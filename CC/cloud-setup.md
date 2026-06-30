@@ -30,14 +30,37 @@ This creates a `.venv` directory containing the isolated Python environment.
 
 ### Step 2: Install Python Requirements
 
-Activate the virtual environment and install the required Python packages:
+**⚠️ Cloud-only fix required first.** `requirements.txt` pins `kivymd` as a git
+dependency (`kivymd @ git+https://github.com/kivymd/KivyMD@...`). It is **GUI-only**
+(the Kivy desktop UI, `kvui.py`) and is **not used** by generation, export, or the
+tests. The cloud sandbox routes GitHub clones through a git relay that only permits
+this session's scoped repos, so the clone returns **403** — and because it's a VCS
+requirement, pip needs its metadata during resolution, which makes the **entire**
+`pip install` abort (nothing gets installed, not even PyYAML).
+
+Comment the two `kivymd` lines out, and tell git to ignore the local edit so it
+never shows in `git status` or gets committed (CI, Docker, and desktop installs
+*can* clone kivymd and still need it, so do **not** change it for them):
 
 ```bash
 source .venv/bin/activate
+
+# Cloud-only: disable the unreachable GUI-only kivymd git dependency.
+sed -i 's|^kivymd|# kivymd|' requirements.txt
+git update-index --skip-worktree requirements.txt   # keep the edit local & uncommittable
+
 pip install -r requirements.txt
 ```
 
-**Note:** You'll see some warnings about pip cache permissions and compilation warnings for `_speedups.c` - these are normal and don't affect functionality.
+This also resolves the interactive `ModuleUpdate` prompt later (Step 3 and every
+`Generate.py` run): `ModuleUpdate` reads `requirements.txt`, so with the kivymd
+lines gone it never tries to verify/install the unsatisfiable dependency.
+
+To undo (rarely needed): `git update-index --no-skip-worktree requirements.txt &&
+git checkout -- requirements.txt`.
+
+**Note:** You'll see some warnings about pip cache permissions and compilation
+warnings for `_speedups.c` - these are normal and don't affect functionality.
 
 ### Step 3: Install Game-Specific Dependencies
 
@@ -53,6 +76,23 @@ This command installs game-specific packages like:
 - `zilliandomizer` for Zillion
 - `factorio-rcon-py` for Factorio
 - Various other game-specific libraries
+
+It also installs the **export/tooling dependencies** that the rules exporter needs
+but that are *not* in the root `requirements.txt` — `astunparse` and `dill` (from
+`worlds/json_tools_installer/requirements.txt` and `worlds/ut_pickle/requirements.txt`).
+If you skip this step, seed generation still "succeeds" but the export post-output
+hook silently fails to import and the `*_rules.json` / `*_sphere_log.jsonl` files
+are **not** written — easy to mistake for a deterministic no-op. (If you ever need
+them without running this step: `pip install astunparse dill`.)
+
+**Notes:**
+- Because the kivymd lines were commented out in Step 2, this completes without
+  prompting. (Without that fix, `ModuleUpdate` would block on an `input()` prompt
+  that raises `EOFError` in the non-interactive shell.)
+- Some world packages with network-restricted dependencies may log
+  `Could not load world ...` / `ModuleNotFoundError` (e.g. `pyevermizer`,
+  `zilliandomizer`, `metamathpy`). These are harmless unless you are working on
+  that specific game.
 
 ### Step 4: Generate Template Files
 
@@ -82,7 +122,34 @@ The `minimal-spoilers` configuration enables:
 - Sphere log generation (`save_sphere_log: true`)
 - Frontend preset updates (`update_frontend_presets: true`)
 
-### Step 6: Install Node.js Dependencies
+### Step 6: Check Out the Frontend Submodule
+
+The frontend rule engine, `StateManager`, and per-game `gameLogic` live in the
+`frontend/modules/shared` git submodule (repo `PeerInfinity/archipelago-shared`).
+**Spoiler / multiclient / multiworld tests cannot run without it** — it's the code
+under test. This submodule is **not** part of the main repo's scope by default, so
+a plain `git submodule update` returns **403** from the sandbox git relay.
+
+1. Bring the repo into the session's scope first (host tool; requires the repo to
+   be accessible to your GitHub integration):
+
+   ```
+   add_repo peerinfinity/archipelago-shared
+   ```
+
+2. Then initialize the submodule at its pinned commit (give it a generous timeout —
+   the shallow pack can take several minutes through the proxy; `git index-pack`
+   may look stalled but isn't, so don't interrupt it):
+
+   ```bash
+   git submodule update --init frontend/modules/shared
+   ```
+
+Only `frontend/modules/shared` is needed for the test suites. The other two
+submodules (`textAdventureEngine`, `journey-to-ascension`) are for specific games
+and can be initialized the same way if you work on those.
+
+### Step 7: Install Node.js Dependencies
 
 Install the JavaScript/TypeScript packages needed for frontend testing:
 
@@ -92,7 +159,7 @@ npm install
 
 This installs Playwright and other testing dependencies defined in `package.json`.
 
-### Step 7: Playwright Browser Setup
+### Step 8: Playwright Browser Setup
 
 The cloud environment typically has cached Playwright browsers from previous sessions. The project uses Playwright 1.56.0 which requires browser build 1194.
 
@@ -145,15 +212,18 @@ This shows the browser build number Playwright expects (e.g., `chromium-1194`). 
 After completing the setup, verify everything is configured correctly:
 
 ```bash
-# Check Python environment
+# Check Python environment (core + exporter deps)
 source .venv/bin/activate
-python -c "import websockets, yaml, jinja2; print('Python packages: OK')"
+python -c "import websockets, yaml, jinja2, astunparse, dill; print('Python packages: OK')"
 
 # Check templates were created
 ls Players/Templates/*.yaml | wc -l  # Should show 80+ files
 
 # Check host.yaml exists
 test -f host.yaml && echo "host.yaml: OK"
+
+# Check the frontend submodule is checked out (required for spoiler tests)
+test -f frontend/modules/shared/ruleEngine.js && echo "Frontend submodule: OK"
 
 # Check Node modules
 test -d node_modules && echo "Node.js packages: OK"
@@ -187,6 +257,17 @@ If `ModuleUpdate.py` fails with import errors, ensure you've activated the virtu
 source .venv/bin/activate
 python ModuleUpdate.py --yes
 ```
+
+### Issue: `pip install` aborts on `kivymd` / `Generate.py` prompts to install kivymd
+
+Both are the same root cause: the GUI-only `kivymd` git dependency can't be cloned
+in the cloud sandbox (the git relay returns **403** for out-of-scope repos). Make
+sure you applied the Step 2 fix (comment the `kivymd` lines out of
+`requirements.txt` + `git update-index --skip-worktree requirements.txt`). With
+those lines gone, both `pip install` and `Generate.py`'s startup `ModuleUpdate`
+check stop trying to install it. See
+[Cloud Environment Issues & Workarounds](./cloud-environment-issues.md) for the
+full background.
 
 ### Issue: Template Generation Warnings
 
@@ -223,7 +304,7 @@ Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwrigh
 This means the installed Playwright version expects a different browser build than what's cached.
 
 **Solution:** Either:
-1. Install a Playwright version matching your cached browser (see version mapping table in Step 7)
+1. Install a Playwright version matching your cached browser (see version mapping table in Step 8)
 2. Or try downloading the required browser: `PLAYWRIGHT_SKIP_BROWSER_GC=1 npx playwright install chromium`
 
 ### Issue: Playwright Installation Hangs
@@ -286,12 +367,19 @@ For convenience, you can run all setup steps at once:
 ```bash
 #!/bin/bash
 # Quick setup script for cloud environment
+set -e
 
 # Create virtual environment
 python -m venv .venv
 source .venv/bin/activate
 
-# Install Python dependencies
+# Cloud-only: disable the unreachable GUI-only kivymd git dependency so pip can
+# resolve, and so Generate.py's ModuleUpdate check doesn't prompt. Kept local via
+# skip-worktree (do NOT commit). See Step 2.
+sed -i 's|^kivymd|# kivymd|' requirements.txt
+git update-index --skip-worktree requirements.txt
+
+# Install Python dependencies (core + game/exporter deps incl. astunparse, dill)
 pip install -r requirements.txt
 python ModuleUpdate.py --yes
 
@@ -299,6 +387,11 @@ python ModuleUpdate.py --yes
 python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 python Launcher.py --update_settings
 python scripts/setup/update_host_settings.py minimal-spoilers
+
+# Check out the frontend submodule (required for spoiler/multiclient/multiworld
+# tests). Requires `add_repo peerinfinity/archipelago-shared` to have been run
+# first (host tool) so the relay allows the clone.
+git submodule update --init frontend/modules/shared
 
 # Install Node.js dependencies
 npm install
@@ -315,6 +408,10 @@ fi
 echo "Setup complete! Virtual environment is activated."
 echo "Run 'source .venv/bin/activate' in new terminal sessions."
 ```
+
+> The `git submodule update` line will 403 unless `add_repo
+> peerinfinity/archipelago-shared` was run first (see Step 6). If you only need
+> headless generation/export (no frontend tests), you can omit that line.
 
 Save this as `CC/scripts/cloud-setup.sh` and run with:
 

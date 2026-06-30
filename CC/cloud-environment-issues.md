@@ -11,10 +11,17 @@ work). These are environment/tooling obstacles that are *not* obvious from
 
 ---
 
-## Does `cloud-setup.md` work as written? (No — verified)
+## Does `cloud-setup.md` work as written?
 
-Walking `cloud-setup.md` from Step 1 in a **fresh venv** confirms it does **not**
-get a cloud session to a working state, and does not resolve the issues below:
+> **Update:** `cloud-setup.md` has since been **fixed** to address the problems
+> below — Step 2 now comments out the `kivymd` git dependency (via
+> `skip-worktree`), Step 3 documents the `astunparse`/`dill` coverage, and a new
+> Step 6 checks out the `frontend/modules/shared` submodule. The table below is
+> kept as the record of *why* those changes were needed (it describes the
+> behavior of the **original** instructions in a fresh venv).
+
+Walking the **original** `cloud-setup.md` from Step 1 in a **fresh venv** confirmed
+it did **not** get a cloud session to a working state:
 
 | Step | Result in a fresh cloud venv |
 |------|------------------------------|
@@ -85,12 +92,34 @@ Notes:
 git clone --filter=blob:none --quiet https://github.com/kivymd/KivyMD ... exit code 128
 ```
 
-`requirements.txt` pins `kivymd @ git+https://github.com/kivymd/KivyMD@<sha>`.
-GitHub (non-`pypi.org`) git fetches go through the policy proxy and are blocked, so
-the whole `pip install` aborts. `kivymd`/`kivy` are **GUI-only** (the Kivy client)
-and are not needed for seed generation, export, or testing.
+`requirements.txt` pins `kivymd @ git+https://github.com/kivymd/KivyMD@<sha>`
+(plus `kivymd>=2.0.1.dev0`). The clone is rewritten through the sandbox **git
+relay** (`http://127.0.0.1:<port>/git/kivymd/KivyMD/`), which only permits repos in
+this session's GitHub scope, so it returns **403** — a policy denial, not a network
+error. Because `kivymd` is a *VCS* requirement, pip must clone it to read its
+metadata during resolution, so the **entire** `pip install` aborts and **nothing**
+is installed.
 
-**Workaround:** install everything except the git line (PyPI is allowed directly):
+Why a git pin (and why we can't just use PyPI): the code uses **KivyMD 2.x**
+(Material Design 3) widgets in `kvui.py`, but PyPI only publishes up to `1.2.0` —
+there is no 2.x release on PyPI, hence the unreleased dev commit. `kivymd`/`kivy`
+are **GUI-only** and are imported lazily; generation, export, and the tests never
+need them (verified). Note CI/Docker/desktop *can* clone kivymd (they aren't behind
+the relay), so this is a cloud-sandbox-only problem — don't restructure the shared
+`requirements.txt` for it.
+
+**Canonical fix (now in `cloud-setup.md` Step 2):** comment the kivymd lines out and
+mark the edit `skip-worktree` so it can't be committed. This fixes the install
+**and** the runtime `ModuleUpdate` prompt (issue #4) in one step:
+
+```
+sed -i 's|^kivymd|# kivymd|' requirements.txt
+git update-index --skip-worktree requirements.txt
+pip install -r requirements.txt
+```
+
+**Alternative** (leaves `requirements.txt` byte-for-byte untouched, but the runtime
+`ModuleUpdate` prompt in issue #4 then still needs the `sitecustomize` bypass):
 
 ```
 grep -v 'kivymd' requirements.txt > /tmp/reqs-core.txt
@@ -99,7 +128,7 @@ pip install -r /tmp/reqs-core.txt
 
 The egress proxy's `noProxy` list includes `pypi.org` and `files.pythonhosted.org`,
 so normal PyPI installs work fine; only VCS (`git+https://github.com/...`)
-dependencies are blocked.
+dependencies hit the git relay.
 
 ---
 
@@ -152,14 +181,22 @@ Requirement pyevermizer==0.50.1 is not satisfied, press enter to install it
 EOFError: EOF when reading a line
 ```
 
-`Generate.py` calls `ModuleUpdate.update()` at import, which scans **every** world's
-`requirements.txt` and `input()`-prompts to install missing ones. In a
-non-interactive shell `input()` raises `EOFError`. CI avoids this with
+`Generate.py` calls `ModuleUpdate.update()` at import, which scans the root and
+**every** world's `requirements.txt` and `input()`-prompts to install missing
+ones. In a non-interactive shell `input()` raises `EOFError`. CI avoids this with
 `python ModuleUpdate.py --yes`, but `--yes` then tries to `pip install` everything
 — including the unsatisfiable `kivymd` git dep (issue #2) — so that path doesn't
 work here either.
 
-**Workaround:** a `sitecustomize.py` on `PYTHONPATH` that pre-sets the
+**Preferred fix:** the canonical kivymd fix in issue #2 / `cloud-setup.md` Step 2
+(comment the lines out of `requirements.txt`) also resolves this — `ModuleUpdate`
+reads `requirements.txt`, so once the unsatisfiable line is gone and the other deps
+are installed, there is nothing left to prompt about and **no bypass is needed.**
+Prefer this for normal setup.
+
+**Fallback bypass** (only if you keep `requirements.txt` unmodified — e.g. you used
+the `grep -v` alternative in issue #2): a `sitecustomize.py` on `PYTHONPATH` that
+pre-sets the
 "already ran" flag, so every Python subprocess (including `Generate.py` and
 `fuzz.py` launched by the test harnesses) skips the check. Crucially it must
 **remove the repo root from `sys.path` afterwards** (see issue #6):
@@ -365,13 +402,17 @@ from the GitHub UI. The UT-fuzz path in particular is self-contained Python
 
 ## Quick setup recap for a fresh cloud session
 
-What actually got the full test stack working here, beyond `cloud-setup.md`:
+`cloud-setup.md` now incorporates these fixes — follow it directly. Condensed
+version (the canonical kivymd fix removes the need for both the `grep -v` trick and
+the `ModuleUpdate` bypass):
 
 ```
-# Python (skip the kivymd git dep; add the exporter deps)
+# Python — disable the unreachable GUI-only kivymd git dep (local, uncommittable)
 python -m venv .venv && source .venv/bin/activate
-grep -v 'kivymd' requirements.txt > /tmp/reqs-core.txt
-pip install -r /tmp/reqs-core.txt astunparse dill
+sed -i 's|^kivymd|# kivymd|' requirements.txt
+git update-index --skip-worktree requirements.txt
+pip install -r requirements.txt
+python ModuleUpdate.py --yes      # installs world deps incl. astunparse, dill
 
 # Frontend rule engine (requires add_repo peerinfinity/archipelago-shared first)
 git submodule update --init frontend/modules/shared
@@ -379,15 +420,14 @@ npm install                       # Playwright browser is pre-installed at /opt/
 
 # Templates + host settings
 python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+python Launcher.py --update_settings
 python scripts/setup/update_host_settings.py minimal-spoilers
-
-# ModuleUpdate bypass for all subprocesses (see issue #4)
-#   create scratchpad/sitecustomize.py, then prefix commands with:
-#   PYTHONPATH=/path/to/scratchpad ...
 
 # Dev server for spoiler tests
 python -m http.server 8000 &
 ```
 
-Then, before each generation: `rm -f Players/*.yaml`. After each fuzz batch:
-restore the canonical preset and `git status` before committing.
+With kivymd commented out, `Generate.py` no longer prompts, so the `sitecustomize`
+bypass (issue #4) is **not** needed for normal use. Then, before each generation:
+`rm -f Players/*.yaml`. After each fuzz batch: restore the canonical preset and
+`git status` before committing.
