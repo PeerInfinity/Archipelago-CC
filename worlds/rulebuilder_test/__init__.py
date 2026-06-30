@@ -44,14 +44,14 @@ _BASE_ID = 313_800_000
 # name -> (count in pool, classification)
 SOURCE_ITEMS: Dict[str, int] = {
     "Key": 1,
-    "Coin": 3,
+    "Coin": 4,
     "Red Gem": 1,
     "Blue Gem": 1,
     "Green Gem": 1,
     "Wallet": 2,
     "Sword": 1,
-    "Token A": 1,
-    "Token B": 1,
+    "Token A": 2,
+    "Token B": 2,
 }
 
 # Each feature location holds one Star; Victory needs them all.
@@ -167,9 +167,19 @@ class RuleBuilderTestWorld(RuleWorldMixin, World):
         self.set_rule(loc("Test: min_value"),
                       Has("Coin", count=MinValue(CountItem("Wallet"), CountItem("Coin"))))
         # Dynamic count from Arithmetic over a MaxValue of CountItem operands.
+        # Required count must be monotonically non-increasing in the token counts
+        # (collecting a token discounts the requirement, never raises it) -- in a
+        # multiworld, items can arrive in any order, so a requirement that grows
+        # with an unrelated item's count would transiently revoke access whenever
+        # that item is received before enough Coins are. Base equals the Coin pool
+        # size (4) so the rule is satisfiable even with zero tokens collected;
+        # Token A/B each have a pool of 2, so MaxValue spans 0..2 and the
+        # required Coin count spans 4..2, genuinely exercising the arithmetic
+        # (not just a binary on/off discount).
         self.set_rule(loc("Test: arithmetic"),
                       Has("Coin", count=Arithmetic(
-                          MaxValue(CountItem("Token A"), CountItem("Token B")), "+", 1)))
+                          SOURCE_ITEMS["Coin"], "-",
+                          MaxValue(CountItem("Token A"), CountItem("Token B")))))
         # Game-specific custom Rule subclass (compiled _evaluate, integer division).
         self.set_rule(loc("Test: custom"), HasTreasure(count=1))
 
