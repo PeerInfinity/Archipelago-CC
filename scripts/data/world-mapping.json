@@ -1176,6 +1176,17 @@
     "template_file": "Risk of Rain 2 WorldGen.yaml",
     "world_directory": "ror2_worldgen"
   },
+  "Rule Builder Test": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Rule Builder Test",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "Rule Builder Test.yaml",
+    "world_directory": "rulebuilder_test"
+  },
   "SMZ3": {
     "exporter_path": "exporter/games/official/smz3.py",
     "exporter_size": 55486,
