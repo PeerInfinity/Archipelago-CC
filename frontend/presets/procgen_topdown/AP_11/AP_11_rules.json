@@ -870,7 +870,7 @@
               "id": "logic_gate_3"
             },
             {
-              "x": 3,
+              "x": 7,
               "y": 5,
               "id": "logic_gate_4"
             }
@@ -883,61 +883,61 @@
               "locationName": "Blue Labyrinth 0"
             },
             {
-              "x": 0,
-              "y": 0,
+              "x": 3,
+              "y": 1,
               "id": "Bridge",
               "locationName": "Blue Labyrinth 1"
             },
             {
-              "x": 1,
-              "y": 5,
+              "x": 2,
+              "y": 0,
               "id": "Freeincarnate",
               "locationName": "Catacombs"
             },
             {
               "x": 3,
-              "y": 4,
+              "y": 0,
               "id": "Sword",
               "locationName": "Adjacent to Catacombs"
             },
             {
-              "x": 3,
-              "y": 2,
+              "x": 4,
+              "y": 0,
               "id": "Freeincarnate",
               "locationName": "Southwest of Catacombs"
             },
             {
-              "x": 0,
-              "y": 2,
+              "x": 2,
+              "y": 5,
               "id": "Freeincarnate",
               "locationName": "White Castle Gate"
             },
             {
-              "x": 4,
-              "y": 4,
+              "x": 6,
+              "y": 1,
               "id": "Freeincarnate",
               "locationName": "Black Castle Gate"
             },
             {
-              "x": 5,
-              "y": 0,
+              "x": 3,
+              "y": 5,
               "id": "White Key",
               "locationName": "Yellow Castle Gate"
             },
             {
-              "x": 2,
-              "y": 5,
+              "x": 7,
+              "y": 0,
               "id": "Slow Rhindle",
               "locationName": "Northeast of Catacombs"
             },
             {
-              "x": 7,
-              "y": 5,
+              "x": 1,
+              "y": 4,
               "id": "Right Difficulty Switch",
               "locationName": "Southeast of Catacombs"
             },
             {
-              "x": 3,
+              "x": 7,
               "y": 5,
               "id": "Black Key",
               "locationName": "Slay Grundle"

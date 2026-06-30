@@ -870,8 +870,8 @@
               "id": "logic_gate_3"
             },
             {
-              "x": 2,
-              "y": 1,
+              "x": 1,
+              "y": 3,
               "id": "logic_gate_4"
             }
           ],
@@ -895,50 +895,50 @@
               "locationName": "Catacombs"
             },
             {
-              "x": 1,
-              "y": 0,
+              "x": 2,
+              "y": 1,
               "id": "Freeincarnate",
               "locationName": "Adjacent to Catacombs"
             },
             {
-              "x": 4,
-              "y": 5,
+              "x": 7,
+              "y": 0,
               "id": "Freeincarnate",
               "locationName": "Southwest of Catacombs"
             },
             {
-              "x": 1,
+              "x": 5,
               "y": 4,
               "id": "Black Key",
               "locationName": "White Castle Gate"
             },
             {
-              "x": 2,
-              "y": 4,
+              "x": 4,
+              "y": 5,
               "id": "Freeincarnate",
               "locationName": "Black Castle Gate"
             },
             {
-              "x": 7,
-              "y": 1,
+              "x": 4,
+              "y": 2,
               "id": "Freeincarnate",
               "locationName": "Yellow Castle Gate"
             },
             {
-              "x": 3,
+              "x": 2,
               "y": 4,
               "id": "White Key",
               "locationName": "Northeast of Catacombs"
             },
             {
-              "x": 2,
-              "y": 5,
+              "x": 7,
+              "y": 1,
               "id": "Freeincarnate",
               "locationName": "Southeast of Catacombs"
             },
             {
-              "x": 2,
-              "y": 1,
+              "x": 1,
+              "y": 3,
               "id": "Slow Rhindle",
               "locationName": "Slay Rhindle"
             }

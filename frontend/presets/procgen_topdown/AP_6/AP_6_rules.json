@@ -8406,14 +8406,14 @@
           ],
           "items": [
             {
-              "x": 4,
-              "y": 5,
+              "x": 3,
+              "y": 3,
               "id": "Button: 9",
               "locationName": "Check 3"
             },
             {
               "x": 6,
-              "y": 2,
+              "y": 4,
               "id": "Checked 3",
               "locationName": "Checked 3"
             }
@@ -8622,8 +8622,8 @@
               "locationName": "Check 4"
             },
             {
-              "x": 4,
-              "y": 4,
+              "x": 3,
+              "y": 3,
               "id": "Checked 4",
               "locationName": "Checked 4"
             }
@@ -11036,14 +11036,14 @@
           ],
           "items": [
             {
-              "x": 1,
-              "y": 1,
+              "x": 2,
+              "y": 0,
               "id": "Button: -",
               "locationName": "Check 24"
             },
             {
-              "x": 0,
-              "y": 2,
+              "x": 2,
+              "y": 3,
               "id": "Checked 24",
               "locationName": "Checked 24"
             }

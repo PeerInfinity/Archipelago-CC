@@ -870,15 +870,15 @@
               "id": "logic_gate_3"
             },
             {
-              "x": 5,
-              "y": 0,
+              "x": 0,
+              "y": 3,
               "id": "logic_gate_4"
             }
           ],
           "items": [
             {
-              "x": 1,
-              "y": 2,
+              "x": 6,
+              "y": 5,
               "id": "Left Difficulty Switch",
               "locationName": "Blue Labyrinth 0"
             },
@@ -889,56 +889,56 @@
               "locationName": "Blue Labyrinth 1"
             },
             {
-              "x": 2,
-              "y": 4,
+              "x": 4,
+              "y": 0,
               "id": "Sword",
               "locationName": "Catacombs"
             },
             {
               "x": 2,
-              "y": 3,
+              "y": 1,
               "id": "Slow Grundle",
               "locationName": "Adjacent to Catacombs"
-            },
-            {
-              "x": 4,
-              "y": 5,
-              "id": "Freeincarnate",
-              "locationName": "Southwest of Catacombs"
-            },
-            {
-              "x": 3,
-              "y": 0,
-              "id": "Freeincarnate",
-              "locationName": "White Castle Gate"
-            },
-            {
-              "x": 5,
-              "y": 3,
-              "id": "Black Key",
-              "locationName": "Black Castle Gate"
-            },
-            {
-              "x": 7,
-              "y": 0,
-              "id": "Freeincarnate",
-              "locationName": "Yellow Castle Gate"
             },
             {
               "x": 2,
               "y": 2,
               "id": "Freeincarnate",
-              "locationName": "Northeast of Catacombs"
+              "locationName": "Southwest of Catacombs"
             },
             {
               "x": 7,
+              "y": 0,
+              "id": "Freeincarnate",
+              "locationName": "White Castle Gate"
+            },
+            {
+              "x": 6,
               "y": 4,
+              "id": "Black Key",
+              "locationName": "Black Castle Gate"
+            },
+            {
+              "x": 5,
+              "y": 2,
+              "id": "Freeincarnate",
+              "locationName": "Yellow Castle Gate"
+            },
+            {
+              "x": 3,
+              "y": 2,
+              "id": "Freeincarnate",
+              "locationName": "Northeast of Catacombs"
+            },
+            {
+              "x": 4,
+              "y": 5,
               "id": "Freeincarnate",
               "locationName": "Southeast of Catacombs"
             },
             {
-              "x": 5,
-              "y": 0,
+              "x": 0,
+              "y": 3,
               "id": "Freeincarnate",
               "locationName": "Slay Yorgle"
             }

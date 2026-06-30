@@ -8101,14 +8101,14 @@
           ],
           "items": [
             {
-              "x": 7,
-              "y": 0,
+              "x": 6,
+              "y": 4,
               "id": "Junk",
               "locationName": "Check 1"
             },
             {
-              "x": 4,
-              "y": 1,
+              "x": 2,
+              "y": 3,
               "id": "Checked 1",
               "locationName": "Checked 1"
             }
@@ -8355,8 +8355,8 @@
               "locationName": "Check 2"
             },
             {
-              "x": 7,
-              "y": 0,
+              "x": 2,
+              "y": 1,
               "id": "Checked 2",
               "locationName": "Checked 2"
             }

@@ -870,8 +870,8 @@
               "id": "logic_gate_3"
             },
             {
-              "x": 7,
-              "y": 1,
+              "x": 6,
+              "y": 0,
               "id": "logic_gate_4"
             }
           ],
@@ -901,8 +901,8 @@
               "locationName": "Adjacent to Catacombs"
             },
             {
-              "x": 6,
-              "y": 4,
+              "x": 1,
+              "y": 5,
               "id": "Freeincarnate",
               "locationName": "Southwest of Catacombs"
             },
@@ -913,32 +913,32 @@
               "locationName": "White Castle Gate"
             },
             {
-              "x": 2,
-              "y": 1,
+              "x": 0,
+              "y": 3,
               "id": "Black Key",
               "locationName": "Black Castle Gate"
             },
             {
-              "x": 0,
-              "y": 5,
+              "x": 1,
+              "y": 1,
               "id": "Freeincarnate",
               "locationName": "Yellow Castle Gate"
             },
             {
-              "x": 3,
-              "y": 3,
+              "x": 4,
+              "y": 1,
               "id": "Freeincarnate",
               "locationName": "Northeast of Catacombs"
             },
             {
-              "x": 0,
-              "y": 3,
+              "x": 1,
+              "y": 4,
               "id": "Freeincarnate",
               "locationName": "Southeast of Catacombs"
             },
             {
-              "x": 7,
-              "y": 1,
+              "x": 6,
+              "y": 0,
               "id": "Freeincarnate",
               "locationName": "Slay Yorgle"
             }
