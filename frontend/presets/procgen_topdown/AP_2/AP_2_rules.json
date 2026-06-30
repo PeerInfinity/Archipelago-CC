@@ -871,7 +871,7 @@
             },
             {
               "x": 7,
-              "y": 0,
+              "y": 3,
               "id": "logic_gate_4"
             }
           ],
@@ -901,44 +901,44 @@
               "locationName": "Adjacent to Catacombs"
             },
             {
-              "x": 5,
-              "y": 5,
+              "x": 0,
+              "y": 0,
               "id": "Freeincarnate",
               "locationName": "Southwest of Catacombs"
             },
             {
-              "x": 5,
-              "y": 4,
+              "x": 6,
+              "y": 5,
               "id": "Freeincarnate",
               "locationName": "White Castle Gate"
             },
             {
-              "x": 0,
-              "y": 0,
+              "x": 7,
+              "y": 4,
               "id": "Freeincarnate",
               "locationName": "Black Castle Gate"
             },
             {
-              "x": 3,
-              "y": 2,
+              "x": 1,
+              "y": 1,
               "id": "White Key",
               "locationName": "Yellow Castle Gate"
             },
             {
-              "x": 6,
-              "y": 2,
+              "x": 1,
+              "y": 4,
               "id": "Slow Rhindle",
               "locationName": "Northeast of Catacombs"
             },
             {
-              "x": 2,
-              "y": 1,
+              "x": 4,
+              "y": 2,
               "id": "Right Difficulty Switch",
               "locationName": "Southeast of Catacombs"
             },
             {
               "x": 7,
-              "y": 0,
+              "y": 3,
               "id": "Black Key",
               "locationName": "Slay Grundle"
             }
