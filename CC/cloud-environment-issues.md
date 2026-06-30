@@ -14,11 +14,13 @@ work). These are environment/tooling obstacles that are *not* obvious from
 ## Does `cloud-setup.md` work as written?
 
 > **Update:** `cloud-setup.md` has since been **fixed** to address the problems
-> below — Step 2 now comments out the `kivymd` git dependency (via
-> `skip-worktree`), Step 3 documents the `astunparse`/`dill` coverage, and a new
-> Step 6 checks out the `frontend/modules/shared` submodule. The table below is
-> kept as the record of *why* those changes were needed (it describes the
-> behavior of the **original** instructions in a fresh venv).
+> below — Step 2 now comments out **all** git-sourced dependencies (kivymd *and*
+> zilliandomizer) via `skip-worktree`, Step 3 documents the `astunparse`/`dill`
+> coverage, and a new Step 6 checks out the `frontend/modules/shared` submodule.
+> The whole updated flow was re-walked in a fresh venv and verified end-to-end
+> (`pip install`, `Generate.py` with no bypass, and the witness spoiler test all
+> pass). The table below is kept as the record of *why* those changes were needed
+> (it describes the behavior of the **original** instructions in a fresh venv).
 
 Walking the **original** `cloud-setup.md` from Step 1 in a **fresh venv** confirmed
 it did **not** get a cloud session to a working state:
@@ -84,51 +86,59 @@ Notes:
 
 ---
 
-## 2. `pip install -r requirements.txt` fails on a git dependency
+## 2. Git-sourced dependencies fail (403) — `pip install` and runtime prompts
 
 **Symptom:**
 
 ```
 git clone --filter=blob:none --quiet https://github.com/kivymd/KivyMD ... exit code 128
+fatal: unable to access 'http://127.0.0.1:<port>/git/kivymd/KivyMD/': ... error: 403
 ```
 
-`requirements.txt` pins `kivymd @ git+https://github.com/kivymd/KivyMD@<sha>`
-(plus `kivymd>=2.0.1.dev0`). The clone is rewritten through the sandbox **git
-relay** (`http://127.0.0.1:<port>/git/kivymd/KivyMD/`), which only permits repos in
-this session's GitHub scope, so it returns **403** — a policy denial, not a network
-error. Because `kivymd` is a *VCS* requirement, pip must clone it to read its
-metadata during resolution, so the **entire** `pip install` aborts and **nothing**
-is installed.
+Clones are rewritten through the sandbox **git relay**
+(`http://127.0.0.1:<port>/git/<owner>/<repo>/`), which only permits repos in this
+session's GitHub scope, so any third-party git dependency returns **403** — a policy
+denial, not a network error.
 
-Why a git pin (and why we can't just use PyPI): the code uses **KivyMD 2.x**
-(Material Design 3) widgets in `kvui.py`, but PyPI only publishes up to `1.2.0` —
-there is no 2.x release on PyPI, hence the unreleased dev commit. `kivymd`/`kivy`
-are **GUI-only** and are imported lazily; generation, export, and the tests never
-need them (verified). Note CI/Docker/desktop *can* clone kivymd (they aren't behind
-the relay), so this is a cloud-sandbox-only problem — don't restructure the shared
-`requirements.txt` for it.
+There are **two** such deps (verified by walking the setup in a fresh venv):
 
-**Canonical fix (now in `cloud-setup.md` Step 2):** comment the kivymd lines out and
-mark the edit `skip-worktree` so it can't be committed. This fixes the install
-**and** the runtime `ModuleUpdate` prompt (issue #4) in one step:
+| Dependency | Declared in | Impact |
+|------------|-------------|--------|
+| `kivymd @ git+...` (`kivymd>=2.0.1.dev0`) | root `requirements.txt` | **GUI-only** (`kvui.py`). As a *VCS* requirement in the root file, pip must clone it during resolution, so the 403 aborts the **entire** `pip install` — nothing installs, not even PyYAML. |
+| `zilliandomizer @ git+...` | `worlds/zillion/requirements.txt` | **Zillion** game only. Doesn't break `pip install` (per-world file), but makes `ModuleUpdate`/`Generate.py` **prompt** to install it at runtime → `EOFError`. |
+
+So fixing only `kivymd` is **not** enough — `Generate.py` still `EOFError`s on
+`zilliandomizer` (confirmed). `pyevermizer`/`metamathpy` are *not* a problem: they're
+normal PyPI packages and install fine.
+
+Why kivymd is a git pin (and can't just come from PyPI): the code uses **KivyMD 2.x**
+(Material Design 3) widgets in `kvui.py`, but PyPI only publishes up to `1.2.0`.
+`kivymd`/`kivy` are GUI-only and imported lazily; generation, export, and the tests
+never need them. CI/Docker/desktop *can* clone these (they aren't behind the relay),
+so this is cloud-sandbox-only — don't restructure the shared requirements for it.
+
+**Canonical fix (now in `cloud-setup.md` Step 2):** comment out **every** git-based
+requirement (root + per-world) and mark the edits `skip-worktree` so they stay local
+and uncommittable. This fixes the install **and** the runtime `ModuleUpdate` prompt
+(issue #4) in one step — verified end-to-end (plain `Generate.py` + spoiler test run
+with no further workaround):
 
 ```
-sed -i 's|^kivymd|# kivymd|' requirements.txt
-git update-index --skip-worktree requirements.txt
+for f in requirements.txt worlds/*/requirements.txt; do
+  if grep -qE 'git\+' "$f" 2>/dev/null; then
+    sed -i -E 's|^([^#].*git\+)|# \1|' "$f"
+    git update-index --skip-worktree "$f"
+  fi
+done
 pip install -r requirements.txt
 ```
 
-**Alternative** (leaves `requirements.txt` byte-for-byte untouched, but the runtime
-`ModuleUpdate` prompt in issue #4 then still needs the `sitecustomize` bypass):
-
-```
-grep -v 'kivymd' requirements.txt > /tmp/reqs-core.txt
-pip install -r /tmp/reqs-core.txt
-```
+**Alternative** (leaves files untouched, but the runtime `ModuleUpdate` prompt in
+issue #4 then still needs the `sitecustomize` bypass, which covers *all* git deps at
+once): `grep -v 'kivymd' requirements.txt > /tmp/reqs-core.txt && pip install -r /tmp/reqs-core.txt`.
 
 The egress proxy's `noProxy` list includes `pypi.org` and `files.pythonhosted.org`,
-so normal PyPI installs work fine; only VCS (`git+https://github.com/...`)
-dependencies hit the git relay.
+so normal PyPI installs work fine; only VCS (`git+https://...`) deps hit the git relay.
 
 ---
 
@@ -407,10 +417,11 @@ version (the canonical kivymd fix removes the need for both the `grep -v` trick 
 the `ModuleUpdate` bypass):
 
 ```
-# Python — disable the unreachable GUI-only kivymd git dep (local, uncommittable)
+# Python — disable git-sourced deps the sandbox can't clone (kivymd, zilliandomizer)
 python -m venv .venv && source .venv/bin/activate
-sed -i 's|^kivymd|# kivymd|' requirements.txt
-git update-index --skip-worktree requirements.txt
+for f in requirements.txt worlds/*/requirements.txt; do
+  grep -qE 'git\+' "$f" 2>/dev/null && { sed -i -E 's|^([^#].*git\+)|# \1|' "$f"; git update-index --skip-worktree "$f"; }
+done
 pip install -r requirements.txt
 python ModuleUpdate.py --yes      # installs world deps incl. astunparse, dill
 

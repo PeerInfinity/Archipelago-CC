@@ -30,34 +30,49 @@ This creates a `.venv` directory containing the isolated Python environment.
 
 ### Step 2: Install Python Requirements
 
-**⚠️ Cloud-only fix required first.** `requirements.txt` pins `kivymd` as a git
-dependency (`kivymd @ git+https://github.com/kivymd/KivyMD@...`). It is **GUI-only**
-(the Kivy desktop UI, `kvui.py`) and is **not used** by generation, export, or the
-tests. The cloud sandbox routes GitHub clones through a git relay that only permits
-this session's scoped repos, so the clone returns **403** — and because it's a VCS
-requirement, pip needs its metadata during resolution, which makes the **entire**
-`pip install` abort (nothing gets installed, not even PyYAML).
+**⚠️ Cloud-only fix required first.** A few dependencies are pinned to **git**
+sources (`... @ git+https://github.com/...`). The cloud sandbox routes git fetches
+through a relay that only permits this session's scoped repos, so any third-party
+git dependency returns **403**. There are currently two, both unneeded for
+generation/export/tests:
 
-Comment the two `kivymd` lines out, and tell git to ignore the local edit so it
-never shows in `git status` or gets committed (CI, Docker, and desktop installs
-*can* clone kivymd and still need it, so do **not** change it for them):
+- `kivymd` (in `requirements.txt`) — **GUI-only** (the Kivy desktop UI, `kvui.py`).
+- `zilliandomizer` (in `worlds/zillion/requirements.txt`) — the **Zillion** game
+  logic only (Zillion can't be tested in the cloud without it anyway).
+
+The `kivymd` one is the worst because it's a *VCS* requirement in the **root**
+`requirements.txt`: pip needs its metadata during resolution, so the clone's 403
+makes the **entire** `pip install` abort — nothing gets installed, not even PyYAML.
+The `zilliandomizer` one doesn't break `pip install` (it's in a per-world file), but
+it *does* make `ModuleUpdate` / `Generate.py` prompt to install it at runtime
+(`EOFError` in a non-interactive shell).
+
+Comment out **every** git-based requirement (root + per-world) and mark the edits
+`skip-worktree` so they stay local and uncommittable (CI, Docker, and desktop
+installs *can* clone these and still need them — do **not** change it for them):
 
 ```bash
 source .venv/bin/activate
 
-# Cloud-only: disable the unreachable GUI-only kivymd git dependency.
-sed -i 's|^kivymd|# kivymd|' requirements.txt
-git update-index --skip-worktree requirements.txt   # keep the edit local & uncommittable
+# Cloud-only: disable git-sourced deps the sandbox git relay can't clone (403).
+for f in requirements.txt worlds/*/requirements.txt; do
+  if grep -qE 'git\+' "$f" 2>/dev/null; then
+    sed -i -E 's|^([^#].*git\+)|# \1|' "$f"
+    git update-index --skip-worktree "$f"   # keep the edit local & uncommittable
+  fi
+done
 
 pip install -r requirements.txt
 ```
 
 This also resolves the interactive `ModuleUpdate` prompt later (Step 3 and every
-`Generate.py` run): `ModuleUpdate` reads `requirements.txt`, so with the kivymd
-lines gone it never tries to verify/install the unsatisfiable dependency.
+`Generate.py` run): `ModuleUpdate` reads these requirement files, so with the git
+lines gone it never tries to verify/install the unreachable dependencies. (Verified
+end-to-end: with both lines commented, a plain `python Generate.py ...` and the
+spoiler test run with no further workaround.)
 
-To undo (rarely needed): `git update-index --no-skip-worktree requirements.txt &&
-git checkout -- requirements.txt`.
+To undo (rarely needed), for each file you changed:
+`git update-index --no-skip-worktree <file> && git checkout -- <file>`.
 
 **Note:** You'll see some warnings about pip cache permissions and compilation
 warnings for `_speedups.c` - these are normal and don't affect functionality.
@@ -86,12 +101,14 @@ are **not** written — easy to mistake for a deterministic no-op. (If you ever 
 them without running this step: `pip install astunparse dill`.)
 
 **Notes:**
-- Because the kivymd lines were commented out in Step 2, this completes without
-  prompting. (Without that fix, `ModuleUpdate` would block on an `input()` prompt
-  that raises `EOFError` in the non-interactive shell.)
-- Some world packages with network-restricted dependencies may log
-  `Could not load world ...` / `ModuleNotFoundError` (e.g. `pyevermizer`,
-  `zilliandomizer`, `metamathpy`). These are harmless unless you are working on
+- Because the git-sourced deps were commented out in Step 2, this (and later
+  `Generate.py` runs) completes without prompting. (Without that fix, `ModuleUpdate`
+  blocks on an `input()` prompt that raises `EOFError` in the non-interactive
+  shell — and it prompts on **every** unsatisfied git dep, not just kivymd.)
+- `pyevermizer` and `metamathpy` are normal PyPI packages and **do** install here;
+  only the git-sourced deps (kivymd, zilliandomizer) are unreachable. A world whose
+  git dep you commented out will log `Could not load world ...` /
+  `ModuleNotFoundError` — harmless unless you are working on
   that specific game.
 
 ### Step 4: Generate Template Files
@@ -258,14 +275,19 @@ source .venv/bin/activate
 python ModuleUpdate.py --yes
 ```
 
-### Issue: `pip install` aborts on `kivymd` / `Generate.py` prompts to install kivymd
+### Issue: `pip install` aborts, or `Generate.py` prompts to install a git dependency
 
-Both are the same root cause: the GUI-only `kivymd` git dependency can't be cloned
-in the cloud sandbox (the git relay returns **403** for out-of-scope repos). Make
-sure you applied the Step 2 fix (comment the `kivymd` lines out of
-`requirements.txt` + `git update-index --skip-worktree requirements.txt`). With
-those lines gone, both `pip install` and `Generate.py`'s startup `ModuleUpdate`
-check stop trying to install it. See
+Same root cause: a git-sourced dependency can't be cloned in the cloud sandbox (the
+git relay returns **403** for out-of-scope repos). There are two — `kivymd` (root
+`requirements.txt`, breaks `pip install`) and `zilliandomizer`
+(`worlds/zillion/requirements.txt`, makes `Generate.py`/`ModuleUpdate` prompt at
+runtime). Make sure you applied the Step 2 fix, which comments out **all** git-based
+requirements (root + per-world) and marks them `skip-worktree`. With those lines
+gone, both `pip install` and `Generate.py`'s `ModuleUpdate` check stop trying to
+install them.
+
+If a *new* git dep appears later, the symptom is the same — re-run the Step 2 loop
+to catch it. See
 [Cloud Environment Issues & Workarounds](./cloud-environment-issues.md) for the
 full background.
 
@@ -373,11 +395,16 @@ set -e
 python -m venv .venv
 source .venv/bin/activate
 
-# Cloud-only: disable the unreachable GUI-only kivymd git dependency so pip can
-# resolve, and so Generate.py's ModuleUpdate check doesn't prompt. Kept local via
+# Cloud-only: disable git-sourced deps the sandbox git relay can't clone (403):
+# kivymd (root, GUI-only) and zilliandomizer (worlds/zillion). This lets pip resolve
+# AND stops Generate.py's ModuleUpdate check from prompting. Kept local via
 # skip-worktree (do NOT commit). See Step 2.
-sed -i 's|^kivymd|# kivymd|' requirements.txt
-git update-index --skip-worktree requirements.txt
+for f in requirements.txt worlds/*/requirements.txt; do
+  if grep -qE 'git\+' "$f" 2>/dev/null; then
+    sed -i -E 's|^([^#].*git\+)|# \1|' "$f"
+    git update-index --skip-worktree "$f"
+  fi
+done
 
 # Install Python dependencies (core + game/exporter deps incl. astunparse, dill)
 pip install -r requirements.txt
