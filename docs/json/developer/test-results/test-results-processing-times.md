@@ -1,6 +1,6 @@
 # Processing Times Chart
 
-**Generated:** 2026-06-30 19:44:32 UTC
+**Generated:** 2026-06-30 19:59:15 UTC
 
 **Source Data Created:** 2026-06-30T19:29:48.028464+00:00
 
@@ -118,8 +118,30 @@ Shows the 10 longest generation and test times from multiworld testing.
 
 ### Top 10 Longest Generation Times
 
-No multiworld generation data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | The Wind Waker | 29.2s | 7 | Bumper Stickers.yaml, DOOM 1993.yaml, Journey to Ascension.yaml, Mega Man 3.yaml, Risk of Rain 2.yaml (+2 more) |
+| 2 | Timespinner | 29.1s | 8 | A Link to the Past.yaml, Castlevania 64.yaml, DepGraph.yaml, Kingdom Hearts.yaml, Meritous.yaml (+3 more) |
+| 3 | Super Mario World | 26.9s | 7 | A Link to the Past.yaml, Castlevania 64.yaml, DepGraph.yaml, Kingdom Hearts.yaml, Meritous.yaml (+2 more) |
+| 4 | Satisfactory | 25.7s | 6 | A Link to the Past.yaml, Castlevania 64.yaml, DepGraph.yaml, Kingdom Hearts.yaml, Meritous.yaml (+1 more) |
+| 5 | Risk of Rain 2 | 24.7s | 5 | Bumper Stickers.yaml, DOOM 1993.yaml, Journey to Ascension.yaml, Mega Man 3.yaml, Risk of Rain 2.yaml |
+| 6 | Undertale | 23.8s | 8 | A Short Hike.yaml, Celeste (Open World).yaml, EarthBound.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+3 more) |
+| 7 | Super Metroid | 23.2s | 7 | A Short Hike.yaml, Celeste (Open World).yaml, EarthBound.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+2 more) |
+| 8 | Super Mario 64 | 20.1s | 6 | Bumper Stickers.yaml, DOOM 1993.yaml, Journey to Ascension.yaml, Mega Man 3.yaml, Risk of Rain 2.yaml (+1 more) |
+| 9 | Kingdom Hearts | 19.6s | 4 | A Link to the Past.yaml, Castlevania 64.yaml, DepGraph.yaml, Kingdom Hearts.yaml |
+| 10 | Meritous | 19.4s | 5 | A Link to the Past.yaml, Castlevania 64.yaml, DepGraph.yaml, Kingdom Hearts.yaml, Meritous.yaml |
 
 ### Top 10 Longest Test Times
 
-No multiworld test data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Satisfactory | 146.1s | 6 | A Link to the Past.yaml, Castlevania 64.yaml, DepGraph.yaml, Kingdom Hearts.yaml, Meritous.yaml (+1 more) |
+| 2 | Kingdom Hearts 2 | 116.9s | 4 | A Hat in Time.yaml, Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Kingdom Hearts 2.yaml |
+| 3 | Starcraft 2 | 92.1s | 6 | Baking Adventure.yaml, Coding Adventure.yaml, Hylics 2.yaml, Mario & Luigi Superstar Saga.yaml, Paint.yaml (+1 more) |
+| 4 | Super Mario Land 2 | 92.1s | 7 | A Hat in Time.yaml, Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml (+2 more) |
+| 5 | Secret of Evermore | 58.0s | 6 | APCalc.yaml, Celeste 64.yaml, Factorio.yaml, Landstalker - The Treasures of King Nole.yaml, Muse Dash.yaml (+1 more) |
+| 6 | Super Metroid | 57.7s | 7 | A Short Hike.yaml, Celeste (Open World).yaml, EarthBound.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+2 more) |
+| 7 | Kirby's Dream Land 3 | 54.6s | 4 | A Short Hike.yaml, Celeste (Open World).yaml, EarthBound.yaml, Kirby's Dream Land 3.yaml |
+| 8 | Kingdom Hearts | 50.1s | 4 | A Link to the Past.yaml, Castlevania 64.yaml, DepGraph.yaml, Kingdom Hearts.yaml |
+| 9 | Raft | 36.0s | 5 | Bomb Rush Cyberfunk.yaml, DLCQuest.yaml, Inscryption.yaml, Mega Man 2.yaml, Raft.yaml |
+| 10 | TUNIC | 32.1s | 7 | Adventure.yaml, Choo-Choo Charles.yaml, Final Fantasy Mystic Quest.yaml, Links Awakening DX.yaml, Old School Runescape.yaml (+2 more) |
