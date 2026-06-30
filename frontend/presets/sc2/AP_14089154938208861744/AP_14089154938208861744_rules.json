@@ -296,130 +296,171 @@
             "name": "Smash and Grab (Terran)",
             "connected_region": "Smash and Grab (Terran)",
             "access_rule": {
-              "rule": "AST_count_true",
-              "args": {
-                "conditions": [
-                  {
-                    "type": "count_true",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Beat Evacuation (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Smash and Grab (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Haven's Fall (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Belly of the Beast"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Zero Hour (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Supernova (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat All-In (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Piercing the Shroud"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Outbreak (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Shatter the Sky (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Ghost of a Chance"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Breakout"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat The Dig (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Liberation Day"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Cutthroat (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat The Outlaws (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Safe Haven (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Devil's Playground (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Gates of Hell (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat The Great Train Robbery (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Welcome to the Jungle (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Media Blitz (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Maw of the Void (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Engine of Destruction (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat The Moebius Factor (Terran)"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "AtLeast",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Evacuation (Terran)"
                       }
-                    ],
-                    "count": 2
-                  },
-                  {
-                    "type": "count_true",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Beat Evacuation (Terran)"
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Smash and Grab (Terran)"
                       }
-                    ],
-                    "count": 1
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Haven's Fall (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Belly of the Beast"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Zero Hour (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Supernova (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat All-In (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Piercing the Shroud"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Outbreak (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Shatter the Sky (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Ghost of a Chance"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Breakout"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat The Dig (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Liberation Day"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Cutthroat (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat The Outlaws (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Safe Haven (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Devil's Playground (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Gates of Hell (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat The Great Train Robbery (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Welcome to the Jungle (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Media Blitz (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Maw of the Void (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Engine of Destruction (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat The Moebius Factor (Terran)"
+                      }
+                    }
+                  ],
+                  "count": 2
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Beat Evacuation (Terran)"
                   }
-                ],
-                "count": 2,
-                "_original_ast_type": "count_true"
-              },
-              "_converted_from_ast": true
+                }
+              ]
             }
           },
           {
@@ -3702,274 +3743,223 @@
             "name": "All-In (Terran)",
             "connected_region": "All-In (Terran)",
             "access_rule": {
-              "rule": "AST_count_true",
-              "args": {
-                "conditions": [
-                  {
-                    "type": "count_true",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Beat Evacuation (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Smash and Grab (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Haven's Fall (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Belly of the Beast"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Zero Hour (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Supernova (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat All-In (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Piercing the Shroud"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Outbreak (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Shatter the Sky (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Ghost of a Chance"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Breakout"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat The Dig (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Liberation Day"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Cutthroat (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat The Outlaws (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Safe Haven (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Devil's Playground (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Gates of Hell (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat The Great Train Robbery (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Welcome to the Jungle (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Media Blitz (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Maw of the Void (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Engine of Destruction (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat The Moebius Factor (Terran)"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "AtLeast",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Evacuation (Terran)"
                       }
-                    ],
-                    "count": 18
-                  },
-                  {
-                    "type": "count_true",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Beat Supernova (Terran)"
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Smash and Grab (Terran)"
                       }
-                    ],
-                    "count": 1
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Haven's Fall (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Belly of the Beast"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Zero Hour (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Supernova (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat All-In (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Piercing the Shroud"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Outbreak (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Shatter the Sky (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Ghost of a Chance"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Breakout"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat The Dig (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Liberation Day"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Cutthroat (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat The Outlaws (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Safe Haven (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Devil's Playground (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Gates of Hell (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat The Great Train Robbery (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Welcome to the Jungle (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Media Blitz (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Maw of the Void (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Engine of Destruction (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat The Moebius Factor (Terran)"
+                      }
+                    }
+                  ],
+                  "count": 18
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Beat Supernova (Terran)"
                   }
-                ],
-                "count": 2,
-                "_original_ast_type": "count_true"
-              },
-              "_converted_from_ast": true
+                }
+              ]
             }
           },
           {
             "name": "The Dig (Terran)",
             "connected_region": "The Dig (Terran)",
             "access_rule": {
-              "rule": "AST_count_true",
+              "rule": "HasAll",
               "args": {
-                "conditions": [
-                  {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Beat Supernova (Terran)"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "count_true",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Beat Breakout"
-                      }
-                    ],
-                    "count": 1
-                  }
-                ],
-                "count": 2,
-                "_original_ast_type": "count_true"
-              },
-              "_converted_from_ast": true
+                "item_names": [
+                  "Beat Breakout",
+                  "Beat Supernova (Terran)"
+                ]
+              }
             }
           },
           {
             "name": "Gates of Hell (Terran)",
             "connected_region": "Gates of Hell (Terran)",
             "access_rule": {
-              "rule": "AST_count_true",
+              "rule": "HasAll",
               "args": {
-                "conditions": [
-                  {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Beat Supernova (Terran)"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "count_true",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Beat Devil's Playground (Terran)"
-                      }
-                    ],
-                    "count": 1
-                  }
-                ],
-                "count": 2,
-                "_original_ast_type": "count_true"
-              },
-              "_converted_from_ast": true
+                "item_names": [
+                  "Beat Devil's Playground (Terran)",
+                  "Beat Supernova (Terran)"
+                ]
+              }
             }
           },
           {
             "name": "Maw of the Void (Terran)",
             "connected_region": "Maw of the Void (Terran)",
             "access_rule": {
-              "rule": "AST_count_true",
+              "rule": "HasAll",
               "args": {
-                "conditions": [
-                  {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Beat Supernova (Terran)"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "count_true",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Beat Media Blitz (Terran)"
-                      }
-                    ],
-                    "count": 1
-                  }
-                ],
-                "count": 2,
-                "_original_ast_type": "count_true"
-              },
-              "_converted_from_ast": true
+                "item_names": [
+                  "Beat Media Blitz (Terran)",
+                  "Beat Supernova (Terran)"
+                ]
+              }
             }
           },
           {
             "name": "The Moebius Factor (Terran)",
             "connected_region": "The Moebius Factor (Terran)",
             "access_rule": {
-              "rule": "AST_count_true",
+              "rule": "HasAll",
               "args": {
-                "conditions": [
-                  {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Beat Supernova (Terran)"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "count_true",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Beat Engine of Destruction (Terran)"
-                      }
-                    ],
-                    "count": 1
-                  }
-                ],
-                "count": 2,
-                "_original_ast_type": "count_true"
-              },
-              "_converted_from_ast": true
+                "item_names": [
+                  "Beat Engine of Destruction (Terran)",
+                  "Beat Supernova (Terran)"
+                ]
+              }
             }
           }
         ],
@@ -5885,202 +5875,197 @@
             "name": "Haven's Fall (Terran)",
             "connected_region": "Haven's Fall (Terran)",
             "access_rule": {
-              "rule": "AST_count_true",
-              "args": {
-                "conditions": [
-                  {
-                    "type": "count_true",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Beat Evacuation (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Smash and Grab (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Haven's Fall (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Belly of the Beast"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Zero Hour (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Supernova (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat All-In (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Piercing the Shroud"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Outbreak (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Shatter the Sky (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Ghost of a Chance"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Breakout"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat The Dig (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Liberation Day"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Cutthroat (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat The Outlaws (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Safe Haven (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Devil's Playground (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Gates of Hell (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat The Great Train Robbery (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Welcome to the Jungle (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Media Blitz (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Maw of the Void (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Engine of Destruction (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat The Moebius Factor (Terran)"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "AtLeast",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Evacuation (Terran)"
                       }
-                    ],
-                    "count": 4
-                  },
-                  {
-                    "type": "count_true",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Beat Smash and Grab (Terran)"
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Smash and Grab (Terran)"
                       }
-                    ],
-                    "count": 1
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Haven's Fall (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Belly of the Beast"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Zero Hour (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Supernova (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat All-In (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Piercing the Shroud"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Outbreak (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Shatter the Sky (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Ghost of a Chance"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Breakout"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat The Dig (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Liberation Day"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Cutthroat (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat The Outlaws (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Safe Haven (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Devil's Playground (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Gates of Hell (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat The Great Train Robbery (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Welcome to the Jungle (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Media Blitz (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Maw of the Void (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Engine of Destruction (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat The Moebius Factor (Terran)"
+                      }
+                    }
+                  ],
+                  "count": 4
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Beat Smash and Grab (Terran)"
                   }
-                ],
-                "count": 2,
-                "_original_ast_type": "count_true"
-              },
-              "_converted_from_ast": true
+                }
+              ]
             }
           },
           {
             "name": "Outbreak (Terran)",
             "connected_region": "Outbreak (Terran)",
             "access_rule": {
-              "rule": "AST_count_true",
+              "rule": "HasAll",
               "args": {
-                "conditions": [
-                  {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Beat Smash and Grab (Terran)"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "count_true",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Beat Piercing the Shroud"
-                      }
-                    ],
-                    "count": 1
-                  }
-                ],
-                "count": 2,
-                "_original_ast_type": "count_true"
-              },
-              "_converted_from_ast": true
+                "item_names": [
+                  "Beat Piercing the Shroud",
+                  "Beat Smash and Grab (Terran)"
+                ]
+              }
             }
           },
           {
             "name": "Cutthroat (Terran)",
             "connected_region": "Cutthroat (Terran)",
             "access_rule": {
-              "rule": "AST_count_true",
+              "rule": "HasAll",
               "args": {
-                "conditions": [
-                  {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Beat Smash and Grab (Terran)"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "count_true",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Beat Liberation Day"
-                      }
-                    ],
-                    "count": 1
-                  }
-                ],
-                "count": 2,
-                "_original_ast_type": "count_true"
-              },
-              "_converted_from_ast": true
+                "item_names": [
+                  "Beat Liberation Day",
+                  "Beat Smash and Grab (Terran)"
+                ]
+              }
             }
           }
         ],
@@ -6941,202 +6926,197 @@
             "name": "Belly of the Beast",
             "connected_region": "Belly of the Beast",
             "access_rule": {
-              "rule": "AST_count_true",
-              "args": {
-                "conditions": [
-                  {
-                    "type": "count_true",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Beat Evacuation (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Smash and Grab (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Haven's Fall (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Belly of the Beast"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Zero Hour (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Supernova (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat All-In (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Piercing the Shroud"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Outbreak (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Shatter the Sky (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Ghost of a Chance"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Breakout"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat The Dig (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Liberation Day"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Cutthroat (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat The Outlaws (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Safe Haven (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Devil's Playground (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Gates of Hell (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat The Great Train Robbery (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Welcome to the Jungle (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Media Blitz (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Maw of the Void (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Engine of Destruction (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat The Moebius Factor (Terran)"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "AtLeast",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Evacuation (Terran)"
                       }
-                    ],
-                    "count": 7
-                  },
-                  {
-                    "type": "count_true",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Beat Haven's Fall (Terran)"
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Smash and Grab (Terran)"
                       }
-                    ],
-                    "count": 1
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Haven's Fall (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Belly of the Beast"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Zero Hour (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Supernova (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat All-In (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Piercing the Shroud"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Outbreak (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Shatter the Sky (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Ghost of a Chance"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Breakout"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat The Dig (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Liberation Day"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Cutthroat (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat The Outlaws (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Safe Haven (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Devil's Playground (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Gates of Hell (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat The Great Train Robbery (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Welcome to the Jungle (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Media Blitz (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Maw of the Void (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Engine of Destruction (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat The Moebius Factor (Terran)"
+                      }
+                    }
+                  ],
+                  "count": 7
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Beat Haven's Fall (Terran)"
                   }
-                ],
-                "count": 2,
-                "_original_ast_type": "count_true"
-              },
-              "_converted_from_ast": true
+                }
+              ]
             }
           },
           {
             "name": "Shatter the Sky (Terran)",
             "connected_region": "Shatter the Sky (Terran)",
             "access_rule": {
-              "rule": "AST_count_true",
+              "rule": "HasAll",
               "args": {
-                "conditions": [
-                  {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Beat Haven's Fall (Terran)"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "count_true",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Beat Outbreak (Terran)"
-                      }
-                    ],
-                    "count": 1
-                  }
-                ],
-                "count": 2,
-                "_original_ast_type": "count_true"
-              },
-              "_converted_from_ast": true
+                "item_names": [
+                  "Beat Haven's Fall (Terran)",
+                  "Beat Outbreak (Terran)"
+                ]
+              }
             }
           },
           {
             "name": "The Outlaws (Terran)",
             "connected_region": "The Outlaws (Terran)",
             "access_rule": {
-              "rule": "AST_count_true",
+              "rule": "HasAll",
               "args": {
-                "conditions": [
-                  {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Beat Haven's Fall (Terran)"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "count_true",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Beat Cutthroat (Terran)"
-                      }
-                    ],
-                    "count": 1
-                  }
-                ],
-                "count": 2,
-                "_original_ast_type": "count_true"
-              },
-              "_converted_from_ast": true
+                "item_names": [
+                  "Beat Cutthroat (Terran)",
+                  "Beat Haven's Fall (Terran)"
+                ]
+              }
             }
           },
           {
@@ -8528,238 +8508,210 @@
             "name": "Zero Hour (Terran)",
             "connected_region": "Zero Hour (Terran)",
             "access_rule": {
-              "rule": "AST_count_true",
-              "args": {
-                "conditions": [
-                  {
-                    "type": "count_true",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Beat Evacuation (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Smash and Grab (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Haven's Fall (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Belly of the Beast"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Zero Hour (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Supernova (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat All-In (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Piercing the Shroud"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Outbreak (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Shatter the Sky (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Ghost of a Chance"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Breakout"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat The Dig (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Liberation Day"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Cutthroat (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat The Outlaws (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Safe Haven (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Devil's Playground (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Gates of Hell (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat The Great Train Robbery (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Welcome to the Jungle (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Media Blitz (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Maw of the Void (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Engine of Destruction (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat The Moebius Factor (Terran)"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "AtLeast",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Evacuation (Terran)"
                       }
-                    ],
-                    "count": 10
-                  },
-                  {
-                    "type": "count_true",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Beat Belly of the Beast"
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Smash and Grab (Terran)"
                       }
-                    ],
-                    "count": 1
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Haven's Fall (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Belly of the Beast"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Zero Hour (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Supernova (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat All-In (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Piercing the Shroud"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Outbreak (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Shatter the Sky (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Ghost of a Chance"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Breakout"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat The Dig (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Liberation Day"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Cutthroat (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat The Outlaws (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Safe Haven (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Devil's Playground (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Gates of Hell (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat The Great Train Robbery (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Welcome to the Jungle (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Media Blitz (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Maw of the Void (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Engine of Destruction (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat The Moebius Factor (Terran)"
+                      }
+                    }
+                  ],
+                  "count": 10
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Beat Belly of the Beast"
                   }
-                ],
-                "count": 2,
-                "_original_ast_type": "count_true"
-              },
-              "_converted_from_ast": true
+                }
+              ]
             }
           },
           {
             "name": "Ghost of a Chance",
             "connected_region": "Ghost of a Chance",
             "access_rule": {
-              "rule": "AST_count_true",
+              "rule": "HasAll",
               "args": {
-                "conditions": [
-                  {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Beat Belly of the Beast"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "count_true",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Beat Shatter the Sky (Terran)"
-                      }
-                    ],
-                    "count": 1
-                  }
-                ],
-                "count": 2,
-                "_original_ast_type": "count_true"
-              },
-              "_converted_from_ast": true
+                "item_names": [
+                  "Beat Belly of the Beast",
+                  "Beat Shatter the Sky (Terran)"
+                ]
+              }
             }
           },
           {
             "name": "Safe Haven (Terran)",
             "connected_region": "Safe Haven (Terran)",
             "access_rule": {
-              "rule": "AST_count_true",
+              "rule": "HasAll",
               "args": {
-                "conditions": [
-                  {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Beat Belly of the Beast"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "count_true",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Beat The Outlaws (Terran)"
-                      }
-                    ],
-                    "count": 1
-                  }
-                ],
-                "count": 2,
-                "_original_ast_type": "count_true"
-              },
-              "_converted_from_ast": true
+                "item_names": [
+                  "Beat Belly of the Beast",
+                  "Beat The Outlaws (Terran)"
+                ]
+              }
             }
           },
           {
             "name": "Welcome to the Jungle (Terran)",
             "connected_region": "Welcome to the Jungle (Terran)",
             "access_rule": {
-              "rule": "AST_count_true",
+              "rule": "HasAll",
               "args": {
-                "conditions": [
-                  {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Beat Belly of the Beast"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "count_true",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Beat The Great Train Robbery (Terran)"
-                      }
-                    ],
-                    "count": 1
-                  }
-                ],
-                "count": 2,
-                "_original_ast_type": "count_true"
-              },
-              "_converted_from_ast": true
+                "item_names": [
+                  "Beat Belly of the Beast",
+                  "Beat The Great Train Robbery (Terran)"
+                ]
+              }
             }
           }
         ],
@@ -9001,238 +8953,210 @@
             "name": "Supernova (Terran)",
             "connected_region": "Supernova (Terran)",
             "access_rule": {
-              "rule": "AST_count_true",
-              "args": {
-                "conditions": [
-                  {
-                    "type": "count_true",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Beat Evacuation (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Smash and Grab (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Haven's Fall (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Belly of the Beast"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Zero Hour (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Supernova (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat All-In (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Piercing the Shroud"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Outbreak (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Shatter the Sky (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Ghost of a Chance"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Breakout"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat The Dig (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Liberation Day"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Cutthroat (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat The Outlaws (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Safe Haven (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Devil's Playground (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Gates of Hell (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat The Great Train Robbery (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Welcome to the Jungle (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Media Blitz (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Maw of the Void (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat Engine of Destruction (Terran)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Beat The Moebius Factor (Terran)"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "AtLeast",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Evacuation (Terran)"
                       }
-                    ],
-                    "count": 14
-                  },
-                  {
-                    "type": "count_true",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Beat Zero Hour (Terran)"
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Smash and Grab (Terran)"
                       }
-                    ],
-                    "count": 1
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Haven's Fall (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Belly of the Beast"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Zero Hour (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Supernova (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat All-In (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Piercing the Shroud"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Outbreak (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Shatter the Sky (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Ghost of a Chance"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Breakout"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat The Dig (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Liberation Day"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Cutthroat (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat The Outlaws (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Safe Haven (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Devil's Playground (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Gates of Hell (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat The Great Train Robbery (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Welcome to the Jungle (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Media Blitz (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Maw of the Void (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat Engine of Destruction (Terran)"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Beat The Moebius Factor (Terran)"
+                      }
+                    }
+                  ],
+                  "count": 14
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Beat Zero Hour (Terran)"
                   }
-                ],
-                "count": 2,
-                "_original_ast_type": "count_true"
-              },
-              "_converted_from_ast": true
+                }
+              ]
             }
           },
           {
             "name": "Breakout",
             "connected_region": "Breakout",
             "access_rule": {
-              "rule": "AST_count_true",
+              "rule": "HasAll",
               "args": {
-                "conditions": [
-                  {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Beat Zero Hour (Terran)"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "count_true",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Beat Ghost of a Chance"
-                      }
-                    ],
-                    "count": 1
-                  }
-                ],
-                "count": 2,
-                "_original_ast_type": "count_true"
-              },
-              "_converted_from_ast": true
+                "item_names": [
+                  "Beat Ghost of a Chance",
+                  "Beat Zero Hour (Terran)"
+                ]
+              }
             }
           },
           {
             "name": "Devil's Playground (Terran)",
             "connected_region": "Devil's Playground (Terran)",
             "access_rule": {
-              "rule": "AST_count_true",
+              "rule": "HasAll",
               "args": {
-                "conditions": [
-                  {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Beat Zero Hour (Terran)"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "count_true",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Beat Safe Haven (Terran)"
-                      }
-                    ],
-                    "count": 1
-                  }
-                ],
-                "count": 2,
-                "_original_ast_type": "count_true"
-              },
-              "_converted_from_ast": true
+                "item_names": [
+                  "Beat Safe Haven (Terran)",
+                  "Beat Zero Hour (Terran)"
+                ]
+              }
             }
           },
           {
             "name": "Media Blitz (Terran)",
             "connected_region": "Media Blitz (Terran)",
             "access_rule": {
-              "rule": "AST_count_true",
+              "rule": "HasAll",
               "args": {
-                "conditions": [
-                  {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Beat Zero Hour (Terran)"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "count_true",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Beat Welcome to the Jungle (Terran)"
-                      }
-                    ],
-                    "count": 1
-                  }
-                ],
-                "count": 2,
-                "_original_ast_type": "count_true"
-              },
-              "_converted_from_ast": true
+                "item_names": [
+                  "Beat Welcome to the Jungle (Terran)",
+                  "Beat Zero Hour (Terran)"
+                ]
+              }
             }
           },
           {
