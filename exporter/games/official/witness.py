@@ -378,7 +378,29 @@ class WitnessGameExportHandler(GenericGameExportHandler):
                 ],
             }
 
-        logger.info(f"Exported {len(mapping)} progressive item types for The Witness")
+        # Alias items: The Witness's collect() also resolves "alias" items via
+        # ``item.is_alias_for`` (e.g. "Simple Stars" -> "Stars", "Sparse Dots" ->
+        # "Dots"), granting one copy of the aliased symbol per collected alias. These
+        # replacement items can appear in the pool for some option combinations, and
+        # their target symbols are checked by access rules just like progressive ones.
+        # We probe create_item (which sets ``is_alias_for`` from ALL_ITEM_ALIASES,
+        # the same source collect() uses) so the resolution stays faithful without
+        # hard-coding the alias table.
+        for item_name in getattr(world, "item_name_to_id", {}):
+            if item_name in mapping:
+                continue
+            try:
+                item = world.create_item(item_name)
+            except Exception:
+                continue
+            target = getattr(item, "is_alias_for", None)
+            if target:
+                mapping[item_name] = {
+                    "base_item": item_name,
+                    "items": [{"name": target, "level": 1}],
+                }
+
+        logger.info(f"Exported {len(mapping)} progressive/alias item types for The Witness")
         return mapping
 
     # =========================================================================

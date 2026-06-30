@@ -9992,6 +9992,24 @@
             "level": 2
           }
         ]
+      },
+      "Sparse Dots": {
+        "base_item": "Sparse Dots",
+        "items": [
+          {
+            "name": "Dots",
+            "level": 1
+          }
+        ]
+      },
+      "Simple Stars": {
+        "base_item": "Simple Stars",
+        "items": [
+          {
+            "name": "Stars",
+            "level": 1
+          }
+        ]
       }
     }
   },
