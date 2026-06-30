@@ -83,6 +83,27 @@ Phase 1's only hard contract for the rest of this document: when it finishes,
 `origin/main` is the *pre-regen* reference (the preset workflow restores
 preserved dev presets from it — see Phase 2).
 
+### Rule Builder regression coverage (custom rules etc.)
+
+When an upstream sync touches `rule_builder/` (new rule types, `field_resolvers`,
+custom-rule machinery), the **`worlds/rulebuilder_test`** world is the regression
+guard. It is a tiny hidden fixture that exercises the rule_builder vocabulary
+end-to-end — generation → exporter → frontend — including a game-specific custom
+`Rule` subclass (`HasTreasure`), `FromOption`, `OptionValue`, dynamic counts,
+`Compare`/`Arithmetic`/`Min`/`MaxValue`, `AtLeast`, `HasGroup`, etc. No external
+download is needed (the world lives in the repo). Its coverage rides on the
+existing suites:
+
+- **Python side:** `pytest worlds/rulebuilder_test/test/` (also runs in the
+  general world suite), plus `pytest test/general/test_rule_builder.py` and
+  `pytest test_json/rule_builder/`.
+- **Export → frontend side:** its **spoiler test** runs as part of Phase 5's
+  spoiler suite (`test-all-sequential` / `test-spoiler-fuzz`); a green
+  `rulebuilder_test` spoiler result means custom rules and the rest of the
+  vocabulary still round-trip to the frontend. (Historical note: this support was
+  first developed against the Baba Is You apworld, which is *not* a stable apworld
+  and is kept out-of-repo at `custom_worlds_disabled/baba_is_you.apworld`.)
+
 ---
 
 ## Phase 2: Preset Generation
