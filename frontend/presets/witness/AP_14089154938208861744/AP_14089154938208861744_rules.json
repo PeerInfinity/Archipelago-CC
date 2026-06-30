@@ -84,12 +84,6 @@
                   }
                 },
                 {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Symmetry Island Upper"
-                  }
-                },
-                {
                   "rule": "Has",
                   "args": {
                     "item_name": "Colored Dots"
@@ -116,12 +110,6 @@
                   "rule": "CanReachRegion",
                   "args": {
                     "region_name": "Desert Elevator Room"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Desert Outside"
                   }
                 },
                 {
@@ -163,12 +151,6 @@
                   "rule": "CanReachRegion",
                   "args": {
                     "region_name": "Quarry Stoneworks Upper Floor"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Outside Quarry"
                   }
                 },
                 {
@@ -218,12 +200,6 @@
                   "args": {
                     "region_name": "Shadows"
                   }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Shadows Laser Room"
-                  }
                 }
               ]
             },
@@ -240,10 +216,93 @@
             "name": "Keep Laser Activated",
             "id": null,
             "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "Keep Tower"
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Keep 2nd Maze"
+                      }
+                    },
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Keep 3rd Maze"
+                      }
+                    },
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Keep 4th Maze"
+                      }
+                    },
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Keep Tower"
+                      }
+                    },
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Keep"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Keep 2nd Pressure Plate"
+                      }
+                    },
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Keep 3rd Pressure Plate"
+                      }
+                    },
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Keep 4th Pressure Plate"
+                      }
+                    },
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Keep Tower"
+                      }
+                    },
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Keep"
+                      }
+                    },
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "item_names": [
+                          "Black/White Squares",
+                          "Colored Squares",
+                          "Dots",
+                          "Shapers",
+                          "Stars",
+                          "Stars + Same Colored Symbol",
+                          "Symmetry"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
             },
             "item": {
               "name": "+1 Laser",
@@ -264,12 +323,6 @@
                   "rule": "CanReachRegion",
                   "args": {
                     "region_name": "Inside Monastery"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Outside Monastery"
                   }
                 },
                 {
@@ -319,12 +372,6 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Jungle"
-                  }
-                },
                 {
                   "rule": "CanReachRegion",
                   "args": {
@@ -534,7 +581,10 @@
             "name": "Outside Tutorial to Outside Tutorial Path To Outpost",
             "connected_region": "Outside Tutorial Path To Outpost",
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Tutorial"
+              }
             }
           },
           {
@@ -602,7 +652,10 @@
             "name": "Outside Tutorial Path To Outpost to Outside Tutorial",
             "connected_region": "Outside Tutorial",
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Tutorial"
+              }
             }
           }
         ],
@@ -699,7 +752,10 @@
             "name": "Orchard Apple Tree 5",
             "id": 158075,
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Orchard"
+              }
             },
             "item": {
               "name": "Speed Boost",
@@ -1258,7 +1314,10 @@
             "name": "Desert Laser Panel",
             "id": 158701,
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Desert Elevator Room"
+              }
             },
             "item": {
               "name": "Speed Boost",
@@ -1395,7 +1454,10 @@
             "name": "Desert Elevator Room to Desert Behind Elevator",
             "connected_region": "Desert Behind Elevator",
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Desert Outside"
+              }
             }
           }
         ],
@@ -1545,7 +1607,47 @@
             "name": "Quarry Elevator to Outside Quarry",
             "connected_region": "Outside Quarry",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Main Island"
+                      }
+                    },
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Quarry"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Quarry Stoneworks Upper Floor"
+                      }
+                    },
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "item_names": [
+                          "Colored Squares",
+                          "Dots",
+                          "Eraser"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
@@ -2162,7 +2264,10 @@
             "name": "Shadows to Shadows Laser Room",
             "connected_region": "Shadows Laser Room",
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Shadows Ledge"
+              }
             }
           }
         ],
@@ -2171,7 +2276,10 @@
             "name": "Shadows Intro 8",
             "id": 158173,
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Shadows Ledge"
+              }
             },
             "item": {
               "name": "Slowness",
@@ -2185,7 +2293,10 @@
             "name": "Shadows Far 8",
             "id": 158181,
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Shadows Ledge"
+              }
             },
             "item": {
               "name": "Speed Boost",
@@ -2199,7 +2310,10 @@
             "name": "Shadows Near 5",
             "id": 158186,
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Shadows Ledge"
+              }
             },
             "item": {
               "name": "Speed Boost",
@@ -2316,14 +2430,20 @@
             "name": "Keep to Keep 3rd Maze",
             "connected_region": "Keep 3rd Maze",
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Keep 2nd Maze"
+              }
             }
           },
           {
             "name": "Keep to Keep 4th Maze",
             "connected_region": "Keep 4th Maze",
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Keep 3rd Maze"
+              }
             }
           }
         ],
@@ -2396,7 +2516,10 @@
             "name": "Keep 3rd Maze to Keep",
             "connected_region": "Keep",
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Keep 2nd Maze"
+              }
             }
           },
           {
@@ -2431,7 +2554,10 @@
             "name": "Keep 4th Maze to Keep",
             "connected_region": "Keep",
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Keep 3rd Maze"
+              }
             }
           },
           {
@@ -4150,7 +4276,47 @@
             "name": "Bunker Elevator Section to Bunker Under Elevator",
             "connected_region": "Bunker Under Elevator",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Bunker Elevator"
+                      }
+                    },
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "item_names": [
+                          "Black/White Squares",
+                          "Colored Squares"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Bunker Cyan Room"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Bunker Green Room"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Bunker Laser Platform"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -4163,7 +4329,47 @@
             "name": "Bunker Under Elevator to Bunker Elevator Section",
             "connected_region": "Bunker Elevator Section",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Bunker Elevator"
+                      }
+                    },
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "item_names": [
+                          "Black/White Squares",
+                          "Colored Squares"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Bunker Cyan Room"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Bunker Green Room"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Bunker Laser Platform"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -4842,7 +5048,10 @@
             "name": "Swamp Near Boat to Swamp Long Bridge",
             "connected_region": "Swamp Long Bridge",
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Main Island"
+              }
             }
           },
           {
