@@ -46,6 +46,7 @@ Each file below links to the available documentation for that module. See the [u
 - [Spoiler Checklist](./spoilerChecklist.md)
 - [Spoiler Test](./spoilerTest.md)
 - [Text Adventure](./textAdventure.md)
+- [Text Adventure (Substrate)](./textAdventureSubstrate.md)
 - [Timer Panel](./timerPanel.md)
 - [Vibe Coding Simulator](./vibeCodingSim.md)
 - [Proof Queue](./proofQueue.md)

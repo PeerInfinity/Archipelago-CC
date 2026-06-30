@@ -17,7 +17,7 @@
 const KNOWN_TYPES = [
   'True_', 'False_',
   'Has', 'HasAll', 'HasAny',
-  'And', 'Or',
+  'And', 'Or', 'AtLeast',
   'CanReachRegion', 'CanReachLocation',
   'CountItem',
   'Compare',
@@ -44,6 +44,10 @@ function defaultShape(ruleName) {
     case 'And':
     case 'Or':
       node.children = [];
+      break;
+    case 'AtLeast':
+      node.children = [];
+      node.count = 1;
       break;
     case 'CanReachRegion':
       node.args = { region_name: '' };
@@ -153,7 +157,7 @@ export default class RuleTreeEditor {
     spacer.style.flex = '1 1 auto';
     header.appendChild(spacer);
 
-    if (!inRawView && (node.rule === 'And' || node.rule === 'Or')) {
+    if (!inRawView && (node.rule === 'And' || node.rule === 'Or' || node.rule === 'AtLeast')) {
       header.appendChild(this._makeButton('+ child', '#3a3a3a', () => {
         if (!node.children) node.children = [];
         node.children.push({ rule: 'True_' });
@@ -186,7 +190,7 @@ export default class RuleTreeEditor {
 
     if (inRawView) {
       block.appendChild(this._renderRawBlock(node));
-    } else if (node.rule === 'And' || node.rule === 'Or') {
+    } else if (node.rule === 'And' || node.rule === 'Or' || node.rule === 'AtLeast') {
       const childrenWrap = document.createElement('div');
       childrenWrap.style.marginLeft = '16px';
       const children = node.children || (node.children = []);
@@ -207,10 +211,12 @@ export default class RuleTreeEditor {
   _changeRuleType(node, newType) {
     delete node.args;
     delete node.children;
+    delete node.count;
     const shape = defaultShape(newType);
     node.rule = newType;
     if (shape.args) node.args = shape.args;
     if (shape.children) node.children = shape.children;
+    if (shape.count !== undefined) node.count = shape.count;
   }
 
   _renderFields(node) {
@@ -221,6 +227,8 @@ export default class RuleTreeEditor {
       case 'And':
       case 'Or':
         return this._label(`(${(node.children || []).length} children)`);
+      case 'AtLeast':
+        return this._atLeastFields(node);
       case 'Has':
         return this._hasFields(node);
       case 'HasAll':
@@ -243,6 +251,21 @@ export default class RuleTreeEditor {
   }
 
   // ---------- Field renderers ----------
+
+  _atLeastFields(node) {
+    if (typeof node.count !== 'number') node.count = 1;
+    if (!Array.isArray(node.children)) node.children = [];
+    const wrap = this._fieldRow();
+    wrap.appendChild(this._label('at least:'));
+    const countInput = this._makeNumberInput(node.count, '60px');
+    countInput.addEventListener('input', (e) => {
+      const v = parseInt(e.target.value, 10);
+      node.count = Number.isFinite(v) ? v : 1;
+    });
+    wrap.appendChild(countInput);
+    wrap.appendChild(this._label(`of ${node.children.length} children`));
+    return wrap;
+  }
 
   _hasFields(node) {
     const args = node.args || (node.args = { item_name: '', count: 1 });

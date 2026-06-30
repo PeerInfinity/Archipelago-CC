@@ -451,6 +451,13 @@ def main(args=None):
     )
 
     parser.add_argument(
+        "--upstream-fixes",
+        action="store_true",
+        help="Also overlay fork fixes for upstream world bugs (e.g. ALttP bunny "
+             "rules) onto the vanilla worlds. Opt-in; not installed by default.",
+    )
+
+    parser.add_argument(
         "--yes", "-y",
         action="store_true",
         help="Skip confirmation prompts (auto-confirm)",
@@ -562,6 +569,12 @@ def main(args=None):
 
     if not components:
         components = list(DEFAULT_COMPONENTS)
+
+    # upstream_fixes is opt-in (not in DEFAULT_COMPONENTS): overlay fork-fixed
+    # world files onto vanilla worlds only when explicitly requested. (--all
+    # already includes it via COMPONENTS.keys().)
+    if getattr(parsed, "upstream_fixes", False) and "upstream_fixes" not in components:
+        components.append("upstream_fixes")
 
     # For update, use existing config's version if not specified
     version = parsed.version

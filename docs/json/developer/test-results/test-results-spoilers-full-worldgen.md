@@ -8,45 +8,38 @@
 
 [View Original Template Results](./test-results-spoilers-full.md)
 
-**Generated:** 2026-04-03 22:56:22 UTC
+**Generated:** 2026-06-28 01:45:41 UTC
 
-**Source Data Created:** 2026-03-21T23:02:42.348573+00:00
+**Source Data Created:** 2026-06-27T22:29:18.654759+00:00
 
-**Source Data Last Updated:** 2026-03-21T23:02:42.348584+00:00
+**Source Data Last Updated:** 2026-06-27T22:29:18.654775+00:00
 
 ## Summary
 
-- **Total Games:** 66
-- **Passed:** 61 (92.4%)
-- **Failed:** 5 (7.6%)
+- **Total Games:** 55
+- **Passed:** 47 (85.5%)
+- **Failed:** 8 (14.5%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 61/61 (100.0% of passed)
-- **Passing with Generic Logic:** 61/61 (100.0% of passed)
-- **Passing with Both Generic:** 61/61 (100.0% of passed)
+- **Passing with Generic Exporter:** 47/47 (100.0% of passed)
+- **Passing with Generic Logic:** 47/47 (100.0% of passed)
+- **Passing with Both Generic:** 47/47 (100.0% of passed)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|----------|----------|
 | A Hat in Time WorldGen | ✅ Passed | 0 | 5.21 | 5.21 | 🟢 Complete | ✅ | ✅ |
-| A Hat in Time WorldGen2 | ✅ Passed | 0 | 5.21 | 5.21 | 🟢 Complete | ✅ | ✅ |
-| A Link to the Past Vanilla WorldGen | ✅ Passed | 0 | 49.1 | 49.1 | 🟢 Complete | ✅ | ✅ |
-| A Link to the Past Vanilla WorldGen2 | ✅ Passed | 0 | 48.1 | 48.1 | 🟢 Complete | ✅ | ✅ |
 | A Link to the Past WorldGen | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | ✅ | ✅ |
-| A Link to the Past WorldGen2 | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | ✅ | ✅ |
 | A Short Hike WorldGen | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
-| A Short Hike WorldGen2 | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
+| APCalc WorldGen | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | ✅ | ✅ |
 | APQuest WorldGen | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure WorldGen | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
-| Adventure WorldGen2 | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
-| Aquaria WorldGen | ✅ Passed | 0 | 6.9 | 6.9 | 🟢 Complete | ✅ | ✅ |
-| Baking Adventure Vanilla WorldGen | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
-| Baking Adventure Vanilla WorldGen2 | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
-| Baking Adventure WorldGen | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
+| Aquaria WorldGen | ✅ Passed | 0 | 4.19 | 4.19 | 🟢 Complete | ✅ | ✅ |
+| Baking Adventure WorldGen | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | Bumper Stickers WorldGen | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
 | Castlevania - Circle of the Moon WorldGen | ✅ Passed | 0 | 4.41 | 4.41 | 🟢 Complete | ✅ | ✅ |
 | Castlevania 64 WorldGen | ✅ Passed | 0 | 5.6 | 5.6 | 🟢 Complete | ✅ | ✅ |
@@ -54,12 +47,9 @@
 | ChecksFinder WorldGen | ✅ Passed | 0 | 4.5 | 4.5 | 🟢 Complete | ✅ | ✅ |
 | Choo-Choo Charles WorldGen | ✅ Passed | 0 | 4.3 | 4.3 | 🟢 Complete | ✅ | ✅ |
 | Civilization VI WorldGen | ✅ Passed | 0 | 8.15 | 8.15 | 🟢 Complete | ✅ | ✅ |
-| Coding Adventure Vanilla WorldGen | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
-| Coding Adventure Vanilla WorldGen2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
-| Coding Adventure WorldGen | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
+| Coding Adventure WorldGen | ✅ Passed | 0 | 13.1 | 13.1 | 🟢 Complete | ✅ | ✅ |
 | DLCQuest WorldGen | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
-| DepGraph WorldGen | ✅ Passed | 0 | 27.2 | 27.2 | 🟢 Complete | ✅ | ✅ |
-| Donkey Kong Country 3 WorldGen | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
+| DepGraph WorldGen | ✅ Passed | 0 | 25.2 | 25.2 | 🟢 Complete | ✅ | ✅ |
 | EarthBound WorldGen | ✅ Passed | 0 | 11.7 | 11.7 | 🟢 Complete | ✅ | ✅ |
 | Factorio WorldGen | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | ✅ | ✅ |
 | Faxanadu WorldGen | ❌ Failed | 0 | 4.4 | 10.1 | 🟡 43.6% | ✅ | ✅ |
@@ -83,15 +73,15 @@
 | Sonic Adventure 2 Battle WorldGen | ❌ Failed | 0 | 0.9 | 7.18 | 🟠 12.5% | ✅ | ✅ |
 | Subnautica WorldGen | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
 | Super Mario 64 WorldGen | ✅ Passed | 0 | 5.5 | 5.5 | 🟢 Complete | ✅ | ✅ |
-| Super Mario Land 2 WorldGen | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
+| Super Mario Land 2 WorldGen | ❌ Failed | 0 | 3.4 | 10.1 | 🟡 33.7% | ✅ | ✅ |
 | Super Mario World WorldGen | ✅ Passed | 0 | 8.12 | 8.12 | 🟢 Complete | ✅ | ✅ |
 | TOEM original WorldGen | ✅ Passed | 0 | 3.66 | 3.66 | 🟢 Complete | ✅ | ✅ |
 | TOEM rule builder WorldGen | ✅ Passed | 0 | 3.66 | 3.66 | 🟢 Complete | ✅ | ✅ |
-| Terraria WorldGen | ✅ Passed | 0 | 9.6 | 9.6 | 🟢 Complete | ✅ | ✅ |
+| Terraria WorldGen | ❌ Failed | 0 | 0 | 9.6 | 🔴 0.0% | ✅ | ✅ |
 | The Legend of Zelda WorldGen | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | The Messenger WorldGen | ❌ Failed | 0 | 2.27 | 7.1 | 🟡 32.0% | ✅ | ✅ |
 | The Wind Waker WorldGen | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | ✅ | ✅ |
-| Timespinner WorldGen | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | ✅ | ✅ |
+| Timespinner WorldGen | ❌ Failed | 0 | 5.19 | 7.3 | 🟡 71.1% | ✅ | ✅ |
 | Undertale WorldGen | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
 | VVVVVV WorldGen | ✅ Passed | 0 | 3.4 | 3.4 | 🟢 Complete | ✅ | ✅ |
 | Wargroove WorldGen | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |

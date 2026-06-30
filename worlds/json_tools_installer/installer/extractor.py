@@ -38,6 +38,31 @@ class ExtractionResult:
     skipped_files: List[str] = field(default_factory=list)
 
 
+def _ap_base_version() -> str:
+    """Base AP version (e.g. '0.6.8'), used to locate version-specific patches.
+
+    The romless patch snapshot lives under json_tools_patches/<version>/romless
+    and MUST match the AP version being packed/installed — shipping an older
+    snapshot overwrites world files with stale code (see
+    scripts/build/generate_romless_patches.py).
+    """
+    try:
+        from Utils import __version__
+        return __version__.split("-")[0]
+    except Exception:
+        # Fall back to the newest snapshot present so packing still works.
+        patches_root = Path(local_path()) / "json_tools_patches"
+        if patches_root.exists():
+            versions = sorted(
+                (p.name for p in patches_root.iterdir()
+                 if p.is_dir() and (p / "romless").exists()),
+                key=lambda v: tuple(int(x) for x in v.split(".") if x.isdigit()),
+            )
+            if versions:
+                return versions[-1]
+        return "0.6.8"
+
+
 # Define available components (order matters for GUI display)
 COMPONENTS: Dict[str, Component] = {
     "exporter": Component(
@@ -102,9 +127,29 @@ COMPONENTS: Dict[str, Component] = {
         name="romless_patches",
         display_name="ROM-less Generation Patches",
         description="Patched world files for generation without ROMs",
-        source_paths=["json_tools_patches/0.6.7/romless"],
+        source_paths=[f"json_tools_patches/{_ap_base_version()}/romless"],
         required=False,
         size_estimate_mb=0.3,
+    ),
+    "upstream_fixes": Component(
+        name="upstream_fixes",
+        display_name="Upstream Bug Fixes",
+        description="Fork fixes for upstream world bugs (overlaid onto vanilla worlds)",
+        # Individual fork-fixed world files overlaid directly onto the cloned
+        # vanilla worlds. These are general correctness fixes (NOT romless), e.g.
+        # the ALttP bunny-rules fix and shapez UT-accuracy fix; without them the
+        # installed env runs vanilla's buggy logic and UT worldgen fuzz mismatches.
+        # Pulled live from the version-matched fork archive (no stored snapshot to
+        # go stale). See docs/json/upstream-bugs/ and
+        # docs/json/developer/diffs/diff-files/{alttp-bunny-rules,world-minor-fixes}.diff
+        source_paths=[
+            "worlds/alttp/Rules.py",        # bunny-rules late-binding/invocation fix
+            "worlds/shapez/__init__.py",    # don't force-clear early_balancer option (UT accuracy)
+            "worlds/landstalker/Hints.py",  # deterministic hint ordering (sorted set)
+            "worlds/lufia2ac/Options.py",   # deterministic boss group ordering (list not set)
+        ],
+        required=False,
+        size_estimate_mb=0.2,
     ),
     "tracker": Component(
         name="tracker",
@@ -157,6 +202,11 @@ COMPONENTS: Dict[str, Component] = {
 # Default components to install
 DEFAULT_COMPONENTS = {
     "exporter",
+    "rule_builder",  # world_generator hard-imports fork rule_builder symbols
+                     # (BOOLEAN_RULE_TYPES, RuleWorldMixin, ...); vanilla AP's
+                     # rule_builder lacks them, so without this the installed
+                     # world_generator can't import and UT worldgen-mode
+                     # tracking fails. Replaces vanilla rule_builder/.
     "world_generator",
     "frontend",
     "docs",
@@ -165,6 +215,10 @@ DEFAULT_COMPONENTS = {
     "tracker",
     "testing",
 }
+# NOTE: "upstream_fixes" is intentionally NOT a default component. It overlays
+# fork-modified world files onto vanilla worlds, so it is opt-in (CLI
+# --upstream-fixes, or included by --all) until the patched files are reviewed
+# against the current upstream versions.
 
 # Patterns to always exclude
 EXCLUDE_PATTERNS: Set[str] = {

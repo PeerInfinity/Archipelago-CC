@@ -1,8 +1,8 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Orig Seeded
 
-**Generated:** 2026-03-28 17:13:12 UTC
+**Generated:** 2026-06-28 18:30:50 UTC
 
-**Source Data Last Updated:** 2026-03-24T03:06:02
+**Source Data Last Updated:** 2026-06-28T16:55:03
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Original Universal Tracker with generation seed number.
 
@@ -17,106 +17,107 @@ This report compares fuzz test results between the Original Universal Tracker (F
 
 ## Summary
 
-- **Total Games Tested:** 88
-- **Passing Both:** 37 (42.0%)
+- **Total Games Tested:** 89
+- **Passing Both:** 46 (51.7%)
 - **Passing Original Only:** 0 (0.0%)
-- **Passing Orig Seeded Only:** 7 (8.0%)
-- **Passing Neither:** 44 (50.0%)
+- **Passing Orig Seeded Only:** 4 (4.5%)
+- **Passing Neither:** 39 (43.8%)
 
 ## Full Comparison
 
 | Game Name | Original Result | Orig Seeded Result |
 |-----------|:---------------------:|:---------------------:|
-| A Hat in Time | ❌ 15/100 | ❌ 15/100 |
-| A Link to the Past | ❌ | ❌ 3/98 |
+| A Hat in Time | ❌ 1/10 | ❌ 1/10 |
+| A Link to the Past | ❌ | ❌ |
 | A Short Hike | ✅ | ✅ |
+| APCalc | ❌ | ❌ |
 | APQuest | ✅ | ✅ |
-| Adventure | ⚠️ 89/100 | ⚠️ 86/99 |
+| Adventure | ⚠️ 9/10 | ✅ |
 | Aquaria | ✅ | ✅ |
 | Baking Adventure | ✅ | ✅ |
 | Blasphemous | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ✅ | ✅ |
 | Bumper Stickers | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ✅ | ✅ |
-| Castlevania 64 | ❌ 10/100 | ❌ 9/100 |
-| Celeste (Open World) | ❌ 46/100 | ✅ |
+| Castlevania 64 | ❌ 1/10 | ❌ 1/10 |
+| Celeste (Open World) | ❌ 4/10 | ✅ |
 | Celeste 64 | ✅ | ✅ |
 | ChecksFinder | ✅ | ✅ |
 | Choo-Choo Charles | ✅ | ✅ |
 | Civilization VI | ✅ | ✅ |
 | Coding Adventure | ✅ | ✅ |
-| DLCQuest | ⚠️ 92/100 | ✅ |
-| DOOM 1993 | ⚠️ 99/100 | ✅ |
+| DLCQuest | ⚠️ 9/10 | ✅ |
+| DOOM 1993 | ✅ | ✅ |
 | DOOM II | ✅ | ✅ |
 | Dark Souls III | ✅ | ✅ |
-| DepGraph | ⚠️ 82/100 | ⚠️ 81/100 |
-| Donkey Kong Country 3 | ⚠️ 52/100 | ⚠️ 52/100 |
-| EarthBound | ❌ 30/100 | ❌ 30/100 |
+| DepGraph | ⚠️ 9/10 | ⚠️ 9/10 |
+| EarthBound | ⚠️ 5/10 | ⚠️ 5/10 |
 | Factorio | ❌ | ❌ |
-| Faxanadu | ❌ 16/100 | ❌ 20/100 |
+| Faxanadu | ❌ 2/10 | ❌ 1/10 |
 | Final Fantasy | ✅ | ✅ |
-| Final Fantasy Mystic Quest | ⚠️ 89/100 | ✅ |
+| Final Fantasy Mystic Quest | ✅ | ✅ |
 | Heretic | ✅ | ✅ |
-| Hollow Knight | ❌ 9/100 | ❌ 8/100 |
+| Hollow Knight | ❌ | ❌ |
 | Hylics 2 | ✅ | ✅ |
 | Inscryption | ✅ | ✅ |
-| Jak and Daxter: The Precursor Legacy | ⚠️ 62/100 | ✅ |
-| Journey to Ascension | ❌ | ❌ |
-| Kingdom Hearts | ❌ 19/99 | ❌ 19/100 |
-| Kingdom Hearts 2 | ❌ 44/100 | ❌ 44/95 |
+| Jak and Daxter: The Precursor Legacy | ❌ 3/10 | ⚠️ 8/10 |
+| Journey to Ascension | ✅ | ✅ |
+| Kingdom Hearts | ❌ 4/10 | ❌ 4/10 |
+| Kingdom Hearts 2 | ✅ | ✅ |
 | Kirby's Dream Land 3 | ❌ | ❌ |
-| Landstalker - The Treasures of King Nole | ❌ 31/100 | ❌ 30/100 |
-| Lingo | ❌ 20/45 | ❌ 19/45 |
-| Links Awakening DX | ❌ 23/100 | ❌ 23/100 |
+| Landstalker - The Treasures of King Nole | ❌ 1/10 | ❌ 2/10 |
+| Lingo | ✅ | ✅ |
+| Links Awakening DX | ❌ 1/10 | ❌ 1/10 |
 | Lufia II Ancient Cave | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ | ✅ |
-| Mega Man 2 | ⚠️ 93/100 | ⚠️ 93/99 |
+| Mega Man 2 | ⚠️ 9/10 | ⚠️ 9/10 |
 | Mega Man 3 | ❌ | ❌ |
 | MegaMan Battle Network 3 | ✅ | ✅ |
 | Meritous | ✅ | ✅ |
-| Metamath | ⚠️ 90/100 | ⚠️ 90/100 |
-| Muse Dash | ❌ | ❌ 25/99 |
+| Metamath | ✅ | ✅ |
+| Muse Dash | ❌ | ❌ 2/10 |
 | Noita | ✅ | ✅ |
-| Ocarina of Time | ❌ | ❌ 1/98 |
+| Ocarina of Time | ❌ | ❌ |
 | Old School Runescape | ✅ | ✅ |
-| Overcooked! 2 | ❌ 9/100 | ❌ 33/67 |
+| Overcooked! 2 | ❌ | ⚠️ 3/5 |
 | Paint | ✅ | ✅ |
-| Pokemon Emerald | ⚠️ 55/92 | ⚠️ 56/92 |
+| Pokemon Emerald | ⚠️ 5/7 | ⚠️ 5/7 |
 | Pokemon Red and Blue | ❌ | ❌ |
 | Raft | ✅ | ✅ |
 | Risk of Rain 2 | ✅ | ✅ |
-| SMZ3 | ❌ 1/100 | ❌ 1/100 |
+| SMZ3 | ❌ | ❌ 2/10 |
 | Satisfactory | ❌ | ❌ |
-| Saving Princess | ❌ 24/100 | ✅ |
+| Saving Princess | ❌ 3/10 | ✅ |
 | Secret of Evermore | ✅ | ✅ |
+| Seedling | ✅ | ✅ |
 | Shivers | ❌ | ❌ |
-| Sonic Adventure 2 Battle | ❌ 6/100 | ❌ 13/100 |
-| Starcraft 2 | ❌ | ❌ |
-| Stardew Valley | ❌ 6/99 | ❌ 24/98 |
-| Subnautica | ❌ 13/100 | ❌ 12/100 |
-| Super Mario 64 | ❌ 28/100 | ❌ 28/99 |
-| Super Mario Land 2 | ❌ 20/100 | ❌ 28/100 |
-| Super Mario World | ⚠️ 55/100 | ⚠️ 55/99 |
-| Super Metroid | ❌ 6/100 | ❌ 5/58 |
+| Sonic Adventure 2 Battle | ❌ 1/10 | ❌ 2/10 |
+| Starcraft 2 | ✅ | ✅ |
+| Stardew Valley | ❌ 1/10 | ⚠️ 5/10 |
+| Subnautica | ❌ 1/10 | ❌ 1/10 |
+| Super Mario 64 | ❌ | ❌ 1/10 |
+| Super Mario Land 2 | ⚠️ 9/10 | ⚠️ 9/10 |
+| Super Mario World | ⚠️ 7/10 | ⚠️ 7/10 |
+| Super Metroid | ❌ | ❌ |
 | TOEM original | ✅ | ✅ |
 | TOEM rule builder | ✅ | ✅ |
 | TUNIC | ✅ | ✅ |
-| Terraria | ⚠️ 98/100 | ✅ |
+| Terraria | ✅ | ✅ |
 | The Legend of Zelda | ✅ | ✅ |
-| The Messenger | ❌ 7/100 | ❌ 10/100 |
-| The Wind Waker | ❌ 4/57 | ❌ 5/54 |
+| The Messenger | ❌ 1/10 | ❌ 1/10 |
+| The Wind Waker | ❌ | ❌ |
 | The Witness | ✅ | ✅ |
-| Timespinner | ❌ 4/100 | ❌ 4/100 |
+| Timespinner | ❌ | ❌ |
 | Undertale | ✅ | ✅ |
-| VVVVVV | ⚠️ 64/100 | ⚠️ 62/100 |
+| VVVVVV | ⚠️ 8/10 | ⚠️ 8/10 |
 | Wargroove | ✅ | ✅ |
-| Yacht Dice | ❌ 1/100 | ❌ |
-| Yoshi's Island | ❌ 22/100 | ❌ 22/100 |
-| Yu-Gi-Oh! 2006 | ❌ 34/100 | ❌ 34/100 |
+| Yacht Dice | ❌ | ❌ |
+| Yoshi's Island | ❌ 2/10 | ❌ 2/10 |
+| Yu-Gi-Oh! 2006 | ⚠️ 5/10 | ⚠️ 5/10 |
 | Zillion | ❌ | ❌ |
 | shapez | ✅ | ✅ |
 
-## Games Passing Both (37)
+## Games Passing Both (46)
 
 These games have 100% success rate in both Universal Tracker versions.
 
@@ -135,46 +136,52 @@ These games have 100% success rate in both Universal Tracker versions.
 | Choo-Choo Charles |
 | Civilization VI |
 | Coding Adventure |
+| DOOM 1993 |
 | DOOM II |
 | Dark Souls III |
 | Final Fantasy |
+| Final Fantasy Mystic Quest |
 | Heretic |
 | Hylics 2 |
 | Inscryption |
+| Journey to Ascension |
+| Kingdom Hearts 2 |
+| Lingo |
 | Lufia II Ancient Cave |
 | Mario & Luigi Superstar Saga |
 | MegaMan Battle Network 3 |
 | Meritous |
+| Metamath |
 | Noita |
 | Old School Runescape |
 | Paint |
 | Raft |
 | Risk of Rain 2 |
 | Secret of Evermore |
+| Seedling |
+| Starcraft 2 |
 | TOEM original |
 | TOEM rule builder |
 | TUNIC |
+| Terraria |
 | The Legend of Zelda |
 | The Witness |
 | Undertale |
 | Wargroove |
 | shapez |
 
-## Games Passing Orig Seeded Only (7)
+## Games Passing Orig Seeded Only (4)
 
 These games pass in the Orig Seeded UT but fail in the Original UT.
 
 | Game Name |
 |-----------|
+| Adventure |
 | Celeste (Open World) |
 | DLCQuest |
-| DOOM 1993 |
-| Final Fantasy Mystic Quest |
-| Jak and Daxter: The Precursor Legacy |
 | Saving Princess |
-| Terraria |
 
-## Games Passing Neither (44)
+## Games Passing Neither (39)
 
 These games fail in both Universal Tracker versions.
 
@@ -182,24 +189,20 @@ These games fail in both Universal Tracker versions.
 |-----------|
 | A Hat in Time |
 | A Link to the Past |
-| Adventure |
+| APCalc |
 | Castlevania 64 |
 | DepGraph |
-| Donkey Kong Country 3 |
 | EarthBound |
 | Factorio |
 | Faxanadu |
 | Hollow Knight |
-| Journey to Ascension |
+| Jak and Daxter: The Precursor Legacy |
 | Kingdom Hearts |
-| Kingdom Hearts 2 |
 | Kirby's Dream Land 3 |
 | Landstalker - The Treasures of King Nole |
-| Lingo |
 | Links Awakening DX |
 | Mega Man 2 |
 | Mega Man 3 |
-| Metamath |
 | Muse Dash |
 | Ocarina of Time |
 | Overcooked! 2 |
@@ -209,7 +212,6 @@ These games fail in both Universal Tracker versions.
 | Satisfactory |
 | Shivers |
 | Sonic Adventure 2 Battle |
-| Starcraft 2 |
 | Stardew Valley |
 | Subnautica |
 | Super Mario 64 |

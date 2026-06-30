@@ -1,10 +1,10 @@
 # Processing Times Chart
 
-**Generated:** 2026-04-03 22:56:22 UTC
+**Generated:** 2026-06-28 01:45:41 UTC
 
-**Source Data Created:** 2026-03-22T06:06:18.834443+00:00
+**Source Data Created:** 2026-06-27T22:26:11.913378+00:00
 
-**Source Data Last Updated:** 2026-04-03T22:56:14.748898+00:00
+**Source Data Last Updated:** 2026-06-27T22:26:11.913389+00:00
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
@@ -18,111 +18,98 @@ This chart shows processing times for each test phase. Times are in seconds. For
 
 | Metric | Gen Time | Minimal Test | Full Test | Multiclient |
 |--------|----------|--------------|-----------|-------------|
-| Total | 528.8s | 2145.6s | 2759.1s | 3328.6s |
-| Average | 5.9s | 24.1s | 31.4s | 37.8s |
-| Max | 20.5s | 300.1s | 300.1s | 425.6s |
-| Min | 3.7s | 5.7s | 5.7s | 11.7s |
+| Total | 392.8s | 799.2s | 1195.1s | 1878.8s |
+| Average | 5.2s | 10.5s | 15.7s | 24.7s |
+| Max | 18.6s | 79.0s | 153.0s | 347.0s |
+| Min | 3.5s | 5.6s | 5.7s | 11.7s |
 
 ## Slowest and Fastest Games
 
 | Metric | Gen Time | Minimal Test | Full Test | Multiclient |
 |--------|----------|--------------|-----------|-------------|
-| Slowest | Journey to Ascension (20.5s) | Pokemon Emerald (300.1s) | Pokemon Emerald (300.1s) | Pokemon Red and Blue (425.6s) |
-| Fastest | Baking Adventure (3.7s) | Castlevania - Circle of the Moon (5.7s) | Saving Princess (5.7s) | Super Mario World (11.7s) |
+| Slowest | Journey to Ascension (18.6s) | Kingdom Hearts 2 (79.0s) | Kingdom Hearts 2 (153.0s) | Starcraft 2 (347.0s) |
+| Fastest | Meritous (3.5s) | Meritous (5.6s) | Old School Runescape (5.7s) | Journey to Ascension (11.7s) |
 
 ## Individual Game Processing Times
 
 | Game | Gen Time | Minimal Test | Full Test | Multiclient |
 |------|----------|--------------|-----------|-------------|
-| A Hat in Time | 6.4s | 9.7s | 12.3s | 17.7s |
-| A Link to the Past | 8.5s | 12.9s | 16.8s | 27.3s |
-| A Short Hike | 4.3s | 5.9s | 5.7s | 13.6s |
-| APCalc WorldGen | 7.0s | 12.1s | - | - |
-| APQuest | 4.0s | 5.8s | 5.7s | 14.1s |
-| Adventure | 4.3s | 5.8s | 5.7s | 17.5s |
-| Aquaria | 5.6s | 6.8s | 11.7s | 16.6s |
-| Baking Adventure | 3.7s | 5.9s | 5.7s | 13.3s |
-| Blasphemous | 10.9s | 14.2s | 14.1s | 181.9s |
-| Bomb Rush Cyberfunk | 6.2s | 11.8s | 13.7s | 20.0s |
-| Bumper Stickers | 3.8s | 5.8s | 5.7s | 15.2s |
-| Castlevania - Circle of the Moon | 4.1s | 5.7s | 5.7s | 12.0s |
-| Castlevania 64 | 4.8s | 5.8s | 6.7s | 12.5s |
-| Celeste (Open World) | 6.4s | 18.9s | 34.8s | 39.1s |
-| Celeste 64 | 4.2s | 5.8s | 5.7s | 12.3s |
-| ChecksFinder | 3.8s | 5.8s | 5.7s | 12.3s |
-| Choo-Choo Charles | 4.0s | 9.8s | 61.8s | 32.6s |
-| Civilization VI | 9.4s | 5.8s | 5.7s | 12.4s |
-| Coding Adventure | 3.9s | 5.8s | 5.7s | 12.0s |
-| DLCQuest | 4.4s | 5.8s | 5.7s | 12.3s |
-| DOOM 1993 | 4.9s | 7.9s | 11.8s | 16.3s |
-| DOOM II | 5.0s | 9.9s | 16.8s | 19.6s |
-| Dark Souls III | 5.4s | 94.0s | 300.0s | 409.4s |
-| DepGraph | 4.1s | 6.8s | 6.7s | 13.4s |
-| Donkey Kong Country 3 | 4.5s | 6.9s | 6.7s | 12.4s |
-| EarthBound | 5.6s | 6.9s | 9.8s | 14.5s |
-| Factorio | 5.4s | 6.9s | 7.7s | 12.0s |
-| Faxanadu | 4.2s | 5.9s | 5.8s | 12.3s |
-| Final Fantasy | 4.2s | 5.9s | 5.7s | 58.2s |
-| Final Fantasy Mystic Quest | 5.3s | 9.0s | 12.8s | 16.0s |
-| Heretic | 5.0s | 11.0s | 18.8s | 21.7s |
-| Hollow Knight | 19.0s | 12.9s | 12.0s | 56.9s |
-| Hylics 2 | 4.6s | 6.1s | 6.7s | 12.5s |
-| Inscryption | 4.4s | 6.0s | 5.7s | 12.4s |
-| Jak and Daxter: The Precursor Legacy | 4.8s | 15.3s | 14.5s | 163.6s |
-| Journey to Ascension | 20.5s | 6.0s | 5.7s | 12.3s |
-| Kingdom Hearts | 11.4s | 23.1s | 38.8s | 27.9s |
-| Kingdom Hearts 2 | 7.6s | 78.1s | 153.9s | 106.3s |
-| Kirby's Dream Land 3 | 5.8s | 50.2s | 61.8s | 21.8s |
-| Landstalker - The Treasures of King Nole | 4.6s | 7.1s | 9.7s | 14.4s |
-| Lingo | 4.8s | 7.0s | 16.8s | 17.6s |
-| Links Awakening DX | 7.7s | 16.0s | 17.8s | 16.6s |
-| Lufia II Ancient Cave | 4.7s | 5.9s | 5.7s | 12.4s |
-| Mario & Luigi Superstar Saga | 5.2s | 10.0s | 41.8s | 33.8s |
-| Mega Man 2 | 4.4s | 6.0s | 5.7s | 12.3s |
-| Mega Man 3 | 4.5s | 5.9s | 5.7s | 12.4s |
-| MegaMan Battle Network 3 | 4.3s | 6.9s | 10.7s | 14.5s |
-| Meritous | 4.0s | 5.9s | 5.7s | 12.3s |
-| Metamath | 11.6s | 5.9s | 5.7s | 12.0s |
-| Muse Dash | 4.5s | 6.0s | 5.7s | 12.4s |
-| Noita | 4.3s | 5.8s | 5.7s | 12.1s |
-| Ocarina of Time | 10.9s | 5.9s | 5.7s | 63.8s |
-| Old School Runescape | 5.6s | 5.9s | 5.8s | 12.6s |
-| Overcooked! 2 | 4.6s | 8.9s | 8.7s | 13.5s |
-| Paint | 4.3s | 5.9s | 6.7s | 12.8s |
-| Pokemon Emerald | 8.1s | 300.1s | 300.1s | 158.6s |
-| Pokemon Red and Blue | 12.9s | 267.2s | 300.1s | 425.6s |
-| Raft | 4.3s | 12.9s | 26.8s | 24.5s |
-| Risk of Rain 2 | 5.1s | 5.8s | 6.7s | 12.1s |
-| SMZ3 | 6.6s | 15.2s | 14.8s | 85.2s |
-| Satisfactory | 6.2s | 38.0s | 46.9s | 40.5s |
-| Saving Princess | 4.3s | 5.8s | 5.7s | 12.0s |
-| Secret of Evermore | 4.8s | 10.9s | 58.8s | 28.1s |
-| Shivers | 4.5s | 6.9s | 6.7s | 13.4s |
-| Sonic Adventure 2 Battle | 6.8s | 6.8s | 7.7s | 13.4s |
-| Starcraft 2 | 8.2s | 55.0s | 73.8s | 71.0s |
-| Stardew Valley | 8.9s | 300.0s | 300.1s | 166.4s |
-| Subnautica | 4.6s | 9.9s | 10.7s | 16.6s |
-| Super Mario 64 | 4.6s | 5.8s | 6.7s | 12.0s |
-| Super Mario Land 2 | 4.9s | 11.9s | 14.9s | 16.7s |
-| Super Mario World | 6.0s | 5.8s | 6.7s | 11.7s |
-| Super Metroid | 10.4s | 10.9s | 15.7s | 14.8s |
-| TOEM original | 4.0s | 5.9s | 5.7s | 12.5s |
-| TOEM rule builder | 4.1s | 5.8s | 5.7s | 12.4s |
-| TUNIC | 7.0s | 10.9s | 22.8s | 21.6s |
-| Terraria | 4.2s | 9.9s | 10.8s | 12.5s |
-| The Legend of Zelda | 4.8s | 6.9s | 7.7s | 12.7s |
-| The Messenger | 4.6s | 8.9s | 10.8s | 14.7s |
-| The Wind Waker | 7.1s | 6.9s | 6.7s | 13.1s |
-| The Witness | 5.3s | 9.9s | 16.8s | 15.6s |
-| Timespinner | 5.7s | 5.9s | 7.7s | 11.7s |
-| Undertale | 4.2s | 5.8s | 5.7s | 11.9s |
-| VVVVVV | 4.0s | 5.8s | 5.7s | 12.4s |
-| Wargroove | 4.3s | 5.8s | 5.7s | 12.3s |
-| Yacht Dice | 4.8s | 10.8s | 13.7s | 14.4s |
-| Yoshi's Island | 5.3s | 6.8s | 9.7s | 14.5s |
-| Yu-Gi-Oh! 2006 | 5.7s | 300.1s | 300.1s | 48.8s |
-| Zillion | 6.0s | 14.8s | 14.5s | 152.9s |
-| shapez | 5.0s | 5.8s | 6.7s | 12.1s |
+| A Hat in Time | 5.7s | 10.1s | 12.3s | 15.6s |
+| A Link to the Past | 8.1s | 14.9s | 18.9s | 25.1s |
+| A Short Hike | 4.6s | 6.3s | 6.3s | 12.8s |
+| APCalc | 4.2s | 7.6s | 10.1s | 17.1s |
+| APQuest | 4.0s | 7.0s | 6.4s | 18.8s |
+| Adventure | 4.2s | 7.2s | 7.1s | 15.1s |
+| Aquaria | 6.5s | 7.9s | 12.3s | 15.0s |
+| Baking Adventure | 3.9s | 9.7s | 7.8s | 17.1s |
+| Bomb Rush Cyberfunk | 6.4s | 13.5s | 15.5s | 17.4s |
+| Bumper Stickers | 4.4s | 7.1s | 7.8s | 13.6s |
+| Castlevania - Circle of the Moon | 4.0s | 5.8s | 5.8s | 11.7s |
+| Castlevania 64 | 4.6s | 5.7s | 6.8s | 12.8s |
+| Celeste (Open World) | 6.5s | 16.9s | 32.9s | 36.7s |
+| Celeste 64 | 4.1s | 5.8s | 5.8s | 12.7s |
+| ChecksFinder | 3.6s | 5.8s | 5.8s | 12.6s |
+| Choo-Choo Charles | 3.6s | 9.8s | 60.7s | 31.8s |
+| Civilization VI | 9.9s | 5.9s | 5.7s | 11.9s |
+| Coding Adventure | 3.6s | 5.8s | 5.8s | 12.9s |
+| DLCQuest | 4.0s | 5.8s | 5.8s | 12.7s |
+| DOOM 1993 | 4.5s | 7.8s | 11.8s | 15.9s |
+| DOOM II | 4.4s | 10.0s | 16.9s | 19.9s |
+| DepGraph | 3.8s | 10.7s | 10.9s | 22.3s |
+| EarthBound | 5.2s | 6.8s | 9.8s | 14.1s |
+| Factorio | 4.9s | 6.9s | 7.9s | 14.9s |
+| Faxanadu | 3.8s | 5.8s | 5.8s | 12.9s |
+| Final Fantasy Mystic Quest | 4.6s | 8.8s | 12.7s | 16.8s |
+| Heretic | 5.2s | 11.0s | 18.8s | 24.2s |
+| Hylics 2 | 4.0s | 5.8s | 6.9s | 12.8s |
+| Inscryption | 4.1s | 5.8s | 5.8s | 12.6s |
+| Journey to Ascension | 18.6s | 5.8s | 5.8s | 11.7s |
+| Kingdom Hearts | 10.4s | 21.7s | 37.9s | 28.4s |
+| Kingdom Hearts 2 | 6.9s | 79.0s | 153.0s | 98.9s |
+| Kirby's Dream Land 3 | 5.3s | 50.9s | 63.9s | 22.0s |
+| Landstalker - The Treasures of King Nole | 4.2s | 6.9s | 9.9s | 14.8s |
+| Lingo | 4.6s | 6.9s | 17.9s | 18.1s |
+| Links Awakening DX | 6.8s | 14.8s | 16.6s | 19.0s |
+| Lufia II Ancient Cave | 4.9s | 6.1s | 5.7s | 12.0s |
+| Mario & Luigi Superstar Saga | 4.6s | 9.8s | 46.0s | 37.1s |
+| Mega Man 2 | 3.8s | 5.8s | 5.8s | 12.6s |
+| Mega Man 3 | 4.2s | 5.8s | 5.8s | 11.7s |
+| MegaMan Battle Network 3 | 3.9s | 6.8s | 10.9s | 14.1s |
+| Meritous | 3.5s | 5.6s | 5.9s | 12.7s |
+| Metamath | 11.8s | 5.8s | 5.8s | 11.7s |
+| Muse Dash | 4.1s | 5.8s | 5.8s | 17.6s |
+| Noita | 3.9s | 5.8s | 5.8s | 12.6s |
+| Old School Runescape | 4.8s | 5.8s | 5.7s | 12.8s |
+| Overcooked! 2 | 4.8s | 9.0s | 7.8s | 12.9s |
+| Paint | 3.9s | 5.8s | 7.0s | 12.9s |
+| Raft | 3.8s | 12.8s | 26.9s | 26.0s |
+| Risk of Rain 2 | 4.8s | 5.8s | 6.8s | 11.7s |
+| Satisfactory | 5.8s | 38.0s | 48.1s | 85.8s |
+| Saving Princess | 3.6s | 5.7s | 5.8s | 12.6s |
+| Secret of Evermore | 4.7s | 11.9s | 60.9s | 26.8s |
+| Seedling | 4.0s | 5.8s | 5.8s | 12.9s |
+| Shivers | 4.1s | 6.8s | 6.8s | 13.9s |
+| Sonic Adventure 2 Battle | 5.7s | 6.8s | 7.6s | 13.9s |
+| Starcraft 2 | 8.4s | 55.0s | 73.8s | 347.0s |
+| Subnautica | 4.2s | 9.8s | 10.9s | 17.1s |
+| Super Mario 64 | 4.0s | 5.8s | 6.9s | 12.8s |
+| Super Mario Land 2 | 4.7s | 10.9s | 14.9s | 46.9s |
+| Super Mario World | 5.4s | 5.8s | 6.8s | 11.9s |
+| Super Metroid | 8.8s | 10.7s | 15.9s | 17.0s |
+| TOEM original | 3.9s | 5.8s | 5.8s | 11.9s |
+| TOEM rule builder | 3.8s | 5.8s | 5.8s | 12.9s |
+| TUNIC | 6.2s | 10.8s | 22.9s | 24.2s |
+| Terraria | 3.8s | 9.8s | 10.7s | 12.9s |
+| The Legend of Zelda | 5.1s | 7.0s | 7.8s | 12.0s |
+| The Messenger | 4.2s | 9.1s | 11.1s | 14.8s |
+| The Wind Waker | 6.3s | 6.8s | 6.9s | 13.9s |
+| The Witness | 5.3s | 14.7s | 14.7s | 159.8s |
+| Timespinner | 5.5s | 5.8s | 7.8s | 12.0s |
+| Undertale | 3.9s | 5.6s | 5.8s | 12.7s |
+| VVVVVV | 3.9s | 5.8s | 5.8s | 11.7s |
+| Wargroove | 4.0s | 5.8s | 5.8s | 12.7s |
+| Yoshi's Island | 4.8s | 6.8s | 9.8s | 14.9s |
+| shapez | 4.5s | 5.8s | 6.6s | 12.7s |
 
 ## Multiworld Test - Longest Processing Times
 
@@ -132,28 +119,28 @@ Shows the 10 longest generation and test times from multiworld testing.
 
 | Rank | Game | Time | Players | Templates in Multiworld |
 |------|------|------|---------|------------------------|
-| 1 | Undertale | 26.9s | 8 | A Hat in Time.yaml, Castlevania 64.yaml, DepGraph.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml (+3 more) |
-| 2 | Super Metroid | 26.2s | 7 | A Hat in Time.yaml, Castlevania 64.yaml, DepGraph.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml (+2 more) |
-| 3 | The Legend of Zelda | 23.9s | 7 | Aquaria.yaml, Civilization VI.yaml, Final Fantasy Mystic Quest.yaml, Links Awakening DX.yaml, Old School Runescape.yaml (+2 more) |
-| 4 | Mega Man 3 | 22.7s | 4 | Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Journey to Ascension.yaml, Mega Man 3.yaml |
-| 5 | VVVVVV | 22.7s | 8 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kingdom Hearts.yaml, Meritous.yaml (+3 more) |
-| 6 | Starcraft 2 | 22.6s | 6 | Aquaria.yaml, Civilization VI.yaml, Final Fantasy Mystic Quest.yaml, Links Awakening DX.yaml, Old School Runescape.yaml (+1 more) |
-| 7 | TOEM original | 22.2s | 7 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kingdom Hearts.yaml, Meritous.yaml (+2 more) |
-| 8 | Saving Princess | 22.2s | 6 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kingdom Hearts.yaml, Meritous.yaml (+1 more) |
-| 9 | Meritous | 21.6s | 5 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kingdom Hearts.yaml, Meritous.yaml |
-| 10 | Kingdom Hearts | 20.9s | 4 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kingdom Hearts.yaml |
+| 1 | Undertale | 24.2s | 8 | A Link to the Past.yaml, Castlevania 64.yaml, DepGraph.yaml, Kingdom Hearts.yaml, Meritous.yaml (+3 more) |
+| 2 | Risk of Rain 2 | 24.2s | 5 | Bumper Stickers.yaml, DOOM 1993.yaml, Journey to Ascension.yaml, Mega Man 3.yaml, Risk of Rain 2.yaml |
+| 3 | Super Metroid | 23.0s | 7 | A Link to the Past.yaml, Castlevania 64.yaml, DepGraph.yaml, Kingdom Hearts.yaml, Meritous.yaml (+2 more) |
+| 4 | The Witness | 23.0s | 7 | Bumper Stickers.yaml, DOOM 1993.yaml, Journey to Ascension.yaml, Mega Man 3.yaml, Risk of Rain 2.yaml (+2 more) |
+| 5 | Timespinner | 21.2s | 8 | A Hat in Time.yaml, Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml (+3 more) |
+| 6 | TOEM original | 21.2s | 7 | A Short Hike.yaml, Celeste (Open World).yaml, EarthBound.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+2 more) |
+| 7 | VVVVVV | 21.0s | 8 | A Short Hike.yaml, Celeste (Open World).yaml, EarthBound.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+3 more) |
+| 8 | Secret of Evermore | 20.3s | 6 | A Short Hike.yaml, Celeste (Open World).yaml, EarthBound.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+1 more) |
+| 9 | The Legend of Zelda | 20.1s | 7 | Aquaria.yaml, Civilization VI.yaml, Heretic.yaml, Lufia II Ancient Cave.yaml, Overcooked! 2.yaml (+2 more) |
+| 10 | Starcraft 2 | 18.9s | 6 | Aquaria.yaml, Civilization VI.yaml, Heretic.yaml, Lufia II Ancient Cave.yaml, Overcooked! 2.yaml (+1 more) |
 
 ### Top 10 Longest Test Times
 
 | Rank | Game | Time | Players | Templates in Multiworld |
 |------|------|------|---------|------------------------|
-| 1 | Starcraft 2 | 187.1s | 6 | Aquaria.yaml, Civilization VI.yaml, Final Fantasy Mystic Quest.yaml, Links Awakening DX.yaml, Old School Runescape.yaml (+1 more) |
-| 2 | Satisfactory | 176.9s | 6 | A Hat in Time.yaml, Castlevania 64.yaml, DepGraph.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml (+1 more) |
-| 3 | Kingdom Hearts 2 | 118.1s | 4 | A Hat in Time.yaml, Castlevania 64.yaml, DepGraph.yaml, Kingdom Hearts 2.yaml |
-| 4 | Secret of Evermore | 89.1s | 6 | A Short Hike.yaml, Celeste 64.yaml, EarthBound.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+1 more) |
-| 5 | Super Metroid | 88.0s | 7 | A Hat in Time.yaml, Castlevania 64.yaml, DepGraph.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml (+2 more) |
-| 6 | Kirby's Dream Land 3 | 55.0s | 4 | A Short Hike.yaml, Celeste 64.yaml, EarthBound.yaml, Kirby's Dream Land 3.yaml |
-| 7 | Kingdom Hearts | 53.1s | 4 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kingdom Hearts.yaml |
-| 8 | Super Mario Land 2 | 44.8s | 6 | Bumper Stickers.yaml, DOOM 1993.yaml, Inscryption.yaml, Mega Man 2.yaml, Raft.yaml (+1 more) |
-| 9 | Raft | 34.8s | 5 | Bumper Stickers.yaml, DOOM 1993.yaml, Inscryption.yaml, Mega Man 2.yaml, Raft.yaml |
-| 10 | Subnautica | 30.7s | 6 | Baking Adventure.yaml, Coding Adventure.yaml, Heretic.yaml, Lufia II Ancient Cave.yaml, Overcooked! 2.yaml (+1 more) |
+| 1 | Starcraft 2 | 191.2s | 6 | Aquaria.yaml, Civilization VI.yaml, Heretic.yaml, Lufia II Ancient Cave.yaml, Overcooked! 2.yaml (+1 more) |
+| 2 | Satisfactory | 168.1s | 6 | A Hat in Time.yaml, Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml (+1 more) |
+| 3 | Kingdom Hearts 2 | 122.2s | 4 | A Hat in Time.yaml, Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Kingdom Hearts 2.yaml |
+| 4 | Secret of Evermore | 99.1s | 6 | A Short Hike.yaml, Celeste (Open World).yaml, EarthBound.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+1 more) |
+| 5 | Kirby's Dream Land 3 | 64.1s | 4 | A Short Hike.yaml, Celeste (Open World).yaml, EarthBound.yaml, Kirby's Dream Land 3.yaml |
+| 6 | The Witness | 45.3s | 7 | Bumper Stickers.yaml, DOOM 1993.yaml, Journey to Ascension.yaml, Mega Man 3.yaml, Risk of Rain 2.yaml (+2 more) |
+| 7 | Super Mario Land 2 | 45.1s | 6 | Bumper Stickers.yaml, DOOM 1993.yaml, Journey to Ascension.yaml, Mega Man 3.yaml, Risk of Rain 2.yaml (+1 more) |
+| 8 | Super Metroid | 43.6s | 7 | A Link to the Past.yaml, Castlevania 64.yaml, DepGraph.yaml, Kingdom Hearts.yaml, Meritous.yaml (+2 more) |
+| 9 | Kingdom Hearts | 39.6s | 4 | A Link to the Past.yaml, Castlevania 64.yaml, DepGraph.yaml, Kingdom Hearts.yaml |
+| 10 | Raft | 37.1s | 5 | Bomb Rush Cyberfunk.yaml, DLCQuest.yaml, Inscryption.yaml, Mega Man 2.yaml, Raft.yaml |

@@ -76,6 +76,7 @@ class RuleBuilderToAST:
             # Composite rules
             'And': self._convert_and,
             'Or': self._convert_or,
+            'AtLeast': self._convert_atleast,
 
             # Reachability rules
             'CanReachRegion': self._convert_can_reach_region,
@@ -521,6 +522,35 @@ class RuleBuilderToAST:
             return filtered[0]
 
         return {'type': 'or', 'conditions': filtered}
+
+    def _convert_atleast(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Convert AtLeast rule to its AST-format semantic twin, count_true.
+
+        Rule Builder: {"rule": "AtLeast", "children": [...], "count": N}
+        AST Format:   {"type": "count_true", "conditions": [...], "count": N}
+
+        count_true means "at least `count` of the conditions are true", which is
+        exactly AtLeast's semantics. Mirror the trivial collapses so the AST
+        stays canonical (count<=0 -> True, count>len -> False, count==1 -> or,
+        count==len -> and).
+        """
+        children = rule.get('children', [])
+        count = rule.get('count', 0)
+        converted = [self._convert_rule(child) for child in children]
+        n = len(converted)
+
+        if isinstance(count, int):
+            if count <= 0:
+                return {'type': 'constant', 'value': True}
+            if n == 0 or count > n:
+                return {'type': 'constant', 'value': False}
+            if count == 1:
+                return self._convert_or({'rule': 'Or', 'children': children})
+            if count == n:
+                return self._convert_and({'rule': 'And', 'children': children})
+
+        return {'type': 'count_true', 'conditions': converted, 'count': count}
 
     # -------------------------------------------------------------------------
     # Reachability Rule Converters
