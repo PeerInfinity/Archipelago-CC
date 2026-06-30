@@ -374,26 +374,22 @@ class WitnessGameExportHandler(GenericGameExportHandler):
         ``{progressive: {"base_item": progressive, "items": [{"name", "level"}, ...]}}``.
         Level N corresponds to the symbol granted by the Nth copy of the progressive
         item, matching the witness ``collect()`` chain-indexing behavior.
-        """
-        mapping: Dict[str, Any] = {}
 
+        ``all_progressive_item_lists`` is only present on the original Witness world.
+        This handler is also selected by name for generated "_worldgen" worlds (e.g.
+        "The Witness WorldGen"), which instead bake the resolved chains (aliases
+        already folded in) into a ``progression_mapping`` ClassVar. The base
+        ``get_progression_mapping`` now reads that ClassVar generically, so for
+        worldgen worlds we just defer to it.
+        """
         player_items = getattr(world, "player_items", None)
         progressive_lists = getattr(player_items, "all_progressive_item_lists", None)
-
-        # ``all_progressive_item_lists`` is only present on the original Witness world.
-        # This handler is also selected by name for generated "_worldgen" worlds (e.g.
-        # "The Witness WorldGen"), which instead bake the resolved chains into a
-        # ``progression_mapping`` ClassVar (``{name: [components]}``, already including
-        # alias items). Both have the same shape, so reuse it directly; only the
-        # original world needs the separate alias probe below.
-        probe_aliases = bool(progressive_lists)
         if not progressive_lists:
-            progressive_lists = getattr(world, "progression_mapping", None)
-        if not progressive_lists:
-            logger.info("The Witness: no progressive item data found; deferring to "
-                        "base progression probe")
+            logger.info("The Witness: no instance-level progressive data; deferring "
+                        "to base progression probe (incl. worldgen ClassVar)")
             return super().get_progression_mapping(world)
 
+        mapping: Dict[str, Any] = {}
         for progressive_name, chain_items in progressive_lists.items():
             mapping[progressive_name] = {
                 "base_item": progressive_name,
@@ -411,21 +407,20 @@ class WitnessGameExportHandler(GenericGameExportHandler):
         # We probe create_item (which sets ``is_alias_for`` from ALL_ITEM_ALIASES,
         # the same source collect() uses) so the resolution stays faithful without
         # hard-coding the alias table. (Generated _worldgen worlds already fold aliases
-        # into their progression_mapping ClassVar, so this only runs for the original.)
-        if probe_aliases:
-            for item_name in getattr(world, "item_name_to_id", {}):
-                if item_name in mapping:
-                    continue
-                try:
-                    item = world.create_item(item_name)
-                except Exception:
-                    continue
-                target = getattr(item, "is_alias_for", None)
-                if target:
-                    mapping[item_name] = {
-                        "base_item": item_name,
-                        "items": [{"name": target, "level": 1}],
-                    }
+        # into their progression_mapping ClassVar, handled by the base above.)
+        for item_name in getattr(world, "item_name_to_id", {}):
+            if item_name in mapping:
+                continue
+            try:
+                item = world.create_item(item_name)
+            except Exception:
+                continue
+            target = getattr(item, "is_alias_for", None)
+            if target:
+                mapping[item_name] = {
+                    "base_item": item_name,
+                    "items": [{"name": target, "level": 1}],
+                }
 
         logger.info(f"Exported {len(mapping)} progressive/alias item types for The Witness")
         return mapping
