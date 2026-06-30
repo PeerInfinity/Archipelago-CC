@@ -1,12 +1,19 @@
 """The Witness game-specific export handler.
 
-Handles unique patterns in The Witness's rule implementations:
-1. Bound method references: region.can_reach passed directly in closures
-2. Region reachability patterns: standard Archipelago region.can_reach AST pattern
-3. Laser activation locations: event locations needing explicit region reachability
+Handles patterns specific to The Witness's rule implementations:
+1. Comprehension reachability: ``all_of`` / ``any_of`` over bound-method or
+   callable iterators that the generic analyzer can't fold on its own.
+2. Laser activation locations: event locations whose vanilla gate is reaching
+   the panel's region.
+3. Runtime-entrance helpers (expert pressure plates, Theater->Tunnels EP):
+   expanded into concrete reachability rule trees the frontend can evaluate.
+
+Bare ``Region.can_reach`` bound methods and ``make_region_lambda`` closures are
+resolved generically by the analyzer (``analysis.region_can_reach_node`` and the
+existing call/expression visitors), so they no longer need handling here.
 """
 
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional
 from ..base import GenericGameExportHandler
 import logging
 
@@ -232,54 +239,17 @@ class WitnessGameExportHandler(GenericGameExportHandler):
     # Region reachability pattern handling
     # =========================================================================
 
-    def _is_region_reachability_pattern(self, rule: Optional[Dict[str, Any]]) -> bool:
-        """Check if rule matches the standard region.can_reach AST pattern."""
-        if not rule or rule.get('type') != 'conditional':
-            return False
-
-        # Test: state.stale[player]
-        test = rule.get('test', {})
-        if test.get('type') != 'subscript':
-            return False
-        test_value = test.get('value', {})
-        if (test_value.get('type') != 'attribute' or
-            test_value.get('attr') != 'stale' or
-            test_value.get('object', {}).get('name') != 'state'):
-            return False
-
-        # if_true: state.update_reachable_regions
-        if_true = rule.get('if_true', {})
-        if (if_true.get('type') != 'state_method' or
-            if_true.get('method') != 'update_reachable_regions'):
-            return False
-
-        # if_false: self in state.reachable_regions[player]
-        if_false = rule.get('if_false', {})
-        if if_false.get('type') != 'compare' or if_false.get('op') != 'in':
-            return False
-        if if_false.get('left', {}).get('name') != 'self':
-            return False
-        right = if_false.get('right', {})
-        if right.get('type') != 'subscript':
-            return False
-        right_value = right.get('value', {})
-        if (right_value.get('type') != 'attribute' or
-            right_value.get('attr') != 'reachable_regions'):
-            return False
-
-        return True
-
     def _simplify_region_reachability(self, rule: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
-        """Recursively simplify region reachability patterns."""
+        """Recursively simplify region reachability comprehension patterns.
+
+        Bare ``Region.can_reach`` bound methods are converted to ``can_reach``
+        nodes by the generic analyzer (``analysis.region_can_reach_node``), so the
+        only region-reachability shapes left to fold here are the comprehension
+        ones the analyzer emits with bound-method/callable iterators (the
+        ``all_of`` / ``any_of`` handlers below).
+        """
         if not rule or not isinstance(rule, dict):
             return rule
-
-        # Handle the pattern itself
-        if self._is_region_reachability_pattern(rule):
-            if hasattr(self, '_exit_region_names') and self._exit_region_names:
-                region_name = self._exit_region_names.pop(0)
-                return {'type': 'can_reach', 'region': region_name}
-            return {'type': 'constant', 'value': True}
 
         # Handle all_of where every iterator value is a region bound method.
         # Convert to the AND of the corresponding can_reach rules rather than
@@ -425,48 +395,6 @@ class WitnessGameExportHandler(GenericGameExportHandler):
         logger.info(f"Exported {len(mapping)} progressive/alias item types for The Witness")
         return mapping
 
-    def get_custom_location_access_rule(self, location, world) -> Optional[Dict[str, Any]]:  # noqa: ARG002
-        """Convert pure region-reachability location rules to a can_reach rule.
-
-        The Witness assigns some location access rules directly to a region's
-        bound ``can_reach`` method, or to ``make_region_lambda``'s
-        ``lambda state: region.can_reach(state)`` (rules.py). The generic analyzer
-        can't recover source for a bound method and falls back to a permissive
-        ``True``, which makes those locations reachable from sphere 0 in the
-        frontend when they should be gated on reaching the region (this shows up
-        under door shuffle, where the gating region needs a door key).
-
-        Only the unambiguous "the whole rule is one region's reachability" case is
-        handled here; anything else returns None so normal analysis runs.
-        """
-        rule = getattr(location, 'access_rule', None)
-        if rule is None:
-            return None
-
-        # Laser activation locations have their own dedicated handling in
-        # postprocess_rule (LASER_ACTIVATION_TO_REGION); leave them to it.
-        if getattr(self, '_current_location_name', None) in self.LASER_ACTIVATION_TO_REGION:
-            return None
-
-        # Case 1: bare bound method ``region.can_reach``.
-        region_name = self._extract_region_name(rule)
-        if region_name:
-            return {'type': 'can_reach', 'region': region_name}
-
-        # Case 2: ``lambda state: region.can_reach(state)`` — exactly one closure
-        # cell, and that cell is a Region. A combined rule would close over more.
-        closure = getattr(rule, '__closure__', None)
-        if closure and len(closure) == 1:
-            try:
-                value = closure[0].cell_contents
-            except ValueError:
-                value = None
-            if (hasattr(value, 'name') and hasattr(value, 'entrances')
-                    and hasattr(value, 'can_reach')):
-                return {'type': 'can_reach', 'region': value.name}
-
-        return None
-
     # =========================================================================
     # Complex helper resolution (expert pressure plates, theater->tunnels EP)
     # =========================================================================
@@ -480,27 +408,16 @@ class WitnessGameExportHandler(GenericGameExportHandler):
         return {'type': 'or', 'conditions': list(conditions)}
 
     def _rule_for_callable(self, rule_func) -> Dict[str, Any]:
-        """Best-effort conversion of a single CollectionRule callable to a rule dict."""
+        """Best-effort conversion of a single CollectionRule callable to a rule dict.
+
+        The analyzer resolves both a bare ``Region.can_reach`` bound method and a
+        ``make_region_lambda`` single-region closure to a concrete reachability
+        rule, so we just analyze and fold comprehension patterns.
+        """
         from exporter.analyzer import analyze_rule
 
         if rule_func is None:
             return {'type': 'constant', 'value': True}
-
-        # Bare bound method region.can_reach.
-        region_name = self._extract_region_name(rule_func)
-        if region_name:
-            return {'type': 'can_reach', 'region': region_name}
-
-        # lambda state: region.can_reach(state) (single-region closure).
-        closure = getattr(rule_func, '__closure__', None)
-        if closure and len(closure) == 1:
-            try:
-                value = closure[0].cell_contents
-            except ValueError:
-                value = None
-            if (hasattr(value, 'name') and hasattr(value, 'entrances')
-                    and hasattr(value, 'can_reach')):
-                return {'type': 'can_reach', 'region': value.name}
 
         analyzed = analyze_rule(rule_func=rule_func, game_handler=self)
         if not analyzed or analyzed.get('type') == 'error':
@@ -642,71 +559,35 @@ class WitnessGameExportHandler(GenericGameExportHandler):
         # laser an item -> item_check "X Laser"; door shuffle makes it
         # item_check "X Laser Activation"; or an explicit multi-region reach), that
         # analyzed rule is the complete, option-correct requirement and we use it
-        # verbatim. Only when the analysis collapses to a bare True / region-reach
-        # AST pattern (which happens for the vanilla "just solve the panel" case,
-        # where reaching the panel's region is the real gate) do we substitute the
-        # known panel region. Previously this always AND'ed the panel region onto
-        # the analyzed rule, which over-constrained shuffled-laser seeds (the laser
-        # item alone activates the laser; reaching the panel region is not required).
+        # verbatim. Only when the analysis collapses to a bare True (the vanilla
+        # "just solve the panel" case, where reaching the panel's region is the
+        # real gate) do we substitute the known panel region. Previously this
+        # always AND'ed the panel region onto the analyzed rule, which
+        # over-constrained shuffled-laser seeds (the laser item alone activates the
+        # laser; reaching the panel region is not required).
         current_loc = getattr(self, '_current_location_name', None)
         if current_loc and current_loc in self.LASER_ACTIVATION_TO_REGION:
             region_name = self.LASER_ACTIVATION_TO_REGION[current_loc]
             can_reach = {'type': 'can_reach', 'region': region_name}
 
             if (simplified is None or
-                    self._is_region_reachability_pattern(simplified) or
                     (simplified.get('type') == 'constant' and simplified.get('value') is True)):
                 return can_reach
             return simplified
 
         return simplified
 
-    def _extract_region_names_from_closure(self, rule_func) -> List[str]:
-        """Extract region names from bound methods in a lambda's closure."""
-        region_names = []
-        if not hasattr(rule_func, '__closure__') or not rule_func.__closure__:
-            return region_names
-
-        def extract_from_list(lst, depth=0):
-            if depth > 3:
-                return
-            for item in lst:
-                if isinstance(item, (list, tuple)):
-                    extract_from_list(item, depth + 1)
-                else:
-                    region_name = self._extract_region_name(item)
-                    if region_name:
-                        region_names.append(region_name)
-
-        for cell in rule_func.__closure__:
-            try:
-                value = cell.cell_contents
-                if isinstance(value, (list, tuple)):
-                    extract_from_list(value)
-            except ValueError:
-                pass
-
-        return region_names
-
     def handle_complex_exit_rule(self, exit_name: str, exit_rule) -> Optional[Dict[str, Any]]:  # noqa: ARG002
-        """Handle complex exit rules with bound method patterns."""
+        """Handle complex exit rules, folding comprehension reachability patterns.
+
+        A bare ``Region.can_reach`` bound method exit (e.g. an elevator/shortcut
+        gated on reaching another region) is converted to a ``can_reach`` rule by
+        the generic analyzer, so we just analyze and fold the remaining
+        comprehension patterns.
+        """
         from exporter.analyzer import analyze_rule
 
-        # Bare bound method ``region.can_reach`` (e.g. an elevator/shortcut exit
-        # gated on reaching another region). The analyzer can't recover source for
-        # a bound method and falls back to True, which over-permits the entrance
-        # once door shuffle gates the source region; convert it directly.
-        region_name = self._extract_region_name(exit_rule)
-        if region_name:
-            return {'type': 'can_reach', 'region': region_name}
-
-        # Extract region names before analysis
-        self._exit_region_names = self._extract_region_names_from_closure(exit_rule)
-
-        # Analyze and post-process
         result = analyze_rule(rule_func=exit_rule, game_handler=self)
         if result and result.get('type') != 'error':
             result = self._simplify_region_reachability(result)
-
-        self._exit_region_names = []
         return result
