@@ -94,6 +94,57 @@ class WitnessGameExportHandler(GenericGameExportHandler):
             return False
         return all(self._is_bound_method(v) for v in values)
 
+    def _handle_all_of_callables(self, rule: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Handle all_of where the iterator values are CollectionRule lambdas.
+
+        The Witness's ``_meets_item_requirements`` (worlds/witness/rules.py) builds
+        rules of the form::
+
+            lambda state: all(condition(state) for condition in sub_requirement)
+
+        where ``sub_requirement`` is a list of ``CollectionRule`` lambdas produced by
+        ``convert_requirement_option`` (e.g. ``state.has_all([...])``). The generic
+        AST analyzer can't serialize these runtime lambda objects, so it emits a
+        broken ``AST_all_of`` node whose iterator is the lambda's ``repr`` string.
+
+        We instead recursively analyze each lambda and AND the results. Only the
+        case where every iterator value is a plain callable is handled here; the
+        bound-method variants are handled by the dedicated handlers above.
+        """
+        from exporter.analyzer import analyze_rule
+
+        if rule.get('type') != 'all_of':
+            return None
+        iterator_info = rule.get('iterator_info', {})
+        if iterator_info.get('type') != 'comprehension_details':
+            return None
+        iterator = iterator_info.get('iterator', {})
+        if iterator.get('type') != 'constant':
+            return None
+        values = iterator.get('value', [])
+        if not isinstance(values, list) or not values:
+            return None
+
+        # Bound-method iterators are handled by the dedicated handlers; only take
+        # the case where every element is a plain callable (a convert_requirement_option lambda).
+        if any(self._is_bound_method(v) for v in values):
+            return None
+        if not all(callable(v) for v in values):
+            return None
+
+        analyzed = []
+        for cond in values:
+            result = analyze_rule(rule_func=cond, game_handler=self)
+            if not result or result.get('type') == 'error':
+                return None
+            analyzed.append(self._simplify_region_reachability(result))
+
+        if not analyzed:
+            return {'type': 'constant', 'value': True}
+        if len(analyzed) == 1:
+            return analyzed[0]
+        return {'type': 'and', 'conditions': analyzed}
+
     def _handle_any_of_nested_bound_methods(self, rule: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """Handle any_of with nested lists containing bound methods."""
         if rule.get('type') != 'any_of':
@@ -239,6 +290,11 @@ class WitnessGameExportHandler(GenericGameExportHandler):
         if result is not None:
             return result
 
+        # Handle all_of over plain CollectionRule lambdas (convert_requirement_option)
+        result = self._handle_all_of_callables(rule)
+        if result is not None:
+            return result
+
         # Handle any_of with nested bound methods
         result = self._handle_any_of_nested_bound_methods(rule)
         if result is not None:
@@ -281,6 +337,49 @@ class WitnessGameExportHandler(GenericGameExportHandler):
                     rule = {**rule, 'element_rule': simplified}
 
         return rule
+
+    # =========================================================================
+    # Progressive item mapping
+    # =========================================================================
+
+    def get_progression_mapping(self, world) -> Dict[str, Any]:
+        """Export The Witness's progressive symbol chains.
+
+        The Witness resolves progressive items in its custom ``collect()`` override
+        (not ``collect_item``), using per-item ``progressive_chain`` data taken from
+        ``world.player_items.all_progressive_item_lists``. The base-class probe only
+        inspects ``collect_item`` and module-level tables, so it can't see these
+        instance-level chains and returns an empty mapping. Without it the frontend
+        never learns that e.g. "Progressive Stars" grants "Stars", so access rules
+        that check the resolved symbols (Has("Stars"), HasAll([...])) never unlock
+        and the spoiler test diverges at the first such location.
+
+        We build the mapping directly from ``all_progressive_item_lists`` (the same
+        data ``collect()`` reads), producing the standard format:
+        ``{progressive: {"base_item": progressive, "items": [{"name", "level"}, ...]}}``.
+        Level N corresponds to the symbol granted by the Nth copy of the progressive
+        item, matching the witness ``collect()`` chain-indexing behavior.
+        """
+        mapping: Dict[str, Any] = {}
+
+        player_items = getattr(world, "player_items", None)
+        progressive_lists = getattr(player_items, "all_progressive_item_lists", None)
+        if not progressive_lists:
+            logger.warning("The Witness: no all_progressive_item_lists found; "
+                           "progression_mapping will be empty")
+            return mapping
+
+        for progressive_name, chain_items in progressive_lists.items():
+            mapping[progressive_name] = {
+                "base_item": progressive_name,
+                "items": [
+                    {"name": concrete_name, "level": level}
+                    for level, concrete_name in enumerate(chain_items, start=1)
+                ],
+            }
+
+        logger.info(f"Exported {len(mapping)} progressive item types for The Witness")
+        return mapping
 
     # =========================================================================
     # Public API

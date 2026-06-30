@@ -3707,52 +3707,22 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "AST_all_of",
+                  "rule": "HasAll",
                   "args": {
-                    "element_rule": {
-                      "type": "helper",
-                      "name": "condition"
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "condition"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": [
-                          "<function convert_requirement_option.<locals>.<lambda>>"
-                        ]
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                    "item_names": [
+                      "Black/White Squares",
+                      "Eraser"
+                    ]
+                  }
                 },
                 {
-                  "rule": "AST_all_of",
+                  "rule": "HasAll",
                   "args": {
-                    "element_rule": {
-                      "type": "helper",
-                      "name": "condition"
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "condition"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": [
-                          "<function convert_requirement_option.<locals>.<lambda>>"
-                        ]
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                    "item_names": [
+                      "Black/White Squares",
+                      "Shapers"
+                    ]
+                  }
                 }
               ]
             }
@@ -9940,7 +9910,90 @@
     "1": {}
   },
   "progression_mapping": {
-    "1": {}
+    "1": {
+      "Progressive Dots": {
+        "base_item": "Progressive Dots",
+        "items": [
+          {
+            "name": "Dots",
+            "level": 1
+          },
+          {
+            "name": "Full Dots",
+            "level": 2
+          }
+        ]
+      },
+      "Progressive Symmetry": {
+        "base_item": "Progressive Symmetry",
+        "items": [
+          {
+            "name": "Symmetry",
+            "level": 1
+          },
+          {
+            "name": "Colored Dots",
+            "level": 2
+          }
+        ]
+      },
+      "Progressive Stars": {
+        "base_item": "Progressive Stars",
+        "items": [
+          {
+            "name": "Stars",
+            "level": 1
+          },
+          {
+            "name": "Stars + Same Colored Symbol",
+            "level": 2
+          }
+        ]
+      },
+      "Progressive Shapers": {
+        "base_item": "Progressive Shapers",
+        "items": [
+          {
+            "name": "Shapers",
+            "level": 1
+          },
+          {
+            "name": "Rotated Shapers",
+            "level": 2
+          },
+          {
+            "name": "Negative Shapers",
+            "level": 3
+          }
+        ]
+      },
+      "Progressive Squares": {
+        "base_item": "Progressive Squares",
+        "items": [
+          {
+            "name": "Black/White Squares",
+            "level": 1
+          },
+          {
+            "name": "Colored Squares",
+            "level": 2
+          }
+        ]
+      },
+      "Progressive Discard Symbols": {
+        "base_item": "Progressive Discard Symbols",
+        "items": [
+          {
+            "name": "Triangles",
+            "level": 1
+          },
+          {
+            "name": "Arrows",
+            "level": 2
+          }
+        ]
+      }
+    }
   },
   "starting_items": {
     "1": []
