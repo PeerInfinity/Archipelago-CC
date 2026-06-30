@@ -27,6 +27,33 @@ _analyze_rule_call_count = 0
 _STANDARD_PARAMS = frozenset({'state', 'player', 'world', 'self'})
 
 
+def region_can_reach_node(rule_func: Any) -> Optional[Dict[str, Any]]:
+    """If ``rule_func`` is a bound ``Region.can_reach`` method, return a can_reach node.
+
+    A region's ``can_reach`` bound method has no usefully-analyzable source: its
+    body is the generic ``state.reachable_regions`` membership check from
+    ``BaseClasses.Region``, which the analyzer would otherwise serialize as an
+    opaque conditional that *drops the region identity* (the ``self in
+    state.reachable_regions[player]`` term keeps ``self`` unresolved) and so
+    over-permits the location. The region object is right there on ``__self__``,
+    so emit the concrete rule directly.
+
+    This mirrors the conversion the expression/call visitors already perform when
+    a ``Region.can_reach`` bound method appears as a *value* inside a larger rule
+    (e.g. ``expression_visitors.visit_Subscript``); doing it at the analysis entry
+    point covers the case where such a bound method is itself the whole rule (a
+    bare access/exit rule, or a comprehension element handed to ``analyze_rule``).
+    """
+    if not isinstance(rule_func, types.MethodType):
+        return None
+    instance: Any = rule_func.__self__
+    if (getattr(rule_func, '__name__', None) == 'can_reach'
+            and hasattr(instance, 'entrances')
+            and hasattr(instance, 'name')):
+        return {'type': 'can_reach', 'region': instance.name}
+    return None
+
+
 def _is_cacheable_function(func: Callable) -> Optional[Tuple[str, int]]:
     """
     Check if a function is cacheable (parameterless beyond standard params).
@@ -137,6 +164,14 @@ def _analyze_rule_impl(rule_func: Optional[Callable[..., Any]] = None,
     _analyze_rule_call_count += 1
     if _analyze_rule_call_count > MAX_ANALYZE_RULE_CALLS:
         raise RuntimeError(f"analyze_rule called {_analyze_rule_call_count} times - likely infinite loop. Context: {context_info}")
+
+    # A bare ``Region.can_reach`` bound method is a region-reachability rule whose
+    # body can't be usefully analyzed from source; convert it directly so we keep
+    # the region identity instead of emitting an opaque (over-permissive) pattern.
+    if ast_node is None:
+        can_reach = region_can_reach_node(rule_func)
+        if can_reach is not None:
+            return can_reach
 
     # Check parameterless function cache for functions that only take state/player/world
     # This avoids re-analyzing the same helper function multiple times

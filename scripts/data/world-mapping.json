@@ -1563,7 +1563,7 @@
   },
   "The Witness": {
     "exporter_path": "exporter/games/official/witness.py",
-    "exporter_size": 14910,
+    "exporter_size": 27507,
     "game_logic_path": null,
     "game_logic_size": 0,
     "game_name": "The Witness",
