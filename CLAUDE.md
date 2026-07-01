@@ -170,6 +170,7 @@ python scripts/setup/update_host_settings.py full-spoilers
 | Exporter | [exporter/](exporter/README.md) |
 | World generator | [world_generator/](world_generator/README.md) |
 | Rule Builder | [rule_builder/](rule_builder/README.md) |
+| Procgen (pipeline, substrates, playback) | [docs/json/developer/procgen/](docs/json/developer/procgen/README.md) — start with architecture.md; gotchas.md preempts the common confusions |
 | Frontend | [frontend/](frontend/README.md) |
 | Claude Code | [CC/](CC/README.md) |
 | Planning docs | [CC/docs/plans/](CC/docs/plans/README.md) |
