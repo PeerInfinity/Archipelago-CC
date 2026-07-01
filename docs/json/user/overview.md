@@ -103,6 +103,10 @@ Beyond standard tracking, the frontend supports several alternate game modes:
 - **[Maze Metagame](../features/maze-metagame.md):** Layers A-Mazing-Idle on top of tracking — solve mazes before you can check locations or move to new regions.
 - **Text Adventure:** Play through the randomizer as a text-based adventure game.
 
+## Procedural Generation
+
+The frontend can also **generate** randomizer worlds, not just track them. The [Procgen Pipeline](../features/procgen.md) builds complete multi-region worlds where each region is a small playable game — a grid maze, a Doodle-Jump-style platformer, a text adventure, and more, freely mixed — with access rules derived from the actual gameplay. Generated worlds use the same `rules.json` format as exported games, so they work with every tracking feature, can run in loop mode, and can even be converted into real Archipelago worlds for multiworld play.
+
 ## New APWorlds
 
 This project includes several custom Archipelago worlds:
