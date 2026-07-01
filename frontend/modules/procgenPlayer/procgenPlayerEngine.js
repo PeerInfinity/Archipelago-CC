@@ -3,8 +3,8 @@
  * Headless: no DOM, no eventBus, no module wiring. The thin
  * subscribe-and-route layer lives in index.js.
  *
- * See NewDocs/plans/procedural-generation/procgen-player.md for the
- * architecture this implements.
+ * See docs/json/developer/procgen/architecture.md §"Runtime: playing
+ * a generated world" for the architecture this implements.
  */
 
 /**

@@ -1,12 +1,11 @@
 /**
- * procgenPipeline engine — headless grid-growth pipeline logic plus
- * the top-down driver. See NewDocs/plans/procedural-generation/
- * grid-growth-pipeline.md and top-down-driver.md.
+ * procgenPipeline engine — headless driver logic for all four layout
+ * modes (docs/json/developer/procgen/architecture.md).
  *
- * This file hosts the scenario pool, grid model, growth loop,
- * incremental re-stitcher, full-world Boolean compile, and the
- * top-down driver that consumes an existing rules.json. Contents
- * grow per the v1 punch list in the plan docs.
+ * This file hosts the scenario pool, grid model, the grid-growth loop
+ * (deprecated), the sphere-driven growth driver, the shuffled-spiral
+ * layout, the top-down driver that consumes an existing rules.json,
+ * the incremental re-stitcher, and the full-world Boolean compile.
  */
 
 import { createRng } from '../shared/rng.js';
@@ -1264,8 +1263,7 @@ function resolveTopDownStart(sourceRegions, declaredStart) {
  * gate by the driver.
  *
  * Used to populate procgen_metadata.source_counts on the output
- * rules.json. See NewDocs/plans/presets-panel-overhaul.md §"Source
- * preservation".
+ * rules.json.
  */
 export function computeSourceCounts(rulesJson, playerId = '1') {
     const sourceRegions = rulesJson?.regions?.[playerId] ?? {};
@@ -2225,16 +2223,14 @@ export function compileRegionGraph(grid, opts = {}) {
 //   - compileRegionGraph output (regions, items, canonical_placements,
 //     itempool_counts — plugged into the scaffold's per-player slots)
 //   - preset_sidecars — per-region playable payloads, serialized into
-//     JSON-safe shapes (see
-//     NewDocs/plans/procedural-generation/substrate-pipeline-
-//     architecture.md §"Preset sidecars through the multiworld bridge"
-//     for the target shape).
+//     JSON-safe shapes (docs/json/developer/procgen/architecture.md
+//     §"rules.json extensions").
 //
 // Output: a single JSON-serialisable object the frontend can write to
-// disk as rules.json. World_generator currently ignores unknown
-// top-level keys, so preset_sidecars rides along untouched in v1;
-// step 8 teaches it to preserve the field through the multiworld
-// bridge.
+// disk as rules.json. world_generator preserves preset_sidecars into
+// the generated package and the exporter re-injects it, so the field
+// survives the full multiworld round-trip (architecture.md §"The
+// Python round-trip").
 
 // Serialize a maze world into the sidecar payload shape. Maps and
 // Int8Array aren't JSON-safe, so this flattens them. AP-canonical
@@ -5122,14 +5118,12 @@ export function buildRulesJson(grid, opts = {}) {
         //     source_counts?: { regions, locations, exits, logic_gates },
         //     stop_reason?: string }
         // region_count and grid_dims are auto-derived from the grid.
-        // See NewDocs/plans/presets-panel-overhaul.md §"Driver
-        // metadata, added in this plan".
         procgenMetadata = null,
         // Embed a procgen-side sphere log at the top level of the
         // output rules.json. The forward simulator (Phase 1.4) walks
         // the freshly-built scaffold and produces JSONL-compatible
         // entries. Default true; callers (tests, debug harnesses) can
-        // disable. See debugging-tools.md Phase 4.
+        // disable.
         embedSphereLog = true,
         // An authoritative sphere log (array of JSONL entries) to embed
         // VERBATIM as `sphere_log` instead of the JS forward simulator's

@@ -8,6 +8,8 @@ Two kinds of reference, treated differently when repointing:
 
 Note: files under `frontend/modules/shared/` and `frontend/modules/textAdventureEngine/` are in git submodules — repointing those needs submodule commits + pointer bumps.
 
+> **STATUS 2026-07-01: COMPLETE.** Every group below is done — `LC_ALL=C grep -rn "NewDocs"` over all code directories (frontend/modules incl. both submodules, scripts, world_generator, exporter, rule_builder, iframe_games, WebHostLib) returns nothing. Submodule commits: shared `7f16589`, textAdventureEngine `df70fb7`, pointer bump `f1f1c8cfd`. This file is retained as the record of what replaced what.
+
 ## Repointable now (official doc already exists)
 
 | NewDocs target | Refs | Referencing files | Replacement |
@@ -42,6 +44,7 @@ Note: files under `frontend/modules/shared/` and `frontend/modules/textAdventure
 ## Status
 
 - [x] 2026-07-01 — inventory taken; architecture / substrate-registry / gotchas docs landed
-- [ ] Repoint the "repointable now" group (verify each claim is actually covered first)
-- [ ] Write the blocked docs (outline-first per the docs workflow), repointing each group as its doc lands
-- [ ] Sweep: `LC_ALL=C grep -rn "NewDocs"` over code returns only test files / nothing
+- [x] Repointed the "repointable now" group (procgenPlayer → architecture.md; substrate-pipeline-architecture refs in generator.py/handler.py/scenarioPool/engine → architecture.md)
+- [x] Wrote all blocked docs (bounce, playback-and-debugging, maze, sphere-growth, paths-and-obstacles, stepped-pipeline, text-adventure, flash, jta) and repointed each group
+- [x] Non-procgen groups: presets-panel-overhaul + tileMapAnalyzer + generic refs removed as history (comments self-contained); no new docs written per user decision
+- [x] Sweep: `LC_ALL=C grep -rn "NewDocs"` over code returns nothing (2026-07-01)

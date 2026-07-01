@@ -8,8 +8,7 @@ const DEV_INDEX_PATH = './presets/preset_files.json';
 const LIVE_INDEX_PATH = './presets/preset_files.live.json';
 
 // Toolbar state — persisted to localStorage so the user's filters
-// survive a panel close/reopen. See NewDocs/plans/presets-panel-
-// overhaul.md §"Search / sort / filter".
+// survive a panel close/reopen.
 const TOOLBAR_LS_KEY = 'presetUI_toolbar';
 // View preferences for the detail view (chart toggle, etc.).
 // Separate from the toolbar so a chart-toggle render doesn't churn
@@ -664,9 +663,6 @@ function testPassCount(data) {
  * represent additional connections from the source's perspective —
  * they're inverse-direction pairs / cross-grid jumps). Locations are
  * counted as items that carry an AP-canonical locationName.
- *
- * See NewDocs/plans/presets-panel-overhaul.md §"Procgen-specific
- * stats".
  */
 export function computeProcgenStats(rulesData, playerId = '1') {
     if (!rulesData?.preset_sidecars) return null;
@@ -752,9 +748,6 @@ export function computeProcgenStats(rulesData, playerId = '1') {
  * fell into this integer bucket, in JSONL order. Used to address
  * individual fractional cells in the chart for tooltip / click
  * targeting.
- *
- * See NewDocs/plans/presets-panel-overhaul.md §"Sphere log shape
- * chart" for the rendering contract this feeds.
  */
 export function parseSphereLogShape(jsonlText) {
     if (!jsonlText) return [];
@@ -876,9 +869,6 @@ export function buildSphereEnrichment(sphereData, opts = {}) {
  * Game-level nav (prevGame/nextGame) jumps to the FIRST tuple of the
  * adjacent display-name group. Seed-level nav (prevSeed/nextSeed)
  * stays within the same gameDirectory.
- *
- * See NewDocs/plans/presets-panel-overhaul.md §"Next / previous
- * buttons".
  */
 export function computeDetailNav(tuples, presets, selected) {
     const result = { prevGame: null, prevSeed: null, nextSeed: null, nextGame: null };
@@ -975,9 +965,6 @@ function comparePresetEntries(a, b, sortKey) {
  * Returns { path, isLive } where `path` is the URL to fetch and
  * `isLive` reflects what the caller is *trying* to load (so a 404
  * fallback can decide whether to retry with the dev index).
- *
- * See NewDocs/plans/presets-panel-overhaul.md §"Dev vs live preset
- * indexes".
  */
 export function selectIndexFile({ hostname = '', search = '' } = {}) {
     const params = new URLSearchParams(search);

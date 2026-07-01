@@ -3,8 +3,7 @@
 // Sanity checks for the physics simulator. Run as a plain module in
 // a browser console or via the test harness — this file uses console
 // assertions to avoid pulling in a test runner. Expected values come
-// from the reach analysis in
-// NewDocs/plans/tile-map-analyzer-physics-model.md.
+// from the original reach analysis of the decompiled player physics.
 
 import {
   DEFAULT_PHYSICS,

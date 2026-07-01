@@ -3,8 +3,6 @@
 // TileMapAnalyzer module — registers the panel component and exposes
 // shared module accessors. The panel itself owns all of the analysis
 // logic; this file is the registration shell.
-//
-// Plan: NewDocs/plans/tile-map-analyzer.md
 
 import { TileMapAnalyzerUI } from './tileMapAnalyzerUI.js';
 import eventBus from '../../app/core/eventBus.js';

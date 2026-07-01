@@ -1,8 +1,8 @@
 /**
  * procgenPlayer — coordinator that routes procgen-emitted regions to
  * their substrate panels. Headless (no UI panel). See
- * NewDocs/plans/procedural-generation/procgen-player.md for the full
- * design.
+ * docs/json/developer/procgen/architecture.md §"Runtime: playing a
+ * generated world".
  *
  * Two responsibilities:
  *   1. On stateManager:rawJsonDataLoaded, recognize procgen-shaped

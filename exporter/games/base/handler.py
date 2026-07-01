@@ -2068,8 +2068,8 @@ class BaseGameExportHandler(
         through, so multiworld rules.json reaches every player's frontend with
         the data needed to render their procgen regions.
 
-        See NewDocs/plans/procedural-generation/substrate-pipeline-architecture.md
-        §"Preset sidecars through the multiworld bridge".
+        See docs/json/developer/procgen/architecture.md §"The Python
+        round-trip".
         """
         try:
             world_module = type(world).__module__

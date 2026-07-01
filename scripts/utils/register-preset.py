@@ -220,8 +220,7 @@ def update_preset_files(
         "files": [f"{file_prefix}_rules.json"],
     }
     # Procgen data flag — true when the rules.json carries
-    # preset_sidecars. Absent = false. See NewDocs/plans/
-    # presets-panel-overhaul.md §"Procgen detection at index time".
+    # preset_sidecars. Absent = false.
     if has_procgen_data:
         new_folder_entry["has_procgen_data"] = True
     if label:

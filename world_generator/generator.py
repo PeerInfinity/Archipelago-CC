@@ -244,8 +244,8 @@ class WorldGenerator:
         # generated __init__.py reads it back at export time and
         # injects it into export_data so multiworld rules.json carries
         # the sidecar through to every player's frontend. See
-        # NewDocs/plans/procedural-generation/substrate-pipeline-architecture.md
-        # §"Preset sidecars through the multiworld bridge".
+        # docs/json/developer/procgen/architecture.md §"The Python
+        # round-trip".
         sidecars_all = source_json.get('preset_sidecars', {})
         player_sidecars = sidecars_all.get(self.player_id, {})
         if player_sidecars:
