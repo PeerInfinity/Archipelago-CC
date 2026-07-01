@@ -1,7 +1,6 @@
 /**
- * mazeRoom engine — v1 walls-only maze, first consumer of the shared
- * simulator-core interface (see NewDocs/plans/procedural-generation/
- * shared-simulator-core.md and maze-room-generator.md).
+ * mazeRoom engine — headless maze world model + generation
+ * (docs/json/developer/procgen/maze.md).
  *
  * Headless: no DOM, no rendering, no input wiring. That lives in
  * mazeRoomUI.js once v1 is engine-complete.
@@ -905,8 +904,7 @@ export function generateMaze(config) {
 // Three pipeline-agnostic functions — generateRegionCore,
 // placeFromItems, and extractPathsAndObstacles (already defined
 // above) — compose into the full substrate-adapter contract. See
-// NewDocs/plans/procedural-generation/substrate-pipeline-architecture.md
-// §"Substrate adapter contract".
+// docs/json/developer/procgen/substrate-registry.md.
 //
 // v1 scope:
 //   - Exactly one entrance (or none for start regions).

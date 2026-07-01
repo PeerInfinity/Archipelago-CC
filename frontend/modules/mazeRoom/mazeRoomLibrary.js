@@ -14,9 +14,8 @@
  * registry entry stays substrate-neutral in shape so any substrate
  * sharing tile-grid semantics can compose the same way.
  *
- * See NewDocs/plans/procedural-generation/procgen-player.md §"Substrate
- * registry" for the runtime fields, and text-adventure-substrate.md
- * §"Substrate registry entry, expanded" for the build-time slots.
+ * See docs/json/developer/procgen/substrate-registry.md for the full
+ * entry contract (runtime fields and build-time slots).
  */
 
 import {

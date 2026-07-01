@@ -1,6 +1,6 @@
 /**
- * mazeRoom — first consumer of the shared simulator-core interface.
- * See NewDocs/plans/procedural-generation/maze-room-generator.md.
+ * mazeRoom — the maze substrate
+ * (docs/json/developer/procgen/maze.md).
  *
  * Engine lives in mazeRoomEngine.js (headless, no DOM). The UI panel
  * lives in mazeRoomUI.js. This file wires the panel into the module
@@ -33,7 +33,8 @@ let unsubLoadRegion = null;
 
 // Buffer for a maze:loadRegion event that arrived before the panel
 // was mounted. MazeRoomUI's constructor drains it on mount via
-// consumePendingLoadRegion(). See procgen-player.md §"Event flow".
+// consumePendingLoadRegion(). See docs/json/developer/procgen/maze.md
+// §"Panel and runtime".
 let pendingLoadRegion = null;
 
 function handleLoadRegion(payload) {

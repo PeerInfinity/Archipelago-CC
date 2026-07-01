@@ -261,7 +261,7 @@ export class MazeRoomUI {
         // executor is bound here so the queue can run actions
         // synchronously; the UI re-renders after each handleInput in
         // _handleKeydown. Cleared on region transitions. See
-        // NewDocs/plans/procedural-generation/maze-content-modules.md.
+        // docs/json/developer/procgen/maze.md ("The action queue").
         this._mazeQueue = new MazeRoomQueue({
             executor: (action) => this._executeQueueAction(action),
         });

@@ -37,6 +37,7 @@ The in-browser world-generation pipeline, its substrates, and the runtime that p
 | [Gotchas and Disambiguations](./procgen/gotchas.md) | Naming overlaps and invariants that mislead newcomers |
 | [Bounce Substrate](./procgen/bounce.md) | Physics-verified platformer substrate: solver, verifier, generators, renderers |
 | [Playback and Debugging Tools](./procgen/playback-and-debugging.md) | Playback bot, controller proxies, forward simulator, simulator core |
+| [Maze Substrate](./procgen/maze.md) | Tile-grid substrate: engine, biomes, content modules, autopather |
 
 ### [Reference](./reference/)
 

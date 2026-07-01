@@ -9,11 +9,7 @@
  * change here. Adding a new backend is a new file under
  * `mazeAlgorithms/` plus an entry there.
  *
- * Tree-based biomes (branchy, bushy, loopy, open, rooms) and the
- * post-processors they use (braid, pruneDeadEnds) land in a
- * follow-up commit alongside their backends.
- *
- * See NewDocs/plans/procedural-generation/maze-biomes.md.
+ * See docs/json/developer/procgen/maze.md ("Biomes and wall backends").
  */
 
 export const BIOMES = Object.freeze({

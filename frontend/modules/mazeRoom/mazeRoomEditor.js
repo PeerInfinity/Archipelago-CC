@@ -5,7 +5,7 @@
  * rendering live in mazeRoomUI; this module is the pure-logic core
  * the panel calls after resolving a click into a tile coordinate.
  *
- * v1 palette per debugging-tools.md Phase 2.1:
+ * v1 palette (docs/json/developer/procgen/maze.md §"Panel and runtime"):
  *   - floor / wall (tile values)
  *   - entrance (single instance, click moves)
  *   - item (with item-id picker + AP-canonical location name)
@@ -14,9 +14,6 @@
  * v1.1 deferred:
  *   - exit placement (needs side picker, exit_id management)
  *   - logic gate (RuleTreeEditor integration)
- *
- * Plan reference:
- * NewDocs/plans/procedural-generation/debugging-tools.md (Phase 2.1)
  */
 
 import {
