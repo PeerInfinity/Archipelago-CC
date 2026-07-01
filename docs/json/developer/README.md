@@ -33,6 +33,8 @@ The in-browser world-generation pipeline, its substrates, and the runtime that p
 | Document | Description |
 |----------|-------------|
 | [Architecture](./procgen/architecture.md) | Orientation: pipeline drivers, substrates, rules.json extensions, runtime, Python round-trip |
+| [Substrate Registry Reference](./procgen/substrate-registry.md) | The registry entry contract and substrate capability matrix |
+| [Gotchas and Disambiguations](./procgen/gotchas.md) | Naming overlaps and invariants that mislead newcomers |
 
 ### [Reference](./reference/)
 
