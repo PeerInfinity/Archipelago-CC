@@ -1,6 +1,5 @@
 /**
- * Bounce Demo game page — build-order step 6
- * (NewDocs/plans/procedural-generation/dj-metroidvania-v2.md).
+ * Bounce Demo game page.
  *
  * The page OWNS `window.__swfBridge.configure/pollItems` (the game
  * side of the flashSubstrate contract); the host bridge injects

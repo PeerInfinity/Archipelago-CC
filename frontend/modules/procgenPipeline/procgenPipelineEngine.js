@@ -2456,8 +2456,8 @@ function perimeterMidpoint(side, size) {
  * Optional adapter hook `extractZoneRules(zoneIdx, ctx)` lets a
  * zone-based substrate contribute AP locations and per-side exit
  * access rules (the "zone-locations channel" —
- * NewDocs/plans/procedural-generation/dj-metroidvania-v2.md §"Pipeline
- * integration"). ctx is { region_id, exitSides, regionSize }; the
+ * docs/json/developer/procgen/substrate-registry.md). ctx is
+ * { region_id, exitSides, regionSize }; the
  * return shape is:
  *
  *   { locations: [{ id, item, access_rule, position? }],  // AP locations

@@ -1,6 +1,5 @@
 /**
- * Bounce Demo game session — build-order step 6
- * (NewDocs/plans/procedural-generation/dj-metroidvania-v2.md). The
+ * Bounce Demo game session — the
  * bridge-agnostic runtime state machine the renderer page wraps:
  * holds the player state, applies AP items as abilities, and turns
  * landings into pickup/exit events. No DOM, no bridge — unit-testable,

@@ -1,7 +1,6 @@
 /**
- * Substrate registry entry for the Bounce Demo (DJ-Metroidvania) —
- * build-order step 5 + the embed phase
- * (NewDocs/plans/procedural-generation/dj-metroidvania-v2.md).
+ * Substrate registry entry for the Bounce Demo (DJ-Metroidvania)
+ * (docs/json/developer/procgen/bounce.md).
  *
  * The entry is a MERGE: flash runtime plumbing (de/serializeWorld,
  * playback stub — via createFlashSubstrateEntry) + bounce's own panel
@@ -180,7 +179,7 @@ function makeExtractZoneRules(zones, { portalPlacement = 'directional' } = {}) {
 //    rule-gated portals/pickups extension, priority #2) ───────────────
 //
 // Requirement-targeted region realization for the sphere grower
-// (NewDocs/plans/procedural-generation/sphere-driven-growth.md): the
+// (docs/json/developer/procgen/bounce.md §"Sphere-growth integration"): the
 // driver specifies per-exit and per-location target requirements in AP
 // item names (plus optional per-item counts). Bounce SPLITS each
 // requirement at this boundary:
@@ -261,9 +260,7 @@ export const BOUNCE_LIBRARY_ITEMS = Object.freeze(Object.fromEntries([
 
 /**
  * Registry-declared OBSTACLE library — the bounce side of the
- * obstacles-along-paths refactor
- * (NewDocs/plans/procedural-generation/topdown-bounce-obstacle-refactor.md,
- * Phase 1). One obstacle per ability: "this path crosses the
+ * obstacles-along-paths vocabulary. One obstacle per ability: "this path crosses the
  * blue-platform gap" compiles (via shared/procgen/pathsAndObstaclesCompiler.js)
  * to has("Blue platforms"). Declared here (NOT in the shared submodule)
  * alongside BOUNCE_LIBRARY_ITEMS; merged with DEFAULT_OBSTACLES by the

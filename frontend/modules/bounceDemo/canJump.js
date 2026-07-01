@@ -1,6 +1,5 @@
 /**
- * Bounce Demo `canJump` — build-order step 2
- * (NewDocs/plans/procedural-generation/dj-metroidvania-v2.md). A
+ * Bounce Demo `canJump` (docs/json/developer/procgen/bounce.md). A
  * conservative forward-query sampler of `step`: it never simulates
  * physics of its own — every answer comes from running the real engine
  * forward, so `step` and `canJump` cannot disagree by construction.

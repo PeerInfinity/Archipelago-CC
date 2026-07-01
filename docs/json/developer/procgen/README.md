@@ -7,6 +7,7 @@ Developer documentation for the procedural-generation ("procgen") system: the pi
 | [Architecture](./architecture.md) | Orientation: the pipeline, drivers, substrates, rules.json extensions, runtime, and Python round-trip. Read this first. |
 | [Substrate Registry Reference](./substrate-registry.md) | The registry entry contract, field by field, with a capability matrix of the five substrates and a checklist for adding one. |
 | [Gotchas and Disambiguations](./gotchas.md) | The things most likely to mislead someone orienting in the procgen code — naming overlaps, shared-code-vs-shared-identity, invariants. |
+| [Bounce Substrate](./bounce.md) | The Doodle-Jump-style platformer substrate: physics core, ability suppression, the canJump solver, the derive-rules verifier, level/braid generation, renderers, and the bot driver. |
 
 ## Related documentation
 

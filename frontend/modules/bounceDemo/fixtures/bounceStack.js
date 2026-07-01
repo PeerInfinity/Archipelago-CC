@@ -1,6 +1,5 @@
 /**
- * Fixture: the no-input bounce stack — the v2 plan's start level
- * (NewDocs/plans/procedural-generation/dj-metroidvania-v2.md). All
+ * Fixture: the no-input bounce stack — the canonical start level. All
  * platforms sit on the vertical center line; the player bounces to the
  * top with ZERO input and ZERO abilities (arrow keys are themselves
  * unlockable items, so the start level must be playable without them).

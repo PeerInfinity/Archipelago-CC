@@ -1,6 +1,6 @@
 /**
- * Bounce Demo derive-rules verifier — build-order step 4
- * (NewDocs/plans/procedural-generation/dj-metroidvania-v2.md).
+ * Bounce Demo derive-rules verifier
+ * (docs/json/developer/procgen/bounce.md).
  *
  * Runs reachability under every subset of the level's relevant ability
  * universe and derives, per goal, the MINIMAL ability sets that make

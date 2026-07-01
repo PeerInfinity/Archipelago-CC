@@ -35,6 +35,7 @@ The in-browser world-generation pipeline, its substrates, and the runtime that p
 | [Architecture](./procgen/architecture.md) | Orientation: pipeline drivers, substrates, rules.json extensions, runtime, Python round-trip |
 | [Substrate Registry Reference](./procgen/substrate-registry.md) | The registry entry contract and substrate capability matrix |
 | [Gotchas and Disambiguations](./procgen/gotchas.md) | Naming overlaps and invariants that mislead newcomers |
+| [Bounce Substrate](./procgen/bounce.md) | Physics-verified platformer substrate: solver, verifier, generators, renderers |
 
 ### [Reference](./reference/)
 
