@@ -515,14 +515,11 @@ const ghostBfsSolver = makeBfsSolver({
 
 // --- Paths-and-obstacles extraction ---
 //
-// Produces the central data representation from the pipeline overview
-// (NewDocs/plans/procedural-generation/pipeline-overview.md §"Authored
-// rules: paths and obstacles"). For each target location (the exit +
-// every item pickup), we walk an obstacle-transparent BFS from the
-// entrance, then annotate the path with the obstacles it crossed. v1
-// emits a single path per location; multi-path via BFS-removal analysis
-// is deferred (pipeline-overview §"What's new" / tile-map-analyzer
-// pattern).
+// Produces the central paths-and-obstacles representation
+// (docs/json/developer/procgen/paths-and-obstacles.md). For each
+// target location (the exit + every item pickup), we walk an
+// obstacle-transparent BFS from the entrance, then annotate the path
+// with the obstacles it crossed. Emits a single path per location.
 
 function obstaclesAlongPath(world, startState, plan) {
     const seen = [];

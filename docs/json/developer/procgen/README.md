@@ -11,6 +11,7 @@ Developer documentation for the procedural-generation ("procgen") system: the pi
 | [Playback and Debugging Tools](./playback-and-debugging.md) | The playback bot, the PlaybackController proxies, shared clock/control-bar primitives, the forward simulator (sphere-log generation), and the simulator core. |
 | [Maze Substrate](./maze.md) | The grid-of-tiles substrate: engine, biomes and wall backends, the action queue, content modules (hazards), the autopather, panel/editor. |
 | [Sphere-Driven Growth](./sphere-growth.md) | The plan-first driver: the sphere plan and its oracle role, the stratification rule, gate compatibility, the three-phase tree split, config assembly. |
+| [Paths and Obstacles](./paths-and-obstacles.md) | The intermediate access-rule representation: the item/obstacle vocabulary, per-substrate producers, the Rule Builder compiler, and the rule→requirement inverse. |
 
 ## Related documentation
 

@@ -475,9 +475,7 @@ function findDisconnectedCellFromOccupied(occupiedKeys, dims, rng, minGap = 2) {
 // buildPresetSidecars re-attaches both onto the payload right before
 // serialize so the substrate serializeWorld signatures stay unchanged.
 // These accessors are the single seam through which all engine code
-// touches them. See
-// NewDocs/plans/procedural-generation/topdown-bounce-obstacle-refactor.md
-// (Phase 2a / 4c).
+// touches them.
 export function getRegionExits(region) {
     return region?.exits;
 }
