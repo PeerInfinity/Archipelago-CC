@@ -40,6 +40,7 @@ The in-browser world-generation pipeline, its substrates, and the runtime that p
 | [Maze Substrate](./procgen/maze.md) | Tile-grid substrate: engine, biomes, content modules, autopather |
 | [Sphere-Driven Growth](./procgen/sphere-growth.md) | Plan-first driver: sphere plan as oracle, stratification, gating |
 | [Paths and Obstacles](./procgen/paths-and-obstacles.md) | The access-rule intermediate representation and its compiler |
+| [The Stepped Pipeline](./procgen/stepped-pipeline.md) | Editable step-by-step generation: envelopes, byte identity, editors |
 
 ### [Reference](./reference/)
 

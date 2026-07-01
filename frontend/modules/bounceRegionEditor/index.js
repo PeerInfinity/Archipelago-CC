@@ -1,6 +1,7 @@
 /**
  * bounceRegionEditor — a Golden Layout panel that edits ONE bounce region's
- * geometry. See NewDocs/plans/procedural-generation/region-step-editing.md §5.
+ * geometry. See docs/json/developer/procgen/stepped-pipeline.md
+ * §"Region editors".
  *
  * Launched two ways:
  *   - pipeline: the procgen panel's 3 Edit ▸ calls openBounceRegionEditor({
