@@ -26,6 +26,14 @@ Step-by-step guides for common development tasks:
 | [Format Converter](./guides/format-converter.md) | Rule format conversion |
 | [Testing Pipeline](./guides/testing-pipeline.md) | How validation works |
 
+### [Procedural Generation](./procgen/)
+
+The in-browser world-generation pipeline, its substrates, and the runtime that plays generated worlds:
+
+| Document | Description |
+|----------|-------------|
+| [Architecture](./procgen/architecture.md) | Orientation: pipeline drivers, substrates, rules.json extensions, runtime, Python round-trip |
+
 ### [Reference](./reference/)
 
 Technical references and specifications:
