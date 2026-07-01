@@ -10,6 +10,7 @@ Developer documentation for the procedural-generation ("procgen") system: the pi
 | [Bounce Substrate](./bounce.md) | The Doodle-Jump-style platformer substrate: physics core, ability suppression, the canJump solver, the derive-rules verifier, level/braid generation, renderers, and the bot driver. |
 | [Playback and Debugging Tools](./playback-and-debugging.md) | The playback bot, the PlaybackController proxies, shared clock/control-bar primitives, the forward simulator (sphere-log generation), and the simulator core. |
 | [Maze Substrate](./maze.md) | The grid-of-tiles substrate: engine, biomes and wall backends, the action queue, content modules (hazards), the autopather, panel/editor. |
+| [Sphere-Driven Growth](./sphere-growth.md) | The plan-first driver: the sphere plan and its oracle role, the stratification rule, gate compatibility, the three-phase tree split, config assembly. |
 
 ## Related documentation
 

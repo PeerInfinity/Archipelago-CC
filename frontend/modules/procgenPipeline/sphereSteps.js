@@ -79,10 +79,8 @@ export const SPHERE_STEPS = Object.freeze([
  *
  * null / undefined / 0 / negative / ≥ totalSpheres all normalise to
  * `totalSpheres` ("one batch = all spheres", the byte-identical default). A
- * value in [1, totalSpheres) is that batch size.
- *
- * Phase 1 only threads + normalises the knob; the batch loop that consumes it
- * lands in Phase 2 (see NewDocs/plans/procedural-generation/per-sphere-batching.md).
+ * value in [1, totalSpheres) is that batch size. See
+ * docs/json/developer/procgen/sphere-growth.md.
  */
 export function resolveSpheresPerBatch(spheresPerBatch, totalSpheres) {
     const n = Number(spheresPerBatch);

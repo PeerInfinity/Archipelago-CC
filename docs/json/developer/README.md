@@ -38,6 +38,7 @@ The in-browser world-generation pipeline, its substrates, and the runtime that p
 | [Bounce Substrate](./procgen/bounce.md) | Physics-verified platformer substrate: solver, verifier, generators, renderers |
 | [Playback and Debugging Tools](./procgen/playback-and-debugging.md) | Playback bot, controller proxies, forward simulator, simulator core |
 | [Maze Substrate](./procgen/maze.md) | Tile-grid substrate: engine, biomes, content modules, autopather |
+| [Sphere-Driven Growth](./procgen/sphere-growth.md) | Plan-first driver: sphere plan as oracle, stratification, gating |
 
 ### [Reference](./reference/)
 

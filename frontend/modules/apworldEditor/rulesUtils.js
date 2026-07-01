@@ -16,8 +16,8 @@
  * This is the APWorld Editor's load⇄apply preservation seam. The editor edits
  * only regions/items/access-rules in place, so a procgen-generated world must
  * round-trip its `procgen_metadata` untouched to stay re-growable/appendable in
- * sphere-growth mode (see
- * NewDocs/plans/procedural-generation/sphere-growth-apworld-integration.md §2.1).
+ * sphere-growth mode (see docs/json/developer/procgen/sphere-growth.md
+ * §"Editing and round-tripping grown worlds").
  *
  * Do NOT replace this with a rebuild-from-known-fields serializer: that would
  * silently drop those keys and sever the round-trip. The regression test in

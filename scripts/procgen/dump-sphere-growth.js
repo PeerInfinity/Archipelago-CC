@@ -3,7 +3,7 @@
  * Headless sphere-driven growth driver — plan the spheres, run
  * growSpheres + buildRulesJson in Node, verify the sphere oracle, and
  * write everything to disk. Procgen-engine debugging without the
- * browser. See NewDocs/plans/procedural-generation/sphere-driven-growth.md.
+ * browser. See docs/json/developer/procgen/sphere-growth.md.
  *
  * Usage:
  *   node scripts/procgen/dump-sphere-growth.js \

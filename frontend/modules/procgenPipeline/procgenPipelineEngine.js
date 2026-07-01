@@ -3175,7 +3175,7 @@ export function arrangeShuffledSpiral(config) {
 // --- Sphere-driven growth driver ---
 //
 // The sphere-plan-first wave grower
-// (NewDocs/plans/procedural-generation/sphere-driven-growth.md).
+// (docs/json/developer/procgen/sphere-growth.md).
 // Two phases:
 //
 //   buildSphereTree — pure bookkeeping: given the sphere plan, decide
@@ -5145,15 +5145,13 @@ export function buildRulesJson(grid, opts = {}) {
         // cost) at the top level of the output rules.json. Requires
         // embedSphereLog. The runtime loops module auto-loads this when
         // present. Default false (loop mode is opt-in).
-        // See NewDocs/plans/procedural-generation/
-        // loop-mode-substrate-integration.md (Phase 2).
         enableLoopMode = false,
         // Per-region XP effect mode stamped on every loop_costs region
         // entry: 'cost' (default — XP discounts mana cost), 'speed'
         // (reserved for v2 — XP discounts action time only), 'both'
         // (reserved for v2), or 'none' (XP has no effect on cost).
         // Threaded through to generateLoopCosts when enableLoopMode is
-        // true. See loop-mode-substrate-integration.md (Phase 7).
+        // true.
         regionXpEffect = 'cost',
         // Items granted to the player at game start (from the source
         // rules.json's `starting_items[playerId]`). Filtered to items
