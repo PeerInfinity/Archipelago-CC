@@ -26,10 +26,10 @@ Note: files under `frontend/modules/shared/` and `frontend/modules/textAdventure
 | ~~**`playback-and-debugging.md`**~~ **DONE 2026-07-01** — doc landed; main-repo refs repointed (`playbackBot/*`, `playbackProxy.js`, `mazeRoomVisualizer.js`). Remaining: submodule files (`shared/playbackControlBar.js`, `shared/playbackClock.js`, `shared/simulatorCore.js`, `shared/procgen/forwardSimulator.js`) deferred to the batched submodule pass; `mazeRoomEditor.js` goes with maze.md | `playback-bot-refactor.md`, `async-playback-bot.md`, `debugging-tools.md`, `shared-simulator-core.md` | ~11 | see left |
 | ~~**`stepped-pipeline.md`**~~ **DONE 2026-07-01** — doc landed; refs repointed (`procgenPipeline/index.js` header + stale "grid-growth pipeline" module description fixed, `bounceRegionEditor/index.js`, `dump-topdown-byteidentity.mjs`) | `topdown-stepped-pipeline.md`, `region-step-editing.md`, `grid-growth-pipeline.md`, `stepped-pipeline-cli.md` | ~4 | done |
 | ~~**`paths-and-obstacles.md`**~~ **DONE 2026-07-01** — doc landed; main-repo refs repointed (`ruleRequirements.js`, `mazeRoomEngine.js` §extraction, engine exit-accessor history ref removed). Remaining: submodule files (`shared/procgen/library.js`, `pathsAndObstaclesCompiler.js`) deferred to the batched submodule pass | `pipeline-overview.md`, rest of `topdown-bounce-obstacle-refactor.md` | ~5 | see left |
-| **`text-adventure.md`** — engine spec + substrate + wrapper/bridge | `textadventure-engine-spec.md`, rest of `text-adventure-substrate.md` | ~3 | `textAdventureEngine/engine.js` (submodule), `textAdventureSubstrateWrapper/index.js` |
-| **`flash.md`** | `flash-substrate-converged.md` | 2 | `flashSubstrate/index.js`, `flashSubstrateLibrary.js` |
-| **`jta.md`** | `jta-substrate-v1-plan.md` | 1 | `jtaSubstrateWrapper/index.js` |
-| **loops dev-doc addition** (extend `docs/json/developer/reference/loops-module-states.md` or `features/loops.md`) | `loops-queue-and-manual-mode.md` | 1 | `gameState/state.js` |
+| ~~**`text-adventure.md`**~~ **DONE 2026-07-01** — doc landed; main-repo refs repointed incl. the wrapper's stale "phase 1 / does NOT yet register" header. Remaining: `textAdventureEngine/engine.js` (submodule) deferred to the batched submodule pass | `textadventure-engine-spec.md`, rest of `text-adventure-substrate.md` | ~3 | see left |
+| ~~**`flash.md`**~~ **DONE 2026-07-01** — doc landed; `flashSubstrate/index.js` + `flashSubstrateLibrary.js` repointed | `flash-substrate-converged.md` | 2 | done |
+| ~~**`jta.md`**~~ **DONE 2026-07-01** — doc landed; `jtaSubstrateWrapper/index.js` repointed | `jta-substrate-v1-plan.md` | 1 | done |
+| ~~**loops dev-doc addition**~~ **RESOLVED 2026-07-01** — no new doc needed: the `gameState/state.js` comment is self-contained about savedQueueStore; the NewDocs history line was removed | `loops-queue-and-manual-mode.md` | 1 | done |
 
 ## Non-procgen references (separate decisions)
 

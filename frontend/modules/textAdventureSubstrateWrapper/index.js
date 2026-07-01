@@ -1,15 +1,12 @@
 /**
- * textAdventureSubstrateWrapper — phase 1 of the substrate-wrapper
- * experiment. Mounts an iframe panel that loads the synthetic
- * archipelago-naive text-adventure engine. An in-iframe bridge.js
- * translates host AP state into engine API calls.
+ * textAdventureSubstrateWrapper — the iframe-hosted text-adventure
+ * substrate (the enabled 'text_adventure' path). Mounts an iframe
+ * panel that loads the synthetic Archipelago-naive text-adventure
+ * engine; an in-iframe bridge.js translates host AP state into engine
+ * API calls. Coexists with the disabled direct-panel
+ * textAdventureSubstrate/ under the same substrate id.
  *
- * This module deliberately coexists with textAdventureSubstrate/ for
- * phase 1. It does NOT yet register a substrate registry entry — that
- * comes in phase 2 once the bridge can deserialize procgen sidecars.
- *
- * See NewDocs/plans/procedural-generation/textadventure-engine-spec.md
- * for the engine contract.
+ * See docs/json/developer/procgen/text-adventure.md.
  */
 
 import { TextAdventureSubstrateWrapperPanel, PANEL_SHOWN_EVENT } from './textAdventureSubstrateWrapperPanel.js';

@@ -13,6 +13,9 @@ Developer documentation for the procedural-generation ("procgen") system: the pi
 | [Sphere-Driven Growth](./sphere-growth.md) | The plan-first driver: the sphere plan and its oracle role, the stratification rule, gate compatibility, the three-phase tree split, config assembly. |
 | [Paths and Obstacles](./paths-and-obstacles.md) | The intermediate access-rule representation: the item/obstacle vocabulary, per-substrate producers, the Rule Builder compiler, and the rule→requirement inverse. |
 | [The Stepped Pipeline](./stepped-pipeline.md) | Running drivers as editable steps: the envelope, sphere/top-down step lists, byte identity, region editors, envelope rebuild, per-step CLIs. |
+| [Text Adventure Substrate](./text-adventure.md) | The prose-rendered tile-grid substrate: the AP-naive engine, the iframe wrapper, and the two-module coexistence. |
+| [Flash Substrate](./flash.md) | Recompiled Flash games as regions: the `__swfBridge` contract and the per-game entry factory the bounce substrate builds on. |
+| [JtA Substrate](./jta.md) | Journey to Ascension as the reference zone-based substrate, with host-side shared-mana brokering. |
 
 ## Related documentation
 

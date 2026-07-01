@@ -6,8 +6,7 @@
  * exits and locations. Uses its own `textAdventureSubstratePanel`
  * Golden Layout component.
  *
- * See NewDocs/plans/procedural-generation/text-adventure-substrate.md
- * §"Text Adventure substrate" for the design.
+ * See docs/json/developer/procgen/text-adventure.md.
  */
 
 import { TextAdventureSubstrateUI } from './textAdventureSubstrateUI.js';

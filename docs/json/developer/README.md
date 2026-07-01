@@ -41,6 +41,7 @@ The in-browser world-generation pipeline, its substrates, and the runtime that p
 | [Sphere-Driven Growth](./procgen/sphere-growth.md) | Plan-first driver: sphere plan as oracle, stratification, gating |
 | [Paths and Obstacles](./procgen/paths-and-obstacles.md) | The access-rule intermediate representation and its compiler |
 | [The Stepped Pipeline](./procgen/stepped-pipeline.md) | Editable step-by-step generation: envelopes, byte identity, editors |
+| [Text Adventure](./procgen/text-adventure.md) · [Flash](./procgen/flash.md) · [JtA](./procgen/jta.md) | The remaining substrate pages |
 
 ### [Reference](./reference/)
 

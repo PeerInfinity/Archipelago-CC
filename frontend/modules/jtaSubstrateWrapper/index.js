@@ -13,8 +13,7 @@
  *    deducting from gameState's shared mana pool (triggering a loop
  *    reset when the pool hits ≤ 0).
  *
- * See NewDocs/plans/jta/jta-substrate-v1-plan.md for the broader
- * design and how this fits with the maze and text-adventure substrates.
+ * See docs/json/developer/procgen/jta.md.
  */
 
 import { JtaSubstrateWrapperPanel } from './jtaSubstrateWrapperPanel.js';

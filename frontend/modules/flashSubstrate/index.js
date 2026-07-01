@@ -15,10 +15,7 @@
  * received items (pollItems), and dispatches user:locationCheck when the
  * game's ActionScript cooperatively calls __swfBridge.sendLocation.
  *
- * See NewDocs/plans/procedural-generation/flash-substrate-converged.md
- * for the broader design (one substrate, two modes) and how this fits
- * with the maze / text-adventure / JtA substrates (the iframe-substrate
- * precedents this module clones).
+ * See docs/json/developer/procgen/flash.md.
  */
 
 import { FlashSubstratePanel } from './flashSubstratePanel.js';

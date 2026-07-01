@@ -7,8 +7,7 @@
  * it renders a textual description of the region with clickable
  * exits (compass-direction labelled) and locations.
  *
- * See NewDocs/plans/procedural-generation/text-adventure-substrate.md
- * §"Text Adventure substrate" for the design.
+ * See docs/json/developer/procgen/text-adventure.md.
  */
 
 import {

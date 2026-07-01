@@ -76,8 +76,7 @@ export class GameState {
         // savedQueueStore in loops/savedQueueStore.js. Saved queues
         // are now keyed by (rules-hash, region, substrate), capped
         // per region, and persist on every region exit (not just on
-        // "better than the previous best"). See
-        // NewDocs/plans/procedural-generation/loops-queue-and-manual-mode.md.
+        // "better than the previous best").
     }
 
     // -------------------- Mana API --------------------
