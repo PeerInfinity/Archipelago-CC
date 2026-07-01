@@ -125,6 +125,10 @@ Technical investigations and research documents:
 | [Player ID Slot Investigation](./docs/investigations/player_id_slot_investigation.md) | Player/slot ID analysis |
 | [UT v0.2.26 vs v0.2.27](./docs/investigations/ut-v0.2.26-vs-v0.2.27.md) | Universal Tracker version comparison |
 
+### Maintenance
+
+- **[Cleanup Backlog](./docs/cleanup-backlog.md)** — Known issues worth fixing (code duplication, stale references, repo hygiene), with evidence and suggested fixes
+
 ### Release
 
 - **[Release Checklist](./docs/release-checklist.md)** — Release preparation checklist
