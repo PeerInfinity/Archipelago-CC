@@ -16,6 +16,7 @@ The tracker's [hybrid mode](../worlds/tracker/docs/hybrid-mode.md) automatically
 
 - **Testing and validation** — Generate a worldgen copy of any game and compare its behavior against the original to verify the export pipeline.
 - **Bootstrapping new worlds** — Start from an exported rules file and customize the generated code, rather than writing everything from scratch.
+- **Procedurally generated worlds** — The frontend's [procgen pipeline](../docs/json/developer/procgen/architecture.md) compiles generated worlds to `rules.json`; the world generator turns those into real APWorlds. Procgen-specific top-level keys (`preset_sidecars`, `procgen_metadata`, `loop_costs`) are preserved into package-local `_worldgen_*.json` files and re-injected by the exporter at export time, so the round-trip keeps generated worlds playable in the frontend (see [The Python round-trip](../docs/json/developer/procgen/architecture.md#the-python-round-trip)).
 
 Generated worlds use the `_worldgen` suffix by convention (e.g., `tunic_worldgen`) to avoid conflicts with the original world.
 

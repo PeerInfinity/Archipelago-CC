@@ -12,6 +12,8 @@ The exporter produces two main output formats:
 - **Rules JSON** — A complete JSON export of rules, regions, items, locations, and options. Available in Rule Builder format (default) or Archipelago-CC AST format.
 - **Pickle** — A compressed `dill` pickle of the entire `MultiWorld` object, preserving lambdas and closures directly. Faster to load since no regeneration is needed.
 
+For worlds created by the frontend's [procgen pipeline](../docs/json/developer/procgen/architecture.md), the base handler also re-injects the procgen-specific top-level keys (`preset_sidecars`, `procgen_metadata`, `loop_costs`) from the world package's `_worldgen_*.json` sidecar files, so a multiworld export of a generated world stays playable in the frontend ([The Python round-trip](../docs/json/developer/procgen/architecture.md#the-python-round-trip)).
+
 ## Usage
 
 The exporter runs automatically during seed generation when enabled in `host.yaml`. No manual invocation is needed for normal use.
