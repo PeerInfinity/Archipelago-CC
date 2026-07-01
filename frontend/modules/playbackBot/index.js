@@ -16,8 +16,7 @@
  *     getActivePanel so dispatcher receivers can reach the bot
  *     without a circular import
  *
- * Plan reference:
- * NewDocs/plans/procedural-generation/playback-bot-refactor.md (Phase 1)
+ * See docs/json/developer/procgen/playback-and-debugging.md.
  */
 
 import { PlaybackBotPanel } from './playbackBotPanel.js';

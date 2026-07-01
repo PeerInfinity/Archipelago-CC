@@ -15,8 +15,7 @@
  *     v1.1 will swap this for `pickNextTarget` from the forward
  *     simulator (or sphere-log replay when one is loaded).
  *
- * Plan reference:
- * NewDocs/plans/procedural-generation/debugging-tools.md (Phase 3)
+ * See docs/json/developer/procgen/playback-and-debugging.md.
  */
 
 import {

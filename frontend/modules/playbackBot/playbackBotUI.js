@@ -12,9 +12,7 @@
  * responsible for injecting dependencies; the bot itself is a plain
  * widget exercised directly by tests.
  *
- * Plan references:
- *   - NewDocs/plans/procedural-generation/debugging-tools.md (Phase 5)
- *   - NewDocs/plans/procedural-generation/playback-bot-refactor.md (Phase 1)
+ * See docs/json/developer/procgen/playback-and-debugging.md.
  */
 
 import { PlaybackControlBar } from '../shared/playbackControlBar.js';

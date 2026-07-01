@@ -15,8 +15,8 @@
  * what's async is the postMessage delivery to the iframe, which the
  * bot doesn't need to wait for.
  *
- * See NewDocs/plans/procedural-generation/async-playback-bot.md for
- * the broader design.
+ * See docs/json/developer/procgen/playback-and-debugging.md for the
+ * broader design.
  */
 
 const CONTROL_EVENT = 'textAdventureSubstrateWrapper:control';
