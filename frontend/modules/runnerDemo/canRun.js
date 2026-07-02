@@ -227,12 +227,27 @@ export function survivesFrom(level, platformId, state, abilities, opts = {}) {
     const maxFrames = opts.maxFrames ?? 400;
     const platform = platformById(level, platformId);
     if (!platform) return false;
+    // Optional per-(level, abilities) memo (opts.doomCache, a Map the
+    // flood/graph builders create per evaluation): landing states from
+    // different arcs cluster on the same spots, and scanning the whole
+    // policy family per candidate landing is the doomed-floor cost
+    // blowup. Landing states are near-canonical (grounded, vy 0), so
+    // (platform, x, vx, canJumpAgain) at 2 decimals identifies one —
+    // the same epsilon class as the sampling grids (bounce's hover
+    // precedent).
+    const key = opts.doomCache
+        ? `${platformId}|${round2(state.x)}|${round2(state.vx)}|${state.canJumpAgain ? 1 : 0}`
+        : null;
+    if (key !== null && opts.doomCache.has(key)) return opts.doomCache.get(key);
+    let survives = false;
     for (const p of policiesFor(level, platform, abilities, opts)) {
         if (!simulateLeg(level, platformId, state, p.make(), abilities, C, maxFrames).died) {
-            return true;
+            survives = true;
+            break;
         }
     }
-    return false;
+    if (key !== null) opts.doomCache.set(key, survives);
+    return survives;
 }
 
 /** ENTRANCE's sole destination: the first platform that supports the
@@ -434,9 +449,29 @@ export function canRunDetailed(level, fromId, toId, abilities, opts = {}) {
     let liveArrivals = 0;
     let launch = true;
     for (const { x0, vx0 } of arrivalsFor(level, from, C_eff, opts)) {
+        // Engine-attribution probe: standSpan brackets the lip stands,
+        // but on a FLUSH boundary (spike-hop partner floors) the
+        // engine's ground probe attributes a left-overhang stand to
+        // the abutting neighbor — a state no landing on `from` can
+        // produce, since legs END the moment support switches. One
+        // real step decides (the module's law: never re-derive engine
+        // logic); samples the engine hands to another platform are
+        // excluded from the ∀ exactly like doomed ones: no chain
+        // delivers them as arrivals on `from`.
+        const attribution = physicsStep(
+            arrivedState(from, x0, vx0), null, level, abilities, C);
+        if (attribution.standingOn && attribution.standingOn !== fromId) continue;
         let live = false;
         let touched = false;
         let witness = null;
+        // Witness budget: after this many candidate landings on `to`
+        // fail the live check, stop looking for this arrival and grade
+        // it touch-only. Pessimistic-safe (an edge can only be UNDER-
+        // graded, never fabricated) and bounds the doomed-floor cost:
+        // an edge into a floor with no live landing would otherwise
+        // scan policies × policies.
+        const witnessBudget = opts.witnessBudget ?? 8;
+        let failedChecks = 0;
         for (const p of policies) {
             const r = runQuery(level, fromId, abilities, {
                 ...opts, x0, vx0, policy: p.make(),
@@ -449,6 +484,7 @@ export function canRunDetailed(level, fromId, toId, abilities, opts = {}) {
                     witness = { x0, vx0, policy: p.name };
                     break;
                 }
+                if (++failedChecks >= witnessBudget) break;
             }
         }
         // Doomed arrival (every policy died): no chain can produce it
@@ -485,10 +521,13 @@ export function buildRunGraph(level, abilities, opts = {}) {
     const nodes = [nodeKey(ENTRANCE), ...platforms.map((p) => nodeKey(p.id))];
     const edges = new Map(nodes.map((n) => [n, new Set()]));
     const touches = new Map(nodes.map((n) => [n, new Set()]));
+    // one doom memo per (level, abilities) evaluation — NEVER share
+    // across ability sets (doom under {} ≠ doom under {doubleJump})
+    const graphOpts = { doomCache: new Map(), ...opts };
     for (const from of [ENTRANCE, ...platforms.map((p) => p.id)]) {
         for (const to of platforms) {
             if (to.id === from) continue;
-            const r = canRunDetailed(level, from, to.id, abilities, opts);
+            const r = canRunDetailed(level, from, to.id, abilities, graphOpts);
             if (r.touch) touches.get(nodeKey(from)).add(nodeKey(to.id));
             if (r.ok) edges.get(nodeKey(from)).add(nodeKey(to.id));
         }
@@ -567,7 +606,8 @@ export function reachablePlatforms(graph) {
  * fall back to the full graph under those ability sets.
  */
 export function reachableRunPlatforms(level, abilities, opts = {}) {
-    const { goalHosts, ...queryOpts } = opts;
+    // per-evaluation doom memo (see buildRunGraph)
+    const { goalHosts, ...queryOpts } = { doomCache: new Map(), ...opts };
     const C = queryOpts.constants ?? DEFAULTS;
     const platforms = activePlatforms(level, abilities)
         .slice().sort((a, b) => (a.x - b.x) || (a.y - b.y));
