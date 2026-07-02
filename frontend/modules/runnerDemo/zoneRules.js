@@ -26,6 +26,7 @@ import { generateLevel, deriveGeneratedRules, resolveGenPhysics } from './genera
 import { validateLevel } from './level.js';
 import {
     RUNNER_LIBRARY_OBSTACLES, minimalSetsToRule, emitObstaclePaths,
+    composeAuthoredRule, authoredTermsToRule,
 } from './apRules.js';
 import { verifyObstacleGating } from './verifyObstacles.js';
 
@@ -74,6 +75,125 @@ export function buildZonePayload(region_id, level, sidePortals, physics = DEFAUL
 }
 
 /**
+ * The rule-emission tail shared by the zone-table hook below and the
+ * spec-driven path (runnerDemoLibrary's generateZoneForSpecsGen) —
+ * bounce's assembleBounceRegionFromLevel shape. Given a verified level
+ * + the side→portal map + per-goal specs, validate, derive (or reuse
+ * `derived` — the generator's cached derivation, kept so the spec path
+ * stays byte-identical and skips the expensive re-verify), and emit
+ * each goal in BOTH the legacy rule form (exitRules /
+ * location.access_rule) and the shared paths-and-obstacles form
+ * (exitPaths / location.paths + obstacleDefs), gated by
+ * verifyObstacleGating — all throws, the fail-loudly doctrine.
+ *
+ * Authored terms (foreign items, count > 1 — anything the physics
+ * can't realise) AND onto the emitted rules (composeAuthoredRule),
+ * ride the paths as per-instance logic_gate obstacles
+ * (emitObstaclePaths), and additionally ride the payload as
+ * `gate_rules` so the flash bridge evaluates them at runtime against
+ * live inventory (locked portal/pickup — setGateStates). Zone tables
+ * carry no authored terms, so their payloads stay byte-identical
+ * (no gate_rules key).
+ *
+ * @param {object} level — verified runner level
+ * @param {object} opts
+ * @param {string} opts.region_id
+ * @param {Object<string,string>} opts.sidePortals — side → portal id
+ * @param {Array<{id: string, item: string|null,
+ *   authored?: Array<{item, count}>}>} opts.locationSpecs — one per
+ *   level pickup (ids must match level.pickups)
+ * @param {Object<string, Array>} [opts.exitAuthored] — side → authored
+ *   terms for that exit
+ * @param {string} [opts.physicsProfile]
+ * @param {object} [opts.derived] — cached deriveGeneratedRules result
+ * @param {string} [opts.what] — error-message context
+ */
+export function assembleRunnerRegion(level, {
+    region_id,
+    sidePortals,
+    locationSpecs = [],
+    exitAuthored = {},
+    physicsProfile = DEFAULT_PROFILE_ID,
+    derived = null,
+    what = 'runner region',
+} = {}) {
+    const { C } = resolveGenPhysics(physicsProfile);
+    const modelErrors = validateLevel(level, C);
+    if (modelErrors.length > 0) {
+        throw new Error(`${what} (${level.id}) invalid: ${modelErrors.join('; ')}`);
+    }
+    if (!derived) derived = deriveGeneratedRules(level, C);
+    if (derived.defects.length > 0) {
+        throw new Error(`${what} (${level.id}) has rule defects: `
+            + derived.defects.join('; '));
+    }
+
+    const obstacleDefs = {};
+    const goals = [];
+    const referencedPhysics = new Set();
+    const gateRules = { portals: {}, pickups: {} };
+    const recordPaths = (paths, authoredDefs) => {
+        Object.assign(obstacleDefs, authoredDefs);
+        for (const p of paths) {
+            for (const o of p.obstacles) {
+                if (RUNNER_LIBRARY_OBSTACLES[o]) referencedPhysics.add(o);
+            }
+        }
+    };
+
+    const specById = new Map(locationSpecs.map((s) => [s.id, s]));
+    const locations = (level.pickups ?? []).map((pk) => {
+        const spec = specById.get(pk.id);
+        if (!spec) {
+            throw new Error(`${what} (${level.id}): pickup '${pk.id}' `
+                + 'has no location spec');
+        }
+        const authored = spec.authored ?? [];
+        const sets = derived.pickups[pk.id].minimalSets;
+        const rule = composeAuthoredRule(minimalSetsToRule(sets), authored);
+        const { paths, authoredDefs } = emitObstaclePaths(sets, authored);
+        recordPaths(paths, authoredDefs);
+        if (authored.length > 0) gateRules.pickups[pk.id] = authoredTermsToRule(authored);
+        goals.push({ kind: 'pickup', id: pk.id, minimalSets: sets, paths, rule });
+        return {
+            id: pk.id,
+            item: spec.item ?? null,
+            access_rule: rule,
+            paths,
+            position: null, // level-local units would be misread as tile coords
+        };
+    });
+
+    const exitRules = {};
+    const exitPaths = {};
+    for (const [side, portalId] of Object.entries(sidePortals)) {
+        const goal = derived.exits[portalId];
+        if (!goal) {
+            throw new Error(`${what} (${level.id}): no portal `
+                + `'${portalId}' for exit side ${side}`);
+        }
+        const authored = exitAuthored[side] ?? [];
+        const sets = goal.minimalSets;
+        const rule = composeAuthoredRule(minimalSetsToRule(sets), authored);
+        exitRules[side] = rule;
+        const { paths, authoredDefs } = emitObstaclePaths(sets, authored);
+        exitPaths[side] = paths;
+        recordPaths(paths, authoredDefs);
+        if (authored.length > 0) gateRules.portals[portalId] = authoredTermsToRule(authored);
+        goals.push({ kind: 'exit', id: portalId, minimalSets: sets, paths, rule });
+    }
+    for (const id of referencedPhysics) obstacleDefs[id] = RUNNER_LIBRARY_OBSTACLES[id];
+    verifyObstacleGating(goals, obstacleDefs);
+
+    const payload = buildZonePayload(region_id, level, sidePortals, physicsProfile);
+    if (Object.keys(gateRules.portals).length > 0
+            || Object.keys(gateRules.pickups).length > 0) {
+        payload.gate_rules = gateRules;
+    }
+    return { locations, exitRules, exitPaths, obstacleDefs, payload };
+}
+
+/**
  * The zone-locations channel hook. `zones` is the generateZoneSet
  * table ([{ level, items, spec }]); `physics` is the fallback profile
  * for zones without a stamped spec.
@@ -85,7 +205,6 @@ export function makeExtractZoneRules(zones, { physics } = {}) {
             throw new Error(`runner: zone index ${zoneIdx} out of range (${zones.length} zones)`);
         }
         const profile = zone.spec?.physics ?? physics ?? DEFAULT_PROFILE_ID;
-        const { C } = resolveGenPhysics(profile);
         const sidePortals = assignSidePortals(exitSides);
         const branchCount = Math.max(0, (exitSides?.length ?? 0) - 1);
 
@@ -101,77 +220,17 @@ export function makeExtractZoneRules(zones, { physics } = {}) {
             });
         }
 
-        const modelErrors = validateLevel(level, C);
-        if (modelErrors.length > 0) {
-            throw new Error(`runner zone ${zoneIdx} (${level.id}) invalid: `
-                + modelErrors.join('; '));
-        }
-        const derived = deriveGeneratedRules(level, C);
-        if (derived.defects.length > 0) {
-            throw new Error(`runner zone ${zoneIdx} (${level.id}) has rule defects: `
-                + derived.defects.join('; '));
-        }
-
-        // Emit each goal in BOTH the legacy rule form (exitRules /
-        // location.access_rule) and the shared paths-and-obstacles form
-        // (exitPaths / location.paths + obstacleDefs). Zone tables carry
-        // no authored terms, so every path is physics-only.
-        const obstacleDefs = {};
-        const goals = [];
-        const referencedPhysics = new Set();
-        const recordPaths = (paths) => {
-            for (const p of paths) {
-                for (const o of p.obstacles) {
-                    if (RUNNER_LIBRARY_OBSTACLES[o]) referencedPhysics.add(o);
-                }
-            }
-        };
-
-        const locations = (level.pickups ?? []).map((pk) => {
+        const locationSpecs = (level.pickups ?? []).map((pk) => {
             const item = zone.items[pk.id];
             if (!item) {
                 throw new Error(`runner zone ${zoneIdx} (${level.id}): pickup '${pk.id}' `
                     + 'has no canonical item assignment');
             }
-            const sets = derived.pickups[pk.id].minimalSets;
-            const rule = minimalSetsToRule(sets);
-            const { paths } = emitObstaclePaths(sets, []);
-            recordPaths(paths);
-            goals.push({ kind: 'pickup', id: pk.id, minimalSets: sets, paths, rule });
-            return {
-                id: pk.id,
-                item,
-                access_rule: rule,
-                paths,
-                position: null, // level-local units would be misread as tile coords
-            };
+            return { id: pk.id, item };
         });
-
-        const exitRules = {};
-        const exitPaths = {};
-        for (const [side, portalId] of Object.entries(sidePortals)) {
-            const goal = derived.exits[portalId];
-            if (!goal) {
-                throw new Error(`runner zone ${zoneIdx} (${level.id}): no portal `
-                    + `'${portalId}' for exit side ${side}`);
-            }
-            const sets = goal.minimalSets;
-            const rule = minimalSetsToRule(sets);
-            exitRules[side] = rule;
-            const { paths } = emitObstaclePaths(sets, []);
-            exitPaths[side] = paths;
-            recordPaths(paths);
-            goals.push({ kind: 'exit', id: portalId, minimalSets: sets, paths, rule });
-        }
-        for (const id of referencedPhysics) obstacleDefs[id] = RUNNER_LIBRARY_OBSTACLES[id];
-        verifyObstacleGating(goals, obstacleDefs);
-
-        return {
-            locations,
-            exitRules,
-            exitPaths,
-            obstacleDefs,
-            payload: buildZonePayload(region_id, level, sidePortals, profile),
-        };
+        return assembleRunnerRegion(level, {
+            region_id, sidePortals, locationSpecs,
+            physicsProfile: profile, what: `runner zone ${zoneIdx}`,
+        });
     };
 }

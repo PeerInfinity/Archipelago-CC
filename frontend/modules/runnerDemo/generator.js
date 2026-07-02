@@ -236,35 +236,17 @@ function sameSets(minimalSets, want) {
 const draw = (rng, w) => w.min + rng.next() * w.span;
 
 /**
- * One proposal — UNVERIFIED geometry (generateLevel is the verified
- * entry; this is exported for tests and the dump CLI's proposal view).
- * Floors are flat ground at y=0 (h=1); gap kinds carry the gate
- * semantics. rng draws happen in strict floor order (gap draws, then
- * the floor's width draw) followed by one hazard pass — the draw order
- * IS the byte-identity contract.
+ * Realize a floor plan left to right — the shared body of proposeLevel
+ * and proposeLevelForSpecs. Each plan entry is a floor ({ role, gap,
+ * pickupId?, seg← }); `gap` describes the gap BEFORE it ({ kind,
+ * type?, portalId? }). rng draws happen in strict floor order (gap
+ * draws, then the floor's width draw) followed by the floor's inline
+ * hazard pass — the draw order IS the byte-identity contract. Explicit
+ * pickupId/portalId override the loc_N / exit_brN counters (the spec
+ * path names its goals); the counters are untouched by overrides only
+ * because the two naming schemes are never mixed in one plan.
  */
-export function proposeLevel({
-    id, requirement, pickupCount, branchCount, stepsBetween, hazardChance, rng, G,
-}) {
-    // plan: each entry is a floor; `gap` describes the gap BEFORE it.
-    const plan = [{ role: 'entrance', gap: null }];
-    const plains = () => {
-        const n = 1 + Math.floor(rng.next() * stepsBetween);
-        for (let i = 0; i < n; i++) plan.push({ role: 'plain', gap: { kind: 'run' } });
-    };
-    for (const ability of rng.shuffle([...requirement])) {
-        plains();
-        plan.push({
-            role: 'plain',
-            gap: ability === 'doubleJump' ? { kind: 'dj' } : { kind: 'stone', type: ability },
-        });
-    }
-    plains();
-    for (let i = 0; i < pickupCount; i++) plan.push({ role: 'pickup', gap: { kind: 'run' } });
-    for (let b = 0; b < branchCount; b++) plan.push({ role: 'plain', gap: { kind: 'branch' } });
-    plan.push({ role: 'exit', gap: { kind: 'run' } });
-
-    // realize left to right
+function realizePlan(plan, { rng, G, hazardChance }) {
     const platforms = [];
     const hazards = [];
     const pickups = [];
@@ -303,7 +285,7 @@ export function proposeLevel({
                 // right − FOOT inset (the pickup offset, not the
                 // wall-clamped exit's 0.6)
                 portals.push({
-                    id: `exit_br${brN}`, on: tip.id,
+                    id: g.portalId ?? `exit_br${brN}`, on: tip.id,
                     x: round2(tip.x + G.TIP_W - 0.2), y: round2(tipY + G.TIP_H + 0.6),
                     arrow: 'up', exitName: null,
                 });
@@ -315,7 +297,8 @@ export function proposeLevel({
         const seg = { id: `seg${segN++}`, x, y: 0, w, h: 1, type: 'ground' };
         platforms.push(seg);
         if (f.role === 'pickup') {
-            pickups.push({ id: `loc_${pkN++}`, on: seg.id, x: round2(x + w - 0.2), y: 1.6 });
+            const pid = f.pickupId ?? `loc_${pkN++}`;
+            pickups.push({ id: pid, on: seg.id, x: round2(x + w - 0.2), y: 1.6 });
         }
         f.seg = seg;
         x = round2(x + w);
@@ -337,9 +320,17 @@ export function proposeLevel({
             x = round2(x + partnerW);
         }
     }
-    // width from the realized right edges (+0.01 headroom: the rounded
-    // cumulative cursor can trail a platform's x+w by float dust, and
-    // the validator's bounds check is exact)
+    return { platforms, hazards, pickups, portals };
+}
+
+/**
+ * Assemble a realized plan into a level: width from the realized right
+ * edges (+0.01 headroom — the rounded cumulative cursor can trail a
+ * platform's x+w by float dust, and the validator's bounds check is
+ * exact), the wall-clamped exit_main on the LAST floor, spawn at the
+ * standard entrance.
+ */
+function assembleStrip(id, plan, { platforms, hazards, pickups, portals }) {
     const width = round2(Math.max(...platforms.map((p) => p.x + p.w)) + 0.01);
     const last = plan[plan.length - 1].seg;
     portals.push({
@@ -353,6 +344,36 @@ export function proposeLevel({
         platforms, hazards, pickups, portals,
         spawn: { x: 1, y: 1 },
     };
+}
+
+/**
+ * One proposal — UNVERIFIED geometry (generateLevel is the verified
+ * entry; this is exported for tests and the dump CLI's proposal view).
+ * Floors are flat ground at y=0 (h=1); gap kinds carry the gate
+ * semantics (see realizePlan for the draw-order contract).
+ */
+export function proposeLevel({
+    id, requirement, pickupCount, branchCount, stepsBetween, hazardChance, rng, G,
+}) {
+    // plan: each entry is a floor; `gap` describes the gap BEFORE it.
+    const plan = [{ role: 'entrance', gap: null }];
+    const plains = () => {
+        const n = 1 + Math.floor(rng.next() * stepsBetween);
+        for (let i = 0; i < n; i++) plan.push({ role: 'plain', gap: { kind: 'run' } });
+    };
+    for (const ability of rng.shuffle([...requirement])) {
+        plains();
+        plan.push({
+            role: 'plain',
+            gap: ability === 'doubleJump' ? { kind: 'dj' } : { kind: 'stone', type: ability },
+        });
+    }
+    plains();
+    for (let i = 0; i < pickupCount; i++) plan.push({ role: 'pickup', gap: { kind: 'run' } });
+    for (let b = 0; b < branchCount; b++) plan.push({ role: 'plain', gap: { kind: 'branch' } });
+    plan.push({ role: 'exit', gap: { kind: 'run' } });
+
+    return assembleStrip(id, plan, realizePlan(plan, { rng, G, hazardChance }));
 }
 
 /**
@@ -414,6 +435,224 @@ export function generateLevel({
     }
     throw new Error(`generateLevel('${id}'): no valid proposal in ${attempts} attempts`
         + ` (requirement [${want.join('+')}]): ${rejected.join('; ')}`);
+}
+
+// ── Spec-driven generation (sphere growth, plan §4.9) ───────────────
+
+/**
+ * Widen the plain-run-gap window toward the structural cap
+ * (0.75 × single reach — validateGeometry's own bound, which keeps
+ * plain gaps grounded-crossable WITHOUT spending the coyote window:
+ * the swept reach is coyote-INCLUSIVE, so gaps must never approach it).
+ * margin 0 returns G UNCHANGED (byte-identity for default worlds);
+ * margin 1 stretches the window max to the cap. Only RUN_GAP moves —
+ * gate windows are pinned calibration, never a difficulty knob.
+ */
+export function applyGapMargin(G, margin = 0) {
+    const m = Math.max(0, Math.min(1, margin));
+    if (m === 0) return G;
+    const cap = 0.75 * G.REACH.single;
+    const baseMax = G.RUN_GAP.min + G.RUN_GAP.span;
+    const max = Math.min(cap, baseMax + m * (cap - baseMax));
+    // floor, not round: a 2dp round-up would nudge the window max past
+    // the structural cap and fail validateGeometry
+    const span = Math.floor((max - G.RUN_GAP.min) * 100) / 100;
+    return Object.freeze({
+        ...G,
+        RUN_GAP: Object.freeze({ min: G.RUN_GAP.min, span: Math.max(G.RUN_GAP.span, span) }),
+    });
+}
+
+/**
+ * Structural plan for a spec-driven strip (throws, non-retryable —
+ * the runner analog of bounce's planBraidGatedChain). A strip realises
+ * gates SEQUENTIALLY, so the distinct physics requirements over all
+ * goals must form one NESTED CHAIN (∅ ⊂ R1 ⊂ … ⊂ Rk); each goal sits
+ * in the window after its requirement's gates and before the next
+ * gate, so it derives EXACTLY its requirement. The exit carrying the
+ * maximal requirement becomes the wall-clamped exit_main at the strip
+ * end; every other exit rides an elevated branch tip in its window
+ * (exit_br0..N in spec order) — including any requirement-[] exit,
+ * which lands on a tip BEFORE the first gate (this is how the sphere
+ * engine's ungated entrance-side back portal is realised: the player
+ * spawns past it on the entrance floor and returns to it by choice —
+ * a deliberate tip landing — never by the mandatory route's wake).
+ *
+ * @param {Array<{key: string, requirement: string[]}>} exitSpecs
+ * @param {Array<{id: string, requirement: string[]}>} pickupSpecs
+ * @returns {{ levels: Array<{ added: string[], pickups: string[],
+ *   tips: Array<{key: string, portalId: string}> }>, mainKey: string,
+ *   portalByKey: Object<string, string> }}
+ */
+export function planStripSpecs(exitSpecs = [], pickupSpecs = []) {
+    if (exitSpecs.length === 0) {
+        throw new Error('runner planStripSpecs: at least one exit spec required');
+    }
+    const seen = new Set();
+    const norm = (req, what) => {
+        if (seen.has(what)) throw new Error(`runner planStripSpecs: duplicate goal ${what}`);
+        seen.add(what);
+        const sorted = [...new Set(req ?? [])].sort();
+        for (const a of sorted) {
+            if (!GATEABLE.has(a)) {
+                throw new Error(`runner planStripSpecs: no gate template for '${a}' (${what})`);
+            }
+        }
+        return sorted;
+    };
+    const exits = exitSpecs.map((s) => ({ key: s.key, req: norm(s.requirement, `exit '${s.key}'`) }));
+    const pickups = pickupSpecs.map((s) => ({ id: s.id, req: norm(s.requirement, `pickup '${s.id}'`) }));
+
+    // Distinct requirement sets (∅ always present — the entrance
+    // window), chain-checked smallest to largest.
+    const byKey = new Map([['', []]]);
+    for (const g of [...exits, ...pickups]) byKey.set(g.req.join('+'), g.req);
+    const sets = [...byKey.values()].sort((a, b) => a.length - b.length);
+    for (let i = 1; i < sets.length; i++) {
+        if (sets[i - 1].length === sets[i].length
+                || !sets[i - 1].every((x) => sets[i].includes(x))) {
+            throw new Error('runner planStripSpecs: requirements do not form a nested chain '
+                + `([${sets[i - 1].join('+')}] vs [${sets[i].join('+')}]) — a strip realises `
+                + 'gates sequentially');
+        }
+    }
+
+    // The strip's right end derives the FULL chain, so the maximal
+    // requirement must belong to an exit (the main).
+    const top = sets[sets.length - 1];
+    const main = exits.find((e) => e.req.length === top.length);
+    if (!main) {
+        throw new Error(`runner planStripSpecs: the maximal requirement [${top.join('+')}] `
+            + 'belongs to no exit — the strip end must be an exit');
+    }
+
+    const portalByKey = { [main.key]: 'exit_main' };
+    let brN = 0;
+    const levels = sets.map((set, i) => {
+        const prev = i > 0 ? sets[i - 1] : [];
+        const lvlKey = set.join('+');
+        const tips = exits
+            .filter((e) => e !== main && e.req.join('+') === lvlKey)
+            .map((e) => {
+                const portalId = `exit_br${brN++}`;
+                portalByKey[e.key] = portalId;
+                return { key: e.key, portalId };
+            });
+        return {
+            added: set.filter((a) => !prev.includes(a)),
+            pickups: pickups.filter((p) => p.req.join('+') === lvlKey).map((p) => p.id),
+            tips,
+        };
+    });
+    return { levels, mainKey: main.key, portalByKey };
+}
+
+/**
+ * One spec-driven proposal — UNVERIFIED geometry (the spec analog of
+ * proposeLevel; generateLevelForSpecs is the verified entry). Walks
+ * the planStripSpecs levels: per level, gate gaps for the ADDED
+ * abilities (shuffled, plains before each — generateLevel's texture),
+ * then the level's goals (pickup floors, then branch tips in spec
+ * order); the strip ends with the exit_main floor.
+ */
+export function proposeLevelForSpecs({ id, plan, stepsBetween, hazardChance, rng, G }) {
+    const floors = [{ role: 'entrance', gap: null }];
+    const plains = () => {
+        const n = 1 + Math.floor(rng.next() * stepsBetween);
+        for (let i = 0; i < n; i++) floors.push({ role: 'plain', gap: { kind: 'run' } });
+    };
+    plan.levels.forEach((level, i) => {
+        for (const ability of rng.shuffle([...level.added])) {
+            plains();
+            floors.push({
+                role: 'plain',
+                gap: ability === 'doubleJump' ? { kind: 'dj' } : { kind: 'stone', type: ability },
+            });
+        }
+        if (level.pickups.length > 0 || level.tips.length > 0
+                || i === plan.levels.length - 1) plains();
+        for (const pickupId of level.pickups) {
+            floors.push({ role: 'pickup', gap: { kind: 'run' }, pickupId });
+        }
+        for (const tip of level.tips) {
+            floors.push({ role: 'plain', gap: { kind: 'branch', portalId: tip.portalId } });
+        }
+    });
+    floors.push({ role: 'exit', gap: { kind: 'run' } });
+
+    return assembleStrip(id, floors, realizePlan(floors, { rng, G, hazardChance }));
+}
+
+/**
+ * Generate one strip realising per-goal requirements (sphere growth's
+ * requirement-targeted entry; generateLevel stays the single-global-
+ * requirement zone-table entry). Exit specs carry a caller key (the
+ * grid side); the returned portalByKey maps it to the realised portal
+ * id. Verification is the SAME gatekeeper as generateLevel —
+ * validateLevel + deriveGeneratedRules, then every goal's minimal sets
+ * must equal exactly its own requirement. Generator form: yields
+ * { type: 'attempt', attempt, attempts } per proposal so the panel's
+ * stepped flow can show generate-and-test progress live.
+ *
+ * @returns {{ level, derived, portalByKey }}
+ */
+export function* generateLevelForSpecsGen({
+    id = 'gen',
+    exitSpecs = [],
+    pickupSpecs = [],
+    stepsBetween = 2,
+    hazardChance = 0.35,
+    gapMargin = 0,
+    seed = 1,
+    attempts = 8,
+    physics = DEFAULT_PROFILE_ID,
+} = {}) {
+    const { C, G } = resolveGenPhysics(physics);
+    const Geff = applyGapMargin(G, gapMargin);
+    // Structural validation runs ONCE (spec-level, non-retryable) so a
+    // decline (non-nested chain, tipless maximal set) throws immediately.
+    const plan = planStripSpecs(exitSpecs, pickupSpecs);
+
+    const wantByGoal = new Map([
+        ...exitSpecs.map((s) => [plan.portalByKey[s.key], [...new Set(s.requirement ?? [])].sort()]),
+        ...pickupSpecs.map((s) => [s.id, [...new Set(s.requirement ?? [])].sort()]),
+    ]);
+    const rejected = [];
+    for (let attempt = 0; attempt < attempts; attempt++) {
+        yield { type: 'attempt', attempt: attempt + 1, attempts };
+        const rng = createRng((seed * 8191 + attempt * 127) | 0);
+        const level = proposeLevelForSpecs({
+            id, plan, stepsBetween, hazardChance, rng, G: Geff,
+        });
+        const modelErrors = validateLevel(level, C);
+        if (modelErrors.length > 0) {
+            rejected.push(`attempt ${attempt}: ${modelErrors[0]}`);
+            continue;
+        }
+        const derived = deriveGeneratedRules(level, C);
+        if (derived.defects.length > 0) {
+            rejected.push(`attempt ${attempt}: ${derived.defects[0]}`);
+            continue;
+        }
+        const goals = [
+            ...level.pickups.map((pk) => [pk.id, derived.pickups[pk.id]]),
+            ...level.portals.map((pt) => [pt.id, derived.exits[pt.id]]),
+        ];
+        const bad = goals.find(([goalId, g]) => !sameSets(g.minimalSets, wantByGoal.get(goalId)));
+        if (!bad) return { level, derived, portalByKey: plan.portalByKey };
+        rejected.push(`attempt ${attempt}: '${bad[0]}' derived `
+            + `!= [${wantByGoal.get(bad[0]).join('+')}]`);
+    }
+    throw new Error(`generateLevelForSpecs('${id}'): no valid proposal in ${attempts} attempts: `
+        + rejected.join('; '));
+}
+
+/** Sync wrapper of generateLevelForSpecsGen (drains the attempt events). */
+export function generateLevelForSpecs(opts) {
+    const gen = generateLevelForSpecsGen(opts);
+    let r = gen.next();
+    while (!r.done) r = gen.next();
+    return r.value;
 }
 
 // ── Zone table ──────────────────────────────────────────────────────
