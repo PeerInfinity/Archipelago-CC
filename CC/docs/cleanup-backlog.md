@@ -21,6 +21,15 @@ Issues noticed while writing the official procgen documentation (2026-07-01) tha
 - [x] **DONE 2026-07-01** (`f8cd8d857`) — module doc index now covers all 79 directories, with procgen/loops/game-tool sections and disabled-by-default markers.
 - [x] **DONE 2026-07-01** (`ce335e718`) — flagship READMEs (root, frontend, exporter, world_generator) now cover procgen and the round-trip; frontend's stale module count fixed.
 
+## Deferred feature follow-ups (from completed projects)
+
+Recorded here when the originating project wrapped so they aren't lost; none are urgent.
+
+- [ ] **Per-sphere batching follow-ups**: zone-substrate bare-rules reconstruction in `rebuildEnvelopeFromRulesJson`, and a CLI-only truncate-to-wave operation.
+- [ ] **Loops rework deferrals**: jta custom-queue recording (`loopSupport.customQueues` flip once recording exists), and bounce native per-tick mana drain (loops currently charges on action completion).
+- [ ] **`xpEffect` `'speed'` / `'both'` variants** — reserved in the loop_costs schema, deferred pending tick-speed regulation.
+- [ ] **Maze content modules phase 3 (block-pushing)** — planned but never started; the `onMove` hook and queue verb are already in place.
+
 ## Tooling notes (Claude Code sessions)
 
 - **Plain `grep` silently returns nothing on some frontend sources** (files containing emoji/multibyte UTF-8, e.g. `procgenPipelineUI.js`) — the match exists but grep produces no output and no error. Prefix with `LC_ALL=C` (`LC_ALL=C grep -n pattern file`) or use the Grep tool. This has repeatedly cost debugging time; if it keeps biting, consider adding it to CLAUDE.md's gotchas table.
