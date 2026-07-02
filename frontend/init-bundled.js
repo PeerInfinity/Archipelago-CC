@@ -126,6 +126,7 @@ import * as textAdventureSubstrateWrapperModule from './modules/textAdventureSub
 import * as jtaSubstrateWrapperModule from './modules/jtaSubstrateWrapper/index.js';
 import * as flashSubstrateModule from './modules/flashSubstrate/index.js';
 import * as bounceDemoModule from './modules/bounceDemo/index.js';
+import * as runnerDemoModule from './modules/runnerDemo/index.js';
 import * as bounceRegionEditorModule from './modules/bounceRegionEditor/index.js';
 import * as playbackBotModule from './modules/playbackBot/index.js';
 
@@ -223,6 +224,7 @@ const BUNDLED_MODULES = {
   jtaSubstrateWrapper: jtaSubstrateWrapperModule,
   flashSubstrate: flashSubstrateModule,
   bounceDemo: bounceDemoModule,
+  runnerDemo: runnerDemoModule,
   bounceRegionEditor: bounceRegionEditorModule,
   playbackBot: playbackBotModule,
 };

@@ -256,6 +256,10 @@
       "path": "./modules/bounceDemo/index.js",
       "enabled": true
     },
+    "runnerDemo": {
+      "path": "./modules/runnerDemo/index.js",
+      "enabled": true
+    },
     "procgenPipeline": {
       "path": "./modules/procgenPipeline/index.js",
       "enabled": true
@@ -338,6 +342,7 @@
     "jtaSubstrateWrapper",
     "flashSubstrate",
     "bounceDemo",
+    "runnerDemo",
     "procgenPipeline",
     "bounceRegionEditor",
     "procgenPlayer",

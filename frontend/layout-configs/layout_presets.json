@@ -258,6 +258,11 @@
             },
             {
               "type": "component",
+              "componentType": "runnerDemoPanel",
+              "title": "Runner Demo"
+            },
+            {
+              "type": "component",
               "componentType": "procgenPipelinePanel",
               "title": "Procgen Pipeline"
             },
