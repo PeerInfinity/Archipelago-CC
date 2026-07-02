@@ -453,13 +453,17 @@ export function generateZoneSet({ count = 5, seed = 1, physics = DEFAULT_PROFILE
             }
         }
         const grants = plan.victory ? [] : (plan.grants ?? []);
-        const level = generateLevel({
-            id: `gen_z${i}`,
+        // The spec is stamped on the zone so extractZoneRules
+        // (zoneRules.js) can re-run generateLevel with a branchCount
+        // matching the exit sides it is asked for — same seed, so the
+        // no-branch regeneration reproduces `level` byte-identically.
+        const spec = {
             requirement,
             pickupCount: plan.victory ? 1 : grants.length,
             seed: (seed * 31 + i) | 0,
             physics,
-        });
+        };
+        const level = generateLevel({ id: `gen_z${i}`, ...spec });
         const items = {};
         level.pickups.forEach((pk, idx) => {
             items[pk.id] = plan.victory
@@ -467,7 +471,7 @@ export function generateZoneSet({ count = 5, seed = 1, physics = DEFAULT_PROFILE
                 : ABILITY_ITEM_NAMES[grants[idx]];
         });
         granted.push(...grants);
-        zones.push({ level, items });
+        zones.push({ level, items, spec });
     });
     return zones;
 }

@@ -90,6 +90,14 @@ describe('generateZoneSet', () => {
         expect(Object.values(ABILITY_ITEM_NAMES))
             .toContain(Object.values(zones[0].items)[0]);
         expect(Object.values(zones[zones.length - 1].items)).toEqual([VICTORY_ITEM_NAME]);
+        // The stamped generation spec reproduces the stored level
+        // byte-identically — the contract extractZoneRules relies on to
+        // regenerate with branch exits (zoneRules.js).
+        for (const zone of zones) {
+            expect(zone.spec).toMatchObject({ pickupCount: expect.any(Number) });
+            expect(JSON.stringify(generateLevel({ id: zone.level.id, ...zone.spec })))
+                .toBe(JSON.stringify(zone.level));
+        }
     });
 
     it('same seed ⇒ byte-identical zone table', () => {
