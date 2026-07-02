@@ -14,6 +14,8 @@ Issues noticed while writing the official procgen documentation (2026-07-01) tha
 
 ## Documentation / repo hygiene
 
+- [ ] **Root README's `?mode=loops` demo link falls back to the default layout.** `frontend/modes.json` has no `loops` mode, so `https://…/?mode=loops` silently loads the default mode (verified locally 2026-07-01: identical tab set). Either re-add a loops mode config, or change the README link to whatever the intended loops demo entry point is now. The `?metagame=…` links were not verified either.
+
 - [ ] **In-code references to NewDocs need repointing.** 90 references across ~60 files cite gitignored `NewDocs/` paths. Full inventory, grouping, and the replacement-doc plan: [newdocs-reference-map.md](./newdocs-reference-map.md). Repoint per-file only once the official doc actually covers what the NewDocs plan covered; history-style references ("built per plan X") are often better deleted than repointed.
 - [ ] **`rule_builder_modified/` and `rule_builder_original/` sit at the repo root** with their own READMEs — diff artifacts that pollute the README namespace and can be mistaken for the real `rule_builder/`. Check whether `docs/json/developer/diffs/rule-builder/` references them; either move them under the diffs area or delete them if the diff docs stand alone.
 - [ ] **Module doc index is stale**: `docs/json/modules/README.md` covers ~50 of the 79 directories in `frontend/modules/`, missing every procgen module (`procgenPipeline`, `procgenPlayer`, `bounceDemo`, `bounceRegionEditor`, `playbackBot`, `flashSubstrate`, `loopsCostDebugger`, …). Planned as phase 2 of the docs effort; tracked here so it isn't lost.

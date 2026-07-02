@@ -2,6 +2,10 @@
 
 The Archipelago JSON Export Tools project provides an advanced tracker for [Archipelago](https://archipelago.gg/) multiworld randomizer games. Archipelago is an open-source framework that connects multiple single-player games into one cooperative multiplayer experience, where items from one game can be found in another player's game.
 
+**New to Archipelago itself?** Start with the **[Introduction to Archipelago](./introduction-to-archipelago.md)**.
+
+**Want to see the highlights first?** Take the **[Guided Tour](./guided-tour.md)** — ten minutes in the live demo, nothing to install.
+
 **Ready to get started?** See the **[Quick Start Guide](./quick-start.md)** for step-by-step instructions.
 
 **Try the Live Demo:** Either the **[Latest Stable Version](https://peerinfinity.github.io/Archipelago/)** or the **[Latest Development Version](https://peerinfinity.github.io/Archipelago-CC/)**

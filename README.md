@@ -68,6 +68,8 @@ See the [procgen developer documentation](./docs/json/developer/procgen/README.m
 
 This project contains a full documentation suite for both users and developers.
 
+- **[Guided Tour](./docs/json/user/guided-tour.md)** — See the highlights in ten minutes, directly in the live demo
+- **[Introduction to Archipelago](./docs/json/user/introduction-to-archipelago.md)** — For readers new to Archipelago and randomizers
 - **[Documentation Portal](./docs/json/README.md)** — Main documentation index
 - **[Features Overview](./docs/json/features/README.md)** — All major features with links to detailed docs
 - **[User Overview](./docs/json/user/overview.md)** — What this project does and how to use it
