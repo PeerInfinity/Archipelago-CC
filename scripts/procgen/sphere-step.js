@@ -75,6 +75,7 @@ import { fileURLToPath } from 'node:url';
 import '../../frontend/modules/mazeRoom/mazeRoomLibrary.js';
 import '../../frontend/modules/textAdventureSubstrate/textAdventureSubstrateLibrary.js';
 import '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
+import '../../frontend/modules/runnerDemo/runnerDemoLibrary.js';
 
 import {
     SPHERE_STEPS, runStep, runToStep, resumeEnvelope, detectCompleted,
