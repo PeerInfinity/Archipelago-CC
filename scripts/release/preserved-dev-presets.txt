@@ -20,6 +20,7 @@
 # generate_yaml_templates -> Generate.py --seed 1.
 
 bounce_worldgen
+runner_worldgen
 jta_mixed_test
 jta_substrate_test
 procgen_maze

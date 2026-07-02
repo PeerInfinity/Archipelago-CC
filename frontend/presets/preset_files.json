@@ -9391,5 +9391,28 @@
         "has_procgen_data": true
       }
     }
+  },
+  "runner_worldgen": {
+    "name": "Runner WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Runner WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ],
+        "is_canonical": true,
+        "has_procgen_data": true
+      }
+    }
   }
 }

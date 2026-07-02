@@ -1,0 +1,42 @@
+﻿Archipelago Version 0.6.8  -  Seed: 1
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Runner WorldGen
+Location Count:                  3
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Randomize Items:                 No
+Use Canonical Options:           Yes
+
+
+Locations:
+
+region_1_0__loc_0: Double Jump
+region_0_1__loc_0: Victory
+region_1_1__loc_0: Blue Platforms
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  region_1_0__loc_0: Double Jump
+}
+2: {
+  region_1_1__loc_0: Blue Platforms
+}
+3: {
+  region_0_1__loc_0: Victory
+}
