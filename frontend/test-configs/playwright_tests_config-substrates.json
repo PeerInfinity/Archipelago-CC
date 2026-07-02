@@ -3,7 +3,7 @@
   "hideDisabledTests": true,
   "randomizeOrder": false,
   "defaultEnabledState": false,
-  "_comment": "Substrate in-app tests (text-adventure wrapper + flash). Runs under the full module config (modules.json) so the substrate runtimes register — unlike test-regression, which uses modules-nograph.json and therefore cannot load them. New substrate tests must be added here (they register enabled:false so they don't leak into other modes).",
+  "_comment": "Substrate in-app tests (text-adventure wrapper + flash + runner). Runs under the full module config (modules.json) so the substrate runtimes register \u2014 unlike test-regression, which uses modules-nograph.json and therefore cannot load them. New substrate tests must be added here (they register enabled:false so they don't leak into other modes).",
   "tests": [
     {
       "id": "tasw-location-check-direct-dispatch",
@@ -49,6 +49,16 @@
       "id": "flash-capability-gating",
       "enabled": true,
       "category": "flashSubstrate"
+    },
+    {
+      "id": "runner-location-check-real-physics",
+      "enabled": true,
+      "category": "runnerDemo"
+    },
+    {
+      "id": "runner-preset-sidecar-configured",
+      "enabled": true,
+      "category": "runnerDemo"
     }
   ]
 }

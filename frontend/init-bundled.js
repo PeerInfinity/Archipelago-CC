@@ -153,6 +153,7 @@ import './modules/tests/testCases/spoilerTestPanelTests.js';
 import './modules/tests/testCases/playbackBotTests.js';
 import './modules/tests/testCases/textAdventureWrapperTests.js';
 import './modules/tests/testCases/flashSubstrateTests.js';
+import './modules/tests/testCases/runnerDemoTests.js';
 
 // Signal that test cases have been pre-imported
 window.__BUNDLED_TEST_CASES__ = true;

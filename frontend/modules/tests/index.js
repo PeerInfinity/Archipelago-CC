@@ -71,6 +71,7 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('window:loadUrl'); // For window-base tests
   registrationApi.registerEventBusPublisher('procgen:activeSubstrateChanged'); // flashSubstrate tests
   registrationApi.registerEventBusPublisher('flash:loadRegion'); // flashSubstrate tests
+  registrationApi.registerEventBusPublisher('runner:loadRegion'); // runnerDemo tests
   registrationApi.registerEventBusPublisher('tests:allTestsChanged');
   
   // Progress bar test events
