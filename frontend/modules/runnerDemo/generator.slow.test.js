@@ -12,6 +12,7 @@ import { describe, it, expect } from 'vitest';
 import {
     CELESTE_GEOMETRY, sweepMaxGap, deriveGeometry, validateGeometry,
     generateLevel, generateZoneSet, deriveGeneratedRules,
+    SWEEP_SATURATING_PROFILES,
 } from './generator.js';
 import { deriveAccessRules } from './deriveRules.js';
 import { DEFAULTS, PROFILES } from './physics.js';
@@ -119,4 +120,16 @@ describe('calibration pins', () => {
         const G = deriveGeometry(C);
         expect(validateGeometry(G, C)).toEqual([]);
     });
+
+    it('SWEEP_SATURATING_PROFILES membership matches a fresh dj sweep of every profile', () => {
+        // The binary search converges just under the cap when the true
+        // reach exceeds it; anything within one probe-step of 16 is
+        // saturated. exitGateVeto pins its physics-gate refusals on
+        // this list, so it must track the profile data exactly.
+        for (const [id, profile] of Object.entries(PROFILES)) {
+            const dj = sweepMaxGap(profile.constants, { doubleJump: true, blue: false });
+            expect(dj >= 15.9, `${id} dj sweep ${dj}`)
+                .toBe(SWEEP_SATURATING_PROFILES.includes(id));
+        }
+    }, 300000);
 });

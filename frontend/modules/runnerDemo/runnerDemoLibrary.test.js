@@ -17,10 +17,23 @@ import {
     RUNNER_LOAD_REGION_EVENT,
     RUNNER_IFRAME_ID,
     RUNNER_ZONE_COUNT,
+    GATEABLE_ITEMS,
+    SWEEP_SATURATING_PROFILES,
+    makeExitGateVeto,
+    canHostExitGates,
+    exitGateVeto,
+    backPortalGated,
+    hostsSurplusExitsNatively,
+    gateHostingHint,
+    buildZoneSpecs,
+    buildRunnerRegionContract,
 } from './runnerDemoLibrary.js';
 import {
     RUNNER_LIBRARY_ITEMS, RUNNER_LIBRARY_OBSTACLES, VICTORY_ITEM_NAME,
 } from './apRules.js';
+import {
+    DEFAULT_RUNNER_PROCGEN_PARAMS, buildRunnerRegionParams,
+} from './runnerProcgenParams.js';
 import { gapJump } from './fixtures.js';
 
 afterEach(() => {
@@ -163,5 +176,126 @@ describe('runner entry — zone-based build-time hooks', () => {
         expect(() => entry.extractZoneRules(3, {
             region_id: 'r', exitSides: ['E'],
         })).toThrow(/out of range/);
+    });
+});
+
+describe('runner entry — sphere-growth adapter hooks (plan §4.9)', () => {
+    const DJ = 'Double Jump';
+    const BLUE = 'Blue Platforms';
+
+    it('wires the hook set into the entry', () => {
+        expect(substrateRegistryEntry.gateableItems).toBe(GATEABLE_ITEMS);
+        expect(GATEABLE_ITEMS).toEqual([DJ, BLUE]);
+        expect(substrateRegistryEntry.canHostExitGates).toBe(canHostExitGates);
+        expect(substrateRegistryEntry.exitGateVeto).toBe(exitGateVeto);
+        expect(substrateRegistryEntry.backPortalGated).toBe(backPortalGated);
+        expect(substrateRegistryEntry.hostsSurplusExitsNatively).toBe(hostsSurplusExitsNatively);
+        expect(substrateRegistryEntry.gateHostingHint).toBe(gateHostingHint);
+        expect(substrateRegistryEntry.buildZoneSpecs).toBe(buildZoneSpecs);
+        expect(substrateRegistryEntry.buildRegionContract).toBe(buildRunnerRegionContract);
+        expect(typeof substrateRegistryEntry.generateZoneForSpecs).toBe('function');
+        expect(typeof substrateRegistryEntry.generateZoneForSpecsGen).toBe('function');
+        expect(substrateRegistryEntry.defaultProcgenParams)
+            .toBe(DEFAULT_RUNNER_PROCGEN_PARAMS);
+        expect(substrateRegistryEntry.buildRegionParams).toBe(buildRunnerRegionParams);
+        expect(typeof substrateRegistryEntry.renderProcgenParams).toBe('function');
+        // no pre-plan contribution (bounce's arrow has no runner analog)
+        expect(substrateRegistryEntry.prepareSphereGrowth).toBeUndefined();
+        expect(substrateRegistryEntry.driftItems).toBeUndefined();
+    });
+
+    it('backPortalGated is false (ungated early tip) and surplus exits are native', () => {
+        expect(backPortalGated({})).toBe(false);
+        expect(backPortalGated()).toBe(false);
+        expect(hostsSurplusExitsNatively({})).toBe(true);
+    });
+
+    it('canHostExitGates: nested chains pass, incomparable gates are vetoed', () => {
+        expect(canHostExitGates([], [DJ])).toBe(true);
+        expect(canHostExitGates([[DJ]], [DJ, BLUE])).toBe(true);
+        expect(canHostExitGates([[DJ, BLUE]], [DJ])).toBe(true);
+        expect(canHostExitGates([[DJ]], [DJ])).toBe(true);
+        expect(canHostExitGates([[DJ]], [BLUE])).toBe(false);
+        expect(canHostExitGates([[DJ], [DJ, BLUE]], [BLUE])).toBe(false);
+    });
+
+    it('authored terms (foreign items, count > 1) are structurally free', () => {
+        expect(canHostExitGates([[DJ]], ['key_red'])).toBe(true);
+        expect(canHostExitGates([[DJ]], [{ item: BLUE, count: 2 }])).toBe(true);
+        expect(canHostExitGates([[DJ]], [{ item: BLUE, count: 2 }, DJ])).toBe(true);
+        // ...but a count-1 physics part still nests
+        expect(canHostExitGates([[DJ]], [{ item: BLUE, count: 1 }])).toBe(false);
+    });
+
+    it('sweep-saturating profiles veto ALL physics gates; authored still pass', () => {
+        for (const profile of SWEEP_SATURATING_PROFILES) {
+            const veto = makeExitGateVeto(profile);
+            expect(veto([], [DJ])).toBe(false);
+            expect(veto([], [BLUE])).toBe(false);
+            expect(veto([], ['key_red'])).toBe(true);
+            expect(veto([], [{ item: DJ, count: 2 }])).toBe(true);
+        }
+        expect(makeExitGateVeto('celeste')([], [DJ])).toBe(true);
+    });
+
+    it('exitGateVeto selects by regionParams.runnerPhysicsProfile', () => {
+        expect(exitGateVeto({ runnerPhysicsProfile: 'sonic' })([], [DJ])).toBe(false);
+        expect(exitGateVeto({ runnerPhysicsProfile: 'celeste' })([], [DJ])).toBe(true);
+        expect(exitGateVeto({})([], [DJ])).toBe(true);
+        expect(exitGateVeto()([], [DJ])).toBe(true);
+    });
+
+    it('gateHostingHint names the saturation veto on saturating profiles', () => {
+        expect(gateHostingHint({ runnerPhysicsProfile: 'sonic' })).toMatch(/no physics gates/);
+        expect(gateHostingHint({})).toMatch(/nested chain/);
+    });
+
+    it('buildZoneSpecs translates the runner regionParams keys, leaving the base otherwise', () => {
+        const base = { region_id: 'r', exitSpecs: [], locationSpecs: [], seed: 7 };
+        expect(buildZoneSpecs(base, {})).toEqual(base);
+        expect(buildZoneSpecs(base, {
+            runnerPhysicsProfile: 'nsmbu',
+            runnerGapMargin: 0.5,
+            runnerHazardDensity: 0.1,
+            runnerLengthSteps: 3,
+        })).toEqual({
+            ...base,
+            physicsProfile: 'nsmbu', gapMargin: 0.5, hazardChance: 0.1, stepsBetween: 3,
+        });
+    });
+
+    it('buildRunnerRegionContract: entrance side joins UNGATED; knobs ride along', () => {
+        const contract = buildRunnerRegionContract({
+            specs: {
+                exitPlans: [{ side: 'E', gate: [DJ], gateCounts: { [DJ]: 1 } }],
+                entranceSide: 'W',
+            },
+            node: { gate: [DJ], items: [{ id: 'it_0', item: 'key_red' }] },
+            regionParams: { runnerPhysicsProfile: 'nsmbu', runnerGapMargin: 0.25 },
+        });
+        expect(contract.exitSpecs).toEqual([
+            { side: 'E', requirement: [DJ], counts: { [DJ]: 1 } },
+            { side: 'W', requirement: [], counts: {} },
+        ]);
+        expect(contract.locationSpecs).toEqual([
+            { id: 'it_0', item: 'key_red', requirement: [], counts: {} },
+        ]);
+        expect(contract.physicsProfile).toBe('nsmbu');
+        expect(contract.gapMargin).toBe(0.25);
+        expect(contract.entranceSide).toBe('W');
+    });
+
+    it('buildRunnerRegionParams: runner-prefixed keys (no collision with bounce)', () => {
+        expect(buildRunnerRegionParams({})).toEqual({
+            runnerPhysicsProfile: 'celeste',
+            runnerGapMargin: 0,
+            runnerHazardDensity: 0.35,
+            runnerLengthSteps: 2,
+        });
+        expect(buildRunnerRegionParams({ params: { runnerGapMargin: 1 } }).runnerGapMargin)
+            .toBe(1);
+        // the defaults mirror the generator defaults (untouched panel ⇒
+        // byte-identical worlds)
+        expect(DEFAULT_RUNNER_PROCGEN_PARAMS).toEqual(buildRunnerRegionParams({}));
     });
 });

@@ -93,6 +93,19 @@ export function sweepMaxGap(C, abilities, { cap = 16 } = {}) {
 }
 
 /**
+ * Profiles whose reach SATURATES the sweep cap (16): the measured
+ * horizontal reach exceeds the probe's search ceiling, so the swept
+ * REACH values are lower bounds, not measurements — every gate window
+ * derived from them (DJ_GAP, STONE) is UNVERIFIABLE there. The sphere
+ * grower's exitGateVeto refuses physics gates on these profiles rather
+ * than emit unverifiable specs (plan §4.9 calibration constraints);
+ * raising the cap and re-deriving the windows would unlock them.
+ * Membership is pinned (static profile data) and re-asserted by a
+ * sweep in generator.slow.test.js.
+ */
+export const SWEEP_SATURATING_PROFILES = Object.freeze(['sonic', 'meatboy']);
+
+/**
  * Pinned geometry for the default (celeste) profile. REACH values are
  * the sweepMaxGap results (single 6.69 incl. coyote; dj 11.40);
  * windows leave margin on BOTH sides of every gate boundary so the
