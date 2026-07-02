@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Runner Demo</title>
+    <style>
+        html, body { height: 100%; margin: 0; background: #1a1a1a; color: #ccc;
+                     font-family: 'Courier New', monospace; }
+        body { display: flex; flex-direction: column; }
+        #status { padding: 4px 8px; background: #2d2d2d; border-bottom: 1px solid #444;
+                  font-size: 11px; color: #888; flex-shrink: 0; }
+        #main { flex: 1; min-height: 0; display: flex; gap: 8px; padding: 8px; }
+        #gamewrap { position: relative; flex-shrink: 0; align-self: flex-start; }
+        #game { background: #101418; border: 1px solid #333; display: block; }
+        #devpanel { flex: 1; min-width: 0; overflow-y: auto; font-size: 12px; }
+        #devpanel:empty { display: none; }
+        #devpanel h3 { margin: 6px 0 4px; font-size: 12px; color: #9c9; }
+        #devpanel label { display: block; cursor: pointer; }
+        #devpanel select, #devpanel button { font-family: inherit; margin: 2px 0; }
+        #devlog { background: #111; border: 1px solid #333; padding: 4px;
+                  height: 180px; overflow-y: auto; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <div id="status">Runner Demo — waiting for configure…</div>
+    <div id="main">
+        <div id="gamewrap"><canvas id="game" width="960" height="512"></canvas></div>
+        <div id="devpanel"></div>
+    </div>
+    <script type="module" src="./main.js"></script>
+</body>
+</html>
