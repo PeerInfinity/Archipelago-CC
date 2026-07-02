@@ -10,10 +10,19 @@
         body { display: flex; flex-direction: column; }
         #status { padding: 4px 8px; background: #2d2d2d; border-bottom: 1px solid #444;
                   font-size: 11px; color: #888; flex-shrink: 0; }
-        #main { flex: 1; min-height: 0; display: flex; gap: 8px; padding: 8px; }
-        #gamewrap { position: relative; flex-shrink: 0; align-self: flex-start; }
-        #game { background: #101418; border: 1px solid #333; display: block; }
-        #devpanel { flex: 1; min-width: 0; overflow-y: auto; font-size: 12px; }
+        /* The canvas keeps its fixed INTERNAL resolution; only its
+           display size scales down on narrow screens (height:auto
+           preserves aspect). Touch stays correct: zone hit-tests and
+           overlays are normalized/percent-based (touchInput.js norms
+           against the container rect). The devpanel wraps below the
+           game when there is no room beside it. */
+        #main { flex: 1; min-height: 0; display: flex; flex-wrap: wrap;
+                gap: 8px; padding: 8px; align-content: flex-start; }
+        #gamewrap { position: relative; flex-shrink: 0; align-self: flex-start;
+                    max-width: 100%; }
+        #game { background: #101418; border: 1px solid #333; display: block;
+                max-width: 100%; height: auto; }
+        #devpanel { flex: 1 1 240px; min-width: 0; overflow-y: auto; font-size: 12px; }
         #devpanel:empty { display: none; }
         #devpanel h3 { margin: 6px 0 4px; font-size: 12px; color: #9c9; }
         #devpanel label { display: block; cursor: pointer; }
