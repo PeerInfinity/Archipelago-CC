@@ -27,11 +27,25 @@ const PLATFORM_GATES = {
 /** The platform-type vocabulary (level.js validates against it). */
 export const KNOWN_PLATFORM_TYPES = Object.freeze(Object.keys(PLATFORM_GATES));
 
-export function isPlatformActive(platform, abilities) {
+/**
+ * The ability gating a platform's existence (null = always exists).
+ * A per-platform `gate` field overrides the type's gate. Production
+ * levels NEVER set it — every production gated type is one-way by
+ * design (plan §3) — it exists so deriveRules.test.js can plant the
+ * non-monotone level the verifier's tripwire must catch (a SOLID
+ * `ground` platform gated on an ability, blocking a corridor).
+ */
+export function platformGate(platform) {
+    if (platform.gate !== undefined) return platform.gate;
     const gate = PLATFORM_GATES[platform.type];
     if (gate === undefined) {
         throw new Error(`runnerDemo: unknown platform type '${platform.type}'`);
     }
+    return gate;
+}
+
+export function isPlatformActive(platform, abilities) {
+    const gate = platformGate(platform);
     return gate === null || !!abilities[gate];
 }
 
