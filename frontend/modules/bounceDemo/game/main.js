@@ -23,6 +23,9 @@ import { createGameSession } from '../gameCore.js';
 import { createBotDriver } from '../botDriver.js';
 import { renderFrame } from './render.js';
 import { installDevHarness } from './devBridge.js';
+import {
+    installTouchControls, resolveTouchOverride,
+} from '../../shared/touchInput.js';
 
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
@@ -43,6 +46,10 @@ let fellExitSent = false; // one fall exit per configure (no double moves)
 let lastItems = [];
 let message = '';
 let messageTimer = 0;
+// declared before the bridge exists: configure() assigns it, and the
+// standalone dev harness calls configure during module init (with the
+// declaration further down, that call hit the TDZ and killed the page)
+let frameMs = 1000 / 60;
 
 // Playback-bot driver (botDriver.js). Engaged via the optional
 // __swfBridge.botWalkTo / botStop contract methods — the host bridge
@@ -78,6 +85,38 @@ window.addEventListener('keyup', (e) => {
     if (dir) keys[dir] = false;
 });
 
+// ── touch (input synthesis via the shared helper; plan §6) ──────
+// Two zones split the whole panel: left half holds Left, right half
+// holds Right — the same keys flags the keyboard sets (abilities
+// already gate whether held input applies). Pointer-id tracked;
+// shown on coarse pointers, ?touch=1, or a host params.touchControls
+// override.
+const touchFlags = {};
+const TOUCH_ZONES = [
+    {
+        id: 'left', flag: 'left', label: '◀',
+        hitTest: (nx) => nx < 0.5,
+        css: { left: '1%', top: '1%', width: '48%', height: '98%' },
+    },
+    {
+        id: 'right', flag: 'right', label: '▶',
+        hitTest: (nx) => nx >= 0.5,
+        css: { right: '1%', top: '1%', width: '48%', height: '98%' },
+    },
+];
+const urlTouchOverride = resolveTouchOverride(window.location.search);
+let touch = { visible: false, tracker: null, destroy() {} };
+function installTouch(hostOverride) {
+    touch.destroy();
+    touch = installTouchControls({
+        container: document.getElementById('gamewrap'),
+        zones: TOUCH_ZONES,
+        flags: touchFlags,
+        override: hostOverride ?? urlTouchOverride,
+    });
+}
+installTouch(null);
+
 // ── game side of the __swfBridge contract ───────────────────────
 const gameSide = {
     configure(config) {
@@ -110,6 +149,7 @@ const gameSide = {
         // their in-game ids; the bridge inverts ap_locations for us.
         session.seedCollected(config?.checkedLocations);
         session.setItems(lastItems);
+        if (params.touchControls !== undefined) installTouch(!!params.touchControls);
         // Gate states start open (the session default). NOT carried
         // across configure like lastItems: ids are region-local, and
         // the bridge pushes this region's fresh states (when it has
@@ -166,6 +206,13 @@ window.__bounceDebug = () => ({
     fallBehavior,
     physicsProfile: physicsProfileId,
     botStatus: botDriver.getStatus(),
+    touchVisible: touch.visible,
+    touchFlags: { ...touchFlags },
+    player: session ? {
+        x: session.state.x,
+        y: session.state.y,
+        onGround: session.state.onGround ?? null,
+    } : null,
 });
 
 // ── standalone dev harness ──────────────────────────────────────
@@ -212,8 +259,8 @@ function handleEvent(ev) {
 // ── fixed-timestep loop (C.TICK_HZ logic, rAF render) ───────────
 // classic runs 60Hz; the dj profile runs its native 20Hz — the
 // constants are DJ-native px/tick, so the tick rate is part of the
-// physics. frameMs follows the configured region's resolved profile.
-let frameMs = 1000 / 60;
+// physics. frameMs follows the configured region's resolved profile
+// (declared up top — configure assigns it during module init).
 let acc = 0;
 let last = performance.now();
 function frame(now) {
@@ -228,8 +275,8 @@ function frame(now) {
             const bot = botDriver.nextInput(
                 session.state, session.level, session.abilities, { isPortalOpen });
             for (const ev of session.tick({
-                left: keys.left || !!bot?.left,
-                right: keys.right || !!bot?.right,
+                left: keys.left || !!touchFlags.left || !!bot?.left,
+                right: keys.right || !!touchFlags.right || !!bot?.right,
             })) {
                 handleEvent(ev);
             }
