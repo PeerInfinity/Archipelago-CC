@@ -22,9 +22,11 @@
 
 import { createSubstrateIframePanelClass } from '../flashSubstrate/flashSubstratePanel.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { PlaybackProxy } from '../textAdventureSubstrateWrapper/playbackProxy.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import {
     substrateRegistryEntry,
+    setPlaybackProxy,
     setTouchControlsOverride,
     RUNNER_PANEL_COMPONENT_TYPE,
     RUNNER_LOAD_REGION_EVENT,
@@ -169,10 +171,18 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
         }
     }, 'runnerDemo');
 
-    // Playback bot: the host-side PlaybackProxy (setPlaybackProxy) is
-    // injected here when the phase-8 bot driver lands; until then the
-    // registry entry's getPlaybackController returns null and the bot /
-    // loops executeVia path no-ops on runner regions.
+    // Host-side playback controller for the bot: the landed
+    // textAdventureSubstrateWrapper proxy, pointed at runner's own
+    // control event (the in-iframe flash bridge subscribes — it learns
+    // the event name from the iframe URL). Injected into the library
+    // so the registry entry's getPlaybackController returns it (null
+    // until now, and forever in headless CLI contexts) — this is what
+    // lights up loops executeVia and the playback bot on runner
+    // regions.
+    setPlaybackProxy(new PlaybackProxy({
+        eventBus,
+        controlEvent: RUNNER_PLAYBACK_CONTROL_EVENT,
+    }));
 
     // When procgen dispatches runner:loadRegion (e.g. on a transition
     // from a maze or bounce region into a runner one), bring the runner

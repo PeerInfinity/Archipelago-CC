@@ -28,6 +28,7 @@
 
 import { resolvePhysicsStamp } from '../physics.js';
 import { createGameSession } from '../gameCore.js';
+import { createBotDriver } from '../botDriver.js';
 import { renderFrame, createJuice } from './render.js';
 import { installDevHarness } from './devBridge.js';
 import {
@@ -55,6 +56,25 @@ let messageTimer = 0;
 // declared before the bridge exists: configure() assigns it, and the
 // standalone dev harness calls configure during module init
 let frameMs = 1000 / 50; // TICK_HZ — reset by configure's profile
+
+// Playback-bot driver (botDriver.js). Engaged via the optional
+// __swfBridge.botWalkTo / botStop contract methods — the host bridge
+// translates AP location/exit names to game-local goal ids before
+// calling in. The driver synthesizes per-frame inputs that merge with
+// (and never block) real keyboard/touch input. Rebuilt per configure
+// so its solver legs use the region's resolved physics constants.
+let botDriver = createBotDriver();
+
+// Gate-state getters for the driver: an OPEN non-target portal en
+// route would exit the region mid-leg (the driver avoids its host and
+// jumps clear of its box), and a locked TARGET is parked at instead of
+// died for.
+function isPortalOpen(id) {
+    return session ? session.gateStates.portals[id] !== false : true;
+}
+function isPickupOpen(id) {
+    return session ? session.gateStates.pickups[id] !== false : true;
+}
 
 function setMessage(text) {
     message = text;
@@ -129,6 +149,12 @@ const gameSide = {
         const constants = resolvePhysicsStamp(params.physics);
         physicsProfileId = params.physics?.profile ?? null;
         frameMs = 1000 / constants.TICK_HZ;
+        // Goal ids are region-local: a target from the previous region
+        // is meaningless here. The host bridge re-sends botWalkTo for
+        // this region (it holds the pending AP-name target) right
+        // after configure. Rebuilding the driver also drops the old
+        // region's cached legs.
+        botDriver = createBotDriver({ constants });
         session = createGameSession(params.runnerLevel, { constants });
         juice = createJuice();
         // Pickups the host already has checked (region revisits) — by
@@ -157,6 +183,19 @@ const gameSide = {
         session?.reset();
         setMessage('level reset');
     },
+    /**
+     * Playback bot: steer toward a game-local goal
+     * ({ kind: 'pickup' | 'portal', id }). The driver re-plans on
+     * every landing, so a mid-flight call engages cleanly.
+     */
+    botWalkTo(goal) {
+        botDriver.setTarget(goal);
+        if (goal?.id) setMessage(`bot: heading to ${goal.id}`);
+    },
+    /** Playback bot: release synthesized inputs (keyboard untouched). */
+    botStop() {
+        botDriver.clearTarget();
+    },
 };
 window.__swfBridge = Object.assign(window.__swfBridge ?? {}, gameSide);
 
@@ -172,6 +211,7 @@ window.__runnerDebug = () => ({
     gateStates: session ? session.gateStates : null,
     levelId: session?.level?.id ?? null,
     physicsProfile: physicsProfileId,
+    botStatus: botDriver.getStatus(),
     touchVisible: touch.visible,
     player: session ? {
         x: session.state.x,
@@ -193,14 +233,21 @@ if (window === window.parent) {
 // ── events out ───────────────────────────────────────────────────
 function handleEvent(ev) {
     const bridge = window.__swfBridge;
+    const botTarget = botDriver.getStatus().target;
     if (ev.type === 'pickup') {
         setMessage(`checked: ${ev.id}`);
+        if (botTarget?.kind === 'pickup' && botTarget.id === ev.id) {
+            botDriver.clearTarget(); // arrived — next walkTo comes from the bot
+        }
         bridge.sendLocation?.(ev.id);
     } else if (ev.type === 'lockedPickup' || ev.type === 'lockedPortal') {
         setMessage('locked — something is still missing');
     } else if (ev.type === 'exit') {
         const side = portalSides[ev.portalId] ?? ev.arrow ?? null;
         setMessage(`exit ${side ?? '?'}`);
+        if (botTarget?.kind === 'portal' && botTarget.id === ev.portalId) {
+            botDriver.clearTarget(); // region unloads; bridge re-targets after configure
+        }
         bridge.sendExit?.(ev.portalId, side);
     } else if (ev.type === 'respawned') {
         if (ev.cause === 'fell' && fallBehavior === 'previous'
@@ -228,11 +275,16 @@ function frame(now) {
         acc -= frameMs;
         if (session) {
             const prevState = session.state;
-            // touch merges with (never blocks) the keyboard
+            // Bot input merges with (never blocks) keyboard and touch.
+            // The driver sees the PREVIOUS tick's state, so it observes
+            // each landing/respawn exactly once — its re-plan trigger.
+            const bot = botDriver.nextInput(
+                session.state, session.level, session.abilities,
+                { isPortalOpen, isPickupOpen });
             for (const ev of session.tick({
-                jump: keys.jump || !!touchFlags.jump,
-                drop: keys.drop || !!touchFlags.drop,
-                reset: keys.reset,
+                jump: keys.jump || !!touchFlags.jump || !!bot?.jump,
+                drop: keys.drop || !!touchFlags.drop || !!bot?.drop,
+                reset: keys.reset || !!bot?.reset,
             })) {
                 handleEvent(ev);
             }
