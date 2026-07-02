@@ -33,9 +33,10 @@ import { DEFAULTS, step, spawnState } from './physics.js';
 import { noAbilities } from './suppression.js';
 
 /**
- * Ability -> AP item names (plan §4.6). Lives here until phase 6's
- * apRules.js takes ownership (the rule emitter needs the same names —
- * it will import these, not redefine them).
+ * Ability -> AP item names (plan §4.6). Defined here because the game
+ * runtime maps received items back to abilities with the same table;
+ * apRules.js (the rule emitter) imports and re-exports these — one
+ * definition, two consumers.
  */
 export const ABILITY_ITEM_NAMES = Object.freeze({
     doubleJump: 'Double Jump',
