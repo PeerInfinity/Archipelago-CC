@@ -21,6 +21,7 @@
 
 bounce_worldgen
 runner_worldgen
+runner_sphere_worldgen
 jta_mixed_test
 jta_substrate_test
 procgen_maze

@@ -1,0 +1,616 @@
+{
+  "region_2_2": {
+    "substrate": "runner",
+    "render_hint": "runner",
+    "grid_cell": {
+      "gx": 2,
+      "gy": 2
+    },
+    "playable_payload": {
+      "gameId": "runnerDemo",
+      "params": {
+        "runnerLevel": {
+          "id": "region_2_2",
+          "size": {
+            "width": 96.89,
+            "height": 16
+          },
+          "platforms": [
+            {
+              "id": "seg0",
+              "x": 0,
+              "y": 0,
+              "w": 8.24,
+              "h": 1,
+              "type": "ground"
+            },
+            {
+              "id": "seg1",
+              "x": 11.58,
+              "y": 0,
+              "w": 6.43,
+              "h": 1,
+              "type": "ground"
+            },
+            {
+              "id": "seg2",
+              "x": 18.01,
+              "y": 0,
+              "w": 5.92,
+              "h": 1,
+              "type": "ground"
+            },
+            {
+              "id": "seg3",
+              "x": 26.82,
+              "y": 0,
+              "w": 7.19,
+              "h": 1,
+              "type": "ground"
+            },
+            {
+              "id": "seg4",
+              "x": 36.88,
+              "y": 0,
+              "w": 5.6,
+              "h": 1,
+              "type": "ground"
+            },
+            {
+              "id": "stone0",
+              "x": 46.45,
+              "y": 0.5,
+              "w": 5,
+              "h": 0.5,
+              "type": "blue"
+            },
+            {
+              "id": "seg5",
+              "x": 55.38,
+              "y": 0,
+              "w": 7,
+              "h": 1,
+              "type": "ground"
+            },
+            {
+              "id": "seg6",
+              "x": 65.82,
+              "y": 0,
+              "w": 7.08,
+              "h": 1,
+              "type": "ground"
+            },
+            {
+              "id": "seg7",
+              "x": 76.44,
+              "y": 0,
+              "w": 6.37,
+              "h": 1,
+              "type": "ground"
+            },
+            {
+              "id": "seg8",
+              "x": 82.81,
+              "y": 0,
+              "w": 4.52,
+              "h": 1,
+              "type": "ground"
+            },
+            {
+              "id": "seg9",
+              "x": 90.49,
+              "y": 0,
+              "w": 6.39,
+              "h": 1,
+              "type": "ground"
+            }
+          ],
+          "hazards": [
+            {
+              "id": "hz0",
+              "type": "spikes",
+              "x": 13.76,
+              "y": 1,
+              "w": 1.11,
+              "h": 0.8
+            },
+            {
+              "id": "hz1",
+              "type": "spikes",
+              "x": 79.22,
+              "y": 1,
+              "w": 1.22,
+              "h": 0.8
+            }
+          ],
+          "pickups": [
+            {
+              "id": "loc_0",
+              "on": "seg3",
+              "x": 33.81,
+              "y": 1.6
+            }
+          ],
+          "portals": [
+            {
+              "id": "exit_main",
+              "on": "seg9",
+              "x": 96.29,
+              "y": 1.6,
+              "arrow": "right",
+              "exitName": null
+            }
+          ],
+          "spawn": {
+            "x": 1,
+            "y": 1
+          }
+        },
+        "sidePortals": {
+          "S": "exit_main"
+        },
+        "physics": {
+          "profile": "celeste",
+          "constants": {
+            "maxSpeed": 9.01,
+            "maxAcceleration": 79,
+            "maxDecceleration": 76,
+            "maxTurnSpeed": 76,
+            "maxAirAcceleration": 80,
+            "maxAirDeceleration": 80,
+            "maxAirTurnSpeed": 80,
+            "friction": 0,
+            "useAcceleration": true,
+            "jumpHeight": 2.25,
+            "timeToJumpApex": 0.38,
+            "upwardMovementMultiplier": 1,
+            "downwardMovementMultiplier": 5.23,
+            "maxAirJumps": 0,
+            "variablejumpHeight": true,
+            "jumpCutOff": 5.23,
+            "speedLimit": 30,
+            "coyoteTime": 0.15,
+            "jumpBuffer": 0.15,
+            "TICK_HZ": 50,
+            "GRAVITY": -9.81,
+            "PLAYER_W": 0.75,
+            "PLAYER_H": 1.125,
+            "AUTO_RUN": true,
+            "SIDE_WALLS": true,
+            "FALL_MARGIN": 5,
+            "MAX_HITS": 0,
+            "GOAL_HALF": 0.375
+          }
+        }
+      },
+      "ap_locations": {
+        "loc_0": "region_2_2__loc_0"
+      },
+      "flashCapabilities": {
+        "locations": "cooperative",
+        "items": "pull",
+        "start": "auto"
+      },
+      "exits": [
+        {
+          "exit_id": "exit_S",
+          "x": 4,
+          "y": 5,
+          "side": "S",
+          "exitName": "exit_S",
+          "targetRegion": "region_2_3",
+          "isBackExit": false,
+          "isTeleporter": false,
+          "targetExitId": "region_2_2"
+        }
+      ],
+      "fogEnabled": true
+    }
+  },
+  "region_2_3": {
+    "substrate": "runner",
+    "render_hint": "runner",
+    "grid_cell": {
+      "gx": 2,
+      "gy": 3
+    },
+    "playable_payload": {
+      "gameId": "runnerDemo",
+      "params": {
+        "runnerLevel": {
+          "id": "region_2_3",
+          "size": {
+            "width": 108.12,
+            "height": 16
+          },
+          "platforms": [
+            {
+              "id": "seg0",
+              "x": 0,
+              "y": 0,
+              "w": 7.9,
+              "h": 1,
+              "type": "ground"
+            },
+            {
+              "id": "seg1",
+              "x": 11,
+              "y": 0,
+              "w": 7.46,
+              "h": 1,
+              "type": "ground"
+            },
+            {
+              "id": "seg2",
+              "x": 21.31,
+              "y": 0,
+              "w": 6.15,
+              "h": 1,
+              "type": "ground"
+            },
+            {
+              "id": "seg3",
+              "x": 27.46,
+              "y": 0,
+              "w": 4.26,
+              "h": 1,
+              "type": "ground"
+            },
+            {
+              "id": "seg4",
+              "x": 34.58,
+              "y": 0,
+              "w": 5.71,
+              "h": 1,
+              "type": "ground"
+            },
+            {
+              "id": "tip0",
+              "x": 41.2,
+              "y": 1.85,
+              "w": 2.5,
+              "h": 0.5,
+              "type": "ground"
+            },
+            {
+              "id": "seg5",
+              "x": 44.61,
+              "y": 0,
+              "w": 6.61,
+              "h": 1,
+              "type": "ground"
+            },
+            {
+              "id": "seg6",
+              "x": 54.01,
+              "y": 0,
+              "w": 6.84,
+              "h": 1,
+              "type": "ground"
+            },
+            {
+              "id": "seg7",
+              "x": 69.28,
+              "y": 0,
+              "w": 5.74,
+              "h": 1,
+              "type": "ground"
+            },
+            {
+              "id": "seg8",
+              "x": 77.67,
+              "y": 0,
+              "w": 5.99,
+              "h": 1,
+              "type": "ground"
+            },
+            {
+              "id": "seg9",
+              "x": 85.98,
+              "y": 0,
+              "w": 5.99,
+              "h": 1,
+              "type": "ground"
+            },
+            {
+              "id": "seg10",
+              "x": 91.97,
+              "y": 0,
+              "w": 5.37,
+              "h": 1,
+              "type": "ground"
+            },
+            {
+              "id": "seg11",
+              "x": 100.81,
+              "y": 0,
+              "w": 7.3,
+              "h": 1,
+              "type": "ground"
+            }
+          ],
+          "hazards": [
+            {
+              "id": "hz0",
+              "type": "spikes",
+              "x": 24.09,
+              "y": 1,
+              "w": 1.03,
+              "h": 0.8
+            },
+            {
+              "id": "hz1",
+              "type": "spikes",
+              "x": 88.75,
+              "y": 1,
+              "w": 1.18,
+              "h": 0.8
+            }
+          ],
+          "pickups": [
+            {
+              "id": "loc_0",
+              "on": "seg4",
+              "x": 40.09,
+              "y": 1.6
+            }
+          ],
+          "portals": [
+            {
+              "id": "exit_br0",
+              "on": "tip0",
+              "x": 43.5,
+              "y": 2.95,
+              "arrow": "up",
+              "exitName": null
+            },
+            {
+              "id": "exit_main",
+              "on": "seg11",
+              "x": 107.52,
+              "y": 1.6,
+              "arrow": "right",
+              "exitName": null
+            }
+          ],
+          "spawn": {
+            "x": 1,
+            "y": 1
+          }
+        },
+        "sidePortals": {
+          "E": "exit_main",
+          "N": "exit_br0"
+        },
+        "physics": {
+          "profile": "celeste",
+          "constants": {
+            "maxSpeed": 9.01,
+            "maxAcceleration": 79,
+            "maxDecceleration": 76,
+            "maxTurnSpeed": 76,
+            "maxAirAcceleration": 80,
+            "maxAirDeceleration": 80,
+            "maxAirTurnSpeed": 80,
+            "friction": 0,
+            "useAcceleration": true,
+            "jumpHeight": 2.25,
+            "timeToJumpApex": 0.38,
+            "upwardMovementMultiplier": 1,
+            "downwardMovementMultiplier": 5.23,
+            "maxAirJumps": 0,
+            "variablejumpHeight": true,
+            "jumpCutOff": 5.23,
+            "speedLimit": 30,
+            "coyoteTime": 0.15,
+            "jumpBuffer": 0.15,
+            "TICK_HZ": 50,
+            "GRAVITY": -9.81,
+            "PLAYER_W": 0.75,
+            "PLAYER_H": 1.125,
+            "AUTO_RUN": true,
+            "SIDE_WALLS": true,
+            "FALL_MARGIN": 5,
+            "MAX_HITS": 0,
+            "GOAL_HALF": 0.375
+          }
+        },
+        "backExitSide": "N"
+      },
+      "ap_locations": {
+        "loc_0": "region_2_3__loc_0"
+      },
+      "flashCapabilities": {
+        "locations": "cooperative",
+        "items": "pull",
+        "start": "auto"
+      },
+      "exits": [
+        {
+          "exit_id": "exit_E",
+          "x": 7,
+          "y": 3,
+          "side": "E",
+          "exitName": "exit_E",
+          "targetRegion": "region_3_3",
+          "isBackExit": false,
+          "isTeleporter": false,
+          "targetExitId": "region_2_3"
+        },
+        {
+          "exit_id": "region_2_2",
+          "x": 4,
+          "y": 0,
+          "side": "N",
+          "exitName": "region_2_2",
+          "targetRegion": "region_2_2",
+          "targetExitId": "exit_S",
+          "isBackExit": true,
+          "isTeleporter": false
+        }
+      ],
+      "fogEnabled": true
+    }
+  },
+  "region_3_3": {
+    "substrate": "runner",
+    "render_hint": "runner",
+    "grid_cell": {
+      "gx": 3,
+      "gy": 3
+    },
+    "playable_payload": {
+      "gameId": "runnerDemo",
+      "params": {
+        "runnerLevel": {
+          "id": "region_3_3",
+          "size": {
+            "width": 49.47,
+            "height": 16
+          },
+          "platforms": [
+            {
+              "id": "seg0",
+              "x": 0,
+              "y": 0,
+              "w": 7.42,
+              "h": 1,
+              "type": "ground"
+            },
+            {
+              "id": "seg1",
+              "x": 10.65,
+              "y": 0,
+              "w": 5.69,
+              "h": 1,
+              "type": "ground"
+            },
+            {
+              "id": "seg2",
+              "x": 19.49,
+              "y": 0,
+              "w": 6.79,
+              "h": 1,
+              "type": "ground"
+            },
+            {
+              "id": "seg3",
+              "x": 26.28,
+              "y": 0,
+              "w": 4.13,
+              "h": 1,
+              "type": "ground"
+            },
+            {
+              "id": "seg4",
+              "x": 33.17,
+              "y": 0,
+              "w": 6.38,
+              "h": 1,
+              "type": "ground"
+            },
+            {
+              "id": "seg5",
+              "x": 43.06,
+              "y": 0,
+              "w": 6.4,
+              "h": 1,
+              "type": "ground"
+            }
+          ],
+          "hazards": [
+            {
+              "id": "hz0",
+              "type": "spikes",
+              "x": 22.29,
+              "y": 1,
+              "w": 1.13,
+              "h": 0.8
+            }
+          ],
+          "pickups": [
+            {
+              "id": "loc_0",
+              "on": "seg4",
+              "x": 39.35,
+              "y": 1.6
+            }
+          ],
+          "portals": [
+            {
+              "id": "exit_main",
+              "on": "seg5",
+              "x": 48.87,
+              "y": 1.6,
+              "arrow": "right",
+              "exitName": null
+            }
+          ],
+          "spawn": {
+            "x": 1,
+            "y": 1
+          }
+        },
+        "sidePortals": {
+          "W": "exit_main"
+        },
+        "physics": {
+          "profile": "celeste",
+          "constants": {
+            "maxSpeed": 9.01,
+            "maxAcceleration": 79,
+            "maxDecceleration": 76,
+            "maxTurnSpeed": 76,
+            "maxAirAcceleration": 80,
+            "maxAirDeceleration": 80,
+            "maxAirTurnSpeed": 80,
+            "friction": 0,
+            "useAcceleration": true,
+            "jumpHeight": 2.25,
+            "timeToJumpApex": 0.38,
+            "upwardMovementMultiplier": 1,
+            "downwardMovementMultiplier": 5.23,
+            "maxAirJumps": 0,
+            "variablejumpHeight": true,
+            "jumpCutOff": 5.23,
+            "speedLimit": 30,
+            "coyoteTime": 0.15,
+            "jumpBuffer": 0.15,
+            "TICK_HZ": 50,
+            "GRAVITY": -9.81,
+            "PLAYER_W": 0.75,
+            "PLAYER_H": 1.125,
+            "AUTO_RUN": true,
+            "SIDE_WALLS": true,
+            "FALL_MARGIN": 5,
+            "MAX_HITS": 0,
+            "GOAL_HALF": 0.375
+          }
+        },
+        "backExitSide": "W"
+      },
+      "ap_locations": {
+        "loc_0": "region_3_3__loc_0"
+      },
+      "flashCapabilities": {
+        "locations": "cooperative",
+        "items": "pull",
+        "start": "auto"
+      },
+      "exits": [
+        {
+          "exit_id": "region_2_3",
+          "x": 0,
+          "y": 3,
+          "side": "W",
+          "exitName": "region_2_3",
+          "targetRegion": "region_2_3",
+          "targetExitId": "exit_E",
+          "isBackExit": true,
+          "isTeleporter": false
+        }
+      ],
+      "fogEnabled": true
+    }
+  }
+}
