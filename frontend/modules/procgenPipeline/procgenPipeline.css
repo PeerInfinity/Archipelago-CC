@@ -372,6 +372,28 @@
     overflow: auto;
 }
 
+.procgen-pipeline-presets {
+    padding: 6px 8px;
+}
+
+.procgen-pipeline-presets-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+    flex-wrap: wrap;
+}
+
+.procgen-pipeline-preset-select {
+    flex: 1;
+    min-width: 160px;
+    background: #232323;
+    color: #ccc;
+    border: 1px solid #444;
+    padding: 3px 4px;
+    font-size: 12px;
+}
+
 .procgen-pipeline-mode {
     padding: 6px 8px;
 }

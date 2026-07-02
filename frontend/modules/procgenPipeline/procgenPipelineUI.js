@@ -48,6 +48,10 @@ import {
 } from './sphereConfigHooks.js';
 import { getRegionEditor } from './regionEditors.js';
 import { peekSphereStateSingleton } from '../sphereState/singleton.js';
+import {
+    SHIPPED_PRESETS, capturePresetState, applyPresetState,
+    getPresetById, loadUserPresets, saveUserPreset, deleteUserPreset,
+} from './presetDefs.js';
 
 const LS_KEY = 'procgenPipeline_params';
 // View preferences (toggle states etc.) live under a separate key so
@@ -490,6 +494,15 @@ export class ProcgenPipelineUI {
         // line under the message) — e.g. sphere-growth quota fallback.
         this.warning = '';
 
+        // Preset drop-down state: the user's saved presets (from the
+        // dedicated presets localStorage key) and which preset the panel
+        // currently reflects. null = "Custom". Any edit gesture clears
+        // the selection (every change handler saves via
+        // _saveToLocalStorage, which resets it unless the save came from
+        // a preset apply).
+        this.userPresets = loadUserPresets(localStorage);
+        this.activePresetId = null;
+
         this.rootElement = document.createElement('div');
         this.rootElement.className = 'procgen-pipeline-panel';
         setPanelInstance(this);
@@ -548,11 +561,12 @@ export class ProcgenPipelineUI {
 
     render() {
         this.rootElement.innerHTML = '';
-        // Mode toggle and the Generate-button row stay unwrapped — they
-        // anchor the panel and shouldn't be foldable. Everything else
-        // is wrapped in an accordion section so users can hide
-        // sections they aren't actively using. Per-section state lives
-        // in this.collapsedSections.
+        // Preset bar, mode toggle and the Generate-button row stay
+        // unwrapped — they anchor the panel and shouldn't be foldable.
+        // Everything else is wrapped in an accordion section so users
+        // can hide sections they aren't actively using. Per-section
+        // state lives in this.collapsedSections.
+        this.rootElement.appendChild(this._renderPresetBar());
         this.rootElement.appendChild(this._renderModeToggle());
         // Scenario Pool: Substrates subsection always visible; Library
         // and Counts subsections grid-growth-only (the scenario pool
@@ -635,6 +649,131 @@ export class ProcgenPipelineUI {
             wrap.appendChild(body);
         }
         return wrap;
+    }
+
+    // --- Preset bar ---
+
+    /**
+     * Drop-down at the top of the panel selecting a shipped or user
+     * preset (presetDefs.js). Selecting one is an explicit gesture: it
+     * overwrites the panel setup, auto-saves, and re-renders — no
+     * confirm. Any subsequent edit flips the selection back to
+     * "Custom" (via _saveToLocalStorage clearing activePresetId).
+     */
+    _renderPresetBar() {
+        const section = document.createElement('div');
+        section.className = 'procgen-pipeline-presets';
+        const title = document.createElement('div');
+        title.className = 'procgen-pipeline-section-title';
+        title.textContent = 'Preset';
+        section.appendChild(title);
+
+        const row = document.createElement('div');
+        row.className = 'procgen-pipeline-presets-row';
+
+        const select = document.createElement('select');
+        select.className = 'procgen-pipeline-preset-select';
+        const customOpt = document.createElement('option');
+        customOpt.value = '';
+        customOpt.textContent = 'Custom';
+        select.appendChild(customOpt);
+        const addGroup = (label, presets) => {
+            if (presets.length === 0) return;
+            const group = document.createElement('optgroup');
+            group.label = label;
+            for (const p of presets) {
+                const opt = document.createElement('option');
+                opt.value = p.id;
+                opt.textContent = p.label;
+                if (p.description) opt.title = p.description;
+                group.appendChild(opt);
+            }
+            select.appendChild(group);
+        };
+        addGroup('Shipped', [...SHIPPED_PRESETS]);
+        addGroup('User', this.userPresets);
+        select.value = this.activePresetId ?? '';
+        // A stale persisted id (e.g. the preset was deleted) falls back
+        // to Custom rather than showing a blank control.
+        if (select.value !== (this.activePresetId ?? '')) select.value = '';
+        select.addEventListener('change', () => {
+            if (select.value) {
+                this._applyPreset(select.value);
+            } else {
+                this.activePresetId = null;
+                this._saveToLocalStorage();
+                this.render();
+            }
+        });
+        row.appendChild(select);
+
+        row.appendChild(this._btn('Save as…', () => {
+            const label = window.prompt('Preset name:');
+            if (label == null) return;
+            const saved = saveUserPreset(
+                localStorage, label, capturePresetState(this),
+            );
+            if (!saved) {
+                this.message = 'ERROR: preset name must contain letters or digits.';
+                this.render();
+                return;
+            }
+            this.userPresets = saved.presets;
+            this.activePresetId = saved.id;
+            this._saveToLocalStorage({ fromPreset: true });
+            this.message = `Preset "${label.trim()}" saved.`;
+            this.render();
+        }));
+
+        const isUserPreset = (this.activePresetId ?? '').startsWith('user:');
+        const deleteBtn = this._btn('Delete', () => {
+            const preset = getPresetById(this.activePresetId, this.userPresets);
+            if (!preset) return;
+            if (!window.confirm(`Delete preset "${preset.label}"?`)) return;
+            this.userPresets = deleteUserPreset(localStorage, preset.id);
+            this.activePresetId = null;
+            this._saveToLocalStorage();
+            this.message = `Preset "${preset.label}" deleted.`;
+            this.render();
+        });
+        deleteBtn.disabled = !isUserPreset;
+        deleteBtn.title = isUserPreset
+            ? 'Delete the selected user preset'
+            : 'Only user presets can be deleted';
+        row.appendChild(deleteBtn);
+
+        section.appendChild(row);
+        return section;
+    }
+
+    /**
+     * Overwrite the panel setup with a preset and auto-save. Clears
+     * the generation result and stepped-pipeline state — a preset is a
+     * "fresh setup" gesture, so stale step envelopes from the previous
+     * params must not survive it.
+     */
+    _applyPreset(id) {
+        const preset = getPresetById(id, this.userPresets);
+        if (!preset) return;
+        const next = applyPresetState(preset.state, {
+            defaults: this._defaultParams(),
+            hasSubstrate: (sid) => substrateRegistry.has(sid),
+            current: this,
+        });
+        this.params = next.params;
+        this.scenario = next.scenario;
+        this.substrateMix = next.substrateMix;
+        this.substrateQuotas = next.substrateQuotas;
+        this.substrateMode = next.substrateMode;
+        this.mode = next.mode;
+        this.result = null;
+        this._stepState = null;
+        this._tdState = null;
+        this.warning = '';
+        this.activePresetId = id;
+        this._saveToLocalStorage({ fromPreset: true });
+        this.message = `Preset "${preset.label}" applied.`;
+        this.render();
     }
 
     // --- Mode toggle ---
@@ -4811,8 +4950,19 @@ export class ProcgenPipelineUI {
      * Pass `showFeedback: true` to also flash a 'Saved.' message and
      * re-render — the explicit Save Params button uses that mode;
      * per-keystroke handlers don't, to avoid render churn.
+     *
+     * Every save is an edit gesture, so it flips the preset drop-down
+     * back to "Custom" — except saves issued BY a preset apply/save,
+     * which pass `fromPreset: true` to keep their selection.
      */
-    _saveToLocalStorage({ showFeedback = false } = {}) {
+    _saveToLocalStorage({ showFeedback = false, fromPreset = false } = {}) {
+        if (!fromPreset) {
+            this.activePresetId = null;
+            // Change handlers save without re-rendering (render churn),
+            // so flip the drop-down to Custom surgically.
+            const sel = this.rootElement?.querySelector('.procgen-pipeline-preset-select');
+            if (sel && sel.value !== '') sel.value = '';
+        }
         try {
             localStorage.setItem(LS_KEY, JSON.stringify({
                 params: this.params,
@@ -4821,6 +4971,7 @@ export class ProcgenPipelineUI {
                 substrateQuotas: this.substrateQuotas,
                 substrateMode: this.substrateMode,
                 mode: this.mode,
+                activePresetId: this.activePresetId,
             }));
             if (showFeedback) {
                 this.message = 'Saved.';
@@ -4837,35 +4988,26 @@ export class ProcgenPipelineUI {
             const s = localStorage.getItem(LS_KEY);
             if (!s) return;
             const parsed = JSON.parse(s);
-            if (parsed.params) this.params = { ...this._defaultParams(), ...parsed.params };
-            if (parsed.scenario) {
-                this.scenario = {
-                    items: { ...(parsed.scenario.items ?? {}) },
-                    obstacles: { ...(parsed.scenario.obstacles ?? {}) },
-                };
-            }
-            // Drop entries for substrates that aren't currently
-            // registered (e.g. saved before a substrate module was
-            // removed). Same filter for mix and quotas dicts.
-            const filterDict = (raw) => {
-                const out = {};
-                if (raw && typeof raw === 'object') {
-                    for (const [id, v] of Object.entries(raw)) {
-                        if (substrateRegistry.has(id) && v > 0) out[id] = v;
-                    }
-                }
-                return out;
-            };
-            this.substrateMix = filterDict(parsed.substrateMix);
-            this.substrateQuotas = filterDict(parsed.substrateQuotas);
-            if (parsed.substrateMode === 'quotas' || parsed.substrateMode === 'mix') {
-                this.substrateMode = parsed.substrateMode;
-            }
-            if (parsed.mode === 'gridGrowth' || parsed.mode === 'topDown'
-                    || parsed.mode === 'shuffledSpiral'
-                    || parsed.mode === 'sphereGrowth') {
-                this.mode = parsed.mode;
-            }
+            // The persisted bundle has the same shape as a preset's
+            // state, so restore shares the preset normalisation path:
+            // params merged over defaults, quota/mix dicts filtered to
+            // registered substrates, mode/substrateMode validated.
+            const next = applyPresetState(parsed, {
+                defaults: this._defaultParams(),
+                hasSubstrate: (id) => substrateRegistry.has(id),
+                current: this,
+            });
+            this.params = next.params;
+            this.scenario = next.scenario;
+            this.substrateMix = next.substrateMix;
+            this.substrateQuotas = next.substrateQuotas;
+            this.substrateMode = next.substrateMode;
+            this.mode = next.mode;
+            // Keep the preset selection across refreshes — but only if
+            // the id still resolves (the preset may have been deleted).
+            this.activePresetId = getPresetById(
+                parsed.activePresetId, this.userPresets,
+            ) ? parsed.activePresetId : null;
         } catch (e) {
             // ignore
         }
