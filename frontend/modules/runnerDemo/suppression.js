@@ -24,6 +24,9 @@ const PLATFORM_GATES = {
     blue: 'blue',
 };
 
+/** The platform-type vocabulary (level.js validates against it). */
+export const KNOWN_PLATFORM_TYPES = Object.freeze(Object.keys(PLATFORM_GATES));
+
 export function isPlatformActive(platform, abilities) {
     const gate = PLATFORM_GATES[platform.type];
     if (gate === undefined) {
