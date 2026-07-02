@@ -77,4 +77,39 @@ export const spikeRun = {
     spawn: { x: 1, y: 1 },
 };
 
-export const FIXTURES = [flatRun, gapJump, oneWay, spikeRun];
+/** A gap wider than the max single running jump (~6.0 with coyote)
+ *  but inside double-jump reach (~9.8): the Double Jump gate fixture
+ *  (the solver's second-press-at-apex policies carry it). */
+export const doubleGap = {
+    id: 'doubleGap',
+    size: { width: 40, height: 16 },
+    platforms: [
+        { id: 'floorA', x: 0, y: 0, w: 16, h: 1, type: 'ground' },
+        { id: 'floorB', x: 24, y: 0, w: 16, h: 1, type: 'ground' },
+    ],
+    hazards: [],
+    pickups: [{ id: 'pk_edge', on: 'floorA', x: 15.8, y: 1.6 }],
+    portals: [{ id: 'exit_main', on: 'floorB', x: 39.4, y: 1.6, arrow: 'right', exitName: null }],
+    spawn: { x: 1, y: 1 },
+};
+
+/** A gap wider than even double-jump reach, with a gated one-way
+ *  (blue) stepping stone mid-gap: without Blue Platforms the gap is
+ *  uncrossable under EVERY movement ability; with it, two plain full
+ *  jumps chain across (the gated-platform gate fixture — plan §4.5's
+ *  gate-segment geometry in fixture form). */
+export const stepStone = {
+    id: 'stepStone',
+    size: { width: 44, height: 16 },
+    platforms: [
+        { id: 'floorA', x: 0, y: 0, w: 16, h: 1, type: 'ground' },
+        { id: 'stone', x: 19.5, y: 0.5, w: 5, h: 0.5, type: 'blue' },
+        { id: 'floorB', x: 28, y: 0, w: 16, h: 1, type: 'ground' },
+    ],
+    hazards: [],
+    pickups: [{ id: 'pk_stone', on: 'stone', x: 24.1, y: 1.6 }],
+    portals: [{ id: 'exit_main', on: 'floorB', x: 43.4, y: 1.6, arrow: 'right', exitName: null }],
+    spawn: { x: 1, y: 1 },
+};
+
+export const FIXTURES = [flatRun, gapJump, oneWay, spikeRun, doubleGap, stepStone];
