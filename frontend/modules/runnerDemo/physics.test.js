@@ -118,6 +118,30 @@ describe('jumping', () => {
         expect(trace.at(-1).onGround).toBe(true);
         expect(trace.at(-1).landedOn).toBe(null);
     });
+
+    it('standingOn tracks support every grounded tick; a flush boundary switches it with NO landing tick', () => {
+        const level = makeLevel({
+            platforms: [
+                { id: 'floorA', x: 0, y: 0, w: 10, h: 1, type: 'ground' },
+                { id: 'floorB', x: 10, y: 0, w: 30, h: 1, type: 'ground' },
+            ],
+        });
+        const trace = run(level, 150);
+        // airborne spawn drop: standingOn null until the landing tick
+        expect(trace[0].standingOn).toBe(null);
+        const landTick = trace.findIndex((s) => s.landedOn === 'floorA');
+        expect(landTick).toBeGreaterThan(0);
+        expect(trace[landTick].standingOn).toBe('floorA');
+        // auto-run carries across the flush boundary: support switches…
+        const crossTick = trace.findIndex((s) => s.standingOn === 'floorB');
+        expect(crossTick).toBeGreaterThan(landTick);
+        // …with no airborne phase and no second landing tick anywhere
+        const landings = trace.filter((s) => s.landedOn !== null);
+        expect(landings).toHaveLength(1);
+        for (let t = landTick; t <= crossTick; t++) {
+            expect(trace[t].onGround).toBe(true);
+        }
+    });
 });
 
 describe('one-way gated platforms', () => {

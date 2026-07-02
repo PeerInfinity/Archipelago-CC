@@ -38,6 +38,13 @@
  * bookkeeping rides on the state:
  * - `landedOn`: platform id, set ONLY on landing ticks (airborne →
  *   grounded transition) — the solver's and bot's re-plan trigger.
+ * - `standingOn`: the supporting platform id EVERY grounded tick
+ *   (null while airborne, and while holding drop on a one-way — the
+ *   engine's own ground probe, so consumers never re-derive support
+ *   geometrically). Auto-run can carry the player across a flush
+ *   platform boundary with no airborne phase — no `landedOn` fires,
+ *   but `standingOn` switches; the solver's leg detector (canRun.js)
+ *   and the goal-wake reasoning need that transition.
  * - `touchedPickups` / `touchedPortals`: ids overlapping this tick.
  * - `respawned`: 'fell' | 'hazard' | 'reset' | null — set on the
  *   tick the player is returned to the spawn; per-attempt state
@@ -219,6 +226,7 @@ export function spawnState(level, C = DEFAULTS) {
         // runner bookkeeping
         t: 0,
         landedOn: null,
+        standingOn: null,
         touchedPickups: [],
         touchedPortals: [],
         hits: 0,
@@ -250,6 +258,7 @@ function respawn(state, level, cause) {
         gravMultiplier: 1,
         onGround: false,
         landedOn: null,
+        standingOn: null,
         touchedPickups: [],
         touchedPortals: [],
         hits: 0,
@@ -460,12 +469,14 @@ export function step(state, input, level, abilities, constants) {
         }
     }
 
-    s.onGround = groundUnder(s.x, s.y) !== null;
+    const support = groundUnder(s.x, s.y);
+    s.onGround = support !== null;
+    s.standingOn = support?.id ?? null;
 
     // Landing tick: airborne at move start, grounded after — the
     // re-plan trigger (set only on this tick, bounce's contract).
     if (startedAirborne && s.onGround) {
-        s.landedOn = (landedPlatform ?? groundUnder(s.x, s.y)).id;
+        s.landedOn = (landedPlatform ?? support).id;
     }
 
     // Hazards: non-solid kill AABBs (plan §3 — never collision
