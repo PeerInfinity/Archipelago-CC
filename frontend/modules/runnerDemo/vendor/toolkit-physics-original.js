@@ -409,6 +409,16 @@ function physicsStep(dt) {
   const startedAirborne = !character.onGround;
   moveAndCollide(dt);
   character.onGround = checkOnGround();
+  // Landing edge: the jump is over — clear currentlyJumping so the next
+  // ledge gets a fresh coyote window. The C# does this in
+  // calculateGravity's vy≈0 branch, which works in Unity because it
+  // reads body.velocity.y AFTER the physics solve (resting contact ≈ 0);
+  // this port integrates gravity into vy BEFORE that branch and zeroes
+  // it in moveAndCollide AFTER, so the branch never fires while grounded
+  // and the flag would stay stuck (killing coyote after the first jump
+  // of a life). Landing-edge reset is observably equivalent to the C#'s
+  // grounded-tick reset.
+  if (character.onGround && startedAirborne) character.currentlyJumping = false;
   // characterJuice.cs checkForLanding() — triggers a squash on the airborne→grounded edge.
   if (character.onGround && startedAirborne && params.landSqueeze > 1) {
     triggerSquash(params.landSqueeze, 1 / params.landSqueeze);

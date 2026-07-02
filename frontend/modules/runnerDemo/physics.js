@@ -477,6 +477,23 @@ export function step(state, input, level, abilities, constants) {
     // re-plan trigger (set only on this tick, bounce's contract).
     if (startedAirborne && s.onGround) {
         s.landedOn = (landedPlatform ?? support).id;
+        // The jump is over — clear currentlyJumping so the NEXT lip
+        // gets a fresh coyote window. In the Unity original this reset
+        // lives in calculateGravity's vy≈0 branch, which works there
+        // because C# reads body.velocity.y AFTER the physics solve
+        // (resting ground contact ≈ 0). Our transcription integrates
+        // gravity into vy BEFORE that branch and zeroes it in collision
+        // AFTER, so a grounded runner always shows vy ≈ -1.25 there and
+        // that branch never fires — leaving the flag stuck and coyote
+        // dead after the first jump of a life. Resetting on the landing
+        // edge is observably equivalent to the C#'s grounded-tick reset
+        // (while grounded, the only currentlyJumping readers are the
+        // coyote accumulator, zeroed anyway, and the rising-gravity
+        // branch, which checks onGround first). The solver's arrivedState
+        // already models fresh coyote per landing, so this makes the
+        // engine match the verified model — solver verdicts, calibration
+        // and derived rules are unchanged.
+        s.currentlyJumping = false;
     }
 
     // Hazards: non-solid kill AABBs (plan §3 — never collision

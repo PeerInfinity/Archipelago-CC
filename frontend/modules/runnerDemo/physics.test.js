@@ -107,6 +107,34 @@ describe('jumping', () => {
         expect(withDj).toBeGreaterThan(without + C.jumpHeight * 0.5);
     });
 
+    it('landing clears currentlyJumping so coyote works after a previous jump', () => {
+        // Auto-run across a single floor ending at x=20: tap a jump
+        // early, land, then run off the lip and press mid-coyote. The
+        // solver's arrivedState assumes every landing yields a fresh
+        // coyote window — this pins the engine to that model (the
+        // pre-fix port left currentlyJumping stuck true after the
+        // first jump, so the coyote counter never accrued again).
+        const level = makeLevel({
+            platforms: [{ id: 'floor', x: 0, y: 0, w: 20, h: 1, type: 'ground' }],
+        });
+        // pass 1 — tap jump at t=5, find the landing and the lip fall
+        const probe = run(level, 200, holdJumpFrom(5, 9));
+        const landTick = probe.findIndex((s, t) => t > 5 && s.landedOn === 'floor');
+        expect(landTick).toBeGreaterThan(5);
+        expect(probe[landTick].currentlyJumping).toBe(false); // the fix
+        const offLip = probe.findIndex((s, t) => t > landTick && !s.onGround);
+        expect(offLip).toBeGreaterThan(landTick);
+        // the coyote window accrues again on the second lip…
+        expect(probe[offLip + 2].coyoteTimeCounter).toBeGreaterThan(0);
+        // pass 2 — …and a mid-coyote press actually launches
+        const trace = run(level, offLip + 60, (t) =>
+            ((t >= 5 && t < 9) || (t >= offLip + 2 && t < offLip + 6) ? { jump: true } : {}));
+        const floorTop = 1;
+        const risesAfterLip = trace.slice(offLip + 2)
+            .some((s) => s.currentlyJumping && s.y > floorTop + 0.5);
+        expect(risesAfterLip).toBe(true);
+    });
+
     it('landedOn fires exactly on the landing tick', () => {
         const trace = run(makeLevel(), 30, () => ({}), {}, { ...DEFAULTS, AUTO_RUN: false });
         const landings = trace

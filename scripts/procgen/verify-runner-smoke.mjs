@@ -60,18 +60,14 @@ if (!expectRegion) throw new Error(`no exit for side ${endSide}`);
 
 // Per-leg witness/policy -> tape event, CHAIN-VALIDATED against the
 // real gameCore sim before touching the browser. Policies are
-// position-triggered (`jump@X+HOLD`); the solver's per-leg witnesses
-// sample each leg from a fresh arrival state, and one engine quirk
-// doesn't survive the chain: `currentlyJumping` is only cleared on a
-// grounded vy≈0 tick (which a running player never produces, since
-// gravity integrates before that branch), so after the first jump of a
-// life the coyote counter stays zeroed and MID-COYOTE triggers are
-// dead. Grounded-trigger policies from the same solver family replay
-// fine — so per leg we take the witness policy plus the leg's other
-// jump policies as candidates, prefer grounded triggers, and greedily
-// pick the first whose whole-chain sim (spawn -> ... -> leg target)
-// lands. (The phase-8 bot is naturally immune: it forward-sims
-// candidates from the LIVE state.)
+// position-triggered (`jump@X+HOLD`). The engine now clears
+// currentlyJumping on the landing edge (the chained-coyote fix in
+// physics.js — pre-fix, mid-coyote triggers were dead after the first
+// jump of a life and verbatim witness replay could fail), so witnesses
+// replay as-is; the chain validation is kept as cheap robustness: per
+// leg we take the witness policy plus the leg's other jump policies as
+// candidates, prefer grounded triggers, and greedily pick the first
+// whose whole-chain sim (spawn -> ... -> leg target) lands.
 const parsePolicy = (name) => {
     const m = /^jump@(-?[\d.]+)\+(\d+)$/.exec(name);
     return m ? { kind: 'jump', triggerX: parseFloat(m[1]), holdTicks: parseInt(m[2], 10) } : null;

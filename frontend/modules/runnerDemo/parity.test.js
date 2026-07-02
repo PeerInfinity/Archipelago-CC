@@ -163,9 +163,15 @@ const TAPES = [
             { at: 36, jump: false },
         ],
         // press again while FALLING from the first jump so the buffer
-        // carries the press into the landing tick
+        // carries the press into the landing tick. Timed by predicted
+        // impact (< 0.1s at the current fall speed, an overestimate
+        // since the fall accelerates — safely inside every preset's
+        // 0.15s jumpBuffer): pressing at the first falling tick, as an
+        // earlier draft did, expires the buffer one tick short of the
+        // landing under toolkit's 6.17× fall gravity.
         dynamic: (s, st) => {
-            if (st.launches === 1 && !s.onGround && s.vy < 0 && !st.rePressed) {
+            if (st.launches === 1 && !s.onGround && s.vy < 0 && !st.rePressed
+                    && (s.y - 1) / -s.vy < 0.1) { // floor top y=1
                 st.rePressed = true;
                 return { jump: true };
             }
@@ -200,6 +206,39 @@ const TAPES = [
             return null;
         },
         check: (st) => {
+            expect(st.coyotePressed).toBe(true);
+            expect(st.coyoteLaunch).toBe(true);
+        },
+    },
+    {
+        name: 'floor: coyote still works after an earlier completed jump',
+        world: 'floor',
+        ticks: 450,
+        events: [
+            { at: 5, jump: true },   // completed tap jump in place…
+            { at: 11, jump: false },
+            { at: 100, left: true }, // …then walk off the left edge
+        ],
+        // Same press logic as the first-jump coyote tape, armed only
+        // after the first launch. The point: LANDING must clear
+        // currentlyJumping (the landing-edge reset both engines carry —
+        // the C#'s grounded vy≈0 reset never fires in this port's tick
+        // ordering), else coyoteTimeCounter never accrues off the lip
+        // and this press condition never becomes true.
+        dynamic: (s, st) => {
+            if (!s.onGround && !s.currentlyJumping && !st.coyotePressed
+                    && s.coyoteTimeCounter > 0.03 && st.launches >= 1) {
+                st.coyotePressed = true;
+                return { jump: true };
+            }
+            if (st.coyotePressed && st.launches >= 2 && !st.coyoteReleased) {
+                st.coyoteReleased = true;
+                return { jump: false };
+            }
+            return null;
+        },
+        check: (st) => {
+            expect(st.launches).toBeGreaterThanOrEqual(2);
             expect(st.coyotePressed).toBe(true);
             expect(st.coyoteLaunch).toBe(true);
         },
@@ -274,7 +313,13 @@ function runParity(profileId, tape, perturb = {}) {
         ported = step(ported, { ...held }, level, {}, C);
 
         // stats (port side; parity below guarantees they describe both)
-        if (ported.currentlyJumping && ported.vy > vyBefore + 1) {
+        // A real DoAJump leaves vy at +jumpSpeed, so require the tick to
+        // END moving up: a LANDING also satisfies `vy > vyBefore + 1`
+        // (vy snaps from a big negative to 0) and, before the landing
+        // reset existed, currentlyJumping was stuck true — that pair
+        // counted landings as launches and let the buffered-refire tape
+        // pass vacuously on profiles where the refire never fired.
+        if (ported.currentlyJumping && ported.vy > vyBefore + 1 && ported.vy > 1) {
             stats.launches += 1;
             if (wasAirborne) stats.coyoteLaunch = true;
         }
