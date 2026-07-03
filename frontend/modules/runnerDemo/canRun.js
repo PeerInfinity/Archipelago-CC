@@ -162,6 +162,9 @@ function arrivedState(from, x, vx) {
         t: 0,
         landedOn: null,
         standingOn: from.id,
+        sprungOn: null,
+        springFlight: false,
+        lastSupportType: from.type ?? null, // pad legs must glide (physics.js)
         touchedPickups: [],
         touchedPortals: [],
         hits: 0,
@@ -364,6 +367,43 @@ export function policiesFor(level, from, abilities, opts = {}) {
             policies.push(jumpPolicy(`jump@${trig}+${hold}`, trig, hold));
         }
     }
+    if (from.type === 'glider') {
+        // Glide policies (plan §8.5/§8.7 step 4), two families, both
+        // ending in a hold that engages the pad's fall cap (physics.js).
+        // Pad legs only — every other policy set is byte-unchanged.
+        //
+        // - hop-and-hold (max reach): tap a hop EARLY on the pad, land
+        //   back on it with the button still held (no new press edge —
+        //   the second press fires mid-hop where it is inert and its
+        //   buffer expires before landing), run off the lip gliding
+        //   from FULL height. This is the solver's synthesis of the
+        //   natural human tape (arrive on the pad holding jump, run
+        //   off) — arrivedState cannot carry a held button across
+        //   legs, so the policy re-creates the held state with a hop.
+        //   Triggers sit deep enough for the hop to land ON the pad;
+        //   lip-adjacent arrivals that cannot hop are covered by the
+        //   past-lip presses below, or are doomed at wide gaps and
+        //   excluded from the ∀ (inbound witnesses must land in live
+        //   states — the doom model's job).
+        // - past-lip press-and-hold: the press edge is inert past the
+        //   lip (a run-off banks no air jump; within 0.03s of the lip
+        //   the coyote window hasn't opened, past ~0.15s it has
+        //   closed), so the hold glides from wherever the free fall
+        //   has reached. Less reach than the hop tape, but arrival-
+        //   position-independent.
+        const HOLD_GLIDE = 9999;
+        const hopTrigs = [...new Set(
+            [lo, (lo + hi) / 2].map((t) => round2(Math.min(t, hi - 3.5))),
+        )].filter((t) => t >= lo);
+        for (const trig of hopTrigs) {
+            policies.push(jumpPolicy(
+                `hop@${trig}+glide`, trig, 1, { at: 4, hold: HOLD_GLIDE }));
+        }
+        for (const mult of [0.15, 1.2, 2.2]) {
+            const trig = round2(hi + C.maxSpeed * C.coyoteTime * mult);
+            policies.push(jumpPolicy(`jump@${trig}+glide`, trig, HOLD_GLIDE));
+        }
+    }
     if ((C.maxAirJumps ?? 0) > 0) {
         for (const trig of sorted) {
             for (const hold of [holdFull, holdMid]) {
@@ -466,7 +506,11 @@ export function canRunDetailed(level, fromId, toId, abilities, opts = {}) {
     const fall = C_eff.jumpHeight * (1 + airJumps) + springRise + drop + 0.5;
     const airTime = C_eff.timeToJumpApex * (1 + airJumps)
         + springs.length * 2 * Math.sqrt((2 * C_eff.SPRING_RISE) / gUp)
-        + Math.sqrt((2 * fall) / gUp) + C_eff.coyoteTime;
+        + Math.sqrt((2 * fall) / gUp) + C_eff.coyoteTime
+        // a glided pad fall-off descends at the CAP, not ballistically
+        // — the fail-only bound must cover the slow-fall airtime or it
+        // lies (glide launches only from `glider` pads, physics.js)
+        + (from.type === 'glider' ? fall / C_eff.GLIDE_FALL_CAP : 0);
     if (to.x - (from.x + from.w) > C_eff.maxSpeed * airTime * 1.25 + C.PLAYER_W) return fail;
 
     const policies = policiesFor(level, from, abilities, opts);

@@ -16,7 +16,7 @@ import {
 import { reachableRunPlatforms } from './canRun.js';
 import {
     flatRun, gapJump, oneWay, spikeRun, doubleGap, stepStone, springGap,
-    springShelf, djShelf, laneSplit, ceilingRun, ceilingHop, FIXTURES,
+    springShelf, djShelf, laneSplit, ceilingRun, ceilingHop, glideDrop, FIXTURES,
 } from './fixtures.js';
 
 describe('abilityUniverse', () => {
@@ -28,6 +28,9 @@ describe('abilityUniverse', () => {
         expect(abilityUniverse(oneWay)).toEqual(['doubleJump', 'blue']);
         expect(abilityUniverse(stepStone)).toEqual(['doubleJump', 'blue']);
         expect(abilityUniverse(springGap)).toEqual(['doubleJump', 'spring']);
+        // glide joins the universe via its PAD's platform gate, like
+        // blue/spring — not as an always-present movement ability
+        expect(abilityUniverse(glideDrop)).toEqual(['doubleJump', 'glide']);
     });
 });
 
@@ -96,6 +99,13 @@ describe('derived rules match fixture ground truth', () => {
         const r = deriveAccessRules(springGap);
         expect(r.pickups.pk_edge.minimalSets).toEqual([[]]);
         expect(r.exits.exit_main.minimalSets).toEqual([['spring']]);
+        expect(r.defects).toEqual([]);
+    });
+
+    it('glideDrop: pad pickup and exit require exactly {glide}; doubleJump provably not', () => {
+        const r = deriveAccessRules(glideDrop);
+        expect(r.pickups.pk_pad.minimalSets).toEqual([['glide']]);
+        expect(r.exits.exit_main.minimalSets).toEqual([['glide']]);
         expect(r.defects).toEqual([]);
     });
 

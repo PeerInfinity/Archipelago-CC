@@ -255,5 +255,32 @@ export const ceilingHop = {
     spawn: { x: 1, y: 1 },
 };
 
+/** The Glide gate (plan §8.5/§8.7 step 4): a ramp climbs to a `glider`
+ *  pad — existence-gated on the Glide item — over an extra-wide DROP
+ *  gap (the widest gap in the game). Holding jump during a non-jump
+ *  fall off the pad caps fall speed (GLIDE_FALL_CAP), so running off
+ *  the pad while holding sails the chasm; without the item the pad is
+ *  absent and the gap is dj-proof from the (lower, further-left) ramp
+ *  top: 16.2 units vs ~12.7 double-jump reach at that drop. The
+ *  natural play tape is "jump onto the pad holding, keep holding, run
+ *  off"; the solver's hop-and-hold policy synthesizes the same held
+ *  state with an early tap hop. */
+export const glideDrop = {
+    id: 'glideDrop',
+    size: { width: 54, height: 20 },
+    platforms: [
+        { id: 'floorA', x: 0, y: 0, w: 8, h: 1, type: 'ground' },
+        { id: 'ramp0', x: 10.6, y: 1.35, w: 4, h: 1, type: 'ground' },
+        { id: 'ramp1', x: 17.2, y: 2.7, w: 4, h: 1, type: 'ground' },
+        { id: 'ramp2', x: 23.8, y: 4.05, w: 4, h: 1, type: 'ground' },
+        { id: 'pad1', x: 29.3, y: 5.75, w: 6, h: 0.5, type: 'glider' },
+        { id: 'floorB', x: 44, y: 0, w: 10, h: 1, type: 'ground' },
+    ],
+    hazards: [],
+    pickups: [{ id: 'pk_pad', on: 'pad1', x: 35, y: 6.85 }],
+    portals: [{ id: 'exit_main', on: 'floorB', x: 53.4, y: 1.6, arrow: 'right', exitName: null }],
+    spawn: { x: 1, y: 1 },
+};
+
 export const FIXTURES = [flatRun, gapJump, oneWay, spikeRun, doubleGap, stepStone, springGap,
-    springShelf, djShelf, laneSplit, ceilingRun, ceilingHop];
+    springShelf, djShelf, laneSplit, ceilingRun, ceilingHop, glideDrop];

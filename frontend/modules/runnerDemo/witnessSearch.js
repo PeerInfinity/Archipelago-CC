@@ -55,12 +55,22 @@ import { DEFAULTS, step as physicsStep, spawnState } from './physics.js';
 
 const DEFAULT_QUANTUM = { x: 0.1, y: 0.1, vx: 0.25, vy: 0.5 };
 
-function keyOf(s, q, dt) {
+function keyOf(s, q, dt, coyoteClamp) {
     return `${Math.round(s.x / q.x)}|${Math.round(s.y / q.y)}`
         + `|${Math.round(s.vx / q.vx)}|${Math.round(s.vy / q.vy)}`
         + `|${s.pressingJump ? 1 : 0}${s.currentlyJumping ? 1 : 0}`
         + `${s.canJumpAgain ? 1 : 0}${s.onGround ? 1 : 0}${s.desiredJump ? 1 : 0}`
-        + `|${Math.round(s.coyoteTimeCounter / dt)}`
+        // glide-relevant history (physics.js glide branch): two states
+        // at one position can differ in whether a held jump glides —
+        // merging them would lose real glide witnesses
+        + `${s.springFlight ? 1 : 0}${s.lastSupportType === 'glider' ? 1 : 0}`
+        // the coyote counter keeps accumulating for a WHOLE non-jump
+        // fall, but past the window its exact value is physics-inert
+        // (only `< coyoteTime` comparisons read it and it only grows)
+        // — clamping the bucket is exact, and without it a long glide
+        // never merges two states at one position reached at different
+        // airborne ages (positions × ages drowned the budget)
+        + `|${Math.round(Math.min(s.coyoteTimeCounter, coyoteClamp) / dt)}`
         + `|${Math.round(s.jumpBufferCounter / dt)}`
         + `|${s.hits}`;
 }
@@ -96,15 +106,35 @@ export function witnessSearch(level, abilities, opts = {}) {
         const airOk = airBranchTicks <= 1
             || Math.round(s.t / dt) % airBranchTicks === 0
             || Math.abs(s.vy) <= apexBand;
+        // glide-eligible state (physics.js glide branch): a press
+        // starts a glide, a release ends one — both real decisions
+        const glidable = s.lastSupportType === 'glider' && !s.onGround
+            && s.vy < 0 && !s.currentlyJumping && !s.springFlight;
         const jumpMatters = s.pressingJump || s.onGround
             || (s.canJumpAgain && airOk)
-            || (!s.currentlyJumping && s.coyoteTimeCounter < C.coyoteTime);
-        const base = jumpMatters ? [{}, { jump: true }] : [{}];
+            || (!s.currentlyJumping && s.coyoteTimeCounter < C.coyoteTime)
+            // a press during a non-jump fall launched from a glider
+            // pad starts a glide — thinned like the air-jump branch
+            || (glidable && airOk);
+        // Release-thinning during a glide: while HOLDING a glide, the
+        // release branches only on airOk ticks — without this every
+        // hover tick doubles the frontier and the long slow-fall
+        // corridors drown the budget (the same completeness-for-time
+        // trade as airBranchTicks, absorbed by the dedup quantum;
+        // pressing-tick releases elsewhere are untouched).
+        const base = !jumpMatters ? [{}]
+            : (s.pressingJump && glidable && !airOk)
+                ? [{ jump: true }]
+                : [{}, { jump: true }];
         if (onewayIds.size === 0) return base;
         // drop branches only where it can act (see header): standing
-        // on a one-way, or airborne and descending toward a catch
+        // on a one-way, or airborne and descending toward a catch —
+        // the airborne branch thinned to airOk ticks: a held drop is
+        // inert until a catch, so starting it a few ticks earlier is
+        // outcome-equal (dominance; long glides made per-tick drop
+        // branches a frontier doubler)
         const dropMatters = (s.standingOn && onewayIds.has(s.standingOn))
-            || (!s.onGround && s.vy <= 0);
+            || (!s.onGround && s.vy <= 0 && airOk);
         if (!dropMatters) return base;
         return [...base, ...base.map((i) => ({ ...i, drop: true }))];
     };
@@ -117,7 +147,8 @@ export function witnessSearch(level, abilities, opts = {}) {
     const firstSupportKey = trackWitnesses ? new Map() : null;
 
     const start = spawnState(level, C);
-    const startKey = keyOf(start, q, dt);
+    const coyoteClamp = C.coyoteTime + dt;
+    const startKey = keyOf(start, q, dt, coyoteClamp);
     const visited = new Set([startKey]);
     // BFS frontier walked by index — Array#shift is O(n) and the
     // frontier grows into the millions on the corpus's biggest cases
@@ -145,7 +176,7 @@ export function witnessSearch(level, abilities, opts = {}) {
         expanded += 1;
         for (const input of inputsFor(state)) {
             const next = physicsStep(state, input, level, abilities, C);
-            const nextKey = keyOf(next, q, dt);
+            const nextKey = keyOf(next, q, dt, coyoteClamp);
             if (visited.has(nextKey)) continue;
             visited.add(nextKey);
             parents?.set(nextKey, { parentKey: key, input });

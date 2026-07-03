@@ -14,7 +14,7 @@ import {
 } from './canRun.js';
 import {
     flatRun, gapJump, oneWay, spikeRun, doubleGap, stepStone, springGap,
-    springShelf, djShelf, laneSplit, ceilingRun, ceilingHop, FIXTURES,
+    springShelf, djShelf, laneSplit, ceilingRun, ceilingHop, glideDrop, FIXTURES,
 } from './fixtures.js';
 import { noAbilities, allAbilities } from './suppression.js';
 import { DEFAULTS } from './physics.js';
@@ -424,5 +424,60 @@ describe('split segments (laneSplit — placement steps 2+3)', () => {
     it('everything is reachable with no abilities (route choice, not logic)', () => {
         expect([...reachableRunPlatforms(laneSplit, NONE)].sort()).toEqual(
             ['floorA', 'floorB', 'floorC', 'lane1', 'ramp0', 'ramp1']);
+    });
+});
+
+describe('glideDrop: the glide gate (plan §8.7 step 4)', () => {
+    const GLIDE = { glide: true };
+
+    it('the drop gap beats even Double Jump; the pad glide sails it', () => {
+        // without the item the best launch is the (lower) ramp top —
+        // 16.2 units at that drop vs ~12.7 double-jump reach
+        expect(canRun(glideDrop, 'ramp2', 'floorB', NONE)).toBe(false);
+        expect(canRun(glideDrop, 'ramp2', 'floorB', DJ)).toBe(false);
+        const d = canRunDetailed(glideDrop, 'pad1', 'floorB', GLIDE);
+        expect(d.ok).toBe(true);
+        // every witness is a glide-family tape (hop-and-hold or a
+        // past-lip press-and-hold) — nothing else crosses
+        expect(d.witnesses.length).toBeGreaterThan(0);
+        expect(d.witnesses.every((w) => w.policy.includes('glide'))).toBe(true);
+    });
+
+    it('the pad is existence-gated: a node (and a leg target) only with the item', () => {
+        expect(canRun(glideDrop, 'ramp2', 'pad1', GLIDE)).toBe(true);
+        expect(canRun(glideDrop, 'ramp2', 'pad1', DJ)).toBe(false);
+        const graph = buildRunGraph(glideDrop, DJ);
+        expect(graph.nodes.some((n) => nodePlatformId(n) === 'pad1')).toBe(false);
+    });
+
+    it('glide policies exist ONLY on pad legs — every other family is byte-unchanged', () => {
+        const ramp = glideDrop.platforms.find((p) => p.id === 'ramp2');
+        const withGlide = policiesFor(glideDrop, ramp, GLIDE).map((p) => p.name);
+        const without = policiesFor(glideDrop, ramp, NONE).map((p) => p.name);
+        expect(withGlide).toEqual(without);
+        const pad = glideDrop.platforms.find((p) => p.id === 'pad1');
+        const padNames = policiesFor(glideDrop, pad, GLIDE).map((p) => p.name);
+        expect(padNames.some((n) => n.startsWith('hop@'))).toBe(true);
+        expect(padNames.some((n) => n.endsWith('+glide'))).toBe(true);
+        // pads are one-way: the drop-through family is there too
+        expect(padNames.some((n) => n.startsWith('drop@'))).toBe(true);
+    });
+
+    it('findRunPath plans the ramp climb, the pad, and the glide', () => {
+        const r = findRunPath(buildRunGraph(glideDrop, GLIDE), 'floorB');
+        expect(r.ok).toBe(true);
+        expect(planPlatformIds(r.plan)).toEqual(
+            ['floorA', 'ramp0', 'ramp1', 'ramp2', 'pad1', 'floorB']);
+        expect(findRunPath(buildRunGraph(glideDrop, DJ), 'floorB').ok).toBe(false);
+    });
+
+    it('reachableRunPlatforms per ability set', () => {
+        const ramps = ['floorA', 'ramp0', 'ramp1', 'ramp2'];
+        expect([...reachableRunPlatforms(glideDrop, NONE)].sort()).toEqual(ramps);
+        expect([...reachableRunPlatforms(glideDrop, DJ)].sort()).toEqual(ramps);
+        expect([...reachableRunPlatforms(glideDrop, GLIDE)].sort())
+            .toEqual([...ramps, 'floorB', 'pad1'].sort());
+        expect([...reachableRunPlatforms(glideDrop, allAbilities())].sort())
+            .toEqual([...ramps, 'floorB', 'pad1'].sort());
     });
 });

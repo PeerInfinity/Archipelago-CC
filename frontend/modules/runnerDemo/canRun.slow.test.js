@@ -21,7 +21,7 @@ import {
     buildRunGraph, reachablePlatforms, reachableRunPlatforms,
 } from './canRun.js';
 import { witnessSearch } from './witnessSearch.js';
-import { FIXTURES, gapJump } from './fixtures.js';
+import { FIXTURES, gapJump, glideDrop } from './fixtures.js';
 import { noAbilities, allAbilities } from './suppression.js';
 import { DEFAULTS, step, spawnState } from './physics.js';
 
@@ -78,6 +78,30 @@ describe('solver ⊆ oracle over the fixture corpus', () => {
             });
         }
     }
+});
+
+describe('glideDrop oracle gate window (plan §8.7 step 4)', () => {
+    it('no non-glide superset crosses the chasm — oracle truth, not solver pessimism', () => {
+        // the gate's dj-proof margin must hold against REAL trajectories,
+        // not just the finite policy family: the strongest itemset
+        // without Glide must fail to reach the pad or the far floor
+        const noGlide = { doubleJump: true, blue: true, spring: true, glide: false };
+        const oracle = witnessSearch(glideDrop, noGlide, { airBranchTicks: 3 });
+        expect(oracle.exhausted).toBe(true);
+        expect(oracle.platforms.has('pad1')).toBe(false);
+        expect(oracle.platforms.has('floorB')).toBe(false);
+    });
+
+    it('glide-only: the oracle finds the pad and the crossing (solver ⊆ oracle)', () => {
+        const oracle = witnessSearch(glideDrop, { glide: true }, { airBranchTicks: 3 });
+        expect(oracle.exhausted).toBe(true);
+        const solver = reachableRunPlatforms(glideDrop, { glide: true });
+        expect(solver.has('floorB')).toBe(true);
+        for (const id of solver) {
+            expect(oracle.platforms.has(id),
+                `solver claims '${id}' but no real trajectory reaches it`).toBe(true);
+        }
+    });
 });
 
 describe('oracle witness tapes', () => {
