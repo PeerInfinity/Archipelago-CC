@@ -508,6 +508,17 @@ export function step(state, input, level, abilities, constants) {
                 s.sprungOn = p.id;
                 s.currentlyJumping = false;
                 s.canJumpAgain = false;
+                // Close the coyote window for the whole flight: the
+                // counter restarts at 0 when currentlyJumping clears,
+                // and a press inside the (0.03, coyoteTime) window
+                // would fire a REAL mid-air jump — zero added speed
+                // (vy is huge) but currentlyJumping would flip the
+                // rise gravity to the held-jump multiplier: a floaty
+                // super-bounce far beyond SPRING_RISE. Pinning the
+                // counter at coyoteTime keeps the arc deterministic
+                // (presses during the flight only feed the jump
+                // buffer, exactly like any other airborne press).
+                s.coyoteTimeCounter = C.coyoteTime;
                 s.gravMultiplier = C.variablejumpHeight
                     ? C.jumpCutOff : C.upwardMovementMultiplier;
             }

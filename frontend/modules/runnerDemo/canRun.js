@@ -110,6 +110,23 @@ const topOf = (p) => p.y + p.h;
 const isSolidType = (p) => p.type === 'ground';
 const round2 = (v) => Math.round(v * 100) / 100;
 
+/** Springs are mid-leg geometry, never graph nodes: the engine never
+ *  grounds on one (physics.js groundUnder excludes them), so no leg
+ *  can END there and no arrival set exists to launch from. The bounce
+ *  happens INSIDE a leg's sim — the policy family already contains
+ *  the witnesses (jump onto the spring, ride the deterministic arc). */
+const isStandable = (p) => p.type !== 'spring';
+
+/** Active springs whose x-extent could touch a from→to leg's corridor
+ *  — the pre-filters must widen their reach bounds by what a bounce
+ *  adds, or they would reject spring-assisted legs before the sim
+ *  ever runs (fail-only filters may prune, never lie). */
+function corridorSprings(level, from, to, abilities, C) {
+    return activePlatforms(level, abilities).filter((p) => p.type === 'spring'
+        && p.x + p.w > from.x - C.PLAYER_W
+        && p.x < to.x + to.w + C.PLAYER_W);
+}
+
 function platformById(level, id) {
     return level.platforms.find((p) => p.id === id) ?? null;
 }
@@ -406,7 +423,7 @@ export function canRunDetailed(level, fromId, toId, abilities, opts = {}) {
     const fail = { ok: false, touch: false, witnesses: [] };
 
     const to = platformById(level, toId);
-    if (!to || !isPlatformActive(to, abilities)) return fail;
+    if (!to || !isPlatformActive(to, abilities) || !isStandable(to)) return fail;
 
     if (fromId === ENTRANCE) {
         // Deterministic spawn (plan §1): the entry leg takes no inputs.
@@ -420,7 +437,7 @@ export function canRunDetailed(level, fromId, toId, abilities, opts = {}) {
         };
     }
     const from = platformById(level, fromId);
-    if (!from || !isPlatformActive(from, abilities)) return fail;
+    if (!from || !isPlatformActive(from, abilities) || !isStandable(from)) return fail;
 
     // Cheap pre-filters — fail-only (pessimistic is the safe direction),
     // each backed by an engine invariant, not a re-simulation:
@@ -431,16 +448,24 @@ export function canRunDetailed(level, fromId, toId, abilities, opts = {}) {
     if (to.x + to.w < from.x - C.PLAYER_W) return fail;
     // 2) rise: each launch re-derives jumpSpeed from jumpHeight, so the
     //    total gain is bounded by jumpHeight per jump (+ margin for the
-    //    inherited gravityScale quirk's overshoot).
+    //    inherited gravityScale quirk's overshoot). Corridor springs
+    //    widen the budget: each bounce adds up to SPRING_RISE.
+    const springs = corridorSprings(level, from, to, abilities, C_eff);
+    const springRise = springs.length * C_eff.SPRING_RISE;
     const airJumps = C_eff.maxAirJumps ?? 0;
-    if (topOf(to) - topOf(from) > C_eff.jumpHeight * (1 + airJumps) * 1.15 + 0.5) return fail;
+    if (topOf(to) - topOf(from)
+            > C_eff.jumpHeight * (1 + airJumps) * 1.15 + springRise + 0.5) return fail;
     // 3) range: maxSpeed × a generous airtime bound (ascent per jump ≤
     //    timeToJumpApex; descent timed with UP-gravity, which the
-    //    downward multiplier only ever shortens).
+    //    downward multiplier only ever shortens). Each corridor spring
+    //    adds a bounce's airtime, timed with UNDAMPENED up-gravity on
+    //    both halves (the real cut/downward multipliers only shorten
+    //    it — generous is the safe direction for a fail-only filter).
     const gUp = (2 * C_eff.jumpHeight) / (C_eff.timeToJumpApex * C_eff.timeToJumpApex);
     const drop = Math.max(0, topOf(from) - topOf(to));
-    const fall = C_eff.jumpHeight * (1 + airJumps) + drop + 0.5;
+    const fall = C_eff.jumpHeight * (1 + airJumps) + springRise + drop + 0.5;
     const airTime = C_eff.timeToJumpApex * (1 + airJumps)
+        + springs.length * 2 * Math.sqrt((2 * C_eff.SPRING_RISE) / gUp)
         + Math.sqrt((2 * fall) / gUp) + C_eff.coyoteTime;
     if (to.x - (from.x + from.w) > C_eff.maxSpeed * airTime * 1.25 + C.PLAYER_W) return fail;
 
@@ -517,7 +542,7 @@ export function canRun(level, fromId, toId, abilities, opts = {}) {
  * don't exist under this ability set.
  */
 export function buildRunGraph(level, abilities, opts = {}) {
-    const platforms = activePlatforms(level, abilities);
+    const platforms = activePlatforms(level, abilities).filter(isStandable);
     const nodes = [nodeKey(ENTRANCE), ...platforms.map((p) => nodeKey(p.id))];
     const edges = new Map(nodes.map((n) => [n, new Set()]));
     const touches = new Map(nodes.map((n) => [n, new Set()]));
@@ -609,8 +634,8 @@ export function reachableRunPlatforms(level, abilities, opts = {}) {
     // per-evaluation doom memo (see buildRunGraph)
     const { goalHosts, ...queryOpts } = { doomCache: new Map(), ...opts };
     const C = queryOpts.constants ?? DEFAULTS;
-    const platforms = activePlatforms(level, abilities)
-        .slice().sort((a, b) => (a.x - b.x) || (a.y - b.y));
+    const platforms = activePlatforms(level, abilities).filter(isStandable)
+        .sort((a, b) => (a.x - b.x) || (a.y - b.y));
     const reached = new Set();
     const entryLeg = runQuery(level, ENTRANCE, abilities, { ...queryOpts, policy: null });
     if (!entryLeg.landedOn) return reached;

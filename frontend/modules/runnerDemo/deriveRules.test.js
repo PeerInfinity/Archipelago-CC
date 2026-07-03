@@ -15,7 +15,7 @@ import {
 } from './deriveRules.js';
 import { reachableRunPlatforms } from './canRun.js';
 import {
-    flatRun, gapJump, oneWay, spikeRun, doubleGap, stepStone, FIXTURES,
+    flatRun, gapJump, oneWay, spikeRun, doubleGap, stepStone, springGap, FIXTURES,
 } from './fixtures.js';
 
 describe('abilityUniverse', () => {
@@ -26,6 +26,7 @@ describe('abilityUniverse', () => {
         expect(abilityUniverse(doubleGap)).toEqual(['doubleJump']);
         expect(abilityUniverse(oneWay)).toEqual(['doubleJump', 'blue']);
         expect(abilityUniverse(stepStone)).toEqual(['doubleJump', 'blue']);
+        expect(abilityUniverse(springGap)).toEqual(['doubleJump', 'spring']);
     });
 });
 
@@ -87,6 +88,13 @@ describe('derived rules match fixture ground truth', () => {
         const r = deriveAccessRules(oneWay);
         expect(r.pickups.pk_shelf.minimalSets).toEqual([['blue']]);
         expect(r.exits.exit_main.minimalSets).toEqual([[]]);
+        expect(r.defects).toEqual([]);
+    });
+
+    it('springGap: the exit requires exactly {spring}; doubleJump provably not required', () => {
+        const r = deriveAccessRules(springGap);
+        expect(r.pickups.pk_edge.minimalSets).toEqual([[]]);
+        expect(r.exits.exit_main.minimalSets).toEqual([['spring']]);
         expect(r.defects).toEqual([]);
     });
 });

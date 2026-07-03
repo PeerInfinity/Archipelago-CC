@@ -13,7 +13,7 @@ import {
     buildRunGraph, findRunPath, reachablePlatforms, reachableRunPlatforms,
 } from './canRun.js';
 import {
-    flatRun, gapJump, oneWay, spikeRun, doubleGap, stepStone, FIXTURES,
+    flatRun, gapJump, oneWay, spikeRun, doubleGap, stepStone, springGap, FIXTURES,
 } from './fixtures.js';
 import { noAbilities, allAbilities } from './suppression.js';
 import { DEFAULTS } from './physics.js';
@@ -263,5 +263,38 @@ describe('survivesFrom', () => {
         const doomLanding = land(doubleGap);
         expect(survivesFrom(doubleGap, 'floorA', doomLanding.landingState, NONE)).toBe(false);
         expect(survivesFrom(doubleGap, 'floorA', doomLanding.landingState, DJ)).toBe(true);
+    });
+});
+
+describe('springGap: the spring gate (plan §8.7 step 1)', () => {
+    const SPRING = { doubleJump: false, blue: false, spring: true };
+
+    it('the full gap beats even Double Jump; the spring bounce carries it', () => {
+        expect(canRun(springGap, 'floorA', 'floorB', NONE)).toBe(false);
+        expect(canRun(springGap, 'floorA', 'floorB', DJ)).toBe(false);
+        const d = canRunDetailed(springGap, 'floorA', 'floorB', SPRING);
+        expect(d.ok).toBe(true);
+        expect(d.witnesses.length).toBeGreaterThan(0);
+    });
+
+    it('springs are never graph nodes: no leg ends on one, none launches from one', () => {
+        const graph = buildRunGraph(springGap, SPRING);
+        expect(graph.nodes.some((n) => nodePlatformId(n) === 'spring1')).toBe(false);
+        expect(canRun(springGap, 'floorA', 'spring1', SPRING)).toBe(false);
+        expect(canRun(springGap, 'spring1', 'floorB', SPRING)).toBe(false);
+    });
+
+    it('findRunPath plans the single spring-assisted leg under Springs', () => {
+        const r = findRunPath(buildRunGraph(springGap, SPRING), 'floorB');
+        expect(r.ok).toBe(true);
+        expect(planPlatformIds(r.plan)).toEqual(['floorA', 'floorB']);
+        expect(findRunPath(buildRunGraph(springGap, DJ), 'floorB').ok).toBe(false);
+    });
+
+    it('reachableRunPlatforms: floorB requires exactly the spring item', () => {
+        expect([...reachableRunPlatforms(springGap, NONE)].sort()).toEqual(['floorA']);
+        expect([...reachableRunPlatforms(springGap, DJ)].sort()).toEqual(['floorA']);
+        expect([...reachableRunPlatforms(springGap, SPRING)].sort())
+            .toEqual(['floorA', 'floorB']);
     });
 });
