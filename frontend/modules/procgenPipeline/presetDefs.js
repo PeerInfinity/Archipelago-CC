@@ -45,7 +45,8 @@ export const VALID_MODES = ['gridGrowth', 'sphereGrowth', 'shuffledSpiral', 'top
  *
  * - runner-placement-demo is the sphere demo config with the
  *   placement + texture knobs on (runnerJitter 0.75, runnerSplitChance
- *   0.6, runnerCeilingDensity 0.5) — the demo for jittered floors,
+ *   0.6, runnerCeilingDensity 0.5, runnerCeilingMargin 1) — the demo
+ *   for jittered floors,
  *   split segments (ramp → one-way top lane / bottom lane merge), and
  *   ceiling hazards (§8.7 step 3: kill slabs that punish full-height
  *   jumps). CLI-verified oracle-clean at this exact config.
@@ -105,7 +106,8 @@ export const SHIPPED_PRESETS = Object.freeze([
             + 'texture knobs turned up: jitter 0.75 (plain floors rise '
             + 'up to ~0.9), splits 0.6 (ramps forking into one-way top '
             + 'lanes over bottom lanes), and ceilings 0.5 (kill slabs '
-            + 'over short gaps — full jumps clip them, taps cross). '
+            + 'over short gaps — full jumps clip them, a plain short '
+            + 'hop crosses at the default margin 1). '
             + 'Same 4-item pool, seed 1 — oracle-clean with 5 ceiling '
             + 'slabs, 4 lane segments and 19 raised floors across 3 '
             + 'regions.',
@@ -127,6 +129,7 @@ export const SHIPPED_PRESETS = Object.freeze([
                 runnerJitter: 0.75,
                 runnerSplitChance: 0.6,
                 runnerCeilingDensity: 0.5,
+                runnerCeilingMargin: 1,
             },
             scenario: {
                 items: {

@@ -25,6 +25,8 @@
  *   --jitter J         vertical placement jitter 0-1 (default 0)
  *   --split-chance P   split-segment probability per plains slot (default 0)
  *   --ceiling-chance P ceiling-hazard probability per plains slot (default 0)
+ *   --ceiling-margin M ceiling margin of error 0-1 (default 1: grounded-tap
+ *                      crossable; 0: expert coyote-tap windows)
  *   --hazard-chance F  hazard decoration chance (default 0.5)
  *   --abilities SPEC   'none' (default), 'all', or csv of
  *                      doubleJump,blue — the suppression view rendered
@@ -51,7 +53,7 @@ import {
 } from '../../frontend/modules/runnerDemo/generator.js';
 
 function parseArgs(argv) {
-    const args = { seed: 1, pickups: 1, branches: null, hazardChance: 0.5, jitter: 0, splitChance: 0, ceilingChance: 0, abilities: 'none' };
+    const args = { seed: 1, pickups: 1, branches: null, hazardChance: 0.5, jitter: 0, splitChance: 0, ceilingChance: 0, ceilingMargin: 1, abilities: 'none' };
     for (let i = 2; i < argv.length; i++) {
         const flag = argv[i];
         switch (flag) {
@@ -65,6 +67,7 @@ function parseArgs(argv) {
             case '--jitter': args.jitter = Number(argv[++i]); break;
             case '--split-chance': args.splitChance = Number(argv[++i]); break;
             case '--ceiling-chance': args.ceilingChance = Number(argv[++i]); break;
+            case '--ceiling-margin': args.ceilingMargin = Number(argv[++i]); break;
             case '--abilities': args.abilities = argv[++i]; break;
             case '--rules': args.rules = true; break;
             case '--json': args.json = argv[++i]; break;
@@ -98,6 +101,7 @@ function loadLevel(args) {
             jitter: args.jitter,
             splitChance: args.splitChance,
             ceilingChance: args.ceilingChance,
+            ceilingMargin: args.ceilingMargin,
             seed: args.seed,
         });
     }

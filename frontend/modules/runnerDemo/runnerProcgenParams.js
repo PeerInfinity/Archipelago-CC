@@ -68,6 +68,12 @@ export const DEFAULT_RUNNER_PROCGEN_PARAMS = Object.freeze({
     // whose calibration window collapses refuse ceilings; 0 keeps the
     // generator draw-for-draw identical.
     runnerCeilingDensity: 0,
+    // Margin of error under ceiling hazards (0–1). 1 (default): gaps
+    // narrow to grounded-tap range and the slab clears the grounded-
+    // tap apex — a plain short hop pressed before the lip crosses,
+    // coyote time is spare forgiveness, never required. 0: expert —
+    // gaps widen so only a run-off coyote tap fits under the slab.
+    runnerCeilingMargin: 1,
 });
 
 // ── regionParams assembly ───────────────────────────────────────────
@@ -85,6 +91,7 @@ export function buildRunnerRegionParams({ params } = {}) {
         runnerJitter: p.runnerJitter ?? 0,
         runnerSplitChance: p.runnerSplitChance ?? 0,
         runnerCeilingDensity: p.runnerCeilingDensity ?? 0,
+        runnerCeilingMargin: p.runnerCeilingMargin ?? 1,
     };
 }
 
@@ -174,5 +181,11 @@ export function renderRunnerProcgenParams({ params, onChange = () => {} } = {}) 
         + 'texture only — requirements never change. Some physics profiles have no '
         + 'safe ceiling window and skip these.',
         'runnerCeilingDensity', 0, { step: 0.01, max: 1 }));
+    wrap.appendChild(numberField('Ceiling margin',
+        'Margin of error under ceiling hazards (0–1). 1 (default): a plain short hop '
+        + 'pressed before the lip crosses — no coyote-time tricks needed. 0: expert — '
+        + 'gaps widen so only a late run-off tap fits under the slab. Mid and full '
+        + 'jumps are punished at every setting.',
+        'runnerCeilingMargin', 1, { step: 0.01, max: 1 }));
     return wrap;
 }
