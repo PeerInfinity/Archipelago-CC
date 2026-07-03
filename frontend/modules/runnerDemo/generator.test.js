@@ -22,7 +22,9 @@ describe('geometry', () => {
     });
 
     it('deriveGeometry from the pinned reaches yields valid windows (no sweep)', () => {
-        const G = deriveGeometry(DEFAULTS, { reaches: CELESTE_GEOMETRY.REACH });
+        const G = deriveGeometry(DEFAULTS, {
+            reaches: CELESTE_GEOMETRY.REACH, rises: CELESTE_GEOMETRY.RISE,
+        });
         expect(validateGeometry(G, DEFAULTS)).toEqual([]);
         // gate boundaries sit strictly between the swept reaches
         expect(G.DJ_GAP.min).toBeGreaterThan(CELESTE_GEOMETRY.REACH.single);
@@ -31,6 +33,11 @@ describe('geometry', () => {
         expect(G.SPRING_TOTAL.min).toBeGreaterThan(CELESTE_GEOMETRY.REACH.dj);
         expect(G.SPRING_TOTAL.min + G.SPRING_TOTAL.span)
             .toBeLessThan(CELESTE_GEOMETRY.REACH.spring);
+        // shelf windows sit strictly between the swept rises
+        expect(G.DJ_SHELF_RISE.min).toBeGreaterThan(CELESTE_GEOMETRY.RISE.single);
+        expect(G.DJ_SHELF_RISE.min + G.DJ_SHELF_RISE.span)
+            .toBeLessThan(CELESTE_GEOMETRY.RISE.dj);
+        expect(G.SPRING_SHELF_RISE.min).toBeGreaterThan(CELESTE_GEOMETRY.RISE.dj);
     });
 
     it('resolveGenPhysics: celeste is pinned; unknown profiles throw; explicit passthrough', () => {
@@ -73,12 +80,52 @@ describe('generateLevel', () => {
         for (const pt of level.portals) {
             expect(derived.exits[pt.id].minimalSets).toEqual([['spring']]);
         }
-    });
+    }, 60000);
 
     it('rejects abilities without a gate template', () => {
         expect(() => generateLevel({ requirement: ['highJump'] }))
             .toThrow(/no gate template/);
     });
+
+    it('reward shelf (shelfChance 1): one oneway shelf over the last gate carries loc_0', () => {
+        const level = generateLevel({
+            id: 'sh', requirement: ['spring'], pickupCount: 2, shelfChance: 1, seed: 1,
+        });
+        const shelves = level.platforms.filter((p) => p.type === 'oneway');
+        expect(shelves).toHaveLength(1);
+        const shelfPickups = level.pickups.filter((pk) => pk.on === shelves[0].id);
+        expect(shelfPickups.map((pk) => pk.id)).toEqual(['loc_0']);
+        // the other pickup stays a trunk floor; total count is unchanged
+        expect(level.pickups).toHaveLength(2);
+        // the shelf is dj-proof by construction: its top sits above the
+        // swept dj rise over the floors' top (y=1)
+        const top = shelves[0].y + shelves[0].h;
+        expect(top - 1).toBeGreaterThan(CELESTE_GEOMETRY.RISE.dj + 0.8);
+    }, 60000);
+
+    it('reward shelf on a dj gate sits strictly between the swept rises', () => {
+        const level = generateLevel({
+            id: 'shdj', requirement: ['doubleJump'], pickupCount: 1, shelfChance: 1, seed: 1,
+        });
+        const shelves = level.platforms.filter((p) => p.type === 'oneway');
+        expect(shelves).toHaveLength(1);
+        const rise = shelves[0].y + shelves[0].h - 1;
+        expect(rise).toBeGreaterThan(CELESTE_GEOMETRY.RISE.single);
+        expect(rise).toBeLessThan(CELESTE_GEOMETRY.RISE.dj);
+        expect(level.pickups.some((pk) => pk.on === shelves[0].id)).toBe(true);
+    }, 60000);
+
+    it('shelfChance 0 or no eligible gate ⇒ no shelf', () => {
+        const none = generateLevel({
+            id: 'sh0', requirement: ['spring'], pickupCount: 1, shelfChance: 0, seed: 1,
+        });
+        expect(none.platforms.some((p) => p.type === 'oneway')).toBe(false);
+        // blue's stone gate has no descent corridor — never shelved
+        const blue = generateLevel({
+            id: 'shb', requirement: ['blue'], pickupCount: 1, shelfChance: 1, seed: 1,
+        });
+        expect(blue.platforms.some((p) => p.type === 'oneway')).toBe(false);
+    }, 60000);
 
     it('generateZoneSet rejects counts below starter+feature+victory', () => {
         expect(() => generateZoneSet({ count: 3 })).toThrow(/count must be >= 4/);

@@ -11,8 +11,8 @@
 import { describe, it, expect } from 'vitest';
 import {
     CELESTE_GEOMETRY, sweepMaxGap, deriveGeometry, validateGeometry,
-    generateLevel, generateZoneSet, deriveGeneratedRules,
-    SWEEP_SATURATING_PROFILES, sweepSpringTotal,
+    generateLevel, generateLevelForSpecs, generateZoneSet, deriveGeneratedRules,
+    SWEEP_SATURATING_PROFILES, sweepSpringTotal, sweepMaxRise,
 } from './generator.js';
 import { deriveAccessRules } from './deriveRules.js';
 import { DEFAULTS, PROFILES } from './physics.js';
@@ -47,7 +47,7 @@ describe('seed-range generate-and-verify', () => {
                     expect(sets, `${level.id} ${id}`).toEqual([want]);
                 }
             }
-        });
+        }, 300000);
     }
 
     it('same seed ⇒ byte-identical level for every requirement', () => {
@@ -109,6 +109,51 @@ describe('generateZoneSet', () => {
     });
 });
 
+describe('reward shelves (plan §8.7 step 2)', () => {
+    // Forced shelves (shelfChance 1) across gate shapes and seeds:
+    // generateLevel's internal verify is the gate — every goal
+    // (including the shelf pickup) must derive exactly [S].
+    for (const requirement of [['spring'], ['doubleJump'], ['doubleJump', 'spring']]) {
+        const want = [...requirement].sort();
+        it(`forced shelf on [${requirement.join('+')}] × seeds 1,2`, () => {
+            for (const seed of [1, 2]) {
+                const level = generateLevel({
+                    id: `shelf_${want.join('_')}_${seed}`, requirement,
+                    pickupCount: 2, branchCount: 1, hazardChance: 0.5,
+                    shelfChance: 1, seed,
+                });
+                const shelves = level.platforms.filter((p) => p.type === 'oneway');
+                expect(shelves, level.id).toHaveLength(1);
+                expect(level.pickups.some((pk) => pk.on === shelves[0].id)).toBe(true);
+                const derived = deriveGeneratedRules(level, DEFAULTS);
+                expect(derived.defects, level.id).toEqual([]);
+                for (const [id, sets] of Object.entries(goalRules(level, derived))) {
+                    expect(sets, `${level.id} ${id}`).toEqual([want]);
+                }
+            }
+        });
+    }
+
+    it('spec path: a shelved window pickup derives its window set; plan grammar unchanged', () => {
+        const { level, derived, portalByKey } = generateLevelForSpecs({
+            id: 'shelf_spec',
+            exitSpecs: [
+                { key: 'E', requirement: ['doubleJump'] },
+                { key: 'W', requirement: [] },
+            ],
+            pickupSpecs: [{ id: 'it_a', requirement: ['doubleJump'] }],
+            shelfChance: 1, seed: 1,
+        });
+        expect(portalByKey).toEqual({ E: 'exit_main', W: 'exit_br0' });
+        const shelves = level.platforms.filter((p) => p.type === 'oneway');
+        expect(shelves).toHaveLength(1);
+        expect(level.pickups.find((pk) => pk.id === 'it_a').on).toBe(shelves[0].id);
+        expect(derived.pickups.it_a.minimalSets).toEqual([['doubleJump']]);
+        expect(derived.exits.exit_main.minimalSets).toEqual([['doubleJump']]);
+        expect(derived.exits.exit_br0.minimalSets).toEqual([[]]);
+    });
+});
+
 describe('calibration pins', () => {
     it('the pinned celeste REACH matches a fresh solver sweep', () => {
         expect(sweepMaxGap(DEFAULTS, { doubleJump: false, blue: false }))
@@ -116,6 +161,13 @@ describe('calibration pins', () => {
         expect(sweepMaxGap(DEFAULTS, { doubleJump: true, blue: false }))
             .toBeCloseTo(CELESTE_GEOMETRY.REACH.dj, 2);
         expect(sweepSpringTotal(DEFAULTS)).toBeCloseTo(CELESTE_GEOMETRY.REACH.spring, 2);
+    });
+
+    it('the pinned celeste RISE matches a fresh solver sweep', () => {
+        expect(sweepMaxRise(DEFAULTS, { doubleJump: false }))
+            .toBeCloseTo(CELESTE_GEOMETRY.RISE.single, 2);
+        expect(sweepMaxRise(DEFAULTS, { doubleJump: true }))
+            .toBeCloseTo(CELESTE_GEOMETRY.RISE.dj, 2);
     });
 
     it('a non-pinned profile (nsmbu) derives structurally valid geometry', () => {

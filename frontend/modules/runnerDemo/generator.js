@@ -25,7 +25,15 @@
  *                carries the far half (sweepSpringTotal calibrates
  *                the crossable total; suppressed without Springs)
  * Pickups land on dedicated segments after all gates; the main exit
- * tops the strip's right end. BRANCHES are elevated tip platforms over
+ * tops the strip's right end. REWARD SHELVES (plan §8.7 step 2): with
+ * probability shelfChance an eligible level hangs ONE always-active
+ * one-way shelf in its LAST gate's descent corridor (dj/spring gates
+ * only — orderGates elects the gate and realizePlan draws the
+ * geometry); the crossing arc lands on it, the wake collects its
+ * pickup, and the fall-off drops onto the gate's padded landing
+ * floor — so the shelf pickup derives exactly [S] like every trunk
+ * goal, and planStripSpecs stays untouched (nested-chain rule §8.2).
+ * BRANCHES are elevated tip platforms over
  * widened plain gaps after the gates (surplus-exit hosts, portal in
  * the tip's wake); HAZARDS are spike patches on goal-free corridor
  * floors — and every spiked floor gets a FLUSH PARTNER floor after it
@@ -128,6 +136,37 @@ export function sweepSpringTotal(C, { cap = 20 } = {}) {
 }
 
 /**
+ * Max landable RISE onto an elevated one-way shelf under `abilities`
+ * — the vertical analog of sweepMaxGap, and the calibration the
+ * reward-shelf windows (plan §8.7 step 2) hang off: a spring shelf
+ * must sit ABOVE the dj rise (so Double Jump provably can't reach
+ * it), a dj shelf strictly BETWEEN the single and dj rises. Probe
+ * parameters FROZEN like sweepMaxGap's (12-unit run-up, 0.5 lead,
+ * 8-unit shelf, [0.5, cap] search, 20 halvings). Landable rise is
+ * lower than the raw apex: the arc must still clear the shelf's left
+ * edge moving forward — which is why this is swept, not closed-form.
+ */
+export function sweepMaxRise(C, abilities, { cap = 12 } = {}) {
+    const probe = (rise) => ({
+        id: 'probe',
+        size: { width: 12 + 0.5 + 8, height: 24 },
+        platforms: [
+            { id: 'a', x: 0, y: 0, w: 12, h: 1, type: 'ground' },
+            { id: 'b', x: 12.5, y: 0.5 + rise, w: 8, h: 0.5, type: 'oneway' },
+        ],
+        hazards: [], pickups: [], portals: [], spawn: { x: 1, y: 1 },
+    });
+    let lo = 0.5;
+    let hi = cap;
+    for (let i = 0; i < 20; i++) {
+        const mid = (lo + hi) / 2;
+        if (canRun(probe(mid), 'a', 'b', abilities, { constants: C })) lo = mid;
+        else hi = mid;
+    }
+    return round2(lo);
+}
+
+/**
  * Profiles whose reach SATURATES the sweep cap (16): the measured
  * horizontal reach exceeds the probe's search ceiling, so the swept
  * REACH values are lower bounds, not measurements — every gate window
@@ -166,6 +205,27 @@ export const CELESTE_GEOMETRY = Object.freeze({
     TIP_H: 0.5,
     BRANCH_RISE: 1.35,                                  // 0.6 × jumpHeight (tip top; apex 2.25 clears)
     HAZARD_MARGIN: 2,                                   // spike patch inset from segment edges
+    // ── reward shelves (plan §8.7 step 2) — a one-way shelf hung in a
+    //    gate's descent corridor. RISE values are sweepMaxRise results
+    //    (max LANDABLE rise, coyote/arc-entry inclusive); rises are
+    //    measured shelf-TOP above the floors' top (y=1). Descent-band
+    //    measurements: spring bounce arcs cross shelf heights 7-8.5
+    //    at x ∈ [3.4, 7.8] rel. to the spring's left edge; dj arcs
+    //    track the far lip (max descent x ≈ 9.9 rel. to gap start
+    //    across the whole DJ_GAP window). ──
+    RISE: Object.freeze({ single: 2.45, dj: 4.71 }),    // swept (sweepMaxRise)
+    SHELF_H: 0.5,
+    SHELF_W: Object.freeze({ min: 5.2, span: 0.8 }),    // spans the descent band
+    SPRING_SHELF_RISE: Object.freeze({ min: 6, span: 1.5 }), // > dj rise + 1.29 (dj-proof);
+    //                          top ≤ bounce apex 9.5 − 2 (catch while still falling)
+    SPRING_SHELF_DX: Object.freeze({ min: 2.9, span: 0.4 }), // shelf left rel spring left,
+    //                          just left of the measured descent band
+    DJ_SHELF_RISE: Object.freeze({ min: 3.1, span: 1.1 }),   // > single rise + 0.65; ≤ dj − 0.5
+    DJ_SHELF_BACK: Object.freeze({ min: 1.5, span: 0.4 }),   // shelf left = gap width − back
+    SHELF_PAD: 3.7,       // extra landing-floor width under the fall-off drift
+    SAW_CHANCE: 0.5,      // saw under a spring shelf's right half (§8.4 flavor)
+    SAW_W: 1.1,
+    SAW_H: 1,
 });
 
 /**
@@ -181,6 +241,8 @@ export function deriveGeometry(C, opts = {}) {
     const dj = opts.reaches?.dj
         ?? sweepMaxGap(C, { doubleJump: true, blue: false }, opts);
     const spring = opts.reaches?.spring ?? sweepSpringTotal(C, opts);
+    const riseSingle = opts.rises?.single ?? sweepMaxRise(C, { doubleJump: false });
+    const riseDj = opts.rises?.dj ?? sweepMaxRise(C, { doubleJump: true });
     // run-up convergence distance (moveTowards is linear in v):
     // t = maxSpeed/maxAcceleration, dist = maxSpeed²/(2·maxAcceleration)
     const convergence = (C.maxSpeed * C.maxSpeed) / (2 * C.maxAcceleration);
@@ -189,9 +251,58 @@ export function deriveGeometry(C, opts = {}) {
     const djMargin = 0.15 * (dj - single);
     const halfMin = round1((dj * 1.06 - STONE_W) / 2);
     const springTotalMin = round1(dj + 0.55);
+    // Shelf windows (§8.7 step 2). The spring-shelf drift bounds come
+    // from the deterministic bounce arc: t up = launch/cut-gravity,
+    // t down to the shelf top under the downward multiplier, horizontal
+    // ≈ maxSpeed (air accel converges fast). Closed-form is generous
+    // here — the per-proposal solver verify is the gatekeeper; these
+    // windows only set the proposal distribution.
+    const gUp = (2 * C.jumpHeight) / (C.timeToJumpApex * C.timeToJumpApex);
+    const gCut = gUp * (C.variablejumpHeight ? C.jumpCutOff : C.upwardMovementMultiplier);
+    const gDown = gUp * C.downwardMovementMultiplier;
+    const tUp = Math.sqrt((2 * C.SPRING_RISE) / gCut);
+    const tDown = (drop) => Math.sqrt((2 * Math.max(drop, 0.2)) / gDown);
+    const springShelfMin = round1(riseDj + 1);
+    const springShelfMax = round1(C.SPRING_RISE - 2.5); // top = 1+rise ≤ apex 0.5+RISE − 2
+    // drift at the window ends (highest shelf catches earliest)
+    const driftHi = C.maxSpeed * (tUp + tDown(C.SPRING_RISE - 0.5 - springShelfMax));
+    const driftLo = C.maxSpeed * (tUp + tDown(C.SPRING_RISE - 0.5 - springShelfMin));
+    const shelfDxMin = round1(0.65 * driftHi);
+    const djShelfMin = round1(riseSingle + 0.65);
+    const djShelfSpan = round1(Math.max(0.3, riseDj - 0.5 - djShelfMin));
+    const shelfWMin = round1(Math.max(5, 4 + driftLo - shelfDxMin));
+    const segWMin = Math.max(5, round1(convergence * 1.5));
+    const shelfPad = round1(C.maxSpeed * tDown(springShelfMax) + 1.6);
+    // dj-shelf back window: the shelf may overhang the gap freely to
+    // its left, so on floaty profiles (long fall drift, wide derived
+    // shelves) the BACK offset absorbs the width growth — solve the
+    // fall-off containment for the minimum back that keeps the landing
+    // on the padded floor (validateGeometry's own inequality, +0.1
+    // rounding slack; floor 1.5 = the measured celeste window).
+    const djFallDrift = C.maxSpeed
+        * Math.sqrt((2 * (djShelfMin + djShelfSpan)) / gDown);
+    const djBackMin = Math.max(1.5, round1(
+        (shelfWMin + 0.8) - (segWMin + shelfPad - djFallDrift - 1.6)));
     return Object.freeze({
         REACH: Object.freeze({ single, dj, spring }),
-        SEG_W: Object.freeze({ min: Math.max(5, round1(convergence * 1.5)), span: 2.5 }),
+        RISE: Object.freeze({ single: riseSingle, dj: riseDj }),
+        SHELF_H: 0.5,
+        SHELF_W: Object.freeze({ min: shelfWMin, span: 0.8 }),
+        SPRING_SHELF_RISE: Object.freeze({
+            min: springShelfMin,
+            span: round1(Math.max(0.3, springShelfMax - springShelfMin)),
+        }),
+        SPRING_SHELF_DX: Object.freeze({ min: shelfDxMin, span: 0.4 }),
+        DJ_SHELF_RISE: Object.freeze({
+            min: djShelfMin,
+            span: djShelfSpan,
+        }),
+        DJ_SHELF_BACK: Object.freeze({ min: djBackMin, span: 0.4 }),
+        SHELF_PAD: shelfPad,
+        SAW_CHANCE: 0.5,
+        SAW_W: 1.1,
+        SAW_H: 1,
+        SEG_W: Object.freeze({ min: segWMin, span: 2.5 }),
         RUN_GAP: Object.freeze({ min: round1(0.35 * single), span: round1(0.2 * single) }),
         DJ_GAP: Object.freeze({
             min: round1(single + djMargin),
@@ -277,6 +388,46 @@ export function validateGeometry(G, C) {
     if (G.SEG_W.min < convergence * 1.2) {
         errors.push(`SEG_W min ${G.SEG_W.min} below run-up convergence ${round2(convergence)}`);
     }
+    // ── reward-shelf windows (§8.7 step 2): each gate direction with
+    //    margin against the SWEPT rises, and the fall-off must land on
+    //    the padded floor after the gate. ──
+    if (G.DJ_SHELF_RISE.min < G.RISE.single + 0.4) {
+        errors.push(`DJ_SHELF_RISE min ${G.DJ_SHELF_RISE.min} landable without`
+            + ` doubleJump (single rise ${G.RISE.single})`);
+    }
+    if (wMax(G.DJ_SHELF_RISE) > G.RISE.dj - 0.4) {
+        errors.push(`DJ_SHELF_RISE max ${wMax(G.DJ_SHELF_RISE)} not catchable`
+            + ` by dj arcs (dj rise ${G.RISE.dj})`);
+    }
+    if (G.SPRING_SHELF_RISE.min < G.RISE.dj + 0.8) {
+        errors.push(`SPRING_SHELF_RISE min ${G.SPRING_SHELF_RISE.min} landable`
+            + ` with doubleJump (dj rise ${G.RISE.dj})`);
+    }
+    // shelf top (floors top 1 + rise) vs bounce apex (spring top 0.5 +
+    // SPRING_RISE): the arc must still be FALLING with room to spare
+    if (wMax(G.SPRING_SHELF_RISE) > C.SPRING_RISE - 2.4) {
+        errors.push(`SPRING_SHELF_RISE max ${wMax(G.SPRING_SHELF_RISE)} too close`
+            + ` to the bounce apex (SPRING_RISE ${C.SPRING_RISE})`);
+    }
+    if (G.SHELF_W.min < 5) {
+        errors.push(`SHELF_W min ${G.SHELF_W.min} too narrow for the descent band`);
+    }
+    // fall-off containment: worst shelf overhang past the landing
+    // floor's start + the fall drift must land within SEG_W.min + PAD
+    const gUp = (2 * C.jumpHeight) / (C.timeToJumpApex * C.timeToJumpApex);
+    const gDown = gUp * C.downwardMovementMultiplier;
+    const fallDrift = (rise) => C.maxSpeed * Math.sqrt((2 * rise) / gDown);
+    const springFloorStart = G.SPRING_TOTAL.min - wMax(G.SPRING_NEAR); // rel spring left
+    const springOverhang = wMax(G.SPRING_SHELF_DX) + wMax(G.SHELF_W) - springFloorStart;
+    if (G.SEG_W.min + G.SHELF_PAD
+            < springOverhang + fallDrift(wMax(G.SPRING_SHELF_RISE)) + 1.5) {
+        errors.push('spring shelf fall-off can overshoot the padded landing floor');
+    }
+    const djOverhang = wMax(G.SHELF_W) - G.DJ_SHELF_BACK.min; // rel far lip
+    if (G.SEG_W.min + G.SHELF_PAD
+            < djOverhang + fallDrift(wMax(G.DJ_SHELF_RISE)) + 1.5) {
+        errors.push('dj shelf fall-off can overshoot the padded landing floor');
+    }
     return errors;
 }
 
@@ -308,12 +459,42 @@ export function resolveGenPhysics(physics = DEFAULT_PROFILE_ID) {
 
 const GATEABLE = new Set(['doubleJump', 'blue', 'spring']);
 
+/** Gates whose descent corridor can carry a reward shelf (§8.7 step
+ *  2): the spring bounce and dj arcs rise high enough to catch an
+ *  elevated one-way shelf; the stone gate's two low hops do not. */
+const SHELF_GATES = new Set(['doubleJump', 'spring']);
+
+/** Default probability that an eligible level/window hangs a reward
+ *  shelf over its last gate (both proposers; overridable per call). */
+const SHELF_CHANCE_DEFAULT = 0.6;
+
 /** The gate gap kind realising an ability's requirement (one row per
  *  plan-§4.5 gate template; shared by both proposers). */
 function gateGapFor(ability) {
     if (ability === 'doubleJump') return { kind: 'dj' };
     if (ability === 'spring') return { kind: 'spring' };
     return { kind: 'stone', type: ability };
+}
+
+/**
+ * Order a level/window's gate abilities, electing at most ONE reward
+ * shelf (shared by both proposers — the draw order is part of the
+ * byte-identity contract): shuffle, then with probability
+ * `shelfChance` move an eligible gate to the END and mark it as the
+ * shelf host. Last-gate placement is the nested-chain rule (§8.2):
+ * the shelf pickup derives its window's FULL requirement (prefix ∪
+ * {gate}) only when no further gate follows. Draws happen ONLY when
+ * a shelf is possible (eligible gate + a pickup to host).
+ */
+function orderGates(rng, abilities, pickupsAvailable, shelfChance) {
+    let order = rng.shuffle([...abilities]);
+    const eligible = order.filter((a) => SHELF_GATES.has(a));
+    let shelfGate = null;
+    if (pickupsAvailable && eligible.length > 0 && rng.next() < shelfChance) {
+        shelfGate = eligible[Math.floor(rng.next() * eligible.length)];
+        order = [...order.filter((a) => a !== shelfGate), shelfGate];
+    }
+    return { order, shelfGate };
 }
 
 function sameSets(minimalSets, want) {
@@ -328,12 +509,24 @@ const draw = (rng, w) => w.min + rng.next() * w.span;
  * Realize a floor plan left to right — the shared body of proposeLevel
  * and proposeLevelForSpecs. Each plan entry is a floor ({ role, gap,
  * pickupId?, seg← }); `gap` describes the gap BEFORE it ({ kind,
- * type?, portalId? }). rng draws happen in strict floor order (gap
- * draws, then the floor's width draw) followed by the floor's inline
- * hazard pass — the draw order IS the byte-identity contract. Explicit
+ * type?, portalId?, shelf? }). rng draws happen in strict floor order
+ * (gap draws, then the gap's shelf draws [rise, width, dx/back, saw],
+ * then the floor's width draw) followed by the floor's inline hazard
+ * pass — the draw order IS the byte-identity contract. Explicit
  * pickupId/portalId override the loc_N / exit_brN counters (the spec
  * path names its goals); the counters are untouched by overrides only
  * because the two naming schemes are never mixed in one plan.
+ *
+ * `gap.shelf` ({ pickupId? }, dj/spring gates only) hangs a REWARD
+ * SHELF (§8.7 step 2) in the gate's descent corridor: an always-
+ * active one-way platform the crossing arc lands on, its pickup in
+ * the auto-run wake, the fall-off dropping onto the gate's landing
+ * floor (widened by SHELF_PAD and kept hazard-free so the drop is
+ * survivable). The detour is refusable by holding drop (§8.6). Spring
+ * shelves may hang a saw under their right half (§8.4): off every
+ * mandatory trajectory — bounce arcs are caught above it and the
+ * fall-off starts right of it — lethal only to a voluntary
+ * drop-refusal.
  */
 function realizePlan(plan, { rng, G, hazardChance }) {
     const platforms = [];
@@ -344,16 +537,40 @@ function realizePlan(plan, { rng, G, hazardChance }) {
     let segN = 0;
     let stoneN = 0;
     let sprN = 0;
+    let shN = 0;
     let brN = 0;
     let pkN = 0;
     let hzN = 0;
+    // shelf platform + wake pickup; returns the shelf (saw placement)
+    const pushShelf = (left, rise, w, spec) => {
+        const shelf = {
+            id: `shelf${shN++}`, x: left, y: round2(1 + rise - G.SHELF_H),
+            w, h: G.SHELF_H, type: 'oneway',
+        };
+        platforms.push(shelf);
+        pickups.push({
+            id: spec.pickupId ?? `loc_${pkN++}`, on: shelf.id,
+            x: round2(left + w - 0.2), y: round2(1 + rise + 0.6),
+        });
+        return shelf;
+    };
     for (const f of plan) {
         if (f.gap) {
             const g = f.gap;
             if (g.kind === 'run') {
                 x = round2(x + draw(rng, G.RUN_GAP));
             } else if (g.kind === 'dj') {
-                x = round2(x + draw(rng, G.DJ_GAP));
+                const gapW = round2(draw(rng, G.DJ_GAP));
+                if (g.shelf) {
+                    // anchored off the FAR lip: dj descent arcs track
+                    // it across the whole DJ_GAP window (max descent
+                    // x ≈ gap start + 9.9 regardless of gap width)
+                    const rise = round2(draw(rng, G.DJ_SHELF_RISE));
+                    const w = round2(draw(rng, G.SHELF_W));
+                    const back = round2(draw(rng, G.DJ_SHELF_BACK));
+                    pushShelf(round2(x + gapW - back), rise, w, g.shelf);
+                }
+                x = round2(x + gapW);
             } else if (g.kind === 'stone') {
                 const half1 = round2(draw(rng, G.STONE_HALF));
                 const half2 = round2(draw(rng, G.STONE_HALF));
@@ -372,10 +589,27 @@ function realizePlan(plan, { rng, G, hazardChance }) {
                 // a jump-down landing, launched back up by the bounce.
                 const near = round2(draw(rng, G.SPRING_NEAR));
                 const total = round2(draw(rng, G.SPRING_TOTAL));
+                const springX = round2(x + near);
                 platforms.push({
-                    id: `spring${sprN++}`, x: round2(x + near), y: 0,
+                    id: `spring${sprN++}`, x: springX, y: 0,
                     w: G.SPRING_W, h: 0.5, type: 'spring',
                 });
+                if (g.shelf) {
+                    const rise = round2(draw(rng, G.SPRING_SHELF_RISE));
+                    const w = round2(draw(rng, G.SHELF_W));
+                    const dx = round2(draw(rng, G.SPRING_SHELF_DX));
+                    const shelf = pushShelf(round2(springX + dx), rise, w, g.shelf);
+                    if (rng.next() < G.SAW_CHANCE) {
+                        const lo = shelf.x + 0.55 * w;
+                        const hi = shelf.x + w - G.SAW_W - 0.2;
+                        hazards.push({
+                            id: `hz${hzN++}`, type: 'saw',
+                            x: round2(lo + rng.next() * (hi - lo)),
+                            y: round2(shelf.y - G.SAW_H - 0.05),
+                            w: G.SAW_W, h: G.SAW_H,
+                        });
+                    }
+                }
                 x = round2(x + total);
             } else if (g.kind === 'branch') {
                 const gapW = round2(draw(rng, G.BRANCH_GAP));
@@ -398,7 +632,9 @@ function realizePlan(plan, { rng, G, hazardChance }) {
                 x = round2(x + gapW);
             }
         }
-        const w = round2(draw(rng, G.SEG_W) + (f.role === 'entrance' ? 2 : 0));
+        // shelved gates widen their landing floor (the fall-off pad)
+        const w = round2(draw(rng, G.SEG_W) + (f.role === 'entrance' ? 2 : 0)
+            + (f.gap?.shelf ? G.SHELF_PAD : 0));
         const seg = { id: `seg${segN++}`, x, y: 0, w, h: 1, type: 'ground' };
         platforms.push(seg);
         if (f.role === 'pickup') {
@@ -407,11 +643,14 @@ function realizePlan(plan, { rng, G, hazardChance }) {
         }
         f.seg = seg;
         x = round2(x + w);
-        // hazard decoration (goal-free plain floors only): a spike
-        // patch inset from the floor's edges, plus the FLUSH PARTNER
-        // floor the hop needs (see the header — a spiked floor must
-        // end in a flush crossing, never a jump gap)
-        if (f.role === 'plain' && seg.w >= 2 * G.HAZARD_MARGIN + 1.8
+        // hazard decoration (goal-free plain floors only — and never
+        // on a shelf's landing floor, where the fall-off must stay
+        // survivable): a spike patch inset from the floor's edges,
+        // plus the FLUSH PARTNER floor the hop needs (see the header
+        // — a spiked floor must end in a flush crossing, never a
+        // jump gap)
+        if (f.role === 'plain' && !f.gap?.shelf
+                && seg.w >= 2 * G.HAZARD_MARGIN + 1.8
                 && rng.next() < hazardChance) {
             const hw = round2(1 + rng.next() * 0.6);
             const lo = seg.x + G.HAZARD_MARGIN;
@@ -458,7 +697,8 @@ function assembleStrip(id, plan, { platforms, hazards, pickups, portals }) {
  * semantics (see realizePlan for the draw-order contract).
  */
 export function proposeLevel({
-    id, requirement, pickupCount, branchCount, stepsBetween, hazardChance, rng, G,
+    id, requirement, pickupCount, branchCount, stepsBetween, hazardChance,
+    shelfChance = SHELF_CHANCE_DEFAULT, rng, G,
 }) {
     // plan: each entry is a floor; `gap` describes the gap BEFORE it.
     const plan = [{ role: 'entrance', gap: null }];
@@ -466,12 +706,19 @@ export function proposeLevel({
         const n = 1 + Math.floor(rng.next() * stepsBetween);
         for (let i = 0; i < n; i++) plan.push({ role: 'plain', gap: { kind: 'run' } });
     };
-    for (const ability of rng.shuffle([...requirement])) {
+    // at most one reward shelf, on the LAST gate (orderGates): its
+    // pickup then derives exactly [S] like every trunk goal
+    const { order, shelfGate } = orderGates(rng, requirement, pickupCount > 0, shelfChance);
+    for (const ability of order) {
         plains();
-        plan.push({ role: 'plain', gap: gateGapFor(ability) });
+        plan.push({
+            role: 'plain',
+            gap: { ...gateGapFor(ability), ...(ability === shelfGate ? { shelf: {} } : {}) },
+        });
     }
     plains();
-    for (let i = 0; i < pickupCount; i++) plan.push({ role: 'pickup', gap: { kind: 'run' } });
+    const floorPickups = pickupCount - (shelfGate ? 1 : 0);
+    for (let i = 0; i < floorPickups; i++) plan.push({ role: 'pickup', gap: { kind: 'run' } });
     for (let b = 0; b < branchCount; b++) plan.push({ role: 'plain', gap: { kind: 'branch' } });
     plan.push({ role: 'exit', gap: { kind: 'run' } });
 
@@ -503,6 +750,7 @@ export function generateLevel({
     branchCount = 0,
     stepsBetween = 2,
     hazardChance = 0.35,
+    shelfChance = SHELF_CHANCE_DEFAULT,
     seed = 1,
     attempts = 8,
     physics = DEFAULT_PROFILE_ID,
@@ -516,7 +764,8 @@ export function generateLevel({
     for (let attempt = 0; attempt < attempts; attempt++) {
         const rng = createRng((seed * 8191 + attempt * 127) | 0);
         const level = proposeLevel({
-            id, requirement, pickupCount, branchCount, stepsBetween, hazardChance, rng, G,
+            id, requirement, pickupCount, branchCount, stepsBetween, hazardChance,
+            shelfChance, rng, G,
         });
         const modelErrors = validateLevel(level, C);
         if (modelErrors.length > 0) {
@@ -657,20 +906,36 @@ export function planStripSpecs(exitSpecs = [], pickupSpecs = []) {
  * then the level's goals (pickup floors, then branch tips in spec
  * order); the strip ends with the exit_main floor.
  */
-export function proposeLevelForSpecs({ id, plan, stepsBetween, hazardChance, rng, G }) {
+export function proposeLevelForSpecs({
+    id, plan, stepsBetween, hazardChance,
+    shelfChance = SHELF_CHANCE_DEFAULT, rng, G,
+}) {
     const floors = [{ role: 'entrance', gap: null }];
     const plains = () => {
         const n = 1 + Math.floor(rng.next() * stepsBetween);
         for (let i = 0; i < n; i++) floors.push({ role: 'plain', gap: { kind: 'run' } });
     };
     plan.levels.forEach((level, i) => {
-        for (const ability of rng.shuffle([...level.added])) {
+        // at most one reward shelf per WINDOW, on its last added gate
+        // (orderGates): the shelf carries the window's first pickup,
+        // which then derives exactly the window's requirement set
+        const { order, shelfGate } = orderGates(
+            rng, level.added, level.pickups.length > 0, shelfChance);
+        const shelfPickupId = shelfGate ? level.pickups[0] : null;
+        for (const ability of order) {
             plains();
-            floors.push({ role: 'plain', gap: gateGapFor(ability) });
+            floors.push({
+                role: 'plain',
+                gap: {
+                    ...gateGapFor(ability),
+                    ...(ability === shelfGate ? { shelf: { pickupId: shelfPickupId } } : {}),
+                },
+            });
         }
         if (level.pickups.length > 0 || level.tips.length > 0
                 || i === plan.levels.length - 1) plains();
         for (const pickupId of level.pickups) {
+            if (pickupId === shelfPickupId) continue; // rides the shelf
             floors.push({ role: 'pickup', gap: { kind: 'run' }, pickupId });
         }
         for (const tip of level.tips) {
@@ -701,6 +966,7 @@ export function* generateLevelForSpecsGen({
     pickupSpecs = [],
     stepsBetween = 2,
     hazardChance = 0.35,
+    shelfChance = SHELF_CHANCE_DEFAULT,
     gapMargin = 0,
     seed = 1,
     attempts = 8,
@@ -721,7 +987,7 @@ export function* generateLevelForSpecsGen({
         yield { type: 'attempt', attempt: attempt + 1, attempts };
         const rng = createRng((seed * 8191 + attempt * 127) | 0);
         const level = proposeLevelForSpecs({
-            id, plan, stepsBetween, hazardChance, rng, G: Geff,
+            id, plan, stepsBetween, hazardChance, shelfChance, rng, G: Geff,
         });
         const modelErrors = validateLevel(level, C);
         if (modelErrors.length > 0) {
