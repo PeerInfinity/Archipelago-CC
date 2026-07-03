@@ -231,5 +231,26 @@ export const ceilingRun = {
     spawn: { x: 1, y: 1 },
 };
 
+/** The FORGIVING ceiling regime (applyCeilingMargin at margin 1, the
+ *  generator default): the gap (1.2) is within grounded-tap range
+ *  (~1.6) and the slab bottom (2.6) clears the grounded-tap apex top
+ *  (~1.87) — a plain short hop pressed BEFORE the lip crosses, with
+ *  coyote time as spare forgiveness for late presses rather than a
+ *  requirement (ceilingRun above is the expert regime, where the
+ *  wider gap admits only run-off coyote taps). Mid and full holds
+ *  still clip the slab and die: punishment intact at every margin. */
+export const ceilingHop = {
+    id: 'ceilingHop',
+    size: { width: 42, height: 16 },
+    platforms: [
+        { id: 'floorA', x: 0, y: 0, w: 16, h: 1, type: 'ground' },
+        { id: 'floorB', x: 17.2, y: 0, w: 24.8, h: 1, type: 'ground' },
+    ],
+    hazards: [{ id: 'ceil1', type: 'ceiling', x: 14.5, y: 3.6, w: 4.2, h: 4.5 }],
+    pickups: [{ id: 'pk_edge', on: 'floorA', x: 15.8, y: 1.6 }],
+    portals: [{ id: 'exit_main', on: 'floorB', x: 41.4, y: 1.6, arrow: 'right', exitName: null }],
+    spawn: { x: 1, y: 1 },
+};
+
 export const FIXTURES = [flatRun, gapJump, oneWay, spikeRun, doubleGap, stepStone, springGap,
-    springShelf, djShelf, laneSplit, ceilingRun];
+    springShelf, djShelf, laneSplit, ceilingRun, ceilingHop];

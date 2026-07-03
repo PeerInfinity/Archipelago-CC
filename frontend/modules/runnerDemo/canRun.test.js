@@ -14,7 +14,7 @@ import {
 } from './canRun.js';
 import {
     flatRun, gapJump, oneWay, spikeRun, doubleGap, stepStone, springGap,
-    springShelf, djShelf, laneSplit, ceilingRun, FIXTURES,
+    springShelf, djShelf, laneSplit, ceilingRun, ceilingHop, FIXTURES,
 } from './fixtures.js';
 import { noAbilities, allAbilities } from './suppression.js';
 import { DEFAULTS } from './physics.js';
@@ -379,6 +379,31 @@ describe('ceiling hazards (ceilingRun — plan §8.7 step 3)', () => {
     it('reach: the pre-ceiling floor stays live (tap escape), far side crossable', () => {
         expect([...reachableRunPlatforms(ceilingRun, NONE)].sort())
             .toEqual(['floorA', 'floorB']);
+    });
+});
+
+describe('ceiling margin: the forgiving regime (ceilingHop)', () => {
+    it('a GROUNDED edge tap crosses — no coyote timing needed', () => {
+        // trigger 15.95 is the stand-span hi: the press happens while
+        // still grounded, before the lip (the mid-coyote trigger for
+        // this floor is 16.56 — deliberately not used here)
+        const r = probe(ceilingHop, 'floorA', NONE, 5, DEFAULTS.maxSpeed,
+            /^jump@15\.95\+1$/);
+        expect(r.landedOn).toBe('floorB');
+        expect(r.died).toBe(null);
+    });
+
+    it('mid and full holds still clip the slab (punishment intact)', () => {
+        for (const re of [/^jump@15\.95\+10$/, /^jump@15\.95\+21$/]) {
+            const r = probe(ceilingHop, 'floorA', NONE, 5, DEFAULTS.maxSpeed, re);
+            expect(r.died).toBe('hazard');
+        }
+    });
+
+    it('reach: both floors, under every ability set', () => {
+        expect([...reachableRunPlatforms(ceilingHop, NONE)].sort())
+            .toEqual(['floorA', 'floorB']);
+        expect(canRun(ceilingHop, 'floorA', 'floorB', DJ)).toBe(true);
     });
 });
 

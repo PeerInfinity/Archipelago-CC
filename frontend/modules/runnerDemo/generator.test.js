@@ -11,7 +11,7 @@ import { describe, it, expect } from 'vitest';
 import {
     CELESTE_GEOMETRY, deriveGeometry, validateGeometry, resolveGenPhysics,
     generateLevel, generateZoneSet, planStripSpecs, applyGapMargin,
-    deriveGeneratedRules,
+    applyCeilingMargin, deriveGeneratedRules,
 } from './generator.js';
 import { DEFAULTS } from './physics.js';
 import { validateLevel } from './level.js';
@@ -204,10 +204,10 @@ describe('generateLevel', () => {
             .toBe(JSON.stringify(generateLevel(base)));
     }, 60000);
 
-    it('ceiling hazards (ceilingChance 1): calibrated slabs over base-anchored flanks', () => {
+    it('ceiling hazards (ceilingChance 1, margin 0): calibrated slabs over base-anchored flanks', () => {
         const level = generateLevel({
             id: 'ce', requirement: ['doubleJump'], pickupCount: 1,
-            ceilingChance: 1, hazardChance: 0.5, jitter: 1, seed: 1,
+            ceilingChance: 1, ceilingMargin: 0, hazardChance: 0.5, jitter: 1, seed: 1,
         });
         const G = CELESTE_GEOMETRY;
         const ceils = level.hazards.filter((hz) => hz.type === 'ceiling');
@@ -245,6 +245,43 @@ describe('generateLevel', () => {
         };
         expect(JSON.stringify(generateLevel({ ...base, ceilingChance: 0 })))
             .toBe(JSON.stringify(generateLevel(base)));
+    }, 60000);
+
+    it('applyCeilingMargin: margin 0 is identity; margin 1 anchors on the grounded-tap arc', () => {
+        const G = CELESTE_GEOMETRY;
+        expect(applyCeilingMargin(G, 0)).toBe(G);
+        const easy = applyCeilingMargin(G, 1);
+        // gap window inside grounded-tap range with slack
+        expect(easy.CEIL_GAP.min + easy.CEIL_GAP.span).toBeCloseTo(G.TAP.range - 0.3, 2);
+        // slab bottom clears the grounded-tap apex with margin
+        expect(easy.CEIL_RISE.min).toBeCloseTo(G.TAP.top + 0.45, 2);
+        // the band MAX never moves: mid/full holds stay punished
+        expect(easy.CEIL_RISE.min + easy.CEIL_RISE.span)
+            .toBeCloseTo(G.CEIL_RISE.min + G.CEIL_RISE.span, 2);
+        // transformed windows still satisfy the structural constraints
+        expect(validateGeometry(easy, DEFAULTS)).toEqual([]);
+        expect(validateGeometry(applyCeilingMargin(G, 0.5), DEFAULTS)).toEqual([]);
+        // null passthrough (refusing profiles stay refusing)
+        const refused = Object.freeze({ ...G, CEIL_RISE: null });
+        expect(applyCeilingMargin(refused, 1)).toBe(refused);
+    });
+
+    it('default margin (1): generated slabs are grounded-tap crossable — no coyote needed', () => {
+        const level = generateLevel({
+            id: 'cem', requirement: [], pickupCount: 1, ceilingChance: 1, seed: 2,
+        });
+        const G = applyCeilingMargin(CELESTE_GEOMETRY, 1);
+        const ceils = level.hazards.filter((hz) => hz.type === 'ceiling');
+        expect(ceils.length).toBeGreaterThan(0);
+        for (const hz of ceils) {
+            const gapW = hz.w - 2 * CELESTE_GEOMETRY.CEIL_OVER;
+            // gap within grounded-tap range, slab above the tap apex
+            expect(gapW).toBeLessThanOrEqual(CELESTE_GEOMETRY.TAP.range - 0.29);
+            expect(hz.y - 1).toBeGreaterThanOrEqual(CELESTE_GEOMETRY.TAP.top + 0.44);
+            expect(hz.y - 1).toBeLessThanOrEqual(
+                G.CEIL_RISE.min + G.CEIL_RISE.span + 0.01);
+        }
+        expect(validateLevel(level, DEFAULTS)).toEqual([]);
     }, 60000);
 
     it('a profile that refuses ceilings (CEIL_RISE null) plants none and draws nothing', () => {

@@ -13,6 +13,7 @@ import {
     CELESTE_GEOMETRY, sweepMaxGap, deriveGeometry, validateGeometry,
     generateLevel, generateLevelForSpecs, generateZoneSet, deriveGeneratedRules,
     SWEEP_SATURATING_PROFILES, sweepSpringTotal, sweepMaxRise, sweepCeilingMin,
+    measureTapArc, applyCeilingMargin,
 } from './generator.js';
 import { deriveAccessRules } from './deriveRules.js';
 import { DEFAULTS, PROFILES } from './physics.js';
@@ -175,25 +176,29 @@ describe('reward shelves (plan §8.7 step 2)', () => {
     }, 300000);
 
     it('full ceilings + splits + jitter across gate shapes: every goal still derives exactly [S]', () => {
-        for (const requirement of [[], ['doubleJump'], ['spring']]) {
-            const want = [...requirement].sort();
-            for (const seed of [1, 2]) {
-                const level = generateLevel({
-                    id: `ceil_${want.join('_') || 'plain'}_${seed}`, requirement,
-                    pickupCount: 2, branchCount: 1, hazardChance: 0.5,
-                    ceilingChance: 1, splitChance: 1, jitter: 1, seed,
-                });
-                expect(validateLevel(level, DEFAULTS), level.id).toEqual([]);
-                expect(level.hazards.some((hz) => hz.type === 'ceiling'), level.id)
-                    .toBe(true);
-                const derived = deriveGeneratedRules(level, DEFAULTS);
-                expect(derived.defects, level.id).toEqual([]);
-                for (const [id, sets] of Object.entries(goalRules(level, derived))) {
-                    expect(sets, `${level.id} ${id}`).toEqual([want]);
+        // ceilingMargin covers both regimes: 1 (default, grounded-tap
+        // forgiving windows) and 0 (expert coyote-tap windows)
+        for (const margin of [1, 0]) {
+            for (const requirement of [[], ['doubleJump'], ['spring']]) {
+                const want = [...requirement].sort();
+                for (const seed of [1, 2]) {
+                    const level = generateLevel({
+                        id: `ceil_m${margin}_${want.join('_') || 'plain'}_${seed}`, requirement,
+                        pickupCount: 2, branchCount: 1, hazardChance: 0.5,
+                        ceilingChance: 1, ceilingMargin: margin, splitChance: 1, jitter: 1, seed,
+                    });
+                    expect(validateLevel(level, DEFAULTS), level.id).toEqual([]);
+                    expect(level.hazards.some((hz) => hz.type === 'ceiling'), level.id)
+                        .toBe(true);
+                    const derived = deriveGeneratedRules(level, DEFAULTS);
+                    expect(derived.defects, level.id).toEqual([]);
+                    for (const [id, sets] of Object.entries(goalRules(level, derived))) {
+                        expect(sets, `${level.id} ${id}`).toEqual([want]);
+                    }
                 }
             }
         }
-    }, 300000);
+    }, 600000);
 
     it('spec path plants ceilings (ceilingChance 1) and the goals still derive exactly', () => {
         const { level, derived } = generateLevelForSpecs({
@@ -283,6 +288,18 @@ describe('calibration pins', () => {
         const gapMax = CELESTE_GEOMETRY.CEIL_GAP.min + CELESTE_GEOMETRY.CEIL_GAP.span;
         expect(sweepCeilingMin(DEFAULTS, gapMax))
             .toBeCloseTo(CELESTE_GEOMETRY.CEIL_MIN_CLEAR, 2);
+    }, 300000);
+
+    it('the pinned celeste TAP matches a fresh engine measurement, and the forgiving band clears a fresh sweep', () => {
+        const t = measureTapArc(DEFAULTS);
+        expect(t.top).toBeCloseTo(CELESTE_GEOMETRY.TAP.top, 2);
+        expect(t.range).toBeCloseTo(CELESTE_GEOMETRY.TAP.range, 2);
+        // the forgiving band min (TAP.top + 0.45) must sit >= 0.4 above
+        // the robust swept crossing minimum at the forgiving gap max —
+        // the same margin doctrine as the expert band
+        const easy = applyCeilingMargin(CELESTE_GEOMETRY, 1);
+        const sweptEasy = sweepCeilingMin(DEFAULTS, easy.CEIL_GAP.min + easy.CEIL_GAP.span);
+        expect(easy.CEIL_RISE.min).toBeGreaterThanOrEqual(sweptEasy + 0.4);
     }, 300000);
 
     it('SWEEP_SATURATING_PROFILES membership matches a fresh dj sweep of every profile', () => {

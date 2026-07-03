@@ -66,7 +66,7 @@
  */
 
 import { createRng } from '../shared/rng.js';
-import { DEFAULTS, PROFILES, DEFAULT_PROFILE_ID } from './physics.js';
+import { DEFAULTS, PROFILES, DEFAULT_PROFILE_ID, step as physicsStep } from './physics.js';
 import { canRun, reachableRunPlatforms } from './canRun.js';
 import { deriveAccessRules } from './deriveRules.js';
 import { validateLevel } from './level.js';
@@ -210,6 +210,44 @@ export function sweepCeilingMin(C, gapW, { cap = 12, over = 1.5, slabH = 4.5 } =
 }
 
 /**
+ * The grounded-tap arc under `C` — apex player-TOP height above the
+ * floor top, and horizontal range back to the same height — measured
+ * by running the real engine once (a 1-tick hold from a converged
+ * run; the module's law: never re-derive physics). The calibration
+ * anchor for the ceiling-margin knob's forgiving end
+ * (applyCeilingMargin): a gap within `range` is crossable by a plain
+ * grounded tap pressed BEFORE the lip — no coyote timing needed.
+ */
+export function measureTapArc(C) {
+    const level = {
+        id: 'probe', size: { width: 60, height: 30 },
+        platforms: [{ id: 'a', x: 0, y: 0, w: 60, h: 1, type: 'ground' }],
+        hazards: [], pickups: [], portals: [], spawn: { x: 1, y: 1 },
+    };
+    let s = {
+        x: 20, y: 1, vx: C.maxSpeed, vy: 0, facing: 1, desiredJump: false,
+        pressingJump: false, jumpBufferCounter: 0, coyoteTimeCounter: 0,
+        currentlyJumping: false, canJumpAgain: false, gravityScale: 1,
+        gravMultiplier: 1, onGround: true, t: 0, landedOn: null,
+        standingOn: 'a', touchedPickups: [], touchedPortals: [],
+        hits: 0, respawned: null,
+    };
+    let apex = 1;
+    let launchX = null;
+    let landX = null;
+    for (let i = 1; i <= 300; i++) {
+        s = physicsStep(s, i === 1 ? { jump: true } : null, level, {}, C);
+        if (launchX === null && !s.onGround) launchX = s.x;
+        apex = Math.max(apex, s.y);
+        if (launchX !== null && s.onGround) { landX = s.x; break; }
+    }
+    return {
+        top: round2(apex - 1 + C.PLAYER_H),
+        range: landX === null ? 0 : round2(landX - launchX),
+    };
+}
+
+/**
  * Profiles whose reach SATURATES the sweep cap (16): the measured
  * horizontal reach exceeds the probe's search ceiling, so the swept
  * REACH values are lower bounds, not measurements — every gate window
@@ -311,6 +349,9 @@ export const CELESTE_GEOMETRY = Object.freeze({
     CEIL_RISE: Object.freeze({ min: 2.1, span: 0.95 }), // slab bottom above floor top
     CEIL_OVER: 1.5,                                     // slab overhang past each lip
     CEIL_H: 4.5,                                        // ≥ dj apex top − rise min + margin
+    TAP: Object.freeze({ top: 1.87, range: 1.62 }),     // measureTapArc — the grounded-tap
+    //                        arc anchoring applyCeilingMargin's forgiving end (the robust
+    //                        swept min at tap-crossable gaps is ~TAP.top: 1.86 at gap ≤ 1.3)
 });
 
 /**
@@ -461,6 +502,7 @@ export function deriveGeometry(C, opts = {}) {
         CEIL_OVER: 1.5,
         CEIL_H: ceilRise === null
             ? null : round1(Math.max(4.5, 2.1 * C.jumpHeight + C.PLAYER_H + 0.5 - ceilRise.min)),
+        TAP: Object.freeze(opts.tap ?? measureTapArc(C)),
     });
 }
 
@@ -625,6 +667,10 @@ export function validateGeometry(G, C) {
         if (G.CEIL_RISE.min + G.CEIL_H < 2.1 * C.jumpHeight + C.PLAYER_H + 0.4) {
             errors.push(`CEIL_H ${G.CEIL_H} too thin — double-jump arcs can overfly`
                 + ' the slab at its lowest hang');
+        }
+        if (!(G.TAP?.top > 0) || !(G.TAP?.range > 0)) {
+            errors.push('TAP anchor missing — applyCeilingMargin cannot place its'
+                + ' forgiving end');
         }
     }
     return errors;
@@ -1076,6 +1122,7 @@ export function generateLevel({
     jitter = 0,
     splitChance = 0,
     ceilingChance = 0,
+    ceilingMargin = 1,
     seed = 1,
     attempts = 8,
     physics = DEFAULT_PROFILE_ID,
@@ -1083,7 +1130,8 @@ export function generateLevel({
     for (const a of requirement) {
         if (!GATEABLE.has(a)) throw new Error(`generateLevel: no gate template for '${a}'`);
     }
-    const { C, G } = resolveGenPhysics(physics);
+    const { C, G: Gbase } = resolveGenPhysics(physics);
+    const G = applyCeilingMargin(Gbase, ceilingMargin);
     const want = [...requirement].sort();
     const rejected = [];
     for (let attempt = 0; attempt < attempts; attempt++) {
@@ -1136,6 +1184,44 @@ export function applyGapMargin(G, margin = 0) {
     return Object.freeze({
         ...G,
         RUN_GAP: Object.freeze({ min: G.RUN_GAP.min, span: Math.max(G.RUN_GAP.span, span) }),
+    });
+}
+
+/**
+ * Interpolate the ceiling windows toward the FORGIVING end (§8.7
+ * step 3 follow-up, user 2026-07-03: crossing a ceiling must not
+ * require coyote timing). margin 1 (the DEFAULT) narrows the gap to
+ * grounded-tap range (TAP.range − 0.3, drawn from a 0.3-wide window)
+ * and lifts the slab-bottom band above the grounded-tap apex
+ * (TAP.top + 0.45) — a plain short hop pressed BEFORE the lip clears
+ * it, and coyote time becomes spare forgiveness for late presses
+ * instead of a requirement. margin 0 returns G UNCHANGED: the pinned
+ * expert windows, where gaps are wide enough that only a run-off
+ * coyote tap fits under the slab. The band MAX never moves (mid and
+ * full holds stay punished at every margin). A profile whose
+ * forgiving band collapses (interpolated span < 0.25, or a tap range
+ * too short for any gap) gets CEIL_RISE null — ceilings are refused
+ * at that margin, consuming no rng, exactly like the deriveGeometry
+ * refusal path.
+ */
+export function applyCeilingMargin(G, margin = 1) {
+    const m = Math.max(0, Math.min(1, margin));
+    if (m === 0 || !G.CEIL_RISE) return G;
+    const easyGapMax = round2(G.TAP.range - 0.3);
+    const easyGapMin = round2(Math.max(0.8, easyGapMax - 0.3));
+    const easyRiseMin = round2(G.TAP.top + 0.45);
+    const gapMax0 = G.CEIL_GAP.min + G.CEIL_GAP.span;
+    const riseMax = round2(G.CEIL_RISE.min + G.CEIL_RISE.span); // pinned: punishment
+    const gapMin = round2(G.CEIL_GAP.min + m * (easyGapMin - G.CEIL_GAP.min));
+    const gapMax = round2(gapMax0 + m * (easyGapMax - gapMax0));
+    const riseMin = round2(G.CEIL_RISE.min + m * (easyRiseMin - G.CEIL_RISE.min));
+    if (riseMax - riseMin < 0.25 || easyGapMax < 0.8 || gapMax < gapMin) {
+        return Object.freeze({ ...G, CEIL_RISE: null });
+    }
+    return Object.freeze({
+        ...G,
+        CEIL_GAP: Object.freeze({ min: gapMin, span: round2(gapMax - gapMin) }),
+        CEIL_RISE: Object.freeze({ min: riseMin, span: round2(riseMax - riseMin) }),
     });
 }
 
@@ -1302,13 +1388,14 @@ export function* generateLevelForSpecsGen({
     jitter = 0,
     splitChance = 0,
     ceilingChance = 0,
+    ceilingMargin = 1,
     gapMargin = 0,
     seed = 1,
     attempts = 8,
     physics = DEFAULT_PROFILE_ID,
 } = {}) {
     const { C, G } = resolveGenPhysics(physics);
-    const Geff = applyGapMargin(G, gapMargin);
+    const Geff = applyCeilingMargin(applyGapMargin(G, gapMargin), ceilingMargin);
     // Structural validation runs ONCE (spec-level, non-retryable) so a
     // decline (non-nested chain, tipless maximal set) throws immediately.
     const plan = planStripSpecs(exitSpecs, pickupSpecs);
