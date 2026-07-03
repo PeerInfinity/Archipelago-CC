@@ -270,9 +270,12 @@ export const CELESTE_GEOMETRY = Object.freeze({
     DJ_SHELF_RISE: Object.freeze({ min: 3.1, span: 1.1 }),   // > single rise + 0.65; ≤ dj − 0.5
     DJ_SHELF_BACK: Object.freeze({ min: 1.5, span: 0.4 }),   // shelf left = gap width − back
     SHELF_PAD: 3.7,       // extra landing-floor width under the fall-off drift
-    SAW_CHANCE: 0.5,      // saw under a spring shelf's right half (§8.4 flavor)
+    SAW_CHANCE: 0.5,      // saw under a shelf's right half (§8.4 flavor)
     SAW_W: 1.1,
     SAW_H: 1,
+    DJ_SAW_MIN_RISE: 2.98, // PLAYER_H + 0.3 corridor clearance + SHELF_H
+    //                        + 0.05 hang + SAW_H — dj shelves hang low,
+    //                        so their saw is rise-guarded (§8.7 step 3)
     // ── vertical jitter (placement step 1) — plain floors rise
     //    0..jitter×JITTER_MAX above the base line; gate/branch/exit/
     //    entrance floors stay base-anchored (the gap windows are
@@ -426,6 +429,7 @@ export function deriveGeometry(C, opts = {}) {
         SAW_CHANCE: 0.5,
         SAW_W: 1.1,
         SAW_H: 1,
+        DJ_SAW_MIN_RISE: round2(C.PLAYER_H + 0.3 + 0.5 + 0.05 + 1),
         SEG_W: Object.freeze({ min: segWMin, span: 2.5 }),
         RUN_GAP: Object.freeze({ min: round1(0.35 * single), span: round1(0.2 * single) }),
         DJ_GAP: Object.freeze({
@@ -587,6 +591,13 @@ export function validateGeometry(G, C) {
     // over the bottom floor's standing band
     if (2 * G.RAMP_STEP.min + G.TOP_RISE.min - 0.5 < C.PLAYER_H + 1.4) {
         errors.push('split top lane leaves no head clearance over the bottom lane');
+    }
+    // dj-shelf saw guard: the pinned threshold must keep the saw's
+    // underside out of the landing floor's run corridor with margin
+    if (G.DJ_SAW_MIN_RISE !== undefined
+            && G.DJ_SAW_MIN_RISE < C.PLAYER_H + 0.3 + G.SHELF_H + 0.05 + G.SAW_H - 0.01) {
+        errors.push(`DJ_SAW_MIN_RISE ${G.DJ_SAW_MIN_RISE} lets a dj-shelf saw `
+            + 'intrude on the landing corridor');
     }
     // ── ceiling hazards (§8.7 step 3): the slab-bottom window must
     //    clear the swept crossing minimum AND the run corridor with
@@ -835,7 +846,28 @@ function realizePlan(plan, { rng, G, hazardChance, jitter = 0 }) {
                     const rise = round2(draw(rng, G.DJ_SHELF_RISE));
                     const w = round2(draw(rng, G.SHELF_W));
                     const back = round2(draw(rng, G.DJ_SHELF_BACK));
-                    pushShelf(round2(x + gapW - back), rise, w, g.shelf);
+                    const shelf = pushShelf(round2(x + gapW - back), rise, w, g.shelf);
+                    // saw under the dj shelf's right half (§8.7 step 3
+                    // — deferred from step 2 pending this clearance
+                    // guard): dj shelves hang low, so the saw only
+                    // appears when the DRAWN rise keeps its underside
+                    // out of the landing floor's run corridor with
+                    // margin. Off every mandatory trajectory like the
+                    // spring saw: crossing arcs that land here are
+                    // caught by the shelf ABOVE the saw, slip-under
+                    // arcs are grounded before its x-span (celeste's
+                    // steep descent), and the fall-off starts right of
+                    // it — lethal only to a voluntary drop-refusal.
+                    if (rise >= G.DJ_SAW_MIN_RISE && rng.next() < G.SAW_CHANCE) {
+                        const lo = shelf.x + 0.55 * w;
+                        const hi = shelf.x + w - G.SAW_W - 0.2;
+                        hazards.push({
+                            id: `hz${hzN++}`, type: 'saw',
+                            x: round2(lo + rng.next() * (hi - lo)),
+                            y: round2(shelf.y - G.SAW_H - 0.05),
+                            w: G.SAW_W, h: G.SAW_H,
+                        });
+                    }
                 }
                 x = round2(x + gapW);
             } else if (g.kind === 'stone') {

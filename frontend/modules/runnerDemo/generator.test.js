@@ -121,6 +121,24 @@ describe('generateLevel', () => {
         expect(level.pickups.some((pk) => pk.on === shelves[0].id)).toBe(true);
     }, 60000);
 
+    it('dj-shelf saw (§8.7 step 3): under the right half, corridor-clear via the rise guard', () => {
+        const level = generateLevel({
+            id: 'shdjsaw', requirement: ['doubleJump'], pickupCount: 1, shelfChance: 1, seed: 1,
+        });
+        const shelf = level.platforms.find((p) => p.type === 'oneway');
+        const saw = level.hazards.find((hz) => hz.type === 'saw');
+        expect(saw, 'seed 1 draws the dj-shelf saw').toBeTruthy();
+        // hangs just under the shelf, in its right half
+        expect(saw.y).toBeCloseTo(shelf.y - CELESTE_GEOMETRY.SAW_H - 0.05, 2);
+        expect(saw.x).toBeGreaterThanOrEqual(shelf.x + 0.55 * shelf.w - 0.01);
+        expect(saw.x + saw.w).toBeLessThanOrEqual(shelf.x + shelf.w - 0.19);
+        // the rise guard held: the saw's underside clears the landing
+        // floor's run corridor with margin
+        expect(saw.y - 1).toBeGreaterThanOrEqual(DEFAULTS.PLAYER_H + 0.3 - 0.01);
+        const rise = shelf.y + shelf.h - 1;
+        expect(rise).toBeGreaterThanOrEqual(CELESTE_GEOMETRY.DJ_SAW_MIN_RISE);
+    }, 60000);
+
     it('vertical jitter: raised plain floors only; anchors stay at base', () => {
         const opts = {
             id: 'jt', requirement: ['doubleJump'], pickupCount: 2, branchCount: 1,

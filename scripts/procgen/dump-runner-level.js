@@ -24,6 +24,7 @@
  *   --branches N       branch-exit count (default 1 when generating)
  *   --jitter J         vertical placement jitter 0-1 (default 0)
  *   --split-chance P   split-segment probability per plains slot (default 0)
+ *   --ceiling-chance P ceiling-hazard probability per plains slot (default 0)
  *   --hazard-chance F  hazard decoration chance (default 0.5)
  *   --abilities SPEC   'none' (default), 'all', or csv of
  *                      doubleJump,blue — the suppression view rendered
@@ -50,7 +51,7 @@ import {
 } from '../../frontend/modules/runnerDemo/generator.js';
 
 function parseArgs(argv) {
-    const args = { seed: 1, pickups: 1, branches: null, hazardChance: 0.5, jitter: 0, splitChance: 0, abilities: 'none' };
+    const args = { seed: 1, pickups: 1, branches: null, hazardChance: 0.5, jitter: 0, splitChance: 0, ceilingChance: 0, abilities: 'none' };
     for (let i = 2; i < argv.length; i++) {
         const flag = argv[i];
         switch (flag) {
@@ -63,6 +64,7 @@ function parseArgs(argv) {
             case '--hazard-chance': args.hazardChance = Number(argv[++i]); break;
             case '--jitter': args.jitter = Number(argv[++i]); break;
             case '--split-chance': args.splitChance = Number(argv[++i]); break;
+            case '--ceiling-chance': args.ceilingChance = Number(argv[++i]); break;
             case '--abilities': args.abilities = argv[++i]; break;
             case '--rules': args.rules = true; break;
             case '--json': args.json = argv[++i]; break;
@@ -95,6 +97,7 @@ function loadLevel(args) {
             hazardChance: args.hazardChance,
             jitter: args.jitter,
             splitChance: args.splitChance,
+            ceilingChance: args.ceilingChance,
             seed: args.seed,
         });
     }
@@ -111,7 +114,8 @@ function loadLevel(args) {
  *  `sx`-scaled units. Later marks overwrite earlier ones, so goals and
  *  the spawn stay visible on top of platform bodies. */
 function render(level, abilities, C = DEFAULTS) {
-    const maxTop = Math.max(2.5, ...level.platforms.map((p) => p.y + p.h));
+    const maxTop = Math.max(2.5, ...level.platforms.map((p) => p.y + p.h),
+        ...(level.hazards ?? []).map((hz) => hz.y + hz.h));
     const sx = Math.min(1, 150 / level.size.width);
     const cols = Math.ceil(level.size.width * sx) + 1;
     const rows = Math.ceil((maxTop + 1.5) * 2);
@@ -130,7 +134,9 @@ function render(level, abilities, C = DEFAULTS) {
         const active = isPlatformActive(p, abilities);
         fillRect(p, p.type === 'ground' ? '=' : (active ? 'B' : 'b'));
     }
-    for (const hz of level.hazards ?? []) fillRect(hz, '^');
+    for (const hz of level.hazards ?? []) {
+        fillRect(hz, hz.type === 'ceiling' ? 'v' : '^');
+    }
     for (const pk of level.pickups ?? []) put(pk.x, pk.y, 'o');
     for (const pt of level.portals ?? []) put(pt.x, pt.y, 'O');
     put(level.spawn.x, level.spawn.y, 'S');

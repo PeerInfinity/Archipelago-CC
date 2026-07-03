@@ -12,7 +12,7 @@ import { describe, it, expect } from 'vitest';
 import {
     CELESTE_GEOMETRY, sweepMaxGap, deriveGeometry, validateGeometry,
     generateLevel, generateLevelForSpecs, generateZoneSet, deriveGeneratedRules,
-    SWEEP_SATURATING_PROFILES, sweepSpringTotal, sweepMaxRise,
+    SWEEP_SATURATING_PROFILES, sweepSpringTotal, sweepMaxRise, sweepCeilingMin,
 } from './generator.js';
 import { deriveAccessRules } from './deriveRules.js';
 import { DEFAULTS, PROFILES } from './physics.js';
@@ -174,6 +174,43 @@ describe('reward shelves (plan §8.7 step 2)', () => {
         }
     }, 300000);
 
+    it('full ceilings + splits + jitter across gate shapes: every goal still derives exactly [S]', () => {
+        for (const requirement of [[], ['doubleJump'], ['spring']]) {
+            const want = [...requirement].sort();
+            for (const seed of [1, 2]) {
+                const level = generateLevel({
+                    id: `ceil_${want.join('_') || 'plain'}_${seed}`, requirement,
+                    pickupCount: 2, branchCount: 1, hazardChance: 0.5,
+                    ceilingChance: 1, splitChance: 1, jitter: 1, seed,
+                });
+                expect(validateLevel(level, DEFAULTS), level.id).toEqual([]);
+                expect(level.hazards.some((hz) => hz.type === 'ceiling'), level.id)
+                    .toBe(true);
+                const derived = deriveGeneratedRules(level, DEFAULTS);
+                expect(derived.defects, level.id).toEqual([]);
+                for (const [id, sets] of Object.entries(goalRules(level, derived))) {
+                    expect(sets, `${level.id} ${id}`).toEqual([want]);
+                }
+            }
+        }
+    }, 300000);
+
+    it('spec path plants ceilings (ceilingChance 1) and the goals still derive exactly', () => {
+        const { level, derived } = generateLevelForSpecs({
+            id: 'ceil_spec',
+            exitSpecs: [
+                { key: 'E', requirement: ['doubleJump'] },
+                { key: 'W', requirement: [] },
+            ],
+            pickupSpecs: [{ id: 'it_a', requirement: [] }],
+            ceilingChance: 1, seed: 1,
+        });
+        expect(level.hazards.some((hz) => hz.type === 'ceiling')).toBe(true);
+        expect(derived.exits.exit_main.minimalSets).toEqual([['doubleJump']]);
+        expect(derived.exits.exit_br0.minimalSets).toEqual([[]]);
+        expect(derived.pickups.it_a.minimalSets).toEqual([[]]);
+    }, 120000);
+
     it('spec path honors jitter (raised floors; goals still derive exactly)', () => {
         const { level, derived } = generateLevelForSpecs({
             id: 'jit_spec',
@@ -236,7 +273,17 @@ describe('calibration pins', () => {
         const C = PROFILES.nsmbu.constants;
         const G = deriveGeometry(C);
         expect(validateGeometry(G, C)).toEqual([]);
+        // nsmbu REFUSES ceilings: its floaty taps push the swept
+        // crossing minimum nearly to its full-hold player top, so the
+        // punish window collapses (the deriveGeometry refusal path)
+        expect(G.CEIL_RISE).toBe(null);
     });
+
+    it('the pinned celeste CEIL_MIN_CLEAR matches a fresh robust ceiling sweep', () => {
+        const gapMax = CELESTE_GEOMETRY.CEIL_GAP.min + CELESTE_GEOMETRY.CEIL_GAP.span;
+        expect(sweepCeilingMin(DEFAULTS, gapMax))
+            .toBeCloseTo(CELESTE_GEOMETRY.CEIL_MIN_CLEAR, 2);
+    }, 300000);
 
     it('SWEEP_SATURATING_PROFILES membership matches a fresh dj sweep of every profile', () => {
         // The binary search converges just under the cap when the true

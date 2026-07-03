@@ -163,7 +163,12 @@ export const springShelf = {
  *  landable rise (~2.45) but inside dj arcs' descent corridor. High
  *  dj arcs catch it (collecting the pickup), low arcs slip under it
  *  onto the far floor; without Double Jump neither the gap nor the
- *  shelf is reachable. */
+ *  shelf is reachable. The saw under the shelf's right half (§8.7
+ *  step 3 — deferred from step 2 pending clearance calibration) stays
+ *  off every mandatory trajectory: catching arcs ride the shelf ABOVE
+ *  it, slip-under arcs are grounded before its x-span (celeste's
+ *  steep descent), the fall-off starts right of it, and its underside
+ *  (2.05 above the floor) clears the run corridor (PLAYER_H + 0.3). */
 export const djShelf = {
     id: 'djShelf',
     size: { width: 44, height: 16 },
@@ -172,7 +177,7 @@ export const djShelf = {
         { id: 'shelf1', x: 22.3, y: 4.1, w: 5.6, h: 0.5, type: 'oneway' },
         { id: 'floorB', x: 24, y: 0, w: 20, h: 1, type: 'ground' },
     ],
-    hazards: [],
+    hazards: [{ id: 'saw1', type: 'saw', x: 25.9, y: 3.05, w: 1.1, h: 1 }],
     pickups: [{ id: 'pk_shelfTop', on: 'shelf1', x: 27.7, y: 5.2 }],
     portals: [{ id: 'exit_main', on: 'floorB', x: 43.4, y: 1.6, arrow: 'right', exitName: null }],
     spawn: { x: 1, y: 1 },
