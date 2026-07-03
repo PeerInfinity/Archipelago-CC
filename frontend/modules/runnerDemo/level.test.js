@@ -134,6 +134,12 @@ describe('stuck-free geometry (wall pockets)', () => {
         lvl.platforms.push({ id: 'shelf', x: 7, y: 1, w: 0.5, h: 8, type: 'blue' });
         expect(validateLevel(lvl)).toEqual([]);
     });
+
+    it('does not treat an ungated oneway platform as a wall either', () => {
+        const lvl = base();
+        lvl.platforms.push({ id: 'shelf', x: 7, y: 1, w: 0.5, h: 8, type: 'oneway' });
+        expect(validateLevel(lvl)).toEqual([]);
+    });
 });
 
 describe('hazards vs surfaces', () => {
@@ -185,6 +191,17 @@ describe('spawn clear', () => {
         const lvl = base();
         lvl.platforms = [
             { id: 'shelf', x: 0, y: 0, w: 14, h: 1, type: 'blue' },
+            { id: 'far', x: 20, y: 0, w: 10, h: 1, type: 'ground' },
+        ];
+        lvl.portals = [{ id: 'exit', on: 'far', x: 29.4, y: 1.6, arrow: 'right', exitName: null }];
+        expect(validateLevel(lvl)).toContainEqual(
+            expect.stringContaining('spawn: no solid ground below the spawn footprint'));
+    });
+
+    it('an ungated oneway below the spawn does not count as ground (drop-through)', () => {
+        const lvl = base();
+        lvl.platforms = [
+            { id: 'shelf', x: 0, y: 0, w: 14, h: 1, type: 'oneway' },
             { id: 'far', x: 20, y: 0, w: 10, h: 1, type: 'ground' },
         ];
         lvl.portals = [{ id: 'exit', on: 'far', x: 29.4, y: 1.6, arrow: 'right', exitName: null }];

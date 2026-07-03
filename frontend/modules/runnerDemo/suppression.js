@@ -24,6 +24,11 @@
 
 const PLATFORM_GATES = {
     ground: null,
+    // UNGATED one-way (drop-through) — the reward-shelf platform
+    // (plan §8.2/§8.6: upper-lane platforms are ALWAYS drop-through,
+    // independent of gating). Existence-wise it behaves like ground;
+    // collision-wise like blue with the item held.
+    oneway: null,
     blue: 'blue',
     spring: 'spring',
 };

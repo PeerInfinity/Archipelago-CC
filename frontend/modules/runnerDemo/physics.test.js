@@ -234,6 +234,33 @@ describe('one-way gated platforms', () => {
     });
 });
 
+describe('oneway platforms (ungated drop-through — reward shelves)', () => {
+    const shelfLevel = makeLevel({
+        platforms: [
+            { id: 'floor', x: 0, y: 0, w: 40, h: 1, type: 'ground' },
+            { id: 'shelf', x: 4, y: 3, w: 6, h: 0.5, type: 'oneway' },
+        ],
+        spawn: { x: 6, y: 8 }, // directly above the shelf
+    });
+
+    it('exists under NO abilities: catches the fall from above', () => {
+        const trace = run(shelfLevel, 60, () => ({}), noAbilities(),
+            { ...DEFAULTS, AUTO_RUN: false });
+        const landing = trace.find((s) => s.landedOn);
+        expect(landing.landedOn).toBe('shelf');
+        expect(landing.y).toBeCloseTo(3.5, 10);
+    });
+
+    it('drop-through works regardless of abilities (§8.6: always refusable)', () => {
+        for (const abilities of [noAbilities(), { doubleJump: true, blue: true, spring: true }]) {
+            const trace = run(shelfLevel, 80, () => ({ drop: true }), abilities,
+                { ...DEFAULTS, AUTO_RUN: false });
+            const landing = trace.find((s) => s.landedOn);
+            expect(landing.landedOn).toBe('floor');
+        }
+    });
+});
+
 describe('hazards, falling, reset', () => {
     it('hazard touch respawns at the spawn (v1: any hit kills)', () => {
         const level = makeLevel({
