@@ -2,7 +2,7 @@
 
 import { getModuleEventBus } from './index.js';
 import settingsManager from '../../app/core/settingsManager.js';
-import { formatBuildInfo } from '../../app/buildInfo.js';
+import { formatBuildInfo, fetchSourceStamp } from '../../app/buildInfo.js';
 import { DiscoveryPanelUI } from '../discoveryPanel/discoveryPanelUI.js';
 import {
   humanizeKey,
@@ -482,6 +482,17 @@ export class OptionsPanelUI {
       this.buildFooter.textContent = formatBuildInfo();
       this.buildFooter.title = 'Frontend build stamp — confirms whether the page loaded fresh code or is cached';
       this.rootElement.appendChild(this.buildFooter);
+
+      // Unbundled dev: upgrade both stamps with the served tree's
+      // last-modified time once the dev server answers (serve-nocache's
+      // /_source-mtime; plain http.server 404s and the stamps stay
+      // load-time-only). loaded < sources ⇒ this page runs stale code.
+      fetchSourceStamp().then((stamp) => {
+        if (!stamp) return;
+        const text = formatBuildInfo(stamp);
+        buildStamp.textContent = text;
+        this.buildFooter.textContent = text;
+      });
     }
     return this.rootElement;
   }
