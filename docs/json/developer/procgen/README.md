@@ -5,9 +5,10 @@ Developer documentation for the procedural-generation ("procgen") system: the pi
 | Document | Description |
 |----------|-------------|
 | [Architecture](./architecture.md) | Orientation: the pipeline, drivers, substrates, rules.json extensions, runtime, and Python round-trip. Read this first. |
-| [Substrate Registry Reference](./substrate-registry.md) | The registry entry contract, field by field, with a capability matrix of the five substrates and a checklist for adding one. |
+| [Substrate Registry Reference](./substrate-registry.md) | The registry entry contract, field by field, with a capability matrix of the six substrates and a checklist for adding one. |
 | [Gotchas and Disambiguations](./gotchas.md) | The things most likely to mislead someone orienting in the procgen code — naming overlaps, shared-code-vs-shared-identity, invariants. |
 | [Bounce Substrate](./bounce.md) | The Doodle-Jump-style platformer substrate: physics core, ability suppression, the canJump solver, the derive-rules verifier, level/braid generation, renderers, and the bot driver. |
+| [Runner Substrate](./runner.md) | The auto-runner platformer substrate: the GMTK toolkit physics port, the canRun solver and its doom/touch/launch model, strip generation and spec planning, and the greedy re-plan bot. |
 | [Playback and Debugging Tools](./playback-and-debugging.md) | The playback bot, the PlaybackController proxies, shared clock/control-bar primitives, the forward simulator (sphere-log generation), and the simulator core. |
 | [Maze Substrate](./maze.md) | The grid-of-tiles substrate: engine, biomes and wall backends, the action queue, content modules (hazards), the autopather, panel/editor. |
 | [Sphere-Driven Growth](./sphere-growth.md) | The plan-first driver: the sphere plan and its oracle role, the stratification rule, gate compatibility, the three-phase tree split, config assembly. |

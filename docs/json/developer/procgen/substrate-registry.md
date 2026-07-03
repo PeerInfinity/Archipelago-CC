@@ -90,18 +90,18 @@ The sphere-growth driver and the Procgen Pipeline panel read a further set of op
 
 ## Capability matrix
 
-| Capability | `maze` | `bounce` | `text_adventure` (wrapper) | `flash` | `jta` |
-|---|---|---|---|---|---|
-| Panel / load event | `mazeRoomPanel` / `maze:loadRegion` | `bounceDemoPanel` / `bounce:loadRegion` | `textAdventureSubstrateWrapperPanel` / `textAdventure:loadRegion` | shared flash panel / `flash:loadRegion` | `jtaSubstrateWrapperPanel` / `jta:loadRegion` |
-| Playback controller | live panel's controller | host proxy → in-game bot driver | host proxy → iframe bridge | none (`null`) | none (`null`) |
-| Loop queue actions | move, check, explore | move, check (`executeVia: 'playbackBot'`) | move, check, explore | move | move |
-| Manual loop play | yes | yes | yes | yes | yes |
-| Custom queues | **yes** | no | no | no | no |
-| Procedural build hooks | yes (+ hazards via `applyContentModules`) | no | yes (shared tile-grid primitives) | no | no |
-| Zone-based | no | yes (`zoneCount` from zone table, `extractZoneRules`, `victoryItem`) | no | no | yes (`zoneCount: 16`, `synthesizeZonePayload`) |
-| Sphere-growth adapter hooks | no | **yes** | no | no | no |
+| Capability | `maze` | `bounce` | `runner` | `text_adventure` (wrapper) | `flash` | `jta` |
+|---|---|---|---|---|---|---|
+| Panel / load event | `mazeRoomPanel` / `maze:loadRegion` | `bounceDemoPanel` / `bounce:loadRegion` | `runnerDemoPanel` / `runner:loadRegion` | `textAdventureSubstrateWrapperPanel` / `textAdventure:loadRegion` | shared flash panel / `flash:loadRegion` | `jtaSubstrateWrapperPanel` / `jta:loadRegion` |
+| Playback controller | live panel's controller | host proxy → in-game bot driver | host proxy → in-game bot driver | host proxy → iframe bridge | none (`null`) | none (`null`) |
+| Loop queue actions | move, check, explore | move, check (`executeVia: 'playbackBot'`) | move, check (`executeVia: 'playbackBot'`) | move, check, explore | move | move |
+| Manual loop play | yes | yes | yes | yes | yes | yes |
+| Custom queues | **yes** | no | no | no | no | no |
+| Procedural build hooks | yes (+ hazards via `applyContentModules`) | no | no | yes (shared tile-grid primitives) | no | no |
+| Zone-based | no | yes (`zoneCount` from zone table, `extractZoneRules`, `victoryItem`) | yes (lazy zone table, `extractZoneRules`, `victoryItem`) | no | no | yes (`zoneCount: 16`, `synthesizeZonePayload`) |
+| Sphere-growth adapter hooks | no | **yes** | **yes** | no | no | no |
 
-Entry sources: `mazeRoomLibrary.js`, `bounceDemoLibrary.js`, `textAdventureSubstrateWrapperLibrary.js`, `flashSubstrateLibrary.js`, `jtaSubstrateWrapperLibrary.js`.
+Entry sources: `mazeRoomLibrary.js`, `bounceDemoLibrary.js`, `runnerDemoLibrary.js`, `textAdventureSubstrateWrapperLibrary.js`, `flashSubstrateLibrary.js`, `jtaSubstrateWrapperLibrary.js`.
 
 ## Adding a substrate
 
