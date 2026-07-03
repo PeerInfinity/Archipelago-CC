@@ -135,6 +135,12 @@ const STRUCTURAL = Object.freeze({
     MAX_HITS: 0,          // hit-budget hook (plan §4.10): hits beyond
     //                       this respawn the player. 0 = any hit kills.
     GOAL_HALF: 0.375,     // pickup/portal default half-extent (touch box)
+    GLIDE_FALL_CAP: 2,    // glide fall-speed cap (units/s) while the
+    //                       jump button is HELD during a NON-JUMP fall
+    //                       launched from a `glider` pad (plan §8.5 —
+    //                       the Glide item gates the PAD's existence,
+    //                       so the behavior is unreachable without the
+    //                       item and baseline physics never changes)
     SPRING_RISE: 10,      // spring bounce rise (units), profile-
     //                       independent: the launch speed is derived
     //                       against the CUT rise gravity, so the rise
@@ -252,6 +258,8 @@ export function spawnState(level, C = DEFAULTS) {
         landedOn: null,
         standingOn: null,
         sprungOn: null,
+        springFlight: false,
+        lastSupportType: null,
         touchedPickups: [],
         touchedPortals: [],
         hits: 0,
@@ -285,6 +293,8 @@ function respawn(state, level, cause) {
         landedOn: null,
         standingOn: null,
         sprungOn: null,
+        springFlight: false,
+        lastSupportType: null,
         touchedPickups: [],
         touchedPortals: [],
         hits: 0,
@@ -434,6 +444,27 @@ export function step(state, input, level, abilities, constants) {
         s.vy = clamp(s.vy, -C.speedLimit, 100);
     }
 
+    // GLIDE (plan §8.5, the third gated element): while the jump
+    // button is HELD during a NON-JUMP fall whose flight launched from
+    // a `glider` pad (walked/dropped off it — never a jump descent or
+    // a spring flight: those arcs own their physics), fall speed is
+    // capped at GLIDE_FALL_CAP. Pads are existence-gated on the Glide
+    // item (suppression.js), so the behavior is unreachable without
+    // the item — baseline physics is bit-identical with no params
+    // overlay at all, and not holding reproduces the old trajectory
+    // exactly (voluntary — the monotonicity-by-construction pattern).
+    // A mid-fall press is inert under every ability set (a run-off
+    // banks no air jump and coyote closes 0.15s past the lip), so the
+    // same glide tape works under every superset. Applied OUTSIDE
+    // calculateGravity: a buffered airborne press keeps desiredJump
+    // true for the whole jumpBuffer window, which skips
+    // calculateGravity — the glide must engage there too.
+    if (s.lastSupportType === 'glider' && s.pressingJump && !s.onGround
+            && s.vy < -C.GLIDE_FALL_CAP && !s.springFlight
+            && !s.currentlyJumping) {
+        s.vy = -C.GLIDE_FALL_CAP;
+    }
+
     // characterMovement.cs runWithAcceleration() / direct set.
     const runWithAcceleration = () => {
         const accel = s.onGround ? C.maxAcceleration : C.maxAirAcceleration;
@@ -519,6 +550,10 @@ export function step(state, input, level, abilities, constants) {
                 // (presses during the flight only feed the jump
                 // buffer, exactly like any other airborne press).
                 s.coyoteTimeCounter = C.coyoteTime;
+                // The bounce owns its whole arc (deterministic — see
+                // above): glide is refused for the rest of this
+                // flight, like the air jump. Cleared on landing.
+                s.springFlight = true;
                 s.gravMultiplier = C.variablejumpHeight
                     ? C.jumpCutOff : C.upwardMovementMultiplier;
             }
@@ -533,6 +568,12 @@ export function step(state, input, level, abilities, constants) {
     const support = groundUnder(s.x, s.y);
     s.onGround = support !== null;
     s.standingOn = support?.id ?? null;
+    // The launch-support memory for the glide branch above: what the
+    // player last STOOD on, held across the whole airborne phase (a
+    // flight "launched from" that platform). Spring catches don't
+    // ground, so a bounce never overwrites it — springFlight excludes
+    // those arcs separately.
+    if (support) s.lastSupportType = support.type;
 
     // Landing tick: airborne at move start, grounded after — the
     // re-plan trigger (set only on this tick, bounce's contract).
@@ -555,6 +596,7 @@ export function step(state, input, level, abilities, constants) {
         // engine match the verified model — solver verdicts, calibration
         // and derived rules are unchanged.
         s.currentlyJumping = false;
+        s.springFlight = false;
     }
 
     // Hazards: non-solid kill AABBs (plan §3 — never collision

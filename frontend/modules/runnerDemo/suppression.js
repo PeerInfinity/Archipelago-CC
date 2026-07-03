@@ -7,7 +7,7 @@
  * and nothing else, so they cannot diverge).
  *
  * Ability set shape (booleans; a missing key means locked):
- *   { doubleJump, blue, spring }                  — the v1.1 universe
+ *   { doubleJump, blue, spring, glide }           — the v1.1 universe
  *   (+ future: highJump, brake, left, shield — plan §6/§7)
  *
  * Two gating mechanisms, both monotone by construction (plan §3):
@@ -31,6 +31,12 @@ const PLATFORM_GATES = {
     oneway: null,
     blue: 'blue',
     spring: 'spring',
+    // Glide pad (plan §8.5/§8.7 step 4): a one-way platform whose
+    // NON-JUMP fall-offs glide (hold jump → fall speed capped, see
+    // physics.js). The Glide item gates the PAD's existence — the
+    // glide behavior itself needs no params overlay, because a flight
+    // can only launch from a pad that exists.
+    glider: 'glide',
 };
 
 /** The platform-type vocabulary (level.js validates against it). */
@@ -74,9 +80,9 @@ export function effectiveParams(constants, abilities) {
 }
 
 export function noAbilities() {
-    return { doubleJump: false, blue: false, spring: false };
+    return { doubleJump: false, blue: false, spring: false, glide: false };
 }
 
 export function allAbilities() {
-    return { doubleJump: true, blue: true, spring: true };
+    return { doubleJump: true, blue: true, spring: true, glide: true };
 }

@@ -183,10 +183,11 @@ describe('runner entry — sphere-growth adapter hooks (plan §4.9)', () => {
     const DJ = 'Double Jump';
     const BLUE = 'Blue Platforms';
     const SPRINGS = 'Springs';
+    const GLIDE = 'Glide';
 
     it('wires the hook set into the entry', () => {
         expect(substrateRegistryEntry.gateableItems).toBe(GATEABLE_ITEMS);
-        expect(GATEABLE_ITEMS).toEqual([DJ, BLUE, SPRINGS]);
+        expect(GATEABLE_ITEMS).toEqual([DJ, BLUE, SPRINGS, GLIDE]);
         expect(substrateRegistryEntry.canHostExitGates).toBe(canHostExitGates);
         expect(substrateRegistryEntry.exitGateVeto).toBe(exitGateVeto);
         expect(substrateRegistryEntry.backPortalGated).toBe(backPortalGated);

@@ -430,3 +430,94 @@ describe('spring platforms', () => {
         expect(trace.some((s) => s.respawned === 'fell')).toBe(true);
     });
 });
+
+describe('glider pads (plan §8.5/§8.7 step 4 — the Glide item)', () => {
+    /** A glider pad high over open ground: run off its right end. */
+    function padLevel(padType = 'glider') {
+        return makeLevel({
+            size: { width: 60, height: 20 },
+            platforms: [
+                { id: 'pad', x: 0, y: 5, w: 10, h: 1, type: padType },
+                { id: 'floor', x: 0, y: 0, w: 60, h: 1, type: 'ground' },
+            ],
+            spawn: { x: 1, y: 6 },
+        });
+    }
+    const abilities = { glide: true };
+    const CAP = DEFAULTS.GLIDE_FALL_CAP;
+
+    it('hop-and-hold: the jump descent falls fast, the walk-off glide is capped', () => {
+        // hold jump from the pad: the press fires a grounded hop whose
+        // descent must NOT glide (currentlyJumping — jumps own their
+        // arcs); it lands back on the pad still holding, runs off the
+        // lip, and the non-jump fall glides at the cap all the way down
+        const trace = run(padLevel(), 500, holdJumpFrom(1), abilities);
+        const land = trace.findIndex((s) => s.landedOn === 'pad');
+        expect(land).toBeGreaterThan(0);
+        const hopMinVy = Math.min(...trace.slice(0, land + 1).map((s) => s.vy));
+        expect(hopMinVy).toBeLessThan(-(CAP + 2));
+        const off = trace.findIndex((s, i) => i > land && !s.onGround);
+        expect(off).toBeGreaterThan(land);
+        const landing = trace.findIndex((s, i) => i > off && s.standingOn === 'floor');
+        expect(landing).toBeGreaterThan(off);
+        const glideMinVy = Math.min(...trace.slice(off, landing).map((s) => s.vy));
+        expect(glideMinVy).toBeGreaterThanOrEqual(-CAP - 1e-9);
+        // the glide slope (~maxSpeed : CAP) carries far right of the
+        // ballistic landing (~x 12)
+        expect(trace[landing].x).toBeGreaterThan(28);
+    });
+
+    it('voluntary: not holding, the run-off is tick-identical to an ungated oneway pad', () => {
+        // the pad's only behavioral difference is the held-jump glide;
+        // with the button up the trajectory must be byte-identical to
+        // plain one-way geometry (the monotonicity-by-construction
+        // requirement: gaining Glide changes nothing you don't ask for)
+        const a = run(padLevel('glider'), 300, () => ({}), abilities);
+        const b = run(padLevel('oneway'), 300, () => ({}), {});
+        for (let t = 0; t < 300; t++) {
+            for (const f of ['x', 'y', 'vx', 'vy', 'onGround', 'standingOn']) {
+                expect(a[t][f], `tick ${t} field ${f}`).toStrictEqual(b[t][f]);
+            }
+        }
+    });
+
+    it('a spring flight never glides: the bounce owns its arc (springFlight)', () => {
+        const level = makeLevel({
+            size: { width: 80, height: 24 },
+            platforms: [
+                { id: 'pad', x: 0, y: 5, w: 10, h: 1, type: 'glider' },
+                { id: 'spr', x: 10.5, y: 0, w: 4, h: 0.5, type: 'spring' },
+                { id: 'floor', x: 15, y: 0, w: 65, h: 1, type: 'ground' },
+            ],
+            spawn: { x: 1, y: 6 },
+        });
+        const both = { glide: true, spring: true };
+        // dry run finds the spring catch, then hold jump only after it:
+        // the press is airborne (the bounce pinned coyote closed), so
+        // no jump fires — but the held descent must still fall FAST:
+        // the flight is the spring's, launched-from-pad or not
+        const dry = run(level, 400, () => ({}), both);
+        const catchT = dry.findIndex((s) => s.sprungOn === 'spr');
+        expect(catchT).toBeGreaterThan(0);
+        const trace = run(level, 600, (t) => (t > catchT ? { jump: true } : {}), both);
+        expect(trace.findIndex((s) => s.sprungOn === 'spr')).toBe(catchT);
+        const landT = trace.findIndex((s, i) => i > catchT && s.standingOn != null);
+        expect(landT).toBeGreaterThan(catchT);
+        const minVy = Math.min(...trace.slice(catchT, landT).map((s) => s.vy));
+        expect(minVy).toBeLessThan(-(CAP + 2));
+    });
+
+    it('is existence-gated: without the item the pad does not exist', () => {
+        const without = run(padLevel(), 40, () => ({}), {});
+        expect(without.some((s) => s.standingOn === 'pad')).toBe(false);
+        expect(without.some((s) => s.standingOn === 'floor')).toBe(true);
+        const withIt = run(padLevel(), 40, () => ({}), abilities);
+        expect(withIt.some((s) => s.standingOn === 'pad')).toBe(true);
+    });
+
+    it('drop-through: a glider pad is one-way like every gated platform', () => {
+        const trace = run(padLevel(), 60, () => ({ drop: true }), abilities);
+        expect(trace.some((s) => s.standingOn === 'pad')).toBe(false);
+        expect(trace.some((s) => s.standingOn === 'floor')).toBe(true);
+    });
+});
