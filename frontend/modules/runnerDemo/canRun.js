@@ -470,6 +470,26 @@ export function canRunDetailed(level, fromId, toId, abilities, opts = {}) {
     if (to.x - (from.x + from.w) > C_eff.maxSpeed * airTime * 1.25 + C.PLAYER_W) return fail;
 
     const policies = policiesFor(level, from, abilities, opts);
+    // Per-evaluation leg memo (opts.legCache, a Map the flood/graph
+    // builders create per (level, abilities) evaluation, exactly like
+    // doomCache): a leg's outcome is TARGET-INDEPENDENT — simulateLeg
+    // ends when support switches to ANY foreign platform, and this
+    // function only inspects WHICH — so without the memo the same
+    // (arrival × policy) sims re-run for every candidate target a
+    // source is probed against. Keyed by policy NAME: names encode
+    // trigger/hold exactly (the policy identity within one family),
+    // and the family is a pure function of (level, from, abilities).
+    const legCache = opts.legCache ?? null;
+    const runLeg = (x0, vx0, p) => {
+        const key = legCache === null ? null : `${fromId}|${x0}|${vx0}|${p.name}`;
+        if (key !== null) {
+            const hit = legCache.get(key);
+            if (hit !== undefined) return hit;
+        }
+        const r = runQuery(level, fromId, abilities, { ...opts, x0, vx0, policy: p.make() });
+        if (key !== null) legCache.set(key, r);
+        return r;
+    };
     const witnesses = [];
     let liveArrivals = 0;
     let launch = true;
@@ -498,9 +518,7 @@ export function canRunDetailed(level, fromId, toId, abilities, opts = {}) {
         const witnessBudget = opts.witnessBudget ?? 8;
         let failedChecks = 0;
         for (const p of policies) {
-            const r = runQuery(level, fromId, abilities, {
-                ...opts, x0, vx0, policy: p.make(),
-            });
+            const r = runLeg(x0, vx0, p);
             if (r.died) continue;
             live = true;
             if (r.landedOn === toId) {
@@ -546,9 +564,9 @@ export function buildRunGraph(level, abilities, opts = {}) {
     const nodes = [nodeKey(ENTRANCE), ...platforms.map((p) => nodeKey(p.id))];
     const edges = new Map(nodes.map((n) => [n, new Set()]));
     const touches = new Map(nodes.map((n) => [n, new Set()]));
-    // one doom memo per (level, abilities) evaluation — NEVER share
-    // across ability sets (doom under {} ≠ doom under {doubleJump})
-    const graphOpts = { doomCache: new Map(), ...opts };
+    // one doom + leg memo per (level, abilities) evaluation — NEVER
+    // share across ability sets (doom/legs under {} ≠ under {doubleJump})
+    const graphOpts = { doomCache: new Map(), legCache: new Map(), ...opts };
     for (const from of [ENTRANCE, ...platforms.map((p) => p.id)]) {
         for (const to of platforms) {
             if (to.id === from) continue;
@@ -631,8 +649,10 @@ export function reachablePlatforms(graph) {
  * fall back to the full graph under those ability sets.
  */
 export function reachableRunPlatforms(level, abilities, opts = {}) {
-    // per-evaluation doom memo (see buildRunGraph)
-    const { goalHosts, ...queryOpts } = { doomCache: new Map(), ...opts };
+    // per-evaluation doom + leg memos (see buildRunGraph)
+    const { goalHosts, ...queryOpts } = {
+        doomCache: new Map(), legCache: new Map(), ...opts,
+    };
     const C = queryOpts.constants ?? DEFAULTS;
     const platforms = activePlatforms(level, abilities).filter(isStandable)
         .sort((a, b) => (a.x - b.x) || (a.y - b.y));
