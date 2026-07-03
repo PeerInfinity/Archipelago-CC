@@ -4,7 +4,7 @@ Filling Algorithm:               balanced
 Players:                         1
 Plando Options:                  connections, texts, bosses
 Game:                            Runner WorldGen
-Location Count:                  3
+Location Count:                  4
 Progression Balancing:           50
 Accessibility:                   Full
 Local Items:                     
@@ -22,7 +22,8 @@ Use Canonical Options:           Yes
 
 Locations:
 
-region_1_0__loc_0: Double Jump
+region_1_0__loc_0: Springs
+region_2_0__loc_0: Double Jump
 region_0_1__loc_0: Victory
 region_1_1__loc_0: Blue Platforms
 
@@ -32,11 +33,14 @@ Playthrough:
 
 }
 1: {
-  region_1_0__loc_0: Double Jump
+  region_1_0__loc_0: Springs
 }
 2: {
-  region_1_1__loc_0: Blue Platforms
+  region_2_0__loc_0: Double Jump
 }
 3: {
+  region_1_1__loc_0: Blue Platforms
+}
+4: {
   region_0_1__loc_0: Victory
 }

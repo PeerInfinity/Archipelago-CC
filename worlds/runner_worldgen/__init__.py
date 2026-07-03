@@ -23,6 +23,7 @@ from .Rules import set_rules
 
 # Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {
+    "Springs": 1,
     "Double Jump": 1,
     "Victory": 1,
     "Blue Platforms": 1,
@@ -85,7 +86,7 @@ class ProcgenMazeWorld(RuleWorldMixin, World):
     }
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
-        "Everything": frozenset(["Double Jump", "Victory", "Blue Platforms"]),
+        "Everything": frozenset(["Springs", "Double Jump", "Victory", "Blue Platforms"]),
     }
 
     # Placements are deterministically reproduced by world generator
@@ -94,7 +95,8 @@ class ProcgenMazeWorld(RuleWorldMixin, World):
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
-        "region_1_0__loc_0": "Double Jump",
+        "region_1_0__loc_0": "Springs",
+        "region_2_0__loc_0": "Double Jump",
         "region_0_1__loc_0": "Victory",
         "region_1_1__loc_0": "Blue Platforms",
     }
@@ -102,7 +104,8 @@ class ProcgenMazeWorld(RuleWorldMixin, World):
     # Original seed placements - actual item placements from the original seed generation
     # Used by _place_original_items() to reproduce exact original item placement
     original_seed_placements: ClassVar[Dict[str, str]] = {
-        "region_1_0__loc_0": "Double Jump",
+        "region_1_0__loc_0": "Springs",
+        "region_2_0__loc_0": "Double Jump",
         "region_0_1__loc_0": "Victory",
         "region_1_1__loc_0": "Blue Platforms",
     }
@@ -111,6 +114,7 @@ class ProcgenMazeWorld(RuleWorldMixin, World):
     # True = progression, False = useful/filler. Used to select correct item copy during placement.
     canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
         "region_1_0__loc_0": True,
+        "region_2_0__loc_0": True,
         "region_0_1__loc_0": True,
         "region_1_1__loc_0": True,
     }

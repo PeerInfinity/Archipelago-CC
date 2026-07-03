@@ -21,25 +21,40 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
+        multiworld.get_entrance("region_2_0__exit_S", player),
+        Has('Springs', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("region_2_0__exit_W", player),
+        Has('Springs', 1)
+    )
+
+    world.set_rule(
         multiworld.get_entrance("region_0_1__exit_E", player),
         HasAll('Blue Platforms', 'Double Jump')
     )
 
     world.set_rule(
         multiworld.get_entrance("region_1_1__exit_N", player),
-        Has('Double Jump', 1)
+        HasAll('Double Jump', 'Springs')
     )
 
     world.set_rule(
         multiworld.get_entrance("region_1_1__exit_E", player),
-        Has('Double Jump', 1)
+        HasAll('Double Jump', 'Springs')
     )
 
     world.set_rule(
         multiworld.get_entrance("region_1_1__exit_W", player),
-        Has('Double Jump', 1)
+        HasAll('Double Jump', 'Springs')
     )
     # Location rules
+    world.set_rule(
+        multiworld.get_location("region_2_0__loc_0", player),
+        Has('Springs', 1)
+    )
+
     world.set_rule(
         multiworld.get_location("region_0_1__loc_0", player),
         HasAll('Blue Platforms', 'Double Jump')
@@ -47,5 +62,5 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("region_1_1__loc_0", player),
-        Has('Double Jump', 1)
+        HasAll('Double Jump', 'Springs')
     )

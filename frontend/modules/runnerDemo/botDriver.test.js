@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { createBotDriver } from './botDriver.js';
 import { createGameSession } from './gameCore.js';
-import { flatRun, gapJump, doubleGap, stepStone } from './fixtures.js';
+import { flatRun, gapJump, doubleGap, stepStone, springGap } from './fixtures.js';
 
 /**
  * Drive the real game session with the driver's per-frame inputs —
@@ -76,6 +76,15 @@ describe('botDriver — completes fixture levels (pickup then portal)', () => {
 
     it('doubleGap: crosses with an air-jump policy under Double Jump', () => {
         const h = makeHarness(doubleGap, { items: ['Double Jump'] });
+        const driver = createBotDriver();
+        driver.setTarget({ kind: 'portal', id: 'exit_main' });
+        const r = h.run(driver, { until: untilEvent(h, 'exit', 'exit_main') });
+        expect(r.done).toBe(true);
+        expect(h.counts.deaths).toBe(0);
+    });
+
+    it('springGap: rides the spring bounce across under Springs', () => {
+        const h = makeHarness(springGap, { items: ['Springs'] });
         const driver = createBotDriver();
         driver.setTarget({ kind: 'portal', id: 'exit_main' });
         const r = h.run(driver, { until: untilEvent(h, 'exit', 'exit_main') });

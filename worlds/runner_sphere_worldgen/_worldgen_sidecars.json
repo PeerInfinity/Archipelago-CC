@@ -179,7 +179,8 @@
             "SIDE_WALLS": true,
             "FALL_MARGIN": 5,
             "MAX_HITS": 0,
-            "GOAL_HALF": 0.375
+            "GOAL_HALF": 0.375,
+            "SPRING_RISE": 10
           }
         }
       },
@@ -412,7 +413,8 @@
             "SIDE_WALLS": true,
             "FALL_MARGIN": 5,
             "MAX_HITS": 0,
-            "GOAL_HALF": 0.375
+            "GOAL_HALF": 0.375,
+            "SPRING_RISE": 10
           }
         },
         "backExitSide": "N"
@@ -584,7 +586,8 @@
             "SIDE_WALLS": true,
             "FALL_MARGIN": 5,
             "MAX_HITS": 0,
-            "GOAL_HALF": 0.375
+            "GOAL_HALF": 0.375,
+            "SPRING_RISE": 10
           }
         },
         "backExitSide": "W"
