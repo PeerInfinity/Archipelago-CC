@@ -16,7 +16,7 @@ import {
 import { reachableRunPlatforms } from './canRun.js';
 import {
     flatRun, gapJump, oneWay, spikeRun, doubleGap, stepStone, springGap,
-    springShelf, djShelf, laneSplit, FIXTURES,
+    springShelf, djShelf, laneSplit, ceilingRun, FIXTURES,
 } from './fixtures.js';
 
 describe('abilityUniverse', () => {
@@ -116,6 +116,13 @@ describe('derived rules match fixture ground truth', () => {
     it('laneSplit: both lanes and their goals derive ALWAYS (route texture, no logic)', () => {
         const r = deriveAccessRules(laneSplit);
         expect(r.pickups.pk_top.minimalSets).toEqual([[]]);
+        expect(r.exits.exit_main.minimalSets).toEqual([[]]);
+        expect(r.defects).toEqual([]);
+    });
+
+    it('ceilingRun: goals derive ALWAYS (jump modulation, not item possession)', () => {
+        const r = deriveAccessRules(ceilingRun);
+        expect(r.pickups.pk_edge.minimalSets).toEqual([[]]);
         expect(r.exits.exit_main.minimalSets).toEqual([[]]);
         expect(r.defects).toEqual([]);
     });

@@ -14,7 +14,7 @@ import {
 } from './canRun.js';
 import {
     flatRun, gapJump, oneWay, spikeRun, doubleGap, stepStone, springGap,
-    springShelf, djShelf, laneSplit, FIXTURES,
+    springShelf, djShelf, laneSplit, ceilingRun, FIXTURES,
 } from './fixtures.js';
 import { noAbilities, allAbilities } from './suppression.js';
 import { DEFAULTS } from './physics.js';
@@ -336,6 +336,49 @@ describe('reward shelves (plan §8.7 step 2)', () => {
         const shelf = springShelf.platforms.find((p) => p.id === 'shelf1');
         const names = policiesFor(springShelf, shelf, SPRING).map((p) => p.name);
         expect(names.some((n) => n.startsWith('drop@'))).toBe(true);
+    });
+});
+
+describe('ceiling hazards (ceilingRun — plan §8.7 step 3)', () => {
+    it('the crossing survives under a short hold; a full hold clips the slab and dies', () => {
+        const d = canRunDetailed(ceilingRun, 'floorA', 'floorB', NONE);
+        expect(d.ok).toBe(true);
+        expect(d.witnesses.length).toBeGreaterThan(0);
+        // the naive max-range jump — full hold at the edge — dies on
+        // the ceiling: modulation is mandatory, not decorative
+        const full = probe(ceilingRun, 'floorA', NONE, 10, DEFAULTS.maxSpeed,
+            /^jump@15\.95\+21$/);
+        expect(full.died).toBe('hazard');
+        expect(full.landedOn).toBe(null);
+    });
+
+    it('avoidance falls out of the existing grid × holds family (no ceiling triggers)', () => {
+        // ceilings hang above head height, so the hazard-lead trigger
+        // pass skips them — the witness set must come from the plain
+        // edge/coyote/grid triggers with short holds
+        const floorA = ceilingRun.platforms.find((p) => p.id === 'floorA');
+        const withCeil = policiesFor(ceilingRun, floorA, NONE).map((p) => p.name);
+        const without = policiesFor(
+            { ...ceilingRun, hazards: [] }, floorA, NONE).map((p) => p.name);
+        expect(withCeil).toEqual(without);
+    });
+
+    it('gaining Double Jump never removes the crossing (monotone)', () => {
+        expect(canRun(ceilingRun, 'floorA', 'floorB', DJ)).toBe(true);
+    });
+
+    it('a ceiling below the crossing window kills the edge for every ability set', () => {
+        const low = {
+            ...ceilingRun,
+            hazards: [{ ...ceilingRun.hazards[0], y: 2.0 }],
+        };
+        expect(canRun(low, 'floorA', 'floorB', NONE)).toBe(false);
+        expect(canRun(low, 'floorA', 'floorB', DJ)).toBe(false);
+    });
+
+    it('reach: the pre-ceiling floor stays live (tap escape), far side crossable', () => {
+        expect([...reachableRunPlatforms(ceilingRun, NONE)].sort())
+            .toEqual(['floorA', 'floorB']);
     });
 });
 

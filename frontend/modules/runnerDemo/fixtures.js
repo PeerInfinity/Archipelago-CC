@@ -202,5 +202,29 @@ export const laneSplit = {
     spawn: { x: 1, y: 1 },
 };
 
+/** A ceiling hazard over a plain run gap (plan §8.7 step 3): a static
+ *  kill slab hung with its bottom 2.6 above the floors' top — above
+ *  the robust swept crossing minimum (~1.6 for gaps ≤ 2.8: coyote-tap
+ *  arcs stay that low) and below the full-hold player top (~3.5) — so
+ *  a naive full-height jump clips it and dies while a tap (grounded
+ *  or coyote) crosses underneath. Jump MODULATION as difficulty
+ *  (§8.4): no item gates it, and the slab is thick enough (4.5) that
+ *  even double-jump arcs cannot overfly it. Gap 2.8 matters: at 3.0
+ *  the only surviving arcs are tick-lattice-critical (the swept
+ *  minimum jumps to ~2.8) — the generator's CEIL_GAP window ends at
+ *  2.8 for exactly this reason. */
+export const ceilingRun = {
+    id: 'ceilingRun',
+    size: { width: 42, height: 16 },
+    platforms: [
+        { id: 'floorA', x: 0, y: 0, w: 16, h: 1, type: 'ground' },
+        { id: 'floorB', x: 18.8, y: 0, w: 23.2, h: 1, type: 'ground' },
+    ],
+    hazards: [{ id: 'ceil1', type: 'ceiling', x: 14.5, y: 3.6, w: 5.8, h: 4.5 }],
+    pickups: [{ id: 'pk_edge', on: 'floorA', x: 15.8, y: 1.6 }],
+    portals: [{ id: 'exit_main', on: 'floorB', x: 41.4, y: 1.6, arrow: 'right', exitName: null }],
+    spawn: { x: 1, y: 1 },
+};
+
 export const FIXTURES = [flatRun, gapJump, oneWay, spikeRun, doubleGap, stepStone, springGap,
-    springShelf, djShelf, laneSplit];
+    springShelf, djShelf, laneSplit, ceilingRun];
