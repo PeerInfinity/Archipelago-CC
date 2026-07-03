@@ -28,16 +28,26 @@ export const LS_PRESETS_KEY = 'procgenPipeline_presets';
 export const VALID_MODES = ['gridGrowth', 'sphereGrowth', 'shuffledSpiral', 'topDown'];
 
 /**
- * Shipped presets. Both are fixture-backed known-good configs:
+ * Shipped presets. All are fixture-backed known-good configs:
  *
- * - runner-sphere-demo mirrors the committed runner_sphere_worldgen
- *   preset (runner phase 9d): dump-sphere-growth.js --seed 1
- *   --quota runner=99 --start runner with the Double Jump /
- *   Blue Platforms / Victory pool — 3 spheres, 3 regions, oracle-clean,
- *   bot-verified end to end by verify-runner-embed.mjs. The runner
- *   difficulty knobs are pinned at the values that world was generated
- *   with, so the preset keeps reproducing it even if the runner
- *   defaults ever move.
+ * - runner-sphere-demo extends the committed runner_sphere_worldgen
+ *   config (runner phase 9d) with the Springs item (§8.7 step 1):
+ *   dump-sphere-growth.js --seed 1 --quota runner=99 --start runner
+ *   with the Double Jump / Blue Platforms / Springs / Victory pool —
+ *   3 spheres, 3 regions, oracle-clean (CLI-verified; the committed
+ *   3-item world stays bot-verified by verify-runner-embed.mjs). The
+ *   runner difficulty knobs are pinned at the values that world was
+ *   generated with, so the preset keeps reproducing it even if the
+ *   runner defaults ever move. Note sphere worlds contain no reward
+ *   shelves: the engine's pickups are requirement-free (gates ride
+ *   region entries), so no spec window ever elects one — shelves are
+ *   the zone-table demo's business.
+ *
+ * - runner-zone-demo mirrors the committed runner_worldgen preset:
+ *   dump-shuffled-spiral.js --seed 1 --quota runner=5 --start runner.
+ *   The 5-zone table shows the full current runner vocabulary — dj /
+ *   stone / spring gates and (at this seed) a reward shelf with a saw
+ *   under it (§8.7 step 2).
  *
  * - bounce-sphere-demo is the config verify-sphere-growth-ui.mjs /
  *   verify-sphere-steps-ui.mjs pre-seed the panel with. Bounce knobs
@@ -49,9 +59,9 @@ export const SHIPPED_PRESETS = Object.freeze([
         id: 'shipped:runner-sphere-demo',
         label: 'Runner demo (sphere growth)',
         description: 'Runner-only 3-sphere world — the committed '
-            + 'runner_sphere_worldgen config: seed 1, Double Jump / '
-            + 'Blue Platforms / Victory, quota runner=99, start runner, '
-            + 'celeste physics.',
+            + 'runner_sphere_worldgen config plus the Springs item: '
+            + 'seed 1, Double Jump / Blue Platforms / Springs / Victory, '
+            + 'quota runner=99, start runner, celeste physics.',
         state: {
             mode: 'sphereGrowth',
             params: {
@@ -69,10 +79,40 @@ export const SHIPPED_PRESETS = Object.freeze([
                 runnerLengthSteps: 2,
             },
             scenario: {
-                items: { 'Double Jump': 1, 'Blue Platforms': 1, Victory: 1 },
+                items: {
+                    'Double Jump': 1, 'Blue Platforms': 1, Springs: 1, Victory: 1,
+                },
                 obstacles: {},
             },
             substrateQuotas: { runner: 99 },
+            substrateMix: {},
+            substrateMode: 'quotas',
+        },
+    },
+    {
+        id: 'shipped:runner-zone-demo',
+        label: 'Runner demo (zone tables)',
+        description: 'Runner-only 5-zone shuffled-spiral world — the '
+            + 'committed runner_worldgen config: seed 1, quota runner=5, '
+            + 'start runner. The zone table mints its own items and '
+            + 'shows the full runner vocabulary: dj / stone / spring '
+            + 'gates and a reward shelf with a saw.',
+        state: {
+            mode: 'shuffledSpiral',
+            params: {
+                seed: 1,
+                regionWidth: 8,
+                regionHeight: 6,
+                startSubstrate: 'runner',
+                // no runner* difficulty pins: the spiral path serves the
+                // library's fixed default zone table (RUNNER_ZONE_SEED,
+                // default physics) — those knobs are spec-path-only
+            },
+            scenario: {
+                items: {},
+                obstacles: {},
+            },
+            substrateQuotas: { runner: 5 },
             substrateMix: {},
             substrateMode: 'quotas',
         },

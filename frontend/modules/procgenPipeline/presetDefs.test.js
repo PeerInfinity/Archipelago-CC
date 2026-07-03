@@ -42,7 +42,7 @@ describe('SHIPPED_PRESETS', () => {
         }
     });
 
-    it('runner demo pins the phase-9d runner_sphere_worldgen config', () => {
+    it('runner sphere demo pins the runner_sphere_worldgen config + Springs', () => {
         const p = getPresetById('shipped:runner-sphere-demo');
         expect(p.state.params.seed).toBe(1);
         expect(p.state.params.sphereCount).toBe(3);
@@ -50,8 +50,21 @@ describe('SHIPPED_PRESETS', () => {
         expect(p.state.params.runnerPhysicsProfile).toBe('celeste');
         expect(p.state.substrateQuotas).toEqual({ runner: 99 });
         expect(p.state.scenario.items).toEqual({
-            'Double Jump': 1, 'Blue Platforms': 1, Victory: 1,
+            'Double Jump': 1, 'Blue Platforms': 1, Springs: 1, Victory: 1,
         });
+    });
+
+    it('runner zone demo pins the runner_worldgen shuffled-spiral config', () => {
+        const p = getPresetById('shipped:runner-zone-demo');
+        expect(p.state.mode).toBe('shuffledSpiral');
+        expect(p.state.params.seed).toBe(1);
+        expect(p.state.params.startSubstrate).toBe('runner');
+        expect(p.state.substrateQuotas).toEqual({ runner: 5 });
+        // the zone table mints its own items — the scenario pool is empty
+        expect(p.state.scenario.items).toEqual({});
+        // and no spec-path difficulty knobs are pinned (spiral serves the
+        // library's fixed default zone table)
+        expect(Object.keys(p.state.params).some((k) => k.startsWith('runner'))).toBe(false);
     });
 });
 

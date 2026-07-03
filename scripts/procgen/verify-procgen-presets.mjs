@@ -107,6 +107,7 @@ const optionLabels = await select.locator('option').allTextContents();
 check('Custom + shipped presets listed',
     optionLabels[0] === 'Custom'
         && optionLabels.includes('Runner demo (sphere growth)')
+        && optionLabels.includes('Runner demo (zone tables)')
         && optionLabels.includes('Bounce demo (sphere growth)'),
     JSON.stringify(optionLabels));
 check('boots on Custom (dirty pre-seeded state, no preset)',
@@ -137,9 +138,10 @@ check('bundle: runner* keys populated',
     JSON.stringify(bundle.params));
 check('bundle: quota runner=99, quotas mode',
     bundle.substrateQuotas.runner === 99 && bundle.substrateMode === 'quotas');
-check('bundle: runner item pool',
+check('bundle: runner item pool (incl. Springs)',
     bundle.scenario.items['Double Jump'] === 1
         && bundle.scenario.items['Blue Platforms'] === 1
+        && bundle.scenario.items.Springs === 1
         && bundle.scenario.items.Victory === 1);
 check('bundle: activePresetId persisted',
     bundle.activePresetId === RUNNER_PRESET_ID);
@@ -153,6 +155,34 @@ const genMessage = await waitFor('sphere oracle success message', async () => {
 }, 240000);
 check('generation from preset succeeds (oracle)', true, genMessage);
 console.log('GEN MESSAGE:', genMessage);
+
+// ── 4b. The zone-table demo: apply + Generate (shuffled spiral) ─────
+await select.selectOption('shipped:runner-zone-demo');
+await page.waitForTimeout(300);
+check('shuffledSpiral mode radio checked after apply',
+    await panel.locator('input[name="procgen-pipeline-mode"][value="shuffledSpiral"]').isChecked());
+const zoneBundle = await readBundle();
+check('bundle: zone demo quota runner=5, empty pool',
+    zoneBundle.substrateQuotas.runner === 5
+        && Object.keys(zoneBundle.scenario.items).length === 0);
+await panel.locator('button:has-text("Generate")').first().click();
+const zoneStats = await waitFor('spiral completion stats', async () => {
+    // spiral success sets NO message (the message element only renders
+    // when non-empty) — errors do; probe it as optional
+    const msgEl = panel.locator('.procgen-pipeline-message');
+    if (await msgEl.count() > 0) {
+        const m = await msgEl.textContent();
+        if (m.startsWith('ERROR')) throw new Error(`spiral generation failed: ${m}`);
+    }
+    const t = await panel.textContent();
+    return t.includes('stop: spiral_complete') ? 'stop: spiral_complete' : null;
+}, 240000);
+check('zone-demo generation completes (5-zone spiral)', true, zoneStats);
+
+// re-apply the sphere demo so the edit-flip section below starts from
+// a selected preset with the seed field it expects
+await select.selectOption(RUNNER_PRESET_ID);
+await page.waitForTimeout(300);
 
 // ── 5. Editing a param flips the selection to Custom ───────────────
 await seedInput.fill('2');
