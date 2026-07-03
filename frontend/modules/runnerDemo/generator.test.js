@@ -109,10 +109,18 @@ describe('generateLevel', () => {
         expect(top - 1).toBeGreaterThan(CELESTE_GEOMETRY.RISE.dj + 0.8);
     }, 60000);
 
-    it('reward shelf on a dj gate sits strictly between the swept rises', () => {
-        const level = generateLevel({
+    // Generating a verified level is this file's dominant cost, so
+    // tests that need the SAME geometry share one generation.
+    let djShelfLevel = null;
+    const genDjShelf = () => {
+        djShelfLevel ??= generateLevel({
             id: 'shdj', requirement: ['doubleJump'], pickupCount: 1, shelfChance: 1, seed: 1,
         });
+        return djShelfLevel;
+    };
+
+    it('reward shelf on a dj gate sits strictly between the swept rises', () => {
+        const level = genDjShelf();
         const shelves = level.platforms.filter((p) => p.type === 'oneway');
         expect(shelves).toHaveLength(1);
         const rise = shelves[0].y + shelves[0].h - 1;
@@ -122,9 +130,7 @@ describe('generateLevel', () => {
     }, 60000);
 
     it('dj-shelf saw (§8.7 step 3): under the right half, corridor-clear via the rise guard', () => {
-        const level = generateLevel({
-            id: 'shdjsaw', requirement: ['doubleJump'], pickupCount: 1, shelfChance: 1, seed: 1,
-        });
+        const level = genDjShelf();
         const shelf = level.platforms.find((p) => p.type === 'oneway');
         const saw = level.hazards.find((hz) => hz.type === 'saw');
         expect(saw, 'seed 1 draws the dj-shelf saw').toBeTruthy();
@@ -186,23 +192,16 @@ describe('generateLevel', () => {
         expect(validateLevel(level, DEFAULTS)).toEqual([]);
     }, 60000);
 
-    it('splitChance 0 is draw-for-draw identical to the no-knob generator', () => {
+    it('knob 0 (splits / jitter / ceilings) is draw-for-draw identical to the no-knob generator', () => {
         const base = {
-            id: 'sp0', requirement: ['spring'], pickupCount: 1, branchCount: 1,
+            id: 'k0', requirement: ['spring'], pickupCount: 1, branchCount: 1,
             hazardChance: 0.5, shelfChance: 1, seed: 2,
         };
-        expect(JSON.stringify(generateLevel({ ...base, splitChance: 0 })))
-            .toBe(JSON.stringify(generateLevel(base)));
-    }, 60000);
-
-    it('jitter 0 is draw-for-draw identical to the flat generator', () => {
-        const base = {
-            id: 'j0', requirement: ['spring'], pickupCount: 1, branchCount: 1,
-            hazardChance: 0.5, shelfChance: 1, seed: 2,
-        };
-        expect(JSON.stringify(generateLevel({ ...base, jitter: 0 })))
-            .toBe(JSON.stringify(generateLevel(base)));
-    }, 60000);
+        const want = JSON.stringify(generateLevel(base));
+        expect(JSON.stringify(generateLevel({ ...base, splitChance: 0 }))).toBe(want);
+        expect(JSON.stringify(generateLevel({ ...base, jitter: 0 }))).toBe(want);
+        expect(JSON.stringify(generateLevel({ ...base, ceilingChance: 0 }))).toBe(want);
+    }, 120000);
 
     it('ceiling hazards (ceilingChance 1, margin 0): calibrated slabs over base-anchored flanks', () => {
         const level = generateLevel({
@@ -236,15 +235,6 @@ describe('generateLevel', () => {
             }
         }
         expect(validateLevel(level, DEFAULTS)).toEqual([]);
-    }, 60000);
-
-    it('ceilingChance 0 is draw-for-draw identical to the no-knob generator', () => {
-        const base = {
-            id: 'ce0', requirement: ['spring'], pickupCount: 1, branchCount: 1,
-            hazardChance: 0.5, shelfChance: 1, seed: 2,
-        };
-        expect(JSON.stringify(generateLevel({ ...base, ceilingChance: 0 })))
-            .toBe(JSON.stringify(generateLevel(base)));
     }, 60000);
 
     it('applyCeilingMargin: margin 0 is identity; margin 1 anchors on the grounded-tap arc', () => {

@@ -126,30 +126,29 @@ describe('reward shelves (plan §8.7 step 2)', () => {
                 const shelves = level.platforms.filter((p) => p.type === 'oneway');
                 expect(shelves, level.id).toHaveLength(1);
                 expect(level.pickups.some((pk) => pk.on === shelves[0].id)).toBe(true);
-                const derived = deriveGeneratedRules(level, DEFAULTS);
-                expect(derived.defects, level.id).toEqual([]);
-                for (const [id, sets] of Object.entries(goalRules(level, derived))) {
-                    expect(sets, `${level.id} ${id}`).toEqual([want]);
-                }
+                // generateLevel's internal verify IS the exact-[S] gate
+                // (it throws otherwise); the same-path re-derive that
+                // used to sit here doubled the cost for no new signal —
+                // the independent-agreement property lives in the
+                // seed-range sweep and the full-graph cross-check above.
             }
         });
     }
 
     it('full jitter across gate shapes: every goal still derives exactly [S]', () => {
         for (const requirement of [['doubleJump'], ['spring'], ['blue'], ['doubleJump', 'blue']]) {
-            const want = [...requirement].sort();
+            const want = [...requirement].sort(); // names the generated ids
             for (const seed of [1, 2]) {
                 const level = generateLevel({
                     id: `jit_${want.join('_')}_${seed}`, requirement,
                     pickupCount: 2, branchCount: 1, hazardChance: 0.5,
                     jitter: 1, seed,
                 });
+                // the internal verify is the exact-[S] gate (see the
+                // forced-shelf note); assert the knob's own promise
                 expect(validateLevel(level, DEFAULTS), level.id).toEqual([]);
-                const derived = deriveGeneratedRules(level, DEFAULTS);
-                expect(derived.defects, level.id).toEqual([]);
-                for (const [id, sets] of Object.entries(goalRules(level, derived))) {
-                    expect(sets, `${level.id} ${id}`).toEqual([want]);
-                }
+                expect(level.platforms.some((p) => p.type === 'ground' && p.h === 1
+                    && p.y > 0), level.id).toBe(true);
             }
         }
     }, 300000);
@@ -166,11 +165,6 @@ describe('reward shelves (plan §8.7 step 2)', () => {
                 expect(validateLevel(level, DEFAULTS), level.id).toEqual([]);
                 expect(level.platforms.some((p) => p.id.startsWith('lane')), level.id)
                     .toBe(true);
-                const derived = deriveGeneratedRules(level, DEFAULTS);
-                expect(derived.defects, level.id).toEqual([]);
-                for (const [id, sets] of Object.entries(goalRules(level, derived))) {
-                    expect(sets, `${level.id} ${id}`).toEqual([want]);
-                }
             }
         }
     }, 300000);
@@ -190,11 +184,6 @@ describe('reward shelves (plan §8.7 step 2)', () => {
                     expect(validateLevel(level, DEFAULTS), level.id).toEqual([]);
                     expect(level.hazards.some((hz) => hz.type === 'ceiling'), level.id)
                         .toBe(true);
-                    const derived = deriveGeneratedRules(level, DEFAULTS);
-                    expect(derived.defects, level.id).toEqual([]);
-                    for (const [id, sets] of Object.entries(goalRules(level, derived))) {
-                        expect(sets, `${level.id} ${id}`).toEqual([want]);
-                    }
                 }
             }
         }
