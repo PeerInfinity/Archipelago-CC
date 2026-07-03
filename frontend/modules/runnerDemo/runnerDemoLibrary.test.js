@@ -299,6 +299,7 @@ describe('runner entry — sphere-growth adapter hooks (plan §4.9)', () => {
             runnerLengthSteps: 2,
             runnerJitter: 0,
             runnerSplitChance: 0,
+            runnerCeilingDensity: 0,
         });
         expect(buildRunnerRegionParams({ params: { runnerGapMargin: 1 } }).runnerGapMargin)
             .toBe(1);

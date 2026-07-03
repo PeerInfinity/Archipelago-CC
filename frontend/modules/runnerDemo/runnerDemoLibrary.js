@@ -237,6 +237,9 @@ export function buildZoneSpecs(base, regionParams = {}) {
     if (regionParams.runnerSplitChance !== undefined) {
         out.splitChance = regionParams.runnerSplitChance;
     }
+    if (regionParams.runnerCeilingDensity !== undefined) {
+        out.ceilingChance = regionParams.runnerCeilingDensity;
+    }
     return out;
 }
 
@@ -266,6 +269,7 @@ export function buildRunnerRegionContract({ specs, node, regionParams = {} }) {
         stepsBetween: regionParams.runnerLengthSteps ?? 2,
         jitter: regionParams.runnerJitter ?? 0,
         splitChance: regionParams.runnerSplitChance ?? 0,
+        ceilingChance: regionParams.runnerCeilingDensity ?? 0,
         entranceSide: specs.entranceSide,
     };
 }
@@ -296,6 +300,7 @@ export function buildRunnerRegionContract({ specs, node, regionParams = {} }) {
  * @param {number} [specs.stepsBetween]
  * @param {number} [specs.jitter]
  * @param {number} [specs.splitChance]
+ * @param {number} [specs.ceilingChance]
  * @returns {{locations: Array, exitRules: Object, exitPaths: Object,
  *   obstacleDefs: Object, payload: Object}}
  */
@@ -310,6 +315,7 @@ export function* generateZoneForSpecsGen({
     stepsBetween = 2,
     jitter = 0,
     splitChance = 0,
+    ceilingChance = 0,
 } = {}) {
     const seenSides = new Set();
     const exits = exitSpecs.map((s) => {
@@ -336,6 +342,7 @@ export function* generateZoneForSpecsGen({
         gapMargin,
         jitter,
         splitChance,
+        ceilingChance,
         physics: physicsProfile,
     });
 

@@ -170,6 +170,46 @@ export function sweepMaxRise(C, abilities, { cap = 12 } = {}) {
 }
 
 /**
+ * Min ceiling-slab BOTTOM height (above the floors' top) that keeps a
+ * `gapW` run gap crossable under NO abilities — the calibration the
+ * ceiling-hazard windows (plan §8.7 step 3) hang off. Unlike the
+ * other sweeps this one is ENTRY-INCLUSIVE (the flood from the real
+ * spawn, the exact predicate the generator's verify run applies) and
+ * takes the max over run-up widths that shake the tick lattice: the
+ * surviving arcs are coyote-launched short holds, and a single-lattice
+ * sweep can find a tick-critical arc a different approach lattice
+ * loses (measured on celeste: gap 3.0 sweeps 1.59 on one lattice but
+ * 2.81 robustly — which is why CEIL_GAP ends at 2.8 there).
+ */
+export function sweepCeilingMin(C, gapW, { cap = 12, over = 1.5, slabH = 4.5 } = {}) {
+    const probe = (runUp, h) => ({
+        id: 'probe',
+        size: { width: runUp + gapW + 10, height: 40 },
+        platforms: [
+            { id: 'a', x: 0, y: 0, w: runUp, h: 1, type: 'ground' },
+            { id: 'b', x: runUp + gapW, y: 0, w: 10, h: 1, type: 'ground' },
+        ],
+        hazards: [{
+            id: 'ceil', type: 'ceiling',
+            x: runUp - over, y: 1 + h, w: gapW + 2 * over, h: slabH,
+        }],
+        pickups: [], portals: [], spawn: { x: 1, y: 1 },
+    });
+    const runUps = [12, 12.29, 12.57, 12.86, 13.14, 13.43, 13.71, 14];
+    const ok = (h) => runUps.every(
+        (r) => reachableRunPlatforms(probe(r, h), {}, { constants: C }).has('b'));
+    if (!ok(cap)) return null; // gap uncrossable even ceiling-free
+    let lo = 0.5;
+    let hi = cap;
+    for (let i = 0; i < 18; i++) {
+        const mid = (lo + hi) / 2;
+        if (ok(mid)) hi = mid;
+        else lo = mid;
+    }
+    return round2(hi);
+}
+
+/**
  * Profiles whose reach SATURATES the sweep cap (16): the measured
  * horizontal reach exceeds the probe's search ceiling, so the swept
  * REACH values are lower bounds, not measurements — every gate window
@@ -253,6 +293,21 @@ export const CELESTE_GEOMETRY = Object.freeze({
     TOP_RISE: Object.freeze({ min: 1, span: 0.5 }),     // top lane above the split floor
     TOP_GAP: Object.freeze({ min: 1.5, span: 1 }),
     TOP_W: Object.freeze({ min: 8, span: 3 }),
+    // ── ceiling hazards (§8.7 step 3) — a kill slab hung over its own
+    //    pinned run gap: full-height jumps clip it, coyote-tap arcs
+    //    cross underneath. The gap window is PINNED calibration (never
+    //    stretched by gapMargin), max 2.8 — the celeste edge of
+    //    lattice-robust crossings (sweepCeilingMin: 1.59 at ≤ 2.8,
+    //    2.81 at 3.0). CEIL_MIN_CLEAR is that swept measurement; the
+    //    rise window sits ≥ 0.5 above it and ≥ 0.44 below the
+    //    full-hold player top (~3.49 = 1.05×jumpHeight + PLAYER_H),
+    //    so the punishment is real and the crossing has margin. The
+    //    slab is thick enough that dj arcs cannot overfly it. ──
+    CEIL_GAP: Object.freeze({ min: 2.3, span: 0.5 }),
+    CEIL_MIN_CLEAR: 1.59,                               // sweepCeilingMin at CEIL_GAP max
+    CEIL_RISE: Object.freeze({ min: 2.1, span: 0.95 }), // slab bottom above floor top
+    CEIL_OVER: 1.5,                                     // slab overhang past each lip
+    CEIL_H: 4.5,                                        // ≥ dj apex top − rise min + margin
 });
 
 /**
@@ -321,6 +376,26 @@ export function deriveGeometry(C, opts = {}) {
         * Math.sqrt((2 * (djShelfMin + djShelfSpan)) / gDown);
     const djBackMin = Math.max(1.5, round1(
         (shelfWMin + 0.8) - (segWMin + shelfPad - djFallDrift - 1.6)));
+    // Ceiling windows (§8.7 step 3). The gap window scales like
+    // RUN_GAP's floor (0.35 × single); the slab-bottom window sits
+    // between the swept crossing minimum (+0.5) and the full-hold
+    // player top (measured overshoot ~5% of jumpHeight; −0.4). A
+    // profile whose window collapses REFUSES ceilings (CEIL_RISE
+    // null — the proposers plant none there): nsmbu's floaty taps
+    // are one (its swept min nearly reaches its full-hold top).
+    const ceilGap = Object.freeze({
+        min: round1(0.35 * single),
+        span: round1(0.07 * single),
+    });
+    const ceilMinClear = opts.ceils?.min
+        ?? sweepCeilingMin(C, round2(ceilGap.min + ceilGap.span));
+    const fullTop = 1.05 * C.jumpHeight + C.PLAYER_H;
+    const ceilRiseMin = ceilMinClear === null
+        ? null : round2(Math.max(ceilMinClear + 0.5, C.PLAYER_H + 0.8));
+    const ceilRiseSpan = ceilRiseMin === null
+        ? null : round2(fullTop - 0.4 - ceilRiseMin);
+    const ceilRise = (ceilRiseSpan !== null && ceilRiseSpan >= 0.25)
+        ? Object.freeze({ min: ceilRiseMin, span: ceilRiseSpan }) : null;
     return Object.freeze({
         REACH: Object.freeze({ single, dj, spring, singleUp, singleUpRamp }),
         RISE: Object.freeze({ single: riseSingle, dj: riseDj }),
@@ -376,6 +451,12 @@ export function deriveGeometry(C, opts = {}) {
         TIP_H: 0.5,
         BRANCH_RISE: round1(0.6 * C.jumpHeight),
         HAZARD_MARGIN: 2,
+        CEIL_GAP: ceilGap,
+        CEIL_MIN_CLEAR: ceilMinClear,
+        CEIL_RISE: ceilRise,
+        CEIL_OVER: 1.5,
+        CEIL_H: ceilRise === null
+            ? null : round1(Math.max(4.5, 2.1 * C.jumpHeight + C.PLAYER_H + 0.5 - ceilRise.min)),
     });
 }
 
@@ -507,6 +588,34 @@ export function validateGeometry(G, C) {
     if (2 * G.RAMP_STEP.min + G.TOP_RISE.min - 0.5 < C.PLAYER_H + 1.4) {
         errors.push('split top lane leaves no head clearance over the bottom lane');
     }
+    // ── ceiling hazards (§8.7 step 3): the slab-bottom window must
+    //    clear the swept crossing minimum AND the run corridor with
+    //    margin, stay below the full-hold player top (else the slab
+    //    punishes nothing), and be thick enough that dj arcs cannot
+    //    overfly it. A profile may refuse ceilings (CEIL_RISE null —
+    //    the window collapsed); then nothing here applies. ──
+    if (G.CEIL_RISE) {
+        const fullTop = 1.05 * C.jumpHeight + C.PLAYER_H;
+        if (wMax(G.CEIL_GAP) > 0.75 * R.single) {
+            errors.push(`CEIL_GAP max ${wMax(G.CEIL_GAP)} > 75% of single reach ${R.single}`);
+        }
+        if (G.CEIL_MIN_CLEAR === null || G.CEIL_RISE.min < G.CEIL_MIN_CLEAR + 0.4) {
+            errors.push(`CEIL_RISE min ${G.CEIL_RISE.min} too close to the swept`
+                + ` crossing minimum ${G.CEIL_MIN_CLEAR}`);
+        }
+        if (G.CEIL_RISE.min < C.PLAYER_H + 0.8) {
+            errors.push(`CEIL_RISE min ${G.CEIL_RISE.min} intrudes on the run`
+                + ` corridor (PLAYER_H ${C.PLAYER_H})`);
+        }
+        if (wMax(G.CEIL_RISE) > fullTop - 0.3) {
+            errors.push(`CEIL_RISE max ${wMax(G.CEIL_RISE)} above the full-hold`
+                + ` player top ${round2(fullTop)} — the slab punishes nothing`);
+        }
+        if (G.CEIL_RISE.min + G.CEIL_H < 2.1 * C.jumpHeight + C.PLAYER_H + 0.4) {
+            errors.push(`CEIL_H ${G.CEIL_H} too thin — double-jump arcs can overfly`
+                + ' the slab at its lowest hang');
+        }
+    }
     return errors;
 }
 
@@ -589,9 +698,10 @@ const draw = (rng, w) => w.min + rng.next() * w.span;
  * and proposeLevelForSpecs. Each plan entry is a floor ({ role, gap,
  * pickupId?, seg← }); `gap` describes the gap BEFORE it ({ kind,
  * type?, portalId?, shelf? }). rng draws happen in strict floor order
- * (gap draws, then the gap's shelf draws [rise, width, dx/back, saw],
- * then the floor's width draw) followed by the floor's inline hazard
- * pass — the draw order IS the byte-identity contract. Explicit
+ * (gap draws — for 'ceil' gaps width then slab rise — then the gap's
+ * shelf draws [rise, width, dx/back, saw], then the floor's width
+ * draw) followed by the floor's inline hazard pass — the draw order
+ * IS the byte-identity contract. Explicit
  * pickupId/portalId override the loc_N / exit_brN counters (the spec
  * path names its goals); the counters are untouched by overrides only
  * because the two naming schemes are never mixed in one plan.
@@ -665,6 +775,24 @@ function realizePlan(plan, { rng, G, hazardChance, jitter = 0 }) {
             const g = f.gap;
             if (g.kind === 'run') {
                 x = round2(x + draw(rng, G.RUN_GAP));
+            } else if (g.kind === 'ceil') {
+                // CEILING HAZARD (§8.7 step 3): a kill slab over its
+                // own pinned gap (CEIL_GAP never stretches with
+                // gapMargin), bottom drawn from the calibrated
+                // CEIL_RISE band — full-height jumps clip it, short
+                // coyote holds cross underneath. Both flanking floors
+                // stay base-anchored (kind ≠ 'run' fails jitterable on
+                // both sides) and spike-free (the hazard pass below
+                // skips both flanks): the crossing windows are
+                // calibrated on flat, unspiked lips.
+                const gapW = round2(draw(rng, G.CEIL_GAP));
+                const rise = round2(draw(rng, G.CEIL_RISE));
+                hazards.push({
+                    id: `hz${hzN++}`, type: 'ceiling',
+                    x: round2(x - G.CEIL_OVER), y: round2(1 + rise),
+                    w: round2(gapW + 2 * G.CEIL_OVER), h: G.CEIL_H,
+                });
+                x = round2(x + gapW);
             } else if (g.kind === 'split') {
                 // SPLIT SEGMENT (placement steps 2+3): a ramp of rising
                 // ground floors; the LAST ramp floor is the split — a
@@ -797,6 +925,7 @@ function realizePlan(plan, { rng, G, hazardChance, jitter = 0 }) {
         // jump gap). The partner shares the floor's rise: the hop
         // must land back and RUN off flush, never climb.
         if (f.role === 'plain' && !f.gap?.shelf && f.gap?.kind !== 'split'
+                && f.gap?.kind !== 'ceil' && plan[i + 1]?.gap?.kind !== 'ceil'
                 && seg.w >= 2 * G.HAZARD_MARGIN + 1.8
                 && rng.next() < hazardChance) {
             const hw = round2(1 + rng.next() * 0.6);
@@ -848,15 +977,21 @@ function assembleStrip(id, plan, { platforms, hazards, pickups, portals }) {
  */
 export function proposeLevel({
     id, requirement, pickupCount, branchCount, stepsBetween, hazardChance,
-    shelfChance = SHELF_CHANCE_DEFAULT, jitter = 0, splitChance = 0, rng, G,
+    shelfChance = SHELF_CHANCE_DEFAULT, jitter = 0, splitChance = 0,
+    ceilingChance = 0, rng, G,
 }) {
     // plan: each entry is a floor; `gap` describes the gap BEFORE it.
     const plan = [{ role: 'entrance', gap: null }];
     const plains = () => {
         const n = 1 + Math.floor(rng.next() * stepsBetween);
         for (let i = 0; i < n; i++) plan.push({ role: 'plain', gap: { kind: 'run' } });
-        // split segments are requirement-neutral texture — placeable in
-        // any plains slot; drawn ONLY when the knob is on (byte-identity)
+        // ceiling hazards and split segments are requirement-neutral
+        // texture — placeable in any plains slot; drawn ONLY when the
+        // knob is on (byte-identity). A profile whose calibration
+        // window collapsed refuses ceilings (CEIL_RISE null).
+        if (ceilingChance > 0 && G.CEIL_RISE && rng.next() < ceilingChance) {
+            plan.push({ role: 'plain', gap: { kind: 'ceil' } });
+        }
         if (splitChance > 0 && rng.next() < splitChance) {
             plan.push({ role: 'plain', gap: { kind: 'split' } });
         }
@@ -908,6 +1043,7 @@ export function generateLevel({
     shelfChance = SHELF_CHANCE_DEFAULT,
     jitter = 0,
     splitChance = 0,
+    ceilingChance = 0,
     seed = 1,
     attempts = 8,
     physics = DEFAULT_PROFILE_ID,
@@ -922,7 +1058,7 @@ export function generateLevel({
         const rng = createRng((seed * 8191 + attempt * 127) | 0);
         const level = proposeLevel({
             id, requirement, pickupCount, branchCount, stepsBetween, hazardChance,
-            shelfChance, jitter, splitChance, rng, G,
+            shelfChance, jitter, splitChance, ceilingChance, rng, G,
         });
         const modelErrors = validateLevel(level, C);
         if (modelErrors.length > 0) {
@@ -1065,12 +1201,16 @@ export function planStripSpecs(exitSpecs = [], pickupSpecs = []) {
  */
 export function proposeLevelForSpecs({
     id, plan, stepsBetween, hazardChance,
-    shelfChance = SHELF_CHANCE_DEFAULT, jitter = 0, splitChance = 0, rng, G,
+    shelfChance = SHELF_CHANCE_DEFAULT, jitter = 0, splitChance = 0,
+    ceilingChance = 0, rng, G,
 }) {
     const floors = [{ role: 'entrance', gap: null }];
     const plains = () => {
         const n = 1 + Math.floor(rng.next() * stepsBetween);
         for (let i = 0; i < n; i++) floors.push({ role: 'plain', gap: { kind: 'run' } });
+        if (ceilingChance > 0 && G.CEIL_RISE && rng.next() < ceilingChance) {
+            floors.push({ role: 'plain', gap: { kind: 'ceil' } });
+        }
         if (splitChance > 0 && rng.next() < splitChance) {
             floors.push({ role: 'plain', gap: { kind: 'split' } });
         }
@@ -1129,6 +1269,7 @@ export function* generateLevelForSpecsGen({
     shelfChance = SHELF_CHANCE_DEFAULT,
     jitter = 0,
     splitChance = 0,
+    ceilingChance = 0,
     gapMargin = 0,
     seed = 1,
     attempts = 8,
@@ -1150,7 +1291,7 @@ export function* generateLevelForSpecsGen({
         const rng = createRng((seed * 8191 + attempt * 127) | 0);
         const level = proposeLevelForSpecs({
             id, plan, stepsBetween, hazardChance, shelfChance, jitter, splitChance,
-            rng, G: Geff,
+            ceilingChance, rng, G: Geff,
         });
         const modelErrors = validateLevel(level, C);
         if (modelErrors.length > 0) {

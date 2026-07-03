@@ -12,8 +12,9 @@
  *   - renderProcgenParams   — the panel's per-substrate param controls.
  *
  * The difficulty/texture knobs (the four v1 knobs of plan §4.9 plus
- * placement jitter + splits): gapMargin, hazardDensity, lengthSteps,
- * physicsProfile, jitter, splitChance. Keys are
+ * placement jitter + splits and §8.7 step 3's ceilings): gapMargin,
+ * hazardDensity, lengthSteps,
+ * physicsProfile, jitter, splitChance, ceilingDensity. Keys are
  * runner-prefixed in BOTH params and regionParams: assembleRegionParams
  * merges every active substrate's output into ONE object, so an
  * unprefixed `physicsProfile` would collide with bounce's in a mixed
@@ -61,6 +62,12 @@ export const DEFAULT_RUNNER_PROCGEN_PARAMS = Object.freeze({
     // (no jump / drop), merging where the lane ends. Requirement-
     // neutral texture; 0 keeps the generator draw-for-draw identical.
     runnerSplitChance: 0,
+    // Ceiling-hazard probability per plains slot (0–1): a kill slab
+    // hung over its own short gap — full-height jumps clip it, short
+    // holds cross underneath (jump modulation, no items). Profiles
+    // whose calibration window collapses refuse ceilings; 0 keeps the
+    // generator draw-for-draw identical.
+    runnerCeilingDensity: 0,
 });
 
 // ── regionParams assembly ───────────────────────────────────────────
@@ -77,6 +84,7 @@ export function buildRunnerRegionParams({ params } = {}) {
         runnerLengthSteps: p.runnerLengthSteps ?? 2,
         runnerJitter: p.runnerJitter ?? 0,
         runnerSplitChance: p.runnerSplitChance ?? 0,
+        runnerCeilingDensity: p.runnerCeilingDensity ?? 0,
     };
 }
 
@@ -160,5 +168,11 @@ export function renderRunnerProcgenParams({ params, onChange = () => {} } = {}) 
         + 'one-way top lane (jump) over a bottom lane (no jump / drop), merging where '
         + 'the lane ends. Route texture only — requirements never change.',
         'runnerSplitChance', 0, { step: 0.01, max: 1 }));
+    wrap.appendChild(numberField('Ceiling hazards',
+        'Ceiling-hazard probability per plains slot (0–1): a kill slab hung over its '
+        + 'own short gap — full jumps clip it, short holds cross underneath. Difficulty '
+        + 'texture only — requirements never change. Some physics profiles have no '
+        + 'safe ceiling window and skip these.',
+        'runnerCeilingDensity', 0, { step: 0.01, max: 1 }));
     return wrap;
 }

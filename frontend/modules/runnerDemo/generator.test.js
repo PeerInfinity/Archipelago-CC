@@ -24,8 +24,14 @@ describe('geometry', () => {
     it('deriveGeometry from the pinned reaches yields valid windows (no sweep)', () => {
         const G = deriveGeometry(DEFAULTS, {
             reaches: CELESTE_GEOMETRY.REACH, rises: CELESTE_GEOMETRY.RISE,
+            ceils: { min: CELESTE_GEOMETRY.CEIL_MIN_CLEAR },
         });
         expect(validateGeometry(G, DEFAULTS)).toEqual([]);
+        // ceiling band sits between the swept clearance and the
+        // full-hold player top (validateGeometry re-checks with margin)
+        expect(G.CEIL_RISE.min).toBeGreaterThan(CELESTE_GEOMETRY.CEIL_MIN_CLEAR);
+        expect(G.CEIL_RISE.min + G.CEIL_RISE.span)
+            .toBeLessThan(1.05 * DEFAULTS.jumpHeight + DEFAULTS.PLAYER_H);
         // gate boundaries sit strictly between the swept reaches
         expect(G.DJ_GAP.min).toBeGreaterThan(CELESTE_GEOMETRY.REACH.single);
         expect(G.DJ_GAP.min + G.DJ_GAP.span).toBeLessThan(CELESTE_GEOMETRY.REACH.dj);
@@ -178,6 +184,65 @@ describe('generateLevel', () => {
         };
         expect(JSON.stringify(generateLevel({ ...base, jitter: 0 })))
             .toBe(JSON.stringify(generateLevel(base)));
+    }, 60000);
+
+    it('ceiling hazards (ceilingChance 1): calibrated slabs over base-anchored flanks', () => {
+        const level = generateLevel({
+            id: 'ce', requirement: ['doubleJump'], pickupCount: 1,
+            ceilingChance: 1, hazardChance: 0.5, jitter: 1, seed: 1,
+        });
+        const G = CELESTE_GEOMETRY;
+        const ceils = level.hazards.filter((hz) => hz.type === 'ceiling');
+        expect(ceils.length).toBeGreaterThan(0);
+        for (const hz of ceils) {
+            // slab bottom inside the calibrated band, size from the windows
+            expect(hz.y - 1).toBeGreaterThanOrEqual(G.CEIL_RISE.min);
+            expect(hz.y - 1).toBeLessThanOrEqual(G.CEIL_RISE.min + G.CEIL_RISE.span + 0.01);
+            expect(hz.h).toBe(G.CEIL_H);
+            const gapW = hz.w - 2 * G.CEIL_OVER;
+            expect(gapW).toBeGreaterThanOrEqual(G.CEIL_GAP.min - 0.01);
+            expect(gapW).toBeLessThanOrEqual(G.CEIL_GAP.min + G.CEIL_GAP.span + 0.01);
+            // flanking floors stay base-anchored despite jitter 1, and
+            // carry no spike patches (the pass skips both flanks)
+            const launch = level.platforms.find((p) => p.type === 'ground'
+                && Math.abs(p.x + p.w - (hz.x + G.CEIL_OVER)) < 0.01);
+            const landing = level.platforms.find((p) => p.type === 'ground'
+                && Math.abs(p.x - (hz.x + hz.w - G.CEIL_OVER)) < 0.01);
+            expect(launch, 'launch floor at the slab left lip').toBeTruthy();
+            expect(landing, 'landing floor at the slab right lip').toBeTruthy();
+            expect(launch.y).toBe(0);
+            expect(landing.y).toBe(0);
+            for (const flank of [launch, landing]) {
+                expect(level.hazards.some((h2) => h2.type === 'spikes'
+                    && h2.x >= flank.x && h2.x < flank.x + flank.w)).toBe(false);
+            }
+        }
+        expect(validateLevel(level, DEFAULTS)).toEqual([]);
+    }, 60000);
+
+    it('ceilingChance 0 is draw-for-draw identical to the no-knob generator', () => {
+        const base = {
+            id: 'ce0', requirement: ['spring'], pickupCount: 1, branchCount: 1,
+            hazardChance: 0.5, shelfChance: 1, seed: 2,
+        };
+        expect(JSON.stringify(generateLevel({ ...base, ceilingChance: 0 })))
+            .toBe(JSON.stringify(generateLevel(base)));
+    }, 60000);
+
+    it('a profile that refuses ceilings (CEIL_RISE null) plants none and draws nothing', () => {
+        // fake measured clearance so high the punish window collapses
+        const refused = deriveGeometry(DEFAULTS, {
+            reaches: CELESTE_GEOMETRY.REACH, rises: CELESTE_GEOMETRY.RISE,
+            ceils: { min: 2.8 },
+        });
+        expect(refused.CEIL_RISE).toBe(null);
+        expect(validateGeometry(refused, DEFAULTS)).toEqual([]);
+        const physics = { constants: DEFAULTS, geometry: refused };
+        const on = generateLevel({ id: 'cr', requirement: [], ceilingChance: 1, seed: 3, physics });
+        expect(on.hazards.some((hz) => hz.type === 'ceiling')).toBe(false);
+        // refusal consumes NO rng: identical to the knob being off
+        expect(JSON.stringify(on)).toBe(JSON.stringify(
+            generateLevel({ id: 'cr', requirement: [], ceilingChance: 0, seed: 3, physics })));
     }, 60000);
 
     it('shelfChance 0 or no eligible gate ⇒ no shelf', () => {
