@@ -1,7 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { createBotDriver } from './botDriver.js';
 import { createGameSession } from './gameCore.js';
-import { flatRun, gapJump, doubleGap, stepStone, springGap } from './fixtures.js';
+import {
+    flatRun, gapJump, doubleGap, stepStone, springGap, springShelf, djShelf,
+} from './fixtures.js';
 
 /**
  * Drive the real game session with the driver's per-frame inputs —
@@ -99,6 +101,41 @@ describe('botDriver — completes fixture levels (pickup then portal)', () => {
         const r = h.run(driver, { until: untilEvent(h, 'exit', 'exit_main') });
         expect(r.done).toBe(true);
         expect(h.counts.deaths).toBe(0);
+    });
+
+    it('springShelf: collects the shelf pickup off the bounce, then falls out to the exit', () => {
+        const h = makeHarness(springShelf, { items: ['Springs'] });
+        const driver = createBotDriver();
+        driver.setTarget({ kind: 'pickup', id: 'pk_shelfTop' });
+        const a = h.run(driver, { until: untilEvent(h, 'pickup', 'pk_shelfTop') });
+        expect(a.done).toBe(true);
+        // continue to the exit — the fall-off leg back to the trunk
+        driver.setTarget({ kind: 'portal', id: 'exit_main' });
+        const b = h.run(driver, { until: untilEvent(h, 'exit', 'exit_main') });
+        expect(b.done).toBe(true);
+        expect(h.counts.deaths).toBe(0); // the saw never touches the route
+    });
+
+    it('djShelf: catches the shelf with a dj arc for the pickup, then exits', () => {
+        const h = makeHarness(djShelf, { items: ['Double Jump'] });
+        const driver = createBotDriver();
+        driver.setTarget({ kind: 'pickup', id: 'pk_shelfTop' });
+        const a = h.run(driver, { until: untilEvent(h, 'pickup', 'pk_shelfTop') });
+        expect(a.done).toBe(true);
+        driver.setTarget({ kind: 'portal', id: 'exit_main' });
+        const b = h.run(driver, { until: untilEvent(h, 'exit', 'exit_main') });
+        expect(b.done).toBe(true);
+        expect(h.counts.deaths).toBe(0);
+    });
+
+    it('springShelf without Springs: shelf pickup is unroutable — stuck, no reset-thrash', () => {
+        const h = makeHarness(springShelf);
+        const driver = createBotDriver();
+        driver.setTarget({ kind: 'pickup', id: 'pk_shelfTop' });
+        h.run(driver, { maxFrames: 1500 });
+        expect(h.counts.resets).toBe(0);
+        expect(driver.getStatus().stuck).toBe(true);
+        expect(h.sawEvent('pickup', 'pk_shelfTop')).toBe(false);
     });
 });
 

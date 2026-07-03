@@ -135,3 +135,37 @@ describe('extractZoneRules — spec\'d zone (branch-exit regeneration)', () => {
         expect(JSON.stringify(a)).toBe(JSON.stringify(b));
     });
 });
+
+describe('extractZoneRules — shelved zone (reward shelf survives the branch regen)', () => {
+    // A forced reward shelf (plan §8.7 step 2): the spec round-trips
+    // through the branch-exit regeneration and the shelf pickup emits
+    // the same gate rule as the exit — the shelf adds no logic.
+    const spec = {
+        requirement: ['doubleJump'], pickupCount: 1, seed: 1,
+        hazardChance: 0, shelfChance: 1,
+    };
+    const zones = [{
+        level: generateLevel({ id: 'gen_z0', ...spec }),
+        items: { loc_0: 'Double Jump' },
+        spec,
+    }];
+    const extract = makeExtractZoneRules(zones);
+
+    it('the stored level carries the shelf and its wake pickup', () => {
+        const shelves = zones[0].level.platforms.filter((p) => p.type === 'oneway');
+        expect(shelves).toHaveLength(1);
+        expect(zones[0].level.pickups[0].on).toBe(shelves[0].id);
+    });
+
+    it('branch regen reproduces the shelf; rules gate on the shelf ability', () => {
+        const out = extract(0, { region_id: 'runner_z0', exitSides: ['E', 'N'] });
+        const level = out.payload.params.runnerLevel;
+        expect(level.platforms.filter((p) => p.type === 'oneway')).toHaveLength(1);
+        expect(out.locations[0]).toMatchObject({
+            id: 'loc_0',
+            access_rule: HAS_DJ,
+            paths: [{ path_id: 'p1', obstacles: [RUNNER_OBSTACLE_ID_BY_ABILITY.doubleJump] }],
+        });
+        expect(out.exitRules).toEqual({ E: HAS_DJ, N: HAS_DJ });
+    });
+});

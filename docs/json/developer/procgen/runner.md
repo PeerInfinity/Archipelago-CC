@@ -18,18 +18,21 @@ The engine adds what the toolkit lacks: auto-run (`directionX` forced to `+1`; l
 
 ## Ability items and suppression (`suppression.js`, `gameCore.js`)
 
-Two v1 ability items gate movement, via the two monotone-by-construction mechanisms:
+Three ability items gate movement, via the two monotone-by-construction mechanisms:
 
 | Ability | AP item | Mechanism |
 |---|---|---|
 | `doubleJump` | Double Jump | Effective params: overlays `maxAirJumps: 1`. Voluntary — any trajectory possible without it survives gaining it. |
 | `blue` | Blue Platforms | Existence: `blue` platforms are one-way with drop-through, so their appearance never removes a route. |
+| `spring` | Springs | Existence: `spring` platforms launch on catch (a deterministic cut-gravity bounce rising `SPRING_RISE`; the player never stands on one) and stay refusable via the same drop-through. Springs are mid-leg geometry, never solver graph nodes, and can never host goals. |
+
+There is also an ungated `oneway` platform type (always exists, drop-through) — the reward-shelf platform; it mints no item.
 
 `suppression.js` is the one shared answer to "does this platform exist / what are the physics params under this ability set" — solver, verifier, generator, and renderer all go through it so they cannot diverge. Pickups, portals, and hazards are never suppressed. `gameCore.js` owns `ABILITY_ITEM_NAMES` and `VICTORY_ITEM_NAME`; rule emission imports from there. (A per-platform `gate` override field exists solely so tests can plant a non-monotone level for the verifier's tripwire; production levels never set it.)
 
 ## Level model (`level.js`)
 
-A level is authored geometry: `platforms` (typed: `ground` solid, `blue` gated one-way), `hazards` (static kill AABBs — spikes), `pickups`, `portals` (with an `arrow` and an `exitName`), and `spawn`. Gaps are not entities — they are the empty space between floors, and the kill floor below ends any fall.
+A level is authored geometry: `platforms` (typed: `ground` solid; `blue` gated one-way; `spring` gated launcher; `oneway` ungated drop-through), `hazards` (static kill AABBs — spike patches on floors, saw blades under shelves; the type string only affects rendering), `pickups`, `portals` (with an `arrow` and an `exitName`), and `spawn`. Gaps are not entities — they are the empty space between floors, and the kill floor below ends any fall.
 
 The key placement rule is the **goal-wake invariant**: every pickup and portal sits in the auto-run wake of its host platform — overlapping the standing box near the host's right end, with the host's run corridor free of solid blocks and hazards — so that *any* landing on the host followed by default auto-run collects the goal. Goal-reachable ⇔ host-platform-reachable, and the verifier needs no trajectory-level goal checks. `validateLevel` enforces this plus structural stuck-freedom (no full-height wall pockets, no fully-lethal walk surfaces, solid ground under the spawn).
 
@@ -51,7 +54,9 @@ The verifier also checks **monotonicity** — gaining an item must never make a 
 
 Generate-and-test: `generateLevel` proposes a strip for a target requirement and verifies it with the same derive-rules path the pipeline uses (`deriveGeneratedRules`) — every pickup and exit must derive minimal sets of exactly `[S]`, zero defects; failed proposals retry with a perturbed seed. Geometry is stored explicitly; the seed drives nothing at runtime.
 
-The strip proposer chains floors separated by gap kinds: `run` (plain, clearable by a grounded full-hold jump), `dj` (wider than any single jump, within double-jump reach), `stone` (a double-wide gap with a one-way `blue` stepping stone mid-gap — suppressed without the item, the gap is uncrossable), and `branch` (a widened plain gap with an elevated tip platform hosting a surplus exit). Gate windows are derived-then-swept: closed forms where clean, solver-swept horizontal reach (`sweepMaxGap`) where not — the sweep is coyote-inclusive, and `sonic`/`meatboy` saturate its cap (`SWEEP_SATURATING_PROFILES`), so physics gates are refused on those profiles rather than emitted unverifiably. Static spike patches decorate floors outside gate margins, with flush partner floors where a spiked floor ends in a gap; the end-of-proposal verify run is the gatekeeper.
+The strip proposer chains floors separated by gap kinds: `run` (plain, clearable by a grounded full-hold jump), `dj` (wider than any single jump, within double-jump reach), `stone` (a double-wide gap with a one-way `blue` stepping stone mid-gap — suppressed without the item, the gap is uncrossable), `spring` (a dj-proof TOTAL gap crossed by the deterministic spring bounce — the crossable quantity is near + spring + far, invariant in the split), and `branch` (a widened plain gap with an elevated tip platform hosting a surplus exit). Gate windows are derived-then-swept: closed forms where clean, solver-swept horizontal reach (`sweepMaxGap`, `sweepSpringTotal`) and landable rise (`sweepMaxRise`) where not — the sweeps are coyote-inclusive, and `sonic`/`meatboy` saturate the gap-sweep cap (`SWEEP_SATURATING_PROFILES`), so physics gates are refused on those profiles rather than emitted unverifiably. Static spike patches decorate floors outside gate margins, with flush partner floors where a spiked floor ends in a gap; the end-of-proposal verify run is the gatekeeper.
+
+**Reward shelves** (v1 lanes): with probability `shelfChance` (default 0.6) an eligible level hangs one always-active `oneway` shelf in its **last** gate's descent corridor — spring and dj gates only. The crossing arc lands on the shelf, its wake collects the shelf's pickup, and running off the right end drops onto the gate's landing floor (widened by `SHELF_PAD` and kept hazard-free); holding drop refuses the whole detour. Shelf rises are calibrated against the swept rises so the shelf gates on exactly the gate's ability (a spring shelf sits above the dj-landable rise; a dj shelf strictly between the single and dj rises). Because the shelf rides the *last* gate, its pickup derives the level's full requirement and `planStripSpecs` needed no changes — in the spec path each requirement window may shelve its last added gate the same way, carrying the window's first pickup. Spring shelves may hang a `saw` hazard under their right half: off every mandatory trajectory (arcs are caught above it, the fall-off starts right of it), lethal only to a voluntary drop-refusal.
 
 The wall-clamped main exit (`exit_main`) sits at the strip's right end; surplus exits ride branch tips (`exit_br0..N`). `generateZoneSet` builds a whole winnable zone table (zone 0 requires nothing and grants the first item; fillers grant nothing; the final pickup is Victory) and stamps each zone's generation `spec` so `extractZoneRules` can regenerate with matching branch count.
 

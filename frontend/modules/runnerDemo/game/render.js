@@ -21,7 +21,9 @@ import { isPlatformActive } from '../suppression.js';
 
 const UNIT = 32; // px per Unity unit (the toolkit's rendering scale)
 
-const PLATFORM_COLORS = { ground: '#4a5568', blue: '#5b9bd5', spring: '#e8843c' };
+const PLATFORM_COLORS = {
+    ground: '#4a5568', blue: '#5b9bd5', spring: '#e8843c', oneway: '#b08d57',
+};
 const ARROWS = { up: '↑', down: '↓', left: '←', right: '→' };
 const ABILITY_HUD = [['doubleJump', 'DJ'], ['blue', 'B'], ['spring', 'S']];
 
@@ -143,11 +145,35 @@ export function renderFrame(ctx, session, ui = {}) {
     }
     ctx.globalAlpha = 1;
 
-    // hazards: jagged kill boxes
+    // hazards: saw blades hang from lane undersides (§8.4), anything
+    // else draws as jagged spike teeth rising from its base
     for (const hz of level.hazards ?? []) {
         const x0 = sx(hz.x);
         const yTop = sy(hz.y + hz.h);
         const yBase = sy(hz.y);
+        if (hz.type === 'saw') {
+            const cx = x0 + (hz.w * UNIT) / 2;
+            const cy = (yTop + yBase) / 2;
+            const r = Math.min(hz.w, hz.h) * UNIT * 0.5;
+            ctx.fillStyle = '#aab4bd';
+            ctx.beginPath();
+            ctx.arc(cx, cy, r, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#c0392b';
+            ctx.lineWidth = 2;
+            for (let i = 0; i < 8; i++) { // static blade teeth
+                const a = (i / 8) * Math.PI * 2;
+                ctx.beginPath();
+                ctx.moveTo(cx + Math.cos(a) * r * 0.45, cy + Math.sin(a) * r * 0.45);
+                ctx.lineTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r);
+                ctx.stroke();
+            }
+            ctx.fillStyle = '#1a1a2e';
+            ctx.beginPath();
+            ctx.arc(cx, cy, r * 0.2, 0, Math.PI * 2);
+            ctx.fill();
+            continue;
+        }
         ctx.fillStyle = '#c0392b';
         ctx.beginPath();
         const teeth = Math.max(2, Math.round(hz.w * 2));
