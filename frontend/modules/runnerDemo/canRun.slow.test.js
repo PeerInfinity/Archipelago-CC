@@ -36,7 +36,13 @@ describe('solver ⊆ oracle over the fixture corpus', () => {
     for (const fixture of FIXTURES) {
         for (const [name, abilities] of SETS) {
             it(`${fixture.id} × ${name}`, () => {
-                const oracle = witnessSearch(fixture, abilities);
+                // airBranchTicks 3: thin the Double-Jump second-press
+                // branch points (every 3rd aerial tick + the apex
+                // band). A completeness trade (witnessSearch header);
+                // this corpus IS its gate — the oracle must keep
+                // dominating the solver's own second-press timings,
+                // or the solver ⊆ oracle assertion below fails.
+                const oracle = witnessSearch(fixture, abilities, { airBranchTicks: 3 });
                 // the oracle must have drained its frontier — a budget
                 // cap would make the ⊆ assertion vacuously weak
                 expect(oracle.exhausted).toBe(true);

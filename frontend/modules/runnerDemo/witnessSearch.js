@@ -28,9 +28,27 @@
  * dominated by pressing at the next decision point, so skipping it
  * costs only redundant tapes (a completeness heuristic — soundness is
  * untouched; without it the aerial state fan-out drowns the budget
- * before the search progresses rightward at all). Drop branches only
- * when the level has one-way platforms. Reset is excluded — death
- * already respawns, and reset trajectories reach nothing more.
+ * before the search progresses rightward at all). Two further
+ * branch-thinning rules of the same class:
+ *
+ * - Drop branches only where the input can act: standing on a
+ *   one-way platform (initiates fall-through) or airborne and
+ *   DESCENDING (a held drop matters only at one-way catch time).
+ *   Held-drop during ascent is physically inert that tick, so any
+ *   tape holding it early is outcome-equal to one that starts
+ *   holding at descent — dominance, not a completeness trade.
+ * - `opts.airBranchTicks` (default 1: branch the air press at every
+ *   aerial tick) thins the Double-Jump second-press branch points to
+ *   every N-th tick PLUS an apex band. Unlike the rules above this
+ *   IS a completeness trade (adjacent-tick presses genuinely differ)
+ *   — mostly absorbed by the dedup quantum, and gated empirically:
+ *   the corpus must stay green with the conservatism gap unchanged,
+ *   and the thinned points must keep dominating the solver's own
+ *   second-press timings (asap / apex / late) or solver ⊆ oracle
+ *   fails falsely.
+ *
+ * Reset is excluded — death already respawns, and reset trajectories
+ * reach nothing more.
  */
 
 import { DEFAULTS, step as physicsStep, spawnState } from './physics.js';
@@ -62,17 +80,32 @@ export function witnessSearch(level, abilities, opts = {}) {
     const q = opts.quantum ?? DEFAULT_QUANTUM;
     const dt = 1 / C.TICK_HZ;
     const trackWitnesses = opts.witnesses ?? false;
+    const airBranchTicks = opts.airBranchTicks ?? 1;
+    // apex band: |vy| within ~1.5 gravity-ticks of the sign crossing
+    const gUp = (2 * C.jumpHeight) / (C.timeToJumpApex * C.timeToJumpApex);
+    const apexBand = gUp * dt * 1.5;
 
-    const hasOneWay = level.platforms.some((p) => p.type !== 'ground');
+    const onewayIds = new Set(
+        level.platforms.filter((p) => p.type !== 'ground').map((p) => p.id));
     const inputsFor = (s) => {
         // jump is a decision only when pressing (release timing), able
         // to launch (ground / coyote-or-buffer window), or holding an
-        // air jump; otherwise a press is inert or dominated by a
-        // press at the next decision point (see header)
-        const jumpMatters = s.pressingJump || s.onGround || s.canJumpAgain
+        // air jump (thinned by airBranchTicks — see header); otherwise
+        // a press is inert or dominated by a press at the next
+        // decision point (see header)
+        const airOk = airBranchTicks <= 1
+            || Math.round(s.t / dt) % airBranchTicks === 0
+            || Math.abs(s.vy) <= apexBand;
+        const jumpMatters = s.pressingJump || s.onGround
+            || (s.canJumpAgain && airOk)
             || (!s.currentlyJumping && s.coyoteTimeCounter < C.coyoteTime);
         const base = jumpMatters ? [{}, { jump: true }] : [{}];
-        if (!hasOneWay) return base;
+        if (onewayIds.size === 0) return base;
+        // drop branches only where it can act (see header): standing
+        // on a one-way, or airborne and descending toward a catch
+        const dropMatters = (s.standingOn && onewayIds.has(s.standingOn))
+            || (!s.onGround && s.vy <= 0);
+        if (!dropMatters) return base;
         return [...base, ...base.map((i) => ({ ...i, drop: true }))];
     };
 
@@ -86,7 +119,11 @@ export function witnessSearch(level, abilities, opts = {}) {
     const start = spawnState(level, C);
     const startKey = keyOf(start, q, dt);
     const visited = new Set([startKey]);
+    // BFS frontier walked by index — Array#shift is O(n) and the
+    // frontier grows into the millions on the corpus's biggest cases
+    // (measured: shift was HALF the oracle's wall time)
     const frontier = [{ state: start, key: startKey }];
+    let head = 0;
     let expanded = 0;
 
     const record = (s, key) => {
@@ -101,8 +138,10 @@ export function witnessSearch(level, abilities, opts = {}) {
     };
     record(start, startKey);
 
-    while (frontier.length > 0 && expanded < budget) {
-        const { state, key } = frontier.shift();
+    while (head < frontier.length && expanded < budget) {
+        const { state, key } = frontier[head];
+        frontier[head] = null; // release the expanded entry for GC
+        head += 1;
         expanded += 1;
         for (const input of inputsFor(state)) {
             const next = physicsStep(state, input, level, abilities, C);
@@ -120,7 +159,7 @@ export function witnessSearch(level, abilities, opts = {}) {
         pickups,
         portals,
         expanded,
-        exhausted: frontier.length === 0,
+        exhausted: head >= frontier.length,
         witnessFor(platformId) {
             if (!parents) throw new Error('witnessSearch: pass opts.witnesses to record tapes');
             let k = firstSupportKey.get(platformId);

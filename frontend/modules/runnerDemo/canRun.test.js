@@ -410,11 +410,11 @@ describe('ceiling margin: the forgiving regime (ceilingHop)', () => {
 describe('split segments (laneSplit — placement steps 2+3)', () => {
     it('jump takes the top lane, walking off takes the bottom, the lane merges back', () => {
         // split floor (ramp top) → top lane: some jump policy per arrival
-        const up = canRunDetailed(laneSplit, 'ramp2', 'lane1', NONE);
+        const up = canRunDetailed(laneSplit, 'ramp1', 'lane1', NONE);
         expect(up.ok).toBe(true);
         expect(up.witnesses.every((w) => w.policy.startsWith('jump@'))).toBe(true);
         // split floor → bottom: the no-input walk-off
-        const down = canRunDetailed(laneSplit, 'ramp2', 'floorB', NONE);
+        const down = canRunDetailed(laneSplit, 'ramp1', 'floorB', NONE);
         expect(down.ok).toBe(true);
         expect(down.witnesses.some((w) => w.policy === 'none')).toBe(true);
         // top lane fall-off merges onto the bottom floor
@@ -423,6 +423,6 @@ describe('split segments (laneSplit — placement steps 2+3)', () => {
 
     it('everything is reachable with no abilities (route choice, not logic)', () => {
         expect([...reachableRunPlatforms(laneSplit, NONE)].sort()).toEqual(
-            ['floorA', 'floorB', 'floorC', 'lane1', 'ramp0', 'ramp1', 'ramp2']);
+            ['floorA', 'floorB', 'floorC', 'lane1', 'ramp0', 'ramp1']);
     });
 });
