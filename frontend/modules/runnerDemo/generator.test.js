@@ -115,6 +115,41 @@ describe('generateLevel', () => {
         expect(level.pickups.some((pk) => pk.on === shelves[0].id)).toBe(true);
     }, 60000);
 
+    it('vertical jitter: raised plain floors only; anchors stay at base', () => {
+        const opts = {
+            id: 'jt', requirement: ['doubleJump'], pickupCount: 2, branchCount: 1,
+            hazardChance: 0.5, shelfChance: 1, jitter: 1, seed: 1,
+        };
+        const level = generateLevel(opts);
+        const floors = level.platforms.filter((p) => p.type === 'ground' && p.h === 1);
+        // some interior floor rose, and no rise exceeds the cap
+        expect(floors.some((p) => p.y > 0)).toBe(true);
+        for (const p of floors) {
+            expect(p.y).toBeGreaterThanOrEqual(0);
+            expect(p.y).toBeLessThanOrEqual(CELESTE_GEOMETRY.JITTER_MAX);
+        }
+        // entrance (first) and exit (last) floors stay base-anchored
+        const byX = [...floors].sort((a, b) => a.x - b.x);
+        expect(byX[0].y).toBe(0);
+        expect(byX[byX.length - 1].y).toBe(0);
+        // gate-adjacent anchoring: the shelf's gate floor is at base
+        const shelf = level.platforms.find((p) => p.type === 'oneway');
+        expect(shelf).toBeTruthy();
+        // pickups ride their host floor's rise (wake invariant intact)
+        expect(validateLevel(level, DEFAULTS)).toEqual([]);
+        // determinism
+        expect(JSON.stringify(generateLevel(opts))).toBe(JSON.stringify(level));
+    }, 60000);
+
+    it('jitter 0 is draw-for-draw identical to the flat generator', () => {
+        const base = {
+            id: 'j0', requirement: ['spring'], pickupCount: 1, branchCount: 1,
+            hazardChance: 0.5, shelfChance: 1, seed: 2,
+        };
+        expect(JSON.stringify(generateLevel({ ...base, jitter: 0 })))
+            .toBe(JSON.stringify(generateLevel(base)));
+    }, 60000);
+
     it('shelfChance 0 or no eligible gate ⇒ no shelf', () => {
         const none = generateLevel({
             id: 'sh0', requirement: ['spring'], pickupCount: 1, shelfChance: 0, seed: 1,

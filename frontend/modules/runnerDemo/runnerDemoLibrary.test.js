@@ -259,9 +259,11 @@ describe('runner entry — sphere-growth adapter hooks (plan §4.9)', () => {
             runnerGapMargin: 0.5,
             runnerHazardDensity: 0.1,
             runnerLengthSteps: 3,
+            runnerJitter: 0.4,
         })).toEqual({
             ...base,
             physicsProfile: 'nsmbu', gapMargin: 0.5, hazardChance: 0.1, stepsBetween: 3,
+            jitter: 0.4,
         });
     });
 
@@ -283,6 +285,7 @@ describe('runner entry — sphere-growth adapter hooks (plan §4.9)', () => {
         ]);
         expect(contract.physicsProfile).toBe('nsmbu');
         expect(contract.gapMargin).toBe(0.25);
+        expect(contract.jitter).toBe(0);
         expect(contract.entranceSide).toBe('W');
     });
 
@@ -292,6 +295,7 @@ describe('runner entry — sphere-growth adapter hooks (plan §4.9)', () => {
             runnerGapMargin: 0,
             runnerHazardDensity: 0.35,
             runnerLengthSteps: 2,
+            runnerJitter: 0,
         });
         expect(buildRunnerRegionParams({ params: { runnerGapMargin: 1 } }).runnerGapMargin)
             .toBe(1);

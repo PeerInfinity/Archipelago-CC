@@ -134,6 +134,41 @@ describe('reward shelves (plan §8.7 step 2)', () => {
         });
     }
 
+    it('full jitter across gate shapes: every goal still derives exactly [S]', () => {
+        for (const requirement of [['doubleJump'], ['spring'], ['blue'], ['doubleJump', 'blue']]) {
+            const want = [...requirement].sort();
+            for (const seed of [1, 2]) {
+                const level = generateLevel({
+                    id: `jit_${want.join('_')}_${seed}`, requirement,
+                    pickupCount: 2, branchCount: 1, hazardChance: 0.5,
+                    jitter: 1, seed,
+                });
+                expect(validateLevel(level, DEFAULTS), level.id).toEqual([]);
+                const derived = deriveGeneratedRules(level, DEFAULTS);
+                expect(derived.defects, level.id).toEqual([]);
+                for (const [id, sets] of Object.entries(goalRules(level, derived))) {
+                    expect(sets, `${level.id} ${id}`).toEqual([want]);
+                }
+            }
+        }
+    }, 300000);
+
+    it('spec path honors jitter (raised floors; goals still derive exactly)', () => {
+        const { level, derived } = generateLevelForSpecs({
+            id: 'jit_spec',
+            exitSpecs: [
+                { key: 'E', requirement: ['doubleJump'] },
+                { key: 'W', requirement: [] },
+            ],
+            pickupSpecs: [{ id: 'it_a', requirement: [] }],
+            jitter: 1, seed: 1,
+        });
+        expect(level.platforms.some((p) => p.type === 'ground' && p.h === 1 && p.y > 0))
+            .toBe(true);
+        expect(derived.exits.exit_main.minimalSets).toEqual([['doubleJump']]);
+        expect(derived.exits.exit_br0.minimalSets).toEqual([[]]);
+    }, 120000);
+
     it('spec path: a shelved window pickup derives its window set; plan grammar unchanged', () => {
         const { level, derived, portalByKey } = generateLevelForSpecs({
             id: 'shelf_spec',
@@ -168,6 +203,12 @@ describe('calibration pins', () => {
             .toBeCloseTo(CELESTE_GEOMETRY.RISE.single, 2);
         expect(sweepMaxRise(DEFAULTS, { doubleJump: true }))
             .toBeCloseTo(CELESTE_GEOMETRY.RISE.dj, 2);
+    });
+
+    it('the pinned celeste singleUp matches a fresh sweep at dy JITTER_MAX', () => {
+        expect(sweepMaxGap(DEFAULTS, { doubleJump: false, blue: false },
+            { dy: CELESTE_GEOMETRY.JITTER_MAX }))
+            .toBeCloseTo(CELESTE_GEOMETRY.REACH.singleUp, 2);
     });
 
     it('a non-pinned profile (nsmbu) derives structurally valid geometry', () => {

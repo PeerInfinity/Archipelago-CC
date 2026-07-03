@@ -11,8 +11,9 @@
  *   - buildRegionParams     — assembles the substrate's regionParams.
  *   - renderProcgenParams   — the panel's per-substrate param controls.
  *
- * The four v1 difficulty knobs (plan §4.9 — settled, nothing more):
- * gapMargin, hazardDensity, lengthSteps, physicsProfile. Keys are
+ * The difficulty/texture knobs (the four v1 knobs of plan §4.9 plus
+ * placement jitter): gapMargin, hazardDensity, lengthSteps,
+ * physicsProfile, jitter. Keys are
  * runner-prefixed in BOTH params and regionParams: assembleRegionParams
  * merges every active substrate's output into ONE object, so an
  * unprefixed `physicsProfile` would collide with bounce's in a mixed
@@ -50,6 +51,11 @@ export const DEFAULT_RUNNER_PROCGEN_PARAMS = Object.freeze({
     // Max plain floors between features (1 + rng·N) — the strip-length
     // texture knob.
     runnerLengthSteps: 2,
+    // Vertical placement jitter (0–1): plain floors rise up to
+    // jitter × JITTER_MAX above the base line. Gate/branch/exit floors
+    // stay base-anchored (gap windows are calibrated flat); 0 keeps
+    // the generator draw-for-draw identical to the flat layout.
+    runnerJitter: 0,
 });
 
 // ── regionParams assembly ───────────────────────────────────────────
@@ -64,6 +70,7 @@ export function buildRunnerRegionParams({ params } = {}) {
         runnerGapMargin: p.runnerGapMargin ?? 0,
         runnerHazardDensity: p.runnerHazardDensity ?? 0.35,
         runnerLengthSteps: p.runnerLengthSteps ?? 2,
+        runnerJitter: p.runnerJitter ?? 0,
     };
 }
 
@@ -138,5 +145,9 @@ export function renderRunnerProcgenParams({ params, onChange = () => {} } = {}) 
     wrap.appendChild(numberField('Length steps',
         'Max plain floors between features (1 + random·N) — longer strips per region.',
         'runnerLengthSteps', 2, { step: 1, max: 8 }));
+    wrap.appendChild(numberField('Jitter',
+        'Vertical placement jitter (0–1): plain floors rise up to jitter × 1.2 units '
+        + 'above the base line. Gates and branch tips stay flat — gap windows never move.',
+        'runnerJitter', 0, { step: 0.01, max: 1 }));
     return wrap;
 }

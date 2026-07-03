@@ -77,6 +77,7 @@ export const SHIPPED_PRESETS = Object.freeze([
                 runnerGapMargin: 0,
                 runnerHazardDensity: 0.35,
                 runnerLengthSteps: 2,
+                runnerJitter: 0,
             },
             scenario: {
                 items: {

@@ -82,15 +82,18 @@ const round1 = (v) => Math.round(v * 10) / 10;
  * over a two-platform probe. The probe parameters are FROZEN (12-unit
  * run-up, 8-unit landing, [0.5, cap] search, 20 halvings) so pinned
  * REACH values reproduce exactly; `cap` only needs raising for very
- * fast profiles (sonic/meatboy saturate 16).
+ * fast profiles (sonic/meatboy saturate 16). `dy` raises the LANDING
+ * floor (jitter calibration: an up-crossing loses range — the
+ * REACH.singleUp pin is this sweep at dy = JITTER_MAX); dy 0 is the
+ * frozen flat probe, values unchanged.
  */
-export function sweepMaxGap(C, abilities, { cap = 16 } = {}) {
+export function sweepMaxGap(C, abilities, { cap = 16, dy = 0 } = {}) {
     const probe = (gap) => ({
         id: 'probe',
         size: { width: 12 + gap + 8, height: 16 },
         platforms: [
             { id: 'a', x: 0, y: 0, w: 12, h: 1, type: 'ground' },
-            { id: 'b', x: 12 + gap, y: 0, w: 8, h: 1, type: 'ground' },
+            { id: 'b', x: 12 + gap, y: dy, w: 8, h: 1, type: 'ground' },
         ],
         hazards: [], pickups: [], portals: [], spawn: { x: 1, y: 1 },
     });
@@ -186,8 +189,9 @@ export const SWEEP_SATURATING_PROFILES = Object.freeze(['sonic', 'meatboy']);
  * solver's arrival/trigger grids can't flip a verdict (§4.3 doctrine).
  */
 export const CELESTE_GEOMETRY = Object.freeze({
-    REACH: Object.freeze({ single: 6.69, dj: 11.4, spring: 13.49 }), // swept
-    //                          (sweepMaxGap / sweepSpringTotal, SPRING_RISE 10)
+    REACH: Object.freeze({ single: 6.69, dj: 11.4, spring: 13.49, singleUp: 6.15 }),
+    //                          (sweepMaxGap / sweepSpringTotal, SPRING_RISE 10;
+    //                           singleUp = sweepMaxGap at dy JITTER_MAX)
     SEG_W: Object.freeze({ min: 5, span: 2.5 }),        // ≫ run-up convergence (~0.5);
     //                          kept tight — floor width scales the solver's arrival grid
     RUN_GAP: Object.freeze({ min: 2.3, span: 1.3 }),    // max 3.6 ≪ single 6.69
@@ -226,6 +230,13 @@ export const CELESTE_GEOMETRY = Object.freeze({
     SAW_CHANCE: 0.5,      // saw under a spring shelf's right half (§8.4 flavor)
     SAW_W: 1.1,
     SAW_H: 1,
+    // ── vertical jitter (placement step 1) — plain floors rise
+    //    0..jitter×JITTER_MAX above the base line; gate/branch/exit/
+    //    entrance floors stay base-anchored (the gap windows are
+    //    calibrated flat). Cap sized so a max-rise run-gap crossing
+    //    keeps margin even at gapMargin 1: RUN_GAP's structural cap
+    //    (0.75×single = 5.02) ≤ singleUp 6.15 − 0.5. ──
+    JITTER_MAX: 1.2,
 });
 
 /**
@@ -243,6 +254,11 @@ export function deriveGeometry(C, opts = {}) {
     const spring = opts.reaches?.spring ?? sweepSpringTotal(C, opts);
     const riseSingle = opts.rises?.single ?? sweepMaxRise(C, { doubleJump: false });
     const riseDj = opts.rises?.dj ?? sweepMaxRise(C, { doubleJump: true });
+    // jitter cap ~half the landable rise, then measure the up-crossing
+    // reach at that cap (the RUN_GAP safety bound)
+    const jitterMax = round1(0.5 * riseSingle);
+    const singleUp = opts.reaches?.singleUp
+        ?? sweepMaxGap(C, { doubleJump: false, blue: false }, { ...opts, dy: jitterMax });
     // run-up convergence distance (moveTowards is linear in v):
     // t = maxSpeed/maxAcceleration, dist = maxSpeed²/(2·maxAcceleration)
     const convergence = (C.maxSpeed * C.maxSpeed) / (2 * C.maxAcceleration);
@@ -284,8 +300,9 @@ export function deriveGeometry(C, opts = {}) {
     const djBackMin = Math.max(1.5, round1(
         (shelfWMin + 0.8) - (segWMin + shelfPad - djFallDrift - 1.6)));
     return Object.freeze({
-        REACH: Object.freeze({ single, dj, spring }),
+        REACH: Object.freeze({ single, dj, spring, singleUp }),
         RISE: Object.freeze({ single: riseSingle, dj: riseDj }),
+        JITTER_MAX: jitterMax,
         SHELF_H: 0.5,
         SHELF_W: Object.freeze({ min: shelfWMin, span: 0.8 }),
         SPRING_SHELF_RISE: Object.freeze({
@@ -428,6 +445,16 @@ export function validateGeometry(G, C) {
             < djOverhang + fallDrift(wMax(G.DJ_SHELF_RISE)) + 1.5) {
         errors.push('dj shelf fall-off can overshoot the padded landing floor');
     }
+    // ── vertical jitter: a run gap must stay crossable when its landing
+    //    floor sits JITTER_MAX higher — even at applyGapMargin's cap
+    //    (0.75 × single), which is where the two knobs compose. ──
+    if (G.JITTER_MAX > 0.75 * R.single - 1) {
+        errors.push(`JITTER_MAX ${G.JITTER_MAX} out of scale with single reach ${R.single}`);
+    }
+    if (0.75 * R.single > R.singleUp - 0.5) {
+        errors.push(`RUN_GAP cap ${round2(0.75 * R.single)} not up-crossable at`
+            + ` JITTER_MAX (singleUp ${R.singleUp})`);
+    }
     return errors;
 }
 
@@ -527,8 +554,30 @@ const draw = (rng, w) => w.min + rng.next() * w.span;
  * mandatory trajectory — bounce arcs are caught above it and the
  * fall-off starts right of it — lethal only to a voluntary
  * drop-refusal.
+ *
+ * VERTICAL JITTER (`jitter` 0..1, placement step 1): plain floors
+ * rise 0..jitter×JITTER_MAX above the base line. Only floors whose
+ * incoming AND outgoing gaps are plain runs jitter — gate, branch,
+ * entrance, and exit floors stay base-anchored because every gate
+ * window is calibrated flat (the up-crossing safety bound is
+ * REACH.singleUp, validateGeometry). The rise draw happens ONLY when
+ * the amplitude is non-zero, so jitter 0 is draw-for-draw identical
+ * to the pre-jitter generator (zone tables and default worlds
+ * reproduce byte-identically). Floor-relative geometry (goals,
+ * hazards, partner floors) rides the floor's rise.
  */
-function realizePlan(plan, { rng, G, hazardChance }) {
+function realizePlan(plan, { rng, G, hazardChance, jitter = 0 }) {
+    const jitterAmp = Math.max(0, Math.min(1, jitter)) * G.JITTER_MAX;
+    // base-anchor rule: a floor may only rise when nothing calibrated
+    // launches from it or lands on it — its own gap AND the next
+    // floor's gap must be plain runs, and it must be an interior floor
+    const jitterable = (i) => {
+        const f = plan[i];
+        if (f.role === 'entrance' || f.role === 'exit') return false;
+        if (f.gap?.kind !== 'run') return false;
+        const next = plan[i + 1];
+        return !next || next.gap?.kind === 'run';
+    };
     const platforms = [];
     const hazards = [];
     const pickups = [];
@@ -554,7 +603,8 @@ function realizePlan(plan, { rng, G, hazardChance }) {
         });
         return shelf;
     };
-    for (const f of plan) {
+    for (let i = 0; i < plan.length; i++) {
+        const f = plan[i];
         if (f.gap) {
             const g = f.gap;
             if (g.kind === 'run') {
@@ -632,14 +682,20 @@ function realizePlan(plan, { rng, G, hazardChance }) {
                 x = round2(x + gapW);
             }
         }
+        // vertical jitter: drawn ONLY when active (see the header's
+        // byte-identity note) and only for base-anchor-free floors
+        const rise = (jitterAmp > 0 && jitterable(i))
+            ? round2(rng.next() * jitterAmp) : 0;
         // shelved gates widen their landing floor (the fall-off pad)
         const w = round2(draw(rng, G.SEG_W) + (f.role === 'entrance' ? 2 : 0)
             + (f.gap?.shelf ? G.SHELF_PAD : 0));
-        const seg = { id: `seg${segN++}`, x, y: 0, w, h: 1, type: 'ground' };
+        const seg = { id: `seg${segN++}`, x, y: rise, w, h: 1, type: 'ground' };
         platforms.push(seg);
         if (f.role === 'pickup') {
             const pid = f.pickupId ?? `loc_${pkN++}`;
-            pickups.push({ id: pid, on: seg.id, x: round2(x + w - 0.2), y: 1.6 });
+            pickups.push({
+                id: pid, on: seg.id, x: round2(x + w - 0.2), y: round2(1.6 + rise),
+            });
         }
         f.seg = seg;
         x = round2(x + w);
@@ -648,7 +704,8 @@ function realizePlan(plan, { rng, G, hazardChance }) {
         // survivable): a spike patch inset from the floor's edges,
         // plus the FLUSH PARTNER floor the hop needs (see the header
         // — a spiked floor must end in a flush crossing, never a
-        // jump gap)
+        // jump gap). The partner shares the floor's rise: the hop
+        // must land back and RUN off flush, never climb.
         if (f.role === 'plain' && !f.gap?.shelf
                 && seg.w >= 2 * G.HAZARD_MARGIN + 1.8
                 && rng.next() < hazardChance) {
@@ -657,10 +714,12 @@ function realizePlan(plan, { rng, G, hazardChance }) {
             const hi = seg.x + seg.w - G.HAZARD_MARGIN - hw;
             hazards.push({
                 id: `hz${hzN++}`, type: 'spikes',
-                x: round2(lo + rng.next() * (hi - lo)), y: 1, w: hw, h: 0.8,
+                x: round2(lo + rng.next() * (hi - lo)), y: round2(1 + rise), w: hw, h: 0.8,
             });
             const partnerW = round2(4 + rng.next() * 2);
-            platforms.push({ id: `seg${segN++}`, x, y: 0, w: partnerW, h: 1, type: 'ground' });
+            platforms.push({
+                id: `seg${segN++}`, x, y: rise, w: partnerW, h: 1, type: 'ground',
+            });
             x = round2(x + partnerW);
         }
     }
@@ -678,7 +737,8 @@ function assembleStrip(id, plan, { platforms, hazards, pickups, portals }) {
     const width = round2(Math.max(...platforms.map((p) => p.x + p.w)) + 0.01);
     const last = plan[plan.length - 1].seg;
     portals.push({
-        id: 'exit_main', on: last.id, x: round2(width - 0.6), y: 1.6,
+        id: 'exit_main', on: last.id, x: round2(width - 0.6),
+        y: round2(last.y + last.h + 0.6),
         arrow: 'right', exitName: null,
     });
 
@@ -698,7 +758,7 @@ function assembleStrip(id, plan, { platforms, hazards, pickups, portals }) {
  */
 export function proposeLevel({
     id, requirement, pickupCount, branchCount, stepsBetween, hazardChance,
-    shelfChance = SHELF_CHANCE_DEFAULT, rng, G,
+    shelfChance = SHELF_CHANCE_DEFAULT, jitter = 0, rng, G,
 }) {
     // plan: each entry is a floor; `gap` describes the gap BEFORE it.
     const plan = [{ role: 'entrance', gap: null }];
@@ -722,7 +782,7 @@ export function proposeLevel({
     for (let b = 0; b < branchCount; b++) plan.push({ role: 'plain', gap: { kind: 'branch' } });
     plan.push({ role: 'exit', gap: { kind: 'run' } });
 
-    return assembleStrip(id, plan, realizePlan(plan, { rng, G, hazardChance }));
+    return assembleStrip(id, plan, realizePlan(plan, { rng, G, hazardChance, jitter }));
 }
 
 /**
@@ -751,6 +811,7 @@ export function generateLevel({
     stepsBetween = 2,
     hazardChance = 0.35,
     shelfChance = SHELF_CHANCE_DEFAULT,
+    jitter = 0,
     seed = 1,
     attempts = 8,
     physics = DEFAULT_PROFILE_ID,
@@ -765,7 +826,7 @@ export function generateLevel({
         const rng = createRng((seed * 8191 + attempt * 127) | 0);
         const level = proposeLevel({
             id, requirement, pickupCount, branchCount, stepsBetween, hazardChance,
-            shelfChance, rng, G,
+            shelfChance, jitter, rng, G,
         });
         const modelErrors = validateLevel(level, C);
         if (modelErrors.length > 0) {
@@ -908,7 +969,7 @@ export function planStripSpecs(exitSpecs = [], pickupSpecs = []) {
  */
 export function proposeLevelForSpecs({
     id, plan, stepsBetween, hazardChance,
-    shelfChance = SHELF_CHANCE_DEFAULT, rng, G,
+    shelfChance = SHELF_CHANCE_DEFAULT, jitter = 0, rng, G,
 }) {
     const floors = [{ role: 'entrance', gap: null }];
     const plains = () => {
@@ -944,7 +1005,7 @@ export function proposeLevelForSpecs({
     });
     floors.push({ role: 'exit', gap: { kind: 'run' } });
 
-    return assembleStrip(id, floors, realizePlan(floors, { rng, G, hazardChance }));
+    return assembleStrip(id, floors, realizePlan(floors, { rng, G, hazardChance, jitter }));
 }
 
 /**
@@ -967,6 +1028,7 @@ export function* generateLevelForSpecsGen({
     stepsBetween = 2,
     hazardChance = 0.35,
     shelfChance = SHELF_CHANCE_DEFAULT,
+    jitter = 0,
     gapMargin = 0,
     seed = 1,
     attempts = 8,
@@ -987,7 +1049,7 @@ export function* generateLevelForSpecsGen({
         yield { type: 'attempt', attempt: attempt + 1, attempts };
         const rng = createRng((seed * 8191 + attempt * 127) | 0);
         const level = proposeLevelForSpecs({
-            id, plan, stepsBetween, hazardChance, shelfChance, rng, G: Geff,
+            id, plan, stepsBetween, hazardChance, shelfChance, jitter, rng, G: Geff,
         });
         const modelErrors = validateLevel(level, C);
         if (modelErrors.length > 0) {

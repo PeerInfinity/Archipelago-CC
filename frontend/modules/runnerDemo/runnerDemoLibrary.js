@@ -231,6 +231,9 @@ export function buildZoneSpecs(base, regionParams = {}) {
     if (regionParams.runnerLengthSteps !== undefined) {
         out.stepsBetween = regionParams.runnerLengthSteps;
     }
+    if (regionParams.runnerJitter !== undefined) {
+        out.jitter = regionParams.runnerJitter;
+    }
     return out;
 }
 
@@ -258,6 +261,7 @@ export function buildRunnerRegionContract({ specs, node, regionParams = {} }) {
         gapMargin: regionParams.runnerGapMargin ?? 0,
         hazardChance: regionParams.runnerHazardDensity ?? 0.35,
         stepsBetween: regionParams.runnerLengthSteps ?? 2,
+        jitter: regionParams.runnerJitter ?? 0,
         entranceSide: specs.entranceSide,
     };
 }
@@ -286,6 +290,7 @@ export function buildRunnerRegionContract({ specs, node, regionParams = {} }) {
  * @param {number} [specs.gapMargin] — see runnerProcgenParams.js
  * @param {number} [specs.hazardChance]
  * @param {number} [specs.stepsBetween]
+ * @param {number} [specs.jitter]
  * @returns {{locations: Array, exitRules: Object, exitPaths: Object,
  *   obstacleDefs: Object, payload: Object}}
  */
@@ -298,6 +303,7 @@ export function* generateZoneForSpecsGen({
     gapMargin = 0,
     hazardChance = 0.35,
     stepsBetween = 2,
+    jitter = 0,
 } = {}) {
     const seenSides = new Set();
     const exits = exitSpecs.map((s) => {
@@ -322,6 +328,7 @@ export function* generateZoneForSpecsGen({
         stepsBetween,
         hazardChance,
         gapMargin,
+        jitter,
         physics: physicsProfile,
     });
 
