@@ -37,6 +37,7 @@ export const RUNNER_OBSTACLE_ID_BY_ABILITY = Object.freeze(Object.fromEntries(
 export const RUNNER_LIBRARY_ITEMS = Object.freeze(Object.fromEntries([
     ['Double Jump', '#9a6ff0'],
     ['Blue Platforms', '#4080d0'],
+    ['Springs', '#e8843c'],
 ].map(([name, color]) => [name, {
     id: name,
     name,
@@ -78,6 +79,7 @@ export const RUNNER_LIBRARY_ITEMS = Object.freeze(Object.fromEntries([
 const RUNNER_OBSTACLE_PRESENTATION = Object.freeze({
     doubleJump: { name: 'Double Jump Gap', color: '#9a6ff0' },
     blue: { name: 'Blue Platform Gap', color: '#4080d0' },
+    spring: { name: 'Spring Gap', color: '#e8843c' },
 });
 
 export const RUNNER_LIBRARY_OBSTACLES = Object.freeze(Object.fromEntries(

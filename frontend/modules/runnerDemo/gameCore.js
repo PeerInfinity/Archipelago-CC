@@ -41,6 +41,7 @@ import { noAbilities } from './suppression.js';
 export const ABILITY_ITEM_NAMES = Object.freeze({
     doubleJump: 'Double Jump',
     blue: 'Blue Platforms',
+    spring: 'Springs',
 });
 export const VICTORY_ITEM_NAME = 'Victory';
 

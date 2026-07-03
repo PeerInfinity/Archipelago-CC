@@ -322,3 +322,84 @@ describe('determinism and profiles', () => {
         expect(DEFAULTS.maxAirJumps).toBe(0); // base untouched
     });
 });
+
+describe('spring platforms', () => {
+    const SPR = { id: 'spr', x: 6, y: 0, w: 4, h: 0.5, type: 'spring' };
+    /** A spring under the spawn drop: the runner runs off a ledge onto
+     *  it (no wall — the ledge ends before the spring). */
+    function springLevel(over = {}) {
+        return makeLevel({
+            platforms: [
+                { id: 'ledge', x: 0, y: 4, w: 4, h: 1, type: 'ground' },
+                { id: 'floor', x: 14, y: 0, w: 26, h: 1, type: 'ground' },
+                SPR,
+            ],
+            spawn: { x: 1, y: 5 },
+            ...over,
+        });
+    }
+    const springTop = SPR.y + SPR.h;
+    const abilities = { spring: true };
+
+    function bounceTrace(inputAt = () => ({}), C = DEFAULTS) {
+        return run(springLevel(), 260, inputAt, abilities, C);
+    }
+
+    for (const [id, profile] of Object.entries(PROFILES)) {
+        it(`${id}: bounce rises ~SPRING_RISE above the spring top`, () => {
+            const C = profile.constants;
+            const trace = run(springLevel(), 400, () => ({}), abilities, C);
+            const sprung = trace.findIndex((s) => s.sprungOn === 'spr');
+            expect(sprung).toBeGreaterThan(0);
+            const apex = Math.max(...trace.slice(sprung).map((s) => s.y));
+            const rise = apex - springTop;
+            expect(rise).toBeGreaterThan(C.SPRING_RISE * 0.9);
+            expect(rise).toBeLessThan(C.SPRING_RISE * 1.25);
+        });
+    }
+
+    it('bounce height is jump-hold independent (deterministic arc)', () => {
+        const free = bounceTrace(() => ({}));
+        const held = bounceTrace(() => ({ jump: true }));
+        // held-from-spawn: the press fires on the LEDGE (grounded), so
+        // compare only from the bounce tick, where the arcs must agree
+        const sFree = free.findIndex((s) => s.sprungOn === 'spr');
+        const sHeld = held.findIndex((s) => s.sprungOn === 'spr');
+        expect(sFree).toBeGreaterThan(0);
+        expect(sHeld).toBeGreaterThan(0);
+        const apexFree = Math.max(...free.slice(sFree).map((s) => s.y));
+        const apexHeld = Math.max(...held.slice(sHeld).map((s) => s.y));
+        expect(Math.abs(apexFree - apexHeld)).toBeLessThan(0.15);
+    });
+
+    it('never grounds on the spring: sprungOn fires, standingOn/landedOn never', () => {
+        const trace = bounceTrace();
+        expect(trace.some((s) => s.sprungOn === 'spr')).toBe(true);
+        expect(trace.some((s) => s.standingOn === 'spr')).toBe(false);
+        expect(trace.some((s) => s.landedOn === 'spr')).toBe(false);
+    });
+
+    it('holding drop refuses the bounce (falls through to the kill floor)', () => {
+        const level = springLevel({
+            platforms: [
+                { id: 'ledge', x: 0, y: 4, w: 4, h: 1, type: 'ground' },
+                SPR,
+            ],
+        });
+        const trace = run(level, 400, () => ({ drop: true }), abilities);
+        expect(trace.some((s) => s.sprungOn === 'spr')).toBe(false);
+        expect(trace.some((s) => s.respawned === 'fell')).toBe(true);
+    });
+
+    it('is existence-gated: without the item the spring does not catch', () => {
+        const level = springLevel({
+            platforms: [
+                { id: 'ledge', x: 0, y: 4, w: 4, h: 1, type: 'ground' },
+                SPR,
+            ],
+        });
+        const trace = run(level, 400, () => ({}), {});
+        expect(trace.some((s) => s.sprungOn === 'spr')).toBe(false);
+        expect(trace.some((s) => s.respawned === 'fell')).toBe(true);
+    });
+});

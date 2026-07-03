@@ -7,13 +7,16 @@
  * and nothing else, so they cannot diverge).
  *
  * Ability set shape (booleans; a missing key means locked):
- *   { doubleJump, blue }                          — the v1 universe
+ *   { doubleJump, blue, spring }                  — the v1.1 universe
  *   (+ future: highJump, brake, left, shield — plan §6/§7)
  *
  * Two gating mechanisms, both monotone by construction (plan §3):
  * - EXISTENCE: gated platform types are one-way with drop-through, so
- *   their appearance never removes a route. Pickups, portals, and
- *   hazards are never suppressed.
+ *   their appearance never removes a route. Springs additionally
+ *   launch instead of landing (physics.js) — but stay refusable via
+ *   the same drop-through, so a newly-active spring can never trap a
+ *   fall the player didn't want. Pickups, portals, and hazards are
+ *   never suppressed.
  * - EFFECTIVE PARAMS: movement abilities overlay physics params
  *   (doubleJump → maxAirJumps 1). Using them is voluntary, so any
  *   trajectory possible without the ability survives gaining it.
@@ -22,6 +25,7 @@
 const PLATFORM_GATES = {
     ground: null,
     blue: 'blue',
+    spring: 'spring',
 };
 
 /** The platform-type vocabulary (level.js validates against it). */
@@ -65,9 +69,9 @@ export function effectiveParams(constants, abilities) {
 }
 
 export function noAbilities() {
-    return { doubleJump: false, blue: false };
+    return { doubleJump: false, blue: false, spring: false };
 }
 
 export function allAbilities() {
-    return { doubleJump: true, blue: true };
+    return { doubleJump: true, blue: true, spring: true };
 }

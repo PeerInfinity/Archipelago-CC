@@ -105,7 +105,14 @@ const ABILITY_BY_ITEM_NAME = Object.freeze(Object.fromEntries(
  *  exit gates on these items. Non-geometry gate terms (foreign items
  *  via top-down, count > 1 instances) still realise as authored
  *  bridge-evaluated logic_gate locks. */
-export const GATEABLE_ITEMS = Object.freeze(Object.values(ABILITY_ITEM_NAMES));
+// Pinned to the abilities the GENERATOR can realise as gate segments —
+// deliberately NOT everything in ABILITY_ITEM_NAMES: Springs joined
+// the physics/item vocabulary first (plan §8.7 step 1 lands bottom-up)
+// and enter this list only when the spring gap kind lands in
+// generator.js. Declaring an item here before the generator can build
+// its gate would let the sphere planner emit unrealisable specs.
+export const GATEABLE_ITEMS = Object.freeze(
+    [ABILITY_ITEM_NAMES.doubleJump, ABILITY_ITEM_NAMES.blue]);
 
 /**
  * Split a driver requirement (AP item names + optional counts) into

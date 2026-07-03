@@ -45,6 +45,9 @@
  *   platform boundary with no airborne phase — no `landedOn` fires,
  *   but `standingOn` switches; the solver's leg detector (canRun.js)
  *   and the goal-wake reasoning need that transition.
+ * - `sprungOn`: spring platform id, set ONLY on the bounce tick (a
+ *   spring catch converts the landing into a launch — the player
+ *   never grounds on a spring, so no landedOn/standingOn fires).
  * - `touchedPickups` / `touchedPortals`: ids overlapping this tick.
  * - `respawned`: 'fell' | 'hazard' | 'reset' | null — set on the
  *   tick the player is returned to the spawn; per-attempt state
@@ -132,6 +135,11 @@ const STRUCTURAL = Object.freeze({
     MAX_HITS: 0,          // hit-budget hook (plan §4.10): hits beyond
     //                       this respawn the player. 0 = any hit kills.
     GOAL_HALF: 0.375,     // pickup/portal default half-extent (touch box)
+    SPRING_RISE: 8,       // spring bounce rise (units), profile-
+    //                       independent: the launch speed is derived
+    //                       against the CUT rise gravity, so the rise
+    //                       is deterministic regardless of jump-hold
+    //                       state (see springLaunchSpeed).
 });
 
 function makeConstants(overrides) {
@@ -203,6 +211,22 @@ function isSolid(p) {
     return p.type === 'ground';
 }
 
+/**
+ * Spring launch speed for a profile (plan §8.3 — gated springs).
+ * Sized so the bounce rises SPRING_RISE units under the rise gravity
+ * the engine actually applies after a bounce: the bounce clears
+ * `currentlyJumping`, so calculateGravity's rising branch always
+ * takes the jump-CUT multiplier (or the plain upward multiplier when
+ * variable jump height is off) — the rise is therefore the same
+ * whether or not the jump button is held. Deterministic bounce =
+ * solver, bot, and player all get identical spring arcs.
+ */
+export function springLaunchSpeed(C) {
+    const gUp = (2 * C.jumpHeight) / (C.timeToJumpApex * C.timeToJumpApex);
+    const m = C.variablejumpHeight ? C.jumpCutOff : C.upwardMovementMultiplier;
+    return Math.sqrt(2 * gUp * m * C.SPRING_RISE);
+}
+
 // ── Spawn / respawn ────────────────────────────────────────────────
 
 /** The standard-entrance spawn state (bottom-left of the level). */
@@ -227,6 +251,7 @@ export function spawnState(level, C = DEFAULTS) {
         t: 0,
         landedOn: null,
         standingOn: null,
+        sprungOn: null,
         touchedPickups: [],
         touchedPortals: [],
         hits: 0,
@@ -259,6 +284,7 @@ function respawn(state, level, cause) {
         onGround: false,
         landedOn: null,
         standingOn: null,
+        sprungOn: null,
         touchedPickups: [],
         touchedPortals: [],
         hits: 0,
@@ -302,6 +328,11 @@ export function step(state, input, level, abilities, constants) {
         for (const dx of [0.05, C.PLAYER_W - 0.05]) {
             const fx = x + dx;
             for (const p of platforms) {
+                // Springs are never support: a catch converts to a
+                // launch the same tick, so the player never stands on
+                // one (standingOn/onGround must not flicker there —
+                // canRun's leg detector and the jump logic rely on it).
+                if (p.type === 'spring') continue;
                 if (!landableOn(p)) continue;
                 const top = p.y + p.h;
                 if (fx >= p.x && fx <= p.x + p.w
@@ -313,7 +344,7 @@ export function step(state, input, level, abilities, constants) {
         return null;
     };
 
-    const s = { ...state, t: state.t + 1, respawned: null, landedOn: null };
+    const s = { ...state, t: state.t + 1, respawned: null, landedOn: null, sprungOn: null };
 
     // OnMovement equivalent. AUTO_RUN forces directionX = +1 — the v1
     // mechanic; with AUTO_RUN off (parity harness; future Brake/Left)
@@ -460,6 +491,25 @@ export function step(state, input, level, abilities, constants) {
             } else if (s.vy > 0) {
                 s.y = p.y - C.PLAYER_H;
                 s.vy = 0;
+            }
+        } else if (p.type === 'spring') {
+            if (!dropping && s.vy < 0 && yBefore >= top - 1e-9) {
+                // spring catch (plan §8.3): the landing converts into
+                // an immediate vertical launch — the player never
+                // grounds. Refusable like any one-way catch (holding
+                // drop passes through), so a newly-active spring can
+                // never trap an unwanted fall (monotonicity, plan §3).
+                // Bounce = fresh surface contact: the jump is over
+                // (fresh coyote semantics don't apply — never grounded)
+                // and the air jump is spent-and-not-restored, so the
+                // arc is identical whatever the player did before.
+                s.y = top;
+                s.vy = springLaunchSpeed(C);
+                s.sprungOn = p.id;
+                s.currentlyJumping = false;
+                s.canJumpAgain = false;
+                s.gravMultiplier = C.variablejumpHeight
+                    ? C.jumpCutOff : C.upwardMovementMultiplier;
             }
         } else if (!dropping && s.vy < 0 && yBefore >= top - 1e-9) {
             // one-way catch: falling, started at/above the top

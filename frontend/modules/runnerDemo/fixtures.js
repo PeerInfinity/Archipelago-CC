@@ -112,4 +112,24 @@ export const stepStone = {
     spawn: { x: 1, y: 1 },
 };
 
-export const FIXTURES = [flatRun, gapJump, oneWay, spikeRun, doubleGap, stepStone];
+/** A gap wider than even double-jump reach, with a gated SPRING
+ *  mid-gap slightly below floor level: without Springs the gap is
+ *  uncrossable under every movement ability; with it, a full jump
+ *  lands on the spring and the bounce (SPRING_RISE, deterministic)
+ *  carries the far half — the spring-gate fixture (plan §8.3). The
+ *  spring hosts no goal (springs have no standing wake). */
+export const springGap = {
+    id: 'springGap',
+    size: { width: 44, height: 16 },
+    platforms: [
+        { id: 'floorA', x: 0, y: 0, w: 16, h: 1, type: 'ground' },
+        { id: 'spring1', x: 20.5, y: 0, w: 4, h: 0.5, type: 'spring' },
+        { id: 'floorB', x: 28.5, y: 0, w: 15.5, h: 1, type: 'ground' },
+    ],
+    hazards: [],
+    pickups: [{ id: 'pk_edge', on: 'floorA', x: 15.8, y: 1.6 }],
+    portals: [{ id: 'exit_main', on: 'floorB', x: 43.4, y: 1.6, arrow: 'right', exitName: null }],
+    spawn: { x: 1, y: 1 },
+};
+
+export const FIXTURES = [flatRun, gapJump, oneWay, spikeRun, doubleGap, stepStone, springGap];

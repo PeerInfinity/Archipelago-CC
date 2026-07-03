@@ -211,3 +211,18 @@ describe('gapJump sizing sanity', () => {
         expect(gap).toBeLessThan(4.2);     // full hold (~4.9) must clear
     });
 });
+
+describe('spring hosts', () => {
+    it('rejects a goal hosted on a spring (no standing wake)', () => {
+        const level = base({
+            platforms: [
+                { id: 'floorA', x: 0, y: 0, w: 14, h: 1, type: 'ground' },
+                { id: 'floorB', x: 20, y: 0, w: 10, h: 1, type: 'ground' },
+                { id: 'spr', x: 15, y: 0, w: 4, h: 0.5, type: 'spring' },
+            ],
+            pickups: [{ id: 'pk_spr', on: 'spr', x: 18.8, y: 1.1 }],
+        });
+        const errors = validateLevel(level, DEFAULTS);
+        expect(errors.some((e) => e.includes("pk_spr") && e.includes('spring'))).toBe(true);
+    });
+});

@@ -123,6 +123,14 @@ function checkGoals(errors, level, key, C) {
             errors.push(`${key} '${g.id}': on='${g.on}' references no platform`);
             continue;
         }
+        // Springs can't host goals: the goal-wake invariant is defined
+        // by STANDING at the host's right end, and a spring converts
+        // every landing into a launch — no stand exists.
+        if (host.type === 'spring') {
+            errors.push(`${key} '${g.id}': hosted on spring '${g.on}' `
+                + '(springs cannot host goals — no standing wake)');
+            continue;
+        }
         // Goal-wake invariant: touched while standing at the host's
         // right end ⇒ touched by every landing's default auto-run.
         if (!rectsOverlap(goalBox(g, C), rightmostStandBox(host, level, C))) {
