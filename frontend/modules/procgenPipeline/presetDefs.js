@@ -43,6 +43,12 @@ export const VALID_MODES = ['gridGrowth', 'sphereGrowth', 'shuffledSpiral', 'top
  *   region entries), so no spec window ever elects one — shelves are
  *   the zone-table demo's business.
  *
+ * - runner-placement-demo is the sphere demo config with the two
+ *   placement knobs on (runnerJitter 0.75, runnerSplitChance 0.6) —
+ *   the demo for jittered floors and split segments (ramp → one-way
+ *   top lane / bottom lane merge). CLI-verified oracle-clean at this
+ *   exact config.
+ *
  * - runner-zone-demo mirrors the committed runner_worldgen preset:
  *   dump-shuffled-spiral.js --seed 1 --quota runner=5 --start runner.
  *   The 5-zone table shows the full current runner vocabulary — dj /
@@ -78,6 +84,43 @@ export const SHIPPED_PRESETS = Object.freeze([
                 runnerHazardDensity: 0.35,
                 runnerLengthSteps: 2,
                 runnerJitter: 0,
+            },
+            scenario: {
+                items: {
+                    'Double Jump': 1, 'Blue Platforms': 1, Springs: 1, Victory: 1,
+                },
+                obstacles: {},
+            },
+            substrateQuotas: { runner: 99 },
+            substrateMix: {},
+            substrateMode: 'quotas',
+        },
+    },
+    {
+        id: 'shipped:runner-placement-demo',
+        label: 'Runner demo (jitter + splits)',
+        description: 'The sphere demo config with the placement knobs '
+            + 'turned up: jitter 0.75 (plain floors rise up to ~0.9) and '
+            + 'splits 0.6 (ramps forking into one-way top lanes over '
+            + 'bottom lanes). Same 4-item pool, seed 1 — oracle-clean '
+            + 'with 5 lane segments and 26 raised floors across 3 regions.',
+        state: {
+            mode: 'sphereGrowth',
+            params: {
+                seed: 1,
+                regionWidth: 8,
+                regionHeight: 6,
+                maxItemsPerRegion: 2,
+                sphereCount: 3,
+                fillerCount: 0,
+                revisitPercent: 25,
+                startSubstrate: 'runner',
+                runnerPhysicsProfile: 'celeste',
+                runnerGapMargin: 0,
+                runnerHazardDensity: 0.35,
+                runnerLengthSteps: 2,
+                runnerJitter: 0.75,
+                runnerSplitChance: 0.6,
             },
             scenario: {
                 items: {

@@ -54,6 +54,17 @@ describe('SHIPPED_PRESETS', () => {
         });
     });
 
+    it('runner placement demo pins the sphere config with the placement knobs on', () => {
+        const p = getPresetById('shipped:runner-placement-demo');
+        expect(p.state.mode).toBe('sphereGrowth');
+        expect(p.state.params.runnerJitter).toBe(0.75);
+        expect(p.state.params.runnerSplitChance).toBe(0.6);
+        expect(p.state.params.startSubstrate).toBe('runner');
+        expect(p.state.scenario.items).toEqual({
+            'Double Jump': 1, 'Blue Platforms': 1, Springs: 1, Victory: 1,
+        });
+    });
+
     it('runner zone demo pins the runner_worldgen shuffled-spiral config', () => {
         const p = getPresetById('shipped:runner-zone-demo');
         expect(p.state.mode).toBe('shuffledSpiral');
