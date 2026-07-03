@@ -43,17 +43,19 @@ export const VALID_MODES = ['gridGrowth', 'sphereGrowth', 'shuffledSpiral', 'top
  *   region entries), so no spec window ever elects one — shelves are
  *   the zone-table demo's business.
  *
- * - runner-placement-demo is the sphere demo config with the two
- *   placement knobs on (runnerJitter 0.75, runnerSplitChance 0.6) —
- *   the demo for jittered floors and split segments (ramp → one-way
- *   top lane / bottom lane merge). CLI-verified oracle-clean at this
- *   exact config.
+ * - runner-placement-demo is the sphere demo config with the
+ *   placement + texture knobs on (runnerJitter 0.75, runnerSplitChance
+ *   0.6, runnerCeilingDensity 0.5) — the demo for jittered floors,
+ *   split segments (ramp → one-way top lane / bottom lane merge), and
+ *   ceiling hazards (§8.7 step 3: kill slabs that punish full-height
+ *   jumps). CLI-verified oracle-clean at this exact config.
  *
  * - runner-zone-demo mirrors the committed runner_worldgen preset:
  *   dump-shuffled-spiral.js --seed 1 --quota runner=5 --start runner.
  *   The 5-zone table shows the full current runner vocabulary — dj /
- *   stone / spring gates and (at this seed) a reward shelf with a saw
- *   under it (§8.7 step 2).
+ *   stone / spring gates and (at this seed) two reward shelves, one
+ *   over a spring gate and one over a dj gate, each with a saw under
+ *   it (§8.7 steps 2-3).
  *
  * - bounce-sphere-demo is the config verify-sphere-growth-ui.mjs /
  *   verify-sphere-steps-ui.mjs pre-seed the panel with. Bounce knobs
@@ -98,12 +100,15 @@ export const SHIPPED_PRESETS = Object.freeze([
     },
     {
         id: 'shipped:runner-placement-demo',
-        label: 'Runner demo (jitter + splits)',
-        description: 'The sphere demo config with the placement knobs '
-            + 'turned up: jitter 0.75 (plain floors rise up to ~0.9) and '
-            + 'splits 0.6 (ramps forking into one-way top lanes over '
-            + 'bottom lanes). Same 4-item pool, seed 1 — oracle-clean '
-            + 'with 5 lane segments and 26 raised floors across 3 regions.',
+        label: 'Runner demo (jitter + splits + ceilings)',
+        description: 'The sphere demo config with the placement and '
+            + 'texture knobs turned up: jitter 0.75 (plain floors rise '
+            + 'up to ~0.9), splits 0.6 (ramps forking into one-way top '
+            + 'lanes over bottom lanes), and ceilings 0.5 (kill slabs '
+            + 'over short gaps — full jumps clip them, taps cross). '
+            + 'Same 4-item pool, seed 1 — oracle-clean with 5 ceiling '
+            + 'slabs, 4 lane segments and 19 raised floors across 3 '
+            + 'regions.',
         state: {
             mode: 'sphereGrowth',
             params: {
@@ -121,6 +126,7 @@ export const SHIPPED_PRESETS = Object.freeze([
                 runnerLengthSteps: 2,
                 runnerJitter: 0.75,
                 runnerSplitChance: 0.6,
+                runnerCeilingDensity: 0.5,
             },
             scenario: {
                 items: {
@@ -140,7 +146,7 @@ export const SHIPPED_PRESETS = Object.freeze([
             + 'committed runner_worldgen config: seed 1, quota runner=5, '
             + 'start runner. The zone table mints its own items and '
             + 'shows the full runner vocabulary: dj / stone / spring '
-            + 'gates and a reward shelf with a saw.',
+            + 'gates and reward shelves with saws under them.',
         state: {
             mode: 'shuffledSpiral',
             params: {

@@ -1216,7 +1216,7 @@
             "runnerLevel": {
               "id": "gen_z4",
               "size": {
-                "width": 98.57,
+                "width": 99.43,
                 "height": 16
               },
               "platforms": [
@@ -1288,28 +1288,37 @@
                   "id": "seg6",
                   "x": 72.87,
                   "y": 0,
-                  "w": 9.13,
+                  "w": 9.41,
                   "h": 1,
                   "type": "ground"
                 },
                 {
                   "id": "seg7",
-                  "x": 84.33,
+                  "x": 85.72,
                   "y": 0,
-                  "w": 5.71,
+                  "w": 5.08,
                   "h": 1,
                   "type": "ground"
                 },
                 {
                   "id": "seg8",
-                  "x": 93.48,
+                  "x": 93.23,
                   "y": 0,
-                  "w": 5.08,
+                  "w": 6.19,
                   "h": 1,
                   "type": "ground"
                 }
               ],
-              "hazards": [],
+              "hazards": [
+                {
+                  "id": "hz0",
+                  "type": "saw",
+                  "x": 74.56,
+                  "y": 3.28,
+                  "w": 1.1,
+                  "h": 1
+                }
+              ],
               "pickups": [
                 {
                   "id": "loc_0",
@@ -1322,7 +1331,7 @@
                 {
                   "id": "exit_main",
                   "on": "seg8",
-                  "x": 97.97,
+                  "x": 98.83,
                   "y": 1.6,
                   "arrow": "right",
                   "exitName": null
