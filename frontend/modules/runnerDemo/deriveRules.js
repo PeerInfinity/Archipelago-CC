@@ -46,7 +46,7 @@ function fullGraphReach(level, abilities, opts) {
     return reachablePlatforms(buildRunGraph(level, abilities, opts));
 }
 
-const ALL_ABILITIES = ['doubleJump', 'blue'];
+const ALL_ABILITIES = ['doubleJump', 'blue', 'spring'];
 
 /**
  * The abilities that can possibly matter for this level: movement

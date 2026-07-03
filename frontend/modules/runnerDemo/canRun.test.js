@@ -13,7 +13,8 @@ import {
     buildRunGraph, findRunPath, reachablePlatforms, reachableRunPlatforms,
 } from './canRun.js';
 import {
-    flatRun, gapJump, oneWay, spikeRun, doubleGap, stepStone, springGap, FIXTURES,
+    flatRun, gapJump, oneWay, spikeRun, doubleGap, stepStone, springGap,
+    springShelf, djShelf, FIXTURES,
 } from './fixtures.js';
 import { noAbilities, allAbilities } from './suppression.js';
 import { DEFAULTS } from './physics.js';
@@ -296,5 +297,44 @@ describe('springGap: the spring gate (plan §8.7 step 1)', () => {
         expect([...reachableRunPlatforms(springGap, DJ)].sort()).toEqual(['floorA']);
         expect([...reachableRunPlatforms(springGap, SPRING)].sort())
             .toEqual(['floorA', 'floorB']);
+    });
+});
+
+describe('reward shelves (plan §8.7 step 2)', () => {
+    const SPRING = { doubleJump: false, blue: false, spring: true };
+
+    it('springShelf: the gate bounce is caught by the shelf; the shelf chains back down', () => {
+        // shelf rise 6.5 beats even dj's landable rise (~4.71) — the
+        // shelf gates on exactly the spring, like the gap under it
+        expect(canRunDetailed(springShelf, 'floorA', 'shelf1', NONE).touch).toBe(false);
+        expect(canRunDetailed(springShelf, 'floorA', 'shelf1', DJ).touch).toBe(false);
+        expect(canRun(springShelf, 'floorA', 'shelf1', SPRING)).toBe(true);
+        // fall-off: run off the shelf's right end onto the far floor
+        expect(canRun(springShelf, 'shelf1', 'floorB', SPRING)).toBe(true);
+    });
+
+    it('springShelf: reach under each ability set (saw under the lane stays off-route)', () => {
+        expect([...reachableRunPlatforms(springShelf, NONE)]).toEqual(['floorA']);
+        expect([...reachableRunPlatforms(springShelf, DJ)]).toEqual(['floorA']);
+        expect([...reachableRunPlatforms(springShelf, SPRING)].sort())
+            .toEqual(['floorA', 'floorB', 'shelf1']);
+        expect([...reachableRunPlatforms(springShelf, allAbilities())].sort())
+            .toEqual(['floorA', 'floorB', 'shelf1']);
+    });
+
+    it('djShelf: high dj arcs catch the shelf, low ones slip under onto the far floor', () => {
+        expect(canRunDetailed(djShelf, 'floorA', 'shelf1', NONE).touch).toBe(false);
+        expect(canRun(djShelf, 'floorA', 'shelf1', DJ)).toBe(true);
+        expect(canRun(djShelf, 'floorA', 'floorB', DJ)).toBe(true); // the slip-under route
+        expect(canRun(djShelf, 'shelf1', 'floorB', DJ)).toBe(true);
+        expect([...reachableRunPlatforms(djShelf, NONE)]).toEqual(['floorA']);
+        expect([...reachableRunPlatforms(djShelf, DJ)].sort())
+            .toEqual(['floorA', 'floorB', 'shelf1']);
+    });
+
+    it('shelves are oneway: drop-through policies exist on them', () => {
+        const shelf = springShelf.platforms.find((p) => p.id === 'shelf1');
+        const names = policiesFor(springShelf, shelf, SPRING).map((p) => p.name);
+        expect(names.some((n) => n.startsWith('drop@'))).toBe(true);
     });
 });

@@ -15,7 +15,8 @@ import {
 } from './deriveRules.js';
 import { reachableRunPlatforms } from './canRun.js';
 import {
-    flatRun, gapJump, oneWay, spikeRun, doubleGap, stepStone, springGap, FIXTURES,
+    flatRun, gapJump, oneWay, spikeRun, doubleGap, stepStone, springGap,
+    springShelf, djShelf, FIXTURES,
 } from './fixtures.js';
 
 describe('abilityUniverse', () => {
@@ -95,6 +96,20 @@ describe('derived rules match fixture ground truth', () => {
         const r = deriveAccessRules(springGap);
         expect(r.pickups.pk_edge.minimalSets).toEqual([[]]);
         expect(r.exits.exit_main.minimalSets).toEqual([['spring']]);
+        expect(r.defects).toEqual([]);
+    });
+
+    it('springShelf: shelf pickup AND exit require exactly {spring} (shelf rides the gate)', () => {
+        const r = deriveAccessRules(springShelf);
+        expect(r.pickups.pk_shelfTop.minimalSets).toEqual([['spring']]);
+        expect(r.exits.exit_main.minimalSets).toEqual([['spring']]);
+        expect(r.defects).toEqual([]);
+    });
+
+    it('djShelf: shelf pickup and exit require exactly {doubleJump}', () => {
+        const r = deriveAccessRules(djShelf);
+        expect(r.pickups.pk_shelfTop.minimalSets).toEqual([['doubleJump']]);
+        expect(r.exits.exit_main.minimalSets).toEqual([['doubleJump']]);
         expect(r.defects).toEqual([]);
     });
 });
