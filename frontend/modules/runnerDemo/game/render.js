@@ -145,12 +145,31 @@ export function renderFrame(ctx, session, ui = {}) {
     }
     ctx.globalAlpha = 1;
 
-    // hazards: saw blades hang from lane undersides (§8.4), anything
-    // else draws as jagged spike teeth rising from its base
+    // hazards: saw blades hang from lane undersides (§8.4), ceiling
+    // slabs carry downward teeth along their bottom edge (§8.7 step
+    // 3), anything else draws as jagged spike teeth rising from its
+    // base
     for (const hz of level.hazards ?? []) {
         const x0 = sx(hz.x);
         const yTop = sy(hz.y + hz.h);
         const yBase = sy(hz.y);
+        if (hz.type === 'ceiling') {
+            const toothH = Math.min(UNIT * 0.45, (yBase - yTop) * 0.25);
+            ctx.fillStyle = '#4a5568';
+            ctx.fillRect(x0, yTop, hz.w * UNIT, yBase - yTop - toothH);
+            ctx.fillStyle = '#c0392b';
+            ctx.beginPath();
+            const teeth = Math.max(2, Math.round(hz.w * 2));
+            const tw = (hz.w * UNIT) / teeth;
+            ctx.moveTo(x0, yBase - toothH);
+            for (let i = 0; i < teeth; i++) {
+                ctx.lineTo(x0 + tw * (i + 0.5), yBase); // tip points DOWN
+                ctx.lineTo(x0 + tw * (i + 1), yBase - toothH);
+            }
+            ctx.closePath();
+            ctx.fill();
+            continue;
+        }
         if (hz.type === 'saw') {
             const cx = x0 + (hz.w * UNIT) / 2;
             const cy = (yTop + yBase) / 2;
