@@ -3,6 +3,7 @@ import { createBotDriver } from './botDriver.js';
 import { createGameSession } from './gameCore.js';
 import {
     flatRun, gapJump, doubleGap, stepStone, springGap, springShelf, djShelf,
+    laneSplit,
 } from './fixtures.js';
 
 /**
@@ -122,6 +123,19 @@ describe('botDriver — completes fixture levels (pickup then portal)', () => {
         driver.setTarget({ kind: 'pickup', id: 'pk_shelfTop' });
         const a = h.run(driver, { until: untilEvent(h, 'pickup', 'pk_shelfTop') });
         expect(a.done).toBe(true);
+        driver.setTarget({ kind: 'portal', id: 'exit_main' });
+        const b = h.run(driver, { until: untilEvent(h, 'exit', 'exit_main') });
+        expect(b.done).toBe(true);
+        expect(h.counts.deaths).toBe(0);
+    });
+
+    it('laneSplit: takes the top lane for the pickup, then any lane to the exit', () => {
+        const h = makeHarness(laneSplit);
+        const driver = createBotDriver();
+        driver.setTarget({ kind: 'pickup', id: 'pk_top' });
+        const a = h.run(driver, { until: untilEvent(h, 'pickup', 'pk_top') });
+        expect(a.done).toBe(true);
+        expect(a.inputs.some((i) => i?.jump)).toBe(true); // the top-lane hop
         driver.setTarget({ kind: 'portal', id: 'exit_main' });
         const b = h.run(driver, { until: untilEvent(h, 'exit', 'exit_main') });
         expect(b.done).toBe(true);

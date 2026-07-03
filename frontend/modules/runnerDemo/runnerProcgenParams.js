@@ -12,8 +12,8 @@
  *   - renderProcgenParams   — the panel's per-substrate param controls.
  *
  * The difficulty/texture knobs (the four v1 knobs of plan §4.9 plus
- * placement jitter): gapMargin, hazardDensity, lengthSteps,
- * physicsProfile, jitter. Keys are
+ * placement jitter + splits): gapMargin, hazardDensity, lengthSteps,
+ * physicsProfile, jitter, splitChance. Keys are
  * runner-prefixed in BOTH params and regionParams: assembleRegionParams
  * merges every active substrate's output into ONE object, so an
  * unprefixed `physicsProfile` would collide with bounce's in a mixed
@@ -56,6 +56,11 @@ export const DEFAULT_RUNNER_PROCGEN_PARAMS = Object.freeze({
     // stay base-anchored (gap windows are calibrated flat); 0 keeps
     // the generator draw-for-draw identical to the flat layout.
     runnerJitter: 0,
+    // Split-segment probability per plains slot (0–1): a rising ramp
+    // forks into a one-way top lane (jump) over a base bottom lane
+    // (no jump / drop), merging where the lane ends. Requirement-
+    // neutral texture; 0 keeps the generator draw-for-draw identical.
+    runnerSplitChance: 0,
 });
 
 // ── regionParams assembly ───────────────────────────────────────────
@@ -71,6 +76,7 @@ export function buildRunnerRegionParams({ params } = {}) {
         runnerHazardDensity: p.runnerHazardDensity ?? 0.35,
         runnerLengthSteps: p.runnerLengthSteps ?? 2,
         runnerJitter: p.runnerJitter ?? 0,
+        runnerSplitChance: p.runnerSplitChance ?? 0,
     };
 }
 
@@ -149,5 +155,10 @@ export function renderRunnerProcgenParams({ params, onChange = () => {} } = {}) 
         'Vertical placement jitter (0–1): plain floors rise up to jitter × 1.2 units '
         + 'above the base line. Gates and branch tips stay flat — gap windows never move.',
         'runnerJitter', 0, { step: 0.01, max: 1 }));
+    wrap.appendChild(numberField('Splits',
+        'Split-segment probability per plains slot (0–1): a rising ramp forks into a '
+        + 'one-way top lane (jump) over a bottom lane (no jump / drop), merging where '
+        + 'the lane ends. Route texture only — requirements never change.',
+        'runnerSplitChance', 0, { step: 0.01, max: 1 }));
     return wrap;
 }

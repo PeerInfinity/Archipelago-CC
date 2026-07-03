@@ -153,6 +153,27 @@ describe('reward shelves (plan §8.7 step 2)', () => {
         }
     }, 300000);
 
+    it('full splits + jitter across gate shapes: every goal still derives exactly [S]', () => {
+        for (const requirement of [[], ['doubleJump'], ['spring']]) {
+            const want = [...requirement].sort();
+            for (const seed of [1, 2]) {
+                const level = generateLevel({
+                    id: `split_${want.join('_') || 'plain'}_${seed}`, requirement,
+                    pickupCount: 2, branchCount: 1, hazardChance: 0.5,
+                    splitChance: 1, jitter: 1, seed,
+                });
+                expect(validateLevel(level, DEFAULTS), level.id).toEqual([]);
+                expect(level.platforms.some((p) => p.id.startsWith('lane')), level.id)
+                    .toBe(true);
+                const derived = deriveGeneratedRules(level, DEFAULTS);
+                expect(derived.defects, level.id).toEqual([]);
+                for (const [id, sets] of Object.entries(goalRules(level, derived))) {
+                    expect(sets, `${level.id} ${id}`).toEqual([want]);
+                }
+            }
+        }
+    }, 300000);
+
     it('spec path honors jitter (raised floors; goals still derive exactly)', () => {
         const { level, derived } = generateLevelForSpecs({
             id: 'jit_spec',

@@ -189,9 +189,12 @@ export const SWEEP_SATURATING_PROFILES = Object.freeze(['sonic', 'meatboy']);
  * solver's arrival/trigger grids can't flip a verdict (§4.3 doctrine).
  */
 export const CELESTE_GEOMETRY = Object.freeze({
-    REACH: Object.freeze({ single: 6.69, dj: 11.4, spring: 13.49, singleUp: 6.15 }),
+    REACH: Object.freeze({
+        single: 6.69, dj: 11.4, spring: 13.49, singleUp: 6.15, singleUpRamp: 5.93,
+    }),
     //                          (sweepMaxGap / sweepSpringTotal, SPRING_RISE 10;
-    //                           singleUp = sweepMaxGap at dy JITTER_MAX)
+    //                           singleUp/singleUpRamp = sweepMaxGap at
+    //                           dy JITTER_MAX / RAMP_STEP max)
     SEG_W: Object.freeze({ min: 5, span: 2.5 }),        // ≫ run-up convergence (~0.5);
     //                          kept tight — floor width scales the solver's arrival grid
     RUN_GAP: Object.freeze({ min: 2.3, span: 1.3 }),    // max 3.6 ≪ single 6.69
@@ -237,6 +240,19 @@ export const CELESTE_GEOMETRY = Object.freeze({
     //    keeps margin even at gapMargin 1: RUN_GAP's structural cap
     //    (0.75×single = 5.02) ≤ singleUp 6.15 − 0.5. ──
     JITTER_MAX: 1.2,
+    // ── split segments (placement steps 2+3) — a gradual ramp climbs
+    //    RAMP_STEP per floor, then the route forks: jump → a one-way
+    //    TOP lane (drop-through, §8.6), no jump / drop → walk off the
+    //    split floor onto the base-height bottom floor, which also
+    //    catches the top lane's fall-off merge. Requirement-neutral by
+    //    construction (both lanes plain — the OR-logic tier is §8.7
+    //    step 6). singleUpRamp = sweepMaxGap at dy RAMP_STEP max. ──
+    RAMP_GAP: Object.freeze({ min: 2.3, span: 0.7 }),   // ≤ singleUpRamp 5.93 − 2.4
+    RAMP_STEP: Object.freeze({ min: 1.2, span: 0.3 }),  // ≤ single rise 2.45 − 0.95
+    RAMP_W: Object.freeze({ min: 4, span: 1.5 }),
+    TOP_RISE: Object.freeze({ min: 1, span: 0.5 }),     // top lane above the split floor
+    TOP_GAP: Object.freeze({ min: 1.5, span: 1 }),
+    TOP_W: Object.freeze({ min: 8, span: 3 }),
 });
 
 /**
@@ -259,6 +275,12 @@ export function deriveGeometry(C, opts = {}) {
     const jitterMax = round1(0.5 * riseSingle);
     const singleUp = opts.reaches?.singleUp
         ?? sweepMaxGap(C, { doubleJump: false, blue: false }, { ...opts, dy: jitterMax });
+    // split-segment windows scale off the landable single rise; the
+    // ramp's up-crossing bound is swept at the max ramp step
+    const rampStepMin = round1(0.49 * riseSingle);
+    const rampStepMax = round1(rampStepMin + 0.12 * riseSingle);
+    const singleUpRamp = opts.reaches?.singleUpRamp
+        ?? sweepMaxGap(C, { doubleJump: false, blue: false }, { ...opts, dy: rampStepMax });
     // run-up convergence distance (moveTowards is linear in v):
     // t = maxSpeed/maxAcceleration, dist = maxSpeed²/(2·maxAcceleration)
     const convergence = (C.maxSpeed * C.maxSpeed) / (2 * C.maxAcceleration);
@@ -300,9 +322,19 @@ export function deriveGeometry(C, opts = {}) {
     const djBackMin = Math.max(1.5, round1(
         (shelfWMin + 0.8) - (segWMin + shelfPad - djFallDrift - 1.6)));
     return Object.freeze({
-        REACH: Object.freeze({ single, dj, spring, singleUp }),
+        REACH: Object.freeze({ single, dj, spring, singleUp, singleUpRamp }),
         RISE: Object.freeze({ single: riseSingle, dj: riseDj }),
         JITTER_MAX: jitterMax,
+        RAMP_GAP: Object.freeze({
+            min: 2.3, span: round1(Math.max(0.3, Math.min(0.7, singleUpRamp - 0.5 - 2.3))),
+        }),
+        RAMP_STEP: Object.freeze({
+            min: rampStepMin, span: round1(rampStepMax - rampStepMin),
+        }),
+        RAMP_W: Object.freeze({ min: 4, span: 1.5 }),
+        TOP_RISE: Object.freeze({ min: round1(0.41 * riseSingle), span: 0.5 }),
+        TOP_GAP: Object.freeze({ min: 1.5, span: 1 }),
+        TOP_W: Object.freeze({ min: 8, span: 3 }),
         SHELF_H: 0.5,
         SHELF_W: Object.freeze({ min: shelfWMin, span: 0.8 }),
         SPRING_SHELF_RISE: Object.freeze({
@@ -455,6 +487,26 @@ export function validateGeometry(G, C) {
         errors.push(`RUN_GAP cap ${round2(0.75 * R.single)} not up-crossable at`
             + ` JITTER_MAX (singleUp ${R.singleUp})`);
     }
+    // ── split segments: ramp hops must stay crossable at the max step,
+    //    rises landable with margin, and the top lane must leave head
+    //    clearance over the bottom lane at the SHALLOWEST ramp. ──
+    if (wMax(G.RAMP_GAP) > R.singleUpRamp - 0.5) {
+        errors.push(`RAMP_GAP max ${wMax(G.RAMP_GAP)} not up-crossable at RAMP_STEP`
+            + ` max (singleUpRamp ${R.singleUpRamp})`);
+    }
+    if (wMax(G.RAMP_STEP) > G.RISE.single - 0.9) {
+        errors.push(`RAMP_STEP max ${wMax(G.RAMP_STEP)} too close to the landable`
+            + ` single rise ${G.RISE.single}`);
+    }
+    if (wMax(G.TOP_RISE) > G.RISE.single - 0.8) {
+        errors.push(`TOP_RISE max ${wMax(G.TOP_RISE)} too close to the landable`
+            + ` single rise ${G.RISE.single}`);
+    }
+    // top lane underside (2 ramp steps + top rise − lane thickness 0.5)
+    // over the bottom floor's standing band
+    if (2 * G.RAMP_STEP.min + G.TOP_RISE.min - 0.5 < C.PLAYER_H + 1.4) {
+        errors.push('split top lane leaves no head clearance over the bottom lane');
+    }
     return errors;
 }
 
@@ -590,6 +642,7 @@ function realizePlan(plan, { rng, G, hazardChance, jitter = 0 }) {
     let brN = 0;
     let pkN = 0;
     let hzN = 0;
+    let lnN = 0;
     // shelf platform + wake pickup; returns the shelf (saw placement)
     const pushShelf = (left, rise, w, spec) => {
         const shelf = {
@@ -605,10 +658,46 @@ function realizePlan(plan, { rng, G, hazardChance, jitter = 0 }) {
     };
     for (let i = 0; i < plan.length; i++) {
         const f = plan[i];
+        // per-gap extra width folded into this entry's floor (split
+        // lane coverage; shelves use the constant SHELF_PAD below)
+        let gapPad = 0;
         if (f.gap) {
             const g = f.gap;
             if (g.kind === 'run') {
                 x = round2(x + draw(rng, G.RUN_GAP));
+            } else if (g.kind === 'split') {
+                // SPLIT SEGMENT (placement steps 2+3): a ramp of rising
+                // ground floors; the LAST ramp floor is the split — a
+                // jump there catches the one-way TOP lane, no jump (or
+                // drop, §8.6) walks off onto this entry's floor, which
+                // starts flush under the split's right edge at BASE
+                // height and runs long enough to catch the top lane's
+                // fall-off merge. Requirement-neutral by construction:
+                // both lanes are plain geometry, so goals past the
+                // merge derive exactly what they would without it (the
+                // OR-logic lane tier is §8.7 step 6, not this).
+                const steps = 2 + Math.floor(rng.next() * 2);
+                let rise = 0;
+                for (let r = 0; r < steps; r++) {
+                    const gapW = round2(draw(rng, G.RAMP_GAP));
+                    rise = round2(rise + draw(rng, G.RAMP_STEP));
+                    const w = round2(draw(rng, G.RAMP_W));
+                    platforms.push({
+                        id: `seg${segN++}`, x: round2(x + gapW), y: rise,
+                        w, h: 1, type: 'ground',
+                    });
+                    x = round2(x + gapW + w);
+                }
+                const topRise = round2(draw(rng, G.TOP_RISE));
+                const topGap = round2(draw(rng, G.TOP_GAP));
+                const topW = round2(draw(rng, G.TOP_W));
+                platforms.push({
+                    id: `lane${lnN++}`, x: round2(x + topGap),
+                    y: round2(0.5 + rise + topRise), // top = split top + topRise
+                    w: topW, h: 0.5, type: 'oneway',
+                });
+                // +5 covers the top lane's fall-off drift with margin
+                gapPad = round2(topGap + topW + 5);
             } else if (g.kind === 'dj') {
                 const gapW = round2(draw(rng, G.DJ_GAP));
                 if (g.shelf) {
@@ -686,9 +775,10 @@ function realizePlan(plan, { rng, G, hazardChance, jitter = 0 }) {
         // byte-identity note) and only for base-anchor-free floors
         const rise = (jitterAmp > 0 && jitterable(i))
             ? round2(rng.next() * jitterAmp) : 0;
-        // shelved gates widen their landing floor (the fall-off pad)
+        // shelved gates and splits widen their landing floor (the
+        // fall-off pad / the two-lane coverage)
         const w = round2(draw(rng, G.SEG_W) + (f.role === 'entrance' ? 2 : 0)
-            + (f.gap?.shelf ? G.SHELF_PAD : 0));
+            + (f.gap?.shelf ? G.SHELF_PAD : 0) + gapPad);
         const seg = { id: `seg${segN++}`, x, y: rise, w, h: 1, type: 'ground' };
         platforms.push(seg);
         if (f.role === 'pickup') {
@@ -706,7 +796,7 @@ function realizePlan(plan, { rng, G, hazardChance, jitter = 0 }) {
         // — a spiked floor must end in a flush crossing, never a
         // jump gap). The partner shares the floor's rise: the hop
         // must land back and RUN off flush, never climb.
-        if (f.role === 'plain' && !f.gap?.shelf
+        if (f.role === 'plain' && !f.gap?.shelf && f.gap?.kind !== 'split'
                 && seg.w >= 2 * G.HAZARD_MARGIN + 1.8
                 && rng.next() < hazardChance) {
             const hw = round2(1 + rng.next() * 0.6);
@@ -758,13 +848,18 @@ function assembleStrip(id, plan, { platforms, hazards, pickups, portals }) {
  */
 export function proposeLevel({
     id, requirement, pickupCount, branchCount, stepsBetween, hazardChance,
-    shelfChance = SHELF_CHANCE_DEFAULT, jitter = 0, rng, G,
+    shelfChance = SHELF_CHANCE_DEFAULT, jitter = 0, splitChance = 0, rng, G,
 }) {
     // plan: each entry is a floor; `gap` describes the gap BEFORE it.
     const plan = [{ role: 'entrance', gap: null }];
     const plains = () => {
         const n = 1 + Math.floor(rng.next() * stepsBetween);
         for (let i = 0; i < n; i++) plan.push({ role: 'plain', gap: { kind: 'run' } });
+        // split segments are requirement-neutral texture — placeable in
+        // any plains slot; drawn ONLY when the knob is on (byte-identity)
+        if (splitChance > 0 && rng.next() < splitChance) {
+            plan.push({ role: 'plain', gap: { kind: 'split' } });
+        }
     };
     // at most one reward shelf, on the LAST gate (orderGates): its
     // pickup then derives exactly [S] like every trunk goal
@@ -812,6 +907,7 @@ export function generateLevel({
     hazardChance = 0.35,
     shelfChance = SHELF_CHANCE_DEFAULT,
     jitter = 0,
+    splitChance = 0,
     seed = 1,
     attempts = 8,
     physics = DEFAULT_PROFILE_ID,
@@ -826,7 +922,7 @@ export function generateLevel({
         const rng = createRng((seed * 8191 + attempt * 127) | 0);
         const level = proposeLevel({
             id, requirement, pickupCount, branchCount, stepsBetween, hazardChance,
-            shelfChance, jitter, rng, G,
+            shelfChance, jitter, splitChance, rng, G,
         });
         const modelErrors = validateLevel(level, C);
         if (modelErrors.length > 0) {
@@ -969,12 +1065,15 @@ export function planStripSpecs(exitSpecs = [], pickupSpecs = []) {
  */
 export function proposeLevelForSpecs({
     id, plan, stepsBetween, hazardChance,
-    shelfChance = SHELF_CHANCE_DEFAULT, jitter = 0, rng, G,
+    shelfChance = SHELF_CHANCE_DEFAULT, jitter = 0, splitChance = 0, rng, G,
 }) {
     const floors = [{ role: 'entrance', gap: null }];
     const plains = () => {
         const n = 1 + Math.floor(rng.next() * stepsBetween);
         for (let i = 0; i < n; i++) floors.push({ role: 'plain', gap: { kind: 'run' } });
+        if (splitChance > 0 && rng.next() < splitChance) {
+            floors.push({ role: 'plain', gap: { kind: 'split' } });
+        }
     };
     plan.levels.forEach((level, i) => {
         // at most one reward shelf per WINDOW, on its last added gate
@@ -1029,6 +1128,7 @@ export function* generateLevelForSpecsGen({
     hazardChance = 0.35,
     shelfChance = SHELF_CHANCE_DEFAULT,
     jitter = 0,
+    splitChance = 0,
     gapMargin = 0,
     seed = 1,
     attempts = 8,
@@ -1049,7 +1149,8 @@ export function* generateLevelForSpecsGen({
         yield { type: 'attempt', attempt: attempt + 1, attempts };
         const rng = createRng((seed * 8191 + attempt * 127) | 0);
         const level = proposeLevelForSpecs({
-            id, plan, stepsBetween, hazardChance, shelfChance, jitter, rng, G: Geff,
+            id, plan, stepsBetween, hazardChance, shelfChance, jitter, splitChance,
+            rng, G: Geff,
         });
         const modelErrors = validateLevel(level, C);
         if (modelErrors.length > 0) {

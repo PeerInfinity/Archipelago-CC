@@ -178,5 +178,29 @@ export const djShelf = {
     spawn: { x: 1, y: 1 },
 };
 
+/** A split segment (placement steps 2+3): a three-floor ramp climbs
+ *  to a split floor; jumping there catches the one-way TOP lane
+ *  (hosting a pickup in its wake), while running off — or dropping —
+ *  falls onto the base-height bottom floor, which also catches the
+ *  lane's fall-off merge. Both lanes are plain geometry, so every
+ *  goal derives [] — route choice, not logic. */
+export const laneSplit = {
+    id: 'laneSplit',
+    size: { width: 66.41, height: 16 },
+    platforms: [
+        { id: 'floorA', x: 0, y: 0, w: 12, h: 1, type: 'ground' },
+        { id: 'ramp0', x: 14.6, y: 1.35, w: 5, h: 1, type: 'ground' },
+        { id: 'ramp1', x: 22.2, y: 2.7, w: 5, h: 1, type: 'ground' },
+        { id: 'ramp2', x: 29.8, y: 4.05, w: 5, h: 1, type: 'ground' },
+        { id: 'lane1', x: 36.8, y: 5.75, w: 9, h: 0.5, type: 'oneway' },
+        { id: 'floorB', x: 34.8, y: 0, w: 21, h: 1, type: 'ground' },
+        { id: 'floorC', x: 58.4, y: 0, w: 8, h: 1, type: 'ground' },
+    ],
+    hazards: [],
+    pickups: [{ id: 'pk_top', on: 'lane1', x: 45.6, y: 6.85 }],
+    portals: [{ id: 'exit_main', on: 'floorC', x: 65.8, y: 1.6, arrow: 'right', exitName: null }],
+    spawn: { x: 1, y: 1 },
+};
+
 export const FIXTURES = [flatRun, gapJump, oneWay, spikeRun, doubleGap, stepStone, springGap,
-    springShelf, djShelf];
+    springShelf, djShelf, laneSplit];

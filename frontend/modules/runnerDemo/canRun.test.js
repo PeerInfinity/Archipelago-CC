@@ -14,7 +14,7 @@ import {
 } from './canRun.js';
 import {
     flatRun, gapJump, oneWay, spikeRun, doubleGap, stepStone, springGap,
-    springShelf, djShelf, FIXTURES,
+    springShelf, djShelf, laneSplit, FIXTURES,
 } from './fixtures.js';
 import { noAbilities, allAbilities } from './suppression.js';
 import { DEFAULTS } from './physics.js';
@@ -336,5 +336,25 @@ describe('reward shelves (plan §8.7 step 2)', () => {
         const shelf = springShelf.platforms.find((p) => p.id === 'shelf1');
         const names = policiesFor(springShelf, shelf, SPRING).map((p) => p.name);
         expect(names.some((n) => n.startsWith('drop@'))).toBe(true);
+    });
+});
+
+describe('split segments (laneSplit — placement steps 2+3)', () => {
+    it('jump takes the top lane, walking off takes the bottom, the lane merges back', () => {
+        // split floor (ramp top) → top lane: some jump policy per arrival
+        const up = canRunDetailed(laneSplit, 'ramp2', 'lane1', NONE);
+        expect(up.ok).toBe(true);
+        expect(up.witnesses.every((w) => w.policy.startsWith('jump@'))).toBe(true);
+        // split floor → bottom: the no-input walk-off
+        const down = canRunDetailed(laneSplit, 'ramp2', 'floorB', NONE);
+        expect(down.ok).toBe(true);
+        expect(down.witnesses.some((w) => w.policy === 'none')).toBe(true);
+        // top lane fall-off merges onto the bottom floor
+        expect(canRun(laneSplit, 'lane1', 'floorB', NONE)).toBe(true);
+    });
+
+    it('everything is reachable with no abilities (route choice, not logic)', () => {
+        expect([...reachableRunPlatforms(laneSplit, NONE)].sort()).toEqual(
+            ['floorA', 'floorB', 'floorC', 'lane1', 'ramp0', 'ramp1', 'ramp2']);
     });
 });

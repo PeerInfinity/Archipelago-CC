@@ -141,6 +141,36 @@ describe('generateLevel', () => {
         expect(JSON.stringify(generateLevel(opts))).toBe(JSON.stringify(level));
     }, 60000);
 
+    it('split segments (splitChance 1): ramp + one-way top lane + base merge floor', () => {
+        const level = generateLevel({
+            id: 'sp', requirement: ['doubleJump'], pickupCount: 1,
+            splitChance: 1, hazardChance: 0.5, seed: 1,
+        });
+        const lanes = level.platforms.filter((p) => p.id.startsWith('lane'));
+        expect(lanes.length).toBeGreaterThan(0);
+        for (const lane of lanes) {
+            expect(lane.type).toBe('oneway');
+            // the lane hovers over a base-height merge floor with head
+            // clearance (validateGeometry's structural bound)
+            const below = level.platforms.find((p) => p.type === 'ground'
+                && p.y === 0 && p.x <= lane.x && p.x + p.w >= lane.x + lane.w);
+            expect(below, `merge floor under ${lane.id}`).toBeTruthy();
+            expect(lane.y - (below.y + below.h)).toBeGreaterThan(DEFAULTS.PLAYER_H + 1.3);
+        }
+        // ramps rose above the base line
+        expect(level.platforms.some((p) => p.type === 'ground' && p.y > 1)).toBe(true);
+        expect(validateLevel(level, DEFAULTS)).toEqual([]);
+    }, 60000);
+
+    it('splitChance 0 is draw-for-draw identical to the no-knob generator', () => {
+        const base = {
+            id: 'sp0', requirement: ['spring'], pickupCount: 1, branchCount: 1,
+            hazardChance: 0.5, shelfChance: 1, seed: 2,
+        };
+        expect(JSON.stringify(generateLevel({ ...base, splitChance: 0 })))
+            .toBe(JSON.stringify(generateLevel(base)));
+    }, 60000);
+
     it('jitter 0 is draw-for-draw identical to the flat generator', () => {
         const base = {
             id: 'j0', requirement: ['spring'], pickupCount: 1, branchCount: 1,
