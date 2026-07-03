@@ -155,6 +155,18 @@ export class OptionsPanelUI {
         .options-home-btn.danger:hover {
           background-color: #d63e2f;
         }
+        .options-build-stamp {
+          margin-left: auto;
+          align-self: center;
+          color: #888;
+          font-size: 10px;
+          font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          min-width: 0;
+          user-select: text;
+        }
         .options-nav-card {
           display: flex;
           align-items: center;
@@ -442,6 +454,18 @@ export class OptionsPanelUI {
       resetBtn.textContent = 'Reset to Defaults';
       resetBtn.addEventListener('click', () => this.handleResetToDefaults(resetBtn));
       this.actionBar.appendChild(resetBtn);
+
+      // Build stamp, duplicated from the bottom footer at the TOP of the
+      // panel: the footer sits on the viewport's bottom edge, which on
+      // real phones keeps getting obscured (fixed tab bar, URL-bar 100vh
+      // overflow, media-query bar-height drift). A staleness indicator
+      // must not depend on bottom-edge geometry, so the action bar —
+      // always visible when the panel opens — carries it too.
+      const buildStamp = document.createElement('span');
+      buildStamp.className = 'options-build-stamp';
+      buildStamp.textContent = formatBuildInfo();
+      buildStamp.title = 'Frontend build stamp — confirms whether the page loaded fresh code or is cached';
+      this.actionBar.appendChild(buildStamp);
 
       this.rootElement.appendChild(this.actionBar);
 

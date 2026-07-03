@@ -398,6 +398,21 @@ body.mobile-layout-active .mobile-tab-bar::-webkit-scrollbar-thumb:hover {
 
 /* Tablet adjustments (larger touch devices) */
 @media (min-width: 769px) and (pointer: coarse) {
+  /* The bar, the content reservation, and the panel-instance clamp must
+     all track the 70px tab bar — a taller tab bar inside a 60px fixed
+     bar overflows UPWARD over the bottom strip of every panel. */
+  body.mobile-layout-active .mobile-bottom-bar {
+    height: 70px;
+  }
+
+  body.mobile-layout-active .mobile-panel-content {
+    padding-bottom: 70px;
+  }
+
+  body.mobile-layout-active .mobile-panel-instance {
+    height: calc(100% - 70px);
+  }
+
   body.mobile-layout-active .mobile-tab-bar {
     height: 70px;
   }
