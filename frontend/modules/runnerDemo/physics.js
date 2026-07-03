@@ -135,7 +135,7 @@ const STRUCTURAL = Object.freeze({
     MAX_HITS: 0,          // hit-budget hook (plan §4.10): hits beyond
     //                       this respawn the player. 0 = any hit kills.
     GOAL_HALF: 0.375,     // pickup/portal default half-extent (touch box)
-    SPRING_RISE: 8,       // spring bounce rise (units), profile-
+    SPRING_RISE: 10,      // spring bounce rise (units), profile-
     //                       independent: the launch speed is derived
     //                       against the CUT rise gravity, so the rise
     //                       is deterministic regardless of jump-hold

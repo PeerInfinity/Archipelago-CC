@@ -11,6 +11,7 @@ import { describe, it, expect } from 'vitest';
 import {
     CELESTE_GEOMETRY, deriveGeometry, validateGeometry, resolveGenPhysics,
     generateLevel, generateZoneSet, planStripSpecs, applyGapMargin,
+    deriveGeneratedRules,
 } from './generator.js';
 import { DEFAULTS } from './physics.js';
 import { validateLevel } from './level.js';
@@ -27,6 +28,9 @@ describe('geometry', () => {
         expect(G.DJ_GAP.min).toBeGreaterThan(CELESTE_GEOMETRY.REACH.single);
         expect(G.DJ_GAP.min + G.DJ_GAP.span).toBeLessThan(CELESTE_GEOMETRY.REACH.dj);
         expect(2 * G.STONE_HALF.min + G.STONE_W).toBeGreaterThan(CELESTE_GEOMETRY.REACH.dj);
+        expect(G.SPRING_TOTAL.min).toBeGreaterThan(CELESTE_GEOMETRY.REACH.dj);
+        expect(G.SPRING_TOTAL.min + G.SPRING_TOTAL.span)
+            .toBeLessThan(CELESTE_GEOMETRY.REACH.spring);
     });
 
     it('resolveGenPhysics: celeste is pinned; unknown profiles throw; explicit passthrough', () => {
@@ -58,13 +62,26 @@ describe('generateLevel', () => {
             .toBe(JSON.stringify(generateLevel(opts)));
     });
 
+    it('spring requirement: every goal derives exactly [spring]', () => {
+        const level = generateLevel({ id: 'spr', requirement: ['spring'], seed: 3 });
+        expect(level.platforms.some((p) => p.type === 'spring')).toBe(true);
+        const derived = deriveGeneratedRules(level, DEFAULTS);
+        expect(derived.defects).toEqual([]);
+        for (const pk of level.pickups) {
+            expect(derived.pickups[pk.id].minimalSets).toEqual([['spring']]);
+        }
+        for (const pt of level.portals) {
+            expect(derived.exits[pt.id].minimalSets).toEqual([['spring']]);
+        }
+    });
+
     it('rejects abilities without a gate template', () => {
         expect(() => generateLevel({ requirement: ['highJump'] }))
             .toThrow(/no gate template/);
     });
 
     it('generateZoneSet rejects counts below starter+feature+victory', () => {
-        expect(() => generateZoneSet({ count: 2 })).toThrow(/count must be >= 3/);
+        expect(() => generateZoneSet({ count: 3 })).toThrow(/count must be >= 4/);
     });
 });
 

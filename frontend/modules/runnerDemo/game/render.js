@@ -21,9 +21,9 @@ import { isPlatformActive } from '../suppression.js';
 
 const UNIT = 32; // px per Unity unit (the toolkit's rendering scale)
 
-const PLATFORM_COLORS = { ground: '#4a5568', blue: '#5b9bd5' };
+const PLATFORM_COLORS = { ground: '#4a5568', blue: '#5b9bd5', spring: '#e8843c' };
 const ARROWS = { up: '↑', down: '↓', left: '←', right: '→' };
-const ABILITY_HUD = [['doubleJump', 'DJ'], ['blue', 'B']];
+const ABILITY_HUD = [['doubleJump', 'DJ'], ['blue', 'B'], ['spring', 'S']];
 
 // characterJuice.cs values (vendored original's Juice param group)
 const JUICE = {
@@ -60,8 +60,10 @@ export function createJuice() {
         get squash() { return { x: j.squashScaleX, y: j.squashScaleY }; },
         get tilt() { return j.tiltCurrent; },
         update(prevState, state, dt) {
-            // launch: currentlyJumping rising edge (jumpEffects())
-            if (state.currentlyJumping && !prevState?.currentlyJumping
+            // launch: currentlyJumping rising edge (jumpEffects()),
+            // and the spring bounce (same stretch, bigger cause)
+            if ((state.sprungOn
+                    || (state.currentlyJumping && !prevState?.currentlyJumping))
                     && JUICE.jumpSqueeze > 1) {
                 trigger(1 / JUICE.jumpSqueeze, JUICE.jumpSqueeze);
             }
@@ -127,6 +129,16 @@ export function renderFrame(ctx, session, ui = {}) {
         if (p.type !== 'ground') { // one-way: mark the landable top
             ctx.fillStyle = 'rgba(255,255,255,0.35)';
             ctx.fillRect(sx(p.x), sy(p.y + p.h), p.w * UNIT, 2);
+        }
+        if (p.type === 'spring') { // coil glyphs along the top
+            ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+            ctx.lineWidth = 2;
+            const step = UNIT * 0.5;
+            for (let cx = sx(p.x) + step / 2; cx < sx(p.x + p.w) - 2; cx += step) {
+                ctx.beginPath();
+                ctx.arc(cx, sy(p.y + p.h) + 6, 4, Math.PI, 0);
+                ctx.stroke();
+            }
         }
     }
     ctx.globalAlpha = 1;

@@ -12,14 +12,16 @@ import { describe, it, expect } from 'vitest';
 import {
     CELESTE_GEOMETRY, sweepMaxGap, deriveGeometry, validateGeometry,
     generateLevel, generateZoneSet, deriveGeneratedRules,
-    SWEEP_SATURATING_PROFILES,
+    SWEEP_SATURATING_PROFILES, sweepSpringTotal,
 } from './generator.js';
 import { deriveAccessRules } from './deriveRules.js';
 import { DEFAULTS, PROFILES } from './physics.js';
 import { validateLevel } from './level.js';
 import { ABILITY_ITEM_NAMES, VICTORY_ITEM_NAME } from './gameCore.js';
 
-const REQUIREMENTS = [[], ['doubleJump'], ['blue'], ['doubleJump', 'blue']];
+const REQUIREMENTS = [[], ['doubleJump'], ['blue'], ['spring'],
+    ['doubleJump', 'blue'], ['doubleJump', 'spring'],
+    ['doubleJump', 'blue', 'spring']];
 const SEEDS = [1, 2, 3, 4];
 
 const goalRules = (level, derived) => Object.fromEntries([
@@ -113,6 +115,7 @@ describe('calibration pins', () => {
             .toBeCloseTo(CELESTE_GEOMETRY.REACH.single, 2);
         expect(sweepMaxGap(DEFAULTS, { doubleJump: true, blue: false }))
             .toBeCloseTo(CELESTE_GEOMETRY.REACH.dj, 2);
+        expect(sweepSpringTotal(DEFAULTS)).toBeCloseTo(CELESTE_GEOMETRY.REACH.spring, 2);
     });
 
     it('a non-pinned profile (nsmbu) derives structurally valid geometry', () => {

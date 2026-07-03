@@ -182,10 +182,11 @@ describe('runner entry — zone-based build-time hooks', () => {
 describe('runner entry — sphere-growth adapter hooks (plan §4.9)', () => {
     const DJ = 'Double Jump';
     const BLUE = 'Blue Platforms';
+    const SPRINGS = 'Springs';
 
     it('wires the hook set into the entry', () => {
         expect(substrateRegistryEntry.gateableItems).toBe(GATEABLE_ITEMS);
-        expect(GATEABLE_ITEMS).toEqual([DJ, BLUE]);
+        expect(GATEABLE_ITEMS).toEqual([DJ, BLUE, SPRINGS]);
         expect(substrateRegistryEntry.canHostExitGates).toBe(canHostExitGates);
         expect(substrateRegistryEntry.exitGateVeto).toBe(exitGateVeto);
         expect(substrateRegistryEntry.backPortalGated).toBe(backPortalGated);

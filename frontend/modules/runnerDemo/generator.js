@@ -17,9 +17,13 @@
  * table:
  *   doubleJump — a gap wider than the max single running jump (solver-
  *                swept, coyote included) but inside double-jump reach
- *   blue (any gated type) — a gap wider than even double-jump reach
- *                with a one-way stepping stone of that type mid-gap:
+ *   blue (stone types) — a gap wider than even double-jump reach with
+ *                a one-way stepping stone of that type mid-gap:
  *                suppressed without the item, the gap is uncrossable
+ *   spring     — a dj-proof TOTAL gap with a spring mid-gap: the jump
+ *                lands on the spring and the deterministic bounce
+ *                carries the far half (sweepSpringTotal calibrates
+ *                the crossable total; suppressed without Springs)
  * Pickups land on dedicated segments after all gates; the main exit
  * tops the strip's right end. BRANCHES are elevated tip platforms over
  * widened plain gaps after the gates (surplus-exit hosts, portal in
@@ -93,6 +97,37 @@ export function sweepMaxGap(C, abilities, { cap = 16 } = {}) {
 }
 
 /**
+ * Max TOTAL spring gap (near + spring width + far) the SOLVER can
+ * cross under {spring} — the spring-gate analog of sweepMaxGap. The
+ * jump onto the spring caps the landing depth, so the crossable TOTAL
+ * is invariant in the near/width split (sweep-verified: identical at
+ * near 3.5/3.9/4.2 and W 4/5) — the probe fixes near/W and searches
+ * far. Probe parameters FROZEN like sweepMaxGap's.
+ */
+export function sweepSpringTotal(C, { cap = 20 } = {}) {
+    const NEAR = 3.8;
+    const W = 4;
+    const probe = (far) => ({
+        id: 'probe',
+        size: { width: 12 + NEAR + W + far + 8, height: 24 },
+        platforms: [
+            { id: 'a', x: 0, y: 0, w: 12, h: 1, type: 'ground' },
+            { id: 'spr', x: 12 + NEAR, y: 0, w: W, h: 0.5, type: 'spring' },
+            { id: 'b', x: 12 + NEAR + W + far, y: 0, w: 8, h: 1, type: 'ground' },
+        ],
+        hazards: [], pickups: [], portals: [], spawn: { x: 1, y: 1 },
+    });
+    let lo = 0.5;
+    let hi = cap;
+    for (let i = 0; i < 20; i++) {
+        const mid = (lo + hi) / 2;
+        if (canRun(probe(mid), 'a', 'b', { spring: true }, { constants: C })) lo = mid;
+        else hi = mid;
+    }
+    return round2(NEAR + W + lo);
+}
+
+/**
  * Profiles whose reach SATURATES the sweep cap (16): the measured
  * horizontal reach exceeds the probe's search ceiling, so the swept
  * REACH values are lower bounds, not measurements — every gate window
@@ -112,13 +147,19 @@ export const SWEEP_SATURATING_PROFILES = Object.freeze(['sonic', 'meatboy']);
  * solver's arrival/trigger grids can't flip a verdict (§4.3 doctrine).
  */
 export const CELESTE_GEOMETRY = Object.freeze({
-    REACH: Object.freeze({ single: 6.69, dj: 11.4 }),   // swept (sweepMaxGap)
+    REACH: Object.freeze({ single: 6.69, dj: 11.4, spring: 13.49 }), // swept
+    //                          (sweepMaxGap / sweepSpringTotal, SPRING_RISE 10)
     SEG_W: Object.freeze({ min: 5, span: 2.5 }),        // ≫ run-up convergence (~0.5);
     //                          kept tight — floor width scales the solver's arrival grid
     RUN_GAP: Object.freeze({ min: 2.3, span: 1.3 }),    // max 3.6 ≪ single 6.69
     DJ_GAP: Object.freeze({ min: 7.4, span: 2.4 }),     // > single+0.7; max 9.8 ≤ dj−1.6
     STONE_W: 5,
     STONE_HALF: Object.freeze({ min: 3.5, span: 0.7 }), // total ≥ 12 > dj+0.5; half ≤ 4.2
+    SPRING_W: 4,
+    SPRING_NEAR: Object.freeze({ min: 3.5, span: 0.7 }), // jump-down onto the spring;
+    //                          max 4.2 ≤ 0.75 × single (grounded window, like STONE_HALF)
+    SPRING_TOTAL: Object.freeze({ min: 11.95, span: 1.05 }), // ≥ dj+0.55 (dj-proof);
+    //                          max 13.0 ≤ spring reach 13.49 − 0.49 (bounce carries it)
     BRANCH_GAP: Object.freeze({ min: 4.1, span: 0.8 }), // tip side clearance > PLAYER_W
     //                          (adjacent goal corridors overhang 0.75); max 4.9 ≪ single
     TIP_W: 2.5,
@@ -139,6 +180,7 @@ export function deriveGeometry(C, opts = {}) {
         ?? sweepMaxGap(C, { doubleJump: false, blue: false }, opts);
     const dj = opts.reaches?.dj
         ?? sweepMaxGap(C, { doubleJump: true, blue: false }, opts);
+    const spring = opts.reaches?.spring ?? sweepSpringTotal(C, opts);
     // run-up convergence distance (moveTowards is linear in v):
     // t = maxSpeed/maxAcceleration, dist = maxSpeed²/(2·maxAcceleration)
     const convergence = (C.maxSpeed * C.maxSpeed) / (2 * C.maxAcceleration);
@@ -146,8 +188,9 @@ export function deriveGeometry(C, opts = {}) {
     const TIP_W = 2.5;
     const djMargin = 0.15 * (dj - single);
     const halfMin = round1((dj * 1.06 - STONE_W) / 2);
+    const springTotalMin = round1(dj + 0.55);
     return Object.freeze({
-        REACH: Object.freeze({ single, dj }),
+        REACH: Object.freeze({ single, dj, spring }),
         SEG_W: Object.freeze({ min: Math.max(5, round1(convergence * 1.5)), span: 2.5 }),
         RUN_GAP: Object.freeze({ min: round1(0.35 * single), span: round1(0.2 * single) }),
         DJ_GAP: Object.freeze({
@@ -158,6 +201,15 @@ export function deriveGeometry(C, opts = {}) {
         STONE_HALF: Object.freeze({
             min: halfMin,
             span: round1(Math.max(0.2, Math.min(0.1 * single, 0.75 * single - halfMin))),
+        }),
+        SPRING_W: 4,
+        SPRING_NEAR: Object.freeze({
+            min: round1(Math.min(0.52 * single, 0.75 * single - 0.7)),
+            span: 0.7,
+        }),
+        SPRING_TOTAL: Object.freeze({
+            min: springTotalMin,
+            span: round1(Math.max(0.3, spring - 0.45 - springTotalMin)),
         }),
         BRANCH_GAP: Object.freeze({ min: round1(TIP_W + 2 * (C.PLAYER_W + 0.05)), span: 0.8 }),
         TIP_W,
@@ -194,6 +246,22 @@ export function validateGeometry(G, C) {
     }
     if (wMax(G.STONE_HALF) > 0.75 * R.single) {
         errors.push(`STONE_HALF max ${wMax(G.STONE_HALF)} > 75% of single reach ${R.single}`);
+    }
+    if (G.SPRING_TOTAL.min < R.dj + 0.5) {
+        errors.push(`SPRING_TOTAL min ${G.SPRING_TOTAL.min} clearable`
+            + ` with doubleJump (dj ${R.dj})`);
+    }
+    if (wMax(G.SPRING_TOTAL) > R.spring - 0.4) {
+        errors.push(`SPRING_TOTAL max ${wMax(G.SPRING_TOTAL)} not clearable`
+            + ` via the spring bounce (spring reach ${R.spring})`);
+    }
+    if (wMax(G.SPRING_NEAR) > 0.75 * R.single) {
+        errors.push(`SPRING_NEAR max ${wMax(G.SPRING_NEAR)} > 75% of single reach ${R.single}`);
+    }
+    if (G.SPRING_TOTAL.min - wMax(G.SPRING_NEAR) - G.SPRING_W < 1) {
+        errors.push('SPRING far half can collapse below 1'
+            + ` (total min ${G.SPRING_TOTAL.min}, near max ${wMax(G.SPRING_NEAR)},`
+            + ` spring w ${G.SPRING_W})`);
     }
     if (G.BRANCH_GAP.min < G.TIP_W + 2 * C.PLAYER_W) {
         errors.push(`BRANCH_GAP min ${G.BRANCH_GAP.min} leaves tip (w ${G.TIP_W})`
@@ -238,7 +306,15 @@ export function resolveGenPhysics(physics = DEFAULT_PROFILE_ID) {
 
 // ── Proposal ────────────────────────────────────────────────────────
 
-const GATEABLE = new Set(['doubleJump', 'blue']);
+const GATEABLE = new Set(['doubleJump', 'blue', 'spring']);
+
+/** The gate gap kind realising an ability's requirement (one row per
+ *  plan-§4.5 gate template; shared by both proposers). */
+function gateGapFor(ability) {
+    if (ability === 'doubleJump') return { kind: 'dj' };
+    if (ability === 'spring') return { kind: 'spring' };
+    return { kind: 'stone', type: ability };
+}
 
 function sameSets(minimalSets, want) {
     if (minimalSets.length !== 1) return false;
@@ -267,6 +343,7 @@ function realizePlan(plan, { rng, G, hazardChance }) {
     let x = 0;
     let segN = 0;
     let stoneN = 0;
+    let sprN = 0;
     let brN = 0;
     let pkN = 0;
     let hzN = 0;
@@ -285,6 +362,21 @@ function realizePlan(plan, { rng, G, hazardChance }) {
                     w: G.STONE_W, h: 0.5, type: g.type,
                 });
                 x = round2(x + half1 + G.STONE_W + half2);
+            } else if (g.kind === 'spring') {
+                // The gate invariant is the TOTAL gap (near + spring
+                // + far): the jump onto the spring caps the landing
+                // depth, so the crossable total is invariant in the
+                // split (sweepSpringTotal). Draw the near half (the
+                // landability window) and the total; the far half is
+                // the difference. Spring top 0.5 below the floors —
+                // a jump-down landing, launched back up by the bounce.
+                const near = round2(draw(rng, G.SPRING_NEAR));
+                const total = round2(draw(rng, G.SPRING_TOTAL));
+                platforms.push({
+                    id: `spring${sprN++}`, x: round2(x + near), y: 0,
+                    w: G.SPRING_W, h: 0.5, type: 'spring',
+                });
+                x = round2(x + total);
             } else if (g.kind === 'branch') {
                 const gapW = round2(draw(rng, G.BRANCH_GAP));
                 const tipY = round2(1 + G.BRANCH_RISE - G.TIP_H);
@@ -376,10 +468,7 @@ export function proposeLevel({
     };
     for (const ability of rng.shuffle([...requirement])) {
         plains();
-        plan.push({
-            role: 'plain',
-            gap: ability === 'doubleJump' ? { kind: 'dj' } : { kind: 'stone', type: ability },
-        });
+        plan.push({ role: 'plain', gap: gateGapFor(ability) });
     }
     plains();
     for (let i = 0; i < pickupCount; i++) plan.push({ role: 'pickup', gap: { kind: 'run' } });
@@ -577,10 +666,7 @@ export function proposeLevelForSpecs({ id, plan, stepsBetween, hazardChance, rng
     plan.levels.forEach((level, i) => {
         for (const ability of rng.shuffle([...level.added])) {
             plains();
-            floors.push({
-                role: 'plain',
-                gap: ability === 'doubleJump' ? { kind: 'dj' } : { kind: 'stone', type: ability },
-            });
+            floors.push({ role: 'plain', gap: gateGapFor(ability) });
         }
         if (level.pickups.length > 0 || level.tips.length > 0
                 || i === plan.levels.length - 1) plains();
@@ -677,10 +763,14 @@ export function generateLevelForSpecs(opts) {
  * the Victory zone; anything beyond is filler.
  */
 export function generateZoneSet({ count = 5, seed = 1, physics = DEFAULT_PROFILE_ID } = {}) {
-    if (count < 3) throw new Error('generateZoneSet: count must be >= 3');
+    const featureCount = Object.keys(ABILITY_ITEM_NAMES).length;
+    if (count < featureCount + 1) {
+        throw new Error(`generateZoneSet: count must be >= ${featureCount + 1}`
+            + ' (one zone per ability item + the Victory zone)');
+    }
     const rng = createRng(seed);
     const featureGrants = rng.shuffle(Object.keys(ABILITY_ITEM_NAMES));
-    const fillerCount = count - 3;
+    const fillerCount = count - featureCount - 1;
 
     // zone plans: starter, second feature (+fillers interleaved), victory
     const plans = [{ requirement: [], grants: [featureGrants[0]] }];
