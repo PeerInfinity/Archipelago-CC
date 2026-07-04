@@ -16,7 +16,8 @@ import {
 import { reachableRunPlatforms } from './canRun.js';
 import {
     flatRun, gapJump, oneWay, spikeRun, doubleGap, stepStone, springGap,
-    springShelf, djShelf, laneSplit, ceilingRun, ceilingHop, glideDrop, FIXTURES,
+    springShelf, djShelf, laneSplit, ceilingRun, ceilingHop, glideDrop,
+    shieldBed, FIXTURES,
 } from './fixtures.js';
 
 describe('abilityUniverse', () => {
@@ -31,6 +32,11 @@ describe('abilityUniverse', () => {
         // glide joins the universe via its PAD's platform gate, like
         // blue/spring — not as an always-present movement ability
         expect(abilityUniverse(glideDrop)).toEqual(['doubleJump', 'glide']);
+        // shield joins only when a budgeted `bed` hazard exists —
+        // ordinary hazards (spikes, saws, ceilings) never pull it in
+        expect(abilityUniverse(shieldBed)).toEqual(['doubleJump', 'shield']);
+        expect(abilityUniverse(ceilingRun)).toEqual(['doubleJump']);
+        expect(abilityUniverse(springShelf)).toEqual(['doubleJump', 'spring']);
     });
 });
 
@@ -135,6 +141,14 @@ describe('derived rules match fixture ground truth', () => {
         expect(r.pickups.pk_edge.minimalSets).toEqual([[]]);
         expect(r.exits.exit_main.minimalSets).toEqual([[]]);
         expect(r.defects).toEqual([]);
+    });
+
+    it('shieldBed: the exit requires exactly {shield}; the pre-bed pickup derives []', () => {
+        const r = deriveAccessRules(shieldBed);
+        expect(r.universe).toEqual(['doubleJump', 'shield']);
+        expect(r.pickups.pk_edge.minimalSets).toEqual([[]]); // item-before-the-gate
+        expect(r.exits.exit_main.minimalSets).toEqual([['shield']]);
+        expect(r.defects).toEqual([]); // incl. monotonicity across the shield subsets
     });
 
     it('ceilingHop (forgiving regime): goals derive ALWAYS', () => {

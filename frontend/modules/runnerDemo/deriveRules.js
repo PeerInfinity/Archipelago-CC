@@ -46,19 +46,28 @@ function fullGraphReach(level, abilities, opts) {
     return reachablePlatforms(buildRunGraph(level, abilities, opts));
 }
 
-const ALL_ABILITIES = ['doubleJump', 'blue', 'spring', 'glide'];
+const ALL_ABILITIES = ['doubleJump', 'blue', 'spring', 'glide', 'shield'];
 
 /**
  * The abilities that can possibly matter for this level: movement
  * abilities always (any gap could need Double Jump — the analog of
  * bounce's always-on arrows); platform-existence gates only when the
- * level contains a platform gated on them. Small (≤ ~4 in v1).
+ * level contains a platform gated on them; the Shield (a params
+ * overlay like doubleJump, but on the death threshold — §4.10) only
+ * when the level contains a budgeted `bed` hazard — on bed-free
+ * levels a hit budget can change nothing the verifier derives
+ * (ordinary hazards are avoidable by construction: spike hops, tap
+ * arcs, off-corridor saws), so the universe stays small there, the
+ * glide precedent. Small (≤ ~5 in v1).
  */
 export function abilityUniverse(level) {
     const universe = ['doubleJump'];
     for (const p of level.platforms) {
         const gate = platformGate(p);
         if (gate && !universe.includes(gate)) universe.push(gate);
+    }
+    if ((level.hazards ?? []).some((hz) => hz.type === 'bed')) {
+        universe.push('shield');
     }
     return universe;
 }

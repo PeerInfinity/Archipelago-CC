@@ -282,5 +282,36 @@ export const glideDrop = {
     spawn: { x: 1, y: 1 },
 };
 
+/** The Shield gate (plan §4.10 — the hit budget): a plain-jump-width
+ *  gap whose whole airspace is one `bed` hazard — a kill volume from
+ *  below the floor line up past the double-jump overfly bound
+ *  (2.1×jumpHeight + 0.9 above floor top), so EVERY crossing arc
+ *  passes through it: unavoidable by construction, never proven
+ *  unavoidable by the solver. Without a Shield the pre-bed floor is a
+ *  doomed pre-gate floor (its edge pickup still derives [] via the
+ *  touch grade — item-before-the-gate); with one the crossing charges
+ *  exactly one contact-edge hit and lands live. The bed is inset 0.85
+ *  from both lips (PLAYER_W overhang + margin) so a grounded stand at
+ *  either edge never touches it. The spike patch AFTER the bed (with
+ *  its flush partner floor, the spikeRun pattern) pins the spent-
+ *  budget dimension: post-bed legs run at hits 1, where the hop over
+ *  the spikes must be flown, never eaten. */
+export const shieldBed = {
+    id: 'shieldBed',
+    size: { width: 42, height: 16 },
+    platforms: [
+        { id: 'floorA', x: 0, y: 0, w: 16, h: 1, type: 'ground' },
+        { id: 'floorB', x: 19, y: 0, w: 14, h: 1, type: 'ground' },
+        { id: 'floorC', x: 33, y: 0, w: 9, h: 1, type: 'ground' },
+    ],
+    hazards: [
+        { id: 'bed1', type: 'bed', x: 16.85, y: -1, w: 1.3, h: 7.63 },
+        { id: 'spikes', type: 'spikes', x: 25, y: 1, w: 1.2, h: 0.8 },
+    ],
+    pickups: [{ id: 'pk_edge', on: 'floorA', x: 15.8, y: 1.6 }],
+    portals: [{ id: 'exit_main', on: 'floorC', x: 41.4, y: 1.6, arrow: 'right', exitName: null }],
+    spawn: { x: 1, y: 1 },
+};
+
 export const FIXTURES = [flatRun, gapJump, oneWay, spikeRun, doubleGap, stepStone, springGap,
-    springShelf, djShelf, laneSplit, ceilingRun, ceilingHop, glideDrop];
+    springShelf, djShelf, laneSplit, ceilingRun, ceilingHop, glideDrop, shieldBed];

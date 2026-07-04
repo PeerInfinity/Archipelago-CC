@@ -21,7 +21,7 @@ import {
     buildRunGraph, reachablePlatforms, reachableRunPlatforms,
 } from './canRun.js';
 import { witnessSearch } from './witnessSearch.js';
-import { FIXTURES, gapJump, glideDrop } from './fixtures.js';
+import { FIXTURES, gapJump, glideDrop, shieldBed } from './fixtures.js';
 import { noAbilities, allAbilities } from './suppression.js';
 import { DEFAULTS, step, spawnState } from './physics.js';
 
@@ -97,6 +97,35 @@ describe('glideDrop oracle gate window (plan §8.7 step 4)', () => {
         expect(oracle.exhausted).toBe(true);
         const solver = reachableRunPlatforms(glideDrop, { glide: true });
         expect(solver.has('floorB')).toBe(true);
+        for (const id of solver) {
+            expect(oracle.platforms.has(id),
+                `solver claims '${id}' but no real trajectory reaches it`).toBe(true);
+        }
+    });
+});
+
+describe('shieldBed oracle gate window (plan §4.10)', () => {
+    it('no non-shield superset crosses the bed — oracle truth, not solver pessimism', () => {
+        // the bed's top rides the double-jump overfly bound; that must
+        // hold against REAL trajectories, not just the policy family:
+        // the strongest itemset without a Shield must not reach the far
+        // side (the oracle explores hit-charged states too — s.hits is
+        // in its dedup key — so this also proves no 0-budget trajectory
+        // survives the charge)
+        const noShield = { doubleJump: true, blue: true, spring: true, glide: true };
+        const oracle = witnessSearch(shieldBed, noShield, { airBranchTicks: 3 });
+        expect(oracle.exhausted).toBe(true);
+        expect(oracle.platforms.has('floorB')).toBe(false);
+        expect(oracle.platforms.has('floorC')).toBe(false);
+        expect(oracle.pickups.has('pk_edge')).toBe(true); // pre-bed wake still collects
+    });
+
+    it('shield-only: the oracle crosses on one budgeted hit (solver ⊆ oracle)', () => {
+        const oracle = witnessSearch(shieldBed, { shield: true }, { airBranchTicks: 3 });
+        expect(oracle.exhausted).toBe(true);
+        expect(oracle.portals.has('exit_main')).toBe(true);
+        const solver = reachableRunPlatforms(shieldBed, { shield: true });
+        expect(solver.has('floorC')).toBe(true);
         for (const id of solver) {
             expect(oracle.platforms.has(id),
                 `solver claims '${id}' but no real trajectory reaches it`).toBe(true);

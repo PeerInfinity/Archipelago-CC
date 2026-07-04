@@ -79,10 +79,23 @@
  *   - `drop@x`: hold drop from a trigger when standing on a one-way
  *     platform (drop-through descend).
  *
- * Node keys carry a `hitsRemaining` dimension RESERVED from day one
- * (plan §1): always 0 in v1 (MAX_HITS 0 — any hazard touch fails the
- * leg), so the hit-budget final phase (§4.10) adds edges that spend
- * hits without re-architecting the graph.
+ * Node keys carry a `hitsRemaining` dimension, reserved from day one
+ * (plan §1) and ACTIVE since the §4.10 hit budget: a node is
+ * (platform, budget remaining), where the budget is effectiveParams'
+ * MAX_HITS (the Shield overlay — 0 without it, and then the graph is
+ * exactly the old single-level one). Arrival states carry the spent
+ * hits (`opts.hits0` → arrivedState.hits), so the SAME sims decide
+ * everything: a leg that clips a hazard within budget survives and
+ * its witness lands at hits+1; past the budget it dies like v1. An
+ * edge's `spend` is the worst witness spend, and the floods explore
+ * (platform, spent) pairs — no dominance shortcut, because the
+ * ∀-arrival's doom exclusion is not monotone in spent (an arrival
+ * live at spent 0 can be doomed at spent 1, changing which arrivals
+ * the ∀ ranges over). The doom and leg memos key on the spent hits
+ * for the same reason (the glide lesson: too-coarse cache keys).
+ * A platform whose every arrival at 0 remaining is doomed before an
+ * unavoidable hazard is the pre-gate doomed floor again — its wake
+ * pickups still derive via the touch grade (item-before-the-gate).
  *
  * The platform graph feeds `simulatorCore.js`'s BFS exactly like
  * bounce's makeJumpSolver: node = keyed platform (plus ENTRANCE),
@@ -100,7 +113,7 @@ import { reach, makeBfsSolver } from '../shared/simulatorCore.js';
 
 export const ENTRANCE = 'entrance';
 
-/** Node key with the reserved hitsRemaining dimension (v1: always 0). */
+/** Node key with the hitsRemaining dimension (0 without a Shield). */
 export const nodeKey = (platformId, hitsRemaining = 0) => `${platformId}~h${hitsRemaining}`;
 export const nodePlatformId = (key) => key.slice(0, key.lastIndexOf('~h'));
 
@@ -142,8 +155,9 @@ function standSpan(p, level, C) {
 
 /** A just-arrived (grounded, mid-run) state on `from` — the runner
  *  analog of bounce's launchedState. Field-for-field what a real
- *  landing tick leaves behind; `step` takes it from here. */
-function arrivedState(from, x, vx) {
+ *  landing tick leaves behind; `step` takes it from here. `hits` is
+ *  the budget already spent on the way here (the node dimension). */
+function arrivedState(from, x, vx, hits = 0) {
     return {
         x,
         y: topOf(from),
@@ -167,7 +181,8 @@ function arrivedState(from, x, vx) {
         lastSupportType: from.type ?? null, // pad legs must glide (physics.js)
         touchedPickups: [],
         touchedPortals: [],
-        hits: 0,
+        hits,
+        hazardContacts: [],
         respawned: null,
     };
 }
@@ -199,7 +214,7 @@ export function runQuery(level, fromId, abilities, opts = {}) {
     } else {
         const from = platformById(level, fromId);
         if (!from) throw new Error(`runQuery: unknown platform '${fromId}'`);
-        state = arrivedState(from, opts.x0 ?? from.x, opts.vx0 ?? 0);
+        state = arrivedState(from, opts.x0 ?? from.x, opts.vx0 ?? 0, opts.hits0 ?? 0);
     }
     return simulateLeg(level, fromId, state, policy, abilities, C, maxFrames);
 }
@@ -252,11 +267,15 @@ export function survivesFrom(level, platformId, state, abilities, opts = {}) {
     // different arcs cluster on the same spots, and scanning the whole
     // policy family per candidate landing is the doomed-floor cost
     // blowup. Landing states are near-canonical (grounded, vy 0), so
-    // (platform, x, vx, canJumpAgain) at 2 decimals identifies one —
-    // the same epsilon class as the sampling grids (bounce's hover
-    // precedent).
+    // (platform, x, vx, canJumpAgain, hits) at 2 decimals identifies
+    // one — the same epsilon class as the sampling grids (bounce's
+    // hover precedent). `hits` is load-bearing (§4.10): survival from
+    // a spent-budget state and a fresh one genuinely differ before an
+    // unavoidable hazard, and a shared entry would poison the grade
+    // (the glide too-coarse-key lesson).
     const key = opts.doomCache
-        ? `${platformId}|${round2(state.x)}|${round2(state.vx)}|${state.canJumpAgain ? 1 : 0}`
+        ? `${platformId}|${round2(state.x)}|${round2(state.vx)}`
+            + `|${state.canJumpAgain ? 1 : 0}|${state.hits ?? 0}`
         : null;
     if (key !== null && opts.doomCache.has(key)) return opts.doomCache.get(key);
     let survives = false;
@@ -452,15 +471,20 @@ function arrivalsFor(level, from, C_eff, opts = {}) {
 }
 
 /**
- * Detailed edge query: `{ ok, touch, witnesses }`. `ok` is the LAUNCH
- * verdict (chainable; one live-landing witness per live arrival),
- * `touch` the weaker goal-granting verdict (see the header's doom/
- * touch/launch section; ok ⇒ touch). `witnesses` accompany ok only.
+ * Detailed edge query: `{ ok, touch, witnesses, spend }`. `ok` is the
+ * LAUNCH verdict (chainable; one live-landing witness per live
+ * arrival), `touch` the weaker goal-granting verdict (see the
+ * header's doom/touch/launch section; ok ⇒ touch). `witnesses`
+ * accompany ok only; each carries `landingHits` (the spent budget at
+ * its landing) and `spend` is their worst spend over `opts.hits0` —
+ * the flood charges the edge that much (§4.10; conservative: a chain
+ * realises the worst witness).
  */
 export function canRunDetailed(level, fromId, toId, abilities, opts = {}) {
     const C = opts.constants ?? DEFAULTS;
     const C_eff = effectiveParams(C, abilities ?? {});
-    const fail = { ok: false, touch: false, witnesses: [] };
+    const hits0 = opts.hits0 ?? 0;
+    const fail = { ok: false, touch: false, witnesses: [], spend: 0 };
 
     const to = platformById(level, toId);
     if (!to || !isPlatformActive(to, abilities) || !isStandable(to)) return fail;
@@ -470,10 +494,12 @@ export function canRunDetailed(level, fromId, toId, abilities, opts = {}) {
         const r = runQuery(level, ENTRANCE, abilities, { ...opts, policy: null });
         if (r.landedOn !== toId) return fail;
         const live = survivesFrom(level, toId, r.landingState, abilities, opts);
+        const landingHits = r.landingState.hits ?? 0;
         return {
             ok: live,
             touch: true,
-            witnesses: live ? [{ x0: null, vx0: 0, policy: 'entry' }] : [],
+            witnesses: live ? [{ x0: null, vx0: 0, policy: 'entry', landingHits }] : [],
+            spend: live ? landingHits : 0,
         };
     }
     const from = platformById(level, fromId);
@@ -523,14 +549,17 @@ export function canRunDetailed(level, fromId, toId, abilities, opts = {}) {
     // source is probed against. Keyed by policy NAME: names encode
     // trigger/hold exactly (the policy identity within one family),
     // and the family is a pure function of (level, from, abilities).
+    // The key carries hits0: a leg's outcome depends on the budget
+    // already spent (a hazard clip survives or kills by it) — §4.10.
     const legCache = opts.legCache ?? null;
     const runLeg = (x0, vx0, p) => {
-        const key = legCache === null ? null : `${fromId}|${x0}|${vx0}|${p.name}`;
+        const key = legCache === null ? null : `${fromId}|${x0}|${vx0}|${hits0}|${p.name}`;
         if (key !== null) {
             const hit = legCache.get(key);
             if (hit !== undefined) return hit;
         }
-        const r = runQuery(level, fromId, abilities, { ...opts, x0, vx0, policy: p.make() });
+        const r = runQuery(level, fromId, abilities,
+            { ...opts, x0, vx0, hits0, policy: p.make() });
         if (key !== null) legCache.set(key, r);
         return r;
     };
@@ -548,7 +577,7 @@ export function canRunDetailed(level, fromId, toId, abilities, opts = {}) {
         // excluded from the ∀ exactly like doomed ones: no chain
         // delivers them as arrivals on `from`.
         const attribution = physicsStep(
-            arrivedState(from, x0, vx0), null, level, abilities, C);
+            arrivedState(from, x0, vx0, hits0), null, level, abilities, C);
         if (attribution.standingOn && attribution.standingOn !== fromId) continue;
         let live = false;
         let touched = false;
@@ -568,7 +597,10 @@ export function canRunDetailed(level, fromId, toId, abilities, opts = {}) {
             if (r.landedOn === toId) {
                 touched = true;
                 if (survivesFrom(level, toId, r.landingState, abilities, opts)) {
-                    witness = { x0, vx0, policy: p.name };
+                    witness = {
+                        x0, vx0, policy: p.name,
+                        landingHits: r.landingState.hits ?? 0,
+                    };
                     break;
                 }
                 if (++failedChecks >= witnessBudget) break;
@@ -585,7 +617,10 @@ export function canRunDetailed(level, fromId, toId, abilities, opts = {}) {
     // A vacuous ∀ (every sampled arrival doomed) must not fabricate
     // reach: a platform the player can only die on has no out-edges.
     if (liveArrivals === 0) return fail;
-    return { ok: launch, touch: true, witnesses: launch ? witnesses : [] };
+    const spend = launch
+        ? witnesses.reduce((m, w) => Math.max(m, (w.landingHits ?? hits0) - hits0), 0)
+        : 0;
+    return { ok: launch, touch: true, witnesses: launch ? witnesses : [], spend };
 }
 
 export function canRun(level, fromId, toId, abilities, opts = {}) {
@@ -597,29 +632,48 @@ export function canRun(level, fromId, toId, abilities, opts = {}) {
 /**
  * Build the per-leg platform graph for one ability set — the SOUND
  * DEFAULT substrate (full N² minus pre-filters) and the layered
- * flood's oracle. `{ level, abilities, nodes, edges, touches }` with
- * nodes keyed by `nodeKey` (hitsRemaining always 0 in v1): `edges`
- * are LAUNCH edges (chainable), `touches` the full touch relation
+ * flood's oracle. `{ level, abilities, nodes, edges, touches,
+ * entrance }` with nodes keyed by `nodeKey` — (platform, budget
+ * remaining) pairs, one LEVEL of them per remaining value 0..B where
+ * B is the ability set's MAX_HITS (§4.10; B 0 reproduces the old
+ * single-level graph byte-for-byte, entrance key included): `edges`
+ * are LAUNCH edges (chainable — the target's remaining is the
+ * source's minus the edge's spend), `touches` the full touch relation
  * (⊇ edges — goal-granting; see the header). Suppressed platforms
- * don't exist under this ability set.
+ * don't exist under this ability set. `entrance` is the start key
+ * (the spawn always has the full budget).
  */
 export function buildRunGraph(level, abilities, opts = {}) {
+    const C = opts.constants ?? DEFAULTS;
+    const B = effectiveParams(C, abilities ?? {}).MAX_HITS ?? 0;
     const platforms = activePlatforms(level, abilities).filter(isStandable);
-    const nodes = [nodeKey(ENTRANCE), ...platforms.map((p) => nodeKey(p.id))];
+    const entrance = nodeKey(ENTRANCE, B);
+    const nodes = [entrance];
+    for (let r = B; r >= 0; r--) {
+        for (const p of platforms) nodes.push(nodeKey(p.id, r));
+    }
     const edges = new Map(nodes.map((n) => [n, new Set()]));
     const touches = new Map(nodes.map((n) => [n, new Set()]));
     // one doom + leg memo per (level, abilities) evaluation — NEVER
-    // share across ability sets (doom/legs under {} ≠ under {doubleJump})
+    // share across ability sets (doom/legs under {} ≠ under {doubleJump});
+    // both memos key on the spent hits, so budget levels share safely
     const graphOpts = { doomCache: new Map(), legCache: new Map(), ...opts };
-    for (const from of [ENTRANCE, ...platforms.map((p) => p.id)]) {
+    const probe = (fromNode, fromId, hits0, remaining) => {
         for (const to of platforms) {
-            if (to.id === from) continue;
-            const r = canRunDetailed(level, from, to.id, abilities, graphOpts);
-            if (r.touch) touches.get(nodeKey(from)).add(nodeKey(to.id));
-            if (r.ok) edges.get(nodeKey(from)).add(nodeKey(to.id));
+            if (to.id === fromId) continue;
+            const r = canRunDetailed(level, fromId, to.id, abilities,
+                { ...graphOpts, hits0 });
+            if (r.touch) {
+                touches.get(fromNode).add(nodeKey(to.id, Math.max(0, remaining - r.spend)));
+            }
+            if (r.ok) edges.get(fromNode).add(nodeKey(to.id, remaining - r.spend));
         }
+    };
+    probe(entrance, ENTRANCE, 0, B);
+    for (let r = B; r >= 0; r--) {
+        for (const from of platforms) probe(nodeKey(from.id, r), from.id, B - r, r);
     }
-    return { level, abilities, nodes, edges, touches };
+    return { level, abilities, nodes, edges, touches, entrance };
 }
 
 /**
@@ -631,14 +685,14 @@ export function buildRunGraph(level, abilities, opts = {}) {
 export function makeRunSolver(graph) {
     return makeBfsSolver({
         step: (world, node, target) => (world.edges.get(node)?.has(target) ? target : null),
-        inputs: graph.nodes.filter((n) => n !== nodeKey(ENTRANCE)),
+        inputs: graph.nodes.filter((n) => nodePlatformId(n) !== ENTRANCE),
         visitedKey: (node) => node,
     });
 }
 
 /** Shortest leg path entrance → `toPlatformId` via simulatorCore. */
 export function findRunPath(graph, toPlatformId, options = {}) {
-    return reach(graph, makeRunSolver(graph), nodeKey(ENTRANCE),
+    return reach(graph, makeRunSolver(graph), graph.entrance ?? nodeKey(ENTRANCE),
         (node) => nodePlatformId(node) === toPlatformId, options);
 }
 
@@ -649,7 +703,7 @@ export const planPlatformIds = (plan) => plan.map(nodePlatformId);
  *  touch step out of every launchable node (touch targets grant
  *  their goals but cannot chain onward — see the header). */
 export function reachablePlatforms(graph) {
-    const start = nodeKey(ENTRANCE);
+    const start = graph.entrance ?? nodeKey(ENTRANCE);
     const launchable = new Set([start]);
     const queue = [start];
     while (queue.length > 0) {
@@ -698,6 +752,11 @@ export function reachableRunPlatforms(level, abilities, opts = {}) {
         doomCache: new Map(), legCache: new Map(), ...opts,
     };
     const C = queryOpts.constants ?? DEFAULTS;
+    // The hit budget (§4.10): flood nodes are (platform, spent) pairs,
+    // collapsed to platform ids in `reached`. B 0 makes the pair the
+    // platform id again — identical behavior AND identical evaluation
+    // order to the pre-budget flood.
+    const B = effectiveParams(C, abilities ?? {}).MAX_HITS ?? 0;
     const platforms = activePlatforms(level, abilities).filter(isStandable)
         .sort((a, b) => (a.x - b.x) || (a.y - b.y));
     const reached = new Set();
@@ -706,26 +765,37 @@ export function reachableRunPlatforms(level, abilities, opts = {}) {
     reached.add(entryLeg.landedOn);
     const remaining = goalHosts
         ? new Set([...goalHosts].filter((h) => !reached.has(h))) : null;
-    const launchable = new Set();
-    const queue = [];
+    const launchable = new Set(); // `${id}|${spent}` — expanded pairs
+    const queue = [];             // { id, spent }
     if (survivesFrom(level, entryLeg.landedOn, entryLeg.landingState, abilities, queryOpts)) {
-        launchable.add(entryLeg.landedOn);
-        queue.push(entryLeg.landedOn);
+        const spent0 = entryLeg.landingState.hits ?? 0;
+        launchable.add(`${entryLeg.landedOn}|${spent0}`);
+        queue.push({ id: entryLeg.landedOn, spent: spent0 });
     }
+    // a target is saturated once every budget level of it is expanded —
+    // nothing new can come from probing it again (B 0: the old skip)
+    const saturated = (id) => {
+        for (let s = 0; s <= B; s++) if (!launchable.has(`${id}|${s}`)) return false;
+        return true;
+    };
     while (queue.length > 0 && !(remaining && remaining.size === 0)) {
-        const fromId = queue.shift();
+        const { id: fromId, spent } = queue.shift();
         const from = platforms.find((p) => p.id === fromId);
         for (const p of platforms) {
-            if (launchable.has(p.id)) continue; // fully expanded already
+            if (saturated(p.id)) continue; // fully expanded already
             if (p.x + p.w < from.x - C.PLAYER_W) continue; // the x-prune
-            const r = canRunDetailed(level, fromId, p.id, abilities, queryOpts);
+            const r = canRunDetailed(level, fromId, p.id, abilities,
+                { ...queryOpts, hits0: spent });
             if (r.touch) {
                 reached.add(p.id);
                 remaining?.delete(p.id);
             }
             if (r.ok) {
-                launchable.add(p.id);
-                queue.push(p.id);
+                const key = `${p.id}|${spent + r.spend}`;
+                if (!launchable.has(key)) {
+                    launchable.add(key);
+                    queue.push({ id: p.id, spent: spent + r.spend });
+                }
             }
             if (remaining && remaining.size === 0) break;
         }

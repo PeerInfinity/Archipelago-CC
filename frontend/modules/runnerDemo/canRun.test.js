@@ -14,7 +14,8 @@ import {
 } from './canRun.js';
 import {
     flatRun, gapJump, oneWay, spikeRun, doubleGap, stepStone, springGap,
-    springShelf, djShelf, laneSplit, ceilingRun, ceilingHop, glideDrop, FIXTURES,
+    springShelf, djShelf, laneSplit, ceilingRun, ceilingHop, glideDrop,
+    shieldBed, FIXTURES,
 } from './fixtures.js';
 import { noAbilities, allAbilities } from './suppression.js';
 import { DEFAULTS } from './physics.js';
@@ -203,8 +204,8 @@ describe('one-way platforms (oneWay)', () => {
     });
 });
 
-describe('graph, BFS, and the reserved hits dimension', () => {
-    it('node keys carry hitsRemaining from day one (always 0 in v1)', () => {
+describe('graph, BFS, and the hits dimension', () => {
+    it('node keys carry hitsRemaining (0 without a Shield)', () => {
         expect(nodeKey('floorA')).toBe('floorA~h0');
         expect(nodeKey('floorA', 2)).toBe('floorA~h2');
         expect(nodePlatformId('floorA~h0')).toBe('floorA');
@@ -264,6 +265,66 @@ describe('survivesFrom', () => {
         const doomLanding = land(doubleGap);
         expect(survivesFrom(doubleGap, 'floorA', doomLanding.landingState, NONE)).toBe(false);
         expect(survivesFrom(doubleGap, 'floorA', doomLanding.landingState, DJ)).toBe(true);
+    });
+});
+
+describe('shieldBed: the hit-budget gate (plan §4.10)', () => {
+    const SHIELD = { shield: true };
+    const NO_SHIELD_MAX = {
+        doubleJump: true, blue: true, spring: true, glide: true, shield: false,
+    };
+
+    it('the bed blocks every itemset without a Shield — including all movement items', () => {
+        expect(canRun(shieldBed, 'floorA', 'floorB', NONE)).toBe(false);
+        expect(canRun(shieldBed, 'floorA', 'floorB', DJ)).toBe(false);
+        expect(canRun(shieldBed, 'floorA', 'floorB', NO_SHIELD_MAX)).toBe(false);
+        // not even the touch grade: every arrival on floorA is doomed
+        // and every crossing dies inside the bed
+        expect(canRunDetailed(shieldBed, 'floorA', 'floorB', NONE).touch).toBe(false);
+    });
+
+    it('with a Shield the crossing charges exactly ONE hit (every witness lands at hits 1)', () => {
+        const r = canRunDetailed(shieldBed, 'floorA', 'floorB', SHIELD);
+        expect(r.ok).toBe(true);
+        expect(r.spend).toBe(1);
+        expect(r.witnesses.length).toBeGreaterThan(0);
+        expect(r.witnesses.every((w) => w.landingHits === 1)).toBe(true);
+    });
+
+    it('the spent-budget dimension: an exhausted budget cannot re-cross, but chains onward', () => {
+        // from floorA with the budget already spent the bed is lethal again
+        expect(canRunDetailed(shieldBed, 'floorA', 'floorB', SHIELD, { hits0: 1 }).ok)
+            .toBe(false);
+        // from floorB at hits 1 the spike hop must be FLOWN, never eaten:
+        // the leg exists and spends nothing
+        const on = canRunDetailed(shieldBed, 'floorB', 'floorC', SHIELD, { hits0: 1 });
+        expect(on.ok).toBe(true);
+        expect(on.spend).toBe(0);
+    });
+
+    it('the pre-bed floor is a doomed pre-gate floor without the item (entry still touches)', () => {
+        const entry = runQuery(shieldBed, ENTRANCE, NONE, { policy: null });
+        expect(entry.landedOn).toBe('floorA');
+        expect(survivesFrom(shieldBed, 'floorA', entry.landingState, NONE)).toBe(false);
+        expect(survivesFrom(shieldBed, 'floorA', entry.landingState, SHIELD)).toBe(true);
+        expect([...reachableRunPlatforms(shieldBed, NONE)]).toEqual(['floorA']);
+        expect([...reachableRunPlatforms(shieldBed, SHIELD)].sort())
+            .toEqual(['floorA', 'floorB', 'floorC']);
+    });
+
+    it('the graph carries the dimension: entrance at full budget, the crossing plans end-to-end', () => {
+        const g = buildRunGraph(shieldBed, SHIELD);
+        expect(g.entrance).toBe(nodeKey(ENTRANCE, 1));
+        expect(g.nodes).toContain(nodeKey('floorB', 0)); // the post-bed budget level
+        const r = findRunPath(g, 'floorC');
+        expect(r.ok).toBe(true);
+        expect(planPlatformIds(r.plan)).toEqual(['floorA', 'floorB', 'floorC']);
+        // the bed edge lands one budget level down
+        expect(g.edges.get(nodeKey('floorA', 1)).has(nodeKey('floorB', 0))).toBe(true);
+        // without the item the graph is the old single-level one
+        const g0 = buildRunGraph(shieldBed, NONE);
+        expect(g0.entrance).toBe(nodeKey(ENTRANCE, 0));
+        expect(findRunPath(g0, 'floorB').ok).toBe(false);
     });
 });
 
