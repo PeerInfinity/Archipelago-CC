@@ -7,8 +7,8 @@
  * and nothing else, so they cannot diverge).
  *
  * Ability set shape (booleans; a missing key means locked):
- *   { doubleJump, blue, spring, glide }           — the v1.1 universe
- *   (+ future: highJump, brake, left, shield — plan §6/§7)
+ *   { doubleJump, blue, spring, glide, shield }   — the v1.1 universe
+ *   (+ future: highJump, brake, left — plan §6/§7)
  *
  * Two gating mechanisms, both monotone by construction (plan §3):
  * - EXISTENCE: gated platform types are one-way with drop-through, so
@@ -20,6 +20,12 @@
  * - EFFECTIVE PARAMS: movement abilities overlay physics params
  *   (doubleJump → maxAirJumps 1). Using them is voluntary, so any
  *   trajectory possible without the ability survives gaining it.
+ *   The Shield (plan §4.10) is the same mechanism on the DEATH
+ *   THRESHOLD instead of movement: shield → MAX_HITS 1 (the hit
+ *   budget = the collected count, NOT 1+count — zero shields keep
+ *   any hit lethal, byte-identical to v1). Trajectories are
+ *   untouched (a hit is a knockback-free counter tick), so gaining
+ *   it only ever ADDS survivable outcomes — monotone by construction.
  */
 
 const PLATFORM_GATES = {
@@ -75,14 +81,19 @@ export function activePlatforms(level, abilities) {
  * geometry AND this overlay (deriveRules signature dedup).
  */
 export function effectiveParams(constants, abilities) {
-    if (!abilities?.doubleJump) return constants;
-    return { ...constants, maxAirJumps: 1 };
+    const dj = !!abilities?.doubleJump;
+    const shield = !!abilities?.shield;
+    if (!dj && !shield) return constants;
+    const out = { ...constants };
+    if (dj) out.maxAirJumps = 1;
+    if (shield) out.MAX_HITS = 1; // the hit budget = the collected count (v1: 0 or 1)
+    return out;
 }
 
 export function noAbilities() {
-    return { doubleJump: false, blue: false, spring: false, glide: false };
+    return { doubleJump: false, blue: false, spring: false, glide: false, shield: false };
 }
 
 export function allAbilities() {
-    return { doubleJump: true, blue: true, spring: true, glide: true };
+    return { doubleJump: true, blue: true, spring: true, glide: true, shield: true };
 }

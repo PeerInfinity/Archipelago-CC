@@ -305,6 +305,60 @@ describe('hazards, falling, reset', () => {
     });
 });
 
+describe('hit budget (plan §4.10 — Shield)', () => {
+    const SHIELD = { shield: true };
+    const twoPatches = () => makeLevel({
+        hazards: [
+            { id: 'hzA', type: 'spikes', x: 8, y: 1, w: 2, h: 0.8 },
+            { id: 'hzB', type: 'spikes', x: 20, y: 1, w: 1, h: 0.8 },
+        ],
+    });
+
+    it('one contact episode charges ONE hit however long the overlap lasts', () => {
+        const trace = run(twoPatches(), 60, () => ({}), SHIELD);
+        const contactTicks = trace.filter((s) => s.hazardContacts.includes('hzA'));
+        expect(contactTicks.length).toBeGreaterThan(3); // a walk-through overlaps many ticks
+        expect(contactTicks.every((s) => s.hits === 1)).toBe(true); // charged once, at entry
+        expect(trace.slice(0, 55).some((s) => s.respawned)).toBe(false);
+    });
+
+    it('the second hazard exhausts the budget and respawns; the respawn refills it', () => {
+        const trace = run(twoPatches(), 400, () => ({}), SHIELD);
+        const death = trace.findIndex((s) => s.respawned === 'hazard');
+        expect(death).toBeGreaterThan(0);
+        expect(trace[death].hits).toBe(0); // per-attempt reset, budget refilled
+        expect(trace[death].hazardContacts).toEqual([]);
+        // the next life replays the same story: survive A, die at B
+        const secondDeath = trace.slice(death + 1).findIndex((s) => s.respawned === 'hazard');
+        expect(secondDeath).toBeGreaterThan(0);
+        expect(trace.slice(death + 1, death + 1 + secondDeath)
+            .some((s) => s.hits === 1)).toBe(true);
+    });
+
+    it('leaving and re-entering the SAME hazard is a second episode (second charge)', () => {
+        const level = makeLevel({
+            hazards: [{ id: 'wide', type: 'spikes', x: 8, y: 1, w: 6, h: 0.8 }],
+        });
+        // enter the patch (charge 1), then a tap hop that clears its
+        // 0.8 top and lands back INSIDE it — the re-entry must charge
+        // again and exhaust the budget
+        const first = run(level, 60, () => ({}), SHIELD)
+            .findIndex((s) => s.hits === 1);
+        expect(first).toBeGreaterThan(0);
+        const trace = run(level, first + 60,
+            (t) => (t >= first + 2 && t < first + 5 ? { jump: true } : {}), SHIELD);
+        const death = trace.find((s) => s.respawned === 'hazard');
+        expect(death).toBeDefined();
+    });
+
+    it('MAX_HITS 0 keeps the first contact tick lethal (v1 byte-identity)', () => {
+        const trace = run(twoPatches(), 120); // no shield
+        const death = trace.findIndex((s) => s.respawned === 'hazard');
+        expect(death).toBeGreaterThan(0);
+        expect(trace.slice(0, death).every((s) => s.hits === 0)).toBe(true);
+    });
+});
+
 describe('goal touches', () => {
     it('auto-run crosses a pickup and a portal placed in its wake', () => {
         const level = makeLevel({
@@ -343,10 +397,13 @@ describe('determinism and profiles', () => {
         expect(() => physicsStampFor('nope')).toThrow(/unknown physics profile/);
     });
 
-    it('effectiveParams is identity without abilities and overlays doubleJump', () => {
+    it('effectiveParams is identity without abilities and overlays doubleJump + shield', () => {
         expect(effectiveParams(DEFAULTS, noAbilities())).toBe(DEFAULTS);
         expect(effectiveParams(DEFAULTS, allAbilities()).maxAirJumps).toBe(1);
+        expect(effectiveParams(DEFAULTS, allAbilities()).MAX_HITS).toBe(1);
+        expect(effectiveParams(DEFAULTS, { shield: true }).maxAirJumps).toBe(0);
         expect(DEFAULTS.maxAirJumps).toBe(0); // base untouched
+        expect(DEFAULTS.MAX_HITS).toBe(0);
     });
 });
 

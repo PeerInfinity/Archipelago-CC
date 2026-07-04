@@ -24,13 +24,15 @@ function runUntil(session, pred, { maxTicks = 2000, inputAt = () => ({}) } = {})
 
 describe('itemsToAbilities', () => {
     it('maps AP item names (strings or {name}) to abilities', () => {
-        expect(itemsToAbilities([])).toEqual({ doubleJump: false, blue: false, spring: false, glide: false });
+        const none = {
+            doubleJump: false, blue: false, spring: false, glide: false, shield: false,
+        };
+        expect(itemsToAbilities([])).toEqual(none);
         expect(itemsToAbilities([ABILITY_ITEM_NAMES.doubleJump]).doubleJump).toBe(true);
         expect(itemsToAbilities([{ name: ABILITY_ITEM_NAMES.blue }]).blue).toBe(true);
         expect(itemsToAbilities([ABILITY_ITEM_NAMES.spring]).spring).toBe(true);
         expect(itemsToAbilities([ABILITY_ITEM_NAMES.glide]).glide).toBe(true);
-        expect(itemsToAbilities([VICTORY_ITEM_NAME, 'Nonsense']))
-            .toEqual({ doubleJump: false, blue: false, spring: false, glide: false });
+        expect(itemsToAbilities([VICTORY_ITEM_NAME, 'Nonsense'])).toEqual(none);
     });
 });
 

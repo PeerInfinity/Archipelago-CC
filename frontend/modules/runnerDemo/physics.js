@@ -53,8 +53,15 @@
  *   tick the player is returned to the spawn; per-attempt state
  *   (hits, future broken platforms) resets with it.
  * - `hits`: hazard hits this attempt. `hits > constants.MAX_HITS`
- *   respawns — MAX_HITS is 0 in v1 (any hit kills); it is the
- *   hit-budget hook the final phase activates (plan §4.10).
+ *   respawns — MAX_HITS is 0 at base (any hit kills) and the Shield
+ *   ability overlays it to the collected count (plan §4.10 — the hit
+ *   budget; suppression.js effectiveParams). Charging is CONTACT-EDGE:
+ *   `hazardContacts` records the hazard ids overlapped each tick, and
+ *   a hit is charged only when a hazard enters that set (per-tick
+ *   charging would spend the whole budget crossing ONE spike bed).
+ *   With MAX_HITS 0 the first contact tick still kills — behavior-
+ *   identical to the per-tick rule. The budget refills with the rest
+ *   of the per-attempt state (respawn / region entry), §8.0.
  */
 
 import { activePlatforms, effectiveParams } from './suppression.js';
@@ -263,6 +270,7 @@ export function spawnState(level, C = DEFAULTS) {
         touchedPickups: [],
         touchedPortals: [],
         hits: 0,
+        hazardContacts: [],
         respawned: null,
         C, // convenience echo for renderers; step never reads it
     };
@@ -298,6 +306,7 @@ function respawn(state, level, cause) {
         touchedPickups: [],
         touchedPortals: [],
         hits: 0,
+        hazardContacts: [],
         respawned: cause,
     };
 }
@@ -600,16 +609,27 @@ export function step(state, input, level, abilities, constants) {
     }
 
     // Hazards: non-solid kill AABBs (plan §3 — never collision
-    // geometry). A hit beyond the budget respawns; MAX_HITS is the
-    // phase-10 hook and 0 in v1.
+    // geometry). Charging is CONTACT-EDGE (see the header): one hit
+    // per contact episode per hazard, so a budgeted arc through a
+    // spike bed spends exactly one hit however many ticks the crossing
+    // overlaps it. Leaving a hazard's box and re-entering charges
+    // again (a hop inside a wide patch is two episodes — the sims see
+    // exactly that). A hit beyond the budget respawns; MAX_HITS is 0
+    // at base and the Shield ability raises it (plan §4.10).
+    const prevContacts = state.hazardContacts ?? [];
+    const contacts = [];
     for (const hz of level.hazards ?? []) {
         if (aabb(s.x, s.y, C.PLAYER_W, C.PLAYER_H, hz.x, hz.y, hz.w, hz.h)) {
-            s.hits += 1;
-            if (s.hits > C.MAX_HITS) {
-                return respawn(s, level, 'hazard');
+            contacts.push(hz.id);
+            if (!prevContacts.includes(hz.id)) {
+                s.hits += 1;
+                if (s.hits > C.MAX_HITS) {
+                    return respawn(s, level, 'hazard');
+                }
             }
         }
     }
+    s.hazardContacts = contacts;
 
     // Goal touches (touch-triggered, unlike bounce's landing-triggered
     // goals; the goal-wake placement invariant lives in level.js).
