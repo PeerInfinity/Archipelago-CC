@@ -34,4 +34,5 @@ location_table: Dict[str, LocationData] = {
     "region_2_0__loc_0": LocationData("region_2_0", "region_2_0__loc_0", 1001, False),
     "region_0_1__loc_0": LocationData("region_0_1", "region_0_1__loc_0", 1002, False),
     "region_1_1__loc_0": LocationData("region_1_1", "region_1_1__loc_0", 1003, False),
+    "region_2_1__loc_0": LocationData("region_2_1", "region_2_1__loc_0", 1004, False),
 }

@@ -165,7 +165,12 @@ const zoneBundle = await readBundle();
 check('bundle: zone demo quota runner=5, empty pool',
     zoneBundle.substrateQuotas.runner === 5
         && Object.keys(zoneBundle.scenario.items).length === 0);
-await panel.locator('button:has-text("Generate")').first().click();
+// the default zone table builds LAZILY inside this click's handler and
+// costs ~30-60s of synchronous solver time since Glide (4 feature
+// zones, §8.7 step 4) — the page's main thread is blocked, so the
+// click needs a budget well past Playwright's 30s default
+await panel.locator('button:has-text("Generate")').first()
+    .click({ timeout: 180000 });
 const zoneStats = await waitFor('spiral completion stats', async () => {
     // spiral success sets NO message (the message element only renders
     // when non-empty) — errors do; probe it as optional

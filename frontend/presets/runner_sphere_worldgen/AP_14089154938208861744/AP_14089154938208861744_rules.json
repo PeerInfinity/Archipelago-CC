@@ -378,6 +378,7 @@
                 "FALL_MARGIN": 5,
                 "MAX_HITS": 0,
                 "GOAL_HALF": 0.375,
+                "GLIDE_FALL_CAP": 2,
                 "SPRING_RISE": 10
               }
             }
@@ -612,6 +613,7 @@
                 "FALL_MARGIN": 5,
                 "MAX_HITS": 0,
                 "GOAL_HALF": 0.375,
+                "GLIDE_FALL_CAP": 2,
                 "SPRING_RISE": 10
               }
             },
@@ -785,6 +787,7 @@
                 "FALL_MARGIN": 5,
                 "MAX_HITS": 0,
                 "GOAL_HALF": 0.375,
+                "GLIDE_FALL_CAP": 2,
                 "SPRING_RISE": 10
               }
             },

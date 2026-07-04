@@ -22,8 +22,9 @@ class ItemData:
 
 
 item_table: Dict[str, ItemData] = {
-    "Springs": ItemData(1, ItemClassification.progression),
-    "Double Jump": ItemData(2, ItemClassification.progression),
+    "Glide": ItemData(1, ItemClassification.progression),
+    "Blue Platforms": ItemData(2, ItemClassification.progression),
     "Victory": ItemData(3, ItemClassification.progression),
-    "Blue Platforms": ItemData(4, ItemClassification.progression),
+    "Springs": ItemData(4, ItemClassification.progression),
+    "Double Jump": ItemData(5, ItemClassification.progression),
 }
