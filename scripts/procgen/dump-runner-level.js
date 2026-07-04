@@ -139,7 +139,7 @@ function render(level, abilities, C = DEFAULTS) {
         fillRect(p, p.type === 'ground' ? '=' : (active ? 'B' : 'b'));
     }
     for (const hz of level.hazards ?? []) {
-        fillRect(hz, hz.type === 'ceiling' ? 'v' : '^');
+        fillRect(hz, hz.type === 'ceiling' ? 'v' : hz.type === 'bed' ? '#' : '^');
     }
     for (const pk of level.pickups ?? []) put(pk.x, pk.y, 'o');
     for (const pt of level.portals ?? []) put(pt.x, pt.y, 'O');

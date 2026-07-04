@@ -21,10 +21,20 @@ import { validateLevel } from './level.js';
 import { ABILITY_ITEM_NAMES, VICTORY_ITEM_NAME, createGameSession } from './gameCore.js';
 import { createBotDriver } from './botDriver.js';
 
+// Shield rows are EXPENSIVE (a bed pulls 'shield' into the verify
+// universe — 2× the subset table — and every shield-subset flood gains
+// a second budget level), so the matrix carries the two load-bearing
+// rows only: the solo gate and the nested chain. Wider shield combos
+// are covered where they're cheap-per-run: the 6-zone table ([spring,
+// shield] / [blue,shield] reqs + the bot gate), the spec-path shield
+// test below, and the sphere slow suite. A 5-ability everything row
+// was tried and timed the suite out (~51 min): the 4-ability row stays
+// the everything check.
 const REQUIREMENTS = [[], ['doubleJump'], ['blue'], ['spring'],
     ['doubleJump', 'blue'], ['doubleJump', 'spring'],
     ['doubleJump', 'blue', 'spring'],
     ['glide'], ['doubleJump', 'glide'], ['glide', 'spring'],
+    ['shield'], ['doubleJump', 'shield'],
     ['blue', 'doubleJump', 'glide', 'spring']];
 const SEEDS = [1, 2, 3, 4];
 
@@ -60,7 +70,7 @@ describe('seed-range generate-and-verify', () => {
             expect(JSON.stringify(generateLevel(opts)), requirement.join('+'))
                 .toBe(JSON.stringify(generateLevel(opts)));
         }
-    }, 300000);
+    }, 600000);
 
     it('independent full-graph derive agrees with the layered verify path', () => {
         for (const requirement of REQUIREMENTS) {
@@ -76,9 +86,10 @@ describe('seed-range generate-and-verify', () => {
                 expect(sets, `${level.id} ${id}`).toEqual([want]);
             }
         }
-        // 11 requirements × (generate + full-N² derive); glide strips
-        // are the longest levels in the corpus
-    }, 600000);
+        // 13 requirements × (generate + full-N² derive); glide strips
+        // are the longest levels in the corpus, and shield rows add a
+        // second budget level to every full graph
+    }, 900000);
 });
 
 describe('generateZoneSet', () => {
@@ -110,8 +121,8 @@ describe('generateZoneSet', () => {
     });
 
     it('same seed ⇒ byte-identical zone table', () => {
-        expect(JSON.stringify(generateZoneSet({ count: 5, seed: 3 })))
-            .toBe(JSON.stringify(generateZoneSet({ count: 5, seed: 3 })));
+        expect(JSON.stringify(generateZoneSet({ count: 6, seed: 3 })))
+            .toBe(JSON.stringify(generateZoneSet({ count: 6, seed: 3 })));
     });
 
     it('every zone goal is BOT-completable: no deaths, no foreign portal fires', () => {
@@ -120,12 +131,20 @@ describe('generateZoneSet', () => {
         // is travel, not death) — geometry can satisfy the logic yet
         // trap actual play (the user-reported tip-then-spikes doom
         // window). This gate drives the real bot through every goal of
-        // a generated zone table under the entry-time item set with
-        // every portal open, and requires clean completion — the same
-        // standard a human player is held to.
-        const zones = generateZoneSet({ count: 5, seed: 1 });
+        // a generated zone table with every portal open, and requires
+        // clean completion — the same standard a human player is held
+        // to. Each zone runs under TWO item sets: the entry-time set,
+        // and the FULL vocabulary — real play visits zones carrying
+        // later items, which changes both the route (more edges) and
+        // the candidate policies; the §4.10 budget mirage (a Double-
+        // Jump shortcut only feasible at fresh budget, proposed after
+        // the bed spent it — user-reported death loop) only manifests
+        // under the superset.
+        const zones = generateZoneSet({ count: 6, seed: 1 });
+        const fullItems = Object.values(ABILITY_ITEM_NAMES);
         for (const zone of zones) {
-            const items = zone.spec.requirement.map((a) => ABILITY_ITEM_NAMES[a]);
+            const entryItems = zone.spec.requirement.map((a) => ABILITY_ITEM_NAMES[a]);
+            for (const items of [entryItems, fullItems]) {
             const session = createGameSession(zone.level);
             session.setItems(items);
             const helpers = {
@@ -158,13 +177,15 @@ describe('generateZoneSet', () => {
                                 && ev.id === target.id) done = true;
                     }
                 }
-                const label = `${zone.level.id} ${target.kind}:${target.id}`;
+                const label = `${zone.level.id} [${items.join(',') || 'no items'}]`
+                    + ` ${target.kind}:${target.id}`;
                 expect(done, `${label} not completed`).toBe(true);
                 expect(deaths, `${label} deaths`).toBe(0);
                 expect(foreign, `${label} foreign portal fires`).toBe(0);
             }
+            }
         }
-    }, 600000);
+    }, 900000);
 });
 
 describe('reward shelves (plan §8.7 step 2)', () => {
@@ -261,6 +282,37 @@ describe('reward shelves (plan §8.7 step 2)', () => {
         expect(derived.exits.exit_br0.minimalSets).toEqual([[]]);
         expect(derived.pickups.it_a.minimalSets).toEqual([[]]);
     }, 120000);
+
+    it('spec path realises a shield gate (§4.10 — the hit budget)', () => {
+        const { level, derived, portalByKey } = generateLevelForSpecs({
+            id: 'shield_spec',
+            exitSpecs: [
+                { key: 'E', requirement: ['shield'] },
+                { key: 'N', requirement: [] },
+            ],
+            pickupSpecs: [{ id: 'it_s', requirement: [] }],
+            hazardChance: 0.5, seed: 3,
+        });
+        const beds = level.hazards.filter((hz) => hz.type === 'bed');
+        expect(beds).toHaveLength(1); // one budgeted hazard per strip
+        expect(portalByKey.E).toBe('exit_main');
+        expect(derived.exits.exit_main.minimalSets).toEqual([['shield']]);
+        expect(derived.exits[portalByKey.N].minimalSets).toEqual([[]]);
+        expect(derived.pickups.it_s.minimalSets).toEqual([[]]);
+        // the bed's landing floor is hazard-exempt (crossings land with
+        // the budget spent — a spike there is the tip-trap doom class)
+        const bed = beds[0];
+        const landing = level.platforms
+            .filter((p) => p.type === 'ground' && p.x >= bed.x + bed.w - 0.01)
+            .sort((a, b) => a.x - b.x)[0];
+        expect(landing).toBeTruthy();
+        for (const hz of level.hazards) {
+            if (hz.type === 'bed') continue;
+            const onLanding = hz.x < landing.x + landing.w && hz.x + hz.w > landing.x
+                && hz.y >= landing.y + landing.h - 0.01;
+            expect(onLanding, `hazard ${hz.id} sits on the bed's landing floor`).toBe(false);
+        }
+    }, 300000);
 
     it('spec path realises a glide gate window (§8.7 step 4)', () => {
         const { level, derived, portalByKey } = generateLevelForSpecs({

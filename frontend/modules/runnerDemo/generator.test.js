@@ -154,6 +154,48 @@ describe('generateLevel', () => {
         }
     }, 60000);
 
+    it('shield requirement: one bed fills the gap airspace; every goal derives exactly [shield]', () => {
+        const level = generateLevel({
+            id: 'sh', requirement: ['shield'], hazardChance: 0.5, seed: 1,
+        });
+        const beds = level.hazards.filter((hz) => hz.type === 'bed');
+        expect(beds).toHaveLength(1); // one budgeted hazard per strip (§4.10)
+        const bed = beds[0];
+        const G = CELESTE_GEOMETRY;
+        // the volume: below the floor line up past the dj overfly bound,
+        // inset from both lips (grounded stands never touch it)
+        expect(bed.y).toBeLessThan(1);
+        expect(bed.y + bed.h).toBeCloseTo(1 + G.BED_TOP, 5);
+        const flankL = level.platforms
+            .filter((p) => p.type === 'ground' && p.x + p.w <= bed.x + 0.01)
+            .sort((a, b) => (b.x + b.w) - (a.x + a.w))[0];
+        const landing = level.platforms
+            .filter((p) => p.type === 'ground' && p.x >= bed.x + bed.w - 0.01)
+            .sort((a, b) => a.x - b.x)[0];
+        expect(bed.x - (flankL.x + flankL.w)).toBeCloseTo(G.BED_INSET, 5);
+        expect(landing.x - (bed.x + bed.w)).toBeCloseTo(G.BED_INSET, 5);
+        // gap drawn from the BED_GAP window
+        const gap = Math.round((landing.x - (flankL.x + flankL.w)) * 100) / 100;
+        expect(gap).toBeGreaterThanOrEqual(G.BED_GAP.min);
+        expect(gap).toBeLessThanOrEqual(G.BED_GAP.min + G.BED_GAP.span + 0.01);
+        // the landing floor is hazard-exempt (crossings land budget-spent)
+        for (const hz of level.hazards) {
+            if (hz.type === 'bed') continue;
+            expect(hz.x + hz.w <= landing.x || hz.x >= landing.x + landing.w
+                || hz.y + hz.h <= landing.y + landing.h,
+            `hazard ${hz.id} on the bed landing floor`).toBe(true);
+        }
+        const derived = deriveGeneratedRules(level, DEFAULTS);
+        expect(derived.defects).toEqual([]);
+        expect(derived.universe).toContain('shield');
+        for (const pk of level.pickups) {
+            expect(derived.pickups[pk.id].minimalSets).toEqual([['shield']]);
+        }
+        for (const pt of level.portals) {
+            expect(derived.exits[pt.id].minimalSets).toEqual([['shield']]);
+        }
+    }, 60000);
+
     it('a profile that refuses glide gates (GLIDE_GAP null) throws on a glide requirement', () => {
         const refusing = { ...CELESTE_GEOMETRY, GLIDE_GAP: null };
         expect(() => generateLevel({
@@ -377,7 +419,8 @@ describe('generateLevel', () => {
     }, 60000);
 
     it('generateZoneSet rejects counts below starter+feature+victory', () => {
-        expect(() => generateZoneSet({ count: 4 })).toThrow(/count must be >= 5/);
+        // the threshold tracks the ability vocabulary (featureCount + 1)
+        expect(() => generateZoneSet({ count: 4 })).toThrow(/count must be >= \d+/);
     });
 });
 

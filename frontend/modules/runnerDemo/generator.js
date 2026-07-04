@@ -24,6 +24,11 @@
  *                lands on the spring and the deterministic bounce
  *                carries the far half (sweepSpringTotal calibrates
  *                the crossable total; suppressed without Springs)
+ *   shield     — a plain-jump gap whose airspace is one budgeted `bed`
+ *                kill volume topping out past the dj overfly bound:
+ *                every crossing arc passes through it and the solver
+ *                charges it one hit (§4.10 — the hit budget; the
+ *                Shield item raises MAX_HITS to the collected count)
  * Pickups land on dedicated segments after all gates; the main exit
  * tops the strip's right end. REWARD SHELVES (plan §8.7 step 2): with
  * probability shelfChance an eligible level hangs ONE always-active
@@ -428,6 +433,21 @@ export const CELESTE_GEOMETRY = Object.freeze({
     GLIDE_DJ_MAX: 6.29,                                 // sweepGlideChasm {doubleJump}, min extents
     GLIDE_REACH: Object.freeze({ min: 16.43, max: 17.87 }), // {glide} at pad rise 1.2 / 1.5
     GLIDE_LAND_PAD: 11.4,                               // GLIDE_REACH.max − GLIDE_GAP.min + 1.5
+    // ── shield gate (§4.10 / §8.7 step 5) — the hit-budget spike bed:
+    //    a plain-jump-width gap whose airspace is ONE `bed` kill
+    //    volume. BED_TOP (rise above the floor top) rides the same
+    //    double-jump overfly bound CEIL_H trusts (2.1×jumpHeight, +0.9
+    //    player-bottom margin), so every crossing arc under EVERY
+    //    ability set passes through the volume — unavoidable by
+    //    construction; the solver just charges it one hit. BED_INSET
+    //    keeps grounded lip stands (PLAYER_W overhang) out of it; the
+    //    gap window stays far under the plain-jump cap so the charged
+    //    crossing is comfortable. The oracle corpus (shieldBed) pins
+    //    the bound against real trajectories. ──
+    BED_GAP: Object.freeze({ min: 2.8, span: 0.8 }),    // max 3.6 ≤ 0.75×single 5.02
+    BED_INSET: 0.85,                                    // PLAYER_W 0.75 + 0.1
+    BED_TOP: 5.63,                                      // 2.1×jumpHeight + 0.9
+    BED_DEPTH: 2,                                       // below the floor TOP (bottom −1)
 });
 
 /**
@@ -606,6 +626,16 @@ export function deriveGeometry(C, opts = {}) {
         GLIDE_REACH: (glideLo !== null && glideHi !== null)
             ? Object.freeze({ min: glideLo, max: glideHi }) : null,
         GLIDE_LAND_PAD: glideGap === null ? null : round1(glideHi - glideGap.min + 1.5),
+        // Shield-gate windows (§4.10). The gap scales like RUN_GAP's
+        // floor but never collapses the inset bed interior below ~1
+        // unit; the top is the dj overfly bound (see CELESTE_GEOMETRY).
+        BED_GAP: Object.freeze({
+            min: round1(Math.max(0.4 * single, 2 * (C.PLAYER_W + 0.1) + 1.1)),
+            span: round1(0.12 * single),
+        }),
+        BED_INSET: round2(C.PLAYER_W + 0.1),
+        BED_TOP: round2(2.1 * C.jumpHeight + 0.9),
+        BED_DEPTH: 2,
     });
 }
 
@@ -799,6 +829,29 @@ export function validateGeometry(G, C) {
         // the pad rise reuses RAMP_STEP, whose landability the ramp
         // constraints above already assert
     }
+    // ── shield gate (§4.10): the gap must stay a comfortable plain
+    //    jump, the inset must clear the grounded lip overhang, the
+    //    inset bed interior must still span something every arc
+    //    crosses, and the top must ride the dj overfly bound (the
+    //    same bound the ceiling slab's thickness trusts). ──
+    if (wMax(G.BED_GAP) > 0.75 * R.single) {
+        errors.push(`BED_GAP max ${wMax(G.BED_GAP)} > 75% of single reach ${R.single}`);
+    }
+    if (G.BED_INSET < C.PLAYER_W + 0.05) {
+        errors.push(`BED_INSET ${G.BED_INSET} lets a grounded lip stand`
+            + ` touch the bed (PLAYER_W ${C.PLAYER_W})`);
+    }
+    if (G.BED_GAP.min - 2 * G.BED_INSET < 1) {
+        errors.push(`bed interior collapses below 1 unit (gap min ${G.BED_GAP.min},`
+            + ` inset ${G.BED_INSET})`);
+    }
+    if (G.BED_TOP < 2.1 * C.jumpHeight + 0.85) {
+        errors.push(`BED_TOP ${G.BED_TOP} below the double-jump overfly bound`
+            + ` ${round2(2.1 * C.jumpHeight + 0.85)} — arcs could cross over the bed`);
+    }
+    if (1 + G.BED_TOP > 15) {
+        errors.push(`BED_TOP ${G.BED_TOP} does not fit the strip height 16`);
+    }
     return errors;
 }
 
@@ -828,7 +881,7 @@ export function resolveGenPhysics(physics = DEFAULT_PROFILE_ID) {
 
 // ── Proposal ────────────────────────────────────────────────────────
 
-const GATEABLE = new Set(['doubleJump', 'blue', 'spring', 'glide']);
+const GATEABLE = new Set(['doubleJump', 'blue', 'spring', 'glide', 'shield']);
 
 /** Gates whose descent corridor can carry a reward shelf (§8.7 step
  *  2): the spring bounce and dj arcs rise high enough to catch an
@@ -845,6 +898,7 @@ function gateGapFor(ability) {
     if (ability === 'doubleJump') return { kind: 'dj' };
     if (ability === 'spring') return { kind: 'spring' };
     if (ability === 'glide') return { kind: 'glide' };
+    if (ability === 'shield') return { kind: 'bed' };
     return { kind: 'stone', type: ability };
 }
 
@@ -1118,6 +1172,28 @@ function realizePlan(plan, { rng, G, hazardChance, jitter = 0 }) {
                 x = round2(x + padGap + padW);
                 x = round2(x + draw(rng, G.GLIDE_GAP));
                 gapPad = G.GLIDE_LAND_PAD;
+            } else if (g.kind === 'bed') {
+                // SHIELD GATE (§4.10): a plain-jump gap whose airspace
+                // is one budgeted `bed` kill volume — from below the
+                // floor line up past the double-jump overfly bound
+                // (BED_TOP), inset from both lips so grounded stands
+                // never touch it. Every crossing arc passes through it:
+                // unavoidable BY CONSTRUCTION (the solver never proves
+                // unavoidability — it just charges the crossing one
+                // hit), so goals past it derive exactly prefix ∪
+                // {shield}. Both flanks are base-anchored for free
+                // (kind ≠ 'run' fails jitterable on both sides) and the
+                // landing floor is hazard-exempt below (the cc9b62226
+                // landing-corridor class — crossing landings cluster on
+                // its left end with the budget already spent).
+                const gapW = round2(draw(rng, G.BED_GAP));
+                hazards.push({
+                    id: `hz${hzN++}`, type: 'bed',
+                    x: round2(x + G.BED_INSET), y: round2(1 - G.BED_DEPTH),
+                    w: round2(gapW - 2 * G.BED_INSET),
+                    h: round2(G.BED_DEPTH + G.BED_TOP),
+                });
+                x = round2(x + gapW);
             } else if (g.kind === 'branch') {
                 const gapW = round2(draw(rng, G.BRANCH_GAP));
                 const tipY = round2(1 + G.BRANCH_RISE - G.TIP_H);
@@ -1167,6 +1243,11 @@ function realizePlan(plan, { rng, G, hazardChance, jitter = 0 }) {
         if (f.role === 'plain' && !f.gap?.shelf && f.gap?.kind !== 'split'
                 && f.gap?.kind !== 'ceil' && plan[i + 1]?.gap?.kind !== 'ceil'
                 && f.gap?.kind !== 'glide' // the glide landing must stay survivable
+                // the bed's landing floor: crossings land here with the
+                // budget already SPENT, so a spike patch would turn the
+                // landing zone into a doom window (§4.10; the same
+                // verifier-blind play-hostility class as branch tips)
+                && f.gap?.kind !== 'bed'
                 // the branch-tip fall-off corridor: the tip's portal box
                 // spans its wake, so the only portal-CLEAN crossings are
                 // jumps off the tip's left half — and their landings
@@ -1631,8 +1712,9 @@ export function generateLevelForSpecs(opts) {
  * nothing, grants the first ability item) + the second feature zone +
  * the Victory zone; anything beyond is filler.
  */
-export function generateZoneSet({ count = 5, seed = 1, physics = DEFAULT_PROFILE_ID } = {}) {
+export function generateZoneSet({ count, seed = 1, physics = DEFAULT_PROFILE_ID } = {}) {
     const featureCount = Object.keys(ABILITY_ITEM_NAMES).length;
+    count ??= featureCount + 1; // one grant zone per ability item + Victory
     if (count < featureCount + 1) {
         throw new Error(`generateZoneSet: count must be >= ${featureCount + 1}`
             + ' (one zone per ability item + the Victory zone)');
