@@ -25,6 +25,11 @@ describe('geometry', () => {
         const G = deriveGeometry(DEFAULTS, {
             reaches: CELESTE_GEOMETRY.REACH, rises: CELESTE_GEOMETRY.RISE,
             ceils: { min: CELESTE_GEOMETRY.CEIL_MIN_CLEAR },
+            glides: {
+                dj: CELESTE_GEOMETRY.GLIDE_DJ_MAX,
+                lo: CELESTE_GEOMETRY.GLIDE_REACH.min,
+                hi: CELESTE_GEOMETRY.GLIDE_REACH.max,
+            },
         });
         expect(validateGeometry(G, DEFAULTS)).toEqual([]);
         // ceiling band sits between the swept clearance and the
@@ -44,6 +49,13 @@ describe('geometry', () => {
         expect(G.DJ_SHELF_RISE.min + G.DJ_SHELF_RISE.span)
             .toBeLessThan(CELESTE_GEOMETRY.RISE.dj);
         expect(G.SPRING_SHELF_RISE.min).toBeGreaterThan(CELESTE_GEOMETRY.RISE.dj);
+        // glide chasm sits strictly between the swept dj bound and the
+        // glide reach, and the landing pad contains the longest glide
+        expect(G.GLIDE_GAP.min).toBeGreaterThan(CELESTE_GEOMETRY.GLIDE_DJ_MAX);
+        expect(G.GLIDE_GAP.min + G.GLIDE_GAP.span)
+            .toBeLessThan(CELESTE_GEOMETRY.GLIDE_REACH.min);
+        expect(G.GLIDE_LAND_PAD)
+            .toBeGreaterThanOrEqual(CELESTE_GEOMETRY.GLIDE_REACH.max - G.GLIDE_GAP.min + 1.2);
     });
 
     it('resolveGenPhysics: celeste is pinned; unknown profiles throw; explicit passthrough', () => {
@@ -87,6 +99,45 @@ describe('generateLevel', () => {
             expect(derived.exits[pt.id].minimalSets).toEqual([['spring']]);
         }
     }, 60000);
+
+    it('glide requirement: ramp + pad + chasm; every goal derives exactly [glide]', () => {
+        const level = generateLevel({ id: 'gl', requirement: ['glide'], seed: 7 });
+        const pads = level.platforms.filter((p) => p.type === 'glider');
+        expect(pads).toHaveLength(1);
+        const pad = pads[0];
+        // the chasm: no platform surface between the pad's right edge
+        // and the landing floor, which starts a GLIDE_GAP-window width
+        // away and is widened by GLIDE_LAND_PAD (containment)
+        const landing = level.platforms
+            .filter((p) => p.type === 'ground' && p.x >= pad.x + pad.w)
+            .sort((a, b) => a.x - b.x)[0];
+        const gap = Math.round((landing.x - (pad.x + pad.w)) * 100) / 100;
+        const G = CELESTE_GEOMETRY;
+        expect(gap).toBeGreaterThanOrEqual(G.GLIDE_GAP.min);
+        expect(gap).toBeLessThanOrEqual(G.GLIDE_GAP.min + G.GLIDE_GAP.span + 0.01);
+        expect(landing.w).toBeGreaterThanOrEqual(G.GLIDE_LAND_PAD);
+        // the landing floor is hazard-exempt (the glide must survive)
+        for (const hz of level.hazards) {
+            expect(hz.x + hz.w <= landing.x || hz.x >= landing.x + landing.w,
+                `hazard ${hz.id} on the glide landing floor`).toBe(true);
+        }
+        const derived = deriveGeneratedRules(level, DEFAULTS);
+        expect(derived.defects).toEqual([]);
+        for (const pk of level.pickups) {
+            expect(derived.pickups[pk.id].minimalSets).toEqual([['glide']]);
+        }
+        for (const pt of level.portals) {
+            expect(derived.exits[pt.id].minimalSets).toEqual([['glide']]);
+        }
+    }, 60000);
+
+    it('a profile that refuses glide gates (GLIDE_GAP null) throws on a glide requirement', () => {
+        const refusing = { ...CELESTE_GEOMETRY, GLIDE_GAP: null };
+        expect(() => generateLevel({
+            id: 'glr', requirement: ['glide'],
+            physics: { constants: DEFAULTS, geometry: refusing },
+        })).toThrow(/refuses glide gates/);
+    });
 
     it('rejects abilities without a gate template', () => {
         expect(() => generateLevel({ requirement: ['highJump'] }))
@@ -303,7 +354,7 @@ describe('generateLevel', () => {
     }, 60000);
 
     it('generateZoneSet rejects counts below starter+feature+victory', () => {
-        expect(() => generateZoneSet({ count: 3 })).toThrow(/count must be >= 4/);
+        expect(() => generateZoneSet({ count: 4 })).toThrow(/count must be >= 5/);
     });
 });
 

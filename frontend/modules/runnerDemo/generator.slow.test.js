@@ -13,7 +13,7 @@ import {
     CELESTE_GEOMETRY, sweepMaxGap, deriveGeometry, validateGeometry,
     generateLevel, generateLevelForSpecs, generateZoneSet, deriveGeneratedRules,
     SWEEP_SATURATING_PROFILES, sweepSpringTotal, sweepMaxRise, sweepCeilingMin,
-    measureTapArc, applyCeilingMargin,
+    sweepGlideChasm, measureTapArc, applyCeilingMargin,
 } from './generator.js';
 import { deriveAccessRules } from './deriveRules.js';
 import { DEFAULTS, PROFILES } from './physics.js';
@@ -22,7 +22,9 @@ import { ABILITY_ITEM_NAMES, VICTORY_ITEM_NAME } from './gameCore.js';
 
 const REQUIREMENTS = [[], ['doubleJump'], ['blue'], ['spring'],
     ['doubleJump', 'blue'], ['doubleJump', 'spring'],
-    ['doubleJump', 'blue', 'spring']];
+    ['doubleJump', 'blue', 'spring'],
+    ['glide'], ['doubleJump', 'glide'], ['glide', 'spring'],
+    ['blue', 'doubleJump', 'glide', 'spring']];
 const SEEDS = [1, 2, 3, 4];
 
 const goalRules = (level, derived) => Object.fromEntries([
@@ -57,7 +59,7 @@ describe('seed-range generate-and-verify', () => {
             expect(JSON.stringify(generateLevel(opts)), requirement.join('+'))
                 .toBe(JSON.stringify(generateLevel(opts)));
         }
-    });
+    }, 300000);
 
     it('independent full-graph derive agrees with the layered verify path', () => {
         for (const requirement of REQUIREMENTS) {
@@ -73,7 +75,9 @@ describe('seed-range generate-and-verify', () => {
                 expect(sets, `${level.id} ${id}`).toEqual([want]);
             }
         }
-    });
+        // 11 requirements × (generate + full-N² derive); glide strips
+        // are the longest levels in the corpus
+    }, 600000);
 });
 
 describe('generateZoneSet', () => {
@@ -205,6 +209,23 @@ describe('reward shelves (plan §8.7 step 2)', () => {
         expect(derived.pickups.it_a.minimalSets).toEqual([[]]);
     }, 120000);
 
+    it('spec path realises a glide gate window (§8.7 step 4)', () => {
+        const { level, derived, portalByKey } = generateLevelForSpecs({
+            id: 'glide_spec',
+            exitSpecs: [
+                { key: 'E', requirement: ['glide'] },
+                { key: 'N', requirement: [] },
+            ],
+            pickupSpecs: [{ id: 'it_g', requirement: ['glide'] }],
+            seed: 2,
+        });
+        expect(level.platforms.some((p) => p.type === 'glider')).toBe(true);
+        expect(portalByKey.E).toBe('exit_main');
+        expect(derived.exits.exit_main.minimalSets).toEqual([['glide']]);
+        expect(derived.exits[portalByKey.N].minimalSets).toEqual([[]]);
+        expect(derived.pickups.it_g.minimalSets).toEqual([['glide']]);
+    }, 300000);
+
     it('spec path honors jitter (raised floors; goals still derive exactly)', () => {
         const { level, derived } = generateLevelForSpecs({
             id: 'jit_spec',
@@ -289,6 +310,19 @@ describe('calibration pins', () => {
         const easy = applyCeilingMargin(CELESTE_GEOMETRY, 1);
         const sweptEasy = sweepCeilingMin(DEFAULTS, easy.CEIL_GAP.min + easy.CEIL_GAP.span);
         expect(easy.CEIL_RISE.min).toBeGreaterThanOrEqual(sweptEasy + 0.4);
+    }, 300000);
+
+    it('the pinned celeste GLIDE bounds match fresh chasm sweeps', () => {
+        // worst-case dj bound: max ramp step, MIN pad extents (the
+        // landing floor nearest the suppressed pad's ramp)
+        expect(sweepGlideChasm(DEFAULTS, { doubleJump: true }, { padGap: 1.4, padW: 5 }))
+            .toBeCloseTo(CELESTE_GEOMETRY.GLIDE_DJ_MAX, 2);
+        expect(sweepGlideChasm(DEFAULTS, { glide: true },
+            { padRise: 1.2, padGap: 1.4, padW: 5 }))
+            .toBeCloseTo(CELESTE_GEOMETRY.GLIDE_REACH.min, 2);
+        expect(sweepGlideChasm(DEFAULTS, { glide: true },
+            { padRise: 1.5, padGap: 1.8, padW: 6 }))
+            .toBeCloseTo(CELESTE_GEOMETRY.GLIDE_REACH.max, 2);
     }, 300000);
 
     it('SWEEP_SATURATING_PROFILES membership matches a fresh dj sweep of every profile', () => {

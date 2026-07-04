@@ -210,6 +210,64 @@ export function sweepCeilingMin(C, gapW, { cap = 12, over = 1.5, slabH = 4.5 } =
 }
 
 /**
+ * Max glide-chasm width (§8.7 step 4) — the calibration the GLIDE gate
+ * windows hang off. The probe is the gate's own frozen geometry: a
+ * 3-floor ramp (each `step` up, the worst case for the no-item bound),
+ * a `glider` pad `padRise` above the ramp top, and the chasm from the
+ * pad's right edge down to a base-height landing floor. The searched
+ * quantity is the drawn chasm width in realizePlan's own coordinate
+ * (pad right edge → landing floor), for BOTH sides of the window:
+ * with {glide} the crossing is the pad walk-off glide (reach grows
+ * with the pad height); with {doubleJump} the pad is suppressed and
+ * the best launch is the ramp top — lower and further left, so the
+ * same drawn width is a strictly harder jump. ENTRY-INCLUSIVE like
+ * sweepCeilingMin (the flood from the real spawn — arrivals onto the
+ * pad ride the real ramp hops).
+ */
+export function sweepGlideChasm(C, abilities, {
+    step = 1.5, padRise = 1.2, padGap = 1.6, padW = 5.5, cap = 30,
+} = {}) {
+    const RAMP_GAP = 2.5;
+    const RAMP_W = 4;
+    const PAD_GAP = padGap;
+    const PAD_W = padW;
+    const probe = (gap) => {
+        const platforms = [{ id: 'a', x: 0, y: 0, w: 12, h: 1, type: 'ground' }];
+        let x = 12;
+        let rise = 0;
+        for (let r = 0; r < 3; r++) {
+            rise = round2(rise + step);
+            platforms.push({
+                id: `r${r}`, x: round2(x + RAMP_GAP), y: rise, w: RAMP_W, h: 1, type: 'ground',
+            });
+            x = round2(x + RAMP_GAP + RAMP_W);
+        }
+        platforms.push({
+            id: 'pad', x: round2(x + PAD_GAP),
+            y: round2(rise + 1 + padRise - 0.5), w: PAD_W, h: 0.5, type: 'glider',
+        });
+        x = round2(x + PAD_GAP + PAD_W);
+        platforms.push({
+            id: 'b', x: round2(x + gap), y: 0, w: 40, h: 1, type: 'ground',
+        });
+        return {
+            id: 'probe', size: { width: round2(x + gap + 40), height: 30 },
+            platforms, hazards: [], pickups: [], portals: [], spawn: { x: 1, y: 1 },
+        };
+    };
+    const ok = (gap) => reachableRunPlatforms(probe(gap), abilities, { constants: C }).has('b');
+    if (!ok(0.5)) return null; // the approach itself fails (no window)
+    let lo = 0.5;
+    let hi = cap;
+    for (let i = 0; i < 20; i++) {
+        const mid = (lo + hi) / 2;
+        if (ok(mid)) lo = mid;
+        else hi = mid;
+    }
+    return round2(lo);
+}
+
+/**
  * The grounded-tap arc under `C` — apex player-TOP height above the
  * floor top, and horizontal range back to the same height — measured
  * by running the real engine once (a 1-tick hold from a converged
@@ -352,6 +410,24 @@ export const CELESTE_GEOMETRY = Object.freeze({
     TAP: Object.freeze({ top: 1.87, range: 1.62 }),     // measureTapArc — the grounded-tap
     //                        arc anchoring applyCeilingMargin's forgiving end (the robust
     //                        swept min at tap-crossable gaps is ~TAP.top: 1.86 at gap ≤ 1.3)
+    // ── glide gate (§8.7 step 4) — a 3-step ramp (RAMP_* windows; the
+    //    pad rise reuses RAMP_STEP: one more step up, but one-way) to a
+    //    `glider` pad over an extra-wide DROP chasm. All bounds are
+    //    sweepGlideChasm results in the DRAWN coordinate (pad right
+    //    edge → landing floor): GLIDE_DJ_MAX at the worst case (max
+    //    ramp step, MIN pad extents — the landing floor nearest the
+    //    suppressed pad's ramp), GLIDE_REACH across the pad-rise
+    //    window. The landing floor is widened by GLIDE_LAND_PAD so the
+    //    longest glide (reach at max rise) still lands ON it — the
+    //    containment guarantee that a glide can never overfly a later
+    //    gate. ──
+    GLIDE_STEPS: 3,
+    GLIDE_PAD_GAP: Object.freeze({ min: 1.4, span: 0.4 }), // pad left rel ramp-top right
+    GLIDE_PAD_W: Object.freeze({ min: 5, span: 1 }),
+    GLIDE_GAP: Object.freeze({ min: 8, span: 4.5 }),    // > dj 6.29 + 1.7; max 12.5 ≤ 16.43 − 3.9
+    GLIDE_DJ_MAX: 6.29,                                 // sweepGlideChasm {doubleJump}, min extents
+    GLIDE_REACH: Object.freeze({ min: 16.43, max: 17.87 }), // {glide} at pad rise 1.2 / 1.5
+    GLIDE_LAND_PAD: 11.4,                               // GLIDE_REACH.max − GLIDE_GAP.min + 1.5
 });
 
 /**
@@ -440,6 +516,25 @@ export function deriveGeometry(C, opts = {}) {
         ? null : round2(fullTop - 0.4 - ceilRiseMin);
     const ceilRise = (ceilRiseSpan !== null && ceilRiseSpan >= 0.25)
         ? Object.freeze({ min: ceilRiseMin, span: ceilRiseSpan }) : null;
+    // Glide-gate windows (§8.7 step 4). The dj bound is swept at the
+    // WORST case (max ramp step, min pad extents); the glide reach at
+    // both ends of the pad-rise window (= RAMP_STEP, reused). Profiles
+    // whose window collapses (or whose approach fails outright, e.g.
+    // saturating sweeps returning null) REFUSE glide gates: GLIDE_GAP
+    // null, and generateLevel throws on a glide requirement there.
+    const glideDj = opts.glides?.dj ?? sweepGlideChasm(C, { doubleJump: true },
+        { step: rampStepMax, padGap: 1.4, padW: 5 });
+    const glideLo = opts.glides?.lo ?? sweepGlideChasm(C, { glide: true },
+        { step: rampStepMax, padRise: rampStepMin, padGap: 1.4, padW: 5 });
+    const glideHi = opts.glides?.hi ?? sweepGlideChasm(C, { glide: true },
+        { step: rampStepMax, padRise: rampStepMax, padGap: 1.8, padW: 6 });
+    const glideGapMin = glideDj === null
+        ? null : round1(glideDj + Math.max(0.6, 0.27 * glideDj));
+    const glideGapMax = (glideGapMin === null || glideLo === null)
+        ? null : round1(Math.min(glideLo - 1.5, glideGapMin + 4.5));
+    const glideGap = (glideGapMax !== null && glideGapMax - glideGapMin >= 0.5)
+        ? Object.freeze({ min: glideGapMin, span: round1(glideGapMax - glideGapMin) })
+        : null;
     return Object.freeze({
         REACH: Object.freeze({ single, dj, spring, singleUp, singleUpRamp }),
         RISE: Object.freeze({ single: riseSingle, dj: riseDj }),
@@ -503,6 +598,14 @@ export function deriveGeometry(C, opts = {}) {
         CEIL_H: ceilRise === null
             ? null : round1(Math.max(4.5, 2.1 * C.jumpHeight + C.PLAYER_H + 0.5 - ceilRise.min)),
         TAP: Object.freeze(opts.tap ?? measureTapArc(C)),
+        GLIDE_STEPS: 3,
+        GLIDE_PAD_GAP: Object.freeze({ min: 1.4, span: 0.4 }),
+        GLIDE_PAD_W: Object.freeze({ min: 5, span: 1 }),
+        GLIDE_GAP: glideGap,
+        GLIDE_DJ_MAX: glideDj,
+        GLIDE_REACH: (glideLo !== null && glideHi !== null)
+            ? Object.freeze({ min: glideLo, max: glideHi }) : null,
+        GLIDE_LAND_PAD: glideGap === null ? null : round1(glideHi - glideGap.min + 1.5),
     });
 }
 
@@ -673,6 +776,29 @@ export function validateGeometry(G, C) {
                 + ' forgiving end');
         }
     }
+    // ── glide gate (§8.7 step 4): the chasm must be dj-proof with
+    //    margin against the SWEPT worst case, comfortably inside the
+    //    glide reach, and the widened landing floor must contain the
+    //    longest glide (the no-overfly guarantee). A profile may
+    //    refuse glide gates (GLIDE_GAP null); then nothing applies. ──
+    if (G.GLIDE_GAP) {
+        if (G.GLIDE_DJ_MAX === null || G.GLIDE_GAP.min < G.GLIDE_DJ_MAX + 0.5) {
+            errors.push(`GLIDE_GAP min ${G.GLIDE_GAP.min} too close to the swept`
+                + ` double-jump bound ${G.GLIDE_DJ_MAX}`);
+        }
+        if (!G.GLIDE_REACH || wMax(G.GLIDE_GAP) > G.GLIDE_REACH.min - 1) {
+            errors.push(`GLIDE_GAP max ${wMax(G.GLIDE_GAP)} not glidable with margin`
+                + ` (glide reach ${G.GLIDE_REACH?.min})`);
+        }
+        if (G.GLIDE_REACH
+                && G.GLIDE_LAND_PAD < G.GLIDE_REACH.max - G.GLIDE_GAP.min + 1.2) {
+            errors.push('glide landing floor cannot contain the longest glide'
+                + ` (pad ${G.GLIDE_LAND_PAD}, reach ${G.GLIDE_REACH.max},`
+                + ` gap min ${G.GLIDE_GAP.min})`);
+        }
+        // the pad rise reuses RAMP_STEP, whose landability the ramp
+        // constraints above already assert
+    }
     return errors;
 }
 
@@ -702,7 +828,7 @@ export function resolveGenPhysics(physics = DEFAULT_PROFILE_ID) {
 
 // ── Proposal ────────────────────────────────────────────────────────
 
-const GATEABLE = new Set(['doubleJump', 'blue', 'spring']);
+const GATEABLE = new Set(['doubleJump', 'blue', 'spring', 'glide']);
 
 /** Gates whose descent corridor can carry a reward shelf (§8.7 step
  *  2): the spring bounce and dj arcs rise high enough to catch an
@@ -718,6 +844,7 @@ const SHELF_CHANCE_DEFAULT = 0.6;
 function gateGapFor(ability) {
     if (ability === 'doubleJump') return { kind: 'dj' };
     if (ability === 'spring') return { kind: 'spring' };
+    if (ability === 'glide') return { kind: 'glide' };
     return { kind: 'stone', type: ability };
 }
 
@@ -810,6 +937,7 @@ function realizePlan(plan, { rng, G, hazardChance, jitter = 0 }) {
     let pkN = 0;
     let hzN = 0;
     let lnN = 0;
+    let pdN = 0;
     // shelf platform + wake pickup; returns the shelf (saw placement)
     const pushShelf = (left, rise, w, spec) => {
         const shelf = {
@@ -956,6 +1084,40 @@ function realizePlan(plan, { rng, G, hazardChance, jitter = 0 }) {
                     }
                 }
                 x = round2(x + total);
+            } else if (g.kind === 'glide') {
+                // GLIDE GATE (§8.7 step 4): a ramp climbs GLIDE_STEPS
+                // ground floors (RAMP windows — the same grammar as
+                // splits), then a `glider` pad (existence-gated on the
+                // Glide item, one more RAMP_STEP up but one-way) hangs
+                // past the ramp top over an extra-wide DROP chasm.
+                // Holding jump during the pad walk-off caps fall speed
+                // (physics.js) and sails the chasm; without the item
+                // the pad is absent and the chasm is dj-proof from the
+                // lower ramp top (GLIDE_DJ_MAX). The landing floor is
+                // this entry's own floor, widened by GLIDE_LAND_PAD so
+                // the longest glide still lands ON it (no-overfly
+                // containment) — and kept hazard-free below.
+                let rise = 0;
+                for (let r = 0; r < G.GLIDE_STEPS; r++) {
+                    const stepGap = round2(draw(rng, G.RAMP_GAP));
+                    rise = round2(rise + draw(rng, G.RAMP_STEP));
+                    const w = round2(draw(rng, G.RAMP_W));
+                    platforms.push({
+                        id: `seg${segN++}`, x: round2(x + stepGap), y: rise,
+                        w, h: 1, type: 'ground',
+                    });
+                    x = round2(x + stepGap + w);
+                }
+                const padRise = round2(draw(rng, G.RAMP_STEP));
+                const padGap = round2(draw(rng, G.GLIDE_PAD_GAP));
+                const padW = round2(draw(rng, G.GLIDE_PAD_W));
+                platforms.push({
+                    id: `pad${pdN++}`, x: round2(x + padGap),
+                    y: round2(rise + 1 + padRise - 0.5), w: padW, h: 0.5, type: 'glider',
+                });
+                x = round2(x + padGap + padW);
+                x = round2(x + draw(rng, G.GLIDE_GAP));
+                gapPad = G.GLIDE_LAND_PAD;
             } else if (g.kind === 'branch') {
                 const gapW = round2(draw(rng, G.BRANCH_GAP));
                 const tipY = round2(1 + G.BRANCH_RISE - G.TIP_H);
@@ -1004,6 +1166,7 @@ function realizePlan(plan, { rng, G, hazardChance, jitter = 0 }) {
         // must land back and RUN off flush, never climb.
         if (f.role === 'plain' && !f.gap?.shelf && f.gap?.kind !== 'split'
                 && f.gap?.kind !== 'ceil' && plan[i + 1]?.gap?.kind !== 'ceil'
+                && f.gap?.kind !== 'glide' // the glide landing must stay survivable
                 && seg.w >= 2 * G.HAZARD_MARGIN + 1.8
                 && rng.next() < hazardChance) {
             const hw = round2(1 + rng.next() * 0.6);
@@ -1130,8 +1293,12 @@ export function generateLevel({
     for (const a of requirement) {
         if (!GATEABLE.has(a)) throw new Error(`generateLevel: no gate template for '${a}'`);
     }
-    const { C, G: Gbase } = resolveGenPhysics(physics);
+    const { profileId, C, G: Gbase } = resolveGenPhysics(physics);
     const G = applyCeilingMargin(Gbase, ceilingMargin);
+    if (requirement.includes('glide') && !G.GLIDE_GAP) {
+        throw new Error(`generateLevel('${id}'): the '${profileId}' physics profile`
+            + ' refuses glide gates (no verifiable chasm window)');
+    }
     const want = [...requirement].sort();
     const rejected = [];
     for (let attempt = 0; attempt < attempts; attempt++) {
@@ -1394,11 +1561,15 @@ export function* generateLevelForSpecsGen({
     attempts = 8,
     physics = DEFAULT_PROFILE_ID,
 } = {}) {
-    const { C, G } = resolveGenPhysics(physics);
+    const { profileId, C, G } = resolveGenPhysics(physics);
     const Geff = applyCeilingMargin(applyGapMargin(G, gapMargin), ceilingMargin);
     // Structural validation runs ONCE (spec-level, non-retryable) so a
     // decline (non-nested chain, tipless maximal set) throws immediately.
     const plan = planStripSpecs(exitSpecs, pickupSpecs);
+    if (!Geff.GLIDE_GAP && plan.levels.some((l) => l.added.includes('glide'))) {
+        throw new Error(`generateLevelForSpecs('${id}'): the '${profileId}' physics`
+            + ' profile refuses glide gates (no verifiable chasm window)');
+    }
 
     const wantByGoal = new Map([
         ...exitSpecs.map((s) => [plan.portalByKey[s.key], [...new Set(s.requirement ?? [])].sort()]),
