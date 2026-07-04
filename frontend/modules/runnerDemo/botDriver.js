@@ -200,7 +200,12 @@ export function createBotDriver(opts = {}) {
                 return { goalTouched: true, portals };
             }
             if (state.standingOn && state.standingOn !== fromId) {
-                return { landedOn: state.standingOn, landingX: state.x, portals };
+                return {
+                    landedOn: state.standingOn,
+                    landingX: state.x,
+                    landingState: state, // liveness check (replan)
+                    portals,
+                };
             }
         }
         return { timedOut: true, portals };
@@ -294,28 +299,42 @@ export function createBotDriver(opts = {}) {
         const goal = (legTo === goalHost && isGoalOpen(helpers, target)) ? target : null;
 
         // First candidate whose live sim completes the leg without
-        // touching an open non-target portal box. When the leg's
-        // DESTINATION itself hosts one (a forced crossing of a branch
-        // tip), prefer the LEFTMOST clean landing — deep landings can
-        // leave no jump-off point before the tip's portal box.
+        // touching an open non-target portal box AND whose landing is
+        // LIVE (survivesFrom — the same discipline canRun's witnesses
+        // obey: a completion into a doom window is a guaranteed death
+        // on the next leg, worse than either alternative below). When
+        // the leg's DESTINATION itself hosts an open portal (a forced
+        // crossing of a branch tip), prefer the LEFTMOST clean landing
+        // — deep landings can leave no jump-off point before the box.
+        // Fallback order: clean+live > dirty (fires a foreign portal —
+        // exits the region, recoverable) > clean-but-doomed (dies and
+        // retries — last resort only).
         const wantLeftmost = blocked.has(legTo);
-        let best = null;                    // clean candidate (leftmost if wanted)
-        let dirty = null;                   // fallback: completes, but exits
+        const liveOpts = { constants: C, doomCache };
+        let best = null;                    // clean + live (leftmost if wanted)
+        let dirty = null;                   // completes, but exits the region
+        let doomed = null;                  // completes cleanly into a doom window
         for (const candidate of policiesFor(level, from, abilities, { constants: C })) {
             const r = simulateFromLive(
                 level, state, abilities, candidate.make(), lastPlatform, goal);
             if (!(r.goalTouched || r.landedOn === legTo)) continue;
             const touchedOpenForeign = [...r.portals].some((id) => openForeign.has(id));
             if (touchedOpenForeign) { dirty ??= candidate; continue; }
-            if (r.goalTouched || !wantLeftmost) { best = candidate; break; }
+            if (r.goalTouched) { best = candidate; break; }
+            if (!survivesFrom(level, r.landedOn, r.landingState, abilities, liveOpts)) {
+                doomed ??= candidate;
+                continue;
+            }
+            if (!wantLeftmost) { best = candidate; break; }
             if (!best || r.landingX < best.landingX) {
                 best = { name: candidate.name, make: candidate.make, landingX: r.landingX };
             }
         }
-        const picked = best ?? dirty;       // bounce's unfiltered fallback analog
+        const picked = best ?? dirty ?? doomed;
         if (picked) {
             policyFn = picked.make();
-            policyName = best ? picked.name : `${picked.name} (through open portal)`;
+            policyName = best ? picked.name
+                : `${picked.name} (${picked === dirty ? 'through open portal' : 'doomed landing'})`;
             nextPlatform = legTo;
             return;
         }

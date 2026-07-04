@@ -18,7 +18,8 @@ import {
 import { deriveAccessRules } from './deriveRules.js';
 import { DEFAULTS, PROFILES } from './physics.js';
 import { validateLevel } from './level.js';
-import { ABILITY_ITEM_NAMES, VICTORY_ITEM_NAME } from './gameCore.js';
+import { ABILITY_ITEM_NAMES, VICTORY_ITEM_NAME, createGameSession } from './gameCore.js';
+import { createBotDriver } from './botDriver.js';
 
 const REQUIREMENTS = [[], ['doubleJump'], ['blue'], ['spring'],
     ['doubleJump', 'blue'], ['doubleJump', 'spring'],
@@ -112,6 +113,58 @@ describe('generateZoneSet', () => {
         expect(JSON.stringify(generateZoneSet({ count: 5, seed: 3 })))
             .toBe(JSON.stringify(generateZoneSet({ count: 5, seed: 3 })));
     });
+
+    it('every zone goal is BOT-completable: no deaths, no foreign portal fires', () => {
+        // The verifier proves REACHABILITY, but portal avoidance is a
+        // play-level constraint it cannot see (touching an open portal
+        // is travel, not death) — geometry can satisfy the logic yet
+        // trap actual play (the user-reported tip-then-spikes doom
+        // window). This gate drives the real bot through every goal of
+        // a generated zone table under the entry-time item set with
+        // every portal open, and requires clean completion — the same
+        // standard a human player is held to.
+        const zones = generateZoneSet({ count: 5, seed: 1 });
+        for (const zone of zones) {
+            const items = zone.spec.requirement.map((a) => ABILITY_ITEM_NAMES[a]);
+            const session = createGameSession(zone.level);
+            session.setItems(items);
+            const helpers = {
+                isPortalOpen: (id) => session.gateStates.portals[id] !== false,
+                isPickupOpen: (id) => session.gateStates.pickups[id] !== false,
+            };
+            const driver = createBotDriver();
+            const targets = [
+                ...zone.level.pickups.map((p) => ({ kind: 'pickup', id: p.id })),
+                ...zone.level.portals.map((p) => ({ kind: 'portal', id: p.id })),
+            ];
+            for (const target of targets) {
+                driver.setTarget({ ...target });
+                let done = false;
+                let deaths = 0;
+                let foreign = 0;
+                for (let f = 0; f < 12000 && !done; f++) {
+                    const bot = driver.nextInput(
+                        session.state, zone.level, session.abilities, helpers);
+                    for (const ev of session.tick({
+                        jump: !!bot?.jump, drop: !!bot?.drop, reset: !!bot?.reset,
+                    })) {
+                        if (ev.type === 'respawned' && ev.cause !== 'reset') deaths += 1;
+                        if (ev.type === 'exit') {
+                            const pid = ev.id ?? ev.portalId;
+                            if (target.kind === 'portal' && pid === target.id) done = true;
+                            else foreign += 1;
+                        }
+                        if (ev.type === 'pickup' && target.kind === 'pickup'
+                                && ev.id === target.id) done = true;
+                    }
+                }
+                const label = `${zone.level.id} ${target.kind}:${target.id}`;
+                expect(done, `${label} not completed`).toBe(true);
+                expect(deaths, `${label} deaths`).toBe(0);
+                expect(foreign, `${label} foreign portal fires`).toBe(0);
+            }
+        }
+    }, 600000);
 });
 
 describe('reward shelves (plan §8.7 step 2)', () => {

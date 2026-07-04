@@ -155,6 +155,45 @@ describe('botDriver — completes fixture levels (pickup then portal)', () => {
         expect(r.inputs.some((i) => i?.jump)).toBe(true);
     });
 
+    it('tipTrap (legacy doom-window geometry): degrades to a portal fire, never a death loop', () => {
+        // gen_z1's user-reported trap, shifted left: the tip's portal
+        // box spans its wake, so the only portal-clean jumps off the
+        // tip land either IN the spikes (full hold) or in the doom
+        // window before them (mid hold — no run-up left to hop). No
+        // clean+live candidate exists; the doom-aware fallback must
+        // prefer the dirty crossing (fires exit_br0 — recoverable)
+        // over the doomed landing (a guaranteed death loop, the
+        // pre-fix behavior). The generator no longer EMITS this shape
+        // (branch landing floors are hazard-exempt) — this pins the
+        // bot's behavior on legacy geometry.
+        const tipTrap = {
+            id: 'tipTrap',
+            size: { width: 42, height: 16 },
+            platforms: [
+                { id: 'floorA', x: 0, y: 0, w: 16, h: 1, type: 'ground' },
+                { id: 'tip0', x: 16.5, y: 1.85, w: 2.5, h: 0.5, type: 'ground' },
+                { id: 'floorB', x: 19.83, y: 0, w: 6.83, h: 1, type: 'ground' },
+                { id: 'floorC', x: 26.66, y: 0, w: 15.34, h: 1, type: 'ground' },
+            ],
+            hazards: [{ id: 'hz1', type: 'spikes', x: 22, y: 1, w: 1.35, h: 0.8 }],
+            pickups: [],
+            portals: [
+                { id: 'exit_br0', on: 'tip0', x: 18.8, y: 2.95, arrow: 'up', exitName: null },
+                { id: 'exit_main', on: 'floorC', x: 41.4, y: 1.6, arrow: 'right', exitName: null },
+            ],
+            spawn: { x: 1, y: 1 },
+        };
+        const h = makeHarness(tipTrap);
+        const driver = createBotDriver();
+        driver.setTarget({ kind: 'portal', id: 'exit_main' });
+        const r = h.run(driver, { until: untilEvent(h, 'exit', 'exit_main'), maxFrames: 3000 });
+        expect(r.done).toBe(true);
+        expect(h.counts.deaths).toBe(0);
+        // the crossing went THROUGH the open branch portal — the
+        // accepted degradation on this geometry
+        expect(h.sawEvent('exit', 'exit_br0')).toBe(true);
+    });
+
     it('springShelf without Springs: shelf pickup is unroutable — stuck, no reset-thrash', () => {
         const h = makeHarness(springShelf);
         const driver = createBotDriver();

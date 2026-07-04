@@ -100,6 +100,29 @@ describe('generateLevel', () => {
         }
     }, 60000);
 
+    it('branch-tip landing floors are hazard-exempt (the fall-off corridor must stay clean)', () => {
+        // the tip's portal box spans its wake, so portal-clean
+        // crossings land on the LEFT end of the next floor — a spike
+        // patch there is a doom window (user-reported). hazardChance 1
+        // makes the exemption observable: every eligible floor is
+        // spiked, tip landing floors never.
+        const level = generateLevel({
+            id: 'brh', requirement: [], pickupCount: 1, branchCount: 2,
+            hazardChance: 1, seed: 3,
+        });
+        const tips = level.platforms.filter((p) => level.portals.some(
+            (pt) => pt.on === p.id && pt.id.startsWith('exit_br')));
+        expect(tips.length).toBe(2);
+        for (const tip of tips) {
+            const landing = level.platforms
+                .filter((p) => p.type === 'ground' && p.y === 0 && p.x >= tip.x + tip.w - 0.01)
+                .sort((a, b) => a.x - b.x)[0];
+            const spiked = level.hazards.some((hz) => hz.type === 'spikes'
+                && hz.x >= landing.x && hz.x < landing.x + landing.w);
+            expect(spiked, `spikes on ${landing.id} after ${tip.id}`).toBe(false);
+        }
+    }, 60000);
+
     it('glide requirement: ramp + pad + chasm; every goal derives exactly [glide]', () => {
         const level = generateLevel({ id: 'gl', requirement: ['glide'], seed: 7 });
         const pads = level.platforms.filter((p) => p.type === 'glider');

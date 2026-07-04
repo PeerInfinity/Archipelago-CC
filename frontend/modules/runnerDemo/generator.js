@@ -1167,6 +1167,15 @@ function realizePlan(plan, { rng, G, hazardChance, jitter = 0 }) {
         if (f.role === 'plain' && !f.gap?.shelf && f.gap?.kind !== 'split'
                 && f.gap?.kind !== 'ceil' && plan[i + 1]?.gap?.kind !== 'ceil'
                 && f.gap?.kind !== 'glide' // the glide landing must stay survivable
+                // the branch-tip fall-off corridor: the tip's portal box
+                // spans its wake, so the only portal-CLEAN crossings are
+                // jumps off the tip's left half — and their landings
+                // cluster on this floor's left end. A spike patch there
+                // turns every clean landing into a doom window (no
+                // run-up to hop), leaving portal-fire or death as the
+                // only outcomes (user-reported on the seed-1 zone
+                // table). Same exemption class as shelf/glide landings.
+                && f.gap?.kind !== 'branch'
                 && seg.w >= 2 * G.HAZARD_MARGIN + 1.8
                 && rng.next() < hazardChance) {
             const hw = round2(1 + rng.next() * 0.6);
