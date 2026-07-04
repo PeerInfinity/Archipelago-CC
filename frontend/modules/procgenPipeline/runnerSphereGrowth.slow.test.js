@@ -88,6 +88,35 @@ describe('growSpheres (runner) — zone realisation + oracle', () => {
             expect(compareSpheresToPlan(computed, plan)).toEqual([]);
         }, 240000);
 
+    it('Glide in the pool (§8.7 step 4): a pad-gated region realises and the oracle agrees', () => {
+        const pool = { 'Double Jump': 1, Glide: 1, Victory: 1 };
+        const plan = planSpheres({
+            itemPool: pool, sphereCount: 3, victoryItem: 'Victory',
+            gateableItems: GATEABLE_ITEMS, seed: 5,
+        });
+        const { grid, startCell } = growSpheres({
+            regionSize: { width: 8, height: 6 },
+            seed: 5,
+            regionParams: RUNNER_REGION_PARAMS,
+            growthParams: {
+                spherePlan: plan,
+                substrateQuotas: { runner: 99 },
+                startSubstrate: 'runner',
+                maxItemsPerRegion: 2,
+            },
+        });
+        // the Glide gate realises as glider-pad geometry somewhere
+        const levels = [...grid.allRegions()]
+            .map((r) => r.playable_payload?.params?.runnerLevel).filter(Boolean);
+        expect(levels.some((l) => l.platforms.some((p) => p.type === 'glider')))
+            .toBe(true);
+        const rulesJson = buildRulesJson(grid, {
+            startCell, seed: 5, embedSphereLog: false,
+            completionConditionItem: 'Victory',
+        });
+        expect(compareSpheresToPlan(computeItemSpheres(rulesJson), plan)).toEqual([]);
+    }, 240000);
+
     it('a count gate on an ability item realises as an authored lock (gate_rules)', () => {
         // gateableItems admits 'Double Jump', but count 2 is not
         // physics-realisable — splitRequirement routes it to the

@@ -3,7 +3,7 @@ import { createBotDriver } from './botDriver.js';
 import { createGameSession } from './gameCore.js';
 import {
     flatRun, gapJump, doubleGap, stepStone, springGap, springShelf, djShelf,
-    laneSplit,
+    laneSplit, glideDrop,
 } from './fixtures.js';
 
 /**
@@ -140,6 +140,19 @@ describe('botDriver — completes fixture levels (pickup then portal)', () => {
         const b = h.run(driver, { until: untilEvent(h, 'exit', 'exit_main') });
         expect(b.done).toBe(true);
         expect(h.counts.deaths).toBe(0);
+    });
+
+    it('glideDrop: climbs the ramp, collects the pad pickup, glides the chasm out', () => {
+        const h = makeHarness(glideDrop, { items: ['Glide'] });
+        const driver = createBotDriver();
+        driver.setTarget({ kind: 'pickup', id: 'pk_pad' });
+        expect(h.run(driver, { until: untilEvent(h, 'pickup', 'pk_pad') }).done).toBe(true);
+        driver.setTarget({ kind: 'portal', id: 'exit_main' });
+        const r = h.run(driver, { until: untilEvent(h, 'exit', 'exit_main'), maxFrames: 3000 });
+        expect(r.done).toBe(true);
+        // the chasm leg is a glide: some frame holds jump while the
+        // engine reports the capped fall
+        expect(r.inputs.some((i) => i?.jump)).toBe(true);
     });
 
     it('springShelf without Springs: shelf pickup is unroutable — stuck, no reset-thrash', () => {

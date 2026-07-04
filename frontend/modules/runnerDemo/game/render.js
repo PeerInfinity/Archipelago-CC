@@ -23,9 +23,10 @@ const UNIT = 32; // px per Unity unit (the toolkit's rendering scale)
 
 const PLATFORM_COLORS = {
     ground: '#4a5568', blue: '#5b9bd5', spring: '#e8843c', oneway: '#b08d57',
+    glider: '#5bc8af',
 };
 const ARROWS = { up: '↑', down: '↓', left: '←', right: '→' };
-const ABILITY_HUD = [['doubleJump', 'DJ'], ['blue', 'B'], ['spring', 'S']];
+const ABILITY_HUD = [['doubleJump', 'DJ'], ['blue', 'B'], ['spring', 'S'], ['glide', 'G']];
 
 // characterJuice.cs values (vendored original's Juice param group)
 const JUICE = {
@@ -131,6 +132,18 @@ export function renderFrame(ctx, session, ui = {}) {
         if (p.type !== 'ground') { // one-way: mark the landable top
             ctx.fillStyle = 'rgba(255,255,255,0.35)';
             ctx.fillRect(sx(p.x), sy(p.y + p.h), p.w * UNIT, 2);
+        }
+        if (p.type === 'glider') { // wing chevrons along the top
+            ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+            ctx.lineWidth = 2;
+            const step = UNIT * 0.6;
+            for (let cx = sx(p.x) + step / 2; cx < sx(p.x + p.w) - 4; cx += step) {
+                ctx.beginPath();
+                ctx.moveTo(cx - 4, sy(p.y + p.h) + 8);
+                ctx.lineTo(cx, sy(p.y + p.h) + 4);
+                ctx.lineTo(cx + 4, sy(p.y + p.h) + 8);
+                ctx.stroke();
+            }
         }
         if (p.type === 'spring') { // coil glyphs along the top
             ctx.strokeStyle = 'rgba(255,255,255,0.55)';
@@ -262,14 +275,31 @@ export function renderFrame(ctx, session, ui = {}) {
     const py = sy(state.y + C.PLAYER_H);
     const w = C.PLAYER_W * UNIT;
     const h = C.PLAYER_H * UNIT;
+    // gliding this tick? (physics.js glide branch: a held non-jump
+    // fall off a pad rides the cap) — a sustained wide-flat stretch
+    // plus wing ticks sell the hover
+    const gliding = !state.onGround && state.pressingJump && !state.currentlyJumping
+        && !state.springFlight && state.lastSupportType === 'glider'
+        && Math.abs(state.vy + C.GLIDE_FALL_CAP) < 1e-6;
     ctx.save();
     ctx.translate(px + w / 2, py + h);
     if (juice) {
         ctx.rotate((juice.tilt * Math.PI) / 180);
         ctx.scale(juice.squash.x, juice.squash.y);
     }
+    if (gliding) ctx.scale(1.25, 0.8);
     ctx.fillStyle = state.onGround ? '#ed8936' : '#f6ad55';
     ctx.fillRect(-w / 2, -h, w, h);
+    if (gliding) { // wing ticks
+        ctx.strokeStyle = '#5bc8af';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(-w * 0.95, -h * 0.75);
+        ctx.lineTo(-w / 2, -h * 0.55);
+        ctx.moveTo(w * 0.95, -h * 0.75);
+        ctx.lineTo(w / 2, -h * 0.55);
+        ctx.stroke();
+    }
     ctx.fillStyle = '#1a1a2e';
     const eyeX = state.facing * 0.18 * w;
     ctx.fillRect(eyeX - 2, -h * 0.78 - 2, 4, 4);
