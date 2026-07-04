@@ -39,6 +39,7 @@ export const RUNNER_LIBRARY_ITEMS = Object.freeze(Object.fromEntries([
     ['Blue Platforms', '#4080d0'],
     ['Springs', '#e8843c'],
     ['Glide', '#5bc8af'],
+    ['Shield', '#d4566a'],
 ].map(([name, color]) => [name, {
     id: name,
     name,
@@ -82,6 +83,7 @@ const RUNNER_OBSTACLE_PRESENTATION = Object.freeze({
     blue: { name: 'Blue Platform Gap', color: '#4080d0' },
     spring: { name: 'Spring Gap', color: '#e8843c' },
     glide: { name: 'Glide Chasm', color: '#5bc8af' },
+    shield: { name: 'Spike Bed', color: '#d4566a' },
 });
 
 export const RUNNER_LIBRARY_OBSTACLES = Object.freeze(Object.fromEntries(

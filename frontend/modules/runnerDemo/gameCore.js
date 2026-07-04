@@ -43,6 +43,7 @@ export const ABILITY_ITEM_NAMES = Object.freeze({
     blue: 'Blue Platforms',
     spring: 'Springs',
     glide: 'Glide',
+    shield: 'Shield',
 });
 export const VICTORY_ITEM_NAME = 'Victory';
 

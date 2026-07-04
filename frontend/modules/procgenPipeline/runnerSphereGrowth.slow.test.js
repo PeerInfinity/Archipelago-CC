@@ -117,6 +117,39 @@ describe('growSpheres (runner) — zone realisation + oracle', () => {
         expect(compareSpheresToPlan(computeItemSpheres(rulesJson), plan)).toEqual([]);
     }, 240000);
 
+    it('Shield in the pool (§4.10): a bed-gated region realises and the oracle agrees', () => {
+        // the Shield is sphere-gateable like any ability item: the
+        // grower composes a Shield exit gate, the strip realises it as
+        // a budgeted `bed` volume, and the emitted rules gate on
+        // Has("Shield") — the sphere oracle proves the placement
+        const pool = { 'Double Jump': 1, Shield: 1, Victory: 1 };
+        const plan = planSpheres({
+            itemPool: pool, sphereCount: 3, victoryItem: 'Victory',
+            gateableItems: GATEABLE_ITEMS, seed: 5,
+        });
+        const { grid, startCell } = growSpheres({
+            regionSize: { width: 8, height: 6 },
+            seed: 5,
+            regionParams: RUNNER_REGION_PARAMS,
+            growthParams: {
+                spherePlan: plan,
+                substrateQuotas: { runner: 99 },
+                startSubstrate: 'runner',
+                maxItemsPerRegion: 2,
+            },
+        });
+        // the Shield gate realises as a budgeted bed volume somewhere
+        const levels = [...grid.allRegions()]
+            .map((r) => r.playable_payload?.params?.runnerLevel).filter(Boolean);
+        expect(levels.some((l) => (l.hazards ?? []).some((hz) => hz.type === 'bed')))
+            .toBe(true);
+        const rulesJson = buildRulesJson(grid, {
+            startCell, seed: 5, embedSphereLog: false,
+            completionConditionItem: 'Victory',
+        });
+        expect(compareSpheresToPlan(computeItemSpheres(rulesJson), plan)).toEqual([]);
+    }, 240000);
+
     it('a count gate on an ability item realises as an authored lock (gate_rules)', () => {
         // gateableItems admits 'Double Jump', but count 2 is not
         // physics-realisable — splitRequirement routes it to the

@@ -3,7 +3,7 @@ import { createBotDriver } from './botDriver.js';
 import { createGameSession } from './gameCore.js';
 import {
     flatRun, gapJump, doubleGap, stepStone, springGap, springShelf, djShelf,
-    laneSplit, glideDrop,
+    laneSplit, glideDrop, shieldBed,
 } from './fixtures.js';
 
 /**
@@ -192,6 +192,85 @@ describe('botDriver — completes fixture levels (pickup then portal)', () => {
         // the crossing went THROUGH the open branch portal — the
         // accepted degradation on this geometry
         expect(h.sawEvent('exit', 'exit_br0')).toBe(true);
+    });
+
+    it('shieldBed: eats the budgeted hit on purpose, then flies the spikes to the exit', () => {
+        // §4.10 — a policy that spends a hit is a legal leg: the bed
+        // crossing charges 1 (the live-state candidate sims are
+        // hits-aware, so the landing is clean+live, not doomed), and
+        // the post-bed spike hop must be FLOWN because the budget is
+        // spent. Zero deaths end to end.
+        const h = makeHarness(shieldBed, { items: ['Shield'] });
+        const driver = createBotDriver();
+        driver.setTarget({ kind: 'pickup', id: 'pk_edge' });
+        expect(h.run(driver, { until: untilEvent(h, 'pickup', 'pk_edge') }).done).toBe(true);
+        driver.setTarget({ kind: 'portal', id: 'exit_main' });
+        const r = h.run(driver, { until: untilEvent(h, 'exit', 'exit_main') });
+        expect(r.done).toBe(true);
+        expect(h.counts.deaths).toBe(0);
+        expect(h.counts.resets).toBe(0);
+        // the crossing genuinely spent the budget (one bed contact)
+        expect(h.session.state.hits).toBe(1);
+    });
+
+    it('budgetMirage (§4.10 routing): a spent budget must reroute, not death-loop', () => {
+        // The user-reported seed-1 gen_z1 geometry, inlined verbatim: a
+        // mandatory bed (spends the Shield) followed by a spiked floor
+        // whose flush partner leads on. Under Double Jump a shortcut
+        // edge seg4→seg6 exists at FRESH budget only — its sole launch
+        // window is past the spikes, so the witness eats a hit. A
+        // budget-naive route proposes it after the bed anyway; no
+        // candidate can complete it at spent budget, the bot idles into
+        // the spikes, dies, and repeats the identical mis-route every
+        // life (respawn refills the budget, the route re-crosses the
+        // bed, same dead end). Budget-aware (platform, spent) routing
+        // proposes seg4→seg5 instead: hop the spikes, walk the flush
+        // boundary — zero deaths end to end.
+        const budgetMirage = {
+            id: 'budgetMirage',
+            size: { width: 81, height: 16 },
+            platforms: [
+                { id: 'seg0', x: 0, y: 0, w: 9.14, h: 1, type: 'ground' },
+                { id: 'seg1', x: 11.56, y: 0, w: 6.65, h: 1, type: 'ground' },
+                { id: 'seg2', x: 21.7, y: 0, w: 5.52, h: 1, type: 'ground' },
+                { id: 'seg3', x: 30.44, y: 0, w: 6.65, h: 1, type: 'ground' },
+                { id: 'seg4', x: 40.09, y: 0, w: 6.07, h: 1, type: 'ground' },
+                { id: 'seg5', x: 46.16, y: 0, w: 5.33, h: 1, type: 'ground' },
+                { id: 'seg6', x: 54.82, y: 0, w: 7.37, h: 1, type: 'ground' },
+                { id: 'seg7', x: 65.71, y: 0, w: 6.17, h: 1, type: 'ground' },
+                { id: 'seg8', x: 74.94, y: 0, w: 6.05, h: 1, type: 'ground' },
+            ],
+            hazards: [
+                { id: 'hz0', type: 'bed', x: 28.07, y: -1, w: 1.52, h: 7.63 },
+                { id: 'hz1', type: 'spikes', x: 42.13, y: 1, w: 1.59, h: 0.8 },
+            ],
+            pickups: [{ id: 'loc_0', on: 'seg7', x: 71.68, y: 1.6 }],
+            portals: [{
+                id: 'exit_main', on: 'seg8', x: 80.4, y: 1.6, arrow: 'right', exitName: null,
+            }],
+            spawn: { x: 1, y: 1 },
+        };
+        const h = makeHarness(budgetMirage, {
+            items: ['Shield', 'Springs', 'Blue Platforms', 'Double Jump'],
+        });
+        const driver = createBotDriver();
+        driver.setTarget({ kind: 'pickup', id: 'loc_0' });
+        expect(h.run(driver, { until: untilEvent(h, 'pickup', 'loc_0') }).done).toBe(true);
+        driver.setTarget({ kind: 'portal', id: 'exit_main' });
+        const r = h.run(driver, { until: untilEvent(h, 'exit', 'exit_main') });
+        expect(r.done).toBe(true);
+        expect(h.counts.deaths).toBe(0);
+        expect(h.counts.resets).toBe(0);
+    });
+
+    it('shieldBed without a Shield: unroutable — stuck, no reset-thrash', () => {
+        const h = makeHarness(shieldBed);
+        const driver = createBotDriver();
+        driver.setTarget({ kind: 'portal', id: 'exit_main' });
+        h.run(driver, { maxFrames: 1500 });
+        expect(h.counts.resets).toBe(0);
+        expect(driver.getStatus().stuck).toBe(true);
+        expect(h.sawEvent('exit', 'exit_main')).toBe(false);
     });
 
     it('springShelf without Springs: shelf pickup is unroutable — stuck, no reset-thrash', () => {

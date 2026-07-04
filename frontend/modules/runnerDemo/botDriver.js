@@ -34,6 +34,22 @@
  * goal under the current abilities; otherwise the driver is stuck
  * and emits nothing (items may still arrive and change the graph).
  *
+ * HIT BUDGET (§4.10): routing is BUDGET-AWARE — route nodes are
+ * (platform, hits spent), expansions thread the spent hits into the
+ * canRun legs (`opts.hits0`), and an edge lands at spent + its worst
+ * witness spend. This is load-bearing, not a nicety: a budget-naive
+ * route (every expansion at hits 0) admits edges whose witnesses EAT
+ * a hit the player no longer has — e.g. a Double-Jump shortcut whose
+ * only launch point is past a spike patch, feasible fresh but not
+ * after the mandatory bed spent the budget. The bot would then park
+ * on a leg no candidate can complete, idle into the hazard, respawn
+ * with a refilled budget, and repeat the identical mis-route forever
+ * (user-reported on the seed-1 6-zone table). With (platform, spent)
+ * states the route only ever proposes legs feasible at the budget the
+ * player will actually have there; at budget 0 the spent dimension is
+ * constantly 0 and everything below reduces to the old single-level
+ * graph, evaluation for evaluation.
+ *
  * BLOCKED-HOST AVOIDANCE: hosts of OPEN non-target portals are
  * avoided twice over —
  *  - route level, exactly like bounce's replan: blocked as
@@ -116,21 +132,26 @@ export function createBotDriver(opts = {}) {
         }
     }
 
-    /** All canRun legs out of `fromId` (launch edges chain; touch edges
-     *  grant goals — usable only as a route's FINAL hop). The x-prune
-     *  mirrors reachableRunPlatforms: under AUTO_RUN vx is never
-     *  negative, so a leg can't end wholly left of its launch. */
-    function expand(level, abilities, fromId) {
-        if (expansions.has(fromId)) return expansions.get(fromId);
-        const legOpts = { constants: C, doomCache };
-        const out = { edges: new Set(), touches: new Set() };
+    /** All canRun legs out of (`fromId`, `spent` hits) — launch edges
+     *  chain and carry the spent hits AFTER the leg (its worst witness
+     *  spend, §4.10); touch edges grant goals — usable only as a
+     *  route's FINAL hop. The x-prune mirrors reachableRunPlatforms:
+     *  under AUTO_RUN vx is never negative, so a leg can't end wholly
+     *  left of its launch. */
+    function expand(level, abilities, fromId, spent) {
+        const cacheKey = `${fromId}|${spent}`;
+        if (expansions.has(cacheKey)) return expansions.get(cacheKey);
+        const legOpts = { constants: C, doomCache, hits0: spent };
+        const out = { edges: new Map(), touches: new Set() }; // edges: toId -> spent after
         if (fromId === ENTRANCE) {
-            // The entry leg takes no inputs (deterministic spawn drop).
-            const r = runQuery(level, ENTRANCE, abilities, { ...legOpts, policy: null });
+            // The entry leg takes no inputs (deterministic spawn drop,
+            // always from a fresh budget — the respawn refills it).
+            const r = runQuery(level, ENTRANCE, abilities, { constants: C, policy: null });
             if (r.landedOn) {
                 out.touches.add(r.landedOn);
-                if (survivesFrom(level, r.landedOn, r.landingState, abilities, legOpts)) {
-                    out.edges.add(r.landedOn);
+                if (survivesFrom(level, r.landedOn, r.landingState, abilities,
+                    { constants: C, doomCache })) {
+                    out.edges.set(r.landedOn, r.landingState.hits ?? 0);
                 }
             }
         } else {
@@ -141,39 +162,52 @@ export function createBotDriver(opts = {}) {
                 if (p.x + p.w < from.x - C.PLAYER_W) continue; // the x-prune
                 const r = canRunDetailed(level, fromId, p.id, abilities, legOpts);
                 if (r.touch) out.touches.add(p.id);
-                if (r.ok) out.edges.add(p.id);
+                if (r.ok) out.edges.set(p.id, spent + r.spend);
             }
         }
-        expansions.set(fromId, out);
+        expansions.set(cacheKey, out);
         return out;
     }
 
     /**
-     * BFS shortest leg path `fromId` → `goalHost` over lazily-expanded
-     * launch edges (touch edges admitted only as the final hop — a
-     * touch-grade host still collects its wake goals, it just can't
-     * chain onward), refusing to pass THROUGH blocked hosts (the goal
-     * itself is always allowed). Returns [from, ..., goalHost] or null.
+     * BFS shortest leg path (`fromId`, `fromSpent` hits) → `goalHost`
+     * over lazily-expanded launch edges (touch edges admitted only as
+     * the final hop — a touch-grade host still collects its wake
+     * goals, it just can't chain onward), refusing to pass THROUGH
+     * blocked hosts (the goal itself is always allowed). States are
+     * (platform, spent) pairs so every proposed leg is feasible at the
+     * budget the player will actually have there (§4.10). Returns
+     * [from, ..., goalHost] (platform ids) or null.
      */
-    function routeTo(level, abilities, fromId, goalHost, blocked) {
+    function routeTo(level, abilities, fromId, fromSpent, goalHost, blocked) {
         if (fromId === goalHost) return [fromId];
-        const prev = new Map([[fromId, null]]);
-        const queue = [fromId];
+        const startKey = `${fromId}|${fromSpent}`;
+        const prev = new Map([[startKey, null]]); // stateKey -> { parentKey, id }
+        const queue = [{ id: fromId, spent: fromSpent }];
+        const pathTo = (key, lastId) => {
+            const path = [lastId];
+            let k = key;
+            while (k !== null) {
+                path.unshift(k.slice(0, k.lastIndexOf('|')));
+                k = prev.get(k)?.parentKey ?? null;
+            }
+            return path;
+        };
         while (queue.length > 0) {
-            const node = queue.shift();
-            const { edges, touches } = expand(level, abilities, node);
-            const nexts = touches.has(goalHost) ? new Set([...edges, goalHost]) : edges;
-            for (const next of nexts) {
-                if (prev.has(next)) continue;
-                if (next !== goalHost && blocked.has(next)) continue;
-                prev.set(next, node);
-                if (next === goalHost) {
-                    const path = [goalHost];
-                    let p = node;
-                    while (p !== null) { path.unshift(p); p = prev.get(p); }
-                    return path;
-                }
-                queue.push(next);
+            const { id, spent } = queue.shift();
+            const nodeKey = `${id}|${spent}`;
+            const { edges, touches } = expand(level, abilities, id, spent);
+            const nexts = [...edges.entries()];
+            // the touch-grade final hop (spends nothing it can use later
+            // — the route ends there)
+            if (touches.has(goalHost) && !edges.has(goalHost)) nexts.push([goalHost, spent]);
+            for (const [next, nextSpent] of nexts) {
+                if (next === goalHost) return pathTo(nodeKey, goalHost);
+                if (blocked.has(next)) continue;
+                const k = `${next}|${nextSpent}`;
+                if (prev.has(k)) continue;
+                prev.set(k, { parentKey: nodeKey });
+                queue.push({ id: next, spent: nextSpent });
             }
         }
         return null;
@@ -270,16 +304,17 @@ export function createBotDriver(opts = {}) {
                 .filter((pt) => openForeign.has(pt.id))
                 .map((pt) => pt.on));
 
-        const route = (fromId) =>
-            routeTo(level, abilities, fromId, goalHost, blocked)
-            ?? routeTo(level, abilities, fromId, goalHost, new Set());
-        let path = route(lastPlatform);
+        const route = (fromId, fromSpent) =>
+            routeTo(level, abilities, fromId, fromSpent, goalHost, blocked)
+            ?? routeTo(level, abilities, fromId, fromSpent, goalHost, new Set());
+        let path = route(lastPlatform, state?.hits ?? 0);
         if (!path || path.length < 2) {
             // No forward route (auto-run can never go LEFT, so a goal
             // behind the player lands here): the implicit reset edge —
             // one respawn returns the player to the entrance, worth
-            // pressing only when the entrance can actually route.
-            const fromEntrance = route(ENTRANCE);
+            // pressing only when the entrance can actually route (the
+            // respawn refills the budget, so the entrance routes at 0).
+            const fromEntrance = route(ENTRANCE, 0);
             if (fromEntrance && fromEntrance.length >= 2) {
                 policyFn = resetPolicy();
                 policyName = 'reset';

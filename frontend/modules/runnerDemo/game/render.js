@@ -17,7 +17,7 @@
  * physics without touching it.
  */
 
-import { isPlatformActive } from '../suppression.js';
+import { isPlatformActive, effectiveParams } from '../suppression.js';
 
 const UNIT = 32; // px per Unity unit (the toolkit's rendering scale)
 
@@ -26,7 +26,8 @@ const PLATFORM_COLORS = {
     glider: '#5bc8af',
 };
 const ARROWS = { up: '↑', down: '↓', left: '←', right: '→' };
-const ABILITY_HUD = [['doubleJump', 'DJ'], ['blue', 'B'], ['spring', 'S'], ['glide', 'G']];
+const ABILITY_HUD = [['doubleJump', 'DJ'], ['blue', 'B'], ['spring', 'S'], ['glide', 'G'],
+    ['shield', 'SH']];
 
 // characterJuice.cs values (vendored original's Juice param group)
 const JUICE = {
@@ -160,12 +161,30 @@ export function renderFrame(ctx, session, ui = {}) {
 
     // hazards: saw blades hang from lane undersides (§8.4), ceiling
     // slabs carry downward teeth along their bottom edge (§8.7 step
-    // 3), anything else draws as jagged spike teeth rising from its
-    // base
+    // 3), spike BEDS (§4.10 — the budgeted hit volume) draw as a
+    // translucent danger field with teeth at the top edge, anything
+    // else draws as jagged spike teeth rising from its base
     for (const hz of level.hazards ?? []) {
         const x0 = sx(hz.x);
         const yTop = sy(hz.y + hz.h);
         const yBase = sy(hz.y);
+        if (hz.type === 'bed') {
+            ctx.fillStyle = 'rgba(212,86,106,0.28)';
+            ctx.fillRect(x0, yTop, hz.w * UNIT, yBase - yTop);
+            ctx.fillStyle = '#d4566a';
+            ctx.beginPath();
+            const teeth = Math.max(2, Math.round(hz.w * 2));
+            const tw = (hz.w * UNIT) / teeth;
+            const toothH = UNIT * 0.4;
+            ctx.moveTo(x0, yTop + toothH);
+            for (let i = 0; i < teeth; i++) {
+                ctx.lineTo(x0 + tw * (i + 0.5), yTop); // tip points UP
+                ctx.lineTo(x0 + tw * (i + 1), yTop + toothH);
+            }
+            ctx.closePath();
+            ctx.fill();
+            continue;
+        }
         if (hz.type === 'ceiling') {
             const toothH = Math.min(UNIT * 0.45, (yBase - yTop) * 0.25);
             ctx.fillStyle = '#4a5568';
@@ -313,6 +332,24 @@ export function renderFrame(ctx, session, ui = {}) {
         ctx.fillStyle = abilities[ability] ? '#8fd14f' : '#444';
         ctx.fillText(glyph, hx, 18);
         hx += ctx.measureText(glyph).width + 10;
+    }
+    // hit-budget pips (§4.10): one per collected Shield (MAX_HITS =
+    // the count, via the same effectiveParams the physics runs on);
+    // filled = hits still available this attempt, hollow = spent.
+    // Absent entirely at budget 0 — the v1 HUD is unchanged.
+    const maxHits = effectiveParams(C, abilities).MAX_HITS;
+    for (let i = 0; i < maxHits; i++) {
+        const cx2 = hx + 6 + i * 16;
+        ctx.beginPath();
+        ctx.arc(cx2, 13, 5, 0, Math.PI * 2);
+        if (i < maxHits - state.hits) {
+            ctx.fillStyle = '#d4566a';
+            ctx.fill();
+        } else {
+            ctx.strokeStyle = '#d4566a';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+        }
     }
     if (ui.message) {
         ctx.fillStyle = '#e6c84a';

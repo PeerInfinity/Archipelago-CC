@@ -32,6 +32,7 @@ describe('itemsToAbilities', () => {
         expect(itemsToAbilities([{ name: ABILITY_ITEM_NAMES.blue }]).blue).toBe(true);
         expect(itemsToAbilities([ABILITY_ITEM_NAMES.spring]).spring).toBe(true);
         expect(itemsToAbilities([ABILITY_ITEM_NAMES.glide]).glide).toBe(true);
+        expect(itemsToAbilities([ABILITY_ITEM_NAMES.shield]).shield).toBe(true);
         expect(itemsToAbilities([VICTORY_ITEM_NAME, 'Nonsense'])).toEqual(none);
     });
 });

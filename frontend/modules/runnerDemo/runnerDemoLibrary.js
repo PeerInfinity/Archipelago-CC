@@ -58,8 +58,11 @@ export const RUNNER_PLAYBACK_CONTROL_EVENT = 'runner:playbackControl';
 // Default zone-table config (the generateZoneSet contract): zone 0
 // grants the first ability with requirement [], fillers grant nothing,
 // the last zone's pickup is Victory. Fixed seed keeps the lazy table
-// deterministic across sessions and headless runs.
-export const RUNNER_ZONE_COUNT = 5;
+// deterministic across sessions and headless runs. The count tracks
+// the ability-item vocabulary (one grant zone per feature + Victory):
+// 6 since the Shield (§4.10) joined — generateZoneSet throws below
+// featureCount + 1.
+export const RUNNER_ZONE_COUNT = 6;
 export const RUNNER_ZONE_SEED = 1;
 
 let _defaultZones = null;
