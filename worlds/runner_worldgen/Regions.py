@@ -13,7 +13,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "region_1_0", "region_2_0", "region_0_1", "region_1_1", "region_2_1"]
+    region_names = ["Menu", "region_0_0", "region_1_0", "region_2_0", "region_0_1", "region_1_1", "region_2_1"]
 
     regions = {}
     for region_name in region_names:
@@ -52,10 +52,14 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
 
     # Create entrances
     _create_entrance(regions["Menu"], regions["region_1_0"], "GameStart")
+    _create_entrance(regions["region_0_0"], regions["region_0_1"], "region_0_0__exit_S")
+    _create_entrance(regions["region_0_0"], regions["region_1_0"], "region_0_0__exit_E")
     _create_entrance(regions["region_1_0"], regions["region_1_1"], "region_1_0__exit_S")
     _create_entrance(regions["region_1_0"], regions["region_2_0"], "region_1_0__exit_E")
+    _create_entrance(regions["region_1_0"], regions["region_0_0"], "region_1_0__exit_W")
     _create_entrance(regions["region_2_0"], regions["region_2_1"], "region_2_0__exit_S")
     _create_entrance(regions["region_2_0"], regions["region_1_0"], "region_2_0__exit_W")
+    _create_entrance(regions["region_0_1"], regions["region_0_0"], "region_0_1__exit_N")
     _create_entrance(regions["region_0_1"], regions["region_1_1"], "region_0_1__exit_E")
     _create_entrance(regions["region_1_1"], regions["region_1_0"], "region_1_1__exit_N")
     _create_entrance(regions["region_1_1"], regions["region_2_1"], "region_1_1__exit_E")

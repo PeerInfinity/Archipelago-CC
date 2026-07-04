@@ -52,11 +52,12 @@ export const VALID_MODES = ['gridGrowth', 'sphereGrowth', 'shuffledSpiral', 'top
  *   jumps). CLI-verified oracle-clean at this exact config.
  *
  * - runner-zone-demo mirrors the committed runner_worldgen preset:
- *   dump-shuffled-spiral.js --seed 1 --quota runner=5 --start runner.
- *   The 5-zone table (4 feature zones + Victory since Glide, §8.7
- *   step 4) shows the full current runner vocabulary: dj / stone /
- *   spring gates, the glide pad + drop chasm, and reward shelves with
- *   saws where the seed elects them (§8.7 steps 2-4).
+ *   dump-shuffled-spiral.js --seed 1 --quota runner=6 --start runner.
+ *   The 6-zone table (5 feature zones + Victory since the Shield,
+ *   §4.10) shows the full current runner vocabulary: dj / stone /
+ *   spring gates, the glide pad + drop chasm, the shield spike bed,
+ *   and reward shelves with saws where the seed elects them
+ *   (§8.7 steps 2-5).
  *
  * - bounce-sphere-demo is the config verify-sphere-growth-ui.mjs /
  *   verify-sphere-steps-ui.mjs pre-seed the panel with. Bounce knobs
@@ -145,11 +146,12 @@ export const SHIPPED_PRESETS = Object.freeze([
     {
         id: 'shipped:runner-zone-demo',
         label: 'Runner demo (zone tables)',
-        description: 'Runner-only 5-zone shuffled-spiral world — the '
-            + 'committed runner_worldgen config: seed 1, quota runner=5, '
+        description: 'Runner-only 6-zone shuffled-spiral world — the '
+            + 'committed runner_worldgen config: seed 1, quota runner=6, '
             + 'start runner. The zone table mints its own items and '
             + 'shows the full runner vocabulary: dj / stone / spring / glide '
-            + 'gates and reward shelves with saws under them.',
+            + 'gates, the shield spike bed (hit budget), and reward '
+            + 'shelves with saws under them.',
         state: {
             mode: 'shuffledSpiral',
             params: {
@@ -165,7 +167,7 @@ export const SHIPPED_PRESETS = Object.freeze([
                 items: {},
                 obstacles: {},
             },
-            substrateQuotas: { runner: 5 },
+            substrateQuotas: { runner: 6 },
             substrateMix: {},
             substrateMode: 'quotas',
         },

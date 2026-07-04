@@ -21,61 +21,81 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
+        multiworld.get_entrance("region_0_0__exit_S", player),
+        HasAll('Blue Platforms', 'Shield')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("region_0_0__exit_E", player),
+        HasAll('Blue Platforms', 'Shield')
+    )
+
+    world.set_rule(
         multiworld.get_entrance("region_2_0__exit_S", player),
-        Has('Glide', 1)
+        Has('Shield', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("region_2_0__exit_W", player),
-        Has('Glide', 1)
+        Has('Shield', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("region_0_1__exit_N", player),
+        HasAll('Shield', 'Springs')
     )
 
     world.set_rule(
         multiworld.get_entrance("region_0_1__exit_E", player),
-        HasAll('Blue Platforms', 'Glide')
+        HasAll('Shield', 'Springs')
     )
 
     world.set_rule(
         multiworld.get_entrance("region_1_1__exit_N", player),
-        HasAll('Blue Platforms', 'Double Jump')
+        HasAll('Blue Platforms', 'Springs')
     )
 
     world.set_rule(
         multiworld.get_entrance("region_1_1__exit_E", player),
-        HasAll('Blue Platforms', 'Double Jump')
+        HasAll('Blue Platforms', 'Springs')
     )
 
     world.set_rule(
         multiworld.get_entrance("region_1_1__exit_W", player),
-        HasAll('Blue Platforms', 'Double Jump')
+        HasAll('Blue Platforms', 'Springs')
     )
 
     world.set_rule(
         multiworld.get_entrance("region_2_1__exit_N", player),
-        HasAll('Blue Platforms', 'Glide')
+        Has('Shield', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("region_2_1__exit_W", player),
-        HasAll('Blue Platforms', 'Glide')
+        Has('Shield', 1)
     )
     # Location rules
     world.set_rule(
+        multiworld.get_location("region_0_0__loc_0", player),
+        HasAll('Blue Platforms', 'Shield')
+    )
+
+    world.set_rule(
         multiworld.get_location("region_2_0__loc_0", player),
-        Has('Glide', 1)
+        Has('Shield', 1)
     )
 
     world.set_rule(
         multiworld.get_location("region_0_1__loc_0", player),
-        HasAll('Blue Platforms', 'Glide')
+        HasAll('Shield', 'Springs')
     )
 
     world.set_rule(
         multiworld.get_location("region_1_1__loc_0", player),
-        HasAll('Blue Platforms', 'Double Jump')
+        HasAll('Blue Platforms', 'Springs')
     )
 
     world.set_rule(
         multiworld.get_location("region_2_1__loc_0", player),
-        HasAll('Blue Platforms', 'Glide')
+        Has('Shield', 1)
     )

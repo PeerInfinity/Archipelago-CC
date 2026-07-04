@@ -23,6 +23,59 @@
         ],
         "locations": []
       },
+      "region_0_0": {
+        "name": "region_0_0",
+        "exits": [
+          {
+            "name": "region_0_0__exit_S",
+            "connected_region": "region_0_1",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "item_names": [
+                  "Blue Platforms",
+                  "Shield"
+                ]
+              }
+            }
+          },
+          {
+            "name": "region_0_0__exit_E",
+            "connected_region": "region_1_0",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "item_names": [
+                  "Blue Platforms",
+                  "Shield"
+                ]
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_0_0__loc_0",
+            "id": 1000,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "item_names": [
+                  "Blue Platforms",
+                  "Shield"
+                ]
+              }
+            },
+            "item": {
+              "name": "Victory",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
       "region_1_0": {
         "name": "region_1_0",
         "exits": [
@@ -39,17 +92,24 @@
             "access_rule": {
               "rule": "True_"
             }
+          },
+          {
+            "name": "region_1_0__exit_W",
+            "connected_region": "region_0_0",
+            "access_rule": {
+              "rule": "True_"
+            }
           }
         ],
         "locations": [
           {
             "name": "region_1_0__loc_0",
-            "id": 1000,
+            "id": 1001,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Glide",
+              "name": "Shield",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -67,7 +127,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Glide"
+                "item_name": "Shield"
               }
             }
           },
@@ -77,7 +137,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Glide"
+                "item_name": "Shield"
               }
             }
           }
@@ -85,15 +145,15 @@
         "locations": [
           {
             "name": "region_2_0__loc_0",
-            "id": 1001,
+            "id": 1002,
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Glide"
+                "item_name": "Shield"
               }
             },
             "item": {
-              "name": "Blue Platforms",
+              "name": "Springs",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -106,14 +166,27 @@
         "name": "region_0_1",
         "exits": [
           {
+            "name": "region_0_1__exit_N",
+            "connected_region": "region_0_0",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "item_names": [
+                  "Shield",
+                  "Springs"
+                ]
+              }
+            }
+          },
+          {
             "name": "region_0_1__exit_E",
             "connected_region": "region_1_1",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "item_names": [
-                  "Blue Platforms",
-                  "Glide"
+                  "Shield",
+                  "Springs"
                 ]
               }
             }
@@ -122,18 +195,18 @@
         "locations": [
           {
             "name": "region_0_1__loc_0",
-            "id": 1002,
+            "id": 1003,
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "item_names": [
-                  "Blue Platforms",
-                  "Glide"
+                  "Shield",
+                  "Springs"
                 ]
               }
             },
             "item": {
-              "name": "Victory",
+              "name": "Glide",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -153,7 +226,7 @@
               "args": {
                 "item_names": [
                   "Blue Platforms",
-                  "Double Jump"
+                  "Springs"
                 ]
               }
             }
@@ -166,7 +239,7 @@
               "args": {
                 "item_names": [
                   "Blue Platforms",
-                  "Double Jump"
+                  "Springs"
                 ]
               }
             }
@@ -179,7 +252,7 @@
               "args": {
                 "item_names": [
                   "Blue Platforms",
-                  "Double Jump"
+                  "Springs"
                 ]
               }
             }
@@ -188,18 +261,18 @@
         "locations": [
           {
             "name": "region_1_1__loc_0",
-            "id": 1003,
+            "id": 1004,
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "item_names": [
                   "Blue Platforms",
-                  "Double Jump"
+                  "Springs"
                 ]
               }
             },
             "item": {
-              "name": "Springs",
+              "name": "Double Jump",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -215,12 +288,9 @@
             "name": "region_2_1__exit_N",
             "connected_region": "region_2_0",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "item_names": [
-                  "Blue Platforms",
-                  "Glide"
-                ]
+                "item_name": "Shield"
               }
             }
           },
@@ -228,12 +298,9 @@
             "name": "region_2_1__exit_W",
             "connected_region": "region_1_1",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "item_names": [
-                  "Blue Platforms",
-                  "Glide"
-                ]
+                "item_name": "Shield"
               }
             }
           }
@@ -241,18 +308,15 @@
         "locations": [
           {
             "name": "region_2_1__loc_0",
-            "id": 1004,
+            "id": 1005,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "item_names": [
-                  "Blue Platforms",
-                  "Glide"
-                ]
+                "item_name": "Shield"
               }
             },
             "item": {
-              "name": "Double Jump",
+              "name": "Blue Platforms",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -273,8 +337,8 @@
   },
   "items": {
     "1": {
-      "Glide": {
-        "name": "Glide",
+      "Victory": {
+        "name": "Victory",
         "id": 1,
         "groups": [
           "Everything"
@@ -283,19 +347,9 @@
         "type": null,
         "max_count": 1
       },
-      "Blue Platforms": {
-        "name": "Blue Platforms",
+      "Shield": {
+        "name": "Shield",
         "id": 2,
-        "groups": [
-          "Everything"
-        ],
-        "classification": "progression",
-        "type": null,
-        "max_count": 1
-      },
-      "Victory": {
-        "name": "Victory",
-        "id": 3,
         "groups": [
           "Everything"
         ],
@@ -305,6 +359,16 @@
       },
       "Springs": {
         "name": "Springs",
+        "id": 3,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Glide": {
+        "name": "Glide",
         "id": 4,
         "groups": [
           "Everything"
@@ -316,6 +380,16 @@
       "Double Jump": {
         "name": "Double Jump",
         "id": 5,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Blue Platforms": {
+        "name": "Blue Platforms",
+        "id": 6,
         "groups": [
           "Everything"
         ],
@@ -335,17 +409,19 @@
       "Blue Platforms": 1,
       "Double Jump": 1,
       "Glide": 1,
+      "Shield": 1,
       "Springs": 1,
       "Victory": 1
     }
   },
   "canonical_placements": {
     "1": {
-      "region_1_0__loc_0": "Glide",
-      "region_2_0__loc_0": "Blue Platforms",
-      "region_0_1__loc_0": "Victory",
-      "region_1_1__loc_0": "Springs",
-      "region_2_1__loc_0": "Double Jump"
+      "region_0_0__loc_0": "Victory",
+      "region_1_0__loc_0": "Shield",
+      "region_2_0__loc_0": "Springs",
+      "region_0_1__loc_0": "Glide",
+      "region_1_1__loc_0": "Double Jump",
+      "region_2_1__loc_0": "Blue Platforms"
     }
   },
   "progression_mapping": {
@@ -369,7 +445,7 @@
             "runnerLevel": {
               "id": "gen_z0",
               "size": {
-                "width": 43.63,
+                "width": 53.74,
                 "height": 16
               },
               "platforms": [
@@ -414,10 +490,26 @@
                   "type": "ground"
                 },
                 {
+                  "id": "tip1",
+                  "x": 36.72,
+                  "y": 1.85,
+                  "w": 2.5,
+                  "h": 0.5,
+                  "type": "ground"
+                },
+                {
                   "id": "seg4",
-                  "x": 38.28,
+                  "x": 40.04,
                   "y": 0,
                   "w": 5.34,
+                  "h": 1,
+                  "type": "ground"
+                },
+                {
+                  "id": "seg5",
+                  "x": 48.55,
+                  "y": 0,
+                  "w": 5.18,
                   "h": 1,
                   "type": "ground"
                 }
@@ -441,9 +533,17 @@
                   "exitName": null
                 },
                 {
+                  "id": "exit_br1",
+                  "on": "tip1",
+                  "x": 39.02,
+                  "y": 2.95,
+                  "arrow": "up",
+                  "exitName": null
+                },
+                {
                   "id": "exit_main",
-                  "on": "seg4",
-                  "x": 43.03,
+                  "on": "seg5",
+                  "x": 53.14,
                   "y": 1.6,
                   "arrow": "right",
                   "exitName": null
@@ -456,7 +556,8 @@
             },
             "sidePortals": {
               "E": "exit_main",
-              "S": "exit_br0"
+              "S": "exit_br0",
+              "W": "exit_br1"
             },
             "physics": {
               "profile": "celeste",
@@ -522,6 +623,16 @@
               "targetRegion": "region_2_0",
               "isBackExit": false,
               "isTeleporter": false
+            },
+            {
+              "exit_id": "exit_W",
+              "x": 0,
+              "y": 3,
+              "side": "W",
+              "exitName": "exit_W",
+              "targetRegion": "region_0_0",
+              "isBackExit": false,
+              "isTeleporter": false
             }
           ],
           "fogEnabled": true
@@ -540,7 +651,7 @@
             "runnerLevel": {
               "id": "gen_z1",
               "size": {
-                "width": 139.83,
+                "width": 92.36,
                 "height": 16
               },
               "platforms": [
@@ -570,97 +681,65 @@
                 },
                 {
                   "id": "seg3",
-                  "x": 29.89,
-                  "y": 1.4,
-                  "w": 4.81,
+                  "x": 30.44,
+                  "y": 0,
+                  "w": 6.65,
                   "h": 1,
                   "type": "ground"
                 },
                 {
                   "id": "seg4",
-                  "x": 37.3,
-                  "y": 2.69,
-                  "w": 5.48,
+                  "x": 40.09,
+                  "y": 0,
+                  "w": 6.07,
                   "h": 1,
                   "type": "ground"
                 },
                 {
                   "id": "seg5",
-                  "x": 45.14,
-                  "y": 4.09,
-                  "w": 5.19,
+                  "x": 46.16,
+                  "y": 0,
+                  "w": 5.33,
                   "h": 1,
                   "type": "ground"
                 },
                 {
-                  "id": "pad0",
-                  "x": 51.94,
-                  "y": 6.07,
-                  "w": 5.94,
-                  "h": 0.5,
-                  "type": "glider"
-                },
-                {
                   "id": "seg6",
-                  "x": 67.99,
+                  "x": 54.82,
                   "y": 0,
-                  "w": 17.85,
+                  "w": 7.37,
                   "h": 1,
                   "type": "ground"
                 },
                 {
                   "id": "seg7",
-                  "x": 88.69,
+                  "x": 65.71,
                   "y": 0,
-                  "w": 7.25,
-                  "h": 1,
-                  "type": "ground"
-                },
-                {
-                  "id": "seg8",
-                  "x": 98.64,
-                  "y": 0,
-                  "w": 7.05,
-                  "h": 1,
-                  "type": "ground"
-                },
-                {
-                  "id": "seg9",
-                  "x": 105.69,
-                  "y": 0,
-                  "w": 4.76,
-                  "h": 1,
-                  "type": "ground"
-                },
-                {
-                  "id": "seg10",
-                  "x": 113.51,
-                  "y": 0,
-                  "w": 6.35,
+                  "w": 6.17,
                   "h": 1,
                   "type": "ground"
                 },
                 {
                   "id": "tip0",
-                  "x": 120.7,
+                  "x": 72.91,
                   "y": 1.85,
                   "w": 2.5,
                   "h": 0.5,
                   "type": "ground"
                 },
                 {
-                  "id": "seg11",
-                  "x": 124.03,
+                  "id": "seg8",
+                  "x": 76.44,
                   "y": 0,
-                  "w": 6.83,
+                  "w": 6.05,
                   "h": 1,
                   "type": "ground"
                 },
                 {
-                  "id": "seg12",
-                  "x": 133.35,
+                  "id": "seg9",
+                  "x": 85.96,
                   "y": 0,
-                  "w": 6.47,
+                  "w": 6.39,
                   "h": 1,
                   "type": "ground"
                 }
@@ -668,18 +747,26 @@
               "hazards": [
                 {
                   "id": "hz0",
+                  "type": "bed",
+                  "x": 28.07,
+                  "y": -1,
+                  "w": 1.52,
+                  "h": 7.63
+                },
+                {
+                  "id": "hz1",
                   "type": "spikes",
-                  "x": 101.87,
+                  "x": 42.13,
                   "y": 1,
-                  "w": 1.07,
+                  "w": 1.59,
                   "h": 0.8
                 }
               ],
               "pickups": [
                 {
                   "id": "loc_0",
-                  "on": "seg10",
-                  "x": 119.66,
+                  "on": "seg7",
+                  "x": 71.68,
                   "y": 1.6
                 }
               ],
@@ -687,15 +774,15 @@
                 {
                   "id": "exit_br0",
                   "on": "tip0",
-                  "x": 123,
+                  "x": 75.21,
                   "y": 2.95,
                   "arrow": "up",
                   "exitName": null
                 },
                 {
                   "id": "exit_main",
-                  "on": "seg12",
-                  "x": 139.23,
+                  "on": "seg9",
+                  "x": 91.76,
                   "y": 1.6,
                   "arrow": "right",
                   "exitName": null
@@ -792,7 +879,7 @@
             "runnerLevel": {
               "id": "gen_z2",
               "size": {
-                "width": 157.17,
+                "width": 69.07,
                 "height": 16
               },
               "platforms": [
@@ -800,143 +887,71 @@
                   "id": "seg0",
                   "x": 0,
                   "y": 0,
-                  "w": 7.2,
+                  "w": 7.99,
                   "h": 1,
                   "type": "ground"
                 },
                 {
                   "id": "seg1",
-                  "x": 9.82,
+                  "x": 10.76,
+                  "y": 0,
+                  "w": 5.2,
+                  "h": 1,
+                  "type": "ground"
+                },
+                {
+                  "id": "seg2",
+                  "x": 18.96,
                   "y": 0,
                   "w": 5.06,
                   "h": 1,
                   "type": "ground"
                 },
                 {
-                  "id": "seg2",
-                  "x": 17.27,
+                  "id": "seg3",
+                  "x": 26.41,
                   "y": 0,
                   "w": 7.22,
                   "h": 1,
                   "type": "ground"
                 },
                 {
-                  "id": "seg3",
-                  "x": 26.97,
-                  "y": 1.27,
-                  "w": 4.2,
-                  "h": 1,
-                  "type": "ground"
-                },
-                {
                   "id": "seg4",
-                  "x": 33.9,
-                  "y": 2.72,
-                  "w": 4.32,
+                  "x": 36.27,
+                  "y": 0,
+                  "w": 5.58,
                   "h": 1,
                   "type": "ground"
                 },
                 {
                   "id": "seg5",
-                  "x": 40.61,
-                  "y": 3.97,
-                  "w": 4.43,
-                  "h": 1,
-                  "type": "ground"
-                },
-                {
-                  "id": "pad0",
-                  "x": 46.65,
-                  "y": 5.92,
-                  "w": 5.56,
-                  "h": 0.5,
-                  "type": "glider"
-                },
-                {
-                  "id": "seg6",
-                  "x": 61.57,
+                  "x": 44.32,
                   "y": 0,
-                  "w": 18.27,
-                  "h": 1,
-                  "type": "ground"
-                },
-                {
-                  "id": "seg7",
-                  "x": 83.26,
-                  "y": 0,
-                  "w": 7.25,
-                  "h": 1,
-                  "type": "ground"
-                },
-                {
-                  "id": "seg8",
-                  "x": 90.51,
-                  "y": 0,
-                  "w": 4.42,
-                  "h": 1,
-                  "type": "ground"
-                },
-                {
-                  "id": "stone0",
-                  "x": 98.77,
-                  "y": 0.5,
-                  "w": 5,
-                  "h": 0.5,
-                  "type": "blue"
-                },
-                {
-                  "id": "seg9",
-                  "x": 107.29,
-                  "y": 0,
-                  "w": 5.95,
-                  "h": 1,
-                  "type": "ground"
-                },
-                {
-                  "id": "seg10",
-                  "x": 113.24,
-                  "y": 0,
-                  "w": 5.98,
-                  "h": 1,
-                  "type": "ground"
-                },
-                {
-                  "id": "seg11",
-                  "x": 121.81,
-                  "y": 0,
-                  "w": 6.6,
-                  "h": 1,
-                  "type": "ground"
-                },
-                {
-                  "id": "seg12",
-                  "x": 131.92,
-                  "y": 0,
-                  "w": 7.06,
+                  "w": 6.55,
                   "h": 1,
                   "type": "ground"
                 },
                 {
                   "id": "tip0",
-                  "x": 139.95,
+                  "x": 52.01,
                   "y": 1.85,
                   "w": 2.5,
                   "h": 0.5,
                   "type": "ground"
                 },
                 {
-                  "id": "seg13",
-                  "x": 143.41,
+                  "id": "seg6",
+                  "x": 55.65,
                   "y": 0,
-                  "w": 5.25,
+                  "w": 5.54,
                   "h": 1,
                   "type": "ground"
                 },
                 {
-                  "id": "seg14",
-                  "x": 151.26,
+                  "id": "seg7",
+                  "x": 63.65,
                   "y": 0,
-                  "w": 5.9,
+                  "w": 5.41,
                   "h": 1,
                   "type": "ground"
                 }
@@ -944,26 +959,18 @@
               "hazards": [
                 {
                   "id": "hz0",
-                  "type": "spikes",
-                  "x": 87.08,
-                  "y": 1,
-                  "w": 1.36,
-                  "h": 0.8
-                },
-                {
-                  "id": "hz1",
-                  "type": "spikes",
-                  "x": 109.38,
-                  "y": 1,
-                  "w": 1.37,
-                  "h": 0.8
+                  "type": "bed",
+                  "x": 16.81,
+                  "y": -1,
+                  "w": 1.3,
+                  "h": 7.63
                 }
               ],
               "pickups": [
                 {
                   "id": "loc_0",
-                  "on": "seg12",
-                  "x": 138.78,
+                  "on": "seg5",
+                  "x": 50.67,
                   "y": 1.6
                 }
               ],
@@ -971,15 +978,15 @@
                 {
                   "id": "exit_br0",
                   "on": "tip0",
-                  "x": 142.25,
+                  "x": 54.31,
                   "y": 2.95,
                   "arrow": "up",
                   "exitName": null
                 },
                 {
                   "id": "exit_main",
-                  "on": "seg14",
-                  "x": 156.57,
+                  "on": "seg7",
+                  "x": 68.47,
                   "y": 1.6,
                   "arrow": "right",
                   "exitName": null
@@ -1076,7 +1083,7 @@
             "runnerLevel": {
               "id": "gen_z3",
               "size": {
-                "width": 123.86,
+                "width": 122.16,
                 "height": 16
               },
               "platforms": [
@@ -1129,48 +1136,64 @@
                   "type": "ground"
                 },
                 {
+                  "id": "spring0",
+                  "x": 53.3,
+                  "y": 0,
+                  "w": 4,
+                  "h": 0.5,
+                  "type": "spring"
+                },
+                {
                   "id": "shelf0",
-                  "x": 55.72,
-                  "y": 3.87,
-                  "w": 5.7,
+                  "x": 56.49,
+                  "y": 7.44,
+                  "w": 5.27,
                   "h": 0.5,
                   "type": "oneway"
                 },
                 {
                   "id": "seg5",
-                  "x": 57.26,
+                  "x": 61.99,
                   "y": 0,
-                  "w": 10.55,
+                  "w": 10.57,
                   "h": 1,
                   "type": "ground"
                 },
                 {
                   "id": "seg6",
-                  "x": 71.08,
+                  "x": 76,
                   "y": 0,
-                  "w": 7.19,
+                  "w": 5.72,
                   "h": 1,
                   "type": "ground"
                 },
                 {
                   "id": "seg7",
-                  "x": 78.27,
+                  "x": 84.44,
                   "y": 0,
-                  "w": 5.01,
+                  "w": 6.72,
                   "h": 1,
                   "type": "ground"
                 },
                 {
+                  "id": "tip0",
+                  "x": 92.18,
+                  "y": 1.85,
+                  "w": 2.5,
+                  "h": 0.5,
+                  "type": "ground"
+                },
+                {
                   "id": "seg8",
-                  "x": 86.3,
+                  "x": 95.7,
                   "y": 0,
                   "w": 5.04,
                   "h": 1,
                   "type": "ground"
                 },
                 {
-                  "id": "tip0",
-                  "x": 92.44,
+                  "id": "tip1",
+                  "x": 101.84,
                   "y": 1.85,
                   "w": 2.5,
                   "h": 0.5,
@@ -1178,33 +1201,17 @@
                 },
                 {
                   "id": "seg9",
-                  "x": 96.04,
+                  "x": 105.44,
                   "y": 0,
                   "w": 6.43,
                   "h": 1,
                   "type": "ground"
                 },
                 {
-                  "id": "tip1",
-                  "x": 103.63,
-                  "y": 1.85,
-                  "w": 2.5,
-                  "h": 0.5,
-                  "type": "ground"
-                },
-                {
                   "id": "seg10",
-                  "x": 107.28,
+                  "x": 115.33,
                   "y": 0,
                   "w": 6.82,
-                  "h": 1,
-                  "type": "ground"
-                },
-                {
-                  "id": "seg11",
-                  "x": 117.25,
-                  "y": 0,
-                  "w": 6.6,
                   "h": 1,
                   "type": "ground"
                 }
@@ -1217,29 +1224,21 @@
                   "y": 1,
                   "w": 1.58,
                   "h": 0.8
-                },
-                {
-                  "id": "hz1",
-                  "type": "spikes",
-                  "x": 74.45,
-                  "y": 1,
-                  "w": 1.19,
-                  "h": 0.8
                 }
               ],
               "pickups": [
                 {
                   "id": "loc_0",
                   "on": "shelf0",
-                  "x": 61.22,
-                  "y": 4.97
+                  "x": 61.56,
+                  "y": 8.54
                 }
               ],
               "portals": [
                 {
                   "id": "exit_br0",
                   "on": "tip0",
-                  "x": 94.74,
+                  "x": 94.48,
                   "y": 2.95,
                   "arrow": "up",
                   "exitName": null
@@ -1247,15 +1246,15 @@
                 {
                   "id": "exit_br1",
                   "on": "tip1",
-                  "x": 105.93,
+                  "x": 104.14,
                   "y": 2.95,
                   "arrow": "up",
                   "exitName": null
                 },
                 {
                   "id": "exit_main",
-                  "on": "seg11",
-                  "x": 123.26,
+                  "on": "seg10",
+                  "x": 121.56,
                   "y": 1.6,
                   "arrow": "right",
                   "exitName": null
@@ -1363,7 +1362,7 @@
             "runnerLevel": {
               "id": "gen_z4",
               "size": {
-                "width": 161.24,
+                "width": 122.74,
                 "height": 16
               },
               "platforms": [
@@ -1371,37 +1370,29 @@
                   "id": "seg0",
                   "x": 0,
                   "y": 0,
-                  "w": 9.48,
+                  "w": 9.02,
                   "h": 1,
                   "type": "ground"
                 },
                 {
                   "id": "seg1",
-                  "x": 12.09,
+                  "x": 11.57,
                   "y": 0,
-                  "w": 7.02,
+                  "w": 6.72,
                   "h": 1,
                   "type": "ground"
                 },
                 {
                   "id": "seg2",
-                  "x": 19.11,
+                  "x": 21.71,
                   "y": 0,
-                  "w": 5.73,
+                  "w": 5.51,
                   "h": 1,
                   "type": "ground"
                 },
                 {
-                  "id": "stone0",
-                  "x": 28.48,
-                  "y": 0.5,
-                  "w": 5,
-                  "h": 0.5,
-                  "type": "blue"
-                },
-                {
                   "id": "seg3",
-                  "x": 37.49,
+                  "x": 30.6,
                   "y": 0,
                   "w": 7.03,
                   "h": 1,
@@ -1409,97 +1400,89 @@
                 },
                 {
                   "id": "seg4",
-                  "x": 44.52,
+                  "x": 40.22,
                   "y": 0,
-                  "w": 5.35,
+                  "w": 7.32,
                   "h": 1,
                   "type": "ground"
                 },
                 {
                   "id": "seg5",
-                  "x": 52.38,
+                  "x": 47.54,
                   "y": 0,
-                  "w": 7.22,
+                  "w": 5.77,
                   "h": 1,
                   "type": "ground"
                 },
                 {
                   "id": "seg6",
-                  "x": 62.98,
+                  "x": 56.47,
                   "y": 0,
-                  "w": 5.42,
+                  "w": 7.08,
                   "h": 1,
                   "type": "ground"
                 },
                 {
                   "id": "seg7",
-                  "x": 70.82,
-                  "y": 1.21,
-                  "w": 4.43,
+                  "x": 63.55,
+                  "y": 0,
+                  "w": 4.57,
                   "h": 1,
                   "type": "ground"
                 },
                 {
+                  "id": "spring0",
+                  "x": 72.23,
+                  "y": 0,
+                  "w": 4,
+                  "h": 0.5,
+                  "type": "spring"
+                },
+                {
+                  "id": "shelf0",
+                  "x": 75.14,
+                  "y": 6.65,
+                  "w": 5.58,
+                  "h": 0.5,
+                  "type": "oneway"
+                },
+                {
                   "id": "seg8",
-                  "x": 78.16,
-                  "y": 2.42,
-                  "w": 4.15,
+                  "x": 80.1,
+                  "y": 0,
+                  "w": 11.04,
                   "h": 1,
                   "type": "ground"
                 },
                 {
                   "id": "seg9",
-                  "x": 84.94,
-                  "y": 3.62,
-                  "w": 4.24,
+                  "x": 94.73,
+                  "y": 0,
+                  "w": 6.5,
                   "h": 1,
                   "type": "ground"
                 },
                 {
-                  "id": "pad0",
-                  "x": 90.95,
-                  "y": 5.41,
-                  "w": 6,
+                  "id": "tip0",
+                  "x": 102.26,
+                  "y": 1.85,
+                  "w": 2.5,
                   "h": 0.5,
-                  "type": "glider"
+                  "type": "ground"
                 },
                 {
                   "id": "seg10",
-                  "x": 107.66,
-                  "y": 0,
-                  "w": 18.58,
-                  "h": 1,
-                  "type": "ground"
-                },
-                {
-                  "id": "seg11",
-                  "x": 129.28,
+                  "x": 105.79,
                   "y": 0,
                   "w": 6.91,
                   "h": 1,
                   "type": "ground"
                 },
                 {
-                  "id": "seg12",
-                  "x": 139.54,
+                  "id": "seg11",
+                  "x": 115.72,
                   "y": 0,
-                  "w": 5.16,
-                  "h": 1,
-                  "type": "ground"
-                },
-                {
-                  "id": "seg13",
-                  "x": 147.75,
-                  "y": 0,
-                  "w": 5.39,
-                  "h": 1,
-                  "type": "ground"
-                },
-                {
-                  "id": "seg14",
-                  "x": 155.69,
-                  "y": 0,
-                  "w": 5.54,
+                  "w": 7.01,
                   "h": 1,
                   "type": "ground"
                 }
@@ -1507,34 +1490,58 @@
               "hazards": [
                 {
                   "id": "hz0",
-                  "type": "spikes",
-                  "x": 14.99,
-                  "y": 1,
-                  "w": 1.41,
-                  "h": 0.8
+                  "type": "bed",
+                  "x": 28.07,
+                  "y": -1,
+                  "w": 1.68,
+                  "h": 7.63
                 },
                 {
                   "id": "hz1",
                   "type": "spikes",
-                  "x": 39.71,
+                  "x": 42.53,
                   "y": 1,
-                  "w": 1.56,
+                  "w": 1.4,
                   "h": 0.8
+                },
+                {
+                  "id": "hz2",
+                  "type": "spikes",
+                  "x": 58.52,
+                  "y": 1,
+                  "w": 1.1,
+                  "h": 0.8
+                },
+                {
+                  "id": "hz3",
+                  "type": "saw",
+                  "x": 78.59,
+                  "y": 5.6,
+                  "w": 1.1,
+                  "h": 1
                 }
               ],
               "pickups": [
                 {
                   "id": "loc_0",
-                  "on": "seg13",
-                  "x": 152.94,
-                  "y": 1.6
+                  "on": "shelf0",
+                  "x": 80.52,
+                  "y": 7.75
                 }
               ],
               "portals": [
                 {
+                  "id": "exit_br0",
+                  "on": "tip0",
+                  "x": 104.56,
+                  "y": 2.95,
+                  "arrow": "up",
+                  "exitName": null
+                },
+                {
                   "id": "exit_main",
-                  "on": "seg14",
-                  "x": 160.64,
+                  "on": "seg11",
+                  "x": 122.14,
                   "y": 1.6,
                   "arrow": "right",
                   "exitName": null
@@ -1546,7 +1553,8 @@
               }
             },
             "sidePortals": {
-              "E": "exit_main"
+              "E": "exit_main",
+              "N": "exit_br0"
             },
             "physics": {
               "profile": "celeste",
@@ -1594,12 +1602,242 @@
           },
           "exits": [
             {
+              "exit_id": "exit_N",
+              "x": 4,
+              "y": 0,
+              "side": "N",
+              "exitName": "exit_N",
+              "targetRegion": "region_0_0",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
               "exit_id": "exit_E",
               "x": 7,
               "y": 3,
               "side": "E",
               "exitName": "exit_E",
               "targetRegion": "region_1_1",
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ],
+          "fogEnabled": true
+        }
+      },
+      "region_0_0": {
+        "substrate": "runner",
+        "render_hint": "runner",
+        "grid_cell": {
+          "gx": 0,
+          "gy": 0
+        },
+        "playable_payload": {
+          "gameId": "runnerDemo",
+          "params": {
+            "runnerLevel": {
+              "id": "gen_z5",
+              "size": {
+                "width": 92.06,
+                "height": 16
+              },
+              "platforms": [
+                {
+                  "id": "seg0",
+                  "x": 0,
+                  "y": 0,
+                  "w": 9.08,
+                  "h": 1,
+                  "type": "ground"
+                },
+                {
+                  "id": "seg1",
+                  "x": 12.46,
+                  "y": 0,
+                  "w": 7.07,
+                  "h": 1,
+                  "type": "ground"
+                },
+                {
+                  "id": "seg2",
+                  "x": 22.68,
+                  "y": 0,
+                  "w": 5.51,
+                  "h": 1,
+                  "type": "ground"
+                },
+                {
+                  "id": "seg3",
+                  "x": 30.89,
+                  "y": 0,
+                  "w": 5.42,
+                  "h": 1,
+                  "type": "ground"
+                },
+                {
+                  "id": "stone0",
+                  "x": 39.81,
+                  "y": 0.5,
+                  "w": 5,
+                  "h": 0.5,
+                  "type": "blue"
+                },
+                {
+                  "id": "seg4",
+                  "x": 48.68,
+                  "y": 0,
+                  "w": 5.61,
+                  "h": 1,
+                  "type": "ground"
+                },
+                {
+                  "id": "seg5",
+                  "x": 56.7,
+                  "y": 0,
+                  "w": 6.97,
+                  "h": 1,
+                  "type": "ground"
+                },
+                {
+                  "id": "seg6",
+                  "x": 66.39,
+                  "y": 0,
+                  "w": 6.61,
+                  "h": 1,
+                  "type": "ground"
+                },
+                {
+                  "id": "tip0",
+                  "x": 74.15,
+                  "y": 1.85,
+                  "w": 2.5,
+                  "h": 0.5,
+                  "type": "ground"
+                },
+                {
+                  "id": "seg7",
+                  "x": 77.79,
+                  "y": 0,
+                  "w": 5.48,
+                  "h": 1,
+                  "type": "ground"
+                },
+                {
+                  "id": "seg8",
+                  "x": 85.92,
+                  "y": 0,
+                  "w": 6.13,
+                  "h": 1,
+                  "type": "ground"
+                }
+              ],
+              "hazards": [
+                {
+                  "id": "hz0",
+                  "type": "bed",
+                  "x": 20.38,
+                  "y": -1,
+                  "w": 1.45,
+                  "h": 7.63
+                }
+              ],
+              "pickups": [
+                {
+                  "id": "loc_0",
+                  "on": "seg6",
+                  "x": 72.8,
+                  "y": 1.6
+                }
+              ],
+              "portals": [
+                {
+                  "id": "exit_br0",
+                  "on": "tip0",
+                  "x": 76.45,
+                  "y": 2.95,
+                  "arrow": "up",
+                  "exitName": null
+                },
+                {
+                  "id": "exit_main",
+                  "on": "seg8",
+                  "x": 91.46,
+                  "y": 1.6,
+                  "arrow": "right",
+                  "exitName": null
+                }
+              ],
+              "spawn": {
+                "x": 1,
+                "y": 1
+              }
+            },
+            "sidePortals": {
+              "E": "exit_main",
+              "S": "exit_br0"
+            },
+            "physics": {
+              "profile": "celeste",
+              "constants": {
+                "maxSpeed": 9.01,
+                "maxAcceleration": 79,
+                "maxDecceleration": 76,
+                "maxTurnSpeed": 76,
+                "maxAirAcceleration": 80,
+                "maxAirDeceleration": 80,
+                "maxAirTurnSpeed": 80,
+                "friction": 0,
+                "useAcceleration": true,
+                "jumpHeight": 2.25,
+                "timeToJumpApex": 0.38,
+                "upwardMovementMultiplier": 1,
+                "downwardMovementMultiplier": 5.23,
+                "maxAirJumps": 0,
+                "variablejumpHeight": true,
+                "jumpCutOff": 5.23,
+                "speedLimit": 30,
+                "coyoteTime": 0.15,
+                "jumpBuffer": 0.15,
+                "TICK_HZ": 50,
+                "GRAVITY": -9.81,
+                "PLAYER_W": 0.75,
+                "PLAYER_H": 1.125,
+                "AUTO_RUN": true,
+                "SIDE_WALLS": true,
+                "FALL_MARGIN": 5,
+                "MAX_HITS": 0,
+                "GOAL_HALF": 0.375,
+                "GLIDE_FALL_CAP": 2,
+                "SPRING_RISE": 10
+              }
+            }
+          },
+          "ap_locations": {
+            "loc_0": "region_0_0__loc_0"
+          },
+          "flashCapabilities": {
+            "locations": "cooperative",
+            "items": "pull",
+            "start": "auto"
+          },
+          "exits": [
+            {
+              "exit_id": "exit_S",
+              "x": 4,
+              "y": 5,
+              "side": "S",
+              "exitName": "exit_S",
+              "targetRegion": "region_0_1",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "exit_E",
+              "x": 7,
+              "y": 3,
+              "side": "E",
+              "exitName": "exit_E",
+              "targetRegion": "region_1_0",
               "isBackExit": false,
               "isTeleporter": false
             }

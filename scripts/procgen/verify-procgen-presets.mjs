@@ -162,15 +162,16 @@ await page.waitForTimeout(300);
 check('shuffledSpiral mode radio checked after apply',
     await panel.locator('input[name="procgen-pipeline-mode"][value="shuffledSpiral"]').isChecked());
 const zoneBundle = await readBundle();
-check('bundle: zone demo quota runner=5, empty pool',
-    zoneBundle.substrateQuotas.runner === 5
+check('bundle: zone demo quota runner=6, empty pool',
+    zoneBundle.substrateQuotas.runner === 6
         && Object.keys(zoneBundle.scenario.items).length === 0);
 // the default zone table builds LAZILY inside this click's handler and
-// costs ~30-60s of synchronous solver time since Glide (4 feature
-// zones, §8.7 step 4) — the page's main thread is blocked, so the
-// click needs a budget well past Playwright's 30s default
+// costs a minute-plus of synchronous solver time since the Shield
+// (5 feature zones + Victory, §4.10) — the page's main thread is
+// blocked, so the click needs a budget well past Playwright's 30s
+// default
 await panel.locator('button:has-text("Generate")').first()
-    .click({ timeout: 180000 });
+    .click({ timeout: 300000 });
 const zoneStats = await waitFor('spiral completion stats', async () => {
     // spiral success sets NO message (the message element only renders
     // when non-empty) — errors do; probe it as optional
@@ -182,7 +183,7 @@ const zoneStats = await waitFor('spiral completion stats', async () => {
     const t = await panel.textContent();
     return t.includes('stop: spiral_complete') ? 'stop: spiral_complete' : null;
 }, 240000);
-check('zone-demo generation completes (5-zone spiral)', true, zoneStats);
+check('zone-demo generation completes (6-zone spiral)', true, zoneStats);
 
 // re-apply the sphere demo so the edit-flip section below starts from
 // a selected preset with the seed field it expects
