@@ -1,0 +1,8 @@
+{
+  "name": "cycle-off-0",
+  "options": {
+    "modOverrides": {
+      "auto_use_cycle_off_resets": 0
+    }
+  }
+}

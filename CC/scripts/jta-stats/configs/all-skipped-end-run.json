@@ -1,0 +1,8 @@
+{
+  "name": "all-skipped-end-run",
+  "options": {
+    "modOverrides": {
+      "threshold_all_skipped": 1
+    }
+  }
+}

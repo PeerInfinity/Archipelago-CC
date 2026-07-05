@@ -1,0 +1,16 @@
+{
+  "name": "fill-prestige-first",
+  "options": {
+    "modOverrides": {},
+    "autoFillOrder": [
+      "prestige",
+      "item",
+      "combat",
+      "perk",
+      "unlocker",
+      "plain",
+      "mandatory",
+      "travel"
+    ]
+  }
+}

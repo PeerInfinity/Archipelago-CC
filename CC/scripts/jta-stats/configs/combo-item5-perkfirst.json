@@ -1,0 +1,18 @@
+{
+  "name": "combo-item5-perkfirst",
+  "options": {
+    "modOverrides": {
+      "threshold_item_pct": 5
+    },
+    "autoFillOrder": [
+      "perk",
+      "item",
+      "combat",
+      "prestige",
+      "unlocker",
+      "plain",
+      "mandatory",
+      "travel"
+    ]
+  }
+}

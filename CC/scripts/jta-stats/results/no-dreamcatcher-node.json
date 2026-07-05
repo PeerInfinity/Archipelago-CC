@@ -12,7 +12,7 @@
       "auto_use_cycle": true,
       "auto_use_free_items": true,
       "artifact_tasks_item_cycle_only": true,
-      "auto_dreamcatcher": true,
+      "auto_dreamcatcher": false,
       "auto_ring": true,
       "auto_prioritize": true,
       "auto_prestige": true,
@@ -38,19 +38,19 @@
     }
   },
   "timing": {
-    "wallMs": 11909.412540000001,
-    "ticks": 15613,
+    "wallMs": 8341.191417,
+    "ticks": 16839,
     "runsExecuted": 500,
-    "ticksPerSec": 1311
+    "ticksPerSec": 2019
   },
   "stalled": false,
   "allCompleted": false,
   "taskCount": 134,
-  "completedCount": 132,
+  "completedCount": 130,
   "finalState": {
-    "prestiges": 5,
-    "highestZone": 24,
-    "divineSpark": 680306
+    "prestiges": 6,
+    "highestZone": 21,
+    "divineSpark": 13156
   },
   "completions": [
     {
@@ -657,15 +657,6 @@
       "prestiges": 0
     },
     {
-      "id": 88,
-      "name": "Train at Every Guild",
-      "zone": 7,
-      "zoneName": "The City",
-      "maxReps": 1,
-      "run": 441,
-      "prestiges": 4
-    },
-    {
       "id": 89,
       "name": "Purge Corrupt Bureacracy",
       "zone": 7,
@@ -1231,15 +1222,6 @@
       "maxReps": 1,
       "run": 141,
       "prestiges": 0
-    },
-    {
-      "id": 158,
-      "name": "Write Down Some Learnings",
-      "zone": 14,
-      "zoneName": "The Ritual",
-      "maxReps": 5,
-      "run": 441,
-      "prestiges": 4
     }
   ],
   "unreached": [
@@ -1256,6 +1238,20 @@
       "zone": 1,
       "zoneName": "The Village Watch",
       "maxReps": 10
+    },
+    {
+      "id": 88,
+      "name": "Train at Every Guild",
+      "zone": 7,
+      "zoneName": "The City",
+      "maxReps": 1
+    },
+    {
+      "id": 158,
+      "name": "Write Down Some Learnings",
+      "zone": 14,
+      "zoneName": "The Ritual",
+      "maxReps": 5
     }
   ],
   "runEnds": [
@@ -3060,10 +3056,10 @@
     },
     {
       "run": 258,
-      "endZone": 17,
+      "endZone": 16,
       "highestZone": 17,
       "prestiged": false,
-      "ticks": 34
+      "ticks": 28
     },
     {
       "run": 259,
@@ -3578,10 +3574,10 @@
     },
     {
       "run": 332,
-      "endZone": 17,
+      "endZone": 15,
       "highestZone": 18,
       "prestiged": false,
-      "ticks": 31
+      "ticks": 20
     },
     {
       "run": 333,
@@ -3602,14 +3598,14 @@
       "endZone": 17,
       "highestZone": 18,
       "prestiged": false,
-      "ticks": 25
+      "ticks": 24
     },
     {
       "run": 336,
       "endZone": 18,
       "highestZone": 18,
       "prestiged": false,
-      "ticks": 34
+      "ticks": 35
     },
     {
       "run": 337,
@@ -3630,7 +3626,7 @@
       "endZone": 18,
       "highestZone": 19,
       "prestiged": false,
-      "ticks": 28
+      "ticks": 27
     },
     {
       "run": 340,
@@ -3665,7 +3661,7 @@
       "endZone": 19,
       "highestZone": 19,
       "prestiged": false,
-      "ticks": 26
+      "ticks": 25
     },
     {
       "run": 345,
@@ -3693,21 +3689,21 @@
       "endZone": 19,
       "highestZone": 19,
       "prestiged": false,
-      "ticks": 23
+      "ticks": 20
     },
     {
       "run": 349,
       "endZone": 18,
       "highestZone": 19,
       "prestiged": false,
-      "ticks": 15
+      "ticks": 14
     },
     {
       "run": 350,
       "endZone": 19,
       "highestZone": 19,
       "prestiged": false,
-      "ticks": 25
+      "ticks": 23
     },
     {
       "run": 351,
@@ -3721,7 +3717,7 @@
       "endZone": 19,
       "highestZone": 19,
       "prestiged": false,
-      "ticks": 25
+      "ticks": 24
     },
     {
       "run": 353,
@@ -3732,10 +3728,10 @@
     },
     {
       "run": 354,
-      "endZone": 19,
+      "endZone": 16,
       "highestZone": 19,
       "prestiged": false,
-      "ticks": 25
+      "ticks": 7
     },
     {
       "run": 355,
@@ -3749,7 +3745,7 @@
       "endZone": 19,
       "highestZone": 19,
       "prestiged": false,
-      "ticks": 27
+      "ticks": 25
     },
     {
       "run": 357,
@@ -3760,1010 +3756,1010 @@
     },
     {
       "run": 358,
-      "endZone": 20,
-      "highestZone": 20,
-      "prestiged": false,
-      "ticks": 28
+      "endZone": 19,
+      "highestZone": 0,
+      "prestiged": true,
+      "ticks": 26
     },
     {
       "run": 359,
-      "endZone": 19,
-      "highestZone": 20,
+      "endZone": 2,
+      "highestZone": 2,
       "prestiged": false,
-      "ticks": 22
+      "ticks": 18
     },
     {
       "run": 360,
-      "endZone": 19,
-      "highestZone": 20,
+      "endZone": 5,
+      "highestZone": 5,
       "prestiged": false,
-      "ticks": 29
+      "ticks": 45
     },
     {
       "run": 361,
-      "endZone": 19,
-      "highestZone": 20,
+      "endZone": 7,
+      "highestZone": 7,
       "prestiged": false,
-      "ticks": 23
+      "ticks": 52
     },
     {
       "run": 362,
-      "endZone": 20,
-      "highestZone": 20,
+      "endZone": 11,
+      "highestZone": 11,
       "prestiged": false,
-      "ticks": 31
+      "ticks": 51
     },
     {
       "run": 363,
-      "endZone": 19,
-      "highestZone": 20,
+      "endZone": 12,
+      "highestZone": 12,
       "prestiged": false,
-      "ticks": 23
+      "ticks": 45
     },
     {
       "run": 364,
-      "endZone": 20,
-      "highestZone": 20,
+      "endZone": 14,
+      "highestZone": 14,
       "prestiged": false,
-      "ticks": 31
+      "ticks": 49
     },
     {
       "run": 365,
-      "endZone": 19,
-      "highestZone": 20,
+      "endZone": 15,
+      "highestZone": 15,
       "prestiged": false,
-      "ticks": 24
+      "ticks": 56
     },
     {
       "run": 366,
-      "endZone": 20,
-      "highestZone": 20,
+      "endZone": 14,
+      "highestZone": 15,
       "prestiged": false,
-      "ticks": 31
+      "ticks": 52
     },
     {
       "run": 367,
-      "endZone": 19,
-      "highestZone": 20,
+      "endZone": 15,
+      "highestZone": 15,
       "prestiged": false,
-      "ticks": 23
+      "ticks": 34
     },
     {
       "run": 368,
-      "endZone": 21,
-      "highestZone": 21,
+      "endZone": 15,
+      "highestZone": 15,
       "prestiged": false,
-      "ticks": 28
+      "ticks": 55
     },
     {
       "run": 369,
-      "endZone": 19,
-      "highestZone": 21,
+      "endZone": 17,
+      "highestZone": 17,
       "prestiged": false,
-      "ticks": 23
+      "ticks": 38
     },
     {
       "run": 370,
-      "endZone": 21,
-      "highestZone": 21,
-      "prestiged": false,
-      "ticks": 31
-    },
-    {
-      "run": 371,
-      "endZone": 19,
-      "highestZone": 21,
-      "prestiged": false,
-      "ticks": 18
-    },
-    {
-      "run": 372,
-      "endZone": 21,
-      "highestZone": 21,
-      "prestiged": false,
-      "ticks": 30
-    },
-    {
-      "run": 373,
-      "endZone": 19,
-      "highestZone": 21,
-      "prestiged": false,
-      "ticks": 18
-    },
-    {
-      "run": 374,
-      "endZone": 20,
-      "highestZone": 21,
+      "endZone": 16,
+      "highestZone": 17,
       "prestiged": false,
       "ticks": 27
     },
     {
-      "run": 375,
-      "endZone": 19,
-      "highestZone": 21,
-      "prestiged": false,
-      "ticks": 18
-    },
-    {
-      "run": 376,
-      "endZone": 21,
-      "highestZone": 21,
-      "prestiged": false,
-      "ticks": 34
-    },
-    {
-      "run": 377,
-      "endZone": 19,
-      "highestZone": 21,
-      "prestiged": false,
-      "ticks": 19
-    },
-    {
-      "run": 378,
-      "endZone": 21,
-      "highestZone": 21,
-      "prestiged": false,
-      "ticks": 34
-    },
-    {
-      "run": 379,
-      "endZone": 19,
-      "highestZone": 21,
-      "prestiged": false,
-      "ticks": 20
-    },
-    {
-      "run": 380,
-      "endZone": 21,
-      "highestZone": 21,
-      "prestiged": false,
-      "ticks": 35
-    },
-    {
-      "run": 381,
-      "endZone": 19,
-      "highestZone": 21,
-      "prestiged": false,
-      "ticks": 20
-    },
-    {
-      "run": 382,
-      "endZone": 21,
-      "highestZone": 21,
-      "prestiged": false,
-      "ticks": 35
-    },
-    {
-      "run": 383,
-      "endZone": 19,
-      "highestZone": 21,
-      "prestiged": false,
-      "ticks": 20
-    },
-    {
-      "run": 384,
-      "endZone": 21,
-      "highestZone": 21,
-      "prestiged": false,
-      "ticks": 36
-    },
-    {
-      "run": 385,
-      "endZone": 19,
-      "highestZone": 21,
-      "prestiged": false,
-      "ticks": 21
-    },
-    {
-      "run": 386,
-      "endZone": 22,
-      "highestZone": 22,
-      "prestiged": false,
-      "ticks": 37
-    },
-    {
-      "run": 387,
-      "endZone": 19,
-      "highestZone": 22,
-      "prestiged": false,
-      "ticks": 21
-    },
-    {
-      "run": 388,
-      "endZone": 21,
-      "highestZone": 22,
-      "prestiged": false,
-      "ticks": 35
-    },
-    {
-      "run": 389,
-      "endZone": 19,
-      "highestZone": 22,
-      "prestiged": false,
-      "ticks": 20
-    },
-    {
-      "run": 390,
-      "endZone": 22,
-      "highestZone": 22,
-      "prestiged": false,
-      "ticks": 37
-    },
-    {
-      "run": 391,
-      "endZone": 19,
-      "highestZone": 22,
-      "prestiged": false,
-      "ticks": 20
-    },
-    {
-      "run": 392,
-      "endZone": 22,
-      "highestZone": 22,
-      "prestiged": false,
-      "ticks": 38
-    },
-    {
-      "run": 393,
-      "endZone": 19,
-      "highestZone": 22,
-      "prestiged": false,
-      "ticks": 20
-    },
-    {
-      "run": 394,
-      "endZone": 22,
-      "highestZone": 22,
-      "prestiged": false,
-      "ticks": 38
-    },
-    {
-      "run": 395,
-      "endZone": 19,
-      "highestZone": 22,
-      "prestiged": false,
-      "ticks": 21
-    },
-    {
-      "run": 396,
-      "endZone": 22,
-      "highestZone": 22,
-      "prestiged": false,
-      "ticks": 41
-    },
-    {
-      "run": 397,
-      "endZone": 19,
-      "highestZone": 22,
-      "prestiged": false,
-      "ticks": 17
-    },
-    {
-      "run": 398,
-      "endZone": 22,
-      "highestZone": 22,
-      "prestiged": false,
-      "ticks": 40
-    },
-    {
-      "run": 399,
-      "endZone": 19,
-      "highestZone": 22,
-      "prestiged": false,
-      "ticks": 21
-    },
-    {
-      "run": 400,
-      "endZone": 22,
-      "highestZone": 22,
-      "prestiged": false,
-      "ticks": 41
-    },
-    {
-      "run": 401,
-      "endZone": 19,
-      "highestZone": 22,
-      "prestiged": false,
-      "ticks": 20
-    },
-    {
-      "run": 402,
-      "endZone": 23,
-      "highestZone": 23,
-      "prestiged": false,
-      "ticks": 25
-    },
-    {
-      "run": 403,
-      "endZone": 20,
-      "highestZone": 23,
-      "prestiged": false,
-      "ticks": 8
-    },
-    {
-      "run": 404,
-      "endZone": 22,
-      "highestZone": 23,
-      "prestiged": false,
-      "ticks": 22
-    },
-    {
-      "run": 405,
-      "endZone": 20,
-      "highestZone": 23,
-      "prestiged": false,
-      "ticks": 8
-    },
-    {
-      "run": 406,
-      "endZone": 23,
-      "highestZone": 23,
-      "prestiged": false,
-      "ticks": 25
-    },
-    {
-      "run": 407,
-      "endZone": 20,
-      "highestZone": 23,
-      "prestiged": false,
-      "ticks": 11
-    },
-    {
-      "run": 408,
-      "endZone": 23,
-      "highestZone": 23,
+      "run": 371,
+      "endZone": 17,
+      "highestZone": 17,
       "prestiged": false,
       "ticks": 24
     },
     {
-      "run": 409,
-      "endZone": 21,
-      "highestZone": 23,
-      "prestiged": false,
-      "ticks": 13
-    },
-    {
-      "run": 410,
-      "endZone": 23,
-      "highestZone": 23,
-      "prestiged": false,
-      "ticks": 22
-    },
-    {
-      "run": 411,
-      "endZone": 21,
-      "highestZone": 23,
-      "prestiged": false,
-      "ticks": 13
-    },
-    {
-      "run": 412,
-      "endZone": 23,
-      "highestZone": 23,
-      "prestiged": false,
-      "ticks": 21
-    },
-    {
-      "run": 413,
-      "endZone": 21,
-      "highestZone": 23,
-      "prestiged": false,
-      "ticks": 13
-    },
-    {
-      "run": 414,
-      "endZone": 23,
-      "highestZone": 23,
-      "prestiged": false,
-      "ticks": 23
-    },
-    {
-      "run": 415,
-      "endZone": 21,
-      "highestZone": 23,
-      "prestiged": false,
-      "ticks": 13
-    },
-    {
-      "run": 416,
-      "endZone": 23,
-      "highestZone": 23,
-      "prestiged": false,
-      "ticks": 23
-    },
-    {
-      "run": 417,
-      "endZone": 21,
-      "highestZone": 23,
-      "prestiged": false,
-      "ticks": 13
-    },
-    {
-      "run": 418,
-      "endZone": 23,
-      "highestZone": 23,
-      "prestiged": false,
-      "ticks": 23
-    },
-    {
-      "run": 419,
-      "endZone": 21,
-      "highestZone": 23,
-      "prestiged": false,
-      "ticks": 14
-    },
-    {
-      "run": 420,
-      "endZone": 24,
-      "highestZone": 24,
-      "prestiged": false,
-      "ticks": 24
-    },
-    {
-      "run": 421,
-      "endZone": 21,
-      "highestZone": 24,
-      "prestiged": false,
-      "ticks": 12
-    },
-    {
-      "run": 422,
-      "endZone": 24,
-      "highestZone": 24,
-      "prestiged": false,
-      "ticks": 24
-    },
-    {
-      "run": 423,
-      "endZone": 22,
-      "highestZone": 24,
-      "prestiged": false,
-      "ticks": 14
-    },
-    {
-      "run": 424,
-      "endZone": 24,
-      "highestZone": 24,
-      "prestiged": false,
-      "ticks": 20
-    },
-    {
-      "run": 425,
-      "endZone": 22,
-      "highestZone": 24,
-      "prestiged": false,
-      "ticks": 16
-    },
-    {
-      "run": 426,
-      "endZone": 23,
-      "highestZone": 24,
-      "prestiged": false,
-      "ticks": 21
-    },
-    {
-      "run": 427,
-      "endZone": 22,
-      "highestZone": 24,
-      "prestiged": false,
-      "ticks": 17
-    },
-    {
-      "run": 428,
-      "endZone": 24,
-      "highestZone": 24,
-      "prestiged": false,
-      "ticks": 20
-    },
-    {
-      "run": 429,
-      "endZone": 22,
-      "highestZone": 24,
-      "prestiged": false,
-      "ticks": 13
-    },
-    {
-      "run": 430,
-      "endZone": 24,
-      "highestZone": 24,
-      "prestiged": false,
-      "ticks": 21
-    },
-    {
-      "run": 431,
-      "endZone": 23,
-      "highestZone": 24,
-      "prestiged": false,
-      "ticks": 16
-    },
-    {
-      "run": 432,
-      "endZone": 24,
-      "highestZone": 24,
-      "prestiged": false,
-      "ticks": 22
-    },
-    {
-      "run": 433,
-      "endZone": 23,
-      "highestZone": 24,
-      "prestiged": false,
-      "ticks": 14
-    },
-    {
-      "run": 434,
-      "endZone": 24,
-      "highestZone": 24,
-      "prestiged": false,
-      "ticks": 19
-    },
-    {
-      "run": 435,
-      "endZone": 23,
-      "highestZone": 24,
-      "prestiged": false,
-      "ticks": 14
-    },
-    {
-      "run": 436,
-      "endZone": 24,
-      "highestZone": 24,
-      "prestiged": false,
-      "ticks": 19
-    },
-    {
-      "run": 437,
-      "endZone": 23,
-      "highestZone": 24,
-      "prestiged": false,
-      "ticks": 14
-    },
-    {
-      "run": 438,
-      "endZone": 24,
-      "highestZone": 24,
-      "prestiged": false,
-      "ticks": 18
-    },
-    {
-      "run": 439,
-      "endZone": 23,
-      "highestZone": 24,
-      "prestiged": false,
-      "ticks": 13
-    },
-    {
-      "run": 440,
-      "endZone": 24,
-      "highestZone": 2,
-      "prestiged": true,
-      "ticks": 19
-    },
-    {
-      "run": 441,
+      "run": 372,
       "endZone": 17,
       "highestZone": 17,
       "prestiged": false,
       "ticks": 26
     },
     {
-      "run": 442,
-      "endZone": 16,
-      "highestZone": 17,
-      "prestiged": false,
-      "ticks": 6
-    },
-    {
-      "run": 443,
+      "run": 373,
       "endZone": 18,
       "highestZone": 18,
       "prestiged": false,
-      "ticks": 15
+      "ticks": 29
     },
     {
-      "run": 444,
-      "endZone": 18,
+      "run": 374,
+      "endZone": 17,
       "highestZone": 18,
-      "prestiged": false,
-      "ticks": 9
-    },
-    {
-      "run": 445,
-      "endZone": 20,
-      "highestZone": 20,
       "prestiged": false,
       "ticks": 21
     },
     {
-      "run": 446,
+      "run": 375,
+      "endZone": 19,
+      "highestZone": 19,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 376,
+      "endZone": 18,
+      "highestZone": 19,
+      "prestiged": false,
+      "ticks": 17
+    },
+    {
+      "run": 377,
+      "endZone": 18,
+      "highestZone": 19,
+      "prestiged": false,
+      "ticks": 21
+    },
+    {
+      "run": 378,
+      "endZone": 18,
+      "highestZone": 19,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 379,
+      "endZone": 19,
+      "highestZone": 19,
+      "prestiged": false,
+      "ticks": 26
+    },
+    {
+      "run": 380,
+      "endZone": 18,
+      "highestZone": 19,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 381,
+      "endZone": 19,
+      "highestZone": 19,
+      "prestiged": false,
+      "ticks": 28
+    },
+    {
+      "run": 382,
+      "endZone": 18,
+      "highestZone": 19,
+      "prestiged": false,
+      "ticks": 17
+    },
+    {
+      "run": 383,
+      "endZone": 19,
+      "highestZone": 19,
+      "prestiged": false,
+      "ticks": 27
+    },
+    {
+      "run": 384,
+      "endZone": 18,
+      "highestZone": 19,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 385,
+      "endZone": 19,
+      "highestZone": 19,
+      "prestiged": false,
+      "ticks": 24
+    },
+    {
+      "run": 386,
+      "endZone": 19,
+      "highestZone": 19,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 387,
+      "endZone": 19,
+      "highestZone": 19,
+      "prestiged": false,
+      "ticks": 27
+    },
+    {
+      "run": 388,
+      "endZone": 19,
+      "highestZone": 19,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 389,
+      "endZone": 19,
+      "highestZone": 19,
+      "prestiged": false,
+      "ticks": 29
+    },
+    {
+      "run": 390,
+      "endZone": 19,
+      "highestZone": 19,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 391,
+      "endZone": 20,
+      "highestZone": 20,
+      "prestiged": false,
+      "ticks": 30
+    },
+    {
+      "run": 392,
       "endZone": 19,
       "highestZone": 20,
       "prestiged": false,
-      "ticks": 11
+      "ticks": 23
     },
     {
-      "run": 447,
+      "run": 393,
+      "endZone": 20,
+      "highestZone": 20,
+      "prestiged": false,
+      "ticks": 30
+    },
+    {
+      "run": 394,
       "endZone": 19,
       "highestZone": 20,
       "prestiged": false,
-      "ticks": 9
+      "ticks": 23
     },
     {
-      "run": 448,
+      "run": 395,
+      "endZone": 20,
+      "highestZone": 20,
+      "prestiged": false,
+      "ticks": 30
+    },
+    {
+      "run": 396,
       "endZone": 19,
       "highestZone": 20,
       "prestiged": false,
-      "ticks": 9
+      "ticks": 24
     },
     {
-      "run": 449,
-      "endZone": 21,
-      "highestZone": 21,
+      "run": 397,
+      "endZone": 20,
+      "highestZone": 20,
       "prestiged": false,
-      "ticks": 22
+      "ticks": 24
     },
     {
-      "run": 450,
+      "run": 398,
       "endZone": 19,
-      "highestZone": 21,
+      "highestZone": 20,
       "prestiged": false,
-      "ticks": 12
+      "ticks": 23
     },
     {
-      "run": 451,
-      "endZone": 22,
-      "highestZone": 22,
+      "run": 399,
+      "endZone": 20,
+      "highestZone": 20,
+      "prestiged": false,
+      "ticks": 26
+    },
+    {
+      "run": 400,
+      "endZone": 19,
+      "highestZone": 20,
+      "prestiged": false,
+      "ticks": 23
+    },
+    {
+      "run": 401,
+      "endZone": 20,
+      "highestZone": 20,
+      "prestiged": false,
+      "ticks": 26
+    },
+    {
+      "run": 402,
+      "endZone": 19,
+      "highestZone": 20,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 403,
+      "endZone": 19,
+      "highestZone": 20,
+      "prestiged": false,
+      "ticks": 20
+    },
+    {
+      "run": 404,
+      "endZone": 19,
+      "highestZone": 20,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 405,
+      "endZone": 20,
+      "highestZone": 20,
+      "prestiged": false,
+      "ticks": 29
+    },
+    {
+      "run": 406,
+      "endZone": 19,
+      "highestZone": 20,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 407,
+      "endZone": 20,
+      "highestZone": 20,
+      "prestiged": false,
+      "ticks": 30
+    },
+    {
+      "run": 408,
+      "endZone": 19,
+      "highestZone": 20,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 409,
+      "endZone": 20,
+      "highestZone": 20,
+      "prestiged": false,
+      "ticks": 30
+    },
+    {
+      "run": 410,
+      "endZone": 19,
+      "highestZone": 20,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 411,
+      "endZone": 20,
+      "highestZone": 0,
+      "prestiged": true,
+      "ticks": 31
+    },
+    {
+      "run": 412,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 63
+    },
+    {
+      "run": 413,
+      "endZone": 7,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 10
+    },
+    {
+      "run": 414,
+      "endZone": 12,
+      "highestZone": 12,
+      "prestiged": false,
+      "ticks": 47
+    },
+    {
+      "run": 415,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 54
+    },
+    {
+      "run": 416,
+      "endZone": 16,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 61
+    },
+    {
+      "run": 417,
+      "endZone": 15,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 55
+    },
+    {
+      "run": 418,
+      "endZone": 16,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 419,
+      "endZone": 16,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 30
+    },
+    {
+      "run": 420,
+      "endZone": 18,
+      "highestZone": 18,
+      "prestiged": false,
+      "ticks": 30
+    },
+    {
+      "run": 421,
+      "endZone": 18,
+      "highestZone": 18,
+      "prestiged": false,
+      "ticks": 23
+    },
+    {
+      "run": 422,
+      "endZone": 18,
+      "highestZone": 18,
+      "prestiged": false,
+      "ticks": 27
+    },
+    {
+      "run": 423,
+      "endZone": 18,
+      "highestZone": 18,
+      "prestiged": false,
+      "ticks": 26
+    },
+    {
+      "run": 424,
+      "endZone": 18,
+      "highestZone": 18,
+      "prestiged": false,
+      "ticks": 28
+    },
+    {
+      "run": 425,
+      "endZone": 18,
+      "highestZone": 18,
       "prestiged": false,
       "ticks": 25
     },
     {
-      "run": 452,
-      "endZone": 20,
-      "highestZone": 22,
+      "run": 426,
+      "endZone": 19,
+      "highestZone": 19,
       "prestiged": false,
-      "ticks": 8
+      "ticks": 35
+    },
+    {
+      "run": 427,
+      "endZone": 18,
+      "highestZone": 19,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 428,
+      "endZone": 19,
+      "highestZone": 19,
+      "prestiged": false,
+      "ticks": 30
+    },
+    {
+      "run": 429,
+      "endZone": 19,
+      "highestZone": 19,
+      "prestiged": false,
+      "ticks": 20
+    },
+    {
+      "run": 430,
+      "endZone": 19,
+      "highestZone": 19,
+      "prestiged": false,
+      "ticks": 31
+    },
+    {
+      "run": 431,
+      "endZone": 19,
+      "highestZone": 19,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 432,
+      "endZone": 19,
+      "highestZone": 19,
+      "prestiged": false,
+      "ticks": 30
+    },
+    {
+      "run": 433,
+      "endZone": 19,
+      "highestZone": 19,
+      "prestiged": false,
+      "ticks": 20
+    },
+    {
+      "run": 434,
+      "endZone": 18,
+      "highestZone": 19,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 435,
+      "endZone": 19,
+      "highestZone": 19,
+      "prestiged": false,
+      "ticks": 23
+    },
+    {
+      "run": 436,
+      "endZone": 20,
+      "highestZone": 20,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 437,
+      "endZone": 19,
+      "highestZone": 20,
+      "prestiged": false,
+      "ticks": 22
+    },
+    {
+      "run": 438,
+      "endZone": 20,
+      "highestZone": 20,
+      "prestiged": false,
+      "ticks": 27
+    },
+    {
+      "run": 439,
+      "endZone": 19,
+      "highestZone": 20,
+      "prestiged": false,
+      "ticks": 24
+    },
+    {
+      "run": 440,
+      "endZone": 20,
+      "highestZone": 20,
+      "prestiged": false,
+      "ticks": 28
+    },
+    {
+      "run": 441,
+      "endZone": 19,
+      "highestZone": 20,
+      "prestiged": false,
+      "ticks": 24
+    },
+    {
+      "run": 442,
+      "endZone": 20,
+      "highestZone": 20,
+      "prestiged": false,
+      "ticks": 29
+    },
+    {
+      "run": 443,
+      "endZone": 19,
+      "highestZone": 20,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 444,
+      "endZone": 21,
+      "highestZone": 21,
+      "prestiged": false,
+      "ticks": 30
+    },
+    {
+      "run": 445,
+      "endZone": 19,
+      "highestZone": 21,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 446,
+      "endZone": 20,
+      "highestZone": 21,
+      "prestiged": false,
+      "ticks": 29
+    },
+    {
+      "run": 447,
+      "endZone": 19,
+      "highestZone": 21,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 448,
+      "endZone": 21,
+      "highestZone": 21,
+      "prestiged": false,
+      "ticks": 31
+    },
+    {
+      "run": 449,
+      "endZone": 19,
+      "highestZone": 21,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 450,
+      "endZone": 21,
+      "highestZone": 21,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 451,
+      "endZone": 19,
+      "highestZone": 21,
+      "prestiged": false,
+      "ticks": 20
+    },
+    {
+      "run": 452,
+      "endZone": 21,
+      "highestZone": 21,
+      "prestiged": false,
+      "ticks": 33
     },
     {
       "run": 453,
-      "endZone": 22,
-      "highestZone": 22,
+      "endZone": 19,
+      "highestZone": 21,
       "prestiged": false,
       "ticks": 20
     },
     {
       "run": 454,
-      "endZone": 20,
-      "highestZone": 22,
+      "endZone": 21,
+      "highestZone": 21,
       "prestiged": false,
-      "ticks": 11
+      "ticks": 34
     },
     {
       "run": 455,
-      "endZone": 23,
-      "highestZone": 23,
+      "endZone": 19,
+      "highestZone": 21,
       "prestiged": false,
-      "ticks": 24
+      "ticks": 20
     },
     {
       "run": 456,
       "endZone": 21,
-      "highestZone": 23,
+      "highestZone": 21,
       "prestiged": false,
-      "ticks": 13
+      "ticks": 34
     },
     {
       "run": 457,
-      "endZone": 23,
-      "highestZone": 23,
+      "endZone": 19,
+      "highestZone": 21,
       "prestiged": false,
-      "ticks": 19
+      "ticks": 21
     },
     {
       "run": 458,
       "endZone": 21,
-      "highestZone": 23,
+      "highestZone": 21,
       "prestiged": false,
-      "ticks": 13
+      "ticks": 34
     },
     {
       "run": 459,
-      "endZone": 24,
-      "highestZone": 24,
+      "endZone": 19,
+      "highestZone": 21,
       "prestiged": false,
       "ticks": 21
     },
     {
       "run": 460,
       "endZone": 21,
-      "highestZone": 24,
+      "highestZone": 21,
       "prestiged": false,
-      "ticks": 14
+      "ticks": 35
     },
     {
       "run": 461,
-      "endZone": 23,
-      "highestZone": 24,
+      "endZone": 19,
+      "highestZone": 21,
       "prestiged": false,
-      "ticks": 18
+      "ticks": 22
     },
     {
       "run": 462,
-      "endZone": 22,
-      "highestZone": 24,
+      "endZone": 21,
+      "highestZone": 21,
       "prestiged": false,
-      "ticks": 15
+      "ticks": 36
     },
     {
       "run": 463,
-      "endZone": 24,
-      "highestZone": 24,
+      "endZone": 19,
+      "highestZone": 21,
       "prestiged": false,
-      "ticks": 17
+      "ticks": 22
     },
     {
       "run": 464,
-      "endZone": 22,
-      "highestZone": 24,
-      "prestiged": false,
-      "ticks": 14
+      "endZone": 21,
+      "highestZone": 0,
+      "prestiged": true,
+      "ticks": 37
     },
     {
       "run": 465,
-      "endZone": 24,
-      "highestZone": 24,
+      "endZone": 10,
+      "highestZone": 10,
       "prestiged": false,
-      "ticks": 18
+      "ticks": 80
     },
     {
       "run": 466,
-      "endZone": 22,
-      "highestZone": 24,
+      "endZone": 7,
+      "highestZone": 10,
       "prestiged": false,
-      "ticks": 13
+      "ticks": 3
     },
     {
       "run": 467,
-      "endZone": 24,
-      "highestZone": 24,
+      "endZone": 15,
+      "highestZone": 15,
       "prestiged": false,
-      "ticks": 18
+      "ticks": 66
     },
     {
       "run": 468,
-      "endZone": 22,
-      "highestZone": 24,
+      "endZone": 15,
+      "highestZone": 15,
       "prestiged": false,
-      "ticks": 8
+      "ticks": 58
     },
     {
       "run": 469,
-      "endZone": 24,
-      "highestZone": 24,
+      "endZone": 15,
+      "highestZone": 15,
       "prestiged": false,
-      "ticks": 19
+      "ticks": 25
     },
     {
       "run": 470,
-      "endZone": 22,
-      "highestZone": 24,
+      "endZone": 16,
+      "highestZone": 16,
       "prestiged": false,
-      "ticks": 8
+      "ticks": 29
     },
     {
       "run": 471,
-      "endZone": 24,
-      "highestZone": 24,
-      "prestiged": false,
-      "ticks": 18
-    },
-    {
-      "run": 472,
-      "endZone": 22,
-      "highestZone": 24,
-      "prestiged": false,
-      "ticks": 9
-    },
-    {
-      "run": 473,
-      "endZone": 24,
-      "highestZone": 24,
-      "prestiged": false,
-      "ticks": 18
-    },
-    {
-      "run": 474,
-      "endZone": 23,
-      "highestZone": 24,
-      "prestiged": false,
-      "ticks": 11
-    },
-    {
-      "run": 475,
-      "endZone": 24,
-      "highestZone": 24,
-      "prestiged": false,
-      "ticks": 18
-    },
-    {
-      "run": 476,
-      "endZone": 23,
-      "highestZone": 24,
-      "prestiged": false,
-      "ticks": 13
-    },
-    {
-      "run": 477,
-      "endZone": 24,
-      "highestZone": 24,
+      "endZone": 16,
+      "highestZone": 16,
       "prestiged": false,
       "ticks": 16
     },
     {
-      "run": 478,
-      "endZone": 23,
-      "highestZone": 24,
+      "run": 472,
+      "endZone": 17,
+      "highestZone": 17,
       "prestiged": false,
-      "ticks": 12
+      "ticks": 23
     },
     {
-      "run": 479,
-      "endZone": 24,
-      "highestZone": 2,
-      "prestiged": true,
-      "ticks": 18
-    },
-    {
-      "run": 480,
+      "run": 473,
       "endZone": 16,
-      "highestZone": 16,
+      "highestZone": 17,
       "prestiged": false,
-      "ticks": 20
+      "ticks": 15
     },
     {
-      "run": 481,
+      "run": 474,
+      "endZone": 17,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 22
+    },
+    {
+      "run": 475,
       "endZone": 18,
       "highestZone": 18,
       "prestiged": false,
-      "ticks": 12
+      "ticks": 28
+    },
+    {
+      "run": 476,
+      "endZone": 18,
+      "highestZone": 18,
+      "prestiged": false,
+      "ticks": 26
+    },
+    {
+      "run": 477,
+      "endZone": 18,
+      "highestZone": 18,
+      "prestiged": false,
+      "ticks": 29
+    },
+    {
+      "run": 478,
+      "endZone": 18,
+      "highestZone": 18,
+      "prestiged": false,
+      "ticks": 26
+    },
+    {
+      "run": 479,
+      "endZone": 19,
+      "highestZone": 19,
+      "prestiged": false,
+      "ticks": 36
+    },
+    {
+      "run": 480,
+      "endZone": 18,
+      "highestZone": 19,
+      "prestiged": false,
+      "ticks": 23
+    },
+    {
+      "run": 481,
+      "endZone": 19,
+      "highestZone": 19,
+      "prestiged": false,
+      "ticks": 33
     },
     {
       "run": 482,
       "endZone": 19,
       "highestZone": 19,
       "prestiged": false,
-      "ticks": 19
+      "ticks": 26
     },
     {
       "run": 483,
-      "endZone": 19,
-      "highestZone": 19,
+      "endZone": 20,
+      "highestZone": 20,
       "prestiged": false,
-      "ticks": 10
+      "ticks": 37
     },
     {
       "run": 484,
       "endZone": 19,
-      "highestZone": 19,
+      "highestZone": 20,
       "prestiged": false,
-      "ticks": 11
+      "ticks": 25
     },
     {
       "run": 485,
-      "endZone": 19,
-      "highestZone": 19,
+      "endZone": 20,
+      "highestZone": 20,
       "prestiged": false,
-      "ticks": 11
+      "ticks": 31
     },
     {
       "run": 486,
-      "endZone": 21,
-      "highestZone": 21,
+      "endZone": 19,
+      "highestZone": 20,
       "prestiged": false,
-      "ticks": 23
+      "ticks": 25
     },
     {
       "run": 487,
       "endZone": 20,
-      "highestZone": 21,
+      "highestZone": 20,
       "prestiged": false,
-      "ticks": 9
+      "ticks": 30
     },
     {
       "run": 488,
-      "endZone": 23,
-      "highestZone": 23,
+      "endZone": 19,
+      "highestZone": 20,
       "prestiged": false,
-      "ticks": 26
+      "ticks": 19
     },
     {
       "run": 489,
-      "endZone": 21,
-      "highestZone": 23,
+      "endZone": 20,
+      "highestZone": 20,
       "prestiged": false,
-      "ticks": 16
+      "ticks": 31
     },
     {
       "run": 490,
-      "endZone": 23,
-      "highestZone": 23,
+      "endZone": 19,
+      "highestZone": 20,
       "prestiged": false,
-      "ticks": 26
+      "ticks": 19
     },
     {
       "run": 491,
-      "endZone": 21,
-      "highestZone": 23,
+      "endZone": 20,
+      "highestZone": 20,
       "prestiged": false,
-      "ticks": 13
+      "ticks": 31
     },
     {
       "run": 492,
-      "endZone": 24,
-      "highestZone": 24,
+      "endZone": 19,
+      "highestZone": 20,
       "prestiged": false,
-      "ticks": 24
+      "ticks": 19
     },
     {
       "run": 493,
-      "endZone": 22,
-      "highestZone": 24,
+      "endZone": 21,
+      "highestZone": 21,
       "prestiged": false,
-      "ticks": 15
+      "ticks": 32
     },
     {
       "run": 494,
-      "endZone": 24,
-      "highestZone": 24,
-      "prestiged": false,
-      "ticks": 22
-    },
-    {
-      "run": 495,
-      "endZone": 22,
-      "highestZone": 24,
-      "prestiged": false,
-      "ticks": 17
-    },
-    {
-      "run": 496,
-      "endZone": 24,
-      "highestZone": 24,
+      "endZone": 19,
+      "highestZone": 21,
       "prestiged": false,
       "ticks": 20
     },
     {
-      "run": 497,
-      "endZone": 22,
-      "highestZone": 24,
+      "run": 495,
+      "endZone": 21,
+      "highestZone": 21,
       "prestiged": false,
-      "ticks": 11
+      "ticks": 34
+    },
+    {
+      "run": 496,
+      "endZone": 19,
+      "highestZone": 21,
+      "prestiged": false,
+      "ticks": 21
+    },
+    {
+      "run": 497,
+      "endZone": 21,
+      "highestZone": 21,
+      "prestiged": false,
+      "ticks": 35
     },
     {
       "run": 498,
-      "endZone": 24,
-      "highestZone": 24,
+      "endZone": 19,
+      "highestZone": 21,
       "prestiged": false,
-      "ticks": 17
+      "ticks": 22
     },
     {
       "run": 499,
-      "endZone": 22,
-      "highestZone": 24,
+      "endZone": 21,
+      "highestZone": 21,
       "prestiged": false,
-      "ticks": 9
+      "ticks": 36
     },
     {
       "run": 500,
-      "endZone": 24,
-      "highestZone": 24,
+      "endZone": 19,
+      "highestZone": 21,
       "prestiged": false,
-      "ticks": 19
+      "ticks": 10
     }
   ],
   "meta": {
     "env": "node",
-    "configName": "baseline",
-    "totalMsIncludingBridge": 13942,
-    "generatedAt": "2026-07-05T19:18:51.286Z"
+    "configName": "no-dreamcatcher",
+    "totalMsIncludingBridge": 8351,
+    "generatedAt": "2026-07-05T19:19:46.085Z"
   }
 }

@@ -1,0 +1,11 @@
+{
+  "name": "rst-5",
+  "options": {
+    "modOverrides": {
+      "threshold_perk_affordable_resets": 5,
+      "threshold_perk_unaffordable_resets": 5,
+      "threshold_progression_resets": 5,
+      "threshold_unlocker_resets": 5
+    }
+  }
+}

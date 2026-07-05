@@ -68,7 +68,10 @@ export function runFirstCompletionStats(env, options = {}) {
   const maxTicksPerRun = options.maxTicksPerRun ?? 200000;
   const endZone = options.endZone ?? 99;
   const logEvery = options.logEvery ?? 25;
-  const mods = options.mods ?? baselineMods();
+  // Full profile via options.mods, or small experiment deltas on top of the
+  // baseline profile via options.modOverrides.
+  const mods =
+    options.mods ?? { ...baselineMods(), ...(options.modOverrides ?? {}) };
   const log = env.log ?? ((msg) => console.log(msg));
 
   // Fresh state, no wall-clock ticking. pauseGameLoop is a no-op headlessly
