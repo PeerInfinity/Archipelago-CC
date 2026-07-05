@@ -1,0 +1,13 @@
+{
+  "name": "income-spend-cap-10",
+  "options": {
+    "modOverrides": {},
+    "maxRuns": 1000,
+    "runToBudget": true,
+    "checkpointEvery": 50,
+    "purchasePolicy": {
+      "kind": "spendCap",
+      "g": 1
+    }
+  }
+}

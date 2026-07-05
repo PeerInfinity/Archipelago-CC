@@ -366,6 +366,41 @@ export function runFirstCompletionStats(env, options = {}) {
     }
   };
 
+  // Spark-income accounting, computed EXACTLY at checkpoints rather than by
+  // watching per-tick deltas (gains and spends can land in the same tick):
+  // earned = spark held + spark ever spent, and spending reconstructs from
+  // owned unlocks + repeatable levels (levels never reset, costs are
+  // geometric). Divinity purchases are the only spark sinks.
+  const checkpointEvery = options.checkpointEvery ?? 100;
+  const sparkCheckpoints = [];
+  const sparkSpent = () => {
+    if (!env.prestige) return 0;
+    let spent = 0;
+    for (const u of env.prestige.PRESTIGE_UNLOCKABLES) {
+      if (sim.hasPrestigeUnlock(u.type)) spent += u.cost;
+    }
+    for (const r of env.prestige.PRESTIGE_REPEATABLES) {
+      const lvl = sim.getPrestigeRepeatableLevel(r.type);
+      for (let i = 0; i < lvl; i++) {
+        spent += Math.ceil(r.initial_cost * Math.pow(r.scaling_exponent, i));
+      }
+    }
+    return spent;
+  };
+  const sparkCheckpoint = (atRun) => {
+    const held = game.GAMESTATE.divine_spark;
+    sparkCheckpoints.push({
+      run: atRun,
+      sparkEarned: held + sparkSpent(),
+      sparkHeld: held,
+      prestiges: game.GAMESTATE.prestige_count,
+      highestZone: Math.max(
+        game.GAMESTATE.highest_zone,
+        game.GAMESTATE.highest_prestige_zone ?? 0
+      ),
+    });
+  };
+
   // Mastery of Time's skipFreeZones() runs INSIDE doEnergyReset/doPrestige
   // (both driver-called) and fully completes every task of each skipped
   // zone on transient task arrays the per-tick scan never sees. Skip only
@@ -392,7 +427,15 @@ export function runFirstCompletionStats(env, options = {}) {
     typeof performance !== "undefined" ? () => performance.now() : () => 0;
   const t0 = now();
 
-  while (completions.size < universe.size && run <= maxRuns) {
+  // runToBudget: keep playing to maxRuns even once every universe task has
+  // completed — used by the spark-income experiments, where the metric is
+  // the earning trajectory, not first completions.
+  const runToBudget = options.runToBudget ?? false;
+
+  while (
+    (runToBudget || completions.size < universe.size) &&
+    run <= maxRuns
+  ) {
     // Capture the pre-tick task array: on a zone advance the tick replaces
     // GAMESTATE.tasks, and the completed Travel task only exists in the old
     // array (same Task objects, mutated in place).
@@ -434,6 +477,7 @@ export function runFirstCompletionStats(env, options = {}) {
         prestiged,
         ticks: ticksThisRun,
       });
+      if (run % checkpointEvery === 0) sparkCheckpoint(run);
       if (run % logEvery === 0) {
         log(
           `[driver] run ${run}: ${completions.size}/${universe.size} tasks completed, ` +
@@ -458,6 +502,14 @@ export function runFirstCompletionStats(env, options = {}) {
     }
   }
 
+  const lastRunCompleted = run - 1;
+  if (
+    sparkCheckpoints.length === 0 ||
+    sparkCheckpoints[sparkCheckpoints.length - 1].run !== lastRunCompleted
+  ) {
+    sparkCheckpoint(lastRunCompleted);
+  }
+
   const wallMs = now() - t0;
   // The sim restarts the interval loop via setTickRate() during play (zone
   // advances, prestige); re-pause so the page doesn't resume ticking the
@@ -479,6 +531,8 @@ export function runFirstCompletionStats(env, options = {}) {
       skipBlocked,
       autoFillOrder,
       purchasePolicy,
+      runToBudget,
+      checkpointEvery,
       mods,
     },
     timing: {
@@ -509,6 +563,7 @@ export function runFirstCompletionStats(env, options = {}) {
         : undefined,
     },
     purchases,
+    sparkCheckpoints,
     completions: completed,
     unreached,
     runEnds,

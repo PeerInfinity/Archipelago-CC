@@ -81,10 +81,20 @@ past budget × (cheapest unowned unlock's cost) while any reachable unlock
 remains. 0 = hard save (bad), large = today's pure greedy. The explicit
 purchase queue stays the manual override, exactly as now.
 
+## Round 3 — long-run spark income (income-comparison.md)
+
+The round-1/2 caveat ("low-prestige winners may cost long-run income") is
+**refuted**: 1000-run trajectories with exact earned-spark accounting show
+the completion winners winning income at every horizon. Spark gain is
+exponential in the deepest zone reached, so fewer-but-deeper prestiges
+compound: at run 1000, combo + spendCap has earned ~18.7 quadrillion vs
+~8.8q for baseline (2.1×), and it leads at run 200, 300, 500, 750 too.
+Frequent prestiging (stall 5) is catastrophic — 68k TOTAL at run 1000,
+eight orders of magnitude behind, stuck at lifetime zone 20.
+
 ## Caveats
 
 - Deterministic sim → each config is one trajectory; deltas under ~2 mean
   runs are noise-equivalent (butterfly effects).
-- The metric rewards early zone 1-15 completion, not long-run spark income;
-  low-prestige configs (stall-40, spendCap) may be worse for post-zone-15
-  progression. Divine Speed's real-time benefit is invisible in instant mode.
+- Divine Speed's real-time benefit is invisible in instant mode (it speeds
+  wall-clock ticks, explicitly not energy use).

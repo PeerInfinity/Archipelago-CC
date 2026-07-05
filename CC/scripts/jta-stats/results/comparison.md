@@ -1,169 +1,149 @@
 # JtA automation stats — comparison
 
-Baseline: **baseline-node**. "Run" = cumulative run (energy reset or prestige) at which a task first hit reps == max_reps. Zone window: zones 1-15, budget 500 runs.
+Baseline: **income-spend-cap-10-node**. "Run" = cumulative run (energy reset or prestige) at which a task first hit reps == max_reps. Zone window: zones 1-15, budget 1000 runs.
 
 | config | completed | mean run | median run | last first-completion | prestiges | highest zone | MoT@ | SBtV@ | ticks | wall ms |
 |---|---|---|---|---|---|---|---|---|---|---|
-| baseline-node | 134/134 | 84.2 | 73 | 416 | 3 | 24 | 402 | 415 | 14231 | 7143 |
-| stall-5-node | 130/134 | 93.7 | 73 | >500 | 9 | 17 | — | — | 18594 | 7520 |
-| stall-10-node | 130/134 | 90.8 | 73 | >500 | 7 | 20 | — | — | 18522 | 7607 |
-| stall-40-node | 134/134 | 79.1 | 73 | 354 | 1 | 24 | 341 | 353 | 11938 | 5949 |
-| all-skipped-end-run-node | 130/134 | 100.2 | 87 | >500 | 6 | 22 | — | — | 17293 | 8220 |
-| no-ring-node | 134/134 | 85.3 | 73 | 453 | 4 | 24 | 435 | 452 | 15237 | 7171 |
-| no-dreamcatcher-node | 130/134 | 86.8 | 73 | >500 | 6 | 22 | 500 | — | 16839 | 7764 |
-| no-ring-no-dc-node | 130/134 | 86.8 | 73 | >500 | 5 | 23 | 477 | — | 16507 | 8019 |
-| thresholds-off-node | 65/134 | 296.4 | 501 | >500 | 0 | 8 | — | — | 15005 | 4739 |
-| rst-2-node | 134/134 | 84.0 | 73 | 421 | 3 | 24 | 406 | 420 | 14409 | 6698 |
-| rst-5-node | 134/134 | 82.7 | 69 | 420 | 3 | 24 | 405 | 419 | 14361 | 6528 |
-| prestige-rst-5-node | 134/134 | 83.5 | 73 | 418 | 3 | 24 | 404 | 417 | 14350 | 6905 |
-| item-rep-5-node | 134/134 | 81.3 | 67 | 466 | 5 | 24 | 446 | 465 | 15893 | 7945 |
-| item-rep-2-node | 134/134 | 85.3 | 71 | 422 | 3 | 24 | 408 | 421 | 14173 | 6659 |
-| item-rep-20-node | 134/134 | 89.8 | 75 | 466 | 4 | 24 | 449 | 465 | 15742 | 7268 |
-| cycle-off-0-node | 130/134 | 94.9 | 83 | >500 | 5 | 24 | 484 | — | 18311 | 8086 |
-| cycle-off-2-node | 130/134 | 92.2 | 77 | >500 | 5 | 23 | — | — | 16992 | 8170 |
-| fill-prestige-first-node | 134/134 | 84.2 | 73 | 416 | 3 | 24 | 401 | 415 | 14247 | 7069 |
-| fill-perk-first-node | 134/134 | 82.4 | 69 | 422 | 3 | 24 | 405 | 421 | 14469 | 6918 |
-| combo-item5-perkfirst-node | 134/134 | 80.4 | 67 | 441 | 4 | 24 | 427 | 440 | 15316 | 7419 |
-| combo-item5-perkfirst-stall40-node | 134/134 | 74.7 | 67 | 353 | 1 | 24 | 337 | 352 | 11806 | 6041 |
-| combo-item5-perkfirst-rst5-node | 134/134 | 80.6 | 71 | 465 | 5 | 24 | 447 | 464 | 15792 | 7515 |
-| combo-all-winners-node | 134/134 | 74.1 | 71 | 352 | 1 | 24 | 335 | 351 | 11687 | 5595 |
+| income-spend-cap-10-node | 134/134 | 82.5 | 73 | 354 | 24 | 31 | 333 | 353 | 27765 | 15124 |
+| income-combo-node | 134/134 | 74.1 | 71 | 352 | 13 | 31 | 335 | 351 | 27046 | 15458 |
+| income-combo-spend-cap-node | 134/134 | 71.6 | 71 | 271 | 13 | 31 | 251 | 270 | 28785 | 15068 |
 
 ## Per-task first completion (run number)
 
-| zone | task | reps | baseline-node | stall-5-node | stall-10-node | stall-40-node | all-skipped-end-run-node | no-ring-node | no-dreamcatcher-node | no-ring-no-dc-node | thresholds-off-node | rst-2-node | rst-5-node | prestige-rst-5-node | item-rep-5-node | item-rep-2-node | item-rep-20-node | cycle-off-0-node | cycle-off-2-node | fill-prestige-first-node | fill-perk-first-node | combo-item5-perkfirst-node | combo-item5-perkfirst-stall40-node | combo-item5-perkfirst-rst5-node | combo-all-winners-node |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 The Village | Join the Watch | 1 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 4 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 4 | 4 |
-| 1 The Village | Read Noticeboard | 1 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 2 | 3 | 2 | 2 | 3 | 3 | 3 | 3 | 2 | 2 | 2 | 2 | 2 |
-| 1 The Village | Train with Weapons | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 2 | 2 |
-| 1 The Village | Learn How to Read | 1 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 1 | 2 | 1 | 2 | 1 | 1 | 2 | 2 | 2 | 2 | 1 | 1 | 1 | 1 | 1 |
-| 1 The Village | Beg for Food | 10 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 2 | 2 | 1 | 1 | 1 | 1 | 1 | 2 | 2 | 3 | 3 |
-| 1 The Village | Hide and Seek | 3 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 2 | 1 | 2 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 2 | 1 | 1 | 1 | 1 |
-| 1 The Village | Observe Surroundings | 5 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 |
-| 1 The Village | Use Secret Fishing Spot | 8 | 416 | — | — | 354 | — | 453 | — | — | — | 421 | 420 | 418 | 466 | 422 | 466 | — | — | 416 | 422 | 441 | 353 | 465 | 352 |
-| 2 The Village Watch | Notice Smoke in the Distance | 1 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 15 | 10 | 9 | 10 | 7 | 10 | 10 | 10 | 10 | 10 | 9 | 7 | 7 | 7 | 7 |
-| 2 The Village Watch | Learn Routines | 4 | 7 | 7 | 7 | 7 | 10 | 7 | 7 | 7 | 13 | 7 | 9 | 7 | 6 | 9 | 7 | 7 | 7 | 7 | 9 | 6 | 6 | 7 | 7 |
-| 2 The Village Watch | Deal with Drunkards | 2 | 9 | 9 | 9 | 9 | 7 | 9 | 9 | 9 | 15 | 9 | 9 | 9 | 7 | 10 | 9 | 9 | 9 | 9 | 9 | 7 | 7 | 7 | 7 |
-| 2 The Village Watch | Chit-chat | 3 | 62 | 62 | 62 | 62 | 80 | 62 | 62 | 62 | 9 | 62 | 62 | 62 | 66 | 6 | 70 | 74 | 77 | 62 | 8 | 64 | 64 | 6 | 6 |
-| 2 The Village Watch | Sparring | 4 | 6 | 6 | 6 | 6 | 9 | 6 | 6 | 6 | 8 | 6 | 8 | 6 | 10 | 68 | 6 | 6 | 6 | 6 | 8 | 10 | 10 | 9 | 9 |
-| 2 The Village Watch | Fletch Arrows | 5 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 6 | 5 | 4 | 4 | 4 | 4 | 4 | 6 | 6 | 9 | 9 |
-| 2 The Village Watch | Daydream About Leaving | 6 | 5 | 5 | 5 | 5 | 5 | 5 | 5 | 5 | 7 | 5 | 5 | 5 | 4 | 4 | 5 | 5 | 5 | 5 | 6 | 4 | 4 | 4 | 4 |
-| 2 The Village Watch | Learn How to Write | 1 | 8 | 8 | 8 | 8 | 8 | 8 | 8 | 8 | 6 | 8 | 7 | 8 | 5 | 7 | 8 | 8 | 8 | 8 | 5 | 5 | 5 | 5 | 5 |
-| 2 The Village Watch | Training Dummy | 10 | 416 | — | — | 354 | — | 453 | — | — | — | 421 | 420 | 418 | 466 | 422 | 466 | — | — | 416 | 422 | 441 | 353 | 465 | 352 |
-| 3 The Raid | Enter the Wilderness | 1 | 12 | 12 | 12 | 12 | 12 | 12 | 12 | 12 | 27 | 12 | 12 | 12 | 12 | 14 | 12 | 12 | 12 | 12 | 11 | 12 | 12 | 11 | 11 |
-| 3 The Raid | Fight a Goblin | 1 | 12 | 12 | 12 | 12 | 12 | 12 | 12 | 12 | 22 | 12 | 12 | 12 | 10 | 12 | 12 | 12 | 12 | 12 | 11 | 10 | 10 | 11 | 11 |
-| 3 The Raid | Warn Villagers | 3 | 12 | 12 | 12 | 12 | 12 | 12 | 12 | 12 | 23 | 12 | 12 | 12 | 11 | 14 | 12 | 12 | 12 | 12 | 11 | 11 | 11 | 11 | 11 |
-| 3 The Raid | Loot the Fallen | 4 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 16 | 10 | 9 | 10 | 7 | 29 | 10 | 10 | 10 | 10 | 9 | 7 | 7 | 7 | 7 |
-| 3 The Raid | Rescue Villager | 3 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 16 | 11 | 11 | 11 | 8 | 11 | 11 | 11 | 11 | 11 | 10 | 8 | 8 | 10 | 10 |
-| 3 The Raid | Treat Villager Wounds | 3 | 10 | 10 | 10 | 10 | 11 | 10 | 10 | 10 | 17 | 10 | 10 | 10 | 9 | 10 | 10 | 10 | 10 | 10 | 9 | 9 | 9 | 8 | 8 |
-| 3 The Raid | Goblin Warlord | 1 | 63 | 63 | 63 | 63 | 79 | 63 | 63 | 63 | 99 | 63 | 63 | 63 | 57 | 61 | 59 | 81 | 58 | 63 | 67 | 57 | 57 | 57 | 57 |
-| 3 The Raid | Save the Village | 1 | 65 | 65 | 65 | 65 | 81 | 65 | 65 | 65 | 100 | 65 | 65 | 65 | 59 | 63 | 61 | 82 | 61 | 65 | 67 | 59 | 59 | 57 | 57 |
-| 4 The Wilderness | Find Cave Entrance | 1 | 19 | 19 | 19 | 19 | 21 | 19 | 19 | 19 | 44 | 19 | 20 | 19 | 18 | 28 | 19 | 19 | 19 | 19 | 19 | 18 | 18 | 19 | 19 |
-| 4 The Wilderness | Look for Tracks | 3 | 17 | 17 | 17 | 17 | 17 | 17 | 17 | 17 | 38 | 17 | 17 | 17 | 14 | 15 | 17 | 17 | 17 | 17 | 16 | 14 | 14 | 13 | 13 |
-| 4 The Wilderness | Survive the Night | 1 | 17 | 17 | 17 | 17 | 17 | 17 | 17 | 17 | 39 | 17 | 17 | 17 | 14 | 17 | 17 | 17 | 17 | 17 | 16 | 14 | 14 | 13 | 13 |
-| 4 The Wilderness | Find an Amulet | 1 | 17 | 17 | 17 | 17 | 18 | 17 | 17 | 17 | 44 | 17 | 17 | 17 | 15 | 23 | 17 | 17 | 17 | 17 | 16 | 15 | 15 | 17 | 17 |
-| 4 The Wilderness | Build a Fire | 1 | 16 | 16 | 16 | 16 | 14 | 16 | 16 | 16 | 36 | 16 | 14 | 16 | 13 | 14 | 16 | 16 | 16 | 16 | 14 | 13 | 13 | 12 | 12 |
-| 4 The Wilderness | Forage for Mushrooms | 5 | 12 | 12 | 12 | 12 | 12 | 12 | 12 | 12 | 28 | 12 | 12 | 12 | 13 | 15 | 12 | 12 | 12 | 12 | 11 | 13 | 13 | 12 | 12 |
-| 4 The Wilderness | Befriend a Deer | 1 | 14 | 14 | 14 | 14 | 16 | 14 | 14 | 14 | 34 | 14 | 16 | 14 | 12 | 21 | 14 | 14 | 14 | 14 | 15 | 12 | 12 | 11 | 11 |
-| 4 The Wilderness | Angry Ent | 1 | 105 | 105 | 105 | 105 | 123 | 105 | 105 | 105 | 131 | 105 | 105 | 105 | 101 | 107 | 113 | 121 | 109 | 105 | 101 | 101 | 101 | 101 | 101 |
-| 4 The Wilderness | Gather Magical Roots | 3 | 105 | 105 | 105 | 105 | 123 | 105 | 105 | 105 | 133 | 105 | 105 | 105 | 101 | 107 | 113 | 121 | 109 | 105 | 101 | 101 | 101 | 101 | 101 |
-| 5 The Cave System | Leave Via Back Entrance | 1 | 30 | 30 | 30 | 30 | 39 | 30 | 30 | 30 | 59 | 30 | 29 | 30 | 25 | 32 | 30 | 30 | 30 | 30 | 30 | 25 | 25 | 25 | 25 |
-| 5 The Cave System | Find a Way Through | 1 | 26 | 26 | 26 | 26 | 26 | 26 | 26 | 26 | 58 | 26 | 26 | 26 | 21 | 31 | 26 | 26 | 26 | 26 | 26 | 21 | 21 | 21 | 21 |
-| 5 The Cave System | Rescue Captives | 3 | 29 | 29 | 29 | 29 | 31 | 29 | 29 | 29 | 59 | 29 | 28 | 29 | 24 | 31 | 29 | 29 | 29 | 29 | 29 | 24 | 24 | 23 | 23 |
-| 5 The Cave System | Steal Supplies | 5 | 20 | 20 | 20 | 20 | 21 | 20 | 20 | 20 | 45 | 20 | 20 | 20 | 22 | 37 | 20 | 20 | 20 | 20 | 20 | 22 | 22 | 22 | 22 |
-| 5 The Cave System | Try Casting a Spell | 6 | 27 | 27 | 27 | 27 | 37 | 27 | 27 | 27 | 56 | 27 | 26 | 27 | 21 | 30 | 27 | 27 | 27 | 27 | 27 | 21 | 21 | 21 | 21 |
-| 5 The Cave System | Inspect Wall Paintings | 1 | 25 | 25 | 25 | 25 | 25 | 25 | 25 | 25 | 57 | 25 | 25 | 25 | 19 | 29 | 25 | 25 | 25 | 25 | 25 | 19 | 19 | 20 | 20 |
-| 5 The Cave System | Scout the Cave | 3 | 161 | 161 | 161 | 165 | 187 | 161 | 161 | 161 | 57 | 163 | 28 | 163 | 24 | 35 | 171 | 177 | 37 | 161 | 29 | 24 | 24 | 24 | 24 |
-| 5 The Cave System | Goblin Chieftain | 1 | 107 | 107 | 107 | 107 | 127 | 107 | 107 | 107 | 163 | 107 | 107 | 107 | 103 | 109 | 115 | 123 | 121 | 107 | 103 | 103 | 103 | 103 | 103 |
-| 5 The Cave System | Wipe Out Goblins | 1 | 109 | 109 | 109 | 109 | 129 | 109 | 109 | 109 | 172 | 109 | 109 | 109 | 105 | 111 | 117 | 125 | 124 | 109 | 105 | 105 | 105 | 105 | 105 |
-| 6 The Road to the City | Get to the City | 1 | 37 | 37 | 37 | 37 | 45 | 37 | 37 | 37 | 75 | 37 | 35 | 37 | 33 | 39 | 39 | 39 | 37 | 37 | 37 | 33 | 33 | 33 | 33 |
-| 6 The Road to the City | Join a Caravan | 1 | 37 | 37 | 37 | 37 | 41 | 37 | 37 | 37 | 73 | 37 | 35 | 37 | 31 | 34 | 39 | 36 | 37 | 37 | 37 | 31 | 31 | 31 | 31 |
-| 6 The Road to the City | Scout the Road Ahead | 3 | 37 | 37 | 37 | 37 | 41 | 37 | 37 | 37 | 75 | 37 | 35 | 37 | 31 | 36 | 39 | 37 | 37 | 37 | 37 | 31 | 31 | 31 | 31 |
-| 6 The Road to the City | Make Travel Equipment | 4 | 35 | 35 | 35 | 35 | 47 | 35 | 35 | 35 | 62 | 35 | 39 | 35 | 31 | 51 | 31 | 35 | 36 | 35 | 35 | 31 | 31 | 31 | 31 |
-| 6 The Road to the City | Get Used to Traveling | 3 | 33 | 33 | 33 | 33 | 43 | 33 | 33 | 33 | 69 | 33 | 33 | 33 | 29 | 34 | 36 | 33 | 34 | 33 | 33 | 29 | 29 | 29 | 29 |
-| 6 The Road to the City | Chat with Travelers | 4 | 35 | 35 | 35 | 35 | 40 | 35 | 35 | 35 | 69 | 35 | 33 | 35 | 27 | 32 | 35 | 34 | 34 | 35 | 35 | 27 | 27 | 26 | 26 |
-| 6 The Road to the City | Practice Traveling Unnoticed | 1 | 31 | 31 | 31 | 31 | 39 | 31 | 31 | 31 | 69 | 31 | 30 | 31 | 26 | 36 | 34 | 31 | 31 | 31 | 30 | 26 | 26 | 25 | 25 |
-| 6 The Road to the City | Bandits | 1 | 111 | 111 | 111 | 111 | 131 | 111 | 111 | 111 | 191 | 111 | 111 | 111 | 107 | 113 | 119 | 127 | 127 | 111 | 107 | 107 | 107 | 107 | 107 |
-| 6 The Road to the City | Loot Bandit Camp | 4 | 111 | 111 | 111 | 111 | 131 | 111 | 111 | 111 | 193 | 111 | 111 | 111 | 107 | 113 | 119 | 127 | 127 | 111 | 107 | 107 | 107 | 107 | 107 |
-| 6 The Road to the City | Study the Amulet | 1 | 32 | 32 | 32 | 32 | 42 | 32 | 32 | 32 | 67 | 32 | 31 | 32 | 28 | 37 | 37 | 32 | 32 | 32 | 31 | 28 | 28 | 27 | 27 |
-| 7 The City Outskirts | Enter the City | 1 | 45 | 45 | 45 | 45 | 55 | 45 | 45 | 45 | 231 | 45 | 45 | 45 | 39 | 43 | 47 | 54 | 46 | 45 | 45 | 39 | 39 | 39 | 39 |
-| 7 The City Outskirts | Bribe the City Guards | 1 | 43 | 43 | 43 | 43 | 51 | 43 | 43 | 43 | 225 | 43 | 41 | 43 | 37 | 43 | 45 | 44 | 43 | 43 | 41 | 35 | 35 | 35 | 35 |
-| 7 The City Outskirts | Survive a Mugging | 1 | 43 | 43 | 43 | 43 | 53 | 43 | 43 | 43 | 231 | 43 | 41 | 43 | 33 | 41 | 45 | 49 | 40 | 43 | 41 | 35 | 35 | 35 | 35 |
-| 7 The City Outskirts | Buy a Book | 5 | 37 | 37 | 37 | 37 | 45 | 37 | 37 | 37 | 79 | 37 | 35 | 37 | 33 | 48 | 41 | 39 | 37 | 37 | 37 | 33 | 33 | 33 | 33 |
-| 7 The City Outskirts | Negotiate with a Rogue Guard | 1 | 41 | 41 | 41 | 41 | 49 | 41 | 41 | 41 | 83 | 41 | 37 | 41 | 35 | 41 | 43 | 48 | 43 | 41 | 39 | 33 | 33 | 33 | 33 |
-| 7 The City Outskirts | Spar with the Guards | 4 | 53 | 53 | 53 | 53 | 83 | 53 | 53 | 53 | 93 | 53 | 53 | 53 | 45 | 51 | 51 | 93 | 55 | 53 | 54 | 45 | 45 | 43 | 43 |
-| 7 The City Outskirts | Fend for Yourself | 1 | 53 | 53 | 53 | 53 | 194 | 53 | 53 | 53 | 87 | 53 | 43 | 53 | 49 | 53 | 45 | 73 | 55 | 53 | 166 | 49 | 49 | 47 | 47 |
-| 7 The City Outskirts | Skulk About | 1 | 39 | 39 | 39 | 39 | 51 | 39 | 39 | 39 | 85 | 39 | 39 | 39 | 33 | 39 | 41 | 44 | 40 | 39 | 41 | 35 | 35 | 35 | 35 |
-| 8 The City | Embark on a Quest | 1 | 57 | 57 | 57 | 57 | 65 | 57 | 57 | 57 | — | 57 | 57 | 57 | 53 | 57 | 65 | 73 | 70 | 57 | 55 | 53 | 53 | 51 | 51 |
-| 8 The City | Investigate Rumors of a Magician | 4 | 49 | 49 | 49 | 49 | 61 | 49 | 49 | 49 | — | 49 | 49 | 49 | 43 | 49 | 57 | 59 | 49 | 49 | 49 | 43 | 43 | 51 | 51 |
-| 8 The City | Search the Archives for Magic | 5 | 57 | 57 | 57 | 57 | 65 | 57 | 57 | 57 | — | 57 | 57 | 57 | 53 | 57 | 65 | 63 | 52 | 57 | 51 | 53 | 53 | 51 | 51 |
-| 8 The City | Scribe Scroll of Haste | 1 | 51 | 51 | 51 | 51 | 73 | 51 | 51 | 51 | 235 | 51 | 51 | 51 | 43 | 49 | 49 | 61 | 52 | 51 | 61 | 43 | 43 | 41 | 41 |
-| 8 The City | Cast a Spell | 6 | 55 | 55 | 55 | 55 | 63 | 55 | 55 | 55 | 237 | 55 | 55 | 55 | 51 | 55 | 63 | 72 | 64 | 55 | 53 | 51 | 51 | 49 | 49 |
-| 8 The City | Study at the Mage's Guild | 1 | 45 | 45 | 45 | 45 | 55 | 45 | 45 | 45 | 241 | 45 | 45 | 45 | 39 | 43 | 47 | 54 | 46 | 45 | 45 | 39 | 39 | 39 | 39 |
-| 8 The City | Train for Your Quest | 3 | 47 | 47 | 47 | 47 | 57 | 47 | 47 | 47 | 241 | 47 | 47 | 47 | 39 | 45 | 57 | 55 | 46 | 47 | 47 | 39 | 39 | 39 | 39 |
-| 8 The City | Corrupt Mayor | 1 | 117 | 117 | 117 | 117 | 135 | 117 | 117 | 117 | 239 | 117 | 117 | 117 | 113 | 117 | 125 | 130 | 130 | 117 | 109 | 113 | 113 | 111 | 111 |
-| 8 The City | Train at Every Guild | 1 | 416 | — | — | 354 | — | 453 | — | — | — | 421 | 420 | 418 | 466 | 422 | 466 | — | — | 416 | 422 | 441 | 353 | 465 | 352 |
-| 8 The City | Purge Corrupt Bureacracy | 1 | 117 | 117 | 117 | 117 | 137 | 117 | 117 | 117 | 239 | 117 | 117 | 117 | 115 | 121 | 127 | 131 | 133 | 117 | 113 | 115 | 115 | 113 | 113 |
-| 9 The Forest | Scale the Mountain | 1 | 73 | 73 | 73 | 73 | 85 | 73 | 73 | 73 | — | 73 | 69 | 73 | 67 | 71 | 75 | 79 | 73 | 73 | 69 | 67 | 67 | 71 | 71 |
-| 9 The Forest | Locate the Mountain | 1 | 59 | 59 | 59 | 59 | 69 | 59 | 59 | 59 | — | 59 | 67 | 59 | 63 | 65 | 69 | 78 | 73 | 59 | 63 | 65 | 65 | 61 | 61 |
-| 9 The Forest | Make Climbing Gear | 3 | 67 | 67 | 67 | 67 | 85 | 67 | 67 | 67 | — | 67 | 67 | 67 | 65 | 67 | 69 | 75 | 73 | 67 | 61 | 65 | 65 | 61 | 61 |
-| 9 The Forest | Make Camping Equipment | 3 | 61 | 61 | 61 | 61 | 73 | 61 | 61 | 61 | — | 61 | 61 | 61 | 63 | 65 | 65 | 73 | 70 | 61 | 59 | 61 | 61 | 63 | 63 |
-| 9 The Forest | Prepare to Scale the Mountain | 3 | 57 | 57 | 57 | 57 | 67 | 57 | 57 | 57 | — | 57 | 57 | 57 | 55 | 59 | 65 | 73 | 73 | 57 | 55 | 55 | 55 | 55 | 55 |
-| 9 The Forest | Build a Hut | 1 | 59 | 59 | 59 | 59 | 73 | 59 | 59 | 59 | — | 59 | 59 | 59 | 63 | 65 | 67 | 74 | 73 | 59 | 57 | 63 | 63 | 63 | 63 |
-| 9 The Forest | Go Sightseeing | 3 | 57 | 57 | 57 | 57 | 65 | 57 | 57 | 57 | — | 57 | 59 | 57 | 55 | 57 | 67 | 73 | 73 | 57 | 55 | 53 | 53 | 53 | 53 |
-| 9 The Forest | Meet a Magical Creature | 1 | 57 | 57 | 57 | 57 | 65 | 57 | 57 | 57 | — | 57 | 57 | 57 | 53 | 57 | 65 | 73 | 73 | 57 | 55 | 53 | 53 | 53 | 53 |
-| 9 The Forest | Werewolf | 1 | 123 | 123 | 123 | 123 | 145 | 123 | 123 | 123 | — | 123 | 123 | 123 | 121 | 125 | 133 | 145 | 142 | 123 | 119 | 121 | 121 | 121 | 121 |
-| 9 The Forest | Gather Shed Fur from Lair | 3 | 123 | 123 | 123 | 123 | 145 | 123 | 123 | 123 | — | 123 | 123 | 123 | 121 | 125 | 133 | 145 | 142 | 123 | 119 | 121 | 121 | 121 | 121 |
-| 10 The Magician | Hunt for the First Reagent | 1 | 81 | 81 | 81 | 81 | 93 | 81 | 81 | 81 | — | 81 | 77 | 81 | 73 | 79 | 85 | 87 | 85 | 81 | 77 | 75 | 75 | 75 | 75 |
-| 10 The Magician | Convince the Magician | 1 | 77 | 77 | 77 | 77 | 89 | 77 | 77 | 77 | — | 77 | 75 | 77 | 73 | 73 | 81 | 84 | 85 | 77 | 73 | 73 | 73 | 75 | 75 |
-| 10 The Magician | Do a Favor | 1 | 77 | 77 | 77 | 77 | 93 | 77 | 77 | 77 | — | 77 | 71 | 77 | 69 | 73 | 81 | 83 | 85 | 77 | 73 | 73 | 73 | 73 | 73 |
-| 10 The Magician | Steal Some Reagents | 4 | 73 | 73 | 73 | 73 | 85 | 73 | 73 | 73 | — | 73 | 71 | 73 | 69 | 83 | 75 | 80 | 79 | 73 | 69 | 67 | 67 | 71 | 71 |
-| 10 The Magician | Figure Out How to Attune | 1 | 77 | 77 | 77 | 77 | 89 | 77 | 77 | 77 | — | 77 | 73 | 77 | 71 | 81 | 81 | 85 | 79 | 77 | 71 | 69 | 69 | 73 | 73 |
-| 10 The Magician | Give Yourself a Pep Talk | 1 | 77 | 77 | 77 | 77 | 91 | 77 | 77 | 77 | — | 77 | 71 | 77 | 69 | 73 | 81 | 83 | 79 | 77 | 73 | 71 | 71 | 73 | 73 |
-| 10 The Magician | Try to Transform Into an Eagle | 1 | 77 | 77 | 77 | 77 | 87 | 77 | 77 | 77 | — | 77 | 71 | 77 | 69 | 73 | 81 | 83 | 79 | 77 | 71 | 71 | 71 | 71 | 71 |
-| 10 The Magician | Low-oxygen Exercise | 5 | 79 | 79 | 79 | 79 | 97 | 79 | 79 | 79 | — | 79 | 81 | 79 | 79 | 75 | 83 | 86 | 82 | 79 | 73 | 71 | 71 | 73 | 73 |
-| 11 The Ocean | Land on Island | 1 | 85 | 85 | 85 | 85 | 101 | 85 | 85 | 85 | — | 85 | 83 | 85 | 79 | 89 | 89 | 95 | 88 | 85 | 81 | 81 | 81 | 81 | 81 |
-| 11 The Ocean | Weather a Storm | 1 | 85 | 85 | 85 | 85 | 97 | 85 | 85 | 85 | — | 85 | 81 | 85 | 79 | 87 | 89 | 91 | 88 | 85 | 79 | 79 | 79 | 81 | 81 |
-| 11 The Ocean | Find the Island | 1 | 85 | 85 | 85 | 85 | 99 | 85 | 85 | 85 | — | 85 | 81 | 85 | 77 | 87 | 89 | 89 | 88 | 85 | 81 | 79 | 79 | 75 | 75 |
-| 11 The Ocean | Catch Fish | 5 | 81 | 81 | 81 | 81 | 93 | 81 | 81 | 81 | — | 81 | 77 | 81 | 75 | 83 | 85 | 88 | 85 | 81 | 77 | 77 | 77 | 75 | 75 |
-| 11 The Ocean | Dive as a Squid | 3 | 83 | 83 | 83 | 83 | 95 | 83 | 83 | 83 | — | 83 | 79 | 83 | 77 | 85 | 87 | 90 | 88 | 83 | 79 | 75 | 75 | 77 | 77 |
-| 11 The Ocean | Look for Land | 3 | 81 | 81 | 81 | 81 | 97 | 81 | 81 | 81 | — | 81 | 79 | 81 | 73 | 79 | 85 | 94 | 88 | 81 | 81 | 79 | 79 | 79 | 79 |
-| 11 The Ocean | Practice Transforming | 1 | 81 | 81 | 81 | 81 | 93 | 81 | 81 | 81 | — | 81 | 77 | 81 | 75 | 83 | 85 | 88 | 85 | 81 | 77 | 79 | 79 | 79 | 79 |
-| 11 The Ocean | Kraken | 1 | 133 | 133 | 133 | 133 | 155 | 133 | 133 | 133 | — | 133 | 133 | 133 | 131 | 135 | 143 | 158 | 154 | 133 | 129 | 131 | 131 | 129 | 129 |
-| 11 The Ocean | Explore Kraken's Lair | 1 | 133 | 133 | 133 | 133 | 155 | 133 | 133 | 133 | — | 133 | 133 | 133 | 131 | 135 | 143 | 158 | 154 | 133 | 129 | 131 | 131 | 129 | 129 |
-| 12 The Island | Hunt for the Second Reagent | 1 | 91 | 91 | 91 | 91 | 109 | 91 | 91 | 91 | — | 91 | 91 | 91 | 87 | 95 | 95 | 103 | 97 | 91 | 87 | 87 | 87 | 89 | 89 |
-| 12 The Island | Gather Reagent | 3 | 89 | 89 | 89 | 89 | 103 | 89 | 89 | 89 | — | 89 | 91 | 89 | 85 | 95 | 95 | 103 | 94 | 89 | 85 | 85 | 85 | 85 | 85 |
-| 12 The Island | Repair Ship | 1 | 91 | 91 | 91 | 91 | 109 | 91 | 91 | 91 | — | 91 | 91 | 91 | 87 | 95 | 95 | 103 | 97 | 91 | 87 | 87 | 87 | 87 | 87 |
-| 12 The Island | Catch More Fish | 4 | 87 | 87 | 87 | 87 | 101 | 87 | 87 | 87 | — | 87 | 85 | 87 | 87 | 93 | 91 | 98 | 94 | 87 | 85 | 87 | 87 | 87 | 87 |
-| 12 The Island | Explore the Jungle | 6 | 89 | 89 | 89 | 89 | 107 | 89 | 89 | 89 | — | 89 | 89 | 89 | 85 | 91 | 93 | 99 | 94 | 89 | 85 | 85 | 85 | 85 | 85 |
-| 12 The Island | Build Another Hut | 1 | 91 | 91 | 91 | 91 | 105 | 91 | 91 | 91 | — | 91 | 87 | 91 | 87 | 93 | 95 | 103 | 97 | 91 | 87 | 87 | 87 | 87 | 87 |
-| 12 The Island | Talk to the Local Wildlife | 3 | 89 | 89 | 89 | 89 | 101 | 89 | 89 | 89 | — | 89 | 87 | 89 | 83 | 91 | 93 | 99 | 94 | 89 | 85 | 85 | 85 | 85 | 85 |
-| 12 The Island | Horde of Lizardfolk | 1 | 212 | 249 | 212 | 163 | 240 | 212 | 212 | 212 | — | 214 | 212 | 214 | 208 | 214 | 222 | 230 | 236 | 212 | 212 | 210 | 159 | 206 | 157 |
-| 12 The Island | Steal Their Oracle Bones | 4 | 212 | 249 | 212 | 163 | 240 | 212 | 212 | 212 | — | 214 | 212 | 214 | 208 | 214 | 222 | 230 | 236 | 212 | 212 | 210 | 159 | 206 | 157 |
-| 13 The Desert | Enter the Oasis | 1 | 103 | 103 | 103 | 103 | 125 | 103 | 103 | 103 | — | 103 | 101 | 103 | 99 | 105 | 107 | 116 | 112 | 103 | 99 | 99 | 99 | 99 | 99 |
-| 13 The Desert | Overcome Mirage | 1 | 103 | 103 | 103 | 103 | 125 | 103 | 103 | 103 | — | 103 | 99 | 103 | 99 | 105 | 107 | 110 | 112 | 103 | 99 | 97 | 97 | 97 | 97 |
-| 13 The Desert | Find the Oasis | 1 | 99 | 99 | 99 | 99 | 125 | 99 | 99 | 99 | — | 99 | 101 | 99 | 89 | 95 | 103 | 105 | 112 | 99 | 99 | 89 | 89 | 89 | 89 |
-| 13 The Desert | Harvest Cactus | 3 | 93 | 93 | 93 | 93 | 109 | 93 | 93 | 93 | — | 93 | 91 | 93 | 91 | 97 | 97 | 104 | 97 | 93 | 89 | 91 | 91 | 91 | 91 |
-| 13 The Desert | Avoid Notice by the Sandworm | 4 | 99 | 99 | 99 | 99 | 119 | 99 | 99 | 99 | — | 99 | 99 | 99 | 95 | 101 | 103 | 112 | 112 | 99 | 93 | 95 | 95 | 93 | 93 |
-| 13 The Desert | Work on Your Tan | 3 | 93 | 93 | 93 | 93 | 111 | 93 | 93 | 93 | — | 93 | 93 | 93 | 89 | 95 | 97 | 105 | 100 | 93 | 91 | 89 | 89 | 89 | 89 |
-| 13 The Desert | Comb the Desert | 3 | 95 | 95 | 95 | 95 | 113 | 95 | 95 | 95 | — | 95 | 95 | 95 | 91 | 97 | 99 | 107 | 103 | 95 | 93 | 91 | 91 | 91 | 91 |
-| 13 The Desert | Giant Sandworm | 1 | 222 | 253 | 255 | 175 | 250 | 222 | 222 | 222 | — | 224 | 222 | 224 | 216 | 226 | 232 | 237 | 248 | 222 | 222 | 218 | 171 | 212 | 169 |
-| 13 The Desert | Learn to Dance the Worm | 1 | 222 | 255 | 257 | 175 | 252 | 222 | 222 | 222 | — | 224 | 222 | 224 | 218 | 226 | 232 | 237 | 248 | 222 | 222 | 218 | 171 | 212 | 169 |
-| 14 The Oasis | Return to the Magician | 1 | 129 | 129 | 129 | 129 | 157 | 129 | 129 | 129 | — | 129 | 129 | 129 | 127 | 131 | 139 | 142 | 145 | 129 | 131 | 133 | 133 | 131 | 131 |
-| 14 The Oasis | Banish Evil Spirit | 3 | 121 | 121 | 121 | 121 | 149 | 121 | 121 | 121 | — | 121 | 121 | 121 | 117 | 121 | 129 | 129 | 145 | 121 | 121 | 121 | 121 | 119 | 119 |
-| 14 The Oasis | Gather Second Reagent | 5 | 127 | 127 | 127 | 127 | 139 | 127 | 127 | 127 | — | 121 | 127 | 127 | 125 | 119 | 137 | 135 | 145 | 127 | 121 | 127 | 127 | 125 | 125 |
-| 14 The Oasis | Bottle Oasis Water | 4 | 109 | 109 | 109 | 109 | 125 | 109 | 109 | 109 | — | 109 | 109 | 109 | 109 | 133 | 107 | 120 | 118 | 109 | 111 | 109 | 109 | 109 | 109 |
-| 14 The Oasis | Reflect on the Journey | 4 | 115 | 115 | 115 | 115 | 141 | 115 | 115 | 115 | — | 115 | 115 | 115 | 117 | 119 | 129 | 119 | 136 | 115 | 115 | 117 | 117 | 115 | 115 |
-| 14 The Oasis | Prepare for the Journey Ahead | 3 | 103 | 103 | 103 | 103 | 125 | 103 | 103 | 103 | — | 103 | 103 | 103 | 99 | 105 | 111 | 117 | 118 | 103 | 99 | 99 | 99 | 99 | 99 |
-| 14 The Oasis | Talk to the Djinn | 1 | 111 | 111 | 111 | 111 | 133 | 111 | 111 | 111 | — | 111 | 111 | 111 | 111 | 115 | 123 | 118 | 118 | 111 | 111 | 111 | 111 | 109 | 109 |
-| 14 The Oasis | Sleepy Djinn | 1 | 230 | 376 | 306 | 181 | 260 | 230 | 230 | 230 | — | 232 | 230 | 232 | 224 | 234 | 240 | 246 | 257 | 230 | 230 | 226 | 177 | 220 | 177 |
-| 14 The Oasis | Find More Lamps | 3 | 230 | 376 | 306 | 181 | 260 | 230 | 230 | 230 | — | 232 | 230 | 232 | 224 | 234 | 240 | 246 | 257 | 230 | 230 | 226 | 177 | 220 | 177 |
-| 15 The Ritual | Begin Search for the Next Ritual | 1 | 216 | 380 | 351 | 165 | 246 | 216 | 216 | 216 | — | 218 | 216 | 218 | 210 | 220 | 226 | 232 | 242 | 216 | 216 | 214 | 161 | 208 | 159 |
-| 15 The Ritual | Apologize for Stealing Reagents | 3 | 214 | 380 | 304 | 161 | 244 | 214 | 214 | 214 | — | 216 | 214 | 153 | 210 | 218 | 224 | 229 | 239 | 214 | 214 | 212 | 157 | 208 | 155 |
-| 15 The Ritual | Rest for a While | 5 | 214 | 380 | 304 | 159 | 244 | 214 | 214 | 214 | — | 147 | 214 | 151 | 206 | 218 | 224 | 227 | 166 | 214 | 214 | 143 | 143 | 204 | 153 |
-| 15 The Ritual | Touch the Divine | 1 | 151 | 151 | 151 | 151 | 175 | 151 | 151 | 151 | — | 153 | 151 | 153 | 149 | 153 | 161 | 167 | 169 | 151 | 149 | 141 | 141 | 141 | 141 |
-| 15 The Ritual | Infuse Mystic Incense | 9 | 129 | 129 | 129 | 129 | 157 | 129 | 129 | 129 | — | 129 | 129 | 129 | 127 | 139 | 139 | 143 | 157 | 129 | 131 | 133 | 133 | 131 | 131 |
-| 15 The Ritual | Practice Memorization | 4 | 139 | 139 | 139 | 139 | 165 | 139 | 139 | 139 | — | 143 | 139 | 139 | 137 | 139 | 149 | 156 | 160 | 139 | 135 | 135 | 135 | 133 | 133 |
-| 15 The Ritual | Guided Spellcasting | 3 | 137 | 137 | 137 | 137 | 163 | 137 | 137 | 137 | — | 139 | 139 | 137 | 133 | 131 | 149 | 142 | 163 | 137 | 139 | 139 | 139 | 133 | 133 |
-| 15 The Ritual | Go for a Walk | 1 | 141 | 141 | 141 | 141 | 167 | 141 | 141 | 141 | — | 139 | 139 | 141 | 137 | 139 | 149 | 161 | 163 | 141 | 139 | 141 | 141 | 137 | 137 |
-| 15 The Ritual | Write Down Some Learnings | 5 | 416 | — | — | 354 | — | 453 | — | — | — | 421 | 420 | 418 | 466 | 422 | 466 | — | — | 416 | 422 | 441 | 353 | 465 | 352 |
+| zone | task | reps | income-spend-cap-10-node | income-combo-node | income-combo-spend-cap-node |
+|---|---|---|---|---|---|
+| 1 The Village | Join the Watch | 1 | 3 | 4 | 4 |
+| 1 The Village | Read Noticeboard | 1 | 3 | 2 | 2 |
+| 1 The Village | Train with Weapons | 3 | 3 | 2 | 2 |
+| 1 The Village | Learn How to Read | 1 | 2 | 1 | 1 |
+| 1 The Village | Beg for Food | 10 | 1 | 3 | 3 |
+| 1 The Village | Hide and Seek | 3 | 1 | 1 | 1 |
+| 1 The Village | Observe Surroundings | 5 | 2 | 2 | 2 |
+| 1 The Village | Use Secret Fishing Spot | 8 | 354 | 352 | 271 |
+| 2 The Village Watch | Notice Smoke in the Distance | 1 | 10 | 7 | 7 |
+| 2 The Village Watch | Learn Routines | 4 | 7 | 7 | 7 |
+| 2 The Village Watch | Deal with Drunkards | 2 | 9 | 7 | 7 |
+| 2 The Village Watch | Chit-chat | 3 | 62 | 6 | 6 |
+| 2 The Village Watch | Sparring | 4 | 6 | 9 | 9 |
+| 2 The Village Watch | Fletch Arrows | 5 | 4 | 9 | 9 |
+| 2 The Village Watch | Daydream About Leaving | 6 | 5 | 4 | 4 |
+| 2 The Village Watch | Learn How to Write | 1 | 8 | 5 | 5 |
+| 2 The Village Watch | Training Dummy | 10 | 354 | 352 | 271 |
+| 3 The Raid | Enter the Wilderness | 1 | 12 | 11 | 11 |
+| 3 The Raid | Fight a Goblin | 1 | 12 | 11 | 11 |
+| 3 The Raid | Warn Villagers | 3 | 12 | 11 | 11 |
+| 3 The Raid | Loot the Fallen | 4 | 10 | 7 | 7 |
+| 3 The Raid | Rescue Villager | 3 | 11 | 10 | 10 |
+| 3 The Raid | Treat Villager Wounds | 3 | 10 | 8 | 8 |
+| 3 The Raid | Goblin Warlord | 1 | 63 | 57 | 57 |
+| 3 The Raid | Save the Village | 1 | 65 | 57 | 57 |
+| 4 The Wilderness | Find Cave Entrance | 1 | 19 | 19 | 19 |
+| 4 The Wilderness | Look for Tracks | 3 | 17 | 13 | 13 |
+| 4 The Wilderness | Survive the Night | 1 | 17 | 13 | 13 |
+| 4 The Wilderness | Find an Amulet | 1 | 17 | 17 | 17 |
+| 4 The Wilderness | Build a Fire | 1 | 16 | 12 | 12 |
+| 4 The Wilderness | Forage for Mushrooms | 5 | 12 | 12 | 12 |
+| 4 The Wilderness | Befriend a Deer | 1 | 14 | 11 | 11 |
+| 4 The Wilderness | Angry Ent | 1 | 105 | 101 | 101 |
+| 4 The Wilderness | Gather Magical Roots | 3 | 105 | 101 | 101 |
+| 5 The Cave System | Leave Via Back Entrance | 1 | 30 | 25 | 25 |
+| 5 The Cave System | Find a Way Through | 1 | 26 | 21 | 21 |
+| 5 The Cave System | Rescue Captives | 3 | 29 | 23 | 23 |
+| 5 The Cave System | Steal Supplies | 5 | 20 | 22 | 22 |
+| 5 The Cave System | Try Casting a Spell | 6 | 27 | 21 | 21 |
+| 5 The Cave System | Inspect Wall Paintings | 1 | 25 | 20 | 20 |
+| 5 The Cave System | Scout the Cave | 3 | 161 | 24 | 24 |
+| 5 The Cave System | Goblin Chieftain | 1 | 107 | 103 | 103 |
+| 5 The Cave System | Wipe Out Goblins | 1 | 109 | 105 | 105 |
+| 6 The Road to the City | Get to the City | 1 | 37 | 33 | 33 |
+| 6 The Road to the City | Join a Caravan | 1 | 37 | 31 | 31 |
+| 6 The Road to the City | Scout the Road Ahead | 3 | 37 | 31 | 31 |
+| 6 The Road to the City | Make Travel Equipment | 4 | 35 | 31 | 31 |
+| 6 The Road to the City | Get Used to Traveling | 3 | 33 | 29 | 29 |
+| 6 The Road to the City | Chat with Travelers | 4 | 35 | 26 | 26 |
+| 6 The Road to the City | Practice Traveling Unnoticed | 1 | 31 | 25 | 25 |
+| 6 The Road to the City | Bandits | 1 | 111 | 107 | 107 |
+| 6 The Road to the City | Loot Bandit Camp | 4 | 111 | 107 | 107 |
+| 6 The Road to the City | Study the Amulet | 1 | 32 | 27 | 27 |
+| 7 The City Outskirts | Enter the City | 1 | 45 | 39 | 39 |
+| 7 The City Outskirts | Bribe the City Guards | 1 | 43 | 35 | 35 |
+| 7 The City Outskirts | Survive a Mugging | 1 | 43 | 35 | 35 |
+| 7 The City Outskirts | Buy a Book | 5 | 37 | 33 | 33 |
+| 7 The City Outskirts | Negotiate with a Rogue Guard | 1 | 41 | 33 | 33 |
+| 7 The City Outskirts | Spar with the Guards | 4 | 53 | 43 | 43 |
+| 7 The City Outskirts | Fend for Yourself | 1 | 53 | 47 | 47 |
+| 7 The City Outskirts | Skulk About | 1 | 39 | 35 | 35 |
+| 8 The City | Embark on a Quest | 1 | 57 | 51 | 51 |
+| 8 The City | Investigate Rumors of a Magician | 4 | 49 | 51 | 51 |
+| 8 The City | Search the Archives for Magic | 5 | 57 | 51 | 51 |
+| 8 The City | Scribe Scroll of Haste | 1 | 51 | 41 | 41 |
+| 8 The City | Cast a Spell | 6 | 55 | 49 | 49 |
+| 8 The City | Study at the Mage's Guild | 1 | 45 | 39 | 39 |
+| 8 The City | Train for Your Quest | 3 | 47 | 39 | 39 |
+| 8 The City | Corrupt Mayor | 1 | 117 | 111 | 111 |
+| 8 The City | Train at Every Guild | 1 | 354 | 352 | 271 |
+| 8 The City | Purge Corrupt Bureacracy | 1 | 117 | 113 | 113 |
+| 9 The Forest | Scale the Mountain | 1 | 73 | 71 | 71 |
+| 9 The Forest | Locate the Mountain | 1 | 59 | 61 | 61 |
+| 9 The Forest | Make Climbing Gear | 3 | 67 | 61 | 61 |
+| 9 The Forest | Make Camping Equipment | 3 | 61 | 63 | 63 |
+| 9 The Forest | Prepare to Scale the Mountain | 3 | 57 | 55 | 55 |
+| 9 The Forest | Build a Hut | 1 | 59 | 63 | 63 |
+| 9 The Forest | Go Sightseeing | 3 | 57 | 53 | 53 |
+| 9 The Forest | Meet a Magical Creature | 1 | 57 | 53 | 53 |
+| 9 The Forest | Werewolf | 1 | 123 | 121 | 121 |
+| 9 The Forest | Gather Shed Fur from Lair | 3 | 123 | 121 | 121 |
+| 10 The Magician | Hunt for the First Reagent | 1 | 81 | 75 | 75 |
+| 10 The Magician | Convince the Magician | 1 | 77 | 75 | 75 |
+| 10 The Magician | Do a Favor | 1 | 77 | 73 | 73 |
+| 10 The Magician | Steal Some Reagents | 4 | 73 | 71 | 71 |
+| 10 The Magician | Figure Out How to Attune | 1 | 77 | 73 | 73 |
+| 10 The Magician | Give Yourself a Pep Talk | 1 | 77 | 73 | 73 |
+| 10 The Magician | Try to Transform Into an Eagle | 1 | 77 | 71 | 71 |
+| 10 The Magician | Low-oxygen Exercise | 5 | 79 | 73 | 73 |
+| 11 The Ocean | Land on Island | 1 | 85 | 81 | 81 |
+| 11 The Ocean | Weather a Storm | 1 | 85 | 81 | 81 |
+| 11 The Ocean | Find the Island | 1 | 85 | 75 | 75 |
+| 11 The Ocean | Catch Fish | 5 | 81 | 75 | 75 |
+| 11 The Ocean | Dive as a Squid | 3 | 83 | 77 | 77 |
+| 11 The Ocean | Look for Land | 3 | 81 | 79 | 79 |
+| 11 The Ocean | Practice Transforming | 1 | 81 | 79 | 79 |
+| 11 The Ocean | Kraken | 1 | 133 | 129 | 129 |
+| 11 The Ocean | Explore Kraken's Lair | 1 | 133 | 129 | 129 |
+| 12 The Island | Hunt for the Second Reagent | 1 | 91 | 89 | 89 |
+| 12 The Island | Gather Reagent | 3 | 89 | 85 | 85 |
+| 12 The Island | Repair Ship | 1 | 91 | 87 | 87 |
+| 12 The Island | Catch More Fish | 4 | 87 | 87 | 87 |
+| 12 The Island | Explore the Jungle | 6 | 89 | 85 | 85 |
+| 12 The Island | Build Another Hut | 1 | 91 | 87 | 87 |
+| 12 The Island | Talk to the Local Wildlife | 3 | 89 | 85 | 85 |
+| 12 The Island | Horde of Lizardfolk | 1 | 212 | 157 | 157 |
+| 12 The Island | Steal Their Oracle Bones | 4 | 212 | 157 | 157 |
+| 13 The Desert | Enter the Oasis | 1 | 103 | 99 | 99 |
+| 13 The Desert | Overcome Mirage | 1 | 103 | 97 | 97 |
+| 13 The Desert | Find the Oasis | 1 | 99 | 89 | 89 |
+| 13 The Desert | Harvest Cactus | 3 | 93 | 91 | 91 |
+| 13 The Desert | Avoid Notice by the Sandworm | 4 | 99 | 93 | 93 |
+| 13 The Desert | Work on Your Tan | 3 | 93 | 89 | 89 |
+| 13 The Desert | Comb the Desert | 3 | 95 | 91 | 91 |
+| 13 The Desert | Giant Sandworm | 1 | 224 | 169 | 169 |
+| 13 The Desert | Learn to Dance the Worm | 1 | 224 | 169 | 169 |
+| 14 The Oasis | Return to the Magician | 1 | 129 | 131 | 131 |
+| 14 The Oasis | Banish Evil Spirit | 3 | 121 | 119 | 119 |
+| 14 The Oasis | Gather Second Reagent | 5 | 127 | 125 | 125 |
+| 14 The Oasis | Bottle Oasis Water | 4 | 109 | 109 | 109 |
+| 14 The Oasis | Reflect on the Journey | 4 | 115 | 115 | 115 |
+| 14 The Oasis | Prepare for the Journey Ahead | 3 | 103 | 99 | 99 |
+| 14 The Oasis | Talk to the Djinn | 1 | 111 | 109 | 109 |
+| 14 The Oasis | Sleepy Djinn | 1 | 234 | 177 | 177 |
+| 14 The Oasis | Find More Lamps | 3 | 234 | 177 | 177 |
+| 15 The Ritual | Begin Search for the Next Ritual | 1 | 216 | 159 | 159 |
+| 15 The Ritual | Apologize for Stealing Reagents | 3 | 214 | 155 | 155 |
+| 15 The Ritual | Rest for a While | 5 | 214 | 153 | 153 |
+| 15 The Ritual | Touch the Divine | 1 | 151 | 141 | 141 |
+| 15 The Ritual | Infuse Mystic Incense | 9 | 129 | 131 | 131 |
+| 15 The Ritual | Practice Memorization | 4 | 139 | 133 | 133 |
+| 15 The Ritual | Guided Spellcasting | 3 | 137 | 133 | 133 |
+| 15 The Ritual | Go for a Walk | 1 | 141 | 137 | 137 |
+| 15 The Ritual | Write Down Some Learnings | 5 | 354 | 352 | 271 |
 

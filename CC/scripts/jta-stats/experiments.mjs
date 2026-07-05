@@ -176,6 +176,72 @@ const EXPERIMENTS = [
     },
   },
 
+  // --- Spark-income round (income-*) ------------------------------------
+  // Question: do the completion-metric winners (stall-40, spendCap — both
+  // low-prestige) sacrifice long-run spark income? runToBudget plays all
+  // 1000 runs regardless of task completion; sparkCheckpoints every 50 runs
+  // record earned = held + exactly-reconstructed spending.
+  {
+    name: "income-baseline",
+    options: { maxRuns: 1000, runToBudget: true, checkpointEvery: 50 },
+  },
+  {
+    name: "income-stall-5",
+    modOverrides: { auto_prestige_stall_resets: 5 },
+    options: { maxRuns: 1000, runToBudget: true, checkpointEvery: 50 },
+  },
+  {
+    name: "income-stall-40",
+    modOverrides: { auto_prestige_stall_resets: 40 },
+    options: { maxRuns: 1000, runToBudget: true, checkpointEvery: 50 },
+  },
+  {
+    name: "income-spend-cap-10",
+    options: {
+      maxRuns: 1000,
+      runToBudget: true,
+      checkpointEvery: 50,
+      purchasePolicy: { kind: "spendCap", g: 1.0 },
+    },
+  },
+  {
+    name: "income-combo",
+    modOverrides: {
+      threshold_item_pct: 5,
+      threshold_perk_affordable_resets: 5,
+      threshold_perk_unaffordable_resets: 5,
+      threshold_progression_resets: 5,
+      threshold_unlocker_resets: 5,
+      auto_prestige_stall_resets: 40,
+    },
+    autoFillOrder: [
+      "perk", "item", "combat", "prestige",
+      "unlocker", "plain", "mandatory", "travel",
+    ],
+    options: { maxRuns: 1000, runToBudget: true, checkpointEvery: 50 },
+  },
+  {
+    name: "income-combo-spend-cap",
+    modOverrides: {
+      threshold_item_pct: 5,
+      threshold_perk_affordable_resets: 5,
+      threshold_perk_unaffordable_resets: 5,
+      threshold_progression_resets: 5,
+      threshold_unlocker_resets: 5,
+      auto_prestige_stall_resets: 40,
+    },
+    autoFillOrder: [
+      "perk", "item", "combat", "prestige",
+      "unlocker", "plain", "mandatory", "travel",
+    ],
+    options: {
+      maxRuns: 1000,
+      runToBudget: true,
+      checkpointEvery: 50,
+      purchasePolicy: { kind: "spendCap", g: 1.0 },
+    },
+  },
+
   {
     // Best run-scheduling profile (combo-all-winners) + best buy policy
     // (spendCap g=1.0) together.
