@@ -1,5 +1,13 @@
 # JtA automation stats — findings (2026-07-05, rev 2)
 
+> **Defaults shipped (Fork 1.5, submodule `64bd3c1`):** the winning numerics
+> are now the game's defaults — item /rep 5%, /rst 5 for the four rst-3
+> categories, auto-prestige stall 40 (toggles all still off). Post-tuning
+> out-of-box runs: `tuned-defaults` all-134 @ 349; with Unlock Savings on,
+> `tuned-defaults-unlock-savings` @ 272 (best sweep config was 270, which
+> additionally used perk-first fill). All other result files below predate
+> the tuning and keep the old defaults as the historical record.
+
 Setup: fresh save, tested play profile (all mods on except queue_cycle/instant_mode,
 auto-prestige stall-only@20, When-All-Skipped = Best Task, Skip on Block, tuned
 threshold defaults), instant mode, automation All to zone 99. Metric: cumulative

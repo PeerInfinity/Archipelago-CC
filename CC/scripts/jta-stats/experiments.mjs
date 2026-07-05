@@ -178,8 +178,20 @@ const EXPERIMENTS = [
 
   // The REAL in-game mod (Fork 1.5 Unlock Savings) — should reproduce the
   // driver-side spendCap g=1.0 policy (buy-spend-cap-10).
+  // NOTE: recorded result predates the Fork 1.5 defaults tuning (item 5%,
+  // rst 5, stall 40) — re-running now lands on the new defaults instead.
   {
     name: "mod-unlock-savings",
+    modOverrides: { auto_buy_budget_enabled: true },
+    options: { maxRuns: 1000 },
+  },
+
+  // Fork 1.5 shipped defaults (post defaults-tuning; toggles enabled by the
+  // profile as usual, numerics all stock). Old results files are kept as
+  // the pre-tuning record — these two document the new out-of-box numbers.
+  { name: "tuned-defaults", modOverrides: {} },
+  {
+    name: "tuned-defaults-unlock-savings",
     modOverrides: { auto_buy_budget_enabled: true },
     options: { maxRuns: 1000 },
   },

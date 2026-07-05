@@ -1,0 +1,6 @@
+{
+  "name": "tuned-defaults",
+  "options": {
+    "modOverrides": {}
+  }
+}
