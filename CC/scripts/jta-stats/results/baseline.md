@@ -1,6 +1,6 @@
 # JtA automation stats — baseline-node
 
-132/134 tasks first-completed within 500 runs; mean run 86.6, median 77; ended with 5 prestiges, highest zone 25.
+134/134 tasks first-completed within 500 runs; mean run 84.2, median 73; ended with 3 prestiges, highest zone 24.
 
 | zone | task | reps | first run (prestiges) |
 |---|---|---|---|
@@ -11,16 +11,16 @@
 | 1 The Village | Beg for Food | 10 | 1 (0) |
 | 1 The Village | Hide and Seek | 3 | 1 (0) |
 | 1 The Village | Observe Surroundings | 5 | 2 (0) |
-| 1 The Village | Use Secret Fishing Spot | 8 | — |
+| 1 The Village | Use Secret Fishing Spot | 8 | 416 (3) |
 | 2 The Village Watch | Notice Smoke in the Distance | 1 | 10 (0) |
 | 2 The Village Watch | Learn Routines | 4 | 7 (0) |
 | 2 The Village Watch | Deal with Drunkards | 2 | 9 (0) |
-| 2 The Village Watch | Chit-chat | 3 | 156 (1) |
+| 2 The Village Watch | Chit-chat | 3 | 62 (0) |
 | 2 The Village Watch | Sparring | 4 | 6 (0) |
 | 2 The Village Watch | Fletch Arrows | 5 | 4 (0) |
 | 2 The Village Watch | Daydream About Leaving | 6 | 5 (0) |
 | 2 The Village Watch | Learn How to Write | 1 | 8 (0) |
-| 2 The Village Watch | Training Dummy | 10 | — |
+| 2 The Village Watch | Training Dummy | 10 | 416 (3) |
 | 3 The Raid | Enter the Wilderness | 1 | 12 (0) |
 | 3 The Raid | Fight a Goblin | 1 | 12 (0) |
 | 3 The Raid | Warn Villagers | 3 | 12 (0) |
@@ -73,7 +73,7 @@
 | 8 The City | Study at the Mage's Guild | 1 | 45 (0) |
 | 8 The City | Train for Your Quest | 3 | 47 (0) |
 | 8 The City | Corrupt Mayor | 1 | 117 (0) |
-| 8 The City | Train at Every Guild | 1 | 441 (4) |
+| 8 The City | Train at Every Guild | 1 | 416 (3) |
 | 8 The City | Purge Corrupt Bureacracy | 1 | 117 (0) |
 | 9 The Forest | Scale the Mountain | 1 | 73 (0) |
 | 9 The Forest | Locate the Mountain | 1 | 59 (0) |
@@ -137,5 +137,5 @@
 | 15 The Ritual | Practice Memorization | 4 | 139 (0) |
 | 15 The Ritual | Guided Spellcasting | 3 | 137 (0) |
 | 15 The Ritual | Go for a Walk | 1 | 141 (0) |
-| 15 The Ritual | Write Down Some Learnings | 5 | 441 (4) |
+| 15 The Ritual | Write Down Some Learnings | 5 | 416 (3) |
 

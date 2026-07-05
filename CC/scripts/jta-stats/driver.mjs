@@ -61,6 +61,192 @@ export function baselineMods() {
   return mods;
 }
 
+// MARK: Purchase policies (Divinity buy-strategy experiments)
+//
+// Each policy is a per-tick function replacing the sim's auto_buy_cheapest
+// greedy. They use only exported sim APIs (calcPrestigeRepeatableCost,
+// hasPrestigeUnlock, addPrestigeUnlock, increasePrestigeRepeatableLevel) and
+// the prestige_upgrades data module, so strategies can be A/B tested without
+// touching the submodule. Layer gating mirrors maybeAutoBuyCheapest: only
+// buy inside GAMESTATE.prestige_layers_unlocked.
+//
+// Descriptors ({ kind, ...params }):
+//   { kind: "cheapest" }                — control; leaves auto_buy_cheapest on
+//   { kind: "unlocksFirst" }            — hard save for the cheapest unowned
+//                                         unlock; repeatables only when no
+//                                         reachable unlock remains
+//   { kind: "reserve", f: 1.0 }         — balance floor: repeatables may only
+//                                         spend spark above f * next unlock cost
+//   { kind: "spendCap", g: 1.0 }        — flow cap: cumulative repeatable spend
+//                                         between unlock purchases <= g * next
+//                                         unlock cost
+//   { kind: "levelCap", cap: 10 }       — greedy, but repeatables stop at level
+//                                         `cap` while any reachable unlock is
+//                                         unowned
+//   { kind: "tiers", list: [...] }      — authored ordering with strict
+//                                         head-of-list saving; entries
+//                                         { unlock: "Name" } or
+//                                         { repeatable: "Name", count: N };
+//                                         locked-layer entries are skipped until
+//                                         their layer opens; greedy cheapest
+//                                         after the list is exhausted
+function makePurchasePolicy(env, desc) {
+  const { sim, game, prestige } = env;
+  if (!desc || desc.kind === "cheapest") return null;
+
+  const G = () => game.GAMESTATE;
+  const layerOpen = (layer) => G().prestige_layers_unlocked.includes(layer);
+  const unownedUnlocks = () =>
+    prestige.PRESTIGE_UNLOCKABLES.filter(
+      (u) => layerOpen(u.layer) && !sim.hasPrestigeUnlock(u.type)
+    ).sort((a, b) => a.cost - b.cost);
+  const cheapestRepeatable = (eligible = () => true) => {
+    let best = null;
+    let bestCost = Infinity;
+    for (const r of prestige.PRESTIGE_REPEATABLES) {
+      if (!layerOpen(r.layer) || !eligible(r)) continue;
+      const cost = sim.calcPrestigeRepeatableCost(r.type);
+      if (cost < bestCost) {
+        best = r;
+        bestCost = cost;
+      }
+    }
+    return best ? { def: best, cost: bestCost } : null;
+  };
+  const buyUnlocksWhileAffordable = () => {
+    for (;;) {
+      const next = unownedUnlocks()[0];
+      if (!next || next.cost > G().divine_spark) return;
+      sim.addPrestigeUnlock(next.type);
+    }
+  };
+
+  if (desc.kind === "unlocksFirst") {
+    return () => {
+      buyUnlocksWhileAffordable();
+      if (unownedUnlocks().length > 0) return;
+      for (;;) {
+        const pick = cheapestRepeatable();
+        if (!pick || pick.cost > G().divine_spark) return;
+        sim.increasePrestigeRepeatableLevel(pick.def.type);
+      }
+    };
+  }
+
+  if (desc.kind === "reserve") {
+    const f = desc.f ?? 1.0;
+    return () => {
+      for (;;) {
+        buyUnlocksWhileAffordable();
+        const next = unownedUnlocks()[0];
+        const reserve = next ? f * next.cost : 0;
+        const pick = cheapestRepeatable();
+        if (!pick || pick.cost > G().divine_spark - reserve) return;
+        sim.increasePrestigeRepeatableLevel(pick.def.type);
+      }
+    };
+  }
+
+  if (desc.kind === "spendCap") {
+    const g = desc.g ?? 1.0;
+    let spentSinceUnlock = 0;
+    let ownedCount = -1;
+    return () => {
+      for (;;) {
+        const before = unownedUnlocks().length;
+        buyUnlocksWhileAffordable();
+        const remaining = unownedUnlocks();
+        if (ownedCount === -1) ownedCount = remaining.length;
+        if (remaining.length < before || remaining.length < ownedCount) {
+          spentSinceUnlock = 0; // an unlock landed; new budget window
+        }
+        ownedCount = remaining.length;
+        const next = remaining[0];
+        const budget = next ? g * next.cost - spentSinceUnlock : Infinity;
+        const pick = cheapestRepeatable();
+        if (!pick || pick.cost > G().divine_spark || pick.cost > budget) return;
+        sim.increasePrestigeRepeatableLevel(pick.def.type);
+        spentSinceUnlock += pick.cost;
+      }
+    };
+  }
+
+  if (desc.kind === "levelCap") {
+    const cap = desc.cap ?? 10;
+    return () => {
+      for (;;) {
+        buyUnlocksWhileAffordable();
+        const anyUnlockLeft = unownedUnlocks().length > 0;
+        const pick = cheapestRepeatable(
+          (r) =>
+            !anyUnlockLeft || sim.getPrestigeRepeatableLevel(r.type) < cap
+        );
+        if (!pick || pick.cost > G().divine_spark) return;
+        sim.increasePrestigeRepeatableLevel(pick.def.type);
+      }
+    };
+  }
+
+  if (desc.kind === "tiers") {
+    const byUnlockName = new Map(
+      prestige.PRESTIGE_UNLOCKABLES.map((u) => [u.name, u])
+    );
+    const byRepName = new Map(
+      prestige.PRESTIGE_REPEATABLES.map((r) => [r.name, r])
+    );
+    const entries = desc.list.map((e) => {
+      if (e.unlock) {
+        const def = byUnlockName.get(e.unlock);
+        if (!def) throw new Error(`tiers: unknown unlock ${e.unlock}`);
+        return { kind: "unlock", def };
+      }
+      const def = byRepName.get(e.repeatable);
+      if (!def) throw new Error(`tiers: unknown repeatable ${e.repeatable}`);
+      return { kind: "repeatable", def, count: e.count ?? 1, bought: 0 };
+    });
+    return () => {
+      for (;;) {
+        // Effective head: first unfinished entry whose layer is open. Strict
+        // saving among *available* entries; locked layers don't block.
+        const head = entries.find((e) => {
+          if (!layerOpen(e.def.layer)) return false;
+          return e.kind === "unlock"
+            ? !sim.hasPrestigeUnlock(e.def.type)
+            : e.bought < e.count;
+        });
+        if (!head) {
+          // List done — fall back to greedy cheapest (unlocks + repeatables).
+          buyUnlocksWhileAffordable();
+          const pick = cheapestRepeatable();
+          const next = unownedUnlocks()[0];
+          if (
+            pick &&
+            pick.cost <= G().divine_spark &&
+            (!next || pick.cost < next.cost)
+          ) {
+            sim.increasePrestigeRepeatableLevel(pick.def.type);
+            continue;
+          }
+          return;
+        }
+        const cost =
+          head.kind === "unlock"
+            ? head.def.cost
+            : sim.calcPrestigeRepeatableCost(head.def.type);
+        if (cost > G().divine_spark) return;
+        if (head.kind === "unlock") {
+          sim.addPrestigeUnlock(head.def.type);
+        } else {
+          sim.increasePrestigeRepeatableLevel(head.def.type);
+          head.bought++;
+        }
+      }
+    };
+  }
+
+  throw new Error(`unknown purchase policy kind: ${desc.kind}`);
+}
+
 export function runFirstCompletionStats(env, options = {}) {
   const { sim, game, zones, win } = env;
   const zoneLimit = options.zoneLimit ?? 15;
@@ -84,6 +270,15 @@ export function runFirstCompletionStats(env, options = {}) {
     if (!sim.setMod(name, value)) {
       throw new Error(`setMod(${name}, ${JSON.stringify(value)}) failed`);
     }
+  }
+
+  // Divinity purchase policy: a driver-side replacement for the sim's
+  // auto_buy_cheapest greedy (which must be OFF so the two don't fight).
+  const purchasePolicy = options.purchasePolicy ?? { kind: "cheapest" };
+  const runPolicy = makePurchasePolicy(env, purchasePolicy);
+  if (runPolicy) {
+    sim.setMod("auto_buy_cheapest", false);
+    mods.auto_buy_cheapest = false;
   }
 
   // Automation-panel setting, not a mod: "Skip on Block". With the default
@@ -115,16 +310,44 @@ export function runFirstCompletionStats(env, options = {}) {
         zone: zi,
         zoneName: zone.name,
         maxReps: def.max_reps,
+        hidden: def.hidden_by_default,
       });
     }
   });
 
   const completions = new Map();
   const runEnds = [];
+  // Unlock purchase timeline: run number at which each one-time Divinity
+  // unlock lands, whoever buys it (policy, queue engine, or the sim greedy).
+  const purchases = [];
+  const ownedUnlocks = new Set();
+  const trackPurchases = () => {
+    if (!env.prestige) return;
+    for (const u of env.prestige.PRESTIGE_UNLOCKABLES) {
+      if (!ownedUnlocks.has(u.type) && sim.hasPrestigeUnlock(u.type)) {
+        ownedUnlocks.add(u.type);
+        purchases.push({ name: u.name, cost: u.cost, layer: u.layer, run });
+      }
+    }
+  };
   let run = 1;
   let ticks = 0;
   let ticksThisRun = 0;
   let stalled = false;
+  // Idle = nothing changes tick over tick: no energy drain, no rep gained,
+  // no zone advance. Happens at end of content (last zone fully done — the
+  // real game shows an overlay whose reset/prestige buttons the player
+  // clicks) and would otherwise spin to maxTicksPerRun. After a short grace
+  // we replicate that click via the same run-end branch. NOTE: active_task
+  // is NOT a usable idle signal — instant mode leaves it null at the end of
+  // every tick.
+  let idleTicks = 0;
+  let lastSig = "";
+  const maxIdleTicks = options.maxIdleTicks ?? 50;
+  let endOfContentRuns = 0;
+  const progressSig = () =>
+    `${game.GAMESTATE.current_zone}|${game.GAMESTATE.current_energy}|` +
+    `${game.GAMESTATE.tasks.reduce((a, t) => a + t.reps, 0)}`;
 
   const scan = (tasks) => {
     for (const t of tasks) {
@@ -143,6 +366,28 @@ export function runFirstCompletionStats(env, options = {}) {
     }
   };
 
+  // Mastery of Time's skipFreeZones() runs INSIDE doEnergyReset/doPrestige
+  // (both driver-called) and fully completes every task of each skipped
+  // zone on transient task arrays the per-tick scan never sees. Skip only
+  // advances through fully-completed zones, so after the run-end action
+  // every universe task below current_zone is complete — except hidden
+  // tasks whose unlock isn't owned (they aren't in the zone's task list).
+  const recordBoundaryCompletions = () => {
+    if (run > maxRuns) return;
+    const cz = game.GAMESTATE.current_zone;
+    for (const t of universe.values()) {
+      if (t.zone >= cz || completions.has(t.id)) continue;
+      if (t.hidden && !game.GAMESTATE.unlocked_tasks.includes(t.id)) continue;
+      completions.set(t.id, {
+        ...t,
+        run,
+        prestiges: game.GAMESTATE.prestige_count,
+        viaZoneSkip: true,
+      });
+    }
+    scan(game.GAMESTATE.tasks); // landing zone: MoT auto-completes 1-tick tasks
+  };
+
   const now =
     typeof performance !== "undefined" ? () => performance.now() : () => 0;
   const t0 = now();
@@ -157,10 +402,26 @@ export function runFirstCompletionStats(env, options = {}) {
     ticksThisRun++;
     scan(before);
     if (game.GAMESTATE.tasks !== before) scan(game.GAMESTATE.tasks);
+    if (runPolicy) runPolicy();
+    trackPurchases();
     // Nobody drains the render-event queue headlessly, and saveGame
     // serializes the whole gamestate (queue included) on every instant
     // completion — clearing per tick keeps that O(1).
     game.GAMESTATE.pending_render_events.length = 0;
+
+    if (!game.GAMESTATE.is_in_energy_reset) {
+      const sig = progressSig();
+      if (sig === lastSig) {
+        idleTicks++;
+        if (idleTicks >= maxIdleTicks) {
+          game.GAMESTATE.is_in_energy_reset = true;
+          endOfContentRuns++;
+        }
+      } else {
+        idleTicks = 0;
+        lastSig = sig;
+      }
+    }
 
     if (game.GAMESTATE.is_in_energy_reset) {
       const zoneAtEnd = game.GAMESTATE.current_zone;
@@ -181,6 +442,9 @@ export function runFirstCompletionStats(env, options = {}) {
       }
       run++;
       ticksThisRun = 0;
+      idleTicks = 0;
+      lastSig = "";
+      recordBoundaryCompletions();
       continue;
     }
 
@@ -214,6 +478,7 @@ export function runFirstCompletionStats(env, options = {}) {
       endZone,
       skipBlocked,
       autoFillOrder,
+      purchasePolicy,
       mods,
     },
     timing: {
@@ -223,14 +488,27 @@ export function runFirstCompletionStats(env, options = {}) {
       ticksPerSec: wallMs > 0 ? Math.round((ticks / wallMs) * 1000) : null,
     },
     stalled,
+    endOfContentRuns,
     allCompleted: completions.size === universe.size,
     taskCount: universe.size,
     completedCount: completions.size,
     finalState: {
       prestiges: game.GAMESTATE.prestige_count,
-      highestZone: game.GAMESTATE.highest_zone,
+      highestZone: Math.max(
+        game.GAMESTATE.highest_zone,
+        game.GAMESTATE.highest_prestige_zone ?? 0
+      ),
       divineSpark: game.GAMESTATE.divine_spark,
+      repeatableLevels: env.prestige
+        ? Object.fromEntries(
+            env.prestige.PRESTIGE_REPEATABLES.map((r) => [
+              r.name,
+              sim.getPrestigeRepeatableLevel(r.type),
+            ]).filter(([, lvl]) => lvl > 0)
+          )
+        : undefined,
     },
+    purchases,
     completions: completed,
     unreached,
     runEnds,

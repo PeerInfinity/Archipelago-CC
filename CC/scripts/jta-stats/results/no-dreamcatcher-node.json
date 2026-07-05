@@ -6,6 +6,9 @@
     "endZone": 99,
     "skipBlocked": true,
     "autoFillOrder": null,
+    "purchasePolicy": {
+      "kind": "cheapest"
+    },
     "mods": {
       "auto_haste": true,
       "auto_lightning": true,
@@ -38,20 +41,75 @@
     }
   },
   "timing": {
-    "wallMs": 8341.191417,
+    "wallMs": 7764.387596,
     "ticks": 16839,
     "runsExecuted": 500,
-    "ticksPerSec": 2019
+    "ticksPerSec": 2169
   },
   "stalled": false,
+  "endOfContentRuns": 0,
   "allCompleted": false,
   "taskCount": 134,
   "completedCount": 130,
   "finalState": {
     "prestiges": 6,
     "highestZone": 21,
-    "divineSpark": 13156
+    "divineSpark": 13156,
+    "repeatableLevels": {
+      "Divine Knowledge": 38,
+      "Unlimited Power": 10,
+      "Divine Appetite": 8,
+      "Gotta Go Fast": 14,
+      "Divine Lightning": 3,
+      "Transcendant Aptitude": 6,
+      "Energized": 6,
+      "Deenergized": 2
+    }
   },
+  "purchases": [
+    {
+      "name": "Permanent Automation",
+      "cost": 10,
+      "layer": 0,
+      "run": 151
+    },
+    {
+      "name": "Divine Inspiration",
+      "cost": 10,
+      "layer": 0,
+      "run": 152
+    },
+    {
+      "name": "Look in the Mirror",
+      "cost": 101,
+      "layer": 0,
+      "run": 242
+    },
+    {
+      "name": "Fully Attuned",
+      "cost": 800,
+      "layer": 0,
+      "run": 314
+    },
+    {
+      "name": "Transcendant Memory",
+      "cost": 100,
+      "layer": 1,
+      "run": 340
+    },
+    {
+      "name": "Divine Speed",
+      "cost": 500,
+      "layer": 1,
+      "run": 341
+    },
+    {
+      "name": "Mastery of Time",
+      "cost": 40000,
+      "layer": 1,
+      "run": 500
+    }
+  ],
   "completions": [
     {
       "id": 10,
@@ -59,6 +117,7 @@
       "zone": 0,
       "zoneName": "The Village",
       "maxReps": 1,
+      "hidden": false,
       "run": 3,
       "prestiges": 0
     },
@@ -68,6 +127,7 @@
       "zone": 0,
       "zoneName": "The Village",
       "maxReps": 1,
+      "hidden": false,
       "run": 3,
       "prestiges": 0
     },
@@ -77,6 +137,7 @@
       "zone": 0,
       "zoneName": "The Village",
       "maxReps": 3,
+      "hidden": false,
       "run": 3,
       "prestiges": 0
     },
@@ -86,6 +147,7 @@
       "zone": 0,
       "zoneName": "The Village",
       "maxReps": 1,
+      "hidden": false,
       "run": 2,
       "prestiges": 0
     },
@@ -95,6 +157,7 @@
       "zone": 0,
       "zoneName": "The Village",
       "maxReps": 10,
+      "hidden": false,
       "run": 1,
       "prestiges": 0
     },
@@ -104,6 +167,7 @@
       "zone": 0,
       "zoneName": "The Village",
       "maxReps": 3,
+      "hidden": false,
       "run": 1,
       "prestiges": 0
     },
@@ -113,6 +177,7 @@
       "zone": 0,
       "zoneName": "The Village",
       "maxReps": 5,
+      "hidden": false,
       "run": 2,
       "prestiges": 0
     },
@@ -122,6 +187,7 @@
       "zone": 1,
       "zoneName": "The Village Watch",
       "maxReps": 1,
+      "hidden": false,
       "run": 10,
       "prestiges": 0
     },
@@ -131,6 +197,7 @@
       "zone": 1,
       "zoneName": "The Village Watch",
       "maxReps": 4,
+      "hidden": false,
       "run": 7,
       "prestiges": 0
     },
@@ -140,6 +207,7 @@
       "zone": 1,
       "zoneName": "The Village Watch",
       "maxReps": 2,
+      "hidden": false,
       "run": 9,
       "prestiges": 0
     },
@@ -149,8 +217,10 @@
       "zone": 1,
       "zoneName": "The Village Watch",
       "maxReps": 3,
-      "run": 156,
-      "prestiges": 1
+      "hidden": false,
+      "run": 62,
+      "prestiges": 0,
+      "viaZoneSkip": true
     },
     {
       "id": 24,
@@ -158,6 +228,7 @@
       "zone": 1,
       "zoneName": "The Village Watch",
       "maxReps": 4,
+      "hidden": false,
       "run": 6,
       "prestiges": 0
     },
@@ -167,6 +238,7 @@
       "zone": 1,
       "zoneName": "The Village Watch",
       "maxReps": 5,
+      "hidden": false,
       "run": 4,
       "prestiges": 0
     },
@@ -176,6 +248,7 @@
       "zone": 1,
       "zoneName": "The Village Watch",
       "maxReps": 6,
+      "hidden": false,
       "run": 5,
       "prestiges": 0
     },
@@ -185,6 +258,7 @@
       "zone": 1,
       "zoneName": "The Village Watch",
       "maxReps": 1,
+      "hidden": false,
       "run": 8,
       "prestiges": 0
     },
@@ -194,6 +268,7 @@
       "zone": 2,
       "zoneName": "The Raid",
       "maxReps": 1,
+      "hidden": false,
       "run": 12,
       "prestiges": 0
     },
@@ -203,6 +278,7 @@
       "zone": 2,
       "zoneName": "The Raid",
       "maxReps": 1,
+      "hidden": false,
       "run": 12,
       "prestiges": 0
     },
@@ -212,6 +288,7 @@
       "zone": 2,
       "zoneName": "The Raid",
       "maxReps": 3,
+      "hidden": false,
       "run": 12,
       "prestiges": 0
     },
@@ -221,6 +298,7 @@
       "zone": 2,
       "zoneName": "The Raid",
       "maxReps": 4,
+      "hidden": false,
       "run": 10,
       "prestiges": 0
     },
@@ -230,6 +308,7 @@
       "zone": 2,
       "zoneName": "The Raid",
       "maxReps": 3,
+      "hidden": false,
       "run": 11,
       "prestiges": 0
     },
@@ -239,6 +318,7 @@
       "zone": 2,
       "zoneName": "The Raid",
       "maxReps": 3,
+      "hidden": false,
       "run": 10,
       "prestiges": 0
     },
@@ -248,6 +328,7 @@
       "zone": 2,
       "zoneName": "The Raid",
       "maxReps": 1,
+      "hidden": false,
       "run": 63,
       "prestiges": 0
     },
@@ -257,6 +338,7 @@
       "zone": 2,
       "zoneName": "The Raid",
       "maxReps": 1,
+      "hidden": true,
       "run": 65,
       "prestiges": 0
     },
@@ -266,6 +348,7 @@
       "zone": 3,
       "zoneName": "The Wilderness",
       "maxReps": 1,
+      "hidden": false,
       "run": 19,
       "prestiges": 0
     },
@@ -275,6 +358,7 @@
       "zone": 3,
       "zoneName": "The Wilderness",
       "maxReps": 3,
+      "hidden": false,
       "run": 17,
       "prestiges": 0
     },
@@ -284,6 +368,7 @@
       "zone": 3,
       "zoneName": "The Wilderness",
       "maxReps": 1,
+      "hidden": false,
       "run": 17,
       "prestiges": 0
     },
@@ -293,6 +378,7 @@
       "zone": 3,
       "zoneName": "The Wilderness",
       "maxReps": 1,
+      "hidden": false,
       "run": 17,
       "prestiges": 0
     },
@@ -302,6 +388,7 @@
       "zone": 3,
       "zoneName": "The Wilderness",
       "maxReps": 1,
+      "hidden": false,
       "run": 16,
       "prestiges": 0
     },
@@ -311,6 +398,7 @@
       "zone": 3,
       "zoneName": "The Wilderness",
       "maxReps": 5,
+      "hidden": false,
       "run": 12,
       "prestiges": 0
     },
@@ -320,6 +408,7 @@
       "zone": 3,
       "zoneName": "The Wilderness",
       "maxReps": 1,
+      "hidden": false,
       "run": 14,
       "prestiges": 0
     },
@@ -329,6 +418,7 @@
       "zone": 3,
       "zoneName": "The Wilderness",
       "maxReps": 1,
+      "hidden": false,
       "run": 105,
       "prestiges": 0
     },
@@ -338,6 +428,7 @@
       "zone": 3,
       "zoneName": "The Wilderness",
       "maxReps": 3,
+      "hidden": true,
       "run": 105,
       "prestiges": 0
     },
@@ -347,6 +438,7 @@
       "zone": 4,
       "zoneName": "The Cave System",
       "maxReps": 1,
+      "hidden": false,
       "run": 30,
       "prestiges": 0
     },
@@ -356,6 +448,7 @@
       "zone": 4,
       "zoneName": "The Cave System",
       "maxReps": 1,
+      "hidden": false,
       "run": 26,
       "prestiges": 0
     },
@@ -365,6 +458,7 @@
       "zone": 4,
       "zoneName": "The Cave System",
       "maxReps": 3,
+      "hidden": false,
       "run": 29,
       "prestiges": 0
     },
@@ -374,6 +468,7 @@
       "zone": 4,
       "zoneName": "The Cave System",
       "maxReps": 5,
+      "hidden": false,
       "run": 20,
       "prestiges": 0
     },
@@ -383,6 +478,7 @@
       "zone": 4,
       "zoneName": "The Cave System",
       "maxReps": 6,
+      "hidden": false,
       "run": 27,
       "prestiges": 0
     },
@@ -392,6 +488,7 @@
       "zone": 4,
       "zoneName": "The Cave System",
       "maxReps": 1,
+      "hidden": false,
       "run": 25,
       "prestiges": 0
     },
@@ -401,6 +498,7 @@
       "zone": 4,
       "zoneName": "The Cave System",
       "maxReps": 3,
+      "hidden": false,
       "run": 161,
       "prestiges": 1
     },
@@ -410,6 +508,7 @@
       "zone": 4,
       "zoneName": "The Cave System",
       "maxReps": 1,
+      "hidden": false,
       "run": 107,
       "prestiges": 0
     },
@@ -419,6 +518,7 @@
       "zone": 4,
       "zoneName": "The Cave System",
       "maxReps": 1,
+      "hidden": true,
       "run": 109,
       "prestiges": 0
     },
@@ -428,6 +528,7 @@
       "zone": 5,
       "zoneName": "The Road to the City",
       "maxReps": 1,
+      "hidden": false,
       "run": 37,
       "prestiges": 0
     },
@@ -437,6 +538,7 @@
       "zone": 5,
       "zoneName": "The Road to the City",
       "maxReps": 1,
+      "hidden": false,
       "run": 37,
       "prestiges": 0
     },
@@ -446,6 +548,7 @@
       "zone": 5,
       "zoneName": "The Road to the City",
       "maxReps": 3,
+      "hidden": false,
       "run": 37,
       "prestiges": 0
     },
@@ -455,6 +558,7 @@
       "zone": 5,
       "zoneName": "The Road to the City",
       "maxReps": 4,
+      "hidden": false,
       "run": 35,
       "prestiges": 0
     },
@@ -464,6 +568,7 @@
       "zone": 5,
       "zoneName": "The Road to the City",
       "maxReps": 3,
+      "hidden": false,
       "run": 33,
       "prestiges": 0
     },
@@ -473,6 +578,7 @@
       "zone": 5,
       "zoneName": "The Road to the City",
       "maxReps": 4,
+      "hidden": false,
       "run": 35,
       "prestiges": 0
     },
@@ -482,6 +588,7 @@
       "zone": 5,
       "zoneName": "The Road to the City",
       "maxReps": 1,
+      "hidden": false,
       "run": 31,
       "prestiges": 0
     },
@@ -491,6 +598,7 @@
       "zone": 5,
       "zoneName": "The Road to the City",
       "maxReps": 1,
+      "hidden": false,
       "run": 111,
       "prestiges": 0
     },
@@ -500,6 +608,7 @@
       "zone": 5,
       "zoneName": "The Road to the City",
       "maxReps": 4,
+      "hidden": true,
       "run": 111,
       "prestiges": 0
     },
@@ -509,6 +618,7 @@
       "zone": 5,
       "zoneName": "The Road to the City",
       "maxReps": 1,
+      "hidden": false,
       "run": 32,
       "prestiges": 0
     },
@@ -518,6 +628,7 @@
       "zone": 6,
       "zoneName": "The City Outskirts",
       "maxReps": 1,
+      "hidden": false,
       "run": 45,
       "prestiges": 0
     },
@@ -527,6 +638,7 @@
       "zone": 6,
       "zoneName": "The City Outskirts",
       "maxReps": 1,
+      "hidden": false,
       "run": 43,
       "prestiges": 0
     },
@@ -536,6 +648,7 @@
       "zone": 6,
       "zoneName": "The City Outskirts",
       "maxReps": 1,
+      "hidden": false,
       "run": 43,
       "prestiges": 0
     },
@@ -545,6 +658,7 @@
       "zone": 6,
       "zoneName": "The City Outskirts",
       "maxReps": 5,
+      "hidden": false,
       "run": 37,
       "prestiges": 0
     },
@@ -554,6 +668,7 @@
       "zone": 6,
       "zoneName": "The City Outskirts",
       "maxReps": 1,
+      "hidden": false,
       "run": 41,
       "prestiges": 0
     },
@@ -563,6 +678,7 @@
       "zone": 6,
       "zoneName": "The City Outskirts",
       "maxReps": 4,
+      "hidden": false,
       "run": 53,
       "prestiges": 0
     },
@@ -572,6 +688,7 @@
       "zone": 6,
       "zoneName": "The City Outskirts",
       "maxReps": 1,
+      "hidden": false,
       "run": 53,
       "prestiges": 0
     },
@@ -581,6 +698,7 @@
       "zone": 6,
       "zoneName": "The City Outskirts",
       "maxReps": 1,
+      "hidden": false,
       "run": 39,
       "prestiges": 0
     },
@@ -590,6 +708,7 @@
       "zone": 7,
       "zoneName": "The City",
       "maxReps": 1,
+      "hidden": false,
       "run": 57,
       "prestiges": 0
     },
@@ -599,6 +718,7 @@
       "zone": 7,
       "zoneName": "The City",
       "maxReps": 4,
+      "hidden": false,
       "run": 49,
       "prestiges": 0
     },
@@ -608,6 +728,7 @@
       "zone": 7,
       "zoneName": "The City",
       "maxReps": 5,
+      "hidden": false,
       "run": 57,
       "prestiges": 0
     },
@@ -617,6 +738,7 @@
       "zone": 7,
       "zoneName": "The City",
       "maxReps": 1,
+      "hidden": false,
       "run": 51,
       "prestiges": 0
     },
@@ -626,6 +748,7 @@
       "zone": 7,
       "zoneName": "The City",
       "maxReps": 6,
+      "hidden": false,
       "run": 55,
       "prestiges": 0
     },
@@ -635,6 +758,7 @@
       "zone": 7,
       "zoneName": "The City",
       "maxReps": 1,
+      "hidden": false,
       "run": 45,
       "prestiges": 0
     },
@@ -644,6 +768,7 @@
       "zone": 7,
       "zoneName": "The City",
       "maxReps": 3,
+      "hidden": false,
       "run": 47,
       "prestiges": 0
     },
@@ -653,6 +778,7 @@
       "zone": 7,
       "zoneName": "The City",
       "maxReps": 1,
+      "hidden": false,
       "run": 117,
       "prestiges": 0
     },
@@ -662,6 +788,7 @@
       "zone": 7,
       "zoneName": "The City",
       "maxReps": 1,
+      "hidden": true,
       "run": 117,
       "prestiges": 0
     },
@@ -671,6 +798,7 @@
       "zone": 8,
       "zoneName": "The Forest",
       "maxReps": 1,
+      "hidden": false,
       "run": 73,
       "prestiges": 0
     },
@@ -680,6 +808,7 @@
       "zone": 8,
       "zoneName": "The Forest",
       "maxReps": 1,
+      "hidden": false,
       "run": 59,
       "prestiges": 0
     },
@@ -689,6 +818,7 @@
       "zone": 8,
       "zoneName": "The Forest",
       "maxReps": 3,
+      "hidden": false,
       "run": 67,
       "prestiges": 0
     },
@@ -698,6 +828,7 @@
       "zone": 8,
       "zoneName": "The Forest",
       "maxReps": 3,
+      "hidden": false,
       "run": 61,
       "prestiges": 0
     },
@@ -707,6 +838,7 @@
       "zone": 8,
       "zoneName": "The Forest",
       "maxReps": 3,
+      "hidden": false,
       "run": 57,
       "prestiges": 0
     },
@@ -716,6 +848,7 @@
       "zone": 8,
       "zoneName": "The Forest",
       "maxReps": 1,
+      "hidden": false,
       "run": 59,
       "prestiges": 0
     },
@@ -725,6 +858,7 @@
       "zone": 8,
       "zoneName": "The Forest",
       "maxReps": 3,
+      "hidden": false,
       "run": 57,
       "prestiges": 0
     },
@@ -734,6 +868,7 @@
       "zone": 8,
       "zoneName": "The Forest",
       "maxReps": 1,
+      "hidden": false,
       "run": 57,
       "prestiges": 0
     },
@@ -743,6 +878,7 @@
       "zone": 8,
       "zoneName": "The Forest",
       "maxReps": 1,
+      "hidden": false,
       "run": 123,
       "prestiges": 0
     },
@@ -752,6 +888,7 @@
       "zone": 8,
       "zoneName": "The Forest",
       "maxReps": 3,
+      "hidden": true,
       "run": 123,
       "prestiges": 0
     },
@@ -761,6 +898,7 @@
       "zone": 9,
       "zoneName": "The Magician",
       "maxReps": 1,
+      "hidden": false,
       "run": 81,
       "prestiges": 0
     },
@@ -770,6 +908,7 @@
       "zone": 9,
       "zoneName": "The Magician",
       "maxReps": 1,
+      "hidden": false,
       "run": 77,
       "prestiges": 0
     },
@@ -779,6 +918,7 @@
       "zone": 9,
       "zoneName": "The Magician",
       "maxReps": 1,
+      "hidden": false,
       "run": 77,
       "prestiges": 0
     },
@@ -788,6 +928,7 @@
       "zone": 9,
       "zoneName": "The Magician",
       "maxReps": 4,
+      "hidden": false,
       "run": 73,
       "prestiges": 0
     },
@@ -797,6 +938,7 @@
       "zone": 9,
       "zoneName": "The Magician",
       "maxReps": 1,
+      "hidden": false,
       "run": 77,
       "prestiges": 0
     },
@@ -806,6 +948,7 @@
       "zone": 9,
       "zoneName": "The Magician",
       "maxReps": 1,
+      "hidden": false,
       "run": 77,
       "prestiges": 0
     },
@@ -815,6 +958,7 @@
       "zone": 9,
       "zoneName": "The Magician",
       "maxReps": 1,
+      "hidden": false,
       "run": 77,
       "prestiges": 0
     },
@@ -824,6 +968,7 @@
       "zone": 9,
       "zoneName": "The Magician",
       "maxReps": 5,
+      "hidden": false,
       "run": 79,
       "prestiges": 0
     },
@@ -833,6 +978,7 @@
       "zone": 10,
       "zoneName": "The Ocean",
       "maxReps": 1,
+      "hidden": false,
       "run": 85,
       "prestiges": 0
     },
@@ -842,6 +988,7 @@
       "zone": 10,
       "zoneName": "The Ocean",
       "maxReps": 1,
+      "hidden": false,
       "run": 85,
       "prestiges": 0
     },
@@ -851,6 +998,7 @@
       "zone": 10,
       "zoneName": "The Ocean",
       "maxReps": 1,
+      "hidden": false,
       "run": 85,
       "prestiges": 0
     },
@@ -860,6 +1008,7 @@
       "zone": 10,
       "zoneName": "The Ocean",
       "maxReps": 5,
+      "hidden": false,
       "run": 81,
       "prestiges": 0
     },
@@ -869,6 +1018,7 @@
       "zone": 10,
       "zoneName": "The Ocean",
       "maxReps": 3,
+      "hidden": false,
       "run": 83,
       "prestiges": 0
     },
@@ -878,6 +1028,7 @@
       "zone": 10,
       "zoneName": "The Ocean",
       "maxReps": 3,
+      "hidden": false,
       "run": 81,
       "prestiges": 0
     },
@@ -887,6 +1038,7 @@
       "zone": 10,
       "zoneName": "The Ocean",
       "maxReps": 1,
+      "hidden": false,
       "run": 81,
       "prestiges": 0
     },
@@ -896,6 +1048,7 @@
       "zone": 10,
       "zoneName": "The Ocean",
       "maxReps": 1,
+      "hidden": false,
       "run": 133,
       "prestiges": 0
     },
@@ -905,6 +1058,7 @@
       "zone": 10,
       "zoneName": "The Ocean",
       "maxReps": 1,
+      "hidden": true,
       "run": 133,
       "prestiges": 0
     },
@@ -914,6 +1068,7 @@
       "zone": 11,
       "zoneName": "The Island",
       "maxReps": 1,
+      "hidden": false,
       "run": 91,
       "prestiges": 0
     },
@@ -923,6 +1078,7 @@
       "zone": 11,
       "zoneName": "The Island",
       "maxReps": 3,
+      "hidden": false,
       "run": 89,
       "prestiges": 0
     },
@@ -932,6 +1088,7 @@
       "zone": 11,
       "zoneName": "The Island",
       "maxReps": 1,
+      "hidden": false,
       "run": 91,
       "prestiges": 0
     },
@@ -941,6 +1098,7 @@
       "zone": 11,
       "zoneName": "The Island",
       "maxReps": 4,
+      "hidden": false,
       "run": 87,
       "prestiges": 0
     },
@@ -950,6 +1108,7 @@
       "zone": 11,
       "zoneName": "The Island",
       "maxReps": 6,
+      "hidden": false,
       "run": 89,
       "prestiges": 0
     },
@@ -959,6 +1118,7 @@
       "zone": 11,
       "zoneName": "The Island",
       "maxReps": 1,
+      "hidden": false,
       "run": 91,
       "prestiges": 0
     },
@@ -968,6 +1128,7 @@
       "zone": 11,
       "zoneName": "The Island",
       "maxReps": 3,
+      "hidden": false,
       "run": 89,
       "prestiges": 0
     },
@@ -977,6 +1138,7 @@
       "zone": 11,
       "zoneName": "The Island",
       "maxReps": 1,
+      "hidden": false,
       "run": 212,
       "prestiges": 1
     },
@@ -986,6 +1148,7 @@
       "zone": 11,
       "zoneName": "The Island",
       "maxReps": 4,
+      "hidden": true,
       "run": 212,
       "prestiges": 1
     },
@@ -995,6 +1158,7 @@
       "zone": 12,
       "zoneName": "The Desert",
       "maxReps": 1,
+      "hidden": false,
       "run": 103,
       "prestiges": 0
     },
@@ -1004,6 +1168,7 @@
       "zone": 12,
       "zoneName": "The Desert",
       "maxReps": 1,
+      "hidden": false,
       "run": 103,
       "prestiges": 0
     },
@@ -1013,6 +1178,7 @@
       "zone": 12,
       "zoneName": "The Desert",
       "maxReps": 1,
+      "hidden": false,
       "run": 99,
       "prestiges": 0
     },
@@ -1022,6 +1188,7 @@
       "zone": 12,
       "zoneName": "The Desert",
       "maxReps": 3,
+      "hidden": false,
       "run": 93,
       "prestiges": 0
     },
@@ -1031,6 +1198,7 @@
       "zone": 12,
       "zoneName": "The Desert",
       "maxReps": 4,
+      "hidden": false,
       "run": 99,
       "prestiges": 0
     },
@@ -1040,6 +1208,7 @@
       "zone": 12,
       "zoneName": "The Desert",
       "maxReps": 3,
+      "hidden": false,
       "run": 93,
       "prestiges": 0
     },
@@ -1049,6 +1218,7 @@
       "zone": 12,
       "zoneName": "The Desert",
       "maxReps": 3,
+      "hidden": false,
       "run": 95,
       "prestiges": 0
     },
@@ -1058,6 +1228,7 @@
       "zone": 12,
       "zoneName": "The Desert",
       "maxReps": 1,
+      "hidden": false,
       "run": 222,
       "prestiges": 1
     },
@@ -1067,6 +1238,7 @@
       "zone": 12,
       "zoneName": "The Desert",
       "maxReps": 1,
+      "hidden": true,
       "run": 222,
       "prestiges": 1
     },
@@ -1076,6 +1248,7 @@
       "zone": 13,
       "zoneName": "The Oasis",
       "maxReps": 1,
+      "hidden": false,
       "run": 129,
       "prestiges": 0
     },
@@ -1085,6 +1258,7 @@
       "zone": 13,
       "zoneName": "The Oasis",
       "maxReps": 3,
+      "hidden": false,
       "run": 121,
       "prestiges": 0
     },
@@ -1094,6 +1268,7 @@
       "zone": 13,
       "zoneName": "The Oasis",
       "maxReps": 5,
+      "hidden": false,
       "run": 127,
       "prestiges": 0
     },
@@ -1103,6 +1278,7 @@
       "zone": 13,
       "zoneName": "The Oasis",
       "maxReps": 4,
+      "hidden": false,
       "run": 109,
       "prestiges": 0
     },
@@ -1112,6 +1288,7 @@
       "zone": 13,
       "zoneName": "The Oasis",
       "maxReps": 4,
+      "hidden": false,
       "run": 115,
       "prestiges": 0
     },
@@ -1121,6 +1298,7 @@
       "zone": 13,
       "zoneName": "The Oasis",
       "maxReps": 3,
+      "hidden": false,
       "run": 103,
       "prestiges": 0
     },
@@ -1130,6 +1308,7 @@
       "zone": 13,
       "zoneName": "The Oasis",
       "maxReps": 1,
+      "hidden": false,
       "run": 111,
       "prestiges": 0
     },
@@ -1139,6 +1318,7 @@
       "zone": 13,
       "zoneName": "The Oasis",
       "maxReps": 1,
+      "hidden": false,
       "run": 230,
       "prestiges": 1
     },
@@ -1148,6 +1328,7 @@
       "zone": 13,
       "zoneName": "The Oasis",
       "maxReps": 3,
+      "hidden": true,
       "run": 230,
       "prestiges": 1
     },
@@ -1157,6 +1338,7 @@
       "zone": 14,
       "zoneName": "The Ritual",
       "maxReps": 1,
+      "hidden": false,
       "run": 216,
       "prestiges": 1
     },
@@ -1166,6 +1348,7 @@
       "zone": 14,
       "zoneName": "The Ritual",
       "maxReps": 3,
+      "hidden": false,
       "run": 214,
       "prestiges": 1
     },
@@ -1175,6 +1358,7 @@
       "zone": 14,
       "zoneName": "The Ritual",
       "maxReps": 5,
+      "hidden": false,
       "run": 214,
       "prestiges": 1
     },
@@ -1184,6 +1368,7 @@
       "zone": 14,
       "zoneName": "The Ritual",
       "maxReps": 1,
+      "hidden": false,
       "run": 151,
       "prestiges": 0
     },
@@ -1193,6 +1378,7 @@
       "zone": 14,
       "zoneName": "The Ritual",
       "maxReps": 9,
+      "hidden": false,
       "run": 129,
       "prestiges": 0
     },
@@ -1202,6 +1388,7 @@
       "zone": 14,
       "zoneName": "The Ritual",
       "maxReps": 4,
+      "hidden": false,
       "run": 139,
       "prestiges": 0
     },
@@ -1211,6 +1398,7 @@
       "zone": 14,
       "zoneName": "The Ritual",
       "maxReps": 3,
+      "hidden": false,
       "run": 137,
       "prestiges": 0
     },
@@ -1220,6 +1408,7 @@
       "zone": 14,
       "zoneName": "The Ritual",
       "maxReps": 1,
+      "hidden": false,
       "run": 141,
       "prestiges": 0
     }
@@ -1230,28 +1419,32 @@
       "name": "Use Secret Fishing Spot",
       "zone": 0,
       "zoneName": "The Village",
-      "maxReps": 8
+      "maxReps": 8,
+      "hidden": true
     },
     {
       "id": 28,
       "name": "Training Dummy",
       "zone": 1,
       "zoneName": "The Village Watch",
-      "maxReps": 10
+      "maxReps": 10,
+      "hidden": true
     },
     {
       "id": 88,
       "name": "Train at Every Guild",
       "zone": 7,
       "zoneName": "The City",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": true
     },
     {
       "id": 158,
       "name": "Write Down Some Learnings",
       "zone": 14,
       "zoneName": "The Ritual",
-      "maxReps": 5
+      "maxReps": 5,
+      "hidden": true
     }
   ],
   "runEnds": [
@@ -4759,7 +4952,7 @@
   "meta": {
     "env": "node",
     "configName": "no-dreamcatcher",
-    "totalMsIncludingBridge": 8351,
-    "generatedAt": "2026-07-05T19:19:46.085Z"
+    "totalMsIncludingBridge": 7775,
+    "generatedAt": "2026-07-05T21:08:48.454Z"
   }
 }

@@ -51,8 +51,12 @@ try {
     const sim = await import(`${base}/simulation.js`);
     const game = await import(`${base}/game.js`);
     const zones = await import(`${base}/zones.js`);
+    const prestige = await import(`${base}/prestige_upgrades.js`);
     const driver = await import("/CC/scripts/jta-stats/driver.mjs");
-    return driver.runFirstCompletionStats({ sim, game, zones, win: window }, options);
+    return driver.runFirstCompletionStats(
+      { sim, game, zones, prestige, win: window },
+      options
+    );
   }, options);
   const totalMs = Date.now() - t0;
 

@@ -109,6 +109,9 @@ globalThis.confirm = () => true;
 const game = await import(pathToFileURL(path.join(buildDir, "game.js")));
 const sim = await import(pathToFileURL(path.join(buildDir, "simulation.js")));
 const zones = await import(pathToFileURL(path.join(buildDir, "zones.js")));
+const prestige = await import(
+  pathToFileURL(path.join(buildDir, "prestige_upgrades.js"))
+);
 const driver = await import(pathToFileURL(path.join(here, "driver.mjs")));
 
 const args = process.argv.slice(2);
@@ -128,7 +131,7 @@ const outPath =
 
 const t0 = Date.now();
 const result = driver.runFirstCompletionStats(
-  { sim, game, zones, win: windowStub },
+  { sim, game, zones, prestige, win: windowStub },
   options
 );
 const totalMs = Date.now() - t0;

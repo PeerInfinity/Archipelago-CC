@@ -36,9 +36,16 @@ node CC/scripts/jta-stats/report.mjs results/*.json > results/comparison.md
 ```
 
 Config JSON: `{ "name": "...", "options": { "modOverrides": {...},
-"autoFillOrder": [...], "maxRuns": 500, "zoneLimit": 15 } }` —
-`modOverrides` are deltas on top of `baselineMods()`; `mods` replaces the
-profile wholesale.
+"autoFillOrder": [...], "maxRuns": 500, "zoneLimit": 15,
+"purchasePolicy": {...} } }` — `modOverrides` are deltas on top of
+`baselineMods()`; `mods` replaces the profile wholesale.
+
+`purchasePolicy` swaps the sim's auto_buy_cheapest for a driver-side Divinity
+buy strategy (see `makePurchasePolicy` in driver.mjs): `{kind:"cheapest"}`
+(control), `{kind:"unlocksFirst"}`, `{kind:"reserve", f}`,
+`{kind:"spendCap", g}` (winner — flow cap on repeatable spending between
+unlocks), `{kind:"levelCap", cap}`, `{kind:"tiers", list:[...]}`. Results
+gain a `purchases` timeline (run each unlock was bought).
 
 ## Gotchas (learned building this)
 
@@ -55,5 +62,14 @@ profile wholesale.
 - Node must import `build/game.js` FIRST (the page's entry module) so the
   circular game/simulation/rendering imports evaluate in the browser's order.
 - Zone-1 Use Secret Fishing Spot / zone-2 Training Dummy / zone-8 Train at
-  Every Guild only unlock via the SeeBeyondTheVeil Divinity purchase — the
-  first two normally don't complete within a 500-run budget.
+  Every Guild only unlock via the SeeBeyondTheVeil Divinity purchase.
+- **Mastery of Time's `skipFreeZones()` completes skipped zones' tasks
+  INSIDE doEnergyReset/doPrestige** — on transient task arrays a per-tick
+  scan never sees. The driver reconstructs these at the run boundary
+  (`viaZoneSkip: true` completions): after the run-end action, every
+  universe task below current_zone is complete unless it's a hidden task
+  whose unlock isn't owned.
+- `active_task` is null at the end of EVERY tick under instant mode — it is
+  not an idle signal. Idle (end of content: last zone done, real game waits
+  for a click) is detected as 50 ticks with zone+energy+reps all unchanged,
+  then the driver forces the run-end branch.

@@ -1,0 +1,11 @@
+{
+  "name": "buy-level-cap-10",
+  "options": {
+    "modOverrides": {},
+    "maxRuns": 1000,
+    "purchasePolicy": {
+      "kind": "levelCap",
+      "cap": 10
+    }
+  }
+}

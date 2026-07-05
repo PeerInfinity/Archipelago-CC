@@ -1,64 +1,90 @@
-# JtA automation stats — findings (2026-07-05)
+# JtA automation stats — findings (2026-07-05, rev 2)
 
 Setup: fresh save, tested play profile (all mods on except queue_cycle/instant_mode,
 auto-prestige stall-only@20, When-All-Skipped = Best Task, Skip on Block, tuned
-threshold defaults), instant mode, automation All to zone 99, 500-run budget.
-Metric: cumulative run number at which each task in zones 1-15 first hits
-reps == max_reps. "Mean run" counts a never-completed task as 501.
+threshold defaults), instant mode, automation All to zone 99. Metric: cumulative
+run number at which each task in zones 1-15 first hits reps == max_reps; a
+never-completed task counts as budget+1 in the mean.
+
+> Rev 2: earlier numbers (harness commit `af639337d`) under-counted — Mastery
+> of Time's `skipFreeZones()` completes skipped zones' tasks inside
+> doEnergyReset/doPrestige where the per-tick scan can't see them. The driver
+> now records those boundary completions (`viaZoneSkip: true`), and forces the
+> run-end branch after 50 progress-free ticks (end-of-content, where the real
+> game waits for a click). With correct measurement the baseline profile
+> completes ALL 134 tasks by run 416 — the old "SBtV-gated tasks never
+> complete" was mostly measurement artifact.
 
 ## Harness validation (Playwright vs plain Node)
 
-Byte-identical `completions` / `runEnds` / `finalState` across both
-environments (the sim has no `Math.random`; same module graph, same tick
-math). Compute time is also the same (~8-12s for 500 runs / ~15.6k ticks);
-Playwright adds ~1.5-2s of browser startup + bridge and needs the dev server.
-**Use `run-node.mjs` for sweeps; keep `run-playwright.mjs` as the in-browser
-fidelity check.**
+Byte-identical results across both environments (no `Math.random` in the sim);
+same compute time (~6-16s per config). Playwright adds only browser startup +
+the dev-server dependency. Node (`run-node.mjs`) is the sweep workhorse.
 
-## Baseline shape
+## Round 1 — run-scheduling settings (500-run budget)
 
-- 132/134 tasks first-complete within 500 runs; mean run 86.6, median 77;
-  5 prestiges; ends at highest zone 25.
-- The two never-completed tasks (zone-1 Use Secret Fishing Spot, zone-2
-  Training Dummy) plus the run-441 outlier (zone-8 Train at Every Guild) are
-  all gated on the **SeeBeyondTheVeil** Divinity purchase — auto_buy_cheapest
-  reaches it very late. The zones-1-15 completion tail is entirely a prestige
-  buy-strategy question (§7 prestige buy queue), not a run-scheduling one.
+Winners (mean run / all-134 run; baseline 84.2 / 416):
 
-## What beat the baseline (mean run over zones 1-15)
+| change | mean | all-134 |
+|---|---|---|
+| combo: item /rep 5% + perk-first fill + rst 5 + stall 40 | **74.1** | **352** |
+| item /rep 5% + perk-first fill + stall 40 | 74.7 | 353 |
+| stall 20 → 40 | 79.1 | 354 |
+| item /rep 10% → 5% | 81.3 | 466 |
+| perk-first auto-fill; /rst 3 → 5 | 82.4-82.7 | ~420 |
 
-| change | mean | median | notes |
-|---|---|---|---|
-| combo: item /rep 5% + perk-first fill + rst 5 + stall 40 | **77.0** | 71 | best overall; only 2 prestiges, reaches zone 30 |
-| item /rep 5% + perk-first fill + stall 40 | 78.9 | **67** | best median |
-| item /rep 5% + perk-first fill + rst 5 | 81.5 | 71 | best without touching auto-prestige |
-| item /rep 5% + perk-first fill | 82.4 | 67 | |
-| threshold_item_pct 10 → 5 | 82.9 | 69 | single biggest lever |
-| stall 20 → 40 | 83.7 | 77 | fewer prestiges = less re-climbing |
-| perk-first auto-fill order | 83.9 | 69 | perks before items |
-| /rst 3 → 5 (perk/progression/unlocker) | 85.0 | 71 | small win |
-| prestige /rst 10 → 5 | 85.8 | 77 | marginal |
+Losers: thresholds-off catastrophic (65/134, mean 296); All-Skipped=End-Run
+(100.2); stall 5/10, cycle-off ≠ 1, no-dreamcatcher — all fail to finish in
+500 runs. no-ring finishes but later (453).
 
-## What lost
+## Round 2 — Divinity purchase policies (1000-run budget, baseline profile)
 
-- **thresholds-off: catastrophic** (65/134 completed, mean 296). The
-  threshold filter is what makes the single priority list viable at all.
-- All-Skipped = End Run: mean 101 (vs 77-87) — banking leftover energy loses
-  to Best-Task grinding it into levels.
-- Tighter stall (5/10): more prestiges (7-9), stuck re-climbing, mean 91-94.
-- item /rep 2% (too strict, 87.6) and 20% (too lax, 91.4) — 5% is the sweet
-  spot of the values tried.
-- cycle-off 0 or 2 (vs 1): 95.7 / 92.9 — the 1-off-1-on cadence wins.
-- no-ring / no-dreamcatcher / both: 87.1-87.5 — each helper is a small but
-  real gain.
-- prestige-first auto-fill order: no change from baseline (86.6).
+All policies implemented driver-side (sim's auto_buy_cheapest off, driver
+buys via exported APIs each tick). Control = auto_buy_cheapest.
+
+| policy | mean | all-134 | MoT@ | SBtV@ | prestiges |
+|---|---|---|---|---|---|
+| **spendCap g=1.0** (repeatable spend between unlocks ≤ 1× next unlock cost) | **82.5** | **354** | 333 | 353 | 2 |
+| spendCap g=0.5 | 83.3 | 358 | 338 | 357 | 2 |
+| levelCap 10 (repeatables stop at L10 while unlocks remain) | 83.9 | 405 | 346 | 403 | 4 |
+| cheapest (control) | 84.2 | 416 | 402 | 415 | 3 |
+| reserve f=0.5 (balance floor) | 87.0 | 460 | 441 | 458 | 5 |
+| tiers v1 (authored ordering) | 90.0 | 584 | 370 | 583 | 8 |
+| unlocks-first / reserve f=1.0 (hard save) | 133.9 | never (130/134) | 942 | never | 11 |
+
+Takeaways:
+
+- **The spend-cap idea wins**: greedy-cheapest is right *locally*, it just
+  needs a budget so low-exponent repeatables (Divine Knowledge 1.25×, Spite
+  the Gods 1.4×) can't soak spark forever below each big unlock's price.
+  Capping cumulative repeatable spending between unlock purchases at ~1× the
+  next unlock's cost pulls MoT from run 402 → 333 and SBtV 415 → 353 while
+  keeping the early repeatable economy intact. g is forgiving (0.5 ≈ 1.0).
+- **Hard saving is the worst possible policy** — repeatables ARE the engine;
+  starving them stalls zone progress so badly the spark income never comes.
+  A balance-floor reserve (f=0.5) is also net-negative. The flow cap beats
+  the stock floor because it never blocks the cheap early purchases.
+- **Authored tiers**: worse than cheapest at full completion despite decent
+  MoT timing — strict ordering under-buys broad cheap boosts. Not worth the
+  UI surface it would need, at least as drafted.
+- **Combined best** (round-1 combo profile + spendCap 1.0): all 134 tasks by
+  **run 270** (mean 71.6), MoT@251, SBtV@270 — 35% fewer runs than the
+  original baseline, with **zero prestiges**: discovery spark alone funds
+  everything (stall-40 never fires within 270 runs).
+
+## Suggested in-game mod shape (not yet implemented)
+
+Extend auto_buy_cheapest with one numeric knob (e.g.
+`auto_buy_unlock_budget`, default 1.0): track repeatable spending since the
+last unlock purchase; skip repeatables whose cost would push that spending
+past budget × (cheapest unowned unlock's cost) while any reachable unlock
+remains. 0 = hard save (bad), large = today's pure greedy. The explicit
+purchase queue stays the manual override, exactly as now.
 
 ## Caveats
 
-- Single metric: first completions in zones 1-15. stall-40 configs prestige
-  less (2 vs 5), which likely costs long-run divine spark income — this
-  sweep does not measure spark efficiency.
-- Deterministic sim: each config is one trajectory, not an average; small
-  deltas (<~2 mean runs) are within butterfly-effect territory.
-- 500-run budget; the two SeeBeyondTheVeil-gated tasks never complete under
-  any config, penalized identically (501) everywhere.
+- Deterministic sim → each config is one trajectory; deltas under ~2 mean
+  runs are noise-equivalent (butterfly effects).
+- The metric rewards early zone 1-15 completion, not long-run spark income;
+  low-prestige configs (stall-40, spendCap) may be worse for post-zone-15
+  progression. Divine Speed's real-time benefit is invisible in instant mode.

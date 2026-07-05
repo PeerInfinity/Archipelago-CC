@@ -116,6 +116,85 @@ const EXPERIMENTS = [
       "unlocker", "plain", "mandatory", "travel",
     ],
   },
+  // --- Divinity purchase-policy round (buy-*) ---------------------------
+  // 1000-run budget: buy strategy mostly shows in the tail (Mastery of
+  // Time 40k / See Beyond the Veil 100k and the three SBtV-gated tasks).
+  // Baseline profile otherwise; control = the sim's auto_buy_cheapest.
+  {
+    name: "buy-cheapest",
+    options: { maxRuns: 1000, purchasePolicy: { kind: "cheapest" } },
+  },
+  {
+    name: "buy-unlocks-first",
+    options: { maxRuns: 1000, purchasePolicy: { kind: "unlocksFirst" } },
+  },
+  {
+    name: "buy-reserve-05",
+    options: { maxRuns: 1000, purchasePolicy: { kind: "reserve", f: 0.5 } },
+  },
+  {
+    name: "buy-reserve-10",
+    options: { maxRuns: 1000, purchasePolicy: { kind: "reserve", f: 1.0 } },
+  },
+  {
+    name: "buy-spend-cap-05",
+    options: { maxRuns: 1000, purchasePolicy: { kind: "spendCap", g: 0.5 } },
+  },
+  {
+    name: "buy-spend-cap-10",
+    options: { maxRuns: 1000, purchasePolicy: { kind: "spendCap", g: 1.0 } },
+  },
+  {
+    name: "buy-level-cap-10",
+    options: { maxRuns: 1000, purchasePolicy: { kind: "levelCap", cap: 10 } },
+  },
+  {
+    // Authored ordering v1. Permanent Automation is deliberately LATE: the
+    // profile runs force_automation, which grants the Amulet anyway.
+    name: "buy-tiers-v1",
+    options: {
+      maxRuns: 1000,
+      purchasePolicy: {
+        kind: "tiers",
+        list: [
+          { unlock: "Divine Inspiration" },
+          { repeatable: "Divine Knowledge", count: 4 },
+          { repeatable: "Gotta Go Fast", count: 3 },
+          { unlock: "Look in the Mirror" },
+          { unlock: "Transcendant Memory" },
+          { repeatable: "Transcendant Aptitude", count: 3 },
+          { unlock: "Fully Attuned" },
+          { repeatable: "Divine Appetite", count: 2 },
+          { unlock: "Mastery of Time" },
+          { unlock: "See Beyond the Veil" },
+          { unlock: "Perky" },
+          { unlock: "Permanent Automation" },
+          { unlock: "Compulsive Notetaking" },
+          { unlock: "Crafting Breakthrough" },
+        ],
+      },
+    },
+  },
+
+  {
+    // Best run-scheduling profile (combo-all-winners) + best buy policy
+    // (spendCap g=1.0) together.
+    name: "combo-plus-spend-cap",
+    modOverrides: {
+      threshold_item_pct: 5,
+      threshold_perk_affordable_resets: 5,
+      threshold_perk_unaffordable_resets: 5,
+      threshold_progression_resets: 5,
+      threshold_unlocker_resets: 5,
+      auto_prestige_stall_resets: 40,
+    },
+    autoFillOrder: [
+      "perk", "item", "combat", "prestige",
+      "unlocker", "plain", "mandatory", "travel",
+    ],
+    options: { maxRuns: 1000, purchasePolicy: { kind: "spendCap", g: 1.0 } },
+  },
+
   {
     name: "combo-all-winners",
     modOverrides: {

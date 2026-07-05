@@ -6,6 +6,9 @@
     "endZone": 99,
     "skipBlocked": true,
     "autoFillOrder": null,
+    "purchasePolicy": {
+      "kind": "cheapest"
+    },
     "mods": {
       "auto_haste": true,
       "auto_lightning": true,
@@ -38,20 +41,23 @@
     }
   },
   "timing": {
-    "wallMs": 4901.355858,
+    "wallMs": 4739.235215000001,
     "ticks": 15005,
     "runsExecuted": 500,
-    "ticksPerSec": 3061
+    "ticksPerSec": 3166
   },
   "stalled": false,
+  "endOfContentRuns": 0,
   "allCompleted": false,
   "taskCount": 134,
   "completedCount": 65,
   "finalState": {
     "prestiges": 0,
     "highestZone": 7,
-    "divineSpark": 0
+    "divineSpark": 0,
+    "repeatableLevels": {}
   },
+  "purchases": [],
   "completions": [
     {
       "id": 10,
@@ -59,6 +65,7 @@
       "zone": 0,
       "zoneName": "The Village",
       "maxReps": 1,
+      "hidden": false,
       "run": 4,
       "prestiges": 0
     },
@@ -68,6 +75,7 @@
       "zone": 0,
       "zoneName": "The Village",
       "maxReps": 1,
+      "hidden": false,
       "run": 3,
       "prestiges": 0
     },
@@ -77,6 +85,7 @@
       "zone": 0,
       "zoneName": "The Village",
       "maxReps": 3,
+      "hidden": false,
       "run": 3,
       "prestiges": 0
     },
@@ -86,6 +95,7 @@
       "zone": 0,
       "zoneName": "The Village",
       "maxReps": 1,
+      "hidden": false,
       "run": 1,
       "prestiges": 0
     },
@@ -95,6 +105,7 @@
       "zone": 0,
       "zoneName": "The Village",
       "maxReps": 10,
+      "hidden": false,
       "run": 1,
       "prestiges": 0
     },
@@ -104,6 +115,7 @@
       "zone": 0,
       "zoneName": "The Village",
       "maxReps": 3,
+      "hidden": false,
       "run": 2,
       "prestiges": 0
     },
@@ -113,6 +125,7 @@
       "zone": 0,
       "zoneName": "The Village",
       "maxReps": 5,
+      "hidden": false,
       "run": 2,
       "prestiges": 0
     },
@@ -122,6 +135,7 @@
       "zone": 1,
       "zoneName": "The Village Watch",
       "maxReps": 1,
+      "hidden": false,
       "run": 15,
       "prestiges": 0
     },
@@ -131,6 +145,7 @@
       "zone": 1,
       "zoneName": "The Village Watch",
       "maxReps": 4,
+      "hidden": false,
       "run": 13,
       "prestiges": 0
     },
@@ -140,6 +155,7 @@
       "zone": 1,
       "zoneName": "The Village Watch",
       "maxReps": 2,
+      "hidden": false,
       "run": 15,
       "prestiges": 0
     },
@@ -149,6 +165,7 @@
       "zone": 1,
       "zoneName": "The Village Watch",
       "maxReps": 3,
+      "hidden": false,
       "run": 9,
       "prestiges": 0
     },
@@ -158,6 +175,7 @@
       "zone": 1,
       "zoneName": "The Village Watch",
       "maxReps": 4,
+      "hidden": false,
       "run": 8,
       "prestiges": 0
     },
@@ -167,6 +185,7 @@
       "zone": 1,
       "zoneName": "The Village Watch",
       "maxReps": 5,
+      "hidden": false,
       "run": 4,
       "prestiges": 0
     },
@@ -176,6 +195,7 @@
       "zone": 1,
       "zoneName": "The Village Watch",
       "maxReps": 6,
+      "hidden": false,
       "run": 7,
       "prestiges": 0
     },
@@ -185,6 +205,7 @@
       "zone": 1,
       "zoneName": "The Village Watch",
       "maxReps": 1,
+      "hidden": false,
       "run": 6,
       "prestiges": 0
     },
@@ -194,6 +215,7 @@
       "zone": 2,
       "zoneName": "The Raid",
       "maxReps": 1,
+      "hidden": false,
       "run": 27,
       "prestiges": 0
     },
@@ -203,6 +225,7 @@
       "zone": 2,
       "zoneName": "The Raid",
       "maxReps": 1,
+      "hidden": false,
       "run": 22,
       "prestiges": 0
     },
@@ -212,6 +235,7 @@
       "zone": 2,
       "zoneName": "The Raid",
       "maxReps": 3,
+      "hidden": false,
       "run": 23,
       "prestiges": 0
     },
@@ -221,6 +245,7 @@
       "zone": 2,
       "zoneName": "The Raid",
       "maxReps": 4,
+      "hidden": false,
       "run": 16,
       "prestiges": 0
     },
@@ -230,6 +255,7 @@
       "zone": 2,
       "zoneName": "The Raid",
       "maxReps": 3,
+      "hidden": false,
       "run": 16,
       "prestiges": 0
     },
@@ -239,6 +265,7 @@
       "zone": 2,
       "zoneName": "The Raid",
       "maxReps": 3,
+      "hidden": false,
       "run": 17,
       "prestiges": 0
     },
@@ -248,6 +275,7 @@
       "zone": 2,
       "zoneName": "The Raid",
       "maxReps": 1,
+      "hidden": false,
       "run": 99,
       "prestiges": 0
     },
@@ -257,6 +285,7 @@
       "zone": 2,
       "zoneName": "The Raid",
       "maxReps": 1,
+      "hidden": true,
       "run": 100,
       "prestiges": 0
     },
@@ -266,6 +295,7 @@
       "zone": 3,
       "zoneName": "The Wilderness",
       "maxReps": 1,
+      "hidden": false,
       "run": 44,
       "prestiges": 0
     },
@@ -275,6 +305,7 @@
       "zone": 3,
       "zoneName": "The Wilderness",
       "maxReps": 3,
+      "hidden": false,
       "run": 38,
       "prestiges": 0
     },
@@ -284,6 +315,7 @@
       "zone": 3,
       "zoneName": "The Wilderness",
       "maxReps": 1,
+      "hidden": false,
       "run": 39,
       "prestiges": 0
     },
@@ -293,6 +325,7 @@
       "zone": 3,
       "zoneName": "The Wilderness",
       "maxReps": 1,
+      "hidden": false,
       "run": 44,
       "prestiges": 0
     },
@@ -302,6 +335,7 @@
       "zone": 3,
       "zoneName": "The Wilderness",
       "maxReps": 1,
+      "hidden": false,
       "run": 36,
       "prestiges": 0
     },
@@ -311,6 +345,7 @@
       "zone": 3,
       "zoneName": "The Wilderness",
       "maxReps": 5,
+      "hidden": false,
       "run": 28,
       "prestiges": 0
     },
@@ -320,6 +355,7 @@
       "zone": 3,
       "zoneName": "The Wilderness",
       "maxReps": 1,
+      "hidden": false,
       "run": 34,
       "prestiges": 0
     },
@@ -329,6 +365,7 @@
       "zone": 3,
       "zoneName": "The Wilderness",
       "maxReps": 1,
+      "hidden": false,
       "run": 131,
       "prestiges": 0
     },
@@ -338,6 +375,7 @@
       "zone": 3,
       "zoneName": "The Wilderness",
       "maxReps": 3,
+      "hidden": true,
       "run": 133,
       "prestiges": 0
     },
@@ -347,6 +385,7 @@
       "zone": 4,
       "zoneName": "The Cave System",
       "maxReps": 1,
+      "hidden": false,
       "run": 59,
       "prestiges": 0
     },
@@ -356,6 +395,7 @@
       "zone": 4,
       "zoneName": "The Cave System",
       "maxReps": 1,
+      "hidden": false,
       "run": 58,
       "prestiges": 0
     },
@@ -365,6 +405,7 @@
       "zone": 4,
       "zoneName": "The Cave System",
       "maxReps": 3,
+      "hidden": false,
       "run": 59,
       "prestiges": 0
     },
@@ -374,6 +415,7 @@
       "zone": 4,
       "zoneName": "The Cave System",
       "maxReps": 5,
+      "hidden": false,
       "run": 45,
       "prestiges": 0
     },
@@ -383,6 +425,7 @@
       "zone": 4,
       "zoneName": "The Cave System",
       "maxReps": 6,
+      "hidden": false,
       "run": 56,
       "prestiges": 0
     },
@@ -392,6 +435,7 @@
       "zone": 4,
       "zoneName": "The Cave System",
       "maxReps": 1,
+      "hidden": false,
       "run": 57,
       "prestiges": 0
     },
@@ -401,6 +445,7 @@
       "zone": 4,
       "zoneName": "The Cave System",
       "maxReps": 3,
+      "hidden": false,
       "run": 57,
       "prestiges": 0
     },
@@ -410,6 +455,7 @@
       "zone": 4,
       "zoneName": "The Cave System",
       "maxReps": 1,
+      "hidden": false,
       "run": 163,
       "prestiges": 0
     },
@@ -419,6 +465,7 @@
       "zone": 4,
       "zoneName": "The Cave System",
       "maxReps": 1,
+      "hidden": true,
       "run": 172,
       "prestiges": 0
     },
@@ -428,6 +475,7 @@
       "zone": 5,
       "zoneName": "The Road to the City",
       "maxReps": 1,
+      "hidden": false,
       "run": 75,
       "prestiges": 0
     },
@@ -437,6 +485,7 @@
       "zone": 5,
       "zoneName": "The Road to the City",
       "maxReps": 1,
+      "hidden": false,
       "run": 73,
       "prestiges": 0
     },
@@ -446,6 +495,7 @@
       "zone": 5,
       "zoneName": "The Road to the City",
       "maxReps": 3,
+      "hidden": false,
       "run": 75,
       "prestiges": 0
     },
@@ -455,6 +505,7 @@
       "zone": 5,
       "zoneName": "The Road to the City",
       "maxReps": 4,
+      "hidden": false,
       "run": 62,
       "prestiges": 0
     },
@@ -464,6 +515,7 @@
       "zone": 5,
       "zoneName": "The Road to the City",
       "maxReps": 3,
+      "hidden": false,
       "run": 69,
       "prestiges": 0
     },
@@ -473,6 +525,7 @@
       "zone": 5,
       "zoneName": "The Road to the City",
       "maxReps": 4,
+      "hidden": false,
       "run": 69,
       "prestiges": 0
     },
@@ -482,6 +535,7 @@
       "zone": 5,
       "zoneName": "The Road to the City",
       "maxReps": 1,
+      "hidden": false,
       "run": 69,
       "prestiges": 0
     },
@@ -491,6 +545,7 @@
       "zone": 5,
       "zoneName": "The Road to the City",
       "maxReps": 1,
+      "hidden": false,
       "run": 191,
       "prestiges": 0
     },
@@ -500,6 +555,7 @@
       "zone": 5,
       "zoneName": "The Road to the City",
       "maxReps": 4,
+      "hidden": true,
       "run": 193,
       "prestiges": 0
     },
@@ -509,6 +565,7 @@
       "zone": 5,
       "zoneName": "The Road to the City",
       "maxReps": 1,
+      "hidden": false,
       "run": 67,
       "prestiges": 0
     },
@@ -518,6 +575,7 @@
       "zone": 6,
       "zoneName": "The City Outskirts",
       "maxReps": 1,
+      "hidden": false,
       "run": 231,
       "prestiges": 0
     },
@@ -527,6 +585,7 @@
       "zone": 6,
       "zoneName": "The City Outskirts",
       "maxReps": 1,
+      "hidden": false,
       "run": 225,
       "prestiges": 0
     },
@@ -536,6 +595,7 @@
       "zone": 6,
       "zoneName": "The City Outskirts",
       "maxReps": 1,
+      "hidden": false,
       "run": 231,
       "prestiges": 0
     },
@@ -545,6 +605,7 @@
       "zone": 6,
       "zoneName": "The City Outskirts",
       "maxReps": 5,
+      "hidden": false,
       "run": 79,
       "prestiges": 0
     },
@@ -554,6 +615,7 @@
       "zone": 6,
       "zoneName": "The City Outskirts",
       "maxReps": 1,
+      "hidden": false,
       "run": 83,
       "prestiges": 0
     },
@@ -563,6 +625,7 @@
       "zone": 6,
       "zoneName": "The City Outskirts",
       "maxReps": 4,
+      "hidden": false,
       "run": 93,
       "prestiges": 0
     },
@@ -572,6 +635,7 @@
       "zone": 6,
       "zoneName": "The City Outskirts",
       "maxReps": 1,
+      "hidden": false,
       "run": 87,
       "prestiges": 0
     },
@@ -581,6 +645,7 @@
       "zone": 6,
       "zoneName": "The City Outskirts",
       "maxReps": 1,
+      "hidden": false,
       "run": 85,
       "prestiges": 0
     },
@@ -590,6 +655,7 @@
       "zone": 7,
       "zoneName": "The City",
       "maxReps": 1,
+      "hidden": false,
       "run": 235,
       "prestiges": 0
     },
@@ -599,6 +665,7 @@
       "zone": 7,
       "zoneName": "The City",
       "maxReps": 6,
+      "hidden": false,
       "run": 237,
       "prestiges": 0
     },
@@ -608,6 +675,7 @@
       "zone": 7,
       "zoneName": "The City",
       "maxReps": 1,
+      "hidden": false,
       "run": 241,
       "prestiges": 0
     },
@@ -617,6 +685,7 @@
       "zone": 7,
       "zoneName": "The City",
       "maxReps": 3,
+      "hidden": false,
       "run": 241,
       "prestiges": 0
     },
@@ -626,6 +695,7 @@
       "zone": 7,
       "zoneName": "The City",
       "maxReps": 1,
+      "hidden": false,
       "run": 239,
       "prestiges": 0
     },
@@ -635,6 +705,7 @@
       "zone": 7,
       "zoneName": "The City",
       "maxReps": 1,
+      "hidden": true,
       "run": 239,
       "prestiges": 0
     }
@@ -645,483 +716,552 @@
       "name": "Use Secret Fishing Spot",
       "zone": 0,
       "zoneName": "The Village",
-      "maxReps": 8
+      "maxReps": 8,
+      "hidden": true
     },
     {
       "id": 28,
       "name": "Training Dummy",
       "zone": 1,
       "zoneName": "The Village Watch",
-      "maxReps": 10
+      "maxReps": 10,
+      "hidden": true
     },
     {
       "id": 80,
       "name": "Embark on a Quest",
       "zone": 7,
       "zoneName": "The City",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": false
     },
     {
       "id": 81,
       "name": "Investigate Rumors of a Magician",
       "zone": 7,
       "zoneName": "The City",
-      "maxReps": 4
+      "maxReps": 4,
+      "hidden": false
     },
     {
       "id": 82,
       "name": "Search the Archives for Magic",
       "zone": 7,
       "zoneName": "The City",
-      "maxReps": 5
+      "maxReps": 5,
+      "hidden": false
     },
     {
       "id": 88,
       "name": "Train at Every Guild",
       "zone": 7,
       "zoneName": "The City",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": true
     },
     {
       "id": 90,
       "name": "Scale the Mountain",
       "zone": 8,
       "zoneName": "The Forest",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": false
     },
     {
       "id": 91,
       "name": "Locate the Mountain",
       "zone": 8,
       "zoneName": "The Forest",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": false
     },
     {
       "id": 92,
       "name": "Make Climbing Gear",
       "zone": 8,
       "zoneName": "The Forest",
-      "maxReps": 3
+      "maxReps": 3,
+      "hidden": false
     },
     {
       "id": 93,
       "name": "Make Camping Equipment",
       "zone": 8,
       "zoneName": "The Forest",
-      "maxReps": 3
+      "maxReps": 3,
+      "hidden": false
     },
     {
       "id": 94,
       "name": "Prepare to Scale the Mountain",
       "zone": 8,
       "zoneName": "The Forest",
-      "maxReps": 3
+      "maxReps": 3,
+      "hidden": false
     },
     {
       "id": 95,
       "name": "Build a Hut",
       "zone": 8,
       "zoneName": "The Forest",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": false
     },
     {
       "id": 96,
       "name": "Go Sightseeing",
       "zone": 8,
       "zoneName": "The Forest",
-      "maxReps": 3
+      "maxReps": 3,
+      "hidden": false
     },
     {
       "id": 97,
       "name": "Meet a Magical Creature",
       "zone": 8,
       "zoneName": "The Forest",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": false
     },
     {
       "id": 98,
       "name": "Werewolf",
       "zone": 8,
       "zoneName": "The Forest",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": false
     },
     {
       "id": 99,
       "name": "Gather Shed Fur from Lair",
       "zone": 8,
       "zoneName": "The Forest",
-      "maxReps": 3
+      "maxReps": 3,
+      "hidden": true
     },
     {
       "id": 100,
       "name": "Hunt for the First Reagent",
       "zone": 9,
       "zoneName": "The Magician",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": false
     },
     {
       "id": 101,
       "name": "Convince the Magician",
       "zone": 9,
       "zoneName": "The Magician",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": false
     },
     {
       "id": 102,
       "name": "Do a Favor",
       "zone": 9,
       "zoneName": "The Magician",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": false
     },
     {
       "id": 103,
       "name": "Steal Some Reagents",
       "zone": 9,
       "zoneName": "The Magician",
-      "maxReps": 4
+      "maxReps": 4,
+      "hidden": false
     },
     {
       "id": 104,
       "name": "Figure Out How to Attune",
       "zone": 9,
       "zoneName": "The Magician",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": false
     },
     {
       "id": 105,
       "name": "Give Yourself a Pep Talk",
       "zone": 9,
       "zoneName": "The Magician",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": false
     },
     {
       "id": 106,
       "name": "Try to Transform Into an Eagle",
       "zone": 9,
       "zoneName": "The Magician",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": false
     },
     {
       "id": 107,
       "name": "Low-oxygen Exercise",
       "zone": 9,
       "zoneName": "The Magician",
-      "maxReps": 5
+      "maxReps": 5,
+      "hidden": false
     },
     {
       "id": 110,
       "name": "Land on Island",
       "zone": 10,
       "zoneName": "The Ocean",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": false
     },
     {
       "id": 111,
       "name": "Weather a Storm",
       "zone": 10,
       "zoneName": "The Ocean",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": false
     },
     {
       "id": 112,
       "name": "Find the Island",
       "zone": 10,
       "zoneName": "The Ocean",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": false
     },
     {
       "id": 113,
       "name": "Catch Fish",
       "zone": 10,
       "zoneName": "The Ocean",
-      "maxReps": 5
+      "maxReps": 5,
+      "hidden": false
     },
     {
       "id": 114,
       "name": "Dive as a Squid",
       "zone": 10,
       "zoneName": "The Ocean",
-      "maxReps": 3
+      "maxReps": 3,
+      "hidden": false
     },
     {
       "id": 115,
       "name": "Look for Land",
       "zone": 10,
       "zoneName": "The Ocean",
-      "maxReps": 3
+      "maxReps": 3,
+      "hidden": false
     },
     {
       "id": 116,
       "name": "Practice Transforming",
       "zone": 10,
       "zoneName": "The Ocean",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": false
     },
     {
       "id": 117,
       "name": "Kraken",
       "zone": 10,
       "zoneName": "The Ocean",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": false
     },
     {
       "id": 118,
       "name": "Explore Kraken's Lair",
       "zone": 10,
       "zoneName": "The Ocean",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": true
     },
     {
       "id": 120,
       "name": "Hunt for the Second Reagent",
       "zone": 11,
       "zoneName": "The Island",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": false
     },
     {
       "id": 121,
       "name": "Gather Reagent",
       "zone": 11,
       "zoneName": "The Island",
-      "maxReps": 3
+      "maxReps": 3,
+      "hidden": false
     },
     {
       "id": 122,
       "name": "Repair Ship",
       "zone": 11,
       "zoneName": "The Island",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": false
     },
     {
       "id": 123,
       "name": "Catch More Fish",
       "zone": 11,
       "zoneName": "The Island",
-      "maxReps": 4
+      "maxReps": 4,
+      "hidden": false
     },
     {
       "id": 124,
       "name": "Explore the Jungle",
       "zone": 11,
       "zoneName": "The Island",
-      "maxReps": 6
+      "maxReps": 6,
+      "hidden": false
     },
     {
       "id": 125,
       "name": "Build Another Hut",
       "zone": 11,
       "zoneName": "The Island",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": false
     },
     {
       "id": 126,
       "name": "Talk to the Local Wildlife",
       "zone": 11,
       "zoneName": "The Island",
-      "maxReps": 3
+      "maxReps": 3,
+      "hidden": false
     },
     {
       "id": 127,
       "name": "Horde of Lizardfolk",
       "zone": 11,
       "zoneName": "The Island",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": false
     },
     {
       "id": 128,
       "name": "Steal Their Oracle Bones",
       "zone": 11,
       "zoneName": "The Island",
-      "maxReps": 4
+      "maxReps": 4,
+      "hidden": true
     },
     {
       "id": 130,
       "name": "Enter the Oasis",
       "zone": 12,
       "zoneName": "The Desert",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": false
     },
     {
       "id": 131,
       "name": "Overcome Mirage",
       "zone": 12,
       "zoneName": "The Desert",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": false
     },
     {
       "id": 132,
       "name": "Find the Oasis",
       "zone": 12,
       "zoneName": "The Desert",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": false
     },
     {
       "id": 133,
       "name": "Harvest Cactus",
       "zone": 12,
       "zoneName": "The Desert",
-      "maxReps": 3
+      "maxReps": 3,
+      "hidden": false
     },
     {
       "id": 134,
       "name": "Avoid Notice by the Sandworm",
       "zone": 12,
       "zoneName": "The Desert",
-      "maxReps": 4
+      "maxReps": 4,
+      "hidden": false
     },
     {
       "id": 135,
       "name": "Work on Your Tan",
       "zone": 12,
       "zoneName": "The Desert",
-      "maxReps": 3
+      "maxReps": 3,
+      "hidden": false
     },
     {
       "id": 136,
       "name": "Comb the Desert",
       "zone": 12,
       "zoneName": "The Desert",
-      "maxReps": 3
+      "maxReps": 3,
+      "hidden": false
     },
     {
       "id": 137,
       "name": "Giant Sandworm",
       "zone": 12,
       "zoneName": "The Desert",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": false
     },
     {
       "id": 138,
       "name": "Learn to Dance the Worm",
       "zone": 12,
       "zoneName": "The Desert",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": true
     },
     {
       "id": 140,
       "name": "Return to the Magician",
       "zone": 13,
       "zoneName": "The Oasis",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": false
     },
     {
       "id": 141,
       "name": "Banish Evil Spirit",
       "zone": 13,
       "zoneName": "The Oasis",
-      "maxReps": 3
+      "maxReps": 3,
+      "hidden": false
     },
     {
       "id": 142,
       "name": "Gather Second Reagent",
       "zone": 13,
       "zoneName": "The Oasis",
-      "maxReps": 5
+      "maxReps": 5,
+      "hidden": false
     },
     {
       "id": 143,
       "name": "Bottle Oasis Water",
       "zone": 13,
       "zoneName": "The Oasis",
-      "maxReps": 4
+      "maxReps": 4,
+      "hidden": false
     },
     {
       "id": 144,
       "name": "Reflect on the Journey",
       "zone": 13,
       "zoneName": "The Oasis",
-      "maxReps": 4
+      "maxReps": 4,
+      "hidden": false
     },
     {
       "id": 145,
       "name": "Prepare for the Journey Ahead",
       "zone": 13,
       "zoneName": "The Oasis",
-      "maxReps": 3
+      "maxReps": 3,
+      "hidden": false
     },
     {
       "id": 146,
       "name": "Talk to the Djinn",
       "zone": 13,
       "zoneName": "The Oasis",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": false
     },
     {
       "id": 147,
       "name": "Sleepy Djinn",
       "zone": 13,
       "zoneName": "The Oasis",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": false
     },
     {
       "id": 148,
       "name": "Find More Lamps",
       "zone": 13,
       "zoneName": "The Oasis",
-      "maxReps": 3
+      "maxReps": 3,
+      "hidden": true
     },
     {
       "id": 150,
       "name": "Begin Search for the Next Ritual",
       "zone": 14,
       "zoneName": "The Ritual",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": false
     },
     {
       "id": 151,
       "name": "Apologize for Stealing Reagents",
       "zone": 14,
       "zoneName": "The Ritual",
-      "maxReps": 3
+      "maxReps": 3,
+      "hidden": false
     },
     {
       "id": 152,
       "name": "Rest for a While",
       "zone": 14,
       "zoneName": "The Ritual",
-      "maxReps": 5
+      "maxReps": 5,
+      "hidden": false
     },
     {
       "id": 153,
       "name": "Touch the Divine",
       "zone": 14,
       "zoneName": "The Ritual",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": false
     },
     {
       "id": 154,
       "name": "Infuse Mystic Incense",
       "zone": 14,
       "zoneName": "The Ritual",
-      "maxReps": 9
+      "maxReps": 9,
+      "hidden": false
     },
     {
       "id": 155,
       "name": "Practice Memorization",
       "zone": 14,
       "zoneName": "The Ritual",
-      "maxReps": 4
+      "maxReps": 4,
+      "hidden": false
     },
     {
       "id": 156,
       "name": "Guided Spellcasting",
       "zone": 14,
       "zoneName": "The Ritual",
-      "maxReps": 3
+      "maxReps": 3,
+      "hidden": false
     },
     {
       "id": 157,
       "name": "Go for a Walk",
       "zone": 14,
       "zoneName": "The Ritual",
-      "maxReps": 1
+      "maxReps": 1,
+      "hidden": false
     },
     {
       "id": 158,
       "name": "Write Down Some Learnings",
       "zone": 14,
       "zoneName": "The Ritual",
-      "maxReps": 5
+      "maxReps": 5,
+      "hidden": true
     }
   ],
   "runEnds": [
@@ -4629,7 +4769,7 @@
   "meta": {
     "env": "node",
     "configName": "thresholds-off",
-    "totalMsIncludingBridge": 6996,
-    "generatedAt": "2026-07-05T19:20:01.728Z"
+    "totalMsIncludingBridge": 6982,
+    "generatedAt": "2026-07-05T21:09:03.650Z"
   }
 }

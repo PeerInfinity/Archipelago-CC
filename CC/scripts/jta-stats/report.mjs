@@ -33,6 +33,10 @@ function summarize(r) {
   const sorted = [...runs].sort((a, b) => a - b);
   const median = sorted[Math.floor(sorted.length / 2)];
   const lastRun = completions.reduce((m, c) => Math.max(m, c.run), 0);
+  const purchaseRun = (name) => {
+    const p = (r.data.purchases ?? []).find((p) => p.name === name);
+    return p ? p.run : "—";
+  };
   return {
     completed: `${r.data.completedCount}/${r.data.taskCount}`,
     meanRun: mean.toFixed(1),
@@ -40,10 +44,14 @@ function summarize(r) {
     lastFirstCompletion: r.data.allCompleted ? lastRun : `>${options.maxRuns}`,
     prestiges: finalState.prestiges,
     highestZone: finalState.highestZone + 1,
+    motRun: purchaseRun("Mastery of Time"),
+    sbtvRun: purchaseRun("See Beyond the Veil"),
     ticks: timing.ticks,
     wallMs: Math.round(timing.wallMs),
   };
 }
+
+const anyPurchases = () => results.some((r) => (r.data.purchases ?? []).length);
 
 const lines = [];
 
@@ -54,14 +62,15 @@ if (results.length > 1) {
     `Baseline: **${results[0].name}**. "Run" = cumulative run (energy reset or prestige) at which a task first hit reps == max_reps. Zone window: zones 1-${results[0].data.options.zoneLimit}, budget ${results[0].data.options.maxRuns} runs.`
   );
   lines.push("");
+  const buyCols = anyPurchases();
   lines.push(
-    `| config | completed | mean run | median run | last first-completion | prestiges | highest zone | ticks | wall ms |`
+    `| config | completed | mean run | median run | last first-completion | prestiges | highest zone |${buyCols ? " MoT@ | SBtV@ |" : ""} ticks | wall ms |`
   );
-  lines.push(`|---|---|---|---|---|---|---|---|---|`);
+  lines.push(`|---|---|---|---|---|---|---|${buyCols ? "---|---|" : ""}---|---|`);
   for (const r of results) {
     const s = summarize(r);
     lines.push(
-      `| ${r.name} | ${s.completed} | ${s.meanRun} | ${s.medianRun} | ${s.lastFirstCompletion} | ${s.prestiges} | ${s.highestZone} | ${s.ticks} | ${s.wallMs} |`
+      `| ${r.name} | ${s.completed} | ${s.meanRun} | ${s.medianRun} | ${s.lastFirstCompletion} | ${s.prestiges} | ${s.highestZone} |${buyCols ? ` ${s.motRun} | ${s.sbtvRun} |` : ""} ${s.ticks} | ${s.wallMs} |`
     );
   }
   lines.push("");

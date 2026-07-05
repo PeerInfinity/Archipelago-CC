@@ -1,0 +1,10 @@
+{
+  "name": "buy-cheapest",
+  "options": {
+    "modOverrides": {},
+    "maxRuns": 1000,
+    "purchasePolicy": {
+      "kind": "cheapest"
+    }
+  }
+}
