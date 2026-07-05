@@ -72,14 +72,16 @@ Takeaways:
   original baseline, with **zero prestiges**: discovery spark alone funds
   everything (stall-40 never fires within 270 runs).
 
-## Suggested in-game mod shape (not yet implemented)
+## In-game mod: Unlock Savings (IMPLEMENTED, Fork 1.5, submodule `3573865`)
 
-Extend auto_buy_cheapest with one numeric knob (e.g.
-`auto_buy_unlock_budget`, default 1.0): track repeatable spending since the
-last unlock purchase; skip repeatables whose cost would push that spending
-past budget × (cheapest unowned unlock's cost) while any reachable unlock
-remains. 0 = hard save (bad), large = today's pure greedy. The explicit
-purchase queue stays the manual override, exactly as now.
+`auto_buy_budget_enabled` + `auto_buy_budget_pct` (default off / 100%),
+Divinity popup next to Auto-Buy Cheapest. Unlockables are bought the moment
+they're affordable (cheapest first); the cheapest repeatable is bought only
+while repeatable spending since the last unlockable purchase (persisted
+counter, shared with manual/queued purchases) stays within pct% of the
+cheapest unowned unlockable's cost. The `mod-unlock-savings` experiment
+reproduces the driver-side spendCap g=1.0 results byte-identically; with
+the toggle off, pure-cheapest behavior is byte-identical too.
 
 ## Round 3 — long-run spark income (income-comparison.md)
 

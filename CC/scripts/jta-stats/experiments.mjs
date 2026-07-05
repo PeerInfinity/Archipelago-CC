@@ -176,6 +176,14 @@ const EXPERIMENTS = [
     },
   },
 
+  // The REAL in-game mod (Fork 1.5 Unlock Savings) — should reproduce the
+  // driver-side spendCap g=1.0 policy (buy-spend-cap-10).
+  {
+    name: "mod-unlock-savings",
+    modOverrides: { auto_buy_budget_enabled: true },
+    options: { maxRuns: 1000 },
+  },
+
   // --- Spark-income round (income-*) ------------------------------------
   // Question: do the completion-metric winners (stall-40, spendCap — both
   // low-prestige) sacrifice long-run spark income? runToBudget plays all
