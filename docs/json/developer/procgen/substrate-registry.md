@@ -32,7 +32,7 @@ All fields below are observed in the registered entries; every group after Ident
 |-------|------|---------|
 | `panelComponentType` | string | Golden Layout component type of the panel that renders this substrate's regions. |
 | `loadRegionEvent` | string | eventBus event the panel subscribes to; procgenPlayer publishes it with the deserialized world when the player enters one of this substrate's regions. |
-| `iframeId` | string | Flash-family entries only: the iframeAdapter id of the panel's iframe. procgenPlayer re-publishes the active region's load event when this iframe announces `appReady`, closing the race where the initial load fires before the iframe's bridge has subscribed (and covering reloads). |
+| `iframeId` | string | Iframe-hosted entries (flash family, jta): the iframeAdapter id of the panel's iframe. procgenPlayer re-publishes the active region's load event when this iframe announces `appReady`, closing the race where the initial load fires before the iframe's bridge has subscribed (and covering reloads). |
 | `supportedFeatures` | string[] | Shared-library feature ids the substrate can realise (e.g. `logic_gate`, `nesw_exits`, `arbitrary_ap_locations`, `region_topology_from_source`). Drivers use this to decide what a substrate's regions may contain. |
 | `deserializeWorld` | `(playable_payload) → world` | Called by procgenPlayer per region when building the warehouse. **Shape requirement:** the returned world's `exits` must be a `Map` keyed by exit name — `procgenPlayer.handleRegionMove` calls `world.exits.has(exitName)`; an array breaks region transitions. |
 | `serializeWorld` | `(world, …) → sidecar payload` | Inverse of `deserializeWorld`, used when emitting `preset_sidecars` (and, for procedural substrates, at the end of region generation). Converts runtime shapes (the exits `Map`) back to plain JSON. |
@@ -76,7 +76,7 @@ For substrates whose content is a fixed, ordered set of pre-authored zones rathe
 | `zoneCount` | How many discrete zones exist. Layout drivers (currently `arrangeShuffledSpiral`) refuse to allocate more regions than this to the substrate. |
 | `synthesizeZonePayload(zoneIdx)` | Returns the `playable_payload` fragment for the Nth zone; the driver merges it with the layout's own fields before stamping the sidecar. (jta: `{ jtaZone: zoneIdx }`.) |
 | `extractZoneRules` | Bounce's richer alternative: produces the zone's locations, exit rules/paths, obstacle defs, and payload in one call, so no separate `synthesizeZonePayload` is needed. |
-| `victoryItem` | Name of the item the substrate's zone table places as the goal. Emission paths use it as the completion-condition item when the scenario pool contributes no `is_victory` item — without it the AP world would have no goal and be "beaten" at sphere 0. Bounce declares one. |
+| `victoryItem` | Name of the item the substrate's zone table places as the goal. Emission paths use it as the completion-condition item when the scenario pool contributes no `is_victory` item — without it the AP world would have no goal and be "beaten" at sphere 0. Bounce, runner, and jta declare one (`'Victory'`). |
 
 ### Build-time — driver-facing adapter hooks (bounce)
 
@@ -98,7 +98,7 @@ The sphere-growth driver and the Procgen Pipeline panel read a further set of op
 | Manual loop play | yes | yes | yes | yes | yes | yes |
 | Custom queues | **yes** | no | no | no | no | no |
 | Procedural build hooks | yes (+ hazards via `applyContentModules`) | no | no | yes (shared tile-grid primitives) | no | no |
-| Zone-based | no | yes (`zoneCount` from zone table, `extractZoneRules`, `victoryItem`) | yes (lazy zone table, `extractZoneRules`, `victoryItem`) | no | no | yes (`zoneCount: 16`, `synthesizeZonePayload`) |
+| Zone-based | no | yes (`zoneCount` from zone table, `extractZoneRules`, `victoryItem`) | yes (lazy zone table, `extractZoneRules`, `victoryItem`) | no | no | yes (`zoneCount: 30`, `synthesizeZonePayload`, `victoryItem`) |
 | Sphere-growth adapter hooks | no | **yes** | **yes** | no | no | no |
 
 Entry sources: `mazeRoomLibrary.js`, `bounceDemoLibrary.js`, `runnerDemoLibrary.js`, `textAdventureSubstrateWrapperLibrary.js`, `flashSubstrateLibrary.js`, `jtaSubstrateWrapperLibrary.js`.
