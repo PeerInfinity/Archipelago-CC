@@ -108,6 +108,7 @@ check('Custom + shipped presets listed',
     optionLabels[0] === 'Custom'
         && optionLabels.includes('Runner demo (sphere growth)')
         && optionLabels.includes('Runner demo (zone tables)')
+        && optionLabels.includes('JtA demo (zone tables)')
         && optionLabels.includes('Bounce demo (sphere growth)'),
     JSON.stringify(optionLabels));
 check('boots on Custom (dirty pre-seeded state, no preset)',
@@ -184,6 +185,28 @@ const zoneStats = await waitFor('spiral completion stats', async () => {
     return t.includes('stop: spiral_complete') ? 'stop: spiral_complete' : null;
 }, 240000);
 check('zone-demo generation completes (6-zone spiral)', true, zoneStats);
+
+// ── 4c. The JtA demo: apply + Generate (15-zone shuffled spiral) ────
+await select.selectOption('shipped:jta-zone-demo');
+await page.waitForTimeout(300);
+const jtaBundle = await readBundle();
+check('bundle: jta demo quota jta=15, start jta, empty pool',
+    jtaBundle.substrateQuotas.jta === 15
+        && jtaBundle.params.startSubstrate === 'jta'
+        && Object.keys(jtaBundle.scenario.items).length === 0);
+// jta zones are a fixed table (no solver) — generation is fast.
+await panel.locator('button:has-text("Generate")').first()
+    .click({ timeout: 60000 });
+const jtaStats = await waitFor('jta spiral completion stats', async () => {
+    const msgEl = panel.locator('.procgen-pipeline-message');
+    if (await msgEl.count() > 0) {
+        const m = await msgEl.textContent();
+        if (m.startsWith('ERROR')) throw new Error(`jta spiral generation failed: ${m}`);
+    }
+    const t = await panel.textContent();
+    return t.includes('stop: spiral_complete') ? 'stop: spiral_complete' : null;
+}, 60000);
+check('jta-demo generation completes (15-zone spiral)', true, jtaStats);
 
 // re-apply the sphere demo so the edit-flip section below starts from
 // a selected preset with the seed field it expects

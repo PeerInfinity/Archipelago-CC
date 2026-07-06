@@ -173,6 +173,31 @@ export const SHIPPED_PRESETS = Object.freeze([
         },
     },
     {
+        id: 'shipped:jta-zone-demo',
+        label: 'JtA demo (zone tables)',
+        description: 'JtA-only 15-zone shuffled-spiral world — one AP '
+            + 'region per Journey to Ascension zone (The Village onward), '
+            + 'played in the JtA substrate panel with the shared loop-mode '
+            + 'energy pool. Zone completion travels between regions; the '
+            + 'playback bot / loops queue can drive it.',
+        state: {
+            mode: 'shuffledSpiral',
+            params: {
+                seed: 1,
+                regionWidth: 8,
+                regionHeight: 6,
+                startSubstrate: 'jta',
+            },
+            scenario: {
+                items: {},
+                obstacles: {},
+            },
+            substrateQuotas: { jta: 15 },
+            substrateMix: {},
+            substrateMode: 'quotas',
+        },
+    },
+    {
         id: 'shipped:bounce-sphere-demo',
         label: 'Bounce demo (sphere growth)',
         description: 'Bounce-only 3-sphere world — the '
