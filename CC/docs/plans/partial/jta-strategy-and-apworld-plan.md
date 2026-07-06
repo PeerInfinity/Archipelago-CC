@@ -1,5 +1,19 @@
 # JTA Strategy System & APWorld Plan
 
+> **Status (2026-07-05): PARTIAL — moved to `partial/` by the JtA
+> substrate-integration review.** Shipped (March 2026): Phase 1 (APWorld
+> skeleton, `worlds/jta/`), Phase 1b (game-data JSON pipeline + frontend
+> loader), Phase 2 steps 1–2 (cost adjuster `jtaCostGenerator.js` +
+> `scripts/jta/cost-adjust.js` CLI; frontend button unverified). Partial:
+> Phase 3 strategy factors (baseline/itemCollection/pushCollect exist in
+> `jtaQueueBuilder.js`; grindPushCollect and artifactUsage never implemented),
+> Phase 4 frontend integration (`jtaArchipelago` does perk↔check/item↔grant
+> against the old `jta-remote` stack). This plan's host-side strategy/queue
+> track is superseded by the submodule's Fork 1.4/1.5 in-game automation; its
+> APWorld + cost-adjustment pipeline remains the only perk-randomization story
+> and feeds Phases 5–6 of `../jta-substrate-integration-plan.md` (stack
+> consolidation, AP checks inside substrate zones).
+
 ## Overview
 
 This plan covers two interconnected systems:

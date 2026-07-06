@@ -1,5 +1,15 @@
 # JTA Action Queue UI — Full Feature Plan
 
+> **Status (2026-07-05): CLOSED — archived by the JtA substrate-integration
+> review.** 9 of 11 phases shipped in March 2026. The two remaining phases are
+> dropped, not pending: Phase 4 (separable Golden Layout panels) and Phase 11
+> (iframe record-mode hooks) targeted the host-side queue stack
+> (`jtaActionQueue`/`jtaQueueEngine` driving the `jta-remote/game-bundle` copy),
+> whose automation role is superseded by the in-game Fork 1.4/1.5 automation in
+> the `journey-to-ascension` submodule (see
+> `completed/jta-automation-v2-plan.md`). The fate of the whole host-side stack
+> is Phase 5 of `../jta-substrate-integration-plan.md`.
+
 ## Context
 
 The JTA Action Queue has a working backend (shared ActionQueue, executor, action catalog, drain strategy, loadout persistence) and a basic UI (action buttons with zone dropdown, flat queue list with remove buttons, start/stop/reset/clear controls, settings panel). This plan upgrades the UI to match the full Idle Loops action queue feature set, adapted for JTA's mechanics.
