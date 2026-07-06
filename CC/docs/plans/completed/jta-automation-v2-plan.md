@@ -426,8 +426,9 @@ All six phases shipped: 1–5 as Fork 1.4 (2026-07-03/04), 6 across Fork 1.4
   sweep tuning `64bd3c1` (item /rep → 5%, the four /rst-3 categories → /rst 5,
   stall → 40; toggles all still off). The sweep also found the default
   **auto-fill order** (item-first) is ~2 runs worse than perk-first at the
-  margin — left as-is pending a user ruling, since item-first was itself a
-  ruling.
+  margin. **User ruling 2026-07-05: keep the current defaults** — item-first
+  order and `threshold_all_skipped` = Idle stay as they are; settled, don't
+  re-raise.
 - Should Auto Dreamcatcher ignore the `auto_use_items` gate? Duplicated items on a
   banking cycle are still banked (half-kept via UnderstandingTheReset), so firing on
   banking cycles is arguably fine. v1 keeps the gate for consistency with
