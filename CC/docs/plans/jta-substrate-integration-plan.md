@@ -21,9 +21,16 @@ and the submodule's own `docs/substrate-integration.md`.
 > substrate-mode tests green, regression suite unaffected; note the loop-reset
 > teleport target is `getResolvedStartRegion()`, which in procgen-aware modes
 > resolves the first substrate region, not Menu).
-> **Still open:** Phase 4 playback controller + `executeVia` (plus the reduced
-> Phase 2 bridge commands it needs: `setInstantMode`/`stepTick`/task
-> targeting), §4 harness measurements (threshold rescale under pooled
+> **Phase 4 SHIPPED too** (`973417997`, pushed): PlaybackController (shared
+> PlaybackProxy on `jta:playbackControl`, setter-injected into the library) +
+> `loopSupport.executeVia: 'playbackBot'`; bridge command handler
+> (play/stop/step/instant/reset) and a walkTo driver that performs the zone's
+> Travel task (else next enabled Mandatory) via `performTask` — guarded by the
+> new `getFullState().activeTaskId` (submodule `1c105a8`) — then takes the
+> requested exit on Travel completion. This subsumed the reduced Phase 2
+> command set. Fifth in-app test `jta-bot-walkto-exit` covers the executeVia
+> path end-to-end; 16/16 substrate tests + regression green.
+> **Still open:** §4 harness measurements (threshold rescale under pooled
 > max_energy), Phase 5 doc relocation (old stack kept per ruling), Phase 6.
 > Nothing in this doc re-opens settled automation decisions (defaults,
 > auto-fill order, `threshold_all_skipped`, Use Free Items kept≡0).
