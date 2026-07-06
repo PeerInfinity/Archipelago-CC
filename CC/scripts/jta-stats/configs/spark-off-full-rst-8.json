@@ -1,0 +1,13 @@
+{
+  "name": "spark-off-full-rst-8",
+  "options": {
+    "modOverrides": {
+      "threshold_perk_affordable_resets": 8,
+      "threshold_perk_unaffordable_resets": 8,
+      "threshold_progression_resets": 8,
+      "threshold_unlocker_resets": 8
+    },
+    "zoneLimit": 30,
+    "maxRuns": 5000
+  }
+}

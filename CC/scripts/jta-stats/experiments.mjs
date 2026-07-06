@@ -466,6 +466,46 @@ const EXPERIMENTS = [
     options: { ...FULL },
   },
 
+  // Full-game round E — winners combined. Round B: stall optimum drops to
+  // 10-20 under spark-off (40 too passive, 5 spam; wealth trigger
+  // degenerates to prestige-every-run while auto-buy keeps held spark near
+  // zero, so stall stays the right trigger TYPE). Round C: Unlock Savings
+  // (= spendCap g=1.0) cuts completion 29%. The spark-on variant checks the
+  // candidate default doesn't regress spark-on players.
+  {
+    name: "spark-off-full-stall10-savings",
+    modOverrides: {
+      auto_prestige_stall_resets: 10,
+      auto_buy_budget_enabled: true,
+    },
+    options: { ...FULL },
+  },
+  {
+    name: "spark-off-full-stall15-savings",
+    modOverrides: {
+      auto_prestige_stall_resets: 15,
+      auto_buy_budget_enabled: true,
+    },
+    options: { ...FULL },
+  },
+  {
+    name: "spark-off-full-stall20-savings",
+    modOverrides: {
+      auto_prestige_stall_resets: 20,
+      auto_buy_budget_enabled: true,
+    },
+    options: { ...FULL },
+  },
+  {
+    name: "spark-off-full-stall15-savings-spark-on",
+    modOverrides: {
+      auto_prestige_stall_resets: 15,
+      auto_buy_budget_enabled: true,
+      award_spark_on_discovery: true,
+    },
+    options: { ...FULL },
+  },
+
   // Zones 1-15 secondary round (130-task universe) — continuity with the
   // historical z15 rounds and the zone-randomization arc's anchor. Winners
   // from the full-game rounds get added here once known.
@@ -473,6 +513,34 @@ const EXPERIMENTS = [
   {
     name: "spark-off-z15-spark-on",
     modOverrides: { award_spark_on_discovery: true },
+    options: { ...Z15 },
+  },
+  {
+    name: "spark-off-z15-stall-10",
+    modOverrides: { auto_prestige_stall_resets: 10 },
+    options: { ...Z15 },
+  },
+  {
+    name: "spark-off-z15-stall-15",
+    modOverrides: { auto_prestige_stall_resets: 15 },
+    options: { ...Z15 },
+  },
+  {
+    name: "spark-off-z15-stall-20",
+    modOverrides: { auto_prestige_stall_resets: 20 },
+    options: { ...Z15 },
+  },
+  {
+    name: "spark-off-z15-savings",
+    modOverrides: { auto_buy_budget_enabled: true },
+    options: { ...Z15 },
+  },
+  {
+    name: "spark-off-z15-stall15-savings",
+    modOverrides: {
+      auto_prestige_stall_resets: 15,
+      auto_buy_budget_enabled: true,
+    },
     options: { ...Z15 },
   },
 ];

@@ -1,0 +1,16 @@
+{
+  "name": "spark-off-z15-spark-on",
+  "options": {
+    "modOverrides": {
+      "award_spark_on_discovery": true
+    },
+    "zoneLimit": 15,
+    "maxRuns": 500,
+    "excludeTaskIds": [
+      17,
+      28,
+      88,
+      158
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "spark-off-full-item-2",
+  "options": {
+    "modOverrides": {
+      "threshold_item_pct": 2
+    },
+    "zoneLimit": 30,
+    "maxRuns": 5000
+  }
+}
