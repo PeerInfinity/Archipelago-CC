@@ -119,10 +119,19 @@ let _pendingWalkExit = null;
 let _walkPrevAutomationMode = null;  // mode to restore when the walk ends (null = we didn't change it)
 let _playbackAutomationPolicy = 'activate';   // 'activate' | 'respect' (host setting)
 
-// Synthetic-task id allocation. The fork's injectSyntheticTask
-// expects unique ids ≥ 10000.
-let _nextSyntheticId = SYNTHETIC_TASK_ID_BASE;
-function _allocSyntheticId() { return _nextSyntheticId++; }
+// Synthetic-task id allocation. The fork's injectSyntheticTask expects
+// unique ids ≥ 10000 — and they must be STABLE across re-entries and
+// reloads: the game's per-zone automation priorities are lists of task
+// ids (persisted in the substrate save), so a player who prioritizes
+// an exit-choice task must find the same id there next loop. Derive
+// the id from (zone, exit index in the region's sidecar exit order):
+// both are fixed for a given world. Zones < 100 exits apiece; current
+// drivers map each zone to at most one region, so zone-scoping is
+// collision-free.
+function _syntheticExitTaskId(exitIndex) {
+    const zone = typeof _world?.jtaZone === 'number' ? _world.jtaZone : 0;
+    return SYNTHETIC_TASK_ID_BASE + zone * 100 + exitIndex;
+}
 
 // ────────────────────────────────────────────────────────────────
 // Polling — mirror JtA energy drain into the shared pool
@@ -283,11 +292,10 @@ function _injectExitTasks(exits) {
         log('warn', 'injectSyntheticTask hook missing; exit tasks not injected');
         return;
     }
-    for (const exit of exits) {
-        const taskId = _allocSyntheticId();
+    exits.forEach((exit, index) => {
         _w.injectSyntheticTask(
             {
-                id: taskId,
+                id: _syntheticExitTaskId(index),
                 name: _exitLabel(exit),
                 costMultiplier: 0,
                 free: true,
@@ -297,7 +305,7 @@ function _injectExitTasks(exits) {
                 _dispatchRegionMove(exit.targetRegion ?? null, exit.exitName);
             },
         );
-    }
+    });
 }
 
 function _handleLoadRegion(payload) {

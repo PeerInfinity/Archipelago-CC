@@ -322,6 +322,47 @@ async function botWalkToExit(testController) {
     }
     testController.assertEqual('bot walked to the target region', true, arrived);
     testController.log(`arrived after ${lastResets} loop reset(s)`);
+    if (!arrived) return testController.getOverallResult();
+
+    // Regression (user-reported): synthetic exit-task ids must be
+    // STABLE across re-entries — the game's per-zone automation
+    // priorities reference task ids, so a player who prioritizes
+    // "Go East" must find the same id live next visit.
+    const reEnter = async (label) => {
+        moveToRegion(JTA_TEST_REGION, readCurrentRegion());
+        return eventually(
+            testController,
+            () => readCurrentRegion() === JTA_TEST_REGION
+                && getJtaIframe()?.contentWindow?.isGameLoopPaused?.() === false,
+            label,
+            10000,
+        );
+    };
+    await reEnter('re-entered completed region');
+    const win2 = getJtaIframe()?.contentWindow;
+    const exitIds = () => (win2?.getAvailableTasks?.() ?? [])
+        .filter(t => t.id >= 10000).map(t => t.id);
+    const idsFirst = exitIds();
+    testController.assertEqual('exit tasks injected on completed re-entry', true, idsFirst.length > 0);
+
+    // Prioritize the first exit task the way a player would.
+    win2.getGamestate.automation_prios.set(0, [idsFirst[0]]);
+
+    moveToRegion(targetRegion, JTA_TEST_REGION);
+    await eventually(testController, () => readCurrentRegion() === targetRegion, 'left again', 8000);
+    await reEnter('re-entered completed region again');
+    const idsSecond = exitIds();
+    testController.assertEqual(
+        'same synthetic exit-task ids on every re-entry',
+        JSON.stringify(idsFirst),
+        JSON.stringify(idsSecond),
+    );
+    const prios = win2.getGamestate.automation_prios.get(0) ?? [];
+    testController.assertEqual(
+        'player priority still references a live exit task',
+        true,
+        prios.includes(idsFirst[0]) && idsSecond.includes(idsFirst[0]),
+    );
 
     return testController.getOverallResult();
 }
