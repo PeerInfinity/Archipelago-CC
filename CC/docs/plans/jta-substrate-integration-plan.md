@@ -186,11 +186,10 @@ this world.
 > - The bridge channel this phase builds shrinks to what Phase 4 (playback
 >   controller + tests) needs: `setInstantMode`, `stepTick`, and whatever
 >   task-targeting command `walkTo` requires. `setMod`-over-bridge is deferred.
-> - "Persisted in the JtA page" requires fixing the managed-mode gap where
->   `setMod`'s `saveGame()` is a no-op (finding 4): mods/settings need a
->   game-side persistence path that works under `?managed=1` (e.g. a
->   settings-only save slice exempt from the managed save guard, under the
->   game's own storage key). Progression state stays governed by Phase 3.
+> - **Refined same-day:** since `mods` lives inside the single GAMESTATE save
+>   blob (no separate settings store exists), settings persistence is
+>   delivered by Phase 3's re-enabled managed-mode save — no settings-only
+>   carve-out. See the Phase 3 ruling.
 
 Original options, kept for the record (the choice among them is deferred, not
 made): **A** host settings block pushed on region load; **B**
@@ -200,12 +199,28 @@ Settings-gate vs Advanced Automation split).
 
 ### Phase 3 — Persistence ownership
 
-> **RULED (2026-07-05): configuration/automation settings persist game-side
-> only (see Phase 2 ruling); progression state remains ephemeral for now —
-> effectively Option C with game-side rather than host-side settings
-> persistence.** Host-owned save (Option A) and game-owned progression saves
-> (Option B) are explicitly "maybe later." The `_completedThisLoop`
-> reconstruction item below still applies regardless.
+> **RULED (2026-07-05, refined same-day): Option B — game-owned save under a
+> substrate-specific SHARED key.** Re-enable the normal `saveGame()`/
+> `loadGame()` path in managed mode, writing to a distinct localStorage key
+> (e.g. `incrementalGameSave_substrate`) so substrate saves never touch the
+> standalone/old-stack slot (`incrementalGameSave` is origin-shared by the
+> submodule copy, standalone testing, and `jta-remote/game-bundle`). One
+> shared save across all presets/worlds (game content is identical across
+> presets; only the host-owned region topology differs) — per-preset keying
+> deferred until cross-world carryover proves wrong in play. This persists
+> the WHOLE blob — mods AND progression — superseding the earlier "progression
+> ephemeral" ruling; that's consistent with loop reset ≡ energy reset (JtA
+> skills/perks natively survive energy resets). Implementation caveats:
+> - **Extend the save-time `tasks` filter to `isSyntheticTask`** — injected
+>   exit-choice tasks (ids ≥ 10000) have the same not-in-`TASK_LOOKUP` load
+>   reviver problem the existing `isArtifactTaskId` filter guards against
+>   (simulation.ts:3326-3330); unfiltered, one save poisons the slot.
+> - **Reconcile with Phase 1.1:** `start()` currently skips load in managed
+>   mode; with load re-enabled, `energy_reset_count` persists — the bridge's
+>   catch-up counter must seed from loaded state or (cleaner) be replaced by
+>   the ruled immediate reset propagation.
+> - `_completedThisLoop` reconstruction (below) still applies — it is bridge
+>   state, not game state.
 
 Options, kept for the record:
 
@@ -315,7 +330,7 @@ Reuse `CC/scripts/jta-stats/` (headless Node over the committed build):
 |---|---|---|
 | 1 | Phase 1.1 reset semantics | **Option A, bidirectional**: JtA energy reset ⇒ loop reset AND loop reset ⇒ JtA energy reset; JtA energy ↔ Loops mana continuously synchronized in both directions |
 | 2 | Phase 1.2 pause policy | **Option A, strict**: leaving a JtA region for another substrate pauses JtA; entering a JtA region from anywhere resumes it |
-| 3 | Phase 2 automation-config home | **Deferred — config/automation settings persist only in the JtA page** for now; host-settings vs sidecar may be revisited later |
-| 4 | Phase 3 persistence | **Progression ephemeral; settings game-side** (Option C variant); host-owned save "maybe later" |
+| 3 | Phase 2 automation-config home | **Deferred — config/automation settings persist only in the JtA page** for now (delivered via ruling 4's save, not a settings-only system); host-settings vs sidecar may be revisited later |
+| 4 | Phase 3 persistence | **Game-owned save re-enabled in managed mode under a substrate-specific SHARED localStorage key** (Option B variant; refined same-day from "ephemeral"): whole blob persists — mods and progression; synthetic tasks excluded from serialization; one save across presets, per-preset keying deferred |
 | 5 | Phase 5 old-stack fate | **Option A — keep for now**; retire eventually once nothing needed remains in them |
 | 6 | Phase 1.5 `victoryItem` name | **`'Victory'`** (same as bounce/runner) |
