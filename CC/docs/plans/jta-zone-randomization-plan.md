@@ -1,20 +1,45 @@
 # JtA Zone Randomization & Reset-Paced Balancing — Plan
 
-**Date:** 2026-07-06 · **Status: PLANNING — options presented, rulings pending; no implementation.**
+**Date:** 2026-07-06 (v2, same-day revision after design discussion) ·
+**Status: PLANNING — directions received on scope/algorithm, remaining rulings pending; no implementation.**
 
 The next JtA arc after `jta-substrate-integration-plan.md` (all phases complete
-except its Phase 6 stub, which this plan absorbs). Goal: randomize JtA zone
-content on the substrate path and balance it so **each task becomes
-completeable within a target number of loop resets after the previous one**.
-This is the modern successor to the old March-2026 randomizer stack's core
-value, and the feature that must land before that stack can be retired
-(standing ruling: keep deprecated code until its useful features are absorbed).
+except its Phase 6 stub, which this plan absorbs). This is the modern successor
+to the old March-2026 randomizer stack's core value, and the feature that must
+land before that stack can be retired (standing ruling: keep deprecated code
+until its useful features are absorbed).
 
 Session context lives in the memory topic
 `project_jta_substrate_integration.md` → **NEXT ARC** section (design inputs
 captured 2026-07-05 while the substrate arc was hot). Settled rulings from that
 arc (bidirectional reset sync, strict pause, no max mana, game-owned shared
 save, Pause-on-Block default, automation defaults) are **not re-opened here**.
+
+## 0. Requirements (user, 2026-07-06)
+
+1. **All JtA tasks count as AP locations. All JtA perks count as AP items.
+   All of them appear in the sphere log.** (Supersedes v1's "perk tasks only"
+   scope — perk tasks were the old apworld's 44/45-location surface; the new
+   surface is every task: 134 tasks in zones 0–14 alone, roughly double across
+   all 30 zones.)
+2. **Pacing:** each task becomes completeable within a target number of loop
+   resets after the previous one. With all tasks as locations the target
+   attaches to *progression steps*, with tasks inside a step splitting the
+   step's budget (see §2).
+3. **Eventual destination: fully synthetic game data** built on the JtA
+   engine — zones constructed **one task at a time**, each task's data set
+   from what the player is *known to have access to at that point*. New tasks
+   are NOT always appended to the latest zone; sometimes they backfill into
+   earlier zones.
+4. Even before synthetic data, the **same forward-pass strategy assigns costs
+   to existing (vanilla/shuffled) tasks**.
+5. Known complication: tasks depend on specific skills and grant XP to those
+   skills. Synthetic data can *choose* each task's skills; existing tasks
+   cannot be re-skilled (cost/xp multipliers are the only levers).
+6. **First step: collect statistics on vanilla JtA data** (via the existing
+   simulated-playthrough scripts) as the approximate target profile for
+   synthetic generation — and, it turns out, as calibration + verification
+   baselines for everything else.
 
 ---
 
@@ -55,8 +80,10 @@ Key facts:
   queue, thresholds, Unlock Savings, scroll-aware estimators).
 - Documented limitations of the legacy solver
   (`docs/json/games/journey-to-ascension/cost-adjustment-algorithm.md`):
-  no feedback loop (earlier adjustments never revisited), xpMult compounding
-  across steps, deliberately weak "base strategy", no items/artifacts/prestige.
+  **no feedback loop** (earlier adjustments never revisited), **xpMult
+  compounding** across steps (retroactive levers re-scale zones 0..Z that were
+  already tuned), deliberately weak "base strategy", no items/artifacts/
+  prestige. §2 below eliminates the first two by construction.
 - `jtaArchipelago`'s mapping conventions (worth keeping verbatim):
   **location name = task name; item name = perk display name**; dedupe on the
   host side; grants queued until iframe ready, reconciled from stateManager
@@ -87,9 +114,12 @@ Key facts:
   (`generateZoneSet({count, seed, physics})`, materialized lazily). Bounce
   uses authored zones; jta uses the fork's static zones.
 - jta cannot participate in **sphere-growth** (the flagship driver) without
-  `generateZoneForSpecs` — it is spiral-only today.
+  `generateZoneForSpecs` — it is spiral-only today. The synthetic-generation
+  destination (§0.3) is essentially jta's `generateZoneForSpecs` story.
 - Sidecars are **build-time only**, deterministic per (seed, params); never
   regenerated at play time.
+- **The Loops cost generator (`frontend/modules/loops/costGenerator.js`) is
+  the in-repo precedent for the balancing algorithm** — see §2.
 
 ### 1c. The fork's own machinery — what we can build on
 
@@ -111,7 +141,8 @@ Key facts:
   **once at module load**. Consequence: *field-level* mutation of existing
   defs (costMult, xpMult, perk, item) stays coherent (derived maps hold
   references); *structural* changes (add/remove/move tasks) stale the derived
-  maps and need either a rebuild or a hook that refreshes them.
+  maps and need a hook that refreshes them. This splits the injection story
+  into two tiers (§3 Q2).
 - Per-task randomizer levers in the data model: `cost_multiplier`, `xp_mult`,
   `max_reps`, `skills[]`, `type` (Boss ⇒ 4^zone instead of 2.2^zone), `perk`,
   `item`, `use_item`, `unlocks_task`, `hidden_by_default`. Global levers
@@ -120,8 +151,10 @@ Key facts:
 - The `window.*` surface has task/zone/automation control
   (`loadZone`, `injectSyntheticTask`, `setMod`, `performTask`, `stepTick`,
   `setInstantMode`, …) but **no perk-grant hook** (the old game-bundle's
-  `window.tryAddPerk` has no fork equivalent — verify at implementation time)
-  and no def-patch hook.
+  `window.tryAddPerk` has no fork equivalent — verify at implementation time),
+  **no general task-completion callback** (the bridge only hears
+  travel/synthetic tasks — all-tasks-as-locations needs one), and no def-patch
+  hook.
 - `CC/scripts/jta-stats/` measures **emergent runs-to-first-completion for
   every task** under real automation (Node, deterministic, ~9s/500 runs,
   byte-identical to browser). It currently reads `zones.ZONES` as committed —
@@ -130,232 +163,317 @@ Key facts:
 
 ---
 
-## 2. Design questions — options and recommendations
+## 2. The core algorithm: a Loops-style forward pass
+
+**Adopted 2026-07-06 (user-confirmed), replacing v1's "legacy solver
+skeleton" recommendation.** The in-repo precedent is the Loops cost generator
+(`frontend/modules/loops/costGenerator.js`), which walks the sphere log one
+location at a time and, per entry: finds the path, assigns costs to
+*not-yet-costed* regions on the path (half of current mana split across them:
+`manaForRegions / remainingUncosted`) and to the location (half of current
+mana), commits the costs **before** queuing, plays the step through the
+**real loop engine** (instant mode), waits for the check to actually land,
+applies item boosts, resets, continues. Defaults fill the untouched tail.
+
+Why this shape wins for JtA — it eliminates the legacy solver's two documented
+limitations **by construction**:
+
+- **First-touch assignment**: when a progression step first needs to cross new
+  zones, the uncosted traversal/mandatory tasks get their costs assigned
+  *then*, as part of that step's budget. Nothing already assigned is ever
+  revisited → no retroactive traversal lever, no xpMult compounding, no
+  feedback-loop problem.
+- **Real-engine advancement**: state between steps is the *emergent* state
+  (the fork's own sim in instant mode plays the step to actual completion, the
+  analog of `_waitForLocationCheck`), not a model's projection — assignment
+  errors don't accumulate; each step re-anchors on reality. Zero model drift:
+  the game is the simulator (consistent with Q1).
+
+**The one piece that doesn't transfer: the assignment rule.** Loops charges
+"half of what you have" — affordable-by-construction, implicit pacing target
+of "within this loop". JtA's target is inverted: the task should NOT complete
+now but *within N resets*. So the per-step rule becomes: from the current real
+gamestate, choose the `costMult` that makes `estimateResetsToComplete(task) ≈
+target` — a cheap **local inversion** (cost is linear in `cost_multiplier`; at
+worst a few bisection iterations on the estimator, no full sims), replacing the
+legacy 25-iteration global searches.
+
+Sketch (existing-data mode; synthetic mode generates the task first, §3 Q7):
+
+```
+walk intended progression order (step = unlock milestone / sphere entry):
+  for each not-yet-costed traversal task the step newly requires:
+    assign costMult by local estimator inversion against the step's
+    traversal share of the budget (Loops-style split across the new tasks)
+  for each task in the step:
+    assign costMult so estimateResetsToComplete ≈ its share of the step
+    budget (category weights = intra-step split rule, cf. old planner's
+    per-category targets)
+  play forward with the real sim (instant mode, pinned pool) until the
+  step's tasks actually complete; grant the step's items/perks
+assign defaults to any never-visited tasks; emit patches
+```
+
+Budget/runtime: forward play totals ≈ (resets per step × steps) instant-mode
+runs — same order as a harness experiment (~9s/500 runs), so a full balancing
+pass is plausibly ~5–15s. Two honest caveats:
+
+1. **Estimator vs emergent mismatch**: the estimator assumes dedicated grind;
+   real automation splits attention (items, thresholds, other categories).
+   Forward play absorbs the drift state-wise; the *measured* gap can still
+   deviate from target — Phase 0 profiling measures the systematic factor,
+   Phase 4 verification asserts the band. If deviation is systematic, the fix
+   is a correction factor on the target, not a different architecture.
+2. **Pinned-pool budgets**: in loop mode `max_energy` is pinned to the loop's
+   starting mana each entry (no Energetic-Memory growth), so per-reset budgets
+   use the pinned pool (harness `pinMaxEnergy` semantics). Mana carried in
+   from other substrates makes real budgets higher — conservative in the right
+   direction.
+
+---
+
+## 3. Design questions — options and recommendations
 
 ### Q1. Where does the balancing math live?
 
 | | Option | Assessment |
 |---|---|---|
-| **A** | **Fork's in-engine estimators** (`estimateResetsToComplete` et al., driven headlessly through a real `GAMESTATE` the way the stats harness does) | Single source of truth — the metric the solver optimizes is literally the metric the game's own thresholds use; models Fork 1.6 mechanics for free; zero drift by construction. Cost: estimators answer "resets for THIS task from THIS state" — sequencing across tasks needs the driver to advance state between steps (run the real sim in instant mode, which the harness already does). |
-| **B** | Resurrect/port the old JS solver stack (simulator + costGenerator/costPlanner) | The solver *skeletons* (sphere-walk, bottleneck detection, log-scale binary search, two-pass xpMult) are proven and worth copying as **algorithms**. But the economy models are stale (v0.5.0/27 zones, three divergent copies, no prestige/threshold modeling) — porting them to Fork 1.6 recreates the drift problem permanently. |
-| **C** | The stats-harness driver as the in-loop oracle (bisection where each evaluation = full instant-mode sim run counting actual resets) | Highest fidelity — measures emergent behavior under the real automation, not an estimator's assumptions. Cost: each solver evaluation is a multi-run sim; ~25 bisection iterations × ~50 pacing steps could be minutes per seed (needs measurement). Fine offline; likely too slow inside an interactive browser pipeline. |
+| **A** | **Fork's in-engine estimators + real sim** (headless `GAMESTATE`, the harness pattern), inside the §2 forward pass | Single source of truth — the solver optimizes the metric the game's own thresholds use; models Fork 1.6 mechanics for free; zero drift by construction. |
+| **B** | Resurrect/port the old JS solver stack | The economy models are stale (v0.5.0/27 zones, three divergent copies); porting recreates the drift problem permanently. §2 supersedes even the solver *skeletons* (the retroactive levers are what the forward pass eliminates). |
+| **C** | Stats-harness full-sim bisection as the in-loop oracle | Highest per-evaluation fidelity but each evaluation is a multi-run sim; unnecessary given §2's local inversion + real-engine advancement. Stays as the **verifier**. |
 
-**Recommendation: A for the in-loop solver, C as the verifier, B mined for
-algorithm structure only (no code resurrection).** Concretely: a new
-`balance` module stands up a headless gamestate, walks the intended
-progression order, uses `estimateResetsToComplete`-style evaluation inside the
-legacy solver's proven search structure (bottleneck test → traversal lever →
-xp lever → task lever), and advances state between steps by running the real
-sim for the target reset count. The harness then verifies the emergent pacing
-end-to-end (Q6). The old stack's economy re-implementations are what made it
-rot; the fork's own code is the only copy that can't drift.
+**Recommendation: A within the §2 pass; C as verifier; B retired outright**
+(algorithms absorbed only as history — the per-category target idea survives
+as the intra-step split rule).
 
-### Q2. How does randomized data reach the game?
+### Q2. How does randomized/synthetic data reach the game?
+
+**Two tiers** (revised for the synthetic destination):
+
+- **Tier 1 — field-level patch hook** (`applyTaskPatches(patches)`: costMult/
+  xpMult/perk/item/maxReps by task id, idempotent, NOT part of the save blob):
+  sufficient for costing + perk-shuffling *existing* tasks; safe against the
+  derived-map staleness trap; consumed by both the substrate bridge (patches
+  ride each region's sidecar payload next to `jtaZone`) and the stats harness.
+- **Tier 2 — structural replacement hook** (`replaceZones(zonesData)`-style,
+  rebuilding `TASK_LOOKUP`/`PERKS_BY_ZONE`/`ITEMS_BY_ZONE` + zone_id stamps):
+  required for fully synthetic data (new tasks, new zone compositions).
+  Deferred to the synthetic phase; designed so Tier 1 becomes a special case.
+
+Build-time data generation (writing a `zones.js` per seed) is rejected for
+runtime use (can't rebuild per seed in the browser) — the hooks serve both the
+bridge and the harness with one mechanism.
+
+*(Sub-choice to confirm: apply patches lazily per-region at load vs
+all-at-once at rules load by iterating the warehouse — lazy is simpler;
+all-at-once keeps global displays like `PERKS_BY_ZONE` coherent.)*
+
+### Q3. Where does randomization/generation run?
+
+**Recommendation unchanged: the procgen pipeline** (deterministic per (seed,
+params), content lands in sidecars + `extracted_rules.locations`, flows to AP
+via the standard rules.json → world_generator → Generate.py path; the pipeline
+is JS in the same origin as the fork's build, so the §2 pass can import
+`build/simulation.js` directly — Web Worker if the ~5–15s solve blows the
+interactive budget). The non-standard `post_output` subprocess dies with the
+apworld path. AP seed-generation-time and frontend-load-time homes remain
+rejected as in v1. Optional post-fill sphere-log refinement (a near-literal
+JtA analog of the Loops in-app generator) stays deferred unless
+solo-approximate pacing proves wrong in multiworld play.
+
+### Q4. Content scope — SUPERSEDED BY USER DIRECTION (2026-07-06)
+
+Scope is now staged rather than optional:
+
+1. **AP surface: ALL tasks = locations, ALL perks = items, all in the sphere
+   log** (requirement §0.1). Location semantics: first *full* completion
+   (reps == max_reps, matching the harness definition). ~40 perks vs hundreds
+   of locations ⇒ most of the pool is filler (old apworld precedent: "Energy
+   Boost" filler — see open question 7).
+2. **Existing-data mode first**: perk shuffle + §2 costing over the fork's
+   vanilla zones (Tier-1 patches only).
+3. **Synthetic mode as the destination** (requirement §0.3): zones constructed
+   one task at a time from known player access, with backfill into earlier
+   zones (a placement lever: earlier zone ⇒ cheaper base cost via 2.2^zone,
+   included in every later reset's replay loop, lower XP yield via 1.25^zone).
+   Requires Tier-2 hook + Q7 ruling + the Phase 0 vanilla profile as its
+   target shape.
+4. Zone-order shuffle (region i ↔ zone π(i)) demoted to an optional stretch
+   after existing-data mode works — superseded in spirit by synthetic mode.
+
+### Q5. AP checks in this arc?
+
+Mooted by §0.1 — all tasks are locations, so yes, definitively this arc.
+Remaining sub-ruling: **grant semantics** — recommendation stands at
+**AP-authoritative** (suppress local perk grant via patch; perk arrives only
+as an AP item through a new fork `grantPerk` hook; solo play round-trips
+locally so feel is unchanged). Local-grant hybrid (old stack's shape)
+double-grants in multiworld.
+
+### Q6. Specifying the pacing target
+
+Revised for all-tasks-as-locations: **the knob attaches to progression steps,
+not individual tasks.** Recommendation: a single `resetsPerStep` target +
+tolerance band as substrate params, with an **intra-step split rule** deciding
+how a step's budget is shared among its tasks (category-weighted; the old
+planner's per-category attempt targets are the precedent, exposed later as
+advanced params if needed). Keep the legacy floor (≥2 resets per step)
+per-step, not per-task. Verification stays two-layer: solver-internal
+acceptance per step + emergent harness verification against Phase 0 bands.
+
+### Q7 (NEW). Synthetic generation: sphere log first, or co-constructed?
+
+The user's open question (§0: "construct the sphere log along with the other
+data, or generate the sphere log first — not sure which is better").
 
 | | Option | Assessment |
 |---|---|---|
-| **A** | **New fork window hook** — e.g. `applyTaskPatches(patches)` (field-level: costMult/xpMult/perk/item/maxReps by task id), applied by the bridge before/at `loadZone` | Matches the sidecar pass-through seam that already exists; per-seed data with no rebuild; save-compatible (task ids stable). Field-level patching is safe against the derived-map staleness trap (§1c). Needs a submodule change (SAVE_VERSION-neutral — patches are not saved state). |
-| **B** | Build-time generation into the fork's data format (generate a `zones.js` per seed / rebuild) | Wrong tool for per-seed runtime randomization in the browser (can't rebuild per seed at play time; dynamic module substitution fights the bundler). It IS the right shape for the harness/CI verifier — but a shared hook (A) used by both the bridge and the harness driver is one mechanism instead of two. |
+| **A** | **Sphere-log/plan first**, then realize tasks to match | The skeleton is an editable, inspectable artifact (fits the stepped pipeline's editable sphere steps). But a fully detailed log is written blind to engine dynamics — whether "task X completes N resets after W" is realizable depends on skill levels that only exist once the prefix is played; infeasible steps force backtracking/re-planning. |
+| **B** | **Co-construction** — generate task-by-task from emergent state; the log falls out as a byproduct trace | Feasible-by-construction (the Loops principle applied to generation); never backtracks. But progression *structure* becomes emergent — hard to author, edit, or aim at global targets ("perk X around step 20") without lookahead heuristics. |
 
-**Recommendation: A — a single field-level patch hook in the fork, consumed by
-both the substrate bridge (runtime) and the stats harness (verification).**
-Patches ride the per-region sidecar payload (`taskPatches` next to `jtaZone`)
-— everything we randomize is per-zone, so no world-level channel is needed;
-the bridge applies a region's patches before `loadZone`. Structural
-randomization (adding/moving tasks), if ever wanted, becomes a v2 hook that
-also refreshes `TASK_LOOKUP`/`PERKS_BY_ZONE`/`ITEMS_BY_ZONE`; not needed for
-the scope recommended in Q4. *(Sub-choice to confirm: apply patches lazily
-per-region at load, or all-at-once at rules load by iterating the warehouse —
-lazy is simpler and sufficient since a zone's defs only matter once loaded,
-but all-at-once keeps `PERKS_BY_ZONE`-style displays coherent globally.)*
+**Recommendation: B for the mechanics, with a thin planned layer on top —
+plan only what needs no engine knowledge.** The planned layer fixes the
+*order*: which perk/item unlocks at which step, when new zones open, when
+tasks backfill into earlier zones (the §0.3 backfill knob lives here), with
+cadence targets taken from the Phase 0 vanilla profile. The forward pass then
+realizes each step's task (zone placement, `skills[]` choice, costMult) from
+real emergent state. This mirrors sphere-growth (driver plans spheres,
+substrate realizes zones) and the stepped pipeline (the coarse plan is the
+editable artifact). The exact sphere log is emitted as a byproduct trace; the
+*authoritative* log is still AP's, computed post-fill, with access rules
+constructed so fill reproduces the intended order.
 
-### Q3. Where does randomization run?
-
-| | Option | Assessment |
-|---|---|---|
-| **A** | AP seed generation (the `worlds/jta` path, modernized) | Multiworld-exact (real sphere log). But the old apworld models a hand-written 27-zone linear world, not the substrate topology; and its defining oddity — Python shelling out to Node because the cost model is JS — exists only because generation runs in Python. |
-| **B** | **The procgen pipeline** (extractZoneRules/generateZoneForSpecs, seeded like runner's `generateZoneSet`) | The architecturally native home: deterministic per (seed, params), content lands in sidecars + `extracted_rules.locations`, flows to AP via the standard rules.json → world_generator → Generate.py path — the perk tasks become ordinary AP locations and **the non-standard `post_output` subprocess dies**. The pipeline is JS in the same origin as the fork's build — it can import `build/simulation.js`/`zones.js` directly and run the balancing solver in-process (Web Worker if slow). Pacing is solved against the pipeline's *intended* progression order (which the pipeline itself decides), i.e. solo-approximate rather than fill-exact. |
-| **C** | Frontend load time | Non-deterministic vs the seed, invisible to AP logic. Ruled out. |
-
-**Recommendation: B.** The multiworld-exactness gap vs A is real but small in
-practice (the old apworld's count-based access rules only ever made the sphere
-log *approximately* zone-ordered anyway), and B is what lets the old stack
-retire — one generation path, no Python→Node bridge. An optional post-fill
-refinement pass (re-run the solver against the actual sphere log, old-style)
-can be bolted on later **if** solo-approximate pacing proves wrong in
-multiworld play; record as deferred, don't build now.
-
-### Q4. Scope of "zone content"
-
-| | Option | Assessment |
-|---|---|---|
-| **A** | Perk placement only + cost/xp balancing (old-stack parity) | Absorbs the old stack's entire randomization value; smallest surface; field-level patches suffice. |
-| **B** | A + **zone-order shuffle** (region i gets zone π(i) instead of zone i) | The seam is one line in the spiral driver (the `zoneCounter`); high fun-value ("which zone is behind this exit?"). But zone costs scale 2.2^zone_id — putting zone 12 second is a pacing cliff the balancer must flatten, which stresses the solver hard (traversal-lever multipliers far outside the old search ranges). |
-| **C** | B + deep content randomization (skills[], items, reps, task structure) | Needs the structural patch hook, re-derivation of the category classifiers the automation depends on (unlocker/combat/item/perk precedence), and rebalancing interactions we can't predict yet. |
-
-**Recommendation: A for this arc's core, B as an explicit stretch phase behind
-its own go/no-go after A's solver proves itself, C deferred to a future arc.**
-Rationale: A alone unblocks old-stack retirement (the user-stated gate); B is
-where substrate randomization becomes visibly different from the old stack,
-but only attempt it with a working balancer in hand.
-
-### Q5. Do perk tasks become AP location checks in this arc (old Phase 6)?
-
-| | Option | Assessment |
-|---|---|---|
-| **A** | **Yes — this arc.** `extractZoneRules` emits perk-task locations + `ap_locations`; bridge sends `user:locationCheck` on perk-task completion; perks granted on AP item receipt (AP-authoritative). | Randomized perk placement without AP checks is barely a randomizer — the perk↔item bridge is the point of the feature, and the bounce/runner pattern makes the wiring cheap. Also the natural moment to absorb `jtaArchipelago`'s conventions (location = task name, item = perk display name, inventory reconciliation on connect). |
-| **B** | Later — randomize + balance self-contained zones first, wire AP checks in a follow-up arc. | Smaller first landing, but leaves the old stack unabsorbable (its AP integration is half its value) and means building perk randomization twice (local-grant semantics, then AP-authoritative semantics). |
-
-**Recommendation: A**, with one sub-decision to rule on — **grant semantics**:
-
-- **A1 — AP-authoritative (recommended):** the randomized task's local perk
-  grant is suppressed (perk field patched to none; location carries the item);
-  the perk arrives only via AP item receipt (new fork `grantPerk` hook —
-  the fork has no `window.tryAddPerk`; needs adding either way). Correct
-  multiworld semantics; solo play is unchanged in practice because checks
-  round-trip locally.
-- **A2 — local-grant hybrid (old stack's shape):** task grants its placed perk
-  locally AND sends the check. Simpler, but double-grants in multiworld and
-  entangles game saves with AP inventory.
-
-### Q6. Specifying and verifying the pacing target
-
-**Specification.** The user's framing — "each task completeable within N
-resets after the previous one" — is per-*step*, which matches the legacy
-`resets_per_sphere` semantics (not the planner's per-category attempt counts).
-Options for the knob surface:
-
-- **A (recommended): one `resetsPerStep` target + tolerance band**, a procgen
-  substrate param (panel-exposed like other jta params, flowing into the
-  world's options the standard way). Keep the legacy floor (≥2). Progression
-  "steps" = the pipeline's intended unlock order (perk tasks + zone
-  traversals in region-topology order).
-- **B: per-category targets** (planner-style: traversal/perk/boss/normal) —
-  more expressive, more knobs to explain; can be added later as advanced
-  params without changing A's default surface.
-
-**Verification.** Two layers, both required:
-
-1. **Solver-internal acceptance:** each step's solved estimate must land in
-   `[target − tol, target + tol]` (tolerance itself an option; legacy used
-   exact-target bisection with 25 iterations and no explicit band — adopt an
-   explicit band, e.g. ±1 reset or ±33%, TBD by measurement).
-2. **Emergent verification via the stats harness** (the natural verifier per
-   the NEXT-ARC notes): extend `CC/scripts/jta-stats/` with a
-   `gameDataPatch` config option (Q2's hook), run the tuned-defaults
-   automation profile with `pinMaxEnergy` set to loop starting mana (matching
-   substrate semantics per the §4 Round-4 measurement), and assert the
-   measured reset gap between consecutive first-completions stays within the
-   band. This is a new experiment family (`randomized-pacing-*`), reported in
-   `results/SUMMARY.md` like prior rounds.
-
-**Substrate-play caveat the solver must honor:** in loop mode `max_energy` is
-pinned to the loop's starting mana each entry (no Energetic-Memory growth),
-so the solver's per-reset budget must be the pinned pool, not standalone
-energy growth — this is exactly what `pinMaxEnergy` emulates in the harness.
-Mana carried between zones/substrates in mixed worlds makes real budgets
-*higher* than the model's; the model is conservative in the right direction.
+**Skills sub-policy** (requirement §0.5): synthetic tasks choose `skills[]`
+freely — policy informed by the vanilla profile (skill-introduction cadence,
+trained-skill coverage so estimator inversion stays in sane costMult ranges,
+deliberate fresh-skill introductions as difficulty spikes). Existing tasks:
+skills fixed; cost/xp multipliers are the only levers, and achievable pacing
+accuracy is bounded by the skill trajectories — Phase 0 measures that bound.
 
 ---
 
-## 3. Recommended phasing (contingent on the rulings above)
+## 4. Recommended phasing
 
-Assumes Q1=A(+C verify), Q2=A, Q3=B, Q4=A(+B stretch), Q5=A1, Q6=A.
-Each phase is separately land-able and committed separately per repo policy.
+Each phase separately land-able and committed separately per repo policy.
 
-### Phase 0 — Enablers (no behavior change)
-- Fork: `applyTaskPatches(patches)` window hook (field-level, id-keyed,
-  idempotent, applied pre-`loadZone`; explicitly NOT part of the save blob) +
-  `grantPerk(perkType)` hook. SAVE_VERSION unchanged. Headless-testable via
-  the harness DOM-stub pattern.
-- Harness: `gameDataPatch` config option in `driver.mjs`/`run-node.mjs`
-  (apply patches after `initializeHeadless`, before the run loop).
-- Pipeline: jta gains a skeleton `extractZoneRules` that emits the *vanilla*
-  zone's perk-task locations (no randomization yet) behind a param default-off,
-  proving the locations path end-to-end (world_generator → Generate.py →
-  spoiler) before any content changes.
+### Phase 0 — Vanilla profiling (user-proposed starting point; no product code)
+Extend `CC/scripts/jta-stats/` to collect, from vanilla playthroughs:
+- **Empirical pacing**: resets between consecutive first-completions, per
+  task/category/zone (the vanilla pacing curve).
+- **Skill trajectories**: per-skill level vs run number.
+- **Structural profile**: tasks/zone, type mix, skills-per-task,
+  skill-introduction cadence, perk/item spacing, costMult/xpMult/max_reps
+  distributions.
+- **Estimator calibration**: `estimateResetsToComplete` at decision time vs
+  actual resets-to-complete (the systematic correction factor for §2 caveat 1).
+Output: `results/vanilla-profile.json` + a SUMMARY round. Run under both
+standalone and `pinMaxEnergy` (substrate) budgets.
 
-### Phase 1 — Perk randomization + AP checks (the old stack's core, absorbed)
-- Seeded perk shuffle in the pipeline (respecting goal-zone scope); patches
-  (`perk` field changes + grant suppression) stamped into per-region sidecar
-  payloads; `ap_locations`-style map for perk tasks.
-- Bridge: apply patches, dispatch `user:locationCheck` on perk-task completion
-  (dedupe like `jtaArchipelago` did), grant perks on AP item receipt with
-  inventory reconciliation on connect/rules-reload (reuse the re-baseline
-  pattern from the reset-sync work).
-- `supportedFeatures` += `arbitrary_ap_locations`.
-- In-app test: randomized preset → complete a perk task → check sent → item
-  receipt → perk present in game state.
+### Phase 1 — Enablers
+- Fork (Tier 1): `applyTaskPatches` + `grantPerk` + a general
+  task-completion callback (`setTaskCompletionCallback` or widened travel
+  callback). SAVE_VERSION-neutral; headless-testable via the harness DOM-stub
+  pattern.
+- Harness: `gameDataPatch` config option.
+- Pipeline: jta `extractZoneRules` skeleton emitting the *vanilla* zone's
+  tasks as locations (param-gated, no randomization) — proves the
+  locations path end-to-end (world_generator → Generate.py → spoiler/sphere
+  log) before content changes.
 
-### Phase 2 — Reset-paced balancing solver
-- New `balance` module (home per Q3-B: importable by both the pipeline and a
-  Node CLI; lives with the pipeline code, imports the fork's `build/*`).
-  Legacy solver skeleton (bottleneck test → traversal costMult lever →
-  xpMult lever → task costMult lever, log-scale bisection) over fork
-  estimators + real-sim state advancement; emits per-task patches merged with
-  Phase 1's.
-- `resetsPerStep` + tolerance as substrate params; solver runs during pipeline
-  generation (measure runtime; move to a Web Worker / pre-generation script if
-  it blows the interactive budget — decision point, not a blocker).
+### Phase 2 — AP integration (all tasks = locations, all perks = items)
+- Location per task (first-full-completion semantics), item per perk,
+  filler design (open question 7), `supportedFeatures` +=
+  `arbitrary_ap_locations`.
+- Seeded perk shuffle in the pipeline; grant suppression patches;
+  AP-authoritative grants with inventory reconciliation on
+  connect/rules-reload (absorbs `jtaArchipelago` conventions).
+- In-app test: complete a task → check sent → item receipt → perk present.
 
-### Phase 3 — Verification harness + acceptance
-- `randomized-pacing-*` experiment family; assert measured reset gaps within
-  band under pinned-pool tuned-defaults automation; SUMMARY.md round.
-- One in-app smoke: randomized+balanced preset completes zone 1→2→3 within
+### Phase 3 — The §2 balancing pass over existing data
+- `balance` module home per Q3 (importable by pipeline and a Node CLI);
+  intended-progression-order walk, first-touch assignment, local estimator
+  inversion (with Phase 0 correction factor), real-sim advancement,
+  intra-step split rule, defaults for the tail; emits Tier-1 patches.
+- `resetsPerStep` + tolerance as substrate params; measure solve runtime →
+  Web Worker / pre-generation script decision point.
+
+### Phase 4 — Verification
+- Harness `randomized-pacing-*` experiment family: measured reset gaps within
+  band (band defaults from Phase 0), pinned-pool tuned-defaults automation;
+  SUMMARY round.
+- In-app smoke: randomized+balanced preset progresses zone 1→3 within
   expected resets under playback automation.
 
-### Phase 4 (stretch, own go/no-go) — Zone-order shuffle
-- Seeded permutation at the spiral-driver seam; solver must flatten the
-  2.2^zone traversal cliff (widen search ranges; expect xpMult to do more
-  work). Gate on Phase 2/3 results.
+### Phase 5 — Synthetic generation v1 (the destination)
+- Fork Tier-2 hook (`replaceZones` + derived-map refresh).
+- Planned layer (Q7): unlock-order/backfill/zone-cadence skeleton, profile-
+  informed; co-constructive realization one task at a time (zone placement,
+  skills policy, costMult from live state); sphere-log trace emitted; access
+  rules encode the intended order.
+- Harness validation against the Phase 0 structural + pacing profile.
+- (Optional stretch, before or instead: zone-order shuffle of vanilla data —
+  cheap once Phase 3 works, superseded in spirit by this phase.)
 
-### Phase 5 — Absorption audit → old-stack retirement green-light
-- Walk the absorption map (§4); confirm nothing left in the old stack that
-  isn't absorbed or explicitly dropped; produce the retirement checklist
-  (actual deletion is its own future change, per the standing ruling).
+### Phase 6 — Absorption audit → old-stack retirement green-light
+- Walk the absorption map (§5); confirm nothing unabsorbed/undropped remains;
+  produce the retirement checklist (deletion is its own future change, per
+  the standing ruling).
 
-## 4. Absorption map (what retirement requires)
+## 5. Absorption map (what retirement requires)
 
 | Old asset | Fate under this plan |
 |---|---|
-| `worlds/jta` apworld (perk placement, options, slot data) | Superseded by pipeline randomization + standard procgen→world_generator path (Phase 1); `resets_per_sphere` semantics carried into `resetsPerStep` |
-| `post_output` Node subprocess bridge | Dies with the apworld path — solver runs natively in JS (Phase 2) |
-| `jtaCostGenerator.js` (legacy solver) | Algorithm skeleton absorbed into the new balance module (Phase 2); code retired |
-| `jtaCostPlanner.js` / `cost-plan.js` / `cost-debugger.js` | Per-category attempt targets recorded as Q6-B future option; two-pass xpMult idea absorbed; code retired |
-| `simulator.js` + `gameData.js` (v0.5.0 economy copies) | Replaced by the fork's own estimators/sim (Q1-A); no port |
-| `jtaGameDataLoader.js` + `jta:replaceGameData`/`patchTaskDefs` | Replaced by the fork `applyTaskPatches` hook + sidecar payloads (Q2-A) |
-| `jtaArchipelago` perk↔item bridge | Conventions (location=task name, item=perk display name, reconcile-on-connect) absorbed into the substrate bridge (Phase 1); module retired |
-| `cost-adjustment-algorithm.md` | Stays as historical reference for the absorbed algorithms; new balancing docs go in `docs/json/developer/procgen/jta.md` |
+| `worlds/jta` apworld (perk placement, options, slot data) | Superseded by pipeline randomization + standard procgen→world_generator path (Phase 2); `resets_per_sphere` semantics carried into `resetsPerStep` |
+| `post_output` Node subprocess bridge | Dies with the apworld path — generation and balancing run natively in JS (Phase 3) |
+| `jtaCostGenerator.js` (legacy solver) | **Superseded by the §2 Loops-style forward pass** (first-touch assignment + real-engine advancement remove the retroactive levers it needed); code retired |
+| `jtaCostPlanner.js` / `cost-plan.js` / `cost-debugger.js` | Per-category attempt targets survive as the intra-step split rule (Q6); two-pass machinery unnecessary under §2; code retired |
+| `simulator.js` + `gameData.js` (v0.5.0 economy copies) | Replaced by the fork's own estimators/sim (Q1); no port |
+| `jtaGameDataLoader.js` + `jta:replaceGameData`/`patchTaskDefs` | Replaced by the fork Tier-1/Tier-2 hooks + sidecar payloads (Q2) |
+| `jtaArchipelago` perk↔item bridge | Conventions (location=task name, item=perk display name, reconcile-on-connect) absorbed into the substrate bridge (Phase 2); module retired |
+| `cost-adjustment-algorithm.md` | Stays as historical reference for the superseded algorithms; new docs go in `docs/json/developer/procgen/jta.md` |
 
-## 5. Open questions (beyond the six rulings)
+## 6. Open questions (beyond the rulings)
 
 1. **Patch application timing** (Q2 sub-choice): lazy per-region vs
    all-at-once at rules load.
-2. **Solver runtime budget**: measure Phase 2 solve time; if >~10s in-browser,
-   pick Web Worker vs generate-time script.
+2. **Solver runtime budget**: measure the Phase 3 pass; if >~10s in-browser,
+   Web Worker vs generate-time script.
 3. **Shared save × randomized seeds**: the one-shared-save ruling
-   (`incrementalGameSave_substrate`) means perks/skills earned under seed A
-   carry into seed B — with AP-authoritative grants the *perks* stop being a
-   problem (they come from AP inventory), but carried *skills* deflate a new
-   seed's pacing. Options when it bites: per-preset save keying (already
-   deferred once), or solver assumes fresh-save state and accepts that veteran
-   saves run ahead of pace. Not blocking; flag for the first playtest.
-4. **Tolerance band default** (Q6): pick after first harness round.
-5. **Multiworld pacing refinement** (Q3): post-fill sphere-log pass — deferred
-   unless solo-approximate pacing proves wrong in real multiworld play.
-6. **`grantPerk` hook shape**: verify the fork's internal perk-grant path
-   (old game-bundle exposed `window.tryAddPerk`; fork exposes nothing) and
-   whether grant needs to be persistence-safe (granted perks live in the
-   save blob — an AP-granted perk must survive save/load without the task
-   being complete).
+   (`incrementalGameSave_substrate`) means skills earned under seed A carry
+   into seed B — AP-authoritative grants de-fang the *perk* side, but carried
+   *skills* deflate a new seed's pacing. Options when it bites: per-preset
+   save keying (already deferred once), or solver assumes fresh-save state.
+   Flag for first playtest.
+4. **Tolerance band + intra-step split defaults** (Q6): pick after Phase 0.
+5. **Multiworld pacing refinement** (Q3): post-fill sphere-log pass (in-app,
+   Loops-generator analog) — deferred unless solo-approximate pacing proves
+   wrong in real multiworld play.
+6. **`grantPerk` hook shape**: verify the fork's internal grant path and
+   persistence-safety (an AP-granted perk must survive save/load without its
+   task being complete).
+7. **Filler item design**: hundreds of locations vs ~40 perks — what fills
+   the pool (old apworld used "Energy Boost" filler; loop-mode candidates:
+   starting-mana boosts, spark, scrolls)? Interacts with the no-max-mana
+   ruling (mana boosts are unbounded-friendly).
+8. **Repeatable-task check semantics**: first full completion is the working
+   definition; confirm no second-check surface is wanted (e.g. per-rep
+   partial locations) — assume no for v1.
+9. **Sphere-log fidelity** (Q7): how strictly must AP's post-fill sphere log
+   reproduce the generator's intended order — strict (specific-perk access
+   rules) vs loose (count-based rules, old-apworld style)? Strict rules
+   over-constrain fill in multiworld; loose rules let fill drift from the
+   balanced order. Recommend: loose + Phase 4 verification tolerance, revisit
+   if drift breaks pacing.
 
-## 6. Rulings requested
+## 7. Rulings
 
-| # | Question | Options | Recommendation |
-|---|---|---|---|
-| 1 | Balancing math home | A fork estimators / B old-JS port / C harness-in-loop | **A in-loop, C as verifier, B algorithms-only** |
-| 2 | Data delivery | A fork patch hook / B build-time data | **A** (field-level; shared by bridge + harness) |
-| 3 | Randomization home | A AP seed gen / B procgen pipeline / C frontend load | **B** |
-| 4 | Content scope | A perks+balance / B +zone-order / C +deep content | **A core, B stretch phase, C future arc** |
-| 5 | AP checks now? | A this arc (A1 AP-authoritative / A2 local-grant) / B later | **A1** |
-| 6 | Pacing knob | A single resetsPerStep+band / B per-category targets | **A** (B later as advanced params) |
+| # | Question | Status |
+|---|---|---|
+| 1 | Balancing math home | **Recommended:** fork estimators + real sim inside the §2 pass; harness verifies; old solvers retired. §2 architecture user-confirmed 2026-07-06 ("makes sense"); formal ruling on Q1 packaging pending |
+| 2 | Data delivery | **Recommended:** two-tier fork hooks (field-level now, structural for synthetic); sidecar-carried patches — pending |
+| 3 | Randomization home | **Recommended:** procgen pipeline — pending |
+| 4 | Content scope | **RULED (user 2026-07-06):** all tasks = locations, all perks = items, all in sphere log; existing-data mode first, fully synthetic generation as destination |
+| 5 | AP checks this arc | **Mooted yes** by ruling 4; grant semantics (AP-authoritative recommended) — pending |
+| 6 | Pacing knob | **Recommended:** `resetsPerStep` + band at progression-step granularity with intra-step split rule — pending |
+| 7 | Synthetic construction order | **Recommended:** co-construction with a thin planned layer (order planned, realization emergent); sphere log as byproduct trace, AP's post-fill log authoritative — pending (user explicitly undecided) |
+| 8 | Vanilla profiling first | **RULED (user 2026-07-06):** yes — Phase 0 |
