@@ -3,7 +3,7 @@
   "hideDisabledTests": true,
   "randomizeOrder": false,
   "defaultEnabledState": false,
-  "_comment": "Substrate in-app tests (text-adventure wrapper + flash + runner). Runs under the full module config (modules.json) so the substrate runtimes register \u2014 unlike test-regression, which uses modules-nograph.json and therefore cannot load them. New substrate tests must be added here (they register enabled:false so they don't leak into other modes).",
+  "_comment": "Substrate in-app tests (text-adventure wrapper + flash + runner + jta). Runs under the full module config (modules.json) so the substrate runtimes register \u2014 unlike test-regression, which uses modules-nograph.json and therefore cannot load them. New substrate tests must be added here (they register enabled:false so they don't leak into other modes).",
   "tests": [
     {
       "id": "tasw-location-check-direct-dispatch",
@@ -59,6 +59,26 @@
       "id": "runner-preset-sidecar-configured",
       "enabled": true,
       "category": "runnerDemo"
+    },
+    {
+      "id": "jta-out-of-mana-loop-reset",
+      "enabled": true,
+      "category": "JtA substrate"
+    },
+    {
+      "id": "jta-game-reset-triggers-loop-reset",
+      "enabled": true,
+      "category": "JtA substrate"
+    },
+    {
+      "id": "jta-pause-resume-on-region-switch",
+      "enabled": true,
+      "category": "JtA substrate"
+    },
+    {
+      "id": "jta-energy-mirrors-pool-both-ways",
+      "enabled": true,
+      "category": "JtA substrate"
     }
   ]
 }

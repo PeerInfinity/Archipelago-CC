@@ -1,0 +1,103 @@
+/**
+ * Test helpers for the JtA substrate wrapper — the module-owned
+ * testability surface described in frontend/modules/tests/README.md §4.
+ * Imported by frontend/modules/tests/testCases/jtaSubstrateWrapperTests.js.
+ *
+ * All helpers work against the live wrapper panel (iframe class
+ * `jtasw-iframe`) and the jta_substrate_test preset, whose regions are
+ * the JtA zone names ("The Village" = zone 0, …) with manaEnabled
+ * sidecars and start region Menu.
+ */
+
+import { centralRegistry } from '../../app/core/centralRegistry.js';
+import { getGameStateSingleton } from '../gameState/singleton.js';
+
+export const JTA_TEST_PRESET_PATH =
+    './presets/jta_substrate_test/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+export const JTA_TEST_REGION = 'The Village';   // jtaZone 0 in the preset
+export const JTA_TEST_START_REGION = 'Menu';
+
+export function getJtaIframe() {
+    return document.querySelector('iframe.jtasw-iframe');
+}
+
+export function gameStateFn(name) {
+    return centralRegistry.getPublicFunction?.('gameState', name);
+}
+
+export function readPool() {
+    return gameStateFn('getCurrentMana')?.() ?? null;
+}
+
+export function readLoopResetCount() {
+    return gameStateFn('getLoopResetCount')?.() ?? null;
+}
+
+export function readCurrentRegion() {
+    return gameStateFn('getCurrentRegion')?.() ?? null;
+}
+
+/**
+ * The region a loop reset teleports to — same resolution the wrapper
+ * host module uses (procgenPlayer's resolved start, falling back to
+ * the rules' first start region). For the jta_substrate_test preset
+ * this is mode-dependent: procgenPlayer may resolve the first
+ * substrate region rather than the synthetic Menu.
+ */
+export function readExpectedResetTarget() {
+    const fn = centralRegistry.getPublicFunction?.('procgenPlayer', 'getResolvedStartRegion');
+    const resolved = fn?.() ?? null;
+    if (resolved) return resolved;
+    return getGameStateSingleton()?.startRegions?.[0] ?? JTA_TEST_START_REGION;
+}
+
+/**
+ * Dispatch a user:regionMove the same way the tasw tests do — via the
+ * raw host dispatcher with initialTarget bottom, mirroring what a real
+ * substrate transition publishes.
+ */
+export function moveToRegion(targetRegion, sourceRegion = null) {
+    window.eventDispatcher?.publish('test', 'user:regionMove', {
+        sourceRegion,
+        targetRegion,
+        exitName: null,
+    }, { initialTarget: 'bottom' });
+}
+
+/**
+ * Wait until the wrapper iframe is mounted, its bridge has resumed the
+ * game clock for the current jta region, and the game hooks the tests
+ * drive (setEnergy / doEnergyReset / getFullState) are present.
+ * Returns the iframe's contentWindow, or null on timeout.
+ */
+export async function waitForJtaActive(testController, timeoutMs = 20000) {
+    let win = null;
+    const ok = await testController.pollForCondition(
+        () => {
+            const iframe = getJtaIframe();
+            if (!iframe?.contentWindow) return false;
+            const w = iframe.contentWindow;
+            if (typeof w.isGameLoopPaused !== 'function'
+                || typeof w.setEnergy !== 'function'
+                || typeof w.doEnergyReset !== 'function'
+                || typeof w.getFullState !== 'function') return false;
+            // The bridge resumes the clock on jta:loadRegion — running
+            // clock ⇒ region entry fully processed.
+            if (w.isGameLoopPaused()) return false;
+            win = w;
+            return true;
+        },
+        'jta iframe active (bridge resumed the game clock)',
+        timeoutMs,
+        250,
+    );
+    return ok ? win : null;
+}
+
+/**
+ * Poll until fn() is truthy or timeout; thin wrapper so tests read as
+ * one-liners for "eventually" assertions on host state.
+ */
+export function eventually(testController, fn, label, timeoutMs = 8000, intervalMs = 200) {
+    return testController.pollForCondition(fn, label, timeoutMs, intervalMs);
+}
