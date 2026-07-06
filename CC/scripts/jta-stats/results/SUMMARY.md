@@ -1,5 +1,17 @@
 # JtA automation stats — findings (2026-07-05, rev 2)
 
+> **VALIDITY CAVEAT (2026-07-06, user-flagged):** Rounds 1–4 and the
+> defaults sweep all ran with `award_spark_on_discovery: true` (it is part
+> of `baselineMods()`), and Round 5 showed discovery spark is load-bearing —
+> it funds Divinity purchases (MoT, SBtV, energy repeatables) without
+> prestiging. Conclusions most exposed: the auto-prestige **stall-40**
+> ("No new zone for N resets") tuning, the entire purchase-policy round
+> (spendCap explicitly rode discovery spark to zero-prestige completions),
+> the income round, and the **all-134 completion metric itself** (it counts
+> the four SBtV-gated tasks — ids 17/28/88/158 — which may be unobtainable
+> without discovery spark or prestige). A spark-off re-evaluation session is
+> planned; treat Rounds 1–4 numbers as valid only for spark-on play.
+
 > **Defaults shipped (Fork 1.5, submodule `64bd3c1`):** the winning numerics
 > are now the game's defaults — item /rep 5%, /rst 5 for the four rst-3
 > categories, auto-prestige stall 40 (toggles all still off). Post-tuning
@@ -155,12 +167,14 @@ an earlier same-day run with it ON is in git history for comparison).
   z28–29) and pinned-100 only 203/269 (26 prestiges) — vs 569/1151-run full
   completions with it on. Zones 0–14 pacing is nearly identical either way;
   the setting reshapes everything past zone ~15.
-- **SBtV-gated hidden tasks are a v1 hazard**: Secret Fishing Spot (z1),
-  Training Dummy (z2), Train at Every Guild (z8) + z14 stragglers need a
-  Divinity purchase; without discovery spark and without prestige (v1 scope
-  = zones 0–14) they may be unobtainable. Pinned-100 left 4 of 134 z0–14
-  tasks unreached at 3000 runs. The randomizer must exclude or
-  de-progression these locations in v1.
+- **SBtV-gated hidden tasks (RULED: excluded from v1)**: exactly four
+  z0–14 tasks have no in-game unlocker — ids 17 (z0 Use Secret Fishing
+  Spot), 28 (z1 Training Dummy), 88 (z7 Train at Every Guild), 158 (z14
+  Write Down Some Learnings); they need the SeeBeyondTheVeil Divinity
+  purchase. Without discovery spark and without prestige (v1 scope) they
+  are unobtainable — pinned-100 left exactly these 4 unreached at 3000
+  runs; standalone completed them only at run ~1460. v1 ignores them
+  (location pool, pacing walk, and metric universe).
 - **Whole-game estimator calibration is tail-dominated under spark-off**
   (tasks sit for hundreds of runs while prestige spark accumulates); the
   Phase 3 balancer should derive its correction curve from the zone≤14

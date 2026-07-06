@@ -577,13 +577,16 @@ standalone and `pinMaxEnergy` (substrate) budgets.
    over-constrain fill in multiworld; loose rules let fill drift from the
    balanced order. Recommend: loose + Phase 4 verification tolerance, revisit
    if drift breaks pacing.
-10. **SBtV-gated hidden tasks in v1 scope** (found by the corrected Phase 0
-   profile): Secret Fishing Spot (z1), Training Dummy (z2), Train at Every
-   Guild (z8) + z14 stragglers require the SeeBeyondTheVeil Divinity
-   purchase; with no prestige (v1 = zones 0–14) and spark-on-discovery off
-   they may never unlock (pinned-100 left 4/134 unreached at 3000 runs).
-   v1 must exclude them from the location pool or mark them
-   non-progression; decide at Phase 2.
+10. **SBtV-gated hidden tasks in v1 scope — RULED (user 2026-07-06):
+   ignored/excluded in v1.** Exactly four zone-0–14 tasks have no in-game
+   unlocker (Divinity/SeeBeyondTheVeil-gated): ids **17** (z0 Use Secret
+   Fishing Spot), **28** (z1 Training Dummy), **88** (z7 Train at Every
+   Guild), **158** (z14 Write Down Some Learnings) — verified as precisely
+   the pinned-run unreached set and the standalone run-~1460 stragglers.
+   They are excluded from the v1 location pool, the pacing walk, and the
+   verification metric universe (all other hidden z0–14 tasks have in-game
+   unlock chains and stay in). The v1 anchor curve's trailing 70-gap value
+   drops with them.
 
 ## 7. Rulings
 
