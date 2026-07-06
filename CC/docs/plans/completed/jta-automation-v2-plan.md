@@ -4,6 +4,23 @@ Plan for the next wave of automation features in the **journey-to-ascension subm
 (`frontend/modules/journey-to-ascension/`, fork of meneth/journey-to-ascension, branch
 `substrate`). All code references are to files inside the submodule.
 
+> **Status (2026-07-05): all phases SHIPPED.** §3–§6 landed as SAVE_VERSION
+> "Fork 1.4" (phases 1–5, 2026-07-03), plus prestige automation (Auto-Prestige,
+> spark stats, purchase queue, Auto-Buy Cheapest, 2026-07-04). §7 shipped in two
+> parts: the Fork 1.4 purchase queue + Auto-Buy Cheapest, then the Fork 1.5
+> **Unlock Savings** repeatable-spend budget (submodule `3573865`) — see the §7
+> as-shipped note. Numeric defaults were re-tuned twice: from playtest
+> (`a2d1ef1`) and then from simulation sweeps (`64bd3c1`). The purchase policy
+> and the defaults were selected with the **stats harness** in the outer repo —
+> `CC/scripts/jta-stats/` (headless Node ≡ Playwright drivers over the committed
+> `build/`), findings in `CC/scripts/jta-stats/results/SUMMARY.md`: a
+> budget-capped greedy beat pure cheapest, hard saving, balance-floor reserves,
+> and authored orderings on *both* time-to-first-completion and long-run Spark
+> income (Spark gain is exponential in deepest zone, so fewer-but-deeper
+> prestiges compound; a short prestige-stall trigger was the single worst
+> setting tested). Player-facing docs: the submodule's
+> `docs/automation-game-mods.md`.
+
 ## 1. Motivation
 
 The existing automation (Game Mods, Advanced Automation panel, queue cycling, artifact
@@ -332,6 +349,22 @@ a run needs no manual decisions — the stated end goal.
 
 Sketch only; implement after §3–§6 have burned in.
 
+> **As shipped (deviations from the sketch below):** repeatables queue as one
+> entry **per click** in click order (no `target_level` absorption — entries of
+> one upgrade are independent and need not be consecutive, which makes ordering
+> a finer tool than the sketch's "up to level N"). There is no
+> `auto_buy_prestige` gate: the queue engine always runs while the queue is
+> non-empty (an explicit queue *is* the opt-in), and the greedy default is the
+> separate **Auto-Buy Cheapest** toggle. Fork 1.5 added **Unlock Savings**
+> (`auto_buy_budget_enabled` / `auto_buy_budget_pct`, default off / 100%):
+> unlockables are bought the moment affordable (cheapest first) and repeatable
+> spending since the last unlockable purchase is capped at pct% of the cheapest
+> unowned unlockable's cost (persisted counter shared by manual/queued/auto
+> purchases). Chosen over alternatives by harness sweep — pure cheapest lets
+> low-exponent repeatables soak Spark forever below each unlockable's price;
+> hard saving and balance-floor reserves starve the repeatable engine and lose
+> badly; the flow cap won on completion speed *and* long-run Spark income.
+
 - **State**: `prestige_buy_queue: PrestigeBuyEntry[]` on Gamestate (saved,
   survives prestige — that's the point). `PrestigeBuyEntry = { kind: 'unlock' |
   'repeatable', type: number, target_level?: number }` — repeatables queue as
@@ -382,10 +415,19 @@ one commit series per phase (project convention: commit directly to the submodul
 | 5 | §6 Phase B autopilot mod + unlockTask hook | Mutual exclusion with queue_cycle |
 | 6 | §7 prestige buy queue + auto-buy | Separate design pass on the Divinity popup UI before implementing |
 
+All six phases shipped: 1–5 as Fork 1.4 (2026-07-03/04), 6 across Fork 1.4
+(queue + Auto-Buy Cheapest) and Fork 1.5 (Unlock Savings, 2026-07-05).
+
 ## 10. Open questions (non-blocking, defaults chosen)
 
 - Threshold defaults in §3.4 are guesses; tune after a playtest with thresholds
-  enabled post-prestige.
+  enabled post-prestige. **Resolved twice**: playtest tuning `a2d1ef1` (combat +
+  item /rep 10%, prestige /rst 10, other /lvl 1%, rest /rst 3, stall 20), then
+  sweep tuning `64bd3c1` (item /rep → 5%, the four /rst-3 categories → /rst 5,
+  stall → 40; toggles all still off). The sweep also found the default
+  **auto-fill order** (item-first) is ~2 runs worse than perk-first at the
+  margin — left as-is pending a user ruling, since item-first was itself a
+  ruling.
 - Should Auto Dreamcatcher ignore the `auto_use_items` gate? Duplicated items on a
   banking cycle are still banked (half-kept via UnderstandingTheReset), so firing on
   banking cycles is arguably fine. v1 keeps the gate for consistency with
@@ -394,3 +436,6 @@ one commit series per phase (project convention: commit directly to the submodul
   different aggressiveness per queue.
 - Auto Ring mid-run ring acquisitions beyond the plan size are banked; if that feels
   wrong in play, extend the plan to `held + spent` entries dynamically.
+  **Resolved**: the dynamic `held + spent` budget shipped in phase 3 — rings
+  rarely survive the early-game reset cull, so a reset-time snapshot was almost
+  always zero and mid-run pickups must widen the window immediately.
