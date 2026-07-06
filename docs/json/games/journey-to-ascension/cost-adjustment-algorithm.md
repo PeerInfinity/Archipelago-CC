@@ -470,7 +470,7 @@ Cost adjuster assumes:     Traverse zones → grind Normal tasks → reset
 Auto queue actually does:  Traverse zones → collect items → push with items → grind bottleneck skills → drain
 ```
 
-If the cost adjuster were to model the auto queue's full strategy, costs would be higher (harder seeds). The planned strategy factor system (see `jta-strategy-and-apworld-plan.md` Part 3) will bridge this gap by letting the cost adjuster layer in the same factors the auto queue uses.
+If the cost adjuster were to model the auto queue's full strategy, costs would be higher (harder seeds). The planned strategy factor system (see `CC/docs/plans/partial/jta-strategy-and-apworld-plan.md` Part 3 — partially implemented) would bridge this gap by letting the cost adjuster layer in the same factors the auto queue uses.
 
 ---
 
