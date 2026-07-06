@@ -13,6 +13,11 @@ under a configurable automation profile. Used to A/B automation settings.
   `doEnergyReset()`); counts cumulative runs in the driver because
   `energy_reset_count` zeroes on prestige. Exports `baselineMods()` (the
   tested play profile) and `runFirstCompletionStats(env, options)`.
+  **`baselineMods()` is spark-OFF since 2026-07-06**: the game's own
+  default for `award_spark_on_discovery` is false, and it being on in
+  every earlier sweep contaminated Rounds 1–4 (see SUMMARY.md validity
+  caveat). Spark-on runs are now an explicit
+  `modOverrides: { award_spark_on_discovery: true }`.
 - `node-env.mjs` — shared plain-Node environment: DOM stubs + build-module
   loading in the browser's evaluation order (used by `run-node.mjs` and
   `profile-vanilla.mjs`).
@@ -51,8 +56,22 @@ node CC/scripts/jta-stats/profile-vanilla.mjs --max-runs 500 --zone-limit 15
 
 Config JSON: `{ "name": "...", "options": { "modOverrides": {...},
 "autoFillOrder": [...], "maxRuns": 500, "zoneLimit": 15,
-"purchasePolicy": {...}, "pinMaxEnergy": 100 } }` — `modOverrides` are
+"purchasePolicy": {...}, "pinMaxEnergy": 100,
+"excludeTaskIds": [...] } }` — `modOverrides` are
 deltas on top of `baselineMods()`; `mods` replaces the profile wholesale.
+`excludeTaskIds` removes tasks from the metric universe — used by the
+zone-limited spark-off configs to drop the four SBtV-gated hidden tasks
+(ids 17/28/88/158, no in-game unlocker; unobtainable without discovery
+spark or a prestige-scale horizon). Full-game (zoneLimit 30) runs keep
+them in: prestige spark buys SeeBeyondTheVeil eventually and their timing
+is real tail signal.
+
+`experiments.mjs` runs the current spark-off rounds by default; the
+spark-on-era entries (Rounds 1–4 + defaults tuning) live in
+`LEGACY_EXPERIMENTS` and only run with `--legacy` (or by name via
+`--only`), with `award_spark_on_discovery: true` injected so re-runs
+reproduce the historical numbers. `--report FILE.md` names the comparison
+output (default `comparison.md`).
 `pinMaxEnergy` emulates jta-substrate play: max_energy re-clamped to the
 value at init and after every reset/prestige, the way the substrate bridge
 pins energy to the shared loop-mode pool (see results/SUMMARY.md Round 4).
