@@ -231,11 +231,15 @@ pass is plausibly ~5–15s. Two honest caveats:
    deviate from target — Phase 0 profiling measures the systematic factor,
    Phase 4 verification asserts the band. If deviation is systematic, the fix
    is a correction factor on the target, not a different architecture.
-2. **Pinned-pool budgets**: in loop mode `max_energy` is pinned to the loop's
-   starting mana each entry (no Energetic-Memory growth), so per-reset budgets
-   use the pinned pool (harness `pinMaxEnergy` semantics). Mana carried in
-   from other substrates makes real budgets higher — conservative in the right
-   direction.
+2. **Starting-mana budgets — terminology note (user re-affirmed 2026-07-06):**
+   `maxMana`/`max_energy` is misnamed — it is the **starting mana**, the
+   per-reset refill target, **never a ceiling**. Substrate mana/energy is
+   unbounded above it (a configurable cap was considered and deferred, maybe
+   never; the `maxMana`→`startingMana` rename is deferred to the cleanup
+   backlog). So: the solver's per-reset budget is the loop's *starting* mana
+   with no Energetic-Memory growth (harness `pinMaxEnergy` semantics — note
+   the harness option clamps carried-in surplus that real play would keep,
+   making it slightly conservative; real budgets can only be higher).
 
 ---
 
@@ -323,13 +327,34 @@ double-grants in multiworld.
 ### Q6. Specifying the pacing target
 
 Revised for all-tasks-as-locations: **the knob attaches to progression steps,
-not individual tasks.** Recommendation: a single `resetsPerStep` target +
-tolerance band as substrate params, with an **intra-step split rule** deciding
-how a step's budget is shared among its tasks (category-weighted; the old
-planner's per-category attempt targets are the precedent, exposed later as
-advanced params if needed). Keep the legacy floor (≥2 resets per step)
-per-step, not per-task. Verification stays two-layer: solver-internal
-acceptance per step + emergent harness verification against Phase 0 bands.
+not individual tasks**, with an **intra-step split rule** deciding how a
+step's budget is shared among its tasks (category-weighted; the old planner's
+per-category attempt targets are the precedent). Verification stays
+two-layer: solver-internal acceptance per step + emergent harness
+verification against Phase 0 bands.
+
+> **RULED (user 2026-07-06): default pacing targets = the profiled vanilla
+> values, and the default must capture the vanilla pacing CURVE, not just its
+> average.** Phase 0 measured the curve (SUMMARY.md Round 5): consecutive
+> first-completion gaps p50 = 2; perk-milestone gaps p50 = 8 (standalone) /
+> 14 (pinned) growing from ~4 early to 60+ late game, long tail max 61/145.
+> A single scalar `resetsPerStep` is demoted to a manual-override knob.
+
+Remaining sub-choice — **how the curve is represented**:
+
+- **A (recommended): position-indexed curve replay** — the k-th milestone's
+  target gap comes from a smoothed vanilla gap-vs-progression-index curve
+  (the ordered gap sequences already stored in `vanilla-profile.json`), with
+  seeded jitter matching local variance. Preserves the trend (early quick,
+  late grindy), not just the distribution.
+- **B: phase-banded distribution sampling** — split progression into bands,
+  sample each step's target from that band's vanilla gap distribution. Same
+  distribution per phase; the trend survives only at band granularity, and
+  order within a band scrambles.
+- Anchor variant: **pinned100's curve for substrate play** (matches loop
+  starting-mana budgets; standalone's curve kept for standalone-flavored
+  worlds/comparison). Tolerance band still to pick after the first Phase 4
+  verification round.
 
 ### Q7 (NEW). Synthetic generation: sphere log first, or co-constructed?
 
@@ -482,6 +507,6 @@ standalone and `pinMaxEnergy` (substrate) budgets.
 | 3 | Randomization home | **Recommended:** procgen pipeline — pending |
 | 4 | Content scope | **RULED (user 2026-07-06):** all tasks = locations, all perks = items, all in sphere log; existing-data mode first, fully synthetic generation as destination |
 | 5 | AP checks this arc | **Mooted yes** by ruling 4; grant semantics (AP-authoritative recommended) — pending |
-| 6 | Pacing knob | **Recommended:** `resetsPerStep` + band at progression-step granularity with intra-step split rule — pending |
+| 6 | Pacing knob | **PARTIALLY RULED (user 2026-07-06):** defaults = profiled vanilla values, capturing the CURVE not just the average; scalar `resetsPerStep` demoted to manual override. Remaining: curve representation (position-indexed replay recommended vs phase-banded sampling) + tolerance band |
 | 7 | Synthetic construction order | **Recommended:** co-construction with a thin planned layer (order planned, realization emergent); sphere log as byproduct trace, AP's post-fill log authoritative — pending (user explicitly undecided) |
 | 8 | Vanilla profiling first | **RULED (user 2026-07-06):** yes — Phase 0 |
