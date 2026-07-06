@@ -134,3 +134,29 @@ identical in both.)
   runs are noise-equivalent (butterfly effects).
 - Divine Speed's real-time benefit is invisible in instant mode (it speeds
   wall-clock ticks, explicitly not energy use).
+
+## Round 5 — vanilla profile for the zone-randomization arc (vanilla-profile.json, 2026-07-06)
+
+Phase 0 of `CC/docs/plans/jta-zone-randomization-plan.md`: full-game (30-zone,
+269-task) tuned-defaults playthroughs + static structural profile + estimator
+calibration, via `profile-vanilla.mjs` (details in `VANILLA-PROFILE.md`).
+
+- **The whole 30-zone game completes under both budgets**: standalone 569
+  runs (3 prestiges), pinned-100 1151 runs (6 prestiges). Nothing unreached —
+  substrate-style pinned energy stretches but never strands vanilla content.
+- **Vanilla pacing anchor** (input for the `resetsPerStep` default): gaps
+  between consecutive first-completions p50 = 2 resets in both variants
+  (mean 2.1 standalone / 4.3 pinned, long tail max 57/102). Perk-milestone
+  gaps p50 = 8 (standalone) / 14 (pinned), max 61/145; unlock-event gaps
+  (perk or task-unlocker) p50 = 5 / 6.
+- **The estimator needs the calibration curve, not a constant factor**:
+  `estimateResetsToComplete` vs actual resets-to-first-completion crosses
+  1.0 around est 11–20 (standalone; actual/est p50 0.92) or 21–50 (pinned;
+  p50 1.08). Below that it is strongly optimistic (est=1 → actual p50 8/16 —
+  automation doesn't dedicate; queue order dominates small tasks), above it
+  strongly pessimistic (est 51–200 → actual/est p50 0.18/0.32 — skills,
+  perks, and prestige compound past the frozen-boost assumption). Even
+  est=0 ("completable now") tasks take p50 6/25 actual resets to land.
+- Skill shape: 195/269 tasks are single-skill, 72 two-skill; most skills hit
+  L100 within ~25 runs; Ascension (first zone 14, xp_needed_mult 200) first
+  trains at run ~332 standalone.

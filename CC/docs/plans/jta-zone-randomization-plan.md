@@ -1,7 +1,8 @@
 # JtA Zone Randomization & Reset-Paced Balancing — Plan
 
 **Date:** 2026-07-06 (v2, same-day revision after design discussion) ·
-**Status: PLANNING — directions received on scope/algorithm, remaining rulings pending; no implementation.**
+**Status: Phase 0 (vanilla profiling) IN PROGRESS — user go-ahead 2026-07-06;
+remaining rulings pending for Phases 1+.**
 
 The next JtA arc after `jta-substrate-integration-plan.md` (all phases complete
 except its Phase 6 stub, which this plan absorbs). This is the modern successor
@@ -30,7 +31,13 @@ save, Pause-on-Block default, automation defaults) are **not re-opened here**.
    engine — zones constructed **one task at a time**, each task's data set
    from what the player is *known to have access to at that point*. New tasks
    are NOT always appended to the latest zone; sometimes they backfill into
-   earlier zones.
+   earlier zones. **Backfill purpose (clarified 2026-07-06):** a backfilled
+   task's cost is assigned later in the walk, when a *higher* cost has become
+   affordable — so it cannot be completed on the first pass through its zone
+   and the player must return later (metroidvania-style revisit structure
+   inside zones).
+   First-completions are the unlock events: some tasks grant a perk, others
+   unlock further tasks (`unlocks_task`/hidden chains).
 4. Even before synthetic data, the **same forward-pass strategy assigns costs
    to existing (vanilla/shuffled) tasks**.
 5. Known complication: tasks depend on specific skills and grant XP to those
@@ -294,8 +301,11 @@ Scope is now staged rather than optional:
    vanilla zones (Tier-1 patches only).
 3. **Synthetic mode as the destination** (requirement §0.3): zones constructed
    one task at a time from known player access, with backfill into earlier
-   zones (a placement lever: earlier zone ⇒ cheaper base cost via 2.2^zone,
-   included in every later reset's replay loop, lower XP yield via 1.25^zone).
+   zones — priced at assignment time (later in the walk), so backfilled tasks
+   are unaffordable on the zone's first pass and require returning later.
+   (Engine side note: an earlier zone_id still scales base cost by 2.2^zone
+   and XP by 1.25^zone, so the assigned costMult compensates — the estimator
+   inversion handles this automatically.)
    Requires Tier-2 hook + Q7 ruling + the Phase 0 vanilla profile as its
    target shape.
 4. Zone-order shuffle (region i ↔ zone π(i)) demoted to an optional stretch
@@ -451,10 +461,8 @@ standalone and `pinMaxEnergy` (substrate) budgets.
 6. **`grantPerk` hook shape**: verify the fork's internal grant path and
    persistence-safety (an AP-granted perk must survive save/load without its
    task being complete).
-7. **Filler item design**: hundreds of locations vs ~40 perks — what fills
-   the pool (old apworld used "Energy Boost" filler; loop-mode candidates:
-   starting-mana boosts, spark, scrolls)? Interacts with the no-max-mana
-   ruling (mana boosts are unbounded-friendly).
+7. **Filler item design — RULED for v1 (user 2026-07-06): filler items do
+   nothing.** Ideas for later (starting-mana boosts, spark, scrolls) parked.
 8. **Repeatable-task check semantics**: first full completion is the working
    definition; confirm no second-check surface is wanted (e.g. per-rep
    partial locations) — assume no for v1.

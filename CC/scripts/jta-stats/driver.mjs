@@ -445,6 +445,13 @@ export function runFirstCompletionStats(env, options = {}) {
   // the earning trajectory, not first completions.
   const runToBudget = options.runToBudget ?? false;
 
+  // Observation hook: called at the start of every run (fresh post-reset
+  // state — energy refilled/pinned, zone settled by skipFreeZones) with the
+  // upcoming run number and the live first-completions map. Used by
+  // profile-vanilla.mjs for skill/estimator sampling; never serialized.
+  const onRunBoundary = options.onRunBoundary ?? null;
+  if (onRunBoundary) onRunBoundary({ run, completions });
+
   while (
     (runToBudget || completions.size < universe.size) &&
     run <= maxRuns
@@ -503,6 +510,7 @@ export function runFirstCompletionStats(env, options = {}) {
       idleTicks = 0;
       lastSig = "";
       recordBoundaryCompletions();
+      if (onRunBoundary && run <= maxRuns) onRunBoundary({ run, completions });
       continue;
     }
 

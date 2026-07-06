@@ -13,8 +13,20 @@ under a configurable automation profile. Used to A/B automation settings.
   `doEnergyReset()`); counts cumulative runs in the driver because
   `energy_reset_count` zeroes on prestige. Exports `baselineMods()` (the
   tested play profile) and `runFirstCompletionStats(env, options)`.
-- `run-node.mjs` — plain-Node bootstrap: stubs just enough DOM to import the
-  committed `build/` ESM directly. Fast path for sweeps; no server needed.
+- `node-env.mjs` — shared plain-Node environment: DOM stubs + build-module
+  loading in the browser's evaluation order (used by `run-node.mjs` and
+  `profile-vanilla.mjs`).
+- `run-node.mjs` — plain-Node bootstrap over `node-env.mjs`. Fast path for
+  sweeps; no server needed.
+- `profile-vanilla.mjs` — Phase 0 of the zone-randomization plan
+  (`CC/docs/plans/jta-zone-randomization-plan.md`): static structural profile
+  of the vanilla data (tasks/zones/skills/perks/unlock chains, cost
+  distributions) + a tuned-defaults playthrough per variant (standalone /
+  pinMaxEnergy=100) collecting reset-gap pacing, perk-milestone spacing,
+  skill trajectories, and `estimateResetsToComplete`-vs-actual calibration
+  (via the driver's `onRunBoundary` hook). Writes
+  `results/vanilla-profile.json`, per-variant `vanilla-profile-raw-*.json`,
+  and `results/VANILLA-PROFILE.md`.
 - `run-playwright.mjs` — real-browser bootstrap against
   `http://localhost:8000/frontend/modules/journey-to-ascension/index.html`
   (fresh save via `localStorage.clear()`), running the same driver in-page.
@@ -33,6 +45,8 @@ node CC/scripts/jta-stats/run-playwright.mjs                 # needs dev server 
 node CC/scripts/jta-stats/experiments.mjs                    # full sweep
 node CC/scripts/jta-stats/experiments.mjs --only baseline,stall-40 --max-runs 100
 node CC/scripts/jta-stats/report.mjs results/*.json > results/comparison.md
+node CC/scripts/jta-stats/profile-vanilla.mjs                # Phase 0 profile, both variants
+node CC/scripts/jta-stats/profile-vanilla.mjs --max-runs 500 --zone-limit 15
 ```
 
 Config JSON: `{ "name": "...", "options": { "modOverrides": {...},
