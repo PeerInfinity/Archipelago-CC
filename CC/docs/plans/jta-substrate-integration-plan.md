@@ -8,13 +8,25 @@ automation surface, so this review checked it file-by-file against the game
 submodule, the substrate contract (`docs/json/developer/procgen/substrate-registry.md`),
 and the submodule's own `docs/substrate-integration.md`.
 
-> **Status (2026-07-05): REVIEW COMPLETE + ALL §6 DESIGN RULINGS RECEIVED;
-> implementation not started.** Findings verified against source (zoneCount and
-> missing energy-reset callback confirmed by hand). The user ruled on all six
-> open questions same-day — rulings are recorded inline in each phase and in
-> the §6 table; the lettered alternatives are kept for the record. Nothing in
-> this doc re-opens settled automation decisions (defaults, auto-fill order,
-> `threshold_all_skipped`, Use Free Items kept≡0).
+> **Status (2026-07-05): Phases 1 + 3 SHIPPED, Phase 4 tests SHIPPED.**
+> All §6 rulings received and recorded inline; implementation landed the same
+> day: submodule **Fork 1.6** (`e26ce3b` — managed-mode persistence under the
+> shared `incrementalGameSave_substrate` slot, synthetic tasks excluded from
+> saves, `doPrestige` fires the energy-reset callback), registry entry fixes
+> (`1e72e6f03` — zoneCount 30, `iframeId`, `victoryItem: 'Victory'`),
+> bidirectional reset + two-way mana sync + strict pause/resume
+> (`d75408ba0` — gameState grew `gainMana`; bridge echo-detection via
+> `_expectedPool`), docs refresh (`5f67739f8`), and the in-app test suite the
+> tests README always promised (`1ec00967a` — 4 JtA tests, all 15
+> substrate-mode tests green, regression suite unaffected; note the loop-reset
+> teleport target is `getResolvedStartRegion()`, which in procgen-aware modes
+> resolves the first substrate region, not Menu).
+> **Still open:** Phase 4 playback controller + `executeVia` (plus the reduced
+> Phase 2 bridge commands it needs: `setInstantMode`/`stepTick`/task
+> targeting), §4 harness measurements (threshold rescale under pooled
+> max_energy), Phase 5 doc relocation (old stack kept per ruling), Phase 6.
+> Nothing in this doc re-opens settled automation decisions (defaults,
+> auto-fill order, `threshold_all_skipped`, Use Free Items kept≡0).
 
 ## 1. Current state — the map
 
