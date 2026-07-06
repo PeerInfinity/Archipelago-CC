@@ -26,6 +26,10 @@ The registry entry exposes a PlaybackController as a host-side proxy (the shared
 
 A walk routinely **spans multiple loop resets**: full-zone play at fresh skills costs more than one pool, so the pool empties, the loop resets (skills persist), and loops' parked-action retry re-dispatches the walk — attempts get cheaper as skills compound until the zone completes within a single loop. The bridge keeps a pending walk alive across a same-region reload (the reset-retry case) and re-arms automation for it. `loopSupport.executeVia: 'playbackBot'` makes loops queue `regionMove` actions execute through this path, parking until the resulting `user:regionMove` arrives.
 
+## Play notes
+
+**Automation can park in under-leveled zones.** Free region travel lets you enter zones far ahead of your skills; a Boss whose base cost exceeds `current energy × disparity limit` counts as *blocked*, and the game's default **Pause on Block** stops the automation queue at the first blocked entry (by design in standalone, where you can't out-travel your level). If automation seems dead in an advanced zone, switch the automation panel's setting to **Skip on Block** — automation then does whatever it can and skips what it can't. Deliberately left as the game's default (user decision 2026-07-05); revisit only if it keeps confusing substrate players.
+
 ## Capabilities
 
 No AP location checks inside regions yet (`supportedFeatures: ['region_topology_from_source']`); loop support is queueable `regionMove` (bot-executed, see above) plus manual play, without custom queues. Full contract: [Substrate Registry Reference](./substrate-registry.md).

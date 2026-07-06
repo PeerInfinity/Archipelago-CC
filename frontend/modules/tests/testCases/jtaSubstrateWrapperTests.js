@@ -345,8 +345,12 @@ async function botWalkToExit(testController) {
     const idsFirst = exitIds();
     testController.assertEqual('exit tasks injected on completed re-entry', true, idsFirst.length > 0);
 
-    // Prioritize the first exit task the way a player would.
+    // Prioritize the first exit task the way a player would — and turn
+    // Auto-Prioritize ON (the user-reported regression: its per-zone
+    // regen on entry erased manually prioritized exit tasks).
     win2.getGamestate.automation_prios.set(0, [idsFirst[0]]);
+    win2.setMod('force_automation', true);
+    win2.setMod('auto_prioritize', true);
 
     moveToRegion(targetRegion, JTA_TEST_REGION);
     await eventually(testController, () => readCurrentRegion() === targetRegion, 'left again', 8000);
@@ -359,10 +363,17 @@ async function botWalkToExit(testController) {
     );
     const prios = win2.getGamestate.automation_prios.get(0) ?? [];
     testController.assertEqual(
-        'player priority still references a live exit task',
+        'player priority survives Auto-Prioritize regen and references a live exit task',
         true,
         prios.includes(idsFirst[0]) && idsSecond.includes(idsFirst[0]),
     );
+    testController.assertEqual(
+        'preserved exit priority kept its front position',
+        idsFirst[0],
+        prios[0],
+    );
+    win2.setMod('auto_prioritize', false);
+    win2.setMod('force_automation', false);
 
     return testController.getOverallResult();
 }
