@@ -6,278 +6,300 @@ Baseline: **spark-off-full-baseline-node**. "Run" = cumulative run (energy reset
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | spark-off-full-baseline-node | 269/269 | 133 | 152 | 194 | 221 | 264 | 268 | 791.0 | 262 | 108.0 | 4068 | 59 | 31 | 1237 | 1459 | 76622 | 68085 |
 | spark-off-full-spark-on-node | 269/269 | 152 | 263 | 269 | 269 | 269 | 269 | 211.7 | 173 | 72.9 | 570 | 3 | 31 | 335 | 348 | 14671 | 14552 |
+| spark-off-full-stall-5-node | 262/269 | 125 | 137 | 164 | 184 | 213 | 218 | 1454.5 | 421 | 141.3 | >5000 | 304 | 30 | 2035 | 2337 | 114696 | 97991 |
+| spark-off-full-stall-10-node | 269/269 | 124 | 150 | 187 | 225 | 268 | 269 | 765.0 | 267 | 107.5 | 3153 | 114 | 31 | 1228 | 1345 | 69109 | 60167 |
+| spark-off-full-stall-20-node | 269/269 | 142 | 152 | 187 | 233 | 268 | 269 | 718.3 | 234 | 106.4 | 3294 | 77 | 31 | 1179 | 1354 | 66650 | 62534 |
+| spark-off-full-stall-80-node | 268/269 | 143 | 152 | 176 | 219 | 221 | 264 | 992.8 | 213 | 118.6 | >5000 | 40 | 30 | 1686 | 1835 | 96076 | 89968 |
+| spark-off-full-ratio-50-node | 269/269 | 143 | 150 | 169 | 216 | 254 | 269 | 902.0 | 213 | 120.5 | 3725 | 77 | 31 | 1637 | 1898 | 82817 | 59463 |
+| spark-off-full-wealth-10-node | 166/269 | 124 | 128 | 129 | 138 | 148 | 158 | 2352.5 | 1760 | 232.4 | >5000 | 514 | 20 | — | — | 196654 | 88092 |
+| spark-off-full-wealth-25-node | 194/269 | 124 | 128 | 129 | 155 | 164 | 179 | 2106.2 | 1448 | 209.7 | >5000 | 496 | 22 | 3462 | 4240 | 151027 | 73060 |
+| spark-off-full-wealth-50-node | 226/269 | 124 | 128 | 135 | 169 | 191 | 212 | 1764.1 | 958 | 163.4 | >5000 | 422 | 26 | 2422 | 2799 | 126302 | 70267 |
+| spark-off-full-stall40-wealth10-node | 166/269 | 124 | 128 | 129 | 138 | 148 | 158 | 2352.5 | 1760 | 232.4 | >5000 | 514 | 20 | — | — | 196654 | 81021 |
+| spark-off-full-buy-spendcap-10-node | 269/269 | 133 | 167 | 202 | 242 | 269 | 269 | 635.0 | 284 | 94.8 | 2887 | 34 | 31 | 716 | 1005 | 53985 | 60300 |
+| spark-off-full-buy-spendcap-05-node | 269/269 | 133 | 167 | 200 | 234 | 268 | 269 | 655.1 | 284 | 95.5 | 3063 | 36 | 31 | 716 | 1029 | 55951 | 59280 |
+| spark-off-full-buy-levelcap-10-node | 258/269 | 133 | 167 | 190 | 218 | 235 | 235 | 1078.8 | 284 | 99.5 | >5000 | 55 | 30 | 806 | 1163 | 88649 | 87130 |
+| spark-off-full-unlock-savings-node | 269/269 | 133 | 167 | 202 | 242 | 269 | 269 | 635.0 | 284 | 94.8 | 2887 | 34 | 31 | 716 | 1005 | 53985 | 53193 |
+| spark-off-full-item-2-node | 269/269 | 129 | 152 | 191 | 221 | 264 | 268 | 795.3 | 262 | 116.7 | 4019 | 58 | 31 | 1241 | 1465 | 75117 | 83402 |
+| spark-off-full-item-10-node | 269/269 | 131 | 152 | 193 | 221 | 266 | 269 | 784.4 | 260 | 113.0 | 3993 | 58 | 31 | 1227 | 1447 | 75486 | 76127 |
+| spark-off-full-rst-3-node | 269/269 | 132 | 152 | 192 | 221 | 264 | 268 | 793.6 | 256 | 110.4 | 4095 | 60 | 31 | 1227 | 1447 | 77029 | 76868 |
+| spark-off-full-rst-8-node | 269/269 | 132 | 152 | 191 | 221 | 264 | 268 | 793.4 | 256 | 109.7 | 4070 | 59 | 31 | 1237 | 1459 | 76643 | 71820 |
+| spark-off-full-fill-perk-first-node | 269/269 | 133 | 152 | 192 | 221 | 266 | 269 | 785.7 | 268 | 109.2 | 3997 | 58 | 31 | 1237 | 1459 | 75746 | 67168 |
+| spark-off-full-stall10-savings-node | 269/269 | 124 | 164 | 187 | 226 | 269 | 269 | 703.6 | 324 | 99.3 | 2592 | 83 | 31 | 788 | 1029 | 53120 | 42065 |
+| spark-off-full-stall15-savings-node | 269/269 | 133 | 168 | 193 | 234 | 269 | 269 | 651.6 | 276 | 94.3 | 2540 | 63 | 31 | 722 | 938 | 49768 | 38484 |
+| spark-off-full-stall20-savings-node | 269/269 | 142 | 168 | 205 | 241 | 269 | 269 | 630.1 | 234 | 95.2 | 2583 | 52 | 31 | 744 | 980 | 50114 | 38711 |
+| spark-off-full-stall15-savings-spark-on-node | 269/269 | 133 | 208 | 269 | 269 | 269 | 269 | 288.4 | 260 | 78.6 | 780 | 15 | 31 | 383 | 426 | 19416 | 12906 |
 
 ## Per-task first completion (run number)
 
-| zone | task | reps | spark-off-full-baseline-node | spark-off-full-spark-on-node |
-|---|---|---|---|---|
-| 1 The Village | Join the Watch | 1 | 4 | 4 |
-| 1 The Village | Read Noticeboard | 1 | 2 | 2 |
-| 1 The Village | Train with Weapons | 3 | 2 | 2 |
-| 1 The Village | Learn How to Read | 1 | 1 | 1 |
-| 1 The Village | Beg for Food | 10 | 3 | 3 |
-| 1 The Village | Hide and Seek | 3 | 1 | 1 |
-| 1 The Village | Observe Surroundings | 5 | 2 | 2 |
-| 1 The Village | Use Secret Fishing Spot | 8 | 1460 | 349 |
-| 2 The Village Watch | Notice Smoke in the Distance | 1 | 7 | 7 |
-| 2 The Village Watch | Learn Routines | 4 | 7 | 7 |
-| 2 The Village Watch | Deal with Drunkards | 2 | 7 | 7 |
-| 2 The Village Watch | Chit-chat | 3 | 6 | 6 |
-| 2 The Village Watch | Sparring | 4 | 9 | 9 |
-| 2 The Village Watch | Fletch Arrows | 5 | 9 | 9 |
-| 2 The Village Watch | Daydream About Leaving | 6 | 4 | 4 |
-| 2 The Village Watch | Learn How to Write | 1 | 5 | 5 |
-| 2 The Village Watch | Training Dummy | 10 | 1460 | 349 |
-| 3 The Raid | Enter the Wilderness | 1 | 11 | 11 |
-| 3 The Raid | Fight a Goblin | 1 | 11 | 11 |
-| 3 The Raid | Warn Villagers | 3 | 11 | 11 |
-| 3 The Raid | Loot the Fallen | 4 | 7 | 7 |
-| 3 The Raid | Rescue Villager | 3 | 10 | 10 |
-| 3 The Raid | Treat Villager Wounds | 3 | 8 | 8 |
-| 3 The Raid | Goblin Warlord | 1 | 57 | 57 |
-| 3 The Raid | Save the Village | 1 | 57 | 57 |
-| 4 The Wilderness | Find Cave Entrance | 1 | 19 | 19 |
-| 4 The Wilderness | Look for Tracks | 3 | 13 | 13 |
-| 4 The Wilderness | Survive the Night | 1 | 13 | 13 |
-| 4 The Wilderness | Find an Amulet | 1 | 17 | 17 |
-| 4 The Wilderness | Build a Fire | 1 | 12 | 12 |
-| 4 The Wilderness | Forage for Mushrooms | 5 | 12 | 12 |
-| 4 The Wilderness | Befriend a Deer | 1 | 11 | 11 |
-| 4 The Wilderness | Angry Ent | 1 | 99 | 99 |
-| 4 The Wilderness | Gather Magical Roots | 3 | 99 | 99 |
-| 5 The Cave System | Leave Via Back Entrance | 1 | 25 | 25 |
-| 5 The Cave System | Find a Way Through | 1 | 21 | 21 |
-| 5 The Cave System | Rescue Captives | 3 | 23 | 23 |
-| 5 The Cave System | Steal Supplies | 5 | 22 | 22 |
-| 5 The Cave System | Try Casting a Spell | 6 | 21 | 21 |
-| 5 The Cave System | Inspect Wall Paintings | 1 | 20 | 20 |
-| 5 The Cave System | Scout the Cave | 3 | 24 | 24 |
-| 5 The Cave System | Goblin Chieftain | 1 | 101 | 101 |
-| 5 The Cave System | Wipe Out Goblins | 1 | 103 | 103 |
-| 6 The Road to the City | Get to the City | 1 | 33 | 33 |
-| 6 The Road to the City | Join a Caravan | 1 | 31 | 31 |
-| 6 The Road to the City | Scout the Road Ahead | 3 | 31 | 31 |
-| 6 The Road to the City | Make Travel Equipment | 4 | 31 | 31 |
-| 6 The Road to the City | Get Used to Traveling | 3 | 29 | 29 |
-| 6 The Road to the City | Chat with Travelers | 4 | 26 | 26 |
-| 6 The Road to the City | Practice Traveling Unnoticed | 1 | 25 | 25 |
-| 6 The Road to the City | Bandits | 1 | 105 | 105 |
-| 6 The Road to the City | Loot Bandit Camp | 4 | 105 | 105 |
-| 6 The Road to the City | Study the Amulet | 1 | 27 | 27 |
-| 7 The City Outskirts | Enter the City | 1 | 39 | 39 |
-| 7 The City Outskirts | Bribe the City Guards | 1 | 37 | 37 |
-| 7 The City Outskirts | Survive a Mugging | 1 | 37 | 37 |
-| 7 The City Outskirts | Buy a Book | 5 | 33 | 33 |
-| 7 The City Outskirts | Negotiate with a Rogue Guard | 1 | 35 | 35 |
-| 7 The City Outskirts | Spar with the Guards | 4 | 37 | 37 |
-| 7 The City Outskirts | Fend for Yourself | 1 | 47 | 47 |
-| 7 The City Outskirts | Skulk About | 1 | 33 | 33 |
-| 8 The City | Embark on a Quest | 1 | 51 | 51 |
-| 8 The City | Investigate Rumors of a Magician | 4 | 43 | 43 |
-| 8 The City | Search the Archives for Magic | 5 | 51 | 51 |
-| 8 The City | Scribe Scroll of Haste | 1 | 43 | 43 |
-| 8 The City | Cast a Spell | 6 | 49 | 49 |
-| 8 The City | Study at the Mage's Guild | 1 | 39 | 39 |
-| 8 The City | Train for Your Quest | 3 | 39 | 39 |
-| 8 The City | Corrupt Mayor | 1 | 109 | 109 |
-| 8 The City | Train at Every Guild | 1 | 1460 | 349 |
-| 8 The City | Purge Corrupt Bureacracy | 1 | 111 | 111 |
-| 9 The Forest | Scale the Mountain | 1 | 65 | 65 |
-| 9 The Forest | Locate the Mountain | 1 | 59 | 59 |
-| 9 The Forest | Make Climbing Gear | 3 | 63 | 63 |
-| 9 The Forest | Make Camping Equipment | 3 | 59 | 59 |
-| 9 The Forest | Prepare to Scale the Mountain | 3 | 55 | 55 |
-| 9 The Forest | Build a Hut | 1 | 59 | 59 |
-| 9 The Forest | Go Sightseeing | 3 | 53 | 53 |
-| 9 The Forest | Meet a Magical Creature | 1 | 53 | 53 |
-| 9 The Forest | Werewolf | 1 | 117 | 117 |
-| 9 The Forest | Gather Shed Fur from Lair | 3 | 117 | 117 |
-| 10 The Magician | Hunt for the First Reagent | 1 | 71 | 71 |
-| 10 The Magician | Convince the Magician | 1 | 71 | 71 |
-| 10 The Magician | Do a Favor | 1 | 69 | 69 |
-| 10 The Magician | Steal Some Reagents | 4 | 65 | 65 |
-| 10 The Magician | Figure Out How to Attune | 1 | 69 | 69 |
-| 10 The Magician | Give Yourself a Pep Talk | 1 | 67 | 67 |
-| 10 The Magician | Try to Transform Into an Eagle | 1 | 67 | 67 |
-| 10 The Magician | Low-oxygen Exercise | 5 | 77 | 77 |
-| 11 The Ocean | Land on Island | 1 | 81 | 81 |
-| 11 The Ocean | Weather a Storm | 1 | 77 | 77 |
-| 11 The Ocean | Find the Island | 1 | 77 | 77 |
-| 11 The Ocean | Catch Fish | 5 | 75 | 75 |
-| 11 The Ocean | Dive as a Squid | 3 | 75 | 75 |
-| 11 The Ocean | Look for Land | 3 | 73 | 73 |
-| 11 The Ocean | Practice Transforming | 1 | 73 | 73 |
-| 11 The Ocean | Kraken | 1 | 127 | 127 |
-| 11 The Ocean | Explore Kraken's Lair | 1 | 127 | 127 |
-| 12 The Island | Hunt for the Second Reagent | 1 | 87 | 87 |
-| 12 The Island | Gather Reagent | 3 | 83 | 83 |
-| 12 The Island | Repair Ship | 1 | 85 | 85 |
-| 12 The Island | Catch More Fish | 4 | 85 | 85 |
-| 12 The Island | Explore the Jungle | 6 | 83 | 83 |
-| 12 The Island | Build Another Hut | 1 | 85 | 85 |
-| 12 The Island | Talk to the Local Wildlife | 3 | 83 | 83 |
-| 12 The Island | Horde of Lizardfolk | 1 | 163 | 157 |
-| 12 The Island | Steal Their Oracle Bones | 4 | 163 | 157 |
-| 13 The Desert | Enter the Oasis | 1 | 97 | 97 |
-| 13 The Desert | Overcome Mirage | 1 | 97 | 97 |
-| 13 The Desert | Find the Oasis | 1 | 87 | 87 |
-| 13 The Desert | Harvest Cactus | 3 | 89 | 89 |
-| 13 The Desert | Avoid Notice by the Sandworm | 4 | 93 | 93 |
-| 13 The Desert | Work on Your Tan | 3 | 87 | 87 |
-| 13 The Desert | Comb the Desert | 3 | 89 | 89 |
-| 13 The Desert | Giant Sandworm | 1 | 203 | 169 |
-| 13 The Desert | Learn to Dance the Worm | 1 | 205 | 169 |
-| 14 The Oasis | Return to the Magician | 1 | 129 | 129 |
-| 14 The Oasis | Banish Evil Spirit | 3 | 119 | 119 |
-| 14 The Oasis | Gather Second Reagent | 5 | 119 | 119 |
-| 14 The Oasis | Bottle Oasis Water | 4 | 107 | 107 |
-| 14 The Oasis | Reflect on the Journey | 4 | 113 | 113 |
-| 14 The Oasis | Prepare for the Journey Ahead | 3 | 97 | 97 |
-| 14 The Oasis | Talk to the Djinn | 1 | 107 | 107 |
-| 14 The Oasis | Sleepy Djinn | 1 | 262 | 175 |
-| 14 The Oasis | Find More Lamps | 3 | 262 | 175 |
-| 15 The Ritual | Begin Search for the Next Ritual | 1 | 167 | 159 |
-| 15 The Ritual | Apologize for Stealing Reagents | 3 | 157 | 155 |
-| 15 The Ritual | Rest for a While | 5 | 141 | 141 |
-| 15 The Ritual | Touch the Divine | 1 | 145 | 145 |
-| 15 The Ritual | Infuse Mystic Incense | 9 | 129 | 129 |
-| 15 The Ritual | Practice Memorization | 4 | 135 | 135 |
-| 15 The Ritual | Guided Spellcasting | 3 | 133 | 133 |
-| 15 The Ritual | Go for a Walk | 1 | 135 | 135 |
-| 15 The Ritual | Write Down Some Learnings | 5 | 1461 | 349 |
-| 16 The Dream | Wake Up | 1 | 266 | 173 |
-| 16 The Dream | Notice Signs You're in a Dream | 3 | 169 | 161 |
-| 16 The Dream | Placate the Voices in Your Head | 1 | 195 | 173 |
-| 16 The Dream | Gather Essence | 2 | 181 | 167 |
-| 16 The Dream | Build Giant Tower | 2 | 276 | 171 |
-| 16 The Dream | Talk to Mysterious Being | 5 | 175 | 163 |
-| 16 The Dream | Travel the Plains | 3 | 169 | 161 |
-| 16 The Dream | The Weaver of Dreams | 1 | 389 | 203 |
-| 16 The Dream | Contain the Dream | 1 | 391 | 205 |
-| 17 The Metropolis | Search for the Dragon's Hoard | 1 | 286 | 185 |
-| 17 The Metropolis | Figure Out the Next Ritual | 3 | 272 | 183 |
-| 17 The Metropolis | Figure Out Where to Go Next | 1 | 284 | 183 |
-| 17 The Metropolis | Write Down Crafting Recipes | 5 | 276 | 177 |
-| 17 The Metropolis | Improve Your Time Compression | 3 | 280 | 181 |
-| 17 The Metropolis | Study at the Artificer Guild | 5 | 274 | 173 |
-| 17 The Metropolis | Practice in the Fighting Pits | 3 | 270 | 177 |
-| 17 The Metropolis | Mage's Guild Headmaster | 1 | 823 | 278 |
-| 17 The Metropolis | Become Honorary Headmaster | 5 | 823 | 278 |
-| 18 The Foothills | Enter the Dragon's Lair | 1 | 791 | 262 |
-| 18 The Foothills | Find the Hidden Entrance | 1 | 401 | 201 |
-| 18 The Foothills | Evade the Dragon | 5 | 298 | 189 |
-| 18 The Foothills | Loot Dragon's Victims | 4 | 290 | 185 |
-| 18 The Foothills | Hide from the Dragon | 3 | 318 | 195 |
-| 18 The Foothills | Go on a Long Trek | 5 | 286 | 185 |
-| 18 The Foothills | Try to Turn into a Dragon | 3 | 290 | 185 |
-| 18 The Foothills | Dragon Spawn | 1 | 843 | 288 |
-| 18 The Foothills | Gather Dragon Scales | 3 | 843 | 288 |
-| 19 The Dragon's Lair | Go to a Place of Power | 1 | 799 | 268 |
-| 19 The Dragon's Lair | Grab the Reagent You Need | 3 | 797 | 264 |
-| 19 The Dragon's Lair | Build a Hang Glider | 1 | 799 | 262 |
-| 19 The Dragon's Lair | Catch Some Insects for Later | 9 | 795 | 262 |
-| 19 The Dragon's Lair | Plan How to Kill the Dragon | 3 | 795 | 266 |
-| 19 The Dragon's Lair | Hide from the Dragon Some More | 3 | 797 | 262 |
-| 19 The Dragon's Lair | Practice Magic Under Pressure | 3 | 797 | 262 |
-| 19 The Dragon's Lair | Dragon | 1 | 881 | 308 |
-| 19 The Dragon's Lair | Hunt Down the Dragon's Spawn | 1 | 881 | 308 |
-| 20 The Place of Power | Venture Forth | 1 | 831 | 292 |
-| 20 The Place of Power | Design Next Ritual | 5 | 807 | 274 |
-| 20 The Place of Power | Apotheosize | 1 | 831 | 280 |
-| 20 The Place of Power | Transcend Humanity | 3 | 801 | 272 |
-| 20 The Place of Power | Imbue Magical Vessel | 9 | 799 | 268 |
-| 20 The Place of Power | Invent a New Spell | 3 | 805 | 270 |
-| 20 The Place of Power | Reflect on Past Obstacles | 5 | 801 | 274 |
-| 20 The Place of Power | Prepare for a Greater Journey | 1 | 801 | 274 |
-| 20 The Place of Power | Build Airship | 1 | 807 | 276 |
-| 20 The Place of Power | Gaze Beyond the Veil | 3 | 1471 | 348 |
-| 21 The Sky | Fly to the Volcano | 1 | 855 | 300 |
-| 21 The Sky | Plot the Course | 2 | 835 | 296 |
-| 21 The Sky | Conduct Emergency Repairs | 3 | 847 | 298 |
-| 21 The Sky | Harness Lightning | 1 | 853 | 308 |
-| 21 The Sky | Go Skydiving | 3 | 879 | 306 |
-| 21 The Sky | Watch the Clouds Go By | 3 | 833 | 294 |
-| 21 The Sky | Chat with the Crew | 4 | 837 | 298 |
-| 21 The Sky | Griffin | 1 | 1095 | 332 |
-| 21 The Sky | Collect Quills | 3 | 1095 | 332 |
-| 22 The Volcano | Enter Crevice | 1 | 978 | 320 |
-| 22 The Volcano | Bottle Lava for the Ritual | 3 | 976 | 314 |
-| 22 The Volcano | Sneak Past Beings of Pure Heat | 1 | 891 | 312 |
-| 22 The Volcano | Harness Heat | 3 | 855 | 304 |
-| 22 The Volcano | Cast the Ring into the Fire | 1 | 1517 | 364 |
-| 22 The Volcano | Get Used to the Heat | 3 | 863 | 300 |
-| 22 The Volcano | Try to Use Lava for Forging | 4 | 867 | 304 |
-| 22 The Volcano | Winged Demon | 1 | 1329 | 360 |
-| 22 The Volcano | Purge Demonic Influence | 1 | 1329 | 362 |
-| 23 The Underworld | Exit Through a Moonpool | 1 | 1101 | 336 |
-| 23 The Underworld | Cast underwater Breathing Spell | 1 | 988 | 334 |
-| 23 The Underworld | Find Rare Mushroom Reagent | 5 | 990 | 334 |
-| 23 The Underworld | Steal Farmed Cave Insects | 7 | 978 | 320 |
-| 23 The Underworld | Study Underground Forge | 2 | 998 | 324 |
-| 23 The Underworld | Practice the Local Dialect | 8 | 980 | 326 |
-| 23 The Underworld | Join Underground Fight Club | 4 | 994 | 328 |
-| 23 The Underworld | Floating Ball of Eyes | 1 | 1653 | 384 |
-| 23 The Underworld | Steal Glasses | 3 | 1653 | 384 |
-| 24 The Depths of the Sea | Journey Into the Depths | 1 | 1315 | 354 |
-| 24 The Depths of the Sea | Determine Deepest Point | 1 | 1123 | 346 |
-| 24 The Depths of the Sea | Prepare for the Pressure | 3 | 1224 | 350 |
-| 24 The Depths of the Sea | Catch Passing Fish | 5 | 1119 | 340 |
-| 24 The Depths of the Sea | Inspect Leviathan | 1 | 1119 | 340 |
-| 24 The Depths of the Sea | Deep-water Swimming | 3 | 1113 | 336 |
-| 24 The Depths of the Sea | Go to Crab Rave | 4 | 1123 | 340 |
-| 24 The Depths of the Sea | Half-Kraken | 1 | 2428 | 461 |
-| 24 The Depths of the Sea | Commune with Damned Souls | 1 | 2428 | 461 |
-| 25 The Deepest Deep | Attempt to Enter Hell | 1 | 2291 | 437 |
-| 25 The Deepest Deep | Dare the Gods to Intervene | 1 | 1718 | 374 |
-| 25 The Deepest Deep | Dig a Tunnel | 5 | 1834 | 394 |
-| 25 The Deepest Deep | Embrace Divinity | 4 | 1339 | 370 |
-| 25 The Deepest Deep | Etch Ritual Symbols | 7 | 1319 | 366 |
-| 25 The Deepest Deep | Defy the Gods | 1 | 1659 | 382 |
-| 25 The Deepest Deep | Study Divinity | 8 | 1317 | 356 |
-| 25 The Deepest Deep | Prepare to Face the Gods | 4 | 1341 | 372 |
-| 26 The Void | Exit the Void | 1 | 2309 | 445 |
-| 26 The Void | Avoid Alerting the Gods | 1 | 2293 | 441 |
-| 26 The Void | Figure Out How to Leave | 2 | 2301 | 441 |
-| 26 The Void | Create Light | 6 | 2291 | 437 |
-| 26 The Void | Avoid Going Insane | 2 | 2307 | 443 |
-| 26 The Void | Talk to Yourself | 3 | 2301 | 461 |
-| 26 The Void | Search the Void | 5 | 2291 | 437 |
-| 26 The Void | Foreboding Presence | 1 | 2602 | 475 |
-| 26 The Void | Gather Void Essence | 4 | 2602 | 475 |
-| 27 The Return | Go Spread Your Word | 1 | 2416 | 459 |
-| 27 The Return | Lick Your Wounds | 8 | 2313 | 447 |
-| 27 The Return | Plot Your Revenge | 4 | 2311 | 449 |
-| 27 The Return | Build Void-inspired Contraption | 4 | 2311 | 449 |
-| 27 The Return | Demonstrate New Powers | 5 | 2347 | 457 |
-| 27 The Return | Whine About the Void | 3 | 2406 | 451 |
-| 27 The Return | Ponder Your Exile | 9 | 2309 | 445 |
-| 27 The Return | Herald of the Gods | 1 | 2780 | 491 |
-| 27 The Return | Send Herald's Head to the Gods | 1 | 2839 | 493 |
-| 28 The Cult | Assemble Your Forces | 1 | 2600 | 473 |
-| 28 The Cult | Attract Followers | 4 | 2446 | 467 |
-| 28 The Cult | Train Your Fighters | 2 | 2594 | 471 |
-| 28 The Cult | Train Your Magicians | 3 | 2440 | 467 |
-| 28 The Cult | Record Rousing Speech | 5 | 2416 | 459 |
-| 28 The Cult | Appoint Second in Command | 1 | 2432 | 465 |
-| 28 The Cult | Ponder Next Moves | 3 | 2422 | 467 |
-| 28 The Cult | Gather Intel | 7 | 2416 | 459 |
-| 28 The Cult | Demigod | 1 | 2914 | 497 |
-| 28 The Cult | Gather Some Divine Spark | 2 | 2920 | 497 |
-| 29 The War Preparations | Bring Your Army to Heaven | 1 | 2841 | 489 |
-| 29 The War Preparations | Build Staircase to Heaven | 1 | 2618 | 477 |
-| 29 The War Preparations | Make Battle Plan | 4 | 2606 | 479 |
-| 29 The War Preparations | Cook for the Army | 3 | 2600 | 473 |
-| 29 The War Preparations | Protect Your Supply Lines | 5 | 2693 | 483 |
-| 29 The War Preparations | Inspire Your Troops | 3 | 2600 | 473 |
-| 29 The War Preparations | Gather More Troops | 9 | 2602 | 479 |
-| 29 The War Preparations | Avatar of the Gods | 1 | 3054 | 511 |
-| 29 The War Preparations | Avoid the Gods' Revenge | 1 | 3089 | 513 |
-| 30 The Gates of Heaven | Take Your Place in Heaven | 1 | 4068 | 570 |
-| 30 The Gates of Heaven | Rally Your Troops | 4 | 3052 | 507 |
-| 30 The Gates of Heaven | Break Down the Gates | 1 | 3105 | 538 |
-| 30 The Gates of Heaven | Ascend to Godhood | 5 | 2843 | 489 |
-| 30 The Gates of Heaven | Conduct Ritual Sacrifice | 3 | 2841 | 489 |
-| 30 The Gates of Heaven | Prepare Final Ritual | 5 | 2938 | 503 |
-| 30 The Gates of Heaven | Taunt the Gods | 2 | 2843 | 489 |
-| 30 The Gates of Heaven | Plan Eternity in Heaven | 5 | 2841 | 489 |
+| zone | task | reps | spark-off-full-baseline-node | spark-off-full-spark-on-node | spark-off-full-stall-5-node | spark-off-full-stall-10-node | spark-off-full-stall-20-node | spark-off-full-stall-80-node | spark-off-full-ratio-50-node | spark-off-full-wealth-10-node | spark-off-full-wealth-25-node | spark-off-full-wealth-50-node | spark-off-full-stall40-wealth10-node | spark-off-full-buy-spendcap-10-node | spark-off-full-buy-spendcap-05-node | spark-off-full-buy-levelcap-10-node | spark-off-full-unlock-savings-node | spark-off-full-item-2-node | spark-off-full-item-10-node | spark-off-full-rst-3-node | spark-off-full-rst-8-node | spark-off-full-fill-perk-first-node | spark-off-full-stall10-savings-node | spark-off-full-stall15-savings-node | spark-off-full-stall20-savings-node | spark-off-full-stall15-savings-spark-on-node |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 1 The Village | Join the Watch | 1 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 3 | 3 | 4 | 4 | 4 | 4 | 4 | 4 |
+| 1 The Village | Read Noticeboard | 1 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 |
+| 1 The Village | Train with Weapons | 3 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 3 | 3 | 2 | 2 | 2 | 2 | 2 | 2 |
+| 1 The Village | Learn How to Read | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 |
+| 1 The Village | Beg for Food | 10 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 1 | 2 | 3 | 3 | 3 | 3 | 3 | 3 |
+| 1 The Village | Hide and Seek | 3 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 2 | 1 | 1 | 1 | 1 | 1 | 1 | 1 |
+| 1 The Village | Observe Surroundings | 5 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 |
+| 1 The Village | Use Secret Fishing Spot | 8 | 1460 | 349 | 2338 | 1346 | 1355 | 1836 | 1899 | — | 4241 | 2800 | — | 1006 | 1030 | 1164 | 1006 | 1466 | 1448 | 1448 | 1460 | 1460 | 1030 | 939 | 981 | 427 |
+| 2 The Village Watch | Notice Smoke in the Distance | 1 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 10 | 9 | 7 | 7 | 7 | 7 | 7 | 7 | 7 |
+| 2 The Village Watch | Learn Routines | 4 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 6 | 9 | 6 | 7 | 7 | 7 | 7 | 7 | 7 |
+| 2 The Village Watch | Deal with Drunkards | 2 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 9 | 9 | 7 | 7 | 7 | 7 | 7 | 7 | 7 |
+| 2 The Village Watch | Chit-chat | 3 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 5 | 62 | 66 | 6 | 6 | 6 | 6 | 6 | 6 |
+| 2 The Village Watch | Sparring | 4 | 9 | 9 | 9 | 9 | 9 | 9 | 9 | 9 | 9 | 9 | 9 | 9 | 9 | 9 | 9 | 72 | 8 | 10 | 9 | 9 | 9 | 9 | 9 | 9 |
+| 2 The Village Watch | Fletch Arrows | 5 | 9 | 9 | 9 | 9 | 9 | 9 | 9 | 9 | 9 | 9 | 9 | 9 | 9 | 9 | 9 | 15 | 4 | 6 | 9 | 9 | 9 | 9 | 9 | 9 |
+| 2 The Village Watch | Daydream About Leaving | 6 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 5 | 4 | 4 | 4 | 4 | 4 | 4 | 4 |
+| 2 The Village Watch | Learn How to Write | 1 | 5 | 5 | 5 | 5 | 5 | 5 | 5 | 5 | 5 | 5 | 5 | 5 | 5 | 5 | 5 | 7 | 7 | 5 | 5 | 5 | 5 | 5 | 5 | 5 |
+| 2 The Village Watch | Training Dummy | 10 | 1460 | 349 | 2338 | 1346 | 1355 | 1836 | 1899 | — | 4241 | 2800 | — | 1006 | 1030 | 1164 | 1006 | 1466 | 1448 | 1448 | 1460 | 1460 | 1030 | 939 | 981 | 427 |
+| 3 The Raid | Enter the Wilderness | 1 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 14 | 12 | 12 | 11 | 11 | 11 | 11 | 11 | 11 |
+| 3 The Raid | Fight a Goblin | 1 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 12 | 12 | 10 | 11 | 11 | 11 | 11 | 11 | 11 |
+| 3 The Raid | Warn Villagers | 3 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 13 | 12 | 11 | 11 | 11 | 11 | 11 | 11 | 11 |
+| 3 The Raid | Loot the Fallen | 4 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 7 | 30 | 9 | 7 | 7 | 7 | 7 | 7 | 7 | 7 |
+| 3 The Raid | Rescue Villager | 3 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 11 | 11 | 8 | 10 | 10 | 10 | 10 | 10 | 10 |
+| 3 The Raid | Treat Villager Wounds | 3 | 8 | 8 | 8 | 8 | 8 | 8 | 8 | 8 | 8 | 8 | 8 | 8 | 8 | 8 | 8 | 10 | 10 | 9 | 8 | 8 | 8 | 8 | 8 | 8 |
+| 3 The Raid | Goblin Warlord | 1 | 57 | 57 | 57 | 57 | 57 | 57 | 57 | 57 | 57 | 57 | 57 | 57 | 57 | 57 | 57 | 61 | 63 | 57 | 57 | 57 | 57 | 57 | 57 | 57 |
+| 3 The Raid | Save the Village | 1 | 57 | 57 | 57 | 57 | 57 | 57 | 57 | 57 | 57 | 57 | 57 | 57 | 57 | 57 | 57 | 63 | 65 | 59 | 57 | 57 | 57 | 57 | 57 | 57 |
+| 4 The Wilderness | Find Cave Entrance | 1 | 19 | 19 | 19 | 19 | 19 | 19 | 19 | 19 | 19 | 19 | 19 | 19 | 19 | 19 | 19 | 27 | 20 | 18 | 19 | 19 | 19 | 19 | 19 | 19 |
+| 4 The Wilderness | Look for Tracks | 3 | 13 | 13 | 13 | 13 | 13 | 13 | 13 | 13 | 13 | 13 | 13 | 13 | 13 | 13 | 13 | 16 | 17 | 14 | 13 | 13 | 13 | 13 | 13 | 13 |
+| 4 The Wilderness | Survive the Night | 1 | 13 | 13 | 13 | 13 | 13 | 13 | 13 | 13 | 13 | 13 | 13 | 13 | 13 | 13 | 13 | 17 | 17 | 14 | 13 | 13 | 13 | 13 | 13 | 13 |
+| 4 The Wilderness | Find an Amulet | 1 | 17 | 17 | 17 | 17 | 17 | 17 | 17 | 17 | 17 | 17 | 17 | 17 | 17 | 17 | 17 | 22 | 17 | 15 | 17 | 17 | 17 | 17 | 17 | 17 |
+| 4 The Wilderness | Build a Fire | 1 | 12 | 12 | 12 | 12 | 12 | 12 | 12 | 12 | 12 | 12 | 12 | 12 | 12 | 12 | 12 | 14 | 14 | 13 | 12 | 12 | 12 | 12 | 12 | 12 |
+| 4 The Wilderness | Forage for Mushrooms | 5 | 12 | 12 | 12 | 12 | 12 | 12 | 12 | 12 | 12 | 12 | 12 | 12 | 12 | 12 | 12 | 15 | 12 | 13 | 12 | 12 | 12 | 12 | 12 | 12 |
+| 4 The Wilderness | Befriend a Deer | 1 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 11 | 20 | 16 | 12 | 11 | 11 | 11 | 11 | 11 | 11 |
+| 4 The Wilderness | Angry Ent | 1 | 99 | 99 | 99 | 99 | 99 | 99 | 99 | 99 | 99 | 99 | 99 | 99 | 99 | 99 | 99 | 109 | 105 | 101 | 101 | 101 | 99 | 99 | 99 | 99 |
+| 4 The Wilderness | Gather Magical Roots | 3 | 99 | 99 | 99 | 99 | 99 | 99 | 99 | 99 | 99 | 99 | 99 | 99 | 99 | 99 | 99 | 109 | 105 | 101 | 101 | 101 | 99 | 99 | 99 | 99 |
+| 5 The Cave System | Leave Via Back Entrance | 1 | 25 | 25 | 25 | 25 | 25 | 25 | 25 | 25 | 25 | 25 | 25 | 25 | 25 | 25 | 25 | 31 | 29 | 25 | 25 | 25 | 25 | 25 | 25 | 25 |
+| 5 The Cave System | Find a Way Through | 1 | 21 | 21 | 21 | 21 | 21 | 21 | 21 | 21 | 21 | 21 | 21 | 21 | 21 | 21 | 21 | 30 | 26 | 21 | 21 | 21 | 21 | 21 | 21 | 21 |
+| 5 The Cave System | Rescue Captives | 3 | 23 | 23 | 23 | 23 | 23 | 23 | 23 | 23 | 23 | 23 | 23 | 23 | 23 | 23 | 23 | 30 | 28 | 24 | 23 | 23 | 23 | 23 | 23 | 23 |
+| 5 The Cave System | Steal Supplies | 5 | 22 | 22 | 22 | 22 | 22 | 22 | 22 | 22 | 22 | 22 | 22 | 22 | 22 | 22 | 22 | 38 | 20 | 22 | 22 | 22 | 22 | 22 | 22 | 22 |
+| 5 The Cave System | Try Casting a Spell | 6 | 21 | 21 | 21 | 21 | 21 | 21 | 21 | 21 | 21 | 21 | 21 | 21 | 21 | 21 | 21 | 29 | 26 | 21 | 21 | 21 | 21 | 21 | 21 | 21 |
+| 5 The Cave System | Inspect Wall Paintings | 1 | 20 | 20 | 20 | 20 | 20 | 20 | 20 | 20 | 20 | 20 | 20 | 20 | 20 | 20 | 20 | 28 | 25 | 19 | 20 | 20 | 20 | 20 | 20 | 20 |
+| 5 The Cave System | Scout the Cave | 3 | 24 | 24 | 24 | 24 | 24 | 24 | 24 | 24 | 24 | 24 | 24 | 24 | 24 | 24 | 24 | 34 | 28 | 24 | 24 | 24 | 24 | 24 | 24 | 24 |
+| 5 The Cave System | Goblin Chieftain | 1 | 101 | 101 | 101 | 101 | 101 | 101 | 101 | 101 | 101 | 101 | 101 | 101 | 101 | 101 | 101 | 111 | 107 | 103 | 103 | 103 | 101 | 101 | 101 | 101 |
+| 5 The Cave System | Wipe Out Goblins | 1 | 103 | 103 | 103 | 103 | 103 | 103 | 103 | 103 | 103 | 103 | 103 | 103 | 103 | 103 | 103 | 113 | 109 | 105 | 105 | 105 | 103 | 103 | 103 | 103 |
+| 6 The Road to the City | Get to the City | 1 | 33 | 33 | 33 | 33 | 33 | 33 | 33 | 33 | 33 | 33 | 33 | 33 | 33 | 33 | 33 | 37 | 35 | 33 | 33 | 33 | 33 | 33 | 33 | 33 |
+| 6 The Road to the City | Join a Caravan | 1 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 33 | 35 | 31 | 31 | 31 | 31 | 31 | 31 | 31 |
+| 6 The Road to the City | Scout the Road Ahead | 3 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 37 | 35 | 31 | 31 | 31 | 31 | 31 | 31 | 31 |
+| 6 The Road to the City | Make Travel Equipment | 4 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 31 | 51 | 39 | 31 | 31 | 31 | 31 | 31 | 31 | 31 |
+| 6 The Road to the City | Get Used to Traveling | 3 | 29 | 29 | 29 | 29 | 29 | 29 | 29 | 29 | 29 | 29 | 29 | 29 | 29 | 29 | 29 | 33 | 33 | 29 | 29 | 29 | 29 | 29 | 29 | 29 |
+| 6 The Road to the City | Chat with Travelers | 4 | 26 | 26 | 26 | 26 | 26 | 26 | 26 | 26 | 26 | 26 | 26 | 26 | 26 | 26 | 26 | 31 | 33 | 27 | 26 | 26 | 26 | 26 | 26 | 26 |
+| 6 The Road to the City | Practice Traveling Unnoticed | 1 | 25 | 25 | 25 | 25 | 25 | 25 | 25 | 25 | 25 | 25 | 25 | 25 | 25 | 25 | 25 | 39 | 30 | 26 | 25 | 25 | 25 | 25 | 25 | 25 |
+| 6 The Road to the City | Bandits | 1 | 105 | 105 | 105 | 105 | 105 | 105 | 105 | 105 | 105 | 105 | 105 | 105 | 105 | 105 | 105 | 115 | 111 | 107 | 107 | 107 | 105 | 105 | 105 | 105 |
+| 6 The Road to the City | Loot Bandit Camp | 4 | 105 | 105 | 105 | 105 | 105 | 105 | 105 | 105 | 105 | 105 | 105 | 105 | 105 | 105 | 105 | 115 | 111 | 107 | 107 | 107 | 105 | 105 | 105 | 105 |
+| 6 The Road to the City | Study the Amulet | 1 | 27 | 27 | 27 | 27 | 27 | 27 | 27 | 27 | 27 | 27 | 27 | 27 | 27 | 27 | 27 | 35 | 31 | 28 | 27 | 27 | 27 | 27 | 27 | 27 |
+| 7 The City Outskirts | Enter the City | 1 | 39 | 39 | 39 | 39 | 39 | 39 | 39 | 39 | 39 | 39 | 39 | 39 | 39 | 39 | 39 | 43 | 45 | 39 | 39 | 39 | 39 | 39 | 39 | 39 |
+| 7 The City Outskirts | Bribe the City Guards | 1 | 37 | 37 | 37 | 37 | 37 | 37 | 37 | 37 | 37 | 37 | 37 | 37 | 37 | 37 | 37 | 37 | 41 | 37 | 37 | 35 | 37 | 37 | 37 | 37 |
+| 7 The City Outskirts | Survive a Mugging | 1 | 37 | 37 | 37 | 37 | 37 | 37 | 37 | 37 | 37 | 37 | 37 | 37 | 37 | 37 | 37 | 41 | 41 | 33 | 37 | 35 | 37 | 37 | 37 | 37 |
+| 7 The City Outskirts | Buy a Book | 5 | 33 | 33 | 33 | 33 | 33 | 33 | 33 | 33 | 33 | 33 | 33 | 33 | 33 | 33 | 33 | 51 | 35 | 33 | 33 | 33 | 33 | 33 | 33 | 33 |
+| 7 The City Outskirts | Negotiate with a Rogue Guard | 1 | 35 | 35 | 35 | 35 | 35 | 35 | 35 | 35 | 35 | 35 | 35 | 35 | 35 | 35 | 35 | 39 | 37 | 35 | 35 | 33 | 35 | 35 | 35 | 35 |
+| 7 The City Outskirts | Spar with the Guards | 4 | 37 | 37 | 37 | 37 | 37 | 37 | 37 | 37 | 37 | 37 | 37 | 37 | 37 | 37 | 37 | 51 | 53 | 45 | 37 | 43 | 37 | 37 | 37 | 37 |
+| 7 The City Outskirts | Fend for Yourself | 1 | 47 | 47 | 47 | 47 | 47 | 47 | 47 | 47 | 47 | 47 | 47 | 47 | 47 | 47 | 47 | 52 | 43 | 49 | 47 | 47 | 47 | 47 | 47 | 47 |
+| 7 The City Outskirts | Skulk About | 1 | 33 | 33 | 33 | 33 | 33 | 33 | 33 | 33 | 33 | 33 | 33 | 33 | 33 | 33 | 33 | 37 | 39 | 33 | 33 | 35 | 33 | 33 | 33 | 33 |
+| 8 The City | Embark on a Quest | 1 | 51 | 51 | 51 | 51 | 51 | 51 | 51 | 51 | 51 | 51 | 51 | 51 | 51 | 51 | 51 | 57 | 57 | 53 | 51 | 51 | 51 | 51 | 51 | 51 |
+| 8 The City | Investigate Rumors of a Magician | 4 | 43 | 43 | 43 | 43 | 43 | 43 | 43 | 43 | 43 | 43 | 43 | 43 | 43 | 43 | 43 | 47 | 49 | 43 | 43 | 51 | 43 | 43 | 43 | 43 |
+| 8 The City | Search the Archives for Magic | 5 | 51 | 51 | 51 | 51 | 51 | 51 | 51 | 51 | 51 | 51 | 51 | 51 | 51 | 51 | 51 | 57 | 57 | 53 | 51 | 51 | 51 | 51 | 51 | 51 |
+| 8 The City | Scribe Scroll of Haste | 1 | 43 | 43 | 43 | 43 | 43 | 43 | 43 | 43 | 43 | 43 | 43 | 43 | 43 | 43 | 43 | 49 | 51 | 43 | 43 | 41 | 43 | 43 | 43 | 43 |
+| 8 The City | Cast a Spell | 6 | 49 | 49 | 49 | 49 | 49 | 49 | 49 | 49 | 49 | 49 | 49 | 49 | 49 | 49 | 49 | 55 | 55 | 51 | 49 | 49 | 49 | 49 | 49 | 49 |
+| 8 The City | Study at the Mage's Guild | 1 | 39 | 39 | 39 | 39 | 39 | 39 | 39 | 39 | 39 | 39 | 39 | 39 | 39 | 39 | 39 | 43 | 45 | 39 | 39 | 39 | 39 | 39 | 39 | 39 |
+| 8 The City | Train for Your Quest | 3 | 39 | 39 | 39 | 39 | 39 | 39 | 39 | 39 | 39 | 39 | 39 | 39 | 39 | 39 | 39 | 45 | 47 | 39 | 39 | 39 | 39 | 39 | 39 | 39 |
+| 8 The City | Corrupt Mayor | 1 | 109 | 109 | 109 | 109 | 109 | 109 | 109 | 109 | 109 | 109 | 109 | 109 | 109 | 109 | 109 | 119 | 117 | 113 | 113 | 111 | 109 | 109 | 109 | 109 |
+| 8 The City | Train at Every Guild | 1 | 1460 | 349 | 2338 | 1346 | 1355 | 1836 | 1899 | — | 4241 | 2800 | — | 1006 | 1029 | 1163 | 1006 | 1466 | 1448 | 1448 | 1460 | 1460 | 1029 | 938 | 981 | 427 |
+| 8 The City | Purge Corrupt Bureacracy | 1 | 111 | 111 | 111 | 111 | 111 | 111 | 111 | 111 | 111 | 111 | 111 | 111 | 111 | 111 | 111 | 123 | 117 | 115 | 115 | 113 | 111 | 111 | 111 | 111 |
+| 9 The Forest | Scale the Mountain | 1 | 65 | 65 | 65 | 65 | 65 | 65 | 65 | 65 | 65 | 65 | 65 | 65 | 65 | 65 | 65 | 73 | 69 | 67 | 65 | 71 | 65 | 65 | 65 | 65 |
+| 9 The Forest | Locate the Mountain | 1 | 59 | 59 | 59 | 59 | 59 | 59 | 59 | 59 | 59 | 59 | 59 | 59 | 59 | 59 | 59 | 67 | 67 | 63 | 59 | 61 | 59 | 59 | 59 | 59 |
+| 9 The Forest | Make Climbing Gear | 3 | 63 | 63 | 63 | 63 | 63 | 63 | 63 | 63 | 63 | 63 | 63 | 63 | 63 | 63 | 63 | 71 | 67 | 65 | 63 | 61 | 63 | 63 | 63 | 63 |
+| 9 The Forest | Make Camping Equipment | 3 | 59 | 59 | 59 | 59 | 59 | 59 | 59 | 59 | 59 | 59 | 59 | 59 | 59 | 59 | 59 | 67 | 61 | 63 | 59 | 63 | 59 | 59 | 59 | 59 |
+| 9 The Forest | Prepare to Scale the Mountain | 3 | 55 | 55 | 55 | 55 | 55 | 55 | 55 | 55 | 55 | 55 | 55 | 55 | 55 | 55 | 55 | 67 | 57 | 55 | 55 | 55 | 55 | 55 | 55 | 55 |
+| 9 The Forest | Build a Hut | 1 | 59 | 59 | 59 | 59 | 59 | 59 | 59 | 59 | 59 | 59 | 59 | 59 | 59 | 59 | 59 | 67 | 59 | 63 | 59 | 63 | 59 | 59 | 59 | 59 |
+| 9 The Forest | Go Sightseeing | 3 | 53 | 53 | 53 | 53 | 53 | 53 | 53 | 53 | 53 | 53 | 53 | 53 | 53 | 53 | 53 | 59 | 59 | 55 | 53 | 53 | 53 | 53 | 53 | 53 |
+| 9 The Forest | Meet a Magical Creature | 1 | 53 | 53 | 53 | 53 | 53 | 53 | 53 | 53 | 53 | 53 | 53 | 53 | 53 | 53 | 53 | 59 | 57 | 53 | 53 | 53 | 53 | 53 | 53 | 53 |
+| 9 The Forest | Werewolf | 1 | 117 | 117 | 117 | 117 | 117 | 117 | 117 | 117 | 117 | 117 | 117 | 117 | 117 | 117 | 117 | 127 | 123 | 121 | 121 | 121 | 117 | 117 | 117 | 117 |
+| 9 The Forest | Gather Shed Fur from Lair | 3 | 117 | 117 | 117 | 117 | 117 | 117 | 117 | 117 | 117 | 117 | 117 | 117 | 117 | 117 | 117 | 127 | 123 | 121 | 121 | 121 | 117 | 117 | 117 | 117 |
+| 10 The Magician | Hunt for the First Reagent | 1 | 71 | 71 | 71 | 71 | 71 | 71 | 71 | 71 | 71 | 71 | 71 | 71 | 71 | 71 | 71 | 83 | 77 | 73 | 73 | 75 | 71 | 71 | 71 | 71 |
+| 10 The Magician | Convince the Magician | 1 | 71 | 71 | 71 | 71 | 71 | 71 | 71 | 71 | 71 | 71 | 71 | 71 | 71 | 71 | 71 | 75 | 75 | 73 | 73 | 75 | 71 | 71 | 71 | 71 |
+| 10 The Magician | Do a Favor | 1 | 69 | 69 | 69 | 69 | 69 | 69 | 69 | 69 | 69 | 69 | 69 | 69 | 69 | 69 | 69 | 75 | 71 | 69 | 71 | 73 | 69 | 69 | 69 | 69 |
+| 10 The Magician | Steal Some Reagents | 4 | 65 | 65 | 65 | 65 | 65 | 65 | 65 | 65 | 65 | 65 | 65 | 65 | 65 | 65 | 65 | 83 | 71 | 69 | 65 | 71 | 65 | 65 | 65 | 65 |
+| 10 The Magician | Figure Out How to Attune | 1 | 69 | 69 | 69 | 69 | 69 | 69 | 69 | 69 | 69 | 69 | 69 | 69 | 69 | 69 | 69 | 81 | 73 | 71 | 67 | 73 | 69 | 69 | 69 | 69 |
+| 10 The Magician | Give Yourself a Pep Talk | 1 | 67 | 67 | 67 | 67 | 67 | 67 | 67 | 67 | 67 | 67 | 67 | 67 | 67 | 67 | 67 | 75 | 71 | 69 | 69 | 73 | 67 | 67 | 67 | 67 |
+| 10 The Magician | Try to Transform Into an Eagle | 1 | 67 | 67 | 67 | 67 | 67 | 67 | 67 | 67 | 67 | 67 | 67 | 67 | 67 | 67 | 67 | 75 | 71 | 69 | 69 | 71 | 67 | 67 | 67 | 67 |
+| 10 The Magician | Low-oxygen Exercise | 5 | 77 | 77 | 77 | 77 | 77 | 77 | 77 | 77 | 77 | 77 | 77 | 77 | 77 | 77 | 77 | 77 | 81 | 79 | 69 | 73 | 77 | 77 | 77 | 77 |
+| 11 The Ocean | Land on Island | 1 | 81 | 81 | 81 | 81 | 81 | 81 | 81 | 81 | 81 | 81 | 81 | 81 | 81 | 81 | 81 | 89 | 83 | 79 | 81 | 81 | 81 | 81 | 81 | 81 |
+| 11 The Ocean | Weather a Storm | 1 | 77 | 77 | 77 | 77 | 77 | 77 | 77 | 77 | 77 | 77 | 77 | 77 | 77 | 77 | 77 | 89 | 81 | 79 | 77 | 81 | 77 | 77 | 77 | 77 |
+| 11 The Ocean | Find the Island | 1 | 77 | 77 | 77 | 77 | 77 | 77 | 77 | 77 | 77 | 77 | 77 | 77 | 77 | 77 | 77 | 85 | 81 | 77 | 77 | 75 | 77 | 77 | 77 | 77 |
+| 11 The Ocean | Catch Fish | 5 | 75 | 75 | 75 | 75 | 75 | 75 | 75 | 75 | 75 | 75 | 75 | 75 | 75 | 75 | 75 | 85 | 77 | 75 | 75 | 75 | 75 | 75 | 75 | 75 |
+| 11 The Ocean | Dive as a Squid | 3 | 75 | 75 | 75 | 75 | 75 | 75 | 75 | 75 | 75 | 75 | 75 | 75 | 75 | 75 | 75 | 87 | 79 | 77 | 75 | 77 | 75 | 75 | 75 | 75 |
+| 11 The Ocean | Look for Land | 3 | 73 | 73 | 73 | 73 | 73 | 73 | 73 | 73 | 73 | 73 | 73 | 73 | 73 | 73 | 73 | 83 | 79 | 73 | 73 | 79 | 73 | 73 | 73 | 73 |
+| 11 The Ocean | Practice Transforming | 1 | 73 | 73 | 73 | 73 | 73 | 73 | 73 | 73 | 73 | 73 | 73 | 73 | 73 | 73 | 73 | 85 | 77 | 75 | 73 | 79 | 73 | 73 | 73 | 73 |
+| 11 The Ocean | Kraken | 1 | 127 | 127 | 127 | 127 | 127 | 127 | 127 | 127 | 127 | 127 | 127 | 127 | 127 | 127 | 127 | 137 | 133 | 131 | 131 | 129 | 127 | 127 | 127 | 127 |
+| 11 The Ocean | Explore Kraken's Lair | 1 | 127 | 127 | 127 | 127 | 127 | 127 | 127 | 127 | 127 | 127 | 127 | 127 | 127 | 127 | 127 | 137 | 133 | 131 | 131 | 129 | 127 | 127 | 127 | 127 |
+| 12 The Island | Hunt for the Second Reagent | 1 | 87 | 87 | 87 | 87 | 87 | 87 | 87 | 87 | 87 | 87 | 87 | 87 | 87 | 87 | 87 | 97 | 91 | 87 | 87 | 89 | 87 | 87 | 87 | 87 |
+| 12 The Island | Gather Reagent | 3 | 83 | 83 | 83 | 83 | 83 | 83 | 83 | 83 | 83 | 83 | 83 | 83 | 83 | 83 | 83 | 97 | 91 | 85 | 83 | 85 | 83 | 83 | 83 | 83 |
+| 12 The Island | Repair Ship | 1 | 85 | 85 | 85 | 85 | 85 | 85 | 85 | 85 | 85 | 85 | 85 | 85 | 85 | 85 | 85 | 97 | 91 | 87 | 87 | 87 | 85 | 85 | 85 | 85 |
+| 12 The Island | Catch More Fish | 4 | 85 | 85 | 85 | 85 | 85 | 85 | 85 | 85 | 85 | 85 | 85 | 85 | 85 | 85 | 85 | 95 | 85 | 87 | 85 | 87 | 85 | 85 | 85 | 85 |
+| 12 The Island | Explore the Jungle | 6 | 83 | 83 | 83 | 83 | 83 | 83 | 83 | 83 | 83 | 83 | 83 | 83 | 83 | 83 | 83 | 93 | 89 | 85 | 83 | 85 | 83 | 83 | 83 | 83 |
+| 12 The Island | Build Another Hut | 1 | 85 | 85 | 85 | 85 | 85 | 85 | 85 | 85 | 85 | 85 | 85 | 85 | 85 | 85 | 85 | 95 | 87 | 87 | 85 | 87 | 85 | 85 | 85 | 85 |
+| 12 The Island | Talk to the Local Wildlife | 3 | 83 | 83 | 83 | 83 | 83 | 83 | 83 | 83 | 83 | 83 | 83 | 83 | 83 | 83 | 83 | 93 | 87 | 83 | 83 | 85 | 83 | 83 | 83 | 83 |
+| 12 The Island | Horde of Lizardfolk | 1 | 163 | 157 | 245 | 208 | 212 | 163 | 163 | 245 | 245 | 245 | 245 | 163 | 163 | 163 | 163 | 171 | 169 | 167 | 167 | 165 | 208 | 208 | 212 | 204 |
+| 12 The Island | Steal Their Oracle Bones | 4 | 163 | 157 | 245 | 208 | 212 | 163 | 163 | 245 | 245 | 245 | 245 | 163 | 163 | 163 | 163 | 171 | 169 | 167 | 167 | 165 | 208 | 208 | 212 | 204 |
+| 13 The Desert | Enter the Oasis | 1 | 97 | 97 | 97 | 97 | 97 | 97 | 97 | 97 | 97 | 97 | 97 | 97 | 97 | 97 | 97 | 107 | 101 | 99 | 99 | 99 | 97 | 97 | 97 | 97 |
+| 13 The Desert | Overcome Mirage | 1 | 97 | 97 | 97 | 97 | 97 | 97 | 97 | 97 | 97 | 97 | 97 | 97 | 97 | 97 | 97 | 107 | 99 | 99 | 97 | 97 | 97 | 97 | 97 | 97 |
+| 13 The Desert | Find the Oasis | 1 | 87 | 87 | 87 | 87 | 87 | 87 | 87 | 87 | 87 | 87 | 87 | 87 | 87 | 87 | 87 | 97 | 101 | 89 | 87 | 89 | 87 | 87 | 87 | 87 |
+| 13 The Desert | Harvest Cactus | 3 | 89 | 89 | 89 | 89 | 89 | 89 | 89 | 89 | 89 | 89 | 89 | 89 | 89 | 89 | 89 | 99 | 91 | 91 | 89 | 91 | 89 | 89 | 89 | 89 |
+| 13 The Desert | Avoid Notice by the Sandworm | 4 | 93 | 93 | 93 | 93 | 93 | 93 | 93 | 93 | 93 | 93 | 93 | 93 | 93 | 93 | 93 | 103 | 99 | 95 | 95 | 93 | 93 | 93 | 93 | 93 |
+| 13 The Desert | Work on Your Tan | 3 | 87 | 87 | 87 | 87 | 87 | 87 | 87 | 87 | 87 | 87 | 87 | 87 | 87 | 87 | 87 | 97 | 93 | 89 | 89 | 89 | 87 | 87 | 87 | 87 |
+| 13 The Desert | Comb the Desert | 3 | 89 | 89 | 89 | 89 | 89 | 89 | 89 | 89 | 89 | 89 | 89 | 89 | 89 | 89 | 89 | 99 | 95 | 91 | 91 | 91 | 89 | 89 | 89 | 89 |
+| 13 The Desert | Giant Sandworm | 1 | 203 | 169 | 251 | 255 | 224 | 203 | 203 | 325 | 325 | 325 | 325 | 203 | 203 | 203 | 203 | 252 | 246 | 246 | 246 | 203 | 271 | 220 | 224 | 216 |
+| 13 The Desert | Learn to Dance the Worm | 1 | 205 | 169 | 295 | 257 | 226 | 205 | 205 | 327 | 327 | 327 | 327 | 205 | 205 | 205 | 205 | 252 | 248 | 246 | 246 | 205 | 273 | 222 | 226 | 216 |
+| 14 The Oasis | Return to the Magician | 1 | 129 | 129 | 129 | 129 | 129 | 129 | 129 | 129 | 129 | 129 | 129 | 129 | 129 | 129 | 129 | 133 | 129 | 127 | 127 | 131 | 129 | 129 | 129 | 129 |
+| 14 The Oasis | Banish Evil Spirit | 3 | 119 | 119 | 119 | 119 | 119 | 119 | 119 | 119 | 119 | 119 | 119 | 119 | 119 | 119 | 119 | 123 | 121 | 117 | 121 | 119 | 119 | 119 | 119 | 119 |
+| 14 The Oasis | Gather Second Reagent | 5 | 119 | 119 | 119 | 119 | 119 | 119 | 119 | 119 | 119 | 119 | 119 | 119 | 119 | 119 | 119 | 121 | 127 | 125 | 125 | 125 | 119 | 119 | 119 | 119 |
+| 14 The Oasis | Bottle Oasis Water | 4 | 107 | 107 | 107 | 107 | 107 | 107 | 107 | 107 | 107 | 107 | 107 | 107 | 107 | 107 | 107 | 135 | 109 | 109 | 109 | 109 | 107 | 107 | 107 | 107 |
+| 14 The Oasis | Reflect on the Journey | 4 | 113 | 113 | 113 | 113 | 113 | 113 | 113 | 113 | 113 | 113 | 113 | 113 | 113 | 113 | 113 | 121 | 115 | 117 | 117 | 115 | 113 | 113 | 113 | 113 |
+| 14 The Oasis | Prepare for the Journey Ahead | 3 | 97 | 97 | 97 | 97 | 97 | 97 | 97 | 97 | 97 | 97 | 97 | 97 | 97 | 97 | 97 | 107 | 103 | 99 | 99 | 99 | 97 | 97 | 97 | 97 |
+| 14 The Oasis | Talk to the Djinn | 1 | 107 | 107 | 107 | 107 | 107 | 107 | 107 | 107 | 107 | 107 | 107 | 107 | 107 | 107 | 107 | 117 | 111 | 111 | 105 | 109 | 107 | 107 | 107 | 107 |
+| 14 The Oasis | Sleepy Djinn | 1 | 262 | 175 | 413 | 263 | 238 | 221 | 221 | 403 | 403 | 403 | 403 | 284 | 284 | 284 | 284 | 266 | 262 | 262 | 262 | 268 | 318 | 276 | 238 | 260 |
+| 14 The Oasis | Find More Lamps | 3 | 262 | 175 | 413 | 263 | 238 | 221 | 221 | 403 | 403 | 403 | 403 | 284 | 284 | 284 | 284 | 266 | 262 | 262 | 262 | 268 | 318 | 276 | 238 | 260 |
+| 15 The Ritual | Begin Search for the Next Ritual | 1 | 167 | 159 | 417 | 259 | 216 | 167 | 167 | 1183 | 1183 | 847 | 1183 | 167 | 167 | 167 | 167 | 242 | 238 | 236 | 236 | 167 | 267 | 212 | 216 | 206 |
+| 15 The Ritual | Apologize for Stealing Reagents | 3 | 157 | 155 | 249 | 253 | 214 | 157 | 157 | 950 | 950 | 847 | 950 | 157 | 157 | 157 | 157 | 167 | 163 | 159 | 159 | 159 | 265 | 210 | 214 | 206 |
+| 15 The Ritual | Rest for a While | 5 | 141 | 141 | 141 | 141 | 141 | 141 | 141 | 141 | 141 | 141 | 141 | 141 | 141 | 141 | 141 | 147 | 159 | 155 | 155 | 153 | 141 | 141 | 141 | 141 |
+| 15 The Ritual | Touch the Divine | 1 | 145 | 145 | 145 | 145 | 145 | 145 | 145 | 145 | 145 | 145 | 145 | 145 | 145 | 145 | 145 | 145 | 151 | 149 | 141 | 141 | 145 | 145 | 145 | 145 |
+| 15 The Ritual | Infuse Mystic Incense | 9 | 129 | 129 | 129 | 129 | 129 | 129 | 129 | 129 | 129 | 129 | 129 | 129 | 129 | 129 | 129 | 139 | 129 | 127 | 133 | 131 | 129 | 129 | 129 | 129 |
+| 15 The Ritual | Practice Memorization | 4 | 135 | 135 | 135 | 135 | 135 | 135 | 135 | 135 | 135 | 135 | 135 | 135 | 135 | 135 | 135 | 141 | 139 | 137 | 135 | 133 | 135 | 135 | 135 | 135 |
+| 15 The Ritual | Guided Spellcasting | 3 | 133 | 133 | 133 | 133 | 133 | 133 | 133 | 133 | 133 | 133 | 133 | 133 | 133 | 133 | 133 | 133 | 139 | 133 | 127 | 133 | 133 | 133 | 133 | 133 |
+| 15 The Ritual | Go for a Walk | 1 | 135 | 135 | 135 | 135 | 135 | 135 | 135 | 135 | 135 | 135 | 135 | 135 | 135 | 135 | 135 | 141 | 139 | 137 | 137 | 137 | 135 | 135 | 135 | 135 |
+| 15 The Ritual | Write Down Some Learnings | 5 | 1461 | 349 | 2339 | 1347 | 1356 | 1837 | 1900 | — | 4242 | 2801 | — | 1007 | 1031 | 1165 | 1007 | 1467 | 1449 | 1449 | 1461 | 1461 | 1031 | 940 | 982 | 427 |
+| 16 The Dream | Wake Up | 1 | 266 | 173 | 421 | 267 | 232 | 213 | 213 | 1760 | 1645 | 1128 | 1760 | 282 | 282 | 282 | 282 | 260 | 258 | 254 | 254 | 270 | 324 | 284 | 232 | 266 |
+| 16 The Dream | Notice Signs You're in a Dream | 3 | 169 | 161 | 419 | 259 | 216 | 169 | 169 | 1760 | 1291 | 847 | 1760 | 169 | 169 | 169 | 169 | 244 | 240 | 238 | 238 | 171 | 275 | 212 | 216 | 218 |
+| 16 The Dream | Placate the Voices in Your Head | 1 | 195 | 173 | 421 | 267 | 230 | 195 | 195 | 1760 | 1448 | 958 | 1760 | 195 | 195 | 195 | 195 | 258 | 252 | 252 | 252 | 195 | 324 | 226 | 230 | 220 |
+| 16 The Dream | Gather Essence | 2 | 181 | 167 | 421 | 265 | 220 | 181 | 181 | 1760 | 1448 | 958 | 1760 | 181 | 181 | 181 | 181 | 256 | 252 | 250 | 250 | 181 | 324 | 216 | 220 | 220 |
+| 16 The Dream | Build Giant Tower | 2 | 276 | 171 | 459 | 277 | 236 | 215 | 215 | 1974 | 1529 | 1126 | 1974 | 292 | 292 | 292 | 292 | 264 | 268 | 258 | 258 | 280 | 334 | 294 | 236 | 268 |
+| 16 The Dream | Talk to Mysterious Being | 5 | 175 | 163 | 417 | 261 | 218 | 175 | 175 | 1183 | 1183 | 847 | 1183 | 175 | 175 | 175 | 175 | 246 | 242 | 240 | 240 | 175 | 277 | 214 | 218 | 210 |
+| 16 The Dream | Travel the Plains | 3 | 169 | 161 | 417 | 259 | 216 | 169 | 169 | 1183 | 1183 | 847 | 1183 | 169 | 169 | 169 | 169 | 244 | 240 | 238 | 238 | 169 | 275 | 212 | 216 | 210 |
+| 16 The Dream | The Weaver of Dreams | 1 | 389 | 203 | 739 | 449 | 374 | 396 | 568 | 2543 | 1765 | 1378 | 2543 | 427 | 427 | 427 | 427 | 391 | 383 | 387 | 387 | 393 | 494 | 406 | 376 | 292 |
+| 16 The Dream | Contain the Dream | 1 | 391 | 205 | 869 | 617 | 386 | 398 | 570 | 2543 | 1767 | 1380 | 2543 | 427 | 427 | 427 | 427 | 393 | 385 | 389 | 389 | 395 | 494 | 406 | 376 | 292 |
+| 17 The Metropolis | Search for the Dragon's Hoard | 1 | 286 | 185 | 867 | 447 | 309 | 251 | 251 | 2545 | 1717 | 1330 | 2545 | 308 | 308 | 308 | 308 | 286 | 282 | 282 | 282 | 290 | 453 | 346 | 307 | 278 |
+| 17 The Metropolis | Figure Out the Next Ritual | 3 | 272 | 183 | 651 | 273 | 240 | 217 | 217 | 2545 | 1717 | 1330 | 2545 | 286 | 286 | 286 | 286 | 284 | 260 | 278 | 276 | 276 | 381 | 290 | 240 | 276 |
+| 17 The Metropolis | Figure Out Where to Go Next | 1 | 284 | 183 | 867 | 408 | 307 | 247 | 247 | 2545 | 1717 | 1330 | 2545 | 308 | 308 | 308 | 308 | 286 | 280 | 282 | 280 | 288 | 453 | 346 | 305 | 276 |
+| 17 The Metropolis | Write Down Crafting Recipes | 5 | 276 | 177 | 587 | 277 | 236 | 219 | 219 | 2545 | 1717 | 1330 | 2545 | 292 | 292 | 292 | 292 | 268 | 268 | 258 | 258 | 280 | 334 | 294 | 236 | 272 |
+| 17 The Metropolis | Improve Your Time Compression | 3 | 280 | 181 | 795 | 369 | 248 | 245 | 245 | 2325 | 1645 | 1278 | 2325 | 298 | 298 | 298 | 298 | 282 | 272 | 276 | 274 | 282 | 381 | 298 | 248 | 274 |
+| 17 The Metropolis | Study at the Artificer Guild | 5 | 274 | 173 | 585 | 275 | 234 | 213 | 213 | 2545 | 1645 | 1197 | 2545 | 290 | 290 | 290 | 290 | 262 | 266 | 256 | 256 | 278 | 332 | 292 | 234 | 270 |
+| 17 The Metropolis | Practice in the Fighting Pits | 3 | 270 | 177 | 585 | 271 | 236 | 219 | 219 | 1760 | 1645 | 1197 | 1760 | 288 | 288 | 288 | 288 | 264 | 264 | 260 | 260 | 274 | 328 | 288 | 236 | 270 |
+| 17 The Metropolis | Mage's Guild Headmaster | 1 | 823 | 278 | 1091 | 716 | 729 | 714 | 980 | 4462 | 3062 | 1969 | 4462 | 512 | 512 | 514 | 512 | 831 | 817 | 819 | 821 | 827 | 599 | 528 | 515 | 338 |
+| 17 The Metropolis | Become Honorary Headmaster | 5 | 823 | 278 | 1091 | 716 | 729 | 722 | 980 | 4462 | 3062 | 1969 | 4462 | 512 | 512 | 514 | 512 | 831 | 817 | 819 | 821 | 827 | 599 | 528 | 515 | 338 |
+| 18 The Foothills | Enter the Dragon's Lair | 1 | 791 | 262 | 867 | 636 | 674 | 684 | 948 | 3275 | 1769 | 1382 | 3275 | 395 | 395 | 395 | 395 | 805 | 785 | 787 | 789 | 795 | 455 | 390 | 364 | 284 |
+| 18 The Foothills | Find the Hidden Entrance | 1 | 401 | 201 | 867 | 539 | 451 | 400 | 437 | 3055 | 1730 | 1343 | 3055 | 389 | 389 | 389 | 389 | 405 | 397 | 401 | 399 | 403 | 455 | 390 | 360 | 284 |
+| 18 The Foothills | Evade the Dragon | 5 | 298 | 189 | 867 | 447 | 311 | 309 | 309 | 3055 | 1769 | 1382 | 3055 | 316 | 316 | 316 | 316 | 302 | 292 | 296 | 296 | 300 | 455 | 352 | 309 | 280 |
+| 18 The Foothills | Loot Dragon's Victims | 4 | 290 | 185 | 867 | 447 | 309 | 275 | 275 | 2545 | 1730 | 1343 | 2545 | 314 | 314 | 314 | 314 | 294 | 286 | 286 | 286 | 294 | 453 | 350 | 311 | 280 |
+| 18 The Foothills | Hide from the Dragon | 3 | 318 | 195 | 867 | 451 | 323 | 388 | 399 | 2545 | 1769 | 1382 | 2545 | 397 | 397 | 397 | 397 | 383 | 375 | 379 | 377 | 322 | 459 | 394 | 325 | 286 |
+| 18 The Foothills | Go on a Long Trek | 5 | 286 | 185 | 867 | 447 | 309 | 253 | 253 | 3055 | 1730 | 1343 | 3055 | 308 | 308 | 308 | 308 | 288 | 282 | 282 | 282 | 290 | 453 | 346 | 307 | 278 |
+| 18 The Foothills | Try to Turn into a Dragon | 3 | 290 | 185 | 867 | 447 | 309 | 251 | 251 | 3055 | 1730 | 1343 | 3055 | 310 | 310 | 310 | 310 | 286 | 282 | 284 | 282 | 294 | 453 | 348 | 309 | 280 |
+| 18 The Foothills | Dragon Spawn | 1 | 843 | 288 | 1207 | 766 | 776 | 909 | 1068 | 4464 | 3064 | 1971 | 4464 | 534 | 534 | 583 | 534 | 851 | 837 | 839 | 841 | 847 | 651 | 586 | 560 | 342 |
+| 18 The Foothills | Gather Dragon Scales | 3 | 843 | 288 | 1207 | 766 | 776 | 909 | 1068 | — | 3064 | 1971 | — | 534 | 534 | 583 | 534 | 851 | 837 | 839 | 841 | 847 | 651 | 586 | 560 | 342 |
+| 19 The Dragon's Lair | Go to a Place of Power | 1 | 799 | 268 | 913 | 644 | 676 | 958 | 956 | 4464 | 2531 | 1662 | 4464 | 415 | 415 | 415 | 415 | 807 | 793 | 795 | 797 | 803 | 496 | 402 | 374 | 296 |
+| 19 The Dragon's Lair | Grab the Reagent You Need | 3 | 797 | 264 | 911 | 642 | 676 | 923 | 954 | 3275 | 2193 | 1645 | 3275 | 403 | 403 | 403 | 403 | 807 | 791 | 793 | 795 | 801 | 461 | 396 | 368 | 296 |
+| 19 The Dragon's Lair | Build a Hang Glider | 1 | 799 | 262 | 913 | 644 | 676 | 706 | 956 | 4464 | 2531 | 1662 | 4464 | 403 | 403 | 403 | 403 | 807 | 793 | 793 | 797 | 803 | 465 | 400 | 368 | 290 |
+| 19 The Dragon's Lair | Catch Some Insects for Later | 9 | 795 | 262 | 871 | 640 | 674 | 726 | 952 | 3275 | 1769 | 1382 | 3275 | 399 | 399 | 399 | 399 | 805 | 789 | 791 | 793 | 801 | 457 | 392 | 364 | 288 |
+| 19 The Dragon's Lair | Plan How to Kill the Dragon | 3 | 795 | 266 | 871 | 640 | 674 | 712 | 952 | 3742 | 2193 | 1532 | 3742 | 409 | 409 | 409 | 409 | 805 | 789 | 791 | 793 | 799 | 463 | 398 | 368 | 294 |
+| 19 The Dragon's Lair | Hide from the Dragon Some More | 3 | 797 | 262 | 1085 | 642 | 693 | 700 | 954 | 3443 | 2345 | 1399 | 3443 | 407 | 407 | 407 | 407 | 931 | 791 | 793 | 795 | 1033 | 461 | 396 | 366 | 290 |
+| 19 The Dragon's Lair | Practice Magic Under Pressure | 3 | 797 | 262 | 909 | 642 | 674 | 684 | 954 | 3275 | 1769 | 1382 | 3275 | 399 | 399 | 399 | 399 | 805 | 791 | 793 | 795 | 801 | 457 | 392 | 364 | 288 |
+| 19 The Dragon's Lair | Dragon | 1 | 881 | 308 | 1479 | 855 | 802 | 1040 | 1094 | — | 3499 | 2293 | — | 564 | 564 | 678 | 564 | 887 | 879 | 879 | 881 | 887 | 740 | 606 | 623 | 388 |
+| 19 The Dragon's Lair | Hunt Down the Dragon's Spawn | 1 | 881 | 308 | 1479 | 855 | 802 | 1040 | 1094 | — | 3499 | 2293 | — | 564 | 564 | 678 | 564 | 887 | 879 | 879 | 881 | 887 | 740 | 606 | 623 | 388 |
+| 20 The Place of Power | Venture Forth | 1 | 831 | 292 | 1475 | 843 | 778 | 990 | 1066 | — | 3529 | 2278 | — | 522 | 522 | 654 | 522 | 837 | 825 | 827 | 829 | 835 | 728 | 590 | 597 | 372 |
+| 20 The Place of Power | Design Next Ritual | 5 | 807 | 274 | 1225 | 652 | 684 | 966 | 964 | — | 3529 | 2278 | — | 494 | 494 | 500 | 494 | 815 | 801 | 803 | 805 | 811 | 537 | 456 | 394 | 342 |
+| 20 The Place of Power | Apotheosize | 1 | 831 | 280 | 1415 | 683 | 725 | 990 | 1013 | — | 3529 | 2278 | — | 510 | 510 | 502 | 510 | 833 | 825 | 827 | 829 | 823 | 568 | 494 | 476 | 366 |
+| 20 The Place of Power | Transcend Humanity | 3 | 801 | 272 | 915 | 646 | 678 | 960 | 958 | 4464 | 2531 | 1662 | 4464 | 425 | 425 | 425 | 425 | 809 | 795 | 797 | 799 | 805 | 498 | 408 | 382 | 300 |
+| 20 The Place of Power | Imbue Magical Vessel | 9 | 799 | 268 | 913 | 644 | 676 | 958 | 956 | 4464 | 2531 | 1662 | 4464 | 419 | 419 | 419 | 419 | 809 | 793 | 795 | 797 | 803 | 496 | 408 | 378 | 296 |
+| 20 The Place of Power | Invent a New Spell | 3 | 805 | 270 | 917 | 650 | 680 | 964 | 962 | 4464 | 3066 | 1973 | 4464 | 439 | 439 | 439 | 439 | 813 | 799 | 801 | 801 | 807 | 502 | 452 | 392 | 302 |
+| 20 The Place of Power | Reflect on Past Obstacles | 5 | 801 | 274 | 915 | 646 | 678 | 960 | 958 | — | 2531 | 1662 | — | 415 | 415 | 415 | 415 | 807 | 795 | 797 | 799 | 805 | 498 | 402 | 374 | 298 |
+| 20 The Place of Power | Prepare for a Greater Journey | 1 | 801 | 274 | 915 | 646 | 678 | 960 | 958 | — | 2531 | 1662 | — | 417 | 417 | 417 | 417 | 807 | 795 | 797 | 799 | 805 | 498 | 404 | 380 | 300 |
+| 20 The Place of Power | Build Airship | 1 | 807 | 276 | 1089 | 652 | 682 | 966 | 964 | — | 3529 | 2278 | — | 443 | 443 | 443 | 443 | 813 | 801 | 803 | 803 | 809 | 506 | 456 | 433 | 304 |
+| 20 The Place of Power | Gaze Beyond the Veil | 3 | 1471 | 348 | 2377 | 1369 | 1366 | 1857 | 1910 | — | 4466 | 2875 | — | 1049 | 1082 | 1211 | 1049 | 1477 | 1459 | 1459 | 1469 | 1471 | 1135 | 1018 | 1022 | 479 |
+| 21 The Sky | Fly to the Volcano | 1 | 855 | 300 | 1951 | 853 | 792 | 1014 | 1084 | — | 4468 | 2582 | — | 550 | 550 | 662 | 550 | 863 | 849 | 851 | 853 | 859 | 738 | 602 | 609 | 380 |
+| 21 The Sky | Plot the Course | 2 | 835 | 296 | 1951 | 847 | 780 | 994 | 1072 | — | 3529 | 2421 | — | 526 | 526 | 656 | 526 | 841 | 829 | 831 | 833 | 839 | 732 | 594 | 599 | 374 |
+| 21 The Sky | Conduct Emergency Repairs | 3 | 847 | 298 | 1951 | 851 | 782 | 1006 | 1076 | — | 4034 | 2582 | — | 544 | 544 | 660 | 544 | 855 | 841 | 843 | 845 | 851 | 736 | 600 | 603 | 376 |
+| 21 The Sky | Harness Lightning | 1 | 853 | 308 | 2051 | 849 | 790 | 1012 | 1086 | — | 4802 | 3097 | — | 552 | 552 | 664 | 552 | 865 | 847 | 849 | 851 | 857 | 734 | 604 | 611 | 388 |
+| 21 The Sky | Go Skydiving | 3 | 879 | 306 | 1953 | 933 | 812 | 1038 | 1106 | — | 3529 | 2471 | — | 552 | 552 | 692 | 552 | 885 | 881 | 877 | 879 | 885 | 880 | 668 | 629 | 390 |
+| 21 The Sky | Watch the Clouds Go By | 3 | 833 | 294 | 1477 | 845 | 780 | 992 | 1070 | — | 3529 | 2295 | — | 524 | 524 | 654 | 524 | 839 | 827 | 829 | 831 | 837 | 730 | 594 | 599 | 374 |
+| 21 The Sky | Chat with the Crew | 4 | 837 | 298 | 1951 | 847 | 784 | 996 | 1074 | — | 3529 | 2421 | — | 528 | 528 | 660 | 528 | 843 | 831 | 833 | 835 | 841 | 732 | 596 | 601 | 374 |
+| 21 The Sky | Griffin | 1 | 1095 | 332 | 2333 | 1203 | 1075 | 1271 | 1220 | — | 4499 | 2929 | — | 962 | 990 | 1013 | 962 | 1109 | 1091 | 1095 | 1097 | 1101 | 1096 | 1010 | 957 | 470 |
+| 21 The Sky | Collect Quills | 3 | 1095 | 332 | 2335 | 1205 | 1075 | 1271 | 1220 | — | 4499 | 2929 | — | 962 | 990 | 1013 | 962 | 1109 | 1091 | 1095 | 1097 | 1101 | 1096 | 1010 | 957 | 470 |
+| 22 The Volcano | Enter Crevice | 1 | 978 | 320 | 2349 | 1207 | 1071 | 1072 | 1128 | — | — | 3051 | — | 675 | 675 | 999 | 675 | 992 | 972 | 974 | 982 | 984 | 1086 | 1000 | 939 | 462 |
+| 22 The Volcano | Bottle Lava for the Ritual | 3 | 976 | 314 | 1955 | 941 | 871 | 1072 | 1124 | — | 4907 | 3047 | — | 665 | 665 | 781 | 665 | 990 | 972 | 972 | 972 | 982 | 917 | 810 | 686 | 428 |
+| 22 The Volcano | Sneak Past Beings of Pure Heat | 1 | 891 | 312 | 2079 | 982 | 867 | 1050 | 1116 | — | 4907 | 3047 | — | 667 | 667 | 793 | 667 | 895 | 887 | 887 | 887 | 893 | 919 | 772 | 794 | 394 |
+| 22 The Volcano | Harness Heat | 3 | 855 | 304 | 2053 | 859 | 794 | 1014 | 1088 | — | 4576 | 2986 | — | 554 | 554 | 680 | 554 | 867 | 861 | 851 | 853 | 859 | 744 | 610 | 613 | 390 |
+| 22 The Volcano | Cast the Ring into the Fire | 1 | 1517 | 364 | 3549 | 1575 | 1441 | 1673 | 1883 | — | — | 4433 | — | 1210 | 1285 | 1522 | 1210 | 1523 | 1499 | 1505 | 1517 | 1519 | 1485 | 1398 | 1307 | 528 |
+| 22 The Volcano | Get Used to the Heat | 3 | 863 | 300 | 1951 | 859 | 800 | 1022 | 1084 | — | 4468 | 2597 | — | 562 | 562 | 662 | 562 | 863 | 863 | 859 | 865 | 871 | 744 | 602 | 609 | 380 |
+| 22 The Volcano | Try to Use Lava for Forging | 4 | 867 | 304 | 1955 | 863 | 808 | 1026 | 1098 | — | 4468 | 2798 | — | 578 | 578 | 694 | 578 | 869 | 867 | 863 | 869 | 875 | 748 | 616 | 613 | 384 |
+| 22 The Volcano | Winged Demon | 1 | 1329 | 360 | 2955 | 1431 | 1337 | 1639 | 1847 | — | — | 3782 | — | 1113 | 1170 | 1316 | 1113 | 1333 | 1319 | 1325 | 1325 | 1329 | 1337 | 1234 | 1103 | 520 |
+| 22 The Volcano | Purge Demonic Influence | 1 | 1329 | 362 | 2961 | 1433 | 1339 | 1639 | 1847 | — | — | 4429 | — | 1113 | 1170 | 1316 | 1113 | 1333 | 1319 | 1325 | 1325 | 1329 | 1339 | 1236 | 1103 | 522 |
+| 23 The Underworld | Exit Through a Moonpool | 1 | 1101 | 336 | 2373 | 1217 | 1089 | 1269 | 1208 | — | — | 3518 | — | 964 | 988 | 1207 | 964 | 1111 | 1097 | 1097 | 1107 | 1107 | 1131 | 1012 | 959 | 472 |
+| 23 The Underworld | Cast underwater Breathing Spell | 1 | 988 | 334 | 2371 | 1209 | 1077 | 1090 | 1154 | — | — | 3264 | — | 687 | 687 | 1011 | 687 | 1000 | 986 | 986 | 1012 | 994 | 1094 | 1008 | 945 | 468 |
+| 23 The Underworld | Find Rare Mushroom Reagent | 5 | 990 | 334 | 2371 | 1211 | 1081 | 1094 | 1164 | — | — | 3264 | — | 687 | 687 | 1015 | 687 | 1022 | 984 | 986 | 994 | 994 | 1092 | 1006 | 947 | 468 |
+| 23 The Underworld | Steal Farmed Cave Insects | 7 | 978 | 320 | 2349 | 1207 | 1071 | 1078 | 1128 | — | — | 3051 | — | 675 | 675 | 999 | 675 | 994 | 976 | 974 | 982 | 984 | 1086 | 1000 | 939 | 462 |
+| 23 The Underworld | Study Underground Forge | 2 | 998 | 324 | 2353 | 1209 | 1077 | 1092 | 1156 | — | — | 3051 | — | 703 | 703 | 1015 | 703 | 1010 | 1002 | 1004 | 1010 | 996 | 1088 | 1002 | 943 | 466 |
+| 23 The Underworld | Practice the Local Dialect | 8 | 980 | 326 | 2371 | 1207 | 1071 | 1078 | 1134 | — | — | 3088 | — | 679 | 679 | 999 | 679 | 992 | 978 | 978 | 988 | 986 | 1088 | 1002 | 941 | 462 |
+| 23 The Underworld | Join Underground Fight Club | 4 | 994 | 328 | 2371 | 1209 | 1077 | 1134 | 1150 | — | — | 3105 | — | 695 | 695 | 1011 | 695 | 1024 | 986 | 1006 | 1014 | 1004 | 1092 | 1006 | 941 | 468 |
+| 23 The Underworld | Floating Ball of Eyes | 1 | 1653 | 384 | 4029 | 1821 | 1609 | 1921 | 2175 | — | — | 4431 | — | 1622 | 1628 | 2947 | 1622 | 1661 | 1641 | 1645 | 1645 | 1657 | 1752 | 1720 | 1553 | 642 |
+| 23 The Underworld | Steal Glasses | 3 | 1653 | 384 | 4029 | 1821 | 1609 | 1921 | 2175 | — | — | 4431 | — | 1622 | 1628 | 2947 | 1622 | 1661 | 1641 | 1645 | 1645 | 1657 | 1752 | 1720 | 1553 | 642 |
+| 24 The Depths of the Sea | Journey Into the Depths | 1 | 1315 | 354 | 2957 | 1429 | 1333 | 1605 | 1835 | — | — | 3784 | — | 1083 | 1158 | 1304 | 1083 | 1319 | 1305 | 1305 | 1315 | 1315 | 1335 | 1232 | 1093 | 518 |
+| 24 The Depths of the Sea | Determine Deepest Point | 1 | 1123 | 346 | 2777 | 1398 | 1233 | 1283 | 1224 | — | — | 3784 | — | 986 | 1008 | 1221 | 986 | 1137 | 1131 | 1125 | 1133 | 1129 | 1273 | 1026 | 1032 | 482 |
+| 24 The Depths of the Sea | Prepare for the Pressure | 3 | 1224 | 350 | 2957 | 1398 | 1331 | 1329 | 1300 | — | — | 3784 | — | 1002 | 1089 | 1229 | 1002 | 1232 | 1222 | 1218 | 1230 | 1226 | 1331 | 1192 | 1083 | 484 |
+| 24 The Depths of the Sea | Catch Passing Fish | 5 | 1119 | 340 | 2773 | 1227 | 1103 | 1287 | 1222 | — | — | 3531 | — | 976 | 1012 | 1219 | 976 | 1131 | 1115 | 1115 | 1125 | 1125 | 1141 | 1024 | 975 | 476 |
+| 24 The Depths of the Sea | Inspect Leviathan | 1 | 1119 | 340 | 2777 | 1268 | 1107 | 1275 | 1222 | — | — | 3758 | — | 972 | 992 | 1219 | 972 | 1133 | 1113 | 1113 | 1123 | 1125 | 1141 | 1024 | 973 | 478 |
+| 24 The Depths of the Sea | Deep-water Swimming | 3 | 1113 | 336 | 2373 | 1225 | 1099 | 1269 | 1210 | — | — | 3518 | — | 964 | 988 | 1215 | 964 | 1115 | 1107 | 1101 | 1117 | 1119 | 1131 | 1020 | 969 | 472 |
+| 24 The Depths of the Sea | Go to Crab Rave | 4 | 1123 | 340 | 2777 | 1227 | 1103 | 1279 | 1212 | — | — | 3531 | — | 978 | 996 | 1219 | 978 | 1125 | 1117 | 1113 | 1131 | 1129 | 1240 | 1024 | 971 | 476 |
+| 24 The Depths of the Sea | Half-Kraken | 1 | 2428 | 461 | 4435 | 2212 | 2122 | 3297 | 2595 | — | — | — | — | 1966 | 2067 | 4934 | 1966 | 2371 | 2351 | 2430 | 2430 | 2357 | 2122 | 2014 | 1948 | 686 |
+| 24 The Depths of the Sea | Commune with Damned Souls | 1 | 2428 | 461 | 4435 | 2212 | 2122 | 3299 | 2597 | — | — | — | — | 1966 | 2067 | 4934 | 1966 | 2373 | 2353 | 2430 | 2432 | 2359 | 2122 | 2014 | 1950 | 686 |
+| 25 The Deepest Deep | Attempt to Enter Hell | 1 | 2291 | 437 | 4143 | 1981 | 1943 | 3233 | 2531 | — | — | 4714 | — | 1740 | 1744 | 2867 | 1740 | 2309 | 2287 | 2285 | 2297 | 2295 | 1908 | 1724 | 1726 | 662 |
+| 25 The Deepest Deep | Dare the Gods to Intervene | 1 | 1718 | 374 | 3567 | 1656 | 1648 | 2042 | 2214 | — | — | 4714 | — | 1685 | 1730 | 1763 | 1685 | 1724 | 1706 | 1712 | 1714 | 1720 | 1612 | 1556 | 1613 | 566 |
+| 25 The Deepest Deep | Dig a Tunnel | 5 | 1834 | 394 | 3623 | 1874 | 1885 | 2155 | 2517 | — | — | 4714 | — | 1531 | 1531 | 1806 | 1531 | 1897 | 1826 | 1826 | 1842 | 1840 | 1533 | 1456 | 1387 | 578 |
+| 25 The Deepest Deep | Embrace Divinity | 4 | 1339 | 370 | 3535 | 1573 | 1404 | 1627 | 1871 | — | — | 4437 | — | 1109 | 1180 | 1322 | 1109 | 1343 | 1329 | 1329 | 1339 | 1339 | 1483 | 1368 | 1113 | 560 |
+| 25 The Deepest Deep | Etch Ritual Symbols | 7 | 1319 | 366 | 2959 | 1437 | 1343 | 1609 | 1839 | — | — | 3940 | — | 1089 | 1160 | 1306 | 1089 | 1323 | 1309 | 1309 | 1319 | 1319 | 1343 | 1240 | 1095 | 524 |
+| 25 The Deepest Deep | Defy the Gods | 1 | 1659 | 382 | 3967 | 1842 | 1646 | 1937 | 2212 | — | — | 4685 | — | 1626 | 1685 | 2875 | 1626 | 1665 | 1647 | 1649 | 1653 | 1661 | 1706 | 1698 | 1555 | 592 |
+| 25 The Deepest Deep | Study Divinity | 8 | 1317 | 356 | 2957 | 1435 | 1341 | 1607 | 1837 | — | — | 3964 | — | 1083 | 1158 | 1304 | 1083 | 1321 | 1307 | 1307 | 1317 | 1317 | 1341 | 1238 | 1093 | 518 |
+| 25 The Deepest Deep | Prepare to Face the Gods | 4 | 1341 | 372 | 4376 | 1602 | 1445 | 1645 | 1873 | — | — | — | — | 1111 | 1190 | 1336 | 1111 | 1444 | 1442 | 1331 | 1341 | 1341 | 1562 | 1404 | 1258 | 564 |
+| 26 The Void | Exit the Void | 1 | 2309 | 445 | 4375 | 2134 | 1961 | 3251 | 2549 | — | — | — | — | 1833 | 1940 | 2907 | 1833 | 2331 | 2309 | 2309 | 2315 | 2317 | 2050 | 1896 | 1873 | 672 |
+| 26 The Void | Avoid Alerting the Gods | 1 | 2293 | 441 | 4147 | 2134 | 1945 | 3235 | 2533 | — | — | — | — | 1827 | 1835 | 2907 | 1827 | 2331 | 2309 | 2287 | 2299 | 2317 | 2050 | 1896 | 1730 | 664 |
+| 26 The Void | Figure Out How to Leave | 2 | 2301 | 441 | 4375 | 1981 | 1953 | 3243 | 2541 | — | — | 4824 | — | 1744 | 1748 | 2871 | 1744 | 2311 | 2289 | 2295 | 2307 | 2297 | 1908 | 1726 | 1728 | 664 |
+| 26 The Void | Create Light | 6 | 2291 | 437 | 4373 | 1981 | 1943 | 3233 | 2531 | — | — | 4744 | — | 1744 | 1748 | 2869 | 1744 | 2309 | 2287 | 2285 | 2297 | 2295 | 1908 | 1724 | 1726 | 662 |
+| 26 The Void | Avoid Going Insane | 2 | 2307 | 443 | 4145 | 2056 | 1959 | 3249 | 2547 | — | — | 4824 | — | 1760 | 1857 | 2903 | 1760 | 2325 | 2305 | 2307 | 2313 | 2313 | 1983 | 1860 | 1793 | 670 |
+| 26 The Void | Talk to Yourself | 3 | 2301 | 461 | 4373 | 2130 | 1953 | 3243 | 2541 | — | — | 4824 | — | 1750 | 1754 | 2885 | 1750 | 2321 | 2303 | 2295 | 2307 | 2311 | 2023 | 1802 | 1742 | 674 |
+| 26 The Void | Search the Void | 5 | 2291 | 437 | 4143 | 1983 | 1943 | 3233 | 2531 | — | — | 4714 | — | 1744 | 1748 | 2869 | 1744 | 2309 | 2287 | 2285 | 2297 | 2295 | 1910 | 1726 | 1726 | 662 |
+| 26 The Void | Foreboding Presence | 1 | 2602 | 475 | 4629 | 2399 | 2275 | 3484 | 2835 | — | — | — | — | 2144 | 2251 | 4994 | 2144 | 2551 | 2527 | 2602 | 2604 | 2529 | 2252 | 2176 | 2121 | 724 |
+| 26 The Void | Gather Void Essence | 4 | 2602 | 475 | 4629 | 2399 | 2275 | 3484 | 2835 | — | — | — | — | 2144 | 2251 | 4994 | 2144 | 2551 | 2527 | 2602 | 2604 | 2529 | 2252 | 2176 | 2121 | 724 |
+| 27 The Return | Go Spread Your Word | 1 | 2416 | 459 | 4579 | 2204 | 2116 | 3293 | 2591 | — | — | — | — | 1956 | 2063 | 4908 | 1956 | 2363 | 2339 | 2416 | 2422 | 2345 | 2118 | 2008 | 1944 | 682 |
+| 27 The Return | Lick Your Wounds | 8 | 2313 | 447 | 4377 | 2136 | 1965 | 3255 | 2553 | — | — | — | — | 1863 | 1956 | 2921 | 1863 | 2337 | 2313 | 2317 | 2319 | 2323 | 2052 | 1898 | 1881 | 676 |
+| 27 The Return | Plot Your Revenge | 4 | 2311 | 449 | 4579 | 2142 | 1963 | 3253 | 2551 | — | — | — | — | 1861 | 1948 | 2911 | 1861 | 2335 | 2311 | 2315 | 2317 | 2321 | 2058 | 1906 | 1879 | 678 |
+| 27 The Return | Build Void-inspired Contraption | 4 | 2311 | 449 | 4379 | 2140 | 1963 | 3253 | 2551 | — | — | — | — | 1833 | 1940 | 2907 | 1833 | 2333 | 2309 | 2311 | 2317 | 2319 | 2056 | 1904 | 1875 | 678 |
+| 27 The Return | Demonstrate New Powers | 5 | 2347 | 457 | 4545 | 2206 | 2118 | 3289 | 2587 | — | — | — | — | 1954 | 1964 | 2929 | 1954 | 2361 | 2337 | 2347 | 2353 | 2343 | 2120 | 2010 | 1940 | 684 |
+| 27 The Return | Whine About the Void | 3 | 2406 | 451 | 4545 | 2175 | 2112 | 3297 | 2595 | — | — | — | — | 1952 | 2045 | 2931 | 1952 | 2371 | 2410 | 2406 | 2412 | 2359 | 2060 | 1972 | 1948 | 690 |
+| 27 The Return | Ponder Your Exile | 9 | 2309 | 445 | 4375 | 2134 | 1961 | 3251 | 2549 | — | — | — | — | 1859 | 1942 | 2907 | 1859 | 2331 | 2309 | 2309 | 2315 | 2317 | 2050 | 1896 | 1873 | 672 |
+| 27 The Return | Herald of the Gods | 1 | 2780 | 491 | 4811 | 2557 | 2455 | 3744 | 3196 | — | — | — | — | 2464 | 2579 | — | 2464 | 2733 | 2760 | 2835 | 2780 | 2709 | 2432 | 2344 | 2334 | 740 |
+| 27 The Return | Send Herald's Head to the Gods | 1 | 2839 | 493 | 4813 | 2559 | 2457 | 3746 | 3198 | — | — | — | — | 2466 | 2579 | — | 2466 | 2798 | 2762 | 2837 | 2839 | 2768 | 2432 | 2344 | 2336 | 740 |
+| 28 The Cult | Assemble Your Forces | 1 | 2600 | 473 | 4627 | 2395 | 2277 | 3474 | 2833 | — | — | — | — | 2142 | 2249 | 4940 | 2142 | 2549 | 2521 | 2600 | 2600 | 2527 | 2248 | 2174 | 2111 | 722 |
+| 28 The Cult | Attract Followers | 4 | 2446 | 467 | 4583 | 2362 | 2130 | 3345 | 2643 | — | — | — | — | 2059 | 2103 | 4916 | 2059 | 2464 | 2432 | 2452 | 2458 | 2446 | 2157 | 2022 | 2005 | 694 |
+| 28 The Cult | Train Your Fighters | 2 | 2594 | 471 | 4627 | 2366 | 2238 | 3474 | 2831 | — | — | — | — | 2138 | 2247 | 4930 | 2138 | 2547 | 2521 | 2598 | 2598 | 2523 | 2215 | 2172 | 2111 | 720 |
+| 28 The Cult | Train Your Magicians | 3 | 2440 | 467 | 4581 | 2360 | 2136 | 3333 | 2631 | — | — | — | — | 1982 | 2093 | 4912 | 1982 | 2389 | 2375 | 2442 | 2438 | 2446 | 2209 | 2130 | 2009 | 694 |
+| 28 The Cult | Record Rousing Speech | 5 | 2416 | 459 | 4579 | 2204 | 2116 | 3293 | 2591 | — | — | — | — | 1956 | 2063 | 4908 | 1956 | 2363 | 2339 | 2416 | 2422 | 2345 | 2118 | 2008 | 1944 | 682 |
+| 28 The Cult | Appoint Second in Command | 1 | 2432 | 465 | 4581 | 2358 | 2128 | 3335 | 2633 | — | — | — | — | 2057 | 2097 | 4910 | 2057 | 2462 | 2367 | 2432 | 2454 | 2444 | 2128 | 2020 | 2003 | 692 |
+| 28 The Cult | Ponder Next Moves | 3 | 2422 | 467 | 4581 | 2360 | 2124 | 3307 | 2605 | — | — | — | — | 1974 | 2073 | 4910 | 1974 | 2381 | 2349 | 2422 | 2434 | 2363 | 2126 | 2016 | 1952 | 690 |
+| 28 The Cult | Gather Intel | 7 | 2416 | 459 | 4581 | 2204 | 2116 | 3293 | 2591 | — | — | — | — | 1962 | 2063 | 4908 | 1962 | 2369 | 2339 | 2416 | 2422 | 2349 | 2118 | 2008 | 1944 | 682 |
+| 28 The Cult | Demigod | 1 | 2914 | 497 | 4815 | 2673 | 2506 | 3810 | 3241 | — | — | — | — | 2505 | 2669 | — | 2505 | 2863 | 2837 | 2910 | 2914 | 2843 | 2434 | 2362 | 2352 | 740 |
+| 28 The Cult | Gather Some Divine Spark | 2 | 2920 | 497 | — | 2706 | 2512 | 3810 | 3351 | — | — | — | — | 2509 | 2675 | — | 2509 | 2891 | 2837 | 2910 | 2920 | 2851 | 2438 | 2370 | 2358 | 740 |
+| 29 The War Preparations | Bring Your Army to Heaven | 1 | 2841 | 489 | 4811 | 2669 | 2453 | 3748 | 3192 | — | — | — | — | 2430 | 2498 | 4976 | 2430 | 2790 | 2764 | 2878 | 2841 | 2770 | 2388 | 2306 | 2260 | 734 |
+| 29 The War Preparations | Build Staircase to Heaven | 1 | 2618 | 477 | 4653 | 2405 | 2287 | 3508 | 2857 | — | — | — | — | 2166 | 2267 | 4950 | 2166 | 2573 | 2547 | 2620 | 2620 | 2551 | 2291 | 2184 | 2125 | 728 |
+| 29 The War Preparations | Make Battle Plan | 4 | 2606 | 479 | 4671 | 2401 | 2281 | 3490 | 2841 | — | — | — | — | 2150 | 2257 | 4956 | 2150 | 2557 | 2531 | 2608 | 2606 | 2535 | 2256 | 2178 | 2121 | 726 |
+| 29 The War Preparations | Cook for the Army | 3 | 2600 | 473 | 4631 | 2395 | 2277 | 3474 | 2833 | — | — | — | — | 2142 | 2249 | 4940 | 2142 | 2549 | 2521 | 2600 | 2600 | 2527 | 2248 | 2174 | 2111 | 722 |
+| 29 The War Preparations | Protect Your Supply Lines | 5 | 2693 | 483 | 4755 | 2467 | 2297 | 3552 | 2885 | — | — | — | — | 2241 | 2287 | — | 2241 | 2648 | 2616 | 2697 | 2638 | 2624 | 2423 | 2342 | 2176 | 739 |
+| 29 The War Preparations | Inspire Your Troops | 3 | 2600 | 473 | 4631 | 2395 | 2277 | 3474 | 2833 | — | — | — | — | 2142 | 2249 | 4942 | 2142 | 2549 | 2521 | 2600 | 2600 | 2527 | 2248 | 2174 | 2111 | 722 |
+| 29 The War Preparations | Gather More Troops | 9 | 2602 | 479 | 4651 | 2397 | 2283 | 3482 | 2837 | — | — | — | — | 2146 | 2251 | 4940 | 2146 | 2553 | 2523 | 2604 | 2602 | 2531 | 2254 | 2180 | 2119 | 724 |
+| 29 The War Preparations | Avatar of the Gods | 1 | 3054 | 511 | — | 2792 | 2621 | 4046 | 3467 | — | — | — | — | 2566 | 2697 | — | 2566 | 3003 | 2979 | 3120 | 3056 | 2983 | 2478 | 2402 | 2410 | 746 |
+| 29 The War Preparations | Avoid the Gods' Revenge | 1 | 3089 | 513 | — | 2837 | 2704 | 4046 | 3469 | — | — | — | — | 2566 | 2697 | — | 2566 | 3038 | 3016 | 3122 | 3091 | 3018 | 2478 | 2402 | 2410 | 746 |
+| 30 The Gates of Heaven | Take Your Place in Heaven | 1 | 4068 | 570 | — | 3153 | 3294 | — | 3725 | — | — | — | — | 2887 | 3063 | — | 2887 | 4019 | 3993 | 4095 | 4070 | 3997 | 2592 | 2540 | 2583 | 780 |
+| 30 The Gates of Heaven | Rally Your Troops | 4 | 3052 | 507 | — | 2841 | 2706 | 4036 | 3471 | — | — | — | — | 2550 | 2683 | — | 2550 | 3040 | 2977 | 3079 | 3054 | 2981 | 2461 | 2376 | 2379 | 742 |
+| 30 The Gates of Heaven | Break Down the Gates | 1 | 3105 | 538 | — | 2862 | 2766 | 4044 | 3587 | — | — | — | — | 2670 | 2824 | — | 2670 | 3054 | 3030 | 3085 | 3107 | 3034 | 2497 | 2442 | 2458 | 760 |
+| 30 The Gates of Heaven | Ascend to Godhood | 5 | 2843 | 489 | 4811 | 2669 | 2453 | 3748 | 3194 | — | — | — | — | 2434 | 2502 | 4984 | 2434 | 2790 | 2766 | 2878 | 2843 | 2772 | 2390 | 2308 | 2262 | 734 |
+| 30 The Gates of Heaven | Conduct Ritual Sacrifice | 3 | 2841 | 489 | 4811 | 2669 | 2453 | 3748 | 3192 | — | — | — | — | 2430 | 2498 | 4976 | 2430 | 2790 | 2764 | 2878 | 2841 | 2770 | 2388 | 2306 | 2260 | 734 |
+| 30 The Gates of Heaven | Prepare Final Ritual | 5 | 2938 | 503 | — | 2706 | 2547 | 3905 | 3357 | — | — | — | — | 2517 | 2681 | — | 2517 | 2891 | 2863 | 2973 | 2938 | 2867 | 2444 | 2374 | 2377 | 742 |
+| 30 The Gates of Heaven | Taunt the Gods | 2 | 2843 | 489 | 4811 | 2669 | 2453 | 3748 | 3194 | — | — | — | — | 2432 | 2502 | 4980 | 2432 | 2790 | 2766 | 2878 | 2843 | 2772 | 2388 | 2308 | 2260 | 734 |
+| 30 The Gates of Heaven | Plan Eternity in Heaven | 5 | 2841 | 489 | 4811 | 2669 | 2453 | 3748 | 3192 | — | — | — | — | 2430 | 2498 | 4976 | 2430 | 2790 | 2764 | 2878 | 2841 | 2770 | 2388 | 2306 | 2260 | 734 |
 

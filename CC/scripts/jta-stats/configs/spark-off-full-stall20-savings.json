@@ -1,0 +1,11 @@
+{
+  "name": "spark-off-full-stall20-savings",
+  "options": {
+    "modOverrides": {
+      "auto_prestige_stall_resets": 20,
+      "auto_buy_budget_enabled": true
+    },
+    "zoneLimit": 30,
+    "maxRuns": 5000
+  }
+}

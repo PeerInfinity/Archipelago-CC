@@ -506,6 +506,25 @@ const EXPERIMENTS = [
     options: { ...FULL },
   },
 
+  // Round E attribution: the spark-on check regressed the tail (570 -> 780).
+  // Which half of the candidate default is responsible under spark-on?
+  {
+    name: "spark-off-full-savings-spark-on",
+    modOverrides: {
+      auto_buy_budget_enabled: true,
+      award_spark_on_discovery: true,
+    },
+    options: { ...FULL },
+  },
+  {
+    name: "spark-off-full-stall15-spark-on",
+    modOverrides: {
+      auto_prestige_stall_resets: 15,
+      award_spark_on_discovery: true,
+    },
+    options: { ...FULL },
+  },
+
   // Zones 1-15 secondary round (130-task universe) — continuity with the
   // historical z15 rounds and the zone-randomization arc's anchor. Winners
   // from the full-game rounds get added here once known.
