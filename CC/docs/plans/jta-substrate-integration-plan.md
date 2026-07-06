@@ -8,10 +8,11 @@ automation surface, so this review checked it file-by-file against the game
 submodule, the substrate contract (`docs/json/developer/procgen/substrate-registry.md`),
 and the submodule's own `docs/substrate-integration.md`.
 
-> **Status (2026-07-05): REVIEW COMPLETE, implementation not started.**
-> Findings verified against source (zoneCount and missing energy-reset callback
-> confirmed by hand). Several phases have real design alternatives — those are
-> presented as lettered options and need a ruling before coding. Nothing in
+> **Status (2026-07-05): REVIEW COMPLETE + ALL §6 DESIGN RULINGS RECEIVED;
+> implementation not started.** Findings verified against source (zoneCount and
+> missing energy-reset callback confirmed by hand). The user ruled on all six
+> open questions same-day — rulings are recorded inline in each phase and in
+> the §6 table; the lettered alternatives are kept for the record. Nothing in
 > this doc re-opens settled automation decisions (defaults, auto-fill order,
 > `threshold_all_skipped`, Use Free Items kept≡0).
 
@@ -130,13 +131,21 @@ this world.
 ### Phase 1 — Contract correctness (do first; small, mostly mechanical)
 
 1. **Energy-reset sync** (finding 1). Register `setEnergyResetCallback` in the
-   bridge. What the host *does* with it is a design decision:
+   bridge.
+   > **RULED (2026-07-05): Option A, made explicitly bidirectional.** A JtA
+   > energy reset triggers a loop reset AND a loop reset triggers a JtA energy
+   > reset (the entry-time catch-up mechanism becomes immediate propagation
+   > while a jta region is loaded). Additionally, **JtA energy and the Loops
+   > mana pool stay continuously synchronized in both directions** — not just
+   > spend-mirroring plus entry pinning: pool changes from other substrates
+   > must reflect into JtA energy, and JtA-side gains/refills must reflect
+   > into the pool (today a positive energy delta is silently dropped by the
+   > deduct-only poll).
    - **Option A — reset is host-authoritative-after-the-fact:** bridge notifies
      the host; host treats a game-initiated reset like pool exhaustion
      (`triggerLoopReset` + `user:regionMove {fromReset}` to the resolved start
      region). One reset semantics everywhere; JtA's own reset button/mods
-     become loop-reset triggers. *(Recommended — matches "the game spends from
-     the same budget every other substrate does".)*
+     become loop-reset triggers.
    - **Option B — suppress game-initiated resets in managed mode:** guard
      `doEnergyReset`/reset-screen/auto-prestige behind `_managed_mode` so only
      the host can reset. Keeps loop semantics pure but lobotomizes the Fork
@@ -145,51 +154,60 @@ this world.
      pool so host and game hit zero together. Preserves both reset paths but
      two systems still race; least clean.
 2. **Pause/resume on region enter/exit** (finding 2):
+   > **RULED (2026-07-05): Option A — strict pause.** Switching from a JtA
+   > region to a different substrate region pauses JtA; switching from any
+   > region to a JtA region resumes it.
    - **Option A — strict pause:** `pauseGameLoop()` when leaving a jta region /
      substrate deactivation, `resumeGameLoop()` on entry. Contract-correct,
-     no unmirrored progress. *(Recommended as the default behavior.)*
+     no unmirrored progress.
    - **Option B — background play as a feature:** keep ticking, keep the energy
      poll always-on so background spend is mirrored to the pool (idle-game
-     flavored; JtA progresses while you play other regions). Requires
-     finding-1's sync to be solid first, and makes loop accounting noisier.
-   - These can compose: strict pause now, background play later as an opt-in
-     (e.g. a loops setting), rather than choosing forever.
+     flavored; JtA progresses while you play other regions). Not chosen; could
+     return later as an opt-in loops setting on top of A.
 3. **`zoneCount` → 30** + repoint the owning-path comment to the submodule
    build + fix `docs/json/developer/procgen/jta.md` (16→30, `iframe_games/` →
    submodule path). Consider deriving the count from the submodule's
    `build/zones.js` at registration instead of hand-syncing (import is
    same-origin; keeps the runtime warning as backstop).
 4. **Add `iframeId: 'jtaSubstrateWrapper'`** to the registry entry (finding 5).
-5. **Add `victoryItem`** to the entry (finding 8) — needs a name choice
-   (e.g. `"Ascension"`).
+5. **Add `victoryItem: 'Victory'`** to the entry (finding 8).
+   > **RULED (2026-07-05):** `'Victory'`, matching bounce/runner
+   > (`VICTORY_ITEM_NAME = 'Victory'` in both).
 6. Delete the stale bridge header comment; fix the "JtA now at zone 0" log
    claim (skipFreeZones can advance past 0).
 
-### Phase 2 — Automation control channel (the substrate's "drive the new mods" story)
+### Phase 2 — Automation control channel (scope REDUCED by ruling)
 
-Expose the mods API through the bridge: a `jta:setMods` /
-`jta:requestMods`-style message pair wrapping `setMod`/`getMods`, plus
-`autoFillPriorities`, `setInstantMode`, and (for tests/bot) `stepTick`.
-The design question is **where automation config lives**:
+> **RULED (2026-07-05): JtA configuration and automation settings stay
+> persisted only in the JtA page for now** — no host-settings block, no
+> sidecar/regionParams authoring. May be revisited later. Consequences:
+> - The host does NOT drive `setMod`/auto-fill/mods config; the player
+>   configures automation inside the game UI as in standalone play.
+> - The bridge channel this phase builds shrinks to what Phase 4 (playback
+>   controller + tests) needs: `setInstantMode`, `stepTick`, and whatever
+>   task-targeting command `walkTo` requires. `setMod`-over-bridge is deferred.
+> - "Persisted in the JtA page" requires fixing the managed-mode gap where
+>   `setMod`'s `saveGame()` is a no-op (finding 4): mods/settings need a
+>   game-side persistence path that works under `?managed=1` (e.g. a
+>   settings-only save slice exempt from the managed save guard, under the
+>   game's own storage key). Progression state stays governed by Phase 3.
 
-- **Option A — host settings:** a settingsManager-backed block
-  (`jtaSubstrate.mods.*`) the wrapper pushes on every region load / appReady.
-  Survives reloads via the host's own persistence; per-user, not per-seed.
-- **Option B — sidecar/regionParams:** per-preset (or per-region) automation
-  config stamped at generation time, like runner's `runner*` regionParams.
-  Makes automation part of the *seed's* difficulty contract (echoes the old
-  apworld `automation_*` options) but is authoring-heavy for 30 zones.
-- **Option C — both, layered:** sidecar sets the allowed/default surface
-  (e.g. `instant_mode_allowed`), host settings set player preference within it.
-  Most faithful to how the game itself splits Settings-gate vs Advanced
-  Automation toggles, at the cost of two mechanisms.
+Original options, kept for the record (the choice among them is deferred, not
+made): **A** host settings block pushed on region load; **B**
+sidecar/regionParams stamped at generation; **C** layered A+B (sidecar sets the
+allowed surface, host settings set preference — mirrors the game's
+Settings-gate vs Advanced Automation split).
 
-This is a multi-surface storage/authoring choice — per the standing working
-rule, confirm the shape (likely via AskUserQuestion) before coding.
+### Phase 3 — Persistence ownership
 
-### Phase 3 — Persistence ownership (needs a design ruling first)
+> **RULED (2026-07-05): configuration/automation settings persist game-side
+> only (see Phase 2 ruling); progression state remains ephemeral for now —
+> effectively Option C with game-side rather than host-side settings
+> persistence.** Host-owned save (Option A) and game-owned progression saves
+> (Option B) are explicitly "maybe later." The `_completedThisLoop`
+> reconstruction item below still applies regardless.
 
-Blocked on a real decision; don't implement by default:
+Options, kept for the record:
 
 - **Option A — host-owned save:** add `getSaveData()` / `loadGameFromData()`
   window hooks in the submodule (export the existing private loader), bridge
@@ -234,7 +252,13 @@ Phase 1 to lock in the correctness fixes; the controller itself can follow.
 
 ### Phase 5 — Consolidation: two stacks, five game copies, old docs
 
-Decide the fate of the March randomizer stack:
+> **RULED (2026-07-05): Option A — keep the old JtA modules for now.** They
+> will be retired eventually, once it's confirmed nothing needed remains in
+> them (the apworld + cost-adjust pipeline and `jtaArchipelago`'s perk↔item
+> bridging logic are the known keep/migrate candidates feeding Phase 6).
+> No retirement work this arc; document the split and move on.
+
+Options, kept for the record:
 
 - **Option A — keep both, clearly labeled:** `?mode=jta` remains the
   "JtA randomizer" mode (apworld + cost-adjust + host-side queues), substrate
@@ -285,13 +309,13 @@ Reuse `CC/scripts/jta-stats/` (headless Node over the committed build):
 | `jta-cost-adjustment-algorithm.md` | Not a plan — accurate reference doc for the shipped cost adjuster + old auto queue | Left in place; relocate under `docs/json/` in Phase 5 |
 | `completed/jta-automation-v2-plan.md` | Background for this arc | none |
 
-## 6. Design rulings needed before implementation
+## 6. Design rulings (all received 2026-07-05)
 
-1. Phase 1.1 reset semantics: **A** (game reset ⇒ loop reset) / B / C.
-2. Phase 1.2 pause policy: **A** (strict pause) / B (mirrored background play) / A-then-B.
-3. Phase 2 automation-config home: A (host settings) / B (sidecar) / **C** (layered).
-4. Phase 3 persistence: A (host-owned save) / B (game-owned substrate key) / **C** (ephemeral + persisted mods, as v1).
-5. Phase 5 old-stack fate: **A** (keep both, label)... / B (re-home + dedupe copies) / C (retire).
-6. Phase 1.5 `victoryItem` name.
-
-Bolded entries are the reviewer's recommendation, not decisions.
+| # | Question | Ruling |
+|---|---|---|
+| 1 | Phase 1.1 reset semantics | **Option A, bidirectional**: JtA energy reset ⇒ loop reset AND loop reset ⇒ JtA energy reset; JtA energy ↔ Loops mana continuously synchronized in both directions |
+| 2 | Phase 1.2 pause policy | **Option A, strict**: leaving a JtA region for another substrate pauses JtA; entering a JtA region from anywhere resumes it |
+| 3 | Phase 2 automation-config home | **Deferred — config/automation settings persist only in the JtA page** for now; host-settings vs sidecar may be revisited later |
+| 4 | Phase 3 persistence | **Progression ephemeral; settings game-side** (Option C variant); host-owned save "maybe later" |
+| 5 | Phase 5 old-stack fate | **Option A — keep for now**; retire eventually once nothing needed remains in them |
+| 6 | Phase 1.5 `victoryItem` name | **`'Victory'`** (same as bounce/runner) |
