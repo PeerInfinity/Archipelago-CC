@@ -37,9 +37,12 @@
  *   - Playback control (jta:playbackControl, from the host-side
  *     PlaybackProxy): play/stop map to the game clock, step/instant to
  *     the fork's stepTick/setInstantMode, reset to doEnergyReset, and
- *     walkTo(exit) drives the zone's mandatory+travel tasks to
- *     completion and then takes the requested exit. This is what
- *     loops' executeVia: 'playbackBot' queue execution calls into.
+ *     walkTo(exit) designates the exit to take once the zone's Travel
+ *     task completes — the zone itself is played by the game's OWN
+ *     automation engine (activated for the walk under the default
+ *     'activate' host setting, or left entirely to the player's
+ *     automation config under 'respect'). This is what loops'
+ *     executeVia: 'playbackBot' queue execution calls into.
  *
  * Host-side counterpart wiring lives in
  *   ../jtaSubstrateWrapper/index.js — that module subscribes to
@@ -105,13 +108,16 @@ let _lastSampledEnergy = null;              // JtA's energy at the last poll
 const _completedThisLoop = new Set();
 
 // Playback walkTo state: the exit to take once the current zone's
-// Travel task completes, plus the driver interval that keeps picking
-// mandatory/travel tasks until it does. Cleared on region load/exit.
-const JTA_TASK_TYPE_TRAVEL = 1;      // zones.ts TaskType.Travel
-const JTA_TASK_TYPE_MANDATORY = 2;   // zones.ts TaskType.Mandatory
-const WALK_DRIVER_INTERVAL_MS = 400;
+// Travel task completes. Zone completion itself is played by the
+// game's OWN automation engine (user ruling 2026-07-05) — under the
+// default 'activate' policy the bridge turns the engine on for the
+// walk (restoring the previous mode after); under 'respect' it relies
+// entirely on the player's automation configuration. Cleared on
+// region load/exit.
+const JTA_AUTOMATION_MODE_ALL = 0;   // simulation.ts AutomationMode.All
 let _pendingWalkExit = null;
-let _walkDriverId = null;
+let _walkPrevAutomationMode = null;  // mode to restore when the walk ends (null = we didn't change it)
+let _playbackAutomationPolicy = 'activate';   // 'activate' | 'respect' (host setting)
 
 // Synthetic-task id allocation. The fork's injectSyntheticTask
 // expects unique ids ≥ 10000.
@@ -157,7 +163,9 @@ function _pollTick() {
             if (_expectedPool !== null) _expectedPool = Math.max(0, _expectedPool - delta);
             _client.publishEventBus('jta:bridgeDeductMana', { amount: delta });
         } else {
-            if (_expectedPool !== null) _expectedPool = Math.min(_hostMaxMana, _expectedPool - delta);
+            // No clamp: maxMana is the loop's STARTING mana, not a
+            // ceiling — the pool may grow beyond it.
+            if (_expectedPool !== null) _expectedPool = _expectedPool - delta;
             _client.publishEventBus('jta:bridgeGainMana', { amount: -delta });
         }
     }
@@ -169,6 +177,14 @@ function _pollTick() {
 // ────────────────────────────────────────────────────────────────
 
 function _applyCatchUpResets() {
+    // A host reset count BELOW what we've already applied means the
+    // host started a new world (rules reload zeroes loopResetCount via
+    // gameState.reset()) while this bridge kept living — re-baseline
+    // so the next real loop reset computes a sane delta instead of a
+    // negative one that silently skips the catch-up.
+    if (_lastAppliedResetCount > _hostResetCount) {
+        _lastAppliedResetCount = _hostResetCount;
+    }
     const delta = _hostResetCount - _lastAppliedResetCount;
     if (delta <= 0) {
         _lastAppliedResetCount = _hostResetCount;
@@ -297,12 +313,18 @@ function _handleLoadRegion(payload) {
         return;
     }
 
-    // Clear any synthetic tasks and in-flight playback walk left over
-    // from a previous region.
+    // Clear any synthetic tasks left over from a previous region. An
+    // in-flight playback walk is cleared only when this is a DIFFERENT
+    // region: a same-region reload is the loop-reset retry case (pool
+    // emptied mid-walk, reset landed us back here) and the walk toward
+    // this region's exit is still valid — clearing it would race
+    // loops' parked-action re-dispatch against this handler.
     if (typeof _w.clearSyntheticTasks === 'function') {
         _w.clearSyntheticTasks();
     }
-    _clearPendingWalk();
+    if (regionId !== _currentRegionId) {
+        _clearPendingWalk();
+    }
 
     // Apply any loop resets the host fired while we were inactive,
     // then push the host pool's current/max into JtA.
@@ -348,6 +370,10 @@ function _handleLoadRegion(payload) {
     // Entering a jta region resumes the game clock (paused since boot
     // or since the last region exit).
     if (typeof _w.resumeGameLoop === 'function') _w.resumeGameLoop();
+    // A walk that survived a same-region reload needs the automation
+    // engine re-armed (the catch-up reset may have been a prestige,
+    // which zeroes automation_mode).
+    if (_pendingWalkExit) _armWalkAutomation();
     _startPolling();
     log('debug', `loaded region ${regionId} (zone ${jtaZone}, completed=${completed})`);
 }
@@ -358,52 +384,35 @@ function _handleLoadRegion(payload) {
 
 function _clearPendingWalk() {
     _pendingWalkExit = null;
-    if (_walkDriverId !== null) {
-        clearInterval(_walkDriverId);
-        _walkDriverId = null;
+    // If we activated the automation engine for this walk, restore the
+    // mode the player had (automation_mode is session-transient in the
+    // fork, so this can't corrupt their save either way).
+    if (_walkPrevAutomationMode !== null) {
+        if (typeof _w.setAutomationMode === 'function') {
+            _w.setAutomationMode(_walkPrevAutomationMode);
+        }
+        _walkPrevAutomationMode = null;
     }
 }
 
 /**
- * Keep the game working toward the current zone's Travel task: when
- * idle, perform the Travel task if it's enabled, else the next enabled
- * Mandatory task (their completion is what unlocks Travel). Task
- * completion itself runs on the game's own clock (one tick per rep, or
- * everything at once under Instant Mode); energy billing and the
- * mana-mirroring poll are untouched. The Travel-task callback ends the
- * walk (see _handleTravelTaskCompleted).
+ * Under the 'activate' policy: switch the automation engine on for the
+ * in-flight walk (remembering what the player had so the walk's end
+ * restores it) and give the zone a priority list if the player
+ * configured none. Idempotent — called on walkTo and again when a
+ * loop-reset reload re-enters the same region mid-walk.
  */
-function _walkDriverTick() {
-    if (!_pendingWalkExit || !_isActive) {
-        _clearPendingWalk();
-        return;
+function _armWalkAutomation() {
+    if (_playbackAutomationPolicy !== 'activate') return;
+    if (typeof _w.getAutomationMode !== 'function'
+        || typeof _w.setAutomationMode !== 'function') return;
+    const current = _w.getAutomationMode();
+    if (current !== JTA_AUTOMATION_MODE_ALL) {
+        if (_walkPrevAutomationMode === null) _walkPrevAutomationMode = current;
+        _w.setAutomationMode(JTA_AUTOMATION_MODE_ALL);
     }
-    if (typeof _w.getFullState !== 'function'
-        || typeof _w.getAvailableTasks !== 'function'
-        || typeof _w.performTask !== 'function') {
-        log('warn', 'walk driver: game hooks missing; aborting walk');
-        _clearPendingWalk();
-        return;
-    }
-    const fullState = _w.getFullState();
-    // Game-over pending: the reset flow (energy-reset callback → host
-    // loop reset) owns what happens next; stop driving.
-    if (fullState.isInEnergyReset) return;
-    // Already working a task — let it finish (re-issuing performTask
-    // would re-apply rep-start effects).
-    if (fullState.activeTaskId !== null && fullState.activeTaskId !== undefined) return;
-
-    const available = _w.getAvailableTasks();
-    const pick = available.find(t => t.type === JTA_TASK_TYPE_TRAVEL)
-        ?? available.find(t => t.type === JTA_TASK_TYPE_MANDATORY);
-    if (!pick) {
-        // Nothing performable right now (e.g. waiting on an unlock);
-        // keep polling — skills/tasks may open up as the game ticks.
-        return;
-    }
-    const res = _w.performTask(pick.id);
-    if (!res?.success) {
-        log('warn', `walk driver: performTask(${pick.id}) failed:`, res?.error);
+    if (typeof _w.ensureZoneAutomationPriorities === 'function') {
+        _w.ensureZoneAutomationPriorities();
     }
 }
 
@@ -429,13 +438,18 @@ function _handleWalkTo(target) {
         _dispatchRegionMove(exit.targetRegion ?? null, exit.exitName);
         return;
     }
-    // First traversal: work the zone to Travel completion, then take
-    // THIS exit (replace-on-walkTo: last write wins).
+    // First traversal: the game's automation plays the zone (per the
+    // player's mods/thresholds; auto-fill puts Travel last, so the
+    // zone is genuinely completed, not just transited). When the
+    // Travel task completes, THIS exit is taken (replace-on-walkTo:
+    // last write wins). Under the default 'activate' policy the bridge
+    // switches the automation engine on for the walk and gives the
+    // zone a priority list if the player configured none; under
+    // 'respect' the walk only designates the exit and completion is
+    // entirely up to the player's own automation settings.
     _pendingWalkExit = exit;
-    if (_walkDriverId === null) {
-        _walkDriverId = setInterval(_walkDriverTick, WALK_DRIVER_INTERVAL_MS);
-    }
-    log('debug', `walkTo: driving zone toward exit '${exit.exitName}'`);
+    _armWalkAutomation();
+    log('debug', `walkTo: zone playing toward exit '${exit.exitName}' (policy=${_playbackAutomationPolicy})`);
 }
 
 function _handlePlaybackControl(payload) {
@@ -576,8 +590,11 @@ async function main() {
             _hostResetCount = data.loopResetCount;
             _lastAppliedResetCount = data.loopResetCount;
         }
+        if (data?.playbackAutomation === 'activate' || data?.playbackAutomation === 'respect') {
+            _playbackAutomationPolicy = data.playbackAutomation;
+        }
         _expectedPool = _hostCurrentMana;
-        log('debug', 'initial state received', { _hostCurrentMana, _hostMaxMana, _hostResetCount });
+        log('debug', 'initial state received', { _hostCurrentMana, _hostMaxMana, _hostResetCount, _playbackAutomationPolicy });
     });
 
     // Incremental updates. Echo detection: manaChanged caused by our
@@ -644,8 +661,20 @@ async function main() {
     // that point, the host returns null and the cached value stays
     // null. Re-request whenever rules (re)load so subsequent exit
     // lookups (Travel-task callbacks) find populated regions.
+    //
+    // Rules loading also means a NEW WORLD: gameState.reset() zeroed
+    // the pool state and restarted loopResetCount at 0 while this
+    // bridge kept living. Re-baseline the reset bookkeeping (a stale
+    // higher applied-count would make the next catch-up delta negative
+    // and silently skip the reset — observed as is_in_energy_reset
+    // stuck true after a mid-walk pool depletion) and drop per-world
+    // state.
     _client.subscribeEventBus('stateManager:rulesLoaded', () => {
-        log('debug', 'stateManager:rulesLoaded — re-requesting static data');
+        log('debug', 'stateManager:rulesLoaded — re-requesting static data; re-baselining world state');
+        _hostResetCount = 0;
+        _lastAppliedResetCount = 0;
+        _completedThisLoop.clear();
+        _clearPendingWalk();
         _client?.requestStaticData?.();
     });
 

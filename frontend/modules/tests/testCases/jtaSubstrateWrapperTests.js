@@ -281,18 +281,47 @@ async function botWalkToExit(testController) {
     // Instant Mode so each task completes in one tick; then ask the
     // bot to take the exit — exactly what loops' executeVia queue
     // execution dispatches for a regionMove action.
+    //
+    // The zone is played by the game's automation (policy 'activate'),
+    // which at fresh skills costs MORE than one 100-mana loop: the pool
+    // empties, the loop resets (skills persist), and the walk must be
+    // re-dispatched — in real usage loops' parked-action retry does
+    // that; the test emulates it on every observed loop reset. Skills
+    // compound across attempts until the zone completes in one loop.
     controller.instant();
     controller.walkTo({ kind: 'exit', name: exitName });
     testController.log(`walkTo dispatched toward '${exitName}'…`);
 
-    const arrived = await eventually(
-        testController,
-        () => readCurrentRegion() === targetRegion,
-        `bot completed the zone and took the exit to ${targetRegion}`,
-        30000,
-        400,
-    );
+    let lastResets = readLoopResetCount();
+    let arrived = false;
+    const deadline = Date.now() + 90000;
+    while (Date.now() < deadline) {
+        await new Promise(r => setTimeout(r, 400));
+        if (readCurrentRegion() === targetRegion) { arrived = true; break; }
+        const resets = readLoopResetCount();
+        if (resets !== lastResets) {
+            lastResets = resets;
+            // The reset teleport may land on a non-jta start region
+            // (Menu); the real loops queue walks back via its earlier
+            // regionMove actions — emulate that, then re-dispatch the
+            // parked walk.
+            if (readCurrentRegion() === targetRegion) { arrived = true; break; }
+            if (readCurrentRegion() !== JTA_TEST_REGION) {
+                moveToRegion(JTA_TEST_REGION, readCurrentRegion());
+            }
+            const active = await eventually(
+                testController,
+                () => getJtaIframe()?.contentWindow?.isGameLoopPaused?.() === false,
+                'jta region active again after loop reset',
+                10000,
+            );
+            if (!active) continue;
+            controller.walkTo({ kind: 'exit', name: exitName });
+            testController.log(`loop reset #${resets} — walkTo re-dispatched`);
+        }
+    }
     testController.assertEqual('bot walked to the target region', true, arrived);
+    testController.log(`arrived after ${lastResets} loop reset(s)`);
 
     return testController.getOverallResult();
 }

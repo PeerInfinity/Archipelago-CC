@@ -24,12 +24,19 @@ and the submodule's own `docs/substrate-integration.md`.
 > **Phase 4 SHIPPED too** (`973417997`, pushed): PlaybackController (shared
 > PlaybackProxy on `jta:playbackControl`, setter-injected into the library) +
 > `loopSupport.executeVia: 'playbackBot'`; bridge command handler
-> (play/stop/step/instant/reset) and a walkTo driver that performs the zone's
-> Travel task (else next enabled Mandatory) via `performTask` — guarded by the
-> new `getFullState().activeTaskId` (submodule `1c105a8`) — then takes the
-> requested exit on Travel completion. This subsumed the reduced Phase 2
-> command set. Fifth in-app test `jta-bot-walkto-exit` covers the executeVia
-> path end-to-end; 16/16 substrate tests + regression green.
+> (play/stop/step/instant/reset). **Reworked same-day per rulings 7–8
+> (follow-up round):** walkTo now only designates the exit — the zone is
+> played by the game's OWN automation engine (policy setting
+> `jtaSubstrateWrapper.playbackAutomation`, default `activate`; submodule
+> `84cadb9` window hooks get/setAutomationMode +
+> ensureZoneAutomationPriorities), spanning loop resets by design; and the
+> mana pool lost its ceiling (`maxMana` ≡ starting mana, rulings table row 8).
+> The rework also fixed a latent bridge bug: rules reloads zero the host's
+> loopResetCount, so the bridge re-baselines its reset bookkeeping on
+> `stateManager:rulesLoaded` (stale counts made catch-up deltas negative and
+> silently skipped resets). Fifth in-app test `jta-bot-walkto-exit` covers the
+> executeVia path end-to-end including reset-retries; 16/16 substrate tests +
+> regression green.
 > **§4 measurement DONE** (`3b2ddbafc`): new `pinMaxEnergy` harness option;
 > pin 100 + tuned defaults completes all 134 tasks (run 747) while pin 100 +
 > thresholds-off strands at 72/134 after 2000 runs — the tuned defaults
@@ -358,3 +365,5 @@ Reuse `CC/scripts/jta-stats/` (headless Node over the committed build):
 | 4 | Phase 3 persistence | **Game-owned save re-enabled in managed mode under a substrate-specific SHARED localStorage key** (Option B variant; refined same-day from "ephemeral"): whole blob persists — mods and progression; synthetic tasks excluded from serialization; one save across presets, per-preset keying deferred |
 | 5 | Phase 5 old-stack fate | **Option A — keep for now**; retire eventually once nothing needed remains in them |
 | 6 | Phase 1.5 `victoryItem` name | **`'Victory'`** (same as bounce/runner) |
+| 7 | Playback zone completion (ruled 2026-07-05, follow-up round) | **The game's own automation engine plays the zone; walkTo only designates the exit.** Policy option `jtaSubstrateWrapper.playbackAutomation` in the host settings schema: `activate` (default — engine switched on for the walk, zone priorities auto-filled only if the player configured none, prior mode restored after) / `respect` (player's automation config decides entirely). A walk spans loop resets by design (skills compound until the zone fits one pool); loops' parked-action retry re-dispatches, and the bridge keeps a pending walk across same-region reloads. Replaced the initial minimal perform-Travel/Mandatory driver, which bypassed the game's automation. |
+| 8 | Max mana semantics (ruled 2026-07-05, follow-up round) | **No max mana.** `maxMana` is the loop's STARTING mana (refilled to at loop reset), not a ceiling: `gainMana` and `_recomputeMaxMana` no longer clamp; the bridge mirrors gains without a cap. A configurable limit-to-max option was considered and deferred (may never be built). Renaming `maxMana` → `startingMana` judged possibly worthwhile but deferred → cleanup backlog. |

@@ -29,6 +29,7 @@ Recorded here when the originating project wrapped so they aren't lost; none are
 - [ ] **Loops rework deferrals**: jta custom-queue recording (`loopSupport.customQueues` flip once recording exists), and bounce native per-tick mana drain (loops currently charges on action completion).
 - [ ] **`xpEffect` `'speed'` / `'both'` variants** — reserved in the loop_costs schema, deferred pending tick-speed regulation.
 - [ ] **Maze content modules phase 3 (block-pushing)** — planned but never started; the `onMove` hook and queue verb are already in place.
+- [ ] **Rename gameState `maxMana` → `startingMana`** — per the 2026-07-05 JtA substrate rulings, "max mana" is really the loop's STARTING mana (what a loop reset refills to); it is no longer a ceiling (gains/`_recomputeMaxMana` no longer clamp). The name touches gameState's API surface (`getMaxMana`, `setSubstrateMaxManaBonus`, `manaChanged` payloads, `includePerItemMaxMana`), loops/substrate UIs, and docs — user judged the rename possibly worth the churn; do it as one dedicated pass.
 
 ## Tooling notes (Claude Code sessions)
 

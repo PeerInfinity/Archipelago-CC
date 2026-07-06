@@ -23,6 +23,7 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { substrateRegistryEntry, setPlaybackProxy } from './jtaSubstrateWrapperLibrary.js';
 import { getGameStateSingleton } from '../gameState/singleton.js';
 import { PlaybackProxy } from '../textAdventureSubstrateWrapper/playbackProxy.js';
+import settingsManager from '../../app/core/settingsManager.js';
 
 export const moduleInfo = {
     name: 'jtaSubstrateWrapper',
@@ -43,6 +44,31 @@ const BRIDGE_DEDUCT_MANA_EVENT = 'jta:bridgeDeductMana';
 const BRIDGE_GAIN_MANA_EVENT = 'jta:bridgeGainMana';
 const BRIDGE_ENERGY_RESET_EVENT = 'jta:bridgeEnergyReset';
 const PLAYBACK_CONTROL_EVENT = 'jta:playbackControl';
+
+// How playback (walkTo / loops executeVia) completes a zone:
+//   'activate' — the bridge switches the game's automation engine on for
+//                the walk (auto-filling the zone's priorities only if the
+//                player configured none) and restores it after. Works out
+//                of the box.
+//   'respect'  — the walk only designates the exit; zone completion is
+//                entirely up to the player's own automation settings in
+//                the JtA page (all-off defaults ⇒ the walk waits forever).
+const PLAYBACK_AUTOMATION_SETTING = 'moduleSettings.jtaSubstrateWrapper.playbackAutomation';
+const PLAYBACK_AUTOMATION_DEFAULT = 'activate';
+let _playbackAutomation = PLAYBACK_AUTOMATION_DEFAULT;
+
+async function _loadPlaybackAutomationSetting() {
+    if (!settingsManager?.getSetting) return;
+    try {
+        const v = await settingsManager.getSetting(
+            PLAYBACK_AUTOMATION_SETTING,
+            PLAYBACK_AUTOMATION_DEFAULT,
+        );
+        _playbackAutomation = v === 'respect' ? 'respect' : 'activate';
+    } catch {
+        // Settings unavailable — keep current value.
+    }
+}
 
 let _initApi = null;
 
@@ -81,11 +107,32 @@ export function register(registrationApi) {
     registrationApi.registerEventBusSubscriberIntent(BRIDGE_GAIN_MANA_EVENT);
     registrationApi.registerEventBusSubscriberIntent(BRIDGE_ENERGY_RESET_EVENT);
     registrationApi.registerEventBusSubscriberIntent('jta:loadRegion');
+    registrationApi.registerEventBusSubscriberIntent('settings:changed');
 
     // Guarded register so re-registration of the same id is harmless
     // (mirrors the textAdventureSubstrateWrapper pattern).
     if (!substrateRegistry.has(substrateRegistryEntry.id)) {
         substrateRegistry.register(substrateRegistryEntry);
+    }
+
+    if (typeof registrationApi.registerSettingsSchema === 'function') {
+        registrationApi.registerSettingsSchema({
+            type: 'object',
+            properties: {
+                playbackAutomation: {
+                    type: 'string',
+                    default: PLAYBACK_AUTOMATION_DEFAULT,
+                    enum: ['activate', 'respect'],
+                    label: 'Playback zone completion',
+                    description:
+                        'How the playback bot completes a JtA zone for a queued '
+                        + 'region move: "activate" turns the game\'s automation '
+                        + 'engine on for the walk (default); "respect" leaves zone '
+                        + 'completion entirely to your own in-game automation '
+                        + 'settings.',
+                },
+            },
+        });
     }
 }
 
@@ -115,6 +162,23 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
             currentMana: gs.getCurrentMana(),
             maxMana: gs.getMaxMana(),
             loopResetCount: gs.getLoopResetCount(),
+            playbackAutomation: _playbackAutomation,
+        });
+    });
+
+    // Load the playback policy now and re-push it to the bridge when
+    // settings change (small idempotent payload; the bridge ignores
+    // fields it already has).
+    _loadPlaybackAutomationSetting();
+    eventBus.subscribe('settings:changed', async () => {
+        await _loadPlaybackAutomationSetting();
+        const gs = getGameStateSingleton();
+        if (!gs) return;
+        eventBus.publish(INITIAL_STATE_EVENT, {
+            currentMana: gs.getCurrentMana(),
+            maxMana: gs.getMaxMana(),
+            loopResetCount: gs.getLoopResetCount(),
+            playbackAutomation: _playbackAutomation,
         });
     });
 
