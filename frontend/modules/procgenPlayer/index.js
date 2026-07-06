@@ -266,7 +266,7 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
         // (registry entries opt in by declaring `iframeId`), re-publish
         // the current region so the late bridge configures itself.
         // Also covers iframe reloads. Substrates without an iframeId
-        // field (maze, jta, textAdventure) are unaffected.
+        // field (maze, textAdventure) are unaffected.
         unsubIframeAppReady = eventBus.subscribe('iframe:appReady', (data) => {
             if (!activeSubstrate?.regionId || !data?.iframeId) return;
             const entry = substrateRegistry.get(activeSubstrate.substrate);

@@ -18,6 +18,20 @@ export const substrateRegistryEntry = Object.freeze({
     panelComponentType: 'jtaSubstrateWrapperPanel',
     loadRegionEvent: 'jta:loadRegion',
 
+    // The panel's iframe announces this id (jtaSubstrateWrapperPanel
+    // appends ?iframeId=jtaSubstrateWrapper to the iframe src).
+    // procgenPlayer re-publishes the active region's loadRegionEvent
+    // when this iframe reports appReady, so a page/panel reload while
+    // standing in a jta region re-delivers jta:loadRegion to the
+    // freshly booted bridge (same catch-up the flash family uses).
+    iframeId: 'jtaSubstrateWrapper',
+
+    // Completion-condition item emission paths use this when a jta
+    // world's scenario pool contributes no is_victory item; without it
+    // an emitted world has no goal and is "beaten" at sphere 0. Same
+    // name bounce and runner declare (VICTORY_ITEM_NAME).
+    victoryItem: 'Victory',
+
     // v1: no AP location checks inside regions, no logic gates, no
     // spatial topology. The supported-feature set is intentionally
     // minimal — extended in later phases as features are added.
@@ -93,11 +107,12 @@ export const substrateRegistryEntry = Object.freeze({
     //     layout's own fields (exits, etc.) before stamping the
     //     sidecar.
     //
-    // Total zone count is owned by the JtA build at
-    // iframe_games/journey-to-ascension/build/zones.js. Kept in sync
-    // by hand for now; if it drifts the runtime warns on loadZone
-    // and refuses the bad index.
-    zoneCount: 16,
+    // Total zone count is owned by the JtA build in the
+    // frontend/modules/journey-to-ascension submodule (build/zones.js
+    // — the copy the panel actually loads). Kept in sync by hand; if
+    // it drifts the runtime warns on loadZone and refuses the bad
+    // index. 30 as of Fork 1.6.
+    zoneCount: 30,
     synthesizeZonePayload: (zoneIdx) => ({ jtaZone: zoneIdx }),
 });
 
