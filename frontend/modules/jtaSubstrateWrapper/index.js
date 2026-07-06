@@ -20,8 +20,9 @@
 
 import { JtaSubstrateWrapperPanel } from './jtaSubstrateWrapperPanel.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
-import { substrateRegistryEntry } from './jtaSubstrateWrapperLibrary.js';
+import { substrateRegistryEntry, setPlaybackProxy } from './jtaSubstrateWrapperLibrary.js';
 import { getGameStateSingleton } from '../gameState/singleton.js';
+import { PlaybackProxy } from '../textAdventureSubstrateWrapper/playbackProxy.js';
 
 export const moduleInfo = {
     name: 'jtaSubstrateWrapper',
@@ -41,6 +42,7 @@ const INITIAL_STATE_EVENT = 'jtaSubstrateWrapper:initialState';
 const BRIDGE_DEDUCT_MANA_EVENT = 'jta:bridgeDeductMana';
 const BRIDGE_GAIN_MANA_EVENT = 'jta:bridgeGainMana';
 const BRIDGE_ENERGY_RESET_EVENT = 'jta:bridgeEnergyReset';
+const PLAYBACK_CONTROL_EVENT = 'jta:playbackControl';
 
 let _initApi = null;
 
@@ -66,6 +68,9 @@ export function register(registrationApi) {
     // up via the iframeAdapter eventBus relay.
     registrationApi.registerEventBusPublisher('jta:loadRegion');
     registrationApi.registerEventBusPublisher(INITIAL_STATE_EVENT);
+    // PlaybackController commands published by the host-side proxy,
+    // executed by the in-iframe bridge (relayed via iframeAdapter).
+    registrationApi.registerEventBusPublisher(PLAYBACK_CONTROL_EVENT);
     // Published by this module on jta:loadRegion so Golden Layout
     // brings the jta panel forward when the player enters a jta region.
     registrationApi.registerEventBusPublisher('ui:activatePanel');
@@ -88,6 +93,14 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
     _initApi = initializationApi;
     const eventBus = initializationApi.getEventBus();
     if (!eventBus) return;
+
+    // Host-side PlaybackController proxy (same class the tasw wrapper
+    // uses, on jta's own control channel). Injected into the library
+    // so the registry entry's getPlaybackController can return it.
+    setPlaybackProxy(new PlaybackProxy({
+        eventBus,
+        controlEvent: PLAYBACK_CONTROL_EVENT,
+    }));
 
     // On every iframe app-ready event (this fires for any iframe
     // module, not just ours — payload is small + idempotent so the

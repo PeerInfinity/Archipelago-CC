@@ -22,6 +22,7 @@
  */
 
 import { registerTest } from '../testRegistry.js';
+import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
 import {
     JTA_TEST_PRESET_PATH,
     JTA_TEST_REGION,
@@ -264,6 +265,50 @@ async function energyMirrorsPoolBothWays(testController) {
 
     return testController.getOverallResult();
 }
+
+async function botWalkToExit(testController) {
+    const win = await enterJtaRegion(testController);
+    if (!win) return testController.getOverallResult();
+
+    const controller = substrateRegistry.get('jta')?.getPlaybackController?.();
+    testController.assertEqual('registry exposes a live PlaybackController', true, !!controller);
+    if (!controller) return testController.getOverallResult();
+
+    // The preset's zone-0 exit (sidecar exitName format "src -> dst").
+    const exitName = `${JTA_TEST_REGION} -> The Village Watch`;
+    const targetRegion = 'The Village Watch';
+
+    // Instant Mode so each task completes in one tick; then ask the
+    // bot to take the exit — exactly what loops' executeVia queue
+    // execution dispatches for a regionMove action.
+    controller.instant();
+    controller.walkTo({ kind: 'exit', name: exitName });
+    testController.log(`walkTo dispatched toward '${exitName}'…`);
+
+    const arrived = await eventually(
+        testController,
+        () => readCurrentRegion() === targetRegion,
+        `bot completed the zone and took the exit to ${targetRegion}`,
+        30000,
+        400,
+    );
+    testController.assertEqual('bot walked to the target region', true, arrived);
+
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'jta-bot-walkto-exit',
+    name: 'JtA: playback controller walkTo drives the zone and takes the exit',
+    description: 'Gets the jta PlaybackController from the substrate registry, '
+               + 'enables Instant Mode, and walkTo()s the zone-0 exit: the bridge '
+               + 'drives mandatory+travel tasks to completion and dispatches the '
+               + 'requested regionMove — the loops executeVia path end-to-end.',
+    testFunction: botWalkToExit,
+    category: 'JtA substrate',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
 
 registerTest({
     id: 'jta-energy-mirrors-pool-both-ways',

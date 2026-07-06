@@ -18,9 +18,13 @@ Resets propagate both ways too: a game-initiated run end (energy-reset overlay, 
 
 The host owns the tick clock: the game loop is paused from boot, resumed when the player enters a jta region, and paused again on leaving — no unmirrored background play. Managed sessions persist like standalone play but under their own localStorage slot (`incrementalGameSave_substrate`, see the fork's `getSaveLocation()`): progression *and* automation/mod settings survive reloads, one shared slot across presets, and standalone saves on the same origin are never touched. Host-injected exit tasks are excluded from saves and re-injected on region entry.
 
+## Playback / bot execution
+
+The registry entry exposes a PlaybackController as a host-side proxy (the shared `PlaybackProxy`, on the `jta:playbackControl` channel) that the in-iframe bridge executes: `play`/`stop` map to the game clock, `step`/`instant` to the fork's `stepTick`/`setInstantMode`, `reset` to `doEnergyReset` (which cascades to a loop reset like any game-initiated reset), and `walkTo({kind:'exit', name})` drives the current zone — performing the Travel task when it's enabled, otherwise the next enabled Mandatory task, on the game's own clock — and takes the requested exit on Travel completion (on a completed region it takes the exit directly). `loopSupport.executeVia: 'playbackBot'` makes loops queue `regionMove` actions execute through this path, parking until the resulting `user:regionMove` arrives.
+
 ## Capabilities
 
-v1 scope is deliberately minimal: no AP location checks inside regions (`supportedFeatures: ['region_topology_from_source']`), no playback controller (the bot no-ops on JtA regions), and loop support of queueable `regionMove` plus manual play, without custom queues. Full contract: [Substrate Registry Reference](./substrate-registry.md).
+No AP location checks inside regions yet (`supportedFeatures: ['region_topology_from_source']`); loop support is queueable `regionMove` (bot-executed, see above) plus manual play, without custom queues. Full contract: [Substrate Registry Reference](./substrate-registry.md).
 
 ## Related documentation
 

@@ -53,7 +53,7 @@ The **PlaybackController** contract is substrate-neutral: `play(rateHz?)`, `stop
 | `loopSupport.queueActions` | string[] | Which loop-queue action types can be authored for a region: `'regionMove'`, `'locationCheck'`, `'explore'`. |
 | `loopSupport.manual` | boolean | The region can be played by hand in loop mode. |
 | `loopSupport.customQueues` | boolean | Saved substrate-native action queues can be recorded and replayed. |
-| `loopSupport.executeVia` | `'playbackBot'` (optional) | Makes the loops queue execute the region's actions by driving the substrate's PlaybackController (`walkTo`); the queue parks until the resulting event arrives, then charges the action's `loop_costs` value. Absent ⇒ generic timer execution. Bounce is the only current user. |
+| `loopSupport.executeVia` | `'playbackBot'` (optional) | Makes the loops queue execute the region's actions by driving the substrate's PlaybackController (`walkTo`); the queue parks until the resulting event arrives, then charges the action's `loop_costs` value. Absent ⇒ generic timer execution. Used by bounce and jta. |
 
 ### Build-time — procedural substrates
 
@@ -93,8 +93,8 @@ The sphere-growth driver and the Procgen Pipeline panel read a further set of op
 | Capability | `maze` | `bounce` | `runner` | `text_adventure` (wrapper) | `flash` | `jta` |
 |---|---|---|---|---|---|---|
 | Panel / load event | `mazeRoomPanel` / `maze:loadRegion` | `bounceDemoPanel` / `bounce:loadRegion` | `runnerDemoPanel` / `runner:loadRegion` | `textAdventureSubstrateWrapperPanel` / `textAdventure:loadRegion` | shared flash panel / `flash:loadRegion` | `jtaSubstrateWrapperPanel` / `jta:loadRegion` |
-| Playback controller | live panel's controller | host proxy → in-game bot driver | host proxy → in-game bot driver | host proxy → iframe bridge | none (`null`) | none (`null`) |
-| Loop queue actions | move, check, explore | move, check (`executeVia: 'playbackBot'`) | move, check (`executeVia: 'playbackBot'`) | move, check, explore | move | move |
+| Playback controller | live panel's controller | host proxy → in-game bot driver | host proxy → in-game bot driver | host proxy → iframe bridge | none (`null`) | host proxy → iframe bridge |
+| Loop queue actions | move, check, explore | move, check (`executeVia: 'playbackBot'`) | move, check (`executeVia: 'playbackBot'`) | move, check, explore | move | move (`executeVia: 'playbackBot'`) |
 | Manual loop play | yes | yes | yes | yes | yes | yes |
 | Custom queues | **yes** | no | no | no | no | no |
 | Procedural build hooks | yes (+ hazards via `applyContentModules`) | no | no | yes (shared tile-grid primitives) | no | no |

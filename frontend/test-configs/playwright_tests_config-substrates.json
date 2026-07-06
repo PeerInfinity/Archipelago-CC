@@ -79,6 +79,11 @@
       "id": "jta-energy-mirrors-pool-both-ways",
       "enabled": true,
       "category": "JtA substrate"
+    },
+    {
+      "id": "jta-bot-walkto-exit",
+      "enabled": true,
+      "category": "JtA substrate"
     }
   ]
 }

@@ -34,6 +34,12 @@
  *   - On Travel-task completion: mark the region completed for this
  *     loop, dispatch user:regionMove for single-exit regions, or
  *     inject synthetic exit-choice tasks for multi-exit regions.
+ *   - Playback control (jta:playbackControl, from the host-side
+ *     PlaybackProxy): play/stop map to the game clock, step/instant to
+ *     the fork's stepTick/setInstantMode, reset to doEnergyReset, and
+ *     walkTo(exit) drives the zone's mandatory+travel tasks to
+ *     completion and then takes the requested exit. This is what
+ *     loops' executeVia: 'playbackBot' queue execution calls into.
  *
  * Host-side counterpart wiring lives in
  *   ../jtaSubstrateWrapper/index.js — that module subscribes to
@@ -97,6 +103,15 @@ let _lastSampledEnergy = null;              // JtA's energy at the last poll
 
 // Per-loop completion tracking. Cleared on gameState:loopReset.
 const _completedThisLoop = new Set();
+
+// Playback walkTo state: the exit to take once the current zone's
+// Travel task completes, plus the driver interval that keeps picking
+// mandatory/travel tasks until it does. Cleared on region load/exit.
+const JTA_TASK_TYPE_TRAVEL = 1;      // zones.ts TaskType.Travel
+const JTA_TASK_TYPE_MANDATORY = 2;   // zones.ts TaskType.Mandatory
+const WALK_DRIVER_INTERVAL_MS = 400;
+let _pendingWalkExit = null;
+let _walkDriverId = null;
 
 // Synthetic-task id allocation. The fork's injectSyntheticTask
 // expects unique ids ≥ 10000.
@@ -282,10 +297,12 @@ function _handleLoadRegion(payload) {
         return;
     }
 
-    // Clear any synthetic tasks left over from a previous region.
+    // Clear any synthetic tasks and in-flight playback walk left over
+    // from a previous region.
     if (typeof _w.clearSyntheticTasks === 'function') {
         _w.clearSyntheticTasks();
     }
+    _clearPendingWalk();
 
     // Apply any loop resets the host fired while we were inactive,
     // then push the host pool's current/max into JtA.
@@ -335,6 +352,128 @@ function _handleLoadRegion(payload) {
     log('debug', `loaded region ${regionId} (zone ${jtaZone}, completed=${completed})`);
 }
 
+// ────────────────────────────────────────────────────────────────
+// Playback control — host proxy commands (jta:playbackControl)
+// ────────────────────────────────────────────────────────────────
+
+function _clearPendingWalk() {
+    _pendingWalkExit = null;
+    if (_walkDriverId !== null) {
+        clearInterval(_walkDriverId);
+        _walkDriverId = null;
+    }
+}
+
+/**
+ * Keep the game working toward the current zone's Travel task: when
+ * idle, perform the Travel task if it's enabled, else the next enabled
+ * Mandatory task (their completion is what unlocks Travel). Task
+ * completion itself runs on the game's own clock (one tick per rep, or
+ * everything at once under Instant Mode); energy billing and the
+ * mana-mirroring poll are untouched. The Travel-task callback ends the
+ * walk (see _handleTravelTaskCompleted).
+ */
+function _walkDriverTick() {
+    if (!_pendingWalkExit || !_isActive) {
+        _clearPendingWalk();
+        return;
+    }
+    if (typeof _w.getFullState !== 'function'
+        || typeof _w.getAvailableTasks !== 'function'
+        || typeof _w.performTask !== 'function') {
+        log('warn', 'walk driver: game hooks missing; aborting walk');
+        _clearPendingWalk();
+        return;
+    }
+    const fullState = _w.getFullState();
+    // Game-over pending: the reset flow (energy-reset callback → host
+    // loop reset) owns what happens next; stop driving.
+    if (fullState.isInEnergyReset) return;
+    // Already working a task — let it finish (re-issuing performTask
+    // would re-apply rep-start effects).
+    if (fullState.activeTaskId !== null && fullState.activeTaskId !== undefined) return;
+
+    const available = _w.getAvailableTasks();
+    const pick = available.find(t => t.type === JTA_TASK_TYPE_TRAVEL)
+        ?? available.find(t => t.type === JTA_TASK_TYPE_MANDATORY);
+    if (!pick) {
+        // Nothing performable right now (e.g. waiting on an unlock);
+        // keep polling — skills/tasks may open up as the game ticks.
+        return;
+    }
+    const res = _w.performTask(pick.id);
+    if (!res?.success) {
+        log('warn', `walk driver: performTask(${pick.id}) failed:`, res?.error);
+    }
+}
+
+function _handleWalkTo(target) {
+    if (!_isActive || !_currentRegionId) {
+        log('warn', 'walkTo ignored — no active jta region');
+        return;
+    }
+    if (target?.kind !== 'exit' || !target?.name) {
+        // v1 jta regions have no locations/tiles; only exits are walkable.
+        log('warn', 'walkTo ignored — unsupported target', target);
+        return;
+    }
+    const exits = _getRegionExits();
+    const exit = exits.find(e => e?.exitName === target.name || e?.exit_id === target.name);
+    if (!exit) {
+        log('warn', `walkTo: exit '${target.name}' not found in ${_currentRegionId}`);
+        return;
+    }
+    // Completed region: the Travel requirement is already met this
+    // loop; take the exit directly (the injected exit tasks are free).
+    if (_completedThisLoop.has(_currentRegionId)) {
+        _dispatchRegionMove(exit.targetRegion ?? null, exit.exitName);
+        return;
+    }
+    // First traversal: work the zone to Travel completion, then take
+    // THIS exit (replace-on-walkTo: last write wins).
+    _pendingWalkExit = exit;
+    if (_walkDriverId === null) {
+        _walkDriverId = setInterval(_walkDriverTick, WALK_DRIVER_INTERVAL_MS);
+    }
+    log('debug', `walkTo: driving zone toward exit '${exit.exitName}'`);
+}
+
+function _handlePlaybackControl(payload) {
+    const method = payload?.method;
+    const args = Array.isArray(payload?.args) ? payload.args : [];
+    switch (method) {
+        case 'play':
+            if (typeof _w.resumeGameLoop === 'function') _w.resumeGameLoop();
+            return;
+        case 'stop':
+            _clearPendingWalk();
+            if (typeof _w.pauseGameLoop === 'function') _w.pauseGameLoop();
+            return;
+        case 'step':
+            if (typeof _w.stepTick === 'function') _w.stepTick();
+            return;
+        case 'instant':
+            if (typeof _w.setInstantMode === 'function') _w.setInstantMode(true);
+            return;
+        case 'reset':
+            // Game-initiated reset semantics: flows through the
+            // energy-reset callback → host loop reset, like a player
+            // reset would.
+            if (typeof _w.doEnergyReset === 'function') _w.doEnergyReset();
+            return;
+        case 'setRate':
+            // The game owns its tick rate (calcTickRate); rate control
+            // isn't meaningful here. Instant Mode is the fast path.
+            log('debug', 'playback setRate ignored (game owns its tick rate)', args[0]);
+            return;
+        case 'walkTo':
+            _handleWalkTo(args[0]);
+            return;
+        default:
+            log('warn', 'playback control: unknown method', method);
+    }
+}
+
 /**
  * Fired by the fork at the end of doEnergyReset() AND doPrestige().
  * When the GAME initiated the reset (overlay click, the
@@ -372,6 +511,15 @@ function _handleTravelTaskCompleted(zone, task) {
     // Mark the region completed for this loop. Subsequent re-entries
     // load it in completed state (only exit tasks visible).
     _completedThisLoop.add(_currentRegionId);
+
+    // A playback walkTo is in flight: take ITS exit — no exit-choice
+    // tasks, no single-exit fallthrough.
+    if (_pendingWalkExit) {
+        const exit = _pendingWalkExit;
+        _clearPendingWalk();
+        _dispatchRegionMove(exit.targetRegion ?? null, exit.exitName);
+        return;
+    }
 
     const exits = _getRegionExits();
     if (exits.length === 0) {
@@ -479,9 +627,14 @@ async function main() {
         if (data?.newRegion && data.newRegion !== _currentRegionId) {
             _isActive = false;
             _stopPolling();
+            _clearPendingWalk();
             if (typeof _w.pauseGameLoop === 'function') _w.pauseGameLoop();
         }
     });
+
+    // PlaybackController commands from the host-side proxy (play /
+    // stop / step / instant / reset / walkTo).
+    _client.subscribeEventBus('jta:playbackControl', _handlePlaybackControl);
 
     // Region activation events (from procgenPlayer).
     _client.subscribeEventBus('jta:loadRegion', _handleLoadRegion);

@@ -11,6 +11,14 @@
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 
+// Host-side PlaybackProxy, injected by index.js's initialize() once the
+// eventBus exists (setter injection rather than importing index.js so
+// this library stays headless-import-safe — Node unit tests import it
+// without the panel/gameState graph). Null until then; registry callers
+// treat null as "no controller available" and no-op.
+let _playbackProxy = null;
+export function setPlaybackProxy(proxy) { _playbackProxy = proxy; }
+
 export const substrateRegistryEntry = Object.freeze({
     // Identity / runtime
     id: 'jta',
@@ -76,19 +84,25 @@ export const substrateRegistryEntry = Object.freeze({
         return { ...w, exits: exitsArray };
     },
 
-    // Playback bot integration is deferred to a later phase. Until
-    // then, the registry's getPlaybackController returns null and the
-    // bot no-ops on JtA regions (per the substrate registry contract).
-    getPlaybackController: () => null,
+    // Host-side proxy publishing jta:playbackControl events that the
+    // in-iframe bridge executes (play/stop → resume/pause the game
+    // clock, step → stepTick, instant → setInstantMode, reset →
+    // doEnergyReset, walkTo(exit) → drive mandatory+travel tasks then
+    // take the requested exit). Null before index.js initializes.
+    getPlaybackController: () => _playbackProxy,
 
-    // Loop-mode capabilities: manual play only for now. Custom queues
-    // are wanted eventually but jta has no queue recording yet — flip
+    // Loop-mode capabilities. executeVia makes the loops queue drive
+    // regionMove actions through the PlaybackController's walkTo (the
+    // queue parks until the resulting user:regionMove arrives) instead
+    // of the generic progress timer. Custom queues are wanted
+    // eventually but jta has no queue recording yet — flip
     // customQueues when that lands. No locations / explore in v1
     // regions, so regionMove is the only queueable action.
     loopSupport: Object.freeze({
         queueActions: Object.freeze(['regionMove']),
         manual: true,
         customQueues: false,
+        executeVia: 'playbackBot',
     }),
 
     // Build-time hooks (generateRegionCore / placeFromItems / etc.)
