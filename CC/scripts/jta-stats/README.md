@@ -37,8 +37,11 @@ node CC/scripts/jta-stats/report.mjs results/*.json > results/comparison.md
 
 Config JSON: `{ "name": "...", "options": { "modOverrides": {...},
 "autoFillOrder": [...], "maxRuns": 500, "zoneLimit": 15,
-"purchasePolicy": {...} } }` — `modOverrides` are deltas on top of
-`baselineMods()`; `mods` replaces the profile wholesale.
+"purchasePolicy": {...}, "pinMaxEnergy": 100 } }` — `modOverrides` are
+deltas on top of `baselineMods()`; `mods` replaces the profile wholesale.
+`pinMaxEnergy` emulates jta-substrate play: max_energy re-clamped to the
+value at init and after every reset/prestige, the way the substrate bridge
+pins energy to the shared loop-mode pool (see results/SUMMARY.md Round 4).
 
 `purchasePolicy` swaps the sim's auto_buy_cheapest for a driver-side Divinity
 buy strategy (see `makePurchasePolicy` in driver.mjs): `{kind:"cheapest"}`

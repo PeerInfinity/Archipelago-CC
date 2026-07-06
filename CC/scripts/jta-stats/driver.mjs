@@ -254,6 +254,18 @@ export function runFirstCompletionStats(env, options = {}) {
   const maxTicksPerRun = options.maxTicksPerRun ?? 200000;
   const endZone = options.endZone ?? 99;
   const logEvery = options.logEvery ?? 25;
+  // Substrate emulation: pin max_energy to a fixed value at every run
+  // boundary, the way the jta substrate bridge pins energy to the shared
+  // loop-mode pool (Energetic Memory growth and prestige energy repeatables
+  // stop mattering; threshold pct budgets stay pct-of-pin). null = off.
+  const pinMaxEnergy = options.pinMaxEnergy ?? null;
+  const applyEnergyPin = () => {
+    if (pinMaxEnergy == null) return;
+    game.GAMESTATE.max_energy = pinMaxEnergy;
+    if (game.GAMESTATE.current_energy > pinMaxEnergy) {
+      game.GAMESTATE.current_energy = pinMaxEnergy;
+    }
+  };
   // Full profile via options.mods, or small experiment deltas on top of the
   // baseline profile via options.modOverrides.
   const mods =
@@ -265,6 +277,7 @@ export function runFirstCompletionStats(env, options = {}) {
   win.pauseGameLoop();
   win.initializeHeadless();
   win.setInstantMode(true);
+  applyEnergyPin();
 
   for (const [name, value] of Object.entries(mods)) {
     if (!sim.setMod(name, value)) {
@@ -470,6 +483,7 @@ export function runFirstCompletionStats(env, options = {}) {
       const zoneAtEnd = game.GAMESTATE.current_zone;
       const prestiged = sim.maybeAutoPrestige();
       if (!prestiged) sim.doEnergyReset();
+      applyEnergyPin();
       runEnds.push({
         run,
         endZone: zoneAtEnd,

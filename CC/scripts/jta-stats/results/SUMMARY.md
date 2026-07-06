@@ -102,6 +102,32 @@ compound: at run 1000, combo + spendCap has earned ~18.7 quadrillion vs
 Frequent prestiging (stall 5) is catastrophic — 68k TOTAL at run 1000,
 eight orders of magnitude behind, stuck at lifetime zone 20.
 
+## Round 4 — substrate-pinned energy (pin100-*.json, 2026-07-05)
+
+The jta substrate pins `max_energy` to the shared loop-mode pool (default
+100) on every region entry, so Energetic-Memory / prestige energy growth
+stops applying and the threshold pct budgets stay pct-of-100 forever. The
+question (substrate-integration plan §4): do the sweep-tuned defaults
+transfer, or does substrate play need different values / bridge-side
+scaling? Measured with the new `pinMaxEnergy` driver option (re-clamps
+max+current at init and after every reset/prestige):
+
+- **pin 100 + tuned defaults (tested play profile): all 134 tasks by run
+  747.** Slower than unpinned (270–349) as expected with a fixed budget,
+  but fully completable — the economy stays skill-driven.
+- **pin 100 + thresholds OFF: 72/134 after 2000 runs**, parked around
+  zone 7–8 with zero prestiges. Worse relative outcome than unpinned
+  thresholds-off (65/134 in 500 runs, which at least kept climbing).
+
+**Conclusion: the tuned defaults transfer to pool-pinned substrate play
+unchanged** — thresholds are MORE load-bearing there, not less, because
+the fixed budget makes over-priced tasks permanently unaffordable rather
+than temporarily. No bridge-side threshold rescaling and no separate
+substrate defaults needed. (Caveat: this emulates the pinned budget in
+standalone zone progression; real substrate play adds region-graph
+traversal on top, but the threshold judgment being tested is per-task and
+identical in both.)
+
 ## Caveats
 
 - Deterministic sim → each config is one trajectory; deltas under ~2 mean
