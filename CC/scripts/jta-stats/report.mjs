@@ -23,6 +23,15 @@ const results = files.map((f) => ({
 
 // Metrics over the measured zone window. Unreached tasks count as
 // maxRuns+1 in the mean so configs that fail to reach tasks rank worse.
+//
+// Long-budget (full-game) runs are tail-dominated under spark-off — the
+// mean is swamped by tasks that wait hundreds of runs for prestige spark.
+// For those, checkpoint counts (tasks done by run N) and the zones-1-15
+// sub-mean (comparable to the historical z15 rounds) carry the signal.
+const CHECKPOINTS = [250, 500, 1000, 2000, 3000, 4000];
+const checkpointsFor = (maxRuns) =>
+  maxRuns > 1000 ? CHECKPOINTS.filter((n) => n <= maxRuns) : [];
+
 function summarize(r) {
   const { completions, unreached, options, timing, finalState } = r.data;
   const penalty = options.maxRuns + 1;
@@ -37,10 +46,20 @@ function summarize(r) {
     const p = (r.data.purchases ?? []).find((p) => p.name === name);
     return p ? p.run : "—";
   };
+  const doneBy = (n) => completions.filter((c) => c.run <= n).length;
+  const z15 = completions
+    .filter((c) => c.zone < 15)
+    .map((c) => c.run)
+    .concat(unreached.filter((t) => t.zone < 15).map(() => penalty));
+  const z15Mean = z15.length
+    ? (z15.reduce((a, b) => a + b, 0) / z15.length).toFixed(1)
+    : "—";
   return {
     completed: `${r.data.completedCount}/${r.data.taskCount}`,
     meanRun: mean.toFixed(1),
     medianRun: median,
+    z15Mean,
+    doneBy,
     lastFirstCompletion: r.data.allCompleted ? lastRun : `>${options.maxRuns}`,
     prestiges: finalState.prestiges,
     highestZone: finalState.highestZone + 1,
@@ -63,14 +82,22 @@ if (results.length > 1) {
   );
   lines.push("");
   const buyCols = anyPurchases();
+  const checkpoints = checkpointsFor(results[0].data.options.maxRuns);
+  const fullGame = results[0].data.options.zoneLimit > 15;
+  const cpHeader = checkpoints.map((n) => ` done@${n} |`).join("");
+  const z15Header = fullGame ? " z1-15 mean |" : "";
   lines.push(
-    `| config | completed | mean run | median run | last first-completion | prestiges | highest zone |${buyCols ? " MoT@ | SBtV@ |" : ""} ticks | wall ms |`
+    `| config | completed |${cpHeader} mean run | median run |${z15Header} last first-completion | prestiges | highest zone |${buyCols ? " MoT@ | SBtV@ |" : ""} ticks | wall ms |`
   );
-  lines.push(`|---|---|---|---|---|---|---|${buyCols ? "---|---|" : ""}---|---|`);
+  lines.push(
+    `|---|---|${checkpoints.map(() => "---|").join("")}---|---|${fullGame ? "---|" : ""}---|---|---|${buyCols ? "---|---|" : ""}---|---|`
+  );
   for (const r of results) {
     const s = summarize(r);
+    const cpCells = checkpoints.map((n) => ` ${s.doneBy(n)} |`).join("");
+    const z15Cell = fullGame ? ` ${s.z15Mean} |` : "";
     lines.push(
-      `| ${r.name} | ${s.completed} | ${s.meanRun} | ${s.medianRun} | ${s.lastFirstCompletion} | ${s.prestiges} | ${s.highestZone} |${buyCols ? ` ${s.motRun} | ${s.sbtvRun} |` : ""} ${s.ticks} | ${s.wallMs} |`
+      `| ${r.name} | ${s.completed} |${cpCells} ${s.meanRun} | ${s.medianRun} |${z15Cell} ${s.lastFirstCompletion} | ${s.prestiges} | ${s.highestZone} |${buyCols ? ` ${s.motRun} | ${s.sbtvRun} |` : ""} ${s.ticks} | ${s.wallMs} |`
     );
   }
   lines.push("");

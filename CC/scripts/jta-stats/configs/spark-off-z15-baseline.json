@@ -1,0 +1,14 @@
+{
+  "name": "spark-off-z15-baseline",
+  "options": {
+    "modOverrides": {},
+    "zoneLimit": 15,
+    "maxRuns": 500,
+    "excludeTaskIds": [
+      17,
+      28,
+      88,
+      158
+    ]
+  }
+}

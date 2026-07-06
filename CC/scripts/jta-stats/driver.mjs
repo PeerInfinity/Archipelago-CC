@@ -36,7 +36,12 @@ export function baselineMods() {
     "auto_buy_cheapest",
     "resume_automation_on_reset",
     "force_automation",
-    "award_spark_on_discovery",
+    // NOT award_spark_on_discovery (flipped OFF 2026-07-06): the game's own
+    // default is false, and Round 5 showed discovery spark is load-bearing —
+    // it funds Divinity purchases with zero prestiges, which contaminated
+    // every earlier sweep. Spark-on runs are an explicit override now
+    // (modOverrides: { award_spark_on_discovery: true }); legacy experiments
+    // in experiments.mjs get that override injected automatically.
     "auto_continue_energy_reset",
     "suppress_prestige_popup",
     "show_spark_stats",
@@ -313,10 +318,21 @@ export function runFirstCompletionStats(env, options = {}) {
   sim.autoFillAllPriorities();
   sim.setAutomationMode(sim.AutomationMode.All);
 
-  // Task universe: every task defined in zones 0..zoneLimit-1.
+  // Task universe: every task defined in zones 0..zoneLimit-1, minus
+  // options.excludeTaskIds. Exclusion exists for zone-limited spark-off
+  // runs: the four SBtV-gated hidden tasks (ids 17/28/88/158) have no
+  // in-game unlocker, and without discovery spark or a prestige-scale
+  // horizon SeeBeyondTheVeil is never bought — they'd sit as permanent
+  // maxRuns+1 penalties. Full-game runs should NOT exclude them (prestige
+  // spark buys SBtV eventually; their timing is real tail signal).
+  const excludeTaskIds = new Set(options.excludeTaskIds ?? []);
   const universe = new Map();
   zones.ZONES.slice(0, zoneLimit).forEach((zone, zi) => {
     for (const def of zone.tasks) {
+      if (excludeTaskIds.has(def.id)) {
+        log(`[driver] excluding task ${def.id} (${def.name}, zone ${zi + 1}) from metric universe`);
+        continue;
+      }
       universe.set(def.id, {
         id: def.id,
         name: def.name,
@@ -550,6 +566,7 @@ export function runFirstCompletionStats(env, options = {}) {
       maxRuns,
       maxTicksPerRun,
       endZone,
+      excludeTaskIds: [...excludeTaskIds],
       skipBlocked,
       autoFillOrder,
       purchasePolicy,
