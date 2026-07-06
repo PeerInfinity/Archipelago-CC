@@ -30,8 +30,13 @@ and the submodule's own `docs/substrate-integration.md`.
 > requested exit on Travel completion. This subsumed the reduced Phase 2
 > command set. Fifth in-app test `jta-bot-walkto-exit` covers the executeVia
 > path end-to-end; 16/16 substrate tests + regression green.
-> **Still open:** §4 harness measurements (threshold rescale under pooled
-> max_energy), Phase 5 doc relocation (old stack kept per ruling), Phase 6.
+> **§4 measurement DONE** (`3b2ddbafc`): new `pinMaxEnergy` harness option;
+> pin 100 + tuned defaults completes all 134 tasks (run 747) while pin 100 +
+> thresholds-off strands at 72/134 after 2000 runs — the tuned defaults
+> transfer to pool-pinned substrate play unchanged, no rescaling needed
+> (jta-stats `results/SUMMARY.md` Round 4). **Phase 5 doc relocation DONE**
+> (`f694cba93`). **Still open: Phase 6 only** (AP location checks inside
+> zones — future arc). This plan is otherwise complete.
 > Nothing in this doc re-opens settled automation decisions (defaults,
 > auto-fill order, `threshold_all_skipped`, Use Free Items kept≡0).
 
