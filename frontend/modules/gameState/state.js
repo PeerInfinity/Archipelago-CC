@@ -147,6 +147,21 @@ export class GameState {
     }
 
     /**
+     * Gain mana, clamped to maxMana. Counterpart of deductMana for
+     * substrates that mirror in-game resource GAINS into the shared
+     * pool (e.g. JtA energy items). Emits `gameState:manaChanged`.
+     * @param {number} amount - Amount of mana to gain (may be fractional)
+     * @returns {number} new currentMana value
+     */
+    gainMana(amount) {
+        const gain = Number(amount) || 0;
+        if (gain <= 0) return this.currentMana;
+        this.currentMana = Math.min(this.maxMana, this.currentMana + gain);
+        this.emitManaChanged();
+        return this.currentMana;
+    }
+
+    /**
      * Refill mana to max. Used by loop reset.
      */
     refillMana() {

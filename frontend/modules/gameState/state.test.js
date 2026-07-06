@@ -103,6 +103,38 @@ describe('GameState — loop-mode resource API', () => {
     });
   });
 
+  describe('gainMana', () => {
+    it('increases currentMana and emits gameState:manaChanged', () => {
+      gs.deductMana(50);
+      bus.events.length = 0;
+      gs.gainMana(20);
+      expect(gs.getCurrentMana()).toBe(70);
+      const ev = bus.events.find((e) => e.name === 'gameState:manaChanged');
+      expect(ev).toBeDefined();
+      expect(ev.data).toEqual({ current: 70, max: 100 });
+    });
+
+    it('clamps to maxMana', () => {
+      gs.deductMana(10);
+      gs.gainMana(50);
+      expect(gs.getCurrentMana()).toBe(100);
+    });
+
+    it('ignores zero, negative, and non-numeric amounts', () => {
+      gs.deductMana(50);
+      bus.events.length = 0;
+      expect(gs.gainMana(0)).toBe(50);
+      expect(gs.gainMana(-10)).toBe(50);
+      expect(gs.gainMana('nope')).toBe(50);
+      expect(bus.events.length).toBe(0);
+    });
+
+    it('handles fractional gains and returns the new value', () => {
+      gs.deductMana(50);
+      expect(gs.gainMana(4.17)).toBeCloseTo(54.17, 5);
+    });
+  });
+
   describe('recalculateMaxMana', () => {
     it('recomputes maxMana from a snapshot inventory', () => {
       const snapshot = { inventory: { sword: 1, shield: 2, key: 0 } };

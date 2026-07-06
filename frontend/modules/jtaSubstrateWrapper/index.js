@@ -8,10 +8,12 @@
  *    publishes jta:loadRegion when the player enters a region tagged
  *    with this substrate.
  *  - Acts as the host-side broker for the in-iframe bridge: pushes
- *    initial pool / reset-count state to the bridge on iframe:appReady,
- *    and handles `jta:bridgeDeductMana` events from the bridge by
- *    deducting from gameState's shared mana pool (triggering a loop
- *    reset when the pool hits ≤ 0).
+ *    initial pool / reset-count state to the bridge on iframe:appReady;
+ *    mirrors the game's energy into gameState's shared mana pool both
+ *    ways (`jta:bridgeDeductMana` / `jta:bridgeGainMana`, with the
+ *    out-of-mana → triggerLoopReset path on depletion); and answers
+ *    `jta:bridgeEnergyReset` (a game-initiated energy reset or
+ *    prestige) with the matching loop reset.
  *
  * See docs/json/developer/procgen/jta.md.
  */
@@ -37,6 +39,8 @@ export const moduleInfo = {
 
 const INITIAL_STATE_EVENT = 'jtaSubstrateWrapper:initialState';
 const BRIDGE_DEDUCT_MANA_EVENT = 'jta:bridgeDeductMana';
+const BRIDGE_GAIN_MANA_EVENT = 'jta:bridgeGainMana';
+const BRIDGE_ENERGY_RESET_EVENT = 'jta:bridgeEnergyReset';
 
 let _initApi = null;
 
@@ -69,6 +73,8 @@ export function register(registrationApi) {
     // Events the host module subscribes to.
     registrationApi.registerEventBusSubscriberIntent('iframe:appReady');
     registrationApi.registerEventBusSubscriberIntent(BRIDGE_DEDUCT_MANA_EVENT);
+    registrationApi.registerEventBusSubscriberIntent(BRIDGE_GAIN_MANA_EVENT);
+    registrationApi.registerEventBusSubscriberIntent(BRIDGE_ENERGY_RESET_EVENT);
     registrationApi.registerEventBusSubscriberIntent('jta:loadRegion');
 
     // Guarded register so re-registration of the same id is harmless
@@ -126,6 +132,33 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
         if (gs.getCurrentMana() <= 0) {
             _fireLoopReset(gs);
         }
+    });
+
+    // Bridge → host: mirror JtA's energy GAINS (energy items etc.)
+    // into the shared pool, clamped to maxMana by gameState.
+    eventBus.subscribe(BRIDGE_GAIN_MANA_EVENT, (data) => {
+        const gs = getGameStateSingleton();
+        if (!gs) return;
+        const amount = Number(data?.amount) || 0;
+        if (amount <= 0) return;
+        gs.gainMana(amount);
+    });
+
+    // Bridge → host: the game ended its own run (energy-reset overlay
+    // click, auto_continue_energy_reset, threshold End Run, prestige /
+    // Auto-Prestige). Answer with a loop reset — UNLESS one already
+    // fired since the bridge last synced its reset count (the
+    // pool-exhaustion race: energy and pool hit 0 together, and the
+    // deduct handler above already reset the loop before the game's
+    // own game-over flow ran).
+    eventBus.subscribe(BRIDGE_ENERGY_RESET_EVENT, (data) => {
+        const gs = getGameStateSingleton();
+        if (!gs) return;
+        const bridgeCount = Number(data?.hostResetCount);
+        if (Number.isFinite(bridgeCount) && gs.getLoopResetCount() > bridgeCount) {
+            return; // a loop reset already covered this game reset
+        }
+        _fireLoopReset(gs);
     });
 }
 

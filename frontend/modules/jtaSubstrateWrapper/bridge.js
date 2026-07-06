@@ -2,28 +2,45 @@
  * Bridge — runs inside the JtA iframe. Injected by
  * jtaSubstrateWrapperPanel after the iframe's `load` event fires.
  *
- * Phase 5 scope (this commit):
- *   - On startup: switch JtA into managed mode (pause loop, wipe
- *     the briefly localStorage-loaded state, initialize fresh) and
- *     complete the iframeAdapter handshake.
+ * Responsibilities:
+ *   - On startup: confirm JtA is in managed mode (?managed=1 already
+ *     flipped it pre-DOMContentLoaded; the game booted from its own
+ *     substrate save slot — see the fork's getSaveLocation) and
+ *     complete the iframeAdapter handshake. The game loop stays
+ *     PAUSED until the player enters a jta region.
  *   - On every jta:loadRegion: catch-up sync any loop resets the
  *     host fired while JtA was inactive, sync JtA's energy/max
  *     from the shared pool, load the right zone (in completed
  *     state if the player already finished this region this loop),
- *     inject synthetic exit tasks for re-entries.
- *   - While active: poll JtA's energy and mirror the drain into
- *     the shared loop-mode pool via `jta:bridgeDeductMana` events
- *     (the wrapper-host module handles the actual deduct + the
- *     out-of-mana → triggerLoopReset path).
+ *     inject synthetic exit tasks for re-entries, resume the game
+ *     loop.
+ *   - On leaving the region (gameState:regionChanged away): pause the
+ *     game loop — no unmirrored background play.
+ *   - While active: poll JtA's energy and mirror BOTH directions into
+ *     the shared loop-mode pool — drains via `jta:bridgeDeductMana`,
+ *     gains (energy items etc.) via `jta:bridgeGainMana`. External
+ *     pool changes (another substrate spent mana, max-mana recompute)
+ *     are pushed back into JtA's energy; the bridge tells its own
+ *     mirrored deltas apart from external changes by tracking the
+ *     pool value it expects to be echoed (`_expectedPool`).
+ *   - Reset propagation, both ways:
+ *       game → host: the fork's energy-reset callback (fires on
+ *         doEnergyReset AND doPrestige) publishes
+ *         `jta:bridgeEnergyReset`; the host answers with a loop reset
+ *         unless one already fired for this depletion.
+ *       host → game: gameState:loopReset applies doEnergyReset
+ *         immediately while a jta region is active (deferred to the
+ *         next jta:loadRegion while inactive, as before).
  *   - On Travel-task completion: mark the region completed for this
  *     loop, dispatch user:regionMove for single-exit regions, or
  *     inject synthetic exit-choice tasks for multi-exit regions.
  *
  * Host-side counterpart wiring lives in
  *   ../jtaSubstrateWrapper/index.js — that module subscribes to
- *   `iframe:appReady` (to push the initial pool state to this bridge)
- *   and to `jta:bridgeDeductMana` (to deduct from gameState and
- *   trigger the loop reset when the pool hits ≤ 0).
+ *   `iframe:appReady` (to push the initial pool state to this bridge),
+ *   `jta:bridgeDeductMana` / `jta:bridgeGainMana` (pool mirroring +
+ *   the out-of-mana → triggerLoopReset path), and
+ *   `jta:bridgeEnergyReset` (game-initiated reset → loop reset).
  */
 
 import { IframeClient } from '../iframe-base/iframeClient.js';
@@ -59,6 +76,20 @@ let _hostCurrentMana = 100;
 let _hostMaxMana = 100;
 let _hostResetCount = 0;
 let _lastAppliedResetCount = 0;             // How many resets we've applied to JtA
+
+// Echo detection for two-way mana sync. After the bridge publishes a
+// deduct/gain, the host's gameState:manaChanged echo carries exactly
+// the value we predicted here; a manaChanged that DOESN'T match is an
+// external pool change (another substrate spent mana, loops charged a
+// cost, max-mana recompute) and gets pushed into JtA's energy.
+// null ⇒ no prediction (treat the next manaChanged as external).
+let _expectedPool = null;
+const POOL_EPSILON = 0.001;
+
+// True while the bridge itself is running doEnergyReset (host-reset
+// propagation) — suppresses the fork's energy-reset callback so we
+// don't report our own resets back to the host.
+let _applyingHostReset = false;
 
 // Polling
 let _pollIntervalId = null;
@@ -100,12 +131,20 @@ function _pollTick() {
         return;
     }
     const delta = _lastSampledEnergy - currentEnergy;
-    // Mirror drain into the shared pool only when this region opts in
-    // (matches the maze / textAdventure pattern of gating on
-    // world.manaEnabled). v1 of the JtA substrate does NOT also check
-    // loopModeActive — the loop queue isn't wired to drive JtA yet.
-    if (delta > 0 && _client && _world?.manaEnabled) {
-        _client.publishEventBus('jta:bridgeDeductMana', { amount: delta });
+    // Mirror energy changes into the shared pool only when this region
+    // opts in (matches the maze / textAdventure pattern of gating on
+    // world.manaEnabled). Does NOT also check loopModeActive — the
+    // loop queue isn't wired to drive JtA yet. Both directions:
+    // drains deduct from the pool, gains (energy items, perk refills)
+    // add to it (clamped to maxMana host-side).
+    if (delta !== 0 && _client && _world?.manaEnabled) {
+        if (delta > 0) {
+            if (_expectedPool !== null) _expectedPool = Math.max(0, _expectedPool - delta);
+            _client.publishEventBus('jta:bridgeDeductMana', { amount: delta });
+        } else {
+            if (_expectedPool !== null) _expectedPool = Math.min(_hostMaxMana, _expectedPool - delta);
+            _client.publishEventBus('jta:bridgeGainMana', { amount: -delta });
+        }
     }
     _lastSampledEnergy = currentEnergy;
 }
@@ -125,17 +164,28 @@ function _applyCatchUpResets() {
         _lastAppliedResetCount = _hostResetCount;
         return;
     }
-    for (let i = 0; i < delta; i++) {
-        _w.doEnergyReset();
+    // Flag so the fork's energy-reset callback (which fires at the end
+    // of every doEnergyReset) doesn't report our own resets back to
+    // the host as game-initiated ones.
+    _applyingHostReset = true;
+    try {
+        for (let i = 0; i < delta; i++) {
+            _w.doEnergyReset();
+        }
+    } finally {
+        _applyingHostReset = false;
     }
     _lastAppliedResetCount = _hostResetCount;
-    log('debug', `applied ${delta} catch-up reset(s); JtA now at zone 0`);
+    // Note: not necessarily zone 0 afterwards — Minor Time Compression's
+    // skipFreeZones can advance past free zones during the reset.
+    log('debug', `applied ${delta} catch-up reset(s)`);
 }
 
 function _syncEnergyFromPool() {
     if (typeof _w.setEnergy !== 'function') return;
     _w.setEnergy(_hostCurrentMana, _hostMaxMana);
     _lastSampledEnergy = _hostCurrentMana;
+    _expectedPool = _hostCurrentMana;
 }
 
 // ────────────────────────────────────────────────────────────────
@@ -278,8 +328,40 @@ function _handleLoadRegion(payload) {
     // works through the zone normally; the Travel-task callback below
     // handles the exit choice when the zone's Travel task completes.
 
+    // Entering a jta region resumes the game clock (paused since boot
+    // or since the last region exit).
+    if (typeof _w.resumeGameLoop === 'function') _w.resumeGameLoop();
     _startPolling();
     log('debug', `loaded region ${regionId} (zone ${jtaZone}, completed=${completed})`);
+}
+
+/**
+ * Fired by the fork at the end of doEnergyReset() AND doPrestige().
+ * When the GAME initiated the reset (overlay click, the
+ * auto_continue_energy_reset mod, threshold End Run, Auto-Prestige),
+ * ask the host to run the matching loop reset. Resets the bridge
+ * applied itself (_applyingHostReset) are not reported back.
+ */
+function _handleGameEnergyReset(state) {
+    if (_applyingHostReset) return;
+
+    // Count the game's own reset as one applied host reset, so the
+    // loop reset the host is about to fire (or the pool-exhaustion
+    // one already in flight) isn't re-applied to the game.
+    _lastAppliedResetCount += 1;
+
+    // The game just refilled its own energy; re-baseline the poll so
+    // the refill isn't mirrored as a gain. The host's loop reset will
+    // arrive as a non-echo manaChanged and re-pin energy to the pool.
+    _lastSampledEnergy = typeof state?.currentEnergy === 'number' ? state.currentEnergy : null;
+    _expectedPool = null;
+
+    // hostResetCount lets the host detect the exhaustion race: if a
+    // loop reset already fired since we last synced (pool hit 0 and
+    // the deduct path reset before this callback ran), the host skips
+    // firing a second one.
+    _client?.publishEventBus('jta:bridgeEnergyReset', { hostResetCount: _hostResetCount });
+    log('debug', 'game-initiated reset reported to host');
 }
 
 function _handleTravelTaskCompleted(zone, task) {
@@ -346,30 +428,58 @@ async function main() {
             _hostResetCount = data.loopResetCount;
             _lastAppliedResetCount = data.loopResetCount;
         }
+        _expectedPool = _hostCurrentMana;
         log('debug', 'initial state received', { _hostCurrentMana, _hostMaxMana, _hostResetCount });
     });
 
-    // Incremental updates.
+    // Incremental updates. Echo detection: manaChanged caused by our
+    // own mirrored deltas matches _expectedPool and is just recorded;
+    // anything else is an external pool change and (while active on a
+    // mana-enabled region) is pushed into JtA's energy so the two stay
+    // continuously synchronized.
     _client.subscribeEventBus('gameState:manaChanged', (data) => {
+        const prevMax = _hostMaxMana;
         if (typeof data?.current === 'number') _hostCurrentMana = data.current;
         if (typeof data?.max === 'number') _hostMaxMana = data.max;
+        if (!_isActive || !_world?.manaEnabled) return;
+        const isEcho = _expectedPool !== null
+            && Math.abs(_hostCurrentMana - _expectedPool) <= POOL_EPSILON
+            && _hostMaxMana === prevMax;
+        if (isEcho) {
+            _expectedPool = _hostCurrentMana; // resync to the exact float
+        } else {
+            _syncEnergyFromPool();
+        }
     });
 
     _client.subscribeEventBus('gameState:loopReset', (data) => {
         if (typeof data?.resetCount === 'number') _hostResetCount = data.resetCount;
-        // The host just reset the loop. Clear per-loop completion
-        // tracking; the bridge's catch-up sync on next jta:loadRegion
-        // will apply doEnergyReset and resync energy.
+        // The payload carries the refilled pool; take it now so the
+        // immediate-propagation path below pins energy to the fresh
+        // values (the follow-up manaChanged then reads as an echo).
+        if (typeof data?.mana?.current === 'number') _hostCurrentMana = data.mana.current;
+        if (typeof data?.mana?.max === 'number') _hostMaxMana = data.mana.max;
         _completedThisLoop.clear();
+        if (_isActive) {
+            // Loop reset while standing in a jta region: propagate
+            // immediately (an energy reset the game already ran itself
+            // was pre-counted in _handleGameEnergyReset, so the
+            // catch-up delta is 0 in that case).
+            _applyCatchUpResets();
+            _syncEnergyFromPool();
+        }
+        // While inactive: deferred to the next jta:loadRegion, as before.
     });
 
     _client.subscribeEventBus('gameState:regionChanged', (data) => {
         // If we move away from this jta region (or to a different
         // jta region — the next jta:loadRegion will re-activate),
-        // stop polling.
+        // stop polling and pause the game clock: no unmirrored
+        // background play while another substrate is active.
         if (data?.newRegion && data.newRegion !== _currentRegionId) {
             _isActive = false;
             _stopPolling();
+            if (typeof _w.pauseGameLoop === 'function') _w.pauseGameLoop();
         }
     });
 
@@ -386,11 +496,16 @@ async function main() {
         _client?.requestStaticData?.();
     });
 
-    // Step 4: register the Travel-task callback on the JtA side.
+    // Step 4: register the game-side callbacks.
     if (typeof _w.setTravelTaskCallback === 'function') {
         _w.setTravelTaskCallback(_handleTravelTaskCompleted);
     } else {
         log('warn', 'setTravelTaskCallback hook missing — single-exit transitions will not work');
+    }
+    if (typeof _w.setEnergyResetCallback === 'function') {
+        _w.setEnergyResetCallback(_handleGameEnergyReset);
+    } else {
+        log('warn', 'setEnergyResetCallback hook missing — game-initiated resets will desync the loop');
     }
 
     // Step 5: announce ready. The host module's iframe:appReady
@@ -398,9 +513,11 @@ async function main() {
     _client.notifyAppReady();
     log('info', 'connected to host; appReady sent');
 
-    // Resume the JtA loop so the player can work tasks. Polling
-    // starts on first jta:loadRegion.
-    if (typeof _w.resumeGameLoop === 'function') _w.resumeGameLoop();
+    // The game loop stays PAUSED until the player enters a jta region
+    // (jta:loadRegion resumes it; gameState:regionChanged away pauses
+    // it again). A panel opened with no jta region active shows the
+    // game frozen — by design: substrate play only ticks while its
+    // region is the current one.
 }
 
 main().catch((err) => {

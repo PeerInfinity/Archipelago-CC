@@ -197,6 +197,9 @@ export async function register(registrationApi) {
     registrationApi.registerPublicFunction(moduleId, 'deductMana', (amount) => {
         return getGameStateSingleton().deductMana(amount);
     });
+    registrationApi.registerPublicFunction(moduleId, 'gainMana', (amount) => {
+        return getGameStateSingleton().gainMana(amount);
+    });
     registrationApi.registerPublicFunction(moduleId, 'refillMana', () => {
         return getGameStateSingleton().refillMana();
     });
