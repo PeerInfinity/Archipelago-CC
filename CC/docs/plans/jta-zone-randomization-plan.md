@@ -1,8 +1,10 @@
 # JtA Zone Randomization & Reset-Paced Balancing — Plan
 
-**Date:** 2026-07-06 (v2, same-day revision after design discussion) ·
-**Status: Phase 0 (vanilla profiling) IN PROGRESS — user go-ahead 2026-07-06;
-remaining rulings pending for Phases 1+.**
+**Date:** 2026-07-06 (v2 + same-day ruling rounds) ·
+**Status: Phase 0 (vanilla profiling) DONE 2026-07-06 (`572fd9c32`, SUMMARY.md
+Round 5). All §7 rulings received; v1 scope settled (zones 0–14, perk-shuffle
++ rebalance; synthetic data deferred). Implementation of Phases 1+ not yet
+started.**
 
 The next JtA arc after `jta-substrate-integration-plan.md` (all phases complete
 except its Phase 6 stub, which this plan absorbs). This is the modern successor
@@ -46,7 +48,21 @@ save, Pause-on-Block default, automation defaults) are **not re-opened here**.
 6. **First step: collect statistics on vanilla JtA data** (via the existing
    simulated-playthrough scripts) as the approximate target profile for
    synthetic generation — and, it turns out, as calibration + verification
-   baselines for everything else.
+   baselines for everything else. **DONE 2026-07-06.**
+7. **Two-pass flow (user, 2026-07-06 follow-up):** generation produces the
+   original rules.json → world_generator + Generate.py **re-randomize item
+   placements during fill** → the exported rules.json needs its costs
+   **rebalanced against the actual sphere log** when loaded. The post-fill
+   rebalance is REQUIRED, not an optional multiworld refinement (see §2b).
+8. **v1 scope (user, 2026-07-06 follow-up):** randomize perk placements only
+   + rebalance costs to the target progression curve; **zones 0–14** (the old
+   goal-zone-15 scope), which avoids prestige entirely. **Fully synthetic
+   data is deferred until after v1.**
+9. **Prestige-grant semantics (recorded for post-v1):** perks/unlocks granted
+   by OTHER multiworld players do not reset on prestige (AP inventory
+   persists; re-grant after prestige). Whether perks/unlocks granted from the
+   CURRENT JtA game reset on prestige should become an option — **default:
+   they DO reset**. Out of v1 scope (zones 0–14 never prestige).
 
 ---
 
@@ -243,6 +259,42 @@ pass is plausibly ~5–15s. Two honest caveats:
 
 ---
 
+## 2b. The two-pass generation flow (promoted per user review 2026-07-06)
+
+AP's fill re-randomizes item placements among the locations, so any costs
+balanced at pipeline time against the pipeline's *intended* order are stale
+once Generate.py exports the final rules.json. The flow is therefore:
+
+1. **Pass A — structure (procgen pipeline):** zones → regions, perk-task
+   locations, perk items, loose count-based access rules that shape the
+   sphere order. Costs are NOT authoritative here — vanilla costs (v1) or
+   provisional assignments (synthetic mode later) suffice, because Pass B
+   always rebalances. (Pipeline-side pre-balancing for in-panel preview play
+   is possible but optional.)
+2. **world_generator + Generate.py:** fill shuffles the items; the export
+   emits the final rules.json + the actual sphere log.
+3. **Pass B — authoritative rebalance (at rules load, in-app):** run the §2
+   forward pass against the ACTUAL sphere log — the near-literal JtA analog
+   of the Loops cost generator, which is itself an in-app post-fill pass —
+   and apply the resulting patches via the Q2 hook. Deterministic given the
+   sphere log; cache the patches (keyed by seed) so the solve runs once per
+   world, not per session.
+
+Same balancer code both places: Pass A (when used) walks the intended order,
+Pass B walks the sphere log. This supersedes the earlier "post-fill
+sphere-log refinement — deferred" framing: Pass B **is** the primary
+balancing point. Note the sphere log records tasks completed and perks
+received independently (multiworld: a JtA task may hold another player's
+item; a perk may arrive from elsewhere) — the walk grants what the log says
+arrives, exactly like the Loops generator's `itemsReceived` handling.
+
+**Verify early (Phase 1 enabler):** that `preset_sidecars` (and any
+zone-payload fields) survive the pipeline → world_generator → Generate.py →
+exported-rules.json round-trip; if not, that pass-through is a prerequisite
+for Pass B having its inputs at load time.
+
+---
+
 ## 3. Design questions — options and recommendations
 
 ### Q1. Where does the balancing math live?
@@ -275,11 +327,20 @@ Build-time data generation (writing a `zones.js` per seed) is rejected for
 runtime use (can't rebuild per seed in the browser) — the hooks serve both the
 bridge and the harness with one mechanism.
 
-*(Sub-choice to confirm: apply patches lazily per-region at load vs
-all-at-once at rules load by iterating the warehouse — lazy is simpler;
-all-at-once keeps global displays like `PERKS_BY_ZONE` coherent.)*
+*(Patch-timing sub-choice — RULED (user 2026-07-06): implementer's call,
+whichever is cleaner to implement. Note Pass B computes all patches at rules
+load anyway, so all-at-once may fall out naturally.)*
 
 ### Q3. Where does randomization/generation run?
+
+> **RULED (user 2026-07-06): procgen-pipeline-initiated.** Where the
+> generation/balancing CODE lives is the implementer's call (cleanest wins);
+> the user notes some of it may make more sense inside the submodule.
+> Working split: engine-touching parts (headless gamestate driver, estimator
+> inversion, forward-play) lean toward the submodule — they version with the
+> mechanics they model, like the estimators themselves; pipeline/AP-facing
+> parts (progression plan, sidecar stamping, curve data, sphere-log walk)
+> stay in the outer repo. Decide finally at implementation.
 
 **Recommendation unchanged: the procgen pipeline** (deterministic per (seed,
 params), content lands in sidecars + `extracted_rules.locations`, flows to AP
@@ -391,7 +452,7 @@ accuracy is bounded by the skill trajectories — Phase 0 measures that bound.
 
 Each phase separately land-able and committed separately per repo policy.
 
-### Phase 0 — Vanilla profiling (user-proposed starting point; no product code)
+### Phase 0 — Vanilla profiling — **DONE 2026-07-06** (`572fd9c32`; findings in `results/SUMMARY.md` Round 5, data in `results/vanilla-profile.json`)
 Extend `CC/scripts/jta-stats/` to collect, from vanilla playthroughs:
 - **Empirical pacing**: resets between consecutive first-completions, per
   task/category/zone (the vanilla pacing curve).
@@ -414,6 +475,10 @@ standalone and `pinMaxEnergy` (substrate) budgets.
   tasks as locations (param-gated, no randomization) — proves the
   locations path end-to-end (world_generator → Generate.py → spoiler/sphere
   log) before content changes.
+- **Round-trip verification (§2b):** confirm `preset_sidecars` + zone payload
+  fields survive pipeline → world_generator → Generate.py → exported
+  rules.json, and that the sphere log is available to the app at rules load
+  (Pass B's inputs). If anything drops, pass-through is a Phase 1 fix.
 
 ### Phase 2 — AP integration (all tasks = locations, all perks = items)
 - Location per task (first-full-completion semantics), item per perk,
@@ -424,13 +489,20 @@ standalone and `pinMaxEnergy` (substrate) budgets.
   connect/rules-reload (absorbs `jtaArchipelago` conventions).
 - In-app test: complete a task → check sent → item receipt → perk present.
 
-### Phase 3 — The §2 balancing pass over existing data
-- `balance` module home per Q3 (importable by pipeline and a Node CLI);
-  intended-progression-order walk, first-touch assignment, local estimator
-  inversion (with Phase 0 correction factor), real-sim advancement,
-  intra-step split rule, defaults for the tail; emits Tier-1 patches.
-- `resetsPerStep` + tolerance as substrate params; measure solve runtime →
-  Web Worker / pre-generation script decision point.
+### Phase 3 — The §2 balancing pass (Pass B first; shared module)
+- `balance` module (code home per Q3 ruling: engine-touching parts lean
+  submodule, orchestration outer; importable by the app at rules load, the
+  pipeline, and a Node CLI/harness): sphere-log/intended-order walk,
+  first-touch assignment, local estimator inversion corrected through the
+  Phase 0 calibration curve, real-sim advancement, intra-step split rule,
+  defaults for the tail; emits Tier-1 patches.
+- **Primary integration = Pass B (§2b): rebalance at rules load against the
+  actual sphere log**, patches cached per seed. Pass A pre-balancing for
+  in-panel preview is optional and can come later.
+- Pacing defaults per Q6 ruling: position-indexed vanilla curve (pinned100
+  anchor) with seeded jitter; `resetsPerStep` scalar as manual override.
+- Measure solve runtime at load; Web Worker if it blows the interactive
+  budget — decision point, not a blocker.
 
 ### Phase 4 — Verification
 - Harness `randomized-pacing-*` experiment family: measured reset gaps within
@@ -439,7 +511,7 @@ standalone and `pinMaxEnergy` (substrate) budgets.
 - In-app smoke: randomized+balanced preset progresses zone 1→3 within
   expected resets under playback automation.
 
-### Phase 5 — Synthetic generation v1 (the destination)
+### Phase 5 — Synthetic generation (the destination — **deferred until after v1 ships**; v1 = Phases 1–4 at zones 0–14 scope)
 - Fork Tier-2 hook (`replaceZones` + derived-map refresh).
 - Planned layer (Q7): unlock-order/backfill/zone-cadence skeleton, profile-
   informed; co-constructive realization one task at a time (zone placement,
@@ -502,11 +574,13 @@ standalone and `pinMaxEnergy` (substrate) budgets.
 
 | # | Question | Status |
 |---|---|---|
-| 1 | Balancing math home | **Recommended:** fork estimators + real sim inside the §2 pass; harness verifies; old solvers retired. §2 architecture user-confirmed 2026-07-06 ("makes sense"); formal ruling on Q1 packaging pending |
-| 2 | Data delivery | **Recommended:** two-tier fork hooks (field-level now, structural for synthetic); sidecar-carried patches — pending |
-| 3 | Randomization home | **Recommended:** procgen pipeline — pending |
-| 4 | Content scope | **RULED (user 2026-07-06):** all tasks = locations, all perks = items, all in sphere log; existing-data mode first, fully synthetic generation as destination |
-| 5 | AP checks this arc | **Mooted yes** by ruling 4; grant semantics (AP-authoritative recommended) — pending |
-| 6 | Pacing knob | **PARTIALLY RULED (user 2026-07-06):** defaults = profiled vanilla values, capturing the CURVE not just the average; scalar `resetsPerStep` demoted to manual override. Remaining: curve representation (position-indexed replay recommended vs phase-banded sampling) + tolerance band |
-| 7 | Synthetic construction order | **Recommended:** co-construction with a thin planned layer (order planned, realization emergent); sphere log as byproduct trace, AP's post-fill log authoritative — pending (user explicitly undecided) |
-| 8 | Vanilla profiling first | **RULED (user 2026-07-06):** yes — Phase 0 |
+| 1 | Balancing math home | **RULED (2026-07-06, recommendations accepted):** fork estimators + real sim inside the §2 pass, corrected via the Phase 0 calibration curve; harness verifies; old solvers retired without port |
+| 2 | Data delivery | **RULED:** two-tier fork hooks (field-level `applyTaskPatches` now, structural later) + `grantPerk` + task-completion callback; patch timing = implementer's choice (cleaner wins) |
+| 3 | Randomization home | **RULED:** procgen-pipeline-initiated; code home = implementer's choice, engine-touching parts may live in the submodule |
+| 4 | Content scope | **RULED:** all tasks = locations, all perks = items, all in sphere log; **v1 = perk shuffle + rebalance, zones 0–14 (no prestige)**; synthetic generation deferred until after v1 |
+| 5 | AP checks this arc | **RULED:** yes; grants AP-authoritative (A1) |
+| 6 | Pacing knob | **RULED:** defaults = profiled vanilla values capturing the CURVE (position-indexed replay with seeded jitter, pinned100 anchor); scalar `resetsPerStep` = manual override; tolerance band picked after first verification round |
+| 7 | Synthetic construction order | **RULED (direction; build post-v1):** co-construction with a thin planned layer; sphere log as byproduct trace, AP's post-fill log authoritative |
+| 8 | Vanilla profiling first | **RULED + DONE:** Phase 0, `572fd9c32`, SUMMARY.md Round 5 |
+| 9 | Two-pass flow | **RULED (user-raised):** post-fill rebalance at rules load is the authoritative balancing point (§2b); Pass A is structure-only |
+| 10 | Prestige-grant reset | **Recorded for post-v1:** foreign-granted perks/unlocks persist through prestige; own-game grants reset on prestige by default, behind an option |
