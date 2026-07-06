@@ -65,9 +65,10 @@ Design and implementation plans for features.
 | [Help Module Plan](./docs/plans/help-module-plan.md) | Planning for help system module |
 | [Incremental Game Randomizer](./docs/plans/incremental-game-randomizer.md) | Incremental randomization features |
 | [Instantiated Expressions](./docs/plans/instantiated-expressions.md) | Instantiated expressions design |
-| [JtA Cost Adjustment Algorithm](./docs/plans/jta-cost-adjustment-algorithm.md) | JtA cost adjustment algorithm |
-| [JtA Queue UI Plan](./docs/plans/jta-queue-ui-plan.md) | JtA queue UI plan |
-| [JtA Strategy and APWorld Plan](./docs/plans/jta-strategy-and-apworld-plan.md) | JtA strategy and APWorld plan |
+| [JtA Cost Adjustment Algorithm](../docs/json/games/journey-to-ascension/cost-adjustment-algorithm.md) | JtA cost adjustment algorithm (reference doc, moved to docs/json) |
+| [JtA Queue UI Plan](./docs/plans/completed/jta-queue-ui-plan.md) | JtA queue UI plan (closed 2026-07-05) |
+| [JtA Strategy and APWorld Plan](./docs/plans/partial/jta-strategy-and-apworld-plan.md) | JtA strategy and APWorld plan (partial) |
+| [JtA Substrate Integration Plan](./docs/plans/jta-substrate-integration-plan.md) | JtA procgen substrate — findings, rulings, phases |
 | [Loops Module Untangling](./docs/plans/loops-module-untangling.md) | Untangling the loops module |
 | [Modules Panel Plan](./docs/plans/modules-panel-plan.md) | Modules panel plan |
 | [Multiworld Mystery Scenario Pack](./docs/plans/multiworld-mystery-scenario-pack.md) | Multiworld mystery scenario pack |

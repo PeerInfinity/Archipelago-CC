@@ -340,7 +340,7 @@ Reuse `CC/scripts/jta-stats/` (headless Node over the committed build):
 |---|---|---|
 | `jta-queue-ui-plan.md` | 9/11 phases shipped (March); remaining Phase 4 (separable panels) + Phase 11 (record mode) dropped — host-side queue UI is superseded by Fork 1.4/1.5 in-game automation for the substrate path | Archived to `completed/` with status header |
 | `jta-strategy-and-apworld-plan.md` | Phases 1/1b/2 largely shipped; Phase 3 factor refactor partial (grindPushCollect/artifacts unimplemented); Phase 4 partial (jtaArchipelago). Its APWorld/cost-adjust track is a Phase-5/6 input, not this arc's next step | Moved to `partial/` with status header |
-| `jta-cost-adjustment-algorithm.md` | Not a plan — accurate reference doc for the shipped cost adjuster + old auto queue | Left in place; relocate under `docs/json/` in Phase 5 |
+| `jta-cost-adjustment-algorithm.md` | Not a plan — accurate reference doc for the shipped cost adjuster + old auto queue | Relocated to `docs/json/games/journey-to-ascension/cost-adjustment-algorithm.md` (Phase 5 item, done 2026-07-05) |
 | `completed/jta-automation-v2-plan.md` | Background for this arc | none |
 
 ## 6. Design rulings (all received 2026-07-05)
