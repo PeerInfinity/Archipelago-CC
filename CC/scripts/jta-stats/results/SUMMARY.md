@@ -135,28 +135,39 @@ identical in both.)
 - Divine Speed's real-time benefit is invisible in instant mode (it speeds
   wall-clock ticks, explicitly not energy use).
 
-## Round 5 — vanilla profile for the zone-randomization arc (vanilla-profile.json, 2026-07-06)
+## Round 5 — vanilla profile for the zone-randomization arc (vanilla-profile.json, 2026-07-06; re-run same day with award_spark_on_discovery OFF per user ruling)
 
 Phase 0 of `CC/docs/plans/jta-zone-randomization-plan.md`: full-game (30-zone,
-269-task) tuned-defaults playthroughs + static structural profile + estimator
-calibration, via `profile-vanilla.mjs` (details in `VANILLA-PROFILE.md`).
+269-task) playthroughs + static structural profile + estimator calibration,
+via `profile-vanilla.mjs` (details in `VANILLA-PROFILE.md`). Profiling profile
+= tuned defaults MINUS Award Spark on Discovery (discovery spark funds
+Divinity purchases without prestiging and distorts the vanilla pacing curve;
+an earlier same-day run with it ON is in git history for comparison).
 
-- **The whole 30-zone game completes under both budgets**: standalone 569
-  runs (3 prestiges), pinned-100 1151 runs (6 prestiges). Nothing unreached —
-  substrate-style pinned energy stretches but never strands vanilla content.
-- **Vanilla pacing anchor** (input for the `resetsPerStep` default): gaps
-  between consecutive first-completions p50 = 2 resets in both variants
-  (mean 2.1 standalone / 4.3 pinned, long tail max 57/102). Perk-milestone
-  gaps p50 = 8 (standalone) / 14 (pinned), max 61/145; unlock-event gaps
-  (perk or task-unlocker) p50 = 5 / 6.
-- **The estimator needs the calibration curve, not a constant factor**:
-  `estimateResetsToComplete` vs actual resets-to-first-completion crosses
-  1.0 around est 11–20 (standalone; actual/est p50 0.92) or 21–50 (pinned;
-  p50 1.08). Below that it is strongly optimistic (est=1 → actual p50 8/16 —
-  automation doesn't dedicate; queue order dominates small tasks), above it
-  strongly pessimistic (est 51–200 → actual/est p50 0.18/0.32 — skills,
-  perks, and prestige compound past the frozen-boost assumption). Even
-  est=0 ("completable now") tasks take p50 6/25 actual resets to land.
-- Skill shape: 195/269 tasks are single-skill, 72 two-skill; most skills hit
-  L100 within ~25 runs; Ascension (first zone 14, xp_needed_mult 200) first
-  trains at run ~332 standalone.
+- **v1 pacing anchor (zones 0–14, STANDALONE variant — the ruled default):**
+  21 perk milestones, gap values
+  [0, 4, 5, 7, 4, 6, 2, 6, 14, 8, 8, 4, 6, 8, 10, 10, 8, 2, 14, 8, 70] —
+  p50 = 7, mean 9.7; consecutive first-completion gaps p50 = 2. The final 70
+  (and the z0–14 completion tail out to run ~1461) is the
+  SeeBeyondTheVeil-gated straggler problem, not the organic curve.
+- **Discovery spark was load-bearing for the late game**: with it off,
+  standalone reaches 264/269 tasks by run 3000 (37 prestiges; 5 unreached in
+  z28–29) and pinned-100 only 203/269 (26 prestiges) — vs 569/1151-run full
+  completions with it on. Zones 0–14 pacing is nearly identical either way;
+  the setting reshapes everything past zone ~15.
+- **SBtV-gated hidden tasks are a v1 hazard**: Secret Fishing Spot (z1),
+  Training Dummy (z2), Train at Every Guild (z8) + z14 stragglers need a
+  Divinity purchase; without discovery spark and without prestige (v1 scope
+  = zones 0–14) they may be unobtainable. Pinned-100 left 4 of 134 z0–14
+  tasks unreached at 3000 runs. The randomizer must exclude or
+  de-progression these locations in v1.
+- **Whole-game estimator calibration is tail-dominated under spark-off**
+  (tasks sit for hundreds of runs while prestige spark accumulates); the
+  Phase 3 balancer should derive its correction curve from the zone≤14
+  samples in `vanilla-profile-raw-*.json` (the estimator-vs-actual pattern
+  from the spark-on run still holds directionally: optimistic at low
+  estimates — queue order dominates; pessimistic at high ones — compounding
+  beats the frozen-boost assumption; crossover in the low tens).
+- Skill shape (static, unchanged): 195/269 tasks single-skill, 72 two-skill;
+  skills introduced at zones 0,0,0,0,0,1,1,2,3,14; Ascension
+  (xp_needed_mult 200) is the outlier.

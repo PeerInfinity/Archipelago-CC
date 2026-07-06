@@ -1,6 +1,6 @@
 # Vanilla JtA Profile (Phase 0)
 
-Generated 2026-07-06T19:40:04.065Z by `profile-vanilla.mjs` (maxRuns 2000, zoneLimit 30, sampleEvery 5, estimatorCap 200). Target profile + calibration inputs for the zone-randomization plan (`CC/docs/plans/jta-zone-randomization-plan.md`).
+Generated 2026-07-06T21:49:42.589Z by `profile-vanilla.mjs` (maxRuns 3000, zoneLimit 30, sampleEvery 5, estimatorCap 200). Target profile + calibration inputs for the zone-randomization plan (`CC/docs/plans/jta-zone-randomization-plan.md`).
 
 ## Structural profile (static)
 
@@ -55,27 +55,28 @@ Generated 2026-07-06T19:40:04.065Z by `profile-vanilla.mjs` (maxRuns 2000, zoneL
 
 ## Variant: standalone
 
-- 269/269 tasks completed in 569 runs (all done by run 570); prestiges at runs [225, 394, 529]
-- Reset gaps between consecutive first-completions: n=269 mean=2.12 p50=2 p90=4 max=57
-- Perk-milestone gaps: n=47 mean=10.89 p50=8 p90=18 max=61
-  - values: [0, 4, 5, 7, 4, 6, 2, 6, 14, 8, 8, 4, 6, 8, 10, 10, 8, 2, 14, 8, 34, 2, 2, 8, 4, 10, 10, 61, 4, 8, 28, 2, 16, 16, 8, 14, 2, 18, 61, 14, 4, 4, 18, 6, 4, 10, 10]
-- Unlock-event gaps (perk or task-unlocker): n=69 mean=7.42 p50=5 p90=14 max=61
-- 4 completions arrived via Mastery-of-Time zone skip.
+- 264/269 tasks completed in 3000 runs — 5 unreached; prestiges at runs [207, 326, 413, 492, 563, 634, 705, 772, 895, 1018, 1141, 1236, 1355, 1458, 1529, 1600, 1661, 1720, 1777, 1836, 1893, 1950, 2005, 2060, 2113, 2164, 2215, 2266, 2349, 2456, 2531, 2640, 2715, 2780, 2881, 2944, 2997]
+- Reset gaps between consecutive first-completions: n=264 mean=11.13 p50=2 p90=12 max=457
+- Perk-milestone gaps: n=46 mean=63.85 p50=10 p90=146 max=648
+  - values: [0, 4, 5, 7, 4, 6, 2, 6, 14, 8, 8, 4, 6, 8, 10, 10, 8, 2, 14, 8, 70, 61, 10, 4, 6, 32, 73, 404, 10, 18, 56, 2, 117, 121, 210, 142, 46, 142, 648, 40, 81, 4, 261, 146, 4, 95]
+- Unlock-event gaps (perk or task-unlocker): n=67 mean=43.84 p50=8 p90=117 max=648
+- 2 completions arrived via Mastery-of-Time zone skip.
+- Unreached: Avatar of the Gods (z28); Avoid the Gods' Revenge (z28); Take Your Place in Heaven (z29); Rally Your Troops (z29); Break Down the Gates (z29)
 
 ### Estimator calibration (estimate → actual resets to completion)
 
 | estimate | actual resets | actual/estimate |
 |---|---|---|
-| 0 | n=302 mean=12.72 p50=6 p90=37 max=87 | — |
-| 1 | n=55 mean=16.98 p50=8 p90=57 max=81 | n=55 mean=16.98 p50=8 p90=57 max=81 |
-| 2 | n=27 mean=15.37 p50=8 p90=46 max=67 | n=27 mean=7.69 p50=4 p90=23 max=33.5 |
-| 3-5 | n=49 mean=16.08 p50=10 p90=34 max=75 | n=49 mean=4.41 p50=2.67 p90=11 max=25 |
-| 6-10 | n=42 mean=21.05 p50=14 p90=54 max=87 | n=42 mean=3.01 p50=1.89 p90=9 max=14.5 |
-| 11-20 | n=45 mean=19.87 p50=13 p90=57 max=91 | n=45 mean=1.33 p50=0.92 p90=4.38 max=6.5 |
-| 21-50 | n=48 mean=22.85 p50=17 p90=63 max=97 | n=48 mean=0.7 p50=0.5 p90=1.7 max=3.48 |
-| 51-200 | n=87 mean=25.17 p50=16 p90=67 max=101 | n=87 mean=0.25 p50=0.18 p90=0.52 max=1.17 |
-| >cap(200) | n=786 mean=36.68 p50=30 p90=77 max=136 | — |
-- 1441 samples, 0 on never-completed tasks.
+| 0 | n=785 mean=157 p50=83 p90=456 max=966 | — |
+| 1 | n=119 mean=153.61 p50=101 p90=379 max=871 | n=119 mean=153.61 p50=101 p90=379 max=871 |
+| 2 | n=81 mean=191.21 p50=112 p90=544 max=881 | n=81 mean=95.6 p50=56 p90=272 max=440.5 |
+| 3-5 | n=159 mean=214.11 p50=113 p90=576 max=901 | n=159 mean=55.99 p50=30.5 p90=151.33 max=297 |
+| 6-10 | n=126 mean=244.17 p50=135 p90=676 max=941 | n=126 mean=32.95 p50=18 p90=91.13 max=130.67 |
+| 11-20 | n=151 mean=225.82 p50=101 p90=656 max=966 | n=151 mean=16.3 p50=6.76 p90=44.44 max=86 |
+| 21-50 | n=215 mean=231.92 p50=125 p90=638 max=986 | n=215 mean=7.33 p50=4.18 p90=18.95 max=41.95 |
+| 51-200 | n=367 mean=283.21 p50=119 p90=806 max=1186 | n=367 mean=2.96 p50=1.29 p90=8.1 max=19.15 |
+| >cap(200) | n=5047 mean=325.37 p50=229 p90=787 max=1448 | — |
+- 7407 samples, 357 on never-completed tasks.
 
 ### Skill milestones (run at which level reached)
 
@@ -96,60 +97,60 @@ Generated 2026-07-06T19:40:04.065Z by `profile-vanilla.mjs` (maxRuns 2000, zoneL
 
 | Zone | completed | first run | last run |
 |---|---|---|---|
-| 0 The Village | 8/8 | 1 | 349 |
-| 1 The Village Watch | 9/9 | 4 | 349 |
+| 0 The Village | 8/8 | 1 | 1460 |
+| 1 The Village Watch | 9/9 | 4 | 1460 |
 | 2 The Raid | 8/8 | 7 | 57 |
 | 3 The Wilderness | 9/9 | 11 | 99 |
 | 4 The Cave System | 9/9 | 20 | 103 |
 | 5 The Road to the City | 10/10 | 25 | 105 |
 | 6 The City Outskirts | 8/8 | 33 | 47 |
-| 7 The City | 10/10 | 39 | 349 |
+| 7 The City | 10/10 | 39 | 1460 |
 | 8 The Forest | 10/10 | 53 | 117 |
 | 9 The Magician | 8/8 | 65 | 77 |
 | 10 The Ocean | 9/9 | 73 | 127 |
-| 11 The Island | 9/9 | 83 | 157 |
-| 12 The Desert | 9/9 | 87 | 169 |
-| 13 The Oasis | 9/9 | 97 | 175 |
-| 14 The Ritual | 9/9 | 129 | 349 |
-| 15 The Dream | 9/9 | 161 | 205 |
-| 16 The Metropolis | 9/9 | 173 | 278 |
-| 17 The Foothills | 9/9 | 185 | 288 |
-| 18 The Dragon's Lair | 9/9 | 262 | 308 |
-| 19 The Place of Power | 10/10 | 268 | 348 |
-| 20 The Sky | 9/9 | 294 | 332 |
-| 21 The Volcano | 9/9 | 300 | 364 |
-| 22 The Underworld | 9/9 | 320 | 384 |
-| 23 The Depths of the Sea | 9/9 | 336 | 461 |
-| 24 The Deepest Deep | 8/8 | 356 | 437 |
-| 25 The Void | 9/9 | 437 | 475 |
-| 26 The Return | 9/9 | 445 | 493 |
-| 27 The Cult | 10/10 | 459 | 497 |
-| 28 The War Preparations | 9/9 | 473 | 513 |
-| 29 The Gates of Heaven | 8/8 | 489 | 570 |
+| 11 The Island | 9/9 | 83 | 163 |
+| 12 The Desert | 9/9 | 87 | 205 |
+| 13 The Oasis | 9/9 | 97 | 262 |
+| 14 The Ritual | 9/9 | 129 | 1461 |
+| 15 The Dream | 9/9 | 169 | 391 |
+| 16 The Metropolis | 9/9 | 270 | 823 |
+| 17 The Foothills | 9/9 | 286 | 843 |
+| 18 The Dragon's Lair | 9/9 | 795 | 881 |
+| 19 The Place of Power | 10/10 | 799 | 1471 |
+| 20 The Sky | 9/9 | 833 | 1095 |
+| 21 The Volcano | 9/9 | 855 | 1517 |
+| 22 The Underworld | 9/9 | 978 | 1653 |
+| 23 The Depths of the Sea | 9/9 | 1113 | 2428 |
+| 24 The Deepest Deep | 8/8 | 1317 | 2291 |
+| 25 The Void | 9/9 | 2291 | 2602 |
+| 26 The Return | 9/9 | 2309 | 2839 |
+| 27 The Cult | 10/10 | 2416 | 2920 |
+| 28 The War Preparations | 7/9 | 2600 | 2841 |
+| 29 The Gates of Heaven | 5/8 | 2841 | 2938 |
 
 ## Variant: pinned100
 
-- 269/269 tasks completed in 1151 runs (all done by run 1151); prestiges at runs [345, 566, 813, 878, 933, 1106]
-- Reset gaps between consecutive first-completions: n=269 mean=4.28 p50=2 p90=10 max=102
-- Perk-milestone gaps: n=47 mean=23.17 p50=14 p90=52 max=145
-  - values: [0, 4, 5, 7, 4, 11, 3, 4, 34, 46, 30, 20, 24, 6, 44, 2, 2, 20, 26, 30, 145, 18, 2, 28, 10, 30, 57, 2, 8, 30, 26, 6, 52, 14, 38, 2, 81, 2, 108, 26, 8, 12, 14, 26, 6, 14, 2]
-- Unlock-event gaps (perk or task-unlocker): n=69 mean=15.78 p50=6 p90=38 max=123
-- 5 completions arrived via Mastery-of-Time zone skip.
+- 203/269 tasks completed in 3000 runs — 66 unreached; prestiges at runs [345, 550, 657, 742, 825, 902, 977, 1052, 1125, 1232, 1337, 1436, 1535, 1620, 1737, 1844, 1937, 2024, 2137, 2252, 2353, 2488, 2603, 2714, 2859, 2988]
+- Reset gaps between consecutive first-completions: n=203 mean=14.01 p50=2 p90=14 max=341
+- Perk-milestone gaps: n=34 mean=83.12 p50=24 p90=309 max=373
+  - values: [0, 4, 5, 7, 4, 11, 3, 4, 34, 46, 30, 20, 24, 6, 44, 2, 2, 20, 26, 30, 163, 24, 4, 309, 369, 291, 6, 2, 14, 200, 218, 180, 373, 351]
+- Unlock-event gaps (perk or task-unlocker): n=49 mean=57.67 p50=11 p90=291 max=367
+- 0 completions arrived via Mastery-of-Time zone skip.
 
 ### Estimator calibration (estimate → actual resets to completion)
 
 | estimate | actual resets | actual/estimate |
 |---|---|---|
-| 0 | n=617 mean=55.48 p50=25 p90=185 max=340 | — |
-| 1 | n=47 mean=28.21 p50=16 p90=66 max=149 | n=47 mean=28.21 p50=16 p90=66 max=149 |
-| 2 | n=44 mean=31.43 p50=19 p90=74 max=183 | n=44 mean=15.72 p50=9.5 p90=37 max=91.5 |
-| 3-5 | n=57 mean=26.61 p50=16 p90=70 max=134 | n=57 mean=6.88 p50=4.4 p90=17.25 max=26.8 |
-| 6-10 | n=57 mean=32.98 p50=28 p90=74 max=118 | n=57 mean=4.38 p50=3.67 p90=9.25 max=16.86 |
-| 11-20 | n=87 mean=40.05 p50=30 p90=89 max=193 | n=87 mean=2.66 p50=1.72 p90=6.4 max=16.08 |
-| 21-50 | n=104 mean=51.39 p50=32 p90=137 max=207 | n=104 mean=1.58 p50=1.08 p90=4.07 max=9.23 |
-| 51-200 | n=208 mean=46.27 p50=33 p90=120 max=227 | n=208 mean=0.47 p50=0.32 p90=1.07 max=3.24 |
-| >cap(200) | n=2108 mean=82.54 p50=66 p90=182 max=296 | — |
-- 3329 samples, 0 on never-completed tasks.
+| 0 | n=857 mean=135.63 p50=48 p90=377 max=953 | — |
+| 1 | n=64 mean=60.69 p50=22 p90=159 max=538 | n=64 mean=60.69 p50=22 p90=159 max=538 |
+| 2 | n=46 mean=81.24 p50=44 p90=190 max=662 | n=46 mean=40.62 p50=22 p90=95 max=331 |
+| 3-5 | n=89 mean=105.92 p50=45 p90=316 max=858 | n=89 mean=27.25 p50=11.6 p90=76 max=192.33 |
+| 6-10 | n=107 mean=146.32 p50=74 p90=417 max=773 | n=107 mean=18.9 p50=9.25 p90=50.78 max=96.63 |
+| 11-20 | n=167 mean=167.44 p50=91 p90=413 max=868 | n=167 mean=11.13 p50=5.35 p90=28.78 max=43.4 |
+| 21-50 | n=246 mean=171.46 p50=133 p90=400 max=888 | n=246 mean=5.38 p50=3.92 p90=11.81 max=27 |
+| 51-200 | n=425 mean=221.63 p50=168 p90=514 max=898 | n=425 mean=2.13 p50=1.64 p90=4.9 max=15.75 |
+| >cap(200) | n=4912 mean=308.46 p50=227 p90=705 max=1325 | — |
+- 8134 samples, 1221 on never-completed tasks.
 
 ### Skill milestones (run at which level reached)
 
@@ -170,33 +171,33 @@ Generated 2026-07-06T19:40:04.065Z by `profile-vanilla.mjs` (maxRuns 2000, zoneL
 
 | Zone | completed | first run | last run |
 |---|---|---|---|
-| 0 The Village | 8/8 | 1 | 748 |
-| 1 The Village Watch | 9/9 | 4 | 748 |
+| 0 The Village | 7/8 | 1 | 4 |
+| 1 The Village Watch | 8/9 | 4 | 9 |
 | 2 The Raid | 8/8 | 7 | 119 |
 | 3 The Wilderness | 9/9 | 11 | 237 |
-| 4 The Cave System | 9/9 | 20 | 345 |
-| 5 The Road to the City | 10/10 | 32 | 360 |
+| 4 The Cave System | 9/9 | 20 | 357 |
+| 5 The Road to the City | 10/10 | 32 | 359 |
 | 6 The City Outskirts | 8/8 | 37 | 78 |
-| 7 The City | 10/10 | 55 | 748 |
+| 7 The City | 9/10 | 55 | 267 |
 | 8 The Forest | 10/10 | 103 | 281 |
 | 9 The Magician | 8/8 | 151 | 189 |
 | 10 The Ocean | 9/9 | 189 | 293 |
-| 11 The Island | 9/9 | 197 | 345 |
-| 12 The Desert | 9/9 | 207 | 468 |
-| 13 The Oasis | 9/9 | 235 | 484 |
-| 14 The Ritual | 9/9 | 305 | 748 |
-| 15 The Dream | 9/9 | 464 | 556 |
-| 16 The Metropolis | 9/9 | 488 | 653 |
-| 17 The Foothills | 9/9 | 526 | 675 |
-| 18 The Dragon's Lair | 9/9 | 601 | 685 |
-| 19 The Place of Power | 10/10 | 619 | 789 |
-| 20 The Sky | 9/9 | 657 | 741 |
-| 21 The Volcano | 9/9 | 683 | 872 |
-| 22 The Underworld | 9/9 | 729 | 984 |
-| 23 The Depths of the Sea | 9/9 | 749 | 1016 |
-| 24 The Deepest Deep | 8/8 | 773 | 976 |
-| 25 The Void | 9/9 | 978 | 1042 |
-| 26 The Return | 9/9 | 986 | 1074 |
-| 27 The Cult | 10/10 | 1002 | 1088 |
-| 28 The War Preparations | 9/9 | 1030 | 1090 |
-| 29 The Gates of Heaven | 8/8 | 1066 | 1151 |
+| 11 The Island | 9/9 | 197 | 460 |
+| 12 The Desert | 9/9 | 207 | 486 |
+| 13 The Oasis | 9/9 | 235 | 512 |
+| 14 The Ritual | 8/9 | 305 | 470 |
+| 15 The Dream | 9/9 | 474 | 1483 |
+| 16 The Metropolis | 9/9 | 510 | 1705 |
+| 17 The Foothills | 9/9 | 1192 | 1840 |
+| 18 The Dragon's Lair | 9/9 | 1473 | 2103 |
+| 19 The Place of Power | 9/10 | 1497 | 1697 |
+| 20 The Sky | 9/9 | 1711 | 2470 |
+| 21 The Volcano | 6/9 | 2105 | 2448 |
+| 22 The Underworld | 7/9 | 2472 | 2819 |
+| 23 The Depths of the Sea | 6/9 | 2823 | 2845 |
+| 24 The Deepest Deep | 0/8 | — | — |
+| 25 The Void | 0/9 | — | — |
+| 26 The Return | 0/9 | — | — |
+| 27 The Cult | 0/10 | — | — |
+| 28 The War Preparations | 0/9 | — | — |
+| 29 The Gates of Heaven | 0/8 | — | — |

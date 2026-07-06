@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-06T19:40:04.065Z",
+  "generatedAt": "2026-07-06T21:49:42.589Z",
   "options": {
-    "maxRuns": 2000,
+    "maxRuns": 3000,
     "zoneLimit": 30,
     "sampleEvery": 5
   },
@@ -6018,7 +6018,7 @@
     "standalone": {
       "options": {
         "zoneLimit": 30,
-        "maxRuns": 2000,
+        "maxRuns": 3000,
         "maxTicksPerRun": 200000,
         "endZone": 99,
         "skipBlocked": true,
@@ -6041,7 +6041,7 @@
           "auto_buy_cheapest": true,
           "resume_automation_on_reset": true,
           "force_automation": true,
-          "award_spark_on_discovery": true,
+          "award_spark_on_discovery": false,
           "auto_continue_energy_reset": true,
           "suppress_prestige_popup": true,
           "show_spark_stats": true,
@@ -6060,44 +6060,122 @@
         }
       },
       "stalled": false,
-      "completed": 269,
+      "completed": 264,
       "taskCount": 269,
-      "allCompleted": true,
-      "runsExecuted": 569,
-      "lastCompletionRun": 570,
-      "unreached": [],
+      "allCompleted": false,
+      "runsExecuted": 3000,
+      "lastCompletionRun": 2938,
+      "unreached": [
+        {
+          "id": 297,
+          "zone": 28,
+          "name": "Avatar of the Gods"
+        },
+        {
+          "id": 298,
+          "zone": 28,
+          "name": "Avoid the Gods' Revenge"
+        },
+        {
+          "id": 300,
+          "zone": 29,
+          "name": "Take Your Place in Heaven"
+        },
+        {
+          "id": 301,
+          "zone": 29,
+          "name": "Rally Your Troops"
+        },
+        {
+          "id": 302,
+          "zone": 29,
+          "name": "Break Down the Gates"
+        }
+      ],
       "prestigeRuns": [
-        225,
-        394,
-        529
+        207,
+        326,
+        413,
+        492,
+        563,
+        634,
+        705,
+        772,
+        895,
+        1018,
+        1141,
+        1236,
+        1355,
+        1458,
+        1529,
+        1600,
+        1661,
+        1720,
+        1777,
+        1836,
+        1893,
+        1950,
+        2005,
+        2060,
+        2113,
+        2164,
+        2215,
+        2266,
+        2349,
+        2456,
+        2531,
+        2640,
+        2715,
+        2780,
+        2881,
+        2944,
+        2997
       ],
       "pacing": {
         "allGaps": {
-          "n": 269,
-          "mean": 2.12,
+          "n": 264,
+          "mean": 11.13,
           "p50": 2,
-          "p90": 4,
-          "max": 57
+          "p90": 12,
+          "max": 457
         },
         "gapHistogram": {
-          "0": 110,
-          "1": 22,
-          "2": 91,
-          "4": 29,
-          "6": 8,
-          "8": 3,
-          "10": 2,
-          "25": 1,
-          "32": 1,
-          "43": 1,
-          "57": 1
+          "0": 97,
+          "1": 21,
+          "2": 64,
+          "4": 25,
+          "6": 15,
+          "8": 8,
+          "10": 6,
+          "12": 4,
+          "14": 1,
+          "16": 1,
+          "18": 1,
+          "20": 1,
+          "34": 1,
+          "46": 1,
+          "57": 1,
+          "59": 3,
+          "71": 2,
+          "75": 1,
+          "85": 1,
+          "87": 1,
+          "91": 1,
+          "97": 1,
+          "101": 1,
+          "116": 1,
+          "119": 1,
+          "136": 1,
+          "148": 1,
+          "390": 1,
+          "457": 1
         },
         "perkGaps": {
-          "n": 47,
-          "mean": 10.89,
-          "p50": 8,
-          "p90": 18,
-          "max": 61
+          "n": 46,
+          "mean": 63.85,
+          "p50": 10,
+          "p90": 146,
+          "max": 648
         },
         "perkGapValues": [
           0,
@@ -6120,42 +6198,41 @@
           2,
           14,
           8,
-          34,
-          2,
-          2,
-          8,
-          4,
-          10,
-          10,
+          70,
           61,
+          10,
           4,
-          8,
-          28,
-          2,
-          16,
-          16,
-          8,
-          14,
-          2,
-          18,
-          61,
-          14,
-          4,
-          4,
-          18,
           6,
-          4,
+          32,
+          73,
+          404,
           10,
-          10
+          18,
+          56,
+          2,
+          117,
+          121,
+          210,
+          142,
+          46,
+          142,
+          648,
+          40,
+          81,
+          4,
+          261,
+          146,
+          4,
+          95
         ],
         "unlockEventGaps": {
-          "n": 69,
-          "mean": 7.42,
-          "p50": 5,
-          "p90": 14,
-          "max": 61
+          "n": 67,
+          "mean": 43.84,
+          "p50": 8,
+          "p90": 117,
+          "max": 648
         },
-        "viaZoneSkipCount": 4
+        "viaZoneSkipCount": 2
       },
       "perZone": [
         {
@@ -6164,7 +6241,7 @@
           "taskCount": 8,
           "completed": 8,
           "firstRun": 1,
-          "lastRun": 349
+          "lastRun": 1460
         },
         {
           "zone": 1,
@@ -6172,7 +6249,7 @@
           "taskCount": 9,
           "completed": 9,
           "firstRun": 4,
-          "lastRun": 349
+          "lastRun": 1460
         },
         {
           "zone": 2,
@@ -6220,7 +6297,7 @@
           "taskCount": 10,
           "completed": 10,
           "firstRun": 39,
-          "lastRun": 349
+          "lastRun": 1460
         },
         {
           "zone": 8,
@@ -6252,7 +6329,7 @@
           "taskCount": 9,
           "completed": 9,
           "firstRun": 83,
-          "lastRun": 157
+          "lastRun": 163
         },
         {
           "zone": 12,
@@ -6260,7 +6337,7 @@
           "taskCount": 9,
           "completed": 9,
           "firstRun": 87,
-          "lastRun": 169
+          "lastRun": 205
         },
         {
           "zone": 13,
@@ -6268,7 +6345,7 @@
           "taskCount": 9,
           "completed": 9,
           "firstRun": 97,
-          "lastRun": 175
+          "lastRun": 262
         },
         {
           "zone": 14,
@@ -6276,127 +6353,127 @@
           "taskCount": 9,
           "completed": 9,
           "firstRun": 129,
-          "lastRun": 349
+          "lastRun": 1461
         },
         {
           "zone": 15,
           "name": "The Dream",
           "taskCount": 9,
           "completed": 9,
-          "firstRun": 161,
-          "lastRun": 205
+          "firstRun": 169,
+          "lastRun": 391
         },
         {
           "zone": 16,
           "name": "The Metropolis",
           "taskCount": 9,
           "completed": 9,
-          "firstRun": 173,
-          "lastRun": 278
+          "firstRun": 270,
+          "lastRun": 823
         },
         {
           "zone": 17,
           "name": "The Foothills",
           "taskCount": 9,
           "completed": 9,
-          "firstRun": 185,
-          "lastRun": 288
+          "firstRun": 286,
+          "lastRun": 843
         },
         {
           "zone": 18,
           "name": "The Dragon's Lair",
           "taskCount": 9,
           "completed": 9,
-          "firstRun": 262,
-          "lastRun": 308
+          "firstRun": 795,
+          "lastRun": 881
         },
         {
           "zone": 19,
           "name": "The Place of Power",
           "taskCount": 10,
           "completed": 10,
-          "firstRun": 268,
-          "lastRun": 348
+          "firstRun": 799,
+          "lastRun": 1471
         },
         {
           "zone": 20,
           "name": "The Sky",
           "taskCount": 9,
           "completed": 9,
-          "firstRun": 294,
-          "lastRun": 332
+          "firstRun": 833,
+          "lastRun": 1095
         },
         {
           "zone": 21,
           "name": "The Volcano",
           "taskCount": 9,
           "completed": 9,
-          "firstRun": 300,
-          "lastRun": 364
+          "firstRun": 855,
+          "lastRun": 1517
         },
         {
           "zone": 22,
           "name": "The Underworld",
           "taskCount": 9,
           "completed": 9,
-          "firstRun": 320,
-          "lastRun": 384
+          "firstRun": 978,
+          "lastRun": 1653
         },
         {
           "zone": 23,
           "name": "The Depths of the Sea",
           "taskCount": 9,
           "completed": 9,
-          "firstRun": 336,
-          "lastRun": 461
+          "firstRun": 1113,
+          "lastRun": 2428
         },
         {
           "zone": 24,
           "name": "The Deepest Deep",
           "taskCount": 8,
           "completed": 8,
-          "firstRun": 356,
-          "lastRun": 437
+          "firstRun": 1317,
+          "lastRun": 2291
         },
         {
           "zone": 25,
           "name": "The Void",
           "taskCount": 9,
           "completed": 9,
-          "firstRun": 437,
-          "lastRun": 475
+          "firstRun": 2291,
+          "lastRun": 2602
         },
         {
           "zone": 26,
           "name": "The Return",
           "taskCount": 9,
           "completed": 9,
-          "firstRun": 445,
-          "lastRun": 493
+          "firstRun": 2309,
+          "lastRun": 2839
         },
         {
           "zone": 27,
           "name": "The Cult",
           "taskCount": 10,
           "completed": 10,
-          "firstRun": 459,
-          "lastRun": 497
+          "firstRun": 2416,
+          "lastRun": 2920
         },
         {
           "zone": 28,
           "name": "The War Preparations",
           "taskCount": 9,
-          "completed": 9,
-          "firstRun": 473,
-          "lastRun": 513
+          "completed": 7,
+          "firstRun": 2600,
+          "lastRun": 2841
         },
         {
           "zone": 29,
           "name": "The Gates of Heaven",
           "taskCount": 8,
-          "completed": 8,
-          "firstRun": 489,
-          "lastRun": 570
+          "completed": 5,
+          "firstRun": 2841,
+          "lastRun": 2938
         }
       ],
       "perkTimeline": [
@@ -6524,307 +6601,301 @@
           "perk": "The Worm",
           "task": "Learn to Dance the Worm",
           "zone": 12,
-          "run": 169
-        },
-        {
-          "perk": "Tower of Babel",
-          "task": "Build Giant Tower",
-          "zone": 15,
-          "run": 171
+          "run": 205
         },
         {
           "perk": "Awakening",
           "task": "Wake Up",
           "zone": 15,
-          "run": 173
+          "run": 266
+        },
+        {
+          "perk": "Tower of Babel",
+          "task": "Build Giant Tower",
+          "zone": 15,
+          "run": 276
         },
         {
           "perk": "Major Time Compression",
           "task": "Improve Your Time Compression",
           "zone": 16,
-          "run": 181
+          "run": 280
         },
         {
           "perk": "Awakening",
           "task": "Search for the Dragon's Hoard",
           "zone": 16,
-          "run": 185
+          "run": 286
         },
         {
           "perk": "Hide in Plain Sight",
           "task": "Hide from the Dragon",
           "zone": 17,
-          "run": 195
+          "run": 318
         },
         {
           "perk": "Dream Prism",
           "task": "Contain the Dream",
           "zone": 15,
-          "run": 205
+          "run": 391
         },
         {
           "perk": "Dragon Killing Plan",
           "task": "Plan How to Kill the Dragon",
           "zone": 18,
-          "run": 266
+          "run": 795
         },
         {
           "perk": "Unified Theory of Magic",
           "task": "Invent a New Spell",
           "zone": 19,
-          "run": 270
+          "run": 805
         },
         {
           "perk": "Headmaster",
           "task": "Become Honorary Headmaster",
           "zone": 16,
-          "run": 278
+          "run": 823
         },
         {
           "perk": "Overcame Fear of Skydiving",
           "task": "Go Skydiving",
           "zone": 20,
-          "run": 306
+          "run": 879
         },
         {
           "perk": "Dragon Slayer",
           "task": "Hunt Down the Dragon's Spawn",
           "zone": 18,
-          "run": 308
+          "run": 881
         },
         {
           "perk": "Studied Underground Forge",
           "task": "Study Underground Forge",
           "zone": 22,
-          "run": 324
+          "run": 998
         },
         {
           "perk": "Understanding Leviathan",
           "task": "Inspect Leviathan",
           "zone": 23,
-          "run": 340
-        },
-        {
-          "perk": "Gazed Beyond the Veil",
-          "task": "Gaze Beyond the Veil",
-          "zone": 19,
-          "run": 348
+          "run": 1119
         },
         {
           "perk": "Purged Demonic Influences",
           "task": "Purge Demonic Influence",
           "zone": 21,
-          "run": 362
+          "run": 1329
+        },
+        {
+          "perk": "Gazed Beyond the Veil",
+          "task": "Gaze Beyond the Veil",
+          "zone": 19,
+          "run": 1471
         },
         {
           "perk": "Destroyed the Ring",
           "task": "Cast the Ring into the Fire",
           "zone": 21,
-          "run": 364
+          "run": 1517
         },
         {
           "perk": "Defied the Gods",
           "task": "Defy the Gods",
           "zone": 24,
-          "run": 382
+          "run": 1659
         },
         {
           "perk": "Survived the Void",
           "task": "Avoid Going Insane",
           "zone": 25,
-          "run": 443
+          "run": 2307
         },
         {
           "perk": "Divine Power",
           "task": "Demonstrate New Powers",
           "zone": 26,
-          "run": 457
+          "run": 2347
         },
         {
           "perk": "Communed with Damned Souls",
           "task": "Commune with Damned Souls",
           "zone": 23,
-          "run": 461
+          "run": 2428
         },
         {
           "perk": "Second in Command",
           "task": "Appoint Second in Command",
           "zone": 27,
-          "run": 465
+          "run": 2432
         },
         {
           "perk": "Supply Lines",
           "task": "Protect Your Supply Lines",
           "zone": 28,
-          "run": 483
-        },
-        {
-          "perk": "Ascended",
-          "task": "Ascend to Godhood",
-          "zone": 29,
-          "run": 489
+          "run": 2693
         },
         {
           "perk": "Returned Herald's Head",
           "task": "Send Herald's Head to the Gods",
           "zone": 26,
-          "run": 493
+          "run": 2839
+        },
+        {
+          "perk": "Ascended",
+          "task": "Ascend to Godhood",
+          "zone": 29,
+          "run": 2843
         },
         {
           "perk": "Prepared Final Ritual",
           "task": "Prepare Final Ritual",
           "zone": 29,
-          "run": 503
-        },
-        {
-          "perk": "Avoided Godly Revenge",
-          "task": "Avoid the Gods' Revenge",
-          "zone": 28,
-          "run": 513
+          "run": 2938
         }
       ],
       "calibration": {
-        "sampleCount": 1441,
-        "uncompletedSamples": 0,
+        "sampleCount": 7407,
+        "uncompletedSamples": 357,
         "buckets": [
           {
             "estimate": "0",
             "actualResets": {
-              "n": 302,
-              "mean": 12.72,
-              "p50": 6,
-              "p90": 37,
-              "max": 87
+              "n": 785,
+              "mean": 157,
+              "p50": 83,
+              "p90": 456,
+              "max": 966
             },
             "actualOverEstimate": null
           },
           {
             "estimate": "1",
             "actualResets": {
-              "n": 55,
-              "mean": 16.98,
-              "p50": 8,
-              "p90": 57,
-              "max": 81
+              "n": 119,
+              "mean": 153.61,
+              "p50": 101,
+              "p90": 379,
+              "max": 871
             },
             "actualOverEstimate": {
-              "n": 55,
-              "mean": 16.98,
-              "p50": 8,
-              "p90": 57,
-              "max": 81
+              "n": 119,
+              "mean": 153.61,
+              "p50": 101,
+              "p90": 379,
+              "max": 871
             }
           },
           {
             "estimate": "2",
             "actualResets": {
-              "n": 27,
-              "mean": 15.37,
-              "p50": 8,
-              "p90": 46,
-              "max": 67
+              "n": 81,
+              "mean": 191.21,
+              "p50": 112,
+              "p90": 544,
+              "max": 881
             },
             "actualOverEstimate": {
-              "n": 27,
-              "mean": 7.69,
-              "p50": 4,
-              "p90": 23,
-              "max": 33.5
+              "n": 81,
+              "mean": 95.6,
+              "p50": 56,
+              "p90": 272,
+              "max": 440.5
             }
           },
           {
             "estimate": "3-5",
             "actualResets": {
-              "n": 49,
-              "mean": 16.08,
-              "p50": 10,
-              "p90": 34,
-              "max": 75
+              "n": 159,
+              "mean": 214.11,
+              "p50": 113,
+              "p90": 576,
+              "max": 901
             },
             "actualOverEstimate": {
-              "n": 49,
-              "mean": 4.41,
-              "p50": 2.67,
-              "p90": 11,
-              "max": 25
+              "n": 159,
+              "mean": 55.99,
+              "p50": 30.5,
+              "p90": 151.33,
+              "max": 297
             }
           },
           {
             "estimate": "6-10",
             "actualResets": {
-              "n": 42,
-              "mean": 21.05,
-              "p50": 14,
-              "p90": 54,
-              "max": 87
+              "n": 126,
+              "mean": 244.17,
+              "p50": 135,
+              "p90": 676,
+              "max": 941
             },
             "actualOverEstimate": {
-              "n": 42,
-              "mean": 3.01,
-              "p50": 1.89,
-              "p90": 9,
-              "max": 14.5
+              "n": 126,
+              "mean": 32.95,
+              "p50": 18,
+              "p90": 91.13,
+              "max": 130.67
             }
           },
           {
             "estimate": "11-20",
             "actualResets": {
-              "n": 45,
-              "mean": 19.87,
-              "p50": 13,
-              "p90": 57,
-              "max": 91
+              "n": 151,
+              "mean": 225.82,
+              "p50": 101,
+              "p90": 656,
+              "max": 966
             },
             "actualOverEstimate": {
-              "n": 45,
-              "mean": 1.33,
-              "p50": 0.92,
-              "p90": 4.38,
-              "max": 6.5
+              "n": 151,
+              "mean": 16.3,
+              "p50": 6.76,
+              "p90": 44.44,
+              "max": 86
             }
           },
           {
             "estimate": "21-50",
             "actualResets": {
-              "n": 48,
-              "mean": 22.85,
-              "p50": 17,
-              "p90": 63,
-              "max": 97
+              "n": 215,
+              "mean": 231.92,
+              "p50": 125,
+              "p90": 638,
+              "max": 986
             },
             "actualOverEstimate": {
-              "n": 48,
-              "mean": 0.7,
-              "p50": 0.5,
-              "p90": 1.7,
-              "max": 3.48
+              "n": 215,
+              "mean": 7.33,
+              "p50": 4.18,
+              "p90": 18.95,
+              "max": 41.95
             }
           },
           {
             "estimate": "51-200",
             "actualResets": {
-              "n": 87,
-              "mean": 25.17,
-              "p50": 16,
-              "p90": 67,
-              "max": 101
+              "n": 367,
+              "mean": 283.21,
+              "p50": 119,
+              "p90": 806,
+              "max": 1186
             },
             "actualOverEstimate": {
-              "n": 87,
-              "mean": 0.25,
-              "p50": 0.18,
-              "p90": 0.52,
-              "max": 1.17
+              "n": 367,
+              "mean": 2.96,
+              "p50": 1.29,
+              "p90": 8.1,
+              "max": 19.15
             }
           },
           {
             "estimate": ">cap(200)",
             "actualResets": {
-              "n": 786,
-              "mean": 36.68,
-              "p50": 30,
-              "p90": 77,
-              "max": 136
+              "n": 5047,
+              "mean": 325.37,
+              "p50": 229,
+              "p90": 787,
+              "max": 1448
             },
             "actualOverEstimate": null
           }
@@ -7039,322 +7110,2068 @@
           "highestZone": 14,
           "prestiges": 0,
           "skills": {
-            "Charisma": 1077,
+            "Charisma": 1075,
             "Study": 1127,
-            "Combat": 897,
-            "Search": 1035,
-            "Subterfuge": 807,
-            "Crafting": 824,
-            "Travel": 957,
-            "Magic": 1131,
+            "Combat": 895,
+            "Search": 1033,
+            "Subterfuge": 804,
+            "Crafting": 823,
+            "Travel": 956,
+            "Magic": 1130,
             "Fortitude": 1005,
-            "Ascension": 252
+            "Ascension": 245
           }
         },
         {
           "run": 175,
-          "maxEnergy": 209.30000000000004,
-          "highestZone": 16,
+          "maxEnergy": 208.40000000000006,
+          "highestZone": 15,
           "prestiges": 0,
           "skills": {
-            "Charisma": 1306,
-            "Study": 1383,
-            "Combat": 1184,
-            "Search": 1211,
-            "Subterfuge": 923,
-            "Crafting": 1375,
-            "Travel": 1224,
-            "Magic": 1347,
-            "Fortitude": 1218,
-            "Ascension": 388
+            "Charisma": 1100,
+            "Study": 1189,
+            "Combat": 1002,
+            "Search": 1114,
+            "Subterfuge": 857,
+            "Crafting": 845,
+            "Travel": 1095,
+            "Magic": 1182,
+            "Fortitude": 1120,
+            "Ascension": 322
           }
         },
         {
           "run": 200,
-          "maxEnergy": 251.79999999999998,
-          "highestZone": 17,
+          "maxEnergy": 247.2,
+          "highestZone": 15,
           "prestiges": 0,
           "skills": {
-            "Charisma": 1603,
-            "Study": 1577,
-            "Combat": 1442,
-            "Search": 1399,
-            "Subterfuge": 1472,
-            "Crafting": 1544,
-            "Travel": 1389,
-            "Magic": 1586,
-            "Fortitude": 1335,
-            "Ascension": 477
+            "Charisma": 1227,
+            "Study": 1243,
+            "Combat": 1021,
+            "Search": 1192,
+            "Subterfuge": 890,
+            "Crafting": 860,
+            "Travel": 1191,
+            "Magic": 1290,
+            "Fortitude": 1182,
+            "Ascension": 355
           }
         },
         {
           "run": 225,
-          "maxEnergy": 296.5000000000002,
-          "highestZone": 17,
-          "prestiges": 0,
+          "maxEnergy": 150,
+          "highestZone": 15,
+          "prestiges": 1,
           "skills": {
-            "Charisma": 1663,
-            "Study": 1637,
-            "Combat": 1591,
-            "Search": 1476,
-            "Subterfuge": 1523,
-            "Crafting": 1587,
-            "Travel": 1460,
-            "Magic": 1663,
-            "Fortitude": 1394,
-            "Ascension": 516
+            "Charisma": 560,
+            "Study": 531,
+            "Combat": 399,
+            "Search": 558,
+            "Subterfuge": 540,
+            "Crafting": 465,
+            "Travel": 512,
+            "Magic": 453,
+            "Fortitude": 463,
+            "Ascension": 0
           }
         },
         {
           "run": 250,
-          "maxEnergy": 162.59999999999997,
-          "highestZone": 17,
+          "maxEnergy": 150,
+          "highestZone": 15,
           "prestiges": 1,
           "skills": {
-            "Charisma": 1363,
-            "Study": 1439,
-            "Combat": 1410,
-            "Search": 1237,
-            "Subterfuge": 1372,
-            "Crafting": 1433,
-            "Travel": 1264,
-            "Magic": 1377,
-            "Fortitude": 1254,
-            "Ascension": 427
+            "Charisma": 1054,
+            "Study": 944,
+            "Combat": 1065,
+            "Search": 1042,
+            "Subterfuge": 822,
+            "Crafting": 832,
+            "Travel": 919,
+            "Magic": 983,
+            "Fortitude": 853,
+            "Ascension": 0
           }
         },
         {
           "run": 275,
-          "maxEnergy": 213.60999999999999,
-          "highestZone": 19,
+          "maxEnergy": 188.29999999999995,
+          "highestZone": 16,
           "prestiges": 1,
           "skills": {
-            "Charisma": 1636,
-            "Study": 1779,
-            "Combat": 1664,
-            "Search": 1615,
-            "Subterfuge": 1763,
-            "Crafting": 1694,
-            "Travel": 1521,
-            "Magic": 1912,
-            "Fortitude": 1442,
-            "Ascension": 830
+            "Charisma": 1436,
+            "Study": 1387,
+            "Combat": 1321,
+            "Search": 1246,
+            "Subterfuge": 1349,
+            "Crafting": 1375,
+            "Travel": 1242,
+            "Magic": 1419,
+            "Fortitude": 1238,
+            "Ascension": 409
           }
         },
         {
           "run": 300,
-          "maxEnergy": 356.7044999999999,
-          "highestZone": 20,
+          "maxEnergy": 230.2999999999999,
+          "highestZone": 17,
           "prestiges": 1,
           "skills": {
-            "Charisma": 2132,
-            "Study": 2081,
-            "Combat": 1999,
-            "Search": 2022,
-            "Subterfuge": 1907,
-            "Crafting": 1786,
-            "Travel": 1691,
-            "Magic": 2076,
-            "Fortitude": 1595,
-            "Ascension": 934
+            "Charisma": 1548,
+            "Study": 1522,
+            "Combat": 1404,
+            "Search": 1354,
+            "Subterfuge": 1447,
+            "Crafting": 1486,
+            "Travel": 1354,
+            "Magic": 1534,
+            "Fortitude": 1307,
+            "Ascension": 459
           }
         },
         {
           "run": 325,
-          "maxEnergy": 549.7334999999997,
-          "highestZone": 22,
+          "maxEnergy": 274.0999999999999,
+          "highestZone": 17,
           "prestiges": 1,
           "skills": {
-            "Charisma": 2195,
-            "Study": 2162,
-            "Combat": 2161,
-            "Search": 2199,
-            "Subterfuge": 2077,
-            "Crafting": 1968,
-            "Travel": 1755,
-            "Magic": 2153,
-            "Fortitude": 1976,
-            "Ascension": 994
+            "Charisma": 1607,
+            "Study": 1561,
+            "Combat": 1449,
+            "Search": 1407,
+            "Subterfuge": 1481,
+            "Crafting": 1537,
+            "Travel": 1400,
+            "Magic": 1588,
+            "Fortitude": 1343,
+            "Ascension": 483
           }
         },
         {
           "run": 350,
-          "maxEnergy": 774.5519999999992,
-          "highestZone": 23,
-          "prestiges": 1,
+          "maxEnergy": 150,
+          "highestZone": 17,
+          "prestiges": 2,
           "skills": {
-            "Charisma": 2368,
-            "Study": 2329,
-            "Combat": 2395,
-            "Search": 2333,
-            "Subterfuge": 2164,
-            "Crafting": 2011,
-            "Travel": 1922,
-            "Magic": 2257,
-            "Fortitude": 2023,
-            "Ascension": 1033
+            "Charisma": 1220,
+            "Study": 1218,
+            "Combat": 1218,
+            "Search": 1079,
+            "Subterfuge": 878,
+            "Crafting": 847,
+            "Travel": 911,
+            "Magic": 1021,
+            "Fortitude": 842,
+            "Ascension": 0
           }
         },
         {
           "run": 375,
-          "maxEnergy": 1049.6049999999989,
-          "highestZone": 24,
-          "prestiges": 1,
+          "maxEnergy": 188.69999999999987,
+          "highestZone": 17,
+          "prestiges": 2,
           "skills": {
-            "Charisma": 2458,
-            "Study": 2628,
-            "Combat": 2613,
-            "Search": 2415,
-            "Subterfuge": 2334,
-            "Crafting": 2074,
-            "Travel": 2085,
-            "Magic": 2557,
-            "Fortitude": 2094,
-            "Ascension": 1507
+            "Charisma": 1510,
+            "Study": 1524,
+            "Combat": 1429,
+            "Search": 1335,
+            "Subterfuge": 1451,
+            "Crafting": 1504,
+            "Travel": 1334,
+            "Magic": 1506,
+            "Fortitude": 1303,
+            "Ascension": 467
           }
         },
         {
           "run": 400,
-          "maxEnergy": 419.59999999999997,
-          "highestZone": 24,
+          "maxEnergy": 232.29999999999987,
+          "highestZone": 17,
           "prestiges": 2,
           "skills": {
-            "Charisma": 2093,
-            "Study": 1844,
-            "Combat": 2210,
-            "Search": 2110,
-            "Subterfuge": 1839,
-            "Crafting": 1722,
-            "Travel": 1607,
-            "Magic": 2042,
-            "Fortitude": 1526,
-            "Ascension": 949
+            "Charisma": 1626,
+            "Study": 1588,
+            "Combat": 1580,
+            "Search": 1426,
+            "Subterfuge": 1507,
+            "Crafting": 1570,
+            "Travel": 1416,
+            "Magic": 1628,
+            "Fortitude": 1362,
+            "Ascension": 505
           }
         },
         {
           "run": 425,
-          "maxEnergy": 665.8450000000003,
-          "highestZone": 24,
-          "prestiges": 2,
+          "maxEnergy": 150,
+          "highestZone": 17,
+          "prestiges": 3,
           "skills": {
-            "Charisma": 2478,
-            "Study": 2611,
-            "Combat": 2664,
-            "Search": 2403,
-            "Subterfuge": 2307,
-            "Crafting": 2062,
-            "Travel": 2078,
-            "Magic": 2561,
-            "Fortitude": 2081,
-            "Ascension": 1511
+            "Charisma": 559,
+            "Study": 508,
+            "Combat": 671,
+            "Search": 545,
+            "Subterfuge": 558,
+            "Crafting": 458,
+            "Travel": 504,
+            "Magic": 539,
+            "Fortitude": 470,
+            "Ascension": 0
           }
         },
         {
           "run": 450,
-          "maxEnergy": 970.3905000000004,
-          "highestZone": 26,
-          "prestiges": 2,
+          "maxEnergy": 172.39999999999992,
+          "highestZone": 17,
+          "prestiges": 3,
           "skills": {
-            "Charisma": 2528,
-            "Study": 2805,
-            "Combat": 2729,
-            "Search": 2546,
-            "Subterfuge": 2555,
-            "Crafting": 2290,
-            "Travel": 2293,
-            "Magic": 2754,
-            "Fortitude": 2289,
-            "Ascension": 1630
+            "Charisma": 1379,
+            "Study": 1501,
+            "Combat": 1417,
+            "Search": 1284,
+            "Subterfuge": 1414,
+            "Crafting": 1475,
+            "Travel": 1293,
+            "Magic": 1446,
+            "Fortitude": 1271,
+            "Ascension": 447
           }
         },
         {
           "run": 475,
-          "maxEnergy": 1374.3545000000006,
-          "highestZone": 28,
-          "prestiges": 2,
+          "maxEnergy": 215.59999999999988,
+          "highestZone": 17,
+          "prestiges": 3,
           "skills": {
-            "Charisma": 2887,
-            "Study": 3074,
-            "Combat": 2911,
-            "Search": 2808,
-            "Subterfuge": 2814,
-            "Crafting": 2487,
-            "Travel": 2415,
-            "Magic": 2990,
-            "Fortitude": 2469,
-            "Ascension": 1701
+            "Charisma": 1616,
+            "Study": 1594,
+            "Combat": 1586,
+            "Search": 1427,
+            "Subterfuge": 1503,
+            "Crafting": 1568,
+            "Travel": 1409,
+            "Magic": 1627,
+            "Fortitude": 1355,
+            "Ascension": 501
           }
         },
         {
           "run": 500,
-          "maxEnergy": 1979.2670000000007,
-          "highestZone": 29,
-          "prestiges": 2,
+          "maxEnergy": 150,
+          "highestZone": 17,
+          "prestiges": 4,
           "skills": {
-            "Charisma": 3104,
-            "Study": 3461,
-            "Combat": 3378,
-            "Search": 2960,
-            "Subterfuge": 2910,
-            "Crafting": 2712,
-            "Travel": 2707,
-            "Magic": 3114,
-            "Fortitude": 2559,
-            "Ascension": 2321
+            "Charisma": 515,
+            "Study": 466,
+            "Combat": 584,
+            "Search": 441,
+            "Subterfuge": 516,
+            "Crafting": 420,
+            "Travel": 454,
+            "Magic": 509,
+            "Fortitude": 353,
+            "Ascension": 0
           }
         },
         {
           "run": 525,
-          "maxEnergy": 2598.509500000002,
-          "highestZone": 29,
-          "prestiges": 2,
+          "maxEnergy": 172.49999999999994,
+          "highestZone": 17,
+          "prestiges": 4,
           "skills": {
-            "Charisma": 3258,
-            "Study": 3539,
-            "Combat": 3636,
-            "Search": 3060,
-            "Subterfuge": 2966,
-            "Crafting": 2752,
-            "Travel": 2780,
-            "Magic": 3252,
-            "Fortitude": 2791,
-            "Ascension": 2401
+            "Charisma": 1520,
+            "Study": 1511,
+            "Combat": 1422,
+            "Search": 1295,
+            "Subterfuge": 1420,
+            "Crafting": 1481,
+            "Travel": 1325,
+            "Magic": 1492,
+            "Fortitude": 1288,
+            "Ascension": 452
           }
         },
         {
           "run": 550,
-          "maxEnergy": 1254.8024999999993,
-          "highestZone": 29,
-          "prestiges": 3,
+          "maxEnergy": 215.99999999999994,
+          "highestZone": 17,
+          "prestiges": 4,
           "skills": {
-            "Charisma": 3257,
-            "Study": 3534,
-            "Combat": 3874,
-            "Search": 3042,
-            "Subterfuge": 2956,
-            "Crafting": 2723,
-            "Travel": 2766,
-            "Magic": 3260,
-            "Fortitude": 2812,
-            "Ascension": 2396
+            "Charisma": 1633,
+            "Study": 1599,
+            "Combat": 1592,
+            "Search": 1432,
+            "Subterfuge": 1512,
+            "Crafting": 1577,
+            "Travel": 1427,
+            "Magic": 1638,
+            "Fortitude": 1368,
+            "Ascension": 507
           }
         },
         {
-          "run": 570,
-          "maxEnergy": 1804.4024999999988,
-          "highestZone": 29,
-          "prestiges": 3,
+          "run": 575,
+          "maxEnergy": 150,
+          "highestZone": 17,
+          "prestiges": 5,
           "skills": {
-            "Charisma": 3362,
-            "Study": 3638,
-            "Combat": 4124,
-            "Search": 3145,
-            "Subterfuge": 3048,
-            "Crafting": 2816,
-            "Travel": 2876,
-            "Magic": 3339,
-            "Fortitude": 2875,
-            "Ascension": 2507
+            "Charisma": 682,
+            "Study": 663,
+            "Combat": 978,
+            "Search": 1035,
+            "Subterfuge": 705,
+            "Crafting": 687,
+            "Travel": 650,
+            "Magic": 979,
+            "Fortitude": 598,
+            "Ascension": 0
+          }
+        },
+        {
+          "run": 600,
+          "maxEnergy": 182.79999999999993,
+          "highestZone": 17,
+          "prestiges": 5,
+          "skills": {
+            "Charisma": 1556,
+            "Study": 1541,
+            "Combat": 1590,
+            "Search": 1365,
+            "Subterfuge": 1459,
+            "Crafting": 1518,
+            "Travel": 1358,
+            "Magic": 1542,
+            "Fortitude": 1315,
+            "Ascension": 474
+          }
+        },
+        {
+          "run": 625,
+          "maxEnergy": 226.39999999999992,
+          "highestZone": 17,
+          "prestiges": 5,
+          "skills": {
+            "Charisma": 1647,
+            "Study": 1623,
+            "Combat": 1598,
+            "Search": 1452,
+            "Subterfuge": 1529,
+            "Crafting": 1592,
+            "Travel": 1435,
+            "Magic": 1649,
+            "Fortitude": 1377,
+            "Ascension": 517
+          }
+        },
+        {
+          "run": 650,
+          "maxEnergy": 150,
+          "highestZone": 17,
+          "prestiges": 6,
+          "skills": {
+            "Charisma": 1235,
+            "Study": 1235,
+            "Combat": 1230,
+            "Search": 1074,
+            "Subterfuge": 856,
+            "Crafting": 818,
+            "Travel": 859,
+            "Magic": 1017,
+            "Fortitude": 772,
+            "Ascension": 0
+          }
+        },
+        {
+          "run": 675,
+          "maxEnergy": 189.89999999999992,
+          "highestZone": 17,
+          "prestiges": 6,
+          "skills": {
+            "Charisma": 1586,
+            "Study": 1554,
+            "Combat": 1594,
+            "Search": 1393,
+            "Subterfuge": 1476,
+            "Crafting": 1529,
+            "Travel": 1384,
+            "Magic": 1571,
+            "Fortitude": 1335,
+            "Ascension": 486
+          }
+        },
+        {
+          "run": 700,
+          "maxEnergy": 233.69999999999996,
+          "highestZone": 17,
+          "prestiges": 6,
+          "skills": {
+            "Charisma": 1658,
+            "Study": 1634,
+            "Combat": 1648,
+            "Search": 1466,
+            "Subterfuge": 1541,
+            "Crafting": 1597,
+            "Travel": 1448,
+            "Magic": 1659,
+            "Fortitude": 1388,
+            "Ascension": 523
+          }
+        },
+        {
+          "run": 725,
+          "maxEnergy": 157.79999999999998,
+          "highestZone": 17,
+          "prestiges": 7,
+          "skills": {
+            "Charisma": 1332,
+            "Study": 1322,
+            "Combat": 1392,
+            "Search": 1209,
+            "Subterfuge": 1027,
+            "Crafting": 1014,
+            "Travel": 1197,
+            "Magic": 1359,
+            "Fortitude": 1208,
+            "Ascension": 400
+          }
+        },
+        {
+          "run": 750,
+          "maxEnergy": 200.5999999999999,
+          "highestZone": 17,
+          "prestiges": 7,
+          "skills": {
+            "Charisma": 1619,
+            "Study": 1585,
+            "Combat": 1598,
+            "Search": 1424,
+            "Subterfuge": 1503,
+            "Crafting": 1570,
+            "Travel": 1409,
+            "Magic": 1632,
+            "Fortitude": 1355,
+            "Ascension": 500
+          }
+        },
+        {
+          "run": 775,
+          "maxEnergy": 100,
+          "highestZone": 17,
+          "prestiges": 8,
+          "skills": {
+            "Charisma": 237,
+            "Study": 249,
+            "Combat": 218,
+            "Search": 277,
+            "Subterfuge": 196,
+            "Crafting": 0,
+            "Travel": 266,
+            "Magic": 0,
+            "Fortitude": 0,
+            "Ascension": 0
+          }
+        },
+        {
+          "run": 800,
+          "maxEnergy": 175.79999999999998,
+          "highestZone": 19,
+          "prestiges": 8,
+          "skills": {
+            "Charisma": 1600,
+            "Study": 1647,
+            "Combat": 1594,
+            "Search": 1557,
+            "Subterfuge": 1573,
+            "Crafting": 1628,
+            "Travel": 1393,
+            "Magic": 1824,
+            "Fortitude": 1324,
+            "Ascension": 464
+          }
+        },
+        {
+          "run": 825,
+          "maxEnergy": 269.70000000000016,
+          "highestZone": 19,
+          "prestiges": 8,
+          "skills": {
+            "Charisma": 1992,
+            "Study": 1887,
+            "Combat": 1869,
+            "Search": 1668,
+            "Subterfuge": 1879,
+            "Crafting": 1753,
+            "Travel": 1639,
+            "Magic": 1986,
+            "Fortitude": 1558,
+            "Ascension": 918
+          }
+        },
+        {
+          "run": 850,
+          "maxEnergy": 373.8000000000004,
+          "highestZone": 20,
+          "prestiges": 8,
+          "skills": {
+            "Charisma": 2135,
+            "Study": 2081,
+            "Combat": 1998,
+            "Search": 2030,
+            "Subterfuge": 1936,
+            "Crafting": 1806,
+            "Travel": 1704,
+            "Magic": 2080,
+            "Fortitude": 1611,
+            "Ascension": 961
+          }
+        },
+        {
+          "run": 875,
+          "maxEnergy": 482.1600000000003,
+          "highestZone": 21,
+          "prestiges": 8,
+          "skills": {
+            "Charisma": 2171,
+            "Study": 2154,
+            "Combat": 2049,
+            "Search": 2123,
+            "Subterfuge": 1964,
+            "Crafting": 1899,
+            "Travel": 1742,
+            "Magic": 2123,
+            "Fortitude": 1910,
+            "Ascension": 993
+          }
+        },
+        {
+          "run": 900,
+          "maxEnergy": 172.205,
+          "highestZone": 21,
+          "prestiges": 9,
+          "skills": {
+            "Charisma": 557,
+            "Study": 510,
+            "Combat": 840,
+            "Search": 677,
+            "Subterfuge": 678,
+            "Crafting": 501,
+            "Travel": 507,
+            "Magic": 565,
+            "Fortitude": 432,
+            "Ascension": 150
+          }
+        },
+        {
+          "run": 925,
+          "maxEnergy": 256.646,
+          "highestZone": 21,
+          "prestiges": 9,
+          "skills": {
+            "Charisma": 2073,
+            "Study": 1838,
+            "Combat": 1970,
+            "Search": 1662,
+            "Subterfuge": 1824,
+            "Crafting": 1712,
+            "Travel": 1557,
+            "Magic": 2026,
+            "Fortitude": 1476,
+            "Ascension": 873
+          }
+        },
+        {
+          "run": 950,
+          "maxEnergy": 367.34749999999974,
+          "highestZone": 21,
+          "prestiges": 9,
+          "skills": {
+            "Charisma": 2157,
+            "Study": 2136,
+            "Combat": 2036,
+            "Search": 2113,
+            "Subterfuge": 1931,
+            "Crafting": 1858,
+            "Travel": 1727,
+            "Magic": 2110,
+            "Fortitude": 1825,
+            "Ascension": 965
+          }
+        },
+        {
+          "run": 975,
+          "maxEnergy": 483.3619999999995,
+          "highestZone": 21,
+          "prestiges": 9,
+          "skills": {
+            "Charisma": 2197,
+            "Study": 2168,
+            "Combat": 2164,
+            "Search": 2197,
+            "Subterfuge": 2018,
+            "Crafting": 1971,
+            "Travel": 1758,
+            "Magic": 2157,
+            "Fortitude": 1975,
+            "Ascension": 999
+          }
+        },
+        {
+          "run": 1000,
+          "maxEnergy": 603.1984999999996,
+          "highestZone": 22,
+          "prestiges": 9,
+          "skills": {
+            "Charisma": 2299,
+            "Study": 2293,
+            "Combat": 2195,
+            "Search": 2239,
+            "Subterfuge": 2100,
+            "Crafting": 1979,
+            "Travel": 1801,
+            "Magic": 2205,
+            "Fortitude": 1985,
+            "Ascension": 1020
+          }
+        },
+        {
+          "run": 1025,
+          "maxEnergy": 221.79899999999998,
+          "highestZone": 22,
+          "prestiges": 10,
+          "skills": {
+            "Charisma": 1328,
+            "Study": 1334,
+            "Combat": 1363,
+            "Search": 1150,
+            "Subterfuge": 1026,
+            "Crafting": 1029,
+            "Travel": 1071,
+            "Magic": 1340,
+            "Fortitude": 1198,
+            "Ascension": 386
+          }
+        },
+        {
+          "run": 1050,
+          "maxEnergy": 328.3580000000002,
+          "highestZone": 22,
+          "prestiges": 10,
+          "skills": {
+            "Charisma": 2146,
+            "Study": 2079,
+            "Combat": 2120,
+            "Search": 2123,
+            "Subterfuge": 1901,
+            "Crafting": 1767,
+            "Travel": 1680,
+            "Magic": 2086,
+            "Fortitude": 1589,
+            "Ascension": 938
+          }
+        },
+        {
+          "run": 1075,
+          "maxEnergy": 454.4555000000002,
+          "highestZone": 22,
+          "prestiges": 10,
+          "skills": {
+            "Charisma": 2202,
+            "Study": 2154,
+            "Combat": 2174,
+            "Search": 2202,
+            "Subterfuge": 2008,
+            "Crafting": 1979,
+            "Travel": 1753,
+            "Magic": 2150,
+            "Fortitude": 1979,
+            "Ascension": 991
+          }
+        },
+        {
+          "run": 1100,
+          "maxEnergy": 586.6710000000002,
+          "highestZone": 22,
+          "prestiges": 10,
+          "skills": {
+            "Charisma": 2307,
+            "Study": 2300,
+            "Combat": 2293,
+            "Search": 2291,
+            "Subterfuge": 2107,
+            "Crafting": 2004,
+            "Travel": 1801,
+            "Magic": 2217,
+            "Fortitude": 2011,
+            "Ascension": 1018
+          }
+        },
+        {
+          "run": 1125,
+          "maxEnergy": 726.4880000000003,
+          "highestZone": 23,
+          "prestiges": 10,
+          "skills": {
+            "Charisma": 2352,
+            "Study": 2344,
+            "Combat": 2354,
+            "Search": 2348,
+            "Subterfuge": 2161,
+            "Crafting": 2010,
+            "Travel": 1928,
+            "Magic": 2281,
+            "Fortitude": 2031,
+            "Ascension": 1036
+          }
+        },
+        {
+          "run": 1150,
+          "maxEnergy": 275.1125,
+          "highestZone": 23,
+          "prestiges": 11,
+          "skills": {
+            "Charisma": 1586,
+            "Study": 1581,
+            "Combat": 1893,
+            "Search": 1433,
+            "Subterfuge": 1469,
+            "Crafting": 1529,
+            "Travel": 1380,
+            "Magic": 1638,
+            "Fortitude": 1317,
+            "Ascension": 448
+          }
+        },
+        {
+          "run": 1175,
+          "maxEnergy": 404.1,
+          "highestZone": 23,
+          "prestiges": 11,
+          "skills": {
+            "Charisma": 2183,
+            "Study": 2132,
+            "Combat": 2154,
+            "Search": 2182,
+            "Subterfuge": 1994,
+            "Crafting": 1955,
+            "Travel": 1731,
+            "Magic": 2121,
+            "Fortitude": 1966,
+            "Ascension": 962
+          }
+        },
+        {
+          "run": 1200,
+          "maxEnergy": 548.5000000000002,
+          "highestZone": 23,
+          "prestiges": 11,
+          "skills": {
+            "Charisma": 2321,
+            "Study": 2316,
+            "Combat": 2295,
+            "Search": 2319,
+            "Subterfuge": 2112,
+            "Crafting": 1993,
+            "Travel": 1936,
+            "Magic": 2246,
+            "Fortitude": 2009,
+            "Ascension": 1008
+          }
+        },
+        {
+          "run": 1225,
+          "maxEnergy": 706.6875000000009,
+          "highestZone": 23,
+          "prestiges": 11,
+          "skills": {
+            "Charisma": 2395,
+            "Study": 2360,
+            "Combat": 2418,
+            "Search": 2365,
+            "Subterfuge": 2231,
+            "Crafting": 2005,
+            "Travel": 2017,
+            "Magic": 2282,
+            "Fortitude": 2038,
+            "Ascension": 1031
+          }
+        },
+        {
+          "run": 1250,
+          "maxEnergy": 319.1529999999999,
+          "highestZone": 23,
+          "prestiges": 12,
+          "skills": {
+            "Charisma": 2110,
+            "Study": 1808,
+            "Combat": 2135,
+            "Search": 2095,
+            "Subterfuge": 1790,
+            "Crafting": 1656,
+            "Travel": 1541,
+            "Magic": 2057,
+            "Fortitude": 1461,
+            "Ascension": 823
+          }
+        },
+        {
+          "run": 1275,
+          "maxEnergy": 463.47899999999964,
+          "highestZone": 23,
+          "prestiges": 12,
+          "skills": {
+            "Charisma": 2285,
+            "Study": 2278,
+            "Combat": 2286,
+            "Search": 2284,
+            "Subterfuge": 2079,
+            "Crafting": 1962,
+            "Travel": 1771,
+            "Magic": 2189,
+            "Fortitude": 1980,
+            "Ascension": 988
+          }
+        },
+        {
+          "run": 1300,
+          "maxEnergy": 625.199,
+          "highestZone": 23,
+          "prestiges": 12,
+          "skills": {
+            "Charisma": 2384,
+            "Study": 2350,
+            "Combat": 2408,
+            "Search": 2354,
+            "Subterfuge": 2238,
+            "Crafting": 2002,
+            "Travel": 2017,
+            "Magic": 2274,
+            "Fortitude": 2029,
+            "Ascension": 1022
+          }
+        },
+        {
+          "run": 1325,
+          "maxEnergy": 800.0360000000007,
+          "highestZone": 24,
+          "prestiges": 12,
+          "skills": {
+            "Charisma": 2414,
+            "Study": 2484,
+            "Combat": 2469,
+            "Search": 2384,
+            "Subterfuge": 2300,
+            "Crafting": 2040,
+            "Travel": 2053,
+            "Magic": 2482,
+            "Fortitude": 2065,
+            "Ascension": 1042
+          }
+        },
+        {
+          "run": 1350,
+          "maxEnergy": 988.1590000000003,
+          "highestZone": 24,
+          "prestiges": 12,
+          "skills": {
+            "Charisma": 2425,
+            "Study": 2614,
+            "Combat": 2601,
+            "Search": 2407,
+            "Subterfuge": 2303,
+            "Crafting": 2054,
+            "Travel": 2065,
+            "Magic": 2565,
+            "Fortitude": 2082,
+            "Ascension": 1425
+          }
+        },
+        {
+          "run": 1375,
+          "maxEnergy": 406.55800000000016,
+          "highestZone": 24,
+          "prestiges": 13,
+          "skills": {
+            "Charisma": 2161,
+            "Study": 2113,
+            "Combat": 2214,
+            "Search": 2162,
+            "Subterfuge": 1995,
+            "Crafting": 1902,
+            "Travel": 1714,
+            "Magic": 2099,
+            "Fortitude": 1947,
+            "Ascension": 947
+          }
+        },
+        {
+          "run": 1400,
+          "maxEnergy": 573.2420000000002,
+          "highestZone": 24,
+          "prestiges": 13,
+          "skills": {
+            "Charisma": 2345,
+            "Study": 2330,
+            "Combat": 2384,
+            "Search": 2335,
+            "Subterfuge": 2194,
+            "Crafting": 1989,
+            "Travel": 1957,
+            "Magic": 2261,
+            "Fortitude": 2005,
+            "Ascension": 1007
+          }
+        },
+        {
+          "run": 1425,
+          "maxEnergy": 761.5279999999993,
+          "highestZone": 24,
+          "prestiges": 13,
+          "skills": {
+            "Charisma": 2406,
+            "Study": 2487,
+            "Combat": 2461,
+            "Search": 2379,
+            "Subterfuge": 2294,
+            "Crafting": 2036,
+            "Travel": 2049,
+            "Magic": 2462,
+            "Fortitude": 2058,
+            "Ascension": 1034
+          }
+        },
+        {
+          "run": 1450,
+          "maxEnergy": 965.4379999999987,
+          "highestZone": 24,
+          "prestiges": 13,
+          "skills": {
+            "Charisma": 2426,
+            "Study": 2614,
+            "Combat": 2500,
+            "Search": 2404,
+            "Subterfuge": 2298,
+            "Crafting": 2054,
+            "Travel": 2063,
+            "Magic": 2566,
+            "Fortitude": 2077,
+            "Ascension": 1429
+          }
+        },
+        {
+          "run": 1475,
+          "maxEnergy": 415.11500000000007,
+          "highestZone": 24,
+          "prestiges": 14,
+          "skills": {
+            "Charisma": 2170,
+            "Study": 2062,
+            "Combat": 2279,
+            "Search": 2140,
+            "Subterfuge": 1925,
+            "Crafting": 1906,
+            "Travel": 1703,
+            "Magic": 2118,
+            "Fortitude": 1888,
+            "Ascension": 984
+          }
+        },
+        {
+          "run": 1500,
+          "maxEnergy": 603.8035,
+          "highestZone": 24,
+          "prestiges": 14,
+          "skills": {
+            "Charisma": 2409,
+            "Study": 2522,
+            "Combat": 2501,
+            "Search": 2385,
+            "Subterfuge": 2298,
+            "Crafting": 2054,
+            "Travel": 2070,
+            "Magic": 2500,
+            "Fortitude": 2068,
+            "Ascension": 1055
+          }
+        },
+        {
+          "run": 1525,
+          "maxEnergy": 814.3144999999994,
+          "highestZone": 24,
+          "prestiges": 14,
+          "skills": {
+            "Charisma": 2451,
+            "Study": 2654,
+            "Combat": 2717,
+            "Search": 2431,
+            "Subterfuge": 2319,
+            "Crafting": 2077,
+            "Travel": 2100,
+            "Magic": 2597,
+            "Fortitude": 2108,
+            "Ascension": 1502
+          }
+        },
+        {
+          "run": 1550,
+          "maxEnergy": 472.865,
+          "highestZone": 24,
+          "prestiges": 15,
+          "skills": {
+            "Charisma": 2267,
+            "Study": 2258,
+            "Combat": 2283,
+            "Search": 2256,
+            "Subterfuge": 2052,
+            "Crafting": 1964,
+            "Travel": 1761,
+            "Magic": 2165,
+            "Fortitude": 1979,
+            "Ascension": 997
+          }
+        },
+        {
+          "run": 1575,
+          "maxEnergy": 677.4199999999997,
+          "highestZone": 24,
+          "prestiges": 15,
+          "skills": {
+            "Charisma": 2424,
+            "Study": 2558,
+            "Combat": 2506,
+            "Search": 2393,
+            "Subterfuge": 2311,
+            "Crafting": 2057,
+            "Travel": 2077,
+            "Magic": 2554,
+            "Fortitude": 2084,
+            "Ascension": 1469
+          }
+        },
+        {
+          "run": 1600,
+          "maxEnergy": 898.0099999999993,
+          "highestZone": 24,
+          "prestiges": 15,
+          "skills": {
+            "Charisma": 2475,
+            "Study": 2663,
+            "Combat": 2733,
+            "Search": 2439,
+            "Subterfuge": 2334,
+            "Crafting": 2077,
+            "Travel": 2110,
+            "Magic": 2607,
+            "Fortitude": 2118,
+            "Ascension": 1525
+          }
+        },
+        {
+          "run": 1625,
+          "maxEnergy": 512.4949999999999,
+          "highestZone": 24,
+          "prestiges": 16,
+          "skills": {
+            "Charisma": 2381,
+            "Study": 2359,
+            "Combat": 2486,
+            "Search": 2359,
+            "Subterfuge": 2275,
+            "Crafting": 2027,
+            "Travel": 2026,
+            "Magic": 2454,
+            "Fortitude": 2036,
+            "Ascension": 1024
+          }
+        },
+        {
+          "run": 1650,
+          "maxEnergy": 728.2399999999993,
+          "highestZone": 24,
+          "prestiges": 16,
+          "skills": {
+            "Charisma": 2455,
+            "Study": 2649,
+            "Combat": 2702,
+            "Search": 2421,
+            "Subterfuge": 2314,
+            "Crafting": 2074,
+            "Travel": 2099,
+            "Magic": 2591,
+            "Fortitude": 2102,
+            "Ascension": 1504
+          }
+        },
+        {
+          "run": 1675,
+          "maxEnergy": 450.8015,
+          "highestZone": 24,
+          "prestiges": 17,
+          "skills": {
+            "Charisma": 2290,
+            "Study": 2284,
+            "Combat": 2309,
+            "Search": 2303,
+            "Subterfuge": 2068,
+            "Crafting": 1986,
+            "Travel": 1767,
+            "Magic": 2165,
+            "Fortitude": 1971,
+            "Ascension": 993
+          }
+        },
+        {
+          "run": 1700,
+          "maxEnergy": 665.8175000000002,
+          "highestZone": 24,
+          "prestiges": 17,
+          "skills": {
+            "Charisma": 2440,
+            "Study": 2606,
+            "Combat": 2612,
+            "Search": 2398,
+            "Subterfuge": 2274,
+            "Crafting": 2063,
+            "Travel": 2083,
+            "Magic": 2569,
+            "Fortitude": 2088,
+            "Ascension": 1472
+          }
+        },
+        {
+          "run": 1725,
+          "maxEnergy": 391.266,
+          "highestZone": 24,
+          "prestiges": 18,
+          "skills": {
+            "Charisma": 2036,
+            "Study": 1723,
+            "Combat": 2003,
+            "Search": 1585,
+            "Subterfuge": 1604,
+            "Crafting": 1590,
+            "Travel": 1401,
+            "Magic": 1985,
+            "Fortitude": 1331,
+            "Ascension": 470
+          }
+        },
+        {
+          "run": 1750,
+          "maxEnergy": 590.3325000000002,
+          "highestZone": 24,
+          "prestiges": 18,
+          "skills": {
+            "Charisma": 2413,
+            "Study": 2527,
+            "Combat": 2500,
+            "Search": 2368,
+            "Subterfuge": 2269,
+            "Crafting": 2054,
+            "Travel": 2056,
+            "Magic": 2530,
+            "Fortitude": 2067,
+            "Ascension": 1473
+          }
+        },
+        {
+          "run": 1775,
+          "maxEnergy": 818.2755000000005,
+          "highestZone": 24,
+          "prestiges": 18,
+          "skills": {
+            "Charisma": 2500,
+            "Study": 2662,
+            "Combat": 2706,
+            "Search": 2432,
+            "Subterfuge": 2330,
+            "Crafting": 2076,
+            "Travel": 2110,
+            "Magic": 2600,
+            "Fortitude": 2114,
+            "Ascension": 1594
+          }
+        },
+        {
+          "run": 1800,
+          "maxEnergy": 551.4240000000001,
+          "highestZone": 24,
+          "prestiges": 19,
+          "skills": {
+            "Charisma": 2394,
+            "Study": 2352,
+            "Combat": 2487,
+            "Search": 2359,
+            "Subterfuge": 2191,
+            "Crafting": 2046,
+            "Travel": 2033,
+            "Magic": 2460,
+            "Fortitude": 2040,
+            "Ascension": 1040
+          }
+        },
+        {
+          "run": 1825,
+          "maxEnergy": 786.0320000000005,
+          "highestZone": 24,
+          "prestiges": 19,
+          "skills": {
+            "Charisma": 2503,
+            "Study": 2656,
+            "Combat": 2700,
+            "Search": 2429,
+            "Subterfuge": 2329,
+            "Crafting": 2075,
+            "Travel": 2100,
+            "Magic": 2591,
+            "Fortitude": 2105,
+            "Ascension": 1565
+          }
+        },
+        {
+          "run": 1850,
+          "maxEnergy": 481.18399999999997,
+          "highestZone": 24,
+          "prestiges": 20,
+          "skills": {
+            "Charisma": 2335,
+            "Study": 2305,
+            "Combat": 2385,
+            "Search": 2306,
+            "Subterfuge": 2154,
+            "Crafting": 2003,
+            "Travel": 1987,
+            "Magic": 2219,
+            "Fortitude": 1986,
+            "Ascension": 997
+          }
+        },
+        {
+          "run": 1875,
+          "maxEnergy": 711.2480000000005,
+          "highestZone": 24,
+          "prestiges": 20,
+          "skills": {
+            "Charisma": 2472,
+            "Study": 2632,
+            "Combat": 2615,
+            "Search": 2412,
+            "Subterfuge": 2309,
+            "Crafting": 2067,
+            "Travel": 2093,
+            "Magic": 2578,
+            "Fortitude": 2095,
+            "Ascension": 1474
+          }
+        },
+        {
+          "run": 1900,
+          "maxEnergy": 425.376,
+          "highestZone": 24,
+          "prestiges": 21,
+          "skills": {
+            "Charisma": 2136,
+            "Study": 1877,
+            "Combat": 2212,
+            "Search": 2110,
+            "Subterfuge": 1874,
+            "Crafting": 1737,
+            "Travel": 1622,
+            "Magic": 2083,
+            "Fortitude": 1540,
+            "Ascension": 959
+          }
+        },
+        {
+          "run": 1925,
+          "maxEnergy": 642.9760000000005,
+          "highestZone": 24,
+          "prestiges": 21,
+          "skills": {
+            "Charisma": 2471,
+            "Study": 2614,
+            "Combat": 2504,
+            "Search": 2400,
+            "Subterfuge": 2288,
+            "Crafting": 2062,
+            "Travel": 2075,
+            "Magic": 2546,
+            "Fortitude": 2079,
+            "Ascension": 1475
+          }
+        },
+        {
+          "run": 1950,
+          "maxEnergy": 882.7840000000006,
+          "highestZone": 24,
+          "prestiges": 21,
+          "skills": {
+            "Charisma": 2514,
+            "Study": 2661,
+            "Combat": 2736,
+            "Search": 2445,
+            "Subterfuge": 2348,
+            "Crafting": 2102,
+            "Travel": 2118,
+            "Magic": 2610,
+            "Fortitude": 2122,
+            "Ascension": 1618
+          }
+        },
+        {
+          "run": 1975,
+          "maxEnergy": 581.8400000000003,
+          "highestZone": 24,
+          "prestiges": 22,
+          "skills": {
+            "Charisma": 2447,
+            "Study": 2563,
+            "Combat": 2497,
+            "Search": 2381,
+            "Subterfuge": 2273,
+            "Crafting": 2052,
+            "Travel": 2058,
+            "Magic": 2495,
+            "Fortitude": 2062,
+            "Ascension": 1475
+          }
+        },
+        {
+          "run": 2000,
+          "maxEnergy": 821.6800000000004,
+          "highestZone": 24,
+          "prestiges": 22,
+          "skills": {
+            "Charisma": 2519,
+            "Study": 2662,
+            "Combat": 2747,
+            "Search": 2439,
+            "Subterfuge": 2347,
+            "Crafting": 2112,
+            "Travel": 2112,
+            "Magic": 2600,
+            "Fortitude": 2115,
+            "Ascension": 1612
+          }
+        },
+        {
+          "run": 2025,
+          "maxEnergy": 537.9200000000001,
+          "highestZone": 24,
+          "prestiges": 23,
+          "skills": {
+            "Charisma": 2403,
+            "Study": 2529,
+            "Combat": 2491,
+            "Search": 2360,
+            "Subterfuge": 2243,
+            "Crafting": 2042,
+            "Travel": 2048,
+            "Magic": 2461,
+            "Fortitude": 2044,
+            "Ascension": 1475
+          }
+        },
+        {
+          "run": 2050,
+          "maxEnergy": 774.7200000000004,
+          "highestZone": 24,
+          "prestiges": 23,
+          "skills": {
+            "Charisma": 2505,
+            "Study": 2657,
+            "Combat": 2735,
+            "Search": 2431,
+            "Subterfuge": 2344,
+            "Crafting": 2082,
+            "Travel": 2106,
+            "Magic": 2593,
+            "Fortitude": 2107,
+            "Ascension": 1601
+          }
+        },
+        {
+          "run": 2075,
+          "maxEnergy": 510.3860000000001,
+          "highestZone": 24,
+          "prestiges": 24,
+          "skills": {
+            "Charisma": 2354,
+            "Study": 2311,
+            "Combat": 2388,
+            "Search": 2314,
+            "Subterfuge": 2156,
+            "Crafting": 2009,
+            "Travel": 1993,
+            "Magic": 2461,
+            "Fortitude": 2002,
+            "Ascension": 1003
+          }
+        },
+        {
+          "run": 2100,
+          "maxEnergy": 754.6190000000005,
+          "highestZone": 24,
+          "prestiges": 24,
+          "skills": {
+            "Charisma": 2507,
+            "Study": 2654,
+            "Combat": 2731,
+            "Search": 2423,
+            "Subterfuge": 2337,
+            "Crafting": 2076,
+            "Travel": 2098,
+            "Magic": 2588,
+            "Fortitude": 2100,
+            "Ascension": 1592
+          }
+        },
+        {
+          "run": 2125,
+          "maxEnergy": 487.8470000000001,
+          "highestZone": 24,
+          "prestiges": 25,
+          "skills": {
+            "Charisma": 2324,
+            "Study": 2288,
+            "Combat": 2488,
+            "Search": 2297,
+            "Subterfuge": 2156,
+            "Crafting": 1997,
+            "Travel": 1943,
+            "Magic": 2462,
+            "Fortitude": 1988,
+            "Ascension": 991
+          }
+        },
+        {
+          "run": 2150,
+          "maxEnergy": 728.9450000000005,
+          "highestZone": 24,
+          "prestiges": 25,
+          "skills": {
+            "Charisma": 2506,
+            "Study": 2640,
+            "Combat": 2732,
+            "Search": 2421,
+            "Subterfuge": 2327,
+            "Crafting": 2096,
+            "Travel": 2093,
+            "Magic": 2580,
+            "Fortitude": 2102,
+            "Ascension": 1598
+          }
+        },
+        {
+          "run": 2175,
+          "maxEnergy": 477.5345000000001,
+          "highestZone": 24,
+          "prestiges": 26,
+          "skills": {
+            "Charisma": 2296,
+            "Study": 2292,
+            "Combat": 2400,
+            "Search": 2291,
+            "Subterfuge": 2152,
+            "Crafting": 1978,
+            "Travel": 1781,
+            "Magic": 2166,
+            "Fortitude": 1963,
+            "Ascension": 986
+          }
+        },
+        {
+          "run": 2200,
+          "maxEnergy": 721.0250000000004,
+          "highestZone": 24,
+          "prestiges": 26,
+          "skills": {
+            "Charisma": 2497,
+            "Study": 2640,
+            "Combat": 2723,
+            "Search": 2422,
+            "Subterfuge": 2332,
+            "Crafting": 2098,
+            "Travel": 2094,
+            "Magic": 2587,
+            "Fortitude": 2100,
+            "Ascension": 1602
+          }
+        },
+        {
+          "run": 2225,
+          "maxEnergy": 468.7730000000001,
+          "highestZone": 24,
+          "prestiges": 27,
+          "skills": {
+            "Charisma": 2285,
+            "Study": 2278,
+            "Combat": 2483,
+            "Search": 2291,
+            "Subterfuge": 2072,
+            "Crafting": 1974,
+            "Travel": 1765,
+            "Magic": 2166,
+            "Fortitude": 1944,
+            "Ascension": 981
+          }
+        },
+        {
+          "run": 2250,
+          "maxEnergy": 709.9370000000004,
+          "highestZone": 24,
+          "prestiges": 27,
+          "skills": {
+            "Charisma": 2494,
+            "Study": 2632,
+            "Combat": 2711,
+            "Search": 2420,
+            "Subterfuge": 2326,
+            "Crafting": 2080,
+            "Travel": 2094,
+            "Magic": 2581,
+            "Fortitude": 2099,
+            "Ascension": 1599
+          }
+        },
+        {
+          "run": 2275,
+          "maxEnergy": 460.7540000000001,
+          "highestZone": 24,
+          "prestiges": 28,
+          "skills": {
+            "Charisma": 2255,
+            "Study": 2244,
+            "Combat": 2312,
+            "Search": 2258,
+            "Subterfuge": 2038,
+            "Crafting": 1963,
+            "Travel": 1714,
+            "Magic": 2153,
+            "Fortitude": 1909,
+            "Ascension": 974
+          }
+        },
+        {
+          "run": 2300,
+          "maxEnergy": 705.1190000000004,
+          "highestZone": 25,
+          "prestiges": 28,
+          "skills": {
+            "Charisma": 2489,
+            "Study": 2625,
+            "Combat": 2675,
+            "Search": 2422,
+            "Subterfuge": 2339,
+            "Crafting": 2135,
+            "Travel": 2186,
+            "Magic": 2607,
+            "Fortitude": 2097,
+            "Ascension": 1607
+          }
+        },
+        {
+          "run": 2325,
+          "maxEnergy": 978.4085000000005,
+          "highestZone": 26,
+          "prestiges": 28,
+          "skills": {
+            "Charisma": 2541,
+            "Study": 2846,
+            "Combat": 2740,
+            "Search": 2599,
+            "Subterfuge": 2552,
+            "Crafting": 2413,
+            "Travel": 2306,
+            "Magic": 2793,
+            "Fortitude": 2365,
+            "Ascension": 1642
+          }
+        },
+        {
+          "run": 2350,
+          "maxEnergy": 360,
+          "highestZone": 26,
+          "prestiges": 29,
+          "skills": {
+            "Charisma": 1000,
+            "Study": 1000,
+            "Combat": 1000,
+            "Search": 1000,
+            "Subterfuge": 1000,
+            "Crafting": 1000,
+            "Travel": 1000,
+            "Magic": 1000,
+            "Fortitude": 1000,
+            "Ascension": 500
+          }
+        },
+        {
+          "run": 2375,
+          "maxEnergy": 660.5710000000003,
+          "highestZone": 26,
+          "prestiges": 29,
+          "skills": {
+            "Charisma": 2513,
+            "Study": 2628,
+            "Combat": 2675,
+            "Search": 2456,
+            "Subterfuge": 2327,
+            "Crafting": 2124,
+            "Travel": 2193,
+            "Magic": 2600,
+            "Fortitude": 2084,
+            "Ascension": 1579
+          }
+        },
+        {
+          "run": 2400,
+          "maxEnergy": 943.0430000000005,
+          "highestZone": 26,
+          "prestiges": 29,
+          "skills": {
+            "Charisma": 2553,
+            "Study": 2844,
+            "Combat": 2744,
+            "Search": 2598,
+            "Subterfuge": 2554,
+            "Crafting": 2419,
+            "Travel": 2307,
+            "Magic": 2791,
+            "Fortitude": 2394,
+            "Ascension": 1636
+          }
+        },
+        {
+          "run": 2425,
+          "maxEnergy": 1236.3270000000005,
+          "highestZone": 27,
+          "prestiges": 29,
+          "skills": {
+            "Charisma": 2588,
+            "Study": 2929,
+            "Combat": 2815,
+            "Search": 2733,
+            "Subterfuge": 2738,
+            "Crafting": 2456,
+            "Travel": 2352,
+            "Magic": 2861,
+            "Fortitude": 2441,
+            "Ascension": 1660
+          }
+        },
+        {
+          "run": 2450,
+          "maxEnergy": 1533.4530000000002,
+          "highestZone": 27,
+          "prestiges": 29,
+          "skills": {
+            "Charisma": 2713,
+            "Study": 3038,
+            "Combat": 2861,
+            "Search": 2796,
+            "Subterfuge": 2801,
+            "Crafting": 2475,
+            "Travel": 2378,
+            "Magic": 2931,
+            "Fortitude": 2462,
+            "Ascension": 1675
+          }
+        },
+        {
+          "run": 2475,
+          "maxEnergy": 622.7775000000003,
+          "highestZone": 27,
+          "prestiges": 30,
+          "skills": {
+            "Charisma": 2542,
+            "Study": 2662,
+            "Combat": 2685,
+            "Search": 2489,
+            "Subterfuge": 2353,
+            "Crafting": 2132,
+            "Travel": 2229,
+            "Magic": 2612,
+            "Fortitude": 2109,
+            "Ascension": 1588
+          }
+        },
+        {
+          "run": 2500,
+          "maxEnergy": 921.8350000000008,
+          "highestZone": 27,
+          "prestiges": 30,
+          "skills": {
+            "Charisma": 2611,
+            "Study": 2943,
+            "Combat": 2848,
+            "Search": 2723,
+            "Subterfuge": 2739,
+            "Crafting": 2453,
+            "Travel": 2360,
+            "Magic": 2861,
+            "Fortitude": 2444,
+            "Ascension": 1667
+          }
+        },
+        {
+          "run": 2525,
+          "maxEnergy": 1228.6625000000013,
+          "highestZone": 27,
+          "prestiges": 30,
+          "skills": {
+            "Charisma": 2709,
+            "Study": 3055,
+            "Combat": 2892,
+            "Search": 2816,
+            "Subterfuge": 2824,
+            "Crafting": 2486,
+            "Travel": 2415,
+            "Magic": 2951,
+            "Fortitude": 2482,
+            "Ascension": 1697
+          }
+        },
+        {
+          "run": 2550,
+          "maxEnergy": 671.1334999999998,
+          "highestZone": 27,
+          "prestiges": 31,
+          "skills": {
+            "Charisma": 2495,
+            "Study": 2659,
+            "Combat": 2691,
+            "Search": 2435,
+            "Subterfuge": 2343,
+            "Crafting": 2141,
+            "Travel": 2271,
+            "Magic": 2592,
+            "Fortitude": 2153,
+            "Ascension": 1611
+          }
+        },
+        {
+          "run": 2575,
+          "maxEnergy": 989.2779999999997,
+          "highestZone": 27,
+          "prestiges": 31,
+          "skills": {
+            "Charisma": 2665,
+            "Study": 2947,
+            "Combat": 2858,
+            "Search": 2760,
+            "Subterfuge": 2766,
+            "Crafting": 2466,
+            "Travel": 2371,
+            "Magic": 2868,
+            "Fortitude": 2439,
+            "Ascension": 1669
+          }
+        },
+        {
+          "run": 2600,
+          "maxEnergy": 1313.6384999999987,
+          "highestZone": 27,
+          "prestiges": 31,
+          "skills": {
+            "Charisma": 2717,
+            "Study": 3078,
+            "Combat": 2919,
+            "Search": 2833,
+            "Subterfuge": 2839,
+            "Crafting": 2494,
+            "Travel": 2413,
+            "Magic": 2994,
+            "Fortitude": 2481,
+            "Ascension": 1711
+          }
+        },
+        {
+          "run": 2625,
+          "maxEnergy": 1665.1755,
+          "highestZone": 28,
+          "prestiges": 31,
+          "skills": {
+            "Charisma": 2969,
+            "Study": 3215,
+            "Combat": 2983,
+            "Search": 2860,
+            "Subterfuge": 2865,
+            "Crafting": 2612,
+            "Travel": 2603,
+            "Magic": 3045,
+            "Fortitude": 2510,
+            "Ascension": 1734
+          }
+        },
+        {
+          "run": 2650,
+          "maxEnergy": 591.4150000000001,
+          "highestZone": 28,
+          "prestiges": 32,
+          "skills": {
+            "Charisma": 2432,
+            "Study": 2596,
+            "Combat": 2707,
+            "Search": 2384,
+            "Subterfuge": 2311,
+            "Crafting": 2071,
+            "Travel": 2059,
+            "Magic": 2308,
+            "Fortitude": 2077,
+            "Ascension": 1543
+          }
+        },
+        {
+          "run": 2675,
+          "maxEnergy": 915.3269999999999,
+          "highestZone": 28,
+          "prestiges": 32,
+          "skills": {
+            "Charisma": 2722,
+            "Study": 3071,
+            "Combat": 2885,
+            "Search": 2804,
+            "Subterfuge": 2810,
+            "Crafting": 2474,
+            "Travel": 2395,
+            "Magic": 2980,
+            "Fortitude": 2448,
+            "Ascension": 1697
+          }
+        },
+        {
+          "run": 2700,
+          "maxEnergy": 1283.414000000001,
+          "highestZone": 28,
+          "prestiges": 32,
+          "skills": {
+            "Charisma": 3004,
+            "Study": 3240,
+            "Combat": 3128,
+            "Search": 2865,
+            "Subterfuge": 2871,
+            "Crafting": 2662,
+            "Travel": 2639,
+            "Magic": 3054,
+            "Fortitude": 2515,
+            "Ascension": 1736
+          }
+        },
+        {
+          "run": 2725,
+          "maxEnergy": 616.2679999999999,
+          "highestZone": 28,
+          "prestiges": 33,
+          "skills": {
+            "Charisma": 2465,
+            "Study": 2613,
+            "Combat": 2752,
+            "Search": 2404,
+            "Subterfuge": 2332,
+            "Crafting": 2122,
+            "Travel": 2259,
+            "Magic": 2305,
+            "Fortitude": 2176,
+            "Ascension": 1595
+          }
+        },
+        {
+          "run": 2750,
+          "maxEnergy": 966.5465,
+          "highestZone": 28,
+          "prestiges": 33,
+          "skills": {
+            "Charisma": 2958,
+            "Study": 3208,
+            "Combat": 2994,
+            "Search": 2845,
+            "Subterfuge": 2850,
+            "Crafting": 2602,
+            "Travel": 2571,
+            "Magic": 3035,
+            "Fortitude": 2488,
+            "Ascension": 1723
+          }
+        },
+        {
+          "run": 2775,
+          "maxEnergy": 1361.051,
+          "highestZone": 28,
+          "prestiges": 33,
+          "skills": {
+            "Charisma": 3026,
+            "Study": 3286,
+            "Combat": 3160,
+            "Search": 2903,
+            "Subterfuge": 2909,
+            "Crafting": 2718,
+            "Travel": 2693,
+            "Magic": 3083,
+            "Fortitude": 2547,
+            "Ascension": 1758
+          }
+        },
+        {
+          "run": 2800,
+          "maxEnergy": 779.9199999999998,
+          "highestZone": 28,
+          "prestiges": 34,
+          "skills": {
+            "Charisma": 2724,
+            "Study": 3006,
+            "Combat": 2871,
+            "Search": 2775,
+            "Subterfuge": 2784,
+            "Crafting": 2458,
+            "Travel": 2378,
+            "Magic": 2934,
+            "Fortitude": 2425,
+            "Ascension": 1678
+          }
+        },
+        {
+          "run": 2825,
+          "maxEnergy": 1170.4800000000002,
+          "highestZone": 28,
+          "prestiges": 34,
+          "skills": {
+            "Charisma": 3006,
+            "Study": 3258,
+            "Combat": 3147,
+            "Search": 2881,
+            "Subterfuge": 2888,
+            "Crafting": 2692,
+            "Travel": 2668,
+            "Magic": 3061,
+            "Fortitude": 2528,
+            "Ascension": 1741
+          }
+        },
+        {
+          "run": 2850,
+          "maxEnergy": 1585.4800000000002,
+          "highestZone": 29,
+          "prestiges": 34,
+          "skills": {
+            "Charisma": 3079,
+            "Study": 3440,
+            "Combat": 3257,
+            "Search": 2918,
+            "Subterfuge": 2925,
+            "Crafting": 2731,
+            "Travel": 2707,
+            "Magic": 3112,
+            "Fortitude": 2564,
+            "Ascension": 2287
+          }
+        },
+        {
+          "run": 2875,
+          "maxEnergy": 2020.1399999999994,
+          "highestZone": 29,
+          "prestiges": 34,
+          "skills": {
+            "Charisma": 3138,
+            "Study": 3498,
+            "Combat": 3259,
+            "Search": 2930,
+            "Subterfuge": 2938,
+            "Crafting": 2747,
+            "Travel": 2711,
+            "Magic": 3137,
+            "Fortitude": 2585,
+            "Ascension": 2362
+          }
+        },
+        {
+          "run": 2900,
+          "maxEnergy": 885.5869999999999,
+          "highestZone": 29,
+          "prestiges": 35,
+          "skills": {
+            "Charisma": 3005,
+            "Study": 3242,
+            "Combat": 3266,
+            "Search": 2856,
+            "Subterfuge": 2862,
+            "Crafting": 2656,
+            "Travel": 2628,
+            "Magic": 3040,
+            "Fortitude": 2503,
+            "Ascension": 1723
+          }
+        },
+        {
+          "run": 2925,
+          "maxEnergy": 1342.9994999999992,
+          "highestZone": 29,
+          "prestiges": 35,
+          "skills": {
+            "Charisma": 3130,
+            "Study": 3487,
+            "Combat": 3367,
+            "Search": 2973,
+            "Subterfuge": 2918,
+            "Crafting": 2731,
+            "Travel": 2675,
+            "Magic": 3128,
+            "Fortitude": 2570,
+            "Ascension": 2351
+          }
+        },
+        {
+          "run": 2950,
+          "maxEnergy": 713.315,
+          "highestZone": 29,
+          "prestiges": 36,
+          "skills": {
+            "Charisma": 2667,
+            "Study": 2875,
+            "Combat": 2877,
+            "Search": 2546,
+            "Subterfuge": 2364,
+            "Crafting": 2394,
+            "Travel": 2296,
+            "Magic": 2820,
+            "Fortitude": 2202,
+            "Ascension": 1588
+          }
+        },
+        {
+          "run": 2975,
+          "maxEnergy": 1176.8374999999996,
+          "highestZone": 29,
+          "prestiges": 36,
+          "skills": {
+            "Charisma": 3107,
+            "Study": 3463,
+            "Combat": 3369,
+            "Search": 2891,
+            "Subterfuge": 2900,
+            "Crafting": 2708,
+            "Travel": 2690,
+            "Magic": 3115,
+            "Fortitude": 2553,
+            "Ascension": 2324
+          }
+        },
+        {
+          "run": 3000,
+          "maxEnergy": 669.89,
+          "highestZone": 29,
+          "prestiges": 37,
+          "skills": {
+            "Charisma": 2245,
+            "Study": 2156,
+            "Combat": 2562,
+            "Search": 2222,
+            "Subterfuge": 1996,
+            "Crafting": 2000,
+            "Travel": 1769,
+            "Magic": 2194,
+            "Fortitude": 1994,
+            "Ascension": 1086
           }
         }
       ]
@@ -7362,7 +9179,7 @@
     "pinned100": {
       "options": {
         "zoneLimit": 30,
-        "maxRuns": 2000,
+        "maxRuns": 3000,
         "maxTicksPerRun": 200000,
         "endZone": 99,
         "skipBlocked": true,
@@ -7385,7 +9202,7 @@
           "auto_buy_cheapest": true,
           "resume_automation_on_reset": true,
           "force_automation": true,
-          "award_spark_on_discovery": true,
+          "award_spark_on_discovery": false,
           "auto_continue_energy_reset": true,
           "suppress_prestige_popup": true,
           "show_spark_stats": true,
@@ -7404,58 +9221,416 @@
         }
       },
       "stalled": false,
-      "completed": 269,
+      "completed": 203,
       "taskCount": 269,
-      "allCompleted": true,
-      "runsExecuted": 1151,
-      "lastCompletionRun": 1151,
-      "unreached": [],
+      "allCompleted": false,
+      "runsExecuted": 3000,
+      "lastCompletionRun": 2845,
+      "unreached": [
+        {
+          "id": 17,
+          "zone": 0,
+          "name": "Use Secret Fishing Spot"
+        },
+        {
+          "id": 28,
+          "zone": 1,
+          "name": "Training Dummy"
+        },
+        {
+          "id": 88,
+          "zone": 7,
+          "name": "Train at Every Guild"
+        },
+        {
+          "id": 158,
+          "zone": 14,
+          "name": "Write Down Some Learnings"
+        },
+        {
+          "id": 209,
+          "zone": 19,
+          "name": "Gaze Beyond the Veil"
+        },
+        {
+          "id": 224,
+          "zone": 21,
+          "name": "Cast the Ring into the Fire"
+        },
+        {
+          "id": 227,
+          "zone": 21,
+          "name": "Winged Demon"
+        },
+        {
+          "id": 228,
+          "zone": 21,
+          "name": "Purge Demonic Influence"
+        },
+        {
+          "id": 237,
+          "zone": 22,
+          "name": "Floating Ball of Eyes"
+        },
+        {
+          "id": 238,
+          "zone": 22,
+          "name": "Steal Glasses"
+        },
+        {
+          "id": 240,
+          "zone": 23,
+          "name": "Journey Into the Depths"
+        },
+        {
+          "id": 247,
+          "zone": 23,
+          "name": "Half-Kraken"
+        },
+        {
+          "id": 248,
+          "zone": 23,
+          "name": "Commune with Damned Souls"
+        },
+        {
+          "id": 250,
+          "zone": 24,
+          "name": "Attempt to Enter Hell"
+        },
+        {
+          "id": 251,
+          "zone": 24,
+          "name": "Dare the Gods to Intervene"
+        },
+        {
+          "id": 252,
+          "zone": 24,
+          "name": "Dig a Tunnel"
+        },
+        {
+          "id": 253,
+          "zone": 24,
+          "name": "Embrace Divinity"
+        },
+        {
+          "id": 254,
+          "zone": 24,
+          "name": "Etch Ritual Symbols"
+        },
+        {
+          "id": 255,
+          "zone": 24,
+          "name": "Defy the Gods"
+        },
+        {
+          "id": 256,
+          "zone": 24,
+          "name": "Study Divinity"
+        },
+        {
+          "id": 257,
+          "zone": 24,
+          "name": "Prepare to Face the Gods"
+        },
+        {
+          "id": 260,
+          "zone": 25,
+          "name": "Exit the Void"
+        },
+        {
+          "id": 261,
+          "zone": 25,
+          "name": "Avoid Alerting the Gods"
+        },
+        {
+          "id": 262,
+          "zone": 25,
+          "name": "Figure Out How to Leave"
+        },
+        {
+          "id": 263,
+          "zone": 25,
+          "name": "Create Light"
+        },
+        {
+          "id": 264,
+          "zone": 25,
+          "name": "Avoid Going Insane"
+        },
+        {
+          "id": 265,
+          "zone": 25,
+          "name": "Talk to Yourself"
+        },
+        {
+          "id": 266,
+          "zone": 25,
+          "name": "Search the Void"
+        },
+        {
+          "id": 267,
+          "zone": 25,
+          "name": "Foreboding Presence"
+        },
+        {
+          "id": 268,
+          "zone": 25,
+          "name": "Gather Void Essence"
+        },
+        {
+          "id": 270,
+          "zone": 26,
+          "name": "Go Spread Your Word"
+        },
+        {
+          "id": 271,
+          "zone": 26,
+          "name": "Lick Your Wounds"
+        },
+        {
+          "id": 272,
+          "zone": 26,
+          "name": "Plot Your Revenge"
+        },
+        {
+          "id": 273,
+          "zone": 26,
+          "name": "Build Void-inspired Contraption"
+        },
+        {
+          "id": 274,
+          "zone": 26,
+          "name": "Demonstrate New Powers"
+        },
+        {
+          "id": 275,
+          "zone": 26,
+          "name": "Whine About the Void"
+        },
+        {
+          "id": 276,
+          "zone": 26,
+          "name": "Ponder Your Exile"
+        },
+        {
+          "id": 277,
+          "zone": 26,
+          "name": "Herald of the Gods"
+        },
+        {
+          "id": 278,
+          "zone": 26,
+          "name": "Send Herald's Head to the Gods"
+        },
+        {
+          "id": 280,
+          "zone": 27,
+          "name": "Assemble Your Forces"
+        },
+        {
+          "id": 281,
+          "zone": 27,
+          "name": "Attract Followers"
+        },
+        {
+          "id": 282,
+          "zone": 27,
+          "name": "Train Your Fighters"
+        },
+        {
+          "id": 283,
+          "zone": 27,
+          "name": "Train Your Magicians"
+        },
+        {
+          "id": 284,
+          "zone": 27,
+          "name": "Record Rousing Speech"
+        },
+        {
+          "id": 285,
+          "zone": 27,
+          "name": "Appoint Second in Command"
+        },
+        {
+          "id": 286,
+          "zone": 27,
+          "name": "Ponder Next Moves"
+        },
+        {
+          "id": 287,
+          "zone": 27,
+          "name": "Gather Intel"
+        },
+        {
+          "id": 288,
+          "zone": 27,
+          "name": "Demigod"
+        },
+        {
+          "id": 289,
+          "zone": 27,
+          "name": "Gather Some Divine Spark"
+        },
+        {
+          "id": 290,
+          "zone": 28,
+          "name": "Bring Your Army to Heaven"
+        },
+        {
+          "id": 291,
+          "zone": 28,
+          "name": "Build Staircase to Heaven"
+        },
+        {
+          "id": 292,
+          "zone": 28,
+          "name": "Make Battle Plan"
+        },
+        {
+          "id": 293,
+          "zone": 28,
+          "name": "Cook for the Army"
+        },
+        {
+          "id": 294,
+          "zone": 28,
+          "name": "Protect Your Supply Lines"
+        },
+        {
+          "id": 295,
+          "zone": 28,
+          "name": "Inspire Your Troops"
+        },
+        {
+          "id": 296,
+          "zone": 28,
+          "name": "Gather More Troops"
+        },
+        {
+          "id": 297,
+          "zone": 28,
+          "name": "Avatar of the Gods"
+        },
+        {
+          "id": 298,
+          "zone": 28,
+          "name": "Avoid the Gods' Revenge"
+        },
+        {
+          "id": 300,
+          "zone": 29,
+          "name": "Take Your Place in Heaven"
+        },
+        {
+          "id": 301,
+          "zone": 29,
+          "name": "Rally Your Troops"
+        },
+        {
+          "id": 302,
+          "zone": 29,
+          "name": "Break Down the Gates"
+        },
+        {
+          "id": 303,
+          "zone": 29,
+          "name": "Ascend to Godhood"
+        },
+        {
+          "id": 304,
+          "zone": 29,
+          "name": "Conduct Ritual Sacrifice"
+        },
+        {
+          "id": 305,
+          "zone": 29,
+          "name": "Prepare Final Ritual"
+        },
+        {
+          "id": 306,
+          "zone": 29,
+          "name": "Taunt the Gods"
+        },
+        {
+          "id": 307,
+          "zone": 29,
+          "name": "Plan Eternity in Heaven"
+        }
+      ],
       "prestigeRuns": [
         345,
-        566,
-        813,
-        878,
-        933,
-        1106
+        550,
+        657,
+        742,
+        825,
+        902,
+        977,
+        1052,
+        1125,
+        1232,
+        1337,
+        1436,
+        1535,
+        1620,
+        1737,
+        1844,
+        1937,
+        2024,
+        2137,
+        2252,
+        2353,
+        2488,
+        2603,
+        2714,
+        2859,
+        2988
       ],
       "pacing": {
         "allGaps": {
-          "n": 269,
-          "mean": 4.28,
+          "n": 203,
+          "mean": 14.01,
           "p50": 2,
-          "p90": 10,
-          "max": 102
+          "p90": 14,
+          "max": 341
         },
         "gapHistogram": {
-          "0": 91,
-          "1": 19,
-          "2": 76,
-          "3": 2,
-          "4": 28,
-          "5": 1,
-          "6": 15,
-          "8": 7,
-          "10": 7,
-          "11": 1,
-          "12": 6,
-          "14": 5,
-          "15": 2,
+          "0": 55,
+          "1": 18,
+          "2": 53,
+          "3": 1,
+          "4": 22,
+          "6": 13,
+          "8": 3,
+          "9": 2,
+          "10": 10,
+          "12": 4,
+          "14": 4,
+          "15": 1,
           "16": 1,
-          "18": 1,
-          "24": 1,
-          "28": 1,
-          "37": 1,
-          "61": 1,
+          "22": 1,
+          "26": 1,
+          "34": 1,
+          "67": 1,
+          "71": 1,
           "73": 1,
-          "98": 1,
-          "102": 1
+          "101": 1,
+          "113": 1,
+          "117": 1,
+          "164": 1,
+          "174": 1,
+          "204": 1,
+          "225": 1,
+          "237": 1,
+          "305": 1,
+          "341": 1
         },
         "perkGaps": {
-          "n": 47,
-          "mean": 23.17,
-          "p50": 14,
-          "p90": 52,
-          "max": 145
+          "n": 34,
+          "mean": 83.12,
+          "p50": 24,
+          "p90": 309,
+          "max": 373
         },
         "perkGapValues": [
           0,
@@ -7478,59 +9653,46 @@
           20,
           26,
           30,
-          145,
-          18,
-          2,
-          28,
-          10,
-          30,
-          57,
-          2,
-          8,
-          30,
-          26,
+          163,
+          24,
+          4,
+          309,
+          369,
+          291,
           6,
-          52,
-          14,
-          38,
           2,
-          81,
-          2,
-          108,
-          26,
-          8,
-          12,
           14,
-          26,
-          6,
-          14,
-          2
+          200,
+          218,
+          180,
+          373,
+          351
         ],
         "unlockEventGaps": {
-          "n": 69,
-          "mean": 15.78,
-          "p50": 6,
-          "p90": 38,
-          "max": 123
+          "n": 49,
+          "mean": 57.67,
+          "p50": 11,
+          "p90": 291,
+          "max": 367
         },
-        "viaZoneSkipCount": 5
+        "viaZoneSkipCount": 0
       },
       "perZone": [
         {
           "zone": 0,
           "name": "The Village",
           "taskCount": 8,
-          "completed": 8,
+          "completed": 7,
           "firstRun": 1,
-          "lastRun": 748
+          "lastRun": 4
         },
         {
           "zone": 1,
           "name": "The Village Watch",
           "taskCount": 9,
-          "completed": 9,
+          "completed": 8,
           "firstRun": 4,
-          "lastRun": 748
+          "lastRun": 9
         },
         {
           "zone": 2,
@@ -7554,7 +9716,7 @@
           "taskCount": 9,
           "completed": 9,
           "firstRun": 20,
-          "lastRun": 345
+          "lastRun": 357
         },
         {
           "zone": 5,
@@ -7562,7 +9724,7 @@
           "taskCount": 10,
           "completed": 10,
           "firstRun": 32,
-          "lastRun": 360
+          "lastRun": 359
         },
         {
           "zone": 6,
@@ -7576,9 +9738,9 @@
           "zone": 7,
           "name": "The City",
           "taskCount": 10,
-          "completed": 10,
+          "completed": 9,
           "firstRun": 55,
-          "lastRun": 748
+          "lastRun": 267
         },
         {
           "zone": 8,
@@ -7610,7 +9772,7 @@
           "taskCount": 9,
           "completed": 9,
           "firstRun": 197,
-          "lastRun": 345
+          "lastRun": 460
         },
         {
           "zone": 12,
@@ -7618,7 +9780,7 @@
           "taskCount": 9,
           "completed": 9,
           "firstRun": 207,
-          "lastRun": 468
+          "lastRun": 486
         },
         {
           "zone": 13,
@@ -7626,135 +9788,135 @@
           "taskCount": 9,
           "completed": 9,
           "firstRun": 235,
-          "lastRun": 484
+          "lastRun": 512
         },
         {
           "zone": 14,
           "name": "The Ritual",
           "taskCount": 9,
-          "completed": 9,
+          "completed": 8,
           "firstRun": 305,
-          "lastRun": 748
+          "lastRun": 470
         },
         {
           "zone": 15,
           "name": "The Dream",
           "taskCount": 9,
           "completed": 9,
-          "firstRun": 464,
-          "lastRun": 556
+          "firstRun": 474,
+          "lastRun": 1483
         },
         {
           "zone": 16,
           "name": "The Metropolis",
           "taskCount": 9,
           "completed": 9,
-          "firstRun": 488,
-          "lastRun": 653
+          "firstRun": 510,
+          "lastRun": 1705
         },
         {
           "zone": 17,
           "name": "The Foothills",
           "taskCount": 9,
           "completed": 9,
-          "firstRun": 526,
-          "lastRun": 675
+          "firstRun": 1192,
+          "lastRun": 1840
         },
         {
           "zone": 18,
           "name": "The Dragon's Lair",
           "taskCount": 9,
           "completed": 9,
-          "firstRun": 601,
-          "lastRun": 685
+          "firstRun": 1473,
+          "lastRun": 2103
         },
         {
           "zone": 19,
           "name": "The Place of Power",
           "taskCount": 10,
-          "completed": 10,
-          "firstRun": 619,
-          "lastRun": 789
+          "completed": 9,
+          "firstRun": 1497,
+          "lastRun": 1697
         },
         {
           "zone": 20,
           "name": "The Sky",
           "taskCount": 9,
           "completed": 9,
-          "firstRun": 657,
-          "lastRun": 741
+          "firstRun": 1711,
+          "lastRun": 2470
         },
         {
           "zone": 21,
           "name": "The Volcano",
           "taskCount": 9,
-          "completed": 9,
-          "firstRun": 683,
-          "lastRun": 872
+          "completed": 6,
+          "firstRun": 2105,
+          "lastRun": 2448
         },
         {
           "zone": 22,
           "name": "The Underworld",
           "taskCount": 9,
-          "completed": 9,
-          "firstRun": 729,
-          "lastRun": 984
+          "completed": 7,
+          "firstRun": 2472,
+          "lastRun": 2819
         },
         {
           "zone": 23,
           "name": "The Depths of the Sea",
           "taskCount": 9,
-          "completed": 9,
-          "firstRun": 749,
-          "lastRun": 1016
+          "completed": 6,
+          "firstRun": 2823,
+          "lastRun": 2845
         },
         {
           "zone": 24,
           "name": "The Deepest Deep",
           "taskCount": 8,
-          "completed": 8,
-          "firstRun": 773,
-          "lastRun": 976
+          "completed": 0,
+          "firstRun": null,
+          "lastRun": null
         },
         {
           "zone": 25,
           "name": "The Void",
           "taskCount": 9,
-          "completed": 9,
-          "firstRun": 978,
-          "lastRun": 1042
+          "completed": 0,
+          "firstRun": null,
+          "lastRun": null
         },
         {
           "zone": 26,
           "name": "The Return",
           "taskCount": 9,
-          "completed": 9,
-          "firstRun": 986,
-          "lastRun": 1074
+          "completed": 0,
+          "firstRun": null,
+          "lastRun": null
         },
         {
           "zone": 27,
           "name": "The Cult",
           "taskCount": 10,
-          "completed": 10,
-          "firstRun": 1002,
-          "lastRun": 1088
+          "completed": 0,
+          "firstRun": null,
+          "lastRun": null
         },
         {
           "zone": 28,
           "name": "The War Preparations",
           "taskCount": 9,
-          "completed": 9,
-          "firstRun": 1030,
-          "lastRun": 1090
+          "completed": 0,
+          "firstRun": null,
+          "lastRun": null
         },
         {
           "zone": 29,
           "name": "The Gates of Heaven",
           "taskCount": 8,
-          "completed": 8,
-          "firstRun": 1066,
-          "lastRun": 1151
+          "completed": 0,
+          "firstRun": null,
+          "lastRun": null
         }
       ],
       "perkTimeline": [
@@ -7882,307 +10044,229 @@
           "perk": "The Worm",
           "task": "Learn to Dance the Worm",
           "zone": 12,
-          "run": 468
-        },
-        {
-          "perk": "Tower of Babel",
-          "task": "Build Giant Tower",
-          "zone": 15,
           "run": 486
         },
         {
           "perk": "Awakening",
           "task": "Wake Up",
           "zone": 15,
-          "run": 488
+          "run": 510
+        },
+        {
+          "perk": "Tower of Babel",
+          "task": "Build Giant Tower",
+          "zone": 15,
+          "run": 514
         },
         {
           "perk": "Major Time Compression",
           "task": "Improve Your Time Compression",
           "zone": 16,
-          "run": 516
+          "run": 823
         },
         {
           "perk": "Awakening",
           "task": "Search for the Dragon's Hoard",
           "zone": 16,
-          "run": 526
+          "run": 1192
         },
         {
           "perk": "Dream Prism",
           "task": "Contain the Dream",
           "zone": 15,
-          "run": 556
+          "run": 1483
         },
         {
           "perk": "Dragon Killing Plan",
           "task": "Plan How to Kill the Dragon",
           "zone": 18,
-          "run": 613
+          "run": 1489
         },
         {
           "perk": "Hide in Plain Sight",
           "task": "Hide from the Dragon",
           "zone": 17,
-          "run": 615
+          "run": 1491
         },
         {
           "perk": "Unified Theory of Magic",
           "task": "Invent a New Spell",
           "zone": 19,
-          "run": 623
+          "run": 1505
         },
         {
           "perk": "Headmaster",
           "task": "Become Honorary Headmaster",
           "zone": 16,
-          "run": 653
+          "run": 1705
         },
         {
           "perk": "Overcame Fear of Skydiving",
           "task": "Go Skydiving",
           "zone": 20,
-          "run": 679
+          "run": 1923
         },
         {
           "perk": "Dragon Slayer",
           "task": "Hunt Down the Dragon's Spawn",
           "zone": 18,
-          "run": 685
+          "run": 2103
         },
         {
           "perk": "Studied Underground Forge",
           "task": "Study Underground Forge",
           "zone": 22,
-          "run": 737
+          "run": 2476
         },
         {
           "perk": "Understanding Leviathan",
           "task": "Inspect Leviathan",
           "zone": 23,
-          "run": 751
-        },
-        {
-          "perk": "Gazed Beyond the Veil",
-          "task": "Gaze Beyond the Veil",
-          "zone": 19,
-          "run": 789
-        },
-        {
-          "perk": "Purged Demonic Influences",
-          "task": "Purge Demonic Influence",
-          "zone": 21,
-          "run": 791
-        },
-        {
-          "perk": "Destroyed the Ring",
-          "task": "Cast the Ring into the Fire",
-          "zone": 21,
-          "run": 872
-        },
-        {
-          "perk": "Defied the Gods",
-          "task": "Defy the Gods",
-          "zone": 24,
-          "run": 874
-        },
-        {
-          "perk": "Survived the Void",
-          "task": "Avoid Going Insane",
-          "zone": 25,
-          "run": 982
-        },
-        {
-          "perk": "Divine Power",
-          "task": "Demonstrate New Powers",
-          "zone": 26,
-          "run": 1008
-        },
-        {
-          "perk": "Communed with Damned Souls",
-          "task": "Commune with Damned Souls",
-          "zone": 23,
-          "run": 1016
-        },
-        {
-          "perk": "Second in Command",
-          "task": "Appoint Second in Command",
-          "zone": 27,
-          "run": 1028
-        },
-        {
-          "perk": "Supply Lines",
-          "task": "Protect Your Supply Lines",
-          "zone": 28,
-          "run": 1042
-        },
-        {
-          "perk": "Ascended",
-          "task": "Ascend to Godhood",
-          "zone": 29,
-          "run": 1068
-        },
-        {
-          "perk": "Returned Herald's Head",
-          "task": "Send Herald's Head to the Gods",
-          "zone": 26,
-          "run": 1074
-        },
-        {
-          "perk": "Prepared Final Ritual",
-          "task": "Prepare Final Ritual",
-          "zone": 29,
-          "run": 1088
-        },
-        {
-          "perk": "Avoided Godly Revenge",
-          "task": "Avoid the Gods' Revenge",
-          "zone": 28,
-          "run": 1090
+          "run": 2827
         }
       ],
       "calibration": {
-        "sampleCount": 3329,
-        "uncompletedSamples": 0,
+        "sampleCount": 8134,
+        "uncompletedSamples": 1221,
         "buckets": [
           {
             "estimate": "0",
             "actualResets": {
-              "n": 617,
-              "mean": 55.48,
-              "p50": 25,
-              "p90": 185,
-              "max": 340
+              "n": 857,
+              "mean": 135.63,
+              "p50": 48,
+              "p90": 377,
+              "max": 953
             },
             "actualOverEstimate": null
           },
           {
             "estimate": "1",
             "actualResets": {
-              "n": 47,
-              "mean": 28.21,
-              "p50": 16,
-              "p90": 66,
-              "max": 149
+              "n": 64,
+              "mean": 60.69,
+              "p50": 22,
+              "p90": 159,
+              "max": 538
             },
             "actualOverEstimate": {
-              "n": 47,
-              "mean": 28.21,
-              "p50": 16,
-              "p90": 66,
-              "max": 149
+              "n": 64,
+              "mean": 60.69,
+              "p50": 22,
+              "p90": 159,
+              "max": 538
             }
           },
           {
             "estimate": "2",
             "actualResets": {
-              "n": 44,
-              "mean": 31.43,
-              "p50": 19,
-              "p90": 74,
-              "max": 183
+              "n": 46,
+              "mean": 81.24,
+              "p50": 44,
+              "p90": 190,
+              "max": 662
             },
             "actualOverEstimate": {
-              "n": 44,
-              "mean": 15.72,
-              "p50": 9.5,
-              "p90": 37,
-              "max": 91.5
+              "n": 46,
+              "mean": 40.62,
+              "p50": 22,
+              "p90": 95,
+              "max": 331
             }
           },
           {
             "estimate": "3-5",
             "actualResets": {
-              "n": 57,
-              "mean": 26.61,
-              "p50": 16,
-              "p90": 70,
-              "max": 134
+              "n": 89,
+              "mean": 105.92,
+              "p50": 45,
+              "p90": 316,
+              "max": 858
             },
             "actualOverEstimate": {
-              "n": 57,
-              "mean": 6.88,
-              "p50": 4.4,
-              "p90": 17.25,
-              "max": 26.8
+              "n": 89,
+              "mean": 27.25,
+              "p50": 11.6,
+              "p90": 76,
+              "max": 192.33
             }
           },
           {
             "estimate": "6-10",
             "actualResets": {
-              "n": 57,
-              "mean": 32.98,
-              "p50": 28,
-              "p90": 74,
-              "max": 118
+              "n": 107,
+              "mean": 146.32,
+              "p50": 74,
+              "p90": 417,
+              "max": 773
             },
             "actualOverEstimate": {
-              "n": 57,
-              "mean": 4.38,
-              "p50": 3.67,
-              "p90": 9.25,
-              "max": 16.86
+              "n": 107,
+              "mean": 18.9,
+              "p50": 9.25,
+              "p90": 50.78,
+              "max": 96.63
             }
           },
           {
             "estimate": "11-20",
             "actualResets": {
-              "n": 87,
-              "mean": 40.05,
-              "p50": 30,
-              "p90": 89,
-              "max": 193
+              "n": 167,
+              "mean": 167.44,
+              "p50": 91,
+              "p90": 413,
+              "max": 868
             },
             "actualOverEstimate": {
-              "n": 87,
-              "mean": 2.66,
-              "p50": 1.72,
-              "p90": 6.4,
-              "max": 16.08
+              "n": 167,
+              "mean": 11.13,
+              "p50": 5.35,
+              "p90": 28.78,
+              "max": 43.4
             }
           },
           {
             "estimate": "21-50",
             "actualResets": {
-              "n": 104,
-              "mean": 51.39,
-              "p50": 32,
-              "p90": 137,
-              "max": 207
+              "n": 246,
+              "mean": 171.46,
+              "p50": 133,
+              "p90": 400,
+              "max": 888
             },
             "actualOverEstimate": {
-              "n": 104,
-              "mean": 1.58,
-              "p50": 1.08,
-              "p90": 4.07,
-              "max": 9.23
+              "n": 246,
+              "mean": 5.38,
+              "p50": 3.92,
+              "p90": 11.81,
+              "max": 27
             }
           },
           {
             "estimate": "51-200",
             "actualResets": {
-              "n": 208,
-              "mean": 46.27,
-              "p50": 33,
-              "p90": 120,
-              "max": 227
+              "n": 425,
+              "mean": 221.63,
+              "p50": 168,
+              "p90": 514,
+              "max": 898
             },
             "actualOverEstimate": {
-              "n": 208,
-              "mean": 0.47,
-              "p50": 0.32,
-              "p90": 1.07,
-              "max": 3.24
+              "n": 425,
+              "mean": 2.13,
+              "p50": 1.64,
+              "p90": 4.9,
+              "max": 15.75
             }
           },
           {
             "estimate": ">cap(200)",
             "actualResets": {
-              "n": 2108,
-              "mean": 82.54,
-              "p50": 66,
-              "p90": 182,
-              "max": 296
+              "n": 4912,
+              "mean": 308.46,
+              "p50": 227,
+              "p90": 705,
+              "max": 1325
             },
             "actualOverEstimate": null
           }
@@ -8541,12 +10625,12 @@
           "highestZone": 14,
           "prestiges": 1,
           "skills": {
-            "Charisma": 217,
-            "Study": 201,
+            "Charisma": 224,
+            "Study": 200,
             "Combat": 159,
             "Search": 248,
             "Subterfuge": 172,
-            "Crafting": 97,
+            "Crafting": 0,
             "Travel": 236,
             "Magic": 0,
             "Fortitude": 0,
@@ -8559,15 +10643,15 @@
           "highestZone": 14,
           "prestiges": 1,
           "skills": {
-            "Charisma": 568,
-            "Study": 515,
-            "Combat": 448,
-            "Search": 540,
-            "Subterfuge": 548,
-            "Crafting": 443,
-            "Travel": 505,
-            "Magic": 469,
-            "Fortitude": 454,
+            "Charisma": 570,
+            "Study": 538,
+            "Combat": 430,
+            "Search": 572,
+            "Subterfuge": 545,
+            "Crafting": 437,
+            "Travel": 501,
+            "Magic": 465,
+            "Fortitude": 474,
             "Ascension": 0
           }
         },
@@ -8577,15 +10661,15 @@
           "highestZone": 14,
           "prestiges": 1,
           "skills": {
-            "Charisma": 699,
-            "Study": 686,
-            "Combat": 524,
-            "Search": 683,
-            "Subterfuge": 620,
-            "Crafting": 605,
-            "Travel": 663,
-            "Magic": 653,
-            "Fortitude": 611,
+            "Charisma": 688,
+            "Study": 679,
+            "Combat": 506,
+            "Search": 684,
+            "Subterfuge": 602,
+            "Crafting": 584,
+            "Travel": 656,
+            "Magic": 625,
+            "Fortitude": 606,
             "Ascension": 0
           }
         },
@@ -8595,15 +10679,15 @@
           "highestZone": 14,
           "prestiges": 1,
           "skills": {
-            "Charisma": 850,
-            "Study": 750,
-            "Combat": 762,
-            "Search": 961,
-            "Subterfuge": 775,
-            "Crafting": 839,
-            "Travel": 908,
-            "Magic": 838,
-            "Fortitude": 866,
+            "Charisma": 836,
+            "Study": 748,
+            "Combat": 725,
+            "Search": 947,
+            "Subterfuge": 765,
+            "Crafting": 830,
+            "Travel": 894,
+            "Magic": 823,
+            "Fortitude": 849,
             "Ascension": 0
           }
         },
@@ -8613,15 +10697,15 @@
           "highestZone": 14,
           "prestiges": 1,
           "skills": {
-            "Charisma": 1096,
-            "Study": 1007,
-            "Combat": 960,
-            "Search": 1075,
-            "Subterfuge": 862,
-            "Crafting": 882,
-            "Travel": 974,
-            "Magic": 1047,
-            "Fortitude": 915,
+            "Charisma": 1082,
+            "Study": 992,
+            "Combat": 941,
+            "Search": 1059,
+            "Subterfuge": 848,
+            "Crafting": 873,
+            "Travel": 966,
+            "Magic": 1006,
+            "Fortitude": 913,
             "Ascension": 0
           }
         },
@@ -8631,34 +10715,34 @@
           "highestZone": 15,
           "prestiges": 1,
           "skills": {
-            "Charisma": 1292,
-            "Study": 1296,
-            "Combat": 1192,
-            "Search": 1209,
-            "Subterfuge": 942,
-            "Crafting": 920,
-            "Travel": 1223,
-            "Magic": 1291,
-            "Fortitude": 1218,
-            "Ascension": 389
+            "Charisma": 1157,
+            "Study": 1226,
+            "Combat": 1078,
+            "Search": 1162,
+            "Subterfuge": 924,
+            "Crafting": 909,
+            "Travel": 1137,
+            "Magic": 1212,
+            "Fortitude": 1181,
+            "Ascension": 363
           }
         },
         {
           "run": 500,
           "maxEnergy": 100,
-          "highestZone": 16,
+          "highestZone": 15,
           "prestiges": 1,
           "skills": {
-            "Charisma": 1472,
-            "Study": 1426,
-            "Combat": 1352,
-            "Search": 1298,
-            "Subterfuge": 1376,
-            "Crafting": 1406,
-            "Travel": 1298,
-            "Magic": 1459,
-            "Fortitude": 1292,
-            "Ascension": 462
+            "Charisma": 1299,
+            "Study": 1314,
+            "Combat": 1198,
+            "Search": 1256,
+            "Subterfuge": 960,
+            "Crafting": 932,
+            "Travel": 1255,
+            "Magic": 1349,
+            "Fortitude": 1249,
+            "Ascension": 411
           }
         },
         {
@@ -8667,484 +10751,1798 @@
           "highestZone": 16,
           "prestiges": 1,
           "skills": {
-            "Charisma": 1573,
-            "Study": 1570,
-            "Combat": 1466,
-            "Search": 1360,
-            "Subterfuge": 1490,
-            "Crafting": 1541,
-            "Travel": 1358,
-            "Magic": 1555,
-            "Fortitude": 1338,
-            "Ascension": 504
+            "Charisma": 1462,
+            "Study": 1387,
+            "Combat": 1295,
+            "Search": 1290,
+            "Subterfuge": 1306,
+            "Crafting": 1367,
+            "Travel": 1290,
+            "Magic": 1450,
+            "Fortitude": 1286,
+            "Ascension": 447
           }
         },
         {
           "run": 550,
           "maxEnergy": 100,
-          "highestZone": 17,
+          "highestZone": 16,
           "prestiges": 1,
           "skills": {
-            "Charisma": 1652,
-            "Study": 1632,
-            "Combat": 1505,
-            "Search": 1438,
-            "Subterfuge": 1527,
-            "Crafting": 1594,
-            "Travel": 1430,
-            "Magic": 1634,
-            "Fortitude": 1382,
-            "Ascension": 531
+            "Charisma": 1516,
+            "Study": 1398,
+            "Combat": 1333,
+            "Search": 1311,
+            "Subterfuge": 1342,
+            "Crafting": 1367,
+            "Travel": 1310,
+            "Magic": 1496,
+            "Fortitude": 1305,
+            "Ascension": 473
           }
         },
         {
           "run": 575,
           "maxEnergy": 100,
-          "highestZone": 17,
+          "highestZone": 16,
           "prestiges": 2,
           "skills": {
-            "Charisma": 532,
-            "Study": 513,
-            "Combat": 597,
-            "Search": 497,
-            "Subterfuge": 508,
-            "Crafting": 457,
-            "Travel": 503,
-            "Magic": 537,
-            "Fortitude": 413,
+            "Charisma": 703,
+            "Study": 683,
+            "Combat": 503,
+            "Search": 669,
+            "Subterfuge": 620,
+            "Crafting": 595,
+            "Travel": 661,
+            "Magic": 636,
+            "Fortitude": 622,
             "Ascension": 0
           }
         },
         {
           "run": 600,
           "maxEnergy": 100,
-          "highestZone": 17,
+          "highestZone": 16,
           "prestiges": 2,
           "skills": {
-            "Charisma": 1597,
-            "Study": 1596,
-            "Combat": 1463,
-            "Search": 1422,
-            "Subterfuge": 1473,
-            "Crafting": 1546,
-            "Travel": 1382,
-            "Magic": 1587,
-            "Fortitude": 1328,
-            "Ascension": 478
+            "Charisma": 1211,
+            "Study": 1221,
+            "Combat": 1213,
+            "Search": 1103,
+            "Subterfuge": 901,
+            "Crafting": 882,
+            "Travel": 963,
+            "Magic": 1119,
+            "Fortitude": 907,
+            "Ascension": 300
           }
         },
         {
           "run": 625,
           "maxEnergy": 100,
-          "highestZone": 19,
+          "highestZone": 16,
           "prestiges": 2,
           "skills": {
-            "Charisma": 1669,
-            "Study": 1808,
-            "Combat": 1668,
-            "Search": 1633,
-            "Subterfuge": 1800,
-            "Crafting": 1689,
-            "Travel": 1555,
-            "Magic": 1923,
-            "Fortitude": 1476,
-            "Ascension": 834
+            "Charisma": 1358,
+            "Study": 1413,
+            "Combat": 1365,
+            "Search": 1275,
+            "Subterfuge": 1376,
+            "Crafting": 1402,
+            "Travel": 1275,
+            "Magic": 1415,
+            "Fortitude": 1274,
+            "Ascension": 446
           }
         },
         {
           "run": 650,
           "maxEnergy": 100,
-          "highestZone": 19,
+          "highestZone": 16,
           "prestiges": 2,
           "skills": {
-            "Charisma": 1700,
-            "Study": 1907,
-            "Combat": 1743,
-            "Search": 1695,
-            "Subterfuge": 1898,
-            "Crafting": 1767,
-            "Travel": 1646,
-            "Magic": 1989,
-            "Fortitude": 1565,
-            "Ascension": 922
+            "Charisma": 1531,
+            "Study": 1426,
+            "Combat": 1440,
+            "Search": 1330,
+            "Subterfuge": 1432,
+            "Crafting": 1402,
+            "Travel": 1329,
+            "Magic": 1515,
+            "Fortitude": 1317,
+            "Ascension": 490
           }
         },
         {
           "run": 675,
           "maxEnergy": 100,
-          "highestZone": 20,
-          "prestiges": 2,
+          "highestZone": 16,
+          "prestiges": 3,
           "skills": {
-            "Charisma": 2151,
-            "Study": 2107,
-            "Combat": 1887,
-            "Search": 2062,
-            "Subterfuge": 1952,
-            "Crafting": 1817,
-            "Travel": 1716,
-            "Magic": 2086,
-            "Fortitude": 1624,
-            "Ascension": 966
+            "Charisma": 643,
+            "Study": 649,
+            "Combat": 654,
+            "Search": 654,
+            "Subterfuge": 590,
+            "Crafting": 555,
+            "Travel": 610,
+            "Magic": 583,
+            "Fortitude": 572,
+            "Ascension": 0
           }
         },
         {
           "run": 700,
           "maxEnergy": 100,
-          "highestZone": 21,
-          "prestiges": 2,
+          "highestZone": 16,
+          "prestiges": 3,
           "skills": {
-            "Charisma": 2204,
-            "Study": 2171,
-            "Combat": 2159,
-            "Search": 2197,
-            "Subterfuge": 1971,
-            "Crafting": 1922,
-            "Travel": 1760,
-            "Magic": 2141,
-            "Fortitude": 1979,
-            "Ascension": 1006
+            "Charisma": 1293,
+            "Study": 1264,
+            "Combat": 1327,
+            "Search": 1191,
+            "Subterfuge": 1035,
+            "Crafting": 899,
+            "Travel": 1207,
+            "Magic": 1301,
+            "Fortitude": 1203,
+            "Ascension": 363
           }
         },
         {
           "run": 725,
           "maxEnergy": 100,
-          "highestZone": 22,
-          "prestiges": 2,
+          "highestZone": 16,
+          "prestiges": 3,
           "skills": {
-            "Charisma": 2225,
-            "Study": 2188,
-            "Combat": 2201,
-            "Search": 2237,
-            "Subterfuge": 2058,
-            "Crafting": 2015,
-            "Travel": 1785,
-            "Magic": 2176,
-            "Fortitude": 2023,
-            "Ascension": 1029
+            "Charisma": 1407,
+            "Study": 1425,
+            "Combat": 1424,
+            "Search": 1309,
+            "Subterfuge": 1405,
+            "Crafting": 1410,
+            "Travel": 1318,
+            "Magic": 1466,
+            "Fortitude": 1305,
+            "Ascension": 474
           }
         },
         {
           "run": 750,
           "maxEnergy": 100,
-          "highestZone": 23,
-          "prestiges": 2,
+          "highestZone": 16,
+          "prestiges": 4,
           "skills": {
-            "Charisma": 2325,
-            "Study": 2316,
-            "Combat": 2313,
-            "Search": 2314,
-            "Subterfuge": 2126,
-            "Crafting": 2031,
-            "Travel": 1897,
-            "Magic": 2259,
-            "Fortitude": 2044,
-            "Ascension": 1047
+            "Charisma": 454,
+            "Study": 465,
+            "Combat": 440,
+            "Search": 427,
+            "Subterfuge": 405,
+            "Crafting": 420,
+            "Travel": 436,
+            "Magic": 383,
+            "Fortitude": 345,
+            "Ascension": 0
           }
         },
         {
           "run": 775,
           "maxEnergy": 100,
-          "highestZone": 24,
-          "prestiges": 2,
+          "highestZone": 16,
+          "prestiges": 4,
           "skills": {
-            "Charisma": 2398,
-            "Study": 2383,
-            "Combat": 2423,
-            "Search": 2384,
-            "Subterfuge": 2271,
-            "Crafting": 2051,
-            "Travel": 2049,
-            "Magic": 2422,
-            "Fortitude": 2069,
-            "Ascension": 1062
+            "Charisma": 1226,
+            "Study": 1235,
+            "Combat": 1323,
+            "Search": 1117,
+            "Subterfuge": 1008,
+            "Crafting": 876,
+            "Travel": 1015,
+            "Magic": 1166,
+            "Fortitude": 1129,
+            "Ascension": 314
           }
         },
         {
           "run": 800,
           "maxEnergy": 100,
-          "highestZone": 24,
-          "prestiges": 2,
+          "highestZone": 16,
+          "prestiges": 4,
           "skills": {
-            "Charisma": 2439,
-            "Study": 2644,
-            "Combat": 2707,
-            "Search": 2416,
-            "Subterfuge": 2328,
-            "Crafting": 2080,
-            "Travel": 2096,
-            "Magic": 2581,
-            "Fortitude": 2103,
-            "Ascension": 1439
+            "Charisma": 1408,
+            "Study": 1431,
+            "Combat": 1437,
+            "Search": 1303,
+            "Subterfuge": 1391,
+            "Crafting": 1417,
+            "Travel": 1318,
+            "Magic": 1452,
+            "Fortitude": 1301,
+            "Ascension": 475
           }
         },
         {
           "run": 825,
           "maxEnergy": 100,
-          "highestZone": 24,
-          "prestiges": 3,
+          "highestZone": 16,
+          "prestiges": 4,
           "skills": {
-            "Charisma": 2146,
-            "Study": 2084,
-            "Combat": 2262,
-            "Search": 2138,
-            "Subterfuge": 1885,
-            "Crafting": 1754,
-            "Travel": 1688,
-            "Magic": 2076,
-            "Fortitude": 1863,
-            "Ascension": 922
+            "Charisma": 1518,
+            "Study": 1536,
+            "Combat": 1484,
+            "Search": 1362,
+            "Subterfuge": 1472,
+            "Crafting": 1522,
+            "Travel": 1366,
+            "Magic": 1527,
+            "Fortitude": 1342,
+            "Ascension": 511
           }
         },
         {
           "run": 850,
           "maxEnergy": 100,
-          "highestZone": 24,
-          "prestiges": 3,
+          "highestZone": 16,
+          "prestiges": 5,
           "skills": {
-            "Charisma": 2401,
-            "Study": 2564,
-            "Combat": 2615,
-            "Search": 2379,
-            "Subterfuge": 2243,
-            "Crafting": 2020,
-            "Travel": 2061,
-            "Magic": 2532,
-            "Fortitude": 2055,
-            "Ascension": 1477
+            "Charisma": 1231,
+            "Study": 1225,
+            "Combat": 1230,
+            "Search": 1103,
+            "Subterfuge": 894,
+            "Crafting": 860,
+            "Travel": 996,
+            "Magic": 1142,
+            "Fortitude": 884,
+            "Ascension": 0
           }
         },
         {
           "run": 875,
           "maxEnergy": 100,
-          "highestZone": 24,
-          "prestiges": 3,
+          "highestZone": 16,
+          "prestiges": 5,
           "skills": {
-            "Charisma": 2470,
-            "Study": 2666,
-            "Combat": 2715,
-            "Search": 2422,
-            "Subterfuge": 2293,
-            "Crafting": 2119,
-            "Travel": 2105,
-            "Magic": 2605,
-            "Fortitude": 2111,
-            "Ascension": 1477
+            "Charisma": 1407,
+            "Study": 1434,
+            "Combat": 1434,
+            "Search": 1297,
+            "Subterfuge": 1394,
+            "Crafting": 1420,
+            "Travel": 1318,
+            "Magic": 1446,
+            "Fortitude": 1303,
+            "Ascension": 473
           }
         },
         {
           "run": 900,
           "maxEnergy": 100,
-          "highestZone": 24,
-          "prestiges": 4,
+          "highestZone": 16,
+          "prestiges": 5,
           "skills": {
-            "Charisma": 2387,
-            "Study": 2532,
-            "Combat": 2498,
-            "Search": 2367,
-            "Subterfuge": 2245,
-            "Crafting": 2080,
-            "Travel": 2032,
-            "Magic": 2464,
-            "Fortitude": 2040,
-            "Ascension": 1020
+            "Charisma": 1495,
+            "Study": 1539,
+            "Combat": 1486,
+            "Search": 1361,
+            "Subterfuge": 1480,
+            "Crafting": 1525,
+            "Travel": 1368,
+            "Magic": 1522,
+            "Fortitude": 1344,
+            "Ascension": 512
           }
         },
         {
           "run": 925,
           "maxEnergy": 100,
-          "highestZone": 24,
-          "prestiges": 4,
+          "highestZone": 16,
+          "prestiges": 6,
           "skills": {
-            "Charisma": 2461,
-            "Study": 2667,
-            "Combat": 2685,
-            "Search": 2417,
-            "Subterfuge": 2284,
-            "Crafting": 2158,
-            "Travel": 2100,
-            "Magic": 2604,
-            "Fortitude": 2107,
-            "Ascension": 1535
+            "Charisma": 1227,
+            "Study": 1227,
+            "Combat": 1223,
+            "Search": 1068,
+            "Subterfuge": 869,
+            "Crafting": 827,
+            "Travel": 883,
+            "Magic": 1010,
+            "Fortitude": 847,
+            "Ascension": 0
           }
         },
         {
           "run": 950,
           "maxEnergy": 100,
-          "highestZone": 24,
-          "prestiges": 5,
+          "highestZone": 16,
+          "prestiges": 6,
           "skills": {
-            "Charisma": 2369,
-            "Study": 2325,
-            "Combat": 2486,
-            "Search": 2341,
-            "Subterfuge": 2161,
-            "Crafting": 2048,
-            "Travel": 1997,
-            "Magic": 2236,
-            "Fortitude": 2014,
-            "Ascension": 1008
+            "Charisma": 1402,
+            "Study": 1434,
+            "Combat": 1437,
+            "Search": 1304,
+            "Subterfuge": 1397,
+            "Crafting": 1423,
+            "Travel": 1314,
+            "Magic": 1458,
+            "Fortitude": 1296,
+            "Ascension": 471
           }
         },
         {
           "run": 975,
           "maxEnergy": 100,
-          "highestZone": 24,
-          "prestiges": 5,
+          "highestZone": 16,
+          "prestiges": 6,
           "skills": {
-            "Charisma": 2483,
-            "Study": 2661,
-            "Combat": 2751,
-            "Search": 2432,
-            "Subterfuge": 2334,
-            "Crafting": 2166,
-            "Travel": 2110,
-            "Magic": 2615,
-            "Fortitude": 2118,
-            "Ascension": 1598
+            "Charisma": 1524,
+            "Study": 1541,
+            "Combat": 1488,
+            "Search": 1362,
+            "Subterfuge": 1478,
+            "Crafting": 1528,
+            "Travel": 1368,
+            "Magic": 1532,
+            "Fortitude": 1343,
+            "Ascension": 512
           }
         },
         {
           "run": 1000,
           "maxEnergy": 100,
-          "highestZone": 26,
-          "prestiges": 5,
+          "highestZone": 16,
+          "prestiges": 7,
           "skills": {
-            "Charisma": 2581,
-            "Study": 2834,
-            "Combat": 2781,
-            "Search": 2626,
-            "Subterfuge": 2594,
-            "Crafting": 2437,
-            "Travel": 2337,
-            "Magic": 2783,
-            "Fortitude": 2351,
-            "Ascension": 1664
+            "Charisma": 1049,
+            "Study": 813,
+            "Combat": 1225,
+            "Search": 1071,
+            "Subterfuge": 868,
+            "Crafting": 847,
+            "Travel": 917,
+            "Magic": 1012,
+            "Fortitude": 850,
+            "Ascension": 0
           }
         },
         {
           "run": 1025,
           "maxEnergy": 100,
-          "highestZone": 27,
-          "prestiges": 5,
+          "highestZone": 16,
+          "prestiges": 7,
           "skills": {
-            "Charisma": 2685,
-            "Study": 3050,
-            "Combat": 2901,
-            "Search": 2831,
-            "Subterfuge": 2840,
-            "Crafting": 2506,
-            "Travel": 2427,
-            "Magic": 2972,
-            "Fortitude": 2493,
-            "Ascension": 1712
+            "Charisma": 1411,
+            "Study": 1439,
+            "Combat": 1439,
+            "Search": 1297,
+            "Subterfuge": 1400,
+            "Crafting": 1425,
+            "Travel": 1320,
+            "Magic": 1452,
+            "Fortitude": 1304,
+            "Ascension": 472
           }
         },
         {
           "run": 1050,
           "maxEnergy": 100,
-          "highestZone": 28,
-          "prestiges": 5,
+          "highestZone": 16,
+          "prestiges": 7,
           "skills": {
-            "Charisma": 3037,
-            "Study": 3275,
-            "Combat": 3161,
-            "Search": 2884,
-            "Subterfuge": 2891,
-            "Crafting": 2658,
-            "Travel": 2672,
-            "Magic": 3075,
-            "Fortitude": 2535,
-            "Ascension": 1759
+            "Charisma": 1567,
+            "Study": 1565,
+            "Combat": 1493,
+            "Search": 1365,
+            "Subterfuge": 1494,
+            "Crafting": 1546,
+            "Travel": 1372,
+            "Magic": 1553,
+            "Fortitude": 1348,
+            "Ascension": 514
           }
         },
         {
           "run": 1075,
           "maxEnergy": 100,
-          "highestZone": 29,
-          "prestiges": 5,
+          "highestZone": 16,
+          "prestiges": 8,
           "skills": {
-            "Charisma": 3116,
-            "Study": 3474,
-            "Combat": 3288,
-            "Search": 2926,
-            "Subterfuge": 2933,
-            "Crafting": 2745,
-            "Travel": 2739,
-            "Magic": 3135,
-            "Fortitude": 2575,
-            "Ascension": 2323
+            "Charisma": 1084,
+            "Study": 815,
+            "Combat": 1325,
+            "Search": 1075,
+            "Subterfuge": 962,
+            "Crafting": 847,
+            "Travel": 932,
+            "Magic": 1012,
+            "Fortitude": 850,
+            "Ascension": 0
           }
         },
         {
           "run": 1100,
           "maxEnergy": 100,
-          "highestZone": 29,
-          "prestiges": 5,
+          "highestZone": 16,
+          "prestiges": 8,
           "skills": {
-            "Charisma": 3262,
-            "Study": 3535,
-            "Combat": 3864,
-            "Search": 3015,
-            "Subterfuge": 2969,
-            "Crafting": 2779,
-            "Travel": 2790,
-            "Magic": 3172,
-            "Fortitude": 2654,
-            "Ascension": 2404
+            "Charisma": 1413,
+            "Study": 1440,
+            "Combat": 1458,
+            "Search": 1308,
+            "Subterfuge": 1400,
+            "Crafting": 1425,
+            "Travel": 1320,
+            "Magic": 1461,
+            "Fortitude": 1304,
+            "Ascension": 474
           }
         },
         {
           "run": 1125,
           "maxEnergy": 100,
-          "highestZone": 29,
-          "prestiges": 6,
+          "highestZone": 16,
+          "prestiges": 8,
           "skills": {
-            "Charisma": 3255,
-            "Study": 3496,
-            "Combat": 3874,
-            "Search": 3002,
-            "Subterfuge": 2943,
-            "Crafting": 2718,
-            "Travel": 2766,
-            "Magic": 3246,
-            "Fortitude": 2767,
-            "Ascension": 2367
+            "Charisma": 1544,
+            "Study": 1555,
+            "Combat": 1592,
+            "Search": 1368,
+            "Subterfuge": 1490,
+            "Crafting": 1542,
+            "Travel": 1371,
+            "Magic": 1541,
+            "Fortitude": 1348,
+            "Ascension": 515
           }
         },
         {
           "run": 1150,
           "maxEnergy": 100,
-          "highestZone": 29,
-          "prestiges": 6,
+          "highestZone": 16,
+          "prestiges": 9,
           "skills": {
-            "Charisma": 3346,
-            "Study": 3632,
-            "Combat": 4097,
-            "Search": 3146,
-            "Subterfuge": 3052,
-            "Crafting": 2821,
-            "Travel": 2881,
-            "Magic": 3320,
-            "Fortitude": 2882,
-            "Ascension": 2509
+            "Charisma": 1236,
+            "Study": 1233,
+            "Combat": 1334,
+            "Search": 1100,
+            "Subterfuge": 998,
+            "Crafting": 868,
+            "Travel": 955,
+            "Magic": 1035,
+            "Fortitude": 872,
+            "Ascension": 0
           }
         },
         {
-          "run": 1152,
+          "run": 1175,
           "maxEnergy": 100,
-          "highestZone": 30,
-          "prestiges": 6,
+          "highestZone": 16,
+          "prestiges": 9,
           "skills": {
-            "Charisma": 3359,
-            "Study": 3638,
-            "Combat": 4101,
-            "Search": 3153,
-            "Subterfuge": 3058,
-            "Crafting": 2828,
-            "Travel": 2893,
-            "Magic": 3327,
-            "Fortitude": 2885,
-            "Ascension": 2513
+            "Charisma": 1496,
+            "Study": 1490,
+            "Combat": 1467,
+            "Search": 1323,
+            "Subterfuge": 1437,
+            "Crafting": 1483,
+            "Travel": 1333,
+            "Magic": 1488,
+            "Fortitude": 1311,
+            "Ascension": 484
+          }
+        },
+        {
+          "run": 1200,
+          "maxEnergy": 100,
+          "highestZone": 17,
+          "prestiges": 9,
+          "skills": {
+            "Charisma": 1578,
+            "Study": 1577,
+            "Combat": 1596,
+            "Search": 1401,
+            "Subterfuge": 1507,
+            "Crafting": 1565,
+            "Travel": 1402,
+            "Magic": 1575,
+            "Fortitude": 1362,
+            "Ascension": 521
+          }
+        },
+        {
+          "run": 1225,
+          "maxEnergy": 100,
+          "highestZone": 17,
+          "prestiges": 9,
+          "skills": {
+            "Charisma": 1656,
+            "Study": 1635,
+            "Combat": 1603,
+            "Search": 1454,
+            "Subterfuge": 1547,
+            "Crafting": 1603,
+            "Travel": 1445,
+            "Magic": 1641,
+            "Fortitude": 1393,
+            "Ascension": 542
+          }
+        },
+        {
+          "run": 1250,
+          "maxEnergy": 100,
+          "highestZone": 17,
+          "prestiges": 10,
+          "skills": {
+            "Charisma": 778,
+            "Study": 814,
+            "Combat": 994,
+            "Search": 1038,
+            "Subterfuge": 819,
+            "Crafting": 782,
+            "Travel": 816,
+            "Magic": 982,
+            "Fortitude": 741,
+            "Ascension": 0
+          }
+        },
+        {
+          "run": 1275,
+          "maxEnergy": 100,
+          "highestZone": 17,
+          "prestiges": 10,
+          "skills": {
+            "Charisma": 1410,
+            "Study": 1472,
+            "Combat": 1455,
+            "Search": 1296,
+            "Subterfuge": 1405,
+            "Crafting": 1465,
+            "Travel": 1318,
+            "Magic": 1463,
+            "Fortitude": 1301,
+            "Ascension": 474
+          }
+        },
+        {
+          "run": 1300,
+          "maxEnergy": 100,
+          "highestZone": 17,
+          "prestiges": 10,
+          "skills": {
+            "Charisma": 1561,
+            "Study": 1571,
+            "Combat": 1597,
+            "Search": 1381,
+            "Subterfuge": 1506,
+            "Crafting": 1560,
+            "Travel": 1389,
+            "Magic": 1562,
+            "Fortitude": 1355,
+            "Ascension": 518
+          }
+        },
+        {
+          "run": 1325,
+          "maxEnergy": 100,
+          "highestZone": 17,
+          "prestiges": 10,
+          "skills": {
+            "Charisma": 1652,
+            "Study": 1627,
+            "Combat": 1605,
+            "Search": 1449,
+            "Subterfuge": 1545,
+            "Crafting": 1599,
+            "Travel": 1440,
+            "Magic": 1637,
+            "Fortitude": 1391,
+            "Ascension": 541
+          }
+        },
+        {
+          "run": 1350,
+          "maxEnergy": 100,
+          "highestZone": 17,
+          "prestiges": 11,
+          "skills": {
+            "Charisma": 698,
+            "Study": 680,
+            "Combat": 924,
+            "Search": 694,
+            "Subterfuge": 684,
+            "Crafting": 597,
+            "Travel": 669,
+            "Magic": 643,
+            "Fortitude": 622,
+            "Ascension": 0
+          }
+        },
+        {
+          "run": 1375,
+          "maxEnergy": 100,
+          "highestZone": 17,
+          "prestiges": 11,
+          "skills": {
+            "Charisma": 1407,
+            "Study": 1474,
+            "Combat": 1451,
+            "Search": 1297,
+            "Subterfuge": 1407,
+            "Crafting": 1468,
+            "Travel": 1311,
+            "Magic": 1445,
+            "Fortitude": 1296,
+            "Ascension": 467
+          }
+        },
+        {
+          "run": 1400,
+          "maxEnergy": 100,
+          "highestZone": 17,
+          "prestiges": 11,
+          "skills": {
+            "Charisma": 1574,
+            "Study": 1575,
+            "Combat": 1599,
+            "Search": 1392,
+            "Subterfuge": 1505,
+            "Crafting": 1562,
+            "Travel": 1390,
+            "Magic": 1566,
+            "Fortitude": 1355,
+            "Ascension": 517
+          }
+        },
+        {
+          "run": 1425,
+          "maxEnergy": 100,
+          "highestZone": 17,
+          "prestiges": 11,
+          "skills": {
+            "Charisma": 1658,
+            "Study": 1636,
+            "Combat": 1607,
+            "Search": 1449,
+            "Subterfuge": 1550,
+            "Crafting": 1605,
+            "Travel": 1445,
+            "Magic": 1640,
+            "Fortitude": 1394,
+            "Ascension": 541
+          }
+        },
+        {
+          "run": 1450,
+          "maxEnergy": 100,
+          "highestZone": 17,
+          "prestiges": 12,
+          "skills": {
+            "Charisma": 1238,
+            "Study": 1238,
+            "Combat": 1238,
+            "Search": 1098,
+            "Subterfuge": 895,
+            "Crafting": 838,
+            "Travel": 893,
+            "Magic": 1040,
+            "Fortitude": 852,
+            "Ascension": 0
+          }
+        },
+        {
+          "run": 1475,
+          "maxEnergy": 100,
+          "highestZone": 18,
+          "prestiges": 12,
+          "skills": {
+            "Charisma": 1619,
+            "Study": 1617,
+            "Combat": 1475,
+            "Search": 1501,
+            "Subterfuge": 1489,
+            "Crafting": 1566,
+            "Travel": 1399,
+            "Magic": 1789,
+            "Fortitude": 1343,
+            "Ascension": 489
+          }
+        },
+        {
+          "run": 1500,
+          "maxEnergy": 100,
+          "highestZone": 19,
+          "prestiges": 12,
+          "skills": {
+            "Charisma": 1673,
+            "Study": 1802,
+            "Combat": 1602,
+            "Search": 1626,
+            "Subterfuge": 1794,
+            "Crafting": 1652,
+            "Travel": 1525,
+            "Magic": 1910,
+            "Fortitude": 1448,
+            "Ascension": 526
+          }
+        },
+        {
+          "run": 1525,
+          "maxEnergy": 100,
+          "highestZone": 19,
+          "prestiges": 12,
+          "skills": {
+            "Charisma": 1698,
+            "Study": 1882,
+            "Combat": 1712,
+            "Search": 1684,
+            "Subterfuge": 1874,
+            "Crafting": 1749,
+            "Travel": 1619,
+            "Magic": 1979,
+            "Fortitude": 1538,
+            "Ascension": 914
+          }
+        },
+        {
+          "run": 1550,
+          "maxEnergy": 100,
+          "highestZone": 19,
+          "prestiges": 13,
+          "skills": {
+            "Charisma": 1276,
+            "Study": 1296,
+            "Combat": 1341,
+            "Search": 1210,
+            "Subterfuge": 1011,
+            "Crafting": 875,
+            "Travel": 1198,
+            "Magic": 1323,
+            "Fortitude": 1193,
+            "Ascension": 368
+          }
+        },
+        {
+          "run": 1575,
+          "maxEnergy": 100,
+          "highestZone": 19,
+          "prestiges": 13,
+          "skills": {
+            "Charisma": 1637,
+            "Study": 1633,
+            "Combat": 1599,
+            "Search": 1577,
+            "Subterfuge": 1544,
+            "Crafting": 1581,
+            "Travel": 1427,
+            "Magic": 1861,
+            "Fortitude": 1364,
+            "Ascension": 499
+          }
+        },
+        {
+          "run": 1600,
+          "maxEnergy": 100,
+          "highestZone": 19,
+          "prestiges": 13,
+          "skills": {
+            "Charisma": 1681,
+            "Study": 1864,
+            "Combat": 1714,
+            "Search": 1666,
+            "Subterfuge": 1859,
+            "Crafting": 1733,
+            "Travel": 1601,
+            "Magic": 1960,
+            "Fortitude": 1520,
+            "Ascension": 900
+          }
+        },
+        {
+          "run": 1625,
+          "maxEnergy": 100,
+          "highestZone": 19,
+          "prestiges": 14,
+          "skills": {
+            "Charisma": 545,
+            "Study": 500,
+            "Combat": 595,
+            "Search": 472,
+            "Subterfuge": 495,
+            "Crafting": 445,
+            "Travel": 497,
+            "Magic": 492,
+            "Fortitude": 406,
+            "Ascension": 150
+          }
+        },
+        {
+          "run": 1650,
+          "maxEnergy": 100,
+          "highestZone": 19,
+          "prestiges": 14,
+          "skills": {
+            "Charisma": 1612,
+            "Study": 1612,
+            "Combat": 1601,
+            "Search": 1542,
+            "Subterfuge": 1519,
+            "Crafting": 1565,
+            "Travel": 1398,
+            "Magic": 1830,
+            "Fortitude": 1343,
+            "Ascension": 491
+          }
+        },
+        {
+          "run": 1675,
+          "maxEnergy": 100,
+          "highestZone": 19,
+          "prestiges": 14,
+          "skills": {
+            "Charisma": 1675,
+            "Study": 1870,
+            "Combat": 1714,
+            "Search": 1665,
+            "Subterfuge": 1863,
+            "Crafting": 1731,
+            "Travel": 1605,
+            "Magic": 1962,
+            "Fortitude": 1524,
+            "Ascension": 904
+          }
+        },
+        {
+          "run": 1700,
+          "maxEnergy": 100,
+          "highestZone": 20,
+          "prestiges": 14,
+          "skills": {
+            "Charisma": 1702,
+            "Study": 1924,
+            "Combat": 1755,
+            "Search": 1704,
+            "Subterfuge": 1916,
+            "Crafting": 1778,
+            "Travel": 1664,
+            "Magic": 1998,
+            "Fortitude": 1580,
+            "Ascension": 942
+          }
+        },
+        {
+          "run": 1725,
+          "maxEnergy": 100,
+          "highestZone": 20,
+          "prestiges": 14,
+          "skills": {
+            "Charisma": 2122,
+            "Study": 2074,
+            "Combat": 1882,
+            "Search": 2044,
+            "Subterfuge": 1947,
+            "Crafting": 1815,
+            "Travel": 1712,
+            "Magic": 2075,
+            "Fortitude": 1621,
+            "Ascension": 967
+          }
+        },
+        {
+          "run": 1750,
+          "maxEnergy": 100,
+          "highestZone": 20,
+          "prestiges": 15,
+          "skills": {
+            "Charisma": 1341,
+            "Study": 1332,
+            "Combat": 1384,
+            "Search": 1221,
+            "Subterfuge": 1049,
+            "Crafting": 895,
+            "Travel": 1207,
+            "Magic": 1400,
+            "Fortitude": 1218,
+            "Ascension": 411
+          }
+        },
+        {
+          "run": 1775,
+          "maxEnergy": 100,
+          "highestZone": 20,
+          "prestiges": 15,
+          "skills": {
+            "Charisma": 1648,
+            "Study": 1828,
+            "Combat": 1683,
+            "Search": 1601,
+            "Subterfuge": 1824,
+            "Crafting": 1688,
+            "Travel": 1575,
+            "Magic": 1898,
+            "Fortitude": 1494,
+            "Ascension": 838
+          }
+        },
+        {
+          "run": 1800,
+          "maxEnergy": 100,
+          "highestZone": 20,
+          "prestiges": 15,
+          "skills": {
+            "Charisma": 2038,
+            "Study": 1904,
+            "Combat": 1880,
+            "Search": 1685,
+            "Subterfuge": 1898,
+            "Crafting": 1762,
+            "Travel": 1646,
+            "Magic": 2019,
+            "Fortitude": 1565,
+            "Ascension": 928
+          }
+        },
+        {
+          "run": 1825,
+          "maxEnergy": 100,
+          "highestZone": 20,
+          "prestiges": 15,
+          "skills": {
+            "Charisma": 2152,
+            "Study": 2097,
+            "Combat": 1885,
+            "Search": 2048,
+            "Subterfuge": 1945,
+            "Crafting": 1810,
+            "Travel": 1712,
+            "Magic": 2093,
+            "Fortitude": 1618,
+            "Ascension": 961
+          }
+        },
+        {
+          "run": 1850,
+          "maxEnergy": 100,
+          "highestZone": 20,
+          "prestiges": 16,
+          "skills": {
+            "Charisma": 1250,
+            "Study": 1250,
+            "Combat": 1244,
+            "Search": 1053,
+            "Subterfuge": 885,
+            "Crafting": 796,
+            "Travel": 838,
+            "Magic": 997,
+            "Fortitude": 750,
+            "Ascension": 200
+          }
+        },
+        {
+          "run": 1875,
+          "maxEnergy": 100,
+          "highestZone": 20,
+          "prestiges": 16,
+          "skills": {
+            "Charisma": 1635,
+            "Study": 1812,
+            "Combat": 1684,
+            "Search": 1612,
+            "Subterfuge": 1806,
+            "Crafting": 1688,
+            "Travel": 1576,
+            "Magic": 1907,
+            "Fortitude": 1495,
+            "Ascension": 840
+          }
+        },
+        {
+          "run": 1900,
+          "maxEnergy": 100,
+          "highestZone": 20,
+          "prestiges": 16,
+          "skills": {
+            "Charisma": 2121,
+            "Study": 1913,
+            "Combat": 1884,
+            "Search": 1688,
+            "Subterfuge": 1904,
+            "Crafting": 1769,
+            "Travel": 1672,
+            "Magic": 2073,
+            "Fortitude": 1585,
+            "Ascension": 930
+          }
+        },
+        {
+          "run": 1925,
+          "maxEnergy": 100,
+          "highestZone": 20,
+          "prestiges": 16,
+          "skills": {
+            "Charisma": 2175,
+            "Study": 2130,
+            "Combat": 2038,
+            "Search": 2085,
+            "Subterfuge": 1947,
+            "Crafting": 1816,
+            "Travel": 1739,
+            "Magic": 2113,
+            "Fortitude": 1675,
+            "Ascension": 969
+          }
+        },
+        {
+          "run": 1950,
+          "maxEnergy": 100,
+          "highestZone": 20,
+          "prestiges": 17,
+          "skills": {
+            "Charisma": 1384,
+            "Study": 1484,
+            "Combat": 1411,
+            "Search": 1273,
+            "Subterfuge": 1074,
+            "Crafting": 1029,
+            "Travel": 1267,
+            "Magic": 1466,
+            "Fortitude": 1262,
+            "Ascension": 437
+          }
+        },
+        {
+          "run": 1975,
+          "maxEnergy": 100,
+          "highestZone": 20,
+          "prestiges": 17,
+          "skills": {
+            "Charisma": 1659,
+            "Study": 1859,
+            "Combat": 1705,
+            "Search": 1640,
+            "Subterfuge": 1855,
+            "Crafting": 1716,
+            "Travel": 1604,
+            "Magic": 1942,
+            "Fortitude": 1524,
+            "Ascension": 889
+          }
+        },
+        {
+          "run": 2000,
+          "maxEnergy": 100,
+          "highestZone": 20,
+          "prestiges": 17,
+          "skills": {
+            "Charisma": 2134,
+            "Study": 2027,
+            "Combat": 1983,
+            "Search": 1991,
+            "Subterfuge": 1927,
+            "Crafting": 1791,
+            "Travel": 1703,
+            "Magic": 2085,
+            "Fortitude": 1610,
+            "Ascension": 948
+          }
+        },
+        {
+          "run": 2025,
+          "maxEnergy": 100,
+          "highestZone": 20,
+          "prestiges": 18,
+          "skills": {
+            "Charisma": 400,
+            "Study": 400,
+            "Combat": 400,
+            "Search": 400,
+            "Subterfuge": 400,
+            "Crafting": 400,
+            "Travel": 400,
+            "Magic": 400,
+            "Fortitude": 400,
+            "Ascension": 200
+          }
+        },
+        {
+          "run": 2050,
+          "maxEnergy": 100,
+          "highestZone": 20,
+          "prestiges": 18,
+          "skills": {
+            "Charisma": 1628,
+            "Study": 1813,
+            "Combat": 1678,
+            "Search": 1617,
+            "Subterfuge": 1811,
+            "Crafting": 1674,
+            "Travel": 1531,
+            "Magic": 1904,
+            "Fortitude": 1452,
+            "Ascension": 810
+          }
+        },
+        {
+          "run": 2075,
+          "maxEnergy": 100,
+          "highestZone": 20,
+          "prestiges": 18,
+          "skills": {
+            "Charisma": 2115,
+            "Study": 2043,
+            "Combat": 1889,
+            "Search": 1992,
+            "Subterfuge": 1915,
+            "Crafting": 1778,
+            "Travel": 1683,
+            "Magic": 2069,
+            "Fortitude": 1590,
+            "Ascension": 935
+          }
+        },
+        {
+          "run": 2100,
+          "maxEnergy": 100,
+          "highestZone": 21,
+          "prestiges": 18,
+          "skills": {
+            "Charisma": 2185,
+            "Study": 2162,
+            "Combat": 2067,
+            "Search": 2135,
+            "Subterfuge": 1955,
+            "Crafting": 1826,
+            "Travel": 1743,
+            "Magic": 2148,
+            "Fortitude": 1733,
+            "Ascension": 983
+          }
+        },
+        {
+          "run": 2125,
+          "maxEnergy": 100,
+          "highestZone": 21,
+          "prestiges": 18,
+          "skills": {
+            "Charisma": 2211,
+            "Study": 2182,
+            "Combat": 2175,
+            "Search": 2210,
+            "Subterfuge": 1974,
+            "Crafting": 1851,
+            "Travel": 1774,
+            "Magic": 2174,
+            "Fortitude": 1969,
+            "Ascension": 1013
+          }
+        },
+        {
+          "run": 2150,
+          "maxEnergy": 100,
+          "highestZone": 21,
+          "prestiges": 19,
+          "skills": {
+            "Charisma": 1380,
+            "Study": 1373,
+            "Combat": 1611,
+            "Search": 1278,
+            "Subterfuge": 1393,
+            "Crafting": 1034,
+            "Travel": 1272,
+            "Magic": 1436,
+            "Fortitude": 1260,
+            "Ascension": 442
+          }
+        },
+        {
+          "run": 2175,
+          "maxEnergy": 100,
+          "highestZone": 21,
+          "prestiges": 19,
+          "skills": {
+            "Charisma": 2123,
+            "Study": 1892,
+            "Combat": 1891,
+            "Search": 1671,
+            "Subterfuge": 1884,
+            "Crafting": 1747,
+            "Travel": 1637,
+            "Magic": 2071,
+            "Fortitude": 1550,
+            "Ascension": 911
+          }
+        },
+        {
+          "run": 2200,
+          "maxEnergy": 100,
+          "highestZone": 21,
+          "prestiges": 19,
+          "skills": {
+            "Charisma": 2181,
+            "Study": 2133,
+            "Combat": 2120,
+            "Search": 2120,
+            "Subterfuge": 1948,
+            "Crafting": 1812,
+            "Travel": 1738,
+            "Magic": 2120,
+            "Fortitude": 1698,
+            "Ascension": 967
+          }
+        },
+        {
+          "run": 2225,
+          "maxEnergy": 100,
+          "highestZone": 21,
+          "prestiges": 19,
+          "skills": {
+            "Charisma": 2211,
+            "Study": 2174,
+            "Combat": 2182,
+            "Search": 2213,
+            "Subterfuge": 1966,
+            "Crafting": 1938,
+            "Travel": 1772,
+            "Magic": 2164,
+            "Fortitude": 1973,
+            "Ascension": 1004
+          }
+        },
+        {
+          "run": 2250,
+          "maxEnergy": 100,
+          "highestZone": 21,
+          "prestiges": 19,
+          "skills": {
+            "Charisma": 2222,
+            "Study": 2183,
+            "Combat": 2206,
+            "Search": 2244,
+            "Subterfuge": 2027,
+            "Crafting": 2019,
+            "Travel": 1787,
+            "Magic": 2185,
+            "Fortitude": 2025,
+            "Ascension": 1025
+          }
+        },
+        {
+          "run": 2275,
+          "maxEnergy": 100,
+          "highestZone": 21,
+          "prestiges": 20,
+          "skills": {
+            "Charisma": 2014,
+            "Study": 1822,
+            "Combat": 1890,
+            "Search": 1618,
+            "Subterfuge": 1815,
+            "Crafting": 1677,
+            "Travel": 1564,
+            "Magic": 1975,
+            "Fortitude": 1484,
+            "Ascension": 815
+          }
+        },
+        {
+          "run": 2300,
+          "maxEnergy": 100,
+          "highestZone": 21,
+          "prestiges": 20,
+          "skills": {
+            "Charisma": 2167,
+            "Study": 2133,
+            "Combat": 2035,
+            "Search": 2102,
+            "Subterfuge": 1936,
+            "Crafting": 1797,
+            "Travel": 1731,
+            "Magic": 2113,
+            "Fortitude": 1716,
+            "Ascension": 948
+          }
+        },
+        {
+          "run": 2325,
+          "maxEnergy": 100,
+          "highestZone": 21,
+          "prestiges": 20,
+          "skills": {
+            "Charisma": 2210,
+            "Study": 2174,
+            "Combat": 2176,
+            "Search": 2207,
+            "Subterfuge": 1963,
+            "Crafting": 1917,
+            "Travel": 1768,
+            "Magic": 2159,
+            "Fortitude": 1965,
+            "Ascension": 998
+          }
+        },
+        {
+          "run": 2350,
+          "maxEnergy": 100,
+          "highestZone": 21,
+          "prestiges": 20,
+          "skills": {
+            "Charisma": 2222,
+            "Study": 2185,
+            "Combat": 2205,
+            "Search": 2240,
+            "Subterfuge": 2042,
+            "Crafting": 2013,
+            "Travel": 1786,
+            "Magic": 2183,
+            "Fortitude": 2021,
+            "Ascension": 1021
+          }
+        },
+        {
+          "run": 2375,
+          "maxEnergy": 100,
+          "highestZone": 21,
+          "prestiges": 21,
+          "skills": {
+            "Charisma": 2083,
+            "Study": 1700,
+            "Combat": 1991,
+            "Search": 1605,
+            "Subterfuge": 1557,
+            "Crafting": 1680,
+            "Travel": 1446,
+            "Magic": 2032,
+            "Fortitude": 1372,
+            "Ascension": 497
+          }
+        },
+        {
+          "run": 2400,
+          "maxEnergy": 100,
+          "highestZone": 21,
+          "prestiges": 21,
+          "skills": {
+            "Charisma": 2169,
+            "Study": 2107,
+            "Combat": 2135,
+            "Search": 2145,
+            "Subterfuge": 1936,
+            "Crafting": 1798,
+            "Travel": 1733,
+            "Magic": 2108,
+            "Fortitude": 1677,
+            "Ascension": 952
+          }
+        },
+        {
+          "run": 2425,
+          "maxEnergy": 100,
+          "highestZone": 21,
+          "prestiges": 21,
+          "skills": {
+            "Charisma": 2213,
+            "Study": 2168,
+            "Combat": 2186,
+            "Search": 2217,
+            "Subterfuge": 1965,
+            "Crafting": 1967,
+            "Travel": 1767,
+            "Magic": 2164,
+            "Fortitude": 1984,
+            "Ascension": 998
+          }
+        },
+        {
+          "run": 2450,
+          "maxEnergy": 100,
+          "highestZone": 22,
+          "prestiges": 21,
+          "skills": {
+            "Charisma": 2224,
+            "Study": 2181,
+            "Combat": 2207,
+            "Search": 2245,
+            "Subterfuge": 2074,
+            "Crafting": 2022,
+            "Travel": 1787,
+            "Magic": 2186,
+            "Fortitude": 2022,
+            "Ascension": 1024
+          }
+        },
+        {
+          "run": 2475,
+          "maxEnergy": 100,
+          "highestZone": 22,
+          "prestiges": 21,
+          "skills": {
+            "Charisma": 2249,
+            "Study": 2225,
+            "Combat": 2312,
+            "Search": 2259,
+            "Subterfuge": 2092,
+            "Crafting": 2040,
+            "Travel": 1809,
+            "Magic": 2219,
+            "Fortitude": 2039,
+            "Ascension": 1041
+          }
+        },
+        {
+          "run": 2500,
+          "maxEnergy": 100,
+          "highestZone": 22,
+          "prestiges": 22,
+          "skills": {
+            "Charisma": 1551,
+            "Study": 1537,
+            "Combat": 1892,
+            "Search": 1378,
+            "Subterfuge": 1453,
+            "Crafting": 1493,
+            "Travel": 1342,
+            "Magic": 1658,
+            "Fortitude": 1295,
+            "Ascension": 454
+          }
+        },
+        {
+          "run": 2525,
+          "maxEnergy": 100,
+          "highestZone": 22,
+          "prestiges": 22,
+          "skills": {
+            "Charisma": 2152,
+            "Study": 2076,
+            "Combat": 2123,
+            "Search": 2097,
+            "Subterfuge": 1928,
+            "Crafting": 1785,
+            "Travel": 1733,
+            "Magic": 2097,
+            "Fortitude": 1682,
+            "Ascension": 944
+          }
+        },
+        {
+          "run": 2550,
+          "maxEnergy": 100,
+          "highestZone": 22,
+          "prestiges": 22,
+          "skills": {
+            "Charisma": 2210,
+            "Study": 2168,
+            "Combat": 2182,
+            "Search": 2212,
+            "Subterfuge": 1974,
+            "Crafting": 1981,
+            "Travel": 1766,
+            "Magic": 2156,
+            "Fortitude": 1995,
+            "Ascension": 993
+          }
+        },
+        {
+          "run": 2575,
+          "maxEnergy": 100,
+          "highestZone": 22,
+          "prestiges": 22,
+          "skills": {
+            "Charisma": 2261,
+            "Study": 2247,
+            "Combat": 2212,
+            "Search": 2243,
+            "Subterfuge": 2087,
+            "Crafting": 2020,
+            "Travel": 1794,
+            "Magic": 2181,
+            "Fortitude": 2025,
+            "Ascension": 1022
+          }
+        },
+        {
+          "run": 2600,
+          "maxEnergy": 100,
+          "highestZone": 22,
+          "prestiges": 22,
+          "skills": {
+            "Charisma": 2332,
+            "Study": 2328,
+            "Combat": 2305,
+            "Search": 2267,
+            "Subterfuge": 2109,
+            "Crafting": 2026,
+            "Travel": 1821,
+            "Magic": 2263,
+            "Fortitude": 2031,
+            "Ascension": 1040
+          }
+        },
+        {
+          "run": 2625,
+          "maxEnergy": 100,
+          "highestZone": 22,
+          "prestiges": 23,
+          "skills": {
+            "Charisma": 2090,
+            "Study": 1870,
+            "Combat": 2001,
+            "Search": 1663,
+            "Subterfuge": 1863,
+            "Crafting": 1708,
+            "Travel": 1654,
+            "Magic": 2039,
+            "Fortitude": 1573,
+            "Ascension": 894
+          }
+        },
+        {
+          "run": 2650,
+          "maxEnergy": 100,
+          "highestZone": 22,
+          "prestiges": 23,
+          "skills": {
+            "Charisma": 2184,
+            "Study": 2140,
+            "Combat": 2164,
+            "Search": 2193,
+            "Subterfuge": 1953,
+            "Crafting": 1874,
+            "Travel": 1749,
+            "Magic": 2123,
+            "Fortitude": 1929,
+            "Ascension": 970
+          }
+        },
+        {
+          "run": 2675,
+          "maxEnergy": 100,
+          "highestZone": 22,
+          "prestiges": 23,
+          "skills": {
+            "Charisma": 2219,
+            "Study": 2179,
+            "Combat": 2201,
+            "Search": 2231,
+            "Subterfuge": 2063,
+            "Crafting": 2001,
+            "Travel": 1779,
+            "Magic": 2163,
+            "Fortitude": 2017,
+            "Ascension": 1009
+          }
+        },
+        {
+          "run": 2700,
+          "maxEnergy": 100,
+          "highestZone": 22,
+          "prestiges": 23,
+          "skills": {
+            "Charisma": 2304,
+            "Study": 2297,
+            "Combat": 2278,
+            "Search": 2246,
+            "Subterfuge": 2094,
+            "Crafting": 2021,
+            "Travel": 1809,
+            "Magic": 2245,
+            "Fortitude": 2032,
+            "Ascension": 1033
+          }
+        },
+        {
+          "run": 2725,
+          "maxEnergy": 100,
+          "highestZone": 22,
+          "prestiges": 24,
+          "skills": {
+            "Charisma": 1404,
+            "Study": 1520,
+            "Combat": 1897,
+            "Search": 1301,
+            "Subterfuge": 1402,
+            "Crafting": 1463,
+            "Travel": 1296,
+            "Magic": 1660,
+            "Fortitude": 1291,
+            "Ascension": 467
+          }
+        },
+        {
+          "run": 2750,
+          "maxEnergy": 100,
+          "highestZone": 22,
+          "prestiges": 24,
+          "skills": {
+            "Charisma": 2170,
+            "Study": 2120,
+            "Combat": 2156,
+            "Search": 2177,
+            "Subterfuge": 1924,
+            "Crafting": 1785,
+            "Travel": 1725,
+            "Magic": 2098,
+            "Fortitude": 1722,
+            "Ascension": 941
+          }
+        },
+        {
+          "run": 2775,
+          "maxEnergy": 100,
+          "highestZone": 22,
+          "prestiges": 24,
+          "skills": {
+            "Charisma": 2217,
+            "Study": 2169,
+            "Combat": 2191,
+            "Search": 2227,
+            "Subterfuge": 2043,
+            "Crafting": 1990,
+            "Travel": 1768,
+            "Magic": 2148,
+            "Fortitude": 2002,
+            "Ascension": 1001
+          }
+        },
+        {
+          "run": 2800,
+          "maxEnergy": 100,
+          "highestZone": 22,
+          "prestiges": 24,
+          "skills": {
+            "Charisma": 2311,
+            "Study": 2304,
+            "Combat": 2317,
+            "Search": 2241,
+            "Subterfuge": 2117,
+            "Crafting": 2024,
+            "Travel": 1819,
+            "Magic": 2212,
+            "Fortitude": 2029,
+            "Ascension": 1028
+          }
+        },
+        {
+          "run": 2825,
+          "maxEnergy": 100,
+          "highestZone": 23,
+          "prestiges": 24,
+          "skills": {
+            "Charisma": 2358,
+            "Study": 2354,
+            "Combat": 2328,
+            "Search": 2355,
+            "Subterfuge": 2147,
+            "Crafting": 2040,
+            "Travel": 1899,
+            "Magic": 2288,
+            "Fortitude": 2039,
+            "Ascension": 1046
+          }
+        },
+        {
+          "run": 2850,
+          "maxEnergy": 100,
+          "highestZone": 23,
+          "prestiges": 24,
+          "skills": {
+            "Charisma": 2404,
+            "Study": 2377,
+            "Combat": 2430,
+            "Search": 2388,
+            "Subterfuge": 2256,
+            "Crafting": 2047,
+            "Travel": 2045,
+            "Magic": 2305,
+            "Fortitude": 2052,
+            "Ascension": 1059
+          }
+        },
+        {
+          "run": 2875,
+          "maxEnergy": 100,
+          "highestZone": 23,
+          "prestiges": 25,
+          "skills": {
+            "Charisma": 2077,
+            "Study": 1833,
+            "Combat": 2006,
+            "Search": 1641,
+            "Subterfuge": 1826,
+            "Crafting": 1688,
+            "Travel": 1576,
+            "Magic": 2026,
+            "Fortitude": 1495,
+            "Ascension": 825
+          }
+        },
+        {
+          "run": 2900,
+          "maxEnergy": 100,
+          "highestZone": 23,
+          "prestiges": 25,
+          "skills": {
+            "Charisma": 2196,
+            "Study": 2151,
+            "Combat": 2166,
+            "Search": 2179,
+            "Subterfuge": 1954,
+            "Crafting": 1955,
+            "Travel": 1742,
+            "Magic": 2126,
+            "Fortitude": 1979,
+            "Ascension": 976
+          }
+        },
+        {
+          "run": 2925,
+          "maxEnergy": 100,
+          "highestZone": 23,
+          "prestiges": 25,
+          "skills": {
+            "Charisma": 2283,
+            "Study": 2272,
+            "Combat": 2304,
+            "Search": 2241,
+            "Subterfuge": 2098,
+            "Crafting": 2010,
+            "Travel": 1807,
+            "Magic": 2181,
+            "Fortitude": 2020,
+            "Ascension": 1017
+          }
+        },
+        {
+          "run": 2950,
+          "maxEnergy": 100,
+          "highestZone": 23,
+          "prestiges": 25,
+          "skills": {
+            "Charisma": 2343,
+            "Study": 2336,
+            "Combat": 2328,
+            "Search": 2351,
+            "Subterfuge": 2141,
+            "Crafting": 2021,
+            "Travel": 1845,
+            "Magic": 2285,
+            "Fortitude": 2040,
+            "Ascension": 1039
+          }
+        },
+        {
+          "run": 2975,
+          "maxEnergy": 100,
+          "highestZone": 23,
+          "prestiges": 25,
+          "skills": {
+            "Charisma": 2378,
+            "Study": 2381,
+            "Combat": 2426,
+            "Search": 2389,
+            "Subterfuge": 2235,
+            "Crafting": 2049,
+            "Travel": 2034,
+            "Magic": 2305,
+            "Fortitude": 2062,
+            "Ascension": 1055
+          }
+        },
+        {
+          "run": 3000,
+          "maxEnergy": 100,
+          "highestZone": 23,
+          "prestiges": 26,
+          "skills": {
+            "Charisma": 2082,
+            "Study": 1675,
+            "Combat": 1902,
+            "Search": 1566,
+            "Subterfuge": 1601,
+            "Crafting": 1557,
+            "Travel": 1387,
+            "Magic": 2028,
+            "Fortitude": 1333,
+            "Ascension": 479
           }
         }
       ]

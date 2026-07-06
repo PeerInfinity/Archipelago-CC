@@ -212,6 +212,11 @@ async function runChildVariant(variantName) {
     pinMaxEnergy: VARIANTS[variantName].pinMaxEnergy,
     logEvery: 100,
     onRunBoundary,
+    // Profiling profile = tuned defaults MINUS Award Spark on Discovery
+    // (user ruling 2026-07-06): discovery spark funds Divinity purchases
+    // without prestiging and distorts the vanilla pacing curve the
+    // randomizer targets.
+    modOverrides: { award_spark_on_discovery: false },
   });
 
   fs.mkdirSync(resultsDir, { recursive: true });

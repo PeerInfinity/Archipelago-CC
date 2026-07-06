@@ -396,10 +396,13 @@ verification against Phase 0 bands.
 
 > **RULED (user 2026-07-06): default pacing targets = the profiled vanilla
 > values, and the default must capture the vanilla pacing CURVE, not just its
-> average.** Phase 0 measured the curve (SUMMARY.md Round 5): consecutive
-> first-completion gaps p50 = 2; perk-milestone gaps p50 = 8 (standalone) /
-> 14 (pinned) growing from ~4 early to 60+ late game, long tail max 61/145.
-> A single scalar `resetsPerStep` is demoted to a manual-override knob.
+> average.** Phase 0 measured it (SUMMARY.md Round 5, re-run with
+> `award_spark_on_discovery` OFF per follow-up ruling). **v1 anchor curve
+> (zones 0–14, standalone):** 21 perk milestones, gaps
+> [0, 4, 5, 7, 4, 6, 2, 6, 14, 8, 8, 4, 6, 8, 10, 10, 8, 2, 14, 8, 70] —
+> p50 = 7, mean 9.7; consecutive first-completion gaps p50 = 2. (The final
+> 70 is the SBtV-gated straggler, not organic pacing — see open question
+> 10.) A single scalar `resetsPerStep` is demoted to a manual-override knob.
 
 Remaining sub-choice — **how the curve is represented**:
 
@@ -412,10 +415,14 @@ Remaining sub-choice — **how the curve is represented**:
   sample each step's target from that band's vanilla gap distribution. Same
   distribution per phase; the trend survives only at band granularity, and
   order within a band scrambles.
-- Anchor variant: **pinned100's curve for substrate play** (matches loop
-  starting-mana budgets; standalone's curve kept for standalone-flavored
-  worlds/comparison). Tolerance band still to pick after the first Phase 4
-  verification round.
+- Anchor variant — **RULED (user 2026-07-06): the STANDALONE (unpinned)
+  curve** is the pacing target. The balancer solves under actual loop
+  budgets to *hit* that curve, so substrate play feels standalone-paced;
+  pinned100 data stays as calibration/verification context. Also RULED:
+  the profiling profile disables `award_spark_on_discovery` (discovery
+  spark funds Divinity purchases without prestiging and distorts the
+  vanilla curve) — profile re-run accordingly. Tolerance band still to
+  pick after the first Phase 4 verification round.
 
 ### Q7 (NEW). Synthetic generation: sphere log first, or co-constructed?
 
@@ -499,8 +506,9 @@ standalone and `pinMaxEnergy` (substrate) budgets.
 - **Primary integration = Pass B (§2b): rebalance at rules load against the
   actual sphere log**, patches cached per seed. Pass A pre-balancing for
   in-panel preview is optional and can come later.
-- Pacing defaults per Q6 ruling: position-indexed vanilla curve (pinned100
-  anchor) with seeded jitter; `resetsPerStep` scalar as manual override.
+- Pacing defaults per Q6 ruling: position-indexed vanilla curve (STANDALONE
+  anchor, spark-on-discovery off) with seeded jitter; `resetsPerStep` scalar
+  as manual override.
 - Measure solve runtime at load; Web Worker if it blows the interactive
   budget — decision point, not a blocker.
 
@@ -569,6 +577,13 @@ standalone and `pinMaxEnergy` (substrate) budgets.
    over-constrain fill in multiworld; loose rules let fill drift from the
    balanced order. Recommend: loose + Phase 4 verification tolerance, revisit
    if drift breaks pacing.
+10. **SBtV-gated hidden tasks in v1 scope** (found by the corrected Phase 0
+   profile): Secret Fishing Spot (z1), Training Dummy (z2), Train at Every
+   Guild (z8) + z14 stragglers require the SeeBeyondTheVeil Divinity
+   purchase; with no prestige (v1 = zones 0–14) and spark-on-discovery off
+   they may never unlock (pinned-100 left 4/134 unreached at 3000 runs).
+   v1 must exclude them from the location pool or mark them
+   non-progression; decide at Phase 2.
 
 ## 7. Rulings
 
@@ -579,7 +594,7 @@ standalone and `pinMaxEnergy` (substrate) budgets.
 | 3 | Randomization home | **RULED:** procgen-pipeline-initiated; code home = implementer's choice, engine-touching parts may live in the submodule |
 | 4 | Content scope | **RULED:** all tasks = locations, all perks = items, all in sphere log; **v1 = perk shuffle + rebalance, zones 0–14 (no prestige)**; synthetic generation deferred until after v1 |
 | 5 | AP checks this arc | **RULED:** yes; grants AP-authoritative (A1) |
-| 6 | Pacing knob | **RULED:** defaults = profiled vanilla values capturing the CURVE (position-indexed replay with seeded jitter, pinned100 anchor); scalar `resetsPerStep` = manual override; tolerance band picked after first verification round |
+| 6 | Pacing knob | **RULED:** defaults = profiled vanilla values capturing the CURVE (position-indexed replay with seeded jitter, **STANDALONE anchor** — user 2026-07-06 follow-up; profiling with `award_spark_on_discovery` OFF); scalar `resetsPerStep` = manual override; tolerance band picked after first verification round |
 | 7 | Synthetic construction order | **RULED (direction; build post-v1):** co-construction with a thin planned layer; sphere log as byproduct trace, AP's post-fill log authoritative |
 | 8 | Vanilla profiling first | **RULED + DONE:** Phase 0, `572fd9c32`, SUMMARY.md Round 5 |
 | 9 | Two-pass flow | **RULED (user-raised):** post-fill rebalance at rules load is the authoritative balancing point (§2b); Pass A is structure-only |
