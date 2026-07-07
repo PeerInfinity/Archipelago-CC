@@ -6,7 +6,7 @@ Contains the rules generator and rule analysis utilities.
 import re
 from typing import Dict, List, Optional, Set
 
-from rule_builder import BOOLEAN_RULE_TYPES
+from .constants import BOOLEAN_RULE_TYPES
 from .constants import BUILTIN_SETTINGS
 from .extractors import ExtractedData, HelperData
 from .rule_codegen import RuleCodeGenerator, HelperCodeGenerator, is_trivial_rule, ANALYZER_RUNTIME_TYPES
@@ -544,7 +544,7 @@ def _setup_dungeon_bosses(multiworld, player: int) -> None:
     # Build import section
     imports_section = ''
     if rule_builder_imports:
-        imports_section = f'\nfrom rule_builder import {rule_builder_imports_str}\n'
+        imports_section = f'\nfrom ._ext import {rule_builder_imports_str}\n'
 
     # Add CollectionState import if we have helpers, lambda rules, or dungeons
     collection_state_import = ''

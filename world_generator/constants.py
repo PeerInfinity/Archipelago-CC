@@ -29,3 +29,28 @@ PER_GAME_COMMON_OPTIONS = frozenset({
 
 # Combined set of all settings to skip when generating option classes
 BUILTIN_SETTINGS = INTERNAL_SETTINGS | PER_GAME_COMMON_OPTIONS
+
+# Rule types that produce boolean expressions (as opposed to numeric values).
+# Prefer the fork rule_builder's definition when available so there is a
+# single source of truth; fall back to a local copy on vanilla Archipelago
+# (whose rule_builder has no extra_rules module and an empty __init__).
+try:
+    from rule_builder import BOOLEAN_RULE_TYPES
+except ImportError:
+    BOOLEAN_RULE_TYPES = frozenset({
+        # Reachability rules
+        'CanReachEntrance', 'CanReachRegion', 'CanReachLocation', 'EntranceAccessRuleCall',
+        # Item rules
+        'Has', 'HasAll', 'HasAny', 'HasAllCounts', 'HasAnyCount',
+        'HasFromList', 'HasFromListUnique', 'HasGroup', 'HasGroupUnique',
+        # Logic rules
+        'And', 'Or', 'Not',
+        # Boolean constants
+        'True_', 'False_',
+        # Comparison and conditional (produce booleans)
+        'Compare', 'Conditional',
+        # Helper calls
+        'HelperCall',
+        # Wrapper rules
+        'Filtered', 'ASTRule',
+    })

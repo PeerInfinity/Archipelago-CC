@@ -5,7 +5,7 @@ Helper statement mixin — statement generators, expression dispatcher, and _ind
 import sys
 from typing import Any, Dict, Set, Optional
 
-from rule_builder import BOOLEAN_RULE_TYPES
+from .constants import BOOLEAN_RULE_TYPES
 from ._codegen_utils import (
     ANALYZER_BOOL_TYPES,
     get_helper_function_name,
