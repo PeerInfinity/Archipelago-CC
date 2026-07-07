@@ -145,6 +145,11 @@ COMPONENTS: Dict[str, Component] = {
         source_paths=[f"json_tools_patches/{_ap_base_version()}/romless"],
         required=False,
         size_estimate_mb=0.3,
+        unsupported_frozen=(
+            "compiled installs run their worlds from lib/worlds/*.apworld and "
+            "lib/library.zip, which file patches cannot reach — the patched "
+            "files would land in the unused root worlds/ directory"
+        ),
     ),
     "upstream_fixes": Component(
         name="upstream_fixes",
@@ -165,6 +170,11 @@ COMPONENTS: Dict[str, Component] = {
         ],
         required=False,
         size_estimate_mb=0.2,
+        unsupported_frozen=(
+            "compiled installs run their worlds from lib/worlds/*.apworld, "
+            "which file overlays cannot reach — the fixed files would land "
+            "in the unused root worlds/ directory"
+        ),
     ),
     "tracker": Component(
         name="tracker",
