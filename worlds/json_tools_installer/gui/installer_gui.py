@@ -44,9 +44,10 @@ class InstallerApp(App):
     version_stable = BooleanProperty(True)
     version_dev = BooleanProperty(False)
 
-    # Component properties (defaults set from DEFAULT_COMPONENTS)
+    # Component properties — keep defaults in sync with DEFAULT_COMPONENTS
+    # (the checkbox build also syncs them, but stale defaults are confusing)
     comp_exporter = BooleanProperty(True)
-    comp_rule_builder = BooleanProperty(False)
+    comp_rule_builder = BooleanProperty(True)
     comp_world_generator = BooleanProperty(True)
     comp_frontend = BooleanProperty(True)
     comp_presets = BooleanProperty(False)
@@ -172,13 +173,17 @@ class InstallerApp(App):
         for name, comp in COMPONENTS.items():
             row = BoxLayout(size_hint_y=None, height=row_height)
 
-            # Checkbox with fixed width, default based on DEFAULT_COMPONENTS
+            # Checkbox with fixed width, default based on DEFAULT_COMPONENTS.
+            # Bind BEFORE setting active so the comp_<name> property is synced
+            # with the displayed state — otherwise a comp_ property whose
+            # default disagrees with DEFAULT_COMPONENTS silently desyncs
+            # (rule_builder showed checked but was never installed).
             cb = CheckBox(
-                active=name in DEFAULT_COMPONENTS,
                 size_hint_x=None,
                 width=40,
             )
             cb.bind(active=lambda instance, value, n=name: self.on_component_toggle(n, value))
+            cb.active = name in DEFAULT_COMPONENTS
             self.component_checkboxes[name] = cb
             row.add_widget(cb)
 

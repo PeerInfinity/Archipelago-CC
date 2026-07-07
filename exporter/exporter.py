@@ -2891,8 +2891,11 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
             clean_game_name = get_world_directory_name(game_name)
             logger.info(f"Detected single game world ({game_name}), using '{clean_game_name}' preset folder.")
 
-        # Determine preset directories
-        presets_dir = os.path.join(os.path.dirname(__file__), '..', 'frontend', 'presets')
+        # Determine preset directories. Resolve via local_path, not relative to
+        # this file: on compiled installs the exporter lives in lib/ while the
+        # frontend is extracted to the install root.
+        from Utils import local_path
+        presets_dir = local_path('frontend', 'presets')
         os.makedirs(presets_dir, exist_ok=True)
 
         # Clear all presets if requested (must be done before creating game directory)
