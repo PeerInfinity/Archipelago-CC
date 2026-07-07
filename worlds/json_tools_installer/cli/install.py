@@ -216,25 +216,17 @@ def do_install(
         for warning in extract_result.warnings:
             print(f"  [WARN] {warning}")
 
-        # Install Python dependencies
+        # Install Python dependencies — JSON Tools' own plus requirements
+        # declared by apworlds in custom_worlds/ (nothing else reads those;
+        # compiled installs can't pip at all). One combined pip run: on
+        # frozen installs a second in-process pip invocation deadlocks.
         print("\n  Installing dependencies...")
-        from ..installer.dependencies import (
-            install_missing_dependencies,
-            install_apworld_dependencies,
-        )
-        dep_ok, dep_msg = install_missing_dependencies()
+        from ..installer.dependencies import install_all_dependencies
+        dep_ok, dep_msg = install_all_dependencies()
         if dep_ok:
             print(f"  [OK] {dep_msg}")
         else:
             print(f"  [WARN] {dep_msg}")
-
-        # Install requirements declared by apworlds in custom_worlds/
-        # (nothing else reads those; compiled installs can't pip at all)
-        apdep_ok, apdep_msg = install_apworld_dependencies()
-        if apdep_ok:
-            print(f"  [OK] {apdep_msg}")
-        else:
-            print(f"  [WARN] {apdep_msg}")
 
         # Download original world source (separate upstream download, not
         # part of the fork archive)

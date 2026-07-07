@@ -491,14 +491,17 @@ class InstallerApp(App):
         Clock.schedule_once(lambda dt: setattr(self.progress, 'value', value))
 
     def show_message(self, title: str, message: str):
-        """Show a popup message."""
+        """Show a popup message (explicit OK — clicking outside won't dismiss)."""
         def show(dt):
-            content = BoxLayout(orientation='vertical', padding=10)
-            content.add_widget(Label(text=message))
+            content = BoxLayout(orientation='vertical', padding=10, spacing=10)
+            label = Label(text=message, halign='left', valign='top')
+            label.bind(size=lambda inst, val: setattr(inst, 'text_size', val))
+            content.add_widget(label)
             btn = Button(text='OK', size_hint_y=None, height=40)
             content.add_widget(btn)
 
-            popup = Popup(title=title, content=content, size_hint=(0.8, 0.5))
+            popup = Popup(title=title, content=content, size_hint=(0.8, 0.6),
+                          auto_dismiss=False)
             btn.bind(on_press=popup.dismiss)
             popup.open()
 
@@ -661,26 +664,20 @@ For more information, see the README.md file."""
                     self.show_message("Error", f"Extraction failed: {extract_result.errors}")
                     return
 
-                if extract_result.warnings:
-                    self.show_message("Warning", "\n\n".join(extract_result.warnings))
+                # Collected and shown once in the completion popup — popups
+                # raised mid-install are easy to lose
+                install_warnings = list(extract_result.warnings)
 
                 # Install Python dependencies required by extracted components
                 self.update_status("Installing dependencies...")
                 self.update_progress(82)
-                from ..installer.dependencies import (
-                    install_missing_dependencies,
-                    install_apworld_dependencies,
-                )
-                dep_ok, dep_msg = install_missing_dependencies()
+                # JSON Tools' own packages plus requirements declared by
+                # apworlds in custom_worlds/, in ONE combined pip run — on
+                # frozen installs a second in-process pip invocation deadlocks.
+                from ..installer.dependencies import install_all_dependencies
+                dep_ok, dep_msg = install_all_dependencies()
                 if not dep_ok:
-                    self.show_message("Warning", f"Some dependencies failed to install: {dep_msg}")
-
-                # Requirements declared by apworlds in custom_worlds/
-                # (nothing else reads those; compiled installs can't pip at all)
-                self.update_status("Installing apworld dependencies...")
-                apdep_ok, apdep_msg = install_apworld_dependencies()
-                if not apdep_ok:
-                    self.show_message("Warning", f"Some apworld dependencies failed to install: {apdep_msg}")
+                    install_warnings.append(f"Dependency install: {dep_msg}")
 
                 # Original world source is a separate upstream download,
                 # not part of the fork archive
@@ -697,7 +694,7 @@ For more information, see the README.md file."""
                     from ..installer.world_source import install_world_source
                     ws_ok, ws_msg = install_world_source(progress_callback=ws_progress_cb)
                     if not ws_ok:
-                        self.show_message("Warning", f"World source download failed: {ws_msg}")
+                        install_warnings.append(f"World source download failed: {ws_msg}")
 
                 # Apply patches based on selected option
                 if self.apply_monkey_patch:
@@ -708,7 +705,7 @@ For more information, see the README.md file."""
                     hook_results = install_hooks()
                     success_count = sum(1 for v in hook_results.values() if v)
                     if success_count < len(hook_results):
-                        self.show_message("Warning", f"Only {success_count}/{len(hook_results)} hooks installed")
+                        install_warnings.append(f"Only {success_count}/{len(hook_results)} hooks installed")
                     self.installer_config.patches.method = "monkey"
 
                 else:
@@ -721,7 +718,7 @@ For more information, see the README.md file."""
                     self.update_progress(90)
                     romless_result = apply_romless_patches(self.installer_config)
                     if not romless_result.success:
-                        self.show_message("Warning", f"ROM-less patch issues: {romless_result.errors}")
+                        install_warnings.append(f"ROM-less patch issues: {romless_result.errors}")
 
                 # Configure export settings in host.yaml
                 if self.configure_export:
@@ -732,10 +729,9 @@ For more information, see the README.md file."""
                         if preset == "minimal-spoilers":
                             self.update_status("Export settings configured (JSON export enabled)")
                     else:
-                        self.show_message(
-                            "Warning",
-                            "Could not configure export settings in host.yaml.\n"
-                            "You may need to run:\n"
+                        install_warnings.append(
+                            "Could not configure export settings in host.yaml. "
+                            "You may need to run: "
                             "python scripts/setup/update_host_settings.py minimal-spoilers"
                         )
 
@@ -749,10 +745,11 @@ For more information, see the README.md file."""
                 from ..config import update_installation_info
                 update_installation_info(self.installer_config, version, components, commit_hash)
 
-                self.show_message(
-                    "Success",
-                    "JSON Tools installed successfully!\n\nComponents are ready to use."
-                )
+                summary = "JSON Tools installed successfully!\n\nComponents are ready to use."
+                if install_warnings:
+                    summary += "\n\nNotes:\n" + "\n\n".join(f"• {w}" for w in install_warnings)
+                summary += "\n\nRestart Archipelago so new worlds and dependencies load."
+                self.show_message("Success", summary)
 
         except Exception as e:
             self.show_message("Error", f"Installation failed: {str(e)}")

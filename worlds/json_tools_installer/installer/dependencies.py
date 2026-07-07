@@ -71,6 +71,13 @@ def _frozen_ca_bundle() -> Optional[str]:
         return None
 
 
+# The bundled pip can only be invoked once per process: a second in-process
+# run deadlocks (observed hanging the installer GUI inside the frozen
+# Launcher). Flows batch all packages into one call; this flag guards
+# against any second attempt.
+_frozen_pip_invoked = False
+
+
 def _install_packages_frozen(packages: List[str]) -> Tuple[bool, str]:
     """
     Install packages on a frozen (compiled) Archipelago install.
@@ -80,7 +87,16 @@ def _install_packages_frozen(packages: List[str]) -> Tuple[bool, str]:
     in-process with --target pointed at lib/, the only writable directory
     on the frozen sys.path.
     """
+    global _frozen_pip_invoked
     target = Path(local_path()) / "lib"
+
+    if _frozen_pip_invoked:
+        return False, (
+            "The bundled pip already ran once in this Archipelago session and "
+            "cannot run again. Restart Archipelago and run the installer again "
+            f"to install: {', '.join(packages)}"
+        )
+
     try:
         from pip._internal.cli.main import main as pip_main
     except ImportError:
@@ -114,21 +130,38 @@ def _install_packages_frozen(packages: List[str]) -> Tuple[bool, str]:
     except Exception as e:
         logger.debug(f"Could not patch distlib ScriptMaker: {e}")
 
-    args = ["install", "--upgrade", "--target", str(target)]
+    # No console interaction: the frozen Launcher is a GUI app whose
+    # stdout/stderr may be absent or an undrained pipe — pip's progress and
+    # version-check output must not touch them.
+    args = [
+        "install", "--upgrade", "--target", str(target),
+        "--progress-bar", "off", "--no-color", "--disable-pip-version-check",
+    ]
     if ca_bundle:
         args += ["--cert", ca_bundle]
     args += packages
     logger.info(f"Running bundled pip in-process: pip {' '.join(args)}")
+
+    import contextlib
+    import io
+    output = io.StringIO()
+    _frozen_pip_invoked = True
     try:
-        rc = pip_main(args)
+        with contextlib.redirect_stdout(output), contextlib.redirect_stderr(output):
+            rc = pip_main(args)
     except SystemExit as e:
         rc = e.code if isinstance(e.code, int) else 1
     except Exception as e:
+        logger.warning(f"Bundled pip output:\n{output.getvalue()[-2000:]}")
         return False, f"Bundled pip failed: {e}"
 
+    logger.info(f"Bundled pip output:\n{output.getvalue()[-2000:]}")
     if rc == 0:
         return True, f"Installed into lib/: {', '.join(packages)}"
-    return False, f"Bundled pip exited with code {rc}"
+    return False, (
+        f"Bundled pip exited with code {rc}: "
+        f"{output.getvalue()[-500:].strip()}"
+    )
 
 
 def install_packages(packages: List[str]) -> Tuple[bool, str]:
@@ -267,3 +300,28 @@ def install_apworld_dependencies() -> Tuple[bool, str]:
 
     logger.info(f"Installing apworld requirements: {missing}")
     return install_packages(missing)
+
+
+def install_all_dependencies() -> Tuple[bool, str]:
+    """
+    Install JSON Tools' own missing packages AND missing apworld
+    requirements in a single pip invocation.
+
+    Install flows must use this instead of calling
+    install_missing_dependencies + install_apworld_dependencies in
+    sequence: on frozen installs the bundled pip can only run once per
+    process (a second in-process invocation deadlocks).
+
+    Returns:
+        Tuple of (success, message).
+    """
+    missing = check_missing_packages()
+    apworld_missing = check_missing_requirements(scan_apworld_requirements())
+    combined = missing + [r for r in apworld_missing if r not in missing]
+
+    if not combined:
+        return True, "All dependencies already installed"
+
+    logger.info(f"Installing dependencies (single pip run): {combined}")
+    ok, msg = install_packages(combined)
+    return ok, msg

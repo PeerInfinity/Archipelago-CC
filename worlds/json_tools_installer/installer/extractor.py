@@ -553,6 +553,7 @@ def extract_tools(
     # Per-world apworld zips being written (frozen_apworld routing).
     # Defined before the try so the finally can always close them.
     apworld_zips: Dict[str, zipfile.ZipFile] = {}
+    apworld_has_manifest: Set[str] = set()
     skipped_apworlds: Set[str] = set()
     excluded_worlds_warned: Set[str] = set()
 
@@ -639,6 +640,8 @@ def extract_tools(
                                 apworld_path, "w", zipfile.ZIP_DEFLATED
                             )
                         apworld_zips[world_name].writestr(arcname, zf.read(file_path))
+                        if arcname.endswith("/archipelago.json"):
+                            apworld_has_manifest.add(world_name)
                         result.extracted_files.append(rel_path)
                     except Exception as e:
                         result.errors.append(f"{rel_path}: {str(e)}")
@@ -680,6 +683,12 @@ def extract_tools(
             except Exception as e:
                 result.errors.append(f"{world_name}.apworld: {str(e)}")
                 result.success = False
+            if world_name not in apworld_has_manifest:
+                result.warnings.append(
+                    f"{world_name}.apworld was packed without an "
+                    f"archipelago.json manifest; Archipelago logs a "
+                    f"deprecation warning for it and will refuse it in 0.7.0"
+                )
 
     return result
 
