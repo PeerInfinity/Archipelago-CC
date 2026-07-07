@@ -34,6 +34,11 @@ export function baselineMods() {
     "auto_prioritize",
     "auto_prestige",
     "auto_buy_cheapest",
+    // Unlock Savings ON (user ruling 2026-07-06, post-Round-6): the game's
+    // toggles still all ship OFF, but this profile models play with the
+    // automation explicitly enabled, and there we use the settings that give
+    // the best results — savings is a measured pure win in both spark states.
+    "auto_buy_budget_enabled",
     "resume_automation_on_reset",
     "force_automation",
     // NOT award_spark_on_discovery (flipped OFF 2026-07-06): the game's own

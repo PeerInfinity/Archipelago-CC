@@ -279,12 +279,17 @@ times; stall 40 never fires). **stall 20 is the sweet spot**: −37% spark-off
 own long-standing manual setting. stall 15 vs 20 vs 10 are within noise on
 spark-off; 20 is strictly kindest to spark-on.
 
-### Recommended defaults (decision pending user)
+### Shipped decisions (user rulings, 2026-07-06)
 
-- `auto_prestige_stall_resets` 40 → **20** (numeric default; the toggle
-  itself stays off per the standing toggles-off ruling).
-- Unlock Savings: measured pure win everywhere (−29% spark-off, −26%
-  spark-on out-of-box-with-automation), but defaulting
-  `auto_buy_budget_enabled` ON would need the user to revisit the explicit
-  toggles-all-off ruling. `auto_buy_budget_pct` 100 is already right.
+- **`auto_prestige_stall_resets` 40 → 20 SHIPPED** (submodule `f39dd2f`,
+  changelog "Fork 1.6.1"; SAVE_VERSION stays Fork 1.6 — no save-shape
+  change). Numeric default only; every toggle still ships off.
+- **Unlock Savings toggle stays OFF in the game** (toggles-all-off ruling
+  stands), but the clarified principle is: when automation is explicitly
+  enabled, use the settings that give the best results. `baselineMods()`
+  therefore now includes `auto_buy_budget_enabled` — the harness's
+  enabled-automation profile plays with savings on.
 - Everything else (thresholds, fill order, all-skipped): unchanged.
+- Verification: `spark-off-full-shipped-defaults` (empty overrides on the
+  new build + new baselineMods) reproduces `spark-off-full-stall20-savings`
+  **byte-identically** — all-269 @ 2583, 52 prestiges.

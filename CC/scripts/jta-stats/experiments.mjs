@@ -506,6 +506,11 @@ const EXPERIMENTS = [
     options: { ...FULL },
   },
 
+  // Shipped-defaults verification (post Fork 1.6.1 stall 40->20 + savings-on
+  // baselineMods): empty overrides should reproduce spark-off-full-
+  // stall20-savings byte-identically.
+  { name: "spark-off-full-shipped-defaults", options: { ...FULL } },
+
   // Round E attribution: the spark-on check regressed the tail (570 -> 780).
   // Which half of the candidate default is responsible under spark-on?
   {
