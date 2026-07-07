@@ -57,6 +57,7 @@ class InstallerApp(App):
     comp_tracker = BooleanProperty(True)
     comp_testing = BooleanProperty(True)
     comp_worldgen_worlds = BooleanProperty(False)
+    comp_world_source = BooleanProperty(False)
 
     # Patch options
     apply_monkey_patch = BooleanProperty(True)
@@ -670,6 +671,23 @@ For more information, see the README.md file."""
                 dep_ok, dep_msg = install_missing_dependencies()
                 if not dep_ok:
                     self.show_message("Warning", f"Some dependencies failed to install: {dep_msg}")
+
+                # Original world source is a separate upstream download,
+                # not part of the fork archive
+                if "world_source" in components:
+                    self.update_status("Downloading original world source...")
+
+                    def ws_progress_cb(downloaded, total):
+                        if total > 0:
+                            self.update_status(
+                                f"Downloading original world source... "
+                                f"{downloaded / 1024 / 1024:.1f} of {total / 1024 / 1024:.0f} MB"
+                            )
+
+                    from ..installer.world_source import install_world_source
+                    ws_ok, ws_msg = install_world_source(progress_callback=ws_progress_cb)
+                    if not ws_ok:
+                        self.show_message("Warning", f"World source download failed: {ws_msg}")
 
                 # Apply patches based on selected option
                 if self.apply_monkey_patch:

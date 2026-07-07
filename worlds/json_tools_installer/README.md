@@ -126,6 +126,20 @@ The installer can install these components:
 | `tracker` | PopTracker integration world for auto-tracking | No |
 | `testing` | Test config files (package.json, playwright, vitest) | No |
 | `worldgen_worlds` | Auto-generated world packages from JSON rules (~15MB) | No |
+| `world_source` | Original world source for full rule export on compiled installs (~15MB, downloaded from the matching upstream Archipelago release) | No |
+
+### Compiled (frozen) Archipelago installs
+
+On the compiled Windows release, importable components (`exporter`,
+`world_generator`) are installed into `lib/` (the install root is not on the
+frozen interpreter's module path), Python dependencies are installed with the
+bundled pip, and `rule_builder` is skipped (vanilla's copy inside
+`lib/library.zip` cannot be replaced; rule exports fall back to `ast` format).
+The bundled worlds ship without source code, so the `ast` rule analysis needs
+the `world_source` component: it downloads the `.py` files from the upstream
+release tag matching the installed Archipelago version into
+`json_tools_world_source/<version>/` — a folder Archipelago itself never
+reads, and which cannot be imported (the root is not on the module path).
 
 ## Version Sources
 

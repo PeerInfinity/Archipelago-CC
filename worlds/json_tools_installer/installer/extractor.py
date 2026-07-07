@@ -203,6 +203,19 @@ COMPONENTS: Dict[str, Component] = {
         required=False,
         size_estimate_mb=1.0,
     ),
+    "world_source": Component(
+        name="world_source",
+        display_name="Original World Source",
+        description="Upstream world source for full rule export on compiled installs "
+                    "(downloaded separately from the matching Archipelago release)",
+        # Not extracted from the fork archive — installed by
+        # installer.world_source.install_world_source(), which downloads the
+        # upstream release tag matching the installed AP version. The
+        # source_paths entry exists for detection and removal only.
+        source_paths=["json_tools_world_source"],
+        required=False,
+        size_estimate_mb=15.0,
+    ),
     "worldgen_worlds": Component(
         name="worldgen_worlds",
         display_name="WorldGen Worlds",

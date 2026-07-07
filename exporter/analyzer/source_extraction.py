@@ -205,6 +205,35 @@ def _extract_multiline_lambda(source_code: str, start_line: int) -> Optional[str
         return None
 
 
+def _world_source_fallback_path(filename: str) -> Optional[str]:
+    """
+    Resolve a source path for worlds shipped without source.
+
+    Compiled Archipelago builds bundle worlds and core modules as .pyc-only
+    code whose co_filename is the relative build-tree path (e.g.
+    'worlds/apquest/rules.py' or 'BaseClasses.py') — no source exists on
+    disk. The JSON Tools Installer can download the matching upstream
+    source into json_tools_world_source/<ap_version>/; look there. The
+    version match matters: lambda extraction works by line number, so only
+    the exact running AP version's source is trusted.
+    """
+    import os
+    norm = filename.replace("\\", "/")
+    if os.path.isabs(norm) or (len(norm) > 1 and norm[1] == ":"):
+        return None
+    try:
+        from Utils import local_path, __version__
+        base_version = __version__.split("-")[0]
+        candidate = os.path.join(
+            local_path("json_tools_world_source", base_version), *norm.split("/")
+        )
+        if os.path.isfile(candidate):
+            return candidate
+    except Exception:
+        pass
+    return None
+
+
 def _read_source_from_path(filename: str) -> Optional[str]:
     """
     Read source code from a file path, handling both regular files and
@@ -243,6 +272,16 @@ def _read_source_from_path(filename: str) -> Optional[str]:
         with open(filename, 'r', encoding='utf-8-sig') as f:
             return f.read()
     except Exception as e:
+        fallback = _world_source_fallback_path(filename)
+        if fallback:
+            try:
+                with open(fallback, 'r', encoding='utf-8-sig') as f:
+                    logging.debug(f"Read source from world source fallback: {fallback}")
+                    return f.read()
+            except Exception as fallback_error:
+                logging.error(
+                    f"Failed to read world source fallback {fallback}: {fallback_error}"
+                )
         logging.error(f"Failed to read source file {filename}: {e}")
         return None
 

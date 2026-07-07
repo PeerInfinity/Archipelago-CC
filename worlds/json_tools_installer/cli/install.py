@@ -225,6 +225,20 @@ def do_install(
         else:
             print(f"  [WARN] {dep_msg}")
 
+        # Download original world source (separate upstream download, not
+        # part of the fork archive)
+        if "world_source" in components:
+            print("\n  Downloading original world source...")
+            from ..installer.world_source import install_world_source
+            ws_ok, ws_msg = install_world_source(
+                progress_callback=progress_callback,
+            )
+            print()  # New line after progress bar
+            if ws_ok:
+                print(f"  [OK] {ws_msg}")
+            else:
+                print(f"  [WARN] {ws_msg}")
+
         # Apply patches based on selected mode
         if patch_mode == "monkey":
             print("\n  Setting up monkey patching...")
@@ -364,6 +378,12 @@ def main(args=None):
         "--world-generator",
         action="store_true",
         help="Install world generator module (default component)",
+    )
+    parser.add_argument(
+        "--world-source",
+        action="store_true",
+        help="Download original world source from the matching Archipelago "
+             "release (compiled installs only; enables full rule export)",
     )
     parser.add_argument(
         "--scripts",
@@ -561,6 +581,7 @@ def main(args=None):
             "worldgen_worlds": "worldgen_worlds",
             "tracker": "tracker",
             "testing": "testing",
+            "world_source": "world_source",
         }
         for flag, comp_name in flag_to_component.items():
             if getattr(parsed, flag, False):
