@@ -205,6 +205,9 @@ Playthrough:
 2: {
   BoB: Find the 8 Red Coins: Power Star
   BoB: Shoot to the Island in the Sky: Power Star
+  CCM: 1Up Block Ice Pillar: 1Up Mushroom
+  CCM: 1Up Block Near Snowman: 1Up Mushroom
+  CCM: 1Up Block Secret Slide: 1Up Mushroom
   CCM: Big Penguin Race: Power Star
   CCM: Bob-omb Buddy: Cannon Unlock CCM
   CCM: Frosty Slide for 8 Red Coins: Progressive Key
@@ -227,15 +230,21 @@ Playthrough:
   WF: To the Top of the Fortress: Power Star
 }
 3: {
+  BBH: 1Up Block Top of Mansion: 1Up Mushroom
   BBH: Big Boo's Balcony: Power Star
   BBH: Go on a Ghost Hunt: Power Star
   BBH: Ride Big Boo's Merry-Go-Round: Power Star
   BBH: Secret of the Haunted Books: Power Star
   BBH: Seek the 8 Red Coins: Power Star
+  Bowser in the Dark World 1Up Block near Goombas: 1Up Mushroom
+  Bowser in the Dark World 1Up Block on Tower: 1Up Mushroom
   Bowser in the Dark World Key: Power Star
   Bowser in the Dark World Red Coins: Power Star
   CCM: Wall Kicks Will Work: Power Star
+  Cavern of the Metal Cap 1Up Block: 1Up Mushroom
   Cavern of the Metal Cap Switch: Power Star
+  HMC: 1Up Block Past Rolling Rocks: 1Up Mushroom
+  HMC: 1Up Block above Pit: 1Up Mushroom
   HMC: A-Maze-Ing Emergency Exit: Power Star
   HMC: Elevate for 8 Red Coins: Power Star
   HMC: Navigating the Toxic Maze: Power Star
@@ -249,17 +258,25 @@ Playthrough:
   LLL: Hot-Foot-It into the Volcano: Power Star
   LLL: Red-Hot Log Rolling: Power Star
   MIPS 1: Power Star
+  SL: 1Up Block Near Moneybags: 1Up Mushroom
+  SL: 1Up Block inside Igloo: 1Up Mushroom
   SL: Bob-omb Buddy: Cannon Unlock SL
   SL: Chill with the Bully: Power Star
   SL: In the Deep Freeze: Power Star
   SL: Shell Shreddin' for Red Coins: Power Star
   SL: Snowman's Big Head: Power Star
   SL: Whirl from the Freezing Pond: Power Star
+  SSL: 1Up Block Outside Pyramid: 1Up Mushroom
+  SSL: 1Up Block Pyramid Back: 1Up Mushroom
+  SSL: 1Up Block Pyramid Left Path: 1Up Mushroom
   SSL: Bob-omb Buddy: Cannon Unlock SSL
   SSL: In the Talons of the Big Bird: Power Star
   SSL: Inside the Ancient Pyramid: Power Star
   SSL: Pyramid Puzzle: Power Star
   SSL: Shining Atop the Pyramid: Power Star
+  THI: 1Up Block THI Large near Start: 1Up Mushroom
+  THI: 1Up Block THI Small near Start: 1Up Mushroom
+  THI: 1Up Block Windy Area: 1Up Mushroom
   THI: Bob-omb Buddy: Cannon Unlock THI
   THI: Five Itty Bitty Secrets: Power Star
   THI: Make Wiggler Squirm: Power Star
@@ -267,6 +284,7 @@ Playthrough:
   THI: Rematch with Koopa the Quick: Power Star
   THI: The Tip Top of the Huge Island: Power Star
   THI: Wiggler's Red Coins: Power Star
+  TTM: 1Up Block on Red Mushroom: 1Up Mushroom
   TTM: Bob-omb Buddy: Cannon Unlock TTM
   TTM: Breathtaking View from Bridge: Power Star
   TTM: Mysterious Mountainside: Power Star
@@ -276,7 +294,9 @@ Playthrough:
   Toad (Basement): Metal Cap
   Tower of the Wing Cap Red Coins: Power Star
   Tower of the Wing Cap Switch: Power Star
+  Vanish Cap Under the Moat 1Up Block: 1Up Mushroom
   Vanish Cap Under the Moat Switch: Power Star
+  WDW: 1Up Block in Downtown: 1Up Mushroom
   WDW: Bob-omb Buddy: Cannon Unlock WDW
   WDW: Express Elevator--Hurry Up!: Power Star
   WDW: Go to Town for Red Coins: Power Star
@@ -286,8 +306,11 @@ Playthrough:
   WF: Blast Away the Wall: Power Star
 }
 4: {
+  Bowser in the Fire Sea 1Up Block Near Poles: 1Up Mushroom
+  Bowser in the Fire Sea 1Up Block Swaying Stairs: 1Up Mushroom
   Bowser in the Fire Sea Key: Power Star
   Bowser in the Fire Sea Red Coins: Power Star
+  Bowser in the Sky 1Up Block: 1Up Mushroom
   Bowser in the Sky Red Coins: Power Star
   Cavern of the Metal Cap Red Coins: Power Star
   DDD: Board Bowser's Sub: Power Star
@@ -298,12 +321,17 @@ Playthrough:
   HMC: Metal-Head Mario Can Move!: Power Star
   JRB: Through the Jet Stream: Power Star
   MIPS 2: Power Star
+  RR: 1Up Block On House in the Sky: 1Up Mushroom
+  RR: 1Up Block Top of Red Coin Maze: 1Up Mushroom
+  RR: 1Up Block Under Fly Guy: 1Up Mushroom
   RR: Bob-omb Buddy: Cannon Unlock RR
   RR: Coins Amassed in a Maze: Power Star
   RR: Cruiser Crossing the Rainbow: Vanish Cap
   RR: Swingin' in the Breeze: Power Star
   RR: The Big House in the Sky: Power Star
   RR: Tricky Triangles!: Power Star
+  TTC: 1Up Block Midway Up: 1Up Mushroom
+  TTC: 1Up Block at the Top: 1Up Mushroom
   TTC: Get a Hand: Power Star
   TTC: Roll into the Cage: Power Star
   TTC: Stomp on the Thwomp: Power Star
@@ -326,5 +354,6 @@ Playthrough:
   BoB: Mario Wings to the Sky: Power Star
   SSL: Free Flying for 8 Red Coins: Power Star
   SSL: Stand Tall on the Four Pillars: Power Star
+  Wing Mario Over the Rainbow 1Up Block: 1Up Mushroom
   Wing Mario Over the Rainbow Red Coins: Power Star
 }

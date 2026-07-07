@@ -79,12 +79,18 @@ Playthrough:
 1: {
   A Knight's Folly: Caesar: Merfolk
   A Knight's Folly: Victory: Warship
+  Best Friendssss: Find Sedge: Commander Defense Boost
   Best Friendssss: Victory: Dragon
+  Denrunaway: Chest: Income Boost
+  Denrunaway: Victory: Witch
   Humble Beginnings: Caesar: Ballista
   Humble Beginnings: Chest 1: Final Bridges
+  Humble Beginnings: Chest 2: Commander Defense Boost
+  Humble Beginnings: Victory: Commander Defense Boost
 }
 2: {
   Corrupted Inlet: Victory: Eastern Bridges
+  Mage Mayhem: Caesar: Balloon
   Mage Mayhem: Victory: Southern Walls
 }
 3: {
@@ -92,25 +98,38 @@ Playthrough:
 }
 4: {
   Archery Lessons: Chest: Harpoon Ship
+  Archery Lessons: Victory: Income Boost
+  Doggo Mountain: Find all the Dogs: Income Boost
+  Doggo Mountain: Victory: Commander Defense Boost
+  Master of the Lake: Victory: Income Boost
 }
 5: {
   The Churning Sea: Victory: Spearman
 }
 6: {
+  Ambushed in the Middle: Victory (Blue): Commander Defense Boost
+  Ambushed in the Middle: Victory (Green): Income Boost
+  Rebel Village: Victory (Pink): Commander Defense Boost
   Rebel Village: Victory (Red): Archer
 }
 7: {
+  A Ballista's Revenge: Victory: Commander Defense Boost
   Frigid Archery: Light the Torch: Mage
   Frigid Archery: Victory: Rifleman
 }
 8: {
   Darkest Knight: Victory: Harpy
   Deep Thicket: Find Sedge: Turtle
+  Deep Thicket: Victory: Income Boost
   Dragon Freeway: Victory: Barge
+  Foolish Canal: Victory: Income Boost
   Open Season: Caesar: Final Walls
+  Open Season: Victory: Commander Defense Boost
   Surrounded: Caesar: Thief
+  Surrounded: Victory: Golem
 }
 9: {
+  Robbed: Victory: Wagon
   Tenri's Fall: Victory: Final Sickle
 }
 10: {

@@ -9,7 +9,7 @@ import os
 from typing import ClassVar, Dict, List, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
-from rule_builder import RuleWorldMixin
+from ._ext import RuleWorldMixin
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState, MultiWorld
@@ -58,7 +58,7 @@ class RunnerSphereWorldGenWeb(WebWorld):
 class ProcgenMazeWorld(RuleWorldMixin, World):
     """
     Runner Sphere WorldGen for Archipelago.
-
+    
     Auto-generated world implementation.
     """
 
@@ -119,6 +119,8 @@ class ProcgenMazeWorld(RuleWorldMixin, World):
         super().__init__(multiworld, player)
         # Game-specific world attributes
         self.world_class_name = 'ProcgenMazeWorld'
+        self.count_non_advancement_items = True
+        self.world_description = 'Runner Sphere WorldGen for Archipelago.\n\nAuto-generated world implementation.'
 
     # Canonical seed for deterministic placement
     CANONICAL_SEED: ClassVar[int] = 1

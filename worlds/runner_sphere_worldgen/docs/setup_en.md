@@ -1,3 +1,3 @@
-# Runner Sphere WorldGen Setup Guide
+# Multiworld Setup Guide
 
-Generated world package.
+A guide to setting up the Runner Sphere WorldGen world for Archipelago.

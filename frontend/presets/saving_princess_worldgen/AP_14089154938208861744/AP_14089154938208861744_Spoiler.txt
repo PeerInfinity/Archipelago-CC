@@ -77,6 +77,8 @@ Playthrough:
 
 }
 1: {
+  Cave: After Wallboss: Clip Extension
+  Cave: Balcony: Full Heal
   Cave: Spike pit: Powered Blaster
   Cave: Wallboss (Boss): Faster Reload
   Hub: Console login: Clip Extension
@@ -90,19 +92,36 @@ Playthrough:
   Cave: Powered Blaster chest: Volcanic Key
   Hub: Hidden near Arctic: Faster Reload
   Swamp: Down the chimney: Ice Spreadshot
+  Swamp: Wall maze: Clip Extension
+  Volcanic: Behind wall: Full Heal
   Volcanic: Under bridge: Life Extension
 }
 3: {
+  Arctic: Ace (Boss): Life Extension
+  Arctic: Ice Spreadshot chest: Faster Reload
+  Swamp: Snake (Boss): Ice Trap
   Swamp: Special Extension chest: Life Extension
+  Volcanic: Cliff (Boss): Clip Extension
   Volcanic: Flamethrower chest: Cave Key
   Volcanic: Hot coals: Flamethrower
 }
 4: {
+  Arctic: Jacket chest: Ice Trap
   Arctic: Under snow: Faster Reload
+  Hub: Ninja scare (Boss?): Life Extension
 }
 5: {
+  Electrical: Before Malakhov: Faster Reload
+  Electrical: Behind wall: Clip Extension
+  Electrical: Generator (Boss): Full Heal
+  Electrical: Malakhov (Boss): Ninja Trap
+  Electrical: Near generator: Special Extension
+  Electrical: Volt Laser chest: Life Extension
+  Elevator: Ninja (Boss): Ninja Trap
   Swamp: Bramble room: Volt Laser
 }
 6: {
+  Electrical: BRAINOS (Boss): Life Extension
+  Electrical: Tesla orb: Jacket
   Mission objective: PRINCESS
 }

@@ -151,12 +151,14 @@ Playthrough:
 }
 1: {
   Burn a Log: Area: South of Varrock
+  Burn some Oak Logs: Progressive Ranged Weapon
   Burn some Willow Logs: Area: Lumbridge Swamp
   Combat Level 15: Area: Falador Farms
   Get Prompted to Buy Membership: Area: Ice Mountain
   Kill a Duck: Area: Crafting Guild
   Reach a Level 10: Area: Draynor Village
   Reach a Level 20: Progressive Weapons
+  Total Level 50: Progressive Ranged Armor
   Total XP 25,000: Area: Central Varrock
 }
 2: {
@@ -169,9 +171,12 @@ Playthrough:
 }
 3: {
   Bake a Redberry Pie: Area: Monastery
+  Cast Bones To Bananas: Progressive Tools
   Catch a Trout: Area: Wizard Tower
   Enter the Cook's Guild: Area: Barbarian Village
+  Equip an Orange Cape: Progressive Ranged Armor
   Find a Needle in a Haystack: Area: Draynor Manor
+  Get Sent to Jail in Shantay Pass: Progressive Ranged Armor
   Kill a Zombie: Progressive Weapons
   Points: Cook's Assistant: 1 QP (Cook's Assistant)
   Points: Prince Ali Rescue: 3 QP (Prince Ali Rescue)
@@ -194,15 +199,19 @@ Playthrough:
   Points: The Restless Ghost: 1 QP (The Restless Ghost)
   Points: Vampyre Slayer: 3 QP (Vampyre Slayer)
   Quest: Doric's Quest: Progressive Weapons
+  Quest: Ernest the Chicken: Progressive Tools
   Quest: Imp Catcher: Progressive Weapons
   Quest: Rune Mysteries: Area: Mudskipper Point
   Quest: The Restless Ghost: Area: Edgeville
   Quest: Vampyre Slayer: Progressive Armor
+  Smelt a Gold Bar: Progressive Magic Spell
   Total Level 150: Area: Citharede Abbey
+  Total XP 125,000: Progressive Tools
 }
 5: {
   Cut a Diamond: Area: Falador
   Points: Witch's Potion: 1 QP (Witch's Potion)
+  Quest: Witch's Potion: Progressive Tools
 }
 6: {
   Points: Below Ice Mountain: 1 QP (Below Ice Mountain)
@@ -210,17 +219,22 @@ Playthrough:
   Points: Goblin Diplomacy: 5 QP (Goblin Diplomacy)
   Quest: Below Ice Mountain: Progressive Armor
   Quest: Black Knights' Fortress: Area: Varrock Palace
+  Quest: Goblin Diplomacy: Progressive Magic Spell
 }
 7: {
   Have the Apothecary Make a Strength Potion: Area: Corsair Cove
+  Open an Ornate Lockbox: Progressive Tools
   Points: Demon Slayer: 3 QP (Demon Slayer)
   Points: Romeo & Juliet: 5 QP (Romeo & Juliet)
   Points: Shield of Arrav: 1 QP (Shield of Arrav)
   Points: The Knight's Sword: 1 QP (The Knight's Sword)
+  Quest: Demon Slayer: Progressive Tools
   Quest: Romeo & Juliet: Area: Karamja
   Quest: Shield of Arrav: Progressive Armor
+  Quest: The Knight's Sword: Progressive Ranged Weapon
 }
 8: {
+  Catch a Lobster: Progressive Ranged Weapon
   Points: Pirate's Treasure: 2 QP (Pirate's Treasure)
   Points: The Corsair Curse: 2 QP (The Corsair Curse)
   Quest: Dragon Slayer: Victory

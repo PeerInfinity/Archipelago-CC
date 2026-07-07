@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 from worlds.generic.Rules import location_item_name, item_name_in_location_names
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, CanReachLocation, CanReachRegion, Compare, False_, Has, HasAll, HasAny, HasGroup, HelperCall, Or, True_
+from ._ext import True_, False_, And, CanReachLocation, CanReachRegion, Compare, False_, Has, HasAll, HasAny, HasGroup, HelperCall, Or, True_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState

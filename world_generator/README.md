@@ -59,7 +59,9 @@ world_generator/
 ├── rule_codegen.py       # Rule → Python code generation
 ├── templates.py          # File template generation
 ├── json_world_builder.py # Live world instantiation from JSON
-└── constants.py          # Configuration constants
+├── constants.py          # Configuration constants
+└── ext_template/         # Vendored rule_builder compat package (copied
+                          # into each generated world as _ext/)
 ```
 
 ## Generated Output
@@ -76,8 +78,20 @@ worlds/{game_directory}/
 ├── Options.py            # Game-specific options
 ├── archipelago.json      # APWorld manifest
 ├── _worldgen_options.json # Options for canonical seed
+├── _ext/                 # Vendored rule_builder compatibility package
+│                         # (fork rule_builder when present, else vanilla
+│                         # rule_builder.rules + vendored extras/mixin)
 └── docs/en/setup.md      # Setup guide
 ```
+
+Generated worlds are **self-contained**: all rule-builder names are imported
+from the world's own `_ext/` package, which prefers the fork's extended
+`rule_builder` and falls back to vanilla Archipelago's `rule_builder.rules`
+plus vendored copies of the fork-only rule types and `RuleWorldMixin`
+(registered under the world's game name via vanilla's per-game
+`CustomRuleRegister`). A generated world therefore runs unchanged on this
+fork, on unmodified vanilla Archipelago source (0.6.7+), and on compiled
+(frozen) installs when packed as an `.apworld`.
 
 ## Python API
 

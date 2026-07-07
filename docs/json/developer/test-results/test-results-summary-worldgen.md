@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2026-07-07 20:24:13 UTC
+**Generated:** 2026-07-07 21:10:54 UTC
 
 **Source Data Created:** 2026-06-27T22:24:23.374452+00:00
 
@@ -65,7 +65,7 @@ Of the 43 templates passing all 4 tests:
 | Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | [Multiworld Test](./test-results-multiworld.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic | Rules Size |
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|------------|
 | A Hat in Time WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 18.2KB | ✅ | 235.5KB |
-| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 14.0KB | ✅ | 667.4KB |
+| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 14.0KB | ✅ | 667.7KB |
 | A Short Hike WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 79.5KB |
 | APCalc WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 314.2KB |
 | APQuest WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 11.8KB |
@@ -83,9 +83,9 @@ Of the 43 templates passing all 4 tests:
 | DLCQuest WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 1.2KB | ✅ | 49.0KB |
 | DepGraph WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 405.4KB |
 | EarthBound WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 353.0KB |
-| Factorio WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 8.8KB | ✅ | 232.2KB |
+| Factorio WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 8.8KB | ✅ | 245.6KB |
 | Faxanadu WorldGen | ✅ Passed | ❌ Failed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 72.4KB |
-| Final Fantasy Mystic Quest WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 14.0KB | ✅ | 557.5KB |
+| Final Fantasy Mystic Quest WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 14.0KB | ✅ | 558.8KB |
 | Hylics 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 103.9KB |
 | Inscryption WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 8.0KB | ✅ | 87.1KB |
 | Landstalker - The Treasures of King Nole WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.6KB | ✅ | 230.0KB |
@@ -126,8 +126,8 @@ Of the 43 templates passing all 4 tests:
 |------|-----------|------------|
 | 1 | Super Mario Land 2 WorldGen | 921.0KB |
 | 2 | Links Awakening DX WorldGen | 698.9KB |
-| 3 | A Link to the Past WorldGen | 667.4KB |
-| 4 | Final Fantasy Mystic Quest WorldGen | 557.5KB |
+| 3 | A Link to the Past WorldGen | 667.7KB |
+| 4 | Final Fantasy Mystic Quest WorldGen | 558.8KB |
 | 5 | Overcooked! 2 WorldGen | 486.2KB |
 | 6 | DepGraph WorldGen | 405.4KB |
 | 7 | Mario & Luigi Superstar Saga WorldGen | 403.9KB |

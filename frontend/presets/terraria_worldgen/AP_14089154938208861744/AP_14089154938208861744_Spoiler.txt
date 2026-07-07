@@ -282,58 +282,96 @@ Playthrough:
 
 }
 1: {
+  A Shimmer In The Dark: Reward: Shoe Spikes
   Aglet: Aglet
   Angler: Angler
   Anklet of the Wind: Anklet of the Wind
   Arms Dealer: Arms Dealer
   Bee Keeper: Bee Keeper
   Bee Wax: Bee Wax
+  Benched: Reward: Flipper
   Bezoar: Bezoar
   Cactus: Cactus
   Celestial Magnet: Celestial Magnet
   Clumsy Slime: Clumsy Slime
   Compass: Compass
   Copper Shortsword: Copper Shortsword
+  Dead Men Tell No Tales: Reward: Treasure Magnet
+  Deerclops: Reward: Magic Conch
   Demonite Ore: Demonite Ore
   Depth Meter: Depth Meter
   Enchanted Sword: Enchanted Sword
+  Evil Boss: Reward: Megaphone
   Evil Boss Part: Evil Boss Part
   Evil Powder: Evil Powder
+  Eye of Cthulhu: Reward: Paint Sprayer
+  Fashion Statement: Reward: Ice Skates
   Feral Claws: Feral Claws
   Flinx Fur Coat: Flinx Fur Coat
+  Funkytown: Reward: Fast Clock
+  Goblin Army: Reward: Rifle Scope
   Gold Hammer: Gold Hammer
   Gold Pickaxe: Gold Pickaxe
   Gold Watch: Gold Watch
   Golfer: Golfer
   Guide: Guide
+  Heart Breaker: Post-Deerclops
+  Heavy Metal: Post-King Slime
+  Heliophobia: Reward: Feral Claws
   Hermes Boots: Hermes Boots
+  Hey! Listen!: Reward: Fledgling Wings
+  Hold on Tight!: Reward: Titan Glove
+  I Am Loot!: Reward: Lavaproof Fishing Hook
   Ice Skates: Ice Skates
+  Into Orbit: Reward: Stopwatch
+  It's Getting Hot in Here: Reward: Ancient Chisel
+  Jeepers Creepers: Reward: Demon Conch
   Jungle Spores: Jungle Spores
+  King Slime: Reward: Nazar
   Lava Charm: Lava Charm
+  Like a Boss: Reward: Star Cloak
+  Lucky Break: Reward: Weather Radio
   Magic Mirror: Magic Mirror
   Magma Stone: Magma Stone
+  Matching Attire: Reward: Torch God's Favor
   Merchant: Merchant
   Metal Detector: Metal Detector
   Meteorite: Meteorite
   Nature's Gift: Nature's Gift
   Nerdy Slime: Nerdy Slime
+  No Hobo: Reward: Celestial Magnet
   Obsidian: Obsidian
   Obsidian Rose: Obsidian Rose
+  Ooo! Shiny!: Reward: Armor Polish
+  Queen Bee: Reward: Step Stool
+  Quiet Neighborhood: Reward: Black Belt
   Radar: Radar
+  Rock Bottom: Post-Queen Slime
   Sandstorm: Sandstorm
   Shark Tooth Necklace: Shark Tooth Necklace
+  Skeletron: Reward: Yoyo Glove
+  Smashing, Poppet!: Reward: Putrid Scent
   Solidifier: Solidifier
   Squire Slime: Squire Slime
+  Star Power: Reward: Hermes Boots
   Starfury: Starfury
   Stinger: Stinger
+  Stop! Hammer Time!: Reward: DPS Meter
   Stylist: Stylist
   Summoning Potion: Summoning Potion
   Surly Slime: Surly Slime
+  The Cavalry: Reward: Red Counterweight
+  Throwing Lines: Reward: Sextant
+  Timber!!: Reward: Rod of Discord
   Torch God: Post-Eye of Cthulhu
+  Unusual Survival Strategies: Post-Old One's Army Tier 1
   Vehicular Manslaughter: Post-Pirate Invasion
   Vine: Vine
   Wand of Sparking: Wand of Sparking
+  Watch Your Step!: Reward: Climbing Claws
   Water Walking Boots: Water Walking Boots
+  Where's My Honey?: Reward: Brick Layer
+  You Can Do It!: Reward: Gold Ring
   Zoologist: Zoologist
 }
 2: {
@@ -362,18 +400,24 @@ Playthrough:
   Pwnhammer: Pwnhammer
   Sextant: Sextant
   Traveling Merchant: Traveling Merchant
+  Wall of Flesh: Reward: Shark Tooth Necklace
   Weather Radio: Weather Radio
 }
 3: {
   Clothier: Clothier
   DPS Meter: DPS Meter
   Dungeon: Dungeon
+  Dye Hard: Reward: Lucky Coin
   Evil Sword: Evil Sword
+  Feast of Midas: Reward: Moon Charm
+  Feeling Petty: Reward: Lava Charm
   Hellforge: Hellforge
   Hellstone: Hellstone
+  Leading Landlord: Reward: Cloud in a Bottle
   Lifeform Analyzer: Lifeform Analyzer
   Meteor Hamaxe: Meteor Hamaxe
   Mystic Slime: Mystic Slime
+  Not the Bees!: Reward: Neptune's Shell
   Party Girl: Party Girl
   Pumpkin Seeds: Pumpkin Seeds
   Stopwatch: Stopwatch
@@ -385,6 +429,7 @@ Playthrough:
   Bone: Bone
   Cobalt Shield: Cobalt Shield
   Cool Slime: Cool Slime
+  Dungeon Heist: Reward: Magic Mirror
   Elder Slime: Elder Slime
   Goblin Tinkerer: Goblin Tinkerer
   Hellstone Bar: Hellstone Bar
@@ -395,6 +440,7 @@ Playthrough:
 5: {
   Actuator: Actuator
   Fiery Greatsword: Fiery Greatsword
+  Hot Reels!: Reward: Flying Carpet
   Molten Hamaxe: Molten Hamaxe
   Molten Pickaxe: Molten Pickaxe
   Rocket Boots: Rocket Boots
@@ -425,10 +471,12 @@ Playthrough:
   Cobalt Bar: Cobalt Bar
   Cobalt Ore: Cobalt Ore
   Cross Necklace: Cross Necklace
+  Don't Dread on Me: Reward: Trifold Map
   Fast Clock: Fast Clock
   Forbidden Fragment: Forbidden Fragment
   Hallow: Hallow
   Hallowed Seeds: Hallowed Seeds
+  Head in the Clouds: Reward: Fisherman's Pocket Guide
   Lightning Boots: Lightning Boots
   Magic Quiver: Magic Quiver
   Megaphone: Megaphone
@@ -450,13 +498,16 @@ Playthrough:
 }
 8: {
   Armor Bracing: Armor Bracing
+  Begone, Evil!: Reward: Obsidian Rose
   Blessed Apple: Blessed Apple
   Cell Phone: Cell Phone
   Cobalt Pickaxe: Cobalt Pickaxe
   Countercurse Mantra: Countercurse Mantra
   Crystal Shard: Crystal Shard
+  Extra Shiny!: Reward: Water Walking Boots
   Frostspark Boots: Frostspark Boots
   Hardmode Anvil: Hardmode Anvil
+  It Can Talk?!: Reward: Tally Counter
   Medicated Bandage: Medicated Bandage
   Pixie Dust: Pixie Dust
   Power Glove: Power Glove
@@ -482,6 +533,7 @@ Playthrough:
   Mechanical Worm: Mechanical Worm
   Meteor Staff: Meteor Staff
   Mythril Pickaxe: Mythril Pickaxe
+  Old One's Army Tier 1: Reward: Nature's Gift
   Terraspark Boots: Terraspark Boots
   Witch Doctor: Witch Doctor
 }
@@ -490,5 +542,6 @@ Playthrough:
   Pygmy Necklace: Pygmy Necklace
   Skeletron Prime: Post-Skeletron Prime
   The Destroyer: Post-The Destroyer
+  The Great Slime Mitosis: Reward: Grappling Hook
   The Twins: Post-The Twins
 }
