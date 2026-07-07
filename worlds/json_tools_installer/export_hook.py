@@ -16,9 +16,18 @@ logger = logging.getLogger(__name__)
 
 def export_post_output_hook(multiworld: "MultiWorld", output_dir: str, filename_base: str) -> None:
     """Export game rules and multiworld pickle after output generation."""
-    from exporter import export_game_rules, clear_rule_cache
-    from exporter.games import clear_handler_cache
-    from exporter.pickle_exporter import export_multiworld_pickle
+    try:
+        from exporter import export_game_rules, clear_rule_cache
+        from exporter.games import clear_handler_cache
+        from exporter.pickle_exporter import export_multiworld_pickle
+    except ModuleNotFoundError as e:
+        logger.warning(
+            "JSON Tools exporter not available (%s); skipping rules export. "
+            "Install the Exporter component via the JSON Tools Installer. "
+            "On a compiled Archipelago install the exporter package and its "
+            "dependencies must be inside the lib/ folder.", e
+        )
+        return
     from .json_tools_settings import get_json_tools_settings
 
     # Call per-world post_output hooks (e.g., JTA cost adjustment).
