@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, final
 
-from rule_builder import CanReachRegion, Has, OptionFilter
+from ._ext import CanReachRegion, Has, OptionFilter
 
 from .items import ItemName
 from .locations import LocationName
@@ -8,7 +8,7 @@ from .options import IncludeBasto
 from .regions import RegionName
 
 if TYPE_CHECKING:
-    from rule_builder import Rule
+    from ._ext import Rule
 
     from . import ToemWorld
 

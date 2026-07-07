@@ -1,0 +1,9 @@
+{
+    "game": "TOEM rule builder",
+    "authors": [
+        "PeerInfinity"
+    ],
+    "minimum_ap_version": "0.6.7",
+    "world_version": "1.0.0",
+    "compatible_version": 5
+}

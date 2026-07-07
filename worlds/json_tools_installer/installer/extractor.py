@@ -223,10 +223,9 @@ COMPONENTS: Dict[str, Component] = {
         required=False,
         size_estimate_mb=1.0,
         frozen_apworld=True,
-        # toem_rule_builder imports the extended rule_builder (RuleWorldMixin),
-        # which cannot load on frozen installs (vanilla's rule_builder inside
-        # library.zip takes precedence)
-        frozen_exclude_worlds=["toem_rule_builder"],
+        # toem_rule_builder ships a vendored _ext compat package (see
+        # world_generator/ext_template/) and runs on vanilla rule_builder,
+        # so it no longer needs excluding on frozen installs.
     ),
     "world_source": Component(
         name="world_source",
@@ -249,22 +248,22 @@ COMPONENTS: Dict[str, Component] = {
         source_patterns=["worlds/*_worldgen", "worlds/*_worldgen/*"],
         required=False,
         size_estimate_mb=15.0,
-        unsupported_frozen=(
-            "worldgen worlds require the extended Rule Builder "
-            "(RuleWorldMixin), which cannot load on compiled installs — "
-            "vanilla's rule_builder inside library.zip takes precedence"
-        ),
+        # Generated worlds carry a vendored _ext compat package that falls
+        # back to vanilla rule_builder.rules, so they load on compiled
+        # installs; pack them as custom_worlds apworlds there.
+        frozen_apworld=True,
     ),
 }
 
 # Default components to install
 DEFAULT_COMPONENTS = {
     "exporter",
-    "rule_builder",  # world_generator hard-imports fork rule_builder symbols
-                     # (BOOLEAN_RULE_TYPES, RuleWorldMixin, ...); vanilla AP's
-                     # rule_builder lacks them, so without this the installed
-                     # world_generator can't import and UT worldgen-mode
-                     # tracking fails. Replaces vanilla rule_builder/.
+    "rule_builder",  # Extended rule_builder enables rule_builder-format rule
+                     # export (ast fallback otherwise). world_generator and
+                     # generated worlds no longer hard-require it — they fall
+                     # back to vanilla rule_builder.rules plus their vendored
+                     # _ext compat package. Replaces vanilla rule_builder/;
+                     # skipped with a warning on frozen installs.
     "world_generator",
     "frontend",
     "docs",
@@ -424,6 +423,14 @@ def component_apworld_paths(comp: Component, root: Path) -> List[Path]:
         world_name = source_path.split("/")[-1]
         for folder in folders:
             paths.append(folder / f"{world_name}.apworld")
+    # Pattern-based components (e.g. worldgen_worlds: "worlds/*_worldgen")
+    # have no fixed world names — glob custom_worlds for matching apworlds.
+    for pattern in comp.source_patterns:
+        if pattern.endswith("/*"):
+            continue  # recursive file pattern, not a world directory pattern
+        world_glob = pattern.split("/")[-1]
+        for folder in folders:
+            paths.extend(folder.glob(f"{world_glob}.apworld"))
     return paths
 
 
