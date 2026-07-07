@@ -145,17 +145,20 @@ On the compiled Windows release, importable components (`exporter`,
 frozen interpreter's module path), and Python dependencies are installed with
 the bundled pip.
 
+World-shaped components (`demo_worlds`, `tracker`) are installed as
+source-bearing `.apworld` files into `custom_worlds/` — the root `worlds/`
+directory they normally extract to is never loaded by compiled installs.
+Restart the Launcher after installing so the new worlds load. Their Python
+dependencies are covered by the apworld-requirements scan described above.
+
 Components that cannot work there are skipped with a warning:
 
 - `rule_builder` — vanilla's copy inside `lib/library.zip` takes module-path
   precedence and cannot be replaced; rule exports fall back to `ast` format.
 - `romless_patches` and `upstream_fixes` — compiled installs run their worlds
   from `lib/worlds/*.apworld`, which file patches cannot reach.
-
-`demo_worlds`, `worldgen_worlds`, and `tracker` currently also have no effect
-on compiled installs (they extract to the root `worlds/` directory, which those
-installs never load); installing them as `.apworld` files into `custom_worlds/`
-is the workaround, and native support is planned.
+- `worldgen_worlds`, and the `toem_rule_builder` demo world — they require the
+  extended Rule Builder, which cannot load on compiled installs.
 
 The bundled worlds ship without source code, so the `ast` rule analysis needs
 the `world_source` component: it downloads the `.py` files from the upstream

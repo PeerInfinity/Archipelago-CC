@@ -37,11 +37,9 @@ The easiest method is the [JSON Tools Installer apworld](https://github.com/Peer
 
 The installer's **Demo Worlds** component includes MetaMath, so both JSON Tools and the MetaMath world can be installed in one step.
 
-> **Compiled `.exe` note:** the Demo Worlds component currently has no effect on
-> compiled installs (it extracts to a directory those installs never load) — use
-> the MetaMath apworld in `custom_worlds/` as described in the next step instead.
-> The core JSON Tools components (exporter, dependencies) install correctly on
-> compiled installs.
+> **Compiled `.exe` note:** on compiled installs, the Demo Worlds component
+> installs MetaMath (and the other demo worlds) as `.apworld` files in
+> `custom_worlds/`. Restart the Launcher afterwards so the new worlds load.
 
 See the [JSON Tools overview](../../../docs/json/user/overview.md) for alternative setup methods.
 

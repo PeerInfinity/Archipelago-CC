@@ -34,6 +34,15 @@ class Component:
     # If set, the component cannot work on frozen installs; extraction skips it
     # and reports this reason as a warning.
     unsupported_frozen: Optional[str] = None
+    # World-shaped components: on frozen installs, pack each worlds/<name>/
+    # directory as a source-bearing custom_worlds/<name>.apworld instead of
+    # extracting to the root worlds/ directory (which frozen installs never
+    # load — their bundled worlds run from lib/worlds/*.apworld).
+    frozen_apworld: bool = False
+    # World directories to skip when packing apworlds on frozen installs
+    # (e.g. worlds that import the extended rule_builder, which cannot load
+    # there). Each skip is reported as a warning.
+    frozen_exclude_worlds: List[str] = field(default_factory=list)
 
 
 @dataclass
@@ -183,6 +192,7 @@ COMPONENTS: Dict[str, Component] = {
         source_paths=["worlds/tracker"],
         required=False,
         size_estimate_mb=0.5,
+        frozen_apworld=True,
     ),
     "testing": Component(
         name="testing",
@@ -212,6 +222,11 @@ COMPONENTS: Dict[str, Component] = {
         ],
         required=False,
         size_estimate_mb=1.0,
+        frozen_apworld=True,
+        # toem_rule_builder imports the extended rule_builder (RuleWorldMixin),
+        # which cannot load on frozen installs (vanilla's rule_builder inside
+        # library.zip takes precedence)
+        frozen_exclude_worlds=["toem_rule_builder"],
     ),
     "world_source": Component(
         name="world_source",
@@ -234,6 +249,11 @@ COMPONENTS: Dict[str, Component] = {
         source_patterns=["worlds/*_worldgen", "worlds/*_worldgen/*"],
         required=False,
         size_estimate_mb=15.0,
+        unsupported_frozen=(
+            "worldgen worlds require the extended Rule Builder "
+            "(RuleWorldMixin), which cannot load on compiled installs — "
+            "vanilla's rule_builder inside library.zip takes precedence"
+        ),
     ),
 }
 
@@ -383,6 +403,30 @@ def get_extractable_components() -> Dict[str, Component]:
     return COMPONENTS.copy()
 
 
+def component_apworld_paths(comp: Component, root: Path) -> List[Path]:
+    """
+    Candidate custom_worlds/<world>.apworld paths for a frozen_apworld
+    component (where frozen installs receive its worlds). Checks both the
+    given root and the real user directory (they differ on frozen macOS).
+    """
+    if not comp.frozen_apworld:
+        return []
+    folders = [root / "custom_worlds"]
+    try:
+        from Utils import user_path
+        user_folder = Path(user_path("custom_worlds"))
+        if user_folder not in folders:
+            folders.append(user_folder)
+    except Exception:
+        pass
+    paths = []
+    for source_path in comp.source_paths:
+        world_name = source_path.split("/")[-1]
+        for folder in folders:
+            paths.append(folder / f"{world_name}.apworld")
+    return paths
+
+
 def matching_component(
     rel_path: str,
     components: List[str],
@@ -472,6 +516,14 @@ def extract_tools(
     """
     if dest_root is None:
         dest_root = Path(local_path())
+        # Real install: custom_worlds lives in the user directory (which on
+        # frozen macOS differs from local_path). Explicit dest_root means a
+        # test/sandbox — keep everything under it.
+        from Utils import user_path
+        custom_worlds_root = Path(user_path("custom_worlds"))
+    else:
+        dest_root = Path(dest_root)
+        custom_worlds_root = dest_root / "custom_worlds"
 
     result = ExtractionResult(success=True)
 
@@ -497,6 +549,22 @@ def extract_tools(
         if frozen and comp and comp.frozen_dest:
             return dest_root / comp.frozen_dest / rel_path
         return dest_root / rel_path
+
+    # Per-world apworld zips being written (frozen_apworld routing).
+    # Defined before the try so the finally can always close them.
+    apworld_zips: Dict[str, zipfile.ZipFile] = {}
+    skipped_apworlds: Set[str] = set()
+    excluded_worlds_warned: Set[str] = set()
+
+    def apworld_route(comp: Optional[Component], rel_path: str):
+        """Return (world_name, arcname) if this file should be packed
+        into a custom_worlds apworld, else None."""
+        if not (frozen and comp and comp.frozen_apworld):
+            return None
+        parts = rel_path.split("/")
+        if len(parts) < 3 or parts[0] != "worlds":
+            return None
+        return parts[1], "/".join(parts[1:])
 
     try:
         with zipfile.ZipFile(archive_path, "r") as zf:
@@ -538,11 +606,46 @@ def extract_tools(
                 else:
                     rel_path = file_path
 
-                dest_path = dest_for(matching_component(rel_path, components), rel_path)
+                comp_name = matching_component(rel_path, components)
+                comp = COMPONENTS.get(comp_name) if comp_name else None
 
                 # Report progress
                 if progress_callback:
                     progress_callback(rel_path, i + 1, total)
+
+                route = apworld_route(comp, rel_path)
+                if route is not None:
+                    world_name, arcname = route
+                    if comp and world_name in comp.frozen_exclude_worlds:
+                        if world_name not in excluded_worlds_warned:
+                            excluded_worlds_warned.add(world_name)
+                            result.warnings.append(
+                                f"Skipped world '{world_name}' on this compiled "
+                                f"Archipelago install: it requires the extended "
+                                f"Rule Builder, which cannot load here"
+                            )
+                        continue
+                    if world_name in skipped_apworlds:
+                        continue
+                    try:
+                        if world_name not in apworld_zips:
+                            apworld_path = custom_worlds_root / f"{world_name}.apworld"
+                            if apworld_path.exists() and not overwrite:
+                                skipped_apworlds.add(world_name)
+                                result.skipped_files.append(rel_path)
+                                continue
+                            custom_worlds_root.mkdir(parents=True, exist_ok=True)
+                            apworld_zips[world_name] = zipfile.ZipFile(
+                                apworld_path, "w", zipfile.ZIP_DEFLATED
+                            )
+                        apworld_zips[world_name].writestr(arcname, zf.read(file_path))
+                        result.extracted_files.append(rel_path)
+                    except Exception as e:
+                        result.errors.append(f"{rel_path}: {str(e)}")
+                        result.success = False
+                    continue
+
+                dest_path = dest_for(comp_name, rel_path)
 
                 # Check if file exists
                 if dest_path.exists() and not overwrite:
@@ -570,6 +673,13 @@ def extract_tools(
     except Exception as e:
         result.success = False
         result.errors.append(f"Extraction failed: {str(e)}")
+    finally:
+        for world_name, apworld_zip in apworld_zips.items():
+            try:
+                apworld_zip.close()
+            except Exception as e:
+                result.errors.append(f"{world_name}.apworld: {str(e)}")
+                result.success = False
 
     return result
 
@@ -623,6 +733,11 @@ def list_installed_components(root: Optional[Path] = None) -> List[str]:
                 if any((r / source_path).exists() for r in check_roots):
                     is_installed = True
                     break
+
+        # Frozen installs receive world-shaped components as custom_worlds
+        # apworlds instead
+        if not is_installed and comp.frozen_apworld:
+            is_installed = any(p.exists() for p in component_apworld_paths(comp, root))
 
         # Check if any source pattern matches existing files
         if not is_installed and comp.source_patterns:
@@ -682,6 +797,12 @@ def remove_component(
                 else:
                     path.unlink()
                 removed = True
+
+    # Remove apworlds written to custom_worlds on frozen installs
+    for apworld_path in component_apworld_paths(comp, root):
+        if apworld_path.exists():
+            apworld_path.unlink()
+            removed = True
 
     # Restore backup for components that replaced vanilla directories
     if comp.clean_before_extract and removed:
