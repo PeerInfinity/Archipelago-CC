@@ -132,9 +132,21 @@ The installer can install these components:
 
 On the compiled Windows release, importable components (`exporter`,
 `world_generator`) are installed into `lib/` (the install root is not on the
-frozen interpreter's module path), Python dependencies are installed with the
-bundled pip, and `rule_builder` is skipped (vanilla's copy inside
-`lib/library.zip` cannot be replaced; rule exports fall back to `ast` format).
+frozen interpreter's module path), and Python dependencies are installed with
+the bundled pip.
+
+Components that cannot work there are skipped with a warning:
+
+- `rule_builder` — vanilla's copy inside `lib/library.zip` takes module-path
+  precedence and cannot be replaced; rule exports fall back to `ast` format.
+- `romless_patches` and `upstream_fixes` — compiled installs run their worlds
+  from `lib/worlds/*.apworld`, which file patches cannot reach.
+
+`demo_worlds`, `worldgen_worlds`, and `tracker` currently also have no effect
+on compiled installs (they extract to the root `worlds/` directory, which those
+installs never load); installing them as `.apworld` files into `custom_worlds/`
+is the workaround, and native support is planned.
+
 The bundled worlds ship without source code, so the `ast` rule analysis needs
 the `world_source` component: it downloads the `.py` files from the upstream
 release tag matching the installed Archipelago version into

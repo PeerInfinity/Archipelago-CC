@@ -2,16 +2,20 @@
 
 ## Prerequisites
 
-> **⚠️ MetaMath requires running Archipelago from source (Python).** As currently
-> packaged it **cannot** be used with the compiled `.exe` / `AppImage` releases,
-> because MetaMath depends on the `metamath-py` Python package and those releases
-> cannot install extra Python packages. The easiest way to get a working source
-> setup is the [Archipelago-CC](https://github.com/PeerInfinity/Archipelago-CC)
-> repository, which already includes MetaMath and the JSON Tools frontend — see
+> **⚠️ MetaMath works best when running Archipelago from source (Python).** The
+> easiest way to get a working source setup is the
+> [Archipelago-CC](https://github.com/PeerInfinity/Archipelago-CC) repository,
+> which already includes MetaMath and the JSON Tools frontend — see
 > [Running From Source](../../../docs/running%20from%20source.md).
+>
+> The compiled `.exe` release also works, but requires one manual step: those
+> releases cannot install Python packages, so the `metamath-py` dependency must
+> be placed into the install's `lib/` folder by hand — see
+> [Install Dependencies](#3-install-dependencies). (Verified on the Windows
+> `.exe`; the Linux `AppImage` uses the same layout but is untested.)
 
 ### Required Software
-- **Archipelago from source** — the compiled `.exe` / `AppImage` release will not work (see note above)
+- **Archipelago** — from source (recommended), or the compiled `.exe` release with the manual dependency step described below
 - **Python** 3.11.9 or newer, but less than 3.14 — not the Windows Store version
 - **git** — required by Archipelago's module installer to fetch some dependencies
 - **JSON Export Tools** — MetaMath is played entirely through the JSON Tools web client, which requires a `rules.json` file produced during seed generation. Install the tools using the [JSON Tools Installer apworld](https://github.com/PeerInfinity/Archipelago-CC/raw/main/apworlds/json_tools_installer.apworld) (recommended) or by [cloning the repository](../../../docs/json/user/overview.md). See the [JSON Tools Installer README](../../json_tools_installer/README.md) for full setup instructions.
@@ -33,6 +37,12 @@ The easiest method is the [JSON Tools Installer apworld](https://github.com/Peer
 3. Open **JSON Tools Installer** from the Launcher and click Install
 
 The installer's **Demo Worlds** component includes MetaMath, so both JSON Tools and the MetaMath world can be installed in one step.
+
+> **Compiled `.exe` note:** the Demo Worlds component currently has no effect on
+> compiled installs (it extracts to a directory those installs never load) — use
+> the MetaMath apworld in `custom_worlds/` as described in the next step instead.
+> The core JSON Tools components (exporter, dependencies) install correctly on
+> compiled installs.
 
 See the [JSON Tools overview](../../../docs/json/user/overview.md) for alternative setup methods.
 
@@ -74,17 +84,27 @@ MetaMath requires the `metamath-py` Python package. How it gets installed depend
   python -m pip install metamath-py
   ```
 
-> **The compiled `.exe` / `AppImage` releases cannot install `metamath-py` at all.**
+- **Compiled `.exe` release**: the release cannot run pip, but the package can be
+  placed by hand — `metamath-py` is pure Python with no dependencies of its own:
+
+  1. Download the `.whl` file from [PyPI](https://pypi.org/project/metamath-py/#files)
+  2. A `.whl` is a zip archive — rename it to `.zip` (or open it directly) and extract it
+  3. Copy the extracted `metamathpy` folder into your Archipelago install's `lib/`
+     folder (e.g. `C:\ProgramData\Archipelago\lib\metamathpy`)
+
+  `lib/` is the only folder on the compiled release's Python module path, which is
+  why the package must go there rather than next to the apworld.
+
 > If MetaMath is missing from the Launcher's "Generate Template Options" output, the
-> Options Creator, or the `Players/Templates` folder, a missing `metamath-py` — or
-> trying to use the `.exe` — is almost always the cause. See [Troubleshooting](#troubleshooting).
+> Options Creator, or the `Players/Templates` folder, a missing `metamath-py` is
+> almost always the cause. See [Troubleshooting](#troubleshooting).
 
 ### 4. Metamath Database Setup
 
 The Metamath database (`set.mm`) is needed to parse theorem proofs. You have three options:
 
 #### Option A: Automatic Download (Recommended)
-Enable `auto_download_database: true` in your YAML config. The database will be downloaded automatically on first use.
+Enable `auto_download_database: true` in your YAML config. The database will be downloaded automatically on first use and saved to `Archipelago/metamath_data/set.mm`, where later generations find it again.
 
 #### Option B: Manual Download
 1. Download from: https://us.metamath.org/metamath/set.mm
@@ -199,15 +219,17 @@ python Generate.py --weights_file_path "Players/YourName.yaml"
   Archipelago logs the error and skips the world — so every *other* game gets a
   template and MetaMath simply doesn't appear.
 - The usual cause is a missing `metamath-py` dependency:
-  - **Using the compiled `.exe` / `AppImage`?** It cannot install `metamath-py`. Switch
-    to running Archipelago from source (see [Prerequisites](#prerequisites)).
+  - **Using the compiled `.exe`?** It cannot run pip — place the `metamathpy`
+    package into the install's `lib/` folder by hand (see
+    [Install Dependencies](#3-install-dependencies)). Then restart the Launcher.
   - **Running from source?** Install the dependency with
     `python -m pip install metamath-py`, or place the `metamath` folder in
     `worlds/` so it installs automatically. Then restart the Launcher.
 
 **`ModuleNotFoundError: No module named 'metamathpy'`**
-- The `metamath-py` package is not installed. Run: `python -m pip install metamath-py`
-- Note this only works when running Archipelago from source; the `.exe` / `AppImage` cannot install it.
+- The `metamath-py` package is not installed. From source, run
+  `python -m pip install metamath-py`; on the compiled `.exe`, extract the
+  package into `lib/` as described in [Install Dependencies](#3-install-dependencies).
 
 **"I generated a seed but `rules.json` isn't in `frontend/presets/metamath/`"**
 - It was generated — it's just in a different subfolder. **Vanilla item placement** saves to

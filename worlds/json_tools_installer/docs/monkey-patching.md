@@ -226,17 +226,10 @@ The hooks are designed to fail gracefully:
 
 1. **Import errors** - If `Main` or `BaseClasses` can't be imported, the hook installation fails but doesn't crash
 2. **Export errors** - Exceptions during export are caught and logged as warnings
-3. **Missing exporters** - If the exporter module isn't installed, a debug message is logged and export is skipped
-
-```python
-try:
-    from exporter import export_game_rules
-    export_game_rules(...)
-except ImportError:
-    logger.debug("Exporter module not found, skipping rules export")
-except Exception as e:
-    logger.warning(f"Rules export failed: {e}")
-```
+3. **Missing exporters** - If the exporter module (or one of its dependencies)
+   isn't importable, `export_post_output_hook` logs a single warning explaining
+   how to install it — including that compiled installs need it inside `lib/` —
+   and skips the export. Generation itself is never affected.
 
 ## Debugging
 
