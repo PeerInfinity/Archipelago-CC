@@ -12,7 +12,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import List, Optional, Set, Callable, Dict
 
-from Utils import local_path
+from Utils import local_path, is_frozen
 
 
 @dataclass
@@ -27,6 +27,13 @@ class Component:
     size_estimate_mb: float = 0.0
     detect_path: Optional[str] = None  # If set, use this path instead of source_paths for install detection
     clean_before_extract: bool = False  # If True, remove source_paths directories before extracting
+    # Subdirectory of the AP root to extract into on frozen (compiled) installs.
+    # Frozen sys.path is only lib/library.zip + lib/, so importable packages
+    # must live under lib/ — the install root itself is not importable.
+    frozen_dest: Optional[str] = None
+    # If set, the component cannot work on frozen installs; extraction skips it
+    # and reports this reason as a warning.
+    unsupported_frozen: Optional[str] = None
 
 
 @dataclass
@@ -36,6 +43,7 @@ class ExtractionResult:
     extracted_files: List[str] = field(default_factory=list)
     errors: List[str] = field(default_factory=list)
     skipped_files: List[str] = field(default_factory=list)
+    warnings: List[str] = field(default_factory=list)
 
 
 def _ap_base_version() -> str:
@@ -72,6 +80,7 @@ COMPONENTS: Dict[str, Component] = {
         source_paths=["exporter"],
         required=False,
         size_estimate_mb=0.5,
+        frozen_dest="lib",
     ),
     "rule_builder": Component(
         name="rule_builder",
@@ -82,6 +91,11 @@ COMPONENTS: Dict[str, Component] = {
         size_estimate_mb=0.5,
         detect_path="rule_builder/_ast_utils.py",  # CC-specific; vanilla has its own rule_builder
         clean_before_extract=True,  # Vanilla has different files that must be removed
+        unsupported_frozen=(
+            "vanilla rule_builder is bundled inside lib/library.zip on compiled "
+            "installs and takes sys.path precedence, so the extended Rule Builder "
+            "cannot replace it; rule exports fall back to 'ast' format"
+        ),
     ),
     "world_generator": Component(
         name="world_generator",
@@ -90,6 +104,7 @@ COMPONENTS: Dict[str, Component] = {
         source_paths=["world_generator"],
         required=False,
         size_estimate_mb=1.0,
+        frozen_dest="lib",
     ),
     "frontend": Component(
         name="frontend",
@@ -345,6 +360,49 @@ def get_extractable_components() -> Dict[str, Component]:
     return COMPONENTS.copy()
 
 
+def matching_component(
+    rel_path: str,
+    components: List[str],
+) -> Optional[str]:
+    """
+    Find which selected component (if any) claims a file path.
+
+    Args:
+        rel_path: Path within the archive, with the archive root removed.
+        components: List of component names to install.
+
+    Returns:
+        The name of the first matching component, or None.
+    """
+    # Check exclusion patterns
+    path_parts = Path(rel_path).parts
+    for part in path_parts:
+        for pattern in EXCLUDE_PATTERNS:
+            if pattern in part:
+                return None
+
+    for comp_name in components:
+        if comp_name not in COMPONENTS:
+            continue
+        comp = COMPONENTS[comp_name]
+
+        # Check exact source paths
+        for source_path in comp.source_paths:
+            if rel_path.startswith(source_path + "/") or rel_path == source_path:
+                # Special case: exclude presets from frontend if presets not selected
+                if comp_name == "frontend" and "presets" not in components:
+                    if rel_path.startswith("frontend/presets/"):
+                        return None
+                return comp_name
+
+        # Check glob patterns
+        for pattern in comp.source_patterns:
+            if fnmatch.fnmatch(rel_path, pattern):
+                return comp_name
+
+    return None
+
+
 def should_extract_file(
     path: str,
     components: List[str],
@@ -361,40 +419,12 @@ def should_extract_file(
     Returns:
         True if the file should be extracted.
     """
-    # Remove archive root prefix
     if path.startswith(archive_root + "/"):
         rel_path = path[len(archive_root) + 1:]
     else:
         rel_path = path
 
-    # Check exclusion patterns
-    path_parts = Path(rel_path).parts
-    for part in path_parts:
-        for pattern in EXCLUDE_PATTERNS:
-            if pattern in part:
-                return False
-
-    # Check if path matches any selected component
-    for comp_name in components:
-        if comp_name not in COMPONENTS:
-            continue
-        comp = COMPONENTS[comp_name]
-
-        # Check exact source paths
-        for source_path in comp.source_paths:
-            if rel_path.startswith(source_path + "/") or rel_path == source_path:
-                # Special case: exclude presets from frontend if presets not selected
-                if comp_name == "frontend" and "presets" not in components:
-                    if rel_path.startswith("frontend/presets/"):
-                        return False
-                return True
-
-        # Check glob patterns
-        for pattern in comp.source_patterns:
-            if fnmatch.fnmatch(rel_path, pattern):
-                return True
-
-    return False
+    return matching_component(rel_path, components) is not None
 
 
 def extract_tools(
@@ -422,6 +452,29 @@ def extract_tools(
 
     result = ExtractionResult(success=True)
 
+    # On frozen (compiled) installs, drop components that cannot work there
+    # and redirect importable packages into lib/ (the only writable sys.path
+    # entry — the install root itself is not importable).
+    frozen = is_frozen()
+    if frozen:
+        effective_components = []
+        for comp_name in components:
+            comp = COMPONENTS.get(comp_name)
+            if comp and comp.unsupported_frozen:
+                result.warnings.append(
+                    f"Skipped '{comp_name}' on this compiled Archipelago install: "
+                    f"{comp.unsupported_frozen}"
+                )
+            else:
+                effective_components.append(comp_name)
+        components = effective_components
+
+    def dest_for(comp_name: Optional[str], rel_path: str) -> Path:
+        comp = COMPONENTS.get(comp_name) if comp_name else None
+        if frozen and comp and comp.frozen_dest:
+            return dest_root / comp.frozen_dest / rel_path
+        return dest_root / rel_path
+
     try:
         with zipfile.ZipFile(archive_path, "r") as zf:
             # Get list of all files
@@ -448,7 +501,7 @@ def extract_tools(
                 comp = COMPONENTS.get(comp_name)
                 if comp and comp.clean_before_extract:
                     for source_path in comp.source_paths:
-                        clean_path = dest_root / source_path
+                        clean_path = dest_for(comp_name, source_path)
                         if clean_path.is_dir():
                             backup_component_directory(clean_path, comp_name, dest_root)
                             shutil.rmtree(clean_path)
@@ -462,7 +515,7 @@ def extract_tools(
                 else:
                     rel_path = file_path
 
-                dest_path = dest_root / rel_path
+                dest_path = dest_for(matching_component(rel_path, components), rel_path)
 
                 # Report progress
                 if progress_callback:
@@ -533,13 +586,18 @@ def list_installed_components(root: Optional[Path] = None) -> List[str]:
     for comp_name, comp in COMPONENTS.items():
         is_installed = False
 
+        # Components with frozen_dest may live under lib/ (compiled installs)
+        # as well as the root (source installs / older layouts).
+        check_roots = [root]
+        if comp.frozen_dest:
+            check_roots.append(root / comp.frozen_dest)
+
         # Use detect_path if set, otherwise check source_paths
         if comp.detect_path:
-            is_installed = (root / comp.detect_path).exists()
+            is_installed = any((r / comp.detect_path).exists() for r in check_roots)
         else:
             for source_path in comp.source_paths:
-                check_path = root / source_path
-                if check_path.exists():
+                if any((r / source_path).exists() for r in check_roots):
                     is_installed = True
                     break
 
@@ -588,14 +646,19 @@ def remove_component(
     comp = COMPONENTS[component_name]
     removed = False
 
+    check_roots = [root]
+    if comp.frozen_dest:
+        check_roots.append(root / comp.frozen_dest)
+
     for source_path in comp.source_paths:
-        path = root / source_path
-        if path.exists():
-            if path.is_dir():
-                shutil.rmtree(path)
-            else:
-                path.unlink()
-            removed = True
+        for check_root in check_roots:
+            path = check_root / source_path
+            if path.exists():
+                if path.is_dir():
+                    shutil.rmtree(path)
+                else:
+                    path.unlink()
+                removed = True
 
     # Restore backup for components that replaced vanilla directories
     if comp.clean_before_extract and removed:

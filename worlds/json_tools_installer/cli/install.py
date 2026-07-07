@@ -213,6 +213,9 @@ def do_install(
         if extract_result.skipped_files:
             print(f"  [INFO] Skipped {len(extract_result.skipped_files)} existing files")
 
+        for warning in extract_result.warnings:
+            print(f"  [WARN] {warning}")
+
         # Install Python dependencies
         print("\n  Installing dependencies...")
         from ..installer.dependencies import install_missing_dependencies

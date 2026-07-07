@@ -660,6 +660,9 @@ For more information, see the README.md file."""
                     self.show_message("Error", f"Extraction failed: {extract_result.errors}")
                     return
 
+                if extract_result.warnings:
+                    self.show_message("Warning", "\n\n".join(extract_result.warnings))
+
                 # Install Python dependencies required by extracted components
                 self.update_status("Installing dependencies...")
                 self.update_progress(82)
