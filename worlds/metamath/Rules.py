@@ -141,8 +141,18 @@ def get_metamath_database(auto_download: bool = True):
     Args:
         auto_download: If True, download the database if not found locally
     """
-    # Try multiple possible locations for set.mm
+    # Stable cache location: metamath_data/ in the writable Archipelago
+    # directory. On source installs this is the repo root; on compiled
+    # installs it works regardless of where the apworld was loaded from.
+    from Utils import user_path
+    stable_path = user_path('metamath_data', 'set.mm')
+
+    # Try the stable location first, then legacy locations (cwd-relative,
+    # next to the world, repo root relative to the world). The last one
+    # traverses through the .apworld file when the world is zipped, which
+    # only resolves on Windows — kept so existing caches are still found.
     possible_paths = [
+        stable_path,
         'metamath_data/set.mm',
         os.path.join(os.path.dirname(__file__), 'metamath_data/set.mm'),
         os.path.join(os.path.dirname(__file__), '../../metamath_data/set.mm')
@@ -154,9 +164,8 @@ def get_metamath_database(auto_download: bool = True):
 
     # If not found and auto_download is enabled, download it
     if auto_download:
-        download_path = os.path.join(os.path.dirname(__file__), '../../metamath_data/set.mm')
-        if download_metamath_database(download_path):
-            return md.parse(download_path), download_path
+        if download_metamath_database(stable_path):
+            return md.parse(stable_path), stable_path
 
     raise FileNotFoundError(
         "Could not find set.mm database. Please download from https://us.metamath.org/metamath/set.mm "
