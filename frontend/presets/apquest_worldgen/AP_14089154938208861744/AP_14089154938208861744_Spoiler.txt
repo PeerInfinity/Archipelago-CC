@@ -44,9 +44,12 @@ Playthrough:
 
 }
 1: {
+  Bottom Left Chest: Confetti Cannon
   Top Middle Chest: Sword
 }
 2: {
+  Bottom Right Room Left Chest: Health Upgrade
+  Bottom Right Room Right Chest: Health Upgrade
   Right Room Enemy Drop: Key
 }
 3: {

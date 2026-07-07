@@ -3,10 +3,59 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2026-06-27T22:33:10.932995+00:00",
-    "last_updated": "2026-06-27T22:33:10.933006+00:00",
+    "last_updated": "2026-07-07T20:24:13.788650+00:00",
     "script_version": "1.0.0"
   },
   "results": {
+    "A Hat in Time WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "game_name_from_filename": "ahit_worldgen",
+      "game_name_from_yaml": "A Hat in Time WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 8.3,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "rules_file": {
+        "path": "frontend/presets/ahit_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 241191,
+        "size_mb": 0.23
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 20.37,
+        "return_code": 0,
+        "sphere_reached": 5.21,
+        "success": true,
+        "total_spheres": 5.21,
+        "warning_count": 0
+      },
+      "template_filename": "A Hat in Time WorldGen.yaml",
+      "timestamp": "2026-07-07T20:21:20.178712+00:00",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name": "A Hat in Time WorldGen",
+        "game_name_from_filename": "ahit_worldgen",
+        "game_name_from_yaml": "A Hat in Time WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "template_file": "A Hat in Time WorldGen.yaml",
+        "world_directory": "ahit_worldgen"
+      }
+    },
     "A Hat in Time.yaml": {
       "analysis": {
         "error_count": 0,
@@ -201,6 +250,55 @@
         "has_custom_game_logic": false,
         "template_file": "APCalc.yaml",
         "world_directory": "apcalc"
+      }
+    },
+    "APQuest WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "game_name_from_filename": "apquest_worldgen",
+      "game_name_from_yaml": "APQuest WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 6.38,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "rules_file": {
+        "path": "frontend/presets/apquest_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 12134,
+        "size_mb": 0.01
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 7.45,
+        "return_code": 0,
+        "sphere_reached": 3.1,
+        "success": true,
+        "total_spheres": 3.1,
+        "warning_count": 0
+      },
+      "template_filename": "APQuest WorldGen.yaml",
+      "timestamp": "2026-07-07T20:21:54.958531+00:00",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name": "APQuest WorldGen",
+        "game_name_from_filename": "apquest_worldgen",
+        "game_name_from_yaml": "APQuest WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "template_file": "APQuest WorldGen.yaml",
+        "world_directory": "apquest_worldgen"
       }
     },
     "APQuest.yaml": {
@@ -497,6 +595,55 @@
         "world_directory": "bumpstik"
       }
     },
+    "Castlevania - Circle of the Moon WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "game_name_from_filename": "cvcotm_worldgen",
+      "game_name_from_yaml": "Castlevania - Circle of the Moon WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 6.8,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "rules_file": {
+        "path": "frontend/presets/cvcotm_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 100999,
+        "size_mb": 0.1
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 8.45,
+        "return_code": 0,
+        "sphere_reached": 4.41,
+        "success": true,
+        "total_spheres": 4.41,
+        "warning_count": 0
+      },
+      "template_filename": "Castlevania - Circle of the Moon WorldGen.yaml",
+      "timestamp": "2026-07-07T20:22:15.866412+00:00",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name": "Castlevania - Circle of the Moon WorldGen",
+        "game_name_from_filename": "cvcotm_worldgen",
+        "game_name_from_yaml": "Castlevania - Circle of the Moon WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "template_file": "Castlevania - Circle of the Moon WorldGen.yaml",
+        "world_directory": "cvcotm_worldgen"
+      }
+    },
     "Castlevania - Circle of the Moon.yaml": {
       "analysis": {
         "error_count": 0,
@@ -791,6 +938,55 @@
         "world_directory": "cccharles"
       }
     },
+    "Civilization VI WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "game_name_from_filename": "civ_6_worldgen",
+      "game_name_from_yaml": "Civilization VI WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 6.5,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "rules_file": {
+        "path": "frontend/presets/civ_6_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 178903,
+        "size_mb": 0.17
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 9.91,
+        "return_code": 0,
+        "sphere_reached": 8.15,
+        "success": true,
+        "total_spheres": 8.15,
+        "warning_count": 0
+      },
+      "template_filename": "Civilization VI WorldGen.yaml",
+      "timestamp": "2026-07-07T20:22:36.689498+00:00",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name": "Civilization VI WorldGen",
+        "game_name_from_filename": "civ_6_worldgen",
+        "game_name_from_yaml": "Civilization VI WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "template_file": "Civilization VI WorldGen.yaml",
+        "world_directory": "civ_6_worldgen"
+      }
+    },
     "Civilization VI.yaml": {
       "analysis": {
         "error_count": 0,
@@ -887,6 +1083,55 @@
         "has_custom_game_logic": false,
         "template_file": "Coding Adventure.yaml",
         "world_directory": "codingadventure"
+      }
+    },
+    "DLCQuest WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "game_name_from_filename": "dlcquest_worldgen",
+      "game_name_from_yaml": "DLCQuest WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 6.41,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "rules_file": {
+        "path": "frontend/presets/dlcquest_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 50215,
+        "size_mb": 0.05
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 7.79,
+        "return_code": 0,
+        "sphere_reached": 8.1,
+        "success": true,
+        "total_spheres": 8.1,
+        "warning_count": 0
+      },
+      "template_filename": "DLCQuest WorldGen.yaml",
+      "timestamp": "2026-07-07T20:22:59.022590+00:00",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name": "DLCQuest WorldGen",
+        "game_name_from_filename": "dlcquest_worldgen",
+        "game_name_from_yaml": "DLCQuest WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "template_file": "DLCQuest WorldGen.yaml",
+        "world_directory": "dlcquest_worldgen"
       }
     },
     "DLCQuest.yaml": {
@@ -2261,6 +2506,55 @@
         "world_directory": "osrs"
       }
     },
+    "Overcooked! 2 WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "game_name_from_filename": "overcooked2_worldgen",
+      "game_name_from_yaml": "Overcooked! 2 WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 8.36,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "rules_file": {
+        "path": "frontend/presets/overcooked2_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 497864,
+        "size_mb": 0.47
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 8,
+        "pass_fail": "failed",
+        "processing_time_seconds": 9.6,
+        "return_code": 1,
+        "sphere_reached": 9.3,
+        "success": false,
+        "total_spheres": 18.3,
+        "warning_count": 0
+      },
+      "template_filename": "Overcooked! 2 WorldGen.yaml",
+      "timestamp": "2026-07-07T20:23:18.874473+00:00",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name": "Overcooked! 2 WorldGen",
+        "game_name_from_filename": "overcooked2_worldgen",
+        "game_name_from_yaml": "Overcooked! 2 WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "template_file": "Overcooked! 2 WorldGen.yaml",
+        "world_directory": "overcooked2_worldgen"
+      }
+    },
     "Overcooked! 2.yaml": {
       "analysis": {
         "error_count": 0,
@@ -2896,6 +3190,55 @@
         "has_custom_game_logic": false,
         "template_file": "Super Mario 64.yaml",
         "world_directory": "sm64ex"
+      }
+    },
+    "Super Mario Land 2 WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "game_name_from_filename": "marioland2_worldgen",
+      "game_name_from_yaml": "Super Mario Land 2 WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 8.38,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "rules_file": {
+        "path": "frontend/presets/marioland2_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 943130,
+        "size_mb": 0.9
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 8,
+        "pass_fail": "failed",
+        "processing_time_seconds": 17.03,
+        "return_code": 1,
+        "sphere_reached": 3.4,
+        "success": false,
+        "total_spheres": 10.1,
+        "warning_count": 0
+      },
+      "template_filename": "Super Mario Land 2 WorldGen.yaml",
+      "timestamp": "2026-07-07T20:23:42.613480+00:00",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name": "Super Mario Land 2 WorldGen",
+        "game_name_from_filename": "marioland2_worldgen",
+        "game_name_from_yaml": "Super Mario Land 2 WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "template_file": "Super Mario Land 2 WorldGen.yaml",
+        "world_directory": "marioland2_worldgen"
       }
     },
     "Super Mario Land 2.yaml": {

@@ -10,49 +10,54 @@
 
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2026-06-28 01:45:41 UTC
+**Generated:** 2026-07-07 20:24:13 UTC
 
 **Source Data Created:** 2026-06-27T22:33:10.932995+00:00
 
-**Source Data Last Updated:** 2026-06-27T22:33:10.933006+00:00
+**Source Data Last Updated:** 2026-07-07T20:24:08.316298+00:00
 
 ## Summary
 
-- **Total Games:** 76
-- **Passed:** 75 (98.7%)
-- **Failed:** 1 (1.3%)
+- **Total Games:** 83
+- **Passed:** 80 (96.4%)
+- **Failed:** 3 (3.6%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 41/75 (54.7% of passed)
-- **Passing with Generic Logic:** 70/75 (93.3% of passed)
-- **Passing with Both Generic:** 41/75 (54.7% of passed)
+- **Passing with Generic Exporter:** 46/80 (57.5% of passed)
+- **Passing with Generic Logic:** 75/80 (93.8% of passed)
+- **Passing with Both Generic:** 46/80 (57.5% of passed)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|----------|----------|
 | A Hat in Time | ✅ Passed | 0 | 5.21 | 5.21 | 🟢 Complete | 18.2KB | ✅ |
+| A Hat in Time WorldGen | ✅ Passed | 0 | 5.21 | 5.21 | 🟢 Complete | ✅ | ✅ |
 | A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 14.0KB | ✅ |
 | A Short Hike | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | APCalc | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
+| APQuest WorldGen | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
 | Aquaria | ✅ Passed | 0 | 4.19 | 4.19 | 🟢 Complete | 1.8KB | ✅ |
 | Baking Adventure | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ✅ Passed | 0 | 10.18 | 10.18 | 🟢 Complete | 1.4KB | 40.3KB |
 | Bumper Stickers | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ✅ Passed | 0 | 4.41 | 4.41 | 🟢 Complete | 4.0KB | ✅ |
+| Castlevania - Circle of the Moon WorldGen | ✅ Passed | 0 | 4.41 | 4.41 | 🟢 Complete | ✅ | ✅ |
 | Castlevania 64 | ✅ Passed | 0 | 5.6 | 5.6 | 🟢 Complete | ✅ | ✅ |
 | Celeste (Open World) | ✅ Passed | 0 | 16.5 | 16.5 | 🟢 Complete | ✅ | ✅ |
 | Celeste 64 | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 4.1KB | ✅ |
 | ChecksFinder | ✅ Passed | 0 | 4.5 | 4.5 | 🟢 Complete | ✅ | ✅ |
 | Choo-Choo Charles | ✅ Passed | 0 | 4.3 | 4.3 | 🟢 Complete | ✅ | ✅ |
 | Civilization VI | ✅ Passed | 0 | 8.15 | 8.15 | 🟢 Complete | ✅ | ✅ |
+| Civilization VI WorldGen | ✅ Passed | 0 | 8.15 | 8.15 | 🟢 Complete | ✅ | ✅ |
 | Coding Adventure | ✅ Passed | 0 | 13.1 | 13.1 | 🟢 Complete | ✅ | ✅ |
 | DLCQuest | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | 1.2KB | ✅ |
+| DLCQuest WorldGen | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
 | DOOM 1993 | ✅ Passed | 0 | 18.5 | 18.5 | 🟢 Complete | ✅ | ✅ |
 | DOOM II | ✅ Passed | 0 | 21.4 | 21.4 | 🟢 Complete | ✅ | ✅ |
 | DepGraph | ✅ Passed | 0 | 26.2 | 26.2 | 🟢 Complete | ✅ | ✅ |
@@ -81,6 +86,7 @@
 | Noita | ✅ Passed | 0 | 0.117 | 0.117 | 🟢 Complete | ✅ | ✅ |
 | Old School Runescape | ✅ Passed | 0 | 7.6 | 7.6 | 🟢 Complete | 1.0KB | ✅ |
 | Overcooked! 2 | ✅ Passed | 0 | 18.3 | 18.3 | 🟢 Complete | 28.5KB | ✅ |
+| Overcooked! 2 WorldGen | ❌ Failed | 0 | 9.3 | 18.3 | 🟡 50.8% | ✅ | ✅ |
 | Paint | ✅ Passed | 0 | 13.2 | 13.2 | 🟢 Complete | 2.7KB | ✅ |
 | Raft | ✅ Passed | 0 | 11.6 | 11.6 | 🟢 Complete | 6.5KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
@@ -94,6 +100,7 @@
 | Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 2.2KB | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | 5.5 | 5.5 | 🟢 Complete | ✅ | ✅ |
 | Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 96.3KB | ✅ |
+| Super Mario Land 2 WorldGen | ❌ Failed | 0 | 3.4 | 10.1 | 🟡 33.7% | ✅ | ✅ |
 | Super Mario World | ✅ Passed | 0 | 8.12 | 8.12 | 🟢 Complete | ✅ | ✅ |
 | Super Metroid | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | 61.0KB | 119.4KB |
 | TOEM original | ✅ Passed | 0 | 3.66 | 3.66 | 🟢 Complete | 0.6KB | ✅ |
@@ -103,7 +110,7 @@
 | The Legend of Zelda | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | The Messenger | ✅ Passed | 0 | 7.1 | 7.1 | 🟢 Complete | 15.2KB | ✅ |
 | The Wind Waker | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | 7.0KB | ✅ |
-| The Witness | ❌ Failed | 0 | 0.2 | 8.15 | 🟠 2.5% | 14.6KB | ✅ |
+| The Witness | ❌ Failed | 0 | 0.2 | 8.15 | 🟠 2.5% | 26.9KB | ✅ |
 | Timespinner | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | 2.2KB | ✅ |
 | Undertale | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
 | VVVVVV | ✅ Passed | 0 | 3.4 | 3.4 | 🟢 Complete | 3.8KB | ✅ |

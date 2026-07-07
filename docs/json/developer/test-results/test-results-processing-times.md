@@ -1,6 +1,6 @@
 # Processing Times Chart
 
-**Generated:** 2026-06-28 01:45:41 UTC
+**Generated:** 2026-07-07 20:24:13 UTC
 
 **Source Data Created:** 2026-06-27T22:26:11.913378+00:00
 
@@ -18,8 +18,8 @@ This chart shows processing times for each test phase. Times are in seconds. For
 
 | Metric | Gen Time | Minimal Test | Full Test | Multiclient |
 |--------|----------|--------------|-----------|-------------|
-| Total | 392.8s | 799.2s | 1195.1s | 1878.8s |
-| Average | 5.2s | 10.5s | 15.7s | 24.7s |
+| Total | 392.8s | 799.2s | 1275.7s | 1878.8s |
+| Average | 5.2s | 10.5s | 15.4s | 24.7s |
 | Max | 18.6s | 79.0s | 153.0s | 347.0s |
 | Min | 3.5s | 5.6s | 5.7s | 11.7s |
 
@@ -35,24 +35,29 @@ This chart shows processing times for each test phase. Times are in seconds. For
 | Game | Gen Time | Minimal Test | Full Test | Multiclient |
 |------|----------|--------------|-----------|-------------|
 | A Hat in Time | 5.7s | 10.1s | 12.3s | 15.6s |
+| A Hat in Time WorldGen | - | - | 20.4s | - |
 | A Link to the Past | 8.1s | 14.9s | 18.9s | 25.1s |
 | A Short Hike | 4.6s | 6.3s | 6.3s | 12.8s |
 | APCalc | 4.2s | 7.6s | 10.1s | 17.1s |
 | APQuest | 4.0s | 7.0s | 6.4s | 18.8s |
+| APQuest WorldGen | - | - | 7.5s | - |
 | Adventure | 4.2s | 7.2s | 7.1s | 15.1s |
 | Aquaria | 6.5s | 7.9s | 12.3s | 15.0s |
 | Baking Adventure | 3.9s | 9.7s | 7.8s | 17.1s |
 | Bomb Rush Cyberfunk | 6.4s | 13.5s | 15.5s | 17.4s |
 | Bumper Stickers | 4.4s | 7.1s | 7.8s | 13.6s |
 | Castlevania - Circle of the Moon | 4.0s | 5.8s | 5.8s | 11.7s |
+| Castlevania - Circle of the Moon WorldGen | - | - | 8.4s | - |
 | Castlevania 64 | 4.6s | 5.7s | 6.8s | 12.8s |
 | Celeste (Open World) | 6.5s | 16.9s | 32.9s | 36.7s |
 | Celeste 64 | 4.1s | 5.8s | 5.8s | 12.7s |
 | ChecksFinder | 3.6s | 5.8s | 5.8s | 12.6s |
 | Choo-Choo Charles | 3.6s | 9.8s | 60.7s | 31.8s |
 | Civilization VI | 9.9s | 5.9s | 5.7s | 11.9s |
+| Civilization VI WorldGen | - | - | 9.9s | - |
 | Coding Adventure | 3.6s | 5.8s | 5.8s | 12.9s |
 | DLCQuest | 4.0s | 5.8s | 5.8s | 12.7s |
+| DLCQuest WorldGen | - | - | 7.8s | - |
 | DOOM 1993 | 4.5s | 7.8s | 11.8s | 15.9s |
 | DOOM II | 4.4s | 10.0s | 16.9s | 19.9s |
 | DepGraph | 3.8s | 10.7s | 10.9s | 22.3s |
@@ -81,6 +86,7 @@ This chart shows processing times for each test phase. Times are in seconds. For
 | Noita | 3.9s | 5.8s | 5.8s | 12.6s |
 | Old School Runescape | 4.8s | 5.8s | 5.7s | 12.8s |
 | Overcooked! 2 | 4.8s | 9.0s | 7.8s | 12.9s |
+| Overcooked! 2 WorldGen | - | - | 9.6s | - |
 | Paint | 3.9s | 5.8s | 7.0s | 12.9s |
 | Raft | 3.8s | 12.8s | 26.9s | 26.0s |
 | Risk of Rain 2 | 4.8s | 5.8s | 6.8s | 11.7s |
@@ -94,6 +100,7 @@ This chart shows processing times for each test phase. Times are in seconds. For
 | Subnautica | 4.2s | 9.8s | 10.9s | 17.1s |
 | Super Mario 64 | 4.0s | 5.8s | 6.9s | 12.8s |
 | Super Mario Land 2 | 4.7s | 10.9s | 14.9s | 46.9s |
+| Super Mario Land 2 WorldGen | - | - | 17.0s | - |
 | Super Mario World | 5.4s | 5.8s | 6.8s | 11.9s |
 | Super Metroid | 8.8s | 10.7s | 15.9s | 17.0s |
 | TOEM original | 3.9s | 5.8s | 5.8s | 11.9s |

@@ -10,7 +10,7 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2026-06-28 01:45:41 UTC
+**Generated:** 2026-07-07 20:24:13 UTC
 
 **Source Data Created:** 2026-06-27T22:26:11.913378+00:00
 
@@ -103,7 +103,7 @@
 | The Legend of Zelda | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | The Messenger | ✅ Passed | 0 | 6.3 | 6.3 | 🟢 Complete | 15.2KB | ✅ |
 | The Wind Waker | ✅ Passed | 0 | 18.1 | 18.1 | 🟢 Complete | 7.0KB | ✅ |
-| The Witness | ❌ Failed | 0 | 0.1 | 8.1 | 🟠 1.2% | 14.6KB | ✅ |
+| The Witness | ❌ Failed | 0 | 0.1 | 8.1 | 🟠 1.2% | 26.9KB | ✅ |
 | Timespinner | ✅ Passed | 0 | 7.1 | 7.1 | 🟢 Complete | 2.2KB | ✅ |
 | Undertale | ✅ Passed | 0 | 4.3 | 4.3 | 🟢 Complete | ✅ | ✅ |
 | VVVVVV | ✅ Passed | 0 | 2.4 | 2.4 | 🟢 Complete | 3.8KB | ✅ |

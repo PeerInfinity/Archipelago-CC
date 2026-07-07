@@ -10,7 +10,7 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2026-06-28 01:45:41 UTC
+**Generated:** 2026-07-07 20:24:13 UTC
 
 **Source Data Created:** 2026-06-27T23:10:36.133603+00:00
 
@@ -107,7 +107,7 @@
 | The Legend of Zelda | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
 | The Messenger | ✅ Passed | ✅ Passed | 7 | 7 | 15.2KB | ✅ |
 | The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | 7.0KB | ✅ |
-| The Witness | ❌ Failed | — | 7 | 7 | 14.6KB | ✅ |
+| The Witness | ❌ Failed | — | 7 | 7 | 26.9KB | ✅ |
 | Timespinner | ✅ Passed | ✅ Passed | 8 | 8 | 2.2KB | ✅ |
 | Undertale | ✅ Passed | ✅ Passed | 8 | 8 | ✅ | ✅ |
 | VVVVVV | ✅ Passed | ✅ Passed | 8 | 8 | 3.8KB | ✅ |

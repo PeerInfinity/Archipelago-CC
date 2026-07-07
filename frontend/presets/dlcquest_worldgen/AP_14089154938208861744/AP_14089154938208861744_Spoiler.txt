@@ -90,27 +90,48 @@ Playthrough:
 }
 4: {
   Animation Pack: Psychological Warfare Pack
+  Audio Pack: Name Change Pack
   Pause Menu Pack: Time is Money Pack
+  Psychological Warfare Pack: Animation Pack
+  Time is Money Pack: Zombie Sheep
 }
 5: {
   Behind Tree coins: 60 coins
+  Between Trees Sheep: Name Change Pack
+  Hole in the Wall Sheep: Name Change Pack
   Psychological Warfare coins: 100 coins
+  Shepherd Sheep: Loading Screen
   West Cave Sheep: Double Jump Pack
 }
 6: {
+  Cutscene Sheep: Loading Screen
+  Double Jump Alcove Sheep: Night Map Pack
   Double Jump Behind Tree coins: 89 coins
+  Double Jump Floating Sheep: Sexy Outfits Pack
+  Double Jump Pack: Loading Screen
   Double Jump Total Left Cave coins: 9 coins
   Double Jump Total Left Roof coins: 10 coins
   Double Jump Total Left coins: 50 coins
   Map Pack: Armor for your Horse Pack
+  North West Alcove Sheep: Audio Pack
+  North West Ceiling Sheep: Pet Pack
   Pet Pack: Map Pack
+  Sexy Outfits Pack: Name Change Pack
+  Sexy Outfits Sheep: Loading Screen
+  Top Hat Pack: Loading Screen
+  Top Hat Sheep: Pause Menu Pack
   True Double Jump Behind Tree coins: 7 coins
 }
 7: {
+  Armor for your Horse Pack: Loading Screen
   Forest High Sheep: Gun Pack
+  Forest Low Sheep: The Zombie Pack
+  Gun Pack: Temporary Spike
+  Night Map Pack: Loading Screen
   The Forest coins: 171 coins
   The Forest with double Jump Part 2 coins: 203 coins
   The Forest with double Jump coins: 76 coins
+  The Zombie Pack: Top Hat Pack
 }
 8: {
   Finish the Fight Pack: Finish the Fight Pack
