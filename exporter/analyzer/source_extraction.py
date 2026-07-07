@@ -255,8 +255,9 @@ def _read_source_from_path(filename: str) -> Optional[str]:
         parts = filename.split('.apworld')
         if len(parts) >= 2:
             zip_path = parts[0] + '.apworld'
-            # Remove leading slash from internal path
-            internal_path = parts[1].lstrip('/')
+            # Zip entries always use forward slashes; on Windows the internal
+            # path arrives with backslashes (from co_filename)
+            internal_path = parts[1].replace('\\', '/').lstrip('/')
 
             try:
                 with zipfile.ZipFile(zip_path, 'r') as zf:
