@@ -23,6 +23,9 @@ templates copied verbatim from ``world_generator/ext_template/``;
 try:
     from rule_builder import (  # noqa: F401
         RuleWorldMixin,
+        # Base classes and option filtering (also present in vanilla)
+        Rule,
+        OptionFilter,
         # Base rule types (also present in vanilla rule_builder.rules)
         And,
         Or,
@@ -60,6 +63,8 @@ except ImportError:
     # from rule_builder.rules and the extras from the vendored modules.
     USING_FORK_RULE_BUILDER = False
     from rule_builder.rules import (  # noqa: F401
+        Rule,
+        OptionFilter,
         And,
         Or,
         True_,
@@ -96,6 +101,8 @@ except ImportError:
 __all__ = [
     'USING_FORK_RULE_BUILDER',
     'RuleWorldMixin',
+    'Rule',
+    'OptionFilter',
     'And',
     'Or',
     'True_',

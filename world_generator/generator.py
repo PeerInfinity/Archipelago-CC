@@ -227,11 +227,18 @@ class WorldGenerator:
         )
 
         # Generate archipelago.json manifest for apworld packaging compatibility
+        # Generated worlds run on vanilla AP 0.6.7+ (the first release shipping
+        # rule_builder, which the vendored _ext package builds on). Don't pin
+        # the manifest to the exporting fork's version — AP refuses to load
+        # apworlds whose minimum exceeds the core version.
         manifest = {
             "game": self.data.metadata.game_name,
             "authors": ["World Generator"],
-            "minimum_ap_version": self.data.metadata.archipelago_version or "0.6.0",
+            "minimum_ap_version": "0.6.7",
             "world_version": "1.0.0",
+            # Required by APContainer manifest validation (0.6.7+ warns and may
+            # refuse apworlds without it); 5 matches the repo's other apworlds.
+            "compatible_version": 5,
         }
         manifest_path = output_dir / 'archipelago.json'
         if not dry_run:
