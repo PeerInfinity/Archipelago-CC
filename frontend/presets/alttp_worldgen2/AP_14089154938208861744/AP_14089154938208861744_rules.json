@@ -19125,6 +19125,19 @@
           }
         ],
         "base_item": "Progressive Bow"
+      },
+      "Progressive Bow (Alt)": {
+        "base_item": "Progressive Bow (Alt)",
+        "items": [
+          {
+            "name": "Bow",
+            "level": 1
+          },
+          {
+            "name": "Silver Bow",
+            "level": 2
+          }
+        ]
       }
     }
   },

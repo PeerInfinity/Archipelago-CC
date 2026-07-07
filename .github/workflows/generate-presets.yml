@@ -122,9 +122,13 @@ jobs:
               # The merge advances the merge base but can't remove files whose
               # deletion predates the common ancestor. Exclude paths that the
               # generate script intentionally creates.
+              # NOTE: no trailing slash on the wildcard pathspec — git wildmatch
+              # never matches file paths against a pattern ending in '/', which
+              # silently disabled this exclusion (worldgen files only present on
+              # this branch were removed and regenerated every run).
               git diff --name-only -z origin/main HEAD --diff-filter=A -- . \
                 ':(exclude)frontend/presets/' \
-                ':(exclude)worlds/*_worldgen*/' \
+                ':(exclude)worlds/*_worldgen*' \
                 ':(exclude)scripts/data/world-mapping.json' \
                 ':(exclude)scripts/output/' \
               | xargs -r -0 git rm -f

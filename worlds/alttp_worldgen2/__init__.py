@@ -10,7 +10,7 @@ import types
 from typing import ClassVar, Dict, List, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
-from rule_builder import RuleWorldMixin
+from ._ext import RuleWorldMixin
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState, MultiWorld
@@ -393,6 +393,7 @@ class ALTTPWorld(RuleWorldMixin, World):
         "Progressive Shield": ["Blue Shield", "Red Shield", "Mirror Shield"],
         "Progressive Glove": ["Power Glove", "Titans Mitts"],
         "Progressive Bow": ["Bow", "Silver Bow"],
+        "Progressive Bow (Alt)": ["Bow", "Silver Bow"],
     }
 
     # Placements are deterministically reproduced by world generator
