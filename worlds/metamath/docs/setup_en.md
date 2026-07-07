@@ -8,11 +8,10 @@
 > which already includes MetaMath and the JSON Tools frontend — see
 > [Running From Source](../../../docs/running%20from%20source.md).
 >
-> The compiled `.exe` release also works, but requires one manual step: those
-> releases cannot install Python packages, so the `metamath-py` dependency must
-> be placed into the install's `lib/` folder by hand — see
-> [Install Dependencies](#3-install-dependencies). (Verified on the Windows
-> `.exe`; the Linux `AppImage` uses the same layout but is untested.)
+> The compiled `.exe` release also works: the JSON Tools Installer (which
+> MetaMath needs anyway) installs the `metamath-py` dependency automatically —
+> see [Install Dependencies](#3-install-dependencies). (Verified on the
+> Windows `.exe`; the Linux `AppImage` uses the same layout but is untested.)
 
 ### Required Software
 - **Archipelago** — from source (recommended), or the compiled `.exe` release with the manual dependency step described below
@@ -84,8 +83,15 @@ MetaMath requires the `metamath-py` Python package. How it gets installed depend
   python -m pip install metamath-py
   ```
 
-- **Compiled `.exe` release**: the release cannot run pip, but the package can be
-  placed by hand — `metamath-py` is pure Python with no dependencies of its own:
+- **Compiled `.exe` release**: run the **JSON Tools Installer** from the Launcher
+  (with the MetaMath apworld already in `custom_worlds/`). Its install step scans
+  every apworld in `custom_worlds/` for a `requirements.txt` and installs the
+  missing packages — including `metamath-py` — into the release's `lib/` folder
+  using the bundled pip. Restart the Launcher afterwards so the MetaMath world
+  loads with its dependency present.
+
+  If you'd rather not use the installer, the package can also be placed by hand —
+  `metamath-py` is pure Python with no dependencies of its own:
 
   1. Download the `.whl` file from [PyPI](https://pypi.org/project/metamath-py/#files)
   2. A `.whl` is a zip archive — rename it to `.zip` (or open it directly) and extract it
@@ -219,8 +225,9 @@ python Generate.py --weights_file_path "Players/YourName.yaml"
   Archipelago logs the error and skips the world — so every *other* game gets a
   template and MetaMath simply doesn't appear.
 - The usual cause is a missing `metamath-py` dependency:
-  - **Using the compiled `.exe`?** It cannot run pip — place the `metamathpy`
-    package into the install's `lib/` folder by hand (see
+  - **Using the compiled `.exe`?** Run the JSON Tools Installer (it installs
+    apworld dependencies automatically), or place the `metamathpy` package into
+    the install's `lib/` folder by hand (see
     [Install Dependencies](#3-install-dependencies)). Then restart the Launcher.
   - **Running from source?** Install the dependency with
     `python -m pip install metamath-py`, or place the `metamath` folder in
@@ -228,8 +235,9 @@ python Generate.py --weights_file_path "Players/YourName.yaml"
 
 **`ModuleNotFoundError: No module named 'metamathpy'`**
 - The `metamath-py` package is not installed. From source, run
-  `python -m pip install metamath-py`; on the compiled `.exe`, extract the
-  package into `lib/` as described in [Install Dependencies](#3-install-dependencies).
+  `python -m pip install metamath-py`; on the compiled `.exe`, run the JSON
+  Tools Installer or extract the package into `lib/` as described in
+  [Install Dependencies](#3-install-dependencies).
 
 **"I generated a seed but `rules.json` isn't in `frontend/presets/metamath/`"**
 - It was generated — it's just in a different subfolder. **Vanilla item placement** saves to

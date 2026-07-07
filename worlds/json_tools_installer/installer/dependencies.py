@@ -7,13 +7,15 @@ that aren't included in vanilla Archipelago's dependencies.
 
 import logging
 import os
+import re
 import subprocess
 import sys
 import tempfile
+import zipfile
 from pathlib import Path
 from typing import List, Optional, Tuple
 
-from Utils import local_path, is_frozen
+from Utils import local_path, user_path, is_frozen
 
 logger = logging.getLogger(__name__)
 
@@ -176,4 +178,92 @@ def install_missing_dependencies() -> Tuple[bool, str]:
         return True, "All dependencies already installed"
 
     logger.info(f"Installing missing dependencies: {missing}")
+    return install_packages(missing)
+
+
+def scan_apworld_requirements() -> List[str]:
+    """
+    Collect requirement strings from custom_worlds/*.apworld files.
+
+    Archipelago's module installer only scans worlds/ directories on source
+    installs — an apworld's requirements.txt is never read by anything else,
+    and compiled installs can't pip-install at all. This scan feeds those
+    requirements through the frozen-capable installer (e.g. MetaMath's
+    metamath-py).
+
+    Returns:
+        Deduplicated list of requirement strings, in discovery order.
+    """
+    requirements: List[str] = []
+    seen = set()
+
+    folder = Path(user_path("custom_worlds"))
+    if not folder.is_dir():
+        return requirements
+
+    for apworld in sorted(folder.glob("*.apworld")):
+        try:
+            with zipfile.ZipFile(apworld) as zf:
+                # Match by content, not filename stem — apworld files can be
+                # renamed without renaming the world directory inside.
+                candidates = [
+                    n for n in zf.namelist()
+                    if n == "requirements.txt" or (
+                        n.endswith("/requirements.txt") and n.count("/") == 1
+                    )
+                ]
+                for candidate in candidates:
+                    data = zf.read(candidate).decode("utf-8")
+                    for line in data.splitlines():
+                        line = line.split("#", 1)[0].strip()
+                        if line and line not in seen:
+                            seen.add(line)
+                            requirements.append(line)
+        except Exception as e:
+            logger.warning(f"Could not read requirements from {apworld.name}: {e}")
+
+    return requirements
+
+
+def check_missing_requirements(requirements: List[str]) -> List[str]:
+    """
+    Filter a requirement list down to distributions that aren't installed.
+
+    Checks by distribution name (importlib.metadata) rather than import name —
+    the two often differ (metamath-py installs as metamathpy). Version
+    specifiers are not evaluated; any installed version satisfies.
+    """
+    import importlib.metadata
+
+    missing = []
+    for req in requirements:
+        dist_name = re.split(r"[<>=!~;\[\s]", req, maxsplit=1)[0].strip()
+        if not dist_name:
+            continue
+        try:
+            importlib.metadata.distribution(dist_name)
+        except importlib.metadata.PackageNotFoundError:
+            missing.append(req)
+    return missing
+
+
+def install_apworld_dependencies() -> Tuple[bool, str]:
+    """
+    Install any missing requirements declared by apworlds in custom_worlds/.
+
+    Returns:
+        Tuple of (success, message).
+    """
+    requirements = scan_apworld_requirements()
+    if not requirements:
+        return True, "No apworld requirements found"
+
+    missing = check_missing_requirements(requirements)
+    if not missing:
+        return True, (
+            f"All apworld requirements already installed "
+            f"({len(requirements)} checked)"
+        )
+
+    logger.info(f"Installing apworld requirements: {missing}")
     return install_packages(missing)

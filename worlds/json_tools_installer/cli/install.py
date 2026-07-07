@@ -218,12 +218,23 @@ def do_install(
 
         # Install Python dependencies
         print("\n  Installing dependencies...")
-        from ..installer.dependencies import install_missing_dependencies
+        from ..installer.dependencies import (
+            install_missing_dependencies,
+            install_apworld_dependencies,
+        )
         dep_ok, dep_msg = install_missing_dependencies()
         if dep_ok:
             print(f"  [OK] {dep_msg}")
         else:
             print(f"  [WARN] {dep_msg}")
+
+        # Install requirements declared by apworlds in custom_worlds/
+        # (nothing else reads those; compiled installs can't pip at all)
+        apdep_ok, apdep_msg = install_apworld_dependencies()
+        if apdep_ok:
+            print(f"  [OK] {apdep_msg}")
+        else:
+            print(f"  [WARN] {apdep_msg}")
 
         # Download original world source (separate upstream download, not
         # part of the fork archive)

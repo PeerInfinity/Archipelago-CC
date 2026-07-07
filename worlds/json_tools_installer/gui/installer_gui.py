@@ -667,10 +667,20 @@ For more information, see the README.md file."""
                 # Install Python dependencies required by extracted components
                 self.update_status("Installing dependencies...")
                 self.update_progress(82)
-                from ..installer.dependencies import install_missing_dependencies
+                from ..installer.dependencies import (
+                    install_missing_dependencies,
+                    install_apworld_dependencies,
+                )
                 dep_ok, dep_msg = install_missing_dependencies()
                 if not dep_ok:
                     self.show_message("Warning", f"Some dependencies failed to install: {dep_msg}")
+
+                # Requirements declared by apworlds in custom_worlds/
+                # (nothing else reads those; compiled installs can't pip at all)
+                self.update_status("Installing apworld dependencies...")
+                apdep_ok, apdep_msg = install_apworld_dependencies()
+                if not apdep_ok:
+                    self.show_message("Warning", f"Some apworld dependencies failed to install: {apdep_msg}")
 
                 # Original world source is a separate upstream download,
                 # not part of the fork archive

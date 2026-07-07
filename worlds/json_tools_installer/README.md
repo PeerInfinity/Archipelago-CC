@@ -128,6 +128,16 @@ The installer can install these components:
 | `worldgen_worlds` | Auto-generated world packages from JSON rules (~15MB) | No |
 | `world_source` | Original world source for full rule export on compiled installs (~15MB, downloaded from the matching upstream Archipelago release) | No |
 
+### APWorld dependencies
+
+The install step also scans every apworld in `custom_worlds/` for a
+`requirements.txt` and installs any missing packages. Nothing else does this:
+vanilla Archipelago's module installer only scans `worlds/` directories on
+source installs, and compiled releases can't run pip at all. This is how e.g.
+MetaMath's `metamath-py` dependency gets installed on compiled installs.
+Restart the Launcher afterwards so affected worlds load with their
+dependencies present.
+
 ### Compiled (frozen) Archipelago installs
 
 On the compiled Windows release, importable components (`exporter`,
