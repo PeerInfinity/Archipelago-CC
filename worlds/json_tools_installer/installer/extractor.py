@@ -14,6 +14,24 @@ from typing import List, Optional, Set, Callable, Dict
 
 from Utils import local_path, is_frozen
 
+# Container manifest version stamped into archipelago.json when packing an
+# .apworld zip. Per the apworld spec this key must NOT appear in world SOURCE
+# manifests (test_world_manifest enforces it) — packing tools inject it.
+# 0.6.7 logs a deprecation warning for apworlds without it and 0.7.0 will
+# refuse them.
+APWORLD_COMPATIBLE_VERSION = 5
+
+
+def stamp_container_version(manifest_bytes: bytes) -> bytes:
+    """Return archipelago.json content with compatible_version injected."""
+    import json
+    try:
+        manifest = json.loads(manifest_bytes.decode("utf-8"))
+    except (ValueError, UnicodeDecodeError):
+        return manifest_bytes  # leave malformed manifests untouched
+    manifest.setdefault("compatible_version", APWORLD_COMPATIBLE_VERSION)
+    return json.dumps(manifest, indent=4).encode("utf-8")
+
 
 @dataclass
 class Component:
@@ -646,9 +664,11 @@ def extract_tools(
                             apworld_zips[world_name] = zipfile.ZipFile(
                                 apworld_path, "w", zipfile.ZIP_DEFLATED
                             )
-                        apworld_zips[world_name].writestr(arcname, zf.read(file_path))
+                        file_data = zf.read(file_path)
                         if arcname.endswith("/archipelago.json"):
+                            file_data = stamp_container_version(file_data)
                             apworld_has_manifest.add(world_name)
+                        apworld_zips[world_name].writestr(arcname, file_data)
                         result.extracted_files.append(rel_path)
                     except Exception as e:
                         result.errors.append(f"{rel_path}: {str(e)}")

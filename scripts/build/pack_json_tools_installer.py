@@ -84,7 +84,15 @@ def create_apworld(output_path: Path, dry_run: bool = False) -> bool:
     try:
         with zipfile.ZipFile(output_path, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as zf:
             for src_path, archive_path in files:
-                zf.write(src_path, archive_path)
+                # Stamp the container version into the world manifest at
+                # packing time (source manifests must not carry it — see
+                # test_world_manifest; AP warns on apworlds without it).
+                if src_path.name == "archipelago.json" and src_path.parent == SOURCE_DIR:
+                    manifest = json.loads(src_path.read_text(encoding="utf-8"))
+                    manifest.setdefault("compatible_version", 5)
+                    zf.writestr(archive_path, json.dumps(manifest, indent=4))
+                else:
+                    zf.write(src_path, archive_path)
 
         size_kb = output_path.stat().st_size / 1024
         print(f"\nCreated: {output_path} ({size_kb:.1f} KB)")

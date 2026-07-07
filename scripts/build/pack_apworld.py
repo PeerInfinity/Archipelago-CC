@@ -5,10 +5,23 @@ Usage: python scripts/build/pack_apworld.py <world_name>
 Example: python scripts/build/pack_apworld.py metamath
 """
 
+import json
 import os
 import sys
 import zipfile
 from pathlib import Path
+
+# Container manifest version stamped into archipelago.json at packing time.
+# Source manifests must not carry this key (see test_world_manifest); AP
+# 0.6.7+ warns about packed apworlds that lack it and 0.7.0 will refuse them.
+APWORLD_COMPATIBLE_VERSION = 5
+
+
+def stamp_container_version(manifest_path: Path) -> bytes:
+    """Return archipelago.json content with compatible_version injected."""
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest.setdefault("compatible_version", APWORLD_COMPATIBLE_VERSION)
+    return json.dumps(manifest, indent=4).encode("utf-8")
 
 
 def pack_apworld(world_name: str):
@@ -43,7 +56,10 @@ def pack_apworld(world_name: str):
                         continue
                     # Calculate relative path from world directory
                     relative_path = path.relative_to(worlds_dir)
-                    zf.write(path, relative_path)
+                    if path.name == "archipelago.json" and path.parent == world_dir:
+                        zf.writestr(str(relative_path), stamp_container_version(path))
+                    else:
+                        zf.write(path, relative_path)
                     print(f"  Added: {relative_path}")
 
         print(f"\nSuccessfully created {apworld_file}")

@@ -231,14 +231,14 @@ class WorldGenerator:
         # rule_builder, which the vendored _ext package builds on). Don't pin
         # the manifest to the exporting fork's version — AP refuses to load
         # apworlds whose minimum exceeds the core version.
+        # NOTE: no 'compatible_version' here — per the apworld spec (and
+        # test_world_manifest), that's a container-level key that packing
+        # tools inject when writing an .apworld zip.
         manifest = {
             "game": self.data.metadata.game_name,
             "authors": ["World Generator"],
             "minimum_ap_version": "0.6.7",
             "world_version": "1.0.0",
-            # Required by APContainer manifest validation (0.6.7+ warns and may
-            # refuse apworlds without it); 5 matches the repo's other apworlds.
-            "compatible_version": 5,
         }
         manifest_path = output_dir / 'archipelago.json'
         if not dry_run:
