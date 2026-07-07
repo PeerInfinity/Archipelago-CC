@@ -1,7 +1,7 @@
 # JtA automation stats — findings (2026-07-05, rev 2)
 
 > **VALIDITY CAVEAT (2026-07-06, user-flagged):** Rounds 1–4 and the
-> defaults sweep all ran with `award_spark_on_discovery: true` (it is part
+> defaults sweep all ran with `award_spark_on_discovery: true` (it was part
 > of `baselineMods()`), and Round 5 showed discovery spark is load-bearing —
 > it funds Divinity purchases (MoT, SBtV, energy repeatables) without
 > prestiging. Conclusions most exposed: the auto-prestige **stall-40**
@@ -9,8 +9,13 @@
 > (spendCap explicitly rode discovery spark to zero-prestige completions),
 > the income round, and the **all-134 completion metric itself** (it counts
 > the four SBtV-gated tasks — ids 17/28/88/158 — which may be unobtainable
-> without discovery spark or prestige). A spark-off re-evaluation session is
-> planned; treat Rounds 1–4 numbers as valid only for spark-on play.
+> without discovery spark or prestige). Treat Rounds 1–4 numbers as valid
+> only for spark-on play. **RESOLVED by Round 6 (same day):**
+> `baselineMods()` is now spark-OFF (the game's own default), the legacy
+> spark-on experiments live in `LEGACY_EXPERIMENTS` (re-runnable via
+> `--legacy`, spark-on auto-injected), and the full re-evaluation below
+> found: stall optimum 40 → 20, Unlock Savings a pure win in both spark
+> states, thresholds/fill/z15 conclusions unaffected.
 
 > **Defaults shipped (Fork 1.5, submodule `64bd3c1`):** the winning numerics
 > are now the game's defaults — item /rep 5%, /rst 5 for the four rst-3
@@ -185,3 +190,101 @@ an earlier same-day run with it ON is in git history for comparison).
 - Skill shape (static, unchanged): 195/269 tasks single-skill, 72 two-skill;
   skills introduced at zones 0,0,0,0,0,1,1,2,3,14; Ascension
   (xp_needed_mult 200) is the outlier.
+
+## Round 6 — spark-off re-evaluation (spark-off-*, 2026-07-06)
+
+`award_spark_on_discovery` defaults to **false in the game** — the spark-on
+harness baseline modeled the user's personal play profile, not out-of-box
+play. This round re-evaluates everything under spark-off. `baselineMods()`
+flipped to spark-off (user-approved); spark-on is now an explicit override.
+
+**Universes (user-ruled):** primary = FULL GAME (zoneLimit 30, all 269
+tasks, 5000-run budget) — the four SBtV-gated tasks stay IN, because
+prestige spark buys SeeBeyondTheVeil eventually and their timing is real
+tail signal. Secondary = zones 1–15 with the four EXCLUDED via the new
+`excludeTaskIds` driver option (all-134 → **all-130**): without discovery
+spark or a prestige-scale horizon they are genuinely unobtainable there.
+Full-game runs are tail-dominated, so the headline metrics are the new
+done@N checkpoint columns + z1-15 sub-mean (report.mjs), not the plain mean.
+Master table: `comparison-spark-off-full.md`.
+
+### A. Scale of the contamination
+
+| profile | all-269 @ | prestiges | MoT@ | SBtV@ |
+|---|---|---|---|---|
+| spark-off (tuned defaults) | 4068 | 59 | 1237 | 1459 |
+| spark-on (same settings) | 570 | 3 | 335 | 348 |
+
+Spark-off is a ~7× longer campaign funded by ~20× more prestiges. Matches
+Round 5's profiling run exactly at run 3000 (264/269, 37 prestiges), which
+validates the flipped baseline. The z15/130-task horizon is nearly
+indifferent (261 vs 175 last-completion; mean 66.4 vs 64.4) — the spark
+setting reshapes only the post-z15 game, as Round 5 said.
+
+### B. Auto-prestige — the stall-40 default was wrong for spark-off
+
+| trigger | all-269 @ | prestiges | notes |
+|---|---|---|---|
+| stall 10 | 3153 | 114 | best tail |
+| stall 20 | **3294** | 77 | near-tie, fewer prestiges, best mid-game |
+| stall 40 (shipped) | 4068 | 59 | too passive when prestige is the only spark |
+| stall 80 | >5000 (268) | 40 | fails |
+| stall 5 | >5000 (262) | 304 | prestige spam, mean 1454 |
+| ratio 50% | 3725 | 77 | mediocre |
+| wealth 10/25/50% | >5000 (166–226) | 422–514 | **catastrophic** |
+
+The wealth trigger (prospective gain ≥ pct of OWNED spark) degenerates while
+auto-buy is on: purchases keep held spark near zero, so it fires almost
+every run — 500+ prestiges, permanently stuck around zone 20–26. It also
+dominates any OR-combo (stall40+wealth10 is trajectory-identical to
+wealth-10). Stall remains the right trigger TYPE; only the count was wrong.
+
+### C. Purchase policy — Unlock Savings wins again, harder
+
+| policy | all-269 @ | prestiges | MoT@ | SBtV@ |
+|---|---|---|---|---|
+| Unlock Savings mod ≡ spendCap g=1.0 | **2887** | 34 | 716 | 1005 |
+| spendCap g=0.5 | 3063 | 36 | 716 | 1029 |
+| cheapest (baseline) | 4068 | 59 | 1237 | 1459 |
+| levelCap 10 | >5000 (258) | 55 | 806 | 1163 |
+
+The in-game mod reproduces driver spendCap g=1.0 byte-identically under
+spark-off too. −29% on its own; the flow cap matters MORE when income
+arrives in prestige lumps, not less.
+
+### D. Thresholds / auto-fill — insensitive at full-game scale
+
+item /rep 2/5/10%, rst 3/5/8, perk-first fill: all within ±100 runs of the
+4068 baseline (≈2%, noise for a deterministic single trajectory). The full
+game is prestige/purchase-bound, not scheduling-bound — the Fork 1.5
+numerics need no spark-off correction. The z15 secondary agrees (all-130 in
+every variant, means 66–69, median 59 across the board).
+
+### E. Winners combined + spark-on safety attribution
+
+| defaults candidate | spark-off all-269 @ | spark-on all-269 @ |
+|---|---|---|
+| shipped (stall 40, savings off) | 4068 | 570 |
+| savings ON, stall 40 | 2887 | **423** (0 prestiges) |
+| savings ON, stall 20 | 2583 | 588 |
+| savings ON, stall 15 | **2540** | 780 |
+| savings ON, stall 10 | 2592 | — |
+
+Attribution is clean: the spark-on regression at stall 15 is entirely the
+stall change (stall15-only spark-on: 800; savings-only spark-on: 423 —
+savings is a pure win in BOTH spark states). Under spark-on, any stall low
+enough to actually fire just buys pointless re-climbs (stall 15 fires 16
+times; stall 40 never fires). **stall 20 is the sweet spot**: −37% spark-off
+(with savings), +3% spark-on vs shipped defaults, and it matches the user's
+own long-standing manual setting. stall 15 vs 20 vs 10 are within noise on
+spark-off; 20 is strictly kindest to spark-on.
+
+### Recommended defaults (decision pending user)
+
+- `auto_prestige_stall_resets` 40 → **20** (numeric default; the toggle
+  itself stays off per the standing toggles-off ruling).
+- Unlock Savings: measured pure win everywhere (−29% spark-off, −26%
+  spark-on out-of-box-with-automation), but defaulting
+  `auto_buy_budget_enabled` ON would need the user to revisit the explicit
+  toggles-all-off ruling. `auto_buy_budget_pct` 100 is already right.
+- Everything else (thresholds, fill order, all-skipped): unchanged.

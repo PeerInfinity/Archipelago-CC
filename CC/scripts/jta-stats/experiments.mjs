@@ -524,6 +524,15 @@ const EXPERIMENTS = [
     },
     options: { ...FULL },
   },
+  {
+    name: "spark-off-full-stall20-savings-spark-on",
+    modOverrides: {
+      auto_prestige_stall_resets: 20,
+      auto_buy_budget_enabled: true,
+      award_spark_on_discovery: true,
+    },
+    options: { ...FULL },
+  },
 
   // Zones 1-15 secondary round (130-task universe) — continuity with the
   // historical z15 rounds and the zone-randomization arc's anchor. Winners
