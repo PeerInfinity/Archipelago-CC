@@ -10,6 +10,7 @@
  */
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { JTA_ZONE_TASK_DATA } from './zoneTaskData.js';
 
 // Host-side PlaybackProxy, injected by index.js's initialize() once the
 // eventBus exists (setter injection rather than importing index.js so
@@ -18,6 +19,50 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 // treat null as "no controller available" and no-op.
 let _playbackProxy = null;
 export function setPlaybackProxy(proxy) { _playbackProxy = proxy; }
+
+// --- Zone-locations channel (Phase 1 skeleton, param-gated) ---
+//
+// extractZoneRules emits a jta zone's tasks as AP locations. It is
+// OPT-IN: dormant by default so existing jta presets stay byte-identical
+// (an entry with a no-op extractZoneRules produces the same region as one
+// with none — empty locations, always-open exits, the same {jtaZone}
+// payload). setJtaEmitZoneLocations(true) turns it on for the
+// AP-locations preset. This proves the locations build path end-to-end
+// (extracted_rules → world_generator → Generate.py → spoiler/sphere log)
+// before Phase 2 adds randomization and the runtime check-reporting
+// bridge.
+let _emitZoneLocations = false;
+export function setJtaEmitZoneLocations(on) { _emitZoneLocations = !!on; }
+export function getJtaEmitZoneLocations() { return _emitZoneLocations; }
+
+// The four zone-0..14 tasks with no in-game unlocker
+// (Divinity/SeeBeyondTheVeil-gated): Use Secret Fishing Spot (17),
+// Training Dummy (28), Train at Every Guild (88), Write Down Some
+// Learnings (158). Unobtainable without prestige, which v1 (zones 0–14)
+// never reaches, so they are excluded from the location pool, the pacing
+// walk, and the verification universe (plan §6 open-q 10, RULED).
+const SBTV_GATED_TASK_IDS = new Set([17, 28, 88, 158]);
+
+// Build the zone-locations result for one zone. Returns the
+// extractZoneRules shape { locations, payload } where payload.ap_locations
+// maps each task id to the compileRegionGraph location name
+// `${region_id}__${id}`. Phase 1 assigns no items (null = filler); item /
+// perk placement is Phase 2. Exits are left to the layout driver
+// (always-open) — jta region transitions are driven by Travel-task
+// completion, not by gated exits, so extractZoneRules emits no
+// exitRules/exitPaths.
+function buildZoneLocations(zoneIdx, region_id) {
+    const zone = JTA_ZONE_TASK_DATA[zoneIdx];
+    if (!zone) return { locations: [], payload: {} };
+    const apLocations = {};
+    const locations = [];
+    for (const task of zone.tasks) {
+        if (SBTV_GATED_TASK_IDS.has(task.id)) continue;
+        apLocations[task.id] = `${region_id}__${task.id}`;
+        locations.push({ id: task.id, item: null, position: null });
+    }
+    return { locations, payload: { ap_locations: apLocations } };
+}
 
 export const substrateRegistryEntry = Object.freeze({
     // Identity / runtime
@@ -128,6 +173,18 @@ export const substrateRegistryEntry = Object.freeze({
     // index. 30 as of Fork 1.6.
     zoneCount: 30,
     synthesizeZonePayload: (zoneIdx) => ({ jtaZone: zoneIdx }),
+
+    // Zone-locations channel (opt-in, see setJtaEmitZoneLocations). The
+    // engine calls this whenever it is present (procgenPipelineEngine
+    // synthesizeZoneRegion), so when emission is off it returns an empty
+    // result that assembles byte-identically to having no hook. When on
+    // it emits the zone's tasks as AP locations, merged over
+    // synthesizeZonePayload's {jtaZone} (the payloads compose:
+    // playable_payload = { ...{jtaZone}, ...{ap_locations} }).
+    extractZoneRules: (zoneIdx, { region_id } = {}) => {
+        if (!_emitZoneLocations) return { locations: [], payload: {} };
+        return buildZoneLocations(zoneIdx, region_id);
+    },
 });
 
 // Side-effect on import: register the JtA substrate so the procgen
