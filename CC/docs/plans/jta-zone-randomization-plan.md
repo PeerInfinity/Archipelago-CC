@@ -1,12 +1,18 @@
 # JtA Zone Randomization & Reset-Paced Balancing — Plan
 
-**Date:** 2026-07-06 (v2 + same-day ruling rounds); Phase 1 shipped 2026-07-08 ·
+**Date:** 2026-07-06 (v2 + same-day ruling rounds); Phases 1–2 shipped
+2026-07-08 ·
 **Status: Phase 0 (vanilla profiling) DONE 2026-07-06 (`572fd9c32`, SUMMARY.md
-Round 5). Phase 1 (enablers) DONE 2026-07-08 — fork Tier-1 hooks + harness
-`gameDataPatch` + jta `extractZoneRules` skeleton + §2b round-trip verified
-(14/14), 17/17 substrate suite green. All §7 rulings received; v1 scope settled
-(zones 0–14, perk-shuffle + rebalance; synthetic data deferred). NEXT: Phase 2
-(AP integration — all tasks = locations, all perks = items).**
+Round 5). Phase 1 (enablers) DONE 2026-07-08. Phase 2 (AP integration) DONE
+2026-07-08 — pipeline perk items + opt-in seeded shuffle + filler + Victory +
+libraryItems + `arbitrary_ap_locations` + per-zone grant-suppression
+`task_patches` (`c08c62de3`); bridge location-check dispatch + `applyTaskPatches`
++ AP-authoritative `grantPerk` reconciliation (`90b5ad02b`); in-app
+`jta-location-check-and-perk-grant` test on a generated `jta_locations_test`
+preset (`038d8cff8`); round-trip now 18/18 (task_patches survive), 18/18
+substrate suite green. All §7 rulings received; v1 scope settled (zones 0–14,
+perk-shuffle + rebalance; synthetic data deferred). NEXT: Phase 3 (the §2
+balancing pass — Pass B rebalance at rules load).**
 
 The next JtA arc after `jta-substrate-integration-plan.md` (all phases complete
 except its Phase 6 stub, which this plan absorbs). This is the modern successor
@@ -516,14 +522,32 @@ standalone and `pinMaxEnergy` (substrate) budgets.
   dropped — no pass-through fix needed. 17/17 in-app substrate suite green
   (incl. 6 JtA); fork standalone baseline byte-identical.
 
-### Phase 2 — AP integration (all tasks = locations, all perks = items)
-- Location per task (first-full-completion semantics), item per perk,
-  filler design (open question 7), `supportedFeatures` +=
-  `arbitrary_ap_locations`.
-- Seeded perk shuffle in the pipeline; grant suppression patches;
-  AP-authoritative grants with inventory reconciliation on
-  connect/rules-reload (absorbs `jtaArchipelago` conventions).
-- In-app test: complete a task → check sent → item receipt → perk present.
+### Phase 2 — AP integration — **DONE 2026-07-08** (`c08c62de3` / `90b5ad02b` / `038d8cff8`)
+- **Pipeline** (`jtaSubstrateWrapperLibrary.js`): perk display-name items on
+  task locations + `JtA Filler` elsewhere + one `Victory` in the goal zone
+  (`setJtaGoalZone`); `libraryItems` classification (perks progression, filler
+  filler, Victory is_victory — was absent, so filler had mis-classified as
+  progression); `supportedFeatures` += `arbitrary_ap_locations`; per-zone
+  `task_patches` = perk→`Count` grant suppression. **Opt-in seeded perk shuffle**
+  (`setJtaPerkShuffleSeed`, user ruling 2026-07-08 — the pipeline CAN randomize
+  placement even though AP fill re-randomizes; off = vanilla identity, bounded
+  to `[0, goalZone]`). `zoneTaskData` generator emits `JTA_PERK_COUNT`.
+- **Bridge** (`bridge.js`): `setTaskCompletionCallback` → resolve
+  `world.ap_locations[id]` → `user:locationCheck` (deduped, re-seeded from
+  `checkedLocations`); apply `world.task_patches` on loadRegion; AP-authoritative
+  `grantPerk(name)` reconciliation on connect / `snapshotUpdated` / rulesLoaded
+  (idempotent, self-rejecting for non-perks — no perk-name map needed). Absorbs
+  the `jtaArchipelago` conventions (location = task name is now the
+  compileRegionGraph `region__id` name; item = perk display name).
+- **Round-trip** upgraded to real `setJtaGoalZone` + `setJtaPerkShuffleSeed` and
+  asserts `task_patches` survive the toolchain (18/18).
+- **In-app test** `jta-location-check-and-perk-grant` (generated
+  `jta_locations_test` preset): fresh-save reset → walkTo drives zone 0 →
+  location check + item receipt + perk present + perks-held == perk-items-received
+  (AP-authoritative). 18/18 substrate suite green.
+- Notes: the substrate boots from a SHARED save slot (plan §6.3), so a clean test
+  needs a save reset; `performTask`+`stepTick` don't advance tasks in managed mode
+  — `walkTo` (arms the game's automation) is the driver.
 
 ### Phase 3 — The §2 balancing pass (Pass B first; shared module)
 - `balance` module (code home per Q3 ruling: engine-touching parts lean
