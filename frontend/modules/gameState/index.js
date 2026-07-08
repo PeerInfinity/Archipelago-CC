@@ -1,5 +1,6 @@
 import { createGameStateSingleton, getGameStateSingleton } from './singleton.js';
 import { stateManagerProxySingleton } from '../stateManager/index.js';
+import settingsManager from '../../app/core/settingsManager.js';
 
 // --- Module Info ---
 export const moduleInfo = {
@@ -22,6 +23,26 @@ function log(level, message, ...data) {
 // Store module-level references
 let moduleDispatcher = null;
 let moduleId = 'gameState';
+
+// Whether the AP-item count contributes to maxMana (the loop starting
+// mana). Default on. Off excludes the per-item term so a substrate's own
+// progression (e.g. JtA energy via energyBonusSync) can be the sole driver
+// of the pool. Drives gameState.setIncludePerItemMaxMana, which recomputes.
+const INCLUDE_PER_ITEM_MAX_MANA_SETTING = 'moduleSettings.gameState.includePerItemMaxMana';
+const INCLUDE_PER_ITEM_MAX_MANA_DEFAULT = true;
+
+async function _applyIncludePerItemMaxManaSetting() {
+    if (!settingsManager?.getSetting) return;
+    try {
+        const v = await settingsManager.getSetting(
+            INCLUDE_PER_ITEM_MAX_MANA_SETTING,
+            INCLUDE_PER_ITEM_MAX_MANA_DEFAULT,
+        );
+        getGameStateSingleton()?.setIncludePerItemMaxMana(v === true || v === 'true');
+    } catch {
+        // Settings unavailable — keep current value.
+    }
+}
 
 export async function register(registrationApi) {
     // Register dispatcher receivers for events
@@ -233,6 +254,26 @@ export async function register(registrationApi) {
     registrationApi.registerPublicFunction(moduleId, 'setIncludePerItemMaxMana', (enabled) => {
         return getGameStateSingleton().setIncludePerItemMaxMana(enabled);
     });
+
+    if (typeof registrationApi.registerSettingsSchema === 'function') {
+        registrationApi.registerSettingsSchema({
+            type: 'object',
+            properties: {
+                includePerItemMaxMana: {
+                    type: 'boolean',
+                    default: INCLUDE_PER_ITEM_MAX_MANA_DEFAULT,
+                    label: 'Count AP items toward max mana',
+                    description:
+                        'When on (default), each AP item raises the loop starting '
+                        + 'mana (maxMana) by the per-item amount, on top of the '
+                        + 'shared default and any substrate bonuses. Turn off to '
+                        + 'exclude the per-item term — e.g. when a substrate\'s own '
+                        + 'progression (such as JtA energy) is the intended driver '
+                        + 'of the pool.',
+                },
+            },
+        });
+    }
     // Note: recordBestPath / getBestPath / clearBestPaths were removed
     // when saved queues moved to loops/savedQueueStore.js. New consumers
     // should import that module directly.
@@ -261,6 +302,12 @@ export async function initialize(mId, priorityIndex, initializationApi) {
 
         // Subscribe to snapshotUpdated to recalculate maxMana from inventory
         eventBus.subscribe('stateManager:snapshotUpdated', handleSnapshotUpdated);
+
+        // Apply the per-item max-mana setting now and whenever it changes.
+        _applyIncludePerItemMaxManaSetting();
+        eventBus.subscribe('settings:changed', () => {
+            _applyIncludePerItemMaxManaSetting();
+        });
     }
 
     log('info', `[${moduleId} Module] Initialization complete.`);
