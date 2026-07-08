@@ -294,6 +294,28 @@ export function runFirstCompletionStats(env, options = {}) {
   win.setInstantMode(true);
   applyEnergyPin();
 
+  // Field-level game-data patches (Phase 1 enabler): apply the same
+  // Tier-1 costMult/xpMult/maxReps/perk/item patches the substrate bridge
+  // rides on each region's sidecar, so the harness can measure pacing
+  // under randomized/rebalanced data. Applied once after init — patches
+  // mutate the static TaskDefinitions in place and never reset, so they
+  // persist across every simulated run. Built before the universe below,
+  // so a patched max_reps is reflected in the first-completion metric.
+  const gameDataPatch = options.gameDataPatch ?? null;
+  if (gameDataPatch) {
+    if (typeof win.applyTaskPatches !== "function") {
+      throw new Error(
+        "gameDataPatch set but win.applyTaskPatches is unavailable " +
+          "(fork build predates the Tier-1 hooks)"
+      );
+    }
+    const res = win.applyTaskPatches(gameDataPatch);
+    log(
+      `[driver] gameDataPatch: ${res.applied.length} task(s) patched` +
+        (res.skipped.length ? `, ${res.skipped.length} skipped (unknown id)` : "")
+    );
+  }
+
   for (const [name, value] of Object.entries(mods)) {
     if (!sim.setMod(name, value)) {
       throw new Error(`setMod(${name}, ${JSON.stringify(value)}) failed`);
@@ -582,6 +604,7 @@ export function runFirstCompletionStats(env, options = {}) {
       purchasePolicy,
       runToBudget,
       checkpointEvery,
+      gameDataPatch,
       mods,
     },
     timing: {

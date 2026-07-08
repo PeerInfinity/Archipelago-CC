@@ -57,7 +57,7 @@ node CC/scripts/jta-stats/profile-vanilla.mjs --max-runs 500 --zone-limit 15
 Config JSON: `{ "name": "...", "options": { "modOverrides": {...},
 "autoFillOrder": [...], "maxRuns": 500, "zoneLimit": 15,
 "purchasePolicy": {...}, "pinMaxEnergy": 100,
-"excludeTaskIds": [...] } }` — `modOverrides` are
+"excludeTaskIds": [...], "gameDataPatch": [...] } }` — `modOverrides` are
 deltas on top of `baselineMods()`; `mods` replaces the profile wholesale.
 `excludeTaskIds` removes tasks from the metric universe — used by the
 zone-limited spark-off configs to drop the four SBtV-gated hidden tasks
@@ -75,6 +75,16 @@ output (default `comparison.md`).
 `pinMaxEnergy` emulates jta-substrate play: max_energy re-clamped to the
 value at init and after every reset/prestige, the way the substrate bridge
 pins energy to the shared loop-mode pool (see results/SUMMARY.md Round 4).
+
+`gameDataPatch` applies field-level task-def patches through the fork's
+`window.applyTaskPatches` hook once after init (array of `{id, ...fields}`
+or a `{[id]: {...fields}}` map; fields: `cost_multiplier`, `xp_mult`,
+`max_reps`, `hidden_by_default`, `unlocks_task`, `perk`, `item`). This is
+the same Tier-1 delivery the substrate bridge uses (patches ride each
+region's sidecar), so the harness can measure pacing under
+randomized/rebalanced game data. Patches mutate the static defs and never
+reset, so they persist across every simulated run; a patched `max_reps`
+is reflected in the first-completion metric universe.
 
 `purchasePolicy` swaps the sim's auto_buy_cheapest for a driver-side Divinity
 buy strategy (see `makePurchasePolicy` in driver.mjs): `{kind:"cheapest"}`
