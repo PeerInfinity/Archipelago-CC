@@ -541,6 +541,25 @@ class FrozenHarness:
             encoding="utf-8")
         return player_dir
 
+    def _template_path(self, name: str) -> Path:
+        """Repo template if present; else generate templates once into the
+        scratch dir (Players/ is gitignored, so CI checkouts have none —
+        generated defaults are equivalent since staging rewrites requires)."""
+        repo_template = REPO_ROOT / "Players" / "Templates" / name
+        if repo_template.is_file():
+            return repo_template
+        generated_dir = self._scratch / "templates"
+        if not generated_dir.is_dir():
+            print("  Repo has no Players/Templates — generating templates "
+                  "(one-time, all worlds) ...")
+            from Options import generate_yaml_templates
+            generate_yaml_templates(generated_dir)
+        generated = generated_dir / name
+        if not generated.is_file():
+            raise HarnessError(f"template not found: {name} (neither in "
+                               f"{repo_template.parent} nor generated)")
+        return generated
+
     def stage_template_player_yamls(self, template_names: List[str],
                                     tag: str) -> Path:
         """Stage repo templates adapted to the installed AP version: the
@@ -551,9 +570,7 @@ class FrozenHarness:
             shutil.rmtree(player_dir)
         player_dir.mkdir(parents=True)
         for name in template_names:
-            template = REPO_ROOT / "Players" / "Templates" / name
-            if not template.is_file():
-                raise HarnessError(f"template not found: {template}")
+            template = self._template_path(name)
             text = template.read_text(encoding="utf-8-sig")
             text, count = re.subn(
                 r"^requires:\n(?:[ \t]+.*\n)*",
@@ -678,7 +695,6 @@ def scenario_baseline(harness) -> CheckList:
 
     harness.reset()
     harness.deploy_installer()
-    harness.deploy_probe()
 
     components = baseline_components(harness)
     actions = [
