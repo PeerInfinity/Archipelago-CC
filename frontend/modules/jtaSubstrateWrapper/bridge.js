@@ -119,6 +119,14 @@ let _pendingWalkExit = null;
 let _walkPrevAutomationMode = null;  // mode to restore when the walk ends (null = we didn't change it)
 let _playbackAutomationPolicy = 'activate';   // 'activate' | 'respect' (host setting)
 
+// Energy-bonus sync (host setting, default off). When on, JtA owns its
+// max_energy and reports its native starting-energy bonus up to the shared
+// pool (jta:bridgeSetManaBonus → setSubstrateMaxManaBonus), and the bridge
+// stops pinning max_energy from the pool (syncs current energy only). When
+// off, the legacy pin applies (max_energy pinned to host maxMana).
+let _energyBonusSync = false;
+let _lastReportedBonus = null;   // last starting-energy bonus pushed to the host
+
 // Synthetic-task id allocation. The fork's injectSyntheticTask expects
 // unique ids ≥ 10000 — and they must be STABLE across re-entries and
 // reloads: the game's per-zone automation priorities are lists of task
@@ -155,6 +163,10 @@ function _pollTick() {
 
     const fullState = _w.getFullState();
     const currentEnergy = fullState.currentEnergy;
+
+    // Report JtA's native starting-energy bonus up to the shared pool
+    // (independent of the per-tick drain mirroring below).
+    _reportStartingEnergyBonusIfChanged(fullState);
 
     if (_lastSampledEnergy === null) {
         _lastSampledEnergy = currentEnergy;
@@ -224,9 +236,33 @@ function _applyCatchUpResets() {
 
 function _syncEnergyFromPool() {
     if (typeof _w.setEnergy !== 'function') return;
-    _w.setEnergy(_hostCurrentMana, _hostMaxMana);
+    if (_energyBonusSync) {
+        // JtA owns its max_energy in bonus-sync mode; sync CURRENT energy
+        // only (the max param is optional). Pinning max here would fight
+        // JtA's own starting-energy growth and form a feedback loop with
+        // the bonus we report back up.
+        _w.setEnergy(_hostCurrentMana);
+    } else {
+        // Legacy pin: max_energy tracks the shared pool's max.
+        _w.setEnergy(_hostCurrentMana, _hostMaxMana);
+    }
     _lastSampledEnergy = _hostCurrentMana;
     _expectedPool = _hostCurrentMana;
+}
+
+// Push JtA's native starting-energy bonus (Energetic Memory + EnergySpell
+// + Divine Supremacy + Energized, tracked by the fork's
+// jta_starting_energy_bonus accumulator) up to the shared pool, but only
+// when bonus-sync is on and the value actually changed. gameState sums
+// per-substrate bonuses into maxMana.
+function _reportStartingEnergyBonusIfChanged(fullState) {
+    if (!_energyBonusSync || !_client) return;
+    const bonus = fullState.jtaStartingEnergyBonus;
+    if (typeof bonus !== 'number') return;
+    if (_lastReportedBonus !== null
+        && Math.abs(bonus - _lastReportedBonus) <= POOL_EPSILON) return;
+    _lastReportedBonus = bonus;
+    _client.publishEventBus('jta:bridgeSetManaBonus', { bonus });
 }
 
 // ────────────────────────────────────────────────────────────────
@@ -352,6 +388,9 @@ function _handleLoadRegion(payload) {
     _world = world;
     _isActive = true;
     _lastSampledEnergy = _hostCurrentMana;
+    // Force the next poll to re-report our starting-energy bonus (the host
+    // may have been reset — losing our bonus — while we were inactive).
+    _lastReportedBonus = null;
 
     // Defensive: if static data isn't cached yet (e.g. the initial
     // post-connect request fired before rules were loaded and no
@@ -602,8 +641,15 @@ async function main() {
         if (data?.playbackAutomation === 'activate' || data?.playbackAutomation === 'respect') {
             _playbackAutomationPolicy = data.playbackAutomation;
         }
+        if (typeof data?.energyBonusSync === 'boolean' && data.energyBonusSync !== _energyBonusSync) {
+            _energyBonusSync = data.energyBonusSync;
+            // Flag flipped: re-report on the next poll, and re-pin max on
+            // the next pool sync if it was just turned off.
+            _lastReportedBonus = null;
+            if (_isActive) _syncEnergyFromPool();
+        }
         _expectedPool = _hostCurrentMana;
-        log('debug', 'initial state received', { _hostCurrentMana, _hostMaxMana, _hostResetCount, _playbackAutomationPolicy });
+        log('debug', 'initial state received', { _hostCurrentMana, _hostMaxMana, _hostResetCount, _playbackAutomationPolicy, _energyBonusSync });
     });
 
     // Incremental updates. Echo detection: manaChanged caused by our

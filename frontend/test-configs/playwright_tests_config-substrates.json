@@ -84,6 +84,11 @@
       "id": "jta-bot-walkto-exit",
       "enabled": true,
       "category": "JtA substrate"
+    },
+    {
+      "id": "jta-starting-energy-bonus-raises-pool",
+      "enabled": true,
+      "category": "JtA substrate"
     }
   ]
 }

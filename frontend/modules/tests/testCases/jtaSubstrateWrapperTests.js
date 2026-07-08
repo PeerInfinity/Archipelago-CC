@@ -23,12 +23,14 @@
 
 import { registerTest } from '../testRegistry.js';
 import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
+import settingsManager from '../../../app/core/settingsManager.js';
 import {
     JTA_TEST_PRESET_PATH,
     JTA_TEST_REGION,
     JTA_TEST_START_REGION,
     waitForJtaActive,
     moveToRegion,
+    gameStateFn,
     readPool,
     readLoopResetCount,
     readCurrentRegion,
@@ -398,6 +400,71 @@ registerTest({
                + 'asserts the shared mana pool follows in both directions '
                + '(jta:bridgeDeductMana / jta:bridgeGainMana).',
     testFunction: energyMirrorsPoolBothWays,
+    category: 'JtA substrate',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
+
+async function startingEnergyBonusRaisesPool(testController) {
+    const win = await enterJtaRegion(testController);
+    if (!win) return testController.getOverallResult();
+
+    const getMaxMana = () => gameStateFn('getMaxMana')?.();
+    const getJtaBonus = () => gameStateFn('getSubstrateMaxManaBonus')?.('jta') ?? 0;
+
+    const BONUS_SETTING = 'moduleSettings.jtaSubstrateWrapper.energyBonusSync';
+    const maxMana0 = getMaxMana();
+    testController.log(`maxMana=${maxMana0}, jtaBonus=${getJtaBonus()}`);
+    testController.assertEqual('jta bonus starts at 0', 0, getJtaBonus());
+
+    try {
+        // Enable the real setting: the host module's settings:changed handler
+        // loads it and republishes initialState{energyBonusSync:true} through
+        // its own relay path to the bridge (the production route — a direct
+        // test publish of initialState is not relayed into the iframe).
+        await settingsManager.updateSetting(BONUS_SETTING, true, { persist: false });
+
+        // Force JtA's starting-energy-bonus accumulator (as Energetic Memory /
+        // Divine Supremacy etc. would in real play). The bridge's poll reads it
+        // off getFullState and reports it up via jta:bridgeSetManaBonus.
+        win.getGamestate.jta_starting_energy_bonus = 50;
+
+        const applied = await eventually(
+            testController,
+            () => getJtaBonus() === 50,
+            'jta starting-energy bonus (50) reported to the shared pool',
+            6000,
+        );
+        testController.assertEqual('bridge reported the bonus to gameState', true, applied);
+        testController.assertEqual('maxMana rose by the bonus', maxMana0 + 50, getMaxMana());
+
+        // Turn it back off: the host module zeroes JtA's pool contribution on
+        // settings:changed when the setting is off.
+        await settingsManager.updateSetting(BONUS_SETTING, false, { persist: false });
+        const cleared = await eventually(
+            testController,
+            () => getJtaBonus() === 0,
+            'jta bonus cleared when bonus-sync turned off',
+            6000,
+        );
+        testController.assertEqual('bonus cleared on flag-off', true, cleared);
+        testController.assertEqual('maxMana returned to baseline', maxMana0, getMaxMana());
+    } finally {
+        // Don't leak the session override into other tests.
+        await settingsManager.clearOverride(BONUS_SETTING);
+    }
+
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'jta-starting-energy-bonus-raises-pool',
+    name: 'JtA: starting-energy bonus raises the shared pool when bonus-sync is on',
+    description: 'With energyBonusSync on, forces JtA\'s starting-energy-bonus '
+               + 'accumulator and asserts the bridge reports it up so the shared '
+               + 'maxMana rises by the bonus (setSubstrateMaxManaBonus); turning '
+               + 'the flag off clears JtA\'s contribution again.',
+    testFunction: startingEnergyBonusRaisesPool,
     category: 'JtA substrate',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });

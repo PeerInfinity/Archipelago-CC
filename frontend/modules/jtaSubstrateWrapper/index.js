@@ -44,6 +44,7 @@ const BRIDGE_DEDUCT_MANA_EVENT = 'jta:bridgeDeductMana';
 const BRIDGE_GAIN_MANA_EVENT = 'jta:bridgeGainMana';
 const BRIDGE_ENERGY_RESET_EVENT = 'jta:bridgeEnergyReset';
 const PLAYBACK_CONTROL_EVENT = 'jta:playbackControl';
+const BRIDGE_SET_MANA_BONUS_EVENT = 'jta:bridgeSetManaBonus';
 
 // How playback (walkTo / loops executeVia) completes a zone:
 //   'activate' — the bridge switches the game's automation engine on for
@@ -65,6 +66,29 @@ async function _loadPlaybackAutomationSetting() {
             PLAYBACK_AUTOMATION_DEFAULT,
         );
         _playbackAutomation = v === 'respect' ? 'respect' : 'activate';
+    } catch {
+        // Settings unavailable — keep current value.
+    }
+}
+
+// Whether JtA reports its own starting-energy bonuses (Energetic Memory,
+// EnergySpell perk, Divine Supremacy, Energized) up into the shared loop
+// starting-mana pool via setSubstrateMaxManaBonus. Default OFF: the bridge
+// keeps pinning JtA's max_energy to the host pool (current behavior). When
+// ON, JtA owns its max_energy and its native starting-energy growth raises
+// the shared maxMana — a balance change, so it is opt-in.
+const ENERGY_BONUS_SYNC_SETTING = 'moduleSettings.jtaSubstrateWrapper.energyBonusSync';
+const ENERGY_BONUS_SYNC_DEFAULT = false;
+let _energyBonusSync = ENERGY_BONUS_SYNC_DEFAULT;
+
+async function _loadEnergyBonusSyncSetting() {
+    if (!settingsManager?.getSetting) return;
+    try {
+        const v = await settingsManager.getSetting(
+            ENERGY_BONUS_SYNC_SETTING,
+            ENERGY_BONUS_SYNC_DEFAULT,
+        );
+        _energyBonusSync = v === true || v === 'true';
     } catch {
         // Settings unavailable — keep current value.
     }
@@ -106,6 +130,7 @@ export function register(registrationApi) {
     registrationApi.registerEventBusSubscriberIntent(BRIDGE_DEDUCT_MANA_EVENT);
     registrationApi.registerEventBusSubscriberIntent(BRIDGE_GAIN_MANA_EVENT);
     registrationApi.registerEventBusSubscriberIntent(BRIDGE_ENERGY_RESET_EVENT);
+    registrationApi.registerEventBusSubscriberIntent(BRIDGE_SET_MANA_BONUS_EVENT);
     registrationApi.registerEventBusSubscriberIntent('jta:loadRegion');
     registrationApi.registerEventBusSubscriberIntent('settings:changed');
 
@@ -130,6 +155,18 @@ export function register(registrationApi) {
                         + 'engine on for the walk (default); "respect" leaves zone '
                         + 'completion entirely to your own in-game automation '
                         + 'settings.',
+                },
+                energyBonusSync: {
+                    type: 'boolean',
+                    default: ENERGY_BONUS_SYNC_DEFAULT,
+                    label: 'Sync JtA starting-energy bonuses to the pool',
+                    description:
+                        'When on, JtA\'s own starting-energy bonuses (Energetic '
+                        + 'Memory, EnergySpell perk, Divine Supremacy, Energized) '
+                        + 'raise the shared loop starting-mana pool, and JtA owns '
+                        + 'its max energy. When off (default), JtA\'s max energy is '
+                        + 'pinned to the shared pool and its starting-energy growth '
+                        + 'is neutralized. Changing this affects energy balance.',
                 },
             },
         });
@@ -163,22 +200,29 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
             maxMana: gs.getMaxMana(),
             loopResetCount: gs.getLoopResetCount(),
             playbackAutomation: _playbackAutomation,
+            energyBonusSync: _energyBonusSync,
         });
     });
 
-    // Load the playback policy now and re-push it to the bridge when
+    // Load the host settings now and re-push them to the bridge when
     // settings change (small idempotent payload; the bridge ignores
     // fields it already has).
     _loadPlaybackAutomationSetting();
+    _loadEnergyBonusSyncSetting();
     eventBus.subscribe('settings:changed', async () => {
         await _loadPlaybackAutomationSetting();
+        await _loadEnergyBonusSyncSetting();
         const gs = getGameStateSingleton();
         if (!gs) return;
+        // With bonus-sync off, JtA must not contribute to the shared pool;
+        // clear any bonus it reported while the flag was on.
+        if (!_energyBonusSync) gs.setSubstrateMaxManaBonus('jta', 0);
         eventBus.publish(INITIAL_STATE_EVENT, {
             currentMana: gs.getCurrentMana(),
             maxMana: gs.getMaxMana(),
             loopResetCount: gs.getLoopResetCount(),
             playbackAutomation: _playbackAutomation,
+            energyBonusSync: _energyBonusSync,
         });
     });
 
@@ -220,6 +264,19 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
         const amount = Number(data?.amount) || 0;
         if (amount <= 0) return;
         gs.gainMana(amount);
+    });
+
+    // Bridge → host: JtA reports its native starting-energy bonus (sum of
+    // Energetic Memory / EnergySpell / Divine Supremacy / Energized) so it
+    // raises the shared loop starting-mana pool. Only fired by the bridge
+    // when the energyBonusSync setting is on; gameState sums per-substrate
+    // bonuses into maxMana (default + Σbonuses + optional item term).
+    eventBus.subscribe(BRIDGE_SET_MANA_BONUS_EVENT, (data) => {
+        const gs = getGameStateSingleton();
+        if (!gs) return;
+        const bonus = Number(data?.bonus);
+        if (!Number.isFinite(bonus)) return;
+        gs.setSubstrateMaxManaBonus('jta', Math.max(0, bonus));
     });
 
     // Bridge → host: the game ended its own run (energy-reset overlay
