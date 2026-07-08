@@ -1,0 +1,138 @@
+# Frozen-install test: install a compiled (frozen) Archipelago release on a
+# Windows runner and drive scripts/test/test-frozen-install.py against it.
+#
+# Manual dispatch only: a full run downloads ~250 MB (AP Setup exe, fork
+# archives per scenario, upstream world source, set.mm) and takes ~30-45 min.
+#
+# Elevation note: the AP Inno installer wants to modify Program Files-style
+# locations, which on a desktop shows a Windows UAC consent popup — the one
+# manual step of the local bench procedure. Hosted runners execute elevated,
+# so the same /VERYSILENT install runs unattended here; we accept the
+# elevation requirement rather than working around it (user ruling
+# 2026-07-07), and /DIR keeps the install in the runner's temp dir.
+#
+# This is the autonomous frozen counterpart of the release checklist's
+# source-install test (Phase 7.2 / scripts/install_json_tools.py).
+
+name: test-frozen-install
+
+on:
+  workflow_dispatch:
+    inputs:
+      ap_version:
+        description: >-
+          Archipelago release to install (Setup.Archipelago.<version>.exe).
+          Leave empty for the latest ArchipelagoMW release — the checkout's
+          own Utils.__version__ is usually an unreleased dev version with no
+          Setup exe to download.
+        required: false
+        default: ""
+      scenarios:
+        description: "Space-separated harness scenarios to run"
+        required: false
+        default: "baseline pip-guard reinstall uninstall worldgen export-parity"
+      source:
+        description: "Where the installer downloads JSON Tools from"
+        type: choice
+        options:
+          - dev
+          - stable
+          - repo
+        default: dev
+
+permissions: {}
+
+jobs:
+  frozen-install:
+    runs-on: windows-latest
+    timeout-minutes: 90
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r ci-requirements.txt
+          python ModuleUpdate.py --yes --force
+          python Launcher.py --update_settings
+
+      - name: Resolve AP version
+        id: version
+        shell: pwsh
+        run: |
+          $ver = "${{ inputs.ap_version }}"
+          if (-not $ver) {
+            $release = Invoke-RestMethod `
+              -Uri "https://api.github.com/repos/ArchipelagoMW/Archipelago/releases/latest"
+            $ver = $release.tag_name
+            if (-not $ver) { throw "could not resolve the latest AP release tag" }
+          }
+          Write-Host "AP version under test: $ver"
+          "version=$ver" >> $env:GITHUB_OUTPUT
+
+      - name: Cache AP setup exe
+        uses: actions/cache@v4
+        with:
+          path: ap-setup
+          key: ap-setup-${{ steps.version.outputs.version }}
+
+      - name: Download AP setup exe
+        shell: pwsh
+        run: |
+          $ver = "${{ steps.version.outputs.version }}"
+          $exe = "ap-setup/Setup.Archipelago.$ver.exe"
+          if (Test-Path $exe) {
+            Write-Host "Using cached $exe"
+          } else {
+            New-Item -ItemType Directory -Force -Path ap-setup | Out-Null
+            $url = "https://github.com/ArchipelagoMW/Archipelago/releases/download/$ver/Setup.Archipelago.$ver.exe"
+            Write-Host "Downloading $url"
+            Invoke-WebRequest -Uri $url -OutFile $exe
+          }
+          Get-Item $exe | Format-List Name, Length
+
+      - name: Install Archipelago (silent)
+        shell: pwsh
+        run: |
+          $ver = "${{ steps.version.outputs.version }}"
+          $installDir = Join-Path $env:RUNNER_TEMP "Archipelago"
+          $proc = Start-Process -FilePath "ap-setup/Setup.Archipelago.$ver.exe" `
+            -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/DIR=$installDir" `
+            -Wait -PassThru
+          if ($proc.ExitCode -ne 0) { throw "Inno setup exited with $($proc.ExitCode)" }
+          # The harness re-validates, but fail fast with a clear message here
+          foreach ($required in @("manifest.json", "ArchipelagoGenerate.exe", "lib")) {
+            if (-not (Test-Path (Join-Path $installDir $required))) {
+              throw "install dir is missing $required — silent install did not complete"
+            }
+          }
+          "JT_FROZEN_AP_DIR=$installDir" >> $env:GITHUB_ENV
+
+      - name: Run frozen-install harness
+        shell: pwsh
+        env:
+          PYTHONUTF8: "1"
+          PYTHONIOENCODING: "utf-8"
+          SCENARIOS: ${{ inputs.scenarios }}
+        run: |
+          python scripts/test/test-frozen-install.py `
+            --host windows `
+            --source "${{ inputs.source }}" `
+            --scenario $env:SCENARIOS.Split(" ")
+
+      - name: Upload install logs and output on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frozen-install-state
+          path: |
+            ${{ env.JT_FROZEN_AP_DIR }}/logs/
+            ${{ env.JT_FROZEN_AP_DIR }}/output/
+            ${{ env.JT_FROZEN_AP_DIR }}/*.json
+          if-no-files-found: ignore

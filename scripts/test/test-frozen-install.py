@@ -35,6 +35,13 @@ State handling: every scenario starts with a reset (installer-owned
 artifacts removed, the AP installation itself untouched). On failure the
 install is left as-is for inspection; on success it is reset again unless
 --keep-state is given.
+
+One-time manual step (local bench): installing compiled Archipelago itself
+(Setup.Archipelago.<ver>.exe /VERYSILENT) triggers the Windows UAC consent
+popup — accepted as-is rather than worked around. Everything this harness
+does afterwards is fully autonomous. CI runners execute elevated, so the
+same silent install runs unattended there (.github/workflows/
+test-frozen-install.yml).
 """
 
 import argparse
