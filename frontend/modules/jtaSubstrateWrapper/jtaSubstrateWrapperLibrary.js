@@ -43,11 +43,18 @@ export function getJtaEmitZoneLocations() { return _emitZoneLocations; }
 // walk, and the verification universe (plan §6 open-q 10, RULED).
 const SBTV_GATED_TASK_IDS = new Set([17, 28, 88, 158]);
 
+// v1 filler item (plan §6 open-q 7, RULED: filler items do nothing). The
+// Phase 1 skeleton places no perks yet, so EVERY location holds filler —
+// enough to give AP fill a full item pool so the round-trip
+// (world_generator → Generate.py → sphere log) actually runs. Phase 2
+// replaces filler with the granting perk on perk-tasks and keeps filler
+// on the rest.
+export const JTA_FILLER_ITEM_NAME = 'JtA Filler';
+
 // Build the zone-locations result for one zone. Returns the
 // extractZoneRules shape { locations, payload } where payload.ap_locations
 // maps each task id to the compileRegionGraph location name
-// `${region_id}__${id}`. Phase 1 assigns no items (null = filler); item /
-// perk placement is Phase 2. Exits are left to the layout driver
+// `${region_id}__${id}`. Exits are left to the layout driver
 // (always-open) — jta region transitions are driven by Travel-task
 // completion, not by gated exits, so extractZoneRules emits no
 // exitRules/exitPaths.
@@ -59,7 +66,7 @@ function buildZoneLocations(zoneIdx, region_id) {
     for (const task of zone.tasks) {
         if (SBTV_GATED_TASK_IDS.has(task.id)) continue;
         apLocations[task.id] = `${region_id}__${task.id}`;
-        locations.push({ id: task.id, item: null, position: null });
+        locations.push({ id: task.id, item: JTA_FILLER_ITEM_NAME, position: null });
     }
     return { locations, payload: { ap_locations: apLocations } };
 }

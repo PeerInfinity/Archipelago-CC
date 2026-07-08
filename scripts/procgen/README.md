@@ -48,6 +48,24 @@ completion-condition item, mirroring the pipeline UI.
 node scripts/procgen/dump-shuffled-spiral.js --seed 1 --quota bounce=4 -o /tmp/spiral.json
 ```
 
+`--jta-locations` turns on the jta zone-locations channel (Phase 1
+skeleton) so jta regions emit their tasks as AP locations; off by
+default (byte-identical to prior jta dumps).
+
+## verify-jta-locations-roundtrip.mjs
+
+Phase 1 round-trip check for the jta zone-locations channel (plan §2b).
+Generates a jta-locations world through the full toolchain — JS pipeline
+→ `world_generator` → `Generate.py` — in a throwaway world/preset and
+asserts that the task locations, their sidecar payload fields
+(`ap_locations`, `jtaZone`), and the sphere log survive into the exported
+rules.json + sphere log + spoiler (Pass B's inputs). Self-cleaning.
+Requires the repo Python env.
+
+```
+node scripts/procgen/verify-jta-locations-roundtrip.mjs
+```
+
 ## dump-bounce-level.js
 
 Dumps a single Bounce (Doodle-Jump-style) level: the generated platform
