@@ -325,6 +325,34 @@ python -m worlds.json_tools_installer install --revert-patches
 python scripts/build/pack_json_tools_installer.py
 ```
 
+### Testing
+
+Three layers, from cheapest to most end-to-end:
+
+**Unit tests** — `worlds/json_tools_installer/test/` (plain pytest, part of
+the repo's normal `pytest` run):
+
+```bash
+python -m pytest worlds/json_tools_installer/test/
+```
+
+Covers extractor routing (frozen_dest / frozen_apworld / unsupported_frozen),
+overwrite/detection/removal, dependency scanning and the single-pip-call +
+frozen re-invocation guards, world_source filtering and the exporter's source
+fallbacks, a manifest-validity sweep over every tracked apworld, and the GUI
+checkbox/property invariant. No test touches a real install; expected paths
+are imported from the production modules.
+
+**Source-install integration** — `scripts/install_json_tools.py` clones
+vanilla AP and installs for real (release checklist §7.2). The
+`--test-apworld-deps` and `--test-uninstall` flags add apworld-requirements
+and uninstall-round-trip verification.
+
+**Frozen-install harness** — `scripts/test/test-frozen-install.py` drives the
+installer inside a real compiled Archipelago install via a probe apworld
+(release checklist §7.2b); `.github/workflows/test-frozen-install.yml` runs
+it on a Windows runner via manual dispatch.
+
 ### Testing Imports
 
 ```python
@@ -345,6 +373,7 @@ worlds/json_tools_installer/
 ├── components.py         # Launcher components
 ├── requirements.txt      # Python dependencies for this module
 ├── README.md             # This file
+├── test/                 # Unit tests (plain pytest; see Testing above)
 ├── installer/
 │   ├── __init__.py
 │   ├── version_detector.py  # AP version detection
