@@ -7,6 +7,7 @@ import { createRng } from '../shared/rng.js';
 import '../mazeRoom/mazeRoomLibrary.js';
 import '../textAdventureSubstrate/textAdventureSubstrateLibrary.js';
 import '../jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import {
     ScenarioPool, SIDES, OPPOSITE_SIDE,
     Grid, cellKey,
@@ -3299,8 +3300,12 @@ describe('arrangeShuffledSpiral', () => {
     });
 
     it('throws when a quota exceeds the substrate zoneCount', () => {
+        // Derive the over-quota from the live zoneCount so this can't go
+        // stale when the substrate's zone count changes (it was hardcoded
+        // to 20, which stopped exceeding jta's zoneCount once it reached 30).
+        const jtaZoneCount = substrateRegistry.get('jta').zoneCount;
         expect(() => arrangeShuffledSpiral(defaultConfig({
-            growthParams: { substrateQuotas: { jta: 20 } },
+            growthParams: { substrateQuotas: { jta: jtaZoneCount + 1 } },
         }))).toThrow(/exceeds substrate zoneCount/);
     });
 

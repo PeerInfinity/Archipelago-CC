@@ -70,7 +70,7 @@ describe('SHIPPED_PRESETS', () => {
         expect(p.state.mode).toBe('shuffledSpiral');
         expect(p.state.params.seed).toBe(1);
         expect(p.state.params.startSubstrate).toBe('runner');
-        expect(p.state.substrateQuotas).toEqual({ runner: 5 });
+        expect(p.state.substrateQuotas).toEqual({ runner: 6 });
         // the zone table mints its own items — the scenario pool is empty
         expect(p.state.scenario.items).toEqual({});
         // and no spec-path difficulty knobs are pinned (spiral serves the
