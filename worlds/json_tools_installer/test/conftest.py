@@ -1,3 +1,17 @@
+import os
+
+# Force kivy fully headless BEFORE it is ever imported (module scope runs at
+# collection, ahead of the test functions that import the GUI). Kivy's real
+# window/GL provider init hard-crashes headless pytest-xdist workers — a
+# segfault the parent can't catch (surfaces as "worker 'gwN' crashed" on
+# Linux/macOS, and HANGS the Windows jobs). The GUI-invariant tests only read
+# class-level property defaults, so the mock window + mock GL backend is
+# sufficient and never touches real OpenGL. (KIVY_NO_ARGS mirrors what the GUI
+# modules already set.)
+os.environ.setdefault("KIVY_WINDOW", "mock")
+os.environ.setdefault("KIVY_GL_BACKEND", "mock")
+os.environ.setdefault("KIVY_NO_ARGS", "1")
+
 import pytest
 
 
