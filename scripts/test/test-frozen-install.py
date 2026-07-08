@@ -825,8 +825,277 @@ def scenario_baseline(harness) -> CheckList:
     return checks
 
 
+def scenario_pip_guard(harness) -> CheckList:
+    """Second in-process pip run: must be refused with the restart message,
+    not deadlock (the Generate timeout is the watchdog backstop)."""
+    checks = CheckList("pip-guard")
+    harness.reset()
+    harness.deploy_installer()
+
+    gen, report = harness.run_probe("pip-guard", [
+        {"type": "install_dependencies"},
+        {"type": "pip_guard", "packages": ["dill"]},
+    ])
+    checks.check(gen.returncode == 0,
+                 "probe Generate exits 0 (no pip deadlock)",
+                 f"rc={gen.returncode}")
+
+    deps = find_action(report, "install_dependencies")
+    checks.check(
+        bool(deps.get("ok")) and "Installed into lib/" in deps.get("msg", ""),
+        "first pip run installed the missing deps", str(deps.get("msg")))
+    guard = find_action(report, "pip_guard")
+    checks.check(guard.get("second_run_ok") is False,
+                 "second in-process pip invocation was refused")
+    checks.check("Restart Archipelago" in guard.get("msg", ""),
+                 "refusal carries the restart message", str(guard.get("msg")))
+    return checks
+
+
+def scenario_reinstall(harness) -> CheckList:
+    """Running the full install twice without a reset between is idempotent:
+    clean re-extract, no duplicate artifacts, deps and world source short-
+    circuit, config preserved."""
+    checks = CheckList("reinstall")
+    harness.reset()
+    harness.deploy_installer()
+
+    components = baseline_components(harness)
+    actions = [
+        {"type": "extract", "components": components, **harness.source_spec()},
+        {"type": "install_dependencies"},
+        {"type": "install_world_source"},
+        {"type": "record_install", "components": components,
+         "version": harness.source, "patch_method": "monkey"},
+    ]
+
+    gen1, report1 = harness.run_probe("reinstall-first", actions, tag="first")
+    checks.check(gen1.returncode == 0, "first install run exits 0")
+    checks.check(bool(find_action(report1, "extract").get("ok")),
+                 "first extraction succeeded")
+    apworlds_first = sorted(
+        p.name for p in harness.custom_worlds.glob("*.apworld"))
+
+    gen2, report2 = harness.run_probe("reinstall-second", actions, tag="second")
+    checks.check(gen2.returncode == 0, "second install run exits 0")
+    extract2 = find_action(report2, "extract")
+    checks.check(bool(extract2.get("ok")), "re-extraction succeeded",
+                 str(extract2.get("errors")))
+
+    deps2 = find_action(report2, "install_dependencies")
+    checks.check("already installed" in deps2.get("msg", ""),
+                 "second run: dependencies short-circuit (no pip run)",
+                 str(deps2.get("msg")))
+    ws2 = find_action(report2, "install_world_source")
+    checks.check("already installed" in ws2.get("msg", ""),
+                 "second run: world source short-circuits",
+                 str(ws2.get("msg")))
+
+    apworlds_second = sorted(
+        p.name for p in harness.custom_worlds.glob("*.apworld"))
+    checks.check(apworlds_first == apworlds_second,
+                 "apworld set unchanged by reinstall",
+                 f"{apworlds_first} -> {apworlds_second}")
+    checks.check(not (harness.install_dir / "worlds").exists(),
+                 "still nothing in a root worlds/ directory")
+
+    config_path = (harness.install_dir
+                   / harness.installer_config.CONFIG_FILENAME)
+    checks.check(config_path.is_file(), "installer config present")
+    if config_path.is_file():
+        config = json.loads(config_path.read_text(encoding="utf-8"))
+        checks.check(
+            config.get("installation", {}).get("components") == components,
+            "config still records the installed components")
+    return checks
+
+
+def scenario_uninstall(harness) -> CheckList:
+    """Probe-driven uninstall: component locations empty afterwards and
+    plain AP generation still works (without export)."""
+    checks = CheckList("uninstall")
+    extractor = harness.extractor
+    harness.reset()
+    harness.deploy_installer()
+
+    components = baseline_components(harness)
+    gen1, report1 = harness.run_probe("uninstall-arrange", [
+        {"type": "extract", "components": components, **harness.source_spec()},
+        {"type": "install_dependencies"},
+        {"type": "record_install", "components": components,
+         "version": harness.source, "patch_method": "monkey"},
+    ], tag="arrange")
+    checks.check(gen1.returncode == 0, "install (arrange) run exits 0")
+    checks.check(bool(find_action(report1, "extract").get("ok")),
+                 "arrange extraction succeeded")
+
+    gen2, report2 = harness.run_probe("uninstall-act", [
+        {"type": "uninstall"},
+        {"type": "list_installed"},
+    ], tag="act")
+    checks.check(gen2.returncode == 0, "uninstall run exits 0")
+    checks.check(bool(find_action(report2, "uninstall").get("ok")),
+                 "uninstall reported success")
+    leftover = [name for name in
+                find_action(report2, "list_installed").get("installed", [])
+                if name in components]
+    checks.check(not leftover,
+                 "no installed components detected after uninstall",
+                 str(leftover))
+
+    for name in components:
+        comp = extractor.COMPONENTS[name]
+        if comp.unsupported_frozen or comp.overlay:
+            continue
+        if comp.frozen_dest:
+            for source_path in comp.source_paths:
+                checks.check(
+                    not (harness.install_dir / comp.frozen_dest / source_path).exists(),
+                    f"{name}: {comp.frozen_dest}/{source_path} removed")
+        elif comp.frozen_apworld:
+            for source_path in comp.source_paths:
+                world = source_path.split("/")[-1]
+                checks.check(
+                    not (harness.custom_worlds / f"{world}.apworld").exists(),
+                    f"{name}: {world}.apworld removed")
+
+    # AP itself must still generate (plain run, no probe, no export)
+    gen3 = harness.run_generate(
+        harness.stage_probe_player_yaml("post"), "post-uninstall generation")
+    checks.check(gen3.returncode == 0,
+                 "AP still generates after uninstall",
+                 f"rc={gen3.returncode}; tail: {gen3.output[-400:]}")
+    checks.check(len(gen3.new_zips) == 1,
+                 "post-uninstall run produced an output zip")
+    return checks
+
+
+def scenario_worldgen(harness) -> CheckList:
+    """WorldGen worlds (vendored _ext, vanilla rule_builder) and
+    toem_rule_builder generate on the frozen install — the
+    worldgen-on-vanilla arc's frozen verification."""
+    checks = CheckList("worldgen")
+    harness.reset()
+    harness.deploy_installer()
+
+    components = baseline_components(harness) + ["worldgen_worlds"]
+    gen1, report = harness.run_probe("worldgen", [
+        {"type": "extract", "components": components, **harness.source_spec()},
+        {"type": "install_dependencies"},
+        # worldgen rules reference vanilla rule_builder / core helpers that
+        # are .pyc-only in library.zip — the exporter needs the downloaded
+        # world source to read them (else 'Failed to read source' errors)
+        {"type": "install_world_source"},
+        {"type": "configure_export", "preset": "minimal-spoilers"},
+        {"type": "record_install", "components": components,
+         "version": harness.source, "patch_method": "monkey"},
+    ])
+    checks.check(gen1.returncode == 0, "install run exits 0")
+    checks.check(bool(find_action(report, "extract").get("ok")),
+                 "extraction succeeded")
+
+    worldgen_apworlds = sorted(
+        p.name for p in harness.custom_worlds.glob("*_worldgen.apworld"))
+    checks.check(len(worldgen_apworlds) > 0,
+                 f"worldgen apworlds packed ({len(worldgen_apworlds)} found)")
+    checks.check("dlcquest_worldgen.apworld" in worldgen_apworlds,
+                 "dlcquest_worldgen.apworld among them", str(worldgen_apworlds[:8]))
+
+    gen2 = harness.run_generate(
+        harness.stage_template_player_yamls(
+            ["DLCQuest WorldGen.yaml", "TOEM rule builder.yaml"], "worldgen"),
+        "worldgen generation")
+    checks.check(gen2.returncode == 0,
+                 "worldgen + toem_rule_builder multiworld generates",
+                 f"rc={gen2.returncode}; tail: {gen2.output[-400:]}")
+    checks.check(len(gen2.new_zips) == 1, "output zip produced")
+    if gen2.new_zips:
+        with zipfile.ZipFile(gen2.new_zips[-1]) as zf:
+            names = zf.namelist()
+        checks.check(any(n.endswith("_rules.json") for n in names),
+                     "worldgen output zip contains exported rules", str(names))
+    # 'Failed to clean source' is EXPECTED here and deliberately not
+    # asserted: without the extended rule_builder the export falls back to
+    # ast format, which cannot source-analyze Rule Builder Resolved objects
+    # ("got Resolved") — a documented fallback degradation, not a frozen
+    # regression. Source reads and manifests must still be clean.
+    for pattern in BAD_LOG_PATTERNS:
+        if pattern == "Failed to clean source":
+            continue
+        checks.check(pattern not in gen2.all_text,
+                     f"worldgen output/logs free of {pattern!r}")
+    return checks
+
+
+def scenario_export_parity(harness) -> CheckList:
+    """APQuest (bundled, .pyc-only — exercises the whole world_source
+    fallback chain) exported on frozen vs the repo's canonical seed-1
+    preset: location totals must match and at most one access rule may be
+    untyped (the known named-closure ast-analyzer gap)."""
+    checks = CheckList("export-parity")
+    harness.reset()
+    harness.deploy_installer()
+
+    canonical = sorted((REPO_ROOT / "frontend" / "presets" / "apquest")
+                       .glob("AP_*/AP_*_rules.json"))
+    if not canonical:
+        raise HarnessError("no canonical APQuest preset in the repo to "
+                           "compare against")
+    source_rules = json.loads(canonical[0].read_text(encoding="utf-8"))
+    source_counts = count_location_rules(source_rules)
+
+    components = [name for name in harness.extractor.COMPONENTS
+                  if name in harness.extractor.DEFAULT_COMPONENTS]
+    gen1, report = harness.run_probe("export-parity", [
+        {"type": "extract", "components": components, **harness.source_spec()},
+        {"type": "install_dependencies"},
+        {"type": "install_world_source"},
+        {"type": "configure_export", "preset": "minimal-spoilers"},
+        {"type": "record_install", "components": components,
+         "version": harness.source, "patch_method": "monkey"},
+    ])
+    checks.check(gen1.returncode == 0, "install run exits 0")
+    checks.check(bool(find_action(report, "install_world_source").get("ok")),
+                 "world source installed")
+
+    gen2 = harness.run_generate(
+        harness.stage_probe_player_yaml("parity"), "APQuest generation")
+    checks.check(gen2.returncode == 0, "APQuest generates on frozen",
+                 f"rc={gen2.returncode}")
+    checks.check(len(gen2.new_zips) == 1, "output zip produced")
+    if not gen2.new_zips:
+        return checks
+
+    frozen_rules = rules_json_from_zip(gen2.new_zips[-1])
+    checks.check(frozen_rules is not None,
+                 "frozen run exported a rules JSON")
+    if frozen_rules is None:
+        return checks
+    frozen_counts = count_location_rules(frozen_rules)
+
+    checks.check(
+        frozen_counts["total"] == source_counts["total"],
+        f"location totals match source preset "
+        f"(frozen {frozen_counts['total']} vs source {source_counts['total']})")
+    # world_source chain broken => every bundled-world rule falls to null.
+    # Allowance of 1: named-closure rules are an ast-analyzer limitation
+    # identical on source installs, not a frozen gap.
+    allowed_gap = 1
+    checks.check(
+        frozen_counts["null"] <= source_counts["null"] + allowed_gap,
+        f"typed-rule parity within allowance "
+        f"(frozen null={frozen_counts['null']}, "
+        f"source null={source_counts['null']}, allowed gap {allowed_gap})")
+    return checks
+
+
 SCENARIOS: Dict[str, Callable] = {
     "baseline": scenario_baseline,
+    "pip-guard": scenario_pip_guard,
+    "reinstall": scenario_reinstall,
+    "uninstall": scenario_uninstall,
+    "worldgen": scenario_worldgen,
+    "export-parity": scenario_export_parity,
 }
 
 
