@@ -107,6 +107,15 @@ let _lastSampledEnergy = null;              // JtA's energy at the last poll
 // Per-loop completion tracking. Cleared on gameState:loopReset.
 const _completedThisLoop = new Set();
 
+// Zone-locations (Phase 2). AP location names already reported this
+// session — dedupes loop-reset replays and region revisits (location
+// semantics = first full completion). Re-seeded from checkedLocations on
+// every region load. Item names already reconciled into perk grants (or
+// found to be non-perks) — each processed once. Both cleared on rules
+// reload (a new world / fresh inventory).
+const _reportedLocationNames = new Set();
+const _processedItems = new Set();
+
 // Playback walkTo state: the exit to take once the current zone's
 // Travel task completes. Zone completion itself is played by the
 // game's OWN automation engine (user ruling 2026-07-05) — under the
@@ -392,6 +401,15 @@ function _handleLoadRegion(payload) {
     // may have been reset — losing our bonus — while we were inactive).
     _lastReportedBonus = null;
 
+    // Zone-locations (Phase 2): suppress this zone's local perk grants
+    // (perk → Count) BEFORE the game can complete any perk-task, re-seed
+    // the location-check dedupe from already-checked locations, and grant
+    // any perks already received as AP items. No-ops when the payload
+    // carries no ap_locations/task_patches (base scope).
+    _applyTaskPatches();
+    _reseedReportedLocations();
+    _reconcilePerksFromInventory();
+
     // Defensive: if static data isn't cached yet (e.g. the initial
     // post-connect request fired before rules were loaded and no
     // stateManager:rulesLoaded has arrived since), kick off another
@@ -400,6 +418,12 @@ function _handleLoadRegion(payload) {
     if (!_client?.getStaticData?.()) {
         _client?.requestStaticData?.();
     }
+    // Starting items are applied to the worker before this iframe
+    // subscribed, so the cached snapshot the reconcile above read may
+    // predate them. Request a fresh, worker-pinged snapshot: its
+    // snapshotUpdated re-runs the perk reconciliation with the real
+    // inventory (same path a mid-play item receipt uses).
+    _client?.requestStateSnapshot?.();
 
     // On re-entry to a completed region, inject exit tasks so the
     // player has something to click (the Travel task is already done).
@@ -424,6 +448,108 @@ function _handleLoadRegion(payload) {
     if (_pendingWalkExit) _armWalkAutomation();
     _startPolling();
     log('debug', `loaded region ${regionId} (zone ${jtaZone}, completed=${completed})`);
+}
+
+// ────────────────────────────────────────────────────────────────
+// Zone-locations (Phase 2) — AP location checks + perk grants
+// ────────────────────────────────────────────────────────────────
+
+/**
+ * Resolve a JtA task id to its AP *location name* via the region
+ * payload's ap_locations map (task id → `${region_id}__${id}`, the
+ * compileRegionGraph name). Returns null for tasks with no mapping
+ * (synthetic exit tasks, SBtV-excluded tasks, or a base-scope region).
+ */
+function _resolveLocationName(taskId) {
+    const map = _world?.ap_locations;
+    if (!map) return null;
+    const name = map[taskId];
+    return (typeof name === 'string' && name.length > 0) ? name : null;
+}
+
+/**
+ * Registered as the fork's task-completion callback: fires for EVERY full
+ * task completion (reps == max_reps). Reports the matching AP location as
+ * a check. Synthetic exit tasks and SBtV-excluded tasks have no
+ * ap_locations entry and are skipped; deduped so loop-reset replays and
+ * revisits report a location once (first-full-completion semantics).
+ */
+function _handleTaskCompleted(task) {
+    if (!task || task.synthetic) return;
+    const locationName = _resolveLocationName(task.id);
+    if (locationName === null) return;
+    if (_reportedLocationNames.has(locationName)) return;
+    _reportedLocationNames.add(locationName);
+    if (!_client) return;
+    _client.publishEventDispatcher('user:locationCheck', {
+        locationName,
+        regionName: _currentRegionId,
+        originator: 'jtaSubstrate',
+    }, { initialTarget: 'bottom' });
+    log('debug', `task ${task.id} (${task.name}) -> user:locationCheck (${locationName})`);
+}
+
+/**
+ * Re-seed the location-check dedupe from the host's already-checked
+ * locations for THIS region, so a re-completed task (loop-reset replay,
+ * revisit) never re-dispatches a check that already landed.
+ */
+function _reseedReportedLocations() {
+    _reportedLocationNames.clear();
+    const map = _world?.ap_locations;
+    if (!map) return;
+    const checked = new Set(_client?.getStateSnapshot?.()?.checkedLocations ?? []);
+    for (const locName of Object.values(map)) {
+        if (checked.has(locName)) _reportedLocationNames.add(locName);
+    }
+}
+
+/**
+ * Grant perks from received AP items (grants are AP-authoritative — the
+ * fork's own perk grants are suppressed via task_patches, so a perk
+ * enters the game ONLY here). window.grantPerk resolves the item name
+ * against the fork's PERKS[].name and self-rejects non-perk items (filler,
+ * other players' items), so we attempt it on every owned item; it is
+ * idempotent and persistence-safe. Each item name is processed once.
+ * Perks are global, so this runs regardless of the active region.
+ */
+function _reconcilePerksFromInventory() {
+    if (typeof _w.grantPerk !== 'function') return;
+    const inv = _client?.getStateSnapshot?.()?.inventory;
+    if (!inv || typeof inv !== 'object') return;
+    for (const [name, count] of Object.entries(inv)) {
+        if (Number(count) <= 0 || _processedItems.has(name)) continue;
+        _processedItems.add(name);
+        try {
+            const res = _w.grantPerk(name);
+            if (res?.success && !res.alreadyHad) {
+                log('debug', `granted perk from AP item '${name}'`);
+            }
+        } catch (err) {
+            log('error', `grantPerk('${name}') threw:`, err);
+        }
+    }
+}
+
+/**
+ * Apply this region's grant-suppression patches (perk → Count) so
+ * completing a perk-task grants nothing locally — the perk arrives only as
+ * an AP item. Idempotent; safe to re-apply on every region load. A task
+ * can't complete before its region loads, so per-region suppression covers
+ * every perk-task before it's reachable.
+ */
+function _applyTaskPatches() {
+    const patches = _world?.task_patches;
+    if (!Array.isArray(patches) || patches.length === 0) return;
+    if (typeof _w.applyTaskPatches !== 'function') {
+        log('warn', 'applyTaskPatches hook missing — local perk grants NOT suppressed (double-grant risk)');
+        return;
+    }
+    try {
+        _w.applyTaskPatches(patches);
+    } catch (err) {
+        log('error', 'applyTaskPatches threw:', err);
+    }
 }
 
 // ────────────────────────────────────────────────────────────────
@@ -708,6 +834,13 @@ async function main() {
     // stop / step / instant / reset / walkTo).
     _client.subscribeEventBus('jta:playbackControl', _handlePlaybackControl);
 
+    // AP state changed (item received here or elsewhere): grant any newly
+    // received perk items. Perks are global, so this runs regardless of the
+    // active region (grantPerk is persistence-safe even before a zone loads).
+    _client.subscribeEventBus('stateManager:snapshotUpdated', () => {
+        _reconcilePerksFromInventory();
+    });
+
     // Region activation events (from procgenPlayer).
     _client.subscribeEventBus('jta:loadRegion', _handleLoadRegion);
 
@@ -729,8 +862,14 @@ async function main() {
         _hostResetCount = 0;
         _lastAppliedResetCount = 0;
         _completedThisLoop.clear();
+        // New world: drop per-world zone-locations bookkeeping so location
+        // checks and perk grants re-derive from the new world's sphere log /
+        // inventory (grantPerk stays idempotent against a shared save).
+        _reportedLocationNames.clear();
+        _processedItems.clear();
         _clearPendingWalk();
         _client?.requestStaticData?.();
+        _client?.requestStateSnapshot?.();
     });
 
     // Step 4: register the game-side callbacks.
@@ -743,6 +882,13 @@ async function main() {
         _w.setEnergyResetCallback(_handleGameEnergyReset);
     } else {
         log('warn', 'setEnergyResetCallback hook missing — game-initiated resets will desync the loop');
+    }
+    // Zone-locations (Phase 2): report every full task completion as an AP
+    // location check. Dormant when the region carries no ap_locations.
+    if (typeof _w.setTaskCompletionCallback === 'function') {
+        _w.setTaskCompletionCallback(_handleTaskCompleted);
+    } else {
+        log('warn', 'setTaskCompletionCallback hook missing — AP location checks will not fire');
     }
 
     // Step 5: announce ready. The host module's iframe:appReady
