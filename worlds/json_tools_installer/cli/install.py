@@ -322,7 +322,20 @@ def do_uninstall(config: InstallerConfig, dry_run: bool = False) -> bool:
             for error in romless_result.errors:
                 print(f"    - {error}")
 
-    # Remove installed components
+    # Remove installed components. Overlay components (upstream_fixes) are
+    # excluded: their files replace vanilla files, so "removing" them would
+    # delete vanilla content — restoring those requires a fresh checkout.
+    from ..installer.extractor import COMPONENTS
+    overlay_installed = [
+        c for c in config.installation.components
+        if c in COMPONENTS and COMPONENTS[c].overlay
+    ]
+    if overlay_installed:
+        print(f"  [WARN] Overlay components cannot be auto-removed: "
+              f"{', '.join(overlay_installed)}")
+        print("         They replaced vanilla files; restore them from a "
+              "fresh Archipelago checkout if needed.")
+
     installed = list_installed_components()
     print(f"\n  Removing components: {', '.join(installed)}")
 

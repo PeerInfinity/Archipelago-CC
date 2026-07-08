@@ -61,6 +61,12 @@ class Component:
     # (e.g. worlds that import the extended rule_builder, which cannot load
     # there). Each skip is reported as a warning.
     frozen_exclude_worlds: List[str] = field(default_factory=list)
+    # Overlay components replace files that already exist in a vanilla
+    # install (e.g. upstream_fixes overwrites vanilla world files). Their
+    # presence cannot be detected from the filesystem, and removing their
+    # source_paths would delete the vanilla files — so detection and removal
+    # skip them entirely (the install config records them instead).
+    overlay: bool = False
 
 
 @dataclass
@@ -197,6 +203,7 @@ COMPONENTS: Dict[str, Component] = {
         ],
         required=False,
         size_estimate_mb=0.2,
+        overlay=True,
         unsupported_frozen=(
             "compiled installs run their worlds from lib/worlds/*.apworld, "
             "which file overlays cannot reach — the fixed files would land "
@@ -316,6 +323,10 @@ FRONTEND_EXCLUDE_IF_NO_PRESETS: Set[str] = {
 BACKUP_DIR_NAME = "json_tools_backups"
 COMPONENT_BACKUP_SUBDIR = "components"
 
+# Directory (under the AP user dir / install root) that receives packed
+# .apworld files on frozen installs. Archipelago itself loads worlds from it.
+CUSTOM_WORLDS_DIR_NAME = "custom_worlds"
+
 
 def get_component_backup_root(dest_root: Optional[Path] = None) -> Path:
     """Get the root directory for component backups."""
@@ -428,10 +439,10 @@ def component_apworld_paths(comp: Component, root: Path) -> List[Path]:
     """
     if not comp.frozen_apworld:
         return []
-    folders = [root / "custom_worlds"]
+    folders = [root / CUSTOM_WORLDS_DIR_NAME]
     try:
         from Utils import user_path
-        user_folder = Path(user_path("custom_worlds"))
+        user_folder = Path(user_path(CUSTOM_WORLDS_DIR_NAME))
         if user_folder not in folders:
             folders.append(user_folder)
     except Exception:
@@ -545,10 +556,10 @@ def extract_tools(
         # frozen macOS differs from local_path). Explicit dest_root means a
         # test/sandbox — keep everything under it.
         from Utils import user_path
-        custom_worlds_root = Path(user_path("custom_worlds"))
+        custom_worlds_root = Path(user_path(CUSTOM_WORLDS_DIR_NAME))
     else:
         dest_root = Path(dest_root)
-        custom_worlds_root = dest_root / "custom_worlds"
+        custom_worlds_root = dest_root / CUSTOM_WORLDS_DIR_NAME
 
     result = ExtractionResult(success=True)
 
@@ -652,6 +663,7 @@ def extract_tools(
                             )
                         continue
                     if world_name in skipped_apworlds:
+                        result.skipped_files.append(rel_path)
                         continue
                     try:
                         if world_name not in apworld_zips:
@@ -753,6 +765,11 @@ def list_installed_components(root: Optional[Path] = None) -> List[str]:
     installed = []
 
     for comp_name, comp in COMPONENTS.items():
+        if comp.overlay:
+            # Overlay source_paths exist in vanilla installs too — file
+            # presence proves nothing, so never report (or remove) them
+            # based on it.
+            continue
         is_installed = False
 
         # Components with frozen_dest may live under lib/ (compiled installs)
@@ -818,6 +835,12 @@ def remove_component(
         root = Path(local_path())
 
     comp = COMPONENTS[component_name]
+    if comp.overlay:
+        # Removing an overlay component's source_paths would delete the
+        # vanilla files it overlaid (regression: uninstall on a source
+        # install deleted worlds/alttp/Rules.py etc.). Restoring vanilla
+        # requires re-cloning those files; refuse instead.
+        return False
     removed = False
 
     check_roots = [root]

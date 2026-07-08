@@ -17,6 +17,8 @@ from typing import List, Optional, Tuple
 
 from Utils import local_path, user_path, is_frozen
 
+from .extractor import CUSTOM_WORLDS_DIR_NAME
+
 logger = logging.getLogger(__name__)
 
 # Packages required by JSON Tools components beyond vanilla AP's deps
@@ -230,7 +232,7 @@ def scan_apworld_requirements() -> List[str]:
     requirements: List[str] = []
     seen = set()
 
-    folder = Path(user_path("custom_worlds"))
+    folder = Path(user_path(CUSTOM_WORLDS_DIR_NAME))
     if not folder.is_dir():
         return requirements
 
