@@ -828,11 +828,18 @@ for g in metamath depgraph jta bakingadventure codingadventure; do
 done
 ```
 
-The pack scripts produce **deterministic** zips, so only APWorlds whose *source*
-changed since the last pack show up in `git status` — the rest repack
-byte-identical. Commit only the changed `apworlds/*.apworld` (they're tracked
-release artifacts). (2026-06-27: `json_tools_installer`, `depgraph`, `metamath`
-changed; `jta`/`bakingadventure`/`codingadventure` byte-identical.)
+The pack scripts are **content-deterministic but not byte-deterministic**:
+zip entries embed filesystem mtimes, so a repack of unchanged sources can
+still show as modified in `git status` (2026-07-07 finding — the earlier
+"byte-identical" claim here was wrong). Don't use `git status` churn to decide
+what changed; the unit test
+`worlds/json_tools_installer/test/test_packed_apworld_freshness.py` compares
+tracked apworlds against fresh packs **by content** and fails on real
+staleness — run it (or the whole installer suite) and commit every
+`apworlds/*.apworld` it flags. Note the tracked artifacts are what the
+download links and the `--dev` installer serve: **an unrepacked apworld ships
+stale code even when the repo source is current** (this bit twice in 2026-07;
+the freshness test now guards it).
 
 ### 7.2 Dev installer test
 
