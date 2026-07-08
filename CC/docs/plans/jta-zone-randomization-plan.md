@@ -1,10 +1,12 @@
 # JtA Zone Randomization & Reset-Paced Balancing — Plan
 
-**Date:** 2026-07-06 (v2 + same-day ruling rounds) ·
+**Date:** 2026-07-06 (v2 + same-day ruling rounds); Phase 1 shipped 2026-07-08 ·
 **Status: Phase 0 (vanilla profiling) DONE 2026-07-06 (`572fd9c32`, SUMMARY.md
-Round 5). All §7 rulings received; v1 scope settled (zones 0–14, perk-shuffle
-+ rebalance; synthetic data deferred). Implementation of Phases 1+ not yet
-started.**
+Round 5). Phase 1 (enablers) DONE 2026-07-08 — fork Tier-1 hooks + harness
+`gameDataPatch` + jta `extractZoneRules` skeleton + §2b round-trip verified
+(14/14), 17/17 substrate suite green. All §7 rulings received; v1 scope settled
+(zones 0–14, perk-shuffle + rebalance; synthetic data deferred). NEXT: Phase 2
+(AP integration — all tasks = locations, all perks = items).**
 
 The next JtA arc after `jta-substrate-integration-plan.md` (all phases complete
 except its Phase 6 stub, which this plan absorbs). This is the modern successor
@@ -484,20 +486,35 @@ Extend `CC/scripts/jta-stats/` to collect, from vanilla playthroughs:
 Output: `results/vanilla-profile.json` + a SUMMARY round. Run under both
 standalone and `pinMaxEnergy` (substrate) budgets.
 
-### Phase 1 — Enablers
-- Fork (Tier 1): `applyTaskPatches` + `grantPerk` + a general
-  task-completion callback (`setTaskCompletionCallback` or widened travel
-  callback). SAVE_VERSION-neutral; headless-testable via the harness DOM-stub
-  pattern.
-- Harness: `gameDataPatch` config option.
-- Pipeline: jta `extractZoneRules` skeleton emitting the *vanilla* zone's
-  tasks as locations (param-gated, no randomization) — proves the
-  locations path end-to-end (world_generator → Generate.py → spoiler/sphere
-  log) before content changes.
-- **Round-trip verification (§2b):** confirm `preset_sidecars` + zone payload
-  fields survive pipeline → world_generator → Generate.py → exported
-  rules.json, and that the sphere log is available to the app at rules load
-  (Pass B's inputs). If anything drops, pass-through is a Phase 1 fix.
+### Phase 1 — Enablers — **DONE 2026-07-08**
+- Fork (Tier 1): `applyTaskPatches` + `grantPerk` + `setTaskCompletionCallback`
+  — additive, `SAVE_VERSION`-neutral, dormant in standalone play. Fired from
+  `onFullyFinishTask`; the general callback carries
+  `{id,name,zone,type,perk,item,reps,maxReps,synthetic}`; `applyTaskPatches`
+  mutates the static `TaskDefinition`s in place (array or map form,
+  cost/xp/max_reps/hidden/unlocks_task/perk/item) and rebuilds the derived
+  perk/item maps (new `zones.ts:rebuildZoneDerivedMaps`) when perk/item
+  change. Submodule `b0b675a`; verified headlessly + byte-identical
+  standalone baseline. **Grant suppression is NOT a flag** — it falls out of
+  patching a task's `perk`→`Count` (Phase 2 wiring).
+- Harness: `gameDataPatch` config option — applies Tier-1 patches via
+  `window.applyTaskPatches` after init, before the metric universe is built.
+- Pipeline: jta `extractZoneRules` skeleton (opt-in via
+  `setJtaEmitZoneLocations`; off by default → byte-identical). Emits each
+  zone task as an AP location + `ap_locations` payload map; excludes the 4
+  SBtV-gated ids (17/28/88/158); places the v1 do-nothing `JtA Filler` item
+  on every location. Task identity comes from a regenerable snapshot
+  (`zoneTaskData.js` + `generate-zone-task-data.mjs`, sourced fresh from the
+  Fork 1.6 build — the DOM-coupled fork build can't be imported by the
+  headless-safe library / browser pipeline). `dump-shuffled-spiral.js
+  --jta-locations` flag.
+- **Round-trip verification (§2b) — PASSED (14/14):**
+  `verify-jta-locations-roundtrip.mjs` drives the full toolchain and confirms
+  task locations + `ap_locations` + `jtaZone` + the sphere log survive
+  pipeline → world_generator (`_worldgen_sidecars.json`) → Generate.py
+  (exported rules.json `preset_sidecars` + sphere log + spoiler). Nothing
+  dropped — no pass-through fix needed. 17/17 in-app substrate suite green
+  (incl. 6 JtA); fork standalone baseline byte-identical.
 
 ### Phase 2 — AP integration (all tasks = locations, all perks = items)
 - Location per task (first-full-completion semantics), item per perk,
