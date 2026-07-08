@@ -73,12 +73,15 @@ async function _loadPlaybackAutomationSetting() {
 
 // Whether JtA reports its own starting-energy bonuses (Energetic Memory,
 // EnergySpell perk, Divine Supremacy, Energized) up into the shared loop
-// starting-mana pool via setSubstrateMaxManaBonus. Default OFF: the bridge
-// keeps pinning JtA's max_energy to the host pool (current behavior). When
-// ON, JtA owns its max_energy and its native starting-energy growth raises
-// the shared maxMana — a balance change, so it is opt-in.
+// starting-mana pool via setSubstrateMaxManaBonus. Default ON (user ruling
+// 2026-07-08, superseding the 2026-07-05 pinned default): JtA owns its
+// max_energy and its native starting-energy growth raises the shared
+// maxMana, so substrate play is natively standalone-paced — the pacing
+// target the zone-randomization balancer already anchors on. Turn OFF to
+// pin JtA's max_energy to the host pool (the older neutralized-growth mode,
+// kept for calibration/comparison).
 const ENERGY_BONUS_SYNC_SETTING = 'moduleSettings.jtaSubstrateWrapper.energyBonusSync';
-const ENERGY_BONUS_SYNC_DEFAULT = false;
+const ENERGY_BONUS_SYNC_DEFAULT = true;
 let _energyBonusSync = ENERGY_BONUS_SYNC_DEFAULT;
 
 async function _loadEnergyBonusSyncSetting() {
@@ -161,12 +164,13 @@ export function register(registrationApi) {
                     default: ENERGY_BONUS_SYNC_DEFAULT,
                     label: 'Sync JtA starting-energy bonuses to the pool',
                     description:
-                        'When on, JtA\'s own starting-energy bonuses (Energetic '
-                        + 'Memory, EnergySpell perk, Divine Supremacy, Energized) '
-                        + 'raise the shared loop starting-mana pool, and JtA owns '
-                        + 'its max energy. When off (default), JtA\'s max energy is '
-                        + 'pinned to the shared pool and its starting-energy growth '
-                        + 'is neutralized. Changing this affects energy balance.',
+                        'When on (default), JtA\'s own starting-energy bonuses '
+                        + '(Energetic Memory, EnergySpell perk, Divine Supremacy, '
+                        + 'Energized) raise the shared loop starting-mana pool, and '
+                        + 'JtA owns its max energy — substrate play is standalone-'
+                        + 'paced. When off, JtA\'s max energy is pinned to the '
+                        + 'shared pool and its starting-energy growth is '
+                        + 'neutralized. Changing this affects energy balance.',
                 },
             },
         });

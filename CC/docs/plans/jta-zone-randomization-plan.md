@@ -418,7 +418,19 @@ Remaining sub-choice — **how the curve is represented**:
 - Anchor variant — **RULED (user 2026-07-06): the STANDALONE (unpinned)
   curve** is the pacing target. The balancer solves under actual loop
   budgets to *hit* that curve, so substrate play feels standalone-paced;
-  pinned100 data stays as calibration/verification context. Also RULED:
+  pinned100 data stays as calibration/verification context.
+  - **SUPERSEDED (RULED 2026-07-08): the runtime is now STANDALONE natively.**
+    The JtA substrate producer leg (`energyBonusSync`, default ON as of
+    commit — reports JtA's `jta_starting_energy_bonus` accumulator up via
+    `setSubstrateMaxManaBonus('jta', …)`) makes JtA own its `max_energy`, so
+    its starting-energy growth raises the shared pool and play is *natively*
+    standalone-paced. The balancer now targets the standalone curve against a
+    **matching standalone runtime** — no pinned-pool budget-compensation.
+    pinned100 is calibration/comparison only. The standalone≡bonus-sync
+    equivalence holds for JtA-only worlds; the per-item max-mana term is now
+    gated by `moduleSettings.gameState.includePerItemMaxMana` (default on) so
+    it doesn't double-count against JtA energy.
+- Also RULED:
   the profiling profile disables `award_spark_on_discovery` (discovery
   spark funds Divinity purchases without prestiging and distorts the
   vanilla curve) — profile re-run accordingly. Tolerance band still to
@@ -514,8 +526,9 @@ standalone and `pinMaxEnergy` (substrate) budgets.
 
 ### Phase 4 — Verification
 - Harness `randomized-pacing-*` experiment family: measured reset gaps within
-  band (band defaults from Phase 0), pinned-pool tuned-defaults automation;
-  SUMMARY round.
+  band (band defaults from Phase 0), **standalone-pool** tuned-defaults
+  automation (matches the `energyBonusSync` runtime per the 2026-07-08
+  supersession; pinned kept for comparison only); SUMMARY round.
 - In-app smoke: randomized+balanced preset progresses zone 1→3 within
   expected resets under playback automation.
 
