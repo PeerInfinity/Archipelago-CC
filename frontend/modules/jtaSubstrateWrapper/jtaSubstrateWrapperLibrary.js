@@ -97,7 +97,7 @@ export const JTA_VICTORY_ITEM_NAME = 'Victory';
 // Every distinct perk display name across the fork's zones — the AP item
 // surface for perks. Sourced from the regenerable snapshot; equals the
 // fork's PERKS[].name (so window.grantPerk resolves these by name).
-const JTA_PERK_ITEM_NAMES = Object.freeze([...new Set(
+export const JTA_PERK_ITEM_NAMES = Object.freeze([...new Set(
     JTA_ZONE_TASK_DATA.flatMap((z) => z.tasks.map((t) => t.perk).filter(Boolean)),
 )]);
 

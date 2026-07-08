@@ -15,19 +15,33 @@
  *      gains (energy items etc., simulated via setEnergy upward) add
  *      to it.
  *
- * All tests load the jta_substrate_test preset (regions = JtA zone
- * names, manaEnabled sidecars, start region Menu) and drive the REAL
- * iframe + bridge; game state is manipulated through the fork's
- * window hooks, exactly the surface the bridge itself uses.
+ * Plus the Phase-2 zone-randomization end-to-end:
+ *   • jta-location-check-and-perk-grant — a perk-task completion is
+ *     reported as an AP location check, the perk returns as a received
+ *     AP item, and the perk is granted in-game with local grants
+ *     suppressed (AP-authoritative). Loads the jta_locations_test preset
+ *     (per-task AP locations + task_patches sidecars).
+ *
+ * The loop-mode tests load the jta_substrate_test preset (regions = JtA
+ * zone names, manaEnabled sidecars, start region Menu); the zone-rando
+ * test loads jta_locations_test. All drive the REAL iframe + bridge;
+ * game state is manipulated through the fork's window hooks, exactly the
+ * surface the bridge itself uses.
  */
 
 import { registerTest } from '../testRegistry.js';
 import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
 import settingsManager from '../../../app/core/settingsManager.js';
+import { JTA_PERK_ITEM_NAMES } from '../../jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
 import {
     JTA_TEST_PRESET_PATH,
     JTA_TEST_REGION,
     JTA_TEST_START_REGION,
+    JTA_LOCTEST_PRESET_PATH,
+    JTA_LOCTEST_REGION,
+    JTA_LOCTEST_START_REGION,
+    JTA_LOCTEST_PERK_LOCATION,
+    JTA_LOCTEST_PERK_ITEM,
     waitForJtaActive,
     moveToRegion,
     gameStateFn,
@@ -38,6 +52,14 @@ import {
     getJtaIframe,
     eventually,
 } from '../../jtaSubstrateWrapper/test-helpers.js';
+
+/** True if the snapshot lists `name` among its checked locations. */
+function snapshotHasLocation(snapshot, name) {
+    const checked = snapshot?.checkedLocations;
+    if (Array.isArray(checked)) return checked.includes(name);
+    if (checked && typeof checked === 'object') return !!checked[name];
+    return false;
+}
 
 /** Shared setup: load the preset, enter the jta region, wait for the bridge. */
 async function enterJtaRegion(testController) {
@@ -465,6 +487,118 @@ registerTest({
                + 'maxMana rises by the bonus (setSubstrateMaxManaBonus); turning '
                + 'the flag off clears JtA\'s contribution again.',
     testFunction: startingEnergyBonusRaisesPool,
+    category: 'JtA substrate',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
+
+/**
+ * Phase-2 zone-randomization end-to-end: complete a perk-task → the
+ * bridge reports the AP location check → the AP round-trip grants the
+ * perk item → the perk is present in-game. Also asserts grants are
+ * AP-authoritative (local grants suppressed via task_patches), so every
+ * perk the game holds arrived as a received AP item.
+ *
+ * Loads the jta_locations_test preset (identity placement:
+ * region_0_0__13 holds 'How to Read'), enters zone 0, and drives the
+ * zone with the game's own automation in Instant Mode with abundant
+ * energy (no loop resets needed). Assertions key on the DURABLE checked
+ * state / global perk set, so they don't race the automation possibly
+ * advancing past zone 0.
+ */
+async function locationCheckAndPerkGrant(testController) {
+    testController.log('Loading jta_locations_test preset…');
+    await testController.loadRulesFromFile(JTA_LOCTEST_PRESET_PATH);
+    await testController.stateManager.pingWorker('after-rules-load', 3000);
+    testController.reportCondition('rules loaded', true);
+
+    testController.eventBus.publish('ui:activatePanel', {
+        panelId: 'jtaSubstrateWrapperPanel',
+    });
+
+    testController.log(`Moving into jta region ${JTA_LOCTEST_REGION}…`);
+    moveToRegion(JTA_LOCTEST_REGION, JTA_LOCTEST_START_REGION);
+    const win = await waitForJtaActive(testController);
+    testController.reportCondition('jta bridge active in zone-0 region', !!win);
+    if (!win) return testController.getOverallResult();
+
+    // Fresh game: the JtA substrate boots from a SHARED save slot
+    // (incrementalGameSave_substrate), so perks/skills left by earlier
+    // tests in this run would pollute the assertions. Clear the slot and
+    // reload the iframe for a clean state; the bridge re-handshakes and
+    // procgenPlayer re-publishes jta:loadRegion on iframe:appReady, so it
+    // re-enters zone 0.
+    try {
+        getJtaIframe()?.contentWindow?.localStorage?.removeItem('incrementalGameSave_substrate');
+    } catch { /* cross-origin guard — same-origin here, ignore */ }
+    getJtaIframe()?.contentWindow?.location?.reload();
+    const gameWin = await waitForJtaActive(testController);
+    testController.reportCondition('fresh jta game active after save reset', !!gameWin);
+    if (!gameWin) return testController.getOverallResult();
+
+    // Baseline: fresh game holds no perks and the perk location is unchecked.
+    const perksBefore = gameWin.getFullState().perks.length;
+    testController.log(`fresh game perksBefore=${perksBefore}, zone=${gameWin.getFullState().currentZone}`);
+    testController.assertEqual('fresh game holds no perks', 0, perksBefore);
+    testController.assertEqual('perk location not yet checked', false,
+        snapshotHasLocation(testController.stateManager.getSnapshot(), JTA_LOCTEST_PERK_LOCATION));
+
+    // Drive zone 0 with the PlaybackController walkTo — the proven driver
+    // (it arms the game's automation to play the zone toward the exit).
+    // Instant Mode + abundant energy completes the zone in ONE pass
+    // (manaEnabled is off here, so nothing re-pins the energy and no loop
+    // reset is needed). Taking the exit disarms automation at zone 1, so
+    // only zone 0's single perk-task (13 = How to Read) is completed.
+    const controller = substrateRegistry.get('jta')?.getPlaybackController?.();
+    testController.assertEqual('registry exposes a live PlaybackController', true, !!controller);
+    if (!controller) return testController.getOverallResult();
+    controller.instant();
+    gameWin.setEnergy(1e9);
+    controller.walkTo({ kind: 'exit', name: 'exit_E' });
+    testController.log('walkTo exit_E — playing zone 0…');
+
+    // Leg 1 — the perk-task completion is reported as an AP location check
+    // (durable: stays checked once it lands).
+    const checked = await eventually(testController,
+        () => snapshotHasLocation(testController.stateManager.getSnapshot(), JTA_LOCTEST_PERK_LOCATION),
+        `perk location ${JTA_LOCTEST_PERK_LOCATION} checked`, 60000, 500);
+    testController.assertEqual('perk-task completion reported as an AP location check', true, checked);
+
+    // Leg 2 — the AP round-trip delivers the perk item back.
+    const gotItem = await eventually(testController,
+        () => Number(testController.stateManager.getSnapshot()?.inventory?.[JTA_LOCTEST_PERK_ITEM] ?? 0) > 0,
+        `received AP item '${JTA_LOCTEST_PERK_ITEM}'`, 12000, 300);
+    testController.assertEqual('perk item received from AP', true, gotItem);
+
+    // Leg 3 — the received item grants the perk in-game.
+    const perkPresent = await eventually(testController,
+        () => (getJtaIframe()?.contentWindow?.getFullState?.().perks?.length ?? 0) > perksBefore,
+        'perk granted in-game via the AP item', 12000, 300);
+    testController.assertEqual('perk present after AP round-trip', true, perkPresent);
+
+    // AP-authoritative: local perk grants are suppressed (task_patches set
+    // the perk-task's perk → Count), so every perk held arrived as a
+    // received AP item. On a fresh game that means perks held == received
+    // perk items — a leaked local grant would make perks EXCEED items.
+    const inv = testController.stateManager.getSnapshot()?.inventory ?? {};
+    const receivedPerkItems = JTA_PERK_ITEM_NAMES.filter((n) => Number(inv[n] ?? 0) > 0).length;
+    const perksHeld = getJtaIframe()?.contentWindow?.getFullState?.().perks?.length ?? -1;
+    testController.assertEqual(
+        'perks held == perk items received (grants are AP-authoritative)',
+        receivedPerkItems, perksHeld);
+
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'jta-location-check-and-perk-grant',
+    name: 'JtA: task completion checks an AP location and the perk arrives as an AP item',
+    description: 'Loads the Phase-2 jta_locations_test preset, plays zone 0 via the '
+               + 'game\'s automation, and asserts the perk-task completion is reported '
+               + 'as an AP location check, the perk returns as a received AP item, and '
+               + 'the perk is granted in-game — with local grants suppressed so the '
+               + 'perk count equals the received perk items (AP-authoritative).',
+    testFunction: locationCheckAndPerkGrant,
     category: 'JtA substrate',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });

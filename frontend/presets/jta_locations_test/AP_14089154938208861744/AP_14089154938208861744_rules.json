@@ -1,0 +1,550 @@
+{
+  "schema_version": 3,
+  "game_name": "JtA Locations Test",
+  "game_directory": "procgen_maze_worldgen",
+  "archipelago_version": "0.6.7",
+  "generation_seed": 1,
+  "seed_name": "",
+  "player_names": {
+    "1": "Player1"
+  },
+  "world_classes": {
+    "1": "ProcgenMazeWorld"
+  },
+  "regions": {
+    "1": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "GameStart",
+            "connected_region": "region_0_0",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "region_0_0": {
+        "name": "region_0_0",
+        "exits": [
+          {
+            "name": "exit_E",
+            "connected_region": "region_1_0",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_0_0__10",
+            "id": 1000,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_0_0__11",
+            "id": 1001,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_0_0__12",
+            "id": 1002,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_0_0__13",
+            "id": 1003,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "How to Read",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          },
+          {
+            "name": "region_0_0__14",
+            "id": 1004,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_0_0__15",
+            "id": 1005,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_0_0__16",
+            "id": 1006,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          }
+        ]
+      },
+      "region_1_0": {
+        "name": "region_1_0",
+        "exits": [
+          {
+            "name": "exit_W",
+            "connected_region": "region_0_0",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_1_0__20",
+            "id": 1007,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Victory",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          },
+          {
+            "name": "region_1_0__21",
+            "id": 1008,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_1_0__22",
+            "id": 1009,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_1_0__25",
+            "id": 1010,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_1_0__27",
+            "id": 1011,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "How to Write",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          },
+          {
+            "name": "region_1_0__23",
+            "id": 1012,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_1_0__24",
+            "id": 1013,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_1_0__26",
+            "id": 1014,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "start_regions": {
+    "1": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "1": {
+      "JtA Filler": {
+        "name": "JtA Filler",
+        "id": 1,
+        "classification": "filler",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "How to Read": {
+        "name": "How to Read",
+        "id": 2,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "Victory": {
+        "name": "Victory",
+        "id": 3,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "How to Write": {
+        "name": "How to Write",
+        "id": 4,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      }
+    }
+  },
+  "item_groups": {
+    "1": [
+      "Everything"
+    ]
+  },
+  "itempool_counts": {
+    "1": {
+      "JtA Filler": 12,
+      "How to Read": 1,
+      "Victory": 1,
+      "How to Write": 1
+    }
+  },
+  "world": {
+    "1": {
+      "game": "JtA Locations Test",
+      "world_class_name": "ProcgenMazeWorld",
+      "options": {}
+    }
+  },
+  "game_info": {
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Victory"
+      }
+    }
+  },
+  "helpers": {},
+  "exporter": {},
+  "canonical_placements": {
+    "1": {
+      "region_0_0__10": "JtA Filler",
+      "region_0_0__11": "JtA Filler",
+      "region_0_0__12": "JtA Filler",
+      "region_0_0__13": "How to Read",
+      "region_0_0__14": "JtA Filler",
+      "region_0_0__15": "JtA Filler",
+      "region_0_0__16": "JtA Filler",
+      "region_1_0__20": "Victory",
+      "region_1_0__21": "JtA Filler",
+      "region_1_0__22": "JtA Filler",
+      "region_1_0__25": "JtA Filler",
+      "region_1_0__27": "How to Write",
+      "region_1_0__23": "JtA Filler",
+      "region_1_0__24": "JtA Filler",
+      "region_1_0__26": "JtA Filler"
+    }
+  },
+  "progression_mapping": {
+    "1": {}
+  },
+  "starting_items": {
+    "1": []
+  },
+  "assume_bidirectional_exits": true,
+  "preset_sidecars": {
+    "1": {
+      "region_0_0": {
+        "substrate": "jta",
+        "render_hint": "jta",
+        "grid_cell": {
+          "gx": 0,
+          "gy": 0
+        },
+        "playable_payload": {
+          "jtaZone": 0,
+          "ap_locations": {
+            "10": "region_0_0__10",
+            "11": "region_0_0__11",
+            "12": "region_0_0__12",
+            "13": "region_0_0__13",
+            "14": "region_0_0__14",
+            "15": "region_0_0__15",
+            "16": "region_0_0__16"
+          },
+          "task_patches": [
+            {
+              "id": 13,
+              "perk": 47
+            }
+          ],
+          "exits": [
+            {
+              "exit_id": "exit_E",
+              "x": 7,
+              "y": 3,
+              "side": "E",
+              "exitName": "exit_E",
+              "targetRegion": "region_1_0",
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ],
+          "fogEnabled": true
+        }
+      },
+      "region_1_0": {
+        "substrate": "jta",
+        "render_hint": "jta",
+        "grid_cell": {
+          "gx": 1,
+          "gy": 0
+        },
+        "playable_payload": {
+          "jtaZone": 1,
+          "ap_locations": {
+            "20": "region_1_0__20",
+            "21": "region_1_0__21",
+            "22": "region_1_0__22",
+            "23": "region_1_0__23",
+            "24": "region_1_0__24",
+            "25": "region_1_0__25",
+            "26": "region_1_0__26",
+            "27": "region_1_0__27"
+          },
+          "task_patches": [
+            {
+              "id": 27,
+              "perk": 47
+            }
+          ],
+          "exits": [
+            {
+              "exit_id": "exit_W",
+              "x": 0,
+              "y": 3,
+              "side": "W",
+              "exitName": "exit_W",
+              "targetRegion": "region_0_0",
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ],
+          "fogEnabled": true
+        }
+      }
+    }
+  },
+  "sphere_log": [
+    {
+      "type": "metadata",
+      "seed": 1,
+      "seed_name": "",
+      "event_locations": {},
+      "event_items": {}
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {},
+            "resolved_items": {}
+          },
+          "new_accessible_locations": [
+            "region_0_0__10",
+            "region_0_0__11",
+            "region_0_0__12",
+            "region_0_0__13",
+            "region_0_0__14",
+            "region_0_0__15",
+            "region_0_0__16",
+            "region_1_0__20",
+            "region_1_0__21",
+            "region_1_0__22",
+            "region_1_0__23",
+            "region_1_0__24",
+            "region_1_0__25",
+            "region_1_0__26",
+            "region_1_0__27"
+          ],
+          "new_accessible_regions": [
+            "Menu",
+            "region_0_0",
+            "region_1_0"
+          ],
+          "sphere_locations": []
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "How to Read": 1
+            },
+            "resolved_items": {
+              "How to Read": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_0_0__13"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Victory": 1
+            },
+            "resolved_items": {
+              "Victory": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_0__20"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.3",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "How to Write": 1
+            },
+            "resolved_items": {
+              "How to Write": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_0__27"
+          ]
+        }
+      }
+    }
+  ],
+  "loop_costs": {
+    "regions": {},
+    "locations": {},
+    "defaultRegionCost": 50,
+    "defaultLocationCost": 10
+  }
+}
