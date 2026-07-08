@@ -75,27 +75,32 @@ try {
     const engine = await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/procgenPipeline/procgenPipelineEngine.js')));
     const { substrateRegistry } = await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/shared/procgen/substrateRegistry.js')));
 
+    // Phase 2: the library emits a real 'Victory'-bearing location in the
+    // goal zone (setJtaGoalZone) and can shuffle perk placement in-pipeline
+    // (setJtaPerkShuffleSeed) — no scaffolding. arrangeShuffledSpiral maps
+    // the Nth jta region to zone N, so the deepest emitted zone is QUOTA-1.
     jtaLib.setJtaEmitZoneLocations(true);
+    jtaLib.setJtaGoalZone(QUOTA - 1);
+    jtaLib.setJtaPerkShuffleSeed(SEED);
     const { grid, startCell } = engine.arrangeShuffledSpiral({
         regionSize: { width: 8, height: 6 }, itemPool: {}, obstaclePool: {}, seed: SEED,
         growthParams: { substrateQuotas: { jta: QUOTA }, assumeBidirectional: true, startSubstrate: 'jta' },
     });
 
-    // Goal scaffolding: place 'Victory' on the goal zone's (highest
-    // jtaZone) last location BEFORE buildRulesJson, so the item pool is
-    // computed with it and Generate.py has a beatable game.
-    let goalRegion = null, goalZone = -1;
+    // Confirm exactly one Victory item landed in the pool (the goal item),
+    // emitted by the library rather than injected by the test.
+    const victoryName = substrateRegistry.get('jta').victoryItem;
+    let victoryLocs = 0;
     for (const [, region] of grid.cells) {
-        const z = region.playable_payload?.jtaZone;
-        if (typeof z === 'number' && z > goalZone) { goalZone = z; goalRegion = region; }
+        for (const l of (region.extracted_rules?.locations ?? [])) {
+            if (l.item === victoryName) victoryLocs++;
+        }
     }
-    const goalLocs = goalRegion?.extracted_rules?.locations ?? [];
-    ok(goalLocs.length > 0, `goal zone ${goalZone} has locations to host Victory`);
-    goalLocs[goalLocs.length - 1].item = substrateRegistry.get('jta').victoryItem; // 'Victory'
+    ok(victoryLocs === 1, `Pass A: library emitted exactly one 'Victory' location (${victoryLocs})`);
 
     const rules = engine.buildRulesJson(grid, {
         startCell, seed: SEED,
-        completionConditionItem: substrateRegistry.get('jta').victoryItem,
+        completionConditionItem: victoryName,
     });
 
     const allRegions = Object.values(rules.regions).flatMap((byName) => Object.values(byName));
@@ -107,6 +112,11 @@ try {
     ok(withAp.length === QUOTA, `Pass A: all ${QUOTA} sidecars carry ap_locations (${withAp.length})`);
     ok(sidecars.every((s) => typeof (s.playable_payload ?? s).jtaZone === 'number'),
         'Pass A: every sidecar carries jtaZone');
+    ok(sidecars.every((s) => Array.isArray((s.playable_payload ?? s).task_patches)),
+        'Pass A: every sidecar carries task_patches (grant-suppression delivery seam)');
+    const totalPatches = sidecars.reduce(
+        (a, s) => a + ((s.playable_payload ?? s).task_patches?.length ?? 0), 0);
+    ok(totalPatches > 0, `Pass A: task_patches emitted (${totalPatches} perk-task suppressions)`);
     ok(Array.isArray(rules.sphere_log) && rules.sphere_log.length > 0,
         `Pass A: sphere_log emitted (${rules.sphere_log?.length} entries)`);
 
@@ -124,6 +134,8 @@ try {
         `world_generator: _worldgen_sidecars.json keeps ap_locations for all ${QUOTA} zones`);
     ok((wgStr.match(/jtaZone/g) ?? []).length === QUOTA,
         `world_generator: _worldgen_sidecars.json keeps jtaZone for all ${QUOTA} zones`);
+    ok((wgStr.match(/task_patches/g) ?? []).length === QUOTA,
+        `world_generator: _worldgen_sidecars.json keeps task_patches for all ${QUOTA} zones`);
 
     // --- Generate.py --------------------------------------------------
     run(py, ['-c', `from Options import generate_yaml_templates; generate_yaml_templates(${JSON.stringify(tmpTemplates)})`]);
@@ -138,6 +150,8 @@ try {
         `Generate.py: exported sidecars keep ap_locations for all ${QUOTA} zones`);
     ok((exStr.match(/jtaZone/g) ?? []).length === QUOTA,
         `Generate.py: exported sidecars keep jtaZone for all ${QUOTA} zones`);
+    ok((exStr.match(/task_patches/g) ?? []).length === QUOTA,
+        `Generate.py: exported sidecars keep task_patches for all ${QUOTA} zones`);
     const exLocs = Object.values(exportedRules.regions ?? {})
         .flatMap((byName) => Object.values(byName))
         .reduce((a, r) => a + (r.locations ?? []).filter((l) => (l.name ?? '').includes('__')).length, 0);

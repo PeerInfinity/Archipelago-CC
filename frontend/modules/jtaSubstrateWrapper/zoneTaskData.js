@@ -9,6 +9,8 @@
 
 export const JTA_FORK_SAVE_VERSION = "Fork 1.6";
 
+export const JTA_PERK_COUNT = 47;
+
 export const JTA_ZONE_TASK_DATA = [
   {
     "zone": 0,

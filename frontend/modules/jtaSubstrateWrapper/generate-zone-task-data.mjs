@@ -85,6 +85,12 @@ const banner =
 
 const body =
   `export const JTA_FORK_SAVE_VERSION = ${JSON.stringify(simMod.SAVE_VERSION)};\n\n` +
+  // PerkType.Count is the enum's terminator (== the perk count). The AP
+  // grant-suppression patch sets a task's `perk` to this sentinel so the
+  // fork's onFullyFinishTask grants nothing locally — the perk arrives only
+  // as an AP item (window.grantPerk). Snapshotted here so the headless-safe
+  // pipeline can emit suppression patches without importing the fork build.
+  `export const JTA_PERK_COUNT = ${JSON.stringify(PerkType.Count)};\n\n` +
   `export const JTA_ZONE_TASK_DATA = ${JSON.stringify(zonesOut, null, 2)};\n`;
 
 fs.writeFileSync(outPath, banner + "\n" + body);
