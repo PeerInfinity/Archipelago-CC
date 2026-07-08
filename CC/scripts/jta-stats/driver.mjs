@@ -271,10 +271,15 @@ export function runFirstCompletionStats(env, options = {}) {
   const pinMaxEnergy = options.pinMaxEnergy ?? null;
   const applyEnergyPin = () => {
     if (pinMaxEnergy == null) return;
+    // Pin starting energy (max_energy) to the shared-pool value and refill
+    // current energy to it at each loop boundary (init + after every
+    // reset/prestige). This mirrors the host loop reset, where refillMana
+    // sets currentMana = maxMana (= startingMana) and discards any surplus.
+    // NOT a mid-loop ceiling: between boundaries current_energy is free to
+    // exceed max_energy — as it does in JtA and in the shared pool, where
+    // maxMana is the loop's STARTING mana (and the mana-bar max), not a cap.
     game.GAMESTATE.max_energy = pinMaxEnergy;
-    if (game.GAMESTATE.current_energy > pinMaxEnergy) {
-      game.GAMESTATE.current_energy = pinMaxEnergy;
-    }
+    game.GAMESTATE.current_energy = pinMaxEnergy;
   };
   // Full profile via options.mods, or small experiment deltas on top of the
   // baseline profile via options.modOverrides.

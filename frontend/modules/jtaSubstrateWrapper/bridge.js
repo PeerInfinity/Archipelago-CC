@@ -166,7 +166,8 @@ function _pollTick() {
     // world.manaEnabled). Does NOT also check loopModeActive — the
     // loop queue isn't wired to drive JtA yet. Both directions:
     // drains deduct from the pool, gains (energy items, perk refills)
-    // add to it (clamped to maxMana host-side).
+    // add to it — NOT clamped: maxMana is the loop's STARTING mana (and
+    // the mana-bar max), not a ceiling; the pool may exceed it.
     if (delta !== 0 && _client && _world?.manaEnabled) {
         if (delta > 0) {
             if (_expectedPool !== null) _expectedPool = Math.max(0, _expectedPool - delta);

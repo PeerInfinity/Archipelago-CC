@@ -212,7 +212,8 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
     });
 
     // Bridge → host: mirror JtA's energy GAINS (energy items etc.)
-    // into the shared pool, clamped to maxMana by gameState.
+    // into the shared pool. gainMana does NOT clamp — maxMana is the
+    // loop's STARTING mana (and the mana-bar max), not a ceiling.
     eventBus.subscribe(BRIDGE_GAIN_MANA_EVENT, (data) => {
         const gs = getGameStateSingleton();
         if (!gs) return;
