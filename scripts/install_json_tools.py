@@ -34,6 +34,13 @@ Usage:
     # Skip tests
     python scripts/install_json_tools.py --skip-tests
 
+    # Verify apworld requirements auto-install (MetaMath's metamath-py)
+    python scripts/install_json_tools.py --test-apworld-deps
+
+    # Verify the uninstall path restores the pre-install clone
+    # (combine with --skip-setup to keep the snapshot diff clean)
+    python scripts/install_json_tools.py --test-uninstall --skip-setup
+
 Options:
     --dev               Use development branch (PeerInfinity/Archipelago-CC @ main)
                         Default is stable (PeerInfinity/Archipelago @ JSONExport)
@@ -46,19 +53,30 @@ Options:
     --skip-tests        Same as --test none
     --skip-clone        Skip cloning (assume Archipelago already exists in target dir)
     --skip-setup        Skip development environment setup
+    --test-apworld-deps Seed custom_worlds/ with metamath.apworld before installing,
+                        then verify the installer auto-installed its requirements
+                        (metamathpy imports, MetaMath generates)
+    --test-uninstall    After install (and tests), run the uninstall path and
+                        assert the clone matches a pre-install file snapshot
     --dry-run           Show what would be done without making changes
     --help              Show this help message
 """
 
 import argparse
+import hashlib
 import os
+import re
 import shutil
 import subprocess
 import sys
 import urllib.request
 import zipfile
 from pathlib import Path
-from typing import List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
+
+# Repo this script lives in — source of local test fixtures
+# (the tracked metamath.apworld and the MetaMath template)
+SCRIPT_REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
 # Repository configuration
@@ -461,6 +479,217 @@ def run_verification_tests(
     return all_passed
 
 
+def seed_metamath_apworld(target_dir: Path, dry_run: bool = False) -> bool:
+    """Drop the tracked metamath.apworld into the clone's custom_worlds/.
+
+    Done BEFORE the installer runs, so the installer's apworld-requirements
+    scan finds it and auto-installs metamath-py alongside the core deps.
+    """
+    print_header("Seeding custom_worlds with metamath.apworld (--test-apworld-deps)")
+
+    source = SCRIPT_REPO_ROOT / "apworlds" / "metamath.apworld"
+    if not source.exists():
+        print(f"  [FAIL] Fixture apworld not found: {source}")
+        return False
+
+    dest = target_dir / "custom_worlds" / "metamath.apworld"
+    if dry_run:
+        print(f"  [DRY RUN] Would copy {source} to {dest}")
+        return True
+
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(source, dest)
+    print_status("Copied", str(dest))
+    return True
+
+
+def get_clone_ap_version(target_dir: Path) -> Optional[str]:
+    """Base AP version of the clone (via its venv's Utils.__version__)."""
+    python_exe = get_python_executable(target_dir / ".venv")
+    try:
+        result = subprocess.run(
+            [str(python_exe), "-c",
+             "import Utils; print(Utils.__version__.split('-')[0])"],
+            cwd=target_dir, capture_output=True, text=True, timeout=120,
+        )
+        if result.returncode == 0:
+            return result.stdout.strip()
+    except Exception:
+        pass
+    return None
+
+
+def stage_metamath_yaml(target_dir: Path, dry_run: bool = False) -> Optional[str]:
+    """Copy the MetaMath template into the clone, adapted to its AP version.
+
+    Applies the known cross-version edits: requires.version is lowered to the
+    clone's actual AP version and the world-version game pin is dropped (the
+    apworld's world_version need not match the template's).
+
+    Returns the weights_file_path value to pass to Generate.py, or None.
+    """
+    template = SCRIPT_REPO_ROOT / "Players" / "Templates" / "Metamath.yaml"
+    if not template.exists():
+        print(f"  [FAIL] MetaMath template not found: {template}")
+        return None
+
+    rel_path = os.path.join("Templates", "Metamath.yaml")
+    if dry_run:
+        print(f"  [DRY RUN] Would stage {template} as Players/{rel_path}")
+        return rel_path
+
+    version = get_clone_ap_version(target_dir)
+    if not version:
+        print("  [FAIL] Could not read the clone's AP version")
+        return None
+
+    text = template.read_text(encoding="utf-8-sig")
+    # Replace the whole requires: block with a version-only one
+    text, count = re.subn(
+        r"^requires:\n(?:[ \t]+.*\n)*",
+        f"requires:\n  version: {version}\n",
+        text, count=1, flags=re.MULTILINE,
+    )
+    if not count:
+        print("  [WARN] Template has no requires: block; staging unmodified")
+
+    dest = target_dir / "Players" / "Templates" / "Metamath.yaml"
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_text(text, encoding="utf-8")
+    print_status("Staged", f"{dest} (requires.version -> {version})")
+    return rel_path
+
+
+def verify_apworld_dependencies(target_dir: Path, dry_run: bool = False) -> bool:
+    """Verify the installer satisfied the seeded apworld's requirements.
+
+    Two checks: metamathpy (the import name of metamath-py — the dist-name /
+    import-name mismatch is the regression this guards) imports in the
+    clone's venv, and MetaMath actually generates a seed there.
+    """
+    print_header("Verifying APWorld Dependencies (--test-apworld-deps)")
+
+    python_exe = get_python_executable(target_dir / ".venv")
+
+    if dry_run:
+        print("  [DRY RUN] Would import metamathpy and generate MetaMath")
+        return True
+
+    success, _, stderr = run_command(
+        [str(python_exe), "-c", "import metamathpy"],
+        "Import metamathpy in the clone's venv",
+        cwd=target_dir,
+    )
+    if not success:
+        print(f"  [FAIL] metamathpy did not import: {stderr[:300]}")
+        return False
+
+    weights_rel = stage_metamath_yaml(target_dir, dry_run)
+    if not weights_rel:
+        return False
+
+    success, _, _ = run_command(
+        [str(python_exe), "Generate.py",
+         "--weights_file_path", weights_rel, "--multi", "1", "--seed", "1"],
+        "Generate a MetaMath seed",
+        cwd=target_dir,
+        capture_output=False,
+        stdin_text="\n",
+    )
+    if success:
+        print("\n  [OK] MetaMath generated with auto-installed requirements")
+    else:
+        print("\n  [FAIL] MetaMath generation failed")
+    return success
+
+
+# Trees the snapshot never records: build/runtime state that install and
+# uninstall legitimately touch, plus fixture locations this script seeds.
+SNAPSHOT_EXCLUDED_PARTS = {
+    ".git", ".venv", "__pycache__", "logs", "output", "custom_worlds",
+    "Players", "metamath_data",  # set.mm download cache (--test-apworld-deps)
+}
+# Diffs the uninstall round-trip accepts: state AP itself creates on first
+# run, and the installer's own backup/config bookkeeping (kept on uninstall
+# so a re-install can still restore/reuse them).
+UNINSTALL_ALLOWED_DIFF_PREFIXES = (
+    "host.yaml",
+    "json_tools_backups/",
+    "json_tools_config.json",
+)
+
+
+def take_snapshot(target_dir: Path) -> Dict[str, str]:
+    """relpath -> sha1 for every file the uninstall round-trip compares."""
+    snapshot = {}
+    for path in sorted(target_dir.rglob("*")):
+        if not path.is_file() or path.suffix == ".pyc":
+            continue
+        rel = path.relative_to(target_dir)
+        if any(part in SNAPSHOT_EXCLUDED_PARTS for part in rel.parts):
+            continue
+        snapshot[rel.as_posix()] = hashlib.sha1(path.read_bytes()).hexdigest()
+    return snapshot
+
+
+def run_uninstall_roundtrip(
+    target_dir: Path,
+    pre_snapshot: Dict[str, str],
+    dry_run: bool = False,
+) -> bool:
+    """Run the uninstall path and diff the clone against the pre-install
+    snapshot. Fails on any unexplained added/removed/changed file — this is
+    what verifies the vanilla rule_builder/ backup restore, among others."""
+    print_header("Uninstall Round-Trip (--test-uninstall)")
+
+    python_exe = get_python_executable(target_dir / ".venv")
+
+    if dry_run:
+        print("  [DRY RUN] Would run the uninstaller and diff against snapshot")
+        return True
+
+    success, _, _ = run_command(
+        [str(python_exe), "-m", "worlds.json_tools_installer",
+         "install", "--uninstall", "--yes"],
+        "Uninstall JSON Tools",
+        cwd=target_dir,
+        capture_output=False,
+        stdin_text="\n",
+    )
+    if not success:
+        print("  [FAIL] Uninstaller exited non-zero")
+        return False
+
+    post_snapshot = take_snapshot(target_dir)
+
+    def unexplained(paths):
+        return sorted(
+            p for p in paths
+            if not p.startswith(UNINSTALL_ALLOWED_DIFF_PREFIXES))
+
+    added = unexplained(set(post_snapshot) - set(pre_snapshot))
+    removed = unexplained(set(pre_snapshot) - set(post_snapshot))
+    changed = unexplained(
+        p for p in set(pre_snapshot) & set(post_snapshot)
+        if pre_snapshot[p] != post_snapshot[p])
+
+    ok = not (added or removed or changed)
+    print(f"\n  Snapshot diff vs pre-install ({len(pre_snapshot)} files tracked):")
+    for label, paths in (("Added", added), ("Removed", removed), ("Changed", changed)):
+        print(f"    {label}: {len(paths)}")
+        for p in paths[:20]:
+            print(f"      - {p}")
+        if len(paths) > 20:
+            print(f"      ... and {len(paths) - 20} more")
+
+    if ok:
+        print("\n  [OK] Uninstall restored the pre-install state "
+              "(vanilla rule_builder/ included)")
+    else:
+        print("\n  [FAIL] Uninstall left unexplained differences (see above)")
+    return ok
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Install JSON Tools into a fresh Archipelago installation",
@@ -528,12 +757,32 @@ def main():
         help="Same as --test none",
     )
     parser.add_argument(
+        "--test-apworld-deps",
+        action="store_true",
+        help="Seed custom_worlds/ with metamath.apworld before installing and "
+             "verify its requirements were auto-installed (metamathpy imports, "
+             "MetaMath generates). Incompatible with --all (demo_worlds would "
+             "register MetaMath twice)",
+    )
+    parser.add_argument(
+        "--test-uninstall",
+        action="store_true",
+        help="After install (and tests), run the uninstall path and assert the "
+             "clone matches the pre-install file snapshot. Best combined with "
+             "--skip-setup so dev-environment changes don't muddy the diff",
+    )
+    parser.add_argument(
         "--dry-run", "-n",
         action="store_true",
         help="Show what would be done without making changes",
     )
 
     args = parser.parse_args()
+
+    if args.test_apworld_deps and args.all:
+        parser.error("--test-apworld-deps cannot be combined with --all: "
+                     "the demo_worlds component also carries MetaMath, and a "
+                     "second copy in custom_worlds/ would double-register the game")
 
     # Handle --skip-tests as alias for --test none
     if args.skip_tests:
@@ -583,6 +832,20 @@ def main():
         print("\n[FAIL] Failed to extract apworld")
         return 1
 
+    # Step 4.5: Seed apworld fixture BEFORE installing so the installer's
+    # requirements scan picks it up (--test-apworld-deps)
+    if args.test_apworld_deps:
+        if not seed_metamath_apworld(target_dir, args.dry_run):
+            print("\n[FAIL] Failed to seed metamath.apworld")
+            return 1
+
+    # Step 4.8: Snapshot the pre-install state (--test-uninstall)
+    pre_snapshot: Optional[Dict[str, str]] = None
+    if args.test_uninstall and not args.dry_run:
+        print_header("Taking Pre-Install Snapshot (--test-uninstall)")
+        pre_snapshot = take_snapshot(target_dir)
+        print_status("Files tracked", str(len(pre_snapshot)))
+
     # Step 5: Run installer (includes romless patches if requested)
     if not run_installer(target_dir, version, args.all, args.patch_mode, args.romless,
                          args.upstream_fixes, args.dry_run):
@@ -611,6 +874,19 @@ def main():
             game_name = "Adventure"
         template_name = f"{game_name}.yaml"
         results_ok = run_verification_tests(target_dir, game_name, template_name, args.dry_run)
+
+    # Step 8.5: Verify apworld requirements auto-install (--test-apworld-deps)
+    if args.test_apworld_deps:
+        if not verify_apworld_dependencies(target_dir, args.dry_run):
+            results_ok = False
+
+    # Step 9: Uninstall round-trip (--test-uninstall) — only meaningful after
+    # a successful install + verification
+    if args.test_uninstall:
+        if not results_ok:
+            print("\n[SKIP] Skipping uninstall round-trip: earlier steps failed")
+        elif not run_uninstall_roundtrip(target_dir, pre_snapshot or {}, args.dry_run):
+            results_ok = False
 
     # Final summary
     print_header("Installation Complete!")
