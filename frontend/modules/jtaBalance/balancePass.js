@@ -1,84 +1,74 @@
 /**
- * The §2 forward pass, driving the fork's own simulation.
+ * The Pass-B forward balancing pass, driving the fork's own simulation.
+ * Design: CC/docs/plans/jta-balance-pass-plan.md (§4); supersedes the earlier
+ * non-converging draft, whose failure analysis lives in that plan's §1.1.
  *
- * Walk the post-fill sphere log in order. At each step (a run of location
- * checks ending at a perk milestone):
+ * Walk a total order over EVERY v1 task (buildWalkOrder: the post-fill sphere
+ * log's buckets + a seeded within-bucket shuffle with playability repair) and,
+ * one entry at a time:
  *
- *   1. FIRST-TOUCH ASSIGNMENT — every task in the step that has no cost yet
- *      gets one now, by inverting `estimateResetsToComplete` against the step's
- *      target reset budget, corrected through the Phase 3c calibration curve.
- *      Nothing already assigned is ever revisited, which is what removes the
- *      legacy solver's retroactive traversal / xpMult-compounding levers.
- *   2. REAL-SIM ADVANCEMENT — the fork plays forward in instant mode under the
- *      shared automation profile until the milestone task actually completes.
- *      The next step's assignments therefore see emergent state, not a model's
- *      projection, so assignment error cannot accumulate.
- *   3. GRANTS — the walk hands over whatever the sphere log says arrived at
- *      those locations, exactly as the Loops cost generator applies
- *      `itemsReceived`. Perks arrive as AP items (grants are AP-authoritative),
- *      so the perk-tasks' own grants are suppressed first.
+ *   1. RELEASE — add the task to the fork's `setCostedTaskIds` allowlist.
+ *      Uncosted tasks are unrunnable and excluded from free-completion paths,
+ *      so automation can never outrun the walk: that is the confinement lever
+ *      (`setAutomationEndZone` is NOT one — it kills automation permanently).
+ *   2. ASSIGN AT FIRST START — when the sim first begins the task,
+ *      `setTaskFirstStartCallback` fires synchronously BEFORE the starting
+ *      tick reads the cost, and we solve `cost_multiplier` there by bisection
+ *      on `estimateResetsToComplete` against decision-time remaining energy
+ *      (the estimator's own documented contract — no budget normalization).
+ *      Milestone entries target the REMAINING step budget
+ *      (`resetsPerStep − resets elapsed since the last milestone`), so the
+ *      constant milestone-to-milestone gap survives whatever the step's other
+ *      tasks consumed; non-milestones use the Loops-style fraction rule (a
+ *      small category fraction of decision-time energy), because reps reset
+ *      every run and everything costed is replayed every run — connective
+ *      tissue must stay cheap or the replay tax swamps the pacing.
+ *   3. ADVANCE — the sim plays under `baselineMods()` in NORMAL ticking until
+ *      the entry's task completes. Instant mode is deliberately OFF:
+ *      `completeTaskInstantly` is affordability-blind (it completes all reps
+ *      in the starting tick and just bills the energy), and the profile's
+ *      all-skipped=Best-Task fallback makes that the common case under
+ *      confinement. Under normal ticking Best-Task is instead the faithful
+ *      catch-up grind real play has. Measured: ~38 ms/run vs instant's ~22 —
+ *      the fidelity is nearly free (plan §1.1 amendment).
+ *   4. GRANT — whatever the sphere log says arrived at that entry (perk items
+ *      via `grantPerk`, AP-authoritative order), then release the next entry.
  *
- * ══ WORK IN PROGRESS — DOES NOT YET CONVERGE. Nothing imports this. ═══════
+ * First-touch by construction: a task is solved exactly once, at its first
+ * start, and never revisited — the legacy solver's retroactive levers cannot
+ * exist here. v1 is REPORT-ONLY: measured gaps are returned for verification,
+ * never fed back into later solves.
  *
- * The primitives in balanceCore.js are verified against the real engine. This
- * advancement loop is not: on a real 15-zone seed most steps stall. The cause
- * is understood and written down here so the next pass starts from it rather
- * than rediscovering it.
- *
- * THE PROBLEM. Loops' cost generator can queue exactly the one location it
- * wants, because the loop engine only does what it is told. JtA's automation is
- * autonomous: left alone it travels ahead and clears whole zones. By the time
- * the walk reaches a task, the sim has already completed it — the measured gap
- * is 0, and worse, `estimateResetsToComplete` returns 0 for a completed task
- * regardless of cost, so the bisection saturates at MAX_COST_MULTIPLIER and
- * would ship a task nobody can finish. (Guarded below: saturated solves fall
- * back to the vanilla multiplier and are counted.)
- *
- * WHAT DOESN'T WORK. `setAutomationEndZone` looks like the lever for holding
- * the sim behind the walk. It is not. `automation_end` gates nothing on an
- * ongoing basis; the only readers are Mastery-of-Time (simulation.ts:957) and
- * two zone-advance branches (simulation.ts:3965, 4322) that switch automation
- * **Off permanently** once `(new_zone + 1) >= automation_end`. So automation
- * finishes zone 0's Travel task, advances, turns itself off, and every
- * subsequent step spins out its whole reset budget doing nothing. Setting the
- * bound to `deepestZone` instead of `deepestZone + 1` is even worse: it kills
- * automation before the first tick.
- *
- * THE SHAPE OF THE FIX. Stop trying to hold the sim back; let it play freely
- * and drive first-touch off the SIM's progression instead of the walk's. Cost a
- * zone's tasks the moment `GAMESTATE.current_zone` first reaches it — targets
- * still come from the walk (`targetByTask`), so the pacing intent is unchanged,
- * but assignment happens with the emergent state the player will actually have,
- * and always before automation can complete anything there (instant mode
- * finishes at most one task per `updateGamestate`). The walk then only supplies
- * targets and grant order; the sim supplies the clock. This is arguably the
- * more faithful model anyway: the player's real completion order IS automation's.
- *
- * Runs against a throwaway `GAMESTATE` created by `initializeHeadless()`, with
- * `localStorage` stubbed, so it cannot touch the player's save.
+ * ENV-AGNOSTIC like balanceCore.js: the caller hands in `env` ({ sim, game,
+ * zones, win }) from headlessGameEnv.js, so one implementation serves the
+ * Pass-B Web Worker, the Node verify script, and Phase 4 verification. Runs
+ * against a throwaway GAMESTATE (`initializeHeadless`) with `localStorage`
+ * stubbed, so it cannot touch the player's save.
  */
 
 import {
-    DEFAULT_CATEGORY_WEIGHTS,
-    ESTIMATOR_CAP,
-    buildPlan,
-    extractLocationEntries,
-    invertCalibration,
+    DEFAULT_CATEGORY_FRACTIONS,
+    MIN_COST_MULTIPLIER,
     solveCostMultiplier,
-    targetGapForMilestone,
 } from './balanceCore.js';
+import { buildWalkOrder, toSeedInt } from './orderBuilder.js';
 import { baselineMods } from './automationProfile.js';
 
-// Ceiling on resets spent waiting for one milestone. A step that blows this is
-// recorded as stalled and the walk moves on rather than hanging: a solve that
-// silently never terminates is worse than one that reports where it gave up.
-const DEFAULT_MAX_RESETS_PER_STEP = 120;
+// The constant pacing knob (ruling: resetsPerStep IS the knob; curve-matching
+// abandoned). Default 5 per the 2026-07-08 ruling. Non-milestone entries use
+// the Loops-style category-fraction rule instead (see solveEntry /
+// DEFAULT_CATEGORY_FRACTIONS in balanceCore.js).
+export const DEFAULT_RESETS_PER_STEP = 5;
+
+// Ceiling on resets spent waiting for one entry. A stalled entry is recorded
+// and skipped so the walk always terminates with a report, never hangs.
+const DEFAULT_MAX_RESETS_PER_ENTRY = 60;
 const DEFAULT_MAX_TICKS_PER_RUN = 200000;
 // Matches driver.mjs: with no progress for this many ticks the run is treated
 // as ended (nobody drives the end-of-content overlay headlessly).
 const DEFAULT_MAX_IDLE_TICKS = 50;
 
-/** Advance one tick, mirroring driver.mjs's two hard-won rules. */
+/** Advance one tick, mirroring driver.mjs's hard-won run-end discipline. */
 function makeStepper(env, onRunBoundary) {
     const { sim, game } = env;
     let idleTicks = 0;
@@ -92,7 +82,7 @@ function makeStepper(env, onRunBoundary) {
         sim.updateGamestate();
         ticksThisRun++;
         // Nobody drains the render-event queue headlessly, and saveGame
-        // serializes the whole gamestate on every instant completion.
+        // serializes the whole gamestate on every completion.
         game.GAMESTATE.pending_render_events.length = 0;
 
         if (!game.GAMESTATE.is_in_energy_reset) {
@@ -128,72 +118,85 @@ function makeStepper(env, onRunBoundary) {
  * @param {object} o.env            { sim, game, zones, win } from headlessGameEnv
  * @param {Array}  o.sphereLog      parsed sphere-log entries (post-fill)
  * @param {string|number} o.playerId
- * @param {object} o.apLocations    AP location name -> jta task id
+ * @param {object} o.apLocations    taskId -> AP location name (payload-native)
  * @param {string[]} o.perkItemNames
- * @param {object} o.calibration    derive-calibration.mjs output
- * @param {number[]} o.anchorCurve  vanilla perk-milestone gaps
- * @param {object} [o.options]      { rng, jitter, resetsPerStep, categoryWeights,
- *                                    perkCountSentinel, maxResetsPerStep, onProgress }
+ * @param {object|Map} o.gateCounts taskId -> access-rule perk count (0 = free)
+ * @param {string|number} o.seed    world seed (seed_name); drives the shuffle
+ * @param {object} [o.options]      { resetsPerStep, categoryFractions,
+ *                                    perkCountSentinel, maxResetsPerEntry,
+ *                                    modOverrides, onProgress }
  * @returns {Promise<{patches, report}>}
  */
 export async function runBalancePass({
-    env, sphereLog, playerId, apLocations, perkItemNames, calibration, anchorCurve, options = {},
+    env, sphereLog, playerId, apLocations, perkItemNames, gateCounts, seed, options = {},
 }) {
-    const { sim, zones, win } = env;
+    const { sim, game, zones, win } = env;
     const {
-        rng = null,
-        jitter = 0,
-        // Manual override (the old apworld's `resets_per_sphere`): when set,
-        // every step targets this many resets and the anchor curve is ignored.
-        resetsPerStep = null,
-        categoryWeights = DEFAULT_CATEGORY_WEIGHTS,
+        resetsPerStep = DEFAULT_RESETS_PER_STEP,
+        categoryFractions = DEFAULT_CATEGORY_FRACTIONS,
         perkCountSentinel = null,
-        maxResetsPerStep = DEFAULT_MAX_RESETS_PER_STEP,
+        maxResetsPerEntry = DEFAULT_MAX_RESETS_PER_ENTRY,
+        thresholdClampMargin = 0.5,
+        modOverrides = {},
         onProgress = null,
     } = options;
+    const perks = new Set(perkItemNames);
 
-    const entries = extractLocationEntries(sphereLog, playerId);
-    const steps = buildPlan(entries, { apLocations, perkItemNames });
-    const milestoneSteps = steps.filter((s) => s.milestone != null);
-    if (!milestoneSteps.length) {
-        throw new Error('runBalancePass: sphere log has no perk milestones — '
-            + 'is Pass A emitting access rules? A degenerate single-sphere log cannot be walked.');
+    // --- The walk order --------------------------------------------------
+    // Field sentinels ("none") come from a default-constructed definition —
+    // ItemType.Count isn't re-exported by the zones module.
+    const defDefaults = new zones.TaskDefinition({});
+    const taskMeta = new Map();
+    for (const def of zones.TASK_LOOKUP.values()) {
+        taskMeta.set(def.id, {
+            type: def.type,
+            zone: def.zone_id,
+            unlocksTask: def.unlocks_task >= 0 ? def.unlocks_task : null,
+            item: def.item !== defDefaults.item ? def.item : null,
+            useItem: def.use_item !== defDefaults.use_item ? def.use_item : null,
+        });
     }
-
-    // Each task's target gap, taken from the step it belongs to. Resolved up
-    // front so a zone can be costed the moment the walk opens it, before the
-    // sim is allowed in.
-    const targetByTask = new Map();
-    {
-        let mi = 0;
-        for (const step of steps) {
-            const gap = resetsPerStep != null
-                ? resetsPerStep
-                : targetGapForMilestone(anchorCurve, mi, milestoneSteps.length, { rng, jitter });
-            for (const taskId of step.tasks) {
-                if (!targetByTask.has(taskId)) targetByTask.set(taskId, gap);
-            }
-            if (step.milestone != null) mi++;
-        }
+    const { entries, report: orderReport } = buildWalkOrder({
+        sphereLog, playerId, apLocations, perkItemNames, taskMeta, gateCounts,
+        seed: toSeedInt(seed),
+    });
+    if (!entries.length) {
+        throw new Error('runBalancePass: empty walk order — no jta locations resolved. '
+            + 'Is apLocations populated and the sphere log for the right player?');
+    }
+    for (const entry of entries) {
+        entry.milestone = entry.items.some((n) => perks.has(n));
+    }
+    if (!entries.some((e) => e.milestone)) {
+        throw new Error('runBalancePass: no perk milestones in the walk — '
+            + 'is Pass A emitting access rules? A degenerate single-sphere log cannot pace anything.');
     }
 
     // --- Engine setup -----------------------------------------------------
-    // The fork's render loop runs on a timer and would tick against the stubbed
-    // DOM. driver.mjs pauses it first; so must we.
+    // The fork's render loop runs on a timer and would tick against the
+    // stubbed DOM; pause before AND after (reset/prestige paths restart it).
     win.pauseGameLoop();
     win.initializeHeadless();
-    win.setInstantMode(true);
-    const mods = { ...baselineMods(), ...(options.modOverrides ?? {}) };
+    // NORMAL ticking — never instant mode here (see module header / plan §1.1).
+    win.setInstantMode(false);
+    const mods = { ...baselineMods(), ...modOverrides };
     for (const [name, value] of Object.entries(mods)) {
         if (!sim.setMod(name, value)) throw new Error(`setMod(${name}) failed`);
     }
-    env.game.GAMESTATE.automation_skip_blocked = true;
+    game.GAMESTATE.automation_skip_blocked = true;
     sim.autoFillAllPriorities();
     sim.setAutomationMode(sim.AutomationMode.All);
 
-    // Grants are AP-authoritative: suppress every perk task's local grant so the
-    // only perks the solved game sees are the ones the sphere log hands over, in
-    // the log's order. Without this the solver's game races ahead of the walk.
+    // Pristine multipliers, captured BEFORE any solving: the bisection's
+    // estimateAt probes mutate the shared static definitions, so "restore
+    // vanilla" must read this snapshot, never def.cost_multiplier (reading the
+    // def after a saturated bisection "restored" 1e6 — measured bug).
+    const vanillaCm = new Map();
+    for (const def of zones.TASK_LOOKUP.values()) vanillaCm.set(def.id, def.cost_multiplier);
+
+    // Grants are AP-authoritative: suppress every perk task's local grant so
+    // the only perks the solved game sees are the ones the walk hands over, in
+    // log order.
     if (perkCountSentinel != null) {
         const suppress = [];
         for (const def of zones.TASK_LOOKUP.values()) {
@@ -202,127 +205,303 @@ export async function runBalancePass({
         if (suppress.length) win.applyTaskPatches(suppress);
     }
 
-    const completed = new Set();
-    win.setTaskCompletionCallback((info) => completed.add(info.id));
-
+    // --- Walk state ---------------------------------------------------------
     let run = 1;
     const tick = makeStepper(env, () => { run++; });
 
-    // --- Walk -------------------------------------------------------------
+    const released = new Set();
+    const pendingEntry = new Map();     // taskId -> entry index awaiting first-start solve
+    const entryReports = entries.map((e) => ({
+        taskId: e.taskId,
+        location: e.location,
+        bucket: e.bucket,
+        milestone: e.milestone,
+        synthesized: e.synthesized,
+        target: null,
+        costMultiplier: null,
+        estimate: null,
+        releasedRun: null,
+        solvedRun: null,
+        completedRun: null,
+        stalled: false,
+        clamp: null,                    // 'skillless' | 'floor' | 'saturated' | null
+    }));
+    let frontier = -1;
+    let milestoneBaseRun = 1;           // run at which the previous milestone completed
+    const milestoneGaps = [];
     const patches = [];
-    const costed = new Set();
-    const openedZones = new Set();
-    const stepReports = [];
-    let clampedFloor = 0;
-    let clampedPlateau = 0;
-    let alreadyComplete = 0;
     let saturated = 0;
-    let deepestZone = -1;
+    let skillless = 0;
+    let floorClamped = 0;
+    let thresholdClamped = 0;
 
-    /** Cost every uncosted AP task in `zoneIdx`, each at its own step's target. */
-    const costZone = (zoneIdx, milestoneId) => {
-        for (const def of zones.TASK_LOOKUP.values()) {
-            if (def.zone_id !== zoneIdx) continue;
-            if (costed.has(def.id) || !targetByTask.has(def.id)) continue;
-            costed.add(def.id);
-            const target = targetByTask.get(def.id);
-            // The milestone carries the whole step budget — it is the event the
-            // anchor curve measures. The rest split it by category.
-            const weight = def.id === milestoneId ? 1 : (categoryWeights[def.type] ?? 1);
-            const { estimate, clamped } = invertCalibration(calibration.curve, target * weight);
-            if (clamped === 'floor') clampedFloor++;
-            else if (clamped === 'plateau') clampedPlateau++;
-            const solved = solveCostMultiplier(env, def.id, estimate, { cap: ESTIMATOR_CAP });
-            if (solved.skillless) continue;
-            if (solved.saturated) {
-                // The estimator never reached the target even at MAX. Shipping
-                // that multiplier would make the task unfinishable. Something is
-                // wrong (usually: the sim already completed it, which pins the
-                // estimate at 0) — leave the task at its vanilla cost and say so.
-                saturated++;
-                win.applyTaskPatches([{ id: def.id, cost_multiplier: def.cost_multiplier }]);
-                continue;
-            }
-            patches.push({ id: def.id, cost_multiplier: solved.costMultiplier });
-        }
+    const release = (k) => {
+        frontier = k;
+        const entry = entries[k];
+        released.add(entry.taskId);
+        win.setCostedTaskIds(released);
+        pendingEntry.set(entry.taskId, k);
+        entryReports[k].releasedRun = run;
     };
 
-    for (const step of steps) {
-        const isMilestoneStep = step.milestone != null;
-        const targetGap = targetByTask.get(step.tasks[0]) ?? 0;
+    // 2. ASSIGN. The normal path is the first-start callback: it fires
+    // synchronously inside the sim, before the starting tick reads the cost;
+    // decision-time current_energy is the budget the estimator sees (rulings
+    // 6+7). It fires again on every later run's fresh start — the pendingEntry
+    // map dedupes to exactly one solve per task. The boss-gate boundary path
+    // (below) reuses the same solve.
+    const solveEntry = (taskId, k, via) => {
+        pendingEntry.delete(taskId);
+        const rep = entryReports[k];
+        const entry = entries[k];
+        const meta = taskMeta.get(taskId);
+        rep.solvedRun = run;
+        rep.solvedVia = via;
 
-        // 1. First-touch assignment, by zone, BEFORE the sim may enter it.
-        for (const taskId of step.tasks) {
-            const def = zones.TASK_LOOKUP.get(taskId);
-            if (!def) continue;
-            if (completed.has(taskId) && !costed.has(taskId)) alreadyComplete++;
-            if (!openedZones.has(def.zone_id)) {
-                openedZones.add(def.zone_id);
-                costZone(def.zone_id, step.milestone);
-                if (def.zone_id > deepestZone) deepestZone = def.zone_id;
+        if (!entry.milestone) {
+            // Non-milestone: Loops-style fraction rule. Bisect to the est>=1
+            // boundary — its LO bracket is "just affordable with decision-time
+            // energy" — and scale it down by the category fraction. Reps reset
+            // every run, so everything already costed is REPLAYED every run:
+            // connective tissue must stay cheap or the replay tax swamps the
+            // milestone pacing (measured: est-target-1 here made reaching a
+            // zone-3 frontier cost dozens of runs). Cost is linear in the
+            // multiplier, so lo × f costs ≈ f of the current budget.
+            const fraction = categoryFractions[meta?.type] ?? 0.25;
+            rep.target = fraction;
+            const probe = solveCostMultiplier(env, taskId, 1, { cap: 2 });
+            if (probe.skillless) {
+                rep.costMultiplier = vanillaCm.get(taskId);
+                rep.estimate = 0;
+                rep.clamp = 'skillless';
+                skillless++;
+                return;
+            }
+            const base = probe.lo ?? MIN_COST_MULTIPLIER;
+            let cm = Math.max(MIN_COST_MULTIPLIER, base * fraction);
+            win.applyTaskPatches([{ id: taskId, cost_multiplier: cm }]);
+            const clamp = clampToThresholdEngagement(taskId, cm);
+            if (clamp.clamped) {
+                cm = clamp.cm;
+                rep.clamp = 'threshold';
+                rep.unengaged = Boolean(clamp.floored);
+                thresholdClamped++;
+            } else if (cm === MIN_COST_MULTIPLIER) {
+                rep.clamp = 'floor';
+                floorClamped++;
+            }
+            rep.costMultiplier = cm;
+            rep.estimate = 0;
+            patches.push({ id: taskId, cost_multiplier: cm });
+            return;
+        }
+
+        // Milestone: estimator inversion against the REMAINING step budget,
+        // so the constant milestone-to-milestone gap survives whatever the
+        // step's other tasks consumed.
+        const target = Math.max(1, resetsPerStep - (run - milestoneBaseRun));
+        rep.target = target;
+        const solved = solveCostMultiplier(env, taskId, target, { cap: target + 1 });
+        rep.costMultiplier = solved.costMultiplier;
+        rep.estimate = solved.estimate;
+        if (solved.skillless) {
+            // Cost cannot move a skill-less task; it stays vanilla.
+            rep.clamp = 'skillless';
+            skillless++;
+            return;
+        }
+        if (solved.saturated) {
+            // Even MAX cost can't make it take `target` resets (deep-game
+            // skill levels can trivialize any cost) — leave it at its
+            // PRISTINE vanilla multiplier (see vanillaCm) and say so.
+            rep.clamp = 'saturated';
+            saturated++;
+            win.applyTaskPatches([{ id: taskId, cost_multiplier: vanillaCm.get(taskId) }]);
+            rep.costMultiplier = vanillaCm.get(taskId);
+            return;
+        }
+        let cm = solved.costMultiplier;
+        const clamp = clampToThresholdEngagement(taskId, cm);
+        if (clamp.clamped) {
+            cm = clamp.cm;
+            rep.costMultiplier = cm;
+            rep.clamp = 'threshold';
+            rep.unengaged = Boolean(clamp.floored);
+            thresholdClamped++;
+        } else if (cm === MIN_COST_MULTIPLIER && target > 0) {
+            rep.clamp = 'floor';
+            floorClamped++;
+        }
+        patches.push({ id: taskId, cost_multiplier: cm });
+    };
+
+    // Engagement clamp: a cost automation refuses to RUN is as unfinishable as
+    // a saturated one. The threshold mods judge tasks by more than
+    // affordability — notably `threshold_other` defaults to the LEVEL metric
+    // (cost / expected_levels vs 1% of max energy), and grant suppression
+    // (perk -> Count) RECATEGORIZES former perk tasks into "other", in the
+    // solver and in real AP play alike — so every solved cost is clamped down
+    // to the largest multiplier the thresholds still engage with. Self-guarding
+    // when thresholds are off (isThresholdSkipped is then always false).
+    const clampToThresholdEngagement = (taskId, cm) => {
+        const def = zones.TASK_LOOKUP.get(taskId);
+        const skippedAt = (x) => {
+            win.applyTaskPatches([{ id: taskId, cost_multiplier: x }]);
+            return sim.isThresholdSkipped(new zones.Task(def));
+        };
+        if (!skippedAt(cm)) return { cm, clamped: false };
+        let lo = MIN_COST_MULTIPLIER;
+        let hi = cm;
+        if (skippedAt(lo)) return { cm: lo, clamped: true, floored: true };
+        while ((hi - lo) / hi > 0.01) {
+            const mid = Math.sqrt(lo * hi);
+            if (skippedAt(mid)) hi = mid; else lo = mid;
+        }
+        // Margin below the exact boundary: the LEVEL metric's ratio drifts
+        // AGAINST the task as skills grow (higher levels need more XP, so
+        // expected_levels shrink while the cost stays fixed) — a zero-margin
+        // clamp flips back to skipped before the sim's next pass through the
+        // task's zone (measured). Keep a real safety factor.
+        const cm2 = Math.max(MIN_COST_MULTIPLIER, lo * thresholdClampMargin);
+        skippedAt(cm2);   // leave the def patched at the final value
+        return { cm: cm2, clamped: true };
+    };
+
+    win.setTaskFirstStartCallback((info) => {
+        const k = pendingEntry.get(info.id);
+        if (k != null) solveEntry(info.id, k, 'first-start');
+    });
+
+    // 4. GRANT + advance the frontier when the frontier entry completes.
+    // Replayed completions of earlier entries (reps reset every run) fire this
+    // too and are deliberately ignored: only the frontier moves the walk.
+    // Advance past the frontier entry: hand over its logged grants (perk items
+    // via grantPerk, AP-authoritative order) and release the next entry.
+    // `completed` is false for an UNENGAGED skip — the grants still flow (the
+    // walk's economy needs what the log says arrives) but no gap is recorded.
+    const advanceFrontier = (completed) => {
+        const entry = entries[frontier];
+        const rep = entryReports[frontier];
+        if (completed) rep.completedRun = run;
+        for (const item of entry.items) {
+            if (perks.has(item)) win.grantPerk(item);
+        }
+        if (entry.milestone) {
+            if (completed) {
+                rep.gap = run - milestoneBaseRun;
+                milestoneGaps.push(rep.gap);
+            }
+            milestoneBaseRun = run;
+        }
+        if (frontier + 1 < entries.length) release(frontier + 1);
+        else frontier = entries.length;
+    };
+
+    win.setTaskCompletionCallback((info) => {
+        if (frontier >= entries.length || info.id !== entries[frontier].taskId) return;
+        advanceFrontier(true);
+    });
+
+    // --- 3. ADVANCE ---------------------------------------------------------
+    release(0);
+    let lastProgressFrontier = -1;
+    while (frontier < entries.length) {
+        const rep = entryReports[frontier];
+        if (run - rep.releasedRun > maxResetsPerEntry) {
+            // Stalled: record, drop the pending solve if it never started, and
+            // move on so the pass always terminates with a report.
+            rep.stalled = true;
+            {
+                // Diagnostics: why is this entry stuck? Evaluated on a fresh
+                // throwaway Task at the stall boundary (full pool, zone 0).
+                const def = zones.TASK_LOOKUP.get(entries[frontier].taskId);
+                const t = def ? new zones.Task(def) : null;
+                const prioZones = [];
+                for (const [z, ids] of game.GAMESTATE.automation_prios) {
+                    if (ids.includes(entries[frontier].taskId)) prioZones.push(z);
+                }
+                rep.stallDiag = def ? {
+                    defZone: def.zone_id,
+                    costMultiplier: def.cost_multiplier,
+                    hidden: def.hidden_by_default,
+                    unlocked: game.GAMESTATE.unlocked_tasks.includes(def.id),
+                    inPrioZones: prioZones,
+                    simHighestZone: game.GAMESTATE.highest_zone,
+                    energy: Math.round(game.GAMESTATE.current_energy),
+                    disabled: sim.isTaskDisabledWithoutBeingFinished(t),
+                    bossGate: sim.isTaskDisabledDueToTooStrongBoss(t),
+                    thresholdSkipped: sim.isThresholdSkipped(t),
+                } : { missingDef: true };
+            }
+            pendingEntry.delete(entries[frontier].taskId);
+            if (frontier + 1 < entries.length) release(frontier + 1);
+            else break;
+            continue;
+        }
+        const wasReset = tick();
+        if (wasReset) {
+            // Boundary fallback: first-start is the organic assignment path,
+            // but a frontier can be unable (or unmotivated) to START at its
+            // PRE-SOLVE vanilla cost, so first-start never fires and never
+            // assigns the cost that would fix it. Two measured cases: a Boss
+            // whose vanilla cost trips the disparity gate (DISABLED, and
+            // Best-Task only considers threshold-skipped tasks), and a
+            // threshold-skipped task in an already-passed zone (automation
+            // replays the zone, takes Travel onward, and the all-skipped
+            // fallback never fires because deeper zones always offer work).
+            // So: a frontier still pending after a FULL run since release
+            // gets solved at the run boundary — full pool, zone 0 — and
+            // then engages the economy like any other costed task.
+            const pendingId = entries[frontier]?.taskId;
+            if (pendingId != null && pendingEntry.has(pendingId)
+                    && run - entryReports[frontier].releasedRun >= 2) {
+                solveEntry(pendingId, frontier, 'boundary');
+            }
+            // UNENGAGED: the engagement clamp floored — the threshold's LEVEL
+            // metric rejects this task at ANY cost (the ratio is nearly
+            // cost-invariant, and it drifts against the task as skills grow).
+            // Automation will never run it — in the solver and, under the same
+            // profile, in real play — so waiting would only stall the walk.
+            // Leave it allowlisted at MIN (it may complete opportunistically),
+            // hand its grants over, and move on. Reported as `unengaged`.
+            if (frontier < entries.length && entryReports[frontier].unengaged
+                    && entryReports[frontier].completedRun == null) {
+                advanceFrontier(false);
             }
         }
-        // BROKEN — see the header. This does not confine automation to the
-        // walk's frontier; it makes the sim switch automation off for good on
-        // the first zone advance, which is why most steps stall. Left in place,
-        // and re-arming the mode each step, only so the failure is reproducible
-        // from the verify script while the redesign is written.
-        sim.setAutomationEndZone(deepestZone + 1);
-        sim.setAutomationMode(sim.AutomationMode.All);
-        sim.autoFillAllPriorities();
-
-        // 2. Real-sim advancement, until the milestone actually completes.
-        const runAtStepStart = run;
-        let stalled = false;
-        if (isMilestoneStep) {
-            while (!completed.has(step.milestone)) {
-                if (run - runAtStepStart >= maxResetsPerStep) { stalled = true; break; }
-                tick();
-            }
-        }
-        const measuredGap = run - runAtStepStart;
-
-        // 3. Grants — whatever the log says arrived here, in log order.
-        for (const item of step.grants) {
-            if (perkItemNames.includes(item)) win.grantPerk(item);
-        }
-
-        stepReports.push({
-            milestone: step.milestone,
-            perk: step.milestonePerk ?? null,
-            taskCount: step.tasks.length,
-            zone: deepestZone,
-            targetGap: Number(targetGap.toFixed(2)),
-            measuredGap,
-            stalled,
-        });
-        if (onProgress) {
-            onProgress({ step: stepReports.length, total: steps.length });
-            // Yield so a worker stays responsive and a host can post progress.
+        if (wasReset && onProgress && frontier !== lastProgressFrontier) {
+            lastProgressFrontier = frontier;
+            onProgress({ entry: frontier, total: entries.length, run });
+            // Yield so a worker stays responsive and can post progress.
             await Promise.resolve();
         }
     }
 
+    win.setTaskFirstStartCallback(null);
     win.setTaskCompletionCallback(null);
+    win.setCostedTaskIds(null);
     // Prestige/reset paths can restart the render loop; leave it stopped so a
     // Node caller can exit and a worker isn't ticking a stubbed DOM.
     win.pauseGameLoop();
 
-    const measured = stepReports.filter((s) => s.milestone != null).map((s) => s.measuredGap);
     return {
         patches,
         report: {
-            steps: stepReports,
-            milestoneCount: milestoneSteps.length,
-            costedTaskCount: costed.size,
-            patchCount: patches.length,
-            clampedFloor,
-            clampedPlateau,
-            alreadyComplete,
+            order: orderReport,
+            entries: entryReports,
+            entryCount: entries.length,
+            milestoneCount: entries.filter((e) => e.milestone).length,
+            milestoneGaps,
+            resetsPerStep,
+            costedTaskCount: patches.length,
+            skillless,
             saturated,
-            stalledSteps: stepReports.filter((s) => s.stalled).length,
+            floorClamped,
+            thresholdClamped,
+            stalledEntries: entryReports.filter((r) => r.stalled).length,
+            unengaged: entryReports.filter((r) => r.unengaged && r.completedRun == null).length,
+            neverStarted: entryReports.filter((r) => r.solvedRun == null && !r.stalled).length,
             totalResets: run - 1,
-            measuredGaps: measured,
         },
     };
 }

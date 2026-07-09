@@ -21,7 +21,8 @@
  *   3. Within each bucket, seeded shuffle (deterministic per world seed) then
  *      a STABLE constraint repair that disturbs the shuffle minimally:
  *        (a) an unlockER precedes every task it unlocks (transitively);
- *        (b) a zone's Mandatory/Prestige tasks precede that zone's Travel task.
+ *        (b) an item's producers precede its consumers (use_item);
+ *        (c) a zone's Mandatory/Prestige tasks precede that zone's Travel task.
  *      Repair is deterministic and throws on a constraint cycle rather than
  *      looping.
  *
@@ -38,6 +39,22 @@ import { createRng } from '../shared/rng.js';
 // is included for fidelity; v1 (zones 0-14) has no Prestige tasks, so it is
 // inert on real data.
 const BLOCKS_TRAVEL = new Set([TASK_TYPE.Mandatory, TASK_TYPE.Prestige]);
+
+/**
+ * Derive the 32-bit shuffle seed from a world seed. AP seed_names are decimal
+ * strings too big for a double (e.g. "14089154938208861744"), and createRng
+ * coerces with `| 0`, which would collapse a non-numeric string to 0 — so map
+ * digit strings through BigInt (mod 2^31-1) and anything else through a djb2
+ * hash. Deterministic: the same world always shuffles the same way.
+ */
+export function toSeedInt(seed) {
+    if (typeof seed === 'number' && Number.isFinite(seed)) return seed | 0;
+    const s = String(seed ?? '');
+    if (/^\d+$/.test(s)) return Number(BigInt(s) % 2147483647n);
+    let h = 5381;
+    for (let i = 0; i < s.length; i++) h = ((h * 33) ^ s.charCodeAt(i)) | 0;
+    return h;
+}
 
 // Read a key from a Map or a plain object. Task ids are numbers; object keys
 // are strings, so fall back to the stringified key for Maps keyed either way.
@@ -62,6 +79,10 @@ function integerSphere(sphereIndex) {
 /**
  * Build the within-bucket "before" edges from task metadata:
  *   - an unlockER (`unlocksTask` -> U) precedes U;
+ *   - an item's producer (`item` X) precedes its consumers (`useItem` X) —
+ *     a consumer is disabled-without-its-item (fork
+ *     isTaskDisabledDueToMissingItem), so ordering it before every producer
+ *     would strand the walk;
  *   - within a zone, each Mandatory/Prestige task precedes each Travel task.
  * Only edges between tasks present in `order` (this bucket) are emitted;
  * cross-bucket order is already correct by construction (plan §2.1).
@@ -84,6 +105,22 @@ function buildBucketEdges(order, taskMeta) {
         if (u != null && inBucket.has(u)) addEdge(id, u);
     }
 
+    // Item chains: every in-bucket producer of an item precedes every
+    // in-bucket consumer of it (over-constrains with multiple producers,
+    // which is safe; a producer in an EARLIER bucket already precedes).
+    const producersByItem = new Map();
+    for (const id of order) {
+        const item = readEntry(taskMeta, id)?.item;
+        if (item == null) continue;
+        if (!producersByItem.has(item)) producersByItem.set(item, []);
+        producersByItem.get(item).push(id);
+    }
+    for (const id of order) {
+        const useItem = readEntry(taskMeta, id)?.useItem;
+        if (useItem == null) continue;
+        for (const p of producersByItem.get(useItem) ?? []) addEdge(p, id);
+    }
+
     // Mandatory/Prestige before Travel, per zone.
     const byZone = new Map();
     for (const id of order) {
@@ -96,6 +133,25 @@ function buildBucketEdges(order, taskMeta) {
     }
     for (const { travel, blocking } of byZone.values()) {
         for (const m of blocking) for (const t of travel) addEdge(m, t);
+    }
+
+    // Zone reachability: Travel(zone z) precedes EVERY deeper-zone task in the
+    // bucket. AP fill front-loads perks, so one integer sphere often opens
+    // several zones at once — a bucket can span zones 1-2 or 3-6 — and an
+    // unconstrained shuffle releases deep tasks before the travels that make
+    // their zones reachable, stranding the walk (the sim replays from zone 0
+    // every run and can only enter zones whose Travel tasks are costed and
+    // completed). Same-zone tasks may still precede a shallower zone's
+    // leftovers — each run passes through every zone, so "return later" is
+    // free; only FORWARD reachability needs edges.
+    for (const [z, g] of byZone) {
+        if (!g.travel.length || typeof z !== 'number') continue;
+        for (const id of order) {
+            const uz = readEntry(taskMeta, id)?.zone;
+            if (typeof uz === 'number' && uz > z) {
+                for (const t of g.travel) addEdge(t, id);
+            }
+        }
     }
     return edges;
 }
@@ -160,7 +216,8 @@ export function repairBucketOrder(order, edges) {
  *                   internally. Its key set is the v1 task universe.
  *   perkItemNames — iterable of perk item names (progression milestones).
  *   taskMeta      — Map|object taskId -> { type (TASK_TYPE int), zone,
- *                   unlocksTask (taskId|null) }.
+ *                   unlocksTask (taskId|null), item (ItemType|null, awarded),
+ *                   useItem (ItemType|null, consumed) }. item/useItem optional.
  *   gateCounts    — Map|object taskId -> access-rule count (0 = no gate).
  *   seed          — world seed; a given seed always yields the same order.
  *

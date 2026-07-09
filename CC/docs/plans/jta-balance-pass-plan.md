@@ -249,13 +249,40 @@ Per walk entry k:
      resetsSinceLastMilestone)` — the remaining step budget, so the constant
      milestone-to-milestone gap survives however many resets the step's
      other tasks consumed.
-   - **Non-milestone entry:** a small constant target (default 1) scaled by
-     the category weights (`DEFAULT_CATEGORY_WEIGHTS`; Boss 1.5) — tunable
-     knob, expected to keep intra-step tasks completing within ~a run,
-     matching vanilla's first-completion gaps (p50 = 2).
+   - **Non-milestone entry (AMENDED during 3d-pass, supersedes the "small
+     constant est-target" idea):** the Loops-style **fraction rule** — cost
+     aimed at a small category fraction of decision-time energy
+     (`DEFAULT_CATEGORY_FRACTIONS`: Travel/Mandatory 0.10, Normal 0.25,
+     Boss 0.5), implemented as the est≥1 bisection's LOW bracket × fraction.
+     Reps reset every run, so every costed task is REPLAYED every run:
+     pricing connective tissue at even ~one run's grind each made reaching a
+     zone-3 frontier cost dozens of runs (measured). Vanilla's economy shape
+     — cheap connective tissue, grindy milestones — must be preserved.
+   - **Boundary fallback (AMENDED):** first-start is the organic assignment
+     path, but a frontier can be unable to START at its pre-solve vanilla
+     cost (Boss disparity gate ⇒ DISABLED; threshold-skipped in an
+     already-passed zone — automation replays the zone, takes Travel onward,
+     and the all-skipped Best-Task fallback never fires because deeper zones
+     always offer work). A frontier still pending after a full run since
+     release is solved at the run boundary instead.
+   - **Engagement clamp (AMENDED):** every solved cost is clamped down to
+     the largest multiplier the threshold mods still engage with (bisect on
+     `isThresholdSkipped`, ×0.5 safety margin — the LEVEL metric's ratio
+     drifts against a task as skills grow). Note: grant suppression
+     (perk→Count) RECATEGORIZES former perk tasks from the perk threshold
+     category into "other" (LEVEL metric, 1% budget) — in the solver and in
+     real AP play alike.
+   - **Unengaged disposition (AMENDED):** the LEVEL metric is nearly
+     cost-invariant (energy cost and XP yield both scale with progress), so
+     a task can be rejected at ANY cost once skills outgrow it. Such a
+     frontier (clamp floored) does not block the walk: grants are handed
+     over, the entry is reported `unengaged`, and the walk moves on. These
+     are also the tasks a tuned-profile REAL player's automation would never
+     run — a real-play design question recorded in §8.
    - Guards kept: skill-less ⇒ leave vanilla (estimator can't move it);
-     saturated ⇒ leave vanilla + count (now a genuine anomaly signal —
-     the allowlist makes "already completed at assignment" impossible).
+     saturated ⇒ leave PRISTINE vanilla + count (restore must read a
+     snapshot taken before solving — the bisection mutates the shared
+     definitions).
 3. **Advance:** tick the sim (normal ticking, idle-tick + max-ticks guards,
    auto-prestige branch replicated) until task k COMPLETES (existing
    completion callback), bounded by a per-entry stall ceiling (report, move
@@ -322,8 +349,33 @@ the already-complete fallback counting.
 5. **3f:** docs (`docs/json/developer/procgen/jta.md`), parent-plan §2b/§4/§7
    update, memory topic update.
 
+### 4b. First converging run (2026-07-08, seed 14089154938208861744, 15 zones)
+
+2.1 s wall, 64 resets simulated, 130/130 tasks costed, 0 stalls, 0
+saturated, 7 unengaged, 25 threshold-clamped. Milestone gaps vs
+`resetsPerStep = 5`: p25=1 p50=2 p75=4 max=12 mean=2.6 — a systematic
+~2.5× UNDERSHOOT (the estimator's dedicated-grind model vs replay XP +
+growing budgets). Report-only per the ruling; `resetsPerStep` is the
+compensating knob and Phase 4 measures the emergent result. Walk-order
+lessons folded into the order builder: buckets are COARSER than zones
+(fill front-loads perks; 5 integer spheres covered 15 zones), so
+within-bucket repair needs zone-reachability edges (Travel(z) before any
+deeper-zone task) and item-dependency edges (producer before consumer) on
+top of unlock chains and Mandatory-before-Travel.
+
 ## 8. Parked (explicitly out of v1 scope, recorded 2026-07-08)
 
+- **Threshold `other`-category level metric vs AP locations (found during
+  3d-pass; needs a ruling):** under the tuned automation profile
+  (`baselineMods`, `threshold_other` = LEVEL metric at 1% budget), some
+  tasks become permanently automation-skipped once skills outgrow their XP
+  yield — at ANY cost — and grant suppression recategorizes every former
+  perk task into that category. A real player running the tuned profile
+  would never auto-complete those AP locations. Candidate fixes:
+  `threshold_other_metric: resets` in the shared profile (measure first —
+  Round 6 found threshold values insensitive), a fork-side exemption for
+  AP-location tasks, or accept-and-document (default all-off players are
+  unaffected). The solver reports these as `unengaged`.
 - Task-unlocks as AP items; further item ideas beyond perks + do-nothing.
 - Moving locations between spheres without disturbing sphere logic
   (backfill-lite); per-task gate-count spread (the full backfill mechanism —

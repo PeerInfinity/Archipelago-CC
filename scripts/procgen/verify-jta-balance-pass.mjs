@@ -1,16 +1,22 @@
 #!/usr/bin/env node
 /**
- * Phase 3d verification: run the §2 forward balancing pass against a REAL
+ * Phase 3d verification: run the Pass-B forward balancing pass against a REAL
  * post-fill seed and report what it produced.
  *
  * This is the Pass-B pipeline end to end, minus the browser: read an exported
- * rules.json (preset_sidecars -> ap_locations, plus the embedded sphere log),
- * walk it through the fork's own simulation, and emit Tier-1 cost patches.
+ * rules.json (preset_sidecars -> ap_locations, access-rule gate counts, plus
+ * the sphere log), walk it through the fork's own simulation under NORMAL
+ * ticking (plan §1.1 amendment — never instant mode), and emit Tier-1 cost
+ * patches. Design: CC/docs/plans/jta-balance-pass-plan.md.
  *
  * Generate an input first, e.g.:
  *   JTA_RT_QUOTA=15 JTA_RT_KEEP=1 node scripts/procgen/verify-jta-locations-roundtrip.mjs
  *   node scripts/procgen/verify-jta-balance-pass.mjs \
  *     frontend/presets/jta_loctest_roundtrip_worldgen/AP_<seed>/AP_<seed>_rules.json
+ *
+ * Exits non-zero when the pass fails its own convergence bar: any stalled or
+ * never-started entry, any saturated solve, or a walk that doesn't cover the
+ * full location universe.
  */
 
 import fs from 'node:fs';
@@ -31,28 +37,44 @@ const { runBalancePass } = await import(pathToFileURL(path.join(repoRoot, 'front
 const jtaLib = await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js')));
 const { JTA_PERK_COUNT } = await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/jtaSubstrateWrapper/zoneTaskData.js')));
 
-// v1 anchor curve: zones 0-14 standalone perk-milestone gaps (Phase 0,
-// SUMMARY.md Round 5). The trailing 70 is the SBtV straggler, which v1
-// excludes, so it is not part of the curve.
-const ANCHOR_CURVE = [0, 4, 5, 7, 4, 6, 2, 6, 14, 8, 8, 4, 6, 8, 10, 10, 8, 2, 14, 8];
-
 const rules = JSON.parse(fs.readFileSync(rulesPath, 'utf8'));
-const calibration = JSON.parse(fs.readFileSync(
-    path.join(repoRoot, 'CC/scripts/jta-stats/results/calibration-standalone-z14.json'), 'utf8'));
 
-// Invert every region's ap_locations (taskId -> name) into name -> taskId.
+// ap_locations, payload-native direction (taskId -> location name).
 const playerId = Object.keys(rules.preset_sidecars)[0];
 const apLocations = {};
 for (const sidecar of Object.values(rules.preset_sidecars[playerId])) {
     const payload = sidecar.playable_payload ?? sidecar;
     for (const [taskId, locName] of Object.entries(payload.ap_locations ?? {})) {
-        apLocations[locName] = Number(taskId);
+        apLocations[taskId] = locName;
     }
 }
+
+// Gate counts: the HasFromListUnique perk count on each location's access
+// rule (Phase 3a's loose zone gates); no access_rule = free (0). Walk the
+// rule tree defensively — the count may sit under a combinator.
+function ruleGateCount(rule) {
+    if (!rule || typeof rule !== 'object') return 0;
+    if (rule.rule === 'HasFromListUnique') return Number(rule.args?.count ?? 0);
+    let max = 0;
+    for (const v of Object.values(rule.args ?? rule)) {
+        if (Array.isArray(v)) for (const x of v) max = Math.max(max, ruleGateCount(x));
+        else if (v && typeof v === 'object') max = Math.max(max, ruleGateCount(v));
+    }
+    return max;
+}
+const nameToTaskId = new Map(Object.entries(apLocations).map(([id, n]) => [n, Number(id)]));
+const gateCounts = new Map();
+for (const region of Object.values(rules.regions?.[playerId] ?? {})) {
+    for (const loc of region.locations ?? []) {
+        const taskId = nameToTaskId.get(loc.name);
+        if (taskId == null) continue;
+        gateCounts.set(taskId, ruleGateCount(loc.access_rule));
+    }
+}
+
 // Embedded first, then the sibling .jsonl — the same strategy sphereState uses
-// in-app (sphereState/index.js loadEmbeddedFirstThenFile). Pass-A rules.json
-// embeds `sphere_log`; a Generate.py export does NOT, and writes
-// <seed>_sphere_log.jsonl beside it instead.
+// in-app. Pass-A rules.json embeds `sphere_log`; a Generate.py export does NOT
+// and writes <seed>_sphere_log.jsonl beside it instead.
 function loadSphereLog(rulesDoc, rulesFile) {
     if (Array.isArray(rulesDoc.sphere_log) && rulesDoc.sphere_log.length) return rulesDoc.sphere_log;
     const sibling = rulesFile.replace(/_rules\.json$/, '_sphere_log.jsonl');
@@ -60,8 +82,10 @@ function loadSphereLog(rulesDoc, rulesFile) {
     return fs.readFileSync(sibling, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
 }
 const sphereLog = loadSphereLog(rules, rulesPath);
-console.log(`rules: ${path.basename(rulesPath)}`);
-console.log(`player ${playerId} · ${Object.keys(apLocations).length} jta locations · ${sphereLog.length} sphere-log entries`);
+const seed = rules.seed_name ?? rules.seed ?? 1;
+console.log(`rules: ${path.basename(rulesPath)} · seed ${seed}`);
+console.log(`player ${playerId} · ${Object.keys(apLocations).length} jta locations · `
+    + `${gateCounts.size} gate counts · ${sphereLog.length} sphere-log entries`);
 
 const env = await loadJtaEnv();
 const t0 = Date.now();
@@ -71,31 +95,60 @@ const { patches, report } = await runBalancePass({
     playerId,
     apLocations,
     perkItemNames: [...jtaLib.JTA_PERK_ITEM_NAMES],
-    calibration,
-    anchorCurve: ANCHOR_CURVE,
+    gateCounts,
+    seed,
     options: { perkCountSentinel: JTA_PERK_COUNT },
 });
 const elapsed = Date.now() - t0;
 
-console.log(`\nsolved in ${elapsed} ms · ${report.totalResets} resets simulated`);
-console.log(`${report.milestoneCount} perk milestones · ${report.costedTaskCount} tasks costed · ${report.patchCount} patches`);
-console.log(`clamped: ${report.clampedFloor} to floor, ${report.clampedPlateau} to plateau · stalled steps: ${report.stalledSteps}`);
-console.log(`already-complete at cost time: ${report.alreadyComplete} · saturated (left vanilla): ${report.saturated}`);
+console.log(`\nsolved in ${(elapsed / 1000).toFixed(1)} s · ${report.totalResets} resets simulated (normal ticking)`);
+console.log(`walk: ${report.entryCount} entries (${report.order.logCovered} from log, `
+    + `${report.order.synthesized} synthesized, ${report.order.buckets} buckets, `
+    + `${report.order.repairsApplied} repair moves)`);
+console.log(`${report.milestoneCount} perk milestones · ${report.costedTaskCount} cost patches · `
+    + `skill-less ${report.skillless} · floor ${report.floorClamped} · threshold-clamped ${report.thresholdClamped}`);
+console.log(`stalled ${report.stalledEntries} · never-started ${report.neverStarted} · saturated ${report.saturated} · unengaged ${report.unengaged}`);
 
-console.log('\n  # perk                            target  measured  tasks');
-for (const [i, s] of report.steps.entries()) {
-    if (!s.milestone) continue;
-    console.log(`${String(i).padStart(3)} ${String(s.perk).padEnd(30)} ${String(s.targetGap).padStart(6)} ${String(s.measuredGap).padStart(9)}${s.stalled ? ' STALL' : '     '} ${String(s.taskCount).padStart(4)}`);
+console.log(`\n  # perk milestone                    zone-bucket target  gap  via`);
+let mi = 0;
+for (const r of report.entries) {
+    if (!r.milestone) continue;
+    mi++;
+    console.log(`${String(mi).padStart(3)} task ${String(r.taskId).padEnd(5)} ${String(r.location ?? '').padEnd(22)}`
+        + ` ${String(r.bucket).padStart(6)} ${String(r.target ?? '-').padStart(6)} ${String(r.gap ?? '-').padStart(5)}`
+        + `  ${r.solvedVia ?? '-'}${r.stalled ? ' STALL' : ''}`);
 }
 
-const gaps = report.measuredGaps;
+const gaps = report.milestoneGaps;
 if (gaps.length) {
     const sorted = [...gaps].sort((a, b) => a - b);
     const p = (q) => sorted[Math.min(sorted.length - 1, Math.floor(q * sorted.length))];
-    console.log(`\nmeasured gaps: p25=${p(0.25)} p50=${p(0.5)} p75=${p(0.75)} max=${sorted[sorted.length - 1]}`);
-    console.log(`anchor curve : p50=7 (zones 0-14 vanilla standalone)`);
+    const mean = (gaps.reduce((a, b) => a + b, 0) / gaps.length).toFixed(1);
+    console.log(`\nmilestone gaps vs resetsPerStep=${report.resetsPerStep}: `
+        + `p25=${p(0.25)} p50=${p(0.5)} p75=${p(0.75)} max=${sorted[sorted.length - 1]} mean=${mean}`);
 }
 const cms = patches.map((x) => x.cost_multiplier).sort((a, b) => a - b);
 if (cms.length) {
     console.log(`cost_multiplier: min=${cms[0].toPrecision(3)} p50=${cms[Math.floor(cms.length / 2)].toPrecision(3)} max=${cms[cms.length - 1].toPrecision(3)}`);
 }
+
+// Full per-entry report for debugging (stall diagnosis, gap distributions).
+const reportPath = process.env.JTA_BP_REPORT;
+if (reportPath) {
+    fs.writeFileSync(reportPath, JSON.stringify({ patches, report }, null, 1));
+    console.log(`\n[report written to ${reportPath}]`);
+}
+
+// ---- Convergence bar -------------------------------------------------------
+const failures = [];
+if (report.entryCount !== Object.keys(apLocations).length) {
+    failures.push(`walk covers ${report.entryCount}/${Object.keys(apLocations).length} locations`);
+}
+if (report.stalledEntries) failures.push(`${report.stalledEntries} stalled entries`);
+if (report.neverStarted) failures.push(`${report.neverStarted} entries never started`);
+if (report.saturated) failures.push(`${report.saturated} saturated solves`);
+if (failures.length) {
+    console.log(`\nFAILED: ${failures.join(' · ')}`);
+    process.exit(1);
+}
+console.log('\nPASS: full coverage, no stalls, no saturation');

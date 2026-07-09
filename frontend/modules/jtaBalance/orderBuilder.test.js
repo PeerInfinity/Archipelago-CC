@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { buildWalkOrder, repairBucketOrder } from './orderBuilder.js';
+import { buildWalkOrder, repairBucketOrder, toSeedInt } from './orderBuilder.js';
 import { TASK_TYPE } from './balanceCore.js';
 
 // Build a `state_update` log record for player 1. `locations` may be a single
@@ -309,5 +309,75 @@ describe('repairBucketOrder', () => {
     it('throws on a cycle instead of looping', () => {
         const edges = new Map([[1, new Set([2])], [2, new Set([1])]]);
         expect(() => repairBucketOrder([1, 2], edges)).toThrow(/cycle/);
+    });
+});
+
+describe('toSeedInt', () => {
+    it('maps AP seed_name digit strings deterministically without collapsing to 0', () => {
+        const a = toSeedInt('14089154938208861744');
+        expect(a).toBe(toSeedInt('14089154938208861744'));
+        expect(a).not.toBe(0);
+        expect(Number.isInteger(a)).toBe(true);
+        expect(a).not.toBe(toSeedInt('14089154938208861745'));
+    });
+
+    it('passes finite numbers through as 32-bit ints and hashes other strings', () => {
+        expect(toSeedInt(42)).toBe(42);
+        expect(toSeedInt('not-a-number')).toBe(toSeedInt('not-a-number'));
+        expect(toSeedInt('not-a-number')).not.toBe(0);
+    });
+});
+
+describe('buildWalkOrder — zone reachability in multi-zone buckets', () => {
+    it('travel of each zone precedes every deeper-zone task, across seeds', () => {
+        // One bucket spanning zones 1-3 (AP fill front-loads perks, so integer
+        // spheres are coarser than zones). Travel(1)=19, Travel(2)=29.
+        const taskMeta = {
+            11: { type: TASK_TYPE.Normal, zone: 1, unlocksTask: null },
+            19: { type: TASK_TYPE.Travel, zone: 1, unlocksTask: null },
+            21: { type: TASK_TYPE.Normal, zone: 2, unlocksTask: null },
+            29: { type: TASK_TYPE.Travel, zone: 2, unlocksTask: null },
+            31: { type: TASK_TYPE.Normal, zone: 3, unlocksTask: null },
+            32: { type: TASK_TYPE.Boss, zone: 3, unlocksTask: null },
+        };
+        const ids = Object.keys(taskMeta).map(Number);
+        const apLocations = Object.fromEntries(ids.map((id) => [id, `r__${id}`]));
+        const sphereLog = [{
+            type: 'state_update',
+            sphere_index: '0.1',
+            player_data: { 1: { sphere_locations: ['r__11'], new_inventory_details: { base_items: {} } } },
+        }];
+        const gateCounts = Object.fromEntries(ids.map((id) => [id, 0]));
+        for (let seed = 1; seed <= 25; seed++) {
+            const { entries } = buildWalkOrder({
+                sphereLog, playerId: 1, apLocations, perkItemNames: [],
+                taskMeta, gateCounts, seed,
+            });
+            const pos = new Map(entries.map((e, i) => [e.taskId, i]));
+            expect(pos.get(19)).toBeLessThan(pos.get(21));  // Travel(1) < zone-2 task
+            expect(pos.get(19)).toBeLessThan(pos.get(29));  // Travel(1) < Travel(2)
+            expect(pos.get(29)).toBeLessThan(pos.get(31));  // Travel(2) < zone-3 tasks
+            expect(pos.get(29)).toBeLessThan(pos.get(32));
+        }
+    });
+
+    it('item producers precede consumers within a bucket, across seeds', () => {
+        const taskMeta = {
+            41: { type: TASK_TYPE.Boss, zone: 1, unlocksTask: null, item: 7 },
+            42: { type: TASK_TYPE.Normal, zone: 1, unlocksTask: null, useItem: 7 },
+            43: { type: TASK_TYPE.Normal, zone: 1, unlocksTask: null },
+        };
+        const ids = Object.keys(taskMeta).map(Number);
+        const apLocations = Object.fromEntries(ids.map((id) => [id, `r__${id}`]));
+        const sphereLog = [];
+        const gateCounts = Object.fromEntries(ids.map((id) => [id, 0]));
+        for (let seed = 1; seed <= 25; seed++) {
+            const { entries } = buildWalkOrder({
+                sphereLog, playerId: 1, apLocations, perkItemNames: [],
+                taskMeta, gateCounts, seed,
+            });
+            const pos = new Map(entries.map((e, i) => [e.taskId, i]));
+            expect(pos.get(41)).toBeLessThan(pos.get(42));  // producer < consumer
+        }
     });
 });

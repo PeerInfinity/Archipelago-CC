@@ -68,6 +68,26 @@ export const DEFAULT_CATEGORY_WEIGHTS = Object.freeze({
     [TASK_TYPE.Boss]: 1.5,
 });
 
+/**
+ * Non-milestone cost rule (the Loops "half your current mana" analog): a
+ * non-milestone task's total remaining energy cost is aimed at this FRACTION
+ * of decision-time energy. Reps reset every energy reset, so every
+ * previously-costed task is REPLAYED every run — connective tissue
+ * (Travel/Mandatory, plus most Normal tasks) must therefore stay cheap or the
+ * replay tax swamps the milestone pacing entirely: pricing each at even ~one
+ * run's grind made reaching a zone-3 frontier cost dozens of runs (measured —
+ * the first converging-run failure). Milestones alone carry the reset budget.
+ * Bosses bite hardest while staying below the boss-disparity gate (< 1×
+ * current energy keeps them startable).
+ */
+export const DEFAULT_CATEGORY_FRACTIONS = Object.freeze({
+    [TASK_TYPE.Normal]: 0.25,
+    [TASK_TYPE.Travel]: 0.10,
+    [TASK_TYPE.Mandatory]: 0.10,
+    [TASK_TYPE.Prestige]: 0.10,
+    [TASK_TYPE.Boss]: 0.5,
+});
+
 // Bisection bounds on cost_multiplier. Vanilla multipliers span roughly 1..100;
 // the window is deliberately wide so the search brackets rather than saturates.
 export const MIN_COST_MULTIPLIER = 0.05;
@@ -209,9 +229,14 @@ export function buildPlan(locationEntries, { apLocations, perkItemNames }) {
  * (cost is linear in it, and the estimate is monotone in cost), so a plain
  * bisection is exact up to `tolerance` in multiplier space.
  *
- * Returns { costMultiplier, estimate, skillless } — skill-less tasks always
- * estimate 0 regardless of cost (simulation.ts short-circuits on
+ * Returns { costMultiplier, estimate, skillless, lo } — skill-less tasks
+ * always estimate 0 regardless of cost (simulation.ts short-circuits on
  * `def.skills.length == 0`), so they are left at their vanilla multiplier.
+ * `lo` is the under-target bracket: the largest probed multiplier whose
+ * estimate is still BELOW the target — for target 1, "just affordable with
+ * decision-time energy", which is what the non-milestone fraction rule
+ * scales down (cost is linear in the multiplier, so lo × f costs ≈ f of the
+ * current budget). Absent when even MIN_COST_MULTIPLIER meets the target.
  */
 export function solveCostMultiplier(env, taskId, targetEstimate, { tolerance = 0.01, cap = ESTIMATOR_CAP } = {}) {
     const { sim, zones, win } = env;
@@ -235,11 +260,11 @@ export function solveCostMultiplier(env, taskId, targetEstimate, { tolerance = 0
     let lo = MIN_COST_MULTIPLIER;   // estimate < target
     let hi = MAX_COST_MULTIPLIER;
     if (estimateAt(hi) < target) {
-        return { costMultiplier: hi, estimate: estimateAt(hi), skillless: false, saturated: true };
+        return { costMultiplier: hi, estimate: estimateAt(hi), skillless: false, saturated: true, lo: hi };
     }
     while ((hi - lo) / hi > tolerance) {
         const mid = Math.sqrt(lo * hi);   // geometric midpoint: cost spans decades
         if (estimateAt(mid) >= target) hi = mid; else lo = mid;
     }
-    return { costMultiplier: hi, estimate: estimateAt(hi), skillless: false };
+    return { costMultiplier: hi, estimate: estimateAt(hi), skillless: false, lo };
 }
