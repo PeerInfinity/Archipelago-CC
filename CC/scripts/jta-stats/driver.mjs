@@ -460,10 +460,11 @@ export function runFirstCompletionStats(env, options = {}) {
   // prestige and the client re-grants it. `grantPerk` is idempotent, so the
   // own-world leg is just "grant on every full completion".
   //
-  // bridge.js implements NEITHER leg today: `_reconcilePerksFromInventory`
-  // grants each item name once ever (`_processedItems`) and nothing reacts to a
-  // prestige. This driver models the INTENDED semantics; the divergence from
-  // shipped code is what `regrantOnEveryCompletion: false` measures.
+  // bridge.js implemented NEITHER leg until 2026-07-09 (`87197f704`):
+  // `_reconcilePerksFromInventory` granted each item name once ever
+  // (`_processedItems`) and nothing reacted to a prestige. This driver models
+  // the semantics the bridge now has; `regrantOnEveryCompletion: false` keeps
+  // the pre-fix behaviour as a control, and is what measured the defect.
   const apRuntime = options.apRuntime ?? null;
   // taskId -> perk item name placed on that task's AP location (own world).
   const apGrants = new Map(

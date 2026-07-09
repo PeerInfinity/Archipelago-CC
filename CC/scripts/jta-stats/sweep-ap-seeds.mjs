@@ -16,7 +16,9 @@
  * Two variants per seed:
  *   baseline    own-world perks re-grant when their holding task next completes
  *               (the 2026-07-09 intended semantics)
- *   no-regrant  each perk granted once, ever — bridge.js as it ships today
+ *   no-regrant  each perk granted once, ever — bridge.js BEFORE the
+ *               2026-07-09 fix (`87197f704`). Kept as the regression control:
+ *               it is what stranding looks like.
  *
  * Step 1 needs the repo Python env (world_generator + Generate.py):
  *   source .venv/bin/activate
@@ -141,7 +143,10 @@ const stat = (g) => {
 
 const L = ['# Cross-seed emergent verification (Phase 4)\n'];
 L.push('`baseline` = the 2026-07-09 grant semantics (own-world perks re-grant on');
-L.push('re-completion). `no-regrant` = bridge.js as it ships today.\n');
+L.push('re-completion, foreign perks restored) — implemented in `bridge.js` since `87197f704`.\n'
+    + '`no-regrant` = the pre-fix bridge, kept as the control that shows what stranding looks like.\n'
+    + 'Both columns drive `driver.mjs`, not the bridge: this sweep verifies the MODEL, and the\n'
+    + 'in-app `jta-prestige-perk-regrant` test verifies the bridge.\n');
 L.push('| seed | variant | solve converged? | coverage | full? | runs | prestiges | re-grants | thresholdFloored covered | gap p50 | gap mean | gap max |');
 L.push('|---|---|---|---|---|---|---|---|---|---|---|---|');
 for (const r of rows) {

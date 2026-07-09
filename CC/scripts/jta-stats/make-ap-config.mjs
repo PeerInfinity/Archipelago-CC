@@ -40,7 +40,8 @@
  *   --no-cost-patches   drop the balance solve; keep shuffle + suppression.
  *                       Control: is the solve helping or hurting coverage?
  *   --no-regrant        grant each perk once, never again — models bridge.js
- *                       as it ships today (see driver.mjs apRuntime header).
+ *                       BEFORE the 2026-07-09 fix (see driver.mjs apRuntime
+ *                       header). The regression control, not current behaviour.
  *   --no-perk-category  omit the forced perk-category ids, re-introducing the
  *                       2026-07-09 categorization defect. Out-of-sample proof
  *                       that the setPerkCategoryTaskIds fix is load-bearing.

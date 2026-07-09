@@ -440,9 +440,10 @@ a foreign perk has no task to re-run, so it persists. `grantPerk` is idempotent
 and `setTaskCompletionCallback` fires on **every** full completion, so the
 own-world leg is just "grant on every completion."
 
-`bridge.js` implements neither leg. `_reconcilePerksFromInventory` grants each
-item name once ever (`_processedItems`, cleared only on `rulesLoaded`), and
-nothing reacts to a prestige. The `no-regrant` variant models that exactly:
+`bridge.js` implemented neither leg at the time of this round.
+`_reconcilePerksFromInventory` granted each item name once ever
+(`_processedItems`, cleared only on `rulesLoaded`), and nothing reacted to a
+prestige. The `no-regrant` variant models that exactly:
 
 | seed | baseline coverage | prestiges | shipped-bridge (`no-regrant`) coverage |
 |---|---|---|---|
@@ -458,6 +459,14 @@ permanently unaffordable. So `thresholdFloored` is a genuine fragility marker,
 and the grant semantics are load-bearing rather than a nicety. **This is a real
 defect in shipped code**, found only because the emulation modelled the intended
 semantics and the shipped ones side by side.
+
+> **Resolved 2026-07-09** (`87197f704`). `bridge.js` now implements both legs,
+> recovering item origin from the post-fill placement in `staticData`. The
+> `no-regrant` variant is retained as the control that produced the table above.
+> Note this sweep cannot verify the fix: it drives `driver.mjs`, and `baseline`
+> already *is* the corrected semantics. Re-running it after the fix reproduces
+> every number here byte-for-byte. The bridge itself is covered in-app by
+> `jta-prestige-perk-regrant`.
 
 ### Two in-sample claims corrected
 

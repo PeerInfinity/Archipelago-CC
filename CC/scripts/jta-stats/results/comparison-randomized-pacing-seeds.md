@@ -1,7 +1,10 @@
 # Cross-seed emergent verification (Phase 4)
 
 `baseline` = the 2026-07-09 grant semantics (own-world perks re-grant on
-re-completion). `no-regrant` = bridge.js as it ships today.
+re-completion, foreign perks restored) — implemented in `bridge.js` since `87197f704`.
+`no-regrant` = the pre-fix bridge, kept as the control that shows what stranding looks like.
+Both columns drive `driver.mjs`, not the bridge: this sweep verifies the MODEL, and the
+in-app `jta-prestige-perk-regrant` test verifies the bridge.
 
 | seed | variant | solve converged? | coverage | full? | runs | prestiges | re-grants | thresholdFloored covered | gap p50 | gap mean | gap max |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -35,3 +38,4 @@ Pooled baseline milestone gaps (n=80): p50 2, mean 5.64, max 106 — target `res
 - task 136 (zone 12) Comb the Desert — **thresholdFloored**
 - task 156 (zone 14) Guided Spellcasting — **thresholdFloored**
 - task 157 (zone 14) Go for a Walk — **thresholdFloored**
+
