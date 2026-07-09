@@ -441,28 +441,45 @@ within-bucket repair needs zone-reachability edges (Travel(z) before any
 deeper-zone task) and item-dependency edges (producer before consumer) on
 top of unlock chains and Mandatory-before-Travel.
 
-## 7b. Handoff to Phase 4 (what this plan could not verify)
+## 7b. Handoff to Phase 4 — **ANSWERED 2026-07-09**
 
 The pass grades its own homework: milestone gaps are measured **inside the walk
-that assigns the costs**, where automation is confined by `setCostedTaskIds`.
-Two things therefore need out-of-sample measurement, and only the parent plan's
-Phase 4 can provide it:
+that assigns the costs**, where automation is confined by `setCostedTaskIds`. Two
+things needed out-of-sample measurement. Both now have it (parent plan §4,
+`CC/scripts/jta-stats/results/SUMMARY.md` Round 8):
 
-1. **Location coverage under free automation.** Six tasks on the verify seed are
-   reported `thresholdFloored`: MIN cost is unaffordable at first touch, and
-   they complete only because the walk WAITS (nothing else is runnable, so the
-   all-skipped Best-Task fallback grinds the skill up). In free play automation
-   always has better work available, so the fallback may never fire and those AP
-   locations may never be checked. The walk cannot detect this by construction.
+1. **Location coverage under free automation — HOLDS.** Six tasks on the verify
+   seed are reported `thresholdFloored`, completing in the walk only because it
+   WAITS for them. Free automation reaches **130/130 locations on all four seeds
+   tested**, every `thresholdFloored` task included. `thresholdFloored` turns out
+   to be a *fragility* marker rather than an unreachability one: those are
+   precisely the tasks that strand first when perks are lost to a prestige that
+   is never re-granted (2-5 locations per seed under the shipped bridge's
+   grant-once semantics).
+
+   Two of this plan's own verdicts are therefore conservative, both because they
+   are reached under confinement. The convergence bar fails seed 4 (5 stalled
+   entries, 1 unengaged MILESTONE) on a world that plays to full coverage. And
+   the `setPerkCategoryTaskIds` fix, which this plan's §4c justified as "their AP
+   locations were never checked, in real play too", changes only TIMING out of
+   sample — it is load-bearing for the confined walk (7 unengaged entries without
+   it) and for early-game pacing, not for completability.
+
 2. **Emergent pacing.** In-sample gaps after §4c are p50 3 / mean 3.7 against
-   `resetsPerStep = 5`. Per §2 caveat 1 of the parent plan, a systematic
-   deviation is corrected with a factor on the target, not an architecture
-   change. Phase 4 also settles the tolerance band and the final `resetsPerStep`.
+   `resetsPerStep = 5`. Out of sample, pooled over 4 seeds (n=80): p50 2, mean
+   5.64 — the mean lands within 13% of target, so the pre-committed correction
+   factor is NOT applied and `resetsPerStep` stays 5. The distribution is
+   heavy-tailed and seed-sensitive (per-seed means 2.20 / 2.70 / 5.65 / 12.00)
+   because AP fill front-loads perks into early spheres. Tolerance band settled:
+   coverage is the hard gate, pacing advisory at `[0.4x, 3x]` of `resetsPerStep`
+   on the per-seed mean.
 
 ## 8. Parked (explicitly out of v1 scope, recorded 2026-07-08)
 
 - ~~Threshold `other`-category level metric vs AP locations~~ — **RESOLVED
-  2026-07-09 (user ruling + fix): see §4c.**
+  2026-07-09 (user ruling + fix): see §4c.** Phase 4 additionally settled the
+  parked `threshold_other_metric: resets` question: no change needed, the metric
+  strands nothing under any tested profile. Leave it at LEVEL.
 - Task-unlocks as AP items; further item ideas beyond perks + do-nothing.
 - Moving locations between spheres without disturbing sphere logic
   (backfill-lite); per-task gate-count spread (the full backfill mechanism —

@@ -50,9 +50,32 @@ AP fill re-randomizes placements, so costs are balanced **in-app, post-fill** by
 
 Two automation subtleties are worth knowing, because both decide whether an AP location is ever *reachable by automation*.
 
-**Suppressed perk tasks keep their perk category.** Grant suppression patches a perk task's `perk` to the `Count` sentinel, but the fork's two categorizers (`getThresholdCategory`, `autoFillCategory`) both gate on `def.perk != Count && !hasPerk(def.perk)`. Left alone, suppression would drop every perk task into the threshold `other` category — whose energy-per-level metric is cost-invariant (energy and XP both scale with cost, so the ratio cancels) and which perk tasks fail by design, since their `xp_mult` is deliberately tiny — and out of the cheapest-first auto-fill `perk` band. Automation would then refuse them at any cost and never check their locations. The `setPerkCategoryTaskIds` hook overrides both categorizers for the tasks the host names, winning even when the perk is already held (a multiworld routinely delivers a perk item before its task is done). The bridge maintains the list per region and retires an id once its location is checked; the balance pass does the same from its walk.
+**Suppressed perk tasks keep their perk category.** Grant suppression patches a perk task's `perk` to the `Count` sentinel, but the fork's two categorizers (`getThresholdCategory`, `autoFillCategory`) both gate on `def.perk != Count && !hasPerk(def.perk)`. Left alone, suppression drops every perk task into the threshold `other` category — whose energy-per-level metric is cost-invariant (energy and XP both scale with cost, so the ratio cancels) and which perk tasks fail by design, since their `xp_mult` is deliberately tiny — and out of the cheapest-first auto-fill `perk` band. The `setPerkCategoryTaskIds` hook overrides both categorizers for the tasks the host names, winning even when the perk is already held (a multiworld routinely delivers a perk item before its task is done). The bridge maintains the list per region and retires an id once its location is checked; the balance pass does the same from its walk.
+
+Without the override the *balance walk* stalls outright — confined by `setCostedTaskIds`, it cannot wait out a task nothing else unblocks, and it reported 7 unengaged entries. Free play is more forgiving: emergent runs reach full location coverage with or without the override, in every profile tested (standalone and pinned, Best-Task and End-Run all-skipped fallbacks), because the player re-enters the zone every run and the fallback eventually fires. What the override buys in real play is **timing** — the first perk lands at run 1 with it and run 19 without (SUMMARY Round 8). So it is load-bearing for the solver and for early-game pacing, not for completability.
 
 **The `other` category's level metric still drifts.** For tasks with no perk at all, that metric worsens roughly 1% per skill level, so a low-XP task can eventually be skipped at any cost. The balance pass reports these as `unengaged` and prices them at the largest cost it assigned anywhere (they carry no perk, so their cost is strategically irrelevant); the all-skipped Best-Task fallback is what completes them in play. The game's shipped all-toggles-off defaults are unaffected by any of this — only the tuned automation profile enables thresholds.
+
+## Prestige and perk grants (known bridge defect)
+
+`doPrestige()` sets every perk to `false`. Under AP-authoritative grants the local grants are suppressed and each AP item is received exactly once, so **unless something re-grants, a prestige costs the player every perk permanently.** This is reachable inside the v1 zone range: task 153 "Touch the Divine" is a `TaskType.Prestige` task in **zone 14**, and even a vanilla 15-zone run auto-prestiges once in ~237 runs.
+
+The intended semantics (ruled 2026-07-09):
+
+- a perk found in the player's **own** world behaves like the vanilla perk it replaced — it resets on prestige and is re-granted the next time *the task holding it* completes (the AP location stays checked; only the in-run perk state cycles);
+- a perk received from **another player's** world has no task to re-run, so it persists through prestige and the client re-grants it.
+
+The fork already affords both: `grantPerk` is idempotent, and `setTaskCompletionCallback` fires on *every* full completion (not just the first), so the own-world leg is simply "grant on every completion". `getFullState().prestigeCount` makes a prestige detectable — there is no dedicated prestige callback, since `_energy_reset_callback` fires for `doEnergyReset` and `doPrestige` alike.
+
+**`bridge.js` implements neither leg.** `_reconcilePerksFromInventory` grants each item *name* once ever (`_processedItems`, cleared only on `rulesLoaded`) and nothing reacts to a prestige. It also cannot distinguish own from foreign items: `getStateSnapshot().inventory` is a flat `{name: count}` map with no origin. Recovering the distinction needs either a location→item placement map in the sidecar payload (the bridge already has `ap_locations` and `checkedLocations`) or item origin exposed by `adapterClient` (AP's `ReceivedItems` carries `NetworkItem{item, location, player}`).
+
+Measured cost of the gap (SUMMARY Round 8, `randomized-pacing-no-regrant`): on every seed that prestiges, locations are stranded for good — 2/130, 3/130 and 5/130 across seeds 1, 2 and 4, and nine of those ten are exactly the tasks the balance pass flagged `thresholdFloored`. Seed 3 never prestiges and is unaffected. The harness models the intended semantics via `driver.mjs`'s `apRuntime` option; the bridge fix is still outstanding.
+
+## Emergent verification
+
+The balance pass grades its own homework: it measures milestone gaps inside the walk that assigns the costs, with automation confined to the frontier. The out-of-sample check lives in the stats harness — `CC/scripts/jta-stats/sweep-ap-seeds.mjs` regenerates a post-fill world per seed, solves it, and plays it under free automation, asserting **location coverage** first and pacing second. Findings: `CC/scripts/jta-stats/results/SUMMARY.md` Round 8. The in-app counterpart is the `jta-randomized-balanced-progression` test.
+
+Two conservatisms to expect. The pass's convergence bar is in-sample: seed 4 fails it (stalled entries, an unengaged milestone) yet plays to full coverage, so the sweep records a failing solve and keeps playing. And a `thresholdFloored` task is not "unreachable" — it is a fragility marker, reachable under free automation but the first thing to strand when perks are lost.
 
 ## Capabilities
 

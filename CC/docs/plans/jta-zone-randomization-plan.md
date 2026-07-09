@@ -627,62 +627,85 @@ standalone and `pinMaxEnergy` (substrate) budgets.
 - Measure solve runtime at load; Web Worker if it blows the interactive
   budget — decision point, not a blocker.
 
-### Phase 4 — Emergent verification (NEXT; scope widened 2026-07-09)
+### Phase 4 — Emergent verification — **DONE 2026-07-09**
 
-Phase 3's numbers are **in-sample**: the balance pass measures milestone gaps
+Phase 3's numbers were **in-sample**: the balance pass measures milestone gaps
 inside the very walk that assigns the costs, where `setCostedTaskIds` confines
-automation to the frontier, costs are assigned from state that arose under
-that confinement, and perks are granted by the walk in sphere-log order. Real
-play has none of those constraints. Phase 4 is the **out-of-sample** check:
-ship the patches, remove the scaffolding, let the game play itself, and
-measure what emerges.
+automation to the frontier, costs are assigned from state that arose under that
+confinement, and perks are granted by the walk in sphere-log order. Phase 4 was
+the **out-of-sample** check: ship the patches, remove the scaffolding, let the
+game play itself, and measure what emerges. Full findings: `CC/scripts/jta-stats/results/SUMMARY.md`
+Round 8; cross-seed table in `results/comparison-randomized-pacing-seeds.md`.
 
-- **Coverage is the first-class assertion (added 2026-07-09; the plan's
-  original "gaps within band" wording predates the all-tasks surface).** After
-  N runs of free automation, how many of the v1 AP locations were actually
-  checked? Anything short of the full set means a real player cannot finish
-  their world. The specific risk the walk **cannot** detect by construction:
-  tasks the pass reports as `thresholdFloored` complete only because the walk
-  *waits* for them (nothing else is runnable, so the all-skipped Best-Task
-  fallback grinds the skill up until MIN cost becomes affordable). In free
-  play automation always has something better to do, so the fallback may never
-  fire. This is also the only real out-of-sample test of the 2026-07-09
-  perk-category fix (`setPerkCategoryTaskIds`).
-- Harness `randomized-pacing-*` experiment family: measured reset gaps within
-  band (band defaults from Phase 0), **standalone-pool** tuned-defaults
-  automation (matches the `energyBonusSync` runtime per the 2026-07-08
-  supersession; pinned kept for comparison only); SUMMARY round. Inputs are
-  ready: Phase 1 gave the harness a `gameDataPatch` option for exactly this,
-  and `verify-jta-balance-pass.mjs` dumps the patch list via `JTA_BP_REPORT`.
-- **Pacing bias is a tuning result, not a redesign trigger** (§2 caveat 1,
-  pre-committed): `estimateResetsToComplete` assumes a dedicated grind while
-  automation splits attention, so a systematic deviation is corrected with a
-  factor on the target. In-sample after the perk-category fix: milestone gaps
-  p50 3 / mean 3.7 vs `resetsPerStep = 5` (~1.35× undershoot) — a hint about
-  magnitude only.
-- Phase 4 is where the deferred knobs get settled with data: the **tolerance
-  band** (§6.4, "pick after Phase 0" → really after the first green emergent
-  run), the final **`resetsPerStep`** value (default 5, user asked to revisit
-  if measurement says otherwise), and the parked
-  **`threshold_other_metric: resets`** question.
-- **⚠ The harness does not model the AP runtime yet — this is the bulk of the
-  implementation work (found 2026-07-09).** `driver.mjs` applies
-  `options.gameDataPatch` (cost multipliers) and nothing else, so a run with
-  only the balance patches measures randomized costs against **vanilla local
-  perk grants** — not the world we ship. Emulating AP solo play needs three
-  more things in the driver: the perk→`Count` **suppression** patches (the
-  pipeline emits them per zone as `task_patches`); `setPerkCategoryTaskIds`
-  with the not-yet-completed perk-task ids, retired on completion (without it
-  the 2026-07-09 categorization defect is re-introduced *inside* the
-  verification, and every perk task is threshold-skipped); and a
-  **placement-driven grant hook** — the perk item AP placed on location L is
-  granted when the task owning L first completes, not when its vanilla perk
-  task does, because the shuffle moves them apart. Placements come from
-  `regions[player][*].locations[].item` joined to the sidecars'
-  `ap_locations`. `setTaskCompletionCallback` is the natural hook; the driver
-  currently polls task arrays, so a callback is additive.
-- In-app smoke: randomized+balanced preset progresses zone 1→3 within
-  expected resets under playback automation.
+**Harness work (the bulk of it).** `driver.mjs` applied `options.gameDataPatch`
+and nothing else, so a run with only the balance patches would have measured
+randomized costs against vanilla local perk grants. A new `apRuntime` option adds
+the missing runtime: the forced perk-category ids (retired on first completion,
+mirroring `bridge.js _syncPerkCategoryTaskIds`), a **placement-driven** grant
+hook on `setTaskCompletionCallback` (the fill shuffle moves a perk item away from
+its native perk task), and exact first-completion recording from that same
+callback. Suppression patches ride the existing `gameDataPatch`, merged with the
+cost patches — the single list the bridge applies on region entry. With
+`apRuntime` absent the driver is byte-identical. New: `make-ap-config.mjs`,
+`summarize-ap-runs.mjs`, `sweep-ap-seeds.mjs`; `verify-jta-locations-roundtrip.mjs`
+gained `JTA_RT_SEED`.
+
+**Result 1 — the first-class assertion holds.** Across four independently
+generated worlds (seeds 1-4, each a full pipeline → world_generator → Generate.py
+round trip), free automation reaches **130/130 AP locations on every seed**, and
+every `thresholdFloored` task completes. The walk's fear — that those six tasks
+finish only because it *waits* for them — does not survive contact with free play.
+
+**Result 2 — what DOES strand locations is prestige without re-grant.** Task 153
+"Touch the Divine" is a `TaskType.Prestige` task in **zone 14**, so the "no
+prestige involvement" scoping assumption is false. `doPrestige()` wipes every
+perk; local grants are suppressed; AP items arrive once. Modelling `bridge.js` as
+shipped (`--no-regrant`) strands 2/130, 3/130 and 5/130 locations on seeds 1, 2
+and 4 (seed 3 never prestiges). Nine of those ten are `thresholdFloored` tasks.
+**This is a real defect in shipped code** — see the follow-up below.
+
+**Result 3 — two in-sample claims corrected.** (a) The `setPerkCategoryTaskIds`
+fix never changes coverage out of sample (standalone and pinned, Best-Task and
+End-Run); it changes *timing* substantially. It is load-bearing for the confined
+walk and for early-game pacing, not for completability. (b) The balance pass's
+convergence bar is conservative: seed 4 fails it yet plays to full coverage, so
+`sweep-ap-seeds.mjs` records a failing solve and keeps playing.
+
+**Result 4 — pacing (secondary).** Pooled milestone gaps, n=80 over 4 seeds:
+p50 2, mean 5.64 against `resetsPerStep = 5`; 82% of gaps ≤ 5. The mean is within
+13% of target, so per §2 caveat 1 **no correction factor is warranted** and the
+in-sample ~1.35× undershoot does not reproduce. But the distribution is
+heavy-tailed and seed-sensitive (per-seed means 2.20 / 2.70 / 5.65 / 12.00),
+because AP fill front-loads perks into early spheres: automation harvests cheap
+perks in a burst, then grinds. A *constant* milestone gap is not what emerges,
+and `resetsPerStep` alone cannot produce one — out of sample the ORDER of perk
+acquisition is chosen by automation, not by the walk. The `vanilla-costs` control
+(mean 10.00 vs 5.65 on seed 1) confirms the solve moves pacing toward target.
+
+**In-app smoke:** `jta-randomized-balanced-progression` — the shuffled 4-zone
+`jta_randomized_test` preset is balanced at rules load and played zones 1→3 by
+the game's own automation under `walkTo` (normal ticking, not instant mode:
+`completeTaskInstantly` is affordability-blind and would pass on a wedged world).
+15 AP locations checked, 3 perks granted, 3 loop resets.
+
+**Deferred knobs, now settled with data** (see §6.4 and §8):
+- `resetsPerStep` **stays 5**.
+- **Tolerance band**: coverage is the hard gate (full coverage on every seed, or
+  the world is broken); pacing is advisory, banded on the *per-seed mean* gap at
+  `[0.4×, 3×]` of `resetsPerStep`. Anything tighter fails seed 4 for reasons that
+  are a property of fill, not of the solve.
+- **`threshold_other_metric: resets`**: no change needed; leave it at LEVEL.
+
+**Follow-up (not Phase 4's to fix): the bridge grant semantics.** Per the
+2026-07-09 ruling an own-world perk resets on prestige and is re-granted when the
+task holding it next completes, while a foreign perk persists. `bridge.js`
+implements neither leg (`_reconcilePerksFromInventory` grants each item name once
+ever; nothing reacts to a prestige), and it cannot even tell own from foreign —
+`getStateSnapshot().inventory` is a flat `{name: count}` map with no origin.
+Fixing it needs a location→item placement map in the sidecar payload, or item
+origin exposed by `adapterClient`. The fork already affords both legs
+(`grantPerk` is idempotent; `setTaskCompletionCallback` fires on every
+completion; `getFullState().prestigeCount` makes a prestige detectable).
 
 ### Phase 5 — Synthetic generation (the destination — **deferred until after v1 ships**; v1 = Phases 1–4 at zones 0–14 scope)
 - Fork Tier-2 hook (`replaceZones` + derived-map refresh).
@@ -724,7 +747,12 @@ measure what emerges.
    *skills* deflate a new seed's pacing. Options when it bites: per-preset
    save keying (already deferred once), or solver assumes fresh-save state.
    Flag for first playtest.
-4. **Tolerance band + intra-step split defaults** (Q6): pick after Phase 0.
+4. **Tolerance band + intra-step split defaults** (Q6) — **SETTLED Phase 4
+   (2026-07-09).** Coverage is the hard gate; pacing is advisory, banded on the
+   per-seed MEAN milestone gap at `[0.4x, 3x]` of `resetsPerStep` (2-15 at the
+   default of 5). `resetsPerStep` stays 5: pooled emergent mean 5.64 vs target 5
+   is no systematic deviation, so no correction factor. Intra-step split keeps
+   the category fractions (Travel/Mandatory 0.10, Normal 0.25, Boss 0.5).
 5. **Multiworld pacing refinement** (Q3): post-fill sphere-log pass (in-app,
    Loops-generator analog) — deferred unless solo-approximate pacing proves
    wrong in real multiworld play.
