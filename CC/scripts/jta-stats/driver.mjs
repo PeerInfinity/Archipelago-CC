@@ -22,54 +22,13 @@
 
 // The user's tested play profile (numeric threshold defaults are already the
 // tuned values, so only booleans + threshold_all_skipped need setting).
-export function baselineMods() {
-  const on = [
-    "auto_haste",
-    "auto_lightning",
-    "auto_use_cycle",
-    "auto_use_free_items",
-    "artifact_tasks_item_cycle_only",
-    "auto_dreamcatcher",
-    "auto_ring",
-    "auto_prioritize",
-    "auto_prestige",
-    "auto_buy_cheapest",
-    // Unlock Savings ON (user ruling 2026-07-06, post-Round-6): the game's
-    // toggles still all ship OFF, but this profile models play with the
-    // automation explicitly enabled, and there we use the settings that give
-    // the best results — savings is a measured pure win in both spark states.
-    "auto_buy_budget_enabled",
-    "resume_automation_on_reset",
-    "force_automation",
-    // NOT award_spark_on_discovery (flipped OFF 2026-07-06): the game's own
-    // default is false, and Round 5 showed discovery spark is load-bearing —
-    // it funds Divinity purchases with zero prestiges, which contaminated
-    // every earlier sweep. Spark-on runs are an explicit override now
-    // (modOverrides: { award_spark_on_discovery: true }); legacy experiments
-    // in experiments.mjs get that override injected automatically.
-    "auto_continue_energy_reset",
-    "suppress_prestige_popup",
-    "show_spark_stats",
-    "instant_mode_allowed",
-    "threshold_master",
-    "threshold_perk_affordable_enabled",
-    "threshold_perk_unaffordable_enabled",
-    "threshold_combat_enabled",
-    "threshold_item_enabled",
-    "threshold_prestige_enabled",
-    "threshold_progression_enabled",
-    "threshold_unlocker_enabled",
-    "threshold_other_enabled",
-    "auto_prestige_stall_enabled",
-    // NOT queue_cycle (mutually exclusive with auto_prioritize),
-    // NOT instant_mode (driven via window.setInstantMode instead),
-    // NOT auto_prestige ratio/target/wealth conditions (stall-only profile).
-  ];
-  const mods = {};
-  for (const name of on) mods[name] = true;
-  mods.threshold_all_skipped = 2; // Best Task
-  return mods;
-}
+// The automation profile lives in frontend/modules/jtaBalance/
+// automationProfile.js, shared with the Pass-B balance pass: that pass
+// inverts the calibration curve THIS profile produced, so the two must not
+// drift. Re-exported here so the harness's existing callers are unchanged.
+import { baselineMods } from "../../../frontend/modules/jtaBalance/automationProfile.js";
+
+export { baselineMods };
 
 // MARK: Purchase policies (Divinity buy-strategy experiments)
 //
