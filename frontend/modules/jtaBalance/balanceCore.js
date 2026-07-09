@@ -30,16 +30,17 @@
  * bias — estimate at decision time vs resets actually taken — so we invert
  * through the calibration curve rather than against the raw estimator.
  *
- * That curve has two hard bounds, and they are properties of the game:
- *   - a FLOOR (~6 resets): even an affordable task waits for the queue;
- *   - a PLATEAU (~14.7): past estimate ~10 skill XP compounds across resets
- *     while the estimator holds the boost frozen.
- * Targets outside [floor, plateau] cannot be reached by cost alone. Per the
- * 2026-07-08 ruling they are CLAMPED and counted, and Phase 4 measures what the
- * clamping actually costs in felt pacing. A below-floor target lands the task
- * at minimum cost (it will complete as soon as automation reaches it); an
- * above-plateau target aims at the CHEAPEST estimate that still predicts the
- * plateau, since anything past that buys cost without buying delay.
+ * That curve has a FLOOR of ~6 resets, and it is a property of the game: even a
+ * task that is affordable right now waits for automation's priority queue to
+ * reach it. Targets below it cannot be reached by cost at all. Per the
+ * 2026-07-08 ruling such targets are CLAMPED (the task lands at minimum cost)
+ * and counted, and Phase 4 measures what the clamping costs in felt pacing.
+ *
+ * The curve's upper end (~19 resets) is a SAMPLING LIMIT, not a plateau — the
+ * measured medians are still climbing there. A target above it clamps to the
+ * cheapest estimate that reaches the top of the measured range, because we have
+ * no evidence that paying more buys more delay. The v1 anchor curve's largest
+ * gap is 14, so this end is not normally exercised.
  */
 
 // TaskType (zones.ts). Duplicated as an integer map because the fork exposes

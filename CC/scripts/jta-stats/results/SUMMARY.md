@@ -296,46 +296,70 @@ spark-off; 20 is strictly kindest to spark-on.
 
 ## Round 7 — estimator calibration for the balancer (calibration-*-z14.json, 2026-07-08)
 
-Phase 3c of the zone-randomization arc. `derive-calibration.mjs` joins Phase
-0's raw `estimatorSamples` (`[taskId, run, estimate]`) against the run each
-task actually completed on, restricted to **zones 0–14** and excluding the four
-SBtV-gated tasks — the restriction SUMMARY Round 5 asked for, because the
-whole-game table in `vanilla-profile.json` is tail-dominated under spark-off
-and comes out non-monotonic. Bucket medians (n ≈ 20) are noisy, so the emitted
-`curve` is an isotonic (pool-adjacent-violators) fit of median actual vs
-estimate, which the balancer inverts.
+Phase 3c of the zone-randomization arc. `derive-calibration.mjs` joins the raw
+`estimatorSamples` (`[taskId, run, estimate]`) against the run each task actually
+completed on, restricted to **zones 0-14** and excluding the four SBtV-gated
+tasks — the restriction SUMMARY Round 5 asked for, because the whole-game table
+in `vanilla-profile.json` is tail-dominated under spark-off and comes out
+non-monotonic. The emitted `curve` is an isotonic (pool-adjacent-violators) fit
+of median actual vs estimate, which the balancer inverts to pick costs.
+
+**The profile was regenerated for this round, and that mattered twice.**
+
+1. *The committed 2026-07-06 profile was stale.* It predates Round 6's shipped
+   defaults (`auto_prestige_stall_resets` 40->20, Unlock Savings on): re-running
+   the same command today completes all 269 tasks at run 2583 with 52 prestiges,
+   where the old file ran the full 3000 runs to 264/269. The balancer's forward
+   pass plays under today's `baselineMods()`, so it must be calibrated against
+   today's game.
+2. *`--sample-every 5` was too sparse to trust.* Bucket medians rested on n ~ 20.
+   Re-profiling with `--sample-every 1` (1487 usable samples vs 301) **removed an
+   apparent plateau** that the sparse run had shown past estimate ~10 — which had
+   been mistaken for skill-XP compounding beating the estimator's frozen boost.
+   It is not there. The curve climbs monotonically across the whole sampled range.
 
 **Standalone (the anchor, and now also the runtime — `energyBonusSync` default
-on).** 301 usable samples, 21 censored.
+on).** 1487 usable samples, 123 censored, sample-every 1.
 
 | estimate | n | actual p25 | p50 | p75 | isotonic p50 |
 |---|---|---|---|---|---|
-| 0 | 162 | 2 | 6 | 10 | 6 |
-| 1 | 22 | 4 | 6 | 11 | 6 |
-| 2 | 17 | 5 | 8 | 15 | 8 |
-| 3–5 | 24 | 6 | 10 | 20 | 10 |
-| 6–10 | 18 | 7 | 17 | 24 | 14.70 |
-| 11–20 | 17 | 10 | 15 | 24 | 14.70 |
-| 21–50 | 18 | 7 | 13 | 29 | 14.70 |
-| 51–200 | 23 | 7 | 14 | 38 | 14.70 |
+| 0 | 782 | 3 | 6 | 10 | 6 |
+| 1 | 102 | 4 | 7 | 16 | 7 |
+| 2 | 61 | 6 | 9 | 14 | 9 |
+| 3-5 | 124 | 5 | 10 | 19 | 10 |
+| 6-10 | 103 | 6 | 11 | 19 | 11 |
+| 11-20 | 78 | 10 | 16 | 22 | 14.91 |
+| 21-50 | 94 | 8 | 14 | 27 | 14.91 |
+| 51-200 | 143 | 9 | 19 | 32 | 19 |
 
-Two bounds fall out, and they are properties of the game, not of the fit:
+One bound is real, the other is not:
 
-- **Floor ≈ 6 resets.** Even at estimate 0 ("affordable right now") the median
-  task waits ~6 resets, because automation works a priority queue. p25 = 2, so
-  it's a soft floor.
-- **Plateau ≈ 14.7 resets.** Past estimate ~10 the median stops climbing: skill
-  XP compounds across resets while the estimator holds the current boost frozen,
-  so grossly expensive tasks land sooner than it predicts.
+- **Floor ~6 resets — a game property.** Even at estimate 0 ("affordable right
+  now") the median task waits ~6 resets, because automation works a priority
+  queue. It rests on the largest bucket (782 samples), and p25 = 3, so it is a
+  soft floor. Targets below it are unreachable by `cost_multiplier` at all.
+- **Upper end ~19 resets — a sampling limit, not a plateau.** It is simply the
+  median for the highest estimate bucket observed; the curve is still climbing.
+  The v1 anchor curve's largest gap is 14, so this end is not normally exercised.
 
-So the reachable pacing window for `cost_multiplier` alone is **[6, 14.7]**.
-The v1 anchor curve's 21 perk-milestone gaps (p50 = 7, max 14 excluding the
-SBtV straggler) sit mostly inside it; the seven gaps below 6 clamp to estimate
-0. This is the "achievable pacing accuracy is bounded by the skill
-trajectories" bound the plan predicted (§3 Q7 skills sub-policy, §2 caveat 1).
+So the reachable pacing window is **[6, 19]**, and of the 21 anchor-curve perk
+gaps the ones below 6 clamp to minimum cost. This is the "achievable pacing
+accuracy is bounded by the skill trajectories" bound the plan predicted (plan
+Sec 3 Q7 skills sub-policy, Sec 2 caveat 1) — but it binds only from below.
 
-**pinned100, for comparison — floor 27.4, plateau 41.1.** A pinned-pool runtime
-could not hit the standalone anchor curve at all: its *floor* is double the
-curve's median gap. This independently corroborates the 2026-07-08 ruling that
-made `energyBonusSync` the default (balancer targets the standalone curve
-against a matching standalone runtime, and drops pin-compensation).
+**The z0-14 anchor curve is unchanged** across the stale profile, a fresh
+prestige-on profile, and a fresh prestige-free profile
+(`profile-vanilla.mjs --no-prestige`, added this round): all three give perk-gap
+sequence `[0,4,5,7,4,6,2,6,14,8,8,4,6,8,10,10,8,2,14,8]`, p50 = 7. Only the
+trailing SBtV straggler moves (70 -> 91 with prestige on), and v1 excludes those
+four tasks. **Prestige is therefore not a confound for the zone-0-14 curve**, and
+the solver keeps `auto_prestige` on, matching the profile that produced the
+anchor curve. (Mastery of Time's zone skip awards items and perks normally — it
+routes through `doAllTaskRepsForFree` -> `progressTask` -> `onFullyFinishTask` —
+so skipping loses nothing.)
+
+**pinned100, for comparison — floor 28.2.** A pinned-pool runtime could not hit
+the standalone anchor curve at all: its *floor* is four times the curve's median
+gap. This independently corroborates the 2026-07-08 ruling that made
+`energyBonusSync` the default (balancer targets the standalone curve against a
+matching standalone runtime, and drops pin-compensation).

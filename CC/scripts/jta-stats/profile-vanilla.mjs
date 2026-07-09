@@ -41,13 +41,32 @@ const ZONE_LIMIT = Number(getArg("--zone-limit", 30));
 const SAMPLE_EVERY = Number(getArg("--sample-every", 5));
 const ESTIMATOR_CAP = 200;
 
+// Prestige axis. The balancer's forward pass plays under this same profile, and
+// the Phase 3c calibration curve is only a valid correction for the automation
+// that produced it — so if the solver ever runs prestige-free, the curve has to
+// be measured prestige-free too. --label keeps such a run from overwriting the
+// committed anchor-curve profile.
+const NO_PRESTIGE = args.includes("--no-prestige");
+const LABEL = getArg("--label", NO_PRESTIGE ? "noprestige" : "");
+const SUFFIX = LABEL ? `-${LABEL}` : "";
+const profilingModOverrides = () => ({
+  // Profiling profile = tuned defaults MINUS Award Spark on Discovery
+  // (user ruling 2026-07-06): discovery spark funds Divinity purchases
+  // without prestiging and distorts the vanilla pacing curve the
+  // randomizer targets.
+  award_spark_on_discovery: false,
+  ...(NO_PRESTIGE
+    ? { auto_prestige: false, auto_prestige_stall_enabled: false }
+    : {}),
+});
+
 const VARIANTS = {
   standalone: { pinMaxEnergy: null },
   pinned100: { pinMaxEnergy: 100 },
 };
 
 const rawPath = (variant) =>
-  path.join(resultsDir, `vanilla-profile-raw-${variant}.json`);
+  path.join(resultsDir, `vanilla-profile-raw-${variant}${SUFFIX}.json`);
 
 // MARK: static profile ------------------------------------------------------
 
@@ -212,11 +231,7 @@ async function runChildVariant(variantName) {
     pinMaxEnergy: VARIANTS[variantName].pinMaxEnergy,
     logEvery: 100,
     onRunBoundary,
-    // Profiling profile = tuned defaults MINUS Award Spark on Discovery
-    // (user ruling 2026-07-06): discovery spark funds Divinity purchases
-    // without prestiging and distorts the vanilla pacing curve the
-    // randomizer targets.
-    modOverrides: { award_spark_on_discovery: false },
+    modOverrides: profilingModOverrides(),
   });
 
   fs.mkdirSync(resultsDir, { recursive: true });
@@ -569,6 +584,8 @@ if (childVariant) {
         String(ZONE_LIMIT),
         "--sample-every",
         String(SAMPLE_EVERY),
+        ...(NO_PRESTIGE ? ["--no-prestige"] : []),
+        ...(LABEL ? ["--label", LABEL] : []),
       ],
       { stdio: "inherit" }
     );
@@ -578,14 +595,14 @@ if (childVariant) {
 
   const profile = {
     generatedAt: new Date().toISOString(),
-    options: { maxRuns: MAX_RUNS, zoneLimit: ZONE_LIMIT, sampleEvery: SAMPLE_EVERY },
+    options: { maxRuns: MAX_RUNS, zoneLimit: ZONE_LIMIT, sampleEvery: SAMPLE_EVERY, noPrestige: NO_PRESTIGE, label: LABEL },
     static: staticProfile,
     variants,
   };
   fs.mkdirSync(resultsDir, { recursive: true });
-  const outJson = path.join(resultsDir, "vanilla-profile.json");
+  const outJson = path.join(resultsDir, `vanilla-profile${SUFFIX}.json`);
   fs.writeFileSync(outJson, JSON.stringify(profile, null, 2));
-  const outMd = path.join(resultsDir, "VANILLA-PROFILE.md");
+  const outMd = path.join(resultsDir, `VANILLA-PROFILE${SUFFIX ? SUFFIX.toUpperCase() : ""}.md`);
   fs.writeFileSync(outMd, buildReport(profile));
   console.log(`[profile] wrote ${outJson}`);
   console.log(`[profile] wrote ${outMd}`);

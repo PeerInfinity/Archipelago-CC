@@ -21,22 +21,28 @@
  * non-monotonic. SUMMARY.md Round 5 says to derive the balancer's curve from
  * the zone<=14 samples instead. That is what this script does.
  *
- * Two properties of the resulting curve are load-bearing for the balancer, and
- * both are real bounds on how precisely cost can pace anything:
+ * One property of the resulting curve is load-bearing, and it is a real bound on
+ * how precisely cost can pace anything:
  *
- *   1. A FLOOR. Even at estimate 0 ("completable right now") the median task
- *      still takes ~6 resets to actually complete, because automation works a
- *      priority queue and doesn't reach it immediately. Targets below the floor
- *      are unreachable by cost alone.
- *   2. A PLATEAU. Past estimate ~10 the median actual stops climbing: skill XP
- *      compounds across resets while the estimator holds the current boost
- *      frozen, so grossly expensive tasks land sooner than predicted. Targets
- *      above the plateau are unreachable by cost alone.
+ *   A FLOOR. Even at estimate 0 ("completable right now") the median task still
+ *   takes ~6 resets to actually complete, because automation works a priority
+ *   queue and doesn't reach it immediately. Targets below the floor are
+ *   unreachable by cost alone. This is robust: it rests on the largest bucket
+ *   (est 0 carries most samples).
  *
- * Because bucket medians are noisy (n ~ 20/bucket) and not monotone, the
- * emitted `curve` is an isotonic (pool-adjacent-violators) fit of median actual
- * against estimate. The balancer inverts that monotone curve and clamps to
- * [floor, plateau], reporting any target it could not reach.
+ * `floorResets` and `plateauResets` are simply the ends of the measured curve.
+ * The upper end is a SAMPLING LIMIT, not a game property — it is the median
+ * actual for the highest estimate bucket we observed, and the curve is still
+ * climbing there. (An earlier sparse run at --sample-every 5 showed the medians
+ * flattening past estimate ~10 and that was read as a "plateau" caused by skill
+ * XP compounding; --sample-every 1 quintupled the samples and the flattening
+ * disappeared. Bucket medians at n ~ 20 are not to be trusted.)
+ *
+ * Because bucket medians are still somewhat noisy and need not come out
+ * monotone, the emitted `curve` is an isotonic (pool-adjacent-violators) fit of
+ * median actual against estimate. The balancer inverts that monotone curve and
+ * clamps to [floorResets, plateauResets], reporting any target it could not
+ * reach.
  *
  * Usage:
  *   node CC/scripts/jta-stats/derive-calibration.mjs [--zone-limit 14] [--variant standalone]
@@ -70,10 +76,14 @@ const BUCKETS = [[0, 0], [1, 1], [2, 2], [3, 5], [6, 10], [11, 20], [21, 50], [5
 const ESTIMATOR_CAP = 200;
 
 function parseArgs(argv) {
-    const out = { zoneLimit: 14, variant: 'standalone' };
+    // --label matches profile-vanilla.mjs's: it selects which profiling run to
+    // read (e.g. --no-prestige writes the "noprestige" label) and keeps a
+    // re-derivation from overwriting the committed curve.
+    const out = { zoneLimit: 14, variant: 'standalone', label: '' };
     for (let i = 2; i < argv.length; i++) {
         if (argv[i] === '--zone-limit') out.zoneLimit = Number(argv[++i]);
         else if (argv[i] === '--variant') out.variant = argv[++i];
+        else if (argv[i] === '--label') out.label = argv[++i];
         else throw new Error(`unknown arg ${argv[i]}`);
     }
     return out;
@@ -119,9 +129,10 @@ function isotonic(ys, ws) {
 }
 
 function main() {
-    const { zoneLimit, variant } = parseArgs(process.argv);
-    const rawPath = path.join(RESULTS, `vanilla-profile-raw-${variant}.json`);
-    const profPath = path.join(RESULTS, 'vanilla-profile.json');
+    const { zoneLimit, variant, label } = parseArgs(process.argv);
+    const suffix = label ? `-${label}` : '';
+    const rawPath = path.join(RESULTS, `vanilla-profile-raw-${variant}${suffix}.json`);
+    const profPath = path.join(RESULTS, `vanilla-profile${suffix}.json`);
     for (const p of [rawPath, profPath]) {
         if (!fs.existsSync(p)) throw new Error(`missing ${p} — run profile-vanilla.mjs first`);
     }
@@ -169,24 +180,27 @@ function main() {
         generatedAt: null,       // stamped by the caller if wanted; kept null for byte-stable reruns
         source: path.basename(rawPath),
         variant,
+        label,
         zoneLimit,
         excludedTaskIds: [...SBTV_GATED_TASK_IDS],
         estimatorCap: ESTIMATOR_CAP,
         sampleCount: pairs.length,
         censoredCount: censored,
-        // The reachable pacing window. The balancer clamps every target into
-        // it and reports the ones it had to clamp — a target outside the window
-        // cannot be hit by cost_multiplier alone at this point in the run.
+        // The reachable pacing window. The balancer clamps every target into it
+        // and reports the ones it had to clamp. `floorResets` is a real game
+        // property (automation's queue). `plateauResets` is only the top of the
+        // MEASURED range — the curve is still climbing there — so a target above
+        // it is not "impossible", merely outside what this profile observed.
         floorResets: curve[0].actualP50,
         plateauResets: curve[curve.length - 1].actualP50,
         buckets,
         curve,
     };
 
-    const outPath = path.join(RESULTS, `calibration-${variant}-z${zoneLimit}.json`);
+    const outPath = path.join(RESULTS, `calibration-${variant}${suffix}-z${zoneLimit}.json`);
     fs.writeFileSync(outPath, `${JSON.stringify(out, null, 2)}\n`);
 
-    console.log(`variant=${variant} zoneLimit=${zoneLimit}`);
+    console.log(`variant=${variant}${label ? ` label=${label}` : ''} zoneLimit=${zoneLimit}`);
     console.log(`usable samples: ${pairs.length} (censored: ${censored})`);
     console.log(`${'estimate'.padStart(10)} ${'n'.padStart(5)} ${'p25'.padStart(5)} ${'p50'.padStart(5)} ${'p75'.padStart(5)} ${'isotonic'.padStart(9)}`);
     for (let i = 0; i < buckets.length; i++) {

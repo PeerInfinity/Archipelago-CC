@@ -561,14 +561,21 @@ standalone and `pinMaxEnergy` (substrate) budgets.
 > required). At v1 scope the exported log now has 21 perk milestones — 1:1 with
 > the anchor curve. This resolves open question 9 (loose over strict) in practice.
 >
-> **Phase 3c (DONE `394456512`).** Calibration re-derived from raw zone≤14
-> samples (`derive-calibration.mjs`, SUMMARY Round 7). It bounds what this phase
-> can achieve: cost alone paces only within **[6, 14.7] resets** — a FLOOR (an
-> affordable task still waits for automation's queue) and a PLATEAU (skill XP
-> compounds while the estimator freezes the boost). Seven of the 21 anchor gaps
-> are below the floor; **RULED: clamp to minimum cost, count, and measure in
-> Phase 4.** The pinned100 curve's floor is 27.4, which independently confirms the
-> `energyBonusSync` supersession above.
+> **Phase 3c (DONE, refreshed 2026-07-08).** Calibration re-derived from raw
+> zone≤14 samples (`derive-calibration.mjs`, SUMMARY Round 7). The profile was
+> regenerated first, and that mattered twice: the committed 2026-07-06 profile
+> predated Round 6's shipped defaults, and `--sample-every 5` was too sparse
+> (n≈20/bucket) to trust. At `--sample-every 1` (1487 samples vs 301) the
+> reachable pacing window is **[6, 19] resets**. The **floor of 6 is a real game
+> property** — an affordable task still waits for automation's priority queue —
+> and anchor gaps below it clamp to minimum cost (**RULED: clamp, count, measure
+> in Phase 4**). The upper end is only a *sampling limit*: an apparent "plateau
+> past estimate ~10" in the sparse run **disappeared** under dense sampling, so
+> that claim is withdrawn. The z0–14 anchor curve is unchanged across stale,
+> prestige-on and prestige-free profiles (only the excluded SBtV straggler
+> moves), so **prestige is not a confound** and the solver keeps `auto_prestige`
+> on. pinned100's floor is 28.2, independently confirming the `energyBonusSync`
+> supersession above.
 >
 > **Solver home (RULED + spiked):** a Web Worker importing the submodule's
 > committed `build/*.js` behind shared DOM stubs. `estimateResetsToComplete` is a
