@@ -307,6 +307,65 @@ anchor-curve replay is superseded by the constant knob), `costZone`-style
 zone-batch assignment, the `setAutomationEndZone` confinement attempt, and
 the already-complete fallback counting.
 
+### 4c. The suppressed-perk-task defect and its fix (2026-07-09)
+
+The `unengaged` tasks Phase 3d reported were not a pacing curiosity — they
+were a **defect introduced by grant suppression**, reaching real AP play, not
+just the solver.
+
+Suppression patches a perk task's `perk` -> `PerkType.Count`. Both of the
+fork's categorizers gate on the same condition,
+`def.perk != Count && !hasPerk(def.perk)`:
+
+- `getThresholdCategory` — the task drops out of `perk_affordable` /
+  `perk_unaffordable` (100% / 25% budgets, **resets** metric, which cost CAN
+  move) into `other` (1% budget, **level** metric). That metric is
+  `calcTaskEnergyCost / calcExpectedLevels`; XP is linear in cost, so the
+  **cost term cancels exactly** — no `cost_multiplier` can engage the task.
+  Worse, perk tasks carry deliberately tiny `xp_mult` (task 89 = 0.02, 104 =
+  0.1, 69 = 0.5) because the perk *is* the reward, so they fail an
+  XP-efficiency test by construction.
+- `autoFillCategory` — the task also loses its cheapest-first `"perk"`
+  priority band (an unnoticed second casualty), reordering the whole plan.
+
+The `!hasPerk` half bites independently: in a multiworld the perk item
+routinely arrives **before** its vanilla task is done, at which point even an
+unsuppressed perk task would fall to `other`.
+
+**Fix (user-proposed):** Tier-1 hook `setPerkCategoryTaskIds(ids | null)`
+forces both categorizers to treat the listed tasks as granting a
+currently-unearned perk, *regardless of `def.perk` or `hasPerk`*. Suppression
+itself is untouched. The host retires an id once the task's AP location is
+checked, so a finished perk task stops being prioritized every run — the
+bridge from `_reportedLocationNames`, the balance pass from the walk's
+completions. Standalone stays byte-identical (null default).
+
+**Result on the verify seed:** `unengaged` 7 -> **0**, threshold-clamped 25 ->
+14, and milestone gaps moved from p50 = 2 / mean 2.6 to **p50 = 3 / mean 3.7**
+against `resetsPerStep = 5` (the ~2.5x undershoot became ~1.35x, because perk
+milestones regained a cost-sensitive metric). Solve time 2.4 s.
+
+**Two further findings, both load-bearing:**
+
+1. **`unengaged` must be metric-aware.** "Skipped even at MIN cost" only means
+   "no cost can ever engage it" under the cost-invariant **level** metric.
+   Under **resets**/**rep** the task is merely unaffordable *right now* with
+   untrained skills — skills grow (the all-skipped Best-Task fallback grinds
+   them), so the walk must WAIT. This is not cosmetic: on the verify seed the
+   two survivors were task 134 (a perk task) and task 151, a **Mandatory**
+   task — and mandatory tasks disable Travel until finished, so pricing it as
+   a don't-care would have walled the player inside zone 14. With the
+   classification fixed, both complete by waiting and `unengaged` is 0.
+2. **Unengaged tail pricing (user ruling 2026-07-09):** genuinely unengaged
+   tasks carry no perk and are strategically irrelevant, so their cost does
+   not matter. They are repriced to the **largest cost the pass assigned to
+   anything**, once every other cost is settled — a deliberate don't-care
+   default, and better than the floor clamp's MIN (a MIN-cost task is
+   single-tick, which makes its whole zone free-skippable). Milestones are
+   excluded and reported as `unengagedMilestones`, a hard failure in the
+   verify script. Currently inert on the verify seed: nothing ends up
+   unengaged.
+
 ## 5. Worker + host module (Phase 3e — unchanged rulings, recorded)
 
 - **Web Worker** imports the submodule's committed `build/*.js` behind the
@@ -380,17 +439,8 @@ top of unlock chains and Mandatory-before-Travel.
 
 ## 8. Parked (explicitly out of v1 scope, recorded 2026-07-08)
 
-- **Threshold `other`-category level metric vs AP locations (found during
-  3d-pass; needs a ruling):** under the tuned automation profile
-  (`baselineMods`, `threshold_other` = LEVEL metric at 1% budget), some
-  tasks become permanently automation-skipped once skills outgrow their XP
-  yield — at ANY cost — and grant suppression recategorizes every former
-  perk task into that category. A real player running the tuned profile
-  would never auto-complete those AP locations. Candidate fixes:
-  `threshold_other_metric: resets` in the shared profile (measure first —
-  Round 6 found threshold values insensitive), a fork-side exemption for
-  AP-location tasks, or accept-and-document (default all-off players are
-  unaffected). The solver reports these as `unengaged`.
+- ~~Threshold `other`-category level metric vs AP locations~~ — **RESOLVED
+  2026-07-09 (user ruling + fix): see §4c.**
 - Task-unlocks as AP items; further item ideas beyond perks + do-nothing.
 - Moving locations between spheres without disturbing sphere logic
   (backfill-lite); per-task gate-count spread (the full backfill mechanism —

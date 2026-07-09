@@ -107,7 +107,10 @@ console.log(`walk: ${report.entryCount} entries (${report.order.logCovered} from
     + `${report.order.repairsApplied} repair moves)`);
 console.log(`${report.milestoneCount} perk milestones · ${report.costedTaskCount} cost patches · `
     + `skill-less ${report.skillless} · floor ${report.floorClamped} · threshold-clamped ${report.thresholdClamped}`);
-console.log(`stalled ${report.stalledEntries} · never-started ${report.neverStarted} · saturated ${report.saturated} · unengaged ${report.unengaged}`);
+console.log(`stalled ${report.stalledEntries} · never-started ${report.neverStarted} · saturated ${report.saturated} · `
+    + `unengaged ${report.unengaged} (milestones ${report.unengagedMilestones})`
+    + (report.unengagedCostMultiplier != null
+        ? ` · unengaged tail repriced to max cm ${report.unengagedCostMultiplier.toPrecision(3)}` : ''));
 
 console.log(`\n  # perk milestone                    zone-bucket target  gap  via`);
 let mi = 0;
@@ -147,6 +150,8 @@ if (report.entryCount !== Object.keys(apLocations).length) {
 if (report.stalledEntries) failures.push(`${report.stalledEntries} stalled entries`);
 if (report.neverStarted) failures.push(`${report.neverStarted} entries never started`);
 if (report.saturated) failures.push(`${report.saturated} saturated solves`);
+// A perk milestone automation refuses to run at any cost would strand progression.
+if (report.unengagedMilestones) failures.push(`${report.unengagedMilestones} unengaged MILESTONES`);
 if (failures.length) {
     console.log(`\nFAILED: ${failures.join(' · ')}`);
     process.exit(1);

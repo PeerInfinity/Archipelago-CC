@@ -408,6 +408,8 @@ function _handleLoadRegion(payload) {
     // carries no ap_locations/task_patches (base scope).
     _applyTaskPatches();
     _reseedReportedLocations();
+    // After the reseed, so already-checked perk tasks are retired immediately.
+    _syncPerkCategoryTaskIds();
     _reconcilePerksFromInventory();
 
     // Defensive: if static data isn't cached yet (e.g. the initial
@@ -487,6 +489,9 @@ function _handleTaskCompleted(task) {
         originator: 'jtaSubstrate',
     }, { initialTarget: 'bottom' });
     log('debug', `task ${task.id} (${task.name}) -> user:locationCheck (${locationName})`);
+    // The check has landed: this perk task no longer needs perk-category
+    // treatment, so automation stops prioritizing it every run.
+    _syncPerkCategoryTaskIds();
 }
 
 /**
@@ -501,6 +506,43 @@ function _reseedReportedLocations() {
     const checked = new Set(_client?.getStateSnapshot?.()?.checkedLocations ?? []);
     for (const locName of Object.values(map)) {
         if (checked.has(locName)) _reportedLocationNames.add(locName);
+    }
+}
+
+/**
+ * Tell the fork which suppressed perk tasks its automation must still judge
+ * as unearned-perk tasks.
+ *
+ * Grant suppression patches a perk task's `perk` → the Count sentinel. But
+ * BOTH of the fork's categorizers gate on `def.perk != Count && !hasPerk(...)`,
+ * so suppression silently (a) drops the task into the `other` energy-threshold
+ * category, whose energy-per-level metric perk tasks fail BY DESIGN — their
+ * xp_mult is deliberately tiny because the perk is the reward — and (b) demotes
+ * it out of the cheapest-first auto-fill "perk" priority band. Automation then
+ * refuses the task at ANY cost, so its AP location is never checked. The
+ * `!hasPerk` half bites too: in a multiworld the perk item routinely arrives
+ * before its task is done.
+ *
+ * The set is the region's perk tasks whose AP location is not yet checked; an
+ * id is retired once its check lands, so a finished perk task stops being
+ * prioritized every run. Dormant when the region carries no task_patches.
+ */
+function _syncPerkCategoryTaskIds() {
+    if (typeof _w.setPerkCategoryTaskIds !== 'function') return;
+    const patches = _world?.task_patches;
+    if (!Array.isArray(patches) || patches.length === 0) return;
+    const ids = [];
+    for (const patch of patches) {
+        // Perk-suppression patches are exactly the ones carrying a `perk` field.
+        if (patch == null || !Object.prototype.hasOwnProperty.call(patch, 'perk')) continue;
+        const locationName = _resolveLocationName(patch.id);
+        if (locationName !== null && _reportedLocationNames.has(locationName)) continue;
+        ids.push(patch.id);
+    }
+    try {
+        _w.setPerkCategoryTaskIds(ids);
+    } catch (err) {
+        log('error', 'setPerkCategoryTaskIds threw:', err);
     }
 }
 
@@ -839,6 +881,10 @@ async function main() {
     // active region (grantPerk is persistence-safe even before a zone loads).
     _client.subscribeEventBus('stateManager:snapshotUpdated', () => {
         _reconcilePerksFromInventory();
+        // checkedLocations can grow outside our own completions (reconnect,
+        // co-op release), so re-derive the retirement set from the snapshot.
+        _reseedReportedLocations();
+        _syncPerkCategoryTaskIds();
     });
 
     // Region activation events (from procgenPlayer).

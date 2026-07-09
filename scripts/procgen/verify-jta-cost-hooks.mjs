@@ -5,6 +5,7 @@
  *
  *   window.setCostedTaskIds(ids | null)        — cost-assignment allowlist
  *   window.setTaskFirstStartCallback(fn | null) — first-start cost callback
+ *   window.setPerkCategoryTaskIds(ids | null)   — perk-categorization override
  *
  * Drives the fork's committed build/*.js under the shared headless DOM stubs
  * (frontend/modules/jtaBalance/headlessGameEnv.js, via node-env.mjs) with
@@ -22,6 +23,9 @@
  *      skip (free completion bypasses applyTaskRepStartEffects, so it must
  *      never touch a task whose cost isn't assigned); a fully-costed zone
  *      free-skips normally.
+ *   E. setPerkCategoryTaskIds restores perk categorization for a task whose
+ *      `perk` field was suppressed for AP-authoritative grants — and wins even
+ *      when the player already holds the perk (AP can deliver it early).
  *
  * Exit 0 on success (one PASS line per check), non-zero on any failure.
  *
@@ -54,6 +58,10 @@ const { loadJtaEnv } = await import(
 );
 const { baselineMods } = await import(
     pathToFileURL(path.join(repoRoot, 'frontend/modules/jtaBalance/automationProfile.js'))
+);
+// The PerkType.Count sentinel the pipeline patches perk tasks to (grant suppression).
+const { JTA_PERK_COUNT: JTA_PERK_COUNT_SENTINEL } = await import(
+    pathToFileURL(path.join(repoRoot, 'frontend/modules/jtaSubstrateWrapper/zoneTaskData.js'))
 );
 
 const env = await loadJtaEnv();
@@ -338,6 +346,63 @@ console.log('\n== Check D: free-zone skip respects the allowlist ==');
         `zone=${game.GAMESTATE.current_zone} stragglerCompleted=${completed.has(straggler)}`);
     win.setTaskCompletionCallback(null);
     win.setCostedTaskIds(null);
+    restoreCosts();
+}
+
+// ===========================================================================
+// Check E — setPerkCategoryTaskIds overrides both categorizers
+// ===========================================================================
+// AP-authoritative grants patch a perk task's `perk` -> Count to suppress the
+// local grant. Both getThresholdCategory and autoFillCategory gate on
+// `def.perk != Count && !hasPerk(def.perk)`, so suppression silently demotes
+// the task into the `other` threshold category (energy-per-level metric, which
+// perk tasks fail by design) and out of the cheapest-first auto-fill "perk"
+// band. The override must restore BOTH, and must win even when the player
+// already holds the perk (AP can deliver it before the task is done).
+console.log('\n== Check E: setPerkCategoryTaskIds restores perk categorization ==');
+{
+    setup(true);
+    // Zone 0's perk task: id 13 "How to Read" (perk Reading).
+    // Zone 0's only perk task (id 13, "Learn How to Read"): perk != the Count
+    // sentinel. Captured from live data, and its perk id is saved because the
+    // suppression patch below overwrites the field.
+    const perkTask = z0.find((t) => t.perk !== JTA_PERK_COUNT_SENTINEL);
+    const perkId = perkTask.perk;
+    const liveTask = () => game.GAMESTATE.tasks.find((t) => t.task_definition.id === perkTask.id);
+
+    const vanillaCat = sim.getThresholdCategory(liveTask());
+    check('E vanilla perk task is a perk threshold category',
+        String(vanillaCat).startsWith('perk_'), `category=${vanillaCat}`);
+
+    // Suppress the grant, exactly as the pipeline's task_patches do.
+    win.applyTaskPatches([{ id: perkTask.id, perk: JTA_PERK_COUNT_SENTINEL }]);
+    const suppressedCat = sim.getThresholdCategory(liveTask());
+    check('E suppression demotes it out of the perk category (the bug)',
+        !String(suppressedCat).startsWith('perk_'), `category=${suppressedCat}`);
+
+    // The override restores it.
+    win.setPerkCategoryTaskIds([perkTask.id]);
+    const restoredCat = sim.getThresholdCategory(liveTask());
+    check('E override restores the perk threshold category',
+        String(restoredCat).startsWith('perk_'), `category=${restoredCat}`);
+
+    // ... and wins even when the perk is already held (AP delivered it early).
+    win.grantPerk(perkId);
+    const heldCat = sim.getThresholdCategory(liveTask());
+    check('E override wins even when the perk is already held',
+        String(heldCat).startsWith('perk_'), `category=${heldCat}`);
+
+    // Retiring the id returns it to the suppressed behaviour.
+    win.setPerkCategoryTaskIds([]);
+    const retiredCat = sim.getThresholdCategory(liveTask());
+    check('E retiring the id drops it back out of the perk category',
+        !String(retiredCat).startsWith('perk_'), `category=${retiredCat}`);
+
+    // null clears entirely (standalone default).
+    win.setPerkCategoryTaskIds(null);
+    check('E null clears the override', true, 'no throw');
+    // Undo the suppression patch: applyTaskPatches mutates the shared static def.
+    win.applyTaskPatches([{ id: perkTask.id, perk: perkId }]);
     restoreCosts();
 }
 

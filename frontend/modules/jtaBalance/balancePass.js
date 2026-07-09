@@ -196,14 +196,28 @@ export async function runBalancePass({
 
     // Grants are AP-authoritative: suppress every perk task's local grant so
     // the only perks the solved game sees are the ones the walk hands over, in
-    // log order.
+    // log order. Capture the perk tasks BEFORE suppression erases `def.perk`:
+    // automation must keep judging them as unearned-perk tasks. Without the
+    // override, suppression drops them into the `other` threshold category,
+    // whose energy-per-level metric perk tasks fail BY DESIGN (their xp_mult is
+    // deliberately tiny — the perk is the reward), and out of the cheapest-first
+    // auto-fill "perk" band. `hasPerk` would short-circuit the vanilla check
+    // anyway once the walk grants the perk. The id is retired on first
+    // completion, mirroring the bridge retiring it once its AP location is
+    // checked.
+    const perkTaskIds = new Set();
     if (perkCountSentinel != null) {
         const suppress = [];
         for (const def of zones.TASK_LOOKUP.values()) {
-            if (def.perk !== perkCountSentinel) suppress.push({ id: def.id, perk: perkCountSentinel });
+            if (def.perk !== perkCountSentinel) {
+                perkTaskIds.add(def.id);
+                suppress.push({ id: def.id, perk: perkCountSentinel });
+            }
         }
         if (suppress.length) win.applyTaskPatches(suppress);
     }
+    const forcedPerkIds = new Set(perkTaskIds);
+    win.setPerkCategoryTaskIds(forcedPerkIds);
 
     // --- Walk state ---------------------------------------------------------
     let run = 1;
@@ -284,7 +298,10 @@ export async function runBalancePass({
             if (clamp.clamped) {
                 cm = clamp.cm;
                 rep.clamp = 'threshold';
-                rep.unengaged = Boolean(clamp.floored);
+                // Floored only means "unengageable at any cost" under the
+                // cost-invariant LEVEL metric (see isLevelMetricTask).
+                rep.unengaged = Boolean(clamp.floored) && isLevelMetricTask(taskId);
+                rep.thresholdFloored = Boolean(clamp.floored);
                 thresholdClamped++;
             } else if (cm === MIN_COST_MULTIPLIER) {
                 rep.clamp = 'floor';
@@ -326,7 +343,8 @@ export async function runBalancePass({
             cm = clamp.cm;
             rep.costMultiplier = cm;
             rep.clamp = 'threshold';
-            rep.unengaged = Boolean(clamp.floored);
+            rep.unengaged = Boolean(clamp.floored) && isLevelMetricTask(taskId);
+            rep.thresholdFloored = Boolean(clamp.floored);
             thresholdClamped++;
         } else if (cm === MIN_COST_MULTIPLIER && target > 0) {
             rep.clamp = 'floor';
@@ -343,6 +361,22 @@ export async function runBalancePass({
     // solver and in real AP play alike — so every solved cost is clamped down
     // to the largest multiplier the thresholds still engage with. Self-guarding
     // when thresholds are off (isThresholdSkipped is then always false).
+    // Is this task judged by the cost-INVARIANT energy-per-level metric? Only
+    // then does "skipped even at MIN cost" mean "no cost can ever engage it":
+    // energy and XP both scale with cost so the ratio cancels, and it worsens
+    // ~1% per skill level. Under the RESETS/REP metrics a floored task is
+    // merely unaffordable RIGHT NOW — skills grow (the all-skipped Best-Task
+    // fallback grinds them), so the walk must wait rather than write it off.
+    // Getting this wrong is not cosmetic: task 151 is a MANDATORY task, and
+    // mandatory tasks disable Travel until finished, so mispricing it as a
+    // don't-care would wall the player inside its zone.
+    const isLevelMetricTask = (taskId) => {
+        const def = zones.TASK_LOOKUP.get(taskId);
+        if (!def) return false;
+        const category = sim.getThresholdCategory(new zones.Task(def));
+        return game.GAMESTATE.mods[`threshold_${category}_metric`] === sim.THRESHOLD_METRIC_LEVEL;
+    };
+
     const clampToThresholdEngagement = (taskId, cm) => {
         const def = zones.TASK_LOOKUP.get(taskId);
         const skippedAt = (x) => {
@@ -398,6 +432,10 @@ export async function runBalancePass({
     };
 
     win.setTaskCompletionCallback((info) => {
+        // Retire a perk task from the forced-perk-category set the first time it
+        // completes — its AP location is checked from here on, so continuing to
+        // prioritize it every run would just burn energy for no reward.
+        if (forcedPerkIds.delete(info.id)) win.setPerkCategoryTaskIds(forcedPerkIds);
         if (frontier >= entries.length || info.id !== entries[frontier].taskId) return;
         advanceFrontier(true);
     });
@@ -480,9 +518,35 @@ export async function runBalancePass({
     win.setTaskFirstStartCallback(null);
     win.setTaskCompletionCallback(null);
     win.setCostedTaskIds(null);
+    win.setPerkCategoryTaskIds(null);
     // Prestige/reset paths can restart the render loop; leave it stopped so a
     // Node caller can exit and a worker isn't ticking a stubbed DOM.
     win.pauseGameLoop();
+
+    // UNENGAGED TAIL (user ruling 2026-07-09). What survives the perk-category
+    // override is the pre-existing drift of the `other` threshold category's
+    // energy-per-level metric: it is cost-INVARIANT (energy and XP both scale
+    // with cost, so the ratio cancels) and worsens ~1% per skill level, so
+    // automation eventually refuses these tasks at ANY cost. They carry no perk
+    // and are strategically irrelevant, so their cost does not matter — give
+    // them the LARGEST cost the pass assigned to anything, once every other cost
+    // is settled. That is a deliberate "don't care" default, and it beats the
+    // floor clamp's MIN: a task pinned at MIN is single-tick, which makes its
+    // whole zone free-skippable.
+    const unengagedIds = entryReports
+        .filter((r) => r.unengaged && r.completedRun == null && !r.milestone)
+        .map((r) => r.taskId);
+    let unengagedCm = null;
+    if (unengagedIds.length && patches.length) {
+        unengagedCm = Math.max(...patches.map((p) => p.cost_multiplier));
+        const unengagedSet = new Set(unengagedIds);
+        for (const p of patches) {
+            if (unengagedSet.has(p.id)) p.cost_multiplier = unengagedCm;
+        }
+        for (const r of entryReports) {
+            if (unengagedSet.has(r.taskId)) r.costMultiplier = unengagedCm;
+        }
+    }
 
     return {
         patches,
@@ -499,7 +563,15 @@ export async function runBalancePass({
             floorClamped,
             thresholdClamped,
             stalledEntries: entryReports.filter((r) => r.stalled).length,
+            // Floored by the thresholds but still cost-sensitive (RESETS/REP):
+            // waited for rather than written off. Informational.
+            thresholdFloored: entryReports.filter((r) => r.thresholdFloored).length,
             unengaged: entryReports.filter((r) => r.unengaged && r.completedRun == null).length,
+            // A MILESTONE that goes unengaged is an anomaly, not a don't-care:
+            // its perk gates progression, so it must never be left behind.
+            unengagedMilestones: entryReports
+                .filter((r) => r.unengaged && r.completedRun == null && r.milestone).length,
+            unengagedCostMultiplier: unengagedCm,
             neverStarted: entryReports.filter((r) => r.solvedRun == null && !r.stalled).length,
             totalResets: run - 1,
         },
