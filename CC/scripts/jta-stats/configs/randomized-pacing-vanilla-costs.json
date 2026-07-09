@@ -1,0 +1,155 @@
+{
+  "name": "randomized-pacing-vanilla-costs",
+  "_source": {
+    "rules": "frontend/presets/jta_loctest_roundtrip_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+    "report": null,
+    "seed": "14089154938208861744",
+    "playerId": "1"
+  },
+  "options": {
+    "zoneLimit": 15,
+    "excludeTaskIds": [
+      17,
+      28,
+      88,
+      158
+    ],
+    "maxRuns": 2000,
+    "gameDataPatch": [
+      {
+        "id": 13,
+        "perk": 47
+      },
+      {
+        "id": 27,
+        "perk": 47
+      },
+      {
+        "id": 34,
+        "perk": 47
+      },
+      {
+        "id": 37,
+        "perk": 47
+      },
+      {
+        "id": 43,
+        "perk": 47
+      },
+      {
+        "id": 54,
+        "perk": 47
+      },
+      {
+        "id": 58,
+        "perk": 47
+      },
+      {
+        "id": 64,
+        "perk": 47
+      },
+      {
+        "id": 69,
+        "perk": 47
+      },
+      {
+        "id": 74,
+        "perk": 47
+      },
+      {
+        "id": 84,
+        "perk": 47
+      },
+      {
+        "id": 89,
+        "perk": 47
+      },
+      {
+        "id": 90,
+        "perk": 47
+      },
+      {
+        "id": 104,
+        "perk": 47
+      },
+      {
+        "id": 114,
+        "perk": 47
+      },
+      {
+        "id": 118,
+        "perk": 47
+      },
+      {
+        "id": 124,
+        "perk": 47
+      },
+      {
+        "id": 134,
+        "perk": 47
+      },
+      {
+        "id": 138,
+        "perk": 47
+      },
+      {
+        "id": 144,
+        "perk": 47
+      },
+      {
+        "id": 155,
+        "perk": 47
+      }
+    ],
+    "apRuntime": {
+      "perkTaskIds": [
+        13,
+        27,
+        34,
+        37,
+        43,
+        54,
+        58,
+        64,
+        69,
+        74,
+        84,
+        89,
+        90,
+        104,
+        114,
+        118,
+        124,
+        134,
+        138,
+        144,
+        155
+      ],
+      "grants": {
+        "13": "Sunken Treasure",
+        "14": "Village Hero",
+        "21": "Reflections on the Journey",
+        "26": "Minor Time Compression",
+        "31": "Energetic Memory",
+        "36": "High Altitude Climbing",
+        "42": "Deep Sea Diving",
+        "45": "Mysterious Amulet",
+        "46": "Found Lost Temple",
+        "63": "Villager Gratitude",
+        "70": "Understanding of the Reset",
+        "74": "Purged Bureaucracy",
+        "76": "How to Write",
+        "86": "Experienced Traveler",
+        "95": "The Worm",
+        "99": "Walk Without Rhythm",
+        "100": "Attunement",
+        "125": "Energetic Spell",
+        "126": "Goblin Scourge",
+        "148": "How to Read",
+        "152": "Underground Connection"
+      },
+      "foreignPerks": [],
+      "regrantOnEveryCompletion": true
+    }
+  }
+}

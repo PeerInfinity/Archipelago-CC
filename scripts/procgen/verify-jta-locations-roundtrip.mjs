@@ -39,7 +39,12 @@ const GAME_NAME = 'JtA LocTest Roundtrip';
 const PRESET_DIR = path.join(repoRoot, 'frontend/presets/jta_loctest_roundtrip_worldgen');
 const PRESET_FILES_JSON = path.join(repoRoot, 'frontend/presets/preset_files.json');
 const OUTPUT_DIR = path.join(repoRoot, 'output');
-const SEED = 1;
+// Drives BOTH the pipeline's perk shuffle and Generate.py's fill, so a
+// different seed is a genuinely different world (different perk placements,
+// different sphere log). JTA_RT_SEED lets Phase 4 check that emergent location
+// coverage holds across seeds rather than on the one seed the balance pass was
+// developed against. Default 1 keeps the canonical AP_14089154938208861744.
+const SEED = Number(process.env.JTA_RT_SEED || 1);
 // Zone count. 3 keeps the round trip fast; JTA_RT_QUOTA=15 exercises the real
 // v1 scope (zones 0–14), where zone 14 demands 14 perks out of a 21-perk pool
 // — the configuration where the count-based gates are most likely to strand
@@ -76,11 +81,22 @@ function cleanup() {
         fs.rmSync(p, { recursive: true, force: true });
     }
     fs.rmSync(tmpRules, { force: true });
-    fs.rmSync(path.join(OUTPUT_DIR, 'AP_14089154938208861744.zip'), { force: true });
+    // Seed id is a hash of SEED, so remove whichever export zip this run made.
+    if (fs.existsSync(OUTPUT_DIR)) {
+        for (const f of fs.readdirSync(OUTPUT_DIR)) {
+            if (/^AP_\d+\.zip$/.test(f)) fs.rmSync(path.join(OUTPUT_DIR, f), { force: true });
+        }
+    }
     if (presetFilesBefore !== null) fs.writeFileSync(PRESET_FILES_JSON, presetFilesBefore);
 }
 
 try {
+    // A previous JTA_RT_KEEP=1 run leaves its export behind, and the seed id is
+    // a hash of SEED — so without this a re-run at a new seed would find two
+    // AP_* dirs and could not tell which one it just generated.
+    fs.rmSync(PRESET_DIR, { recursive: true, force: true });
+    fs.rmSync(WORLD_DIR, { recursive: true, force: true });
+
     // --- Pass A: JS pipeline ------------------------------------------
     // Substrate libraries register on import.
     await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js')));
@@ -194,8 +210,16 @@ try {
     run(py, ['Generate.py', '--weights_file_path', path.join(tmpTemplates, `${GAME_NAME}.yaml`),
         '--multi', '1', '--seed', String(SEED)]);
 
-    const apDir = path.join(PRESET_DIR, 'AP_14089154938208861744');
-    const exportedRules = JSON.parse(fs.readFileSync(path.join(apDir, 'AP_14089154938208861744_rules.json'), 'utf8'));
+    // Discover the export dir rather than hardcoding seed 1's id — the seed id
+    // is a hash of SEED, so JTA_RT_SEED changes it. PRESET_DIR is wiped before
+    // Pass A, so exactly one AP_* dir exists here.
+    const apDirs = fs.readdirSync(PRESET_DIR).filter((n) => n.startsWith('AP_'));
+    if (apDirs.length !== 1) {
+        throw new Error(`expected exactly one AP_* export in ${PRESET_DIR}, found ${apDirs.length}: ${apDirs}`);
+    }
+    const seedId = apDirs[0];
+    const apDir = path.join(PRESET_DIR, seedId);
+    const exportedRules = JSON.parse(fs.readFileSync(path.join(apDir, `${seedId}_rules.json`), 'utf8'));
     const exStr = JSON.stringify(exportedRules.preset_sidecars ?? {});
     ok('preset_sidecars' in exportedRules, 'Generate.py: exported rules.json keeps preset_sidecars');
     ok((exStr.match(/ap_locations/g) ?? []).length === QUOTA,
@@ -209,7 +233,7 @@ try {
         .reduce((a, r) => a + (r.locations ?? []).filter((l) => (l.name ?? '').includes('__')).length, 0);
     ok(exLocs === locCount, `Generate.py: exported rules.json keeps all ${locCount} jta locations (${exLocs})`);
 
-    const sphereLines = fs.readFileSync(path.join(apDir, 'AP_14089154938208861744_sphere_log.jsonl'), 'utf8')
+    const sphereLines = fs.readFileSync(path.join(apDir, `${seedId}_sphere_log.jsonl`), 'utf8')
         .split('\n').filter(Boolean).map((l) => JSON.parse(l));
     const sphereLocs = new Set();
     for (const e of sphereLines) {
@@ -244,7 +268,7 @@ try {
     ok(!sphere0Accessible.includes(victoryLocName),
         'Generate.py: Victory is NOT in logic at sphere 0 (zone gates hold)');
 
-    const spoiler = fs.readFileSync(path.join(apDir, 'AP_14089154938208861744_Spoiler.txt'), 'utf8');
+    const spoiler = fs.readFileSync(path.join(apDir, `${seedId}_Spoiler.txt`), 'utf8');
     const spoilerLocs = new Set(spoiler.match(/region_\d+_\d+__\d+/g) ?? []).size;
     ok(spoilerLocs === locCount, `Generate.py: spoiler lists all ${locCount} jta locations (${spoilerLocs})`);
 } finally {

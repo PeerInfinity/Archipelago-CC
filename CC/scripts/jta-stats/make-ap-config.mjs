@@ -72,6 +72,23 @@ if (!rulesPath || !outPath) {
         + '[--no-cost-patches] [--no-regrant] [--no-perk-category]');
     process.exit(2);
 }
+// Repeatable `--mod-override key=value` (value JSON-parsed, falling back to the
+// raw string). Lets a variant probe a different automation profile — e.g.
+// `--mod-override threshold_all_skipped=1` swaps the Best-Task all-skipped
+// fallback for End Run, which is what the baseline profile uses to rescue
+// threshold-skipped tasks.
+const modOverrides = {};
+for (let i = 0; i < args.length; i++) {
+    if (args[i] !== '--mod-override') continue;
+    const [k, ...rest] = String(args[i + 1] ?? '').split('=');
+    if (!k || !rest.length) {
+        console.error(`--mod-override expects key=value, got ${args[i + 1]}`);
+        process.exit(2);
+    }
+    const raw = rest.join('=');
+    try { modOverrides[k] = JSON.parse(raw); } catch { modOverrides[k] = raw; }
+}
+
 const noCostPatches = hasFlag('--no-cost-patches');
 if (!reportPath && !noCostPatches) {
     console.error('--report is required unless --no-cost-patches is set');
@@ -174,6 +191,7 @@ const options = {
     },
 };
 if (getArg('--pin-max-energy')) options.pinMaxEnergy = Number(getArg('--pin-max-energy'));
+if (Object.keys(modOverrides).length) options.modOverrides = modOverrides;
 
 const config = {
     name,

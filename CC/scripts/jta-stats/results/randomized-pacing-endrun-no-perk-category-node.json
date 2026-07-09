@@ -1,0 +1,4122 @@
+{
+  "options": {
+    "zoneLimit": 15,
+    "maxRuns": 2000,
+    "maxTicksPerRun": 200000,
+    "endZone": 99,
+    "excludeTaskIds": [
+      17,
+      28,
+      88,
+      158
+    ],
+    "skipBlocked": true,
+    "autoFillOrder": null,
+    "purchasePolicy": {
+      "kind": "cheapest"
+    },
+    "runToBudget": false,
+    "checkpointEvery": 100,
+    "gameDataPatch": [
+      {
+        "id": 16,
+        "cost_multiplier": 0.4983968405993143
+      },
+      {
+        "id": 15,
+        "cost_multiplier": 0.6481176883003203
+      },
+      {
+        "id": 13,
+        "cost_multiplier": 13.94857546475959
+      },
+      {
+        "id": 14,
+        "cost_multiplier": 0.16988242673501341
+      },
+      {
+        "id": 12,
+        "cost_multiplier": 0.46432893228912414
+      },
+      {
+        "id": 11,
+        "cost_multiplier": 2.1200329705149197
+      },
+      {
+        "id": 10,
+        "cost_multiplier": 1.7990510787385798
+      },
+      {
+        "id": 23,
+        "cost_multiplier": 0.6534597320535871
+      },
+      {
+        "id": 26,
+        "cost_multiplier": 5.700981696540758
+      },
+      {
+        "id": 27,
+        "cost_multiplier": 2.9591756455852765
+      },
+      {
+        "id": 25,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 22,
+        "cost_multiplier": 1.1267848497776771
+      },
+      {
+        "id": 24,
+        "cost_multiplier": 0.6481176883003203
+      },
+      {
+        "id": 21,
+        "cost_multiplier": 2.768429791111952
+      },
+      {
+        "id": 20,
+        "cost_multiplier": 1.2955233708274125
+      },
+      {
+        "id": 32,
+        "cost_multiplier": 0.06265799136368777
+      },
+      {
+        "id": 36,
+        "cost_multiplier": 1.9450931471961554
+      },
+      {
+        "id": 37,
+        "cost_multiplier": 0.3199393467812742
+      },
+      {
+        "id": 35,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 31,
+        "cost_multiplier": 30.926487217284688
+      },
+      {
+        "id": 34,
+        "cost_multiplier": 0.15158514830929717
+      },
+      {
+        "id": 33,
+        "cost_multiplier": 0.2361371296128246
+      },
+      {
+        "id": 30,
+        "cost_multiplier": 0.27912482904970737
+      },
+      {
+        "id": 42,
+        "cost_multiplier": 0.23981514711582133
+      },
+      {
+        "id": 45,
+        "cost_multiplier": 0.2186431861320317
+      },
+      {
+        "id": 47,
+        "cost_multiplier": 1.2962353766006407
+      },
+      {
+        "id": 48,
+        "cost_multiplier": 0.1407900776686364
+      },
+      {
+        "id": 46,
+        "cost_multiplier": 0.16988242673501341
+      },
+      {
+        "id": 44,
+        "cost_multiplier": 0.6323521596634001
+      },
+      {
+        "id": 41,
+        "cost_multiplier": 0.5166187616175225
+      },
+      {
+        "id": 43,
+        "cost_multiplier": 5.0195293804497
+      },
+      {
+        "id": 40,
+        "cost_multiplier": 2.41758588797223
+      },
+      {
+        "id": 54,
+        "cost_multiplier": 0.16727695937193157
+      },
+      {
+        "id": 57,
+        "cost_multiplier": 0.5341566214092436
+      },
+      {
+        "id": 58,
+        "cost_multiplier": 5.256754167745386
+      },
+      {
+        "id": 52,
+        "cost_multiplier": 0.15712726329683188
+      },
+      {
+        "id": 55,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 53,
+        "cost_multiplier": 0.0799079668714873
+      },
+      {
+        "id": 56,
+        "cost_multiplier": 0.6271826706517688
+      },
+      {
+        "id": 51,
+        "cost_multiplier": 0.6447984539181006
+      },
+      {
+        "id": 50,
+        "cost_multiplier": 0.13116637409292345
+      },
+      {
+        "id": 62,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 61,
+        "cost_multiplier": 0.06317444344854667
+      },
+      {
+        "id": 64,
+        "cost_multiplier": 0.05087653177060972
+      },
+      {
+        "id": 67,
+        "cost_multiplier": 0.2237604231789773
+      },
+      {
+        "id": 66,
+        "cost_multiplier": 0.606923880441315
+      },
+      {
+        "id": 65,
+        "cost_multiplier": 0.12969477736846183
+      },
+      {
+        "id": 63,
+        "cost_multiplier": 0.051205503264899595
+      },
+      {
+        "id": 60,
+        "cost_multiplier": 0.0921572279744318
+      },
+      {
+        "id": 77,
+        "cost_multiplier": 0.10826633983991173
+      },
+      {
+        "id": 74,
+        "cost_multiplier": 1.5080882844458003
+      },
+      {
+        "id": 72,
+        "cost_multiplier": 5.360220421788402
+      },
+      {
+        "id": 69,
+        "cost_multiplier": 0.9532499886290479
+      },
+      {
+        "id": 75,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 68,
+        "cost_multiplier": 0.28549591531084717
+      },
+      {
+        "id": 76,
+        "cost_multiplier": 30.422905007286214
+      },
+      {
+        "id": 73,
+        "cost_multiplier": 0.24004584436457635
+      },
+      {
+        "id": 71,
+        "cost_multiplier": 0.44201398368949296
+      },
+      {
+        "id": 70,
+        "cost_multiplier": 1.2486271586199278
+      },
+      {
+        "id": 83,
+        "cost_multiplier": 0.2782680860250817
+      },
+      {
+        "id": 82,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 84,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 86,
+        "cost_multiplier": 1740.700344664374
+      },
+      {
+        "id": 85,
+        "cost_multiplier": 24.802437369411997
+      },
+      {
+        "id": 81,
+        "cost_multiplier": 11.03821329048973
+      },
+      {
+        "id": 80,
+        "cost_multiplier": 1.539250591063218
+      },
+      {
+        "id": 95,
+        "cost_multiplier": 3.3017236435416244
+      },
+      {
+        "id": 96,
+        "cost_multiplier": 8.67321249712343
+      },
+      {
+        "id": 98,
+        "cost_multiplier": 1.741896264644882
+      },
+      {
+        "id": 93,
+        "cost_multiplier": 0.5192781643279988
+      },
+      {
+        "id": 87,
+        "cost_multiplier": 48.79714858899754
+      },
+      {
+        "id": 89,
+        "cost_multiplier": 72.69484326570239
+      },
+      {
+        "id": 91,
+        "cost_multiplier": 215.48293024950354
+      },
+      {
+        "id": 94,
+        "cost_multiplier": 97.68818088852764
+      },
+      {
+        "id": 99,
+        "cost_multiplier": 0.763019107692957
+      },
+      {
+        "id": 97,
+        "cost_multiplier": 5.659815473776904
+      },
+      {
+        "id": 92,
+        "cost_multiplier": 0.1423875684954663
+      },
+      {
+        "id": 90,
+        "cost_multiplier": 2042.729360263028
+      },
+      {
+        "id": 102,
+        "cost_multiplier": 2.734363528521053
+      },
+      {
+        "id": 106,
+        "cost_multiplier": 9.261890353837579
+      },
+      {
+        "id": 101,
+        "cost_multiplier": 1.099375693790275
+      },
+      {
+        "id": 100,
+        "cost_multiplier": 7.233248275960324
+      },
+      {
+        "id": 117,
+        "cost_multiplier": 4.55116044249894
+      },
+      {
+        "id": 116,
+        "cost_multiplier": 117.02295367703037
+      },
+      {
+        "id": 118,
+        "cost_multiplier": 369.28775122639314
+      },
+      {
+        "id": 104,
+        "cost_multiplier": 4515.194873329015
+      },
+      {
+        "id": 107,
+        "cost_multiplier": 712.1334523124514
+      },
+      {
+        "id": 112,
+        "cost_multiplier": 26.786380600969835
+      },
+      {
+        "id": 111,
+        "cost_multiplier": 522.9114196994605
+      },
+      {
+        "id": 105,
+        "cost_multiplier": 206.18308013892397
+      },
+      {
+        "id": 115,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 114,
+        "cost_multiplier": 52.780113337955704
+      },
+      {
+        "id": 113,
+        "cost_multiplier": 0.1632079303346418
+      },
+      {
+        "id": 110,
+        "cost_multiplier": 19.608560176483877
+      },
+      {
+        "id": 122,
+        "cost_multiplier": 0.1637104215037699
+      },
+      {
+        "id": 127,
+        "cost_multiplier": 6.477616854137063
+      },
+      {
+        "id": 126,
+        "cost_multiplier": 1489.3262709735016
+      },
+      {
+        "id": 121,
+        "cost_multiplier": 46.42651566417424
+      },
+      {
+        "id": 120,
+        "cost_multiplier": 0.5382635288529559
+      },
+      {
+        "id": 134,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 136,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 135,
+        "cost_multiplier": 798.8601763686879
+      },
+      {
+        "id": 133,
+        "cost_multiplier": 0.15793610862136667
+      },
+      {
+        "id": 131,
+        "cost_multiplier": 1762.1449196601434
+      },
+      {
+        "id": 125,
+        "cost_multiplier": 2.188631411932392
+      },
+      {
+        "id": 123,
+        "cost_multiplier": 5.0453684537305215
+      },
+      {
+        "id": 128,
+        "cost_multiplier": 16.1851469518749
+      },
+      {
+        "id": 124,
+        "cost_multiplier": 8495.288165834092
+      },
+      {
+        "id": 132,
+        "cost_multiplier": 0.2571277263360457
+      },
+      {
+        "id": 130,
+        "cost_multiplier": 3.3297773743341157
+      },
+      {
+        "id": 146,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 147,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 144,
+        "cost_multiplier": 8.46223572166142
+      },
+      {
+        "id": 142,
+        "cost_multiplier": 6.36864037983154
+      },
+      {
+        "id": 141,
+        "cost_multiplier": 85.22614384572188
+      },
+      {
+        "id": 140,
+        "cost_multiplier": 43.1202714721516
+      },
+      {
+        "id": 145,
+        "cost_multiplier": 58.24381196279543
+      },
+      {
+        "id": 137,
+        "cost_multiplier": 0.44590216718545506
+      },
+      {
+        "id": 138,
+        "cost_multiplier": 12190.91157888549
+      },
+      {
+        "id": 103,
+        "cost_multiplier": 2.63537694711384
+      },
+      {
+        "id": 143,
+        "cost_multiplier": 0.5410343525123603
+      },
+      {
+        "id": 148,
+        "cost_multiplier": 75.98867823021065
+      },
+      {
+        "id": 157,
+        "cost_multiplier": 337.4041238466168
+      },
+      {
+        "id": 152,
+        "cost_multiplier": 1223.0125259447989
+      },
+      {
+        "id": 151,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 153,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 155,
+        "cost_multiplier": 30.20322423100633
+      },
+      {
+        "id": 150,
+        "cost_multiplier": 153.90391747673527
+      },
+      {
+        "id": 154,
+        "cost_multiplier": 155.97123731490632
+      },
+      {
+        "id": 156,
+        "cost_multiplier": 480.2235972336198
+      },
+      {
+        "id": 13,
+        "perk": 47
+      },
+      {
+        "id": 27,
+        "perk": 47
+      },
+      {
+        "id": 34,
+        "perk": 47
+      },
+      {
+        "id": 37,
+        "perk": 47
+      },
+      {
+        "id": 43,
+        "perk": 47
+      },
+      {
+        "id": 54,
+        "perk": 47
+      },
+      {
+        "id": 58,
+        "perk": 47
+      },
+      {
+        "id": 64,
+        "perk": 47
+      },
+      {
+        "id": 69,
+        "perk": 47
+      },
+      {
+        "id": 74,
+        "perk": 47
+      },
+      {
+        "id": 84,
+        "perk": 47
+      },
+      {
+        "id": 89,
+        "perk": 47
+      },
+      {
+        "id": 90,
+        "perk": 47
+      },
+      {
+        "id": 104,
+        "perk": 47
+      },
+      {
+        "id": 114,
+        "perk": 47
+      },
+      {
+        "id": 118,
+        "perk": 47
+      },
+      {
+        "id": 124,
+        "perk": 47
+      },
+      {
+        "id": 134,
+        "perk": 47
+      },
+      {
+        "id": 138,
+        "perk": 47
+      },
+      {
+        "id": 144,
+        "perk": 47
+      },
+      {
+        "id": 155,
+        "perk": 47
+      }
+    ],
+    "apRuntime": {
+      "perkTaskIds": [],
+      "grants": {
+        "13": "Sunken Treasure",
+        "14": "Village Hero",
+        "21": "Reflections on the Journey",
+        "26": "Minor Time Compression",
+        "31": "Energetic Memory",
+        "36": "High Altitude Climbing",
+        "42": "Deep Sea Diving",
+        "45": "Mysterious Amulet",
+        "46": "Found Lost Temple",
+        "63": "Villager Gratitude",
+        "70": "Understanding of the Reset",
+        "74": "Purged Bureaucracy",
+        "76": "How to Write",
+        "86": "Experienced Traveler",
+        "95": "The Worm",
+        "99": "Walk Without Rhythm",
+        "100": "Attunement",
+        "125": "Energetic Spell",
+        "126": "Goblin Scourge",
+        "148": "How to Read",
+        "152": "Underground Connection"
+      },
+      "foreignPerks": [],
+      "regrantOnEveryCompletion": true
+    },
+    "mods": {
+      "auto_haste": true,
+      "auto_lightning": true,
+      "auto_use_cycle": true,
+      "auto_use_free_items": true,
+      "artifact_tasks_item_cycle_only": true,
+      "auto_dreamcatcher": true,
+      "auto_ring": true,
+      "auto_prioritize": true,
+      "auto_prestige": true,
+      "auto_buy_cheapest": true,
+      "auto_buy_budget_enabled": true,
+      "resume_automation_on_reset": true,
+      "force_automation": true,
+      "auto_continue_energy_reset": true,
+      "suppress_prestige_popup": true,
+      "show_spark_stats": true,
+      "instant_mode_allowed": true,
+      "threshold_master": true,
+      "threshold_perk_affordable_enabled": true,
+      "threshold_perk_unaffordable_enabled": true,
+      "threshold_combat_enabled": true,
+      "threshold_item_enabled": true,
+      "threshold_prestige_enabled": true,
+      "threshold_progression_enabled": true,
+      "threshold_unlocker_enabled": true,
+      "threshold_other_enabled": true,
+      "auto_prestige_stall_enabled": true,
+      "threshold_all_skipped": 1
+    }
+  },
+  "timing": {
+    "wallMs": 5310.051254,
+    "ticks": 8001,
+    "runsExecuted": 253,
+    "ticksPerSec": 1507
+  },
+  "stalled": false,
+  "endOfContentRuns": 0,
+  "allCompleted": true,
+  "taskCount": 130,
+  "completedCount": 130,
+  "finalState": {
+    "prestiges": 3,
+    "highestZone": 19,
+    "divineSpark": 21,
+    "repeatableLevels": {
+      "Divine Knowledge": 11,
+      "Unlimited Power": 3,
+      "Divine Appetite": 2,
+      "Gotta Go Fast": 4
+    }
+  },
+  "apRuntime": {
+    "coverage": 130,
+    "coverageTotal": 130,
+    "fullCoverage": true,
+    "uncovered": [],
+    "pollingCompletedCount": 130,
+    "callbackCompletedCount": 130,
+    "firstCompletionRuns": {
+      "10": 1,
+      "11": 1,
+      "12": 1,
+      "13": 23,
+      "14": 1,
+      "15": 1,
+      "16": 1,
+      "20": 4,
+      "21": 3,
+      "22": 2,
+      "23": 1,
+      "24": 2,
+      "25": 1,
+      "26": 1,
+      "27": 23,
+      "30": 10,
+      "31": 8,
+      "32": 5,
+      "33": 4,
+      "34": 4,
+      "35": 4,
+      "36": 6,
+      "37": 8,
+      "40": 13,
+      "41": 12,
+      "42": 12,
+      "43": 12,
+      "44": 10,
+      "45": 11,
+      "46": 12,
+      "47": 11,
+      "48": 12,
+      "50": 15,
+      "51": 15,
+      "52": 15,
+      "53": 13,
+      "54": 13,
+      "55": 15,
+      "56": 14,
+      "57": 14,
+      "58": 23,
+      "60": 17,
+      "61": 17,
+      "62": 17,
+      "63": 15,
+      "64": 15,
+      "65": 15,
+      "66": 16,
+      "67": 16,
+      "68": 16,
+      "69": 34,
+      "70": 18,
+      "71": 18,
+      "72": 18,
+      "73": 17,
+      "74": 17,
+      "75": 36,
+      "76": 21,
+      "77": 17,
+      "80": 25,
+      "81": 24,
+      "82": 25,
+      "83": 23,
+      "84": 78,
+      "85": 19,
+      "86": 23,
+      "87": 29,
+      "89": 78,
+      "90": 35,
+      "91": 33,
+      "92": 28,
+      "93": 31,
+      "94": 25,
+      "95": 31,
+      "96": 25,
+      "97": 25,
+      "98": 27,
+      "99": 27,
+      "100": 49,
+      "101": 42,
+      "102": 49,
+      "103": 41,
+      "104": 67,
+      "105": 37,
+      "106": 35,
+      "107": 39,
+      "110": 49,
+      "111": 49,
+      "112": 49,
+      "113": 49,
+      "114": 51,
+      "115": 147,
+      "116": 51,
+      "117": 49,
+      "118": 51,
+      "120": 53,
+      "121": 53,
+      "122": 52,
+      "123": 51,
+      "124": 49,
+      "125": 53,
+      "126": 51,
+      "127": 53,
+      "128": 53,
+      "130": 54,
+      "131": 54,
+      "132": 54,
+      "133": 53,
+      "134": 157,
+      "135": 53,
+      "136": 157,
+      "137": 55,
+      "138": 63,
+      "140": 55,
+      "141": 55,
+      "142": 55,
+      "143": 57,
+      "144": 69,
+      "145": 54,
+      "146": 253,
+      "147": 55,
+      "148": 57,
+      "150": 75,
+      "151": 75,
+      "152": 75,
+      "153": 67,
+      "154": 61,
+      "155": 55,
+      "156": 65,
+      "157": 75
+    },
+    "milestones": [
+      {
+        "taskId": 14,
+        "perk": "Village Hero",
+        "run": 1
+      },
+      {
+        "taskId": 26,
+        "perk": "Minor Time Compression",
+        "run": 1
+      },
+      {
+        "taskId": 21,
+        "perk": "Reflections on the Journey",
+        "run": 3
+      },
+      {
+        "taskId": 36,
+        "perk": "High Altitude Climbing",
+        "run": 6
+      },
+      {
+        "taskId": 31,
+        "perk": "Energetic Memory",
+        "run": 8
+      },
+      {
+        "taskId": 45,
+        "perk": "Mysterious Amulet",
+        "run": 11
+      },
+      {
+        "taskId": 42,
+        "perk": "Deep Sea Diving",
+        "run": 12
+      },
+      {
+        "taskId": 46,
+        "perk": "Found Lost Temple",
+        "run": 12
+      },
+      {
+        "taskId": 63,
+        "perk": "Villager Gratitude",
+        "run": 15
+      },
+      {
+        "taskId": 74,
+        "perk": "Purged Bureaucracy",
+        "run": 17
+      },
+      {
+        "taskId": 70,
+        "perk": "Understanding of the Reset",
+        "run": 18
+      },
+      {
+        "taskId": 76,
+        "perk": "How to Write",
+        "run": 21
+      },
+      {
+        "taskId": 13,
+        "perk": "Sunken Treasure",
+        "run": 23
+      },
+      {
+        "taskId": 86,
+        "perk": "Experienced Traveler",
+        "run": 23
+      },
+      {
+        "taskId": 99,
+        "perk": "Walk Without Rhythm",
+        "run": 27
+      },
+      {
+        "taskId": 95,
+        "perk": "The Worm",
+        "run": 31
+      },
+      {
+        "taskId": 100,
+        "perk": "Attunement",
+        "run": 49
+      },
+      {
+        "taskId": 126,
+        "perk": "Goblin Scourge",
+        "run": 51
+      },
+      {
+        "taskId": 125,
+        "perk": "Energetic Spell",
+        "run": 53
+      },
+      {
+        "taskId": 148,
+        "perk": "How to Read",
+        "run": 57
+      },
+      {
+        "taskId": 152,
+        "perk": "Underground Connection",
+        "run": 75
+      }
+    ],
+    "perksGranted": [
+      "Village Hero",
+      "Minor Time Compression",
+      "Reflections on the Journey",
+      "High Altitude Climbing",
+      "Energetic Memory",
+      "Mysterious Amulet",
+      "Found Lost Temple",
+      "Deep Sea Diving",
+      "Villager Gratitude",
+      "Purged Bureaucracy",
+      "Understanding of the Reset",
+      "How to Write",
+      "Experienced Traveler",
+      "Sunken Treasure",
+      "Walk Without Rhythm",
+      "The Worm",
+      "Attunement",
+      "Goblin Scourge",
+      "Energetic Spell",
+      "How to Read",
+      "Underground Connection"
+    ],
+    "perksMissing": [],
+    "foreignPerks": [],
+    "regrants": 56,
+    "prestigeWipes": 3
+  },
+  "purchases": [
+    {
+      "name": "Permanent Automation",
+      "cost": 10,
+      "layer": 0,
+      "run": 96
+    },
+    {
+      "name": "Divine Inspiration",
+      "cost": 10,
+      "layer": 0,
+      "run": 96
+    },
+    {
+      "name": "Look in the Mirror",
+      "cost": 101,
+      "layer": 0,
+      "run": 96
+    },
+    {
+      "name": "Fully Attuned",
+      "cost": 800,
+      "layer": 0,
+      "run": 216
+    }
+  ],
+  "sparkCheckpoints": [
+    {
+      "run": 100,
+      "sparkEarned": 200,
+      "sparkHeld": 10,
+      "prestiges": 1,
+      "highestZone": 15
+    },
+    {
+      "run": 200,
+      "sparkEarned": 734,
+      "sparkHeld": 31,
+      "prestiges": 2,
+      "highestZone": 17
+    },
+    {
+      "run": 253,
+      "sparkEarned": 1801,
+      "sparkHeld": 21,
+      "prestiges": 3,
+      "highestZone": 19
+    }
+  ],
+  "completions": [
+    {
+      "id": 10,
+      "name": "Join the Watch",
+      "zone": 0,
+      "zoneName": "The Village",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 1,
+      "prestiges": 0
+    },
+    {
+      "id": 11,
+      "name": "Read Noticeboard",
+      "zone": 0,
+      "zoneName": "The Village",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 1,
+      "prestiges": 0
+    },
+    {
+      "id": 12,
+      "name": "Train with Weapons",
+      "zone": 0,
+      "zoneName": "The Village",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 1,
+      "prestiges": 0
+    },
+    {
+      "id": 13,
+      "name": "Learn How to Read",
+      "zone": 0,
+      "zoneName": "The Village",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 24,
+      "prestiges": 0,
+      "viaZoneSkip": true
+    },
+    {
+      "id": 14,
+      "name": "Beg for Food",
+      "zone": 0,
+      "zoneName": "The Village",
+      "maxReps": 10,
+      "hidden": false,
+      "run": 1,
+      "prestiges": 0
+    },
+    {
+      "id": 15,
+      "name": "Hide and Seek",
+      "zone": 0,
+      "zoneName": "The Village",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 1,
+      "prestiges": 0
+    },
+    {
+      "id": 16,
+      "name": "Observe Surroundings",
+      "zone": 0,
+      "zoneName": "The Village",
+      "maxReps": 5,
+      "hidden": false,
+      "run": 1,
+      "prestiges": 0
+    },
+    {
+      "id": 20,
+      "name": "Notice Smoke in the Distance",
+      "zone": 1,
+      "zoneName": "The Village Watch",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 4,
+      "prestiges": 0
+    },
+    {
+      "id": 21,
+      "name": "Learn Routines",
+      "zone": 1,
+      "zoneName": "The Village Watch",
+      "maxReps": 4,
+      "hidden": false,
+      "run": 3,
+      "prestiges": 0
+    },
+    {
+      "id": 22,
+      "name": "Deal with Drunkards",
+      "zone": 1,
+      "zoneName": "The Village Watch",
+      "maxReps": 2,
+      "hidden": false,
+      "run": 2,
+      "prestiges": 0
+    },
+    {
+      "id": 23,
+      "name": "Chit-chat",
+      "zone": 1,
+      "zoneName": "The Village Watch",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 1,
+      "prestiges": 0
+    },
+    {
+      "id": 24,
+      "name": "Sparring",
+      "zone": 1,
+      "zoneName": "The Village Watch",
+      "maxReps": 4,
+      "hidden": false,
+      "run": 2,
+      "prestiges": 0
+    },
+    {
+      "id": 25,
+      "name": "Fletch Arrows",
+      "zone": 1,
+      "zoneName": "The Village Watch",
+      "maxReps": 5,
+      "hidden": false,
+      "run": 1,
+      "prestiges": 0
+    },
+    {
+      "id": 26,
+      "name": "Daydream About Leaving",
+      "zone": 1,
+      "zoneName": "The Village Watch",
+      "maxReps": 6,
+      "hidden": false,
+      "run": 1,
+      "prestiges": 0
+    },
+    {
+      "id": 27,
+      "name": "Learn How to Write",
+      "zone": 1,
+      "zoneName": "The Village Watch",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 24,
+      "prestiges": 0,
+      "viaZoneSkip": true
+    },
+    {
+      "id": 30,
+      "name": "Enter the Wilderness",
+      "zone": 2,
+      "zoneName": "The Raid",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 10,
+      "prestiges": 0
+    },
+    {
+      "id": 31,
+      "name": "Fight a Goblin",
+      "zone": 2,
+      "zoneName": "The Raid",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 8,
+      "prestiges": 0
+    },
+    {
+      "id": 32,
+      "name": "Warn Villagers",
+      "zone": 2,
+      "zoneName": "The Raid",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 5,
+      "prestiges": 0
+    },
+    {
+      "id": 33,
+      "name": "Loot the Fallen",
+      "zone": 2,
+      "zoneName": "The Raid",
+      "maxReps": 4,
+      "hidden": false,
+      "run": 4,
+      "prestiges": 0
+    },
+    {
+      "id": 34,
+      "name": "Rescue Villager",
+      "zone": 2,
+      "zoneName": "The Raid",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 4,
+      "prestiges": 0
+    },
+    {
+      "id": 35,
+      "name": "Treat Villager Wounds",
+      "zone": 2,
+      "zoneName": "The Raid",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 4,
+      "prestiges": 0
+    },
+    {
+      "id": 36,
+      "name": "Goblin Warlord",
+      "zone": 2,
+      "zoneName": "The Raid",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 6,
+      "prestiges": 0
+    },
+    {
+      "id": 37,
+      "name": "Save the Village",
+      "zone": 2,
+      "zoneName": "The Raid",
+      "maxReps": 1,
+      "hidden": true,
+      "run": 8,
+      "prestiges": 0
+    },
+    {
+      "id": 40,
+      "name": "Find Cave Entrance",
+      "zone": 3,
+      "zoneName": "The Wilderness",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 13,
+      "prestiges": 0
+    },
+    {
+      "id": 41,
+      "name": "Look for Tracks",
+      "zone": 3,
+      "zoneName": "The Wilderness",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 12,
+      "prestiges": 0
+    },
+    {
+      "id": 42,
+      "name": "Survive the Night",
+      "zone": 3,
+      "zoneName": "The Wilderness",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 12,
+      "prestiges": 0
+    },
+    {
+      "id": 43,
+      "name": "Find an Amulet",
+      "zone": 3,
+      "zoneName": "The Wilderness",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 12,
+      "prestiges": 0
+    },
+    {
+      "id": 44,
+      "name": "Build a Fire",
+      "zone": 3,
+      "zoneName": "The Wilderness",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 10,
+      "prestiges": 0
+    },
+    {
+      "id": 45,
+      "name": "Forage for Mushrooms",
+      "zone": 3,
+      "zoneName": "The Wilderness",
+      "maxReps": 5,
+      "hidden": false,
+      "run": 11,
+      "prestiges": 0
+    },
+    {
+      "id": 46,
+      "name": "Befriend a Deer",
+      "zone": 3,
+      "zoneName": "The Wilderness",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 12,
+      "prestiges": 0
+    },
+    {
+      "id": 47,
+      "name": "Angry Ent",
+      "zone": 3,
+      "zoneName": "The Wilderness",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 11,
+      "prestiges": 0
+    },
+    {
+      "id": 48,
+      "name": "Gather Magical Roots",
+      "zone": 3,
+      "zoneName": "The Wilderness",
+      "maxReps": 3,
+      "hidden": true,
+      "run": 12,
+      "prestiges": 0
+    },
+    {
+      "id": 50,
+      "name": "Leave Via Back Entrance",
+      "zone": 4,
+      "zoneName": "The Cave System",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 15,
+      "prestiges": 0
+    },
+    {
+      "id": 51,
+      "name": "Find a Way Through",
+      "zone": 4,
+      "zoneName": "The Cave System",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 15,
+      "prestiges": 0
+    },
+    {
+      "id": 52,
+      "name": "Rescue Captives",
+      "zone": 4,
+      "zoneName": "The Cave System",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 15,
+      "prestiges": 0
+    },
+    {
+      "id": 53,
+      "name": "Steal Supplies",
+      "zone": 4,
+      "zoneName": "The Cave System",
+      "maxReps": 5,
+      "hidden": false,
+      "run": 13,
+      "prestiges": 0
+    },
+    {
+      "id": 54,
+      "name": "Try Casting a Spell",
+      "zone": 4,
+      "zoneName": "The Cave System",
+      "maxReps": 6,
+      "hidden": false,
+      "run": 13,
+      "prestiges": 0
+    },
+    {
+      "id": 55,
+      "name": "Inspect Wall Paintings",
+      "zone": 4,
+      "zoneName": "The Cave System",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 15,
+      "prestiges": 0
+    },
+    {
+      "id": 56,
+      "name": "Scout the Cave",
+      "zone": 4,
+      "zoneName": "The Cave System",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 14,
+      "prestiges": 0
+    },
+    {
+      "id": 57,
+      "name": "Goblin Chieftain",
+      "zone": 4,
+      "zoneName": "The Cave System",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 14,
+      "prestiges": 0
+    },
+    {
+      "id": 58,
+      "name": "Wipe Out Goblins",
+      "zone": 4,
+      "zoneName": "The Cave System",
+      "maxReps": 1,
+      "hidden": true,
+      "run": 23,
+      "prestiges": 0
+    },
+    {
+      "id": 60,
+      "name": "Get to the City",
+      "zone": 5,
+      "zoneName": "The Road to the City",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 17,
+      "prestiges": 0
+    },
+    {
+      "id": 61,
+      "name": "Join a Caravan",
+      "zone": 5,
+      "zoneName": "The Road to the City",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 17,
+      "prestiges": 0
+    },
+    {
+      "id": 62,
+      "name": "Scout the Road Ahead",
+      "zone": 5,
+      "zoneName": "The Road to the City",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 17,
+      "prestiges": 0
+    },
+    {
+      "id": 63,
+      "name": "Make Travel Equipment",
+      "zone": 5,
+      "zoneName": "The Road to the City",
+      "maxReps": 4,
+      "hidden": false,
+      "run": 15,
+      "prestiges": 0
+    },
+    {
+      "id": 64,
+      "name": "Get Used to Traveling",
+      "zone": 5,
+      "zoneName": "The Road to the City",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 15,
+      "prestiges": 0
+    },
+    {
+      "id": 65,
+      "name": "Chat with Travelers",
+      "zone": 5,
+      "zoneName": "The Road to the City",
+      "maxReps": 4,
+      "hidden": false,
+      "run": 15,
+      "prestiges": 0
+    },
+    {
+      "id": 66,
+      "name": "Practice Traveling Unnoticed",
+      "zone": 5,
+      "zoneName": "The Road to the City",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 16,
+      "prestiges": 0
+    },
+    {
+      "id": 67,
+      "name": "Bandits",
+      "zone": 5,
+      "zoneName": "The Road to the City",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 16,
+      "prestiges": 0
+    },
+    {
+      "id": 68,
+      "name": "Loot Bandit Camp",
+      "zone": 5,
+      "zoneName": "The Road to the City",
+      "maxReps": 4,
+      "hidden": true,
+      "run": 16,
+      "prestiges": 0
+    },
+    {
+      "id": 69,
+      "name": "Study the Amulet",
+      "zone": 5,
+      "zoneName": "The Road to the City",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 35,
+      "prestiges": 0,
+      "viaZoneSkip": true
+    },
+    {
+      "id": 70,
+      "name": "Enter the City",
+      "zone": 6,
+      "zoneName": "The City Outskirts",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 18,
+      "prestiges": 0
+    },
+    {
+      "id": 71,
+      "name": "Bribe the City Guards",
+      "zone": 6,
+      "zoneName": "The City Outskirts",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 18,
+      "prestiges": 0
+    },
+    {
+      "id": 72,
+      "name": "Survive a Mugging",
+      "zone": 6,
+      "zoneName": "The City Outskirts",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 18,
+      "prestiges": 0
+    },
+    {
+      "id": 73,
+      "name": "Buy a Book",
+      "zone": 6,
+      "zoneName": "The City Outskirts",
+      "maxReps": 5,
+      "hidden": false,
+      "run": 17,
+      "prestiges": 0
+    },
+    {
+      "id": 74,
+      "name": "Negotiate with a Rogue Guard",
+      "zone": 6,
+      "zoneName": "The City Outskirts",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 17,
+      "prestiges": 0
+    },
+    {
+      "id": 75,
+      "name": "Spar with the Guards",
+      "zone": 6,
+      "zoneName": "The City Outskirts",
+      "maxReps": 4,
+      "hidden": false,
+      "run": 37,
+      "prestiges": 0,
+      "viaZoneSkip": true
+    },
+    {
+      "id": 76,
+      "name": "Fend for Yourself",
+      "zone": 6,
+      "zoneName": "The City Outskirts",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 21,
+      "prestiges": 0
+    },
+    {
+      "id": 77,
+      "name": "Skulk About",
+      "zone": 6,
+      "zoneName": "The City Outskirts",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 17,
+      "prestiges": 0
+    },
+    {
+      "id": 80,
+      "name": "Embark on a Quest",
+      "zone": 7,
+      "zoneName": "The City",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 25,
+      "prestiges": 0
+    },
+    {
+      "id": 81,
+      "name": "Investigate Rumors of a Magician",
+      "zone": 7,
+      "zoneName": "The City",
+      "maxReps": 4,
+      "hidden": false,
+      "run": 24,
+      "prestiges": 0
+    },
+    {
+      "id": 82,
+      "name": "Search the Archives for Magic",
+      "zone": 7,
+      "zoneName": "The City",
+      "maxReps": 5,
+      "hidden": false,
+      "run": 25,
+      "prestiges": 0
+    },
+    {
+      "id": 83,
+      "name": "Scribe Scroll of Haste",
+      "zone": 7,
+      "zoneName": "The City",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 23,
+      "prestiges": 0
+    },
+    {
+      "id": 84,
+      "name": "Cast a Spell",
+      "zone": 7,
+      "zoneName": "The City",
+      "maxReps": 6,
+      "hidden": false,
+      "run": 79,
+      "prestiges": 0,
+      "viaZoneSkip": true
+    },
+    {
+      "id": 85,
+      "name": "Study at the Mage's Guild",
+      "zone": 7,
+      "zoneName": "The City",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 19,
+      "prestiges": 0
+    },
+    {
+      "id": 86,
+      "name": "Train for Your Quest",
+      "zone": 7,
+      "zoneName": "The City",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 23,
+      "prestiges": 0
+    },
+    {
+      "id": 87,
+      "name": "Corrupt Mayor",
+      "zone": 7,
+      "zoneName": "The City",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 29,
+      "prestiges": 0
+    },
+    {
+      "id": 89,
+      "name": "Purge Corrupt Bureacracy",
+      "zone": 7,
+      "zoneName": "The City",
+      "maxReps": 1,
+      "hidden": true,
+      "run": 79,
+      "prestiges": 0,
+      "viaZoneSkip": true
+    },
+    {
+      "id": 90,
+      "name": "Scale the Mountain",
+      "zone": 8,
+      "zoneName": "The Forest",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 35,
+      "prestiges": 0
+    },
+    {
+      "id": 91,
+      "name": "Locate the Mountain",
+      "zone": 8,
+      "zoneName": "The Forest",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 33,
+      "prestiges": 0
+    },
+    {
+      "id": 92,
+      "name": "Make Climbing Gear",
+      "zone": 8,
+      "zoneName": "The Forest",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 28,
+      "prestiges": 0
+    },
+    {
+      "id": 93,
+      "name": "Make Camping Equipment",
+      "zone": 8,
+      "zoneName": "The Forest",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 31,
+      "prestiges": 0
+    },
+    {
+      "id": 94,
+      "name": "Prepare to Scale the Mountain",
+      "zone": 8,
+      "zoneName": "The Forest",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 25,
+      "prestiges": 0
+    },
+    {
+      "id": 95,
+      "name": "Build a Hut",
+      "zone": 8,
+      "zoneName": "The Forest",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 31,
+      "prestiges": 0
+    },
+    {
+      "id": 96,
+      "name": "Go Sightseeing",
+      "zone": 8,
+      "zoneName": "The Forest",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 25,
+      "prestiges": 0
+    },
+    {
+      "id": 97,
+      "name": "Meet a Magical Creature",
+      "zone": 8,
+      "zoneName": "The Forest",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 25,
+      "prestiges": 0
+    },
+    {
+      "id": 98,
+      "name": "Werewolf",
+      "zone": 8,
+      "zoneName": "The Forest",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 27,
+      "prestiges": 0
+    },
+    {
+      "id": 99,
+      "name": "Gather Shed Fur from Lair",
+      "zone": 8,
+      "zoneName": "The Forest",
+      "maxReps": 3,
+      "hidden": true,
+      "run": 27,
+      "prestiges": 0
+    },
+    {
+      "id": 100,
+      "name": "Hunt for the First Reagent",
+      "zone": 9,
+      "zoneName": "The Magician",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 49,
+      "prestiges": 0
+    },
+    {
+      "id": 101,
+      "name": "Convince the Magician",
+      "zone": 9,
+      "zoneName": "The Magician",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 42,
+      "prestiges": 0
+    },
+    {
+      "id": 102,
+      "name": "Do a Favor",
+      "zone": 9,
+      "zoneName": "The Magician",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 49,
+      "prestiges": 0
+    },
+    {
+      "id": 103,
+      "name": "Steal Some Reagents",
+      "zone": 9,
+      "zoneName": "The Magician",
+      "maxReps": 4,
+      "hidden": false,
+      "run": 41,
+      "prestiges": 0
+    },
+    {
+      "id": 104,
+      "name": "Figure Out How to Attune",
+      "zone": 9,
+      "zoneName": "The Magician",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 67,
+      "prestiges": 0
+    },
+    {
+      "id": 105,
+      "name": "Give Yourself a Pep Talk",
+      "zone": 9,
+      "zoneName": "The Magician",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 37,
+      "prestiges": 0
+    },
+    {
+      "id": 106,
+      "name": "Try to Transform Into an Eagle",
+      "zone": 9,
+      "zoneName": "The Magician",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 35,
+      "prestiges": 0
+    },
+    {
+      "id": 107,
+      "name": "Low-oxygen Exercise",
+      "zone": 9,
+      "zoneName": "The Magician",
+      "maxReps": 5,
+      "hidden": false,
+      "run": 39,
+      "prestiges": 0
+    },
+    {
+      "id": 110,
+      "name": "Land on Island",
+      "zone": 10,
+      "zoneName": "The Ocean",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 49,
+      "prestiges": 0
+    },
+    {
+      "id": 111,
+      "name": "Weather a Storm",
+      "zone": 10,
+      "zoneName": "The Ocean",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 49,
+      "prestiges": 0
+    },
+    {
+      "id": 112,
+      "name": "Find the Island",
+      "zone": 10,
+      "zoneName": "The Ocean",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 49,
+      "prestiges": 0
+    },
+    {
+      "id": 113,
+      "name": "Catch Fish",
+      "zone": 10,
+      "zoneName": "The Ocean",
+      "maxReps": 5,
+      "hidden": false,
+      "run": 49,
+      "prestiges": 0
+    },
+    {
+      "id": 114,
+      "name": "Dive as a Squid",
+      "zone": 10,
+      "zoneName": "The Ocean",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 51,
+      "prestiges": 0
+    },
+    {
+      "id": 115,
+      "name": "Look for Land",
+      "zone": 10,
+      "zoneName": "The Ocean",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 148,
+      "prestiges": 1,
+      "viaZoneSkip": true
+    },
+    {
+      "id": 116,
+      "name": "Practice Transforming",
+      "zone": 10,
+      "zoneName": "The Ocean",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 51,
+      "prestiges": 0
+    },
+    {
+      "id": 117,
+      "name": "Kraken",
+      "zone": 10,
+      "zoneName": "The Ocean",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 49,
+      "prestiges": 0
+    },
+    {
+      "id": 118,
+      "name": "Explore Kraken's Lair",
+      "zone": 10,
+      "zoneName": "The Ocean",
+      "maxReps": 1,
+      "hidden": true,
+      "run": 51,
+      "prestiges": 0
+    },
+    {
+      "id": 120,
+      "name": "Hunt for the Second Reagent",
+      "zone": 11,
+      "zoneName": "The Island",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 53,
+      "prestiges": 0
+    },
+    {
+      "id": 121,
+      "name": "Gather Reagent",
+      "zone": 11,
+      "zoneName": "The Island",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 53,
+      "prestiges": 0
+    },
+    {
+      "id": 122,
+      "name": "Repair Ship",
+      "zone": 11,
+      "zoneName": "The Island",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 52,
+      "prestiges": 0
+    },
+    {
+      "id": 123,
+      "name": "Catch More Fish",
+      "zone": 11,
+      "zoneName": "The Island",
+      "maxReps": 4,
+      "hidden": false,
+      "run": 51,
+      "prestiges": 0
+    },
+    {
+      "id": 124,
+      "name": "Explore the Jungle",
+      "zone": 11,
+      "zoneName": "The Island",
+      "maxReps": 6,
+      "hidden": false,
+      "run": 49,
+      "prestiges": 0
+    },
+    {
+      "id": 125,
+      "name": "Build Another Hut",
+      "zone": 11,
+      "zoneName": "The Island",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 53,
+      "prestiges": 0
+    },
+    {
+      "id": 126,
+      "name": "Talk to the Local Wildlife",
+      "zone": 11,
+      "zoneName": "The Island",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 51,
+      "prestiges": 0
+    },
+    {
+      "id": 127,
+      "name": "Horde of Lizardfolk",
+      "zone": 11,
+      "zoneName": "The Island",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 53,
+      "prestiges": 0
+    },
+    {
+      "id": 128,
+      "name": "Steal Their Oracle Bones",
+      "zone": 11,
+      "zoneName": "The Island",
+      "maxReps": 4,
+      "hidden": true,
+      "run": 53,
+      "prestiges": 0
+    },
+    {
+      "id": 130,
+      "name": "Enter the Oasis",
+      "zone": 12,
+      "zoneName": "The Desert",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 54,
+      "prestiges": 0
+    },
+    {
+      "id": 131,
+      "name": "Overcome Mirage",
+      "zone": 12,
+      "zoneName": "The Desert",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 54,
+      "prestiges": 0
+    },
+    {
+      "id": 132,
+      "name": "Find the Oasis",
+      "zone": 12,
+      "zoneName": "The Desert",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 54,
+      "prestiges": 0
+    },
+    {
+      "id": 133,
+      "name": "Harvest Cactus",
+      "zone": 12,
+      "zoneName": "The Desert",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 53,
+      "prestiges": 0
+    },
+    {
+      "id": 134,
+      "name": "Avoid Notice by the Sandworm",
+      "zone": 12,
+      "zoneName": "The Desert",
+      "maxReps": 4,
+      "hidden": false,
+      "run": 158,
+      "prestiges": 1,
+      "viaZoneSkip": true
+    },
+    {
+      "id": 135,
+      "name": "Work on Your Tan",
+      "zone": 12,
+      "zoneName": "The Desert",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 53,
+      "prestiges": 0
+    },
+    {
+      "id": 136,
+      "name": "Comb the Desert",
+      "zone": 12,
+      "zoneName": "The Desert",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 158,
+      "prestiges": 1,
+      "viaZoneSkip": true
+    },
+    {
+      "id": 137,
+      "name": "Giant Sandworm",
+      "zone": 12,
+      "zoneName": "The Desert",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 55,
+      "prestiges": 0
+    },
+    {
+      "id": 138,
+      "name": "Learn to Dance the Worm",
+      "zone": 12,
+      "zoneName": "The Desert",
+      "maxReps": 1,
+      "hidden": true,
+      "run": 63,
+      "prestiges": 0
+    },
+    {
+      "id": 140,
+      "name": "Return to the Magician",
+      "zone": 13,
+      "zoneName": "The Oasis",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 55,
+      "prestiges": 0
+    },
+    {
+      "id": 141,
+      "name": "Banish Evil Spirit",
+      "zone": 13,
+      "zoneName": "The Oasis",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 55,
+      "prestiges": 0
+    },
+    {
+      "id": 142,
+      "name": "Gather Second Reagent",
+      "zone": 13,
+      "zoneName": "The Oasis",
+      "maxReps": 5,
+      "hidden": false,
+      "run": 55,
+      "prestiges": 0
+    },
+    {
+      "id": 143,
+      "name": "Bottle Oasis Water",
+      "zone": 13,
+      "zoneName": "The Oasis",
+      "maxReps": 4,
+      "hidden": false,
+      "run": 57,
+      "prestiges": 0
+    },
+    {
+      "id": 144,
+      "name": "Reflect on the Journey",
+      "zone": 13,
+      "zoneName": "The Oasis",
+      "maxReps": 4,
+      "hidden": false,
+      "run": 69,
+      "prestiges": 0
+    },
+    {
+      "id": 145,
+      "name": "Prepare for the Journey Ahead",
+      "zone": 13,
+      "zoneName": "The Oasis",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 54,
+      "prestiges": 0
+    },
+    {
+      "id": 146,
+      "name": "Talk to the Djinn",
+      "zone": 13,
+      "zoneName": "The Oasis",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 254,
+      "prestiges": 3,
+      "viaZoneSkip": true
+    },
+    {
+      "id": 147,
+      "name": "Sleepy Djinn",
+      "zone": 13,
+      "zoneName": "The Oasis",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 55,
+      "prestiges": 0
+    },
+    {
+      "id": 148,
+      "name": "Find More Lamps",
+      "zone": 13,
+      "zoneName": "The Oasis",
+      "maxReps": 3,
+      "hidden": true,
+      "run": 57,
+      "prestiges": 0
+    },
+    {
+      "id": 150,
+      "name": "Begin Search for the Next Ritual",
+      "zone": 14,
+      "zoneName": "The Ritual",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 75,
+      "prestiges": 0
+    },
+    {
+      "id": 151,
+      "name": "Apologize for Stealing Reagents",
+      "zone": 14,
+      "zoneName": "The Ritual",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 75,
+      "prestiges": 0
+    },
+    {
+      "id": 152,
+      "name": "Rest for a While",
+      "zone": 14,
+      "zoneName": "The Ritual",
+      "maxReps": 5,
+      "hidden": false,
+      "run": 75,
+      "prestiges": 0
+    },
+    {
+      "id": 153,
+      "name": "Touch the Divine",
+      "zone": 14,
+      "zoneName": "The Ritual",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 67,
+      "prestiges": 0
+    },
+    {
+      "id": 154,
+      "name": "Infuse Mystic Incense",
+      "zone": 14,
+      "zoneName": "The Ritual",
+      "maxReps": 9,
+      "hidden": false,
+      "run": 61,
+      "prestiges": 0
+    },
+    {
+      "id": 155,
+      "name": "Practice Memorization",
+      "zone": 14,
+      "zoneName": "The Ritual",
+      "maxReps": 4,
+      "hidden": false,
+      "run": 55,
+      "prestiges": 0
+    },
+    {
+      "id": 156,
+      "name": "Guided Spellcasting",
+      "zone": 14,
+      "zoneName": "The Ritual",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 65,
+      "prestiges": 0
+    },
+    {
+      "id": 157,
+      "name": "Go for a Walk",
+      "zone": 14,
+      "zoneName": "The Ritual",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 75,
+      "prestiges": 0
+    }
+  ],
+  "unreached": [],
+  "runEnds": [
+    {
+      "run": 1,
+      "endZone": 1,
+      "highestZone": 1,
+      "prestiged": false,
+      "ticks": 9
+    },
+    {
+      "run": 2,
+      "endZone": 1,
+      "highestZone": 1,
+      "prestiged": false,
+      "ticks": 11
+    },
+    {
+      "run": 3,
+      "endZone": 1,
+      "highestZone": 1,
+      "prestiged": false,
+      "ticks": 9
+    },
+    {
+      "run": 4,
+      "endZone": 2,
+      "highestZone": 2,
+      "prestiged": false,
+      "ticks": 13
+    },
+    {
+      "run": 5,
+      "endZone": 2,
+      "highestZone": 2,
+      "prestiged": false,
+      "ticks": 14
+    },
+    {
+      "run": 6,
+      "endZone": 2,
+      "highestZone": 2,
+      "prestiged": false,
+      "ticks": 10
+    },
+    {
+      "run": 7,
+      "endZone": 1,
+      "highestZone": 2,
+      "prestiged": false,
+      "ticks": 11
+    },
+    {
+      "run": 8,
+      "endZone": 2,
+      "highestZone": 2,
+      "prestiged": false,
+      "ticks": 15
+    },
+    {
+      "run": 9,
+      "endZone": 2,
+      "highestZone": 2,
+      "prestiged": false,
+      "ticks": 15
+    },
+    {
+      "run": 10,
+      "endZone": 3,
+      "highestZone": 3,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 11,
+      "endZone": 3,
+      "highestZone": 3,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 12,
+      "endZone": 3,
+      "highestZone": 3,
+      "prestiged": false,
+      "ticks": 24
+    },
+    {
+      "run": 13,
+      "endZone": 4,
+      "highestZone": 4,
+      "prestiged": false,
+      "ticks": 28
+    },
+    {
+      "run": 14,
+      "endZone": 4,
+      "highestZone": 4,
+      "prestiged": false,
+      "ticks": 30
+    },
+    {
+      "run": 15,
+      "endZone": 5,
+      "highestZone": 5,
+      "prestiged": false,
+      "ticks": 37
+    },
+    {
+      "run": 16,
+      "endZone": 5,
+      "highestZone": 5,
+      "prestiged": false,
+      "ticks": 38
+    },
+    {
+      "run": 17,
+      "endZone": 6,
+      "highestZone": 6,
+      "prestiged": false,
+      "ticks": 43
+    },
+    {
+      "run": 18,
+      "endZone": 7,
+      "highestZone": 7,
+      "prestiged": false,
+      "ticks": 46
+    },
+    {
+      "run": 19,
+      "endZone": 7,
+      "highestZone": 7,
+      "prestiged": false,
+      "ticks": 46
+    },
+    {
+      "run": 20,
+      "endZone": 6,
+      "highestZone": 7,
+      "prestiged": false,
+      "ticks": 37
+    },
+    {
+      "run": 21,
+      "endZone": 6,
+      "highestZone": 7,
+      "prestiged": false,
+      "ticks": 43
+    },
+    {
+      "run": 22,
+      "endZone": 6,
+      "highestZone": 7,
+      "prestiged": false,
+      "ticks": 38
+    },
+    {
+      "run": 23,
+      "endZone": 7,
+      "highestZone": 7,
+      "prestiged": false,
+      "ticks": 48
+    },
+    {
+      "run": 24,
+      "endZone": 7,
+      "highestZone": 7,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 25,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 42
+    },
+    {
+      "run": 26,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 34
+    },
+    {
+      "run": 27,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 41
+    },
+    {
+      "run": 28,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 30
+    },
+    {
+      "run": 29,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 37
+    },
+    {
+      "run": 30,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 30
+    },
+    {
+      "run": 31,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 39
+    },
+    {
+      "run": 32,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 33,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 28
+    },
+    {
+      "run": 34,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 35,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 24
+    },
+    {
+      "run": 36,
+      "endZone": 8,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 20
+    },
+    {
+      "run": 37,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 38,
+      "endZone": 8,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 39,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 40,
+      "endZone": 8,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 17
+    },
+    {
+      "run": 41,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 42,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 9
+    },
+    {
+      "run": 43,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 16
+    },
+    {
+      "run": 44,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 9
+    },
+    {
+      "run": 45,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 46,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 10
+    },
+    {
+      "run": 47,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 48,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 10
+    },
+    {
+      "run": 49,
+      "endZone": 11,
+      "highestZone": 11,
+      "prestiged": false,
+      "ticks": 27
+    },
+    {
+      "run": 50,
+      "endZone": 11,
+      "highestZone": 11,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 51,
+      "endZone": 11,
+      "highestZone": 11,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 52,
+      "endZone": 11,
+      "highestZone": 11,
+      "prestiged": false,
+      "ticks": 20
+    },
+    {
+      "run": 53,
+      "endZone": 12,
+      "highestZone": 12,
+      "prestiged": false,
+      "ticks": 33
+    },
+    {
+      "run": 54,
+      "endZone": 13,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 25
+    },
+    {
+      "run": 55,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 43
+    },
+    {
+      "run": 56,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 28
+    },
+    {
+      "run": 57,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 41
+    },
+    {
+      "run": 58,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 29
+    },
+    {
+      "run": 59,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 48
+    },
+    {
+      "run": 60,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 30
+    },
+    {
+      "run": 61,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 46
+    },
+    {
+      "run": 62,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 30
+    },
+    {
+      "run": 63,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 46
+    },
+    {
+      "run": 64,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 31
+    },
+    {
+      "run": 65,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 45
+    },
+    {
+      "run": 66,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 31
+    },
+    {
+      "run": 67,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 45
+    },
+    {
+      "run": 68,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 69,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 46
+    },
+    {
+      "run": 70,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 71,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 47
+    },
+    {
+      "run": 72,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 33
+    },
+    {
+      "run": 73,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 48
+    },
+    {
+      "run": 74,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 34
+    },
+    {
+      "run": 75,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 53
+    },
+    {
+      "run": 76,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 36
+    },
+    {
+      "run": 77,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 53
+    },
+    {
+      "run": 78,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 37
+    },
+    {
+      "run": 79,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 48
+    },
+    {
+      "run": 80,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 37
+    },
+    {
+      "run": 81,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 48
+    },
+    {
+      "run": 82,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 37
+    },
+    {
+      "run": 83,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 49
+    },
+    {
+      "run": 84,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 37
+    },
+    {
+      "run": 85,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 48
+    },
+    {
+      "run": 86,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 38
+    },
+    {
+      "run": 87,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 48
+    },
+    {
+      "run": 88,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 39
+    },
+    {
+      "run": 89,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 47
+    },
+    {
+      "run": 90,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 39
+    },
+    {
+      "run": 91,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 46
+    },
+    {
+      "run": 92,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 39
+    },
+    {
+      "run": 93,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 47
+    },
+    {
+      "run": 94,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 39
+    },
+    {
+      "run": 95,
+      "endZone": 15,
+      "highestZone": 0,
+      "prestiged": true,
+      "ticks": 45
+    },
+    {
+      "run": 96,
+      "endZone": 1,
+      "highestZone": 1,
+      "prestiged": false,
+      "ticks": 9
+    },
+    {
+      "run": 97,
+      "endZone": 1,
+      "highestZone": 1,
+      "prestiged": false,
+      "ticks": 12
+    },
+    {
+      "run": 98,
+      "endZone": 2,
+      "highestZone": 2,
+      "prestiged": false,
+      "ticks": 16
+    },
+    {
+      "run": 99,
+      "endZone": 2,
+      "highestZone": 2,
+      "prestiged": false,
+      "ticks": 20
+    },
+    {
+      "run": 100,
+      "endZone": 2,
+      "highestZone": 2,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 101,
+      "endZone": 4,
+      "highestZone": 4,
+      "prestiged": false,
+      "ticks": 31
+    },
+    {
+      "run": 102,
+      "endZone": 6,
+      "highestZone": 6,
+      "prestiged": false,
+      "ticks": 49
+    },
+    {
+      "run": 103,
+      "endZone": 6,
+      "highestZone": 6,
+      "prestiged": false,
+      "ticks": 52
+    },
+    {
+      "run": 104,
+      "endZone": 7,
+      "highestZone": 7,
+      "prestiged": false,
+      "ticks": 56
+    },
+    {
+      "run": 105,
+      "endZone": 7,
+      "highestZone": 7,
+      "prestiged": false,
+      "ticks": 45
+    },
+    {
+      "run": 106,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 44
+    },
+    {
+      "run": 107,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 37
+    },
+    {
+      "run": 108,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 46
+    },
+    {
+      "run": 109,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 21
+    },
+    {
+      "run": 110,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 111,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 9
+    },
+    {
+      "run": 112,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 113,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 10
+    },
+    {
+      "run": 114,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 20
+    },
+    {
+      "run": 115,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 13
+    },
+    {
+      "run": 116,
+      "endZone": 11,
+      "highestZone": 11,
+      "prestiged": false,
+      "ticks": 30
+    },
+    {
+      "run": 117,
+      "endZone": 10,
+      "highestZone": 11,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 118,
+      "endZone": 11,
+      "highestZone": 11,
+      "prestiged": false,
+      "ticks": 35
+    },
+    {
+      "run": 119,
+      "endZone": 11,
+      "highestZone": 11,
+      "prestiged": false,
+      "ticks": 21
+    },
+    {
+      "run": 120,
+      "endZone": 13,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 46
+    },
+    {
+      "run": 121,
+      "endZone": 11,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 23
+    },
+    {
+      "run": 122,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 50
+    },
+    {
+      "run": 123,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 33
+    },
+    {
+      "run": 124,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 52
+    },
+    {
+      "run": 125,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 36
+    },
+    {
+      "run": 126,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 50
+    },
+    {
+      "run": 127,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 39
+    },
+    {
+      "run": 128,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 52
+    },
+    {
+      "run": 129,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 39
+    },
+    {
+      "run": 130,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 51
+    },
+    {
+      "run": 131,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 40
+    },
+    {
+      "run": 132,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 50
+    },
+    {
+      "run": 133,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 40
+    },
+    {
+      "run": 134,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 49
+    },
+    {
+      "run": 135,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 37
+    },
+    {
+      "run": 136,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 49
+    },
+    {
+      "run": 137,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 37
+    },
+    {
+      "run": 138,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 50
+    },
+    {
+      "run": 139,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 39
+    },
+    {
+      "run": 140,
+      "endZone": 16,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 49
+    },
+    {
+      "run": 141,
+      "endZone": 14,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 39
+    },
+    {
+      "run": 142,
+      "endZone": 16,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 50
+    },
+    {
+      "run": 143,
+      "endZone": 14,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 39
+    },
+    {
+      "run": 144,
+      "endZone": 16,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 51
+    },
+    {
+      "run": 145,
+      "endZone": 14,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 38
+    },
+    {
+      "run": 146,
+      "endZone": 16,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 50
+    },
+    {
+      "run": 147,
+      "endZone": 14,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 38
+    },
+    {
+      "run": 148,
+      "endZone": 16,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 34
+    },
+    {
+      "run": 149,
+      "endZone": 14,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 38
+    },
+    {
+      "run": 150,
+      "endZone": 16,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 33
+    },
+    {
+      "run": 151,
+      "endZone": 14,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 23
+    },
+    {
+      "run": 152,
+      "endZone": 16,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 33
+    },
+    {
+      "run": 153,
+      "endZone": 14,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 23
+    },
+    {
+      "run": 154,
+      "endZone": 16,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 34
+    },
+    {
+      "run": 155,
+      "endZone": 14,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 21
+    },
+    {
+      "run": 156,
+      "endZone": 16,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 27
+    },
+    {
+      "run": 157,
+      "endZone": 14,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 17
+    },
+    {
+      "run": 158,
+      "endZone": 16,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 20
+    },
+    {
+      "run": 159,
+      "endZone": 15,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 13
+    },
+    {
+      "run": 160,
+      "endZone": 16,
+      "highestZone": 0,
+      "prestiged": true,
+      "ticks": 20
+    },
+    {
+      "run": 161,
+      "endZone": 1,
+      "highestZone": 1,
+      "prestiged": false,
+      "ticks": 10
+    },
+    {
+      "run": 162,
+      "endZone": 2,
+      "highestZone": 2,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 163,
+      "endZone": 6,
+      "highestZone": 6,
+      "prestiged": false,
+      "ticks": 52
+    },
+    {
+      "run": 164,
+      "endZone": 7,
+      "highestZone": 7,
+      "prestiged": false,
+      "ticks": 60
+    },
+    {
+      "run": 165,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 49
+    },
+    {
+      "run": 166,
+      "endZone": 7,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 15
+    },
+    {
+      "run": 167,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 168,
+      "endZone": 8,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 15
+    },
+    {
+      "run": 169,
+      "endZone": 11,
+      "highestZone": 11,
+      "prestiged": false,
+      "ticks": 37
+    },
+    {
+      "run": 170,
+      "endZone": 12,
+      "highestZone": 12,
+      "prestiged": false,
+      "ticks": 28
+    },
+    {
+      "run": 171,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 52
+    },
+    {
+      "run": 172,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 38
+    },
+    {
+      "run": 173,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 46
+    },
+    {
+      "run": 174,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 36
+    },
+    {
+      "run": 175,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 53
+    },
+    {
+      "run": 176,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 37
+    },
+    {
+      "run": 177,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 53
+    },
+    {
+      "run": 178,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 39
+    },
+    {
+      "run": 179,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 41
+    },
+    {
+      "run": 180,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 34
+    },
+    {
+      "run": 181,
+      "endZone": 16,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 45
+    },
+    {
+      "run": 182,
+      "endZone": 14,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 31
+    },
+    {
+      "run": 183,
+      "endZone": 16,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 36
+    },
+    {
+      "run": 184,
+      "endZone": 14,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 25
+    },
+    {
+      "run": 185,
+      "endZone": 16,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 37
+    },
+    {
+      "run": 186,
+      "endZone": 15,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 187,
+      "endZone": 16,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 29
+    },
+    {
+      "run": 188,
+      "endZone": 15,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 20
+    },
+    {
+      "run": 189,
+      "endZone": 16,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 28
+    },
+    {
+      "run": 190,
+      "endZone": 15,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 20
+    },
+    {
+      "run": 191,
+      "endZone": 16,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 29
+    },
+    {
+      "run": 192,
+      "endZone": 15,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 14
+    },
+    {
+      "run": 193,
+      "endZone": 16,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 23
+    },
+    {
+      "run": 194,
+      "endZone": 15,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 14
+    },
+    {
+      "run": 195,
+      "endZone": 17,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 26
+    },
+    {
+      "run": 196,
+      "endZone": 15,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 15
+    },
+    {
+      "run": 197,
+      "endZone": 17,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 27
+    },
+    {
+      "run": 198,
+      "endZone": 15,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 15
+    },
+    {
+      "run": 199,
+      "endZone": 17,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 27
+    },
+    {
+      "run": 200,
+      "endZone": 15,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 15
+    },
+    {
+      "run": 201,
+      "endZone": 17,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 27
+    },
+    {
+      "run": 202,
+      "endZone": 15,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 15
+    },
+    {
+      "run": 203,
+      "endZone": 17,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 27
+    },
+    {
+      "run": 204,
+      "endZone": 15,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 15
+    },
+    {
+      "run": 205,
+      "endZone": 17,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 27
+    },
+    {
+      "run": 206,
+      "endZone": 15,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 15
+    },
+    {
+      "run": 207,
+      "endZone": 17,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 27
+    },
+    {
+      "run": 208,
+      "endZone": 16,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 209,
+      "endZone": 17,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 27
+    },
+    {
+      "run": 210,
+      "endZone": 16,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 211,
+      "endZone": 17,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 28
+    },
+    {
+      "run": 212,
+      "endZone": 16,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 213,
+      "endZone": 17,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 27
+    },
+    {
+      "run": 214,
+      "endZone": 16,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 215,
+      "endZone": 17,
+      "highestZone": 0,
+      "prestiged": true,
+      "ticks": 27
+    },
+    {
+      "run": 216,
+      "endZone": 1,
+      "highestZone": 1,
+      "prestiged": false,
+      "ticks": 10
+    },
+    {
+      "run": 217,
+      "endZone": 4,
+      "highestZone": 4,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 218,
+      "endZone": 6,
+      "highestZone": 6,
+      "prestiged": false,
+      "ticks": 55
+    },
+    {
+      "run": 219,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 51
+    },
+    {
+      "run": 220,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 30
+    },
+    {
+      "run": 221,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 222,
+      "endZone": 13,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 54
+    },
+    {
+      "run": 223,
+      "endZone": 13,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 45
+    },
+    {
+      "run": 224,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 47
+    },
+    {
+      "run": 225,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 49
+    },
+    {
+      "run": 226,
+      "endZone": 16,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 56
+    },
+    {
+      "run": 227,
+      "endZone": 14,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 43
+    },
+    {
+      "run": 228,
+      "endZone": 15,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 47
+    },
+    {
+      "run": 229,
+      "endZone": 14,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 28
+    },
+    {
+      "run": 230,
+      "endZone": 16,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 35
+    },
+    {
+      "run": 231,
+      "endZone": 14,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 26
+    },
+    {
+      "run": 232,
+      "endZone": 17,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 41
+    },
+    {
+      "run": 233,
+      "endZone": 15,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 16
+    },
+    {
+      "run": 234,
+      "endZone": 17,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 29
+    },
+    {
+      "run": 235,
+      "endZone": 16,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 17
+    },
+    {
+      "run": 236,
+      "endZone": 18,
+      "highestZone": 18,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 237,
+      "endZone": 16,
+      "highestZone": 18,
+      "prestiged": false,
+      "ticks": 20
+    },
+    {
+      "run": 238,
+      "endZone": 18,
+      "highestZone": 18,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 239,
+      "endZone": 16,
+      "highestZone": 18,
+      "prestiged": false,
+      "ticks": 21
+    },
+    {
+      "run": 240,
+      "endZone": 18,
+      "highestZone": 18,
+      "prestiged": false,
+      "ticks": 33
+    },
+    {
+      "run": 241,
+      "endZone": 16,
+      "highestZone": 18,
+      "prestiged": false,
+      "ticks": 21
+    },
+    {
+      "run": 242,
+      "endZone": 18,
+      "highestZone": 18,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 243,
+      "endZone": 16,
+      "highestZone": 18,
+      "prestiged": false,
+      "ticks": 21
+    },
+    {
+      "run": 244,
+      "endZone": 18,
+      "highestZone": 18,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 245,
+      "endZone": 17,
+      "highestZone": 18,
+      "prestiged": false,
+      "ticks": 23
+    },
+    {
+      "run": 246,
+      "endZone": 18,
+      "highestZone": 18,
+      "prestiged": false,
+      "ticks": 34
+    },
+    {
+      "run": 247,
+      "endZone": 17,
+      "highestZone": 18,
+      "prestiged": false,
+      "ticks": 24
+    },
+    {
+      "run": 248,
+      "endZone": 18,
+      "highestZone": 18,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 249,
+      "endZone": 17,
+      "highestZone": 18,
+      "prestiged": false,
+      "ticks": 25
+    },
+    {
+      "run": 250,
+      "endZone": 19,
+      "highestZone": 19,
+      "prestiged": false,
+      "ticks": 35
+    },
+    {
+      "run": 251,
+      "endZone": 17,
+      "highestZone": 19,
+      "prestiged": false,
+      "ticks": 26
+    },
+    {
+      "run": 252,
+      "endZone": 19,
+      "highestZone": 19,
+      "prestiged": false,
+      "ticks": 34
+    },
+    {
+      "run": 253,
+      "endZone": 17,
+      "highestZone": 19,
+      "prestiged": false,
+      "ticks": 26
+    }
+  ],
+  "meta": {
+    "env": "node",
+    "configName": "randomized-pacing-endrun-no-perk-category",
+    "totalMsIncludingBridge": 5334,
+    "generatedAt": "2026-07-09T21:18:19.808Z"
+  }
+}
