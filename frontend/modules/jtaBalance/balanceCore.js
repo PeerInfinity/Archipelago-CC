@@ -26,21 +26,23 @@
  * non-decreasing in cost and a bisection inverts it.
  *
  * The estimate assumes a DEDICATED grind, though, while real automation works
- * a priority queue. `calibration-standalone-z14.json` (Phase 3c) measures that
- * bias — estimate at decision time vs resets actually taken — so we invert
- * through the calibration curve rather than against the raw estimator.
+ * a priority queue, so it is a biased predictor of the resets actually taken.
  *
- * That curve has a FLOOR of ~6 resets, and it is a property of the game: even a
- * task that is affordable right now waits for automation's priority queue to
- * reach it. Targets below it cannot be reached by cost at all. Per the
- * 2026-07-08 ruling such targets are CLAMPED (the task lands at minimum cost)
- * and counted, and Phase 4 measures what the clamping costs in felt pacing.
+ * !! `calibration-standalone-z14.json` was built to correct that bias and DOES
+ * NOT SUPPORT THE WEIGHT. Its samples are not independent (1487 samples from
+ * only 118 tasks — a task that lingers contributes one sample per run); it
+ * measures the wrong conditional (the balancer assigns ONCE, at first touch, and
+ * the per-task table is non-monotone on n = 46/12/7/11/10/5/11/16); and it is
+ * observational, not interventional — cost is vanilla throughout, never
+ * manipulated, so it cannot answer "what happens if I SET the cost". Its upper
+ * half moves with the build's automation defaults and with `auto_prestige`.
+ * See derive-calibration.mjs's header and SUMMARY.md Round 7.
  *
- * The curve's upper end (~19 resets) is a SAMPLING LIMIT, not a plateau — the
- * measured medians are still climbing there. A target above it clamps to the
- * cheapest estimate that reaches the top of the measured range, because we have
- * no evidence that paying more buys more delay. The v1 anchor curve's largest
- * gap is 14, so this end is not normally exercised.
+ * RULED 2026-07-08, superseding the position-indexed anchor-curve replay: aim
+ * for a CONSTANT number of resets between milestones (`resetsPerStep`), and
+ * MEASURE the real gaps by replaying the forward pass rather than predicting
+ * them from a static curve. `invertCalibration` and `targetGapForMilestone`
+ * survive only to seed the first guess.
  */
 
 // TaskType (zones.ts). Duplicated as an integer map because the fork exposes

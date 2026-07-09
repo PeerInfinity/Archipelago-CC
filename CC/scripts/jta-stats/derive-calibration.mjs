@@ -21,28 +21,36 @@
  * non-monotonic. SUMMARY.md Round 5 says to derive the balancer's curve from
  * the zone<=14 samples instead. That is what this script does.
  *
- * One property of the resulting curve is load-bearing, and it is a real bound on
- * how precisely cost can pace anything:
+ * ⚠ THE OUTPUT OF THIS SCRIPT IS NOT A TRUSTWORTHY CALIBRATION. It is retained
+ * as a descriptive statistic and as a rough prior, nothing more. Three defects,
+ * found 2026-07-08 while re-examining it (details in SUMMARY.md Round 7):
  *
- *   A FLOOR. Even at estimate 0 ("completable right now") the median task still
- *   takes ~6 resets to actually complete, because automation works a priority
- *   queue and doesn't reach it immediately. Targets below the floor are
- *   unreachable by cost alone. This is robust: it rests on the largest bucket
- *   (est 0 carries most samples).
+ *   1. The samples are not independent. ~1487 samples come from 118 distinct
+ *      tasks; a task that lingers 100 runs contributes 100 samples whose
+ *      `actual` counts down 100, 99, 98..., while a task that finishes at once
+ *      contributes one. The median is therefore weighted by how long tasks
+ *      linger — the very thing it is meant to predict.
+ *   2. It is the wrong conditional. The balancer assigns a cost ONCE, at first
+ *      touch. The matching quantity is one observation per task, and that table
+ *      is non-monotone on n = 46/12/7/11/10/5/11/16.
+ *   3. It is observational, not interventional. Cost is vanilla throughout; it
+ *      was never manipulated. Estimates vary with designer-set cost, zone and
+ *      skill level, all of which also drive `actual`. The balancer's whole job
+ *      is to SET cost, so this cannot answer its question. The symptom: the
+ *      curve's upper half moves with the build's automation defaults and with
+ *      `auto_prestige`.
  *
- * `floorResets` and `plateauResets` are simply the ends of the measured curve.
- * The upper end is a SAMPLING LIMIT, not a game property — it is the median
- * actual for the highest estimate bucket we observed, and the curve is still
- * climbing there. (An earlier sparse run at --sample-every 5 showed the medians
- * flattening past estimate ~10 and that was read as a "plateau" caused by skill
- * XP compounding; --sample-every 1 quintupled the samples and the flattening
- * disappeared. Bucket medians at n ~ 20 are not to be trusted.)
+ * Superseded by the user ruling of 2026-07-08 — aim for a CONSTANT number of
+ * resets between milestones, and MEASURE the real gaps by replaying the forward
+ * pass, rather than predicting them from a static curve.
  *
- * Because bucket medians are still somewhat noisy and need not come out
- * monotone, the emitted `curve` is an isotonic (pool-adjacent-violators) fit of
- * median actual against estimate. The balancer inverts that monotone curve and
- * clamps to [floorResets, plateauResets], reporting any target it could not
- * reach.
+ * What still holds qualitatively: an affordable task waits several resets for
+ * automation's priority queue, and dearer tasks take longer.
+ *
+ * `floorResets` / `plateauResets` are just the ends of the measured curve; the
+ * upper one is a sampling limit, not a game property. The `curve` is an isotonic
+ * (pool-adjacent-violators) fit of median actual against estimate, so it can at
+ * least be inverted unambiguously when used as a prior.
  *
  * Usage:
  *   node CC/scripts/jta-stats/derive-calibration.mjs [--zone-limit 14] [--variant standalone]

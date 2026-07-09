@@ -561,21 +561,25 @@ standalone and `pinMaxEnergy` (substrate) budgets.
 > required). At v1 scope the exported log now has 21 perk milestones — 1:1 with
 > the anchor curve. This resolves open question 9 (loose over strict) in practice.
 >
-> **Phase 3c (DONE, refreshed 2026-07-08).** Calibration re-derived from raw
-> zone≤14 samples (`derive-calibration.mjs`, SUMMARY Round 7). The profile was
-> regenerated first, and that mattered twice: the committed 2026-07-06 profile
-> predated Round 6's shipped defaults, and `--sample-every 5` was too sparse
-> (n≈20/bucket) to trust. At `--sample-every 1` (1487 samples vs 301) the
-> reachable pacing window is **[6, 19] resets**. The **floor of 6 is a real game
-> property** — an affordable task still waits for automation's priority queue —
-> and anchor gaps below it clamp to minimum cost (**RULED: clamp, count, measure
-> in Phase 4**). The upper end is only a *sampling limit*: an apparent "plateau
-> past estimate ~10" in the sparse run **disappeared** under dense sampling, so
-> that claim is withdrawn. The z0–14 anchor curve is unchanged across stale,
-> prestige-on and prestige-free profiles (only the excluded SBtV straggler
-> moves), so **prestige is not a confound** and the solver keeps `auto_prestige`
-> on. pinned100's floor is 28.2, independently confirming the `energyBonusSync`
-> supersession above.
+> **Phase 3c — the calibration curve is RETIRED (2026-07-08).** It was built to
+> correct `estimateResetsToComplete`'s dedicated-grind bias, and it does not hold
+> up. Its samples are not independent (1487 samples from 118 tasks — a lingering
+> task contributes one per run, so the median is weighted by lingering); it
+> measures the wrong conditional (the balancer assigns ONCE at first touch, and
+> the per-task table is non-monotone on n = 46/12/7/11/10/5/11/16); and it is
+> observational, not interventional — cost is vanilla throughout, so it cannot
+> answer "what if I *set* the cost". Its instability shows it: holding sampling
+> density fixed, the stale build gives a flat top `[…14,14,14,14]` and the current
+> build `[…12,13,13,19]`, and turning `auto_prestige` off flattens it again. Two
+> claims made earlier in this file are therefore WITHDRAWN: that dense sampling
+> dissolved the plateau (it was the build), and that prestige is not a confound
+> (true for the anchor curve, false for the calibration).
+>
+> What survives: the profile refresh itself (the committed 2026-07-06 data
+> predated Round 6's shipped defaults), the `--no-prestige` / `--label` axes, and
+> the qualitative facts that an affordable task still waits several resets for
+> automation's queue and dearer tasks take longer. pinned100's floor (28.2) still
+> independently confirms the `energyBonusSync` supersession above.
 >
 > **Solver home (RULED + spiked):** a Web Worker importing the submodule's
 > committed `build/*.js` behind shared DOM stubs. `estimateResetsToComplete` is a
@@ -694,7 +698,7 @@ standalone and `pinMaxEnergy` (substrate) budgets.
 | 3 | Randomization home | **RULED:** procgen-pipeline-initiated; code home = implementer's choice, engine-touching parts may live in the submodule |
 | 4 | Content scope | **RULED:** all tasks = locations, all perks = items, all in sphere log; **v1 = perk shuffle + rebalance, zones 0–14 (no prestige)**; synthetic generation deferred until after v1 |
 | 5 | AP checks this arc | **RULED:** yes; grants AP-authoritative (A1) |
-| 6 | Pacing knob | **RULED:** defaults = profiled vanilla values capturing the CURVE (position-indexed replay with seeded jitter, **STANDALONE anchor** — user 2026-07-06 follow-up; profiling with `award_spark_on_discovery` OFF); scalar `resetsPerStep` = manual override; tolerance band picked after first verification round |
+| 6 | Pacing knob | **RE-RULED 2026-07-08 (supersedes the curve):** aim for a **CONSTANT number of resets between milestones** — scalar `resetsPerStep` is the knob, not an override. Curve-matching is abandoned: the vanilla curve is barely noticeable before the late zones, and the calibration built to hit it does not hold up (see §2c). Measure the real gaps by replaying the forward pass. |
 | 7 | Synthetic construction order | **RULED (direction; build post-v1):** co-construction with a thin planned layer; sphere log as byproduct trace, AP's post-fill log authoritative |
 | 8 | Vanilla profiling first | **RULED + DONE:** Phase 0, `572fd9c32`, SUMMARY.md Round 5 |
 | 9 | Two-pass flow | **RULED (user-raised):** post-fill rebalance at rules load is the authoritative balancing point (§2b); Pass A is structure-only |

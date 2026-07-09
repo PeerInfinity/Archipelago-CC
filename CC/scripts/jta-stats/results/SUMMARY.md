@@ -312,11 +312,13 @@ of median actual vs estimate, which the balancer inverts to pick costs.
    where the old file ran the full 3000 runs to 264/269. The balancer's forward
    pass plays under today's `baselineMods()`, so it must be calibrated against
    today's game.
-2. *`--sample-every 5` was too sparse to trust.* Bucket medians rested on n ~ 20.
-   Re-profiling with `--sample-every 1` (1487 usable samples vs 301) **removed an
-   apparent plateau** that the sparse run had shown past estimate ~10 — which had
-   been mistaken for skill-XP compounding beating the estimator's frozen boost.
-   It is not there. The curve climbs monotonically across the whole sampled range.
+2. *The "plateau" was a property of the STALE BUILD, not of sampling density.*
+   Holding density fixed at `--sample-every 5` and varying only the build:
+   stale gives `[6, 6, 8, 10, 14, 14, 14, 14]` (flat top), current gives
+   `[6, 6, 8, 10, 12, 13, 13, 19]`. Denser sampling only refines the low buckets.
+   An earlier draft of this round credited the flattening to sparse sampling;
+   that was wrong — two things were changed at once. There is no plateau, and it
+   was never evidence of skill-XP compounding beating the estimator.
 
 **Standalone (the anchor, and now also the runtime — `energyBonusSync` default
 on).** 1487 usable samples, 123 censored, sample-every 1.
@@ -332,20 +334,35 @@ on).** 1487 usable samples, 123 censored, sample-every 1.
 | 21-50 | 94 | 8 | 14 | 27 | 14.91 |
 | 51-200 | 143 | 9 | 19 | 32 | 19 |
 
-One bound is real, the other is not:
+### The window [6, 19] does not mean what it looks like — RETIRED 2026-07-08
 
-- **Floor ~6 resets — a game property.** Even at estimate 0 ("affordable right
-  now") the median task waits ~6 resets, because automation works a priority
-  queue. It rests on the largest bucket (782 samples), and p25 = 3, so it is a
-  soft floor. Targets below it are unreachable by `cost_multiplier` at all.
-- **Upper end ~19 resets — a sampling limit, not a plateau.** It is simply the
-  median for the highest estimate bucket observed; the curve is still climbing.
-  The v1 anchor curve's largest gap is 14, so this end is not normally exercised.
+This table is kept as a record, not as a calibration. Three defects, found while
+re-examining it:
 
-So the reachable pacing window is **[6, 19]**, and of the 21 anchor-curve perk
-gaps the ones below 6 clamp to minimum cost. This is the "achievable pacing
-accuracy is bounded by the skill trajectories" bound the plan predicted (plan
-Sec 3 Q7 skills sub-policy, Sec 2 caveat 1) — but it binds only from below.
+1. **The samples are not independent.** 1487 samples come from only **118
+   distinct tasks**; the `est = 0` bucket is 782 samples from 91 tasks. A task
+   that lingers 100 runs contributes 100 samples whose `actual` counts down
+   100, 99, 98...; a task that finishes at once contributes one. So the median is
+   weighted by *how long tasks linger* — the very thing it is trying to predict.
+   One task (id 150) supplies 63 samples on its own.
+2. **It is the wrong conditional.** The balancer assigns a cost ONCE, at first
+   touch. The matching quantity is one observation per task: the estimate at
+   first touch, and the resets it then took. That table reads
+   `est 0 -> p50 9` (not 6; only 3 of 46 tasks finish within one reset), on
+   n = 46/12/7/11/10/5/11/16, and it is **not monotone**: 9, 6, 13, 9, 19, 11,
+   15, 32. There is no curve in it.
+3. **It is observational, not interventional.** Cost was never manipulated —
+   it is vanilla throughout. Estimates vary because of designer-set costs, zone
+   and skill level, all of which also drive `actual`. Reading a causal
+   "set est = E, get actual = f(E)" off that is confounded; and the balancer's
+   whole job is to *set* cost. The build- and prestige-sensitivity above is the
+   symptom.
+
+Only the qualitative shape survives: an affordable task still waits several
+resets for automation's priority queue, and more expensive tasks take longer.
+**Superseded by the user ruling of 2026-07-08: aim for a CONSTANT number of
+resets between milestones and measure the real gaps by replaying the forward
+pass, rather than predicting them from a static curve.**
 
 **The z0-14 anchor curve is unchanged** across the stale profile, a fresh
 prestige-on profile, and a fresh prestige-free profile
