@@ -443,6 +443,88 @@ export function runFirstCompletionStats(env, options = {}) {
     scan(game.GAMESTATE.tasks); // landing zone: MoT auto-completes 1-tick tasks
   };
 
+  // --- AP solo-play emulation (Phase 4) ------------------------------------
+  // `gameDataPatch` above already carries BOTH the balance pass's cost
+  // multipliers and the pipeline's perk -> Count grant-suppression patches —
+  // exactly the merged list the substrate bridge applies on region entry. What
+  // it cannot carry is the AP *runtime*: which tasks automation must still
+  // judge as perk tasks once suppression erased `def.perk`, and which perk item
+  // each AP location holds once the fill shuffled them away from their native
+  // tasks. Both arrive through `options.apRuntime`.
+  //
+  // Grant semantics (user ruling 2026-07-09). A perk found in the player's OWN
+  // world behaves like the vanilla perk it replaced: it resets on prestige and
+  // is re-granted the next time the task holding it completes. The AP location
+  // stays checked — only the in-run perk state cycles. A perk received from
+  // ANOTHER player's world has no task to re-run, so it persists through
+  // prestige and the client re-grants it. `grantPerk` is idempotent, so the
+  // own-world leg is just "grant on every full completion".
+  //
+  // bridge.js implements NEITHER leg today: `_reconcilePerksFromInventory`
+  // grants each item name once ever (`_processedItems`) and nothing reacts to a
+  // prestige. This driver models the INTENDED semantics; the divergence from
+  // shipped code is what `regrantOnEveryCompletion: false` measures.
+  const apRuntime = options.apRuntime ?? null;
+  // taskId -> perk item name placed on that task's AP location (own world).
+  const apGrants = new Map(
+    Object.entries(apRuntime?.grants ?? {}).map(([id, name]) => [Number(id), name])
+  );
+  // Perks of ours that the fill placed in ANOTHER player's world. Granted at
+  // start (best case: the finder checked it early) and re-granted after every
+  // prestige. Empty for a solo seed, where every perk sits on our own locations.
+  const apForeignPerks = apRuntime?.foreignPerks ?? [];
+  const apState = apRuntime
+    ? {
+        firstCompletionRun: new Map(), // taskId -> run; callback ground truth
+        perksGranted: new Set(),
+        regrants: 0,
+        prestigeWipes: 0,
+      }
+    : null;
+  const grantForeignPerks = () => {
+    for (const name of apForeignPerks) win.grantPerk(name);
+  };
+  if (apRuntime) {
+    for (const hook of [
+      "setPerkCategoryTaskIds",
+      "setTaskCompletionCallback",
+      "grantPerk",
+    ]) {
+      if (typeof win[hook] !== "function") {
+        throw new Error(
+          `apRuntime set but win.${hook} is unavailable ` +
+            "(fork build predates the Tier-1 hooks)"
+        );
+      }
+    }
+    // Mirrors bridge.js `_syncPerkCategoryTaskIds`: the forced set is exactly
+    // the NATIVE perk tasks (the ids carrying a `perk` suppression patch), and
+    // an id retires once its AP location is checked — i.e. on first completion.
+    // NOT the tasks *holding* perk items: the shuffle moves those, and the
+    // defect being repaired is the two categorizers' reliance on `def.perk`.
+    const forcedPerkIds = new Set(apRuntime.perkTaskIds ?? []);
+    win.setPerkCategoryTaskIds(forcedPerkIds);
+    const regrantOnEveryCompletion = apRuntime.regrantOnEveryCompletion ?? true;
+
+    win.setTaskCompletionCallback((info) => {
+      if (info.synthetic) return;
+      if (forcedPerkIds.delete(info.id)) win.setPerkCategoryTaskIds(forcedPerkIds);
+      if (universe.has(info.id) && !apState.firstCompletionRun.has(info.id)) {
+        apState.firstCompletionRun.set(info.id, run);
+      }
+      const perk = apGrants.get(info.id);
+      if (!perk) return;
+      const firstGrant = !apState.perksGranted.has(perk);
+      if (!firstGrant && !regrantOnEveryCompletion) return;
+      const res = win.grantPerk(perk);
+      if (!res?.success) return;
+      apState.perksGranted.add(perk);
+      // alreadyHad === false on a re-grant means a prestige had wiped it.
+      if (!firstGrant && !res.alreadyHad) apState.regrants++;
+    });
+    grantForeignPerks();
+  }
+
   const now =
     typeof performance !== "undefined" ? () => performance.now() : () => 0;
   const t0 = now();
@@ -497,6 +579,13 @@ export function runFirstCompletionStats(env, options = {}) {
       const zoneAtEnd = game.GAMESTATE.current_zone;
       const prestiged = sim.maybeAutoPrestige();
       if (!prestiged) sim.doEnergyReset();
+      if (prestiged && apState) {
+        // doPrestige() sets every perk to false. Own-world perks return when
+        // their holding task next completes; foreign perks have no task to
+        // re-run, so the client re-grants them here.
+        apState.prestigeWipes++;
+        grantForeignPerks();
+      }
       applyEnergyPin();
       runEnds.push({
         run,
@@ -540,6 +629,12 @@ export function runFirstCompletionStats(env, options = {}) {
   }
 
   const wallMs = now() - t0;
+  if (apRuntime) {
+    // Leave the fork as we found it: a second run in the same process (or a
+    // browser page) must not inherit this run's callback or allowlist.
+    win.setTaskCompletionCallback(null);
+    win.setPerkCategoryTaskIds(null);
+  }
   // The sim restarts the interval loop via setTickRate() during play (zone
   // advances, prestige); re-pause so the page doesn't resume ticking the
   // finished game after we return.
@@ -564,6 +659,7 @@ export function runFirstCompletionStats(env, options = {}) {
       runToBudget,
       checkpointEvery,
       gameDataPatch,
+      apRuntime,
       mods,
     },
     timing: {
@@ -593,6 +689,45 @@ export function runFirstCompletionStats(env, options = {}) {
           )
         : undefined,
     },
+    // Phase 4's first-class assertion: of the AP location pool (== the metric
+    // universe, once the four SBtV ids are excluded), how many were ever
+    // checked? `coverage` counts FIRST completions observed by the fork's own
+    // completion callback — ground truth, including Mastery-of-Time and
+    // free-zone skips. `pollingCompletedCount` is the pre-existing metric,
+    // which INFERS zone-skip completions at run boundaries; the two must agree.
+    apRuntime: apState
+      ? {
+          coverage: apState.firstCompletionRun.size,
+          coverageTotal: universe.size,
+          fullCoverage: apState.firstCompletionRun.size === universe.size,
+          uncovered: Array.from(universe.values())
+            .filter((t) => !apState.firstCompletionRun.has(t.id))
+            .map((t) => ({ id: t.id, name: t.name, zone: t.zone })),
+          pollingCompletedCount: completions.size,
+          callbackCompletedCount: apState.firstCompletionRun.size,
+          // taskId -> run of the completion the FORK actually reported. The
+          // polling metric infers zone-skip completions from `current_zone` at
+          // a run boundary; this map is what `onFullyFinishTask` really fired,
+          // which is also exactly when the bridge dispatches the AP check.
+          firstCompletionRuns: Object.fromEntries(apState.firstCompletionRun),
+          // Perk milestones in emergent order: the run at which each perk item
+          // was first acquired. Pacing gaps are the diffs of `run` here.
+          milestones: [...apGrants.entries()]
+            .map(([taskId, perk]) => ({
+              taskId,
+              perk,
+              run: apState.firstCompletionRun.get(taskId) ?? null,
+            }))
+            .sort((a, b) => (a.run ?? Infinity) - (b.run ?? Infinity)),
+          perksGranted: [...apState.perksGranted],
+          perksMissing: [...apGrants.values()].filter(
+            (p) => !apState.perksGranted.has(p)
+          ),
+          foreignPerks: [...apForeignPerks],
+          regrants: apState.regrants,
+          prestigeWipes: apState.prestigeWipes,
+        }
+      : null,
     purchases,
     sparkCheckpoints,
     completions: completed,
