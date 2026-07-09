@@ -665,6 +665,22 @@ measure what emerges.
   run), the final **`resetsPerStep`** value (default 5, user asked to revisit
   if measurement says otherwise), and the parked
   **`threshold_other_metric: resets`** question.
+- **⚠ The harness does not model the AP runtime yet — this is the bulk of the
+  implementation work (found 2026-07-09).** `driver.mjs` applies
+  `options.gameDataPatch` (cost multipliers) and nothing else, so a run with
+  only the balance patches measures randomized costs against **vanilla local
+  perk grants** — not the world we ship. Emulating AP solo play needs three
+  more things in the driver: the perk→`Count` **suppression** patches (the
+  pipeline emits them per zone as `task_patches`); `setPerkCategoryTaskIds`
+  with the not-yet-completed perk-task ids, retired on completion (without it
+  the 2026-07-09 categorization defect is re-introduced *inside* the
+  verification, and every perk task is threshold-skipped); and a
+  **placement-driven grant hook** — the perk item AP placed on location L is
+  granted when the task owning L first completes, not when its vanilla perk
+  task does, because the shuffle moves them apart. Placements come from
+  `regions[player][*].locations[].item` joined to the sidecars'
+  `ap_locations`. `setTaskCompletionCallback` is the natural hook; the driver
+  currently polls task arrays, so a callback is additive.
 - In-app smoke: randomized+balanced preset progresses zone 1→3 within
   expected resets under playback automation.
 
