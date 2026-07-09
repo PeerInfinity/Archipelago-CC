@@ -70,17 +70,24 @@ const presetFilesBefore = fs.existsSync(PRESET_FILES_JSON)
     ? fs.readFileSync(PRESET_FILES_JSON, 'utf8') : null;
 
 function cleanup() {
+    // The generator's scaffolding — world_generator's input and the yaml
+    // templates Generate.py reads. Nobody inspects these, so they go even under
+    // JTA_RT_KEEP; left behind, they are untracked litter a `git add -A` during
+    // a sweep will happily commit.
+    fs.rmSync(tmpTemplates, { recursive: true, force: true });
+    fs.rmSync(tmpRules, { force: true });
+
     // JTA_RT_KEEP=1 leaves the generated world/preset in place for inspection
-    // (the exported sphere log is Pass B's input — handy to eyeball).
+    // (the exported sphere log is Pass B's input — handy to eyeball), and
+    // sweep-ap-seeds.mjs relies on it to hand the export to the driver.
     if (process.env.JTA_RT_KEEP) {
         console.log(`\n[kept] world=${WORLD_DIR}\n[kept] preset=${PRESET_DIR}`);
         if (presetFilesBefore !== null) fs.writeFileSync(PRESET_FILES_JSON, presetFilesBefore);
         return;
     }
-    for (const p of [WORLD_DIR, PRESET_DIR, tmpTemplates]) {
+    for (const p of [WORLD_DIR, PRESET_DIR]) {
         fs.rmSync(p, { recursive: true, force: true });
     }
-    fs.rmSync(tmpRules, { force: true });
     // Seed id is a hash of SEED, so remove whichever export zip this run made.
     if (fs.existsSync(OUTPUT_DIR)) {
         for (const f of fs.readdirSync(OUTPUT_DIR)) {

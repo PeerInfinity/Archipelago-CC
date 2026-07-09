@@ -326,3 +326,12 @@ rule_builder_modified/
 frontend/modules/bounceDemo/djReal/*.swf
 frontend/modules/bounceDemo/djReal/runtime/Doodle_Jump_loader.*
 
+
+# Transient workspace of scripts/procgen/verify-jta-locations-roundtrip.mjs.
+# Under JTA_RT_KEEP=1 (how CC/scripts/jta-stats/sweep-ap-seeds.mjs drives it)
+# the generated world + preset survive the run on purpose, so they must never
+# be picked up by a `git add -A` that lands mid-sweep.
+scripts/procgen/.jta-roundtrip-rules.json
+scripts/procgen/.jta-roundtrip-templates/
+worlds/jta_loctest_roundtrip_worldgen/
+frontend/presets/jta_loctest_roundtrip_worldgen/
