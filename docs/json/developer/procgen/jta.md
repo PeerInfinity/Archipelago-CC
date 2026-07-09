@@ -56,24 +56,30 @@ Without the override the *balance walk* stalls outright — confined by `setCost
 
 **The `other` category's level metric still drifts.** For tasks with no perk at all, that metric worsens roughly 1% per skill level, so a low-XP task can eventually be skipped at any cost. The balance pass reports these as `unengaged` and prices them at the largest cost it assigned anywhere (they carry no perk, so their cost is strategically irrelevant); the all-skipped Best-Task fallback is what completes them in play. The game's shipped all-toggles-off defaults are unaffected by any of this — only the tuned automation profile enables thresholds.
 
-## Prestige and perk grants (known bridge defect)
+## Prestige and perk grants
 
-`doPrestige()` sets every perk to `false`. Under AP-authoritative grants the local grants are suppressed and each AP item is received exactly once, so **unless something re-grants, a prestige costs the player every perk permanently.** This is reachable inside the v1 zone range: task 153 "Touch the Divine" is a `TaskType.Prestige` task in **zone 14**, and even a vanilla 15-zone run auto-prestiges once in ~237 runs.
+`doPrestige()` sets every perk to `false`, and it is reachable inside the v1 zone range: task 153 "Touch the Divine" is a `TaskType.Prestige` task in **zone 14**, and even a vanilla 15-zone run auto-prestiges once in ~237 runs. Under AP-authoritative grants the local grants are suppressed and each AP item is received exactly once, so something has to re-grant.
 
-The intended semantics (ruled 2026-07-09):
+The semantics (ruled 2026-07-09) turn on where the fill put the perk:
 
-- a perk found in the player's **own** world behaves like the vanilla perk it replaced — it resets on prestige and is re-granted the next time *the task holding it* completes (the AP location stays checked; only the in-run perk state cycles);
-- a perk received from **another player's** world has no task to re-run, so it persists through prestige and the client re-grants it.
+- a perk found on the player's **own** location behaves like the vanilla perk it replaced — it resets on prestige and is re-granted the next time *the task holding it* completes. The AP location stays checked; only the in-run perk state cycles.
+- a perk found in **another player's** world has no task to re-run, so `bridge.js` grants it when its item arrives and re-grants it after a prestige.
 
-The fork already affords both: `grantPerk` is idempotent, and `setTaskCompletionCallback` fires on *every* full completion (not just the first), so the own-world leg is simply "grant on every completion". `getFullState().prestigeCount` makes a prestige detectable — there is no dedicated prestige callback, since `_energy_reset_callback` fires for `doEnergyReset` and `doPrestige` alike.
+The fork affords both without a dedicated hook: `grantPerk` is idempotent, and `setTaskCompletionCallback` fires on *every* full completion (not just the first), so the own-world leg is simply "grant on every completion". Prestige is detected by comparing `getFullState().prestigeCount` across the energy-reset callback, which fires for `doEnergyReset` and `doPrestige` alike.
 
-**`bridge.js` implements neither leg.** `_reconcilePerksFromInventory` grants each item *name* once ever (`_processedItems`, cleared only on `rulesLoaded`) and nothing reacts to a prestige. It also cannot distinguish own from foreign items: `getStateSnapshot().inventory` is a flat `{name: count}` map with no origin. Recovering the distinction needs either a location→item placement map in the sidecar payload (the bridge already has `ap_locations` and `checkedLocations`) or item origin exposed by `adapterClient` (AP's `ReceivedItems` carries `NetworkItem{item, location, player}`).
+**Telling own from foreign.** `getStateSnapshot().inventory` is a flat `{name: count}` map with no origin, so the bridge recovers it from the placement: an item is own-world iff it sits on one of our locations *and belongs to us* (`perkOrigin.js`). The `player` half matters — two JtA slots in one multiworld both own an item named "Attunement", and my location may hold theirs while mine sits in their world.
 
-Measured cost of the gap (SUMMARY Round 8, `randomized-pacing-no-regrant`): on every seed that prestiges, locations are stranded for good — 2/130, 3/130 and 5/130 across seeds 1, 2 and 4, and nine of those ten are exactly the tasks the balance pass flagged `thresholdFloored`. Seed 3 never prestiges and is unaffected. The harness models the intended semantics via `driver.mjs`'s `apRuntime` option; the bridge fix is still outstanding.
+The placement source is **`staticData.locationItems`**, not the region sidecar. Sidecars are baked into the world package at world-generation time and read back verbatim at export (`exporter/games/base/handler.py` `_inject_worldgen_sidecars`), whereas AP's fill runs afterwards — so a placement map embedded in `playable_payload` would describe the *pre-fill* world and be wrong for anything `Generate.py` produces. `staticData` is post-fill, already crosses the iframe boundary as a `Map`, and needs no pipeline change. (`adapterClient` item origin — AP's `ReceivedItems` carries `NetworkItem{item, location, player}` — was the other candidate, but the frontend normally runs with no AP server: `stateManager` awards items locally from `locationItems`, and no `ReceivedItems` ever arrives.) `CC/scripts/jta-stats/make-ap-config.mjs` performs the same join to build the harness's reference model.
+
+Measured cost of the gap before the fix (SUMMARY Round 8, `randomized-pacing-no-regrant`, which models the old bridge): on every seed that prestiges, locations were stranded for good — 2/130, 3/130 and 5/130 across seeds 1, 2 and 4, and nine of those ten were exactly the tasks the balance pass flagged `thresholdFloored`. Seed 3 never prestiges and was unaffected.
+
+Both legs are covered in-app by `jta-prestige-perk-regrant`. Solo v1 worlds place all 21 perks at home, so the foreign leg has no natural fixture; the `jta_prestige_test` preset puts one perk in `start_inventory` instead, which from the bridge's side is the same thing — an inventory entry with no own placement. The test reaches a real prestige the way the game does, by completing task 153 (cost patched to 0) and letting the auto-prestige wealth trigger fire on the next depletion.
 
 ## Emergent verification
 
 The balance pass grades its own homework: it measures milestone gaps inside the walk that assigns the costs, with automation confined to the frontier. The out-of-sample check lives in the stats harness — `CC/scripts/jta-stats/sweep-ap-seeds.mjs` regenerates a post-fill world per seed, solves it, and plays it under free automation, asserting **location coverage** first and pacing second. Findings: `CC/scripts/jta-stats/results/SUMMARY.md` Round 8. The in-app counterpart is the `jta-randomized-balanced-progression` test.
+
+Note what the sweep does and does not cover: it drives `driver.mjs`, not `bridge.js`. Its `baseline` column *is* the intended grant semantics, so a bridge change cannot move it — the sweep is a regression guard on the model. The in-app tests are the only thing that exercises the real bridge.
 
 Two conservatisms to expect. The pass's convergence bar is in-sample: seed 4 fails it (stalled entries, an unengaged milestone) yet plays to full coverage, so the sweep records a failing solve and keeps playing. And a `thresholdFloored` task is not "unreachable" — it is a fragility marker, reachable under free automation but the first thing to strand when perks are lost.
 
