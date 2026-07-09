@@ -99,6 +99,11 @@
       "id": "jta-balance-solve-at-rules-load",
       "enabled": true,
       "category": "JtA substrate"
+    },
+    {
+      "id": "jta-randomized-balanced-progression",
+      "enabled": true,
+      "category": "JtA substrate"
     }
   ]
 }

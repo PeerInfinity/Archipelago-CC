@@ -1,0 +1,1331 @@
+{
+  "schema_version": 3,
+  "game_name": "JtA Randomized Test",
+  "game_directory": "procgen_maze_worldgen",
+  "archipelago_version": "0.6.7",
+  "generation_seed": 1,
+  "seed_name": "",
+  "player_names": {
+    "1": "Player1"
+  },
+  "world_classes": {
+    "1": "ProcgenMazeWorld"
+  },
+  "regions": {
+    "1": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "GameStart",
+            "connected_region": "region_0_0",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "region_0_0": {
+        "name": "region_0_0",
+        "exits": [
+          {
+            "name": "exit_S",
+            "connected_region": "region_0_1",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "exit_E",
+            "connected_region": "region_1_0",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_0_0__10",
+            "id": 1000,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_0_0__11",
+            "id": 1001,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_0_0__12",
+            "id": 1002,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_0_0__13",
+            "id": 1003,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_0_0__14",
+            "id": 1004,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_0_0__15",
+            "id": 1005,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_0_0__16",
+            "id": 1006,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Mysterious Amulet",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
+      "region_1_0": {
+        "name": "region_1_0",
+        "exits": [
+          {
+            "name": "exit_S",
+            "connected_region": "region_1_1",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "exit_W",
+            "connected_region": "region_0_0",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_1_0__20",
+            "id": 1007,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write",
+                  "Mysterious Amulet",
+                  "Village Hero",
+                  "Villager Gratitude"
+                ],
+                "count": 1
+              }
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_1_0__21",
+            "id": 1008,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write",
+                  "Mysterious Amulet",
+                  "Village Hero",
+                  "Villager Gratitude"
+                ],
+                "count": 1
+              }
+            },
+            "item": {
+              "name": "How to Write",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          },
+          {
+            "name": "region_1_0__22",
+            "id": 1009,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write",
+                  "Mysterious Amulet",
+                  "Village Hero",
+                  "Villager Gratitude"
+                ],
+                "count": 1
+              }
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_1_0__25",
+            "id": 1010,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write",
+                  "Mysterious Amulet",
+                  "Village Hero",
+                  "Villager Gratitude"
+                ],
+                "count": 1
+              }
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_1_0__27",
+            "id": 1011,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write",
+                  "Mysterious Amulet",
+                  "Village Hero",
+                  "Villager Gratitude"
+                ],
+                "count": 1
+              }
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_1_0__23",
+            "id": 1012,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write",
+                  "Mysterious Amulet",
+                  "Village Hero",
+                  "Villager Gratitude"
+                ],
+                "count": 1
+              }
+            },
+            "item": {
+              "name": "How to Read",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          },
+          {
+            "name": "region_1_0__24",
+            "id": 1013,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write",
+                  "Mysterious Amulet",
+                  "Village Hero",
+                  "Villager Gratitude"
+                ],
+                "count": 1
+              }
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_1_0__26",
+            "id": 1014,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write",
+                  "Mysterious Amulet",
+                  "Village Hero",
+                  "Villager Gratitude"
+                ],
+                "count": 1
+              }
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          }
+        ]
+      },
+      "region_0_1": {
+        "name": "region_0_1",
+        "exits": [
+          {
+            "name": "exit_N",
+            "connected_region": "region_0_0",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "exit_E",
+            "connected_region": "region_1_1",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_0_1__40",
+            "id": 1015,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write",
+                  "Mysterious Amulet",
+                  "Village Hero",
+                  "Villager Gratitude"
+                ],
+                "count": 3
+              }
+            },
+            "item": {
+              "name": "Victory",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          },
+          {
+            "name": "region_0_1__41",
+            "id": 1016,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write",
+                  "Mysterious Amulet",
+                  "Village Hero",
+                  "Villager Gratitude"
+                ],
+                "count": 3
+              }
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_0_1__42",
+            "id": 1017,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write",
+                  "Mysterious Amulet",
+                  "Village Hero",
+                  "Villager Gratitude"
+                ],
+                "count": 3
+              }
+            },
+            "item": {
+              "name": "Villager Gratitude",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          },
+          {
+            "name": "region_0_1__43",
+            "id": 1018,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write",
+                  "Mysterious Amulet",
+                  "Village Hero",
+                  "Villager Gratitude"
+                ],
+                "count": 3
+              }
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_0_1__45",
+            "id": 1019,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write",
+                  "Mysterious Amulet",
+                  "Village Hero",
+                  "Villager Gratitude"
+                ],
+                "count": 3
+              }
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_0_1__44",
+            "id": 1020,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write",
+                  "Mysterious Amulet",
+                  "Village Hero",
+                  "Villager Gratitude"
+                ],
+                "count": 3
+              }
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_0_1__46",
+            "id": 1021,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write",
+                  "Mysterious Amulet",
+                  "Village Hero",
+                  "Villager Gratitude"
+                ],
+                "count": 3
+              }
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_0_1__47",
+            "id": 1022,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write",
+                  "Mysterious Amulet",
+                  "Village Hero",
+                  "Villager Gratitude"
+                ],
+                "count": 3
+              }
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_0_1__48",
+            "id": 1023,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write",
+                  "Mysterious Amulet",
+                  "Village Hero",
+                  "Villager Gratitude"
+                ],
+                "count": 3
+              }
+            },
+            "item": {
+              "name": "Village Hero",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
+      "region_1_1": {
+        "name": "region_1_1",
+        "exits": [
+          {
+            "name": "exit_N",
+            "connected_region": "region_1_0",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "exit_W",
+            "connected_region": "region_0_1",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_1_1__30",
+            "id": 1024,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write",
+                  "Mysterious Amulet",
+                  "Village Hero",
+                  "Villager Gratitude"
+                ],
+                "count": 2
+              }
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_1_1__31",
+            "id": 1025,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write",
+                  "Mysterious Amulet",
+                  "Village Hero",
+                  "Villager Gratitude"
+                ],
+                "count": 2
+              }
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_1_1__32",
+            "id": 1026,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write",
+                  "Mysterious Amulet",
+                  "Village Hero",
+                  "Villager Gratitude"
+                ],
+                "count": 2
+              }
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_1_1__33",
+            "id": 1027,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write",
+                  "Mysterious Amulet",
+                  "Village Hero",
+                  "Villager Gratitude"
+                ],
+                "count": 2
+              }
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_1_1__34",
+            "id": 1028,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write",
+                  "Mysterious Amulet",
+                  "Village Hero",
+                  "Villager Gratitude"
+                ],
+                "count": 2
+              }
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_1_1__35",
+            "id": 1029,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write",
+                  "Mysterious Amulet",
+                  "Village Hero",
+                  "Villager Gratitude"
+                ],
+                "count": 2
+              }
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_1_1__36",
+            "id": 1030,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write",
+                  "Mysterious Amulet",
+                  "Village Hero",
+                  "Villager Gratitude"
+                ],
+                "count": 2
+              }
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_1_1__37",
+            "id": 1031,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write",
+                  "Mysterious Amulet",
+                  "Village Hero",
+                  "Villager Gratitude"
+                ],
+                "count": 2
+              }
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "start_regions": {
+    "1": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "1": {
+      "JtA Filler": {
+        "name": "JtA Filler",
+        "id": 1,
+        "classification": "filler",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "Mysterious Amulet": {
+        "name": "Mysterious Amulet",
+        "id": 2,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "How to Write": {
+        "name": "How to Write",
+        "id": 3,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "How to Read": {
+        "name": "How to Read",
+        "id": 4,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "Victory": {
+        "name": "Victory",
+        "id": 5,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "Villager Gratitude": {
+        "name": "Villager Gratitude",
+        "id": 6,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "Village Hero": {
+        "name": "Village Hero",
+        "id": 7,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      }
+    }
+  },
+  "item_groups": {
+    "1": [
+      "Everything"
+    ]
+  },
+  "itempool_counts": {
+    "1": {
+      "JtA Filler": 26,
+      "Mysterious Amulet": 1,
+      "How to Write": 1,
+      "How to Read": 1,
+      "Victory": 1,
+      "Villager Gratitude": 1,
+      "Village Hero": 1
+    }
+  },
+  "world": {
+    "1": {
+      "game": "JtA Randomized Test",
+      "world_class_name": "ProcgenMazeWorld",
+      "options": {}
+    }
+  },
+  "game_info": {
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Victory"
+      }
+    }
+  },
+  "helpers": {},
+  "exporter": {},
+  "canonical_placements": {
+    "1": {
+      "region_0_0__10": "JtA Filler",
+      "region_0_0__11": "JtA Filler",
+      "region_0_0__12": "JtA Filler",
+      "region_0_0__13": "JtA Filler",
+      "region_0_0__14": "JtA Filler",
+      "region_0_0__15": "JtA Filler",
+      "region_0_0__16": "Mysterious Amulet",
+      "region_1_0__20": "JtA Filler",
+      "region_1_0__21": "How to Write",
+      "region_1_0__22": "JtA Filler",
+      "region_1_0__25": "JtA Filler",
+      "region_1_0__27": "JtA Filler",
+      "region_1_0__23": "How to Read",
+      "region_1_0__24": "JtA Filler",
+      "region_1_0__26": "JtA Filler",
+      "region_0_1__40": "Victory",
+      "region_0_1__41": "JtA Filler",
+      "region_0_1__42": "Villager Gratitude",
+      "region_0_1__43": "JtA Filler",
+      "region_0_1__45": "JtA Filler",
+      "region_0_1__44": "JtA Filler",
+      "region_0_1__46": "JtA Filler",
+      "region_0_1__47": "JtA Filler",
+      "region_0_1__48": "Village Hero",
+      "region_1_1__30": "JtA Filler",
+      "region_1_1__31": "JtA Filler",
+      "region_1_1__32": "JtA Filler",
+      "region_1_1__33": "JtA Filler",
+      "region_1_1__34": "JtA Filler",
+      "region_1_1__35": "JtA Filler",
+      "region_1_1__36": "JtA Filler",
+      "region_1_1__37": "JtA Filler"
+    }
+  },
+  "progression_mapping": {
+    "1": {}
+  },
+  "starting_items": {
+    "1": []
+  },
+  "assume_bidirectional_exits": true,
+  "preset_sidecars": {
+    "1": {
+      "region_0_0": {
+        "substrate": "jta",
+        "render_hint": "jta",
+        "grid_cell": {
+          "gx": 0,
+          "gy": 0
+        },
+        "playable_payload": {
+          "jtaZone": 0,
+          "ap_locations": {
+            "10": "region_0_0__10",
+            "11": "region_0_0__11",
+            "12": "region_0_0__12",
+            "13": "region_0_0__13",
+            "14": "region_0_0__14",
+            "15": "region_0_0__15",
+            "16": "region_0_0__16"
+          },
+          "task_patches": [
+            {
+              "id": 13,
+              "perk": 47
+            }
+          ],
+          "exits": [
+            {
+              "exit_id": "exit_S",
+              "x": 4,
+              "y": 5,
+              "side": "S",
+              "exitName": "exit_S",
+              "targetRegion": "region_0_1",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "exit_E",
+              "x": 7,
+              "y": 3,
+              "side": "E",
+              "exitName": "exit_E",
+              "targetRegion": "region_1_0",
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ],
+          "fogEnabled": true
+        }
+      },
+      "region_1_0": {
+        "substrate": "jta",
+        "render_hint": "jta",
+        "grid_cell": {
+          "gx": 1,
+          "gy": 0
+        },
+        "playable_payload": {
+          "jtaZone": 1,
+          "ap_locations": {
+            "20": "region_1_0__20",
+            "21": "region_1_0__21",
+            "22": "region_1_0__22",
+            "23": "region_1_0__23",
+            "24": "region_1_0__24",
+            "25": "region_1_0__25",
+            "26": "region_1_0__26",
+            "27": "region_1_0__27"
+          },
+          "task_patches": [
+            {
+              "id": 27,
+              "perk": 47
+            }
+          ],
+          "exits": [
+            {
+              "exit_id": "exit_S",
+              "x": 4,
+              "y": 5,
+              "side": "S",
+              "exitName": "exit_S",
+              "targetRegion": "region_1_1",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "exit_W",
+              "x": 0,
+              "y": 3,
+              "side": "W",
+              "exitName": "exit_W",
+              "targetRegion": "region_0_0",
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ],
+          "fogEnabled": true
+        }
+      },
+      "region_1_1": {
+        "substrate": "jta",
+        "render_hint": "jta",
+        "grid_cell": {
+          "gx": 1,
+          "gy": 1
+        },
+        "playable_payload": {
+          "jtaZone": 2,
+          "ap_locations": {
+            "30": "region_1_1__30",
+            "31": "region_1_1__31",
+            "32": "region_1_1__32",
+            "33": "region_1_1__33",
+            "34": "region_1_1__34",
+            "35": "region_1_1__35",
+            "36": "region_1_1__36",
+            "37": "region_1_1__37"
+          },
+          "task_patches": [
+            {
+              "id": 34,
+              "perk": 47
+            },
+            {
+              "id": 37,
+              "perk": 47
+            }
+          ],
+          "exits": [
+            {
+              "exit_id": "exit_N",
+              "x": 4,
+              "y": 0,
+              "side": "N",
+              "exitName": "exit_N",
+              "targetRegion": "region_1_0",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "exit_W",
+              "x": 0,
+              "y": 3,
+              "side": "W",
+              "exitName": "exit_W",
+              "targetRegion": "region_0_1",
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ],
+          "fogEnabled": true
+        }
+      },
+      "region_0_1": {
+        "substrate": "jta",
+        "render_hint": "jta",
+        "grid_cell": {
+          "gx": 0,
+          "gy": 1
+        },
+        "playable_payload": {
+          "jtaZone": 3,
+          "ap_locations": {
+            "40": "region_0_1__40",
+            "41": "region_0_1__41",
+            "42": "region_0_1__42",
+            "43": "region_0_1__43",
+            "44": "region_0_1__44",
+            "45": "region_0_1__45",
+            "46": "region_0_1__46",
+            "47": "region_0_1__47",
+            "48": "region_0_1__48"
+          },
+          "task_patches": [
+            {
+              "id": 43,
+              "perk": 47
+            }
+          ],
+          "exits": [
+            {
+              "exit_id": "exit_N",
+              "x": 4,
+              "y": 0,
+              "side": "N",
+              "exitName": "exit_N",
+              "targetRegion": "region_0_0",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "exit_E",
+              "x": 7,
+              "y": 3,
+              "side": "E",
+              "exitName": "exit_E",
+              "targetRegion": "region_1_1",
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ],
+          "fogEnabled": true
+        }
+      }
+    }
+  },
+  "sphere_log": [
+    {
+      "type": "metadata",
+      "seed": 1,
+      "seed_name": "",
+      "event_locations": {},
+      "event_items": {}
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {},
+            "resolved_items": {}
+          },
+          "new_accessible_locations": [
+            "region_0_0__10",
+            "region_0_0__11",
+            "region_0_0__12",
+            "region_0_0__13",
+            "region_0_0__14",
+            "region_0_0__15",
+            "region_0_0__16"
+          ],
+          "new_accessible_regions": [
+            "Menu",
+            "region_0_0",
+            "region_0_1",
+            "region_1_0",
+            "region_1_1"
+          ],
+          "sphere_locations": []
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Mysterious Amulet": 1
+            },
+            "resolved_items": {
+              "Mysterious Amulet": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_0__20",
+            "region_1_0__21",
+            "region_1_0__22",
+            "region_1_0__23",
+            "region_1_0__24",
+            "region_1_0__25",
+            "region_1_0__26",
+            "region_1_0__27"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_0_0__16"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "1.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "How to Write": 1
+            },
+            "resolved_items": {
+              "How to Write": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__30",
+            "region_1_1__31",
+            "region_1_1__32",
+            "region_1_1__33",
+            "region_1_1__34",
+            "region_1_1__35",
+            "region_1_1__36",
+            "region_1_1__37"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_0__21"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "1.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "How to Read": 1
+            },
+            "resolved_items": {
+              "How to Read": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_0_1__40",
+            "region_0_1__41",
+            "region_0_1__42",
+            "region_0_1__43",
+            "region_0_1__44",
+            "region_0_1__45",
+            "region_0_1__46",
+            "region_0_1__47",
+            "region_0_1__48"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_0__23"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "2.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Victory": 1
+            },
+            "resolved_items": {
+              "Victory": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_0_1__40"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "2.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Villager Gratitude": 1
+            },
+            "resolved_items": {
+              "Villager Gratitude": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_0_1__42"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "2.3",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Village Hero": 1
+            },
+            "resolved_items": {
+              "Village Hero": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_0_1__48"
+          ]
+        }
+      }
+    }
+  ],
+  "loop_costs": {
+    "regions": {},
+    "locations": {},
+    "defaultRegionCost": 50,
+    "defaultLocationCost": 10
+  }
+}
