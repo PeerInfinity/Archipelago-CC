@@ -84,11 +84,29 @@ already-completed task (the allowlist makes that unreachable during the walk).
   instant-mode resets, the same order as a stats-harness experiment — a few
   seconds. Comfortably inside a Web Worker budget.
 
-**Instant-mode consequence of ruling 6:** in instant mode a task starts and
-completes within the same `updateGamestate` tick. "Assign immediately before
-first run" therefore cannot be done by observing state between ticks — it
-must be a synchronous callback from inside the sim, fired before the task's
-first progress/cost evaluation (§3.2).
+**Consequence of ruling 6:** "assign immediately before first run" cannot be
+done by observing state between ticks — it must be a synchronous callback
+from inside the sim, fired before the task's first progress/cost evaluation
+(§3.2).
+
+**AMENDED 2026-07-08 (3d-hooks empirical findings): the walk advances under
+NORMAL ticking, not instant mode.** Two verified facts killed instant mode as
+the advancement engine: (a) `completeTaskInstantly` is affordability-blind —
+it completes ALL of a task's reps in the starting tick regardless of cost,
+billing the energy (negative → reset) but completing anyway, so no
+cost patch can pace a task that starts under instant mode; (b) the baseline
+automation profile sets `threshold_all_skipped = 2` (Best Task — force-run
+the best skipped task), and under the walk's allowlist confinement
+"all skipped" is the NORMAL state during a milestone wait, so instant mode
+would force-complete the milestone immediately (and switching the fallback to
+End Run instead would deadlock any milestone whose skills no replayed task
+trains). Under normal ticking both problems vanish: thresholds gate the
+started task per-tick at its patched cost, and the Best-Task fallback is the
+faithful catch-up grind (partial progress + XP, no completion) that real play
+has. Measured cost (150-run probe over the v1 zone range, baselineMods):
+normal ticking 38.1 ms/run vs instant 21.8 ms/run — only ~1.75× slower
+(per-tick cost is completion-dominated, not tick-count-dominated), so a full
+walk stays ~10 s in the worker, once per seed, cached.
 
 ### 1.2 Sphere-log facts
 
@@ -212,9 +230,12 @@ that task's first rep this run".
 ## 4. The rewritten forward pass (`balancePass.js`)
 
 State: headless env (existing `headlessGameEnv.js` + `pauseGameLoop`
-discipline), `baselineMods()` automation profile, grant suppression via the
-perk→Count patches (as today), allowlist initially empty, walk pointer at
-entry 0, run counter from the existing stepper.
+discipline), `baselineMods()` automation profile, **NORMAL ticking — instant
+mode must stay off** (see the §1.1 amendment: `completeTaskInstantly` is
+affordability-blind and the profile's Best-Task fallback would instant-force
+milestones under confinement), grant suppression via the perk→Count patches
+(as today), allowlist initially empty, walk pointer at entry 0, run counter
+from the existing stepper.
 
 Per walk entry k:
 
@@ -235,7 +256,7 @@ Per walk entry k:
    - Guards kept: skill-less ⇒ leave vanilla (estimator can't move it);
      saturated ⇒ leave vanilla + count (now a genuine anomaly signal —
      the allowlist makes "already completed at assignment" impossible).
-3. **Advance:** tick the sim (instant mode, idle-tick + max-ticks guards,
+3. **Advance:** tick the sim (normal ticking, idle-tick + max-ticks guards,
    auto-prestige branch replicated) until task k COMPLETES (existing
    completion callback), bounded by a per-entry stall ceiling (report, move
    on).
