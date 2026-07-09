@@ -104,6 +104,11 @@
       "id": "jta-randomized-balanced-progression",
       "enabled": true,
       "category": "JtA substrate"
+    },
+    {
+      "id": "jta-prestige-perk-regrant",
+      "enabled": true,
+      "category": "JtA substrate"
     }
   ]
 }

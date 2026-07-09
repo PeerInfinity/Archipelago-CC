@@ -1,6 +1,6 @@
 /**
  * Generate the small, deterministic Phase-2 (zone-randomization) presets the
- * in-app JtA tests load. Two worlds come out of this one script:
+ * in-app JtA tests load. Three worlds come out of this one script:
  *
  *   jta_locations_test    2 zones, IDENTITY perk placement (no shuffle) so
  *                         `jta-location-check-and-perk-grant` can assert a
@@ -8,6 +8,13 @@
  *   jta_randomized_test   4 zones, SHUFFLED perk placement — the Phase-4 smoke
  *                         world for `jta-randomized-balanced-progression`,
  *                         which balances it at rules load and plays zones 1->3.
+ *   jta_prestige_test     jta_locations_test plus one FOREIGN perk in
+ *                         start_inventory, for `jta-prestige-perk-regrant`.
+ *                         A starting item sits on no location of the player's
+ *                         own, which is exactly what makes the bridge classify
+ *                         it as another world's perk — the only way to exercise
+ *                         the foreign grant leg without a multiworld seed
+ *                         (solo v1 worlds place all their perks at home).
  *
  * Both are produced by the modern procgen pipeline's Pass A (unlike
  * jta_substrate_test, the OLD apworld export whose locations are named by task
@@ -54,11 +61,22 @@ const PRESETS = [
         quota: 4,
         shuffleSeed: SEED,      // perks move off their native tasks
     },
+    {
+        gameId: 'jta_prestige_test',
+        gameName: 'JtA Prestige Test',
+        quota: 2,
+        shuffleSeed: null,      // identity: region_0_0__13 holds 'How to Read'
+        // Zone 14's native perk. This world emits zones 0-1, so no location of
+        // ours holds it — the bridge must treat it as another player's perk and
+        // re-grant it after a prestige. (The item lib registers every perk name
+        // regardless of the emitted zone range, so it resolves as a real item.)
+        startInventory: ['Energetic Memory'],
+    },
 ];
 
 async function generate(preset, mods) {
     const { jtaLib, engine, substrateRegistry, mergeSubstrateItemLib, DEFAULT_ITEMS, zoneTaskData } = mods;
-    const { gameId, gameName, quota, shuffleSeed } = preset;
+    const { gameId, gameName, quota, shuffleSeed, startInventory } = preset;
     const goalZone = quota - 1;   // arrangeShuffledSpiral maps the Nth jta region to zone N
     const outDir = path.join(repoRoot, 'frontend/presets', gameId, SEED_ID);
     const outFile = path.join(outDir, `${SEED_ID}_rules.json`);
@@ -88,6 +106,28 @@ async function generate(preset, mods) {
     rules.loop_costs = {
         regions: {}, locations: {}, defaultRegionCost: 50, defaultLocationCost: 10,
     };
+
+    // stateManager reads starting_items[playerId] as an array of item names and
+    // seeds the inventory with them before the first snapshot — but only for
+    // names it can find in the item table, which buildRulesJson populates from
+    // the PLACED items alone. A starting perk is placed nowhere (that is the
+    // point), so register it by hand. It stays out of itempool_counts: a
+    // starting item is not in the fill pool.
+    if (startInventory?.length) {
+        const playerId = Object.keys(rules.regions)[0];
+        rules.starting_items = { [playerId]: [...startInventory] };
+        const table = rules.items[playerId];
+        let nextId = Math.max(0, ...Object.values(table).map((it) => it.id ?? 0)) + 1;
+        for (const name of startInventory) {
+            if (table[name]) continue;
+            table[name] = {
+                name,
+                id: nextId++,
+                classification: itemLib[name]?.classification ?? 'progression',
+                groups: ['Everything'],
+            };
+        }
+    }
 
     fs.mkdirSync(outDir, { recursive: true });
     fs.writeFileSync(outFile, JSON.stringify(rules, null, 2) + '\n');
@@ -121,6 +161,20 @@ async function generate(preset, mods) {
         console.log(`  ${moved.length}/${perkLocs} perk(s) moved off their native task`);
         if (!perkLocs) throw new Error(`${gameId}: no perk items placed — is the item lib merged?`);
         if (!moved.length) throw new Error(`${gameId}: shuffle seed ${shuffleSeed} produced the identity placement`);
+    }
+
+    // A starting perk that the fill also placed on one of our own locations
+    // would classify as own-world, and the foreign leg would go untested.
+    if (startInventory?.length) {
+        const placed = new Set(allRegions.flatMap((r) => (r.locations ?? []).map(
+            (loc) => (typeof loc.item === 'string' ? loc.item : loc.item?.name))));
+        for (const name of startInventory) {
+            if (placed.has(name)) {
+                throw new Error(`${gameId}: starting item '${name}' is also placed on an own location `
+                    + '— it would classify as own-world, not foreign');
+            }
+        }
+        console.log(`  start_inventory (foreign perks): ${startInventory.join(', ')}`);
     }
     console.log('Register with:\n'
         + `  python3 scripts/utils/register-preset.py `

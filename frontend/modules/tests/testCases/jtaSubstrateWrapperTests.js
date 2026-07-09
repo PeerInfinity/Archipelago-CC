@@ -21,12 +21,15 @@
  *     AP item, and the perk is granted in-game with local grants
  *     suppressed (AP-authoritative). Loads the jta_locations_test preset
  *     (per-task AP locations + task_patches sidecars).
+ *   • jta-prestige-perk-regrant — a prestige wipes every perk; an
+ *     own-world perk comes back when the task holding it is re-run, a
+ *     foreign one is restored by the bridge. Loads jta_prestige_test.
  *
  * The loop-mode tests load the jta_substrate_test preset (regions = JtA
  * zone names, manaEnabled sidecars, start region Menu); the zone-rando
- * test loads jta_locations_test. All drive the REAL iframe + bridge;
- * game state is manipulated through the fork's window hooks, exactly the
- * surface the bridge itself uses.
+ * tests load jta_locations_test / jta_prestige_test. All drive the REAL
+ * iframe + bridge; game state is manipulated through the fork's window
+ * hooks, exactly the surface the bridge itself uses.
  */
 
 import { registerTest } from '../testRegistry.js';
@@ -51,6 +54,15 @@ import {
     readExpectedResetTarget,
     getJtaIframe,
     eventually,
+    JTA_PRESTIGETEST_PRESET_PATH,
+    JTA_PRESTIGETEST_REGION,
+    JTA_PRESTIGETEST_START_REGION,
+    JTA_PRESTIGETEST_OWN_TASK_ID,
+    JTA_PRESTIGETEST_OWN_LOCATION,
+    JTA_PRESTIGETEST_OWN_ITEM,
+    JTA_PRESTIGETEST_FOREIGN_ITEM,
+    JTA_PRESTIGE_TASK_ID,
+    JTA_PRESTIGE_TASK_ZONE,
 } from '../../jtaSubstrateWrapper/test-helpers.js';
 
 /** True if the snapshot lists `name` among its checked locations. */
@@ -599,6 +611,214 @@ registerTest({
                + 'the perk is granted in-game — with local grants suppressed so the '
                + 'perk count equals the received perk items (AP-authoritative).',
     testFunction: locationCheckAndPerkGrant,
+    category: 'JtA substrate',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
+// ---------------------------------------------------------------------------
+// Prestige grant semantics (2026-07-09)
+// ---------------------------------------------------------------------------
+
+/** Pump the fork's tick loop, but only while the region is live. */
+function pumpTicks(win, count = 50) {
+    if (typeof win?.stepTick !== 'function') return;
+    if (win.isGameLoopPaused?.() !== false) return;
+    for (let i = 0; i < count; i++) win.stepTick();
+}
+
+/** The set of perk TYPE ids the game currently holds. */
+function heldPerks(win) {
+    return new Set(win?.getFullState?.().perks ?? []);
+}
+
+/**
+ * Run one task to full completion under NORMAL ticking (never Instant Mode,
+ * whose completeTaskInstantly is affordability-blind). Energy is topped up as
+ * we go, so affordability is never the thing under test here.
+ *
+ * getAvailableTasks() filters out `reps >= max_reps`, so a task DROPPING OUT of
+ * the list is what full completion looks like from here.
+ */
+async function completeTask(testController, win, taskId, label, timeoutMs = 20000) {
+    const available = () => (win.getAvailableTasks?.() ?? []).some((t) => t.id === taskId);
+    if (!available()) {
+        testController.log(`task ${taskId} is not available to start`);
+        return false;
+    }
+    return eventually(testController, () => {
+        if (!available()) return true;
+        win.setEnergy(1e9);
+        if (win.getFullState?.().activeTaskId !== taskId) win.performTask(taskId);
+        pumpTicks(win);
+        return false;
+    }, label, timeoutMs, 20);
+}
+
+/**
+ * Perk grants survive a prestige, with the two origins behaving differently.
+ *
+ * doPrestige() sets every perk to false. Local grants are suppressed (the
+ * sidecar's task_patches point each perk-task's `perk` at the Count sentinel)
+ * and each AP item is received exactly once, so before the 2026-07-09 fix a
+ * prestige cost the player every perk permanently — Phase-4 emergent
+ * verification measured 2-5 of 130 AP locations stranded per prestiging seed.
+ *
+ * The ruled semantics, both legs asserted here:
+ *   - an OWN-world perk (on one of our own locations) behaves like the vanilla
+ *     perk it replaced: wiped by the prestige, re-granted the next time the
+ *     task holding it completes. Its AP location stays checked throughout.
+ *   - a FOREIGN perk has no task to re-run, so the bridge restores it as part
+ *     of the prestige.
+ *
+ * Solo v1 worlds place all their perks at home, so the foreign leg needs a perk
+ * that sits on no location of ours: jta_prestige_test puts one in
+ * start_inventory, which is exactly the shape a perk found in another player's
+ * world has from the bridge's side (an inventory entry with no own placement).
+ *
+ * Reaching a real prestige needs no fork hook — window.doPrestige doesn't
+ * exist, but the game's own path does. Task 153 'Touch the Divine' is a
+ * TaskType.Prestige task in zone 14: completing it sets prestige_available, and
+ * then the auto-prestige wealth trigger (which fires on the first opportunity
+ * while divine_spark is 0) turns the next energy depletion into a prestige via
+ * updateGameOver -> maybeAutoPrestige. We load zone 14 directly and zero task
+ * 153's cost rather than playing 14 zones to get there.
+ */
+async function prestigePerkRegrant(testController) {
+    testController.log('Loading jta_prestige_test preset…');
+    await testController.loadRulesFromFile(JTA_PRESTIGETEST_PRESET_PATH);
+    await testController.stateManager.pingWorker('after-rules-load', 3000);
+    testController.reportCondition('rules loaded', true);
+
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'jtaSubstrateWrapperPanel' });
+    moveToRegion(JTA_PRESTIGETEST_REGION, JTA_PRESTIGETEST_START_REGION);
+    if (!await waitForJtaActive(testController)) {
+        testController.reportCondition('jta bridge active in zone-0 region', false);
+        return testController.getOverallResult();
+    }
+
+    // Fresh game — the substrate save slot is shared across the tests in a run.
+    try {
+        getJtaIframe()?.contentWindow?.localStorage?.removeItem('incrementalGameSave_substrate');
+    } catch { /* same-origin here */ }
+    getJtaIframe()?.contentWindow?.location?.reload();
+    const win = await waitForJtaActive(testController);
+    testController.reportCondition('fresh jta game active after save reset', !!win);
+    if (!win) return testController.getOverallResult();
+
+    // Leg 1 — the foreign perk arrives as a starting AP item and is granted.
+    const invHasForeign = Number(
+        testController.stateManager.getSnapshot()?.inventory?.[JTA_PRESTIGETEST_FOREIGN_ITEM] ?? 0) > 0;
+    testController.assertEqual(`start_inventory holds the foreign perk '${JTA_PRESTIGETEST_FOREIGN_ITEM}'`,
+        true, invHasForeign);
+    const foreignGranted = await eventually(testController,
+        () => heldPerks(win).size === 1, 'the foreign perk is granted from inventory', 15000, 200);
+    testController.assertEqual('foreign perk granted on arrival', true, foreignGranted);
+    if (!foreignGranted) return testController.getOverallResult();
+    // Identify the perk types positionally: the only perk held now is the
+    // foreign one; the one that appears next is task 13's own-world perk.
+    const [foreignPerk] = [...heldPerks(win)];
+
+    // Leg 2 — completing task 13 checks its AP location and grants its perk.
+    const ownDone = await completeTask(testController, win, JTA_PRESTIGETEST_OWN_TASK_ID,
+        `task ${JTA_PRESTIGETEST_OWN_TASK_ID} completed`);
+    testController.assertEqual('own-world perk task completed', true, ownDone);
+    const ownGranted = await eventually(testController,
+        () => heldPerks(win).size === 2, 'the own-world perk is granted', 15000, 200);
+    testController.assertEqual('own-world perk granted on task completion', true, ownGranted);
+    if (!ownGranted) return testController.getOverallResult();
+    const ownPerk = [...heldPerks(win)].find((p) => p !== foreignPerk);
+    const checkedAfterOwn = await eventually(testController,
+        () => snapshotHasLocation(testController.stateManager.getSnapshot(), JTA_PRESTIGETEST_OWN_LOCATION),
+        `${JTA_PRESTIGETEST_OWN_LOCATION} checked`, 15000, 250);
+    testController.assertEqual('own perk task checked its AP location', true, checkedAfterOwn);
+    const gotOwnItem = await eventually(testController,
+        () => Number(testController.stateManager.getSnapshot()?.inventory?.[JTA_PRESTIGETEST_OWN_ITEM] ?? 0) > 0,
+        `received AP item '${JTA_PRESTIGETEST_OWN_ITEM}'`, 15000, 250);
+    testController.assertEqual('own perk returned as a received AP item', true, gotOwnItem);
+
+    // Leg 3 — reach a real prestige. Complete the zone-14 Prestige task (cost
+    // zeroed, so normal ticking finishes it), then let the wealth trigger turn
+    // the next depletion into a prestige instead of an energy reset.
+    win.loadZone(JTA_PRESTIGE_TASK_ZONE);
+    win.applyTaskPatches([{ id: JTA_PRESTIGE_TASK_ID, cost_multiplier: 0, max_reps: 1 }]);
+    const prestigeTaskDone = await completeTask(testController, win, JTA_PRESTIGE_TASK_ID,
+        `zone-14 Prestige task ${JTA_PRESTIGE_TASK_ID} completed`);
+    testController.assertEqual('Prestige task 153 completed', true, prestigeTaskDone);
+    testController.assertEqual('completing a Prestige task makes prestige available',
+        true, win.getFullState().prestigeAvailable === true);
+
+    win.setMod('auto_prestige', true);
+    win.setMod('auto_prestige_wealth_enabled', true);
+    win.setMod('auto_continue_energy_reset', true);
+    win.setEnergy(0);
+    const prestiged = await eventually(testController, () => {
+        pumpTicks(win, 5);
+        return (win.getFullState().prestigeCount ?? 0) > 0;
+    }, 'the game prestiged', 30000, 100);
+    testController.assertEqual('energy depletion triggered a prestige', true, prestiged);
+    if (!prestiged) return testController.getOverallResult();
+    // One prestige is enough; leave the mods off so the re-completion below
+    // isn't interrupted by a second one.
+    win.setMod('auto_prestige', false);
+    win.setMod('auto_continue_energy_reset', false);
+
+    // Leg 4 — the crux. The prestige wiped both perks; the bridge restored the
+    // foreign one and left the own-world one for its task to re-grant. Perks
+    // held is now deliberately BELOW perk items received — the invariant the
+    // other tests assert holds only while no prestige has happened.
+    const held = heldPerks(win);
+    testController.log(`after prestige: perks held [${[...held]}], `
+        + `foreign=${foreignPerk}, own=${ownPerk}`);
+    testController.assertEqual('foreign perk survives the prestige', true, held.has(foreignPerk));
+    testController.assertEqual('own-world perk is wiped by the prestige', false, held.has(ownPerk));
+    testController.assertEqual('the own perk\'s AP location stays checked', true,
+        snapshotHasLocation(testController.stateManager.getSnapshot(), JTA_PRESTIGETEST_OWN_LOCATION));
+    const inv = testController.stateManager.getSnapshot()?.inventory ?? {};
+    const receivedPerkItems = JTA_PERK_ITEM_NAMES.filter((n) => Number(inv[n] ?? 0) > 0).length;
+    testController.assertEqual('perk items received is unchanged by the prestige', 2, receivedPerkItems);
+    testController.assertEqual('perks held is below items received while the own perk is unearned',
+        1, held.size);
+
+    // Leg 5 — re-running the task that holds the own perk brings it back, with
+    // no new AP item and no second location check. The prestige sent us to zone
+    // 0 and its energy reset teleported us off the jta region, so walk back
+    // first (the loops queue does this in real play).
+    if (readCurrentRegion() !== JTA_PRESTIGETEST_REGION) {
+        moveToRegion(JTA_PRESTIGETEST_REGION, readCurrentRegion());
+    }
+    const active = await eventually(testController,
+        () => getJtaIframe()?.contentWindow?.isGameLoopPaused?.() === false,
+        'jta region active again after the prestige reset', 15000, 200);
+    testController.assertEqual('re-entered the jta region after the prestige', true, active);
+    if (!active) return testController.getOverallResult();
+
+    const reDone = await completeTask(testController, win, JTA_PRESTIGETEST_OWN_TASK_ID,
+        `task ${JTA_PRESTIGETEST_OWN_TASK_ID} re-completed after the prestige`);
+    testController.assertEqual('own perk task re-completed', true, reDone);
+    const regranted = await eventually(testController,
+        () => heldPerks(win).has(ownPerk), 'own-world perk re-granted', 15000, 200);
+    testController.assertEqual('re-completing the task re-grants the own-world perk', true, regranted);
+    testController.assertEqual('foreign perk still held after the re-grant',
+        true, heldPerks(win).has(foreignPerk));
+
+    const invAfter = testController.stateManager.getSnapshot()?.inventory ?? {};
+    testController.assertEqual('the re-completion sent no duplicate AP item',
+        1, Number(invAfter[JTA_PRESTIGETEST_OWN_ITEM] ?? 0));
+    testController.assertEqual('perks held == perk items received once the task is re-run',
+        JTA_PERK_ITEM_NAMES.filter((n) => Number(invAfter[n] ?? 0) > 0).length, heldPerks(win).size);
+
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'jta-prestige-perk-regrant',
+    name: 'JtA: perk grants survive a prestige (own-world re-earned, foreign restored)',
+    description: 'Loads jta_prestige_test (identity placement plus one foreign perk in '
+               + 'start_inventory), earns an own-world perk, reaches a real prestige via '
+               + 'zone 14\'s Touch the Divine task, and asserts the prestige wipes only the '
+               + 'own-world perk — restored when its task is re-run, with its AP location '
+               + 'still checked and no duplicate item — while the foreign perk persists.',
+    testFunction: prestigePerkRegrant,
     category: 'JtA substrate',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });
