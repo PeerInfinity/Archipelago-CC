@@ -59,7 +59,7 @@
  */
 
 import { IframeClient } from '../iframe-base/iframeClient.js';
-import { buildOwnPlacements } from './perkOrigin.js';
+import { buildOwnPlacements, staticDataMatchesRegion } from './perkOrigin.js';
 
 function log(level, ...args) {
     const fn = console[level] || console.log;
@@ -584,7 +584,14 @@ function _syncPerkCategoryTaskIds() {
 function _ensureOwnPlacements() {
     if (_ownPlacements) return _ownPlacements;
     const staticData = _client?.getStaticData?.();
-    if (!staticData || staticData === _staleStaticData) return null;
+    if (!staticData) return null;
+    // Two staleness guards, because a rules reload leaves the AdapterClient
+    // cache describing the old world: skip the exact object we saw at reload,
+    // and skip any staticData whose locations don't cover this region's — a
+    // response that raced the host's own cache update is a fresh object with
+    // stale content, and memoizing it would misclassify every perk.
+    if (staticData === _staleStaticData) return null;
+    if (!staticDataMatchesRegion(staticData, _world?.ap_locations)) return null;
     _ownPlacements = buildOwnPlacements(staticData);
     if (_ownPlacements) {
         log('debug', `own placements resolved: ${_ownPlacements.byLocation.size} locations`);

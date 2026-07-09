@@ -27,6 +27,26 @@
  */
 
 /**
+ * True when `staticData` describes the world the given region belongs to.
+ *
+ * Identity alone can't establish this. AdapterClient hands back a freshly
+ * structured-cloned object per response, so a response that raced the host's
+ * own cache update is a NEW object carrying the OLD world — and memoizing that
+ * would misclassify every perk. Every jta AP location carries an item, so the
+ * region's own location names must all be present.
+ *
+ * @param {object|null} staticData
+ * @param {Record<string, string>|null|undefined} apLocations - world.ap_locations
+ */
+export function staticDataMatchesRegion(staticData, apLocations) {
+    const locationItems = staticData?.locationItems;
+    if (!(locationItems instanceof Map)) return false;
+    const names = Object.values(apLocations ?? {});
+    if (names.length === 0) return false;
+    return names.every((name) => locationItems.has(name));
+}
+
+/**
  * Build the own-world placement view from a staticData snapshot.
  *
  * @param {object|null} staticData - as returned by AdapterClient.getStaticData()

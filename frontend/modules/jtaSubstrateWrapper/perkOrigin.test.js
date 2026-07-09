@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { buildOwnPlacements } from './perkOrigin.js';
+import { buildOwnPlacements, staticDataMatchesRegion } from './perkOrigin.js';
 
 // staticData as AdapterClient hands it to the bridge: locationItems is a
 // Map<locationName, {name, player, ...}|null> and playerId is a STRING, while
@@ -64,5 +64,28 @@ describe('buildOwnPlacements', () => {
         ]));
         expect(own.byLocation.size).toBe(1);
         expect(own.byLocation.get('real')).toBe('Mysterious Amulet');
+    });
+});
+
+describe('staticDataMatchesRegion', () => {
+    const apLocations = { 13: 'region_0_0__13', 14: 'region_0_0__14' };
+    const sd = (names) => staticData(names.map((n) => [n, perk('x', 1)]));
+
+    it('accepts staticData covering every location of the region', () => {
+        expect(staticDataMatchesRegion(
+            sd(['region_0_0__13', 'region_0_0__14', 'region_1_0__20']), apLocations)).toBe(true);
+    });
+
+    it('rejects staticData from another world (a fresh object with stale content)', () => {
+        expect(staticDataMatchesRegion(sd(['other_world__1']), apLocations)).toBe(false);
+        // Partial coverage is still the wrong world.
+        expect(staticDataMatchesRegion(sd(['region_0_0__13']), apLocations)).toBe(false);
+    });
+
+    it('rejects when there is nothing to match against', () => {
+        expect(staticDataMatchesRegion(null, apLocations)).toBe(false);
+        expect(staticDataMatchesRegion(sd(['region_0_0__13']), null)).toBe(false);
+        // A base-scope jta region carries no ap_locations — nothing to verify.
+        expect(staticDataMatchesRegion(sd(['region_0_0__13']), {})).toBe(false);
     });
 });
