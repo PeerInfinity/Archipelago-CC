@@ -1,7 +1,10 @@
 # JtA Pass-B Balance Pass — Phase 3 Redesign Plan
 
 **Date:** 2026-07-08 ·
-**Status: PLANNED (design agreed in-session 2026-07-08; no implementation yet).**
+**Status: PHASES 1–4 of §7 DONE 2026-07-08/09 (3d-hooks `12c014e`+`198dbe8c5`, 3d-order
+`319d0c6bb`, 3d-pass `415961ccb` — converges, see §4b; 3e `80432e2c2` — in-app
+worker + host module, 19/19 substrate suite). Remaining: §7 step 5 (3f docs —
+this update — plus Phase-4 emergent verification per the parent plan).**
 Child plan of `jta-zone-randomization-plan.md` (its Phase 3, redone per the
 2026-07-08 re-rulings). The parent plan's §2 sketch and Phase-3 progress notes
 are superseded by this document where they conflict.

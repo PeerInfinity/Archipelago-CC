@@ -42,9 +42,17 @@ The procgen host owns zone transitions, so in managed mode the fork **never call
 - **`setAutomationEndZone` is not a confinement lever.** `automation_end` gates nothing continuously; it switches automation **Off permanently** once `(zone + 1) >= automation_end` — from `advanceZone`, from `loadZone`, and at the moment you call the setter. Don't use it to bound a headless driver to a zone range; it will simply stop the game.
 - **`doEnergyReset()` returns the fork to zone 0** even if the host has the player standing in a later region. A location check reported for a zone the bridge isn't currently mapping is silently dropped, but this self-heals: task reps reset every run, so the completion callback fires again the next time that zone is loaded, and the bridge's dedupe set only records checks it actually dispatched.
 
+## AP locations and the Pass-B balance solve
+
+Every zone task is an AP location (`extractZoneRules`, opt-in via `setJtaEmitZoneLocations`): perk tasks carry shuffled perk items, everything else a do-nothing filler, one `Victory` in the goal zone, and loose count-based access rules (`HasFromListUnique`, zone Z needs Z perks) shape the sphere order. Grants are AP-authoritative — per-zone `task_patches` suppress each perk task's local grant (`perk → Count`) and the bridge grants perks from received AP items.
+
+AP fill re-randomizes placements, so costs are balanced **in-app, post-fill** by the `jtaBalance` module (design + full findings: `CC/docs/plans/jta-balance-pass-plan.md`). At `stateManager:rulesLoaded` on a jta world it runs a forward walk in a Web Worker against the fork's committed build (stubbed `localStorage` — the solve can't touch the player's save): the post-fill sphere log's buckets plus a seeded within-bucket shuffle (with playability repair: unlockers before unlockees, item producers before consumers, Mandatory before Travel, Travel before deeper zones) define a total order over every task; each task's `cost_multiplier` is solved at its first start via `estimateResetsToComplete`, with perk milestones targeting a constant `resetsPerStep` (default 5) and other tasks a small category fraction of decision-time energy. Patches are cached in `localStorage` by seed and merged into each region's warehouse `world.task_patches`, which the bridge applies on region load. Fork hooks backing this: `setCostedTaskIds` (uncosted tasks are unrunnable and excluded from free-completion paths) and `setTaskFirstStartCallback` (synchronous, before the starting tick's cost read). Guards: `scripts/procgen/verify-jta-balance-pass.mjs` (end-to-end convergence) and `scripts/procgen/verify-jta-cost-hooks.mjs`.
+
+One caveat worth knowing: under the tuned automation profile, the threshold `other` category's LEVEL metric can reject a low-XP-yield task at *any* cost once skills outgrow it (grant suppression recategorizes former perk tasks into that category). The solver reports such tasks as `unengaged`; the game's all-toggles-off defaults are unaffected. Open design question in the plan's §8.
+
 ## Capabilities
 
-No AP location checks inside regions yet (`supportedFeatures: ['region_topology_from_source']`); loop support is queueable `regionMove` (bot-executed, see above) plus manual play, without custom queues. Full contract: [Substrate Registry Reference](./substrate-registry.md).
+`supportedFeatures: ['region_topology_from_source', 'arbitrary_ap_locations']` — AP location checks inside zones are live (see above); loop support is queueable `regionMove` (bot-executed, see above) plus manual play, without custom queues. Full contract: [Substrate Registry Reference](./substrate-registry.md).
 
 ## Related documentation
 
