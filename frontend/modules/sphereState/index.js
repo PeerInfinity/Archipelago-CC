@@ -130,6 +130,15 @@ export async function register(registrationApi) {
     return sphereState.getLogHeader();
   });
 
+  // Raw sphere-log entries (the parsed `state_update` records), as loaded via
+  // the embedded-first-then-file path. Consumers that need the literal log
+  // order rather than the processed per-sphere view (e.g. the jtaBalance Pass-B
+  // walk) read this. Empty array when no log is loaded.
+  registrationApi.registerPublicFunction(moduleId, 'getRawSphereLog', () => {
+    const sphereState = getSphereStateSingleton();
+    return sphereState?.rawData ?? [];
+  });
+
   // Cross-player item computation (used by loopsCostDebugger verify, spoilerChecklist sync)
   registrationApi.registerPublicFunction(moduleId, 'compareSphereIndex', compareSphereIndex);
   registrationApi.registerPublicFunction(moduleId, 'computeCrossPlayerItems',

@@ -236,6 +236,16 @@ export function register(registrationApi) {
             'getActiveSubstrate',
             () => activeSubstrate,
         );
+
+        // The live world warehouse, or null when none is loaded. Exposed so
+        // headless post-load passes (jtaBalance Pass-B) can read each region's
+        // deserialized `world` (ap_locations) and extend its `task_patches`
+        // in place — the same object the bridge applies on loadRegion.
+        registrationApi.registerPublicFunction(
+            'procgenPlayer',
+            'getWarehouse',
+            () => warehouse,
+        );
     }
 }
 

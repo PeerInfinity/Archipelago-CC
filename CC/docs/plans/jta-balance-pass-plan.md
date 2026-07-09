@@ -313,11 +313,23 @@ the already-complete fallback counting.
   (spiked live).
 - **`jtaBalance` host module:** subscribe `stateManager:rulesLoaded`; sphere
   log from `sphereState` (embedded-first-then-file — Generate.py does NOT
-  embed `sphere_log` in rules.json); rules via `getLastRawJsonData()`; run
-  the pass in the worker; merge patches into the procgenPlayer warehouse
+  embed `sphere_log` in rules.json); rules doc cached from the
+  **`stateManager:rawJsonDataLoaded` push event** (AMENDED during 3e
+  verification: the `getLastRawJsonData()` pull only updates on the
+  `files:jsonLoaded` path, so rules loaded any other way — e.g. the test
+  harness — leave it stale at the app's initial preset; procgenPlayer
+  caches from the push event for the same reason); run the pass in the
+  worker; merge patches into the procgenPlayer warehouse
   `world.task_patches` (the bridge already applies those on `loadRegion`);
-  cache patches in localStorage keyed by seed so the solve runs once per
-  world; register in `__BUNDLED_MODULES__` (init-bundled.js).
+  cache patches in localStorage keyed by seed (`seed_name ||
+  generation_seed || seed` — Pass-A presets carry an EMPTY-STRING
+  seed_name) so the solve runs once per world; register in
+  `__BUNDLED_MODULES__` (init-bundled.js) **and in modules.json's
+  `loadPriority` array — a module absent from that list silently never
+  initializes even when its `moduleDefinitions` entry is enabled.**
+  Known limitation (documented in the module header): a cache-miss solve
+  finishing while the player already stands in a jta region only takes
+  effect on the next region entry.
 
 ## 6. Verification (Phase 3f)
 

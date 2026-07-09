@@ -248,6 +248,10 @@
       "path": "./modules/jtaSubstrateWrapper/index.js",
       "enabled": true
     },
+    "jtaBalance": {
+      "path": "./modules/jtaBalance/index.js",
+      "enabled": true
+    },
     "flashSubstrate": {
       "path": "./modules/flashSubstrate/index.js",
       "enabled": true
@@ -346,6 +350,7 @@
     "procgenPipeline",
     "bounceRegionEditor",
     "procgenPlayer",
+    "jtaBalance",
     "playbackBot"
   ]
 }

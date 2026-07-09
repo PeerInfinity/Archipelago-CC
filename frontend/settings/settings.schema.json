@@ -117,6 +117,14 @@
           },
           "additionalProperties": true
         },
+        "jtaBalance": {
+          "type": "object",
+          "title": "JtA Balance Settings",
+          "properties": {
+            "enabled": { "type": "boolean", "default": true }
+          },
+          "additionalProperties": true
+        },
         "files": {
           "type": "object",
           "title": "Files Settings",

@@ -89,12 +89,17 @@ const filesToCopy = [
     src: path.join(frontendDir, 'modules/stateManager/stateManagerWorker.js'),
     dest: path.join(distDir, 'stateManagerWorker.js'),
   },
+  {
+    src: path.join(frontendDir, 'modules/jtaBalance/balanceWorker.js'),
+    dest: path.join(distDir, 'modules/jtaBalance/balanceWorker.js'),
+  },
 ];
 
 // Copy required files to dist
 function copyFilesToDist() {
   for (const { src, dest } of filesToCopy) {
     if (fs.existsSync(src)) {
+      fs.mkdirSync(path.dirname(dest), { recursive: true });
       fs.copyFileSync(src, dest);
       console.log(`   Copied: ${path.basename(src)}`);
     } else {

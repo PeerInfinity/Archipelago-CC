@@ -124,6 +124,7 @@ import * as procgenPipelineModule from './modules/procgenPipeline/index.js';
 import * as procgenPlayerModule from './modules/procgenPlayer/index.js';
 import * as textAdventureSubstrateWrapperModule from './modules/textAdventureSubstrateWrapper/index.js';
 import * as jtaSubstrateWrapperModule from './modules/jtaSubstrateWrapper/index.js';
+import * as jtaBalanceModule from './modules/jtaBalance/index.js';
 import * as flashSubstrateModule from './modules/flashSubstrate/index.js';
 import * as bounceDemoModule from './modules/bounceDemo/index.js';
 import * as runnerDemoModule from './modules/runnerDemo/index.js';
@@ -223,6 +224,7 @@ const BUNDLED_MODULES = {
   procgenPlayer: procgenPlayerModule,
   textAdventureSubstrateWrapper: textAdventureSubstrateWrapperModule,
   jtaSubstrateWrapper: jtaSubstrateWrapperModule,
+  jtaBalance: jtaBalanceModule,
   flashSubstrate: flashSubstrateModule,
   bounceDemo: bounceDemoModule,
   runnerDemo: runnerDemoModule,
