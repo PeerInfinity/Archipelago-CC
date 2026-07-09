@@ -549,7 +549,43 @@ standalone and `pinMaxEnergy` (substrate) budgets.
   needs a save reset; `performTask`+`stepTick` don't advance tasks in managed mode
   — `walkTo` (arms the game's automation) is the driver.
 
-### Phase 3 — The §2 balancing pass (Pass B first; shared module)
+### Phase 3 — The §2 balancing pass (Pass B first; shared module) — **IN PROGRESS 2026-07-08**
+
+> **Phase 3a (unplanned prerequisite, DONE `02d9ebcab`).** Pass A emitted no
+> access rules at all — every location was `True_`, so AP produced ONE sphere,
+> Victory sat in logic at sphere 0, and this phase's sphere-log walk had nothing
+> to walk. Fixed by porting the old apworld's loose count-based gate
+> (`HasFromListUnique`, zone Z needs Z perks) onto **locations** rather than
+> entrances, since the spiral layout gives region adjacency no zone order. Victory
+> also had to be pinned (`lockedCanonicalItems` + `procgen_metadata`, both
+> required). At v1 scope the exported log now has 21 perk milestones — 1:1 with
+> the anchor curve. This resolves open question 9 (loose over strict) in practice.
+>
+> **Phase 3c (DONE `394456512`).** Calibration re-derived from raw zone≤14
+> samples (`derive-calibration.mjs`, SUMMARY Round 7). It bounds what this phase
+> can achieve: cost alone paces only within **[6, 14.7] resets** — a FLOOR (an
+> affordable task still waits for automation's queue) and a PLATEAU (skill XP
+> compounds while the estimator freezes the boost). Seven of the 21 anchor gaps
+> are below the floor; **RULED: clamp to minimum cost, count, and measure in
+> Phase 4.** The pinned100 curve's floor is 27.4, which independently confirms the
+> `energyBonusSync` supersession above.
+>
+> **Solver home (RULED + spiked):** a Web Worker importing the submodule's
+> committed `build/*.js` behind shared DOM stubs. `estimateResetsToComplete` is a
+> module export and **not** on `window`, so the bridge could never have called it;
+> the worker can. Stubbed `localStorage` keeps the solver away from the player's
+> save. **Zero fork changes.** Solve at `stateManager:rulesLoaded`, patches cached
+> in localStorage by seed.
+>
+> **Phase 3d — primitives DONE + verified (`9192d3a96`); the forward-walk driver
+> is WIP and does not converge (`0ce2db703`).** JtA's automation is autonomous and
+> outruns the sphere-log walk; `setAutomationEndZone` is *not* a confinement lever
+> (`simulation.ts:3965`/`4322` switch automation Off permanently). The fix is to
+> drive first-touch costing off the **sim's** zone entry rather than the walk's —
+> targets still come from the walk, so pacing intent is unchanged. Also learned:
+> Generate.py does **not** embed `sphere_log` in rules.json (sibling `.jsonl`), so
+> Pass B must take the log from `sphereState`, not `rawJsonData`.
+
 - `balance` module (code home per Q3 ruling: engine-touching parts lean
   submodule, orchestration outer; importable by the app at rules load, the
   pipeline, and a Node CLI/harness): sphere-log/intended-order walk,
