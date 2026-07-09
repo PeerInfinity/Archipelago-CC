@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitest/config';
+import { defineConfig, configDefaults } from 'vitest/config';
 
 // On-demand config for the heavy, CPU-bound generate-and-test property suites
 // (*.slow.test.js — e.g. bounceDemo generator/specGenerator, procgen
@@ -12,6 +12,10 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   test: {
     include: ['frontend/**/*.slow.test.js'],
+    // runnerDemo is TEMPORARILY DISABLED (user request 2026-07-09) — see the
+    // matching note in vitest.config.js. Re-enable by deleting the runnerDemo
+    // entry. Spread the defaults: a bare `exclude` would drop node_modules/dist.
+    exclude: [...configDefaults.exclude, 'frontend/modules/runnerDemo/**'],
     environment: 'node',
     globals: false,
     reporters: ['default'],

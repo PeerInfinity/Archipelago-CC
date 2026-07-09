@@ -10,7 +10,15 @@ export default defineConfig({
     // CPU contention, stretch past vitest's (non-interruptible) timeout and
     // flake with STACK_TRACE_ERROR. Run them serially via `npm run test:unit:slow`
     // (vitest.slow.config.js). Keep the vitest defaults (node_modules, etc.).
-    exclude: [...configDefaults.exclude, '**/*.slow.test.js'],
+    //
+    // runnerDemo is TEMPORARILY DISABLED (user request 2026-07-09): its suites
+    // dominate both the default and the slow run's wall time. Re-enable by
+    // deleting the runnerDemo entry here and in vitest.slow.config.js.
+    exclude: [
+      ...configDefaults.exclude,
+      '**/*.slow.test.js',
+      'frontend/modules/runnerDemo/**',
+    ],
 
     // Environment settings
     environment: 'node',
