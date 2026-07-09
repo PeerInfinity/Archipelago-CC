@@ -551,6 +551,16 @@ standalone and `pinMaxEnergy` (substrate) budgets.
 
 ### Phase 3 — The §2 balancing pass (Pass B first; shared module) — **IN PROGRESS 2026-07-08**
 
+> **REDESIGNED 2026-07-08 — see `jta-balance-pass-plan.md` (child plan), which
+> supersedes this phase's remaining work and the §2 sketch where they
+> conflict.** Key rulings it implements: constant `resetsPerStep` (= 5);
+> all tasks costed; walk order = sphere-log buckets + seeded within-sphere
+> shuffle with Mandatory/Travel/unlocks special cases; cost assigned
+> immediately before the sim first runs a task, against decision-time
+> remaining energy (the estimator's native contract); automation rejects
+> uncosted tasks via a new fork allowlist hook + a synchronous first-start
+> callback. Pass A needs no changes.
+
 > **Phase 3a (unplanned prerequisite, DONE `02d9ebcab`).** Pass A emitted no
 > access rules at all — every location was `True_`, so AP produced ONE sphere,
 > Victory sat in logic at sphere 0, and this phase's sphere-log walk had nothing
