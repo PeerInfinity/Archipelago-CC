@@ -380,3 +380,139 @@ the standalone anchor curve at all: its *floor* is four times the curve's median
 gap. This independently corroborates the 2026-07-08 ruling that made
 `energyBonusSync` the default (balancer targets the standalone curve against a
 matching standalone runtime, and drops pin-compensation).
+
+## Round 8 — emergent verification of the randomized world (randomized-pacing-*, 2026-07-09)
+
+Phase 3's numbers were all **in-sample**: the Pass-B balance pass measures
+milestone gaps inside the very walk that assigns the costs, where
+`setCostedTaskIds` confines automation to the frontier, costs are assigned from
+state that arose under that confinement, and perks are granted by the walk in
+sphere-log order. Round 8 removes the scaffolding: ship the patches, let the
+game play itself under `baselineMods()`, and measure what emerges.
+
+The harness could not do this before. `driver.mjs` applied `options.gameDataPatch`
+(cost multipliers) and nothing else, so a run with only the balance patches would
+have measured randomized costs against **vanilla local perk grants** — not the
+world we ship. The new `apRuntime` option adds the three missing pieces: the
+forced perk-category ids (`setPerkCategoryTaskIds`, retired on first completion,
+mirroring `bridge.js _syncPerkCategoryTaskIds`); a **placement-driven** grant hook
+on `setTaskCompletionCallback`, because the fill shuffle moves a perk item away
+from its native perk task; and exact first-completion recording from that same
+callback, which is ground truth (it sees Mastery-of-Time and free-zone-skip
+completions) rather than the polling metric's run-boundary inference. The
+suppression patches ride the existing `gameDataPatch`, merged with the cost
+patches — exactly the single list the bridge applies on region entry. With
+`apRuntime` absent the driver is byte-identical (verified on a 300-run z15
+baseline: completions, runEnds, purchases, sparkCheckpoints all unchanged).
+
+**The first-class assertion is LOCATION COVERAGE, not pacing.** Of the 130 AP
+locations (zones 0-14, minus the four SBtV ids, which are not locations), how
+many are ever checked under free automation? Anything short of the full set means
+a real player cannot finish their world.
+
+### Coverage holds — the walk's fear was unfounded
+
+`verify-jta-balance-pass.mjs` reports six tasks as `thresholdFloored`: minimum
+cost is unaffordable at first touch, and they complete **in the walk** only
+because the walk waits (nothing else is runnable, so the all-skipped Best-Task
+fallback grinds the skill up). The worry was that in free play automation always
+has better work, the fallback never fires, and those locations are never checked.
+
+It does not happen. Across four independently generated worlds (`JTA_RT_SEED`
+1-4, each a full pipeline -> world_generator -> Generate.py round trip, 39/39
+assertions each), free automation reaches **130/130 locations on every seed**, and
+every `thresholdFloored` task is completed (6/6, 7/7, 5/5, 14/14). Reproduce with
+`node CC/scripts/jta-stats/sweep-ap-seeds.mjs --seeds 1,2,3,4`.
+
+### What DOES strand locations: prestige without re-grant
+
+`doPrestige()` sets every perk to `false`. Under AP-authoritative grants the
+local perk grants are suppressed and each AP item is received once, so unless
+something re-grants, a prestige costs the player all 21 perks permanently. This
+matters inside v1 scope, contrary to the "zones 0-14, no prestige involvement"
+scoping assumption: **task 153 "Touch the Divine" is a `TaskType.Prestige` task
+in zone 14**, and even a vanilla z15 baseline prestiges once in 237 runs.
+
+The 2026-07-09 ruling: an own-world perk behaves like the vanilla perk it
+replaced — it resets on prestige and is re-granted the next time the task holding
+it completes (the AP location stays checked; only the in-run perk state cycles);
+a foreign perk has no task to re-run, so it persists. `grantPerk` is idempotent
+and `setTaskCompletionCallback` fires on **every** full completion, so the
+own-world leg is just "grant on every completion."
+
+`bridge.js` implements neither leg. `_reconcilePerksFromInventory` grants each
+item name once ever (`_processedItems`, cleared only on `rulesLoaded`), and
+nothing reacts to a prestige. The `no-regrant` variant models that exactly:
+
+| seed | baseline coverage | prestiges | shipped-bridge (`no-regrant`) coverage |
+|---|---|---|---|
+| 1 | 130/130 | 3 | **128/130** (28 prestiges, hit the 2000-run cap) |
+| 2 | 130/130 | 2 | **127/130** (9 prestiges) |
+| 3 | 130/130 | 0 | 130/130 — never prestiges, so unaffected |
+| 4 | 130/130 | 4 | **125/130** (40 prestiges) |
+
+**Nine of those ten stranded locations are exactly the `thresholdFloored` tasks**,
+and `task 136 Comb the Desert` strands on all three failing seeds. The mechanism
+is clean: lose the perks, lose the power, and the marginal tasks become
+permanently unaffordable. So `thresholdFloored` is a genuine fragility marker,
+and the grant semantics are load-bearing rather than a nicety. **This is a real
+defect in shipped code**, found only because the emulation modelled the intended
+semantics and the shipped ones side by side.
+
+### Two in-sample claims corrected
+
+**The `setPerkCategoryTaskIds` fix does not determine coverage.** The Phase-3
+claim that grant suppression left automation refusing perk tasks at any cost "so
+their AP locations were never checked, in real play too" is too strong. Out of
+sample the fix never changes coverage — not standalone, not `pinned100`, not with
+the Best-Task all-skipped fallback, not with End Run (all four combinations reach
+130/130). What it changes is **timing**, substantially: the first perk lands at
+run 1 with the fix and run 19 without; task 134 at run 49 vs 145; 15 of the 21
+native perk tasks are materially delayed. The fix is load-bearing for the
+*confined* walk — which cannot wait out a task nothing else unblocks, and which
+reported 7 unengaged entries before it — and for early-game pacing. It is not
+what makes the world completable; free play recovers those tasks eventually
+because the player re-enters the zone every run.
+
+**The balance pass's convergence bar is conservative.** Seed 4 fails it (5 stalled
+entries, 1 unengaged MILESTONE) and yet its emergent playthrough still reaches
+130/130. The bar is an in-sample verdict, reached under confinement. `sweep-ap-seeds.mjs`
+therefore records a failing solve and keeps playing rather than aborting the seed —
+whether those patches yield a playable world is precisely the question.
+
+### Pacing (secondary metric)
+
+Pooled milestone gaps across the four baseline seeds, n=80: p25 1, **p50 2**,
+p75 4, p90 8, max 106, **mean 5.64** against `resetsPerStep = 5`; 82% of gaps are
+<= 5.
+
+The mean lands within 13% of target, so **no correction factor is warranted** and
+`resetsPerStep` stays at 5 (the pre-committed ruling was that a systematic
+deviation is corrected with a factor on the target, not an architecture change —
+there is no systematic deviation in the mean). The in-sample ~1.35x undershoot
+(p50 3 / mean 3.7) does not reproduce out of sample.
+
+But the distribution is heavy-tailed and strongly seed-sensitive — per-seed means
+2.20, 2.70, 5.65, 12.00 — because AP fill front-loads perks into the early
+spheres, so automation harvests a burst of cheap perks and then grinds for the
+last few. A *constant* milestone-to-milestone gap is not what emerges, and
+`resetsPerStep` cannot deliver one on its own: out of sample the **order** in
+which perks are acquired is chosen by automation, not by the walk.
+
+The `vanilla-costs` control (suppression + shuffle, no cost patches) confirms the
+solve is doing real work: mean gap 10.00 with max 89 on seed 1, versus 5.65 / 49
+with the solved costs. `pinned100` is worse than standalone as expected from
+Round 7's 28.2 floor (mean 7.05, 564 runs vs 243).
+
+**Tolerance band (the deferred knob, now settled with data).** Coverage is the
+hard gate: full coverage on every seed, or the world is broken. Pacing is
+advisory, and given the observed spread the honest band is on the *mean* gap per
+seed: within `[0.4x, 3x]` of `resetsPerStep` (i.e. 2-15 at the default of 5).
+Anything tighter would fail on seed 4 for reasons that are a property of fill,
+not of the solve.
+
+**`threshold_other_metric: resets` (the parked question) — no change needed.**
+It was parked because the `other` category's cost-invariant energy-per-level
+metric is what let suppression demote perk tasks. With the perk-category fix in
+place nothing is unengaged in-sample, and out of sample the metric strands
+nothing under any tested profile. Leave it at LEVEL.
