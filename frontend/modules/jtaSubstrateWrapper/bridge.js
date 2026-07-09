@@ -34,6 +34,12 @@
  *   - On Travel-task completion: mark the region completed for this
  *     loop, dispatch user:regionMove for single-exit regions, or
  *     inject synthetic exit-choice tasks for multi-exit regions.
+ *   - Perk grants, which are AP-authoritative (the fork's own grants are
+ *     suppressed by task_patches). A perk on one of the player's OWN
+ *     locations is granted on every full completion of the task holding
+ *     it, like the vanilla perk it replaced; a perk from another
+ *     player's world is granted when its item arrives and re-granted
+ *     after a prestige, which has no task to re-run. See perkOrigin.js.
  *   - Playback control (jta:playbackControl, from the host-side
  *     PlaybackProxy): play/stop map to the game clock, step/instant to
  *     the fork's stepTick/setInstantMode, reset to doEnergyReset, and
@@ -53,6 +59,7 @@
  */
 
 import { IframeClient } from '../iframe-base/iframeClient.js';
+import { buildOwnPlacements } from './perkOrigin.js';
 
 function log(level, ...args) {
     const fn = console[level] || console.log;
@@ -115,6 +122,25 @@ const _completedThisLoop = new Set();
 // reload (a new world / fresh inventory).
 const _reportedLocationNames = new Set();
 const _processedItems = new Set();
+
+// Own-vs-foreign perk origin (see perkOrigin.js). Memoized from staticData on
+// first use, dropped on rules reload. null ⇒ not resolvable yet: every grant
+// falls back to inventory reconciliation, which is the pre-origin behaviour.
+let _ownPlacements = null;
+// AdapterClient caches staticData from the first response and keeps returning
+// it until a new response overwrites it, so after a rules reload the cache
+// still describes the OLD world. Remember that object and refuse to build
+// placements from it; each response is a fresh reference, so an incoming one
+// compares unequal. (Same staleness trap the textAdventure bridge's
+// ensureStaticData() sidesteps.)
+let _staleStaticData = null;
+// Item names an own-world location holds that grantPerk rejected (filler, the
+// Victory item). Saves a PERKS scan on every completion of those tasks.
+const _nonPerkItemNames = new Set();
+// Prestige detection. doPrestige() wipes every perk and — like doEnergyReset —
+// ends by firing the fork's energy-reset callback; there is no dedicated
+// prestige callback, so the two are told apart by prestige_count.
+let _lastPrestigeCount = null;
 
 // Playback walkTo state: the exit to take once the current zone's
 // Travel task completes. Zone completion itself is played by the
@@ -404,7 +430,8 @@ function _handleLoadRegion(payload) {
     // Zone-locations (Phase 2): suppress this zone's local perk grants
     // (perk → Count) BEFORE the game can complete any perk-task, re-seed
     // the location-check dedupe from already-checked locations, and grant
-    // any perks already received as AP items. No-ops when the payload
+    // any foreign perks already received as AP items (own-world perks are
+    // granted by their task's completion callback). No-ops when the payload
     // carries no ap_locations/task_patches (base scope).
     _applyTaskPatches();
     _reseedReportedLocations();
@@ -480,6 +507,9 @@ function _handleTaskCompleted(task) {
     if (!task || task.synthetic) return;
     const locationName = _resolveLocationName(task.id);
     if (locationName === null) return;
+    // Before the check dedupe: a re-completion checks no new location, but it
+    // is exactly what re-grants an own-world perk a prestige wiped.
+    _grantOwnPerkForLocation(locationName);
     if (_reportedLocationNames.has(locationName)) return;
     _reportedLocationNames.add(locationName);
     if (!_client) return;
@@ -547,29 +577,110 @@ function _syncPerkCategoryTaskIds() {
 }
 
 /**
- * Grant perks from received AP items (grants are AP-authoritative — the
- * fork's own perk grants are suppressed via task_patches, so a perk
- * enters the game ONLY here). window.grantPerk resolves the item name
- * against the fork's PERKS[].name and self-rejects non-perk items (filler,
- * other players' items), so we attempt it on every owned item; it is
- * idempotent and persistence-safe. Each item name is processed once.
- * Perks are global, so this runs regardless of the active region.
+ * Resolve (and memoize) which item sits on each of the player's own locations,
+ * from the post-fill placement in staticData. Returns null while staticData is
+ * unavailable — callers then fall back to origin-blind reconciliation.
  */
-function _reconcilePerksFromInventory() {
+function _ensureOwnPlacements() {
+    if (_ownPlacements) return _ownPlacements;
+    const staticData = _client?.getStaticData?.();
+    if (!staticData || staticData === _staleStaticData) return null;
+    _ownPlacements = buildOwnPlacements(staticData);
+    if (_ownPlacements) {
+        log('debug', `own placements resolved: ${_ownPlacements.byLocation.size} locations`);
+    }
+    return _ownPlacements;
+}
+
+/**
+ * Own-world leg of the grant semantics: the perk a task's own AP location holds
+ * is granted on EVERY full completion of that task, exactly like the vanilla
+ * perk the placement replaced. That is what carries a perk back across a
+ * prestige — doPrestige() wipes the perk but not the location check, so the
+ * task is re-run and re-grants. grantPerk is idempotent, so the ordinary
+ * completions in between are no-ops.
+ *
+ * Non-perk placements (filler, Victory) self-reject once and are then skipped.
+ */
+function _grantOwnPerkForLocation(locationName) {
+    if (typeof _w.grantPerk !== 'function') return;
+    const own = _ensureOwnPlacements();
+    const itemName = own?.byLocation.get(locationName);
+    if (!itemName || _nonPerkItemNames.has(itemName)) return;
+    try {
+        const res = _w.grantPerk(itemName);
+        if (!res?.success) {
+            _nonPerkItemNames.add(itemName);
+            return;
+        }
+        if (!res.alreadyHad) log('debug', `granted own-world perk '${itemName}' on task completion`);
+    } catch (err) {
+        log('error', `grantPerk('${itemName}') threw:`, err);
+    }
+}
+
+/**
+ * Foreign leg of the grant semantics: a perk the fill placed in another
+ * player's world has no task to re-run, so the client owns its whole lifetime —
+ * granted when the item arrives, and re-granted after a prestige wipes it.
+ *
+ * Own-world perks are deliberately NOT granted here; they belong to
+ * _grantOwnPerkForLocation. Until staticData resolves the origin split we can't
+ * tell the two apart, so we grant everything once (the pre-origin behaviour) —
+ * grantPerk self-rejects non-perk items, so filler costs nothing but a lookup.
+ *
+ * `regrant` ignores the once-ever dedupe; it needs a resolved origin split, or
+ * it would restore own-world perks a prestige was supposed to take.
+ */
+function _reconcilePerksFromInventory({ regrant = false } = {}) {
     if (typeof _w.grantPerk !== 'function') return;
     const inv = _client?.getStateSnapshot?.()?.inventory;
     if (!inv || typeof inv !== 'object') return;
+    const own = _ensureOwnPlacements();
+    if (regrant && !own) {
+        log('warn', 'prestige: no placement data — foreign perks not re-granted');
+        return;
+    }
     for (const [name, count] of Object.entries(inv)) {
-        if (Number(count) <= 0 || _processedItems.has(name)) continue;
+        if (Number(count) <= 0) continue;
+        if (own?.itemNames.has(name)) continue;
+        if (!regrant && _processedItems.has(name)) continue;
         _processedItems.add(name);
         try {
             const res = _w.grantPerk(name);
             if (res?.success && !res.alreadyHad) {
-                log('debug', `granted perk from AP item '${name}'`);
+                log('debug', `granted foreign perk from AP item '${name}'`);
             }
         } catch (err) {
             log('error', `grantPerk('${name}') threw:`, err);
         }
+    }
+}
+
+/**
+ * A prestige just wiped every perk. Own-world perks come back when their task
+ * next completes; foreign ones have no task, so restore them now.
+ * Idempotent — safe to call on a reset that turned out not to be a prestige.
+ */
+function _handlePrestige() {
+    _reconcilePerksFromInventory({ regrant: true });
+}
+
+/**
+ * Detect a prestige. The fork's energy-reset callback fires for doEnergyReset
+ * and doPrestige alike, and its payload carries no prestige flag, so compare
+ * prestige_count across calls. Seeds itself on the first call (a bridge that
+ * attaches to an already-prestiged save must not treat that as a fresh wipe).
+ */
+function _checkForPrestige() {
+    if (typeof _w.getFullState !== 'function') return;
+    const count = _w.getFullState()?.prestigeCount;
+    if (typeof count !== 'number') return;
+    const previous = _lastPrestigeCount;
+    _lastPrestigeCount = count;
+    if (previous !== null && count > previous) {
+        log('debug', `prestige detected (count ${previous} -> ${count})`);
+        _handlePrestige();
     }
 }
 
@@ -710,8 +821,13 @@ function _handlePlaybackControl(payload) {
  * auto_continue_energy_reset mod, threshold End Run, Auto-Prestige),
  * ask the host to run the matching loop reset. Resets the bridge
  * applied itself (_applyingHostReset) are not reported back.
+ *
+ * The prestige check runs BEFORE that suppression: a prestige wipes perks
+ * whoever asked for the reset, and its re-grants are a game-state repair the
+ * host has no part in.
  */
 function _handleGameEnergyReset(state) {
+    _checkForPrestige();
     if (_applyingHostReset) return;
 
     // Count the game's own reset as one applied host reset, so the
@@ -785,6 +901,9 @@ async function main() {
     }
     _w.setManagedMode(true);
     if (typeof _w.pauseGameLoop === 'function') _w.pauseGameLoop();
+    // Seed the prestige counter from the loaded save, so a bridge attaching to
+    // an already-prestiged game doesn't read its first reset as a fresh wipe.
+    _checkForPrestige();
     log('info', 'JtA in managed mode (loop paused)');
 
     // Step 2: complete the iframeAdapter handshake.
@@ -913,6 +1032,11 @@ async function main() {
         // inventory (grantPerk stays idempotent against a shared save).
         _reportedLocationNames.clear();
         _processedItems.clear();
+        // New placements too — but the cached staticData still describes the
+        // old world until the response to the request below lands.
+        _staleStaticData = _client?.getStaticData?.() ?? null;
+        _ownPlacements = null;
+        _nonPerkItemNames.clear();
         _clearPendingWalk();
         _client?.requestStaticData?.();
         _client?.requestStateSnapshot?.();
