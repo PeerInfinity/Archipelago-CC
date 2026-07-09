@@ -1,10 +1,14 @@
 # JtA Pass-B Balance Pass — Phase 3 Redesign Plan
 
 **Date:** 2026-07-08 ·
-**Status: PHASES 1–4 of §7 DONE 2026-07-08/09 (3d-hooks `12c014e`+`198dbe8c5`, 3d-order
-`319d0c6bb`, 3d-pass `415961ccb` — converges, see §4b; 3e `80432e2c2` — in-app
-worker + host module, 19/19 substrate suite). Remaining: §7 step 5 (3f docs —
-this update — plus Phase-4 emergent verification per the parent plan).**
+**Status: COMPLETE 2026-07-09. §7 steps 1–5 all done (3d-hooks `12c014e`+`198dbe8c5`,
+3d-order `319d0c6bb`, 3d-pass `415961ccb` — converges, see §4b; 3e `80432e2c2` —
+in-app worker + host module; 3f docs), plus the suppressed-perk-task
+categorization fix (§4c, submodule `0478389` + outer `45c944b80`) which closed
+the last §8 open ruling. Everything pushed; CI fully green.
+NEXT: Phase 4 emergent verification, in the parent plan — note it now carries a
+first-class LOCATION-COVERAGE assertion, because `thresholdFloored` tasks
+complete in the walk only because the walk waits for them.**
 Child plan of `jta-zone-randomization-plan.md` (its Phase 3, redone per the
 2026-07-08 re-rulings). The parent plan's §2 sketch and Phase-3 progress notes
 are superseded by this document where they conflict.
@@ -436,6 +440,24 @@ lessons folded into the order builder: buckets are COARSER than zones
 within-bucket repair needs zone-reachability edges (Travel(z) before any
 deeper-zone task) and item-dependency edges (producer before consumer) on
 top of unlock chains and Mandatory-before-Travel.
+
+## 7b. Handoff to Phase 4 (what this plan could not verify)
+
+The pass grades its own homework: milestone gaps are measured **inside the walk
+that assigns the costs**, where automation is confined by `setCostedTaskIds`.
+Two things therefore need out-of-sample measurement, and only the parent plan's
+Phase 4 can provide it:
+
+1. **Location coverage under free automation.** Six tasks on the verify seed are
+   reported `thresholdFloored`: MIN cost is unaffordable at first touch, and
+   they complete only because the walk WAITS (nothing else is runnable, so the
+   all-skipped Best-Task fallback grinds the skill up). In free play automation
+   always has better work available, so the fallback may never fire and those AP
+   locations may never be checked. The walk cannot detect this by construction.
+2. **Emergent pacing.** In-sample gaps after §4c are p50 3 / mean 3.7 against
+   `resetsPerStep = 5`. Per §2 caveat 1 of the parent plan, a systematic
+   deviation is corrected with a factor on the target, not an architecture
+   change. Phase 4 also settles the tolerance band and the final `resetsPerStep`.
 
 ## 8. Parked (explicitly out of v1 scope, recorded 2026-07-08)
 

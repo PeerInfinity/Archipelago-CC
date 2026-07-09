@@ -11,8 +11,13 @@ libraryItems + `arbitrary_ap_locations` + per-zone grant-suppression
 `jta-location-check-and-perk-grant` test on a generated `jta_locations_test`
 preset (`038d8cff8`); round-trip now 18/18 (task_patches survive), 18/18
 substrate suite green. All §7 rulings received; v1 scope settled (zones 0–14,
-perk-shuffle + rebalance; synthetic data deferred). NEXT: Phase 3 (the §2
-balancing pass — Pass B rebalance at rules load).**
+perk-shuffle + rebalance; synthetic data deferred).
+**Phase 3 DONE 2026-07-08/09 — see the child plan
+`jta-balance-pass-plan.md`: converging Pass-B walk (`415961ccb`), in-app
+`jtaBalance` worker module (`80432e2c2`), and the suppressed-perk-task
+categorization fix (`45c944b80` + submodule `0478389`) that closed the last
+open ruling. NEXT: Phase 4 (emergent verification — out-of-sample pacing AND
+location coverage under free automation).**
 
 The next JtA arc after `jta-substrate-integration-plan.md` (all phases complete
 except its Phase 6 stub, which this plan absorbs). This is the modern successor
@@ -622,11 +627,44 @@ standalone and `pinMaxEnergy` (substrate) budgets.
 - Measure solve runtime at load; Web Worker if it blows the interactive
   budget — decision point, not a blocker.
 
-### Phase 4 — Verification
+### Phase 4 — Emergent verification (NEXT; scope widened 2026-07-09)
+
+Phase 3's numbers are **in-sample**: the balance pass measures milestone gaps
+inside the very walk that assigns the costs, where `setCostedTaskIds` confines
+automation to the frontier, costs are assigned from state that arose under
+that confinement, and perks are granted by the walk in sphere-log order. Real
+play has none of those constraints. Phase 4 is the **out-of-sample** check:
+ship the patches, remove the scaffolding, let the game play itself, and
+measure what emerges.
+
+- **Coverage is the first-class assertion (added 2026-07-09; the plan's
+  original "gaps within band" wording predates the all-tasks surface).** After
+  N runs of free automation, how many of the v1 AP locations were actually
+  checked? Anything short of the full set means a real player cannot finish
+  their world. The specific risk the walk **cannot** detect by construction:
+  tasks the pass reports as `thresholdFloored` complete only because the walk
+  *waits* for them (nothing else is runnable, so the all-skipped Best-Task
+  fallback grinds the skill up until MIN cost becomes affordable). In free
+  play automation always has something better to do, so the fallback may never
+  fire. This is also the only real out-of-sample test of the 2026-07-09
+  perk-category fix (`setPerkCategoryTaskIds`).
 - Harness `randomized-pacing-*` experiment family: measured reset gaps within
   band (band defaults from Phase 0), **standalone-pool** tuned-defaults
   automation (matches the `energyBonusSync` runtime per the 2026-07-08
-  supersession; pinned kept for comparison only); SUMMARY round.
+  supersession; pinned kept for comparison only); SUMMARY round. Inputs are
+  ready: Phase 1 gave the harness a `gameDataPatch` option for exactly this,
+  and `verify-jta-balance-pass.mjs` dumps the patch list via `JTA_BP_REPORT`.
+- **Pacing bias is a tuning result, not a redesign trigger** (§2 caveat 1,
+  pre-committed): `estimateResetsToComplete` assumes a dedicated grind while
+  automation splits attention, so a systematic deviation is corrected with a
+  factor on the target. In-sample after the perk-category fix: milestone gaps
+  p50 3 / mean 3.7 vs `resetsPerStep = 5` (~1.35× undershoot) — a hint about
+  magnitude only.
+- Phase 4 is where the deferred knobs get settled with data: the **tolerance
+  band** (§6.4, "pick after Phase 0" → really after the first green emergent
+  run), the final **`resetsPerStep`** value (default 5, user asked to revisit
+  if measurement says otherwise), and the parked
+  **`threshold_other_metric: resets`** question.
 - In-app smoke: randomized+balanced preset progresses zone 1→3 within
   expected resets under playback automation.
 
