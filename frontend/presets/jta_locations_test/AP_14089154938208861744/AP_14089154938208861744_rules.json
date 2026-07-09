@@ -147,7 +147,14 @@
             "name": "region_1_0__20",
             "id": 1007,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write"
+                ],
+                "count": 1
+              }
             },
             "item": {
               "name": "Victory",
@@ -160,7 +167,14 @@
             "name": "region_1_0__21",
             "id": 1008,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write"
+                ],
+                "count": 1
+              }
             },
             "item": {
               "name": "JtA Filler",
@@ -173,7 +187,14 @@
             "name": "region_1_0__22",
             "id": 1009,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write"
+                ],
+                "count": 1
+              }
             },
             "item": {
               "name": "JtA Filler",
@@ -186,7 +207,14 @@
             "name": "region_1_0__25",
             "id": 1010,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write"
+                ],
+                "count": 1
+              }
             },
             "item": {
               "name": "JtA Filler",
@@ -199,7 +227,14 @@
             "name": "region_1_0__27",
             "id": 1011,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write"
+                ],
+                "count": 1
+              }
             },
             "item": {
               "name": "How to Write",
@@ -212,7 +247,14 @@
             "name": "region_1_0__23",
             "id": 1012,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write"
+                ],
+                "count": 1
+              }
             },
             "item": {
               "name": "JtA Filler",
@@ -225,7 +267,14 @@
             "name": "region_1_0__24",
             "id": 1013,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write"
+                ],
+                "count": 1
+              }
             },
             "item": {
               "name": "JtA Filler",
@@ -238,7 +287,14 @@
             "name": "region_1_0__26",
             "id": 1014,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "How to Read",
+                  "How to Write"
+                ],
+                "count": 1
+              }
             },
             "item": {
               "name": "JtA Filler",
@@ -458,15 +514,7 @@
             "region_0_0__13",
             "region_0_0__14",
             "region_0_0__15",
-            "region_0_0__16",
-            "region_1_0__20",
-            "region_1_0__21",
-            "region_1_0__22",
-            "region_1_0__23",
-            "region_1_0__24",
-            "region_1_0__25",
-            "region_1_0__26",
-            "region_1_0__27"
+            "region_0_0__16"
           ],
           "new_accessible_regions": [
             "Menu",
@@ -490,7 +538,16 @@
               "How to Read": 1
             }
           },
-          "new_accessible_locations": [],
+          "new_accessible_locations": [
+            "region_1_0__20",
+            "region_1_0__21",
+            "region_1_0__22",
+            "region_1_0__23",
+            "region_1_0__24",
+            "region_1_0__25",
+            "region_1_0__26",
+            "region_1_0__27"
+          ],
           "new_accessible_regions": [],
           "sphere_locations": [
             "region_0_0__13"
@@ -500,7 +557,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "0.2",
+      "sphere_index": "1.1",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -521,7 +578,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "0.3",
+      "sphere_index": "1.2",
       "player_data": {
         "1": {
           "new_inventory_details": {

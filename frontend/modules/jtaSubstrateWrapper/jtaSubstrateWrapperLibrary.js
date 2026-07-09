@@ -15,6 +15,12 @@
  * AP-authoritative (the bridge applies them via window.applyTaskPatches
  * and reports task completions / grants perks from received items).
  * With emission off the substrate is byte-identical to the base scope.
+ *
+ * Phase 3a: each location also carries a loose count-based `access_rule`
+ * (setJtaFreeZones / setJtaStartingPerks) so AP's fill produces a real
+ * sphere ORDER. Without it every location is `True_`, the whole game
+ * collapses into sphere 0, Victory sits in logic immediately, and the
+ * §2b post-fill balancing pass has no progression to walk.
  */
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
@@ -57,6 +63,7 @@ let _perkShuffleSeed = null;
 export function setJtaPerkShuffleSeed(seed) {
     _perkShuffleSeed = (typeof seed === 'number') ? seed : null;
     _placementCache = null;
+    _universeCache = null;
 }
 export function getJtaPerkShuffleSeed() { return _perkShuffleSeed; }
 
@@ -70,11 +77,37 @@ let _goalZone = null;
 export function setJtaGoalZone(zoneIdx) {
     _goalZone = (typeof zoneIdx === 'number' && zoneIdx >= 0) ? zoneIdx : null;
     _placementCache = null;
+    _universeCache = null;
 }
 export function getJtaGoalZone() { return _goalZone; }
 
+// Loose count-based zone gating, ported from the old worlds/jta apworld
+// (Rules.py + Options.py): zone Z requires
+//   max(0, Z - free_zones + 1 - starting_perks)
+// perks — ANY perks, not specific ones, so AP fill keeps maximum freedom
+// while the sphere log still follows zone order (plan §6 open-q 9, loose
+// over strict). Defaults match the apworld's: only zone 0 is free, and
+// zone Z then requires Z perks.
+//
+// The old apworld put this on the zone→zone ENTRANCE. We put it on each
+// zone's LOCATIONS instead: the procgen layout drivers place zones on a
+// grid and stitch arbitrary spiral exits, so region adjacency carries no
+// zone ordering to hang an entrance rule on.
+let _freeZones = 1;
+export function setJtaFreeZones(n) {
+    _freeZones = (typeof n === 'number' && n >= 1) ? Math.floor(n) : 1;
+}
+export function getJtaFreeZones() { return _freeZones; }
+
+let _startingPerks = 0;
+export function setJtaStartingPerks(n) {
+    _startingPerks = (typeof n === 'number' && n >= 0) ? Math.floor(n) : 0;
+}
+export function getJtaStartingPerks() { return _startingPerks; }
+
 // Memoized canonical placement, keyed by (shuffleSeed, goalZone).
 let _placementCache = null; // { key, byZone: Map<zoneIdx, Map<taskId, itemName>> }
+let _universeCache = null;  // { key, names: string[] }
 
 // The four zone-0..14 tasks with no in-game unlocker
 // (Divinity/SeeBeyondTheVeil-gated): Use Secret Fishing Spot (17),
@@ -183,6 +216,37 @@ function _computePlacement() {
     return byZone;
 }
 
+// The perk item names that actually reach the AP pool: the perks placed on
+// emitted zones (0..goalZone). Derived from the placement map rather than
+// from JTA_ZONE_TASK_DATA so it tracks the SBtV exclusions and the shuffle
+// bound automatically — a perk stranded on an unemitted zone is not in the
+// pool and must not appear in an access rule's item_names. Sorted to match
+// rule_builder's HasFromListUnique, which stores `tuple(sorted(set(...)))`.
+function _perkUniverse() {
+    const key = `${_perkShuffleSeed}|${_goalZone}`;
+    if (_universeCache && _universeCache.key === key) return _universeCache.names;
+
+    const byZone = _computePlacement();
+    const maxZone = _goalZone ?? (JTA_ZONE_TASK_DATA.length - 1);
+    const names = new Set();
+    for (let z = 0; z <= maxZone; z++) {
+        for (const item of byZone.get(z)?.values() ?? []) {
+            if (item !== JTA_VICTORY_ITEM_NAME) names.add(item);
+        }
+    }
+    const sorted = [...names].sort();
+    _universeCache = { key, names: sorted };
+    return sorted;
+}
+
+// How many perks zone `zoneIdx` demands. Capped at the universe size:
+// HasFromListUnique resolves to False_ when count > len(item_names), which
+// would make the whole zone unreachable and fail fill.
+function _perksRequiredForZone(zoneIdx, universeSize) {
+    const offset = _freeZones - 1 + _startingPerks;
+    return Math.min(Math.max(0, zoneIdx - offset), universeSize);
+}
+
 // Build the zone-locations result for one zone. Returns the
 // extractZoneRules shape { locations, payload } where payload.ap_locations
 // maps each task id to the compileRegionGraph location name
@@ -195,6 +259,14 @@ function buildZoneLocations(zoneIdx, region_id) {
     const zone = JTA_ZONE_TASK_DATA[zoneIdx];
     if (!zone) return { locations: [], payload: {} };
     const placement = _computePlacement().get(zoneIdx) ?? new Map();
+    const universe = _perkUniverse();
+    const required = _perksRequiredForZone(zoneIdx, universe.length);
+    // Free zones carry no access_rule at all — assembleZoneRegion omits the
+    // field and world_generator emits the `True_` default, exactly as before
+    // this rule existed.
+    const accessRule = required > 0
+        ? { rule: 'HasFromListUnique', args: { item_names: universe, count: required } }
+        : null;
     const apLocations = {};
     const locations = [];
     const taskPatches = [];
@@ -202,7 +274,10 @@ function buildZoneLocations(zoneIdx, region_id) {
         if (SBTV_GATED_TASK_IDS.has(task.id)) continue;
         apLocations[task.id] = `${region_id}__${task.id}`;
         const item = placement.get(task.id) ?? JTA_FILLER_ITEM_NAME;
-        locations.push({ id: task.id, item, position: null });
+        locations.push({
+            id: task.id, item, position: null,
+            ...(accessRule ? { access_rule: accessRule } : {}),
+        });
         // Grant suppression (Q5, AP-authoritative): any task that
         // vanilla-grants a perk gets its `perk` patched to the Count
         // sentinel so onFullyFinishTask grants nothing locally — the perk
