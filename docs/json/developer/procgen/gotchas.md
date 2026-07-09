@@ -35,6 +35,10 @@ The stepped pipeline (panel steps and the `scripts/procgen/*-step.js` CLIs) must
 
 Module enablement is not global: `frontend/modes.json` maps launch modes to config variants in `frontend/module-configs/` (`modules.json`, `modules-nograph.json`, `modules-jta.json`, …), each enabling a different module set. A substrate that works in the default mode may be absent in another — the regression-test mode's config, for example, omits substrate runtimes entirely. When a substrate "is not registered," check which mode (and therefore which config file) the app was launched with before debugging the registry.
 
+## In managed mode JtA never advances its own zone
+
+The procgen host owns zone transitions, so the fork's `onFullyFinishTask` fires the travel callback and skips `advanceZone()`. Engine code that assumed "completing the zone's Travel task changes `GAMESTATE.tasks`" silently loops forever instead — that is exactly how `skipCurrentZoneIfFree()` hung `doEnergyReset()` once the player held Minor Time Compression. Relatedly, **`setAutomationEndZone` is not a way to confine a headless driver to a zone range**: `automation_end` gates nothing continuously, it switches automation *Off permanently* once `(zone + 1) >= automation_end`. The full set of managed-mode zone invariants (including why out-of-order zone play is safe) is in [jta.md](./jta.md#managed-mode-zone-invariants).
+
 ## `shared/` is a git submodule
 
 `frontend/modules/shared/` (home of the substrate registry, rng, procgen primitives) and `frontend/modules/textAdventureEngine/` are git submodules with their own history and remotes. `git log`/`git blame` from the outer repo won't see their commits — run git *inside* the submodule directory. Edits to files under these paths land in the submodule, not the outer repo; landing a change means committing inside the submodule, then bumping the submodule pointer in a separate outer-repo commit.
