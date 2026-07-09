@@ -1,0 +1,237 @@
+{
+  "generatedAt": null,
+  "source": "vanilla-profile-raw-standalone.json",
+  "variant": "standalone",
+  "zoneLimit": 14,
+  "excludedTaskIds": [
+    17,
+    28,
+    88,
+    158
+  ],
+  "estimatorCap": 200,
+  "sampleCount": 301,
+  "censoredCount": 21,
+  "floorResets": 6,
+  "plateauResets": 14.697,
+  "buckets": [
+    {
+      "lo": 0,
+      "hi": 0,
+      "estimate": 0,
+      "actualResets": {
+        "n": 162,
+        "mean": 7.27,
+        "p25": 2,
+        "p50": 6,
+        "p75": 10,
+        "p90": 15,
+        "max": 34
+      },
+      "actualOverEstimate": null
+    },
+    {
+      "lo": 1,
+      "hi": 1,
+      "estimate": 1,
+      "actualResets": {
+        "n": 22,
+        "mean": 9.36,
+        "p25": 4,
+        "p50": 6,
+        "p75": 11,
+        "p90": 25,
+        "max": 32
+      },
+      "actualOverEstimate": {
+        "n": 22,
+        "mean": 9.36,
+        "p25": 4,
+        "p50": 6,
+        "p75": 11,
+        "p90": 25,
+        "max": 32
+      }
+    },
+    {
+      "lo": 2,
+      "hi": 2,
+      "estimate": 2,
+      "actualResets": {
+        "n": 17,
+        "mean": 11.12,
+        "p25": 5,
+        "p50": 8,
+        "p75": 15,
+        "p90": 23,
+        "max": 35
+      },
+      "actualOverEstimate": {
+        "n": 17,
+        "mean": 5.56,
+        "p25": 2.5,
+        "p50": 4,
+        "p75": 7.5,
+        "p90": 11.5,
+        "max": 17.5
+      }
+    },
+    {
+      "lo": 3,
+      "hi": 5,
+      "estimate": 4,
+      "actualResets": {
+        "n": 24,
+        "mean": 13.88,
+        "p25": 6,
+        "p50": 10,
+        "p75": 20,
+        "p90": 30,
+        "max": 52
+      },
+      "actualOverEstimate": {
+        "n": 24,
+        "mean": 3.79,
+        "p25": 1.5,
+        "p50": 2.5,
+        "p75": 5.333333333333333,
+        "p90": 7.333333333333333,
+        "max": 14
+      }
+    },
+    {
+      "lo": 6,
+      "hi": 10,
+      "estimate": 8,
+      "actualResets": {
+        "n": 18,
+        "mean": 19.72,
+        "p25": 7,
+        "p50": 17,
+        "p75": 24,
+        "p90": 57,
+        "max": 62
+      },
+      "actualOverEstimate": {
+        "n": 18,
+        "mean": 2.92,
+        "p25": 0.875,
+        "p50": 1.8888888888888888,
+        "p75": 4,
+        "p90": 9.5,
+        "max": 10.333333333333334
+      }
+    },
+    {
+      "lo": 11,
+      "hi": 20,
+      "estimate": 15.5,
+      "actualResets": {
+        "n": 17,
+        "mean": 21.29,
+        "p25": 10,
+        "p50": 15,
+        "p75": 24,
+        "p90": 67,
+        "max": 77
+      },
+      "actualOverEstimate": {
+        "n": 17,
+        "mean": 1.53,
+        "p25": 0.9090909090909091,
+        "p50": 1.1818181818181819,
+        "p75": 1.4375,
+        "p90": 4.529411764705882,
+        "max": 6.090909090909091
+      }
+    },
+    {
+      "lo": 21,
+      "hi": 50,
+      "estimate": 35.5,
+      "actualResets": {
+        "n": 18,
+        "mean": 21,
+        "p25": 7,
+        "p50": 13,
+        "p75": 29,
+        "p90": 48,
+        "max": 87
+      },
+      "actualOverEstimate": {
+        "n": 18,
+        "mean": 0.73,
+        "p25": 0.2916666666666667,
+        "p50": 0.5714285714285714,
+        "p75": 1.1538461538461537,
+        "p90": 1.8461538461538463,
+        "max": 2.175
+      }
+    },
+    {
+      "lo": 51,
+      "hi": 200,
+      "estimate": 125.5,
+      "actualResets": {
+        "n": 23,
+        "mean": 24.39,
+        "p25": 7,
+        "p50": 14,
+        "p75": 38,
+        "p90": 58,
+        "max": 97
+      },
+      "actualOverEstimate": {
+        "n": 23,
+        "mean": 0.27,
+        "p25": 0.07894736842105263,
+        "p50": 0.175,
+        "p75": 0.367816091954023,
+        "p90": 0.4431818181818182,
+        "max": 1.1547619047619047
+      }
+    }
+  ],
+  "curve": [
+    {
+      "estimate": 0,
+      "actualP50": 6,
+      "n": 162
+    },
+    {
+      "estimate": 1,
+      "actualP50": 6,
+      "n": 22
+    },
+    {
+      "estimate": 2,
+      "actualP50": 8,
+      "n": 17
+    },
+    {
+      "estimate": 4,
+      "actualP50": 10,
+      "n": 24
+    },
+    {
+      "estimate": 8,
+      "actualP50": 14.697,
+      "n": 18
+    },
+    {
+      "estimate": 15.5,
+      "actualP50": 14.697,
+      "n": 17
+    },
+    {
+      "estimate": 35.5,
+      "actualP50": 14.697,
+      "n": 18
+    },
+    {
+      "estimate": 125.5,
+      "actualP50": 14.697,
+      "n": 23
+    }
+  ]
+}

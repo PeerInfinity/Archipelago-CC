@@ -293,3 +293,49 @@ spark-off; 20 is strictly kindest to spark-on.
 - Verification: `spark-off-full-shipped-defaults` (empty overrides on the
   new build + new baselineMods) reproduces `spark-off-full-stall20-savings`
   **byte-identically** — all-269 @ 2583, 52 prestiges.
+
+## Round 7 — estimator calibration for the balancer (calibration-*-z14.json, 2026-07-08)
+
+Phase 3c of the zone-randomization arc. `derive-calibration.mjs` joins Phase
+0's raw `estimatorSamples` (`[taskId, run, estimate]`) against the run each
+task actually completed on, restricted to **zones 0–14** and excluding the four
+SBtV-gated tasks — the restriction SUMMARY Round 5 asked for, because the
+whole-game table in `vanilla-profile.json` is tail-dominated under spark-off
+and comes out non-monotonic. Bucket medians (n ≈ 20) are noisy, so the emitted
+`curve` is an isotonic (pool-adjacent-violators) fit of median actual vs
+estimate, which the balancer inverts.
+
+**Standalone (the anchor, and now also the runtime — `energyBonusSync` default
+on).** 301 usable samples, 21 censored.
+
+| estimate | n | actual p25 | p50 | p75 | isotonic p50 |
+|---|---|---|---|---|---|
+| 0 | 162 | 2 | 6 | 10 | 6 |
+| 1 | 22 | 4 | 6 | 11 | 6 |
+| 2 | 17 | 5 | 8 | 15 | 8 |
+| 3–5 | 24 | 6 | 10 | 20 | 10 |
+| 6–10 | 18 | 7 | 17 | 24 | 14.70 |
+| 11–20 | 17 | 10 | 15 | 24 | 14.70 |
+| 21–50 | 18 | 7 | 13 | 29 | 14.70 |
+| 51–200 | 23 | 7 | 14 | 38 | 14.70 |
+
+Two bounds fall out, and they are properties of the game, not of the fit:
+
+- **Floor ≈ 6 resets.** Even at estimate 0 ("affordable right now") the median
+  task waits ~6 resets, because automation works a priority queue. p25 = 2, so
+  it's a soft floor.
+- **Plateau ≈ 14.7 resets.** Past estimate ~10 the median stops climbing: skill
+  XP compounds across resets while the estimator holds the current boost frozen,
+  so grossly expensive tasks land sooner than it predicts.
+
+So the reachable pacing window for `cost_multiplier` alone is **[6, 14.7]**.
+The v1 anchor curve's 21 perk-milestone gaps (p50 = 7, max 14 excluding the
+SBtV straggler) sit mostly inside it; the seven gaps below 6 clamp to estimate
+0. This is the "achievable pacing accuracy is bounded by the skill
+trajectories" bound the plan predicted (§3 Q7 skills sub-policy, §2 caveat 1).
+
+**pinned100, for comparison — floor 27.4, plateau 41.1.** A pinned-pool runtime
+could not hit the standalone anchor curve at all: its *floor* is double the
+curve's median gap. This independently corroborates the 2026-07-08 ruling that
+made `energyBonusSync` the default (balancer targets the standalone curve
+against a matching standalone runtime, and drops pin-compensation).
