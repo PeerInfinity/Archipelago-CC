@@ -1,7 +1,11 @@
 # JtA Synthetic Game Data — Phase 5 Plan
 
 **Date:** 2026-07-10 ·
-**Status: PROPOSED — design doc for review; rulings pending (§7).**
+**Status: RULED 2026-07-10 — all seven §7 questions answered same day
+(rulings recorded inline in §7); ready for 5a. Q2's feasibility check is
+DONE: no `const enum` in the fork (and `isolatedModules: true` forbids them
+project-wide), compiled enums are mutable runtime objects — the count
+rewrite works as designed.**
 Child plan of `jta-zone-randomization-plan.md` (its Phase 5, "the destination").
 Sibling precedent: `jta-balance-pass-plan.md` (Phase 3). Phases 0–4 of the
 parent are DONE; this plan builds on their machinery (Pass-B balance walk,
@@ -705,8 +709,9 @@ both halves (the harness already re-extracts the committed HEAD per run).
   `sweep-ap-seeds`-style runs over N generated datasets × seeds; hard gate =
   full location coverage every run; advisory band = the settled `[0.4×, 3×]`
   per-seed mean gap; plus the C4 invariant checked EMERGENTLY (skill levels
-  actually reached vs zone demands). UI-parity layer 3 lands here or is
-  dropped by ruling.
+  actually reached vs zone demands). UI-parity layer 3 is RULED IN (§7 Q6) —
+  build it in 5c with the other parity layers unless it proves not worth the
+  effort in practice.
 
 Post-v1 (recorded, not planned here): per-behavior effects migration
 (§2.3), branching topology / grid-fit via `generateZoneForSpecs`
@@ -715,35 +720,39 @@ standalone `?dataset=` play.
 
 ---
 
-## 7. Open questions (rulings sought)
+## 7. Rulings (all received 2026-07-10, same day as the proposal)
 
-1. **Behavior slots vs immediate indirection.** §2.3/§3.3 recommend fixed
-   behavior slots for v1 (minimal fork surface, parity-gateable, dead-slot
-   precedent) with per-behavior declarative migration later. The
-   alternative — rewrite the ~40 branches through a behavior-key lookup
-   now — buys count-freedom for behavior-bearing perks/items immediately at
-   much higher risk. **Recommend: slots.**
-2. **Runtime enum rewrite feasibility.** The count-freedom story assumes
-   non-const TS enums (runtime property reads). Verify no `const enum` in
-   the fork before 5b; if any table's enum is const-inlined, that table's
-   count is fixed at vanilla for v1 (skills are the one place count freedom
-   is REQUIRED by ruling 5 — pre-check skills first).
-3. **Dead-slot handling in the schema** (§5.1): compact + provenance map
-   (cleaner documents) vs explicit placeholders (simpler loader). Minor;
-   implementer's call unless the user has a preference.
-4. **Dataset carriage** (§4.1): single-carrier + refs (recommended) vs
-   per-region copies (simpler, bloats rules.json ×zoneCount) vs a new
-   world-level rules.json field (cleanest shape, but adds a schema/export
-   surface the sidecar path already provides).
-5. **Theme v1 depth** (§2.5): namebank-driven `title/setting/flavor` only
-   (recommended), or also `arc_beat` zone structure in v1?
-6. **UI-parity layer 3** (§5.2): build the `?dataset=` boot path for it, or
-   accept layers 1+2 + the in-app substrate test as sufficient and drop it?
-7. **Where generation code lives** (parent Q3 pattern): recommend the
-   dataset GENERATOR in the outer repo (pipeline-side, next to the wrapper
-   library), `loadGameData` + decoupling in the submodule (it versions with
-   the mechanics), the schema/validator in the outer repo with the fixture
-   regenerated from the fork build.
+1. **Behavior slots vs immediate indirection — RULED: start with slots.**
+   User follow-up: "would it make sense to migrate to indirection later?" —
+   Answer recorded: the migration target is the declarative `effects[]`
+   vocabulary (§2.3), not a permanent indirection layer. Sequence per
+   behavior: slot now → rewrite that one branch to read data → the slot
+   constraint dissolves for that key. A wholesale behavior-key indirection
+   layer as an intermediate stage would be double work; a per-behavior
+   indirection shim is only worth building if a concrete need for
+   count-freedom-with-behaviors arrives before the effects migration reaches
+   that behavior. So: indirection may appear transiently per behavior, but
+   declarative effects are the endpoint.
+2. **Runtime enum rewrite feasibility — VERIFIED 2026-07-10 (implementer
+   check, not a ruling):** zero `const enum` in the fork's TS sources, and
+   its tsconfig sets `isolatedModules: true`, which forbids const enums
+   project-wide (so this cannot silently regress). Compiled `build/*.js`
+   confirms standard mutable runtime enum objects. Count rewrite is
+   feasible for ALL tables. 5b implementation note: audit for module-level
+   constants computed FROM `*.Count` at import time (e.g. table sizes) —
+   property reads track the mutation, import-time captures do not; the
+   loader must rebuild any it finds.
+3. **Dead-slot handling — RULED: no user preference; implementer's call**
+   (decide at 5a; the parity bar catches either choice).
+4. **Dataset carriage — RULED: single-carrier + refs.**
+5. **Theme v1 depth — RULED: namebank-driven `title/setting/flavor` only;**
+   other ideas (arc beats etc.) may be tried later.
+6. **UI-parity layer 3 — RULED: run it** (it looks reasonably cheap);
+   drop only if implementation reveals it is not worth the effort.
+7. **Code homes — RULED as recommended:** dataset generator outer repo
+   (pipeline-side, next to the wrapper library); `loadGameData` +
+   decoupling changes in the submodule; schema/validator outer repo with
+   the vanilla fixture regenerated from the fork build.
 
 ## 8. Traceability
 
