@@ -8,3 +8,11 @@
 	path = frontend/modules/journey-to-ascension
 	url = https://github.com/PeerInfinity/journey-to-ascension.git
 	branch = substrate
+[submodule "frontend/modules/omsi-loops"]
+	path = frontend/modules/omsi-loops
+	url = https://github.com/PeerInfinity/omsi-loops.git
+	branch = substrate
+[submodule "frontend/modules/cavernous-ii"]
+	path = frontend/modules/cavernous-ii
+	url = https://github.com/PeerInfinity/cavernous-ii.git
+	branch = substrate
