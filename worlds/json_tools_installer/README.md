@@ -6,6 +6,8 @@ An APWorld package that provides tools for installing, updating, and managing JS
 
 This installer allows vanilla Archipelago users to easily install the JSON Tools suite (exporter, rule builder, world generator, frontend) without needing to clone or manage the full development repository.
 
+**AI disclosure:** The code and documentation in this package are predominantly AI-generated, written with [Claude Code](https://claude.ai/code), as part of the [Archipelago-CC](https://github.com/PeerInfinity/Archipelago-CC) project.
+
 ## Features
 
 - **Download Tools**: Fetch JSON Tools from GitHub (stable or development versions)

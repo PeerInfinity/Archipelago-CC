@@ -4,7 +4,7 @@ A suite of tools for exporting, visualizing, and tracking Archipelago game logic
 
 This project exports all the multiworld data from an Archipelago seed generation — access rules, regions, locations, items, helper functions — to a JSON file. A JavaScript frontend reads this JSON, connects to an Archipelago server, and works as a logic-aware tracker. The project also includes an enhanced Universal Tracker, several new APWorlds, and alternate game modes.
 
-Most of the code for this project was written by Claude.
+**AI disclosure:** The code and documentation in this repository are predominantly AI-generated, written with [Claude Code](https://claude.ai/code). This applies to the Archipelago-CC project's own work; bundled upstream projects (see Credits) remain the work of their original authors.
 
 **Live Demos:** [Latest Stable Version](https://peerinfinity.github.io/Archipelago/) | [Latest Development Version](https://peerinfinity.github.io/Archipelago-CC/)
 
