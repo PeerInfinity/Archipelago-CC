@@ -1,7 +1,9 @@
 # JtA Action Queue Port — Plan
 
 **Date:** 2026-07-10 ·
-**Status: PROPOSED — awaiting §7 rulings before any implementation.**
+**Status: RULED 2026-07-10 — all ten §7 rulings answered same day, each as
+recommended (recorded inline in §7). Ready for implementation (§5 phases);
+not yet started.**
 Source task: `CC/docs/cleanup-backlog.md` ("Port the jtaActionQueue module to
 the substrate JtA", user request 2026-07-10). Feeds the Phase-6 absorption
 audit of `jta-zone-randomization-plan.md` — this port is one of the "features
@@ -375,7 +377,10 @@ Rough size: bridge ~150 lines, engine/transport ~300, UI trims ~100, test
 
 ## 7. Rulings sought
 
-Answer these before implementation; recommendations restated inline.
+**RULED 2026-07-10: the user accepted every recommendation below as stated
+— R1 = A1, R2 = B1, R3 = C1, R4 = yes, R5 = allowed, R6 = yes, R7 = yes,
+R8 = drop, R9 = F1, R10 = yes.** The questions are kept verbatim for the
+record.
 
 1. **R1 — Port semantics:** action-script capability only (A1), with the
    bridge channel designed so a config-queue mirror (A2) remains a pure
