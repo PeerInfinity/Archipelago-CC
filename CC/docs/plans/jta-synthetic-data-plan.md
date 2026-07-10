@@ -625,11 +625,10 @@ content-table serializer (§1a). Specifics:
 - Derives `enum` fields from position (neutralizing the two items.ts typos —
   the exported dataset is CORRECT where the source is wrong; the loader's
   position≡enum assert makes the fixture and the tables agree).
-- Compacts vanilla's dead slots (`REMOVED`×2, `DELETED`) out of the schema
-  arrays and records the compaction map in `provenance` — the loader
-  re-expands to engine slots. (Alternative — keep dead slots in the schema
-  as explicit placeholders — is simpler and loses nothing; decide at
-  implementation, the parity bar catches either way.)
+- Dead slots (`REMOVED`×2, `DELETED`) — **RESOLVED at 5a implementation:
+  explicit `{placeholder: true}` entries**, so array position == engine enum
+  value everywhere and the loader needs no re-expansion map. (The compaction
+  alternative was dropped as pure extra machinery.)
 - Emits `dataset_id: "vanilla-fork-<version>"`; regenerated whenever the
   fork's data changes (same regeneration discipline as `zoneTaskData.js`).
 
@@ -687,10 +686,27 @@ both halves (the harness already re-extracts the committed HEAD per run).
 
 ## 6. Phasing (each separately land-able, committed as completed)
 
-- **5a — Schema + vanilla exporter + validator.** `jta-dataset.schema.json`,
-  the behavior-key table (enumerated from §1a's coupling list),
-  `export-vanilla-dataset.mjs`, the vanilla fixture, validator CLI. No fork
-  changes; no behavior anywhere changes.
+- **5a — Schema + vanilla exporter + validator — DONE 2026-07-10.**
+  Shipped: `frontend/schema/jta-dataset.schema.json` (Draft-7, well-formed,
+  fixture validates via python jsonschema);
+  `frontend/modules/jtaSubstrateWrapper/datasetBehaviors.js` (the behavior-key
+  table — 17 perk + 4 item + 16 prestige-unlock + 12 repeatable slots, every
+  key verified at its engine site; Perky/Deenergized have definition+display
+  sites but no found application site — keyed by documented intent);
+  `datasetValidator.js` (authoritative structural checks + CLI, proven
+  non-vacuous by 5 perturbation tests incl. wrong-slot, silent slot takeover,
+  C1, dangling unlocks_task); `export-vanilla-dataset.mjs` (deterministic —
+  byte-identical regeneration verified; hard-fails on hand-table drift vs the
+  build and on unclassified `on_consume`); fixture
+  `datasets/vanilla.json` (`vanilla-fork-1.6.2`: 10 skills, 30 zones, 269
+  tasks, 46 perks, 46 items, 164 KB, 0 warnings).
+  Empirical rule adjustments recorded: `xp_mult >= 0` (vanilla has three
+  deliberate zero-XP tasks: Apotheosize, Defy the Gods, Prepare Final
+  Ritual); C1 and Travel-per-zone hold on vanilla unmodified.
+  §7 Q3 sub-decision RESOLVED: **explicit placeholders** (dead slots are
+  `{placeholder: true}` entries; array position == engine enum value
+  everywhere; the §5.1 compaction alternative is dropped). No fork changes;
+  no runtime behavior anywhere changes.
 - **5b — Fork: `loadGameData` + decoupling changes** (§3.3 table), dataset
   save keying, dormant-by-default. Gated by the standalone byte-identity
   baseline. Ship as Fork 1.7 (changelog per SAVE_VERSION discipline).
@@ -742,8 +758,8 @@ standalone `?dataset=` play.
    constants computed FROM `*.Count` at import time (e.g. table sizes) —
    property reads track the mutation, import-time captures do not; the
    loader must rebuild any it finds.
-3. **Dead-slot handling — RULED: no user preference; implementer's call**
-   (decide at 5a; the parity bar catches either choice).
+3. **Dead-slot handling — RULED: no user preference; implementer's call.**
+   Decided at 5a: explicit placeholders (see §5.1 and Phase 5a notes).
 4. **Dataset carriage — RULED: single-carrier + refs.**
 5. **Theme v1 depth — RULED: namebank-driven `title/setting/flavor` only;**
    other ideas (arc beats etc.) may be tried later.

@@ -1,0 +1,6994 @@
+{
+  "schema_version": 1,
+  "dataset_id": "vanilla-fork-1.6.2",
+  "provenance": {
+    "generator": "export-vanilla-dataset.mjs",
+    "fork_save_version": "Fork 1.6.2",
+    "seed": null,
+    "params_hash": null
+  },
+  "theme": {
+    "title": "Journey to Ascension",
+    "setting": null,
+    "tone": [],
+    "namebanks": null
+  },
+  "skills": [
+    {
+      "name": "Charisma",
+      "icon": "🎭",
+      "xp_needed_mult": 1,
+      "theme": null
+    },
+    {
+      "name": "Study",
+      "icon": "🧠",
+      "xp_needed_mult": 1,
+      "theme": null
+    },
+    {
+      "name": "Combat",
+      "icon": "⚔️",
+      "xp_needed_mult": 5,
+      "theme": null
+    },
+    {
+      "name": "Search",
+      "icon": "🔎",
+      "xp_needed_mult": 1,
+      "theme": null
+    },
+    {
+      "name": "Subterfuge",
+      "icon": "🗡️",
+      "xp_needed_mult": 1,
+      "theme": null
+    },
+    {
+      "name": "Crafting",
+      "icon": "🔨",
+      "xp_needed_mult": 1,
+      "theme": null
+    },
+    {
+      "placeholder": true
+    },
+    {
+      "name": "Travel",
+      "icon": "🗺️",
+      "xp_needed_mult": 1,
+      "theme": null
+    },
+    {
+      "name": "Magic",
+      "icon": "🔮",
+      "xp_needed_mult": 3,
+      "theme": null
+    },
+    {
+      "name": "Fortitude",
+      "icon": "🛡️",
+      "xp_needed_mult": 5,
+      "theme": null
+    },
+    {
+      "placeholder": true
+    },
+    {
+      "name": "Ascension",
+      "icon": "🙏",
+      "xp_needed_mult": 200,
+      "theme": null
+    }
+  ],
+  "zones": [
+    {
+      "name": "The Village",
+      "theme": null,
+      "tasks": [
+        {
+          "id": 10,
+          "name": "Join the Watch",
+          "type": "Travel",
+          "skills": [
+            0
+          ],
+          "cost_multiplier": 4,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 11,
+          "name": "Read Noticeboard",
+          "type": "Mandatory",
+          "skills": [
+            1
+          ],
+          "cost_multiplier": 3,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 12,
+          "name": "Train with Weapons",
+          "type": "Mandatory",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 1,
+          "xp_mult": 3,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 13,
+          "name": "Learn How to Read",
+          "type": "Normal",
+          "skills": [
+            1
+          ],
+          "cost_multiplier": 8,
+          "xp_mult": 0.5,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 0,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 14,
+          "name": "Beg for Food",
+          "type": "Normal",
+          "skills": [
+            0
+          ],
+          "cost_multiplier": 1,
+          "xp_mult": 2,
+          "max_reps": 10,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 0,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 15,
+          "name": "Hide and Seek",
+          "type": "Normal",
+          "skills": [
+            3,
+            4
+          ],
+          "cost_multiplier": 2,
+          "xp_mult": 1.5,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 16,
+          "name": "Observe Surroundings",
+          "type": "Normal",
+          "skills": [
+            1
+          ],
+          "cost_multiplier": 1,
+          "xp_mult": 3,
+          "max_reps": 5,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 17,
+          "name": "Use Secret Fishing Spot",
+          "type": "Normal",
+          "skills": [
+            3
+          ],
+          "cost_multiplier": 500,
+          "xp_mult": 2,
+          "max_reps": 8,
+          "hidden_by_default": true,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 13,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        }
+      ]
+    },
+    {
+      "name": "The Village Watch",
+      "theme": null,
+      "tasks": [
+        {
+          "id": 20,
+          "name": "Notice Smoke in the Distance",
+          "type": "Travel",
+          "skills": [
+            3
+          ],
+          "cost_multiplier": 3,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 21,
+          "name": "Learn Routines",
+          "type": "Mandatory",
+          "skills": [
+            1
+          ],
+          "cost_multiplier": 1.3,
+          "xp_mult": 1,
+          "max_reps": 4,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 22,
+          "name": "Deal with Drunkards",
+          "type": "Mandatory",
+          "skills": [
+            0
+          ],
+          "cost_multiplier": 1.6,
+          "xp_mult": 1,
+          "max_reps": 2,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 25,
+          "name": "Fletch Arrows",
+          "type": "Normal",
+          "skills": [
+            5
+          ],
+          "cost_multiplier": 0.4,
+          "xp_mult": 1,
+          "max_reps": 5,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 1,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 27,
+          "name": "Learn How to Write",
+          "type": "Normal",
+          "skills": [
+            1
+          ],
+          "cost_multiplier": 16,
+          "xp_mult": 0.2,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 1,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 23,
+          "name": "Chit-chat",
+          "type": "Normal",
+          "skills": [
+            0
+          ],
+          "cost_multiplier": 1,
+          "xp_mult": 3,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 24,
+          "name": "Sparring",
+          "type": "Normal",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 1.5,
+          "xp_mult": 5,
+          "max_reps": 4,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 26,
+          "name": "Daydream About Leaving",
+          "type": "Normal",
+          "skills": [
+            7,
+            3
+          ],
+          "cost_multiplier": 1,
+          "xp_mult": 3,
+          "max_reps": 6,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 28,
+          "name": "Training Dummy",
+          "type": "Boss",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 16,
+          "xp_mult": 3,
+          "max_reps": 10,
+          "hidden_by_default": true,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        }
+      ]
+    },
+    {
+      "name": "The Raid",
+      "theme": null,
+      "tasks": [
+        {
+          "id": 30,
+          "name": "Enter the Wilderness",
+          "type": "Travel",
+          "skills": [
+            7
+          ],
+          "cost_multiplier": 2,
+          "xp_mult": 0.5,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 31,
+          "name": "Fight a Goblin",
+          "type": "Mandatory",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 3,
+          "xp_mult": 3,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 32,
+          "name": "Warn Villagers",
+          "type": "Mandatory",
+          "skills": [
+            0
+          ],
+          "cost_multiplier": 3,
+          "xp_mult": 1,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 33,
+          "name": "Loot the Fallen",
+          "type": "Normal",
+          "skills": [
+            3
+          ],
+          "cost_multiplier": 0.4,
+          "xp_mult": 1,
+          "max_reps": 4,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 2,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 34,
+          "name": "Rescue Villager",
+          "type": "Normal",
+          "skills": [
+            4,
+            3
+          ],
+          "cost_multiplier": 1.2,
+          "xp_mult": 1.5,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 2,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 35,
+          "name": "Treat Villager Wounds",
+          "type": "Normal",
+          "skills": [
+            5
+          ],
+          "cost_multiplier": 1.5,
+          "xp_mult": 3,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 36,
+          "name": "Goblin Warlord",
+          "type": "Boss",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 400,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": 37,
+          "perk": null,
+          "item": 8,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 37,
+          "name": "Save the Village",
+          "type": "Normal",
+          "skills": [
+            2,
+            8
+          ],
+          "cost_multiplier": 1300,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": true,
+          "unlocks_task": null,
+          "perk": 10,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        }
+      ]
+    },
+    {
+      "name": "The Wilderness",
+      "theme": null,
+      "tasks": [
+        {
+          "id": 40,
+          "name": "Find Cave Entrance",
+          "type": "Travel",
+          "skills": [
+            7,
+            3
+          ],
+          "cost_multiplier": 2,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 41,
+          "name": "Look for Tracks",
+          "type": "Mandatory",
+          "skills": [
+            3,
+            4
+          ],
+          "cost_multiplier": 0.5,
+          "xp_mult": 1,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 42,
+          "name": "Survive the Night",
+          "type": "Mandatory",
+          "skills": [
+            9,
+            5
+          ],
+          "cost_multiplier": 1,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 43,
+          "name": "Find an Amulet",
+          "type": "Mandatory",
+          "skills": [
+            3,
+            8
+          ],
+          "cost_multiplier": 2.5,
+          "xp_mult": 0.1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 3,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 45,
+          "name": "Forage for Mushrooms",
+          "type": "Normal",
+          "skills": [
+            3,
+            9
+          ],
+          "cost_multiplier": 0.25,
+          "xp_mult": 2,
+          "max_reps": 5,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 3,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 44,
+          "name": "Build a Fire",
+          "type": "Normal",
+          "skills": [
+            5
+          ],
+          "cost_multiplier": 2,
+          "xp_mult": 5,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 46,
+          "name": "Befriend a Deer",
+          "type": "Normal",
+          "skills": [
+            0
+          ],
+          "cost_multiplier": 10,
+          "xp_mult": 3,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 47,
+          "name": "Angry Ent",
+          "type": "Boss",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 1000,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": 48,
+          "perk": null,
+          "item": 11,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 48,
+          "name": "Gather Magical Roots",
+          "type": "Normal",
+          "skills": [
+            3
+          ],
+          "cost_multiplier": 15,
+          "xp_mult": 1,
+          "max_reps": 3,
+          "hidden_by_default": true,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 11,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        }
+      ]
+    },
+    {
+      "name": "The Cave System",
+      "theme": null,
+      "tasks": [
+        {
+          "id": 50,
+          "name": "Leave Via Back Entrance",
+          "type": "Travel",
+          "skills": [
+            7
+          ],
+          "cost_multiplier": 2,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 51,
+          "name": "Find a Way Through",
+          "type": "Mandatory",
+          "skills": [
+            3
+          ],
+          "cost_multiplier": 2,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 52,
+          "name": "Rescue Captives",
+          "type": "Mandatory",
+          "skills": [
+            0,
+            4
+          ],
+          "cost_multiplier": 1.5,
+          "xp_mult": 1,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 53,
+          "name": "Steal Supplies",
+          "type": "Normal",
+          "skills": [
+            4
+          ],
+          "cost_multiplier": 0.3,
+          "xp_mult": 1,
+          "max_reps": 5,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 4,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 54,
+          "name": "Try Casting a Spell",
+          "type": "Normal",
+          "skills": [
+            8,
+            1
+          ],
+          "cost_multiplier": 2,
+          "xp_mult": 1,
+          "max_reps": 6,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 4,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 55,
+          "name": "Inspect Wall Paintings",
+          "type": "Normal",
+          "skills": [
+            1
+          ],
+          "cost_multiplier": 2,
+          "xp_mult": 4,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 56,
+          "name": "Scout the Cave",
+          "type": "Normal",
+          "skills": [
+            3
+          ],
+          "cost_multiplier": 0.5,
+          "xp_mult": 3,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 57,
+          "name": "Goblin Chieftain",
+          "type": "Boss",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 1000,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": 58,
+          "perk": null,
+          "item": 12,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 58,
+          "name": "Wipe Out Goblins",
+          "type": "Normal",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 10000,
+          "xp_mult": 0.3,
+          "max_reps": 1,
+          "hidden_by_default": true,
+          "unlocks_task": null,
+          "perk": 12,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        }
+      ]
+    },
+    {
+      "name": "The Road to the City",
+      "theme": null,
+      "tasks": [
+        {
+          "id": 60,
+          "name": "Get to the City",
+          "type": "Travel",
+          "skills": [
+            7
+          ],
+          "cost_multiplier": 3,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 61,
+          "name": "Join a Caravan",
+          "type": "Mandatory",
+          "skills": [
+            0
+          ],
+          "cost_multiplier": 4,
+          "xp_mult": 0.5,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 62,
+          "name": "Scout the Road Ahead",
+          "type": "Mandatory",
+          "skills": [
+            1,
+            3
+          ],
+          "cost_multiplier": 1.3,
+          "xp_mult": 1,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 63,
+          "name": "Make Travel Equipment",
+          "type": "Normal",
+          "skills": [
+            5
+          ],
+          "cost_multiplier": 0.5,
+          "xp_mult": 1,
+          "max_reps": 4,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 5,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 64,
+          "name": "Get Used to Traveling",
+          "type": "Normal",
+          "skills": [
+            7,
+            9
+          ],
+          "cost_multiplier": 1,
+          "xp_mult": 3,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 5,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 69,
+          "name": "Study the Amulet",
+          "type": "Normal",
+          "skills": [
+            1
+          ],
+          "cost_multiplier": 5,
+          "xp_mult": 0.5,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 30,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 65,
+          "name": "Chat with Travelers",
+          "type": "Normal",
+          "skills": [
+            0
+          ],
+          "cost_multiplier": 1,
+          "xp_mult": 3,
+          "max_reps": 4,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 66,
+          "name": "Practice Traveling Unnoticed",
+          "type": "Normal",
+          "skills": [
+            4
+          ],
+          "cost_multiplier": 2,
+          "xp_mult": 5,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 67,
+          "name": "Bandits",
+          "type": "Boss",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 500,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": 68,
+          "perk": null,
+          "item": 14,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 68,
+          "name": "Loot Bandit Camp",
+          "type": "Normal",
+          "skills": [
+            4,
+            3
+          ],
+          "cost_multiplier": 35,
+          "xp_mult": 3,
+          "max_reps": 4,
+          "hidden_by_default": true,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 14,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        }
+      ]
+    },
+    {
+      "name": "The City Outskirts",
+      "theme": null,
+      "tasks": [
+        {
+          "id": 70,
+          "name": "Enter the City",
+          "type": "Travel",
+          "skills": [
+            7
+          ],
+          "cost_multiplier": 1.5,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 71,
+          "name": "Bribe the City Guards",
+          "type": "Mandatory",
+          "skills": [
+            0
+          ],
+          "cost_multiplier": 4,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 72,
+          "name": "Survive a Mugging",
+          "type": "Mandatory",
+          "skills": [
+            2,
+            9
+          ],
+          "cost_multiplier": 2.5,
+          "xp_mult": 0.75,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 73,
+          "name": "Buy a Book",
+          "type": "Normal",
+          "skills": [
+            0
+          ],
+          "cost_multiplier": 1,
+          "xp_mult": 1,
+          "max_reps": 5,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 6,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 74,
+          "name": "Negotiate with a Rogue Guard",
+          "type": "Normal",
+          "skills": [
+            0,
+            4
+          ],
+          "cost_multiplier": 12,
+          "xp_mult": 0.3,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 6,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 75,
+          "name": "Spar with the Guards",
+          "type": "Normal",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 0.75,
+          "xp_mult": 2,
+          "max_reps": 4,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 76,
+          "name": "Fend for Yourself",
+          "type": "Normal",
+          "skills": [
+            9
+          ],
+          "cost_multiplier": 0.5,
+          "xp_mult": 5,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 77,
+          "name": "Skulk About",
+          "type": "Normal",
+          "skills": [
+            4
+          ],
+          "cost_multiplier": 2,
+          "xp_mult": 5,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        }
+      ]
+    },
+    {
+      "name": "The City",
+      "theme": null,
+      "tasks": [
+        {
+          "id": 80,
+          "name": "Embark on a Quest",
+          "type": "Travel",
+          "skills": [
+            7
+          ],
+          "cost_multiplier": 4,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 81,
+          "name": "Investigate Rumors of a Magician",
+          "type": "Mandatory",
+          "skills": [
+            0,
+            3
+          ],
+          "cost_multiplier": 1.5,
+          "xp_mult": 1,
+          "max_reps": 4,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 82,
+          "name": "Search the Archives for Magic",
+          "type": "Mandatory",
+          "skills": [
+            1,
+            3
+          ],
+          "cost_multiplier": 1.2,
+          "xp_mult": 1,
+          "max_reps": 5,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 83,
+          "name": "Scribe Scroll of Haste",
+          "type": "Normal",
+          "skills": [
+            5,
+            8
+          ],
+          "cost_multiplier": 2,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 7,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 84,
+          "name": "Cast a Spell",
+          "type": "Normal",
+          "skills": [
+            8
+          ],
+          "cost_multiplier": 1,
+          "xp_mult": 0.2,
+          "max_reps": 6,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 7,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 85,
+          "name": "Study at the Mage's Guild",
+          "type": "Normal",
+          "skills": [
+            1,
+            8
+          ],
+          "cost_multiplier": 2,
+          "xp_mult": 2,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 86,
+          "name": "Train for Your Quest",
+          "type": "Normal",
+          "skills": [
+            3,
+            9
+          ],
+          "cost_multiplier": 1,
+          "xp_mult": 3,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 87,
+          "name": "Corrupt Mayor",
+          "type": "Boss",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 150,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": 89,
+          "perk": null,
+          "item": 16,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 89,
+          "name": "Purge Corrupt Bureacracy",
+          "type": "Normal",
+          "skills": [
+            1,
+            4
+          ],
+          "cost_multiplier": 100000,
+          "xp_mult": 0.02,
+          "max_reps": 1,
+          "hidden_by_default": true,
+          "unlocks_task": null,
+          "perk": 17,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 88,
+          "name": "Train at Every Guild",
+          "type": "Normal",
+          "skills": [
+            1,
+            0,
+            2,
+            8,
+            5
+          ],
+          "cost_multiplier": 500000000,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": true,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        }
+      ]
+    },
+    {
+      "name": "The Forest",
+      "theme": null,
+      "tasks": [
+        {
+          "id": 90,
+          "name": "Scale the Mountain",
+          "type": "Travel",
+          "skills": [
+            7,
+            9
+          ],
+          "cost_multiplier": 6,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 8,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 91,
+          "name": "Locate the Mountain",
+          "type": "Mandatory",
+          "skills": [
+            3
+          ],
+          "cost_multiplier": 2,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 92,
+          "name": "Make Climbing Gear",
+          "type": "Mandatory",
+          "skills": [
+            5
+          ],
+          "cost_multiplier": 0.3,
+          "xp_mult": 1,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 93,
+          "name": "Make Camping Equipment",
+          "type": "Normal",
+          "skills": [
+            5
+          ],
+          "cost_multiplier": 0.15,
+          "xp_mult": 1,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 9,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 94,
+          "name": "Prepare to Scale the Mountain",
+          "type": "Normal",
+          "skills": [
+            1,
+            9
+          ],
+          "cost_multiplier": 1,
+          "xp_mult": 4,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 95,
+          "name": "Build a Hut",
+          "type": "Normal",
+          "skills": [
+            5
+          ],
+          "cost_multiplier": 0.3,
+          "xp_mult": 3,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 96,
+          "name": "Go Sightseeing",
+          "type": "Normal",
+          "skills": [
+            3,
+            7
+          ],
+          "cost_multiplier": 0.5,
+          "xp_mult": 3,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 97,
+          "name": "Meet a Magical Creature",
+          "type": "Normal",
+          "skills": [
+            8,
+            0
+          ],
+          "cost_multiplier": 2,
+          "xp_mult": 3,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 98,
+          "name": "Werewolf",
+          "type": "Boss",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 170,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": 99,
+          "perk": null,
+          "item": 17,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 99,
+          "name": "Gather Shed Fur from Lair",
+          "type": "Normal",
+          "skills": [
+            4
+          ],
+          "cost_multiplier": 8,
+          "xp_mult": 1,
+          "max_reps": 3,
+          "hidden_by_default": true,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 17,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        }
+      ]
+    },
+    {
+      "name": "The Magician",
+      "theme": null,
+      "tasks": [
+        {
+          "id": 100,
+          "name": "Hunt for the First Reagent",
+          "type": "Travel",
+          "skills": [
+            7
+          ],
+          "cost_multiplier": 5,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 101,
+          "name": "Convince the Magician",
+          "type": "Mandatory",
+          "skills": [
+            0
+          ],
+          "cost_multiplier": 6,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 102,
+          "name": "Do a Favor",
+          "type": "Mandatory",
+          "skills": [
+            5,
+            4
+          ],
+          "cost_multiplier": 1,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 103,
+          "name": "Steal Some Reagents",
+          "type": "Normal",
+          "skills": [
+            4
+          ],
+          "cost_multiplier": 0.15,
+          "xp_mult": 1,
+          "max_reps": 4,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 10,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 104,
+          "name": "Figure Out How to Attune",
+          "type": "Normal",
+          "skills": [
+            1,
+            8
+          ],
+          "cost_multiplier": 60,
+          "xp_mult": 0.1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 11,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 105,
+          "name": "Give Yourself a Pep Talk",
+          "type": "Normal",
+          "skills": [
+            0
+          ],
+          "cost_multiplier": 2,
+          "xp_mult": 4,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 106,
+          "name": "Try to Transform Into an Eagle",
+          "type": "Normal",
+          "skills": [
+            8
+          ],
+          "cost_multiplier": 1,
+          "xp_mult": 10,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 107,
+          "name": "Low-oxygen Exercise",
+          "type": "Normal",
+          "skills": [
+            9
+          ],
+          "cost_multiplier": 0.5,
+          "xp_mult": 4,
+          "max_reps": 5,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        }
+      ]
+    },
+    {
+      "name": "The Ocean",
+      "theme": null,
+      "tasks": [
+        {
+          "id": 110,
+          "name": "Land on Island",
+          "type": "Travel",
+          "skills": [
+            7
+          ],
+          "cost_multiplier": 3,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 111,
+          "name": "Weather a Storm",
+          "type": "Mandatory",
+          "skills": [
+            9
+          ],
+          "cost_multiplier": 2,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 112,
+          "name": "Find the Island",
+          "type": "Mandatory",
+          "skills": [
+            3
+          ],
+          "cost_multiplier": 2,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 113,
+          "name": "Catch Fish",
+          "type": "Normal",
+          "skills": [
+            5,
+            3
+          ],
+          "cost_multiplier": 0.4,
+          "xp_mult": 4,
+          "max_reps": 5,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 13,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 114,
+          "name": "Dive as a Squid",
+          "type": "Normal",
+          "skills": [
+            8,
+            3
+          ],
+          "cost_multiplier": 8,
+          "xp_mult": 0.5,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 13,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 115,
+          "name": "Look for Land",
+          "type": "Normal",
+          "skills": [
+            3
+          ],
+          "cost_multiplier": 0.5,
+          "xp_mult": 8,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 116,
+          "name": "Practice Transforming",
+          "type": "Normal",
+          "skills": [
+            8
+          ],
+          "cost_multiplier": 3,
+          "xp_mult": 5,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 117,
+          "name": "Kraken",
+          "type": "Boss",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 40,
+          "xp_mult": 0.5,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": 118,
+          "perk": null,
+          "item": 19,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 118,
+          "name": "Explore Kraken's Lair",
+          "type": "Normal",
+          "skills": [
+            3,
+            8
+          ],
+          "cost_multiplier": 15000,
+          "xp_mult": 0.6,
+          "max_reps": 1,
+          "hidden_by_default": true,
+          "unlocks_task": null,
+          "perk": 18,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        }
+      ]
+    },
+    {
+      "name": "The Island",
+      "theme": null,
+      "tasks": [
+        {
+          "id": 120,
+          "name": "Hunt for the Second Reagent",
+          "type": "Travel",
+          "skills": [
+            7
+          ],
+          "cost_multiplier": 8,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 121,
+          "name": "Gather Reagent",
+          "type": "Mandatory",
+          "skills": [
+            3,
+            8
+          ],
+          "cost_multiplier": 4,
+          "xp_mult": 1,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 122,
+          "name": "Repair Ship",
+          "type": "Mandatory",
+          "skills": [
+            5
+          ],
+          "cost_multiplier": 1.4,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 123,
+          "name": "Catch More Fish",
+          "type": "Normal",
+          "skills": [
+            5,
+            3
+          ],
+          "cost_multiplier": 1,
+          "xp_mult": 1,
+          "max_reps": 4,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 13,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 124,
+          "name": "Explore the Jungle",
+          "type": "Normal",
+          "skills": [
+            3,
+            7,
+            9
+          ],
+          "cost_multiplier": 6,
+          "xp_mult": 1,
+          "max_reps": 6,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 14,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 125,
+          "name": "Build Another Hut",
+          "type": "Normal",
+          "skills": [
+            5
+          ],
+          "cost_multiplier": 2,
+          "xp_mult": 5,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 126,
+          "name": "Talk to the Local Wildlife",
+          "type": "Normal",
+          "skills": [
+            8,
+            0
+          ],
+          "cost_multiplier": 2,
+          "xp_mult": 2,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 127,
+          "name": "Horde of Lizardfolk",
+          "type": "Boss",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 210,
+          "xp_mult": 0.5,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": 128,
+          "perk": null,
+          "item": 21,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 128,
+          "name": "Steal Their Oracle Bones",
+          "type": "Normal",
+          "skills": [
+            4,
+            3
+          ],
+          "cost_multiplier": 8,
+          "xp_mult": 1,
+          "max_reps": 4,
+          "hidden_by_default": true,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 21,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        }
+      ]
+    },
+    {
+      "name": "The Desert",
+      "theme": null,
+      "tasks": [
+        {
+          "id": 130,
+          "name": "Enter the Oasis",
+          "type": "Travel",
+          "skills": [
+            7
+          ],
+          "cost_multiplier": 7,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 131,
+          "name": "Overcome Mirage",
+          "type": "Mandatory",
+          "skills": [
+            9
+          ],
+          "cost_multiplier": 6,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 132,
+          "name": "Find the Oasis",
+          "type": "Mandatory",
+          "skills": [
+            3
+          ],
+          "cost_multiplier": 1,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 133,
+          "name": "Harvest Cactus",
+          "type": "Normal",
+          "skills": [
+            5
+          ],
+          "cost_multiplier": 0.2,
+          "xp_mult": 1,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 15,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 134,
+          "name": "Avoid Notice by the Sandworm",
+          "type": "Normal",
+          "skills": [
+            4
+          ],
+          "cost_multiplier": 1,
+          "xp_mult": 1,
+          "max_reps": 4,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 15,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 135,
+          "name": "Work on Your Tan",
+          "type": "Normal",
+          "skills": [
+            9
+          ],
+          "cost_multiplier": 1,
+          "xp_mult": 15,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 136,
+          "name": "Comb the Desert",
+          "type": "Normal",
+          "skills": [
+            3
+          ],
+          "cost_multiplier": 2,
+          "xp_mult": 10,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 137,
+          "name": "Giant Sandworm",
+          "type": "Boss",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 460,
+          "xp_mult": 0.4,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": 138,
+          "perk": null,
+          "item": 22,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 138,
+          "name": "Learn to Dance the Worm",
+          "type": "Normal",
+          "skills": [
+            1,
+            0
+          ],
+          "cost_multiplier": 600000,
+          "xp_mult": 0.1,
+          "max_reps": 1,
+          "hidden_by_default": true,
+          "unlocks_task": null,
+          "perk": 20,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        }
+      ]
+    },
+    {
+      "name": "The Oasis",
+      "theme": null,
+      "tasks": [
+        {
+          "id": 140,
+          "name": "Return to the Magician",
+          "type": "Travel",
+          "skills": [
+            7
+          ],
+          "cost_multiplier": 8,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 141,
+          "name": "Banish Evil Spirit",
+          "type": "Mandatory",
+          "skills": [
+            8
+          ],
+          "cost_multiplier": 100,
+          "xp_mult": 1,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 142,
+          "name": "Gather Second Reagent",
+          "type": "Mandatory",
+          "skills": [
+            3
+          ],
+          "cost_multiplier": 0.75,
+          "xp_mult": 1,
+          "max_reps": 5,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 143,
+          "name": "Bottle Oasis Water",
+          "type": "Normal",
+          "skills": [
+            5
+          ],
+          "cost_multiplier": 0.2,
+          "xp_mult": 1,
+          "max_reps": 4,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 18,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 144,
+          "name": "Reflect on the Journey",
+          "type": "Normal",
+          "skills": [
+            1
+          ],
+          "cost_multiplier": 25,
+          "xp_mult": 1,
+          "max_reps": 4,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 16,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 145,
+          "name": "Prepare for the Journey Ahead",
+          "type": "Normal",
+          "skills": [
+            7,
+            2
+          ],
+          "cost_multiplier": 2.5,
+          "xp_mult": 2,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 146,
+          "name": "Talk to the Djinn",
+          "type": "Normal",
+          "skills": [
+            0
+          ],
+          "cost_multiplier": 30,
+          "xp_mult": 20,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 147,
+          "name": "Sleepy Djinn",
+          "type": "Boss",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 840,
+          "xp_mult": 0.3,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": 148,
+          "perk": null,
+          "item": 23,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 148,
+          "name": "Find More Lamps",
+          "type": "Normal",
+          "skills": [
+            3,
+            4
+          ],
+          "cost_multiplier": 30,
+          "xp_mult": 1,
+          "max_reps": 3,
+          "hidden_by_default": true,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 23,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        }
+      ]
+    },
+    {
+      "name": "The Ritual",
+      "theme": null,
+      "tasks": [
+        {
+          "id": 150,
+          "name": "Begin Search for the Next Ritual",
+          "type": "Travel",
+          "skills": [
+            7
+          ],
+          "cost_multiplier": 50,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 151,
+          "name": "Apologize for Stealing Reagents",
+          "type": "Mandatory",
+          "skills": [
+            0
+          ],
+          "cost_multiplier": 40,
+          "xp_mult": 0.25,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 152,
+          "name": "Rest for a While",
+          "type": "Mandatory",
+          "skills": [
+            9
+          ],
+          "cost_multiplier": 1000,
+          "xp_mult": 1.25,
+          "max_reps": 5,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 153,
+          "name": "Touch the Divine",
+          "type": "Prestige",
+          "skills": [
+            11
+          ],
+          "cost_multiplier": 0.025,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": 0,
+          "theme": null
+        },
+        {
+          "id": 154,
+          "name": "Infuse Mystic Incense",
+          "type": "Normal",
+          "skills": [
+            8
+          ],
+          "cost_multiplier": 75,
+          "xp_mult": 1,
+          "max_reps": 9,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 20,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 155,
+          "name": "Practice Memorization",
+          "type": "Normal",
+          "skills": [
+            1,
+            8
+          ],
+          "cost_multiplier": 1200,
+          "xp_mult": 0.5,
+          "max_reps": 4,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 19,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 156,
+          "name": "Guided Spellcasting",
+          "type": "Normal",
+          "skills": [
+            8
+          ],
+          "cost_multiplier": 100,
+          "xp_mult": 10,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 157,
+          "name": "Go for a Walk",
+          "type": "Normal",
+          "skills": [
+            3,
+            7
+          ],
+          "cost_multiplier": 4,
+          "xp_mult": 8,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 158,
+          "name": "Write Down Some Learnings",
+          "type": "Normal",
+          "skills": [
+            8,
+            1
+          ],
+          "cost_multiplier": 500000,
+          "xp_mult": 1,
+          "max_reps": 5,
+          "hidden_by_default": true,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 34,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        }
+      ]
+    },
+    {
+      "name": "The Dream",
+      "theme": null,
+      "tasks": [
+        {
+          "id": 160,
+          "name": "Wake Up",
+          "type": "Travel",
+          "skills": [
+            8
+          ],
+          "cost_multiplier": 350000,
+          "xp_mult": 0.25,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 22,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 161,
+          "name": "Notice Signs You're in a Dream",
+          "type": "Mandatory",
+          "skills": [
+            1,
+            3
+          ],
+          "cost_multiplier": 2000,
+          "xp_mult": 0.2,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 162,
+          "name": "Placate the Voices in Your Head",
+          "type": "Mandatory",
+          "skills": [
+            0
+          ],
+          "cost_multiplier": 1500,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 163,
+          "name": "Gather Essence",
+          "type": "Normal",
+          "skills": [
+            8
+          ],
+          "cost_multiplier": 20000,
+          "xp_mult": 1,
+          "max_reps": 2,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 25,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 164,
+          "name": "Build Giant Tower",
+          "type": "Normal",
+          "skills": [
+            5
+          ],
+          "cost_multiplier": 60,
+          "xp_mult": 0.25,
+          "max_reps": 2,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 21,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 165,
+          "name": "Talk to Mysterious Being",
+          "type": "Normal",
+          "skills": [
+            0
+          ],
+          "cost_multiplier": 100,
+          "xp_mult": 10,
+          "max_reps": 5,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 166,
+          "name": "Travel the Plains",
+          "type": "Normal",
+          "skills": [
+            7,
+            9
+          ],
+          "cost_multiplier": 200,
+          "xp_mult": 2,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 167,
+          "name": "The Weaver of Dreams",
+          "type": "Boss",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 13000,
+          "xp_mult": 0.15,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": 168,
+          "perk": null,
+          "item": 24,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 168,
+          "name": "Contain the Dream",
+          "type": "Normal",
+          "skills": [
+            8
+          ],
+          "cost_multiplier": 200000000,
+          "xp_mult": 0.05,
+          "max_reps": 1,
+          "hidden_by_default": true,
+          "unlocks_task": null,
+          "perk": 25,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        }
+      ]
+    },
+    {
+      "name": "The Metropolis",
+      "theme": null,
+      "tasks": [
+        {
+          "id": 170,
+          "name": "Search for the Dragon's Hoard",
+          "type": "Travel",
+          "skills": [
+            7
+          ],
+          "cost_multiplier": 100,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 22,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 171,
+          "name": "Figure Out the Next Ritual",
+          "type": "Mandatory",
+          "skills": [
+            8,
+            0
+          ],
+          "cost_multiplier": 1000000,
+          "xp_mult": 0.05,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 172,
+          "name": "Figure Out Where to Go Next",
+          "type": "Mandatory",
+          "skills": [
+            1
+          ],
+          "cost_multiplier": 100000,
+          "xp_mult": 0.2,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 173,
+          "name": "Write Down Crafting Recipes",
+          "type": "Normal",
+          "skills": [
+            5
+          ],
+          "cost_multiplier": 5,
+          "xp_mult": 1,
+          "max_reps": 5,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 26,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 174,
+          "name": "Improve Your Time Compression",
+          "type": "Normal",
+          "skills": [
+            8,
+            1
+          ],
+          "cost_multiplier": 1000000,
+          "xp_mult": 0.03,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 23,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 175,
+          "name": "Study at the Artificer Guild",
+          "type": "Normal",
+          "skills": [
+            1,
+            5
+          ],
+          "cost_multiplier": 10000,
+          "xp_mult": 1,
+          "max_reps": 5,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 176,
+          "name": "Practice in the Fighting Pits",
+          "type": "Normal",
+          "skills": [
+            2,
+            4
+          ],
+          "cost_multiplier": 250000,
+          "xp_mult": 0.02,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 177,
+          "name": "Mage's Guild Headmaster",
+          "type": "Boss",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 750000,
+          "xp_mult": 0.125,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": 178,
+          "perk": null,
+          "item": 31,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 178,
+          "name": "Become Honorary Headmaster",
+          "type": "Normal",
+          "skills": [
+            8,
+            0
+          ],
+          "cost_multiplier": 65000000000,
+          "xp_mult": 0.01,
+          "max_reps": 5,
+          "hidden_by_default": true,
+          "unlocks_task": null,
+          "perk": 28,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        }
+      ]
+    },
+    {
+      "name": "The Foothills",
+      "theme": null,
+      "tasks": [
+        {
+          "id": 180,
+          "name": "Enter the Dragon's Lair",
+          "type": "Travel",
+          "skills": [
+            7
+          ],
+          "cost_multiplier": 100,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 181,
+          "name": "Find the Hidden Entrance",
+          "type": "Mandatory",
+          "skills": [
+            3
+          ],
+          "cost_multiplier": 30000,
+          "xp_mult": 0.05,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 182,
+          "name": "Evade the Dragon",
+          "type": "Mandatory",
+          "skills": [
+            4
+          ],
+          "cost_multiplier": 100,
+          "xp_mult": 0.2,
+          "max_reps": 5,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 183,
+          "name": "Loot Dragon's Victims",
+          "type": "Normal",
+          "skills": [
+            3
+          ],
+          "cost_multiplier": 700,
+          "xp_mult": 0.5,
+          "max_reps": 4,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 27,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 184,
+          "name": "Hide from the Dragon",
+          "type": "Normal",
+          "skills": [
+            4
+          ],
+          "cost_multiplier": 1000,
+          "xp_mult": 0.1,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 24,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 185,
+          "name": "Go on a Long Trek",
+          "type": "Normal",
+          "skills": [
+            7,
+            9
+          ],
+          "cost_multiplier": 20000,
+          "xp_mult": 0.01,
+          "max_reps": 5,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 186,
+          "name": "Try to Turn into a Dragon",
+          "type": "Normal",
+          "skills": [
+            8
+          ],
+          "cost_multiplier": 10000,
+          "xp_mult": 2,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 187,
+          "name": "Dragon Spawn",
+          "type": "Boss",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 2000000,
+          "xp_mult": 0.05,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": 188,
+          "perk": null,
+          "item": 28,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 188,
+          "name": "Gather Dragon Scales",
+          "type": "Normal",
+          "skills": [
+            3
+          ],
+          "cost_multiplier": 1000000,
+          "xp_mult": 0.1,
+          "max_reps": 3,
+          "hidden_by_default": true,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 28,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        }
+      ]
+    },
+    {
+      "name": "The Dragon's Lair",
+      "theme": null,
+      "tasks": [
+        {
+          "id": 190,
+          "name": "Go to a Place of Power",
+          "type": "Travel",
+          "skills": [
+            7
+          ],
+          "cost_multiplier": 300,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 191,
+          "name": "Grab the Reagent You Need",
+          "type": "Mandatory",
+          "skills": [
+            3,
+            4
+          ],
+          "cost_multiplier": 2750000,
+          "xp_mult": 0.001,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 192,
+          "name": "Build a Hang Glider",
+          "type": "Mandatory",
+          "skills": [
+            5
+          ],
+          "cost_multiplier": 1000,
+          "xp_mult": 0.2,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 193,
+          "name": "Catch Some Insects for Later",
+          "type": "Normal",
+          "skills": [
+            3
+          ],
+          "cost_multiplier": 2000,
+          "xp_mult": 1,
+          "max_reps": 9,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 29,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 194,
+          "name": "Plan How to Kill the Dragon",
+          "type": "Normal",
+          "skills": [
+            1
+          ],
+          "cost_multiplier": 1000000,
+          "xp_mult": 0.1,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 26,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 195,
+          "name": "Hide from the Dragon Some More",
+          "type": "Normal",
+          "skills": [
+            4
+          ],
+          "cost_multiplier": 5000,
+          "xp_mult": 5,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 196,
+          "name": "Practice Magic Under Pressure",
+          "type": "Normal",
+          "skills": [
+            8
+          ],
+          "cost_multiplier": 5000000,
+          "xp_mult": 1.5,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 197,
+          "name": "Dragon",
+          "type": "Boss",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 21000000,
+          "xp_mult": 0.01,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": 198,
+          "perk": null,
+          "item": 28,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 198,
+          "name": "Hunt Down the Dragon's Spawn",
+          "type": "Normal",
+          "skills": [
+            2,
+            3
+          ],
+          "cost_multiplier": 300000000000000,
+          "xp_mult": 0.000001,
+          "max_reps": 1,
+          "hidden_by_default": true,
+          "unlocks_task": null,
+          "perk": 29,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        }
+      ]
+    },
+    {
+      "name": "The Place of Power",
+      "theme": null,
+      "tasks": [
+        {
+          "id": 200,
+          "name": "Venture Forth",
+          "type": "Travel",
+          "skills": [
+            7
+          ],
+          "cost_multiplier": 10000,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 201,
+          "name": "Design Next Ritual",
+          "type": "Mandatory",
+          "skills": [
+            1
+          ],
+          "cost_multiplier": 5000000,
+          "xp_mult": 0.01,
+          "max_reps": 5,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 202,
+          "name": "Apotheosize",
+          "type": "Mandatory",
+          "skills": [
+            11,
+            9
+          ],
+          "cost_multiplier": 20000000,
+          "xp_mult": 0,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 208,
+          "name": "Build Airship",
+          "type": "Mandatory",
+          "skills": [
+            5
+          ],
+          "cost_multiplier": 20000,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 203,
+          "name": "Transcend Humanity",
+          "type": "Prestige",
+          "skills": [
+            11
+          ],
+          "cost_multiplier": 2,
+          "xp_mult": 0.25,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": 1,
+          "theme": null
+        },
+        {
+          "id": 204,
+          "name": "Imbue Magical Vessel",
+          "type": "Normal",
+          "skills": [
+            8,
+            5
+          ],
+          "cost_multiplier": 10000000,
+          "xp_mult": 0.001,
+          "max_reps": 9,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 30,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 205,
+          "name": "Invent a New Spell",
+          "type": "Normal",
+          "skills": [
+            8
+          ],
+          "cost_multiplier": 300000000,
+          "xp_mult": 0.01,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 27,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 206,
+          "name": "Reflect on Past Obstacles",
+          "type": "Normal",
+          "skills": [
+            4,
+            1
+          ],
+          "cost_multiplier": 300000,
+          "xp_mult": 1,
+          "max_reps": 5,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 207,
+          "name": "Prepare for a Greater Journey",
+          "type": "Normal",
+          "skills": [
+            7,
+            9
+          ],
+          "cost_multiplier": 1000000,
+          "xp_mult": 0.01,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 209,
+          "name": "Gaze Beyond the Veil",
+          "type": "Normal",
+          "skills": [
+            11
+          ],
+          "cost_multiplier": 200,
+          "xp_mult": 0.02,
+          "max_reps": 3,
+          "hidden_by_default": true,
+          "unlocks_task": null,
+          "perk": 33,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        }
+      ]
+    },
+    {
+      "name": "The Sky",
+      "theme": null,
+      "tasks": [
+        {
+          "id": 210,
+          "name": "Fly to the Volcano",
+          "type": "Travel",
+          "skills": [
+            7
+          ],
+          "cost_multiplier": 5000,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 211,
+          "name": "Plot the Course",
+          "type": "Mandatory",
+          "skills": [
+            3,
+            1
+          ],
+          "cost_multiplier": 500000000,
+          "xp_mult": 0.02,
+          "max_reps": 2,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 212,
+          "name": "Conduct Emergency Repairs",
+          "type": "Mandatory",
+          "skills": [
+            5
+          ],
+          "cost_multiplier": 1200,
+          "xp_mult": 1,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 213,
+          "name": "Harness Lightning",
+          "type": "Normal",
+          "skills": [
+            8
+          ],
+          "cost_multiplier": 5000000000,
+          "xp_mult": 0.01,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 32,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 214,
+          "name": "Go Skydiving",
+          "type": "Normal",
+          "skills": [
+            9
+          ],
+          "cost_multiplier": 3000000000,
+          "xp_mult": 0.00002,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 31,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 215,
+          "name": "Watch the Clouds Go By",
+          "type": "Normal",
+          "skills": [
+            1
+          ],
+          "cost_multiplier": 10000000,
+          "xp_mult": 1,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 216,
+          "name": "Chat with the Crew",
+          "type": "Normal",
+          "skills": [
+            0
+          ],
+          "cost_multiplier": 100000,
+          "xp_mult": 200,
+          "max_reps": 4,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 217,
+          "name": "Griffin",
+          "type": "Boss",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 130000000,
+          "xp_mult": 0.001,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": 218,
+          "perk": null,
+          "item": 35,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 218,
+          "name": "Collect Quills",
+          "type": "Normal",
+          "skills": [
+            3
+          ],
+          "cost_multiplier": 50000000,
+          "xp_mult": 0.1,
+          "max_reps": 3,
+          "hidden_by_default": true,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 35,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        }
+      ]
+    },
+    {
+      "name": "The Volcano",
+      "theme": null,
+      "tasks": [
+        {
+          "id": 220,
+          "name": "Enter Crevice",
+          "type": "Travel",
+          "skills": [
+            7
+          ],
+          "cost_multiplier": 5000,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 221,
+          "name": "Bottle Lava for the Ritual",
+          "type": "Mandatory",
+          "skills": [
+            9
+          ],
+          "cost_multiplier": 2500000000,
+          "xp_mult": 0.0001,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 222,
+          "name": "Sneak Past Beings of Pure Heat",
+          "type": "Mandatory",
+          "skills": [
+            4
+          ],
+          "cost_multiplier": 500000,
+          "xp_mult": 3,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 223,
+          "name": "Harness Heat",
+          "type": "Normal",
+          "skills": [
+            8
+          ],
+          "cost_multiplier": 1000000000,
+          "xp_mult": 0.01,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 33,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 224,
+          "name": "Cast the Ring into the Fire",
+          "type": "Normal",
+          "skills": [
+            0
+          ],
+          "cost_multiplier": 3000000000,
+          "xp_mult": 0.002,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 32,
+          "item": null,
+          "use_item": 31,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 225,
+          "name": "Get Used to the Heat",
+          "type": "Normal",
+          "skills": [
+            9
+          ],
+          "cost_multiplier": 500000000,
+          "xp_mult": 0.002,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 226,
+          "name": "Try to Use Lava for Forging",
+          "type": "Normal",
+          "skills": [
+            5
+          ],
+          "cost_multiplier": 10000,
+          "xp_mult": 20,
+          "max_reps": 4,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 227,
+          "name": "Winged Demon",
+          "type": "Boss",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 5000000000,
+          "xp_mult": 0.0002,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": 228,
+          "perk": null,
+          "item": 36,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 228,
+          "name": "Purge Demonic Influence",
+          "type": "Normal",
+          "skills": [
+            8
+          ],
+          "cost_multiplier": 3000000000000,
+          "xp_mult": 0.0001,
+          "max_reps": 1,
+          "hidden_by_default": true,
+          "unlocks_task": null,
+          "perk": 36,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        }
+      ]
+    },
+    {
+      "name": "The Underworld",
+      "theme": null,
+      "tasks": [
+        {
+          "id": 230,
+          "name": "Exit Through a Moonpool",
+          "type": "Travel",
+          "skills": [
+            7
+          ],
+          "cost_multiplier": 5000,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 231,
+          "name": "Cast underwater Breathing Spell",
+          "type": "Mandatory",
+          "skills": [
+            8
+          ],
+          "cost_multiplier": 10000000000,
+          "xp_mult": 0.005,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 232,
+          "name": "Find Rare Mushroom Reagent",
+          "type": "Mandatory",
+          "skills": [
+            3
+          ],
+          "cost_multiplier": 1000000000,
+          "xp_mult": 0.05,
+          "max_reps": 5,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 233,
+          "name": "Steal Farmed Cave Insects",
+          "type": "Normal",
+          "skills": [
+            4
+          ],
+          "cost_multiplier": 4000,
+          "xp_mult": 100,
+          "max_reps": 7,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 29,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 234,
+          "name": "Study Underground Forge",
+          "type": "Normal",
+          "skills": [
+            1,
+            5
+          ],
+          "cost_multiplier": 1000000000,
+          "xp_mult": 0.0001,
+          "max_reps": 2,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 34,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 235,
+          "name": "Practice the Local Dialect",
+          "type": "Normal",
+          "skills": [
+            1,
+            0
+          ],
+          "cost_multiplier": 5000000000,
+          "xp_mult": 0.005,
+          "max_reps": 8,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 236,
+          "name": "Join Underground Fight Club",
+          "type": "Normal",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 10000000000,
+          "xp_mult": 0.005,
+          "max_reps": 4,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 237,
+          "name": "Floating Ball of Eyes",
+          "type": "Boss",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 50000000000,
+          "xp_mult": 0.0001,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": 238,
+          "perk": null,
+          "item": 38,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 238,
+          "name": "Steal Glasses",
+          "type": "Normal",
+          "skills": [
+            4
+          ],
+          "cost_multiplier": 250000,
+          "xp_mult": 20,
+          "max_reps": 3,
+          "hidden_by_default": true,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 38,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        }
+      ]
+    },
+    {
+      "name": "The Depths of the Sea",
+      "theme": null,
+      "tasks": [
+        {
+          "id": 240,
+          "name": "Journey Into the Depths",
+          "type": "Travel",
+          "skills": [
+            7
+          ],
+          "cost_multiplier": 40000,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 241,
+          "name": "Determine Deepest Point",
+          "type": "Mandatory",
+          "skills": [
+            3,
+            1
+          ],
+          "cost_multiplier": 200000000000,
+          "xp_mult": 0.0001,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 242,
+          "name": "Prepare for the Pressure",
+          "type": "Mandatory",
+          "skills": [
+            9
+          ],
+          "cost_multiplier": 100000000000,
+          "xp_mult": 0.000001,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 243,
+          "name": "Catch Passing Fish",
+          "type": "Normal",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 200000000000,
+          "xp_mult": 0.002,
+          "max_reps": 5,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 13,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 244,
+          "name": "Inspect Leviathan",
+          "type": "Normal",
+          "skills": [
+            4,
+            1
+          ],
+          "cost_multiplier": 100000000000,
+          "xp_mult": 0.0001,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 35,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 245,
+          "name": "Deep-water Swimming",
+          "type": "Normal",
+          "skills": [
+            9,
+            7
+          ],
+          "cost_multiplier": 50000000000,
+          "xp_mult": 0.000001,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 246,
+          "name": "Go to Crab Rave",
+          "type": "Normal",
+          "skills": [
+            0
+          ],
+          "cost_multiplier": 1000000,
+          "xp_mult": 50,
+          "max_reps": 4,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 247,
+          "name": "Half-Kraken",
+          "type": "Boss",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 1000000000000,
+          "xp_mult": 0.00001,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": 248,
+          "perk": null,
+          "item": 19,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 248,
+          "name": "Commune with Damned Souls",
+          "type": "Normal",
+          "skills": [
+            0
+          ],
+          "cost_multiplier": 20000000000,
+          "xp_mult": 0.1,
+          "max_reps": 1,
+          "hidden_by_default": true,
+          "unlocks_task": null,
+          "perk": 39,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        }
+      ]
+    },
+    {
+      "name": "The Deepest Deep",
+      "theme": null,
+      "tasks": [
+        {
+          "id": 250,
+          "name": "Attempt to Enter Hell",
+          "type": "Travel",
+          "skills": [
+            7
+          ],
+          "cost_multiplier": 300000,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 251,
+          "name": "Dare the Gods to Intervene",
+          "type": "Mandatory",
+          "skills": [
+            0
+          ],
+          "cost_multiplier": 800000000,
+          "xp_mult": 0.15,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 252,
+          "name": "Dig a Tunnel",
+          "type": "Mandatory",
+          "skills": [
+            5
+          ],
+          "cost_multiplier": 20000000,
+          "xp_mult": 0.002,
+          "max_reps": 5,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 253,
+          "name": "Embrace Divinity",
+          "type": "Prestige",
+          "skills": [
+            11
+          ],
+          "cost_multiplier": 24000,
+          "xp_mult": 0.015,
+          "max_reps": 4,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": 2,
+          "theme": null
+        },
+        {
+          "id": 254,
+          "name": "Etch Ritual Symbols",
+          "type": "Normal",
+          "skills": [
+            8
+          ],
+          "cost_multiplier": 30000000000,
+          "xp_mult": 0.03,
+          "max_reps": 7,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 37,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 255,
+          "name": "Defy the Gods",
+          "type": "Normal",
+          "skills": [
+            9,
+            11
+          ],
+          "cost_multiplier": 20000000000000,
+          "xp_mult": 0,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 37,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 256,
+          "name": "Study Divinity",
+          "type": "Normal",
+          "skills": [
+            1
+          ],
+          "cost_multiplier": 20000000000,
+          "xp_mult": 0.05,
+          "max_reps": 8,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 257,
+          "name": "Prepare to Face the Gods",
+          "type": "Normal",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 1000000000000000,
+          "xp_mult": 0.00005,
+          "max_reps": 4,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        }
+      ]
+    },
+    {
+      "name": "The Void",
+      "theme": null,
+      "tasks": [
+        {
+          "id": 260,
+          "name": "Exit the Void",
+          "type": "Travel",
+          "skills": [
+            7
+          ],
+          "cost_multiplier": 500000,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 261,
+          "name": "Avoid Alerting the Gods",
+          "type": "Mandatory",
+          "skills": [
+            4
+          ],
+          "cost_multiplier": 8000000,
+          "xp_mult": 0.3,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 262,
+          "name": "Figure Out How to Leave",
+          "type": "Mandatory",
+          "skills": [
+            1,
+            3
+          ],
+          "cost_multiplier": 2000000000000,
+          "xp_mult": 0.0001,
+          "max_reps": 2,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 263,
+          "name": "Create Light",
+          "type": "Normal",
+          "skills": [
+            8
+          ],
+          "cost_multiplier": 20000000000,
+          "xp_mult": 0.05,
+          "max_reps": 6,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 39,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 264,
+          "name": "Avoid Going Insane",
+          "type": "Normal",
+          "skills": [
+            9
+          ],
+          "cost_multiplier": 5000000000000,
+          "xp_mult": 2e-7,
+          "max_reps": 2,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 38,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 265,
+          "name": "Talk to Yourself",
+          "type": "Normal",
+          "skills": [
+            0
+          ],
+          "cost_multiplier": 200000000,
+          "xp_mult": 2,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 266,
+          "name": "Search the Void",
+          "type": "Normal",
+          "skills": [
+            7,
+            3
+          ],
+          "cost_multiplier": 50000000000,
+          "xp_mult": 0.00001,
+          "max_reps": 5,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 267,
+          "name": "Foreboding Presence",
+          "type": "Boss",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 1000000000000,
+          "xp_mult": 0.000005,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": 268,
+          "perk": null,
+          "item": 43,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 268,
+          "name": "Gather Void Essence",
+          "type": "Normal",
+          "skills": [
+            3
+          ],
+          "cost_multiplier": 100000000000,
+          "xp_mult": 0.0001,
+          "max_reps": 4,
+          "hidden_by_default": true,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 43,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        }
+      ]
+    },
+    {
+      "name": "The Return",
+      "theme": null,
+      "tasks": [
+        {
+          "id": 270,
+          "name": "Go Spread Your Word",
+          "type": "Travel",
+          "skills": [
+            7
+          ],
+          "cost_multiplier": 600000,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 271,
+          "name": "Lick Your Wounds",
+          "type": "Mandatory",
+          "skills": [
+            9
+          ],
+          "cost_multiplier": 5000000000000,
+          "xp_mult": 0.000001,
+          "max_reps": 8,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 272,
+          "name": "Plot Your Revenge",
+          "type": "Mandatory",
+          "skills": [
+            1,
+            4
+          ],
+          "cost_multiplier": 40000000000000,
+          "xp_mult": 0.00001,
+          "max_reps": 4,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 273,
+          "name": "Build Void-inspired Contraption",
+          "type": "Normal",
+          "skills": [
+            5
+          ],
+          "cost_multiplier": 200000000,
+          "xp_mult": 0.01,
+          "max_reps": 4,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 40,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 274,
+          "name": "Demonstrate New Powers",
+          "type": "Normal",
+          "skills": [
+            8
+          ],
+          "cost_multiplier": 7000000000000,
+          "xp_mult": 0.001,
+          "max_reps": 5,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 40,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 275,
+          "name": "Whine About the Void",
+          "type": "Normal",
+          "skills": [
+            0
+          ],
+          "cost_multiplier": 200000000,
+          "xp_mult": 2,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 276,
+          "name": "Ponder Your Exile",
+          "type": "Normal",
+          "skills": [
+            1,
+            8
+          ],
+          "cost_multiplier": 60000000000000,
+          "xp_mult": 0.0002,
+          "max_reps": 9,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 277,
+          "name": "Herald of the Gods",
+          "type": "Boss",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 40000000000000,
+          "xp_mult": 0.000005,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": 278,
+          "perk": null,
+          "item": 42,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 278,
+          "name": "Send Herald's Head to the Gods",
+          "type": "Normal",
+          "skills": [
+            8
+          ],
+          "cost_multiplier": 100000000000000000,
+          "xp_mult": 0.0001,
+          "max_reps": 1,
+          "hidden_by_default": true,
+          "unlocks_task": null,
+          "perk": 44,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        }
+      ]
+    },
+    {
+      "name": "The Cult",
+      "theme": null,
+      "tasks": [
+        {
+          "id": 280,
+          "name": "Assemble Your Forces",
+          "type": "Travel",
+          "skills": [
+            7
+          ],
+          "cost_multiplier": 1500000,
+          "xp_mult": 1,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 281,
+          "name": "Attract Followers",
+          "type": "Mandatory",
+          "skills": [
+            0
+          ],
+          "cost_multiplier": 1000000000,
+          "xp_mult": 0.05,
+          "max_reps": 4,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 282,
+          "name": "Train Your Fighters",
+          "type": "Mandatory",
+          "skills": [
+            1,
+            2
+          ],
+          "cost_multiplier": 1e+24,
+          "xp_mult": 5e-14,
+          "max_reps": 2,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 283,
+          "name": "Train Your Magicians",
+          "type": "Mandatory",
+          "skills": [
+            1,
+            8
+          ],
+          "cost_multiplier": 30000000000000000,
+          "xp_mult": 0.000005,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 284,
+          "name": "Record Rousing Speech",
+          "type": "Normal",
+          "skills": [
+            8
+          ],
+          "cost_multiplier": 200000000000,
+          "xp_mult": 0.01,
+          "max_reps": 5,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 41,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 285,
+          "name": "Appoint Second in Command",
+          "type": "Normal",
+          "skills": [
+            0
+          ],
+          "cost_multiplier": 5000000000,
+          "xp_mult": 0.3,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 41,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 286,
+          "name": "Ponder Next Moves",
+          "type": "Normal",
+          "skills": [
+            1
+          ],
+          "cost_multiplier": 10000000000000,
+          "xp_mult": 0.01,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 287,
+          "name": "Gather Intel",
+          "type": "Normal",
+          "skills": [
+            4,
+            3
+          ],
+          "cost_multiplier": 5000000000000,
+          "xp_mult": 0.0001,
+          "max_reps": 7,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 288,
+          "name": "Demigod",
+          "type": "Boss",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 100000000000000,
+          "xp_mult": 0.000003,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": 289,
+          "perk": null,
+          "item": 42,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 289,
+          "name": "Gather Some Divine Spark",
+          "type": "Normal",
+          "skills": [
+            3
+          ],
+          "cost_multiplier": 30000000000000,
+          "xp_mult": 0.0005,
+          "max_reps": 2,
+          "hidden_by_default": true,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 42,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        }
+      ]
+    },
+    {
+      "name": "The War Preparations",
+      "theme": null,
+      "tasks": [
+        {
+          "id": 290,
+          "name": "Bring Your Army to Heaven",
+          "type": "Travel",
+          "skills": [
+            7
+          ],
+          "cost_multiplier": 500000000,
+          "xp_mult": 0.01,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 291,
+          "name": "Build Staircase to Heaven",
+          "type": "Mandatory",
+          "skills": [
+            5
+          ],
+          "cost_multiplier": 5000000000000,
+          "xp_mult": 0.000003,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 292,
+          "name": "Make Battle Plan",
+          "type": "Mandatory",
+          "skills": [
+            1
+          ],
+          "cost_multiplier": 1000000000000000,
+          "xp_mult": 0.001,
+          "max_reps": 4,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 293,
+          "name": "Cook for the Army",
+          "type": "Normal",
+          "skills": [
+            5
+          ],
+          "cost_multiplier": 500000000,
+          "xp_mult": 0.001,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 44,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 294,
+          "name": "Protect Your Supply Lines",
+          "type": "Normal",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 5000000000000000000,
+          "xp_mult": 0.000001,
+          "max_reps": 5,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 42,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 295,
+          "name": "Inspire Your Troops",
+          "type": "Normal",
+          "skills": [
+            0
+          ],
+          "cost_multiplier": 5000000000,
+          "xp_mult": 2,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 296,
+          "name": "Gather More Troops",
+          "type": "Normal",
+          "skills": [
+            3,
+            7
+          ],
+          "cost_multiplier": 60000000000000,
+          "xp_mult": 1e-7,
+          "max_reps": 9,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 297,
+          "name": "Avatar of the Gods",
+          "type": "Boss",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 1000000000000000,
+          "xp_mult": 0.000001,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": 298,
+          "perk": null,
+          "item": 42,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 298,
+          "name": "Avoid the Gods' Revenge",
+          "type": "Normal",
+          "skills": [
+            4,
+            9
+          ],
+          "cost_multiplier": 300000000000000000000,
+          "xp_mult": 1e-12,
+          "max_reps": 1,
+          "hidden_by_default": true,
+          "unlocks_task": null,
+          "perk": 45,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        }
+      ]
+    },
+    {
+      "name": "The Gates of Heaven",
+      "theme": null,
+      "tasks": [
+        {
+          "id": 300,
+          "name": "Take Your Place in Heaven",
+          "type": "Travel",
+          "skills": [
+            7
+          ],
+          "cost_multiplier": 500000000000,
+          "xp_mult": 0.0001,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 301,
+          "name": "Rally Your Troops",
+          "type": "Mandatory",
+          "skills": [
+            0
+          ],
+          "cost_multiplier": 1000000000000000,
+          "xp_mult": 0.00015,
+          "max_reps": 4,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 302,
+          "name": "Break Down the Gates",
+          "type": "Mandatory",
+          "skills": [
+            2
+          ],
+          "cost_multiplier": 5e+28,
+          "xp_mult": 1e-10,
+          "max_reps": 1,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 303,
+          "name": "Ascend to Godhood",
+          "type": "Prestige",
+          "skills": [
+            11
+          ],
+          "cost_multiplier": 5000000000,
+          "xp_mult": 0.0001,
+          "max_reps": 5,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 46,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": 3,
+          "theme": null
+        },
+        {
+          "id": 304,
+          "name": "Conduct Ritual Sacrifice",
+          "type": "Normal",
+          "skills": [
+            8
+          ],
+          "cost_multiplier": 5000000000000,
+          "xp_mult": 0.001,
+          "max_reps": 3,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": 45,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 305,
+          "name": "Prepare Final Ritual",
+          "type": "Normal",
+          "skills": [
+            8,
+            11
+          ],
+          "cost_multiplier": 800000000000000000,
+          "xp_mult": 0,
+          "max_reps": 5,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": 43,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 306,
+          "name": "Taunt the Gods",
+          "type": "Normal",
+          "skills": [
+            0
+          ],
+          "cost_multiplier": 5000000000,
+          "xp_mult": 3,
+          "max_reps": 2,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        },
+        {
+          "id": 307,
+          "name": "Plan Eternity in Heaven",
+          "type": "Normal",
+          "skills": [
+            1
+          ],
+          "cost_multiplier": 500000000000000,
+          "xp_mult": 0.03,
+          "max_reps": 5,
+          "hidden_by_default": false,
+          "unlocks_task": null,
+          "perk": null,
+          "item": null,
+          "use_item": null,
+          "prestige_layer": null,
+          "theme": null
+        }
+      ]
+    }
+  ],
+  "perks": [
+    {
+      "name": "How to Read",
+      "icon": "📖",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 1,
+          "add": 0.5
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "How to Write",
+      "icon": "📝",
+      "tooltip": "Improves ♟️XP gain by 50%",
+      "effects": [],
+      "behavior": "xp_all_mult_a",
+      "theme": null
+    },
+    {
+      "name": "Villager Gratitude",
+      "icon": "❤️",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 0,
+          "add": 0.5
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Mysterious Amulet",
+      "icon": "📿",
+      "tooltip": "Unlocks Zone Automation<br>Unlocks automatic Item use",
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 8,
+          "add": 0.5
+        }
+      ],
+      "behavior": "automation_unlock",
+      "theme": null
+    },
+    {
+      "name": "Energetic Spell",
+      "icon": "⚡️",
+      "tooltip": "Increases starting 🔋Energy by 50",
+      "effects": [],
+      "behavior": "starting_energy_flat",
+      "theme": null
+    },
+    {
+      "name": "Experienced Traveler",
+      "icon": "🦶",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 7,
+          "add": 0.5
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Underground Connection",
+      "icon": "🎲",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 4,
+          "add": 0.4
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 0,
+          "add": 0.2
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Minor Time Compression",
+      "icon": "⌚",
+      "tooltip": "Tasks reps that are completed instantly (in a single ⏰Tick) now cost 80% less 🔋Energy<br>Zones where all Tasks are instant without using Items are completed for free in a single ⏰Tick when doing an 🔋Energy Reset<br>This gives all the benefits doing those Tasks manually would have",
+      "effects": [],
+      "behavior": "time_compression_minor",
+      "theme": null
+    },
+    {
+      "name": "High Altitude Climbing",
+      "icon": "🗻",
+      "tooltip": "Reduces all 🔋Energy consumption 20%",
+      "effects": [],
+      "behavior": "energy_drain_reduction",
+      "theme": null
+    },
+    {
+      "placeholder": true
+    },
+    {
+      "name": "Village Hero",
+      "icon": "🎖️",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 0,
+          "add": 0.4
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 2,
+          "add": 0.2
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Attunement",
+      "icon": "🌀",
+      "tooltip": "Unlocks the 🌀Attunement mechanic",
+      "effects": [],
+      "behavior": "attunement_enable",
+      "theme": null
+    },
+    {
+      "name": "Goblin Scourge",
+      "icon": "💀",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 2,
+          "add": 0.3
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 9,
+          "add": 0.3
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Sunken Treasure",
+      "icon": "⚓",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 3,
+          "add": 0.3
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 9,
+          "add": 0.3
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Found Lost Temple",
+      "icon": "🏯",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 8,
+          "add": 0.5
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Walk Without Rhythm",
+      "icon": "👣",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 4,
+          "add": 0.4
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 7,
+          "add": 0.2
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Reflections on the Journey",
+      "icon": "🕰️",
+      "tooltip": "Reduce 🔋Energy drain based on the highest Zone reached<br>In each Zone 🔋Energy consumption is reduced 5% compounding for each Zone you've reached past it<br>So Zone 12 has 🔋Energy cost multiplied by 0.95^2 if the highest Zone reached is 14<br><br>Highest Zone reached: 1<br>Effect in current Zone: 0% reduction",
+      "effects": [],
+      "behavior": "energy_drain_zone_history",
+      "theme": null
+    },
+    {
+      "name": "Purged Bureaucracy",
+      "icon": "⚖️",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 0,
+          "add": 0.3
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 5,
+          "add": 0.3
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Deep Sea Diving",
+      "icon": "🤿",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 3,
+          "add": 0.3
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 8,
+          "add": 0.3
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Energetic Memory",
+      "icon": "💭",
+      "tooltip": "On each Energy Reset, increase max 🔋Energy by the current Zone / 10<br>So Zone 9 gives 0.9 max 🔋Energy",
+      "effects": [],
+      "behavior": "starting_energy_growth",
+      "theme": null
+    },
+    {
+      "name": "The Worm",
+      "icon": "💃",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 0,
+          "add": 0.5
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Tower of Babel",
+      "icon": "🧱",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 0,
+          "add": 0.3
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 11,
+          "add": 0.3
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Awakening",
+      "icon": "💤",
+      "tooltip": "Improves ✨Divine Spark gain by 33%",
+      "effects": [],
+      "behavior": "spark_gain_mult_a",
+      "theme": null
+    },
+    {
+      "name": "Major Time Compression",
+      "icon": "⏰",
+      "tooltip": "Tasks with instant reps now complete the whole Task in a single ⏰Tick, rather than a single ⏰Tick per rep<br>This also means the 🔋Energy cost is that of a single ⏰Tick<br>Reduces the real-world time for non-instant Tasks by 33% (does not affect 🔋Energy use)",
+      "effects": [],
+      "behavior": "time_compression_major",
+      "theme": null
+    },
+    {
+      "name": "Hide in Plain Sight",
+      "icon": "👥",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 4,
+          "add": 0.5
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Dream Prism",
+      "icon": "🔷",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 8,
+          "add": 0.3
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 7,
+          "add": 0.3
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Dragon Killing Plan",
+      "icon": "🏔️",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 2,
+          "add": 0.5
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Unified Theory of Magic",
+      "icon": "📜",
+      "tooltip": "Each Zone fully completed in this Prestige increases Task Speed 2%<br>For instance, having fully completed the 15th Zone would speed up Task speed 1.02^15 = 35%<br>Note that it's based on your highest fully completed, so you can skip fully completing earlier Zones if you want<br><br>Highest Zone fully completed currently: 0<br>Current effect: +0% Task speed",
+      "effects": [],
+      "behavior": "speed_per_completed_zone",
+      "theme": null
+    },
+    {
+      "name": "Headmaster",
+      "icon": "🧙‍♂️",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 8,
+          "add": 0.3
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 1,
+          "add": 0.3
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Dragon Slayer",
+      "icon": "🐉",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 2,
+          "add": 0.3
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 0,
+          "add": 0.3
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Understanding of the Reset",
+      "icon": "🔁",
+      "tooltip": "When you run out of 🔋Energy and reincarnate you keep half your remaining Items (rounded up)<br>This means you can use more Items in a run than just those gained in that specific run",
+      "effects": [],
+      "behavior": "keep_items_on_reset",
+      "theme": null
+    },
+    {
+      "name": "Overcame Fear of Skydiving",
+      "icon": "🪂",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 2,
+          "add": 0.3
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 9,
+          "add": 0.3
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Destroyed the Ring",
+      "icon": "💍",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 11,
+          "add": 1
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 0,
+          "add": 0.5
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Gazed Beyond the Veil",
+      "icon": "👀",
+      "tooltip": "Improves ♟️XP gain by 100%",
+      "effects": [],
+      "behavior": "xp_all_mult_b",
+      "theme": null
+    },
+    {
+      "name": "Studied Underground Forge",
+      "icon": "⛏️",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 5,
+          "add": 0.5
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Understanding Leviathan",
+      "icon": "🐋",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 1,
+          "add": 0.3
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 2,
+          "add": 0.3
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Purged Demonic Influences",
+      "icon": "👹",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 0,
+          "add": 0.3
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 9,
+          "add": 0.3
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Defied the Gods",
+      "icon": "🚫",
+      "tooltip": "Improves ✨Divine Spark gain by 25%",
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 11,
+          "add": 1
+        }
+      ],
+      "behavior": "spark_gain_mult_b",
+      "theme": null
+    },
+    {
+      "name": "Survived the Void",
+      "icon": "⚫",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 11,
+          "add": 0.3
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 9,
+          "add": 0.3
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Communed with Damned Souls",
+      "icon": "👻",
+      "tooltip": "Doubles 🌀Attunement Gain",
+      "effects": [],
+      "behavior": "attunement_gain_mult",
+      "theme": null
+    },
+    {
+      "name": "Divine Power",
+      "icon": "☀️",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 11,
+          "add": 0.25
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 2,
+          "add": 0.25
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 8,
+          "add": 0.25
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 1,
+          "add": 0.25
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Second in Command",
+      "icon": "🙇‍♂️",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 0,
+          "add": 0.3
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 4,
+          "add": 0.3
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 3,
+          "add": 0.3
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Supply Lines",
+      "icon": "🛣️",
+      "tooltip": "Increases 🔋Energy Gain from Items by 20%",
+      "effects": [],
+      "behavior": "item_energy_mult",
+      "theme": null
+    },
+    {
+      "name": "Prepared Final Ritual",
+      "icon": "✨",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 11,
+          "add": 1
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 1,
+          "add": 1
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 8,
+          "add": 1
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Returned Herald's Head",
+      "icon": "🤕",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 0,
+          "add": 0.3
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 2,
+          "add": 0.3
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 11,
+          "add": 0.3
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Avoided Godly Revenge",
+      "icon": "🌋",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 4,
+          "add": 0.3
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 9,
+          "add": 0.3
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 0,
+          "add": 0.3
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 11,
+          "add": 0.3
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Ascended",
+      "icon": "👼",
+      "tooltip": "Doubles ✨Divine Spark gain",
+      "effects": [],
+      "behavior": "spark_gain_mult_c",
+      "theme": null
+    }
+  ],
+  "items": [
+    {
+      "name": "Food",
+      "name_plural": "Food",
+      "icon": "🍲",
+      "tooltip": "Gives 5 🔋Energy each<br>Can take you above your Max Energy<br><br>Right-click to use all",
+      "effects": [
+        {
+          "kind": "energy_on_consume",
+          "base_amount": 5
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Arrow",
+      "name_plural": "Arrows",
+      "icon": "🏹",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 2,
+          "add": 0.15
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Coin",
+      "name_plural": "Coins",
+      "icon": "💰",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 0,
+          "add": 0.2
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Mushroom",
+      "name_plural": "Mushrooms",
+      "icon": "🍄",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 8,
+          "add": 0.2
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 3,
+          "add": 0.2
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Goblin Supplies",
+      "name_plural": "Goblin Supplies",
+      "icon": "📦",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 4,
+          "add": 0.15
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 2,
+          "add": 0.1
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 9,
+          "add": 0.1
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Travel Equipment",
+      "name_plural": "Travel Equipment",
+      "icon": "🎒",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 7,
+          "add": 0.1
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 9,
+          "add": 0.1
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Book",
+      "name_plural": "Books",
+      "icon": "📚",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 1,
+          "add": 0.1
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 8,
+          "add": 0.1
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Scroll of Haste",
+      "name_plural": "Scrolls of Haste",
+      "icon": "🐇",
+      "tooltip": "The next Task rep you start is 5x as fast",
+      "effects": [],
+      "behavior": "artifact_haste_queue",
+      "theme": null
+    },
+    {
+      "name": "Goblin Waraxe",
+      "name_plural": "Goblin Waraxes",
+      "icon": "🪓",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 2,
+          "add": 1
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Camping Equipment",
+      "name_plural": "Camping Equipment",
+      "icon": "⛺",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 9,
+          "add": 0.15
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Reagent",
+      "name_plural": "Reagents",
+      "icon": "🌿",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 8,
+          "add": 0.2
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 5,
+          "add": 0.1
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Magical Root",
+      "name_plural": "Magical Roots",
+      "icon": "🌲",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 9,
+          "add": 0.2
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 8,
+          "add": 0.1
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Goblin Treasure",
+      "name_plural": "Goblin Treasures",
+      "icon": "💎",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 4,
+          "add": 0.5
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 8,
+          "add": 0.5
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Fish",
+      "name_plural": "Fish",
+      "icon": "🐟",
+      "tooltip": "Gives 10 🔋Energy each",
+      "effects": [
+        {
+          "kind": "energy_on_consume",
+          "base_amount": 10
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Bandit Weapon",
+      "name_plural": "Bandit Weapons",
+      "icon": "🔪",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 4,
+          "add": 0.1
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 2,
+          "add": 0.2
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Cactus",
+      "name_plural": "Cactuses",
+      "icon": "🌵",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 9,
+          "add": 0.15
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "City Chain",
+      "name_plural": "City Chains",
+      "icon": "🔗",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 0,
+          "add": 0.5
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 4,
+          "add": 0.5
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Werewolf Fur",
+      "name_plural": "Werewolf Furs",
+      "icon": "🐺",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 0,
+          "add": 0.2
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 9,
+          "add": 0.2
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Oasis Water",
+      "name_plural": "Oasis Water",
+      "icon": "💧",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 8,
+          "add": 0.2
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 9,
+          "add": 0.1
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Calamari",
+      "name_plural": "Calamari",
+      "icon": "🦑",
+      "tooltip": "Gives 50 🔋Energy each",
+      "effects": [
+        {
+          "kind": "energy_on_consume",
+          "base_amount": 50
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Mystic Incense",
+      "name_plural": "Mystic Incense",
+      "icon": "🕯️",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 11,
+          "add": 0.1
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Oracle Bone",
+      "name_plural": "Oracle Bones",
+      "icon": "🦴",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 3,
+          "add": 0.2
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 8,
+          "add": 0.2
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 11,
+          "add": 0.1
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 7,
+          "add": 0.1
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Worm Hide Coat",
+      "name_plural": "Worm Hide Coats",
+      "icon": "🧥",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 9,
+          "add": 1
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Djinn Lamp",
+      "name_plural": "Djinn Lamps",
+      "icon": "🧞",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 11,
+          "add": 0.3
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 8,
+          "add": 0.3
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Dreamcatcher",
+      "name_plural": "Dreamcatchers",
+      "icon": "🕸️",
+      "tooltip": "Creates a copy of every Item type you've obtained this Energy Reset (except Dreamcatchers)",
+      "effects": [],
+      "behavior": "artifact_duplicate_found",
+      "theme": null
+    },
+    {
+      "name": "Magical Essence",
+      "name_plural": "Magical Essences",
+      "icon": "🌠",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 8,
+          "add": 4
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Crafting Recipe",
+      "name_plural": "Crafting Recipes",
+      "icon": "🛠️",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 5,
+          "add": 0.3
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Knightly Boots",
+      "name_plural": "Knightly Boots",
+      "icon": "👢",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 2,
+          "add": 0.2
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 9,
+          "add": 0.2
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Dragon Scale",
+      "name_plural": "Dragon Scales",
+      "icon": "🐲",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 2,
+          "add": 0.5
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 9,
+          "add": 0.5
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Cave Insect",
+      "name_plural": "Cave Insects",
+      "icon": "🦟",
+      "tooltip": "Gives 5 🔋Energy each",
+      "effects": [
+        {
+          "kind": "energy_on_consume",
+          "base_amount": 5
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Magical Vessel",
+      "name_plural": "Magical Vessels",
+      "icon": "🏺",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 11,
+          "add": 0.3
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Magic Ring",
+      "name_plural": "Magic Rings",
+      "icon": "💍",
+      "tooltip": "The next Task rep you start gives 5x as much XP",
+      "effects": [],
+      "behavior": "artifact_xp_queue",
+      "theme": null
+    },
+    {
+      "name": "Bottled Lightning",
+      "name_plural": "Bottled Lightning",
+      "icon": "⚡",
+      "tooltip": "The next Boss Task you start is 2x as fast<br>This stacks with Scroll of Haste",
+      "effects": [],
+      "behavior": "artifact_boss_haste_queue",
+      "theme": null
+    },
+    {
+      "name": "Heat Essence",
+      "name_plural": "Heat Essence",
+      "icon": "🔥",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 0,
+          "add": 1
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Divine Note",
+      "name_plural": "Divine Notes",
+      "icon": "📜",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 1,
+          "add": 0.3
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 3,
+          "add": 0.3
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 7,
+          "add": 0.1
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Griffin Quill",
+      "name_plural": "Griffin Quills",
+      "icon": "🕊️",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 1,
+          "add": 1
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Wings of Shadow",
+      "name_plural": "Wings of Shadow",
+      "icon": "🦇",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 11,
+          "add": 5
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 7,
+          "add": 1
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Ritual Symbol",
+      "name_plural": "Ritual Symbols",
+      "icon": "☯️",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 11,
+          "add": 1
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Glasses",
+      "name_plural": "Glasses",
+      "icon": "👓",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 3,
+          "add": 1
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Light",
+      "name_plural": "Light",
+      "icon": "💡",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 3,
+          "add": 0.5
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 7,
+          "add": 0.5
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 9,
+          "add": 0.5
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Mad Contraption",
+      "name_plural": "Mad Contraptions",
+      "icon": "🤪",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 1,
+          "add": 1
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 5,
+          "add": 1
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 2,
+          "add": 1
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Recording",
+      "name_plural": "Recordings",
+      "icon": "📼",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 0,
+          "add": 1
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Divine Spark",
+      "name_plural": "Divine Sparks",
+      "icon": "✨",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 11,
+          "add": 20
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Void Essence",
+      "name_plural": "Void Essence",
+      "icon": "⚫",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 8,
+          "add": 3
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 1,
+          "add": 3
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 4,
+          "add": 3
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Army Food",
+      "name_plural": "Army Food",
+      "icon": "🍱",
+      "tooltip": "Gives 15 🔋Energy each<br>Can take you above your Max Energy<br><br>Right-click to use all",
+      "effects": [
+        {
+          "kind": "energy_on_consume",
+          "base_amount": 15
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    },
+    {
+      "name": "Ritual Sacrifice",
+      "name_plural": "Ritual Sacrifice",
+      "icon": "🩸",
+      "tooltip": null,
+      "effects": [
+        {
+          "kind": "skill_speed",
+          "skill": 8,
+          "add": 5
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 11,
+          "add": 5
+        },
+        {
+          "kind": "skill_speed",
+          "skill": 2,
+          "add": 5
+        }
+      ],
+      "behavior": null,
+      "theme": null
+    }
+  ],
+  "prestige": {
+    "layers": [
+      {
+        "key": "touch_the_divine",
+        "theme": null
+      },
+      {
+        "key": "transcend_humanity",
+        "theme": null
+      },
+      {
+        "key": "embrace_divinity",
+        "theme": null
+      },
+      {
+        "key": "ascend_to_godhood",
+        "theme": null
+      }
+    ],
+    "unlockables": [
+      {
+        "name": "Permanent Automation",
+        "layer": 0,
+        "cost": 10,
+        "description": "Permanently unlocks the 📿Mysterious Amulet Perk",
+        "behavior": "permanent_automation",
+        "theme": null
+      },
+      {
+        "name": "Divine Inspiration",
+        "layer": 0,
+        "cost": 10,
+        "description": "Increases ♟️XP gain by 50% and 🌀Attunement gain by 100%<br>Note that 🌀Attunement still needs to be unlocked in Zone 10",
+        "behavior": "xp_all_prestige_mult",
+        "theme": null
+      },
+      {
+        "name": "Look in the Mirror",
+        "layer": 0,
+        "cost": 101,
+        "description": "Permanently unlocks the 🕰️Reflections on the Journey Perk<br>Boosts its base from 0.95 to 0.9",
+        "behavior": "grant_drain_reflections",
+        "theme": null
+      },
+      {
+        "name": "Fully Attuned",
+        "layer": 0,
+        "cost": 800,
+        "description": "Permanently unlocks the 🌀Attunement Perk<br>Makes the Divine Knowledge Prestige upgrade apply to 🌀Attunement<br>Makes 🌀Attunement apply to 🔎Search",
+        "behavior": "attunement_expand_search",
+        "theme": null
+      },
+      {
+        "name": "Transcendant Memory",
+        "layer": 1,
+        "cost": 100,
+        "description": "Permanently unlocks the 💭Energetic Memory Perk<br>Squares the Max 🔋Energy gain after Zone 10",
+        "behavior": "starting_energy_growth_square",
+        "theme": null
+      },
+      {
+        "name": "Divine Speed",
+        "layer": 1,
+        "cost": 500,
+        "description": "Makes the game tick 1% faster (additively) for every 4 Max 🔋Energy beyond 100<br>No effect on 🔋Energy use, but makes tasks take less real-world time",
+        "behavior": "tick_rate_from_energy_overflow",
+        "theme": null
+      },
+      {
+        "name": "Mastery of Time",
+        "layer": 1,
+        "cost": 40000,
+        "description": "Permanently unlocks the ⌚Minor Time Compression and ⏰Major Time Compression Perks<br>1-tick Tasks are now free<br>1-tick Tasks (except Travel) are now automatically completed when you enter a Zone<br>The auto-completion is not applied to Zones you've not set to be automated (in case you want to do things like use a Magic Ring)",
+        "behavior": "mastery_of_time",
+        "theme": null
+      },
+      {
+        "name": "See Beyond the Veil",
+        "layer": 1,
+        "cost": 100000,
+        "description": "Unlocks five new tasks before Zone 20<br>Boss Tasks no longer get removed from Automation on Prestige",
+        "behavior": "see_beyond_the_veil",
+        "theme": null
+      },
+      {
+        "name": "Perky",
+        "layer": 2,
+        "cost": 100000,
+        "description": "Every Perk unlocked increases Task Speed by 1% (multiplicative)<br>Current effect: +0%",
+        "behavior": "speed_per_perk_held",
+        "theme": null
+      },
+      {
+        "name": "Compulsive Notetaking",
+        "layer": 2,
+        "cost": 1000000,
+        "description": "Start every reset with at minimum 2 of each of 🐇Scrolls of Haste, 📚Books, 🛠️Crafting Recipes, 📜Divine Notes, and 🕊️Griffin Quills<br>Takes effect if you would keep fewer of the given Item on Energy Reset",
+        "behavior": "note_item_floor_on_reset",
+        "theme": null
+      },
+      {
+        "name": "Crafting Breakthrough",
+        "layer": 2,
+        "cost": 2000000,
+        "description": "Makes 🌀Attunement apply to 🔨Crafting",
+        "behavior": "attunement_expand_crafting",
+        "theme": null
+      },
+      {
+        "name": "Godly Travel",
+        "layer": 2,
+        "cost": 1000000000,
+        "description": "Makes 🗺️Travel Tasks 5x faster",
+        "behavior": "travel_skill_prestige_mult",
+        "theme": null
+      },
+      {
+        "name": "Amazing Speed",
+        "layer": 3,
+        "cost": 10000000000,
+        "description": "Makes all Tasks 5x faster<br>Doubles ✨Divine Spark Gain",
+        "behavior": "spark_gain_double_a",
+        "theme": null
+      },
+      {
+        "name": "Limitless Power",
+        "layer": 3,
+        "cost": 50000000000,
+        "description": "Multiplies 💪Power and 🌀Attunement Gain by 5<br>Doubles ✨Divine Spark Gain",
+        "behavior": "spark_gain_double_b",
+        "theme": null
+      },
+      {
+        "name": "Unparalleled Learning",
+        "layer": 3,
+        "cost": 150000000000,
+        "description": "Multiplies ♟️XP Gain by 5<br>Doubles ✨Divine Spark Gain",
+        "behavior": "xp_all_prestige_mult_b",
+        "theme": null
+      },
+      {
+        "name": "Divine Supremacy",
+        "layer": 3,
+        "cost": 500000000000,
+        "description": "Makes Mandatory Tasks 5x faster<br><br>Increases Max 🔋Energy by 1000<br>Doubles ✨Divine Spark Gain",
+        "behavior": "starting_energy_prestige_flat",
+        "theme": null
+      }
+    ],
+    "repeatables": [
+      {
+        "name": "Divine Knowledge",
+        "layer": 0,
+        "initial_cost": 10,
+        "scaling_exponent": 1.25,
+        "description": "Increases ♟️XP gain by 50%",
+        "behavior": "xp_all_level_a",
+        "theme": null
+      },
+      {
+        "name": "Unlimited Power",
+        "layer": 0,
+        "initial_cost": 10,
+        "scaling_exponent": 2.5,
+        "description": "Doubles 💪Power gain",
+        "behavior": "power_rate_level",
+        "theme": null
+      },
+      {
+        "name": "Divine Appetite",
+        "layer": 0,
+        "initial_cost": 30,
+        "scaling_exponent": 2.5,
+        "description": "Increases 🔋Energy gained from Items by 20%",
+        "behavior": "item_energy_level",
+        "theme": null
+      },
+      {
+        "name": "Gotta Go Fast",
+        "layer": 0,
+        "initial_cost": 20,
+        "scaling_exponent": 1.75,
+        "description": "Multiplies Task speed by 1.1",
+        "behavior": "speed_level",
+        "theme": null
+      },
+      {
+        "name": "Divine Lightning",
+        "layer": 1,
+        "initial_cost": 1000,
+        "scaling_exponent": 4,
+        "description": "Increases the exponent for the ✨Divine Spark gain calculation by 0.12<br>One more level would increase ✨Divine Spark gain at Zone 19 by 34%, and -53% at Zone 1",
+        "behavior": "spark_exponent_level",
+        "theme": null
+      },
+      {
+        "name": "Transcendant Aptitude",
+        "layer": 1,
+        "initial_cost": 100,
+        "scaling_exponent": 3,
+        "description": "Increases starting skill levels by 100<br>🙏Ascension has its starting level increased by only half",
+        "behavior": "skill_start_level",
+        "theme": null
+      },
+      {
+        "name": "Energized",
+        "layer": 1,
+        "initial_cost": 1500,
+        "scaling_exponent": 1.75,
+        "description": "Increases Max 🔋Energy by 20<br>Increases the 🔋Energy gain from 💭Energetic Memory by 5%",
+        "behavior": "starting_energy_level",
+        "theme": null
+      },
+      {
+        "name": "Deenergized",
+        "layer": 1,
+        "initial_cost": 10000,
+        "scaling_exponent": 2.5,
+        "description": "Reduces 🔋Energy drain by 10%",
+        "behavior": "drain_reduction_level",
+        "theme": null
+      },
+      {
+        "name": "Mandatory Schmandatory",
+        "layer": 2,
+        "initial_cost": 500000,
+        "scaling_exponent": 1.5,
+        "description": "Improves the speed of Travel, Mandatory, and Prestige Tasks by 20%",
+        "behavior": "mandatory_speed_level",
+        "theme": null
+      },
+      {
+        "name": "Divine Attunement",
+        "layer": 2,
+        "initial_cost": 1000000,
+        "scaling_exponent": 2,
+        "description": "Multiplies 🌀Attunement Gain by 1.25",
+        "behavior": "attunement_effect_level",
+        "theme": null
+      },
+      {
+        "name": "Spite the Gods",
+        "layer": 2,
+        "initial_cost": 200000,
+        "scaling_exponent": 1.4,
+        "description": "Improves the speed of Charisma and Ascension Tasks by 25%",
+        "behavior": "spite_skills_level",
+        "theme": null
+      },
+      {
+        "name": "Diviner Knowledge",
+        "layer": 2,
+        "initial_cost": 5000000,
+        "scaling_exponent": 3,
+        "description": "Increases ♟️XP gain by 100%",
+        "behavior": "xp_all_level_b",
+        "theme": null
+      }
+    ],
+    "spark_zone_origin": 14,
+    "sbtv_unlock_task_ids": [
+      17,
+      28,
+      88,
+      158,
+      209
+    ]
+  },
+  "roles": {
+    "ascension_skill": 11,
+    "travel_skill": 7,
+    "attunement_skills": [
+      8,
+      1
+    ],
+    "power_skills": [
+      2,
+      9
+    ],
+    "spite_skills": [
+      11,
+      0
+    ]
+  },
+  "economy": {
+    "base_task_cost": 10,
+    "zone_cost_exponent": 2.2,
+    "boss_cost_exponent": 4,
+    "xp_base": 8,
+    "xp_zone_mult": 1.25,
+    "level_curve": 1.02
+  },
+  "item_groups": {
+    "note_items": [
+      7,
+      6,
+      26,
+      34,
+      35
+    ]
+  }
+}
