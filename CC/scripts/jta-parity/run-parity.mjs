@@ -330,14 +330,17 @@ function extractForkBuild() {
     encoding: "utf8",
   }).trim();
   const marker = path.join(forkExtractDir, ".sha");
+  // Full committed tree (not just build/): run-ui-parity.mjs serves
+  // fork-head/index.html + assets from the same extraction; shared .sha marker.
   if (
     !fs.existsSync(path.join(forkExtractDir, "build", "simulation.js")) ||
+    !fs.existsSync(path.join(forkExtractDir, "index.html")) ||
     !fs.existsSync(marker) ||
     fs.readFileSync(marker, "utf8").trim() !== sha
   ) {
     fs.rmSync(forkExtractDir, { recursive: true, force: true });
     fs.mkdirSync(forkExtractDir, { recursive: true });
-    execSync(`git archive ${sha} build | tar -x -C ${JSON.stringify(forkExtractDir)}`, {
+    execSync(`git archive ${sha} | tar -x -C ${JSON.stringify(forkExtractDir)}`, {
       cwd: submoduleDir,
       shell: "/bin/bash",
     });

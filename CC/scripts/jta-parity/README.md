@@ -158,6 +158,83 @@ Aggregate report: `results/parity-report.json`; per-scenario details in
 - **`SAVE_VERSION`** `"1.1.1"` → `"Fork 1.6"`: save-file metadata, not
   gameplay-observable (and saves go to a stubbed localStorage here).
 
+## UI parity (`run-ui-parity.mjs`)
+
+Verifies the fork's UI looks the same as upstream on a FRESH page load,
+modulo the documented exclusions below.
+
+```
+node CC/scripts/jta-parity/run-ui-parity.mjs      # needs the :8000 dev server
+```
+
+Both sides are served by the already-running repo dev server on :8000 (the
+script checks and refuses to start a duplicate): upstream from `upstream/`
+(fork-point clone, compiled by `fetch-upstream.mjs`), the fork from
+`fork-head/` — the submodule's **committed HEAD, full tree**, re-extracted
+via `git archive` on every run. So re-checking after the submodule pointer
+advances (e.g. once the in-flight prestige-popup gating fix lands) is just a
+re-run. The live submodule path is never loaded (its working tree carries
+uncommitted changes).
+
+Four views per side, each in a fresh Playwright context (clean localStorage,
+fixed 1440x1050 viewport): `main`, `settings-open`, `stats-open`, and
+`prestige-open` (the hidden `#open-prestige` button is clicked
+programmatically — the open handler is not gated in either build; flagged
+`syntheticOpen` in the report). Per view:
+
+- **DOM structural diff** — both trees serialized identically (tag + sorted
+  attributes + collapsed text; scripts/comments dropped) and diffed three
+  ways: **raw** (no exclusions — classification input, nothing hidden),
+  **clean** (exclusion list applied — the pass/fail signal), **residual**
+  (exclusions + known-pending). Serializations and unified diffs land in
+  `results/ui/`.
+- **Screenshot pixel diff** — exact RGBA compare with pink masks over the
+  excluded elements only. Differing pixels are split into the excluded
+  elements' union footprint (orange in the diff image — the approved delta
+  changes the Settings box size, so the two masks legitimately cover
+  different areas) and everything outside (red — must be zero or noise).
+  Both screenshots + diff image + pixel counts are saved.
+- A **self-stability probe** (same page serialized twice, 700ms apart, game
+  loop running) guards against tick-volatile DOM being misread as a fork
+  difference. Fresh-load DOM is static.
+- **Renderer noise**: even with determinism flags (`--disable-gpu`,
+  `--disable-lcd-text`, srgb, no font hinting), the SAME page screenshotted
+  twice occasionally differs by a few dozen pixels (channel deltas <= ~20) —
+  measured as a per-view noise floor, and any outside-region diff must
+  additionally REPRODUCE across up to 3 fresh screenshot pairs before it can
+  be called UNEXPECTED; transient jitter vanishes on retake. A real UI
+  difference reproduces identically.
+
+### UI exclusion list (complete)
+
+| entry | kind | justification |
+|---|---|---|
+| `#settings` subtree | excluded-intentional | Settings popup: user-approved fork additions — the "Game Mods" section (7 controls, all rendering "Off"/defaults) plus a `.scroll-area` wrapper around the popup's pre-existing content. Static `index.html` delta. This is the ONLY DOM exclusion. |
+| `#prestige-box` subtree | known-pending (prestige-open view only) | Fork's `populatePrestigeView` Divinity additions (purchase queue / Auto-Buy controls) were expected to be ungated on committed HEAD; a gating fix is in flight. See observation below — on a fresh load they do not render at all. Re-run after the submodule pointer advances. |
+
+### UI results (2026-07-10, fork `d0e41aa`, upstream `a0057b1`)
+
+| view | DOM raw diff | DOM after exclusions | pixels outside excluded regions | verdict |
+|---|---|---|---|---|
+| main | 55 lines (all `#settings`) | **0** | 0 (transient noise vanished on retake) | PASS |
+| settings-open | 55 lines (all `#settings`) | **0** | 0 (excluded footprint ~107k px = the approved bigger box; noise vanished on retake) | PASS |
+| stats-open | 55 lines (all `#settings`) | **0** | 0 (transient noise vanished on retake) | PASS |
+| prestige-open | 55 lines (all `#settings`) | **0** | 0 (pixel-exact) | PASS |
+
+**UI verdict: PASS — identical modulo the single documented Settings-popup
+exclusion.** Report: `results/ui/ui-parity-report.json`.
+
+**Prestige-popup observation:** the fork's Divinity queue/auto-buy controls
+did NOT appear — `populatePrestigeView` gates them behind
+`GAMESTATE.prestige_layers_unlocked.length > 0` (rendering.ts), and a fresh
+game has no layers unlocked, so the popup renders byte-identically to
+upstream (DOM raw diff over the whole page: only the `#settings` lines;
+pixels exact). The known-pending `#prestige-box` entry therefore had nothing
+to absorb on this HEAD; it stays in the harness so the post-gating-fix re-run
+reports through the same channel. A deeper check (popup on a save WITH
+unlocked layers) would need a progressed save and is out of scope for the
+fresh-load claim.
+
 ## Known coverage limits (what a stronger claim would need)
 
 - Real (non-synthetic) prestige: the first Prestige-type task sits in zone 14;
