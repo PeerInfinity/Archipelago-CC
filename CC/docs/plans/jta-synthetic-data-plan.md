@@ -754,10 +754,20 @@ standalone `?dataset=` play.
    its tsconfig sets `isolatedModules: true`, which forbids const enums
    project-wide (so this cannot silently regress). Compiled `build/*.js`
    confirms standard mutable runtime enum objects. Count rewrite is
-   feasible for ALL tables. 5b implementation note: audit for module-level
-   constants computed FROM `*.Count` at import time (e.g. table sizes) —
-   property reads track the mutation, import-time captures do not; the
-   loader must rebuild any it finds.
+   feasible for ALL tables. **The `*.Count` capture audit is DONE
+   (2026-07-10, pre-5b): zero module-scope captures.** Every `.Count` usage
+   in the fork is a class-field default (evaluated per construction) or an
+   in-function read — both track a mutated enum. Combined with fixed
+   behavior slots (member values like `PerkType.Amulet` never move), 5b
+   needs NO wholesale enum renumbering: the only enum mutation is setting
+   `SkillType.Count`/`PerkType.Count`/`ItemType.Count` to the dataset
+   lengths (keep reverse mappings consistent). One nuance: `new Gamestate()`
+   field initializers (e.g. `undo_item = [ItemType.Count, 0]`) bake the
+   Count value current at construction — moot because `loadGameData` ends
+   with a re-init. Also verified: `initializeSkills` loops
+   `skill < SkillType.Count` and creates Skill objects for placeholder
+   indices too, identical to vanilla's REMOVED handling — dataset
+   placeholders need no special-casing there.
 3. **Dead-slot handling — RULED: no user preference; implementer's call.**
    Decided at 5a: explicit placeholders (see §5.1 and Phase 5a notes).
 4. **Dataset carriage — RULED: single-carrier + refs.**
