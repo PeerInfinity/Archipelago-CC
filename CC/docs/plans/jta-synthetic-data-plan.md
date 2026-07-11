@@ -943,6 +943,32 @@ both halves (the harness already re-extracts the committed HEAD per run).
   verify-jta-dataset-load; procgen presets 27/27; vanilla inertness —
   vanilla cache keys unchanged, vanilla guard inputs byte-identical,
   vanilla z15 baseline solve PASS.
+  **5e addendum (same day, user rulings on the measurement findings):**
+  1. **Forced perk-category set = native ∪ holders, single definition**
+     (ruled: perk task data stays synchronized everywhere). The union —
+     native perk tasks (suppression-patch ids) ∪ perk HOLDERS (tasks whose
+     own AP location holds a perk item) — is defined once in
+     `perkOrigin.js` (`activePerkItemNames` / `perkHolderTaskIds` /
+     `forcedPerkCategoryIds`) and every consumer derives through it: the
+     Pass-B solver (holder ids extracted host-side, shipped to the
+     worker), the bridge (`_syncPerkCategoryTaskIds` holder leg from the
+     staticData placements, lazily resolved), the measurement model
+     (`make-ap-config.mjs`), and the headless guard. This retires the
+     measurement pass's unengaged-milestone mode at its cause: a perk
+     placed on a non-perk task was judged by `other`'s cost-invariant
+     level metric. Post-change re-run of the §4.2 batch: see
+     `results/dataset-passb/SUMMARY.md`.
+  2. **Convergence-bar bookkeeping:** entries that COMPLETE before their
+     solve fires (inside the boundary fallback's ≥2-run guard) now count
+     as `completedUnsolved`, not `neverStarted`; the bar fails only on
+     genuinely-never-ran entries. The underlying gap (the task keeps its
+     provisional cost in the replay economy) is FILED in
+     `CC/docs/cleanup-backlog.md` with the candidate solve-at-completion
+     fix — not changed, because it invalidates patch caches and committed
+     measurement records and deserves its own step.
+  3. The headless guard now derives its walk seed via `computeSeedName`
+     (Pass-A presets carry an empty `seed_name`; the guard used to walk
+     them in a different shuffle order than the app solves them).
 - **5f — Emergent verification** (Phase-4 replay at Phase-5 scope):
   `sweep-ap-seeds`-style runs over N generated datasets × seeds; hard gate =
   full location coverage every run; advisory band = the settled `[0.4×, 3×]`
