@@ -1133,7 +1133,18 @@ both halves (the harness already re-extracts the committed HEAD per run).
        margin 2.56× on both twins) and the profile-derived floors stay
        untouched. Formula datasets now read `economy.xp_zone_mult` from
        the document instead of the hardcoded 1.25 (identical for mirrors).
-    5. **Generator shape:** raw is the default via
+    5. **Informational formula-equivalent multipliers (user follow-up
+       2026-07-11):** the cost fold erases strategy-relevant structure
+       from the DATA (post-v1 branching also makes it non-reconstructable
+       from raw values), so `premultiplyDataset` stamps
+       `formula_cost_multiplier` + `formula_xp_mult` on every raw task —
+       what the multipliers would be if the document weren't raw
+       (engine-blind; schema + validator type-check them; the
+       generated-dataset guard asserts they equal the formula twin's real
+       multipliers). Note the fork UI currently renders only EFFECTIVE
+       numbers (energy/ticks/XP) — surfacing these fields in tooltips
+       would be a small fork follow-up, not yet requested.
+    6. **Generator shape:** raw is the default via
        `premultiplyDataset(formula doc)` — ONE raw-ification code path
        shared by the generator, the exporter (which writes the committed
        `datasets/vanilla-raw.json` twin), and any future tooling; the twin
@@ -1144,7 +1155,7 @@ both halves (the harness already re-extracts the committed HEAD per run).
        tasks, artifact tasks) carry no raw values and fall back to the
        formula backbone — which is why raw documents still carry the
        formula fields (the plan's "unused-but-carried" is load-bearing).
-    6. **Verification battery (all green):** sim lockstep ×3 modes at
+    7. **Verification battery (all green):** sim lockstep ×3 modes at
        identical tick counts + both canaries; UI parity zero DOM diff on
        formula AND raw fixtures; verify-jta-dataset-load (raw rejects,
        raw ≡ native bit-exact, formula fallback, mode reset);
@@ -1163,7 +1174,7 @@ both halves (the harness already re-extracts the committed HEAD per run).
        synchronous solve that measured 299.7 s under a sibling
        session's 3-core load — a coin-flip timeout on a busy machine,
        not a defect); emergent sweep on raw worlds (next item).
-    7. **Emergent sweep on raw worlds — HARD PROGRESSION GATE PASS on all
+    8. **Emergent sweep on raw worlds — HARD PROGRESSION GATE PASS on all
        six** (`results/comparison-dataset-emergent-raw.md`; artifacts
        /tmp per convention; the vanilla anchor byte-reproduces Phase 4:
        130/130 in 249 runs). Victory runs 89–143 (5f formula batch:

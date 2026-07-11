@@ -290,6 +290,8 @@
         "xp_mult": { "type": "number", "minimum": 0, "description": ">= 0: vanilla has deliberate zero-XP tasks. Applies in both value modes (multiplies raw_xp in raw mode)." },
         "raw_cost": { "type": "number", "exclusiveMinimum": 0, "description": "Raw mode only (validator enforces presence there): absolute base cost — the zone/Boss exponential backbone pre-dissolved into the value; cost_multiplier still applies." },
         "raw_xp": { "type": "number", "minimum": 0, "description": "Raw mode only: absolute per-progress XP base, replacing xp_base × zone backbone; xp_mult still applies." },
+        "formula_cost_multiplier": { "type": "number", "exclusiveMinimum": 0, "description": "Raw mode, INFORMATIONAL (engine-blind): the formula-mode cost multiplier this task would carry if the document weren't raw — the raw fold sets cost_multiplier to 1, which erases this strategy-relevant structure from the data (and post-v1 branching makes it non-reconstructable). Stamped by premultiplyDataset()." },
+        "formula_xp_mult": { "type": "number", "minimum": 0, "description": "Raw mode, INFORMATIONAL (engine-blind): the formula-mode xp_mult twin of formula_cost_multiplier. Equals xp_mult in v1 documents (the fold doesn't touch xp_mult) — carried explicitly so the pair is self-contained if the fold policy ever changes." },
         "max_reps": { "type": "integer", "minimum": 1 },
         "hidden_by_default": { "type": "boolean" },
         "unlocks_task": { "type": ["integer", "null"] },

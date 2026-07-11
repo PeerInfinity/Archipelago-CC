@@ -317,7 +317,18 @@ export function validateJtaDataset(dataset) {
         if (!(typeof t?.raw_xp === "number" && t.raw_xp >= 0)) {
           err(`${where}.raw_xp must be a non-negative number under value_mode "raw"`);
         }
-      } else if (t?.raw_cost !== undefined || t?.raw_xp !== undefined) {
+        // Informational formula-equivalent multipliers (engine-blind):
+        // optional, but must be well-typed when present.
+        if (t?.formula_cost_multiplier !== undefined
+            && !(typeof t.formula_cost_multiplier === "number" && t.formula_cost_multiplier > 0)) {
+          err(`${where}.formula_cost_multiplier must be a positive number when present`);
+        }
+        if (t?.formula_xp_mult !== undefined
+            && !(typeof t.formula_xp_mult === "number" && t.formula_xp_mult >= 0)) {
+          err(`${where}.formula_xp_mult must be a non-negative number when present`);
+        }
+      } else if (t?.raw_cost !== undefined || t?.raw_xp !== undefined
+          || t?.formula_cost_multiplier !== undefined || t?.formula_xp_mult !== undefined) {
         strayRawFields += 1;
       }
     });
@@ -409,7 +420,7 @@ export function validateJtaDataset(dataset) {
     }
   }
   if (strayRawFields > 0) {
-    warn(`${strayRawFields} raw_cost/raw_xp/raw_drain field(s) present but value_mode is not "raw" — they will be ignored`);
+    warn(`${strayRawFields} raw-mode field(s) (raw_cost/raw_xp/raw_drain/formula_*) present but value_mode is not "raw" — they will be ignored`);
   }
 
   // --- item groups ---

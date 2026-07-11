@@ -94,6 +94,14 @@ for (const { seed, params } of CASES) {
         && z.tasks.every((t) => typeof t.raw_cost === 'number' && t.raw_cost > 0
             && typeof t.raw_xp === 'number' && t.cost_multiplier === 1)),
     'raw twin carries raw values everywhere, cost_multiplier folded to 1');
+    // The informational formula-equivalent multipliers must reproduce the
+    // formula twin's real multipliers exactly (strategy info the fold
+    // would otherwise erase from the data).
+    ok(rawTwin.zones.every((z, zi) => z.tasks.every((t, ti) => {
+        const f = formulaTwin.zones[zi].tasks[ti];
+        return t.formula_cost_multiplier === f.cost_multiplier
+            && t.formula_xp_mult === f.xp_mult;
+    })), 'formula_cost_multiplier/formula_xp_mult ≡ the formula twin\'s multipliers');
 }
 
 // ---- 2. Validation + C4 ----------------------------------------------------

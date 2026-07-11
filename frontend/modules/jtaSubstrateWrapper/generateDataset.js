@@ -110,6 +110,12 @@ function isPlaceholder(e) {
 //  - raw_drain = zone_speedup_base^zone is the same double the formula
 //    computes, read back at both engine sites.
 //
+// Each task also gains formula_cost_multiplier / formula_xp_mult — the
+// formula-mode multipliers as INFORMATION (what the values would be if the
+// document weren't raw). The engine never reads them; they exist because
+// the multipliers are strategy-relevant to players/tools and the cost fold
+// would otherwise erase that structure from the data.
+//
 // Returns a NEW document; the caller must restamp the identity
 // (stampDatasetIdentity) — content changed, so the old id would poison the
 // (seed, dataset_id) cache and the dataset-keyed save slot.
@@ -126,6 +132,14 @@ export function premultiplyDataset(dataset) {
     zone.raw_drain = Math.pow(eco.zone_speedup_base, zi);
     for (const t of zone.tasks) {
       const exponent = t.type === "Boss" ? eco.boss_cost_exponent : eco.zone_cost_exponent;
+      // The formula-mode multipliers are strategy-relevant information
+      // (relative task cost/XP value), and the cost fold below erases one
+      // of them from the data — carry both explicitly as informational
+      // fields (engine-blind; validators type-check them only). Post-v1
+      // branching makes them non-reconstructable from raw values, so they
+      // must be stamped here or lost.
+      t.formula_cost_multiplier = t.cost_multiplier;
+      t.formula_xp_mult = t.xp_mult;
       t.raw_cost = eco.base_task_cost * t.cost_multiplier * Math.pow(exponent, zi);
       t.cost_multiplier = 1;
       t.raw_xp = eco.xp_base * Math.pow(eco.xp_zone_mult, zi);

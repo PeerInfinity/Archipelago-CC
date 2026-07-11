@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "dataset_id": "vanilla-fork-1.8-raw-ecaa2185",
+  "dataset_id": "vanilla-fork-1.8-raw-1bd7e891",
   "provenance": {
     "generator": "export-vanilla-dataset.mjs",
     "fork_save_version": "Fork 1.8",
     "seed": null,
     "params_hash": null,
-    "content_hash": "ecaa2185"
+    "content_hash": "1bd7e891"
   },
   "theme": {
     "title": "Journey to Ascension",
@@ -105,6 +105,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 4,
+          "formula_xp_mult": 1,
           "raw_cost": 40,
           "raw_xp": 8
         },
@@ -125,6 +127,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 3,
+          "formula_xp_mult": 1,
           "raw_cost": 30,
           "raw_xp": 8
         },
@@ -145,6 +149,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1,
+          "formula_xp_mult": 3,
           "raw_cost": 10,
           "raw_xp": 8
         },
@@ -165,6 +171,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 8,
+          "formula_xp_mult": 0.5,
           "raw_cost": 80,
           "raw_xp": 8
         },
@@ -185,6 +193,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1,
+          "formula_xp_mult": 2,
           "raw_cost": 10,
           "raw_xp": 8
         },
@@ -206,6 +216,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 2,
+          "formula_xp_mult": 1.5,
           "raw_cost": 20,
           "raw_xp": 8
         },
@@ -226,6 +238,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1,
+          "formula_xp_mult": 3,
           "raw_cost": 10,
           "raw_xp": 8
         },
@@ -246,6 +260,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 500,
+          "formula_xp_mult": 2,
           "raw_cost": 5000,
           "raw_xp": 8
         }
@@ -274,6 +290,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 3,
+          "formula_xp_mult": 1,
           "raw_cost": 66,
           "raw_xp": 10
         },
@@ -294,6 +312,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1.3,
+          "formula_xp_mult": 1,
           "raw_cost": 28.6,
           "raw_xp": 10
         },
@@ -314,6 +334,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1.6,
+          "formula_xp_mult": 1,
           "raw_cost": 35.2,
           "raw_xp": 10
         },
@@ -334,6 +356,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 0.4,
+          "formula_xp_mult": 1,
           "raw_cost": 8.8,
           "raw_xp": 10
         },
@@ -354,6 +378,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 16,
+          "formula_xp_mult": 0.2,
           "raw_cost": 352,
           "raw_xp": 10
         },
@@ -374,6 +400,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1,
+          "formula_xp_mult": 3,
           "raw_cost": 22,
           "raw_xp": 10
         },
@@ -394,6 +422,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1.5,
+          "formula_xp_mult": 5,
           "raw_cost": 33,
           "raw_xp": 10
         },
@@ -415,6 +445,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1,
+          "formula_xp_mult": 3,
           "raw_cost": 22,
           "raw_xp": 10
         },
@@ -435,6 +467,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 16,
+          "formula_xp_mult": 3,
           "raw_cost": 640,
           "raw_xp": 10
         }
@@ -463,6 +497,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 2,
+          "formula_xp_mult": 0.5,
           "raw_cost": 96.80000000000001,
           "raw_xp": 12.5
         },
@@ -483,6 +519,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 3,
+          "formula_xp_mult": 3,
           "raw_cost": 145.20000000000002,
           "raw_xp": 12.5
         },
@@ -503,6 +541,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 3,
+          "formula_xp_mult": 1,
           "raw_cost": 145.20000000000002,
           "raw_xp": 12.5
         },
@@ -523,6 +563,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 0.4,
+          "formula_xp_mult": 1,
           "raw_cost": 19.360000000000003,
           "raw_xp": 12.5
         },
@@ -544,6 +586,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1.2,
+          "formula_xp_mult": 1.5,
           "raw_cost": 58.08000000000001,
           "raw_xp": 12.5
         },
@@ -564,6 +608,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1.5,
+          "formula_xp_mult": 3,
           "raw_cost": 72.60000000000001,
           "raw_xp": 12.5
         },
@@ -584,6 +630,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 400,
+          "formula_xp_mult": 1,
           "raw_cost": 64000,
           "raw_xp": 12.5
         },
@@ -605,6 +653,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1300,
+          "formula_xp_mult": 1,
           "raw_cost": 62920.00000000001,
           "raw_xp": 12.5
         }
@@ -634,6 +684,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 2,
+          "formula_xp_mult": 1,
           "raw_cost": 212.96000000000006,
           "raw_xp": 15.625
         },
@@ -655,6 +707,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 0.5,
+          "formula_xp_mult": 1,
           "raw_cost": 53.240000000000016,
           "raw_xp": 15.625
         },
@@ -676,6 +730,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1,
+          "formula_xp_mult": 1,
           "raw_cost": 106.48000000000003,
           "raw_xp": 15.625
         },
@@ -697,6 +753,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 2.5,
+          "formula_xp_mult": 0.1,
           "raw_cost": 266.2000000000001,
           "raw_xp": 15.625
         },
@@ -718,6 +776,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 0.25,
+          "formula_xp_mult": 2,
           "raw_cost": 26.620000000000008,
           "raw_xp": 15.625
         },
@@ -738,6 +798,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 2,
+          "formula_xp_mult": 5,
           "raw_cost": 212.96000000000006,
           "raw_xp": 15.625
         },
@@ -758,6 +820,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 10,
+          "formula_xp_mult": 3,
           "raw_cost": 1064.8000000000004,
           "raw_xp": 15.625
         },
@@ -778,6 +842,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1000,
+          "formula_xp_mult": 1,
           "raw_cost": 640000,
           "raw_xp": 15.625
         },
@@ -798,6 +864,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 15,
+          "formula_xp_mult": 1,
           "raw_cost": 1597.2000000000005,
           "raw_xp": 15.625
         }
@@ -826,6 +894,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 2,
+          "formula_xp_mult": 1,
           "raw_cost": 468.51200000000017,
           "raw_xp": 19.53125
         },
@@ -846,6 +916,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 2,
+          "formula_xp_mult": 1,
           "raw_cost": 468.51200000000017,
           "raw_xp": 19.53125
         },
@@ -867,6 +939,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1.5,
+          "formula_xp_mult": 1,
           "raw_cost": 351.3840000000001,
           "raw_xp": 19.53125
         },
@@ -887,6 +961,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 0.3,
+          "formula_xp_mult": 1,
           "raw_cost": 70.27680000000004,
           "raw_xp": 19.53125
         },
@@ -908,6 +984,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 2,
+          "formula_xp_mult": 1,
           "raw_cost": 468.51200000000017,
           "raw_xp": 19.53125
         },
@@ -928,6 +1006,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 2,
+          "formula_xp_mult": 4,
           "raw_cost": 468.51200000000017,
           "raw_xp": 19.53125
         },
@@ -948,6 +1028,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 0.5,
+          "formula_xp_mult": 3,
           "raw_cost": 117.12800000000004,
           "raw_xp": 19.53125
         },
@@ -968,6 +1050,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1000,
+          "formula_xp_mult": 1,
           "raw_cost": 2560000,
           "raw_xp": 19.53125
         },
@@ -988,6 +1072,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 10000,
+          "formula_xp_mult": 0.3,
           "raw_cost": 2342560.000000001,
           "raw_xp": 19.53125
         }
@@ -1016,6 +1102,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 3,
+          "formula_xp_mult": 1,
           "raw_cost": 1546.0896000000005,
           "raw_xp": 24.4140625
         },
@@ -1036,6 +1124,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 4,
+          "formula_xp_mult": 0.5,
           "raw_cost": 2061.452800000001,
           "raw_xp": 24.4140625
         },
@@ -1057,6 +1147,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1.3,
+          "formula_xp_mult": 1,
           "raw_cost": 669.9721600000003,
           "raw_xp": 24.4140625
         },
@@ -1077,6 +1169,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 0.5,
+          "formula_xp_mult": 1,
           "raw_cost": 257.6816000000001,
           "raw_xp": 24.4140625
         },
@@ -1098,6 +1192,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1,
+          "formula_xp_mult": 3,
           "raw_cost": 515.3632000000002,
           "raw_xp": 24.4140625
         },
@@ -1118,6 +1214,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 5,
+          "formula_xp_mult": 0.5,
           "raw_cost": 2576.8160000000007,
           "raw_xp": 24.4140625
         },
@@ -1138,6 +1236,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1,
+          "formula_xp_mult": 3,
           "raw_cost": 515.3632000000002,
           "raw_xp": 24.4140625
         },
@@ -1158,6 +1258,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 2,
+          "formula_xp_mult": 5,
           "raw_cost": 1030.7264000000005,
           "raw_xp": 24.4140625
         },
@@ -1178,6 +1280,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 500,
+          "formula_xp_mult": 1,
           "raw_cost": 5120000,
           "raw_xp": 24.4140625
         },
@@ -1199,6 +1303,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 35,
+          "formula_xp_mult": 3,
           "raw_cost": 18037.712000000007,
           "raw_xp": 24.4140625
         }
@@ -1227,6 +1333,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1.5,
+          "formula_xp_mult": 1,
           "raw_cost": 1700.6985600000007,
           "raw_xp": 30.517578125
         },
@@ -1247,6 +1355,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 4,
+          "formula_xp_mult": 1,
           "raw_cost": 4535.196160000002,
           "raw_xp": 30.517578125
         },
@@ -1268,6 +1378,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 2.5,
+          "formula_xp_mult": 0.75,
           "raw_cost": 2834.4976000000015,
           "raw_xp": 30.517578125
         },
@@ -1288,6 +1400,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1,
+          "formula_xp_mult": 1,
           "raw_cost": 1133.7990400000006,
           "raw_xp": 30.517578125
         },
@@ -1309,6 +1423,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 12,
+          "formula_xp_mult": 0.3,
           "raw_cost": 13605.588480000006,
           "raw_xp": 30.517578125
         },
@@ -1329,6 +1445,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 0.75,
+          "formula_xp_mult": 2,
           "raw_cost": 850.3492800000004,
           "raw_xp": 30.517578125
         },
@@ -1349,6 +1467,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 0.5,
+          "formula_xp_mult": 5,
           "raw_cost": 566.8995200000003,
           "raw_xp": 30.517578125
         },
@@ -1369,6 +1489,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 2,
+          "formula_xp_mult": 5,
           "raw_cost": 2267.598080000001,
           "raw_xp": 30.517578125
         }
@@ -1397,6 +1519,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 4,
+          "formula_xp_mult": 1,
           "raw_cost": 9977.431552000005,
           "raw_xp": 38.14697265625
         },
@@ -1418,6 +1542,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1.5,
+          "formula_xp_mult": 1,
           "raw_cost": 3741.5368320000025,
           "raw_xp": 38.14697265625
         },
@@ -1439,6 +1565,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1.2,
+          "formula_xp_mult": 1,
           "raw_cost": 2993.2294656000017,
           "raw_xp": 38.14697265625
         },
@@ -1460,6 +1588,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 2,
+          "formula_xp_mult": 1,
           "raw_cost": 4988.715776000003,
           "raw_xp": 38.14697265625
         },
@@ -1480,6 +1610,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1,
+          "formula_xp_mult": 0.2,
           "raw_cost": 2494.3578880000014,
           "raw_xp": 38.14697265625
         },
@@ -1501,6 +1633,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 2,
+          "formula_xp_mult": 2,
           "raw_cost": 4988.715776000003,
           "raw_xp": 38.14697265625
         },
@@ -1522,6 +1656,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1,
+          "formula_xp_mult": 3,
           "raw_cost": 2494.3578880000014,
           "raw_xp": 38.14697265625
         },
@@ -1542,6 +1678,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 150,
+          "formula_xp_mult": 1,
           "raw_cost": 24576000,
           "raw_xp": 38.14697265625
         },
@@ -1563,6 +1701,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 100000,
+          "formula_xp_mult": 0.02,
           "raw_cost": 249435788.80000016,
           "raw_xp": 38.14697265625
         },
@@ -1587,6 +1727,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 500000000,
+          "formula_xp_mult": 1,
           "raw_cost": 1247178944000.0007,
           "raw_xp": 38.14697265625
         }
@@ -1616,6 +1758,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 6,
+          "formula_xp_mult": 1,
           "raw_cost": 32925.52412160002,
           "raw_xp": 47.6837158203125
         },
@@ -1636,6 +1780,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 2,
+          "formula_xp_mult": 1,
           "raw_cost": 10975.174707200007,
           "raw_xp": 47.6837158203125
         },
@@ -1656,6 +1802,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 0.3,
+          "formula_xp_mult": 1,
           "raw_cost": 1646.2762060800012,
           "raw_xp": 47.6837158203125
         },
@@ -1676,6 +1824,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 0.15,
+          "formula_xp_mult": 1,
           "raw_cost": 823.1381030400006,
           "raw_xp": 47.6837158203125
         },
@@ -1697,6 +1847,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1,
+          "formula_xp_mult": 4,
           "raw_cost": 5487.587353600004,
           "raw_xp": 47.6837158203125
         },
@@ -1717,6 +1869,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 0.3,
+          "formula_xp_mult": 3,
           "raw_cost": 1646.2762060800012,
           "raw_xp": 47.6837158203125
         },
@@ -1738,6 +1892,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 0.5,
+          "formula_xp_mult": 3,
           "raw_cost": 2743.793676800002,
           "raw_xp": 47.6837158203125
         },
@@ -1759,6 +1915,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 2,
+          "formula_xp_mult": 3,
           "raw_cost": 10975.174707200007,
           "raw_xp": 47.6837158203125
         },
@@ -1779,6 +1937,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 170,
+          "formula_xp_mult": 1,
           "raw_cost": 111411200,
           "raw_xp": 47.6837158203125
         },
@@ -1799,6 +1959,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 8,
+          "formula_xp_mult": 1,
           "raw_cost": 43900.69882880003,
           "raw_xp": 47.6837158203125
         }
@@ -1827,6 +1989,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 5,
+          "formula_xp_mult": 1,
           "raw_cost": 60363.46088960005,
           "raw_xp": 59.604644775390625
         },
@@ -1847,6 +2011,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 6,
+          "formula_xp_mult": 1,
           "raw_cost": 72436.15306752006,
           "raw_xp": 59.604644775390625
         },
@@ -1868,6 +2034,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1,
+          "formula_xp_mult": 1,
           "raw_cost": 12072.69217792001,
           "raw_xp": 59.604644775390625
         },
@@ -1888,6 +2056,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 0.15,
+          "formula_xp_mult": 1,
           "raw_cost": 1810.9038266880016,
           "raw_xp": 59.604644775390625
         },
@@ -1909,6 +2079,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 60,
+          "formula_xp_mult": 0.1,
           "raw_cost": 724361.5306752006,
           "raw_xp": 59.604644775390625
         },
@@ -1929,6 +2101,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 2,
+          "formula_xp_mult": 4,
           "raw_cost": 24145.38435584002,
           "raw_xp": 59.604644775390625
         },
@@ -1949,6 +2123,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1,
+          "formula_xp_mult": 10,
           "raw_cost": 12072.69217792001,
           "raw_xp": 59.604644775390625
         },
@@ -1969,6 +2145,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 0.5,
+          "formula_xp_mult": 4,
           "raw_cost": 6036.346088960005,
           "raw_xp": 59.604644775390625
         }
@@ -1997,6 +2175,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 3,
+          "formula_xp_mult": 1,
           "raw_cost": 79679.76837427207,
           "raw_xp": 74.50580596923828
         },
@@ -2017,6 +2197,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 2,
+          "formula_xp_mult": 1,
           "raw_cost": 53119.84558284805,
           "raw_xp": 74.50580596923828
         },
@@ -2037,6 +2219,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 2,
+          "formula_xp_mult": 1,
           "raw_cost": 53119.84558284805,
           "raw_xp": 74.50580596923828
         },
@@ -2058,6 +2242,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 0.4,
+          "formula_xp_mult": 4,
           "raw_cost": 10623.96911656961,
           "raw_xp": 74.50580596923828
         },
@@ -2079,6 +2265,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 8,
+          "formula_xp_mult": 0.5,
           "raw_cost": 212479.3823313922,
           "raw_xp": 74.50580596923828
         },
@@ -2099,6 +2287,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 0.5,
+          "formula_xp_mult": 8,
           "raw_cost": 13279.961395712013,
           "raw_xp": 74.50580596923828
         },
@@ -2119,6 +2309,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 3,
+          "formula_xp_mult": 5,
           "raw_cost": 79679.76837427207,
           "raw_xp": 74.50580596923828
         },
@@ -2139,6 +2331,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 40,
+          "formula_xp_mult": 0.5,
           "raw_cost": 419430400,
           "raw_xp": 74.50580596923828
         },
@@ -2160,6 +2354,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 15000,
+          "formula_xp_mult": 0.6,
           "raw_cost": 398398841.87136036,
           "raw_xp": 74.50580596923828
         }
@@ -2188,6 +2384,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 8,
+          "formula_xp_mult": 1,
           "raw_cost": 467454.6411290628,
           "raw_xp": 93.13225746154785
         },
@@ -2209,6 +2407,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 4,
+          "formula_xp_mult": 1,
           "raw_cost": 233727.3205645314,
           "raw_xp": 93.13225746154785
         },
@@ -2229,6 +2429,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1.4,
+          "formula_xp_mult": 1,
           "raw_cost": 81804.562197586,
           "raw_xp": 93.13225746154785
         },
@@ -2250,6 +2452,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1,
+          "formula_xp_mult": 1,
           "raw_cost": 58431.83014113285,
           "raw_xp": 93.13225746154785
         },
@@ -2272,6 +2476,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 6,
+          "formula_xp_mult": 1,
           "raw_cost": 350590.9808467971,
           "raw_xp": 93.13225746154785
         },
@@ -2292,6 +2498,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 2,
+          "formula_xp_mult": 5,
           "raw_cost": 116863.6602822657,
           "raw_xp": 93.13225746154785
         },
@@ -2313,6 +2521,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 2,
+          "formula_xp_mult": 2,
           "raw_cost": 116863.6602822657,
           "raw_xp": 93.13225746154785
         },
@@ -2333,6 +2543,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 210,
+          "formula_xp_mult": 0.5,
           "raw_cost": 8808038400,
           "raw_xp": 93.13225746154785
         },
@@ -2354,6 +2566,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 8,
+          "formula_xp_mult": 1,
           "raw_cost": 467454.6411290628,
           "raw_xp": 93.13225746154785
         }
@@ -2382,6 +2596,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 7,
+          "formula_xp_mult": 1,
           "raw_cost": 899850.184173446,
           "raw_xp": 116.41532182693481
         },
@@ -2402,6 +2618,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 6,
+          "formula_xp_mult": 1,
           "raw_cost": 771300.1578629537,
           "raw_xp": 116.41532182693481
         },
@@ -2422,6 +2640,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1,
+          "formula_xp_mult": 1,
           "raw_cost": 128550.02631049228,
           "raw_xp": 116.41532182693481
         },
@@ -2442,6 +2662,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 0.2,
+          "formula_xp_mult": 1,
           "raw_cost": 25710.005262098457,
           "raw_xp": 116.41532182693481
         },
@@ -2462,6 +2684,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1,
+          "formula_xp_mult": 1,
           "raw_cost": 128550.02631049228,
           "raw_xp": 116.41532182693481
         },
@@ -2482,6 +2706,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1,
+          "formula_xp_mult": 15,
           "raw_cost": 128550.02631049228,
           "raw_xp": 116.41532182693481
         },
@@ -2502,6 +2728,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 2,
+          "formula_xp_mult": 10,
           "raw_cost": 257100.05262098456,
           "raw_xp": 116.41532182693481
         },
@@ -2522,6 +2750,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 460,
+          "formula_xp_mult": 0.4,
           "raw_cost": 77175193600,
           "raw_xp": 116.41532182693481
         },
@@ -2543,6 +2773,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 600000,
+          "formula_xp_mult": 0.1,
           "raw_cost": 77130015786.29536,
           "raw_xp": 116.41532182693481
         }
@@ -2571,6 +2803,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 8,
+          "formula_xp_mult": 1,
           "raw_cost": 2262480.4630646645,
           "raw_xp": 145.51915228366852
         },
@@ -2591,6 +2825,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 100,
+          "formula_xp_mult": 1,
           "raw_cost": 28281005.788308308,
           "raw_xp": 145.51915228366852
         },
@@ -2611,6 +2847,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 0.75,
+          "formula_xp_mult": 1,
           "raw_cost": 212107.54341231228,
           "raw_xp": 145.51915228366852
         },
@@ -2631,6 +2869,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 0.2,
+          "formula_xp_mult": 1,
           "raw_cost": 56562.01157661661,
           "raw_xp": 145.51915228366852
         },
@@ -2651,6 +2891,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 25,
+          "formula_xp_mult": 1,
           "raw_cost": 7070251.447077077,
           "raw_xp": 145.51915228366852
         },
@@ -2672,6 +2914,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 2.5,
+          "formula_xp_mult": 2,
           "raw_cost": 707025.1447077077,
           "raw_xp": 145.51915228366852
         },
@@ -2692,6 +2936,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 30,
+          "formula_xp_mult": 20,
           "raw_cost": 8484301.736492492,
           "raw_xp": 145.51915228366852
         },
@@ -2712,6 +2958,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 840,
+          "formula_xp_mult": 0.3,
           "raw_cost": 563714457600,
           "raw_xp": 145.51915228366852
         },
@@ -2733,6 +2981,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 30,
+          "formula_xp_mult": 1,
           "raw_cost": 8484301.736492492,
           "raw_xp": 145.51915228366852
         }
@@ -2761,6 +3011,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 50,
+          "formula_xp_mult": 1,
           "raw_cost": 31109106.36713914,
           "raw_xp": 181.89894035458565
         },
@@ -2781,6 +3033,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 40,
+          "formula_xp_mult": 0.25,
           "raw_cost": 24887285.09371131,
           "raw_xp": 181.89894035458565
         },
@@ -2801,6 +3055,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1000,
+          "formula_xp_mult": 1.25,
           "raw_cost": 622182127.3427827,
           "raw_xp": 181.89894035458565
         },
@@ -2821,6 +3077,8 @@
           "use_item": null,
           "prestige_layer": 0,
           "theme": null,
+          "formula_cost_multiplier": 0.025,
+          "formula_xp_mult": 1,
           "raw_cost": 15554.55318356957,
           "raw_xp": 181.89894035458565
         },
@@ -2841,6 +3099,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 75,
+          "formula_xp_mult": 1,
           "raw_cost": 46663659.55070871,
           "raw_xp": 181.89894035458565
         },
@@ -2862,6 +3122,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1200,
+          "formula_xp_mult": 0.5,
           "raw_cost": 746618552.8113394,
           "raw_xp": 181.89894035458565
         },
@@ -2882,6 +3144,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 100,
+          "formula_xp_mult": 10,
           "raw_cost": 62218212.73427828,
           "raw_xp": 181.89894035458565
         },
@@ -2903,6 +3167,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 4,
+          "formula_xp_mult": 8,
           "raw_cost": 2488728.509371131,
           "raw_xp": 181.89894035458565
         },
@@ -2924,6 +3190,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 500000,
+          "formula_xp_mult": 1,
           "raw_cost": 311091063671.39136,
           "raw_xp": 181.89894035458565
         }
@@ -2952,6 +3220,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 350000,
+          "formula_xp_mult": 0.25,
           "raw_cost": 479080238053.9428,
           "raw_xp": 227.37367544323206
         },
@@ -2973,6 +3243,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 2000,
+          "formula_xp_mult": 0.2,
           "raw_cost": 2737601360.3082447,
           "raw_xp": 227.37367544323206
         },
@@ -2993,6 +3265,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1500,
+          "formula_xp_mult": 1,
           "raw_cost": 2053201020.2311833,
           "raw_xp": 227.37367544323206
         },
@@ -3013,6 +3287,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 20000,
+          "formula_xp_mult": 1,
           "raw_cost": 27376013603.082443,
           "raw_xp": 227.37367544323206
         },
@@ -3033,6 +3309,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 60,
+          "formula_xp_mult": 0.25,
           "raw_cost": 82128040.80924733,
           "raw_xp": 227.37367544323206
         },
@@ -3053,6 +3331,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 100,
+          "formula_xp_mult": 10,
           "raw_cost": 136880068.0154122,
           "raw_xp": 227.37367544323206
         },
@@ -3074,6 +3354,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 200,
+          "formula_xp_mult": 2,
           "raw_cost": 273760136.0308244,
           "raw_xp": 227.37367544323206
         },
@@ -3094,6 +3376,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 13000,
+          "formula_xp_mult": 0.15,
           "raw_cost": 139586437120000,
           "raw_xp": 227.37367544323206
         },
@@ -3114,6 +3398,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 200000000,
+          "formula_xp_mult": 0.05,
           "raw_cost": 273760136030824.44,
           "raw_xp": 227.37367544323206
         }
@@ -3142,6 +3428,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 100,
+          "formula_xp_mult": 1,
           "raw_cost": 301136149.6339069,
           "raw_xp": 284.2170943040401
         },
@@ -3163,6 +3451,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1000000,
+          "formula_xp_mult": 0.05,
           "raw_cost": 3011361496339.069,
           "raw_xp": 284.2170943040401
         },
@@ -3183,6 +3473,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 100000,
+          "formula_xp_mult": 0.2,
           "raw_cost": 301136149633.9069,
           "raw_xp": 284.2170943040401
         },
@@ -3203,6 +3495,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 5,
+          "formula_xp_mult": 1,
           "raw_cost": 15056807.481695345,
           "raw_xp": 284.2170943040401
         },
@@ -3224,6 +3518,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1000000,
+          "formula_xp_mult": 0.03,
           "raw_cost": 3011361496339.069,
           "raw_xp": 284.2170943040401
         },
@@ -3245,6 +3541,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 10000,
+          "formula_xp_mult": 1,
           "raw_cost": 30113614963.39069,
           "raw_xp": 284.2170943040401
         },
@@ -3266,6 +3564,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 250000,
+          "formula_xp_mult": 0.02,
           "raw_cost": 752840374084.7672,
           "raw_xp": 284.2170943040401
         },
@@ -3286,6 +3586,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 750000,
+          "formula_xp_mult": 0.125,
           "raw_cost": 32212254720000000,
           "raw_xp": 284.2170943040401
         },
@@ -3307,6 +3609,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 65000000000,
+          "formula_xp_mult": 0.01,
           "raw_cost": 195738497262039500,
           "raw_xp": 284.2170943040401
         }
@@ -3335,6 +3639,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 100,
+          "formula_xp_mult": 1,
           "raw_cost": 662499529.1945953,
           "raw_xp": 355.2713678800501
         },
@@ -3355,6 +3661,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 30000,
+          "formula_xp_mult": 0.05,
           "raw_cost": 198749858758.3786,
           "raw_xp": 355.2713678800501
         },
@@ -3375,6 +3683,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 100,
+          "formula_xp_mult": 0.2,
           "raw_cost": 662499529.1945953,
           "raw_xp": 355.2713678800501
         },
@@ -3395,6 +3705,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 700,
+          "formula_xp_mult": 0.5,
           "raw_cost": 4637496704.362167,
           "raw_xp": 355.2713678800501
         },
@@ -3415,6 +3727,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1000,
+          "formula_xp_mult": 0.1,
           "raw_cost": 6624995291.945953,
           "raw_xp": 355.2713678800501
         },
@@ -3436,6 +3750,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 20000,
+          "formula_xp_mult": 0.01,
           "raw_cost": 132499905838.91905,
           "raw_xp": 355.2713678800501
         },
@@ -3456,6 +3772,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 10000,
+          "formula_xp_mult": 2,
           "raw_cost": 66249952919.459526,
           "raw_xp": 355.2713678800501
         },
@@ -3476,6 +3794,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 2000000,
+          "formula_xp_mult": 0.05,
           "raw_cost": 343597383680000000,
           "raw_xp": 355.2713678800501
         },
@@ -3496,6 +3816,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1000000,
+          "formula_xp_mult": 0.1,
           "raw_cost": 6624995291945.953,
           "raw_xp": 355.2713678800501
         }
@@ -3524,6 +3846,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 300,
+          "formula_xp_mult": 1,
           "raw_cost": 4372496892.684329,
           "raw_xp": 444.0892098500626
         },
@@ -3545,6 +3869,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 2750000,
+          "formula_xp_mult": 0.001,
           "raw_cost": 40081221516273.016,
           "raw_xp": 444.0892098500626
         },
@@ -3565,6 +3891,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1000,
+          "formula_xp_mult": 0.2,
           "raw_cost": 14574989642.281097,
           "raw_xp": 444.0892098500626
         },
@@ -3585,6 +3913,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 2000,
+          "formula_xp_mult": 1,
           "raw_cost": 29149979284.562195,
           "raw_xp": 444.0892098500626
         },
@@ -3605,6 +3935,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1000000,
+          "formula_xp_mult": 0.1,
           "raw_cost": 14574989642281.098,
           "raw_xp": 444.0892098500626
         },
@@ -3625,6 +3957,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 5000,
+          "formula_xp_mult": 5,
           "raw_cost": 72874948211.40549,
           "raw_xp": 444.0892098500626
         },
@@ -3645,6 +3979,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 5000000,
+          "formula_xp_mult": 1.5,
           "raw_cost": 72874948211405.48,
           "raw_xp": 444.0892098500626
         },
@@ -3665,6 +4001,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 21000000,
+          "formula_xp_mult": 0.01,
           "raw_cost": 14431090114560000000,
           "raw_xp": 444.0892098500626
         },
@@ -3686,6 +4024,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 300000000000000,
+          "formula_xp_mult": 0.000001,
           "raw_cost": 4.3724968926843293e+21,
           "raw_xp": 444.0892098500626
         }
@@ -3714,6 +4054,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 10000,
+          "formula_xp_mult": 1,
           "raw_cost": 320649772130.18414,
           "raw_xp": 555.1115123125783
         },
@@ -3734,6 +4076,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 5000000,
+          "formula_xp_mult": 0.01,
           "raw_cost": 160324886065092.06,
           "raw_xp": 555.1115123125783
         },
@@ -3755,6 +4099,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 20000000,
+          "formula_xp_mult": 0,
           "raw_cost": 641299544260368.2,
           "raw_xp": 555.1115123125783
         },
@@ -3775,6 +4121,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 20000,
+          "formula_xp_mult": 1,
           "raw_cost": 641299544260.3683,
           "raw_xp": 555.1115123125783
         },
@@ -3795,6 +4143,8 @@
           "use_item": null,
           "prestige_layer": 1,
           "theme": null,
+          "formula_cost_multiplier": 2,
+          "formula_xp_mult": 0.25,
           "raw_cost": 64129954.426036835,
           "raw_xp": 555.1115123125783
         },
@@ -3816,6 +4166,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 10000000,
+          "formula_xp_mult": 0.001,
           "raw_cost": 320649772130184.1,
           "raw_xp": 555.1115123125783
         },
@@ -3836,6 +4188,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 300000000,
+          "formula_xp_mult": 0.01,
           "raw_cost": 9619493163905524,
           "raw_xp": 555.1115123125783
         },
@@ -3857,6 +4211,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 300000,
+          "formula_xp_mult": 1,
           "raw_cost": 9619493163905.525,
           "raw_xp": 555.1115123125783
         },
@@ -3878,6 +4234,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1000000,
+          "formula_xp_mult": 0.01,
           "raw_cost": 32064977213018.414,
           "raw_xp": 555.1115123125783
         },
@@ -3898,6 +4256,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 200,
+          "formula_xp_mult": 0.02,
           "raw_cost": 6412995442.603683,
           "raw_xp": 555.1115123125783
         }
@@ -3926,6 +4286,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 5000,
+          "formula_xp_mult": 1,
           "raw_cost": 352714749343.2026,
           "raw_xp": 693.8893903907228
         },
@@ -3947,6 +4309,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 500000000,
+          "formula_xp_mult": 0.02,
           "raw_cost": 35271474934320260,
           "raw_xp": 693.8893903907228
         },
@@ -3967,6 +4331,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1200,
+          "formula_xp_mult": 1,
           "raw_cost": 84651539842.36862,
           "raw_xp": 693.8893903907228
         },
@@ -3987,6 +4353,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 5000000000,
+          "formula_xp_mult": 0.01,
           "raw_cost": 352714749343202560,
           "raw_xp": 693.8893903907228
         },
@@ -4007,6 +4375,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 3000000000,
+          "formula_xp_mult": 0.00002,
           "raw_cost": 211628849605921570,
           "raw_xp": 693.8893903907228
         },
@@ -4027,6 +4397,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 10000000,
+          "formula_xp_mult": 1,
           "raw_cost": 705429498686405.1,
           "raw_xp": 693.8893903907228
         },
@@ -4047,6 +4419,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 100000,
+          "formula_xp_mult": 200,
           "raw_cost": 7054294986864.052,
           "raw_xp": 693.8893903907228
         },
@@ -4067,6 +4441,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 130000000,
+          "formula_xp_mult": 0.001,
           "raw_cost": 1.4293651161088e+21,
           "raw_xp": 693.8893903907228
         },
@@ -4087,6 +4463,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 50000000,
+          "formula_xp_mult": 0.1,
           "raw_cost": 3527147493432026,
           "raw_xp": 693.8893903907228
         }
@@ -4115,6 +4493,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 5000,
+          "formula_xp_mult": 1,
           "raw_cost": 775972448555.0458,
           "raw_xp": 867.3617379884035
         },
@@ -4135,6 +4515,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 2500000000,
+          "formula_xp_mult": 0.0001,
           "raw_cost": 387986224277522900,
           "raw_xp": 867.3617379884035
         },
@@ -4155,6 +4537,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 500000,
+          "formula_xp_mult": 3,
           "raw_cost": 77597244855504.58,
           "raw_xp": 867.3617379884035
         },
@@ -4175,6 +4559,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1000000000,
+          "formula_xp_mult": 0.01,
           "raw_cost": 155194489711009150,
           "raw_xp": 867.3617379884035
         },
@@ -4195,6 +4581,8 @@
           "use_item": 31,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 3000000000,
+          "formula_xp_mult": 0.002,
           "raw_cost": 465583469133027460,
           "raw_xp": 867.3617379884035
         },
@@ -4215,6 +4603,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 500000000,
+          "formula_xp_mult": 0.002,
           "raw_cost": 77597244855504580,
           "raw_xp": 867.3617379884035
         },
@@ -4235,6 +4625,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 10000,
+          "formula_xp_mult": 20,
           "raw_cost": 1551944897110.0916,
           "raw_xp": 867.3617379884035
         },
@@ -4255,6 +4647,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 5000000000,
+          "formula_xp_mult": 0.0002,
           "raw_cost": 2.199023255552e+23,
           "raw_xp": 867.3617379884035
         },
@@ -4275,6 +4669,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 3000000000000,
+          "formula_xp_mult": 0.0001,
           "raw_cost": 465583469133027500000,
           "raw_xp": 867.3617379884035
         }
@@ -4303,6 +4699,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 5000,
+          "formula_xp_mult": 1,
           "raw_cost": 1707139386821.1008,
           "raw_xp": 1084.2021724855044
         },
@@ -4323,6 +4721,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 10000000000,
+          "formula_xp_mult": 0.005,
           "raw_cost": 3414278773642201600,
           "raw_xp": 1084.2021724855044
         },
@@ -4343,6 +4743,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1000000000,
+          "formula_xp_mult": 0.05,
           "raw_cost": 341427877364220160,
           "raw_xp": 1084.2021724855044
         },
@@ -4363,6 +4765,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 4000,
+          "formula_xp_mult": 100,
           "raw_cost": 1365711509456.8806,
           "raw_xp": 1084.2021724855044
         },
@@ -4384,6 +4788,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1000000000,
+          "formula_xp_mult": 0.0001,
           "raw_cost": 341427877364220160,
           "raw_xp": 1084.2021724855044
         },
@@ -4405,6 +4811,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 5000000000,
+          "formula_xp_mult": 0.005,
           "raw_cost": 1707139386821100800,
           "raw_xp": 1084.2021724855044
         },
@@ -4425,6 +4833,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 10000000000,
+          "formula_xp_mult": 0.005,
           "raw_cost": 3414278773642201600,
           "raw_xp": 1084.2021724855044
         },
@@ -4445,6 +4855,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 50000000000,
+          "formula_xp_mult": 0.0001,
           "raw_cost": 8.796093022208e+24,
           "raw_xp": 1084.2021724855044
         },
@@ -4465,6 +4877,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 250000,
+          "formula_xp_mult": 20,
           "raw_cost": 85356969341055.05,
           "raw_xp": 1084.2021724855044
         }
@@ -4493,6 +4907,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 40000,
+          "formula_xp_mult": 1,
           "raw_cost": 30045653208051.38,
           "raw_xp": 1355.2527156068804
         },
@@ -4514,6 +4930,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 200000000000,
+          "formula_xp_mult": 0.0001,
           "raw_cost": 150228266040256900000,
           "raw_xp": 1355.2527156068804
         },
@@ -4534,6 +4952,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 100000000000,
+          "formula_xp_mult": 0.000001,
           "raw_cost": 75114133020128440000,
           "raw_xp": 1355.2527156068804
         },
@@ -4554,6 +4974,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 200000000000,
+          "formula_xp_mult": 0.002,
           "raw_cost": 150228266040256900000,
           "raw_xp": 1355.2527156068804
         },
@@ -4575,6 +4997,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 100000000000,
+          "formula_xp_mult": 0.0001,
           "raw_cost": 75114133020128440000,
           "raw_xp": 1355.2527156068804
         },
@@ -4596,6 +5020,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 50000000000,
+          "formula_xp_mult": 0.000001,
           "raw_cost": 37557066510064220000,
           "raw_xp": 1355.2527156068804
         },
@@ -4616,6 +5042,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1000000,
+          "formula_xp_mult": 50,
           "raw_cost": 751141330201284.5,
           "raw_xp": 1355.2527156068804
         },
@@ -4636,6 +5064,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1000000000000,
+          "formula_xp_mult": 0.00001,
           "raw_cost": 7.0368744177664e+26,
           "raw_xp": 1355.2527156068804
         },
@@ -4656,6 +5086,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 20000000000,
+          "formula_xp_mult": 0.1,
           "raw_cost": 15022826604025688000,
           "raw_xp": 1355.2527156068804
         }
@@ -4684,6 +5116,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 300000,
+          "formula_xp_mult": 1,
           "raw_cost": 495753277932847.75,
           "raw_xp": 1694.0658945086006
         },
@@ -4704,6 +5138,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 800000000,
+          "formula_xp_mult": 0.15,
           "raw_cost": 1322008741154260700,
           "raw_xp": 1694.0658945086006
         },
@@ -4724,6 +5160,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 20000000,
+          "formula_xp_mult": 0.002,
           "raw_cost": 33050218528856516,
           "raw_xp": 1694.0658945086006
         },
@@ -4744,6 +5182,8 @@
           "use_item": null,
           "prestige_layer": 2,
           "theme": null,
+          "formula_cost_multiplier": 24000,
+          "formula_xp_mult": 0.015,
           "raw_cost": 39660262234627.82,
           "raw_xp": 1694.0658945086006
         },
@@ -4764,6 +5204,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 30000000000,
+          "formula_xp_mult": 0.03,
           "raw_cost": 49575327793284780000,
           "raw_xp": 1694.0658945086006
         },
@@ -4785,6 +5227,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 20000000000000,
+          "formula_xp_mult": 0,
           "raw_cost": 3.3050218528856517e+22,
           "raw_xp": 1694.0658945086006
         },
@@ -4805,6 +5249,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 20000000000,
+          "formula_xp_mult": 0.05,
           "raw_cost": 33050218528856515000,
           "raw_xp": 1694.0658945086006
         },
@@ -4825,6 +5271,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1000000000000000,
+          "formula_xp_mult": 0.00005,
           "raw_cost": 1.652510926442826e+24,
           "raw_xp": 1694.0658945086006
         }
@@ -4853,6 +5301,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 500000,
+          "formula_xp_mult": 1,
           "raw_cost": 1817762019087108.2,
           "raw_xp": 2117.582368135751
         },
@@ -4873,6 +5323,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 8000000,
+          "formula_xp_mult": 0.3,
           "raw_cost": 29084192305393732,
           "raw_xp": 2117.582368135751
         },
@@ -4894,6 +5346,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 2000000000000,
+          "formula_xp_mult": 0.0001,
           "raw_cost": 7.271048076348433e+21,
           "raw_xp": 2117.582368135751
         },
@@ -4914,6 +5368,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 20000000000,
+          "formula_xp_mult": 0.05,
           "raw_cost": 72710480763484330000,
           "raw_xp": 2117.582368135751
         },
@@ -4934,6 +5390,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 5000000000000,
+          "formula_xp_mult": 2e-7,
           "raw_cost": 1.8177620190871083e+22,
           "raw_xp": 2117.582368135751
         },
@@ -4954,6 +5412,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 200000000,
+          "formula_xp_mult": 2,
           "raw_cost": 727104807634843400,
           "raw_xp": 2117.582368135751
         },
@@ -4975,6 +5435,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 50000000000,
+          "formula_xp_mult": 0.00001,
           "raw_cost": 181776201908710830000,
           "raw_xp": 2117.582368135751
         },
@@ -4995,6 +5457,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1000000000000,
+          "formula_xp_mult": 0.000005,
           "raw_cost": 1.125899906842624e+28,
           "raw_xp": 2117.582368135751
         },
@@ -5015,6 +5479,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 100000000000,
+          "formula_xp_mult": 0.0001,
           "raw_cost": 363552403817421700000,
           "raw_xp": 2117.582368135751
         }
@@ -5043,6 +5509,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 600000,
+          "formula_xp_mult": 1,
           "raw_cost": 4798891730389967,
           "raw_xp": 2646.9779601696882
         },
@@ -5063,6 +5531,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 5000000000000,
+          "formula_xp_mult": 0.000001,
           "raw_cost": 3.999076441991639e+22,
           "raw_xp": 2646.9779601696882
         },
@@ -5084,6 +5554,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 40000000000000,
+          "formula_xp_mult": 0.00001,
           "raw_cost": 3.1992611535933115e+23,
           "raw_xp": 2646.9779601696882
         },
@@ -5104,6 +5576,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 200000000,
+          "formula_xp_mult": 0.01,
           "raw_cost": 1599630576796655600,
           "raw_xp": 2646.9779601696882
         },
@@ -5124,6 +5598,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 7000000000000,
+          "formula_xp_mult": 0.001,
           "raw_cost": 5.598707018788295e+22,
           "raw_xp": 2646.9779601696882
         },
@@ -5144,6 +5620,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 200000000,
+          "formula_xp_mult": 2,
           "raw_cost": 1599630576796655600,
           "raw_xp": 2646.9779601696882
         },
@@ -5165,6 +5643,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 60000000000000,
+          "formula_xp_mult": 0.0002,
           "raw_cost": 4.798891730389967e+23,
           "raw_xp": 2646.9779601696882
         },
@@ -5185,6 +5665,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 40000000000000,
+          "formula_xp_mult": 0.000005,
           "raw_cost": 1.8014398509481984e+30,
           "raw_xp": 2646.9779601696882
         },
@@ -5205,6 +5687,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 100000000000000000,
+          "formula_xp_mult": 0.0001,
           "raw_cost": 7.998152883983278e+26,
           "raw_xp": 2646.9779601696882
         }
@@ -5233,6 +5717,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1500000,
+          "formula_xp_mult": 1,
           "raw_cost": 26393904517144820,
           "raw_xp": 3308.7224502121107
         },
@@ -5253,6 +5739,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1000000000,
+          "formula_xp_mult": 0.05,
           "raw_cost": 17595936344763214000,
           "raw_xp": 3308.7224502121107
         },
@@ -5274,6 +5762,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1e+24,
+          "formula_xp_mult": 5e-14,
           "raw_cost": 1.7595936344763212e+34,
           "raw_xp": 3308.7224502121107
         },
@@ -5295,6 +5785,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 30000000000000000,
+          "formula_xp_mult": 0.000005,
           "raw_cost": 5.278780903428964e+26,
           "raw_xp": 3308.7224502121107
         },
@@ -5315,6 +5807,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 200000000000,
+          "formula_xp_mult": 0.01,
           "raw_cost": 3.519187268952643e+21,
           "raw_xp": 3308.7224502121107
         },
@@ -5335,6 +5829,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 5000000000,
+          "formula_xp_mult": 0.3,
           "raw_cost": 87979681723816070000,
           "raw_xp": 3308.7224502121107
         },
@@ -5355,6 +5851,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 10000000000000,
+          "formula_xp_mult": 0.01,
           "raw_cost": 1.7595936344763215e+23,
           "raw_xp": 3308.7224502121107
         },
@@ -5376,6 +5874,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 5000000000000,
+          "formula_xp_mult": 0.0001,
           "raw_cost": 8.797968172381608e+22,
           "raw_xp": 3308.7224502121107
         },
@@ -5396,6 +5896,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 100000000000000,
+          "formula_xp_mult": 0.000003,
           "raw_cost": 1.8014398509481984e+31,
           "raw_xp": 3308.7224502121107
         },
@@ -5416,6 +5918,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 30000000000000,
+          "formula_xp_mult": 0.0005,
           "raw_cost": 5.2787809034289646e+23,
           "raw_xp": 3308.7224502121107
         }
@@ -5444,6 +5948,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 500000000,
+          "formula_xp_mult": 0.01,
           "raw_cost": 19355529979239540000,
           "raw_xp": 4135.903062765138
         },
@@ -5464,6 +5970,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 5000000000000,
+          "formula_xp_mult": 0.000003,
           "raw_cost": 1.935552997923954e+23,
           "raw_xp": 4135.903062765138
         },
@@ -5484,6 +5992,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1000000000000000,
+          "formula_xp_mult": 0.001,
           "raw_cost": 3.871105995847907e+25,
           "raw_xp": 4135.903062765138
         },
@@ -5504,6 +6014,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 500000000,
+          "formula_xp_mult": 0.001,
           "raw_cost": 19355529979239540000,
           "raw_xp": 4135.903062765138
         },
@@ -5524,6 +6036,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 5000000000000000000,
+          "formula_xp_mult": 0.000001,
           "raw_cost": 1.935552997923954e+29,
           "raw_xp": 4135.903062765138
         },
@@ -5544,6 +6058,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 5000000000,
+          "formula_xp_mult": 2,
           "raw_cost": 193555299792395370000,
           "raw_xp": 4135.903062765138
         },
@@ -5565,6 +6081,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 60000000000000,
+          "formula_xp_mult": 1e-7,
           "raw_cost": 2.3226635975087445e+24,
           "raw_xp": 4135.903062765138
         },
@@ -5585,6 +6103,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1000000000000000,
+          "formula_xp_mult": 0.000001,
           "raw_cost": 7.205759403792794e+32,
           "raw_xp": 4135.903062765138
         },
@@ -5606,6 +6126,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 300000000000000000000,
+          "formula_xp_mult": 1e-12,
           "raw_cost": 1.1613317987543722e+31,
           "raw_xp": 4135.903062765138
         }
@@ -5634,6 +6156,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 500000000000,
+          "formula_xp_mult": 0.0001,
           "raw_cost": 4.2582165954326985e+22,
           "raw_xp": 5169.878828456423
         },
@@ -5654,6 +6178,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 1000000000000000,
+          "formula_xp_mult": 0.00015,
           "raw_cost": 8.516433190865397e+25,
           "raw_xp": 5169.878828456423
         },
@@ -5674,6 +6200,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 5e+28,
+          "formula_xp_mult": 1e-10,
           "raw_cost": 4.258216595432698e+39,
           "raw_xp": 5169.878828456423
         },
@@ -5694,6 +6222,8 @@
           "use_item": null,
           "prestige_layer": 3,
           "theme": null,
+          "formula_cost_multiplier": 5000000000,
+          "formula_xp_mult": 0.0001,
           "raw_cost": 425821659543269800000,
           "raw_xp": 5169.878828456423
         },
@@ -5714,6 +6244,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 5000000000000,
+          "formula_xp_mult": 0.001,
           "raw_cost": 4.2582165954326984e+23,
           "raw_xp": 5169.878828456423
         },
@@ -5735,6 +6267,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 800000000000000000,
+          "formula_xp_mult": 0,
           "raw_cost": 6.813146552692317e+28,
           "raw_xp": 5169.878828456423
         },
@@ -5755,6 +6289,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 5000000000,
+          "formula_xp_mult": 3,
           "raw_cost": 425821659543269800000,
           "raw_xp": 5169.878828456423
         },
@@ -5775,6 +6311,8 @@
           "use_item": null,
           "prestige_layer": null,
           "theme": null,
+          "formula_cost_multiplier": 500000000000000,
+          "formula_xp_mult": 0.03,
           "raw_cost": 4.258216595432699e+25,
           "raw_xp": 5169.878828456423
         }

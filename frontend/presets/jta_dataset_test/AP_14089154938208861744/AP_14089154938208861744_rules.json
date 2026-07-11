@@ -673,18 +673,18 @@
             }
           ],
           "jta_dataset_ref": {
-            "dataset_id": "synthetic-sunken-meridian-s1-z3-64849674",
+            "dataset_id": "synthetic-sunken-meridian-s1-z3-8adcd7b1",
             "schema_version": 1
           },
           "jta_dataset": {
             "schema_version": 1,
-            "dataset_id": "synthetic-sunken-meridian-s1-z3-64849674",
+            "dataset_id": "synthetic-sunken-meridian-s1-z3-8adcd7b1",
             "provenance": {
               "generator": "generateDataset.js",
               "fork_save_version": "Fork 1.8",
               "seed": 1,
               "params_hash": "759b9cfc",
-              "content_hash": "64849674"
+              "content_hash": "8adcd7b1"
             },
             "theme": {
               "title": "The Sunken Meridian",
@@ -784,6 +784,8 @@
                     "use_item": null,
                     "prestige_layer": null,
                     "theme": null,
+                    "formula_cost_multiplier": 4,
+                    "formula_xp_mult": 1,
                     "raw_cost": 40,
                     "raw_xp": 8
                   },
@@ -804,6 +806,8 @@
                     "use_item": null,
                     "prestige_layer": null,
                     "theme": null,
+                    "formula_cost_multiplier": 3,
+                    "formula_xp_mult": 1,
                     "raw_cost": 30,
                     "raw_xp": 8
                   },
@@ -824,6 +828,8 @@
                     "use_item": null,
                     "prestige_layer": null,
                     "theme": null,
+                    "formula_cost_multiplier": 1,
+                    "formula_xp_mult": 3,
                     "raw_cost": 10,
                     "raw_xp": 8
                   },
@@ -844,6 +850,8 @@
                     "use_item": null,
                     "prestige_layer": null,
                     "theme": null,
+                    "formula_cost_multiplier": 8,
+                    "formula_xp_mult": 0.5,
                     "raw_cost": 80,
                     "raw_xp": 8
                   },
@@ -864,6 +872,8 @@
                     "use_item": null,
                     "prestige_layer": null,
                     "theme": null,
+                    "formula_cost_multiplier": 1,
+                    "formula_xp_mult": 2,
                     "raw_cost": 10,
                     "raw_xp": 8
                   },
@@ -885,6 +895,8 @@
                     "use_item": null,
                     "prestige_layer": null,
                     "theme": null,
+                    "formula_cost_multiplier": 2,
+                    "formula_xp_mult": 1.5,
                     "raw_cost": 20,
                     "raw_xp": 8
                   },
@@ -905,6 +917,8 @@
                     "use_item": null,
                     "prestige_layer": null,
                     "theme": null,
+                    "formula_cost_multiplier": 1,
+                    "formula_xp_mult": 3,
                     "raw_cost": 10,
                     "raw_xp": 8
                   }
@@ -935,6 +949,8 @@
                     "use_item": null,
                     "prestige_layer": null,
                     "theme": null,
+                    "formula_cost_multiplier": 3,
+                    "formula_xp_mult": 1,
                     "raw_cost": 66,
                     "raw_xp": 10
                   },
@@ -955,6 +971,8 @@
                     "use_item": null,
                     "prestige_layer": null,
                     "theme": null,
+                    "formula_cost_multiplier": 1.3,
+                    "formula_xp_mult": 1,
                     "raw_cost": 28.6,
                     "raw_xp": 10
                   },
@@ -975,6 +993,8 @@
                     "use_item": null,
                     "prestige_layer": null,
                     "theme": null,
+                    "formula_cost_multiplier": 1.6,
+                    "formula_xp_mult": 1,
                     "raw_cost": 35.2,
                     "raw_xp": 10
                   },
@@ -995,6 +1015,8 @@
                     "use_item": null,
                     "prestige_layer": null,
                     "theme": null,
+                    "formula_cost_multiplier": 0.4,
+                    "formula_xp_mult": 1,
                     "raw_cost": 8.8,
                     "raw_xp": 10
                   },
@@ -1015,6 +1037,8 @@
                     "use_item": null,
                     "prestige_layer": null,
                     "theme": null,
+                    "formula_cost_multiplier": 16,
+                    "formula_xp_mult": 0.2,
                     "raw_cost": 352,
                     "raw_xp": 10
                   },
@@ -1035,6 +1059,8 @@
                     "use_item": null,
                     "prestige_layer": null,
                     "theme": null,
+                    "formula_cost_multiplier": 1,
+                    "formula_xp_mult": 3,
                     "raw_cost": 22,
                     "raw_xp": 10
                   },
@@ -1055,6 +1081,8 @@
                     "use_item": null,
                     "prestige_layer": null,
                     "theme": null,
+                    "formula_cost_multiplier": 1.5,
+                    "formula_xp_mult": 5,
                     "raw_cost": 33,
                     "raw_xp": 10
                   },
@@ -1076,6 +1104,8 @@
                     "use_item": null,
                     "prestige_layer": null,
                     "theme": null,
+                    "formula_cost_multiplier": 1,
+                    "formula_xp_mult": 3,
                     "raw_cost": 22,
                     "raw_xp": 10
                   }
@@ -1106,6 +1136,8 @@
                     "use_item": null,
                     "prestige_layer": null,
                     "theme": null,
+                    "formula_cost_multiplier": 2,
+                    "formula_xp_mult": 0.5,
                     "raw_cost": 96.80000000000001,
                     "raw_xp": 12.5
                   },
@@ -1126,6 +1158,8 @@
                     "use_item": null,
                     "prestige_layer": null,
                     "theme": null,
+                    "formula_cost_multiplier": 3,
+                    "formula_xp_mult": 3,
                     "raw_cost": 145.20000000000002,
                     "raw_xp": 12.5
                   },
@@ -1146,6 +1180,8 @@
                     "use_item": null,
                     "prestige_layer": null,
                     "theme": null,
+                    "formula_cost_multiplier": 3,
+                    "formula_xp_mult": 1,
                     "raw_cost": 145.20000000000002,
                     "raw_xp": 12.5
                   },
@@ -1166,6 +1202,8 @@
                     "use_item": null,
                     "prestige_layer": null,
                     "theme": null,
+                    "formula_cost_multiplier": 0.4,
+                    "formula_xp_mult": 1,
                     "raw_cost": 19.360000000000003,
                     "raw_xp": 12.5
                   },
@@ -1187,6 +1225,8 @@
                     "use_item": null,
                     "prestige_layer": null,
                     "theme": null,
+                    "formula_cost_multiplier": 1.2,
+                    "formula_xp_mult": 1.5,
                     "raw_cost": 58.08000000000001,
                     "raw_xp": 12.5
                   },
@@ -1207,6 +1247,8 @@
                     "use_item": null,
                     "prestige_layer": null,
                     "theme": null,
+                    "formula_cost_multiplier": 1.5,
+                    "formula_xp_mult": 3,
                     "raw_cost": 72.60000000000001,
                     "raw_xp": 12.5
                   },
@@ -1227,6 +1269,8 @@
                     "use_item": null,
                     "prestige_layer": null,
                     "theme": null,
+                    "formula_cost_multiplier": 400,
+                    "formula_xp_mult": 1,
                     "raw_cost": 64000,
                     "raw_xp": 12.5
                   },
@@ -1248,6 +1292,8 @@
                     "use_item": null,
                     "prestige_layer": null,
                     "theme": null,
+                    "formula_cost_multiplier": 1300,
+                    "formula_xp_mult": 1,
                     "raw_cost": 62920.00000000001,
                     "raw_xp": 12.5
                   }
@@ -3101,7 +3147,7 @@
             }
           ],
           "jta_dataset_ref": {
-            "dataset_id": "synthetic-sunken-meridian-s1-z3-64849674",
+            "dataset_id": "synthetic-sunken-meridian-s1-z3-8adcd7b1",
             "schema_version": 1
           },
           "exits": [
@@ -3159,7 +3205,7 @@
             }
           ],
           "jta_dataset_ref": {
-            "dataset_id": "synthetic-sunken-meridian-s1-z3-64849674",
+            "dataset_id": "synthetic-sunken-meridian-s1-z3-8adcd7b1",
             "schema_version": 1
           },
           "exits": [
