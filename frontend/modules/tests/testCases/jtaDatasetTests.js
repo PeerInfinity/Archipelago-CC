@@ -1,11 +1,14 @@
 /**
- * In-app test for the JtA synthetic-dataset path (Phase 5d,
- * jta-synthetic-data-plan §5.3) — the bridge-seam integration proof.
+ * In-app test for the JtA synthetic-dataset path (Phase 5d + 5e,
+ * jta-synthetic-data-plan §5.3, §4.2) — the bridge-seam integration proof.
  * Neither parity layer exercises bridge.js: this is the one place the
  * whole runtime chain is driven — preset sidecars carry the dataset
  * (single-carrier + refs), procgenPlayer's warehouse resolves the refs,
+ * the jtaBalance worker SOLVES the dataset world at rules load (Pass B,
+ * 5e: loadGameData in the worker, cache keyed by (seed, dataset_id)),
  * the bridge applies the dataset via window.loadGameData before task
- * patches, and the world PLAYS: automation clears the themed zone,
+ * patches (so the solved costs land on the dataset's tasks), and the
+ * world PLAYS on those solved costs: automation clears the themed zone,
  * task completions land as AP location checks, and the dataset's perk
  * comes back as an AP item and is granted in-game (grants stay
  * AP-authoritative under the dataset's own suppression sentinel).
@@ -27,8 +30,9 @@
  */
 
 import { registerTest } from '../testRegistry.js';
+import { centralRegistry } from '../../../app/core/centralRegistry.js';
 import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
-import { detectJtaWorld } from '../../jtaBalance/hostGlue.js';
+import { detectJtaWorld, computeSeedName, cacheKey } from '../../jtaBalance/hostGlue.js';
 import {
     waitForJtaActive,
     resetJtaSaveAndReload,
@@ -54,6 +58,21 @@ function snapshotHasLocation(snapshot, name) {
     const checked = snapshot?.checkedLocations ?? [];
     const list = Array.isArray(checked) ? checked : Object.keys(checked);
     return list.includes(name);
+}
+
+/** All {id, cost_multiplier} patches across the warehouse's jta regions. */
+function warehouseCostPatches() {
+    const warehouse = centralRegistry.getPublicFunction?.('procgenPlayer', 'getWarehouse')?.() ?? null;
+    if (!warehouse || typeof warehouse.keys !== 'function') return [];
+    const out = [];
+    for (const regionId of warehouse.keys()) {
+        const entry = warehouse.get(regionId);
+        if (entry?.substrate !== 'jta') continue;
+        for (const p of entry.world?.task_patches ?? []) {
+            if (Object.prototype.hasOwnProperty.call(p, 'cost_multiplier')) out.push(p);
+        }
+    }
+    return out;
 }
 
 /**
@@ -102,7 +121,7 @@ async function datasetWorldProgression(testController) {
     const payloads = sidecarPayloads(rulesDoc);
 
     // Leg 0 — the preset really carries the dataset (single-carrier + refs)
-    // and the balance module correctly skips it (Pass-B datasets are 5e).
+    // and the balance module DETECTS it (Pass-B dataset support, 5e).
     const carriers = payloads.filter(([, p]) => p.jta_dataset);
     testController.assertEqual('exactly one sidecar carries the full jta_dataset', 1, carriers.length);
     testController.assertEqual('every jta sidecar carries jta_dataset_ref',
@@ -110,7 +129,7 @@ async function datasetWorldProgression(testController) {
     if (carriers.length !== 1) return testController.getOverallResult();
     const dataset = carriers[0][1].jta_dataset;
     testController.log(`dataset '${dataset.dataset_id}' (${dataset.zones.length} zones, "${dataset.theme?.title}")`);
-    testController.assertEqual('jtaBalance skips dataset worlds (5e)', false, detectJtaWorld(rulesDoc).isJta);
+    testController.assertEqual('jtaBalance detects dataset worlds (5e)', true, detectJtaWorld(rulesDoc).isJta);
 
     // Geometry + the dataset's zone-0 perk, derived from the doc, never
     // hardcoded — the preset regenerates deterministically but names are
@@ -127,9 +146,36 @@ async function datasetWorldProgression(testController) {
     if (!exitName) return testController.getOverallResult();
     testController.log(`zone-0 perk task ${perkTask.id} "${perkTask.name}" holds '${perkItemName}' at ${perkLocation}`);
 
-    // Leg 1 — load and enter with a fresh game.
+    // Leg 1 — the Pass-B solve runs at rules load AGAINST THE DATASET (5e):
+    // cleared cache so the worker really runs (cold), patches merge into the
+    // warehouse and cache under the (seed, dataset_id) key — the dataset
+    // dimension matters because every Pass-A test preset shares seed 1.
+    const key = cacheKey(computeSeedName(rulesDoc), dataset.dataset_id);
+    localStorage.removeItem(key);
+    testController.log(`cleared dataset balance cache (${key})`);
     await testController.loadRulesFromFile(JTA_DATASETTEST_PRESET_PATH);
     await testController.stateManager.pingWorker('after-rules-load', 3000);
+    const solved = await eventually(testController,
+        () => warehouseCostPatches().length > 0,
+        'dataset balance solve merged cost patches into the warehouse', 120000, 1000);
+    testController.assertEqual('dataset world was balanced at rules load (cold solve)', true, solved);
+    if (!solved) return testController.getOverallResult();
+    const coldPatches = warehouseCostPatches();
+    testController.log(`cold solve merged ${coldPatches.length} cost patches`);
+    const cached = await eventually(testController,
+        () => !!localStorage.getItem(key),
+        `balance cache present at ${key}`, 15000, 500);
+    testController.assertEqual('patches cached under the (seed, dataset_id) key', true, cached);
+
+    // Cache hit: re-loading re-merges synchronously from the cache (no worker).
+    await testController.loadRulesFromFile(JTA_DATASETTEST_PRESET_PATH);
+    await testController.stateManager.pingWorker('after-rules-reload', 3000);
+    const rehit = await eventually(testController,
+        () => warehouseCostPatches().length === coldPatches.length,
+        'cost patches re-merged from cache after reload', 15000, 250);
+    testController.assertEqual('cache-hit merge restored the cost patches', true, rehit);
+
+    // Leg 1b — enter with a fresh game.
     testController.eventBus.publish('ui:activatePanel', { panelId: 'jtaSubstrateWrapperPanel' });
     moveToRegion(region0, START_REGION);
     if (!await waitForJtaActive(testController)) {
@@ -149,6 +195,16 @@ async function datasetWorldProgression(testController) {
     }, 'available tasks are the dataset zone-0 tasks', 15000, 250);
     testController.assertEqual('loadGameData applied — the game serves dataset tasks', true, datasetLive);
     testController.assertEqual('fresh game holds no perks', 0, gameWin.getFullState().perks.length);
+
+    // The walk below plays on SOLVED costs: the bridge applied the merged
+    // cost patches to the dataset's live task defs on region entry.
+    const patchById = new Map(coldPatches.map((p) => [p.id, p.cost_multiplier]));
+    const applied = await eventually(testController, () => {
+        const tasks = getJtaIframe()?.contentWindow?.getAvailableTasks?.() ?? [];
+        return tasks.some((t) => patchById.has(t.id)
+            && Math.abs(t.costMult - patchById.get(t.id)) / patchById.get(t.id) < 1e-6);
+    }, 'a live dataset task def carries its solved cost_multiplier', 20000, 500);
+    testController.assertEqual('solved cost applied to the live dataset task on region entry', true, applied);
 
     // Leg 3 — the themed world PLAYS: automation walks zone 0 -> zone 1.
     const controller = substrateRegistry.get('jta')?.getPlaybackController?.();
@@ -196,11 +252,13 @@ registerTest({
     id: 'jta-dataset-world-progression',
     name: 'JtA dataset: a synthetic-dataset world loads through the bridge and plays',
     description: 'Loads the jta_dataset_test preset (generated synthetic dataset embedded as '
-               + 'single-carrier + refs), asserts the warehouse/bridge chain applies it via '
-               + "loadGameData (the fork serves the dataset's themed tasks), walks zone 0->1 "
-               + "under the game's own automation (normal ticking), and asserts the dataset "
-               + "perk's location check, AP item receipt, and in-game grant — AP-authoritative "
-               + "under the dataset's own suppression sentinel.",
+               + 'single-carrier + refs), asserts the Pass-B worker solves it at rules load '
+               + '(cold solve + (seed, dataset_id) cache + cache-hit re-merge), the '
+               + "warehouse/bridge chain applies dataset + solved costs via loadGameData "
+               + "(the fork serves the dataset's themed tasks at solved costs), walks zone "
+               + "0->1 under the game's own automation (normal ticking), and asserts the "
+               + "dataset perk's location check, AP item receipt, and in-game grant — "
+               + "AP-authoritative under the dataset's own suppression sentinel.",
     testFunction: datasetWorldProgression,
     category: 'JtA substrate',
     enabled: false, // off by default — runs only in the test-substrates mode
