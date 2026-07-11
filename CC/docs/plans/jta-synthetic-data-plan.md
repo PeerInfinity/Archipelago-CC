@@ -1057,13 +1057,32 @@ both halves (the harness already re-extracts the committed HEAD per run).
     and to native — sim lockstep + static sweep + the smoke; then the
     generated-dataset guard, roundtrip, and the 5f emergent sweep re-run
     on raw-mode worlds (progression gate).
+  - **Riders (RULED 2026-07-11, post-v1 design session — do these WITH 5g,
+    which already touches schema + generator + validator + fixtures):**
+    (1) `computeC4Report`/`opportunityTable` hardcode `XP_ZONE_MULT = 1.25`
+    (`generateDataset.js:99-129`) — under raw mode the opportunity weight
+    must read `raw_xp`, else C4 silently mis-weights every raw dataset;
+    (2) content-hash the dataset identity — `provenance.content_hash` over
+    the canonical document minus provenance, short hash appended to
+    `dataset_id`, plus a `datasetValidator.js --restamp` CLI mode. Today
+    `dataset_id` is a pure function of (theme, seed, zoneCount), so an
+    edited document keeps its id and silently poisons the
+    `(seed, dataset_id)` Pass-B cache and the dataset-keyed save slot;
+    (3) optional `zones[].key` (unique stable string) — a
+    position-independent zone identity for post-v1 branching topology and
+    theme references. Full context and rationale:
+    `NewDocs/plans/jta/jta-synthetic-post-v1-design.md` §2.6 (gitignored;
+    the zone-randomization memory topic is the durable pointer).
 - **Phase 6 (parent plan) — absorption audit** → old-stack retirement
   green-light; see jta-zone-randomization-plan.md §5/§6.
 
-Post-v1 (recorded, not planned here): per-behavior effects migration
-(§2.3), branching topology / grid-fit via `generateZoneForSpecs`
-(sphere-growth), narrative content in `theme`, prestige-table variation,
-standalone `?dataset=` play.
+Post-v1 — now DESIGNED + RULED (2026-07-11, all seven rulings accepted):
+`NewDocs/plans/jta/jta-synthetic-post-v1-design.md` sequences phases
+0(=5g)/A(structure policy v2)/B(pipeline step ②d)/C(branching)/D(effects
+migration ladder)/E(theme v2) with gates; supersedes the informal list that
+stood here (per-behavior effects migration, branching/grid-fit via
+`generateZoneForSpecs`, narrative `theme`, prestige-table variation,
+standalone `?dataset=` play — all absorbed into that document's phasing).
 
 ---
 
