@@ -787,14 +787,16 @@ both halves (the harness already re-extracts the committed HEAD per run).
   Byte-identity under the FULL automation/mods surface: vanilla-dataset run
   ≡ no-dataset run on `spark-off-z15-baseline` (130/130 @ 237 runs, 9173
   ticks, whole result JSON identical modulo meta/wallMs).
-  **Finding (pre-existing, not 5b/5c):** the COMMITTED
-  `results/spark-off-z15-baseline-node.json` (2026-07-06, 261 runs) no
-  longer reproduces on the current build — Fork 1.6.2 and Fork 1.7 builds
-  both give 237/9173 (also proving 1.7 inert under full mods, beyond
-  defaults-only parity). The drift entered between 2026-07-06 and Fork
-  1.6.2 (candidates: the 2026-07-08 jta-stats pinMaxEnergy rework or a
-  baselineMods change post-dating the file); the live A/B gate is the
-  binding one. Filed in `CC/docs/cleanup-backlog.md`.
+  **Finding (pre-existing, not 5b/5c — RESOLVED 2026-07-10):** the
+  COMMITTED `results/spark-off-z15-baseline-node.json` (2026-07-06, 261
+  runs) no longer reproduces — today's builds give 237/9173 (identical on
+  Fork 1.6.2 and Fork 1.7, also proving 1.7 inert under full mods beyond
+  defaults-only parity). Root cause: `baselineMods()` inherits the GAME's
+  `auto_prestige_stall_resets` default, which Fork 1.6.1 changed 40→20
+  later the same day the file was generated; the committed
+  `spark-off-z15-stall-20` variant is EXACTLY 237/9173. No engine or
+  harness drift. Filed in `CC/docs/cleanup-backlog.md` (regenerate vs
+  annotate is the only open decision).
   Regression re-runs after the harness edits: upstream-mode sim parity
   4/4 PASS and UI parity PASS unchanged. **Gate satisfied: 5d may start.**
 - **5d — Pass A: pipeline dataset synthesis.** Generation step (linear,
