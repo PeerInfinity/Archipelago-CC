@@ -101,12 +101,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           submodules: recursive
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: '~3.12.7'
           check-latest: true
@@ -175,7 +175,7 @@ jobs:
 
       - name: Cache Python virtual environment for setup
         if: inputs.template_type == 'apworld'
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         id: cache-venv-setup
         with:
           path: .venv
@@ -245,7 +245,7 @@ jobs:
 
       - name: Upload APWorld Manager artifact
         if: inputs.template_type == 'apworld'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.0
         with:
           name: apworld-manager
           path: worlds/apworld_manager/
@@ -253,7 +253,7 @@ jobs:
 
       - name: Upload custom worlds artifact
         if: inputs.template_type == 'apworld'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.0
         with:
           name: custom-worlds
           path: custom_worlds/
@@ -261,7 +261,7 @@ jobs:
 
       - name: Upload world mapping for apworlds
         if: inputs.template_type == 'apworld'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.0
         with:
           name: world-mapping-unofficial
           path: scripts/data/world-mapping-unofficial.json
@@ -283,12 +283,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           submodules: recursive
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: '~3.12.7'
           check-latest: true
@@ -299,7 +299,7 @@ jobs:
           sudo apt -y install python3-gi libgirepository1.0-dev
 
       - name: Cache Python virtual environment
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         id: cache-venv
         with:
           path: .venv
@@ -320,14 +320,14 @@ jobs:
 
       - name: Download APWorld Manager artifact
         if: inputs.template_type == 'apworld'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8.0.1
         with:
           name: apworld-manager
           path: worlds/apworld_manager/
 
       - name: Download custom worlds artifact
         if: inputs.template_type == 'apworld'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8.0.1
         with:
           name: custom-worlds
           path: custom_worlds/
@@ -362,7 +362,7 @@ jobs:
           python scripts/setup/update_host_settings.py minimal-spoilers
 
       - name: Cache Node.js dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         id: cache-node
         with:
           path: node_modules
@@ -373,7 +373,7 @@ jobs:
         run: npm install
 
       - name: Cache Playwright browsers
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         id: cache-playwright
         with:
           path: ~/.cache/ms-playwright
@@ -540,7 +540,7 @@ jobs:
 
       - name: Upload test results for split ${{ matrix.split_num }}
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.0
         with:
           name: test-results-minimal-spoiler-${{ inputs.template_type }}-split-${{ matrix.split_num }}
           path: scripts/output/${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || inputs.template_type == 'apworld' && 'spoiler-minimal-apworld' || 'spoiler-minimal' }}/test-results-split-${{ matrix.split_num }}.json
@@ -557,12 +557,12 @@ jobs:
 
     steps:
       - name: Checkout results branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           ref: ${{ inputs.template_type == 'worldgen' && 'test-results-worldgen' || inputs.template_type == 'apworld' && 'test-results-apworld' || 'test-results-original' }}
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: '~3.12.7'
           check-latest: true
@@ -573,13 +573,13 @@ jobs:
           pip install pyyaml
 
       - name: Download all test artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8.0.1
         with:
           path: artifacts
 
       - name: Download world mapping for apworlds
         if: inputs.template_type == 'apworld'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8.0.1
         with:
           name: world-mapping-unofficial
           path: scripts/data
@@ -643,13 +643,13 @@ jobs:
 
     steps:
       - name: Checkout results branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           ref: ${{ inputs.template_type == 'worldgen' && 'test-results-worldgen' || inputs.template_type == 'apworld' && 'test-results-apworld' || 'test-results-original' }}
           submodules: recursive
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: '~3.12.7'
           check-latest: true
@@ -660,7 +660,7 @@ jobs:
           sudo apt -y install python3-gi libgirepository1.0-dev
 
       - name: Cache Python virtual environment
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         id: cache-venv
         with:
           path: .venv
@@ -681,14 +681,14 @@ jobs:
 
       - name: Download APWorld Manager artifact
         if: inputs.template_type == 'apworld'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8.0.1
         with:
           name: apworld-manager
           path: worlds/apworld_manager/
 
       - name: Download custom worlds artifact
         if: inputs.template_type == 'apworld'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8.0.1
         with:
           name: custom-worlds
           path: custom_worlds/
@@ -723,7 +723,7 @@ jobs:
           python scripts/setup/update_host_settings.py full-spoilers
 
       - name: Cache Node.js dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         id: cache-node
         with:
           path: node_modules
@@ -734,7 +734,7 @@ jobs:
         run: npm install
 
       - name: Cache Playwright browsers
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         id: cache-playwright
         with:
           path: ~/.cache/ms-playwright
@@ -855,7 +855,7 @@ jobs:
 
       - name: Upload test results for split ${{ matrix.split_num }}
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.0
         with:
           name: test-results-full-spoiler-${{ inputs.template_type }}-split-${{ matrix.split_num }}
           path: scripts/output/${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || inputs.template_type == 'apworld' && 'spoiler-full-apworld' || 'spoiler-full' }}/test-results-split-${{ matrix.split_num }}.json
@@ -872,12 +872,12 @@ jobs:
 
     steps:
       - name: Checkout results branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           ref: ${{ inputs.template_type == 'worldgen' && 'test-results-worldgen' || inputs.template_type == 'apworld' && 'test-results-apworld' || 'test-results-original' }}
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: '~3.12.7'
           check-latest: true
@@ -888,13 +888,13 @@ jobs:
           pip install pyyaml
 
       - name: Download all test artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8.0.1
         with:
           path: artifacts
 
       - name: Download world mapping for apworlds
         if: inputs.template_type == 'apworld'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8.0.1
         with:
           name: world-mapping-unofficial
           path: scripts/data
@@ -958,13 +958,13 @@ jobs:
 
     steps:
       - name: Checkout results branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           ref: ${{ inputs.template_type == 'worldgen' && 'test-results-worldgen' || inputs.template_type == 'apworld' && 'test-results-apworld' || 'test-results-original' }}
           submodules: recursive
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: '~3.12.7'
           check-latest: true
@@ -975,7 +975,7 @@ jobs:
           sudo apt -y install python3-gi libgirepository1.0-dev
 
       - name: Cache Python virtual environment
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         id: cache-venv
         with:
           path: .venv
@@ -996,14 +996,14 @@ jobs:
 
       - name: Download APWorld Manager artifact
         if: inputs.template_type == 'apworld'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8.0.1
         with:
           name: apworld-manager
           path: worlds/apworld_manager/
 
       - name: Download custom worlds artifact
         if: inputs.template_type == 'apworld'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8.0.1
         with:
           name: custom-worlds
           path: custom_worlds/
@@ -1038,7 +1038,7 @@ jobs:
           python scripts/setup/update_host_settings.py minimal-spoilers
 
       - name: Cache Node.js dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         id: cache-node
         with:
           path: node_modules
@@ -1049,7 +1049,7 @@ jobs:
         run: npm install
 
       - name: Cache Playwright browsers
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         id: cache-playwright
         with:
           path: ~/.cache/ms-playwright
@@ -1118,7 +1118,7 @@ jobs:
 
       - name: Upload test results for split ${{ matrix.split_num }}
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.0
         with:
           name: test-results-multiclient-${{ inputs.template_type }}-split-${{ matrix.split_num }}
           path: scripts/output/${{ inputs.template_type == 'worldgen' && 'multiclient-worldgen' || inputs.template_type == 'apworld' && 'multiclient-apworld' || 'multiclient' }}/test-results-split-${{ matrix.split_num }}.json
@@ -1135,12 +1135,12 @@ jobs:
 
     steps:
       - name: Checkout results branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           ref: ${{ inputs.template_type == 'worldgen' && 'test-results-worldgen' || inputs.template_type == 'apworld' && 'test-results-apworld' || 'test-results-original' }}
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: '~3.12.7'
           check-latest: true
@@ -1151,13 +1151,13 @@ jobs:
           pip install pyyaml
 
       - name: Download all test artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8.0.1
         with:
           path: artifacts
 
       - name: Download world mapping for apworlds
         if: inputs.template_type == 'apworld'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8.0.1
         with:
           name: world-mapping-unofficial
           path: scripts/data
@@ -1213,13 +1213,13 @@ jobs:
 
     steps:
       - name: Checkout results branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           ref: ${{ inputs.template_type == 'worldgen' && 'test-results-worldgen' || inputs.template_type == 'apworld' && 'test-results-apworld' || 'test-results-original' }}
           submodules: recursive
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: '~3.12.7'
           check-latest: true
@@ -1230,7 +1230,7 @@ jobs:
           sudo apt -y install python3-gi libgirepository1.0-dev
 
       - name: Cache Python virtual environment
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         id: cache-venv
         with:
           path: .venv
@@ -1251,14 +1251,14 @@ jobs:
 
       - name: Download APWorld Manager artifact
         if: inputs.template_type == 'apworld'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8.0.1
         with:
           name: apworld-manager
           path: worlds/apworld_manager/
 
       - name: Download custom worlds artifact
         if: inputs.template_type == 'apworld'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8.0.1
         with:
           name: custom-worlds
           path: custom_worlds/
@@ -1293,7 +1293,7 @@ jobs:
           python scripts/setup/update_host_settings.py minimal-spoilers
 
       - name: Cache Node.js dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         id: cache-node
         with:
           path: node_modules
@@ -1304,7 +1304,7 @@ jobs:
         run: npm install
 
       - name: Cache Playwright browsers
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         id: cache-playwright
         with:
           path: ~/.cache/ms-playwright
@@ -1350,7 +1350,7 @@ jobs:
 
       - name: Upload test results
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.0
         with:
           name: test-results-multiworld-single-${{ inputs.template_type }}
           path: scripts/output/${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || inputs.template_type == 'apworld' && 'multiworld-apworld' || 'multiworld' }}/test-results.json
@@ -1367,12 +1367,12 @@ jobs:
 
     steps:
       - name: Checkout results branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           ref: ${{ inputs.template_type == 'worldgen' && 'test-results-worldgen' || inputs.template_type == 'apworld' && 'test-results-apworld' || 'test-results-original' }}
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: '~3.12.7'
           check-latest: true
@@ -1383,14 +1383,14 @@ jobs:
           pip install pyyaml
 
       - name: Download test artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8.0.1
         with:
           name: test-results-multiworld-single-${{ inputs.template_type }}
           path: artifacts
 
       - name: Download world mapping for apworlds
         if: inputs.template_type == 'apworld'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8.0.1
         with:
           name: world-mapping-unofficial
           path: scripts/data
@@ -1442,13 +1442,13 @@ jobs:
 
     steps:
       - name: Checkout results branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           ref: ${{ inputs.template_type == 'worldgen' && 'test-results-worldgen' || inputs.template_type == 'apworld' && 'test-results-apworld' || 'test-results-original' }}
           submodules: recursive
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: '~3.12.7'
           check-latest: true
@@ -1459,7 +1459,7 @@ jobs:
           sudo apt -y install python3-gi libgirepository1.0-dev
 
       - name: Cache Python virtual environment
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         id: cache-venv
         with:
           path: .venv
@@ -1480,14 +1480,14 @@ jobs:
 
       - name: Download APWorld Manager artifact
         if: inputs.template_type == 'apworld'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8.0.1
         with:
           name: apworld-manager
           path: worlds/apworld_manager/
 
       - name: Download custom worlds artifact
         if: inputs.template_type == 'apworld'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8.0.1
         with:
           name: custom-worlds
           path: custom_worlds/
@@ -1522,7 +1522,7 @@ jobs:
           python scripts/setup/update_host_settings.py minimal-spoilers
 
       - name: Cache Node.js dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         id: cache-node
         with:
           path: node_modules
@@ -1533,7 +1533,7 @@ jobs:
         run: npm install
 
       - name: Cache Playwright browsers
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         id: cache-playwright
         with:
           path: ~/.cache/ms-playwright
@@ -1579,7 +1579,7 @@ jobs:
 
       - name: Upload test results for split ${{ matrix.split_num }}
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.0
         with:
           name: test-results-multiworld-${{ inputs.template_type }}-split-${{ matrix.split_num }}
           path: scripts/output/${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || inputs.template_type == 'apworld' && 'multiworld-apworld' || 'multiworld' }}/test-results-split-${{ matrix.split_num }}.json
@@ -1596,12 +1596,12 @@ jobs:
 
     steps:
       - name: Checkout results branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           ref: ${{ inputs.template_type == 'worldgen' && 'test-results-worldgen' || inputs.template_type == 'apworld' && 'test-results-apworld' || 'test-results-original' }}
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: '~3.12.7'
           check-latest: true
@@ -1612,13 +1612,13 @@ jobs:
           pip install pyyaml
 
       - name: Download all test artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8.0.1
         with:
           path: artifacts
 
       - name: Download world mapping for apworlds
         if: inputs.template_type == 'apworld'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8.0.1
         with:
           name: world-mapping-unofficial
           path: scripts/data

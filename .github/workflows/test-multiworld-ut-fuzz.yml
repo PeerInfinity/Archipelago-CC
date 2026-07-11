@@ -48,12 +48,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           submodules: recursive
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: '~3.12.7'
           check-latest: true
@@ -87,12 +87,12 @@ jobs:
 
     steps:
       - name: Checkout test-results-multiworld-ut-fuzz branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           ref: test-results-multiworld-ut-fuzz
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: '~3.12.7'
           check-latest: true
@@ -103,7 +103,7 @@ jobs:
           sudo apt -y install python3-gi libgirepository1.0-dev
 
       - name: Cache Python virtual environment
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         id: cache-venv
         with:
           path: .venv
@@ -171,7 +171,7 @@ jobs:
 
       - name: Upload test results
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.0
         with:
           name: multiworld-ut-fuzz-results
           path: scripts/output/multiworld-ut-fuzz/test-results-*.json
