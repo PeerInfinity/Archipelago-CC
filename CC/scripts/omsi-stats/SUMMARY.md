@@ -31,9 +31,27 @@ This same run doubles as the whole-system behavioral regression gate the
 XML-migration plan adopts for its Phases 4/5 (run it against the XML-backed
 build; the hash must not move).
 
-## Round 2 — predictor cross-check variant (`--seed-predictor`)
+## Round 2 — predictor cross-check variant (`--seed-predictor`) (2026-07-10)
 
 With the predictor-model cross-check enabled, planner DECISIONS are designed
 to be identical (engine measurement stays authoritative; the predictor
 projection is recorded as a prior and divergences logged as a verifier —
-the "third oracle"). Result: <!-- ROUND2 -->pending.
+the "third oracle").
+
+**Result: decision-neutrality CONFIRMED — the run is byte-identical to
+Round 1** (500 loops / 5,432,753 ticks / hash `54506b48ec1758af`, 0 RNG,
+11.8 min), with **54 divergences recorded**.
+
+**Divergence quality caveat:** every one of the 54 shows `predicted=0.00`
+(Short Quest/Pick Locks/Long Quest gold yields; Buy Glasses / Buy Mana Z1 /
+Buy Supplies gold spends; Throw Party rep spend). That is a limitation of
+the current PRIOR EXTRACTION, not evidence against the predictor model: the
+prior runs the predictor on a single-exec queue from the LIVE state, so any
+action that is resource-gated or costed from that state projects no resource
+delta (the planner's engine measurements inject resources; the predictor
+probe doesn't). Useful next step for the arc: derive priors from the
+predictor's per-action effect table (`Koviko.Predictor.initPredictions()`
+entries) or feed the predictor an injected input state, so the cross-check
+compares like with like. Until then, treat zero-predicted divergences as
+"extraction blind spot", and only a NON-zero mismatch as a true third-oracle
+alarm.
