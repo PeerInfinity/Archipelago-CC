@@ -3,25 +3,26 @@
     "datasetSeed": 1,
     "fillSeed": 1,
     "seedId": "AP_14089154938208861744",
-    "converged": false,
-    "failure": "1 entries never started",
+    "converged": true,
+    "failure": null,
     "entries": 130,
     "milestones": 21,
     "stalled": 0,
-    "neverStarted": 1,
+    "neverStarted": 0,
+    "completedUnsolved": 0,
     "saturated": 0,
     "skillless": 0,
-    "floorClamped": 18,
-    "thresholdClamped": 13,
-    "unengaged": 1,
+    "floorClamped": 10,
+    "thresholdClamped": 9,
+    "unengaged": 2,
     "unengagedMilestones": 0,
-    "totalResets": 58,
-    "gapP50": 2,
-    "gapMean": 2.761904761904762,
-    "gapMax": 8,
+    "totalResets": 76,
+    "gapP50": 3,
+    "gapMean": 3.619047619047619,
+    "gapMax": 13,
     "cmMin": 0.05,
-    "cmP50": 0.7575094224786676,
-    "cmMax": 9919.612300391458,
+    "cmP50": 1.2131810095894853,
+    "cmMax": 1453.098258069971,
     "milestoneTrouble": [],
     "bandProfile": [
       {
@@ -29,13 +30,13 @@
         "n": 7,
         "floor": 0,
         "saturated": 0,
-        "threshold": 1,
+        "threshold": 0,
         "stalled": 0
       },
       {
         "bucket": 1,
         "n": 25,
-        "floor": 10,
+        "floor": 2,
         "saturated": 0,
         "threshold": 1,
         "stalled": 0
@@ -43,7 +44,7 @@
       {
         "bucket": 2,
         "n": 46,
-        "floor": 7,
+        "floor": 6,
         "saturated": 0,
         "threshold": 4,
         "stalled": 0
@@ -51,9 +52,9 @@
       {
         "bucket": 3,
         "n": 52,
-        "floor": 1,
+        "floor": 2,
         "saturated": 0,
-        "threshold": 7,
+        "threshold": 4,
         "stalled": 0
       }
     ]
@@ -68,10 +69,11 @@
     "milestones": 21,
     "stalled": 1,
     "neverStarted": 0,
+    "completedUnsolved": 0,
     "saturated": 0,
     "skillless": 0,
-    "floorClamped": 13,
-    "thresholdClamped": 13,
+    "floorClamped": 16,
+    "thresholdClamped": 12,
     "unengaged": 1,
     "unengagedMilestones": 0,
     "totalResets": 140,
@@ -79,8 +81,8 @@
     "gapMean": 6.190476190476191,
     "gapMax": 62,
     "cmMin": 0.05,
-    "cmP50": 1.194082433713971,
-    "cmMax": 83826.8741932113,
+    "cmP50": 1.406354517130147,
+    "cmMax": 21813.757432549733,
     "milestoneTrouble": [],
     "bandProfile": [
       {
@@ -104,13 +106,13 @@
         "n": 18,
         "floor": 3,
         "saturated": 0,
-        "threshold": 1,
+        "threshold": 0,
         "stalled": 0
       },
       {
         "bucket": 3,
         "n": 37,
-        "floor": 1,
+        "floor": 2,
         "saturated": 0,
         "threshold": 4,
         "stalled": 0
@@ -118,7 +120,7 @@
       {
         "bucket": 4,
         "n": 52,
-        "floor": 1,
+        "floor": 3,
         "saturated": 0,
         "threshold": 6,
         "stalled": 0
@@ -129,41 +131,42 @@
     "datasetSeed": 2,
     "fillSeed": 1,
     "seedId": "AP_14089154938208861744",
-    "converged": false,
-    "failure": "1 unengaged MILESTONES",
+    "converged": true,
+    "failure": null,
     "entries": 130,
     "milestones": 21,
     "stalled": 0,
     "neverStarted": 0,
+    "completedUnsolved": 0,
     "saturated": 0,
     "skillless": 0,
-    "floorClamped": 5,
-    "thresholdClamped": 13,
+    "floorClamped": 10,
+    "thresholdClamped": 14,
     "unengaged": 2,
-    "unengagedMilestones": 1,
-    "totalResets": 82,
-    "gapP50": 3,
-    "gapMean": 3.8,
-    "gapMax": 20,
+    "unengagedMilestones": 0,
+    "totalResets": 94,
+    "gapP50": 4,
+    "gapMean": 4.476190476190476,
+    "gapMax": 19,
     "cmMin": 0.05,
-    "cmP50": 0.6323521596634001,
-    "cmMax": 10260.58456877215,
+    "cmP50": 1.0169717186445082,
+    "cmMax": 13563.776032269563,
     "milestoneTrouble": [],
     "bandProfile": [
       {
         "bucket": 0,
         "n": 7,
-        "floor": 1,
+        "floor": 0,
         "saturated": 0,
-        "threshold": 0,
+        "threshold": 1,
         "stalled": 0
       },
       {
         "bucket": 1,
         "n": 16,
-        "floor": 1,
+        "floor": 3,
         "saturated": 0,
-        "threshold": 2,
+        "threshold": 1,
         "stalled": 0
       },
       {
@@ -171,15 +174,15 @@
         "n": 28,
         "floor": 2,
         "saturated": 0,
-        "threshold": 2,
+        "threshold": 3,
         "stalled": 0
       },
       {
         "bucket": 3,
         "n": 44,
-        "floor": 0,
+        "floor": 4,
         "saturated": 0,
-        "threshold": 5,
+        "threshold": 6,
         "stalled": 0
       },
       {
@@ -187,7 +190,7 @@
         "n": 35,
         "floor": 1,
         "saturated": 0,
-        "threshold": 4,
+        "threshold": 3,
         "stalled": 0
       }
     ]
@@ -196,25 +199,26 @@
     "datasetSeed": 2,
     "fillSeed": 2,
     "seedId": "AP_01043188731678011336",
-    "converged": false,
-    "failure": "2 unengaged MILESTONES",
+    "converged": true,
+    "failure": null,
     "entries": 130,
     "milestones": 21,
     "stalled": 0,
     "neverStarted": 0,
+    "completedUnsolved": 0,
     "saturated": 0,
     "skillless": 0,
-    "floorClamped": 16,
-    "thresholdClamped": 18,
-    "unengaged": 5,
-    "unengagedMilestones": 2,
-    "totalResets": 107,
+    "floorClamped": 21,
+    "thresholdClamped": 20,
+    "unengaged": 4,
+    "unengagedMilestones": 0,
+    "totalResets": 95,
     "gapP50": 4,
-    "gapMean": 4.578947368421052,
-    "gapMax": 20,
+    "gapMean": 4.380952380952381,
+    "gapMax": 16,
     "cmMin": 0.05,
-    "cmP50": 0.6642762762308688,
-    "cmMax": 50855.570952401664,
+    "cmP50": 0.4530340838208584,
+    "cmMax": 44963.92282038518,
     "milestoneTrouble": [],
     "bandProfile": [
       {
@@ -238,23 +242,23 @@
         "n": 28,
         "floor": 6,
         "saturated": 0,
-        "threshold": 2,
+        "threshold": 1,
         "stalled": 0
       },
       {
         "bucket": 3,
         "n": 44,
-        "floor": 3,
+        "floor": 7,
         "saturated": 0,
-        "threshold": 8,
+        "threshold": 12,
         "stalled": 0
       },
       {
         "bucket": 4,
         "n": 35,
-        "floor": 1,
+        "floor": 2,
         "saturated": 0,
-        "threshold": 6,
+        "threshold": 5,
         "stalled": 0
       }
     ]
@@ -263,33 +267,34 @@
     "datasetSeed": 3,
     "fillSeed": 3,
     "seedId": "AP_84719271504320872445",
-    "converged": false,
-    "failure": "1 entries never started",
+    "converged": true,
+    "failure": null,
     "entries": 130,
     "milestones": 21,
     "stalled": 0,
-    "neverStarted": 1,
+    "neverStarted": 0,
+    "completedUnsolved": 0,
     "saturated": 0,
     "skillless": 0,
-    "floorClamped": 14,
-    "thresholdClamped": 15,
+    "floorClamped": 12,
+    "thresholdClamped": 10,
     "unengaged": 0,
     "unengagedMilestones": 0,
-    "totalResets": 65,
-    "gapP50": 2,
-    "gapMean": 2.4761904761904763,
-    "gapMax": 5,
+    "totalResets": 87,
+    "gapP50": 3,
+    "gapMean": 3.619047619047619,
+    "gapMax": 19,
     "cmMin": 0.05,
-    "cmP50": 0.3876115522978818,
-    "cmMax": 38156.19614381979,
+    "cmP50": 0.9140384116286492,
+    "cmMax": 44231.766223840474,
     "milestoneTrouble": [],
     "bandProfile": [
       {
         "bucket": 0,
         "n": 7,
-        "floor": 1,
+        "floor": 2,
         "saturated": 0,
-        "threshold": 1,
+        "threshold": 0,
         "stalled": 0
       },
       {
@@ -297,7 +302,7 @@
         "n": 16,
         "floor": 2,
         "saturated": 0,
-        "threshold": 3,
+        "threshold": 1,
         "stalled": 0
       },
       {
@@ -311,9 +316,9 @@
       {
         "bucket": 3,
         "n": 37,
-        "floor": 6,
+        "floor": 3,
         "saturated": 0,
-        "threshold": 5,
+        "threshold": 1,
         "stalled": 0
       },
       {
@@ -321,7 +326,7 @@
         "n": 52,
         "floor": 3,
         "saturated": 0,
-        "threshold": 4,
+        "threshold": 6,
         "stalled": 0
       }
     ]
@@ -336,19 +341,20 @@
     "milestones": 21,
     "stalled": 0,
     "neverStarted": 0,
+    "completedUnsolved": 0,
     "saturated": 0,
     "skillless": 0,
-    "floorClamped": 18,
-    "thresholdClamped": 15,
+    "floorClamped": 23,
+    "thresholdClamped": 10,
     "unengaged": 1,
     "unengagedMilestones": 0,
-    "totalResets": 80,
-    "gapP50": 2,
-    "gapMean": 3.7142857142857144,
-    "gapMax": 14,
+    "totalResets": 81,
+    "gapP50": 3,
+    "gapMean": 3.619047619047619,
+    "gapMax": 9,
     "cmMin": 0.05,
-    "cmP50": 0.17286057362104373,
-    "cmMax": 78574.42385712976,
+    "cmP50": 0.21288983254409583,
+    "cmMax": 109113.74135315647,
     "milestoneTrouble": [],
     "bandProfile": [
       {
@@ -386,7 +392,7 @@
       {
         "bucket": 4,
         "n": 9,
-        "floor": 1,
+        "floor": 3,
         "saturated": 0,
         "threshold": 1,
         "stalled": 0
@@ -394,33 +400,33 @@
       {
         "bucket": 5,
         "n": 18,
-        "floor": 5,
+        "floor": 3,
         "saturated": 0,
-        "threshold": 1,
+        "threshold": 0,
         "stalled": 0
       },
       {
         "bucket": 6,
         "n": 9,
-        "floor": 2,
+        "floor": 4,
         "saturated": 0,
-        "threshold": 2,
+        "threshold": 1,
         "stalled": 0
       },
       {
         "bucket": 7,
         "n": 18,
-        "floor": 3,
+        "floor": 5,
         "saturated": 0,
-        "threshold": 4,
+        "threshold": 2,
         "stalled": 0
       },
       {
         "bucket": 8,
         "n": 27,
-        "floor": 2,
+        "floor": 3,
         "saturated": 0,
-        "threshold": 4,
+        "threshold": 2,
         "stalled": 0
       },
       {
@@ -428,7 +434,7 @@
         "n": 17,
         "floor": 1,
         "saturated": 0,
-        "threshold": 0,
+        "threshold": 1,
         "stalled": 0
       }
     ]

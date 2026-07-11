@@ -14,39 +14,39 @@
   },
   {
    "id": 16,
-   "cost_multiplier": 0.05
+   "cost_multiplier": 29.440206857328267
   },
   {
    "id": 15,
-   "cost_multiplier": 1.9469642868761428
+   "cost_multiplier": 0.05
   },
   {
    "id": 12,
-   "cost_multiplier": 0.3399048921952579
+   "cost_multiplier": 0.4493305229451385
   },
   {
    "id": 10,
-   "cost_multiplier": 1.2231805299711234
+   "cost_multiplier": 1.8898756540496728
   },
   {
    "id": 31,
-   "cost_multiplier": 0.25502570306378
+   "cost_multiplier": 1.5647293944254683
   },
   {
    "id": 32,
-   "cost_multiplier": 0.2447705553787207
+   "cost_multiplier": 0.37202483431026095
   },
   {
    "id": 34,
-   "cost_multiplier": 2.0962476551340874
+   "cost_multiplier": 12.446236618853414
   },
   {
    "id": 37,
-   "cost_multiplier": 0.15409429672790678
+   "cost_multiplier": 0.15664497840921943
   },
   {
    "id": 35,
-   "cost_multiplier": 0.21932072626800586
+   "cost_multiplier": 0.3279159352323086
   },
   {
    "id": 36,
@@ -54,15 +54,15 @@
   },
   {
    "id": 33,
-   "cost_multiplier": 0.05
+   "cost_multiplier": 0.07123291158927232
   },
   {
    "id": 30,
-   "cost_multiplier": 0.1637104215037699
+   "cost_multiplier": 0.18822641886602184
   },
   {
    "id": 54,
-   "cost_multiplier": 0.053445018816906865
+   "cost_multiplier": 0.06508279260280052
   },
   {
    "id": 55,
@@ -74,59 +74,59 @@
   },
   {
    "id": 52,
-   "cost_multiplier": 1.3443655700502692
+   "cost_multiplier": 0.0560892185147753
   },
   {
    "id": 50,
-   "cost_multiplier": 0.05867550283782154
+   "cost_multiplier": 0.18977785587083487
   },
   {
    "id": 56,
-   "cost_multiplier": 0.5992085491867434
+   "cost_multiplier": 0.604147464363525
   },
   {
    "id": 53,
-   "cost_multiplier": 0.34853718939215067
+   "cost_multiplier": 3.0801930934141213
   },
   {
    "id": 57,
-   "cost_multiplier": 1.5095390344183752
+   "cost_multiplier": 1.5599266293018328
   },
   {
    "id": 71,
-   "cost_multiplier": 0.21819750912935434
+   "cost_multiplier": 0.20771126573119952
   },
   {
    "id": 73,
-   "cost_multiplier": 0.3876115522978818
+   "cost_multiplier": 0.5123953949845913
   },
   {
    "id": 72,
-   "cost_multiplier": 0.1423875684954663
+   "cost_multiplier": 0.17339278373826597
   },
   {
    "id": 76,
-   "cost_multiplier": 2.9109907935227817
+   "cost_multiplier": 1.3905761843436177
   },
   {
    "id": 74,
-   "cost_multiplier": 0.09112328710535995
+   "cost_multiplier": 0.12346184185796094
   },
   {
    "id": 75,
-   "cost_multiplier": 0.23229206124933255
+   "cost_multiplier": 0.25633850100368716
   },
   {
    "id": 70,
-   "cost_multiplier": 0.3183008269580516
+   "cost_multiplier": 0.3876115522978818
   },
   {
    "id": 94,
-   "cost_multiplier": 0.05
+   "cost_multiplier": 0.06455073973310597
   },
   {
    "id": 95,
-   "cost_multiplier": 0.053445018816906865
+   "cost_multiplier": 0.05
   },
   {
    "id": 93,
@@ -134,55 +134,55 @@
   },
   {
    "id": 91,
-   "cost_multiplier": 0.22180927414118365
-  },
-  {
-   "id": 97,
-   "cost_multiplier": 0.06066738315350447
-  },
-  {
-   "id": 98,
-   "cost_multiplier": 0.9601833774583054
-  },
-  {
-   "id": 92,
-   "cost_multiplier": 0.8880906004389999
-  },
-  {
-   "id": 90,
-   "cost_multiplier": 2.5924707532012814
-  },
-  {
-   "id": 77,
-   "cost_multiplier": 1.050917683471272
-  },
-  {
-   "id": 78,
-   "cost_multiplier": 0.4653819122137643
-  },
-  {
-   "id": 96,
    "cost_multiplier": 0.05
   },
   {
+   "id": 97,
+   "cost_multiplier": 0.0591916428925931
+  },
+  {
+   "id": 98,
+   "cost_multiplier": 0.9140384116286492
+  },
+  {
+   "id": 92,
+   "cost_multiplier": 0.3183008269580516
+  },
+  {
+   "id": 90,
+   "cost_multiplier": 2.42769552176526
+  },
+  {
+   "id": 77,
+   "cost_multiplier": 1.0683132428184872
+  },
+  {
+   "id": 78,
+   "cost_multiplier": 0.45592157768806735
+  },
+  {
+   "id": 96,
+   "cost_multiplier": 16.16959213615885
+  },
+  {
    "id": 111,
-   "cost_multiplier": 0.8114144862439207
+   "cost_multiplier": 0.8523785127717531
   },
   {
    "id": 112,
-   "cost_multiplier": 0.13116637409292345
+   "cost_multiplier": 0.6239706517207332
   },
   {
    "id": 118,
-   "cost_multiplier": 0.10689003763381373
+   "cost_multiplier": 0.2011123987405205
   },
   {
    "id": 117,
-   "cost_multiplier": 2.062114033056034
+   "cost_multiplier": 1.7499013115585476
   },
   {
    "id": 114,
-   "cost_multiplier": 0.42293746662926546
+   "cost_multiplier": 1.0870414527843573
   },
   {
    "id": 113,
@@ -190,11 +190,11 @@
   },
   {
    "id": 110,
-   "cost_multiplier": 0.09291682449973303
+   "cost_multiplier": 0.1423875684954663
   },
   {
    "id": 131,
-   "cost_multiplier": 0.120829492872705
+   "cost_multiplier": 0.10859967462071454
   },
   {
    "id": 134,
@@ -202,55 +202,55 @@
   },
   {
    "id": 135,
-   "cost_multiplier": 0.05
+   "cost_multiplier": 0.06950016377537298
   },
   {
    "id": 137,
-   "cost_multiplier": 0.08890670388554792
+   "cost_multiplier": 0.11466956029774274
   },
   {
    "id": 132,
-   "cost_multiplier": 2.6571051049234753
+   "cost_multiplier": 13.834545637406162
   },
   {
    "id": 133,
-   "cost_multiplier": 0.17572188846473935
+   "cost_multiplier": 0.17144743566899823
   },
   {
    "id": 119,
-   "cost_multiplier": 0.37308964360202423
+   "cost_multiplier": 120.81289692402532
   },
   {
    "id": 136,
-   "cost_multiplier": 4.177331089663119
+   "cost_multiplier": 14.193102855751771
   },
   {
    "id": 116,
-   "cost_multiplier": 1.4849589067856932
+   "cost_multiplier": 1.5095390344183752
   },
   {
    "id": 115,
-   "cost_multiplier": 0.8089239385433221
+   "cost_multiplier": 2.148510388694901
   },
   {
    "id": 130,
-   "cost_multiplier": 0.10595797649844428
+   "cost_multiplier": 0.21999597978007773
   },
   {
    "id": 156,
-   "cost_multiplier": 1.1513325896166486
+   "cost_multiplier": 11.278687936732517
   },
   {
    "id": 152,
-   "cost_multiplier": 0.05
+   "cost_multiplier": 0.13116637409292345
   },
   {
    "id": 155,
-   "cost_multiplier": 0.11656765486104827
+   "cost_multiplier": 0.3473099410519665
   },
   {
    "id": 151,
-   "cost_multiplier": 0.05
+   "cost_multiplier": 0.15330512664809526
   },
   {
    "id": 150,
@@ -258,7 +258,7 @@
   },
   {
    "id": 171,
-   "cost_multiplier": 0.1664202763266708
+   "cost_multiplier": 0.13778827069323493
   },
   {
    "id": 175,
@@ -270,123 +270,123 @@
   },
   {
    "id": 174,
-   "cost_multiplier": 9.720123660092128
+   "cost_multiplier": 21.027016670981546
   },
   {
    "id": 177,
-   "cost_multiplier": 2.983566348165504
+   "cost_multiplier": 0.9690288807447044
   },
   {
    "id": 176,
-   "cost_multiplier": 3.455312469684127
+   "cost_multiplier": 0.9215722797443179
   },
   {
    "id": 178,
-   "cost_multiplier": 0.05
+   "cost_multiplier": 0.0591916428925931
   },
   {
    "id": 179,
-   "cost_multiplier": 0.22133422153501744
+   "cost_multiplier": 7.661045903604201
   },
   {
    "id": 157,
-   "cost_multiplier": 0.31847576168444924
+   "cost_multiplier": 0.4761669315008672
   },
   {
    "id": 158,
-   "cost_multiplier": 23.41745364787751
+   "cost_multiplier": 54.54188491731773
   },
   {
    "id": 153,
-   "cost_multiplier": 2.788474535422612
+   "cost_multiplier": 54.938591028121095
   },
   {
    "id": 172,
-   "cost_multiplier": 0.13063810213252794
+   "cost_multiplier": 1.610446917918428
   },
   {
    "id": 170,
-   "cost_multiplier": 5.448946716842628
+   "cost_multiplier": 74.12566214764608
   },
   {
    "id": 154,
-   "cost_multiplier": 20.53526787445223
+   "cost_multiplier": 5.213780118409535
   },
   {
    "id": 195,
-   "cost_multiplier": 9.415199947777804
+   "cost_multiplier": 3.63324467186685
   },
   {
    "id": 196,
-   "cost_multiplier": 3.346918097111702
+   "cost_multiplier": 9.80966841560242
   },
   {
    "id": 192,
-   "cost_multiplier": 0.09065661330052341
+   "cost_multiplier": 0.932925598497644
   },
   {
    "id": 194,
-   "cost_multiplier": 17.283683119574384
+   "cost_multiplier": 96.09750459616549
   },
   {
    "id": 197,
-   "cost_multiplier": 0.05
+   "cost_multiplier": 30.45217121740149
   },
   {
    "id": 191,
-   "cost_multiplier": 0.165059787907937
+   "cost_multiplier": 0.47982798040871605
   },
   {
    "id": 190,
-   "cost_multiplier": 0.12619554872621178
+   "cost_multiplier": 0.9140384116286492
   },
   {
    "id": 211,
-   "cost_multiplier": 0.3005267083372929
+   "cost_multiplier": 175.50478892081895
   },
   {
    "id": 213,
-   "cost_multiplier": 0.12969477736846183
+   "cost_multiplier": 0.05
   },
   {
    "id": 212,
-   "cost_multiplier": 5.060902337946803
+   "cost_multiplier": 5.448946716842628
   },
   {
    "id": 214,
-   "cost_multiplier": 33.32980551816706
+   "cost_multiplier": 26.485855788683388
   },
   {
    "id": 217,
-   "cost_multiplier": 0.1228970569586112
+   "cost_multiplier": 0.7061177392367414
   },
   {
    "id": 218,
-   "cost_multiplier": 1073.5176514310551
+   "cost_multiplier": 2104.4353387288684
   },
   {
    "id": 215,
-   "cost_multiplier": 5.343767813568424
+   "cost_multiplier": 0.05
   },
   {
    "id": 210,
-   "cost_multiplier": 2.1027016670981546
+   "cost_multiplier": 0.6239706517207332
   },
   {
    "id": 231,
-   "cost_multiplier": 11.220925882923888
+   "cost_multiplier": 37.50396921214146
   },
   {
    "id": 235,
-   "cost_multiplier": 0.16865572259967457
+   "cost_multiplier": 0.05
   },
   {
    "id": 234,
-   "cost_multiplier": 31.468648189270798
+   "cost_multiplier": 313.37603539600775
   },
   {
    "id": 233,
-   "cost_multiplier": 0.2896480436944455
+   "cost_multiplier": 2.1641374100494413
   },
   {
    "id": 232,
@@ -394,19 +394,19 @@
   },
   {
    "id": 236,
-   "cost_multiplier": 29.711419057645777
+   "cost_multiplier": 33.0573338253722
   },
   {
    "id": 237,
-   "cost_multiplier": 0.07510072329541066
+   "cost_multiplier": 0.3974936529629071
   },
   {
    "id": 238,
-   "cost_multiplier": 7.360051714332067
+   "cost_multiplier": 21.047244229390017
   },
   {
    "id": 230,
-   "cost_multiplier": 5.724035221720992
+   "cost_multiplier": 13.222933530148879
   },
   {
    "id": 253,
@@ -414,7 +414,7 @@
   },
   {
    "id": 255,
-   "cost_multiplier": 5.128883088364449
+   "cost_multiplier": 30.70317012386853
   },
   {
    "id": 256,
@@ -422,79 +422,79 @@
   },
   {
    "id": 257,
-   "cost_multiplier": 0.05
+   "cost_multiplier": 0.20277004711641
   },
   {
    "id": 258,
-   "cost_multiplier": 265.92958806346996
+   "cost_multiplier": 472.40401983741407
   },
   {
    "id": 252,
-   "cost_multiplier": 77.55426233871526
+   "cost_multiplier": 136.64307885297464
   },
   {
    "id": 254,
-   "cost_multiplier": 1.008657958591137
+   "cost_multiplier": 2.1641374100494413
   },
   {
    "id": 251,
-   "cost_multiplier": 544.8198303206843
+   "cost_multiplier": 1897.2572741797853
   },
   {
    "id": 250,
-   "cost_multiplier": 0.2349277898683948
+   "cost_multiplier": 0.2884418645733962
   },
   {
    "id": 272,
-   "cost_multiplier": 0.47789547545372246
+   "cost_multiplier": 0.25702992229087884
   },
   {
    "id": 274,
-   "cost_multiplier": 13.062015896991875
+   "cost_multiplier": 0.3222664004602399
   },
   {
    "id": 277,
-   "cost_multiplier": 0.8669639186913298
+   "cost_multiplier": 1.5275062328235887
   },
   {
    "id": 276,
-   "cost_multiplier": 80.22007748868636
+   "cost_multiplier": 58.24381196279543
   },
   {
    "id": 271,
-   "cost_multiplier": 6.856955493536185
+   "cost_multiplier": 6.36864037983154
   },
   {
    "id": 278,
-   "cost_multiplier": 6.144008851484958
+   "cost_multiplier": 8.46223572166142
   },
   {
    "id": 275,
-   "cost_multiplier": 163.84540028742444
+   "cost_multiplier": 345.81613651302456
   },
   {
    "id": 270,
-   "cost_multiplier": 0.9027909266287847
+   "cost_multiplier": 1.2231805299711234
   },
   {
    "id": 292,
-   "cost_multiplier": 4.511475174693007
+   "cost_multiplier": 9.759429717799508
   },
   {
    "id": 295,
-   "cost_multiplier": 5.800923528154406
+   "cost_multiplier": 5.848737046989268
   },
   {
    "id": 296,
-   "cost_multiplier": 2.2943364584659895
+   "cost_multiplier": 3.265503974247969
   },
   {
    "id": 294,
-   "cost_multiplier": 0.5499899494501943
+   "cost_multiplier": 0.7827946764734167
   },
   {
    "id": 297,
-   "cost_multiplier": 1.3905761843436177
+   "cost_multiplier": 2.637918412792429
   },
   {
    "id": 293,
@@ -502,19 +502,23 @@
   },
   {
    "id": 291,
-   "cost_multiplier": 2.1027016670981546
+   "cost_multiplier": 0.9406151423192093
   },
   {
    "id": 290,
-   "cost_multiplier": 3.3572227237566548
+   "cost_multiplier": 2.8960826049289405
   },
   {
    "id": 273,
-   "cost_multiplier": 0.22295108359272753
+   "cost_multiplier": 0.35596892123866575
   },
   {
    "id": 216,
-   "cost_multiplier": 38156.19614381979
+   "cost_multiplier": 44231.766223840474
+  },
+  {
+   "id": 193,
+   "cost_multiplier": 7.93141055270815
   }
  ],
  "report": {
@@ -581,17 +585,15 @@
     "milestone": true,
     "synthesized": false,
     "target": 4,
-    "costMultiplier": 0.05,
+    "costMultiplier": 29.440206857328267,
     "estimate": 4,
     "releasedRun": 5,
     "solvedRun": 5,
-    "completedRun": 5,
+    "completedRun": 7,
     "stalled": false,
-    "clamp": "threshold",
+    "clamp": null,
     "solvedVia": "first-start",
-    "unengaged": true,
-    "thresholdFloored": true,
-    "gap": 1
+    "gap": 3
    },
    {
     "taskId": 15,
@@ -600,13 +602,13 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 1.9469642868761428,
+    "costMultiplier": 0.05,
     "estimate": 0,
-    "releasedRun": 5,
-    "solvedRun": 5,
-    "completedRun": 5,
+    "releasedRun": 7,
+    "solvedRun": 7,
+    "completedRun": 7,
     "stalled": false,
-    "clamp": null,
+    "clamp": "floor",
     "solvedVia": "first-start"
    },
    {
@@ -616,11 +618,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 0.3399048921952579,
+    "costMultiplier": 0.4493305229451385,
     "estimate": 0,
-    "releasedRun": 5,
-    "solvedRun": 5,
-    "completedRun": 5,
+    "releasedRun": 7,
+    "solvedRun": 8,
+    "completedRun": 8,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -632,11 +634,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 1.2231805299711234,
+    "costMultiplier": 1.8898756540496728,
     "estimate": 0,
-    "releasedRun": 5,
-    "solvedRun": 5,
-    "completedRun": 5,
+    "releasedRun": 8,
+    "solvedRun": 8,
+    "completedRun": 8,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -648,11 +650,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 0.25502570306378,
+    "costMultiplier": 1.5647293944254683,
     "estimate": 0,
-    "releasedRun": 5,
-    "solvedRun": 5,
-    "completedRun": 5,
+    "releasedRun": 8,
+    "solvedRun": 8,
+    "completedRun": 8,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -664,11 +666,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 0.2447705553787207,
+    "costMultiplier": 0.37202483431026095,
     "estimate": 0,
-    "releasedRun": 5,
-    "solvedRun": 5,
-    "completedRun": 5,
+    "releasedRun": 8,
+    "solvedRun": 8,
+    "completedRun": 8,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -680,11 +682,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 2.0962476551340874,
+    "costMultiplier": 12.446236618853414,
     "estimate": 0,
-    "releasedRun": 5,
-    "solvedRun": 5,
-    "completedRun": 5,
+    "releasedRun": 8,
+    "solvedRun": 8,
+    "completedRun": 8,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -696,11 +698,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 0.15409429672790678,
+    "costMultiplier": 0.15664497840921943,
     "estimate": 0,
-    "releasedRun": 5,
-    "solvedRun": 5,
-    "completedRun": 5,
+    "releasedRun": 8,
+    "solvedRun": 8,
+    "completedRun": 8,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -712,11 +714,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 0.21932072626800586,
+    "costMultiplier": 0.3279159352323086,
     "estimate": 0,
-    "releasedRun": 5,
-    "solvedRun": 5,
-    "completedRun": 5,
+    "releasedRun": 8,
+    "solvedRun": 8,
+    "completedRun": 8,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -730,9 +732,9 @@
     "target": 0.25,
     "costMultiplier": 0.05,
     "estimate": 0,
-    "releasedRun": 5,
-    "solvedRun": 5,
-    "completedRun": 5,
+    "releasedRun": 8,
+    "solvedRun": 8,
+    "completedRun": 8,
     "stalled": false,
     "clamp": "threshold",
     "solvedVia": "first-start",
@@ -746,13 +748,13 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 0.05,
+    "costMultiplier": 0.07123291158927232,
     "estimate": 0,
-    "releasedRun": 5,
-    "solvedRun": 5,
-    "completedRun": 5,
+    "releasedRun": 8,
+    "solvedRun": 8,
+    "completedRun": 8,
     "stalled": false,
-    "clamp": "floor",
+    "clamp": null,
     "solvedVia": "first-start"
    },
    {
@@ -762,11 +764,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 0.1637104215037699,
+    "costMultiplier": 0.18822641886602184,
     "estimate": 0,
-    "releasedRun": 5,
-    "solvedRun": 5,
-    "completedRun": 5,
+    "releasedRun": 8,
+    "solvedRun": 8,
+    "completedRun": 8,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -778,11 +780,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 0.053445018816906865,
+    "costMultiplier": 0.06508279260280052,
     "estimate": 0,
-    "releasedRun": 5,
-    "solvedRun": 5,
-    "completedRun": 5,
+    "releasedRun": 8,
+    "solvedRun": 8,
+    "completedRun": 8,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -796,9 +798,9 @@
     "target": 0.25,
     "costMultiplier": 0.05,
     "estimate": 0,
-    "releasedRun": 5,
-    "solvedRun": 5,
-    "completedRun": 5,
+    "releasedRun": 8,
+    "solvedRun": 8,
+    "completedRun": 8,
     "stalled": false,
     "clamp": "floor",
     "solvedVia": "first-start"
@@ -812,14 +814,12 @@
     "target": 0.1,
     "costMultiplier": 0.05,
     "estimate": 0,
-    "releasedRun": 5,
-    "solvedRun": 5,
-    "completedRun": 6,
+    "releasedRun": 8,
+    "solvedRun": 8,
+    "completedRun": 8,
     "stalled": false,
-    "clamp": "threshold",
-    "solvedVia": "first-start",
-    "unengaged": false,
-    "thresholdFloored": true
+    "clamp": "floor",
+    "solvedVia": "first-start"
    },
    {
     "taskId": 52,
@@ -828,11 +828,11 @@
     "milestone": true,
     "synthesized": false,
     "target": 4,
-    "costMultiplier": 1.3443655700502692,
+    "costMultiplier": 0.0560892185147753,
     "estimate": 4,
-    "releasedRun": 6,
-    "solvedRun": 6,
-    "completedRun": 7,
+    "releasedRun": 8,
+    "solvedRun": 8,
+    "completedRun": 9,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start",
@@ -845,11 +845,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 0.05867550283782154,
+    "costMultiplier": 0.18977785587083487,
     "estimate": 0,
-    "releasedRun": 7,
-    "solvedRun": 7,
-    "completedRun": 7,
+    "releasedRun": 9,
+    "solvedRun": 9,
+    "completedRun": 9,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -861,11 +861,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.5,
-    "costMultiplier": 0.5992085491867434,
+    "costMultiplier": 0.604147464363525,
     "estimate": 0,
-    "releasedRun": 7,
-    "solvedRun": 9,
-    "completedRun": 9,
+    "releasedRun": 9,
+    "solvedRun": 11,
+    "completedRun": 11,
     "stalled": false,
     "clamp": null,
     "solvedVia": "boundary"
@@ -877,17 +877,15 @@
     "milestone": true,
     "synthesized": false,
     "target": 3,
-    "costMultiplier": 0.34853718939215067,
+    "costMultiplier": 3.0801930934141213,
     "estimate": 3,
-    "releasedRun": 9,
-    "solvedRun": 9,
-    "completedRun": 9,
+    "releasedRun": 11,
+    "solvedRun": 11,
+    "completedRun": 12,
     "stalled": false,
-    "clamp": "threshold",
+    "clamp": null,
     "solvedVia": "first-start",
-    "unengaged": false,
-    "thresholdFloored": false,
-    "gap": 2
+    "gap": 3
    },
    {
     "taskId": 57,
@@ -896,11 +894,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 1.5095390344183752,
+    "costMultiplier": 1.5599266293018328,
     "estimate": 0,
-    "releasedRun": 9,
-    "solvedRun": 11,
-    "completedRun": 11,
+    "releasedRun": 12,
+    "solvedRun": 14,
+    "completedRun": 14,
     "stalled": false,
     "clamp": null,
     "solvedVia": "boundary"
@@ -912,11 +910,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 0.21819750912935434,
+    "costMultiplier": 0.20771126573119952,
     "estimate": 0,
-    "releasedRun": 11,
-    "solvedRun": 11,
-    "completedRun": 11,
+    "releasedRun": 14,
+    "solvedRun": 14,
+    "completedRun": 14,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -928,11 +926,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 0.3876115522978818,
+    "costMultiplier": 0.5123953949845913,
     "estimate": 0,
-    "releasedRun": 11,
-    "solvedRun": 11,
-    "completedRun": 11,
+    "releasedRun": 14,
+    "solvedRun": 14,
+    "completedRun": 14,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -944,11 +942,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 0.1423875684954663,
+    "costMultiplier": 0.17339278373826597,
     "estimate": 0,
-    "releasedRun": 11,
-    "solvedRun": 11,
-    "completedRun": 11,
+    "releasedRun": 14,
+    "solvedRun": 14,
+    "completedRun": 14,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -960,11 +958,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 2.9109907935227817,
+    "costMultiplier": 1.3905761843436177,
     "estimate": 0,
-    "releasedRun": 11,
-    "solvedRun": 11,
-    "completedRun": 11,
+    "releasedRun": 14,
+    "solvedRun": 14,
+    "completedRun": 14,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -976,11 +974,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 0.09112328710535995,
+    "costMultiplier": 0.12346184185796094,
     "estimate": 0,
-    "releasedRun": 11,
-    "solvedRun": 11,
-    "completedRun": 11,
+    "releasedRun": 14,
+    "solvedRun": 14,
+    "completedRun": 14,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -992,11 +990,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 0.23229206124933255,
+    "costMultiplier": 0.25633850100368716,
     "estimate": 0,
-    "releasedRun": 11,
-    "solvedRun": 11,
-    "completedRun": 11,
+    "releasedRun": 14,
+    "solvedRun": 14,
+    "completedRun": 14,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -1008,11 +1006,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 0.3183008269580516,
+    "costMultiplier": 0.3876115522978818,
     "estimate": 0,
-    "releasedRun": 11,
-    "solvedRun": 11,
-    "completedRun": 11,
+    "releasedRun": 14,
+    "solvedRun": 14,
+    "completedRun": 14,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -1024,13 +1022,13 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 0.05,
+    "costMultiplier": 0.06455073973310597,
     "estimate": 0,
-    "releasedRun": 11,
-    "solvedRun": 11,
-    "completedRun": 11,
+    "releasedRun": 14,
+    "solvedRun": 14,
+    "completedRun": 14,
     "stalled": false,
-    "clamp": "floor",
+    "clamp": null,
     "solvedVia": "first-start"
    },
    {
@@ -1040,14 +1038,16 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 0.053445018816906865,
+    "costMultiplier": 0.05,
     "estimate": 0,
-    "releasedRun": 11,
-    "solvedRun": 11,
-    "completedRun": 11,
+    "releasedRun": 14,
+    "solvedRun": 14,
+    "completedRun": 14,
     "stalled": false,
-    "clamp": null,
-    "solvedVia": "first-start"
+    "clamp": "threshold",
+    "solvedVia": "first-start",
+    "unengaged": true,
+    "thresholdFloored": true
    },
    {
     "taskId": 93,
@@ -1058,9 +1058,9 @@
     "target": 0.25,
     "costMultiplier": 0.05,
     "estimate": 0,
-    "releasedRun": 11,
-    "solvedRun": 11,
-    "completedRun": 12,
+    "releasedRun": 14,
+    "solvedRun": 14,
+    "completedRun": 14,
     "stalled": false,
     "clamp": "floor",
     "solvedVia": "first-start"
@@ -1072,13 +1072,13 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 0.22180927414118365,
+    "costMultiplier": 0.05,
     "estimate": 0,
-    "releasedRun": 12,
-    "solvedRun": 12,
-    "completedRun": 12,
+    "releasedRun": 14,
+    "solvedRun": 14,
+    "completedRun": 14,
     "stalled": false,
-    "clamp": null,
+    "clamp": "floor",
     "solvedVia": "first-start"
    },
    {
@@ -1088,11 +1088,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.5,
-    "costMultiplier": 0.06066738315350447,
+    "costMultiplier": 0.0591916428925931,
     "estimate": 0,
-    "releasedRun": 12,
-    "solvedRun": 14,
-    "completedRun": 14,
+    "releasedRun": 14,
+    "solvedRun": 16,
+    "completedRun": 16,
     "stalled": false,
     "clamp": null,
     "solvedVia": "boundary"
@@ -1104,15 +1104,15 @@
     "milestone": true,
     "synthesized": false,
     "target": 1,
-    "costMultiplier": 0.9601833774583054,
+    "costMultiplier": 0.9140384116286492,
     "estimate": 1,
-    "releasedRun": 14,
-    "solvedRun": 14,
-    "completedRun": 14,
+    "releasedRun": 16,
+    "solvedRun": 16,
+    "completedRun": 16,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start",
-    "gap": 5
+    "gap": 4
    },
    {
     "taskId": 92,
@@ -1121,11 +1121,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 0.8880906004389999,
+    "costMultiplier": 0.3183008269580516,
     "estimate": 0,
-    "releasedRun": 14,
-    "solvedRun": 15,
-    "completedRun": 15,
+    "releasedRun": 16,
+    "solvedRun": 17,
+    "completedRun": 17,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -1137,15 +1137,15 @@
     "milestone": true,
     "synthesized": false,
     "target": 4,
-    "costMultiplier": 2.5924707532012814,
+    "costMultiplier": 2.42769552176526,
     "estimate": 4,
-    "releasedRun": 15,
-    "solvedRun": 15,
-    "completedRun": 16,
+    "releasedRun": 17,
+    "solvedRun": 17,
+    "completedRun": 19,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start",
-    "gap": 2
+    "gap": 3
    },
    {
     "taskId": 77,
@@ -1154,11 +1154,11 @@
     "milestone": true,
     "synthesized": false,
     "target": 3,
-    "costMultiplier": 1.050917683471272,
+    "costMultiplier": 1.0683132428184872,
     "estimate": 3,
-    "releasedRun": 16,
-    "solvedRun": 18,
-    "completedRun": 18,
+    "releasedRun": 19,
+    "solvedRun": 21,
+    "completedRun": 21,
     "stalled": false,
     "clamp": null,
     "solvedVia": "boundary",
@@ -1171,11 +1171,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 0.4653819122137643,
+    "costMultiplier": 0.45592157768806735,
     "estimate": 0,
-    "releasedRun": 18,
-    "solvedRun": 20,
-    "completedRun": 20,
+    "releasedRun": 21,
+    "solvedRun": 23,
+    "completedRun": 23,
     "stalled": false,
     "clamp": "threshold",
     "solvedVia": "boundary",
@@ -1189,17 +1189,15 @@
     "milestone": true,
     "synthesized": false,
     "target": 3,
-    "costMultiplier": 0.05,
+    "costMultiplier": 16.16959213615885,
     "estimate": 3,
-    "releasedRun": 20,
-    "solvedRun": 20,
-    "completedRun": 20,
+    "releasedRun": 23,
+    "solvedRun": 23,
+    "completedRun": 25,
     "stalled": false,
-    "clamp": "threshold",
+    "clamp": null,
     "solvedVia": "first-start",
-    "unengaged": true,
-    "thresholdFloored": true,
-    "gap": 2
+    "gap": 4
    },
    {
     "taskId": 111,
@@ -1208,11 +1206,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 0.8114144862439207,
+    "costMultiplier": 0.8523785127717531,
     "estimate": 0,
-    "releasedRun": 20,
-    "solvedRun": 20,
-    "completedRun": 20,
+    "releasedRun": 25,
+    "solvedRun": 26,
+    "completedRun": 26,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -1224,11 +1222,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 0.13116637409292345,
+    "costMultiplier": 0.6239706517207332,
     "estimate": 0,
-    "releasedRun": 20,
-    "solvedRun": 20,
-    "completedRun": 20,
+    "releasedRun": 26,
+    "solvedRun": 26,
+    "completedRun": 26,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -1240,11 +1238,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.5,
-    "costMultiplier": 0.10689003763381373,
+    "costMultiplier": 0.2011123987405205,
     "estimate": 0,
-    "releasedRun": 20,
-    "solvedRun": 22,
-    "completedRun": 22,
+    "releasedRun": 26,
+    "solvedRun": 28,
+    "completedRun": 28,
     "stalled": false,
     "clamp": null,
     "solvedVia": "boundary"
@@ -1256,11 +1254,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 2.062114033056034,
+    "costMultiplier": 1.7499013115585476,
     "estimate": 0,
-    "releasedRun": 22,
-    "solvedRun": 22,
-    "completedRun": 22,
+    "releasedRun": 28,
+    "solvedRun": 28,
+    "completedRun": 28,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -1272,11 +1270,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 0.42293746662926546,
+    "costMultiplier": 1.0870414527843573,
     "estimate": 0,
-    "releasedRun": 22,
-    "solvedRun": 22,
-    "completedRun": 22,
+    "releasedRun": 28,
+    "solvedRun": 28,
+    "completedRun": 28,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -1290,9 +1288,9 @@
     "target": 0.25,
     "costMultiplier": 0.05,
     "estimate": 0,
-    "releasedRun": 22,
-    "solvedRun": 22,
-    "completedRun": 22,
+    "releasedRun": 28,
+    "solvedRun": 28,
+    "completedRun": 28,
     "stalled": false,
     "clamp": "floor",
     "solvedVia": "first-start"
@@ -1304,11 +1302,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 0.09291682449973303,
+    "costMultiplier": 0.1423875684954663,
     "estimate": 0,
-    "releasedRun": 22,
-    "solvedRun": 22,
-    "completedRun": 22,
+    "releasedRun": 28,
+    "solvedRun": 28,
+    "completedRun": 28,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -1320,11 +1318,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 0.120829492872705,
+    "costMultiplier": 0.10859967462071454,
     "estimate": 0,
-    "releasedRun": 22,
-    "solvedRun": 22,
-    "completedRun": 22,
+    "releasedRun": 28,
+    "solvedRun": 28,
+    "completedRun": 28,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -1338,9 +1336,9 @@
     "target": 0.25,
     "costMultiplier": 0.8155914113661914,
     "estimate": 0,
-    "releasedRun": 22,
-    "solvedRun": 22,
-    "completedRun": 22,
+    "releasedRun": 28,
+    "solvedRun": 28,
+    "completedRun": 28,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -1352,13 +1350,13 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 0.05,
+    "costMultiplier": 0.06950016377537298,
     "estimate": 0,
-    "releasedRun": 22,
-    "solvedRun": 22,
-    "completedRun": 22,
+    "releasedRun": 28,
+    "solvedRun": 28,
+    "completedRun": 28,
     "stalled": false,
-    "clamp": "floor",
+    "clamp": null,
     "solvedVia": "first-start"
    },
    {
@@ -1368,11 +1366,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 0.08890670388554792,
+    "costMultiplier": 0.11466956029774274,
     "estimate": 0,
-    "releasedRun": 22,
-    "solvedRun": 22,
-    "completedRun": 22,
+    "releasedRun": 28,
+    "solvedRun": 28,
+    "completedRun": 28,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -1383,16 +1381,16 @@
     "bucket": 3,
     "milestone": true,
     "synthesized": false,
-    "target": 3,
-    "costMultiplier": 2.6571051049234753,
-    "estimate": 3,
-    "releasedRun": 22,
-    "solvedRun": 22,
-    "completedRun": 23,
+    "target": 2,
+    "costMultiplier": 13.834545637406162,
+    "estimate": 2,
+    "releasedRun": 28,
+    "solvedRun": 28,
+    "completedRun": 29,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start",
-    "gap": 3
+    "gap": 4
    },
    {
     "taskId": 133,
@@ -1401,11 +1399,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 0.17572188846473935,
+    "costMultiplier": 0.17144743566899823,
     "estimate": 0,
-    "releasedRun": 23,
-    "solvedRun": 23,
-    "completedRun": 23,
+    "releasedRun": 29,
+    "solvedRun": 29,
+    "completedRun": 29,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -1416,18 +1414,16 @@
     "bucket": 3,
     "milestone": true,
     "synthesized": false,
-    "target": 3,
-    "costMultiplier": 0.37308964360202423,
-    "estimate": 3,
-    "releasedRun": 23,
-    "solvedRun": 25,
-    "completedRun": 25,
+    "target": 4,
+    "costMultiplier": 120.81289692402532,
+    "estimate": 4,
+    "releasedRun": 29,
+    "solvedRun": 30,
+    "completedRun": 32,
     "stalled": false,
-    "clamp": "threshold",
-    "solvedVia": "boundary",
-    "unengaged": false,
-    "thresholdFloored": false,
-    "gap": 2
+    "clamp": null,
+    "solvedVia": "first-start",
+    "gap": 3
    },
    {
     "taskId": 136,
@@ -1436,11 +1432,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 4.177331089663119,
+    "costMultiplier": 14.193102855751771,
     "estimate": 0,
-    "releasedRun": 25,
-    "solvedRun": 25,
-    "completedRun": 25,
+    "releasedRun": 32,
+    "solvedRun": 33,
+    "completedRun": 33,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -1452,11 +1448,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 1.4849589067856932,
+    "costMultiplier": 1.5095390344183752,
     "estimate": 0,
-    "releasedRun": 25,
-    "solvedRun": 26,
-    "completedRun": 26,
+    "releasedRun": 33,
+    "solvedRun": 34,
+    "completedRun": 34,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -1468,11 +1464,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 0.8089239385433221,
+    "costMultiplier": 2.148510388694901,
     "estimate": 0,
-    "releasedRun": 26,
-    "solvedRun": 26,
-    "completedRun": 26,
+    "releasedRun": 34,
+    "solvedRun": 34,
+    "completedRun": 34,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -1484,11 +1480,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 0.10595797649844428,
+    "costMultiplier": 0.21999597978007773,
     "estimate": 0,
-    "releasedRun": 26,
-    "solvedRun": 26,
-    "completedRun": 26,
+    "releasedRun": 34,
+    "solvedRun": 34,
+    "completedRun": 34,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -1500,11 +1496,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 1.1513325896166486,
+    "costMultiplier": 11.278687936732517,
     "estimate": 0,
-    "releasedRun": 26,
-    "solvedRun": 26,
-    "completedRun": 26,
+    "releasedRun": 34,
+    "solvedRun": 34,
+    "completedRun": 34,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -1516,13 +1512,13 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 0.05,
+    "costMultiplier": 0.13116637409292345,
     "estimate": 0,
-    "releasedRun": 26,
-    "solvedRun": 26,
-    "completedRun": 26,
+    "releasedRun": 34,
+    "solvedRun": 34,
+    "completedRun": 34,
     "stalled": false,
-    "clamp": "floor",
+    "clamp": null,
     "solvedVia": "first-start"
    },
    {
@@ -1532,11 +1528,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 0.11656765486104827,
+    "costMultiplier": 0.3473099410519665,
     "estimate": 0,
-    "releasedRun": 26,
-    "solvedRun": 26,
-    "completedRun": 26,
+    "releasedRun": 34,
+    "solvedRun": 34,
+    "completedRun": 34,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -1548,13 +1544,13 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 0.05,
+    "costMultiplier": 0.15330512664809526,
     "estimate": 0,
-    "releasedRun": 26,
-    "solvedRun": 26,
-    "completedRun": 26,
+    "releasedRun": 34,
+    "solvedRun": 34,
+    "completedRun": 34,
     "stalled": false,
-    "clamp": "floor",
+    "clamp": null,
     "solvedVia": "first-start"
    },
    {
@@ -1566,14 +1562,12 @@
     "target": 0.1,
     "costMultiplier": 0.05,
     "estimate": 0,
-    "releasedRun": 26,
-    "solvedRun": 26,
-    "completedRun": 27,
+    "releasedRun": 34,
+    "solvedRun": 34,
+    "completedRun": 34,
     "stalled": false,
-    "clamp": "threshold",
-    "solvedVia": "first-start",
-    "unengaged": false,
-    "thresholdFloored": true
+    "clamp": "floor",
+    "solvedVia": "first-start"
    },
    {
     "taskId": 171,
@@ -1582,11 +1576,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 0.1664202763266708,
+    "costMultiplier": 0.13778827069323493,
     "estimate": 0,
-    "releasedRun": 27,
-    "solvedRun": 27,
-    "completedRun": 27,
+    "releasedRun": 34,
+    "solvedRun": 34,
+    "completedRun": 34,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -1600,9 +1594,9 @@
     "target": 0.25,
     "costMultiplier": 0.05,
     "estimate": 0,
-    "releasedRun": 27,
-    "solvedRun": 27,
-    "completedRun": 27,
+    "releasedRun": 34,
+    "solvedRun": 34,
+    "completedRun": 35,
     "stalled": false,
     "clamp": "floor",
     "solvedVia": "first-start"
@@ -1616,9 +1610,9 @@
     "target": 0.25,
     "costMultiplier": 0.05,
     "estimate": 0,
-    "releasedRun": 27,
-    "solvedRun": 27,
-    "completedRun": 28,
+    "releasedRun": 35,
+    "solvedRun": 35,
+    "completedRun": 36,
     "stalled": false,
     "clamp": "threshold",
     "solvedVia": "first-start",
@@ -1631,12 +1625,12 @@
     "bucket": 3,
     "milestone": true,
     "synthesized": false,
-    "target": 2,
-    "costMultiplier": 9.720123660092128,
-    "estimate": 2,
-    "releasedRun": 28,
-    "solvedRun": 28,
-    "completedRun": 29,
+    "target": 1,
+    "costMultiplier": 21.027016670981546,
+    "estimate": 1,
+    "releasedRun": 36,
+    "solvedRun": 36,
+    "completedRun": 36,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start",
@@ -1649,11 +1643,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 2.983566348165504,
+    "costMultiplier": 0.9690288807447044,
     "estimate": 0,
-    "releasedRun": 29,
-    "solvedRun": 29,
-    "completedRun": 29,
+    "releasedRun": 36,
+    "solvedRun": 36,
+    "completedRun": 36,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -1665,15 +1659,15 @@
     "milestone": true,
     "synthesized": false,
     "target": 5,
-    "costMultiplier": 3.455312469684127,
+    "costMultiplier": 0.9215722797443179,
     "estimate": 5,
-    "releasedRun": 29,
-    "solvedRun": 29,
-    "completedRun": 31,
+    "releasedRun": 36,
+    "solvedRun": 36,
+    "completedRun": 37,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start",
-    "gap": 2
+    "gap": 1
    },
    {
     "taskId": 178,
@@ -1682,13 +1676,13 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.5,
-    "costMultiplier": 0.05,
+    "costMultiplier": 0.0591916428925931,
     "estimate": 0,
-    "releasedRun": 31,
-    "solvedRun": 33,
-    "completedRun": 33,
+    "releasedRun": 37,
+    "solvedRun": 39,
+    "completedRun": 39,
     "stalled": false,
-    "clamp": "floor",
+    "clamp": null,
     "solvedVia": "boundary"
    },
    {
@@ -1698,17 +1692,15 @@
     "milestone": true,
     "synthesized": false,
     "target": 3,
-    "costMultiplier": 0.22133422153501744,
+    "costMultiplier": 7.661045903604201,
     "estimate": 3,
-    "releasedRun": 33,
-    "solvedRun": 33,
-    "completedRun": 33,
+    "releasedRun": 39,
+    "solvedRun": 39,
+    "completedRun": 40,
     "stalled": false,
-    "clamp": "threshold",
+    "clamp": null,
     "solvedVia": "first-start",
-    "unengaged": false,
-    "thresholdFloored": false,
-    "gap": 2
+    "gap": 3
    },
    {
     "taskId": 157,
@@ -1717,11 +1709,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.5,
-    "costMultiplier": 0.31847576168444924,
+    "costMultiplier": 0.4761669315008672,
     "estimate": 0,
-    "releasedRun": 33,
-    "solvedRun": 35,
-    "completedRun": 35,
+    "releasedRun": 40,
+    "solvedRun": 42,
+    "completedRun": 42,
     "stalled": false,
     "clamp": null,
     "solvedVia": "boundary"
@@ -1733,11 +1725,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 23.41745364787751,
+    "costMultiplier": 54.54188491731773,
     "estimate": 0,
-    "releasedRun": 35,
-    "solvedRun": 37,
-    "completedRun": 37,
+    "releasedRun": 42,
+    "solvedRun": 44,
+    "completedRun": 44,
     "stalled": false,
     "clamp": null,
     "solvedVia": "boundary"
@@ -1749,16 +1741,14 @@
     "milestone": true,
     "synthesized": false,
     "target": 1,
-    "costMultiplier": 2.788474535422612,
+    "costMultiplier": 54.938591028121095,
     "estimate": 1,
-    "releasedRun": 37,
-    "solvedRun": 37,
-    "completedRun": 37,
+    "releasedRun": 44,
+    "solvedRun": 44,
+    "completedRun": 44,
     "stalled": false,
-    "clamp": "threshold",
+    "clamp": null,
     "solvedVia": "first-start",
-    "unengaged": false,
-    "thresholdFloored": false,
     "gap": 4
    },
    {
@@ -1767,16 +1757,16 @@
     "bucket": 3,
     "milestone": true,
     "synthesized": false,
-    "target": 5,
-    "costMultiplier": 0.13063810213252794,
-    "estimate": 5,
-    "releasedRun": 37,
-    "solvedRun": 37,
-    "completedRun": 38,
+    "target": 3,
+    "costMultiplier": 1.610446917918428,
+    "estimate": 3,
+    "releasedRun": 44,
+    "solvedRun": 46,
+    "completedRun": 63,
     "stalled": false,
     "clamp": null,
-    "solvedVia": "first-start",
-    "gap": 1
+    "solvedVia": "boundary",
+    "gap": 19
    },
    {
     "taskId": 170,
@@ -1785,11 +1775,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 5.448946716842628,
+    "costMultiplier": 74.12566214764608,
     "estimate": 0,
-    "releasedRun": 38,
-    "solvedRun": 38,
-    "completedRun": 38,
+    "releasedRun": 63,
+    "solvedRun": 63,
+    "completedRun": 63,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -1801,11 +1791,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 20.53526787445223,
+    "costMultiplier": 5.213780118409535,
     "estimate": 0,
-    "releasedRun": 38,
-    "solvedRun": 39,
-    "completedRun": 39,
+    "releasedRun": 63,
+    "solvedRun": 64,
+    "completedRun": 64,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -1817,11 +1807,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 9.415199947777804,
+    "costMultiplier": 3.63324467186685,
     "estimate": 0,
-    "releasedRun": 39,
-    "solvedRun": 39,
-    "completedRun": 39,
+    "releasedRun": 64,
+    "solvedRun": 65,
+    "completedRun": 65,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -1833,11 +1823,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 3.346918097111702,
+    "costMultiplier": 9.80966841560242,
     "estimate": 0,
-    "releasedRun": 39,
-    "solvedRun": 39,
-    "completedRun": 39,
+    "releasedRun": 65,
+    "solvedRun": 65,
+    "completedRun": 65,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -1849,11 +1839,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 0.09065661330052341,
+    "costMultiplier": 0.932925598497644,
     "estimate": 0,
-    "releasedRun": 39,
-    "solvedRun": 39,
-    "completedRun": 39,
+    "releasedRun": 65,
+    "solvedRun": 65,
+    "completedRun": 65,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -1865,11 +1855,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 17.283683119574384,
+    "costMultiplier": 96.09750459616549,
     "estimate": 0,
-    "releasedRun": 39,
-    "solvedRun": 39,
-    "completedRun": 39,
+    "releasedRun": 65,
+    "solvedRun": 65,
+    "completedRun": 65,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -1881,16 +1871,14 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 0.05,
+    "costMultiplier": 30.45217121740149,
     "estimate": 0,
-    "releasedRun": 39,
-    "solvedRun": 39,
-    "completedRun": 39,
+    "releasedRun": 65,
+    "solvedRun": 65,
+    "completedRun": 65,
     "stalled": false,
-    "clamp": "threshold",
-    "solvedVia": "first-start",
-    "unengaged": true,
-    "thresholdFloored": true
+    "clamp": null,
+    "solvedVia": "first-start"
    },
    {
     "taskId": 191,
@@ -1899,11 +1887,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 0.165059787907937,
+    "costMultiplier": 0.47982798040871605,
     "estimate": 0,
-    "releasedRun": 39,
-    "solvedRun": 39,
-    "completedRun": 39,
+    "releasedRun": 65,
+    "solvedRun": 65,
+    "completedRun": 65,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -1914,18 +1902,16 @@
     "bucket": 4,
     "milestone": true,
     "synthesized": false,
-    "target": 4,
-    "costMultiplier": 0.12619554872621178,
-    "estimate": 6,
-    "releasedRun": 39,
-    "solvedRun": 39,
-    "completedRun": 39,
+    "target": 3,
+    "costMultiplier": 0.9140384116286492,
+    "estimate": 3,
+    "releasedRun": 65,
+    "solvedRun": 65,
+    "completedRun": 67,
     "stalled": false,
-    "clamp": "threshold",
+    "clamp": null,
     "solvedVia": "first-start",
-    "unengaged": false,
-    "thresholdFloored": false,
-    "gap": 1
+    "gap": 4
    },
    {
     "taskId": 211,
@@ -1934,11 +1920,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 0.3005267083372929,
+    "costMultiplier": 175.50478892081895,
     "estimate": 0,
-    "releasedRun": 39,
-    "solvedRun": 39,
-    "completedRun": 39,
+    "releasedRun": 67,
+    "solvedRun": 67,
+    "completedRun": 67,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -1950,14 +1936,14 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 0.12969477736846183,
+    "costMultiplier": 0.05,
     "estimate": 0,
-    "releasedRun": 39,
-    "solvedRun": 41,
-    "completedRun": 41,
+    "releasedRun": 67,
+    "solvedRun": 67,
+    "completedRun": 67,
     "stalled": false,
-    "clamp": null,
-    "solvedVia": "boundary"
+    "clamp": "floor",
+    "solvedVia": "first-start"
    },
    {
     "taskId": 212,
@@ -1966,11 +1952,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 5.060902337946803,
+    "costMultiplier": 5.448946716842628,
     "estimate": 0,
-    "releasedRun": 41,
-    "solvedRun": 41,
-    "completedRun": 41,
+    "releasedRun": 67,
+    "solvedRun": 67,
+    "completedRun": 67,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -1982,11 +1968,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 33.32980551816706,
+    "costMultiplier": 26.485855788683388,
     "estimate": 0,
-    "releasedRun": 41,
-    "solvedRun": 41,
-    "completedRun": 41,
+    "releasedRun": 67,
+    "solvedRun": 67,
+    "completedRun": 67,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -1998,11 +1984,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.5,
-    "costMultiplier": 0.1228970569586112,
+    "costMultiplier": 0.7061177392367414,
     "estimate": 0,
-    "releasedRun": 41,
-    "solvedRun": 43,
-    "completedRun": 43,
+    "releasedRun": 67,
+    "solvedRun": 69,
+    "completedRun": 69,
     "stalled": false,
     "clamp": null,
     "solvedVia": "boundary"
@@ -2014,11 +2000,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 1073.5176514310551,
+    "costMultiplier": 2104.4353387288684,
     "estimate": 0,
-    "releasedRun": 43,
-    "solvedRun": 43,
-    "completedRun": 43,
+    "releasedRun": 69,
+    "solvedRun": 69,
+    "completedRun": 69,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -2030,14 +2016,16 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 5.343767813568424,
+    "costMultiplier": 0.05,
     "estimate": 0,
-    "releasedRun": 43,
-    "solvedRun": 43,
-    "completedRun": 43,
+    "releasedRun": 69,
+    "solvedRun": 69,
+    "completedRun": 69,
     "stalled": false,
-    "clamp": null,
-    "solvedVia": "first-start"
+    "clamp": "threshold",
+    "solvedVia": "first-start",
+    "unengaged": true,
+    "thresholdFloored": true
    },
    {
     "taskId": 210,
@@ -2046,11 +2034,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 2.1027016670981546,
+    "costMultiplier": 0.6239706517207332,
     "estimate": 0,
-    "releasedRun": 43,
-    "solvedRun": 43,
-    "completedRun": 43,
+    "releasedRun": 69,
+    "solvedRun": 69,
+    "completedRun": 69,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -2062,11 +2050,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 11.220925882923888,
+    "costMultiplier": 37.50396921214146,
     "estimate": 0,
-    "releasedRun": 43,
-    "solvedRun": 43,
-    "completedRun": 43,
+    "releasedRun": 69,
+    "solvedRun": 69,
+    "completedRun": 69,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -2078,14 +2066,16 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 0.16865572259967457,
+    "costMultiplier": 0.05,
     "estimate": 0,
-    "releasedRun": 43,
-    "solvedRun": 43,
-    "completedRun": 43,
+    "releasedRun": 69,
+    "solvedRun": 69,
+    "completedRun": 69,
     "stalled": false,
-    "clamp": null,
-    "solvedVia": "first-start"
+    "clamp": "threshold",
+    "solvedVia": "first-start",
+    "unengaged": true,
+    "thresholdFloored": true
    },
    {
     "taskId": 234,
@@ -2094,11 +2084,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 31.468648189270798,
+    "costMultiplier": 313.37603539600775,
     "estimate": 0,
-    "releasedRun": 43,
-    "solvedRun": 43,
-    "completedRun": 43,
+    "releasedRun": 69,
+    "solvedRun": 69,
+    "completedRun": 69,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -2109,16 +2099,16 @@
     "bucket": 4,
     "milestone": true,
     "synthesized": false,
-    "target": 1,
-    "costMultiplier": 0.2896480436944455,
-    "estimate": 1,
-    "releasedRun": 43,
-    "solvedRun": 43,
-    "completedRun": 43,
+    "target": 3,
+    "costMultiplier": 2.1641374100494413,
+    "estimate": 3,
+    "releasedRun": 69,
+    "solvedRun": 69,
+    "completedRun": 69,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start",
-    "gap": 4
+    "gap": 2
    },
    {
     "taskId": 232,
@@ -2129,9 +2119,9 @@
     "target": 0.1,
     "costMultiplier": 0.05,
     "estimate": 0,
-    "releasedRun": 43,
-    "solvedRun": 43,
-    "completedRun": 43,
+    "releasedRun": 69,
+    "solvedRun": 69,
+    "completedRun": 69,
     "stalled": false,
     "clamp": "floor",
     "solvedVia": "first-start"
@@ -2143,11 +2133,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 29.711419057645777,
+    "costMultiplier": 33.0573338253722,
     "estimate": 0,
-    "releasedRun": 43,
-    "solvedRun": 43,
-    "completedRun": 43,
+    "releasedRun": 69,
+    "solvedRun": 69,
+    "completedRun": 69,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -2159,11 +2149,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.5,
-    "costMultiplier": 0.07510072329541066,
+    "costMultiplier": 0.3974936529629071,
     "estimate": 0,
-    "releasedRun": 43,
-    "solvedRun": 45,
-    "completedRun": 45,
+    "releasedRun": 69,
+    "solvedRun": 71,
+    "completedRun": 71,
     "stalled": false,
     "clamp": null,
     "solvedVia": "boundary"
@@ -2175,11 +2165,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 7.360051714332067,
+    "costMultiplier": 21.047244229390017,
     "estimate": 0,
-    "releasedRun": 45,
-    "solvedRun": 45,
-    "completedRun": 45,
+    "releasedRun": 71,
+    "solvedRun": 71,
+    "completedRun": 71,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -2191,11 +2181,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 5.724035221720992,
+    "costMultiplier": 13.222933530148879,
     "estimate": 0,
-    "releasedRun": 45,
-    "solvedRun": 45,
-    "completedRun": 45,
+    "releasedRun": 71,
+    "solvedRun": 71,
+    "completedRun": 71,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -2209,9 +2199,9 @@
     "target": 0.25,
     "costMultiplier": 0.05,
     "estimate": 0,
-    "releasedRun": 45,
-    "solvedRun": 45,
-    "completedRun": 45,
+    "releasedRun": 71,
+    "solvedRun": 71,
+    "completedRun": 71,
     "stalled": false,
     "clamp": "floor",
     "solvedVia": "first-start"
@@ -2223,11 +2213,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 5.128883088364449,
+    "costMultiplier": 30.70317012386853,
     "estimate": 0,
-    "releasedRun": 45,
-    "solvedRun": 45,
-    "completedRun": 45,
+    "releasedRun": 71,
+    "solvedRun": 71,
+    "completedRun": 71,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -2241,9 +2231,9 @@
     "target": 0.25,
     "costMultiplier": 0.05,
     "estimate": 0,
-    "releasedRun": 45,
-    "solvedRun": 45,
-    "completedRun": 45,
+    "releasedRun": 71,
+    "solvedRun": 71,
+    "completedRun": 71,
     "stalled": false,
     "clamp": "threshold",
     "solvedVia": "first-start",
@@ -2257,13 +2247,13 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.5,
-    "costMultiplier": 0.05,
+    "costMultiplier": 0.20277004711641,
     "estimate": 0,
-    "releasedRun": 45,
-    "solvedRun": 47,
-    "completedRun": 47,
+    "releasedRun": 71,
+    "solvedRun": 73,
+    "completedRun": 73,
     "stalled": false,
-    "clamp": "floor",
+    "clamp": null,
     "solvedVia": "boundary"
    },
    {
@@ -2273,11 +2263,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 265.92958806346996,
+    "costMultiplier": 472.40401983741407,
     "estimate": 0,
-    "releasedRun": 47,
-    "solvedRun": 47,
-    "completedRun": 47,
+    "releasedRun": 73,
+    "solvedRun": 73,
+    "completedRun": 73,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -2289,11 +2279,11 @@
     "milestone": true,
     "synthesized": false,
     "target": 1,
-    "costMultiplier": 77.55426233871526,
+    "costMultiplier": 136.64307885297464,
     "estimate": 1,
-    "releasedRun": 47,
-    "solvedRun": 47,
-    "completedRun": 47,
+    "releasedRun": 73,
+    "solvedRun": 73,
+    "completedRun": 73,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start",
@@ -2306,11 +2296,11 @@
     "milestone": true,
     "synthesized": false,
     "target": 3,
-    "costMultiplier": 1.008657958591137,
+    "costMultiplier": 2.1641374100494413,
     "estimate": 3,
-    "releasedRun": 47,
-    "solvedRun": 49,
-    "completedRun": 49,
+    "releasedRun": 73,
+    "solvedRun": 75,
+    "completedRun": 75,
     "stalled": false,
     "clamp": null,
     "solvedVia": "boundary",
@@ -2323,11 +2313,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 544.8198303206843,
+    "costMultiplier": 1897.2572741797853,
     "estimate": 0,
-    "releasedRun": 49,
-    "solvedRun": 49,
-    "completedRun": 49,
+    "releasedRun": 75,
+    "solvedRun": 75,
+    "completedRun": 75,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -2339,11 +2329,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 0.2349277898683948,
+    "costMultiplier": 0.2884418645733962,
     "estimate": 0,
-    "releasedRun": 49,
-    "solvedRun": 49,
-    "completedRun": 49,
+    "releasedRun": 75,
+    "solvedRun": 75,
+    "completedRun": 75,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -2355,15 +2345,17 @@
     "milestone": true,
     "synthesized": false,
     "target": 5,
-    "costMultiplier": 0.47789547545372246,
-    "estimate": 5,
-    "releasedRun": 49,
-    "solvedRun": 49,
-    "completedRun": 51,
+    "costMultiplier": 0.25702992229087884,
+    "estimate": 7,
+    "releasedRun": 75,
+    "solvedRun": 75,
+    "completedRun": 75,
     "stalled": false,
-    "clamp": null,
+    "clamp": "threshold",
     "solvedVia": "first-start",
-    "gap": 2
+    "unengaged": false,
+    "thresholdFloored": false,
+    "gap": 0
    },
    {
     "taskId": 274,
@@ -2372,11 +2364,11 @@
     "milestone": true,
     "synthesized": false,
     "target": 5,
-    "costMultiplier": 13.062015896991875,
+    "costMultiplier": 0.3222664004602399,
     "estimate": 5,
-    "releasedRun": 51,
-    "solvedRun": 51,
-    "completedRun": 53,
+    "releasedRun": 75,
+    "solvedRun": 75,
+    "completedRun": 77,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start",
@@ -2389,11 +2381,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.5,
-    "costMultiplier": 0.8669639186913298,
+    "costMultiplier": 1.5275062328235887,
     "estimate": 0,
-    "releasedRun": 53,
-    "solvedRun": 55,
-    "completedRun": 55,
+    "releasedRun": 77,
+    "solvedRun": 79,
+    "completedRun": 79,
     "stalled": false,
     "clamp": null,
     "solvedVia": "boundary"
@@ -2405,11 +2397,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 80.22007748868636,
+    "costMultiplier": 58.24381196279543,
     "estimate": 0,
-    "releasedRun": 55,
-    "solvedRun": 55,
-    "completedRun": 55,
+    "releasedRun": 79,
+    "solvedRun": 79,
+    "completedRun": 79,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -2421,11 +2413,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 6.856955493536185,
+    "costMultiplier": 6.36864037983154,
     "estimate": 0,
-    "releasedRun": 55,
-    "solvedRun": 55,
-    "completedRun": 55,
+    "releasedRun": 79,
+    "solvedRun": 79,
+    "completedRun": 79,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -2437,11 +2429,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 6.144008851484958,
+    "costMultiplier": 8.46223572166142,
     "estimate": 0,
-    "releasedRun": 55,
-    "solvedRun": 55,
-    "completedRun": 55,
+    "releasedRun": 79,
+    "solvedRun": 79,
+    "completedRun": 79,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -2453,11 +2445,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 163.84540028742444,
+    "costMultiplier": 345.81613651302456,
     "estimate": 0,
-    "releasedRun": 55,
-    "solvedRun": 55,
-    "completedRun": 55,
+    "releasedRun": 79,
+    "solvedRun": 79,
+    "completedRun": 79,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -2469,11 +2461,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 0.9027909266287847,
+    "costMultiplier": 1.2231805299711234,
     "estimate": 0,
-    "releasedRun": 55,
-    "solvedRun": 55,
-    "completedRun": 55,
+    "releasedRun": 79,
+    "solvedRun": 79,
+    "completedRun": 79,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -2485,11 +2477,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 4.511475174693007,
+    "costMultiplier": 9.759429717799508,
     "estimate": 0,
-    "releasedRun": 55,
-    "solvedRun": 55,
-    "completedRun": 55,
+    "releasedRun": 79,
+    "solvedRun": 79,
+    "completedRun": 79,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -2501,11 +2493,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 5.800923528154406,
+    "costMultiplier": 5.848737046989268,
     "estimate": 0,
-    "releasedRun": 55,
-    "solvedRun": 55,
-    "completedRun": 55,
+    "releasedRun": 79,
+    "solvedRun": 79,
+    "completedRun": 79,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -2517,11 +2509,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 2.2943364584659895,
+    "costMultiplier": 3.265503974247969,
     "estimate": 0,
-    "releasedRun": 55,
-    "solvedRun": 55,
-    "completedRun": 55,
+    "releasedRun": 79,
+    "solvedRun": 79,
+    "completedRun": 79,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -2533,11 +2525,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 0.5499899494501943,
+    "costMultiplier": 0.7827946764734167,
     "estimate": 0,
-    "releasedRun": 55,
-    "solvedRun": 55,
-    "completedRun": 55,
+    "releasedRun": 79,
+    "solvedRun": 79,
+    "completedRun": 79,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -2549,11 +2541,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 1.3905761843436177,
+    "costMultiplier": 2.637918412792429,
     "estimate": 0,
-    "releasedRun": 55,
-    "solvedRun": 55,
-    "completedRun": 55,
+    "releasedRun": 79,
+    "solvedRun": 79,
+    "completedRun": 79,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -2567,9 +2559,9 @@
     "target": 0.1,
     "costMultiplier": 0.05,
     "estimate": 0,
-    "releasedRun": 55,
-    "solvedRun": 55,
-    "completedRun": 61,
+    "releasedRun": 79,
+    "solvedRun": 79,
+    "completedRun": 83,
     "stalled": false,
     "clamp": "threshold",
     "solvedVia": "first-start",
@@ -2583,11 +2575,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 2.1027016670981546,
+    "costMultiplier": 0.9406151423192093,
     "estimate": 0,
-    "releasedRun": 61,
-    "solvedRun": 61,
-    "completedRun": 61,
+    "releasedRun": 83,
+    "solvedRun": 83,
+    "completedRun": 83,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -2599,11 +2591,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.1,
-    "costMultiplier": 3.3572227237566548,
+    "costMultiplier": 2.8960826049289405,
     "estimate": 0,
-    "releasedRun": 61,
-    "solvedRun": 61,
-    "completedRun": 61,
+    "releasedRun": 83,
+    "solvedRun": 83,
+    "completedRun": 83,
     "stalled": false,
     "clamp": null,
     "solvedVia": "first-start"
@@ -2615,11 +2607,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 0.22295108359272753,
+    "costMultiplier": 0.35596892123866575,
     "estimate": 0,
-    "releasedRun": 61,
-    "solvedRun": 63,
-    "completedRun": 63,
+    "releasedRun": 83,
+    "solvedRun": 85,
+    "completedRun": 85,
     "stalled": false,
     "clamp": null,
     "solvedVia": "boundary"
@@ -2631,11 +2623,11 @@
     "milestone": false,
     "synthesized": false,
     "target": 0.25,
-    "costMultiplier": 38156.19614381979,
+    "costMultiplier": 44231.766223840474,
     "estimate": 0,
-    "releasedRun": 63,
-    "solvedRun": 65,
-    "completedRun": 65,
+    "releasedRun": 85,
+    "solvedRun": 87,
+    "completedRun": 87,
     "stalled": false,
     "clamp": null,
     "solvedVia": "boundary"
@@ -2646,53 +2638,57 @@
     "bucket": 4,
     "milestone": false,
     "synthesized": false,
-    "target": null,
-    "costMultiplier": null,
-    "estimate": null,
-    "releasedRun": 65,
-    "solvedRun": null,
-    "completedRun": 65,
+    "target": 0.25,
+    "costMultiplier": 7.93141055270815,
+    "estimate": 0,
+    "releasedRun": 87,
+    "solvedRun": 88,
+    "completedRun": 88,
     "stalled": false,
-    "clamp": null
+    "clamp": "threshold",
+    "solvedVia": "first-start",
+    "unengaged": false,
+    "thresholdFloored": false
    }
   ],
   "entryCount": 130,
   "milestoneCount": 21,
   "milestoneGaps": [
    3,
-   1,
+   3,
    2,
-   2,
-   5,
-   2,
-   2,
-   2,
+   3,
+   4,
    3,
    2,
    4,
-   2,
-   2,
+   4,
+   3,
    4,
    1,
-   1,
+   3,
    4,
+   19,
    4,
    2,
+   4,
    2,
+   0,
    2
   ],
   "resetsPerStep": 5,
-  "costedTaskCount": 129,
+  "costedTaskCount": 130,
   "skillless": 0,
   "saturated": 0,
-  "floorClamped": 14,
-  "thresholdClamped": 15,
+  "floorClamped": 12,
+  "thresholdClamped": 10,
   "stalledEntries": 0,
-  "thresholdFloored": 9,
+  "thresholdFloored": 7,
   "unengaged": 0,
   "unengagedMilestones": 0,
   "unengagedCostMultiplier": null,
-  "neverStarted": 1,
-  "totalResets": 65
+  "completedUnsolved": 0,
+  "neverStarted": 0,
+  "totalResets": 87
  }
 }
