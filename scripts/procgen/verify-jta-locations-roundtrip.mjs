@@ -134,10 +134,18 @@ try {
             'frontend/modules/jtaSubstrateWrapper/datasets/vanilla.json'), 'utf8'));
         // JTA_RT_DATASET_SEED decouples the dataset identity from the fill
         // seed (default: coupled, the 5d behavior).
-        const datasetSeed = Number(process.env.JTA_RT_DATASET_SEED || SEED);
-        dataset = generateJtaDataset({
-            seed: datasetSeed, profile, vanilla: vanillaFixture, params: { zoneCount: QUOTA },
-        }).dataset;
+        // JTA_RT_DATASET_FILE bypasses generation entirely and uses the given
+        // document verbatim (hand-edited / departure experiments). The file
+        // skips generateJtaDataset's validator+C4 gates by design; the fork's
+        // loadGameData validation still applies downstream.
+        if (process.env.JTA_RT_DATASET_FILE) {
+            dataset = JSON.parse(fs.readFileSync(process.env.JTA_RT_DATASET_FILE, 'utf8'));
+        } else {
+            const datasetSeed = Number(process.env.JTA_RT_DATASET_SEED || SEED);
+            dataset = generateJtaDataset({
+                seed: datasetSeed, profile, vanilla: vanillaFixture, params: { zoneCount: QUOTA },
+            }).dataset;
+        }
         jtaLib.setJtaDataset(dataset);
         console.log(`[dataset mode] ${dataset.dataset_id}`);
     }
