@@ -89,3 +89,36 @@ That is a real predictor-model limitation worth knowing about (it
 underestimates queues that check-and-harvest in one loop), and exactly what
 the third oracle exists to surface. Non-zero-vs-non-zero mismatches are now
 trustworthy alarms.
+
+## Round 4 — parameter sweeps: screenK / probeEvery / weights (2026-07-10)
+
+All unseeded, seed 12345, fork `0622a54` (clean worktree), reference =
+defaults (screenK 8, probeEvery 1): **500 loops / 5,432,753 ticks**.
+
+| Variant | Loops | Ticks | vs reference |
+|---|---:|---:|---|
+| screenK 4 | 542 | 5,878,586 | worse — narrow screen drops good candidates |
+| **screenK 8 (default)** | **500** | **5,432,753** | — |
+| screenK 16 | 570 | 7,497,789 | worse — see below |
+| probeEvery 5 | 531 | 6,384,858 | worse — stale thresholds mis-time unlock pushes |
+| weights frontier:1000 | 502 | 7,101,523 | loops ≈ v0's 502 EXACTLY (port-fidelity cross-check) |
+| weights bank:10 | 632 | 5,354,266 | loops ≈ v0's 632 EXACTLY (port-fidelity cross-check) |
+
+Findings:
+
+- **Quality is non-monotonic in screenK: the predictor screen is a
+  REGULARIZER, not just a compute saver.** Widening the screen to 16 lets
+  myopically-attractive candidates through to engine confirmation, and the
+  scorer's delayed-payoff approximations sometimes pick one over the
+  long-game candidate the narrower screen would have forced. screenK 8
+  stays the default.
+- **probeEvery > 1 costs real progress** (531 vs 500 at probeEvery 5):
+  threshold probes are cheap relative to a mis-timed unlock push. Keep 1.
+- **Both v0 weight-sweep cross-checks reproduce loop-exactly** (frontier
+  1000 → 502, bank 10 → 632), extending the byte-exact port-fidelity
+  evidence from the default point to the weight axis. Tick totals show the
+  trade both ways: bank:10 finishes in FEWER ticks (5.35M) across MORE
+  loops — the bank-light policy runs shorter loops — while frontier:1000
+  matches the default's loop count at a 31% tick premium. Loops and ticks
+  disagree about second place, another reason the loops-to-milestone
+  primary metric is reported with ticks beside it.
