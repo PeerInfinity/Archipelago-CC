@@ -33,6 +33,13 @@
 //   node CC/scripts/jta-parity/run-parity.mjs --scenario automation
 //   node CC/scripts/jta-parity/run-parity.mjs --dataset     # dataset mode,
 //       # vanilla fixture (or --dataset path/to/dataset.json)
+//   node CC/scripts/jta-parity/run-parity.mjs --dataset \
+//       frontend/modules/jtaSubstrateWrapper/datasets/vanilla-raw.json
+//       # RAW dataset mode (5g): auto-detected from economy.value_mode;
+//       # the def-field zones sweep is replaced by an effective-value sweep
+//       # (raw folds the backbone into raw_cost/raw_xp/raw_drain with
+//       # cost_multiplier = 1), the canary perturbs raw_cost, and results
+//       # are written under dataset-raw-* names.
 //   node CC/scripts/jta-parity/run-parity.mjs --scenario scripted --dataset \
 //       --selftest-perturb-dataset   # canary: must DIVERGE to pass
 //   node CC/scripts/jta-parity/run-parity.mjs --list
@@ -543,9 +550,17 @@ function compareDatasetStaticData(dsEngine, nativeEngine, dataset) {
       modifiers: modifierPairs(d.skill_modifiers),
       tooltip: energyItems.has(i) ? "(energy — containment-checked)" : d.getTooltip(),
     }));
+  // A raw dataset flips ECONOMY.value_mode on the dataset engine by design;
+  // compareStaticDataRawEffective asserts it — exclude it from the
+  // native-vs-dataset economy comparison in that mode.
+  const rawMode = dataset.economy?.value_mode === "raw";
   const dataProj = (E) => ({
     skill_roles: JSON.parse(JSON.stringify(E.sim.SKILL_ROLES)),
-    economy: { ...E.sim.ECONOMY },
+    economy: (() => {
+      const e = { ...E.sim.ECONOMY };
+      if (rawMode) delete e.value_mode;
+      return e;
+    })(),
     prestige_data: JSON.parse(JSON.stringify(E.sim.PRESTIGE_DATA)),
     artifacts: [...E.items.ARTIFACTS],
     note_items: [...E.items.NOTE_ITEMS],
@@ -584,6 +599,66 @@ function compareDatasetStaticData(dsEngine, nativeEngine, dataset) {
     }
   }
   return { diffs };
+}
+
+// MARK: Raw-mode static parity (5g): a raw dataset deliberately carries
+// cost_multiplier = 1 with the backbone folded into raw_cost/raw_xp/raw_drain,
+// so the def-field zones sweep above would flag every task. The raw gate
+// compares EFFECTIVE values instead — calcTaskCost / calcSkillXp / energy
+// drain / progress multiplier at fresh state, which raw mode must reproduce
+// bit-exactly (the lockstep then proves the whole trajectory).
+function compareStaticDataRawEffective(fork, up) {
+  const effProj = (E) =>
+    E.zones.ZONES.map((zone) => ({
+      name: zone.name,
+      tasks: zone.tasks.map((d) => {
+        const t = new E.zones.Task(d);
+        return {
+          id: d.id,
+          name: d.name,
+          type: d.type,
+          skills: [...d.skills],
+          item: d.item,
+          use_item: d.use_item,
+          perk: d.perk,
+          prestige_layer: d.prestige_layer,
+          max_reps: d.max_reps,
+          hidden_by_default: d.hidden_by_default,
+          unlocks_task: d.unlocks_task,
+          zone_id: d.zone_id,
+          cost: E.sim.calcTaskCost(t),
+          xp_per_100_progress: E.sim.calcSkillXp(t, 100, true),
+          drain_per_tick: E.sim.calcEnergyDrainPerTick(t, false),
+          progress_mult: E.sim.calcTaskProgressMultiplier(t),
+        };
+      }),
+    }));
+  const prestigeProj = (p) => ({
+    unlockables: p.PRESTIGE_UNLOCKABLES.map((u) => ({
+      type: u.type,
+      name: u.name,
+      cost: u.cost,
+      layer: u.layer,
+    })),
+    repeatables: p.PRESTIGE_REPEATABLES.map((r) => ({
+      type: r.type,
+      name: r.name,
+      initial_cost: r.initial_cost,
+      scaling_exponent: r.scaling_exponent,
+      layer: r.layer,
+    })),
+  });
+  const diffs = [];
+  deepDiff(effProj(fork), effProj(up), "zones_effective", diffs);
+  deepDiff(prestigeProj(fork.prestige), prestigeProj(up.prestige), "prestige", diffs);
+  deepDiff(fork.skills.SKILLS, up.skills.SKILLS, "skills.SKILLS", diffs);
+  deepDiff(fork.perks.PerkType.Count, up.perks.PerkType.Count, "perks.PerkType.Count", diffs);
+  deepDiff(fork.items.ItemType.Count, up.items.ItemType.Count, "items.ItemType.Count", diffs);
+  // The raw dataset engine must actually BE in raw mode (vacuity guard).
+  if (fork.sim.ECONOMY.value_mode !== "raw") {
+    diffs.push({ path: "ECONOMY.value_mode", fork: fork.sim.ECONOMY.value_mode, upstream: "raw (expected on the dataset engine)" });
+  }
+  return { diffs, forkOnlyDefFields: [] };
 }
 
 function reportForkOnlyFields(fork, up) {
@@ -847,15 +922,28 @@ async function childMain(scenarioName, maxTicksOverride, perturbAtTick, datasetO
     fork = await loadEngine("fork", copyDir);
     up = await loadEngine("upstream", path.join(forkExtractDir, "build"));
     const datasetDoc = JSON.parse(fs.readFileSync(datasetOpts.path, "utf8"));
+    const rawDataset = datasetDoc?.economy?.value_mode === "raw";
+    datasetOpts.raw = rawDataset;
     if (datasetOpts.perturb) {
       // Canary: nudge ONE number in the DATASET DOCUMENT; the run must
-      // DIVERGE, proving the loaded tables drive the dataset engine.
+      // DIVERGE, proving the loaded tables drive the dataset engine. In raw
+      // mode perturb raw_cost — the raw values must be what drives play.
       const t = datasetDoc.zones[0].tasks[1];
-      t.cost_multiplier *= 2;
+      if (rawDataset) {
+        t.raw_cost *= 2;
+      } else {
+        t.cost_multiplier *= 2;
+      }
       console.log(
         `[${scenarioName}] SELFTEST: perturbed dataset task ${t.id} ` +
-          `("${t.name}") cost_multiplier -> ${t.cost_multiplier}`
+          `("${t.name}") ${rawDataset ? `raw_cost -> ${t.raw_cost}` : `cost_multiplier -> ${t.cost_multiplier}`}`
       );
+      // The canary edits the document, so its content hash no longer
+      // matches — restamp the identity (the load-time validator would
+      // otherwise be entitled to refuse it once it learns about hashes;
+      // more importantly the save slot must not collide with clean runs).
+      datasetDoc.dataset_id = `${datasetDoc.dataset_id}-perturbed`;
+      delete datasetDoc.provenance?.content_hash;
     }
     if (typeof fork.win.loadGameData !== "function") {
       console.error("FATAL: fork build has no window.loadGameData (predates Fork 1.7)");
@@ -888,7 +976,13 @@ async function childMain(scenarioName, maxTicksOverride, perturbAtTick, datasetO
     up = await loadEngine("upstream", upstreamBuildDir);
   }
 
-  const staticCmp = compareStaticData(fork, up);
+  // Raw datasets fold the backbone into raw values (cost_multiplier = 1), so
+  // the def-field zones sweep would flag every task — the raw gate compares
+  // effective values instead (bit-exact by the premultiplication design).
+  const rawStatic = datasetOpts && datasetOpts.raw;
+  const staticCmp = rawStatic
+    ? compareStaticDataRawEffective(fork, up)
+    : compareStaticData(fork, up);
   const modsSnapshot =
     typeof fork.sim.getMods === "function" ? fork.sim.getMods() : null;
 
@@ -925,12 +1019,12 @@ async function childMain(scenarioName, maxTicksOverride, perturbAtTick, datasetO
       const staticCaught =
         !result.staticData.equal || !result.datasetStaticData.equal;
       result.pass = result.firstDivergence !== null && staticCaught;
-      resultName = `dataset-canary-${scenarioName}`;
+      resultName = `${datasetOpts.raw ? "dataset-raw" : "dataset"}-canary-${scenarioName}`;
     } else {
       // Layers 1 (static) and 2 (lockstep) both gate the dataset verdict.
       result.pass =
         result.pass && result.staticData.equal && result.datasetStaticData.equal;
-      resultName = `dataset-${scenarioName}`;
+      resultName = `${datasetOpts.raw ? "dataset-raw" : "dataset"}-${scenarioName}`;
     }
   }
 
@@ -963,6 +1057,17 @@ function parentMain(only, datasetOpts) {
   const names = only ?? Object.keys(SCENARIOS);
   const summary = [];
   const dsArgs = datasetOpts ? ["--dataset", datasetOpts.path] : [];
+  // Result files are tagged by dataset mode (formula vs raw) so a raw run
+  // never clobbers the formula run's committed results.
+  let dsTag = "dataset";
+  if (datasetOpts) {
+    try {
+      const doc = JSON.parse(fs.readFileSync(datasetOpts.path, "utf8"));
+      if (doc?.economy?.value_mode === "raw") dsTag = "dataset-raw";
+    } catch {
+      /* child will report the real read error */
+    }
+  }
   const runChild = (name, extraArgs, resultName, label) => {
     console.log(`\n=== ${label} ===`);
     const r = spawnSync(
@@ -996,8 +1101,8 @@ function parentMain(only, datasetOpts) {
     runChild(
       name,
       [],
-      datasetOpts ? `dataset-${name}` : name,
-      `scenario: ${name}${datasetOpts ? " (dataset mode)" : ""}`
+      datasetOpts ? `${dsTag}-${name}` : name,
+      `scenario: ${name}${datasetOpts ? ` (${dsTag} mode)` : ""}`
     );
   }
   if (datasetOpts) {
@@ -1007,14 +1112,14 @@ function parentMain(only, datasetOpts) {
     runChild(
       "scripted",
       ["--selftest-perturb-dataset", "--max-ticks", "5000"],
-      "dataset-canary-scripted",
-      "dataset canary: scripted + perturbed dataset (must be DETECTED)"
+      `${dsTag}-canary-scripted`,
+      `${dsTag} canary: scripted + perturbed dataset (must be DETECTED)`
     );
   }
   const allPass = summary.every((s) => s.pass);
   const report = {
     verdict: allPass ? "PASS" : "FAIL",
-    mode: datasetOpts ? "dataset" : "upstream",
+    mode: datasetOpts ? dsTag : "upstream",
     dataset: datasetOpts?.path ?? null,
     generatedAt: new Date().toISOString(),
     forkCommit: (() => {
@@ -1040,7 +1145,7 @@ function parentMain(only, datasetOpts) {
     scenarios: summary,
   };
   const reportName = datasetOpts
-    ? "dataset-parity-report.json"
+    ? `${dsTag}-parity-report.json`
     : "parity-report.json";
   fs.mkdirSync(resultsDir, { recursive: true });
   fs.writeFileSync(

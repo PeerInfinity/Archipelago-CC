@@ -65,7 +65,14 @@ const datasetDoc = DATASET_MODE
   ? JSON.parse(fs.readFileSync(datasetPath, "utf8"))
   : null;
 
-const outDir = path.join(here, "results", DATASET_MODE ? "ui-dataset" : "ui");
+// Raw datasets (5g) get their own results dir; the DOM comparison itself is
+// unchanged — every rendered number is an EFFECTIVE value, which raw mode
+// must reproduce exactly, so zero-diff is still the expectation.
+const RAW_DATASET = datasetDoc?.economy?.value_mode === "raw";
+const outDir = path.join(
+  here, "results",
+  DATASET_MODE ? (RAW_DATASET ? "ui-dataset-raw" : "ui-dataset") : "ui"
+);
 
 const BASE = "http://localhost:8000/CC/scripts/jta-parity";
 const FORK_URL = `${BASE}/fork-head/index.html`;

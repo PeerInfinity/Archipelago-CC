@@ -37,6 +37,8 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, '../..');
 const fixturePath = path.join(
     repoRoot, 'frontend/modules/jtaSubstrateWrapper/datasets/vanilla.json');
+const rawFixturePath = path.join(
+    repoRoot, 'frontend/modules/jtaSubstrateWrapper/datasets/vanilla-raw.json');
 
 const { loadJtaEnv } = await import(
     `file://${path.join(repoRoot, 'CC/scripts/jta-stats/node-env.mjs')}`);
@@ -131,10 +133,27 @@ function diffSnapshots(a, b) {
     return diffs;
 }
 
+// Effective-value projection at fresh state — what raw mode must reproduce
+// bit-exactly (the raw fixture folds the backbone into raw values, so its
+// DEF fields differ from native by design; behavior must not).
+function effectiveSnapshot() {
+    return zones.ZONES.map((z) => z.tasks.map((d) => {
+        const t = new zones.Task(d);
+        return {
+            id: d.id,
+            cost: sim.calcTaskCost(t),
+            xp100: sim.calcSkillXp(t, 100, true),
+            drain: sim.calcEnergyDrainPerTick(t, false),
+            progressMult: sim.calcTaskProgressMultiplier(t),
+        };
+    }));
+}
+
 // ---- Native baseline (fresh state so state-reading tooltips are deterministic)
 win.pauseGameLoop?.();
 win.initializeHeadless();
 const nativeSnapshot = snapshotTables();
+const nativeEffective = effectiveSnapshot();
 assert(sim.getLoadedDatasetId() === null, 'no dataset loaded at boot');
 const nativeSaveLocation = sim.getSaveLocation();
 
@@ -228,6 +247,66 @@ if (failures === 0) ok('repeat load of the same dataset_id is a no-op');
         'energy_on_consume grants calcItemEnergyGain(base)');
 }
 if (failures === 0) ok('re-initialized game runs: task completion, energy drain, item consumption');
+
+// ---- 6. RAW MODE (5g): rejects, effective equivalence, mode reset
+const rawDataset = JSON.parse(fs.readFileSync(rawFixturePath, 'utf8'));
+{
+    // Broken raw documents are rejected (raw completeness is validated).
+    const rawClone = () => JSON.parse(JSON.stringify(rawDataset));
+    const rawBrokenCases = [
+        ['missing raw_cost', (d) => { delete d.zones[0].tasks[0].raw_cost; }],
+        ['missing raw_xp', (d) => { delete d.zones[2].tasks[1].raw_xp; }],
+        ['missing raw_drain', (d) => { delete d.zones[1].raw_drain; }],
+        ['bad value_mode', (d) => { d.economy.value_mode = 'raw-ish'; }],
+        ['missing zone_speedup_base', (d) => { delete d.economy.zone_speedup_base; }],
+    ];
+    for (const [name, mutate] of rawBrokenCases) {
+        const broken = rawClone();
+        broken.dataset_id = `broken-raw-${name}`;
+        mutate(broken);
+        const res = win.loadGameData(broken);
+        assert(res.ok === false, `raw ${name}: must be rejected`);
+    }
+    if (failures === 0) ok(`${rawBrokenCases.length} broken raw datasets rejected`);
+
+    // The raw fixture loads and reproduces native effective values EXACTLY.
+    const res = win.loadGameData(rawDataset);
+    assert(res.ok === true, `raw fixture must load: ${JSON.stringify(res.errors ?? [])}`);
+    assert(sim.ECONOMY.value_mode === 'raw', 'ECONOMY.value_mode flips to raw');
+    assert(sim.getSaveLocation() === `incrementalGameSave_substrate__${rawDataset.dataset_id}`,
+        'raw save slot keyed by the raw dataset id');
+    win.initializeHeadless();
+    const rawEffective = effectiveSnapshot();
+    {
+        const diffs = diffSnapshots(nativeEffective, rawEffective);
+        assert(diffs.length === 0,
+            `raw effective values must equal native BIT-EXACTLY: ${diffs.join('; ')}`);
+    }
+    if (failures === 0) ok('raw fixture ≡ native effective values (cost/XP/drain/progress, bit-exact)');
+
+    // Runtime-synthesized tasks fall back to the formula backbone in raw mode.
+    {
+        const G = game.GAMESTATE;
+        const inject = win.injectSyntheticTask?.(
+            { id: 10001, name: 'raw-mode exit probe', costMultiplier: 2, free: true },
+            () => {});
+        assert(inject?.success === true, 'synthetic task injects under raw mode');
+        const synth = G.tasks.find((t) => t.task_definition.id === 10001);
+        const expected = rawDataset.economy.base_task_cost * 2
+            * Math.pow(rawDataset.economy.zone_cost_exponent, synth.task_definition.zone_id);
+        assert(sim.calcTaskCost(synth) === expected,
+            `synthetic task uses the formula fallback (got ${sim.calcTaskCost(synth)}, want ${expected})`);
+        assert(sim.calcEnergyDrainPerTick(synth, false) === 0, 'free synthetic task still drains 0');
+        win.clearSyntheticTasks?.();
+    }
+    if (failures === 0) ok('raw mode: runtime-synthesized tasks fall back to the formula backbone');
+
+    // Loading a formula dataset afterwards RESETS the mode.
+    const back = win.loadGameData(clone());
+    assert(back.ok === true, 'formula fixture reloads after raw');
+    assert(sim.ECONOMY.value_mode === 'zone_formula', 'value_mode resets to zone_formula');
+    if (failures === 0) ok('formula load after raw resets value_mode');
+}
 
 if (failures > 0) {
     console.error(`\n${failures} failure(s)`);

@@ -85,6 +85,27 @@ rest of the vacuity surface.
 point; dataset mode proves fork+vanillaDataset ≡ fork(defaults); composed:
 **fork + vanilla dataset ≡ the upstream game.**
 
+## Raw dataset mode (5g)
+
+Passing a RAW document (`economy.value_mode: "raw"`, e.g. the committed
+`datasets/vanilla-raw.json` twin) is auto-detected. Raw folds the backbone
+into `raw_cost`/`raw_xp`/`raw_drain` with `cost_multiplier = 1`, so the
+def-field zones sweep would flag every task — the base static layer is
+replaced by `compareStaticDataRawEffective` (calcTaskCost / calcSkillXp /
+drain / progress-multiplier at fresh state, which the premultiplication
+design must reproduce BIT-EXACTLY), `ECONOMY.value_mode` is asserted raw on
+the dataset engine and excluded from the economy cross-compare, and the
+canary perturbs `raw_cost` instead of `cost_multiplier`. Results land under
+`dataset-raw-*` names so a raw run never clobbers a formula run.
+
+```
+node CC/scripts/jta-parity/run-parity.mjs --dataset \
+    frontend/modules/jtaSubstrateWrapper/datasets/vanilla-raw.json
+```
+
+Extends the transitivity chain: raw-vanilla ≡ fork(defaults) ≡ the upstream
+game, tick-for-tick.
+
 `run-ui-parity.mjs --dataset` is the same idea for the fresh-load UI: both
 sides serve the SAME fork extraction, the dataset side loads the fixture via
 a harness-injected `loadGameData` call after boot (no fork boot param), and

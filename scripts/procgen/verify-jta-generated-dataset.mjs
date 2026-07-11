@@ -50,9 +50,10 @@ const ok = (cond, msg) => {
 
 // ---- 1. Determinism -------------------------------------------------------
 const CASES = [
-    { seed: 1, params: {} },
+    { seed: 1, params: {} },                                    // raw (the default, 5g Q9)
     { seed: 2, params: {} },
     { seed: 3, params: { zoneCount: 3 } },
+    { seed: 3, params: { zoneCount: 3, valueMode: 'zone_formula' } }, // the formula twin
 ];
 const generated = [];
 for (const { seed, params } of CASES) {
@@ -60,7 +61,8 @@ for (const { seed, params } of CASES) {
     const b = generateJtaDataset({ seed, profile, vanilla, params });
     const bytesA = JSON.stringify(a.dataset, null, 2);
     const bytesB = JSON.stringify(b.dataset, null, 2);
-    ok(bytesA === bytesB, `seed ${seed}${params.zoneCount ? ` z${params.zoneCount}` : ''}: `
+    ok(bytesA === bytesB, `seed ${seed}${params.zoneCount ? ` z${params.zoneCount}` : ''}`
+        + `${params.valueMode ? ` ${params.valueMode}` : ''}: `
         + `regeneration is byte-identical (${a.dataset.dataset_id})`);
     generated.push(a);
 }
@@ -70,6 +72,28 @@ for (const { seed, params } of CASES) {
     ok(a.dataset.dataset_id !== b.dataset.dataset_id
         && JSON.stringify(a.dataset.skills) !== JSON.stringify(b.dataset.skills),
     'different seeds produce different datasets');
+}
+{
+    // Raw is the default (5g Q9); the identity carries the content hash
+    // (rider 2); the raw and formula twins differ ONLY in economy mode +
+    // value fields (same names/ids/skeleton) and get distinct identities.
+    const rawTwin = generated[2].dataset;
+    const formulaTwin = generated[3].dataset;
+    ok(rawTwin.economy.value_mode === 'raw', 'default generation is raw mode');
+    ok(formulaTwin.economy.value_mode === 'zone_formula', 'zone_formula stays generatable');
+    ok(CASES.every((_, i) => {
+        const d = generated[i].dataset;
+        return d.provenance.content_hash?.length === 8
+            && d.dataset_id.endsWith(`-${d.provenance.content_hash}`);
+    }), 'every dataset_id carries its content-hash suffix');
+    ok(rawTwin.dataset_id !== formulaTwin.dataset_id, 'twins get distinct identities');
+    ok(rawTwin.zones.every((z, zi) => z.key === formulaTwin.zones[zi].key
+        && typeof z.key === 'string' && z.key.length > 0),
+    'zones[].key emitted and mode-independent');
+    ok(rawTwin.zones.every((z) => typeof z.raw_drain === 'number'
+        && z.tasks.every((t) => typeof t.raw_cost === 'number' && t.raw_cost > 0
+            && typeof t.raw_xp === 'number' && t.cost_multiplier === 1)),
+    'raw twin carries raw values everywhere, cost_multiplier folded to 1');
 }
 
 // ---- 2. Validation + C4 ----------------------------------------------------
@@ -119,6 +143,28 @@ function loadAndPlay(dataset, ticks = 500) {
 
 loadAndPlay(generated[0].dataset);
 loadAndPlay(generated[2].dataset); // dataset→dataset swap + truncated zones
+
+// ---- 5. Raw ≡ formula twin: effective values are BIT-EXACT ----------------
+// The raw twin is premultiplyDataset(formula twin) by construction; loading
+// both through the real fork boundary must produce identical effective
+// costs/XP/drain at fresh state (the tick-for-tick property, statically).
+{
+    const effective = () => zones.ZONES.map((z) => z.tasks.map((d) => {
+        const t = new zones.Task(d);
+        return [d.id, sim.calcTaskCost(t), sim.calcSkillXp(t, 100, true),
+            sim.calcEnergyDrainPerTick(t, false), sim.calcTaskProgressMultiplier(t)];
+    }));
+    const load = (dataset) => {
+        const res = win.loadGameData(dataset);
+        ok(res?.ok === true, `${dataset.dataset_id}: loads for the twin comparison`);
+        win.initializeHeadless();
+        return effective();
+    };
+    const formulaEff = load(generated[3].dataset);
+    const rawEff = load(generated[2].dataset);
+    ok(JSON.stringify(formulaEff) === JSON.stringify(rawEff),
+        'raw twin ≡ formula twin effective values (cost/XP/drain/progress, bit-exact)');
+}
 
 console.log(failures === 0
     ? '\nAll generated-dataset assertions passed.'
