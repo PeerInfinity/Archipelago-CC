@@ -572,7 +572,17 @@ export async function runBalancePass({
             unengagedMilestones: entryReports
                 .filter((r) => r.unengaged && r.completedRun == null && r.milestone).length,
             unengagedCostMultiplier: unengagedCm,
-            neverStarted: entryReports.filter((r) => r.solvedRun == null && !r.stalled).length,
+            // An entry can COMPLETE before its solve fires: released, then
+            // finished organically within one run — inside the boundary
+            // fallback's >=2-run guard — so first-start never assigned a
+            // cost and the task keeps its Pass-A provisional multiplier.
+            // Coverage is unaffected (it completed); the replay economy
+            // carries one unsolved cost. Split from neverStarted so the
+            // convergence bar only fails on entries that truly never ran.
+            completedUnsolved: entryReports
+                .filter((r) => r.solvedRun == null && !r.stalled && r.completedRun != null).length,
+            neverStarted: entryReports
+                .filter((r) => r.solvedRun == null && !r.stalled && r.completedRun == null).length,
             totalResets: run - 1,
         },
     };

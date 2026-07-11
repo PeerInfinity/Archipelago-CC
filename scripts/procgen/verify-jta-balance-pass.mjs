@@ -43,6 +43,7 @@ if (!rulesPath) {
 
 const { loadJtaEnv } = await import(pathToFileURL(path.join(repoRoot, 'CC/scripts/jta-stats/node-env.mjs')));
 const { runBalancePass } = await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/jtaBalance/balancePass.js')));
+const { computeSeedName } = await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/jtaBalance/hostGlue.js')));
 const jtaLib = await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js')));
 const { JTA_PERK_COUNT } = await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/jtaSubstrateWrapper/zoneTaskData.js')));
 
@@ -100,7 +101,12 @@ function loadSphereLog(rulesDoc, rulesFile) {
     return fs.readFileSync(sibling, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
 }
 const sphereLog = loadSphereLog(rules, rulesPath);
-const seed = rules.seed_name ?? rules.seed ?? 1;
+// computeSeedName, not a hand-rolled fallback chain: Pass-A presets carry an
+// EMPTY seed_name (`??` would keep it, `||` skips it) and a generation_seed —
+// the in-app worker keys its walk shuffle and cache on computeSeedName, so the
+// guard must derive the SAME seed or it walks the same preset in a different
+// order than the app solves it.
+const seed = computeSeedName(rules);
 console.log(`rules: ${path.basename(rulesPath)} · seed ${seed}`
     + (dataset ? ` · dataset ${dataset.dataset_id}` : ''));
 console.log(`player ${playerId} · ${Object.keys(apLocations).length} jta locations · `
@@ -147,7 +153,8 @@ console.log(`walk: ${report.entryCount} entries (${report.order.logCovered} from
     + `${report.order.repairsApplied} repair moves)`);
 console.log(`${report.milestoneCount} perk milestones · ${report.costedTaskCount} cost patches · `
     + `skill-less ${report.skillless} · floor ${report.floorClamped} · threshold-clamped ${report.thresholdClamped}`);
-console.log(`stalled ${report.stalledEntries} · never-started ${report.neverStarted} · saturated ${report.saturated} · `
+console.log(`stalled ${report.stalledEntries} · never-started ${report.neverStarted} · `
+    + `completed-unsolved ${report.completedUnsolved} · saturated ${report.saturated} · `
     + `unengaged ${report.unengaged} (milestones ${report.unengagedMilestones})`
     + (report.unengagedCostMultiplier != null
         ? ` · unengaged tail repriced to max cm ${report.unengagedCostMultiplier.toPrecision(3)}` : ''));

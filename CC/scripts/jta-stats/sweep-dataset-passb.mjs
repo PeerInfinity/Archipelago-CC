@@ -127,6 +127,7 @@ for (const [ds, fill] of pairs) {
         milestones: report.milestoneCount,
         stalled: report.stalledEntries,
         neverStarted: report.neverStarted,
+        completedUnsolved: report.completedUnsolved ?? 0,
         saturated: report.saturated,
         skillless: report.skillless,
         floorClamped: report.floorClamped,
@@ -151,12 +152,12 @@ const L = ['# Pass-B convergence over generated datasets × fill seeds (Phase 5e
 L.push('Instrument: the Pass-B convergence report, run over roundtrip exports of');
 L.push('GENERATED synthetic-dataset worlds (z15). Levers (xp_mult co-solve, economy');
 L.push('scaling) are added only if the trigger signals below fire — plan §4.2 table.\n');
-L.push('| dataset | fill | converged? | entries | milestones | stalled | never-started | saturated | unengaged (ms) | gap p50/mean/max | cm min/p50/max |');
-L.push('|---|---|---|---|---|---|---|---|---|---|---|');
+L.push('| dataset | fill | converged? | entries | milestones | stalled | never-started | completed-unsolved | saturated | unengaged (ms) | gap p50/mean/max | cm min/p50/max |');
+L.push('|---|---|---|---|---|---|---|---|---|---|---|---|');
 for (const r of rows) {
     const conv = r.converged ? 'yes' : `**no** (${r.failure})`;
     L.push(`| ${r.datasetSeed} | ${r.fillSeed} | ${conv} | ${r.entries} | ${r.milestones} `
-        + `| ${r.stalled} | ${r.neverStarted} | ${r.saturated} | ${r.unengaged} (${r.unengagedMilestones}) `
+        + `| ${r.stalled} | ${r.neverStarted} | ${r.completedUnsolved} | ${r.saturated} | ${r.unengaged} (${r.unengagedMilestones}) `
         + `| ${r.gapP50}/${r.gapMean?.toFixed(1)}/${r.gapMax} `
         + `| ${r.cmMin?.toPrecision(3)}/${r.cmP50?.toPrecision(3)}/${r.cmMax?.toPrecision(3)} |`);
 }
@@ -182,8 +183,11 @@ L.push(`- **economy starvation** (saturated solves in a band): `
     + (starvedBands.length ? `**FIRED** — ${starvedBands.join('; ')}` : 'not fired') + '.');
 L.push('\nPer-pair per-bucket clamp profiles and full walk reports: `bp-ds*-f*.json` beside this file.\n');
 
+// sweep-summary.md, NOT SUMMARY.md: the auto-generated table is overwritten
+// on every run, while SUMMARY.md is the curated record (table + hand-written
+// conclusion) — clobbering it would eat the conclusion.
 const md = `${L.join('\n')}\n`;
-fs.writeFileSync(path.join(outDir, 'SUMMARY.md'), md);
+fs.writeFileSync(path.join(outDir, 'sweep-summary.md'), md);
 fs.writeFileSync(path.join(outDir, 'sweep.json'), JSON.stringify(rows, null, 2));
 console.log(`\n${md}`);
-console.log(`wrote ${path.join(outDir, 'SUMMARY.md')}`);
+console.log(`wrote ${path.join(outDir, 'sweep-summary.md')}`);
