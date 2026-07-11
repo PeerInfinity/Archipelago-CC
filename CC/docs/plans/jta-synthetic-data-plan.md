@@ -2,10 +2,12 @@
 
 **Date:** 2026-07-10 ·
 **Status: RULED 2026-07-10 — all seven §7 questions answered same day
-(rulings recorded inline in §7); ready for 5a. Q2's feasibility check is
+(rulings recorded inline in §7). Q2's feasibility check is
 DONE: no `const enum` in the fork (and `isolatedModules: true` forbids them
 project-wide), compiled enums are mutable runtime objects — the count
-rewrite works as designed.**
+rewrite works as designed. Phase 5a DONE 2026-07-10 (`a09e2492f`);
+Phase 5b DONE 2026-07-10 (Fork 1.7, submodule `c6bb26d` — see §6).
+NEXT: 5c (dataset parity mode).**
 Child plan of `jta-zone-randomization-plan.md` (its Phase 5, "the destination").
 Sibling precedent: `jta-balance-pass-plan.md` (Phase 3). Phases 0–4 of the
 parent are DONE; this plan builds on their machinery (Pass-B balance walk,
@@ -707,9 +709,52 @@ both halves (the harness already re-extracts the committed HEAD per run).
   `{placeholder: true}` entries; array position == engine enum value
   everywhere; the §5.1 compaction alternative is dropped). No fork changes;
   no runtime behavior anywhere changes.
-- **5b — Fork: `loadGameData` + decoupling changes** (§3.3 table), dataset
-  save keying, dormant-by-default. Gated by the standalone byte-identity
-  baseline. Ship as Fork 1.7 (changelog per SAVE_VERSION discipline).
+- **5b — Fork: `loadGameData` + decoupling changes — DONE 2026-07-10,
+  shipped as Fork 1.7** (submodule `c6bb26d`; changelog entry =
+  `CHANGELOG[0]` = SAVE_VERSION per discipline).
+  Shipped: new fork module `game_data.ts` — TS-side structural validation
+  (essentials + behavior-slot asserts mirroring `datasetValidator.js`, which
+  stays the authoritative pre-flight) + atomic in-place table swap in §3.1's
+  order, ending with enum-`Count` rewrites (member values never move) —
+  plus `window.loadGameData` in `game.ts` (re-init against the dataset-keyed
+  slot; Rendering rebuilt only when a live page bootstrapped; idempotent per
+  `dataset_id`; rejects apply nothing). §3.3 decoupling landed as three
+  runtime objects in `simulation.ts` with vanilla defaults — `SKILL_ROLES`
+  (both Ascension half-level sites: `initializeSkills` AND the Transcendant
+  Aptitude purchase; travel incl. the rendering breakdown row; power UI text
+  now joins the role set), `ECONOMY`, `PRESTIGE_DATA` (SBtV ids; spark
+  origin incl. the Divine Lightning tooltip mirror). Save keying/stamp per
+  §3.4 exactly (`incrementalGameSave_substrate__<dataset_id>`; `loadGame`
+  refuses mismatched blobs BEFORE the task reviver runs — a foreign blob
+  would otherwise revive undefined task defs; vanilla blobs/keys unchanged).
+  Fixture regenerated → `vanilla-fork-1.7` (envelope-only diff, content
+  tables byte-identical).
+  **Verification:** new smoke `scripts/procgen/verify-jta-dataset-load.mjs`
+  (7 broken-dataset rejects leave tables untouched; vanilla dataset ≡ native
+  across every table incl. prestige/roles/economy/derived maps; save keying;
+  idempotency by GAMESTATE identity; 500-tick play with task completion,
+  energy drain, synthesized `energy_on_consume`); sim parity PASS (4
+  scenarios, 36,629 ticks, fork@defaults ≡ upstream fork point); UI parity
+  PASS (only the documented `#settings` exclusion); substrate suite green;
+  jta guards green.
+  **Implementation findings (recorded for 5c):**
+  - Behavior-slot entries keep their compiled tooltip/on_consume/effect-text
+    lambdas unless the dataset provides text; a dataset-provided tooltip is a
+    STATIC override, so the three state-dependent perk tooltips
+    (Reflections, Energetic Memory, Unified Theory) freeze at their captured
+    text in dataset mode — identical at fresh state (all gates pass), stale
+    mid-game. Cosmetic; same applies to captured prestige descriptions
+    (Divine Lightning). Revisit in 5c only if layer 1's tooltip sweep cares.
+  - `energy_on_consume` items always synthesize the FULL Food-pattern text,
+    so Fish/Calamari/Cave Insects gain the "Can take you above your Max
+    Energy / Right-click" lines their hand-written vanilla tooltips omit —
+    true statements, dataset-mode-only, asserted by containment in the smoke.
+  - Placeholder prestige-table entries keep their vanilla definitions (the
+    engine renders every slot; no dead-slot precedent exists there); v1
+    datasets always carry full prestige tables.
+  - Placeholder perk/item cosmetic names are "DELETED" (never rendered).
+  - Shrinking a table leaves stale reverse-map names above the new `Count`
+    on the enum objects; nothing reads them at runtime.
 - **5c — Parity: dataset mode.** §5.2 layers 1+2 (+ canary), §5.3 jta-stats
   `dataset` option + baseline byte-identity run. **Gate: no 5d work starts
   until 5c passes** — the loader must be proven before data varies.

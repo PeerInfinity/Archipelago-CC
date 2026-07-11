@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "dataset_id": "vanilla-fork-1.6.2",
+  "dataset_id": "vanilla-fork-1.7",
   "provenance": {
     "generator": "export-vanilla-dataset.mjs",
-    "fork_save_version": "Fork 1.6.2",
+    "fork_save_version": "Fork 1.7",
     "seed": null,
     "params_hash": null
   },
