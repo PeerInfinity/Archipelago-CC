@@ -1,0 +1,6 @@
+# Upstream fork-point extraction (git archive from the submodule's objects)
+upstream/
+# Fork sim extracted from the submodule's committed HEAD (git archive)
+fork-head/
+# Run outputs
+results/
