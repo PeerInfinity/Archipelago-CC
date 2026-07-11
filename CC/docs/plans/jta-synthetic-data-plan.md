@@ -1170,10 +1170,10 @@ both halves (the harness already re-extracts the committed HEAD per run).
        CPU-contention flake class under sweep load, 40/40 solo);
        substrate suite 22/22 incl. jta-dataset-world-progression on the
        raw preset through bridge + Pass-B worker; procgen presets 27/27
-       (note: its zone-demo Generate click budgets 300 s for a
-       synchronous solve that measured 299.7 s under a sibling
-       session's 3-core load — a coin-flip timeout on a busy machine,
-       not a defect); emergent sweep on raw worlds (next item).
+       (its zone-demo Generate click measured 299.7 s under a sibling
+       session's 3-core load vs a 300 s budget — bumped to 450 s the
+       same day since multi-session load is the norm; re-verified
+       27/27); emergent sweep on raw worlds (next item).
     8. **Emergent sweep on raw worlds — HARD PROGRESSION GATE PASS on all
        six** (`results/comparison-dataset-emergent-raw.md`; artifacts
        /tmp per convention; the vanilla anchor byte-reproduces Phase 4:
