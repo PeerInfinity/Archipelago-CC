@@ -170,9 +170,11 @@ check('bundle: zone demo quota runner=6, empty pool',
 // costs a minute-plus of synchronous solver time since the Shield
 // (5 feature zones + Victory, §4.10) — the page's main thread is
 // blocked, so the click needs a budget well past Playwright's 30s
-// default
+// default. Measured 299.7s under a sibling session pinning 3 of 8
+// cores (2026-07-11) — multi-session load is the norm, so budget for
+// it rather than coin-flip at 300s.
 await panel.locator('button:has-text("Generate")').first()
-    .click({ timeout: 300000 });
+    .click({ timeout: 450000 });
 const zoneStats = await waitFor('spiral completion stats', async () => {
     // spiral success sets NO message (the message element only renders
     // when non-empty) — errors do; probe it as optional
