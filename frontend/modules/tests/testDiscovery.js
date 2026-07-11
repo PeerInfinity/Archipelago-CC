@@ -47,6 +47,7 @@ const TEST_CASE_FILES = [
   './testCases/runnerDemoTests.js',
   './testCases/jtaSubstrateWrapperTests.js',
   './testCases/jtaBalanceTests.js',
+  './testCases/jtaDatasetTests.js',
   //'./testCases/manualTests.js',
 ];
 

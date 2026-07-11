@@ -15,6 +15,11 @@
  *                         it as another world's perk — the only way to exercise
  *                         the foreign grant leg without a multiworld seed
  *                         (solo v1 worlds place all their perks at home).
+ *   jta_dataset_test      3 zones built from a GENERATED synthetic dataset
+ *                         (Phase 5d): the sidecars carry the jta_dataset
+ *                         single-carrier + refs, every location/item name is
+ *                         the dataset's, and the bridge must loadGameData
+ *                         before playing. For `jta-dataset-world-progression`.
  *
  * Both are produced by the modern procgen pipeline's Pass A (unlike
  * jta_substrate_test, the OLD apworld export whose locations are named by task
@@ -72,15 +77,44 @@ const PRESETS = [
         // regardless of the emitted zone range, so it resolves as a real item.)
         startInventory: ['Energetic Memory'],
     },
+    {
+        gameId: 'jta_dataset_test',
+        gameName: 'JtA Dataset Test',
+        // Three zones: the smoke test walks 0 -> 1, and the goal must not sit
+        // in the start zone. Identity placement so the dataset's zone-0 perk
+        // sits on its own task (the test derives the location from the doc).
+        quota: 3,
+        shuffleSeed: null,
+        // Deterministic synthetic dataset (generateDataset.js, seed 1,
+        // truncated to the emitted zone range). Regeneration is
+        // byte-identical, so this preset is as reproducible as the others.
+        dataset: { seed: 1, zoneCount: 3 },
+    },
 ];
 
 async function generate(preset, mods) {
     const { jtaLib, engine, substrateRegistry, mergeSubstrateItemLib, DEFAULT_ITEMS, zoneTaskData } = mods;
-    const { gameId, gameName, quota, shuffleSeed, startInventory } = preset;
+    const { gameId, gameName, quota, shuffleSeed, startInventory, dataset } = preset;
     const goalZone = quota - 1;   // arrangeShuffledSpiral maps the Nth jta region to zone N
     const outDir = path.join(repoRoot, 'frontend/presets', gameId, SEED_ID);
     const outFile = path.join(outDir, `${SEED_ID}_rules.json`);
 
+    // Synthetic dataset (Phase 5d): generated fresh — deterministic per
+    // (seed, params) — and set BEFORE any pipeline call so zoneCount, perk
+    // names, and the suppression sentinel all come from the dataset.
+    // Explicitly reset to null otherwise: module state persists across the
+    // presets this script builds in one process.
+    let datasetDoc = null;
+    if (dataset) {
+        const { generateJtaDataset } = mods;
+        datasetDoc = generateJtaDataset({
+            seed: dataset.seed,
+            profile: mods.profile,
+            vanilla: mods.vanillaFixture,
+            params: { zoneCount: dataset.zoneCount },
+        }).dataset;
+    }
+    jtaLib.setJtaDataset(datasetDoc);
     jtaLib.setJtaEmitZoneLocations(true);
     jtaLib.setJtaGoalZone(goalZone);
     jtaLib.setJtaPerkShuffleSeed(shuffleSeed);
@@ -140,6 +174,21 @@ async function generate(preset, mods) {
     console.log(`  goal zone ${goalZone} hosts '${victoryName}'`
         + `, perk placement ${shuffleSeed == null ? 'IDENTITY' : `shuffled (seed ${shuffleSeed})`}`);
 
+    // Dataset preset: the carriage must actually be in the sidecars — one
+    // full document, a ref on every jta region.
+    if (datasetDoc) {
+        const playerId = Object.keys(rules.preset_sidecars)[0];
+        const payloads = Object.values(rules.preset_sidecars[playerId])
+            .map((sc) => sc.playable_payload ?? sc);
+        const carriers = payloads.filter((p) => p.jta_dataset).length;
+        const refs = payloads.filter((p) =>
+            p.jta_dataset_ref?.dataset_id === datasetDoc.dataset_id).length;
+        if (carriers !== 1 || refs !== quota) {
+            throw new Error(`${gameId}: dataset carriage broken (${carriers} carriers, ${refs} refs)`);
+        }
+        console.log(`  dataset '${datasetDoc.dataset_id}' embedded (1 carrier + ${refs} refs)`);
+    }
+
     // A shuffled preset whose shuffle happened to be the identity would make
     // the smoke test's "randomized" claim vacuous — assert it really moved.
     if (shuffleSeed != null) {
@@ -197,6 +246,12 @@ async function main() {
             'frontend/modules/shared/procgen/library.js')))).DEFAULT_ITEMS,
         zoneTaskData: await import(pathToFileURL(path.join(repoRoot,
             'frontend/modules/jtaSubstrateWrapper/zoneTaskData.js'))),
+        generateJtaDataset: (await import(pathToFileURL(path.join(repoRoot,
+            'frontend/modules/jtaSubstrateWrapper/generateDataset.js')))).generateJtaDataset,
+        profile: JSON.parse(fs.readFileSync(path.join(repoRoot,
+            'CC/scripts/jta-stats/results/vanilla-profile.json'), 'utf8')).static,
+        vanillaFixture: JSON.parse(fs.readFileSync(path.join(repoRoot,
+            'frontend/modules/jtaSubstrateWrapper/datasets/vanilla.json'), 'utf8')),
     };
     for (const preset of PRESETS) {
         if (only && preset.gameId !== only) continue;

@@ -57,15 +57,22 @@ export const JTA_PRESTIGE_TASK_ID = 153;
 export const JTA_PRESTIGE_TASK_ZONE = 14;
 
 /**
- * Clear the SHARED JtA save slot and reload the iframe, so a test starts from a
- * fresh game. The substrate boots from `incrementalGameSave_substrate`, which
- * every jta test in a run shares — perks and skills left behind by an earlier
- * test would otherwise pollute assertions. procgenPlayer re-publishes
- * jta:loadRegion on iframe:appReady, so the game re-enters the current region.
+ * Clear the JtA substrate save slots and reload the iframe, so a test starts
+ * from a fresh game. The substrate boots from `incrementalGameSave_substrate`,
+ * which every jta test in a run shares — perks and skills left behind by an
+ * earlier test would otherwise pollute assertions. Synthetic-dataset worlds
+ * (Fork 1.7) key their save by dataset:
+ * `incrementalGameSave_substrate__<dataset_id>` — clearing by prefix covers
+ * both. procgenPlayer re-publishes jta:loadRegion on iframe:appReady, so the
+ * game re-enters the current region.
  */
 export async function resetJtaSaveAndReload(testController) {
     try {
-        getJtaIframe()?.contentWindow?.localStorage?.removeItem('incrementalGameSave_substrate');
+        const ls = getJtaIframe()?.contentWindow?.localStorage;
+        for (let i = (ls?.length ?? 0) - 1; i >= 0; i--) {
+            const key = ls.key(i);
+            if (key?.startsWith('incrementalGameSave_substrate')) ls.removeItem(key);
+        }
     } catch { /* cross-origin guard — same-origin here, ignore */ }
     getJtaIframe()?.contentWindow?.location?.reload();
     return waitForJtaActive(testController);

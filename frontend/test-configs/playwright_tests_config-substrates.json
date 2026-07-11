@@ -109,6 +109,11 @@
       "id": "jta-prestige-perk-regrant",
       "enabled": true,
       "category": "JtA substrate"
+    },
+    {
+      "id": "jta-dataset-world-progression",
+      "enabled": true,
+      "category": "JtA substrate"
     }
   ]
 }
