@@ -101,6 +101,11 @@ if (!reportPath && !noCostPatches) {
 const { JTA_PERK_ITEM_NAMES } = await import(
     pathToFileURL(path.join(repoRoot, 'frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js'))
 );
+// The forced perk-category union (native ∪ holders) — the same shared
+// definition the bridge and the Pass-B solver consume.
+const { perkHolderTaskIds, forcedPerkCategoryIds } = await import(
+    pathToFileURL(path.join(repoRoot, 'frontend/modules/jtaSubstrateWrapper/perkOrigin.js'))
+);
 const perkNames = new Set(JTA_PERK_ITEM_NAMES);
 
 const rules = JSON.parse(fs.readFileSync(rulesPath, 'utf8'));
@@ -179,13 +184,26 @@ const gameDataPatch = [...costPatches, ...suppressionPatches];
 // AP location pool, so `allCompleted` means exactly "full coverage".
 const SBTV_TASK_IDS = [17, 28, 88, 158];
 
+// Forced perk-category set (perkOrigin.js union): native perk tasks
+// (suppression patch ids) ∪ perk holders (my locations holding my perk
+// items). The driver retires an id on first completion, mirroring the
+// bridge's location-checked retirement.
+const holderIds = perkHolderTaskIds({
+    apLocations,
+    itemAtLocation: (name) => locToItem.get(name),
+    perkNames,
+    playerId,
+});
+
 const options = {
     zoneLimit: 15,
     excludeTaskIds: SBTV_TASK_IDS,
     maxRuns: Number(getArg('--max-runs') ?? 2000),
     gameDataPatch,
     apRuntime: {
-        perkTaskIds: hasFlag('--no-perk-category') ? [] : suppressionPatches.map((p) => p.id),
+        perkTaskIds: hasFlag('--no-perk-category')
+            ? []
+            : [...forcedPerkCategoryIds(suppressionPatches.map((p) => p.id), holderIds)].sort((a, b) => a - b),
         grants,
         foreignPerks,
         regrantOnEveryCompletion: !hasFlag('--no-regrant'),

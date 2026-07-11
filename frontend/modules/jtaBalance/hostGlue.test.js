@@ -6,6 +6,7 @@ import {
     datasetIdentity,
     extractApLocations,
     extractGateCounts,
+    extractPerkHolderTaskIds,
     ruleGateCount,
     computeSeedName,
     cacheKey,
@@ -182,6 +183,24 @@ describe('extractGateCounts', () => {
         // Plain object, cloneable across the worker boundary; numeric-string keys.
         expect(gc).toEqual({ 10: 0, 11: 2, 20: 5 });
         expect(Object.getPrototypeOf(gc)).toBe(Object.prototype);
+    });
+});
+
+describe('extractPerkHolderTaskIds', () => {
+    it('joins placed perk items on my locations to task ids (object and string items)', () => {
+        const doc = jtaRules();
+        doc.regions[1].region_0_0.locations[0].item = { name: 'How to Read', player: 1 };
+        doc.regions[1].region_0_0.locations[1].item = 'JtA Filler';       // string form
+        doc.regions[1].region_1_0.locations[0].item = { name: 'Attunement', player: 2 }; // foreign
+        const apLocations = extractApLocations(doc, '1');
+        expect(extractPerkHolderTaskIds(doc, '1', apLocations, ['How to Read', 'Attunement']))
+            .toEqual([10]);
+    });
+
+    it('returns [] when locations carry no items (pre-fill doc)', () => {
+        const apLocations = extractApLocations(jtaRules(), '1');
+        expect(extractPerkHolderTaskIds(jtaRules(), '1', apLocations, ['How to Read']))
+            .toEqual([]);
     });
 });
 

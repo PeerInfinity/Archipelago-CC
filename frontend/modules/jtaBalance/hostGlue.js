@@ -16,6 +16,11 @@
  * a Map). apLocations is already a plain object.
  */
 
+import {
+    activePerkItemNames,
+    perkHolderTaskIds,
+} from '../jtaSubstrateWrapper/perkOrigin.js';
+
 /** Read the substrate payload for a sidecar entry (playable_payload or the entry itself). */
 function sidecarPayload(sidecar) {
     return sidecar?.playable_payload ?? sidecar ?? {};
@@ -76,18 +81,32 @@ export function extractDataset(rulesDoc, playerId) {
  * count. Plain values, structured-cloneable for the worker boundary.
  */
 export function datasetIdentity(dataset) {
-    const names = new Set();
-    for (const zone of dataset?.zones ?? []) {
-        for (const task of zone.tasks ?? []) {
-            if (task.perk == null) continue;
-            const name = dataset.perks?.[task.perk]?.name;
-            if (name) names.add(name);
-        }
-    }
     return {
-        perkItemNames: [...names],
+        perkItemNames: activePerkItemNames(dataset),
         perkCountSentinel: dataset?.perks?.length ?? null,
     };
+}
+
+/**
+ * The PERK HOLDER leg of the forced perk-category set (see perkOrigin.js for
+ * the definition and its consumers), extracted from the loaded rules doc:
+ * task ids whose own AP location holds a perk item per the post-fill
+ * placements in `regions[playerId][*].locations[].item`. Plain array,
+ * structured-cloneable for the worker boundary.
+ */
+export function extractPerkHolderTaskIds(rulesDoc, playerId, apLocations, perkItemNames) {
+    const itemByLocation = new Map();
+    for (const region of Object.values(rulesDoc?.regions?.[playerId] ?? {})) {
+        for (const loc of region?.locations ?? []) {
+            if (loc?.name && loc.item) itemByLocation.set(loc.name, loc.item);
+        }
+    }
+    return perkHolderTaskIds({
+        apLocations,
+        itemAtLocation: (name) => itemByLocation.get(name),
+        perkNames: new Set(perkItemNames),
+        playerId,
+    });
 }
 
 /**

@@ -59,7 +59,13 @@
  */
 
 import { IframeClient } from '../iframe-base/iframeClient.js';
-import { buildOwnPlacements, staticDataMatchesRegion } from './perkOrigin.js';
+import {
+    activePerkItemNames,
+    buildOwnPlacements,
+    forcedPerkCategoryIds,
+    perkHolderTaskIds,
+    staticDataMatchesRegion,
+} from './perkOrigin.js';
 
 function log(level, ...args) {
     const fn = console[level] || console.log;
@@ -604,27 +610,70 @@ function _reseedReportedLocations() {
  * `!hasPerk` half bites too: in a multiworld the perk item routinely arrives
  * before its task is done.
  *
- * The set is the region's perk tasks whose AP location is not yet checked; an
- * id is retired once its check lands, so a finished perk task stops being
- * prioritized every run. Dormant when the region carries no task_patches.
+ * The set is the forced perk-category union defined in perkOrigin.js —
+ * NATIVE perk tasks (the region's `perk` suppression patches) ∪ perk
+ * HOLDERS (tasks whose own AP location holds a perk item, per the post-fill
+ * placements) — restricted to tasks whose AP location is not yet checked;
+ * an id is retired once its check lands, so a finished task stops being
+ * prioritized every run. The holder leg is what keeps a perk milestone the
+ * fill placed on a NON-perk task out of the `other` category, whose
+ * cost-invariant energy-per-level metric would otherwise refuse it at any
+ * cost. The Pass-B solver and the jta-stats model apply the same union —
+ * keep the three in sync through perkOrigin.js, never by re-implementing.
+ *
+ * Placements resolve lazily from staticData: until they do, the set is
+ * native-only, and the next snapshotUpdated sync (which follows every
+ * region load's snapshot request) widens it. Dormant in base scope (no
+ * task_patches AND no ap_locations).
  */
 function _syncPerkCategoryTaskIds() {
     if (typeof _w.setPerkCategoryTaskIds !== 'function') return;
-    const patches = _world?.task_patches;
-    if (!Array.isArray(patches) || patches.length === 0) return;
+    const patches = Array.isArray(_world?.task_patches) ? _world.task_patches : [];
+    const apLocations = _world?.ap_locations;
+    const hasApLocations = apLocations && typeof apLocations === 'object'
+        && Object.keys(apLocations).length > 0;
+    if (patches.length === 0 && !hasApLocations) return;
+    // Native leg: perk-suppression patches are exactly the ones carrying a
+    // `perk` field.
+    const nativeIds = patches
+        .filter((p) => p != null && Object.prototype.hasOwnProperty.call(p, 'perk'))
+        .map((p) => p.id);
+    // Holder leg (own placements resolve lazily; null until staticData lands).
+    let holderIds = [];
+    const own = hasApLocations ? _ensureOwnPlacements() : null;
+    if (own) {
+        holderIds = perkHolderTaskIds({
+            apLocations,
+            // ownPlacements values are bare item names, already player-filtered.
+            itemAtLocation: (name) => own.byLocation.get(name),
+            perkNames: _activePerkNameSet(),
+        });
+    }
     const ids = [];
-    for (const patch of patches) {
-        // Perk-suppression patches are exactly the ones carrying a `perk` field.
-        if (patch == null || !Object.prototype.hasOwnProperty.call(patch, 'perk')) continue;
-        const locationName = _resolveLocationName(patch.id);
+    for (const id of forcedPerkCategoryIds(nativeIds, holderIds)) {
+        const locationName = _resolveLocationName(id);
         if (locationName !== null && _reportedLocationNames.has(locationName)) continue;
-        ids.push(patch.id);
+        ids.push(id);
     }
     try {
         _w.setPerkCategoryTaskIds(ids);
     } catch (err) {
         log('error', 'setPerkCategoryTaskIds threw:', err);
     }
+}
+
+// The active data source's perk item names (dataset's when this world carries
+// one, vanilla snapshot's otherwise), memoized on the dataset document
+// identity — _world changes per region, the document rides every region.
+let _perkNameSetSource = null;
+let _perkNameSet = null;
+function _activePerkNameSet() {
+    const dataset = _world?.jta_dataset ?? null;
+    if (!_perkNameSet || _perkNameSetSource !== dataset) {
+        _perkNameSet = new Set(activePerkItemNames(dataset));
+        _perkNameSetSource = dataset;
+    }
+    return _perkNameSet;
 }
 
 /**

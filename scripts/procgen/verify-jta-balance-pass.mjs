@@ -43,7 +43,7 @@ if (!rulesPath) {
 
 const { loadJtaEnv } = await import(pathToFileURL(path.join(repoRoot, 'CC/scripts/jta-stats/node-env.mjs')));
 const { runBalancePass } = await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/jtaBalance/balancePass.js')));
-const { computeSeedName } = await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/jtaBalance/hostGlue.js')));
+const { computeSeedName, extractPerkHolderTaskIds } = await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/jtaBalance/hostGlue.js')));
 const jtaLib = await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js')));
 const { JTA_PERK_COUNT } = await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/jtaSubstrateWrapper/zoneTaskData.js')));
 
@@ -134,6 +134,9 @@ if (dataset) {
         .map((t) => dataset.perks[t.perk].name)))];
     perkCountSentinel = dataset.perks.length;
 }
+// Holder leg of the forced perk-category set — the same extraction the
+// in-app host performs (hostGlue -> perkOrigin shared definition).
+const perkHolderIds = extractPerkHolderTaskIds(rules, playerId, apLocations, perkItemNames);
 const t0 = Date.now();
 const { patches, report } = await runBalancePass({
     env,
@@ -141,6 +144,7 @@ const { patches, report } = await runBalancePass({
     playerId,
     apLocations,
     perkItemNames,
+    perkHolderTaskIds: perkHolderIds,
     gateCounts,
     seed,
     options: { perkCountSentinel },

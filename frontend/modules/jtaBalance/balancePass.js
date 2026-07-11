@@ -51,6 +51,7 @@ import {
     MIN_COST_MULTIPLIER,
     solveCostMultiplier,
 } from './balanceCore.js';
+import { forcedPerkCategoryIds } from '../jtaSubstrateWrapper/perkOrigin.js';
 import { buildWalkOrder, toSeedInt } from './orderBuilder.js';
 import { baselineMods } from './automationProfile.js';
 
@@ -120,6 +121,9 @@ function makeStepper(env, onRunBoundary) {
  * @param {string|number} o.playerId
  * @param {object} o.apLocations    taskId -> AP location name (payload-native)
  * @param {string[]} o.perkItemNames
+ * @param {number[]} [o.perkHolderTaskIds] tasks whose own AP location holds a
+ *                                  perk item — the holder leg of the forced
+ *                                  perk-category set (perkOrigin.js)
  * @param {object|Map} o.gateCounts taskId -> access-rule perk count (0 = free)
  * @param {string|number} o.seed    world seed (seed_name); drives the shuffle
  * @param {object} [o.options]      { resetsPerStep, categoryFractions,
@@ -128,7 +132,8 @@ function makeStepper(env, onRunBoundary) {
  * @returns {Promise<{patches, report}>}
  */
 export async function runBalancePass({
-    env, sphereLog, playerId, apLocations, perkItemNames, gateCounts, seed, options = {},
+    env, sphereLog, playerId, apLocations, perkItemNames, perkHolderTaskIds = [],
+    gateCounts, seed, options = {},
 }) {
     const { sim, game, zones, win } = env;
     const {
@@ -216,7 +221,13 @@ export async function runBalancePass({
         }
         if (suppress.length) win.applyTaskPatches(suppress);
     }
-    const forcedPerkIds = new Set(perkTaskIds);
+    // Forced perk-category set = native perk tasks ∪ perk HOLDERS (tasks
+    // whose own AP location holds a perk item) — the shared definition in
+    // perkOrigin.js, the same union the bridge applies in real play. The
+    // holder leg keeps a perk milestone on a non-perk task out of the
+    // `other` category, whose cost-invariant energy-per-level metric would
+    // otherwise refuse it at any cost (unengaged milestone).
+    const forcedPerkIds = forcedPerkCategoryIds(perkTaskIds, perkHolderTaskIds);
     win.setPerkCategoryTaskIds(forcedPerkIds);
 
     // --- Walk state ---------------------------------------------------------

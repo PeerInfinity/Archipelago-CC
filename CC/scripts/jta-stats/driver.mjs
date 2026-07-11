@@ -520,11 +520,11 @@ export function runFirstCompletionStats(env, options = {}) {
         );
       }
     }
-    // Mirrors bridge.js `_syncPerkCategoryTaskIds`: the forced set is exactly
-    // the NATIVE perk tasks (the ids carrying a `perk` suppression patch), and
-    // an id retires once its AP location is checked — i.e. on first completion.
-    // NOT the tasks *holding* perk items: the shuffle moves those, and the
-    // defect being repaired is the two categorizers' reliance on `def.perk`.
+    // Mirrors bridge.js `_syncPerkCategoryTaskIds`: the forced set is the
+    // perkOrigin.js union — NATIVE perk tasks (ids carrying a `perk`
+    // suppression patch) ∪ perk HOLDERS (tasks whose own AP location holds a
+    // perk item) — computed by make-ap-config.mjs into `perkTaskIds`; an id
+    // retires once its AP location is checked, i.e. on first completion.
     const forcedPerkIds = new Set(apRuntime.perkTaskIds ?? []);
     win.setPerkCategoryTaskIds(forcedPerkIds);
     const regrantOnEveryCompletion = apRuntime.regrantOnEveryCompletion ?? true;

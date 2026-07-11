@@ -32,7 +32,7 @@ function postProgress(payload) {
 async function handleRun(input) {
     const {
         apLocations, gateCounts, sphereLog, playerId,
-        perkItemNames, perkCountSentinel, dataset, seed, options = {},
+        perkItemNames, perkCountSentinel, perkHolderTaskIds, dataset, seed, options = {},
     } = input;
 
     // gateCounts crosses the worker boundary as a plain object (cloneable);
@@ -65,6 +65,7 @@ async function handleRun(input) {
         playerId,
         apLocations: apLocations ?? {},
         perkItemNames: perkItemNames ?? [],
+        perkHolderTaskIds: perkHolderTaskIds ?? [],
         gateCounts: gateCountsMap,
         seed,
         options: { ...options, perkCountSentinel, onProgress: postProgress },

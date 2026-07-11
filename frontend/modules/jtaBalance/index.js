@@ -49,6 +49,7 @@ import {
     datasetIdentity,
     extractApLocations,
     extractGateCounts,
+    extractPerkHolderTaskIds,
     computeSeedName,
     cacheKey,
     partitionPatchesByRegion,
@@ -221,21 +222,14 @@ function triggerSolve(solve) {
         cleanup();
     };
 
-    // Identity constants come from the dataset when the world carries one
-    // (Phase 5e): its placed-perk names and its perk count are the AP item
-    // surface / suppression sentinel the walk must use — the vanilla
-    // constants belong to different tables. The dataset document itself
-    // rides along (structured clone) so the worker can loadGameData it.
-    const identity = solve.dataset
-        ? datasetIdentity(solve.dataset)
-        : { perkItemNames: [...JTA_PERK_ITEM_NAMES], perkCountSentinel: JTA_PERK_COUNT };
     worker.postMessage({
         apLocations: solve.apLocations,
         gateCounts: solve.gateCounts,
         sphereLog,
         playerId: solve.playerId,
-        perkItemNames: identity.perkItemNames,
-        perkCountSentinel: identity.perkCountSentinel,
+        perkItemNames: solve.identity.perkItemNames,
+        perkCountSentinel: solve.identity.perkCountSentinel,
+        perkHolderTaskIds: solve.perkHolderTaskIds,
         dataset: solve.dataset ?? null,
         seed: solve.seed,
         options: {},
@@ -274,6 +268,17 @@ async function handleRulesLoaded() {
 
     const apLocations = extractApLocations(rulesDoc, playerId);
     const gateCounts = extractGateCounts(rulesDoc, playerId, apLocations);
+    // Identity constants come from the dataset when the world carries one
+    // (Phase 5e): its placed-perk names and its perk count are the AP item
+    // surface / suppression sentinel the walk must use — the vanilla
+    // constants belong to different tables. Perk HOLDER ids (tasks whose own
+    // location holds a perk item) feed the forced perk-category set — the
+    // same union the bridge applies in real play (see perkOrigin.js).
+    const identity = dataset
+        ? datasetIdentity(dataset)
+        : { perkItemNames: [...JTA_PERK_ITEM_NAMES], perkCountSentinel: JTA_PERK_COUNT };
+    const perkHolderIds = extractPerkHolderTaskIds(
+        rulesDoc, playerId, apLocations, identity.perkItemNames);
     const seed = computeSeedName(rulesDoc);
     const key = cacheKey(seed, dataset?.dataset_id ?? null);
 
@@ -297,7 +302,10 @@ async function handleRulesLoaded() {
 
     // Cache miss: solve. Needs the sphere log; trigger now if sphereState
     // already loaded it, else wait for sphereState:dataLoaded.
-    pendingSolve = { playerId, seed, key, apLocations, gateCounts, dataset };
+    pendingSolve = {
+        playerId, seed, key, apLocations, gateCounts, dataset,
+        identity, perkHolderTaskIds: perkHolderIds,
+    };
     triggerSolve(pendingSolve);
 }
 

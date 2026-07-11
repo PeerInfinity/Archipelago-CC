@@ -89,3 +89,75 @@ describe('staticDataMatchesRegion', () => {
         expect(staticDataMatchesRegion(sd(['region_0_0__13']), {})).toBe(false);
     });
 });
+
+// --- The forced perk-category definition (Phase 5e follow-up) ---------------
+
+describe('activePerkItemNames', () => {
+    it('derives the dataset perk names from placed perks only', async () => {
+        const { activePerkItemNames } = await import('./perkOrigin.js');
+        const dataset = {
+            zones: [
+                { tasks: [{ id: 10, perk: 0 }, { id: 11, perk: null }] },
+                { tasks: [{ id: 30, perk: 2 }, { id: 31, perk: 0 }] },
+            ],
+            perks: [{ name: 'First Light' }, { name: 'Unplaced' }, { name: 'Deep Sight' }],
+        };
+        expect(activePerkItemNames(dataset)).toEqual(['First Light', 'Deep Sight']);
+    });
+
+    it('falls back to the vanilla snapshot when no dataset is given', async () => {
+        const { activePerkItemNames } = await import('./perkOrigin.js');
+        const names = activePerkItemNames(null);
+        expect(names.length).toBeGreaterThan(20);
+        expect(names).toContain('How to Read');
+    });
+});
+
+describe('perkHolderTaskIds / forcedPerkCategoryIds', () => {
+    const apLocations = { 13: 'r0__13', 14: 'r0__14', 20: 'r1__20' };
+    const perkNames = new Set(['How to Read', 'Attunement']);
+
+    it('joins own placements (bare names) to holder task ids', async () => {
+        const { perkHolderTaskIds } = await import('./perkOrigin.js');
+        const byLocation = new Map([
+            ['r0__13', 'JtA Filler'],
+            ['r0__14', 'Attunement'],
+            ['r1__20', 'How to Read'],
+        ]);
+        expect(perkHolderTaskIds({
+            apLocations,
+            itemAtLocation: (n) => byLocation.get(n),
+            perkNames,
+        })).toEqual([14, 20]);
+    });
+
+    it('applies the player guard to placement objects', async () => {
+        const { perkHolderTaskIds } = await import('./perkOrigin.js');
+        const byLocation = new Map([
+            ['r0__13', { name: 'How to Read', player: 2 }],   // another player's copy
+            ['r0__14', { name: 'Attunement', player: 1 }],
+            ['r1__20', { name: 'How to Read' }],              // single-player export = mine
+        ]);
+        expect(perkHolderTaskIds({
+            apLocations,
+            itemAtLocation: (n) => byLocation.get(n),
+            perkNames,
+            playerId: '1',
+        })).toEqual([14, 20]);
+    });
+
+    it('accepts string items (Pass-A presets place items as bare names)', async () => {
+        const { perkHolderTaskIds } = await import('./perkOrigin.js');
+        expect(perkHolderTaskIds({
+            apLocations: { 13: 'r0__13' },
+            itemAtLocation: () => 'How to Read',
+            perkNames,
+        })).toEqual([13]);
+    });
+
+    it('unions native and holder legs', async () => {
+        const { forcedPerkCategoryIds } = await import('./perkOrigin.js');
+        expect(forcedPerkCategoryIds([13, 15], [14, 15])).toEqual(new Set([13, 14, 15]));
+        expect(forcedPerkCategoryIds(null, [1])).toEqual(new Set([1]));
+    });
+});
