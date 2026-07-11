@@ -7,7 +7,12 @@
  * PLAY it out under free automation (driver.mjs, options.dataset — the same
  * model sweep-ap-seeds verified against the bridge in Phase 4). Checks:
  *
- *   - HARD GATE: full AP location coverage every run.
+ *   - HARD GATE (user ruling 2026-07-10): the VICTORY task and every
+ *     PERK-holding task complete within the run budget. Total location
+ *     coverage is REPORTED, not gated: a stranded filler location is
+ *     informational (solo v1 filler does nothing; in a MULTIWORLD a filler
+ *     location can hold another player's progression item — that caveat
+ *     rides with the report).
  *   - ADVISORY: per-world mean milestone gap inside [0.4x, 3x] of
  *     resetsPerStep = 5 (the settled Phase-4 band).
  *   - C4 EMERGENT: skill levels actually reached vs zone demands — at each
@@ -114,6 +119,30 @@ function playAndAnalyze({ tag, rules, doc, excludeIds }) {
     const d = JSON.parse(fs.readFileSync(res, 'utf8'));
     const ap = d.apRuntime;
 
+    // The progression gate's id sets: perk-holding tasks (the config's own
+    // grant join) and the Victory-holding task (from the export's post-fill
+    // placements — Victory is placed on a goal-zone task location).
+    const perkTaskIds = new Set(Object.keys(cfgDoc.options.apRuntime.grants).map(Number));
+    const rulesDoc = JSON.parse(fs.readFileSync(rules, 'utf8'));
+    const pid = Object.keys(rulesDoc.preset_sidecars)[0];
+    const nameToTask = new Map();
+    for (const sc of Object.values(rulesDoc.preset_sidecars[pid])) {
+        const payload = sc.playable_payload ?? sc;
+        for (const [id, loc] of Object.entries(payload.ap_locations ?? {})) nameToTask.set(loc, Number(id));
+    }
+    let victoryTaskId = null;
+    for (const region of Object.values(rulesDoc.regions?.[pid] ?? {})) {
+        for (const loc of region.locations ?? []) {
+            const itemName = typeof loc.item === 'string' ? loc.item : loc.item?.name;
+            if (itemName === 'Victory' && nameToTask.has(loc.name)) victoryTaskId = nameToTask.get(loc.name);
+        }
+    }
+    const fcr = ap.firstCompletionRuns ?? {};
+    const victoryRun = victoryTaskId != null ? (fcr[victoryTaskId] ?? null) : null;
+    const perkRuns = [...perkTaskIds].map((id) => fcr[id] ?? null);
+    const lastPerkRun = perkRuns.every((r) => r != null) ? Math.max(...perkRuns) : null;
+    const progressionOk = victoryRun != null && lastPerkRun != null;
+
     // Milestone gaps (emergent acquisition order).
     const acquired = ap.milestones.filter((m) => m.run != null).sort((a, b) => a.run - b.run);
     const gaps = acquired.slice(1).map((m, i) => m.run - acquired[i].run);
@@ -156,6 +185,9 @@ function playAndAnalyze({ tag, rules, doc, excludeIds }) {
         total: ap.coverageTotal,
         full: ap.fullCoverage,
         uncovered: ap.uncovered,
+        progressionOk,
+        victoryRun,
+        lastPerkRun,
         runs: d.timing.runsExecuted,
         prestiges: ap.prestigeWipes,
         regrants: ap.regrants,
@@ -225,17 +257,23 @@ for (const [ds, fill] of pairs) {
 // --- Summary -----------------------------------------------------------
 const L = ['# Emergent verification of generated dataset worlds (Phase 5f)\n'];
 L.push('Free-automation playthroughs of Pass-B-solved GENERATED worlds (z' + quota
-    + '), the Phase-4 sweep re-aimed at synthetic datasets. Hard gate = full');
-L.push('coverage; advisory = per-world mean milestone gap in '
+    + '), the Phase-4 sweep re-aimed at synthetic datasets. Hard gate (user');
+L.push('ruling 2026-07-10) = the Victory task AND every perk-holding task complete');
+L.push('within the run budget; total location coverage is REPORTED, not gated');
+L.push('(solo v1 filler does nothing; in a multiworld a filler location can hold');
+L.push('another player\'s progression item — caveat rides with the report).');
+L.push('Advisory = per-world mean milestone gap in '
     + `[${BAND[0]}, ${BAND[1]}] (resetsPerStep=${RESETS_PER_STEP}); C4 emergent = min demanded-skill`);
 L.push('level at each zone completion vs the vanilla anchor (flag < '
     + `${C4_RATIO_FLOOR}x or any level-0 demanded skill). Play artifacts: \`${outDir}\`.\n`);
-L.push('| world | solve | coverage | full? | runs | prestiges | re-grants | gap p50/mean/max | band ok? | C4 worst-zone ratio | C4 zero-levels |');
-L.push('|---|---|---|---|---|---|---|---|---|---|---|');
+L.push('| world | solve | victory+perks? | victory run | last perk run | coverage | runs | prestiges | re-grants | gap p50/mean/max | band ok? | C4 worst-zone ratio | C4 zero-levels |');
+L.push('|---|---|---|---|---|---|---|---|---|---|---|---|---|');
 const worldRow = (r) => {
     const solve = r.solveConverged ? 'ok' : `**no** (${r.solveFailure})`;
     const worst = r.c4Worst ? `${r.c4Worst.ratio.toFixed(2)}x (z${r.c4Worst.zone})` : '—';
-    L.push(`| ${r.tag} | ${solve} | ${r.coverage}/${r.total} | ${r.full ? 'yes' : '**NO**'} `
+    L.push(`| ${r.tag} | ${solve} | ${r.progressionOk ? 'yes' : '**NO**'} `
+        + `| ${r.victoryRun ?? '**—**'} | ${r.lastPerkRun ?? '**—**'} `
+        + `| ${r.coverage}/${r.total}${r.full ? '' : ` (stranded: ${r.uncovered.map((u) => u.id).join(',')})`} `
         + `| ${r.runs} | ${r.prestiges} | ${r.regrants} `
         + `| ${r.gapP50}/${r.gapMean?.toFixed(1)}/${r.gapMax} | ${r.bandOk ? 'yes' : '**NO**'} `
         + `| ${worst} | ${r.c4ZeroLevels ?? 0} |`);
@@ -243,12 +281,17 @@ const worldRow = (r) => {
 worldRow({ ...anchor, c4Worst: { zone: '-', ratio: 1 }, c4ZeroLevels: anchor.c4.reduce((a, z) => a + z.zeroLevelDemanded, 0) });
 for (const r of rows) worldRow(r);
 
-const hardFail = rows.filter((r) => !r.full);
+const hardFail = rows.filter((r) => !r.progressionOk);
+const strandedFiller = rows.filter((r) => !r.full);
 const bandFail = rows.filter((r) => !r.bandOk);
 const c4Fail = rows.filter((r) => (r.c4Worst && r.c4Worst.ratio < C4_RATIO_FLOOR) || r.c4ZeroLevels > 0);
 L.push('');
-L.push(`- **Hard gate (full coverage):** ${hardFail.length === 0 ? 'PASS on every world.'
-    : `**FAILED** — ${hardFail.map((r) => `${r.tag} (${r.coverage}/${r.total}: ${r.uncovered.map((u) => `task ${u.id} z${u.zone}`).join(', ')})`).join('; ')}`}`);
+L.push(`- **Hard gate (Victory + all perk tasks within ${maxRuns} runs):** ${hardFail.length === 0
+    ? 'PASS on every world.'
+    : `**FAILED** — ${hardFail.map((r) => `${r.tag} (victory run ${r.victoryRun}, last perk run ${r.lastPerkRun})`).join('; ')}`}`);
+L.push(`- **Residual stranded filler (informational; multiworld caveat):** ${strandedFiller.length === 0
+    ? 'none.'
+    : strandedFiller.map((r) => `${r.tag}: ${r.uncovered.map((u) => `task ${u.id} z${u.zone}`).join(', ')}`).join('; ')}`);
 L.push(`- **Pacing advisory:** ${bandFail.length === 0 ? 'every world inside the band.'
     : `outside the band — ${bandFail.map((r) => `${r.tag} (mean ${r.gapMean?.toFixed(1)})`).join('; ')}`}`);
 L.push(`- **C4 emergent:** ${c4Fail.length === 0 ? 'no world below the vanilla-anchor ratio floor; no level-0 demanded skills.'

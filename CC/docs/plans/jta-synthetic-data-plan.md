@@ -13,10 +13,13 @@ zero fork changes);
 Phase 5e DONE 2026-07-10 (Pass-B worker dataset load + §4.2 measurement
 pass — see §6; VERDICT: no balancing lever fires, xp_mult co-solve and
 economy scaling NOT built);
-Phase 5f RUN 2026-07-10 — machinery DONE, **HARD GATE FAILED**: every
-generated world strands 1–3 locations under the tuned profile (vanilla
-anchor clean); `threshold_other_metric = RESETS` rescues fully but is a
-Phase-4-settled knob — see §6 5f. NEXT: ruling on that knob, then re-run.**
+Phase 5f DONE 2026-07-10 — **PASS under the refined progression gate**
+(user ruling same day: hard gate = Victory + every perk task within the
+run budget; total coverage reported, not gated). All six generated worlds
+play to victory + full perks at vanilla-comparable pacing; the residual
+1–3 stranded FILLER locations per world (the LEVEL-metric fragility class)
+are recorded informationally with the multiworld caveat and the known
+RESETS rescue — see §6 5f. NEXT: Phase 6 absorption audit.**
 Child plan of `jta-zone-randomization-plan.md` (its Phase 5, "the destination").
 Sibling precedent: `jta-balance-pass-plan.md` (Phase 3). Phases 0–4 of the
 parent are DONE; this plan builds on their machinery (Pass-B balance walk,
@@ -973,8 +976,18 @@ both halves (the harness already re-extracts the committed HEAD per run).
   3. The headless guard now derives its walk seed via `computeSeedName`
      (Pass-A presets carry an empty `seed_name`; the guard used to walk
      them in a different shuffle order than the app solves them).
-- **5f — Emergent verification — RUN 2026-07-10, HARD GATE FAILED
-  (finding recorded, lever identified, NOT flipped — awaiting ruling).**
+- **5f — Emergent verification — DONE 2026-07-10, PASS under the refined
+  progression gate.** GATE RULING (user, same day, supersedes the initial
+  full-coverage bar): a world FAILS only if the Victory task or any
+  perk-holding task goes uncompleted within the run budget; total location
+  coverage is REPORTED, not gated (solo v1 filler does nothing; the
+  multiworld caveat — a filler location can hold another player's
+  progression item — rides with the report). **Under that gate all six
+  generated worlds PASS: victory at runs 55–89, last perk by run 53–79,
+  vanilla-comparable (anchor 63/53); pacing advisory in-band everywhere;
+  C4 zero-level check clean.** The remainder of this entry records the
+  initial full-coverage run and its diagnosis — kept because the fragility
+  it found is real (and gate-relevant if multiworld ever hardens it).
   Shipped (`4ae824866`): `CC/scripts/jta-stats/sweep-dataset-emergent.mjs`
   (vanilla anchor + datasets × fill seeds; free-automation play of
   Pass-B-solved exports; hard coverage gate + `[0.4×, 3×]` advisory +
@@ -999,8 +1012,10 @@ both halves (the harness already re-extracts the committed HEAD per run).
   fully** (ds1-f1 130/130 in 117 runs; worst world ds2-f2 130/130 in 194,
   pacing in-band). That knob was SETTLED as LEVEL by Phase 4 on vanilla
   evidence — re-opening it (globally, per-world-type, or another remedy)
-  is a user decision. **5f's verification machinery is DONE; the v1
-  synthetic-world playability claim is BLOCKED on that ruling.**
+  is a user decision. RESOLVED by the gate ruling above: with progression
+  as the hard gate, `threshold_other_metric` stays LEVEL (no re-litigation
+  needed); the RESETS rescue stays recorded as the known remedy should
+  full coverage ever harden again (multiworld).
 
 Post-v1 (recorded, not planned here): per-behavior effects migration
 (§2.3), branching topology / grid-fit via `generateZoneForSpecs`
