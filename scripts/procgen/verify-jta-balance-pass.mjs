@@ -14,6 +14,15 @@
  *   node scripts/procgen/verify-jta-balance-pass.mjs \
  *     frontend/presets/jta_loctest_roundtrip_worldgen/AP_<seed>/AP_<seed>_rules.json
  *
+ * Synthetic-dataset worlds (Phase 5e) are AUTO-DETECTED from the sidecar
+ * carriage (single-carrier + refs): the dataset is loadGameData'd into the
+ * env before the walk and the identity constants (perk item names,
+ * suppression sentinel) come from the document instead of the vanilla
+ * snapshot — the same worker path jtaBalance runs in-app. Generate a dataset
+ * input with JTA_RT_DATASET=1 JTA_RT_KEEP=1 on the roundtrip verifier.
+ * A ref without a resolvable document is fatal (solving vanilla tables
+ * against dataset task ids would be garbage).
+ *
  * Exits non-zero when the pass fails its own convergence bar: any stalled or
  * never-started entry, any saturated solve, or a walk that doesn't cover the
  * full location universe.
@@ -39,14 +48,23 @@ const { JTA_PERK_COUNT } = await import(pathToFileURL(path.join(repoRoot, 'front
 
 const rules = JSON.parse(fs.readFileSync(rulesPath, 'utf8'));
 
-// ap_locations, payload-native direction (taskId -> location name).
+// ap_locations, payload-native direction (taskId -> location name). Dataset
+// carriage (5e): the single carrier's `jta_dataset` if any sidecar has one.
 const playerId = Object.keys(rules.preset_sidecars)[0];
 const apLocations = {};
+let dataset = null;
+let datasetRef = null;
 for (const sidecar of Object.values(rules.preset_sidecars[playerId])) {
     const payload = sidecar.playable_payload ?? sidecar;
+    if (!dataset && payload.jta_dataset) dataset = payload.jta_dataset;
+    if (!datasetRef && payload.jta_dataset_ref) datasetRef = payload.jta_dataset_ref;
     for (const [taskId, locName] of Object.entries(payload.ap_locations ?? {})) {
         apLocations[taskId] = locName;
     }
+}
+if (datasetRef && !dataset) {
+    console.error(`FATAL: world references dataset '${datasetRef.dataset_id}' but no sidecar carries it`);
+    process.exit(2);
 }
 
 // Gate counts: the HasFromListUnique perk count on each location's access
@@ -83,21 +101,43 @@ function loadSphereLog(rulesDoc, rulesFile) {
 }
 const sphereLog = loadSphereLog(rules, rulesPath);
 const seed = rules.seed_name ?? rules.seed ?? 1;
-console.log(`rules: ${path.basename(rulesPath)} · seed ${seed}`);
+console.log(`rules: ${path.basename(rulesPath)} · seed ${seed}`
+    + (dataset ? ` · dataset ${dataset.dataset_id}` : ''));
 console.log(`player ${playerId} · ${Object.keys(apLocations).length} jta locations · `
     + `${gateCounts.size} gate counts · ${sphereLog.length} sphere-log entries`);
 
 const env = await loadJtaEnv();
+// Dataset world: swap the engine's tables to the document before the walk —
+// the same seam the jtaBalance worker uses — and take identity constants
+// from the dataset (placed-perk names / perk count) instead of the vanilla
+// snapshot.
+let perkItemNames = [...jtaLib.JTA_PERK_ITEM_NAMES];
+let perkCountSentinel = JTA_PERK_COUNT;
+if (dataset) {
+    if (typeof env.win.loadGameData !== 'function') {
+        console.error('FATAL: dataset world but loadGameData is unavailable (fork build predates Fork 1.7)');
+        process.exit(2);
+    }
+    const res = env.win.loadGameData(dataset);
+    if (!res?.ok) {
+        console.error(`FATAL: loadGameData rejected the dataset: ${(res?.errors ?? []).join('; ')}`);
+        process.exit(2);
+    }
+    perkItemNames = [...new Set(dataset.zones.flatMap((z) => z.tasks
+        .filter((t) => t.perk != null)
+        .map((t) => dataset.perks[t.perk].name)))];
+    perkCountSentinel = dataset.perks.length;
+}
 const t0 = Date.now();
 const { patches, report } = await runBalancePass({
     env,
     sphereLog,
     playerId,
     apLocations,
-    perkItemNames: [...jtaLib.JTA_PERK_ITEM_NAMES],
+    perkItemNames,
     gateCounts,
     seed,
-    options: { perkCountSentinel: JTA_PERK_COUNT },
+    options: { perkCountSentinel },
 });
 const elapsed = Date.now() - t0;
 
