@@ -6,8 +6,11 @@
 DONE: no `const enum` in the fork (and `isolatedModules: true` forbids them
 project-wide), compiled enums are mutable runtime objects — the count
 rewrite works as designed. Phase 5a DONE 2026-07-10 (`a09e2492f`);
-Phase 5b DONE 2026-07-10 (Fork 1.7, submodule `c6bb26d` — see §6).
-NEXT: 5c (dataset parity mode).**
+Phase 5b DONE 2026-07-10 (Fork 1.7, submodule `c6bb26d`);
+Phase 5c DONE 2026-07-10 (dataset parity mode, all layers PASS);
+Phase 5d DONE 2026-07-10 (Pass-A pipeline dataset synthesis — see §6;
+zero fork changes). NEXT: 5e (Pass-B worker dataset load) / 5f
+(emergent sweep).**
 Child plan of `jta-zone-randomization-plan.md` (its Phase 5, "the destination").
 Sibling precedent: `jta-balance-pass-plan.md` (Phase 3). Phases 0–4 of the
 parent are DONE; this plan builds on their machinery (Pass-B balance walk,
@@ -799,11 +802,84 @@ both halves (the harness already re-extracts the committed HEAD per run).
   annotate is the only open decision).
   Regression re-runs after the harness edits: upstream-mode sim parity
   4/4 PASS and UI parity PASS unchanged. **Gate satisfied: 5d may start.**
-- **5d — Pass A: pipeline dataset synthesis.** Generation step (linear,
-  profile-shaped, theme namebanks v0), constraints C1–C4 validator, sidecar
-  carriage (single-carrier + refs), `extractZoneRules`-from-dataset,
-  bridge dataset application, roundtrip-verifier dataset assertions, in-app
-  dataset preset + substrate test.
+- **5d — Pass A: pipeline dataset synthesis — DONE 2026-07-10.** Zero fork
+  changes (Fork 1.7's `loadGameData` is the only fork surface used).
+  Shipped, one commit per step:
+  1. `frontend/modules/jtaSubstrateWrapper/generateDataset.js` +
+     `datasetNamebanks.js` (three themes): deterministic per (seed, params)
+     — byte-identical regeneration; CLI `--seed/--zones/--theme/--out`.
+     **v1 structure policy:** the skeleton mirrors the vanilla profile
+     entry-for-entry (per-zone type mix, skills-per-task, reps/xp, unlock
+     chains, perk/item placement positions, behavior slots, effect
+     magnitudes) while every IDENTITY is synthetic — theme-namebank names,
+     a seeded skill permutation (xp_needed_mult and the `roles` couplings
+     follow the skill), fresh task ids. So a generated world is
+     balance-ISOMORPHIC to vanilla under relabeling (rulings 2/3 taken
+     literally); seeds vary theme/names/permutation, not balance. The five
+     hidden-without-unlocker vanilla tasks are DROPPED (⇒ 264 tasks), so
+     `sbtv_unlock_task_ids: []` holds by construction. C1–C3 via the
+     authoritative validator; **C4 implemented generator-side**: cumulative
+     skill-XP opportunity per (zone, demanded skill), floors derived from
+     the vanilla profile keyed by depth-since-introduction, emitted as a
+     report and asserted.
+  2. Library dataset mode: `setJtaDataset(doc)` switches the zone-locations
+     channel to a normalized dataset view; registry `zoneCount` and
+     `libraryItems` became live getters (dataset zone count / perk names);
+     suppression sentinel = the ACTIVE source's perk count. Carriage per
+     ruling 4: every region payload gets `jta_dataset_ref`, zone 0 carries
+     the full `jta_dataset`. Vanilla path byte-identical (presets
+     regenerate identically).
+  3. Host + bridge: `buildWarehouse` resolves refs at rules load (hands the
+     bridge the full document with any region); bridge `_applyWorldDataset`
+     calls `window.loadGameData` when the dataset_id differs, REFUSES the
+     region load on failure/missing hook/unresolved ref (errors surfaced);
+     synthetic exit tasks take the travel skill from the dataset's roles.
+     `jtaBalance.detectJtaWorld` now SKIPS dataset worlds — Pass-B dataset
+     support is 5e; solving vanilla tables against dataset ids would be
+     garbage. Unit tests on all three seams.
+  4. Guards: new `scripts/procgen/verify-jta-generated-dataset.mjs`
+     (determinism ×3 cases, validator + C4 re-check, load+play on the fork
+     build incl. a dataset→dataset swap and the 12→10 skill-Count shrink;
+     31/31). `verify-jta-locations-roundtrip.mjs` gained `JTA_RT_DATASET=1`
+     (carriage asserted at Pass A / world_generator / Generate.py /
+     warehouse; document structurally identical at every hop; 38/38 — and
+     AP fill produced a non-degenerate sphere log over synthetic names).
+  5. In-app: `jta_dataset_test` preset (3 zones, dataset embedded;
+     generator script asserts the carriage) + substrate test
+     `jta-dataset-world-progression` (22nd test) — the bridge-seam proof:
+     the fork serves the DATASET's themed tasks after load, automation
+     walks zone 0→1 under normal ticking (the three hard-won test facts
+     honored), and the dataset perk's location check / AP item / in-game
+     grant all land with held == received. `resetJtaSaveAndReload` clears
+     save slots by prefix (dataset-keyed slots included).
+  **Findings:**
+  - **C4 floors must exclude the SBtV-gated tasks** from vanilla's
+    opportunity table: they are unreachable without the prestige unlock
+    (and one is the game's only 5-skill task), so raw floors are inflated —
+    the mirror-shaped dataset failed its own floors at zones 8+ until the
+    floor computation dropped them. With reachable-only floors the mirror
+    meets them at equality (tightest margin 1.00×), i.e. the assert is
+    exactly at vanilla's own bar.
+  - **Bridge placement deviates from §3.2's letter**: the dataset applies
+    at the TOP of `_handleLoadRegion`, not "immediately before
+    `_applyTaskPatches`" — `loadGameData` re-initializes GAMESTATE, so the
+    catch-up resets, energy sync, and `loadZone(jtaZone)` that sit between
+    must operate on the post-swap state (the ruled position would load the
+    OLD tables' zone and lose the energy sync). The binding constraint —
+    dataset before task patches — holds.
+  - The generated dataset's perk roster mirrors vanilla's 47 slots, so the
+    dataset sentinel VALUE equals vanilla's for now; the plumbing reads the
+    dataset's count everywhere (diverges the moment a generator varies
+    roster size).
+  - jta test files are deliberately absent from `init-bundled.js` (jta
+    suite is dev-mode-only precedent); the new test file follows suit.
+  **Gates (all green 2026-07-10):** generator determinism + validator CLI +
+  jsonschema + C4 report; generated-dataset guard 31/31; roundtrip 27/27
+  vanilla + 38/38 dataset; presets byte-identical; substrate suite 22/22
+  (solo run — a concurrent-load run flaked `jta-bot-walkto-exit`,
+  pre-existing test, unrelated); zone-skip + cost-hooks guards; procgen
+  presets 27/27; vitest 2580 green; 5c dataset sim parity re-run PASS
+  (see below).
 - **5e — Pass B extension.** Worker dataset load + cache keying; solve a
   generated world end-to-end; the §4.2 measurement pass over a dataset×seed
   batch; add levers only as the failure modes demand.
