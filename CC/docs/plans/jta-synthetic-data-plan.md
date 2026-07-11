@@ -12,7 +12,11 @@ Phase 5d DONE 2026-07-10 (Pass-A pipeline dataset synthesis — see §6;
 zero fork changes);
 Phase 5e DONE 2026-07-10 (Pass-B worker dataset load + §4.2 measurement
 pass — see §6; VERDICT: no balancing lever fires, xp_mult co-solve and
-economy scaling NOT built). NEXT: 5f (emergent sweep).**
+economy scaling NOT built);
+Phase 5f RUN 2026-07-10 — machinery DONE, **HARD GATE FAILED**: every
+generated world strands 1–3 locations under the tuned profile (vanilla
+anchor clean); `threshold_other_metric = RESETS` rescues fully but is a
+Phase-4-settled knob — see §6 5f. NEXT: ruling on that knob, then re-run.**
 Child plan of `jta-zone-randomization-plan.md` (its Phase 5, "the destination").
 Sibling precedent: `jta-balance-pass-plan.md` (Phase 3). Phases 0–4 of the
 parent are DONE; this plan builds on their machinery (Pass-B balance walk,
@@ -969,13 +973,34 @@ both halves (the harness already re-extracts the committed HEAD per run).
   3. The headless guard now derives its walk seed via `computeSeedName`
      (Pass-A presets carry an empty `seed_name`; the guard used to walk
      them in a different shuffle order than the app solves them).
-- **5f — Emergent verification** (Phase-4 replay at Phase-5 scope):
-  `sweep-ap-seeds`-style runs over N generated datasets × seeds; hard gate =
-  full location coverage every run; advisory band = the settled `[0.4×, 3×]`
-  per-seed mean gap; plus the C4 invariant checked EMERGENTLY (skill levels
-  actually reached vs zone demands). UI-parity layer 3 is RULED IN (§7 Q6) —
-  build it in 5c with the other parity layers unless it proves not worth the
-  effort in practice.
+- **5f — Emergent verification — RUN 2026-07-10, HARD GATE FAILED
+  (finding recorded, lever identified, NOT flipped — awaiting ruling).**
+  Shipped (`4ae824866`): `CC/scripts/jta-stats/sweep-dataset-emergent.mjs`
+  (vanilla anchor + datasets × fill seeds; free-automation play of
+  Pass-B-solved exports; hard coverage gate + `[0.4×, 3×]` advisory +
+  emergent C4 via a new opt-in `recordSkillLevels` driver trace —
+  conditionally serialized, committed baselines reproduce byte-identically);
+  `make-ap-config.mjs` dataset mode (perk names / zone limit / exclusions /
+  `options.dataset` from the carriage). UI-parity layer 3 was already built
+  in 5c as ruled.
+  **Results (`results/comparison-dataset-emergent.md`):** vanilla anchor
+  130/130 in 249 runs; **every dataset world strands 1–3 locations** at the
+  2000-run ceiling — task 256 (z12, the same mirrored structural slot) on
+  all six, i.e. vanilla's `thresholdFloored` fragility class made fatal.
+  Diagnosis: not cost (cm ≈ 0.1), not the model (perks/regrants clean; z12
+  replayed 1480×) — the `other` category's cost-invariant LEVEL metric
+  refuses the task and its zone never empties, so the all-skipped fallback
+  never fires; the balance-isomorphism argument covers structure, not the
+  emergent skill-level trajectory the metric keys on. Pacing advisory and
+  the C4 zero-level check pass on every world (the C4 anchor-ratio flags
+  are a completion-timing artifact, documented).
+  **Rescue experiments (existing knobs, measurements only):** End-Run
+  all-skipped does NOT rescue; **`threshold_other_metric = RESETS` rescues
+  fully** (ds1-f1 130/130 in 117 runs; worst world ds2-f2 130/130 in 194,
+  pacing in-band). That knob was SETTLED as LEVEL by Phase 4 on vanilla
+  evidence — re-opening it (globally, per-world-type, or another remedy)
+  is a user decision. **5f's verification machinery is DONE; the v1
+  synthetic-world playability claim is BLOCKED on that ruling.**
 
 Post-v1 (recorded, not planned here): per-behavior effects migration
 (§2.3), branching topology / grid-fit via `generateZoneForSpecs`
