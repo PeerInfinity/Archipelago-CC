@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "dataset_id": "vanilla-fork-1.8-e72f5c24",
+  "dataset_id": "vanilla-fork-1.8-raw-ecaa2185",
   "provenance": {
     "generator": "export-vanilla-dataset.mjs",
     "fork_save_version": "Fork 1.8",
     "seed": null,
     "params_hash": null,
-    "content_hash": "e72f5c24"
+    "content_hash": "ecaa2185"
   },
   "theme": {
     "title": "Journey to Ascension",
@@ -95,7 +95,7 @@
           "skills": [
             0
           ],
-          "cost_multiplier": 4,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -104,7 +104,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 40,
+          "raw_xp": 8
         },
         {
           "id": 11,
@@ -113,7 +115,7 @@
           "skills": [
             1
           ],
-          "cost_multiplier": 3,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -122,7 +124,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 30,
+          "raw_xp": 8
         },
         {
           "id": 12,
@@ -140,7 +144,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 10,
+          "raw_xp": 8
         },
         {
           "id": 13,
@@ -149,7 +155,7 @@
           "skills": [
             1
           ],
-          "cost_multiplier": 8,
+          "cost_multiplier": 1,
           "xp_mult": 0.5,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -158,7 +164,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 80,
+          "raw_xp": 8
         },
         {
           "id": 14,
@@ -176,7 +184,9 @@
           "item": 0,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 10,
+          "raw_xp": 8
         },
         {
           "id": 15,
@@ -186,7 +196,7 @@
             3,
             4
           ],
-          "cost_multiplier": 2,
+          "cost_multiplier": 1,
           "xp_mult": 1.5,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -195,7 +205,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 20,
+          "raw_xp": 8
         },
         {
           "id": 16,
@@ -213,7 +225,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 10,
+          "raw_xp": 8
         },
         {
           "id": 17,
@@ -222,7 +236,7 @@
           "skills": [
             3
           ],
-          "cost_multiplier": 500,
+          "cost_multiplier": 1,
           "xp_mult": 2,
           "max_reps": 8,
           "hidden_by_default": true,
@@ -231,9 +245,12 @@
           "item": 13,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 5000,
+          "raw_xp": 8
         }
-      ]
+      ],
+      "raw_drain": 1
     },
     {
       "name": "The Village Watch",
@@ -247,7 +264,7 @@
           "skills": [
             3
           ],
-          "cost_multiplier": 3,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -256,7 +273,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 66,
+          "raw_xp": 10
         },
         {
           "id": 21,
@@ -265,7 +284,7 @@
           "skills": [
             1
           ],
-          "cost_multiplier": 1.3,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 4,
           "hidden_by_default": false,
@@ -274,7 +293,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 28.6,
+          "raw_xp": 10
         },
         {
           "id": 22,
@@ -283,7 +304,7 @@
           "skills": [
             0
           ],
-          "cost_multiplier": 1.6,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 2,
           "hidden_by_default": false,
@@ -292,7 +313,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 35.2,
+          "raw_xp": 10
         },
         {
           "id": 25,
@@ -301,7 +324,7 @@
           "skills": [
             5
           ],
-          "cost_multiplier": 0.4,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 5,
           "hidden_by_default": false,
@@ -310,7 +333,9 @@
           "item": 1,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 8.8,
+          "raw_xp": 10
         },
         {
           "id": 27,
@@ -319,7 +344,7 @@
           "skills": [
             1
           ],
-          "cost_multiplier": 16,
+          "cost_multiplier": 1,
           "xp_mult": 0.2,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -328,7 +353,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 352,
+          "raw_xp": 10
         },
         {
           "id": 23,
@@ -346,7 +373,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 22,
+          "raw_xp": 10
         },
         {
           "id": 24,
@@ -355,7 +384,7 @@
           "skills": [
             2
           ],
-          "cost_multiplier": 1.5,
+          "cost_multiplier": 1,
           "xp_mult": 5,
           "max_reps": 4,
           "hidden_by_default": false,
@@ -364,7 +393,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 33,
+          "raw_xp": 10
         },
         {
           "id": 26,
@@ -383,7 +414,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 22,
+          "raw_xp": 10
         },
         {
           "id": 28,
@@ -392,7 +425,7 @@
           "skills": [
             2
           ],
-          "cost_multiplier": 16,
+          "cost_multiplier": 1,
           "xp_mult": 3,
           "max_reps": 10,
           "hidden_by_default": true,
@@ -401,9 +434,12 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 640,
+          "raw_xp": 10
         }
-      ]
+      ],
+      "raw_drain": 1.05
     },
     {
       "name": "The Raid",
@@ -417,7 +453,7 @@
           "skills": [
             7
           ],
-          "cost_multiplier": 2,
+          "cost_multiplier": 1,
           "xp_mult": 0.5,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -426,7 +462,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 96.80000000000001,
+          "raw_xp": 12.5
         },
         {
           "id": 31,
@@ -435,7 +473,7 @@
           "skills": [
             2
           ],
-          "cost_multiplier": 3,
+          "cost_multiplier": 1,
           "xp_mult": 3,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -444,7 +482,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 145.20000000000002,
+          "raw_xp": 12.5
         },
         {
           "id": 32,
@@ -453,7 +493,7 @@
           "skills": [
             0
           ],
-          "cost_multiplier": 3,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -462,7 +502,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 145.20000000000002,
+          "raw_xp": 12.5
         },
         {
           "id": 33,
@@ -471,7 +513,7 @@
           "skills": [
             3
           ],
-          "cost_multiplier": 0.4,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 4,
           "hidden_by_default": false,
@@ -480,7 +522,9 @@
           "item": 2,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 19.360000000000003,
+          "raw_xp": 12.5
         },
         {
           "id": 34,
@@ -490,7 +534,7 @@
             4,
             3
           ],
-          "cost_multiplier": 1.2,
+          "cost_multiplier": 1,
           "xp_mult": 1.5,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -499,7 +543,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 58.08000000000001,
+          "raw_xp": 12.5
         },
         {
           "id": 35,
@@ -508,7 +554,7 @@
           "skills": [
             5
           ],
-          "cost_multiplier": 1.5,
+          "cost_multiplier": 1,
           "xp_mult": 3,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -517,7 +563,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 72.60000000000001,
+          "raw_xp": 12.5
         },
         {
           "id": 36,
@@ -526,7 +574,7 @@
           "skills": [
             2
           ],
-          "cost_multiplier": 400,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -535,7 +583,9 @@
           "item": 8,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 64000,
+          "raw_xp": 12.5
         },
         {
           "id": 37,
@@ -545,7 +595,7 @@
             2,
             8
           ],
-          "cost_multiplier": 1300,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": true,
@@ -554,9 +604,12 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 62920.00000000001,
+          "raw_xp": 12.5
         }
-      ]
+      ],
+      "raw_drain": 1.1025
     },
     {
       "name": "The Wilderness",
@@ -571,7 +624,7 @@
             7,
             3
           ],
-          "cost_multiplier": 2,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -580,7 +633,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 212.96000000000006,
+          "raw_xp": 15.625
         },
         {
           "id": 41,
@@ -590,7 +645,7 @@
             3,
             4
           ],
-          "cost_multiplier": 0.5,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -599,7 +654,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 53.240000000000016,
+          "raw_xp": 15.625
         },
         {
           "id": 42,
@@ -618,7 +675,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 106.48000000000003,
+          "raw_xp": 15.625
         },
         {
           "id": 43,
@@ -628,7 +687,7 @@
             3,
             8
           ],
-          "cost_multiplier": 2.5,
+          "cost_multiplier": 1,
           "xp_mult": 0.1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -637,7 +696,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 266.2000000000001,
+          "raw_xp": 15.625
         },
         {
           "id": 45,
@@ -647,7 +708,7 @@
             3,
             9
           ],
-          "cost_multiplier": 0.25,
+          "cost_multiplier": 1,
           "xp_mult": 2,
           "max_reps": 5,
           "hidden_by_default": false,
@@ -656,7 +717,9 @@
           "item": 3,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 26.620000000000008,
+          "raw_xp": 15.625
         },
         {
           "id": 44,
@@ -665,7 +728,7 @@
           "skills": [
             5
           ],
-          "cost_multiplier": 2,
+          "cost_multiplier": 1,
           "xp_mult": 5,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -674,7 +737,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 212.96000000000006,
+          "raw_xp": 15.625
         },
         {
           "id": 46,
@@ -683,7 +748,7 @@
           "skills": [
             0
           ],
-          "cost_multiplier": 10,
+          "cost_multiplier": 1,
           "xp_mult": 3,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -692,7 +757,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 1064.8000000000004,
+          "raw_xp": 15.625
         },
         {
           "id": 47,
@@ -701,7 +768,7 @@
           "skills": [
             2
           ],
-          "cost_multiplier": 1000,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -710,7 +777,9 @@
           "item": 11,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 640000,
+          "raw_xp": 15.625
         },
         {
           "id": 48,
@@ -719,7 +788,7 @@
           "skills": [
             3
           ],
-          "cost_multiplier": 15,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 3,
           "hidden_by_default": true,
@@ -728,9 +797,12 @@
           "item": 11,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 1597.2000000000005,
+          "raw_xp": 15.625
         }
-      ]
+      ],
+      "raw_drain": 1.1576250000000001
     },
     {
       "name": "The Cave System",
@@ -744,7 +816,7 @@
           "skills": [
             7
           ],
-          "cost_multiplier": 2,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -753,7 +825,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 468.51200000000017,
+          "raw_xp": 19.53125
         },
         {
           "id": 51,
@@ -762,7 +836,7 @@
           "skills": [
             3
           ],
-          "cost_multiplier": 2,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -771,7 +845,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 468.51200000000017,
+          "raw_xp": 19.53125
         },
         {
           "id": 52,
@@ -781,7 +857,7 @@
             0,
             4
           ],
-          "cost_multiplier": 1.5,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -790,7 +866,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 351.3840000000001,
+          "raw_xp": 19.53125
         },
         {
           "id": 53,
@@ -799,7 +877,7 @@
           "skills": [
             4
           ],
-          "cost_multiplier": 0.3,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 5,
           "hidden_by_default": false,
@@ -808,7 +886,9 @@
           "item": 4,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 70.27680000000004,
+          "raw_xp": 19.53125
         },
         {
           "id": 54,
@@ -818,7 +898,7 @@
             8,
             1
           ],
-          "cost_multiplier": 2,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 6,
           "hidden_by_default": false,
@@ -827,7 +907,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 468.51200000000017,
+          "raw_xp": 19.53125
         },
         {
           "id": 55,
@@ -836,7 +918,7 @@
           "skills": [
             1
           ],
-          "cost_multiplier": 2,
+          "cost_multiplier": 1,
           "xp_mult": 4,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -845,7 +927,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 468.51200000000017,
+          "raw_xp": 19.53125
         },
         {
           "id": 56,
@@ -854,7 +938,7 @@
           "skills": [
             3
           ],
-          "cost_multiplier": 0.5,
+          "cost_multiplier": 1,
           "xp_mult": 3,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -863,7 +947,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 117.12800000000004,
+          "raw_xp": 19.53125
         },
         {
           "id": 57,
@@ -872,7 +958,7 @@
           "skills": [
             2
           ],
-          "cost_multiplier": 1000,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -881,7 +967,9 @@
           "item": 12,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 2560000,
+          "raw_xp": 19.53125
         },
         {
           "id": 58,
@@ -890,7 +978,7 @@
           "skills": [
             2
           ],
-          "cost_multiplier": 10000,
+          "cost_multiplier": 1,
           "xp_mult": 0.3,
           "max_reps": 1,
           "hidden_by_default": true,
@@ -899,9 +987,12 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 2342560.000000001,
+          "raw_xp": 19.53125
         }
-      ]
+      ],
+      "raw_drain": 1.2155062500000002
     },
     {
       "name": "The Road to the City",
@@ -915,7 +1006,7 @@
           "skills": [
             7
           ],
-          "cost_multiplier": 3,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -924,7 +1015,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 1546.0896000000005,
+          "raw_xp": 24.4140625
         },
         {
           "id": 61,
@@ -933,7 +1026,7 @@
           "skills": [
             0
           ],
-          "cost_multiplier": 4,
+          "cost_multiplier": 1,
           "xp_mult": 0.5,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -942,7 +1035,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 2061.452800000001,
+          "raw_xp": 24.4140625
         },
         {
           "id": 62,
@@ -952,7 +1047,7 @@
             1,
             3
           ],
-          "cost_multiplier": 1.3,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -961,7 +1056,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 669.9721600000003,
+          "raw_xp": 24.4140625
         },
         {
           "id": 63,
@@ -970,7 +1067,7 @@
           "skills": [
             5
           ],
-          "cost_multiplier": 0.5,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 4,
           "hidden_by_default": false,
@@ -979,7 +1076,9 @@
           "item": 5,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 257.6816000000001,
+          "raw_xp": 24.4140625
         },
         {
           "id": 64,
@@ -998,7 +1097,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 515.3632000000002,
+          "raw_xp": 24.4140625
         },
         {
           "id": 69,
@@ -1007,7 +1108,7 @@
           "skills": [
             1
           ],
-          "cost_multiplier": 5,
+          "cost_multiplier": 1,
           "xp_mult": 0.5,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -1016,7 +1117,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 2576.8160000000007,
+          "raw_xp": 24.4140625
         },
         {
           "id": 65,
@@ -1034,7 +1137,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 515.3632000000002,
+          "raw_xp": 24.4140625
         },
         {
           "id": 66,
@@ -1043,7 +1148,7 @@
           "skills": [
             4
           ],
-          "cost_multiplier": 2,
+          "cost_multiplier": 1,
           "xp_mult": 5,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -1052,7 +1157,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 1030.7264000000005,
+          "raw_xp": 24.4140625
         },
         {
           "id": 67,
@@ -1061,7 +1168,7 @@
           "skills": [
             2
           ],
-          "cost_multiplier": 500,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -1070,7 +1177,9 @@
           "item": 14,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 5120000,
+          "raw_xp": 24.4140625
         },
         {
           "id": 68,
@@ -1080,7 +1189,7 @@
             4,
             3
           ],
-          "cost_multiplier": 35,
+          "cost_multiplier": 1,
           "xp_mult": 3,
           "max_reps": 4,
           "hidden_by_default": true,
@@ -1089,9 +1198,12 @@
           "item": 14,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 18037.712000000007,
+          "raw_xp": 24.4140625
         }
-      ]
+      ],
+      "raw_drain": 1.2762815625000004
     },
     {
       "name": "The City Outskirts",
@@ -1105,7 +1217,7 @@
           "skills": [
             7
           ],
-          "cost_multiplier": 1.5,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -1114,7 +1226,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 1700.6985600000007,
+          "raw_xp": 30.517578125
         },
         {
           "id": 71,
@@ -1123,7 +1237,7 @@
           "skills": [
             0
           ],
-          "cost_multiplier": 4,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -1132,7 +1246,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 4535.196160000002,
+          "raw_xp": 30.517578125
         },
         {
           "id": 72,
@@ -1142,7 +1258,7 @@
             2,
             9
           ],
-          "cost_multiplier": 2.5,
+          "cost_multiplier": 1,
           "xp_mult": 0.75,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -1151,7 +1267,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 2834.4976000000015,
+          "raw_xp": 30.517578125
         },
         {
           "id": 73,
@@ -1169,7 +1287,9 @@
           "item": 6,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 1133.7990400000006,
+          "raw_xp": 30.517578125
         },
         {
           "id": 74,
@@ -1179,7 +1299,7 @@
             0,
             4
           ],
-          "cost_multiplier": 12,
+          "cost_multiplier": 1,
           "xp_mult": 0.3,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -1188,7 +1308,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 13605.588480000006,
+          "raw_xp": 30.517578125
         },
         {
           "id": 75,
@@ -1197,7 +1319,7 @@
           "skills": [
             2
           ],
-          "cost_multiplier": 0.75,
+          "cost_multiplier": 1,
           "xp_mult": 2,
           "max_reps": 4,
           "hidden_by_default": false,
@@ -1206,7 +1328,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 850.3492800000004,
+          "raw_xp": 30.517578125
         },
         {
           "id": 76,
@@ -1215,7 +1339,7 @@
           "skills": [
             9
           ],
-          "cost_multiplier": 0.5,
+          "cost_multiplier": 1,
           "xp_mult": 5,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -1224,7 +1348,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 566.8995200000003,
+          "raw_xp": 30.517578125
         },
         {
           "id": 77,
@@ -1233,7 +1359,7 @@
           "skills": [
             4
           ],
-          "cost_multiplier": 2,
+          "cost_multiplier": 1,
           "xp_mult": 5,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -1242,9 +1368,12 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 2267.598080000001,
+          "raw_xp": 30.517578125
         }
-      ]
+      ],
+      "raw_drain": 1.3400956406250004
     },
     {
       "name": "The City",
@@ -1258,7 +1387,7 @@
           "skills": [
             7
           ],
-          "cost_multiplier": 4,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -1267,7 +1396,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 9977.431552000005,
+          "raw_xp": 38.14697265625
         },
         {
           "id": 81,
@@ -1277,7 +1408,7 @@
             0,
             3
           ],
-          "cost_multiplier": 1.5,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 4,
           "hidden_by_default": false,
@@ -1286,7 +1417,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 3741.5368320000025,
+          "raw_xp": 38.14697265625
         },
         {
           "id": 82,
@@ -1296,7 +1429,7 @@
             1,
             3
           ],
-          "cost_multiplier": 1.2,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 5,
           "hidden_by_default": false,
@@ -1305,7 +1438,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 2993.2294656000017,
+          "raw_xp": 38.14697265625
         },
         {
           "id": 83,
@@ -1315,7 +1450,7 @@
             5,
             8
           ],
-          "cost_multiplier": 2,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -1324,7 +1459,9 @@
           "item": 7,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 4988.715776000003,
+          "raw_xp": 38.14697265625
         },
         {
           "id": 84,
@@ -1342,7 +1479,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 2494.3578880000014,
+          "raw_xp": 38.14697265625
         },
         {
           "id": 85,
@@ -1352,7 +1491,7 @@
             1,
             8
           ],
-          "cost_multiplier": 2,
+          "cost_multiplier": 1,
           "xp_mult": 2,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -1361,7 +1500,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 4988.715776000003,
+          "raw_xp": 38.14697265625
         },
         {
           "id": 86,
@@ -1380,7 +1521,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 2494.3578880000014,
+          "raw_xp": 38.14697265625
         },
         {
           "id": 87,
@@ -1389,7 +1532,7 @@
           "skills": [
             2
           ],
-          "cost_multiplier": 150,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -1398,7 +1541,9 @@
           "item": 16,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 24576000,
+          "raw_xp": 38.14697265625
         },
         {
           "id": 89,
@@ -1408,7 +1553,7 @@
             1,
             4
           ],
-          "cost_multiplier": 100000,
+          "cost_multiplier": 1,
           "xp_mult": 0.02,
           "max_reps": 1,
           "hidden_by_default": true,
@@ -1417,7 +1562,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 249435788.80000016,
+          "raw_xp": 38.14697265625
         },
         {
           "id": 88,
@@ -1430,7 +1577,7 @@
             8,
             5
           ],
-          "cost_multiplier": 500000000,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": true,
@@ -1439,9 +1586,12 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 1247178944000.0007,
+          "raw_xp": 38.14697265625
         }
-      ]
+      ],
+      "raw_drain": 1.4071004226562505
     },
     {
       "name": "The Forest",
@@ -1456,7 +1606,7 @@
             7,
             9
           ],
-          "cost_multiplier": 6,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -1465,7 +1615,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 32925.52412160002,
+          "raw_xp": 47.6837158203125
         },
         {
           "id": 91,
@@ -1474,7 +1626,7 @@
           "skills": [
             3
           ],
-          "cost_multiplier": 2,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -1483,7 +1635,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 10975.174707200007,
+          "raw_xp": 47.6837158203125
         },
         {
           "id": 92,
@@ -1492,7 +1646,7 @@
           "skills": [
             5
           ],
-          "cost_multiplier": 0.3,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -1501,7 +1655,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 1646.2762060800012,
+          "raw_xp": 47.6837158203125
         },
         {
           "id": 93,
@@ -1510,7 +1666,7 @@
           "skills": [
             5
           ],
-          "cost_multiplier": 0.15,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -1519,7 +1675,9 @@
           "item": 9,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 823.1381030400006,
+          "raw_xp": 47.6837158203125
         },
         {
           "id": 94,
@@ -1538,7 +1696,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 5487.587353600004,
+          "raw_xp": 47.6837158203125
         },
         {
           "id": 95,
@@ -1547,7 +1707,7 @@
           "skills": [
             5
           ],
-          "cost_multiplier": 0.3,
+          "cost_multiplier": 1,
           "xp_mult": 3,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -1556,7 +1716,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 1646.2762060800012,
+          "raw_xp": 47.6837158203125
         },
         {
           "id": 96,
@@ -1566,7 +1728,7 @@
             3,
             7
           ],
-          "cost_multiplier": 0.5,
+          "cost_multiplier": 1,
           "xp_mult": 3,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -1575,7 +1737,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 2743.793676800002,
+          "raw_xp": 47.6837158203125
         },
         {
           "id": 97,
@@ -1585,7 +1749,7 @@
             8,
             0
           ],
-          "cost_multiplier": 2,
+          "cost_multiplier": 1,
           "xp_mult": 3,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -1594,7 +1758,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 10975.174707200007,
+          "raw_xp": 47.6837158203125
         },
         {
           "id": 98,
@@ -1603,7 +1769,7 @@
           "skills": [
             2
           ],
-          "cost_multiplier": 170,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -1612,7 +1778,9 @@
           "item": 17,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 111411200,
+          "raw_xp": 47.6837158203125
         },
         {
           "id": 99,
@@ -1621,7 +1789,7 @@
           "skills": [
             4
           ],
-          "cost_multiplier": 8,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 3,
           "hidden_by_default": true,
@@ -1630,9 +1798,12 @@
           "item": 17,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 43900.69882880003,
+          "raw_xp": 47.6837158203125
         }
-      ]
+      ],
+      "raw_drain": 1.477455443789063
     },
     {
       "name": "The Magician",
@@ -1646,7 +1817,7 @@
           "skills": [
             7
           ],
-          "cost_multiplier": 5,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -1655,7 +1826,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 60363.46088960005,
+          "raw_xp": 59.604644775390625
         },
         {
           "id": 101,
@@ -1664,7 +1837,7 @@
           "skills": [
             0
           ],
-          "cost_multiplier": 6,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -1673,7 +1846,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 72436.15306752006,
+          "raw_xp": 59.604644775390625
         },
         {
           "id": 102,
@@ -1692,7 +1867,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 12072.69217792001,
+          "raw_xp": 59.604644775390625
         },
         {
           "id": 103,
@@ -1701,7 +1878,7 @@
           "skills": [
             4
           ],
-          "cost_multiplier": 0.15,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 4,
           "hidden_by_default": false,
@@ -1710,7 +1887,9 @@
           "item": 10,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 1810.9038266880016,
+          "raw_xp": 59.604644775390625
         },
         {
           "id": 104,
@@ -1720,7 +1899,7 @@
             1,
             8
           ],
-          "cost_multiplier": 60,
+          "cost_multiplier": 1,
           "xp_mult": 0.1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -1729,7 +1908,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 724361.5306752006,
+          "raw_xp": 59.604644775390625
         },
         {
           "id": 105,
@@ -1738,7 +1919,7 @@
           "skills": [
             0
           ],
-          "cost_multiplier": 2,
+          "cost_multiplier": 1,
           "xp_mult": 4,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -1747,7 +1928,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 24145.38435584002,
+          "raw_xp": 59.604644775390625
         },
         {
           "id": 106,
@@ -1765,7 +1948,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 12072.69217792001,
+          "raw_xp": 59.604644775390625
         },
         {
           "id": 107,
@@ -1774,7 +1959,7 @@
           "skills": [
             9
           ],
-          "cost_multiplier": 0.5,
+          "cost_multiplier": 1,
           "xp_mult": 4,
           "max_reps": 5,
           "hidden_by_default": false,
@@ -1783,9 +1968,12 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 6036.346088960005,
+          "raw_xp": 59.604644775390625
         }
-      ]
+      ],
+      "raw_drain": 1.5513282159785162
     },
     {
       "name": "The Ocean",
@@ -1799,7 +1987,7 @@
           "skills": [
             7
           ],
-          "cost_multiplier": 3,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -1808,7 +1996,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 79679.76837427207,
+          "raw_xp": 74.50580596923828
         },
         {
           "id": 111,
@@ -1817,7 +2007,7 @@
           "skills": [
             9
           ],
-          "cost_multiplier": 2,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -1826,7 +2016,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 53119.84558284805,
+          "raw_xp": 74.50580596923828
         },
         {
           "id": 112,
@@ -1835,7 +2027,7 @@
           "skills": [
             3
           ],
-          "cost_multiplier": 2,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -1844,7 +2036,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 53119.84558284805,
+          "raw_xp": 74.50580596923828
         },
         {
           "id": 113,
@@ -1854,7 +2048,7 @@
             5,
             3
           ],
-          "cost_multiplier": 0.4,
+          "cost_multiplier": 1,
           "xp_mult": 4,
           "max_reps": 5,
           "hidden_by_default": false,
@@ -1863,7 +2057,9 @@
           "item": 13,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 10623.96911656961,
+          "raw_xp": 74.50580596923828
         },
         {
           "id": 114,
@@ -1873,7 +2069,7 @@
             8,
             3
           ],
-          "cost_multiplier": 8,
+          "cost_multiplier": 1,
           "xp_mult": 0.5,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -1882,7 +2078,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 212479.3823313922,
+          "raw_xp": 74.50580596923828
         },
         {
           "id": 115,
@@ -1891,7 +2089,7 @@
           "skills": [
             3
           ],
-          "cost_multiplier": 0.5,
+          "cost_multiplier": 1,
           "xp_mult": 8,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -1900,7 +2098,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 13279.961395712013,
+          "raw_xp": 74.50580596923828
         },
         {
           "id": 116,
@@ -1909,7 +2109,7 @@
           "skills": [
             8
           ],
-          "cost_multiplier": 3,
+          "cost_multiplier": 1,
           "xp_mult": 5,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -1918,7 +2118,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 79679.76837427207,
+          "raw_xp": 74.50580596923828
         },
         {
           "id": 117,
@@ -1927,7 +2129,7 @@
           "skills": [
             2
           ],
-          "cost_multiplier": 40,
+          "cost_multiplier": 1,
           "xp_mult": 0.5,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -1936,7 +2138,9 @@
           "item": 19,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 419430400,
+          "raw_xp": 74.50580596923828
         },
         {
           "id": 118,
@@ -1946,7 +2150,7 @@
             3,
             8
           ],
-          "cost_multiplier": 15000,
+          "cost_multiplier": 1,
           "xp_mult": 0.6,
           "max_reps": 1,
           "hidden_by_default": true,
@@ -1955,9 +2159,12 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 398398841.87136036,
+          "raw_xp": 74.50580596923828
         }
-      ]
+      ],
+      "raw_drain": 1.6288946267774422
     },
     {
       "name": "The Island",
@@ -1971,7 +2178,7 @@
           "skills": [
             7
           ],
-          "cost_multiplier": 8,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -1980,7 +2187,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 467454.6411290628,
+          "raw_xp": 93.13225746154785
         },
         {
           "id": 121,
@@ -1990,7 +2199,7 @@
             3,
             8
           ],
-          "cost_multiplier": 4,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -1999,7 +2208,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 233727.3205645314,
+          "raw_xp": 93.13225746154785
         },
         {
           "id": 122,
@@ -2008,7 +2219,7 @@
           "skills": [
             5
           ],
-          "cost_multiplier": 1.4,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -2017,7 +2228,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 81804.562197586,
+          "raw_xp": 93.13225746154785
         },
         {
           "id": 123,
@@ -2036,7 +2249,9 @@
           "item": 13,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 58431.83014113285,
+          "raw_xp": 93.13225746154785
         },
         {
           "id": 124,
@@ -2047,7 +2262,7 @@
             7,
             9
           ],
-          "cost_multiplier": 6,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 6,
           "hidden_by_default": false,
@@ -2056,7 +2271,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 350590.9808467971,
+          "raw_xp": 93.13225746154785
         },
         {
           "id": 125,
@@ -2065,7 +2282,7 @@
           "skills": [
             5
           ],
-          "cost_multiplier": 2,
+          "cost_multiplier": 1,
           "xp_mult": 5,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -2074,7 +2291,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 116863.6602822657,
+          "raw_xp": 93.13225746154785
         },
         {
           "id": 126,
@@ -2084,7 +2303,7 @@
             8,
             0
           ],
-          "cost_multiplier": 2,
+          "cost_multiplier": 1,
           "xp_mult": 2,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -2093,7 +2312,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 116863.6602822657,
+          "raw_xp": 93.13225746154785
         },
         {
           "id": 127,
@@ -2102,7 +2323,7 @@
           "skills": [
             2
           ],
-          "cost_multiplier": 210,
+          "cost_multiplier": 1,
           "xp_mult": 0.5,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -2111,7 +2332,9 @@
           "item": 21,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 8808038400,
+          "raw_xp": 93.13225746154785
         },
         {
           "id": 128,
@@ -2121,7 +2344,7 @@
             4,
             3
           ],
-          "cost_multiplier": 8,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 4,
           "hidden_by_default": true,
@@ -2130,9 +2353,12 @@
           "item": 21,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 467454.6411290628,
+          "raw_xp": 93.13225746154785
         }
-      ]
+      ],
+      "raw_drain": 1.7103393581163142
     },
     {
       "name": "The Desert",
@@ -2146,7 +2372,7 @@
           "skills": [
             7
           ],
-          "cost_multiplier": 7,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -2155,7 +2381,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 899850.184173446,
+          "raw_xp": 116.41532182693481
         },
         {
           "id": 131,
@@ -2164,7 +2392,7 @@
           "skills": [
             9
           ],
-          "cost_multiplier": 6,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -2173,7 +2401,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 771300.1578629537,
+          "raw_xp": 116.41532182693481
         },
         {
           "id": 132,
@@ -2191,7 +2421,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 128550.02631049228,
+          "raw_xp": 116.41532182693481
         },
         {
           "id": 133,
@@ -2200,7 +2432,7 @@
           "skills": [
             5
           ],
-          "cost_multiplier": 0.2,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -2209,7 +2441,9 @@
           "item": 15,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 25710.005262098457,
+          "raw_xp": 116.41532182693481
         },
         {
           "id": 134,
@@ -2227,7 +2461,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 128550.02631049228,
+          "raw_xp": 116.41532182693481
         },
         {
           "id": 135,
@@ -2245,7 +2481,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 128550.02631049228,
+          "raw_xp": 116.41532182693481
         },
         {
           "id": 136,
@@ -2254,7 +2492,7 @@
           "skills": [
             3
           ],
-          "cost_multiplier": 2,
+          "cost_multiplier": 1,
           "xp_mult": 10,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -2263,7 +2501,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 257100.05262098456,
+          "raw_xp": 116.41532182693481
         },
         {
           "id": 137,
@@ -2272,7 +2512,7 @@
           "skills": [
             2
           ],
-          "cost_multiplier": 460,
+          "cost_multiplier": 1,
           "xp_mult": 0.4,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -2281,7 +2521,9 @@
           "item": 22,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 77175193600,
+          "raw_xp": 116.41532182693481
         },
         {
           "id": 138,
@@ -2291,7 +2533,7 @@
             1,
             0
           ],
-          "cost_multiplier": 600000,
+          "cost_multiplier": 1,
           "xp_mult": 0.1,
           "max_reps": 1,
           "hidden_by_default": true,
@@ -2300,9 +2542,12 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 77130015786.29536,
+          "raw_xp": 116.41532182693481
         }
-      ]
+      ],
+      "raw_drain": 1.79585632602213
     },
     {
       "name": "The Oasis",
@@ -2316,7 +2561,7 @@
           "skills": [
             7
           ],
-          "cost_multiplier": 8,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -2325,7 +2570,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 2262480.4630646645,
+          "raw_xp": 145.51915228366852
         },
         {
           "id": 141,
@@ -2334,7 +2581,7 @@
           "skills": [
             8
           ],
-          "cost_multiplier": 100,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -2343,7 +2590,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 28281005.788308308,
+          "raw_xp": 145.51915228366852
         },
         {
           "id": 142,
@@ -2352,7 +2601,7 @@
           "skills": [
             3
           ],
-          "cost_multiplier": 0.75,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 5,
           "hidden_by_default": false,
@@ -2361,7 +2610,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 212107.54341231228,
+          "raw_xp": 145.51915228366852
         },
         {
           "id": 143,
@@ -2370,7 +2621,7 @@
           "skills": [
             5
           ],
-          "cost_multiplier": 0.2,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 4,
           "hidden_by_default": false,
@@ -2379,7 +2630,9 @@
           "item": 18,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 56562.01157661661,
+          "raw_xp": 145.51915228366852
         },
         {
           "id": 144,
@@ -2388,7 +2641,7 @@
           "skills": [
             1
           ],
-          "cost_multiplier": 25,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 4,
           "hidden_by_default": false,
@@ -2397,7 +2650,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 7070251.447077077,
+          "raw_xp": 145.51915228366852
         },
         {
           "id": 145,
@@ -2407,7 +2662,7 @@
             7,
             2
           ],
-          "cost_multiplier": 2.5,
+          "cost_multiplier": 1,
           "xp_mult": 2,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -2416,7 +2671,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 707025.1447077077,
+          "raw_xp": 145.51915228366852
         },
         {
           "id": 146,
@@ -2425,7 +2682,7 @@
           "skills": [
             0
           ],
-          "cost_multiplier": 30,
+          "cost_multiplier": 1,
           "xp_mult": 20,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -2434,7 +2691,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 8484301.736492492,
+          "raw_xp": 145.51915228366852
         },
         {
           "id": 147,
@@ -2443,7 +2702,7 @@
           "skills": [
             2
           ],
-          "cost_multiplier": 840,
+          "cost_multiplier": 1,
           "xp_mult": 0.3,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -2452,7 +2711,9 @@
           "item": 23,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 563714457600,
+          "raw_xp": 145.51915228366852
         },
         {
           "id": 148,
@@ -2462,7 +2723,7 @@
             3,
             4
           ],
-          "cost_multiplier": 30,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 3,
           "hidden_by_default": true,
@@ -2471,9 +2732,12 @@
           "item": 23,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 8484301.736492492,
+          "raw_xp": 145.51915228366852
         }
-      ]
+      ],
+      "raw_drain": 1.8856491423232367
     },
     {
       "name": "The Ritual",
@@ -2487,7 +2751,7 @@
           "skills": [
             7
           ],
-          "cost_multiplier": 50,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -2496,7 +2760,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 31109106.36713914,
+          "raw_xp": 181.89894035458565
         },
         {
           "id": 151,
@@ -2505,7 +2771,7 @@
           "skills": [
             0
           ],
-          "cost_multiplier": 40,
+          "cost_multiplier": 1,
           "xp_mult": 0.25,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -2514,7 +2780,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 24887285.09371131,
+          "raw_xp": 181.89894035458565
         },
         {
           "id": 152,
@@ -2523,7 +2791,7 @@
           "skills": [
             9
           ],
-          "cost_multiplier": 1000,
+          "cost_multiplier": 1,
           "xp_mult": 1.25,
           "max_reps": 5,
           "hidden_by_default": false,
@@ -2532,7 +2800,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 622182127.3427827,
+          "raw_xp": 181.89894035458565
         },
         {
           "id": 153,
@@ -2541,7 +2811,7 @@
           "skills": [
             11
           ],
-          "cost_multiplier": 0.025,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -2550,7 +2820,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": 0,
-          "theme": null
+          "theme": null,
+          "raw_cost": 15554.55318356957,
+          "raw_xp": 181.89894035458565
         },
         {
           "id": 154,
@@ -2559,7 +2831,7 @@
           "skills": [
             8
           ],
-          "cost_multiplier": 75,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 9,
           "hidden_by_default": false,
@@ -2568,7 +2840,9 @@
           "item": 20,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 46663659.55070871,
+          "raw_xp": 181.89894035458565
         },
         {
           "id": 155,
@@ -2578,7 +2852,7 @@
             1,
             8
           ],
-          "cost_multiplier": 1200,
+          "cost_multiplier": 1,
           "xp_mult": 0.5,
           "max_reps": 4,
           "hidden_by_default": false,
@@ -2587,7 +2861,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 746618552.8113394,
+          "raw_xp": 181.89894035458565
         },
         {
           "id": 156,
@@ -2596,7 +2872,7 @@
           "skills": [
             8
           ],
-          "cost_multiplier": 100,
+          "cost_multiplier": 1,
           "xp_mult": 10,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -2605,7 +2881,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 62218212.73427828,
+          "raw_xp": 181.89894035458565
         },
         {
           "id": 157,
@@ -2615,7 +2893,7 @@
             3,
             7
           ],
-          "cost_multiplier": 4,
+          "cost_multiplier": 1,
           "xp_mult": 8,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -2624,7 +2902,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 2488728.509371131,
+          "raw_xp": 181.89894035458565
         },
         {
           "id": 158,
@@ -2634,7 +2914,7 @@
             8,
             1
           ],
-          "cost_multiplier": 500000,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 5,
           "hidden_by_default": true,
@@ -2643,9 +2923,12 @@
           "item": 34,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 311091063671.39136,
+          "raw_xp": 181.89894035458565
         }
-      ]
+      ],
+      "raw_drain": 1.9799315994393987
     },
     {
       "name": "The Dream",
@@ -2659,7 +2942,7 @@
           "skills": [
             8
           ],
-          "cost_multiplier": 350000,
+          "cost_multiplier": 1,
           "xp_mult": 0.25,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -2668,7 +2951,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 479080238053.9428,
+          "raw_xp": 227.37367544323206
         },
         {
           "id": 161,
@@ -2678,7 +2963,7 @@
             1,
             3
           ],
-          "cost_multiplier": 2000,
+          "cost_multiplier": 1,
           "xp_mult": 0.2,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -2687,7 +2972,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 2737601360.3082447,
+          "raw_xp": 227.37367544323206
         },
         {
           "id": 162,
@@ -2696,7 +2983,7 @@
           "skills": [
             0
           ],
-          "cost_multiplier": 1500,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -2705,7 +2992,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 2053201020.2311833,
+          "raw_xp": 227.37367544323206
         },
         {
           "id": 163,
@@ -2714,7 +3003,7 @@
           "skills": [
             8
           ],
-          "cost_multiplier": 20000,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 2,
           "hidden_by_default": false,
@@ -2723,7 +3012,9 @@
           "item": 25,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 27376013603.082443,
+          "raw_xp": 227.37367544323206
         },
         {
           "id": 164,
@@ -2732,7 +3023,7 @@
           "skills": [
             5
           ],
-          "cost_multiplier": 60,
+          "cost_multiplier": 1,
           "xp_mult": 0.25,
           "max_reps": 2,
           "hidden_by_default": false,
@@ -2741,7 +3032,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 82128040.80924733,
+          "raw_xp": 227.37367544323206
         },
         {
           "id": 165,
@@ -2750,7 +3043,7 @@
           "skills": [
             0
           ],
-          "cost_multiplier": 100,
+          "cost_multiplier": 1,
           "xp_mult": 10,
           "max_reps": 5,
           "hidden_by_default": false,
@@ -2759,7 +3052,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 136880068.0154122,
+          "raw_xp": 227.37367544323206
         },
         {
           "id": 166,
@@ -2769,7 +3064,7 @@
             7,
             9
           ],
-          "cost_multiplier": 200,
+          "cost_multiplier": 1,
           "xp_mult": 2,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -2778,7 +3073,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 273760136.0308244,
+          "raw_xp": 227.37367544323206
         },
         {
           "id": 167,
@@ -2787,7 +3084,7 @@
           "skills": [
             2
           ],
-          "cost_multiplier": 13000,
+          "cost_multiplier": 1,
           "xp_mult": 0.15,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -2796,7 +3093,9 @@
           "item": 24,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 139586437120000,
+          "raw_xp": 227.37367544323206
         },
         {
           "id": 168,
@@ -2805,7 +3104,7 @@
           "skills": [
             8
           ],
-          "cost_multiplier": 200000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.05,
           "max_reps": 1,
           "hidden_by_default": true,
@@ -2814,9 +3113,12 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 273760136030824.44,
+          "raw_xp": 227.37367544323206
         }
-      ]
+      ],
+      "raw_drain": 2.0789281794113688
     },
     {
       "name": "The Metropolis",
@@ -2830,7 +3132,7 @@
           "skills": [
             7
           ],
-          "cost_multiplier": 100,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -2839,7 +3141,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 301136149.6339069,
+          "raw_xp": 284.2170943040401
         },
         {
           "id": 171,
@@ -2849,7 +3153,7 @@
             8,
             0
           ],
-          "cost_multiplier": 1000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.05,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -2858,7 +3162,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 3011361496339.069,
+          "raw_xp": 284.2170943040401
         },
         {
           "id": 172,
@@ -2867,7 +3173,7 @@
           "skills": [
             1
           ],
-          "cost_multiplier": 100000,
+          "cost_multiplier": 1,
           "xp_mult": 0.2,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -2876,7 +3182,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 301136149633.9069,
+          "raw_xp": 284.2170943040401
         },
         {
           "id": 173,
@@ -2885,7 +3193,7 @@
           "skills": [
             5
           ],
-          "cost_multiplier": 5,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 5,
           "hidden_by_default": false,
@@ -2894,7 +3202,9 @@
           "item": 26,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 15056807.481695345,
+          "raw_xp": 284.2170943040401
         },
         {
           "id": 174,
@@ -2904,7 +3214,7 @@
             8,
             1
           ],
-          "cost_multiplier": 1000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.03,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -2913,7 +3223,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 3011361496339.069,
+          "raw_xp": 284.2170943040401
         },
         {
           "id": 175,
@@ -2923,7 +3235,7 @@
             1,
             5
           ],
-          "cost_multiplier": 10000,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 5,
           "hidden_by_default": false,
@@ -2932,7 +3244,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 30113614963.39069,
+          "raw_xp": 284.2170943040401
         },
         {
           "id": 176,
@@ -2942,7 +3256,7 @@
             2,
             4
           ],
-          "cost_multiplier": 250000,
+          "cost_multiplier": 1,
           "xp_mult": 0.02,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -2951,7 +3265,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 752840374084.7672,
+          "raw_xp": 284.2170943040401
         },
         {
           "id": 177,
@@ -2960,7 +3276,7 @@
           "skills": [
             2
           ],
-          "cost_multiplier": 750000,
+          "cost_multiplier": 1,
           "xp_mult": 0.125,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -2969,7 +3285,9 @@
           "item": 31,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 32212254720000000,
+          "raw_xp": 284.2170943040401
         },
         {
           "id": 178,
@@ -2979,7 +3297,7 @@
             8,
             0
           ],
-          "cost_multiplier": 65000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.01,
           "max_reps": 5,
           "hidden_by_default": true,
@@ -2988,9 +3306,12 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 195738497262039500,
+          "raw_xp": 284.2170943040401
         }
-      ]
+      ],
+      "raw_drain": 2.182874588381937
     },
     {
       "name": "The Foothills",
@@ -3004,7 +3325,7 @@
           "skills": [
             7
           ],
-          "cost_multiplier": 100,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -3013,7 +3334,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 662499529.1945953,
+          "raw_xp": 355.2713678800501
         },
         {
           "id": 181,
@@ -3022,7 +3345,7 @@
           "skills": [
             3
           ],
-          "cost_multiplier": 30000,
+          "cost_multiplier": 1,
           "xp_mult": 0.05,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -3031,7 +3354,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 198749858758.3786,
+          "raw_xp": 355.2713678800501
         },
         {
           "id": 182,
@@ -3040,7 +3365,7 @@
           "skills": [
             4
           ],
-          "cost_multiplier": 100,
+          "cost_multiplier": 1,
           "xp_mult": 0.2,
           "max_reps": 5,
           "hidden_by_default": false,
@@ -3049,7 +3374,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 662499529.1945953,
+          "raw_xp": 355.2713678800501
         },
         {
           "id": 183,
@@ -3058,7 +3385,7 @@
           "skills": [
             3
           ],
-          "cost_multiplier": 700,
+          "cost_multiplier": 1,
           "xp_mult": 0.5,
           "max_reps": 4,
           "hidden_by_default": false,
@@ -3067,7 +3394,9 @@
           "item": 27,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 4637496704.362167,
+          "raw_xp": 355.2713678800501
         },
         {
           "id": 184,
@@ -3076,7 +3405,7 @@
           "skills": [
             4
           ],
-          "cost_multiplier": 1000,
+          "cost_multiplier": 1,
           "xp_mult": 0.1,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -3085,7 +3414,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 6624995291.945953,
+          "raw_xp": 355.2713678800501
         },
         {
           "id": 185,
@@ -3095,7 +3426,7 @@
             7,
             9
           ],
-          "cost_multiplier": 20000,
+          "cost_multiplier": 1,
           "xp_mult": 0.01,
           "max_reps": 5,
           "hidden_by_default": false,
@@ -3104,7 +3435,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 132499905838.91905,
+          "raw_xp": 355.2713678800501
         },
         {
           "id": 186,
@@ -3113,7 +3446,7 @@
           "skills": [
             8
           ],
-          "cost_multiplier": 10000,
+          "cost_multiplier": 1,
           "xp_mult": 2,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -3122,7 +3455,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 66249952919.459526,
+          "raw_xp": 355.2713678800501
         },
         {
           "id": 187,
@@ -3131,7 +3466,7 @@
           "skills": [
             2
           ],
-          "cost_multiplier": 2000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.05,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -3140,7 +3475,9 @@
           "item": 28,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 343597383680000000,
+          "raw_xp": 355.2713678800501
         },
         {
           "id": 188,
@@ -3149,7 +3486,7 @@
           "skills": [
             3
           ],
-          "cost_multiplier": 1000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.1,
           "max_reps": 3,
           "hidden_by_default": true,
@@ -3158,9 +3495,12 @@
           "item": 28,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 6624995291945.953,
+          "raw_xp": 355.2713678800501
         }
-      ]
+      ],
+      "raw_drain": 2.292018317801034
     },
     {
       "name": "The Dragon's Lair",
@@ -3174,7 +3514,7 @@
           "skills": [
             7
           ],
-          "cost_multiplier": 300,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -3183,7 +3523,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 4372496892.684329,
+          "raw_xp": 444.0892098500626
         },
         {
           "id": 191,
@@ -3193,7 +3535,7 @@
             3,
             4
           ],
-          "cost_multiplier": 2750000,
+          "cost_multiplier": 1,
           "xp_mult": 0.001,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -3202,7 +3544,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 40081221516273.016,
+          "raw_xp": 444.0892098500626
         },
         {
           "id": 192,
@@ -3211,7 +3555,7 @@
           "skills": [
             5
           ],
-          "cost_multiplier": 1000,
+          "cost_multiplier": 1,
           "xp_mult": 0.2,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -3220,7 +3564,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 14574989642.281097,
+          "raw_xp": 444.0892098500626
         },
         {
           "id": 193,
@@ -3229,7 +3575,7 @@
           "skills": [
             3
           ],
-          "cost_multiplier": 2000,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 9,
           "hidden_by_default": false,
@@ -3238,7 +3584,9 @@
           "item": 29,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 29149979284.562195,
+          "raw_xp": 444.0892098500626
         },
         {
           "id": 194,
@@ -3247,7 +3595,7 @@
           "skills": [
             1
           ],
-          "cost_multiplier": 1000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.1,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -3256,7 +3604,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 14574989642281.098,
+          "raw_xp": 444.0892098500626
         },
         {
           "id": 195,
@@ -3265,7 +3615,7 @@
           "skills": [
             4
           ],
-          "cost_multiplier": 5000,
+          "cost_multiplier": 1,
           "xp_mult": 5,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -3274,7 +3624,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 72874948211.40549,
+          "raw_xp": 444.0892098500626
         },
         {
           "id": 196,
@@ -3283,7 +3635,7 @@
           "skills": [
             8
           ],
-          "cost_multiplier": 5000000,
+          "cost_multiplier": 1,
           "xp_mult": 1.5,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -3292,7 +3644,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 72874948211405.48,
+          "raw_xp": 444.0892098500626
         },
         {
           "id": 197,
@@ -3301,7 +3655,7 @@
           "skills": [
             2
           ],
-          "cost_multiplier": 21000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.01,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -3310,7 +3664,9 @@
           "item": 28,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 14431090114560000000,
+          "raw_xp": 444.0892098500626
         },
         {
           "id": 198,
@@ -3320,7 +3676,7 @@
             2,
             3
           ],
-          "cost_multiplier": 300000000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.000001,
           "max_reps": 1,
           "hidden_by_default": true,
@@ -3329,9 +3685,12 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 4.3724968926843293e+21,
+          "raw_xp": 444.0892098500626
         }
-      ]
+      ],
+      "raw_drain": 2.406619233691086
     },
     {
       "name": "The Place of Power",
@@ -3345,7 +3704,7 @@
           "skills": [
             7
           ],
-          "cost_multiplier": 10000,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -3354,7 +3713,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 320649772130.18414,
+          "raw_xp": 555.1115123125783
         },
         {
           "id": 201,
@@ -3363,7 +3724,7 @@
           "skills": [
             1
           ],
-          "cost_multiplier": 5000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.01,
           "max_reps": 5,
           "hidden_by_default": false,
@@ -3372,7 +3733,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 160324886065092.06,
+          "raw_xp": 555.1115123125783
         },
         {
           "id": 202,
@@ -3382,7 +3745,7 @@
             11,
             9
           ],
-          "cost_multiplier": 20000000,
+          "cost_multiplier": 1,
           "xp_mult": 0,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -3391,7 +3754,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 641299544260368.2,
+          "raw_xp": 555.1115123125783
         },
         {
           "id": 208,
@@ -3400,7 +3765,7 @@
           "skills": [
             5
           ],
-          "cost_multiplier": 20000,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -3409,7 +3774,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 641299544260.3683,
+          "raw_xp": 555.1115123125783
         },
         {
           "id": 203,
@@ -3418,7 +3785,7 @@
           "skills": [
             11
           ],
-          "cost_multiplier": 2,
+          "cost_multiplier": 1,
           "xp_mult": 0.25,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -3427,7 +3794,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": 1,
-          "theme": null
+          "theme": null,
+          "raw_cost": 64129954.426036835,
+          "raw_xp": 555.1115123125783
         },
         {
           "id": 204,
@@ -3437,7 +3806,7 @@
             8,
             5
           ],
-          "cost_multiplier": 10000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.001,
           "max_reps": 9,
           "hidden_by_default": false,
@@ -3446,7 +3815,9 @@
           "item": 30,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 320649772130184.1,
+          "raw_xp": 555.1115123125783
         },
         {
           "id": 205,
@@ -3455,7 +3826,7 @@
           "skills": [
             8
           ],
-          "cost_multiplier": 300000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.01,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -3464,7 +3835,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 9619493163905524,
+          "raw_xp": 555.1115123125783
         },
         {
           "id": 206,
@@ -3474,7 +3847,7 @@
             4,
             1
           ],
-          "cost_multiplier": 300000,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 5,
           "hidden_by_default": false,
@@ -3483,7 +3856,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 9619493163905.525,
+          "raw_xp": 555.1115123125783
         },
         {
           "id": 207,
@@ -3493,7 +3868,7 @@
             7,
             9
           ],
-          "cost_multiplier": 1000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.01,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -3502,7 +3877,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 32064977213018.414,
+          "raw_xp": 555.1115123125783
         },
         {
           "id": 209,
@@ -3511,7 +3888,7 @@
           "skills": [
             11
           ],
-          "cost_multiplier": 200,
+          "cost_multiplier": 1,
           "xp_mult": 0.02,
           "max_reps": 3,
           "hidden_by_default": true,
@@ -3520,9 +3897,12 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 6412995442.603683,
+          "raw_xp": 555.1115123125783
         }
-      ]
+      ],
+      "raw_drain": 2.5269501953756404
     },
     {
       "name": "The Sky",
@@ -3536,7 +3916,7 @@
           "skills": [
             7
           ],
-          "cost_multiplier": 5000,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -3545,7 +3925,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 352714749343.2026,
+          "raw_xp": 693.8893903907228
         },
         {
           "id": 211,
@@ -3555,7 +3937,7 @@
             3,
             1
           ],
-          "cost_multiplier": 500000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.02,
           "max_reps": 2,
           "hidden_by_default": false,
@@ -3564,7 +3946,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 35271474934320260,
+          "raw_xp": 693.8893903907228
         },
         {
           "id": 212,
@@ -3573,7 +3957,7 @@
           "skills": [
             5
           ],
-          "cost_multiplier": 1200,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -3582,7 +3966,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 84651539842.36862,
+          "raw_xp": 693.8893903907228
         },
         {
           "id": 213,
@@ -3591,7 +3977,7 @@
           "skills": [
             8
           ],
-          "cost_multiplier": 5000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.01,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -3600,7 +3986,9 @@
           "item": 32,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 352714749343202560,
+          "raw_xp": 693.8893903907228
         },
         {
           "id": 214,
@@ -3609,7 +3997,7 @@
           "skills": [
             9
           ],
-          "cost_multiplier": 3000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.00002,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -3618,7 +4006,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 211628849605921570,
+          "raw_xp": 693.8893903907228
         },
         {
           "id": 215,
@@ -3627,7 +4017,7 @@
           "skills": [
             1
           ],
-          "cost_multiplier": 10000000,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -3636,7 +4026,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 705429498686405.1,
+          "raw_xp": 693.8893903907228
         },
         {
           "id": 216,
@@ -3645,7 +4037,7 @@
           "skills": [
             0
           ],
-          "cost_multiplier": 100000,
+          "cost_multiplier": 1,
           "xp_mult": 200,
           "max_reps": 4,
           "hidden_by_default": false,
@@ -3654,7 +4046,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 7054294986864.052,
+          "raw_xp": 693.8893903907228
         },
         {
           "id": 217,
@@ -3663,7 +4057,7 @@
           "skills": [
             2
           ],
-          "cost_multiplier": 130000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.001,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -3672,7 +4066,9 @@
           "item": 35,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 1.4293651161088e+21,
+          "raw_xp": 693.8893903907228
         },
         {
           "id": 218,
@@ -3681,7 +4077,7 @@
           "skills": [
             3
           ],
-          "cost_multiplier": 50000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.1,
           "max_reps": 3,
           "hidden_by_default": true,
@@ -3690,9 +4086,12 @@
           "item": 35,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 3527147493432026,
+          "raw_xp": 693.8893903907228
         }
-      ]
+      ],
+      "raw_drain": 2.653297705144422
     },
     {
       "name": "The Volcano",
@@ -3706,7 +4105,7 @@
           "skills": [
             7
           ],
-          "cost_multiplier": 5000,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -3715,7 +4114,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 775972448555.0458,
+          "raw_xp": 867.3617379884035
         },
         {
           "id": 221,
@@ -3724,7 +4125,7 @@
           "skills": [
             9
           ],
-          "cost_multiplier": 2500000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.0001,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -3733,7 +4134,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 387986224277522900,
+          "raw_xp": 867.3617379884035
         },
         {
           "id": 222,
@@ -3742,7 +4145,7 @@
           "skills": [
             4
           ],
-          "cost_multiplier": 500000,
+          "cost_multiplier": 1,
           "xp_mult": 3,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -3751,7 +4154,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 77597244855504.58,
+          "raw_xp": 867.3617379884035
         },
         {
           "id": 223,
@@ -3760,7 +4165,7 @@
           "skills": [
             8
           ],
-          "cost_multiplier": 1000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.01,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -3769,7 +4174,9 @@
           "item": 33,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 155194489711009150,
+          "raw_xp": 867.3617379884035
         },
         {
           "id": 224,
@@ -3778,7 +4185,7 @@
           "skills": [
             0
           ],
-          "cost_multiplier": 3000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.002,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -3787,7 +4194,9 @@
           "item": null,
           "use_item": 31,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 465583469133027460,
+          "raw_xp": 867.3617379884035
         },
         {
           "id": 225,
@@ -3796,7 +4205,7 @@
           "skills": [
             9
           ],
-          "cost_multiplier": 500000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.002,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -3805,7 +4214,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 77597244855504580,
+          "raw_xp": 867.3617379884035
         },
         {
           "id": 226,
@@ -3814,7 +4225,7 @@
           "skills": [
             5
           ],
-          "cost_multiplier": 10000,
+          "cost_multiplier": 1,
           "xp_mult": 20,
           "max_reps": 4,
           "hidden_by_default": false,
@@ -3823,7 +4234,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 1551944897110.0916,
+          "raw_xp": 867.3617379884035
         },
         {
           "id": 227,
@@ -3832,7 +4245,7 @@
           "skills": [
             2
           ],
-          "cost_multiplier": 5000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.0002,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -3841,7 +4254,9 @@
           "item": 36,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 2.199023255552e+23,
+          "raw_xp": 867.3617379884035
         },
         {
           "id": 228,
@@ -3850,7 +4265,7 @@
           "skills": [
             8
           ],
-          "cost_multiplier": 3000000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.0001,
           "max_reps": 1,
           "hidden_by_default": true,
@@ -3859,9 +4274,12 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 465583469133027500000,
+          "raw_xp": 867.3617379884035
         }
-      ]
+      ],
+      "raw_drain": 2.7859625904016436
     },
     {
       "name": "The Underworld",
@@ -3875,7 +4293,7 @@
           "skills": [
             7
           ],
-          "cost_multiplier": 5000,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -3884,7 +4302,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 1707139386821.1008,
+          "raw_xp": 1084.2021724855044
         },
         {
           "id": 231,
@@ -3893,7 +4313,7 @@
           "skills": [
             8
           ],
-          "cost_multiplier": 10000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.005,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -3902,7 +4322,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 3414278773642201600,
+          "raw_xp": 1084.2021724855044
         },
         {
           "id": 232,
@@ -3911,7 +4333,7 @@
           "skills": [
             3
           ],
-          "cost_multiplier": 1000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.05,
           "max_reps": 5,
           "hidden_by_default": false,
@@ -3920,7 +4342,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 341427877364220160,
+          "raw_xp": 1084.2021724855044
         },
         {
           "id": 233,
@@ -3929,7 +4353,7 @@
           "skills": [
             4
           ],
-          "cost_multiplier": 4000,
+          "cost_multiplier": 1,
           "xp_mult": 100,
           "max_reps": 7,
           "hidden_by_default": false,
@@ -3938,7 +4362,9 @@
           "item": 29,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 1365711509456.8806,
+          "raw_xp": 1084.2021724855044
         },
         {
           "id": 234,
@@ -3948,7 +4374,7 @@
             1,
             5
           ],
-          "cost_multiplier": 1000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.0001,
           "max_reps": 2,
           "hidden_by_default": false,
@@ -3957,7 +4383,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 341427877364220160,
+          "raw_xp": 1084.2021724855044
         },
         {
           "id": 235,
@@ -3967,7 +4395,7 @@
             1,
             0
           ],
-          "cost_multiplier": 5000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.005,
           "max_reps": 8,
           "hidden_by_default": false,
@@ -3976,7 +4404,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 1707139386821100800,
+          "raw_xp": 1084.2021724855044
         },
         {
           "id": 236,
@@ -3985,7 +4415,7 @@
           "skills": [
             2
           ],
-          "cost_multiplier": 10000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.005,
           "max_reps": 4,
           "hidden_by_default": false,
@@ -3994,7 +4424,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 3414278773642201600,
+          "raw_xp": 1084.2021724855044
         },
         {
           "id": 237,
@@ -4003,7 +4435,7 @@
           "skills": [
             2
           ],
-          "cost_multiplier": 50000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.0001,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -4012,7 +4444,9 @@
           "item": 38,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 8.796093022208e+24,
+          "raw_xp": 1084.2021724855044
         },
         {
           "id": 238,
@@ -4021,7 +4455,7 @@
           "skills": [
             4
           ],
-          "cost_multiplier": 250000,
+          "cost_multiplier": 1,
           "xp_mult": 20,
           "max_reps": 3,
           "hidden_by_default": true,
@@ -4030,9 +4464,12 @@
           "item": 38,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 85356969341055.05,
+          "raw_xp": 1084.2021724855044
         }
-      ]
+      ],
+      "raw_drain": 2.925260719921726
     },
     {
       "name": "The Depths of the Sea",
@@ -4046,7 +4483,7 @@
           "skills": [
             7
           ],
-          "cost_multiplier": 40000,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -4055,7 +4492,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 30045653208051.38,
+          "raw_xp": 1355.2527156068804
         },
         {
           "id": 241,
@@ -4065,7 +4504,7 @@
             3,
             1
           ],
-          "cost_multiplier": 200000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.0001,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -4074,7 +4513,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 150228266040256900000,
+          "raw_xp": 1355.2527156068804
         },
         {
           "id": 242,
@@ -4083,7 +4524,7 @@
           "skills": [
             9
           ],
-          "cost_multiplier": 100000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.000001,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -4092,7 +4533,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 75114133020128440000,
+          "raw_xp": 1355.2527156068804
         },
         {
           "id": 243,
@@ -4101,7 +4544,7 @@
           "skills": [
             2
           ],
-          "cost_multiplier": 200000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.002,
           "max_reps": 5,
           "hidden_by_default": false,
@@ -4110,7 +4553,9 @@
           "item": 13,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 150228266040256900000,
+          "raw_xp": 1355.2527156068804
         },
         {
           "id": 244,
@@ -4120,7 +4565,7 @@
             4,
             1
           ],
-          "cost_multiplier": 100000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.0001,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -4129,7 +4574,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 75114133020128440000,
+          "raw_xp": 1355.2527156068804
         },
         {
           "id": 245,
@@ -4139,7 +4586,7 @@
             9,
             7
           ],
-          "cost_multiplier": 50000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.000001,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -4148,7 +4595,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 37557066510064220000,
+          "raw_xp": 1355.2527156068804
         },
         {
           "id": 246,
@@ -4157,7 +4606,7 @@
           "skills": [
             0
           ],
-          "cost_multiplier": 1000000,
+          "cost_multiplier": 1,
           "xp_mult": 50,
           "max_reps": 4,
           "hidden_by_default": false,
@@ -4166,7 +4615,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 751141330201284.5,
+          "raw_xp": 1355.2527156068804
         },
         {
           "id": 247,
@@ -4175,7 +4626,7 @@
           "skills": [
             2
           ],
-          "cost_multiplier": 1000000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.00001,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -4184,7 +4635,9 @@
           "item": 19,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 7.0368744177664e+26,
+          "raw_xp": 1355.2527156068804
         },
         {
           "id": 248,
@@ -4193,7 +4646,7 @@
           "skills": [
             0
           ],
-          "cost_multiplier": 20000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.1,
           "max_reps": 1,
           "hidden_by_default": true,
@@ -4202,9 +4655,12 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 15022826604025688000,
+          "raw_xp": 1355.2527156068804
         }
-      ]
+      ],
+      "raw_drain": 3.0715237559178123
     },
     {
       "name": "The Deepest Deep",
@@ -4218,7 +4674,7 @@
           "skills": [
             7
           ],
-          "cost_multiplier": 300000,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -4227,7 +4683,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 495753277932847.75,
+          "raw_xp": 1694.0658945086006
         },
         {
           "id": 251,
@@ -4236,7 +4694,7 @@
           "skills": [
             0
           ],
-          "cost_multiplier": 800000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.15,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -4245,7 +4703,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 1322008741154260700,
+          "raw_xp": 1694.0658945086006
         },
         {
           "id": 252,
@@ -4254,7 +4714,7 @@
           "skills": [
             5
           ],
-          "cost_multiplier": 20000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.002,
           "max_reps": 5,
           "hidden_by_default": false,
@@ -4263,7 +4723,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 33050218528856516,
+          "raw_xp": 1694.0658945086006
         },
         {
           "id": 253,
@@ -4272,7 +4734,7 @@
           "skills": [
             11
           ],
-          "cost_multiplier": 24000,
+          "cost_multiplier": 1,
           "xp_mult": 0.015,
           "max_reps": 4,
           "hidden_by_default": false,
@@ -4281,7 +4743,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": 2,
-          "theme": null
+          "theme": null,
+          "raw_cost": 39660262234627.82,
+          "raw_xp": 1694.0658945086006
         },
         {
           "id": 254,
@@ -4290,7 +4754,7 @@
           "skills": [
             8
           ],
-          "cost_multiplier": 30000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.03,
           "max_reps": 7,
           "hidden_by_default": false,
@@ -4299,7 +4763,9 @@
           "item": 37,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 49575327793284780000,
+          "raw_xp": 1694.0658945086006
         },
         {
           "id": 255,
@@ -4309,7 +4775,7 @@
             9,
             11
           ],
-          "cost_multiplier": 20000000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -4318,7 +4784,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 3.3050218528856517e+22,
+          "raw_xp": 1694.0658945086006
         },
         {
           "id": 256,
@@ -4327,7 +4795,7 @@
           "skills": [
             1
           ],
-          "cost_multiplier": 20000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.05,
           "max_reps": 8,
           "hidden_by_default": false,
@@ -4336,7 +4804,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 33050218528856515000,
+          "raw_xp": 1694.0658945086006
         },
         {
           "id": 257,
@@ -4345,7 +4815,7 @@
           "skills": [
             2
           ],
-          "cost_multiplier": 1000000000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.00005,
           "max_reps": 4,
           "hidden_by_default": false,
@@ -4354,9 +4824,12 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 1.652510926442826e+24,
+          "raw_xp": 1694.0658945086006
         }
-      ]
+      ],
+      "raw_drain": 3.225099943713703
     },
     {
       "name": "The Void",
@@ -4370,7 +4843,7 @@
           "skills": [
             7
           ],
-          "cost_multiplier": 500000,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -4379,7 +4852,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 1817762019087108.2,
+          "raw_xp": 2117.582368135751
         },
         {
           "id": 261,
@@ -4388,7 +4863,7 @@
           "skills": [
             4
           ],
-          "cost_multiplier": 8000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.3,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -4397,7 +4872,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 29084192305393732,
+          "raw_xp": 2117.582368135751
         },
         {
           "id": 262,
@@ -4407,7 +4884,7 @@
             1,
             3
           ],
-          "cost_multiplier": 2000000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.0001,
           "max_reps": 2,
           "hidden_by_default": false,
@@ -4416,7 +4893,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 7.271048076348433e+21,
+          "raw_xp": 2117.582368135751
         },
         {
           "id": 263,
@@ -4425,7 +4904,7 @@
           "skills": [
             8
           ],
-          "cost_multiplier": 20000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.05,
           "max_reps": 6,
           "hidden_by_default": false,
@@ -4434,7 +4913,9 @@
           "item": 39,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 72710480763484330000,
+          "raw_xp": 2117.582368135751
         },
         {
           "id": 264,
@@ -4443,7 +4924,7 @@
           "skills": [
             9
           ],
-          "cost_multiplier": 5000000000000,
+          "cost_multiplier": 1,
           "xp_mult": 2e-7,
           "max_reps": 2,
           "hidden_by_default": false,
@@ -4452,7 +4933,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 1.8177620190871083e+22,
+          "raw_xp": 2117.582368135751
         },
         {
           "id": 265,
@@ -4461,7 +4944,7 @@
           "skills": [
             0
           ],
-          "cost_multiplier": 200000000,
+          "cost_multiplier": 1,
           "xp_mult": 2,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -4470,7 +4953,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 727104807634843400,
+          "raw_xp": 2117.582368135751
         },
         {
           "id": 266,
@@ -4480,7 +4965,7 @@
             7,
             3
           ],
-          "cost_multiplier": 50000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.00001,
           "max_reps": 5,
           "hidden_by_default": false,
@@ -4489,7 +4974,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 181776201908710830000,
+          "raw_xp": 2117.582368135751
         },
         {
           "id": 267,
@@ -4498,7 +4985,7 @@
           "skills": [
             2
           ],
-          "cost_multiplier": 1000000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.000005,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -4507,7 +4994,9 @@
           "item": 43,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 1.125899906842624e+28,
+          "raw_xp": 2117.582368135751
         },
         {
           "id": 268,
@@ -4516,7 +5005,7 @@
           "skills": [
             3
           ],
-          "cost_multiplier": 100000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.0001,
           "max_reps": 4,
           "hidden_by_default": true,
@@ -4525,9 +5014,12 @@
           "item": 43,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 363552403817421700000,
+          "raw_xp": 2117.582368135751
         }
-      ]
+      ],
+      "raw_drain": 3.3863549408993885
     },
     {
       "name": "The Return",
@@ -4541,7 +5033,7 @@
           "skills": [
             7
           ],
-          "cost_multiplier": 600000,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -4550,7 +5042,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 4798891730389967,
+          "raw_xp": 2646.9779601696882
         },
         {
           "id": 271,
@@ -4559,7 +5053,7 @@
           "skills": [
             9
           ],
-          "cost_multiplier": 5000000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.000001,
           "max_reps": 8,
           "hidden_by_default": false,
@@ -4568,7 +5062,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 3.999076441991639e+22,
+          "raw_xp": 2646.9779601696882
         },
         {
           "id": 272,
@@ -4578,7 +5074,7 @@
             1,
             4
           ],
-          "cost_multiplier": 40000000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.00001,
           "max_reps": 4,
           "hidden_by_default": false,
@@ -4587,7 +5083,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 3.1992611535933115e+23,
+          "raw_xp": 2646.9779601696882
         },
         {
           "id": 273,
@@ -4596,7 +5094,7 @@
           "skills": [
             5
           ],
-          "cost_multiplier": 200000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.01,
           "max_reps": 4,
           "hidden_by_default": false,
@@ -4605,7 +5103,9 @@
           "item": 40,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 1599630576796655600,
+          "raw_xp": 2646.9779601696882
         },
         {
           "id": 274,
@@ -4614,7 +5114,7 @@
           "skills": [
             8
           ],
-          "cost_multiplier": 7000000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.001,
           "max_reps": 5,
           "hidden_by_default": false,
@@ -4623,7 +5123,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 5.598707018788295e+22,
+          "raw_xp": 2646.9779601696882
         },
         {
           "id": 275,
@@ -4632,7 +5134,7 @@
           "skills": [
             0
           ],
-          "cost_multiplier": 200000000,
+          "cost_multiplier": 1,
           "xp_mult": 2,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -4641,7 +5143,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 1599630576796655600,
+          "raw_xp": 2646.9779601696882
         },
         {
           "id": 276,
@@ -4651,7 +5155,7 @@
             1,
             8
           ],
-          "cost_multiplier": 60000000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.0002,
           "max_reps": 9,
           "hidden_by_default": false,
@@ -4660,7 +5164,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 4.798891730389967e+23,
+          "raw_xp": 2646.9779601696882
         },
         {
           "id": 277,
@@ -4669,7 +5175,7 @@
           "skills": [
             2
           ],
-          "cost_multiplier": 40000000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.000005,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -4678,7 +5184,9 @@
           "item": 42,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 1.8014398509481984e+30,
+          "raw_xp": 2646.9779601696882
         },
         {
           "id": 278,
@@ -4687,7 +5195,7 @@
           "skills": [
             8
           ],
-          "cost_multiplier": 100000000000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.0001,
           "max_reps": 1,
           "hidden_by_default": true,
@@ -4696,9 +5204,12 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 7.998152883983278e+26,
+          "raw_xp": 2646.9779601696882
         }
-      ]
+      ],
+      "raw_drain": 3.555672687944358
     },
     {
       "name": "The Cult",
@@ -4712,7 +5223,7 @@
           "skills": [
             7
           ],
-          "cost_multiplier": 1500000,
+          "cost_multiplier": 1,
           "xp_mult": 1,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -4721,7 +5232,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 26393904517144820,
+          "raw_xp": 3308.7224502121107
         },
         {
           "id": 281,
@@ -4730,7 +5243,7 @@
           "skills": [
             0
           ],
-          "cost_multiplier": 1000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.05,
           "max_reps": 4,
           "hidden_by_default": false,
@@ -4739,7 +5252,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 17595936344763214000,
+          "raw_xp": 3308.7224502121107
         },
         {
           "id": 282,
@@ -4749,7 +5264,7 @@
             1,
             2
           ],
-          "cost_multiplier": 1e+24,
+          "cost_multiplier": 1,
           "xp_mult": 5e-14,
           "max_reps": 2,
           "hidden_by_default": false,
@@ -4758,7 +5273,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 1.7595936344763212e+34,
+          "raw_xp": 3308.7224502121107
         },
         {
           "id": 283,
@@ -4768,7 +5285,7 @@
             1,
             8
           ],
-          "cost_multiplier": 30000000000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.000005,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -4777,7 +5294,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 5.278780903428964e+26,
+          "raw_xp": 3308.7224502121107
         },
         {
           "id": 284,
@@ -4786,7 +5305,7 @@
           "skills": [
             8
           ],
-          "cost_multiplier": 200000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.01,
           "max_reps": 5,
           "hidden_by_default": false,
@@ -4795,7 +5314,9 @@
           "item": 41,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 3.519187268952643e+21,
+          "raw_xp": 3308.7224502121107
         },
         {
           "id": 285,
@@ -4804,7 +5325,7 @@
           "skills": [
             0
           ],
-          "cost_multiplier": 5000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.3,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -4813,7 +5334,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 87979681723816070000,
+          "raw_xp": 3308.7224502121107
         },
         {
           "id": 286,
@@ -4822,7 +5345,7 @@
           "skills": [
             1
           ],
-          "cost_multiplier": 10000000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.01,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -4831,7 +5354,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 1.7595936344763215e+23,
+          "raw_xp": 3308.7224502121107
         },
         {
           "id": 287,
@@ -4841,7 +5366,7 @@
             4,
             3
           ],
-          "cost_multiplier": 5000000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.0001,
           "max_reps": 7,
           "hidden_by_default": false,
@@ -4850,7 +5375,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 8.797968172381608e+22,
+          "raw_xp": 3308.7224502121107
         },
         {
           "id": 288,
@@ -4859,7 +5386,7 @@
           "skills": [
             2
           ],
-          "cost_multiplier": 100000000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.000003,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -4868,7 +5395,9 @@
           "item": 42,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 1.8014398509481984e+31,
+          "raw_xp": 3308.7224502121107
         },
         {
           "id": 289,
@@ -4877,7 +5406,7 @@
           "skills": [
             3
           ],
-          "cost_multiplier": 30000000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.0005,
           "max_reps": 2,
           "hidden_by_default": true,
@@ -4886,9 +5415,12 @@
           "item": 42,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 5.2787809034289646e+23,
+          "raw_xp": 3308.7224502121107
         }
-      ]
+      ],
+      "raw_drain": 3.733456322341576
     },
     {
       "name": "The War Preparations",
@@ -4902,7 +5434,7 @@
           "skills": [
             7
           ],
-          "cost_multiplier": 500000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.01,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -4911,7 +5443,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 19355529979239540000,
+          "raw_xp": 4135.903062765138
         },
         {
           "id": 291,
@@ -4920,7 +5454,7 @@
           "skills": [
             5
           ],
-          "cost_multiplier": 5000000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.000003,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -4929,7 +5463,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 1.935552997923954e+23,
+          "raw_xp": 4135.903062765138
         },
         {
           "id": 292,
@@ -4938,7 +5474,7 @@
           "skills": [
             1
           ],
-          "cost_multiplier": 1000000000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.001,
           "max_reps": 4,
           "hidden_by_default": false,
@@ -4947,7 +5483,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 3.871105995847907e+25,
+          "raw_xp": 4135.903062765138
         },
         {
           "id": 293,
@@ -4956,7 +5494,7 @@
           "skills": [
             5
           ],
-          "cost_multiplier": 500000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.001,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -4965,7 +5503,9 @@
           "item": 44,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 19355529979239540000,
+          "raw_xp": 4135.903062765138
         },
         {
           "id": 294,
@@ -4974,7 +5514,7 @@
           "skills": [
             2
           ],
-          "cost_multiplier": 5000000000000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.000001,
           "max_reps": 5,
           "hidden_by_default": false,
@@ -4983,7 +5523,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 1.935552997923954e+29,
+          "raw_xp": 4135.903062765138
         },
         {
           "id": 295,
@@ -4992,7 +5534,7 @@
           "skills": [
             0
           ],
-          "cost_multiplier": 5000000000,
+          "cost_multiplier": 1,
           "xp_mult": 2,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -5001,7 +5543,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 193555299792395370000,
+          "raw_xp": 4135.903062765138
         },
         {
           "id": 296,
@@ -5011,7 +5555,7 @@
             3,
             7
           ],
-          "cost_multiplier": 60000000000000,
+          "cost_multiplier": 1,
           "xp_mult": 1e-7,
           "max_reps": 9,
           "hidden_by_default": false,
@@ -5020,7 +5564,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 2.3226635975087445e+24,
+          "raw_xp": 4135.903062765138
         },
         {
           "id": 297,
@@ -5029,7 +5575,7 @@
           "skills": [
             2
           ],
-          "cost_multiplier": 1000000000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.000001,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -5038,7 +5584,9 @@
           "item": 42,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 7.205759403792794e+32,
+          "raw_xp": 4135.903062765138
         },
         {
           "id": 298,
@@ -5048,7 +5596,7 @@
             4,
             9
           ],
-          "cost_multiplier": 300000000000000000000,
+          "cost_multiplier": 1,
           "xp_mult": 1e-12,
           "max_reps": 1,
           "hidden_by_default": true,
@@ -5057,9 +5605,12 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 1.1613317987543722e+31,
+          "raw_xp": 4135.903062765138
         }
-      ]
+      ],
+      "raw_drain": 3.920129138458655
     },
     {
       "name": "The Gates of Heaven",
@@ -5073,7 +5624,7 @@
           "skills": [
             7
           ],
-          "cost_multiplier": 500000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.0001,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -5082,7 +5633,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 4.2582165954326985e+22,
+          "raw_xp": 5169.878828456423
         },
         {
           "id": 301,
@@ -5091,7 +5644,7 @@
           "skills": [
             0
           ],
-          "cost_multiplier": 1000000000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.00015,
           "max_reps": 4,
           "hidden_by_default": false,
@@ -5100,7 +5653,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 8.516433190865397e+25,
+          "raw_xp": 5169.878828456423
         },
         {
           "id": 302,
@@ -5109,7 +5664,7 @@
           "skills": [
             2
           ],
-          "cost_multiplier": 5e+28,
+          "cost_multiplier": 1,
           "xp_mult": 1e-10,
           "max_reps": 1,
           "hidden_by_default": false,
@@ -5118,7 +5673,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 4.258216595432698e+39,
+          "raw_xp": 5169.878828456423
         },
         {
           "id": 303,
@@ -5127,7 +5684,7 @@
           "skills": [
             11
           ],
-          "cost_multiplier": 5000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.0001,
           "max_reps": 5,
           "hidden_by_default": false,
@@ -5136,7 +5693,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": 3,
-          "theme": null
+          "theme": null,
+          "raw_cost": 425821659543269800000,
+          "raw_xp": 5169.878828456423
         },
         {
           "id": 304,
@@ -5145,7 +5704,7 @@
           "skills": [
             8
           ],
-          "cost_multiplier": 5000000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.001,
           "max_reps": 3,
           "hidden_by_default": false,
@@ -5154,7 +5713,9 @@
           "item": 45,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 4.2582165954326984e+23,
+          "raw_xp": 5169.878828456423
         },
         {
           "id": 305,
@@ -5164,7 +5725,7 @@
             8,
             11
           ],
-          "cost_multiplier": 800000000000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0,
           "max_reps": 5,
           "hidden_by_default": false,
@@ -5173,7 +5734,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 6.813146552692317e+28,
+          "raw_xp": 5169.878828456423
         },
         {
           "id": 306,
@@ -5182,7 +5745,7 @@
           "skills": [
             0
           ],
-          "cost_multiplier": 5000000000,
+          "cost_multiplier": 1,
           "xp_mult": 3,
           "max_reps": 2,
           "hidden_by_default": false,
@@ -5191,7 +5754,9 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 425821659543269800000,
+          "raw_xp": 5169.878828456423
         },
         {
           "id": 307,
@@ -5200,7 +5765,7 @@
           "skills": [
             1
           ],
-          "cost_multiplier": 500000000000000,
+          "cost_multiplier": 1,
           "xp_mult": 0.03,
           "max_reps": 5,
           "hidden_by_default": false,
@@ -5209,9 +5774,12 @@
           "item": null,
           "use_item": null,
           "prestige_layer": null,
-          "theme": null
+          "theme": null,
+          "raw_cost": 4.258216595432699e+25,
+          "raw_xp": 5169.878828456423
         }
-      ]
+      ],
+      "raw_drain": 4.116135595381588
     }
   ],
   "perks": [
@@ -7013,7 +7581,7 @@
     "xp_zone_mult": 1.25,
     "level_curve": 1.02,
     "zone_speedup_base": 1.05,
-    "value_mode": "zone_formula"
+    "value_mode": "raw"
   },
   "item_groups": {
     "note_items": [

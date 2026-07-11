@@ -44,11 +44,16 @@ import {
   TASK_TYPE_NAMES,
   behaviorSlotIndex,
 } from "./datasetBehaviors.js";
-import { validateJtaDataset } from "./datasetValidator.js";
+import { validateJtaDataset, stampDatasetIdentity } from "./datasetValidator.js";
+import { premultiplyDataset } from "./generateDataset.js";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const outDir = path.join(here, "datasets");
 const outPath = path.join(outDir, "vanilla.json");
+// The raw twin (5g): the same content with the economy backbone
+// pre-multiplied into raw values — the parity harness's raw-mode fixture
+// (raw-vanilla ≡ formula-vanilla ≡ native, tick-for-tick).
+const rawOutPath = path.join(outDir, "vanilla-raw.json");
 
 const env = await loadJtaEnv();
 const build = (f) =>
@@ -93,6 +98,16 @@ if (Object.keys(PRESTIGE_REPEATABLE_BEHAVIORS).length !== prestigeMod.PrestigeRe
 }
 for (const name of Object.keys(ITEM_CONSUME_ENERGY)) {
   if (itemsMod.ItemType[name] === undefined) fail(`ITEM_CONSUME_ENERGY.${name}: enum member no longer exists`);
+}
+// Economy backbone: the hand table must match the build's ECONOMY defaults
+// field-for-field (Fork 1.8 made the whole backbone introspectable).
+for (const [key, value] of Object.entries(VANILLA_ECONOMY)) {
+  if (simMod.ECONOMY[key] !== value) {
+    fail(`VANILLA_ECONOMY.${key} = ${value} != build ECONOMY.${key} = ${simMod.ECONOMY[key]}`);
+  }
+}
+if (simMod.ECONOMY.value_mode !== "zone_formula") {
+  fail(`build ECONOMY.value_mode must default to "zone_formula", got ${simMod.ECONOMY.value_mode}`);
 }
 
 // --- helpers ---
@@ -168,8 +183,20 @@ const items = itemsMod.ITEMS.map((def, i) => {
 const { PerkType } = perksMod;
 const { ItemType } = itemsMod;
 const { PrestigeLayer } = prestigeMod;
+// zones[].key (5g rider 3): position-independent identity, slug of the
+// (unique) zone name — same convention as generateDataset.js.
+const usedZoneKeys = new Set();
+const zoneKey = (name) => {
+  const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "zone";
+  let key = slug;
+  for (let n = 2; usedZoneKeys.has(key); n++) key = `${slug}-${n}`;
+  usedZoneKeys.add(key);
+  return key;
+};
+
 const zones = zonesMod.ZONES.map((zone, zi) => ({
   name: zone.name,
+  key: zoneKey(zone.name),
   theme: null,
   tasks: zone.tasks.map((def) => {
     if (def.zone_id !== zi) fail(`task ${def.id} zone_id ${def.zone_id} != position ${zi}`);
@@ -216,9 +243,10 @@ const prestige = {
 };
 
 const saveVersion = simMod.SAVE_VERSION;
+const baseId = `vanilla-${saveVersion.toLowerCase().replace(/\s+/g, "-")}`;
 const dataset = {
   schema_version: 1,
-  dataset_id: `vanilla-${saveVersion.toLowerCase().replace(/\s+/g, "-")}`,
+  dataset_id: baseId,
   provenance: {
     generator: "export-vanilla-dataset.mjs",
     fork_save_version: saveVersion,
@@ -243,27 +271,34 @@ const dataset = {
     power_skills: [...VANILLA_SKILL_ROLES.power_skills],
     spite_skills: [...VANILLA_SKILL_ROLES.spite_skills],
   },
-  economy: { ...VANILLA_ECONOMY },
+  economy: { ...VANILLA_ECONOMY, value_mode: "zone_formula" },
   item_groups: {
     note_items: [...itemsMod.NOTE_ITEMS],
   },
 };
+stampDatasetIdentity(dataset, baseId);
+
+// The raw twin, stamped with its own identity (different content ⇒
+// different hash ⇒ different save slot / cache key, as it must be).
+const rawDataset = premultiplyDataset(dataset);
+stampDatasetIdentity(rawDataset, `${baseId}-raw`);
 
 // --- validate, then write ---
 
-const result = validateJtaDataset(dataset);
-for (const w of result.warnings) console.log(`WARN: ${w}`);
-if (!result.ok) {
-  for (const e of result.errors) console.error(`ERROR: ${e}`);
-  fail(`generated dataset fails validation (${result.errors.length} errors) — nothing written`);
-}
-
 fs.mkdirSync(outDir, { recursive: true });
-fs.writeFileSync(outPath, JSON.stringify(dataset, null, 2) + "\n");
-const s = result.stats;
-console.log(
-  `wrote ${outPath}: ${dataset.dataset_id} — ${s.skills} skills, ` +
-  `${s.zones} zones, ${s.tasks} tasks, ${s.perks} perks, ${s.items} items ` +
-  `(${result.warnings.length} warnings)`
-);
+for (const [doc, file] of [[dataset, outPath], [rawDataset, rawOutPath]]) {
+  const result = validateJtaDataset(doc);
+  for (const w of result.warnings) console.log(`WARN: ${w}`);
+  if (!result.ok) {
+    for (const e of result.errors) console.error(`ERROR: ${e}`);
+    fail(`generated dataset ${doc.dataset_id} fails validation (${result.errors.length} errors) — nothing written`);
+  }
+  fs.writeFileSync(file, JSON.stringify(doc, null, 2) + "\n");
+  const s = result.stats;
+  console.log(
+    `wrote ${file}: ${doc.dataset_id} — ${s.skills} skills, ` +
+    `${s.zones} zones, ${s.tasks} tasks, ${s.perks} perks, ${s.items} items ` +
+    `(${result.warnings.length} warnings)`
+  );
+}
 process.exit(0);

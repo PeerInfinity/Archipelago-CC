@@ -19,7 +19,12 @@
         "generator": { "type": "string" },
         "fork_save_version": { "type": "string", "minLength": 1 },
         "seed": { "type": ["integer", "string", "null"] },
-        "params_hash": { "type": ["string", "null"] }
+        "params_hash": { "type": ["string", "null"] },
+        "content_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}$",
+          "description": "FNV-1a over the canonical (sorted-key) document minus provenance and dataset_id; dataset_id must end with '-<content_hash>'. An edited document must be restamped (datasetValidator.js --restamp) or validation fails — this is what keeps the (seed, dataset_id) Pass-B cache and the dataset-keyed save slot from being silently poisoned."
+        }
       }
     },
     "theme": {
@@ -59,7 +64,17 @@
         "required": ["name", "tasks"],
         "properties": {
           "name": { "type": "string", "minLength": 1 },
+          "key": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Optional position-independent zone identity (unique across zones) for topology edges and theme references (post-v1 branching); the engine never reads it."
+          },
           "theme": { "$ref": "#/definitions/entityTheme" },
+          "raw_drain": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "description": "Raw mode only (economy.value_mode 'raw'; validator enforces presence there): the zone's speedup/drain factor, replacing zone_speedup_base^zone at both engine sites (task progress and energy drain per tick)."
+          },
           "tasks": {
             "type": "array",
             "minItems": 1,
@@ -192,15 +207,20 @@
     },
     "economy": {
       "type": "object",
-      "description": "The global balance backbone, carried explicitly instead of compiled. v1 datasets use vanilla values verbatim; the fields exist so Pass B gains levers later without a schema bump.",
-      "required": ["base_task_cost", "zone_cost_exponent", "boss_cost_exponent", "xp_base", "xp_zone_mult", "level_curve"],
+      "description": "The global balance backbone, carried explicitly instead of compiled. The formula fields are required in BOTH value modes — under 'raw' they are unused by dataset tasks but remain the fallback formula for runtime-synthesized tasks (host exit tasks, artifact tasks).",
+      "required": ["base_task_cost", "zone_cost_exponent", "boss_cost_exponent", "xp_base", "xp_zone_mult", "level_curve", "zone_speedup_base"],
       "properties": {
+        "value_mode": {
+          "enum": ["zone_formula", "raw"],
+          "description": "Absent ⇒ 'zone_formula' (vanilla backbone formulas). 'raw' (5g, §7 Q8/Q9 — the DEFAULT for synthetic generation): every task carries raw_cost + raw_xp and every zone raw_drain, all zone-keyed formulas together; the validator enforces completeness."
+        },
         "base_task_cost": { "type": "number", "exclusiveMinimum": 0 },
         "zone_cost_exponent": { "type": "number", "exclusiveMinimum": 0 },
         "boss_cost_exponent": { "type": "number", "exclusiveMinimum": 0 },
         "xp_base": { "type": "number", "exclusiveMinimum": 0 },
         "xp_zone_mult": { "type": "number", "exclusiveMinimum": 0 },
-        "level_curve": { "type": "number", "exclusiveMinimum": 0 }
+        "level_curve": { "type": "number", "exclusiveMinimum": 0 },
+        "zone_speedup_base": { "type": "number", "exclusiveMinimum": 0, "description": "Per-zone speedup/drain backbone (vanilla 1.05), applied to both task progress and energy drain per tick." }
       }
     },
     "item_groups": {
@@ -266,8 +286,10 @@
           "items": { "type": "integer", "minimum": 0 },
           "description": "Indices into skills[]. May be empty only for Travel tasks (C1: a skill-less task cannot be paced by the balancer)."
         },
-        "cost_multiplier": { "type": "number", "exclusiveMinimum": 0, "description": "Provisional in Pass-A output; Pass B owns final costs." },
-        "xp_mult": { "type": "number", "minimum": 0, "description": ">= 0: vanilla has deliberate zero-XP tasks." },
+        "cost_multiplier": { "type": "number", "exclusiveMinimum": 0, "description": "Provisional in Pass-A output; Pass B owns final costs. In raw mode this is the Tier-1 patch lever over raw_cost (generated raw documents fold the profile multiplier into raw_cost and emit 1 here)." },
+        "xp_mult": { "type": "number", "minimum": 0, "description": ">= 0: vanilla has deliberate zero-XP tasks. Applies in both value modes (multiplies raw_xp in raw mode)." },
+        "raw_cost": { "type": "number", "exclusiveMinimum": 0, "description": "Raw mode only (validator enforces presence there): absolute base cost — the zone/Boss exponential backbone pre-dissolved into the value; cost_multiplier still applies." },
+        "raw_xp": { "type": "number", "minimum": 0, "description": "Raw mode only: absolute per-progress XP base, replacing xp_base × zone backbone; xp_mult still applies." },
         "max_reps": { "type": "integer", "minimum": 1 },
         "hidden_by_default": { "type": "boolean" },
         "unlocks_task": { "type": ["integer", "null"] },

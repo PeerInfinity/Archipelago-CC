@@ -21,6 +21,14 @@
 // prestige.sbtv_unlock_task_ids = [] holds by construction and every hidden
 // task has an in-game unlocker.
 //
+// Raw-value economy (5g): generation is raw BY DEFAULT (§7 Q9) — the
+// zone_formula document is built first, then premultiplyDataset() dissolves
+// the backbone into per-task raw_cost/raw_xp and per-zone raw_drain
+// (tick-for-tick equivalent by construction; params.valueMode
+// "zone_formula" skips the step for comparison runs). The identity carries
+// a content-hash suffix (stampDatasetIdentity) so edited documents can
+// never impersonate their source in the Pass-B cache or the save slot.
+//
 // Constraints: C1-C3 are enforced by datasetValidator.js (authoritative;
 // run here before returning). C4 — the cumulative skill-XP opportunity
 // floor per zone (ruling 2's tracked invariant) — is generator-side:
@@ -37,12 +45,13 @@
 //
 // CLI (Node):
 //   node frontend/modules/jtaSubstrateWrapper/generateDataset.js \
-//     --seed 7 [--zones N] [--theme long-road-north] [--out FILE]
+//     --seed 7 [--zones N] [--theme long-road-north] \
+//     [--value-mode raw|zone_formula] [--out FILE]
 
 import { createRng } from "../shared/rng.js";
 import { DATASET_THEMES, DATASET_THEME_KEYS } from "./datasetNamebanks.js";
 import { PERK_BEHAVIORS, ITEM_BEHAVIORS } from "./datasetBehaviors.js";
-import { validateJtaDataset, JTA_DATASET_SCHEMA_VERSION } from "./datasetValidator.js";
+import { validateJtaDataset, stampDatasetIdentity, JTA_DATASET_SCHEMA_VERSION } from "./datasetValidator.js";
 
 // FNV-1a over the canonical params JSON — a stable fingerprint for
 // provenance.params_hash (not cryptographic).
@@ -85,6 +94,46 @@ function isPlaceholder(e) {
   return e != null && e.placeholder === true;
 }
 
+// --- raw-value economy mode (5g, §7 Q8/Q9) ---------------------------------
+//
+// Turn a zone_formula document into its raw twin by evaluating the backbone
+// at generation time. The twin plays TICK-FOR-TICK identically to the source
+// document (and, for the vanilla fixture, to the natively compiled game):
+//  - raw_cost replicates the fork's calcTaskCost operation order
+//    ((base × cost_multiplier) × exponent^zone) and the multiplier then
+//    folds to 1, so raw play multiplies the identical double by exactly 1.
+//  - raw_xp = xp_base × xp_zone_mult^zone is applied by the fork at the
+//    zone factor's chain position; xp_base is a power of two (vanilla 8),
+//    so moving it across the chain commutes with rounding. xp_mult is NOT
+//    folded — it sits before the perk multiplications in calcSkillXp
+//    (folding it would break bit-equality) and C4 keeps reading it.
+//  - raw_drain = zone_speedup_base^zone is the same double the formula
+//    computes, read back at both engine sites.
+//
+// Returns a NEW document; the caller must restamp the identity
+// (stampDatasetIdentity) — content changed, so the old id would poison the
+// (seed, dataset_id) cache and the dataset-keyed save slot.
+export function premultiplyDataset(dataset) {
+  const doc = JSON.parse(JSON.stringify(dataset));
+  const eco = doc.economy;
+  if (eco == null || typeof eco !== "object") throw new Error("premultiplyDataset: document has no economy");
+  if (eco.value_mode === "raw") throw new Error("premultiplyDataset: document is already raw");
+  for (const key of ["base_task_cost", "zone_cost_exponent", "boss_cost_exponent", "xp_base", "xp_zone_mult", "zone_speedup_base"]) {
+    if (typeof eco[key] !== "number") throw new Error(`premultiplyDataset: economy.${key} missing`);
+  }
+  eco.value_mode = "raw";
+  doc.zones.forEach((zone, zi) => {
+    zone.raw_drain = Math.pow(eco.zone_speedup_base, zi);
+    for (const t of zone.tasks) {
+      const exponent = t.type === "Boss" ? eco.boss_cost_exponent : eco.zone_cost_exponent;
+      t.raw_cost = eco.base_task_cost * t.cost_multiplier * Math.pow(exponent, zi);
+      t.cost_multiplier = 1;
+      t.raw_xp = eco.xp_base * Math.pow(eco.xp_zone_mult, zi);
+    }
+  });
+  return doc;
+}
+
 // --- C4: cumulative skill-XP opportunity floor (plan §4.1) -----------------
 //
 // opportunity(s, Z) = Σ over tasks in zones < Z training s of
@@ -96,15 +145,22 @@ function isPlaceholder(e) {
 // any skill d zones after introducing it. A dataset that demands a skill
 // deeper than it trains it fails the assert.
 
+// The vanilla profile's zone-XP backbone — used ONLY for the profile-derived
+// floors (the profile is vanilla, which is formula-mode by definition).
+// Dataset rows compute their own xpValue from the document's economy — raw
+// documents read raw_xp (rider 1: a hardcoded 1.25 would silently mis-weight
+// every raw dataset).
 const XP_ZONE_MULT = 1.25;
 
+// Task entries carry xpValue = the per-progress XP factor (xp_mult × zone
+// backbone, or its raw equivalent); weight = max_reps × xpValue.
 function opportunityTable(tasks, skillOf, zoneCount) {
   // perZone[s][z] = opportunity contributed BY zone z to skill s.
   const perSkillZone = new Map();
   const demandedAt = new Map(); // skill -> Set of zones demanding it
   for (const t of tasks) {
     if (t.zone >= zoneCount) continue;
-    const weight = t.maxReps * t.xpMult * Math.pow(XP_ZONE_MULT, t.zone);
+    const weight = t.maxReps * t.xpValue;
     for (const raw of t.skills) {
       const s = skillOf(raw);
       if (!perSkillZone.has(s)) perSkillZone.set(s, new Map());
@@ -138,7 +194,8 @@ export function computeC4Report(dataset, profile) {
     profile.tasks
       .filter((t) => !(t.hidden && !chainTargets.has(t.id)))
       .map((t) => ({
-        zone: t.zone, maxReps: t.maxReps, xpMult: t.xpMult, skills: t.skills,
+        zone: t.zone, maxReps: t.maxReps, skills: t.skills,
+        xpValue: t.xpMult * Math.pow(XP_ZONE_MULT, t.zone),
       })),
     (name) => name,
     profile.zoneCount,
@@ -150,11 +207,21 @@ export function computeC4Report(dataset, profile) {
   }
   const maxDepth = Math.max(...floorByDepth.keys());
 
-  // Dataset rows (skill identity = index).
+  // Dataset rows (skill identity = index). Raw documents weight by raw_xp
+  // normalized to the document's xp_base — the same scale as the formula
+  // floors, and exactly the zone backbone for premultiplied documents
+  // (raw_xp / xp_base = xp_zone_mult^zone, ÷pow2 is exact), so raw and
+  // formula twins report identical C4 numbers.
+  const rawMode = dataset.economy?.value_mode === "raw";
+  const xpBase = dataset.economy?.xp_base;
+  const xpZoneMult = dataset.economy?.xp_zone_mult ?? XP_ZONE_MULT;
   const dsTasks = [];
   dataset.zones.forEach((zone, zi) => {
     for (const t of zone.tasks) {
-      dsTasks.push({ zone: zi, maxReps: t.max_reps, xpMult: t.xp_mult, skills: t.skills });
+      const xpValue = rawMode
+        ? t.xp_mult * (t.raw_xp / xpBase)
+        : t.xp_mult * Math.pow(xpZoneMult, zi);
+      dsTasks.push({ zone: zi, maxReps: t.max_reps, xpValue, skills: t.skills });
     }
   });
   const rows = opportunityTable(dsTasks, (idx) => idx, dataset.zones.length)
@@ -190,6 +257,12 @@ export function generateJtaDataset({ seed, profile, vanilla, params = {} }) {
   const zoneCount = params.zoneCount ?? profile.zoneCount;
   if (!Number.isInteger(zoneCount) || zoneCount < 1 || zoneCount > profile.zoneCount) {
     throw new Error(`generateJtaDataset: zoneCount must be 1..${profile.zoneCount}, got ${zoneCount}`);
+  }
+  // Raw is the DEFAULT for synthetic data (§7 Q9); zone_formula stays
+  // expressible for the vanilla fixture and comparison runs.
+  const valueMode = params.valueMode ?? "raw";
+  if (valueMode !== "raw" && valueMode !== "zone_formula") {
+    throw new Error(`generateJtaDataset: valueMode must be "raw" or "zone_formula", got ${JSON.stringify(valueMode)}`);
   }
   const rng = createRng(seed);
   const themeKey = params.theme ?? DATASET_THEME_KEYS[Math.floor(rng.next() * DATASET_THEME_KEYS.length)];
@@ -325,6 +398,18 @@ export function generateJtaDataset({ seed, profile, vanilla, params = {} }) {
   for (let zi = 0; zi < zoneCount; zi++) zoneNames.push(drawZoneName());
   const drawZoneFlavor = makeDrawer(rng, theme.zoneFlavors);
 
+  // zones[].key (5g rider 3): a position-independent zone identity for
+  // post-v1 topology edges and theme references. Slug of the (unique) zone
+  // name, uniquified defensively.
+  const usedZoneKeys = new Set();
+  const zoneKey = (name) => {
+    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "zone";
+    let key = slug;
+    for (let n = 2; usedZoneKeys.has(key); n++) key = `${slug}-${n}`;
+    usedZoneKeys.add(key);
+    return key;
+  };
+
   const newIdOf = new Map(); // vanilla task id -> synthetic task id
   const zones = [];
   for (let zi = 0; zi < zoneCount; zi++) {
@@ -366,7 +451,12 @@ export function generateJtaDataset({ seed, profile, vanilla, params = {} }) {
         theme: null,
       };
     });
-    zones.push({ name: zoneNames[zi], theme: { flavor: drawZoneFlavor() }, tasks });
+    zones.push({
+      name: zoneNames[zi],
+      key: zoneKey(zoneNames[zi]),
+      theme: { flavor: drawZoneFlavor() },
+      tasks,
+    });
   }
   // Second pass: remap unlock chains to the fresh ids. A chain whose target
   // fell outside the zone range is severed (its source keeps unlocking
@@ -413,8 +503,8 @@ export function generateJtaDataset({ seed, profile, vanilla, params = {} }) {
     sbtv_unlock_task_ids: [],
   };
 
-  const effectiveParams = { zoneCount, theme: themeKey };
-  const dataset = {
+  const effectiveParams = { zoneCount, theme: themeKey, valueMode };
+  let dataset = {
     schema_version: JTA_DATASET_SCHEMA_VERSION,
     dataset_id: `synthetic-${themeKey}-s${seed}-z${zoneCount}`,
     provenance: {
@@ -435,11 +525,18 @@ export function generateJtaDataset({ seed, profile, vanilla, params = {} }) {
     items,
     prestige,
     roles,
-    economy: { ...vanilla.economy },
+    economy: { ...vanilla.economy, value_mode: "zone_formula" },
     item_groups: {
       note_items: [...vanilla.item_groups.note_items],
     },
   };
+
+  if (valueMode === "raw") {
+    dataset = premultiplyDataset(dataset);
+  }
+  // Identity: content-hash suffix (rider 2) — the base id is still a pure
+  // function of the params; the hash makes edited/variant content distinct.
+  stampDatasetIdentity(dataset, `synthetic-${themeKey}-s${seed}-z${zoneCount}`);
 
   const validation = validateJtaDataset(dataset);
   if (!validation.ok) {
@@ -481,6 +578,7 @@ if (isNodeCli) {
   const seed = Number(argOf("--seed") ?? 1);
   const zonesArg = argOf("--zones");
   const themeArg = argOf("--theme");
+  const valueModeArg = argOf("--value-mode"); // raw (default) | zone_formula
   const out = argOf("--out");
 
   const profile = JSON.parse(readFileSync(
@@ -494,6 +592,7 @@ if (isNodeCli) {
     params: {
       ...(zonesArg !== undefined ? { zoneCount: Number(zonesArg) } : {}),
       ...(themeArg !== undefined ? { theme: themeArg } : {}),
+      ...(valueModeArg !== undefined ? { valueMode: valueModeArg } : {}),
     },
   });
   for (const w of validation.warnings) console.log(`WARN: ${w}`);

@@ -200,7 +200,11 @@ export const VANILLA_SKILL_ROLES = Object.freeze({
 
 // The global balance backbone, carried explicitly instead of compiled
 // (values verified in simulation.ts: calcTaskCost, calcSkillXp,
-// calcSkillTaskProgressMultiplierFromLevel).
+// calcSkillTaskProgressMultiplierFromLevel, calcZoneSpeedupFactor; the
+// exporter cross-checks this table against the build's ECONOMY object).
+// These are the zone_formula backbone — raw-mode documents (value_mode
+// "raw", 5g) carry them too, unused except as the fallback formula for
+// runtime-synthesized tasks.
 export const VANILLA_ECONOMY = Object.freeze({
   base_task_cost: 10,
   zone_cost_exponent: 2.2,
@@ -208,6 +212,7 @@ export const VANILLA_ECONOMY = Object.freeze({
   xp_base: 8,
   xp_zone_mult: 1.25,
   level_curve: 1.02,
+  zone_speedup_base: 1.05,
 });
 
 // Engine absolute couplings made data-driven in 5b (plan §3.3):

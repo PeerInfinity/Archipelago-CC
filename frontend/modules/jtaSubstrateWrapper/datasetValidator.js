@@ -33,6 +33,60 @@ function isPlaceholder(entry) {
   return entry != null && entry.placeholder === true;
 }
 
+// --- content-hash identity (5g rider 2) ------------------------------------
+//
+// dataset_id used to be a pure function of the generation params, so an
+// EDITED document kept its id and silently poisoned the (seed, dataset_id)
+// Pass-B cache and the dataset-keyed save slot. The identity now includes a
+// content hash: provenance.content_hash = FNV-1a over the canonical document
+// (sorted-key JSON) minus `provenance` and minus `dataset_id` itself (the id
+// embeds the hash, so it cannot be part of the hashed content), and the
+// dataset_id ends with the 8-hex short hash. validateJtaDataset errors on a
+// mismatch; `--restamp` rewrites both after a deliberate hand edit.
+
+export function stableStringify(value) {
+  if (value === null || typeof value !== "object") return JSON.stringify(value);
+  if (Array.isArray(value)) return `[${value.map(stableStringify).join(",")}]`;
+  const keys = Object.keys(value).sort();
+  return `{${keys.map((k) => `${JSON.stringify(k)}:${stableStringify(value[k])}`).join(",")}}`;
+}
+
+function fnv1a32(str) {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < str.length; i += 1) {
+    h ^= str.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return (h >>> 0).toString(16).padStart(8, "0");
+}
+
+export function computeDatasetContentHash(dataset) {
+  const content = { ...dataset };
+  delete content.provenance;
+  delete content.dataset_id;
+  return fnv1a32(stableStringify(content));
+}
+
+// Stamp (or re-stamp) the identity in place: sets provenance.content_hash and
+// appends the short hash to `baseId` (defaults to the current dataset_id with
+// a previously stamped hash suffix stripped — idempotent). Returns the dataset.
+export function stampDatasetIdentity(dataset, baseId = null) {
+  const hash = computeDatasetContentHash(dataset);
+  let base = baseId ?? dataset.dataset_id ?? "dataset";
+  if (baseId == null) {
+    const prior = dataset.provenance?.content_hash;
+    if (typeof prior === "string" && base.endsWith(`-${prior}`)) {
+      base = base.slice(0, -(prior.length + 1));
+    }
+  }
+  dataset.dataset_id = `${base}-${hash}`;
+  if (dataset.provenance == null || typeof dataset.provenance !== "object") {
+    dataset.provenance = {};
+  }
+  dataset.provenance.content_hash = hash;
+  return dataset;
+}
+
 export function validateJtaDataset(dataset) {
   const errors = [];
   const warnings = [];
@@ -53,8 +107,24 @@ export function validateJtaDataset(dataset) {
   const prov = dataset.provenance;
   if (prov == null || typeof prov !== "object") {
     err("provenance object is required");
-  } else if (typeof prov.fork_save_version !== "string" || prov.fork_save_version.length === 0) {
-    err("provenance.fork_save_version must be a non-empty string");
+  } else {
+    if (typeof prov.fork_save_version !== "string" || prov.fork_save_version.length === 0) {
+      err("provenance.fork_save_version must be a non-empty string");
+    }
+    // Content-hash identity (5g rider 2): an edited document must be
+    // restamped or it poisons the (seed, dataset_id) cache + save slot.
+    if (prov.content_hash === undefined) {
+      warn("provenance.content_hash missing (legacy document) — restamp with datasetValidator.js --restamp");
+    } else if (typeof prov.content_hash !== "string") {
+      err("provenance.content_hash must be a string");
+    } else {
+      const actual = computeDatasetContentHash(dataset);
+      if (prov.content_hash !== actual) {
+        err(`provenance.content_hash ${prov.content_hash} does not match the document content (${actual}) — edited without --restamp?`);
+      } else if (typeof dataset.dataset_id === "string" && !dataset.dataset_id.endsWith(`-${actual}`)) {
+        err(`dataset_id must end with the content hash suffix -${actual} (got "${dataset.dataset_id}") — restamp with --restamp`);
+      }
+    }
   }
 
   // --- skills ---
@@ -160,13 +230,35 @@ export function validateJtaDataset(dataset) {
   const validItemIndex = validRosterIndex(items);
 
   // --- zones / tasks ---
+  // Raw-value economy mode (5g, §7 Q8): under value_mode "raw" EVERY task
+  // must carry raw_cost + raw_xp and EVERY zone raw_drain — no partial mode.
+  const valueMode = dataset.economy?.value_mode;
+  const rawMode = valueMode === "raw";
   const zones = Array.isArray(dataset.zones) ? dataset.zones : [];
   if (!Array.isArray(dataset.zones) || zones.length === 0) err("zones must be a non-empty array");
   const taskIds = new Set();
   const allTasks = [];
+  const zoneKeys = new Set();
+  let strayRawFields = 0;
   zones.forEach((zone, zi) => {
     if (typeof zone?.name !== "string" || zone.name.length === 0) {
       err(`zones[${zi}].name must be a non-empty string`);
+    }
+    if (zone?.key !== undefined) {
+      if (typeof zone.key !== "string" || zone.key.length === 0) {
+        err(`zones[${zi}].key must be a non-empty string when present`);
+      } else if (zoneKeys.has(zone.key)) {
+        err(`duplicate zone key "${zone.key}" (zones[${zi}])`);
+      } else {
+        zoneKeys.add(zone.key);
+      }
+    }
+    if (rawMode) {
+      if (!(typeof zone?.raw_drain === "number" && zone.raw_drain > 0)) {
+        err(`zones[${zi}].raw_drain must be a positive number under value_mode "raw"`);
+      }
+    } else if (zone?.raw_drain !== undefined) {
+      strayRawFields += 1;
     }
     const tasks = Array.isArray(zone?.tasks) ? zone.tasks : [];
     if (!Array.isArray(zone?.tasks) || tasks.length === 0) {
@@ -217,6 +309,16 @@ export function validateJtaDataset(dataset) {
       }
       if (t?.type === "Prestige" && t?.prestige_layer === null) {
         err(`${where} ("${t?.name}") is a Prestige task but has no prestige_layer`);
+      }
+      if (rawMode) {
+        if (!(typeof t?.raw_cost === "number" && t.raw_cost > 0)) {
+          err(`${where}.raw_cost must be a positive number under value_mode "raw"`);
+        }
+        if (!(typeof t?.raw_xp === "number" && t.raw_xp >= 0)) {
+          err(`${where}.raw_xp must be a non-negative number under value_mode "raw"`);
+        }
+      } else if (t?.raw_cost !== undefined || t?.raw_xp !== undefined) {
+        strayRawFields += 1;
       }
     });
     // C3 (linear v1): every zone except the last needs a Travel exit.
@@ -293,7 +395,7 @@ export function validateJtaDataset(dataset) {
 
   // --- economy ---
   const economy = dataset.economy;
-  const ECONOMY_FIELDS = ["base_task_cost", "zone_cost_exponent", "boss_cost_exponent", "xp_base", "xp_zone_mult", "level_curve"];
+  const ECONOMY_FIELDS = ["base_task_cost", "zone_cost_exponent", "boss_cost_exponent", "xp_base", "xp_zone_mult", "level_curve", "zone_speedup_base"];
   if (economy == null || typeof economy !== "object") {
     err("economy object is required");
   } else {
@@ -302,6 +404,12 @@ export function validateJtaDataset(dataset) {
         err(`economy.${key} must be a positive number`);
       }
     }
+    if (valueMode !== undefined && valueMode !== "zone_formula" && valueMode !== "raw") {
+      err(`economy.value_mode must be "zone_formula" or "raw", got ${JSON.stringify(valueMode)}`);
+    }
+  }
+  if (strayRawFields > 0) {
+    warn(`${strayRawFields} raw_cost/raw_xp/raw_drain field(s) present but value_mode is not "raw" — they will be ignored`);
   }
 
   // --- item groups ---
@@ -349,13 +457,23 @@ if (isNodeCli) {
   // under Node.
   const nodeFs = "node:fs";
   (async () => {
-    const file = process.argv[2];
+    const argv = process.argv.slice(2);
+    const restamp = argv.includes("--restamp");
+    const file = argv.find((a) => !a.startsWith("--"));
     if (!file) {
-      console.error("usage: node datasetValidator.js <dataset.json>");
+      console.error("usage: node datasetValidator.js [--restamp] <dataset.json>");
       process.exit(2);
     }
-    const { readFileSync } = await import(nodeFs);
+    const { readFileSync, writeFileSync } = await import(nodeFs);
     const dataset = JSON.parse(readFileSync(file, "utf8"));
+    if (restamp) {
+      // Hand-edit workflow: recompute the content hash, rewrite the id
+      // suffix, write the file back, then validate the restamped document.
+      const oldId = dataset.dataset_id;
+      stampDatasetIdentity(dataset);
+      writeFileSync(file, JSON.stringify(dataset, null, 2) + "\n");
+      console.log(`restamped: ${oldId} -> ${dataset.dataset_id}`);
+    }
     const result = validateJtaDataset(dataset);
     for (const w of result.warnings) console.log(`WARN: ${w}`);
     for (const e of result.errors) console.error(`ERROR: ${e}`);
