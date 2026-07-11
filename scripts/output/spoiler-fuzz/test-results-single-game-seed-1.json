@@ -1,0 +1,40 @@
+{
+  "metadata": {
+    "created": "2026-07-11T22:36:49.397523+00:00",
+    "last_updated": "2026-07-11T22:36:49.397540+00:00",
+    "script_version": "1.0.0",
+    "combined_from": 10,
+    "test_type": "spoiler_fuzz",
+    "seed_mode": "fixed",
+    "starting_seed": 1,
+    "runs_per_game": 1,
+    "generation_timeout": 300,
+    "test_timeout": 120,
+    "total_runs": 10,
+    "total_templates": 1
+  },
+  "results": {
+    "APQuest.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "APQuest",
+        "world_directory": "apquest"
+      },
+      "timestamp": "2026-07-11T22:36:49.397974+00:00"
+    }
+  }
+}
