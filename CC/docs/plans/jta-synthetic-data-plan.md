@@ -19,7 +19,10 @@ run budget; total coverage reported, not gated). All six generated worlds
 play to victory + full perks at vanilla-comparable pacing; the residual
 1–3 stranded FILLER locations per world (the LEVEL-metric fragility class)
 are recorded informationally with the multiworld caveat and the known
-RESETS rescue — see §6 5f. NEXT: Phase 6 absorption audit.**
+RESETS rescue — see §6 5f.
+Phase 5g (raw-value economy mode, Fork 1.8) PLANNED + RULED 2026-07-10
+(§7 Q8/Q9: all formulas raw together; raw = synthetic default) —
+implementation NOT started. NEXT: 5g / Phase 6 absorption audit.**
 Child plan of `jta-zone-randomization-plan.md` (its Phase 5, "the destination").
 Sibling precedent: `jta-balance-pass-plan.md` (Phase 3). Phases 0–4 of the
 parent are DONE; this plan builds on their machinery (Pass-B balance walk,
@@ -1017,6 +1020,46 @@ both halves (the harness already re-extracts the committed HEAD per run).
   needed); the RESETS rescue stays recorded as the known remedy should
   full coverage ever harden again (multiworld).
 
+- **5g — Raw-value economy mode (Fork 1.8) — PLANNED 2026-07-10, RULED
+  (§7 Q8/Q9), implementation NOT started.** Motivation (assessed
+  2026-07-10 after 5f): for linear v1 raw values add no new reachable
+  states (`cost_multiplier`/`xp_mult` already span the space — this is a
+  reparameterization), but they remove real solver pathologies (Pass B
+  fighting the zone-ordinal exponential produced multipliers up to
+  1.09e5 in the 5e batch, one saturation clamp from failure) and they are
+  REQUIRED for the post-v1 branching/grid topology, where zone ordinal
+  stops being the difficulty axis. Design:
+  - **Schema (additive, no version bump):** `economy.value_mode:
+    "zone_formula" | "raw"` (absent ⇒ `zone_formula`); in raw mode every
+    task carries `raw_cost` + `raw_xp` and every zone carries `raw_drain`
+    — **RULED Q8: all zone-keyed formulas go raw TOGETHER** (cost, XP,
+    energy drain; no partial mode). Validator enforces all-present under
+    raw. The Boss exponent dissolves into the values (raw is absolute);
+    `zone_cost_exponent`/`boss_cost_exponent`/`xp_base`/`xp_zone_mult`
+    become unused-but-carried in raw mode.
+  - **Fork (Fork 1.8):** the three zone-keyed sites already routed
+    through `ECONOMY` (5b §3.3) branch on the mode — `calcTaskCost` =
+    `raw_cost × cost_multiplier` in raw mode, XP and per-zone drain read
+    their raw values. Everything downstream (estimateResetsToComplete,
+    thresholds, Pass B, the stats driver) flows through those functions
+    unchanged. Dormant with no dataset / formula mode: vanilla
+    byte-identical, parity-gated like 5b.
+  - **Balancer:** UNCHANGED — `cost_multiplier` stays the Tier-1 patch
+    lever, now over the raw base; solved multipliers should sit near 1.
+  - **Generator:** emits raw BY DEFAULT for synthetic data — **RULED Q9**
+    — computing the raw values by evaluating the vanilla backbone at
+    generation (the mirror stays balance-isomorphic byte-for-byte in
+    effect); `value_mode: "zone_formula"` remains generatable for
+    comparison runs.
+  - **Verification (the 5c transitivity trick, re-aimed):** a raw-mode
+    vanilla fixture derived by PRE-MULTIPLYING the backbone into raw
+    values must play tick-identically to the formula-mode vanilla fixture
+    and to native — sim lockstep + static sweep + the smoke; then the
+    generated-dataset guard, roundtrip, and the 5f emergent sweep re-run
+    on raw-mode worlds (progression gate).
+- **Phase 6 (parent plan) — absorption audit** → old-stack retirement
+  green-light; see jta-zone-randomization-plan.md §5/§6.
+
 Post-v1 (recorded, not planned here): per-behavior effects migration
 (§2.3), branching topology / grid-fit via `generateZoneForSpecs`
 (sphere-growth), narrative content in `theme`, prestige-table variation,
@@ -1067,6 +1110,12 @@ standalone `?dataset=` play.
    (pipeline-side, next to the wrapper library); `loadGameData` +
    decoupling changes in the submodule; schema/validator outer repo with
    the vanilla fixture regenerated from the fork build.
+8. **Raw-value economy mode: scope — RULED 2026-07-10: ALL zone-keyed
+   formulas go raw together** (task cost, task XP, per-zone energy drain
+   — no partial/cost-only mode). See §6 5g.
+9. **Raw-value economy mode: generator default — RULED 2026-07-10: raw is
+   the DEFAULT for synthetic data**; the zone-formula mode remains
+   expressible in the schema (vanilla fixture; comparison runs).
 
 ## 8. Traceability
 
