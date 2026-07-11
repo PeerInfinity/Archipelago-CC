@@ -26,6 +26,7 @@
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { JTA_ZONE_TASK_DATA, JTA_PERK_COUNT } from './zoneTaskData.js';
 import { createRng } from '../shared/rng.js';
+import { validateJtaDataset } from './datasetValidator.js';
 
 // Host-side PlaybackProxy, injected by index.js's initialize() once the
 // eventBus exists (setter injection rather than importing index.js so
@@ -105,6 +106,70 @@ export function setJtaStartingPerks(n) {
 }
 export function getJtaStartingPerks() { return _startingPerks; }
 
+// --- Synthetic dataset mode (Phase 5d, jta-synthetic-data-plan §4.1) ---
+//
+// When a dataset document is active, the pipeline reads IT instead of the
+// zoneTaskData.js vanilla snapshot: zoneCount comes from the dataset, zone
+// tasks/perk placement come from its zones, the grant-suppression sentinel
+// is the DATASET's perk count, and every emitted region's payload carries
+// the dataset carriage (single-carrier + refs, ruling 4): the first jta
+// region (zone 0 — linear v1 rides the spiral driver, which maps the Nth
+// jta region to zone N) carries `jta_dataset` (the full document); EVERY
+// jta region carries `jta_dataset_ref: {dataset_id, schema_version}`.
+// procgenPlayer resolves refs at warehouse build; the bridge applies the
+// dataset via window.loadGameData before task patches.
+//
+// null (default) keeps the vanilla path byte-identical.
+let _dataset = null;
+export function setJtaDataset(dataset) {
+    if (dataset != null) {
+        const result = validateJtaDataset(dataset);
+        if (!result.ok) {
+            throw new Error(`setJtaDataset: invalid dataset:\n  ${result.errors.join('\n  ')}`);
+        }
+    }
+    _dataset = dataset ?? null;
+    _placementCache = null;
+    _universeCache = null;
+    _zoneViewCache = null;
+    _libraryItemsCache = null;
+}
+export function getJtaDataset() { return _dataset; }
+
+// Normalized zone/task view over whichever source is active — the vanilla
+// snapshot or the dataset. Shape matches what the placement machinery
+// needs: zones[zoneIdx] = { zone, tasks: [{ id, perk: <item name|null> }] },
+// plus the grant-suppression sentinel (the source's perk count), the
+// excluded task ids (vanilla: the SBtV-gated four; dataset:
+// prestige.sbtv_unlock_task_ids — [] by generation), and the perk item
+// names the source can place.
+let _zoneViewCache = null;
+let _libraryItemsCache = null;
+function _zoneView() {
+    if (_zoneViewCache) return _zoneViewCache;
+    if (_dataset) {
+        const perkName = (idx) => _dataset.perks[idx]?.name ?? null;
+        _zoneViewCache = {
+            zones: _dataset.zones.map((z, i) => ({
+                zone: i,
+                tasks: z.tasks.map((t) => ({
+                    id: t.id,
+                    perk: t.perk != null ? perkName(t.perk) : null,
+                })),
+            })),
+            perkCount: _dataset.perks.length,
+            excluded: new Set(_dataset.prestige?.sbtv_unlock_task_ids ?? []),
+        };
+    } else {
+        _zoneViewCache = {
+            zones: JTA_ZONE_TASK_DATA,
+            perkCount: JTA_PERK_COUNT,
+            excluded: SBTV_GATED_TASK_IDS,
+        };
+    }
+    return _zoneViewCache;
+}
+
 // Memoized canonical placement, keyed by (shuffleSeed, goalZone).
 let _placementCache = null; // { key, byZone: Map<zoneIdx, Map<taskId, itemName>> }
 let _universeCache = null;  // { key, names: string[] }
@@ -148,11 +213,12 @@ export const JTA_LIBRARY_ITEMS = Object.freeze({
     }, {}),
 });
 
-// Identity placement: each perk on its own vanilla task.
+// Identity placement: each perk on its own native task.
 function _placeIdentity(ensureZone) {
-    for (const zone of JTA_ZONE_TASK_DATA) {
+    const view = _zoneView();
+    for (const zone of view.zones) {
         for (const t of zone.tasks) {
-            if (SBTV_GATED_TASK_IDS.has(t.id)) continue;
+            if (view.excluded.has(t.id)) continue;
             if (t.perk) ensureZone(zone.zone).set(t.id, t.perk);
         }
     }
@@ -163,7 +229,8 @@ function _placeIdentity(ensureZone) {
 // default at the call site (any task not in the returned map). Returns
 // Map<zoneIdx, Map<taskId, itemName>>.
 function _computePlacement() {
-    const key = `${_perkShuffleSeed}|${_goalZone}`;
+    const view = _zoneView();
+    const key = `${_dataset?.dataset_id ?? ''}|${_perkShuffleSeed}|${_goalZone}`;
     if (_placementCache && _placementCache.key === key) return _placementCache.byZone;
 
     const byZone = new Map();
@@ -181,10 +248,10 @@ function _computePlacement() {
         const perks = [];
         const slots = [];
         for (let z = 0; z <= _goalZone; z++) {
-            const zone = JTA_ZONE_TASK_DATA[z];
+            const zone = view.zones[z];
             if (!zone) continue;
             for (const t of zone.tasks) {
-                if (SBTV_GATED_TASK_IDS.has(t.id)) continue;
+                if (view.excluded.has(t.id)) continue;
                 slots.push({ zone: z, taskId: t.id });
                 if (t.perk) perks.push(t.perk);
             }
@@ -203,11 +270,11 @@ function _computePlacement() {
     // Victory: one goal-zone task not already holding a perk (every zone has
     // a Travel task, which has no perk, so a free slot always exists).
     if (_goalZone != null) {
-        const zone = JTA_ZONE_TASK_DATA[_goalZone];
+        const zone = view.zones[_goalZone];
         if (zone) {
             const zoneMap = ensureZone(_goalZone);
             const slot = zone.tasks.find((t) =>
-                !SBTV_GATED_TASK_IDS.has(t.id) && !zoneMap.has(t.id));
+                !view.excluded.has(t.id) && !zoneMap.has(t.id));
             if (slot) zoneMap.set(slot.id, JTA_VICTORY_ITEM_NAME);
         }
     }
@@ -223,11 +290,11 @@ function _computePlacement() {
 // pool and must not appear in an access rule's item_names. Sorted to match
 // rule_builder's HasFromListUnique, which stores `tuple(sorted(set(...)))`.
 function _perkUniverse() {
-    const key = `${_perkShuffleSeed}|${_goalZone}`;
+    const key = `${_dataset?.dataset_id ?? ''}|${_perkShuffleSeed}|${_goalZone}`;
     if (_universeCache && _universeCache.key === key) return _universeCache.names;
 
     const byZone = _computePlacement();
-    const maxZone = _goalZone ?? (JTA_ZONE_TASK_DATA.length - 1);
+    const maxZone = _goalZone ?? (_zoneView().zones.length - 1);
     const names = new Set();
     for (let z = 0; z <= maxZone; z++) {
         for (const item of byZone.get(z)?.values() ?? []) {
@@ -256,7 +323,8 @@ function _perksRequiredForZone(zoneIdx, universeSize) {
 // region transitions are driven by Travel-task completion, not gated
 // exits — so extractZoneRules emits no exitRules/exitPaths.
 function buildZoneLocations(zoneIdx, region_id) {
-    const zone = JTA_ZONE_TASK_DATA[zoneIdx];
+    const view = _zoneView();
+    const zone = view.zones[zoneIdx];
     if (!zone) return { locations: [], payload: {} };
     const placement = _computePlacement().get(zoneIdx) ?? new Map();
     const universe = _perkUniverse();
@@ -271,7 +339,7 @@ function buildZoneLocations(zoneIdx, region_id) {
     const locations = [];
     const taskPatches = [];
     for (const task of zone.tasks) {
-        if (SBTV_GATED_TASK_IDS.has(task.id)) continue;
+        if (view.excluded.has(task.id)) continue;
         apLocations[task.id] = `${region_id}__${task.id}`;
         const item = placement.get(task.id) ?? JTA_FILLER_ITEM_NAME;
         locations.push({
@@ -279,14 +347,26 @@ function buildZoneLocations(zoneIdx, region_id) {
             ...(accessRule ? { access_rule: accessRule } : {}),
         });
         // Grant suppression (Q5, AP-authoritative): any task that
-        // vanilla-grants a perk gets its `perk` patched to the Count
-        // sentinel so onFullyFinishTask grants nothing locally — the perk
+        // natively grants a perk gets its `perk` patched to the Count
+        // sentinel (the ACTIVE source's perk count — the dataset's when one
+        // is loaded) so onFullyFinishTask grants nothing locally — the perk
         // arrives only as an AP item (window.grantPerk). Applied per-region
         // on load; safe because a task can't complete before its region is
         // loaded. Independent of where the perk ITEM is placed above.
-        if (task.perk) taskPatches.push({ id: task.id, perk: JTA_PERK_COUNT });
+        if (task.perk) taskPatches.push({ id: task.id, perk: view.perkCount });
     }
-    return { locations, payload: { ap_locations: apLocations, task_patches: taskPatches } };
+    const payload = { ap_locations: apLocations, task_patches: taskPatches };
+    if (_dataset) {
+        // Dataset carriage (ruling 4, single-carrier + refs): every region
+        // carries the ref; the first jta region (zone 0) carries the full
+        // document. procgenPlayer's warehouse resolves refs at rules load.
+        payload.jta_dataset_ref = {
+            dataset_id: _dataset.dataset_id,
+            schema_version: _dataset.schema_version,
+        };
+        if (zoneIdx === 0) payload.jta_dataset = _dataset;
+    }
+    return { locations, payload };
 }
 
 export const substrateRegistryEntry = Object.freeze({
@@ -322,9 +402,29 @@ export const substrateRegistryEntry = Object.freeze({
 
     // Item-classification library merged into the pipeline's itemLib for a
     // jta world: perk items (progression), 'JtA Filler' (filler, does
-    // nothing), and 'Victory' (the is_victory goal item). See
-    // JTA_LIBRARY_ITEMS.
-    libraryItems: JTA_LIBRARY_ITEMS,
+    // nothing), and 'Victory' (the is_victory goal item). A getter so a
+    // loaded dataset's perk names replace the vanilla ones (memoized by
+    // dataset_id); with no dataset this returns the frozen vanilla
+    // JTA_LIBRARY_ITEMS object, exactly as before.
+    get libraryItems() {
+        if (!_dataset) return JTA_LIBRARY_ITEMS;
+        if (!_libraryItemsCache || _libraryItemsCache.id !== _dataset.dataset_id) {
+            const names = [...new Set(_zoneView().zones
+                .flatMap((z) => z.tasks.map((t) => t.perk).filter(Boolean)))];
+            _libraryItemsCache = {
+                id: _dataset.dataset_id,
+                lib: Object.freeze({
+                    [JTA_FILLER_ITEM_NAME]: { classification: 'filler' },
+                    [JTA_VICTORY_ITEM_NAME]: { classification: 'progression', is_victory: true },
+                    ...names.reduce((acc, name) => {
+                        acc[name] = { classification: 'progression' };
+                        return acc;
+                    }, {}),
+                }),
+            };
+        }
+        return _libraryItemsCache.lib;
+    },
 
     // procgenPlayer passes the sidecar entry's `playable_payload` (not
     // the whole sidecar) to this function. The bridge then reads
@@ -400,12 +500,14 @@ export const substrateRegistryEntry = Object.freeze({
     //     layout's own fields (exits, etc.) before stamping the
     //     sidecar.
     //
-    // Total zone count is owned by the JtA build in the
+    // Total zone count. With a dataset active it is the dataset's zone
+    // count (the dataset IS the game data the fork will load). Otherwise
+    // it is owned by the JtA build in the
     // frontend/modules/journey-to-ascension submodule (build/zones.js
     // — the copy the panel actually loads). Kept in sync by hand; if
     // it drifts the runtime warns on loadZone and refuses the bad
     // index. 30 as of Fork 1.6.
-    zoneCount: 30,
+    get zoneCount() { return _dataset ? _dataset.zones.length : 30; },
     synthesizeZonePayload: (zoneIdx) => ({ jtaZone: zoneIdx }),
 
     // Zone-locations channel (opt-in, see setJtaEmitZoneLocations). The
