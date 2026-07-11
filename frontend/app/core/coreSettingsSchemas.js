@@ -35,7 +35,7 @@ export const CORE_SETTINGS_SCHEMAS = {
       },
       autoLoadMode: {
         type: 'boolean',
-        default: true,
+        default: false,
         label: 'Auto-load Mode',
         description: 'Automatically load saved mode state on startup',
       },
