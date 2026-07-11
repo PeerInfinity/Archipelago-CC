@@ -6,11 +6,16 @@
  * preset_sidecars payload carries `ap_locations`), it:
  *
  *   1. checks `moduleSettings.jtaBalance.enabled` (default ON) — dormant if off;
- *   2. keys a localStorage cache by seed. On a cache HIT it merges the cached
- *      cost patches into the procgenPlayer warehouse and spawns NO worker;
+ *   2. keys a localStorage cache by seed (plus dataset_id for synthetic-dataset
+ *      worlds). On a cache HIT it merges the cached cost patches into the
+ *      procgenPlayer warehouse and spawns NO worker;
  *   3. on a miss, waits for sphereState to load the sphere log, runs
  *      `runBalancePass` in a Web Worker against the fork's committed build,
- *      caches the resulting cost patches, and merges them.
+ *      caches the resulting cost patches, and merges them. Synthetic-dataset
+ *      worlds (Phase 5e) ship their dataset document to the worker, which
+ *      loadGameData's it before the walk; identity constants (perk item
+ *      names, suppression sentinel) come from the dataset instead of the
+ *      vanilla snapshot.
  *
  * MERGE POINT: each jta region's world object in the procgenPlayer warehouse
  * carries a `task_patches` array (grant-suppression `{id, perk}` patches). The
@@ -40,6 +45,8 @@ import { JTA_PERK_ITEM_NAMES } from '../jtaSubstrateWrapper/jtaSubstrateWrapperL
 import { JTA_PERK_COUNT } from '../jtaSubstrateWrapper/zoneTaskData.js';
 import {
     detectJtaWorld,
+    extractDataset,
+    datasetIdentity,
     extractApLocations,
     extractGateCounts,
     computeSeedName,
@@ -169,7 +176,8 @@ function triggerSolve(solve) {
         return;
     }
     running = true;
-    log('info', `starting Pass-B balance solve (seed ${solve.seed}, ${Object.keys(solve.apLocations).length} locations)`);
+    log('info', `starting Pass-B balance solve (seed ${solve.seed}, ${Object.keys(solve.apLocations).length} locations`
+        + (solve.dataset ? `, dataset ${solve.dataset.dataset_id})` : ')'));
 
     try {
         worker = new Worker(resolveWorkerUrl(), { type: 'module' });
@@ -213,13 +221,22 @@ function triggerSolve(solve) {
         cleanup();
     };
 
+    // Identity constants come from the dataset when the world carries one
+    // (Phase 5e): its placed-perk names and its perk count are the AP item
+    // surface / suppression sentinel the walk must use — the vanilla
+    // constants belong to different tables. The dataset document itself
+    // rides along (structured clone) so the worker can loadGameData it.
+    const identity = solve.dataset
+        ? datasetIdentity(solve.dataset)
+        : { perkItemNames: [...JTA_PERK_ITEM_NAMES], perkCountSentinel: JTA_PERK_COUNT };
     worker.postMessage({
         apLocations: solve.apLocations,
         gateCounts: solve.gateCounts,
         sphereLog,
         playerId: solve.playerId,
-        perkItemNames: [...JTA_PERK_ITEM_NAMES],
-        perkCountSentinel: JTA_PERK_COUNT,
+        perkItemNames: identity.perkItemNames,
+        perkCountSentinel: identity.perkCountSentinel,
+        dataset: solve.dataset ?? null,
         seed: solve.seed,
         options: {},
     });
@@ -245,10 +262,20 @@ async function handleRulesLoaded() {
     const { isJta, playerId } = detectJtaWorld(rulesDoc);
     if (!isJta) return; // dormant for non-jta worlds
 
+    // Synthetic-dataset carriage (Phase 5e). A ref with no resolvable
+    // document means the carriage is broken — the bridge refuses those
+    // region loads too; solving vanilla tables against dataset task ids
+    // would cache garbage, so stay out.
+    const { dataset, ref } = extractDataset(rulesDoc, playerId);
+    if (ref && !dataset) {
+        log('warn', `world references dataset '${ref.dataset_id}' but no sidecar carries it; skipping balance solve`);
+        return;
+    }
+
     const apLocations = extractApLocations(rulesDoc, playerId);
     const gateCounts = extractGateCounts(rulesDoc, playerId, apLocations);
     const seed = computeSeedName(rulesDoc);
-    const key = cacheKey(seed);
+    const key = cacheKey(seed, dataset?.dataset_id ?? null);
 
     // Cache hit: merge and skip the worker entirely.
     let cached = null;
@@ -270,7 +297,7 @@ async function handleRulesLoaded() {
 
     // Cache miss: solve. Needs the sphere log; trigger now if sphereState
     // already loaded it, else wait for sphereState:dataLoaded.
-    pendingSolve = { playerId, seed, key, apLocations, gateCounts };
+    pendingSolve = { playerId, seed, key, apLocations, gateCounts, dataset };
     triggerSolve(pendingSolve);
 }
 

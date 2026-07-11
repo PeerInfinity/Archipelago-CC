@@ -2,6 +2,8 @@ import { describe, it, expect } from 'vitest';
 
 import {
     detectJtaWorld,
+    extractDataset,
+    datasetIdentity,
     extractApLocations,
     extractGateCounts,
     ruleGateCount,
@@ -88,11 +90,58 @@ describe('detectJtaWorld', () => {
         expect(detectJtaWorld(doc)).toEqual({ isJta: true, playerId: '2' });
     });
 
-    it('skips synthetic-dataset worlds (jta_dataset_ref carriage — Pass-B dataset support is 5e)', () => {
+    it('detects synthetic-dataset worlds too (Pass-B dataset support, 5e)', () => {
         const doc = jtaRules();
         doc.preset_sidecars[1].region_0_0.playable_payload.jta_dataset_ref =
             { dataset_id: 'synthetic-x-s1-z2', schema_version: 1 };
-        expect(detectJtaWorld(doc)).toEqual({ isJta: false, playerId: null });
+        expect(detectJtaWorld(doc)).toEqual({ isJta: true, playerId: '1' });
+    });
+});
+
+describe('extractDataset', () => {
+    // Single-carrier + refs: region_0_0 carries the full document, both
+    // regions carry the ref — the shape the pipeline emits.
+    function datasetRules() {
+        const doc = jtaRules();
+        const ref = { dataset_id: 'synthetic-x-s1-z2', schema_version: 1 };
+        const dataset = {
+            schema_version: 1,
+            dataset_id: 'synthetic-x-s1-z2',
+            zones: [{ name: 'Z0', tasks: [{ id: 10, perk: 0 }, { id: 11, perk: null }] },
+                { name: 'Z1', tasks: [{ id: 20, perk: 2 }] }],
+            perks: [{ name: 'First Light' }, { name: 'Unplaced' }, { name: 'Deep Sight' }],
+        };
+        doc.preset_sidecars[1].region_0_0.playable_payload.jta_dataset = dataset;
+        doc.preset_sidecars[1].region_0_0.playable_payload.jta_dataset_ref = ref;
+        doc.preset_sidecars[1].region_1_0.playable_payload.jta_dataset_ref = ref;
+        return doc;
+    }
+
+    it('resolves the single-carrier document and the ref', () => {
+        const { dataset, ref } = extractDataset(datasetRules(), '1');
+        expect(dataset?.dataset_id).toBe('synthetic-x-s1-z2');
+        expect(ref).toEqual({ dataset_id: 'synthetic-x-s1-z2', schema_version: 1 });
+    });
+
+    it('returns null/null for a vanilla world', () => {
+        expect(extractDataset(jtaRules(), '1')).toEqual({ dataset: null, ref: null });
+    });
+
+    it('surfaces a broken carriage: ref without a carried document', () => {
+        const doc = datasetRules();
+        delete doc.preset_sidecars[1].region_0_0.playable_payload.jta_dataset;
+        const { dataset, ref } = extractDataset(doc, '1');
+        expect(dataset).toBe(null);
+        expect(ref?.dataset_id).toBe('synthetic-x-s1-z2');
+    });
+
+    it('derives the identity constants from the dataset', () => {
+        const { dataset } = extractDataset(datasetRules(), '1');
+        expect(datasetIdentity(dataset)).toEqual({
+            // Placed-perk names only — 'Unplaced' sits on no task.
+            perkItemNames: ['First Light', 'Deep Sight'],
+            perkCountSentinel: 3,
+        });
     });
 });
 
@@ -146,6 +195,13 @@ describe('computeSeedName / cacheKey', () => {
     });
     it('builds a versioned, seed-keyed cache key', () => {
         expect(cacheKey('AP_9999')).toBe('jtaBalance_patches_v1_AP_9999');
+    });
+    it('adds a dataset dimension WITHOUT changing vanilla keys', () => {
+        // The no-dataset string is load-bearing: existing caches and the
+        // jta-balance-solve-at-rules-load test key on it.
+        expect(cacheKey('AP_9999', null)).toBe('jtaBalance_patches_v1_AP_9999');
+        expect(cacheKey(1, 'synthetic-x-s1-z3'))
+            .toBe('jtaBalance_patches_v1_1__ds_synthetic-x-s1-z3');
     });
 });
 

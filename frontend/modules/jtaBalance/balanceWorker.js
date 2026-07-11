@@ -32,7 +32,7 @@ function postProgress(payload) {
 async function handleRun(input) {
     const {
         apLocations, gateCounts, sphereLog, playerId,
-        perkItemNames, perkCountSentinel, seed, options = {},
+        perkItemNames, perkCountSentinel, dataset, seed, options = {},
     } = input;
 
     // gateCounts crosses the worker boundary as a plain object (cloneable);
@@ -42,6 +42,23 @@ async function handleRun(input) {
     );
 
     const env = await loadJtaEnv(resolveModuleUrl);
+    // Synthetic-dataset world (Phase 5e): swap the fork's content tables to
+    // the world's dataset BEFORE the walk — same seam as the stats driver
+    // (jta-stats driver.mjs) and the bridge. runBalancePass's own
+    // initializeHeadless then re-inits against the swapped tables, and
+    // estimateResetsToComplete models the dataset for free (it reads live
+    // state + task defs). The dataset-keyed save slot writes to the stubbed
+    // localStorage black hole, exactly like the vanilla slot.
+    if (dataset) {
+        if (typeof env.win.loadGameData !== 'function') {
+            throw new Error('dataset world but loadGameData is unavailable (fork build predates Fork 1.7)');
+        }
+        const res = env.win.loadGameData(dataset);
+        if (!res?.ok) {
+            throw new Error(`loadGameData rejected dataset '${dataset.dataset_id}': `
+                + `${(res?.errors ?? []).join('; ')}`);
+        }
+    }
     const { patches, report } = await runBalancePass({
         env,
         sphereLog: sphereLog ?? [],

@@ -5,7 +5,7 @@
  * eventBus, no warehouse — so it is unit-testable in Node (hostGlue.test.js)
  * and reusable from both the host module (index.js) and, if ever needed, the
  * worker. The extraction logic mirrors scripts/procgen/verify-jta-balance-pass.mjs
- * (which we may not modify): ap_locations come from the preset_sidecars
+ * (kept in lockstep — it is the headless guard for this path): ap_locations come from the preset_sidecars
  * `playable_payload` in payload-native direction (taskId -> location name), and
  * gate counts come from a defensive walk of each location's access rule tree
  * looking for the `HasFromListUnique` perk count.
@@ -36,25 +36,58 @@ export function detectJtaWorld(rulesDoc) {
     }
     for (const [playerId, sidecars] of Object.entries(sidecarsByPlayer)) {
         if (!sidecars || typeof sidecars !== 'object') continue;
-        let hasApLocations = false;
-        let hasDataset = false;
         for (const sidecar of Object.values(sidecars)) {
-            const payload = sidecarPayload(sidecar);
-            // Synthetic-dataset worlds (jta_dataset_ref carriage, Phase 5d)
-            // are NOT balanceable yet: the worker would solve against the
-            // fork's vanilla tables while the world's task ids belong to the
-            // dataset. Pass-B dataset support is Phase 5e — until then the
-            // solve is skipped and the world plays on its Pass-A
-            // provisional costs.
-            if (payload.jta_dataset_ref || payload.jta_dataset) hasDataset = true;
-            const apLocations = payload.ap_locations;
+            const apLocations = sidecarPayload(sidecar).ap_locations;
             if (apLocations && typeof apLocations === 'object' && Object.keys(apLocations).length) {
-                hasApLocations = true;
+                return { isJta: true, playerId };
             }
         }
-        if (hasApLocations && !hasDataset) return { isJta: true, playerId };
     }
     return { isJta: false, playerId: null };
+}
+
+/**
+ * The synthetic-dataset carriage of a player's sidecars (Phase 5e; carriage
+ * shape per jta-synthetic-data-plan §4.1, single-carrier + refs): `dataset` is
+ * the full document from whichever payload carries `jta_dataset`, `ref` the
+ * first `jta_dataset_ref` seen. A vanilla world returns { dataset: null,
+ * ref: null }. `ref` without `dataset` means the carriage is broken (the
+ * bridge will refuse the region load too) — the caller must NOT solve, or it
+ * would cost vanilla tables against dataset task ids.
+ */
+export function extractDataset(rulesDoc, playerId) {
+    const sidecars = rulesDoc?.preset_sidecars?.[playerId] ?? {};
+    let dataset = null;
+    let ref = null;
+    for (const sidecar of Object.values(sidecars)) {
+        const payload = sidecarPayload(sidecar);
+        if (!dataset && payload.jta_dataset) dataset = payload.jta_dataset;
+        if (!ref && payload.jta_dataset_ref) ref = payload.jta_dataset_ref;
+    }
+    return { dataset, ref };
+}
+
+/**
+ * The identity constants the balance pass needs, derived from a dataset
+ * document (vanilla worlds use JTA_PERK_ITEM_NAMES / JTA_PERK_COUNT instead):
+ * the distinct names of the perks the dataset's tasks natively grant (the
+ * placeable AP perk-item surface — same derivation as the substrate library's
+ * dataset view), and the grant-suppression sentinel = the dataset's perk
+ * count. Plain values, structured-cloneable for the worker boundary.
+ */
+export function datasetIdentity(dataset) {
+    const names = new Set();
+    for (const zone of dataset?.zones ?? []) {
+        for (const task of zone.tasks ?? []) {
+            if (task.perk == null) continue;
+            const name = dataset.perks?.[task.perk]?.name;
+            if (name) names.add(name);
+        }
+    }
+    return {
+        perkItemNames: [...names],
+        perkCountSentinel: dataset?.perks?.length ?? null,
+    };
 }
 
 /**
@@ -122,9 +155,17 @@ export function computeSeedName(rulesDoc) {
     return rulesDoc?.seed_name || rulesDoc?.generation_seed || rulesDoc?.seed || 1;
 }
 
-/** localStorage cache key for a seed's solved cost patches (versioned). */
-export function cacheKey(seedName) {
-    return `jtaBalance_patches_v1_${seedName}`;
+/**
+ * localStorage cache key for a seed's solved cost patches (versioned).
+ * Dataset worlds add a dataset_id dimension: their task ids belong to the
+ * dataset, and the Pass-A-only test presets all share seed 1, so a vanilla
+ * cache entry replayed onto a dataset world (or vice versa) would patch the
+ * wrong tasks. Vanilla keys are UNCHANGED (no datasetId ⇒ the pre-5e string —
+ * existing caches and tests depend on it).
+ */
+export function cacheKey(seedName, datasetId = null) {
+    const base = `jtaBalance_patches_v1_${seedName}`;
+    return datasetId ? `${base}__ds_${datasetId}` : base;
 }
 
 /**
