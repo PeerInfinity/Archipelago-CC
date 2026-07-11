@@ -87,7 +87,12 @@ minPeakMana — peak per-loop mana budget proves the scenario engaged
 banks/converters, not just the Wander backstop); an under-running scenario
 is VACUOUS and fails.
 
-## Scenarios and results (2026-07-10, fork = fork point `fe4a349`, zero mods)
+## Scenarios and results (2026-07-10)
+
+Verified PASS against three fork HEADs: `fe4a349` (zero mods), `be71fe0`
+(substrate: test harness + goldens + CI), and `e15d3d4` (automation branch:
+the Advanced Automation planner, all toggles at their shipped-off defaults)
+— i.e. the planner mod is proven byte-inert at defaults.
 
 | scenario | drive | granularity | steps | loops | ticks | peak mana | result |
 |---|---|---|---|---|---|---|---|
