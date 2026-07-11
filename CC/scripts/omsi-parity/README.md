@@ -37,9 +37,20 @@ node CC/scripts/omsi-parity/run-parity.mjs --list
 # step N; MUST report a divergence at exactly that step/field and exit 1
 # (guards against the harness ever passing vacuously)
 node CC/scripts/omsi-parity/run-parity.mjs --scenario ticks --selftest-perturb 500
+
+# UI parity in a real browser (needs the repo dev server on :8000):
+# fork HEAD vs fork point across three injected save states (fresh/mid/deep)
+# with Date.now frozen on both sides — DOM structural diff, per-action
+# tooltip outerHTML compare, and exact screenshot pixel diff incl. hover
+# probes on the tooltip-bearing actions the introspection refactor touched.
+# ZERO exclusions: any DOM difference fails the run. Built as the
+# XML-migration Phase 1 exit gate; rerun it whenever a fork change could
+# touch view behavior the headless harness can't see.
+node CC/scripts/omsi-parity/run-ui-parity.mjs
 ```
 
-Everything generated lives in gitignored `upstream/`, `fork-head/`, `results/`.
+Everything generated lives in gitignored `upstream/`, `fork-head/`,
+`ui-upstream/`, `ui-fork-head/`, `results/`.
 
 ## How both engines are driven
 
