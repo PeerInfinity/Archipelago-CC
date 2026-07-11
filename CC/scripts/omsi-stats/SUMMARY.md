@@ -122,3 +122,40 @@ Findings:
   matches the default's loop count at a 31% tick premium. Loops and ticks
   disagree about second place, another reason the loops-to-milestone
   primary metric is reported with ticks beside it.
+
+## Round 5 — stretch goal: past town 1 with no new hand-scripting (2026-07-10)
+
+`--target-town 2 --max-loops 1200`, unseeded, seed 12345, fork `0622a54`.
+
+**Result: town 2 NOT reached — the run hit the 1200-loop cap (32.8M ticks,
+84 min wall).** Town 1 fell at L500 exactly as always; the remaining 700
+loops split into `grind:Magic` (301), `discover:Throw Party` (40), and
+`repeat` (359) — the planner converged to a byte-identical town-0 queue
+and repeated it to the cap. This is the expected wall from the plan, now
+precisely characterized, and it is NOT an unlock problem: **Continue On
+(the town-1 → town-2 travel) unlocked at L500**, the same loop town 1
+opened.
+
+Two layers, both town-0-centric planner design:
+
+1. **Travel-candidate filter confuses the travel DELTA with the
+   destination** (`planner.js` buildPushes): candidates are kept while
+   `!townsUnlocked.includes(a.travelNum)`, but `travelNum` is the offset
+   (+1 for both Start Journey and Continue On — destination = townNum +
+   travelNum, with specials like Open Portal's -5). For Continue On it
+   checks town 1 — already unlocked — so the only route to town 2 is
+   never even generated. The check only coincides with the destination
+   for town-0 travels, which is why v0 never noticed.
+2. **Knowledge never forms for town-1 content.** `refreshKnowledge`
+   measures each action with a single-action queue from loop start (town
+   0); every town-1 action therefore measures exec=0, and the generators
+   only compose `[town-0 economy…, travel]` single-hop queues. Reaching
+   town 2 requires a two-hop loop — `[t0 economy, Start Journey, t1
+   actions, Continue On]` — plus measurement that runs a travel prefix
+   before probing an out-of-town action.
+
+Next arc item (design work, not a patch): destination-aware travel
+candidates (townNum + travelNum), travel-prefixed measurement so town-1
+actions become measurable, and generators that build per-town sub-queues.
+Multipart actions/dungeons — the originally predicted wall — sit BEHIND
+this one and stay unassessed until it falls.
