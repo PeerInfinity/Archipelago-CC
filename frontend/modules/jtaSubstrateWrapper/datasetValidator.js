@@ -342,23 +342,31 @@ const isNodeCli =
   /datasetValidator\.js$/.test(process.argv[1].replace(/\\/g, "/"));
 
 if (isNodeCli) {
-  const file = process.argv[2];
-  if (!file) {
-    console.error("usage: node datasetValidator.js <dataset.json>");
-    process.exit(2);
-  }
-  const { readFileSync } = await import("node:fs");
-  const dataset = JSON.parse(readFileSync(file, "utf8"));
-  const result = validateJtaDataset(dataset);
-  for (const w of result.warnings) console.log(`WARN: ${w}`);
-  for (const e of result.errors) console.error(`ERROR: ${e}`);
-  if (result.ok) {
-    const s = result.stats;
-    console.log(
-      `OK: ${dataset.dataset_id} — ${s.skills} skills, ${s.zones} zones, ` +
-      `${s.tasks} tasks, ${s.perks} perks, ${s.items} items ` +
-      `(${result.warnings.length} warnings)`
-    );
-  }
-  process.exit(result.ok ? 0 : 1);
+  // Async IIFE + computed import specifier: this module is in the BUNDLED
+  // browser graph (jtaSubstrateWrapperLibrary imports it), so the CLI tail
+  // must not use top-level await (es2020 target) or a literal "node:fs"
+  // esbuild would try to resolve. At runtime this branch only executes
+  // under Node.
+  const nodeFs = "node:fs";
+  (async () => {
+    const file = process.argv[2];
+    if (!file) {
+      console.error("usage: node datasetValidator.js <dataset.json>");
+      process.exit(2);
+    }
+    const { readFileSync } = await import(nodeFs);
+    const dataset = JSON.parse(readFileSync(file, "utf8"));
+    const result = validateJtaDataset(dataset);
+    for (const w of result.warnings) console.log(`WARN: ${w}`);
+    for (const e of result.errors) console.error(`ERROR: ${e}`);
+    if (result.ok) {
+      const s = result.stats;
+      console.log(
+        `OK: ${dataset.dataset_id} — ${s.skills} skills, ${s.zones} zones, ` +
+        `${s.tasks} tasks, ${s.perks} perks, ${s.items} items ` +
+        `(${result.warnings.length} warnings)`
+      );
+    }
+    process.exit(result.ok ? 0 : 1);
+  })();
 }

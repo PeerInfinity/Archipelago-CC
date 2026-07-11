@@ -462,9 +462,14 @@ const isNodeCli =
   /generateDataset\.js$/.test(process.argv[1].replace(/\\/g, "/"));
 
 if (isNodeCli) {
-  const { readFileSync, writeFileSync } = await import("node:fs");
-  const path = await import("node:path");
-  const { fileURLToPath } = await import("node:url");
+  // Async IIFE + computed specifiers — bundler-safe like datasetValidator's
+  // CLI tail (no top-level await, no literal node: imports for esbuild to
+  // resolve); only ever executes under Node.
+  const [nodeFs, nodePath, nodeUrl] = ["node:fs", "node:path", "node:url"];
+  (async () => {
+  const { readFileSync, writeFileSync } = await import(nodeFs);
+  const path = await import(nodePath);
+  const { fileURLToPath } = await import(nodeUrl);
   const here = path.dirname(fileURLToPath(import.meta.url));
   const repoRoot = path.resolve(here, "../../..");
 
@@ -505,4 +510,5 @@ if (isNodeCli) {
     writeFileSync(out, JSON.stringify(dataset, null, 2) + "\n");
     console.log(`wrote ${out}`);
   }
+  })();
 }
