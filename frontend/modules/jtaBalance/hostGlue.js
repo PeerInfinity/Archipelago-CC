@@ -36,12 +36,23 @@ export function detectJtaWorld(rulesDoc) {
     }
     for (const [playerId, sidecars] of Object.entries(sidecarsByPlayer)) {
         if (!sidecars || typeof sidecars !== 'object') continue;
+        let hasApLocations = false;
+        let hasDataset = false;
         for (const sidecar of Object.values(sidecars)) {
-            const apLocations = sidecarPayload(sidecar).ap_locations;
+            const payload = sidecarPayload(sidecar);
+            // Synthetic-dataset worlds (jta_dataset_ref carriage, Phase 5d)
+            // are NOT balanceable yet: the worker would solve against the
+            // fork's vanilla tables while the world's task ids belong to the
+            // dataset. Pass-B dataset support is Phase 5e — until then the
+            // solve is skipped and the world plays on its Pass-A
+            // provisional costs.
+            if (payload.jta_dataset_ref || payload.jta_dataset) hasDataset = true;
+            const apLocations = payload.ap_locations;
             if (apLocations && typeof apLocations === 'object' && Object.keys(apLocations).length) {
-                return { isJta: true, playerId };
+                hasApLocations = true;
             }
         }
+        if (hasApLocations && !hasDataset) return { isJta: true, playerId };
     }
     return { isJta: false, playerId: null };
 }

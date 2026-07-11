@@ -85,6 +85,62 @@ describe('buildWarehouse', () => {
         expect(wh.size()).toBe(0);
         expect(warnings[0]).toMatch(/no deserializeWorld/);
     });
+
+    it('resolves jta_dataset_ref against the single-carrier region (dataset carriage)', () => {
+        const JTA_ENTRY = {
+            id: 'jta',
+            loadRegionEvent: 'jta:loadRegion',
+            deserializeWorld: (payload) => ({ ...payload }),
+        };
+        const doc = { dataset_id: 'synthetic-x-s1-z2', schema_version: 1, zones: [{}, {}] };
+        const ref = { dataset_id: 'synthetic-x-s1-z2', schema_version: 1 };
+        const rules = makeRulesJson({
+            preset_sidecars: {
+                1: {
+                    region_0_0: {
+                        substrate: 'jta',
+                        playable_payload: { jtaZone: 0, jta_dataset: doc, jta_dataset_ref: ref },
+                    },
+                    region_1_0: {
+                        substrate: 'jta',
+                        playable_payload: { jtaZone: 1, jta_dataset_ref: ref },
+                    },
+                },
+            },
+        });
+        const wh = buildWarehouse(rules, '1', makeRegistry([JTA_ENTRY]));
+        // The carrier keeps its document; the ref-only region gets the SAME
+        // document object attached (resolved host-side, not re-parsed).
+        expect(wh.get('region_0_0').world.jta_dataset).toBe(doc);
+        expect(wh.get('region_1_0').world.jta_dataset).toBe(doc);
+        expect(wh.get('region_1_0').world.jtaZone).toBe(1);
+    });
+
+    it('warns when a jta_dataset_ref has no carrier and leaves the payload unresolved', () => {
+        const JTA_ENTRY = {
+            id: 'jta',
+            loadRegionEvent: 'jta:loadRegion',
+            deserializeWorld: (payload) => ({ ...payload }),
+        };
+        const warnings = [];
+        const rules = makeRulesJson({
+            preset_sidecars: {
+                1: {
+                    region_0_0: {
+                        substrate: 'jta',
+                        playable_payload: {
+                            jtaZone: 0,
+                            jta_dataset_ref: { dataset_id: 'missing-doc', schema_version: 1 },
+                        },
+                    },
+                },
+            },
+        });
+        const wh = buildWarehouse(rules, '1', makeRegistry([JTA_ENTRY]),
+            { logger: { warn: (msg) => warnings.push(msg) } });
+        expect(wh.get('region_0_0').world.jta_dataset).toBeUndefined();
+        expect(warnings[0]).toMatch(/references dataset 'missing-doc'/);
+    });
 });
 
 describe('findStartRegion', () => {

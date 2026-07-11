@@ -364,6 +364,9 @@ function _injectExitTasks(exits) {
         log('warn', 'injectSyntheticTask hook missing; exit tasks not injected');
         return;
     }
+    // A dataset world's skill table is its own — take the travel skill from
+    // its roles instead of vanilla's fixed enum position.
+    const travelSkill = _world?.jta_dataset?.roles?.travel_skill ?? JTA_SKILL_TYPE_TRAVEL;
     exits.forEach((exit, index) => {
         _w.injectSyntheticTask(
             {
@@ -371,13 +374,52 @@ function _injectExitTasks(exits) {
                 name: _exitLabel(exit),
                 costMultiplier: 0,
                 free: true,
-                skills: [JTA_SKILL_TYPE_TRAVEL],
+                skills: [travelSkill],
             },
             () => {
                 _dispatchRegionMove(exit.targetRegion ?? null, exit.exitName);
             },
         );
     });
+}
+
+// dataset_id the bridge has successfully applied via window.loadGameData.
+// The fork hook is idempotent per dataset_id, so this is an optimization +
+// the plan §3.2 "differs from the loaded one" guard, not a correctness gate.
+let _loadedDatasetId = null;
+
+/**
+ * Apply the region world's synthetic dataset (resolved host-side by the
+ * procgenPlayer warehouse: `jta_dataset` = the full document). Returns
+ * false when the region must NOT be loaded: an unresolved ref, a missing
+ * fork hook, or a rejected dataset all mean the fork's tables would not
+ * match the region's locations/patches. Errors are surfaced, not
+ * swallowed (plan §3.2).
+ */
+function _applyWorldDataset(world) {
+    const ds = world?.jta_dataset;
+    if (!ds) {
+        if (world?.jta_dataset_ref) {
+            log('error', `region references dataset '${world.jta_dataset_ref.dataset_id}' `
+                + 'but the host did not resolve it — refusing to load the region');
+            return false;
+        }
+        return true; // vanilla world — the hook stays dormant
+    }
+    if (_loadedDatasetId === ds.dataset_id) return true;
+    if (typeof _w.loadGameData !== 'function') {
+        log('error', `world carries dataset '${ds.dataset_id}' but the fork has no `
+            + 'loadGameData hook (needs Fork 1.7+)');
+        return false;
+    }
+    const res = _w.loadGameData(ds);
+    if (!res?.ok) {
+        log('error', `loadGameData('${ds.dataset_id}') failed:`, res?.errors ?? res);
+        return false;
+    }
+    _loadedDatasetId = ds.dataset_id;
+    log('info', `dataset '${ds.dataset_id}' applied (${ds.zones?.length} zones)`);
+    return true;
 }
 
 function _handleLoadRegion(payload) {
@@ -392,6 +434,15 @@ function _handleLoadRegion(payload) {
         log('warn', `jta:loadRegion for ${regionId} has no jtaZone in world`, world);
         return;
     }
+
+    // Synthetic dataset application (Phase 5d, plan §3.2). Runs FIRST:
+    // loadGameData swaps the content tables and re-initializes GAMESTATE
+    // against the dataset-keyed save slot, so everything below — catch-up
+    // resets, energy sync, loadZone, and crucially _applyTaskPatches (Pass-B
+    // costs + grant suppression apply to the DATASET's tasks) — must operate
+    // on the post-swap state. Refusing the region on failure beats silently
+    // playing vanilla tables against dataset locations.
+    if (!_applyWorldDataset(world)) return;
 
     // Clear any synthetic tasks left over from a previous region. An
     // in-flight playback walk is cleared only when this is a DIFFERENT

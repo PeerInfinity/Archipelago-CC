@@ -87,6 +87,13 @@ describe('detectJtaWorld', () => {
         const doc = { preset_sidecars: { 2: { r: { substrate: 'jta', ap_locations: { 1: 'r__1' } } } } };
         expect(detectJtaWorld(doc)).toEqual({ isJta: true, playerId: '2' });
     });
+
+    it('skips synthetic-dataset worlds (jta_dataset_ref carriage — Pass-B dataset support is 5e)', () => {
+        const doc = jtaRules();
+        doc.preset_sidecars[1].region_0_0.playable_payload.jta_dataset_ref =
+            { dataset_id: 'synthetic-x-s1-z2', schema_version: 1 };
+        expect(detectJtaWorld(doc)).toEqual({ isJta: false, playerId: null });
+    });
 });
 
 describe('extractApLocations', () => {
