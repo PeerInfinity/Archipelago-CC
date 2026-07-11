@@ -9,8 +9,10 @@ rewrite works as designed. Phase 5a DONE 2026-07-10 (`a09e2492f`);
 Phase 5b DONE 2026-07-10 (Fork 1.7, submodule `c6bb26d`);
 Phase 5c DONE 2026-07-10 (dataset parity mode, all layers PASS);
 Phase 5d DONE 2026-07-10 (Pass-A pipeline dataset synthesis — see §6;
-zero fork changes). NEXT: 5e (Pass-B worker dataset load) / 5f
-(emergent sweep).**
+zero fork changes);
+Phase 5e DONE 2026-07-10 (Pass-B worker dataset load + §4.2 measurement
+pass — see §6; VERDICT: no balancing lever fires, xp_mult co-solve and
+economy scaling NOT built). NEXT: 5f (emergent sweep).**
 Child plan of `jta-zone-randomization-plan.md` (its Phase 5, "the destination").
 Sibling precedent: `jta-balance-pass-plan.md` (Phase 3). Phases 0–4 of the
 parent are DONE; this plan builds on their machinery (Pass-B balance walk,
@@ -880,9 +882,67 @@ both halves (the harness already re-extracts the committed HEAD per run).
   pre-existing test, unrelated); zone-skip + cost-hooks guards; procgen
   presets 27/27; vitest 2580 green; 5c dataset sim parity re-run PASS
   (see below).
-- **5e — Pass B extension.** Worker dataset load + cache keying; solve a
-  generated world end-to-end; the §4.2 measurement pass over a dataset×seed
-  batch; add levers only as the failure modes demand.
+- **5e — Pass B extension — DONE 2026-07-10.** Zero fork changes (Fork
+  1.7's `loadGameData` is the only fork surface used). Shipped, one commit
+  per step:
+  1. Worker dataset load (`1fef51eb8`): `detectJtaWorld` no longer skips
+     dataset worlds (the 5d seam removed); `hostGlue.extractDataset`
+     resolves the single-carrier + refs carriage from the rules doc (a ref
+     with no resolvable carrier SKIPS the solve — the bridge refuses those
+     region loads too, and solving vanilla tables against dataset ids would
+     cache garbage); `datasetIdentity` derives the walk's identity constants
+     from the document (placed-perk names; sentinel = `perks.length`);
+     `cacheKey(seed, datasetId)` adds a dataset_id dimension (`__ds_<id>`
+     suffix; vanilla keys byte-unchanged — existing caches and the
+     `jta-balance-solve-at-rules-load` test key on them, and every Pass-A
+     test preset shares seed 1, so the dimension is what keeps a vanilla
+     cache entry from patching dataset task ids). The host posts the
+     dataset (structured clone) with the solve request; `balanceWorker`
+     calls `loadGameData(dataset)` after `loadJtaEnv()`, before the walk —
+     the walk itself is UNCHANGED (`estimateResetsToComplete` is fork code
+     reading live state, so it models the dataset for free; the
+     dataset-keyed save slot writes to the stubbed-localStorage black hole
+     like the vanilla slot). +5 hostGlue vitest cases.
+  2. Headless guard (`08f12a736`): `verify-jta-balance-pass.mjs`
+     auto-detects the carriage and mirrors the worker path (loadGameData +
+     dataset identity constants); ref-without-carrier fatal. Vanilla inputs
+     byte-identical to the pre-change script (verified against HEAD copy).
+     The `jta_dataset_test` preset solves 23/23, 0 stalls, 0.2 s; a z15
+     generated world exported through Generate.py solves 130/130 in 3.4 s.
+  3. §4.2 measurement driver (`031b8d3f4`) + results (`7afb56ecf`):
+     `CC/scripts/jta-stats/sweep-dataset-passb.mjs` = steps 1-2 of
+     sweep-ap-seeds only (roundtrip export → Pass-B convergence report —
+     the emergent replay is 5f), aggregating the §4.2 trigger signals;
+     `JTA_RT_DATASET_SEED` decouples dataset identity from fill seed so a
+     batch can cross them. **VERDICT — no lever fires** (6 worlds, datasets
+     1-4 × fill seeds, z15/130 locations): zero saturated solves, zero
+     milestone stalls, no zone band pinned at min cost, no starvation band
+     ⇒ xp_mult co-solve and economy scaling NOT built, per the
+     measurements-first staging. The 5/6 conservative-bar failures are
+     three already-known walk modes (full decomposition + per-task evidence
+     in `results/dataset-passb/SUMMARY.md`): threshold-drift unengagement
+     on perk-ITEM milestones sitting on non-native perk tasks (the
+     `setPerkCategoryTaskIds` override deliberately covers only native perk
+     tasks; same mode as vanilla Phase-4 seed 4, which plays to full
+     coverage emergently), one replay stall (vanilla seed 4 has 5), and a
+     boundary-fallback bookkeeping gap — a task completing within ONE run
+     of release (under the fallback's ≥2-run guard) keeps its Pass-A
+     provisional cost and reads as "never started" despite completing;
+     ≤1 task per affected world, coverage unaffected. Milestone pacing on
+     every pair sits inside the settled [0.4×, 3×] advisory band (gap means
+     2.5–6.2 vs resetsPerStep=5).
+  4. In-app: `jta-dataset-world-progression` now asserts the SOLVE instead
+     of the skip — cold solve at rules load (cleared dataset-keyed cache),
+     patches cached under `(seed, dataset_id)`, cache-hit re-merge on
+     reload, and the bridge applying a solved `cost_multiplier` to a live
+     dataset task def on region entry; the zone-0→1 walk then plays on
+     solved costs (modeled on `jta-randomized-balanced-progression`).
+  **Gates (all green 2026-07-10):** vitest 2585; substrate suite 22/22
+  (solo run); 3 jta guards (managed-zone-skip, cost-hooks, roundtrip 27/27
+  vanilla + 38/38 dataset); verify-jta-generated-dataset 31/31;
+  verify-jta-dataset-load; procgen presets 27/27; vanilla inertness —
+  vanilla cache keys unchanged, vanilla guard inputs byte-identical,
+  vanilla z15 baseline solve PASS.
 - **5f — Emergent verification** (Phase-4 replay at Phase-5 scope):
   `sweep-ap-seeds`-style runs over N generated datasets × seeds; hard gate =
   full location coverage every run; advisory band = the settled `[0.4×, 3×]`
