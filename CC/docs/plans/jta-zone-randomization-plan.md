@@ -16,8 +16,24 @@ perk-shuffle + rebalance; synthetic data deferred).
 `jta-balance-pass-plan.md`: converging Pass-B walk (`415961ccb`), in-app
 `jtaBalance` worker module (`80432e2c2`), and the suppressed-perk-task
 categorization fix (`45c944b80` + submodule `0478389`) that closed the last
-open ruling. NEXT: Phase 4 (emergent verification — out-of-sample pacing AND
-location coverage under free automation).**
+open ruling.
+Phase 4 (emergent verification) DONE 2026-07-09 — 130/130 coverage on 4
+seeds under free automation; found + fixed the prestige perk-grant defect
+(bridge re-grant semantics, `87197f704`); knobs settled (resetsPerStep=5,
+[0.4×,3×] advisory).
+Phase 5 (synthetic data) — ALL of 5a–5f DONE 2026-07-10/11; see the child
+plan `jta-synthetic-data-plan.md` §6 for per-phase findings. Highlights:
+Fork 1.7 `loadGameData` data boundary; Pass-A generator (vanilla-profile
+mirror, synthetic identities); Pass-B worker solves dataset worlds (cache
+keyed (seed, dataset_id)); §4.2 verdict = no balancing lever needed; the
+forced perk-category set became the perkOrigin.js union (native ∪ perk
+holders, one definition for solver/bridge/model — user ruling); 5f
+emergent sweep PASSES under the refined progression gate (user ruling:
+Victory + all perk tasks within budget; residual deep-zone filler
+stranding recorded with the multiworld caveat + RESETS remedy). Phase 5g
+(raw-value economy mode, Fork 1.8) PLANNED + RULED, not started.
+NEXT: Phase 5g and/or Phase 6 (absorption audit, below) — the
+jtaActionQueue port (own plan, RULED) feeds Phase 6.**
 
 The next JtA arc after `jta-substrate-integration-plan.md` (all phases complete
 except its Phase 6 stub, which this plan absorbs). This is the modern successor

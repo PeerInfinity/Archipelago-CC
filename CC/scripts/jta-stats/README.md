@@ -41,6 +41,27 @@ under a configurable automation profile. Used to A/B automation settings.
 - `report.mjs` — one result file → per-task table; many → comparison.
 - `results/SUMMARY.md` — findings write-up.
 
+AP / synthetic-world sweeps (Phases 4–5f; all need the repo Python env for
+`verify-jta-locations-roundtrip.mjs`'s Generate.py step):
+
+- `make-ap-config.mjs` — exported rules.json + Pass-B report → driver
+  config modeling the bridge runtime (grants, suppression + cost patches,
+  forced perk-category union). Auto-detects the synthetic-dataset carriage
+  (perk names / zone limit / `options.dataset` from the document).
+- `sweep-ap-seeds.mjs` — Phase 4 cross-seed emergent verification of
+  VANILLA randomized worlds (roundtrip → solve → play, baseline +
+  no-regrant control).
+- `sweep-dataset-passb.mjs` — Phase 5e §4.2 measurement pass: Pass-B
+  convergence reports over generated datasets × fill seeds (solve only,
+  no play). Auto table → `sweep-summary.md`; `SUMMARY.md` in the out-dir
+  is the curated record and is NOT overwritten.
+- `sweep-dataset-emergent.mjs` — Phase 5f: free-automation playthroughs of
+  solved generated worlds + vanilla anchor. Hard gate = Victory + every
+  perk task within the run budget (total coverage reported, not gated);
+  pacing advisory; emergent C4 via the driver's opt-in
+  `recordSkillLevels` per-run trace. Summary →
+  `results/comparison-dataset-emergent.md`.
+
 ## Usage
 
 ```
