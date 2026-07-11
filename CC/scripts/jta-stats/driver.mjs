@@ -557,6 +557,14 @@ export function runFirstCompletionStats(env, options = {}) {
   // the earning trajectory, not first completions.
   const runToBudget = options.runToBudget ?? false;
 
+  // Phase 5f: opt-in per-run skill-level trace for the emergent C4 check
+  // (skill levels actually reached vs zone demands). Sampled at every run
+  // boundary, aligned with runEnds. Serialized ONLY when enabled, so
+  // existing configs/results stay byte-identical (the apRuntime/dataset
+  // precedent).
+  const recordSkillLevels = options.recordSkillLevels ?? false;
+  const skillLevelsByRun = recordSkillLevels ? [] : null;
+
   // Observation hook: called at the start of every run (fresh post-reset
   // state — energy refilled/pinned, zone settled by skipFreeZones) with the
   // upcoming run number and the live first-completions map. Used by
@@ -617,6 +625,12 @@ export function runFirstCompletionStats(env, options = {}) {
         prestiged,
         ticks: ticksThisRun,
       });
+      if (skillLevelsByRun) {
+        skillLevelsByRun.push({
+          run,
+          levels: Array.from(game.GAMESTATE.skills, (s) => s?.level ?? 0),
+        });
+      }
       if (run % checkpointEvery === 0) sparkCheckpoint(run);
       if (run % logEvery === 0) {
         log(
@@ -758,5 +772,6 @@ export function runFirstCompletionStats(env, options = {}) {
     completions: completed,
     unreached,
     runEnds,
+    ...(skillLevelsByRun ? { skillLevelsByRun } : {}),
   };
 }

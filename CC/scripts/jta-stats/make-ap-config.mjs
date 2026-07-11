@@ -103,20 +103,21 @@ const { JTA_PERK_ITEM_NAMES } = await import(
 );
 // The forced perk-category union (native ∪ holders) — the same shared
 // definition the bridge and the Pass-B solver consume.
-const { perkHolderTaskIds, forcedPerkCategoryIds } = await import(
+const { activePerkItemNames, perkHolderTaskIds, forcedPerkCategoryIds } = await import(
     pathToFileURL(path.join(repoRoot, 'frontend/modules/jtaSubstrateWrapper/perkOrigin.js'))
 );
-const perkNames = new Set(JTA_PERK_ITEM_NAMES);
 
 const rules = JSON.parse(fs.readFileSync(rulesPath, 'utf8'));
 const playerId = Object.keys(rules.preset_sidecars ?? {})[0];
 if (!playerId) throw new Error(`${rulesPath}: no preset_sidecars — not a jta procgen export?`);
 
-// --- ap_locations + suppression patches, from the sidecars -------------------
+// --- ap_locations + suppression patches + dataset, from the sidecars ---------
 const apLocations = new Map();      // taskId -> location name
 const suppressionPatches = [];      // { id, perk } — the NATIVE perk tasks
+let dataset = null;                 // synthetic-dataset carriage (Phase 5f)
 for (const sidecar of Object.values(rules.preset_sidecars[playerId])) {
     const payload = sidecar.playable_payload ?? sidecar;
+    if (!dataset && payload.jta_dataset) dataset = payload.jta_dataset;
     for (const [taskId, locName] of Object.entries(payload.ap_locations ?? {})) {
         apLocations.set(Number(taskId), locName);
     }
@@ -127,6 +128,12 @@ for (const sidecar of Object.values(rules.preset_sidecars[playerId])) {
     }
 }
 if (!apLocations.size) throw new Error(`${rulesPath}: no ap_locations in the sidecars`);
+
+// Dataset worlds: perk names come from the document (vanilla names belong to
+// different tables), the driver plays against the dataset (options.dataset —
+// the 5c seam), the zone universe is the dataset's, and there are no SBtV
+// exclusions (sbtv_unlock_task_ids = [] by construction).
+const perkNames = new Set(dataset ? activePerkItemNames(dataset) : JTA_PERK_ITEM_NAMES);
 
 // --- placements: which item sits on which of MY locations --------------------
 const locToItem = new Map();
@@ -181,8 +188,10 @@ const gameDataPatch = [...costPatches, ...suppressionPatches];
 
 // SBtV-gated tasks (17/28/88/158) have no in-game unlocker and are NOT AP
 // locations. Excluding them makes the driver's metric universe identical to the
-// AP location pool, so `allCompleted` means exactly "full coverage".
-const SBTV_TASK_IDS = [17, 28, 88, 158];
+// AP location pool, so `allCompleted` means exactly "full coverage". Dataset
+// worlds drop those tasks at generation (sbtv_unlock_task_ids = [] by
+// construction), so there is nothing to exclude.
+const SBTV_TASK_IDS = dataset ? [] : [17, 28, 88, 158];
 
 // Forced perk-category set (perkOrigin.js union): native perk tasks
 // (suppression patch ids) ∪ perk holders (my locations holding my perk
@@ -196,9 +205,12 @@ const holderIds = perkHolderTaskIds({
 });
 
 const options = {
-    zoneLimit: 15,
+    // Dataset worlds: the driver loads the document (the 5c options.dataset
+    // seam) BEFORE building its universe, so the zone limit is the dataset's.
+    zoneLimit: dataset ? dataset.zones.length : 15,
     excludeTaskIds: SBTV_TASK_IDS,
     maxRuns: Number(getArg('--max-runs') ?? 2000),
+    ...(dataset ? { dataset } : {}),
     gameDataPatch,
     apRuntime: {
         perkTaskIds: hasFlag('--no-perk-category')
@@ -233,7 +245,8 @@ if (Object.keys(grants).length !== suppressionPatches.length - foreignPerks.leng
         + `!= suppressed perk tasks (${suppressionPatches.length})`);
 }
 
-console.log(`${name}: player ${playerId} · ${apLocations.size} locations`);
+console.log(`${name}: player ${playerId} · ${apLocations.size} locations`
+    + (dataset ? ` · dataset ${dataset.dataset_id}` : ''));
 console.log(`  gameDataPatch: ${costPatches.length} cost + ${suppressionPatches.length} suppression`);
 console.log(`  grants: ${Object.keys(grants).length} own-world perks · ${foreignPerks.length} foreign perks`);
 console.log(`  other placements: ${fillerCount} filler · ${victoryCount} victory`
