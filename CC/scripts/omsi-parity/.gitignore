@@ -4,3 +4,6 @@ upstream/
 fork-head/
 # Run outputs
 results/
+# Full-tree extractions for run-ui-parity.mjs
+ui-fork-head/
+ui-upstream/
