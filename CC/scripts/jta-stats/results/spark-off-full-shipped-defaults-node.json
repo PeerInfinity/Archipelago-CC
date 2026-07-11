@@ -12,6 +12,9 @@
     },
     "runToBudget": false,
     "checkpointEvery": 100,
+    "gameDataPatch": null,
+    "apRuntime": null,
+    "dataset": null,
     "mods": {
       "auto_haste": true,
       "auto_lightning": true,
@@ -44,10 +47,10 @@
     }
   },
   "timing": {
-    "wallMs": 39699.180506,
+    "wallMs": 66350.249546,
     "ticks": 50114,
     "runsExecuted": 2583,
-    "ticksPerSec": 1262
+    "ticksPerSec": 755
   },
   "stalled": false,
   "endOfContentRuns": 0,
@@ -73,6 +76,7 @@
       "Diviner Knowledge": 9
     }
   },
+  "apRuntime": null,
   "purchases": [
     {
       "name": "Permanent Automation",
@@ -21136,7 +21140,7 @@
   "meta": {
     "env": "node",
     "configName": "spark-off-full-shipped-defaults",
-    "totalMsIncludingBridge": 40401,
-    "generatedAt": "2026-07-07T00:08:35.022Z"
+    "totalMsIncludingBridge": 66366,
+    "generatedAt": "2026-07-11T02:07:03.154Z"
   }
 }

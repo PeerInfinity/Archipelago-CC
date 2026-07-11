@@ -4,13 +4,13 @@ Baseline: **spark-off-z15-baseline-node**. "Run" = cumulative run (energy reset 
 
 | config | completed | mean run | median run | last first-completion | prestiges | highest zone | MoT@ | SBtV@ | ticks | wall ms |
 |---|---|---|---|---|---|---|---|---|---|---|
-| spark-off-z15-baseline-node | 130/130 | 66.4 | 59 | 262 | 1 | 16 | — | — | 10364 | 4957 |
-| spark-off-z15-spark-on-node | 130/130 | 64.4 | 59 | 175 | 0 | 17 | — | — | 6730 | 3399 |
-| spark-off-z15-stall-10-node | 130/130 | 69.4 | 59 | 263 | 2 | 16 | — | — | 9879 | 4704 |
-| spark-off-z15-stall-15-node | 130/130 | 68.4 | 59 | 278 | 2 | 16 | — | — | 10765 | 5130 |
-| spark-off-z15-stall-20-node | 130/130 | 67.9 | 59 | 238 | 1 | 17 | — | — | 9173 | 4621 |
-| spark-off-z15-savings-node | 130/130 | 66.8 | 59 | 284 | 1 | 17 | — | — | 11390 | 5644 |
-| spark-off-z15-stall15-savings-node | 130/130 | 68.3 | 59 | 276 | 2 | 16 | — | — | 10469 | 5354 |
+| spark-off-z15-baseline-node | 130/130 | 67.9 | 59 | 238 | 1 | 17 | — | — | 9173 | 6646 |
+| spark-off-z15-spark-on-node | 130/130 | 67.5 | 59 | 226 | 1 | 17 | — | — | 8683 | 6336 |
+| spark-off-z15-stall-10-node | 130/130 | 70.6 | 59 | 318 | 3 | 16 | — | — | 12094 | 9812 |
+| spark-off-z15-stall-15-node | 130/130 | 68.3 | 59 | 276 | 2 | 16 | — | — | 10469 | 7865 |
+| spark-off-z15-stall-20-node | 130/130 | 67.9 | 59 | 238 | 1 | 17 | — | — | 9173 | 7124 |
+| spark-off-z15-savings-node | 130/130 | 67.9 | 59 | 238 | 1 | 17 | — | — | 9173 | 6833 |
+| spark-off-z15-stall15-savings-node | 130/130 | 68.3 | 59 | 276 | 2 | 16 | — | — | 10469 | 7161 |
 
 ## Per-task first completion (run number)
 
@@ -118,8 +118,8 @@ Baseline: **spark-off-z15-baseline-node**. "Run" = cumulative run (energy reset 
 | 12 The Island | Explore the Jungle | 6 | 83 | 83 | 83 | 83 | 83 | 83 | 83 |
 | 12 The Island | Build Another Hut | 1 | 85 | 85 | 85 | 85 | 85 | 85 | 85 |
 | 12 The Island | Talk to the Local Wildlife | 3 | 83 | 83 | 83 | 83 | 83 | 83 | 83 |
-| 12 The Island | Horde of Lizardfolk | 1 | 163 | 157 | 208 | 208 | 212 | 163 | 208 |
-| 12 The Island | Steal Their Oracle Bones | 4 | 163 | 157 | 208 | 208 | 212 | 163 | 208 |
+| 12 The Island | Horde of Lizardfolk | 1 | 212 | 208 | 208 | 208 | 212 | 212 | 208 |
+| 12 The Island | Steal Their Oracle Bones | 4 | 212 | 208 | 208 | 208 | 212 | 212 | 208 |
 | 13 The Desert | Enter the Oasis | 1 | 97 | 97 | 97 | 97 | 97 | 97 | 97 |
 | 13 The Desert | Overcome Mirage | 1 | 97 | 97 | 97 | 97 | 97 | 97 | 97 |
 | 13 The Desert | Find the Oasis | 1 | 87 | 87 | 87 | 87 | 87 | 87 | 87 |
@@ -127,8 +127,8 @@ Baseline: **spark-off-z15-baseline-node**. "Run" = cumulative run (energy reset 
 | 13 The Desert | Avoid Notice by the Sandworm | 4 | 93 | 93 | 93 | 93 | 93 | 93 | 93 |
 | 13 The Desert | Work on Your Tan | 3 | 87 | 87 | 87 | 87 | 87 | 87 | 87 |
 | 13 The Desert | Comb the Desert | 3 | 89 | 89 | 89 | 89 | 89 | 89 | 89 |
-| 13 The Desert | Giant Sandworm | 1 | 203 | 169 | 255 | 220 | 224 | 203 | 220 |
-| 13 The Desert | Learn to Dance the Worm | 1 | 205 | 169 | 257 | 222 | 226 | 205 | 222 |
+| 13 The Desert | Giant Sandworm | 1 | 224 | 218 | 271 | 220 | 224 | 224 | 220 |
+| 13 The Desert | Learn to Dance the Worm | 1 | 226 | 218 | 273 | 222 | 226 | 226 | 222 |
 | 14 The Oasis | Return to the Magician | 1 | 129 | 129 | 129 | 129 | 129 | 129 | 129 |
 | 14 The Oasis | Banish Evil Spirit | 3 | 119 | 119 | 119 | 119 | 119 | 119 | 119 |
 | 14 The Oasis | Gather Second Reagent | 5 | 119 | 119 | 119 | 119 | 119 | 119 | 119 |
@@ -136,10 +136,10 @@ Baseline: **spark-off-z15-baseline-node**. "Run" = cumulative run (energy reset 
 | 14 The Oasis | Reflect on the Journey | 4 | 113 | 113 | 113 | 113 | 113 | 113 | 113 |
 | 14 The Oasis | Prepare for the Journey Ahead | 3 | 97 | 97 | 97 | 97 | 97 | 97 | 97 |
 | 14 The Oasis | Talk to the Djinn | 1 | 107 | 107 | 107 | 107 | 107 | 107 | 107 |
-| 14 The Oasis | Sleepy Djinn | 1 | 262 | 175 | 263 | 278 | 238 | 284 | 276 |
-| 14 The Oasis | Find More Lamps | 3 | 262 | 175 | 263 | 278 | 238 | 284 | 276 |
-| 15 The Ritual | Begin Search for the Next Ritual | 1 | 167 | 159 | 259 | 212 | 216 | 167 | 212 |
-| 15 The Ritual | Apologize for Stealing Reagents | 3 | 157 | 155 | 253 | 210 | 214 | 157 | 210 |
+| 14 The Oasis | Sleepy Djinn | 1 | 238 | 226 | 318 | 276 | 238 | 238 | 276 |
+| 14 The Oasis | Find More Lamps | 3 | 238 | 226 | 318 | 276 | 238 | 238 | 276 |
+| 15 The Ritual | Begin Search for the Next Ritual | 1 | 216 | 210 | 267 | 212 | 216 | 216 | 212 |
+| 15 The Ritual | Apologize for Stealing Reagents | 3 | 214 | 210 | 265 | 210 | 214 | 214 | 210 |
 | 15 The Ritual | Rest for a While | 5 | 141 | 141 | 141 | 141 | 141 | 141 | 141 |
 | 15 The Ritual | Touch the Divine | 1 | 145 | 145 | 145 | 145 | 145 | 145 | 145 |
 | 15 The Ritual | Infuse Mystic Incense | 9 | 129 | 129 | 129 | 129 | 129 | 129 | 129 |

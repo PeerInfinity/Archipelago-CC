@@ -12,6 +12,9 @@
     },
     "runToBudget": false,
     "checkpointEvery": 100,
+    "gameDataPatch": null,
+    "apRuntime": null,
+    "dataset": null,
     "mods": {
       "auto_haste": true,
       "auto_lightning": true,
@@ -23,6 +26,7 @@
       "auto_prioritize": true,
       "auto_prestige": true,
       "auto_buy_cheapest": true,
+      "auto_buy_budget_enabled": true,
       "resume_automation_on_reset": true,
       "force_automation": true,
       "auto_continue_energy_reset": true,
@@ -41,15 +45,14 @@
       "auto_prestige_stall_enabled": true,
       "threshold_all_skipped": 2,
       "auto_prestige_stall_resets": 15,
-      "auto_buy_budget_enabled": true,
       "award_spark_on_discovery": true
     }
   },
   "timing": {
-    "wallMs": 12905.768844,
+    "wallMs": 26999.130016,
     "ticks": 19416,
     "runsExecuted": 779,
-    "ticksPerSec": 1504
+    "ticksPerSec": 719
   },
   "stalled": false,
   "endOfContentRuns": 0,
@@ -75,6 +78,7 @@
       "Diviner Knowledge": 12
     }
   },
+  "apRuntime": null,
   "purchases": [
     {
       "name": "Permanent Automation",
@@ -8386,7 +8390,7 @@
   "meta": {
     "env": "node",
     "configName": "spark-off-full-stall15-savings-spark-on",
-    "totalMsIncludingBridge": 13499,
-    "generatedAt": "2026-07-06T23:56:50.696Z"
+    "totalMsIncludingBridge": 27019,
+    "generatedAt": "2026-07-11T02:05:56.625Z"
   }
 }

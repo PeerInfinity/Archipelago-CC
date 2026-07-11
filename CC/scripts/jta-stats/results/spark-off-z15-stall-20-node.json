@@ -17,6 +17,9 @@
     },
     "runToBudget": false,
     "checkpointEvery": 100,
+    "gameDataPatch": null,
+    "apRuntime": null,
+    "dataset": null,
     "mods": {
       "auto_haste": true,
       "auto_lightning": true,
@@ -28,6 +31,7 @@
       "auto_prioritize": true,
       "auto_prestige": true,
       "auto_buy_cheapest": true,
+      "auto_buy_budget_enabled": true,
       "resume_automation_on_reset": true,
       "force_automation": true,
       "auto_continue_energy_reset": true,
@@ -49,10 +53,10 @@
     }
   },
   "timing": {
-    "wallMs": 4620.752407999999,
+    "wallMs": 7123.591594,
     "ticks": 9173,
     "runsExecuted": 237,
-    "ticksPerSec": 1985
+    "ticksPerSec": 1288
   },
   "stalled": false,
   "endOfContentRuns": 0,
@@ -68,6 +72,7 @@
       "Unlimited Power": 1
     }
   },
+  "apRuntime": null,
   "purchases": [
     {
       "name": "Permanent Automation",
@@ -3072,7 +3077,7 @@
   "meta": {
     "env": "node",
     "configName": "spark-off-z15-stall-20",
-    "totalMsIncludingBridge": 4634,
-    "generatedAt": "2026-07-06T23:54:55.782Z"
+    "totalMsIncludingBridge": 7149,
+    "generatedAt": "2026-07-11T02:08:33.596Z"
   }
 }

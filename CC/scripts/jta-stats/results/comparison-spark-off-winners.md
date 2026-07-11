@@ -4,10 +4,10 @@ Baseline: **spark-off-full-stall10-savings-node**. "Run" = cumulative run (energ
 
 | config | completed | done@250 | done@500 | done@1000 | done@2000 | done@3000 | done@4000 | mean run | median run | z1-15 mean | last first-completion | prestiges | highest zone | MoT@ | SBtV@ | ticks | wall ms |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| spark-off-full-stall10-savings-node | 269/269 | 124 | 164 | 187 | 226 | 269 | 269 | 703.6 | 324 | 99.3 | 2592 | 83 | 31 | 788 | 1029 | 53120 | 42065 |
-| spark-off-full-stall15-savings-node | 269/269 | 133 | 168 | 193 | 234 | 269 | 269 | 651.6 | 276 | 94.3 | 2540 | 63 | 31 | 722 | 938 | 49768 | 38484 |
-| spark-off-full-stall20-savings-node | 269/269 | 142 | 168 | 205 | 241 | 269 | 269 | 630.1 | 234 | 95.2 | 2583 | 52 | 31 | 744 | 980 | 50114 | 38711 |
-| spark-off-full-stall15-savings-spark-on-node | 269/269 | 133 | 208 | 269 | 269 | 269 | 269 | 288.4 | 260 | 78.6 | 780 | 15 | 31 | 383 | 426 | 19416 | 12906 |
+| spark-off-full-stall10-savings-node | 269/269 | 124 | 164 | 187 | 226 | 269 | 269 | 703.6 | 324 | 99.3 | 2592 | 83 | 31 | 788 | 1029 | 53120 | 81729 |
+| spark-off-full-stall15-savings-node | 269/269 | 133 | 168 | 193 | 234 | 269 | 269 | 651.6 | 276 | 94.3 | 2540 | 63 | 31 | 722 | 938 | 49768 | 69567 |
+| spark-off-full-stall20-savings-node | 269/269 | 142 | 168 | 205 | 241 | 269 | 269 | 630.1 | 234 | 95.2 | 2583 | 52 | 31 | 744 | 980 | 50114 | 65814 |
+| spark-off-full-stall15-savings-spark-on-node | 269/269 | 133 | 208 | 269 | 269 | 269 | 269 | 288.4 | 260 | 78.6 | 780 | 15 | 31 | 383 | 426 | 19416 | 26999 |
 
 ## Per-task first completion (run number)
 

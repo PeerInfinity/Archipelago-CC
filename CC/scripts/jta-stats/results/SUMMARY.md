@@ -525,3 +525,36 @@ It was parked because the `other` category's cost-invariant energy-per-level
 metric is what let suppression demote perk tasks. With the perk-category fix in
 place nothing is unengaged in-sample, and out of sample the metric strands
 nothing under any tested profile. Leave it at LEVEL.
+
+## Round 9 — spark-off results regenerated on the current build (2026-07-10)
+
+All 35 non-legacy `spark-off-*` result files (and their seven `comparison-
+spark-off-*.md` reports, same groupings) were REGENERATED on the Fork 1.7
+build with today's `baselineMods()`. The old files predated **two config
+changes that landed after they were written on 2026-07-06**: the game's
+auto-prestige stall default 40 → 20 (Fork 1.6.1 — `baselineMods()` doesn't
+set stall, so runs inherit the game default) and `baselineMods()` gaining
+`auto_buy_budget_enabled: true` (Unlock Savings, Round 6's own ruling). The
+Round 6 numbers quoted in the text above are the historical measurements
+that DROVE those decisions — they remain correct *for their era* and live on
+in git history; the result files now measure variants against the shipped
+world instead.
+
+Verification that this is config provenance and nothing else: the 8 files
+that pin BOTH knobs (`shipped-defaults`, every `stall*-savings` variant,
+`z15-stall-20` — savings is a no-op on that z15 trajectory — and
+`z15-stall15-savings`) reproduced **gameplay-byte-identically**; the other
+27 changed exactly as the two knobs predict. (Result JSONs also gained two
+shape fields since 07-06: `apRuntime: null` and `options.dataset: null` —
+echo-only.) Phase 5c separately proved the engine itself is drift-free:
+Fork 1.6.2 and Fork 1.7 builds produce identical runs, and sim parity pins
+fork@defaults ≡ the upstream fork point.
+
+Round 6's shipped conclusions re-checked against the fresh numbers and
+UNCHANGED: full-game baseline (≡ stall-20 ≡ savings variants) completes
+all-269 @ 2583 with 52 prestiges; stall 10-20 within noise (15 marginally
+best tail @ 2540), stall-5 catastrophic (261/269 @ >5000), stall-80 too
+passive (3717); the wealth trigger still degenerates (173-248/269 @ budget
+cap); z15 all-130 everywhere with mean run ~68. If a future comparison needs
+the pre-1.6.1 era numbers, check out the files from before this round's
+commit rather than mixing eras in one table.
