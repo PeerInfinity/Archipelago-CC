@@ -27,7 +27,9 @@
  * §2b balancing pass had no progression order to walk.
  *
  * Phase 5d: JTA_RT_DATASET=1 runs the same round trip on a GENERATED
- * synthetic dataset (seed=SEED, zoneCount=QUOTA) and additionally asserts
+ * synthetic dataset (seed=SEED — or JTA_RT_DATASET_SEED to decouple the
+ * dataset from the fill seed, so a batch can cross datasets × fill seeds
+ * (Phase 5e §4.2 measurement pass) — zoneCount=QUOTA) and additionally asserts
  * the dataset carriage (single-carrier + refs) survives every hop intact:
  * exactly one Pass-A sidecar carries the full `jta_dataset` document and
  * all of them carry `jta_dataset_ref`; world_generator and Generate.py
@@ -130,8 +132,11 @@ try {
             path.join(repoRoot, 'CC/scripts/jta-stats/results/vanilla-profile.json'), 'utf8')).static;
         const vanillaFixture = JSON.parse(fs.readFileSync(path.join(repoRoot,
             'frontend/modules/jtaSubstrateWrapper/datasets/vanilla.json'), 'utf8'));
+        // JTA_RT_DATASET_SEED decouples the dataset identity from the fill
+        // seed (default: coupled, the 5d behavior).
+        const datasetSeed = Number(process.env.JTA_RT_DATASET_SEED || SEED);
         dataset = generateJtaDataset({
-            seed: SEED, profile, vanilla: vanillaFixture, params: { zoneCount: QUOTA },
+            seed: datasetSeed, profile, vanilla: vanillaFixture, params: { zoneCount: QUOTA },
         }).dataset;
         jtaLib.setJtaDataset(dataset);
         console.log(`[dataset mode] ${dataset.dataset_id}`);
