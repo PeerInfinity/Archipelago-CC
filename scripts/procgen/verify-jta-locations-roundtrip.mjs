@@ -25,6 +25,15 @@
  * with Victory out of logic in sphere 0). Before those rules existed every
  * location was `True_`, the whole game collapsed into sphere 0, and the
  * §2b balancing pass had no progression order to walk.
+ *
+ * Phase 5d: JTA_RT_DATASET=1 runs the same round trip on a GENERATED
+ * synthetic dataset (seed=SEED, zoneCount=QUOTA) and additionally asserts
+ * the dataset carriage (single-carrier + refs) survives every hop intact:
+ * exactly one Pass-A sidecar carries the full `jta_dataset` document and
+ * all of them carry `jta_dataset_ref`; world_generator and Generate.py
+ * preserve both; and procgenPlayer's buildWarehouse resolves the refs so
+ * every jta region's world holds the full, structurally identical
+ * document. Default (unset) stays the vanilla-data round trip.
  */
 
 import { execFileSync } from 'node:child_process';
@@ -111,6 +120,23 @@ try {
     const engine = await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/procgenPipeline/procgenPipelineEngine.js')));
     const { substrateRegistry } = await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/shared/procgen/substrateRegistry.js')));
 
+    // Phase 5d: synthetic-dataset mode. The generated document becomes the
+    // world's game data; the library switches its zone/perk source to it.
+    let dataset = null;
+    if (process.env.JTA_RT_DATASET) {
+        const { generateJtaDataset } = await import(pathToFileURL(
+            path.join(repoRoot, 'frontend/modules/jtaSubstrateWrapper/generateDataset.js')));
+        const profile = JSON.parse(fs.readFileSync(
+            path.join(repoRoot, 'CC/scripts/jta-stats/results/vanilla-profile.json'), 'utf8')).static;
+        const vanillaFixture = JSON.parse(fs.readFileSync(path.join(repoRoot,
+            'frontend/modules/jtaSubstrateWrapper/datasets/vanilla.json'), 'utf8'));
+        dataset = generateJtaDataset({
+            seed: SEED, profile, vanilla: vanillaFixture, params: { zoneCount: QUOTA },
+        }).dataset;
+        jtaLib.setJtaDataset(dataset);
+        console.log(`[dataset mode] ${dataset.dataset_id}`);
+    }
+
     // Phase 2: the library emits a real 'Victory'-bearing location in the
     // goal zone (setJtaGoalZone) and can shuffle perk placement in-pipeline
     // (setJtaPerkShuffleSeed) — no scaffolding. arrangeShuffledSpiral maps
@@ -186,11 +212,47 @@ try {
         ok(gated.length === locs.length,
             `Pass A: all ${locs.length} zone-${z} locations gated on ${z} perk(s)`);
     }
+    // The placeable perk names of the ACTIVE source — the dataset's when
+    // one is loaded, vanilla's otherwise.
+    const activePerkNames = dataset
+        ? dataset.zones.flatMap((z) => z.tasks
+            .filter((t) => t.perk != null)
+            .map((t) => dataset.perks[t.perk].name))
+        : jtaLib.JTA_PERK_ITEM_NAMES;
     const universe = zone0Locs.length && byZoneIdx.get(1).extracted_rules.locations[0]
         .access_rule.args.item_names;
     ok(Array.isArray(universe) && universe.length >= QUOTA - 1
-        && universe.every((n) => jtaLib.JTA_PERK_ITEM_NAMES.includes(n)),
+        && universe.every((n) => activePerkNames.includes(n)),
         `Pass A: access-rule item_names are ${universe.length} real perk names`);
+
+    // Phase 5d dataset carriage: exactly one carrier + a ref on every region.
+    const canonical = (o) => JSON.stringify(o, (k, v) => (
+        v && typeof v === 'object' && !Array.isArray(v)
+            ? Object.fromEntries(Object.entries(v).sort(([a], [b]) => (a < b ? -1 : 1)))
+            : v));
+    // Region payloads inside an arbitrarily nested sidecar container
+    // (player-keyed, region-keyed, or bare) — a jta payload is any object
+    // with a numeric jtaZone.
+    const collectJtaPayloads = (node, out = []) => {
+        if (!node || typeof node !== 'object') return out;
+        if (typeof node.jtaZone === 'number') { out.push(node); return out; }
+        for (const v of Object.values(node)) collectJtaPayloads(v, out);
+        return out;
+    };
+    const assertCarriage = (label, payloads) => {
+        const carriers = payloads.filter((p) => p.jta_dataset);
+        const refs = payloads.filter((p) => p.jta_dataset_ref);
+        ok(carriers.length === 1, `${label}: exactly one sidecar carries jta_dataset (${carriers.length})`);
+        ok(refs.length === QUOTA && refs.every((p) =>
+            p.jta_dataset_ref.dataset_id === dataset.dataset_id
+            && p.jta_dataset_ref.schema_version === dataset.schema_version),
+        `${label}: all ${QUOTA} sidecars carry a matching jta_dataset_ref`);
+        ok(carriers.length === 1 && canonical(carriers[0].jta_dataset) === canonical(dataset),
+            `${label}: carried jta_dataset is structurally identical to the generated document`);
+    };
+    if (dataset) {
+        assertCarriage('Pass A', sidecars.map((s) => s.playable_payload ?? s));
+    }
 
     fs.writeFileSync(tmpRules, JSON.stringify(rules, null, 2));
 
@@ -211,6 +273,9 @@ try {
     const rulesPy = fs.readFileSync(path.join(WORLD_DIR, 'Rules.py'), 'utf8');
     ok(rulesPy.includes('HasFromListUnique'),
         'world_generator: Rules.py emits HasFromListUnique zone gates');
+    if (dataset) {
+        assertCarriage('world_generator', collectJtaPayloads(wgSidecars));
+    }
 
     // --- Generate.py --------------------------------------------------
     run(py, ['-c', `from Options import generate_yaml_templates; generate_yaml_templates(${JSON.stringify(tmpTemplates)})`]);
@@ -239,6 +304,25 @@ try {
         .flatMap((byName) => Object.values(byName))
         .reduce((a, r) => a + (r.locations ?? []).filter((l) => (l.name ?? '').includes('__')).length, 0);
     ok(exLocs === locCount, `Generate.py: exported rules.json keeps all ${locCount} jta locations (${exLocs})`);
+    if (dataset) {
+        assertCarriage('Generate.py', collectJtaPayloads(exportedRules.preset_sidecars ?? {}));
+
+        // Warehouse resolution: the REAL registry adapter + buildWarehouse
+        // hand every jta region the full document (single-carrier refs
+        // resolved host-side) — this is exactly what the bridge receives.
+        const { buildWarehouse } = await import(pathToFileURL(
+            path.join(repoRoot, 'frontend/modules/procgenPlayer/procgenPlayerEngine.js')));
+        const playerId = Object.keys(exportedRules.preset_sidecars)[0];
+        const warehouse = buildWarehouse(exportedRules, playerId, substrateRegistry,
+            { logger: { warn: (m) => console.log(`  [warehouse] ${m}`) } });
+        const jtaWorlds = warehouse.keys()
+            .map((r) => warehouse.get(r))
+            .filter((e) => e.substrate === 'jta')
+            .map((e) => e.world);
+        ok(jtaWorlds.length === QUOTA
+            && jtaWorlds.every((w) => canonical(w.jta_dataset) === canonical(dataset)),
+        `warehouse: all ${QUOTA} jta regions resolved to the full dataset document`);
+    }
 
     const sphereLines = fs.readFileSync(path.join(apDir, `${seedId}_sphere_log.jsonl`), 'utf8')
         .split('\n').filter(Boolean).map((l) => JSON.parse(l));
