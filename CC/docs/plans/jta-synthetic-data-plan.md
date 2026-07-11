@@ -20,9 +20,12 @@ play to victory + full perks at vanilla-comparable pacing; the residual
 1–3 stranded FILLER locations per world (the LEVEL-metric fragility class)
 are recorded informationally with the multiworld caveat and the known
 RESETS rescue — see §6 5f.
-Phase 5g (raw-value economy mode, Fork 1.8) PLANNED + RULED 2026-07-10
-(§7 Q8/Q9: all formulas raw together; raw = synthetic default) —
-implementation NOT started. NEXT: 5g / Phase 6 absorption audit.**
+Phase 5g DONE 2026-07-11 (raw-value economy mode, Fork 1.8, + the three
+riders: content-hash dataset identity, raw-aware C4, zones[].key) —
+**GATE GREEN: raw-vanilla ≡ formula-vanilla ≡ native TICK-FOR-TICK** (all
+lockstep scenarios at identical tick counts in all three parity modes;
+UI parity zero DOM diff both fixtures) — see §6 5g findings.
+NEXT: Phase 6 absorption audit / post-v1 phases (design doc).**
 Child plan of `jta-zone-randomization-plan.md` (its Phase 5, "the destination").
 Sibling precedent: `jta-balance-pass-plan.md` (Phase 3). Phases 0–4 of the
 parent are DONE; this plan builds on their machinery (Pass-B balance walk,
@@ -1020,8 +1023,15 @@ both halves (the harness already re-extracts the committed HEAD per run).
   needed); the RESETS rescue stays recorded as the known remedy should
   full coverage ever harden again (multiworld).
 
-- **5g — Raw-value economy mode (Fork 1.8) — PLANNED 2026-07-10, RULED
-  (§7 Q8/Q9), implementation NOT started.** Motivation (assessed
+- **5g — Raw-value economy mode (Fork 1.8) — DONE 2026-07-11 (all three
+  riders included). GATE GREEN: pre-multiplied raw-vanilla fixture ≡
+  formula-vanilla ≡ native, TICK-FOR-TICK** — all four lockstep scenarios
+  at the identical historical tick counts (2000/2517/31304/808) in all
+  three parity modes (upstream / dataset / dataset-raw), canaries detected
+  in both dataset modes (the raw canary perturbs `raw_cost`); UI parity
+  zero DOM diff on BOTH the formula and the raw fixture (every rendered
+  number is an effective value); roundtrip both modes; full battery
+  (findings below). Motivation (assessed
   2026-07-10 after 5f): for linear v1 raw values add no new reachable
   states (`cost_multiplier`/`xp_mult` already span the space — this is a
   reparameterization), but they remove real solver pathologies (Pass B
@@ -1073,6 +1083,106 @@ both halves (the harness already re-extracts the committed HEAD per run).
     theme references. Full context and rationale:
     `NewDocs/plans/jta/jta-synthetic-post-v1-design.md` §2.6 (gitignored;
     the zone-randomization memory topic is the durable pointer).
+  - **5g FINDINGS (implemented 2026-07-11; fork `1f0b731`, outer
+    `74cafbc34`..; plan-contact corrections flagged in the commits):**
+    1. **The plan's "three zone-keyed sites already routed through ECONOMY"
+       was wrong for drain.** The drain backbone was still the compiled
+       constant `ZONE_SPEEDUP_BASE = 1.05` — and it has TWO engine sites
+       (task progress multiplier AND energy drain per tick; they cancel in
+       energy terms — the factor is a pure time compression). Fix shipped
+       with 5g: `economy.zone_speedup_base` is a 7th REQUIRED backbone
+       field (schema + validator + fork + exporter cross-check), and in raw
+       mode `raw_drain` replaces the factor at BOTH sites together —
+       replacing only the drain leg would have silently re-keyed task speed
+       on zone ordinal. Consequence: pre-5g dataset documents (6 economy
+       fields) no longer validate — regenerate them (fixtures, the
+       jta_dataset_test preset, and all /tmp experiment docs were).
+    2. **Bit-exact tick-for-tick equivalence required operation-order
+       discipline** (float multiplication is commutative but NOT
+       associative — the naive "raw_cost = 10 × 2.2^z, keep cm" design
+       mismatches ~37% of random triples by 1 ulp):
+       `raw_cost` is generated with calcTaskCost's exact operation order
+       ((base × cm) × exponent^zone) and **cost_multiplier folds to 1**
+       (multiplying the identical double by 1.0 is exact — and the folded
+       multiplier is precisely "solved multipliers sit near 1");
+       `raw_xp` = xp_base × xp_zone_mult^zone is applied by the fork at the
+       zone factor's exact chain position (AFTER the perk multiplications)
+       and **xp_mult is NOT folded** (it sits before them — folding it
+       would break bit-equality; C4 keeps reading it). The xp leg's
+       exactness rests on xp_base being a power of two (vanilla 8): a
+       non-pow2 xp_base still plays correctly, just not bit-identically to
+       its formula twin. `raw_drain` is the same double the formula
+       computes — exact unconditionally. Guards assert effective values
+       (cost/XP/drain/progress-mult) bit-exact: raw-vanilla ≡ native AND
+       every generated raw twin ≡ its formula twin.
+    3. **Rider 2 clarification: the content hash must also exclude
+       `dataset_id`** (§2.6 said only "minus provenance") — the id embeds
+       the hash, so hashing it would be circular. Hash = FNV-1a over
+       sorted-key canonical JSON minus `provenance` minus `dataset_id`;
+       validation errors on mismatch or missing id suffix (missing
+       content_hash entirely = legacy warning); `--restamp` proven
+       (tamper → reject → restamp → pass). The identity applies to ALL
+       stamped documents including the vanilla fixtures
+       (`vanilla-fork-1.8-e72f5c24`, `vanilla-fork-1.8-raw-ecaa2185`).
+       Old (seed, dataset_id) cache entries and dataset save slots are
+       orphaned, not migrated; `resetJtaSaveAndReload` needed no change
+       (prefix clearing covers suffixed ids).
+    4. **Rider 1 normalization:** the raw C4 opportunity weight is
+       `xp_mult × raw_xp / xp_base` — the ÷pow2 is exact, so raw and
+       formula twins report IDENTICAL C4 numbers (verified: tightest
+       margin 2.56× on both twins) and the profile-derived floors stay
+       untouched. Formula datasets now read `economy.xp_zone_mult` from
+       the document instead of the hardcoded 1.25 (identical for mirrors).
+    5. **Generator shape:** raw is the default via
+       `premultiplyDataset(formula doc)` — ONE raw-ification code path
+       shared by the generator, the exporter (which writes the committed
+       `datasets/vanilla-raw.json` twin), and any future tooling; the twin
+       property (raw ≡ formula, unpatched) therefore holds for every
+       generated world by construction, not just the vanilla fixture.
+       `--value-mode zone_formula` (CLI) / `params.valueMode` keep Q9's
+       comparison mode expressible. Runtime-synthesized tasks (host exit
+       tasks, artifact tasks) carry no raw values and fall back to the
+       formula backbone — which is why raw documents still carry the
+       formula fields (the plan's "unused-but-carried" is load-bearing).
+    6. **Verification battery (all green):** sim lockstep ×3 modes at
+       identical tick counts + both canaries; UI parity zero DOM diff on
+       formula AND raw fixtures; verify-jta-dataset-load (raw rejects,
+       raw ≡ native bit-exact, formula fallback, mode reset);
+       verify-jta-generated-dataset (twin bit-exactness, identity/key
+       asserts); roundtrip default + JTA_RT_DATASET=1 (the raw document
+       survives Generate.py fill + carriage + the Pass-B worker walk);
+       balance-pass vanilla path unchanged (the sweep's anchor
+       byte-reproduces Phase 4: 130/130 in 249 runs); presets: only
+       jta_dataset_test changed (now a raw world — the in-app test
+       exercises the raw path), regeneration deterministic; vitest
+       2591/2593 (the 2 fails = braidRegime2's documented
+       CPU-contention flake class under sweep load, 40/40 solo);
+       substrate suite 22/22 incl. jta-dataset-world-progression on the
+       raw preset through bridge + Pass-B worker; procgen presets 27/27
+       (note: its zone-demo Generate click budgets 300 s for a
+       synchronous solve that measured 299.7 s under a sibling
+       session's 3-core load — a coin-flip timeout on a busy machine,
+       not a defect); emergent sweep on raw worlds (next item).
+    7. **Emergent sweep on raw worlds — HARD PROGRESSION GATE PASS on all
+       six** (`results/comparison-dataset-emergent-raw.md`; artifacts
+       /tmp per convention; the vanilla anchor byte-reproduces Phase 4:
+       130/130 in 249 runs). Victory runs 89–143 (5f formula batch:
+       55–89), last perk 101–153, pacing inside the band everywhere,
+       C4 zero-levels clean (the sub-0.4× anchor-ratio flags are the same
+       completion-timing artifact 5f documented). Residual filler
+       stranding is the SAME LEVEL-metric class — task 256/z12 on 5 of 6
+       worlds (ds1-f1 reached FULL 130/130 in 202 runs; the two ds2
+       worlds strand 4–5 vs 5f's 1–3). **Pass B behaves differently on
+       the raw base, as intended but with texture:** solved multipliers
+       sit near 1 at the median (ds1-f1 p50 = 0.96) and the worst
+       saturation dropped an order of magnitude (max cm 1.1e4 vs the
+       formula batch's 1.09e5 — reduced, not eliminated), while the
+       walk's CONSERVATIVE bar now reports 2–12 stalled entries on 5/6
+       raw solves (formula round 2: 5/6 clean) — the cm floor/cap
+       geometry acts on a base that folds the profile multiplier, so the
+       reachable cost band differs. Phase 4's ruling stands: the
+       conservative bar records, emergent play gates — and the gate
+       passes everywhere.
 - **Phase 6 (parent plan) — absorption audit** → old-stack retirement
   green-light; see jta-zone-randomization-plan.md §5/§6.
 

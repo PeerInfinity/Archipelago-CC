@@ -21,7 +21,7 @@ Phase 4 (emergent verification) DONE 2026-07-09 — 130/130 coverage on 4
 seeds under free automation; found + fixed the prestige perk-grant defect
 (bridge re-grant semantics, `87197f704`); knobs settled (resetsPerStep=5,
 [0.4×,3×] advisory).
-Phase 5 (synthetic data) — ALL of 5a–5f DONE 2026-07-10/11; see the child
+Phase 5 (synthetic data) — ALL of 5a–5g DONE 2026-07-10/11; see the child
 plan `jta-synthetic-data-plan.md` §6 for per-phase findings. Highlights:
 Fork 1.7 `loadGameData` data boundary; Pass-A generator (vanilla-profile
 mirror, synthetic identities); Pass-B worker solves dataset worlds (cache
@@ -31,9 +31,11 @@ holders, one definition for solver/bridge/model — user ruling); 5f
 emergent sweep PASSES under the refined progression gate (user ruling:
 Victory + all perk tasks within budget; residual deep-zone filler
 stranding recorded with the multiworld caveat + RESETS remedy). Phase 5g
-(raw-value economy mode, Fork 1.8) PLANNED + RULED, not started.
-NEXT: Phase 5g and/or Phase 6 (absorption audit, below) — the
-jtaActionQueue port (own plan, RULED) feeds Phase 6.**
+(raw-value economy mode, Fork 1.8, + riders: content-hash dataset_id /
+raw-aware C4 / zones[].key) DONE 2026-07-11 — raw-vanilla ≡
+formula-vanilla ≡ native tick-for-tick; raw is the synthetic default.
+NEXT: Phase 6 (absorption audit, below) and/or the post-v1 design-doc
+phases — the jtaActionQueue port (own plan, RULED) feeds Phase 6.**
 
 The next JtA arc after `jta-substrate-integration-plan.md` (all phases complete
 except its Phase 6 stub, which this plan absorbs). This is the modern successor
