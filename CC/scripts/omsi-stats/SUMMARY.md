@@ -55,3 +55,37 @@ entries) or feed the predictor an injected input state, so the cross-check
 compares like with like. Until then, treat zero-predicted divergences as
 "extraction blind spot", and only a NON-zero mismatch as a true third-oracle
 alarm.
+
+## Round 3 — rebase gate + effect-table priors (2026-07-10)
+
+Two whole-system gates, both against the frozen v0 reference
+(500 / 5,432,753 / `54506b48ec1758af` / 0 RNG, seed 12345):
+
+| Run | Fork | Result |
+|---|---|---|
+| Unseeded, after `automation` was REBASED onto the Phase-1 substrate (introspection metadata refactor underneath) | `dd4fd0d` | **byte-exact PASS** |
+| Seeded (`--seed-predictor`), after the prior-extraction fix | `0622a54` | **byte-exact PASS** (decision-neutral at full scale) |
+
+Milestone table identical in both (Pick Locks/Buy Glasses L105 · Investigate
+L270 · Start Journey L405 · town 1 L500).
+
+**Prior-extraction fix (`0622a54`)**: priors now come from the predictor's
+per-action effect table (`predictions[name].effect`) applied to synthetic
+accumulators that mirror `measureAction`'s injections, with the snapshot
+restored first (effects read live globals: town banks, `goldCost()`, buffs).
+Loop-model entries (multiparts) are marked `unsupported` — their rewards
+live in per-segment handlers, not the flat `effect()`. Spend-all converters
+(Buy Mana zeroes the wallet in one exec) are flagged `goldSpendAll` and the
+divergence check compares the engine's TOTAL spend instead of the per-exec
+average (the observed `-87.5 vs -1050` mismatch was averaging across a
+12-exec batch, not a model error).
+
+**Divergence quality after the fix: 54 blind-spot zeros → 26 entries, all
+ONE genuine model boundary** — Short Quest (11) / Pick Locks (9) / Long
+Quest (6) gold: the predictor's effect gates yield on the banked
+("checked") goods, while the engine also yields gold on FRESH checks, so
+measurements taken with an empty bank record small measured-vs-0 gaps.
+That is a real predictor-model limitation worth knowing about (it
+underestimates queues that check-and-harvest in one loop), and exactly what
+the third oracle exists to surface. Non-zero-vs-non-zero mismatches are now
+trustworthy alarms.
