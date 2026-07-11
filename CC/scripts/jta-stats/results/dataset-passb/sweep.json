@@ -1,0 +1,436 @@
+[
+  {
+    "datasetSeed": 1,
+    "fillSeed": 1,
+    "seedId": "AP_14089154938208861744",
+    "converged": false,
+    "failure": "1 entries never started",
+    "entries": 130,
+    "milestones": 21,
+    "stalled": 0,
+    "neverStarted": 1,
+    "saturated": 0,
+    "skillless": 0,
+    "floorClamped": 18,
+    "thresholdClamped": 13,
+    "unengaged": 1,
+    "unengagedMilestones": 0,
+    "totalResets": 58,
+    "gapP50": 2,
+    "gapMean": 2.761904761904762,
+    "gapMax": 8,
+    "cmMin": 0.05,
+    "cmP50": 0.7575094224786676,
+    "cmMax": 9919.612300391458,
+    "milestoneTrouble": [],
+    "bandProfile": [
+      {
+        "bucket": 0,
+        "n": 7,
+        "floor": 0,
+        "saturated": 0,
+        "threshold": 1,
+        "stalled": 0
+      },
+      {
+        "bucket": 1,
+        "n": 25,
+        "floor": 10,
+        "saturated": 0,
+        "threshold": 1,
+        "stalled": 0
+      },
+      {
+        "bucket": 2,
+        "n": 46,
+        "floor": 7,
+        "saturated": 0,
+        "threshold": 4,
+        "stalled": 0
+      },
+      {
+        "bucket": 3,
+        "n": 52,
+        "floor": 1,
+        "saturated": 0,
+        "threshold": 7,
+        "stalled": 0
+      }
+    ]
+  },
+  {
+    "datasetSeed": 1,
+    "fillSeed": 2,
+    "seedId": "AP_01043188731678011336",
+    "converged": false,
+    "failure": "1 stalled entries",
+    "entries": 130,
+    "milestones": 21,
+    "stalled": 1,
+    "neverStarted": 0,
+    "saturated": 0,
+    "skillless": 0,
+    "floorClamped": 13,
+    "thresholdClamped": 13,
+    "unengaged": 1,
+    "unengagedMilestones": 0,
+    "totalResets": 140,
+    "gapP50": 3,
+    "gapMean": 6.190476190476191,
+    "gapMax": 62,
+    "cmMin": 0.05,
+    "cmP50": 1.194082433713971,
+    "cmMax": 83826.8741932113,
+    "milestoneTrouble": [],
+    "bandProfile": [
+      {
+        "bucket": 0,
+        "n": 7,
+        "floor": 2,
+        "saturated": 0,
+        "threshold": 1,
+        "stalled": 0
+      },
+      {
+        "bucket": 1,
+        "n": 16,
+        "floor": 6,
+        "saturated": 0,
+        "threshold": 1,
+        "stalled": 1
+      },
+      {
+        "bucket": 2,
+        "n": 18,
+        "floor": 3,
+        "saturated": 0,
+        "threshold": 1,
+        "stalled": 0
+      },
+      {
+        "bucket": 3,
+        "n": 37,
+        "floor": 1,
+        "saturated": 0,
+        "threshold": 4,
+        "stalled": 0
+      },
+      {
+        "bucket": 4,
+        "n": 52,
+        "floor": 1,
+        "saturated": 0,
+        "threshold": 6,
+        "stalled": 0
+      }
+    ]
+  },
+  {
+    "datasetSeed": 2,
+    "fillSeed": 1,
+    "seedId": "AP_14089154938208861744",
+    "converged": false,
+    "failure": "1 unengaged MILESTONES",
+    "entries": 130,
+    "milestones": 21,
+    "stalled": 0,
+    "neverStarted": 0,
+    "saturated": 0,
+    "skillless": 0,
+    "floorClamped": 5,
+    "thresholdClamped": 13,
+    "unengaged": 2,
+    "unengagedMilestones": 1,
+    "totalResets": 82,
+    "gapP50": 3,
+    "gapMean": 3.8,
+    "gapMax": 20,
+    "cmMin": 0.05,
+    "cmP50": 0.6323521596634001,
+    "cmMax": 10260.58456877215,
+    "milestoneTrouble": [],
+    "bandProfile": [
+      {
+        "bucket": 0,
+        "n": 7,
+        "floor": 1,
+        "saturated": 0,
+        "threshold": 0,
+        "stalled": 0
+      },
+      {
+        "bucket": 1,
+        "n": 16,
+        "floor": 1,
+        "saturated": 0,
+        "threshold": 2,
+        "stalled": 0
+      },
+      {
+        "bucket": 2,
+        "n": 28,
+        "floor": 2,
+        "saturated": 0,
+        "threshold": 2,
+        "stalled": 0
+      },
+      {
+        "bucket": 3,
+        "n": 44,
+        "floor": 0,
+        "saturated": 0,
+        "threshold": 5,
+        "stalled": 0
+      },
+      {
+        "bucket": 4,
+        "n": 35,
+        "floor": 1,
+        "saturated": 0,
+        "threshold": 4,
+        "stalled": 0
+      }
+    ]
+  },
+  {
+    "datasetSeed": 2,
+    "fillSeed": 2,
+    "seedId": "AP_01043188731678011336",
+    "converged": false,
+    "failure": "2 unengaged MILESTONES",
+    "entries": 130,
+    "milestones": 21,
+    "stalled": 0,
+    "neverStarted": 0,
+    "saturated": 0,
+    "skillless": 0,
+    "floorClamped": 16,
+    "thresholdClamped": 18,
+    "unengaged": 5,
+    "unengagedMilestones": 2,
+    "totalResets": 107,
+    "gapP50": 4,
+    "gapMean": 4.578947368421052,
+    "gapMax": 20,
+    "cmMin": 0.05,
+    "cmP50": 0.6642762762308688,
+    "cmMax": 50855.570952401664,
+    "milestoneTrouble": [],
+    "bandProfile": [
+      {
+        "bucket": 0,
+        "n": 7,
+        "floor": 1,
+        "saturated": 0,
+        "threshold": 0,
+        "stalled": 0
+      },
+      {
+        "bucket": 1,
+        "n": 16,
+        "floor": 5,
+        "saturated": 0,
+        "threshold": 2,
+        "stalled": 0
+      },
+      {
+        "bucket": 2,
+        "n": 28,
+        "floor": 6,
+        "saturated": 0,
+        "threshold": 2,
+        "stalled": 0
+      },
+      {
+        "bucket": 3,
+        "n": 44,
+        "floor": 3,
+        "saturated": 0,
+        "threshold": 8,
+        "stalled": 0
+      },
+      {
+        "bucket": 4,
+        "n": 35,
+        "floor": 1,
+        "saturated": 0,
+        "threshold": 6,
+        "stalled": 0
+      }
+    ]
+  },
+  {
+    "datasetSeed": 3,
+    "fillSeed": 3,
+    "seedId": "AP_84719271504320872445",
+    "converged": false,
+    "failure": "1 entries never started",
+    "entries": 130,
+    "milestones": 21,
+    "stalled": 0,
+    "neverStarted": 1,
+    "saturated": 0,
+    "skillless": 0,
+    "floorClamped": 14,
+    "thresholdClamped": 15,
+    "unengaged": 0,
+    "unengagedMilestones": 0,
+    "totalResets": 65,
+    "gapP50": 2,
+    "gapMean": 2.4761904761904763,
+    "gapMax": 5,
+    "cmMin": 0.05,
+    "cmP50": 0.3876115522978818,
+    "cmMax": 38156.19614381979,
+    "milestoneTrouble": [],
+    "bandProfile": [
+      {
+        "bucket": 0,
+        "n": 7,
+        "floor": 1,
+        "saturated": 0,
+        "threshold": 1,
+        "stalled": 0
+      },
+      {
+        "bucket": 1,
+        "n": 16,
+        "floor": 2,
+        "saturated": 0,
+        "threshold": 3,
+        "stalled": 0
+      },
+      {
+        "bucket": 2,
+        "n": 18,
+        "floor": 2,
+        "saturated": 0,
+        "threshold": 2,
+        "stalled": 0
+      },
+      {
+        "bucket": 3,
+        "n": 37,
+        "floor": 6,
+        "saturated": 0,
+        "threshold": 5,
+        "stalled": 0
+      },
+      {
+        "bucket": 4,
+        "n": 52,
+        "floor": 3,
+        "saturated": 0,
+        "threshold": 4,
+        "stalled": 0
+      }
+    ]
+  },
+  {
+    "datasetSeed": 4,
+    "fillSeed": 4,
+    "seedId": "AP_05594871498841892311",
+    "converged": true,
+    "failure": null,
+    "entries": 130,
+    "milestones": 21,
+    "stalled": 0,
+    "neverStarted": 0,
+    "saturated": 0,
+    "skillless": 0,
+    "floorClamped": 18,
+    "thresholdClamped": 15,
+    "unengaged": 1,
+    "unengagedMilestones": 0,
+    "totalResets": 80,
+    "gapP50": 2,
+    "gapMean": 3.7142857142857144,
+    "gapMax": 14,
+    "cmMin": 0.05,
+    "cmP50": 0.17286057362104373,
+    "cmMax": 78574.42385712976,
+    "milestoneTrouble": [],
+    "bandProfile": [
+      {
+        "bucket": 0,
+        "n": 7,
+        "floor": 0,
+        "saturated": 0,
+        "threshold": 0,
+        "stalled": 0
+      },
+      {
+        "bucket": 1,
+        "n": 8,
+        "floor": 2,
+        "saturated": 0,
+        "threshold": 2,
+        "stalled": 0
+      },
+      {
+        "bucket": 2,
+        "n": 8,
+        "floor": 0,
+        "saturated": 0,
+        "threshold": 0,
+        "stalled": 0
+      },
+      {
+        "bucket": 3,
+        "n": 9,
+        "floor": 2,
+        "saturated": 0,
+        "threshold": 1,
+        "stalled": 0
+      },
+      {
+        "bucket": 4,
+        "n": 9,
+        "floor": 1,
+        "saturated": 0,
+        "threshold": 1,
+        "stalled": 0
+      },
+      {
+        "bucket": 5,
+        "n": 18,
+        "floor": 5,
+        "saturated": 0,
+        "threshold": 1,
+        "stalled": 0
+      },
+      {
+        "bucket": 6,
+        "n": 9,
+        "floor": 2,
+        "saturated": 0,
+        "threshold": 2,
+        "stalled": 0
+      },
+      {
+        "bucket": 7,
+        "n": 18,
+        "floor": 3,
+        "saturated": 0,
+        "threshold": 4,
+        "stalled": 0
+      },
+      {
+        "bucket": 8,
+        "n": 27,
+        "floor": 2,
+        "saturated": 0,
+        "threshold": 4,
+        "stalled": 0
+      },
+      {
+        "bucket": 9,
+        "n": 17,
+        "floor": 1,
+        "saturated": 0,
+        "threshold": 0,
+        "stalled": 0
+      }
+    ]
+  }
+]
