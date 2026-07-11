@@ -246,6 +246,28 @@ export function runFirstCompletionStats(env, options = {}) {
     options.mods ?? { ...baselineMods(), ...(options.modOverrides ?? {}) };
   const log = env.log ?? ((msg) => console.log(msg));
 
+  // Synthetic game data (Phase 5c): swap the fork's content tables to a
+  // dataset document BEFORE anything reads them — the metric universe below
+  // is built from the live zones.ZONES, which loadGameData rebuilds in
+  // place. Absent ⇒ this block is skipped and the run is byte-identical to
+  // pre-dataset behavior (the apRuntime precedent).
+  const dataset = options.dataset ?? null;
+  if (dataset) {
+    if (typeof win.loadGameData !== "function") {
+      throw new Error(
+        "dataset set but win.loadGameData is unavailable " +
+          "(fork build predates Fork 1.7)"
+      );
+    }
+    const res = win.loadGameData(dataset);
+    if (!res.ok) {
+      throw new Error(
+        `loadGameData rejected the dataset: ${(res.errors ?? []).join("; ")}`
+      );
+    }
+    log(`[driver] dataset loaded: ${dataset.dataset_id}`);
+  }
+
   // Fresh state, no wall-clock ticking. pauseGameLoop is a no-op headlessly
   // (the loop never started) but essential in the browser page.
   win.pauseGameLoop();
@@ -661,6 +683,8 @@ export function runFirstCompletionStats(env, options = {}) {
       checkpointEvery,
       gameDataPatch,
       apRuntime,
+      // Identity only — the full document would bloat every result JSON.
+      dataset: dataset ? dataset.dataset_id : null,
       mods,
     },
     timing: {

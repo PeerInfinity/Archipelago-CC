@@ -755,9 +755,48 @@ both halves (the harness already re-extracts the committed HEAD per run).
   - Placeholder perk/item cosmetic names are "DELETED" (never rendered).
   - Shrinking a table leaves stale reverse-map names above the new `Count`
     on the enum objects; nothing reads them at runtime.
-- **5c — Parity: dataset mode.** §5.2 layers 1+2 (+ canary), §5.3 jta-stats
-  `dataset` option + baseline byte-identity run. **Gate: no 5d work starts
-  until 5c passes** — the loader must be proven before data varies.
+- **5c — Parity: dataset mode — DONE 2026-07-10, ALL LAYERS PASS.** No fork
+  changes (outer harness work only).
+  **Layer 2 + 1 (`run-parity.mjs --dataset`):** the fork build loaded twice
+  in one process (second engine from an on-disk build copy —
+  `fork-head/build-dataset-copy/`; identical file URLs would share one
+  cached ES-module graph), dataset side gets `loadGameData(vanilla)`.
+  All 4 scenarios lockstep-PASS with tick/reset counts IDENTICAL to the
+  upstream-mode run (2000/2517/31304/808 ticks) ⇒ by transitivity
+  **fork+vanillaDataset ≡ the upstream game**. Layer 1 = the base static
+  sweep + a new `compareDatasetStaticData` (SKILL_DEFINITIONS/PERKS/ITEMS
+  incl. fresh-state tooltips, ARTIFACTS/NOTE_ITEMS, enum Counts,
+  SKILL_ROLES/ECONOMY/PRESTIGE_DATA, dataset-side enum≡position), both
+  gating the verdict, with the 5b cosmetic deltas carved out explicitly
+  (dead-slot names, energy-item synthesized text containment-checked, the
+  two fixed `.enum` typos). **Canary:** the parent `--dataset` run
+  auto-runs `--selftest-perturb-dataset` (doubles one cost_multiplier in
+  the DOCUMENT; must be caught by BOTH lockstep divergence and a static
+  sweep — verified: diverges at tick 29). The tick-level
+  `--selftest-perturb` also fires in dataset mode. Vacuity guards: FATAL
+  exit on loadGameData failure or unmarked `getLoadedDatasetId()`.
+  **Layer 3 (`run-ui-parity.mjs --dataset`, ruled in §7 Q6):** both sides
+  serve the same fork extraction; dataset side loads the fixture via a
+  harness-injected `loadGameData` (no fork boot param needed — the deferred
+  `?dataset=` stays deferred); vacuity probe = save lands under the
+  dataset-keyed localStorage slot. Result: **zero DOM diff with ZERO
+  exclusions on all 4 views** (raw=0), pixels at renderer noise floor.
+  **§5.3 jta-stats:** `driver.mjs` gained `options.dataset` (+ run-node
+  `--dataset FILE`), applied before init/universe-build; absent ⇒
+  byte-identical (verified: pre-edit driver ≡ post-edit no-dataset run).
+  Byte-identity under the FULL automation/mods surface: vanilla-dataset run
+  ≡ no-dataset run on `spark-off-z15-baseline` (130/130 @ 237 runs, 9173
+  ticks, whole result JSON identical modulo meta/wallMs).
+  **Finding (pre-existing, not 5b/5c):** the COMMITTED
+  `results/spark-off-z15-baseline-node.json` (2026-07-06, 261 runs) no
+  longer reproduces on the current build — Fork 1.6.2 and Fork 1.7 builds
+  both give 237/9173 (also proving 1.7 inert under full mods, beyond
+  defaults-only parity). The drift entered between 2026-07-06 and Fork
+  1.6.2 (candidates: the 2026-07-08 jta-stats pinMaxEnergy rework or a
+  baselineMods change post-dating the file); the live A/B gate is the
+  binding one. Filed in `CC/docs/cleanup-backlog.md`.
+  Regression re-runs after the harness edits: upstream-mode sim parity
+  4/4 PASS and UI parity PASS unchanged. **Gate satisfied: 5d may start.**
 - **5d — Pass A: pipeline dataset synthesis.** Generation step (linear,
   profile-shaped, theme namebanks v0), constraints C1–C4 validator, sidecar
   carriage (single-carrier + refs), `extractZoneRules`-from-dataset,

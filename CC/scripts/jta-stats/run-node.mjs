@@ -2,7 +2,8 @@
 // live in node-env.mjs (shared with profile-vanilla.mjs); this script wires
 // a config file to driver.mjs and writes the result JSON.
 //
-// Usage: node CC/scripts/jta-stats/run-node.mjs [--config FILE] [--out FILE] [--max-runs N]
+// Usage: node CC/scripts/jta-stats/run-node.mjs [--config FILE] [--out FILE]
+//        [--max-runs N] [--dataset FILE.json]
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -24,6 +25,11 @@ const config = configPath
   : {};
 const options = { ...(config.options ?? config) };
 if (getArg("--max-runs")) options.maxRuns = Number(getArg("--max-runs"));
+// Synthetic game data document (Phase 5c): loaded from disk here, passed to
+// the driver as options.dataset (config files may also inline it).
+if (getArg("--dataset")) {
+  options.dataset = JSON.parse(fs.readFileSync(getArg("--dataset"), "utf8"));
+}
 const outPath =
   getArg("--out") ??
   path.join(here, "results", `${config.name ?? "baseline"}-node.json`);

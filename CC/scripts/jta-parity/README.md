@@ -43,6 +43,56 @@ clone's own `./node_modules/.bin/tsc` (from its `npm ci`), never an ambient
 tsc. Everything generated lives in gitignored `upstream/`, `fork-head/`,
 `results/`.
 
+## Dataset mode (`--dataset`, Phase 5c of the synthetic-data plan)
+
+Re-aims the same machinery at **two datasets under one build**: the fork
+build is loaded twice in one process (the second engine from an on-disk copy
+of the extraction, `fork-head/build-dataset-copy/` — identical file URLs
+would share one cached ES-module graph), one side gets
+`window.loadGameData(<dataset>)` (Fork 1.7) before play, and the same
+per-tick lockstep contract applies. The vanilla dataset fixture
+(`frontend/modules/jtaSubstrateWrapper/datasets/vanilla.json`) is the
+default document.
+
+```
+node CC/scripts/jta-parity/run-parity.mjs --dataset          # all scenarios
+    # + the dataset-document canary, results/dataset-*.json +
+    # results/dataset-parity-report.json
+node CC/scripts/jta-parity/run-parity.mjs --scenario automation --dataset
+node CC/scripts/jta-parity/run-parity.mjs --dataset path/to/other.json
+
+# dataset canary (run automatically by the parent --dataset run): doubles one
+# cost_multiplier in the DATASET DOCUMENT and demands BOTH layers catch it —
+# lockstep divergence AND a static-sweep diff — proving the loaded tables,
+# not the compiled ones, drive the dataset engine
+node CC/scripts/jta-parity/run-parity.mjs --scenario scripted --dataset \
+    --selftest-perturb-dataset --max-ticks 5000
+```
+
+The dataset verdict gates on THREE checks per scenario: the base static
+sweep, the dataset-extension static sweep (`compareDatasetStaticData`:
+SKILL_DEFINITIONS / PERKS / ITEMS with fresh-state tooltips,
+ARTIFACTS/NOTE_ITEMS, enum Counts, SKILL_ROLES/ECONOMY/PRESTIGE_DATA, and
+the dataset-side `enum === position` invariant), and the per-tick lockstep.
+Known deliberate deltas are carved out, not ignored: dead-slot cosmetic
+names, synthesized energy-item tooltips (containment-checked against
+`calcItemEnergyGain`), and the two native `items.ts` `.enum` typos that the
+loader deliberately fixes. A `loadGameData` failure or an unmarked
+`getLoadedDatasetId()` is a FATAL exit, and the auto-run canary guards the
+rest of the vacuity surface.
+
+**Transitivity:** the default mode proves fork(defaults) ≡ upstream fork
+point; dataset mode proves fork+vanillaDataset ≡ fork(defaults); composed:
+**fork + vanilla dataset ≡ the upstream game.**
+
+`run-ui-parity.mjs --dataset` is the same idea for the fresh-load UI: both
+sides serve the SAME fork extraction, the dataset side loads the fixture via
+a harness-injected `loadGameData` call after boot (no fork boot param), and
+the exclusion list is EMPTY — expected and observed result is zero DOM diff
+across all four views (results in `results/ui-dataset/`). A vacuity probe
+saves and asserts the dataset-keyed localStorage slot exists on the dataset
+side.
+
 ## How both engines are driven (the common surface)
 
 Both builds are stood up with the jta-stats prior art

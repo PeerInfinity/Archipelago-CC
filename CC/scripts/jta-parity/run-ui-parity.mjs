@@ -24,7 +24,14 @@
 // misread as a fork difference. Fresh-load state has no active task, so no
 // gameplay numbers move.
 //
-// Usage: node CC/scripts/jta-parity/run-ui-parity.mjs
+// DATASET MODE (--dataset [path], Phase 5c layer 3): both sides serve the
+// SAME fork extraction; the "fork" side loads the vanilla dataset through
+// window.loadGameData after boot (harness-injected — no fork boot param
+// needed), the "upstream" side stays on native tables. Expected: zero DOM
+// diff with ZERO exclusions (both sides are the same build, so the
+// #settings delta vanishes from the comparison entirely).
+//
+// Usage: node CC/scripts/jta-parity/run-ui-parity.mjs [--dataset [path]]
 //   (re-run after the submodule pointer advances: the archive step re-extracts
 //    the submodule's HEAD every run, so a post-gating-fix re-check is just a
 //    re-run)
@@ -42,11 +49,31 @@ const submoduleDir = path.join(
   "frontend/modules/journey-to-ascension"
 );
 const forkExtractDir = path.join(here, "fork-head");
-const outDir = path.join(here, "results", "ui");
+
+const argv = process.argv.slice(2);
+const dsIdx = argv.indexOf("--dataset");
+const DATASET_MODE = dsIdx >= 0;
+const datasetPath = DATASET_MODE
+  ? argv[dsIdx + 1] && !argv[dsIdx + 1].startsWith("--")
+    ? path.resolve(argv[dsIdx + 1])
+    : path.join(
+        repoRoot,
+        "frontend/modules/jtaSubstrateWrapper/datasets/vanilla.json"
+      )
+  : null;
+const datasetDoc = DATASET_MODE
+  ? JSON.parse(fs.readFileSync(datasetPath, "utf8"))
+  : null;
+
+const outDir = path.join(here, "results", DATASET_MODE ? "ui-dataset" : "ui");
 
 const BASE = "http://localhost:8000/CC/scripts/jta-parity";
 const FORK_URL = `${BASE}/fork-head/index.html`;
-const UPSTREAM_URL = `${BASE}/upstream/index.html`;
+// Dataset mode compares fork+dataset ("fork" side) vs fork native
+// ("upstream" side) — same URL, different post-boot treatment.
+const UPSTREAM_URL = DATASET_MODE
+  ? FORK_URL
+  : `${BASE}/upstream/index.html`;
 
 // ---------------------------------------------------------------------------
 // MARK: The exclusion list (every entry documented — do not widen casually)
@@ -54,28 +81,32 @@ const UPSTREAM_URL = `${BASE}/upstream/index.html`;
 // Applied to BOTH sides in the "clean" diff and as screenshot masks. A raw
 // (no-exclusion) diff is always computed too, so exclusions hide nothing from
 // the report — they only keep approved deltas out of the pass/fail signal.
-const EXCLUSIONS = [
-  {
-    selector: "#settings",
-    reason:
-      "Settings popup box: user-approved fork additions — the 'Game Mods' " +
-      "section (7 mod controls) plus a .scroll-area wrapper around the " +
-      "popup's existing content. Static fork delta in index.html.",
-  },
-];
+const EXCLUSIONS = DATASET_MODE
+  ? [] // same build on both sides — nothing is approved to differ
+  : [
+      {
+        selector: "#settings",
+        reason:
+          "Settings popup box: user-approved fork additions — the 'Game Mods' " +
+          "section (7 mod controls) plus a .scroll-area wrapper around the " +
+          "popup's existing content. Static fork delta in index.html.",
+      },
+    ];
 // Known-pending: NOT approved-permanent, NOT unexpected. Reported separately
 // and expected to disappear on a future committed HEAD.
-const KNOWN_PENDING = [
-  {
-    selector: "#prestige-box",
-    reason:
-      "Fork's populatePrestigeView builds its Divinity additions (purchase " +
-      "queue / auto-buy controls) UNGATED on the current committed HEAD; the " +
-      "gating fix is in flight (uncommitted, other agent). Re-run this " +
-      "script after the submodule pointer advances and this entry should " +
-      "become removable.",
-  },
-];
+const KNOWN_PENDING = DATASET_MODE
+  ? []
+  : [
+      {
+        selector: "#prestige-box",
+        reason:
+          "Fork's populatePrestigeView builds its Divinity additions (purchase " +
+          "queue / auto-buy controls) UNGATED on the current committed HEAD; the " +
+          "gating fix is in flight (uncommitted, other agent). Re-run this " +
+          "script after the submodule pointer advances and this entry should " +
+          "become removable.",
+      },
+    ];
 
 const VIEWS = [
   {
@@ -333,7 +364,7 @@ async function pixelDiff(scratchPage, pngA, pngB, unionRects = []) {
   );
 }
 
-async function bootPage(browser, url) {
+async function bootPage(browser, url, withDataset = false) {
   // Fresh context per page per view: clean localStorage/cache, fixed
   // deterministic viewport.
   const ctx = await browser.newContext({
@@ -349,6 +380,33 @@ async function bootPage(browser, url) {
     () => document.querySelectorAll("#tasks *").length > 0,
     { timeout: 10000 }
   );
+  if (withDataset) {
+    // Dataset side: swap tables via the fork's own hook (re-inits the game
+    // and rebuilds the Rendering), then prove it actually loaded — a save
+    // must land under the dataset-keyed slot, else this whole comparison
+    // would be fork-vs-fork vacuous.
+    const probe = await page.evaluate((ds) => {
+      const r = window.loadGameData(ds);
+      if (!r.ok) return { ok: false, errors: r.errors ?? [] };
+      window.saveGame();
+      const key = `incrementalGameSave_substrate__${ds.dataset_id}`;
+      return { ok: true, saved: localStorage.getItem(key) !== null };
+    }, datasetDoc);
+    if (!probe.ok) {
+      throw new Error(
+        `loadGameData rejected the dataset: ${probe.errors.join("; ")}`
+      );
+    }
+    if (!probe.saved) {
+      throw new Error(
+        "dataset vacuity guard tripped: no save under the dataset-keyed slot"
+      );
+    }
+    await page.waitForFunction(
+      () => document.querySelectorAll("#tasks *").length > 0,
+      { timeout: 10000 }
+    );
+  }
   await page.evaluate(() => document.fonts.ready);
   // Freeze cosmetic motion for pixel-stable screenshots (applied to BOTH
   // sides identically; DOM serialization is unaffected by CSS).
@@ -395,6 +453,10 @@ const browser = await chromium.launch({
 });
 const report = {
   generatedAt: new Date().toISOString(),
+  mode: DATASET_MODE ? "dataset" : "upstream",
+  dataset: DATASET_MODE
+    ? { path: datasetPath, dataset_id: datasetDoc.dataset_id }
+    : null,
   forkCommit: forkSha,
   forkUrl: FORK_URL,
   upstreamUrl: UPSTREAM_URL,
@@ -404,9 +466,11 @@ const report = {
   views: [],
 };
 
-// --- Self-stability probe (fork page, no exclusions, loop left running) ----
+// --- Self-stability probe (fork page, no exclusions, loop left running;
+//     in dataset mode the probe runs on the dataset-loaded side — the new
+//     surface whose volatility matters) ----
 {
-  const { ctx, page } = await bootPage(browser, FORK_URL);
+  const { ctx, page } = await bootPage(browser, FORK_URL, DATASET_MODE);
   const s1 = await page.evaluate(serializeDom, []);
   await page.waitForTimeout(700);
   const s2 = await page.evaluate(serializeDom, []);
@@ -438,7 +502,11 @@ for (const view of VIEWS) {
     ["fork", FORK_URL],
     ["upstream", UPSTREAM_URL],
   ]) {
-    const { ctx, page } = await bootPage(browser, url);
+    const { ctx, page } = await bootPage(
+      browser,
+      url,
+      DATASET_MODE && label === "fork"
+    );
     let prepareError = null;
     if (view.prepare) {
       try {

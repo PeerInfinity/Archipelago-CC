@@ -16,9 +16,25 @@
 // Fork side comes from the submodule's COMMITTED HEAD (`git archive`), never
 // its working tree — another agent may be editing/rebuilding it concurrently.
 //
+// DATASET MODE (--dataset [path], Phase 5c): compares two DATASETS under ONE
+// build instead of two builds under one dataset — the fork build is loaded
+// twice (from two on-disk copies, so the module graphs are separate), one
+// side gets window.loadGameData(vanilla dataset) before play, and the same
+// lockstep contract applies. Passing proves the loader is transparent:
+// fork+vanillaDataset ≡ fork(native tables); composed with the default mode
+// (fork ≡ upstream fork point), fork+vanillaDataset ≡ the upstream game.
+// The dataset-mode canary (--selftest-perturb-dataset) perturbs one
+// cost_multiplier in the DATASET DOCUMENT and demands divergence — proof
+// that the loaded tables, not the compiled ones, drive the dataset engine
+// (guards against a vacuous pass where the dataset silently failed to load).
+//
 // Usage:
 //   node CC/scripts/jta-parity/run-parity.mjs               # all scenarios
 //   node CC/scripts/jta-parity/run-parity.mjs --scenario automation
+//   node CC/scripts/jta-parity/run-parity.mjs --dataset     # dataset mode,
+//       # vanilla fixture (or --dataset path/to/dataset.json)
+//   node CC/scripts/jta-parity/run-parity.mjs --scenario scripted --dataset \
+//       --selftest-perturb-dataset   # canary: must DIVERGE to pass
 //   node CC/scripts/jta-parity/run-parity.mjs --list
 import { execSync, spawnSync } from "node:child_process";
 import fs from "node:fs";
@@ -34,6 +50,10 @@ const submoduleDir = path.join(
 const upstreamBuildDir = path.join(here, "upstream", "build");
 const forkExtractDir = path.join(here, "fork-head");
 const resultsDir = path.join(here, "results");
+const defaultDatasetPath = path.join(
+  repoRoot,
+  "frontend/modules/jtaSubstrateWrapper/datasets/vanilla.json"
+);
 
 // ---------------------------------------------------------------------------
 // MARK: Scenario table
@@ -349,6 +369,20 @@ function extractForkBuild() {
   return sha;
 }
 
+// Dataset mode loads the SAME build twice; identical file URLs would share
+// one cached ES-module graph (one GAMESTATE), so the second engine loads
+// from an on-disk copy of the extracted build. Lives inside fork-head/, so
+// re-extraction (which rm -rf's the dir) invalidates it automatically.
+function ensureForkBuildCopy() {
+  const src = path.join(forkExtractDir, "build");
+  const dst = path.join(forkExtractDir, "build-dataset-copy");
+  if (!fs.existsSync(path.join(dst, "simulation.js"))) {
+    fs.rmSync(dst, { recursive: true, force: true });
+    fs.cpSync(src, dst, { recursive: true });
+  }
+  return dst;
+}
+
 async function loadEngine(label, buildDir) {
   // Stubs + load-bearing import order (game.js FIRST) live in the shared
   // headless env from the jta-stats prior art.
@@ -450,6 +484,106 @@ function compareStaticData(fork, up) {
     fork.zones.ZONES[0].tasks[0]
   ).filter((k) => !(k in up.zones.ZONES[0].tasks[0]));
   return { diffs, forkOnlyDefFields };
+}
+
+// MARK: Dataset-mode static parity (layer 1, plan §5.2): the default
+// compareStaticData sweep PLUS the tables loadGameData rebuilds that the
+// default sweep doesn't cover — SKILL_DEFINITIONS, PERKS, ITEMS (with
+// tooltips at fresh state), ARTIFACTS/NOTE_ITEMS, all three enum Counts, and
+// the SKILL_ROLES/ECONOMY/PRESTIGE_DATA runtime objects. Needs both engines
+// initialized (tooltip lambdas read GAMESTATE).
+//
+// Known deliberate deltas, carved out instead of failing:
+//  - dead-slot cosmetic names/icons (dataset placeholders; never rendered),
+//  - items with a declarative energy_on_consume effect: the loader
+//    synthesizes full Food-pattern text (checked by containment instead),
+//  - ItemDefinition.enum: the native tables carry two latent typos (Cactus,
+//    Glasses); the dataset side must instead satisfy enum === position.
+function compareDatasetStaticData(dsEngine, nativeEngine, dataset) {
+  const diffs = [];
+  const isPlaceholder = (e) => e != null && e.placeholder === true;
+  const deadPerks = new Set(
+    dataset.perks.flatMap((p, i) => (isPlaceholder(p) ? [i] : []))
+  );
+  const deadSkills = new Set(
+    dataset.skills.flatMap((s, i) => (isPlaceholder(s) ? [i] : []))
+  );
+  const energyItems = new Map(
+    dataset.items.flatMap((it, i) => {
+      const e = (it.effects ?? []).find((x) => x.kind === "energy_on_consume");
+      return e ? [[i, e.base_amount]] : [];
+    })
+  );
+  const modifierPairs = (list) =>
+    (list?.modifiers ?? []).map((m) => [m.skill, m.effect]);
+
+  const skillsProj = (E) =>
+    E.skills.SKILL_DEFINITIONS.map((d, i) =>
+      deadSkills.has(i)
+        ? "dead"
+        : { type: d.type, name: d.name, icon: d.icon, xp_needed_mult: d.xp_needed_mult }
+    );
+  const perksProj = (E) =>
+    E.perks.PERKS.map((d, i) =>
+      deadPerks.has(i)
+        ? "dead"
+        : {
+            enum: d.enum,
+            name: d.name,
+            icon: d.icon,
+            modifiers: modifierPairs(d.skill_modifiers),
+            tooltip: d.getTooltip(),
+          }
+    );
+  const itemsProj = (E) =>
+    E.items.ITEMS.map((d, i) => ({
+      name: d.name,
+      name_plural: d.name_plural,
+      icon: d.icon,
+      modifiers: modifierPairs(d.skill_modifiers),
+      tooltip: energyItems.has(i) ? "(energy — containment-checked)" : d.getTooltip(),
+    }));
+  const dataProj = (E) => ({
+    skill_roles: JSON.parse(JSON.stringify(E.sim.SKILL_ROLES)),
+    economy: { ...E.sim.ECONOMY },
+    prestige_data: JSON.parse(JSON.stringify(E.sim.PRESTIGE_DATA)),
+    artifacts: [...E.items.ARTIFACTS],
+    note_items: [...E.items.NOTE_ITEMS],
+    counts: {
+      skills: E.skills.SkillType.Count,
+      perks: E.perks.PerkType.Count,
+      items: E.items.ItemType.Count,
+    },
+  });
+
+  deepDiff(skillsProj(dsEngine), skillsProj(nativeEngine), "skill_defs", diffs);
+  deepDiff(perksProj(dsEngine), perksProj(nativeEngine), "perk_defs", diffs);
+  deepDiff(itemsProj(dsEngine), itemsProj(nativeEngine), "item_defs", diffs);
+  deepDiff(dataProj(dsEngine), dataProj(nativeEngine), "runtime_data", diffs);
+
+  // Dataset side: enum === position everywhere (this is what neutralizes the
+  // two native items.ts typos, so .enum is not cross-compared above).
+  dsEngine.items.ITEMS.forEach((d, i) => {
+    if (d.enum !== i)
+      diffs.push({ path: `items[${i}].enum`, fork: d.enum, upstream: i });
+  });
+  dsEngine.perks.PERKS.forEach((d, i) => {
+    if (d.enum !== i)
+      diffs.push({ path: `perks[${i}].enum`, fork: d.enum, upstream: i });
+  });
+  // Energy items: synthesized text must scale with calcItemEnergyGain.
+  for (const [i, base] of energyItems) {
+    const def = dsEngine.items.ITEMS[i];
+    const gain = dsEngine.sim.calcItemEnergyGain(base);
+    if (!def.getTooltip().includes(`Gives ${gain} `)) {
+      diffs.push({
+        path: `items[${i}].tooltip(energy)`,
+        fork: def.getTooltip(),
+        upstream: `must include "Gives ${gain} "`,
+      });
+    }
+  }
+  return { diffs };
 }
 
 function reportForkOnlyFields(fork, up) {
@@ -675,7 +809,7 @@ function runScenario(name, fork, up, opts = {}) {
 // ---------------------------------------------------------------------------
 // MARK: Entry points
 // ---------------------------------------------------------------------------
-async function childMain(scenarioName, maxTicksOverride, perturbAtTick) {
+async function childMain(scenarioName, maxTicksOverride, perturbAtTick, datasetOpts) {
   // No wall-clock game loop, ever: both builds call setTickRate()/setInterval
   // during play (zone advance, prestige unlocks). The run loop below is fully
   // synchronous, so timers could only fire between scenarios — neuter them
@@ -701,8 +835,58 @@ async function childMain(scenarioName, maxTicksOverride, perturbAtTick) {
   }
 
   const forkSha = extractForkBuild();
-  const fork = await loadEngine("fork", path.join(forkExtractDir, "build"));
-  const up = await loadEngine("upstream", upstreamBuildDir);
+  let fork;
+  let up;
+  let datasetInfo = null;
+  let datasetStaticCmp = null;
+  if (datasetOpts) {
+    // Dataset mode: ONE build, loaded twice from separate on-disk copies.
+    // "fork" = the engine with loadGameData(dataset) applied; "up" = the
+    // same build on its native compiled tables.
+    const copyDir = ensureForkBuildCopy();
+    fork = await loadEngine("fork", copyDir);
+    up = await loadEngine("upstream", path.join(forkExtractDir, "build"));
+    const datasetDoc = JSON.parse(fs.readFileSync(datasetOpts.path, "utf8"));
+    if (datasetOpts.perturb) {
+      // Canary: nudge ONE number in the DATASET DOCUMENT; the run must
+      // DIVERGE, proving the loaded tables drive the dataset engine.
+      const t = datasetDoc.zones[0].tasks[1];
+      t.cost_multiplier *= 2;
+      console.log(
+        `[${scenarioName}] SELFTEST: perturbed dataset task ${t.id} ` +
+          `("${t.name}") cost_multiplier -> ${t.cost_multiplier}`
+      );
+    }
+    if (typeof fork.win.loadGameData !== "function") {
+      console.error("FATAL: fork build has no window.loadGameData (predates Fork 1.7)");
+      process.exit(2);
+    }
+    const lr = fork.win.loadGameData(datasetDoc);
+    if (!lr.ok) {
+      console.error(
+        `FATAL: loadGameData rejected the dataset: ${(lr.errors ?? []).join("; ")}`
+      );
+      process.exit(2);
+    }
+    if (fork.sim.getLoadedDatasetId() !== datasetDoc.dataset_id) {
+      console.error("FATAL: dataset not marked loaded — vacuity guard tripped");
+      process.exit(2);
+    }
+    datasetInfo = {
+      path: datasetOpts.path,
+      dataset_id: datasetDoc.dataset_id,
+      perturbed: !!datasetOpts.perturb,
+    };
+    // Layer 1: static-data parity, base sweep + the dataset-specific tables
+    // (tooltip lambdas read GAMESTATE, so initialize both engines first —
+    // runScenario re-initializes, which is idempotent here).
+    fork.game.GAMESTATE.initialize();
+    up.game.GAMESTATE.initialize();
+    datasetStaticCmp = compareDatasetStaticData(fork, up, datasetDoc);
+  } else {
+    fork = await loadEngine("fork", path.join(forkExtractDir, "build"));
+    up = await loadEngine("upstream", upstreamBuildDir);
+  }
 
   const staticCmp = compareStaticData(fork, up);
   const modsSnapshot =
@@ -725,11 +909,48 @@ async function childMain(scenarioName, maxTicksOverride, perturbAtTick) {
   result.forkModDefaults = modsSnapshot;
   result.suppressedUpstreamSkillSpam = skillSpam;
 
+  let resultName = scenarioName;
+  if (datasetOpts) {
+    result.dataset = datasetInfo;
+    result.datasetStaticData = {
+      equal: datasetStaticCmp.diffs.length === 0,
+      diffs: datasetStaticCmp.diffs,
+    };
+    if (datasetOpts.perturb) {
+      // Canary semantics: PASS means the harness CAUGHT the perturbation in
+      // BOTH layers — the lockstep diverged (layer 2) AND a static sweep
+      // flagged the table delta (layer 1; a cost_multiplier change lands in
+      // the BASE zones sweep, other deltas in the dataset-extension sweep).
+      result.canary = true;
+      const staticCaught =
+        !result.staticData.equal || !result.datasetStaticData.equal;
+      result.pass = result.firstDivergence !== null && staticCaught;
+      resultName = `dataset-canary-${scenarioName}`;
+    } else {
+      // Layers 1 (static) and 2 (lockstep) both gate the dataset verdict.
+      result.pass =
+        result.pass && result.staticData.equal && result.datasetStaticData.equal;
+      resultName = `dataset-${scenarioName}`;
+    }
+  }
+
   fs.mkdirSync(resultsDir, { recursive: true });
-  const outPath = path.join(resultsDir, `${scenarioName}.json`);
+  const outPath = path.join(resultsDir, `${resultName}.json`);
   fs.writeFileSync(outPath, JSON.stringify(result, null, 2));
   console.log(
-    `[${scenarioName}] ${result.pass ? "PASS" : result.firstDivergence ? "DIVERGED" : "VACUOUS"}: ` +
+    `[${resultName}] ${
+      result.canary
+        ? result.pass
+          ? "PASS (perturbation detected)"
+          : "FAIL (perturbation NOT detected — comparator is vacuous)"
+        : result.pass
+          ? "PASS"
+          : result.firstDivergence
+            ? "DIVERGED"
+            : result.vacuous
+              ? "VACUOUS"
+              : "STATIC-DIFF"
+    }: ` +
       `${result.ticks} ticks, ${result.resets} resets, ${result.prestiges} prestiges, ` +
       `final zone ${result.finalState.current_zone} (highest ever ${result.finalState.highest_zone_ever})`
   );
@@ -738,27 +959,30 @@ async function childMain(scenarioName, maxTicksOverride, perturbAtTick) {
   process.exit(result.pass ? 0 : 1);
 }
 
-function parentMain(only) {
+function parentMain(only, datasetOpts) {
   const names = only ?? Object.keys(SCENARIOS);
   const summary = [];
-  for (const name of names) {
-    console.log(`\n=== scenario: ${name} ===`);
+  const dsArgs = datasetOpts ? ["--dataset", datasetOpts.path] : [];
+  const runChild = (name, extraArgs, resultName, label) => {
+    console.log(`\n=== ${label} ===`);
     const r = spawnSync(
       process.execPath,
-      [fileURLToPath(import.meta.url), "--scenario", name],
+      [fileURLToPath(import.meta.url), "--scenario", name, ...dsArgs, ...extraArgs],
       { stdio: "inherit" }
     );
     let detail = null;
-    const f = path.join(resultsDir, `${name}.json`);
+    const f = path.join(resultsDir, `${resultName}.json`);
     if (fs.existsSync(f)) detail = JSON.parse(fs.readFileSync(f, "utf8"));
     summary.push({
-      scenario: name,
+      scenario: resultName,
       exitCode: r.status,
       pass: detail?.pass ?? false,
+      canary: detail?.canary ?? false,
       ticks: detail?.ticks,
       resets: detail?.resets,
       prestiges: detail?.prestiges,
       vacuous: detail?.vacuous,
+      datasetStaticEqual: detail?.datasetStaticData?.equal,
       firstDivergence: detail?.firstDivergence
         ? {
             tick: detail.firstDivergence.tick,
@@ -767,10 +991,31 @@ function parentMain(only) {
           }
         : null,
     });
+  };
+  for (const name of names) {
+    runChild(
+      name,
+      [],
+      datasetOpts ? `dataset-${name}` : name,
+      `scenario: ${name}${datasetOpts ? " (dataset mode)" : ""}`
+    );
+  }
+  if (datasetOpts) {
+    // The dataset-document canary always runs with the full dataset gate:
+    // a vacuous comparator (dataset silently not driving the engine) would
+    // otherwise pass every scenario above.
+    runChild(
+      "scripted",
+      ["--selftest-perturb-dataset", "--max-ticks", "5000"],
+      "dataset-canary-scripted",
+      "dataset canary: scripted + perturbed dataset (must be DETECTED)"
+    );
   }
   const allPass = summary.every((s) => s.pass);
   const report = {
     verdict: allPass ? "PASS" : "FAIL",
+    mode: datasetOpts ? "dataset" : "upstream",
+    dataset: datasetOpts?.path ?? null,
     generatedAt: new Date().toISOString(),
     forkCommit: (() => {
       try {
@@ -794,22 +1039,31 @@ function parentMain(only) {
     })(),
     scenarios: summary,
   };
+  const reportName = datasetOpts
+    ? "dataset-parity-report.json"
+    : "parity-report.json";
   fs.mkdirSync(resultsDir, { recursive: true });
   fs.writeFileSync(
-    path.join(resultsDir, "parity-report.json"),
+    path.join(resultsDir, reportName),
     JSON.stringify(report, null, 2)
   );
-  console.log(`\n================= PARITY ${report.verdict} =================`);
+  console.log(
+    `\n================= ${datasetOpts ? "DATASET " : ""}PARITY ${report.verdict} =================`
+  );
   for (const s of summary) {
     console.log(
       `  ${s.pass ? "PASS" : "FAIL"} ${s.scenario}: ticks=${s.ticks} resets=${s.resets} ` +
-        `prestiges=${s.prestiges}${s.vacuous ? " [VACUOUS: below minimum activity]" : ""}` +
-        (s.firstDivergence
-          ? ` [first divergence @ tick ${s.firstDivergence.tick} (${s.firstDivergence.phase})]`
-          : "")
+        `prestiges=${s.prestiges}${s.vacuous && !s.canary ? " [VACUOUS: below minimum activity]" : ""}` +
+        (s.canary
+          ? s.pass
+            ? " [canary: perturbation detected]"
+            : " [canary FAILED: perturbation NOT detected]"
+          : s.firstDivergence
+            ? ` [first divergence @ tick ${s.firstDivergence.tick} (${s.firstDivergence.phase})]`
+            : "")
     );
   }
-  console.log(`  report: ${path.join(resultsDir, "parity-report.json")}`);
+  console.log(`  report: ${path.join(resultsDir, reportName)}`);
   process.exit(allPass ? 0 : 1);
 }
 
@@ -822,11 +1076,23 @@ if (args.includes("--list")) {
 const scIdx = args.indexOf("--scenario");
 const mtIdx = args.indexOf("--max-ticks");
 const ptIdx = args.indexOf("--selftest-perturb");
+const dsIdx = args.indexOf("--dataset");
 const maxTicksOverride = mtIdx >= 0 ? Number(args[mtIdx + 1]) : undefined;
 const perturbAtTick = ptIdx >= 0 ? Number(args[ptIdx + 1]) : undefined;
+const perturbDataset = args.includes("--selftest-perturb-dataset");
+const datasetOpts =
+  dsIdx >= 0 || perturbDataset
+    ? {
+        path:
+          dsIdx >= 0 && args[dsIdx + 1] && !args[dsIdx + 1].startsWith("--")
+            ? path.resolve(args[dsIdx + 1])
+            : defaultDatasetPath,
+        perturb: perturbDataset,
+      }
+    : null;
 if (scIdx >= 0) {
   // Single scenario runs in THIS process (it is already fresh).
-  await childMain(args[scIdx + 1], maxTicksOverride, perturbAtTick);
+  await childMain(args[scIdx + 1], maxTicksOverride, perturbAtTick, datasetOpts);
 } else {
-  parentMain(null);
+  parentMain(null, datasetOpts);
 }
