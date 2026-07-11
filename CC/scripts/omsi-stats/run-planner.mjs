@@ -18,6 +18,8 @@
 //   node CC/scripts/omsi-stats/run-planner.mjs --seed N --max-loops N
 //   node CC/scripts/omsi-stats/run-planner.mjs --seed-predictor   # predictor cross-check on
 //   node CC/scripts/omsi-stats/run-planner.mjs --weights '{"frontier":1000}'
+//   node CC/scripts/omsi-stats/run-planner.mjs --screen-k 4 --probe-every 5
+//   node CC/scripts/omsi-stats/run-planner.mjs --target-town 2   # stretch: past town 1
 //   node CC/scripts/omsi-stats/run-planner.mjs --out results/foo.json
 
 import { execFileSync } from "node:child_process";
@@ -46,6 +48,10 @@ async function main() {
     const seedFromPredictor = has("--seed-predictor");
     const weightsOverride = JSON.parse(val("--weights", "{}"));
     const useWorktree = has("--worktree");
+    const screenK = Number(val("--screen-k", 8));
+    const probeEvery = Number(val("--probe-every", 1));
+    const targetTown = Number(val("--target-town", 1));
+    const knobsAtDefaults = screenK === 8 && probeEvery === 1 && targetTown === 1;
 
     let srcDir, forkCommit;
     if (useWorktree) {
@@ -69,12 +75,13 @@ async function main() {
 
     const weights = { ...IP.DEFAULT_WEIGHTS, ...weightsOverride };
     const t0 = Date.now();
-    const r = await IP.runStandalone({ maxLoops, weights, seedFromPredictor, verbose: true });
+    const r = await IP.runStandalone({ maxLoops, weights, seedFromPredictor, verbose: true, screenK, probeEvery, targetTown });
     const hash = crypto.createHash("sha256").update(r.finalSnapshot).digest("hex").slice(0, 16);
 
     const out = {
         date: new Date().toISOString(), forkCommit, seed, seedFromPredictor,
-        weightsOverride, loopsRun: r.loopsRun, cumTicks: r.cumTicks,
+        weightsOverride, screenK, probeEvery, targetTown,
+        loopsRun: r.loopsRun, cumTicks: r.cumTicks,
         finished: r.finished, finalHash: hash,
         divergenceCount: r.divergences.length, divergences: r.divergences,
         rngConsumed: ctx.rngCount(),
@@ -96,9 +103,9 @@ async function main() {
     console.log(`results written to ${outPath}`);
 
     // Acceptance gates
-    const gate = r.finished && r.loopsRun <= 500;
-    console.log(`\nACCEPTANCE (<=500 loops to town 1): ${gate ? "PASS" : "FAIL"} (${r.loopsRun} loops)`);
-    if (seed === V0_REFERENCE.seed && !seedFromPredictor && !Object.keys(weightsOverride).length) {
+    const gate = r.finished && (targetTown !== 1 || r.loopsRun <= 500);
+    console.log(`\nACCEPTANCE (${targetTown === 1 ? "<=500 loops to town 1" : `reached town ${targetTown}`}): ${gate ? "PASS" : "FAIL"} (${r.loopsRun} loops)`);
+    if (seed === V0_REFERENCE.seed && !seedFromPredictor && !Object.keys(weightsOverride).length && knobsAtDefaults) {
         const exact = r.loopsRun === V0_REFERENCE.loops && r.cumTicks === V0_REFERENCE.ticks && hash === V0_REFERENCE.hash;
         console.log(`V0 EXACT REPRODUCTION (500 / 5,432,753 / ${V0_REFERENCE.hash}): ${exact ? "PASS" : "MISMATCH"}`);
         if (!exact) console.log(`  got ${r.loopsRun} / ${r.cumTicks} / ${hash} — investigate the port before trusting other numbers`);
