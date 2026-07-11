@@ -20,6 +20,7 @@
 //   node CC/scripts/omsi-stats/run-planner.mjs --weights '{"frontier":1000}'
 //   node CC/scripts/omsi-stats/run-planner.mjs --screen-k 4 --probe-every 5
 //   node CC/scripts/omsi-stats/run-planner.mjs --target-town 2   # stretch: past town 1
+//   node CC/scripts/omsi-stats/run-planner.mjs --multi-town off  # v0 town-0-only planner (A/B)
 //   node CC/scripts/omsi-stats/run-planner.mjs --out results/foo.json
 
 import { execFileSync } from "node:child_process";
@@ -51,7 +52,8 @@ async function main() {
     const screenK = Number(val("--screen-k", 8));
     const probeEvery = Number(val("--probe-every", 1));
     const targetTown = Number(val("--target-town", 1));
-    const knobsAtDefaults = screenK === 8 && probeEvery === 1 && targetTown === 1;
+    const multiTown = val("--multi-town", "on") !== "off";
+    const knobsAtDefaults = screenK === 8 && probeEvery === 1 && targetTown === 1 && multiTown;
 
     let srcDir, forkCommit;
     if (useWorktree) {
@@ -75,12 +77,12 @@ async function main() {
 
     const weights = { ...IP.DEFAULT_WEIGHTS, ...weightsOverride };
     const t0 = Date.now();
-    const r = await IP.runStandalone({ maxLoops, weights, seedFromPredictor, verbose: true, screenK, probeEvery, targetTown });
+    const r = await IP.runStandalone({ maxLoops, weights, seedFromPredictor, verbose: true, screenK, probeEvery, targetTown, multiTown });
     const hash = crypto.createHash("sha256").update(r.finalSnapshot).digest("hex").slice(0, 16);
 
     const out = {
         date: new Date().toISOString(), forkCommit, seed, seedFromPredictor,
-        weightsOverride, screenK, probeEvery, targetTown,
+        weightsOverride, screenK, probeEvery, targetTown, multiTown,
         loopsRun: r.loopsRun, cumTicks: r.cumTicks,
         finished: r.finished, finalHash: hash,
         divergenceCount: r.divergences.length, divergences: r.divergences,

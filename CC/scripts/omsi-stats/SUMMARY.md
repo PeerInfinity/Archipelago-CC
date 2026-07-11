@@ -159,3 +159,58 @@ candidates (townNum + travelNum), travel-prefixed measurement so town-1
 actions become measurable, and generators that build per-town sub-queues.
 Multipart actions/dungeons — the originally predicted wall — sit BEHIND
 this one and stay unassessed until it falls.
+
+## Round 6 — multi-town planner lands; town-2 wall recharacterized as ECONOMIC (2026-07-11)
+
+Fork `automation` @ `c97c50b` (M0 `30b6310` graph/pushes, M1+M2 `04b02e8`
+measurement/segments, M3 `efd0ef7` plannerMultiTown option, `c97c50b`
+expedition economics). All phases byte-inert at townsUnlocked=[0]:
+
+| run | loops | ticks | result |
+|---|---:|---:|---|
+| acceptance (M0 tree) | 500 | 5,432,753 | hash `54506b48ec1758af` — **byte-exact** |
+| acceptance (M1–M3 tree) | 500 | 5,432,753 | **byte-exact** |
+| acceptance (final tree, `c97c50b`) | 500 | 5,432,753 | **byte-exact** |
+| cross-check frontier:1000 | 502 | 7,101,523 | loop- AND tick-exact vs Round 4 |
+| cross-check bank:10 | 632 | 5,354,266 | loop- AND tick-exact vs Round 4 |
+| stretch town-2, M0 only | 1200 cap | 32,833,753 | hash `1240f71c5654f61e`; town 2 NOT reached |
+| town-2, M0–M3 as designed | 1200 cap | 32,833,753 | **byte-identical to M0-only** — every multi-town candidate generated+confirmed, none ever won |
+| town-2, + expedition economics | 1200 cap | 27,643,753 | hash `e01418a303a0cdb4`; town 2 NOT reached, but the cascade fires (below) |
+
+**The design doc's model of the wall was wrong.** Round 5 framed town 2 as
+a planner-structure problem (destination filter + measurement). Both are
+fixed and verified (two-hop pushes generate; town-1 profiles form via
+travel-prefixed probes), yet nothing changed: the binding constraint is
+LOOP CAPACITY. Engine-verified arithmetic at the L500 state:
+
+- Pure town-0 economy loop: 34,250 realized mana − 23,468 pump ticks =
+  **10,782 disposable headroom**. Pools are saturated (Pots 500/500,
+  SQuests 76/76…); capacity plateaus at 39,250 by L600.
+- Gold reserved for a purchase forgoes its converter value (~50
+  mana/gold): supplies = 15,000 mana-equivalent (9,000 at Haggle h6,
+  rep-capped by the 6-item LQuest bank). Push budgets match exactly:
+  19,250 = 34,250 − 15,000 (h0); 25,250 = 34,250 − 9,000 (h6).
+- Town-2 price at best composition ≈ 9,000 + 1,639 (Haggle/Buy/Start
+  Journey) + 8,000 (Continue On) ≈ 18.6k ≫ 10,782. An h6 expedition
+  leaves ~143 ticks of town-1 time. The knowledge model is fine — it is
+  actually PESSIMISTIC (realized gold yields exceed measured).
+- No alternate route: Hitch Ride (cost 1, dest 2!) and Open Rift are
+  story-gated (probeable:false — vanilla unlocks them only after
+  reaching those towns).
+
+**Expedition-economics fix** (`c97c50b`: binding tailReserve, full pump +
+Haggle variants, generous tails): expeditions WIN from L506 and unlock
+six town-1 actions — Wild Mana L508, Gather Herbs L533, Old Shortcut
+L570, Talk To Hermit L838, Follow Flowers L909, Clear Thicket L933 (the
+as-designed run unlocked ZERO in 700 post-L500 loops). The run then
+converges to replaying an h6 expedition loop (mana 30,250 = 39,250 −
+9,000 toll, paid every loop).
+
+**The NEXT wall is scoring horizon (design doc §11.5, now proven):**
+Old Shortcut — whose progress cheapens Continue On's 8,000 and is the
+vanilla-intended key to town 2 — was ground exactly ONCE in 700 loops:
+travel-COST reductions are invisible to the frontier term (it prices
+unlock thresholds only). Ditto capacity compounding (Wild Mana bank
+growth via sustained investment). Both need a scoring design pass
+(travel-relief term gated to multi-town states + multi-loop capacity
+valuation), not a patch. Multiparts/dungeons remain unassessed behind it.
