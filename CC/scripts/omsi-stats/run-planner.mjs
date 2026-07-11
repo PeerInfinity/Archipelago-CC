@@ -21,6 +21,13 @@
 //   node CC/scripts/omsi-stats/run-planner.mjs --screen-k 4 --probe-every 5
 //   node CC/scripts/omsi-stats/run-planner.mjs --target-town 2   # stretch: past town 1
 //   node CC/scripts/omsi-stats/run-planner.mjs --multi-town off  # v0 town-0-only planner (A/B)
+//   node CC/scripts/omsi-stats/run-planner.mjs --gain-mult 100   # boosted testing runs (exp only)
+//   node CC/scripts/omsi-stats/run-planner.mjs --save-state results/state.json   # dump end-of-run resume blob
+//   node CC/scripts/omsi-stats/run-planner.mjs --from-state results/state.json --max-loops 550
+//       # snapshot-start: continue a saved run (max-loops is TOTAL loops incl. the donor's).
+//       # Iteration scaffolding only — the acceptance gate stays full-from-fresh.
+//       # The blob carries save+rng+planning state (knowledge table incl.), so scorer/weight
+//       # changes can be A/B'd from the same wall state without replaying 500 loops.
 //   node CC/scripts/omsi-stats/run-planner.mjs --out results/foo.json
 
 import { execFileSync } from "node:child_process";
@@ -53,7 +60,11 @@ async function main() {
     const probeEvery = Number(val("--probe-every", 1));
     const targetTown = Number(val("--target-town", 1));
     const multiTown = val("--multi-town", "on") !== "off";
-    const knobsAtDefaults = screenK === 8 && probeEvery === 1 && targetTown === 1 && multiTown;
+    const gainMult = Number(val("--gain-mult", 1));
+    const saveStatePath = val("--save-state", null);
+    const fromStatePath = val("--from-state", null);
+    const knobsAtDefaults = screenK === 8 && probeEvery === 1 && targetTown === 1 && multiTown
+        && gainMult === 1 && !fromStatePath;
 
     let srcDir, forkCommit;
     if (useWorktree) {
@@ -73,16 +84,26 @@ async function main() {
     ctx.sandbox.__rngGet = ctx.getRng;
     ctx.sandbox.__rngSet = ctx.setRng;
     ctx.ev("IdlePlanner.setRngHooks({ get: __rngGet, set: __rngSet })");
+    if (gainMult !== 1) ctx.ev(`options.expGainMultiplier = ${gainMult}`);
     const IP = ctx.ev("IdlePlanner");
 
     const weights = { ...IP.DEFAULT_WEIGHTS, ...weightsOverride };
+    const resumePath = fromStatePath && !path.isAbsolute(fromStatePath) ? path.join(here, fromStatePath) : fromStatePath;
+    const resume = resumePath ? JSON.parse(fs.readFileSync(resumePath, "utf8")) : null;
+    if (resume) console.log(`resuming from ${fromStatePath} (donor loop ${resume.planning?.loop}, gain-mult must match the donor run)`);
     const t0 = Date.now();
-    const r = await IP.runStandalone({ maxLoops, weights, seedFromPredictor, verbose: true, screenK, probeEvery, targetTown, multiTown });
+    const r = await IP.runStandalone({ maxLoops, weights, seedFromPredictor, verbose: true, screenK, probeEvery, targetTown, multiTown, resume });
     const hash = crypto.createHash("sha256").update(r.finalSnapshot).digest("hex").slice(0, 16);
+    if (saveStatePath) {
+        const p = path.isAbsolute(saveStatePath) ? saveStatePath : path.join(here, saveStatePath);
+        fs.mkdirSync(path.dirname(p), { recursive: true });
+        fs.writeFileSync(p, JSON.stringify(r.resume));
+        console.log(`resume state written to ${p}`);
+    }
 
     const out = {
         date: new Date().toISOString(), forkCommit, seed, seedFromPredictor,
-        weightsOverride, screenK, probeEvery, targetTown, multiTown,
+        weightsOverride, screenK, probeEvery, targetTown, multiTown, gainMult,
         loopsRun: r.loopsRun, cumTicks: r.cumTicks,
         finished: r.finished, finalHash: hash,
         divergenceCount: r.divergences.length, divergences: r.divergences,
@@ -91,7 +112,7 @@ async function main() {
         wallSeconds: (Date.now() - t0) / 1000,
     };
     fs.mkdirSync(resultsDir, { recursive: true });
-    const slug = val("--out", `planner-seed${seed}${seedFromPredictor ? "-seeded" : ""}${Object.keys(weightsOverride).length ? "-" + Object.entries(weightsOverride).map(([k, v]) => k + v).join("_") : ""}.json`);
+    const slug = val("--out", `planner-seed${seed}${seedFromPredictor ? "-seeded" : ""}${gainMult !== 1 ? `-gm${gainMult}` : ""}${Object.keys(weightsOverride).length ? "-" + Object.entries(weightsOverride).map(([k, v]) => k + v).join("_") : ""}.json`);
     const outPath = path.isAbsolute(slug) ? slug : path.join(here, slug.startsWith("results/") ? slug : `results/${slug}`);
     fs.writeFileSync(outPath, JSON.stringify(out, null, 2));
 
