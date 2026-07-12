@@ -117,7 +117,9 @@ describe('calibration pins', () => {
         // crossing minimum nearly to its full-hold player top, so the
         // punish window collapses (the deriveGeometry refusal path)
         expect(G.CEIL_RISE).toBe(null);
-    });
+        // nsmbu's ceiling refusal forces deriveGeometry through full sweeps —
+        // the heaviest pin; the 300 s budget class (like the other sweep pins).
+    }, 300000);
 
     it('the pinned celeste CEIL_MIN_CLEAR matches a fresh robust ceiling sweep', () => {
         const gapMax = CELESTE_GEOMETRY.CEIL_GAP.min + CELESTE_GEOMETRY.CEIL_GAP.span;

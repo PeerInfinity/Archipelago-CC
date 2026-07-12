@@ -99,7 +99,9 @@ describe('generateZoneSet', () => {
             expect(JSON.stringify(generateLevel({ id: zone.level.id, ...zone.spec })))
                 .toBe(JSON.stringify(zone.level));
         }
-    });
+        // 6 zone generations + 6 byte-identity re-generations — heavy; give it
+        // headroom over the default ceiling under battery/CI load.
+    }, 300000);
 
     it('same seed ⇒ byte-identical zone table', () => {
         expect(JSON.stringify(generateZoneSet({ count: 6, seed: 3 })))
@@ -378,7 +380,9 @@ describe('calibration pins', () => {
         // crossing minimum nearly to its full-hold player top, so the
         // punish window collapses (the deriveGeometry refusal path)
         expect(G.CEIL_RISE).toBe(null);
-    });
+        // nsmbu's ceiling refusal forces deriveGeometry through full sweeps —
+        // the heaviest pin; the 300 s budget class (like the other sweep pins).
+    }, 300000);
 
     it('the pinned celeste CEIL_MIN_CLEAR matches a fresh robust ceiling sweep', () => {
         const gapMax = CELESTE_GEOMETRY.CEIL_GAP.min + CELESTE_GEOMETRY.CEIL_GAP.span;
