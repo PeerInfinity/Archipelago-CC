@@ -268,15 +268,23 @@ their current weights (relief credits ~180/Shortcut-level vs an ~7k gap).
 against a bank-limited ~39k plateau; Old Shortcut relief accrues ~2 levels
 per rare grind loop. Options for the next arc: heavier relief weighting
 (sweep W.travelRelief 10–30 from the L500 snapshot), buff-grant visibility,
-multipart assessment — all pending the SUCCESS-METRIC decision (user,
-session 8): loops-to-town-N incentivizes capacity-maximizing loops; ticks/
-wall-clock (both already recorded) may be the truer metric, and weight
-calibration (incl. bank 30 / bankPot 15) should be redone under whichever
-is chosen. ALSO ruled: v1 AP location checks = RESOURCE unlocks (pool
+multipart assessment — all pending recalibration under the SUCCESS-METRIC
+ruling (user, session 8): loops-to-town-N incentivizes capacity-maximizing
+loops; ticks/wall-clock (both already recorded) may be the truer metric,
+and weight calibration (incl. bank 30 / bankPot 15) should be redone under
+whichever is chosen. The harness side SHIPPED same session: `--metric
+loops|ticks|wall|weighted` (+ `--metric-weights`), reported/stored as
+metricValue — **default stays loop count for now** (user ruling); gates
+unchanged. ALSO ruled: v1 AP location checks = RESOURCE unlocks (pool
 discovery + lootable checking), NOT action unlocks.
 
 **New defect found (browser-vs-worker):** "Lootable first" checkboxes are
 DOM-only; the worker has no DOM, so its sim plays LOOT-FIRST while the
 browser default is CHECK-FIRST — live play can realize a different budget
-than the plan. Fix pending a ruling (forward checkbox states to the worker,
-or have Auto mode set the boxes).
+than the plan. RULED + SHIPPED same session (fork `af09547`):
+`plannerControlLootFirst` (default ON) — ON: automation sets all
+searchToggler boxes to its loot-first model at each plan request; OFF:
+live checkbox states are forwarded with the plan message and the worker's
+getElementById shim returns HTMLInputElement stubs carrying them. Headless
+paths untouched (byte-gates unaffected); UI smoke 23/23 covers both
+branches.
