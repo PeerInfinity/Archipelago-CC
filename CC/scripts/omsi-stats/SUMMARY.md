@@ -339,3 +339,53 @@ tick-efficiently by deliberately grinding high-expMult actions — the
 metric ever makes talent compounding score-worthy, the vocabulary is
 high-expMult grind CANDIDATES (expMult is already exported in
 plReadState, currently unused in scoring).
+
+## Round 9 — metric-disagreement hunt: NULL at the optimum; bankPot:8 dominates; a fixation hole at bank:20 (2026-07-12)
+
+Initial attempt to find loops-vs-ticks disagreement (user-directed; the
+pre-registered fallback: if none found, adopt "track both, stop
+hunting"). Six new 1x lab runs (seed 12345, town-1 horizon, fork
+`4174348` --worktree) along the bank/bankPot axis, joining three known
+points:
+
+| Config | Loops | Ticks | |
+|---|---:|---:|---|
+| **bankPot:8** | **484** | **5,099,270** | **argmin BOTH metrics** |
+| default (bank:30/bankPot:15) | 500 | 5,432,753 | the frozen reference |
+| frontier:1000 | 502 | 7,101,523 | known (R4) |
+| bank:15 | 531 | 5,764,277 | worse both |
+| bank:45 | 534 | 7,276,823 | worse both (+34% ticks) |
+| bank:10 | 632 | 5,354,266 | known (R4) — 2nd in ticks, 6th in loops |
+| bank:10+bankPot:8 | 636 | 5,502,151 | lean combo does NOT compound |
+| bank:5 | 694 | 6,550,643 | bank:10's tick edge collapses |
+| bank:20 | DNF (1200 cap) | 29,455,600 | fixation hole — see below |
+
+**Verdict on the metric question: the metrics AGREE about the winner.**
+bankPot:8 is optimal under loops AND ticks; the only disagreement in the
+field remains the known bank:10 asymmetry (−1.4% ticks for +26% loops),
+which no config amplified. Per the pre-registered rule, the
+recommendation is: keep loops as the primary metric (standing ruling),
+keep recording ticks/wall beside it (the harness already does), fold
+metric-watching into the other planned work, and stop actively hunting
+disagreement sources.
+
+**Finding 2 — recalibration debt is real but modest:** bankPot:8 beats
+the shipped default on both currencies (−3.2% loops, −6.1% ticks).
+DEFAULT_WEIGHTS is NOT changed: one seed, one horizon, and a default
+change invalidates the frozen byte-reference (500/5,432,753/54506b...)
+→ that belongs to the deliberate recalibration pass (ideally after the
+§11.7 eval pool makes sweeps cheap), not a drive-by.
+
+**Finding 3 — the weight landscape has a fixation HOLE, not a smooth
+trade-off:** bank:20 NEVER reached town 1 (1200-loop cap, 29.5M ticks)
+despite unlocking Start Journey at L462 — `repeat` won 675 of the last
+738 loops while it built the fattest economy of any run (34,750-mana
+loops). Healthy neighbors on BOTH sides (15 → 531, 30 → 500). Mechanism
+undiagnosed (same fixation class as the R5/R6 walls: the travel push
+never outscores the banked-economy loop at exactly this credit level).
+Consequences: weight calibration is a ROBUSTNESS problem, not just an
+optimization problem — sweeps must flag DNFs, and AP-randomized content
+(different economies) raises the odds of landing in a hole. A
+cap-triggered anti-fixation guard (e.g. frontier boost after N identical
+committed queues) is a candidate general mechanism, consistent with the
+no-special-cases doctrine.
