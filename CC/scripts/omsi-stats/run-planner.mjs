@@ -91,8 +91,19 @@ async function main() {
     const resumePath = fromStatePath && !path.isAbsolute(fromStatePath) ? path.join(here, fromStatePath) : fromStatePath;
     const resume = resumePath ? JSON.parse(fs.readFileSync(resumePath, "utf8")) : null;
     if (resume) console.log(`resuming from ${fromStatePath} (donor loop ${resume.planning?.loop}, gain-mult must match the donor run)`);
+    // Sidecar progress log: one line per loop, flushed as it happens, next to
+    // the results file. Launch pipes (`| tail`) swallow the verbose progress,
+    // so mid-run visibility must not depend on how the command was invoked.
+    const outArg = val("--out", null);
+    const progressPath = path.join(resultsDir,
+        (outArg ? path.basename(outArg).replace(/\.json$/, "") : `planner-progress-${process.pid}`) + ".log");
+    fs.mkdirSync(resultsDir, { recursive: true });
+    fs.writeFileSync(progressPath, "");
+    const onLoop = (t) => fs.appendFileSync(progressPath,
+        `L${t.loop} ${t.label} ticks=${t.ticks} cum=${t.cumTicks} mana=${t.mana} score=${t.score}\n`);
+    console.log(`progress log: ${progressPath}`);
     const t0 = Date.now();
-    const r = await IP.runStandalone({ maxLoops, weights, seedFromPredictor, verbose: true, screenK, probeEvery, targetTown, multiTown, resume });
+    const r = await IP.runStandalone({ maxLoops, weights, seedFromPredictor, verbose: true, screenK, probeEvery, targetTown, multiTown, resume, onLoop });
     const hash = crypto.createHash("sha256").update(r.finalSnapshot).digest("hex").slice(0, 16);
     if (saveStatePath) {
         const p = path.isAbsolute(saveStatePath) ? saveStatePath : path.join(here, saveStatePath);
