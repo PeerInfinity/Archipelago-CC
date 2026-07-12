@@ -389,3 +389,35 @@ optimization problem — sweeps must flag DNFs, and AP-randomized content
 cap-triggered anti-fixation guard (e.g. frontier boost after N identical
 committed queues) is a candidate general mechanism, consistent with the
 no-special-cases doctrine.
+
+## Round 10 — parallel eval pool SHIPPED: 2.0x, and the planner's true bottleneck is the predictor screen (2026-07-12)
+
+§11.7 Design A implemented (fork `automation` @ `efc9b36`: setEvalPool
+hook + confirmCandidate extraction + per-phase wall instrumentation;
+outer `5e0fd6d13`: eval-worker.mjs + `--pool N` batched worker_threads
+host). All gates byte-exact: v0 acceptance serial AND pool-8 both
+reproduce 500 / 5,432,753 / `54506b48ec1758af` / 0 RNG; fork npm test
+26/26 (new two-kind pool-contract equivalence test).
+
+**Measured speedup at --pool 8: 2.0x full-run (1775s → 878s, identical
+contention), not the 4–8x the design estimated.** The new phase
+instrumentation explains why, and the finding matters beyond the pool:
+
+- **The Koviko predictor screen is 80–93% of ALL planning wall time**
+  (L200 profile: screen 80 / confirm 14 / probe 3 / know 1; full 500-run
+  serial: screen 93 / confirm 6). Engine confirms — presumed dominant
+  since v0 — are a rounding error. Pooling confirms alone bought 5%.
+- Pooled rounds are bounded by the SLOWEST SINGLE PREDICTION, not worker
+  count: late-game committed queues run 50+ entries and the predictor
+  scales with queue length, so the `repeat` candidate's prediction is a
+  long pole that caps per-round parallelism at ~2–3x. Batched dispatch
+  (one message per worker per round) recovered the messaging overhead
+  (per-job round trips cost ~as much as the predictions themselves).
+- Worker-side snapshot restore caching was a no-op (predictions are
+  state-pure; restores were never the cost).
+
+Further speedup routes, all BEHAVIOR-CHANGING and therefore future
+design decisions, not drive-bys: predictor-level optimization (its cost
+model, not the planner's), screening long repeat queues incrementally,
+or narrowing what gets predicted. For now: `--pool 8` halves every
+stats run; acceptance stays gated on the serial path.
