@@ -421,3 +421,42 @@ design decisions, not drive-bys: predictor-level optimization (its cost
 model, not the planner's), screening long repeat queues incrementally,
 or narrowing what gets predicted. For now: `--pool 8` halves every
 stats run; acceptance stays gated on the serial path.
+
+## Round 11 — screen-mode A/B: the K-cut is the regularizer; engine screen = the 5x iteration regime (2026-07-12)
+
+User question: if the predictor costs more than the engine (Round 10),
+use the engine for the screen step — or skip screening? Fork gained
+`screenMode: predictor (default) | engine | none` (`e3d4d89`; runner
+`--screen-mode`). All arms pool-4, seed 12345, 1x. **Every run in this
+arc consumed 0 RNG — the trajectory is fully deterministic, so gaps
+below are facts about THE canonical run, not sampling noise** (there is
+no seed axis to average over until AP randomization exists).
+
+| Arm | Loops | Ticks | Wall (shared box) |
+|---|---:|---:|---:|
+| predictor screen, K=8 (reference) | **500** | **5,432,753** | 772s — byte-exact PASS |
+| engine screen, K=8 | 514 | 5,954,659 | **156s (~5x)** |
+| no screen (all confirmed) | 570 | 7,497,789 | 132s |
+
+Findings:
+- **`none` reproduces Round 4's screenK:16 EXACTLY (570 / 7,497,789)**
+  — K=16 was already past the candidate count, so that old data point
+  WAS the no-screen ablation: the K-CUT is the regularizer, worth 70
+  loops / 38% ticks, independent of what ranks the candidates.
+- **Engine-truth ranking is slightly WORSE than the predictor's
+  model-gapped ranking** (+14 loops / +9.6% ticks). First divergence at
+  L292: the engine screen admits `discover:Investigate`, which WINS the
+  round (793 > invest:1's 787) — locally better, globally worse. The
+  predictor under-ranks discovery queues (its known model gap), which
+  functioned as accidental regularization against a myopic pick. A
+  lesson for scorer work, not a defense of the predictor per se.
+- **Engine screen has no long pole** (uniform loop cost per candidate vs
+  predictor cost scaling with queue entry count): full 1x runs drop to
+  ~2.6 min pooled.
+
+**Standing usage ruling (recorded):** the reference/acceptance gates
+stay on `predictor` (default, byte-inert — no re-baseline); `--screen-
+mode engine` is the ITERATION regime for sweeps and experiments (~5x,
+quality within 3% loops on the canonical trajectory); `none` is
+rejected. Sweeps should final-check winning configs under predictor
+mode before drawing conclusions.
