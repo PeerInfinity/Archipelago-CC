@@ -15,39 +15,31 @@ import {
     SWEEP_SATURATING_PROFILES, sweepSpringTotal, sweepMaxRise, sweepCeilingMin,
     sweepGlideChasm, measureTapArc, applyCeilingMargin,
 } from './generator.js';
-import { deriveAccessRules } from './deriveRules.js';
 import { DEFAULTS, PROFILES } from './physics.js';
 import { validateLevel } from './level.js';
 import { ABILITY_ITEM_NAMES, VICTORY_ITEM_NAME, createGameSession } from './gameCore.js';
 import { createBotDriver } from './botDriver.js';
 
-// Shield rows are EXPENSIVE (a bed pulls 'shield' into the verify
-// universe — 2× the subset table — and every shield-subset flood gains
-// a second budget level), so the matrix carries the two load-bearing
-// rows only: the solo gate and the nested chain. Wider shield combos
-// are covered where they're cheap-per-run: the 6-zone table ([spring,
-// shield] / [blue,shield] reqs + the bot gate), the spec-path shield
-// test below, and the sphere slow suite. A 5-ability everything row
-// was tried and timed the suite out (~51 min): the 4-ability row stays
-// the everything check.
-const REQUIREMENTS = [[], ['doubleJump'], ['blue'], ['spring'],
-    ['doubleJump', 'blue'], ['doubleJump', 'spring'],
-    ['doubleJump', 'blue', 'spring'],
-    ['glide'], ['doubleJump', 'glide'], ['glide', 'spring'],
-    ['shield'], ['doubleJump', 'shield'],
-    ['blue', 'doubleJump', 'glide', 'spring']];
-const SEEDS = [1, 2, 3, 4];
+// The FULL requirement matrix (13 rows) × 4 seeds was the routine battery's
+// bulk (~20–25 min); it is now the calibration tier's job
+// (generator.calib.test.js, run on physics/vocabulary/solver change). The
+// slow battery keeps a 3-ROW SMOKE that still exercises the plain,
+// single-ability, and everything paths every run — generateLevel's internal
+// verify remains the production gate for every shipped level regardless.
+const EVERYTHING = ['blue', 'doubleJump', 'glide', 'spring'];
+const SMOKE = [[], ['doubleJump'], EVERYTHING];
+const SMOKE_SEEDS = [1, 2];
 
 const goalRules = (level, derived) => Object.fromEntries([
     ...level.pickups.map((pk) => [pk.id, derived.pickups[pk.id].minimalSets]),
     ...level.portals.map((pt) => [pt.id, derived.exits[pt.id].minimalSets]),
 ]);
 
-describe('seed-range generate-and-verify', () => {
-    for (const requirement of REQUIREMENTS) {
+describe('seed-range generate-and-verify (3-row smoke)', () => {
+    for (const requirement of SMOKE) {
         const want = [...requirement].sort();
-        it(`requirement [${requirement.join('+') || 'none'}] × seeds ${SEEDS.join(',')}`, () => {
-            for (const seed of SEEDS) {
+        it(`requirement [${requirement.join('+') || 'none'}] × seeds ${SMOKE_SEEDS.join(',')}`, () => {
+            for (const seed of SMOKE_SEEDS) {
                 const level = generateLevel({
                     id: `sweep_${want.join('_') || 'plain'}_${seed}`,
                     requirement, branchCount: 1, hazardChance: 0.5, seed,
@@ -64,32 +56,21 @@ describe('seed-range generate-and-verify', () => {
         }, 300000);
     }
 
-    it('same seed ⇒ byte-identical level for every requirement', () => {
-        for (const requirement of REQUIREMENTS) {
-            const opts = { id: 'det', requirement, branchCount: 1, hazardChance: 0.5, seed: 7 };
-            expect(JSON.stringify(generateLevel(opts)), requirement.join('+'))
-                .toBe(JSON.stringify(generateLevel(opts)));
-        }
-    }, 600000);
-
-    it('independent full-graph derive agrees with the layered verify path', () => {
-        for (const requirement of REQUIREMENTS) {
-            const want = [...requirement].sort();
-            const level = generateLevel({
-                id: `xcheck_${want.join('_') || 'plain'}`,
-                requirement, branchCount: 1, hazardChance: 0.5, seed: 5,
-            });
-            // default reach = full N² graph flood (deriveRules.js)
-            const derived = deriveAccessRules(level, { constants: DEFAULTS });
-            expect(derived.defects, level.id).toEqual([]);
-            for (const [id, sets] of Object.entries(goalRules(level, derived))) {
-                expect(sets, `${level.id} ${id}`).toEqual([want]);
-            }
-        }
-        // 13 requirements × (generate + full-N² derive); glide strips
-        // are the longest levels in the corpus, and shield rows add a
-        // second budget level to every full graph
-    }, 900000);
+    it('same seed ⇒ byte-identical level (everything row)', () => {
+        // Byte-identity is a draw-order property; the full per-requirement
+        // repetition (13×) re-proved the same discipline and moved to the
+        // calibration tier. The everything row here + the zone-table
+        // determinism test below are the two byte-identity canaries (§1).
+        const opts = { id: 'det', requirement: EVERYTHING, branchCount: 1, hazardChance: 0.5, seed: 7 };
+        expect(JSON.stringify(generateLevel(opts)))
+            .toBe(JSON.stringify(generateLevel(opts)));
+        // The everything row is the heaviest single generation in the battery
+        // (two 4-ability generates); match the sweep's 300 s ceiling so CI
+        // variance never trips it (it runs serially, ~40–60 s unloaded).
+    }, 300000);
+    // The independent full-graph-vs-layered agreement over all 13 requirements
+    // (~8 min) is demoted to the calibration tier (generator.calib.test.js);
+    // the fixture-level agreement runs every canRun.slow corpus case.
 });
 
 describe('generateZoneSet', () => {
@@ -194,8 +175,8 @@ describe('reward shelves (plan §8.7 step 2)', () => {
     // (including the shelf pickup) must derive exactly [S].
     for (const requirement of [['spring'], ['doubleJump'], ['doubleJump', 'spring']]) {
         const want = [...requirement].sort();
-        it(`forced shelf on [${requirement.join('+')}] × seeds 1,2`, () => {
-            for (const seed of [1, 2]) {
+        it(`forced shelf on [${requirement.join('+')}] × seed 1`, () => {
+            for (const seed of [1]) {
                 const level = generateLevel({
                     id: `shelf_${want.join('_')}_${seed}`, requirement,
                     pickupCount: 2, branchCount: 1, hazardChance: 0.5,
@@ -216,7 +197,7 @@ describe('reward shelves (plan §8.7 step 2)', () => {
     it('full jitter across gate shapes: every goal still derives exactly [S]', () => {
         for (const requirement of [['doubleJump'], ['spring'], ['blue'], ['doubleJump', 'blue']]) {
             const want = [...requirement].sort(); // names the generated ids
-            for (const seed of [1, 2]) {
+            for (const seed of [1]) {
                 const level = generateLevel({
                     id: `jit_${want.join('_')}_${seed}`, requirement,
                     pickupCount: 2, branchCount: 1, hazardChance: 0.5,
@@ -234,7 +215,7 @@ describe('reward shelves (plan §8.7 step 2)', () => {
     it('full splits + jitter across gate shapes: every goal still derives exactly [S]', () => {
         for (const requirement of [[], ['doubleJump'], ['spring']]) {
             const want = [...requirement].sort();
-            for (const seed of [1, 2]) {
+            for (const seed of [1]) {
                 const level = generateLevel({
                     id: `split_${want.join('_') || 'plain'}_${seed}`, requirement,
                     pickupCount: 2, branchCount: 1, hazardChance: 0.5,
@@ -253,7 +234,7 @@ describe('reward shelves (plan §8.7 step 2)', () => {
         for (const margin of [1, 0]) {
             for (const requirement of [[], ['doubleJump'], ['spring']]) {
                 const want = [...requirement].sort();
-                for (const seed of [1, 2]) {
+                for (const seed of [1]) {
                     const level = generateLevel({
                         id: `ceil_m${margin}_${want.join('_') || 'plain'}_${seed}`, requirement,
                         pickupCount: 2, branchCount: 1, hazardChance: 0.5,

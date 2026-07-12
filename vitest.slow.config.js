@@ -12,10 +12,12 @@ import { defineConfig, configDefaults } from 'vitest/config';
 export default defineConfig({
   test: {
     include: ['frontend/**/*.slow.test.js'],
-    // runnerDemo is TEMPORARILY DISABLED (user request 2026-07-09) — see the
-    // matching note in vitest.config.js. Re-enable by deleting the runnerDemo
-    // entry. Spread the defaults: a bare `exclude` would drop node_modules/dist.
-    exclude: [...configDefaults.exclude, 'frontend/modules/runnerDemo/**'],
+    // runnerDemo's slow battery is back (test-strategy rebalance §1, 2026-07-12):
+    // the heavy 13×4 sweep + full-graph agreement were demoted to the manual
+    // calibration tier (*.calib.test.js, run via `npm run test:unit:calib`),
+    // and the remaining suites trimmed, so the battery fits the CI slow job
+    // again. Spread the defaults: a bare `exclude` would drop node_modules/dist.
+    exclude: [...configDefaults.exclude],
     environment: 'node',
     globals: false,
     reporters: ['default'],

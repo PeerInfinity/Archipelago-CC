@@ -41,9 +41,12 @@ const RUNNER_REGION_PARAMS = {
 };
 
 describe('growSpheres (runner) — zone realisation + oracle', () => {
+    // One seed: the second (seed 2) re-proved the same plan-is-the-oracle
+    // contract; world-level breadth belongs to the preset gates (test-strategy
+    // rebalance §1). Regenerate seed 2 via the calibration tier if the growth
+    // or oracle changes.
     it.each([
         [1, 3],
-        [2, 3],
     ])('runner-only world, seed %i, %i spheres: computed spheres == plan',
         (seed, sphereCount) => {
             const plan = makeRunnerPlan(seed, sphereCount);
