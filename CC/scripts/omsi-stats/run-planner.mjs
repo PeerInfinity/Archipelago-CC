@@ -28,6 +28,10 @@
 //       # Iteration scaffolding only — the acceptance gate stays full-from-fresh.
 //       # The blob carries save+rng+planning state (knowledge table incl.), so scorer/weight
 //       # changes can be A/B'd from the same wall state without replaying 500 loops.
+//   node CC/scripts/omsi-stats/run-planner.mjs --metric ticks
+//       # success metric for run comparison: loops | ticks | wall | weighted (default loops —
+//       # user ruling 2026-07-11). Reported and stored as metricValue; gates are unchanged.
+//   node CC/scripts/omsi-stats/run-planner.mjs --metric weighted --metric-weights '{"loops":1,"ticks":0.0001,"wall":0.5}'
 //   node CC/scripts/omsi-stats/run-planner.mjs --out results/foo.json
 
 import { execFileSync } from "node:child_process";
@@ -61,6 +65,8 @@ async function main() {
     const targetTown = Number(val("--target-town", 1));
     const multiTown = val("--multi-town", "on") !== "off";
     const gainMult = Number(val("--gain-mult", 1));
+    const metric = val("--metric", "loops");
+    const metricWeights = JSON.parse(val("--metric-weights", '{"loops":1,"ticks":0,"wall":0}'));
     const saveStatePath = val("--save-state", null);
     const fromStatePath = val("--from-state", null);
     const knobsAtDefaults = screenK === 8 && probeEvery === 1 && targetTown === 1 && multiTown
@@ -112,15 +118,22 @@ async function main() {
         console.log(`resume state written to ${p}`);
     }
 
+    const wallSeconds = (Date.now() - t0) / 1000;
+    const metricValue =
+        metric === "loops" ? r.loopsRun :
+        metric === "ticks" ? r.cumTicks :
+        metric === "wall" ? wallSeconds :
+        metricWeights.loops * r.loopsRun + (metricWeights.ticks ?? 0) * r.cumTicks + (metricWeights.wall ?? 0) * wallSeconds;
     const out = {
         date: new Date().toISOString(), forkCommit, seed, seedFromPredictor,
         weightsOverride, screenK, probeEvery, targetTown, multiTown, gainMult,
+        metric, metricValue,
         loopsRun: r.loopsRun, cumTicks: r.cumTicks,
         finished: r.finished, finalHash: hash,
         divergenceCount: r.divergences.length, divergences: r.divergences,
         rngConsumed: ctx.rngCount(),
         milestones: r.milestones, trace: r.trace,
-        wallSeconds: (Date.now() - t0) / 1000,
+        wallSeconds,
     };
     fs.mkdirSync(resultsDir, { recursive: true });
     const slug = val("--out", `planner-seed${seed}${seedFromPredictor ? "-seeded" : ""}${gainMult !== 1 ? `-gm${gainMult}` : ""}${Object.keys(weightsOverride).length ? "-" + Object.entries(weightsOverride).map(([k, v]) => k + v).join("_") : ""}.json`);
@@ -128,6 +141,7 @@ async function main() {
     fs.writeFileSync(outPath, JSON.stringify(out, null, 2));
 
     console.log(`\nloops: ${r.loopsRun}  ticks: ${r.cumTicks}  town1: ${r.finished}  hash: ${hash}  rng: ${ctx.rngCount()}  (${out.wallSeconds.toFixed(0)}s)`);
+    console.log(`metric (${metric}): ${Math.round(metricValue * 100) / 100}`);
     console.log(`divergences (predictor-vs-engine): ${r.divergences.length}`);
     console.log("milestones (loop):");
     const highlights = Object.entries(r.milestones).filter(([k]) =>
