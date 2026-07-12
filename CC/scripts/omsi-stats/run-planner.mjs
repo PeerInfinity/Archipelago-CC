@@ -40,6 +40,14 @@
 //       # changes). Loops/ticks are reported split by phase AND as totals; the
 //       # metric uses totals. Mutually exclusive with --from-state. --max-loops
 //       # stays TOTAL (wander phase included).
+//   node CC/scripts/omsi-stats/run-planner.mjs --pool 8
+//       # parallel eval pool (§11.7 Design A): fan the per-round candidate
+//       # confirms out across N worker_threads, each with its own sim
+//       # context. Results are bit-identical to serial (every job carries a
+//       # full save+rng snapshot; results merge in candidate order) — a
+//       # default-seed pool run still asserts V0 EXACT REPRODUCTION, which
+//       # is the determinism gate. Speedup bounded by Amdahl: measurement/
+//       # probing/screening stay serial in the main context.
 //   node CC/scripts/omsi-stats/run-planner.mjs --out results/foo.json
 
 import { execFileSync } from "node:child_process";
@@ -47,6 +55,7 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { Worker } from "node:worker_threads";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, "../../..");
@@ -103,6 +112,42 @@ async function main() {
     ctx.ev("IdlePlanner.setRngHooks({ get: __rngGet, set: __rngSet })");
     if (gainMult !== 1) ctx.ev(`options.expGainMultiplier = ${gainMult}`);
     const IP = ctx.ev("IdlePlanner");
+
+    // Parallel eval pool (--pool N): N worker_threads, each with its own sim
+    // context, serving confirmCandidate jobs. Order preserved by Promise.all
+    // over per-job promises; a free-worker queue keeps every thread busy.
+    const poolSize = Number(val("--pool", 0));
+    let poolWorkers = [];
+    if (poolSize > 0) {
+        const workerPath = path.join(here, "eval-worker.mjs");
+        poolWorkers = Array.from({ length: poolSize }, () =>
+            new Worker(workerPath, { workerData: { srcDir, seed, gainMult } }));
+        await Promise.all(poolWorkers.map(w => new Promise((res, rej) => {
+            w.once("message", res);
+            w.once("error", rej);
+        })));
+        const idle = [...poolWorkers], waiters = [];
+        const acquire = () => idle.length ? Promise.resolve(idle.pop()) : new Promise(r => waiters.push(r));
+        const release = (w) => { const n = waiters.shift(); if (n) n(w); else idle.push(w); };
+        let nextId = 1;
+        const runJob = async (job) => {
+            const w = await acquire();
+            try {
+                return await new Promise((resolve, reject) => {
+                    const id = nextId++;
+                    const onMsg = (m) => {
+                        if (m.id !== id) return;
+                        w.off("message", onMsg);
+                        if (m.ok) resolve(m.res); else reject(new Error(m.error));
+                    };
+                    w.on("message", onMsg);
+                    w.postMessage({ id, job });
+                });
+            } finally { release(w); }
+        };
+        IP.setEvalPool((jobs) => Promise.all(jobs.map(runJob)));
+        console.log(`eval pool: ${poolSize} workers`);
+    }
 
     const weights = { ...IP.DEFAULT_WEIGHTS, ...weightsOverride };
     const resumePath = fromStatePath && !path.isAbsolute(fromStatePath) ? path.join(here, fromStatePath) : fromStatePath;
@@ -162,6 +207,7 @@ async function main() {
 
     const t0 = Date.now();
     const r = await IP.runStandalone({ maxLoops, weights, seedFromPredictor, verbose: true, screenK, probeEvery, targetTown, multiTown, resume, onLoop });
+    for (const w of poolWorkers) w.terminate();
     const hash = crypto.createHash("sha256").update(r.finalSnapshot).digest("hex").slice(0, 16);
     if (saveStatePath) {
         const p = path.isAbsolute(saveStatePath) ? saveStatePath : path.join(here, saveStatePath);
