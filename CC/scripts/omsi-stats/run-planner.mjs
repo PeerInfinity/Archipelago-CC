@@ -32,6 +32,14 @@
 //       # success metric for run comparison: loops | ticks | wall | weighted (default loops —
 //       # user ruling 2026-07-11). Reported and stored as metricValue; gates are unchanged.
 //   node CC/scripts/omsi-stats/run-planner.mjs --metric weighted --metric-weights '{"loops":1,"ticks":0.0001,"wall":0.5}'
+//   node CC/scripts/omsi-stats/run-planner.mjs --wander-until 50 [--wander-cap 20000]
+//       # human-strategy arm (success-metric experiment, plan §11.5 open item 1):
+//       # run single-Wander-only queues ([Wander x99], no planning) until town 0's
+//       # Explored level reaches N%, then hand the planner a resume blob at the
+//       # switch point (same snapshot-start machinery as --from-state; zero fork
+//       # changes). Loops/ticks are reported split by phase AND as totals; the
+//       # metric uses totals. Mutually exclusive with --from-state. --max-loops
+//       # stays TOTAL (wander phase included).
 //   node CC/scripts/omsi-stats/run-planner.mjs --out results/foo.json
 
 import { execFileSync } from "node:child_process";
@@ -69,8 +77,11 @@ async function main() {
     const metricWeights = JSON.parse(val("--metric-weights", '{"loops":1,"ticks":0,"wall":0}'));
     const saveStatePath = val("--save-state", null);
     const fromStatePath = val("--from-state", null);
+    const wanderUntil = Number(val("--wander-until", 0));
+    const wanderCap = Number(val("--wander-cap", 20000));
+    if (wanderUntil > 0 && fromStatePath) throw new Error("--wander-until and --from-state are mutually exclusive");
     const knobsAtDefaults = screenK === 8 && probeEvery === 1 && targetTown === 1 && multiTown
-        && gainMult === 1 && !fromStatePath;
+        && gainMult === 1 && !fromStatePath && !wanderUntil;
 
     let srcDir, forkCommit;
     if (useWorktree) {
@@ -95,7 +106,7 @@ async function main() {
 
     const weights = { ...IP.DEFAULT_WEIGHTS, ...weightsOverride };
     const resumePath = fromStatePath && !path.isAbsolute(fromStatePath) ? path.join(here, fromStatePath) : fromStatePath;
-    const resume = resumePath ? JSON.parse(fs.readFileSync(resumePath, "utf8")) : null;
+    let resume = resumePath ? JSON.parse(fs.readFileSync(resumePath, "utf8")) : null;
     if (resume) console.log(`resuming from ${fromStatePath} (donor loop ${resume.planning?.loop}, gain-mult must match the donor run)`);
     // Sidecar progress log: one line per loop, flushed as it happens, next to
     // the results file. Launch pipes (`| tail`) swallow the verbose progress,
@@ -108,6 +119,44 @@ async function main() {
     const onLoop = (t) => fs.appendFileSync(progressPath,
         `L${t.loop} ${t.label} ticks=${t.ticks} cum=${t.cumTicks} mana=${t.mana} score=${t.score}\n`);
     console.log(`progress log: ${progressPath}`);
+
+    // Wander-first phase (--wander-until): the human opening — commit
+    // [Wander x99] every loop with NO planning until Explored reaches the
+    // threshold, then hand the planner a resume blob at the switch point.
+    // Loops run live (no rollback); the blob's planning state is FRESH
+    // except loop counter, so the planner starts probing/measuring from the
+    // wander end state exactly as it would at loop 0. runStandalone's resume
+    // path restart()s once against the restored queue (the §10a.8
+    // normalization), matching continuous-run semantics.
+    let wanderLoops = 0, wanderTicks = 0, wanderExplored = 0, wanderWallSeconds = 0;
+    if (wanderUntil > 0) {
+        const tw = Date.now();
+        const sess = new IP.Session();
+        const explored = () => sess.read().towns[0].progress.Wander.level;
+        wanderExplored = explored();
+        while (wanderExplored < wanderUntil && wanderLoops < wanderCap) {
+            sess.setQueue([["Wander", 99]]);
+            sess.restart();
+            const lr = sess.runLoop();
+            if (lr.degenerate) throw new Error(`wander loop ${wanderLoops} degenerate (0 mana spent)`);
+            wanderTicks += lr.ticks;
+            wanderLoops++;
+            wanderExplored = explored();
+            if (wanderLoops % 100 === 0)
+                fs.appendFileSync(progressPath, `W${wanderLoops} explored=${wanderExplored} cum=${wanderTicks}\n`);
+        }
+        wanderWallSeconds = (Date.now() - tw) / 1000;
+        const capped = wanderExplored < wanderUntil;
+        fs.appendFileSync(progressPath,
+            `WANDER ${capped ? "CAPPED" : "DONE"} loops=${wanderLoops} explored=${wanderExplored} cum=${wanderTicks}\n`);
+        console.log(`wander phase: ${wanderLoops} loops, ${wanderTicks} ticks -> Explored ${wanderExplored}%`
+            + ` (${wanderWallSeconds.toFixed(1)}s)${capped ? " — CAP HIT before threshold" : ""}`);
+        if (capped) throw new Error(`--wander-cap ${wanderCap} hit at Explored ${wanderExplored}% < ${wanderUntil}%`);
+        const P0 = IP.newPlanningState({});
+        P0.loop = wanderLoops;
+        resume = { save: IP._internals.plSaveClone(), rng: ctx.getRng(), planning: IP.serializePlanningState(P0) };
+    }
+
     const t0 = Date.now();
     const r = await IP.runStandalone({ maxLoops, weights, seedFromPredictor, verbose: true, screenK, probeEvery, targetTown, multiTown, resume, onLoop });
     const hash = crypto.createHash("sha256").update(r.finalSnapshot).digest("hex").slice(0, 16);
@@ -119,40 +168,53 @@ async function main() {
     }
 
     const wallSeconds = (Date.now() - t0) / 1000;
+    // Totals include the wander phase (zero when --wander-until is off).
+    // NOTE: r.loopsRun counts PLANNER loops only, but milestone .loop values
+    // are total-indexed (P.loop resumes at wanderLoops); milestone .cumTicks
+    // are planner-phase only — add wanderTicks for totals.
+    const totalLoops = wanderLoops + r.loopsRun;
+    const totalTicks = wanderTicks + r.cumTicks;
+    const totalWall = wanderWallSeconds + wallSeconds;
     const metricValue =
-        metric === "loops" ? r.loopsRun :
-        metric === "ticks" ? r.cumTicks :
-        metric === "wall" ? wallSeconds :
-        metricWeights.loops * r.loopsRun + (metricWeights.ticks ?? 0) * r.cumTicks + (metricWeights.wall ?? 0) * wallSeconds;
+        metric === "loops" ? totalLoops :
+        metric === "ticks" ? totalTicks :
+        metric === "wall" ? totalWall :
+        metricWeights.loops * totalLoops + (metricWeights.ticks ?? 0) * totalTicks + (metricWeights.wall ?? 0) * totalWall;
     const out = {
         date: new Date().toISOString(), forkCommit, seed, seedFromPredictor,
         weightsOverride, screenK, probeEvery, targetTown, multiTown, gainMult,
         metric, metricValue,
+        wanderUntil, wanderLoops, wanderTicks, wanderExplored,
+        totalLoops, totalTicks,
         loopsRun: r.loopsRun, cumTicks: r.cumTicks,
         finished: r.finished, finalHash: hash,
         divergenceCount: r.divergences.length, divergences: r.divergences,
         rngConsumed: ctx.rngCount(),
         milestones: r.milestones, trace: r.trace,
-        wallSeconds,
+        wallSeconds, wanderWallSeconds,
     };
     fs.mkdirSync(resultsDir, { recursive: true });
     const slug = val("--out", `planner-seed${seed}${seedFromPredictor ? "-seeded" : ""}${gainMult !== 1 ? `-gm${gainMult}` : ""}${Object.keys(weightsOverride).length ? "-" + Object.entries(weightsOverride).map(([k, v]) => k + v).join("_") : ""}.json`);
     const outPath = path.isAbsolute(slug) ? slug : path.join(here, slug.startsWith("results/") ? slug : `results/${slug}`);
     fs.writeFileSync(outPath, JSON.stringify(out, null, 2));
 
-    console.log(`\nloops: ${r.loopsRun}  ticks: ${r.cumTicks}  town1: ${r.finished}  hash: ${hash}  rng: ${ctx.rngCount()}  (${out.wallSeconds.toFixed(0)}s)`);
+    const phaseNote = wanderUntil > 0
+        ? `  [wander ${wanderLoops}L/${wanderTicks}t + planner ${r.loopsRun}L/${r.cumTicks}t]` : "";
+    console.log(`\nloops: ${totalLoops}  ticks: ${totalTicks}  town1: ${r.finished}  hash: ${hash}  rng: ${ctx.rngCount()}  (${totalWall.toFixed(0)}s)${phaseNote}`);
     console.log(`metric (${metric}): ${Math.round(metricValue * 100) / 100}`);
     console.log(`divergences (predictor-vs-engine): ${r.divergences.length}`);
-    console.log("milestones (loop):");
+    console.log(`milestones (loop, total-indexed${wanderUntil > 0 ? "; ticks incl. wander phase" : ""}):`);
     const highlights = Object.entries(r.milestones).filter(([k]) =>
         k.startsWith("town") || ["Pick Locks:unlocked", "Buy Glasses:unlocked", "Short Quests:unlocked",
             "Investigate:unlocked", "Lessons:unlocked", "Start Journey:unlocked"].includes(k));
-    for (const [k, v] of highlights) console.log(`  ${k.padEnd(30)} L${v.loop}  (${v.cumTicks} ticks)`);
+    for (const [k, v] of highlights) console.log(`  ${k.padEnd(30)} L${v.loop}  (${v.cumTicks + wanderTicks} ticks)`);
     console.log(`results written to ${outPath}`);
 
-    // Acceptance gates
-    const gate = r.finished && (targetTown !== 1 || r.loopsRun <= 500);
-    console.log(`\nACCEPTANCE (${targetTown === 1 ? "<=500 loops to town 1" : `reached town ${targetTown}`}): ${gate ? "PASS" : "FAIL"} (${r.loopsRun} loops)`);
+    // Acceptance gates (the <=500 criterion is the v0 acceptance test —
+    // not applicable to wander-first experiment arms, which only gate on
+    // reaching the target town)
+    const gate = r.finished && (targetTown !== 1 || wanderUntil > 0 || r.loopsRun <= 500);
+    console.log(`\nACCEPTANCE (${targetTown === 1 && !wanderUntil ? "<=500 loops to town 1" : `reached town ${targetTown}`}): ${gate ? "PASS" : "FAIL"} (${totalLoops} loops)`);
     if (seed === V0_REFERENCE.seed && !seedFromPredictor && !Object.keys(weightsOverride).length && knobsAtDefaults) {
         const exact = r.loopsRun === V0_REFERENCE.loops && r.cumTicks === V0_REFERENCE.ticks && hash === V0_REFERENCE.hash;
         console.log(`V0 EXACT REPRODUCTION (500 / 5,432,753 / ${V0_REFERENCE.hash}): ${exact ? "PASS" : "MISMATCH"}`);
