@@ -121,8 +121,11 @@ async function main() {
     console.log(`progress log: ${progressPath}`);
 
     // Wander-first phase (--wander-until): the human opening — commit
-    // [Wander x99] every loop with NO planning until Explored reaches the
+    // [Wander x1] every loop with NO planning until Explored reaches the
     // threshold, then hand the planner a resume blob at the switch point.
+    // x1, not x99 (user ruling): the loop ends the moment the single Wander
+    // completes, so no ticks are burned on a partial Wander that would run
+    // out of mana before finishing.
     // Loops run live (no rollback); the blob's planning state is FRESH
     // except loop counter, so the planner starts probing/measuring from the
     // wander end state exactly as it would at loop 0. runStandalone's resume
@@ -135,7 +138,7 @@ async function main() {
         const explored = () => sess.read().towns[0].progress.Wander.level;
         wanderExplored = explored();
         while (wanderExplored < wanderUntil && wanderLoops < wanderCap) {
-            sess.setQueue([["Wander", 99]]);
+            sess.setQueue([["Wander", 1]]);
             sess.restart();
             const lr = sess.runLoop();
             if (lr.degenerate) throw new Error(`wander loop ${wanderLoops} degenerate (0 mana spent)`);
