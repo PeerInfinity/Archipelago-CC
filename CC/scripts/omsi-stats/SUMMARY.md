@@ -328,9 +328,14 @@ wander phase); (2) the 50% arm is worse than the 100% arm in ticks
 spent more ticks than the baseline's whole run from 0%, an anomaly not
 yet diagnosed.
 
-Town-1 end states saved for continuation runs (state-arm{A,B,C}-town1
-.json): the long-term half of the hypothesis — whether extra talent pays
-off past town 1 — is still open, testable cheaply via --from-state.
-User's live refinement during the round: with glasses x4, the optimal
-wander-only cutoff is likely well below 50%, and the real human opening
-is "glasses first, then wander" (arm D candidate).
+Town-1 end states saved (state-arm{A,B,C}-town1.json). POST-ROUND RULING
+(user, 2026-07-12): wander-first is CLOSED as a failure — no sub-50%
+sweep, no special-case openings in the algorithm. The talent residue is
+devalued too: every action gives talent, and per-tick stat exp scales
+with expMult (actions.js:706; 85 actions at x1 incl. Wander, 17 at x2,
+8 at x4, 5 at x5), so B/C's +22% talent is reproducible ~4-5x more
+tick-efficiently by deliberately grinding high-expMult actions — the
+--from-state talent continuation is deprioritized. If a ticks-flavored
+metric ever makes talent compounding score-worthy, the vocabulary is
+high-expMult grind CANDIDATES (expMult is already exported in
+plReadState, currently unused in scoring).
