@@ -130,7 +130,7 @@ async function main() {
         const acquire = () => idle.length ? Promise.resolve(idle.pop()) : new Promise(r => waiters.push(r));
         const release = (w) => { const n = waiters.shift(); if (n) n(w); else idle.push(w); };
         let nextId = 1;
-        const runJob = async (job) => {
+        const runBatch = async (batch) => {
             const w = await acquire();
             try {
                 return await new Promise((resolve, reject) => {
@@ -141,12 +141,26 @@ async function main() {
                         if (m.ok) resolve(m.res); else reject(new Error(m.error));
                     };
                     w.on("message", onMsg);
-                    w.postMessage({ id, job });
+                    w.postMessage({ id, batch });
                 });
             } finally { release(w); }
         };
-        IP.setEvalPool((jobs) => Promise.all(jobs.map(runJob)));
-        console.log(`eval pool: ${poolSize} workers`);
+        // One message per worker per round (latency amortization): jobs are
+        // dealt round-robin into <= poolSize slices, results reassembled by
+        // original index.
+        IP.setEvalPool(async (jobs) => {
+            const n = Math.max(1, Math.min(poolSize, jobs.length));
+            const slices = Array.from({ length: n }, () => []);
+            jobs.forEach((job, idx) => slices[idx % n].push({ idx, job }));
+            const results = new Array(jobs.length);
+            await Promise.all(slices.map(async (slice) => {
+                if (!slice.length) return;
+                const rs = await runBatch(slice.map(x => x.job));
+                slice.forEach((x, k) => { results[x.idx] = rs[k]; });
+            }));
+            return results;
+        });
+        console.log(`eval pool: ${poolSize} workers (batched)`);
     }
 
     const weights = { ...IP.DEFAULT_WEIGHTS, ...weightsOverride };
@@ -251,6 +265,12 @@ async function main() {
         ? `  [wander ${wanderLoops}L/${wanderTicks}t + planner ${r.loopsRun}L/${r.cumTicks}t]` : "";
     console.log(`\nloops: ${totalLoops}  ticks: ${totalTicks}  town1: ${r.finished}  hash: ${hash}  rng: ${ctx.rngCount()}  (${totalWall.toFixed(0)}s)${phaseNote}`);
     console.log(`metric (${metric}): ${Math.round(metricValue * 100) / 100}`);
+    if (r.perf) {
+        const total = Object.entries(r.perf).filter(([k]) => k !== "rounds").reduce((s, [, v]) => s + v, 0);
+        console.log(`planRound phases (${r.perf.rounds} rounds, ${(total / 1000).toFixed(0)}s):`,
+            Object.entries(r.perf).filter(([k]) => k !== "rounds")
+                .map(([k, v]) => `${k} ${(100 * v / Math.max(1, total)).toFixed(0)}%`).join("  "));
+    }
     console.log(`divergences (predictor-vs-engine): ${r.divergences.length}`);
     console.log(`milestones (loop, total-indexed${wanderUntil > 0 ? "; ticks incl. wander phase" : ""}):`);
     const highlights = Object.entries(r.milestones).filter(([k]) =>
