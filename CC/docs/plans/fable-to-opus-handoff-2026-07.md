@@ -94,20 +94,38 @@ tick-for-tick triple equivalence green). Memory:
 Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
 `NewDocs/plans/omsiloops/`.
 
-1. **Scoring-horizon design pass (§11.5) — PENDING SLOT.** A final Fable
-   session is planned for this (prompt delivered 2026-07-11; includes the
-   stat-gain-multiplier test-speed enabler and snapshot-start iteration).
-   - If it lands: implement/continue its output; it will update this
-     section itself.
-   - If it does not land: this is the ONE item in the queue that may exceed
-     comfortable Opus territory — a greedy-scorer horizon problem (planner
-     converges to commuting-without-advancing at L506+; travel-cost
-     reductions and capacity compounding are invisible to the scorer).
-     Evidence base: multitown plan §10a.6–7 + §11.5, omsi-stats SUMMARY
-     Round 6, the instrumented L500 state. Constraint: any travel-relief
-     term must gate on `townsUnlocked > 1` to preserve town-0 byte-inertness
-     (v0 acceptance hash). Iterate boosted-first (100× → 10× → 1×) per the
-     user's ruling.
+1. **Scoring-horizon design pass (§11.5) — LANDED 2026-07-11 (session 8,
+   fork `automation` @ `4174348`, pushed, CI green).** Shipped:
+   `expGainMultiplier` (exp-only at the three engine funnels, byte-inert at
+   1), snapshot-start resume (byte-exact; carries the knowledge table;
+   runner `--gain-mult`/`--save-state`/`--from-state` + sidecar progress
+   logs), travelRelief=3 + headroom=1 scoring terms (mana units, gated
+   `pre.townsUnlocked.length > 1`), the **capacity-probe fix** (pump cost =
+   Σ lastExec manaUsed, cushion-chunked interleaved harvest — the starved
+   probe had been silently crippling expedition tails since M2), the
+   Stats-panel Automation view (settings moved from Extras + live internals
+   incl. Pools & ledgers), `AUTOMATION.md`, `plannerControlLootFirst`
+   (plan/play consistency on the DOM-only searchToggler boxes), and harness
+   `--metric loops|ticks|wall|weighted` (default stays loops — user
+   ruling). All byte-gates green (v0 acceptance on all three trees,
+   cross-checks loop+tick-exact, npm 25/25, UI smoke 23/23).
+   **Round 7 key finding: the probe fix — not the scoring terms — was the
+   lever.** At 1× (shared L500 donor) full design ≈ terms-zeroed control,
+   both with sustained town-1 investment Round 6 never reached; the town-2
+   wall STANDS at 1× L1200 (economy: 9k/loop toll vs bank-limited ~39k
+   plateau). 10× melts on its own (L213; fixed tree L232 — the terms
+   slightly hurt where frontier dominates); 100× has no wall at all (L85)
+   and cannot discriminate designs.
+   **For Opus** (full list: multitown plan §11.5 "Open items" + memory):
+   weight recalibration is GATED on the success-metric question (option
+   shipped, default loops); buff-grant blindness (`addBuffAmt` ×7 earns no
+   decision-time score — direction is declarative per-action metadata
+   behind an option, not imperative special cases); `repeatLastAction` vs
+   backstop ×99 (needs a deliberate re-baseline); **AP ruling: v1 location
+   checks = RESOURCE unlocks (pool discovery + lootable checking), NOT
+   action unlocks** (discretization plan §7 header updated — re-weighs what
+   U0–U5 treats as the pool); settle the base algorithm in town-0 mode
+   (`plannerMultiTown` off) before more multi-town work.
 2. **Unlock-discretization U0–U5** —
    `omsi-loops-unlock-discretization-plan.md` (~5–6 days, on `substrate`).
    Defines the AP location pool; extractor prototyped (157×2 predicates,
