@@ -214,3 +214,69 @@ unlock thresholds only). Ditto capacity compounding (Wild Mana bank
 growth via sustained investment). Both need a scoring design pass
 (travel-relief term gated to multi-town states + multi-loop capacity
 valuation), not a patch. Multiparts/dungeons remain unassessed behind it.
+
+## Round 7 — scoring-horizon pass: the capacity probe was the real lever (2026-07-11, session 8)
+
+Fork `automation` @ `c990b16` (expGainMultiplier `1db09f6`; scoring terms +
+snapshot-start resume `d276342`; headroom/probe fix `a39bc27`; Stats-panel
+Automation view `51442a3`/`c990b16`; AUTOMATION.md `6ed71d1`). Outer:
+`--gain-mult`/`--save-state`/`--from-state` + sidecar progress logs in
+run-planner.mjs.
+
+**Enablers.** expGainMultiplier multiplies exp ONLY (three engine funnels;
+economy stays real; 1 = byte-inert, identity golden). Snapshot-start resume
+is BYTE-EXACT (resumed L40→L55 at 100x ≡ continuous: trace + hash) and
+carries the knowledge table, so scorer iteration skips the 500-loop replay.
+
+**Gates (all green).** v0 acceptance byte-exact (500 / 5,432,753 /
+54506b48ec1758af) on `1db09f6`, `d276342` AND `a39bc27`; weight cross-checks
+loop- AND tick-exact on the final tree (frontier:1000 → 502/7,101,523;
+bank:10 → 632/5,354,266); npm test 25/25; CI green; UI smoke 20/20.
+
+**Design.** Two mana-unit terms, gated on pre.townsUnlocked.length > 1
+(byte-inert at [0]): travelRelief (Δ summed route costs to reachable towns —
+prices Old Shortcut → Continue On 8000−60/level) and headroom
+(Δ(capacity − pump cost) vs last committed loop). Validation then exposed
+that headroom read 0 BY CONSTRUCTION twice over: the chunk driver's spent ==
+budget on every completed loop (pump cost = Σ lastExec manaUsed instead),
+and the capacity probe's end-loaded converter STARVED once banks outgrew the
+base budget (probe 5,250 vs realized 21,250 at a 10x L140 state) — fixed
+with cushion-chunked interleaved harvests, state-gated (`a39bc27`).
+
+**Multiplier sensitivity (get-it-working-boosted-first ruling):**
+
+| regime | result |
+|---|---|
+| 100x | NO WALL: town 1 L84, town 2 L85, unmodified scorer — 100x cannot discriminate designs (~3.5 min/run; plumbing smoke only) |
+| 10x | wall melts economically: town 2 L213 (control == pre-fix design BYTE-IDENTICAL — terms never flipped a winner); fixed tree L232 (−19 loops: the redirection costs more than it buys where frontier dominates) |
+| 1x | wall STANDS at L1200 (700 resumed loops from the shared L500 donor), both arms |
+
+**1x attribution (the round's key finding).** Full design vs
+terms-zeroed control, both on the fixed tree, from the same L500 state:
+NEARLY IDENTICAL (same 15 milestones incl. Hunt unlocked L732/L~732 and Bird
+Watching visible; histograms differ by single loops; Shortcut ground 2 vs 1
+times; 22.43M vs 22.49M ticks). Both differ RADICALLY from Round 6: sustained
+town-1 investment (Forest grinds ×52, invests ×71, Thicket discovery ×15 vs
+Round 6's near-total `repeat` convergence). So the behavior change came from
+the CAPACITY-PROBE FIX, not the scoring terms: accurate capacity flows into
+capacityHint, which sizes expedition tail batches — the starved probe
+(~5k instead of ~32k) had been silently crippling town-1 tails all along.
+The terms themselves are cheap and directionally right but marginal at
+their current weights (relief credits ~180/Shortcut-level vs an ~7k gap).
+
+**Residual wall at 1x = economy-dominated:** 9k supplies toll every loop
+against a bank-limited ~39k plateau; Old Shortcut relief accrues ~2 levels
+per rare grind loop. Options for the next arc: heavier relief weighting
+(sweep W.travelRelief 10–30 from the L500 snapshot), buff-grant visibility,
+multipart assessment — all pending the SUCCESS-METRIC decision (user,
+session 8): loops-to-town-N incentivizes capacity-maximizing loops; ticks/
+wall-clock (both already recorded) may be the truer metric, and weight
+calibration (incl. bank 30 / bankPot 15) should be redone under whichever
+is chosen. ALSO ruled: v1 AP location checks = RESOURCE unlocks (pool
+discovery + lootable checking), NOT action unlocks.
+
+**New defect found (browser-vs-worker):** "Lootable first" checkboxes are
+DOM-only; the worker has no DOM, so its sim plays LOOT-FIRST while the
+browser default is CHECK-FIRST — live play can realize a different budget
+than the plan. Fix pending a ruling (forward checkbox states to the worker,
+or have Auto mode set the boxes).
