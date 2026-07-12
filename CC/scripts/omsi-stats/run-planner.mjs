@@ -78,6 +78,7 @@ async function main() {
     const weightsOverride = JSON.parse(val("--weights", "{}"));
     const useWorktree = has("--worktree");
     const screenK = Number(val("--screen-k", 8));
+    const screenMode = val("--screen-mode", "predictor");   // predictor | engine | none
     const probeEvery = Number(val("--probe-every", 1));
     const targetTown = Number(val("--target-town", 1));
     const multiTown = val("--multi-town", "on") !== "off";
@@ -90,7 +91,7 @@ async function main() {
     const wanderCap = Number(val("--wander-cap", 20000));
     if (wanderUntil > 0 && fromStatePath) throw new Error("--wander-until and --from-state are mutually exclusive");
     const knobsAtDefaults = screenK === 8 && probeEvery === 1 && targetTown === 1 && multiTown
-        && gainMult === 1 && !fromStatePath && !wanderUntil;
+        && gainMult === 1 && !fromStatePath && !wanderUntil && screenMode === "predictor";
 
     let srcDir, forkCommit;
     if (useWorktree) {
@@ -220,7 +221,7 @@ async function main() {
     }
 
     const t0 = Date.now();
-    const r = await IP.runStandalone({ maxLoops, weights, seedFromPredictor, verbose: true, screenK, probeEvery, targetTown, multiTown, resume, onLoop });
+    const r = await IP.runStandalone({ maxLoops, weights, seedFromPredictor, verbose: true, screenK, screenMode, probeEvery, targetTown, multiTown, resume, onLoop });
     for (const w of poolWorkers) w.terminate();
     const hash = crypto.createHash("sha256").update(r.finalSnapshot).digest("hex").slice(0, 16);
     if (saveStatePath) {
@@ -245,7 +246,7 @@ async function main() {
         metricWeights.loops * totalLoops + (metricWeights.ticks ?? 0) * totalTicks + (metricWeights.wall ?? 0) * totalWall;
     const out = {
         date: new Date().toISOString(), forkCommit, seed, seedFromPredictor,
-        weightsOverride, screenK, probeEvery, targetTown, multiTown, gainMult,
+        weightsOverride, screenK, screenMode, probeEvery, targetTown, multiTown, gainMult,
         metric, metricValue,
         wanderUntil, wanderLoops, wanderTicks, wanderExplored,
         totalLoops, totalTicks,

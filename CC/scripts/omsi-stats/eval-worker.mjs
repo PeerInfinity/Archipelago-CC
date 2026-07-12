@@ -25,6 +25,11 @@ const sess = new IP.Session();
 let lastSnapKey = null;
 
 async function runOne(job) {
+    if (job.kind === "escreen") {
+        // engine-screen: one loop, uniform cost, degenerate-on-failure
+        lastSnapKey = null;
+        return IP.evalLoopOnly(sess, { save: job.save, rng: job.rng }, job.q);
+    }
     if (job.kind === "screen") {
         // failures resolve as {ok:false} — the serial path's catch shape
         try {
