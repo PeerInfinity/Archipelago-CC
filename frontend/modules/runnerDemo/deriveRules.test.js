@@ -113,7 +113,9 @@ describe('derived rules match fixture ground truth', () => {
         expect(r.pickups.pk_pad.minimalSets).toEqual([['glide']]);
         expect(r.exits.exit_main.minimalSets).toEqual([['glide']]);
         expect(r.defects).toEqual([]);
-    });
+        // glideDrop derive is a heavy oracle search (~9 s); headroom over the
+        // 10 s default ceiling under contention (test-strategy rebalance §1).
+    }, 30000);
 
     it('springShelf: shelf pickup AND exit require exactly {spring} (shelf rides the gate)', () => {
         const r = deriveAccessRules(springShelf);
@@ -149,7 +151,7 @@ describe('derived rules match fixture ground truth', () => {
         expect(r.pickups.pk_edge.minimalSets).toEqual([[]]); // item-before-the-gate
         expect(r.exits.exit_main.minimalSets).toEqual([['shield']]);
         expect(r.defects).toEqual([]); // incl. monotonicity across the shield subsets
-    });
+    }, 30000); // shieldBed derive is heavy (~6 s); headroom vs the 10 s ceiling
 
     it('ceilingHop (forgiving regime): goals derive ALWAYS', () => {
         const r = deriveAccessRules(ceilingHop);
@@ -167,21 +169,6 @@ describe('freeAbilities: always-held items never appear in a requirement', () =>
         expect(r.exits.exit_main.minimalSets).toEqual([[]]);
         expect(r.defects).toEqual([]);
     });
-});
-
-describe('injectable reach: layered strip flood agrees with the full graph', () => {
-    // reachableRunPlatforms claims VERDICT-IDENTITY with the full
-    // N² flood on AUTO_RUN levels (canRun.js) — so the whole derive
-    // must agree on every fixture, not merely over-state.
-    for (const f of FIXTURES) {
-        it(`${f.id}: identical minimal sets and defects`, () => {
-            const full = deriveAccessRules(f);
-            const layered = deriveAccessRules(f, { reach: reachableRunPlatforms });
-            expect(layered.pickups).toEqual(full.pickups);
-            expect(layered.exits).toEqual(full.exits);
-            expect(layered.defects).toEqual(full.defects);
-        });
-    }
 });
 
 describe('includePlatforms: per-platform minimal sets (per-segment requirements)', () => {

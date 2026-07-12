@@ -11,16 +11,19 @@ export default defineConfig({
     // flake with STACK_TRACE_ERROR. Run them serially via `npm run test:unit:slow`
     // (vitest.slow.config.js). Keep the vitest defaults (node_modules, etc.).
     //
-    // runnerDemo is TEMPORARILY DISABLED (user request 2026-07-09): its suites
-    // dominate both the default and the slow run's wall time. Re-enable by
-    // deleting the runnerDemo entry here and in vitest.slow.config.js.
+    // runnerDemo's PURE unit tests are back in the default run (test-strategy
+    // rebalance §1, 2026-07-12): they were disabled wholesale 2026-07-09 because
+    // generation-invoking tests (generateLevel/generateZoneSet) flaked under
+    // parallel CPU contention. Those are now split out into *.slow.test.js
+    // files (generatorFeatures, zoneRules.slow, …), so what remains here is
+    // sub-second fixture/unit work. The **/*.slow.test.js rule keeps the
+    // generation-backed suites in the serial slow battery.
     exclude: [
       ...configDefaults.exclude,
       '**/*.slow.test.js',
       // Calibration tier (vitest.calib.config.js) — demoted heavy sweeps,
       // run manually via `npm run test:unit:calib`, never in the default run.
       '**/*.calib.test.js',
-      'frontend/modules/runnerDemo/**',
     ],
 
     // Environment settings

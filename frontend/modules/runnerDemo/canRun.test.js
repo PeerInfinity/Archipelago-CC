@@ -237,19 +237,13 @@ describe('graph, BFS, and the hits dimension', () => {
     });
 });
 
-describe('layered flood ⇔ full graph (verdict identity)', () => {
-    // The lazy left-to-right flood must agree with the full N² graph
-    // on every fixture × ability set (canRun.js header argument).
-    for (const f of FIXTURES) {
-        for (const [name, ab] of [['none', NONE], ['dj', DJ], ['blue', BLUE], ['all', allAbilities()]]) {
-            it(`${f.id} × ${name}`, () => {
-                const full = reachablePlatforms(buildRunGraph(f, ab));
-                const lazy = reachableRunPlatforms(f, ab);
-                expect([...lazy].sort()).toEqual([...full].sort());
-            });
-        }
-    }
-
+describe('reachableRunPlatforms: goalHosts early-exit', () => {
+    // The layered-flood ⇔ full-graph verdict-identity check over the whole
+    // fixture × ability-set corpus lives in canRun.slow.test.js: its frozen
+    // "solver ⊆ oracle" corpus already asserts fullGraph == reachableRun-
+    // Platforms per fixture × set. It is kept out of the default suite because
+    // the full N² flood over glideDrop × dj alone runs >10 s (test-strategy
+    // rebalance §1). Only this light goalHosts early-exit case stays here.
     it('goalHosts early-exit returns every goal host it reached', () => {
         const hosts = [...stepStone.pickups, ...stepStone.portals].map((g) => g.on);
         const reached = reachableRunPlatforms(stepStone, BLUE, { goalHosts: hosts });
@@ -489,6 +483,11 @@ describe('split segments (laneSplit — placement steps 2+3)', () => {
 });
 
 describe('glideDrop: the glide gate (plan §8.7 step 4)', () => {
+    // The glide oracle search over this fixture is the heaviest fixture work
+    // in the default suite (~6–9 s each for the graph/reach cases). Generous
+    // per-test timeouts keep them off the 10 s default ceiling under CPU
+    // contention (test-strategy rebalance §1) — they are green well inside it
+    // on an unloaded runner / CI.
     const GLIDE = { glide: true };
 
     it('the drop gap beats even Double Jump; the pad glide sails it', () => {
@@ -509,7 +508,7 @@ describe('glideDrop: the glide gate (plan §8.7 step 4)', () => {
         expect(canRun(glideDrop, 'ramp2', 'pad1', DJ)).toBe(false);
         const graph = buildRunGraph(glideDrop, DJ);
         expect(graph.nodes.some((n) => nodePlatformId(n) === 'pad1')).toBe(false);
-    });
+    }, 30000);
 
     it('glide policies exist ONLY on pad legs — every other family is byte-unchanged', () => {
         const ramp = glideDrop.platforms.find((p) => p.id === 'ramp2');
@@ -530,7 +529,7 @@ describe('glideDrop: the glide gate (plan §8.7 step 4)', () => {
         expect(planPlatformIds(r.plan)).toEqual(
             ['floorA', 'ramp0', 'ramp1', 'ramp2', 'pad1', 'floorB']);
         expect(findRunPath(buildRunGraph(glideDrop, DJ), 'floorB').ok).toBe(false);
-    });
+    }, 30000);
 
     it('reachableRunPlatforms per ability set', () => {
         const ramps = ['floorA', 'ramp0', 'ramp1', 'ramp2'];
@@ -540,5 +539,5 @@ describe('glideDrop: the glide gate (plan §8.7 step 4)', () => {
             .toEqual([...ramps, 'floorB', 'pad1'].sort());
         expect([...reachableRunPlatforms(glideDrop, allAbilities())].sort())
             .toEqual([...ramps, 'floorB', 'pad1'].sort());
-    });
+    }, 30000);
 });
