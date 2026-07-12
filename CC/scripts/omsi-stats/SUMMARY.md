@@ -288,3 +288,49 @@ live checkbox states are forwarded with the plan message and the worker's
 getElementById shim returns HTMLInputElement stubs carrying them. Headless
 paths untouched (byte-gates unaffected); UI smoke 23/23 covers both
 branches.
+
+## Round 8 — human-opening arms: wander-first loses at the town-1 horizon under BOTH metrics (2026-07-12)
+
+Success-metric experiment (plan §11.5 open item 1, three-arm design ruled
+by the user): harness `--wander-until N` (zero fork changes) plays the
+human opening — [Wander x1] every loop, NO planning — until town 0
+Explored reaches N%, then hands the planner a resume blob at the switch
+point. Engine fact found on the way: Wander costs 250 mana == starting
+mana and stat LEVELS reset per loop, so wander-only play is pinned at
+exactly one 250-tick Wander per loop ([Wander x1] ≡ [Wander x99],
+identical 2,525-loop probes). Fork `automation` @ `4174348`
+(--worktree), seed 12345, defaults, targetTown 1.
+
+| Arm | Total loops | Total ticks | Planner phase | End-state talent |
+|---|---:|---:|---|---:|
+| A: baseline | **500** | **5,432,753** | 500 L / 5.43M t (V0 byte-gate PASS) | 108,113 |
+| B: wander→50% (638 L) | 1,046 | 6,545,842 | 408 L / 6.39M t | 132,574 |
+| C: wander→100% (2,525 L) | 2,816 | 6,341,414 | 291 L / 5.71M t | 129,468 |
+
+**Key finding: exploration converges regardless — all three arms end
+town 1 with Explored 100% and IDENTICAL pools (500 pots / 100 locks).**
+The baseline already fully explores town 0 en route (Buy Glasses at L105,
+then 4x-rate exploration interleaved with economy), so a raw-Wander
+prefix buys nothing durable: it pays for exploration at the 4x-worse
+pre-glasses rate, without economy, and the planner would have acquired
+the same map anyway. The only residual asset is talent (+22% in B/C) —
+and that comes from running MORE loops, not from exploring earlier.
+
+**Both metrics agree at this horizon** (baseline wins loops AND ticks) —
+the first data point for the metric ruling, and a null one: these arms
+don't discriminate the metrics. Curiosities worth remembering: (1)
+pre-exploration DOES cut planner-phase loops monotonically (500 → 408 →
+291) — the planner from a 100%-explored state hits Start Journey in 177
+planner loops vs 405 — but the loops are so mana-rich that planner-phase
+TICKS still exceed baseline (C: 5.71M > 5.43M before even counting the
+wander phase); (2) the 50% arm is worse than the 100% arm in ticks
+(6.55M vs 6.34M) — B's planner phase alone (6.39M from 50% explored)
+spent more ticks than the baseline's whole run from 0%, an anomaly not
+yet diagnosed.
+
+Town-1 end states saved for continuation runs (state-arm{A,B,C}-town1
+.json): the long-term half of the hypothesis — whether extra talent pays
+off past town 1 — is still open, testable cheaply via --from-state.
+User's live refinement during the round: with glasses x4, the optimal
+wander-only cutoff is likely well below 50%, and the real human opening
+is "glasses first, then wander" (arm D candidate).
