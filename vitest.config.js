@@ -17,6 +17,9 @@ export default defineConfig({
     exclude: [
       ...configDefaults.exclude,
       '**/*.slow.test.js',
+      // Calibration tier (vitest.calib.config.js) — demoted heavy sweeps,
+      // run manually via `npm run test:unit:calib`, never in the default run.
+      '**/*.calib.test.js',
       'frontend/modules/runnerDemo/**',
     ],
 
