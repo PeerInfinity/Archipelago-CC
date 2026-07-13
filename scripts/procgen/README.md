@@ -129,6 +129,48 @@ sphere-oracle mismatch. The grown grid crosses the boundary in a
 structural (tagged) form — edit the pipeline at `plan`/`allocate`/
 `topology`/`items`, not the grown grid by hand.
 
+## spiral-step.js
+
+Per-step driver for the stepped shuffled-spiral pipeline. Runs ONE step
+(or a contiguous range) of `arrange → content → regions → compile`,
+reading the prior step's envelope JSON and writing the next. Shares the
+step wiring with the Procgen Pipeline panel via
+`frontend/modules/procgenPipeline/spiralSteps.js`, so the CLI and the
+panel can't drift.
+
+```
+# four steps, each its own process:
+node scripts/procgen/spiral-step.js arrange --seed 1 --quota jta=5 --start jta -o s1.json
+node scripts/procgen/spiral-step.js content -i s1.json -o s2.json
+node scripts/procgen/spiral-step.js regions -i s2.json -o s3.json
+node scripts/procgen/spiral-step.js compile -i s3.json -o env.json --rules-out rules.json
+
+# or the whole pipeline in one process:
+node scripts/procgen/spiral-step.js run --quota maze=4 --quota jta=4 --start maze \
+    --items key_red=2 --rules-out rules.json
+```
+
+`arrange`/`run` take the same world flags as `dump-shuffled-spiral.js`.
+② `content` is a no-op for every current substrate (byte-identical); it's
+the seam JtA's per-zone dataset lands on. The unedited chain is
+byte-identical to `dump-shuffled-spiral.js` for the same flags (plus the
+panel's `procgen_metadata` enrichment). Edit ① `arrange` (reorder
+`sequence`, tweak `cells`) then re-run from `regions`; the grown grid
+crosses the boundary in structural form — don't hand-edit it.
+
+## dump-spiral-byteidentity.mjs
+
+Self-checking byte-identity guard for the stepped spiral pipeline: asserts
+the four steps reproduce monolithic `arrangeShuffledSpiral` + `buildRulesJson`
+byte-for-byte, both in-process and with a serialize→deserialize round-trip
+between every step, across jta-only, maze-only, and mixed maze+jta walks
+(the mixed case proves the ①→③ rng threading). Exits non-zero on any
+mismatch. Sibling of `dump-sphere-byteidentity.mjs` / `verify-topdown-steps.mjs`.
+
+```
+node scripts/procgen/dump-spiral-byteidentity.mjs
+```
+
 ## verify-bounce-embed.mjs
 
 Playwright driver for the Bounce Demo in-app round-trip (plan step 8b).
