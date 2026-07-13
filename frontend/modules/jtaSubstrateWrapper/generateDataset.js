@@ -151,6 +151,97 @@ function resolveIdStride(structure, zoneCount, maxTasksPerZone) {
   return stride;
 }
 
+// A task is a CARRIER (structurally load-bearing, preserved verbatim under
+// profiled) if it anchors a reserved axis: linear topology (Travel), prestige
+// (Prestige), perk/item placement, or an unlock chain (source or hidden
+// target). Everything else is a FREE task the profiled sampler may resize or
+// retype without disturbing the perk/unlock/prestige skeleton.
+function isCarrierTask(t) {
+  return t.type === "Travel" || t.type === "Prestige"
+    || t.perk != null || t.item != null || t.unlocksTask != null || t.hidden;
+}
+
+const PROFILED_FREE_TYPES = ["Normal", "Mandatory", "Boss"];
+
+// A synthetic free task cloned from a donor's own zone patterns (reps/xp/
+// skills) — the D1 "dense" departure the §2.4 experiment validated as SAFE.
+// Placement is stripped so a carrier can safely donate; Travel/Prestige
+// donors degrade to Normal (a free task is never a topology/prestige node).
+function cloneFreeTask(donor, id, zi) {
+  const type = donor.type === "Travel" || donor.type === "Prestige" ? "Normal" : donor.type;
+  return {
+    id, zone: zi, type,
+    skills: [...donor.skills],
+    costMult: donor.costMult, xpMult: donor.xpMult, maxReps: donor.maxReps,
+    hidden: false, unlocksTask: null, perk: null, item: null, useItem: null,
+    synthetic: true,
+  };
+}
+
+// Target TOTAL task count for a zone. Array form is deterministic (no rng);
+// { mean, jitter } draws exactly one rng value — and ONLY when tasksPerZone
+// is set, preserving the zero-rng-at-default discipline.
+function resolveZoneTaskCount(spec, zi, rng) {
+  if (Array.isArray(spec)) {
+    const v = spec[zi];
+    if (!Number.isInteger(v) || v < 1) throw new Error(`tasksPerZone[${zi}] must be a positive integer, got ${JSON.stringify(v)}`);
+    return v;
+  }
+  if (spec && typeof spec === "object" && typeof spec.mean === "number") {
+    const jitter = typeof spec.jitter === "number" ? spec.jitter : 0;
+    if (spec.mean < 1) throw new Error(`tasksPerZone.mean must be >= 1, got ${spec.mean}`);
+    const u = 2 * rng.next() - 1;
+    return Math.max(1, Math.round(spec.mean * (1 + jitter * u)));
+  }
+  throw new Error("tasksPerZone must be a { mean, jitter } object or a per-zone array");
+}
+
+// Retype the free pool to hit exact per-type counts. Deterministic (no rng);
+// type only affects the provisional cost exponent (Pass B owns final cost)
+// and the Mandatory gate — never C4 (xp opportunity is type-blind), so this
+// stays a balance-safe departure.
+function retypeFreePool(free, mix, zi) {
+  for (const k of Object.keys(mix)) {
+    if (!PROFILED_FREE_TYPES.includes(k)) throw new Error(`typeMix[${zi}] type "${k}" must be one of ${PROFILED_FREE_TYPES.join(", ")}`);
+  }
+  const want = PROFILED_FREE_TYPES.map((k) => [k, mix[k] ?? 0]);
+  const sum = want.reduce((a, [, n]) => a + n, 0);
+  if (sum !== free.length) {
+    throw new Error(`typeMix[${zi}] counts sum to ${sum} but the zone has ${free.length} free (non-carrier) tasks`);
+  }
+  let idx = 0;
+  for (const [k, n] of want) for (let c = 0; c < n; c++) { free[idx].type = k; free[idx].synthetic = true; idx++; }
+}
+
+// Apply the bounded profiled departures to one zone's source-task list.
+// Carriers are preserved by reference (read-only downstream); only the free
+// pool is cloned and mutated. With no departure param set this returns the
+// original list unchanged (zero rng), so profiled-at-defaults reproduces the
+// mirror draw order and differs only in the id stride.
+function departZoneTasks(sourceTasks, zi, structure, rng, nextSynthId) {
+  const mix = structure.typeMix?.[zi];
+  if (structure.tasksPerZone == null && mix == null) return sourceTasks;
+
+  const carriers = sourceTasks.filter(isCarrierTask);
+  const leading = carriers.filter((t) => t.type !== "Travel" && t.type !== "Prestige");
+  const trailing = carriers.filter((t) => t.type === "Travel" || t.type === "Prestige");
+  let free = sourceTasks.filter((t) => !isCarrierTask(t)).map((t) => ({ ...t })); // clone before mutating
+
+  if (structure.tasksPerZone != null) {
+    const targetTotal = resolveZoneTaskCount(structure.tasksPerZone, zi, rng);
+    const targetFree = Math.max(0, targetTotal - carriers.length);
+    while (free.length > targetFree) free.pop(); // deterministic drop from the end
+    while (free.length < targetFree) {
+      const pool = free.length ? free : sourceTasks; // fall back to any donor if the pool emptied
+      const donor = pool[Math.floor(rng.next() * pool.length)];
+      free.push(cloneFreeTask(donor, nextSynthId(), zi));
+    }
+  }
+  if (mix != null) retypeFreePool(free, mix, zi);
+
+  return [...leading, ...free, ...trailing];
+}
+
 // --- raw-value economy mode (5g, §7 Q8/Q9) ---------------------------------
 //
 // Turn a zone_formula document into its raw twin by evaluating the backbone
@@ -336,11 +427,12 @@ export function generateJtaDataset({ seed, profile, vanilla, params = {} }) {
     throw new Error(`generateJtaDataset: valueMode must be "raw" or "zone_formula", got ${JSON.stringify(valueMode)}`);
   }
   const structure = normalizeStructure(params.structure);
-  if (structure.policy === "profiled") {
-    // Phase A commit 2 replaces this with the profile-distribution sampler.
-    throw new Error('params.structure.policy "profiled" is not yet implemented (Phase A commit 2)');
-  }
   const rng = createRng(seed);
+  // Synthetic source ids for profiled-added free tasks: negative and
+  // descending, so they never collide with the positive vanilla profile ids
+  // in newIdOf and are trivially recognizable as generator-minted.
+  let synthSrcCounter = 0;
+  const nextSynthId = () => --synthSrcCounter;
   const themeKey = params.theme ?? DATASET_THEME_KEYS[Math.floor(rng.next() * DATASET_THEME_KEYS.length)];
   const theme = DATASET_THEMES[themeKey];
   if (!theme) throw new Error(`generateJtaDataset: unknown theme "${themeKey}" (have ${DATASET_THEME_KEYS.join(", ")})`);
@@ -491,11 +583,23 @@ export function generateJtaDataset({ seed, profile, vanilla, params = {} }) {
   const newIdOf = new Map(); // vanilla task id -> synthetic task id
   const zones = [];
   for (let zi = 0; zi < zoneCount; zi++) {
-    const sourceTasks = byZone.get(zi) ?? [];
-    if (sourceTasks.length === 0) throw new Error(`profile has no tasks for zone ${zi}`);
+    const rawSource = byZone.get(zi) ?? [];
+    if (rawSource.length === 0) throw new Error(`profile has no tasks for zone ${zi}`);
+    const sourceTasks = structure.policy === "profiled"
+      ? departZoneTasks(rawSource, zi, structure, rng, nextSynthId)
+      : rawSource;
+    // A departure must not push a zone's ids into the next zone's stride
+    // window or the synthetic exit-task range (the resolveIdStride bounds,
+    // re-checked against the ACTUAL post-departure count).
+    if (sourceTasks.length > idStride) {
+      throw new Error(`zone ${zi} has ${sourceTasks.length} tasks after departures, exceeding the id stride ${idStride} (ids would collide with the next zone)`);
+    }
+    if (zi * idStride + (sourceTasks.length - 1) + 10 >= EXIT_TASK_ID_FLOOR) {
+      throw new Error(`zone ${zi} tasks after departures reach the synthetic exit-task floor ${EXIT_TASK_ID_FLOOR}`);
+    }
     const tasks = sourceTasks.map((src, ti) => {
-      const fixtureTask = fixtureTaskById.get(src.id);
-      if (!fixtureTask) throw new Error(`profile task ${src.id} missing from the vanilla fixture`);
+      const fixtureTask = fixtureTaskById.get(src.id) ?? null;
+      if (!fixtureTask && !src.synthetic) throw new Error(`profile task ${src.id} missing from the vanilla fixture`);
       const id = zi * idStride + ti + 10;
       newIdOf.set(src.id, id);
       let name;
@@ -504,7 +608,7 @@ export function generateJtaDataset({ seed, profile, vanilla, params = {} }) {
       } else if (src.type === "Boss") {
         name = `${theme.taskVerbs.Boss[ti % theme.taskVerbs.Boss.length]} ${drawBossName()}`;
       } else if (src.type === "Prestige") {
-        name = theme.prestigeTemplate(theme.prestigeNouns[fixtureTask.prestige_layer ?? 0]);
+        name = theme.prestigeTemplate(theme.prestigeNouns[fixtureTask?.prestige_layer ?? 0]);
       } else {
         name = taskDrawers[src.type]();
       }
@@ -522,10 +626,10 @@ export function generateJtaDataset({ seed, profile, vanilla, params = {} }) {
         max_reps: src.maxReps,
         hidden_by_default: src.hidden,
         unlocks_task: src.unlocksTask, // remapped below once all ids exist
-        perk: fixtureTask.perk,
-        item: fixtureTask.item,
-        use_item: fixtureTask.use_item,
-        prestige_layer: fixtureTask.prestige_layer,
+        perk: fixtureTask?.perk ?? null,
+        item: fixtureTask?.item ?? null,
+        use_item: fixtureTask?.use_item ?? null,
+        prestige_layer: fixtureTask?.prestige_layer ?? null,
         theme: null,
       };
     });

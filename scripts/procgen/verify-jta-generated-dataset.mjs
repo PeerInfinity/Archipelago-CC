@@ -123,14 +123,62 @@ for (const { seed, params } of CASES) {
         'idStride below max tasks-per-zone is rejected');
     ok(throws(() => generateJtaDataset({ seed: 1, profile, vanilla, params: { structure: { idStride: 800 } } })),
         'idStride that pushes deep zone ids >= 10000 is rejected');
-    // profiled sampler is reserved but not yet built (Phase A commit 2).
-    ok((throws(() => generateJtaDataset({ seed: 1, profile, vanilla, params: { structure: { policy: 'profiled' } } })) || '').includes('not yet implemented'),
-        'profiled policy is reserved (throws not-implemented until commit 2)');
+    // profiled sampler landed in commit 2 (detailed coverage in section 1c).
+    ok(generateJtaDataset({ seed: 1, profile, vanilla, params: { structure: { policy: 'profiled' } } }).validation.ok,
+        'profiled policy is accepted (sampler landed)');
     // Unknown structure fields fail fast.
     ok(throws(() => generateJtaDataset({ seed: 1, profile, vanilla, params: { structure: { bogus: 1 } } })),
         'unknown structure field is rejected');
     ok((throws(() => generateJtaDataset({ seed: 1, profile, vanilla, params: { structure: { policy: 'nope' } } })) || '').includes('policy'),
         'invalid policy is rejected');
+}
+
+// ---- 1c. Profiled sampler (post-v1 §2.2/§2.3, Phase A commit 2) ------------
+const P = (seed, structure) => generateJtaDataset({ seed, profile, vanilla, params: { zoneCount: 15, structure } });
+const profiledDense = P(2, { policy: 'profiled', tasksPerZone: { mean: 13, jitter: 0 } });
+{
+    const throws = (fn) => { try { fn(); return false; } catch { return true; } };
+    const bytes = (r) => JSON.stringify(r.dataset, null, 2);
+    const counts = (r) => r.dataset.zones.map((z) => z.tasks.length);
+    const names = (r) => r.dataset.zones.map((z) => z.tasks.map((t) => t.name));
+
+    const pDefault = P(1, { policy: 'profiled' });
+    const mDefault = P(1, { policy: 'mirror' });
+    ok(pDefault.validation.ok && pDefault.c4.ok, 'profiled at defaults: valid + C4-clean');
+    ok(bytes(pDefault) === bytes(P(1, { policy: 'profiled' })), 'profiled is deterministic');
+    // A null axis draws zero rng, so profiled-at-defaults reproduces the mirror
+    // structure and draw order and differs ONLY in the id stride (100 vs 20).
+    ok(pDefault.dataset.zones[1].tasks[0].id === 110, 'profiled uses id stride 100');
+    ok(JSON.stringify(counts(pDefault)) === JSON.stringify(counts(mDefault)), 'profiled defaults: per-zone task counts == mirror');
+    ok(JSON.stringify(names(pDefault)) === JSON.stringify(names(mDefault)), 'profiled defaults: task names == mirror (draw order preserved)');
+    ok(pDefault.dataset.dataset_id !== mDefault.dataset.dataset_id, 'profiled gets a distinct identity from mirror');
+
+    // tasksPerZone: dense clones stay C4-clean (adding training raises opportunity).
+    ok(profiledDense.validation.ok && profiledDense.c4.ok, 'dense tasksPerZone{mean:13}: valid + C4-clean');
+    ok(counts(profiledDense).every((n) => n >= 12), 'dense: every zone has >= 12 tasks');
+    ok(profiledDense.dataset.zones.flatMap((z) => z.tasks).every((t) => Number.isInteger(t.id) && t.id > 0
+        && (t.prestige_layer === null || [0, 1, 2, 3].includes(t.prestige_layer))),
+    'dense: every synthetic task has a valid positive id and prestige_layer');
+    ok(bytes(profiledDense) === bytes(P(2, { policy: 'profiled', tasksPerZone: { mean: 13, jitter: 0 } })), 'dense is deterministic');
+
+    // tasksPerZone per-zone array.
+    const arr = Array(15).fill(11); arr[3] = 14;
+    const pArr = P(3, { policy: 'profiled', tasksPerZone: arr });
+    ok(pArr.validation.ok && pArr.c4.ok && pArr.dataset.zones[3].tasks.length === 14, 'tasksPerZone array: valid + zone 3 == 14 tasks');
+
+    // typeMix: retype the free pool; type is C4-blind so it stays clean.
+    const z5 = pDefault.dataset.zones[5].tasks;
+    const carriers5 = z5.filter((t) => t.perk != null || t.item != null || t.type === 'Travel' || t.type === 'Prestige' || t.hidden_by_default).length;
+    const nfree5 = z5.length - carriers5;
+    const pMix = P(4, { policy: 'profiled', typeMix: { 5: { Normal: nfree5 - 1, Boss: 1 } } });
+    ok(pMix.validation.ok && pMix.c4.ok && pMix.dataset.zones[5].tasks.filter((t) => t.type === 'Boss').length >= 1,
+        'typeMix retype: valid + C4-clean + zone 5 gains a Boss');
+    ok(throws(() => P(4, { policy: 'profiled', typeMix: { 5: { Normal: 99 } } })), 'typeMix whose counts miss the free-pool size is rejected');
+
+    // Reserved Full axes are unbuilt: setting one is a no-op today (documented),
+    // but carriers (perk/item/unlock/prestige placement) stay profile-shaped.
+    ok(profiledDense.dataset.perks.filter((p) => !p.placeholder).length === mDefault.dataset.perks.filter((p) => !p.placeholder).length,
+        'profiled preserves the perk roster (reserved perkCadence axis)');
 }
 
 // ---- 2. Validation + C4 ----------------------------------------------------
@@ -180,6 +228,7 @@ function loadAndPlay(dataset, ticks = 500) {
 
 loadAndPlay(generated[0].dataset);
 loadAndPlay(generated[2].dataset); // dataset→dataset swap + truncated zones
+loadAndPlay(profiledDense.dataset); // profiled departure loads + plays through the fork
 
 // ---- 5. Raw ≡ formula twin: effective values are BIT-EXACT ----------------
 // The raw twin is premultiplyDataset(formula twin) by construction; loading
