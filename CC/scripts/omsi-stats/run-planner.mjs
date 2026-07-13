@@ -44,6 +44,11 @@
 //       # §11.10 targeted mode (T1): goal-directed regression toward one action
 //       # goal (make NAME executable this loop), falling back to the heuristic
 //       # scorer when unachievable. Absent ⇒ heuristic (byte-exact default).
+//   node CC/scripts/omsi-stats/run-planner.mjs --target-value skill:Magic:50
+//       # §11.10 targeted mode (T2): a kind-b target-value goal — fill the loop
+//       # with the max-ΔR providers toward a PERSISTENT target (skill/progress
+//       # level, buff, soulstones, goldInvested; ruling 6). TYPE:NAME:VALUE
+//       # (NAME omitted for soulstones/goldInvested).
 //   node CC/scripts/omsi-stats/run-planner.mjs --pool 8
 //       # parallel eval pool (§11.7 Design A): fan the per-round candidate
 //       # confirms out across N worker_threads, each with its own sim
@@ -91,7 +96,16 @@ async function main() {
     // regression toward a single action goal (T1 headless driver; T3 adds the
     // priority list). Absent ⇒ heuristic strategy = today's byte-exact behavior.
     const targetAction = val("--target-action", null);
-    const strategy = targetAction ? "targeted" : "heuristic";
+    // --target-value TYPE:NAME:VALUE (T2): a kind-b target-value goal. TYPE ∈
+    // skill|progress|buff|soulstones|goldInvested; NAME omitted for
+    // soulstones/goldInvested (e.g. "goldInvested::1000000", "skill:Magic:50").
+    const targetValueArg = val("--target-value", null);
+    let targets = [];
+    if (targetValueArg) {
+        const [type, name, value] = targetValueArg.split(":");
+        targets = [{ kind: "b", target: { type, name: name || undefined }, value: Number(value) }];
+    }
+    const strategy = (targetAction || targets.length) ? "targeted" : "heuristic";
     const gainMult = Number(val("--gain-mult", 1));
     const metric = val("--metric", "loops");
     const metricWeights = JSON.parse(val("--metric-weights", '{"loops":1,"ticks":0,"wall":0}'));
@@ -232,7 +246,7 @@ async function main() {
     }
 
     const t0 = Date.now();
-    const r = await IP.runStandalone({ maxLoops, weights, seedFromPredictor, verbose: true, screenK, screenMode, probeEvery, targetTown, multiTown, vocabulary, strategy, targetAction, resume, onLoop });
+    const r = await IP.runStandalone({ maxLoops, weights, seedFromPredictor, verbose: true, screenK, screenMode, probeEvery, targetTown, multiTown, vocabulary, strategy, targetAction, targets, resume, onLoop });
     for (const w of poolWorkers) w.terminate();
     const hash = crypto.createHash("sha256").update(r.finalSnapshot).digest("hex").slice(0, 16);
     if (saveStatePath) {
@@ -258,7 +272,7 @@ async function main() {
     const out = {
         date: new Date().toISOString(), forkCommit, seed, seedFromPredictor,
         weightsOverride, screenK, screenMode, probeEvery, targetTown, multiTown, vocabulary, gainMult,
-        strategy, targetAction,
+        strategy, targetAction, targets,
         metric, metricValue,
         wanderUntil, wanderLoops, wanderTicks, wanderExplored,
         totalLoops, totalTicks,

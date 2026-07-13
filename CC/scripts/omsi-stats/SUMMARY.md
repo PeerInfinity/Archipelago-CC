@@ -592,3 +592,21 @@ Byte-gate: 500 / 5,432,753 / 54506b48ec1758af (0 RNG, pool-8) at the default
 strategy (heuristic). npm 44/44 (+6 targeted-mode tests incl. a
 targeted-falls-back-to-heuristic byte-equivalence guard). Iteration ran under
 `--screen-mode engine` (~2 min/run); no DEFAULT_WEIGHTS / reference change.
+
+### Round 14 addendum — T2: target-value goals + §4 measurement extension (2026-07-13, Opus)
+
+Fork `automation`: `measureAction` now differences the piece-1 persistent
+read-state fields across each probe (`p.persistentDelta = {buffs, soulstones,
+goldInvested}`, the identical subtraction `grants` does) — byte-inert (an
+additive profile field the heuristic scorer never reads; the snapshot hash
+covers game state, not the knowledge table). New `regressTarget` /
+`rankValueProviders` / `readStateValue`: a kind-b target-value goal FILLS the
+loop with the max-ΔR provider toward a PERSISTENT target (skill/progress level,
+buff, soulstones, goldInvested — ruling 6; NOT gold/rep/mana), reusing
+regressAction for the route/gate/economy scaffold and replacing its terminal x1
+with a pool-availability-capped fill. V is the across-rounds stop condition
+(planTargeted drops a goal once read-state R ≥ V). Runner flag
+`--target-value TYPE:NAME:VALUE`. Functional check:
+`--target-value progress:Wander:8` installs `value:progress:Wander` 4/5 loops.
+§4 differencing was empirically validated at T0 (goldInvested Δ=500 on a forced
+Invest). npm 50/50 (+6 T2 tests incl. a satisfied-goal byte-equivalence guard).
