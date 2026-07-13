@@ -242,6 +242,111 @@ function departZoneTasks(sourceTasks, zi, structure, rng, nextSynthId) {
   return [...leading, ...free, ...trailing];
 }
 
+// The p95 caps that bound C4 repair (§2.3): a repair never raises an xp_mult
+// or max_reps past what the vanilla profile itself exhibits, so repaired
+// worlds stay within the vanilla magnitude envelope.
+function profileRepairCaps(profile) {
+  const q = (vals, p) => { const s = [...vals].sort((a, b) => a - b); return s[Math.min(s.length - 1, Math.floor(p * s.length))]; };
+  return {
+    xpMult: q(profile.tasks.map((t) => t.xpMult), 0.95),
+    maxReps: q(profile.tasks.map((t) => t.maxReps), 0.95),
+  };
+}
+
+// An OUTPUT-dataset task the repair loop may modify: plain (no perk/item/
+// unlock/hidden placement) and not a topology/prestige node. Skills are
+// indices at this stage.
+function isRepairableTask(t) {
+  return t.perk == null && t.item == null && t.unlocks_task == null
+    && !t.hidden_by_default && t.type !== "Travel" && t.type !== "Prestige";
+}
+
+// Deterministically repair C4 floor violations (§2.3) on the FINAL dataset:
+// raise xp_mult (then max_reps) toward the profile p95 on earlier tasks that
+// train the deficient skill, and — if no earlier trainer can be lifted far
+// enough — retarget an earlier repairable task to also train it. Mirror is
+// C4-clean by construction, so this runs under profiled only. Returns the
+// repair log (stamped into provenance; the value edits themselves are what
+// the content hash reflects). Both value modes work: C4 reads xp_mult ×
+// (raw_xp/xp_base | zone backbone), so raising xp_mult raises opportunity in
+// either; formula_xp_mult (raw's informational twin) is kept in sync.
+function repairC4Violations(dataset, profile, caps) {
+  const repairs = [];
+  const MAX_STEPS = 2000;
+  for (let step = 0; step < MAX_STEPS; step++) {
+    const report = computeC4Report(dataset, profile);
+    if (report.ok) return repairs;
+    const v = report.violations[0]; // worst by (zone, skill) sort
+    const trainers = [];
+    dataset.zones.forEach((z, zi) => {
+      if (zi >= v.zone) return;
+      for (const t of z.tasks) if (t.skills.includes(v.skill)) trainers.push(t);
+    });
+    // Free (repairable) trainers first — lift them before touching carriers.
+    trainers.sort((a, b) => (isRepairableTask(b) ? 1 : 0) - (isRepairableTask(a) ? 1 : 0));
+    let acted = false;
+    for (const t of trainers) {
+      if (t.xp_mult < caps.xpMult - 1e-9) {
+        const from = t.xp_mult;
+        t.xp_mult = Math.min(caps.xpMult, Math.max(t.xp_mult * 1.5, t.xp_mult + 0.5));
+        if ("formula_xp_mult" in t) t.formula_xp_mult = t.xp_mult;
+        repairs.push({ skill: v.skill, zone: v.zone, task: t.id, field: "xp_mult", from, to: t.xp_mult });
+        acted = true; break;
+      }
+      if (t.max_reps < caps.maxReps) {
+        const from = t.max_reps;
+        t.max_reps = Math.min(caps.maxReps, t.max_reps + 1);
+        repairs.push({ skill: v.skill, zone: v.zone, task: t.id, field: "max_reps", from, to: t.max_reps });
+        acted = true; break;
+      }
+    }
+    if (!acted) {
+      // No liftable trainer — introduce training on an earlier repairable task.
+      let target = null;
+      for (let zi = 0; zi < v.zone && !target; zi++) {
+        target = dataset.zones[zi].tasks.find((t) => isRepairableTask(t) && !t.skills.includes(v.skill)) ?? null;
+      }
+      if (!target) {
+        throw new Error(`C4 repair cannot converge: skill ${v.skill} ("${v.skillName}") demanded at zone ${v.zone} has no earlier task able to train it`);
+      }
+      target.skills.push(v.skill);
+      repairs.push({ skill: v.skill, zone: v.zone, task: target.id, field: "skills", added: v.skill });
+    }
+  }
+  throw new Error(`C4 repair exceeded ${MAX_STEPS} steps without converging`);
+}
+
+// skillCount (add-only, §2.2): each appended skill is woven into the economy
+// at a spread of zones — an early intro that trains it plus deeper demands at
+// depth > 0, which need prior opportunity and therefore genuinely exercise the
+// C4 repair loop (repair supplies the earlier training). Reducing the roster
+// would break the role couplings (ascension/travel/attunement/power/spite),
+// so it is refused. Deterministic (no rng).
+function injectNewSkillDemand(zones, nLive, extra, zoneCount) {
+  const findRepairableNear = (dz, si) => {
+    for (let d = 0; d < zoneCount; d++) {
+      for (const zz of [dz + d, dz - d]) {
+        if (zz < 1 || zz >= zoneCount) continue;
+        const cand = zones[zz].tasks.find((t) => isRepairableTask(t) && !t.skills.includes(si));
+        if (cand) return cand;
+      }
+    }
+    return null;
+  };
+  const nSlots = Math.min(3, Math.max(1, zoneCount - 1));
+  for (let e = 0; e < extra; e++) {
+    const si = nLive + e;
+    let placed = 0;
+    for (let k = 0; k < nSlots; k++) {
+      const frac = (k + 1) / (nSlots + 1);
+      const dz = Math.max(1, Math.min(zoneCount - 1, Math.round(frac * (zoneCount - 1)) + (e % 2)));
+      const target = findRepairableNear(dz, si);
+      if (target) { target.skills.push(si); placed++; }
+    }
+    if (placed === 0) throw new Error(`skillCount: no repairable task available to demand new skill ${si}`);
+  }
+}
+
 // --- raw-value economy mode (5g, §7 Q8/Q9) ---------------------------------
 //
 // Turn a zone_formula document into its raw twin by evaluating the backbone
@@ -493,6 +598,15 @@ export function generateJtaDataset({ seed, profile, vanilla, params = {} }) {
   };
 
   // -- skills --
+  // skillCount (add-only): reducing the roster would sever the role couplings
+  // (roles reference specific live skills), so it is refused. Extra skills are
+  // appended after the permuted vanilla roster; their draws happen ONLY when
+  // skillCount is set, preserving the zero-rng-at-default discipline.
+  if (structure.skillCount != null
+      && (!Number.isInteger(structure.skillCount) || structure.skillCount < nLive)) {
+    throw new Error(`params.structure.skillCount must be an integer >= the live vanilla skill count ${nLive} (reducing skills is not supported in v1), got ${JSON.stringify(structure.skillCount)}`);
+  }
+  const extraSkills = structure.skillCount != null ? structure.skillCount - nLive : 0;
   const skills = [];
   for (let j = 0; j < nLive; j++) {
     const vanillaLive = profile.skills[assign[j]];
@@ -502,6 +616,10 @@ export function generateJtaDataset({ seed, profile, vanilla, params = {} }) {
       xp_needed_mult: vanillaLive.xpNeededMult,
       theme: null,
     });
+  }
+  const medianXpNeeded = [...profile.skills.map((s) => s.xpNeededMult)].sort((a, b) => a - b)[Math.floor(nLive / 2)];
+  for (let e = 0; e < extraSkills; e++) {
+    skills.push({ name: drawSkillName(), icon: drawSkillIcon(), xp_needed_mult: medianXpNeeded, theme: null });
   }
 
   // -- roles (fixture roles are fixture-skill-index based) --
@@ -649,6 +767,9 @@ export function generateJtaDataset({ seed, profile, vanilla, params = {} }) {
       t.unlocks_task = newIdOf.get(t.unlocks_task) ?? null;
     }
   }
+  // skillCount (add-only): give each appended skill a late demand; the C4
+  // repair loop in the tail supplies its earlier training.
+  if (extraSkills > 0) injectNewSkillDemand(zones, nLive, extraSkills, zoneCount);
   // Every hidden task must have an in-game unlocker (the generation-time
   // guarantee that makes sbtv_unlock_task_ids = [] sound).
   const unlockTargets = new Set(zones.flatMap((z) => z.tasks.map((t) => t.unlocks_task)).filter((x) => x != null));
@@ -721,6 +842,16 @@ export function generateJtaDataset({ seed, profile, vanilla, params = {} }) {
 
   if (valueMode === "raw") {
     dataset = premultiplyDataset(dataset);
+  }
+  // C4 repair (profiled only): a departure can pull a demanded skill's
+  // opportunity below the profile floor (the mirror sits at exactly 1.00x, so
+  // any reduction or a newly introduced skill can bind). Repair raises earlier
+  // training toward the p95 caps, deterministically, and logs to provenance —
+  // BEFORE stamping so the content hash reflects the repaired values. Mirror
+  // never repairs (C4-clean by construction).
+  if (structure.policy === "profiled" && !computeC4Report(dataset, profile).ok) {
+    const c4Repairs = repairC4Violations(dataset, profile, profileRepairCaps(profile));
+    if (c4Repairs.length) dataset.provenance.c4_repairs = c4Repairs;
   }
   // Identity: content-hash suffix (rider 2) — the base id is still a pure
   // function of the params; the hash makes edited/variant content distinct.

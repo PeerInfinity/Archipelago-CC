@@ -181,6 +181,44 @@ const profiledDense = P(2, { policy: 'profiled', tasksPerZone: { mean: 13, jitte
         'profiled preserves the perk roster (reserved perkCadence axis)');
 }
 
+// ---- 1d. C4 repair loop + skillCount (Phase A commit 3) --------------------
+const skillCountWorld = P(2, { policy: 'profiled', skillCount: 13 });
+{
+    const caps = (() => {
+        const q = (v, p) => { const s = [...v].sort((a, b) => a - b); return s[Math.min(s.length - 1, Math.floor(p * s.length))]; };
+        return { xpMult: q(profile.tasks.map((t) => t.xpMult), 0.95), maxReps: q(profile.tasks.map((t) => t.maxReps), 0.95) };
+    })();
+    const throws = (fn) => { try { fn(); return false; } catch { return true; } };
+
+    // The mirror sits at exactly 1.00x C4 margin, so a sparse tasksPerZone
+    // pulls a demanded skill below floor → the repair loop must fire and clear it.
+    let sparse = null;
+    for (const s of [1, 2, 3, 7, 11]) {
+        const r = P(s, { policy: 'profiled', tasksPerZone: { mean: 6, jitter: 0 } });
+        if (r.dataset.provenance.c4_repairs) { sparse = r; break; }
+    }
+    ok(sparse != null, 'a sparse tasksPerZone departure triggers the C4 repair loop');
+    if (sparse) {
+        ok(sparse.c4.ok && sparse.validation.ok, 'the repaired sparse world is C4-clean + valid');
+        const valueEdits = sparse.dataset.provenance.c4_repairs.filter((e) => e.field === 'xp_mult' || e.field === 'max_reps');
+        ok(valueEdits.length > 0 && valueEdits.every((e) => e.field === 'xp_mult' ? e.to <= caps.xpMult + 1e-9 : e.to <= caps.maxReps),
+        `every repair value edit respects the profile p95 caps (${valueEdits.length} edits)`);
+        ok(JSON.stringify(sparse.dataset) === JSON.stringify(P(sparse.dataset.provenance.seed, { policy: 'profiled', tasksPerZone: { mean: 6, jitter: 0 } }).dataset),
+        'the repaired world is deterministic (repair is a pure function of inputs)');
+    }
+
+    // skillCount add-only: new skills are woven in and supplied by repair; C4-clean.
+    ok(skillCountWorld.validation.ok && skillCountWorld.c4.ok && skillCountWorld.dataset.skills.length === 13,
+        'skillCount 13: valid + C4-clean + roster grew to 13');
+    const uses = {};
+    for (const z of skillCountWorld.dataset.zones) for (const t of z.tasks) for (const s of t.skills) uses[s] = (uses[s] ?? 0) + 1;
+    ok([10, 11, 12].every((si) => (uses[si] ?? 0) >= 2), 'each appended skill is used by >= 2 tasks');
+    ok((skillCountWorld.dataset.provenance.c4_repairs?.length ?? 0) > 0, 'skillCount exercised the repair loop to supply the new skills');
+    ok(throws(() => P(1, { policy: 'profiled', skillCount: 5 })), 'reducing the skill roster is refused (would break role couplings)');
+    // Mirror never repairs (C4-clean by construction — no provenance.c4_repairs).
+    ok(generated[0].dataset.provenance.c4_repairs === undefined, 'mirror carries no c4_repairs (repairs are profiled-only)');
+}
+
 // ---- 2. Validation + C4 ----------------------------------------------------
 for (const { dataset, c4 } of generated) {
     const v = validateJtaDataset(dataset);
@@ -229,6 +267,7 @@ function loadAndPlay(dataset, ticks = 500) {
 loadAndPlay(generated[0].dataset);
 loadAndPlay(generated[2].dataset); // dataset→dataset swap + truncated zones
 loadAndPlay(profiledDense.dataset); // profiled departure loads + plays through the fork
+loadAndPlay(skillCountWorld.dataset); // skillCount 13 (grown roster + repaired supply) loads + plays
 
 // ---- 5. Raw ≡ formula twin: effective values are BIT-EXACT ----------------
 // The raw twin is premultiplyDataset(formula twin) by construction; loading
