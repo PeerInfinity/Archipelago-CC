@@ -8,7 +8,6 @@ import { setPanelInstance, getModuleApis } from './index.js';
 import eventBus from '../../app/core/eventBus.js';
 import {
     growMaze,
-    arrangeShuffledSpiral,
     rebuildSphereTopology,
     buildRulesJson,
     stringifyRulesJson,
@@ -34,6 +33,13 @@ import {
 import {
     TOPDOWN_STEPS, runTopDownStep, nextTopDownStep, buildTopDownEnvelope,
 } from './topDownSteps.js';
+// The shuffled-spiral pipeline steps live in their own shared runner too (same
+// harness as sphere/top-down): ① arrange → ② content [no-op] → ③ regions →
+// ④ compile. Running all four reproduces the monolithic arrangeShuffledSpiral +
+// buildRulesJson byte-for-byte (dump-spiral-byteidentity.mjs).
+import {
+    SPIRAL_STEPS, runSpiralStep, nextSpiralStep, newSpiralEnvelope,
+} from './spiralSteps.js';
 import {
     TILE_WALL, getTile, getObstacle, getItem,
 } from '../mazeRoom/mazeRoomEngine.js';
@@ -400,6 +406,18 @@ const TOPDOWN_STEP_RUN_LABELS = [
 ];
 const TOPDOWN_LAST_STEP = TOPDOWN_STEP_LABELS.length - 1; // 3
 
+// Shuffled-spiral's four steps. Same `completed` index convention (0..3; -1 =
+// not started). ② Content is a no-op for every current substrate (JtA's dataset
+// lands there in Part 3) — there is no editing surface, so its block renders a
+// "no content substrate" note.
+const SPIRAL_STEP_LABELS = [
+    '1 Arrange', '2 Content', '3 Regions', '4 Compile',
+];
+const SPIRAL_STEP_RUN_LABELS = [
+    'Run 1 Arrange', 'Run 2 Content', 'Run 3 Regions', 'Run 4 Compile',
+];
+const SPIRAL_LAST_STEP = SPIRAL_STEP_LABELS.length - 1; // 3
+
 export class ProcgenPipelineUI {
     static moduleApis = null;
     static setModuleApis(apis) { ProcgenPipelineUI.moduleApis = apis; }
@@ -475,6 +493,9 @@ export class ProcgenPipelineUI {
         // Top-down stepped-pipeline state (null until step 1 Layout runs).
         // See _stepTDLayout / _renderTopDownSteps. Session-only.
         this._tdState = null;
+        // Shuffled-spiral stepped-pipeline state (null until step 1 Arrange runs).
+        // See _stepSpiralArrange / _renderSpiralSteps. Session-only.
+        this._spiralState = null;
         // 2b Topology view mode: 'tree' (indented directory tree) or 'flat'
         // (numerical index order). Session-only view preference.
         this._topologyView = 'tree';
@@ -769,6 +790,7 @@ export class ProcgenPipelineUI {
         this.result = null;
         this._stepState = null;
         this._tdState = null;
+        this._spiralState = null;
         this.warning = '';
         this.activePresetId = id;
         this._saveToLocalStorage({ fromPreset: true });
@@ -3604,7 +3626,9 @@ export class ProcgenPipelineUI {
         // (or absent) one means Generate re-generates, so clear its result.
         const midTopDown = this.mode === 'topDown' && this._tdState
             && nextTopDownStep(this._tdState) !== null;
-        if (!midSphere && !midTopDown) this.result = null;
+        const midSpiral = this.mode === 'shuffledSpiral' && this._spiralState
+            && nextSpiralStep(this._spiralState) !== null;
+        if (!midSphere && !midTopDown && !midSpiral) this.result = null;
         this.render();
 
         try {
@@ -3612,7 +3636,7 @@ export class ProcgenPipelineUI {
                 // async: yields per region so the progress indicator repaints
                 await this._runTopDownAll();
             } else if (this.mode === 'shuffledSpiral') {
-                this._runShuffledSpiral();
+                await this._runSpiralAll();
             } else if (this.mode === 'sphereGrowth') {
                 // async: yields to the event loop between regions and
                 // generate-and-test attempts so the progress indicator
@@ -3756,7 +3780,20 @@ export class ProcgenPipelineUI {
         };
     }
 
-    _runShuffledSpiral() {
+    // ── Shuffled spiral as a 4-step pipeline ────────────────────────
+    // ① Arrange → ② Content (no-op today) → ③ Regions → ④ Compile. Each step
+    // can run on its own ("Run next step") or the lot at once ("Run all" =
+    // _runSpiralAll). The steps delegate to spiralSteps.js — the same shared
+    // runner the headless `spiral-step` CLI uses — so the stepped panel output
+    // is byte-identical to the monolithic arrangeShuffledSpiral + buildRulesJson.
+    // State lives on this._spiralState (null until ① runs); see _renderSpiralSteps.
+
+    // Build a fresh spiral envelope from the panel's current params + scenario.
+    // The { config, compileIn } pair is EXACTLY what the old one-shot fed
+    // arrangeShuffledSpiral + buildRulesJson (regionParams:{} — no substrate
+    // config yet; JtA's dataset config lands on ② content in Part 3), so
+    // byte-identity holds.
+    _buildSpiralEnvelope() {
         const { seed, regionWidth, regionHeight, maxItemsPerRegion,
             startSubstrate } = this.params;
         const quotas = this._effectiveSubstrateQuotas();
@@ -3764,7 +3801,7 @@ export class ProcgenPipelineUI {
             throw new Error('shuffled-spiral requires at least one substrate '
                 + 'with a positive quota (set Substrate allocation to Quotas)');
         }
-        const { grid, pool, stats, startCell } = arrangeShuffledSpiral({
+        const config = {
             regionSize: { width: regionWidth, height: regionHeight },
             itemPool: { ...this.scenario.items },
             obstaclePool: { ...this.scenario.obstacles },
@@ -3777,25 +3814,169 @@ export class ProcgenPipelineUI {
                     ? { startSubstrate } : {}),
             },
             hazardOpts: this._effectiveHazardOpts(),
-        });
-        const victoryItemId = this._resolveVictoryItemId();
-        const rulesJson = buildRulesJson(grid, {
-            startCell, seed,
+        };
+        const compileIn = {
+            seed,
             enableLoopMode: !!this.params.enableLoopMode,
             regionXpEffect: this.params.regionXpEffect ?? 'cost',
-            completionConditionItem: victoryItemId,
-            procgenMetadata: {
-                driver: 'shuffled-spiral',
-                stop_reason: stats.stopReason,
-            },
-        });
-        this.result = {
-            grid,
-            regionSize: { width: regionWidth, height: regionHeight },
-            stats,
-            poolRemaining: pool.snapshot(),
-            rulesJson,
+            completionConditionItem: this._resolveVictoryItemId(),
         };
+        return newSpiralEnvelope({ config, compileIn });
+    }
+
+    // --- spiral step runners (delegate to spiralSteps) ---
+    // Spiral's step runners are synchronous (no per-region streaming like
+    // sphere/top-down), so — unlike those modes — the handlers need no
+    // _progressState / onProgress wiring. arrange/content/regions/compile run
+    // instantly.
+
+    async _stepSpiralArrange() {
+        await runSpiralStep('arrange', this._spiralState);
+    }
+
+    // ② Content — a no-op for every current substrate (byte-identical). No
+    // editing surface; _renderSpiralSteps shows a "no content substrate" note.
+    async _stepSpiralContent() {
+        await runSpiralStep('content', this._spiralState);
+    }
+
+    async _stepSpiralRegions() {
+        await runSpiralStep('regions', this._spiralState);
+    }
+
+    // ④ Compile — the panel owns the this.result it shows. poolRemaining:null
+    // (matches top-down; the pool is kept off the envelope, so the "pool
+    // remaining" stat is dropped in stepped mode — the stats renderer branches
+    // cleanly on null).
+    async _stepSpiralCompile() {
+        const st = this._spiralState;
+        await runSpiralStep('compile', st);
+        this.result = {
+            grid: st.regions.grid,
+            regionSize: {
+                width: this.params.regionWidth, height: this.params.regionHeight,
+            },
+            stats: st.regions.stats,
+            poolRemaining: null,
+            rulesJson: st.compile.rulesJson,
+        };
+    }
+
+    // Advance one spiral step (button: Run next step). Starts the pipeline
+    // (① Arrange) when none is running, then follows nextSpiralStep.
+    _advanceSpiralStep() {
+        if (!this._spiralState) { this._spiralState = this._buildSpiralEnvelope(); }
+        const byName = {
+            arrange: () => this._stepSpiralArrange(),
+            content: () => this._stepSpiralContent(),
+            regions: () => this._stepSpiralRegions(),
+            compile: () => this._stepSpiralCompile(),
+        };
+        const step = nextSpiralStep(this._spiralState);
+        return step ? byName[step]?.() : undefined;
+    }
+
+    // "Run all" — run from the current point to completion (driven by
+    // _runGeneration, which owns isGenerating + the surrounding render).
+    async _runSpiralAll() {
+        // Fresh run when there's no pipeline OR the previous one is complete
+        // (Generate re-generates); otherwise continue the in-progress one.
+        if (!this._spiralState || nextSpiralStep(this._spiralState) === null) {
+            this._spiralState = this._buildSpiralEnvelope();
+        }
+        while (nextSpiralStep(this._spiralState)) {
+            // eslint-disable-next-line no-await-in-loop
+            await this._advanceSpiralStep();
+        }
+    }
+
+    // "Run next step" button — its own guard + render (the Generate path in
+    // _runGeneration wraps "Run all").
+    async _runSpiralStepNext() {
+        if (this.isGenerating) return;
+        this.isGenerating = true;
+        this.render();
+        try {
+            await this._advanceSpiralStep();
+        } catch (e) {
+            this.message = `ERROR: ${e.message}`;
+        }
+        this.isGenerating = false;
+        this.render();
+    }
+
+    // "Reset" button — drop the spiral pipeline so ① re-runs from current params.
+    _resetSpiralSteps() {
+        this._spiralState = null;
+        this.result = null;
+        this.message = '';
+        this.warning = '';
+        this.render();
+    }
+
+    // Content of the "Spiral pipeline" section: read-only feedback per completed
+    // step (② Content is a no-op note — no editing surface this pass).
+    _renderSpiralSteps() {
+        const wrap = document.createElement('div');
+        const st = this._spiralState;
+        if (!st) return wrap;
+        if (st.completed >= 0 && st.arrange) {
+            wrap.appendChild(this._renderStepBlock('1 Arrange — spiral placement plan',
+                this._renderSpiralArrangeFeedback(st.arrange)));
+        }
+        if (st.completed >= 1) {
+            wrap.appendChild(this._renderStepBlock('2 Content — per-zone dataset',
+                this._renderSpiralContentFeedback()));
+        }
+        if (st.completed >= 2 && st.regions) {
+            wrap.appendChild(this._renderStepBlock('3 Regions — spiral-walk region synthesis',
+                this._renderSpiralRegionsFeedback(st.regions)));
+        }
+        if (st.completed >= 3 && st.compile) {
+            wrap.appendChild(this._renderStepBlock('4 Compile',
+                this._renderSpiralCompileFeedback(st.compile)));
+        }
+        return wrap;
+    }
+
+    _renderSpiralArrangeFeedback(arrange) {
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'font-size:12px;color:#bbb;';
+        const seq = arrange.sequence ?? [];
+        const counts = {};
+        for (const s of seq) counts[s] = (counts[s] ?? 0) + 1;
+        const bySub = Object.entries(counts).map(([s, n]) => `${n} ${s}`).join(', ') || 'none';
+        const dims = arrange.gridDims;
+        wrap.textContent = `Planned ${seq.length} region${seq.length === 1 ? '' : 's'} `
+            + `from center: ${bySub}${dims ? ` · grid ${dims.width}×${dims.height}` : ''}`;
+        return wrap;
+    }
+
+    _renderSpiralContentFeedback() {
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'font-size:12px;color:#999;';
+        wrap.textContent = 'No content substrate — nothing to synthesise (no-op).';
+        return wrap;
+    }
+
+    _renderSpiralRegionsFeedback(regions) {
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'font-size:12px;color:#bbb;';
+        const stats = regions.stats ?? {};
+        const counts = stats.substrateCounts ?? {};
+        const bySub = Object.entries(counts).map(([s, n]) => `${n} ${s}`).join(', ') || 'none';
+        wrap.textContent = `Realised ${stats.regionsBuilt ?? 0} region(s): ${bySub} · `
+            + `stop: ${stats.stopReason}`;
+        return wrap;
+    }
+
+    _renderSpiralCompileFeedback(compile) {
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'font-size:12px;color:#bbb;';
+        const rj = compile.rulesJson;
+        const regionCount = Object.keys(rj.regions?.['1'] ?? {}).length;
+        wrap.textContent = `driver ${rj.procgen_metadata?.driver} · ${regionCount} regions`;
+        return wrap;
     }
 
     // ── Sphere growth as a 4-step pipeline ──────────────────────────
