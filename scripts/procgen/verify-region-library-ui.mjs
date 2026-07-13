@@ -240,31 +240,37 @@ const rjB = await extractRulesJson();
 assert(canon(rjB) === MONO, 'Phase B: post-reload rules.json === same headless world');
 
 // --- Phase C — F5 capture UI ----------------------------------------
-// Open the first region via the composite map (click-to-edit), then Save to
-// library. The working-library download must validate + re-instantiate.
-const captureAvailable = await page.evaluate(() => {
-    const sec = document.querySelector('.procgen-pipeline-region-libraries');
-    return !!(sec && [...sec.querySelectorAll('button')].some((b) => /Download working library/.test(b.textContent)));
+// The "Capture to library" area lists the last generation's regions; Save one,
+// then Download the working library and assert it validates + re-instantiates.
+const captureBtnPresent = await page.evaluate(() => {
+    const sec = document.querySelector('.procgen-pipeline-library-capture');
+    return !!(sec && [...sec.querySelectorAll('button')].some((b) => /Save.*to library/.test(b.textContent)));
 });
-if (!captureAvailable) {
-    console.log('NOTE: F5 capture UI not present yet — Phase C skipped (F3-only build).');
+if (!captureBtnPresent) {
+    console.log('NOTE: F5 capture UI not present — Phase C skipped (F3-only build).');
 } else {
-    // Capture the first maze region from the ③ region view.
-    const captured = await page.evaluate(({ rootExpr }) => {
-        const root = eval(rootExpr);
-        const btn = [...root.querySelectorAll('button')].find((b) => /Save.*to library/.test(b.textContent));
+    const captured = await page.evaluate(() => {
+        const sec = document.querySelector('.procgen-pipeline-library-capture');
+        const btn = [...sec.querySelectorAll('button')].find((b) => /Save.*to library/.test(b.textContent));
         if (!btn) return false;
         btn.click();
         return true;
-    }, { rootExpr: panelRoot() });
-    assert(captured, 'Phase C: captured a region into the working library');
+    });
+    assert(captured, 'Phase C: clicked "Save to library" on a generated region');
     await page.waitForTimeout(400);
 
-    const workingText = await extractDownload(() => page.evaluate(({ rootExpr }) => {
-        const root = eval(rootExpr);
-        const btn = [...root.querySelectorAll('button')].find((b) => /Download working library/.test(b.textContent));
+    const downloadPresent = await page.evaluate(() => {
+        const sec = document.querySelector('.procgen-pipeline-library-capture');
+        return /Working library \(1 entry\)/.test(sec?.textContent ?? '')
+            && [...sec.querySelectorAll('button')].some((b) => /Download working library/.test(b.textContent));
+    });
+    assert(downloadPresent, 'Phase C: capture added an entry + revealed the Download button');
+
+    const workingText = await extractDownload(() => page.evaluate(() => {
+        const sec = document.querySelector('.procgen-pipeline-library-capture');
+        const btn = [...sec.querySelectorAll('button')].find((b) => /Download working library/.test(b.textContent));
         btn.click();
-    }, { rootExpr: panelRoot() }));
+    }));
     let workingLib = null;
     try { workingLib = JSON.parse(workingText); } catch (e) { /* asserted below */ }
     assert(!!workingLib, 'Phase C: working-library download is valid JSON');
@@ -273,7 +279,15 @@ if (!captureAvailable) {
             entryCapabilityCheck: (e) => maze.validateLibraryEntry(e),
         });
         assert(vr.ok, `Phase C: captured working library validates (${vr.errors.join('; ') || 'no errors'})`);
-        assert((workingLib.entries?.length ?? 0) >= 1, 'Phase C: working library has >= 1 captured entry');
+        assert((workingLib.entries?.length ?? 0) === 1, 'Phase C: working library has the captured entry');
+        // Re-instantiate the captured entry in a fresh context (independent of the
+        // capture): it must produce a self-contained maze region descriptor.
+        const entry = workingLib.entries[0];
+        const region = maze.instantiateLibraryEntry(entry, {
+            region_id: 'rl_ui_probe', exitSides: entry.exit_sides, regionSize: entry.region_size,
+        });
+        assert(region?.substrate === 'maze' && (region.extracted_rules?.locations?.length ?? 0) >= 0,
+            'Phase C: captured entry re-instantiates into a maze region');
     }
 }
 

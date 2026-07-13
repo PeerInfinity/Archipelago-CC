@@ -66,7 +66,7 @@ import {
     serializeLibrarySelection, resolveLibrarySelection,
     buildLibrarySpiralConfig,
 } from './regionLibraryLoader.js';
-import { stampLibraryIdentity } from './regionLibraryValidator.js';
+import { stampLibraryIdentity, REGION_LIBRARY_SCHEMA_VERSION } from './regionLibraryValidator.js';
 
 const LS_KEY = 'procgenPipeline_params';
 // View preferences (toggle states etc.) live under a separate key so
@@ -1253,7 +1253,168 @@ export class ProcgenPipelineUI {
         grid.appendChild(left);
         grid.appendChild(right);
         wrap.appendChild(grid);
+
+        // F5 — capture regions from the last generation into a working library,
+        // downloadable as a committable library JSON file.
+        wrap.appendChild(this._renderLibraryCaptureArea());
         return wrap;
+    }
+
+    // F5 capture UI: a "capture from last generation" list (one Save button per
+    // region in this.result.grid) + the working-library summary with Download /
+    // Clear. Self-contained in this section so capture + export live together.
+    _renderLibraryCaptureArea() {
+        const wrap = document.createElement('div');
+        wrap.className = 'procgen-pipeline-library-capture';
+
+        const header = document.createElement('div');
+        header.className = 'procgen-pipeline-scenario-subheader';
+        header.textContent = 'Capture to library (from last generation)';
+        header.title = 'Save a generated region into a working library, then download '
+            + 'it as a committable region-library JSON.';
+        wrap.appendChild(header);
+
+        const grid = document.createElement('div');
+        grid.className = 'procgen-pipeline-scenario-grid';
+
+        // Left: regions available to capture.
+        const left = document.createElement('div');
+        left.className = 'procgen-pipeline-scenario-library';
+        const regions = this.result?.grid ? [...this.result.grid.allRegions()] : [];
+        const capturable = regions.filter((r) => {
+            const sub = substrateRegistry.get(r?.substrate);
+            return sub && typeof sub.captureLibraryEntry === 'function';
+        });
+        if (capturable.length === 0) {
+            const empty = document.createElement('div');
+            empty.className = 'procgen-pipeline-scenario-empty';
+            empty.textContent = regions.length
+                ? '(no capturable regions in the last generation)'
+                : '(generate a world to capture regions)';
+            left.appendChild(empty);
+        } else {
+            for (const region of capturable) {
+                left.appendChild(this._renderCaptureRegionRow(region));
+            }
+        }
+
+        // Right: the working library + Download / Clear.
+        const right = document.createElement('div');
+        right.className = 'procgen-pipeline-scenario-selected';
+        const rightHeader = document.createElement('div');
+        rightHeader.className = 'procgen-pipeline-scenario-subheader';
+        const n = this.workingLibrary.entries.length;
+        rightHeader.textContent = `Working library (${n} entr${n === 1 ? 'y' : 'ies'})`;
+        right.appendChild(rightHeader);
+        if (n === 0) {
+            const empty = document.createElement('div');
+            empty.className = 'procgen-pipeline-scenario-empty';
+            empty.textContent = '(nothing captured yet)';
+            right.appendChild(empty);
+        } else {
+            for (const entry of this.workingLibrary.entries) {
+                const row = document.createElement('div');
+                row.className = 'procgen-pipeline-selected-row';
+                const name = document.createElement('span');
+                name.className = 'procgen-pipeline-selected-name';
+                name.textContent = `${entry.entry_id} (${entry.substrate})`;
+                name.title = `${entry.exit_sides?.join(',') ?? ''} · ${entry.location_slots ?? 0} slots`;
+                row.appendChild(name);
+                const rm = document.createElement('button');
+                rm.className = 'procgen-pipeline-btn-small';
+                rm.textContent = '×';
+                rm.title = 'Remove from working library';
+                rm.addEventListener('click', () => this._removeCapturedEntry(entry.entry_id));
+                row.appendChild(rm);
+                right.appendChild(row);
+            }
+            const btnRow = document.createElement('div');
+            btnRow.style.cssText = 'display:flex;gap:6px;margin-top:4px;';
+            btnRow.appendChild(this._btn('Download working library', () => this._downloadWorkingLibrary()));
+            btnRow.appendChild(this._btn('Clear', () => this._clearWorkingLibrary()));
+            right.appendChild(btnRow);
+        }
+
+        grid.appendChild(left);
+        grid.appendChild(right);
+        wrap.appendChild(grid);
+        return wrap;
+    }
+
+    _renderCaptureRegionRow(region) {
+        const row = document.createElement('div');
+        row.className = 'procgen-pipeline-library-row';
+        const name = document.createElement('span');
+        name.style.cssText = 'flex:1;';
+        name.textContent = `${region.region_id} (${region.substrate})`;
+        row.appendChild(name);
+        const save = this._btn('Save to library ▸', () => this._captureRegionToLibrary(region));
+        save.title = 'Serialize this region into the working library';
+        row.appendChild(save);
+        return row;
+    }
+
+    // Serialize a live region into the working library via its substrate's
+    // captureLibraryEntry hook, revalidating the captured entry against its own
+    // payload before adding (a re-capture of the same entry_id replaces).
+    _captureRegionToLibrary(region) {
+        const sub = substrateRegistry.get(region?.substrate);
+        if (!sub || typeof sub.captureLibraryEntry !== 'function') {
+            this.warning = `Substrate "${region?.substrate}" has no library capture hook.`;
+            this.render();
+            return;
+        }
+        try {
+            const entry = sub.captureLibraryEntry(region);
+            const check = typeof sub.validateLibraryEntry === 'function'
+                ? sub.validateLibraryEntry(entry) : { errors: [] };
+            if (check.errors?.length) {
+                this.warning = `Capture rejected: ${check.errors.join('; ')}`;
+                this.render();
+                return;
+            }
+            this.workingLibrary.entries = this.workingLibrary.entries
+                .filter((e) => e.entry_id !== entry.entry_id);
+            this.workingLibrary.entries.push(entry);
+            this._saveWorkingLibraryToLocalStorage();
+            const total = this.workingLibrary.entries.length;
+            this.message = `Captured "${entry.entry_id}" → working library `
+                + `(${total} entr${total === 1 ? 'y' : 'ies'}).`;
+            this.warning = '';
+            this.render();
+        } catch (e) {
+            this.warning = `Capture failed: ${e.message}`;
+            this.render();
+        }
+    }
+
+    _removeCapturedEntry(entryId) {
+        this.workingLibrary.entries = this.workingLibrary.entries.filter((e) => e.entry_id !== entryId);
+        this._saveWorkingLibraryToLocalStorage();
+        this.render();
+    }
+
+    _clearWorkingLibrary() {
+        this.workingLibrary = { entries: [] };
+        this._saveWorkingLibraryToLocalStorage();
+        this.render();
+    }
+
+    // Stamp a content-hash identity onto the working entries and download a valid
+    // region-library document (committable to frontend/region-libraries/ + indexed).
+    _downloadWorkingLibrary() {
+        if (!this.workingLibrary.entries.length) return;
+        const doc = {
+            schema_version: REGION_LIBRARY_SCHEMA_VERSION,
+            name: 'Captured Library',
+            description: 'Regions captured from the procgen pipeline.',
+            entries: JSON.parse(JSON.stringify(this.workingLibrary.entries)),
+        };
+        stampLibraryIdentity(doc);
+        this._downloadText(JSON.stringify(doc, null, 2), `${doc.library_id}.json`);
+        this.message = `Downloaded working library "${doc.library_id}" `
+            + `(${doc.entries.length} entries).`;
+        this.render();
     }
 
     _renderServedLibraryList() {
@@ -2904,6 +3065,15 @@ export class ProcgenPipelineUI {
         const reroll = this._btn('Re-roll 🎲', () => this._reRollRegion(region, node));
         reroll.title = "Regenerate this region's interior on a new seed (keeps exits/locations)";
         row.appendChild(reroll);
+
+        // F5 — capture this region into the working library (substrates with a
+        // captureLibraryEntry hook only; the working library exports from the
+        // Region libraries section).
+        if (typeof substrateRegistry.get(region?.substrate)?.captureLibraryEntry === 'function') {
+            const save = this._btn('Save to library ▸', () => this._captureRegionToLibrary(region));
+            save.title = 'Serialize this region into the working library (Region libraries section)';
+            row.appendChild(save);
+        }
         return row;
     }
 
