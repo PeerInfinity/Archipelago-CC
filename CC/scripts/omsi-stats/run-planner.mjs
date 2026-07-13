@@ -3,11 +3,15 @@
 // conventions: committed SUMMARY.md, raw data local-only in results/).
 //
 // The primary acceptance metric (substrate plan §3.3): loops to Forest Path
-// (town 1) must stay <= 500 — the queue-planner v0 experiment's result
-// (500 loops / 5,432,753 ticks / final-state sha256-16 54506b48ec1758af,
-// seed 12345, default weights). With --seed 12345 and seeding OFF, this
-// harness additionally checks BYTE-EXACT reproduction of that run: the fork
-// port must not have changed planner behavior.
+// (town 1) must stay <= the frozen reference. Part A (§11.9, 2026-07-13)
+// deliberately re-froze it to 535 loops / 5,965,890 ticks / final-state
+// sha256-16 e23f020400162f9a (seed 12345, default weights): A1 un-gated the
+// town-0 capacity probe, which reshapes the healthy trajectory (was the
+// pre-Part-A 500 / 5,432,753 / 54506b48ec1758af) AND melts the bank:20
+// fixation hole (was DNF@1200 -> escapes @538, plain heuristic). With
+// --seed 12345 and seeding OFF, this harness additionally checks BYTE-EXACT
+// reproduction of that reference: any planner change must reproduce it or
+// be a deliberate re-freeze.
 //
 // The sim boot reuses the fork's OWN test/harness.mjs from the extraction,
 // so the stats run exercises exactly what the fork ships.
@@ -81,7 +85,9 @@ const submoduleDir = path.join(repoRoot, "frontend/modules/omsi-loops");
 const forkDir = path.join(here, "fork");
 const resultsDir = path.join(here, "results");
 
-const V0_REFERENCE = { seed: 12345, loops: 500, ticks: 5_432_753, hash: "54506b48ec1758af" };
+// V0_LEGACY (pre-Part-A queue-planner v0, superseded by the §11.9 re-freeze
+// 2026-07-13): { loops: 500, ticks: 5_432_753, hash: "54506b48ec1758af" }.
+const V0_REFERENCE = { seed: 12345, loops: 535, ticks: 5_965_890, hash: "e23f020400162f9a" };
 
 const run = (cmd, args) => execFileSync(cmd, args, { encoding: "utf8" }).trim();
 
@@ -323,14 +329,14 @@ async function main() {
     for (const [k, v] of highlights) console.log(`  ${k.padEnd(30)} L${v.loop}  (${v.cumTicks + wanderTicks} ticks)`);
     console.log(`results written to ${outPath}`);
 
-    // Acceptance gates (the <=500 criterion is the v0 acceptance test —
-    // not applicable to wander-first experiment arms, which only gate on
-    // reaching the target town)
-    const gate = r.finished && (targetTown !== 1 || wanderUntil > 0 || r.loopsRun <= 500);
-    console.log(`\nACCEPTANCE (${targetTown === 1 && !wanderUntil ? "<=500 loops to town 1" : `reached town ${targetTown}`}): ${gate ? "PASS" : "FAIL"} (${totalLoops} loops)`);
+    // Acceptance gates (the <=V0_REFERENCE.loops criterion is the acceptance
+    // test — not applicable to wander-first experiment arms, which only gate
+    // on reaching the target town)
+    const gate = r.finished && (targetTown !== 1 || wanderUntil > 0 || r.loopsRun <= V0_REFERENCE.loops);
+    console.log(`\nACCEPTANCE (${targetTown === 1 && !wanderUntil ? `<=${V0_REFERENCE.loops} loops to town 1` : `reached town ${targetTown}`}): ${gate ? "PASS" : "FAIL"} (${totalLoops} loops)`);
     if (seed === V0_REFERENCE.seed && !seedFromPredictor && !Object.keys(weightsOverride).length && knobsAtDefaults) {
         const exact = r.loopsRun === V0_REFERENCE.loops && r.cumTicks === V0_REFERENCE.ticks && hash === V0_REFERENCE.hash;
-        console.log(`V0 EXACT REPRODUCTION (500 / 5,432,753 / ${V0_REFERENCE.hash}): ${exact ? "PASS" : "MISMATCH"}`);
+        console.log(`V0 EXACT REPRODUCTION (${V0_REFERENCE.loops} / ${V0_REFERENCE.ticks} / ${V0_REFERENCE.hash}): ${exact ? "PASS" : "MISMATCH"}`);
         if (!exact) console.log(`  got ${r.loopsRun} / ${r.cumTicks} / ${hash} — investigate the port before trusting other numbers`);
         process.exit(gate && exact ? 0 : 1);
     }

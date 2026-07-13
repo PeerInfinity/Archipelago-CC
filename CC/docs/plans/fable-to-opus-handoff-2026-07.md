@@ -255,12 +255,25 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
       read-state fields. Plus: greedy fill consumes through limitedPools
       exhaustion; later goals costed incrementally (shared prefixes
       deduped); §6 escalation ignores budgets + user list.
-   3. Then as before: tail trim / remaining ladder rungs (auto-add,
+   3. **§11.9 Part A — SHIPPED 2026-07-13 (Opus, session 13; A1 only).**
+      Un-gated the town-0 [0] capacity probe (A1); the deliberate
+      byte-reference re-freeze (the first since v0) landed: **500 /
+      5,432,753 / `54506b48ec1758af` → 535 / 5,965,890 /
+      `e23f020400162f9a`**. HARD GATE MET — `--weights bank:20` escapes
+      town 1 at loop 538 (was DNF@1200), under the **plain heuristic**, so
+      `plannerAntiFixation` stays OFF. The optimistic h arm (A2) was
+      DROPPED: A1-only == A1+A2 byte-for-byte on both the healthy default
+      and bank:20, so A2 is inert on top of A1 (rationale falsified). The
+      +35-loop healthy regression was accepted as the price of the gate fix
+      (user ruling). Detail: SUMMARY Round 15, multitown §11.9 banner,
+      targeted-mode §13. **Remaining Part-A follow-on** = re-freeze the two
+      weight-sweep cross-checks (frontier:1000, bank:10), which now folds
+      into item 5 (calibration re-baseline).
+   4. Then as before: tail trim / remaining ladder rungs (auto-add,
       simple balancing) / §11.7 Design B — as the user prioritizes.
-   4. LAST (unchanged): the ONE deliberate re-baseline + recalibration
-      — now bundling §11.9 Part A (un-gate the starved [0] capacity
-      probe + always-include optimistic h arm), §11.8 piece 3 scored
-      channels, DNF-aware sweeps, bankPot:8 re-test.
+   5. LAST: the recalibration remainder of the ONE re-baseline bundle —
+      §11.8 piece 3 scored channels, DNF-aware sweeps, DEFAULT_WEIGHTS
+      recalibration, bankPot:8 re-test (Part A itself moved to item 3).
    Original queue (for reference):
    1. **Systematic action-code audit (user: HIGH priority)**: read all
       157 actions' reward/effect code and produce a complete census of

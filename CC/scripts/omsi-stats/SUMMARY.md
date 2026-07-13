@@ -668,3 +668,69 @@ fixes the auto-entry, but the chain is economically infeasible in one loop
 regardless. **The bank:20 escape needs a Part-A economy slice pulled into scope;
 open for the user** (and bears on the plannerAntiFixation default — the guard
 fires but cannot escape until the economy is fixed).
+
+## Round 15 — Part A: un-gated town-0 capacity probe SHIPPED; the bank:20 headline gate now PASSES; reference deliberately re-frozen (2026-07-13, Opus)
+
+Parent design: multitown-planner-plan §11.9 Part A; brief
+`NewDocs/plans/omsiloops/omsi-loops-part-a-rebaseline-plan.md`. This is the
+FIRST deliberate move of the frozen byte-reference since v0. **A1 only** landed
+(A2 dropped — see below).
+
+**A1 — un-gate the interleaved capacity probe at `[0]`** (planner.js:698,
+`const interleave = post.townsUnlocked.length > 1` → `true`). The Round-7
+`a39bc27` fix had left town-0-only states on the v0 non-interleaved path to
+preserve the byte-reference; consequently `planning.prevTimeNeeded` read 5,250
+in ALL town-0 states while committed loops realize 27k–35k — a ~7× understated
+capacityHint that mis-sized every economy/push candidate. A1 makes the
+cushion-chunked interleave the universal path.
+
+**The re-freeze (old → new, side by side):**
+
+| metric | v0 (pre-Part-A) | Part A (A1) |
+|---|---|---|
+| loops to town 1 (default) | 500 | **535** |
+| cumulative ticks | 5,432,753 | **5,965,890** |
+| final-state hash (sha256-16) | `54506b48ec1758af` | **`e23f020400162f9a`** |
+| RNG draws | 0 | 0 |
+
+Predictor screen, seed 12345, pool-8. Run **twice** under the predictor screen,
+byte-identical both times; engine-screen run of the same tree is ALSO
+byte-identical (535 / 5,965,890 / `e23f020400162f9a`) — 0 RNG, fully
+deterministic. Old V0 gate correctly reports MISMATCH (the change binds). The
++35-loop healthy cost (+9.8% ticks) was accepted by the user as the price of the
+headline-gate fix (ruling 2026-07-13). Golden `candidates-town0.json` is
+UNCHANGED under A1-only (A1 does not alter the town-0 candidate SET; the probe
+change affects sizing, not these synthetic states). npm 55/55.
+
+**HEADLINE GATE (bank:20 escape) — PASSES.** `--weights '{"bank":20}'`:
+pre-Part-A DNF@1200 with 0 escapes → post-A1 **escapes to town 1 at loop 538**
+(538 / 5,783,328 / `f8a0a310fdf528d8`, 0 RNG). Critically the **plain
+heuristic** escapes; `--anti-fixation` produces byte-identical output (the guard
+never changes the outcome here). So §11.9's "Part A alone probably melts it"
+held, and the datum for the `plannerAntiFixation` default is clear: **plain
+escapes ⇒ default stays OFF** (user ruling 2026-07-13; a guard the plain path
+doesn't need to escape).
+
+**Why A2 (the optimistic h arm) was DROPPED.** Attribution matrix (engine
+mode, seed 12345):
+
+| variant | healthy default | bank:20 |
+|---|---|---|
+| baseline `48bd32e` | 500 | DNF@1200 |
+| A2-only | 514 | DNF@1200 |
+| A1-only | **535 / `e23f0204`** | **escapes @538 / `f8a0a310`** |
+| A1+A2 | 535 / `e23f0204` | escapes @538 / `f8a0a310` |
+
+A1-only == A1+A2 **byte-for-byte on BOTH scenarios** ⇒ A2 is inert on top of A1.
+It only adds a `push:Start Journey:h15` candidate in synthetic states that never
+win from fresh (the actual escape uses the ordinary h4–h6 rep-capped ladder,
+which A1's accurate capacity now funds). The §11.9 rationale for A2 ("h15 makes
+supplies price 0") is therefore **falsified** — A1's sizing accuracy, not the
+optimistic arm, funds the toll. A2 alone is mildly harmful (514, still DNF), so
+it was dropped; only A1 shipped (user ruling 2026-07-13).
+
+**Out of scope (calibration stays LAST, handoff item 5).** The two prior
+weight-sweep cross-checks (frontier:1000 → 502, bank:10 → 632) predate Part A
+and no longer reproduce byte-exact; they are re-measured in the calibration
+re-baseline, not here. DEFAULT_WEIGHTS, scored channels, DNF-aware sweeps, and
+the bankPot:8 re-test all remain in that last queue item.
