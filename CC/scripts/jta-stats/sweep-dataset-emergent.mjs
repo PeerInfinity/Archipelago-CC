@@ -39,7 +39,7 @@
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, '../../..');
@@ -49,14 +49,48 @@ const getArg = (n) => {
     const i = args.indexOf(n);
     return i >= 0 ? args[i + 1] : undefined;
 };
-const pairs = (getArg('--pairs') ?? '1:1,1:2,2:1,2:2,3:3,4:4')
-    .split(',')
-    .map((p) => p.split(':').map(Number));
 const quota = getArg('--quota') ?? '15';
 const maxRuns = getArg('--max-runs') ?? '2000';
 const outDir = path.resolve(getArg('--out-dir') ?? '/tmp/jta-dataset-emergent');
 const summaryPath = path.resolve(repoRoot,
     getArg('--summary') ?? 'CC/scripts/jta-stats/results/comparison-dataset-emergent.md');
+fs.mkdirSync(outDir, { recursive: true });
+
+// Jobs: a dataset addressed by seed (--pairs, JTA_RT_DATASET_SEED) or a
+// dataset DOCUMENT on disk (--dataset-file / --structure, JTA_RT_DATASET_FILE
+// — the profiled departure batch). make-ap-config reads the dataset from the
+// export, so everything downstream is identical either way. --pairs default
+// keeps existing 5f invocations unchanged.
+const fillEmergent = Number(getArg('--fill') ?? 1);
+const jobs = [];
+const datasetFileArg = getArg('--dataset-file');
+const structureArg = getArg('--structure');
+if (structureArg != null) {
+    const structure = JSON.parse(structureArg);
+    const zones = Number(getArg('--zones') ?? 15);
+    const seeds = (getArg('--seeds') ?? '1,2,3').split(',').map(Number);
+    const { generateJtaDataset } = await import(pathToFileURL(
+        path.join(repoRoot, 'frontend/modules/jtaSubstrateWrapper/generateDataset.js')).href);
+    const profile = JSON.parse(fs.readFileSync(path.join(repoRoot, 'CC/scripts/jta-stats/results/vanilla-profile.json'), 'utf8')).static;
+    const vanilla = JSON.parse(fs.readFileSync(path.join(repoRoot, 'frontend/modules/jtaSubstrateWrapper/datasets/vanilla.json'), 'utf8'));
+    for (const seed of seeds) {
+        const { dataset, c4 } = generateJtaDataset({ seed, profile, vanilla, params: { zoneCount: zones, structure } });
+        const file = path.join(outDir, `gen-s${seed}-z${zones}.json`);
+        fs.writeFileSync(file, `${JSON.stringify(dataset, null, 2)}\n`);
+        console.log(`generated ${dataset.dataset_id} (C4 ${c4.ok ? 'clean' : 'VIOLATED'}, ${dataset.provenance.c4_repairs?.length ?? 0} repairs)`);
+        jobs.push({ tag: `s${seed}`, datasetFile: file, fillSeed: fillEmergent });
+    }
+} else if (datasetFileArg != null) {
+    for (const f of datasetFileArg.split(',')) {
+        const file = path.resolve(repoRoot, f.trim());
+        jobs.push({ tag: path.basename(file).replace(/\.json$/, ''), datasetFile: file, fillSeed: fillEmergent });
+    }
+} else {
+    for (const p of (getArg('--pairs') ?? '1:1,1:2,2:1,2:2,3:3,4:4').split(',')) {
+        const [ds, f] = p.split(':').map(Number);
+        jobs.push({ tag: `ds${ds}-f${f}`, datasetSeed: ds, fillSeed: f });
+    }
+}
 
 const PRESET_DIR = path.join(repoRoot, 'frontend/presets/jta_loctest_roundtrip_worldgen');
 const WORLD_DIR = path.join(repoRoot, 'worlds/jta_loctest_roundtrip_worldgen');
@@ -228,11 +262,13 @@ const anchorC4 = new Map(anchor.c4.map((z) => [z.zone, z.minDemandedLevel]));
 
 // --- Dataset worlds ----------------------------------------------------
 const rows = [];
-for (const [ds, fill] of pairs) {
-    const tag = `ds${ds}-f${fill}`;
+for (const job of jobs) {
+    const { tag } = job;
     console.log(`\n=== ${tag}: regenerating dataset export …`);
     rulesPath = exportWorld({
-        JTA_RT_DATASET: '1', JTA_RT_DATASET_SEED: String(ds), JTA_RT_SEED: String(fill),
+        JTA_RT_DATASET: '1',
+        ...(job.datasetFile ? { JTA_RT_DATASET_FILE: job.datasetFile } : { JTA_RT_DATASET_SEED: String(job.datasetSeed) }),
+        JTA_RT_SEED: String(job.fillSeed),
     });
     const rulesDoc = JSON.parse(fs.readFileSync(rulesPath, 'utf8'));
     const playerId = Object.keys(rulesDoc.preset_sidecars)[0];

@@ -35,7 +35,7 @@
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, '../../..');
@@ -45,11 +45,49 @@ const getArg = (n) => {
     const i = args.indexOf(n);
     return i >= 0 ? args[i + 1] : undefined;
 };
-const pairs = (getArg('--pairs') ?? '1:1,1:2,2:1,2:2,3:3,4:4')
-    .split(',')
-    .map((p) => p.split(':').map(Number));
 const quota = getArg('--quota') ?? '15';
 const outDir = path.resolve(repoRoot, getArg('--out-dir') ?? 'CC/scripts/jta-stats/results/dataset-passb');
+fs.mkdirSync(outDir, { recursive: true });
+
+// A JOB is one (dataset, fillSeed) run: either a generated dataset addressed
+// by seed (--pairs, JTA_RT_DATASET_SEED) or a dataset DOCUMENT on disk
+// (--dataset-file / --structure, JTA_RT_DATASET_FILE — the §2.5 departure
+// batch modes). The three selectors are mutually exclusive; --pairs is the
+// default so existing Phase 5e invocations are unchanged.
+const fill = Number(getArg('--fill') ?? 1);
+const jobs = [];
+const datasetFileArg = getArg('--dataset-file');
+const structureArg = getArg('--structure');
+if (structureArg != null) {
+    // Generate a profiled batch from one structure spec across --seeds, write
+    // each to the out dir, then run them as dataset-files. Raw by default, so
+    // the docs are exactly what the fork loads.
+    const structure = JSON.parse(structureArg);
+    const zones = Number(getArg('--zones') ?? 15);
+    const seeds = (getArg('--seeds') ?? '1,2,3').split(',').map(Number);
+    const { generateJtaDataset } = await import(pathToFileURL(
+        path.join(repoRoot, 'frontend/modules/jtaSubstrateWrapper/generateDataset.js')).href);
+    const profile = JSON.parse(fs.readFileSync(path.join(repoRoot, 'CC/scripts/jta-stats/results/vanilla-profile.json'), 'utf8')).static;
+    const vanilla = JSON.parse(fs.readFileSync(path.join(repoRoot, 'frontend/modules/jtaSubstrateWrapper/datasets/vanilla.json'), 'utf8'));
+    for (const seed of seeds) {
+        const { dataset, c4 } = generateJtaDataset({ seed, profile, vanilla, params: { zoneCount: zones, structure } });
+        const file = path.join(outDir, `gen-s${seed}-z${zones}.json`);
+        fs.writeFileSync(file, `${JSON.stringify(dataset, null, 2)}\n`);
+        const repaired = dataset.provenance.c4_repairs?.length ?? 0;
+        console.log(`generated ${dataset.dataset_id} (C4 ${c4.ok ? 'clean' : 'VIOLATED'}, ${repaired} repairs) -> ${path.relative(repoRoot, file)}`);
+        jobs.push({ label: `s${seed}`, datasetFile: file, fillSeed: fill, datasetId: dataset.dataset_id });
+    }
+} else if (datasetFileArg != null) {
+    for (const f of datasetFileArg.split(',')) {
+        const file = path.resolve(repoRoot, f.trim());
+        jobs.push({ label: path.basename(file).replace(/\.json$/, ''), datasetFile: file, fillSeed: fill });
+    }
+} else {
+    for (const p of (getArg('--pairs') ?? '1:1,1:2,2:1,2:2,3:3,4:4').split(',')) {
+        const [ds, f] = p.split(':').map(Number);
+        jobs.push({ label: `ds${ds}-f${f}`, datasetSeed: ds, fillSeed: f });
+    }
+}
 
 const PRESET_DIR = path.join(repoRoot, 'frontend/presets/jta_loctest_roundtrip_worldgen');
 const WORLD_DIR = path.join(repoRoot, 'worlds/jta_loctest_roundtrip_worldgen');
@@ -63,16 +101,14 @@ const sh = (cmd, cmdArgs, env = {}) =>
         maxBuffer: 64 * 1024 * 1024,
     });
 
-fs.mkdirSync(outDir, { recursive: true });
-
 const rows = [];
-for (const [ds, fill] of pairs) {
-    const tag = `ds${ds}-f${fill}`;
+for (const job of jobs) {
+    const { label: tag, fillSeed } = job;
     console.log(`\n=== ${tag}: generating post-fill dataset world (Generate.py) …`);
     sh('node', ['scripts/procgen/verify-jta-locations-roundtrip.mjs'], {
         JTA_RT_DATASET: '1',
-        JTA_RT_DATASET_SEED: String(ds),
-        JTA_RT_SEED: String(fill),
+        ...(job.datasetFile ? { JTA_RT_DATASET_FILE: job.datasetFile } : { JTA_RT_DATASET_SEED: String(job.datasetSeed) }),
+        JTA_RT_SEED: String(fillSeed),
         JTA_RT_QUOTA: quota,
         JTA_RT_KEEP: '1',
     });
@@ -117,12 +153,21 @@ for (const [ds, fill] of pairs) {
     }
     const bandProfile = [...byBucket.entries()].sort((a, b) => a[0] - b[0])
         .map(([bucket, b]) => ({ bucket, ...b }));
+    // The xp_mult co-solve trigger (§2.5 lever 1) is specifically the estimator
+    // inversion running OUT OF cost range while a level deficit persists: a
+    // FLOOR-clamped (cost pinned at MIN) or SATURATED (cost at MAX) milestone
+    // that still stalls. A milestone stall with clamp 'threshold'/none is the
+    // KNOWN conservative-bar / threshold-drift mode (§5e/§5f — emergently
+    // completable, not a lever); counting those would cry wolf.
     const milestoneTrouble = (report.entries ?? [])
-        .filter((e) => e.milestone && (e.stalled || e.clamp === 'saturated'))
+        .filter((e) => e.milestone && e.stalled && (e.clamp === 'floor' || e.clamp === 'saturated'))
         .map((e) => ({ taskId: e.taskId, bucket: e.bucket, stalled: e.stalled, clamp: e.clamp }));
+    const milestoneBarStalls = (report.entries ?? [])
+        .filter((e) => e.milestone && e.stalled && e.clamp !== 'floor' && e.clamp !== 'saturated')
+        .map((e) => ({ taskId: e.taskId, bucket: e.bucket, clamp: e.clamp ?? 'none' }));
 
     rows.push({
-        datasetSeed: ds, fillSeed: fill, seedId, converged, failure,
+        label: tag, datasetSeed: job.datasetSeed ?? tag, fillSeed, seedId, converged, failure,
         entries: report.entryCount,
         milestones: report.milestoneCount,
         stalled: report.stalledEntries,
@@ -140,6 +185,7 @@ for (const [ds, fill] of pairs) {
         gapMax: sortedGaps.length ? sortedGaps[sortedGaps.length - 1] : null,
         cmMin: cms[0] ?? null, cmP50: cms.length ? pct(cms, 0.5) : null, cmMax: cms[cms.length - 1] ?? null,
         milestoneTrouble,
+        milestoneBarStalls,
         bandProfile,
     });
 
@@ -163,20 +209,23 @@ for (const r of rows) {
 }
 L.push('\n## §4.2 trigger signals\n');
 const anyMilestoneTrouble = rows.some((r) => r.milestoneTrouble.length);
-L.push(`- **xp_mult co-solve trigger** (milestone stalls / saturated milestone solves): `
+const anyBarStalls = rows.some((r) => (r.milestoneBarStalls ?? []).length);
+L.push(`- **xp_mult co-solve trigger** (FLOOR-/saturated-clamped milestone stalls — the estimator out of cost range with a level deficit, §2.5 lever 1): `
     + (anyMilestoneTrouble ? '**FIRED**' : 'not fired') + '.');
+L.push(`  - Conservative-bar milestone stalls (clamp threshold/none — the known §5e/§5f mode, NOT the lever; the emergent progression gate is the arbiter): `
+    + (anyBarStalls ? rows.filter((r) => (r.milestoneBarStalls ?? []).length).map((r) => `${r.label} ${r.milestoneBarStalls.length}`).join(', ') : 'none') + '.');
 for (const r of rows) {
     for (const t of r.milestoneTrouble) {
-        L.push(`  - ds${r.datasetSeed}-f${r.fillSeed}: task ${t.taskId} (bucket ${t.bucket}) `
+        L.push(`  - ${r.label} (fill ${r.fillSeed}): task ${t.taskId} (bucket ${t.bucket}) `
             + `${t.stalled ? 'STALLED' : ''}${t.clamp === 'saturated' ? 'SATURATED' : ''}`);
     }
 }
 const saturatedBands = rows.flatMap((r) => r.bandProfile
     .filter((b) => b.n >= 3 && b.floor === b.n)
-    .map((b) => `ds${r.datasetSeed}-f${r.fillSeed} bucket ${b.bucket} (${b.floor}/${b.n} at floor)`));
+    .map((b) => `${r.label}-f${r.fillSeed} bucket ${b.bucket} (${b.floor}/${b.n} at floor)`));
 const starvedBands = rows.flatMap((r) => r.bandProfile
     .filter((b) => b.n >= 3 && b.saturated > 0)
-    .map((b) => `ds${r.datasetSeed}-f${r.fillSeed} bucket ${b.bucket} (${b.saturated}/${b.n} saturated)`));
+    .map((b) => `${r.label}-f${r.fillSeed} bucket ${b.bucket} (${b.saturated}/${b.n} saturated)`));
 L.push(`- **economy scaling trigger** (a whole zone band pinned at min cost): `
     + (saturatedBands.length ? `**FIRED** — ${saturatedBands.join('; ')}` : 'not fired') + '.');
 L.push(`- **economy starvation** (saturated solves in a band): `
