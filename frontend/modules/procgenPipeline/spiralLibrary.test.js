@@ -9,7 +9,7 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { tileGridPathExtractor } from '../shared/procgen/adapterPrimitives.js';
 import { stampLibraryIdentity } from './regionLibraryValidator.js';
 import {
-    arrangeShuffledSpiral, buildRulesJson, librarySourceId,
+    arrangeShuffledSpiral, buildRulesJson, librarySourceId, LIBRARY_SLOT_FILLER_ITEM,
 } from './procgenPipelineEngine.js';
 import {
     newSpiralEnvelope, runSpiralToStep,
@@ -59,13 +59,24 @@ describe('region library as a spiral content source', () => {
     it('fills slots with self-contained maze regions', () => {
         const lib = library([mazeEntry('a', 1), mazeEntry('b', 2), mazeEntry('c', 3)]);
         const cfg = config(lib, (id) => ({ maze: 2, [id]: 3 }));
-        const { grid } = arrangeShuffledSpiral(cfg);
+        const { grid, startCell } = arrangeShuffledSpiral(cfg);
         const regions = [...grid.allRegions()];
         expect(regions).toHaveLength(5);
         // Every region renders as maze (library maze regions ARE maze regions).
         expect(regions.every((r) => r.substrate === 'maze')).toBe(true);
         // Every region carries a self-contained tile world (tiles is a TypedArray).
         expect(regions.every((r) => r.playable_payload.tiles?.length === 81)).toBe(true);
+        // The engine stamps a filler on un-itemed library slots so the compiled
+        // item pool balances 1:1 with locations, classified 'filler'.
+        const rules = buildRulesJson(grid, {
+            startCell, seed: 7, completionConditionItem: 'Victory',
+            procgenMetadata: { driver: 'shuffled-spiral' },
+        });
+        expect(rules.items['1'][LIBRARY_SLOT_FILLER_ITEM]?.classification).toBe('filler');
+        const locCount = Object.values(rules.regions).flatMap((b) => Object.values(b))
+            .reduce((a, r) => a + (r.locations?.length ?? 0), 0);
+        const poolCount = Object.values(rules.itempool_counts['1']).reduce((a, n) => a + n, 0);
+        expect(poolCount).toBe(locCount); // 1:1 pool ↔ locations (fillable)
     });
 
     it('allows repetition (palette) when the pool is smaller than the quota', () => {

@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "libraries": [
+    {
+      "file": "demo-maze-pack.json",
+      "library_id": "demo-maze-pack-3dd25239",
+      "name": "Demo Maze Pack",
+      "description": "Four 11x11 maze rooms (all four exit sides, 2-3 slots each).",
+      "entry_count": 4,
+      "substrates": ["maze"]
+    }
+  ]
+}

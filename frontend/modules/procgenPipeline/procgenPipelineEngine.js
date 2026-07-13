@@ -2098,7 +2098,11 @@ export function makeLocationName(regionName, locId, position) {
 export function compileRegionGraph(grid, opts = {}) {
     const {
         obstacleLib = DEFAULT_OBSTACLES,
-        itemLib = DEFAULT_ITEMS,
+        // Merge the region-library slot filler classification so a library
+        // world's item pool balances 1:1 with its locations (a slot with no
+        // engine-assigned item carries LIBRARY_SLOT_FILLER_ITEM; without a
+        // 'filler' classification it would default to 'progression').
+        itemLib: rawItemLib = DEFAULT_ITEMS,
         startCell,
         playerId = 1,
         // Item names whose canonical placement must ALWAYS hold — the
@@ -2107,6 +2111,7 @@ export function compileRegionGraph(grid, opts = {}) {
         // the item there). Used for the bounce start-stack arrow.
         lockedItems = [],
     } = opts;
+    const itemLib = { [LIBRARY_SLOT_FILLER_ITEM]: { classification: 'filler' }, ...rawItemLib };
     const lockedItemSet = new Set(lockedItems);
     const numericPlayerId = Number.isFinite(Number(playerId)) ? Number(playerId) : 1;
 
@@ -3171,6 +3176,14 @@ function resolveSpiralContentSource(id, config = {}) {
 
 // Synthetic content-source ids for loaded region libraries.
 const LIBRARY_SOURCE_PREFIX = 'library:';
+
+// Filler item stamped on a library slot the engine leaves un-itemed (v1 spiral:
+// entries are "pure geometry + slots", so the engine owns items — it assigns a
+// filler so the compiled world's item pool balances 1:1 with its locations, the
+// same shape a procedural maze region has). Classified 'filler' by
+// compileRegionGraph so it never inflates progression. Substrates whose entries
+// carry their own canonical items (bounce) keep those.
+export const LIBRARY_SLOT_FILLER_ITEM = 'Region Library Filler';
 export function isLibrarySourceId(id) {
     return typeof id === 'string' && id.startsWith(LIBRARY_SOURCE_PREFIX);
 }
@@ -3218,7 +3231,14 @@ function buildLibraryContentSource(sourceId, doc) {
                     `${sourceId}: substrate '${pick.substrate}' (entry '${pick.entry_id}') `
                     + 'has no instantiateLibraryEntry hook');
             }
-            return sub.instantiateLibraryEntry(pick, { region_id, exitSides, regionSize });
+            const region = sub.instantiateLibraryEntry(pick, { region_id, exitSides, regionSize });
+            // The engine owns items on "pure geometry" slots: stamp a filler on
+            // any slot the substrate left un-itemed so the compiled pool balances
+            // 1:1 with locations (a slot with no item is an unfillable location).
+            for (const loc of region.extracted_rules?.locations ?? []) {
+                if (loc.item == null) loc.item = LIBRARY_SLOT_FILLER_ITEM;
+            }
+            return region;
         },
     };
 }
