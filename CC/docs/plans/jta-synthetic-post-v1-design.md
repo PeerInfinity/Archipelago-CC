@@ -15,7 +15,13 @@ Acceptance (`CC/scripts/jta-stats/results/dataset-passb/profiled-batch.md`):
 the xp_mult co-solve lever stays UNBUILT — zero floor-clamped milestone stalls
 on generated C4-clean profiled worlds; 5f emergent gate PASSES on all.
 **This doc moved from `NewDocs/plans/jta/` into git when Phase A implementation
-started (standing convention).** NEXT = Phase B. Design session deliverable (Fable planning window). Successor
+started (standing convention).** **Phase B SHIPPED 2026-07-13 (Opus, on `main`,
+NOT pushed)** — as the "reshaped Phase B" on the stepped-spiral pipeline (the
+2026-07-12 re-sequencing: spiral parity first, so ②d lands on JtA's actual path,
+not a sphere-growth detour). The ②d "content" step is spiral ② content; the
+`generateZoneForSpecs`-into-sphere-growth selection strategy is DEFERRED (spiral
+supersedes its v1 purpose). All four gates met — see
+`CC/docs/plans/stepped-spiral-parity-plan.md` §6 Part 3. Design session deliverable (Fable planning window). Successor
 design to `CC/docs/plans/jta-synthetic-data-plan.md` (Phase 5, RULED + 5a–5f
 DONE); this document sequences everything AFTER Phase 5g. **Phase 5g
 (raw-value economy mode, Fork 1.8) is phase zero of this plan and is already
@@ -681,13 +687,20 @@ PASSES on every profiled world (Victory + all perks in budget). Full record:
 `CC/scripts/jta-stats/results/dataset-passb/profiled-batch.md`; durable notes
 in the `project_jta_zone_randomization` memory topic.
 
-**Phase B — pipeline residency (independent of A in code, after A in value).**
-②d content step + envelope artifact + restamp-on-edit; preset substrate
-params; `generateZoneForSpecs` selection strategy (linear worlds first — a
-chain graphSpec); spiral preset wiring. Gates: non-jta + non-dataset presets
-byte-identical; roundtrip guard extended to pipeline-initiated datasets;
-panel-generated world solves + plays in-app (substrate test); envelope
-edit → new id → fresh solve demonstrated in a test.
+**Phase B — pipeline residency — SHIPPED 2026-07-13 (Opus) as the reshaped Phase
+B on the stepped-spiral pipeline.** ②d content = spiral ② content (the
+2026-07-12 re-sequencing put it on JtA's actual path); envelope artifact
+(`env.content`) + restamp-on-edit (`onContentEdit` → `stampDatasetIdentity`);
+preset substrate params (`substrateConfig.jta`, config carries a Node-generated
+`datasetDoc` — fixtures unbundled, so generation stays a Node concern). Ordering
+resolved: **install at ① arrange** (so the quota-vs-`zoneCount` validation sees
+the dataset), ② materialises the editable doc, ③/④ engine untouched.
+`generateZoneForSpecs`-into-sphere-growth: DEFERRED (spiral supersedes its v1
+purpose; keep only for genuinely sphere-shaped future worlds). All four gates
+MET — (a) dataset-less byte-identity, (b) `JTA_RT_PIPELINE` roundtrip, (c)
+pipeline reproduces the committed playable preset the in-app test solves+plays,
+(d) edit → new id → fresh solve. Commit-by-commit in
+`stepped-spiral-parity-plan.md` §6 Part 3.
 
 **Phase C — branching topology (needs 0 + A; B for growth-fit worlds).**
 Slice 1 = §3.4 verify-first list (fork change only if E1 confirms; Fork 1.9

@@ -346,10 +346,44 @@ editor). Revisit if a later gate demands spiral region editing.
   first-drop; not started.
 - **Interactive spiral grid editing** (Move/Edit) — the scope decision above.
 
-**NEXT:** **Part 3** — JtA dataset into ② content (reshaped Phase B): wire
-`emitsSpiralContent` + `onContentEdit` (datasetValidator `--restamp`) + spiral
-dataset config params + the four Phase-B gates. The ② content seam is designed and
-in place; Part 3 is pure wiring.
+**Part 3 — JtA dataset into ② content (reshaped Phase B): DONE 2026-07-13 (Opus;
+on `main`, NOT pushed).** 4 commits (`Part 3-1..3-4`). The generator stays a Node
+concern (the profile/vanilla fixtures aren't bundled — user decision); a preset
+carries `growthParams.substrateConfig.jta = { datasetDoc, emitZoneLocations,
+goalZone, freeZones, startingPerks, perkShuffleSeed }` and the pipeline installs
+it. **Ordering wrinkle resolved (user-confirmed): install at ①.** ① arrange calls
+`applySubstrateConfig → adapter.applyPipelineConfig` (install datasetDoc + zone
+knobs via the existing setters) BEFORE the quota-vs-`zoneCount` validation; ②
+content materialises the installed doc onto `env.content` (editable, deep-copied);
+③/④ engine UNTOUCHED (they read the installed global). The descriptor gains
+`onContentEdit`: on every deserialize it re-installs from `env.content ?? cfg.datasetDoc`
+(globals don't cross a process boundary), restamps a hand edit (content-hash →
+new `dataset_id`), and clears downstream `regions`/`compile` when the id changes.
+- `3-1` — jta adapter seam: `emitsSpiralContent: true`, `applyPipelineConfig(cfg)`
+  (defers every field to its setter default, so `applyPipelineConfig({})` resets
+  the vanilla path exactly → byte-identical), `getSpiralContent()`, `onContentEdit(doc)`
+  (validate + `stampDatasetIdentity`). Standalone setters stay for CLI/test callers.
+- `3-2` — spiralSteps wiring. **Key gotcha:** `contentSubstrates` gates on
+  `substrateConfig[id].datasetDoc`, NOT merely `emitsSpiralContent` — jta declares
+  it unconditionally, so a dataset-less jta world must read as no-content or the ②
+  presence probe stalls `detectCompleted` at ②.
+- `3-3` — `spiral-step` CLI `--jta-*` flags + Node fixture generator;
+  `verify-jta-locations-roundtrip.mjs` `JTA_RT_PIPELINE` (gate b).
+- `3-4` — gate (c) `verify-jta-dataset-pipeline-preset.mjs` (pipeline reproduces
+  the committed `jta_dataset_test` preset the in-app test solves+plays) + gate (d)
+  `spiralSteps.dataset.test.js` (edit → new id → downstream invalidated → resume →
+  different `cacheKey` = fresh solve).
+
+**All four Phase-B gates MET:** (a) `dump-spiral-byteidentity` 5/5 (dataset-less
+byte-identity); (b) `JTA_RT_PIPELINE=1 JTA_RT_DATASET=1` passes every hop
+(carriage + non-degenerate sphere log + Victory gated); (c) pipeline == committed
+playable preset, byte-for-byte; (d) vitest 4/4. procgenPipeline vitest 8 files /
+318 tests; `verify-spiral-steps-ui` 24/24 (② no-op note intact for dataset-less).
+
+**STILL DEFERRED (unchanged):** `rebuildEnvelopeFromRulesJson` spiral analog;
+interactive spiral grid editing; a panel dataset-config surface (the panel
+consumes a committed dataset preset — generation is CLI/Node). Parking-lot:
+reevaluate the whole "zone" concept.
 
 ---
 
