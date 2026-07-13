@@ -28,20 +28,23 @@ plan moves to `CC/docs/plans/` when its implementation starts.
 
 ---
 
-## 1. Runner substrate — FIRST (restores lost coverage)
+## 1. Runner substrate — OR-lanes are the only remaining work
 
-Status: `runnerDemo` vitest suites are DISABLED in both configs (2026-07-09)
-— the substrate currently has near-zero routine test coverage.
+Status: coverage RESTORED. The test-strategy rebalance SHIPPED+PUSHED
+2026-07-12, CI green (JavaScript Unit Tests 11m36s, whole slow battery under
+the ~15–18 min target). runnerDemo suites are back in both vitest configs.
 
-1. **Implement the test-strategy rebalance** — *(NewDocs)*
+1. **~~Implement the test-strategy rebalance~~ — DONE 2026-07-12** (Opus; 5
+   commits on `main`, pushed, CI green). Default suite is generation-free;
+   heavy sweeps demoted to a manual `vitest.calib.config.js` tier
+   (`npm run test:unit:calib`, not in CI); the **G1 preset bot-replay gate**
+   (`presetBot.slow.test.js`, 9/9) replaced the retired matrix rows. G2
+   stored-witness tapes were DEFERRED (optional; G1 subsumes most of the
+   value; sidecar plumbing non-trivial). The redundant canRun "layered flood
+   ⇔ full graph" loop was deleted (frozen corpus already covers it). Details:
+   `project_runner_substrate` memory. Plan doc (now historical):
    `NewDocs/plans/procedural-platformer/runner-test-strategy-rebalance.md`.
-   This is the re-enablement path: fast/slow re-split by cost class, matrix
-   rows demoted to a manual `vitest.calib.config.js` tier, new G1 preset
-   bot-replay gate (~30–60s, exercises committed rules.json), stored witness
-   tapes (10ms replay; key tapes to level-payload + physics hash, regenerate
-   on replay failure — never hand-fix). Target: ~31 min battery → ~15–18 min
-   with coverage restored.
-2. **Then OR-route lanes O1–O5** — *(NewDocs)*
+2. **Then OR-route lanes O1–O5 — the remaining Runner work** — *(NewDocs)*
    `runner-or-lanes-step6-plan.md`. De-risked: the verify/emission stack
    handles OR today (experiment-confirmed); work is confined to
    planStripSpecsV2 + orGate grammar + integration. Verification follows the
