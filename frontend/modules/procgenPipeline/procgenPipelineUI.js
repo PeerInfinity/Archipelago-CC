@@ -615,6 +615,11 @@ export class ProcgenPipelineUI {
                 'topdown-pipeline', 'Top-down pipeline', this._renderTopDownSteps(),
             ));
         }
+        if (this.mode === 'shuffledSpiral' && this._spiralState) {
+            this.rootElement.appendChild(this._renderCollapsibleSection(
+                'spiral-pipeline', 'Spiral pipeline', this._renderSpiralSteps(),
+            ));
+        }
         this.rootElement.appendChild(this._renderCollapsibleSection(
             'stats', 'Stats', this._renderStats(),
         ));
@@ -1761,12 +1766,14 @@ export class ProcgenPipelineUI {
         section.className = 'procgen-pipeline-actions';
         const sphere = this.mode === 'sphereGrowth';
         const topDown = this.mode === 'topDown';
+        const spiral = this.mode === 'shuffledSpiral';
         const completed = this._stepState?.completed ?? -1;
         const tdCompleted = this._tdState?.completed ?? -1;
+        const spiralCompleted = this._spiralState?.completed ?? -1;
 
         // Step indicator (stepped modes): the step chips take the full first
         // row; the Run buttons sit on their own row below.
-        if (sphere || topDown) {
+        if (sphere || topDown || spiral) {
             const ind = this._renderStepIndicator();
             ind.style.flexBasis = '100%';
             section.appendChild(ind);
@@ -1782,7 +1789,9 @@ export class ProcgenPipelineUI {
             : (sphere
                 ? (completed >= 0 && completed < SPHERE_LAST_STEP ? 'Run all (finish)' : 'Run all')
                 : (topDown && tdCompleted >= 0 && tdCompleted < TOPDOWN_LAST_STEP
-                    ? 'Run all (finish)' : 'Generate'));
+                    ? 'Run all (finish)'
+                    : (spiral && spiralCompleted >= 0 && spiralCompleted < SPIRAL_LAST_STEP
+                        ? 'Run all (finish)' : 'Generate')));
         gen.disabled = this.isGenerating;
         gen.addEventListener('click', () => this._runGeneration());
 
@@ -1892,6 +1901,28 @@ export class ProcgenPipelineUI {
                 btnRow.appendChild(this._btn('Reset', () => this._resetTDSteps()));
             }
             section.appendChild(btnRow);
+        } else if (spiral) {
+            // Shuffled-spiral mode: a Run-next button row beside the primary
+            // (Generate / Run all), mirroring top-down over the four spiral steps.
+            const btnRow = document.createElement('div');
+            btnRow.className = 'procgen-pipeline-btn-row';
+            btnRow.style.flexBasis = '100%';
+            btnRow.appendChild(gen);
+
+            const nextStep = this._spiralState ? nextSpiralStep(this._spiralState) : 'arrange';
+            const nextIdx = nextStep ? SPIRAL_STEPS.indexOf(nextStep) : -1;
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'procgen-pipeline-btn';
+            nextBtn.textContent = nextIdx >= 0
+                ? SPIRAL_STEP_RUN_LABELS[nextIdx] : 'Pipeline complete';
+            nextBtn.disabled = this.isGenerating || nextIdx < 0;
+            nextBtn.addEventListener('click', () => this._runSpiralStepNext());
+            btnRow.appendChild(nextBtn);
+
+            if (this._spiralState) {
+                btnRow.appendChild(this._btn('Reset', () => this._resetSpiralSteps()));
+            }
+            section.appendChild(btnRow);
         } else {
             section.appendChild(gen);
         }
@@ -1963,8 +1994,12 @@ export class ProcgenPipelineUI {
         const wrap = document.createElement('div');
         wrap.style.cssText = 'display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-bottom:6px;font-size:12px;';
         const topDown = this.mode === 'topDown';
-        const labels = topDown ? TOPDOWN_STEP_LABELS : SPHERE_STEP_LABELS;
-        const completed = (topDown ? this._tdState?.completed : this._stepState?.completed) ?? -1;
+        const spiral = this.mode === 'shuffledSpiral';
+        const labels = topDown ? TOPDOWN_STEP_LABELS
+            : spiral ? SPIRAL_STEP_LABELS : SPHERE_STEP_LABELS;
+        const completed = (topDown ? this._tdState?.completed
+            : spiral ? this._spiralState?.completed
+                : this._stepState?.completed) ?? -1;
         labels.forEach((label, i) => {
             const chip = document.createElement('span');
             const done = i <= completed;
@@ -2848,6 +2883,15 @@ export class ProcgenPipelineUI {
             // realises), before 4 Compile sets this.result.
             grid = td.layout.grid;
             regionSize = td.regionSize ?? this.result?.regionSize;
+        } else if (this.mode === 'shuffledSpiral' && this._spiralState?.regions?.grid) {
+            // Live stepped grid: visible from 3 Regions onward, before 4 Compile
+            // sets this.result. The pool/regionSize aren't on the envelope, so
+            // fall back to the current params for the cell size. Display-only:
+            // spiral regions are structural (not hand-edited), so no interactive
+            // Move/Edit this pass (matches the old one-shot spiral map).
+            grid = this._spiralState.regions.grid;
+            regionSize = this.result?.regionSize
+                ?? { width: this.params.regionWidth, height: this.params.regionHeight };
         } else if (this.result) {
             ({ grid, regionSize } = this.result);
         }
