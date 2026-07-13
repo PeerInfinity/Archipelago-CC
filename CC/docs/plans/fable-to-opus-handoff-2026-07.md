@@ -169,7 +169,30 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    design in plan §11.8 (read-state extension → gate metadata → scored
    channels → `plannerVocabulary` option boundary). Unscheduled user
    idea recorded (plan §11.5 addendum): `rngMode: cycle` for the 4
-   reward-path RNG sites. Original queue (for reference):
+   reward-path RNG sites.
+   **RE-SCHEDULED QUEUE (user ruling 2026-07-12, later session 10 —
+   §11.10 targeted mode SCHEDULED; supersedes items 5–6 ordering
+   below):**
+   1. **§11.8 pieces 1–2** — plReadState extension (buffs/soulstones/
+      goldInvested/trial+dungeon state/multipart totals; byte-inert
+      additive), then gate metadata (guild/negative-rep/upper-bound/
+      stock/time gates → setup-prefix measurement + gate-aware
+      candidates). Prerequisite for targeted-mode chain completeness.
+   2. **§11.10 targeted mode v1 + priority list** — within-loop goal
+      regression over the measured needs/provider/threshold graph;
+      ordered target list with residual-budget fitting; heuristic mode
+      = priority-∞ fallback; stagnation trigger (§11.9 Part B's
+      counters, healthy≤16 streak/135 drought vs hole 617) auto-enters
+      a targeted round from heuristic mode. §11.9 Part B's blind
+      escalation is SUPERSEDED by this; §11.6's ordered-priority idea
+      is ABSORBED by this. Multi-loop setup chains = v2, deferred.
+   3. Then as before: tail trim / remaining ladder rungs (auto-add,
+      simple balancing) / §11.7 Design B — as the user prioritizes.
+   4. LAST (unchanged): the ONE deliberate re-baseline + recalibration
+      — now bundling §11.9 Part A (un-gate the starved [0] capacity
+      probe + always-include optimistic h arm), §11.8 piece 3 scored
+      channels, DNF-aware sweeps, bankPot:8 re-test.
+   Original queue (for reference):
    1. **Systematic action-code audit (user: HIGH priority)**: read all
       157 actions' reward/effect code and produce a complete census of
       what the automation's vocabulary cannot see. The session-8 audit
