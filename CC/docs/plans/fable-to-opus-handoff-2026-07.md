@@ -148,23 +148,30 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
      re-baseline). 0 RNG throughout ⇒ every gap is a deterministic fact;
      there is no seed axis until AP randomization exists.
 
-   **For Opus, in rough order** (full list: plan §11.5 "Open items"):
-   1. Weight recalibration sweep in the town-0 lab (engine mode + pool
-      make it ~30 min): bankPot:8 is the first candidate to formalize;
-      DNF-aware; changing DEFAULT_WEIGHTS = deliberate re-baseline of the
-      frozen byte-reference, own step.
-   2. bank:20 fixation diagnosis → anti-fixation guard design (general
-      mechanism, per the no-special-cases doctrine).
-   3. Scorer vocabulary: the L292 lesson (the engine screen admits
-      discover:Investigate, which WINS locally 793>787 and ends 14 loops
-      worse — discovery is still undervalued by the delayed-payoff
-      terms); buff-grant blindness (`addBuffAmt` ×7); talent =
-      CALIBRATION + high-expMult grind candidates (the scoring term
-      already ships at W.talent 0.01 — do NOT re-add it).
-   4. Exact-count tail trim (SUPERSEDES the old repeatLastAction item;
-      metric-dependent, minor); §11.6 assist-feature ladder (rep-gap
-      report first); §11.7 Design B live no-pause pipelining (designed,
-      unbuilt; late-plan policy open).
+   **SEQUENCING RULING (user, 2026-07-12): ARCHITECTURE CHANGES FIRST,
+   calibration LAST.** Weights are calibrated to a scoring vocabulary and
+   candidate set; recalibrating before the vocabulary settles is
+   throwaway work. Ordered queue:
+   1. bank:20 fixation diagnosis → anti-fixation guard design (general
+      mechanism, per the no-special-cases doctrine; robustness is an
+      architecture property).
+   2. Scorer/candidate vocabulary: the L292 lesson (the engine screen
+      admits discover:Investigate, which WINS locally 793>787 and ends
+      14 loops worse — discovery is still undervalued by the
+      delayed-payoff terms); buff-grant blindness (`addBuffAmt` ×7 —
+      ruled direction: declarative per-action metadata behind an
+      option); high-expMult grind CANDIDATES for talent (the scoring
+      term already ships at W.talent 0.01 — do NOT re-add it);
+      non-travel manaCost cheapening; soulstones; multiparts.
+   3. Queue-emission: exact-count tail trim (SUPERSEDES repeatLastAction;
+      metric-dependent). §11.6 assist-feature ladder + priority
+      checkboxes; §11.7 Design B live no-pause pipelining (designed,
+      unbuilt; late-plan policy open) — as ruled/prioritized by the user.
+   4. ONLY THEN: one deliberate re-baseline + full weight recalibration
+      in the town-0 lab against the settled architecture (engine mode +
+      pool make it ~30 min; DNF-aware; bankPot:8 = the Round-9 datum to
+      re-test, NOT a pre-settled answer). Changing DEFAULT_WEIGHTS =
+      re-baseline of the frozen byte-reference, own step.
    **AP ruling stands: v1 location checks = RESOURCE unlocks (pool
    discovery + lootable checking), NOT action unlocks** (discretization
    plan §7). Settle the base algorithm in town-0 mode before more
