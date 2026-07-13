@@ -30,7 +30,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const srcDir = path.resolve(here, "../../../frontend/modules/omsi-loops");
 
 const { makeContext } = await import(pathToFileURL(path.join(srcDir, "test/harness.mjs")).href);
-const ctx = makeContext(12345, ["planner.js"]);
+const ctx = makeContext(12345, ["planner-metadata.js", "planner.js"]);
 ctx.sandbox.__rngGet = ctx.getRng;
 ctx.sandbox.__rngSet = ctx.setRng;
 ctx.ev("IdlePlanner.setRngHooks({ get: __rngGet, set: __rngSet })");

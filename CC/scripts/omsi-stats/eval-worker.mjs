@@ -9,7 +9,7 @@ import { pathToFileURL } from "node:url";
 
 const { srcDir, seed, gainMult } = workerData;
 const { makeContext } = await import(pathToFileURL(path.join(srcDir, "test/harness.mjs")).href);
-const ctx = makeContext(seed, ["planner.js"]);
+const ctx = makeContext(seed, ["planner-metadata.js", "planner.js"]);
 ctx.sandbox.__rngGet = ctx.getRng;
 ctx.sandbox.__rngSet = ctx.setRng;
 ctx.ev("IdlePlanner.setRngHooks({ get: __rngGet, set: __rngSet })");

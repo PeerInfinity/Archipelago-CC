@@ -82,6 +82,7 @@ async function main() {
     const probeEvery = Number(val("--probe-every", 1));
     const targetTown = Number(val("--target-town", 1));
     const multiTown = val("--multi-town", "on") !== "off";
+    const vocabulary = val("--vocabulary", "empirical");   // empirical | informed
     const gainMult = Number(val("--gain-mult", 1));
     const metric = val("--metric", "loops");
     const metricWeights = JSON.parse(val("--metric-weights", '{"loops":1,"ticks":0,"wall":0}'));
@@ -91,7 +92,8 @@ async function main() {
     const wanderCap = Number(val("--wander-cap", 20000));
     if (wanderUntil > 0 && fromStatePath) throw new Error("--wander-until and --from-state are mutually exclusive");
     const knobsAtDefaults = screenK === 8 && probeEvery === 1 && targetTown === 1 && multiTown
-        && gainMult === 1 && !fromStatePath && !wanderUntil && screenMode === "predictor";
+        && gainMult === 1 && !fromStatePath && !wanderUntil && screenMode === "predictor"
+        && vocabulary === "empirical";
 
     let srcDir, forkCommit;
     if (useWorktree) {
@@ -107,7 +109,7 @@ async function main() {
     console.log(`fork: ${forkCommit}  seed: ${seed}  seedFromPredictor: ${seedFromPredictor}`);
 
     const { makeContext } = await import(pathToFileURL(path.join(srcDir, "test/harness.mjs")).href);
-    const ctx = makeContext(seed, ["planner.js"]);
+    const ctx = makeContext(seed, ["planner-metadata.js", "planner.js"]);
     ctx.sandbox.__rngGet = ctx.getRng;
     ctx.sandbox.__rngSet = ctx.setRng;
     ctx.ev("IdlePlanner.setRngHooks({ get: __rngGet, set: __rngSet })");
@@ -221,7 +223,7 @@ async function main() {
     }
 
     const t0 = Date.now();
-    const r = await IP.runStandalone({ maxLoops, weights, seedFromPredictor, verbose: true, screenK, screenMode, probeEvery, targetTown, multiTown, resume, onLoop });
+    const r = await IP.runStandalone({ maxLoops, weights, seedFromPredictor, verbose: true, screenK, screenMode, probeEvery, targetTown, multiTown, vocabulary, resume, onLoop });
     for (const w of poolWorkers) w.terminate();
     const hash = crypto.createHash("sha256").update(r.finalSnapshot).digest("hex").slice(0, 16);
     if (saveStatePath) {
@@ -246,7 +248,7 @@ async function main() {
         metricWeights.loops * totalLoops + (metricWeights.ticks ?? 0) * totalTicks + (metricWeights.wall ?? 0) * totalWall;
     const out = {
         date: new Date().toISOString(), forkCommit, seed, seedFromPredictor,
-        weightsOverride, screenK, screenMode, probeEvery, targetTown, multiTown, gainMult,
+        weightsOverride, screenK, screenMode, probeEvery, targetTown, multiTown, vocabulary, gainMult,
         metric, metricValue,
         wanderUntil, wanderLoops, wanderTicks, wanderExplored,
         totalLoops, totalTicks,
