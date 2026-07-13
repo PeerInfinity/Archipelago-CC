@@ -124,5 +124,14 @@ export function deserializeEnvelope(obj, desc) {
     for (const [field, codec] of Object.entries(desc.codecs ?? {})) {
         if (obj[field] != null && codec.decode) out[field] = codec.decode(obj[field], out, obj);
     }
-    return out;
+    // Restamp seam (② content). A substrate whose ② step emits an editable
+    // dataset supplies `onContentEdit(env) → env` so a HAND-EDITED content
+    // document re-runs the substrate's validator + identity restamp on load
+    // (content-hash → new dataset id), keeping a (seed, id) cache / id-keyed save
+    // slot from being poisoned by an edited-but-same-id document. Idempotent
+    // (unchanged content → unchanged id), so calling it on every decode is safe.
+    // No current descriptor sets it (all ② steps are no-ops); JtA wires it in
+    // Part 3. See docs/json/developer/procgen/stepped-pipeline.md and the
+    // spiralSteps ② content design.
+    return desc.onContentEdit ? desc.onContentEdit(out, obj) : out;
 }
