@@ -119,16 +119,56 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    plateau). 10× melts on its own (L213; fixed tree L232 — the terms
    slightly hurt where frontier dominates); 100× has no wall at all (L85)
    and cannot discriminate designs.
-   **For Opus** (full list: multitown plan §11.5 "Open items" + memory):
-   weight recalibration is GATED on the success-metric question (option
-   shipped, default loops); buff-grant blindness (`addBuffAmt` ×7 earns no
-   decision-time score — direction is declarative per-action metadata
-   behind an option, not imperative special cases); `repeatLastAction` vs
-   backstop ×99 (needs a deliberate re-baseline); **AP ruling: v1 location
-   checks = RESOURCE unlocks (pool discovery + lootable checking), NOT
-   action unlocks** (discretization plan §7 header updated — re-weighs what
-   U0–U5 treats as the pool); settle the base algorithm in town-0 mode
-   (`plannerMultiTown` off) before more multi-town work.
+   **Session 9 update (2026-07-12, Fable) — metrics resolved + speed
+   infrastructure shipped (SUMMARY Rounds 8–11; plan §11.5/§11.6/§11.7 +
+   memory all updated):**
+   - **Success metric RESOLVED (user ruling): "track both, move on"** —
+     loops stays primary, ticks/wall recorded beside it on every run; the
+     disagreement hunt was NULL at the optimum (bankPot:8 = argmin under
+     BOTH metrics, 484 / 5,099,270 — beats the shipped default
+     −3.2%/−6.1%). Weight recalibration is thereby UNGATED.
+   - **Wander-first human openings CLOSED as failure** (Round 8):
+     exploration CONVERGES (every arm ends town 1 at Explored 100%,
+     identical pools — the planner buys glasses L105 and explores 4x
+     interleaved); user doctrine: no special-case openings. Talent
+     residue devalued (every action gives talent; expMult ladder).
+   - **bank:20 is a FIXATION HOLE** (Round 9): DNF at the 1200 cap
+     between healthy neighbors (15→531, 30→500) — weight calibration is
+     a ROBUSTNESS problem; sweeps must treat DNFs as first-class;
+     candidate general mechanism = cap-triggered anti-fixation guard.
+   - **Eval pool + screenMode SHIPPED** (fork `automation` @ `e3d4d89`,
+     3 commits; Rounds 10–11): setEvalPool hook + confirmCandidate +
+     per-phase instrumentation; `--pool N` worker_threads host; profiling
+     OVERTURNED the standing assumption — the Koviko predictor screen was
+     80–93% of planning wall, engine confirms 5–14%. **`--screen-mode
+     engine` = the ITERATION regime** (~5x; full 1x runs ≈ 2.6 min;
+     quality 514/5.95M vs reference 500/5.43M); `none` proved the K-CUT
+     is the regularizer (reproduces Round 4 screenK:16 exactly).
+     Gates/reference stay `predictor` (default, byte-inert — no
+     re-baseline). 0 RNG throughout ⇒ every gap is a deterministic fact;
+     there is no seed axis until AP randomization exists.
+
+   **For Opus, in rough order** (full list: plan §11.5 "Open items"):
+   1. Weight recalibration sweep in the town-0 lab (engine mode + pool
+      make it ~30 min): bankPot:8 is the first candidate to formalize;
+      DNF-aware; changing DEFAULT_WEIGHTS = deliberate re-baseline of the
+      frozen byte-reference, own step.
+   2. bank:20 fixation diagnosis → anti-fixation guard design (general
+      mechanism, per the no-special-cases doctrine).
+   3. Scorer vocabulary: the L292 lesson (the engine screen admits
+      discover:Investigate, which WINS locally 793>787 and ends 14 loops
+      worse — discovery is still undervalued by the delayed-payoff
+      terms); buff-grant blindness (`addBuffAmt` ×7); talent =
+      CALIBRATION + high-expMult grind candidates (the scoring term
+      already ships at W.talent 0.01 — do NOT re-add it).
+   4. Exact-count tail trim (SUPERSEDES the old repeatLastAction item;
+      metric-dependent, minor); §11.6 assist-feature ladder (rep-gap
+      report first); §11.7 Design B live no-pause pipelining (designed,
+      unbuilt; late-plan policy open).
+   **AP ruling stands: v1 location checks = RESOURCE unlocks (pool
+   discovery + lootable checking), NOT action unlocks** (discretization
+   plan §7). Settle the base algorithm in town-0 mode before more
+   multi-town work (unchanged).
 2. **Unlock-discretization U0–U5** —
    `omsi-loops-unlock-discretization-plan.md` (~5–6 days, on `substrate`).
    Defines the AP location pool; extractor prototyped (157×2 predicates,
