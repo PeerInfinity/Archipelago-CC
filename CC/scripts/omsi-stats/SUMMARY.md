@@ -633,3 +633,38 @@ strategy. npm 53/53 (+3 T3 tests: budgeted layers + cascade + residual tail,
 unbudgeted-spine greed, auto-rank enumeration). Playwright ui-smoke 31/31
 (strategy select + auto-rank + priority-list textarea render, sync via
 loadOption, and persist through save()/reload).
+
+### Round 14 addendum — T4: §6 stagnation trigger SHIPPED; bank:20 headline gate FAILS on the economy wall (2026-07-13, Opus)
+
+Fork `automation`: the §6 anti-fixation trigger. `updateStagnation` tracks the
+committed-queue identity STREAK and the no-new-action-availability DROUGHT on P
+(not serialized, like perf). planRound: when `plannerAntiFixation` is on and the
+HEURISTIC has fixated (streak ≥ K=32 or drought ≥ D=256), it auto-enters ONE
+all-in targeted escalation round (`planTargeted({escalate})` → autoRankGoals,
+ignoring the user list + budgets); a failed escalation that re-commits the same
+queue doubles K (sticky backoff). Option `plannerAntiFixation` (default off,
+isStandardOption:false) + Automation-view checkbox + runner `--anti-fixation`.
+
+**Byte-inert by margin:** default off, and even on, the separation holds
+(healthy max streak 16 < K 32); v0 acceptance reproduces 500 / 5,432,753 /
+54506b48ec1758af (0 RNG, pool-8) at defaults. npm 55/55 (+2: streak/drought/
+K-backoff counters, byte-inert-margin guard).
+
+**HEADLINE GATE FAILS — bank:20 is economy-walled, not scoring-walled.**
+`--anti-fixation --weights '{"bank":20}'` DNFs at 1200 loops with **0
+escalation installs**. The trigger FIRES correctly (the repeat streak reaches
+~738 during the L462–1200 fixation, far past K), and every escalation round
+regresses the Start Journey goal — but the chain confirms **SJ exec=0 at ALL
+bank levels, including the L1200 max-bank state** (h0/h1/h3 loop budgets
+19,750–22,750; the chain's own harvest can't reach repeat's 34,750 because it
+doesn't invest, and the supplies+travel toll doesn't fit the ~20k it musters).
+This is exactly Round 13's "push evals die before Buy Supplies" — the starved
+[0]-capacity / rep-capped-h-ladder economics whose fix is **Part A (un-gate the
+[0] capacity probe + optimistic h arm), a re-baseline item the §11.10 plan
+explicitly scoped OUT** (§8.4). So the plan's §10 framing (targeted mode escapes
+bank:20 "Part-A-independent", i.e. a pure SCORING problem) does not hold:
+targeted mode fixes the scoring half (install-without-scoring) and the trigger
+fixes the auto-entry, but the chain is economically infeasible in one loop
+regardless. **The bank:20 escape needs a Part-A economy slice pulled into scope;
+open for the user** (and bears on the plannerAntiFixation default — the guard
+fires but cannot escape until the economy is fixed).

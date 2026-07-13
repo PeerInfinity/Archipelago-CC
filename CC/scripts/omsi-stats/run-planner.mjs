@@ -55,6 +55,9 @@
 //       # leftover budget goes to the heuristic grind tail.
 //   node CC/scripts/omsi-stats/run-planner.mjs --auto-rank
 //       # targeted mode with the travel-frontier auto-ranker (ignores the list).
+//   node CC/scripts/omsi-stats/run-planner.mjs --anti-fixation --weights '{"bank":20}'
+//       # §6 stagnation trigger: the HEURISTIC auto-enters a targeted escalation
+//       # round when it fixates (streak≥32 / drought≥256). Off = byte-exact.
 //   node CC/scripts/omsi-stats/run-planner.mjs --pool 8
 //       # parallel eval pool (§11.7 Design A): fan the per-round candidate
 //       # confirms out across N worker_threads, each with its own sim
@@ -110,6 +113,9 @@ async function main() {
     // '[{"kind":"a","action":"Continue On"},{"kind":"b","target":{"type":"skill","name":"Magic"},"value":50,"budget":0.3}]'
     const targetsArg = val("--targets", null);
     const autoRankTargets = has("--auto-rank");
+    // §6 stagnation trigger: auto-enter a targeted escalation round when the
+    // heuristic fixates (streak≥32 / drought≥256). Off = today's behavior.
+    const antiFixation = has("--anti-fixation");
     let targets = [];
     if (targetsArg) targets = JSON.parse(targetsArg);
     else if (targetValueArg) {
@@ -127,7 +133,7 @@ async function main() {
     if (wanderUntil > 0 && fromStatePath) throw new Error("--wander-until and --from-state are mutually exclusive");
     const knobsAtDefaults = screenK === 8 && probeEvery === 1 && targetTown === 1 && multiTown
         && gainMult === 1 && !fromStatePath && !wanderUntil && screenMode === "predictor"
-        && vocabulary === "empirical" && strategy === "heuristic";
+        && vocabulary === "empirical" && strategy === "heuristic" && !antiFixation;
 
     let srcDir, forkCommit;
     if (useWorktree) {
@@ -257,7 +263,7 @@ async function main() {
     }
 
     const t0 = Date.now();
-    const r = await IP.runStandalone({ maxLoops, weights, seedFromPredictor, verbose: true, screenK, screenMode, probeEvery, targetTown, multiTown, vocabulary, strategy, targetAction, targets, autoRankTargets, resume, onLoop });
+    const r = await IP.runStandalone({ maxLoops, weights, seedFromPredictor, verbose: true, screenK, screenMode, probeEvery, targetTown, multiTown, vocabulary, strategy, targetAction, targets, autoRankTargets, antiFixation, resume, onLoop });
     for (const w of poolWorkers) w.terminate();
     const hash = crypto.createHash("sha256").update(r.finalSnapshot).digest("hex").slice(0, 16);
     if (saveStatePath) {
@@ -283,7 +289,7 @@ async function main() {
     const out = {
         date: new Date().toISOString(), forkCommit, seed, seedFromPredictor,
         weightsOverride, screenK, screenMode, probeEvery, targetTown, multiTown, vocabulary, gainMult,
-        strategy, targetAction, targets, autoRankTargets,
+        strategy, targetAction, targets, autoRankTargets, antiFixation,
         metric, metricValue,
         wanderUntil, wanderLoops, wanderTicks, wanderExplored,
         totalLoops, totalTicks,
