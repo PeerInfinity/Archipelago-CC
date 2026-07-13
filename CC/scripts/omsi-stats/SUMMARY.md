@@ -540,6 +540,8 @@ original), then a one-round candidate-eval dump from the resumed state
   reference by measured margin (16 < 32), option-gated.
 
 Artifacts: results/session10-bank20-to470.json (+ resume blob
-session10-bank20-L470.json), scratchpad diagnose-bank20.mjs. No fork
+session10-bank20-L470.json), diagnose-round.mjs (promoted into this
+directory: resume any --save-state blob, dump full per-round evals +
+push exec ledgers; pass the donor's --weights). No fork
 changes this round (diagnosis + design only). Also this session:
 rep-gap tracker shipped (fork `2b79ceb`, Round-12 census `b32f9d33b`).
