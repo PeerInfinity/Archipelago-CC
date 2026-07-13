@@ -58,11 +58,23 @@ import {
     SHIPPED_PRESETS, capturePresetState, applyPresetState,
     getPresetById, loadUserPresets, saveUserPreset, deleteUserPreset,
 } from './presetDefs.js';
+// Region-library (F3/F5) — the headless loader core (fetch/parse/validate served
+// + ad-hoc libraries; selection → spiral config) plus the identity stamper the
+// F5 capture-and-download path needs. All DOM/persistence chrome lives here.
+import {
+    loadServedIndex, loadServedLibrary, parseRegionLibrary,
+    serializeLibrarySelection, resolveLibrarySelection,
+    buildLibrarySpiralConfig,
+} from './regionLibraryLoader.js';
+import { stampLibraryIdentity } from './regionLibraryValidator.js';
 
 const LS_KEY = 'procgenPipeline_params';
 // View preferences (toggle states etc.) live under a separate key so
 // they don't churn the saved scenario state on every render.
 const LS_VIEW_KEY = 'procgenPipeline_view';
+// F5 "working library" (regions captured from the ③ view, pending export) —
+// its own key so a capture doesn't churn the main params bundle.
+const LS_WORKING_LIBRARY_KEY = 'procgenPipeline_workingLibrary';
 const TILE_PX = 14;
 
 const COLORS = {
@@ -446,6 +458,27 @@ export class ProcgenPipelineUI {
         // region counts. 'mix' → weighted-random sampling per region.
         // Top-down driver always uses the mix.
         this.substrateMode = 'quotas';
+        // Region-library (F3) working selection: the RESOLVED docs the user has
+        // ticked/loaded, each { source:'served'|'adhoc', file?, library, count }.
+        // Persistence rides the hybrid shape (regionLibraryLoader
+        // serializeLibrarySelection); served refs re-fetch on load into this list.
+        this.regionLibraries = [];
+        // Persisted `libraries` refs awaiting the async resolve kicked off by a
+        // load/preset-apply. Held so a save during the (ms-long) fetch window
+        // round-trips the untouched refs instead of clobbering them with an
+        // empty regionLibraries. Cleared once resolution lands. See
+        // _serializedLibraries / _setPersistedLibraries / _resolveRegionLibraries.
+        this._pendingLibraryRefs = null;
+        // Cached served-library index (region_library_files.json). null = not yet
+        // fetched; [] = fetched-but-empty. _renderRegionLibrariesSubsection kicks
+        // the fetch on first render and re-renders when it lands.
+        this._servedLibraryIndex = null;
+        this._servedLibraryError = null;
+        this._servedLibraryFetching = false;
+        // F5 capture: a session "working library" of regions saved from the ③
+        // view / region editor, exportable as a committable library JSON file.
+        // Persisted under LS_WORKING_LIBRARY_KEY.
+        this.workingLibrary = { entries: [] };
         // View preference: when true, the Library subsection shows an
         // "Unsupported by selected substrates" group with library
         // entries no selected substrate declares. Default off so
@@ -529,6 +562,7 @@ export class ProcgenPipelineUI {
         setPanelInstance(this);
         this._loadFromLocalStorage();
         this._loadViewFromLocalStorage();
+        this._loadWorkingLibraryFromLocalStorage();
         // Subscribe through the raw eventBus so the panel sees raw-
         // json-loaded events even when constructed before the module's
         // initialize() has wired up apis. Same workaround the maze
@@ -737,7 +771,8 @@ export class ProcgenPipelineUI {
             const label = window.prompt('Preset name:');
             if (label == null) return;
             const saved = saveUserPreset(
-                localStorage, label, capturePresetState(this),
+                localStorage, label,
+                capturePresetState({ ...this, libraries: this._serializedLibraries() }),
             );
             if (!saved) {
                 this.message = 'ERROR: preset name must contain letters or digits.';
@@ -792,6 +827,7 @@ export class ProcgenPipelineUI {
         this.substrateQuotas = next.substrateQuotas;
         this.substrateMode = next.substrateMode;
         this.mode = next.mode;
+        this._setPersistedLibraries(next.libraries);
         this.result = null;
         this._stepState = null;
         this._tdState = null;
@@ -1067,6 +1103,13 @@ export class ProcgenPipelineUI {
         // Top: Substrates (always visible — every mode needs them).
         section.appendChild(this._renderSubstratesSubsection());
 
+        // Region libraries (F3) — pre-built regions loaded from JSON as
+        // `library:<id>` spiral content sources. Shuffled-spiral only (the
+        // content-source seam is the spiral driver's).
+        if (this.mode === 'shuffledSpiral') {
+            section.appendChild(this._renderRegionLibrariesSubsection());
+        }
+
         // Bottom: Library + Counts. Shown for the modes that build
         // regions from a scenario pool. Top-down's items come from
         // its source rules.json, not the pool, so it skips.
@@ -1159,6 +1202,233 @@ export class ProcgenPipelineUI {
         }
 
         return wrap;
+    }
+
+    // ── Region libraries (F3) — pre-built regions loaded from JSON ───
+    // Left column: served libraries (index-driven checkboxes) + an ad-hoc file
+    // loader. Right column: the working selection with per-library region counts.
+    // Everything mutates this.regionLibraries (resolved docs) + _saveToLocalStorage.
+    _renderRegionLibrariesSubsection() {
+        const wrap = document.createElement('div');
+        wrap.className = 'procgen-pipeline-region-libraries';
+
+        const header = document.createElement('div');
+        header.className = 'procgen-pipeline-scenario-subheader';
+        header.textContent = 'Region libraries (pre-built regions from JSON)';
+        header.title = 'Load committed or ad-hoc libraries of pre-built maze/bounce '
+            + 'regions; each ticked library becomes a content source with its own region count.';
+        wrap.appendChild(header);
+
+        const grid = document.createElement('div');
+        grid.className = 'procgen-pipeline-scenario-grid';
+
+        // Left: available (served list + ad-hoc file load).
+        const left = document.createElement('div');
+        left.className = 'procgen-pipeline-scenario-library';
+        const leftHeader = document.createElement('div');
+        leftHeader.className = 'procgen-pipeline-scenario-subheader';
+        leftHeader.textContent = 'Available (tick to add)';
+        left.appendChild(leftHeader);
+        left.appendChild(this._renderServedLibraryList());
+        left.appendChild(this._renderAdhocLibraryLoader());
+
+        // Right: selected libraries (count + remove).
+        const right = document.createElement('div');
+        right.className = 'procgen-pipeline-scenario-selected';
+        const rightHeader = document.createElement('div');
+        rightHeader.className = 'procgen-pipeline-scenario-subheader';
+        rightHeader.textContent = 'Selected libraries';
+        right.appendChild(rightHeader);
+        if (this.regionLibraries.length === 0) {
+            const empty = document.createElement('div');
+            empty.className = 'procgen-pipeline-scenario-empty';
+            empty.textContent = this._pendingLibraryRefs ? '(resolving…)' : '(none selected)';
+            right.appendChild(empty);
+        } else {
+            for (const w of this.regionLibraries) {
+                right.appendChild(this._renderSelectedLibraryRow(w));
+            }
+        }
+
+        grid.appendChild(left);
+        grid.appendChild(right);
+        wrap.appendChild(grid);
+        return wrap;
+    }
+
+    _renderServedLibraryList() {
+        const box = document.createElement('div');
+        this._ensureServedLibraryIndex();
+        const note = (txt) => {
+            const n = document.createElement('div');
+            n.className = 'procgen-pipeline-scenario-empty';
+            n.textContent = txt;
+            return n;
+        };
+        if (this._servedLibraryError) {
+            box.appendChild(note(`(served index error: ${this._servedLibraryError})`));
+            return box;
+        }
+        if (this._servedLibraryIndex === null) {
+            box.appendChild(note('(loading served libraries…)'));
+            return box;
+        }
+        if (this._servedLibraryIndex.length === 0) {
+            box.appendChild(note('(no served libraries)'));
+            return box;
+        }
+        for (const idx of this._servedLibraryIndex) {
+            box.appendChild(this._renderServedLibraryRow(idx));
+        }
+        return box;
+    }
+
+    _renderServedLibraryRow(idx) {
+        const row = document.createElement('div');
+        row.className = 'procgen-pipeline-library-row';
+        const selected = this.regionLibraries.some(
+            (w) => w.source === 'served' && w.file === idx.file);
+        const label = document.createElement('label');
+        label.style.cssText = 'flex:1;cursor:pointer;display:flex;align-items:center;gap:4px;';
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.checked = selected;
+        cb.className = 'procgen-pipeline-served-library-cb';
+        cb.dataset.file = idx.file;
+        cb.addEventListener('change', () => this._toggleServedLibrary(idx, cb.checked));
+        label.appendChild(cb);
+        const subs = (idx.substrates ?? []).join(', ');
+        const n = idx.entry_count;
+        label.appendChild(document.createTextNode(
+            `${idx.name ?? idx.file} — ${n ?? '?'} entr${n === 1 ? 'y' : 'ies'}`
+            + `${subs ? ` (${subs})` : ''}`));
+        if (idx.description) label.title = idx.description;
+        row.appendChild(label);
+        return row;
+    }
+
+    _renderAdhocLibraryLoader() {
+        const wrap = document.createElement('div');
+        wrap.className = 'procgen-pipeline-field';
+        const label = document.createElement('label');
+        label.textContent = 'Load file';
+        label.title = 'Load an ad-hoc region-library JSON (validated + restamped on load).';
+        wrap.appendChild(label);
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json,application/json';
+        input.className = 'procgen-pipeline-library-file';
+        input.addEventListener('change', () => {
+            const file = input.files?.[0];
+            if (file) this._loadAdhocLibraryFile(file);
+            input.value = '';
+        });
+        wrap.appendChild(input);
+        return wrap;
+    }
+
+    _renderSelectedLibraryRow(w) {
+        const row = document.createElement('div');
+        row.className = 'procgen-pipeline-selected-row';
+        const name = document.createElement('span');
+        name.className = 'procgen-pipeline-selected-name';
+        const tag = w.source === 'adhoc' ? ' [ad-hoc]' : '';
+        name.textContent = `${w.library.name ?? w.library.library_id}${tag}`;
+        name.title = `${w.library.library_id} · ${w.library.entries.length} entries`;
+        row.appendChild(name);
+
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.min = 1; input.max = 999; input.step = 1;
+        input.value = w.count;
+        input.className = 'procgen-pipeline-count-input';
+        input.title = 'Spiral regions to fill from this library (repetition allowed once its entries run out).';
+        input.addEventListener('change', () => {
+            const v = parseInt(input.value, 10);
+            w.count = Number.isFinite(v) && v > 0 ? v : 1;
+            this._saveToLocalStorage();
+            this.render();
+        });
+        row.appendChild(input);
+
+        const rm = document.createElement('button');
+        rm.className = 'procgen-pipeline-btn-small';
+        rm.textContent = '×';
+        rm.title = 'Remove this library';
+        rm.addEventListener('click', () => this._removeLibrary(w));
+        row.appendChild(rm);
+        return row;
+    }
+
+    // Lazily fetch the served index once; re-render when it lands. Errors leave an
+    // empty index + a surfaced message (the ad-hoc loader still works offline).
+    _ensureServedLibraryIndex() {
+        if (this._servedLibraryIndex !== null || this._servedLibraryFetching) return;
+        this._servedLibraryFetching = true;
+        loadServedIndex(window.fetch.bind(window), this._libraryBasePath())
+            .then((libs) => { this._servedLibraryIndex = libs; this._servedLibraryError = null; })
+            .catch((e) => { this._servedLibraryIndex = []; this._servedLibraryError = e.message; })
+            .finally(() => { this._servedLibraryFetching = false; this.render(); });
+    }
+
+    // A user gesture is authoritative over any in-flight restore, so clear
+    // _pendingLibraryRefs (the pre-resolve raw refs) whenever the working list is
+    // edited — persistence then serializes the live regionLibraries.
+    async _toggleServedLibrary(idx, checked) {
+        if (!checked) {
+            this.regionLibraries = this.regionLibraries.filter(
+                (w) => !(w.source === 'served' && w.file === idx.file));
+            this._pendingLibraryRefs = null;
+            this._saveToLocalStorage();
+            this.render();
+            return;
+        }
+        if (this.regionLibraries.some((w) => w.source === 'served' && w.file === idx.file)) return;
+        const res = await loadServedLibrary(window.fetch.bind(window), idx.file, {
+            basePath: this._libraryBasePath(),
+        });
+        if (!res.ok) {
+            this.warning = `Region library '${idx.file}': ${res.errors.join('; ')}`;
+            this.render();
+            return;
+        }
+        this.regionLibraries.push({ source: 'served', file: idx.file, library: res.library, count: 1 });
+        this._pendingLibraryRefs = null;
+        this.warning = res.warnings?.length ? `Region library '${idx.file}': ${res.warnings.join('; ')}` : '';
+        this._saveToLocalStorage();
+        this.render();
+    }
+
+    async _loadAdhocLibraryFile(file) {
+        try {
+            const text = await file.text();
+            const res = parseRegionLibrary(text, { restamp: true });
+            if (!res.ok) {
+                this.warning = `Ad-hoc library '${file.name}': ${res.errors.join('; ')}`;
+                this.render();
+                return;
+            }
+            // A re-load of the same document replaces the prior working entry.
+            this.regionLibraries = this.regionLibraries.filter(
+                (w) => w.library.library_id !== res.library.library_id);
+            this.regionLibraries.push({ source: 'adhoc', library: res.library, count: 1 });
+            this._pendingLibraryRefs = null;
+            this.message = `Loaded ad-hoc library '${res.library.name ?? res.library.library_id}' `
+                + `(${res.library.entries.length} entries).`;
+            this.warning = res.warnings?.length ? res.warnings.join('; ') : '';
+            this._saveToLocalStorage();
+            this.render();
+        } catch (e) {
+            this.warning = `Ad-hoc library '${file.name}': ${e.message}`;
+            this.render();
+        }
+    }
+
+    _removeLibrary(w) {
+        this.regionLibraries = this.regionLibraries.filter((x) => x !== w);
+        this._pendingLibraryRefs = null;
+        this._saveToLocalStorage();
+        this.render();
     }
 
     _renderSubstrateModeToggle() {
@@ -3840,10 +4110,19 @@ export class ProcgenPipelineUI {
     _buildSpiralEnvelope() {
         const { seed, regionWidth, regionHeight, maxItemsPerRegion,
             startSubstrate } = this.params;
-        const quotas = this._effectiveSubstrateQuotas();
-        if (!quotas) {
+        // Merge substrate quotas with the selected region-library content sources
+        // (each contributes a `library:<id>` quota + its libraryDoc on
+        // substrateConfig). Libraries are held RESOLVED in this.regionLibraries,
+        // so this is synchronous — the async re-fetch happens once, at load /
+        // preset-apply, into that list.
+        const { substrateQuotas, substrateConfig } = buildLibrarySpiralConfig(
+            this.regionLibraries,
+            { substrateQuotas: this._effectiveSubstrateQuotas() ?? {}, substrateConfig: {} },
+        );
+        if (Object.keys(substrateQuotas).length === 0) {
             throw new Error('shuffled-spiral requires at least one substrate '
-                + 'with a positive quota (set Substrate allocation to Quotas)');
+                + 'with a positive quota (set Substrate allocation to Quotas) '
+                + 'or a selected region library');
         }
         const config = {
             regionSize: { width: regionWidth, height: regionHeight },
@@ -3852,10 +4131,12 @@ export class ProcgenPipelineUI {
             seed,
             regionParams: {},
             growthParams: {
-                substrateQuotas: quotas,
+                substrateQuotas,
                 maxItemsPerRegion,
                 ...(startSubstrate && startSubstrate !== 'auto'
                     ? { startSubstrate } : {}),
+                ...(Object.keys(substrateConfig).length
+                    ? { substrateConfig } : {}),
             },
             hazardOpts: this._effectiveHazardOpts(),
         };
@@ -5189,6 +5470,7 @@ export class ProcgenPipelineUI {
             if (sel && sel.value !== '') sel.value = '';
         }
         try {
+            const libraries = this._serializedLibraries();
             localStorage.setItem(LS_KEY, JSON.stringify({
                 params: this.params,
                 scenario: this.scenario,
@@ -5197,6 +5479,9 @@ export class ProcgenPipelineUI {
                 substrateMode: this.substrateMode,
                 mode: this.mode,
                 activePresetId: this.activePresetId,
+                // Region-library selection (hybrid persistence). Omitted when
+                // empty so bundles that never touch libraries stay unchanged.
+                ...(libraries.length ? { libraries } : {}),
             }));
             if (showFeedback) {
                 this.message = 'Saved.';
@@ -5228,6 +5513,7 @@ export class ProcgenPipelineUI {
             this.substrateQuotas = next.substrateQuotas;
             this.substrateMode = next.substrateMode;
             this.mode = next.mode;
+            this._setPersistedLibraries(next.libraries);
             // Keep the preset selection across refreshes — but only if
             // the id still resolves (the preset may have been deleted).
             this.activePresetId = getPresetById(
@@ -5260,6 +5546,79 @@ export class ProcgenPipelineUI {
                 showUnsupportedLibrary: this.showUnsupportedLibrary,
                 collapsedSections: Array.from(this.collapsedSections),
             }));
+        } catch (e) {
+            // ignore
+        }
+    }
+
+    // ── Region-library persistence (F3, hybrid) ─────────────────────
+    // The panel's live model is this.regionLibraries (resolved docs). Persistence
+    // uses the hybrid serialize/resolve helpers in regionLibraryLoader. See the
+    // _pendingLibraryRefs comment in the constructor for the async-window handling.
+
+    // The persisted `libraries` array. Before an in-flight resolve lands,
+    // _pendingLibraryRefs holds the untouched refs so a save round-trips them
+    // rather than clobbering with an empty regionLibraries; otherwise serialize
+    // the live working docs.
+    _serializedLibraries() {
+        if (this._pendingLibraryRefs) return this._pendingLibraryRefs;
+        return serializeLibrarySelection(this.regionLibraries);
+    }
+
+    // App-relative base for served-library fetches, mirroring presetUI's
+    // './presets/…' (the app is served from /frontend/, so './' resolves against
+    // the document URL to /frontend/region-libraries/…).
+    _libraryBasePath() {
+        return './';
+    }
+
+    // Adopt a persisted `libraries` array from a load/preset-apply: stash the raw
+    // refs, blank the working list, and (if non-empty) kick the async resolve.
+    _setPersistedLibraries(refs) {
+        const arr = Array.isArray(refs) ? refs : [];
+        this._pendingLibraryRefs = arr.length ? arr : null;
+        this.regionLibraries = [];
+        if (arr.length) this._resolveRegionLibraries(arr);
+    }
+
+    // Re-fetch served refs + revalidate inline ad-hoc docs into resolved working
+    // entries. A newer _setPersistedLibraries (different refs identity) supersedes
+    // an in-flight resolve. Drift/missing surfaces on the panel warning line.
+    async _resolveRegionLibraries(refs) {
+        try {
+            const { resolved, errors, warnings } = await resolveLibrarySelection(refs, {
+                fetchImpl: window.fetch.bind(window),
+                basePath: this._libraryBasePath(),
+            });
+            if (this._pendingLibraryRefs !== refs) return; // superseded
+            this.regionLibraries = resolved;
+            this._pendingLibraryRefs = null;
+            const notes = [...errors, ...warnings];
+            if (notes.length) this.warning = `Region libraries: ${notes.join(' · ')}`;
+            this.render();
+        } catch (e) {
+            if (this._pendingLibraryRefs === refs) this._pendingLibraryRefs = null;
+            this.warning = `Region libraries: ${e.message}`;
+            this.render();
+        }
+    }
+
+    _loadWorkingLibraryFromLocalStorage() {
+        try {
+            const s = localStorage.getItem(LS_WORKING_LIBRARY_KEY);
+            if (!s) return;
+            const parsed = JSON.parse(s);
+            if (parsed && Array.isArray(parsed.entries)) {
+                this.workingLibrary = { entries: parsed.entries };
+            }
+        } catch (e) {
+            // ignore
+        }
+    }
+
+    _saveWorkingLibraryToLocalStorage() {
+        try {
+            localStorage.setItem(LS_WORKING_LIBRARY_KEY, JSON.stringify(this.workingLibrary));
         } catch (e) {
             // ignore
         }
