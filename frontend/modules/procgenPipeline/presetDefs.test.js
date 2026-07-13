@@ -93,6 +93,16 @@ describe('capturePresetState', () => {
         expect(CURRENT.scenario.items.victory).toBe(1);
         expect(CURRENT.params.seed).toBe(42);
     });
+
+    it('carries a non-empty region-library selection; omits an empty one', () => {
+        const libraries = [{ source: 'served', file: 'p.json', library_id: 'p-abc', count: 3 }];
+        const withLibs = capturePresetState({ ...CURRENT, libraries });
+        expect(withLibs.libraries).toEqual(libraries);
+        withLibs.libraries[0].count = 9; // deep-copied
+        expect(libraries[0].count).toBe(3);
+        expect(capturePresetState({ ...CURRENT, libraries: [] })).not.toHaveProperty('libraries');
+        expect(capturePresetState(CURRENT)).not.toHaveProperty('libraries');
+    });
 });
 
 describe('applyPresetState', () => {
@@ -143,6 +153,28 @@ describe('applyPresetState', () => {
         }, { defaults: DEFAULTS, hasSubstrate: HAS, current: CURRENT });
         expect(next.substrateQuotas).toEqual({ runner: 99 });
         expect(next.substrateMix).toEqual({ bounce: 1 });
+    });
+
+    it('passes a region-library selection through unfiltered; defaults to current when absent', () => {
+        const libraries = [
+            { source: 'served', file: 'p.json', library_id: 'p-abc', count: 3 },
+            { source: 'adhoc', doc: { library_id: 'q' }, count: 2 },
+        ];
+        const withLibs = applyPresetState({ libraries }, {
+            defaults: DEFAULTS, hasSubstrate: HAS, current: { ...CURRENT, libraries: [] },
+        });
+        // No hasSubstrate filter — library:* ids have no registry entry.
+        expect(withLibs.libraries).toEqual(libraries);
+        // Absent selection keeps the current one.
+        const kept = applyPresetState({}, {
+            defaults: DEFAULTS, hasSubstrate: HAS, current: { ...CURRENT, libraries },
+        });
+        expect(kept.libraries).toEqual(libraries);
+        // Present-but-empty clears.
+        const cleared = applyPresetState({ libraries: [] }, {
+            defaults: DEFAULTS, hasSubstrate: HAS, current: { ...CURRENT, libraries },
+        });
+        expect(cleared.libraries).toEqual([]);
     });
 
     it('does not mutate the preset state or defaults', () => {

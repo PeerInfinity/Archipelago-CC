@@ -240,10 +240,16 @@ export const SHIPPED_PRESETS = Object.freeze([
  * everything in it is JSON-serialisable by construction).
  */
 export function capturePresetState({
-    mode, params, scenario, substrateMix, substrateQuotas, substrateMode,
+    mode, params, scenario, substrateMix, substrateQuotas, substrateMode, libraries,
 }) {
     return JSON.parse(JSON.stringify({
         mode, params, scenario, substrateMix, substrateQuotas, substrateMode,
+        // Selected region libraries in the hybrid-persistence shape (served
+        // references + inline ad-hoc/edited docs — regionLibraryLoader
+        // serializeLibrarySelection). Carried verbatim; the panel resolves
+        // served references (async fetch) into growthParams.substrateConfig at
+        // generation time. Omitted when empty so existing presets stay unchanged.
+        ...(Array.isArray(libraries) && libraries.length ? { libraries } : {}),
     }));
 }
 
@@ -289,6 +295,11 @@ export function applyPresetState(state, { defaults, hasSubstrate, current }) {
             ? state.substrateMode
             : current.substrateMode,
         mode: VALID_MODES.includes(state?.mode) ? state.mode : current.mode,
+        // Region-library selection (hybrid persistence). Passed through verbatim
+        // — served references stay unresolved here (resolution is an async fetch
+        // the panel runs), so unlike substrateQuotas there is no registry filter.
+        // A present-but-empty selection clears; absent keeps `current`.
+        libraries: Array.isArray(state?.libraries) ? state.libraries : (current.libraries ?? []),
     };
 }
 

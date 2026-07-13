@@ -9,11 +9,12 @@ import { createRng } from '../shared/rng.js';
 import {
     parseRegionLibrary, loadServedIndex, loadServedLibrary,
     buildLibrarySpiralConfig, isLoadedLibrarySource, registryCapabilityCheck,
+    serializeLibrarySelection, resolveLibrarySelection,
 } from './regionLibraryLoader.js';
 
 const maze = substrateRegistry.get('maze');
 
-function demoLibrary() {
+function demoLibrary(libraryId = 'demo', seedBase = 0) {
     const mk = (id, seed) => {
         const rng = createRng(seed);
         const core = maze.generateRegionCore({
@@ -28,7 +29,10 @@ function demoLibrary() {
         const ex = tileGridPathExtractor(core.world, { regionId: id });
         return maze.captureLibraryEntry({ region_id: id, playable_payload: core.world, extracted_rules: ex }, { entry_id: id });
     };
-    const lib = { schema_version: 1, library_id: 'demo', name: 'Demo', entries: [mk('a', 1), mk('b', 2)] };
+    const lib = {
+        schema_version: 1, library_id: libraryId, name: 'Demo',
+        entries: [mk('a', seedBase + 1), mk('b', seedBase + 2)],
+    };
     stampLibraryIdentity(lib);
     return lib;
 }
@@ -105,6 +109,54 @@ describe('regionLibraryLoader', () => {
         expect(isLoadedLibrarySource(id, cfg)).toBe(true);
         expect(isLoadedLibrarySource(id, {})).toBe(false);
         expect(isLoadedLibrarySource('maze', cfg)).toBe(false);
+    });
+
+    it('hybrid persistence: served → reference, ad-hoc → inline', () => {
+        const served = demoLibrary();
+        const adhoc = demoLibrary();
+        const persisted = serializeLibrarySelection([
+            { source: 'served', file: 'demo.json', library: served, count: 3 },
+            { source: 'adhoc', library: adhoc, count: 2 },
+        ]);
+        expect(persisted[0]).toEqual({ source: 'served', file: 'demo.json', library_id: served.library_id, count: 3 });
+        expect(persisted[1].source).toBe('adhoc');
+        expect(persisted[1].doc).toBe(adhoc);
+        expect(persisted[1].count).toBe(2);
+    });
+
+    it('hybrid resolve: re-fetches served, uses inline ad-hoc, feeds the engine', async () => {
+        const served = demoLibrary('served-pack', 10);
+        const adhoc = demoLibrary('adhoc-pack', 20);
+        const fetchImpl = fakeFetch({ 'demo.json': JSON.stringify(served) });
+        const persisted = [
+            { source: 'served', file: 'demo.json', library_id: served.library_id, count: 2 },
+            { source: 'adhoc', doc: adhoc, count: 2 },
+        ];
+        const { resolved, errors, warnings } = await resolveLibrarySelection(persisted, { fetchImpl });
+        expect(errors).toEqual([]);
+        expect(warnings).toEqual([]);
+        expect(resolved).toHaveLength(2);
+        const { substrateQuotas, substrateConfig } = buildLibrarySpiralConfig(resolved);
+        const { grid } = arrangeShuffledSpiral({
+            regionSize: { width: 9, height: 9 }, seed: 1, itemPool: {}, obstaclePool: {},
+            regionParams: {}, growthParams: { substrateQuotas, substrateConfig }, hazardOpts: null,
+        });
+        expect([...grid.allRegions()]).toHaveLength(4);
+    });
+
+    it('hybrid resolve: warns on served drift, errors on a missing served file', async () => {
+        const served = demoLibrary();
+        const fetchImpl = fakeFetch({ 'demo.json': JSON.stringify(served) });
+        // Reference saved against a stale id → drift warning, current file used.
+        const drift = await resolveLibrarySelection(
+            [{ source: 'served', file: 'demo.json', library_id: 'demo-OLDHASH', count: 2 }], { fetchImpl });
+        expect(drift.warnings.some((w) => /changed since saved/.test(w))).toBe(true);
+        expect(drift.resolved).toHaveLength(1);
+        // Missing file → error, dropped.
+        const missing = await resolveLibrarySelection(
+            [{ source: 'served', file: 'gone.json', library_id: 'x', count: 1 }], { fetchImpl });
+        expect(missing.errors.some((e) => /gone\.json/.test(e))).toBe(true);
+        expect(missing.resolved).toHaveLength(0);
     });
 
     it('registryCapabilityCheck delegates to the substrate adapter', () => {

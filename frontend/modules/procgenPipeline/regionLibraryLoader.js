@@ -103,3 +103,67 @@ export function buildLibrarySpiralConfig(selection, base = {}) {
 export function isLoadedLibrarySource(id, substrateConfig = {}) {
     return typeof id === 'string' && id.startsWith('library:') && substrateConfig[id]?.libraryDoc != null;
 }
+
+// --- Hybrid persistence (region-library F3, user ruling 2026-07-13) -----------
+//
+// The panel's state/preset bundle persists a `libraries` array. Provenance
+// decides the shape (so the everyday "tick a committed pack" case stays tiny and
+// picks up pack improvements, while ad-hoc / hand-edited docs stay self-contained):
+//
+//   served, unedited → { source: 'served', file, library_id, count }  (reference)
+//   ad-hoc OR ②-edited → { source: 'adhoc', doc, count }               (inline)
+//
+// A served reference stores the stamped `library_id` it was saved against so a
+// later reload can DETECT drift (the committed file changed) rather than silently
+// generating a different world.
+
+/**
+ * A working selection entry (the panel's live model) →
+ *   { library, count, source: 'served'|'adhoc', file? }
+ * Serialize the working selection to the persisted `libraries` array. A served
+ * entry the user hand-edited must be passed with source 'adhoc' (it has diverged
+ * from its file — the panel decides that by comparing ids).
+ */
+export function serializeLibrarySelection(working) {
+    return (working ?? [])
+        .filter((w) => w?.library?.library_id && w.count > 0)
+        .map((w) => (w.source === 'served' && w.file
+            ? { source: 'served', file: w.file, library_id: w.library.library_id, count: w.count }
+            : { source: 'adhoc', doc: w.library, count: w.count }));
+}
+
+/**
+ * Resolve a persisted `libraries` array back into loaded documents (async: served
+ * references are re-fetched). Ad-hoc entries validate their inline doc. A served
+ * entry whose re-fetched file no longer matches the stored `library_id` yields a
+ * drift WARNING (the current file is used — packs are "living"). A missing/invalid
+ * served file yields an ERROR and is dropped.
+ *
+ * @returns { resolved: Array<{ library, count, source, file? }>, errors, warnings }
+ */
+export async function resolveLibrarySelection(persisted, {
+    fetchImpl, basePath = '', capabilityCheck = registryCapabilityCheck,
+} = {}) {
+    const resolved = [];
+    const errors = [];
+    const warnings = [];
+    for (const entry of persisted ?? []) {
+        if (entry?.source === 'served') {
+            if (!fetchImpl) { errors.push(`served library '${entry.file}': no fetch available to resolve`); continue; }
+            const res = await loadServedLibrary(fetchImpl, entry.file, { basePath, capabilityCheck });
+            if (!res.ok) { errors.push(`served library '${entry.file}': ${res.errors.join('; ')}`); continue; }
+            if (entry.library_id && res.library.library_id !== entry.library_id) {
+                warnings.push(`served library '${entry.file}' changed since saved `
+                    + `(${entry.library_id} → ${res.library.library_id}); using the current file`);
+            }
+            resolved.push({ library: res.library, count: entry.count, source: 'served', file: entry.file });
+        } else if (entry?.source === 'adhoc') {
+            const res = parseRegionLibrary(JSON.stringify(entry.doc), { capabilityCheck });
+            if (!res.ok) { errors.push(`ad-hoc library '${entry.doc?.library_id ?? '?'}': ${res.errors.join('; ')}`); continue; }
+            resolved.push({ library: res.library, count: entry.count, source: 'adhoc' });
+        } else {
+            errors.push(`library entry has unknown source ${JSON.stringify(entry?.source)}`);
+        }
+    }
+    return { resolved, errors, warnings };
+}
