@@ -60,6 +60,20 @@ import {
     computeItemSpheres,
     compareSpheresToPlan,
 } from './spherePlanner.js';
+// Generic stepped-pipeline machinery — the driver/resume/serde skeleton shared
+// with top-down (and spiral). This module supplies the sphere DESCRIPTOR; the
+// harness drives it. Aliased on import because sphere's public export names
+// (runStep, serializeEnvelope, …) intentionally match the generic ones. See
+// steppedPipeline.js for the descriptor + codec contract.
+import {
+    runStep as runStepGeneric,
+    runToStep as runToStepGeneric,
+    detectCompleted as detectCompletedGeneric,
+    resumeEnvelope as resumeEnvelopeGeneric,
+    newEnvelope as newEnvelopeGeneric,
+    serializeEnvelope as serializeEnvelopeGeneric,
+    deserializeEnvelope as deserializeEnvelopeGeneric,
+} from './steppedPipeline.js';
 
 /** Step names in run order; index === the `completed` value the step yields. */
 export const SPHERE_STEPS = Object.freeze([
@@ -465,9 +479,7 @@ const RUNNERS = {
  * resolve to the (same, mutated) env.
  */
 export async function runStep(stepName, env, opts = {}) {
-    const runner = RUNNERS[stepName];
-    if (!runner) throw new Error(`runStep: unknown step '${stepName}'`);
-    return runner(env, opts);
+    return runStepGeneric(stepName, env, opts, SPHERE_DESCRIPTOR);
 }
 
 // The plan's wave count, read from env.plan (post-①) or the draft (post-plan,
@@ -503,15 +515,7 @@ export function nextSphereStep(env) {
  * they run; resume the returned env to continue the loop. Returns the env.
  */
 export async function runToStep(env, toStep = 'compile', opts = {}) {
-    if (SPHERE_STEPS.indexOf(toStep) < 0) throw new Error(`runToStep: unknown step '${toStep}'`);
-    let step = nextSphereStep(env);
-    while (step) {
-        // eslint-disable-next-line no-await-in-loop
-        await runStep(step, env, opts);
-        if (step === toStep) break;
-        step = nextSphereStep(env);
-    }
-    return env;
+    return runToStepGeneric(env, toStep, opts, SPHERE_DESCRIPTOR);
 }
 
 // --- envelope (de)serialisation ---------------------------------------
@@ -530,43 +534,45 @@ function deserializeNode(nd) {
     return { ...nd, usedSides: new Set(nd.usedSides ?? []) };
 }
 
+// The non-plain artifacts, as harness codecs (declaration order = decode order;
+// see steppedPipeline.js). `tree.nodes` aliases env.nodes — dropped on encode,
+// re-aliased to the decoded nodes on decode (nodes is declared first, so
+// out.nodes is ready). grow.grid is a Grid; each node's usedSides is a Set; the
+// cross-batch `placed` is a Set of grid node indices.
+const SPHERE_CODECS = {
+    nodes: {
+        encode: (nodes) => nodes.map(serializeNode),
+        decode: (nodes) => nodes.map(deserializeNode),
+    },
+    tree: {
+        encode: (tree) => ({
+            substrateCounts: tree.substrateCounts,
+            quotaFallbacks: tree.quotaFallbacks,
+        }),
+        decode: (tree, out) => ({
+            nodes: out.nodes, // re-alias the decoded nodes
+            substrateCounts: tree.substrateCounts,
+            quotaFallbacks: tree.quotaFallbacks,
+        }),
+    },
+    grow: {
+        encode: (grow) => (grow.grid ? { ...grow, grid: serializeGrid(grow.grid) } : grow),
+        decode: (grow) => (grow.grid ? { ...grow, grid: deserializeGrid(grow.grid) } : grow),
+    },
+    placed: {
+        encode: (placed) => (placed instanceof Set ? [...placed] : placed),
+        decode: (placed) => new Set(placed),
+    },
+};
+
 /** Live envelope → JSON-safe plain object. */
 export function serializeEnvelope(env) {
-    const out = { ...env };
-    if (env.nodes) out.nodes = env.nodes.map(serializeNode);
-    if (env.tree) {
-        // tree.nodes aliases env.nodes — don't double-emit; rebuild the
-        // alias on deserialize.
-        out.tree = {
-            substrateCounts: env.tree.substrateCounts,
-            quotaFallbacks: env.tree.quotaFallbacks,
-        };
-    }
-    if (env.grow?.grid) {
-        out.grow = { ...env.grow, grid: serializeGrid(env.grow.grid) };
-    }
-    if (env.placed) {
-        out.placed = env.placed instanceof Set ? [...env.placed] : env.placed;
-    }
-    return out;
+    return serializeEnvelopeGeneric(env, SPHERE_DESCRIPTOR);
 }
 
 /** JSON-safe plain object (from serializeEnvelope) → live envelope. */
 export function deserializeEnvelope(obj) {
-    const env = { ...obj };
-    if (obj.nodes) env.nodes = obj.nodes.map(deserializeNode);
-    if (obj.tree) {
-        env.tree = {
-            nodes: env.nodes, // re-alias the decoded nodes
-            substrateCounts: obj.tree.substrateCounts,
-            quotaFallbacks: obj.tree.quotaFallbacks,
-        };
-    }
-    if (obj.grow?.grid) {
-        env.grow = { ...obj.grow, grid: deserializeGrid(obj.grow.grid) };
-    }
-    if (obj.placed) env.placed = new Set(obj.placed);
-    return env;
+    return deserializeEnvelopeGeneric(obj, SPHERE_DESCRIPTOR);
 }
 
 /**
@@ -592,7 +598,7 @@ export function importSphereEnvelope(rawJson, opts = {}) {
 
 /** A fresh, empty envelope for the given resolved config block. */
 export function newEnvelope(config) {
-    return { config, completed: -1 };
+    return newEnvelopeGeneric({ config });
 }
 
 // Whether each step's OUTPUT is present in an envelope. Used to derive the
@@ -609,6 +615,17 @@ const STEP_OUTPUT_PRESENT = {
     compile: (e) => !!e.compile?.rulesJson,
 };
 
+// The sphere mode descriptor — the whole per-mode surface the harness needs.
+// nextStep is the batch-aware loop (nextSphereStep); everything else is the
+// step list, runners, presence probes, and the non-plain artifact codecs.
+const SPHERE_DESCRIPTOR = {
+    steps: SPHERE_STEPS,
+    runners: RUNNERS,
+    present: STEP_OUTPUT_PRESENT,
+    codecs: SPHERE_CODECS,
+    nextStep: nextSphereStep,
+};
+
 /**
  * Derive the `completed` index (last CONTIGUOUSLY-finished step) from which
  * step outputs are present in `env`. Returns -1 when nothing is present (so
@@ -617,12 +634,7 @@ const STEP_OUTPUT_PRESENT = {
  * stale and will be overwritten when the pipeline runs forward.
  */
 export function detectCompleted(env) {
-    let n = 0;
-    for (const step of SPHERE_STEPS) {
-        if (STEP_OUTPUT_PRESENT[step](env)) n += 1;
-        else break;
-    }
-    return n - 1;
+    return detectCompletedGeneric(env, SPHERE_DESCRIPTOR);
 }
 
 /**
@@ -631,8 +643,7 @@ export function detectCompleted(env) {
  * `env.completed` from data presence first.
  */
 export async function resumeEnvelope(env, toStep = 'compile', opts = {}) {
-    env.completed = detectCompleted(env);
-    return runToStep(env, toStep, opts);
+    return resumeEnvelopeGeneric(env, toStep, opts, SPHERE_DESCRIPTOR);
 }
 
 // --- sphere append ----------------------------------------------------
