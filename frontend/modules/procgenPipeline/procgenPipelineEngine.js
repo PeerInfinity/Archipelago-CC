@@ -3010,27 +3010,24 @@ export function generateRegion(spec) {
     return r.value;
 }
 
-export function arrangeShuffledSpiral(config) {
+// Phase ① of shuffled-spiral (the "arrange" step): validate the config, build
+// the shuffled substrate sequence — the ONLY pre-loop rng consumption — and
+// auto-size the spiral grid. Returns a plain PLACEMENT PLAN (sequence + cells +
+// startCell + gridDims) plus the rng state AFTER the shuffle, so the region
+// realisation phase can continue the SAME continuous rng stream. Splitting here
+// (rather than inline in arrangeShuffledSpiral) lets spiralSteps.js drive the
+// stepped pipeline over the identical machinery; the monolith below just calls
+// this then realiseSpiralRegions in sequence, byte-for-byte unchanged.
+export function arrangeSpiralPlan(config) {
     const {
-        regionSize,
-        itemPool = {},
-        obstaclePool = {},
-        itemLib = DEFAULT_ITEMS,
-        obstacleLib = DEFAULT_OBSTACLES,
         seed = 1,
-        regionParams = {},
         growthParams = {},
-        hazardOpts = null,
     } = config;
+    const { regionSize } = config;
     if (!regionSize || !regionSize.width || !regionSize.height) {
         throw new Error('arrangeShuffledSpiral: regionSize.{width,height} required');
     }
-    const {
-        substrateQuotas,
-        startSubstrate = null,
-        maxItemsPerRegion = 2,
-        assumeBidirectional = true,
-    } = growthParams;
+    const { substrateQuotas, startSubstrate = null } = growthParams;
     if (!substrateQuotas || Object.keys(substrateQuotas).length === 0) {
         throw new Error('arrangeShuffledSpiral: growthParams.substrateQuotas required');
     }
@@ -3088,6 +3085,37 @@ export function arrangeShuffledSpiral(config) {
     const cells = rawCells.map((c) => ({ gx: c.gx - minX, gy: c.gy - minY }));
     const startCell = cells[0];
 
+    return {
+        sequence, cells, startCell, gridDims, rngState: rng.getState(),
+    };
+}
+
+// Phase ③ of shuffled-spiral (the "regions" step): realise each planned cell
+// into a region on a fresh grid, then run the whole-grid post-passes. Restores
+// the post-shuffle rng from the plan so procedural substrates draw in the exact
+// monolithic order (zone substrates draw none). Deterministic given the plan +
+// config; the empty grid + ScenarioPool are re-created from config here (no rng),
+// so the plan crosses a serialised boundary as plain data. Returns
+// { grid, pool, stats, startCell } — the same shape arrangeShuffledSpiral did.
+export function realiseSpiralRegions(plan, config) {
+    const {
+        itemPool = {},
+        obstaclePool = {},
+        itemLib = DEFAULT_ITEMS,
+        obstacleLib = DEFAULT_OBSTACLES,
+        regionParams = {},
+        growthParams = {},
+        hazardOpts = null,
+    } = config;
+    const { regionSize } = config;
+    const { maxItemsPerRegion = 2, assumeBidirectional = true } = growthParams;
+    const {
+        sequence, cells, startCell, gridDims,
+    } = plan;
+
+    const rng = createRng(0);
+    rng.setState(plan.rngState); // post-shuffle position (continuous stream)
+
     const grid = new Grid(gridDims);
     const pool = new ScenarioPool({
         items: itemPool, obstacles: obstaclePool, itemLib, obstacleLib,
@@ -3123,7 +3151,7 @@ export function arrangeShuffledSpiral(config) {
             });
         } else {
             const arrival = accumulatedInventory(grid);
-            const plan = pool.planPlacement({
+            const placementPlan = pool.planPlacement({
                 arrivalInventory: arrival, rng, maxItems: maxItemsPerRegion,
             });
             region = buildSubstrateRegion({
@@ -3133,8 +3161,8 @@ export function arrangeShuffledSpiral(config) {
                 entrances: [],
                 exit_sides: exitSides,
                 arrival_inventory: arrival,
-                items_to_place: plan.items_to_place,
-                obstacles_to_place: plan.obstacles_to_place,
+                items_to_place: placementPlan.items_to_place,
+                obstacles_to_place: placementPlan.obstacles_to_place,
                 itemLib, obstacleLib, rng, params: regionParams,
                 hazardOpts,
             });
@@ -3164,6 +3192,11 @@ export function arrangeShuffledSpiral(config) {
         substrateCounts: { ...zoneCounter },
     };
     return { grid, pool, stats, startCell };
+}
+
+export function arrangeShuffledSpiral(config) {
+    const plan = arrangeSpiralPlan(config);
+    return realiseSpiralRegions(plan, config);
 }
 
 // --- Sphere-driven growth driver ---
