@@ -394,37 +394,46 @@ On `main`, NOT pushed. Every phase kept `dump-spiral-byteidentity.mjs` at 5/5
 - **F3 (core)** `0da14c365` — `regionLibraryLoader.js` (fetch/parse/validate
   served + ad-hoc; `buildLibrarySpiralConfig`; `isLoadedLibrarySource`). 7 tests.
 
-### Deferred: F3 panel UI + F5 capture UI — needs a panel-state design decision
+### F3 persistence DONE (hybrid ruling); remaining = panel DOM + F5
 
-The engine + loader are done; what remains is browser chrome that can't be
-verified headlessly AND hits a genuine gap: **the pipeline panel's state model
-carries no `substrateConfig` today** (jta datasets are Node/CLI-only, per
-stepped-pipeline.md), and `applyPresetState`'s `filterDict` (`presetDefs.js`)
-drops any quota id where `hasSubstrate(id)` is false — so a `library:<id>` quota
-is dropped. Wiring the panel needs, in order:
+**Design question RESOLVED (user, 2026-07-13): HYBRID.** Served packs persist as
+`{ source:'served', file, library_id, count }` references (re-fetched on load,
+drift-detected via the stored `library_id`); ad-hoc / ②-edited libraries persist
+inline as `{ source:'adhoc', doc, count }`. Rationale: keeps the everyday
+"tick a committed pack" bundle tiny and lets packs stay living, while ad-hoc and
+edited docs stay self-contained.
 
-1. Extend `capturePresetState`/`applyPresetState` (+ the panel's `_saveToLocalStorage`
-   bundle) to carry selected libraries and their documents → `substrateConfig`.
-   **Design question to confirm first:** do selected library DOCUMENTS live in
-   the persisted panel/preset state (self-contained, portable, larger), or does
-   state persist only `{file, count}` references re-fetched from the served index
-   on load (small, but ad-hoc files must still persist their doc)? (Recommend:
-   references for served libraries + inline doc for ad-hoc.)
-2. Teach the substrate filter to keep `library:<id>` quotas via
-   `isLoadedLibrarySource(id, substrateConfig)` (loader, already built).
-3. Thread `substrateConfig` from panel state into the generation config
-   (`growthParams.substrateConfig`) — the monolithic AND stepped paths already
-   consume it; only the panel→config assembly is missing.
-4. UI: a "Region libraries" section (served-index checkboxes with entry
-   summaries + per-library slot count + an ad-hoc file input/drag-drop, validated
-   on load), calling `_saveToLocalStorage()` on every change.
+**Built + tested** (`4bdec077b`, all headless):
+- `regionLibraryLoader.serializeLibrarySelection` / `resolveLibrarySelection`
+  (async re-fetch; drift = warning + use current file; missing = error + drop),
+  `buildLibrarySpiralConfig`, `isLoadedLibrarySource` (the substrate-filter
+  guard so `library:<id>` quotas survive).
+- `presetDefs.capturePresetState`/`applyPresetState` carry `libraries` (omitted
+  when empty; passed through UNFILTERED — `library:*` ids have no registry entry,
+  so `hasSubstrate` must not touch them). Note the earlier "panel carries no
+  substrateConfig" gap is now moot: libraries ride the panel bundle as the
+  `libraries` selection, and the panel assembles `substrateConfig` at generate
+  time via `resolveLibrarySelection` → `buildLibrarySpiralConfig`.
+
+**Remaining — panel DOM (browser-only, verify via a playwright UI run):**
+1. A "Region libraries" panel section: fetch the served index
+   (`loadServedIndex`), render per-library checkboxes (name + entry count +
+   substrates) with a per-library slot-count input, plus an ad-hoc file
+   input/drag-drop (`parseRegionLibrary`, restamp-on-load). Every change updates
+   the working selection and calls `_saveToLocalStorage()`.
+2. At generate time: `resolveLibrarySelection(state.libraries, { fetchImpl:
+   window.fetch })` → `buildLibrarySpiralConfig(resolved, { substrateQuotas,
+   substrateConfig })` → merge into `growthParams` before the driver call
+   (surface drift warnings / errors in the panel). Both monolithic + stepped
+   paths already consume `substrateConfig`.
+3. `isLoadedLibrarySource` guard wherever the panel filters quota ids for display.
 
 **F5 capture UI** ("Save region to library ▸" on the ③ region view + the bounce
-region editor) then appends `adapter.captureLibraryEntry(region)` to a
-localStorage "working library" and offers a JSON download (committable to
-`frontend/region-libraries/` + re-indexed). Blocked on nothing but the same
-panel surface.
+region editor): `adapter.captureLibraryEntry(region)` → append to a localStorage
+"working library" → JSON download (committable to `frontend/region-libraries/` +
+re-indexed). Same panel surface; blocked on nothing else.
 
-Because this is exactly the "implicit storage choice on a multi-surface feature"
-the working-style memory says to confirm first, the panel UI is parked for a
-follow-up with the design question above, rather than guessed.
+All the logic these steps call is built and unit-tested; what's left is DOM
+rendering + the generate-time glue, which needs a browser (a
+`verify-region-library-ui.mjs` playwright driver, in the `verify-spiral-steps-ui`
+mould, would gate it).
