@@ -40,6 +40,10 @@
 //       # changes). Loops/ticks are reported split by phase AND as totals; the
 //       # metric uses totals. Mutually exclusive with --from-state. --max-loops
 //       # stays TOTAL (wander phase included).
+//   node CC/scripts/omsi-stats/run-planner.mjs --target-action "Continue On"
+//       # §11.10 targeted mode (T1): goal-directed regression toward one action
+//       # goal (make NAME executable this loop), falling back to the heuristic
+//       # scorer when unachievable. Absent ⇒ heuristic (byte-exact default).
 //   node CC/scripts/omsi-stats/run-planner.mjs --pool 8
 //       # parallel eval pool (§11.7 Design A): fan the per-round candidate
 //       # confirms out across N worker_threads, each with its own sim
@@ -83,6 +87,11 @@ async function main() {
     const targetTown = Number(val("--target-town", 1));
     const multiTown = val("--multi-town", "on") !== "off";
     const vocabulary = val("--vocabulary", "empirical");   // empirical | informed
+    // §11.10 targeted mode: --target-action NAME drives the goal-directed
+    // regression toward a single action goal (T1 headless driver; T3 adds the
+    // priority list). Absent ⇒ heuristic strategy = today's byte-exact behavior.
+    const targetAction = val("--target-action", null);
+    const strategy = targetAction ? "targeted" : "heuristic";
     const gainMult = Number(val("--gain-mult", 1));
     const metric = val("--metric", "loops");
     const metricWeights = JSON.parse(val("--metric-weights", '{"loops":1,"ticks":0,"wall":0}'));
@@ -93,7 +102,7 @@ async function main() {
     if (wanderUntil > 0 && fromStatePath) throw new Error("--wander-until and --from-state are mutually exclusive");
     const knobsAtDefaults = screenK === 8 && probeEvery === 1 && targetTown === 1 && multiTown
         && gainMult === 1 && !fromStatePath && !wanderUntil && screenMode === "predictor"
-        && vocabulary === "empirical";
+        && vocabulary === "empirical" && strategy === "heuristic";
 
     let srcDir, forkCommit;
     if (useWorktree) {
@@ -223,7 +232,7 @@ async function main() {
     }
 
     const t0 = Date.now();
-    const r = await IP.runStandalone({ maxLoops, weights, seedFromPredictor, verbose: true, screenK, screenMode, probeEvery, targetTown, multiTown, vocabulary, resume, onLoop });
+    const r = await IP.runStandalone({ maxLoops, weights, seedFromPredictor, verbose: true, screenK, screenMode, probeEvery, targetTown, multiTown, vocabulary, strategy, targetAction, resume, onLoop });
     for (const w of poolWorkers) w.terminate();
     const hash = crypto.createHash("sha256").update(r.finalSnapshot).digest("hex").slice(0, 16);
     if (saveStatePath) {
@@ -249,6 +258,7 @@ async function main() {
     const out = {
         date: new Date().toISOString(), forkCommit, seed, seedFromPredictor,
         weightsOverride, screenK, screenMode, probeEvery, targetTown, multiTown, vocabulary, gainMult,
+        strategy, targetAction,
         metric, metricValue,
         wanderUntil, wanderLoops, wanderTicks, wanderExplored,
         totalLoops, totalTicks,

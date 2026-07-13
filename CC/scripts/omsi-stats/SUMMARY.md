@@ -545,3 +545,50 @@ directory: resume any --save-state blob, dump full per-round evals +
 push exec ledgers; pass the donor's --weights). No fork
 changes this round (diagnosis + design only). Also this session:
 rep-gap tracker shipped (fork `2b79ceb`, Round-12 census `b32f9d33b`).
+
+## Round 14 — §11.10 targeted mode T0+T1: goal-regression engine SHIPPED; the bank:20 escape is economy-walled, not scoring-walled (2026-07-13, Opus)
+
+Targeted-mode plan `NewDocs/plans/omsiloops/omsi-loops-targeted-mode-plan.md`
+(§12 = T0 results). Fork `automation`: T1 adds `regressAction` /
+`generateTargeted` / `planTargeted` (a goal-directed backward regression that
+generalizes `buildPushes`), a new orthogonal `plannerStrategy: heuristic |
+targeted` (§7 Option X, byte-inert at the default), and the runner flag
+`--target-action NAME`.
+
+- **T0 de-risk (§8.1, RULED v2):** guild MEMBERSHIP (`guild==="X"`, the actual
+  gate) is set after ~3000 mana — one Crafting Guild rep — long before the 2M+
+  RANK; `[Crafting Guild x1, Apprentice x5]` runs in ~12k mana in one loop. The
+  L11 "zero progress with 50M injected" was a town-0 probe artifact (the town-2
+  action was never selected at curTown 0). But guild goals only succeed
+  deep-game (reach town 2+, unlock Drunk≥30 which v1 does not regress, nonzero
+  Magic/Crafting), so v1 covers route + canStart + repMax gates only; guild
+  goals deferred to v2 (as WITHIN-loop action goals, not the multi-loop setup
+  the plan assumed). §8.2 rep-sinks and §8.3 persistent-Δ differencing both
+  confirmed.
+- **T1 mechanism PROVEN:** default-weights `--target-action "Start Journey"`
+  installs the regressed chain the loop it first CONFIRMS achievable —
+  `L514 target:Start Journey:h4` → town 1. The engine confirm IS the
+  achievability oracle (a chain whose target never executes is not installed).
+  At default weights that is L514 = the same loop the heuristic's own push
+  becomes fundable, so no early escape there — but the install proves the
+  regress→confirm→install→commit pipeline end to end.
+- **The bank:20 escape is ECONOMY-walled, confirming Round 13.** Targeting
+  Start Journey under `--weights '{"bank":20}'` does NOT escape (0 installs
+  through L911, still `repeat`/34,750). Direct diagnosis on a fixated state:
+  the Start Journey chain's own loop budget (~19,750, earned by its own harvest)
+  cannot fund the toll — the reserved supplies harvest (Short Quest ×12 for
+  ~240g at h3) exhausts it before Buy Supplies, exactly the "push dies before
+  Buy Supplies" ledger of Round 13. This is the starved-[0]-capacity /
+  rep-capped-h-ladder economics whose fix is **Part A (re-baseline, out of
+  §11.10 scope)**. So the plan's §10 headline framing (targeted escapes bank:20
+  "Part-A-independent", i.e. a pure SCORING problem) does not hold: bank:20 is
+  *both* mis-scored (repeat > push) *and* economically infeasible in one loop.
+  Targeted mode fixes the scoring half (install-without-scoring) but the chain
+  still runs dry. **Open for T4 / user:** the bank:20 escape needs either a
+  Part-A economy slice pulled into scope, or the headline gate re-scoped to a
+  state where the toll is fundable.
+
+Byte-gate: 500 / 5,432,753 / 54506b48ec1758af (0 RNG, pool-8) at the default
+strategy (heuristic). npm 44/44 (+6 targeted-mode tests incl. a
+targeted-falls-back-to-heuristic byte-equivalence guard). Iteration ran under
+`--screen-mode engine` (~2 min/run); no DEFAULT_WEIGHTS / reference change.
