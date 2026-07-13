@@ -610,3 +610,26 @@ with a pool-availability-capped fill. V is the across-rounds stop condition
 `--target-value progress:Wander:8` installs `value:progress:Wander` 4/5 loops.
 §4 differencing was empirically validated at T0 (goldInvested Δ=500 on a forced
 Invest). npm 50/50 (+6 T2 tests incl. a satisfied-goal byte-equivalence guard).
+
+### Round 14 addendum — T3: priority list + budgets + residual fitting + UI (2026-07-13, Opus)
+
+Fork `automation`: the targeted strategy now composes a whole priority list into
+ONE committed queue. New `assembleTargetedQueue` — the highest-priority
+achievable goal is the SPINE (economy + chain); lower-priority kind-b goals
+layer BUDGETED fills onto the shared economy against a running remaining-ticks
+counter (cascade falls out of the counter; §3.5); leftover budget goes to a
+heuristic grind tail (residual handoff, ruling 5); full fallback = no goal's
+scaffold forms. planTargeted confirms the assembled queue and, if the residual
+extension starved the spine (§8.4), retries the bare spine. `autoRankGoals`
+enumerates the blocked travel frontier (ruling 2). Options registered
+(`plannerStrategy` / `plannerTargets` JSON / `plannerAutoRankTargets`, all
+isStandardOption:false = extraOptions save-compat) and threaded through
+automation.js → planner-worker.js. Automation-view UI: strategy select +
+auto-rank checkbox + a priority-list JSON textarea (add/remove/reorder-by-edit;
+a richer row editor is deferred polish). Runner flags `--targets` / `--auto-rank`.
+
+Byte-inert: 500 / 5,432,753 / 54506b48ec1758af (0 RNG, pool-8) at the default
+strategy. npm 53/53 (+3 T3 tests: budgeted layers + cascade + residual tail,
+unbudgeted-spine greed, auto-rank enumeration). Playwright ui-smoke 31/31
+(strategy select + auto-rank + priority-list textarea render, sync via
+loadOption, and persist through save()/reload).
