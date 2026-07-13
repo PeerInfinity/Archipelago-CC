@@ -310,30 +310,54 @@ update the `project_jta_zone_randomization` memory pointer ("NEXT = Phase B" →
   cross-process == one-shot; region/item output == monolith + panel metadata).
 - Docs — `stepped-pipeline.md` (shared-harness + spiral sections), scripts README.
 
-**DEFERRED (essentials fallback — the PANEL surface, not the parity gate):**
-- **Panel per-step spiral UI** (`_renderSpiralSteps` + `_stepSpiral*` +
-  `_runSpiralAll` + step indicator/run-button branches) and the **③ Edit ▸
-  region-editor launch** for spiral, plus a `verify-spiral-steps-ui.mjs`. Reason:
-  the panel's stepped-mode UI is a large, interwoven surface (~15 `sphere||topDown`
-  branch sites + a full `_renderTopDownSteps`-sized render + handlers) that is NOT
-  byte-identity-verifiable and is best done as its own focused pass. The parity
-  GATE (byte-identity + presets + serde + resume) does not need it, and the panel's
-  one-shot spiral path already runs the *identical* engine machinery
-  (`arrangeShuffledSpiral` = `realiseSpiralRegions(arrangeSpiralPlan(cfg), cfg)` —
-  the same functions the steps call), so there is no correctness drift. This is the
-  plan's anticipated essentials fallback, scoped to the panel only.
+**Part 2c — panel spiral step-UI: DONE 2026-07-13 (Opus; on `main`, NOT pushed).**
+3 commits (`Part 2c-1/2/3`). The panel now drives shuffled-spiral through the
+shared harness exactly like sphere/top-down:
+- `2c-1` — retired the one-shot `_runShuffledSpiral`; added `_buildSpiralEnvelope`
+  + the four delegated step runners (`_stepSpiral{Arrange,Content,Regions,Compile}`)
+  + `_advanceSpiralStep`/`_runSpiralAll`/`_runSpiralStepNext`/`_resetSpiralSteps`/
+  `_renderSpiralSteps` + feedback renderers; `_runGeneration` dispatches Generate to
+  `_runSpiralAll` with a `midSpiral` guard. Spiral runners are SYNCHRONOUS, so (unlike
+  sphere/top-down) no `_progressState`/`onProgress` wiring. `this.result.poolRemaining
+  = null` (matches top-down). Byte-identity holds: the `{config, compileIn}` is exactly
+  what the one-shot fed.
+- `2c-2` — render wiring: "Spiral pipeline" collapsible, `_renderActions` step
+  indicator + "Run N …"/Reset row, `_renderStepIndicator` `SPIRAL_STEP_LABELS` arm,
+  live composite grid from `_spiralState.regions.grid` (visible from ③ onward).
+- `2c-3` — `scripts/procgen/verify-spiral-steps-ui.mjs` (playwright, :8000): steps
+  1→4 through the UI, asserts the downloaded rules.json === headless
+  `arrangeShuffledSpiral`+`buildRulesJson` on BOTH stepped and Run-all paths, plus
+  reset/indicator behaviour + no page/singleton warnings. 24/24 green.
+- **Gate met:** dump-spiral-byteidentity (5) + verify-{sphere,topdown,spiral}-steps-ui
+  + procgenPipelineUI.test.js (22) + full procgenPipeline vitest (314) all green.
+
+**SCOPE DECISION (essentials fallback, recorded):** spiral's composite grid is
+**display-only** — no interactive Move Region / Move Exits / per-region Edit ▸.
+Reason: `_editRegionTD` is layout-shaped (it calls `buildTopDownRegionContract` on
+`layout.cellsByName`), but a spiral envelope carries an *arrange plan*, not a
+top-down layout — so "reuse `_editRegionTD`" doesn't hold, and a spiral
+region-contract builder is new engine work outside a UI pass. Zero regression: the
+old one-shot spiral map was also non-interactive. For the common jta/maze spiral
+world every region's Edit ▸ would be disabled anyway (only `bounce` has a registered
+editor). Revisit if a later gate demands spiral region editing.
+
+**STILL DEFERRED:**
 - **`rebuildEnvelopeFromRulesJson` analog for spiral** — the plan's explicit
   first-drop; not started.
+- **Interactive spiral grid editing** (Move/Edit) — the scope decision above.
 
-**NEXT:** (a) the deferred panel spiral step-UI + region-editor launch +
-verify-spiral-steps-ui.mjs; then (b) **Part 3** — JtA dataset into ② content
-(reshaped Phase B): wire `emitsSpiralContent` + `onContentEdit`
-(datasetValidator `--restamp`) + spiral dataset config params + the four Phase-B
-gates. The ② content seam is designed and in place; Part 3 is pure wiring.
+**NEXT:** **Part 3** — JtA dataset into ② content (reshaped Phase B): wire
+`emitsSpiralContent` + `onContentEdit` (datasetValidator `--restamp`) + spiral
+dataset config params + the four Phase-B gates. The ② content seam is designed and
+in place; Part 3 is pure wiring.
 
 ---
 
-## 7. Panel spiral step-UI — implementation map (for the deferred pass)
+## 7. Panel spiral step-UI — implementation map (IMPLEMENTED 2026-07-13; see §6)
+
+> This section is the build spec that Part 2c executed; kept for reference. The
+> per-region **Edit ▸** launch + interactive Move sites were intentionally NOT
+> wired (spiral grid is display-only — see the §6 scope decision).
 
 All refs are `frontend/modules/procgenPipeline/procgenPipelineUI.js` at the
 2026-07-13 HEAD (verify line numbers before editing — this 5040-line file drifts).
