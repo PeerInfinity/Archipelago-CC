@@ -104,6 +104,35 @@ for (const { seed, params } of CASES) {
     })), 'formula_cost_multiplier/formula_xp_mult ≡ the formula twin\'s multipliers');
 }
 
+// ---- 1b. Structure policy v2 (post-v1 §2.3, Phase A commit 1) --------------
+{
+    const throws = (fn) => { try { fn(); return false; } catch (e) { return e.message; } };
+    // The default (mirror) uses the v1 id stride of 20 — zone 1 task 0 is id 30.
+    ok(generated[0].dataset.zones[1].tasks[0].id === 30, 'mirror default keeps id stride 20 (zone1 task0 == id 30)');
+    // An explicit all-default mirror block must reproduce the default byte-for-byte.
+    ok(JSON.stringify(generateJtaDataset({ seed: 1, profile, vanilla, params: { structure: { policy: 'mirror' } } }).dataset, null, 2)
+        === JSON.stringify(generated[0].dataset, null, 2),
+    'explicit { policy: "mirror" } is byte-identical to the default');
+    // A custom mirror idStride is a valid, DISTINCT variant (ids widen).
+    const wide = generateJtaDataset({ seed: 1, profile, vanilla, params: { structure: { idStride: 30 } } });
+    ok(wide.validation.ok && wide.c4.ok && wide.dataset.zones[1].tasks[0].id === 40
+        && wide.dataset.dataset_id !== generated[0].dataset.dataset_id,
+    'custom mirror idStride widens ids (zone1 task0 == id 40) and gets a distinct identity');
+    // idStride is range-checked on BOTH sides (collision below, exit-task floor above).
+    ok(throws(() => generateJtaDataset({ seed: 1, profile, vanilla, params: { structure: { idStride: 5 } } })),
+        'idStride below max tasks-per-zone is rejected');
+    ok(throws(() => generateJtaDataset({ seed: 1, profile, vanilla, params: { structure: { idStride: 800 } } })),
+        'idStride that pushes deep zone ids >= 10000 is rejected');
+    // profiled sampler is reserved but not yet built (Phase A commit 2).
+    ok((throws(() => generateJtaDataset({ seed: 1, profile, vanilla, params: { structure: { policy: 'profiled' } } })) || '').includes('not yet implemented'),
+        'profiled policy is reserved (throws not-implemented until commit 2)');
+    // Unknown structure fields fail fast.
+    ok(throws(() => generateJtaDataset({ seed: 1, profile, vanilla, params: { structure: { bogus: 1 } } })),
+        'unknown structure field is rejected');
+    ok((throws(() => generateJtaDataset({ seed: 1, profile, vanilla, params: { structure: { policy: 'nope' } } })) || '').includes('policy'),
+        'invalid policy is rejected');
+}
+
 // ---- 2. Validation + C4 ----------------------------------------------------
 for (const { dataset, c4 } of generated) {
     const v = validateJtaDataset(dataset);

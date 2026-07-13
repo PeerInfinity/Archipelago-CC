@@ -94,6 +94,63 @@ function isPlaceholder(e) {
   return e != null && e.placeholder === true;
 }
 
+// --- structure policy v2 (post-v1 §2.3) ------------------------------------
+//
+// `mirror` reproduces v1 byte-for-byte (the entry-for-entry vanilla mirror);
+// `profiled` samples counts/mixes/reps/xp from the vanilla-profile
+// distributions (Phase A commit 2). Every axis is null/profile-shaped by
+// default, and the LOAD-BEARING discipline is: a null axis consumes ZERO rng
+// and emits ZERO extra document bytes. That is what keeps reserving a field
+// here from perturbing any existing world, and makes the later "Full" slice
+// (perkCadence / unlockChainDensity / economy) purely additive — a
+// bounded-era `profiled` world regenerates byte-identically after those land.
+const STRUCTURE_DEFAULTS = {
+  policy: "mirror",
+  idStride: null,           // null => policy-derived (mirror 20, profiled 100)
+  tasksPerZone: null,       // profiled: { mean, jitter } or per-zone array
+  typeMix: null,            // profiled: per-zone type-count overrides
+  skillCount: null,         // profiled: skill roster size
+  perkCadence: null,        // RESERVED (Full slice): perk placements per zone
+  unlockChainDensity: null, // RESERVED (Full slice)
+  economy: null,            // RESERVED (Full slice, post-5g §2.5 lever 2)
+};
+
+// Synthetic exit tasks (host region-graph edges) live at ids >= 10000; zone
+// task ids must stay strictly below that floor (§1b, memory).
+const EXIT_TASK_ID_FLOOR = 10000;
+
+function normalizeStructure(structure) {
+  if (structure != null && typeof structure !== "object") {
+    throw new Error(`params.structure must be an object, got ${JSON.stringify(structure)}`);
+  }
+  const s = { ...STRUCTURE_DEFAULTS, ...(structure ?? {}) };
+  const unknown = Object.keys(s).filter((k) => !(k in STRUCTURE_DEFAULTS));
+  if (unknown.length) throw new Error(`params.structure: unknown field(s) ${unknown.join(", ")}`);
+  if (s.policy !== "mirror" && s.policy !== "profiled") {
+    throw new Error(`params.structure.policy must be "mirror" or "profiled", got ${JSON.stringify(s.policy)}`);
+  }
+  if (s.idStride != null && (!Number.isInteger(s.idStride) || s.idStride < 1)) {
+    throw new Error(`params.structure.idStride must be a positive integer, got ${JSON.stringify(s.idStride)}`);
+  }
+  return s;
+}
+
+// Resolve + range-check the id stride against BOTH bounds (§2.3, and the
+// exit-task floor). maxTasksPerZone is known once the per-zone task set
+// exists. Too small => task (stride+1) collides with the next zone's ids;
+// too large => the deepest zone's ids reach the synthetic exit-task range.
+function resolveIdStride(structure, zoneCount, maxTasksPerZone) {
+  const stride = structure.idStride ?? (structure.policy === "profiled" ? 100 : 20);
+  if (stride <= maxTasksPerZone) {
+    throw new Error(`params.structure.idStride ${stride} must exceed the max tasks-per-zone ${maxTasksPerZone} (else ids collide across zones)`);
+  }
+  const deepestId = (zoneCount - 1) * stride + (maxTasksPerZone - 1) + 10;
+  if (deepestId >= EXIT_TASK_ID_FLOOR) {
+    throw new Error(`params.structure.idStride ${stride} too large: zone ${zoneCount - 1} task ids reach ${deepestId} >= the synthetic exit-task floor ${EXIT_TASK_ID_FLOOR}`);
+  }
+  return stride;
+}
+
 // --- raw-value economy mode (5g, §7 Q8/Q9) ---------------------------------
 //
 // Turn a zone_formula document into its raw twin by evaluating the backbone
@@ -278,6 +335,11 @@ export function generateJtaDataset({ seed, profile, vanilla, params = {} }) {
   if (valueMode !== "raw" && valueMode !== "zone_formula") {
     throw new Error(`generateJtaDataset: valueMode must be "raw" or "zone_formula", got ${JSON.stringify(valueMode)}`);
   }
+  const structure = normalizeStructure(params.structure);
+  if (structure.policy === "profiled") {
+    // Phase A commit 2 replaces this with the profile-distribution sampler.
+    throw new Error('params.structure.policy "profiled" is not yet implemented (Phase A commit 2)');
+  }
   const rng = createRng(seed);
   const themeKey = params.theme ?? DATASET_THEME_KEYS[Math.floor(rng.next() * DATASET_THEME_KEYS.length)];
   const theme = DATASET_THEMES[themeKey];
@@ -407,6 +469,8 @@ export function generateJtaDataset({ seed, profile, vanilla, params = {} }) {
     if (!byZone.has(t.zone)) byZone.set(t.zone, []);
     byZone.get(t.zone).push(t);
   }
+  const maxTasksPerZone = Math.max(...[...byZone.values()].map((a) => a.length));
+  const idStride = resolveIdStride(structure, zoneCount, maxTasksPerZone);
 
   const zoneNames = [];
   for (let zi = 0; zi < zoneCount; zi++) zoneNames.push(drawZoneName());
@@ -432,7 +496,7 @@ export function generateJtaDataset({ seed, profile, vanilla, params = {} }) {
     const tasks = sourceTasks.map((src, ti) => {
       const fixtureTask = fixtureTaskById.get(src.id);
       if (!fixtureTask) throw new Error(`profile task ${src.id} missing from the vanilla fixture`);
-      const id = zi * 20 + ti + 10;
+      const id = zi * idStride + ti + 10;
       newIdOf.set(src.id, id);
       let name;
       if (src.type === "Travel") {
@@ -517,7 +581,13 @@ export function generateJtaDataset({ seed, profile, vanilla, params = {} }) {
     sbtv_unlock_task_ids: [],
   };
 
+  // Byte-identity discipline: the default (mirror, no overrides) must produce
+  // the exact v1 params_hash, so `structure` only enters the hash when it
+  // differs from the pure default. A custom mirror idStride DOES change ids,
+  // so it correctly falls on the hashed side.
+  const structureIsDefault = JSON.stringify(structure) === JSON.stringify(STRUCTURE_DEFAULTS);
   const effectiveParams = { zoneCount, theme: themeKey, valueMode };
+  if (!structureIsDefault) effectiveParams.structure = structure;
   let dataset = {
     schema_version: JTA_DATASET_SCHEMA_VERSION,
     dataset_id: `synthetic-${themeKey}-s${seed}-z${zoneCount}`,
