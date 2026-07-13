@@ -330,3 +330,65 @@ verify-spiral-steps-ui.mjs; then (b) **Part 3** — JtA dataset into ② content
 (reshaped Phase B): wire `emitsSpiralContent` + `onContentEdit`
 (datasetValidator `--restamp`) + spiral dataset config params + the four Phase-B
 gates. The ② content seam is designed and in place; Part 3 is pure wiring.
+
+---
+
+## 7. Panel spiral step-UI — implementation map (for the deferred pass)
+
+All refs are `frontend/modules/procgenPipeline/procgenPipelineUI.js` at the
+2026-07-13 HEAD (verify line numbers before editing — this 5040-line file drifts).
+**Top-down is the exact mirror**: 4 linear steps, same `completed` 0..3 (-1 = not
+started) convention, no batch loop. Build spiral as `_spiralState` alongside
+`_tdState`, copying each top-down member. Emoji in this file → use `LC_ALL=C grep`.
+
+**Design deltas from top-down (know these first):**
+- Spiral's step runners are **synchronous** (no per-region streaming like TD's
+  realise / sphere's regions), so the spiral step handlers need **no
+  `_progressState` / `onProgress` wiring** — simpler than TD. arrange/content/
+  regions/compile all run instantly.
+- ② **content is a no-op** today — its step block should render as "2 Content —
+  (no content substrate)" or be skipped; don't invent an editing surface.
+- `this.result.poolRemaining`: TD sets it `null`; the current one-shot
+  `_runShuffledSpiral` sets `pool.snapshot()`. `env.regions` does NOT carry the
+  pool (kept off the envelope so serde/CLI stay clean). **Recommend `null`**
+  (matches TD; the stats renderer branches cleanly on it) and accept the minor
+  "pool remaining" display drop — or stash `env.regions.pool` as a session-only
+  field the regions codec ignores, if you want to keep it.
+
+**Add these (mirror the cited top-down member):**
+| New spiral member | Mirror of (line) |
+|---|---|
+| `SPIRAL_STEP_LABELS` / `_RUN_LABELS` / `SPIRAL_LAST_STEP` (=3) | `:383-401` |
+| `this._spiralState = null` (init) | `_tdState` `:474,:770-771` |
+| `_buildSpiralEnvelope()` → `newSpiralEnvelope({config, compileIn})` (the config block currently inline in `_runShuffledSpiral` `:3759-3799`) | `_buildTDEnvelope` `:4350` |
+| `_stepSpiralArrange/Content/Regions/Compile()` → `runSpiralStep(...)`; Compile sets `this.result = {grid: st.regions.grid, regionSize, stats: st.regions.stats, poolRemaining: null, rulesJson}` | `_stepTD*` `:4373-4421` |
+| `_advanceSpiralStep()` (byName dispatch via `nextSpiralStep`) | `_advanceTDStep` `:4425` |
+| `_runSpiralAll()` (replaces the `_runShuffledSpiral` one-shot) | `_runTopDownAll` `:4439` |
+| `_runSpiralStepNext()` | `_runTopDownStepNext` `:4453` |
+| `_resetSpiralSteps()` | `_resetTDSteps` `:4473` |
+| `_renderSpiralSteps()` (read-only per-step feedback; ② = no-op note) | `_renderTopDownSteps` `:4484` |
+| `_editRegionSpiral(region)` — likely just reuse `_editRegionTD`'s body (spiral regions carry the same descriptor + `region.substrate`; `getRegionEditor` keys on it; only bounce is registered → jta/maze fall through gracefully). Region-editor "registration" is genuinely free — only the launch wiring is new. | `_editRegionTD` `:4652` |
+| import block from `'./spiralSteps.js'` (`SPIRAL_STEPS, runSpiralStep, nextSpiralStep, newSpiralEnvelope`) | topDownSteps import `:34-36` |
+
+**Add a `shuffledSpiral` arm at these branch sites** (each currently
+`sphere||topDown` or `mode==='topDown'`):
+- render sections `:587-595` (add a "Spiral pipeline" collapsible when
+  `mode==='shuffledSpiral' && _spiralState`).
+- `_renderActions` `:1740-1747` (`sphere||topDown` → include spiral for the step
+  indicator), run-button label `:1756-1763`, the TD "Run next step" button
+  `:1859-1869` (add a spiral analog).
+- `_renderStepIndicator` `:1940-1945` (completed source: add spiral).
+- composite map `:2818-2846` (add `else if mode==='shuffledSpiral' && _spiralState?.regions?.grid`; interactive when regions present), Edit▸ launch `:2927`,
+  `_applyGridEdit` dispatch `:3056`.
+- `_runGeneration` `:3602-3616`: add a `midSpiral` guard (mirror `midTopDown`
+  `:3605-3606`) and change `:3614-3615` from `this._runShuffledSpiral()` to
+  `await this._runSpiralAll()`; retire/repurpose `_runShuffledSpiral` `:3759`.
+- the Reset-button row (wherever TD/sphere reset is wired) → spiral reset.
+
+**Gate:** new `scripts/procgen/verify-spiral-steps-ui.mjs` modeled on
+`verify-topdown-steps-ui.mjs` (365 lines) — drive the panel in jsdom, run the
+spiral steps THROUGH the UI, assert the stepped-UI rules.json == the monolithic
+`arrangeShuffledSpiral`+compile (the same equality `dump-spiral-byteidentity.mjs`
+proves headlessly), plus step-indicator/next-button/reset behaviour and no
+`[…] Singleton not yet created` warnings. Also re-run `procgenPipelineUI.test.js`
+and the existing `verify-{sphere,topdown}-steps-ui.mjs` (shared render code).
