@@ -72,12 +72,16 @@ Phase 5 is COMPLETE (5a–5f + 5g raw-value/Fork 1.8 with all riders;
 tick-for-tick triple equivalence green). Memory:
 `project_jta_zone_randomization`.
 
-1. **Post-v1 phases A→E** — *(NewDocs)*
-   `NewDocs/plans/jta/jta-synthetic-post-v1-design.md`, all 7 rulings
-   accepted. Phase 0 (5g) is done; start at A. Carry-forward data point:
-   5g reduced worst Pass-B saturation by an order of magnitude (1.1e4 vs
-   1.09e5) but did NOT eliminate it — the economy-scaling lever retains a
-   residual case even on C4-clean linear worlds.
+1. **Post-v1 phases A→E** — `CC/docs/plans/jta-synthetic-post-v1-design.md`
+   (moved into git 2026-07-12 when Phase A started), all 7 rulings accepted.
+   **Phase A DONE + PUSHED 2026-07-12 (Opus): structure policy v2 (mirror/
+   profiled), policy-gated id stride, C4 repair loop, skillCount add-only,
+   sweep departure-batch modes. xp_mult co-solve lever stays UNBUILT (0
+   floor-clamped milestone stalls on generated C4-clean worlds; 5f emergent
+   gate PASS all).** NEXT = Phase B (pipeline residency ②d). Carry-forward
+   data point: 5g reduced worst Pass-B saturation by an order of magnitude
+   (1.1e4 vs 1.09e5) but did NOT eliminate it — the economy-scaling lever
+   retains a residual case even on C4-clean linear worlds.
 2. **jtaActionQueue → substrate port** —
    `CC/docs/plans/jta-action-queue-port-plan.md`, all 10 rulings settled,
    zero fork changes v1. Feeds item 3.
