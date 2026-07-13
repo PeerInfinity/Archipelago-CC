@@ -41,7 +41,8 @@ Parking-lot (separate future session, user-raised): **reevaluate the whole
 "zone" concept** — audit what is unimplemented vs obsolete across
 `zoneCount` / `synthesizeZonePayload` / `extractZoneRules` /
 `generateZoneForSpecs` and the spiral-vs-sphere zone assumptions. Some of this
-audit surfaces naturally during Part 2 below.
+audit surfaces naturally during Part 2 below. *(Done 2026-07-13 — audit
+verdicts + follow-on plan in `CC/docs/plans/region-library-plan.md`.)*
 
 ---
 

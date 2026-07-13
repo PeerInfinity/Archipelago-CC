@@ -78,10 +78,21 @@ tick-for-tick triple equivalence green). Memory:
    profiled), policy-gated id stride, C4 repair loop, skillCount add-only,
    sweep departure-batch modes. xp_mult co-solve lever stays UNBUILT (0
    floor-clamped milestone stalls on generated C4-clean worlds; 5f emergent
-   gate PASS all).** NEXT = Phase B (pipeline residency ②d). Carry-forward
-   data point: 5g reduced worst Pass-B saturation by an order of magnitude
-   (1.1e4 vs 1.09e5) but did NOT eliminate it — the economy-scaling lever
-   retains a residual case even on C4-clean linear worlds.
+   gate PASS all).** Carry-forward data point: 5g reduced worst Pass-B
+   saturation by an order of magnitude (1.1e4 vs 1.09e5) but did NOT eliminate
+   it — the economy-scaling lever retains a residual case even on C4-clean
+   linear worlds.
+   **NEXT is RE-SEQUENCED (user 2026-07-12): stepped-spiral parity FIRST, then
+   Phase B on the spiral pipeline.** Phase B wanted an editable dataset artifact
+   on a pipeline envelope, but that machinery lives only in sphere-growth +
+   top-down; JtA runs on the MONOLITHIC shuffled-spiral. So before Phase B,
+   bring shuffled-spiral to stepped-pipeline parity (and dedup the shared
+   orchestration across all three modes) — plan
+   `CC/docs/plans/stepped-spiral-parity-plan.md`. Then Phase B's ②d "content"
+   step lands on JtA's actual path and `generateZoneForSpecs`-into-sphere-growth
+   becomes optional/deferred. The spiral-parity session stays JtA-agnostic
+   (②d ships as a no-op for all current substrates); JtA dataset wiring + the
+   four Phase-B gates are its Part 3, a later session.
 2. **jtaActionQueue → substrate port** —
    `CC/docs/plans/jta-action-queue-port-plan.md`, all 10 rulings settled,
    zero fork changes v1. Feeds item 3.
@@ -95,6 +106,18 @@ tick-for-tick triple equivalence green). Memory:
    drive-by); task-256/z12 filler stranding stays accepted unless a
    multiworld hardens the gate (measured remedy: `threshold_other_metric =
    RESETS`).
+5. **Zone-concept reevaluation — AUDIT DONE + PLAN WRITTEN 2026-07-13
+   (Fable), implementation NOT started.** Findings + the plan live in
+   `CC/docs/plans/region-library-plan.md` (memory:
+   `project_region_library`): "zone" = an *interface* (no tile-procedural
+   hooks) conflated with a *content model* (finite ordered pool); only jta is
+   genuinely pre-built; `synthesizeZonePayload` obsolete-leaning. The plan
+   pairs the cleanup (C1–C3: absorb synthesizeZonePayload, spiral onto the
+   unified seam, content-source reframing + ② content generalization) with
+   the user's region-library feature (F1–F6: pre-built regions loadable from
+   multi-file JSON, served-index + ad-hoc load, capture + validator tooling,
+   maze + bounce v1). Rulings settled 2026-07-13; ready for an
+   implementation session.
 
 ## 4. Omsi Loops — the one open design front
 
@@ -177,19 +200,61 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    **RE-SCHEDULED QUEUE (user ruling 2026-07-12, later session 10 —
    §11.10 targeted mode SCHEDULED; supersedes items 5–6 ordering
    below):**
-   1. **§11.8 pieces 1–2** — plReadState extension (buffs/soulstones/
-      goldInvested/trial+dungeon state/multipart totals; byte-inert
-      additive), then gate metadata (guild/negative-rep/upper-bound/
-      stock/time gates → setup-prefix measurement + gate-aware
-      candidates). Prerequisite for targeted-mode chain completeness.
-   2. **§11.10 targeted mode v1 + priority list** — within-loop goal
-      regression over the measured needs/provider/threshold graph;
-      ordered target list with residual-budget fitting; heuristic mode
-      = priority-∞ fallback; stagnation trigger (§11.9 Part B's
-      counters, healthy≤16 streak/135 drought vs hole 617) auto-enters
-      a targeted round from heuristic mode. §11.9 Part B's blind
-      escalation is SUPERSEDED by this; §11.6's ordered-priority idea
-      is ABSORBED by this. Multi-loop setup chains = v2, deferred.
+   1. **§11.8 pieces 1–2 — SHIPPED 2026-07-12 (Opus; fork `automation`
+      @ `a27e384` piece 1 + `218264d` piece 2, outer `cb69c975a`
+      omsi-stats harness; submodule pointer stays on substrate).**
+      Piece 1: plReadState now emits buffs / soulstones{perStat,total} /
+      goldInvested / trainingLimits / effectiveTime / stonesUsed /
+      dungeon+trial state / per-town multipart ledgers (additive,
+      JSON-plain) + a "Persistent resources" Stats-panel internals
+      section. Piece 2: new `planner-metadata.js` gate table (transcribed
+      from canStart, verified) + `plannerVocabulary: empirical|informed`
+      option (default empirical = byte-exact); informed mode satisfies
+      guild + repMax gates in measureAction (guild global set / rep
+      clamped, applied in evalLoop after inject to baseline+full via the
+      M1 prefix-baseline subtraction); read-state actions carry a static
+      `gate` field for §11.10; declared-but-unsatisfied gates
+      (soulstoneSac/talentFloor/buffFloor/trial-power/timeMax) are v2
+      setup chains. Both pieces byte-inert: 500 / 5,432,753 /
+      54506b48ec1758af (0 RNG, pool-8) at default vocabulary; npm 38/38
+      (3 new: gate table + informed guild/negative-rep measurement).
+      **§11.10 is now UNBLOCKED.**
+   2. **§11.10 targeted mode v1 + priority list — DESIGNED 2026-07-13
+      (rulings collected); implementation DEFERRED to a fresh session
+      (user: "big enough to need a new session"). START HERE.** Full
+      brief: *(NewDocs)*
+      `NewDocs/plans/omsiloops/omsi-loops-targeted-mode-plan.md` (memory
+      `project_omsi_loops_fork` is the durable pointer). Generalize the
+      one hand-wired chain (buildPushes→routeTo→resolveRouteGrantors→
+      buildEconomy) into a generic within-loop backward regression over
+      the already-measured graph. **USER RULINGS:** (a) DISTINCT MODE +
+      FALLBACK (targeted strategy regresses the ordered list, installs
+      best achievable chain, falls back to heuristic when nothing
+      achievable — not additive, not trigger-only); (b) USER-AUTHORED
+      priority list + an AUTO-RANK toggle; (c) goal vocab = action goals
+      (make blocked-but-unlocked action executable) AND target-value
+      goals ("reach V of resource/buff/soulstone" = fill loop with the
+      max-ΔR providers; V tracked across rounds on the piece-1 read
+      state). Plan phases T0(de-risk)→T4; each byte-inert-gated; headline
+      gate = ESCAPE the bank:20 hole. Flags 3 dependencies (buff/soulstone
+      goals need a read-state-Δ measurement extension; guild action-goals
+      need an in-real-loop rank join — T0 decides v1-vs-v2; rep-sinks
+      discovered from profiles). Stagnation trigger (§11.9 Part B's
+      counters, healthy≤16 streak/135 drought vs hole 617) survives as
+      the auto-entry hook; its blind escalation is SUPERSEDED; §11.6's
+      ordered-priority idea ABSORBED. Multi-loop setup chains = v2.
+      **AMENDED 2026-07-13 (user-approved rulings 4–6, in the plan doc):**
+      (d) per-goal fractional SLACK BUDGETS on target-value goals
+      (running remaining-budget counter, leftover cascades; makes the
+      list concurrent, not lexicographic; auto-rank assigns none in v1;
+      marginal-value stopping REJECTED = calibration); (e) RESIDUAL
+      HANDOFF — leftover budget goes to the heuristic grind/frontier
+      filler (full fallback = the 0%-consumed degenerate case); (f)
+      terminal targets must PERSIST across loop reset — gold/rep/mana
+      are instrumental only; valid targets = the piece-1 persistent
+      read-state fields. Plus: greedy fill consumes through limitedPools
+      exhaustion; later goals costed incrementally (shared prefixes
+      deduped); §6 escalation ignores budgets + user list.
    3. Then as before: tail trim / remaining ladder rungs (auto-add,
       simple balancing) / §11.7 Design B — as the user prioritizes.
    4. LAST (unchanged): the ONE deliberate re-baseline + recalibration
