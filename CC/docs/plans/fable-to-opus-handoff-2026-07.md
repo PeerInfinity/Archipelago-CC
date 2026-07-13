@@ -219,10 +219,15 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
       54506b48ec1758af (0 RNG, pool-8) at default vocabulary; npm 38/38
       (3 new: gate table + informed guild/negative-rep measurement).
       **§11.10 is now UNBLOCKED.**
-   2. **§11.10 targeted mode v1 + priority list — DESIGNED 2026-07-13
-      (rulings collected); implementation DEFERRED to a fresh session
-      (user: "big enough to need a new session"). START HERE.** Full
-      brief: *(NewDocs)*
+   2. **§11.10 targeted mode v1 + priority list — T0–T4 ALL SHIPPED
+      2026-07-13 (session 12; submodule `automation` e5b0bb6→48bd32e +
+      outer harness commits, ALL PUSHED, fork CI green). Byte-inert every
+      phase; npm 55/55; ui-smoke 33/33. T0 rulings: guild goals v2,
+      Option X (`plannerStrategy`). HEADLINE bank:20 escape was DEFERRED at
+      T4 — economy-walled, not scoring-walled (trigger fires, chain
+      confirms dry at every bank level); the fix, Part A, was pulled
+      forward and has since SHIPPED — the gate now PASSES (item 3 below).
+      Results: plan §12–13 + SUMMARY Round 14.** Original brief: *(NewDocs)*
       `NewDocs/plans/omsiloops/omsi-loops-targeted-mode-plan.md` (memory
       `project_omsi_loops_fork` is the durable pointer). Generalize the
       one hand-wired chain (buildPushes→routeTo→resolveRouteGrantors→
