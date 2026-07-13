@@ -151,7 +151,25 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    **SEQUENCING RULING (user, 2026-07-12): ARCHITECTURE CHANGES FIRST,
    calibration LAST.** Weights are calibrated to a scoring vocabulary and
    candidate set; recalibrating before the vocabulary settles is
-   throwaway work. Ordered queue:
+   throwaway work.
+   **Session 10 status (2026-07-12, Fable): items 1–4 DONE (1–2 shipped,
+   3–4 designed awaiting user review).** ① Census SHIPPED —
+   `CC/scripts/omsi-stats/ACTION-CENSUS.md` + SUMMARY Round 12
+   (`b32f9d33b`). ② Rep-gap tracker SHIPPED — fork `automation` @
+   `2b79ceb` (`predictorRepGap` default-off; byte-gate PASS
+   500/5,432,753/54506b48; npm 33/33). ③ bank:20 DIAGNOSED — SUMMARY
+   Round 13 (`b8e627adf`) + plan §11.9 design: root cause = the
+   capacity probe is STARVED at all [0] states (prevTimeNeeded 5250 in
+   hole AND reference — the a39bc27 interleave is gated
+   townsUnlocked>1) + rep-bank-capped h-ladder (h≤3 vs healthy h4–h6);
+   proposed Part A (un-gate probe at [0] + optimistic h arm —
+   RE-BASELINE items, fold into queue item 6 as its first change) and
+   Part B (streak≥32/drought≥256 search-escalation guard; healthy max
+   16/135 across all 11 traces — byte-inert by margin). ④ Vocabulary
+   design in plan §11.8 (read-state extension → gate metadata → scored
+   channels → `plannerVocabulary` option boundary). Unscheduled user
+   idea recorded (plan §11.5 addendum): `rngMode: cycle` for the 4
+   reward-path RNG sites. Original queue (for reference):
    1. **Systematic action-code audit (user: HIGH priority)**: read all
       157 actions' reward/effect code and produce a complete census of
       what the automation's vocabulary cannot see. The session-8 audit
