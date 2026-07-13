@@ -1,10 +1,15 @@
 # Region library: zone-concept cleanup + pre-built region reuse from JSON
 
-**Date:** 2026-07-13 · **Status: PLAN — ready for a fresh session. No code
-yet.** Shape confirmed with the user this session (rulings in §0b). This is
-the dedicated session the handoff parking-lot item 5 called for ("reevaluate
-the whole zone concept"), extended with the feature that motivates the
-cleanup: a user-selectable library of pre-built regions loadable from JSON.
+**Date:** 2026-07-13 · **Status: IMPLEMENTED (engine + validation + e2e) 2026-07-13
+(Opus, on `main`, NOT pushed).** Cleanup C1–C3 + feature F1, F2, F4, and F3's
+headless loader core are DONE and gated; the §5.3 world_generator/Generate.py
+end-to-end passes 13/13. **Remaining: F3 panel UI + F5 capture UI (browser
+surfaces, deferred with a design note — see §7), F6 (sphere-growth reuse,
+stretch).** Per-phase commit log + the deferred-panel design question in §7.
+Shape confirmed with the user (rulings in §0b). This is the dedicated session the
+handoff parking-lot item 5 called for ("reevaluate the whole zone concept"),
+extended with the feature that motivates the cleanup: a user-selectable library
+of pre-built regions loadable from JSON.
 
 ## 0. Why this exists
 
@@ -346,3 +351,80 @@ Every phase ends with the byte-identity gate green
    `placeFromRules` on a deserialized world is exactly the existing
    re-import path; verify `placeFromRules` behaves on a deserialized world
    early in F2 — if it doesn't, fall back to captured slot positions.
+   **RESOLVED (F2): captured slot positions.** `placeFromRules` DOES work on a
+   deserialized world (verified), but the plan's rng-free-instantiate constraint
+   (§2c "never inside an entry") forbids fresh rng placement — so v1 reuses the
+   captured slot positions deterministically. It's not the open-q's fallback for
+   the reason the open-q anticipated (a failure); it's the primary choice the
+   rng discipline dictates.
+
+## 7. Implementation status + per-phase commit log (2026-07-13, Opus)
+
+On `main`, NOT pushed. Every phase kept `dump-spiral-byteidentity.mjs` at 5/5
+(library-absent worlds byte-identical) and its own gates green.
+
+- **C1** `ab9de8a4a` — absorb `synthesizeZonePayload` into jta `extractZoneRules`
+  (jtaZone first payload key; hook deleted from engine + jta entry +
+  substrate-registry.md). Byte-identical.
+- **C2** `f7c0679aa` — route the spiral zone path through one
+  `resolveSpiralContentSource` seam (id→source; renamed zoneCounter→ordinalCounter).
+  Pure refactor.
+- **C3** `a9bb806d4` — name the content-source contract + generalize ② content
+  (`spiralContentConfigKey`, default `datasetDoc`; `contentDocId` reads
+  dataset_id/library_id). Docs: substrate-registry.md ("content sources" section
+  + the zone audit verdicts + out-of-scope), stepped-pipeline.md, architecture.md.
+- **F1** `91fe37e15` — schema (`region-library.schema.json`) + `regionLibraryValidator.js`
+  (content-hash identity, per-substrate capture contract, capability-check seam) +
+  CLI `region-library-validate.mjs`. 12 unit tests.
+- **F2** `a71f5bd83` — `captureLibraryEntry`/`instantiateLibraryEntry`/`validateLibraryEntry`
+  for maze (`mazeLibraryEntry.js`, re-derived rules) + bounce (`bounceLibraryEntry.js`,
+  carried rules, assembleZoneRegion re-assembly — now exported). 7 roundtrip tests
+  (maze uses an independent re-extract stratum). **Finding:** the ⊆ fit rule means
+  NO geometry relabel (moveSphereExitSide) is needed in v1 (deferred to F6).
+- **F4** `d1cb6b6d4` — `library:<id>` as a spiral content source
+  (`buildLibraryContentSource`: config-carried `libraryDoc`, fit + prefer-least-used
+  + repetition + loud no-fit; arrange-time validation; stepped ② residency via
+  `LIBRARY_CONTENT_ADAPTER`; onContentEdit restamp). 7 spiral-library tests.
+- **§5.3 e2e** `f5768f336` — committed `frontend/region-libraries/demo-maze-pack.json`
+  + index; `verify-region-library-roundtrip.mjs` (13/13: world_generator +
+  Generate.py, relocated locations reachable/checked, winnable). **Fillability
+  fix:** the engine stamps `LIBRARY_SLOT_FILLER_ITEM` on un-itemed slots
+  (classified 'filler' by compileRegionGraph) so the pool balances 1:1 with
+  locations — a maze region is 1 item/location; an un-itemed slot was unfillable.
+- **F3 (core)** `0da14c365` — `regionLibraryLoader.js` (fetch/parse/validate
+  served + ad-hoc; `buildLibrarySpiralConfig`; `isLoadedLibrarySource`). 7 tests.
+
+### Deferred: F3 panel UI + F5 capture UI — needs a panel-state design decision
+
+The engine + loader are done; what remains is browser chrome that can't be
+verified headlessly AND hits a genuine gap: **the pipeline panel's state model
+carries no `substrateConfig` today** (jta datasets are Node/CLI-only, per
+stepped-pipeline.md), and `applyPresetState`'s `filterDict` (`presetDefs.js`)
+drops any quota id where `hasSubstrate(id)` is false — so a `library:<id>` quota
+is dropped. Wiring the panel needs, in order:
+
+1. Extend `capturePresetState`/`applyPresetState` (+ the panel's `_saveToLocalStorage`
+   bundle) to carry selected libraries and their documents → `substrateConfig`.
+   **Design question to confirm first:** do selected library DOCUMENTS live in
+   the persisted panel/preset state (self-contained, portable, larger), or does
+   state persist only `{file, count}` references re-fetched from the served index
+   on load (small, but ad-hoc files must still persist their doc)? (Recommend:
+   references for served libraries + inline doc for ad-hoc.)
+2. Teach the substrate filter to keep `library:<id>` quotas via
+   `isLoadedLibrarySource(id, substrateConfig)` (loader, already built).
+3. Thread `substrateConfig` from panel state into the generation config
+   (`growthParams.substrateConfig`) — the monolithic AND stepped paths already
+   consume it; only the panel→config assembly is missing.
+4. UI: a "Region libraries" section (served-index checkboxes with entry
+   summaries + per-library slot count + an ad-hoc file input/drag-drop, validated
+   on load), calling `_saveToLocalStorage()` on every change.
+
+**F5 capture UI** ("Save region to library ▸" on the ③ region view + the bounce
+region editor) then appends `adapter.captureLibraryEntry(region)` to a
+localStorage "working library" and offers a JSON download (committable to
+`frontend/region-libraries/` + re-indexed). Blocked on nothing but the same
+panel surface.
+
+Because this is exactly the "implicit storage choice on a multi-surface feature"
+the working-style memory says to confirm first, the panel UI is parked for a
+follow-up with the design question above, rather than guessed.
