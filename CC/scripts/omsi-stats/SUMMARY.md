@@ -460,3 +460,49 @@ mode engine` is the ITERATION regime for sweeps and experiments (~5x,
 quality within 3% loops on the canonical trajectory); `none` is
 rejected. Sweeps should final-check winning configs under predictor
 mode before drawing conclusions.
+
+## Round 12 — systematic action-code census: the complete blind-spot map (2026-07-12, session 10)
+
+Queue item 1 of the ARCHITECTURE-FIRST sequencing ruling: all 157 actions'
+reward/effect code audited (mechanical harness extraction + hand read of
+every finish/segment/loop/floorReward handler and the shared reward
+helpers). Durable deliverable: **`ACTION-CENSUS.md`** (this directory) —
+per-action table, complete effect-channel taxonomy, visibility
+classification against the measurement + scoring vocabulary.
+
+Headline results (details and per-action rows in the census):
+
+- **The blind-spot map is now CLOSED-FORM**: every reward-path statement in
+  the game maps to one of the census channels; the reward-path RNG surface
+  is exactly 4 sites (dungeon soulstones ×2-roll, Mine Soulstones stat
+  pick, exchangeMap zone pick).
+- **Buff grants (7) are the deepest hole**: Ritual/Imbuement/Imbuement2/
+  Feast/Heroism/Aspirant/Imbuement3 — the mid/late-game capacity levers
+  (zone speed, starting stats, training caps, exp/talent mults) are
+  entirely absent from the read state, profiles, and scoring.
+- **Soulstones are an invisible ECONOMY, not just a resource**: granted by
+  3 dungeon lines + Mine Soulstones, spent by the 3 sacrifice buffs,
+  and each stone multiplies stat exp (1 + ss^0.8/30) — none of it
+  differenceable today.
+- **The skill-level efficiency web is the highest-leverage scoring
+  extension**: 15+ skills cheapen or amplify OTHER actions' costs/yields;
+  only travel edges are credited (travelRelief). Yield INCREASES
+  (goldCost-as-yield: pots/locks/quests × Dark/Practical/Thievery) are
+  never attributed to the skill action — they arrive as measurement lag.
+- **A gate class blocks MEASUREMENT, not just scoring**: needs-probing
+  raises resources positively only — guild membership (a global, not a
+  resource), negative-rep clauses (Dark Magic/Ritual, Thieves Guild),
+  upper bounds (power < 8), soulstone/talent/buff floors, and time gates
+  (Escape < 60s) all measure exec=0 forever. Guild-gated town-2/7
+  economies are unmeasurable without composed (join-prefix) probes.
+- Structural distortions catalogued: cross-town effects outside the
+  measured town's window (exchangeMap, Build Tower/adjustRocks),
+  consumption invisibility (33 cost() bodies verified), context-dependent
+  reward amounts (Seek Blessing/Buffet/Guild Assassin scale with per-loop
+  counters), temporal decay (Mana Well = 5000 − 10×effectiveTime).
+- Census §5 records the design implications for queue item 4 (metadata =
+  channel existence + gates; empirical measurement stays authoritative
+  for rates; read-state extensions must stay byte-inert additive).
+
+No fork changes, no harness changes, no behavior changes this round —
+audit only.
