@@ -55,25 +55,60 @@ import {
 /** Step names in run order; index === the `completed` value the step yields. */
 export const SPIRAL_STEPS = Object.freeze(['arrange', 'content', 'regions', 'compile']);
 
-// Whether any substrate in this spiral world emits ② content. No current
-// substrate does (all ② runs are no-ops), so this is false for every existing
-// world and the ② presence probe reports "completed" without an env.content —
-// keeping detectCompleted's contiguous walk from stalling at ②. JtA opts the
-// first content substrate in via `adapter.emitsSpiralContent` in Part 3.
-function worldHasContentSubstrate(env) {
+// The content substrates in this world's quota that actually EMIT a content
+// document, in quota order. A substrate emits content only when it both declares
+// `emitsSpiralContent` (jta does) AND its pipeline config carries a document
+// (`substrateConfig[id].datasetDoc`). That config gate is load-bearing: jta
+// declares emitsSpiralContent unconditionally, but a DATASET-LESS jta world
+// (vanilla tables — jta-zone-demo, mixed maze+jta) emits no content, so ②
+// stays a byte-identical no-op and the `content` presence probe
+// (`!worldHasContentSubstrate(e) || !!e.content`) reports "completed" without an
+// env.content instead of stalling detectCompleted's contiguous walk at ②. (v1
+// content lives under `datasetDoc`; generalise the field if a second content
+// substrate ever lands.)
+function contentSubstrates(env) {
     const quotas = env.config?.growthParams?.substrateQuotas ?? {};
+    const cfg = env.config?.growthParams?.substrateConfig ?? {};
+    const out = [];
     for (const [id, count] of Object.entries(quotas)) {
         if (!(Number(count) > 0)) continue;
-        if (substrateRegistry.get(id)?.emitsSpiralContent) return true;
+        const adapter = substrateRegistry.get(id);
+        if (adapter?.emitsSpiralContent && cfg[id]?.datasetDoc != null) {
+            out.push({ id, adapter });
+        }
     }
-    return false;
+    return out;
+}
+
+function worldHasContentSubstrate(env) {
+    return contentSubstrates(env).length > 0;
+}
+
+// Install each quota substrate's pipeline config (dataset + zone-locations
+// knobs) BEFORE arrangement, so the quota-vs-zoneCount validation in
+// arrangeSpiralPlan sees the dataset's real zone count (design §6.3 "run the
+// generator before arrangement"). A substrate exposes `applyPipelineConfig`;
+// only jta does, and its hook resets to the vanilla-path defaults when its
+// config is absent, so a dataset-less world stays byte-identical. Config lives
+// at config.growthParams.substrateConfig[id] (a preset carries it, per the
+// "presets store config, not envelopes" convention).
+function applySubstrateConfig(env) {
+    const quotas = env.config?.growthParams?.substrateQuotas ?? {};
+    const cfg = env.config?.growthParams?.substrateConfig ?? {};
+    for (const [id, count] of Object.entries(quotas)) {
+        if (!(Number(count) > 0)) continue;
+        substrateRegistry.get(id)?.applyPipelineConfig?.(cfg[id]);
+    }
 }
 
 // --- the four steps (mutate + return env) -----------------------------
 
-// ① — arrange. Build the placement plan + snapshot the post-shuffle rng. Nulls
-// everything downstream (a fresh run / re-arrange invalidates ②–④).
+// ① — arrange. Install substrate config (so the quota validation sees the
+// dataset's real zoneCount), then build the placement plan + snapshot the
+// post-shuffle rng. Nulls everything downstream (a fresh run / re-arrange
+// invalidates ②–④).
 function stepArrange(env) {
+    applySubstrateConfig(env);
     const plan = arrangeSpiralPlan(env.config);
     env.arrange = {
         sequence: plan.sequence,
@@ -89,13 +124,21 @@ function stepArrange(env) {
     return env;
 }
 
-// ② — content. No-op for every current substrate (byte-identical). A content
-// substrate would synthesise its per-zone dataset onto env.<sub>Content here,
-// keyed off the ① placement plan; the presence probe + onContentEdit seam
-// (Part 3) handle invalidation + restamp. Consumes no rng.
+// ② — content. Materialise the content substrate's installed document onto the
+// envelope as the editable artifact. A NO-OP (env.content = null) for every
+// dataset-less world (byte-identical). v1 supports one content substrate (jta);
+// its document was installed by ① applySubstrateConfig (or, across a process
+// boundary, by the deserialize seam). Deep-copied so envelope edits don't mutate
+// the installed/config document. Consumes no rng.
 function stepContent(env) {
-    // Reserved: iterate content substrates and populate env.<sub>Content.
-    env.content = null;
+    let content = null;
+    for (const { adapter } of contentSubstrates(env)) {
+        const doc = adapter.getSpiralContent?.();
+        if (doc != null) { content = JSON.parse(JSON.stringify(doc)); break; }
+    }
+    env.content = content;
+    env.regions = null;
+    env.compile = null;
     env.completed = 1;
     return env;
 }
@@ -172,16 +215,42 @@ const SPIRAL_STEP_OUTPUT_PRESENT = {
     compile: (e) => !!e.compile?.rulesJson,
 };
 
+// The ② content restamp + re-install seam, called on every envelope deserialize
+// (steppedPipeline.deserializeEnvelope). Globals don't cross a process boundary,
+// so this re-installs the content substrate's config on load — from the edited
+// env.content when present (past ②), else the config's carried document (a fresh
+// cross-process ①/②). It also restamps a hand-edited env.content (content-hash →
+// new dataset_id) and, when that id CHANGES (a real edit), clears the downstream
+// regions/compile so an auto-resume regenerates them against the edited dataset
+// (Phase-B gate d). Idempotent: an unchanged document restamps to the same id
+// and re-installs the same globals. A no-op for dataset-less worlds.
+function spiralOnContentEdit(env) {
+    const subs = contentSubstrates(env);
+    if (subs.length === 0) return env;
+    const { id, adapter } = subs[0];
+    const cfg = env.config?.growthParams?.substrateConfig?.[id] ?? {};
+    const beforeId = env.content?.dataset_id ?? null;
+    if (env.content != null && adapter.onContentEdit) {
+        env.content = adapter.onContentEdit(env.content);
+    }
+    const afterId = env.content?.dataset_id ?? null;
+    const doc = env.content ?? cfg.datasetDoc ?? null;
+    adapter.applyPipelineConfig?.({ ...cfg, datasetDoc: doc });
+    if (beforeId !== afterId) {
+        env.regions = null;
+        env.compile = null;
+    }
+    return env;
+}
+
 // The spiral mode descriptor — the whole per-mode surface the harness needs.
-// `onContentEdit` (the ② restamp seam) is intentionally absent: no current
-// substrate emits content, so a decoded envelope needs no restamp. JtA adds it
-// in Part 3.
 const SPIRAL_DESCRIPTOR = {
     steps: SPIRAL_STEPS,
     runners: RUNNERS,
     present: SPIRAL_STEP_OUTPUT_PRESENT,
     codecs: SPIRAL_CODECS,
     nextStep: nextSpiralStep,
+    onContentEdit: spiralOnContentEdit,
 };
 
 // --- public API (delegates to the shared harness) ---------------------

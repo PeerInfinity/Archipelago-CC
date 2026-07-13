@@ -556,6 +556,10 @@ export const substrateRegistryEntry = Object.freeze({
         return getJtaDataset();
     },
 
+    // The installed content document for the ② content step to materialise onto
+    // the envelope as the editable artifact (null when no dataset is active).
+    getSpiralContent: () => getJtaDataset(),
+
     // Restamp a (possibly hand-edited) dataset document: recompute the content
     // hash and rewrite the dataset_id suffix (the datasetValidator --restamp
     // path), then validate. The spiral descriptor calls this on every envelope
