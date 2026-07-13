@@ -37,6 +37,18 @@ import {
     serializeGrid,
     deserializeGrid,
 } from './procgenPipelineEngine.js';
+// Generic stepped-pipeline machinery — the driver/resume/serde skeleton shared
+// with sphere (and spiral). This module supplies the top-down DESCRIPTOR; the
+// harness drives it. See steppedPipeline.js for the descriptor + codec contract.
+import {
+    runStep as runStepGeneric,
+    runToStep as runToStepGeneric,
+    detectCompleted as detectCompletedGeneric,
+    resumeEnvelope as resumeEnvelopeGeneric,
+    newEnvelope as newEnvelopeGeneric,
+    serializeEnvelope as serializeEnvelopeGeneric,
+    deserializeEnvelope as deserializeEnvelopeGeneric,
+} from './steppedPipeline.js';
 
 /** Step names in run order; index === the `completed` value the step yields. */
 export const TOPDOWN_STEPS = Object.freeze(['layout', 'realise', 'finalize', 'compile']);
@@ -134,43 +146,16 @@ const RUNNERS = {
     compile: stepCompile,
 };
 
-/**
- * Run a single named step over the envelope, mutating + returning it. Async
- * because ② streams progress (pass opts.onProgress). All steps resolve to the
- * (same, mutated) env.
- */
-export async function runTopDownStep(stepName, env, opts = {}) {
-    const runner = RUNNERS[stepName];
-    if (!runner) throw new Error(`runTopDownStep: unknown step '${stepName}'`);
-    return runner(env, opts);
-}
-
-/** The next step to run given the envelope's `completed` index; null when done. */
+/** The next step to run given the envelope's `completed` index; null when done.
+ *  Top-down is a trivial linear +1 walk (no batching), the descriptor's loop. */
 export function nextTopDownStep(env) {
     const completed = env.completed ?? -1;
     return completed < TOPDOWN_STEPS.length - 1 ? TOPDOWN_STEPS[completed + 1] : null;
 }
 
-/** Run steps from the current point through `toStep` (default: to completion). */
-export async function runTopDownToStep(env, toStep = 'compile', opts = {}) {
-    if (TOPDOWN_STEPS.indexOf(toStep) < 0) {
-        throw new Error(`runTopDownToStep: unknown step '${toStep}'`);
-    }
-    let step = nextTopDownStep(env);
-    while (step) {
-        // eslint-disable-next-line no-await-in-loop
-        await runTopDownStep(step, env, opts);
-        if (step === toStep) break;
-        step = nextTopDownStep(env);
-    }
-    return env;
-}
-
 /** A fresh envelope for a pre-assembled config block (opts + compileIn). */
 export function newTopDownEnvelope({ source, opts, compileIn, regionSize }) {
-    return {
-        completed: -1, source, opts, compileIn, regionSize,
-    };
+    return newEnvelopeGeneric({ source, opts, compileIn, regionSize });
 }
 
 /**
@@ -230,56 +215,53 @@ export function buildTopDownEnvelope({
     });
 }
 
-// --- envelope (de)serialisation (for the headless CLI) -----------------
+// --- envelope (de)serialisation codecs (for the headless CLI) ----------
 //
-// Most of the envelope is plain JSON (config, opts, compileIn, stats, plans,
-// the compiled rules.json). The non-JSON members are: the live rng, the Grid,
-// and two Maps on the layout (cellsByName, exitSidesByExit). realise/finalize
-// alias the SAME grid object as layout — encode it once (on layout) and rebuild
-// the aliases on decode. sourceRegions aliases source.regions[playerId] — drop +
-// rebuild it too (no need to duplicate the source).
-
-/** Live envelope → JSON-safe plain object. */
-export function serializeTDEnvelope(env) {
-    const out = { ...env };
-    if (env.rng && typeof env.rng.getState === 'function') {
-        out.rng = { s: env.rng.getState() };
-    }
-    if (env.layout) {
-        const L = { ...env.layout };
-        if (L.grid) L.grid = serializeGrid(L.grid);
-        if (L.cellsByName instanceof Map) L.cellsByName = [...L.cellsByName];
-        if (L.exitSidesByExit instanceof Map) L.exitSidesByExit = [...L.exitSidesByExit];
-        L.sourceRegions = undefined; // rebuilt from source on decode
-        out.layout = L;
-    }
-    // Drop the grid alias on realise/finalize (rebuilt from layout on decode).
-    if (env.realise) out.realise = { ...env.realise, grid: undefined };
-    if (env.finalize) out.finalize = { ...env.finalize, grid: undefined };
-    return out;
-}
-
-/** JSON-safe plain object (from serializeTDEnvelope) → live envelope. */
-export function deserializeTDEnvelope(obj) {
-    const env = { ...obj };
-    if (obj.rng && obj.rng.s !== undefined) {
-        const rng = createRng(0);
-        rng.setState(obj.rng.s);
-        env.rng = rng;
-    }
-    if (obj.layout) {
-        const L = { ...obj.layout };
-        if (L.grid) L.grid = deserializeGrid(L.grid);
-        if (Array.isArray(L.cellsByName)) L.cellsByName = new Map(L.cellsByName);
-        if (Array.isArray(L.exitSidesByExit)) L.exitSidesByExit = new Map(L.exitSidesByExit);
-        L.sourceRegions = obj.source?.regions?.[L.playerId ?? '1'] ?? {};
-        env.layout = L;
-    }
-    // Rebuild the grid aliases (realise/finalize share layout.grid).
-    if (env.realise && env.layout?.grid) env.realise.grid = env.layout.grid;
-    if (env.finalize && env.layout?.grid) env.finalize.grid = env.layout.grid;
-    return env;
-}
+// Most of the envelope is plain JSON (config, opts, compileIn, stats, plans, the
+// compiled rules.json) and rides the harness's spread. The non-JSON members get
+// a codec: the live rng, the Grid + two Maps on the layout, and the grid ALIASES.
+// realise/finalize alias the SAME grid object as layout — drop it on encode and
+// reconnect the SAME decoded grid on decode (layout is declared first, so
+// out.layout is decoded when realise/finalize decode runs). sourceRegions aliases
+// source.regions[playerId] — dropped + rebuilt from source on decode (no need to
+// duplicate the source in the envelope). See steppedPipeline.js for the contract.
+const TD_CODECS = {
+    rng: {
+        encode: (rng) => (typeof rng.getState === 'function' ? { s: rng.getState() } : rng),
+        decode: (r) => {
+            if (r?.s === undefined) return r;
+            const rng = createRng(0);
+            rng.setState(r.s);
+            return rng;
+        },
+    },
+    layout: {
+        encode: (layout) => {
+            const L = { ...layout };
+            if (L.grid) L.grid = serializeGrid(L.grid);
+            if (L.cellsByName instanceof Map) L.cellsByName = [...L.cellsByName];
+            if (L.exitSidesByExit instanceof Map) L.exitSidesByExit = [...L.exitSidesByExit];
+            L.sourceRegions = undefined; // rebuilt from source on decode
+            return L;
+        },
+        decode: (layout, out, obj) => {
+            const L = { ...layout };
+            if (L.grid) L.grid = deserializeGrid(L.grid);
+            if (Array.isArray(L.cellsByName)) L.cellsByName = new Map(L.cellsByName);
+            if (Array.isArray(L.exitSidesByExit)) L.exitSidesByExit = new Map(L.exitSidesByExit);
+            L.sourceRegions = obj.source?.regions?.[L.playerId ?? '1'] ?? {};
+            return L;
+        },
+    },
+    realise: {
+        encode: (realise) => ({ ...realise, grid: undefined }),
+        decode: (realise, out) => ({ ...realise, grid: out.layout?.grid }),
+    },
+    finalize: {
+        encode: (finalize) => ({ ...finalize, grid: undefined }),
+        decode: (finalize, out) => ({ ...finalize, grid: out.layout?.grid }),
+    },
+};
 
 // Whether each step's OUTPUT is present in an envelope — used to derive the
 // resume point from data presence (a hand-edited/partial envelope resumes from
@@ -291,18 +273,47 @@ const TD_STEP_OUTPUT_PRESENT = {
     compile: (e) => !!e.compile,
 };
 
+// The top-down mode descriptor — the whole per-mode surface the harness needs.
+const TD_DESCRIPTOR = {
+    steps: TOPDOWN_STEPS,
+    runners: RUNNERS,
+    present: TD_STEP_OUTPUT_PRESENT,
+    codecs: TD_CODECS,
+    nextStep: nextTopDownStep,
+};
+
+// --- public API (stable names/signatures; delegate to the shared harness) ---
+
+/**
+ * Run a single named step over the envelope, mutating + returning it. Async
+ * because ② streams progress (pass opts.onProgress). All steps resolve to the
+ * (same, mutated) env.
+ */
+export async function runTopDownStep(stepName, env, opts = {}) {
+    return runStepGeneric(stepName, env, opts, TD_DESCRIPTOR);
+}
+
+/** Run steps from the current point through `toStep` (default: to completion). */
+export async function runTopDownToStep(env, toStep = 'compile', opts = {}) {
+    return runToStepGeneric(env, toStep, opts, TD_DESCRIPTOR);
+}
+
+/** Live envelope → JSON-safe plain object. */
+export function serializeTDEnvelope(env) {
+    return serializeEnvelopeGeneric(env, TD_DESCRIPTOR);
+}
+
+/** JSON-safe plain object (from serializeTDEnvelope) → live envelope. */
+export function deserializeTDEnvelope(obj) {
+    return deserializeEnvelopeGeneric(obj, TD_DESCRIPTOR);
+}
+
 /** The `completed` index (last contiguously-finished step) from data presence. */
 export function detectTDCompleted(env) {
-    let n = 0;
-    for (const step of TOPDOWN_STEPS) {
-        if (TD_STEP_OUTPUT_PRESENT[step](env)) n += 1;
-        else break;
-    }
-    return n - 1;
+    return detectCompletedGeneric(env, TD_DESCRIPTOR);
 }
 
 /** Resume to `toStep` from the first step whose output is missing. */
 export async function resumeTDEnvelope(env, toStep = 'compile', opts = {}) {
-    env.completed = detectTDCompleted(env);
-    return runTopDownToStep(env, toStep, opts);
+    return resumeEnvelopeGeneric(env, toStep, opts, TD_DESCRIPTOR);
 }
