@@ -2471,11 +2471,11 @@ function synthesizeZoneRegion({
     const zoneRules = adapter.extractZoneRules
         ? adapter.extractZoneRules(zoneIdx, { region_id, exitSides, regionSize })
         : null;
-    const zonePayload = adapter.synthesizeZonePayload
-        ? adapter.synthesizeZonePayload(zoneIdx)
-        : {};
+    // Zone payload comes entirely from the extractZoneRules channel now
+    // (region-library C1): jta folds its `jtaZone` ordinal into that
+    // channel's payload, so no separate synthesizeZonePayload hook.
     return assembleZoneRegion({
-        substrate, region_id, regionSize, exitSides, zoneRules, zonePayload,
+        substrate, region_id, regionSize, exitSides, zoneRules, zonePayload: {},
     });
 }
 

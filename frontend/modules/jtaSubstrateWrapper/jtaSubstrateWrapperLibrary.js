@@ -491,14 +491,12 @@ export const substrateRegistryEntry = Object.freeze({
     // --- Zone-based substrate metadata ---
     //
     // Layout drivers that map grid positions to ordered "zones"
-    // (currently arrangeShuffledSpiral) read these two fields:
-    //   - zoneCount: how many discrete zones this substrate exposes.
-    //     Drivers refuse to allocate more than this many regions to
-    //     the substrate.
-    //   - synthesizeZonePayload(zoneIdx): returns a playable_payload
-    //     fragment for the Nth zone. The driver merges this with the
-    //     layout's own fields (exits, etc.) before stamping the
-    //     sidecar.
+    // (currently arrangeShuffledSpiral) read `zoneCount` (how many
+    // discrete zones this substrate exposes — drivers refuse to
+    // allocate more regions than this) and the `extractZoneRules`
+    // content channel below (the sole per-zone payload contributor
+    // since region-library C1 absorbed the former synthesizeZonePayload
+    // hook into it).
     //
     // Total zone count. With a dataset active it is the dataset's zone
     // count (the dataset IS the game data the fork will load). Otherwise
@@ -508,18 +506,21 @@ export const substrateRegistryEntry = Object.freeze({
     // it drifts the runtime warns on loadZone and refuses the bad
     // index. 30 as of Fork 1.6.
     get zoneCount() { return _dataset ? _dataset.zones.length : 30; },
-    synthesizeZonePayload: (zoneIdx) => ({ jtaZone: zoneIdx }),
 
-    // Zone-locations channel (opt-in, see setJtaEmitZoneLocations). The
-    // engine calls this whenever it is present (procgenPipelineEngine
-    // synthesizeZoneRegion), so when emission is off it returns an empty
-    // result that assembles byte-identically to having no hook. When on
-    // it emits the zone's tasks as AP locations, merged over
-    // synthesizeZonePayload's {jtaZone} (the payloads compose:
-    // playable_payload = { ...{jtaZone}, ...{ap_locations} }).
+    // Zone-locations channel: the sole per-zone playable_payload
+    // contributor. `jtaZone` (the zone ordinal the fork reads to load
+    // the right zone) is always emitted as the FIRST payload key —
+    // absorbed here from the former synthesizeZonePayload hook
+    // (region-library C1), which the engine used to compose ahead of
+    // this channel's payload. Byte-identical to the pre-C1 order.
+    //
+    // The zone-LOCATIONS half is opt-in (setJtaEmitZoneLocations): off,
+    // the payload is just {jtaZone}; on, it also emits the zone's tasks
+    // as AP locations (buildZoneLocations) alongside jtaZone.
     extractZoneRules: (zoneIdx, { region_id } = {}) => {
-        if (!_emitZoneLocations) return { locations: [], payload: {} };
-        return buildZoneLocations(zoneIdx, region_id);
+        if (!_emitZoneLocations) return { locations: [], payload: { jtaZone: zoneIdx } };
+        const result = buildZoneLocations(zoneIdx, region_id);
+        return { ...result, payload: { jtaZone: zoneIdx, ...result.payload } };
     },
 
     // --- Stepped-spiral ② content seam (stepped-spiral-parity plan Part 3) ---

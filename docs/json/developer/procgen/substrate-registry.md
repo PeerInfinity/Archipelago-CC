@@ -74,8 +74,7 @@ For substrates whose content is a fixed, ordered set of pre-authored zones rathe
 | Field | Meaning |
 |-------|---------|
 | `zoneCount` | How many discrete zones exist. Layout drivers (currently `arrangeShuffledSpiral`) refuse to allocate more regions than this to the substrate. |
-| `synthesizeZonePayload(zoneIdx)` | Returns the `playable_payload` fragment for the Nth zone; the driver merges it with the layout's own fields before stamping the sidecar. (jta: `{ jtaZone: zoneIdx }`.) |
-| `extractZoneRules` | Bounce's richer alternative: produces the zone's locations, exit rules/paths, obstacle defs, and payload in one call, so no separate `synthesizeZonePayload` is needed. |
+| `extractZoneRules(zoneIdx, ctx)` | The single per-zone content channel: produces the zone's locations, per-side exit rules/paths, obstacle defs, and `playable_payload` fragment in one call. jta folds its `{ jtaZone: zoneIdx }` sidecar ordinal into this channel's payload (region-library C1 absorbed the former standalone `synthesizeZonePayload` hook — `jtaZone` stays the first payload key); bounce/runner emit their winnable geometry's locations and rules. |
 | `victoryItem` | Name of the item the substrate's zone table places as the goal. Emission paths use it as the completion-condition item when the scenario pool contributes no `is_victory` item — without it the AP world would have no goal and be "beaten" at sphere 0. Bounce, runner, and jta declare one (`'Victory'`). |
 
 ### Build-time — driver-facing adapter hooks (bounce)
@@ -98,7 +97,7 @@ The sphere-growth driver and the Procgen Pipeline panel read a further set of op
 | Manual loop play | yes | yes | yes | yes | yes | yes |
 | Custom queues | **yes** | no | no | no | no | no |
 | Procedural build hooks | yes (+ hazards via `applyContentModules`) | no | no | yes (shared tile-grid primitives) | no | no |
-| Zone-based | no | yes (`zoneCount` from zone table, `extractZoneRules`, `victoryItem`) | yes (lazy zone table, `extractZoneRules`, `victoryItem`) | no | no | yes (`zoneCount: 30`, `synthesizeZonePayload`, `victoryItem`) |
+| Zone-based | no | yes (`zoneCount` from zone table, `extractZoneRules`, `victoryItem`) | yes (lazy zone table, `extractZoneRules`, `victoryItem`) | no | no | yes (`zoneCount: 30`, `extractZoneRules`, `victoryItem`) |
 | Sphere-growth adapter hooks | no | **yes** | **yes** | no | no | no |
 
 Entry sources: `mazeRoomLibrary.js`, `bounceDemoLibrary.js`, `runnerDemoLibrary.js`, `textAdventureSubstrateWrapperLibrary.js`, `flashSubstrateLibrary.js`, `jtaSubstrateWrapperLibrary.js`.
