@@ -152,22 +152,33 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    calibration LAST.** Weights are calibrated to a scoring vocabulary and
    candidate set; recalibrating before the vocabulary settles is
    throwaway work. Ordered queue:
-   1. bank:20 fixation diagnosis → anti-fixation guard design (general
+   1. **Systematic action-code audit (user: HIGH priority)**: read all
+      157 actions' reward/effect code and produce a complete census of
+      what the automation's vocabulary cannot see. The session-8 audit
+      found EXAMPLES (buff grants `addBuffAmt` ×7, non-travel manaCost
+      cheapening, soulstones, multiparts opaque, and now the L292
+      discovery undervaluation) — it was not exhaustive. The census
+      DEFINES the vocabulary the architecture work must express; do it
+      before designing the metadata schema.
+   2. **Assist-tools track, first deliverable (user plan, §11.6): the
+      rep-gap tracker** — report when an action's total queued reps <
+      its currently-unlocked reps (the user built exactly this as a
+      personal predictor patch years ago). Small, independent, ships
+      default-off; the first rung of the §11.6 ladder (auto-add = rung
+      2, simple balancing = rung 3).
+   3. bank:20 fixation diagnosis → anti-fixation guard design (general
       mechanism, per the no-special-cases doctrine; robustness is an
       architecture property).
-   2. Scorer/candidate vocabulary: the L292 lesson (the engine screen
-      admits discover:Investigate, which WINS locally 793>787 and ends
-      14 loops worse — discovery is still undervalued by the
-      delayed-payoff terms); buff-grant blindness (`addBuffAmt` ×7 —
-      ruled direction: declarative per-action metadata behind an
-      option); high-expMult grind CANDIDATES for talent (the scoring
-      term already ships at W.talent 0.01 — do NOT re-add it);
-      non-travel manaCost cheapening; soulstones; multiparts.
-   3. Queue-emission: exact-count tail trim (SUPERSEDES repeatLastAction;
-      metric-dependent). §11.6 assist-feature ladder + priority
+   4. Scorer/candidate vocabulary DESIGN from the audit census: ruled
+      direction = declarative per-action metadata behind an option (the
+      pure-empirical mode survives for AP); high-expMult grind
+      CANDIDATES for talent (the scoring term already ships at W.talent
+      0.01 — do NOT re-add it); the L292 discovery lesson.
+   5. Queue-emission: exact-count tail trim (SUPERSEDES repeatLastAction;
+      metric-dependent). Remaining §11.6 ladder rungs + priority
       checkboxes; §11.7 Design B live no-pause pipelining (designed,
       unbuilt; late-plan policy open) — as ruled/prioritized by the user.
-   4. ONLY THEN: one deliberate re-baseline + full weight recalibration
+   6. ONLY THEN: one deliberate re-baseline + full weight recalibration
       in the town-0 lab against the settled architecture (engine mode +
       pool make it ~30 min; DNF-aware; bankPot:8 = the Round-9 datum to
       re-test, NOT a pre-settled answer). Changing DEFAULT_WEIGHTS =
