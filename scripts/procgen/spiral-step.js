@@ -38,6 +38,19 @@
  *   --victory-item NAME     completion item (default: first quota'd substrate's
  *                           registry victoryItem)
  *
+ * JtA ② content dataset flags (arrange / run; Part 3 — generation is Node-only):
+ *   --jta-dataset-file F    install a pre-generated dataset document as ② content
+ *   --jta-generate          generate the dataset from the bundled-less fixtures
+ *   --jta-dataset-seed N    generation seed (default 1)
+ *   --jta-dataset-zones N   generation zone count
+ *   --jta-dataset-theme K   generation theme key
+ *   --jta-dataset-value-mode M   raw (default) | zone_formula
+ *   --jta-emit-locations    surface each zone task as an AP location + a Victory
+ *   --jta-goal-zone N       Victory zone (default: deepest zone when emitting)
+ *   --jta-free-zones N      zones requiring no perks (default 1)
+ *   --jta-starting-perks N  perks the player starts with (default 0)
+ *   --jta-perk-shuffle-seed N   seeded cross-zone perk placement
+ *
  * I/O flags (all subcommands):
  *   -i, --input <envelope.json>   prior step's envelope
  *   -o, --out <envelope.json>     where to write the resulting envelope ('-' = stdout)
@@ -56,11 +69,32 @@ import '../../frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js
 import '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
 import '../../frontend/modules/runnerDemo/runnerDemoLibrary.js';
 import { substrateRegistry } from '../../frontend/modules/shared/procgen/substrateRegistry.js';
+import { generateJtaDataset } from '../../frontend/modules/jtaSubstrateWrapper/generateDataset.js';
 import {
     SPIRAL_STEPS, runSpiralStep, runSpiralToStep, resumeSpiralEnvelope,
     nextSpiralStep, detectSpiralCompleted, newSpiralEnvelope,
     serializeSpiralEnvelope, deserializeSpiralEnvelope,
 } from '../../frontend/modules/procgenPipeline/spiralSteps.js';
+
+const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
+
+// Node-only jta dataset generation (the profile/vanilla fixtures aren't
+// bundled — stepped-spiral Part 3, decision "generation stays a Node concern").
+// Reads the two fixtures off disk and runs the pure generator, returning the
+// dataset document the pipeline installs as ② content. Used by the --jta-*
+// flags below so `spiral-step run` can mint a jta-dataset world end-to-end.
+function generateJtaDatasetFromFixtures({ seed = 1, zones, theme, valueMode }) {
+    const profile = JSON.parse(readFileSync(
+        resolve(REPO_ROOT, 'CC/scripts/jta-stats/results/vanilla-profile.json'), 'utf8')).static;
+    const vanilla = JSON.parse(readFileSync(
+        resolve(REPO_ROOT, 'frontend/modules/jtaSubstrateWrapper/datasets/vanilla.json'), 'utf8'));
+    const params = {
+        ...(zones !== undefined ? { zoneCount: zones } : {}),
+        ...(theme !== undefined ? { theme } : {}),
+        ...(valueMode !== undefined ? { valueMode } : {}),
+    };
+    return generateJtaDataset({ seed, profile, vanilla, params }).dataset;
+}
 
 // --- CLI parser ---
 
@@ -82,6 +116,18 @@ function parseArgs(argv) {
         rulesOut: null,
         from: null,
         to: null,
+        // jta ② content dataset config (stepped-spiral Part 3)
+        jtaDatasetFile: null,
+        jtaGenerate: false,
+        jtaDatasetSeed: 1,
+        jtaDatasetZones: undefined,
+        jtaDatasetTheme: undefined,
+        jtaDatasetValueMode: undefined,
+        jtaEmitLocations: false,
+        jtaGoalZone: undefined,
+        jtaFreeZones: undefined,
+        jtaStartingPerks: undefined,
+        jtaPerkShuffleSeed: undefined,
     };
     const parseWxH = (s) => {
         const [w, h] = s.split('x').map((n) => parseInt(n, 10));
@@ -113,6 +159,17 @@ function parseArgs(argv) {
             case '--rules-out': out.rulesOut = next(); break;
             case '--from': out.from = next(); break;
             case '--to': out.to = next(); break;
+            case '--jta-dataset-file': out.jtaDatasetFile = next(); break;
+            case '--jta-generate': out.jtaGenerate = true; break;
+            case '--jta-dataset-seed': out.jtaDatasetSeed = parseInt(next(), 10); break;
+            case '--jta-dataset-zones': out.jtaDatasetZones = parseInt(next(), 10); break;
+            case '--jta-dataset-theme': out.jtaDatasetTheme = next(); break;
+            case '--jta-dataset-value-mode': out.jtaDatasetValueMode = next(); break;
+            case '--jta-emit-locations': out.jtaEmitLocations = true; break;
+            case '--jta-goal-zone': out.jtaGoalZone = parseInt(next(), 10); break;
+            case '--jta-free-zones': out.jtaFreeZones = parseInt(next(), 10); break;
+            case '--jta-starting-perks': out.jtaStartingPerks = parseInt(next(), 10); break;
+            case '--jta-perk-shuffle-seed': out.jtaPerkShuffleSeed = parseInt(next(), 10); break;
             case '-h': case '--help':
                 process.stdout.write('See the header comment in scripts/procgen/spiral-step.js\n');
                 process.exit(0);
@@ -147,12 +204,46 @@ function resolveVictory(quotas) {
         .find(Boolean) ?? null;
 }
 
+// Resolve the jta ② content config from the --jta-* flags (stepped-spiral
+// Part 3), or null when no jta dataset was requested. Either loads a
+// pre-generated document (--jta-dataset-file) or generates one from fixtures
+// (--jta-generate). The result rides config.growthParams.substrateConfig.jta,
+// which ① applySubstrateConfig installs before arrangement.
+function buildJtaSubstrateConfig(args) {
+    let datasetDoc = null;
+    if (args.jtaDatasetFile) {
+        datasetDoc = readJson(args.jtaDatasetFile);
+    } else if (args.jtaGenerate) {
+        datasetDoc = generateJtaDatasetFromFixtures({
+            seed: args.jtaDatasetSeed,
+            zones: args.jtaDatasetZones,
+            theme: args.jtaDatasetTheme,
+            valueMode: args.jtaDatasetValueMode,
+        });
+    } else {
+        return null;
+    }
+    // A goal zone is required to emit a Victory item; default to the deepest
+    // dataset zone when emitting locations without an explicit --jta-goal-zone.
+    const goalZone = args.jtaGoalZone
+        ?? (args.jtaEmitLocations ? datasetDoc.zones.length - 1 : undefined);
+    return {
+        datasetDoc,
+        emitZoneLocations: args.jtaEmitLocations,
+        ...(goalZone !== undefined ? { goalZone } : {}),
+        ...(args.jtaFreeZones !== undefined ? { freeZones: args.jtaFreeZones } : {}),
+        ...(args.jtaStartingPerks !== undefined ? { startingPerks: args.jtaStartingPerks } : {}),
+        ...(args.jtaPerkShuffleSeed !== undefined ? { perkShuffleSeed: args.jtaPerkShuffleSeed } : {}),
+    };
+}
+
 // Build a fresh envelope from the world flags (the { config, compileIn } shape
 // spiralSteps consumes; config is exactly what arrangeShuffledSpiral takes).
 function buildEnv(args) {
     if (Object.keys(args.quotas).length === 0) {
         throw new Error('arrange/run require at least one --quota id=N (or -i <envelope.json>)');
     }
+    const jtaCfg = buildJtaSubstrateConfig(args);
     const config = {
         regionSize: args.region,
         itemPool: { ...args.items },
@@ -163,6 +254,7 @@ function buildEnv(args) {
             substrateQuotas: args.quotas,
             assumeBidirectional: args.bidirectional,
             ...(args.start && args.start !== 'auto' ? { startSubstrate: args.start } : {}),
+            ...(jtaCfg ? { substrateConfig: { jta: jtaCfg } } : {}),
         },
         hazardOpts: null,
     };

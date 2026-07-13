@@ -154,13 +154,45 @@ try {
     // goal zone (setJtaGoalZone) and can shuffle perk placement in-pipeline
     // (setJtaPerkShuffleSeed) — no scaffolding. arrangeShuffledSpiral maps
     // the Nth jta region to zone N, so the deepest emitted zone is QUOTA-1.
-    jtaLib.setJtaEmitZoneLocations(true);
-    jtaLib.setJtaGoalZone(QUOTA - 1);
-    jtaLib.setJtaPerkShuffleSeed(SEED);
-    const { grid, startCell } = engine.arrangeShuffledSpiral({
-        regionSize: { width: 8, height: 6 }, itemPool: {}, obstaclePool: {}, seed: SEED,
-        growthParams: { substrateQuotas: { jta: QUOTA }, assumeBidirectional: true, startSubstrate: 'jta' },
-    });
+    //
+    // JTA_RT_PIPELINE (stepped-spiral Part 3 gate b): produce the grid via the
+    // stepped spiral pipeline + the ② content config seam (a "pipeline-initiated
+    // dataset") instead of the setJta* globals + monolithic arrangeShuffledSpiral.
+    // The two are byte-identical (dump-spiral-byteidentity), so this proves the
+    // config-seam path — not just the global-install path — survives the whole
+    // world_generator + Generate.py toolchain. Compile stays the guard's own
+    // buildRulesJson below (it pins Victory via lockedCanonicalItems, which the
+    // stepped ④ compile doesn't); only grid production (the dataset carriage) is
+    // under test here.
+    let grid, startCell;
+    if (process.env.JTA_RT_PIPELINE) {
+        const spiral = await import(pathToFileURL(
+            path.join(repoRoot, 'frontend/modules/procgenPipeline/spiralSteps.js')));
+        const jtaCfg = {
+            ...(dataset ? { datasetDoc: dataset } : {}),
+            emitZoneLocations: true, goalZone: QUOTA - 1, perkShuffleSeed: SEED,
+        };
+        const env = await spiral.runSpiralToStep(spiral.newSpiralEnvelope({
+            config: {
+                regionSize: { width: 8, height: 6 }, itemPool: {}, obstaclePool: {}, seed: SEED,
+                growthParams: {
+                    substrateQuotas: { jta: QUOTA }, assumeBidirectional: true,
+                    startSubstrate: 'jta', substrateConfig: { jta: jtaCfg },
+                },
+            },
+            compileIn: { seed: SEED },
+        }), 'regions');
+        ({ grid, startCell } = env.regions);
+        console.log('[pipeline mode] grid via stepped spiral + ② content config seam');
+    } else {
+        jtaLib.setJtaEmitZoneLocations(true);
+        jtaLib.setJtaGoalZone(QUOTA - 1);
+        jtaLib.setJtaPerkShuffleSeed(SEED);
+        ({ grid, startCell } = engine.arrangeShuffledSpiral({
+            regionSize: { width: 8, height: 6 }, itemPool: {}, obstaclePool: {}, seed: SEED,
+            growthParams: { substrateQuotas: { jta: QUOTA }, assumeBidirectional: true, startSubstrate: 'jta' },
+        }));
+    }
 
     // Confirm exactly one Victory item landed in the pool (the goal item),
     // emitted by the library rather than injected by the test.
