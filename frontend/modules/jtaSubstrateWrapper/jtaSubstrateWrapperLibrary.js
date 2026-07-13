@@ -26,7 +26,7 @@
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { JTA_ZONE_TASK_DATA, JTA_PERK_COUNT } from './zoneTaskData.js';
 import { createRng } from '../shared/rng.js';
-import { validateJtaDataset } from './datasetValidator.js';
+import { validateJtaDataset, stampDatasetIdentity } from './datasetValidator.js';
 
 // Host-side PlaybackProxy, injected by index.js's initialize() once the
 // eventBus exists (setter injection rather than importing index.js so
@@ -520,6 +520,59 @@ export const substrateRegistryEntry = Object.freeze({
     extractZoneRules: (zoneIdx, { region_id } = {}) => {
         if (!_emitZoneLocations) return { locations: [], payload: {} };
         return buildZoneLocations(zoneIdx, region_id);
+    },
+
+    // --- Stepped-spiral ② content seam (stepped-spiral-parity plan Part 3) ---
+    //
+    // The spiral pipeline installs a jta world's dataset + zone-locations
+    // config through these hooks instead of the module-global setters, so a
+    // preset can CARRY the config and the pipeline applies it deterministically:
+    // ① arrange calls applyPipelineConfig BEFORE the zoneCount-gated quota
+    // validation (so the validation sees the dataset's real zone count, design
+    // §6.3 "run the generator before arrangement"); ② content materialises the
+    // installed document onto the envelope as the editable artifact; the spiral
+    // descriptor re-applies it on every deserialize (globals don't cross a
+    // process boundary) and restamps a hand-edited document.
+    //
+    // The standalone setters (setJtaDataset etc.) stay for the CLI/test callers
+    // that drive the monolith directly — this seam is a NEW caller of them, not
+    // a replacement.
+    //
+    // Generation stays a Node concern (the profile/vanilla fixtures aren't
+    // bundled): cfg carries an already-generated `datasetDoc` (the spiral-step
+    // CLI / tests produce it). Every field defers to its setter's own default,
+    // so applyPipelineConfig({}) resets the vanilla path exactly — a jta world
+    // with no dataset config stays byte-identical to before this seam existed.
+    emitsSpiralContent: true,
+
+    applyPipelineConfig: (cfg) => {
+        const c = cfg ?? {};
+        setJtaDataset(c.datasetDoc ?? null);
+        setJtaEmitZoneLocations(c.emitZoneLocations);
+        setJtaGoalZone(c.goalZone);
+        setJtaFreeZones(c.freeZones);
+        setJtaStartingPerks(c.startingPerks);
+        setJtaPerkShuffleSeed(c.perkShuffleSeed);
+        return getJtaDataset();
+    },
+
+    // Restamp a (possibly hand-edited) dataset document: recompute the content
+    // hash and rewrite the dataset_id suffix (the datasetValidator --restamp
+    // path), then validate. The spiral descriptor calls this on every envelope
+    // deserialize; the returned document's id lets the harness detect a real
+    // content edit (id changed ⇒ invalidate the downstream regions/compile) and
+    // keeps the (seed, dataset_id) Pass-B cache + id-keyed save slot honest.
+    // Idempotent: an unchanged document restamps to the same id.
+    onContentEdit: (doc) => {
+        if (doc == null) return doc;
+        stampDatasetIdentity(doc);
+        const result = validateJtaDataset(doc);
+        if (!result.ok) {
+            throw new Error(
+                `jta onContentEdit: invalid dataset after restamp:\n  ${result.errors.join('\n  ')}`,
+            );
+        }
+        return doc;
     },
 });
 
