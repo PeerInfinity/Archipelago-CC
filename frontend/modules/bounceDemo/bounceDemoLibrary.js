@@ -41,6 +41,11 @@ import {
     DEFAULT_BOUNCE_PROCGEN_PARAMS, prepareBounceSphereGrowth,
     buildBounceRegionParams, renderBounceProcgenParams,
 } from './bounceProcgenParams.js';
+import {
+    captureBounceLibraryEntry,
+    instantiateBounceLibraryEntry,
+    validateBounceLibraryEntry,
+} from './bounceLibraryEntry.js';
 
 // Canonical assignment constraints (checked by the e2e winnability
 // test): the spiral chain hops E,S,W,W with derived side rules, so
@@ -854,6 +859,15 @@ export function createBounceSubstrateEntry({
         // All payload content comes from extractZoneRules (which knows
         // the exit sides); no separate synthesizeZonePayload needed.
         extractZoneRules: makeExtractZoneRules(zones, { portalPlacement }),
+
+        // --- Region-library content-source hooks (region-library F2) ---
+        // bounce is the CONTENT (zone) library substrate: an entry carries its
+        // emitted rules verbatim (geometry not re-derivable) + the level payload;
+        // instantiate re-assembles the synthetic-exit region via assembleZoneRegion
+        // for the slot's sides (⊆ the entry's captured sides). See bounceLibraryEntry.js.
+        captureLibraryEntry: captureBounceLibraryEntry,
+        instantiateLibraryEntry: (entry, ctx) => instantiateBounceLibraryEntry(entry, ctx, { buildZonePayload }),
+        validateLibraryEntry: validateBounceLibraryEntry,
 
         // Sphere-driven growth: requirement-targeted generation + the
         // structural veto for gate combinations + the panel-facing

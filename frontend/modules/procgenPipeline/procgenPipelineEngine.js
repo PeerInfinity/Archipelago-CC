@@ -2484,7 +2484,7 @@ function synthesizeZoneRegion({
 // conventions) plus the zone-locations channel result. Consumed by
 // both the spiral path (extractZoneRules) and the sphere-growth path
 // (generateZoneForSpecs).
-function assembleZoneRegion({
+export function assembleZoneRegion({
     substrate, region_id, regionSize, exitSides, zoneRules, zonePayload,
 }) {
     const exitsMap = new Map();

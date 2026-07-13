@@ -26,6 +26,11 @@ import {
     tileGridSerializer,
     tileGridDeserializer,
 } from '../shared/procgen/adapterPrimitives.js';
+import {
+    captureTileGridLibraryEntry,
+    instantiateTileGridLibraryEntry,
+    validateTileGridLibraryEntry,
+} from './mazeLibraryEntry.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { generateHazards } from '../shared/procgen/contentModules/hazardPathGen.js';
 import { getPanelInstance } from './index.js';
@@ -127,6 +132,29 @@ export const substrateRegistryEntry = Object.freeze({
     // base region build at both build sites; substrates that don't declare it
     // skip the pass, so the engine no longer names 'maze' there.
     applyContentModules: applyMazeContentModules,
+
+    // --- Region-library content-source hooks (region-library F2) ---
+    // maze is the tile/procedural library substrate: an entry stores the
+    // serialized world geometry (payload only, carried_rules null) and
+    // instantiation deserializes + re-extracts real exits/locations, so rules
+    // can never go stale against the geometry. Instantiate draws NO rng (it
+    // reuses the captured slot POSITIONS, keeping ③ deterministic — the plan's
+    // rng-free-instantiate constraint, which is why v1 uses captured positions
+    // rather than fresh placeFromRules even though open-q 5 confirmed the latter
+    // works). See mazeLibraryEntry.js and substrate-registry.md.
+    captureLibraryEntry: (region, meta) => captureTileGridLibraryEntry(region, meta, {
+        serialize: tileGridSerializer,
+        extract: tileGridPathExtractor,
+        substrate: 'maze',
+    }),
+    instantiateLibraryEntry: (entry, ctx) => instantiateTileGridLibraryEntry(entry, ctx, {
+        deserialize: tileGridDeserializer,
+        extract: tileGridPathExtractor,
+        substrate: 'maze',
+    }),
+    validateLibraryEntry: (entry) => validateTileGridLibraryEntry(entry, {
+        deserialize: tileGridDeserializer,
+    }),
 });
 
 // Side-effect on import: register the maze substrate so any caller
