@@ -3090,6 +3090,47 @@ export function arrangeSpiralPlan(config) {
     };
 }
 
+// --- Spiral content sources (region-library C2) ---
+//
+// A "content source" supplies pre-existing region descriptors to the spiral
+// driver BY ORDINAL — its Nth planned cell becomes its Nth entry — as opposed
+// to a procedural substrate, which GROWS a region's geometry from the rng
+// stream. The spiral loop resolves one per planned cell through this single
+// seam: a content source `instantiate`s (drawing NO rng — the byte-identity
+// discipline is that content slots consume none, procedural slots draw in the
+// exact monolithic order), and everything else falls through to the
+// rng-consuming procedural build path.
+//
+// Today the only content sources are zone-based substrates (jta), whose
+// registry adapter exposes `zoneCount` (pool size) + `extractZoneRules`
+// (the per-ordinal instantiate channel). The reframing is deliberately routed
+// through an id → source resolver rather than an inline
+// `typeof adapter.zoneCount === 'number'` test so that region-library F4 can
+// register further content sources under synthetic ids (`library:<id>`) whose
+// instantiated regions carry an ENTRY's own substrate at runtime. C3 names this
+// "content source" contract in the substrate registry.
+//
+// Returns { poolSize, instantiate({ region_id, ordinal, regionSize, exitSides }) }
+// or null for a procedural substrate (no zone pool).
+function resolveSpiralContentSource(id) {
+    const adapter = substrateRegistry.get(id);
+    if (adapter && typeof adapter.zoneCount === 'number') {
+        return {
+            poolSize: adapter.zoneCount,
+            instantiate: ({ region_id, ordinal, regionSize, exitSides }) =>
+                synthesizeZoneRegion({
+                    substrate: id,
+                    region_id,
+                    zoneIdx: ordinal,
+                    regionSize,
+                    exitSides,
+                    adapter,
+                }),
+        };
+    }
+    return null;
+}
+
 // Phase ③ of shuffled-spiral (the "regions" step): realise each planned cell
 // into a region on a fresh grid, then run the whole-grid post-passes. Restores
 // the post-shuffle rng from the plan so procedural substrates draw in the exact
@@ -3120,15 +3161,17 @@ export function realiseSpiralRegions(plan, config) {
     const pool = new ScenarioPool({
         items: itemPool, obstacles: obstaclePool, itemLib, obstacleLib,
     });
-    const zoneCounter = {};  // per-substrate "Nth zone" counter
+    // Per-content-source "Nth entry" counter, keyed by sequence id (a
+    // substrate id, or a `library:<id>` content-source id under F4). Advanced
+    // for every cell so a content source's ordinal is its running use count.
+    const ordinalCounter = {};
     const occupied = new Set(cells.map((c) => cellKey(c)));
 
     for (let i = 0; i < cells.length; i++) {
         const cell = cells[i];
         const substrate = sequence[i];
-        const adapter = getAdapter(substrate);
-        const zoneIdx = zoneCounter[substrate] ?? 0;
-        zoneCounter[substrate] = zoneIdx + 1;
+        const ordinal = ordinalCounter[substrate] ?? 0;
+        ordinalCounter[substrate] = ordinal + 1;
 
         // Sides whose geographic neighbor is in-bounds AND will hold
         // a spiral region (occupied set is the universe of cells).
@@ -3139,24 +3182,22 @@ export function realiseSpiralRegions(plan, config) {
             if (occupied.has(cellKey(neighbor))) exitSides.push(side);
         }
 
+        const region_id = regionIdForCell(cell);
+        const source = resolveSpiralContentSource(substrate);
         let region;
-        if (typeof adapter.zoneCount === 'number') {
-            region = synthesizeZoneRegion({
-                substrate,
-                region_id: regionIdForCell(cell),
-                zoneIdx,
-                regionSize,
-                exitSides,
-                adapter,
-            });
+        if (source) {
+            // Content source: instantiate its Nth entry (draws no rng).
+            region = source.instantiate({ region_id, ordinal, regionSize, exitSides });
         } else {
+            // Procedural substrate: grow geometry from the rng stream.
+            getAdapter(substrate); // preserve the "unregistered id" throw
             const arrival = accumulatedInventory(grid);
             const placementPlan = pool.planPlacement({
                 arrivalInventory: arrival, rng, maxItems: maxItemsPerRegion,
             });
             region = buildSubstrateRegion({
                 substrate,
-                region_id: regionIdForCell(cell),
+                region_id,
                 size: regionSize,
                 entrances: [],
                 exit_sides: exitSides,
@@ -3189,7 +3230,7 @@ export function realiseSpiralRegions(plan, config) {
         regionsSkipped: 0,
         teleportersPlaced: 0,
         stopReason: 'spiral_complete',
-        substrateCounts: { ...zoneCounter },
+        substrateCounts: { ...ordinalCounter },
     };
     return { grid, pool, stats, startCell };
 }
