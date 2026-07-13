@@ -1,15 +1,17 @@
 # Region library: zone-concept cleanup + pre-built region reuse from JSON
 
-**Date:** 2026-07-13 · **Status: IMPLEMENTED (engine + validation + e2e) 2026-07-13
-(Opus, on `main`, NOT pushed).** Cleanup C1–C3 + feature F1, F2, F4, and F3's
-headless loader core are DONE and gated; the §5.3 world_generator/Generate.py
-end-to-end passes 13/13. **Remaining: F3 panel UI + F5 capture UI (browser
-surfaces, deferred with a design note — see §7), F6 (sphere-growth reuse,
-stretch).** Per-phase commit log + the deferred-panel design question in §7.
-Shape confirmed with the user (rulings in §0b). This is the dedicated session the
-handoff parking-lot item 5 called for ("reevaluate the whole zone concept"),
-extended with the feature that motivates the cleanup: a user-selectable library
-of pre-built regions loadable from JSON.
+**Date:** 2026-07-13 · **Status: IMPLEMENTED — ALL of F1–F5 DONE + gated 2026-07-13
+(Opus, on `main`, NOT pushed).** Cleanup C1–C3 + features F1, F2, F3 (loader core
++ panel UI), F4, and F5 (capture UI) are DONE and gated; the §5.3
+world_generator/Generate.py end-to-end passes 13/13 and the browser panel is
+proven by `verify-region-library-ui.mjs` (20/20: F3 selection byte-identity
+through the panel + hybrid-persistence reload + F5 capture→validate→
+re-instantiate). **Remaining: F6 (sphere-growth reuse / exit relabel, stretch) —
+the only deferred item.** Per-phase commit log in §7. Shape confirmed with the
+user (rulings in §0b). This is the dedicated session the handoff parking-lot item
+5 called for ("reevaluate the whole zone concept"), extended with the feature
+that motivates the cleanup: a user-selectable library of pre-built regions
+loadable from JSON.
 
 ## 0. Why this exists
 
@@ -393,8 +395,17 @@ On `main`, NOT pushed. Every phase kept `dump-spiral-byteidentity.mjs` at 5/5
   locations — a maze region is 1 item/location; an un-itemed slot was unfillable.
 - **F3 (core)** `0da14c365` — `regionLibraryLoader.js` (fetch/parse/validate
   served + ad-hoc; `buildLibrarySpiralConfig`; `isLoadedLibrarySource`). 7 tests.
+- **F3 (panel)** `58a9c1c5f` — `_renderRegionLibrariesSubsection` (served
+  checkboxes + per-library count + ad-hoc file loader), hybrid-persistence glue
+  (`_serializedLibraries`/`_setPersistedLibraries`/`_resolveRegionLibraries` with
+  the `_pendingLibraryRefs` async window), `_buildSpiralEnvelope` merges
+  `buildLibrarySpiralConfig`. Gated by `verify-region-library-ui.mjs` Phases A+B.
+- **F5** `c68fbbe68` — "Capture to library" area + sphere-③ Save button →
+  `_captureRegionToLibrary` (adapter `captureLibraryEntry`, revalidated) → session
+  working library → Download (content-hash-stamped, committable) + Clear. Verifier
+  Phase C: Save → Download → validate + re-instantiate.
 
-### F3 persistence DONE (hybrid ruling); remaining = panel DOM + F5
+### F1–F5 ALL DONE (hybrid ruling); only F6 deferred
 
 **Design question RESOLVED (user, 2026-07-13): HYBRID.** Served packs persist as
 `{ source:'served', file, library_id, count }` references (re-fetched on load,
@@ -415,25 +426,34 @@ edited docs stay self-contained.
   `libraries` selection, and the panel assembles `substrateConfig` at generate
   time via `resolveLibrarySelection` → `buildLibrarySpiralConfig`.
 
-**Remaining — panel DOM (browser-only, verify via a playwright UI run):**
-1. A "Region libraries" panel section: fetch the served index
-   (`loadServedIndex`), render per-library checkboxes (name + entry count +
-   substrates) with a per-library slot-count input, plus an ad-hoc file
-   input/drag-drop (`parseRegionLibrary`, restamp-on-load). Every change updates
-   the working selection and calls `_saveToLocalStorage()`.
-2. At generate time: `resolveLibrarySelection(state.libraries, { fetchImpl:
-   window.fetch })` → `buildLibrarySpiralConfig(resolved, { substrateQuotas,
-   substrateConfig })` → merge into `growthParams` before the driver call
-   (surface drift warnings / errors in the panel). Both monolithic + stepped
-   paths already consume `substrateConfig`.
-3. `isLoadedLibrarySource` guard wherever the panel filters quota ids for display.
+**Panel DOM — DONE** (`58a9c1c5f`): the "Region libraries" section fetches the
+served index (`loadServedIndex`), renders per-library checkboxes (name + entry
+count + substrates) with a per-library region-count input + an ad-hoc file loader
+(`parseRegionLibrary`, restamp-on-load); every control calls
+`_saveToLocalStorage()`. At generate time `_buildSpiralEnvelope` calls
+`buildLibrarySpiralConfig(this.regionLibraries, { substrateQuotas, substrateConfig })`
+and merges into `growthParams` (libraries are held RESOLVED on the panel, so it's
+synchronous — the async `resolveLibrarySelection` runs once, at load/preset-apply).
+The generated world is byte-identical to the headless equivalent (verifier
+Phase A). Note: because libraries live in their own `this.regionLibraries` list
+(never in `substrateQuotas`), no `isLoadedLibrarySource` display-filter guard was
+needed in the panel — the guard remains available for any future path that mixes
+library ids into a substrate dict.
 
-**F5 capture UI** ("Save region to library ▸" on the ③ region view + the bounce
-region editor): `adapter.captureLibraryEntry(region)` → append to a localStorage
-"working library" → JSON download (committable to `frontend/region-libraries/` +
-re-indexed). Same panel surface; blocked on nothing else.
+**F5 capture UI — DONE** (`c68fbbe68`): a "Capture to library" area lists the last
+generation's regions with a per-region "Save to library ▸" (same button on the
+sphere ③ edit rows) → `_captureRegionToLibrary` (`adapter.captureLibraryEntry`,
+revalidated) → session working library (own localStorage key) → Download
+(content-hash-stamped, committable to `frontend/region-libraries/` + re-indexed)
++ Clear.
 
-All the logic these steps call is built and unit-tested; what's left is DOM
-rendering + the generate-time glue, which needs a browser (a
-`verify-region-library-ui.mjs` playwright driver, in the `verify-spiral-steps-ui`
-mould, would gate it).
+**Gate — `scripts/procgen/verify-region-library-ui.mjs`** (verify-spiral-steps-ui
+mould, dev server :8000, 20/20): Phase A drives the checkbox/count controls,
+Generates, and asserts the downloaded rules.json === the headless
+`buildLibrarySpiralConfig` + arrange + compile (byte-identity THROUGH the panel);
+Phase B reloads and proves the served reference re-resolves + Generates the same
+world; Phase C Saves a region, Downloads the working library, and asserts it
+validates AND the entry re-instantiates into a self-contained maze region.
+
+**Only F6 (sphere-growth reuse / exit relabel, §4 F6 + §6 open-q 1) remains** —
+a stretch item nothing in F1–F5 depends on.
