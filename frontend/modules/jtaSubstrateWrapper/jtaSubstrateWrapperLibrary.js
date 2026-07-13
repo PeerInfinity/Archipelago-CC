@@ -546,6 +546,13 @@ export const substrateRegistryEntry = Object.freeze({
     // with no dataset config stays byte-identical to before this seam existed.
     emitsSpiralContent: true,
 
+    // Content-source contract (region-library C3): the ② content seam reads this
+    // source's installed document from `substrateConfig.jta.datasetDoc` and its
+    // stamped id from the document's `dataset_id`. Naming the field here (rather
+    // than hardcoding `datasetDoc` in spiralSteps) is what lets a region library
+    // ride the same ② seam under its own field/id.
+    spiralContentConfigKey: 'datasetDoc',
+
     applyPipelineConfig: (cfg) => {
         const c = cfg ?? {};
         setJtaDataset(c.datasetDoc ?? null);

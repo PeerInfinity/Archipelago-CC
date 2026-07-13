@@ -58,7 +58,7 @@ The Procgen Pipeline panel's Mode toggle (`frontend/modules/procgenPipeline/proc
 Two kinds of substrate participation:
 
 - **Procedural substrates** (maze, bounce, text adventure) generate region geometry on demand from build-time hooks on their registry entry.
-- **Zone-based substrates** (jta) instead expose a fixed `zoneCount` and synthesize a payload per zone index; the shuffled-spiral driver arranges those zones into a world.
+- **Content sources** (zone-based substrates: jta) instead expose a fixed `zoneCount` (pool size) and instantiate a region descriptor per ordinal via `extractZoneRules`; the shuffled-spiral driver arranges those entries into a world, resolving one content source per planned cell through a single seam (`resolveSpiralContentSource`). A content source instantiates without drawing rng — only procedural substrates consume the rng stream. This "content source" reframing (region-library cleanup, see [Substrate Registry Reference](./substrate-registry.md#build-time--content-sources-zone-based-substrates)) is what lets a data-backed **region library** join as a content source alongside code-backed ones.
 
 A substrate's registry entry may declare a `victoryItem`; when a quota'd substrate does, the pipeline uses it as the world's completion condition instead of a constant-true goal.
 

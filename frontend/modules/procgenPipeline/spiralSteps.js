@@ -28,11 +28,16 @@
 // restores that snapshot and continues the per-cell procedural draws. See
 // scripts/procgen/dump-spiral-byteidentity.mjs.
 //
-// ② content (designed for Part 3, no-op now): the presence probe treats "no
-// content substrate in this world" as a COMPLETED no-op, so detectCompleted's
-// contiguous walk doesn't stall at ② on every current world. A substrate opts in
-// by exposing `adapter.emitsSpiralContent`; ② then populates env.<sub>Content and
-// the descriptor's `onContentEdit` restamps it on hand-edit (steppedPipeline.js).
+// ② content: the presence probe treats "no content source in this world" as a
+// COMPLETED no-op, so detectCompleted's contiguous walk doesn't stall at ② on
+// every current world. A content source opts in by exposing
+// `adapter.emitsSpiralContent` AND carrying a document in its substrate config;
+// ② then materialises that document onto `env.content` and the descriptor's
+// `onContentEdit` restamps it on hand-edit (steppedPipeline.js). The config
+// field the document lives under is named by the source (`spiralContentConfigKey`,
+// default `datasetDoc`) — region-library C3 generalised this so a region library
+// (`library:<id>`) is a second content kind riding the same ② seam as jta's
+// dataset.
 
 import {
     arrangeSpiralPlan,
@@ -55,17 +60,33 @@ import {
 /** Step names in run order; index === the `completed` value the step yields. */
 export const SPIRAL_STEPS = Object.freeze(['arrange', 'content', 'regions', 'compile']);
 
-// The content substrates in this world's quota that actually EMIT a content
-// document, in quota order. A substrate emits content only when it both declares
-// `emitsSpiralContent` (jta does) AND its pipeline config carries a document
-// (`substrateConfig[id].datasetDoc`). That config gate is load-bearing: jta
-// declares emitsSpiralContent unconditionally, but a DATASET-LESS jta world
-// (vanilla tables — jta-zone-demo, mixed maze+jta) emits no content, so ②
-// stays a byte-identical no-op and the `content` presence probe
+// Where a content source's installed document lives inside its
+// `substrateConfig[id]` entry. A source names its field via
+// `spiralContentConfigKey`; the jta-era default is `datasetDoc`. This is the
+// one field name the ② content seam has to know — generalising it (region-library
+// C3) is what lets a SECOND content kind (a region library, keyed `library:<id>`
+// with `spiralContentConfigKey: 'libraryDoc'`) ride ② alongside jta's dataset.
+function contentConfigKey(adapter) {
+    return adapter?.spiralContentConfigKey ?? 'datasetDoc';
+}
+
+// The stamped content-hash id of a content document, used to detect a real
+// hand-edit (id changed ⇒ invalidate downstream). Each content kind stamps its
+// own field — jta datasets `dataset_id`, region libraries `library_id` — so the
+// ② restamp seam reads whichever is present.
+function contentDocId(doc) {
+    return doc?.dataset_id ?? doc?.library_id ?? null;
+}
+
+// The content sources in this world's quota that actually EMIT a content
+// document, in quota order. A source emits content only when it both declares
+// `emitsSpiralContent` (jta does; a library source does) AND its pipeline config
+// carries a document under its `contentConfigKey`. That config gate is
+// load-bearing: jta declares emitsSpiralContent unconditionally, but a
+// DATASET-LESS jta world (vanilla tables — jta-zone-demo, mixed maze+jta) emits
+// no content, so ② stays a byte-identical no-op and the `content` presence probe
 // (`!worldHasContentSubstrate(e) || !!e.content`) reports "completed" without an
-// env.content instead of stalling detectCompleted's contiguous walk at ②. (v1
-// content lives under `datasetDoc`; generalise the field if a second content
-// substrate ever lands.)
+// env.content instead of stalling detectCompleted's contiguous walk at ②.
 function contentSubstrates(env) {
     const quotas = env.config?.growthParams?.substrateQuotas ?? {};
     const cfg = env.config?.growthParams?.substrateConfig ?? {};
@@ -73,7 +94,7 @@ function contentSubstrates(env) {
     for (const [id, count] of Object.entries(quotas)) {
         if (!(Number(count) > 0)) continue;
         const adapter = substrateRegistry.get(id);
-        if (adapter?.emitsSpiralContent && cfg[id]?.datasetDoc != null) {
+        if (adapter?.emitsSpiralContent && cfg[id]?.[contentConfigKey(adapter)] != null) {
             out.push({ id, adapter });
         }
     }
@@ -228,14 +249,15 @@ function spiralOnContentEdit(env) {
     const subs = contentSubstrates(env);
     if (subs.length === 0) return env;
     const { id, adapter } = subs[0];
+    const key = contentConfigKey(adapter);
     const cfg = env.config?.growthParams?.substrateConfig?.[id] ?? {};
-    const beforeId = env.content?.dataset_id ?? null;
+    const beforeId = contentDocId(env.content);
     if (env.content != null && adapter.onContentEdit) {
         env.content = adapter.onContentEdit(env.content);
     }
-    const afterId = env.content?.dataset_id ?? null;
-    const doc = env.content ?? cfg.datasetDoc ?? null;
-    adapter.applyPipelineConfig?.({ ...cfg, datasetDoc: doc });
+    const afterId = contentDocId(env.content);
+    const doc = env.content ?? cfg[key] ?? null;
+    adapter.applyPipelineConfig?.({ ...cfg, [key]: doc });
     if (beforeId !== afterId) {
         env.regions = null;
         env.compile = null;

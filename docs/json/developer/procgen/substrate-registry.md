@@ -67,15 +67,23 @@ Implemented by `maze` and `text_adventure` (both via the shared `adapterPrimitiv
 | `extractPathsAndObstacles` | Extract the access rules the generated geometry actually enforces (verification: authored vs. realised). |
 | `applyContentModules` | Optional post-build pass for content modules (maze uses it for hazards); the engine calls it at both build sites when declared, and substrates without it skip the pass. |
 
-### Build-time — zone-based substrates
+### Build-time — content sources (zone-based substrates)
 
-For substrates whose content is a fixed, ordered set of pre-authored zones rather than grown geometry (`jta`, `bounce`):
+A **content source** supplies pre-existing region descriptors to a layout driver *by ordinal* — its Nth planned cell becomes its Nth entry — rather than growing region geometry from the rng stream. The shuffled-spiral driver resolves one per planned cell through a single seam (`resolveSpiralContentSource` in `procgenPipelineEngine.js`); a content source instantiates without drawing rng (content slots consume none — the byte-identity discipline), and everything else falls through to the rng-consuming procedural build path.
+
+Today's content sources are the zone-based substrates (`jta`, `bounce`, `runner`), whose registry adapter exposes:
 
 | Field | Meaning |
 |-------|---------|
-| `zoneCount` | How many discrete zones exist. Layout drivers (currently `arrangeShuffledSpiral`) refuse to allocate more regions than this to the substrate. |
-| `extractZoneRules(zoneIdx, ctx)` | The single per-zone content channel: produces the zone's locations, per-side exit rules/paths, obstacle defs, and `playable_payload` fragment in one call. jta folds its `{ jtaZone: zoneIdx }` sidecar ordinal into this channel's payload (region-library C1 absorbed the former standalone `synthesizeZonePayload` hook — `jtaZone` stays the first payload key); bounce/runner emit their winnable geometry's locations and rules. |
-| `victoryItem` | Name of the item the substrate's zone table places as the goal. Emission paths use it as the completion-condition item when the scenario pool contributes no `is_victory` item — without it the AP world would have no goal and be "beaten" at sphere 0. Bounce, runner, and jta declare one (`'Victory'`). |
+| `zoneCount` | **Pool size** — how many discrete entries exist. Layout drivers (currently `arrangeShuffledSpiral`) refuse to allocate more regions than this to the source, and the quota-vs-pool check keys on it. |
+| `extractZoneRules(zoneIdx, ctx)` | **Instantiate** — the single per-ordinal content channel: produces the entry's locations, per-side exit rules/paths, obstacle defs, and `playable_payload` fragment in one call. jta folds its `{ jtaZone: zoneIdx }` sidecar ordinal into this channel's payload (region-library C1 absorbed the former standalone `synthesizeZonePayload` hook — `jtaZone` stays the first payload key); bounce/runner emit their winnable geometry's locations and rules. |
+| `victoryItem` | Name of the item the source's entry table places as the goal. Emission paths use it as the completion-condition item when the scenario pool contributes no `is_victory` item — without it the AP world would have no goal and be "beaten" at sphere 0. Bounce, runner, and jta declare one (`'Victory'`). |
+
+**Content-source residency in the stepped pipeline.** A content source that also feeds a *document* into the pipeline (jta's synthetic dataset; a loaded region library) declares `emitsSpiralContent: true` and names the config field its document rides under with `spiralContentConfigKey` (default `datasetDoc`). The stepped spiral's ② content step materialises that document onto the envelope, restamps it on hand-edit, and clears downstream on a real id change — see [The Stepped Pipeline](./stepped-pipeline.md#spiral-mode--four-steps). A content source with no such document (a vanilla-table jta world) leaves ② a byte-identical no-op.
+
+**The "zone" reframing (region-library audit, 2026-07-13).** "Zone" historically conflated two orthogonal things: an *interface* ("no tile-procedural hooks → give this region fictional `exit_<side>` geometry"; `assembleZoneRegion`) and a *content model* (a finite ordered pool, Nth region = zone N, each used once). Only jta is genuinely pre-built-by-reference (indices into one stateful game build — excluded from the region library by nature); bounce/runner *generate* their "zones" (`extractZoneRules` / `generateZoneForSpecs`), payload-by-value and self-contained. The interface half (synthetic exits, location replacement, exit reconnection via `stitchGrid` + `wallOffUnusedExits`) is already substrate-agnostic and is **not** what distinguishes a content source; the two irreducible differences a reuse design must handle are **access-rule realisation** (a procedural substrate makes geometry match a rule via `placeFromRules`; fixed content must annotate/negotiate) and **exit-geometry decoupling** (a synthetic or `sidePortals`-relabelled exit moves freely; a maze exit is a real hole in a real wall). The region library (`docs/json/developer/procgen/…`, plan `CC/docs/plans/region-library-plan.md`) is the first content source that is *data, not code*.
+
+**Out of scope (the eventual direction, not built).** Unifying the ordinal-driven `extractZoneRules` (substrate decides) with the spec-driven `generateZoneForSpecs` (engine decides) into one spec-driven content contract, and running jta on the sphere-growth driver, are the natural next steps once a second data-backed content source exists. They are deliberately deferred.
 
 ### Build-time — driver-facing adapter hooks (bounce)
 
@@ -110,7 +118,7 @@ The minimal checklist, derived from the smallest existing entry (jta):
 2. **Register from the module** — call `substrateRegistry.register(entry)` (guarded) in the module's `register()`/`initialize()` hook as well.
 3. **Wire the panel**: register the `panelComponentType` with the layout system and subscribe the panel to `loadRegionEvent`. (See the panel-integration steps in the module-system guide.)
 4. **Enable the module** in `frontend/module-configs/modules.json` (and any mode variants that should include it — `frontend/modes.json` maps launch modes to config files).
-5. If the substrate participates in generation, implement the build-time group that fits: procedural hooks for grown geometry, or `zoneCount` + a payload synthesizer for a fixed zone set.
+5. If the substrate participates in generation, implement the build-time group that fits: procedural hooks for grown geometry, or the content-source group (`zoneCount` + `extractZoneRules`) for a fixed ordered pool.
 6. If regions should be playable in loop mode or by the playback bot, declare `loopSupport` and implement `getPlaybackController`.
 
 ## Related documentation
