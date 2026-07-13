@@ -506,3 +506,40 @@ Headline results (details and per-action rows in the census):
 
 No fork changes, no harness changes, no behavior changes this round —
 audit only.
+
+## Round 13 — bank:20 fixation DIAGNOSED: starved [0] capacity probe + rep-capped h-ladder; anti-fixation design drafted (2026-07-12, session 10)
+
+Byte-exact reproduction of the Round-9 DNF to L470 (trace EXACT vs the
+original), then a one-round candidate-eval dump from the resumed state
+(planRound's `evals`). Full write-up + proposed response: plan §11.9
+(design for user review). The chain:
+
+- **The capacity probe is starved in ALL town-0 states** — prevTimeNeeded
+  = 5250 (250 + 50 pots × 100) in the hole at L470 AND in the healthy
+  reference at L500, vs 27k–35k realized. This is the Round-7 end-loaded-
+  converter starvation, deliberately left un-fixed at townsUnlocked=[0]
+  (the a39bc27 interleave is gated `length > 1`) to preserve the
+  byte-reference. Candidate economies are sized against a ~7x-understated
+  capacityHint everywhere in town-0 play.
+- **The Haggle ladder is capped by the rep-bank model**: fixated state has
+  goodLQuests=3 / totalLQuests=19 (low Met progress) → h ≤ 3 → supplies
+  ≥ 240 gold; every healthy run won its push with h4–h6 from
+  goodLQuests≈6 / totalLQuests=30.
+- **Every push eval dies mid-queue before Buy Supplies** (exec ledgers:
+  0/1 on the whole purchase tail; the loop runs dry at Short Quest 5–7 of
+  13) → pushes score talent-only (~3) < repeat (~6) → discover arms win
+  while bankPot expectation lasts, then repeat absorbs. 0 RNG freezes it:
+  mana pinned at exactly 34,750 for 600 loops.
+- Separation data for a general guard trigger (all 11 traces): healthy max
+  committed-queue repeat streak 16, max milestone drought 135; the hole
+  617 / unbounded. Proposed (plan §11.9): Part A root fix = un-gate the
+  interleaved probe at [0] + always include the optimistic h arm (both
+  re-baseline items, first change of the queue-item-6 pass); Part B =
+  streak/drought-triggered one-round search escalation (full re-measure,
+  no screen cut, full h range; K doubles on failure) — byte-inert on the
+  reference by measured margin (16 < 32), option-gated.
+
+Artifacts: results/session10-bank20-to470.json (+ resume blob
+session10-bank20-L470.json), scratchpad diagnose-bank20.mjs. No fork
+changes this round (diagnosis + design only). Also this session:
+rep-gap tracker shipped (fork `2b79ceb`, Round-12 census `b32f9d33b`).
