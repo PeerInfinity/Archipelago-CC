@@ -47,6 +47,8 @@ import {
     deserializeGrid,
 } from './procgenPipelineEngine.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { isLibrarySourceId } from './procgenPipelineEngine.js';
+import { stampLibraryIdentity } from './regionLibraryValidator.js';
 import {
     runStep as runStepGeneric,
     runToStep as runToStepGeneric,
@@ -69,6 +71,20 @@ export const SPIRAL_STEPS = Object.freeze(['arrange', 'content', 'regions', 'com
 function contentConfigKey(adapter) {
     return adapter?.spiralContentConfigKey ?? 'datasetDoc';
 }
+
+// A loaded region library is a content source with no registry adapter — its
+// document rides config directly (no module globals). This synthetic adapter
+// gives the ② content seam the same hook surface jta exposes: the document lives
+// under `libraryDoc`, is stamped by `library_id`, needs no global install
+// (getSpiralContent returns null → stepContent falls back to the config doc),
+// and restamps on hand-edit. See region-library C3/F4.
+const LIBRARY_CONTENT_ADAPTER = Object.freeze({
+    emitsSpiralContent: true,
+    spiralContentConfigKey: 'libraryDoc',
+    getSpiralContent: () => null,
+    applyPipelineConfig: () => {},
+    onContentEdit: (doc) => (doc == null ? doc : stampLibraryIdentity(doc)),
+});
 
 // The stamped content-hash id of a content document, used to detect a real
 // hand-edit (id changed ⇒ invalidate downstream). Each content kind stamps its
@@ -93,6 +109,10 @@ function contentSubstrates(env) {
     const out = [];
     for (const [id, count] of Object.entries(quotas)) {
         if (!(Number(count) > 0)) continue;
+        if (isLibrarySourceId(id)) {
+            if (cfg[id]?.libraryDoc != null) out.push({ id, adapter: LIBRARY_CONTENT_ADAPTER });
+            continue;
+        }
         const adapter = substrateRegistry.get(id);
         if (adapter?.emitsSpiralContent && cfg[id]?.[contentConfigKey(adapter)] != null) {
             out.push({ id, adapter });
@@ -153,8 +173,11 @@ function stepArrange(env) {
 // the installed/config document. Consumes no rng.
 function stepContent(env) {
     let content = null;
-    for (const { adapter } of contentSubstrates(env)) {
-        const doc = adapter.getSpiralContent?.();
+    const cfg = env.config?.growthParams?.substrateConfig ?? {};
+    for (const { id, adapter } of contentSubstrates(env)) {
+        // jta reads its installed global; a library has no global, so fall back
+        // to the document carried in its config entry.
+        const doc = adapter.getSpiralContent?.() ?? cfg[id]?.[contentConfigKey(adapter)] ?? null;
         if (doc != null) { content = JSON.parse(JSON.stringify(doc)); break; }
     }
     env.content = content;
@@ -257,7 +280,14 @@ function spiralOnContentEdit(env) {
     }
     const afterId = contentDocId(env.content);
     const doc = env.content ?? cfg[key] ?? null;
-    adapter.applyPipelineConfig?.({ ...cfg, [key]: doc });
+    if (isLibrarySourceId(id)) {
+        // A library document rides config (no module global); write the edited
+        // doc back so ③ generation (which reads config's libraryDoc) sees it.
+        const entry = env.config?.growthParams?.substrateConfig?.[id];
+        if (entry) entry[key] = doc;
+    } else {
+        adapter.applyPipelineConfig?.({ ...cfg, [key]: doc });
+    }
     if (beforeId !== afterId) {
         env.regions = null;
         env.compile = null;

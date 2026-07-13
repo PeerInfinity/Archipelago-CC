@@ -3031,12 +3031,31 @@ export function arrangeSpiralPlan(config) {
     if (!substrateQuotas || Object.keys(substrateQuotas).length === 0) {
         throw new Error('arrangeShuffledSpiral: growthParams.substrateQuotas required');
     }
-    // Upfront validation: every substrate must be registered with
-    // either a build-time generateRegionCore (procedural) or a
-    // zoneCount (zone-based). Zone-based substrates' quotas must
-    // also fit within their zoneCount.
+    // Upfront validation: every quota id must be either a registered substrate
+    // with a build-time generateRegionCore (procedural) or a zoneCount
+    // (zone-based content source), OR a `library:<id>` content source whose
+    // document rides the config. A content source's quota must fit within its
+    // pool size (zoneCount / library entry count).
     for (const [sub, count] of Object.entries(substrateQuotas)) {
         if (count <= 0) continue;
+        if (isLibrarySourceId(sub)) {
+            // A library quota MAY exceed its entry count — entries are a palette,
+            // not consumables, so repetition is allowed (§2c). Only require a
+            // non-empty document; the per-slot fit check is what can fail loudly.
+            const doc = growthParams.substrateConfig?.[sub]?.libraryDoc;
+            if (doc == null) {
+                throw new Error(
+                    `arrangeShuffledSpiral: library source '${sub}' has no libraryDoc `
+                    + 'in growthParams.substrateConfig',
+                );
+            }
+            if (!Array.isArray(doc.entries) || doc.entries.length === 0) {
+                throw new Error(
+                    `arrangeShuffledSpiral: library source '${sub}' has no entries`,
+                );
+            }
+            continue;
+        }
         const adapter = substrateRegistry.get(sub);
         if (!adapter) {
             throw new Error(
@@ -3110,9 +3129,19 @@ export function arrangeSpiralPlan(config) {
 // instantiated regions carry an ENTRY's own substrate at runtime. C3 names this
 // "content source" contract in the substrate registry.
 //
+// region-library F4 adds a SECOND kind of content source: a loaded region
+// library, keyed `library:<library_id>` in the quota, whose pool is the
+// library's entries and whose instantiated regions carry an ENTRY's own
+// substrate (a library maze region IS a maze region at runtime — nothing new to
+// render, and the compiled world is fully self-contained: the library is a
+// build-time source, absent from the sidecars). The library document rides
+// `substrateConfig['library:<id>'].libraryDoc` (the same "presets carry config"
+// convention as jta's datasetDoc), so a content source is built per generation
+// from config without any global registration to unwind.
+//
 // Returns { poolSize, instantiate({ region_id, ordinal, regionSize, exitSides }) }
 // or null for a procedural substrate (no zone pool).
-function resolveSpiralContentSource(id) {
+function resolveSpiralContentSource(id, config = {}) {
     const adapter = substrateRegistry.get(id);
     if (adapter && typeof adapter.zoneCount === 'number') {
         return {
@@ -3128,7 +3157,70 @@ function resolveSpiralContentSource(id) {
                 }),
         };
     }
+    if (isLibrarySourceId(id)) {
+        const doc = config?.growthParams?.substrateConfig?.[id]?.libraryDoc;
+        if (doc == null) {
+            throw new Error(
+                `spiral content source '${id}': no libraryDoc in `
+                + 'growthParams.substrateConfig — a selected library must ride the config');
+        }
+        return buildLibraryContentSource(id, doc);
+    }
     return null;
+}
+
+// Synthetic content-source ids for loaded region libraries.
+const LIBRARY_SOURCE_PREFIX = 'library:';
+export function isLibrarySourceId(id) {
+    return typeof id === 'string' && id.startsWith(LIBRARY_SOURCE_PREFIX);
+}
+export function librarySourceId(libraryId) {
+    return `${LIBRARY_SOURCE_PREFIX}${libraryId}`;
+}
+
+// Build a content source backed by a loaded region-library document. Fit-based
+// selection (§2c): an entry fits a slot iff the slot's required exitSides ⊆ the
+// entry's exit_sides (surplus sides are walled off by wallOffUnusedExits).
+// Prefer-least-used, tie-break by declaration order, repeat when the pool is
+// exhausted (entries are a palette, not consumables — region_id namespacing
+// makes repetition safe). Loud failure when no entry fits. The usage counter
+// lives in this closure, so build a source ONCE per generation (realiseSpiralRegions
+// memoizes). Instantiation draws no rng.
+function buildLibraryContentSource(sourceId, doc) {
+    const entries = Array.isArray(doc.entries) ? doc.entries : [];
+    const usage = new Map(); // entry_id -> times used
+    return {
+        poolSize: entries.length,
+        instantiate: ({ region_id, regionSize, exitSides }) => {
+            const need = new Set(exitSides);
+            const fitting = entries.filter((e) => {
+                const has = new Set(e.exit_sides ?? []);
+                for (const s of need) if (!has.has(s)) return false;
+                return true;
+            });
+            if (fitting.length === 0) {
+                throw new Error(
+                    `${sourceId}: no entry fits slot sides [${[...need].join(',')}] `
+                    + `for region '${region_id}' (library '${doc.name ?? doc.library_id}', `
+                    + `${entries.length} entries)`);
+            }
+            // Least-used-then-declaration-order.
+            let pick = fitting[0];
+            let best = usage.get(pick.entry_id) ?? 0;
+            for (const e of fitting) {
+                const u = usage.get(e.entry_id) ?? 0;
+                if (u < best) { best = u; pick = e; }
+            }
+            usage.set(pick.entry_id, (usage.get(pick.entry_id) ?? 0) + 1);
+            const sub = getAdapter(pick.substrate);
+            if (typeof sub.instantiateLibraryEntry !== 'function') {
+                throw new Error(
+                    `${sourceId}: substrate '${pick.substrate}' (entry '${pick.entry_id}') `
+                    + 'has no instantiateLibraryEntry hook');
+            }
+            return sub.instantiateLibraryEntry(pick, { region_id, exitSides, regionSize });
+        },
+    };
 }
 
 // Phase ③ of shuffled-spiral (the "regions" step): realise each planned cell
@@ -3165,6 +3257,10 @@ export function realiseSpiralRegions(plan, config) {
     // substrate id, or a `library:<id>` content-source id under F4). Advanced
     // for every cell so a content source's ordinal is its running use count.
     const ordinalCounter = {};
+    // Content sources are built ONCE per generation and reused across cells so a
+    // library source's usage counter (prefer-least-used) persists (jta sources
+    // are stateless; memoizing them is harmless).
+    const sourceCache = {};
     const occupied = new Set(cells.map((c) => cellKey(c)));
 
     for (let i = 0; i < cells.length; i++) {
@@ -3183,7 +3279,7 @@ export function realiseSpiralRegions(plan, config) {
         }
 
         const region_id = regionIdForCell(cell);
-        const source = resolveSpiralContentSource(substrate);
+        const source = (sourceCache[substrate] ??= resolveSpiralContentSource(substrate, config) ?? null);
         let region;
         if (source) {
             // Content source: instantiate its Nth entry (draws no rng).
