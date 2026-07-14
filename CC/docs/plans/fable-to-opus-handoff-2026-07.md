@@ -292,16 +292,21 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
       returns null gracefully). HARD BOUNDARY held — data channels +
       coverage only, no scoring/weights (that's item 6). Plan §11 =
       implementation detail; memory [[project_omsi_loops_fork]] session 15.
-   5. **Assist-ladder rungs 3+2 — RULED NEXT (user 2026-07-13):** simple
-      balancing (rearrange-only waste minimization, prototype-first) then
-      auto-add newly-unlocked reps riding it. Brief + kickoff:
-      *(NewDocs)* `omsi-loops-ladder-rungs-plan.md` /
-      `omsi-loops-ladder-kickoff-prompt.md`. **Tail trim is FOLDED INTO
-      item 6 (user ruling 2026-07-13)** — under the primary loops metric
-      a trimmed partial rep loses free talent, and it forces a
-      re-baseline item 6 already pays for; build it there ticks-gated.
-      §11.7 Design B (live no-pause pipelining) remains after the rungs,
-      as prioritized.
+   5. **Assist-ladder rung 3 — SHIPPED 2026-07-13 (Opus); REDEFINED by the
+      user mid-build into a BUY MANA / zone-1 ECONOMY OPTIMISER** (NOT a
+      general rearranger — removing unnecessary Buy Mana actions IS the
+      expected result; reorder / remove / split+insert / merge / reserve-gold).
+      `IdlePlanner.optimizeEconomy`; options `economyOptimizer` +
+      `economyOptimizerAuto` (both default OFF); byte-inert vs 535. Submodule
+      `automation` L1 `ef32a7b` + L2 `169cfaf` (COMMITTED, NOT pushed; pointer
+      stays on substrate pin `531faa3`); L0 `48813d73d` + `--balance`
+      `68c205175`. Objective (reserved decision 1, resolved empirically): unmet
+      non-converter reps, then `unconvertedGold·rate + converter mana`.
+      **Rung 2 (auto-add newly-unlocked reps) DEFERRED** (implementer's choice,
+      user-approved — ships as its own follow-on). Detail in *(NewDocs)*
+      `omsi-loops-ladder-rungs-plan.md` §4b + memory session 16. **Tail trim
+      still FOLDED INTO item 6** (ticks-gated). §11.7 Design B remains queued
+      after auto-add-reps.
    6. LAST: the recalibration remainder of the ONE re-baseline bundle —
       §11.8 piece 3 scored channels (consumes the item-4 coverage
       report), DNF-aware sweeps, DEFAULT_WEIGHTS recalibration (target:

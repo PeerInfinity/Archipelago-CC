@@ -769,3 +769,43 @@ stay in the item-6 recalibration bundle. **Deviation:** multipart segmentRate
 LIVE measurement is v2 (census 2.4 — multiparts measure exec=0 in a single-loop
 probe); the Combat→multipart edge is DECLARED + coverage-reported. Detail: plan
 §11 + memory [[project_omsi_loops_fork]] session 15.
+
+## Round 17 — assist-ladder rung 3 SHIPPED as a Buy Mana / zone-1 economy optimiser (2026-07-13, Opus, session 16)
+
+Rung 3 of the §11.6 assist ladder shipped, but **the user redefined it mid-L0**
+from a general rearranger into a **Buy Mana / zone-1 economy optimiser**:
+`IdlePlanner.optimizeEconomy(sess, snap, queue) → {queue, report}`. It optimises
+the town-0 mana↔gold economy — REORDER gold into batches before each conversion,
+REMOVE redundant/thin Buy Manas, SPLIT a gold harvest to INSERT an intermediate
+conversion when the budget would starve, MERGE unnecessarily-split entries, and
+RESERVE gold for downstream purchases. **Removing unnecessary Buy Mana actions
+is the expected result** (so it is not rearrange-only). Best-improvement local
+search, engine rollout as oracle.
+
+**Objective (reserved decision 1 — resolved EMPIRICALLY):** lexicographic in
+mana units — (1) unmet reps of every NON-converter action (throughput), then
+(2) `unconvertedGold·rate + converter mana spent`. Two L0 findings: (a) "failed
+execs" must count ALL unmet reps or a misplaced mana-sink that starves later
+entries reads as low-waste (collapse-reward); (b) the brief's recommended
+`failed→idle→gold` ranks tail idle mana above unconverted gold, making the
+balancer prefer NOT converting — so it fails to recover converter-before-income.
+Folding idle+gold into one mana term (converter's actual `manaUsed` overhead +
+`gold·rate`) recovers every case. A conversion is worth keeping only above
+`overhead/rate` ≈ 2 gold.
+
+**Harness changes:** `buy-mana-opt.mjs` (L0 prototype: 6 capability fixtures +
+feasibility guard, all PASS) and a `--balance` flag on `run-planner.mjs`
+(optimise a `--from-state` committed queue or `--queue` override; prints the
+proposed order + waste deltas). Both are dev readouts; the optimiser never runs
+in the reference path.
+
+**Gates:** byte-gate 535 / 5,965,890 / e23f020400162f9a / 0 RNG re-verified on the
+working tree (pool-8, worktree); fork npm 85/85; ui-smoke 41 checks ALL PASS
+(worker optimize → 3→1 Buy Mana proposal → apply → persistence). Both options
+(`economyOptimizer` / `economyOptimizerAuto`) default OFF.
+
+**Commits (NOT pushed; pointer stays on substrate pin 531faa3):** submodule
+`automation` L1 `ef32a7b` + L2 `169cfaf`; outer L0 `48813d73d` + `--balance`
+`68c205175`. **Rung 2 (auto-add reps) DEFERRED** — ships as its own follow-on.
+Detail: plan `omsi-loops-ladder-rungs-plan.md` §4b + memory
+[[project_omsi_loops_fork]] session 16.
