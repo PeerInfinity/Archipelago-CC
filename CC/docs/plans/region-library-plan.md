@@ -456,4 +456,6 @@ world; Phase C Saves a region, Downloads the working library, and asserts it
 validates AND the entry re-instantiates into a self-contained maze region.
 
 **Only F6 (sphere-growth reuse / exit relabel, §4 F6 + §6 open-q 1) remains** —
-a stretch item nothing in F1–F5 depends on.
+a stretch item nothing in F1–F5 depends on. Its design brief (problems, engine
+seams, open questions needing user rulings, tentative phase breakdown) is
+**`CC/docs/plans/region-library-f6-plan.md`** — read that first for an F6 session.
