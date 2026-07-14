@@ -330,8 +330,18 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
       91/91 (+6 autoadd.test.mjs); ui-smoke 51/51 (+10). Submodule
       `automation` one commit atop `169cfaf`, COMMITTED-not-pushed; outer
       gitlink stays on substrate pin `531faa3`. Detail: *(NewDocs)*
-      `omsi-loops-ladder-rungs-plan.md` §4c + memory session 17. **§11.7
-      Design B remains queued after this.**
+      `omsi-loops-ladder-rungs-plan.md` §4c + memory session 17.
+   8. **Basic/Advanced automation UI split — session 18 (2026-07-14, Opus).**
+      New `basicAutomation` master gate (default OFF, **functional** per user
+      ruling, symmetric with `advancedAutomation`): the three basic assist
+      features (rep-gap badges, auto-add reps, Buy Mana optimiser) act only when
+      it AND their own toggle are on. Extras has two "Enable basic/advanced
+      automation" checkboxes; the Automation view gained a "Basic automation"
+      collapsible section above "Advanced automation settings" (Buy Mana moved
+      into it); the view radio shows if EITHER master is on. Byte-inert
+      (535 / 5,965,890 / e23f020400162f9a); npm 91/91; ui-smoke 66/66. Detail:
+      *(NewDocs)* `omsi-loops-ladder-rungs-plan.md` §4d + memory session 18.
+      **§11.7 Design B remains queued after this.**
    Original queue (for reference):
    1. **Systematic action-code audit (user: HIGH priority)**: read all
       157 actions' reward/effect code and produce a complete census of
