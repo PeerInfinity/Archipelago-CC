@@ -274,11 +274,27 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
       targeted-mode §13. **Remaining Part-A follow-on** = re-freeze the two
       weight-sweep cross-checks (frontier:1000, bank:10), which now folds
       into item 5 (calibration re-baseline).
-   4. Then as before: tail trim / remaining ladder rungs (auto-add,
+   4. **Vocabulary extension (original-queue item ④) — DESIGNED
+      2026-07-13 (Fable, session 14; ALL 4 RULINGS collected),
+      implementation READY.** Plan + kickoff: *(NewDocs)*
+      `omsi-loops-vocabulary-design-plan.md` /
+      `omsi-loops-vocabulary-kickoff-prompt.md`. Three layers: E =
+      empirical widening on the DEFAULT path (consumes/cross-town/
+      persistentDelta widening); M = hand-authored `dimEffects` +
+      `context` metadata in planner-metadata.js (swap to XML-derived at
+      XML Phase 6) + mechanical-extraction guard test; P = edge-directed
+      pair-probes behind `informed`. W0 = `rngMode: "cycle"` (4-site
+      deterministic RNG replacement; REQUIRED for RNG-channel features).
+      HARD BOUNDARY: data channels + coverage report only — no scoring,
+      no weights (that's item 6).
+   5. Then as before: tail trim / remaining ladder rungs (auto-add,
       simple balancing) / §11.7 Design B — as the user prioritizes.
-   5. LAST: the recalibration remainder of the ONE re-baseline bundle —
-      §11.8 piece 3 scored channels, DNF-aware sweeps, DEFAULT_WEIGHTS
-      recalibration, bankPot:8 re-test (Part A itself moved to item 3).
+   6. LAST: the recalibration remainder of the ONE re-baseline bundle —
+      §11.8 piece 3 scored channels (consumes the item-4 coverage
+      report), DNF-aware sweeps, DEFAULT_WEIGHTS recalibration (target:
+      recover ≤500 loops on the accurate capacity model), bankPot:8
+      re-test, weight-sweep cross-check re-freeze (frontier:1000,
+      bank:10).
    Original queue (for reference):
    1. **Systematic action-code audit (user: HIGH priority)**: read all
       157 actions' reward/effect code and produce a complete census of
