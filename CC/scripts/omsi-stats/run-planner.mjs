@@ -219,6 +219,34 @@ async function runCoverage(makeContext, seed, resultsDir, outArg) {
     console.log(`\ncoverage report written to ${outPath}`);
 }
 
+// §11.6 ladder — Buy Mana / zone-1 economy optimiser readout (--balance).
+// Restores a saved run's loop-start state and optimises its last committed
+// queue (or a --queue override), printing the proposed order + waste deltas.
+function runBalance(ctx, IP, { fromStatePath, queueArg }) {
+    const sess = ctx.ev("new IdlePlanner.Session()");
+    let queue = queueArg ? JSON.parse(queueArg) : null;
+    if (fromStatePath) {
+        const p = path.isAbsolute(fromStatePath) ? fromStatePath : path.join(here, fromStatePath);
+        const blob = JSON.parse(fs.readFileSync(p, "utf8"));
+        sess.restore({ save: blob.save, rng: blob.rng });
+        if (!queue) queue = blob.planning?.lastCommitted ?? null;
+    }
+    if (!queue || !queue.length) throw new Error("--balance needs --from-state (with a committed queue) or --queue '[[name,loops],...]'");
+    sess.setQueue(queue);
+    sess.restart();
+    const snap = sess.save();
+    const res = IP.optimizeEconomy(sess, snap, queue);
+    const fmt = (q) => q.map(([n, l]) => `${n} x${l}`).join(" | ");
+    const wfmt = (w) => `failed=${w.failed} buyMana=${w.convExecs} gold=${w.unconvGold} econ=${Math.round(w.econ)}`;
+    console.log(`\nBUY MANA / economy optimiser (converter=${res.report.converter}, rate=${res.report.rate})\n`);
+    console.log(`  queue in:  ${fmt(queue)}`);
+    console.log(`             ${wfmt(res.report.before)}`);
+    console.log(`  proposed:  ${fmt(res.queue)}`);
+    console.log(`             ${wfmt(res.report.after)}   (${res.report.moves} moves, ${res.report.evals} rollouts)`);
+    const changed = JSON.stringify(res.queue) !== JSON.stringify(queue.map(([n, l]) => [n, l]));
+    console.log(`\n  ${changed ? "SUGGESTS a reorder/rebalance" : "already optimal — no change"}`);
+}
+
 async function main() {
     const args = process.argv.slice(2);
     const has = (f) => args.includes(f);
@@ -303,6 +331,13 @@ async function main() {
     const IP = ctx.ev("IdlePlanner");
 
     if (coverage) { await runCoverage(makeContext, seed, resultsDir, val("--out", null)); return; }
+
+    // §11.6 ladder — Buy Mana / zone-1 economy optimiser (IdlePlanner.optimizeEconomy).
+    // --balance restores a saved run (--from-state) and optimises its last committed
+    // queue (or a --queue '<json>' override) against that loop-start state, printing
+    // the proposed order + waste deltas. Byte-inert: the optimiser never runs in the
+    // reference path, this is a manual dev readout. Early-return before the normal run.
+    if (has("--balance")) { runBalance(ctx, IP, { fromStatePath, queueArg: val("--queue", null) }); return; }
 
     // Parallel eval pool (--pool N): N worker_threads, each with its own sim
     // context, serving confirmCandidate jobs. Order preserved by Promise.all
