@@ -734,3 +734,38 @@ weight-sweep cross-checks (frontier:1000 → 502, bank:10 → 632) predate Part 
 and no longer reproduce byte-exact; they are re-measured in the calibration
 re-baseline, not here. DEFAULT_WEIGHTS, scored channels, DNF-aware sweeps, and
 the bankPot:8 re-test all remain in that last queue item.
+
+## Round 16 — vocabulary arc W0–W4 SHIPPED: measured data channels + coverage report, no scoring (2026-07-13, Opus, session 15)
+
+Queue item 4 (ARCHITECTURE, not calibration). All 5 phases landed byte-inert vs
+the Round-15 reference **535 / 5,965,890 / e23f020400162f9a / 0 RNG** (seed 12345,
+pool-8, predictor). Submodule `automation`: W0 `501e573`, W1 `f289007`, W2
+`ac8f62c`, W3 `868c757` (outer gitlink LEFT on substrate pin `531faa3`). This
+harness (run-planner.mjs, outer `ab3ad75f6`) gained two flags:
+
+- **`--coverage`** — writes `results/vocabulary-coverage.json` + prints a
+  census-class → measured/declared-channel map with sample values probed on
+  representative states. The item-5 calibration handshake artifact. Sample run:
+
+  | census class | coverage | sample |
+  |---|---|---|
+  | 1 buffs | 7 dimEffects declared + persistentDelta.buffs measured | — |
+  | 2 soulstones | persistentDelta.soulstones/perStat measured (rng cycle) | Small Dungeon per-stat +0.083/exec |
+  | 3 stacks | 4 segmentRate skills declared; consumes{} | — |
+  | 4 skill web | 15 skill dims declared + edgeRates measured | Practical→Smash Pots manaCost **−0.067**, →Pick Locks goldYield **+0.017** |
+  | 5 gates | 22 declared | — |
+  | 6 ledgers | persistentDelta.dungeons/trials/mult/… measured | Small Dungeon floor completed +0.083, ssChance drift <0 |
+  | 7 cross-town/context | crossTown:7 temporal:2 dynamic:15 rng:5 | Learn Alchemy consumes herbs:10 |
+
+- **`--rng-mode random|cycle`** — exposes the W0 fork option (default random keeps
+  the frozen reference; cycle enables RNG-channel measurement + Layer-P probing of
+  RNG targets). Serial only (pool workers boot their own context); folded into the
+  `knobsAtDefaults` byte-reference guard.
+
+**Informed mode** (`--vocabulary informed`) runs deterministic (twin hash
+`209a55c3d687c876`) and clean under both random and cycle. **No scoring/weights
+changed** — DEFAULT_WEIGHTS untouched; scored channels that CONSUME this coverage
+stay in the item-6 recalibration bundle. **Deviation:** multipart segmentRate
+LIVE measurement is v2 (census 2.4 — multiparts measure exec=0 in a single-loop
+probe); the Combat→multipart edge is DECLARED + coverage-reported. Detail: plan
+§11 + memory [[project_omsi_loops_fork]] session 15.

@@ -274,19 +274,24 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
       targeted-mode §13. **Remaining Part-A follow-on** = re-freeze the two
       weight-sweep cross-checks (frontier:1000, bank:10), which now folds
       into item 5 (calibration re-baseline).
-   4. **Vocabulary extension (original-queue item ④) — DESIGNED
-      2026-07-13 (Fable, session 14; ALL 4 RULINGS collected),
-      implementation READY.** Plan + kickoff: *(NewDocs)*
-      `omsi-loops-vocabulary-design-plan.md` /
-      `omsi-loops-vocabulary-kickoff-prompt.md`. Three layers: E =
-      empirical widening on the DEFAULT path (consumes/cross-town/
-      persistentDelta widening); M = hand-authored `dimEffects` +
-      `context` metadata in planner-metadata.js (swap to XML-derived at
-      XML Phase 6) + mechanical-extraction guard test; P = edge-directed
-      pair-probes behind `informed`. W0 = `rngMode: "cycle"` (4-site
-      deterministic RNG replacement; REQUIRED for RNG-channel features).
-      HARD BOUNDARY: data channels + coverage report only — no scoring,
-      no weights (that's item 6).
+   4. **Vocabulary extension (original-queue item ④) — ALL 5 PHASES
+      W0–W4 SHIPPED 2026-07-13 (Opus, session 15), byte-inert vs the
+      Part-A reference 535 / 5,965,890 / e23f020400162f9a / 0 RNG.**
+      Submodule `automation` W0 `501e573` (rngMode random|cycle), W1
+      `f289007` (Layer E: consumes/crossTown/persistentDelta widening),
+      W2 `ac8f62c` (Layer M: planner-metadata.js dimEffects+context +
+      metadata-census guard = the independent stratum reading CODE), W3
+      `868c757` (Layer P: probeEdges two-snapshot generalized
+      travelRelief behind `informed`; edgeRates). Outer `ab3ad75f6` =
+      run-planner.mjs `--coverage` report (results/vocabulary-coverage.json,
+      the item-5 handshake) + `--rng-mode`. Pointer LEFT on the substrate
+      pin `531faa3`; NOT pushed. npm 78/78. **DEVIATION: multipart
+      segmentRate LIVE measurement is v2** (census 2.4 — Fight Monsters
+      measures exec=0 in a single-loop probe at every Combat level; the
+      Combat→multipart edge is DECLARED + coverage-reported, measureEdge
+      returns null gracefully). HARD BOUNDARY held — data channels +
+      coverage only, no scoring/weights (that's item 6). Plan §11 =
+      implementation detail; memory [[project_omsi_loops_fork]] session 15.
    5. Then as before: tail trim / remaining ladder rungs (auto-add,
       simple balancing) / §11.7 Design B — as the user prioritizes.
    6. LAST: the recalibration remainder of the ONE re-baseline bundle —
