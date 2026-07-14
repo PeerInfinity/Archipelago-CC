@@ -14,6 +14,15 @@
  *     headless world.
  *   Phase C — F5 capture: open a generated region, "Save to library", and assert
  *     the downloaded working-library JSON validates + re-instantiates.
+ *   Phase D — sphere-growth library wiring (F6d): a fresh context in sphere mode
+ *     proves the Region-libraries subsection now renders there, a non-bounce pack
+ *     is DISABLED while the bounce pack is selectable (bounce-only, F6a), and
+ *     ticking the bounce library flows its content source into the sphere config —
+ *     the grown world changes materially vs the same seed/params with NO library
+ *     (i.e. the selection reached the engine's resolveSphereLibrarySources). The
+ *     engine's correct PLACEMENT of that content is separately proven headlessly
+ *     (verify-region-library-sphere-roundtrip.mjs + sphereLibrary.slow.test.js);
+ *     Phase D proves the PANEL delivers it.
  *
  * Prereq: dev server on :8000 (localhost → unbundled ES modules, so source edits
  * are picked up). Run: node scripts/procgen/verify-region-library-ui.mjs
@@ -294,6 +303,184 @@ if (!captureBtnPresent) {
 const pageErrors = logs.filter((l) => l.startsWith('[pageerror]'));
 assert(pageErrors.length === 0, `no page errors (${pageErrors.length})`);
 if (pageErrors.length) console.log(pageErrors.join('\n'));
+
+// --- Phase D — sphere-growth library wiring (F6d) -------------------
+// A fresh context seeded in sphere-growth mode with a bounce quota + a plannable
+// bounce item pool. The served index carries BOTH the maze pack (non-bounce) and
+// the bounce pack, so sphere mode is a live disable/enable test.
+const BOUNCE_FILE = 'demo-bounce-pack.json';
+const bounceLib = JSON.parse(fs.readFileSync(
+    path.join(repoRoot, 'frontend/region-libraries/demo-bounce-pack.json'), 'utf8'));
+const SPHERE_ITEMS = {
+    'Right arrow': 1, 'Left arrow': 1, Springs: 1, Jetpacks: 1, 'Blue platforms': 1, Victory: 1,
+};
+const sctx = await browser.newContext({ acceptDownloads: true });
+const sp = await sctx.newPage();
+const slogs = [];
+sp.on('console', (msg) => slogs.push(`[${msg.type()}] ${msg.text()}`));
+sp.on('pageerror', (err) => slogs.push(`[pageerror] ${err.message}`));
+await sp.addInitScript(({ items }) => {
+    localStorage.setItem('procgenPipeline_params', JSON.stringify({
+        mode: 'sphereGrowth',
+        params: {
+            seed: 1, regionWidth: 8, regionHeight: 6, maxItemsPerRegion: 2,
+            sphereCount: 3, fillerCount: 0, revisitPercent: 25,
+        },
+        scenario: { items, obstacles: {} },
+        // High bounce quota so bounce never runs out of budget (matches
+        // verify-sphere-steps-ui.mjs); the library competes for the SAME nodes.
+        substrateQuotas: { bounce: 99 }, substrateMix: {}, substrateMode: 'quotas',
+    }));
+}, { items: SPHERE_ITEMS });
+
+// Phase-D helpers bound to the sphere page (the A–C helpers close over `page`).
+const sClickByText = (txt) => sp.evaluate((t) => {
+    const btn = [...document.querySelectorAll('.procgen-pipeline-panel button')]
+        .find((b) => b.textContent.trim() === t && !b.disabled);
+    if (btn) { btn.click(); return true; }
+    return false;
+}, txt);
+// Sphere's primary button is "Run all" (not "Generate"). From scratch it runs the
+// plan and pauses (editable plan); "Run all (finish)" completes the rest. Click
+// whichever is present until the compile step's success ("Sphere plan realised")
+// or an oracle mismatch appears. Returns true only on success.
+const sMessage = () => sp.evaluate(() =>
+    document.querySelector('.procgen-pipeline-message')?.textContent ?? '');
+const sRunAll = async () => {
+    for (let i = 0; i < 160; i++) {
+        const msg = await sMessage();
+        if (/Sphere plan realised/.test(msg)) return true;
+        if (/ORACLE MISMATCH|ERROR:/.test(msg)) return false;
+        const working = await sp.evaluate(() =>
+            /Working…/.test(document.querySelector('.procgen-pipeline-panel')?.textContent ?? ''));
+        if (!working) {
+            // Idle and not finished → click the next run button to advance.
+            const clicked = (await sClickByText('Run all (finish)')) || (await sClickByText('Run all'));
+            if (!clicked) return false;
+        }
+        await sp.waitForTimeout(500);
+    }
+    return false;
+};
+const sExtractRulesJson = async () => {
+    const [download] = await Promise.all([
+        sp.waitForEvent('download'),
+        sp.evaluate(() => [...document.querySelectorAll('.procgen-pipeline-panel button')]
+            .find((b) => b.textContent.trim() === 'Download rules.json')?.click()),
+    ]);
+    const stream = await download.createReadStream();
+    const chunks = [];
+    for await (const chunk of stream) chunks.push(chunk);
+    return JSON.parse(Buffer.concat(chunks).toString('utf8'));
+};
+
+await sp.goto('http://localhost:8000/frontend/');
+await sp.waitForTimeout(8000);
+// Activate the panel (same handshake as activatePanel, bound to sp).
+{
+    let activated = false;
+    for (let i = 0; i < 40 && !activated; i++) {
+        activated = await sp.evaluate(() => {
+            const tab = [...document.querySelectorAll('.lm_tab')].find((t) => t.title === 'Procgen Pipeline');
+            if (!tab) return false;
+            tab.click();
+            return true;
+        });
+        if (!activated) await sp.waitForTimeout(500);
+    }
+    assert(activated, 'Phase D: activated the Procgen Pipeline panel in sphere mode');
+    await sp.waitForTimeout(1500);
+}
+
+// D1 — the Region-libraries subsection renders in sphere mode (was spiral-only).
+const sphereSubsection = await sp.evaluate(() =>
+    !!document.querySelector('.procgen-pipeline-region-libraries'));
+assert(sphereSubsection, 'Phase D: Region-libraries subsection renders in sphere mode');
+
+// Wait for both served checkboxes to render from the index.
+let bothServed = false;
+for (let i = 0; i < 40 && !bothServed; i++) {
+    bothServed = await sp.evaluate((files) => files.every((f) => !!document.querySelector(
+        `.procgen-pipeline-served-library-cb[data-file="${f}"]`)), [BOUNCE_FILE, DEMO_FILE]);
+    if (!bothServed) await sp.waitForTimeout(250);
+}
+assert(bothServed, 'Phase D: both served packs (bounce + maze) rendered from the index');
+
+// D2 — bounce pack ENABLED, maze pack (non-bounce) DISABLED in sphere mode.
+const cbState = await sp.evaluate((files) => {
+    const get = (f) => document.querySelector(`.procgen-pipeline-served-library-cb[data-file="${f}"]`);
+    return { bounceDisabled: get(files.bounce)?.disabled, mazeDisabled: get(files.maze)?.disabled };
+}, { bounce: BOUNCE_FILE, maze: DEMO_FILE });
+assert(cbState.bounceDisabled === false, 'Phase D: bounce pack checkbox is enabled (sphere-capable)');
+assert(cbState.mazeDisabled === true, 'Phase D: maze pack checkbox is disabled (bounce-only in sphere mode)');
+
+// D3 — tick the bounce pack; it lands in the working selection.
+await sp.evaluate((f) => document.querySelector(
+    `.procgen-pipeline-served-library-cb[data-file="${f}"]`).click(), BOUNCE_FILE);
+let bounceSelected = false;
+for (let i = 0; i < 40 && !bounceSelected; i++) {
+    bounceSelected = await sp.evaluate(() => {
+        const sec = document.querySelector('.procgen-pipeline-region-libraries');
+        return !!(sec && /Demo Bounce Pack/.test(sec.textContent)
+            && sec.querySelector('.procgen-pipeline-selected-row'));
+    });
+    if (!bounceSelected) await sp.waitForTimeout(250);
+}
+assert(bounceSelected, 'Phase D: ticking the bounce pack added it to the selection');
+await sp.evaluate((val) => {
+    const inp = document.querySelector(
+        '.procgen-pipeline-region-libraries .procgen-pipeline-selected-row .procgen-pipeline-count-input');
+    if (inp) { inp.value = String(val); inp.dispatchEvent(new Event('change', { bubbles: true })); }
+}, 4);
+await sp.waitForTimeout(400);
+
+// D4 — Generate WITH the library ("Run all"); a sphere-growth world compiles.
+assert(await sRunAll(), 'Phase D: ran the sphere pipeline to a compiled result (with library)');
+const rjWith = await sExtractRulesJson();
+assert(rjWith.procgen_metadata?.driver === 'sphere-growth',
+    'Phase D: with-library world is a sphere-growth build');
+const regionsWith = Object.values(rjWith.regions ?? {}).reduce((n, byName) => n + Object.keys(byName).length, 0);
+assert(regionsWith >= 2, `Phase D: with-library sphere world has ${regionsWith} regions (≥2)`);
+
+// D5 — build-time source only: the library DOCUMENT never embeds, and the PLAYABLE
+// regions are self-contained bounce (no library id in them). The library id may
+// appear in procgen_metadata.sphere_tree as build PROVENANCE (the node's source
+// substrate, like `driver`) — that is not playable residency.
+const withStr = JSON.stringify(rjWith);
+assert(!withStr.includes('libraryDoc'),
+    'Phase D: compiled sphere world embeds NO library document (libraryDoc absent)');
+assert(!JSON.stringify(rjWith.regions ?? {}).includes(bounceLib.library_id),
+    'Phase D: playable regions are self-contained (no library id in compiled regions)');
+
+// D6 — untick the library and regenerate at the SAME seed/params: the grown world
+// must DIFFER. The only change is the library selection, so any difference proves
+// the selection reached the sphere config (a dropped wiring → identical worlds →
+// this fails). Engine placement correctness is proven by the F6a strata.
+await sp.evaluate((f) => document.querySelector(
+    `.procgen-pipeline-served-library-cb[data-file="${f}"]`).click(), BOUNCE_FILE);
+let bounceCleared = false;
+for (let i = 0; i < 40 && !bounceCleared; i++) {
+    bounceCleared = await sp.evaluate(() => {
+        const sec = document.querySelector('.procgen-pipeline-region-libraries');
+        return !!sec && !/Demo Bounce Pack/.test(sec.querySelector('.procgen-pipeline-scenario-selected')?.textContent ?? '');
+    });
+    if (!bounceCleared) await sp.waitForTimeout(250);
+}
+assert(bounceCleared, 'Phase D: unticked the bounce library');
+// A completed pipeline won't re-plan on "Run all"; Reset drops it so the run
+// re-plans from the now-library-less config.
+assert(await sClickByText('Reset'), 'Phase D: reset the sphere pipeline before the no-library run');
+await sp.waitForTimeout(400);
+assert(await sRunAll(), 'Phase D: ran the sphere pipeline to a compiled result (no library)');
+const rjNo = await sExtractRulesJson();
+assert(rjNo.procgen_metadata?.driver === 'sphere-growth',
+    'Phase D: no-library world is a sphere-growth build');
+assert(canon(rjWith) !== canon(rjNo),
+    'Phase D: the bounce library materially changed the grown world (selection reached the sphere config)');
+
+const spErrors = slogs.filter((l) => l.startsWith('[pageerror]'));
+assert(spErrors.length === 0, `Phase D: no page errors (${spErrors.length})`);
+if (spErrors.length) console.log(spErrors.join('\n'));
 
 await browser.close();
 console.log(failures.length ? `\nFAIL: ${failures.length} failure(s)` : '\nAll region-library UI assertions passed.');

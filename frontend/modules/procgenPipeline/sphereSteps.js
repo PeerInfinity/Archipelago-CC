@@ -45,6 +45,7 @@ import {
     wireSphereWaves,
     placeSphereTreeItems,
     realiseSphereBatchGen,
+    resolveSphereLibrarySources,
     compactSphereTree,
     buildRulesJson,
     serializeGrid,
@@ -121,6 +122,11 @@ export function growConfigFrom(config, plan) {
             fillerCount: config.fillerCount,
             revisitRatio: config.revisitRatio,
             ...(config.substrateQuotas ? { substrateQuotas: config.substrateQuotas } : {}),
+            // Region-library content sources (F6d): each selected bounce library
+            // rides its document on substrateConfig['library:<id>'].libraryDoc,
+            // consumed by the engine's resolveSphereLibrarySources. Absent unless a
+            // library is selected, so library-less worlds stay byte-identical.
+            ...(config.substrateConfig ? { substrateConfig: config.substrateConfig } : {}),
             ...(config.startSubstrate ? { startSubstrate: config.startSubstrate } : {}),
             // Carried for any standalone batched driver consumer; the step
             // runner reads env.config.spheresPerBatch directly to drive its
@@ -333,6 +339,19 @@ async function stepRegions(env, { onProgress = null } = {}) {
     const rng = createRng(0);
     rng.setState((env.regionsRng ?? env.rng).s); // post-②b position
 
+    // Region-library content sources (F6d): resolve the `library:<id>` quotas into
+    // stateful sources (prefer-least-used counter). Built ONCE per grow so the
+    // counter persists across sphere-major batches (mirrors growSpheresBatchedGen);
+    // rebuilt on a batch-0 (re)start so an edit re-run realises from a clean state.
+    // Empty {} when no library is selected → non-library nodes take no new path
+    // (byte-inert). Not serialisable (holds closures) — survives in-memory step
+    // runs; a cross-process CLI resume simply rebuilds it, same as the counter reset
+    // that a fresh process implies.
+    if (batchStart === 0 || !env.librarySources) {
+        env.librarySources = resolveSphereLibrarySources(
+            growConfig.growthParams?.substrateQuotas, growConfig);
+    }
+
     // Size the grid from the CURRENT allocation (deterministic — matches
     // growSpheresGen's auto-size for the unedited tree). Recomputing here rather
     // than trusting ②a's stashed env.dims keeps the grid correctly sized when
@@ -389,6 +408,7 @@ async function stepRegions(env, { onProgress = null } = {}) {
         hazardOpts,
         assumeBidirectional,
         stats,
+        librarySources: env.librarySources,
     });
     let r = gen.next();
     while (!r.done) {

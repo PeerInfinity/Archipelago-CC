@@ -1103,10 +1103,11 @@ export class ProcgenPipelineUI {
         // Top: Substrates (always visible — every mode needs them).
         section.appendChild(this._renderSubstratesSubsection());
 
-        // Region libraries (F3) — pre-built regions loaded from JSON as
-        // `library:<id>` spiral content sources. Shuffled-spiral only (the
-        // content-source seam is the spiral driver's).
-        if (this.mode === 'shuffledSpiral') {
+        // Region libraries (F3/F6d) — pre-built regions loaded from JSON as
+        // `library:<id>` content sources. Shuffled-spiral (maze + bounce, F4) and
+        // sphere-growth (bounce-only overlay gates, F6a). Sphere mode disables
+        // non-bounce libraries in the served list (see _renderServedLibraryRow).
+        if (this.mode === 'shuffledSpiral' || this.mode === 'sphereGrowth') {
             section.appendChild(this._renderRegionLibrariesSubsection());
         }
 
@@ -1449,11 +1450,20 @@ export class ProcgenPipelineUI {
         row.className = 'procgen-pipeline-library-row';
         const selected = this.regionLibraries.some(
             (w) => w.source === 'served' && w.file === idx.file);
+        // F6d: sphere-growth library reuse is BOUNCE-ONLY (F6a). Disable a served
+        // library that declares no bounce entries in sphere mode — a non-bounce
+        // pack would be filtered out of the sphere config anyway (and throw in
+        // resolveSphereLibrarySources if it slipped through). Unknown substrates
+        // (older index without the field) stay enabled — the generate-time filter
+        // is the real guard.
+        const incompatible = this._sphereModeLibraryDisabled(idx.substrates);
         const label = document.createElement('label');
-        label.style.cssText = 'flex:1;cursor:pointer;display:flex;align-items:center;gap:4px;';
+        label.style.cssText = `flex:1;display:flex;align-items:center;gap:4px;`
+            + `${incompatible ? 'opacity:0.5;cursor:not-allowed;' : 'cursor:pointer;'}`;
         const cb = document.createElement('input');
         cb.type = 'checkbox';
         cb.checked = selected;
+        cb.disabled = incompatible;
         cb.className = 'procgen-pipeline-served-library-cb';
         cb.dataset.file = idx.file;
         cb.addEventListener('change', () => this._toggleServedLibrary(idx, cb.checked));
@@ -1462,10 +1472,24 @@ export class ProcgenPipelineUI {
         const n = idx.entry_count;
         label.appendChild(document.createTextNode(
             `${idx.name ?? idx.file} — ${n ?? '?'} entr${n === 1 ? 'y' : 'ies'}`
-            + `${subs ? ` (${subs})` : ''}`));
-        if (idx.description) label.title = idx.description;
+            + `${subs ? ` (${subs})` : ''}`
+            + `${incompatible ? ' — bounce-only in sphere mode' : ''}`));
+        label.title = incompatible
+            ? 'Sphere-growth library reuse is bounce-only (F6a); this pack has no bounce entries.'
+            : (idx.description ?? '');
         row.appendChild(label);
         return row;
+    }
+
+    // Whether a library with the given declared substrates is unusable in the
+    // current mode. F6d: sphere-growth places bounce entries only (F6a), so a pack
+    // with a KNOWN substrate list that lacks 'bounce' is disabled. Any other mode
+    // (shuffled-spiral) accepts maze + bounce. An empty/undefined list is treated
+    // as unknown (not disabled) — the config-time bounce filter is authoritative.
+    _sphereModeLibraryDisabled(substrates) {
+        if (this.mode !== 'sphereGrowth') return false;
+        return Array.isArray(substrates) && substrates.length > 0
+            && !substrates.includes('bounce');
     }
 
     _renderAdhocLibraryLoader() {
@@ -1494,8 +1518,14 @@ export class ProcgenPipelineUI {
         const name = document.createElement('span');
         name.className = 'procgen-pipeline-selected-name';
         const tag = w.source === 'adhoc' ? ' [ad-hoc]' : '';
-        name.textContent = `${w.library.name ?? w.library.library_id}${tag}`;
+        // F6d: a selected library with no bounce entries contributes nothing in
+        // sphere mode (bounce-only) — mark it so the user isn't surprised it's
+        // absent from the grown world. Still counts for shuffled-spiral.
+        const unusedInSphere = this.mode === 'sphereGrowth' && !this._libraryHasBounce(w.library);
+        name.textContent = `${w.library.name ?? w.library.library_id}${tag}`
+            + `${unusedInSphere ? ' — not used (bounce-only)' : ''}`;
         name.title = `${w.library.library_id} · ${w.library.entries.length} entries`;
+        if (unusedInSphere) name.style.opacity = '0.5';
         row.appendChild(name);
 
         const input = document.createElement('input');
@@ -4484,12 +4514,43 @@ export class ProcgenPipelineUI {
     // The shared, frozen-at-1 config every step reads (so a later param
     // tweak doesn't silently change a pipeline mid-run — Reset/re-Plan
     // to pick up new params).
+    // Does a resolved library document carry at least one bounce entry? Sphere-
+    // growth library reuse is bounce-only (F6a), so a maze-only pack contributes
+    // nothing to a sphere world.
+    _libraryHasBounce(library) {
+        return (library?.entries ?? []).some((e) => e.substrate === 'bounce');
+    }
+
+    // The selected libraries usable as SPHERE content sources: the bounce-carrying
+    // subset of the shared this.regionLibraries. A non-bounce pack would throw in
+    // the engine's resolveSphereLibrarySources, so it is dropped here (and disabled
+    // in the served list). Returns [] when nothing bounce-capable is selected, so
+    // library-less sphere worlds take no new code path (byte-inert).
+    _bounceRegionLibraries() {
+        return this.regionLibraries.filter((w) => this._libraryHasBounce(w.library));
+    }
+
     _buildSphereConfig() {
         const { seed, regionWidth, regionHeight, maxItemsPerRegion,
             sphereCount, fillerCount, revisitPercent, spheresPerBatch,
             startSubstrate } = this.params;
         const startSub = (startSubstrate && startSubstrate !== 'auto') ? startSubstrate : null;
-        const quotas = this._effectiveSubstrateQuotas();
+        // Merge the selected bounce region-libraries into the substrate quotas as
+        // `library:<id>` content sources (each carrying its libraryDoc on
+        // substrateConfig), mirroring _buildSpiralEnvelope's spiral merge. Only
+        // when at least one bounce library is selected — otherwise quotas stays the
+        // exact _effectiveSubstrateQuotas() value (null when empty) and
+        // substrateConfig is null, so a library-less world is byte-identical.
+        const baseQuotas = this._effectiveSubstrateQuotas();
+        const bounceLibs = this._bounceRegionLibraries();
+        let quotas = baseQuotas;
+        let substrateConfig = null;
+        if (bounceLibs.length > 0) {
+            const merged = buildLibrarySpiralConfig(
+                bounceLibs, { substrateQuotas: baseQuotas ?? {}, substrateConfig: {} });
+            quotas = merged.substrateQuotas;
+            substrateConfig = merged.substrateConfig;
+        }
         return {
             seed,
             regionWidth, regionHeight,
@@ -4500,6 +4561,7 @@ export class ProcgenPipelineUI {
             spheresPerBatch: spheresPerBatch ?? null,
             startSub,
             quotas,
+            substrateConfig,
             activeIds: this._activeSubstrateIds(quotas, startSub),
             itemLib: this._mergedItemLib(),
             itemPool: { ...this.scenario.items },
@@ -4561,6 +4623,10 @@ export class ProcgenPipelineUI {
             fillerCount: cfg.fillerCount,
             revisitRatio: cfg.revisitPercent / 100,
             substrateQuotas: cfg.quotas ?? null,
+            // Region-library content sources (F6d) — present only when a bounce
+            // library is selected; growConfigFrom carries it into
+            // growthParams.substrateConfig for resolveSphereLibrarySources.
+            ...(cfg.substrateConfig ? { substrateConfig: cfg.substrateConfig } : {}),
             startSubstrate: cfg.startSub ?? null,
             sphereCount: cfg.sphereCount,
             spheresPerBatch: cfg.spheresPerBatch ?? null,

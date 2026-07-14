@@ -4277,7 +4277,7 @@ function buildSphereLibraryRegion(sourceId, entry, {
 // (prefer-least-used) persists across nodes. Also the arrange-time validation for
 // library ids (the upfront quota loop skips them — a library id has no registry
 // entry). Returns { id: source } (empty when no library quota is set).
-function resolveSphereLibrarySources(substrateQuotas, config) {
+export function resolveSphereLibrarySources(substrateQuotas, config) {
     const sources = {};
     for (const [id, count] of Object.entries(substrateQuotas ?? {})) {
         if (count <= 0 || !isLibrarySourceId(id)) continue;
