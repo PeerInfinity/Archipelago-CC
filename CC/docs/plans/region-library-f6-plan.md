@@ -1,10 +1,12 @@
 # Region library F6 — sphere-growth reuse (requirement-targeted placement)
 
-**Date:** 2026-07-13 · **Status: F6a + F6d SHIPPED (on `main`, not pushed);
-F6b/F6c deferred.** Rulings resolved in §3b; F6a implementation shape + gates in
-the main plan `region-library-plan.md` §7; F6d (panel/UI wiring) commit
-`20e185682` (see §4 F6d + main plan §7). This doc's §1–§2 (why sphere is harder,
-engine seams) and §3b (rulings) stay the reference for an F6b/F6c session.
+**Date:** 2026-07-13 · **Status: F6a + F6d SHIPPED + PUSHED; F6c REFRAMED +
+RULINGS SETTLED (implementation NOT started); F6b deferred.** Rulings resolved in
+§3b; F6a shape + gates in main plan `region-library-plan.md` §7; F6d commit
+`20e185682`. **F6c was reframed 2026-07-13 (user): configurable maze connection
+settings + fix the runner library gap — the executable design is in §4 F6c; a
+fresh session should START THERE.** This doc's §1–§2 (why sphere is harder, engine
+seams) + §3b stay reference.
 This is the last phase of the region-library arc (main plan
 `CC/docs/plans/region-library-plan.md`; memory `project_region_library`). F1–F5
 are DONE + gated (on `main`, not pushed): the library is a spiral **content
@@ -193,14 +195,75 @@ All four priority questions landed on the recommended option:
   exactly the "can this entry host this gate?" test). Whichever: byte-inert at
   defaults still holds, and the winnability stratum stays Generate.py fill.
 
-- **F6c — maze sphere placement + (maybe) exit-carve. Needs rulings.** Maze sides
-  are REAL holes, not re-keyable — so there is no `instantiateLibraryEntryForSpecs`
-  relabel equivalent. Either ⊆-fit only (a maze entry fits a node iff its captured
-  sides ⊇ the node's needed sides — very restrictive) or build the exit-carve op
-  (carve a hole on the needed side + re-extract; main plan §6 open-q 1). Maze gates
-  are physical walls the fixed entry can't rebuild → they ride as overlays too
-  (same F6a contract). The maze hook is `instantiateLibraryEntry` (spiral,
-  sides-only) — F6c adds the sphere/entrance/back-portal + item-map layer.
+- **F6c — REFRAMED 2026-07-13 (user): configurable maze connection + fix the
+  runner library gap. RULINGS SETTLED; implementation NOT started.** The original
+  ⊆-fit-vs-exit-carve framing was based on an INCOMPLETE analysis — see the
+  enabling finding below. Do **runner first, then maze** (user sequencing ruling).
+
+  **KEY ENABLING FINDING (procgenPipelineEngine.js `stitchGrid` @ :491):** region
+  links are resolved BY SIDE — `exit.target_region = grid.neighborCell(cell, side)`.
+  Tile position is used only to look up the side (`exits_placed`) + for rendering;
+  it does NOT gate the logical connection. So a maze region whose opening is on the
+  correct SIDE but the "wrong" tile still connects correctly in AP logic. That means
+  **"no tile alignment" is winnability-sound under the overlay doctrine** (the F6a
+  logic-looser-than-physics contract): the connection holds logically; only the
+  physical opening may not line up (like F6a's "walkable past the gate"). This
+  dissolves the need for exit-carve.
+
+  **The two irreducible maze requirements become CONFIGURABLE (user ruling):**
+  - `mazeRequireSameWall` — ON: a maze exit only serves the side its hole is on
+    (⊆-fit-by-side). OFF: **relabel** the exit's LOGICAL side onto any needed side
+    (the maze analogue of bounce's `moveSphereExitSide`); the physical hole stays
+    put (logic-looser-than-physics).
+  - `mazeRequireTileAlign` — ON: the opening must sit at the grid-mirror tile
+    (`mirrorTileAcrossSide`, :1070/:1548 — what generated maze does today; a captured
+    maze would need exit-carve to satisfy it). OFF: use the captured opening's tile;
+    the connection stays side-based logic.
+  - **Both default ON** (user ruling) → current maze output byte-identical (byte-inert
+    gate holds trivially; strict positional connection preserved for real playable
+    maze worlds). **Both OFF** → maze exits behave exactly like bounce portals (any
+    opening → any needed side, no tile constraint) → F6c reuses the F6a abstract
+    machinery: overlay gates, self-contained region, winnable on logic.
+  - Settings live on maze `regionParams` (like bounce's `bounceMode`); surface in
+    the panel later (mirror the bounce mode controls). `applySphereBackExit` (:4374)
+    uses `specs.entranceTile` — with tile-align OFF it must use the captured opening's
+    tile on the (relabeled) entrance side instead.
+
+  **RUNNER GAP (user: "should already work like bounce; if not, we made a mistake").
+  CONFIRMED — runner has ZERO library hooks.** Runner IS a zone/portal substrate
+  (`generateZoneForSpecs`, `sidePortals`, `backPortalGated`, `buildZonePayload` in
+  `runnerDemo/zoneRules.js` — signature identical to bounce's), but F1–F6a only wired
+  bounce, so `runnerDemoLibrary.js`'s `createRunnerSubstrateEntry` registers NONE of
+  `captureLibraryEntry` / `instantiateLibraryEntry` / `instantiateLibraryEntryForSpecs`
+  / `validateLibraryEntry`. **Runner-first deliverable = add those four hooks.**
+  `bounceLibraryEntry.js` is the template and is cleanly parameterizable (the
+  substrate-specific bits are: the payload level key — bounce `bounceLevel` vs runner
+  `runnerLevel`; the `buildZonePayload` dep; the portal-direction relabel — bounce
+  sets `portal.direction` from `SIDE_DIRECTIONS`, check whether runner portals carry a
+  direction; the substrate id). RECOMMENDED: extract a shared
+  `shared/procgen/zoneLibraryEntry.js` both bounce and runner consume (bounce +
+  runner share the zone model), OR mirror-and-adapt into `runnerLibraryEntry.js` if
+  extraction risks the SHIPPED+gated bounce code. Runner then rides sphere library
+  placement through the SAME engine path F6a/F6d built (no engine changes needed —
+  `buildSphereLibraryRegion` already calls `adapter.instantiateLibraryEntryForSpecs`
+  and overlays gates; `resolveSphereLibrarySources` must relax its "bounce entries"
+  check to accept runner too — it currently throws on a non-bounce library).
+
+  **Gates (both sub-phases):** byte-inert at defaults (`dump-sphere-byteidentity`
+  diff-clean, `dump-spiral-byteidentity` 5/5, maze settings ON = no change);
+  independent winnability stratum = Generate.py fill — add runner-sphere +
+  maze-sphere (both settings OFF) roundtrips mirroring
+  `verify-region-library-sphere-roundtrip.mjs`; keep `verify-region-library-ui`
+  36/36 + the three roundtrips + `sphereLibrary.slow` green. Committed demo packs:
+  add a runner pack + a maze-for-sphere pack (make-demo-*-pack.mjs generators).
+
+  **Maze hook shape (F6c-maze):** the maze sphere hook must return a full tile
+  region descriptor (NOT bounce zoneRules), so `buildSphereLibraryRegion` (:4215)
+  needs a branch by region shape (bounce/runner return zoneRules → `assembleZoneRegion`;
+  maze returns a ready descriptor → overlay gate access_rules onto its
+  `extracted_rules.exits`/entrance directly). Item map + filler as F6a. Under both
+  settings OFF, relabel captured exits' sides onto the needed sides (by index, like
+  bounce) and skip the tile-align back-exit retarget.
 
 - **F6d — capture/UI parity. ✅ DONE (`20e185682`).** Wired the `library:<id>`
   sphere quota into the panel's sphere-growth config so a user can tick a bounce
