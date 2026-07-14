@@ -292,14 +292,23 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
       returns null gracefully). HARD BOUNDARY held — data channels +
       coverage only, no scoring/weights (that's item 6). Plan §11 =
       implementation detail; memory [[project_omsi_loops_fork]] session 15.
-   5. Then as before: tail trim / remaining ladder rungs (auto-add,
-      simple balancing) / §11.7 Design B — as the user prioritizes.
+   5. **Assist-ladder rungs 3+2 — RULED NEXT (user 2026-07-13):** simple
+      balancing (rearrange-only waste minimization, prototype-first) then
+      auto-add newly-unlocked reps riding it. Brief + kickoff:
+      *(NewDocs)* `omsi-loops-ladder-rungs-plan.md` /
+      `omsi-loops-ladder-kickoff-prompt.md`. **Tail trim is FOLDED INTO
+      item 6 (user ruling 2026-07-13)** — under the primary loops metric
+      a trimmed partial rep loses free talent, and it forces a
+      re-baseline item 6 already pays for; build it there ticks-gated.
+      §11.7 Design B (live no-pause pipelining) remains after the rungs,
+      as prioritized.
    6. LAST: the recalibration remainder of the ONE re-baseline bundle —
       §11.8 piece 3 scored channels (consumes the item-4 coverage
       report), DNF-aware sweeps, DEFAULT_WEIGHTS recalibration (target:
       recover ≤500 loops on the accurate capacity model), bankPot:8
       re-test, weight-sweep cross-check re-freeze (frontier:1000,
-      bank:10).
+      bank:10), **+ tail trim (ticks-metric-gated; folded in from item 5,
+      user 2026-07-13)**.
    Original queue (for reference):
    1. **Systematic action-code audit (user: HIGH priority)**: read all
       157 actions' reward/effect code and produce a complete census of
