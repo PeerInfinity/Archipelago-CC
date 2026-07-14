@@ -379,8 +379,13 @@ maze, DONE), F6d (panel wiring, DONE). What remains is a set of deferred,
 inter-related follow-ups. None is byte-affecting at defaults, and each keeps the
 Generate.py-fill winnability stratum.
 
-1. **F6b — capability negotiation (physical gate enforcement). NEXT — user ruled
-   candidate (a) per-library capability profile (2026-07-14).** Today `canHost`
+1. **F6b — capability negotiation (physical gate enforcement). RULED but PARKED —
+   deferred until there is a specific example to work with (user, 2026-07-14).**
+   Ruling candidate (a) per-library capability profile is settled; a fresh-session
+   kickoff prompt was drafted, but the user chose to wait for a concrete motivating
+   case before implementing (the design has one open sub-question — see below — that
+   a real example would sharpen). Pick this up when such an example exists. Today
+   `canHost`
    (`procgenPipelineEngine.js:3608`) returns TRUE for ANY `library:<id>` host, so
    every sphere gate rides only as a logic OVERLAY — correct, but the runtime level
    is "walkable past" the gate. F6b physically enforces a gate WHERE the entry can
