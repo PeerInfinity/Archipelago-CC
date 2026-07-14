@@ -1,12 +1,11 @@
 # Region library F6 — sphere-growth reuse (requirement-targeted placement)
 
-**Date:** 2026-07-13 · **Status: F6a + F6d SHIPPED + PUSHED; F6c REFRAMED +
-RULINGS SETTLED (implementation NOT started); F6b deferred.** Rulings resolved in
-§3b; F6a shape + gates in main plan `region-library-plan.md` §7; F6d commit
-`20e185682`. **F6c was reframed 2026-07-13 (user): configurable maze connection
-settings + fix the runner library gap — the executable design is in §4 F6c; a
-fresh session should START THERE.** This doc's §1–§2 (why sphere is harder, engine
-seams) + §3b stay reference.
+**Date:** 2026-07-13 · **Status: F6a + F6d SHIPPED + PUSHED; F6c DONE (both
+sub-phases, on `main`, NOT pushed); F6b deferred.** Rulings resolved in §3b; F6a
+shape + gates in main plan `region-library-plan.md` §7; F6d commit `20e185682`.
+**F6c (reframed 2026-07-13 — configurable maze connection + runner library gap) is
+now IMPLEMENTED: runner sub-phase `f2d08f0bc`, maze sub-phase committed after.**
+This doc's §1–§2 (why sphere is harder, engine seams) + §3b stay reference.
 This is the last phase of the region-library arc (main plan
 `CC/docs/plans/region-library-plan.md`; memory `project_region_library`). F1–F5
 are DONE + gated (on `main`, not pushed): the library is a spiral **content
@@ -195,10 +194,36 @@ All four priority questions landed on the recommended option:
   exactly the "can this entry host this gate?" test). Whichever: byte-inert at
   defaults still holds, and the winnability stratum stays Generate.py fill.
 
-- **F6c — REFRAMED 2026-07-13 (user): configurable maze connection + fix the
-  runner library gap. RULINGS SETTLED; implementation NOT started.** The original
-  ⊆-fit-vs-exit-carve framing was based on an INCOMPLETE analysis — see the
-  enabling finding below. Do **runner first, then maze** (user sequencing ruling).
+- **F6c — DONE 2026-07-13 (both sub-phases, on `main`, NOT pushed): configurable
+  maze connection + the runner library gap.** Runner `f2d08f0bc`, maze after. The
+  original ⊆-fit-vs-exit-carve framing was based on an INCOMPLETE analysis — see the
+  enabling finding below. Built **runner first, then maze** (user sequencing ruling).
+
+  **AS BUILT (both sub-phases):**
+  - **Runner (`f2d08f0bc`):** `runnerDemo/runnerLibraryEntry.js` (mirror-and-adapt of
+    bounceLibraryEntry — NOT the shared-extraction option, to keep the SHIPPED+gated
+    bounce code untouched; runnerLevel key, always-present physics stamp, portal
+    `arrow` relabel). Registered the 4 hooks; `resolveSphereLibrarySources` now
+    registry-driven (accepts any substrate with `instantiateLibraryEntryForSpecs`);
+    `regionLibraryValidator` `runner: 'content'`. Committed `demo-runner-pack.json`
+    (built via generateZoneForSpecs — FAST; the 6-zone default table via
+    extractZoneRules is the minute-plus path, avoided) + runner sphere roundtrip.
+  - **Maze:** `mazeLibraryEntry.js instantiateTileGridLibraryEntryForSpecs` returns a
+    FULL descriptor; `buildSphereLibraryRegion` branches on `adapter.generateRegionCore`
+    (procedural → overlay child gates onto `extracted_rules.exits` by side, entrance
+    handled by `applySphereBackExit`; zone → the F6a assembleZoneRegion path). Settings
+    `mazeRequireSameWall`/`mazeRequireTileAlign` on regionParams, both default ON:
+    tile-align ON THROWS for a captured entry (needs carve — out of scope); both OFF
+    relabels child openings by index at captured tiles. REUSED `demo-maze-pack.json`
+    (F3; 4-side/multi-slot entries already fit sphere — a new pack would duplicate)
+    for the maze sphere roundtrip. The entrance side gets no forward exit (back-portal
+    carries it), and the back-exit tile stays `specs.entranceTile` — winnability is
+    side-based so the physical-tile nicety was not needed (deferred).
+  - **Gates (both):** dump-spiral 5/5, dump-sphere byte-identical (engine edits in the
+    isLibrarySourceId branch + a generateRegionCore shape-branch — untaken/unchanged
+    for library-less worlds), verify-region-library-ui 36/36, bounce+runner+maze
+    sphere roundtrips + spiral roundtrip green (Generate.py fill = independent
+    winnability stratum), sphereLibrary.slow 9/9, maze/runner/region-library units.
 
   **KEY ENABLING FINDING (procgenPipelineEngine.js `stitchGrid` @ :491):** region
   links are resolved BY SIDE — `exit.target_region = grid.neighborCell(cell, side)`.

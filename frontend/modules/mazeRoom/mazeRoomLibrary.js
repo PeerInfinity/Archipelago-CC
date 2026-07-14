@@ -29,6 +29,7 @@ import {
 import {
     captureTileGridLibraryEntry,
     instantiateTileGridLibraryEntry,
+    instantiateTileGridLibraryEntryForSpecs,
     validateTileGridLibraryEntry,
 } from './mazeLibraryEntry.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
@@ -148,6 +149,17 @@ export const substrateRegistryEntry = Object.freeze({
         substrate: 'maze',
     }),
     instantiateLibraryEntry: (entry, ctx) => instantiateTileGridLibraryEntry(entry, ctx, {
+        deserialize: tileGridDeserializer,
+        extract: tileGridPathExtractor,
+        substrate: 'maze',
+    }),
+    // Requirement-aware sphere placement (region-library F6c): relabels captured
+    // openings onto the slot's child sides (mazeRequireSameWall OFF) at their
+    // captured tiles (mazeRequireTileAlign OFF) + maps the node's items onto slots;
+    // the engine overlays each child gate as an access_rule. Returns a full tile
+    // region descriptor (buildSphereLibraryRegion branches on region shape). See
+    // mazeLibraryEntry.js.
+    instantiateLibraryEntryForSpecs: (entry, ctx) => instantiateTileGridLibraryEntryForSpecs(entry, ctx, {
         deserialize: tileGridDeserializer,
         extract: tileGridPathExtractor,
         substrate: 'maze',

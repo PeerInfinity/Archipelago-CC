@@ -4220,9 +4220,42 @@ function buildSphereLibraryRegion(sourceId, entry, {
     if (typeof adapter.instantiateLibraryEntryForSpecs !== 'function') {
         throw new Error(
             `${sourceId}: substrate '${entry.substrate}' (entry '${entry.entry_id}') has `
-            + 'no instantiateLibraryEntryForSpecs hook — sphere-growth library reuse is '
-            + 'bounce-only in F6a');
+            + 'no instantiateLibraryEntryForSpecs hook — sphere-growth library reuse needs '
+            + 'a zone substrate (bounce/runner) or a tile substrate wired for it (maze)');
     }
+
+    // Region-shape branch (region-library F6c). A PROCEDURAL/tile substrate (maze —
+    // adapter.generateRegionCore) returns a FULL region descriptor (real exits on the
+    // needed sides at captured tiles); a ZONE substrate (bounce/runner) returns
+    // GEOMETRY-only zoneRules that assembleZoneRegion turns into synthetic-exit
+    // descriptors. Both overlay the DRIVER's per-child gate as an access_rule
+    // (logic-looser-than-physics) — the tile branch onto the extracted exits
+    // directly, the zone branch via the zoneRules → assembleZoneRegion attach.
+    if (typeof adapter.generateRegionCore === 'function') {
+        const region = adapter.instantiateLibraryEntryForSpecs(entry, {
+            region_id,
+            regionSize,
+            exitSides: neededSides,
+            locationSpecs: locations.map((l) => ({ item: l.item })),
+            fillerItem: LIBRARY_SLOT_FILLER_ITEM,
+            regionParams,
+        });
+        // Overlay each child exit's gate onto its extracted exit (matched by side via
+        // exits_placed). The ENTRANCE side has no forward exit in the tile branch —
+        // the driver's back-portal (applySphereBackExit) carries the return route,
+        // and buildRulesJson's post-pass copies the forward gate's rule onto it.
+        const sideToExitId = new Map((region.exits_placed ?? []).map((e) => [e.side, e.exit_id]));
+        const exitById = new Map((region.extracted_rules?.exits ?? []).map((e) => [e.id, e]));
+        for (const e of exitPlans) {
+            const r = sphereGateRule(e.gate, e.gateCounts ?? {});
+            if (!r) continue;
+            const ex = exitById.get(sideToExitId.get(e.side));
+            if (ex) ex.access_rule = r;
+        }
+        region.placed_logic_gates = region.placed_logic_gates ?? [];
+        return region;
+    }
+
     // The substrate returns GEOMETRY-only zoneRules (relabelled portals + the
     // node items mapped onto captured slots; engine filler on the surplus).
     const zoneRules = adapter.instantiateLibraryEntryForSpecs(entry, {
@@ -4231,6 +4264,7 @@ function buildSphereLibraryRegion(sourceId, entry, {
         exitSides: neededSides,
         locationSpecs: locations.map((l) => ({ item: l.item })),
         fillerItem: LIBRARY_SLOT_FILLER_ITEM,
+        regionParams,
     });
 
     // Gate OVERLAY: each child exit carries its gate rule; the entrance side
