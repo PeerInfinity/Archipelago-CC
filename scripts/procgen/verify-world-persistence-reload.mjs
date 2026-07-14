@@ -182,6 +182,60 @@ try {
   check('restored inline source label preserved',
     (await rulesSource()) === 'userLoaded:persist-inline-test.json', String(await rulesSource()));
 
+  // ── 4c. Substrate reattach spot-check (JtA dataset-keyed slot) ─────
+  // The JtA save slot keys on dataset_id, which lives in preset_sidecars — a
+  // raw-rules-only field. Prove that identity survives a reload: load the JtA
+  // dataset preset, reload, and confirm the restored raw JSON carries the same
+  // dataset_id (so the slot re-keys to the same world by construction).
+  const JTA_PATH =
+    './presets/jta_dataset_test/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+  const readDatasetId = () =>
+    page.evaluate(async () => {
+      const mod = await import('./modules/stateManager/index.js');
+      const raw = mod.getLastRawJsonData?.()?.rawJsonData;
+      const sidecars = raw?.preset_sidecars;
+      if (!sidecars) return null;
+      // Walk to the first jta_dataset_ref.dataset_id.
+      let found = null;
+      const walk = (o) => {
+        if (found || !o || typeof o !== 'object') return;
+        if (o.jta_dataset_ref?.dataset_id) {
+          found = o.jta_dataset_ref.dataset_id;
+          return;
+        }
+        for (const v of Object.values(o)) walk(v);
+      };
+      walk(sidecars);
+      return found;
+    });
+
+  const jtaLoaded = await page.evaluate(async (path) => {
+    const r = await fetch(path);
+    if (!r.ok) return null;
+    const jsonData = await r.json();
+    const publishers = window.eventBus.publishers?.['files:jsonLoaded'];
+    const publisher = publishers ? [...publishers.keys()][0] : 'presets';
+    window.eventBus.publish(
+      'files:jsonLoaded',
+      { jsonData, selectedPlayerId: 1, sourceName: path },
+      publisher
+    );
+    return true;
+  }, JTA_PATH);
+  check('JtA dataset preset published', !!jtaLoaded);
+  await waitFor('JtA record persisted as its path', async () => {
+    const r = await readRecord();
+    return r && r.path === JTA_PATH ? r : null;
+  });
+  const datasetBefore = await waitFor('dataset_id readable before reload', readDatasetId);
+  await page.reload();
+  await bootReady();
+  check('JtA world restored after reload',
+    (await rulesSource()) === JTA_PATH, String(await rulesSource()));
+  const datasetAfter = await waitFor('dataset_id readable after reload', readDatasetId);
+  check('JtA dataset_id (slot key) survives the reload identically',
+    datasetAfter === datasetBefore, `${datasetAfter} vs ${datasetBefore}`);
+
   // ── 5. ?reset=true (same tab) → default boots, entry cleared ───────
   await page.goto(`${BASE}?reset=true`);
   await bootReady();
