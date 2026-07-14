@@ -314,9 +314,9 @@ Every phase ends with the byte-identity gate green
   "working library", with export/download of the JSON file (which can then be
   committed to `frontend/region-libraries/` and indexed).
 - **F6 — sphere-growth reuse.** Requirement-targeted placement of library
-  entries. **F6a DONE** (bounce, overlay gates) — see §7 + `region-library-f6-plan.md`
-  §3b for the rulings. F6b (capability negotiation / physical enforcement),
-  F6c (maze + exit-carve) and F6d (capture/UI parity) remain deferred; nothing in
+  entries. **F6a + F6d DONE** (bounce, overlay gates + panel/UI wiring) — see §7 +
+  `region-library-f6-plan.md` §3b for the rulings. F6b (capability negotiation /
+  physical enforcement) and F6c (maze + exit-carve) remain deferred; nothing in
   F1–F5 depends on any of them.
 
 ## 5. Gates / acceptance
@@ -456,11 +456,11 @@ Phase B reloads and proves the served reference re-resolves + Generates the same
 world; Phase C Saves a region, Downloads the working library, and asserts it
 validates AND the entry re-instantiates into a self-contained maze region.
 
-**F6a DONE** (2026-07-13, Opus, on `main`, not pushed) — see the F6a commit log
-below. **F6b/F6c/F6d remain deferred** (capability negotiation, maze + exit-carve,
-capture/UI parity); nothing in F1–F5 depends on them. The design brief +
-resolved rulings are **`CC/docs/plans/region-library-f6-plan.md`** (§3b RULINGS) —
-read that first for an F6b+ session.
+**F6a + F6d DONE** (2026-07-13, Opus, on `main`, not pushed) — see the F6a and
+F6d commit logs below. **F6b/F6c remain deferred** (capability negotiation /
+physical enforcement; maze + exit-carve); nothing in F1–F5 depends on them. The
+design brief + resolved rulings are **`CC/docs/plans/region-library-f6-plan.md`**
+(§3b RULINGS + §4 F6b/F6c) — read that first for an F6b/F6c session.
 
 ### F6a — sphere-growth reuse (bounce, overlay gates), 2026-07-13
 
@@ -495,3 +495,43 @@ no-fit · rng-free**. Q5/Q6 defaults kept (pure geometry; re-derive at placement
 - **Unit suite:** `sphereLibrary.slow.test.js` (9 tests — placement + gate
   overlay + portal relabel + rng-free determinism + byte-inert at quota 0 + loud
   no-fit + missing-doc).
+
+### F6d — sphere library reachable from the pipeline panel, 2026-07-13
+
+**DONE** (`20e185682`, on `main`, not pushed). F6a shipped the sphere library
+ENGINE path but it was reachable only from headless tests; F6d makes it usable
+from the panel. Sequencing ruling (user): F6d before F6b/F6c (reachability beats
+fidelity — overlay worlds are already winnable). UX ruling (user): show all served
+libraries in sphere mode, DISABLE non-bounce packs with a note.
+
+- **Panel** (`procgenPipelineUI.js`): the Region-libraries subsection now renders
+  in sphere mode (was shuffled-spiral only); `_buildSphereConfig` merges the
+  bounce-carrying subset of `this.regionLibraries` (via `buildLibrarySpiralConfig`)
+  into the sphere `substrateQuotas` + `substrateConfig`, but ONLY when a bounce
+  library is selected → library-less worlds keep the exact prior config
+  (byte-inert). `_configFromCfgPrep` threads `substrateConfig`. Served rows disable
+  + annotate non-bounce packs in sphere mode; a selected non-bounce pack is marked
+  "not used (bounce-only)".
+- **Stepped runner** (`sphereSteps.js`) — THE MISSING WIRE: F6a only fed
+  `librarySources` through the direct `growSpheres`/`growSpheresBatchedGen` path.
+  The panel drives the STEPPED runner, whose `stepRegions` called
+  `realiseSphereBatchGen` WITHOUT library sources → "library node has no resolved
+  content source". Fix: `growConfigFrom` carries `substrateConfig` into
+  `growthParams`; `stepRegions` resolves `library:<id>` quotas (via the now-exported
+  engine `resolveSphereLibrarySources`) and threads them into
+  `realiseSphereBatchGen` (which already accepted `librarySources`). Built once per
+  grow, stashed on `env` so the prefer-least-used counter survives sphere-major
+  batches; rebuilt on a batch-0 restart. Engine change = the `export` only.
+- **Gate** — `verify-region-library-ui.mjs` **Phase D** (new; 20/20 → **36/36**):
+  a fresh sphere-mode context proves the subsection renders, the bounce pack is
+  enabled while the maze pack is disabled, ticking the bounce library grows a
+  compiled sphere-growth world (4 regions) whose playable regions are
+  self-contained (no `libraryDoc`, no library id in `regions`; the id may appear in
+  `procgen_metadata.sphere_tree` as build provenance), and unticking regenerates a
+  materially different world (the selection reached the sphere config).
+- **All arc gates green:** `dump-spiral-byteidentity` 5/5,
+  `verify-region-library-roundtrip` 13/13, `verify-region-library-sphere-roundtrip`
+  (winnable), `sphereLibrary.slow` 9/9, `sphereSteps` 33/33 (unify invariant
+  intact), region-library unit 36/36.
+- **F6b/F6c remain deferred** (capability negotiation / physical enforcement; maze
+  + exit-carve). See `region-library-f6-plan.md` §4.

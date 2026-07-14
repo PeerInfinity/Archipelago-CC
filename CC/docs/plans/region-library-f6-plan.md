@@ -1,9 +1,10 @@
 # Region library F6 — sphere-growth reuse (requirement-targeted placement)
 
-**Date:** 2026-07-13 · **Status: F6a SHIPPED (on `main`, not pushed); F6b/c/d
-deferred.** Rulings resolved in §3b; F6a implementation shape + gates in the main
-plan `region-library-plan.md` §7. This doc's §1–§2 (why sphere is harder, engine
-seams) and §3b (rulings) stay the reference for an F6b+ session.
+**Date:** 2026-07-13 · **Status: F6a + F6d SHIPPED (on `main`, not pushed);
+F6b/F6c deferred.** Rulings resolved in §3b; F6a implementation shape + gates in
+the main plan `region-library-plan.md` §7; F6d (panel/UI wiring) commit
+`20e185682` (see §4 F6d + main plan §7). This doc's §1–§2 (why sphere is harder,
+engine seams) and §3b (rulings) stay the reference for an F6b/F6c session.
 This is the last phase of the region-library arc (main plan
 `CC/docs/plans/region-library-plan.md`; memory `project_region_library`). F1–F5
 are DONE + gated (on `main`, not pushed): the library is a spiral **content
@@ -201,12 +202,41 @@ All four priority questions landed on the recommended option:
   (same F6a contract). The maze hook is `instantiateLibraryEntry` (spiral,
   sides-only) — F6c adds the sphere/entrance/back-portal + item-map layer.
 
-- **F6d — capture/UI parity.** Surface sphere library usage in the panel (sphere
-  mode already has the F5 Save button on `_renderRegionEditRow`); wire a
-  `library:<id>` sphere quota into the panel's sphere-growth config (F6a is
-  engine-only — tests/e2e drive `substrateQuotas` directly). The committed
-  `demo-bounce-pack.json` + its index entry already exist for the panel to pick up.
-  Any capture-metadata additions land here (none needed for F6a/overlay).
+- **F6d — capture/UI parity. ✅ DONE (`20e185682`).** Wired the `library:<id>`
+  sphere quota into the panel's sphere-growth config so a user can tick a bounce
+  pack and grow a sphere world with it (F6a was engine-only). Sequencing ruling
+  (user): F6d before F6b/F6c — F6a already yields winnable overlay worlds, so
+  reachability beats fidelity. UX ruling (user): show ALL served libraries in
+  sphere mode but DISABLE non-bounce packs (bounce-only, F6a), with a note.
+  - Panel (`procgenPipelineUI.js`): render the Region-libraries subsection in
+    sphere mode; `_buildSphereConfig` merges the bounce-carrying subset of
+    `this.regionLibraries` (via `buildLibrarySpiralConfig`) into the sphere
+    `substrateQuotas`/`substrateConfig` — ONLY when a bounce library is selected,
+    so library-less worlds keep the exact prior config (byte-inert);
+    `_configFromCfgPrep` threads `substrateConfig`. Served rows disable + annotate
+    non-bounce packs; a selected non-bounce pack shows "not used (bounce-only)".
+  - **The missing wire (the real F6d work):** F6a only fed `librarySources`
+    through the direct `growSpheres`/`growSpheresBatchedGen` path. The PANEL drives
+    the STEPPED runner (`sphereSteps.js`), which called `realiseSphereBatchGen`
+    WITHOUT library sources → "library node has no resolved content source". Fix:
+    `growConfigFrom` carries `substrateConfig` into `growthParams`; `stepRegions`
+    resolves `library:<id>` quotas (via the now-exported
+    `resolveSphereLibrarySources`) and threads them into `realiseSphereBatchGen`
+    (which already accepted `librarySources`). Built once per grow, stashed on
+    `env` so the prefer-least-used counter survives sphere-major batches; rebuilt
+    on a batch-0 restart.
+  - Gate: `verify-region-library-ui.mjs` Phase D (new; 20/20 → **36/36**) — a
+    fresh sphere-mode context proves the subsection renders, bounce enabled /
+    maze disabled, ticking grows a compiled sphere-growth world (self-contained
+    playable regions; library id only as `procgen_metadata.sphere_tree`
+    provenance), and unticking regenerates a materially different world.
+  - No richer capture needed (overlay-only) — Q6 default held. The committed
+    `demo-bounce-pack.json` + index entry were already present.
+  - KNOWN LIMITATION (out of scope, note for F6b/rebuild): the sphere_tree
+    records a library node's source substrate as `library:<id>`, so
+    `rebuildEnvelopeFromRulesJson` on a compiled library sphere world would need
+    the libraryDoc (absent from the world) — rebuild/resume of library worlds is a
+    separate capability, not claimed by F6a/F6d.
 
 ## 5. Gates & conventions (unchanged from the arc)
 
