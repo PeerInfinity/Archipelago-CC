@@ -1,6 +1,9 @@
 # Region library F6 — sphere-growth reuse (requirement-targeted placement)
 
-**Date:** 2026-07-13 · **Status: DESIGN — rulings needed before implementation.**
+**Date:** 2026-07-13 · **Status: F6a SHIPPED (on `main`, not pushed); F6b/c/d
+deferred.** Rulings resolved in §3b; F6a implementation shape + gates in the main
+plan `region-library-plan.md` §7. This doc's §1–§2 (why sphere is harder, engine
+seams) and §3b (rulings) stay the reference for an F6b+ session.
 This is the last phase of the region-library arc (main plan
 `CC/docs/plans/region-library-plan.md`; memory `project_region_library`). F1–F5
 are DONE + gated (on `main`, not pushed): the library is a spiral **content
@@ -99,6 +102,67 @@ irreducible:
 6. **Capture parity.** F5 capture stores sphere-agnostic entries. Does F6 need a
    richer capture (e.g. carry hostable-gate metadata), or does re-derivation at
    placement suffice?
+
+## 3b. RULINGS (user, 2026-07-13) — §3 resolved; F6a refined below
+
+All four priority questions landed on the recommended option:
+
+1. **Scope → bounce-first.** F6a places only **bounce** library entries into
+   sphere worlds. Bounce's `sidePortals` are re-keyable (side-fitting is a
+   relabel, geometry untouched — `moveSphereExitSide`), so the exit-geometry
+   problem is free and only the access-rule problem remains. Maze (real holes +
+   physical gates) is F6c.
+2. **Gate strategy → overlay-only for F6a.** Each exit/entrance gate rides as an
+   annotated `access_rule` (`sphereGateRule`) on the exit — logic-looser-than-
+   physics, the blessed jta contract. The captured bounce level is reused as pure
+   playable geometry; the AP LOGIC (rules.json) enforces the gate, not the
+   level's physics (the region is "walkable past" the gate at runtime). This is
+   sound under the AP-logic doctrine (winnability = bot/witness solve on LOGIC).
+   Capability negotiation (physical enforcement where the entry can host) is F6b;
+   the hybrid destination is deferred, not abandoned.
+3. **Exit-carve → keep loud no-fit; defer.** Moot for bounce (relabel fits any
+   side). Revisit in F6c.
+4. **RNG → rng-free, mirror F4.** Entry selection is prefer-least-used-then-
+   declaration-order among fitting entries; a library node draws **zero** rng —
+   NOT even the per-node seed a generated zone node draws. Determinism goldens
+   with no library selected are byte-identical by construction (no library nodes
+   ⇒ no new branches taken); library-present worlds are trivially reproducible.
+5. **Item/location rules → pure geometry (default kept).** The engine owns items
+   (node.items map onto the entry's captured pickup slots; surplus slots get
+   `LIBRARY_SLOT_FILLER_ITEM`, mirroring spiral). Entries advertise no scenario
+   rules in v1.
+6. **Capture parity → no richer capture (default kept).** F5 entries suffice;
+   hostable-gate capacity is not needed under overlay-only (overlay hosts any
+   gate). Re-derivation happens at placement.
+
+### F6a implementation shape (as built)
+
+- **Bounce adapter hook `instantiateLibraryEntryForSpecs(entry, ctx, deps)`**
+  (in `bounceLibraryEntry.js`) — the requirement-aware sphere analogue of the
+  spiral `instantiateLibraryEntry`. Owns the substrate-internal relabel: re-key
+  `sidePortals` + set each portal's `direction` to the target side (the
+  `moveSphereExitSide` relabel done at build time), rename the captured level's
+  pickups to the node's location ids + items, stamp filler on surplus pickups,
+  and return GEOMETRY-ONLY `zoneRules` (`{ locations, payload, obstacleDefs:{} }`,
+  no exit rules). Keeps the engine substrate-agnostic — the gate overlay is the
+  driver's, composed engine-side.
+- **Engine `buildSphereLibrarySource(id, doc)` + `buildSphereLibraryRegion`** —
+  a stateful sphere content source (usage counter persists across nodes for
+  prefer-least-used, like `buildLibraryContentSource`). `buildSphereLibraryRegion`
+  fit-selects a bounce entry (enough portals for child sides ∪ entrance side;
+  enough location slots), calls the hook, then OVERLAYS `exitRules[side] =
+  sphereGateRule(childGate)` for each child exit and `exitRules[entranceSide] =
+  sphereGateRule(entryGate)` for the back portal, and assembles via
+  `assembleZoneRegion`. Sets `playable_payload.params.backExitSide` +
+  `fallBehavior` (parity with `generateRegionZoneGen`). Loud no-fit.
+- **Dispatch** in `realiseOneSphereNode`: `isLibrarySourceId(node.substrate)` →
+  `buildSphereLibraryRegion` (no rng draw). Library sources built once in
+  `growSpheresGen` and threaded through `realiseSphereNodes`.
+- **Capability guards:** `canHost` returns true for a library-substrate host
+  (overlay hosts any gate; still bounded by usedSides < 4); the upfront quota
+  validation in `growSpheresGen` + the batched driver accept `library:<id>` ids
+  (validated against `growthParams.substrateConfig[id].libraryDoc`) instead of
+  throwing "not registered / no realiser hook".
 
 ## 4. Tentative phase breakdown (refine after §3 rulings)
 

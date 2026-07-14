@@ -44,6 +44,7 @@ import {
 import {
     captureBounceLibraryEntry,
     instantiateBounceLibraryEntry,
+    instantiateLibraryEntryForSpecs,
     validateBounceLibraryEntry,
 } from './bounceLibraryEntry.js';
 
@@ -867,6 +868,12 @@ export function createBounceSubstrateEntry({
         // for the slot's sides (⊆ the entry's captured sides). See bounceLibraryEntry.js.
         captureLibraryEntry: captureBounceLibraryEntry,
         instantiateLibraryEntry: (entry, ctx) => instantiateBounceLibraryEntry(entry, ctx, { buildZonePayload }),
+        // Requirement-aware sphere placement (region-library F6a): relabels the
+        // captured portals onto the slot's specific sides + reassigns the node's
+        // items; the engine overlays each gate as an access_rule. See
+        // bounceLibraryEntry.js / buildSphereLibraryRegion.
+        instantiateLibraryEntryForSpecs: (entry, ctx) =>
+            instantiateLibraryEntryForSpecs(entry, ctx, { buildZonePayload }),
         validateLibraryEntry: validateBounceLibraryEntry,
 
         // Sphere-driven growth: requirement-targeted generation + the

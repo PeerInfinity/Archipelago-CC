@@ -3601,6 +3601,11 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
 
     const canHost = (host, gateTerms) => {
         if (host.usedSides.size >= 4) return false;
+        // A library content source (region-library F6a) hosts ANY gate — the gate
+        // rides as an access_rule OVERLAY on the exit (logic-looser-than-physics),
+        // which no fixed geometry can veto. Bounded only by the 4-side budget
+        // above. (Physical enforcement / capability negotiation is F6b.)
+        if (isLibrarySourceId(host.substrate)) return true;
         const adapter = substrateRegistry.get(host.substrate);
         if (!adapter) return false;
         const gateable = adapter.gateableItems ?? null;
@@ -4141,6 +4146,158 @@ function sphereGateRule(gate, gateCounts = {}) {
         : makeAndRule(gate.map((item) => makeHasRule(item, gateCounts[item] ?? 1)));
 }
 
+// --- Sphere-growth library content source (region-library F6a) ---
+//
+// The sphere analogue of buildLibraryContentSource (the spiral F4 source). A
+// sphere slot is HARDER than a spiral slot: it needs SPECIFIC sides (entrance
+// mirrored from the parent's placed exit + child sides) and carries per-exit
+// GATES. F6a is BOUNCE-ONLY: a bounce entry's sidePortals are re-keyable, so the
+// substrate hook (instantiateLibraryEntryForSpecs) relabels its portals onto the
+// requested sides; the GATE is realised here as an access_rule OVERLAY
+// (logic-looser-than-physics — the captured level is reused as pure geometry, the
+// AP LOGIC enforces the gate; physical enforcement where hostable is F6b).
+//
+// Selection is RNG-FREE (Q4 ruling): least-used-then-declaration-order among
+// fitting entries, mirroring the spiral source. A library node draws ZERO rng
+// (realiseOneSphereNode skips the per-node zone seed too), so library-absent
+// worlds are byte-identical.
+function buildSphereLibrarySource(sourceId, doc) {
+    const entries = Array.isArray(doc.entries) ? doc.entries : [];
+    const usage = new Map(); // entry_id -> times used
+    return {
+        poolSize: entries.length,
+        instantiate: (specs) => {
+            const {
+                region_id, regionSize, exitPlans, locations, entranceSide,
+                entryGate = [], entryGateCounts = {}, regionParams = {},
+            } = specs;
+            // Sides this region needs, ORDERED (entrance first so its portal
+            // assignment is stable, then children in exit-plan order). The
+            // substrate hook maps captured portals onto these by index.
+            const neededSides = [
+                ...(entranceSide ? [entranceSide] : []),
+                ...exitPlans.map((e) => e.side),
+            ];
+            const nLocs = locations.length;
+            // Fit (v1, bounce): enough re-keyable portals for every needed side
+            // AND enough location slots for the node's items. (No ⊆-by-side match
+            // — bounce relabels; count is the constraint.)
+            const fitting = entries.filter((e) =>
+                (e.exit_sides?.length ?? 0) >= neededSides.length
+                && (e.location_slots ?? 0) >= nLocs);
+            if (fitting.length === 0) {
+                throw new Error(
+                    `${sourceId}: no entry fits sphere slot (needs ${neededSides.length} `
+                    + `side(s) [${neededSides.join(',')}] + ${nLocs} location(s)) for region `
+                    + `'${region_id}' (library '${doc.name ?? doc.library_id}', `
+                    + `${entries.length} entries)`);
+            }
+            // Least-used-then-declaration-order — rng-free.
+            let pick = fitting[0];
+            let best = usage.get(pick.entry_id) ?? 0;
+            for (const e of fitting) {
+                const u = usage.get(e.entry_id) ?? 0;
+                if (u < best) { best = u; pick = e; }
+            }
+            usage.set(pick.entry_id, (usage.get(pick.entry_id) ?? 0) + 1);
+            return buildSphereLibraryRegion(sourceId, pick, {
+                region_id, regionSize, exitPlans, locations, entranceSide,
+                entryGate, entryGateCounts, regionParams, neededSides,
+            });
+        },
+    };
+}
+
+// Realise ONE sphere library node: call the entry's requirement-aware substrate
+// hook for geometry, OVERLAY each gate as an access_rule (the driver's gate,
+// composed engine-side), then assemble the descriptor via the shared
+// assembleZoneRegion tail. Draws no rng.
+function buildSphereLibraryRegion(sourceId, entry, {
+    region_id, regionSize, exitPlans, locations, entranceSide,
+    entryGate = [], entryGateCounts = {}, regionParams = {}, neededSides,
+}) {
+    const adapter = getAdapter(entry.substrate);
+    if (typeof adapter.instantiateLibraryEntryForSpecs !== 'function') {
+        throw new Error(
+            `${sourceId}: substrate '${entry.substrate}' (entry '${entry.entry_id}') has `
+            + 'no instantiateLibraryEntryForSpecs hook — sphere-growth library reuse is '
+            + 'bounce-only in F6a');
+    }
+    // The substrate returns GEOMETRY-only zoneRules (relabelled portals + the
+    // node items mapped onto captured slots; engine filler on the surplus).
+    const zoneRules = adapter.instantiateLibraryEntryForSpecs(entry, {
+        region_id,
+        regionSize,
+        exitSides: neededSides,
+        locationSpecs: locations.map((l) => ({ item: l.item })),
+        fillerItem: LIBRARY_SLOT_FILLER_ITEM,
+    });
+
+    // Gate OVERLAY: each child exit carries its gate rule; the entrance side
+    // rides the back portal gated on the entry gate (unless the substrate ungates
+    // it — braid). No exitPaths are emitted, so assembleZoneRegion attaches the
+    // access_rule (which compileRegion prefers over the always-open path).
+    const exitRules = {};
+    for (const e of exitPlans) {
+        const r = sphereGateRule(e.gate, e.gateCounts ?? {});
+        if (r) exitRules[e.side] = r;
+    }
+    if (entranceSide) {
+        const backGated = adapter.backPortalGated?.(regionParams) ?? true;
+        const r = backGated ? sphereGateRule(entryGate, entryGateCounts) : null;
+        if (r) exitRules[entranceSide] = r;
+    }
+    if (Object.keys(exitRules).length) zoneRules.exitRules = exitRules;
+
+    const region = assembleZoneRegion({
+        substrate: entry.substrate,
+        region_id,
+        regionSize,
+        exitSides: neededSides,
+        zoneRules,
+        zonePayload: {},
+    });
+    // Parity with generateRegionZoneGen: landing on the entrance side resolves to
+    // the driver's back-exit; fallBehavior is per-world.
+    if (region.playable_payload?.params && entranceSide) {
+        region.playable_payload.params.backExitSide = entranceSide;
+        if (regionParams.fallBehavior) {
+            region.playable_payload.params.fallBehavior = regionParams.fallBehavior;
+        }
+    }
+    // assembleZoneRegion omits this write-only field; sphere descriptors carry it.
+    region.placed_logic_gates = region.placed_logic_gates ?? [];
+    return region;
+}
+
+// Resolve the sphere library content sources named in substrateQuotas as
+// `library:<id>` ids (region-library F6a). Each rides its doc on
+// growthParams.substrateConfig[id].libraryDoc (mirroring the spiral source,
+// resolveSpiralContentSource). Built ONCE per grow so each source's usage counter
+// (prefer-least-used) persists across nodes. Also the arrange-time validation for
+// library ids (the upfront quota loop skips them — a library id has no registry
+// entry). Returns { id: source } (empty when no library quota is set).
+function resolveSphereLibrarySources(substrateQuotas, config) {
+    const sources = {};
+    for (const [id, count] of Object.entries(substrateQuotas ?? {})) {
+        if (count <= 0 || !isLibrarySourceId(id)) continue;
+        const doc = config?.growthParams?.substrateConfig?.[id]?.libraryDoc;
+        if (doc == null) {
+            throw new Error(
+                `growSpheres: library content source '${id}' has no libraryDoc in `
+                + 'growthParams.substrateConfig — a selected library must ride the config');
+        }
+        const entries = Array.isArray(doc.entries) ? doc.entries : [];
+        if (!entries.some((e) => e.substrate === 'bounce')) {
+            throw new Error(
+                `growSpheres: library '${id}' has no bounce entries — sphere-growth library `
+                + 'reuse is bounce-only in F6a');
+        }
+        sources[id] = buildSphereLibrarySource(id, doc);
+    }
+    return sources;
+}
+
 /**
  * Build the realiser specs for ONE tree node — the per-child exit plans
  * (side + gate + composed rule), the entrance mirrored from the parent's
@@ -4660,12 +4817,12 @@ function placeSphereTreeCells(grid, nodes, rng, {
 function* realiseSphereNodes(grid, nodes, tree, rng, {
     fromIndex = 0, total = nodes.length,
     regionSize, itemLib, obstacleLib, regionParams, hazardOpts,
-    assumeBidirectional, childrenByParent, stats,
+    assumeBidirectional, childrenByParent, stats, librarySources = null,
 }) {
     for (let i = fromIndex; i < nodes.length; i++) {
         yield* realiseOneSphereNode(grid, nodes[i], tree, rng, {
             total, regionSize, itemLib, obstacleLib, regionParams, hazardOpts,
-            assumeBidirectional, childrenByParent, stats,
+            assumeBidirectional, childrenByParent, stats, librarySources,
         });
     }
 }
@@ -4684,6 +4841,7 @@ function* realiseSphereNodes(grid, nodes, tree, rng, {
 function* realiseOneSphereNode(grid, node, tree, rng, {
     total = 0, regionSize, itemLib, obstacleLib, regionParams, hazardOpts,
     assumeBidirectional, childrenByParent, stats, replace = false,
+    librarySources = null,
 }) {
     // Cell + side were resolved by the placement pre-pass
     // (occupancy-aware adjacency, remote only when fully surrounded).
@@ -4704,36 +4862,52 @@ function* realiseOneSphereNode(grid, node, tree, rng, {
         placements: locations.length,
     };
 
-    const adapter = getAdapter(node.substrate);
     let region;
-    if (typeof adapter.generateRegionCore === 'function') {
-        region = buildSphereProceduralRegion({
-            substrate: node.substrate,
-            region_id,
-            size: regionSize,
-            entrances,
-            exitPlans,
-            locations,
-            itemLib, obstacleLib, rng, params: regionParams, hazardOpts,
-        });
-    } else if (typeof adapter.generateZoneForSpecs === 'function'
-            || typeof adapter.generateZoneForSpecsGen === 'function') {
-        region = yield* buildSphereZoneRegion({
-            substrate: node.substrate,
-            region_id,
-            regionSize,
-            exitPlans,
-            locations,
-            entranceSide,
-            entryGate: node.gate,
-            entryGateCounts: node.gateCounts,
-            regionParams,
-            seed: (rng.next() * 0x7fffffff) | 0,
-            adapter,
+    if (isLibrarySourceId(node.substrate)) {
+        // Library content source (region-library F6a): place a pre-built entry
+        // against the node's specs. Draws NO rng (Q4 ruling — rng-free
+        // selection, no per-node seed) so library-absent worlds are byte-inert.
+        const source = librarySources?.[node.substrate];
+        if (!source) {
+            throw new Error(`growSpheres: library node '${region_id}' has no resolved `
+                + `content source for '${node.substrate}' — a selected library must ride `
+                + 'growthParams.substrateConfig');
+        }
+        region = source.instantiate({
+            region_id, regionSize, exitPlans, locations, entranceSide,
+            entryGate: node.gate, entryGateCounts: node.gateCounts, regionParams,
         });
     } else {
-        throw new Error(`growSpheres: substrate '${node.substrate}' has neither `
-            + 'generateRegionCore nor generateZoneForSpecs');
+        const adapter = getAdapter(node.substrate);
+        if (typeof adapter.generateRegionCore === 'function') {
+            region = buildSphereProceduralRegion({
+                substrate: node.substrate,
+                region_id,
+                size: regionSize,
+                entrances,
+                exitPlans,
+                locations,
+                itemLib, obstacleLib, rng, params: regionParams, hazardOpts,
+            });
+        } else if (typeof adapter.generateZoneForSpecs === 'function'
+                || typeof adapter.generateZoneForSpecsGen === 'function') {
+            region = yield* buildSphereZoneRegion({
+                substrate: node.substrate,
+                region_id,
+                regionSize,
+                exitPlans,
+                locations,
+                entranceSide,
+                entryGate: node.gate,
+                entryGateCounts: node.gateCounts,
+                regionParams,
+                seed: (rng.next() * 0x7fffffff) | 0,
+                adapter,
+            });
+        } else {
+            throw new Error(`growSpheres: substrate '${node.substrate}' has neither `
+                + 'generateRegionCore nor generateZoneForSpecs');
+        }
     }
 
     if (replace) grid.replaceRegion(cell, region);
@@ -4806,9 +4980,11 @@ export function* growSpheresGen(config) {
     // Upfront quota validation (same contract as the spiral): every
     // substrate must be registered and realisable by this driver —
     // procedurally (generateRegionCore) or via the sphere hook
-    // (generateZoneForSpecs, landing with bounce in step 5).
+    // (generateZoneForSpecs, landing with bounce in step 5). Library content
+    // sources (`library:<id>`) have no registry entry; they are validated by
+    // resolveSphereLibrarySources below (F6a) and skipped here.
     for (const [sub, count] of Object.entries(substrateQuotas ?? {})) {
-        if (count <= 0) continue;
+        if (count <= 0 || isLibrarySourceId(sub)) continue;
         const adapter = substrateRegistry.get(sub);
         if (!adapter) {
             throw new Error(`growSpheres: substrate '${sub}' is not registered`);
@@ -4820,6 +4996,9 @@ export function* growSpheresGen(config) {
                 + 'realise requirement-targeted regions');
         }
     }
+    // Region-library sphere content sources (F6a). Empty unless a `library:<id>`
+    // quota is set — so library-absent worlds take no new code path.
+    const librarySources = resolveSphereLibrarySources(substrateQuotas, config);
 
     // The tree-build and region-build can run as SEPARATE pipeline steps:
     // when a pre-built tree (and its live rng — see buildSphereGrowthTree)
@@ -4872,7 +5051,7 @@ export function* growSpheresGen(config) {
     placeSphereTreeCells(grid, tree.nodes, rng, { startCell, teleporterMinGap, dims });
     yield* realiseSphereNodes(grid, tree.nodes, tree, rng, {
         regionSize, itemLib, obstacleLib, regionParams, hazardOpts,
-        assumeBidirectional, childrenByParent, stats,
+        assumeBidirectional, childrenByParent, stats, librarySources,
     });
 
     // Every exit was allocated to a specific child (or teleporter), so
@@ -4917,7 +5096,7 @@ function resolveBatchSize(spheresPerBatch, waves) {
 export function* realiseSphereBatchGen(grid, nodes, tree, rng, {
     prevCount, placed, startCell, teleporterMinGap, dims,
     total, regionSize, itemLib, obstacleLib, regionParams, hazardOpts,
-    assumeBidirectional, stats,
+    assumeBidirectional, stats, librarySources = null,
 }) {
     // childrenByParent over ALL nodes, in index order (== stable exit-plan
     // order); touchedPriorHosts = earlier-batch hosts that gained a child now.
@@ -4937,7 +5116,7 @@ export function* realiseSphereBatchGen(grid, nodes, tree, rng, {
     for (const h of touchedPriorHosts) realiseStart = Math.min(realiseStart, h);
     const realiseOpts = {
         total, regionSize, itemLib, obstacleLib, regionParams, hazardOpts,
-        assumeBidirectional, childrenByParent, stats,
+        assumeBidirectional, childrenByParent, stats, librarySources,
     };
     for (let i = realiseStart; i < nodes.length; i++) {
         const node = nodes[i];
@@ -5010,7 +5189,7 @@ export function* growSpheresBatchedGen(config) {
         throw new Error(`growSpheres: invalid sphere plan — ${planErrors[0]}`);
     }
     for (const [sub, count] of Object.entries(substrateQuotas ?? {})) {
-        if (count <= 0) continue;
+        if (count <= 0 || isLibrarySourceId(sub)) continue;
         const adapter = substrateRegistry.get(sub);
         if (!adapter) {
             throw new Error(`growSpheres: substrate '${sub}' is not registered`);
@@ -5022,6 +5201,8 @@ export function* growSpheresBatchedGen(config) {
                 + 'realise requirement-targeted regions');
         }
     }
+    // Region-library sphere content sources (F6a) — same as growSpheresGen.
+    const librarySources = resolveSphereLibrarySources(substrateQuotas, config);
 
     const opts = {
         maxItemsPerRegion, fillerCount, revisitRatio,
@@ -5078,7 +5259,7 @@ export function* growSpheresBatchedGen(config) {
         yield* realiseSphereBatchGen(grid, nodes, tree, rng, {
             prevCount, placed, startCell, teleporterMinGap, dims,
             total: totalNodes, regionSize, itemLib, obstacleLib, regionParams,
-            hazardOpts, assumeBidirectional, stats,
+            hazardOpts, assumeBidirectional, stats, librarySources,
         });
     }
 

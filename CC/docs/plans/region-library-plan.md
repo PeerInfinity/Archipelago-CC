@@ -313,10 +313,11 @@ Every phase ends with the byte-identity gate green
   region view (and the bounce region editor): appends to a localStorage
   "working library", with export/download of the JSON file (which can then be
   committed to `frontend/region-libraries/` and indexed).
-- **F6 (stretch/deferred-able) — sphere-growth reuse.** Requirement-targeted
-  placement of library entries: capability negotiation from stored/re-derived
-  rules + `logic_gate` overlays for terms the fixed geometry can't host.
-  Explicitly OK to defer to a later session; nothing in F1–F5 depends on it.
+- **F6 — sphere-growth reuse.** Requirement-targeted placement of library
+  entries. **F6a DONE** (bounce, overlay gates) — see §7 + `region-library-f6-plan.md`
+  §3b for the rulings. F6b (capability negotiation / physical enforcement),
+  F6c (maze + exit-carve) and F6d (capture/UI parity) remain deferred; nothing in
+  F1–F5 depends on any of them.
 
 ## 5. Gates / acceptance
 
@@ -455,7 +456,42 @@ Phase B reloads and proves the served reference re-resolves + Generates the same
 world; Phase C Saves a region, Downloads the working library, and asserts it
 validates AND the entry re-instantiates into a self-contained maze region.
 
-**Only F6 (sphere-growth reuse / exit relabel, §4 F6 + §6 open-q 1) remains** —
-a stretch item nothing in F1–F5 depends on. Its design brief (problems, engine
-seams, open questions needing user rulings, tentative phase breakdown) is
-**`CC/docs/plans/region-library-f6-plan.md`** — read that first for an F6 session.
+**F6a DONE** (2026-07-13, Opus, on `main`, not pushed) — see the F6a commit log
+below. **F6b/F6c/F6d remain deferred** (capability negotiation, maze + exit-carve,
+capture/UI parity); nothing in F1–F5 depends on them. The design brief +
+resolved rulings are **`CC/docs/plans/region-library-f6-plan.md`** (§3b RULINGS) —
+read that first for an F6b+ session.
+
+### F6a — sphere-growth reuse (bounce, overlay gates), 2026-07-13
+
+Rulings (all recommended; brief §3b): **bounce-first · overlay-only · keep loud
+no-fit · rng-free**. Q5/Q6 defaults kept (pure geometry; re-derive at placement).
+
+- **Bounce hook `instantiateLibraryEntryForSpecs`** (`bounceLibraryEntry.js`) —
+  relabels the captured `sidePortals` + portal `direction` onto the node's
+  SPECIFIC sides (entrance + child sides) by index, reassigns the node's items
+  onto the captured pickup slots (engine filler on the surplus), returns
+  GEOMETRY-only zoneRules. Registered on the bounce adapter.
+- **Engine `buildSphereLibrarySource` / `buildSphereLibraryRegion`** — rng-free
+  prefer-least-used fit-select (enough portals + slots, else loud no-fit); the
+  gate rides as an access_rule **OVERLAY** (`sphereGateRule`) on each child exit +
+  the entrance back portal (logic-looser-than-physics — the captured level is
+  reused as pure geometry); `assembleZoneRegion` tail; `backExitSide`/`fallBehavior`
+  parity. Dispatch branch in `realiseOneSphereNode` draws **zero rng** (no per-node
+  seed); `resolveSphereLibrarySources` builds sources once from
+  `growthParams.substrateConfig[id].libraryDoc`. Capability guards: `canHost`
+  returns true for a library host (overlay hosts any gate); the upfront quota
+  validation (both `growSpheresGen` + the batched driver) skips `library:<id>`.
+- **Gates:** `dump-sphere-byteidentity` byte-identical with no library selected
+  (library-absent worlds take no new code path — proven); `dump-spiral-byteidentity`
+  5/5; `verify-region-library-roundtrip` 13/13; `verify-region-library-ui` 20/20.
+- **New winnability e2e (independent stratum):**
+  `scripts/procgen/verify-region-library-sphere-roundtrip.mjs` (16/16) — grows a
+  bounce sphere world mixing the committed `demo-bounce-pack.json` with generated
+  bounce regions → `world_generator` → `Generate.py`; AP's OWN fill places the
+  goal + the sphere log references every relocated library location (winnable),
+  which does NOT share the JS placement's assumptions. Pack generator
+  `scripts/procgen/make-demo-bounce-pack.mjs` (committed, deterministic).
+- **Unit suite:** `sphereLibrary.slow.test.js` (9 tests — placement + gate
+  overlay + portal relabel + rng-free determinism + byte-inert at quota 0 + loud
+  no-fit + missing-doc).
