@@ -274,9 +274,9 @@ async function initialize(moduleId, priorityIndex, initializationApi) {
 
       // Persist for restore-after-reload (sessionStorage). Fire-and-forget:
       // the setting read is async, but persistence never blocks the re-emit
-      // above. Gated by generalSettings.restoreLastWorld (default on).
+      // above. Gated by generalSettings.restoreLastWorld (default OFF — opt-in).
       settingsManager
-        .getSetting('generalSettings.restoreLastWorld', true)
+        .getSetting('generalSettings.restoreLastWorld', false)
         .then((enabled) => {
           if (enabled) persistLastWorld(eventData);
         })

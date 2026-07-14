@@ -1,18 +1,27 @@
 /**
- * In-app end-to-end verify for "World persistence across reloads" (P3).
+ * In-app end-to-end verify for "World persistence across reloads".
  * Design: NewDocs/plans/world-persistence-reload-design.md.
  *
- *   1. Boot the app → note the default (first-preset) game. A fresh boot
- *      does NOT persist (only user-driven files:jsonLoaded does), so
- *      sessionStorage.apcc_lastWorld starts empty.
- *   2. Load a DIFFERENT preset by publishing a real files:jsonLoaded through
- *      window.eventBus (the same event the presets panel publishes) →
- *      assert the active game changed AND a path-type record was persisted.
- *   3. page.reload() (same tab, sessionStorage survives) → assert the app
- *      restored the loaded world, NOT the default preset, with no user action.
- *   4. Reload once more → assert the restore repeats (entry kept on success).
- *   5. Navigate to ?reset=true (same tab) → assert the default preset boots
- *      and apcc_lastWorld was cleared.
+ * The feature is OPT-IN (generalSettings.restoreLastWorld, default OFF), so the
+ * verify runs two contexts:
+ *
+ *   PHASE A — OFF BY DEFAULT (fresh context, setting untouched):
+ *     Load a non-default world, confirm NOTHING is persisted (write gate off),
+ *     reload, confirm the default preset boots (read gate off — no restore).
+ *
+ *   PHASE B — ENABLED (context seeded with restoreLastWorld + autoLoadMode on):
+ *     Load a non-default preset by publishing a real files:jsonLoaded through
+ *     window.eventBus (the same event the presets panel fires) → assert a
+ *     path-type record is persisted; reload → assert the loaded world restores
+ *     with no user action; reload again → restore repeats (entry kept on
+ *     success); inline-type restore leg (procgen / manual-upload shape); JtA
+ *     substrate reattach spot-check (dataset_id slot key survives the reload);
+ *     ?reset=true → default boots and the record is cleared.
+ *
+ * Enabling in PHASE B injects a default-mode blob carrying restoreLastWorld +
+ * autoLoadMode = true. That feeds BOTH gates: the raw boot read (modeDataLoader,
+ * before settingsManager is up) sees restoreLastWorld directly, and autoLoadMode
+ * routes the same userSettings into settingsManager for the write-site gate.
  *
  * Requires the dev server on :8000. Run:
  *   node scripts/procgen/verify-world-persistence-reload.mjs
@@ -24,10 +33,13 @@ const BASE = 'http://localhost:8000/frontend/';
 const KEY = 'apcc_lastWorld';
 
 const browser = await chromium.launch();
-const page = await browser.newPage();
-const logs = [];
-page.on('console', (msg) => logs.push(`[${msg.type()}] ${msg.text()}`));
-page.on('pageerror', (err) => logs.push(`[pageerror] ${err.message}`));
+let page; // reassigned per context
+let logs = [];
+
+function attach(p) {
+  p.on('console', (msg) => logs.push(`[${msg.type()}] ${msg.text()}`));
+  p.on('pageerror', (err) => logs.push(`[pageerror] ${err.message}`));
+}
 
 let checks = 0;
 function check(desc, ok, detail = '') {
@@ -84,19 +96,12 @@ async function bootReady() {
   });
 }
 
-try {
-  // ── 1. Boot → default game, nothing persisted ──────────────────────
-  await page.goto(BASE);
-  await bootReady();
-  const defaultGame = await gameName();
-  check('boots with a default game', !!defaultGame, String(defaultGame));
-  check('fresh boot persists nothing', (await readRecord()) === null);
-
-  // ── 2. Load a DIFFERENT preset via a real files:jsonLoaded ─────────
-  const loaded = await page.evaluate(async (dfltGame) => {
+// Publish a real files:jsonLoaded for a preset whose game differs from the boot
+// default (the same event the presets panel fires). Returns { path, expectGame }.
+function loadNonDefaultPreset(defaultGame) {
+  return page.evaluate(async (dfltGame) => {
     const resp = await fetch('./presets/preset_files.json');
     const presets = await resp.json();
-    // Find a preset whose game differs from the boot default.
     for (const [dir, entry] of Object.entries(presets)) {
       const folders = entry.folders || {};
       for (const [seed, folder] of Object.entries(folders)) {
@@ -109,16 +114,12 @@ try {
         if (!r.ok) continue;
         const jsonData = await r.json();
         // Publish as a REGISTERED publisher of files:jsonLoaded (the presets
-        // panel is one) so the eventBus accepts it — same event the panel fires.
+        // panel is one) so the eventBus accepts it.
         const publishers = window.eventBus.publishers?.['files:jsonLoaded'];
         const publisher = publishers ? [...publishers.keys()][0] : 'presets';
         window.eventBus.publish(
           'files:jsonLoaded',
-          {
-            jsonData,
-            selectedPlayerId: game.player ?? 1,
-            sourceName: path,
-          },
+          { jsonData, selectedPlayerId: game.player ?? 1, sourceName: path },
           publisher
         );
         return { path, expectGame: jsonData.game_name || entry.name || game.game };
@@ -126,21 +127,73 @@ try {
     }
     return null;
   }, defaultGame);
-  check('found + published a non-default preset', !!loaded, JSON.stringify(loaded));
+}
 
-  await waitFor('active game switches to the loaded preset', async () => {
+try {
+  // ══ PHASE A — OFF BY DEFAULT ═══════════════════════════════════════
+  const ctxA = await browser.newContext();
+  page = await ctxA.newPage();
+  attach(page);
+  logs.length = 0;
+
+  await page.goto(BASE);
+  await bootReady();
+  const defA = await gameName();
+  check('off-default: boots with a default game', !!defA, String(defA));
+
+  const loadedA = await loadNonDefaultPreset(defA);
+  check('off-default: published a non-default preset', !!loadedA, JSON.stringify(loadedA));
+  await waitFor('off-default: active game switches (load still works)', async () =>
+    (await gameName()) !== defA
+  );
+  // The write gate is off, so persistence must NOT happen. Give the (skipped)
+  // async persist a beat to prove it stays a no-op.
+  await page.waitForTimeout(700);
+  check('off-default: nothing persisted (write gate off)', (await readRecord()) === null);
+
+  await page.reload();
+  await bootReady();
+  check('off-default: reload boots the default (no restore)',
+    (await gameName()) === defA, String(await gameName()));
+  await ctxA.close();
+
+  // ══ PHASE B — ENABLED ══════════════════════════════════════════════
+  const ctxB = await browser.newContext();
+  page = await ctxB.newPage();
+  attach(page);
+  logs.length = 0;
+
+  // Turn the opt-in feature ON for every boot in this context.
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      'archipelagoToolSuite_modeData_default',
+      JSON.stringify({
+        userSettings: { generalSettings: { restoreLastWorld: true, autoLoadMode: true } },
+      })
+    );
+  });
+
+  await page.goto(BASE);
+  await bootReady();
+  const defaultGame = await gameName();
+  check('enabled: boots with a default game', !!defaultGame, String(defaultGame));
+  check('enabled: fresh boot persists nothing yet', (await readRecord()) === null);
+
+  // ── Load a non-default preset → persisted path-type ────────────────
+  const loaded = await loadNonDefaultPreset(defaultGame);
+  check('enabled: found + published a non-default preset', !!loaded, JSON.stringify(loaded));
+  await waitFor('enabled: active game switches to the loaded preset', async () => {
     const g = await gameName();
     return g && g !== defaultGame;
   });
   const loadedGame = await gameName();
-  check('loaded game differs from default', loadedGame !== defaultGame,
+  check('enabled: loaded game differs from default', loadedGame !== defaultGame,
     `${loadedGame} vs ${defaultGame}`);
+  const rec = await waitFor('enabled: record persisted', async () => await readRecord());
+  check('enabled: persisted as path-type', rec.type === 'path', JSON.stringify(rec));
+  check('enabled: persisted path matches the load', rec.path === loaded.path, rec.path);
 
-  const rec = await waitFor('record persisted', async () => await readRecord());
-  check('persisted as path-type', rec.type === 'path', JSON.stringify(rec));
-  check('persisted path matches the load', rec.path === loaded.path, rec.path);
-
-  // ── 3. Reload → restore, no user action ────────────────────────────
+  // ── Reload → restore, no user action ───────────────────────────────
   await page.reload();
   await bootReady();
   check('restored the loaded world after reload (not default)',
@@ -148,7 +201,7 @@ try {
   check('restored source is the persisted path',
     (await rulesSource()) === loaded.path, String(await rulesSource()));
 
-  // ── 4. Reload again → restore repeats (entry kept on success) ───────
+  // ── Reload again → restore repeats (entry kept on success) ──────────
   await page.reload();
   await bootReady();
   check('restore repeats on a second reload',
@@ -156,9 +209,7 @@ try {
   check('record still present after successful restore',
     (await readRecord()) !== null);
 
-  // ── 4b. Inline-type restore (procgen / manual-upload shape) ────────
-  // Re-publish the same rules under a NON-preset sourceName so it persists
-  // inline (full payload), reload, and confirm it restores without a fetch.
+  // ── Inline-type restore (procgen / manual-upload shape) ────────────
   await page.evaluate(async (path) => {
     const jsonData = await (await fetch(path)).json();
     const publishers = window.eventBus.publishers?.['files:jsonLoaded'];
@@ -182,11 +233,9 @@ try {
   check('restored inline source label preserved',
     (await rulesSource()) === 'userLoaded:persist-inline-test.json', String(await rulesSource()));
 
-  // ── 4c. Substrate reattach spot-check (JtA dataset-keyed slot) ─────
+  // ── Substrate reattach spot-check (JtA dataset-keyed slot) ─────────
   // The JtA save slot keys on dataset_id, which lives in preset_sidecars — a
-  // raw-rules-only field. Prove that identity survives a reload: load the JtA
-  // dataset preset, reload, and confirm the restored raw JSON carries the same
-  // dataset_id (so the slot re-keys to the same world by construction).
+  // raw-rules-only field. Prove that identity survives a reload.
   const JTA_PATH =
     './presets/jta_dataset_test/AP_14089154938208861744/AP_14089154938208861744_rules.json';
   const readDatasetId = () =>
@@ -195,7 +244,6 @@ try {
       const raw = mod.getLastRawJsonData?.()?.rawJsonData;
       const sidecars = raw?.preset_sidecars;
       if (!sidecars) return null;
-      // Walk to the first jta_dataset_ref.dataset_id.
       let found = null;
       const walk = (o) => {
         if (found || !o || typeof o !== 'object') return;
@@ -236,13 +284,14 @@ try {
   check('JtA dataset_id (slot key) survives the reload identically',
     datasetAfter === datasetBefore, `${datasetAfter} vs ${datasetBefore}`);
 
-  // ── 5. ?reset=true (same tab) → default boots, entry cleared ───────
+  // ── ?reset=true (same tab) → default boots, entry cleared ──────────
   await page.goto(`${BASE}?reset=true`);
   await bootReady();
   check('?reset=true boots the default game',
     (await gameName()) === defaultGame, String(await gameName()));
   check('?reset=true cleared the persisted record',
     (await readRecord()) === null);
+  await ctxB.close();
 
   console.log(`\nPASS — ${checks} checks`);
 } finally {

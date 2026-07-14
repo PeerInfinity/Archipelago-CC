@@ -51,11 +51,11 @@ async function shouldLoadFromLocalStorage(fetchJson, logger) {
 /**
  * Reads the restoreLastWorld setting during early boot (before settingsManager
  * is initialized), mirroring shouldLoadFromLocalStorage's read chain but
- * defaulting to TRUE when the key is absent everywhere. Absent is the common
- * case (settings.json ships generalSettings: {}), so the schema default (true)
- * is the behavior we want. This is why the restore gate is read raw here rather
- * than via settingsManager.getSetting — see the autoLoadMode boot-inconsistency
- * finding in the world-persistence design doc.
+ * defaulting to FALSE when the key is absent everywhere. The feature is opt-in
+ * (schema default false); absent is the common case (settings.json ships
+ * generalSettings: {}), so absent → off is the behavior we want. This is why
+ * the restore gate is read raw here rather than via settingsManager.getSetting
+ * — settingsManager is not yet up at this boot phase.
  *
  * @param {Function} fetchJson - Function to fetch JSON files
  * @param {Object} logger - Logger instance
@@ -85,10 +85,10 @@ async function isRestoreLastWorldEnabled(fetchJson, logger) {
       return settingsJson.generalSettings.restoreLastWorld;
     }
   } catch (error) {
-    logger.warn('init', 'Error reading restoreLastWorld setting, defaulting to true:', error);
+    logger.warn('init', 'Error reading restoreLastWorld setting, defaulting to false:', error);
   }
-  // Schema default is true.
-  return true;
+  // Schema default is false (opt-in feature).
+  return false;
 }
 
 /**
@@ -96,9 +96,9 @@ async function isRestoreLastWorldEnabled(fetchJson, logger) {
  * ahead of the default-preset file load. Called only when there is no
  * ?rules=/?game= URL override and no mode-blob rulesConfig, so this preserves
  * the design precedence: URL override > mode blob > sessionStorage > default
- * preset. Gated by generalSettings.restoreLastWorld (default true). No-op on any
- * failure (worldPersistence.restoreLastWorld self-clears a corrupt/unfetchable
- * record), leaving the default-preset ladder to run.
+ * preset. Gated by generalSettings.restoreLastWorld (default false — opt-in).
+ * No-op on any failure (worldPersistence.restoreLastWorld self-clears a
+ * corrupt/unfetchable record), leaving the default-preset ladder to run.
  *
  * @param {Object} params
  * @param {Object} params.baseCombinedData
@@ -111,7 +111,7 @@ async function maybeRestoreLastWorld({ baseCombinedData, dataSources, fetchJson,
   try {
     enabled = await isRestoreLastWorldEnabled(fetchJson, logger);
   } catch {
-    enabled = true;
+    enabled = false;
   }
   if (!enabled) return false;
 

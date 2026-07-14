@@ -47,9 +47,9 @@ export const CORE_SETTINGS_SCHEMAS = {
       },
       restoreLastWorld: {
         type: 'boolean',
-        default: true,
+        default: false,
         label: 'Restore Last World',
-        description: 'Restore the most recently loaded world after a page reload',
+        description: 'Save the most recently loaded world and automatically restore it after a page reload (off by default)',
       },
     },
   },
