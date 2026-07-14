@@ -341,6 +341,11 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
       into it); the view radio shows if EITHER master is on. Byte-inert
       (535 / 5,965,890 / e23f020400162f9a); npm 91/91; ui-smoke 66/66. Detail:
       *(NewDocs)* `omsi-loops-ladder-rungs-plan.md` §4d + memory session 18.
+      **Refinement (same day):** SHOWN vs ENABLED — Extras checkboxes renamed
+      "Show basic/advanced automation" (visibility); new in-section "Enable
+      basic/advanced automation" checkboxes (`*Enabled`, default true) gate
+      whether features run; a tier acts only when shown AND enabled; disabling
+      via Enable keeps the section+radio visible. npm 91/91; ui-smoke 75/75.
       **§11.7 Design B remains queued after this.**
    Original queue (for reference):
    1. **Systematic action-code audit (user: HIGH priority)**: read all
