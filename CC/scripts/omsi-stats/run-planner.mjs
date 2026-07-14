@@ -91,6 +91,134 @@ const V0_REFERENCE = { seed: 12345, loops: 535, ticks: 5_965_890, hash: "e23f020
 
 const run = (cmd, args) => execFileSync(cmd, args, { encoding: "utf8" }).trim();
 
+// §W4 — vocabulary coverage report. Maps the ACTION-CENSUS.md blind-spot
+// classes to the measured channels + metadata that now cover them, with sample
+// values probed on representative states. This is the handshake artifact for
+// item-5 calibration: it says which channels exist and roughly how big they
+// are, without committing any scoring. Uses fresh sim contexts per scenario
+// (the same setups as the vocabulary tests) so samples are deterministic.
+async function runCoverage(makeContext, seed, resultsDir, outArg) {
+    const mk = () => {
+        const c = makeContext(seed, ["planner-metadata.js", "planner.js"]);
+        c.sandbox.__rngGet = c.getRng; c.sandbox.__rngSet = c.setRng;
+        c.ev("IdlePlanner.setRngHooks({ get: __rngGet, set: __rngSet })");
+        return c;
+    };
+    const meta = JSON.parse(mk().ev(
+        "JSON.stringify(typeof PLANNER_METADATA!=='undefined'?PLANNER_METADATA:{gates:{},dimEffects:{},context:{}})"));
+    const de = meta.dimEffects || {}, cx = meta.context || {}, gates = meta.gates || {};
+    const dims = (pref) => Object.keys(de).filter(k => k.startsWith(pref));
+    const ctxWith = (flag) => Object.keys(cx).filter(n => cx[n][flag]);
+
+    // --- live channel samples (fresh, deterministic context per scenario) ---
+    const samples = {};
+
+    // Class 4 skill web — edgeRates (Practical Magic cheapens Smash Pots manaCost,
+    // raises Pick Locks goldYield; census 2.2c row 1).
+    try {
+        const c = mk(); const IP = c.ev("IdlePlanner"); const sess = c.ev("new IdlePlanner.Session()");
+        c.ev(`actions.clearActions();actions.addAction("Wander",1);restart();townsUnlocked=[0,1];`);
+        for (const r of (sess.probe()["Start Journey"]?.requires ?? []))
+            c.ev(`skills[${JSON.stringify(r.v)}].levelExp.level=Math.max(${r.need},skills[${JSON.stringify(r.v)}].levelExp.level)`);
+        c.ev(`towns[0].expWander=getExpOfLevel(30);towns[1].expHermit=getExpOfLevel(30);
+              skills.Magic.levelExp.level=Math.max(50,skills.Magic.levelExp.level);
+              towns[0].totalLocks=100;towns[0].checkedLocks=0;towns[0].goodLocks=100;towns[0].goodTempLocks=100;
+              skills.Practical.levelExp.level=0;adjustAll();`);
+        const snap = sess.save(); sess.restore(snap); const state = sess.read();
+        const A = state.actions.find(a => a.name === "Practical Magic");
+        const sp = state.actions.find(a => a.name === "Smash Pots");
+        const pl = state.actions.find(a => a.name === "Pick Locks");
+        samples.edgeRates = {
+            "Practical Magic -> Smash Pots.manaCost": IP.measureEdge(sess, snap, state, new Map(), A, sp, "manaCost"),
+            "Practical Magic -> Pick Locks.goldYield": IP.measureEdge(sess, snap, state, new Map(), A, pl, "goldYield"),
+        };
+    } catch (e) { samples.edgeRates = { error: e.message }; }
+
+    // Class 2/6 persistentDelta — per-stat soulstones + dungeon floors (cycle
+    // mode makes the RNG reward deterministic; Small Dungeon).
+    try {
+        const c = mk(); const IP = c.ev("IdlePlanner"); const sess = c.ev("new IdlePlanner.Session()");
+        c.ev(`options.rngMode="cycle";actions.clearActions();actions.addAction("Wander",1);restart();
+              skills.Combat.levelExp.level=400;skills.Magic.levelExp.level=400;adjustAll();`);
+        const snap = sess.save(); sess.restore(snap); const state = sess.read();
+        const sd = state.actions.find(a => a.name === "Small Dungeon");
+        const p = IP.measureAction(sess, snap, state, new Map(), sd, sess.needs("Small Dungeon"));
+        samples.persistentDelta = {
+            "Small Dungeon.soulstonesPerStat": p.persistentDelta?.soulstonesPerStat ?? null,
+            "Small Dungeon.dungeons": p.persistentDelta?.dungeons ?? null,
+        };
+    } catch (e) { samples.persistentDelta = { error: e.message }; }
+
+    // Class 7 consumes — Learn Alchemy consumes herbs 10/exec.
+    try {
+        const c = mk(); const IP = c.ev("IdlePlanner"); const sess = c.ev("new IdlePlanner.Session()");
+        c.ev(`actions.clearActions();actions.addAction("Wander",1);restart();townsUnlocked=[0,1];`);
+        for (const r of (sess.probe()["Start Journey"]?.requires ?? []))
+            c.ev(`skills[${JSON.stringify(r.v)}].levelExp.level=${r.need}`);
+        c.ev(`towns[1].expHermit=100*40*41/2;skills.Magic.levelExp.level=60;adjustAll();`);
+        const snap = sess.save(); sess.restore(snap); const state = sess.read();
+        const la = state.actions.find(a => a.name === "Learn Alchemy");
+        const p = la ? IP.measureAction(sess, snap, state, new Map(), la, sess.needs("Learn Alchemy"), { baselineCache: new Map() }) : null;
+        samples.consumes = { "Learn Alchemy": p?.consumes ?? null };
+    } catch (e) { samples.consumes = { error: e.message }; }
+
+    const report = {
+        date: new Date().toISOString(),
+        note: "vocabulary coverage (plan §W4). declared = metadata (dimEffects/context/gates); "
+            + "measured = an empirical measureAction channel; samples probed on representative states.",
+        classes: {
+            "1 buffs": {
+                declared: dims("buff:"),
+                channels: ["persistentDelta.buffs (measured)",
+                    "downstream: speed / trainingLimits / startingStats / expMult / segmentRate (dimEffects)"],
+            },
+            "2 soulstones": {
+                declared: ["skill:Divine (soulstoneCount)"],
+                channels: ["persistentDelta.soulstones + soulstonesPerStat (measured)",
+                    "context.rng — needs rngMode cycle"],
+                sample: samples.persistentDelta?.["Small Dungeon.soulstonesPerStat"],
+            },
+            "3 capability stacks": {
+                declared: dims("skill:").filter(k => de[k].some(e => e.channel === "segmentRate")),
+                channels: ["segmentRate (dimEffects; live multipart RATE = v2, census 2.4)",
+                    "consumes{} for armor/team/blood/hide"],
+            },
+            "4 skill-efficiency web": {
+                declared: dims("skill:"),
+                channels: ["edgeRates[T][channel] — measured, informed mode (generalized travelRelief)"],
+                sample: samples.edgeRates,
+            },
+            "5 gates": { declared: Object.keys(gates) },
+            "6 persistent ledgers": {
+                channels: ["persistentDelta.goldInvested / dungeons / trials / mult / stonesUsed / trainingLimits (measured)"],
+                sample: samples.persistentDelta?.["Small Dungeon.dungeons"],
+            },
+            "7 cross-town / context": {
+                declared: { crossTown: ctxWith("crossTown"), temporal: ctxWith("temporal"),
+                    dynamic: ctxWith("dynamic"), rng: ctxWith("rng") },
+                channels: ["crossTown{} (measured; deep-game live sample = v2)", "consumes{}"],
+                sample: samples.consumes,
+            },
+        },
+    };
+
+    fs.mkdirSync(resultsDir, { recursive: true });
+    const outPath = outArg
+        ? (path.isAbsolute(outArg) ? outArg : path.join(resultsDir, path.basename(outArg)))
+        : path.join(resultsDir, "vocabulary-coverage.json");
+    fs.writeFileSync(outPath, JSON.stringify(report, null, 2));
+
+    console.log("VOCABULARY COVERAGE (census class -> measured/declared channels):\n");
+    for (const [cls, info] of Object.entries(report.classes)) {
+        const decl = Array.isArray(info.declared) ? `${info.declared.length} declared`
+            : info.declared ? Object.entries(info.declared).map(([k, v]) => `${k}:${v.length}`).join(" ") : "";
+        console.log(`  ${cls.padEnd(24)} ${decl}`);
+        for (const ch of info.channels ?? []) console.log(`      · ${ch}`);
+        if (info.sample !== undefined) console.log(`      sample: ${JSON.stringify(info.sample)}`);
+    }
+    console.log(`\ncoverage report written to ${outPath}`);
+}
+
 async function main() {
     const args = process.argv.slice(2);
     const has = (f) => args.includes(f);
@@ -107,6 +235,11 @@ async function main() {
     const targetTown = Number(val("--target-town", 1));
     const multiTown = val("--multi-town", "on") !== "off";
     const vocabulary = val("--vocabulary", "empirical");   // empirical | informed
+    // deterministic RNG cycling (fork option; W0). "random" (default) keeps the
+    // frozen reference; "cycle" makes RNG-channel measurement/candidates + Layer-P
+    // probing of RNG targets available (plan §6). Serial only for now — pool
+    // workers boot their own context without it.
+    const rngMode = val("--rng-mode", "random");           // random | cycle
     // §11.10 targeted mode: --target-action NAME drives the goal-directed
     // regression toward a single action goal (T1 headless driver; T3 adds the
     // priority list). Absent ⇒ heuristic strategy = today's byte-exact behavior.
@@ -122,6 +255,11 @@ async function main() {
     // §6 stagnation trigger: auto-enter a targeted escalation round when the
     // heuristic fixates (streak≥32 / drought≥256). Off = today's behavior.
     const antiFixation = has("--anti-fixation");
+    // §W4 vocabulary coverage report: census class -> measured channel -> sample
+    // values on representative states. The item-5 calibration handshake artifact
+    // (which data channels exist + sample magnitudes). Boots the sim, samples
+    // each channel, writes JSON + a summary, and exits before the normal run.
+    const coverage = has("--coverage");
     let targets = [];
     if (targetsArg) targets = JSON.parse(targetsArg);
     else if (targetValueArg) {
@@ -139,7 +277,8 @@ async function main() {
     if (wanderUntil > 0 && fromStatePath) throw new Error("--wander-until and --from-state are mutually exclusive");
     const knobsAtDefaults = screenK === 8 && probeEvery === 1 && targetTown === 1 && multiTown
         && gainMult === 1 && !fromStatePath && !wanderUntil && screenMode === "predictor"
-        && vocabulary === "empirical" && strategy === "heuristic" && !antiFixation;
+        && vocabulary === "empirical" && strategy === "heuristic" && !antiFixation
+        && rngMode === "random";
 
     let srcDir, forkCommit;
     if (useWorktree) {
@@ -160,7 +299,10 @@ async function main() {
     ctx.sandbox.__rngSet = ctx.setRng;
     ctx.ev("IdlePlanner.setRngHooks({ get: __rngGet, set: __rngSet })");
     if (gainMult !== 1) ctx.ev(`options.expGainMultiplier = ${gainMult}`);
+    if (rngMode !== "random") ctx.ev(`options.rngMode = ${JSON.stringify(rngMode)}`);
     const IP = ctx.ev("IdlePlanner");
+
+    if (coverage) { await runCoverage(makeContext, seed, resultsDir, val("--out", null)); return; }
 
     // Parallel eval pool (--pool N): N worker_threads, each with its own sim
     // context, serving confirmCandidate jobs. Order preserved by Promise.all
