@@ -89,6 +89,7 @@ import settingsManager from '../../app/core/settingsManager.js';
 import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 import { resolveFirstPresetPath } from '../../utils/presetResolver.js';
 import { FALLBACK_RULES } from '../../data/fallbackRules.js';
+import { persistLastWorld, restoreLastWorld } from './worldPersistence.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -270,6 +271,18 @@ async function initialize(moduleId, priorityIndex, initializationApi) {
         selectedPlayerInfo,
       };
       eventBus.publish('stateManager:rawJsonDataLoaded', lastRawJsonPayload);
+
+      // Persist for restore-after-reload (sessionStorage). Fire-and-forget:
+      // the setting read is async, but persistence never blocks the re-emit
+      // above. Gated by generalSettings.restoreLastWorld (default on).
+      settingsManager
+        .getSetting('generalSettings.restoreLastWorld', true)
+        .then((enabled) => {
+          if (enabled) persistLastWorld(eventData);
+        })
+        .catch(() => {
+          /* setting read failed — skip persistence, do not disrupt load */
+        });
     });
     log('info', '[StateManager Module] Subscribed to files:jsonLoaded events (for rawJsonDataLoaded re-emit)');
   }
@@ -316,6 +329,46 @@ async function postInitialize(initializationApi, moduleSpecificConfig = {}) {
     // Determine the source name for these rules
     let sourceNameForTheseRules =
       moduleSpecificConfig.id || moduleSpecificConfig.sourceName;
+
+    // Restore the last loaded world (sessionStorage) before falling back to the
+    // first preset — survives host-page reload / mobile-Chrome tab discard.
+    // This feeds the same ladder as the default preset (proxy initialize ->
+    // loadRules -> rawJsonDataLoaded), so it is NOT a new init catch-up: it must
+    // NOT re-publish files:jsonLoaded. Gated by generalSettings.restoreLastWorld
+    // (default on). A ?rules=/?game= URL override arrives via
+    // moduleSpecificConfig.rulesConfig, so this branch never runs for it.
+    if (!rulesConfigToUse) {
+      let restored = null;
+      try {
+        const restoreEnabled = await settingsManager.getSetting(
+          'generalSettings.restoreLastWorld',
+          true
+        );
+        if (restoreEnabled) {
+          restored = await restoreLastWorld();
+        }
+      } catch (restoreError) {
+        logger.warn(
+          moduleInfo.name,
+          `[StateManager Module] Last-world restore failed, falling back to preset: ${restoreError.message}`
+        );
+        restored = null;
+      }
+      if (restored) {
+        rulesConfigToUse = restored.rulesConfig;
+        sourceNameForTheseRules = restored.sourceName;
+        if (
+          restored.selectedPlayerId !== undefined &&
+          restored.selectedPlayerId !== null
+        ) {
+          playerIdToUse = String(restored.selectedPlayerId);
+        }
+        logger.info(
+          moduleInfo.name,
+          `[StateManager Module] Restored last world from ${restored.sourceName} (player ${playerIdToUse ?? 'auto'}).`
+        );
+      }
+    }
 
     if (!rulesConfigToUse) {
       logger.info(
