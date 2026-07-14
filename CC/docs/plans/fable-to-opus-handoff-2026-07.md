@@ -302,11 +302,11 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
       stays on substrate pin `531faa3`); L0 `48813d73d` + `--balance`
       `68c205175`. Objective (reserved decision 1, resolved empirically): unmet
       non-converter reps, then `unconvertedGold·rate + converter mana`.
-      **Rung 2 (auto-add newly-unlocked reps) DEFERRED** (implementer's choice,
-      user-approved — ships as its own follow-on). Detail in *(NewDocs)*
-      `omsi-loops-ladder-rungs-plan.md` §4b + memory session 16. **Tail trim
-      still FOLDED INTO item 6** (ticks-gated). §11.7 Design B remains queued
-      after auto-add-reps.
+      **Rung 2 (auto-add newly-unlocked reps) SHIPPED 2026-07-14** (Opus,
+      session 17 — see item 7 below). Detail in *(NewDocs)*
+      `omsi-loops-ladder-rungs-plan.md` §4b/§4c + memory sessions 16/17. **Tail
+      trim still FOLDED INTO item 6** (ticks-gated). §11.7 Design B remains
+      queued after auto-add-reps.
    6. LAST: the recalibration remainder of the ONE re-baseline bundle —
       §11.8 piece 3 scored channels (consumes the item-4 coverage
       report), DNF-aware sweeps, DEFAULT_WEIGHTS recalibration (target:
@@ -314,6 +314,24 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
       re-test, weight-sweep cross-check re-freeze (frontier:1000,
       bank:10), **+ tail trim (ticks-metric-gated; folded in from item 5,
       user 2026-07-13)**.
+   7. **Assist-ladder rung 2 (auto-add reps) — SHIPPED 2026-07-14 (Opus,
+      session 17); the deferred session-16 follow-on.** Pure UI-thread
+      top-up of under-queued actions (`actions.next[i].loops += gap`,
+      reusing rung-1's `repGapReport`) that, when the Buy Mana optimiser is
+      ALSO enabled, chains `requestOptimize` to rebalance — **user
+      decision-1 ruling 2026-07-14: "top-up then chain optimizer"**
+      (placement DELEGATED to the optimiser, not duplicated; the user's
+      update "rely on that feature's logic rather than duplicating it").
+      Add-only (over-queued left alone = tail trim, item 6);
+      multiparts/progress/one-shots excluded (carries rung 1's null).
+      Options `autoAddReps`/`autoAddRepsAuto` default OFF; controls in the
+      Extras block after rung 1 (independent of the Advanced Automation
+      master gate). Byte-inert vs 535 / 5,965,890 / e23f020400162f9a; npm
+      91/91 (+6 autoadd.test.mjs); ui-smoke 51/51 (+10). Submodule
+      `automation` one commit atop `169cfaf`, COMMITTED-not-pushed; outer
+      gitlink stays on substrate pin `531faa3`. Detail: *(NewDocs)*
+      `omsi-loops-ladder-rungs-plan.md` §4c + memory session 17. **§11.7
+      Design B remains queued after this.**
    Original queue (for reference):
    1. **Systematic action-code audit (user: HIGH priority)**: read all
       157 actions' reward/effect code and produce a complete census of
