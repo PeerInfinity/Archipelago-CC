@@ -5,6 +5,7 @@ import { LOCAL_STORAGE_MODE_PREFIX, LOCAL_STORAGE_LAST_ACTIVE_MODE_KEY } from '.
 import { loadAndMergeJsonFiles, getConfigPaths } from '../../utils/settingsMerger.js';
 import { resolveFirstPresetPath } from '../../utils/presetResolver.js';
 import { FALLBACK_RULES } from '../../data/fallbackRules.js';
+import { restoreLastWorld } from '../../modules/stateManager/worldPersistence.js';
 
 /**
  * Reads the autoLoadMode setting to determine if localStorage data should be loaded.
@@ -45,6 +46,99 @@ async function shouldLoadFromLocalStorage(fetchJson, logger) {
 
   // Default to false (don't auto-load from localStorage)
   return false;
+}
+
+/**
+ * Reads the restoreLastWorld setting during early boot (before settingsManager
+ * is initialized), mirroring shouldLoadFromLocalStorage's read chain but
+ * defaulting to TRUE when the key is absent everywhere. Absent is the common
+ * case (settings.json ships generalSettings: {}), so the schema default (true)
+ * is the behavior we want. This is why the restore gate is read raw here rather
+ * than via settingsManager.getSetting — see the autoLoadMode boot-inconsistency
+ * finding in the world-persistence design doc.
+ *
+ * @param {Function} fetchJson - Function to fetch JSON files
+ * @param {Object} logger - Logger instance
+ * @returns {Promise<boolean>}
+ */
+async function isRestoreLastWorldEnabled(fetchJson, logger) {
+  try {
+    const lastActiveMode = localStorage.getItem(LOCAL_STORAGE_LAST_ACTIVE_MODE_KEY);
+    const modesToCheck = lastActiveMode ? [lastActiveMode, 'default'] : ['default'];
+    for (const modeName of modesToCheck) {
+      const storedData = localStorage.getItem(`${LOCAL_STORAGE_MODE_PREFIX}${modeName}`);
+      if (storedData) {
+        try {
+          const modeData = JSON.parse(storedData);
+          const v = modeData.userSettings?.generalSettings?.restoreLastWorld;
+          if (v !== undefined) return v;
+        } catch (parseError) {
+          logger.warn('init', `Failed to parse stored mode data for "${modeName}":`, parseError);
+        }
+      }
+    }
+    const settingsJson = await fetchJson(
+      './settings/settings.json',
+      'Error loading settings.json for restoreLastWorld check'
+    );
+    if (settingsJson?.generalSettings?.restoreLastWorld !== undefined) {
+      return settingsJson.generalSettings.restoreLastWorld;
+    }
+  } catch (error) {
+    logger.warn('init', 'Error reading restoreLastWorld setting, defaulting to true:', error);
+  }
+  // Schema default is true.
+  return true;
+}
+
+/**
+ * Restore the last user-loaded world (sessionStorage) into baseCombinedData
+ * ahead of the default-preset file load. Called only when there is no
+ * ?rules=/?game= URL override and no mode-blob rulesConfig, so this preserves
+ * the design precedence: URL override > mode blob > sessionStorage > default
+ * preset. Gated by generalSettings.restoreLastWorld (default true). No-op on any
+ * failure (worldPersistence.restoreLastWorld self-clears a corrupt/unfetchable
+ * record), leaving the default-preset ladder to run.
+ *
+ * @param {Object} params
+ * @param {Object} params.baseCombinedData
+ * @param {Object} params.dataSources
+ * @param {Function} params.fetchJson
+ * @param {Object} params.logger
+ */
+async function maybeRestoreLastWorld({ baseCombinedData, dataSources, fetchJson, logger }) {
+  let enabled;
+  try {
+    enabled = await isRestoreLastWorldEnabled(fetchJson, logger);
+  } catch {
+    enabled = true;
+  }
+  if (!enabled) return false;
+
+  let restored = null;
+  try {
+    restored = await restoreLastWorld();
+  } catch (error) {
+    logger.warn('init', 'Last-world restore failed; falling back to default preset:', error);
+    return false;
+  }
+  if (!restored || !restored.rulesConfig) return false;
+
+  baseCombinedData.rulesConfig = restored.rulesConfig;
+  if (
+    restored.selectedPlayerId !== undefined &&
+    restored.selectedPlayerId !== null &&
+    baseCombinedData.playerId === undefined
+  ) {
+    baseCombinedData.playerId = String(restored.selectedPlayerId);
+  }
+  dataSources.rulesConfig = {
+    source: 'sessionRestore',
+    timestamp: new Date().toISOString(),
+    details: `Restored last world: ${restored.sourceName}`,
+  };
+  logger.info('init', `Restored last world from ${restored.sourceName} (sessionStorage).`);
+  return true;
 }
 
 /**
@@ -184,6 +278,23 @@ export async function loadCombinedModeData(options) {
     logger.info('init', `Player ID from URL parameter: ${playerId}`);
   }
 
+  // Restore the last user-loaded world (sessionStorage) ahead of the default
+  // preset — survives a full host-page reload / mobile-Chrome tab discard.
+  // Skipped when a ?rules=/?game= URL override is present (rulesOverride) or a
+  // mode blob already populated rulesConfig (autoLoadMode) — both outrank the
+  // restore. When it fires, loadConfigKey below sees rulesConfig present and
+  // skips the default-preset file load. Reset flows clear the sessionStorage
+  // record (see modeManager), so those correctly fall through to the default.
+  let rulesConfigRestored = false;
+  if (!rulesOverride && !baseCombinedData.rulesConfig) {
+    rulesConfigRestored = await maybeRestoreLastWorld({
+      baseCombinedData,
+      dataSources,
+      fetchJson,
+      logger,
+    });
+  }
+
   // Load config files for the current mode
   const currentModeFileConfigs = modesConfig?.[currentActiveMode];
   const defaultModeFileConfigs = modesConfig?.['default'];
@@ -207,6 +318,7 @@ export async function loadCombinedModeData(options) {
         baseCombinedData,
         dataSources,
         rulesOverride,
+        rulesConfigRestored,
         skipLocalStorageLoad: shouldSkipLocalStorage,
         fetchJson,
         logger,
@@ -441,10 +553,19 @@ async function loadConfigKey(params) {
     baseCombinedData,
     dataSources,
     rulesOverride,
+    rulesConfigRestored,
     skipLocalStorageLoad,
     fetchJson,
     logger,
   } = params;
+
+  // A restored last-world (sessionStorage) already populated rulesConfig +
+  // dataSources.rulesConfig — do NOT reload the default preset over it. This
+  // matters on a normal boot, where skipLocalStorageLoad is true and would
+  // otherwise force a file load regardless of the existing value.
+  if (configKey === 'rulesConfig' && rulesConfigRestored) {
+    return;
+  }
 
   // Determine which config entry to use (current mode or fallback to default)
   let configEntry = null;
@@ -775,6 +896,11 @@ function prepareStateManagerConfig(baseCombinedData, dataSources, log) {
       }
     } else if (dataSources.rulesConfig.source === 'alphabeticalFallback') {
       const match = dataSources.rulesConfig.details.match(/^Loaded from first alphabetical preset \(default not found\): (.+)$/);
+      if (match) {
+        sourcePath = match[1];
+      }
+    } else if (dataSources.rulesConfig.source === 'sessionRestore') {
+      const match = dataSources.rulesConfig.details.match(/^Restored last world: (.+)$/);
       if (match) {
         sourcePath = match[1];
       }

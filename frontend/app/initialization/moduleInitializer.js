@@ -345,6 +345,7 @@ function prepareStateManagerConfig(genericModuleSpecificConfig, combinedModeData
        combinedModeData.dataSources.rulesConfig.source === 'urlOverride' ||
        combinedModeData.dataSources.rulesConfig.source === 'fallback' ||
        combinedModeData.dataSources.rulesConfig.source === 'alphabeticalFallback' ||
+       combinedModeData.dataSources.rulesConfig.source === 'sessionRestore' ||
        combinedModeData.dataSources.rulesConfig.source === 'hardcodedFallback') &&
       typeof combinedModeData.dataSources.rulesConfig.details === 'string'
     ) {
@@ -365,6 +366,8 @@ function prepareStateManagerConfig(genericModuleSpecificConfig, combinedModeData
           pathPrefix = 'Loaded from "default" mode (fallback): ';
         } else if (combinedModeData.dataSources.rulesConfig.source === 'alphabeticalFallback') {
           pathPrefix = 'Loaded from first alphabetical preset (default not found): ';
+        } else if (combinedModeData.dataSources.rulesConfig.source === 'sessionRestore') {
+          pathPrefix = 'Restored last world: ';
         }
 
         if (combinedModeData.dataSources.rulesConfig.details.startsWith(pathPrefix)) {
