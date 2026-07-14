@@ -135,26 +135,28 @@ export function instantiateTileGridLibraryEntry(entry, ctx = {}, deps) {
  * zoneRules) — the engine (buildSphereLibraryRegion) branches on region shape and
  * overlays the child gates onto extracted_rules.exits directly.
  *
- * The two irreducible maze requirements (plan §4 F6c) are CONFIGURABLE via
- * regionParams, both DEFAULT ON (so the current strict behaviour is preserved and
- * generated-maze output is byte-inert — these flags only touch this new hook):
+ * Connection is BEST-EFFORT by default (plan §4 F6c; user ruling 2026-07-14): the
+ * hook ATTEMPTS to align each child opening to the needed wall (and keeps tiles),
+ * and FALLS BACK to a relabelled, side-based connection when it can't — it never
+ * throws in the default mode. Two regionParams flags, both DEFAULT OFF ("don't
+ * require"), turn the attempt into a hard requirement:
  *
- *   - mazeRequireSameWall — ON: a captured exit only serves the wall its hole is on
- *     (⊆-fit-by-side; child sides must be a subset of the captured exit sides).
- *     OFF: RELABEL the captured exits' logical sides onto the needed child sides by
- *     index (the maze analogue of bounce's moveSphereExitSide) — the physical hole
- *     stays put, the connection is side-based (stitchGrid), logic-looser-than-physics.
- *   - mazeRequireTileAlign — ON: the opening must sit at the grid-mirror tile (what a
- *     GENERATED maze carves). A CAPTURED maze's openings sit at fixed captured tiles,
- *     so satisfying this needs an exit-carve — out of scope; ON therefore THROWS for
- *     a captured entry. OFF: keep the captured opening's tile (the connection stays
- *     side-based logic).
+ *   - mazeRequireSameWall — OFF (default): prefer a captured opening already on the
+ *     needed wall (aligned); fall back to relabelling any leftover opening onto the
+ *     side (the maze analogue of bounce's moveSphereExitSide — the physical hole
+ *     stays put, the connection is side-based via stitchGrid, logic-looser-than-
+ *     physics). ON: a child side MUST be served by a same-wall opening, else throw.
+ *   - mazeRequireTileAlign — OFF (default): keep the captured opening's tile (the
+ *     child region mirrors its own entrance from this exit tile, so child links stay
+ *     physically coherent; the connection is side-based regardless). ON: the opening
+ *     must sit at the grid-mirror tile — a CAPTURED maze's holes are fixed, so exact
+ *     alignment would need an exit-carve (out of scope), and ON therefore throws.
  *
- * Both OFF → a captured maze's exits behave like bounce portals (any opening → any
- * needed child side, no tile constraint), reusing the F6a overlay machinery. The
- * ENTRANCE side carries no forward exit here — the driver's guaranteed back-portal
- * (applySphereBackExit) provides the return route to the parent. Slots take the
- * node's items in order (filler on the surplus). Draws no rng (captured positions).
+ * These flags touch ONLY this hook; generated-maze output never reads them, so the
+ * default flip is byte-inert for every non-library path. The ENTRANCE side carries
+ * no forward exit here — the driver's guaranteed back-portal (applySphereBackExit)
+ * provides the return route to the parent. Slots take the node's items in order
+ * (filler on the surplus). Draws no rng (captured positions).
  *
  * @param entry  the maze library entry
  * @param ctx    { region_id, exitSides, locationSpecs, fillerItem, regionParams }
@@ -172,15 +174,15 @@ export function instantiateTileGridLibraryEntryForSpecs(entry, ctx = {}, deps) {
     const locationSpecs = ctx.locationSpecs ?? [];
     const fillerItem = ctx.fillerItem ?? null;
     const regionParams = ctx.regionParams ?? {};
-    const requireSameWall = regionParams.mazeRequireSameWall !== false; // default ON
-    const requireTileAlign = regionParams.mazeRequireTileAlign !== false; // default ON
+    const requireSameWall = regionParams.mazeRequireSameWall === true; // default OFF
+    const requireTileAlign = regionParams.mazeRequireTileAlign === true; // default OFF
 
     if (requireTileAlign) {
         throw new Error(
             `instantiateLibraryEntryForSpecs(${substrate}): a captured tile region cannot `
             + 'satisfy mazeRequireTileAlign — its openings sit at fixed captured tiles, and '
-            + 'grid-mirror alignment would need an exit-carve (out of scope). Set '
-            + 'mazeRequireTileAlign=false on regionParams for sphere-growth reuse.');
+            + 'grid-mirror alignment would need an exit-carve (out of scope). Leave '
+            + 'mazeRequireTileAlign off (the default) for best-effort sphere-growth reuse.');
     }
 
     // Entrance side is served by the driver's back-portal (applySphereBackExit); only
@@ -198,40 +200,54 @@ export function instantiateTileGridLibraryEntryForSpecs(entry, ctx = {}, deps) {
     }
     const capturedExits = [...world.exits.values()];
 
-    // Assign a captured opening to each needed child side.
+    // Assign a captured opening to each needed child side, BEST-EFFORT: first give
+    // each side an opening ALREADY on that wall (aligned), then — unless same-wall is
+    // required — relabel leftover openings onto the still-unserved sides (fallback).
     const assigned = new Map(); // exit_id -> new side
-    if (requireSameWall) {
-        // ⊆-fit-by-side: each child side must have a captured opening on that wall.
-        const bySide = new Map();
-        for (const ex of capturedExits) {
-            if (!bySide.has(ex.side)) bySide.set(ex.side, []);
-            bySide.get(ex.side).push(ex);
+    const usedIds = new Set();
+    const bySide = new Map();
+    for (const ex of capturedExits) {
+        if (!bySide.has(ex.side)) bySide.set(ex.side, []);
+        bySide.get(ex.side).push(ex);
+    }
+    const unmatched = [];
+    // Pass 1: aligned (same-wall) assignment.
+    for (const side of childSides) {
+        const pool = bySide.get(side);
+        if (pool && pool.length) {
+            const ex = pool.shift();
+            assigned.set(ex.exit_id, side);
+            usedIds.add(ex.exit_id);
+        } else {
+            unmatched.push(side);
         }
-        for (const side of childSides) {
-            const pool = bySide.get(side);
-            if (!pool || pool.length === 0) {
-                throw new Error(
-                    `instantiateLibraryEntryForSpecs(${substrate}): entry '${entry.entry_id}' has `
-                    + `no captured opening on wall '${side}' (mazeRequireSameWall is ON; captured `
-                    + `sides [${[...bySide.keys()].join(',')}]). Set mazeRequireSameWall=false to `
-                    + 'relabel a captured opening onto any needed side.');
-            }
-            assigned.set(pool.shift().exit_id, side);
+    }
+    // Pass 2: fall back to relabelling leftover openings (unless same-wall required).
+    if (unmatched.length) {
+        if (requireSameWall) {
+            throw new Error(
+                `instantiateLibraryEntryForSpecs(${substrate}): entry '${entry.entry_id}' has `
+                + `no captured opening on wall(s) [${unmatched.join(',')}] (mazeRequireSameWall `
+                + `is ON; captured sides [${[...bySide.keys()].join(',')}]). Leave `
+                + 'mazeRequireSameWall off to relabel a captured opening onto any needed side.');
         }
-    } else {
-        // Relabel by index (bounce-portal analogue): child side i ← captured exit i.
-        if (capturedExits.length < childSides.length) {
+        const leftover = capturedExits.filter((ex) => !usedIds.has(ex.exit_id));
+        if (leftover.length < unmatched.length) {
             throw new Error(
                 `instantiateLibraryEntryForSpecs(${substrate}): entry '${entry.entry_id}' offers `
                 + `${capturedExits.length} captured opening(s) but the slot needs `
                 + `${childSides.length} child side(s) [${childSides.join(',')}]`);
         }
-        childSides.forEach((side, i) => assigned.set(capturedExits[i].exit_id, side));
+        unmatched.forEach((side, i) => {
+            const ex = leftover[i];
+            assigned.set(ex.exit_id, side);
+            usedIds.add(ex.exit_id);
+        });
     }
 
     // Prune the openings we didn't assign (their holes stay as geometry but they are
     // NOT routing exits — no neighbour to route to), and relabel the assigned ones
-    // onto their needed side. The captured TILE is kept (tile-align OFF).
+    // onto their needed side. The captured TILE is kept (tile-align off).
     for (const ex of capturedExits) {
         if (assigned.has(ex.exit_id)) ex.side = assigned.get(ex.exit_id);
         else world.exits.delete(ex.exit_id);

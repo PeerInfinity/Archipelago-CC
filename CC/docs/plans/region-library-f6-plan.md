@@ -212,18 +212,35 @@ All four priority questions landed on the recommended option:
     FULL descriptor; `buildSphereLibraryRegion` branches on `adapter.generateRegionCore`
     (procedural → overlay child gates onto `extracted_rules.exits` by side, entrance
     handled by `applySphereBackExit`; zone → the F6a assembleZoneRegion path). Settings
-    `mazeRequireSameWall`/`mazeRequireTileAlign` on regionParams, both default ON:
-    tile-align ON THROWS for a captured entry (needs carve — out of scope); both OFF
-    relabels child openings by index at captured tiles. REUSED `demo-maze-pack.json`
-    (F3; 4-side/multi-slot entries already fit sphere — a new pack would duplicate)
-    for the maze sphere roundtrip. The entrance side gets no forward exit (back-portal
-    carries it), and the back-exit tile stays `specs.entranceTile` — winnability is
-    side-based so the physical-tile nicety was not needed (deferred).
-  - **Gates (both):** dump-spiral 5/5, dump-sphere byte-identical (engine edits in the
+    `mazeRequireSameWall`/`mazeRequireTileAlign` on regionParams, both **DEFAULT OFF =
+    BEST-EFFORT** (user ruling 2026-07-14, refined from the initial default-ON design):
+    the hook ATTEMPTS to align each child opening to the needed wall and FALLS BACK to
+    a relabelled side-based connection when it can't — it never throws in the default
+    mode. `mazeRequireSameWall` ON = a child side must reuse a same-wall opening (else
+    throw); `mazeRequireTileAlign` ON = openings must sit at the grid-mirror tile (a
+    captured maze can't without a carve, so it throws — surfaced as an opt-in for a
+    future carve capability). The default flip is byte-inert (generated maze never
+    reads these flags). REUSED `demo-maze-pack.json` (F3; 4-side/multi-slot entries
+    already fit sphere — a new pack would duplicate) for the maze sphere roundtrip. The
+    entrance side gets no forward exit (back-portal carries it); the back-exit tile
+    stays `specs.entranceTile` — winnability is side-based so the physical-tile nicety
+    is deferred.
+  - **Panel surfacing (procgenPipelineUI.js):** the F6d bounce-only sphere gating is
+    now REGISTRY-DRIVEN — a served/selected library is sphere-usable when any entry's
+    substrate provides `instantiateLibraryEntryForSpecs` (bounce/runner/maze), matching
+    the engine's `resolveSphereLibrarySources`. Helpers `_substrateSphereCapable` /
+    `_librarySphereCapable` / `_sphereRegionLibraries` (replacing the `*Bounce*` ones);
+    `_buildSphereConfig` merges every sphere-capable lib. The two maze connection
+    toggles render in the sphere Region-libraries subsection when a maze pack is
+    selected (default OFF), persisted in `params`, threaded into `regionParams` via
+    `_configFromCfgPrep` ONLY when a maze lib is selected (byte-inert otherwise).
+  - **Gates:** dump-spiral 5/5, dump-sphere byte-identical (engine edits in the
     isLibrarySourceId branch + a generateRegionCore shape-branch — untaken/unchanged
-    for library-less worlds), verify-region-library-ui 36/36, bounce+runner+maze
-    sphere roundtrips + spiral roundtrip green (Generate.py fill = independent
-    winnability stratum), sphereLibrary.slow 9/9, maze/runner/region-library units.
+    for library-less worlds; the maze-hook default flip only touches the library path),
+    verify-region-library-ui **38/38** (maze/runner now ENABLED in sphere mode + the
+    toggle-default-OFF checks), bounce+runner+maze sphere roundtrips + spiral roundtrip
+    green (Generate.py fill = independent winnability stratum), sphereLibrary.slow 9/9,
+    maze/runner/region-library units.
 
   **KEY ENABLING FINDING (procgenPipelineEngine.js `stitchGrid` @ :491):** region
   links are resolved BY SIDE — `exit.target_region = grid.neighborCell(cell, side)`.

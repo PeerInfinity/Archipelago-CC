@@ -225,6 +225,13 @@ const DEFAULT_PARAMS = {
     // integer < sphereCount grows the middle phases sphere-major in batches
     // (Phase 2). Phase 1 only carries the knob; no visible control yet.
     spheresPerBatch: null,
+    // Maze region-library connection strictness (region-library F6c), surfaced in
+    // sphere mode when a maze pack is selected. Both DEFAULT false = best-effort:
+    // a captured maze opening is aligned to the needed wall when possible and
+    // relabelled onto a side-based connection otherwise. true = require alignment
+    // (a captured maze can't satisfy tile-align without a carve, so it throws).
+    mazeRequireSameWall: false,
+    mazeRequireTileAlign: false,
     // Substrate-specific params (e.g. bounce's fall behavior / physics
     // profile / braid layout) are NOT here — each substrate declares its
     // own defaults via the registry `defaultProcgenParams` hook, merged
@@ -1255,9 +1262,59 @@ export class ProcgenPipelineUI {
         grid.appendChild(right);
         wrap.appendChild(grid);
 
+        // Maze connection strictness (region-library F6c) — only relevant in sphere
+        // mode with a maze pack selected. Default best-effort; the toggles opt into
+        // strict alignment.
+        if (this.mode === 'sphereGrowth' && this._sphereMazeLibrarySelected()) {
+            wrap.appendChild(this._renderMazeConnectionToggles());
+        }
+
         // F5 — capture regions from the last generation into a working library,
         // downloadable as a committable library JSON file.
         wrap.appendChild(this._renderLibraryCaptureArea());
+        return wrap;
+    }
+
+    // The two maze connection-strictness toggles (region-library F6c), shown in
+    // sphere mode when a maze library is selected. Default OFF = best-effort:
+    // captured openings align to the needed wall when possible, else fall back to a
+    // side-based connection at their captured tiles. Turning a flag ON requires
+    // alignment (tile-align can't be satisfied by a captured maze, so it will fail
+    // generation loudly — surfaced as an opt-in for a future carve capability).
+    _renderMazeConnectionToggles() {
+        const wrap = document.createElement('div');
+        wrap.className = 'procgen-pipeline-maze-connection';
+        const header = document.createElement('div');
+        header.className = 'procgen-pipeline-scenario-subheader';
+        header.textContent = 'Maze connection (sphere mode)';
+        header.title = 'How a captured maze pack connects into a sphere slot. Default '
+            + 'best-effort: align to the wall when possible, else connect by side.';
+        wrap.appendChild(header);
+
+        const toggle = (key, text, title) => {
+            const label = document.createElement('label');
+            label.style.cssText = 'display:flex;align-items:center;gap:4px;cursor:pointer;';
+            const cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.checked = !!this.params[key];
+            cb.className = `procgen-pipeline-${key === 'mazeRequireSameWall' ? 'maze-samewall' : 'maze-tilealign'}-cb`;
+            cb.addEventListener('change', () => {
+                this.params[key] = cb.checked;
+                this._saveToLocalStorage();
+                this.render();
+            });
+            label.appendChild(cb);
+            label.appendChild(document.createTextNode(text));
+            label.title = title;
+            wrap.appendChild(label);
+        };
+        toggle('mazeRequireSameWall', 'Require same wall',
+            'ON: a child exit must reuse a captured opening on that exact wall (else '
+            + 'generation fails). OFF (default): relabel any opening onto the side.');
+        toggle('mazeRequireTileAlign', 'Require tile alignment',
+            'ON: openings must sit at the grid-mirror tile — a captured maze cannot '
+            + 'satisfy this without a carve, so generation fails. OFF (default): keep '
+            + 'the captured tile (side-based connection).');
         return wrap;
     }
 
@@ -1450,12 +1507,12 @@ export class ProcgenPipelineUI {
         row.className = 'procgen-pipeline-library-row';
         const selected = this.regionLibraries.some(
             (w) => w.source === 'served' && w.file === idx.file);
-        // F6d: sphere-growth library reuse is BOUNCE-ONLY (F6a). Disable a served
-        // library that declares no bounce entries in sphere mode — a non-bounce
-        // pack would be filtered out of the sphere config anyway (and throw in
-        // resolveSphereLibrarySources if it slipped through). Unknown substrates
-        // (older index without the field) stay enabled — the generate-time filter
-        // is the real guard.
+        // Sphere-growth places any sphere-capable substrate (bounce F6a, runner +
+        // maze F6c). Disable a served library in sphere mode only when NONE of its
+        // declared substrates is sphere-capable — such a pack would be filtered out
+        // of the sphere config anyway (and throw in resolveSphereLibrarySources if
+        // it slipped through). Unknown substrates (older index without the field)
+        // stay enabled — the generate-time filter is the real guard.
         const incompatible = this._sphereModeLibraryDisabled(idx.substrates);
         const label = document.createElement('label');
         label.style.cssText = `flex:1;display:flex;align-items:center;gap:4px;`
@@ -1473,23 +1530,24 @@ export class ProcgenPipelineUI {
         label.appendChild(document.createTextNode(
             `${idx.name ?? idx.file} — ${n ?? '?'} entr${n === 1 ? 'y' : 'ies'}`
             + `${subs ? ` (${subs})` : ''}`
-            + `${incompatible ? ' — bounce-only in sphere mode' : ''}`));
+            + `${incompatible ? ' — not sphere-capable' : ''}`));
         label.title = incompatible
-            ? 'Sphere-growth library reuse is bounce-only (F6a); this pack has no bounce entries.'
+            ? 'No entry in this pack is sphere-capable (its substrate lacks the sphere placement hook).'
             : (idx.description ?? '');
         row.appendChild(label);
         return row;
     }
 
     // Whether a library with the given declared substrates is unusable in the
-    // current mode. F6d: sphere-growth places bounce entries only (F6a), so a pack
-    // with a KNOWN substrate list that lacks 'bounce' is disabled. Any other mode
-    // (shuffled-spiral) accepts maze + bounce. An empty/undefined list is treated
-    // as unknown (not disabled) — the config-time bounce filter is authoritative.
+    // current mode. Sphere-growth places any sphere-capable substrate (bounce,
+    // runner, maze — F6a/F6c), so a pack is disabled only when its KNOWN substrate
+    // list has NONE that is sphere-capable. Any other mode (shuffled-spiral) accepts
+    // maze + bounce. An empty/undefined list is treated as unknown (not disabled) —
+    // the config-time capability filter is authoritative.
     _sphereModeLibraryDisabled(substrates) {
         if (this.mode !== 'sphereGrowth') return false;
         return Array.isArray(substrates) && substrates.length > 0
-            && !substrates.includes('bounce');
+            && !substrates.some((s) => this._substrateSphereCapable(s));
     }
 
     _renderAdhocLibraryLoader() {
@@ -1518,12 +1576,12 @@ export class ProcgenPipelineUI {
         const name = document.createElement('span');
         name.className = 'procgen-pipeline-selected-name';
         const tag = w.source === 'adhoc' ? ' [ad-hoc]' : '';
-        // F6d: a selected library with no bounce entries contributes nothing in
-        // sphere mode (bounce-only) — mark it so the user isn't surprised it's
-        // absent from the grown world. Still counts for shuffled-spiral.
-        const unusedInSphere = this.mode === 'sphereGrowth' && !this._libraryHasBounce(w.library);
+        // A selected library with no sphere-capable entry contributes nothing in
+        // sphere mode — mark it so the user isn't surprised it's absent from the
+        // grown world. Still counts for shuffled-spiral.
+        const unusedInSphere = this.mode === 'sphereGrowth' && !this._librarySphereCapable(w.library);
         name.textContent = `${w.library.name ?? w.library.library_id}${tag}`
-            + `${unusedInSphere ? ' — not used (bounce-only)' : ''}`;
+            + `${unusedInSphere ? ' — not used (not sphere-capable)' : ''}`;
         name.title = `${w.library.library_id} · ${w.library.entries.length} entries`;
         if (unusedInSphere) name.style.opacity = '0.5';
         row.appendChild(name);
@@ -4514,20 +4572,28 @@ export class ProcgenPipelineUI {
     // The shared, frozen-at-1 config every step reads (so a later param
     // tweak doesn't silently change a pipeline mid-run — Reset/re-Plan
     // to pick up new params).
-    // Does a resolved library document carry at least one bounce entry? Sphere-
-    // growth library reuse is bounce-only (F6a), so a maze-only pack contributes
-    // nothing to a sphere world.
-    _libraryHasBounce(library) {
-        return (library?.entries ?? []).some((e) => e.substrate === 'bounce');
+    // Can a substrate host a sphere-growth library node? True when its registry
+    // adapter provides the requirement-aware instantiateLibraryEntryForSpecs hook
+    // (bounce F6a, runner + maze F6c). This is the exact predicate the engine's
+    // resolveSphereLibrarySources uses, so the panel filter and the engine agree.
+    _substrateSphereCapable(name) {
+        return typeof substrateRegistry.get(name)?.instantiateLibraryEntryForSpecs === 'function';
     }
 
-    // The selected libraries usable as SPHERE content sources: the bounce-carrying
-    // subset of the shared this.regionLibraries. A non-bounce pack would throw in
-    // the engine's resolveSphereLibrarySources, so it is dropped here (and disabled
-    // in the served list). Returns [] when nothing bounce-capable is selected, so
-    // library-less sphere worlds take no new code path (byte-inert).
-    _bounceRegionLibraries() {
-        return this.regionLibraries.filter((w) => this._libraryHasBounce(w.library));
+    // Does a resolved library document carry at least one sphere-capable entry?
+    // (F6c broadened this from bounce-only to any zone/tile substrate wired for
+    // sphere placement.) A pack with none contributes nothing to a sphere world.
+    _librarySphereCapable(library) {
+        return (library?.entries ?? []).some((e) => this._substrateSphereCapable(e.substrate));
+    }
+
+    // The selected libraries usable as SPHERE content sources: the sphere-capable
+    // subset of the shared this.regionLibraries. A pack with no sphere-capable
+    // entry would throw in resolveSphereLibrarySources, so it is dropped here (and
+    // disabled in the served list). Returns [] when nothing sphere-capable is
+    // selected, so library-less sphere worlds take no new code path (byte-inert).
+    _sphereRegionLibraries() {
+        return this.regionLibraries.filter((w) => this._librarySphereCapable(w.library));
     }
 
     _buildSphereConfig() {
@@ -4535,19 +4601,19 @@ export class ProcgenPipelineUI {
             sphereCount, fillerCount, revisitPercent, spheresPerBatch,
             startSubstrate } = this.params;
         const startSub = (startSubstrate && startSubstrate !== 'auto') ? startSubstrate : null;
-        // Merge the selected bounce region-libraries into the substrate quotas as
-        // `library:<id>` content sources (each carrying its libraryDoc on
-        // substrateConfig), mirroring _buildSpiralEnvelope's spiral merge. Only
-        // when at least one bounce library is selected — otherwise quotas stays the
-        // exact _effectiveSubstrateQuotas() value (null when empty) and
+        // Merge the selected sphere-capable region-libraries into the substrate
+        // quotas as `library:<id>` content sources (each carrying its libraryDoc on
+        // substrateConfig), mirroring _buildSpiralEnvelope's spiral merge. Only when
+        // at least one sphere-capable library is selected — otherwise quotas stays
+        // the exact _effectiveSubstrateQuotas() value (null when empty) and
         // substrateConfig is null, so a library-less world is byte-identical.
         const baseQuotas = this._effectiveSubstrateQuotas();
-        const bounceLibs = this._bounceRegionLibraries();
+        const sphereLibs = this._sphereRegionLibraries();
         let quotas = baseQuotas;
         let substrateConfig = null;
-        if (bounceLibs.length > 0) {
+        if (sphereLibs.length > 0) {
             const merged = buildLibrarySpiralConfig(
-                bounceLibs, { substrateQuotas: baseQuotas ?? {}, substrateConfig: {} });
+                sphereLibs, { substrateQuotas: baseQuotas ?? {}, substrateConfig: {} });
             quotas = merged.substrateQuotas;
             substrateConfig = merged.substrateConfig;
         }
@@ -4610,14 +4676,32 @@ export class ProcgenPipelineUI {
         await runStep('plan', this._stepState); // builds draft, completed = 0
     }
 
+    // Selected libraries carry a maze entry? Drives whether the maze connection
+    // flags are threaded into regionParams (below) — so a maze-less world stays
+    // byte-identical (no new regionParams keys).
+    _sphereMazeLibrarySelected() {
+        return this._sphereRegionLibraries().some(
+            (w) => (w.library?.entries ?? []).some((e) => e.substrate === 'maze'));
+    }
+
     // cfg + prep → the runner's flat resolved config. `itemPool` is the
     // POST-prep pool the plan is built from (prep may have removed items).
     _configFromCfgPrep(cfg, prep, itemPool) {
+        // Thread the maze connection strictness flags into regionParams ONLY when a
+        // maze library is selected (region-library F6c) — otherwise the world takes
+        // no new regionParams keys and stays byte-identical.
+        const regionParamsExtra = this._sphereMazeLibrarySelected()
+            ? {
+                ...prep.regionParams,
+                mazeRequireSameWall: !!this.params.mazeRequireSameWall,
+                mazeRequireTileAlign: !!this.params.mazeRequireTileAlign,
+            }
+            : prep.regionParams;
         return {
             seed: cfg.seed,
             regionSize: { width: cfg.regionWidth, height: cfg.regionHeight },
             itemLib: cfg.itemLib,
-            regionParams: this._assembleRegionParams(cfg.activeIds, 'sphere', prep.regionParams),
+            regionParams: this._assembleRegionParams(cfg.activeIds, 'sphere', regionParamsExtra),
             hazardOpts: cfg.hazardOpts,
             maxItemsPerRegion: cfg.maxItemsPerRegion,
             fillerCount: cfg.fillerCount,

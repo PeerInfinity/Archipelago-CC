@@ -106,11 +106,12 @@ try {
         victoryItem: 'Victory', gateableItems: [], seed: 1,
     });
     // Mix generated maze regions with library slots (the start region is a generated
-    // maze region; library entries fill non-root nodes). Both connection settings OFF
-    // → captured openings relabel onto the needed child sides at their captured tiles.
+    // maze region; library entries fill non-root nodes). No maze connection flags set
+    // → the DEFAULT best-effort path: attempt same-wall alignment, fall back to a
+    // relabelled side-based connection at the captured tiles.
     const { grid, startCell, tree } = engine.growSpheres({
         regionSize: { width: 11, height: 11 }, seed: SEED,
-        regionParams: { mazeRequireSameWall: false, mazeRequireTileAlign: false },
+        regionParams: {},
         growthParams: {
             spherePlan: plan,
             substrateQuotas: { maze: 2, [srcId]: 6 },

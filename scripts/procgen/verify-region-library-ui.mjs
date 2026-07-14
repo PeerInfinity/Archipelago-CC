@@ -14,9 +14,10 @@
  *     headless world.
  *   Phase C — F5 capture: open a generated region, "Save to library", and assert
  *     the downloaded working-library JSON validates + re-instantiates.
- *   Phase D — sphere-growth library wiring (F6d): a fresh context in sphere mode
- *     proves the Region-libraries subsection now renders there, a non-bounce pack
- *     is DISABLED while the bounce pack is selectable (bounce-only, F6a), and
+ *   Phase D — sphere-growth library wiring (F6d + F6c): a fresh context in sphere
+ *     mode proves the Region-libraries subsection now renders there, both the bounce
+ *     AND maze packs are selectable (F6c made maze/runner sphere-capable), ticking a
+ *     maze pack surfaces the connection toggles (default best-effort), and
  *     ticking the bounce library flows its content source into the sphere config —
  *     the grown world changes materially vs the same seed/params with NO library
  *     (i.e. the selection reached the engine's resolveSphereLibrarySources). The
@@ -406,13 +407,36 @@ for (let i = 0; i < 40 && !bothServed; i++) {
 }
 assert(bothServed, 'Phase D: both served packs (bounce + maze) rendered from the index');
 
-// D2 — bounce pack ENABLED, maze pack (non-bounce) DISABLED in sphere mode.
+// D2 — both bounce AND maze packs ENABLED in sphere mode (F6c: sphere placement
+// is no longer bounce-only — maze + runner are sphere-capable too).
 const cbState = await sp.evaluate((files) => {
     const get = (f) => document.querySelector(`.procgen-pipeline-served-library-cb[data-file="${f}"]`);
     return { bounceDisabled: get(files.bounce)?.disabled, mazeDisabled: get(files.maze)?.disabled };
 }, { bounce: BOUNCE_FILE, maze: DEMO_FILE });
 assert(cbState.bounceDisabled === false, 'Phase D: bounce pack checkbox is enabled (sphere-capable)');
-assert(cbState.mazeDisabled === true, 'Phase D: maze pack checkbox is disabled (bounce-only in sphere mode)');
+assert(cbState.mazeDisabled === false, 'Phase D: maze pack checkbox is enabled (sphere-capable, F6c)');
+
+// D2b — ticking the maze pack surfaces the maze connection toggles, both default
+// OFF (best-effort). Untick afterwards so the bounce flow below is unaffected.
+await sp.evaluate((f) => document.querySelector(
+    `.procgen-pipeline-served-library-cb[data-file="${f}"]`).click(), DEMO_FILE);
+let mazeToggles = null;
+for (let i = 0; i < 40 && mazeToggles === null; i++) {
+    mazeToggles = await sp.evaluate(() => {
+        const sw = document.querySelector('.procgen-pipeline-maze-samewall-cb');
+        const ta = document.querySelector('.procgen-pipeline-maze-tilealign-cb');
+        if (!sw || !ta) return null;
+        return { sameWall: sw.checked, tileAlign: ta.checked };
+    });
+    if (mazeToggles === null) await sp.waitForTimeout(250);
+}
+assert(mazeToggles !== null, 'Phase D: maze connection toggles render when a maze pack is selected');
+assert(mazeToggles && mazeToggles.sameWall === false && mazeToggles.tileAlign === false,
+    'Phase D: maze connection toggles default OFF (best-effort)');
+// Untick the maze pack (restore the pre-D2b selection state).
+await sp.evaluate((f) => document.querySelector(
+    `.procgen-pipeline-served-library-cb[data-file="${f}"]`).click(), DEMO_FILE);
+await sp.waitForTimeout(300);
 
 // D3 — tick the bounce pack; it lands in the working selection.
 await sp.evaluate((f) => document.querySelector(
