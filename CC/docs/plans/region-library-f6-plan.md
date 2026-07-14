@@ -164,20 +164,49 @@ All four priority questions landed on the recommended option:
   (validated against `growthParams.substrateConfig[id].libraryDoc`) instead of
   throwing "not registered / no realiser hook".
 
-## 4. Tentative phase breakdown (refine after §3 rulings)
+## 4. Phase breakdown (F6a DONE; F6b/c/d refined with F6a's learnings)
 
-- **F6a — bounce sphere placement (overlay gates).** `buildSphereZoneRegion`
-  library branch; sidePortals relabel to the slot's sides; gates as `logic_gate`
-  overlays; capability guard updates. Gate: a sphere world mixing a bounce
-  library entry with generated regions is winnable (witness/bot) + byte-inert at
-  defaults (no library ⇒ unchanged).
-- **F6b — capability negotiation.** Feed entry hostable-gate capacity into the
-  tree builder's `exitGateVeto`/`gateHostingHint` so the planner only assigns
-  hostable gates; physical enforcement where possible.
-- **F6c — maze sphere placement + (maybe) exit-carve.** ⊆ fit first; exit-carve
-  op only if ruled in.
-- **F6d — capture/UI parity.** Any capture-metadata additions; surface F6 usage
-  in the panel (sphere mode already has the F5 Save button on `_renderRegionEditRow`).
+- **F6a — bounce sphere placement (overlay gates). ✅ DONE (`c7cdd687c`).**
+  Built as `buildSphereLibrarySource`/`buildSphereLibraryRegion` (engine) + the
+  bounce adapter hook `instantiateLibraryEntryForSpecs` (relabel + item map) +
+  the dispatch branch in `realiseOneSphereNode` (zero rng) + capability guards
+  (`canHost` → true for a library host; quota validation skips `library:<id>`).
+  Gates all green; independent stratum = `verify-region-library-sphere-roundtrip.mjs`
+  (Generate.py fill). Full facts in main plan §7 + memory.
+
+- **F6b — capability negotiation (physical enforcement). NEXT, needs rulings.**
+  Today F6a's `canHost` returns TRUE for any library host and every gate rides as
+  an overlay — logically correct, but the runtime level is "walkable past" the
+  gate. F6b upgrades a gate to PHYSICAL where the entry can host it, overlay
+  otherwise (the hybrid Q2 destination). **The hard part** (already scoped in §1):
+  the tree builder assigns a node's gates at TREE-BUILD time, BEFORE the entry is
+  fit-selected at realise time — so the planner can't know the eventual entry's
+  hostable-gate capacity. Ruling candidates: (a) a per-library **capability
+  profile** (the pool advertises a common hostable-gate envelope; `canHost`
+  consults it instead of blanket-true) — simplest, but conservative; (b) **defer
+  entry selection into tree-build** (select the entry when the node is gated, so
+  its real capacity feeds `exitGateVeto`) — most faithful, biggest refactor;
+  (c) keep overlay as the floor and only physically enforce gates the entry
+  already carries verbatim (`assembleBounceRegionFromLevel` is the tool — it
+  re-derives + verifies a level against specs and THROWS on mismatch, which is
+  exactly the "can this entry host this gate?" test). Whichever: byte-inert at
+  defaults still holds, and the winnability stratum stays Generate.py fill.
+
+- **F6c — maze sphere placement + (maybe) exit-carve. Needs rulings.** Maze sides
+  are REAL holes, not re-keyable — so there is no `instantiateLibraryEntryForSpecs`
+  relabel equivalent. Either ⊆-fit only (a maze entry fits a node iff its captured
+  sides ⊇ the node's needed sides — very restrictive) or build the exit-carve op
+  (carve a hole on the needed side + re-extract; main plan §6 open-q 1). Maze gates
+  are physical walls the fixed entry can't rebuild → they ride as overlays too
+  (same F6a contract). The maze hook is `instantiateLibraryEntry` (spiral,
+  sides-only) — F6c adds the sphere/entrance/back-portal + item-map layer.
+
+- **F6d — capture/UI parity.** Surface sphere library usage in the panel (sphere
+  mode already has the F5 Save button on `_renderRegionEditRow`); wire a
+  `library:<id>` sphere quota into the panel's sphere-growth config (F6a is
+  engine-only — tests/e2e drive `substrateQuotas` directly). The committed
+  `demo-bounce-pack.json` + its index entry already exist for the panel to pick up.
+  Any capture-metadata additions land here (none needed for F6a/overlay).
 
 ## 5. Gates & conventions (unchanged from the arc)
 
