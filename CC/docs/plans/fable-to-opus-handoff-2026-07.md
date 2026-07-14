@@ -346,7 +346,12 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
       basic/advanced automation" checkboxes (`*Enabled`, default true) gate
       whether features run; a tier acts only when shown AND enabled; disabling
       via Enable keeps the section+radio visible. npm 91/91; ui-smoke 75/75.
-      **§11.7 Design B remains queued after this.**
+      **Buy Mana UX polish (same day):** "Optimise Buy Mana" button → "Suggest"
+      (preview-only); "Apply" auto-suggests when no cached proposal exists;
+      fixed onError not resetting awaitingOptimize. The proposal is now a
+      collapsible `<details>` with two Before/After/Δ tables (waste + reps, Δ
+      colour-coded); Suggest/Apply top up reps first when auto-add is on.
+      ui-smoke 83/83. **§11.7 Design B remains queued after this.**
    Original queue (for reference):
    1. **Systematic action-code audit (user: HIGH priority)**: read all
       157 actions' reward/effect code and produce a complete census of
