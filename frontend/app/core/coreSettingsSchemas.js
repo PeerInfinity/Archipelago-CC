@@ -45,6 +45,12 @@ export const CORE_SETTINGS_SCHEMAS = {
         label: 'Use Substituted Names',
         description: 'Show meaningful display names instead of generic internal names',
       },
+      restoreLastWorld: {
+        type: 'boolean',
+        default: true,
+        label: 'Restore Last World',
+        description: 'Restore the most recently loaded world after a page reload',
+      },
     },
   },
   colorblindMode: {
