@@ -23,11 +23,12 @@ export const REGION_LIBRARY_SCHEMA_VERSION = 1;
 //     so an entry stores `payload` only and `carried_rules` MUST be null —
 //     instantiation re-extracts rules (deserializeWorld + extractPathsAndObstacles),
 //     which can never go stale against the geometry.
-//   - 'content' (bounce): geometry cannot be re-derived, so an entry MUST carry
-//     its emitted rules verbatim in `carried_rules`.
+//   - 'content' (bounce, runner): geometry cannot be re-derived, so an entry MUST
+//     carry its emitted rules verbatim in `carried_rules`.
 export const LIBRARY_V1_SUBSTRATES = Object.freeze({
     maze: 'procedural',
     bounce: 'content',
+    runner: 'content',
 });
 
 const VALID_SIDES = new Set(['N', 'E', 'S', 'W']);

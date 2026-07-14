@@ -27,7 +27,13 @@ import { createFlashSubstrateEntry } from '../flashSubstrate/flashSubstrateLibra
 import {
     generateZoneSet, generateLevelForSpecsGen, SWEEP_SATURATING_PROFILES,
 } from './generator.js';
-import { makeExtractZoneRules, assembleRunnerRegion } from './zoneRules.js';
+import { makeExtractZoneRules, assembleRunnerRegion, buildZonePayload } from './zoneRules.js';
+import {
+    captureRunnerLibraryEntry,
+    instantiateRunnerLibraryEntry,
+    instantiateLibraryEntryForSpecs,
+    validateRunnerLibraryEntry,
+} from './runnerLibraryEntry.js';
 import {
     RUNNER_LIBRARY_ITEMS, RUNNER_LIBRARY_OBSTACLES,
     ABILITY_ITEM_NAMES, VICTORY_ITEM_NAME,
@@ -495,6 +501,22 @@ export function createRunnerSubstrateEntry({
         // All payload content comes from extractZoneRules (which knows
         // the exit sides); no separate synthesizeZonePayload needed.
         extractZoneRules,
+
+        // --- Region-library content-source hooks (region-library F6c) ---
+        // Runner is a CONTENT (zone) library substrate exactly like bounce: an
+        // entry carries its emitted rules verbatim (geometry not re-derivable) +
+        // the runner level payload; instantiate re-assembles the synthetic-exit
+        // region via assembleZoneRegion. F1–F6a only wired bounce; these close
+        // the runner gap. See runnerLibraryEntry.js.
+        captureLibraryEntry: captureRunnerLibraryEntry,
+        instantiateLibraryEntry: (entry, ctx) => instantiateRunnerLibraryEntry(entry, ctx, { buildZonePayload }),
+        // Requirement-aware sphere placement (region-library F6c): relabels the
+        // captured portals onto the slot's specific sides + reassigns the node's
+        // items; the engine overlays each gate as an access_rule. See
+        // runnerLibraryEntry.js / buildSphereLibraryRegion.
+        instantiateLibraryEntryForSpecs: (entry, ctx) =>
+            instantiateLibraryEntryForSpecs(entry, ctx, { buildZonePayload }),
+        validateLibraryEntry: validateRunnerLibraryEntry,
 
         // Panel-facing item/obstacle vocabulary (declared in apRules.js,
         // the rule-emission home — unlike bounce, whose defs sit here).

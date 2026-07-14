@@ -20,6 +20,16 @@
       "substrates": [
         "bounce"
       ]
+    },
+    {
+      "file": "demo-runner-pack.json",
+      "library_id": "demo-runner-pack-ea1041cc",
+      "name": "Demo Runner Pack",
+      "description": "Two runner zone rooms (four re-keyable sides, 1 slot each).",
+      "entry_count": 2,
+      "substrates": [
+        "runner"
+      ]
     }
   ]
 }

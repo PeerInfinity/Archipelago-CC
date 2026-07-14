@@ -4288,10 +4288,19 @@ export function resolveSphereLibrarySources(substrateQuotas, config) {
                 + 'growthParams.substrateConfig — a selected library must ride the config');
         }
         const entries = Array.isArray(doc.entries) ? doc.entries : [];
-        if (!entries.some((e) => e.substrate === 'bounce')) {
+        // A sphere slot is realised via the entry substrate's requirement-aware
+        // instantiateLibraryEntryForSpecs hook (bounce F6a, runner F6c). Accept any
+        // library with at least one entry whose registered substrate provides it —
+        // registry-driven so a newly-wired substrate (maze) is picked up without
+        // touching this guard. Per-entry substrates lacking the hook still fail
+        // loudly at buildSphereLibraryRegion.
+        const hasRealisable = entries.some((e) =>
+            typeof substrateRegistry.get(e.substrate)?.instantiateLibraryEntryForSpecs === 'function');
+        if (!hasRealisable) {
             throw new Error(
-                `growSpheres: library '${id}' has no bounce entries — sphere-growth library `
-                + 'reuse is bounce-only in F6a');
+                `growSpheres: library '${id}' has no entries whose substrate can realise a `
+                + 'sphere slot (no registered instantiateLibraryEntryForSpecs hook) — '
+                + 'sphere-growth library reuse needs a zone substrate (e.g. bounce or runner)');
         }
         sources[id] = buildSphereLibrarySource(id, doc);
     }
