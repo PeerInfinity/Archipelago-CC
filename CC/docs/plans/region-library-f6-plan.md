@@ -371,3 +371,56 @@ All four priority questions landed on the recommended option:
 3. Get the §3 rulings from the user BEFORE writing code (esp. Q1 scope, Q2 gate
    strategy, Q3 exit-carve).
 4. Then implement the ruled F6a phase behind the byte-inert-at-defaults gate.
+
+## 7. Deferred threads / follow-ups (after F6a/F6c/F6d)
+
+The arc's named phases are F6a (bounce sphere placement, DONE), F6c (runner +
+maze, DONE), F6d (panel wiring, DONE). What remains is a set of deferred,
+inter-related follow-ups. None is byte-affecting at defaults, and each keeps the
+Generate.py-fill winnability stratum.
+
+1. **F6b — capability negotiation (physical gate enforcement). NEXT — user ruled
+   candidate (a) per-library capability profile (2026-07-14).** Today `canHost`
+   (`procgenPipelineEngine.js:3608`) returns TRUE for ANY `library:<id>` host, so
+   every sphere gate rides only as a logic OVERLAY — correct, but the runtime level
+   is "walkable past" the gate. F6b physically enforces a gate WHERE the entry can
+   host it, overlay otherwise. The tension (§4 F6b / §1): the tree builder assigns a
+   node's gate at TREE-BUILD time, but the specific entry is fit-selected later at
+   REALISE time (`buildSphereLibrarySource`), so `canHost` can't know the eventual
+   entry's capacity. **Ruling (a):** the LIBRARY (pool) advertises a common hostable-
+   gate ENVELOPE; `canHost` consults that profile instead of blanket-true. The
+   profile must be CONSERVATIVE (a gate the planner assigns must be hostable by
+   whatever entry the fit-selector later picks) — e.g. the intersection of the
+   entries' physical capabilities, or the entry substrate's own `exitGateVeto`
+   applied to the library. Candidates (b) [defer entry selection into tree-build] and
+   (c) [overlay floor + enforce verbatim-carried gates via
+   `assembleBounceRegionFromLevel`] stay the escalation path. Full brief §4 F6b.
+
+2. **Maze back-exit tile fidelity.** F6c's maze sphere hook leaves the driver's
+   back-exit at `specs.entranceTile` (the grid-mirror of the parent's exit) rather
+   than the captured entrance opening's tile. Winnability is side-based (stitchGrid),
+   so AP logic is unaffected — this is a PHYSICAL-rendering nicety only. Fixing it
+   means teaching `applySphereBackExit` (`:4374`) to use the region's captured
+   entrance tile for a library maze node (byte-safe: gate strictly on
+   `isLibrarySourceId(node.substrate) && adapter.generateRegionCore`, else generated
+   maze / bounce library back-exits shift and byte-identity breaks).
+
+3. **Exit-carve / true tile alignment.** `mazeRequireTileAlign: true` currently
+   THROWS for a captured maze (its holes are fixed; grid-mirror alignment needs a
+   carve). Implementing the carve — cut a new opening at the needed tile + re-extract
+   — turns that opt-in flag into a working "physically aligned" mode (main plan §6
+   open-q 1). This is the honest home for thread 2 as well.
+
+4. **Auto-adjust surrounding regions (user aspiration, 2026-07-13, NOT built).**
+   Beyond F6b/F6c: let a user place a library region into the grid in ways that don't
+   currently fit, then AUTO-ADJUST the neighbouring regions (re-carve their shared
+   openings / re-route) to make it fit. A generalisation of exit-carve (thread 3)
+   from one region to its neighbourhood — the exit-carve/negotiation direction taken
+   to the layout level. Largest and most open-ended; no plan written.
+
+5. **Shared `zoneLibraryEntry.js` extraction (cleanup).** Runner's F6c hooks were
+   MIRROR-AND-ADAPTED from `bounceLibraryEntry.js` to keep the SHIPPED+byte-gated
+   bounce code untouched (and because `shared/` is a submodule). Bounce + runner
+   share the zone-library model, so a later cleanup could extract the common body
+   into `shared/procgen/zoneLibraryEntry.js` that both consume — behind the existing
+   byte-identity + roundtrip gates. Pure refactor; no behaviour change.
