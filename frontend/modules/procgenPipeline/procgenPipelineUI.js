@@ -7,7 +7,7 @@
 import { setPanelInstance, getModuleApis } from './index.js';
 import eventBus from '../../app/core/eventBus.js';
 import {
-    growMaze,
+    growMazeAsync,
     rebuildSphereTopology,
     buildRulesJson,
     stringifyRulesJson,
@@ -4215,7 +4215,9 @@ export class ProcgenPipelineUI {
                 // below the Generate button can repaint
                 await this._runSphereGrowth();
             } else {
-                this._runGridGrowth();
+                // async: streams a region/regionDone event per built region
+                // (growMazeAsync) so the indicator repaints as the maze grows
+                await this._runGridGrowth();
             }
         } catch (e) {
             this.message = `ERROR: ${e.message}`;
@@ -4278,7 +4280,10 @@ export class ProcgenPipelineUI {
                 ? ` · attempt ${s.attempt.attempt}/${s.attempt.attempts}` : '';
             // sphere is sphere-mode-only; top-down regions carry no wave.
             const sphereBit = r.sphere != null ? `, sphere ${r.sphere}` : '';
-            lines.push(`Building region ${r.index + 1}/${s.totalRegions} — `
+            // Grid-growth's total is emergent (null) — omit the "/N" denominator
+            // and the regions-remaining line, which only the plan-driven modes know.
+            const totalBit = s.totalRegions ? `/${s.totalRegions}` : '';
+            lines.push(`Building region ${r.index + 1}${totalBit} — `
                 + `${r.region_id} (${r.substrate}${sphereBit}, `
                 + `${r.placements} placement${r.placements === 1 ? '' : 's'})${attempt}`);
             let spheresBit = '';
@@ -4286,12 +4291,18 @@ export class ProcgenPipelineUI {
                 const spheresLeft = Math.max(0, s.totalSpheres - r.sphere);
                 spheresBit = `${spheresLeft} sphere${spheresLeft === 1 ? '' : 's'} · `;
             }
-            const regionsLeft = s.totalRegions - r.index;
-            lines.push(`Remaining: ${spheresBit}`
-                + `${regionsLeft} region${regionsLeft === 1 ? '' : 's'} · `
-                + `${r.placements} placement${r.placements === 1 ? '' : 's'} in current region`);
+            if (s.totalRegions) {
+                const regionsLeft = s.totalRegions - r.index;
+                lines.push(`Remaining: ${spheresBit}`
+                    + `${regionsLeft} region${regionsLeft === 1 ? '' : 's'} · `
+                    + `${r.placements} placement${r.placements === 1 ? '' : 's'} in current region`);
+            } else {
+                lines.push(`${r.placements} placement${r.placements === 1 ? '' : 's'} in current region`);
+            }
         } else if (s.phase) {
-            lines.push(`Finalizing: ${s.phase} · ${s.doneRegions}/${s.totalRegions} regions built`);
+            const builtBit = s.totalRegions
+                ? `${s.doneRegions}/${s.totalRegions}` : `${s.doneRegions}`;
+            lines.push(`Finalizing: ${s.phase} · ${builtBit} regions built`);
         } else if (s.totalRegions) {
             lines.push(s.totalSpheres
                 ? `Planned: ${s.totalSpheres} spheres, ${s.totalRegions} regions`
@@ -4303,14 +4314,24 @@ export class ProcgenPipelineUI {
         this._progressEl.textContent = lines.join('\n');
     }
 
-    _runGridGrowth() {
+    async _runGridGrowth() {
         const { seed, gridWidth, gridHeight, regionWidth, regionHeight,
             maxItemsPerRegion, maxRegions, startSubstrate,
             stopOnPoolEmpty, asymmetricExits } = this.params;
         const useQuotas = this.substrateMode === 'quotas';
         const quotas = useQuotas ? this._effectiveSubstrateQuotas() : null;
         const mix = !useQuotas ? this._effectiveSubstrateMix() : null;
-        const { grid, pool, stats, startCell } = growMaze({
+        // Live progress: grid-growth streams a region/regionDone event per built
+        // region (drained by growMazeAsync with a setTimeout(0) yield so the
+        // indicator repaints as the maze grows). The region count is emergent,
+        // so totalRegions stays null — the panel shows "Building region N" with
+        // no denominator (unlike the plan-driven sphere/top-down modes).
+        this._progressState = {
+            startedAt: performance.now(), totalRegions: 0, totalSpheres: 0,
+            doneRegions: 0, region: null, attempt: null, phase: null,
+            timings: [], lastEvent: null, lastAt: 0,
+        };
+        const { grid, pool, stats, startCell } = await growMazeAsync({
             gridDims: { width: gridWidth, height: gridHeight },
             regionSize: { width: regionWidth, height: regionHeight },
             itemPool: { ...this.scenario.items },
@@ -4328,7 +4349,7 @@ export class ProcgenPipelineUI {
                     ? { startSubstrate } : {}),
             },
             hazardOpts: this._effectiveHazardOpts(),
-        });
+        }, (ev) => this._onGenerationProgress(ev));
         // Auto-completion-condition item — scenario is_victory item or
         // a selected substrate's declared victoryItem (see
         // _resolveVictoryItemId). Opt-out: drop all such items.

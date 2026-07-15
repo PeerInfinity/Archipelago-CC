@@ -12,7 +12,7 @@ import {
     ScenarioPool, SIDES, OPPOSITE_SIDE,
     Grid, cellKey,
     stitchGrid, accumulatedInventory,
-    wallOffUnusedExits, growMaze, compileRegionGraph,
+    wallOffUnusedExits, growMaze, growMazeGen, growMazeAsync, compileRegionGraph,
     buildPresetSidecars, buildRulesJson, stringifyRulesJson,
     findDisconnectedCell,
     topDownFromRulesJson, layoutTopDown, realiseTopDownGen,
@@ -1030,6 +1030,75 @@ describe('growMaze', () => {
             expect(region.render_hint).toBe('maze');
             expect(region.sidecar_filename).toBe(`${region.region_id}.json`);
         }
+    });
+});
+
+describe('growMazeGen / growMaze / growMazeAsync (generator + drains)', () => {
+    const cfg = {
+        gridDims: { width: 4, height: 4 },
+        regionSize: { width: 8, height: 6 },
+        itemPool: { key_red: 6 },
+        obstaclePool: { door_red: 6 },
+        seed: 1,
+        regionParams: {},
+        growthParams: { maxRegions: 8, assumeBidirectional: true },
+    };
+
+    function drain(gen) {
+        const events = [];
+        let r = gen.next();
+        while (!r.done) { events.push(r.value); r = gen.next(); }
+        return { events, result: r.value };
+    }
+
+    it('yields a plan event first, region/regionDone pairs, then a phase event', () => {
+        const { events } = drain(growMazeGen(cfg));
+        expect(events[0]).toEqual({ type: 'plan', regions: null });
+        expect(events[events.length - 1]).toEqual({ type: 'phase', name: 'finalizing' });
+
+        const regionEvents = events.filter((e) => e.type === 'region');
+        const doneEvents = events.filter((e) => e.type === 'regionDone');
+        expect(regionEvents.length).toBe(doneEvents.length);
+        expect(regionEvents.length).toBeGreaterThanOrEqual(2);
+        // Contiguous indices from 0; emergent count (total null); no waves.
+        regionEvents.forEach((e, i) => {
+            expect(e.index).toBe(i);
+            expect(e.total).toBe(null);
+            expect(e.sphere).toBe(null);
+            expect(typeof e.region_id).toBe('string');
+            expect(typeof e.substrate).toBe('string');
+            expect(e.placements).toBeGreaterThanOrEqual(0);
+        });
+        doneEvents.forEach((e, i) => expect(e.index).toBe(i));
+    });
+
+    it('emits exactly one region event per built region', () => {
+        const { events, result } = drain(growMazeGen(cfg));
+        const regionEvents = events.filter((e) => e.type === 'region');
+        expect(regionEvents.length).toBe(result.stats.regionsBuilt);
+    });
+
+    it('growMaze (sync drain) returns the generator return value', () => {
+        const out = growMaze(cfg);
+        expect(out.stats.regionsBuilt).toBeGreaterThanOrEqual(1);
+        expect(out.grid.hasRegion({ gx: 2, gy: 2 })).toBe(true);
+    });
+
+    it('growMazeAsync output is identical to growMaze and forwards the full event stream', async () => {
+        const sync = growMaze(cfg);
+        const events = [];
+        const asyncOut = await growMazeAsync(cfg, (ev) => events.push(ev));
+
+        // Identical result (yields never touch the rng).
+        expect(asyncOut.stats.regionsBuilt).toBe(sync.stats.regionsBuilt);
+        expect(asyncOut.stats.stopReason).toBe(sync.stats.stopReason);
+        expect(asyncOut.stats.teleportersPlaced).toBe(sync.stats.teleportersPlaced);
+        const regionIds = (g) => [...g.allRegions()].map((r) => r.region_id).sort();
+        expect(regionIds(asyncOut.grid)).toEqual(regionIds(sync.grid));
+
+        // The forwarded stream equals what the generator yields.
+        const { events: genEvents } = drain(growMazeGen(cfg));
+        expect(events).toEqual(genEvents);
     });
 });
 

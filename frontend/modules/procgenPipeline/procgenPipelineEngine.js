@@ -936,7 +936,7 @@ function insertBackExit(grid, {
     return true;
 }
 
-export function growMaze(config) {
+export function* growMazeGen(config) {
     const {
         gridDims,
         regionSize,
@@ -1018,6 +1018,15 @@ export function growMaze(config) {
         substrateCounts,
     };
 
+    // Grid-growth's region count is EMERGENT — growth stops on
+    // frontier/pool/quota exhaustion or maxRegions, not a plan — so the total
+    // is genuinely unknown up front. Emit regions:null; the panel then shows
+    // "Building region N" with no denominator. Yields never touch the rng, so
+    // draining growMazeGen synchronously (growMaze) is byte-identical to the
+    // pre-generator implementation; the panel drains asynchronously
+    // (growMazeAsync) so the progress indicator repaints between regions.
+    yield { type: 'plan', regions: null };
+
     // --- Start region ---
     const startCell = {
         gx: Math.floor(gridDims.width / 2),
@@ -1046,6 +1055,10 @@ export function growMaze(config) {
         }, rng);
     }
     substrateCounts[startSub] = (substrateCounts[startSub] || 0) + 1;
+    yield {
+        type: 'region', index: stats.regionsBuilt, total: null,
+        region_id: startRegionId, substrate: startSub, sphere: null, placements: 0,
+    };
     const startRegion = buildSubstrateRegion({
         substrate: startSub,
         region_id: startRegionId,
@@ -1065,6 +1078,10 @@ export function growMaze(config) {
     });
     stitchGrid(grid);
     stats.regionsBuilt += 1;
+    yield {
+        type: 'regionDone', index: stats.regionsBuilt - 1, total: null,
+        region_id: startRegionId,
+    };
 
     // --- Frontier init ---
     // Each frontier entry represents an unbuilt parent-side that
@@ -1149,6 +1166,11 @@ export function growMaze(config) {
             substrateCounts, substratePicker,
         }, rng);
         substrateCounts[childSub] = (substrateCounts[childSub] || 0) + 1;
+        yield {
+            type: 'region', index: stats.regionsBuilt, total: null,
+            region_id: childRegionId, substrate: childSub, sphere: null,
+            placements: plan.items_to_place.length,
+        };
         const region = buildSubstrateRegion({
             substrate: childSub,
             region_id: childRegionId,
@@ -1189,6 +1211,10 @@ export function growMaze(config) {
         });
         stitchGrid(grid);
         stats.regionsBuilt += 1;
+        yield {
+            type: 'regionDone', index: stats.regionsBuilt - 1, total: null,
+            region_id: childRegionId,
+        };
 
         for (const placed of region.exits_placed) {
             // For teleporter children, every exit becomes a fresh
@@ -1203,6 +1229,8 @@ export function growMaze(config) {
         stats.stopReason = 'frontier_empty';
     }
 
+    yield { type: 'phase', name: 'finalizing' };
+
     // Cross-branch stitching can leave one-way exits. When the user
     // wants bidirectional traversal, reconcile asymmetric pairs
     // before walling off unused exits — 'remove' mode nulls the
@@ -1214,6 +1242,35 @@ export function growMaze(config) {
     wallOffUnusedExits(grid);
 
     return { grid, pool, stats, startCell };
+}
+
+/**
+ * Grid-growth (growMaze), synchronous: drains growMazeGen with no pauses —
+ * byte-identical to the pre-generator implementation (yields never touch the
+ * rng). All headless callers and tests use this.
+ */
+export function growMaze(config) {
+    const gen = growMazeGen(config);
+    let r = gen.next();
+    while (!r.done) r = gen.next();
+    return r.value;
+}
+
+/**
+ * Grid-growth, asynchronous: forwards each progress event to `onProgress` and
+ * yields to the event loop between events so the panel's Generate progress
+ * indicator can repaint. Identical output to growMaze.
+ */
+export async function growMazeAsync(config, onProgress = null) {
+    const gen = growMazeGen(config);
+    let r = gen.next();
+    while (!r.done) {
+        onProgress?.(r.value);
+        // eslint-disable-next-line no-await-in-loop
+        await new Promise((resolve) => { setTimeout(resolve, 0); });
+        r = gen.next();
+    }
+    return r.value;
 }
 
 // --- Top-down driver ---
