@@ -989,6 +989,12 @@ function _dispatchQueueAction(method, args) {
             };
         case 'getFullState':
             return typeof _w.getFullState === 'function' ? _w.getFullState() : null;
+        case 'getPreviousRunActions':
+            // Ordered log of what actually ran during the run that ended at the
+            // last reset (task reps + item uses, in sequence).
+            return typeof _w.getPreviousRunActions === 'function' ? _w.getPreviousRunActions() : [];
+        case 'getCurrentRunActions':
+            return typeof _w.getCurrentRunActions === 'function' ? _w.getCurrentRunActions() : [];
         case 'getItemDefs':
             // Item-name sourcing is deferred to Phase 3: the fork exposes no
             // name table today and v1 makes no fork changes. Relay names if a
