@@ -260,6 +260,10 @@ async function main() {
     const screenK = Number(val("--screen-k", 8));
     const screenMode = val("--screen-mode", "predictor");   // predictor | engine | none
     const probeEvery = Number(val("--probe-every", 1));
+    // §11.7 reuse: replay each winning queue this many loops before re-planning
+    // (running is far cheaper than planning). 1 = re-plan every loop = byte-exact
+    // reference. >1 trades loop-count optimality for wall-clock.
+    const replanEvery = Number(val("--replan-every", 1));
     const targetTown = Number(val("--target-town", 1));
     const multiTown = val("--multi-town", "on") !== "off";
     const vocabulary = val("--vocabulary", "empirical");   // empirical | informed
@@ -306,7 +310,7 @@ async function main() {
     const knobsAtDefaults = screenK === 8 && probeEvery === 1 && targetTown === 1 && multiTown
         && gainMult === 1 && !fromStatePath && !wanderUntil && screenMode === "predictor"
         && vocabulary === "empirical" && strategy === "heuristic" && !antiFixation
-        && rngMode === "random";
+        && rngMode === "random" && replanEvery === 1;
 
     let srcDir, forkCommit;
     if (useWorktree) {
@@ -446,7 +450,7 @@ async function main() {
     }
 
     const t0 = Date.now();
-    const r = await IP.runStandalone({ maxLoops, weights, seedFromPredictor, verbose: true, screenK, screenMode, probeEvery, targetTown, multiTown, vocabulary, strategy, targetAction, targets, autoRankTargets, antiFixation, resume, onLoop });
+    const r = await IP.runStandalone({ maxLoops, weights, seedFromPredictor, verbose: true, screenK, screenMode, probeEvery, replanEvery, targetTown, multiTown, vocabulary, strategy, targetAction, targets, autoRankTargets, antiFixation, resume, onLoop });
     for (const w of poolWorkers) w.terminate();
     const hash = crypto.createHash("sha256").update(r.finalSnapshot).digest("hex").slice(0, 16);
     if (saveStatePath) {
@@ -471,7 +475,7 @@ async function main() {
         metricWeights.loops * totalLoops + (metricWeights.ticks ?? 0) * totalTicks + (metricWeights.wall ?? 0) * totalWall;
     const out = {
         date: new Date().toISOString(), forkCommit, seed, seedFromPredictor,
-        weightsOverride, screenK, screenMode, probeEvery, targetTown, multiTown, vocabulary, gainMult,
+        weightsOverride, screenK, screenMode, probeEvery, replanEvery, targetTown, multiTown, vocabulary, gainMult,
         strategy, targetAction, targets, autoRankTargets, antiFixation,
         metric, metricValue,
         wanderUntil, wanderLoops, wanderTicks, wanderExplored,
