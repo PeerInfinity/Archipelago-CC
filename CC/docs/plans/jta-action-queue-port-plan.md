@@ -453,23 +453,27 @@ record.
 
 ## 9. Amendments (2026-07-14, implementation)
 
-**A. Catalog source — LIVE report, not a static table (user ruling
+**A. Catalog source — LIVE ALL-ZONES report, not a static table (user rulings
 2026-07-14, supersedes §2.4 / §3 "Re-source from zoneTaskData").** The Actions
-catalog on the substrate path is built from a live "currently-loaded actions"
-report from JtA, not the generated `zoneTaskData.js` snapshot — so it stays
-correct when the synthetic-data arc changes what each zone contains, with no
-regeneration step. Mechanism (zero fork changes): a `getActions` queueAction
-method returns the fork's current-zone task list (`getFullState().tasks`, which
-JtA already exposes); `BridgeTransport.requestActions()` fetches it and emits an
-`actions` event; the engine builds the catalog via
-`buildCatalogFromReport()` and re-requests on every zone change (the transport
-re-emits `gameState:regionChanged`). Consequence: the Actions panel shows the
-**current zone's** actions (JtA loads one zone at a time), not an all-zones
-navigator — a cross-zone script is authored by queueing the current zone's
-actions plus an exit, then adding the next zone's once loaded. Task entries are
-uniformly `clickTask` (travel = a clickTask on a travel task). Item labels are
-best-effort (`Item <type>`) — the fork reports held items without names; a
-nicer label source is deferred.
+catalog on the substrate path is built from a live report from JtA, not the
+generated `zoneTaskData.js` snapshot — so it stays correct when the
+synthetic-data arc changes the zone tables, with no regeneration step. Fact
+established: the fork keeps EVERY zone's action definitions resident in the
+module-level `ZONES` array (`zones.ts:72`), and synthetic data replaces the
+whole table (`swapZoneTables`, `game_data.ts:623`) — nothing is thrown out
+per-zone. A first pass (`92ef7e685`) reported only the loaded zone
+(`getFullState().tasks`, zero fork changes); the user then chose the all-zones
+report, accepting a minimal **read-only fork change**: `window.getAllZoneActions()`
+(`simulation.ts`, fork `02f7b13`, byte-inert — reads live `ZONES`). Mechanism:
+the `getActions` queueAction method returns `{ zones: getAllZoneActions(),
+items: getFullState().items }`; `BridgeTransport.requestActions()` fetches it and
+emits an `actions` event; the engine builds the catalog via
+`buildCatalogFromReport()` (tasks grouped by zone name) and re-requests when the
+dataset (re)loads (the transport re-emits `stateManager:rulesLoaded` — defs only
+change when `ZONES` swaps, not on zone moves). The Actions panel is an all-zones
+navigator, as before. Task entries are uniformly `clickTask` (travel = a
+clickTask on a travel task). Item labels are best-effort (`Item <type>`) — the
+fork reports held items without names; a nicer label source is deferred.
 
 **B. Default layout — still out (user confirmed).** The queue panel is
 registered in the default mode (F1) but stays out of the default layout preset.
@@ -478,9 +482,12 @@ registered in the default mode (F1) but stays out of the default layout preset.
 actions that actually *ran* during the last reset, optionally savable as an
 action queue. Needs a fork-side per-reset execution log; revisit later.
 
-**Implementation status:** Phase 1 (`17e5c8149`) and Phase 2 (`630450686`)
-complete; Phase 3a (live-report catalog mechanism) complete. Remaining: Phase 3b
-(UI trims — hide Builder/Predictor/Drain on the bridge transport; fresh loadout
-key `jta-action-loadouts-substrate`; skip the `[Auto]` strategy loadout on the
+**Implementation status:** Phase 1 (`17e5c8149`), Phase 2 (`630450686`), and
+Phase 3a (live catalog — current-zone `92ef7e685`, then all-zones fork hook
+`bd78d8aa4` pointer + `9e0f72c0b` rewire) complete. Remaining: Phase 3b (UI
+trims — hide Builder/Predictor/Drain on the bridge transport; fresh loadout key
+`jta-action-loadouts-substrate`; skip the `[Auto]` strategy loadout on the
 bridge) and Phase 4 (default-mode registration, in-app substrate test in the
-test-substrates config, docs). All work outer-repo only; zero fork changes.
+test-substrates config, docs). Only the one read-only `getAllZoneActions` fork
+hook was needed; everything else is outer-repo. NOTE: push the fork's
+`substrate` branch (`02f7b13`) before pushing outer main.
