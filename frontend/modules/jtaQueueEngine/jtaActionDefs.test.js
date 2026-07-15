@@ -5,24 +5,27 @@ import { describe, it, expect } from 'vitest';
 import { buildCatalogFromReport, JTAActionType } from './jtaActionDefs.js';
 
 describe('buildCatalogFromReport', () => {
-    it('maps reported current-zone tasks to clickTask catalog entries', () => {
+    it('maps all reported zones to clickTask catalog entries grouped by zone name', () => {
         const cat = buildCatalogFromReport({
-            zone: 2,
-            tasks: [
-                { id: 10, name: 'Explore', maxReps: 5 },
-                { id: 11, name: 'Fight Monsters', maxReps: 20 },
+            zones: [
+                { zone: 0, name: 'The Fields', tasks: [{ id: 1, name: 'Explore', maxReps: 5 }] },
+                { zone: 1, name: 'Dark Cave', tasks: [
+                    { id: 10, name: 'Fight Monsters', maxReps: 20 },
+                    { id: 11, name: 'Travel', maxReps: 1 },
+                ] },
             ],
             items: [],
         });
         expect(cat.tasks).toEqual([
-            { actionType: JTAActionType.CLICK_TASK, actionId: 10, label: 'Explore', group: 'Zone 3', zoneId: 2, maxReps: 5 },
-            { actionType: JTAActionType.CLICK_TASK, actionId: 11, label: 'Fight Monsters', group: 'Zone 3', zoneId: 2, maxReps: 20 },
+            { actionType: JTAActionType.CLICK_TASK, actionId: 1, label: 'Explore', group: 'The Fields', zoneId: 0, maxReps: 5 },
+            { actionType: JTAActionType.CLICK_TASK, actionId: 10, label: 'Fight Monsters', group: 'Dark Cave', zoneId: 1, maxReps: 20 },
+            { actionType: JTAActionType.CLICK_TASK, actionId: 11, label: 'Travel', group: 'Dark Cave', zoneId: 1, maxReps: 1 },
         ]);
         expect(cat.prestige).toEqual([]); // prestige dropped on the substrate
     });
 
     it('maps reported held items to useItem entries (best-effort labels)', () => {
-        const cat = buildCatalogFromReport({ zone: 0, tasks: [], items: [{ type: 4, count: 3 }] });
+        const cat = buildCatalogFromReport({ zones: [], items: [{ type: 4, count: 3 }] });
         expect(cat.items).toEqual([
             { actionType: JTAActionType.USE_ITEM, actionId: 4, label: 'Item 4', group: 'Items' },
         ]);

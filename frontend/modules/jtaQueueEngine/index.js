@@ -51,7 +51,7 @@ export async function register(registrationApi) {
     // Substrate bridge command replies + host lifecycle (BridgeTransport).
     registrationApi.registerEventBusSubscriberIntent(id, 'jta:queueActionResult');
     registrationApi.registerEventBusSubscriberIntent(id, 'gameState:loopReset');
-    registrationApi.registerEventBusSubscriberIntent(id, 'gameState:regionChanged');
+    registrationApi.registerEventBusSubscriberIntent(id, 'stateManager:rulesLoaded');
 
     log('info', 'Registration complete.');
 }

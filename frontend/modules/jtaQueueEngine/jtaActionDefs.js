@@ -70,35 +70,38 @@ export function buildActionCatalog(zones, itemData) {
 }
 
 /**
- * Build the catalog from a live "currently-loaded actions" report (substrate
- * path). Unlike buildActionCatalog (all zones, from a static gameDefs
- * snapshot), this reflects only the zone JtA currently has loaded — so it stays
- * correct under synthetic data, which can change what each zone contains. The
- * catalog is re-built whenever the loaded zone changes.
+ * Build the catalog from a live all-zones actions report (substrate path).
+ * Unlike buildActionCatalog (from a static gameDefs snapshot), this reflects
+ * the fork's live ZONES table (via window.getAllZoneActions), so it stays
+ * correct under synthetic data, which replaces the zone tables wholesale. Every
+ * zone's tasks are offered, grouped by zone name — re-built when the dataset
+ * (re)loads.
  *
  * Task entries are uniformly clickTask (a "travel" is just a clickTask on a
  * travel task, so the report needs no per-task action-type). Prestige is
  * dropped on the substrate (no window.doPrestige hook). Item labels are
  * best-effort (the fork reports held items by type without names).
  *
- * @param {{ zone: number, tasks: object[], items: object[] }|null} report
+ * @param {{ zones: {zone:number, name:string, tasks:object[]}[], items: object[] }|null} report
  * @returns {{ tasks: object[], items: object[], prestige: object[] }}
  */
 export function buildCatalogFromReport(report) {
     const tasks = [];
     const items = [];
-    if (report && Array.isArray(report.tasks)) {
-        const zoneId = report.zone ?? 0;
-        const group = `Zone ${zoneId + 1}`;
-        for (const t of report.tasks) {
-            tasks.push({
-                actionType: JTAActionType.CLICK_TASK,
-                actionId: t.id,
-                label: t.name,
-                group,
-                zoneId,
-                maxReps: t.maxReps,
-            });
+    if (report && Array.isArray(report.zones)) {
+        for (const z of report.zones) {
+            const zoneId = z.zone ?? 0;
+            const group = z.name || `Zone ${zoneId + 1}`;
+            for (const t of (z.tasks || [])) {
+                tasks.push({
+                    actionType: JTAActionType.CLICK_TASK,
+                    actionId: t.id,
+                    label: t.name,
+                    group,
+                    zoneId,
+                    maxReps: t.maxReps,
+                });
+            }
         }
     }
     if (report && Array.isArray(report.items)) {

@@ -18,7 +18,7 @@
  * @typedef {(
  *   'taskClicked'|'itemClicked'|'prestigeDone'|'taskStatus'|
  *   'energyDepleted'|'gameOverDismissed'|'detailedState'|'gameDefs'|'connected'|
- *   'actions'|'loopReset'|'regionChanged'
+ *   'actions'|'loopReset'|'rulesLoaded'
  * )} QueueTransportEvent
  */
 
@@ -212,17 +212,17 @@ export class BridgeTransport extends QueueTransport {
     #unsubLoopReset;
 
     /** @type {Function} */
-    #unsubRegion;
+    #unsubRules;
 
     constructor(eventBus, moduleName) {
         super();
         this.#eventBus = eventBus;
         this.#moduleName = moduleName;
-        // Persistent subscriptions: command replies + host loop reset + zone
-        // change (the catalog is re-requested when the loaded zone changes).
+        // Persistent subscriptions: command replies + host loop reset + dataset
+        // (re)load (the all-zones catalog is re-requested when ZONES swaps).
         this.#unsubResult = this.#subscribe('jta:queueActionResult', (p) => this.#onResult(p));
         this.#unsubLoopReset = this.#subscribe('gameState:loopReset', () => this.#emit('loopReset', {}));
-        this.#unsubRegion = this.#subscribe('gameState:regionChanged', () => this.#emit('regionChanged', {}));
+        this.#unsubRules = this.#subscribe('stateManager:rulesLoaded', () => this.#emit('rulesLoaded', {}));
     }
 
     get isBridge() { return true; }
@@ -362,7 +362,7 @@ export class BridgeTransport extends QueueTransport {
     destroy() {
         try { this.#unsubResult?.(); } catch (e) { /* ignore */ }
         try { this.#unsubLoopReset?.(); } catch (e) { /* ignore */ }
-        try { this.#unsubRegion?.(); } catch (e) { /* ignore */ }
+        try { this.#unsubRules?.(); } catch (e) { /* ignore */ }
         this.#handlers.clear();
         this.#pending.clear();
     }

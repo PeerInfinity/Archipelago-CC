@@ -663,17 +663,17 @@ export class JTAQueueEngine {
         sub('gameDefs', (data) => this.#handleGameDefs(data));
         sub('detailedState', (data) => this.#handleDetailedState(data));
         sub('connected', () => this.#handleConnected());
-        // Substrate-only: loaded-actions report + zone change + loop reset.
+        // Substrate-only: all-zones actions report + dataset reload + loop reset.
         if (this.#transport.isBridge) {
             sub('actions', (report) => this.#handleActionsReport(report));
-            sub('regionChanged', () => this.#transport.requestActions());
+            sub('rulesLoaded', () => this.#transport.requestActions());
             sub('loopReset', () => this.#handleLoopReset());
         }
     }
 
     /**
-     * Substrate catalog from a live "currently-loaded actions" report — no
-     * static table, so it survives synthetic data. Re-built on every zone change.
+     * Substrate catalog from a live all-zones actions report — no static table,
+     * so it survives synthetic data. Re-built when the dataset (re)loads.
      */
     #handleActionsReport(report) {
         this.#catalog = buildCatalogFromReport(report);

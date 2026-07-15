@@ -979,14 +979,14 @@ function _dispatchQueueAction(method, args) {
         case 'getStatus':
             return _queueStatus();
         case 'getActions':
-            // JtA reports its currently-loaded actions (the live current-zone
-            // task list). This is the catalog source — no static table — so it
-            // stays correct when synthetic data changes what's loaded.
-            if (typeof _w.getFullState !== 'function') return null;
-            {
-                const s = _w.getFullState();
-                return { zone: s.currentZone, tasks: s.tasks, items: s.items };
-            }
+            // JtA reports its loaded actions for ALL zones (the live ZONES
+            // table via getAllZoneActions) plus current held items. This is the
+            // catalog source — no static table — so it stays correct when
+            // synthetic data replaces the zone tables.
+            return {
+                zones: typeof _w.getAllZoneActions === 'function' ? _w.getAllZoneActions() : [],
+                items: typeof _w.getFullState === 'function' ? (_w.getFullState().items || []) : [],
+            };
         case 'getFullState':
             return typeof _w.getFullState === 'function' ? _w.getFullState() : null;
         case 'getItemDefs':
