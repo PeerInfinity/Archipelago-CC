@@ -128,6 +128,7 @@ export class JTAQueueEngine {
         this.#unsubs = [];
         if (this.#executor) this.#executor.stop();
         if (this.#predictionDebounceTimer) clearTimeout(this.#predictionDebounceTimer);
+        this.#transport.destroy();
     }
 
     // =====================================================================
@@ -195,6 +196,10 @@ export class JTAQueueEngine {
                 }
             }
             this.#initTrackingState();
+            // Substrate: disable the fork's automation for the run (restored on
+            // stop/pause/finish). Published before the executor's first command
+            // so the mode change is processed first.
+            if (this.#transport.isBridge) this.#transport.beginRun();
             this.#executor.start();
 
             if (isImmediate) {
@@ -211,6 +216,7 @@ export class JTAQueueEngine {
     stop() {
         if (this.#executor) {
             this.#executor.stop();
+            if (this.#transport.isBridge) this.#transport.endRun();
             this.#emitStatusMessage('Stopped');
             this.#notifyStatusChange();
         }
@@ -234,6 +240,7 @@ export class JTAQueueEngine {
             if (isImmediate) {
                 this.#executor.updateConfig({ drainEnabled: false, autoReset: false });
             }
+            if (this.#transport.isBridge) this.#transport.beginRun();
             this.#executor.stepOne();
             this.#emitStatusMessage('Stepping...');
             this.#notifyStatusChange();
@@ -518,6 +525,27 @@ export class JTAQueueEngine {
         this.#executor.onStatusChange = () => this.#notifyStatusChange();
         this.#executor.onQueueExhausted = () => this.#handleQueueExhausted();
         this.#executor.onBeforeReset = () => this.regenerateStrategyQueue();
+        this.#executor.onPaused = (reason) => this.#handleExecutorPaused(reason);
+    }
+
+    /** Executor paused on an external block (substrate playback walk). */
+    #handleExecutorPaused(reason) {
+        if (this.#transport.isBridge) this.#transport.endRun();
+        this.#emitStatusMessage(`Paused: ${reason}`);
+        this.#notifyStatusChange();
+    }
+
+    /**
+     * Host loop reset while a substrate run is active: the player is teleported
+     * off-region and the game paused, so pause the run (snapshot preserved for
+     * Resume) and restore automation.
+     */
+    #handleLoopReset() {
+        if (!this.#executor?.isRunning) return;
+        this.#executor.stop();
+        if (this.#transport.isBridge) this.#transport.endRun();
+        this.#emitStatusMessage('Paused (loop reset)');
+        this.#notifyStatusChange();
     }
 
     #initTrackingState() {
@@ -538,7 +566,19 @@ export class JTAQueueEngine {
         if (this.#stopAfter) {
             this.#stopAfter = false;
             if (this.#executor) this.#executor.stop();
+            if (this.#transport.isBridge) this.#transport.endRun();
             this.#emitStatusMessage('Queue finished (stopped)');
+            this.#notifyStatusChange();
+            return;
+        }
+
+        // Substrate: single-run semantics — no drain, no auto-repeat across
+        // resets (a loop reset pauses the run instead). Stop and restore
+        // automation when the script exhausts.
+        if (this.#transport.isBridge) {
+            if (this.#executor) this.#executor.stop();
+            this.#transport.endRun();
+            this.#emitStatusMessage('Queue finished');
             this.#notifyStatusChange();
             return;
         }
@@ -617,6 +657,10 @@ export class JTAQueueEngine {
         sub('gameDefs', (data) => this.#handleGameDefs(data));
         sub('detailedState', (data) => this.#handleDetailedState(data));
         sub('connected', () => this.#handleConnected());
+        // Substrate-only: host loop reset teleports the player off-region.
+        if (this.#transport.isBridge) {
+            sub('loopReset', () => this.#handleLoopReset());
+        }
     }
 
     #handleGameDefs(data) {
@@ -631,6 +675,10 @@ export class JTAQueueEngine {
 
     #handleDetailedState(data) {
         if (!data || !data.state) return;
+        // Substrate path: the executor tracks its own energy/skills via the
+        // transport; the engine's prediction/strategy machinery relies on the
+        // stale bundled simulator and is not used here.
+        if (this.#transport.isBridge) return;
         this.#lastGameState = data.state;
         this.#lastSimState = convertToSimState(data.state);
         this.#runPredictions();

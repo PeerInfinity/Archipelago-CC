@@ -943,20 +943,37 @@ function _queueStatus() {
         activeTaskId: s.activeTaskId ?? null,
         currentEnergy: s.currentEnergy,
         tasks: s.tasks,
+        // A playback walk owns the zone's automation; the action queue must
+        // not drive concurrently. The host executor watches this to pause.
+        walkInFlight: !!_pendingWalkExit,
     };
 }
+
+/** Rejection payload returned to the executor while a playback walk owns the zone. */
+const _WALK_IN_FLIGHT = Object.freeze({
+    success: false,
+    error: 'playback walk in flight',
+    walkInFlight: true,
+});
 
 /**
  * Dispatch one queueAction method to the fork window API. Returns the fork's
  * result (or a small derived payload); throws on an unknown method or a
  * missing fork hook so the caller reports an error.
+ *
+ * While a playback walk is pending (_pendingWalkExit set), the driving
+ * commands (performTask / useItem / setAutomationMode) are refused: the walk
+ * is played by the game's own automation and must not be disturbed. Read-only
+ * queries stay available so the executor can observe the walk and pause.
  */
 function _dispatchQueueAction(method, args) {
     switch (method) {
         case 'performTask':
+            if (_pendingWalkExit) return _WALK_IN_FLIGHT;
             if (typeof _w.performTask !== 'function') throw new Error('performTask hook missing');
             return _w.performTask(args[0]);
         case 'useItem':
+            if (_pendingWalkExit) return _WALK_IN_FLIGHT;
             if (typeof _w.useItem !== 'function') throw new Error('useItem hook missing');
             return _w.useItem(args[0], !!args[1]);
         case 'getStatus':
@@ -971,6 +988,8 @@ function _dispatchQueueAction(method, args) {
         case 'getAutomationMode':
             return typeof _w.getAutomationMode === 'function' ? _w.getAutomationMode() : null;
         case 'setAutomationMode':
+            // Refuse to touch automation mid-walk — the walk needs it On.
+            if (_pendingWalkExit) return _WALK_IN_FLIGHT;
             if (typeof _w.setAutomationMode !== 'function') throw new Error('setAutomationMode hook missing');
             return _w.setAutomationMode(args[0]);
         default:

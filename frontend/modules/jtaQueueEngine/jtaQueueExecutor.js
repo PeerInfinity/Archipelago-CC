@@ -61,6 +61,9 @@ export class JTAQueueExecutor {
     /** @type {Function|null} */
     #onStatusChange = null;
 
+    /** @type {Function|null} Called (with a reason) when the run pauses on an external block */
+    #onPaused = null;
+
     /** @type {Function|null} Called before creating a new snapshot on energy reset */
     #onBeforeReset = null;
 
@@ -112,6 +115,14 @@ export class JTAQueueExecutor {
      * @param {Function} cb
      */
     set onStatusChange(cb) { this.#onStatusChange = cb; }
+
+    /**
+     * Set a callback for when the run pauses on an external block (e.g. a
+     * substrate playback walk owns the zone). The snapshot is preserved; the
+     * run can be resumed with start().
+     * @param {Function} cb
+     */
+    set onPaused(cb) { this.#onPaused = cb; }
 
     /**
      * Set a callback called before creating a new snapshot on energy reset.
@@ -354,12 +365,30 @@ export class JTAQueueExecutor {
         this.#transport.doPrestige();
     }
 
+    /**
+     * Pause the run because an external driver blocks it (substrate playback
+     * walk). Preserves the snapshot + cursor so start() resumes the same entry.
+     */
+    #pauseForBlock(reason) {
+        log('info', `Pausing queue: ${reason}`);
+        this.#stopPolling();
+        this.#waitingForCompletion = false;
+        if (this.#snapshot) this.#snapshot.running = false;
+        if (this.#onPaused) this.#onPaused(reason);
+        this.#notifyStatusChange();
+    }
+
     /** Handle jta:taskClicked response */
     #onTaskClicked(data) {
         if (!this.#snapshot?.running) return;
 
         const entry = this.#snapshot.currentEntry();
         if (!entry || entry.actionType !== JTAActionType.CLICK_TASK) return;
+
+        if (data.walkInFlight) {
+            this.#pauseForBlock('playback walk in flight');
+            return;
+        }
 
         if (!data.success) {
             if (data.alreadyCompleted) {
@@ -385,6 +414,11 @@ export class JTAQueueExecutor {
         if (!entry) return;
         if (entry.actionType !== JTAActionType.USE_ITEM && entry.actionType !== JTAActionType.USE_ALL_ITEMS) return;
 
+        if (data.walkInFlight) {
+            this.#pauseForBlock('playback walk in flight');
+            return;
+        }
+
         // Items are immediate — mark loop completed and check loops
         this.#completeLoop(entry);
     }
@@ -408,6 +442,11 @@ export class JTAQueueExecutor {
     #onTaskStatus(data) {
         if (data.currentEnergy !== undefined) {
             this.#lastKnownEnergy = data.currentEnergy;
+        }
+        // A playback walk started mid-run (substrate) — yield the zone.
+        if (data.walkInFlight && this.#snapshot?.running) {
+            this.#pauseForBlock('playback walk in flight');
+            return;
         }
         if (!this.#snapshot?.running || !this.#waitingForCompletion) {
             // Also handle drain task status
