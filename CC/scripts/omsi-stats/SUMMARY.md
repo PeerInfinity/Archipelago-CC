@@ -855,12 +855,27 @@ so "run while planning" just runs *very stale* plans. Bounding staleness to make
 it converge forces the executor to WAIT for the planner (planning-bound), which
 is just serial replanEvery with no overlap gain (loop time is negligible).
 
-**Conclusion: overlapping execution with planning gives NO headless benefit — the
-only headless wall lever is planning LESS OFTEN (replanEvery).** This CONFIRMS the
-§11.7 cost-structure fact for the *execution/planning-overlap* half, even as
-replanEvery REFUTED the "plan-every-loop" half of the original "headless can't
-benefit" claim. Idea #2's real home is LIVE play — where loops cost real seconds
-— and that is exactly what Design B (shipped) does.
+**Anti-fixation guard ON (--anti-fixation): STILL DNF** at 5000 loops, K=208. It
+does not help because the fixation is EXECUTOR-side, not planner-side: the planner
+plans from snapshots ~208 loops apart, so consecutive plans DIFFER (P.streak never
+accumulates → the streak/drought guard never fires). The real failure is that the
+frontier PUSH (Buy Supplies → Start Journey) is a precise, timing-sensitive
+multi-loop setup; adopting a push-plan ~150–208 loops stale drops it into a state
+where it no longer executes. Extreme staleness is fine for the ECONOMY phase
+(stale economy loops still bank resources) but BREAKS the town-crossing.
+
+**Reconciliation — the user's idea IS valid; it is `replanEvery`.** "Save wall at
+the cost of inefficient loops" is exactly what replanEvery=12 delivers: 829 loops
+/ 76s (−88% wall, +55% loops), CONVERGING to town 1. The reserved thread is the
+same idea with concurrency, but (a) in headless the committed loop is already
+~free so overlap buys nothing over serial replanEvery at a matched K, and (b) it
+auto-selects K≈150–208 (the hardware ratio), which is stale enough to break the
+push. Bounding staleness to a converging K just makes the executor WAIT for the
+planner (= serial replanEvery, no overlap gain). **So: use replanEvery and pick
+the K you want — higher K = more wall savings + more (inefficient) loops, until
+the push breaks (K=4 fixates; K≤3 and K∈{8,12} converge on this seed).** The
+concurrency/overlap only pays off in LIVE play (loops cost real seconds), which is
+what Design B does.
 
 **Commits (NOT pushed; §11.7 Design B):** submodule `automation` `c65d6ea` +
 `a99685f` (pushed to the fork for CI); outer `867857384` (`--replan-every`) +

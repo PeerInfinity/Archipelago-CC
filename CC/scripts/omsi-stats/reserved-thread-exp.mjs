@@ -35,6 +35,10 @@ const dispatchEvery = Number(val("--dispatch-every", 0));   // 0 = dispatch when
 // old and no fresh plan is pending, the executor WAITS for the next plan before
 // running the loop. 0 = never wait (pure overlap, self-selected K).
 const maxStale = Number(val("--max-stale", 0));
+// --anti-fixation: enable the planner's stagnation guard (streak/drought ->
+// targeted escalation), which is what escapes the economy-fixation hole that
+// extreme staleness (K~143) lands in.
+const antiFixation = args.includes("--anti-fixation");
 
 // --- executor sim on the main thread ---------------------------------------
 const { makeContext } = await import(pathToFileURL(path.join(srcDir, "test/harness.mjs")).href);
@@ -47,7 +51,7 @@ const exec = new IP.Session();
 
 // --- planner worker_thread --------------------------------------------------
 const worker = new Worker(path.join(here, "planner-thread-worker.mjs"), {
-    workerData: { srcDir, seed, params: { screenK, screenMode: "predictor", multiTown: true, seedFromPredictor: false } },
+    workerData: { srcDir, seed, params: { screenK, screenMode: "predictor", multiTown: true, seedFromPredictor: false, antiFixation } },
 });
 let plannerReady = null;
 const readyP = new Promise((res) => { plannerReady = res; });
@@ -142,7 +146,7 @@ worker.terminate();
 
 const effK = adoptions ? (loop / adoptions) : loop;
 const avgPlanMs = plansReturned ? planMsTotal / plansReturned : 0;
-console.log(`\nRESERVED-THREAD (seed ${seed}, screenK ${screenK}, dispatchEvery ${dispatchEvery}, maxStale ${maxStale})`);
+console.log(`\nRESERVED-THREAD (seed ${seed}, screenK ${screenK}, dispatchEvery ${dispatchEvery}, maxStale ${maxStale}, antiFix ${antiFixation})`);
 console.log(`  town${targetTown}: ${finished ? "REACHED" : "DNF"}  loops: ${loop}  ticks: ${cumTicks}  wall: ${wall.toFixed(1)}s`);
 console.log(`  plans: ${plansReturned} returned / ${plansDispatched} dispatched  effective reuse K=${effK.toFixed(1)}  avg planRound ${avgPlanMs.toFixed(0)}ms`);
 console.log(`  executor loop time total ${execMs.toFixed(0)}ms (${(execMs / loop).toFixed(1)}ms/loop)  stale adoptions: ${staleAdopts}/${adoptions}`);
