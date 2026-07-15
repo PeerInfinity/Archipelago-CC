@@ -874,6 +874,68 @@ function buildSubstrateRegion({
 // Termination: when the scenario pool is exhausted OR the frontier is
 // empty OR the maxRegions cap (if set) is hit.
 
+/**
+ * Insert a synthetic back-exit on `region` pointing at its BFS/tree parent,
+ * and link the parent's forward exit back to it (targetExitId on both sides,
+ * so a forward traversal carries the right arrivedFrom.exit_id). The
+ * back-exit's access rule is copied from the forward exit at compile time
+ * (buildRulesJson's bidirectional post-pass), so the same gate guards both
+ * directions of traversal. See top-down-driver.md §2.
+ *
+ * Extracted from three previously byte-identical inline copies —
+ * grid-growth (growMaze), sphere-growth (applySphereBackExit) and top-down
+ * (layoutTopDown). The callers differ only in where the field values come
+ * from; top-down additionally opts into `skipIfReverseExists`.
+ *
+ * `skipIfReverseExists` (top-down): skip (and return false) when the region
+ * already has an exit keyed `backExitId`, or any exit already targeting
+ * `targetRegion` — i.e. an explicit reverse route already exists, so a
+ * synthetic one would just duplicate it. Returns true when a back-exit was
+ * inserted.
+ */
+function insertBackExit(grid, {
+    region,
+    parentRegion,
+    backExitId,
+    entranceTile,
+    entranceSide,
+    targetRegion,
+    targetExitId,
+    isTeleporter,
+    skipIfReverseExists = false,
+}) {
+    const regionExits = getRegionExits(region);
+    if (skipIfReverseExists) {
+        const hasExplicitReverse = [...regionExits.values()]
+            .some((e) => e.targetRegion === targetRegion);
+        if (regionExits.has(backExitId) || hasExplicitReverse) return false;
+    }
+    regionExits.set(backExitId, {
+        exit_id: backExitId,
+        x: entranceTile.x,
+        y: entranceTile.y,
+        side: entranceSide,
+        exitName: backExitId,
+        targetRegion,
+        targetExitId,
+        isBackExit: true,
+        isTeleporter,
+    });
+    // Mirror onto extracted_rules so the compiler emits the back-exit too.
+    // Path-and-obstacles for an entrance-to-entrance walk has zero obstacles
+    // → compiles to True_; buildRulesJson's post-pass overwrites this with
+    // the forward exit's rule for bidirectional pairs.
+    region.extracted_rules.exits.push({
+        id: backExitId,
+        position: { x: entranceTile.x, y: entranceTile.y },
+        target_region: targetRegion,
+        paths: [{ path_id: 'p1', obstacles: [] }],
+    });
+    const parentWorldExit = getRegionExits(parentRegion)?.get(targetExitId);
+    if (parentWorldExit) parentWorldExit.targetExitId = backExitId;
+    return true;
+}
+
 export function growMaze(config) {
     const {
         gridDims,
@@ -1106,39 +1168,20 @@ export function growMaze(config) {
             stats.teleportersPlaced += 1;
         }
         if (assumeBidirectional) {
-            // Add a back-exit on the child's entrance tile, pointing
-            // to the parent. Pair with parent's forward exit via
-            // targetExitId on both sides so the procgen player can
-            // resolve which entrance tile to spawn the player at on
-            // either direction of traversal.
-            const backExitId = parentRegion.region_id;
-            getRegionExits(region).set(backExitId, {
-                exit_id: backExitId,
-                x: entranceTile.x,
-                y: entranceTile.y,
-                side: entranceSide,
-                exitName: backExitId,
+            // Back-exit on the child's entrance tile pointing to the parent,
+            // paired via targetExitId on both sides so the procgen player can
+            // resolve which entrance tile to spawn at on either direction of
+            // traversal. Shared with sphere/top-down — see insertBackExit.
+            insertBackExit(grid, {
+                region,
+                parentRegion,
+                backExitId: parentRegion.region_id,
+                entranceTile,
+                entranceSide,
                 targetRegion: parentRegion.region_id,
                 targetExitId: parentExitPlaced.exit_id,
-                isBackExit: true,
                 isTeleporter,
             });
-            // Mirror onto extracted_rules so the compiler emits the
-            // back-exit too. Path-and-obstacles for an entrance-to-
-            // entrance walk has zero obstacles → compiles to True_;
-            // buildRulesJson's post-pass overwrites this with the
-            // forward exit's rule for bidirectional pairs.
-            region.extracted_rules.exits.push({
-                id: backExitId,
-                position: { x: entranceTile.x, y: entranceTile.y },
-                target_region: parentRegion.region_id,
-                paths: [{ path_id: 'p1', obstacles: [] }],
-            });
-            // Link parent's forward exit back to this child's
-            // back-exit, so a forward traversal carries the right
-            // arrivedFrom.exit_id.
-            const parentWorldExit = getRegionExits(parentRegion)?.get(parentExitPlaced.exit_id);
-            if (parentWorldExit) parentWorldExit.targetExitId = backExitId;
         }
         pool.markPlaced({
             placed_items: region.placed_items,
@@ -1775,33 +1818,20 @@ export function finalizeTopDown(layout) {
             if (!parentRegion || !parentExit) continue;
             const entranceTile = getRegionEntrance(region);
             const entranceSide = OPPOSITE_SIDE[parentExit.side];
-            const backExitId = parent.name;
-            // Skip the synthetic back-exit when the source already
-            // declared a reverse exit pointing at the parent (under
-            // any name) — we'd just be duplicating an existing route.
-            const regionExits = getRegionExits(region);
-            const hasExplicitReverse = [...regionExits.values()]
-                .some((e) => e.targetRegion === parent.name);
-            if (regionExits.has(backExitId) || hasExplicitReverse) continue;
-            regionExits.set(backExitId, {
-                exit_id: backExitId,
-                x: entranceTile.x,
-                y: entranceTile.y,
-                side: entranceSide,
-                exitName: backExitId,
+            // Back-exit pointing at the BFS parent — skipped when the source
+            // already declared a reverse route pointing at the parent (under
+            // any name). Shared with grid-growth/sphere — see insertBackExit.
+            insertBackExit(grid, {
+                region,
+                parentRegion,
+                backExitId: parent.name,
+                entranceTile,
+                entranceSide,
                 targetRegion: parent.name,
                 targetExitId: parent.exit_id,
-                isBackExit: true,
                 isTeleporter: false,
+                skipIfReverseExists: true,
             });
-            region.extracted_rules.exits.push({
-                id: backExitId,
-                position: { x: entranceTile.x, y: entranceTile.y },
-                target_region: parent.name,
-                paths: [{ path_id: 'p1', obstacles: [] }],
-            });
-            const parentWorldExit = getRegionExits(parentRegion)?.get(parent.exit_id);
-            if (parentWorldExit) parentWorldExit.targetExitId = backExitId;
         }
     }
 
@@ -4417,26 +4447,16 @@ function buildNodeRealiserSpecs(node, tree, grid, regionSize, deps = {}) {
 function applySphereBackExit(grid, node, specs, region, { assumeBidirectional = true } = {}) {
     if (!assumeBidirectional || !specs.parentNode) return;
     const parentRegion = grid.getRegion(specs.parentNode.cell);
-    const backExitId = parentRegion.region_id;
-    getRegionExits(region).set(backExitId, {
-        exit_id: backExitId,
-        x: specs.entranceTile.x,
-        y: specs.entranceTile.y,
-        side: specs.entranceSide,
-        exitName: backExitId,
+    insertBackExit(grid, {
+        region,
+        parentRegion,
+        backExitId: parentRegion.region_id,
+        entranceTile: specs.entranceTile,
+        entranceSide: specs.entranceSide,
         targetRegion: parentRegion.region_id,
         targetExitId: specs.parentExitPlaced.exit_id,
-        isBackExit: true,
         isTeleporter: node.isTeleporter,
     });
-    region.extracted_rules.exits.push({
-        id: backExitId,
-        position: { x: specs.entranceTile.x, y: specs.entranceTile.y },
-        target_region: parentRegion.region_id,
-        paths: [{ path_id: 'p1', obstacles: [] }],
-    });
-    const parentWorldExit = getRegionExits(parentRegion)?.get(specs.parentExitPlaced.exit_id);
-    if (parentWorldExit) parentWorldExit.targetExitId = backExitId;
 }
 
 /**
