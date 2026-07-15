@@ -809,3 +809,61 @@ working tree (pool-8, worktree); fork npm 85/85; ui-smoke 41 checks ALL PASS
 `68c205175`. **Rung 2 (auto-add reps) DEFERRED** — ships as its own follow-on.
 Detail: plan `omsi-loops-ladder-rungs-plan.md` §4b + memory
 [[project_omsi_loops_fork]] session 16.
+
+## Round 18 — §11.7 Design B shipped; replanEvery sweep (wall vs loops); reserved-thread experiment REFUTED for headless (2026-07-14, Opus, session 19)
+
+**§11.7 Design B (live no-pause pipelining) + replanEvery reuse SHIPPED** (memory
+session 19; submodule `automation` `c65d6ea`+`a99685f`, outer `867857384` =
+`--replan-every`). Byte-gate 535 / 5,965,890 / e23f020400162f9a re-verified;
+npm 95/95; ui-smoke ALL PASS + a live soft-lock guard.
+
+### replanEvery wall-clock vs loop-count (seed 12345, pool-8, predictor screen)
+
+| replanEvery | loops | ticks | wall | vs K=1 |
+|---|---|---|---|---|
+| 1 (reference) | 535 | 5,965,890 | 650s | — |
+| 2 | 609 (+14%) | 7,457,767 | 382s | −41% wall |
+| 3 | 580 (+8%) | 6,500,047 | 242s | −63% wall |
+| 4 | **FIXATES** | — | — | (see below) |
+| 8 | 769 (+44%) | 9,879,417 | 114s | −82% wall |
+| 12 | 829 (+55%) | 10,682,871 | 76s | −88% wall |
+
+**Wall scales ~1/K** (down to −88% at K=12) because a planRound is ~99% of
+per-loop cost and reuse skips K−1 of them. The loop cost is **NON-MONOTONE and
+not smooth** — K=3 beats K=2, and **K=4 falls into the 34,750-mana economy
+FIXATION hole** (the same one bank:20 hits, Round 13): stuck on `repeat` loops
+past L1700 with no frontier push, effectively DNF, while its neighbours K=3 and
+K=8 both converge. So replanEvery is a **robustness problem, not a smooth knob**
+— exactly the bank:20 lesson (weight/cadence sweeps have wildly-different
+neighbours). The default anti-fixation guard (OFF) likely rescues K=4; untested.
+**Ruling stands: K=1 is the byte-exact reference; K∈{2,3} is the safe wall win;
+higher K is opt-in and must be validated per-K (some fixate).**
+
+### Reserved-thread headless experiment (user idea #2) — REFUTED for headless
+
+Harness: `reserved-thread-exp.mjs` (executor advances committed loops on the main
+thread) + `planner-thread-worker.mjs` (a dedicated planner worker_thread planning
+from snapshots the executor hands it, swapping in fresh plans as they land — the
+purest form of "run while planning, swap at a loop boundary").
+
+**Natural (dispatch-when-idle, screenK 8): DNF at 3000 loops**, effective reuse
+**K=143**, all 21 adoptions stale. Root cause measured: the executor runs
+**14 ms/loop** but a planRound is **2269 ms** — a **~160:1** ratio — so plans are
+hopelessly stale and never converge. Because headless committed loops are already
+~free/fast, there is NOTHING to overlap: the executor outruns the planner 160:1,
+so "run while planning" just runs *very stale* plans. Bounding staleness to make
+it converge forces the executor to WAIT for the planner (planning-bound), which
+is just serial replanEvery with no overlap gain (loop time is negligible).
+
+**Conclusion: overlapping execution with planning gives NO headless benefit — the
+only headless wall lever is planning LESS OFTEN (replanEvery).** This CONFIRMS the
+§11.7 cost-structure fact for the *execution/planning-overlap* half, even as
+replanEvery REFUTED the "plan-every-loop" half of the original "headless can't
+benefit" claim. Idea #2's real home is LIVE play — where loops cost real seconds
+— and that is exactly what Design B (shipped) does.
+
+**Commits (NOT pushed; §11.7 Design B):** submodule `automation` `c65d6ea` +
+`a99685f` (pushed to the fork for CI); outer `867857384` (`--replan-every`) +
+this SUMMARY + the two reserved-thread harness scripts. Outer main push HELD:
+6 interleaved commits from a concurrent jta session bump an unpushed j-t-a
+submodule pin. Detail: memory [[project_omsi_loops_fork]] session 19.
