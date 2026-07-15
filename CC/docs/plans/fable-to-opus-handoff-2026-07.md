@@ -51,20 +51,26 @@ the ~15–18 min target). runnerDemo suites are back in both vitest configs.
    rebalanced doctrine (witness per disjunct = hard gate; lane exclusivity =
    bounded, calibration-time). Memory: `project_runner_substrate`.
 
-## 2. World persistence across reloads (small, self-contained)
+## 2. World persistence across reloads (small, self-contained) — DONE + PUSHED 2026-07-14
 
-Implement P1–P4 of *(NewDocs)* `NewDocs/plans/world-persistence-reload-design.md`
+**SHIPPED + PUSHED 2026-07-14 (Opus); on `main`, in `origin/main`.** Commits
+P1 `ea876dd61` → P2 `0725ff0f3` → P1-fix+P3 verify `93919de76` → P4 `4e2c15df9`
+→ opt-in default-OFF `6f550d722`. `scripts/procgen/verify-world-persistence-reload.mjs`
+PASS 23/23 (re-run green 2026-07-15). Memory: `project_world_persistence_reload`.
+
+Implemented P1–P4 of *(NewDocs)* `NewDocs/plans/world-persistence-reload-design.md`
 (sessionStorage `apcc_lastWorld` riding the existing
 `moduleSpecificConfig.rulesConfig` boot channel — deliberately NOT a new init
-catch-up). Acceptance must include: (a) the live reload repro (preset → Run
-all → Load → page reload → panel reattaches) — the design session verified by
-code-reading only; (b) the **stale-path leg**: a persisted preset path whose
-fetch 404s at boot must degrade to first-preset and clear the record (this
-failure happens AFTER the sessionStorage read succeeds, so the self-clear
-guard doesn't obviously cover it); (c) `restoreLastWorld` (schema default on)
-must be read honoring the schema default — do not repeat the `autoLoadMode`
-boot-reader pattern fixed in `5fa4b4726`. Memory:
-`project_world_persistence_reload`.
+catch-up). **Two design corrections landed during implementation:** (1) the
+setting `restoreLastWorld` shipped **default OFF / opt-in** (user ruling
+2026-07-14), gating BOTH save and restore — not schema-default-on as the design
+assumed; (2) the read-site moved from `stateManager.postInitialize` (that
+branch is DEAD on a normal boot) to `modeDataLoader.loadCombinedModeData` — see
+the memory's READ-SITE PLACEMENT CORRECTION. Acceptance covered: live reload
+repro, the stale-path self-clear leg, inline + JtA substrate-reattach legs, and
+`?reset=true` clears — all in the verify script. The `autoLoadMode`
+boot-reader trap (`5fa4b4726`) was avoided by reading the gate raw via
+`isRestoreLastWorldEnabled`.
 
 ## 3. JtA — post-v1 and retirement track
 
