@@ -105,13 +105,16 @@ tick-for-tick triple equivalence green). Memory:
 3. **Phase 6 absorption audit** — parent plan §5 absorption map. Gates the
    old-March-stack retirement (deletion itself is a separate future change
    per standing ruling).
-4. **Backlog (in `CC/docs/cleanup-backlog.md`):** the presets-guard 300s
-   zone-demo click budget is a coin flip under load — bump to ~450s
-   (one-liner); the balance-walk solve-at-completion fix (own step + batch
-   re-run — invalidates caches and committed measurement records, NOT a
-   drive-by); task-256/z12 filler stranding stays accepted unless a
-   multiworld hardens the gate (measured remedy: `threshold_other_metric =
-   RESETS`).
+4. **Backlog (in `CC/docs/cleanup-backlog.md`):** ~~the presets-guard 300s
+   zone-demo click budget is a coin flip under load — bump to ~450s~~ **DONE +
+   PUSHED (`01bb80553`, 2026-07-11 — now `timeout: 450000`)**; the balance-walk
+   solve-at-completion fix remains OPEN (own step + batch re-run — invalidates
+   caches and committed measurement records, NOT a drive-by); task-256/z12
+   filler stranding stays accepted-but-open unless a multiworld hardens the
+   gate (measured remedy: `threshold_other_metric = RESETS`). Also still open
+   and JtA-adjacent: `zoneCount:16` hand-sync assertion, `jtaCostDebugger`'s
+   copied `JTACostPlanner`, and jta custom-queue recording
+   (`loopSupport.customQueues`).
 5. **Zone-concept reevaluation + region library — LANDED + PUSHED 2026-07-13
    (Opus); only F6b remains, parked.** Findings + plan in
    `CC/docs/plans/region-library-plan.md` + `region-library-f6-plan.md`
