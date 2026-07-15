@@ -4,6 +4,7 @@
 import { ActionQueue } from '../shared/actionQueue/actionQueue.js';
 import { LoadoutManager } from '../shared/actionQueue/loadoutManager.js';
 import { JTAQueueExecutor } from './jtaQueueExecutor.js';
+import { createQueueTransport } from './jtaQueueTransport.js';
 import { buildActionCatalog } from './jtaActionDefs.js';
 import { convertToSimState, predictQueue, snapshotSkillsFromGameState } from './jtaQueuePredictor.js';
 import { StrategyType, buildQueueForStrategy } from './jtaQueueBuilder.js';
@@ -63,11 +64,8 @@ export class JTAQueueEngine {
     /** @type {object|null} */
     #lastReasoning = null;
 
-    /** @type {{ publish: Function, subscribe: Function, unsubscribe: Function }} */
-    #eventBus;
-
-    /** @type {string} */
-    #moduleName;
+    /** @type {import('./jtaQueueTransport.js').QueueTransport} */
+    #transport;
 
     /** @type {Function[]} */
     #unsubs = [];
@@ -103,8 +101,7 @@ export class JTAQueueEngine {
      * @param {string} moduleName
      */
     constructor(eventBus, moduleName) {
-        this.#eventBus = eventBus;
-        this.#moduleName = moduleName;
+        this.#transport = createQueueTransport(eventBus, moduleName);
         this.#settings = { ...DEFAULT_SETTINGS };
     }
 
@@ -119,7 +116,7 @@ export class JTAQueueEngine {
 
         // Request game defs in case iframe is already connected
         setTimeout(() => {
-            this.#eventBus.publish('jta:requestGameDefs', {}, this.#moduleName);
+            this.#transport.requestGameDefs();
         }, 1000);
     }
 
@@ -249,7 +246,7 @@ export class JTAQueueEngine {
 
         const emptyQueue = new ActionQueue();
         const drainSettings = { ...this.#settings, drainEnabled: true, autoReset: true };
-        const drainExecutor = new JTAQueueExecutor(emptyQueue, this.#eventBus, this.#moduleName, drainSettings);
+        const drainExecutor = new JTAQueueExecutor(emptyQueue, this.#transport, drainSettings);
         drainExecutor.onStatusChange = () => this.#notifyStatusChange();
 
         let drainResetOccurred = false;
@@ -517,7 +514,7 @@ export class JTAQueueEngine {
             ? { ...this.#settings, drainEnabled: false, autoReset: false }
             : this.#settings;
 
-        this.#executor = new JTAQueueExecutor(this.#queue, this.#eventBus, this.#moduleName, config);
+        this.#executor = new JTAQueueExecutor(this.#queue, this.#transport, config);
         this.#executor.onStatusChange = () => this.#notifyStatusChange();
         this.#executor.onQueueExhausted = () => this.#handleQueueExhausted();
         this.#executor.onBeforeReset = () => this.regenerateStrategyQueue();
@@ -614,13 +611,12 @@ export class JTAQueueEngine {
 
     #subscribeGameEvents() {
         const sub = (event, handler) => {
-            const unsub = this.#eventBus.subscribe(event, handler);
-            this.#unsubs.push(typeof unsub === 'function' ? unsub : () => this.#eventBus.unsubscribe(event, handler));
+            this.#unsubs.push(this.#transport.on(event, handler));
         };
 
-        sub('jta:gameDefsSnapshot', (data) => this.#handleGameDefs(data));
-        sub('jta:detailedStateSnapshot', (data) => this.#handleDetailedState(data));
-        sub('iframe:connected', () => this.#handleConnected());
+        sub('gameDefs', (data) => this.#handleGameDefs(data));
+        sub('detailedState', (data) => this.#handleDetailedState(data));
+        sub('connected', () => this.#handleConnected());
     }
 
     #handleGameDefs(data) {
@@ -642,7 +638,7 @@ export class JTAQueueEngine {
 
     #handleConnected() {
         setTimeout(() => {
-            this.#eventBus.publish('jta:requestGameDefs', {}, this.#moduleName);
+            this.#transport.requestGameDefs();
         }, 500);
     }
 
@@ -651,7 +647,7 @@ export class JTAQueueEngine {
     // =====================================================================
 
     #requestPredictionState() {
-        this.#eventBus.publish('jta:requestDetailedState', {}, this.#moduleName);
+        this.#transport.requestDetailedState();
     }
 
     #runPredictions() {

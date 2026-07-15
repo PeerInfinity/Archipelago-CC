@@ -922,6 +922,79 @@ function _handlePlaybackControl(payload) {
     }
 }
 
+// ────────────────────────────────────────────────────────────────
+// Action-queue channel — host proxy commands (jta:queueAction)
+// ────────────────────────────────────────────────────────────────
+//
+// The host-side JtA action-queue engine (jtaQueueEngine, via its
+// BridgeTransport) drives the live fork through this request/response
+// channel. Each command is {method, args, requestId}; the bridge calls the
+// matching fork window API and — when requestId is set — publishes
+// jta:queueActionResult {requestId, method, result, error} back to the host.
+// Mirrors the playbackControl pattern; the bridge stays the sole owner of
+// the fork's single-slot completion/reset callbacks, so the executor polls
+// getStatus rather than registering one.
+
+/** Light poll payload for completion tracking: active task + current-zone reps. */
+function _queueStatus() {
+    if (typeof _w.getFullState !== 'function') return null;
+    const s = _w.getFullState();
+    return {
+        activeTaskId: s.activeTaskId ?? null,
+        currentEnergy: s.currentEnergy,
+        tasks: s.tasks,
+    };
+}
+
+/**
+ * Dispatch one queueAction method to the fork window API. Returns the fork's
+ * result (or a small derived payload); throws on an unknown method or a
+ * missing fork hook so the caller reports an error.
+ */
+function _dispatchQueueAction(method, args) {
+    switch (method) {
+        case 'performTask':
+            if (typeof _w.performTask !== 'function') throw new Error('performTask hook missing');
+            return _w.performTask(args[0]);
+        case 'useItem':
+            if (typeof _w.useItem !== 'function') throw new Error('useItem hook missing');
+            return _w.useItem(args[0], !!args[1]);
+        case 'getStatus':
+            return _queueStatus();
+        case 'getFullState':
+            return typeof _w.getFullState === 'function' ? _w.getFullState() : null;
+        case 'getItemDefs':
+            // Item-name sourcing is deferred to Phase 3: the fork exposes no
+            // name table today and v1 makes no fork changes. Relay names if a
+            // future hook appears; otherwise an empty list (callers fall back).
+            return typeof _w.getItemDefs === 'function' ? _w.getItemDefs() : { items: [] };
+        case 'getAutomationMode':
+            return typeof _w.getAutomationMode === 'function' ? _w.getAutomationMode() : null;
+        case 'setAutomationMode':
+            if (typeof _w.setAutomationMode !== 'function') throw new Error('setAutomationMode hook missing');
+            return _w.setAutomationMode(args[0]);
+        default:
+            throw new Error(`unknown queueAction method '${method}'`);
+    }
+}
+
+function _handleQueueAction(payload) {
+    const method = payload?.method;
+    const requestId = payload?.requestId;
+    const args = Array.isArray(payload?.args) ? payload.args : [];
+    let result = null;
+    let error = null;
+    try {
+        result = _dispatchQueueAction(method, args);
+    } catch (err) {
+        error = String(err?.message ?? err);
+        log('warn', `queueAction '${method}' failed:`, error);
+    }
+    if (requestId != null && _client) {
+        _client.publishEventBus('jta:queueActionResult', { requestId, method, result, error });
+    }
+}
+
 /**
  * Fired by the fork at the end of doEnergyReset() AND doPrestige().
  * When the GAME initiated the reset (overlay click, the
@@ -1101,6 +1174,11 @@ async function main() {
     // PlaybackController commands from the host-side proxy (play /
     // stop / step / instant / reset / walkTo).
     _client.subscribeEventBus('jta:playbackControl', _handlePlaybackControl);
+
+    // Action-queue commands from the host-side BridgeTransport
+    // (performTask / useItem / getStatus / getFullState / getItemDefs /
+    // get+set automation mode). Replies go back as jta:queueActionResult.
+    _client.subscribeEventBus('jta:queueAction', _handleQueueAction);
 
     // AP state changed (item received here or elsewhere): grant any newly
     // received perk items. Perks are global, so this runs regardless of the

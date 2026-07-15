@@ -32,6 +32,9 @@ export async function register(registrationApi) {
     registrationApi.registerEventBusPublisher('jta:requestGameDefs');
     registrationApi.registerEventBusPublisher('jta:dismissGameOver');
     registrationApi.registerEventBusPublisher('jta:requestDetailedState');
+    // Substrate bridge command channel (used by BridgeTransport when the JtA
+    // substrate wrapper is present); the legacy topics above drive ?mode=jta.
+    registrationApi.registerEventBusPublisher('jta:queueAction');
 
     // Subscribers — responses from the iframe + lifecycle
     const id = 'jtaQueueEngine';
@@ -45,6 +48,8 @@ export async function register(registrationApi) {
     registrationApi.registerEventBusSubscriberIntent(id, 'jta:detailedStateSnapshot');
     registrationApi.registerEventBusSubscriberIntent(id, 'iframe:connected');
     registrationApi.registerEventBusSubscriberIntent(id, 'iframe:disconnected');
+    // Substrate bridge command replies (BridgeTransport).
+    registrationApi.registerEventBusSubscriberIntent(id, 'jta:queueActionResult');
 
     log('info', 'Registration complete.');
 }
