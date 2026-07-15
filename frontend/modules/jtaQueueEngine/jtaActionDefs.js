@@ -79,10 +79,11 @@ export function buildActionCatalog(zones, itemData) {
  *
  * Task entries are uniformly clickTask (a "travel" is just a clickTask on a
  * travel task, so the report needs no per-task action-type). Prestige is
- * dropped on the substrate (no window.doPrestige hook). Item labels are
- * best-effort (the fork reports held items by type without names).
+ * dropped on the substrate (no window.doPrestige hook). Items carry their real
+ * names and are split into "Artifacts" / "Items" by the report's isArtifact
+ * flag (the fork's getAllItems supplies both).
  *
- * @param {{ zones: {zone:number, name:string, tasks:object[]}[], items: object[] }|null} report
+ * @param {{ zones: {zone:number, name:string, tasks:object[]}[], items: {type:number, name:string, isArtifact:boolean}[] }|null} report
  * @returns {{ tasks: object[], items: object[], prestige: object[] }}
  */
 export function buildCatalogFromReport(report) {
@@ -109,8 +110,8 @@ export function buildCatalogFromReport(report) {
             items.push({
                 actionType: JTAActionType.USE_ITEM,
                 actionId: it.type,
-                label: `Item ${it.type}`,
-                group: 'Items',
+                label: it.name || `Item ${it.type}`,
+                group: it.isArtifact ? 'Artifacts' : 'Items',
             });
         }
     }

@@ -24,11 +24,20 @@ describe('buildCatalogFromReport', () => {
         expect(cat.prestige).toEqual([]); // prestige dropped on the substrate
     });
 
-    it('maps reported held items to useItem entries (best-effort labels)', () => {
-        const cat = buildCatalogFromReport({ zones: [], items: [{ type: 4, count: 3 }] });
+    it('maps reported items to useItem entries with real names, split by artifact flag', () => {
+        const cat = buildCatalogFromReport({ zones: [], items: [
+            { type: 0, name: 'Food', isArtifact: false },
+            { type: 7, name: 'Scroll of Haste', isArtifact: true },
+        ] });
         expect(cat.items).toEqual([
-            { actionType: JTAActionType.USE_ITEM, actionId: 4, label: 'Item 4', group: 'Items' },
+            { actionType: JTAActionType.USE_ITEM, actionId: 0, label: 'Food', group: 'Items' },
+            { actionType: JTAActionType.USE_ITEM, actionId: 7, label: 'Scroll of Haste', group: 'Artifacts' },
         ]);
+    });
+
+    it('falls back to a type label when a name is missing', () => {
+        const cat = buildCatalogFromReport({ zones: [], items: [{ type: 4, isArtifact: false }] });
+        expect(cat.items[0].label).toBe('Item 4');
     });
 
     it('tolerates a null/empty report', () => {
