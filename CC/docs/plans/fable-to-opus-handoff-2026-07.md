@@ -112,18 +112,27 @@ tick-for-tick triple equivalence green). Memory:
    drive-by); task-256/z12 filler stranding stays accepted unless a
    multiworld hardens the gate (measured remedy: `threshold_other_metric =
    RESETS`).
-5. **Zone-concept reevaluation — AUDIT DONE + PLAN WRITTEN 2026-07-13
-   (Fable), implementation NOT started.** Findings + the plan live in
-   `CC/docs/plans/region-library-plan.md` (memory:
-   `project_region_library`): "zone" = an *interface* (no tile-procedural
-   hooks) conflated with a *content model* (finite ordered pool); only jta is
-   genuinely pre-built; `synthesizeZonePayload` obsolete-leaning. The plan
-   pairs the cleanup (C1–C3: absorb synthesizeZonePayload, spiral onto the
-   unified seam, content-source reframing + ② content generalization) with
-   the user's region-library feature (F1–F6: pre-built regions loadable from
-   multi-file JSON, served-index + ad-hoc load, capture + validator tooling,
-   maze + bounce v1). Rulings settled 2026-07-13; ready for an
-   implementation session.
+5. **Zone-concept reevaluation + region library — LANDED + PUSHED 2026-07-13
+   (Opus); only F6b remains, parked.** Findings + plan in
+   `CC/docs/plans/region-library-plan.md` + `region-library-f6-plan.md`
+   (memory: `project_region_library`): "zone" = an *interface* (no
+   tile-procedural hooks) conflated with a *content model* (finite ordered
+   pool); only jta is genuinely pre-built; `synthesizeZonePayload`
+   obsolete-leaning. **DONE + PUSHED, CI green:** the cleanup (C1–C3: absorbed
+   synthesizeZonePayload, spiral onto the unified content-source seam, ②
+   content generalization) plus the region-library feature (F1–F5: pre-built
+   regions loadable from multi-file JSON, served-index + ad-hoc load,
+   capture + validator tooling, hybrid persistence, panel UI — maze + bounce)
+   AND sphere-growth reuse (F6a bounce, F6c runner + configurable-maze
+   connection + registry-driven panel surfacing, F6d panel reachability). All
+   byte-inert (dump-spiral 5/5, dump-sphere diff-clean); `verify-region-library-ui`
+   38/38; bounce/runner/maze sphere + spiral Generate.py roundtrips green.
+   **F6b (capability negotiation / physical gate enforcement of fixed captured
+   entries) is RULED but PARKED until a concrete motivating example exists**
+   (user 2026-07-14; candidate = per-library hostable-gate capability profile
+   consulted by `canHost`). Also parked (plan §7): maze back-exit tile
+   fidelity, exit-carve/true-tile-align, the auto-adjust-neighbours aspiration,
+   and shared `zoneLibraryEntry` extraction (runner mirrors bounce today).
 
 ## 4. Omsi Loops — the one open design front
 
