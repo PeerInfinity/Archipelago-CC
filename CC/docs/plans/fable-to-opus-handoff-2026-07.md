@@ -460,9 +460,11 @@ Inputs already settled — do not re-derive:
 
 Pre-existing next steps that predate this transition, in their topic files:
 top-down stepped pipeline phases 4/5/6 (editors); sphere-growth soft
-difficulty (deferred); grid-growth retirement (planned, not started); docs
-migration help module; flashPanel unification. Nothing from the 07-10/11
-work blocks on them.
+difficulty (deferred); grid-growth **KEPT + refactored onto shared code**
+(user 2026-07-15 chose refactor over deletion; `insertBackExit` extraction
+`a6cbdd35d`, on main NOT pushed, byte-inert — see `project_region_library`'s
+sibling `project_grid_growth_retirement`); docs migration help module;
+flashPanel unification. Nothing from the 07-10/11 work blocks on them.
 
 ---
 
