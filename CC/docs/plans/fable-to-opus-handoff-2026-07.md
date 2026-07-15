@@ -305,8 +305,16 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
       **Rung 2 (auto-add newly-unlocked reps) SHIPPED 2026-07-14** (Opus,
       session 17 — see item 7 below). Detail in *(NewDocs)*
       `omsi-loops-ladder-rungs-plan.md` §4b/§4c + memory sessions 16/17. **Tail
-      trim still FOLDED INTO item 6** (ticks-gated). §11.7 Design B remains
-      queued after auto-add-reps.
+      trim still FOLDED INTO item 6** (ticks-gated). **§11.7 Design B — live
+      no-pause pipelining + replanEvery reuse — SHIPPED 2026-07-14 (Opus,
+      session 19): `plannerPipeline` (opt-in) plays the committed queue while the
+      worker plans from the PREDICTED boundary and swaps at the boundary iff a
+      state-hash still matches; `plannerReplanEvery` reuses a plan for K loops
+      (shared live + headless). Measured headless K=3 = −63% wall for +8% loops
+      (K=2 = −41% / +14%) — REFUTES the old "headless can't benefit" claim (win =
+      planning less often). Byte-inert at defaults (byte-gate re-verified); npm
+      95/95; ui-smoke ALL PASS incl. a live soft-lock guard. Reserved-thread
+      headless pipeline (user idea #2) DEFERRED. Detail in memory session 19.**
    6. LAST: the recalibration remainder of the ONE re-baseline bundle —
       §11.8 piece 3 scored channels (consumes the item-4 coverage
       report), DNF-aware sweeps, DEFAULT_WEIGHTS recalibration (target:
