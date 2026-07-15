@@ -268,6 +268,11 @@ async function main() {
     // top-up to current pools) between full replans. Tactical only; off = plain
     // reuse. No effect at replanEvery=1 (no reuse loop) ⇒ byte-gate unaffected.
     const basicReuse = has("--basic-reuse");
+    // --dump-detail: stream a per-loop diagnostic JSONL (each loop's full
+    // candidate evals + a compact economy/frontier state snapshot) to
+    // results/<label>-detail.jsonl for post-run analysis of WHY a run gets
+    // stuck. Written incrementally so a killed/DNF run still leaves the file.
+    const dumpDetail = has("--dump-detail");
     const targetTown = Number(val("--target-town", 1));
     const multiTown = val("--multi-town", "on") !== "off";
     const vocabulary = val("--vocabulary", "empirical");   // empirical | informed
@@ -409,9 +414,17 @@ async function main() {
         (outArg ? path.basename(outArg).replace(/\.json$/, "") : `planner-progress-${process.pid}`) + ".log");
     fs.mkdirSync(resultsDir, { recursive: true });
     fs.writeFileSync(progressPath, "");
-    const onLoop = (t) => fs.appendFileSync(progressPath,
-        `L${t.loop} ${t.label} ticks=${t.ticks} cum=${t.cumTicks} mana=${t.mana} score=${t.score}\n`);
+    // --dump-detail: a per-loop JSONL beside the progress log. Each line is the
+    // full trace entry (queue + candidate evals + compact state) for that loop.
+    const detailPath = dumpDetail ? progressPath.replace(/\.log$/, "-detail.jsonl") : null;
+    if (detailPath) fs.writeFileSync(detailPath, "");
+    const onLoop = (t) => {
+        fs.appendFileSync(progressPath,
+            `L${t.loop} ${t.label} ticks=${t.ticks} cum=${t.cumTicks} mana=${t.mana} score=${t.score}\n`);
+        if (detailPath) fs.appendFileSync(detailPath, JSON.stringify(t) + "\n");
+    };
     console.log(`progress log: ${progressPath}`);
+    if (detailPath) console.log(`detail log:   ${detailPath}`);
 
     // Wander-first phase (--wander-until): the human opening — commit
     // [Wander x1] every loop with NO planning until Explored reaches the
@@ -454,7 +467,7 @@ async function main() {
     }
 
     const t0 = Date.now();
-    const r = await IP.runStandalone({ maxLoops, weights, seedFromPredictor, verbose: true, screenK, screenMode, probeEvery, replanEvery, basicReuse, targetTown, multiTown, vocabulary, strategy, targetAction, targets, autoRankTargets, antiFixation, resume, onLoop });
+    const r = await IP.runStandalone({ maxLoops, weights, seedFromPredictor, verbose: true, screenK, screenMode, probeEvery, replanEvery, basicReuse, dumpDetail, targetTown, multiTown, vocabulary, strategy, targetAction, targets, autoRankTargets, antiFixation, resume, onLoop });
     for (const w of poolWorkers) w.terminate();
     const hash = crypto.createHash("sha256").update(r.finalSnapshot).digest("hex").slice(0, 16);
     if (saveStatePath) {
@@ -488,7 +501,10 @@ async function main() {
         finished: r.finished, finalHash: hash,
         divergenceCount: r.divergences.length, divergences: r.divergences,
         rngConsumed: ctx.rngCount(),
-        milestones: r.milestones, trace: r.trace,
+        // keep the main results JSON lean: the heavy per-loop evals/state live
+        // in the -detail.jsonl (when --dump-detail); strip them here.
+        milestones: r.milestones,
+        trace: dumpDetail ? r.trace.map(({ evals, state, ...t }) => t) : r.trace,
         wallSeconds, wanderWallSeconds,
     };
     fs.mkdirSync(resultsDir, { recursive: true });
