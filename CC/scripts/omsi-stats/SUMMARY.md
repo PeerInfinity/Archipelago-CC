@@ -877,6 +877,30 @@ the push breaks (K=4 fixates; K≤3 and K∈{8,12} converge on this seed).** The
 concurrency/overlap only pays off in LIVE play (loops cost real seconds), which is
 what Design B does.
 
+### "Basic automation during reuse" (user idea) — NO-OP: the planner already fully-reps
+
+Idea: between expensive full replans, cheaply RE-TUNE each reused queue with basic
+automation (rep top-up, Buy Mana optimise) — every loop, or every few if even the
+cheap pass is too much CPU. Built as `runStandalone({basicReuse})` + `--basic-reuse`
+(rep top-up on reused loops; byte-inert, off by default, no effect at K=1). **Result:
+replanEvery=3 with --basic-reuse is BYTE-IDENTICAL to baseline (580 loops, hash
+41a1e110a3a8f5d7) — `applyRepTopUps` adds ZERO reps on every reused loop.** Confirmed
+a genuine no-op, not a silent failure (repgap/autoadd tests pass headless). **Why: the
+full planner already sizes every queue's reps to the available pools, so there is no
+under-queuing for the tactical layer to fix.**
+
+Generalizes: **basic automation is REDUNDANT with the full planner.** The assist tools
+(rep-gap, Buy Mana optimiser) exist to polish HAND-MADE / rougher queues; by the same
+argument the Buy Mana optimiser is also ~no-op on planner queues (the scorer already
+optimises the mana↔gold economy). The tiered "cheap tactical + occasional strategic"
+architecture pays only when the strategic layer is deliberately ROUGH (fast but
+under-tuned) and leans on the tactical layer to finish — omsi's planner emits
+fully-tuned queues, so it isn't that. And the reuse inefficiency is STRATEGIC (stale
+frontier-push timing), which no tactical pass addresses. The `basicReuse` hook stays as
+byte-inert experiment infrastructure (future rough-planner / Buy-Mana-during-reuse
+probe); NOT wired into the live pipeline (there it would also trip the planner's
+manual-edit-wins disengage unless sanctioned).
+
 **Commits (NOT pushed; §11.7 Design B):** submodule `automation` `c65d6ea` +
 `a99685f` (pushed to the fork for CI); outer `867857384` (`--replan-every`) +
 this SUMMARY + the two reserved-thread harness scripts. Outer main push HELD:

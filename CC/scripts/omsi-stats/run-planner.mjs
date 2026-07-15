@@ -264,6 +264,10 @@ async function main() {
     // (running is far cheaper than planning). 1 = re-plan every loop = byte-exact
     // reference. >1 trades loop-count optimality for wall-clock.
     const replanEvery = Number(val("--replan-every", 1));
+    // "basic automation during reuse" (user idea): re-tune reused queues (rep
+    // top-up to current pools) between full replans. Tactical only; off = plain
+    // reuse. No effect at replanEvery=1 (no reuse loop) ⇒ byte-gate unaffected.
+    const basicReuse = has("--basic-reuse");
     const targetTown = Number(val("--target-town", 1));
     const multiTown = val("--multi-town", "on") !== "off";
     const vocabulary = val("--vocabulary", "empirical");   // empirical | informed
@@ -450,7 +454,7 @@ async function main() {
     }
 
     const t0 = Date.now();
-    const r = await IP.runStandalone({ maxLoops, weights, seedFromPredictor, verbose: true, screenK, screenMode, probeEvery, replanEvery, targetTown, multiTown, vocabulary, strategy, targetAction, targets, autoRankTargets, antiFixation, resume, onLoop });
+    const r = await IP.runStandalone({ maxLoops, weights, seedFromPredictor, verbose: true, screenK, screenMode, probeEvery, replanEvery, basicReuse, targetTown, multiTown, vocabulary, strategy, targetAction, targets, autoRankTargets, antiFixation, resume, onLoop });
     for (const w of poolWorkers) w.terminate();
     const hash = crypto.createHash("sha256").update(r.finalSnapshot).digest("hex").slice(0, 16);
     if (saveStatePath) {
