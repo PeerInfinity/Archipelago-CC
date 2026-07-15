@@ -70,6 +70,51 @@ export function buildActionCatalog(zones, itemData) {
 }
 
 /**
+ * Build the catalog from a live "currently-loaded actions" report (substrate
+ * path). Unlike buildActionCatalog (all zones, from a static gameDefs
+ * snapshot), this reflects only the zone JtA currently has loaded — so it stays
+ * correct under synthetic data, which can change what each zone contains. The
+ * catalog is re-built whenever the loaded zone changes.
+ *
+ * Task entries are uniformly clickTask (a "travel" is just a clickTask on a
+ * travel task, so the report needs no per-task action-type). Prestige is
+ * dropped on the substrate (no window.doPrestige hook). Item labels are
+ * best-effort (the fork reports held items by type without names).
+ *
+ * @param {{ zone: number, tasks: object[], items: object[] }|null} report
+ * @returns {{ tasks: object[], items: object[], prestige: object[] }}
+ */
+export function buildCatalogFromReport(report) {
+    const tasks = [];
+    const items = [];
+    if (report && Array.isArray(report.tasks)) {
+        const zoneId = report.zone ?? 0;
+        const group = `Zone ${zoneId + 1}`;
+        for (const t of report.tasks) {
+            tasks.push({
+                actionType: JTAActionType.CLICK_TASK,
+                actionId: t.id,
+                label: t.name,
+                group,
+                zoneId,
+                maxReps: t.maxReps,
+            });
+        }
+    }
+    if (report && Array.isArray(report.items)) {
+        for (const it of report.items) {
+            items.push({
+                actionType: JTAActionType.USE_ITEM,
+                actionId: it.type,
+                label: `Item ${it.type}`,
+                group: 'Items',
+            });
+        }
+    }
+    return { tasks, items, prestige: [] };
+}
+
+/**
  * Create a QueueEntry from a catalog action definition
  * @param {object} catalogEntry - Entry from buildActionCatalog()
  * @param {number} [loops=1] - Number of times to repeat

@@ -5,7 +5,7 @@ import { ActionQueue } from '../shared/actionQueue/actionQueue.js';
 import { LoadoutManager } from '../shared/actionQueue/loadoutManager.js';
 import { JTAQueueExecutor } from './jtaQueueExecutor.js';
 import { createQueueTransport } from './jtaQueueTransport.js';
-import { buildActionCatalog } from './jtaActionDefs.js';
+import { buildActionCatalog, buildCatalogFromReport } from './jtaActionDefs.js';
 import { convertToSimState, predictQueue, snapshotSkillsFromGameState } from './jtaQueuePredictor.js';
 import { StrategyType, buildQueueForStrategy } from './jtaQueueBuilder.js';
 
@@ -114,10 +114,16 @@ export class JTAQueueEngine {
         this.#loadSettings();
         this.#subscribeGameEvents();
 
-        // Request game defs in case iframe is already connected
+        // Request the action catalog in case the game is already connected
         setTimeout(() => {
-            this.#transport.requestGameDefs();
+            this.#requestCatalog();
         }, 1000);
+    }
+
+    /** Request the action catalog from the active transport's source. */
+    #requestCatalog() {
+        if (this.#transport.isBridge) this.#transport.requestActions();
+        else this.#transport.requestGameDefs();
     }
 
     /** Tear down: unsubscribe events and stop executor. */
@@ -657,10 +663,21 @@ export class JTAQueueEngine {
         sub('gameDefs', (data) => this.#handleGameDefs(data));
         sub('detailedState', (data) => this.#handleDetailedState(data));
         sub('connected', () => this.#handleConnected());
-        // Substrate-only: host loop reset teleports the player off-region.
+        // Substrate-only: loaded-actions report + zone change + loop reset.
         if (this.#transport.isBridge) {
+            sub('actions', (report) => this.#handleActionsReport(report));
+            sub('regionChanged', () => this.#transport.requestActions());
             sub('loopReset', () => this.#handleLoopReset());
         }
+    }
+
+    /**
+     * Substrate catalog from a live "currently-loaded actions" report — no
+     * static table, so it survives synthetic data. Re-built on every zone change.
+     */
+    #handleActionsReport(report) {
+        this.#catalog = buildCatalogFromReport(report);
+        if (this.#onCatalogChanged) this.#onCatalogChanged(this.#catalog);
     }
 
     #handleGameDefs(data) {
@@ -686,7 +703,7 @@ export class JTAQueueEngine {
 
     #handleConnected() {
         setTimeout(() => {
-            this.#transport.requestGameDefs();
+            this.#requestCatalog();
         }, 500);
     }
 

@@ -182,10 +182,27 @@ describe('BridgeTransport — substrate channel translation', () => {
         expect(bus.published.length).toBe(before);
     });
 
+    it('requestActions → getActions reply → actions event (live catalog source)', async () => {
+        const events = [];
+        t.on('actions', (d) => events.push(d));
+        t.requestActions();
+        expect(bus.published.at(-1).data.method).toBe('getActions');
+        replyToLast(bus, { result: { zone: 1, tasks: [{ id: 5, name: 'Fight' }], items: [] } });
+        await flush();
+        expect(events[0]).toEqual({ zone: 1, tasks: [{ id: 5, name: 'Fight' }], items: [] });
+    });
+
     it('re-emits the host loop reset as a loopReset transport event', () => {
         const events = [];
         t.on('loopReset', () => events.push(true));
         bus.emit('gameState:loopReset', {});
+        expect(events).toEqual([true]);
+    });
+
+    it('re-emits the host region change as a regionChanged transport event', () => {
+        const events = [];
+        t.on('regionChanged', () => events.push(true));
+        bus.emit('gameState:regionChanged', {});
         expect(events).toEqual([true]);
     });
 

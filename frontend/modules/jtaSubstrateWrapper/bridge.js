@@ -978,6 +978,15 @@ function _dispatchQueueAction(method, args) {
             return _w.useItem(args[0], !!args[1]);
         case 'getStatus':
             return _queueStatus();
+        case 'getActions':
+            // JtA reports its currently-loaded actions (the live current-zone
+            // task list). This is the catalog source — no static table — so it
+            // stays correct when synthetic data changes what's loaded.
+            if (typeof _w.getFullState !== 'function') return null;
+            {
+                const s = _w.getFullState();
+                return { zone: s.currentZone, tasks: s.tasks, items: s.items };
+            }
         case 'getFullState':
             return typeof _w.getFullState === 'function' ? _w.getFullState() : null;
         case 'getItemDefs':

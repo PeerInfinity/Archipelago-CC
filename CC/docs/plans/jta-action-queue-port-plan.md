@@ -448,3 +448,39 @@ record.
 - Panel checklist (for F1): `module-configs/modules.json` +
   `layout-configs/layout_presets.json` + `app/core/moduleMetadata.js` +
   `__BUNDLED_MODULES__` in `init-bundled.js`.
+
+---
+
+## 9. Amendments (2026-07-14, implementation)
+
+**A. Catalog source — LIVE report, not a static table (user ruling
+2026-07-14, supersedes §2.4 / §3 "Re-source from zoneTaskData").** The Actions
+catalog on the substrate path is built from a live "currently-loaded actions"
+report from JtA, not the generated `zoneTaskData.js` snapshot — so it stays
+correct when the synthetic-data arc changes what each zone contains, with no
+regeneration step. Mechanism (zero fork changes): a `getActions` queueAction
+method returns the fork's current-zone task list (`getFullState().tasks`, which
+JtA already exposes); `BridgeTransport.requestActions()` fetches it and emits an
+`actions` event; the engine builds the catalog via
+`buildCatalogFromReport()` and re-requests on every zone change (the transport
+re-emits `gameState:regionChanged`). Consequence: the Actions panel shows the
+**current zone's** actions (JtA loads one zone at a time), not an all-zones
+navigator — a cross-zone script is authored by queueing the current zone's
+actions plus an exit, then adding the next zone's once loaded. Task entries are
+uniformly `clickTask` (travel = a clickTask on a travel task). Item labels are
+best-effort (`Item <type>`) — the fork reports held items without names; a
+nicer label source is deferred.
+
+**B. Default layout — still out (user confirmed).** The queue panel is
+registered in the default mode (F1) but stays out of the default layout preset.
+
+**C. Future feature (noted, NOT scheduled):** have JtA report the list of
+actions that actually *ran* during the last reset, optionally savable as an
+action queue. Needs a fork-side per-reset execution log; revisit later.
+
+**Implementation status:** Phase 1 (`17e5c8149`) and Phase 2 (`630450686`)
+complete; Phase 3a (live-report catalog mechanism) complete. Remaining: Phase 3b
+(UI trims — hide Builder/Predictor/Drain on the bridge transport; fresh loadout
+key `jta-action-loadouts-substrate`; skip the `[Auto]` strategy loadout on the
+bridge) and Phase 4 (default-mode registration, in-app substrate test in the
+test-substrates config, docs). All work outer-repo only; zero fork changes.

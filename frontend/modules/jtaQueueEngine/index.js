@@ -48,8 +48,10 @@ export async function register(registrationApi) {
     registrationApi.registerEventBusSubscriberIntent(id, 'jta:detailedStateSnapshot');
     registrationApi.registerEventBusSubscriberIntent(id, 'iframe:connected');
     registrationApi.registerEventBusSubscriberIntent(id, 'iframe:disconnected');
-    // Substrate bridge command replies (BridgeTransport).
+    // Substrate bridge command replies + host lifecycle (BridgeTransport).
     registrationApi.registerEventBusSubscriberIntent(id, 'jta:queueActionResult');
+    registrationApi.registerEventBusSubscriberIntent(id, 'gameState:loopReset');
+    registrationApi.registerEventBusSubscriberIntent(id, 'gameState:regionChanged');
 
     log('info', 'Registration complete.');
 }

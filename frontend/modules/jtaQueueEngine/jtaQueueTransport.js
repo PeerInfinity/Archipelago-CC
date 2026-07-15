@@ -17,7 +17,8 @@
  * concrete game-protocol topic inside the implementation.
  * @typedef {(
  *   'taskClicked'|'itemClicked'|'prestigeDone'|'taskStatus'|
- *   'energyDepleted'|'gameOverDismissed'|'detailedState'|'gameDefs'|'connected'
+ *   'energyDepleted'|'gameOverDismissed'|'detailedState'|'gameDefs'|'connected'|
+ *   'actions'|'loopReset'|'regionChanged'
  * )} QueueTransportEvent
  */
 
@@ -36,6 +37,8 @@ export class QueueTransport {
     requestDetailedState() {}
     dismissGameOver() {}
     requestGameDefs() {}
+    /** Ask JtA to report its currently-loaded actions (substrate catalog source). */
+    requestActions() {}
 
     /**
      * Subscribe to a transport event.
@@ -208,13 +211,18 @@ export class BridgeTransport extends QueueTransport {
     /** @type {Function} */
     #unsubLoopReset;
 
+    /** @type {Function} */
+    #unsubRegion;
+
     constructor(eventBus, moduleName) {
         super();
         this.#eventBus = eventBus;
         this.#moduleName = moduleName;
-        // Persistent subscriptions: command replies + host loop reset.
+        // Persistent subscriptions: command replies + host loop reset + zone
+        // change (the catalog is re-requested when the loaded zone changes).
         this.#unsubResult = this.#subscribe('jta:queueActionResult', (p) => this.#onResult(p));
         this.#unsubLoopReset = this.#subscribe('gameState:loopReset', () => this.#emit('loopReset', {}));
+        this.#unsubRegion = this.#subscribe('gameState:regionChanged', () => this.#emit('regionChanged', {}));
     }
 
     get isBridge() { return true; }
@@ -315,8 +323,14 @@ export class BridgeTransport extends QueueTransport {
     }
 
     requestGameDefs() {
-        // The substrate catalog comes from a static source (Phase 3), not a
+        // The substrate catalog is a live report (requestActions), not a
         // gameDefs round-trip.
+    }
+
+    requestActions() {
+        this.#request('getActions').then((res) => {
+            this.#emit('actions', res.result || null);
+        });
     }
 
     dismissGameOver() {
@@ -348,6 +362,7 @@ export class BridgeTransport extends QueueTransport {
     destroy() {
         try { this.#unsubResult?.(); } catch (e) { /* ignore */ }
         try { this.#unsubLoopReset?.(); } catch (e) { /* ignore */ }
+        try { this.#unsubRegion?.(); } catch (e) { /* ignore */ }
         this.#handlers.clear();
         this.#pending.clear();
     }
