@@ -906,3 +906,103 @@ manual-edit-wins disengage unless sanctioned).
 this SUMMARY + the two reserved-thread harness scripts. Outer main push HELD:
 6 interleaved commits from a concurrent jta session bump an unpushed j-t-a
 submodule pin. Detail: memory [[project_omsi_loops_fork]] session 19.
+
+## Round 19 — CALIBRATION (handoff item 6): piece-3 scored channels shipped; town-0 recalibration sweeps; DNF-aware sweep driver (2026-07-16, Fable, session 28)
+
+Regime: `sweep-planner.mjs` (new, DNF-aware — see below), engine screen +
+pool 8, K=1, cap 1200, seed 12345, 0 RNG throughout (every number a
+deterministic fact). Winners final-checked under predictor (Round-11 rule).
+
+### §11.8 piece 3 (fork `8b6eb61` + `270ebd0`): five zero-default channels
+
+`efficiency` / `buff` / `soulstone` / `invest` / `grindTalent` — every
+consumer weight-gated; byte-gate V0 EXACT re-verified per commit. Two
+findings that reshape the piece-3 design intent:
+
+- **The planned state-delta efficiency formulation (Δa.cost pre/post) is
+  structurally wrong** — base stats RESET every restart(), so read-state
+  cost deltas measure within-loop transient leveling (verified: 30 loops →
+  0 drifting actions). Rewritten (`270ebd0`) as the measured edge-rate
+  ledger (W3 edgeRates, census class 4): execs × Δchannel/exec × expected
+  future execs (capacity/cost), manaCost signed, goldYield at 50 mana/gold;
+  goldCost/segmentRate unscored (price transients / multipart composition).
+  Double-gated: edgeRates populate only under informed vocabulary.
+- **NONE of the new channels have town-0 signal.** buff/soulstone/invest:
+  no buffs, stones, or Invest reachable in town 0. efficiency: the
+  skill-efficiency web's grinders (Practical Magic, Dark Magic, …) are all
+  town-1+ actions — by L460 the only town-0 skill granters are Warrior/Mage
+  Lessons (Combat/Magic), whose declared edges target multiparts
+  (segmentRate, unscored). Verified: informed-vocabulary runs with
+  efficiency 0.5/2/8 are ALL byte-identical to the reference (hash equal).
+  grindTalent: town 0's only expMult≥4 action (Train Strength, Met≥5)
+  NEVER unlocks on the reference trajectory (no milestone in 535 loops).
+  ⇒ All five ship at 0; their calibration belongs to the town-2+ arcs.
+  The town-0 recalibration is entirely about the EXISTING axes.
+
+### DNF-aware sweep driver (`sweep-planner.mjs`, outer `c46a48b0f`)
+
+DNFs are first-class: flagged + auto-classified FIXATION vs ECONOMY from
+each arm's own trace. **The §11.9 "healthy ≤16 streak / ≤135 drought"
+separation is PRE-Part-A data** — post-A1 healthy traces carry maxStreak
+~104 (early repeat phase) and close it (endStreak ≤50 / endDrought ≤149 on
+every stored trace), while every known hole is an absorbing state with the
+counter OPEN AT THE CAP (endStreak 311–635 / endDrought 260–738). The
+classifier is therefore END-anchored, threshold 256. Crash signal = missing
+result JSON (run-planner exits 1 on any non-acceptance run).
+
+### Town-0 sweeps (rounds A/C/E; B/D = the null results above)
+
+| arm | loops | ticks | note |
+|---|---:|---:|---|
+| default (bank30/bankPot15) | 535 | 5,965,890 | the frozen reference |
+| bankPot8 | 505 | 5,316,346 | Round-9 datum re-confirmed directionally |
+| bank45 | 500 | 6,436,733 | |
+| frontier1000 | 496 | 7,586,006 | loops win, +27% ticks |
+| **bank45+bankPot8** | **461** | **5,195,188** | ticks argmin; +mana400 byte-identical |
+| **bank50+bankPot8** | **459** | 5,570,012 | loops argmin |
+| bank40/60+bankPot8 | 489/501 | | healthy shoulder both sides |
+| bank10+bankPot8 | DNF@1200 | | FIXATION endStreak 514 (finished 636 pre-A1!) |
+| bank55 (alone) | DNF@1200 | | FIXATION endStreak 676, healthy at 45 and 60 |
+
+The weight landscape keeps its Round-9 character on the new capacity model:
+non-monotone with absorbing holes (two NEW ones found — both auto-flagged
+by the classifier, neither silently averaged). The winning combo's
+neighborhood (bank 20–60 × bankPot 8) is a healthy plateau.
+
+### Predictor finals, the chosen DEFAULT_WEIGHTS, and the re-freeze
+
+Predictor finals (the gate regime): **bank45+bankPot8 = 461 / 5,195,188 /
+`9d9952e68bc8373c`** — identical to its engine-screen numbers — while
+bank50+bankPot8 degrades to 484 / 6,042,754. So bank45+bankPot8 dominates
+BOTH metrics under predictor and ships: **DEFAULT_WEIGHTS bank 30 → 45,
+bankPot 15 → 8** (all other weights unchanged; the five piece-3 channels
+stay 0).
+
+**Tail trim (§11.5 item 4, folded-in from handoff item 5): measured and
+REJECTED.** Exact-count trim prototype (re-run the winning queue trimmed to
+the confirm's completed reps, commit the live loop): it cuts ~9% of
+per-loop ticks but the lost per-tick stat/talent exp compounds into more
+loops — on the NEW defaults it loses BOTH metrics (515 / 6,117,370 vs 461 /
+5,195,188; old defaults: 543 / 5,552,865 vs 535 / 5,965,890 — a ticks win
+only on the configuration being retired). Negative result recorded; the
+prototype was reverted, no code ships.
+
+**The re-freeze (the THIRD deliberate reference move):**
+
+| metric | v0 | Part A | session 28 |
+|---|---|---|---|
+| loops to town 1 | 500 | 535 | **461** |
+| cumulative ticks | 5,432,753 | 5,965,890 | **5,195,188** |
+| final-state hash | `54506b48ec1758af` | `e23f020400162f9a` | **`9d9952e68bc8373c`** |
+| RNG draws | 0 | 0 | **0** |
+
+Run twice under predictor + pool 8, byte-identical both times. Weight-sweep
+cross-checks re-frozen on the new defaults (predictor): **frontier:1000 →
+513 / 6,582,103 / `86de5c16e23698c2`**; **bank:10 → 710 / 7,922,014 /
+`6c6c6f81e3d9ed6c`** (bank:10 now implies bank10+bankPot8, which FIXATES
+under the engine screen but finishes under predictor — screen mode is part
+of a hole's identity). Gate proofs on the new defaults: **bank:20 escapes
+@549** (5,980,873); **fresh K=4 targeted (--target-action "Start Journey"
+--replan-every 4) reaches town1 @593** (6,802,717; was @669 on the old
+weights). V0_REFERENCE in run-planner.mjs, AUTOMATION.md §8, and the fork
+comment triple all updated in the re-baseline commits.

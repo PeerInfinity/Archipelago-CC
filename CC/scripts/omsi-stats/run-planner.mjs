@@ -3,12 +3,14 @@
 // conventions: committed SUMMARY.md, raw data local-only in results/).
 //
 // The primary acceptance metric (substrate plan §3.3): loops to Forest Path
-// (town 1) must stay <= the frozen reference. Part A (§11.9, 2026-07-13)
-// deliberately re-froze it to 535 loops / 5,965,890 ticks / final-state
-// sha256-16 e23f020400162f9a (seed 12345, default weights): A1 un-gated the
-// town-0 capacity probe, which reshapes the healthy trajectory (was the
-// pre-Part-A 500 / 5,432,753 / 54506b48ec1758af) AND melts the bank:20
-// fixation hole (was DNF@1200 -> escapes @538, plain heuristic). With
+// (town 1) must stay <= the frozen reference. The session-28 calibration
+// re-baseline (2026-07-16) deliberately re-froze it to 461 loops /
+// 5,195,188 ticks / sha256-16 9d9952e68bc8373c (seed 12345, default
+// weights): DEFAULT_WEIGHTS bank 30->45 / bankPot 15->8, the sweep winner
+// under BOTH metrics on the Part-A capacity model. Prior references, both
+// retired deliberately: Part A §11.9 535 / 5,965,890 / e23f020400162f9a
+// (A1 un-gated the town-0 capacity probe); pre-Part-A v0 500 / 5,432,753 /
+// 54506b48ec1758af. With
 // --seed 12345 and seeding OFF, this harness additionally checks BYTE-EXACT
 // reproduction of that reference: any planner change must reproduce it or
 // be a deliberate re-freeze.
@@ -87,7 +89,7 @@ const resultsDir = path.join(here, "results");
 
 // V0_LEGACY (pre-Part-A queue-planner v0, superseded by the §11.9 re-freeze
 // 2026-07-13): { loops: 500, ticks: 5_432_753, hash: "54506b48ec1758af" }.
-const V0_REFERENCE = { seed: 12345, loops: 535, ticks: 5_965_890, hash: "e23f020400162f9a" };
+const V0_REFERENCE = { seed: 12345, loops: 461, ticks: 5_195_188, hash: "9d9952e68bc8373c" };
 
 const run = (cmd, args) => execFileSync(cmd, args, { encoding: "utf8" }).trim();
 

@@ -333,13 +333,28 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
       planning less often). Byte-inert at defaults (byte-gate re-verified); npm
       95/95; ui-smoke ALL PASS incl. a live soft-lock guard. Reserved-thread
       headless pipeline (user idea #2) DEFERRED. Detail in memory session 19.**
-   6. LAST: the recalibration remainder of the ONE re-baseline bundle —
-      §11.8 piece 3 scored channels (consumes the item-4 coverage
-      report), DNF-aware sweeps, DEFAULT_WEIGHTS recalibration (target:
-      recover ≤500 loops on the accurate capacity model), bankPot:8
-      re-test, weight-sweep cross-check re-freeze (frontier:1000,
-      bank:10), **+ tail trim (ticks-metric-gated; folded in from item 5,
-      user 2026-07-13)**.
+   6. **DONE 2026-07-16 (Fable, session 28) — THE §4.1 QUEUE IS COMPLETE.**
+      The whole bundle shipped: §11.8 piece 3 scored channels (fork
+      `8b6eb61` + `270ebd0` — the efficiency channel was REWRITTEN onto
+      the measured W3 edge-rate ledger after the planned state-delta
+      formulation proved structurally wrong: base stats reset every
+      restart(); ALL five channels ship at 0 — zero town-0 signal, they
+      calibrate when town-2+ arcs run); DNF-aware sweep driver
+      `CC/scripts/omsi-stats/sweep-planner.mjs` (`c46a48b0f`; END-anchored
+      streak/drought fixation classifier — the §11.9 healthy-≤16 datum is
+      pre-Part-A, post-A1 holes are counters OPEN at the cap 311–635 vs
+      healthy ends ≤50); DEFAULT_WEIGHTS recalibration (fork `ce6ea89`:
+      bank 30→45, bankPot 15→8 — target beaten: **461 loops / 5,195,188
+      ticks / `9d9952e68bc8373c`**, −13.8%/−12.9%, twice-run byte-stable;
+      bankPot:8 datum CONFIRMED as half the winner); cross-checks
+      re-frozen (frontier:1000 → 513/6,582,103/86de5c16e23698c2; bank:10 →
+      710/7,922,014/6c6c6f81e3d9ed6c); gate proofs on the new defaults
+      (bank:20 escapes @549; fresh K=4 targeted @593); **tail trim
+      measured and REJECTED** (loses both metrics on the new defaults —
+      prototype reverted, negative result in SUMMARY Round 19). Two NEW
+      engine-screen fixation holes mapped: bank10+bankPot8, bank55-alone.
+      AUTOMATION.md gained §4a (targeted mode / two-tier list) + a
+      rewritten §8. Detail: SUMMARY Round 19 + memory session 28.
    7. **Assist-ladder rung 2 (auto-add reps) — SHIPPED 2026-07-14 (Opus,
       session 17); the deferred session-16 follow-on.** Pure UI-thread
       top-up of under-queued actions (`actions.next[i].loops += gap`,
