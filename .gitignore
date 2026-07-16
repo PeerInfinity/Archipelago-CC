@@ -335,3 +335,8 @@ scripts/procgen/.jta-roundtrip-rules.json
 scripts/procgen/.jta-roundtrip-templates/
 worlds/jta_loctest_roundtrip_worldgen/
 frontend/presets/jta_loctest_roundtrip_worldgen/
+
+# SWFRecomp-recompiled game pages for the flashPanel wasm transport: the
+# built artifacts (23.8 MB wasm) are never committed — copy them from
+# SWFRecomp-CC (see frontend/modules/flashPanel/README.md for the command).
+frontend/modules/flashPanel/wasm/

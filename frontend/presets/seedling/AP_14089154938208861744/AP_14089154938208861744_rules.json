@@ -2,6 +2,10 @@
   "schema_version": 3,
   "game_name": "Seedling",
   "game_directory": "seedling",
+  "flash_panel": {
+    "config": "seedling.json",
+    "wasm": "seedling_teleport_ap/game.html"
+  },
   "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",

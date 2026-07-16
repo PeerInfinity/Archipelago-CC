@@ -46,6 +46,25 @@ export function register(registrationApi) {
     );
   }
 
+  // Transport selection (read by FlashPanelUI at panel init; changing
+  // it takes effect the next time a flash panel initializes). Mirrors
+  // the moduleSettings.bounceDemo.renderer pattern.
+  registrationApi.registerSettingsSchema({
+    type: 'object',
+    properties: {
+      runtime: {
+        type: 'string',
+        default: 'auto',
+        enum: ['auto', 'flash', 'wasm'],
+        label: 'Runtime',
+        description: "'auto' uses the SWFRecomp wasm page when the game's "
+          + "flash_panel wiring provides one (runs in any browser), real "
+          + "Flash otherwise | 'flash' forces the real-Flash <object> embed "
+          + "(needs NPAPI Flash or Ruffle) | 'wasm' forces the wasm iframe.",
+      },
+    },
+  });
+
   registrationApi.registerEventBusSubscriberIntent('stateManager:rulesLoaded');
   registrationApi.registerEventBusSubscriberIntent('stateManager:inventoryChanged');
   registrationApi.registerEventBusSubscriberIntent('stateManager:ready');
@@ -81,6 +100,12 @@ function handleUserLocationCheckForFlashPanel(eventData, eventName = 'user:locat
 
 export function setActivePanelInstance(instance) {
   activePanelInstance = instance;
+}
+
+// Test/diagnostic handle (used by scripts/procgen/verify-seedling-wasm-
+// bridge.mjs to reach the live adapter).
+export function getActivePanelInstance() {
+  return activePanelInstance;
 }
 
 export function initialize(moduleId, priorityIndex, initializationApi) {

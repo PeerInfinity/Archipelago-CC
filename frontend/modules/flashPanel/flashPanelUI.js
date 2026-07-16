@@ -1,6 +1,8 @@
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
+import settingsManager from '../../app/core/settingsManager.js';
 import { getDispatcher, getModuleEventBus, setActivePanelInstance } from './index.js';
 import { FlashBridgeAdapter } from './flashBridgeAdapter.js';
+import { WasmBridgeAdapter } from './wasmBridgeAdapter.js';
 
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -13,7 +15,15 @@ function log(level, message, ...data) {
 
 const GAMES_DIR = './modules/flashPanel/games/';
 const SWF_DIR = './modules/flashPanel/swf/';
+// SWFRecomp-recompiled game pages (__swfBridge contract). The built
+// artifacts are NOT committed (23.8 MB wasm) — see this module's
+// README.md for the copy command that stages them locally.
+const WASM_DIR = './modules/flashPanel/wasm/';
 const RUFFLE_CDN = 'https://unpkg.com/@ruffle-rs/ruffle';
+// Transport selection, mirroring moduleSettings.bounceDemo.renderer:
+// 'auto' (default) uses the wasm page when the game wiring provides
+// one, real Flash otherwise; 'flash'/'wasm' force a transport.
+const RUNTIME_SETTING_KEY = 'moduleSettings.flashPanel.runtime';
 
 let instanceCounter = 0;
 let rufflePromise = null;
@@ -73,6 +83,7 @@ export class FlashPanelUI {
     // be populated yet when the component is constructed.
     this.configPath = this.componentState.configPath || null;
     this.swfPath = this.componentState.swfPath || null;
+    this.wasmPath = this.componentState.wasmPath || null;
 
     this.rootElement = null;
     this.swfContainer = null;
@@ -306,6 +317,88 @@ export class FlashPanelUI {
     `;
   }
 
+  _embedWasmIframe(width, height) {
+    this.swfContainer.innerHTML = `
+      <iframe id="${this.flashObjectId}" src="${this.wasmPath}"
+          width="${width}" height="${height}"
+          style="border:0;background:#000;display:block;"
+          allow="autoplay"></iframe>
+    `;
+  }
+
+  /**
+   * Init flow for the wasm-iframe transport (SWFRecomp-recompiled
+   * game page exposing __swfBridge). Differs from the real-Flash flow
+   * in lifecycle, not semantics: the page loads immediately, but the
+   * game — and with it the bridge callbacks — only starts on the
+   * page's own ▶ Start button (a user gesture inside the iframe;
+   * WebGPU/audio init consume the activation). So we wait for the
+   * shim, tell the user to press Start, then wait as long as it takes
+   * for the callbacks before configuring. None of the real-Flash
+   * workarounds (Ruffle load, Clean Flash configure delay, host-shim
+   * poll counters) apply here.
+   */
+  async _initializeWasm() {
+    this._setStatus('loading config…');
+    this.gameConfig = await this._loadConfig(this.configPath);
+    this._panelLog(`config loaded: ${this.gameConfig.game} (wasm transport)`);
+    this._setupTeleportUI();
+
+    const [w, h] = this.gameConfig.stage_size || [480, 480];
+    this._embedWasmIframe(w, h);
+
+    this.adapter = new WasmBridgeAdapter({
+      config: this.gameConfig,
+      flashObjectId: this.flashObjectId,
+      stateManager,
+      dispatcher: getDispatcher(),
+      eventBus: this.eventBus,
+      log: (msg, cls) => this._panelLog(msg, cls),
+    });
+
+    try {
+      this._setStatus('loading wasm page…');
+      await this.adapter.waitForShim(30000);
+      this._setStatus('click ▶ Start in the game');
+      this._panelLog('wasm page loaded — click ▶ Start in the game to boot it');
+      // Callbacks appear only after the user starts the game; wait
+      // generously rather than timing out under them.
+      await this.adapter.waitForBridge(10 * 60 * 1000);
+      this._panelLog('bridge callbacks ready');
+    } catch (err) {
+      this._panelLog(`bridge not ready: ${err.message}`, 'error');
+      this._setStatus('bridge timeout');
+      return;
+    }
+
+    // Hook state reports before configure so the baseline reads that
+    // follow it are seen (and suppressed) by the adapter.
+    this.adapter.installStateHook();
+    const result = this.adapter.configureBridge();
+    this._panelLog(`configure: ${result}`);
+    this._setStatus('configured');
+    this.adapter.attach();
+    setTimeout(() => this._verifyWasmBridgeConfigured(), 1000);
+  }
+
+  _verifyWasmBridgeConfigured() {
+    if (!this.adapter) return;
+    const raw = this.adapter.readState();
+    if (typeof raw === 'string' && raw.indexOf('not configured') !== -1) {
+      this._panelLog('bridge not configured — retrying');
+      this.adapter.configureBridge();
+      setTimeout(() => this._verifyWasmBridgeConfigured(), 1000);
+      return;
+    }
+    if (typeof raw === 'string' && raw.indexOf('classes not resolved') !== -1) {
+      this._panelLog('bridge waiting for classes to resolve…');
+      setTimeout(() => this._verifyWasmBridgeConfigured(), 1000);
+      return;
+    }
+    this._panelLog(`bridge verified: ${raw?.substring ? raw.substring(0, 80) : raw}`);
+    this._setStatus('ready');
+  }
+
   async _initializeAdapter() {
     if (this.isInitialized) return;
     this.isInitialized = true;
@@ -315,17 +408,34 @@ export class FlashPanelUI {
       // rules.json `flash_panel` section, which is threaded through
       // stateManager.getStaticData(). componentState overrides win;
       // if neither source specifies a game, the panel stays idle.
-      if (!this.configPath || !this.swfPath) {
+      if (!this.configPath || !this.swfPath || !this.wasmPath) {
         const fp = stateManager.getStaticData?.()?.flash_panel;
-        if (fp && (fp.config || fp.swf)) {
+        if (fp && (fp.config || fp.swf || fp.wasm)) {
           if (!this.configPath && fp.config) {
             this.configPath = GAMES_DIR + fp.config;
           }
           if (!this.swfPath && fp.swf) {
             this.swfPath = SWF_DIR + fp.swf;
           }
-          this._panelLog(`rules.json flash_panel: config=${fp.config} swf=${fp.swf}`);
+          if (!this.wasmPath && fp.wasm) {
+            this.wasmPath = WASM_DIR + fp.wasm;
+          }
+          this._panelLog(`rules.json flash_panel: config=${fp.config} swf=${fp.swf} wasm=${fp.wasm}`);
         }
+      }
+
+      // Transport selection: 'auto' takes the wasm page whenever the
+      // wiring provides one (it runs in any browser; real Flash needs
+      // a plugin-capable one), 'flash'/'wasm' force their transport.
+      // A forced transport with no matching path falls through to the
+      // "not configured" messages below.
+      let runtime = 'auto';
+      try {
+        runtime = await settingsManager.getSetting(RUNTIME_SETTING_KEY, 'auto');
+      } catch { /* keep 'auto' */ }
+      if (this.configPath && this.wasmPath && runtime !== 'flash') {
+        await this._initializeWasm();
+        return;
       }
 
       if (!this.configPath || !this.swfPath) {
