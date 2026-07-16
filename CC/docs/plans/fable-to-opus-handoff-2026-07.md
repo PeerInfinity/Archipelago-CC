@@ -378,6 +378,25 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
       collapsible `<details>` with two Before/After/Δ tables (waste + reps, Δ
       colour-coded); Suggest/Apply top up reps first when auto-add is on.
       ui-smoke 83/83. **§11.7 Design B remains queued after this.**
+   9. **§11.10 targeted-mode v2 (two-tier goals) — V0–V5 ALL CODE-COMPLETE
+      2026-07-16 (sessions 20–27; fork `automation` @ `e6f2655`, unpushed; outer
+      gitlink stays `531faa3`).** The arc: row-based priority editor + V0
+      diagnostics + V1 sticky Tier-1 goals/per-branch stall + V2 recursive
+      Tier-2 finder (DAG walk) + V3 locked-goal freeze + h-variant cash-in
+      (fresh-K=4 DNF fixed, town1 @L669) + V4 two-tier UI with user-override
+      storage + V5 planner-consume (`tier2UserLeaves` → ordered kind-b leaves
+      tried BEFORE the auto finder, which stays the fallback; a pin CAN build
+      toward a still-locked goal) + finalize (plannerTargets JSON confirmed as
+      the option home; fork CI gained a standing `ui-smoke` job — UNEXERCISED
+      until the next fork push, watch its first run). Gates: byte-inert
+      throughout (535 / 5,965,890 / e23f020400162f9a / 0 RNG); npm 116/116;
+      ui-smoke 116/116; override gates proven ([Secrets,LQuests] pin escapes
+      K=4 @L849; unpursuable pin falls back auto-identical). Characterization:
+      a value-less first override entry MONOPOLIZES by design — recommend stop
+      values. Deferred: deeper override authoring (own slice); AUTOMATION.md
+      still has NO targeted-mode section (pre-existing doc gap). Plan:
+      *(NewDocs)* `omsi-loops-targeted-v2-plan.md`; memory sessions 20–27.
+      **Item 6 (calibration) is now the ONLY remaining item in this queue.**
    Original queue (for reference):
    1. **Systematic action-code audit (user: HIGH priority)**: read all
       157 actions' reward/effect code and produce a complete census of
