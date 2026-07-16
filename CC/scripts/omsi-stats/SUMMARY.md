@@ -1030,3 +1030,36 @@ per TICK, so the fat repeat economy loop maximizes the term forever — a
 talent-greedy scorer never leaves the absorbing state. The tail-trim
 rejection (above) is the same channel seen from the other side: losing
 partial-rep exp ticks measurably costs loops. No change to DEFAULT_WEIGHTS.
+
+## Round 20 — abandon-necessity audit: NOT vestigial — abandon is the only path past a dead top goal (2026-07-16, Fable, session 28)
+
+The session-25 ❓ ("does the stall/abandon detector solve a problem that
+actually EXISTS?") answered empirically. New harness knob: `--goal-stall-k`
+(pass a huge value to disable abandon). All arms engine screen + pool 8,
+`--replan-every 4`; donor = the k4-fixated state @L800 (Start Journey needs
+the finder's setup rounds to escape).
+
+| arm | goals | abandon | result (post-donor) |
+|---|---|---|---|
+| CTRL | [Start Journey] | ON | town1 in **9 loops** |
+| A1 | [dead kind-b Practical≥10, Start Journey] | ON (K=20) | town1 in **89 loops** (20 stalled rounds × K=4 = 80-loop shadow, then escape) |
+| A2 | same | **OFF** | **DNF@500** — never escapes |
+| B1/B2 | fresh K=4 [Start Journey] | ON vs OFF | **byte-identical** (649 / 8,164,990 / e93fb3f141784169) |
+
+**Verdict: KEEP.** The mechanism has exactly one live function and it is
+real: `planTargeted`'s setup path (`findSetupLeaf` → `planSetupRound`) is
+TOP-GOAL-SCOPED, so a dead top goal (no providers, never progresses)
+shadows every lower goal's setup rounds forever — abandon is what advances
+the finder past it (A1 escapes, A2 DNFs). On healthy single-goal paths
+abandon-off changes nothing (B1 ≡ B2 byte-for-byte: the V3 freeze covers
+locked goals; post-unlock progress resets the counter).
+
+Two design notes for the unlock-dim session (they interact):
+- The shadow costs `goalStallK × replanEvery` loops (80 here) before the
+  list advances. An ALTERNATIVE design — let findSetupLeaf iterate the goal
+  list and pursue the first goal with an installable leaf — would remove
+  the shadow entirely and demote abandon to a wall-clock optimization;
+  that's a user design call, not a drive-by.
+- Unlock-dim tracking changes WHEN stall accrues (locked goals would
+  measure unlock progress instead of freezing), so retune/re-audit K after
+  it lands.

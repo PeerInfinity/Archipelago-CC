@@ -295,6 +295,8 @@ async function main() {
     // '[{"kind":"a","action":"Continue On"},{"kind":"b","target":{"type":"skill","name":"Magic"},"value":50,"budget":0.3}]'
     const targetsArg = val("--targets", null);
     const autoRankTargets = has("--auto-rank");
+    // abandon-audit knob: stall rounds before a goal branch abandons (default 20; huge value = abandon disabled)
+    const goalStallK = Number(val("--goal-stall-k", 20));
     // §6 stagnation trigger: auto-enter a targeted escalation round when the
     // heuristic fixates (streak≥32 / drought≥256). Off = today's behavior.
     const antiFixation = has("--anti-fixation");
@@ -469,7 +471,7 @@ async function main() {
     }
 
     const t0 = Date.now();
-    const r = await IP.runStandalone({ maxLoops, weights, seedFromPredictor, verbose: true, screenK, screenMode, probeEvery, replanEvery, basicReuse, dumpDetail, targetTown, multiTown, vocabulary, strategy, targetAction, targets, autoRankTargets, antiFixation, resume, onLoop });
+    const r = await IP.runStandalone({ maxLoops, weights, seedFromPredictor, verbose: true, screenK, screenMode, probeEvery, replanEvery, basicReuse, dumpDetail, targetTown, multiTown, vocabulary, strategy, targetAction, targets, autoRankTargets, antiFixation, goalStallK, resume, onLoop });
     for (const w of poolWorkers) w.terminate();
     const hash = crypto.createHash("sha256").update(r.finalSnapshot).digest("hex").slice(0, 16);
     if (saveStatePath) {
