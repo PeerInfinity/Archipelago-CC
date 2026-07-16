@@ -557,6 +557,38 @@ data path is live, the compiled default dead).
   is pacing/trivialization (a 10× `time_compression` collapses the reset
   economy), which is exactly what the emergent band measures.
 
+### 4.4 Addendum (2026-07-16) — Phase-D riders + vanilla-snapshot unification
+
+Recorded at the omsi-XML-resume planning session, after a side-by-side of this
+system with the omsi XML migration plan (which now imports THIS plan's mechanics —
+two-layer model, gate triple, perturbation canary; see the omsi plan §8). Three
+small items attach to the JtA side:
+
+**Rider D-a — standalone `?dataset=<url>` boot.** Deferred at v1 (§3.2/§7); the
+`loadGameData` hook already exists, this is boot-path wiring. Attach to any Phase-D
+rung rather than its own project.
+
+**Rider D-b — new-stack in-UI dataset import/export.** The only existing UI
+import/export (`jtaGameDataPanelUI.js`) belongs to the retired jta-randomizer stack
+and moves SAVE blobs + old cost tables, not schema datasets. A new-stack surface is
+validator + `setJtaDataset`/`loadGameData` + file-picker wiring, plus export =
+serializing the live doc (the CLI exporter already proves the shape). Small;
+attach to Phase D or land independently.
+
+**Unification U-a — retire `zoneTaskData.js` in favor of `datasets/vanilla.json`.**
+The pipeline's VANILLA identity channel still reads the hand-maintained snapshot
+`zoneTaskData.js` (names/types/perks/items — the source of the `zoneCount: 16`
+hand-sync backlog item), while the synthetic channel reads the dataset doc. Since
+vanilla-through-the-loader is proven tick-identical (§5c/5g) and
+`datasets/vanilla.json` is regenerable from the fork build
+(`export-vanilla-dataset.mjs`), pointing the vanilla channel at the dataset fixture
+makes ONE data path serve both, retires the snapshot file, and dissolves the
+hand-sync assertion item (the exporter + schema validator BECOME the sync
+mechanism). Gate: byte-inert on all pipeline outputs (dump-spiral 5/5, Generate.py
+roundtrips) — the fixture is a superset of the snapshot, so this is
+read-site-only. Standalone small item; do NOT bundle with a Phase-D rung (different
+risk surface).
+
 ---
 
 ## 5. Question 4 — theme and narrative hooks
