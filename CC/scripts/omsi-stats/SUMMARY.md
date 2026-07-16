@@ -1006,3 +1006,27 @@ of a hole's identity). Gate proofs on the new defaults: **bank:20 escapes
 --replan-every 4) reaches town1 @593** (6,802,717; was @669 on the old
 weights). V0_REFERENCE in run-planner.mjs, AUTOMATION.md §8, and the fork
 comment triple all updated in the re-baseline commits.
+
+### W.talent ablation (post-re-baseline; user question: is persistent talent accounted for?)
+
+Talent's EFFECT on costs needs no model — everything downstream (within-loop
+stat releveling via totalBonusXP = soulstoneMult × talentMult × prestige,
+hence effective action costs and capacity) is measured live per candidate by
+the engine confirms and capacity probe. Talent ACQUISITION is scored by the
+long-standing `W.talent × Δtalent` term; ablating it on the new defaults
+proves it load-bearing, and the hand-set 0.01 sits in the flat optimum:
+
+| W.talent | loops | ticks |
+|---|---:|---:|
+| 0 (ablated) | 476 | 5,646,831 |
+| 0.001 | **461** | **5,195,188** |
+| 0.01 (shipped) | **461** | **5,195,188** |
+| 0.1 | 465 | 5,363,328 |
+| 1 | 476 | 5,719,261 |
+| 5 | DNF@1200 | FIXATION (endStreak 682) |
+
+talent:5 is a THIRD new fixation hole, mechanistically clean: talent accrues
+per TICK, so the fat repeat economy loop maximizes the term forever — a
+talent-greedy scorer never leaves the absorbing state. The tail-trim
+rejection (above) is the same channel seen from the other side: losing
+partial-rep exp ticks measurably costs loops. No change to DEFAULT_WEIGHTS.
