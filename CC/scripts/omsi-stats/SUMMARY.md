@@ -1063,3 +1063,68 @@ Two design notes for the unlock-dim session (they interact):
 - Unlock-dim tracking changes WHEN stall accrues (locked goals would
   measure unlock progress instead of freezing), so retune/re-audit K after
   it lands.
+
+## Round 21 — §B goal-list-scoped setup path + §U armed unlock-dim tracking + anti-fixation retune (2026-07-16, Fable, session 29)
+
+Session-29 items 1+2 (the post-calibration housekeeping arc, kickoff doc's
+per-item spec). Option B chosen by the user for the abandon interaction:
+the setup path iterates the goal list; abandon demotes to list hygiene.
+
+**§B — goal-list-scoped setup path.** `planTargeted`'s setup path
+(`tier2UserLeaves` → `findSetupLeaf` → `planSetupRound`) now walks the WHOLE
+priority list in order and pursues the first goal with an installable leaf;
+the top goal's clock advances via the same round-end accounting when a lower
+goal wins. Round-20 donor arms re-run (k4 donor @L800, engine, pool, replan 4):
+
+| arm | goals | abandon | Round 20 (top-goal-scoped) | §B (list-scoped) |
+|---|---|---|---|---|
+| CTRL | [Start Journey] | ON | town1 in 9 loops (@L809) | town1 in 9 loops (@L809) ✅ |
+| A1-style | [dead kind-b Practical≥10, SJ] | ON (K=20) | 89 loops (80-loop shadow) | **9 loops** — shadow GONE |
+| A2-style | same | OFF (K=999999) | **DNF@500** | **9 loops** — abandon no longer load-bearing |
+
+**§U — armed unlock-dim tracking (deviation from the kickoff spec, forced by
+measurement).** The kickoff's "locked goal + inert dims → stall accrues →
+abandons at K=20" is REFUTED on the healthy reference: a full-run dim trace
+(onLoop live-state read, every loop) shows Start Journey's unlock dims
+(Combat/Magic exp) at [0,0] from L1 to L236 — a 236-round flat window — then
+grinding nearly continuously to the L374 unlock. Naive flat-window accrual
+would false-abandon SJ on EVERY fresh targeted run (K=20 fires at round ~21;
+even K=256 leaves ~20 rounds of margin). Shipped semantics: the unlock
+fraction (mean reqFraction over probed `thresholds[action].requires`) is
+baselined at first sighting and the clock stays FROZEN until the dims first
+rise during the goal's tenure ("armed"); after arming, rising rounds reset
+the clock, flat rounds accrue, and abandon fires at `unlockStallK` — its OWN
+threshold (default 64), because the armed window's measured worst healthy
+flat stretch is 25 rounds at replanEvery=1, over goalStallK's 20 (this IS
+the kickoff's goalStallK re-audit: 20 stays correct for the actionable
+branch, where V0 grounds it; the locked branch needed its own constant).
+Unprobeable dims keep the unconditional §V3 freeze. Never-moved dims freeze
+forever — same observable as V3, now harmless because §B removed the shadow.
+Regression proof: fresh targeted SJ engine arm (B1-style, replan 4) is
+BYTE-IDENTICAL to session 28: 649 / 8,164,990 / e93fb3f141784169.
+New knob: `--unlock-stall-k` (run-planner).
+
+**Anti-fixation retune (item 2).** `antiFixK` 32 → 256 (newPlanningState +
+fallbacks + docs/tooltip): the K=32 trigger predates Part A — post-A1 healthy
+trajectories carry mid-run streaks ~104 and CLOSE them; holes hold counters
+open at the cap (endStreak 311–682) vs healthy ends ≤50/≤149 (Round 19's
+end-anchored separation). Proofs: `--anti-fixation` on the default run
+reproduces the exact triple 461 / 5,195,188 / 9d9952e68bc8373c (guard ON,
+never fires); engine-hole probe below.
+
+**Byte-gates.** V0 EXACT (461 / 5,195,188 / 9d9952e68bc8373c / 0 RNG) PASS
+three times: on the item-2 tree (`f245b59`), mid-edit (`gate-final`), and
+definitively on the committed item-1 tree (`5ad0d16`). npm 124/124 (+4 §U
+units; §V3 expectations UNCHANGED — armed semantics freeze the never-moved
+case by construction); ui-smoke 116/116 ALL PASS.
+
+**Engine-hole probe (item 2's "record either way"):** bank10+bankPot8
+(engine, guard ON, K=256) still DNF@1200 with a trajectory BYTE-IDENTICAL to
+the no-guard sweep run (per-loop cumTicks match loop-for-loop; both end
+cum=25,306,300). The guard FIRES — endStreak 514 crosses 256 around L942,
+and the failed-escape backoff doubles K (≈2 escalation rounds total) — but
+escalation is deliberately one-shot spine-only (`opts.escalate` returns
+before the §B setup loop), and this hole is ECONOMY-shaped: SJ unlocks L543
+and the push needs setup rounds the escalation never runs. Observation
+parked, not actioned: letting escalation rounds use the §B setup path is a
+design change beyond this session's scope.

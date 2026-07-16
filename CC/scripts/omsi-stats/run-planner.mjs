@@ -63,7 +63,7 @@
 //       # targeted mode with the travel-frontier auto-ranker (ignores the list).
 //   node CC/scripts/omsi-stats/run-planner.mjs --anti-fixation --weights '{"bank":20}'
 //       # §6 stagnation trigger: the HEURISTIC auto-enters a targeted escalation
-//       # round when it fixates (streak≥32 / drought≥256). Off = byte-exact.
+//       # round when it fixates (streak≥256 / drought≥256; end-anchored retune). Off = byte-exact.
 //   node CC/scripts/omsi-stats/run-planner.mjs --pool 8
 //       # parallel eval pool (§11.7 Design A): fan the per-round candidate
 //       # confirms out across N worker_threads, each with its own sim
@@ -297,8 +297,11 @@ async function main() {
     const autoRankTargets = has("--auto-rank");
     // abandon-audit knob: stall rounds before a goal branch abandons (default 20; huge value = abandon disabled)
     const goalStallK = Number(val("--goal-stall-k", 20));
+    // §U locked-branch abandon threshold (armed unlock-dim clock; default 64 — measured
+    // healthy armed-window max flat stretch is 25 rounds at replanEvery=1)
+    const unlockStallK = Number(val("--unlock-stall-k", 64));
     // §6 stagnation trigger: auto-enter a targeted escalation round when the
-    // heuristic fixates (streak≥32 / drought≥256). Off = today's behavior.
+    // heuristic fixates (streak≥256 / drought≥256; end-anchored retune). Off = today's behavior.
     const antiFixation = has("--anti-fixation");
     // §W4 vocabulary coverage report: census class -> measured channel -> sample
     // values on representative states. The item-5 calibration handshake artifact
@@ -471,7 +474,7 @@ async function main() {
     }
 
     const t0 = Date.now();
-    const r = await IP.runStandalone({ maxLoops, weights, seedFromPredictor, verbose: true, screenK, screenMode, probeEvery, replanEvery, basicReuse, dumpDetail, targetTown, multiTown, vocabulary, strategy, targetAction, targets, autoRankTargets, antiFixation, goalStallK, resume, onLoop });
+    const r = await IP.runStandalone({ maxLoops, weights, seedFromPredictor, verbose: true, screenK, screenMode, probeEvery, replanEvery, basicReuse, dumpDetail, targetTown, multiTown, vocabulary, strategy, targetAction, targets, autoRankTargets, antiFixation, goalStallK, unlockStallK, resume, onLoop });
     for (const w of poolWorkers) w.terminate();
     const hash = crypto.createHash("sha256").update(r.finalSnapshot).digest("hex").slice(0, 16);
     if (saveStatePath) {
@@ -497,7 +500,7 @@ async function main() {
     const out = {
         date: new Date().toISOString(), forkCommit, seed, seedFromPredictor,
         weightsOverride, screenK, screenMode, probeEvery, replanEvery, targetTown, multiTown, vocabulary, gainMult,
-        strategy, targetAction, targets, autoRankTargets, antiFixation,
+        strategy, targetAction, targets, autoRankTargets, antiFixation, goalStallK, unlockStallK,
         metric, metricValue,
         wanderUntil, wanderLoops, wanderTicks, wanderExplored,
         totalLoops, totalTicks,
