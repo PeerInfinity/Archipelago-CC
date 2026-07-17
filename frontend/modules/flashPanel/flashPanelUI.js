@@ -108,12 +108,15 @@ export class FlashPanelUI {
     // Wait for rules to actually finish loading before picking the
     // config. `stateManager:rulesLoaded` fires after the worker
     // confirms rules + snapshot are ready, which is when
-    // `staticData.flash_panel` becomes authoritative.
-    const readyHandler = async () => {
-      this.eventBus.unsubscribe('stateManager:rulesLoaded', readyHandler);
-      await this._initializeAdapter();
-    };
-    this.eventBus.subscribe('stateManager:rulesLoaded', readyHandler);
+    // `staticData.flash_panel` becomes authoritative. The
+    // subscription is PERMANENT: rulesLoaded fires again on every
+    // preset switch (and staticDataCache is replaced before it
+    // publishes), so the panel can re-initialize when the newly
+    // loaded rules wire a different flash game — e.g. the app boots
+    // on the fallback preset and the user then loads a flash-game
+    // preset through the UI.
+    this._rulesLoadedHandler = () => { this._onRulesLoaded(); };
+    this.eventBus.subscribe('stateManager:rulesLoaded', this._rulesLoadedHandler);
 
     // Fast path: if rules were already loaded before this panel
     // was constructed (e.g. created by a layout change after
@@ -121,13 +124,57 @@ export class FlashPanelUI {
     // game_name is populated in staticDataCache alongside
     // flash_panel, so it's a reliable "rules ready" signal.
     if (stateManager.getStaticData?.()?.game_name) {
-      this.eventBus.unsubscribe('stateManager:rulesLoaded', readyHandler);
-      this._initializeAdapter();
+      this._onRulesLoaded();
     }
   }
 
   getRootElement() {
     return this.rootElement;
+  }
+
+  /**
+   * Runs on every stateManager:rulesLoaded (and once at construction
+   * when rules were already loaded). The first call initializes;
+   * later calls handle preset switches: when the loaded rules'
+   * flash_panel wiring differs from the one this panel initialized
+   * against, tear the embed down and re-initialize. Panels pinned via
+   * componentState paths ignore preset switches.
+   */
+  _onRulesLoaded() {
+    const fp = stateManager.getStaticData?.()?.flash_panel ?? null;
+    const key = JSON.stringify(fp);
+    if (!this.isInitialized) {
+      this._lastFlashPanelKey = key;
+      this._initializeAdapter();
+      return;
+    }
+    if (this.componentState.configPath || this.componentState.swfPath
+        || this.componentState.wasmPath) {
+      return;
+    }
+    if (key === this._lastFlashPanelKey) return;
+    this._lastFlashPanelKey = key;
+    this._panelLog('rules changed — reinitializing');
+    this._teardownForReinit();
+    this._initializeAdapter();
+  }
+
+  _teardownForReinit() {
+    if (this.adapter) {
+      this.adapter.detach();
+      this.adapter = null;
+    }
+    if (this._teleportUnsub) {
+      this._teleportUnsub();
+      this._teleportUnsub = null;
+    }
+    this.swfContainer.innerHTML = '';
+    this.teleportRow.style.display = 'none';
+    this.gameConfig = null;
+    this.configPath = this.componentState.configPath || null;
+    this.swfPath = this.componentState.swfPath || null;
+    this.wasmPath = this.componentState.wasmPath || null;
+    this.isInitialized = false;
   }
 
   _createBaseUI() {
@@ -347,7 +394,10 @@ export class FlashPanelUI {
     const [w, h] = this.gameConfig.stage_size || [480, 480];
     this._embedWasmIframe(w, h);
 
-    this.adapter = new WasmBridgeAdapter({
+    // Local handle so the awaits below can detect a teardown/reinit
+    // (preset switch) racing this flow — a stale flow must not touch
+    // the panel or the replacement adapter.
+    const adapter = new WasmBridgeAdapter({
       config: this.gameConfig,
       flashObjectId: this.flashObjectId,
       stateManager,
@@ -355,17 +405,21 @@ export class FlashPanelUI {
       eventBus: this.eventBus,
       log: (msg, cls) => this._panelLog(msg, cls),
     });
+    this.adapter = adapter;
 
     try {
       this._setStatus('loading wasm page…');
-      await this.adapter.waitForShim(30000);
+      await adapter.waitForShim(30000);
+      if (this.adapter !== adapter) return;
       this._setStatus('click ▶ Start in the game');
       this._panelLog('wasm page loaded — click ▶ Start in the game to boot it');
       // Callbacks appear only after the user starts the game; wait
       // generously rather than timing out under them.
-      await this.adapter.waitForBridge(10 * 60 * 1000);
+      await adapter.waitForBridge(10 * 60 * 1000);
+      if (this.adapter !== adapter) return;
       this._panelLog('bridge callbacks ready');
     } catch (err) {
+      if (this.adapter !== adapter) return;
       this._panelLog(`bridge not ready: ${err.message}`, 'error');
       this._setStatus('bridge timeout');
       return;
@@ -373,12 +427,14 @@ export class FlashPanelUI {
 
     // Hook state reports before configure so the baseline reads that
     // follow it are seen (and suppressed) by the adapter.
-    this.adapter.installStateHook();
-    const result = this.adapter.configureBridge();
+    adapter.installStateHook();
+    const result = adapter.configureBridge();
     this._panelLog(`configure: ${result}`);
     this._setStatus('configured');
-    this.adapter.attach();
-    setTimeout(() => this._verifyWasmBridgeConfigured(), 1000);
+    adapter.attach();
+    setTimeout(() => {
+      if (this.adapter === adapter) this._verifyWasmBridgeConfigured();
+    }, 1000);
   }
 
   _verifyWasmBridgeConfigured() {
@@ -592,6 +648,10 @@ export class FlashPanelUI {
 
   destroy() {
     log('info', '[FlashPanelUI] Destroying');
+    if (this._rulesLoadedHandler) {
+      this.eventBus.unsubscribe('stateManager:rulesLoaded', this._rulesLoadedHandler);
+      this._rulesLoadedHandler = null;
+    }
     if (this.adapter) {
       this.adapter.detach();
       this.adapter = null;

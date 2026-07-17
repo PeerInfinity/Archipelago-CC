@@ -78,10 +78,27 @@ export class WasmBridgeAdapter extends FlashBridgeAdapter {
   async waitForShim(maxMs) {
     const start = Date.now();
     while (Date.now() - start < maxMs) {
+      if (this._cancelled) throw new Error('adapter detached');
       if (this._getBridge()) return true;
       await new Promise((r) => setTimeout(r, 100));
     }
     throw new Error(`__swfBridge shim did not appear within ${maxMs}ms`);
+  }
+
+  // Same probe loop as the inherited version, plus the cancellation
+  // check — the wasm flow waits up to minutes for the user's Start
+  // click, and a preset switch must be able to abort that wait (a
+  // replacement iframe reuses the same element id, so a stale loop
+  // would otherwise resolve against the NEW game page).
+  async waitForBridge(maxMs) {
+    const start = Date.now();
+    while (Date.now() - start < maxMs) {
+      if (this._cancelled) throw new Error('adapter detached');
+      const el = this._getFlash();
+      if (el) return el;
+      await new Promise((r) => setTimeout(r, 100));
+    }
+    throw new Error(`bridge did not become ready within ${maxMs}ms`);
   }
 
   /**
@@ -114,6 +131,7 @@ export class WasmBridgeAdapter extends FlashBridgeAdapter {
   }
 
   detach() {
+    this._cancelled = true;
     if (this._pushTimer) {
       clearInterval(this._pushTimer);
       this._pushTimer = null;

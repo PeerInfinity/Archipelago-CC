@@ -47,8 +47,13 @@ if (!existsSync(join(ARTIFACT, 'game.html'))
 
 // mode=flash: the flashPanel module is enabled in modules-flash.json
 // (disabled in the default module config) and the default layout
-// already carries a "Flash Game" tab.
-const URL = 'http://localhost:8000/frontend/?mode=flash&game=seedling&seed=1';
+// already carries a "Flash Game" tab. No ?game param on purpose: the
+// app boots on its fallback preset and the script switches to the
+// seedling preset afterwards, covering the panel's reinit-on-preset-
+// switch path (the flow a user takes when picking the preset in the
+// UI rather than the URL).
+const URL = 'http://localhost:8000/frontend/?mode=flash';
+const SEEDLING_RULES = './presets/seedling/AP_14089154938208861744/AP_14089154938208861744_rules.json';
 
 const browser = await chromium.launch({
     args: [
@@ -170,6 +175,16 @@ await waitFor('Flash Game tab activated', () => page.evaluate(() => {
     tab.click();
     return true;
 }));
+
+// ── reinit-on-preset-switch: fallback preset first, then seedling ──
+check('panel idle on the fallback preset',
+    (await panelStatus()) === 'no game configured',
+    `status="${await panelStatus()}"`);
+await page.evaluate(async (src) => {
+    const { default: proxy } = await import('./modules/stateManager/stateManagerProxySingleton.js');
+    const rules = await fetch(src).then((r) => r.json());
+    await proxy.loadRules(rules, { playerId: 1 }, src);
+}, SEEDLING_RULES);
 
 // ── acceptance 2: handshake ─────────────────────────────────────────
 await waitFor('wasm iframe mounted', async () =>
