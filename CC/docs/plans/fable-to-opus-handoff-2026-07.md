@@ -490,6 +490,30 @@ Inputs already settled — do not re-derive:
 - **v0 victory** = reach zone 2 — the portal is pit-gated, so it exercises
   the full iron→furnace→anvil→bridge chain.
 
+## 5b. Cross-game resource sharing + consumable pool (arc opened 2026-07-17, post-dates this doc)
+
+Plan of record: *(NewDocs)* `cross-game-consumable-pool-plan.md` (D1–D10 +
+S1–S8 ALL RULED 2026-07-17). Memory: `project_cross_game_consumables`.
+**R1 (sharing contract + resourceChannels module + all four mana legs) +
+R2 (omsiSubstrateWrapper + mana channel + v0 victory) + P1 (item channels:
+sharing.items declarations, jta Fork 1.12 `window.grantItem`, omsi
+bridge-direct `addResource` arrival handler, D4 wipe verified both sides)
+are COMPLETE and pushed.** Next in order:
+
+1. **P2 — award schedules + randomization**: PLANNING pass first (S2
+   schedule-representation design + S4 safe-to-randomize censuses per
+   game), then implementation. Kickoff prompt ready: *(NewDocs)*
+   `cross-game-p2-kickoff-prompt.md`. The omsi carrier naturally FOLLOWS
+   the omsi XML Phase-6 executable-rewards arc (§5-adjacent; not started —
+   view-subscribe refactor first); the JtA half does not block on it.
+2. **X1 — maze consumable tiles** (independent of P2's randomization;
+   needs only the grant bus, which is live): new tile type → compile
+   classification → sidecar → pickup dispatch → grant event; maze-only
+   always/never bot-collect setting (S6); mana-refill tiles = optional
+   stretch (S5).
+3. **X2 — hardening** (S4-census-driven logic-inertness enforcement;
+   balancing-aware placement aspiration).
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
