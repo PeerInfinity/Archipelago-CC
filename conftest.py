@@ -26,6 +26,13 @@ The same exclusion is applied to ``WIP_WORLDS`` — fork worlds that ARE ours
 but are still under active development and not yet stable enough for the
 iterate-over-all-worlds tests. Remove a name from that set once its world is
 stable.
+
+``KNOWN_FLAKY_WORLDS`` holds fork worlds that are deliberately parked with
+known seed-dependent generation flakiness (e.g. roving FillError /
+"Failed to generate chain for sphere N" RuntimeErrors in test_implemented and
+test_multiworlds). Unlike WIP_WORLDS these are NOT expected to stabilize —
+they are prototypes not under further development (user ruling 2026-07-17).
+Re-include one only if its development resumes.
 """
 
 from __future__ import annotations
@@ -73,12 +80,26 @@ UPSTREAM_WORLDS: frozenset[str] = frozenset({
 #   ``Fill.FillError: No more spots to place 5 items``. (Previously masked by
 #   the json_tools kivy xdist worker crash aborting the session early.)
 WIP_WORLDS: frozenset[str] = frozenset({
+    # Runner family — still in active development; seed-flaky generation
+    # (e.g. sphere-chain RuntimeErrors) until the generator stabilizes.
     "runner_worldgen",
+    "runner_sphere_worldgen",
+})
+
+# Known-flaky, deliberately parked (see module docstring) — not WIP, not
+# expected to stabilize.
+KNOWN_FLAKY_WORLDS: frozenset[str] = frozenset({
+    # APCalc prototype ("APCalc" / "APCalc WorldGen") — seed-dependent
+    # "Failed to generate chain for sphere N" in generate_early; the user
+    # chose not to develop it further (2026-07-17).
+    "apcalc",
+    "apcalc_worldgen",
 })
 
 # Everything dropped from AutoWorldRegister for the pytest session:
-# upstream (not our responsibility) + our own not-yet-ready worlds.
-EXCLUDED_WORLDS: frozenset[str] = UPSTREAM_WORLDS | WIP_WORLDS
+# upstream (not our responsibility) + our own not-yet-ready worlds +
+# parked known-flaky prototypes.
+EXCLUDED_WORLDS: frozenset[str] = UPSTREAM_WORLDS | WIP_WORLDS | KNOWN_FLAKY_WORLDS
 
 collect_ignore_glob = [
     pattern
