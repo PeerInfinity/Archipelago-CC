@@ -1768,10 +1768,12 @@ export class LoopState {
   }
 
   /**
-   * True when the current action's sourceRegion is a maze substrate
-   * region with manaEnabled — i.e. one that wants to handle the
-   * action via tile-by-tile walking instead of the queue's flat
-   * tick-progress-to-100 model.
+   * True when the current action's sourceRegion belongs to a substrate
+   * that declares the loop-action-delegation capability
+   * (sharing.mana.loopActionDelegation in its registry entry — maze
+   * today) and the region has manaEnabled — i.e. one that wants to
+   * handle the action via tile-by-tile walking instead of the queue's
+   * flat tick-progress-to-100 model.
    *
    * Reads procgenPlayer.getRegionInfo via centralRegistry to avoid
    * a hard dep. Returns false in standalone / non-procgen contexts.
@@ -1788,7 +1790,9 @@ export class LoopState {
     } catch {
       info = null;
     }
-    return info?.substrate === 'maze' && info?.manaEnabled === true;
+    const entry = info?.substrate ? substrateRegistry.get(info.substrate) : null;
+    return entry?.sharing?.mana?.loopActionDelegation === true
+      && info?.manaEnabled === true;
   }
 
   /**

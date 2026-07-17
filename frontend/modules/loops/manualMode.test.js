@@ -438,11 +438,18 @@ describe('Per-region manual mode (Manual checkbox)', () => {
     });
 
     it('substrate delegation is suppressed for manual-checked regions', () => {
-        // Delegation requires substrate 'maze' + manaEnabled.
+        // Delegation requires a registry-declared delegation capability
+        // (maze's sharing.mana.loopActionDelegation) + manaEnabled.
         try { centralRegistry.publicFunctions.get('procgenPlayer')?.delete('getRegionInfo'); } catch { /* ignore */ }
         centralRegistry.registerPublicFunction('procgenPlayer', 'getRegionInfo', () => (
             { substrate: 'maze', label: 'Maze', manaEnabled: true }
         ));
+        if (!substrateRegistry.has('maze')) {
+            substrateRegistry.register({
+                id: 'maze',
+                sharing: { mana: { loopActionDelegation: true } },
+            });
+        }
         gs.updatePath('mazeRegion', 'go', 'Menu');
         gs.addLocationCheck('Loc M', 'mazeRegion');
         loopState.currentActionIndex = 1;

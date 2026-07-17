@@ -2,6 +2,17 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { LoopState } from './loopState.js';
 import { GameState } from '../gameState/state.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+
+// The delegation check reads the substrate's registry-declared
+// loop-action-delegation capability (sharing.mana.loopActionDelegation)
+// — register the maze declaration the way mazeRoomLibrary does.
+if (!substrateRegistry.has('maze')) {
+    substrateRegistry.register({
+        id: 'maze',
+        sharing: { mana: { loopActionDelegation: true } },
+    });
+}
 
 function makeBus() {
   const events = [];

@@ -122,6 +122,16 @@ export const substrateRegistryEntry = Object.freeze({
         customQueues: true,
     }),
 
+    // Cross-substrate sharing: participates in the shared-mana channel
+    // (per-tile charging via the resourceChannels helpers), and asks
+    // the loops queue to DELEGATE actions on manaEnabled maze regions
+    // to the substrate's own tile-by-tile walker (the capability the
+    // loops _shouldDelegateCurrentAction check reads — formerly a
+    // hard-coded substrate === 'maze' branch).
+    sharing: Object.freeze({
+        mana: Object.freeze({ loopActionDelegation: true }),
+    }),
+
     // Build-time adapters
     generateRegionCore: spatialCore,
     placeFromItems: itemBasedPlacer,

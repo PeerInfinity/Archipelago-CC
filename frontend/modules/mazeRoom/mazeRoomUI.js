@@ -38,7 +38,11 @@ import { MazeRoomVisualizer } from './mazeRoomVisualizer.js';
 import { BIOMES, DEFAULT_BIOME_ID } from './mazeRoomBiomeLibrary.js';
 import { getGameStateSingleton } from '../gameState/singleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
-import { applyRegionXpCostEffect } from '../loops/xpFormulas.js';
+import {
+    xpAdjustedCost,
+    chargeMana,
+    fireLoopResetTeleport,
+} from '../resourceChannels/resourceChannelsLibrary.js';
 import { findPath, stepsToActions } from './mazeAutopather.js';
 import { SubstrateInactiveOverlay } from '../shared/substrateInactiveOverlay.js';
 import { substrateRegistryEntry } from './mazeRoomLibrary.js';
@@ -1036,13 +1040,8 @@ export class MazeRoomUI {
     }
 
     _applyXpReduction(cost) {
-        if (!this.currentRegionId) return cost;
         try {
-            const gs = getGameStateSingleton?.();
-            if (!gs) return cost;
-            const xpData = gs.getRegionXP(this.currentRegionId);
-            const effect = this._getCostDataManager()?.getRegionXpEffect?.(this.currentRegionId);
-            return applyRegionXpCostEffect(cost, xpData?.level ?? 0, effect);
+            return xpAdjustedCost(cost, this.currentRegionId);
         } catch {
             return cost;
         }
@@ -1082,9 +1081,15 @@ export class MazeRoomUI {
         const cost = isUncheckedLocation
             ? this._locationTileCost(locationName)
             : this._perTileMoveCost();
-        gs.deductMana(cost);
-        if (this.currentRegionId) gs.addRegionXP(this.currentRegionId, cost);
-        if (gs.getCurrentMana() <= 0) {
+        // Charges the shared pool + awards 1:1 region XP via the
+        // resourceChannels helper; depletion is reported back so the
+        // maze-specific pre-reset cleanup in _fireLoopReset runs first.
+        const { depleted } = chargeMana({
+            substrateId: 'maze',
+            amount: cost,
+            regionId: this.currentRegionId,
+        });
+        if (depleted) {
             this._fireLoopReset();
         }
         return cost;
@@ -1107,9 +1112,7 @@ export class MazeRoomUI {
      */
     _fireLoopReset() {
         const gs = getGameStateSingleton?.();
-        const dispatcher = this.apis?.dispatcher;
         if (!gs) return;
-        const startRegion = this._resolveStartRegion(gs);
         const sourceRegion = this.currentRegionId;
 
         // Notify loops first — clear the queue-driven tracking and
@@ -1126,28 +1129,11 @@ export class MazeRoomUI {
         // continue into the new region after teleport.
         this._visualizer?.stop?.();
 
-        gs.triggerLoopReset();
-        if (startRegion && dispatcher?.publish) {
-            dispatcher.publish('user:regionMove', {
-                sourceRegion,
-                targetRegion: startRegion,
-                fromReset: true,
-                updatePath: false,
-            }, { initialTarget: 'bottom' });
-        }
-    }
-
-    _resolveStartRegion(gs) {
-        try {
-            const fn = centralRegistry.getPublicFunction?.(
-                'procgenPlayer', 'getResolvedStartRegion',
-            );
-            const resolved = fn?.();
-            if (resolved) return resolved;
-        } catch {
-            // procgenPlayer not loaded; fall through.
-        }
-        return gs.startRegions?.[0] ?? null;
+        fireLoopResetTeleport({
+            sourceRegion,
+            dispatcher: this.apis?.dispatcher,
+            dispatchOpts: { initialTarget: 'bottom' },
+        });
     }
 
     /**
