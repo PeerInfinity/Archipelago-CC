@@ -564,9 +564,18 @@ system with the omsi XML migration plan (which now imports THIS plan's mechanics
 two-layer model, gate triple, perturbation canary; see the omsi plan §8). Three
 small items attach to the JtA side:
 
-**Rider D-a — standalone `?dataset=<url>` boot.** Deferred at v1 (§3.2/§7); the
-`loadGameData` hook already exists, this is boot-path wiring. Attach to any Phase-D
-rung rather than its own project.
+**Rider D-a — standalone `?dataset=<url>` boot. DONE 2026-07-16 (fork `4b8ae1a`,
+attached to rung 2).** `maybeLoadDatasetFromUrl` in game.ts: after the normal
+bootstrap (standalone only — managed mode ignores the param, the bridge owns
+dataset loading there), fetch the URL and feed it through the same path as
+`window.loadGameData` (full validation, dataset-keyed save slot; the brief
+vanilla boot never touches the dataset's save). Failures keep the vanilla game
+and surface console + alert. Also exposed `window.getLoadedDatasetId`. Guard:
+`scripts/procgen/verify-jta-dataset-url-boot.mjs` (two local servers, the
+dataset one cross-origin + CORS; asserts vanilla boot absent the param, themed
+zone-0 task + dataset id with it, alert + vanilla-intact on a broken URL).
+Byte-inert leg: native parity 4/4 + UI parity zero DOM diff re-ran green
+against the D-a fork commit.
 
 **Rider D-b — new-stack in-UI dataset import/export.** The only existing UI
 import/export (`jtaGameDataPanelUI.js`) belongs to the retired jta-randomizer stack
