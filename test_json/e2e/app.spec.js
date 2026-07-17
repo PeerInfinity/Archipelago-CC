@@ -71,9 +71,15 @@ test.describe('Application End-to-End Tests', () => {
       console.log(`  - profiling: ${testProfiling}`);
     }
     console.log(`PW DEBUG: URL: ${APP_URL}`);
-    // Wait until network activity has ceased, giving SPA more time to initialize
-    await page.goto(APP_URL, { waitUntil: 'networkidle', timeout: 60000 });
-    console.log('PW DEBUG: Page navigation complete (network idle).');
+    // waitUntil 'load', not 'networkidle': modes that auto-start their
+    // tests on load (test-substrates) generate continuous network from
+    // the moment the app boots, so a 500ms network gap may never occur
+    // and the networkidle gate times out while the in-app suite passes
+    // (observed 4x). Phase 1 below already polls the
+    // __playwrightTestsStarted__ flag, which is the real readiness
+    // signal.
+    await page.goto(APP_URL, { waitUntil: 'load', timeout: 60000 });
+    console.log('PW DEBUG: Page navigation complete (load).');
 
     // Phase 1: Wait for tests to START (short timeout - fail fast if page doesn't load)
     console.log(
