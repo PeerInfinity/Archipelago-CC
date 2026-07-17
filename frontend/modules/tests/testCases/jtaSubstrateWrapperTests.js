@@ -34,6 +34,7 @@
 
 import { registerTest } from '../testRegistry.js';
 import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
+import { centralRegistry } from '../../../app/core/centralRegistry.js';
 import settingsManager from '../../../app/core/settingsManager.js';
 import { JTA_PERK_ITEM_NAMES } from '../../jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
 import {
@@ -47,6 +48,7 @@ import {
     JTA_LOCTEST_PERK_ITEM,
     waitForJtaActive,
     moveToRegion,
+    resetJtaSaveAndReload,
     gameStateFn,
     readPool,
     readLoopResetCount,
@@ -819,6 +821,98 @@ registerTest({
                + 'own-world perk — restored when its task is re-run, with its AP location '
                + 'still checked and no duplicate item — while the foreign perk persists.',
     testFunction: prestigePerkRegrant,
+    category: 'JtA substrate',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
+
+/** The fork's inventory count for an item enum, via getFullState. */
+function itemCount(win, itemEnum) {
+    const entry = win.getFullState?.()?.items?.find((it) => it.type === itemEnum);
+    return entry?.count ?? 0;
+}
+
+async function crossSubstrateItemGrant(testController) {
+    let win = await enterJtaRegion(testController);
+    if (!win) return testController.getOverallResult();
+
+    // Fresh save: earlier tests in the run share the substrate save
+    // slot, and the D4 leg below asserts the reset's EXACT keep
+    // formula on a game with no keep-modifying perks.
+    win = await resetJtaSaveAndReload(testController);
+    testController.reportCondition('fresh save reloaded', !!win);
+    if (!win) return testController.getOverallResult();
+
+    const grantFn = centralRegistry.getPublicFunction?.('resourceChannels', 'grantItem');
+    testController.assertEqual('resourceChannels grantItem public fn present', true,
+        typeof grantFn === 'function');
+    if (typeof grantFn !== 'function') return testController.getOverallResult();
+
+    // Declaration ↔ live-catalog cross-check (the drift guard): the
+    // registry's getTypes must equal the fork's getAllItems() names
+    // minus the artifacts.
+    const declared = substrateRegistry.get('jta')?.sharing?.items?.getTypes?.() ?? [];
+    const catalog = win.getAllItems();
+    const liveShareable = catalog.filter((it) => !it.isArtifact).map((it) => it.name).sort();
+    testController.assertEqual('declared types match the live fork catalog minus artifacts',
+        JSON.stringify(liveShareable), JSON.stringify([...declared].sort()));
+
+    const itemName = declared.includes('Food') ? 'Food' : declared[0];
+    const itemEnum = catalog.find((it) => it.name === itemName)?.type;
+    const artifactName = catalog.find((it) => it.isArtifact)?.name;
+    testController.log(`granting '${itemName}' (enum ${itemEnum}); artifact probe '${artifactName}'`);
+    const before = itemCount(win, itemEnum);
+
+    // Grants from the host and from a fellow substrate both deposit.
+    testController.assertEqual('grant from host accepted', true,
+        grantFn({ to: 'jta', from: 'host', itemType: itemName, count: 2 }));
+    const hostLanded = await eventually(testController,
+        () => itemCount(win, itemEnum) === before + 2,
+        `'${itemName}' count reached ${before + 2} after the host grant`);
+    testController.assertEqual('host grant landed in the fork inventory', true, hostLanded);
+
+    testController.assertEqual('grant from omsi accepted', true,
+        grantFn({ to: 'jta', from: 'omsi', itemType: itemName, count: 1 }));
+    const omsiLanded = await eventually(testController,
+        () => itemCount(win, itemEnum) === before + 3,
+        `'${itemName}' count reached ${before + 3} after the omsi grant`);
+    testController.assertEqual('cross-substrate grant landed in the fork inventory', true, omsiLanded);
+
+    // Rejections: the bus refuses undeclared types (artifacts are not
+    // declared), and the fork hook itself refuses artifacts even when
+    // called directly (defense in depth).
+    testController.assertEqual('bus rejects an artifact grant', false,
+        grantFn({ to: 'jta', from: 'host', itemType: artifactName, count: 1 }));
+    testController.assertEqual('bus rejects an unknown type', false,
+        grantFn({ to: 'jta', from: 'host', itemType: 'No Such Item', count: 1 }));
+    testController.assertEqual('fork hook rejects an artifact directly', false,
+        win.grantItem(artifactName)?.success === true);
+    testController.assertEqual('rejections left the inventory unchanged',
+        before + 3, itemCount(win, itemEnum));
+
+    // D4 made visible: the game's OWN energy reset applies its native
+    // keep formula to granted items — a fresh game holds no
+    // keep-modifying perks and the granted item is not a note item, so
+    // the reset wipes it entirely.
+    testController.log('Triggering the game\'s own energy reset…');
+    win.doEnergyReset();
+    const wiped = await eventually(testController,
+        () => itemCount(win, itemEnum) === 0,
+        'granted items wiped by the native energy reset (keep formula)');
+    testController.assertEqual('granted items live by the native reset semantics', true, wiped);
+
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'jta-cross-substrate-item-grant',
+    name: 'JtA: cross-substrate item grants land in the fork inventory',
+    description: 'Grants a consumable to \'jta\' over the resourceChannels bus (from '
+               + '\'host\' and from \'omsi\'); the bridge deposits via the fork\'s '
+               + 'grantItem hook (Fork 1.12). Asserts the declaration matches the live '
+               + 'catalog minus artifacts, artifact/unknown grants are rejected at both '
+               + 'layers, and the game\'s own energy reset wipes granted items (D4).',
+    testFunction: crossSubstrateItemGrant,
     category: 'JtA substrate',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });

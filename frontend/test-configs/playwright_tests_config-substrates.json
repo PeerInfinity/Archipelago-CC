@@ -116,6 +116,11 @@
       "category": "JtA substrate"
     },
     {
+      "id": "jta-cross-substrate-item-grant",
+      "enabled": true,
+      "category": "JtA substrate"
+    },
+    {
       "id": "omsi-out-of-mana-loop-reset",
       "enabled": true,
       "category": "Omsi substrate"

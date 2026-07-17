@@ -788,6 +788,35 @@ function _handlePrestige() {
 }
 
 /**
+ * Cross-substrate consumable arrival (crossSubstrate:itemGranted, the
+ * resourceChannels grant bus). The bus already validated the grant
+ * against the registry's sharing.items declaration; the bridge filters
+ * on its own id and deposits via the fork's grantItem hook (Fork
+ * 1.12). From there the item lives by the game's OWN economy — the
+ * energy-reset keep formula applies to it like any natively-awarded
+ * item; no bridge-side bookkeeping. A missing hook (older fork build)
+ * drops the grant with a warning — surfaced, never queued.
+ */
+function _handleItemGranted(data) {
+    if (data?.to !== 'jta') return;
+    const count = data.count ?? 1;
+    if (typeof _w.grantItem !== 'function') {
+        log('warn', `item grant '${data.itemType}' x${count} dropped: fork build has no grantItem hook`);
+        return;
+    }
+    try {
+        const res = _w.grantItem(data.itemType, count);
+        if (res?.success) {
+            log('debug', `granted ${count}x '${data.itemType}' from '${data.from}'`);
+        } else {
+            log('warn', `item grant '${data.itemType}' x${count} rejected by fork:`, res?.error);
+        }
+    } catch (err) {
+        log('error', `grantItem('${data.itemType}') threw:`, err);
+    }
+}
+
+/**
  * Detect a prestige. The fork's energy-reset callback fires for doEnergyReset
  * and doPrestige alike, and its payload carries no prestige flag, so compare
  * prestige_count across calls. Seeds itself on the first call (a bridge that
@@ -1234,6 +1263,10 @@ async function main() {
     // (performTask / useItem / getStatus / getFullState / getItemDefs /
     // get+set automation mode). Replies go back as jta:queueActionResult.
     _client.subscribeEventBus('jta:queueAction', _handleQueueAction);
+
+    // Cross-substrate consumable grants (resourceChannels bus) — every
+    // bridge sees the event; this one deposits grants addressed to 'jta'.
+    _client.subscribeEventBus('crossSubstrate:itemGranted', _handleItemGranted);
 
     // AP state changed (item received here or elsewhere): grant any newly
     // received perk items. Perks are global, so this runs regardless of the
