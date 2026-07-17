@@ -149,6 +149,11 @@
       "id": "omsi-victory-start-journey",
       "enabled": true,
       "category": "Omsi substrate"
+    },
+    {
+      "id": "omsi-cross-substrate-item-grant",
+      "enabled": true,
+      "category": "Omsi substrate"
     }
   ]
 }

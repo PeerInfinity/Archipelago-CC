@@ -17,6 +17,17 @@
  *   4. The game's own doEnergyReset wipes the granted items (fresh
  *      save, no keep-modifying perks ⇒ keep formula wipes to 0).
  *
+ * Omsi leg (omsi_substrate_test preset):
+ *   1. The static declared type list matches the engine's numeric
+ *      resourcesTemplate entries.
+ *   2. grantItem({to:'omsi', from:'host'|'jta', ...}) lands in the
+ *      engine's resources bag via its own addResource — WITHOUT the
+ *      player entering the omsi region (eager delivery; the bag is
+ *      global engine state).
+ *   3. Boolean-flag / unknown-type grants are rejected at the bus.
+ *   4. The game's own loop restart (restartLoop → resetResources)
+ *      wipes the granted resources — the D4 native clearing.
+ *
  * Prereq: dev server on :8000 (python -m http.server 8000).
  * Run: node scripts/procgen/verify-item-channels.mjs
  */
@@ -25,6 +36,7 @@ import { execSync } from 'node:child_process';
 
 const JTA_URL = 'http://localhost:8000/frontend/?game=jta_substrate_test&seed=1';
 const JTA_REGION = 'The Village';
+const OMSI_URL = 'http://localhost:8000/frontend/?game=omsi_substrate_test&seed=1';
 const TIMEOUT_MS = 60000;
 
 for (const sub of ['journey-to-ascension', 'omsi-loops']) {
@@ -171,8 +183,85 @@ async function verifyJtaLeg() {
     console.log('  JTA LEG: OK');
 }
 
+// ────────────────────────────────────────────────────────────────
+// Omsi leg
+// ────────────────────────────────────────────────────────────────
+async function verifyOmsiLeg() {
+    console.log('━━ omsi item leg:', OMSI_URL);
+    const { page, logs } = await makePage(OMSI_URL);
+
+    const omsiEval = (code) => page.evaluate((c) => {
+        const win = document.querySelector('iframe.omsisw-iframe')?.contentWindow;
+        if (!win) throw new Error('omsi iframe not mounted');
+        return win.eval(c);
+    }, code);
+
+    // __omsiBridge is set at the END of the bridge's main(), after all
+    // subscriptions — its presence means the crossSubstrate handler is
+    // live. Deliberately NO region entry: the resources bag is global
+    // engine state and the handler is not activity-gated (eager
+    // delivery over a pending queue).
+    await waitFor(page, logs, 'omsi engine booted + bridge connected', () => page.evaluate(() => {
+        const win = document.querySelector('iframe.omsisw-iframe')?.contentWindow;
+        if (!win?.__omsiBridge) return false;
+        try {
+            return win.eval('typeof addResource === "function" && typeof resources === "object"');
+        } catch { return false; }
+    }), 45000);
+    console.log('  ✓ engine booted; bridge connected (no region entry — eager delivery)');
+
+    // (1) declaration ↔ engine numerics.
+    const declared = await page.evaluate(async () => {
+        const { substrateRegistry } = await import('./modules/shared/procgen/substrateRegistry.js');
+        return [...(substrateRegistry.get('omsi')?.sharing?.items?.types ?? [])];
+    });
+    const liveNumerics = await omsiEval(
+        'Object.keys(resourcesTemplate).filter((k) => typeof resourcesTemplate[k] === "number")');
+    if (JSON.stringify([...declared].sort()) !== JSON.stringify([...liveNumerics].sort())) {
+        fail(`declared types drift from the engine's numeric bag:\n  declared=${JSON.stringify(declared)}\n  live=${JSON.stringify(liveNumerics)}`);
+    }
+    console.log(`  ✓ declaration matches the engine's numeric resources bag (${declared.length} types)`);
+
+    // (2) grants from host and from a fellow substrate.
+    const goldBefore = await omsiEval('resources.gold');
+    if (await grant(page, { to: 'omsi', from: 'host', itemType: 'gold', count: 5 }) !== true) {
+        fail('host grant not accepted by the bus');
+    }
+    await waitFor(page, logs, `resources.gold ${goldBefore + 5} after host grant`, async () =>
+        await omsiEval('resources.gold') === goldBefore + 5, 10000);
+    if (await grant(page, { to: 'omsi', from: 'jta', itemType: 'gold', count: 2 }) !== true) {
+        fail('jta-sourced grant not accepted by the bus');
+    }
+    await waitFor(page, logs, `resources.gold ${goldBefore + 7} after jta grant`, async () =>
+        await omsiEval('resources.gold') === goldBefore + 7, 10000);
+    console.log(`  ✓ grants landed: gold ${goldBefore} → ${goldBefore + 7} (from host + from jta)`);
+
+    // (3) rejections.
+    if (await grant(page, { to: 'omsi', from: 'host', itemType: 'glasses', count: 1 }) !== false) {
+        fail('boolean-flag grant was not rejected');
+    }
+    if (await grant(page, { to: 'omsi', from: 'host', itemType: 'noSuchResource', count: 1 }) !== false) {
+        fail('unknown-type grant was not rejected');
+    }
+    if (await omsiEval('resources.gold') !== goldBefore + 7) fail('rejected grants changed the bag');
+    if (await omsiEval('resources.glasses') !== false) fail('boolean flag was touched');
+    console.log('  ✓ boolean-flag + unknown-type grants rejected at the bus');
+
+    // (4) D4: the game's own loop restart wipes the per-loop bag.
+    await omsiEval('IdleLoopsManaged.restartLoop()');
+    await waitFor(page, logs, 'granted gold wiped by the native loop reset', async () =>
+        await omsiEval('resources.gold') === 0, 15000);
+    console.log('  ✓ native loop reset wiped the granted resources (resetResources, D4)');
+
+    const errors = logs.filter((l) => l.startsWith('[pageerror]'));
+    if (errors.length > 0) fail('page errors:\n  ' + errors.join('\n  '));
+    await page.close();
+    console.log('  OMSI LEG: OK');
+}
+
 try {
     await verifyJtaLeg();
+    await verifyOmsiLeg();
     await browser.close();
     console.log('\nVERIFY ITEM CHANNELS: OK');
     process.exit(0);

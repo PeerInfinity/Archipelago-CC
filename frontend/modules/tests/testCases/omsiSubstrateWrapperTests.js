@@ -34,6 +34,8 @@
  */
 
 import { registerTest } from '../testRegistry.js';
+import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
+import { centralRegistry } from '../../../app/core/centralRegistry.js';
 import {
     OMSI_TEST_PRESET_PATH,
     OMSI_TEST_REGION,
@@ -404,6 +406,85 @@ registerTest({
                + 'per-loop budget (250) as substrate:resourceBonus; asserts it '
                + 'lands in gameState\'s per-substrate max-mana accumulator.',
     testFunction: nativeBudgetRaisesPool,
+    category: 'Omsi substrate',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
+
+async function crossSubstrateItemGrant(testController) {
+    const win = await enterOmsiRegion(testController);
+    if (!win) return testController.getOverallResult();
+
+    const grantFn = centralRegistry.getPublicFunction?.('resourceChannels', 'grantItem');
+    testController.assertEqual('resourceChannels grantItem public fn present', true,
+        typeof grantFn === 'function');
+    if (typeof grantFn !== 'function') return testController.getOverallResult();
+
+    // Declaration ↔ engine cross-check (the drift guard): the static
+    // registry list must equal the NUMERIC entries of the live engine's
+    // resourcesTemplate.
+    const declared = [...(substrateRegistry.get('omsi')?.sharing?.items?.types ?? [])];
+    const liveNumerics = omsiEval(
+        'Object.keys(resourcesTemplate).filter((k) => typeof resourcesTemplate[k] === "number")');
+    testController.assertEqual('declared types match the engine\'s numeric resources bag',
+        JSON.stringify([...liveNumerics].sort()), JSON.stringify(declared.sort()));
+
+    const goldBefore = omsiEval('resources.gold');
+    testController.log(`resources.gold before grants: ${goldBefore}`);
+
+    // Grants from the host and from a fellow substrate both deposit
+    // through the engine's own addResource.
+    testController.assertEqual('grant from host accepted', true,
+        grantFn({ to: 'omsi', from: 'host', itemType: 'gold', count: 5 }));
+    const hostLanded = await eventually(testController,
+        () => omsiEval('resources.gold') === goldBefore + 5,
+        `resources.gold reached ${goldBefore + 5} after the host grant`);
+    testController.assertEqual('host grant landed in the resources bag', true, hostLanded);
+
+    testController.assertEqual('grant from jta accepted', true,
+        grantFn({ to: 'omsi', from: 'jta', itemType: 'gold', count: 2 }));
+    const jtaLanded = await eventually(testController,
+        () => omsiEval('resources.gold') === goldBefore + 7,
+        `resources.gold reached ${goldBefore + 7} after the jta grant`);
+    testController.assertEqual('cross-substrate grant landed in the resources bag', true, jtaLanded);
+
+    // Rejections: boolean bag entries are unlock flags (undeclared),
+    // unknown types and non-positive counts are refused by the bus.
+    testController.assertEqual('bus rejects a boolean-flag grant', false,
+        grantFn({ to: 'omsi', from: 'host', itemType: 'glasses', count: 1 }));
+    testController.assertEqual('bus rejects an unknown resource', false,
+        grantFn({ to: 'omsi', from: 'host', itemType: 'noSuchResource', count: 1 }));
+    testController.assertEqual('bus rejects a non-positive count', false,
+        grantFn({ to: 'omsi', from: 'host', itemType: 'gold', count: 0 }));
+    testController.assertEqual('rejections left the bag unchanged',
+        goldBefore + 7, omsiEval('resources.gold'));
+    testController.assertEqual('boolean flag untouched', false, omsiEval('resources.glasses'));
+
+    // D4 made visible: the game's OWN loop reset wipes the per-loop
+    // resources bag — granted consumables evaporate with it, by design.
+    // restartLoop → restart() → resetResources(); the bridge's
+    // no-progress guard keeps this idle restart from ping-ponging a
+    // host loop reset.
+    testController.log('Restarting the loop via IdleLoopsManaged.restartLoop()…');
+    omsiEval('IdleLoopsManaged.restartLoop()');
+    const wiped = await eventually(testController,
+        () => omsiEval('resources.gold') === 0,
+        'granted gold wiped by the native loop reset');
+    testController.assertEqual('granted items live by the native reset semantics', true, wiped);
+
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'omsi-cross-substrate-item-grant',
+    name: 'Omsi: cross-substrate item grants land in the resources bag',
+    description: 'Grants gold to \'omsi\' over the resourceChannels bus (from '
+               + '\'host\' and from \'jta\'); the bridge deposits via the engine\'s '
+               + 'own addResource. Asserts the declared type list matches the '
+               + 'engine\'s numeric resourcesTemplate entries, boolean/unknown '
+               + 'grants are rejected, and the game\'s own loop reset wipes the '
+               + 'granted resources (D4 native clearing).',
+    testFunction: crossSubstrateItemGrant,
     category: 'Omsi substrate',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });

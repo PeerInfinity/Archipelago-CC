@@ -313,6 +313,38 @@ function _checkVictoryProgress() {
 }
 
 // ────────────────────────────────────────────────────────────────
+// Cross-substrate item arrivals
+// ────────────────────────────────────────────────────────────────
+
+/**
+ * Deposit a cross-substrate consumable grant (crossSubstrate:itemGranted,
+ * the resourceChannels grant bus) into the engine's own resources bag.
+ * The bus already validated the grant against the registry's
+ * sharing.items declaration (the numeric bag entries), and addResource
+ * is the engine's ONLY resource mutation path — a grant is exactly a
+ * native gain, and resetResources wipes it at the next loop reset (the
+ * ruled native-clearing semantics, not a bug). addResource queues a
+ * render update but managed mode never drains the queue on its own, so
+ * nudge view.update() for an idle game (the clock's rate-limited
+ * update covers a running one).
+ */
+function _handleItemGranted(data) {
+    if (data?.to !== 'omsi') return;
+    const count = data.count ?? 1;
+    if (typeof addResource !== 'function') {
+        log('warn', `item grant '${data.itemType}' x${count} dropped: engine addResource not available`);
+        return;
+    }
+    try {
+        addResource(data.itemType, count);
+        _engineView()?.update();
+        log('debug', `granted ${count}x '${data.itemType}' from '${data.from}'`);
+    } catch (err) {
+        log('error', `addResource('${data.itemType}') threw:`, err);
+    }
+}
+
+// ────────────────────────────────────────────────────────────────
 // Mana mirroring
 // ────────────────────────────────────────────────────────────────
 
@@ -615,6 +647,13 @@ async function main() {
 
     // Region activation events (from procgenPlayer).
     _client.subscribeEventBus('omsi:loadRegion', _handleLoadRegion);
+
+    // Cross-substrate consumable grants (resourceChannels bus) — every
+    // bridge sees the event; this one deposits grants addressed to
+    // 'omsi'. Deliberately not gated on _isActive: the resources bag
+    // is global engine state, and grants must land while the player
+    // stands elsewhere (eager delivery, no queue).
+    _client.subscribeEventBus('crossSubstrate:itemGranted', _handleItemGranted);
 
     // Game-side loop-reset callback (driver restart() dispatches it).
     const m = _managed();
