@@ -673,18 +673,18 @@
             }
           ],
           "jta_dataset_ref": {
-            "dataset_id": "synthetic-sunken-meridian-s1-z3-cb8d048c",
+            "dataset_id": "synthetic-sunken-meridian-s1-z3-d689c6ac",
             "schema_version": 1
           },
           "jta_dataset": {
             "schema_version": 1,
-            "dataset_id": "synthetic-sunken-meridian-s1-z3-cb8d048c",
+            "dataset_id": "synthetic-sunken-meridian-s1-z3-d689c6ac",
             "provenance": {
               "generator": "generateDataset.js",
-              "fork_save_version": "Fork 1.9",
+              "fork_save_version": "Fork 1.10",
               "seed": 1,
               "params_hash": "759b9cfc",
-              "content_hash": "cb8d048c"
+              "content_hash": "d689c6ac"
             },
             "theme": {
               "title": "The Sunken Meridian",
@@ -1361,9 +1361,15 @@
               {
                 "name": "Pearled Blood",
                 "icon": "👁️",
-                "tooltip": "+50 max energy, applied once when the perk is granted (tryAddPerk).",
-                "effects": [],
-                "behavior": "starting_energy_flat",
+                "tooltip": "+50 max energy when gained.",
+                "effects": [
+                  {
+                    "kind": "starting_energy",
+                    "flat": 50,
+                    "scope": "run"
+                  }
+                ],
+                "behavior": null,
                 "theme": null
               },
               {
@@ -1565,9 +1571,16 @@
               {
                 "name": "Barnacle Lungs",
                 "icon": "🐚 II",
-                "tooltip": "Max energy grows each reset by (current_zone+1) * ENERGETIC_MEMORY_MULT.",
-                "effects": [],
-                "behavior": "starting_energy_growth",
+                "tooltip": "On each energy reset, max energy grows by (zone + 1) x 0.1.",
+                "effects": [
+                  {
+                    "kind": "starting_energy",
+                    "per_reset": 0.1,
+                    "curve": "linear",
+                    "scope": "run"
+                  }
+                ],
+                "behavior": null,
                 "theme": null
               },
               {
@@ -3159,7 +3172,7 @@
             }
           ],
           "jta_dataset_ref": {
-            "dataset_id": "synthetic-sunken-meridian-s1-z3-cb8d048c",
+            "dataset_id": "synthetic-sunken-meridian-s1-z3-d689c6ac",
             "schema_version": 1
           },
           "exits": [
@@ -3217,7 +3230,7 @@
             }
           ],
           "jta_dataset_ref": {
-            "dataset_id": "synthetic-sunken-meridian-s1-z3-cb8d048c",
+            "dataset_id": "synthetic-sunken-meridian-s1-z3-d689c6ac",
             "schema_version": 1
           },
           "exits": [

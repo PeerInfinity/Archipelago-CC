@@ -38,6 +38,19 @@ export const EFFECT_KINDS = Object.freeze({
   // are entangled with attunement/spark doubles). Magnitude priors in
   // effectMagnitudes.js.
   xp_all_mult: { fields: ["mult", "scope"] },
+  // Perk-granted starting-energy bonus (Phase-D rung 2). Two variants,
+  // exactly one of flat / per_reset per entry: `flat` adds that much max
+  // energy once when the perk is granted (fork EFFECTS.starting_energy_flat
+  // _run, the tryAddPerk position); `per_reset` (+ curve "linear") grows max
+  // energy by (current_zone + 1) * per_reset on every energy reset while the
+  // perk is held (EFFECTS.starting_energy_growth_run, the
+  // calcEnergeticMemoryGain base term). Perk entries only; scope "run" and
+  // curve "linear" only — the prestige-side starting-energy keys stay
+  // slotted (TranscendantMemory: impure, auto-grants perk slot 19 AND
+  // squares the growth gain, reserving curve "square"; DivineSupremacy:
+  // triply impure — its flat also multiplies mandatoryish task speed and
+  // doubles spark gain; Energized is the repeatable *_level family).
+  starting_energy: { fields: ["flat", "per_reset", "curve", "scope"] },
 });
 
 // Perk behavior slots: key -> { slot, enumName, description }.
@@ -48,10 +61,9 @@ export const PERK_BEHAVIORS = Object.freeze({
     slot: 3, enumName: "Amulet",
     description: "Unlocks the automation system (engine + UI gates).",
   },
-  starting_energy_flat: {
-    slot: 4, enumName: "EnergySpell",
-    description: "+50 max energy, applied once when the perk is granted (tryAddPerk).",
-  },
+  // starting_energy_flat (EnergySpell slot 4) MIGRATED to the declarative
+  // starting_energy effect kind, flat variant (Phase-D rung 2, Fork 1.10) —
+  // the slot is free; the vanilla exemplar lives in effectMagnitudes.js.
   time_compression_minor: {
     slot: 7, enumName: "MinorTimeCompression",
     description: "Single-tick tasks drain 0.2x energy.",
@@ -68,10 +80,14 @@ export const PERK_BEHAVIORS = Object.freeze({
     slot: 16, enumName: "ReflectionsOnTheJourney",
     description: "Energy drain scaled by zone-completion history (calcReflectionsOnTheJourneyMult).",
   },
-  starting_energy_growth: {
-    slot: 19, enumName: "EnergeticMemory",
-    description: "Max energy grows each reset by (current_zone+1) * ENERGETIC_MEMORY_MULT.",
-  },
+  // starting_energy_growth (EnergeticMemory slot 19) MIGRATED to the
+  // declarative starting_energy effect kind, per_reset variant (Phase-D
+  // rung 2, Fork 1.10) — the slot is free. NOTE the residual coupling: the
+  // still-slotted TranscendantMemory prestige unlock auto-grants PERK SLOT
+  // 19 by enum identity (and squares the growth gain, whichever perks carry
+  // it) — a dataset that places a plain perk at slot 19 gets that perk
+  // auto-granted by TranscendantMemory; coherent under slot semantics, but
+  // generators should know. Vanilla exemplar in effectMagnitudes.js.
   spark_gain_mult_a: {
     slot: 22, enumName: "Awakening",
     description: "Divine spark gain x(1 + AWAKENING_DIVINE_SPARK_MULT).",

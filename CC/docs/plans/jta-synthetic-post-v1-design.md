@@ -755,6 +755,37 @@ fork release).** §4.2 order; per-rung gates: native byte-identity, dataset
 lockstep with re-expressed vanilla fixture, magnitude-perturbation canary.
 Magnitude-range protocol (§4.3) runs per kind BEFORE the generator varies it.
 
+**Rung 2 (starting_energy) SHIPPED 2026-07-16 — Fork 1.10 (submodule `e5422e2`),
+perk-side keys only.** The two PERK behavior keys migrated (EnergySpell flat 50 /
+EnergeticMemory per-reset 0.1 → `effects[] {kind: starting_energy, flat |
+per_reset + curve: "linear", scope: "run"}`; fork
+`EFFECTS.starting_energy_flat_run` at the tryAddPerk position,
+`starting_energy_growth_run` as the calcEnergeticMemoryGain base term — gains
+SUM across carriers, the square applies to the total). **Deviation from the
+§4.1 absorb list, discovered at the audit (the rung-1 lesson applied BEFORE
+coding): the prestige-side pair stays slotted** — TranscendantMemory is impure
+(auto-grants perk slot 19 by enum identity AND squares the growth gain; `curve:
+"square"` reserved for it) and DivineSupremacy is triply impure (flat energy +
+FINAL_PRESTIGE_MULT on mandatoryish task speed + spark ×2; `scope: "prestige"`
+reserved). They migrate when their entangled kinds do. Residual coupling
+recorded in datasetBehaviors.js: TranscendantMemory grants PERK SLOT 19
+whatever a dataset placed there. Both migrated sites still route through
+`modifyMaxEnergy`, so the `jta_starting_energy_bonus` accumulator (host
+energy-bonus sync) observes identical deltas — the bonus-sync leg needed no
+change and its in-app test is a rung gate. `effectMagnitudes.js` generalized to
+multi-param kinds (`exemplars[].params` + per-field `priors`; both
+starting_energy priors are degenerate single-exemplar spans until a §4.3
+sweep); the `structure.effects.shuffle` lever re-places entries preserving
+their variant, re-sampling prior'd fields (identical rng consumption for
+single-magnitude kinds). Canary extended: doubled flat + doubled per_reset +
+novel flat placement alongside the rung-1 xp legs. HARNESS FIX shipped with
+this rung: run-parity's parent read STALE child result JSONs when a child
+died before writing (every child had FATALed while the summary said PASS) —
+children's results are now pre-deleted per run and a non-zero exit fails the
+scenario regardless of the file. Note the harness gates the COMMITTED fork
+(`git archive HEAD`), so the fork commit precedes the parity gates in the
+rung workflow.
+
 **Rung 1 (xp_all_mult) SHIPPED 2026-07-16 — Fork 1.9 (submodule `5cba354`), run
 scope only.** The two in-run slots migrated (Writing ×1.5 / GazedBeyondTheVeil ×2
 → `effects[] {kind: xp_all_mult, mult, scope: "run"}`; runtime `EFFECTS`

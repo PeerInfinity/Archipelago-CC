@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "dataset_id": "vanilla-fork-1.9-c9cedf39",
+  "dataset_id": "vanilla-fork-1.10-4ed6ab25",
   "provenance": {
     "generator": "export-vanilla-dataset.mjs",
-    "fork_save_version": "Fork 1.9",
+    "fork_save_version": "Fork 1.10",
     "seed": null,
     "params_hash": null,
-    "content_hash": "c9cedf39"
+    "content_hash": "4ed6ab25"
   },
   "theme": {
     "title": "Journey to Ascension",
@@ -5275,8 +5275,14 @@
       "name": "Energetic Spell",
       "icon": "⚡️",
       "tooltip": "Increases starting 🔋Energy by 50",
-      "effects": [],
-      "behavior": "starting_energy_flat",
+      "effects": [
+        {
+          "kind": "starting_energy",
+          "flat": 50,
+          "scope": "run"
+        }
+      ],
+      "behavior": null,
       "theme": null
     },
     {
@@ -5479,8 +5485,15 @@
       "name": "Energetic Memory",
       "icon": "💭",
       "tooltip": "On each Energy Reset, increase max 🔋Energy by the current Zone / 10<br>So Zone 9 gives 0.9 max 🔋Energy",
-      "effects": [],
-      "behavior": "starting_energy_growth",
+      "effects": [
+        {
+          "kind": "starting_energy",
+          "per_reset": 0.1,
+          "curve": "linear",
+          "scope": "run"
+        }
+      ],
+      "behavior": null,
       "theme": null
     },
     {

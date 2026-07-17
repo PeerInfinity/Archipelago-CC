@@ -274,6 +274,20 @@
             "scope": { "enum": ["run"], "description": "Perk entries only. \"prestige\" is reserved until the prestige-side XP multipliers migrate (entangled with attunement/spark doubles)." }
           },
           "required": ["kind", "mult", "scope"]
+        },
+        {
+          "properties": {
+            "kind": { "const": "starting_energy" },
+            "flat": { "type": "number", "exclusiveMinimum": 0, "description": "Flat variant: added to max energy once when the carrying perk is granted (the tryAddPerk position). Exactly one of flat / per_reset." },
+            "per_reset": { "type": "number", "exclusiveMinimum": 0, "description": "Growth variant: on every energy reset, max energy grows by (current_zone + 1) * per_reset while the carrying perk is held (the calcEnergeticMemoryGain base term)." },
+            "curve": { "enum": ["linear"], "description": "per_reset variant only. \"square\" is reserved — it is the compiled TranscendantMemory modifier (which squares the total growth gain and auto-grants perk slot 19), not yet migrated." },
+            "scope": { "enum": ["run"], "description": "Perk entries only. \"prestige\" is reserved until the prestige-side starting-energy keys migrate (TranscendantMemory / DivineSupremacy are impure — entangled with other engine branches)." }
+          },
+          "required": ["kind", "scope"],
+          "oneOf": [
+            { "required": ["flat"], "not": { "required": ["per_reset"] } },
+            { "required": ["per_reset"], "not": { "required": ["flat"] } }
+          ]
         }
       ]
     },

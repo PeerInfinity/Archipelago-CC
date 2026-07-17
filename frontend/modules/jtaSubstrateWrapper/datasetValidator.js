@@ -183,6 +183,37 @@ export function validateJtaDataset(dataset) {
         if (e.scope !== "run") {
           err(`${where}.effects[${k}] xp_all_mult: scope must be "run" (prestige scope not yet migrated)`);
         }
+      } else if (kind === "starting_energy") {
+        // Phase-D rung 2: perk entries only, scope "run", exactly one of
+        // flat (once on perk grant) / per_reset (per-energy-reset growth,
+        // curve "linear"). The prestige-side starting-energy keys stay
+        // compiled behaviors (TranscendantMemory reserves curve "square";
+        // DivineSupremacy reserves scope "prestige").
+        if (rosterLabel !== "perks") {
+          err(`${where}.effects[${k}] starting_energy: only perk entries may carry it`);
+        }
+        const hasFlat = e.flat !== undefined;
+        const hasGrowth = e.per_reset !== undefined;
+        if (hasFlat === hasGrowth) {
+          err(`${where}.effects[${k}] starting_energy: exactly one of flat / per_reset is required`);
+        } else if (hasFlat) {
+          if (!(typeof e.flat === "number" && Number.isFinite(e.flat) && e.flat > 0)) {
+            err(`${where}.effects[${k}] starting_energy: flat must be a positive finite number`);
+          }
+          if (e.curve !== undefined) {
+            err(`${where}.effects[${k}] starting_energy: curve only applies to the per_reset variant`);
+          }
+        } else {
+          if (!(typeof e.per_reset === "number" && Number.isFinite(e.per_reset) && e.per_reset > 0)) {
+            err(`${where}.effects[${k}] starting_energy: per_reset must be a positive finite number`);
+          }
+          if (e.curve !== undefined && e.curve !== "linear") {
+            err(`${where}.effects[${k}] starting_energy: curve must be "linear" ("square" is the compiled TranscendantMemory modifier, not yet migrated)`);
+          }
+        }
+        if (e.scope !== "run") {
+          err(`${where}.effects[${k}] starting_energy: scope must be "run" (prestige scope not yet migrated)`);
+        }
       }
     });
   };

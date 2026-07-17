@@ -43,7 +43,7 @@
 //   node CC/scripts/jta-parity/run-parity.mjs --scenario scripted --dataset \
 //       --selftest-perturb-dataset   # canary: must DIVERGE to pass
 //   node CC/scripts/jta-parity/run-parity.mjs --scenario scripted --dataset \
-//       --selftest-perturb-effect    # Phase-D magnitude canary (xp_all_mult)
+//       --selftest-perturb-effect    # Phase-D magnitude canary (all migrated kinds)
 //   node CC/scripts/jta-parity/run-parity.mjs --list
 import { execSync, spawnSync } from "node:child_process";
 import fs from "node:fs";
@@ -952,27 +952,40 @@ async function childMain(scenarioName, maxTicksOverride, perturbAtTick, datasetO
       delete datasetDoc.provenance?.content_hash;
     }
     if (datasetOpts.perturbEffect) {
-      // Phase-D rung-1 magnitude canary: a NON-vanilla xp_all_mult magnitude
-      // AND a non-vanilla placement must drive the dataset engine — proves
-      // the migrated effect reads the DATA path, not the dead compiled
-      // default. Double the first exemplar's mult and add the effect to a
-      // perk that vanilla never gave one (perks[0], acquired early by the
+      // Phase-D magnitude canary: NON-vanilla magnitudes AND a non-vanilla
+      // placement of every migrated kind must drive the dataset engine —
+      // proves each migrated effect reads the DATA path, not the dead
+      // compiled default. Double each exemplar's magnitude and add fresh
+      // placements on perks vanilla never gave one (early-acquired by the
       // scripted scenario, so divergence lands within the canary budget).
-      const carrier = datasetDoc.perks.find((p) =>
-        (p?.effects ?? []).some((e) => e.kind === "xp_all_mult"));
-      if (!carrier) {
-        console.error("FATAL: no xp_all_mult effect in the dataset to perturb (pre-rung-1 fixture?)");
+      // Divergence comes from the early-game legs (xp_all_mult +
+      // starting_energy flat); the starting_energy per_reset doubling is
+      // late-game (EnergeticMemory) and is caught by the layer-1
+      // runtime_data.effects static sweep instead.
+      const findCarrier = (pred) => datasetDoc.perks.find((p) => (p?.effects ?? []).some(pred));
+      const xpCarrier = findCarrier((e) => e.kind === "xp_all_mult");
+      const flatCarrier = findCarrier((e) => e.kind === "starting_energy" && e.flat !== undefined);
+      const growthCarrier = findCarrier((e) => e.kind === "starting_energy" && e.per_reset !== undefined);
+      if (!xpCarrier || !flatCarrier || !growthCarrier) {
+        console.error("FATAL: missing migrated-effect exemplar(s) in the dataset to perturb (pre-rung-2 fixture?)");
         process.exit(2);
       }
-      const eff = carrier.effects.find((e) => e.kind === "xp_all_mult");
-      eff.mult *= 2;
+      const xpEff = xpCarrier.effects.find((e) => e.kind === "xp_all_mult");
+      xpEff.mult *= 2;
+      const flatEff = flatCarrier.effects.find((e) => e.kind === "starting_energy");
+      flatEff.flat *= 2;
+      const growthEff = growthCarrier.effects.find((e) => e.kind === "starting_energy");
+      growthEff.per_reset *= 2;
       const fresh = datasetDoc.perks.find((p) =>
         p && !p.placeholder && Array.isArray(p.effects)
-        && !p.effects.some((e) => e.kind === "xp_all_mult"));
+        && !p.effects.some((e) => e.kind === "xp_all_mult" || e.kind === "starting_energy"));
       fresh.effects.push({ kind: "xp_all_mult", mult: 3, scope: "run" });
+      fresh.effects.push({ kind: "starting_energy", flat: 25, scope: "run" });
       console.log(
-        `[${scenarioName}] SELFTEST: xp_all_mult mult -> ${eff.mult} on "${carrier.name}"; ` +
-          `added xp_all_mult x3 to "${fresh.name}"`
+        `[${scenarioName}] SELFTEST: xp_all_mult mult -> ${xpEff.mult} on "${xpCarrier.name}"; ` +
+          `starting_energy flat -> ${flatEff.flat} on "${flatCarrier.name}"; ` +
+          `per_reset -> ${growthEff.per_reset} on "${growthCarrier.name}"; ` +
+          `added xp_all_mult x3 + starting_energy flat 25 to "${fresh.name}"`
       );
       datasetDoc.dataset_id = `${datasetDoc.dataset_id}-effect-perturbed`;
       delete datasetDoc.provenance?.content_hash;
@@ -1104,18 +1117,23 @@ function parentMain(only, datasetOpts) {
   }
   const runChild = (name, extraArgs, resultName, label) => {
     console.log(`\n=== ${label} ===`);
+    // Remove any prior run's result BEFORE spawning: a child that dies on a
+    // FATAL (e.g. loadGameData rejection) exits without writing its result
+    // file, and reading a stale one here silently reported the PREVIOUS
+    // session's PASS (bit 2026-07-16, rung 2 — every child had FATALed).
+    const f = path.join(resultsDir, `${resultName}.json`);
+    fs.rmSync(f, { force: true });
     const r = spawnSync(
       process.execPath,
       [fileURLToPath(import.meta.url), "--scenario", name, ...dsArgs, ...extraArgs],
       { stdio: "inherit" }
     );
     let detail = null;
-    const f = path.join(resultsDir, `${resultName}.json`);
     if (fs.existsSync(f)) detail = JSON.parse(fs.readFileSync(f, "utf8"));
     summary.push({
       scenario: resultName,
       exitCode: r.status,
-      pass: detail?.pass ?? false,
+      pass: r.status === 0 && (detail?.pass ?? false),
       canary: detail?.canary ?? false,
       ticks: detail?.ticks,
       resets: detail?.resets,

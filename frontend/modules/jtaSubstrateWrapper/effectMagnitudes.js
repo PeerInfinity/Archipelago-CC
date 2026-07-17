@@ -3,11 +3,18 @@
 //
 // Each migrated kind records its VANILLA EXEMPLARS — the magnitudes and
 // roster positions the compiled branches carried before migration — and the
-// sampling prior the generator draws from when it places the effect freely.
-// The prior starts as the vanilla exemplar span; the §4.3 one-knob
-// perturbation protocol widens it to a VALIDATED range when novel
-// territory is explored (update the `prior` field with the evidence, and
-// cite the sweep).
+// sampling priors the generator draws from when it places the effect freely.
+// Priors start as the vanilla exemplar span; the §4.3 one-knob perturbation
+// protocol widens them to a VALIDATED range when novel territory is
+// explored (update the `priors` field with the evidence, and cite the
+// sweep).
+//
+// Shape (generalized for multi-param kinds at rung 2):
+//   exemplars[].params — the effect entry's payload fields verbatim (the
+//     exporter emits `{kind, ...params, scope}`);
+//   priors — per numeric field the generator may re-sample when it
+//     re-places an entry of this kind; fields absent here (e.g. `curve`)
+//     are preserved verbatim on re-placement.
 //
 // Companion to datasetBehaviors.js (the not-yet-migrated slot keys): when a
 // behavior key migrates, its slot entry moves here as exemplars. The
@@ -24,11 +31,29 @@ export const EFFECT_MAGNITUDES = Object.freeze({
   xp_all_mult: Object.freeze({
     scope: "run",
     exemplars: Object.freeze([
-      Object.freeze({ roster: "perks", slot: 1, enumName: "Writing", mult: 1.5 }),
-      Object.freeze({ roster: "perks", slot: 33, enumName: "GazedBeyondTheVeil", mult: 2 }),
+      Object.freeze({ roster: "perks", slot: 1, enumName: "Writing", params: Object.freeze({ mult: 1.5 }) }),
+      Object.freeze({ roster: "perks", slot: 33, enumName: "GazedBeyondTheVeil", params: Object.freeze({ mult: 2 }) }),
     ]),
     // Sampling prior = the vanilla exemplar span. Not yet widened by a
     // perturbation-ladder sweep.
-    prior: Object.freeze({ min: 1.5, max: 2 }),
+    priors: Object.freeze({ mult: Object.freeze({ min: 1.5, max: 2 }) }),
+  }),
+  // Perk-granted starting-energy bonus (scope "run"; fork
+  // EFFECTS.starting_energy_flat_run / starting_energy_growth_run).
+  // Migrated from perk behavior keys starting_energy_flat /
+  // starting_energy_growth (Fork 1.10). Two variants — flat (once on perk
+  // grant) and per_reset + curve "linear" (per-energy-reset growth) — each
+  // with a single vanilla exemplar, so both priors are degenerate spans
+  // until a perturbation-ladder sweep widens them.
+  starting_energy: Object.freeze({
+    scope: "run",
+    exemplars: Object.freeze([
+      Object.freeze({ roster: "perks", slot: 4, enumName: "EnergySpell", params: Object.freeze({ flat: 50 }) }),
+      Object.freeze({ roster: "perks", slot: 19, enumName: "EnergeticMemory", params: Object.freeze({ per_reset: 0.1, curve: "linear" }) }),
+    ]),
+    priors: Object.freeze({
+      flat: Object.freeze({ min: 50, max: 50 }),
+      per_reset: Object.freeze({ min: 0.1, max: 0.1 }),
+    }),
   }),
 });

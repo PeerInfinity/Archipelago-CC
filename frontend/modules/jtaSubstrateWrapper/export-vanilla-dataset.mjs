@@ -165,7 +165,7 @@ for (const [kind, spec] of Object.entries(EFFECT_MAGNITUDES)) {
     if (value === undefined) fail(`EFFECT_MAGNITUDES.${kind}: enum member ${ex.enumName} no longer exists in the build`);
     if (value !== ex.slot) fail(`EFFECT_MAGNITUDES.${kind}: slot ${ex.slot} != build enum value ${value} for ${ex.enumName}`);
     const list = migratedPerkEffects.get(ex.slot) ?? [];
-    list.push({ kind, mult: ex.mult, scope: spec.scope });
+    list.push({ kind, ...ex.params, scope: spec.scope });
     migratedPerkEffects.set(ex.slot, list);
   }
 }

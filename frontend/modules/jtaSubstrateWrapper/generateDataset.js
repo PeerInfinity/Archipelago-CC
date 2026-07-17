@@ -649,15 +649,25 @@ export function generateJtaDataset({ seed, profile, vanilla, params = {} }) {
     if (e.kind === "skill_speed") return { kind: "skill_speed", skill: mapFixtureSkill(e.skill), add: e.add };
     if (e.kind === "energy_on_consume") return { kind: "energy_on_consume", base_amount: e.base_amount };
     if (e.kind === "xp_all_mult") return { kind: "xp_all_mult", mult: e.mult, scope: e.scope };
+    if (e.kind === "starting_energy") {
+      return e.flat !== undefined
+        ? { kind: "starting_energy", flat: e.flat, scope: e.scope }
+        : { kind: "starting_energy", per_reset: e.per_reset, curve: e.curve ?? "linear", scope: e.scope };
+    }
     throw new Error(`unknown effect kind ${e.kind}`);
   });
 
-  // Functional tooltip for a migrated declarative effect (behavior slots use
+  // Functional tooltip for migrated declarative effects (behavior slots use
   // their key's description; declarative entries otherwise fall back to the
-  // engine's skill-modifier text, which xp_all_mult has none of).
+  // engine's skill-modifier text, which the migrated kinds have none of).
   const effectTooltip = (effects) => {
-    const xp = (effects ?? []).find((e) => e.kind === "xp_all_mult");
-    return xp ? `All skill XP x${xp.mult}.` : null;
+    const parts = [];
+    for (const e of effects ?? []) {
+      if (e.kind === "xp_all_mult") parts.push(`All skill XP x${e.mult}.`);
+      else if (e.kind === "starting_energy" && e.flat !== undefined) parts.push(`+${e.flat} max energy when gained.`);
+      else if (e.kind === "starting_energy") parts.push(`On each energy reset, max energy grows by (zone + 1) x ${e.per_reset}.`);
+    }
+    return parts.length ? parts.join("<br>") : null;
   };
 
   // -- perks (mirror the fixture roster slot-for-slot; behavior slots keep
@@ -679,18 +689,22 @@ export function generateJtaDataset({ seed, profile, vanilla, params = {} }) {
   // -- migrated-effect placement lever (Phase-D rung 1) --
   // structure.effects.shuffle moves each listed migrated kind off its
   // mirrored slots onto rng-chosen eligible perks (live, non-behavior, not
-  // already carrying the kind) with magnitudes sampled from the kind's
-  // prior (effectMagnitudes.js). The default (null) consumes ZERO rng —
-  // mirror placement, mirrored magnitudes.
+  // already carrying the kind). Each removed entry is re-placed with its
+  // variant fields preserved (e.g. starting_energy flat vs per_reset+curve)
+  // and every field that has a prior (effectMagnitudes.js) re-sampled. The
+  // default (null) consumes ZERO rng — mirror placement, mirrored
+  // magnitudes. (rng draws: one shuffle per kind + one draw per re-placed
+  // prior'd field, in removal order — for single-magnitude kinds this is
+  // the same consumption pattern the rung-1 lever had.)
   if (structure.effects != null) {
     for (const kind of structure.effects.shuffle) {
       const spec = EFFECT_MAGNITUDES[kind];
-      let count = 0;
+      const removed = [];
       for (const p of perks) {
         if (p.placeholder || !Array.isArray(p.effects)) continue;
         const kept = p.effects.filter((e) => e.kind !== kind);
         if (kept.length < p.effects.length) {
-          count += p.effects.length - kept.length;
+          removed.push(...p.effects.filter((e) => e.kind === kind));
           p.effects = kept;
           if (!p.behavior) p.tooltip = effectTooltip(kept);
         }
@@ -698,17 +712,22 @@ export function generateJtaDataset({ seed, profile, vanilla, params = {} }) {
       const eligible = perks.filter((p) =>
         !p.placeholder && !p.behavior
         && !(p.effects ?? []).some((e) => e.kind === kind));
-      if (eligible.length < count) {
-        throw new Error(`structure.effects: only ${eligible.length} eligible perk slots for ${count} ${kind} effect(s)`);
+      if (eligible.length < removed.length) {
+        throw new Error(`structure.effects: only ${eligible.length} eligible perk slots for ${removed.length} ${kind} effect(s)`);
       }
       const shuffled = rng.shuffle([...eligible]);
-      for (let k = 0; k < count; k++) {
+      removed.forEach((entry, k) => {
         const p = shuffled[k];
-        const mult = Math.round(
-          (spec.prior.min + rng.next() * (spec.prior.max - spec.prior.min)) * 100) / 100;
-        p.effects = [...(p.effects ?? []), { kind, mult, scope: spec.scope }];
+        const placed = { ...entry };
+        for (const [field, prior] of Object.entries(spec.priors)) {
+          if (placed[field] !== undefined) {
+            placed[field] = Math.round(
+              (prior.min + rng.next() * (prior.max - prior.min)) * 100) / 100;
+          }
+        }
+        p.effects = [...(p.effects ?? []), placed];
         if (!p.behavior) p.tooltip = p.tooltip ?? effectTooltip(p.effects);
-      }
+      });
     }
   }
 
