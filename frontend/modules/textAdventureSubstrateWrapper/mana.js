@@ -20,8 +20,17 @@
 
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { getGameStateSingleton } from '../gameState/singleton.js';
-import { applyRegionXpCostEffect } from '../loops/xpFormulas.js';
+import {
+    xpAdjustedCost,
+    chargeMana,
+    fireLoopResetTeleport,
+} from '../resourceChannels/resourceChannelsLibrary.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
+
+// Registry id shared with the in-process textAdventureSubstrate (both
+// register the same entry id, guarded; the sharing.mana declaration
+// rides whichever wins).
+const SUBSTRATE_ID = 'text_adventure';
 
 const HEADER_INFO_EVENT = 'textAdventureSubstrateWrapper:headerInfo';
 
@@ -167,15 +176,14 @@ function getRegionMoveCost(name) {
 function deductLocationCheckMana(names) {
     const gs = getGameStateSingleton?.();
     if (!gs) return;
-    const cdm = getCostDataManager();
     for (const name of names) {
-        const baseCost = getLocationCost(name);
-        const xpData = _currentRegionId ? gs.getRegionXP?.(_currentRegionId) : null;
-        const effect = _currentRegionId ? cdm?.getRegionXpEffect?.(_currentRegionId) : undefined;
-        const cost = applyRegionXpCostEffect(baseCost, xpData?.level ?? 0, effect);
-        gs.deductMana(cost);
-        if (_currentRegionId) gs.addRegionXP?.(_currentRegionId, cost);
-        if (gs.getCurrentMana?.() <= 0) {
+        const cost = xpAdjustedCost(getLocationCost(name), _currentRegionId);
+        const { depleted } = chargeMana({
+            substrateId: SUBSTRATE_ID,
+            amount: cost,
+            regionId: _currentRegionId,
+        });
+        if (depleted) {
             fireLoopReset();
             return;
         }
@@ -185,38 +193,24 @@ function deductLocationCheckMana(names) {
 function deductRegionMoveMana(regionName) {
     const gs = getGameStateSingleton?.();
     if (!gs) return;
-    const cdm = getCostDataManager();
-    const baseCost = getRegionMoveCost(regionName);
-    const xpData = gs.getRegionXP?.(regionName);
-    const effect = cdm?.getRegionXpEffect?.(regionName);
-    const cost = applyRegionXpCostEffect(baseCost, xpData?.level ?? 0, effect);
-    gs.deductMana(cost);
-    gs.addRegionXP?.(regionName, cost);
-    if (gs.getCurrentMana?.() <= 0) fireLoopReset();
+    const cost = xpAdjustedCost(getRegionMoveCost(regionName), regionName);
+    const { depleted } = chargeMana({
+        substrateId: SUBSTRATE_ID,
+        amount: cost,
+        regionId: regionName,
+    });
+    if (depleted) fireLoopReset();
 }
 
 function fireLoopReset() {
-    const gs = getGameStateSingleton?.();
-    if (!gs) return;
-    const sourceRegion = _currentRegionId;
-    gs.triggerLoopReset?.();
-    // Resolve the start region via procgenPlayer if available; fall
-    // back to leaving the move undispatched if we can't determine one.
-    let startRegion = null;
-    try {
-        const fn = centralRegistry.getPublicFunction?.('procgenPlayer', 'getResolvedStartRegion');
-        startRegion = fn?.() ?? null;
-    } catch {
-        startRegion = null;
-    }
-    if (startRegion && _dispatcher?.publish) {
-        _dispatcher.publish('user:regionMove', {
-            sourceRegion,
-            targetRegion: startRegion,
-            fromReset: true,
-            updatePath: false,
-        });
-    }
+    // No declared-start fallback here: this leg historically resolves
+    // the teleport target via procgenPlayer only, and leaves the move
+    // undispatched otherwise (the reset itself still fires).
+    fireLoopResetTeleport({
+        sourceRegion: _currentRegionId,
+        dispatcher: _dispatcher,
+        fallbackToDeclaredStart: false,
+    });
 }
 
 function publishHeaderInfo() {

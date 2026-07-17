@@ -62,6 +62,12 @@ export const substrateRegistryEntry = Object.freeze({
         customQueues: false,
     }),
 
+    // Cross-substrate sharing: participates in the shared-mana channel
+    // (both TA mana legs charge through the resourceChannels helpers).
+    sharing: Object.freeze({
+        mana: Object.freeze({}),
+    }),
+
     // Build-time adapters — same as existing. These run host-side
     // during procgen seed generation.
     generateRegionCore: spatialCore,

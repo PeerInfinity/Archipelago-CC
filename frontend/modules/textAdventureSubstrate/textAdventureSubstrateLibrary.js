@@ -55,6 +55,12 @@ export const substrateRegistryEntry = Object.freeze({
         customQueues: false,
     }),
 
+    // Cross-substrate sharing: participates in the shared-mana channel
+    // (both TA mana legs charge through the resourceChannels helpers).
+    sharing: Object.freeze({
+        mana: Object.freeze({}),
+    }),
+
     // Build-time adapters — same as maze. The text panel reads from
     // the same world shape and ignores the tile-grid fields it
     // doesn't render.
