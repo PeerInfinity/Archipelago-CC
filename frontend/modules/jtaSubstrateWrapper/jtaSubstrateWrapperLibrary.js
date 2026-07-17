@@ -486,8 +486,22 @@ export const substrateRegistryEntry = Object.freeze({
     // (substrate:resourceDelta/Bonus/Reset with substrateId 'jta');
     // the resourceChannels router validates them against this
     // declaration.
+    //
+    // items: the shareable consumable types (D2), as display NAMES —
+    // grantPerk's precedent, and what "jta/Fish" namespacing reads as.
+    // Derived from the ACTIVE source document (same source as zoneCount:
+    // dataset worlds rename items via namebanks, so a static list would
+    // drift; the vanilla fixture is regenerated from the fork build).
+    // Behavior-slotted items (the artifacts — `behavior` non-null) are
+    // non-portable and excluded per D2.
     sharing: Object.freeze({
         mana: Object.freeze({}),
+        items: Object.freeze({
+            getTypes: () => (_dataset ?? JTA_VANILLA_DATASET).items
+                .filter((it) => it && it.behavior == null
+                    && typeof it.name === 'string' && it.name.length > 0)
+                .map((it) => it.name),
+        }),
     }),
 
     // Build-time hooks (generateRegionCore / placeFromItems / etc.)

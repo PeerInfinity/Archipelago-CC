@@ -17,10 +17,20 @@ describe('omsi substrate registry entry', () => {
         expect(substrateRegistry.get('omsi')).toBe(substrateRegistryEntry);
     });
 
-    it('declares the shared-mana channel (and only that category)', () => {
-        expect(substrateRegistryEntry.sharing).toEqual({ mana: {} });
-        // R2 scope: the items category stays undeclared until P1.
-        expect(substrateRegistryEntry.sharing.items).toBeUndefined();
+    it('declares the shared-mana channel and the shareable consumables (P1)', () => {
+        expect(Object.keys(substrateRegistryEntry.sharing).sort()).toEqual(['items', 'mana']);
+        expect(substrateRegistryEntry.sharing.mana).toEqual({});
+        // The NUMERIC entries of the engine's resources bag, in template
+        // order (booleans are unlock flags, excluded). The in-app
+        // substrate test cross-checks this list against the live
+        // resourcesTemplate via iframe eval.
+        expect(substrateRegistryEntry.sharing.items.types).toEqual([
+            'gold', 'reputation', 'herbs', 'hide', 'potions',
+            'teamMembers', 'armor', 'blood', 'artifacts', 'favors',
+            'enchantments', 'houses', 'pylons', 'zombie', 'map',
+            'completedMap', 'heart', 'power',
+        ]);
+        expect(new Set(substrateRegistryEntry.sharing.items.types).size).toBe(18);
     });
 
     it('passes register-time sharing validation on a fresh registry', () => {

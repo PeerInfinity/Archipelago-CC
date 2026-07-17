@@ -103,8 +103,27 @@ export const substrateRegistryEntry = Object.freeze({
     // generic channel events (substrate:resourceDelta/Bonus/Reset with
     // substrateId 'omsi'); the resourceChannels router validates them
     // against this declaration.
+    //
+    // items: the shareable consumable types (D2) — the NUMERIC entries
+    // of the engine's per-loop `resources` bag (resourcesTemplate,
+    // saving.js), in template order. The bag literal is engine-static,
+    // so this is a static list; the in-app substrate test cross-checks
+    // it against the live resourcesTemplate to catch drift. Boolean
+    // entries (glasses/supplies/pickaxe/...) are excluded: addResource
+    // ASSIGNS rather than adds them — they are unlock flags, not
+    // consumables. A granted consumable lands via the engine's own
+    // addResource and is wiped by resetResources at the next loop
+    // reset — that is the D4-ruled native clearing, not a bug.
     sharing: Object.freeze({
         mana: Object.freeze({}),
+        items: Object.freeze({
+            types: Object.freeze([
+                'gold', 'reputation', 'herbs', 'hide', 'potions',
+                'teamMembers', 'armor', 'blood', 'artifacts', 'favors',
+                'enchantments', 'houses', 'pylons', 'zombie', 'map',
+                'completedMap', 'heart', 'power',
+            ]),
+        }),
     }),
 
     // --- Zone-based substrate metadata ---
