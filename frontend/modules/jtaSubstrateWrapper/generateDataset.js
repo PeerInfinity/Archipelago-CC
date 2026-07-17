@@ -654,6 +654,11 @@ export function generateJtaDataset({ seed, profile, vanilla, params = {} }) {
         ? { kind: "starting_energy", flat: e.flat, scope: e.scope }
         : { kind: "starting_energy", per_reset: e.per_reset, curve: e.curve ?? "linear", scope: e.scope };
     }
+    if (e.kind === "time_compression") {
+      return e.mult !== undefined
+        ? { kind: "time_compression", mult: e.mult, scope: e.scope }
+        : { kind: "time_compression", single_tick_drain_mult: e.single_tick_drain_mult, scope: e.scope };
+    }
     throw new Error(`unknown effect kind ${e.kind}`);
   });
 
@@ -666,6 +671,8 @@ export function generateJtaDataset({ seed, profile, vanilla, params = {} }) {
       if (e.kind === "xp_all_mult") parts.push(`All skill XP x${e.mult}.`);
       else if (e.kind === "starting_energy" && e.flat !== undefined) parts.push(`+${e.flat} max energy when gained.`);
       else if (e.kind === "starting_energy") parts.push(`On each energy reset, max energy grows by (zone + 1) x ${e.per_reset}.`);
+      else if (e.kind === "time_compression" && e.mult !== undefined) parts.push(`Task speed and energy drain x${e.mult}; single-tick tasks complete all reps in one tick.`);
+      else if (e.kind === "time_compression") parts.push(`Single-tick tasks drain x${e.single_tick_drain_mult} energy; zones with only free tasks left are skipped automatically.`);
     }
     return parts.length ? parts.join("<br>") : null;
   };

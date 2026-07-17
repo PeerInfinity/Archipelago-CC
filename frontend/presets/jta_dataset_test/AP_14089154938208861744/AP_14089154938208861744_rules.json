@@ -673,18 +673,18 @@
             }
           ],
           "jta_dataset_ref": {
-            "dataset_id": "synthetic-sunken-meridian-s1-z3-d689c6ac",
+            "dataset_id": "synthetic-sunken-meridian-s1-z3-9e623056",
             "schema_version": 1
           },
           "jta_dataset": {
             "schema_version": 1,
-            "dataset_id": "synthetic-sunken-meridian-s1-z3-d689c6ac",
+            "dataset_id": "synthetic-sunken-meridian-s1-z3-9e623056",
             "provenance": {
               "generator": "generateDataset.js",
-              "fork_save_version": "Fork 1.10",
+              "fork_save_version": "Fork 1.11",
               "seed": 1,
               "params_hash": "759b9cfc",
-              "content_hash": "d689c6ac"
+              "content_hash": "9e623056"
             },
             "theme": {
               "title": "The Sunken Meridian",
@@ -1408,9 +1408,15 @@
               {
                 "name": "Steady Calm",
                 "icon": "🧭",
-                "tooltip": "Single-tick tasks drain 0.2x energy.",
-                "effects": [],
-                "behavior": "time_compression_minor",
+                "tooltip": "Single-tick tasks drain x0.2 energy; zones with only free tasks left are skipped automatically.",
+                "effects": [
+                  {
+                    "kind": "time_compression",
+                    "single_tick_drain_mult": 0.2,
+                    "scope": "run"
+                  }
+                ],
+                "behavior": null,
                 "theme": null
               },
               {
@@ -1627,9 +1633,15 @@
               {
                 "name": "Coldproof Lungs",
                 "icon": "🔱 II",
-                "tooltip": "Task speed and drain x MAJOR_TIME_COMPRESSION_EFFECT; single-tick tasks complete all reps in one tick.",
-                "effects": [],
-                "behavior": "time_compression_major",
+                "tooltip": "Task speed and energy drain x1.5; single-tick tasks complete all reps in one tick.",
+                "effects": [
+                  {
+                    "kind": "time_compression",
+                    "mult": 1.5,
+                    "scope": "run"
+                  }
+                ],
+                "behavior": null,
                 "theme": null
               },
               {
@@ -3172,7 +3184,7 @@
             }
           ],
           "jta_dataset_ref": {
-            "dataset_id": "synthetic-sunken-meridian-s1-z3-d689c6ac",
+            "dataset_id": "synthetic-sunken-meridian-s1-z3-9e623056",
             "schema_version": 1
           },
           "exits": [
@@ -3230,7 +3242,7 @@
             }
           ],
           "jta_dataset_ref": {
-            "dataset_id": "synthetic-sunken-meridian-s1-z3-d689c6ac",
+            "dataset_id": "synthetic-sunken-meridian-s1-z3-9e623056",
             "schema_version": 1
           },
           "exits": [

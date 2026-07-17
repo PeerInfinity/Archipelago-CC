@@ -214,6 +214,33 @@ export function validateJtaDataset(dataset) {
         if (e.scope !== "run") {
           err(`${where}.effects[${k}] starting_energy: scope must be "run" (prestige scope not yet migrated)`);
         }
+      } else if (kind === "time_compression") {
+        // Phase-D rung 3: perk entries only, scope "run", exactly one of
+        // mult (scale variant — task speed & zone drain ×mult, single-tick
+        // compensated, single-tick tasks complete all reps in one tick) /
+        // single_tick_drain_mult (single-tick variant — single-tick drain
+        // ×value, free zones auto-skipped on reset). The feature unlocks
+        // are declared variant semantics. MasteryOfTime stays a compiled
+        // prestige behavior (auto-grants perk slots 7/23).
+        if (rosterLabel !== "perks") {
+          err(`${where}.effects[${k}] time_compression: only perk entries may carry it`);
+        }
+        const hasScale = e.mult !== undefined;
+        const hasSingleTick = e.single_tick_drain_mult !== undefined;
+        if (hasScale === hasSingleTick) {
+          err(`${where}.effects[${k}] time_compression: exactly one of mult / single_tick_drain_mult is required`);
+        } else if (hasScale) {
+          if (!(typeof e.mult === "number" && Number.isFinite(e.mult) && e.mult > 0)) {
+            err(`${where}.effects[${k}] time_compression: mult must be a positive finite number`);
+          }
+        } else {
+          if (!(typeof e.single_tick_drain_mult === "number" && Number.isFinite(e.single_tick_drain_mult) && e.single_tick_drain_mult > 0)) {
+            err(`${where}.effects[${k}] time_compression: single_tick_drain_mult must be a positive finite number`);
+          }
+        }
+        if (e.scope !== "run") {
+          err(`${where}.effects[${k}] time_compression: scope must be "run"`);
+        }
       }
     });
   };

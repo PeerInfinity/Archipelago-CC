@@ -51,6 +51,20 @@ export const EFFECT_KINDS = Object.freeze({
   // triply impure — its flat also multiplies mandatoryish task speed and
   // doubles spark gain; Energized is the repeatable *_level family).
   starting_energy: { fields: ["flat", "per_reset", "curve", "scope"] },
+  // Perk-granted time compression (Phase-D rung 3). Two variants, exactly
+  // one of mult / single_tick_drain_mult per entry; each variant's feature
+  // unlock is DECLARED semantics that travels with it, not a separate field:
+  // `mult` (scale variant; fork EFFECTS.time_compression_scale_run)
+  // multiplies task speed AND zone energy drain (the cancellation pair —
+  // energy per task unchanged, wall-clock divided), compensates single-tick
+  // drain back down (÷mult), and makes single-tick tasks complete ALL reps
+  // in one tick; `single_tick_drain_mult` (single-tick variant;
+  // EFFECTS.time_compression_single_tick_run) multiplies single-tick task
+  // drain and enables the automatic free-zone skip on energy reset
+  // (skipFreeZones). Perk entries only; scope "run". The MasteryOfTime
+  // prestige unlock stays a compiled behavior (it auto-grants perk slots
+  // 7/23 by enum identity and zeroes single-tick drain).
+  time_compression: { fields: ["mult", "single_tick_drain_mult", "scope"] },
 });
 
 // Perk behavior slots: key -> { slot, enumName, description }.
@@ -64,10 +78,16 @@ export const PERK_BEHAVIORS = Object.freeze({
   // starting_energy_flat (EnergySpell slot 4) MIGRATED to the declarative
   // starting_energy effect kind, flat variant (Phase-D rung 2, Fork 1.10) —
   // the slot is free; the vanilla exemplar lives in effectMagnitudes.js.
-  time_compression_minor: {
-    slot: 7, enumName: "MinorTimeCompression",
-    description: "Single-tick tasks drain 0.2x energy.",
-  },
+  // time_compression_minor (MinorTimeCompression slot 7) MIGRATED to the
+  // declarative time_compression effect kind, single-tick variant (Phase-D
+  // rung 3, Fork 1.11) — the slot is free. (Its compiled behavior was TWO
+  // things, both now variant semantics: single-tick drain ×0.2 AND gating
+  // the skipFreeZones feature — the original description here recorded only
+  // the drain leg.) NOTE the residual coupling: the still-slotted
+  // MasteryOfTime prestige unlock auto-grants PERK SLOTS 7 AND 23 by enum
+  // identity — a dataset that places plain perks there gets them
+  // auto-granted by MasteryOfTime; coherent under slot semantics, but
+  // generators should know. Vanilla exemplar in effectMagnitudes.js.
   energy_drain_reduction: {
     slot: 8, enumName: "HighAltitudeClimbing",
     description: "All energy drain x0.8.",
@@ -92,10 +112,10 @@ export const PERK_BEHAVIORS = Object.freeze({
     slot: 22, enumName: "Awakening",
     description: "Divine spark gain x(1 + AWAKENING_DIVINE_SPARK_MULT).",
   },
-  time_compression_major: {
-    slot: 23, enumName: "MajorTimeCompression",
-    description: "Task speed and drain x MAJOR_TIME_COMPRESSION_EFFECT; single-tick tasks complete all reps in one tick.",
-  },
+  // time_compression_major (MajorTimeCompression slot 23) MIGRATED to the
+  // declarative time_compression effect kind, scale variant (Phase-D rung 3,
+  // Fork 1.11) — the slot is free; MasteryOfTime residual coupling noted at
+  // the slot-7 banner above. Vanilla exemplar in effectMagnitudes.js.
   speed_per_completed_zone: {
     slot: 27, enumName: "UnifiedTheoryOfMagic",
     description: "Task speed x(1+e)^(highest_zone_fully_completed+1).",

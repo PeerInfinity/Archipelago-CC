@@ -56,4 +56,26 @@ export const EFFECT_MAGNITUDES = Object.freeze({
       per_reset: Object.freeze({ min: 0.1, max: 0.1 }),
     }),
   }),
+  // Perk-granted time compression (scope "run"; fork
+  // EFFECTS.time_compression_scale_run / time_compression_single_tick_run).
+  // Migrated from perk behavior keys time_compression_major /
+  // time_compression_minor (Fork 1.11). Two variants discriminated by field
+  // presence — `mult` (scale: task speed & zone drain ×mult, single-tick
+  // compensated, single-tick tasks complete all reps in one tick) and
+  // `single_tick_drain_mult` (single-tick drain ×value, free zones
+  // auto-skipped) — each with a single vanilla exemplar, so both priors are
+  // degenerate spans until a §4.3 perturbation-ladder sweep widens them
+  // (the scale mult is THE pacing lever §4.3 names: a 10× scale collapses
+  // the reset economy — sweep before the generator varies it).
+  time_compression: Object.freeze({
+    scope: "run",
+    exemplars: Object.freeze([
+      Object.freeze({ roster: "perks", slot: 23, enumName: "MajorTimeCompression", params: Object.freeze({ mult: 1.5 }) }),
+      Object.freeze({ roster: "perks", slot: 7, enumName: "MinorTimeCompression", params: Object.freeze({ single_tick_drain_mult: 0.2 }) }),
+    ]),
+    priors: Object.freeze({
+      mult: Object.freeze({ min: 1.5, max: 1.5 }),
+      single_tick_drain_mult: Object.freeze({ min: 0.2, max: 0.2 }),
+    }),
+  }),
 });

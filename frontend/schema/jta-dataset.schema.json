@@ -288,6 +288,19 @@
             { "required": ["flat"], "not": { "required": ["per_reset"] } },
             { "required": ["per_reset"], "not": { "required": ["flat"] } }
           ]
+        },
+        {
+          "properties": {
+            "kind": { "const": "time_compression" },
+            "mult": { "type": "number", "exclusiveMinimum": 0, "description": "Scale variant: task speed AND zone energy drain x mult while the carrying perk is held (the cancellation pair — energy per task unchanged, wall-clock divided), single-tick drain compensated back down, and single-tick tasks complete ALL reps in one tick (declared variant semantics). Exactly one of mult / single_tick_drain_mult." },
+            "single_tick_drain_mult": { "type": "number", "exclusiveMinimum": 0, "description": "Single-tick variant: single-tick tasks drain x this while the carrying perk is held, and zones whose remaining tasks are all free are skipped automatically on energy reset (skipFreeZones — declared variant semantics)." },
+            "scope": { "enum": ["run"], "description": "Perk entries only. MasteryOfTime stays a compiled prestige behavior (it auto-grants perk slots 7/23 by enum identity and zeroes single-tick drain)." }
+          },
+          "required": ["kind", "scope"],
+          "oneOf": [
+            { "required": ["mult"], "not": { "required": ["single_tick_drain_mult"] } },
+            { "required": ["single_tick_drain_mult"], "not": { "required": ["mult"] } }
+          ]
         }
       ]
     },

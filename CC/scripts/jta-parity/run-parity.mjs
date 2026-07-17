@@ -959,15 +959,19 @@ async function childMain(scenarioName, maxTicksOverride, perturbAtTick, datasetO
       // placements on perks vanilla never gave one (early-acquired by the
       // scripted scenario, so divergence lands within the canary budget).
       // Divergence comes from the early-game legs (xp_all_mult +
-      // starting_energy flat); the starting_energy per_reset doubling is
-      // late-game (EnergeticMemory) and is caught by the layer-1
+      // starting_energy flat + the novel time_compression scale placement);
+      // the starting_energy per_reset and both vanilla time_compression
+      // doublings are late-game (EnergeticMemory / MinorTimeCompression /
+      // MajorTimeCompression) and are caught by the layer-1
       // runtime_data.effects static sweep instead.
       const findCarrier = (pred) => datasetDoc.perks.find((p) => (p?.effects ?? []).some(pred));
       const xpCarrier = findCarrier((e) => e.kind === "xp_all_mult");
       const flatCarrier = findCarrier((e) => e.kind === "starting_energy" && e.flat !== undefined);
       const growthCarrier = findCarrier((e) => e.kind === "starting_energy" && e.per_reset !== undefined);
-      if (!xpCarrier || !flatCarrier || !growthCarrier) {
-        console.error("FATAL: missing migrated-effect exemplar(s) in the dataset to perturb (pre-rung-2 fixture?)");
+      const scaleCarrier = findCarrier((e) => e.kind === "time_compression" && e.mult !== undefined);
+      const singleTickCarrier = findCarrier((e) => e.kind === "time_compression" && e.single_tick_drain_mult !== undefined);
+      if (!xpCarrier || !flatCarrier || !growthCarrier || !scaleCarrier || !singleTickCarrier) {
+        console.error("FATAL: missing migrated-effect exemplar(s) in the dataset to perturb (pre-rung-3 fixture?)");
         process.exit(2);
       }
       const xpEff = xpCarrier.effects.find((e) => e.kind === "xp_all_mult");
@@ -976,16 +980,23 @@ async function childMain(scenarioName, maxTicksOverride, perturbAtTick, datasetO
       flatEff.flat *= 2;
       const growthEff = growthCarrier.effects.find((e) => e.kind === "starting_energy");
       growthEff.per_reset *= 2;
+      const scaleEff = scaleCarrier.effects.find((e) => e.kind === "time_compression");
+      scaleEff.mult *= 2;
+      const singleTickEff = singleTickCarrier.effects.find((e) => e.kind === "time_compression");
+      singleTickEff.single_tick_drain_mult *= 2;
       const fresh = datasetDoc.perks.find((p) =>
         p && !p.placeholder && Array.isArray(p.effects)
-        && !p.effects.some((e) => e.kind === "xp_all_mult" || e.kind === "starting_energy"));
+        && !p.effects.some((e) => e.kind === "xp_all_mult" || e.kind === "starting_energy" || e.kind === "time_compression"));
       fresh.effects.push({ kind: "xp_all_mult", mult: 3, scope: "run" });
       fresh.effects.push({ kind: "starting_energy", flat: 25, scope: "run" });
+      fresh.effects.push({ kind: "time_compression", mult: 3, scope: "run" });
       console.log(
         `[${scenarioName}] SELFTEST: xp_all_mult mult -> ${xpEff.mult} on "${xpCarrier.name}"; ` +
           `starting_energy flat -> ${flatEff.flat} on "${flatCarrier.name}"; ` +
           `per_reset -> ${growthEff.per_reset} on "${growthCarrier.name}"; ` +
-          `added xp_all_mult x3 + starting_energy flat 25 to "${fresh.name}"`
+          `time_compression mult -> ${scaleEff.mult} on "${scaleCarrier.name}"; ` +
+          `single_tick_drain_mult -> ${singleTickEff.single_tick_drain_mult} on "${singleTickCarrier.name}"; ` +
+          `added xp_all_mult x3 + starting_energy flat 25 + time_compression x3 to "${fresh.name}"`
       );
       datasetDoc.dataset_id = `${datasetDoc.dataset_id}-effect-perturbed`;
       delete datasetDoc.provenance?.content_hash;

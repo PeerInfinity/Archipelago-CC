@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "dataset_id": "vanilla-fork-1.10-raw-c9b99902",
+  "dataset_id": "vanilla-fork-1.11-raw-5ee865e0",
   "provenance": {
     "generator": "export-vanilla-dataset.mjs",
-    "fork_save_version": "Fork 1.10",
+    "fork_save_version": "Fork 1.11",
     "seed": null,
     "params_hash": null,
-    "content_hash": "c9b99902"
+    "content_hash": "5ee865e0"
   },
   "theme": {
     "title": "Journey to Ascension",
@@ -6428,8 +6428,14 @@
       "name": "Minor Time Compression",
       "icon": "⌚",
       "tooltip": "Tasks reps that are completed instantly (in a single ⏰Tick) now cost 80% less 🔋Energy<br>Zones where all Tasks are instant without using Items are completed for free in a single ⏰Tick when doing an 🔋Energy Reset<br>This gives all the benefits doing those Tasks manually would have",
-      "effects": [],
-      "behavior": "time_compression_minor",
+      "effects": [
+        {
+          "kind": "time_compression",
+          "single_tick_drain_mult": 0.2,
+          "scope": "run"
+        }
+      ],
+      "behavior": null,
       "theme": null
     },
     {
@@ -6647,8 +6653,14 @@
       "name": "Major Time Compression",
       "icon": "⏰",
       "tooltip": "Tasks with instant reps now complete the whole Task in a single ⏰Tick, rather than a single ⏰Tick per rep<br>This also means the 🔋Energy cost is that of a single ⏰Tick<br>Reduces the real-world time for non-instant Tasks by 33% (does not affect 🔋Energy use)",
-      "effects": [],
-      "behavior": "time_compression_major",
+      "effects": [
+        {
+          "kind": "time_compression",
+          "mult": 1.5,
+          "scope": "run"
+        }
+      ],
+      "behavior": null,
       "theme": null
     },
     {

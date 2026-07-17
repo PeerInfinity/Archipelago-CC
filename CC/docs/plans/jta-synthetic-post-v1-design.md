@@ -773,6 +773,58 @@ fork release).** §4.2 order; per-rung gates: native byte-identity, dataset
 lockstep with re-expressed vanilla fixture, magnitude-perturbation canary.
 Magnitude-range protocol (§4.3) runs per kind BEFORE the generator varies it.
 
+**Rung 3 (time_compression) SHIPPED 2026-07-16 — Fork 1.11 (submodule `710caf9`),
+FULL RUNG — both keys migrated (the audit's pre-surveyed "null rung is
+legitimate" outcome was NOT needed; rung 4 fallback not triggered).** Both
+perk behavior keys migrated with their feature unlocks as DECLARED VARIANT
+SEMANTICS: time_compression_major (MajorTimeCompression, slot 23) →
+`effects[] {kind: time_compression, mult, scope: "run"}` (scale variant) —
+task speed ×mult (calcTaskProgressMultiplier) AND zone drain ×mult
+(calcEnergyDrainPerTickInZone, the cancellation pair), single-tick drain
+compensated ÷mult (calcEnergyDrainPerTick), and the all-reps-in-one-tick
+feature (willCompleteAllRepsInOneTick + the progressTask all-reps loop) now
+gates on "any held scale carrier"; time_compression_minor
+(MinorTimeCompression, slot 7) → `{single_tick_drain_mult}` (single-tick
+variant) — single-tick drain ×value plus the skipFreeZones gate on "any held
+single-tick carrier". Variants are discriminated by FIELD PRESENCE (exactly
+one of mult / single_tick_drain_mult), the rung-2 flat/per_reset pattern, so
+per-field priors and the shuffle lever needed no structural change. With
+several carriers the rate mults multiply (ascending perk-index order) and
+the feature gates fire on any carrier. Deviation from the §4.1 row ("2
+slots, one rate site"): the audit confirmed the pre-survey — 7 engine sites
+across 4 behaviors, ALL exactly re-expressible, so full-migrate (not the
+richer-shape or null outcomes). Residual couplings recorded in
+datasetBehaviors.js: MasteryOfTime auto-grants PERK SLOTS 7 AND 23 by enum
+identity (the slot-19 class; it also zeroes single-tick drain — its own
+behavior, untouched); the zone-skip notification (rendering.ts) previously
+hardcoded the Minor perk name and now credits the first held single-tick
+carrier via new `getZoneSkipCreditPerk()` (identical vanilla output —
+UI-parity-safe, dataset-correct). datasetBehaviors' old
+time_compression_minor description had recorded only the drain leg — the
+skipFreeZones gate was a table documentation GAP, caught by the audit.
+Fixtures → `vanilla-fork-1.11-fc7aae7f` / raw `-5ee865e0`; jta_dataset_test
+regenerated (other two presets byte-identical). Canary extended: doubled
+scale mult + doubled single_tick_drain_mult + novel scale placement (the
+late-game doublings are caught by the layer-1 runtime_data.effects sweep,
+per the rung-2 note). EXTRA independent stratum this rung (first FEATURE
+migration): a headless data-follow probe (scratchpad, results recorded
+here) moved the single-tick variant to slot 8 and re-magnituded both — all
+four behaviors follow the DATA (speed ×2.0, zone drain ×2.0, single-tick
+compensation net ×1, all-reps gate opens only with a carrier, freed slot 7
+inert, moved carrier discounts ×0.5 stacked on slot 8's compiled ×0.8,
+credit helper follows the carrier). Gates all green: native 4/4
+tick-identical (2000/2517/31304/808); re-expressed lockstep 4/4 formula AND
+raw; effect canary DETECTED both modes; UI parity zero clean DOM diff
+native + dataset; vitest 2966; substrate suite 177 in-app checks 0 failed;
+verify-jta-managed-zone-skip re-ran green (skipFreeZones touched); full
+guard battery green. BATTERY NOTE for future rungs: balance-pass on the
+JTA_RT_DATASET=1 kept preset exits 1 with 2 stalled entries — proven
+RUNG-INDEPENDENT by a strip-A/B (dataset with all time_compression entries
+removed solves identically, 2 stalls) and deterministic on re-run; it is
+the known raw-base conservative-bar mode (5e/5g, records only per the
+Phase-4 ruling). The vanilla-world kept preset (default roundtrip) solves
+clean, exit 0 — use that input when reading the guard as a gate.
+
 **Rung 2 (starting_energy) SHIPPED 2026-07-16 — Fork 1.10 (submodule `e5422e2`),
 perk-side keys only.** The two PERK behavior keys migrated (EnergySpell flat 50 /
 EnergeticMemory per-reset 0.1 → `effects[] {kind: starting_energy, flat |
