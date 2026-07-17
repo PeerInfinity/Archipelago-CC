@@ -51,6 +51,7 @@
 import { createRng } from "../shared/rng.js";
 import { DATASET_THEMES, DATASET_THEME_KEYS } from "./datasetNamebanks.js";
 import { PERK_BEHAVIORS, ITEM_BEHAVIORS } from "./datasetBehaviors.js";
+import { EFFECT_MAGNITUDES } from "./effectMagnitudes.js";
 import { validateJtaDataset, stampDatasetIdentity, JTA_DATASET_SCHEMA_VERSION } from "./datasetValidator.js";
 
 // FNV-1a over the canonical params JSON — a stable fingerprint for
@@ -113,6 +114,9 @@ const STRUCTURE_DEFAULTS = {
   perkCadence: null,        // RESERVED (Full slice): perk placements per zone
   unlockChainDensity: null, // RESERVED (Full slice)
   economy: null,            // RESERVED (Full slice, post-5g §2.5 lever 2)
+  effects: null,            // profiled: { shuffle: ["xp_all_mult", ...] } —
+                            // migrated-kind placement + magnitude freedom
+                            // (Phase-D; priors in effectMagnitudes.js)
 };
 
 // Synthetic exit tasks (host region-graph edges) live at ids >= 10000; zone
@@ -131,6 +135,16 @@ function normalizeStructure(structure) {
   }
   if (s.idStride != null && (!Number.isInteger(s.idStride) || s.idStride < 1)) {
     throw new Error(`params.structure.idStride must be a positive integer, got ${JSON.stringify(s.idStride)}`);
+  }
+  if (s.effects != null) {
+    if (s.policy !== "profiled") {
+      throw new Error("params.structure.effects requires policy \"profiled\" (mirror never departs)");
+    }
+    const kinds = s.effects.shuffle;
+    if (!Array.isArray(kinds) || kinds.length === 0
+        || kinds.some((k) => !(k in EFFECT_MAGNITUDES))) {
+      throw new Error(`params.structure.effects.shuffle must list migrated kinds (${Object.keys(EFFECT_MAGNITUDES).join(", ")}), got ${JSON.stringify(kinds)}`);
+    }
   }
   return s;
 }
@@ -634,23 +648,69 @@ export function generateJtaDataset({ seed, profile, vanilla, params = {} }) {
   const mapEffects = (effects) => (effects ?? []).map((e) => {
     if (e.kind === "skill_speed") return { kind: "skill_speed", skill: mapFixtureSkill(e.skill), add: e.add };
     if (e.kind === "energy_on_consume") return { kind: "energy_on_consume", base_amount: e.base_amount };
+    if (e.kind === "xp_all_mult") return { kind: "xp_all_mult", mult: e.mult, scope: e.scope };
     throw new Error(`unknown effect kind ${e.kind}`);
   });
+
+  // Functional tooltip for a migrated declarative effect (behavior slots use
+  // their key's description; declarative entries otherwise fall back to the
+  // engine's skill-modifier text, which xp_all_mult has none of).
+  const effectTooltip = (effects) => {
+    const xp = (effects ?? []).find((e) => e.kind === "xp_all_mult");
+    return xp ? `All skill XP x${xp.mult}.` : null;
+  };
 
   // -- perks (mirror the fixture roster slot-for-slot; behavior slots keep
   //    their key and gain a functional tooltip so no vanilla-branded text
   //    leaks into a themed world) --
   const perks = vanilla.perks.map((p) => {
     if (isPlaceholder(p)) return { placeholder: true };
+    const effects = mapEffects(p.effects);
     return {
       name: drawPerkName(),
       icon: drawPerkIcon(),
-      tooltip: p.behavior ? PERK_BEHAVIORS[p.behavior].description : null,
-      effects: mapEffects(p.effects),
+      tooltip: p.behavior ? PERK_BEHAVIORS[p.behavior].description : effectTooltip(effects),
+      effects,
       behavior: p.behavior ?? null,
       theme: null,
     };
   });
+
+  // -- migrated-effect placement lever (Phase-D rung 1) --
+  // structure.effects.shuffle moves each listed migrated kind off its
+  // mirrored slots onto rng-chosen eligible perks (live, non-behavior, not
+  // already carrying the kind) with magnitudes sampled from the kind's
+  // prior (effectMagnitudes.js). The default (null) consumes ZERO rng —
+  // mirror placement, mirrored magnitudes.
+  if (structure.effects != null) {
+    for (const kind of structure.effects.shuffle) {
+      const spec = EFFECT_MAGNITUDES[kind];
+      let count = 0;
+      for (const p of perks) {
+        if (p.placeholder || !Array.isArray(p.effects)) continue;
+        const kept = p.effects.filter((e) => e.kind !== kind);
+        if (kept.length < p.effects.length) {
+          count += p.effects.length - kept.length;
+          p.effects = kept;
+          if (!p.behavior) p.tooltip = effectTooltip(kept);
+        }
+      }
+      const eligible = perks.filter((p) =>
+        !p.placeholder && !p.behavior
+        && !(p.effects ?? []).some((e) => e.kind === kind));
+      if (eligible.length < count) {
+        throw new Error(`structure.effects: only ${eligible.length} eligible perk slots for ${count} ${kind} effect(s)`);
+      }
+      const shuffled = rng.shuffle([...eligible]);
+      for (let k = 0; k < count; k++) {
+        const p = shuffled[k];
+        const mult = Math.round(
+          (spec.prior.min + rng.next() * (spec.prior.max - spec.prior.min)) * 100) / 100;
+        p.effects = [...(p.effects ?? []), { kind, mult, scope: spec.scope }];
+        if (!p.behavior) p.tooltip = p.tooltip ?? effectTooltip(p.effects);
+      }
+    }
+  }
 
   // -- items --
   const items = vanilla.items.map((it) => {

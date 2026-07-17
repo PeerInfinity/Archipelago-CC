@@ -152,7 +152,7 @@ export function validateJtaDataset(dataset) {
   const validSkillIndex = (idx) =>
     Number.isInteger(idx) && idx >= 0 && idx < skills.length && !isPlaceholder(skills[idx]);
 
-  const checkEffects = (effects, where) => {
+  const checkEffects = (effects, where, rosterLabel) => {
     if (effects === undefined) return;
     if (!Array.isArray(effects)) {
       err(`${where}.effects must be an array when present`);
@@ -170,6 +170,18 @@ export function validateJtaDataset(dataset) {
       } else if (kind === "energy_on_consume") {
         if (!(typeof e.base_amount === "number" && e.base_amount > 0)) {
           err(`${where}.effects[${k}] base_amount must be a positive number`);
+        }
+      } else if (kind === "xp_all_mult") {
+        // Phase-D rung 1: perk entries only, scope "run" (the prestige
+        // scope stays a compiled behavior until attunement/spark migrate).
+        if (rosterLabel !== "perks") {
+          err(`${where}.effects[${k}] xp_all_mult: only perk entries may carry it`);
+        }
+        if (!(typeof e.mult === "number" && Number.isFinite(e.mult) && e.mult > 0)) {
+          err(`${where}.effects[${k}] xp_all_mult: mult must be a positive finite number`);
+        }
+        if (e.scope !== "run") {
+          err(`${where}.effects[${k}] xp_all_mult: scope must be "run" (prestige scope not yet migrated)`);
         }
       }
     });
@@ -196,7 +208,7 @@ export function validateJtaDataset(dataset) {
       // grantPerk / applyTaskPatches resolve by name — uniqueness is load-bearing.
       if (names.has(entry.name)) err(`duplicate ${label} name "${entry.name}"`);
       names.add(entry.name);
-      checkEffects(entry.effects, where);
+      checkEffects(entry.effects, where, label);
       const behavior = entry.behavior ?? null;
       if (behavior !== null) {
         const spec = behaviorTable[behavior];

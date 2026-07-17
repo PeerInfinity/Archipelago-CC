@@ -31,6 +31,13 @@ export const EFFECT_KINDS = Object.freeze({
   // Consuming one grants calcItemEnergyGain(base_amount) energy
   // (prestige/perk scaling applied by the engine at use time).
   energy_on_consume: { fields: ["base_amount"] },
+  // All-skill XP multiplier while the carrying perk is held (Phase-D rung 1;
+  // fork simulation.ts EFFECTS.xp_all_mult_run, applied at the calcSkillXp
+  // site in ascending perk-index order). Perk entries only; scope "run" —
+  // "prestige" is reserved until the prestige-side branches migrate (they
+  // are entangled with attunement/spark doubles). Magnitude priors in
+  // effectMagnitudes.js.
+  xp_all_mult: { fields: ["mult", "scope"] },
 });
 
 // Perk behavior slots: key -> { slot, enumName, description }.
@@ -81,14 +88,9 @@ export const PERK_BEHAVIORS = Object.freeze({
     slot: 30, enumName: "UnderstandingTheReset",
     description: "Keep half of each item stack (rounded up) across energy resets; enables the prep-run hint.",
   },
-  xp_all_mult_a: {
-    slot: 1, enumName: "Writing",
-    description: "All skill XP x1.5 (calcSkillXp).",
-  },
-  xp_all_mult_b: {
-    slot: 33, enumName: "GazedBeyondTheVeil",
-    description: "All skill XP x2 (calcSkillXp).",
-  },
+  // xp_all_mult_a/_b (Writing slot 1, GazedBeyondTheVeil slot 33) MIGRATED
+  // to the declarative xp_all_mult effect kind (Phase-D rung 1, Fork 1.9) —
+  // those slots are free; the vanilla exemplars live in effectMagnitudes.js.
   spark_gain_mult_b: {
     slot: 37, enumName: "DefiedTheGods",
     description: "Divine spark gain x(1 + DEFIED_THE_GODS_SPARK_MULT).",

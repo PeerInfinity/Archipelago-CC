@@ -42,6 +42,8 @@
 //       # are written under dataset-raw-* names.
 //   node CC/scripts/jta-parity/run-parity.mjs --scenario scripted --dataset \
 //       --selftest-perturb-dataset   # canary: must DIVERGE to pass
+//   node CC/scripts/jta-parity/run-parity.mjs --scenario scripted --dataset \
+//       --selftest-perturb-effect    # Phase-D magnitude canary (xp_all_mult)
 //   node CC/scripts/jta-parity/run-parity.mjs --list
 import { execSync, spawnSync } from "node:child_process";
 import fs from "node:fs";
@@ -555,6 +557,10 @@ function compareDatasetStaticData(dsEngine, nativeEngine, dataset) {
   // native-vs-dataset economy comparison in that mode.
   const rawMode = dataset.economy?.value_mode === "raw";
   const dataProj = (E) => ({
+    // Migrated declarative effect handler tables (Phase-D): for a clean
+    // vanilla fixture the dataset-derived table must equal the compiled
+    // defaults; an effect-canary perturbation must show up here (layer 1).
+    effects: JSON.parse(JSON.stringify(E.sim.EFFECTS ?? null)),
     skill_roles: JSON.parse(JSON.stringify(E.sim.SKILL_ROLES)),
     economy: (() => {
       const e = { ...E.sim.ECONOMY };
@@ -945,6 +951,32 @@ async function childMain(scenarioName, maxTicksOverride, perturbAtTick, datasetO
       datasetDoc.dataset_id = `${datasetDoc.dataset_id}-perturbed`;
       delete datasetDoc.provenance?.content_hash;
     }
+    if (datasetOpts.perturbEffect) {
+      // Phase-D rung-1 magnitude canary: a NON-vanilla xp_all_mult magnitude
+      // AND a non-vanilla placement must drive the dataset engine — proves
+      // the migrated effect reads the DATA path, not the dead compiled
+      // default. Double the first exemplar's mult and add the effect to a
+      // perk that vanilla never gave one (perks[0], acquired early by the
+      // scripted scenario, so divergence lands within the canary budget).
+      const carrier = datasetDoc.perks.find((p) =>
+        (p?.effects ?? []).some((e) => e.kind === "xp_all_mult"));
+      if (!carrier) {
+        console.error("FATAL: no xp_all_mult effect in the dataset to perturb (pre-rung-1 fixture?)");
+        process.exit(2);
+      }
+      const eff = carrier.effects.find((e) => e.kind === "xp_all_mult");
+      eff.mult *= 2;
+      const fresh = datasetDoc.perks.find((p) =>
+        p && !p.placeholder && Array.isArray(p.effects)
+        && !p.effects.some((e) => e.kind === "xp_all_mult"));
+      fresh.effects.push({ kind: "xp_all_mult", mult: 3, scope: "run" });
+      console.log(
+        `[${scenarioName}] SELFTEST: xp_all_mult mult -> ${eff.mult} on "${carrier.name}"; ` +
+          `added xp_all_mult x3 to "${fresh.name}"`
+      );
+      datasetDoc.dataset_id = `${datasetDoc.dataset_id}-effect-perturbed`;
+      delete datasetDoc.provenance?.content_hash;
+    }
     if (typeof fork.win.loadGameData !== "function") {
       console.error("FATAL: fork build has no window.loadGameData (predates Fork 1.7)");
       process.exit(2);
@@ -1010,16 +1042,18 @@ async function childMain(scenarioName, maxTicksOverride, perturbAtTick, datasetO
       equal: datasetStaticCmp.diffs.length === 0,
       diffs: datasetStaticCmp.diffs,
     };
-    if (datasetOpts.perturb) {
+    if (datasetOpts.perturb || datasetOpts.perturbEffect) {
       // Canary semantics: PASS means the harness CAUGHT the perturbation in
       // BOTH layers — the lockstep diverged (layer 2) AND a static sweep
       // flagged the table delta (layer 1; a cost_multiplier change lands in
-      // the BASE zones sweep, other deltas in the dataset-extension sweep).
+      // the BASE zones sweep, an effect-table change in the dataset
+      // extension sweep's runtime_data.effects projection).
       result.canary = true;
       const staticCaught =
         !result.staticData.equal || !result.datasetStaticData.equal;
       result.pass = result.firstDivergence !== null && staticCaught;
-      resultName = `${datasetOpts.raw ? "dataset-raw" : "dataset"}-canary-${scenarioName}`;
+      resultName = `${datasetOpts.raw ? "dataset-raw" : "dataset"}-canary${
+        datasetOpts.perturbEffect ? "-effect" : ""}-${scenarioName}`;
     } else {
       // Layers 1 (static) and 2 (lockstep) both gate the dataset verdict.
       result.pass =
@@ -1115,6 +1149,15 @@ function parentMain(only, datasetOpts) {
       `${dsTag}-canary-scripted`,
       `${dsTag} canary: scripted + perturbed dataset (must be DETECTED)`
     );
+    // Phase-D magnitude canary: a non-vanilla xp_all_mult mult/placement
+    // must diverge — the migrated effect's data path is live, the compiled
+    // default dead (rung-1 gate c).
+    runChild(
+      "scripted",
+      ["--selftest-perturb-effect", "--max-ticks", "5000"],
+      `${dsTag}-canary-effect-scripted`,
+      `${dsTag} canary: scripted + perturbed xp_all_mult effect (must be DETECTED)`
+    );
   }
   const allPass = summary.every((s) => s.pass);
   const report = {
@@ -1185,14 +1228,16 @@ const dsIdx = args.indexOf("--dataset");
 const maxTicksOverride = mtIdx >= 0 ? Number(args[mtIdx + 1]) : undefined;
 const perturbAtTick = ptIdx >= 0 ? Number(args[ptIdx + 1]) : undefined;
 const perturbDataset = args.includes("--selftest-perturb-dataset");
+const perturbEffect = args.includes("--selftest-perturb-effect");
 const datasetOpts =
-  dsIdx >= 0 || perturbDataset
+  dsIdx >= 0 || perturbDataset || perturbEffect
     ? {
         path:
           dsIdx >= 0 && args[dsIdx + 1] && !args[dsIdx + 1].startsWith("--")
             ? path.resolve(args[dsIdx + 1])
             : defaultDatasetPath,
         perturb: perturbDataset,
+        perturbEffect,
       }
     : null;
 if (scIdx >= 0) {

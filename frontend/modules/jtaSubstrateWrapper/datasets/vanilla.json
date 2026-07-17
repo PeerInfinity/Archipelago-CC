@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "dataset_id": "vanilla-fork-1.8-e72f5c24",
+  "dataset_id": "vanilla-fork-1.9-c9cedf39",
   "provenance": {
     "generator": "export-vanilla-dataset.mjs",
-    "fork_save_version": "Fork 1.8",
+    "fork_save_version": "Fork 1.9",
     "seed": null,
     "params_hash": null,
-    "content_hash": "e72f5c24"
+    "content_hash": "c9cedf39"
   },
   "theme": {
     "title": "Journey to Ascension",
@@ -5233,8 +5233,14 @@
       "name": "How to Write",
       "icon": "📝",
       "tooltip": "Improves ♟️XP gain by 50%",
-      "effects": [],
-      "behavior": "xp_all_mult_a",
+      "effects": [
+        {
+          "kind": "xp_all_mult",
+          "mult": 1.5,
+          "scope": "run"
+        }
+      ],
+      "behavior": null,
       "theme": null
     },
     {
@@ -5669,8 +5675,14 @@
       "name": "Gazed Beyond the Veil",
       "icon": "👀",
       "tooltip": "Improves ♟️XP gain by 100%",
-      "effects": [],
-      "behavior": "xp_all_mult_b",
+      "effects": [
+        {
+          "kind": "xp_all_mult",
+          "mult": 2,
+          "scope": "run"
+        }
+      ],
+      "behavior": null,
       "theme": null
     },
     {

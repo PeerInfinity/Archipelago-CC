@@ -48,6 +48,7 @@ import {
   TASK_TYPE_NAMES,
   behaviorSlotIndex,
 } from "./datasetBehaviors.js";
+import { EFFECT_MAGNITUDES } from "./effectMagnitudes.js";
 import { validateJtaDataset, stampDatasetIdentity } from "./datasetValidator.js";
 import { premultiplyDataset } from "./generateDataset.js";
 
@@ -152,13 +153,33 @@ const skills = skillsMod.SKILL_DEFINITIONS.map((def, i) => {
   return { name: def.name, icon: def.icon, xp_needed_mult: def.xp_needed_mult, theme: null };
 });
 
+// Migrated-effect exemplars (Phase-D): per-roster slot -> effect entries,
+// re-expressed from effectMagnitudes.js. The enum-name cross-check keeps the
+// exemplar table honest against the build; the MAGNITUDES are checked by the
+// dataset-lockstep parity gate (a wrong mult fails tick-identity).
+const migratedPerkEffects = new Map();
+for (const [kind, spec] of Object.entries(EFFECT_MAGNITUDES)) {
+  for (const ex of spec.exemplars) {
+    if (ex.roster !== "perks") fail(`EFFECT_MAGNITUDES.${kind}: unsupported roster ${JSON.stringify(ex.roster)}`);
+    const value = perksMod.PerkType[ex.enumName];
+    if (value === undefined) fail(`EFFECT_MAGNITUDES.${kind}: enum member ${ex.enumName} no longer exists in the build`);
+    if (value !== ex.slot) fail(`EFFECT_MAGNITUDES.${kind}: slot ${ex.slot} != build enum value ${value} for ${ex.enumName}`);
+    const list = migratedPerkEffects.get(ex.slot) ?? [];
+    list.push({ kind, mult: ex.mult, scope: spec.scope });
+    migratedPerkEffects.set(ex.slot, list);
+  }
+}
+
 const perks = perksMod.PERKS.map((def, i) => {
   if (isDeadPerk(i)) return { placeholder: true };
   return {
     name: def.name,
     icon: def.icon,
     tooltip: captureText(def.get_custom_tooltip),
-    effects: modifierEffects(def.skill_modifiers, `perks[${i}] ("${def.name}")`),
+    effects: [
+      ...modifierEffects(def.skill_modifiers, `perks[${i}] ("${def.name}")`),
+      ...(migratedPerkEffects.get(i) ?? []),
+    ],
     behavior: perkBehaviorBySlot.get(i) ?? null,
     theme: null,
   };

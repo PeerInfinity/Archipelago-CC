@@ -266,6 +266,14 @@
             "base_amount": { "type": "number", "exclusiveMinimum": 0, "description": "Energy per unit consumed, before calcItemEnergyGain scaling." }
           },
           "required": ["kind", "base_amount"]
+        },
+        {
+          "properties": {
+            "kind": { "const": "xp_all_mult" },
+            "mult": { "type": "number", "exclusiveMinimum": 0, "description": "All-skill XP multiplier applied while the carrying perk is held (calcSkillXp; ascending perk-index application order)." },
+            "scope": { "enum": ["run"], "description": "Perk entries only. \"prestige\" is reserved until the prestige-side XP multipliers migrate (entangled with attunement/spark doubles)." }
+          },
+          "required": ["kind", "mult", "scope"]
         }
       ]
     },

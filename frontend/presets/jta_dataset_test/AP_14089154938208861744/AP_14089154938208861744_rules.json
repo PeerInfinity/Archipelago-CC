@@ -673,18 +673,18 @@
             }
           ],
           "jta_dataset_ref": {
-            "dataset_id": "synthetic-sunken-meridian-s1-z3-8adcd7b1",
+            "dataset_id": "synthetic-sunken-meridian-s1-z3-cb8d048c",
             "schema_version": 1
           },
           "jta_dataset": {
             "schema_version": 1,
-            "dataset_id": "synthetic-sunken-meridian-s1-z3-8adcd7b1",
+            "dataset_id": "synthetic-sunken-meridian-s1-z3-cb8d048c",
             "provenance": {
               "generator": "generateDataset.js",
-              "fork_save_version": "Fork 1.8",
+              "fork_save_version": "Fork 1.9",
               "seed": 1,
               "params_hash": "759b9cfc",
-              "content_hash": "8adcd7b1"
+              "content_hash": "cb8d048c"
             },
             "theme": {
               "title": "The Sunken Meridian",
@@ -1319,9 +1319,15 @@
               {
                 "name": "Fathomless Instinct",
                 "icon": "🐠",
-                "tooltip": "All skill XP x1.5 (calcSkillXp).",
-                "effects": [],
-                "behavior": "xp_all_mult_a",
+                "tooltip": "All skill XP x1.5.",
+                "effects": [
+                  {
+                    "kind": "xp_all_mult",
+                    "mult": 1.5,
+                    "scope": "run"
+                  }
+                ],
+                "behavior": null,
                 "theme": null
               },
               {
@@ -1755,9 +1761,15 @@
               {
                 "name": "Silver Sense",
                 "icon": "🎶 III",
-                "tooltip": "All skill XP x2 (calcSkillXp).",
-                "effects": [],
-                "behavior": "xp_all_mult_b",
+                "tooltip": "All skill XP x2.",
+                "effects": [
+                  {
+                    "kind": "xp_all_mult",
+                    "mult": 2,
+                    "scope": "run"
+                  }
+                ],
+                "behavior": null,
                 "theme": null
               },
               {
@@ -3147,7 +3159,7 @@
             }
           ],
           "jta_dataset_ref": {
-            "dataset_id": "synthetic-sunken-meridian-s1-z3-8adcd7b1",
+            "dataset_id": "synthetic-sunken-meridian-s1-z3-cb8d048c",
             "schema_version": 1
           },
           "exits": [
@@ -3205,7 +3217,7 @@
             }
           ],
           "jta_dataset_ref": {
-            "dataset_id": "synthetic-sunken-meridian-s1-z3-8adcd7b1",
+            "dataset_id": "synthetic-sunken-meridian-s1-z3-cb8d048c",
             "schema_version": 1
           },
           "exits": [

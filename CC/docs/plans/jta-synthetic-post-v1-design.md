@@ -575,7 +575,12 @@ validator + `setJtaDataset`/`loadGameData` + file-picker wiring, plus export =
 serializing the live doc (the CLI exporter already proves the shape). Small;
 attach to Phase D or land independently.
 
-**Unification U-a — retire `zoneTaskData.js` in favor of `datasets/vanilla.json`.**
+**Unification U-a — retire `zoneTaskData.js` in favor of `datasets/vanilla.json`.
+DONE 2026-07-16 (`950c18dbb`) — new `vanillaDataset.js` (static JSON module import),
+one `_zoneView` derivation, all consumers switched, snapshot + generator deleted,
+zoneCount backlog item closed; every gate byte-inert (dump-spiral dump
+byte-identical, Generate.py artifacts sha256-identical, vitest 2966, preset regen
+zero drift).**
 The pipeline's VANILLA identity channel still reads the hand-maintained snapshot
 `zoneTaskData.js` (names/types/perks/items — the source of the `zoneCount: 16`
 hand-sync backlog item), while the synthetic channel reads the dataset doc. Since
@@ -749,6 +754,26 @@ E1 fork change (if any) native-byte-identical + managed-delta-only.
 fork release).** §4.2 order; per-rung gates: native byte-identity, dataset
 lockstep with re-expressed vanilla fixture, magnitude-perturbation canary.
 Magnitude-range protocol (§4.3) runs per kind BEFORE the generator varies it.
+
+**Rung 1 (xp_all_mult) SHIPPED 2026-07-16 — Fork 1.9 (submodule `5cba354`), run
+scope only.** The two in-run slots migrated (Writing ×1.5 / GazedBeyondTheVeil ×2
+→ `effects[] {kind: xp_all_mult, mult, scope: "run"}`; runtime `EFFECTS`
+handler table in simulation.ts; loader `applyEffects`). **Deviation from the
+§4.1 absorb list, discovered at implementation: the prestige pair
+(xp_all_prestige_mult(_b)) stays slotted** — DivineInspiration also doubles
+attunement gain and UnparalleledLearning also doubles spark gain (impure keys),
+and their XP multipliers sit SPLIT around the repeatable multipliers in the
+calcSkillXp chain, so no per-scope application order re-expresses them exactly
+(float chain position is load-bearing, the 5g lesson). They migrate when the
+attunement/spark kinds do; `scope: "prestige"` is reserved in the schema.
+Gates all green: native 4/4 tick-identical (2000/2517/31304/808); re-expressed
+fixture lockstep 4/4 tick-identical, formula AND raw twins; magnitude canary
+(new `--selftest-perturb-effect`: doubled exemplar mult + novel placement on
+perks[0]) DETECTED in both modes, plus a layer-1 `runtime_data.effects` sweep.
+`effectMagnitudes.js` holds the exemplars + prior [1.5, 2] (not yet
+sweep-widened); generator lever `structure.effects.shuffle` (profiled-only,
+zero-rng default) places the kind freely with prior-sampled magnitudes. UI
+parity zero DOM diff (fixture carries the compiled tooltip text).
 
 **Phase E — theme v2 (after A; display surface deferred).** Arc priors +
 thread grammars + effect-aligned banks (needs D only for the kinds it names;
