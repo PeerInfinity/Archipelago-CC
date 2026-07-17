@@ -577,12 +577,21 @@ zone-0 task + dataset id with it, alert + vanilla-intact on a broken URL).
 Byte-inert leg: native parity 4/4 + UI parity zero DOM diff re-ran green
 against the D-a fork commit.
 
-**Rider D-b — new-stack in-UI dataset import/export.** The only existing UI
-import/export (`jtaGameDataPanelUI.js`) belongs to the retired jta-randomizer stack
-and moves SAVE blobs + old cost tables, not schema datasets. A new-stack surface is
-validator + `setJtaDataset`/`loadGameData` + file-picker wiring, plus export =
-serializing the live doc (the CLI exporter already proves the shape). Small;
-attach to Phase D or land independently.
+**Rider D-b — new-stack in-UI dataset import/export. DONE 2026-07-16 (attached
+to rung 2; home = the JtA wrapper panel toolbar, user-ruled this session).**
+Pure half `datasetTransfer.js` (`importDatasetText` = parse → restamp-if-edited
+→ authoritative validation; `exportDatasetText` = the DOCUMENT serialized
+exactly as the CLI exporter — the doc, not mutated live state, so
+import→export→import is a fixed point by construction); thin toolbar glue on
+`jtaSubstrateWrapperPanel` (file-picker → `setJtaDataset` host view +
+same-origin iframe `loadGameData`; export downloads live doc ?? vanilla
+fixture; a manual import overrides the running game until the next region load
+re-applies the world's carriage). Guard:
+`scripts/procgen/verify-jta-dataset-transfer.mjs` (fixed point on both
+committed fixtures byte-for-byte + a generated synthetic doc; deterministic
+restamp to a fresh id on hand edits; broken inputs refused). Byte-inert when
+unused (substrate suite green with the toolbar present). The retired
+jtaGameDataPanelUI.js remains untouched.
 
 **Unification U-a — retire `zoneTaskData.js` in favor of `datasets/vanilla.json`.
 DONE 2026-07-16 (`950c18dbb`) — new `vanillaDataset.js` (static JSON module import),
