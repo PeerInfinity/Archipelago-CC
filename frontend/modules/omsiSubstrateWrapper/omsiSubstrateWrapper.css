@@ -1,0 +1,17 @@
+/* Host-side panel container: full-bleed iframe, no chrome. */
+
+.omsisw-root {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: #1e1e1e;
+    box-sizing: border-box;
+}
+
+.omsisw-iframe {
+    flex: 1;
+    width: 100%;
+    border: none;
+    background-color: #1e1e1e;
+}

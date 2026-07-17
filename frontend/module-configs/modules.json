@@ -252,6 +252,10 @@
       "path": "./modules/jtaSubstrateWrapper/index.js",
       "enabled": true
     },
+    "omsiSubstrateWrapper": {
+      "path": "./modules/omsiSubstrateWrapper/index.js",
+      "enabled": true
+    },
     "jtaBalance": {
       "path": "./modules/jtaBalance/index.js",
       "enabled": true
@@ -349,6 +353,7 @@
     "textAdventureSubstrate",
     "textAdventureSubstrateWrapper",
     "jtaSubstrateWrapper",
+    "omsiSubstrateWrapper",
     "flashSubstrate",
     "bounceDemo",
     "runnerDemo",

@@ -248,6 +248,11 @@
             },
             {
               "type": "component",
+              "componentType": "omsiSubstrateWrapperPanel",
+              "title": "Idle Loops"
+            },
+            {
+              "type": "component",
               "componentType": "flashSubstratePanel",
               "title": "Flash"
             },
