@@ -26,6 +26,11 @@
  *      bridge clock stopped after leaving.
  *   4. Re-entering the omsi region resumes the clock and re-pins the
  *      (reset) budget to the pool.
+ *   5. Victory (v0, §6 ruling): completing Start Journey — simulated
+ *      via the game's own unlockTown(1), the exact call its finish
+ *      handler makes — checks `region_1_1__start_journey` and the
+ *      'Victory' item lands in the AP inventory (the preset's
+ *      completion condition is item_check on it).
  *
  * The omsi-loops iframe serves the CHECKED-OUT submodule tree, which
  * may be on a different branch than the outer gitlink — the script
@@ -240,6 +245,36 @@ async function main() {
         return s?.manaLeft != null && Math.abs(s.manaLeft - s.currentMana) < 15;
     }, 15000);
     console.log('  ✓ re-entry: clock resumed, budget re-pinned');
+
+    // (5) Victory: unlockTown(1) ⇔ Start Journey completed at least
+    // once (townsUnlocked is persistent). The bridge reports the
+    // victory location; the placed 'Victory' item arrives.
+    const victoryState = await page.evaluate(async () => {
+        const { default: proxy } =
+            await import('./modules/stateManager/stateManagerProxySingleton.js');
+        return {
+            checked: proxy.getSnapshot?.()?.checkedLocations ?? [],
+            victory: proxy.getSnapshot?.()?.inventory?.Victory ?? 0,
+        };
+    });
+    if (victoryState.checked.includes(`${OMSI_REGION}__start_journey`)) {
+        fail('victory location checked before Start Journey completed');
+    }
+    await omsiEval('unlockTown(1)');
+    console.log('  unlockTown(1) called (Start Journey completion)…');
+    await waitFor('victory location checked + Victory item received', async () => {
+        return page.evaluate(async ([region]) => {
+            const { default: proxy } =
+                await import('./modules/stateManager/stateManagerProxySingleton.js');
+            const snap = proxy.getSnapshot?.() ?? {};
+            const checked = snap.checkedLocations ?? [];
+            const has = Array.isArray(checked)
+                ? checked.includes(`${region}__start_journey`)
+                : !!checked[`${region}__start_journey`];
+            return has && Number(snap.inventory?.Victory ?? 0) > 0;
+        }, [OMSI_REGION]);
+    }, 15000);
+    console.log('  ✓ victory: Start Journey checked the location; Victory item in inventory');
 
     const errors = logs.filter((l) => l.startsWith('[pageerror]'));
     if (errors.length > 0) fail('page errors:\n  ' + errors.join('\n  '));

@@ -139,6 +139,11 @@
       "id": "omsi-native-budget-raises-pool",
       "enabled": true,
       "category": "Omsi substrate"
+    },
+    {
+      "id": "omsi-victory-start-journey",
+      "enabled": true,
+      "category": "Omsi substrate"
     }
   ]
 }

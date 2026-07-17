@@ -19,6 +19,11 @@
  *   5. omsi-native-budget-raises-pool — the game's native per-loop
  *      budget (250) is reported as a substrate:resourceBonus and lands
  *      in gameState's per-substrate max-mana accumulator.
+ *   6. omsi-victory-start-journey — completing Start Journey (town 1
+ *      unlocked, simulated via the game's own unlockTown(1) — the
+ *      exact call Start Journey's completion makes; a real playthrough
+ *      is a multi-hundred-loop event) checks the victory location and
+ *      the Victory item arrives in the AP inventory.
  *
  * All tests load the omsi_substrate_test preset (2 maze regions + 1
  * omsi Beginnersville region, manaEnabled sidecars, loop_costs
@@ -33,6 +38,7 @@ import {
     OMSI_TEST_PRESET_PATH,
     OMSI_TEST_REGION,
     OMSI_TEST_MAZE_REGION,
+    OMSI_TEST_VICTORY_LOCATION,
     OMSI_NATIVE_BUDGET,
     waitForOmsiActive,
     moveToRegion,
@@ -40,6 +46,7 @@ import {
     omsiAddMana,
     omsiQueueAction,
     omsiClearQueue,
+    omsiEval,
     isBridgeClockRunning,
     readPool,
     readLoopResetCount,
@@ -48,6 +55,14 @@ import {
     readExpectedResetTarget,
     eventually,
 } from '../../omsiSubstrateWrapper/test-helpers.js';
+
+/** True if the snapshot lists `name` among its checked locations. */
+function snapshotHasLocation(snapshot, name) {
+    const checked = snapshot?.checkedLocations;
+    if (Array.isArray(checked)) return checked.includes(name);
+    if (checked && typeof checked === 'object') return !!checked[name];
+    return false;
+}
 
 /** Shared setup: load the preset, enter the omsi region, wait for the bridge. */
 async function enterOmsiRegion(testController) {
@@ -319,6 +334,68 @@ async function nativeBudgetRaisesPool(testController) {
 
     return testController.getOverallResult();
 }
+
+async function victoryStartJourney(testController) {
+    const win = await enterOmsiRegion(testController);
+    if (!win) return testController.getOverallResult();
+
+    testController.assertEqual(
+        'victory location not yet checked',
+        false,
+        snapshotHasLocation(testController.stateManager.getSnapshot(), OMSI_TEST_VICTORY_LOCATION),
+    );
+
+    // Complete Start Journey: its finish handler calls unlockTown(1) —
+    // call the same engine function directly (a real playthrough is a
+    // multi-hundred-loop event; townsUnlocked is the persistent
+    // milestone the victory location is defined on).
+    testController.log('Simulating Start Journey completion via unlockTown(1)…');
+    omsiEval('unlockTown(1)');
+
+    const checked = await eventually(
+        testController,
+        () => snapshotHasLocation(testController.stateManager.getSnapshot(), OMSI_TEST_VICTORY_LOCATION),
+        'victory location checked',
+        10000,
+    );
+    testController.assertEqual('victory location checked', true, checked);
+
+    const victoryReceived = await eventually(
+        testController,
+        () => Number(testController.stateManager.getSnapshot()?.inventory?.Victory ?? 0) > 0,
+        "'Victory' item in the AP inventory",
+        10000,
+    );
+    testController.assertEqual("'Victory' item received", true, victoryReceived);
+
+    // The check is once-only: town 1 stays unlocked, the dedupe (and
+    // the reseed on region reload) must not re-dispatch it. Re-enter
+    // the region and confirm no error and the location stays checked.
+    moveToRegion(OMSI_TEST_MAZE_REGION, OMSI_TEST_REGION);
+    await eventually(testController, () => !isBridgeClockRunning(), 'clock stopped after leaving');
+    moveToRegion(OMSI_TEST_REGION, OMSI_TEST_MAZE_REGION);
+    await eventually(testController, () => isBridgeClockRunning(), 'clock resumed on re-entry');
+    testController.assertEqual(
+        'victory location still checked after re-entry',
+        true,
+        snapshotHasLocation(testController.stateManager.getSnapshot(), OMSI_TEST_VICTORY_LOCATION),
+    );
+
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'omsi-victory-start-journey',
+    name: 'Omsi: completing Start Journey checks the victory location',
+    description: 'Simulates Start Journey completion (unlockTown(1), the exact '
+               + 'call its finish handler makes); the bridge reports the victory '
+               + 'location as an AP check, the Victory item arrives, and the '
+               + 'check is not re-dispatched on region re-entry.',
+    testFunction: victoryStartJourney,
+    category: 'Omsi substrate',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
 
 registerTest({
     id: 'omsi-native-budget-raises-pool',

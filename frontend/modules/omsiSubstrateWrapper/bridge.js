@@ -48,6 +48,10 @@
  *         immediately while an omsi region is active; resets fired
  *         while inactive are caught up on the next omsi:loadRegion
  *         (applied-count bookkeeping, verbatim jta pattern).
+ *   - Victory location (v0, slice 3): completing Start Journey
+ *     unlocks town 1 (townsUnlocked is persistent), reported once as
+ *     a user:locationCheck on the sidecar's ap_locations.start_journey
+ *     name — the Victory item rides that check.
  *   - No-progress guard: a restart after a loop that consumed (almost)
  *     no effective time means no queued action could run (empty queue
  *     slips past the step gate only in exotic states; a queue whose
@@ -131,6 +135,11 @@ let _lastViewUpdateTime = 0;
 let _lastSampledManaLeft = null;   // manaLeft at the last sample
 let _lastReportedBudget = null;    // last starting-budget bonus pushed up
 let _ticksAtLastRestart = 0;       // totals.effectiveTime at the last restart (s)
+// AP location names already reported this session (v0: the single
+// Start Journey victory location). Re-seeded from checkedLocations on
+// every region load; cleared on rules reload (a new world).
+const _reportedLocationNames = new Set();
+
 // Clock diagnostics, exposed via __omsiBridge.getDebugState().
 const _clockStats = {
     messages: 0, inactiveSkips: 0, callbacks: 0,
@@ -257,6 +266,50 @@ function _clockTick() {
     // also come from direct engine manipulation (addMana — Buy Mana
     // effects, tests, future hooks), not just from our own stepping.
     _samplePoolMirror();
+    _checkVictoryProgress();
+}
+
+// ────────────────────────────────────────────────────────────────
+// Victory location (v0: complete Start Journey ⇔ town 1 unlocked)
+// ────────────────────────────────────────────────────────────────
+
+/**
+ * Re-seed the location-check dedupe from the host's already-checked
+ * locations, so a restored save / region revisit never re-dispatches a
+ * check that already landed (jta pattern, reduced to v0's single
+ * location).
+ */
+function _reseedReportedLocations() {
+    _reportedLocationNames.clear();
+    const map = _world?.ap_locations;
+    if (!map) return;
+    const checked = new Set(_client?.getStateSnapshot?.()?.checkedLocations ?? []);
+    for (const locName of Object.values(map)) {
+        if (checked.has(locName)) _reportedLocationNames.add(locName);
+    }
+}
+
+/**
+ * v0 victory watch: completing Start Journey calls the game's own
+ * unlockTown(1), growing townsUnlocked past the starting [0] —
+ * townsUnlocked is PERSISTENT (not per-loop), so this is exactly the
+ * "completed Start Journey at least once" milestone the §6 ruling
+ * places the Victory item on. Reported as a normal AP location check;
+ * the location name comes from the sidecar's ap_locations map.
+ */
+function _checkVictoryProgress() {
+    const locationName = _world?.ap_locations?.start_journey;
+    if (!locationName || _reportedLocationNames.has(locationName)) return;
+    const s = _fullState();
+    if (!s || !Array.isArray(s.townsUnlocked) || s.townsUnlocked.length <= 1) return;
+    _reportedLocationNames.add(locationName);
+    if (!_client) return;
+    _client.publishEventDispatcher('user:locationCheck', {
+        locationName,
+        regionName: _currentRegionId,
+        originator: 'omsiSubstrate',
+    }, { initialTarget: 'bottom' });
+    log('debug', `Start Journey complete -> user:locationCheck (${locationName})`);
 }
 
 // ────────────────────────────────────────────────────────────────
@@ -439,6 +492,12 @@ function _handleLoadRegion(payload) {
         _lastSampledManaLeft = _manaLeft();
     }
 
+    // Victory-location bookkeeping: dedupe against already-checked
+    // locations, then check immediately — a restored save may already
+    // have town 1 unlocked with the location unchecked.
+    _reseedReportedLocations();
+    _checkVictoryProgress();
+
     _startClock();
     _engineView()?.update();
     log('debug', `loaded region ${payload.region_id} (town ${world.omsiTown}, manaEnabled=${!!world.manaEnabled})`);
@@ -551,6 +610,7 @@ async function main() {
         _lastAppliedResetCount = 0;
         _expectedPool = null;
         _lastReportedBudget = null;
+        _reportedLocationNames.clear();
     });
 
     // Region activation events (from procgenPlayer).
