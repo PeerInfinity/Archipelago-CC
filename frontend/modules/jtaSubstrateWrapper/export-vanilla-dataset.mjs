@@ -9,7 +9,11 @@
 // on_consume energy amounts) comes from the hand-curated tables in
 // datasetBehaviors.js — and every hand-curated fact is cross-checked against
 // the build here, so a fork data change HARD-FAILS regeneration instead of
-// silently drifting (same discipline as generate-zone-task-data.mjs).
+// silently drifting.
+//
+// Since unification U-a (post-v1 design §4.4) the fixture this writes is
+// also the pipeline's VANILLA identity channel (vanillaDataset.js) — this
+// exporter + datasetValidator.js are the fork↔outer sync mechanism.
 //
 // Deliberately deterministic: no timestamps, no randomness — regeneration on
 // an unchanged build is byte-identical, so drift shows as a small git diff.
@@ -23,9 +27,9 @@
 //   value everywhere (plan §7 ruling 3, resolved: placeholders).
 // - The two items.ts `.enum` typos (Cactus, Glasses) are neutralized by
 //   construction: identity is array position; `.enum` fields are not exported.
-// - Vanilla task costs/xp ARE exported (unlike zoneTaskData.js): the fixture
-//   must be complete for the 5c parity equivalence claim. Synthetic Pass-A
-//   datasets treat cost_multiplier as provisional; Pass B owns final costs.
+// - Vanilla task costs/xp ARE exported: the fixture must be complete for
+//   the 5c parity equivalence claim. Synthetic Pass-A datasets treat
+//   cost_multiplier as provisional; Pass B owns final costs.
 
 import fs from "node:fs";
 import path from "node:path";

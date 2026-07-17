@@ -20,7 +20,7 @@ import { centralRegistry } from '../../../app/core/centralRegistry.js';
 import { computeSeedName, cacheKey } from '../../jtaBalance/hostGlue.js';
 import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
 import { JTA_PERK_ITEM_NAMES } from '../../jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
-import { JTA_ZONE_TASK_DATA } from '../../jtaSubstrateWrapper/zoneTaskData.js';
+import { vanillaPerkNameByTaskId } from '../../jtaSubstrateWrapper/vanillaDataset.js';
 import {
     JTA_LOCTEST_PRESET_PATH,
     JTA_LOCTEST_REGION,
@@ -131,8 +131,7 @@ async function balanceSolveAtRulesLoad(testController) {
 // ---------------------------------------------------------------------------
 
 /** taskId -> the perk that task grants in vanilla (null if it grants none). */
-const NATIVE_PERK_OF = new Map(
-    JTA_ZONE_TASK_DATA.flatMap((z) => z.tasks).map((t) => [t.id, t.perk ?? null]));
+const NATIVE_PERK_OF = vanillaPerkNameByTaskId();
 
 /** Region name -> jtaZone, from the preset's sidecars. */
 function zoneByRegion(rulesDoc) {

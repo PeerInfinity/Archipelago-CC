@@ -93,7 +93,7 @@ const PRESETS = [
 ];
 
 async function generate(preset, mods) {
-    const { jtaLib, engine, substrateRegistry, mergeSubstrateItemLib, DEFAULT_ITEMS, zoneTaskData } = mods;
+    const { jtaLib, engine, substrateRegistry, mergeSubstrateItemLib, DEFAULT_ITEMS } = mods;
     const { gameId, gameName, quota, shuffleSeed, startInventory, dataset } = preset;
     const goalZone = quota - 1;   // arrangeShuffledSpiral maps the Nth jta region to zone N
     const outDir = path.join(repoRoot, 'frontend/presets', gameId, SEED_ID);
@@ -193,8 +193,7 @@ async function generate(preset, mods) {
     // the smoke test's "randomized" claim vacuous — assert it really moved.
     if (shuffleSeed != null) {
         const perkNames = new Set(jtaLib.JTA_PERK_ITEM_NAMES);
-        const nativePerkOf = new Map(
-            zoneTaskData.JTA_ZONE_TASK_DATA.flatMap((z) => z.tasks).map((t) => [t.id, t.perk ?? null]));
+        const nativePerkOf = mods.vanillaPerkNameByTaskId();
         const moved = [];
         let perkLocs = 0;
         for (const region of allRegions) {
@@ -244,8 +243,8 @@ async function main() {
             'frontend/modules/procgenPipeline/sphereConfigHooks.js')))).mergeSubstrateItemLib,
         DEFAULT_ITEMS: (await import(pathToFileURL(path.join(repoRoot,
             'frontend/modules/shared/procgen/library.js')))).DEFAULT_ITEMS,
-        zoneTaskData: await import(pathToFileURL(path.join(repoRoot,
-            'frontend/modules/jtaSubstrateWrapper/zoneTaskData.js'))),
+        vanillaPerkNameByTaskId: (await import(pathToFileURL(path.join(repoRoot,
+            'frontend/modules/jtaSubstrateWrapper/vanillaDataset.js')))).vanillaPerkNameByTaskId,
         generateJtaDataset: (await import(pathToFileURL(path.join(repoRoot,
             'frontend/modules/jtaSubstrateWrapper/generateDataset.js')))).generateJtaDataset,
         profile: JSON.parse(fs.readFileSync(path.join(repoRoot,

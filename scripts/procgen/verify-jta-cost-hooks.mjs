@@ -61,7 +61,7 @@ const { baselineMods } = await import(
 );
 // The PerkType.Count sentinel the pipeline patches perk tasks to (grant suppression).
 const { JTA_PERK_COUNT: JTA_PERK_COUNT_SENTINEL } = await import(
-    pathToFileURL(path.join(repoRoot, 'frontend/modules/jtaSubstrateWrapper/zoneTaskData.js'))
+    pathToFileURL(path.join(repoRoot, 'frontend/modules/jtaSubstrateWrapper/vanillaDataset.js'))
 );
 
 const env = await loadJtaEnv();

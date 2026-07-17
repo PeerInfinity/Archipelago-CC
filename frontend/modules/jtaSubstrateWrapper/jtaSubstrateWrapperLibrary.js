@@ -24,7 +24,8 @@
  */
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
-import { JTA_ZONE_TASK_DATA, JTA_PERK_COUNT } from './zoneTaskData.js';
+import { JTA_VANILLA_DATASET } from './vanillaDataset.js';
+import { activePerkItemNames } from './perkOrigin.js';
 import { createRng } from '../shared/rng.js';
 import { validateJtaDataset, stampDatasetIdentity } from './datasetValidator.js';
 
@@ -109,7 +110,8 @@ export function getJtaStartingPerks() { return _startingPerks; }
 // --- Synthetic dataset mode (Phase 5d, jta-synthetic-data-plan §4.1) ---
 //
 // When a dataset document is active, the pipeline reads IT instead of the
-// zoneTaskData.js vanilla snapshot: zoneCount comes from the dataset, zone
+// vanilla fixture (datasets/vanilla.json): zoneCount comes from the dataset,
+// zone
 // tasks/perk placement come from its zones, the grant-suppression sentinel
 // is the DATASET's perk count, and every emitted region's payload carries
 // the dataset carriage (single-carrier + refs, ruling 4): the first jta
@@ -137,36 +139,32 @@ export function setJtaDataset(dataset) {
 export function getJtaDataset() { return _dataset; }
 
 // Normalized zone/task view over whichever source is active — the vanilla
-// snapshot or the dataset. Shape matches what the placement machinery
-// needs: zones[zoneIdx] = { zone, tasks: [{ id, perk: <item name|null> }] },
-// plus the grant-suppression sentinel (the source's perk count), the
-// excluded task ids (vanilla: the SBtV-gated four; dataset:
-// prestige.sbtv_unlock_task_ids — [] by generation), and the perk item
-// names the source can place.
+// fixture or a synthetic dataset (ONE derivation; both are jta-dataset
+// documents since unification U-a). Shape matches what the placement
+// machinery needs: zones[zoneIdx] = { zone, tasks: [{ id,
+// perk: <item name|null> }] }, plus the grant-suppression sentinel (the
+// source's perk count) and the excluded task ids. The exclusion set stays
+// source-specific: vanilla keeps the v1-scoped SBtV four (the fixture's
+// prestige.sbtv_unlock_task_ids also lists 209/zone-20, which the vanilla
+// channel has never excluded); synthetic datasets carry [] by generation.
 let _zoneViewCache = null;
 let _libraryItemsCache = null;
 function _zoneView() {
     if (_zoneViewCache) return _zoneViewCache;
-    if (_dataset) {
-        const perkName = (idx) => _dataset.perks[idx]?.name ?? null;
-        _zoneViewCache = {
-            zones: _dataset.zones.map((z, i) => ({
-                zone: i,
-                tasks: z.tasks.map((t) => ({
-                    id: t.id,
-                    perk: t.perk != null ? perkName(t.perk) : null,
-                })),
+    const doc = _dataset ?? JTA_VANILLA_DATASET;
+    _zoneViewCache = {
+        zones: doc.zones.map((z, i) => ({
+            zone: i,
+            tasks: z.tasks.map((t) => ({
+                id: t.id,
+                perk: t.perk != null ? (doc.perks[t.perk]?.name ?? null) : null,
             })),
-            perkCount: _dataset.perks.length,
-            excluded: new Set(_dataset.prestige?.sbtv_unlock_task_ids ?? []),
-        };
-    } else {
-        _zoneViewCache = {
-            zones: JTA_ZONE_TASK_DATA,
-            perkCount: JTA_PERK_COUNT,
-            excluded: SBTV_GATED_TASK_IDS,
-        };
-    }
+        })),
+        perkCount: doc.perks.length,
+        excluded: _dataset
+            ? new Set(_dataset.prestige?.sbtv_unlock_task_ids ?? [])
+            : SBTV_GATED_TASK_IDS,
+    };
     return _zoneViewCache;
 }
 
@@ -193,11 +191,10 @@ export const JTA_FILLER_ITEM_NAME = 'JtA Filler';
 export const JTA_VICTORY_ITEM_NAME = 'Victory';
 
 // Every distinct perk display name across the fork's zones — the AP item
-// surface for perks. Sourced from the regenerable snapshot; equals the
+// surface for perks. Sourced from the regenerable vanilla fixture via the
+// single shared derivation (perkOrigin.activePerkItemNames); equals the
 // fork's PERKS[].name (so window.grantPerk resolves these by name).
-export const JTA_PERK_ITEM_NAMES = Object.freeze([...new Set(
-    JTA_ZONE_TASK_DATA.flatMap((z) => z.tasks.map((t) => t.perk).filter(Boolean)),
-)]);
+export const JTA_PERK_ITEM_NAMES = Object.freeze(activePerkItemNames(null));
 
 // Item-classification library, merged into the pipeline's itemLib via the
 // registry entry's `libraryItems` (mergeSubstrateItemLib / the panel's
@@ -285,7 +282,7 @@ function _computePlacement() {
 
 // The perk item names that actually reach the AP pool: the perks placed on
 // emitted zones (0..goalZone). Derived from the placement map rather than
-// from JTA_ZONE_TASK_DATA so it tracks the SBtV exclusions and the shuffle
+// from the source document so it tracks the SBtV exclusions and the shuffle
 // bound automatically — a perk stranded on an unemitted zone is not in the
 // pool and must not appear in an access rule's item_names. Sorted to match
 // rule_builder's HasFromListUnique, which stores `tuple(sorted(set(...)))`.
@@ -498,14 +495,13 @@ export const substrateRegistryEntry = Object.freeze({
     // since region-library C1 absorbed the former synthesizeZonePayload
     // hook into it).
     //
-    // Total zone count. With a dataset active it is the dataset's zone
-    // count (the dataset IS the game data the fork will load). Otherwise
-    // it is owned by the JtA build in the
-    // frontend/modules/journey-to-ascension submodule (build/zones.js
-    // — the copy the panel actually loads). Kept in sync by hand; if
-    // it drifts the runtime warns on loadZone and refuses the bad
-    // index. 30 as of Fork 1.6.
-    get zoneCount() { return _dataset ? _dataset.zones.length : 30; },
+    // Total zone count — the active source document's zone count: the
+    // dataset's when one is loaded (the dataset IS the game data the fork
+    // will load), the vanilla fixture's otherwise. The fixture is
+    // regenerated from the fork build (export-vanilla-dataset.mjs), so
+    // there is no hand-synced literal to drift; the runtime still warns on
+    // loadZone and refuses a bad index as a backstop.
+    get zoneCount() { return (_dataset ?? JTA_VANILLA_DATASET).zones.length; },
 
     // Zone-locations channel: the sole per-zone playable_payload
     // contributor. `jtaZone` (the zone ordinal the fork reads to load

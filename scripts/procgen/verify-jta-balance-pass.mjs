@@ -45,7 +45,7 @@ const { loadJtaEnv } = await import(pathToFileURL(path.join(repoRoot, 'CC/script
 const { runBalancePass } = await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/jtaBalance/balancePass.js')));
 const { computeSeedName, extractPerkHolderTaskIds } = await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/jtaBalance/hostGlue.js')));
 const jtaLib = await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js')));
-const { JTA_PERK_COUNT } = await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/jtaSubstrateWrapper/zoneTaskData.js')));
+const { JTA_PERK_COUNT } = await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/jtaSubstrateWrapper/vanillaDataset.js')));
 
 const rules = JSON.parse(fs.readFileSync(rulesPath, 'utf8'));
 

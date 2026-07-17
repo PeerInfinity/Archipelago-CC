@@ -52,25 +52,24 @@
  *     `driver.mjs` apRuntime).
  */
 
-import { JTA_ZONE_TASK_DATA } from './zoneTaskData.js';
+import { JTA_VANILLA_DATASET } from './vanillaDataset.js';
 
 /**
  * The perk item names of the ACTIVE data source: the dataset's placed-perk
- * names when a dataset document is given, the vanilla snapshot's otherwise.
- * Same derivation the pipeline library uses for its item surface, kept here
- * (pure, iframe-safe) so the bridge and the balance host agree on it.
+ * names when a dataset document is given, the vanilla fixture's otherwise
+ * (both are jta-dataset documents — one derivation). THE definition of the
+ * perk item surface, kept here (pure, iframe-safe) so the bridge, the
+ * balance host, and the pipeline library all agree on it.
  *
  * @param {object|null|undefined} dataset - a jta-dataset document, or null
  * @returns {string[]} distinct perk display names
  */
 export function activePerkItemNames(dataset) {
-    if (dataset) {
-        return [...new Set(dataset.zones.flatMap((z) => z.tasks
-            .filter((t) => t.perk != null)
-            .map((t) => dataset.perks[t.perk]?.name)
-            .filter(Boolean)))];
-    }
-    return [...new Set(JTA_ZONE_TASK_DATA.flatMap((z) => z.tasks.map((t) => t.perk).filter(Boolean)))];
+    const doc = dataset ?? JTA_VANILLA_DATASET;
+    return [...new Set(doc.zones.flatMap((z) => z.tasks
+        .filter((t) => t.perk != null)
+        .map((t) => doc.perks[t.perk]?.name)
+        .filter(Boolean)))];
 }
 
 /**

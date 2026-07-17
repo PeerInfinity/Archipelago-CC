@@ -42,7 +42,7 @@
 import settingsManager from '../../app/core/settingsManager.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { JTA_PERK_ITEM_NAMES } from '../jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
-import { JTA_PERK_COUNT } from '../jtaSubstrateWrapper/zoneTaskData.js';
+import { JTA_PERK_COUNT } from '../jtaSubstrateWrapper/vanillaDataset.js';
 import {
     detectJtaWorld,
     extractDataset,
