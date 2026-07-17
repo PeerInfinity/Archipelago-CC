@@ -17,8 +17,9 @@
  *   - On leaving the region (gameState:regionChanged away): pause the
  *     game loop — no unmirrored background play.
  *   - While active: poll JtA's energy and mirror BOTH directions into
- *     the shared loop-mode pool — drains via `jta:bridgeDeductMana`,
- *     gains (energy items etc.) via `jta:bridgeGainMana`. External
+ *     the shared loop-mode pool via the generic resource-channel event
+ *     `substrate:resourceDelta` ({ substrateId: 'jta', resource:
+ *     'mana', amount } — negative drains, positive gains). External
  *     pool changes (another substrate spent mana, max-mana recompute)
  *     are pushed back into JtA's energy; the bridge tells its own
  *     mirrored deltas apart from external changes by tracking the
@@ -26,8 +27,8 @@
  *   - Reset propagation, both ways:
  *       game → host: the fork's energy-reset callback (fires on
  *         doEnergyReset AND doPrestige) publishes
- *         `jta:bridgeEnergyReset`; the host answers with a loop reset
- *         unless one already fired for this depletion.
+ *         `substrate:resourceReset`; the host answers with a loop
+ *         reset unless one already fired for this depletion.
  *       host → game: gameState:loopReset applies doEnergyReset
  *         immediately while a jta region is active (deferred to the
  *         next jta:loadRegion while inactive, as before).
@@ -50,12 +51,14 @@
  *     automation config under 'respect'). This is what loops'
  *     executeVia: 'playbackBot' queue execution calls into.
  *
- * Host-side counterpart wiring lives in
- *   ../jtaSubstrateWrapper/index.js — that module subscribes to
- *   `iframe:appReady` (to push the initial pool state to this bridge),
- *   `jta:bridgeDeductMana` / `jta:bridgeGainMana` (pool mirroring +
- *   the out-of-mana → triggerLoopReset path), and
- *   `jta:bridgeEnergyReset` (game-initiated reset → loop reset).
+ * Host-side counterpart wiring: ../jtaSubstrateWrapper/index.js pushes
+ * the initial pool state to this bridge on `iframe:appReady`; the
+ * channel events (`substrate:resourceDelta` / `substrate:resourceBonus`
+ * / `substrate:resourceReset`) are handled by the generic
+ * resourceChannels router (../resourceChannels/index.js), which
+ * validates the substrate id against the registry's sharing.mana
+ * declaration and runs the pool mirroring, the out-of-mana →
+ * triggerLoopReset path, and the reset-count race guard.
  */
 
 import { IframeClient } from '../iframe-base/iframeClient.js';
@@ -162,9 +165,10 @@ let _playbackAutomationPolicy = 'activate';   // 'activate' | 'respect' (host se
 
 // Energy-bonus sync (host setting, default off). When on, JtA owns its
 // max_energy and reports its native starting-energy bonus up to the shared
-// pool (jta:bridgeSetManaBonus → setSubstrateMaxManaBonus), and the bridge
-// stops pinning max_energy from the pool (syncs current energy only). When
-// off, the legacy pin applies (max_energy pinned to host maxMana).
+// pool (substrate:resourceBonus → the per-substrate maxMana accumulator),
+// and the bridge stops pinning max_energy from the pool (syncs current
+// energy only). When off, the legacy pin applies (max_energy pinned to
+// host maxMana).
 let _energyBonusSync = false;
 let _lastReportedBonus = null;   // last starting-energy bonus pushed to the host
 
@@ -224,13 +228,19 @@ function _pollTick() {
     if (delta !== 0 && _client && _world?.manaEnabled) {
         if (delta > 0) {
             if (_expectedPool !== null) _expectedPool = Math.max(0, _expectedPool - delta);
-            _client.publishEventBus('jta:bridgeDeductMana', { amount: delta });
         } else {
             // No clamp: maxMana is the loop's STARTING mana, not a
             // ceiling — the pool may grow beyond it.
             if (_expectedPool !== null) _expectedPool = _expectedPool - delta;
-            _client.publishEventBus('jta:bridgeGainMana', { amount: -delta });
         }
+        // Generic channel event: negative amount drains the pool,
+        // positive mirrors a gain. delta is energy SPENT, so the
+        // channel amount is its negation.
+        _client.publishEventBus('substrate:resourceDelta', {
+            substrateId: 'jta',
+            resource: 'mana',
+            amount: -delta,
+        });
     }
     _lastSampledEnergy = currentEnergy;
 }
@@ -303,7 +313,11 @@ function _reportStartingEnergyBonusIfChanged(fullState) {
     if (_lastReportedBonus !== null
         && Math.abs(bonus - _lastReportedBonus) <= POOL_EPSILON) return;
     _lastReportedBonus = bonus;
-    _client.publishEventBus('jta:bridgeSetManaBonus', { bonus });
+    _client.publishEventBus('substrate:resourceBonus', {
+        substrateId: 'jta',
+        resource: 'mana',
+        bonus,
+    });
 }
 
 // ────────────────────────────────────────────────────────────────
@@ -1062,7 +1076,11 @@ function _handleGameEnergyReset(state) {
     // loop reset already fired since we last synced (pool hit 0 and
     // the deduct path reset before this callback ran), the host skips
     // firing a second one.
-    _client?.publishEventBus('jta:bridgeEnergyReset', { hostResetCount: _hostResetCount });
+    _client?.publishEventBus('substrate:resourceReset', {
+        substrateId: 'jta',
+        resource: 'mana',
+        hostResetCount: _hostResetCount,
+    });
     log('debug', 'game-initiated reset reported to host');
 }
 

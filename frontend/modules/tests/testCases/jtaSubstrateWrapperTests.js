@@ -289,7 +289,7 @@ async function energyMirrorsPoolBothWays(testController) {
     testController.assertEqual('pool followed the drain', true, drained);
 
     // Gain: raise energy by 5 (an energy item, in real play) → pool
-    // must follow up (jta:bridgeGainMana → gameState.gainMana).
+    // must follow up (substrate:resourceDelta amount>0 → gameState.gainMana).
     const energy1 = win.getFullState().currentEnergy;
     win.setEnergy(energy1 + 5);
     const gained = await eventually(
@@ -432,7 +432,7 @@ registerTest({
     name: 'JtA: energy drains AND gains mirror into the shared pool',
     description: 'Moves JtA energy down then up via the fork\'s setEnergy hook and '
                + 'asserts the shared mana pool follows in both directions '
-               + '(jta:bridgeDeductMana / jta:bridgeGainMana).',
+               + '(substrate:resourceDelta, signed).',
     testFunction: energyMirrorsPoolBothWays,
     category: 'JtA substrate',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
@@ -460,7 +460,7 @@ async function startingEnergyBonusRaisesPool(testController) {
 
         // Force JtA's starting-energy-bonus accumulator (as Energetic Memory /
         // Divine Supremacy etc. would in real play). The bridge's poll reads it
-        // off getFullState and reports it up via jta:bridgeSetManaBonus.
+        // off getFullState and reports it up via substrate:resourceBonus.
         win.getGamestate.jta_starting_energy_bonus = 50;
 
         const applied = await eventually(

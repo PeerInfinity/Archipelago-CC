@@ -8,12 +8,13 @@
  *    publishes jta:loadRegion when the player enters a region tagged
  *    with this substrate.
  *  - Acts as the host-side broker for the in-iframe bridge: pushes
- *    initial pool / reset-count state to the bridge on iframe:appReady;
- *    mirrors the game's energy into gameState's shared mana pool both
- *    ways (`jta:bridgeDeductMana` / `jta:bridgeGainMana`, with the
- *    out-of-mana → triggerLoopReset path on depletion); and answers
- *    `jta:bridgeEnergyReset` (a game-initiated energy reset or
- *    prestige) with the matching loop reset.
+ *    initial pool / reset-count state to the bridge on iframe:appReady
+ *    and re-pushes host settings on change. The energy↔mana mirroring
+ *    itself (drains/gains, out-of-mana → loop reset, game-initiated
+ *    reset answering) rides the generic resource-channel events
+ *    (substrate:resourceDelta/Bonus/Reset with substrateId 'jta'),
+ *    published by the bridge and handled by the resourceChannels
+ *    router — no jta-specific host handlers remain.
  *
  * See docs/json/developer/procgen/jta.md.
  */
@@ -40,11 +41,7 @@ export const moduleInfo = {
 };
 
 const INITIAL_STATE_EVENT = 'jtaSubstrateWrapper:initialState';
-const BRIDGE_DEDUCT_MANA_EVENT = 'jta:bridgeDeductMana';
-const BRIDGE_GAIN_MANA_EVENT = 'jta:bridgeGainMana';
-const BRIDGE_ENERGY_RESET_EVENT = 'jta:bridgeEnergyReset';
 const PLAYBACK_CONTROL_EVENT = 'jta:playbackControl';
-const BRIDGE_SET_MANA_BONUS_EVENT = 'jta:bridgeSetManaBonus';
 
 // How playback (walkTo / loops executeVia) completes a zone:
 //   'activate' — the bridge switches the game's automation engine on for
@@ -97,8 +94,6 @@ async function _loadEnergyBonusSyncSetting() {
     }
 }
 
-let _initApi = null;
-
 export function register(registrationApi) {
     if (typeof document !== 'undefined') {
         const link = document.createElement('link');
@@ -112,10 +107,6 @@ export function register(registrationApi) {
         JtaSubstrateWrapperPanel,
     );
 
-    // Sent up the dispatcher when the bridge runs out of pool mana
-    // and we trigger a loop reset (mirrors maze / textAdventure).
-    registrationApi.registerDispatcherSender('user:regionMove', 'bottom', 'first');
-
     // Events the bridge subscribes to. procgenPlayer publishes
     // jta:loadRegion on jta-region transitions; the bridge picks it
     // up via the iframeAdapter eventBus relay.
@@ -128,12 +119,10 @@ export function register(registrationApi) {
     // brings the jta panel forward when the player enters a jta region.
     registrationApi.registerEventBusPublisher('ui:activatePanel');
 
-    // Events the host module subscribes to.
+    // Events the host module subscribes to. The bridge's channel
+    // events (substrate:resourceDelta/Bonus/Reset) are handled by the
+    // resourceChannels router, not here.
     registrationApi.registerEventBusSubscriberIntent('iframe:appReady');
-    registrationApi.registerEventBusSubscriberIntent(BRIDGE_DEDUCT_MANA_EVENT);
-    registrationApi.registerEventBusSubscriberIntent(BRIDGE_GAIN_MANA_EVENT);
-    registrationApi.registerEventBusSubscriberIntent(BRIDGE_ENERGY_RESET_EVENT);
-    registrationApi.registerEventBusSubscriberIntent(BRIDGE_SET_MANA_BONUS_EVENT);
     registrationApi.registerEventBusSubscriberIntent('jta:loadRegion');
     registrationApi.registerEventBusSubscriberIntent('settings:changed');
 
@@ -178,7 +167,6 @@ export function register(registrationApi) {
 }
 
 export function initialize(_moduleId, _priorityIndex, initializationApi) {
-    _initApi = initializationApi;
     const eventBus = initializationApi.getEventBus();
     if (!eventBus) return;
 
@@ -244,81 +232,10 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
         eventBus.publish('ui:activatePanel', { panelId: 'jtaSubstrateWrapperPanel' });
     });
 
-    // Bridge → host: mirror JtA's energy drain into the shared pool.
-    // If the pool depletes, trigger a loop reset + teleport to the
-    // resolved start region (the same pattern maze and textAdventure
-    // use directly, since they're host-side modules).
-    eventBus.subscribe(BRIDGE_DEDUCT_MANA_EVENT, (data) => {
-        const gs = getGameStateSingleton();
-        if (!gs) return;
-        const amount = Number(data?.amount) || 0;
-        if (amount <= 0) return;
-        gs.deductMana(amount);
-        if (gs.getCurrentMana() <= 0) {
-            _fireLoopReset(gs);
-        }
-    });
-
-    // Bridge → host: mirror JtA's energy GAINS (energy items etc.)
-    // into the shared pool. gainMana does NOT clamp — maxMana is the
-    // loop's STARTING mana (and the mana-bar max), not a ceiling.
-    eventBus.subscribe(BRIDGE_GAIN_MANA_EVENT, (data) => {
-        const gs = getGameStateSingleton();
-        if (!gs) return;
-        const amount = Number(data?.amount) || 0;
-        if (amount <= 0) return;
-        gs.gainMana(amount);
-    });
-
-    // Bridge → host: JtA reports its native starting-energy bonus (sum of
-    // Energetic Memory / EnergySpell / Divine Supremacy / Energized) so it
-    // raises the shared loop starting-mana pool. Only fired by the bridge
-    // when the energyBonusSync setting is on; gameState sums per-substrate
-    // bonuses into maxMana (default + Σbonuses + optional item term).
-    eventBus.subscribe(BRIDGE_SET_MANA_BONUS_EVENT, (data) => {
-        const gs = getGameStateSingleton();
-        if (!gs) return;
-        const bonus = Number(data?.bonus);
-        if (!Number.isFinite(bonus)) return;
-        gs.setSubstrateMaxManaBonus('jta', Math.max(0, bonus));
-    });
-
-    // Bridge → host: the game ended its own run (energy-reset overlay
-    // click, auto_continue_energy_reset, threshold End Run, prestige /
-    // Auto-Prestige). Answer with a loop reset — UNLESS one already
-    // fired since the bridge last synced its reset count (the
-    // pool-exhaustion race: energy and pool hit 0 together, and the
-    // deduct handler above already reset the loop before the game's
-    // own game-over flow ran).
-    eventBus.subscribe(BRIDGE_ENERGY_RESET_EVENT, (data) => {
-        const gs = getGameStateSingleton();
-        if (!gs) return;
-        const bridgeCount = Number(data?.hostResetCount);
-        if (Number.isFinite(bridgeCount) && gs.getLoopResetCount() > bridgeCount) {
-            return; // a loop reset already covered this game reset
-        }
-        _fireLoopReset(gs);
-    });
-}
-
-function _fireLoopReset(gs) {
-    gs.triggerLoopReset();
-    const startRegion = _resolveStartRegion(gs);
-    if (!startRegion) {
-        console.warn('[jtaSubstrateWrapper] no resolvable start region; loop reset teleport skipped');
-        return;
-    }
-    const dispatcher = _initApi?.getDispatcher?.();
-    if (!dispatcher) return;
-    dispatcher.publish('user:regionMove', {
-        sourceRegion: gs.getCurrentRegion(),
-        targetRegion: startRegion,
-        fromReset: true,
-        updatePath: false,
-    }, { initialTarget: 'bottom' });
-}
-
-function _resolveStartRegion(gs) {
-    const fn = _initApi?.getModuleFunction?.('procgenPlayer', 'getResolvedStartRegion');
-    return fn?.() ?? gs.startRegions?.[0] ?? null;
+    // The bridge's energy↔mana mirroring (drains, gains, bonus
+    // reports, game-initiated resets) arrives as generic
+    // substrate:resourceDelta / resourceBonus / resourceReset events
+    // with substrateId 'jta' and is handled by the resourceChannels
+    // router — including the out-of-mana → loop-reset-teleport path
+    // and the reset-count race guard this module used to implement.
 }

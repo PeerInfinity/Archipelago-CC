@@ -481,6 +481,15 @@ export const substrateRegistryEntry = Object.freeze({
         executeVia: 'playbackBot',
     }),
 
+    // Cross-substrate sharing: participates in the shared-mana channel.
+    // The in-iframe bridge publishes the generic channel events
+    // (substrate:resourceDelta/Bonus/Reset with substrateId 'jta');
+    // the resourceChannels router validates them against this
+    // declaration.
+    sharing: Object.freeze({
+        mana: Object.freeze({}),
+    }),
+
     // Build-time hooks (generateRegionCore / placeFromItems / etc.)
     // are omitted in v1 — procgen does not generate JtA-specific
     // region content; it just records `jtaZone` in the sidecar.
