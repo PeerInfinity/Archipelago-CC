@@ -9513,5 +9513,24 @@
         "has_procgen_data": true
       }
     }
+  },
+  "omsi_substrate_test": {
+    "name": "Omsi Substrate Test",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Omsi Substrate Test"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744_rules.json"
+        ],
+        "has_procgen_data": true
+      }
+    }
   }
 }
