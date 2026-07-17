@@ -122,6 +122,7 @@ import * as apworldEditorModule from './modules/apworldEditor/index.js';
 import * as mazeRoomModule from './modules/mazeRoom/index.js';
 import * as procgenPipelineModule from './modules/procgenPipeline/index.js';
 import * as procgenPlayerModule from './modules/procgenPlayer/index.js';
+import * as resourceChannelsModule from './modules/resourceChannels/index.js';
 import * as textAdventureSubstrateWrapperModule from './modules/textAdventureSubstrateWrapper/index.js';
 import * as jtaSubstrateWrapperModule from './modules/jtaSubstrateWrapper/index.js';
 import * as jtaBalanceModule from './modules/jtaBalance/index.js';
@@ -222,6 +223,7 @@ const BUNDLED_MODULES = {
   mazeRoom: mazeRoomModule,
   procgenPipeline: procgenPipelineModule,
   procgenPlayer: procgenPlayerModule,
+  resourceChannels: resourceChannelsModule,
   textAdventureSubstrateWrapper: textAdventureSubstrateWrapperModule,
   jtaSubstrateWrapper: jtaSubstrateWrapperModule,
   jtaBalance: jtaBalanceModule,
