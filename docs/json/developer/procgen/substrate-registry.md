@@ -55,6 +55,16 @@ The **PlaybackController** contract is substrate-neutral: `play(rateHz?)`, `stop
 | `loopSupport.customQueues` | boolean | Saved substrate-native action queues can be recorded and replayed. |
 | `loopSupport.executeVia` | `'playbackBot'` (optional) | Makes the loops queue execute the region's actions by driving the substrate's PlaybackController (`walkTo`); the queue parks until the resulting event arrives, then charges the action's `loop_costs` value. Absent ⇒ generic timer execution. Used by bounce and jta. |
 
+### Cross-substrate sharing
+
+The optional `sharing` field declares which resource-channel categories the substrate participates in (the cross-game consumable-pool plan's layer R; validated at `register()` time — unknown categories or malformed shapes throw). The host side lives in `frontend/modules/resourceChannels/`: a shared charge/XP/loop-reset helper library for in-process legs, an id-keyed channel-event router (`substrate:resourceDelta` / `substrate:resourceBonus` / `substrate:resourceReset`) for iframe bridges, and the `crossSubstrate:itemGranted` grant-notification bus. The router **rejects** channel events from substrate ids without a matching declaration, so participation is always declared, never implied.
+
+| Field | Type | Meaning |
+|-------|------|---------|
+| `sharing.mana` | object (optional) | The substrate participates in the continuous shared-mana channel (drain/refill/bonus/reset against the host loop-mode pool). |
+| `sharing.mana.loopActionDelegation` | boolean (optional) | The loops queue delegates action execution + per-step charging for this substrate's `manaEnabled` regions to the substrate's own walker instead of the queue's flat tick-progress model. |
+| `sharing.items` | object (optional) | The substrate offers discrete shareable consumables, namespaced `<substrateId>/<type>`. Carries the type list as **exactly one of** a static `types: string[]` or a `getTypes(): string[]` provider. Grant routing (`grantItem`) validates against it. |
+
 ### Build-time — procedural substrates
 
 Implemented by `maze` and `text_adventure` (both via the shared `adapterPrimitives.js` tile-grid implementations):
@@ -120,6 +130,7 @@ The minimal checklist, derived from the smallest existing entry (jta):
 4. **Enable the module** in `frontend/module-configs/modules.json` (and any mode variants that should include it — `frontend/modes.json` maps launch modes to config files).
 5. If the substrate participates in generation, implement the build-time group that fits: procedural hooks for grown geometry, or the content-source group (`zoneCount` + `extractZoneRules`) for a fixed ordered pool.
 6. If regions should be playable in loop mode or by the playback bot, declare `loopSupport` and implement `getPlaybackController`.
+7. If the substrate shares resources or consumables across substrates (loop-mode mana, cross-game item grants), declare `sharing` and build on the `resourceChannels` helpers instead of bespoke gameState plumbing.
 
 ## Related documentation
 
