@@ -332,6 +332,24 @@
         "unlocks_task": { "type": ["integer", "null"] },
         "perk": { "type": ["integer", "null"], "description": "Index into perks[] (live entry) or null. zone_id is NOT in the schema — derived from zone array position." },
         "item": { "type": ["integer", "null"] },
+        "item_schedule": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              { "type": "integer", "minimum": 0 },
+              {
+                "type": "object",
+                "required": ["substrate", "type"],
+                "properties": {
+                  "substrate": { "type": "string", "minLength": 1 },
+                  "type": { "type": "string", "minLength": 1 },
+                  "count": { "type": "integer", "minimum": 1 }
+                }
+              }
+            ]
+          },
+          "description": "Per-rep award schedule (Fork 1.13): exactly max_reps entries — rep k awards entry k instead of `item`. Integer = local NON-ARTIFACT item index; object = foreign award routed to the cross-substrate grant bus (count defaults 1). Only valid on tasks with a non-null item. Cross-field rules (length == max_reps, non-artifact locals, requires item) are validator-enforced."
+        },
         "use_item": { "type": ["integer", "null"] },
         "prestige_layer": { "type": ["integer", "null"], "description": "Required non-null when type is Prestige." },
         "theme": { "$ref": "#/definitions/entityTheme" }

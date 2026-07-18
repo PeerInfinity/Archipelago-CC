@@ -372,6 +372,43 @@ export function validateJtaDataset(dataset) {
       if (typeof t?.hidden_by_default !== "boolean") err(`${where}.hidden_by_default must be a boolean`);
       if (t?.perk !== null && !validPerkIndex(t?.perk)) err(`${where}.perk must be null or a live perk index`);
       if (t?.item !== null && !validItemIndex(t?.item)) err(`${where}.item must be null or a live item index`);
+      // Per-rep award schedule (Fork 1.13 / P2): optional, only on
+      // item-awarding tasks, exactly max_reps entries. Local entries must be
+      // live NON-ARTIFACT items (behavior-slotted entries are excluded from
+      // scheduling per ruling R1); foreign entries are shape-checked only —
+      // the receiving substrate's catalog is validated at runtime by the
+      // grant bus (and at generation time by the schedule generator).
+      if (t?.item_schedule !== undefined && t?.item_schedule !== null) {
+        if (t?.item === null) err(`${where}.item_schedule requires a non-null item`);
+        if (!Array.isArray(t.item_schedule)) {
+          err(`${where}.item_schedule must be an array`);
+        } else {
+          if (t.item_schedule.length !== t?.max_reps) {
+            err(`${where}.item_schedule must have exactly max_reps (${t?.max_reps}) entries, got ${t.item_schedule.length}`);
+          }
+          t.item_schedule.forEach((entry, ei) => {
+            const ewhere = `${where}.item_schedule[${ei}]`;
+            if (typeof entry === "number") {
+              if (!validItemIndex(entry)) err(`${ewhere} must be a live item index`);
+              else if (items[entry]?.behavior != null) {
+                err(`${ewhere} must not be a behavior-slotted (artifact) item`);
+              }
+            } else if (entry !== null && typeof entry === "object" && !Array.isArray(entry)) {
+              if (typeof entry.substrate !== "string" || entry.substrate.length === 0) {
+                err(`${ewhere}.substrate must be a non-empty string`);
+              }
+              if (typeof entry.type !== "string" || entry.type.length === 0) {
+                err(`${ewhere}.type must be a non-empty string`);
+              }
+              if (entry.count !== undefined && !(Number.isInteger(entry.count) && entry.count > 0)) {
+                err(`${ewhere}.count must be a positive integer when present`);
+              }
+            } else {
+              err(`${ewhere} must be an item index or a foreign-award object`);
+            }
+          });
+        }
+      }
       if (t?.use_item !== null && !validItemIndex(t?.use_item)) err(`${where}.use_item must be null or a live item index`);
       if (t?.prestige_layer !== null &&
           !(Number.isInteger(t?.prestige_layer) && t.prestige_layer >= 0 && t.prestige_layer < PRESTIGE_LAYER_KEYS.length)) {
