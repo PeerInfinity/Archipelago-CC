@@ -149,6 +149,38 @@ function normalizeStructure(structure) {
   return s;
 }
 
+// Per-rep award randomization (P2 slice 3; rulings R1/R3 + the dummy-item
+// setting). One GLOBAL pair of knobs (S3): originalItemWeight weights
+// KEEPING a rep's original item (byte-inert default 1 = always-original);
+// dummyItemRatio replaces that fraction of reps with a minted inert dummy
+// item (default 0). foreignTypes = the co-present substrates' declared
+// item types ({substrate, type}), supplied by the caller; foreign awards
+// carry count 1 in v1. Composition per rep: dummy roll first, then
+// original-vs-different, then a uniform draw over (eligible locals ∪
+// foreignTypes).
+const AWARDS_DEFAULTS = { originalItemWeight: 1, dummyItemRatio: 0, foreignTypes: null };
+function normalizeAwards(awards) {
+  if (awards != null && typeof awards !== "object") {
+    throw new Error(`params.awards must be an object, got ${JSON.stringify(awards)}`);
+  }
+  const a = { ...AWARDS_DEFAULTS, ...(awards ?? {}) };
+  const unknown = Object.keys(a).filter((k) => !(k in AWARDS_DEFAULTS));
+  if (unknown.length) throw new Error(`params.awards: unknown field(s) ${unknown.join(", ")}`);
+  for (const k of ["originalItemWeight", "dummyItemRatio"]) {
+    if (!(typeof a[k] === "number" && a[k] >= 0 && a[k] <= 1)) {
+      throw new Error(`params.awards.${k} must be a number in [0, 1], got ${JSON.stringify(a[k])}`);
+    }
+  }
+  if (a.foreignTypes != null) {
+    if (!Array.isArray(a.foreignTypes) || a.foreignTypes.some((f) =>
+        !(f && typeof f.substrate === "string" && f.substrate.length > 0
+          && typeof f.type === "string" && f.type.length > 0))) {
+      throw new Error("params.awards.foreignTypes must be an array of {substrate, type} with non-empty strings");
+    }
+  }
+  return a;
+}
+
 // Resolve + range-check the id stride against BOTH bounds (§2.3, and the
 // exit-task floor). maxTasksPerZone is known once the per-zone task set
 // exists. Too small => task (stride+1) collides with the next zone's ids;
@@ -546,6 +578,7 @@ export function generateJtaDataset({ seed, profile, vanilla, params = {} }) {
     throw new Error(`generateJtaDataset: valueMode must be "raw" or "zone_formula", got ${JSON.stringify(valueMode)}`);
   }
   const structure = normalizeStructure(params.structure);
+  const awards = normalizeAwards(params.awards);
   const rng = createRng(seed);
   // Synthetic source ids for profiled-added free tasks: negative and
   // descending, so they never collide with the positive vanilla profile ids
@@ -752,6 +785,19 @@ export function generateJtaDataset({ seed, profile, vanilla, params = {} }) {
       theme: null,
     };
   });
+  // Dummy award item (P2: dummyItemRatio) — a themed, mechanically inert
+  // roster entry (no effects, no behavior) appended past the mirrored
+  // roster; scheduled reps that roll dummy award it. Minted (and its name
+  // drawn) ONLY when the ratio is non-zero — zero-draw-at-default.
+  let dummyItemIndex = null;
+  if (awards.dummyItemRatio > 0) {
+    const [name, plural] = drawItemPair();
+    dummyItemIndex = items.length;
+    items.push({
+      name, name_plural: plural, icon: drawItemIcon(),
+      tooltip: null, effects: [], behavior: null, theme: null,
+    });
+  }
 
   // -- zones / tasks --
   // Mirror the profile's task list per zone, in order, DROPPING the tasks
@@ -896,9 +942,68 @@ export function generateJtaDataset({ seed, profile, vanilla, params = {} }) {
   // the exact v1 params_hash, so `structure` only enters the hash when it
   // differs from the pure default. A custom mirror idStride DOES change ids,
   // so it correctly falls on the hashed side.
+  // -- per-rep award schedules (P2 slice 3) --
+  // Runs only when a knob departs from its byte-inert default: at
+  // originalItemWeight 1 + dummyItemRatio 0 this pass draws NO rng and
+  // emits NO fields (the document is byte-identical to pre-P2 output).
+  // Draw order: document order (zone, task, rep); per rep the dummy roll
+  // draws first, then the keep roll, then (different only) a uniform pool
+  // draw — deterministic per (seed, params).
+  const awardsActive = awards.originalItemWeight < 1 || awards.dummyItemRatio > 0;
+  if (awardsActive) {
+    const eligibleLocal = [];
+    items.forEach((it, i) => {
+      if (!isPlaceholder(it) && it.behavior == null && i !== dummyItemIndex) eligibleLocal.push(i);
+    });
+    const pool = [
+      ...eligibleLocal.map((i) => ({ local: i })),
+      ...(awards.foreignTypes ?? []).map((f) => ({ foreign: f })),
+    ];
+    for (const zone of zones) {
+      for (const t of zone.tasks) {
+        // R1: artifacts (behavior-slotted) are never rescheduled; itemless
+        // tasks carry no schedule.
+        if (t.item == null || items[t.item]?.behavior != null) continue;
+        const sched = [];
+        let differs = false;
+        for (let rep = 0; rep < t.max_reps; rep += 1) {
+          let entry = t.item;
+          if (awards.dummyItemRatio > 0 && rng.next() < awards.dummyItemRatio) {
+            entry = dummyItemIndex;
+            differs = true;
+          } else if (awards.originalItemWeight < 1 && rng.next() >= awards.originalItemWeight && pool.length > 0) {
+            const pick = pool[Math.floor(rng.next() * pool.length)];
+            if (pick.local !== undefined) {
+              entry = pick.local;
+              if (entry !== t.item) differs = true;
+            } else {
+              entry = { substrate: pick.foreign.substrate, type: pick.foreign.type, count: 1 };
+              differs = true;
+            }
+          }
+          sched.push(entry);
+        }
+        // Emit only when some rep departs from the original — an
+        // all-original roll leaves the task untouched (smaller doc, and
+        // unaffected tasks stay byte-identical).
+        if (differs) t.item_schedule = sched;
+      }
+    }
+  }
+
   const structureIsDefault = JSON.stringify(structure) === JSON.stringify(STRUCTURE_DEFAULTS);
   const effectiveParams = { zoneCount, theme: themeKey, valueMode };
   if (!structureIsDefault) effectiveParams.structure = structure;
+  // Byte-identity discipline (mirrors structure): awards enter the hash only
+  // when the pass ran — foreignTypes alone (weight 1) changes nothing and
+  // correctly stays off the hashed side.
+  if (awardsActive) {
+    effectiveParams.awards = {
+      originalItemWeight: awards.originalItemWeight,
+      dummyItemRatio: awards.dummyItemRatio,
+      foreignTypes: awards.foreignTypes ?? [],
+    };
+  }
   let dataset = {
     schema_version: JTA_DATASET_SCHEMA_VERSION,
     dataset_id: `synthetic-${themeKey}-s${seed}-z${zoneCount}`,

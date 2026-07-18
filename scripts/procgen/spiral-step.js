@@ -45,6 +45,10 @@
  *   --jta-dataset-zones N   generation zone count
  *   --jta-dataset-theme K   generation theme key
  *   --jta-dataset-value-mode M   raw (default) | zone_formula
+ *   --jta-original-item-weight W  per-rep chance a scheduled award keeps the
+ *                                 original item (P2/S3; byte-inert default 1)
+ *   --jta-dummy-item-ratio R      per-rep chance an award becomes the minted
+ *                                 inert dummy item (P2; byte-inert default 0)
  *   --jta-emit-locations    surface each zone task as an AP location + a Victory
  *   --jta-goal-zone N       Victory zone (default: deepest zone when emitting)
  *   --jta-free-zones N      zones requiring no perks (default 1)
@@ -68,6 +72,7 @@ import '../../frontend/modules/textAdventureSubstrate/textAdventureSubstrateLibr
 import '../../frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
 import '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
 import '../../frontend/modules/runnerDemo/runnerDemoLibrary.js';
+import '../../frontend/modules/omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js';
 import { substrateRegistry } from '../../frontend/modules/shared/procgen/substrateRegistry.js';
 import { generateJtaDataset } from '../../frontend/modules/jtaSubstrateWrapper/generateDataset.js';
 import {
@@ -83,7 +88,7 @@ const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 // Reads the two fixtures off disk and runs the pure generator, returning the
 // dataset document the pipeline installs as ② content. Used by the --jta-*
 // flags below so `spiral-step run` can mint a jta-dataset world end-to-end.
-function generateJtaDatasetFromFixtures({ seed = 1, zones, theme, valueMode }) {
+function generateJtaDatasetFromFixtures({ seed = 1, zones, theme, valueMode, awards }) {
     const profile = JSON.parse(readFileSync(
         resolve(REPO_ROOT, 'CC/scripts/jta-stats/results/vanilla-profile.json'), 'utf8')).static;
     const vanilla = JSON.parse(readFileSync(
@@ -92,6 +97,7 @@ function generateJtaDatasetFromFixtures({ seed = 1, zones, theme, valueMode }) {
         ...(zones !== undefined ? { zoneCount: zones } : {}),
         ...(theme !== undefined ? { theme } : {}),
         ...(valueMode !== undefined ? { valueMode } : {}),
+        ...(awards !== undefined ? { awards } : {}),
     };
     return generateJtaDataset({ seed, profile, vanilla, params }).dataset;
 }
@@ -123,6 +129,8 @@ function parseArgs(argv) {
         jtaDatasetZones: undefined,
         jtaDatasetTheme: undefined,
         jtaDatasetValueMode: undefined,
+        jtaOriginalItemWeight: undefined,
+        jtaDummyItemRatio: undefined,
         jtaEmitLocations: false,
         jtaGoalZone: undefined,
         jtaFreeZones: undefined,
@@ -165,6 +173,8 @@ function parseArgs(argv) {
             case '--jta-dataset-zones': out.jtaDatasetZones = parseInt(next(), 10); break;
             case '--jta-dataset-theme': out.jtaDatasetTheme = next(); break;
             case '--jta-dataset-value-mode': out.jtaDatasetValueMode = next(); break;
+            case '--jta-original-item-weight': out.jtaOriginalItemWeight = parseFloat(next()); break;
+            case '--jta-dummy-item-ratio': out.jtaDummyItemRatio = parseFloat(next()); break;
             case '--jta-emit-locations': out.jtaEmitLocations = true; break;
             case '--jta-goal-zone': out.jtaGoalZone = parseInt(next(), 10); break;
             case '--jta-free-zones': out.jtaFreeZones = parseInt(next(), 10); break;
@@ -204,6 +214,20 @@ function resolveVictory(quotas) {
         .find(Boolean) ?? null;
 }
 
+// Foreign award pool (P2, R3): {substrate, type} for every OTHER substrate
+// actually in the mix (quota > 0) that declares sharing.items with a static
+// types list. jta is the donor; getTypes-style dynamic declarations (jta's
+// own) are not foreign targets here.
+function foreignAwardTypes(quotas) {
+    const out = [];
+    for (const [id, n] of Object.entries(quotas ?? {})) {
+        if (!(n > 0) || id === 'jta') continue;
+        const types = substrateRegistry.get(id)?.sharing?.items?.types;
+        if (Array.isArray(types)) for (const t of types) out.push({ substrate: id, type: t });
+    }
+    return out;
+}
+
 // Resolve the jta ② content config from the --jta-* flags (stepped-spiral
 // Part 3), or null when no jta dataset was requested. Either loads a
 // pre-generated document (--jta-dataset-file) or generates one from fixtures
@@ -214,11 +238,21 @@ function buildJtaSubstrateConfig(args) {
     if (args.jtaDatasetFile) {
         datasetDoc = readJson(args.jtaDatasetFile);
     } else if (args.jtaGenerate) {
+        // Award-schedule knobs (P2/S3): only built when a knob departs from
+        // its byte-inert default; the foreign pool is the co-present
+        // substrates' declared item types (R3) drawn from the registry.
+        const awards = (args.jtaOriginalItemWeight !== undefined || args.jtaDummyItemRatio !== undefined)
+            ? {
+                ...(args.jtaOriginalItemWeight !== undefined ? { originalItemWeight: args.jtaOriginalItemWeight } : {}),
+                ...(args.jtaDummyItemRatio !== undefined ? { dummyItemRatio: args.jtaDummyItemRatio } : {}),
+                foreignTypes: foreignAwardTypes(args.quotas),
+            } : undefined;
         datasetDoc = generateJtaDatasetFromFixtures({
             seed: args.jtaDatasetSeed,
             zones: args.jtaDatasetZones,
             theme: args.jtaDatasetTheme,
             valueMode: args.jtaDatasetValueMode,
+            awards,
         });
     } else {
         return null;

@@ -291,6 +291,56 @@ loadAndPlay(skillCountWorld.dataset); // skillCount 13 (grown roster + repaired 
         'raw twin ≡ formula twin effective values (cost/XP/drain/progress, bit-exact)');
 }
 
+// ---- 6. Award schedules (P2 slice 3: originalItemWeight / dummyItemRatio) --
+{
+    const G = (seed, awards) => generateJtaDataset({
+        seed, profile, vanilla, params: { zoneCount: 15, awards } }).dataset;
+    const allTasks = (d) => d.zones.flatMap((z) => z.tasks);
+    const schedTasks = (d) => allTasks(d).filter((t) => t.item_schedule);
+
+    // Byte-inertness: explicit default knobs == absent awards param, no
+    // schedules, no dummy item, same dataset_id.
+    const base = G(1, undefined); // zoneCount 15, no awards param
+    const defaults = G(1, { originalItemWeight: 1, dummyItemRatio: 0 });
+    ok(JSON.stringify(defaults) === JSON.stringify(base),
+        'awards at default knobs are byte-identical to no awards param (zero-draw discipline)');
+    ok(schedTasks(base).length === 0, 'default document carries no item_schedule fields');
+
+    const OMSI_TYPES = ['gold', 'reputation', 'herbs'].map((type) => ({ substrate: 'omsi', type }));
+    const w = G(1, { originalItemWeight: 0.3, foreignTypes: OMSI_TYPES });
+    const w2 = G(1, { originalItemWeight: 0.3, foreignTypes: OMSI_TYPES });
+    ok(JSON.stringify(w) === JSON.stringify(w2), 'weighted generation is deterministic per (seed, params)');
+    ok(w.dataset_id !== base.dataset_id, 'weighted document gets a distinct dataset_id');
+    const entries = schedTasks(w).flatMap((t) => t.item_schedule);
+    ok(schedTasks(w).length > 0 && entries.length > 0, `weight 0.3 emits schedules (${schedTasks(w).length} tasks)`);
+    ok(schedTasks(w).every((t) => t.item_schedule.length === t.max_reps),
+        'every schedule has exactly max_reps entries');
+    const artifactIdx = new Set(w.items.flatMap((it, i) => (it?.behavior != null ? [i] : [])));
+    ok(entries.every((e) => typeof e !== 'number' || !artifactIdx.has(e)),
+        'no scheduled entry is a behavior-slotted (artifact) item');
+    ok(allTasks(w).filter((t) => t.item != null && artifactIdx.has(t.item)).every((t) => !t.item_schedule),
+        'artifact-awarding tasks are never rescheduled (R1)');
+    const foreign = entries.filter((e) => typeof e === 'object');
+    ok(foreign.every((f) => f.count === 1 && f.substrate === 'omsi' && typeof f.type === 'string'),
+        `foreign entries are {substrate,type,count:1} (${foreign.length} foreign)`);
+    ok(validateJtaDataset(w).ok, 'weighted document passes the outer validator');
+
+    const dm = G(1, { dummyItemRatio: 0.5 });
+    ok(dm.items.length === base.items.length + 1, 'dummy ratio mints exactly one extra roster item');
+    const dummy = dm.items[dm.items.length - 1];
+    ok(dummy.behavior == null && Array.isArray(dummy.effects) && dummy.effects.length === 0,
+        `dummy item is mechanically inert ("${dummy.name}")`);
+    const dmEntries = schedTasks(dm).flatMap((t) => t.item_schedule);
+    const dummyHits = dmEntries.filter((e) => e === dm.items.length - 1).length;
+    ok(dummyHits > 0, `dummy entries appear in schedules (${dummyHits}/${dmEntries.length})`);
+    ok(validateJtaDataset(dm).ok, 'dummy document passes the outer validator');
+
+    // The scheduled document loads in the engine (Fork 1.13 loader accepts
+    // what the outer validator accepts).
+    const res = win.loadGameData(w);
+    ok(res?.ok === true, 'weighted document loads in the fork engine');
+}
+
 console.log(failures === 0
     ? '\nAll generated-dataset assertions passed.'
     : `\n${failures} assertion(s) FAILED.`);
