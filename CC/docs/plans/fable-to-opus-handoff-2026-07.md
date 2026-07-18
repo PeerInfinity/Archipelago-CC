@@ -1,7 +1,10 @@
 # Fable → Opus handoff — cross-arc queue (2026-07-11)
 
-**Purpose.** Written at the Fable→Opus transition (Fable access ends ~2026-07-13).
-During 2026-07-10/11 every active arc was either shipped or carried to a fully
+**Purpose.** Written at the Fable→Opus transition (originally "Fable access
+ends ~2026-07-13"; superseded 2026-07-18 — Fable is now a standing 50% of the
+weekly cap, so the queue's role is durable: Fable does design/rulings
+sessions, Opus implements from the kickoff prompts queued here). During
+2026-07-10/11 every active arc was either shipped or carried to a fully
 ruled design; this document is the single ordered queue of what comes next,
 with dependencies. Detail lives in the per-arc plan docs and memory topic
 files — this doc is the map, not the territory.
@@ -448,6 +451,29 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    discovery + lootable checking), NOT action unlocks** (discretization
    plan §7). Settle the base algorithm in town-0 mode before more
    multi-town work (unchanged).
+1b. **XML migration arc (fork branch `xml-migration`; post-dates this doc's
+   original queue) — Phases 3+4+wiring+5 COMPLETE 2026-07-16 (sessions
+   30–32, Fable); view-subscribe DESIGN COMPLETE 2026-07-18 (session 33,
+   Fable). NEXT = the Opus implementation kickoff below.**
+   - Shipped: field matrix + xmlLite/actionListXml interpreter + all 157
+     actions XML-defined (differential-green vs the JS oracle) + game-side
+     wiring behind `options.useActionListXml` (default OFF) + Phase-5 tick
+     goldens. 15 commits on `xml-migration` @ `efb0ee5`, pushed, CI green
+     (test.yml triggers on the branch). ⚠ The outer gitlink stays on
+     `substrate` (`5ad0d16`) — never bump it from this arc.
+   - **View-subscribe refactor (Phase 6's prerequisite): design + 4 user
+     rulings done** — *(NewDocs)* `omsiloops/omsi-loops-view-subscribe-plan.md`
+     (§8 = rulings: bespoke kinds + payloads for tails; actionList.js-only
+     scope with a post-Phase-6 sweep arc for the ~61 other sites;
+     `kind:key` + wildcards + level-delta vocabulary; settled-DOM
+     equivalence bar). **Opus kickoff READY:** *(NewDocs)*
+     `omsiloops/omsi-loops-view-subscribe-opus-kickoff.md` (3 slices;
+     ui-parity = load-bearing gate, commit before gating; 461 byte-gate
+     every commit; success = actionList.js contains ZERO view category
+     names).
+   - Then **Phase 6 executable rewards** (reward vocabulary must NOT grow
+     `<notify>` — ruled; also unblocks the P2-omsi award-schedule carrier
+     + lootable UI, §5b) → **Phase 7 editor**.
 2. **Unlock-discretization U0–U5** —
    `omsi-loops-unlock-discretization-plan.md` (~5–6 days, on `substrate`).
    Defines the AP location pool; extractor prototyped (157×2 predicates,
@@ -500,17 +526,28 @@ sharing.items declarations, jta Fork 1.12 `window.grantItem`, omsi
 bridge-direct `addResource` arrival handler, D4 wipe verified both sides)
 are COMPLETE and pushed.** Next in order:
 
-1. **P2 — award schedules + randomization**: PLANNING pass first (S2
-   schedule-representation design + S4 safe-to-randomize censuses per
-   game), then implementation. Kickoff prompt ready: *(NewDocs)*
-   `cross-game-p2-kickoff-prompt.md`. The omsi carrier naturally FOLLOWS
-   the omsi XML Phase-6 executable-rewards arc (§5-adjacent; not started —
-   view-subscribe refactor first); the JtA half does not block on it.
-2. **X1 — maze consumable tiles** (independent of P2's randomization;
-   needs only the grant bus, which is live): new tile type → compile
-   classification → sidecar → pickup dispatch → grant event; maze-only
-   always/never bot-collect setting (S6); mana-refill tiles = optional
-   stretch (S5).
+1. **P2 — award schedules + randomization: JTA HALF COMPLETE + PUSHED
+   2026-07-17** (design doc *(NewDocs)* `cross-game-p2-award-schedules-design.md`
+   with censuses + experiments + rulings R1–R4; 4 outer commits
+   `11a633277`→`8bc0fa0cf` + jta fork Fork 1.13 `e1e38d9`, CI all green).
+   Shipped: per-rep `item_schedule` in the dataset doc (solver-visible by
+   construction), schema/validator rules, generator knobs
+   `originalItemWeight`/`dummyItemRatio` (byte-inert defaults), outbound
+   foreign-award leg end-to-end. Key experiment facts: JtA has NO hard
+   wall even with all 32 awards nulled (p100 completes at 17.7×
+   baseline); omsi uniform dropping DNFs even at realized 15% — the
+   lootable UI (design §9b-pre) is the mitigation. **The omsi half
+   FOLLOWS XML Phase 6** (§4 item 1b: view-subscribe → Phase 6 → §2d
+   carrier + §9b-pre lootable UI).
+2. **X1 — maze consumable tiles — Opus kickoff READY 2026-07-18:**
+   *(NewDocs)* `x1-maze-consumable-tiles-opus-kickoff.md` (anchors
+   verified: `compileRegionGraph` procgenPipelineEngine.js:2185,
+   `stepItems` sphereSteps.js:305, mazeRoom/index.js:110 pickup dispatch;
+   carries D10/S5/S6/D5/D2/S8 + byte-inert-default discipline).
+   Independent of P2's omsi half and of Phase 6 — needs only the grant
+   bus, which is live: new tile type → compile classification → sidecar →
+   pickup dispatch → grant event; maze-only always/never bot-collect
+   setting (S6); mana-refill tiles = optional stretch (S5).
 3. **X2 — hardening** (S4-census-driven logic-inertness enforcement;
    balancing-aware placement aspiration).
 
@@ -534,6 +571,8 @@ runner rebalance ──► OR-lanes O1–O5
 action-queue port ──► Phase 6 audit ──► old-stack retirement
 scoring-horizon design ──► multi-town continuation (beyond M4)
 U0–U5 (independent of M-phases) ──► omsi randomization v1
+view-subscribe impl (kickoff ready) ──► XML Phase 6 ──► P2-omsi carrier + lootable UI ──► Phase 7 editor
+X1 maze tiles (kickoff ready, independent — grant bus live)
 Cavernous Stage 2 (hooks/managed) ──► v0 substrate ──► Stage F (pool + trigger ready)
 world-persistence P1–P4 (independent)
 ```
