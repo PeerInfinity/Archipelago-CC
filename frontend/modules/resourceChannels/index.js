@@ -44,6 +44,11 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 export const RESOURCE_DELTA_EVENT = 'substrate:resourceDelta';
 export const RESOURCE_BONUS_EVENT = 'substrate:resourceBonus';
 export const RESOURCE_RESET_EVENT = 'substrate:resourceReset';
+// Substrate-initiated item grants (P2 outbound leg): an iframe bridge
+// publishes this when its game's award executor routes a FOREIGN scheduled
+// award (Fork 1.13 item_schedule) — the router forwards to the validating
+// library grantItem (declared substrates/types; invalid grants warn+drop).
+export const SUBSTRATE_ITEM_GRANT_EVENT = 'substrate:itemGrant';
 
 export const moduleInfo = {
     name: 'resourceChannels',
@@ -100,6 +105,9 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
     eventBus.subscribe(RESOURCE_DELTA_EVENT, (data) => handleResourceDelta(data));
     eventBus.subscribe(RESOURCE_BONUS_EVENT, (data) => handleResourceBonus(data));
     eventBus.subscribe(RESOURCE_RESET_EVENT, (data) => handleResourceReset(data));
+    eventBus.subscribe(SUBSTRATE_ITEM_GRANT_EVENT, (data) => {
+        grantItem({ to: data?.to, from: data?.from, itemType: data?.itemType, count: data?.count });
+    });
 }
 
 /**

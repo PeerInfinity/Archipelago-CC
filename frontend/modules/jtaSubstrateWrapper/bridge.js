@@ -817,6 +817,25 @@ function _handleItemGranted(data) {
 }
 
 /**
+ * Foreign-award outbound (P2 / Fork 1.13): the fork's award executor hands
+ * over a per-rep schedule entry that belongs to another substrate — the
+ * local player deliberately receives nothing, and the bridge forwards the
+ * award to the resourceChannels grant bus. The router validates it against
+ * the receiving substrate's sharing.items declaration (invalid grants
+ * warn+drop host-side); delivery is eager per D8/S8 — the receiving
+ * substrate's own arrival handler deposits it.
+ */
+function _handleForeignAward(info) {
+    _client.publishEventBus('substrate:itemGrant', {
+        to: info.substrate,
+        from: 'jta',
+        itemType: info.type,
+        count: info.count,
+    });
+    log('debug', `foreign award task ${info.taskId} rep ${info.rep} -> ${info.substrate}/${info.type} x${info.count}`);
+}
+
+/**
  * Detect a prestige. The fork's energy-reset callback fires for doEnergyReset
  * and doPrestige alike, and its payload carries no prestige flag, so compare
  * prestige_count across calls. Seeds itself on the first call (a bridge that
@@ -1332,6 +1351,12 @@ async function main() {
         _w.setTaskCompletionCallback(_handleTaskCompleted);
     } else {
         log('warn', 'setTaskCompletionCallback hook missing — AP location checks will not fire');
+    }
+    // Foreign-award outbound (P2). No warning when missing: a build old
+    // enough to lack the hook also lacks the item_schedule loader, so no
+    // foreign award can ever fire there.
+    if (typeof _w.setForeignAwardCallback === 'function') {
+        _w.setForeignAwardCallback(_handleForeignAward);
     }
 
     // Step 5: announce ready. The host module's iframe:appReady

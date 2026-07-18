@@ -49,6 +49,7 @@ const TEST_CASE_FILES = [
   './testCases/omsiSubstrateWrapperTests.js',
   './testCases/jtaBalanceTests.js',
   './testCases/jtaDatasetTests.js',
+  './testCases/jtaScheduleTests.js',
   //'./testCases/manualTests.js',
 ];
 

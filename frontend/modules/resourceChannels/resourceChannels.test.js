@@ -26,6 +26,7 @@ import {
     RESOURCE_DELTA_EVENT,
     RESOURCE_BONUS_EVENT,
     RESOURCE_RESET_EVENT,
+    SUBSTRATE_ITEM_GRANT_EVENT,
 } from './index.js';
 
 function makeFakeBus() {
@@ -224,6 +225,38 @@ describe('fireLoopResetTeleport', () => {
         gs.startRegions = ['Start'];
         expect(resolveStartRegion({ fallbackToDeclaredStart: false })).toBeNull();
         expect(resolveStartRegion()).toBe('Start');
+    });
+});
+
+describe('substrate:itemGrant router leg (P2 outbound)', () => {
+    // An iframe bridge publishes substrate:itemGrant for a FOREIGN scheduled
+    // award (Fork 1.13); the router forwards to the validating grantItem.
+    let bus;
+    beforeEach(() => {
+        substrateRegistry.register({ id: 'omsi', sharing: { items: { types: ['gold'] } } });
+        substrateRegistry.register({ id: 'jta', sharing: { items: { types: ['Fish'] } } });
+        createGameStateSingleton(null);
+        bus = makeFakeBus();
+        initializeModule('resourceChannels', 0, {
+            getEventBus: () => bus,
+            getDispatcher: () => makeFakeDispatcher(),
+        });
+    });
+
+    it('forwards a valid grant request to the crossSubstrate:itemGranted bus', () => {
+        bus.publish(SUBSTRATE_ITEM_GRANT_EVENT, { to: 'omsi', from: 'jta', itemType: 'gold', count: 2 });
+        expect(bus.published).toContainEqual({
+            event: ITEM_GRANTED_EVENT,
+            data: { to: 'omsi', from: 'jta', itemType: 'gold', count: 2 },
+        });
+    });
+
+    it('drops invalid requests (undeclared type / unknown substrate) without publishing', () => {
+        bus.publish(SUBSTRATE_ITEM_GRANT_EVENT, { to: 'omsi', from: 'jta', itemType: 'sandwich', count: 1 });
+        bus.publish(SUBSTRATE_ITEM_GRANT_EVENT, { to: 'ghost', from: 'jta', itemType: 'gold', count: 1 });
+        bus.publish(SUBSTRATE_ITEM_GRANT_EVENT, { to: 'omsi', from: 'jta', itemType: 'gold', count: 0 });
+        expect(bus.published.filter((p) => p.event === ITEM_GRANTED_EVENT)).toHaveLength(0);
+        expect(warnSpy).toHaveBeenCalledTimes(3);
     });
 });
 

@@ -1,0 +1,3447 @@
+{
+  "schema_version": 3,
+  "game_name": "JtA Schedule Test",
+  "game_directory": "procgen_maze_worldgen",
+  "archipelago_version": "0.6.7",
+  "generation_seed": 1,
+  "seed_name": "",
+  "player_names": {
+    "1": "Player1"
+  },
+  "world_classes": {
+    "1": "ProcgenMazeWorld"
+  },
+  "regions": {
+    "1": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "GameStart",
+            "connected_region": "region_0_0",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "region_0_0": {
+        "name": "region_0_0",
+        "exits": [
+          {
+            "name": "exit_E",
+            "connected_region": "region_1_0",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_0_0__10",
+            "id": 1000,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_0_0__11",
+            "id": 1001,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_0_0__12",
+            "id": 1002,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_0_0__13",
+            "id": 1003,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Anchored Sense",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          },
+          {
+            "name": "region_0_0__14",
+            "id": 1004,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_0_0__15",
+            "id": 1005,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_0_0__16",
+            "id": 1006,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          }
+        ]
+      },
+      "region_1_0": {
+        "name": "region_1_0",
+        "exits": [
+          {
+            "name": "exit_S",
+            "connected_region": "region_1_1",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "exit_W",
+            "connected_region": "region_0_0",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_1_0__30",
+            "id": 1007,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "Anchored Lungs",
+                  "Anchored Sense",
+                  "Fathomless Instinct",
+                  "Tideworn Sight"
+                ],
+                "count": 1
+              }
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_1_0__31",
+            "id": 1008,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "Anchored Lungs",
+                  "Anchored Sense",
+                  "Fathomless Instinct",
+                  "Tideworn Sight"
+                ],
+                "count": 1
+              }
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_1_0__32",
+            "id": 1009,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "Anchored Lungs",
+                  "Anchored Sense",
+                  "Fathomless Instinct",
+                  "Tideworn Sight"
+                ],
+                "count": 1
+              }
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_1_0__33",
+            "id": 1010,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "Anchored Lungs",
+                  "Anchored Sense",
+                  "Fathomless Instinct",
+                  "Tideworn Sight"
+                ],
+                "count": 1
+              }
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_1_0__34",
+            "id": 1011,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "Anchored Lungs",
+                  "Anchored Sense",
+                  "Fathomless Instinct",
+                  "Tideworn Sight"
+                ],
+                "count": 1
+              }
+            },
+            "item": {
+              "name": "Fathomless Instinct",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          },
+          {
+            "name": "region_1_0__35",
+            "id": 1012,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "Anchored Lungs",
+                  "Anchored Sense",
+                  "Fathomless Instinct",
+                  "Tideworn Sight"
+                ],
+                "count": 1
+              }
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_1_0__36",
+            "id": 1013,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "Anchored Lungs",
+                  "Anchored Sense",
+                  "Fathomless Instinct",
+                  "Tideworn Sight"
+                ],
+                "count": 1
+              }
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_1_0__37",
+            "id": 1014,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "Anchored Lungs",
+                  "Anchored Sense",
+                  "Fathomless Instinct",
+                  "Tideworn Sight"
+                ],
+                "count": 1
+              }
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          }
+        ]
+      },
+      "region_1_1": {
+        "name": "region_1_1",
+        "exits": [
+          {
+            "name": "exit_N",
+            "connected_region": "region_1_0",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_1_1__50",
+            "id": 1015,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "Anchored Lungs",
+                  "Anchored Sense",
+                  "Fathomless Instinct",
+                  "Tideworn Sight"
+                ],
+                "count": 2
+              }
+            },
+            "item": {
+              "name": "Victory",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          },
+          {
+            "name": "region_1_1__51",
+            "id": 1016,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "Anchored Lungs",
+                  "Anchored Sense",
+                  "Fathomless Instinct",
+                  "Tideworn Sight"
+                ],
+                "count": 2
+              }
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_1_1__52",
+            "id": 1017,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "Anchored Lungs",
+                  "Anchored Sense",
+                  "Fathomless Instinct",
+                  "Tideworn Sight"
+                ],
+                "count": 2
+              }
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_1_1__53",
+            "id": 1018,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "Anchored Lungs",
+                  "Anchored Sense",
+                  "Fathomless Instinct",
+                  "Tideworn Sight"
+                ],
+                "count": 2
+              }
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_1_1__54",
+            "id": 1019,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "Anchored Lungs",
+                  "Anchored Sense",
+                  "Fathomless Instinct",
+                  "Tideworn Sight"
+                ],
+                "count": 2
+              }
+            },
+            "item": {
+              "name": "Tideworn Sight",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          },
+          {
+            "name": "region_1_1__55",
+            "id": 1020,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "Anchored Lungs",
+                  "Anchored Sense",
+                  "Fathomless Instinct",
+                  "Tideworn Sight"
+                ],
+                "count": 2
+              }
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_1_1__56",
+            "id": 1021,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "Anchored Lungs",
+                  "Anchored Sense",
+                  "Fathomless Instinct",
+                  "Tideworn Sight"
+                ],
+                "count": 2
+              }
+            },
+            "item": {
+              "name": "JtA Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_1_1__57",
+            "id": 1022,
+            "access_rule": {
+              "rule": "HasFromListUnique",
+              "args": {
+                "item_names": [
+                  "Anchored Lungs",
+                  "Anchored Sense",
+                  "Fathomless Instinct",
+                  "Tideworn Sight"
+                ],
+                "count": 2
+              }
+            },
+            "item": {
+              "name": "Anchored Lungs",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "start_regions": {
+    "1": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "1": {
+      "JtA Filler": {
+        "name": "JtA Filler",
+        "id": 1,
+        "classification": "filler",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "Anchored Sense": {
+        "name": "Anchored Sense",
+        "id": 2,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "Fathomless Instinct": {
+        "name": "Fathomless Instinct",
+        "id": 3,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "Victory": {
+        "name": "Victory",
+        "id": 4,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "Tideworn Sight": {
+        "name": "Tideworn Sight",
+        "id": 5,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "Anchored Lungs": {
+        "name": "Anchored Lungs",
+        "id": 6,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      }
+    }
+  },
+  "item_groups": {
+    "1": [
+      "Everything"
+    ]
+  },
+  "itempool_counts": {
+    "1": {
+      "JtA Filler": 18,
+      "Anchored Sense": 1,
+      "Fathomless Instinct": 1,
+      "Victory": 1,
+      "Tideworn Sight": 1,
+      "Anchored Lungs": 1
+    }
+  },
+  "world": {
+    "1": {
+      "game": "JtA Schedule Test",
+      "world_class_name": "ProcgenMazeWorld",
+      "options": {}
+    }
+  },
+  "game_info": {
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Victory"
+      }
+    }
+  },
+  "helpers": {},
+  "exporter": {},
+  "canonical_placements": {
+    "1": {
+      "region_0_0__10": "JtA Filler",
+      "region_0_0__11": "JtA Filler",
+      "region_0_0__12": "JtA Filler",
+      "region_0_0__13": "Anchored Sense",
+      "region_0_0__14": "JtA Filler",
+      "region_0_0__15": "JtA Filler",
+      "region_0_0__16": "JtA Filler",
+      "region_1_0__30": "JtA Filler",
+      "region_1_0__31": "JtA Filler",
+      "region_1_0__32": "JtA Filler",
+      "region_1_0__33": "JtA Filler",
+      "region_1_0__34": "Fathomless Instinct",
+      "region_1_0__35": "JtA Filler",
+      "region_1_0__36": "JtA Filler",
+      "region_1_0__37": "JtA Filler",
+      "region_1_1__50": "Victory",
+      "region_1_1__51": "JtA Filler",
+      "region_1_1__52": "JtA Filler",
+      "region_1_1__53": "JtA Filler",
+      "region_1_1__54": "Tideworn Sight",
+      "region_1_1__55": "JtA Filler",
+      "region_1_1__56": "JtA Filler",
+      "region_1_1__57": "Anchored Lungs"
+    }
+  },
+  "progression_mapping": {
+    "1": {}
+  },
+  "starting_items": {
+    "1": []
+  },
+  "assume_bidirectional_exits": true,
+  "preset_sidecars": {
+    "1": {
+      "region_0_0": {
+        "substrate": "jta",
+        "render_hint": "jta",
+        "grid_cell": {
+          "gx": 0,
+          "gy": 0
+        },
+        "playable_payload": {
+          "jtaZone": 0,
+          "ap_locations": {
+            "10": "region_0_0__10",
+            "11": "region_0_0__11",
+            "12": "region_0_0__12",
+            "13": "region_0_0__13",
+            "14": "region_0_0__14",
+            "15": "region_0_0__15",
+            "16": "region_0_0__16"
+          },
+          "task_patches": [
+            {
+              "id": 13,
+              "perk": 47
+            }
+          ],
+          "jta_dataset_ref": {
+            "dataset_id": "synthetic-sunken-meridian-s1-z3-5febd71f",
+            "schema_version": 1
+          },
+          "jta_dataset": {
+            "schema_version": 1,
+            "dataset_id": "synthetic-sunken-meridian-s1-z3-5febd71f",
+            "provenance": {
+              "generator": "generateDataset.js",
+              "fork_save_version": "Fork 1.11",
+              "seed": 1,
+              "params_hash": "759b9cfc",
+              "content_hash": "5febd71f"
+            },
+            "theme": {
+              "title": "The Sunken Meridian",
+              "setting": "A drowned trade-road of reef towns and tide-locked ruins, descending current by current toward the luminous trench where the old line ends.",
+              "tone": [
+                "strange",
+                "luminous"
+              ],
+              "namebanks": {
+                "theme": "sunken-meridian"
+              }
+            },
+            "skills": [
+              {
+                "name": "Lungcraft",
+                "icon": "🫁",
+                "xp_needed_mult": 200,
+                "theme": null
+              },
+              {
+                "name": "Reefcombing",
+                "icon": "🦪",
+                "xp_needed_mult": 5,
+                "theme": null
+              },
+              {
+                "name": "Pearlbinding",
+                "icon": "🔔",
+                "xp_needed_mult": 1,
+                "theme": null
+              },
+              {
+                "name": "Drifting",
+                "icon": "🌀",
+                "xp_needed_mult": 5,
+                "theme": null
+              },
+              {
+                "name": "Haggling",
+                "icon": "🌊",
+                "xp_needed_mult": 1,
+                "theme": null
+              },
+              {
+                "name": "Harpoonry",
+                "icon": "📖",
+                "xp_needed_mult": 1,
+                "theme": null
+              },
+              {
+                "name": "Deepcalling",
+                "icon": "🧂",
+                "xp_needed_mult": 1,
+                "theme": null
+              },
+              {
+                "name": "Sounding",
+                "icon": "🐟",
+                "xp_needed_mult": 3,
+                "theme": null
+              },
+              {
+                "name": "Currentreading",
+                "icon": "⚓",
+                "xp_needed_mult": 1,
+                "theme": null
+              },
+              {
+                "name": "Tidelore",
+                "icon": "🪸",
+                "xp_needed_mult": 1,
+                "theme": null
+              }
+            ],
+            "zones": [
+              {
+                "name": "The Silted Shelf",
+                "key": "the-silted-shelf",
+                "theme": {
+                  "flavor": "The tide keeps its own ledgers here."
+                },
+                "tasks": [
+                  {
+                    "id": 10,
+                    "name": "Ride the Current to The Glassy Meridian",
+                    "type": "Travel",
+                    "skills": [
+                      9
+                    ],
+                    "cost_multiplier": 1,
+                    "xp_mult": 1,
+                    "max_reps": 1,
+                    "hidden_by_default": false,
+                    "unlocks_task": null,
+                    "perk": null,
+                    "item": null,
+                    "use_item": null,
+                    "prestige_layer": null,
+                    "theme": null,
+                    "formula_cost_multiplier": 4,
+                    "formula_xp_mult": 1,
+                    "raw_cost": 40,
+                    "raw_xp": 8
+                  },
+                  {
+                    "id": 11,
+                    "name": "Flood the Anemone Field",
+                    "type": "Mandatory",
+                    "skills": [
+                      5
+                    ],
+                    "cost_multiplier": 1,
+                    "xp_mult": 1,
+                    "max_reps": 1,
+                    "hidden_by_default": false,
+                    "unlocks_task": null,
+                    "perk": null,
+                    "item": null,
+                    "use_item": null,
+                    "prestige_layer": null,
+                    "theme": null,
+                    "formula_cost_multiplier": 3,
+                    "formula_xp_mult": 1,
+                    "raw_cost": 30,
+                    "raw_xp": 8
+                  },
+                  {
+                    "id": 12,
+                    "name": "Seal the Lanterns",
+                    "type": "Mandatory",
+                    "skills": [
+                      3
+                    ],
+                    "cost_multiplier": 1,
+                    "xp_mult": 3,
+                    "max_reps": 3,
+                    "hidden_by_default": false,
+                    "unlocks_task": null,
+                    "perk": null,
+                    "item": null,
+                    "use_item": null,
+                    "prestige_layer": null,
+                    "theme": null,
+                    "formula_cost_multiplier": 1,
+                    "formula_xp_mult": 3,
+                    "raw_cost": 10,
+                    "raw_xp": 8
+                  },
+                  {
+                    "id": 13,
+                    "name": "Untangle the Bell Tower",
+                    "type": "Normal",
+                    "skills": [
+                      5
+                    ],
+                    "cost_multiplier": 1,
+                    "xp_mult": 0.5,
+                    "max_reps": 1,
+                    "hidden_by_default": false,
+                    "unlocks_task": null,
+                    "perk": 0,
+                    "item": null,
+                    "use_item": null,
+                    "prestige_layer": null,
+                    "theme": null,
+                    "formula_cost_multiplier": 8,
+                    "formula_xp_mult": 0.5,
+                    "raw_cost": 80,
+                    "raw_xp": 8
+                  },
+                  {
+                    "id": 14,
+                    "name": "Salvage the Pressure Door",
+                    "type": "Normal",
+                    "skills": [
+                      9
+                    ],
+                    "cost_multiplier": 1,
+                    "xp_mult": 2,
+                    "max_reps": 10,
+                    "hidden_by_default": false,
+                    "unlocks_task": null,
+                    "perk": null,
+                    "item": 0,
+                    "use_item": null,
+                    "prestige_layer": null,
+                    "theme": null,
+                    "formula_cost_multiplier": 1,
+                    "formula_xp_mult": 2,
+                    "raw_cost": 10,
+                    "raw_xp": 8,
+                    "item_schedule": [
+                      0,
+                      {
+                        "substrate": "omsi",
+                        "type": "gold",
+                        "count": 2
+                      },
+                      0,
+                      0,
+                      0,
+                      0,
+                      0,
+                      0,
+                      0,
+                      0
+                    ]
+                  },
+                  {
+                    "id": 15,
+                    "name": "Untangle the Brine Pools",
+                    "type": "Normal",
+                    "skills": [
+                      4,
+                      8
+                    ],
+                    "cost_multiplier": 1,
+                    "xp_mult": 1.5,
+                    "max_reps": 3,
+                    "hidden_by_default": false,
+                    "unlocks_task": null,
+                    "perk": null,
+                    "item": null,
+                    "use_item": null,
+                    "prestige_layer": null,
+                    "theme": null,
+                    "formula_cost_multiplier": 2,
+                    "formula_xp_mult": 1.5,
+                    "raw_cost": 20,
+                    "raw_xp": 8
+                  },
+                  {
+                    "id": 16,
+                    "name": "Polish the Sunken Market",
+                    "type": "Normal",
+                    "skills": [
+                      5
+                    ],
+                    "cost_multiplier": 1,
+                    "xp_mult": 3,
+                    "max_reps": 5,
+                    "hidden_by_default": false,
+                    "unlocks_task": null,
+                    "perk": null,
+                    "item": null,
+                    "use_item": null,
+                    "prestige_layer": null,
+                    "theme": null,
+                    "formula_cost_multiplier": 1,
+                    "formula_xp_mult": 3,
+                    "raw_cost": 10,
+                    "raw_xp": 8
+                  }
+                ],
+                "raw_drain": 1
+              },
+              {
+                "name": "The Glassy Meridian",
+                "key": "the-glassy-meridian",
+                "theme": {
+                  "flavor": "Whatever sank here learned to grow."
+                },
+                "tasks": [
+                  {
+                    "id": 30,
+                    "name": "Ride the Current to The Moonlit Ruins",
+                    "type": "Travel",
+                    "skills": [
+                      4
+                    ],
+                    "cost_multiplier": 1,
+                    "xp_mult": 1,
+                    "max_reps": 1,
+                    "hidden_by_default": false,
+                    "unlocks_task": null,
+                    "perk": null,
+                    "item": null,
+                    "use_item": null,
+                    "prestige_layer": null,
+                    "theme": null,
+                    "formula_cost_multiplier": 3,
+                    "formula_xp_mult": 1,
+                    "raw_cost": 66,
+                    "raw_xp": 10
+                  },
+                  {
+                    "id": 31,
+                    "name": "Cross the Kelp Rows",
+                    "type": "Mandatory",
+                    "skills": [
+                      5
+                    ],
+                    "cost_multiplier": 1,
+                    "xp_mult": 1,
+                    "max_reps": 4,
+                    "hidden_by_default": false,
+                    "unlocks_task": null,
+                    "perk": null,
+                    "item": null,
+                    "use_item": null,
+                    "prestige_layer": null,
+                    "theme": null,
+                    "formula_cost_multiplier": 1.3,
+                    "formula_xp_mult": 1,
+                    "raw_cost": 28.6,
+                    "raw_xp": 10
+                  },
+                  {
+                    "id": 32,
+                    "name": "Open the Cargo Hold",
+                    "type": "Mandatory",
+                    "skills": [
+                      9
+                    ],
+                    "cost_multiplier": 1,
+                    "xp_mult": 1,
+                    "max_reps": 2,
+                    "hidden_by_default": false,
+                    "unlocks_task": null,
+                    "perk": null,
+                    "item": null,
+                    "use_item": null,
+                    "prestige_layer": null,
+                    "theme": null,
+                    "formula_cost_multiplier": 1.6,
+                    "formula_xp_mult": 1,
+                    "raw_cost": 35.2,
+                    "raw_xp": 10
+                  },
+                  {
+                    "id": 33,
+                    "name": "Salvage the Reef Wall",
+                    "type": "Normal",
+                    "skills": [
+                      2
+                    ],
+                    "cost_multiplier": 1,
+                    "xp_mult": 1,
+                    "max_reps": 5,
+                    "hidden_by_default": false,
+                    "unlocks_task": null,
+                    "perk": null,
+                    "item": 1,
+                    "use_item": null,
+                    "prestige_layer": null,
+                    "theme": null,
+                    "formula_cost_multiplier": 0.4,
+                    "formula_xp_mult": 1,
+                    "raw_cost": 8.8,
+                    "raw_xp": 10
+                  },
+                  {
+                    "id": 34,
+                    "name": "Comb the Pressure Door",
+                    "type": "Normal",
+                    "skills": [
+                      5
+                    ],
+                    "cost_multiplier": 1,
+                    "xp_mult": 0.2,
+                    "max_reps": 1,
+                    "hidden_by_default": false,
+                    "unlocks_task": null,
+                    "perk": 1,
+                    "item": null,
+                    "use_item": null,
+                    "prestige_layer": null,
+                    "theme": null,
+                    "formula_cost_multiplier": 16,
+                    "formula_xp_mult": 0.2,
+                    "raw_cost": 352,
+                    "raw_xp": 10
+                  },
+                  {
+                    "id": 35,
+                    "name": "Read the Mooring Lines",
+                    "type": "Normal",
+                    "skills": [
+                      9
+                    ],
+                    "cost_multiplier": 1,
+                    "xp_mult": 3,
+                    "max_reps": 3,
+                    "hidden_by_default": false,
+                    "unlocks_task": null,
+                    "perk": null,
+                    "item": null,
+                    "use_item": null,
+                    "prestige_layer": null,
+                    "theme": null,
+                    "formula_cost_multiplier": 1,
+                    "formula_xp_mult": 3,
+                    "raw_cost": 22,
+                    "raw_xp": 10
+                  },
+                  {
+                    "id": 36,
+                    "name": "Read the Oyster Beds",
+                    "type": "Normal",
+                    "skills": [
+                      3
+                    ],
+                    "cost_multiplier": 1,
+                    "xp_mult": 5,
+                    "max_reps": 4,
+                    "hidden_by_default": false,
+                    "unlocks_task": null,
+                    "perk": null,
+                    "item": null,
+                    "use_item": null,
+                    "prestige_layer": null,
+                    "theme": null,
+                    "formula_cost_multiplier": 1.5,
+                    "formula_xp_mult": 5,
+                    "raw_cost": 33,
+                    "raw_xp": 10
+                  },
+                  {
+                    "id": 37,
+                    "name": "Anchor the Bell Tower",
+                    "type": "Normal",
+                    "skills": [
+                      6,
+                      4
+                    ],
+                    "cost_multiplier": 1,
+                    "xp_mult": 3,
+                    "max_reps": 6,
+                    "hidden_by_default": false,
+                    "unlocks_task": null,
+                    "perk": null,
+                    "item": null,
+                    "use_item": null,
+                    "prestige_layer": null,
+                    "theme": null,
+                    "formula_cost_multiplier": 1,
+                    "formula_xp_mult": 3,
+                    "raw_cost": 22,
+                    "raw_xp": 10
+                  }
+                ],
+                "raw_drain": 1.05
+              },
+              {
+                "name": "The Moonlit Ruins",
+                "key": "the-moonlit-ruins",
+                "theme": {
+                  "flavor": "The current has opinions about your route."
+                },
+                "tasks": [
+                  {
+                    "id": 50,
+                    "name": "Ride the Current to the Luminous Trench",
+                    "type": "Travel",
+                    "skills": [
+                      6
+                    ],
+                    "cost_multiplier": 1,
+                    "xp_mult": 0.5,
+                    "max_reps": 1,
+                    "hidden_by_default": false,
+                    "unlocks_task": null,
+                    "perk": null,
+                    "item": null,
+                    "use_item": null,
+                    "prestige_layer": null,
+                    "theme": null,
+                    "formula_cost_multiplier": 2,
+                    "formula_xp_mult": 0.5,
+                    "raw_cost": 96.80000000000001,
+                    "raw_xp": 12.5
+                  },
+                  {
+                    "id": 51,
+                    "name": "Brave the Kelp Rows",
+                    "type": "Mandatory",
+                    "skills": [
+                      3
+                    ],
+                    "cost_multiplier": 1,
+                    "xp_mult": 3,
+                    "max_reps": 1,
+                    "hidden_by_default": false,
+                    "unlocks_task": null,
+                    "perk": null,
+                    "item": null,
+                    "use_item": null,
+                    "prestige_layer": null,
+                    "theme": null,
+                    "formula_cost_multiplier": 3,
+                    "formula_xp_mult": 3,
+                    "raw_cost": 145.20000000000002,
+                    "raw_xp": 12.5
+                  },
+                  {
+                    "id": 52,
+                    "name": "Seal the Reef Wall",
+                    "type": "Mandatory",
+                    "skills": [
+                      9
+                    ],
+                    "cost_multiplier": 1,
+                    "xp_mult": 1,
+                    "max_reps": 3,
+                    "hidden_by_default": false,
+                    "unlocks_task": null,
+                    "perk": null,
+                    "item": null,
+                    "use_item": null,
+                    "prestige_layer": null,
+                    "theme": null,
+                    "formula_cost_multiplier": 3,
+                    "formula_xp_mult": 1,
+                    "raw_cost": 145.20000000000002,
+                    "raw_xp": 12.5
+                  },
+                  {
+                    "id": 53,
+                    "name": "Net the Cargo Hold",
+                    "type": "Normal",
+                    "skills": [
+                      4
+                    ],
+                    "cost_multiplier": 1,
+                    "xp_mult": 1,
+                    "max_reps": 4,
+                    "hidden_by_default": false,
+                    "unlocks_task": null,
+                    "perk": null,
+                    "item": 2,
+                    "use_item": null,
+                    "prestige_layer": null,
+                    "theme": null,
+                    "formula_cost_multiplier": 0.4,
+                    "formula_xp_mult": 1,
+                    "raw_cost": 19.360000000000003,
+                    "raw_xp": 12.5
+                  },
+                  {
+                    "id": 54,
+                    "name": "Anchor the Mooring Lines",
+                    "type": "Normal",
+                    "skills": [
+                      8,
+                      4
+                    ],
+                    "cost_multiplier": 1,
+                    "xp_mult": 1.5,
+                    "max_reps": 3,
+                    "hidden_by_default": false,
+                    "unlocks_task": null,
+                    "perk": 2,
+                    "item": null,
+                    "use_item": null,
+                    "prestige_layer": null,
+                    "theme": null,
+                    "formula_cost_multiplier": 1.2,
+                    "formula_xp_mult": 1.5,
+                    "raw_cost": 58.08000000000001,
+                    "raw_xp": 12.5
+                  },
+                  {
+                    "id": 55,
+                    "name": "Listen to the Undertow",
+                    "type": "Normal",
+                    "skills": [
+                      2
+                    ],
+                    "cost_multiplier": 1,
+                    "xp_mult": 3,
+                    "max_reps": 3,
+                    "hidden_by_default": false,
+                    "unlocks_task": null,
+                    "perk": null,
+                    "item": null,
+                    "use_item": null,
+                    "prestige_layer": null,
+                    "theme": null,
+                    "formula_cost_multiplier": 1.5,
+                    "formula_xp_mult": 3,
+                    "raw_cost": 72.60000000000001,
+                    "raw_xp": 12.5
+                  },
+                  {
+                    "id": 56,
+                    "name": "Quiet the Trench Warden",
+                    "type": "Boss",
+                    "skills": [
+                      3
+                    ],
+                    "cost_multiplier": 1,
+                    "xp_mult": 1,
+                    "max_reps": 1,
+                    "hidden_by_default": false,
+                    "unlocks_task": 57,
+                    "perk": null,
+                    "item": 8,
+                    "use_item": null,
+                    "prestige_layer": null,
+                    "theme": null,
+                    "formula_cost_multiplier": 400,
+                    "formula_xp_mult": 1,
+                    "raw_cost": 64000,
+                    "raw_xp": 12.5
+                  },
+                  {
+                    "id": 57,
+                    "name": "Harvest the Drift Nets",
+                    "type": "Normal",
+                    "skills": [
+                      3,
+                      7
+                    ],
+                    "cost_multiplier": 1,
+                    "xp_mult": 1,
+                    "max_reps": 1,
+                    "hidden_by_default": true,
+                    "unlocks_task": null,
+                    "perk": 10,
+                    "item": null,
+                    "use_item": null,
+                    "prestige_layer": null,
+                    "theme": null,
+                    "formula_cost_multiplier": 1300,
+                    "formula_xp_mult": 1,
+                    "raw_cost": 62920.00000000001,
+                    "raw_xp": 12.5
+                  }
+                ],
+                "raw_drain": 1.1025
+              }
+            ],
+            "perks": [
+              {
+                "name": "Anchored Sense",
+                "icon": "🌙",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 5,
+                    "add": 0.5
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Fathomless Instinct",
+                "icon": "🐠",
+                "tooltip": "All skill XP x1.5.",
+                "effects": [
+                  {
+                    "kind": "xp_all_mult",
+                    "mult": 1.5,
+                    "scope": "run"
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Tideworn Sight",
+                "icon": "💠",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 9,
+                    "add": 0.5
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Deepwater Sight",
+                "icon": "🐚",
+                "tooltip": "Unlocks the automation system (engine + UI gates).",
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 7,
+                    "add": 0.5
+                  }
+                ],
+                "behavior": "automation_unlock",
+                "theme": null
+              },
+              {
+                "name": "Pearled Blood",
+                "icon": "👁️",
+                "tooltip": "+50 max energy when gained.",
+                "effects": [
+                  {
+                    "kind": "starting_energy",
+                    "flat": 50,
+                    "scope": "run"
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Silver Lungs",
+                "icon": "⚓",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 6,
+                    "add": 0.5
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Anchored Instinct",
+                "icon": "🔱",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 8,
+                    "add": 0.4
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 9,
+                    "add": 0.2
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Steady Calm",
+                "icon": "🧭",
+                "tooltip": "Single-tick tasks drain x0.2 energy; zones with only free tasks left are skipped automatically.",
+                "effects": [
+                  {
+                    "kind": "time_compression",
+                    "single_tick_drain_mult": 0.2,
+                    "scope": "run"
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Tideworn Patience",
+                "icon": "🫁",
+                "tooltip": "All energy drain x0.8.",
+                "effects": [],
+                "behavior": "energy_drain_reduction",
+                "theme": null
+              },
+              {
+                "placeholder": true
+              },
+              {
+                "name": "Anchored Lungs",
+                "icon": "🎶",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 9,
+                    "add": 0.4
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 3,
+                    "add": 0.2
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Fathomless Grip",
+                "icon": "🌊",
+                "tooltip": "Enables attunement gain (calcAttunementGain returns 0 without it).",
+                "effects": [],
+                "behavior": "attunement_enable",
+                "theme": null
+              },
+              {
+                "name": "Fathomless Song",
+                "icon": "🪝",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 3,
+                    "add": 0.3
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 1,
+                    "add": 0.3
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Pearled Reckoning",
+                "icon": "⚓ II",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 4,
+                    "add": 0.3
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 1,
+                    "add": 0.3
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Barnacle Calm",
+                "icon": "🌙 II",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 7,
+                    "add": 0.5
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Anchored Reckoning",
+                "icon": "🫁 II",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 8,
+                    "add": 0.4
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 6,
+                    "add": 0.2
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Barnacle Instinct",
+                "icon": "🧭 II",
+                "tooltip": "Energy drain scaled by zone-completion history (calcReflectionsOnTheJourneyMult).",
+                "effects": [],
+                "behavior": "energy_drain_zone_history",
+                "theme": null
+              },
+              {
+                "name": "Silver Bearings",
+                "icon": "👁️ II",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 9,
+                    "add": 0.3
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 2,
+                    "add": 0.3
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Barnacle Sense",
+                "icon": "🪝 II",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 4,
+                    "add": 0.3
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 7,
+                    "add": 0.3
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Barnacle Lungs",
+                "icon": "🐚 II",
+                "tooltip": "On each energy reset, max energy grows by (zone + 1) x 0.1.",
+                "effects": [
+                  {
+                    "kind": "starting_energy",
+                    "per_reset": 0.1,
+                    "curve": "linear",
+                    "scope": "run"
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Fathomless Blood",
+                "icon": "💠 II",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 9,
+                    "add": 0.5
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Tideworn Bearings",
+                "icon": "🌊 II",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 9,
+                    "add": 0.3
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 0,
+                    "add": 0.3
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Glowing Instinct",
+                "icon": "🎶 II",
+                "tooltip": "Divine spark gain x(1 + AWAKENING_DIVINE_SPARK_MULT).",
+                "effects": [],
+                "behavior": "spark_gain_mult_a",
+                "theme": null
+              },
+              {
+                "name": "Coldproof Lungs",
+                "icon": "🔱 II",
+                "tooltip": "Task speed and energy drain x1.5; single-tick tasks complete all reps in one tick.",
+                "effects": [
+                  {
+                    "kind": "time_compression",
+                    "mult": 1.5,
+                    "scope": "run"
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Anchored Blood",
+                "icon": "🐠 II",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 8,
+                    "add": 0.5
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Moontide Patience",
+                "icon": "🐚 III",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 7,
+                    "add": 0.3
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 6,
+                    "add": 0.3
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Pearled Grip",
+                "icon": "👁️ III",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 3,
+                    "add": 0.5
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Coldproof Memory",
+                "icon": "🌙 III",
+                "tooltip": "Task speed x(1+e)^(highest_zone_fully_completed+1).",
+                "effects": [],
+                "behavior": "speed_per_completed_zone",
+                "theme": null
+              },
+              {
+                "name": "Moontide Song",
+                "icon": "⚓ III",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 7,
+                    "add": 0.3
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 5,
+                    "add": 0.3
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Deepwater Calm",
+                "icon": "🫁 III",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 3,
+                    "add": 0.3
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 9,
+                    "add": 0.3
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Anchored Song",
+                "icon": "🔱 III",
+                "tooltip": "Keep half of each item stack (rounded up) across energy resets; enables the prep-run hint.",
+                "effects": [],
+                "behavior": "keep_items_on_reset",
+                "theme": null
+              },
+              {
+                "name": "Pearled Calm",
+                "icon": "💠 III",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 3,
+                    "add": 0.3
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 1,
+                    "add": 0.3
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Barnacle Song",
+                "icon": "🌊 III",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 0,
+                    "add": 1
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 9,
+                    "add": 0.5
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Silver Sense",
+                "icon": "🎶 III",
+                "tooltip": "All skill XP x2.",
+                "effects": [
+                  {
+                    "kind": "xp_all_mult",
+                    "mult": 2,
+                    "scope": "run"
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Deepwater Reckoning",
+                "icon": "🐠 III",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 2,
+                    "add": 0.5
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Steady Sense",
+                "icon": "🪝 III",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 5,
+                    "add": 0.3
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 3,
+                    "add": 0.3
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Moontide Reckoning",
+                "icon": "🧭 III",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 9,
+                    "add": 0.3
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 1,
+                    "add": 0.3
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Silver Sight",
+                "icon": "🐠 IV",
+                "tooltip": "Divine spark gain x(1 + DEFIED_THE_GODS_SPARK_MULT).",
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 0,
+                    "add": 1
+                  }
+                ],
+                "behavior": "spark_gain_mult_b",
+                "theme": null
+              },
+              {
+                "name": "Fathomless Sense",
+                "icon": "🧭 IV",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 0,
+                    "add": 0.3
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 1,
+                    "add": 0.3
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Deepwater Lungs",
+                "icon": "🪝 IV",
+                "tooltip": "Attunement gain x2.",
+                "effects": [],
+                "behavior": "attunement_gain_mult",
+                "theme": null
+              },
+              {
+                "name": "Glowing Calm",
+                "icon": "🌙 IV",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 0,
+                    "add": 0.25
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 3,
+                    "add": 0.25
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 7,
+                    "add": 0.25
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 5,
+                    "add": 0.25
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Brinewise Lungs",
+                "icon": "⚓ IV",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 9,
+                    "add": 0.3
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 8,
+                    "add": 0.3
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 4,
+                    "add": 0.3
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Fathomless Bearings",
+                "icon": "🫁 IV",
+                "tooltip": "Item energy gain x(1 + SUPPLY_LINES_EFFECT) (calcItemEnergyGain).",
+                "effects": [],
+                "behavior": "item_energy_mult",
+                "theme": null
+              },
+              {
+                "name": "Silver Reckoning",
+                "icon": "💠 IV",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 0,
+                    "add": 1
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 5,
+                    "add": 1
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 7,
+                    "add": 1
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Silver Instinct",
+                "icon": "🐚 IV",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 9,
+                    "add": 0.3
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 3,
+                    "add": 0.3
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 0,
+                    "add": 0.3
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Glowing Sight",
+                "icon": "👁️ IV",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 8,
+                    "add": 0.3
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 1,
+                    "add": 0.3
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 9,
+                    "add": 0.3
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 0,
+                    "add": 0.3
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Glowing Reckoning",
+                "icon": "🎶 IV",
+                "tooltip": "Divine spark gain x2.",
+                "effects": [],
+                "behavior": "spark_gain_mult_c",
+                "theme": null
+              }
+            ],
+            "items": [
+              {
+                "name": "Tide Logbook",
+                "name_plural": "Tide Logbooks",
+                "icon": "🐬",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "energy_on_consume",
+                    "base_amount": 5
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Deepsea Fin",
+                "name_plural": "Deepsea Fins",
+                "icon": "🔭",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 3,
+                    "add": 0.15
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Moonshell Amphora",
+                "name_plural": "Moonshell Amphorae",
+                "icon": "🕸️",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 9,
+                    "add": 0.2
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Deepsea Lantern",
+                "name_plural": "Deepsea Lanterns",
+                "icon": "🛟",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 7,
+                    "add": 0.2
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 4,
+                    "add": 0.2
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Pearl Cordage",
+                "name_plural": "Pearl Cordages",
+                "icon": "🪙",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 8,
+                    "add": 0.15
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 3,
+                    "add": 0.1
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 1,
+                    "add": 0.1
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Drift Lantern",
+                "name_plural": "Drift Lanterns",
+                "icon": "🐚",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 6,
+                    "add": 0.1
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 1,
+                    "add": 0.1
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Brass Cordage",
+                "name_plural": "Brass Cordages",
+                "icon": "🐟",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 5,
+                    "add": 0.1
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 7,
+                    "add": 0.1
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Salted Pearl",
+                "name_plural": "Salted Pearls",
+                "icon": "🧴",
+                "tooltip": "Consuming queues: next task rep started is HASTE_MULT(5)x as fast.",
+                "effects": [],
+                "behavior": "artifact_haste_queue",
+                "theme": null
+              },
+              {
+                "name": "Moonshell Logbook",
+                "name_plural": "Moonshell Logbooks",
+                "icon": "🏮",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 3,
+                    "add": 1
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Deepsea Hook",
+                "name_plural": "Deepsea Hooks",
+                "icon": "🦪",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 1,
+                    "add": 0.15
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Glass Pearl",
+                "name_plural": "Glass Pearls",
+                "icon": "🧭",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 7,
+                    "add": 0.2
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 2,
+                    "add": 0.1
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Phosphor Catch",
+                "name_plural": "Phosphor Catches",
+                "icon": "📓",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 1,
+                    "add": 0.2
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 7,
+                    "add": 0.1
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Kelp Logbook",
+                "name_plural": "Kelp Logbooks",
+                "icon": "🪝",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 8,
+                    "add": 0.5
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 7,
+                    "add": 0.5
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Tide Lantern",
+                "name_plural": "Tide Lanterns",
+                "icon": "🪢",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "energy_on_consume",
+                    "base_amount": 10
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Moonshell Bell",
+                "name_plural": "Moonshell Bells",
+                "icon": "🗺️",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 8,
+                    "add": 0.1
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 3,
+                    "add": 0.2
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Salted Net",
+                "name_plural": "Salted Nets",
+                "icon": "🧪",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 1,
+                    "add": 0.15
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Drift Float",
+                "name_plural": "Drift Floats",
+                "icon": "🏺",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 9,
+                    "add": 0.5
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 8,
+                    "add": 0.5
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Brined Net",
+                "name_plural": "Brined Nets",
+                "icon": "🔔",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 9,
+                    "add": 0.2
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 1,
+                    "add": 0.2
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Pearl Compass",
+                "name_plural": "Pearl Compasses",
+                "icon": "🦪 II",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 7,
+                    "add": 0.2
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 1,
+                    "add": 0.1
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Brined Catch",
+                "name_plural": "Brined Catches",
+                "icon": "🪢 II",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "energy_on_consume",
+                    "base_amount": 50
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Brined Cordage",
+                "name_plural": "Brined Cordages",
+                "icon": "🧪 II",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 0,
+                    "add": 0.1
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Pearl Chart",
+                "name_plural": "Pearl Charts",
+                "icon": "📓 II",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 4,
+                    "add": 0.2
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 7,
+                    "add": 0.2
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 0,
+                    "add": 0.1
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 6,
+                    "add": 0.1
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Drift Pearl",
+                "name_plural": "Drift Pearls",
+                "icon": "🔔 II",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 1,
+                    "add": 1
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Kelp Cordage",
+                "name_plural": "Kelp Cordages",
+                "icon": "🏮 II",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 0,
+                    "add": 0.3
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 7,
+                    "add": 0.3
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Deepsea Shell",
+                "name_plural": "Deepsea Shells",
+                "icon": "🪝 II",
+                "tooltip": "Consuming copies every item type found this energy reset (except itself).",
+                "effects": [],
+                "behavior": "artifact_duplicate_found",
+                "theme": null
+              },
+              {
+                "name": "Salted Shell",
+                "name_plural": "Salted Shells",
+                "icon": "🏺 II",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 7,
+                    "add": 4
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Brined Amphora",
+                "name_plural": "Brined Amphorae",
+                "icon": "🔭 II",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 2,
+                    "add": 0.3
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Brined Chart",
+                "name_plural": "Brined Charts",
+                "icon": "🪙 II",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 3,
+                    "add": 0.2
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 1,
+                    "add": 0.2
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Brined Compass",
+                "name_plural": "Brined Compasses",
+                "icon": "🧴 II",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 3,
+                    "add": 0.5
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 1,
+                    "add": 0.5
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Coral Compass",
+                "name_plural": "Coral Compasses",
+                "icon": "🐚 II",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "energy_on_consume",
+                    "base_amount": 5
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Moonshell Shell",
+                "name_plural": "Moonshell Shells",
+                "icon": "🧭 II",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 0,
+                    "add": 0.3
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Brass Fin",
+                "name_plural": "Brass Fins",
+                "icon": "🐟 II",
+                "tooltip": "Consuming queues: next task rep started gives MAGIC_RING_MULT(5)x XP.",
+                "effects": [],
+                "behavior": "artifact_xp_queue",
+                "theme": null
+              },
+              {
+                "name": "Coral Fin",
+                "name_plural": "Coral Fins",
+                "icon": "🛟 II",
+                "tooltip": "Consuming queues: next Boss task started is BOTTLED_LIGHTNING_MULT(2)x as fast; stacks with haste.",
+                "effects": [],
+                "behavior": "artifact_boss_haste_queue",
+                "theme": null
+              },
+              {
+                "name": "Deepsea Amphora",
+                "name_plural": "Deepsea Amphorae",
+                "icon": "🗺️ II",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 9,
+                    "add": 1
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Salted Chart",
+                "name_plural": "Salted Charts",
+                "icon": "🐬 II",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 5,
+                    "add": 0.3
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 4,
+                    "add": 0.3
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 6,
+                    "add": 0.1
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Glass Bell",
+                "name_plural": "Glass Bells",
+                "icon": "🕸️ II",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 5,
+                    "add": 1
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Tide Vial",
+                "name_plural": "Tide Vials",
+                "icon": "🐚 III",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 0,
+                    "add": 5
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 6,
+                    "add": 1
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Drift Compass",
+                "name_plural": "Drift Compasses",
+                "icon": "🏮 III",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 0,
+                    "add": 1
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Salted Fin",
+                "name_plural": "Salted Fins",
+                "icon": "🧴 III",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 4,
+                    "add": 1
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Salted Salve",
+                "name_plural": "Salted Salves",
+                "icon": "🪢 III",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 4,
+                    "add": 0.5
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 6,
+                    "add": 0.5
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 1,
+                    "add": 0.5
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Moonshell Lantern",
+                "name_plural": "Moonshell Lanterns",
+                "icon": "🔔 III",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 5,
+                    "add": 1
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 2,
+                    "add": 1
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 3,
+                    "add": 1
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Pearl Salve",
+                "name_plural": "Pearl Salves",
+                "icon": "🛟 III",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 9,
+                    "add": 1
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Moonshell Hook",
+                "name_plural": "Moonshell Hooks",
+                "icon": "🏺 III",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 0,
+                    "add": 20
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Moonshell Catch",
+                "name_plural": "Moonshell Catches",
+                "icon": "🐟 III",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 7,
+                    "add": 3
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 5,
+                    "add": 3
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 8,
+                    "add": 3
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Moonshell Cordage",
+                "name_plural": "Moonshell Cordages",
+                "icon": "🧭 III",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "energy_on_consume",
+                    "base_amount": 15
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              },
+              {
+                "name": "Salted Bell",
+                "name_plural": "Salted Bells",
+                "icon": "🐬 III",
+                "tooltip": null,
+                "effects": [
+                  {
+                    "kind": "skill_speed",
+                    "skill": 7,
+                    "add": 5
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 0,
+                    "add": 5
+                  },
+                  {
+                    "kind": "skill_speed",
+                    "skill": 3,
+                    "add": 5
+                  }
+                ],
+                "behavior": null,
+                "theme": null
+              }
+            ],
+            "prestige": {
+              "layers": [
+                {
+                  "key": "touch_the_divine",
+                  "theme": null
+                },
+                {
+                  "key": "transcend_humanity",
+                  "theme": null
+                },
+                {
+                  "key": "embrace_divinity",
+                  "theme": null
+                },
+                {
+                  "key": "ascend_to_godhood",
+                  "theme": null
+                }
+              ],
+              "unlockables": [
+                {
+                  "name": "Pearled Sense",
+                  "layer": 0,
+                  "cost": 10,
+                  "description": null,
+                  "behavior": "permanent_automation",
+                  "theme": null
+                },
+                {
+                  "name": "Moontide Sense",
+                  "layer": 0,
+                  "cost": 10,
+                  "description": null,
+                  "behavior": "xp_all_prestige_mult",
+                  "theme": null
+                },
+                {
+                  "name": "Barnacle Blood",
+                  "layer": 0,
+                  "cost": 101,
+                  "description": null,
+                  "behavior": "grant_drain_reflections",
+                  "theme": null
+                },
+                {
+                  "name": "Steady Blood",
+                  "layer": 0,
+                  "cost": 800,
+                  "description": null,
+                  "behavior": "attunement_expand_search",
+                  "theme": null
+                },
+                {
+                  "name": "Brinewise Song",
+                  "layer": 1,
+                  "cost": 100,
+                  "description": null,
+                  "behavior": "starting_energy_growth_square",
+                  "theme": null
+                },
+                {
+                  "name": "Anchored Grip",
+                  "layer": 1,
+                  "cost": 500,
+                  "description": null,
+                  "behavior": "tick_rate_from_energy_overflow",
+                  "theme": null
+                },
+                {
+                  "name": "Deepwater Instinct",
+                  "layer": 1,
+                  "cost": 40000,
+                  "description": null,
+                  "behavior": "mastery_of_time",
+                  "theme": null
+                },
+                {
+                  "name": "Fathomless Lungs",
+                  "layer": 1,
+                  "cost": 100000,
+                  "description": null,
+                  "behavior": "see_beyond_the_veil",
+                  "theme": null
+                },
+                {
+                  "name": "Pearled Bearings",
+                  "layer": 2,
+                  "cost": 100000,
+                  "description": null,
+                  "behavior": "speed_per_perk_held",
+                  "theme": null
+                },
+                {
+                  "name": "Pearled Instinct",
+                  "layer": 2,
+                  "cost": 1000000,
+                  "description": null,
+                  "behavior": "note_item_floor_on_reset",
+                  "theme": null
+                },
+                {
+                  "name": "Coldproof Calm",
+                  "layer": 2,
+                  "cost": 2000000,
+                  "description": null,
+                  "behavior": "attunement_expand_crafting",
+                  "theme": null
+                },
+                {
+                  "name": "Tideworn Sense",
+                  "layer": 2,
+                  "cost": 1000000000,
+                  "description": null,
+                  "behavior": "travel_skill_prestige_mult",
+                  "theme": null
+                },
+                {
+                  "name": "Fathomless Calm",
+                  "layer": 3,
+                  "cost": 10000000000,
+                  "description": null,
+                  "behavior": "spark_gain_double_a",
+                  "theme": null
+                },
+                {
+                  "name": "Tideworn Reckoning",
+                  "layer": 3,
+                  "cost": 50000000000,
+                  "description": null,
+                  "behavior": "spark_gain_double_b",
+                  "theme": null
+                },
+                {
+                  "name": "Tideworn Lungs",
+                  "layer": 3,
+                  "cost": 150000000000,
+                  "description": null,
+                  "behavior": "xp_all_prestige_mult_b",
+                  "theme": null
+                },
+                {
+                  "name": "Silver Grip",
+                  "layer": 3,
+                  "cost": 500000000000,
+                  "description": null,
+                  "behavior": "starting_energy_prestige_flat",
+                  "theme": null
+                }
+              ],
+              "repeatables": [
+                {
+                  "name": "Steady Sight",
+                  "layer": 0,
+                  "initial_cost": 10,
+                  "scaling_exponent": 1.25,
+                  "description": null,
+                  "behavior": "xp_all_level_a",
+                  "theme": null
+                },
+                {
+                  "name": "Brinewise Instinct",
+                  "layer": 0,
+                  "initial_cost": 10,
+                  "scaling_exponent": 2.5,
+                  "description": null,
+                  "behavior": "power_rate_level",
+                  "theme": null
+                },
+                {
+                  "name": "Silver Calm",
+                  "layer": 0,
+                  "initial_cost": 30,
+                  "scaling_exponent": 2.5,
+                  "description": null,
+                  "behavior": "item_energy_level",
+                  "theme": null
+                },
+                {
+                  "name": "Barnacle Grip",
+                  "layer": 0,
+                  "initial_cost": 20,
+                  "scaling_exponent": 1.75,
+                  "description": null,
+                  "behavior": "speed_level",
+                  "theme": null
+                },
+                {
+                  "name": "Moontide Instinct",
+                  "layer": 1,
+                  "initial_cost": 1000,
+                  "scaling_exponent": 4,
+                  "description": null,
+                  "behavior": "spark_exponent_level",
+                  "theme": null
+                },
+                {
+                  "name": "Coldproof Reckoning",
+                  "layer": 1,
+                  "initial_cost": 100,
+                  "scaling_exponent": 3,
+                  "description": null,
+                  "behavior": "skill_start_level",
+                  "theme": null
+                },
+                {
+                  "name": "Tideworn Grip",
+                  "layer": 1,
+                  "initial_cost": 1500,
+                  "scaling_exponent": 1.75,
+                  "description": null,
+                  "behavior": "starting_energy_level",
+                  "theme": null
+                },
+                {
+                  "name": "Pearled Memory",
+                  "layer": 1,
+                  "initial_cost": 10000,
+                  "scaling_exponent": 2.5,
+                  "description": null,
+                  "behavior": "drain_reduction_level",
+                  "theme": null
+                },
+                {
+                  "name": "Coldproof Bearings",
+                  "layer": 2,
+                  "initial_cost": 500000,
+                  "scaling_exponent": 1.5,
+                  "description": null,
+                  "behavior": "mandatory_speed_level",
+                  "theme": null
+                },
+                {
+                  "name": "Tideworn Song",
+                  "layer": 2,
+                  "initial_cost": 1000000,
+                  "scaling_exponent": 2,
+                  "description": null,
+                  "behavior": "attunement_effect_level",
+                  "theme": null
+                },
+                {
+                  "name": "Steady Lungs",
+                  "layer": 2,
+                  "initial_cost": 200000,
+                  "scaling_exponent": 1.4,
+                  "description": null,
+                  "behavior": "spite_skills_level",
+                  "theme": null
+                },
+                {
+                  "name": "Glowing Memory",
+                  "layer": 2,
+                  "initial_cost": 5000000,
+                  "scaling_exponent": 3,
+                  "description": null,
+                  "behavior": "xp_all_level_b",
+                  "theme": null
+                }
+              ],
+              "spark_zone_origin": 2,
+              "sbtv_unlock_task_ids": []
+            },
+            "roles": {
+              "ascension_skill": 0,
+              "travel_skill": 6,
+              "attunement_skills": [
+                7,
+                5
+              ],
+              "power_skills": [
+                3,
+                1
+              ],
+              "spite_skills": [
+                0,
+                9
+              ]
+            },
+            "economy": {
+              "base_task_cost": 10,
+              "zone_cost_exponent": 2.2,
+              "boss_cost_exponent": 4,
+              "xp_base": 8,
+              "xp_zone_mult": 1.25,
+              "level_curve": 1.02,
+              "zone_speedup_base": 1.05,
+              "value_mode": "raw"
+            },
+            "item_groups": {
+              "note_items": [
+                7,
+                6,
+                26,
+                34,
+                35
+              ]
+            }
+          },
+          "exits": [
+            {
+              "exit_id": "exit_E",
+              "x": 7,
+              "y": 3,
+              "side": "E",
+              "exitName": "exit_E",
+              "targetRegion": "region_1_0",
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ],
+          "fogEnabled": true
+        }
+      },
+      "region_1_0": {
+        "substrate": "jta",
+        "render_hint": "jta",
+        "grid_cell": {
+          "gx": 1,
+          "gy": 0
+        },
+        "playable_payload": {
+          "jtaZone": 1,
+          "ap_locations": {
+            "30": "region_1_0__30",
+            "31": "region_1_0__31",
+            "32": "region_1_0__32",
+            "33": "region_1_0__33",
+            "34": "region_1_0__34",
+            "35": "region_1_0__35",
+            "36": "region_1_0__36",
+            "37": "region_1_0__37"
+          },
+          "task_patches": [
+            {
+              "id": 34,
+              "perk": 47
+            }
+          ],
+          "jta_dataset_ref": {
+            "dataset_id": "synthetic-sunken-meridian-s1-z3-5febd71f",
+            "schema_version": 1
+          },
+          "exits": [
+            {
+              "exit_id": "exit_S",
+              "x": 4,
+              "y": 5,
+              "side": "S",
+              "exitName": "exit_S",
+              "targetRegion": "region_1_1",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "exit_W",
+              "x": 0,
+              "y": 3,
+              "side": "W",
+              "exitName": "exit_W",
+              "targetRegion": "region_0_0",
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ],
+          "fogEnabled": true
+        }
+      },
+      "region_1_1": {
+        "substrate": "jta",
+        "render_hint": "jta",
+        "grid_cell": {
+          "gx": 1,
+          "gy": 1
+        },
+        "playable_payload": {
+          "jtaZone": 2,
+          "ap_locations": {
+            "50": "region_1_1__50",
+            "51": "region_1_1__51",
+            "52": "region_1_1__52",
+            "53": "region_1_1__53",
+            "54": "region_1_1__54",
+            "55": "region_1_1__55",
+            "56": "region_1_1__56",
+            "57": "region_1_1__57"
+          },
+          "task_patches": [
+            {
+              "id": 54,
+              "perk": 47
+            },
+            {
+              "id": 57,
+              "perk": 47
+            }
+          ],
+          "jta_dataset_ref": {
+            "dataset_id": "synthetic-sunken-meridian-s1-z3-5febd71f",
+            "schema_version": 1
+          },
+          "exits": [
+            {
+              "exit_id": "exit_N",
+              "x": 4,
+              "y": 0,
+              "side": "N",
+              "exitName": "exit_N",
+              "targetRegion": "region_1_0",
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ],
+          "fogEnabled": true
+        }
+      }
+    }
+  },
+  "sphere_log": [
+    {
+      "type": "metadata",
+      "seed": 1,
+      "seed_name": "",
+      "event_locations": {},
+      "event_items": {}
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {},
+            "resolved_items": {}
+          },
+          "new_accessible_locations": [
+            "region_0_0__10",
+            "region_0_0__11",
+            "region_0_0__12",
+            "region_0_0__13",
+            "region_0_0__14",
+            "region_0_0__15",
+            "region_0_0__16"
+          ],
+          "new_accessible_regions": [
+            "Menu",
+            "region_0_0",
+            "region_1_0",
+            "region_1_1"
+          ],
+          "sphere_locations": []
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Anchored Sense": 1
+            },
+            "resolved_items": {
+              "Anchored Sense": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_0__30",
+            "region_1_0__31",
+            "region_1_0__32",
+            "region_1_0__33",
+            "region_1_0__34",
+            "region_1_0__35",
+            "region_1_0__36",
+            "region_1_0__37"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_0_0__13"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "1.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Fathomless Instinct": 1
+            },
+            "resolved_items": {
+              "Fathomless Instinct": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__50",
+            "region_1_1__51",
+            "region_1_1__52",
+            "region_1_1__53",
+            "region_1_1__54",
+            "region_1_1__55",
+            "region_1_1__56",
+            "region_1_1__57"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_0__34"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "2.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Victory": 1
+            },
+            "resolved_items": {
+              "Victory": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__50"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "2.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Tideworn Sight": 1
+            },
+            "resolved_items": {
+              "Tideworn Sight": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__54"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "2.3",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Anchored Lungs": 1
+            },
+            "resolved_items": {
+              "Anchored Lungs": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__57"
+          ]
+        }
+      }
+    }
+  ],
+  "loop_costs": {
+    "regions": {},
+    "locations": {},
+    "defaultRegionCost": 50,
+    "defaultLocationCost": 10
+  }
+}

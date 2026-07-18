@@ -28,15 +28,27 @@
  *   4. The game's own loop restart (restartLoop → resetResources)
  *      wipes the granted resources — the D4 native clearing.
  *
+ * JtA outbound leg (jta_schedule_test preset; cross-game P2, Fork 1.13):
+ *   the preset's dataset schedules zone 0's first item-awarding task with
+ *   rep 1 = FOREIGN omsi/gold x2. Driving reps 0-1 with the fork's own
+ *   performTask under real region ticking, rep 0 deposits the original
+ *   item locally (nothing crosses) and rep 1 deposits nothing locally
+ *   while gold x2 lands in the omsi resources bag over the full path
+ *   (foreign-award callback → substrate:itemGrant → router grantItem →
+ *   crossSubstrate:itemGranted → omsi bridge addResource).
+ *
  * Prereq: dev server on :8000 (python -m http.server 8000).
  * Run: node scripts/procgen/verify-item-channels.mjs
  */
 import { chromium } from 'playwright';
 import { execSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
 
 const JTA_URL = 'http://localhost:8000/frontend/?game=jta_substrate_test&seed=1';
 const JTA_REGION = 'The Village';
 const OMSI_URL = 'http://localhost:8000/frontend/?game=omsi_substrate_test&seed=1';
+const SCHED_URL = 'http://localhost:8000/frontend/?game=jta_schedule_test&seed=1';
+const SCHED_RULES = 'frontend/presets/jta_schedule_test/AP_14089154938208861744/AP_14089154938208861744_rules.json';
 const TIMEOUT_MS = 60000;
 
 for (const sub of ['journey-to-ascension', 'omsi-loops']) {
@@ -259,9 +271,96 @@ async function verifyOmsiLeg() {
     console.log('  OMSI LEG: OK');
 }
 
+// ────────────────────────────────────────────────────────────────
+// JtA outbound (foreign-award) leg — P2 slice 4, Fork 1.13
+// ────────────────────────────────────────────────────────────────
+async function verifyJtaOutboundLeg() {
+    console.log('━━ jta outbound foreign-award leg:', SCHED_URL);
+    // Schedule facts come from the committed preset on disk (deterministic).
+    const rules = JSON.parse(readFileSync(SCHED_RULES, 'utf8'));
+    const playerId = Object.keys(rules.preset_sidecars)[0];
+    const payloads = Object.entries(rules.preset_sidecars[playerId])
+        .map(([r, sc]) => [r, sc.playable_payload ?? sc]);
+    const dataset = payloads.map(([, p]) => p.jta_dataset).find(Boolean);
+    const task = dataset?.zones[0].tasks.find((t) => t.item_schedule);
+    if (!task) fail('preset dataset carries no scheduled zone-0 task');
+    const f = task.item_schedule[1];
+    if (!(f && f.substrate === 'omsi' && f.type === 'gold' && f.count === 2)) {
+        fail(`unexpected foreign entry at rep 1: ${JSON.stringify(f)}`);
+    }
+    const region0 = payloads.find(([, p]) => p.jtaZone === 0)[0];
+    const originalName = dataset.items[task.item].name;
+    console.log(`  scheduled task ${task.id} "${task.name}": rep 0 '${originalName}', rep 1 omsi/gold x2`);
+
+    const { page, logs } = await makePage(SCHED_URL);
+    await waitFor(page, logs, 'jta iframe booted with Fork 1.13 hooks', () => page.evaluate(() => {
+        const win = document.querySelector('iframe.jtasw-iframe')?.contentWindow;
+        return typeof win?.setForeignAwardCallback === 'function'
+            && typeof win?.performTask === 'function';
+    }), 45000);
+    console.log('  ✓ fork booted; setForeignAwardCallback present (Fork 1.13)');
+
+    // Fresh game: clear the dataset-keyed substrate save slots BEFORE the
+    // region entry re-initializes against them (idempotent reruns — a stale
+    // save would resume the task at reps >= 2).
+    await page.evaluate(() => {
+        const win = document.querySelector('iframe.jtasw-iframe').contentWindow;
+        for (const k of Object.keys(win.localStorage)) {
+            if (k.startsWith('incrementalGameSave_substrate')) win.localStorage.removeItem(k);
+        }
+    });
+    const startRegion = await page.evaluate(async () => {
+        const { getGameStateSingleton } = await import('./modules/gameState/singleton.js');
+        return getGameStateSingleton()?.getCurrentRegion?.() ?? 'Menu';
+    });
+    await moveTo(page, region0, startRegion);
+    await waitFor(page, logs, 'jta region active (game clock running)', () => page.evaluate(() =>
+        document.querySelector('iframe.jtasw-iframe')?.contentWindow?.isGameLoopPaused?.() === false), 30000);
+    console.log(`  ✓ entered ${region0} (zone 0) with a fresh save`);
+
+    const jtaEval = (fn, arg) => page.evaluate(([body, a]) => {
+        const win = document.querySelector('iframe.jtasw-iframe').contentWindow;
+        // eslint-disable-next-line no-new-func
+        return new win.Function('win', 'arg', body)(win, a);
+    }, [fn, arg]);
+    const itemEnum = await jtaEval(
+        'return (win.getAllItems() ?? []).find((it) => it.name === arg)?.type ?? null;', originalName);
+    if (itemEnum == null) fail(`'${originalName}' missing from the live catalog`);
+    const localCount = () => jtaEval(
+        'return (win.getFullState().items ?? []).find((it) => it.type === arg)?.count ?? 0;', itemEnum);
+    const omsiGold = () => page.evaluate(() => {
+        const win = document.querySelector('iframe.omsisw-iframe')?.contentWindow;
+        return win ? win.eval('resources.gold') : null;
+    });
+    await waitFor(page, logs, 'omsi iframe live (S1 eager boot)', async () => (await omsiGold()) !== null, 45000);
+    const goldBefore = await omsiGold();
+    const localBefore = await localCount();
+    console.log(`  before: local '${originalName}' x${localBefore}, omsi gold ${goldBefore}`);
+
+    // Rep 0: original lands locally; nothing crosses.
+    const s0 = await jtaEval('return win.performTask(arg);', task.id);
+    if (s0?.success !== true) fail(`rep 0 did not start: ${JSON.stringify(s0)}`);
+    await waitFor(page, logs, 'rep 0 deposited the original item locally',
+        async () => (await localCount()) === localBefore + 1, 30000);
+    if ((await omsiGold()) !== goldBefore) fail('rep 0 leaked a cross-substrate grant');
+    console.log('  ✓ rep 0: original item deposited locally, nothing crossed');
+
+    // Rep 1: foreign — nothing locally, omsi/gold x2 over the full bus.
+    const s1 = await jtaEval('return win.performTask(arg);', task.id);
+    if (s1?.success !== true) fail(`rep 1 did not start: ${JSON.stringify(s1)}`);
+    await waitFor(page, logs, 'omsi bag gained gold x2 from the foreign award',
+        async () => (await omsiGold()) === goldBefore + 2, 30000);
+    if ((await localCount()) !== localBefore + 1) fail('foreign rep also deposited locally');
+    console.log('  ✓ rep 1: nothing local, omsi bag +2 gold (bridge → router → omsi arrival)');
+
+    await page.close();
+    console.log('  JTA OUTBOUND LEG: OK');
+}
+
 try {
     await verifyJtaLeg();
     await verifyOmsiLeg();
+    await verifyJtaOutboundLeg();
     await browser.close();
     console.log('\nVERIFY ITEM CHANNELS: OK');
     process.exit(0);

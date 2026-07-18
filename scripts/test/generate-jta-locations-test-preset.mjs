@@ -90,11 +90,25 @@ const PRESETS = [
         // byte-identical, so this preset is as reproducible as the others.
         dataset: { seed: 1, zoneCount: 3 },
     },
+    {
+        gameId: 'jta_schedule_test',
+        gameName: 'JtA Schedule Test',
+        // Same 3-zone synthetic dataset as jta_dataset_test, plus a
+        // deterministic hand-authored per-rep award schedule (Fork 1.13)
+        // on zone 0's first item-awarding non-artifact task: rep 1 is a
+        // FOREIGN award (omsi/gold x2), every other rep keeps the original
+        // item. The in-app test drives reps 0-1 and asserts the local
+        // deposit and the cross-substrate arrival in the omsi bag.
+        quota: 3,
+        shuffleSeed: null,
+        dataset: { seed: 1, zoneCount: 3 },
+        itemSchedule: { foreignRep: 1, foreign: { substrate: 'omsi', type: 'gold', count: 2 } },
+    },
 ];
 
 async function generate(preset, mods) {
     const { jtaLib, engine, substrateRegistry, mergeSubstrateItemLib, DEFAULT_ITEMS } = mods;
-    const { gameId, gameName, quota, shuffleSeed, startInventory, dataset } = preset;
+    const { gameId, gameName, quota, shuffleSeed, startInventory, dataset, itemSchedule } = preset;
     const goalZone = quota - 1;   // arrangeShuffledSpiral maps the Nth jta region to zone N
     const outDir = path.join(repoRoot, 'frontend/presets', gameId, SEED_ID);
     const outFile = path.join(outDir, `${SEED_ID}_rules.json`);
@@ -113,6 +127,18 @@ async function generate(preset, mods) {
             vanilla: mods.vanillaFixture,
             params: { zoneCount: dataset.zoneCount },
         }).dataset;
+        if (itemSchedule) {
+            // Deterministic post-edit (P2): schedule zone 0's first
+            // item-awarding non-artifact task, foreign at rep `foreignRep`,
+            // original everywhere else; restamp (content changed).
+            const target = datasetDoc.zones[0].tasks.find((t) =>
+                t.item != null && datasetDoc.items[t.item]?.behavior == null && t.max_reps > itemSchedule.foreignRep);
+            if (!target) throw new Error(`${gameId}: no zone-0 task suitable for the schedule edit`);
+            target.item_schedule = Array.from({ length: target.max_reps }, (_, rep) =>
+                (rep === itemSchedule.foreignRep ? { ...itemSchedule.foreign } : target.item));
+            mods.stampDatasetIdentity(datasetDoc);
+            console.log(`  schedule on task ${target.id} ("${target.name}"): foreign rep ${itemSchedule.foreignRep} -> ${itemSchedule.foreign.substrate}/${itemSchedule.foreign.type} x${itemSchedule.foreign.count}`);
+        }
     }
     jtaLib.setJtaDataset(datasetDoc);
     jtaLib.setJtaEmitZoneLocations(true);
@@ -247,6 +273,8 @@ async function main() {
             'frontend/modules/jtaSubstrateWrapper/vanillaDataset.js')))).vanillaPerkNameByTaskId,
         generateJtaDataset: (await import(pathToFileURL(path.join(repoRoot,
             'frontend/modules/jtaSubstrateWrapper/generateDataset.js')))).generateJtaDataset,
+        stampDatasetIdentity: (await import(pathToFileURL(path.join(repoRoot,
+            'frontend/modules/jtaSubstrateWrapper/datasetValidator.js')))).stampDatasetIdentity,
         profile: JSON.parse(fs.readFileSync(path.join(repoRoot,
             'CC/scripts/jta-stats/results/vanilla-profile.json'), 'utf8')).static,
         vanillaFixture: JSON.parse(fs.readFileSync(path.join(repoRoot,
