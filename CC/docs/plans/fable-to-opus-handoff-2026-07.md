@@ -461,19 +461,27 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
      goldens. 15 commits on `xml-migration` @ `efb0ee5`, pushed, CI green
      (test.yml triggers on the branch). ⚠ The outer gitlink stays on
      `substrate` (`5ad0d16`) — never bump it from this arc.
-   - **View-subscribe refactor (Phase 6's prerequisite): design + 4 user
-     rulings done** — *(NewDocs)* `omsiloops/omsi-loops-view-subscribe-plan.md`
-     (§8 = rulings: bespoke kinds + payloads for tails; actionList.js-only
-     scope with a post-Phase-6 sweep arc for the ~61 other sites;
-     `kind:key` + wildcards + level-delta vocabulary; settled-DOM
-     equivalence bar). **Opus kickoff READY:** *(NewDocs)*
-     `omsiloops/omsi-loops-view-subscribe-opus-kickoff.md` (3 slices;
-     ui-parity = load-bearing gate, commit before gating; 461 byte-gate
-     every commit; success = actionList.js contains ZERO view category
-     names).
-   - Then **Phase 6 executable rewards** (reward vocabulary must NOT grow
-     `<notify>` — ruled; also unblocks the P2-omsi award-schedule carrier
-     + lootable UI, §5b) → **Phase 7 editor**.
+   - **View-subscribe refactor — IMPLEMENTED + PUSHED 2026-07-18** (Opus
+     session 34, reviewed + approved by Fable same day). 3 commits
+     `efb0ee5`→`0ff9f49` on `xml-migration`; `substrate` fast-forwarded to
+     match (new standing cadence: substrate ff's to xml-migration at every
+     green milestone; the `automation` branch was deleted, and the
+     XML-only-branch idea is abandoned). Success criterion MET:
+     actionList.js has ZERO view category names (64 sites → 19
+     `stateChanged` emissions; funnels emit skill/buff/progress with level
+     deltas; view-side `STATE_SUBSCRIPTIONS` table + null-checked sink in
+     helpers.js). All gates green every slice (ui-parity, 461 byte-gate
+     EXACT, npm 191/191, introspection golden untouched — one
+     structurally-dead finish()/updateBuff grep assertion retired with the
+     golden column frozen as history; `grantsBuff` metadata assertion
+     stays live). Design + rulings: *(NewDocs)*
+     `omsiloops/omsi-loops-view-subscribe-plan.md` §8.
+   - **NEXT: Phase 6 executable rewards — DESIGN session first**
+     (Fable-shaped; reward vocabulary must NOT grow `<notify>` — ruled;
+     rewards call the funnels and view updates now happen for free; also
+     unblocks the P2-omsi award-schedule carrier + lootable UI, §5b).
+     Kickoff: *(NewDocs)* `omsiloops/omsi-loops-phase6-design-kickoff.md`.
+     Then **Phase 7 editor**.
 2. **Unlock-discretization U0–U5** —
    `omsi-loops-unlock-discretization-plan.md` (~5–6 days, on `substrate`).
    Defines the AP location pool; extractor prototyped (157×2 predicates,
