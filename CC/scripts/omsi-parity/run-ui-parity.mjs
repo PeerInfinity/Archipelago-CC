@@ -608,4 +608,18 @@ report.verdict = unexpected === 0
 fs.writeFileSync(path.join(outDir, "ui-parity-report.json"), JSON.stringify(report, null, 2));
 console.log(`\n[ui-parity] ${report.verdict}`);
 console.log(`[ui-parity] report: ${path.join(outDir, "ui-parity-report.json")}`);
+// PARITY_REPORT_ONLY: report differences without failing. For the CI control
+// leg, which runs WITHOUT the raster flags and is therefore expected to show
+// the rounded-corner AA flake sometimes — we want that measured, not gating.
+//
+// This is deliberately NOT the job-level `continue-on-error`, which was tried
+// first and is actively harmful here: it turns a step that DIED (browser
+// failed to launch, nothing compared) into a green job, indistinguishable
+// from one that ran and passed. It briefly had me reading a launch failure as
+// evidence about antialiasing. Report-only suppresses the exit code for
+// PIXEL/DOM differences only; a harness error still throws and still fails.
+if (unexpected !== 0 && process.env.PARITY_REPORT_ONLY === "1") {
+    log(`report-only: ${unexpected} unexpected difference group(s) — NOT failing the job`);
+    process.exit(0);
+}
 process.exit(unexpected === 0 ? 0 : 1);
