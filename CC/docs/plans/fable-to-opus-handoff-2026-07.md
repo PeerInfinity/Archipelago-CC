@@ -569,8 +569,9 @@ are COMPLETE and pushed.** Next in order:
    `mint-world-config.mjs` + `worlds/curves/` ladder (`04f920011`) + the
    session brief *(NewDocs)*
    `cross-game-shuffle-scope-ruling-session-brief.md` (banner'd PARKED).
-   Open sub-question, undecided: whether "procgen setting" means S3 panel
-   exposure (current surface = spiral-step CLI flags + params only).** JtA-half record: design doc *(NewDocs)*
+   Sub-question RESOLVED (user, 2026-07-19): S3 panel exposure IS wanted,
+   but DEFERRED to a UI-focused session (batch it with other panel
+   surfacing; current CLI+params surface stands until then).** JtA-half record: design doc *(NewDocs)*
    `cross-game-p2-award-schedules-design.md` (censuses + experiments +
    rulings R1–R4; 4 outer commits
    `11a633277`→`8bc0fa0cf` + jta fork Fork 1.13 `e1e38d9`, CI all green).
