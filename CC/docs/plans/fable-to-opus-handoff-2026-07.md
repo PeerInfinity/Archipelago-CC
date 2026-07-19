@@ -540,11 +540,15 @@ are COMPLETE and pushed.** Next in order:
    generator knobs; fork `b160473` (incl. the inline-toggle reshape), outer
    gitlink bumped (`91ff331f8`), npm 217/217, strict ui-parity green.**
    Detail: memory `project_cross_game_consumables` + `project_omsi_loops_fork`
-   session 38. **Follow-on QUEUED (user 2026-07-19): the planner/predictor
-   automation must be taught the P2 carrier + lootable controls** (workers
-   don't receive schedules; the category-priority walk isn't an automation
-   lever; `valueOfVar` has no per-category values) — scope in a planning
-   session. JtA-half record: design doc *(NewDocs)*
+   session 38. **Follow-on SCOPED 2026-07-19 (Fable, session 39): the
+   automation update was SPLIT (user-accepted) — A (worker schedule+prefs
+   transport) + B (harness `--world-config`/`--loot-policy` hooks) are
+   Opus-ready in *(NewDocs)*
+   `cross-game-p2-automation-transport-opus-kickoff.md`; C (per-category
+   valueOfVar/bank scoring) + D (priority walk as a planner lever) are
+   DEFERRED until U0–U5 + AP semantics settle (U-plan §7 reshapes exactly
+   those scoring surfaces; empirical self-correction from A makes deferral
+   cheap). B unblocks the shuffle-scope prioritized-play curves. JtA-half record: design doc *(NewDocs)*
    `cross-game-p2-award-schedules-design.md` (censuses + experiments +
    rulings R1–R4; 4 outer commits
    `11a633277`→`8bc0fa0cf` + jta fork Fork 1.13 `e1e38d9`, CI all green).
