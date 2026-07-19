@@ -394,13 +394,29 @@ log(`crafted save blobs: mid=${saves.mid.length}B deep=${saves.deep.length}B`);
 //
 // PARITY_RASTER_FLAGS=off runs WITHOUT them, so CI can A/B the hypothesis
 // against a control instead of re-rolling until green.
+// PARITY_STRICT_PIXELS=1 removes the tolerance bands entirely: any nonzero
+// pixel difference fails.
+//
+// This is affordable in CI and NOT on a developer box, and the difference is
+// measured, not assumed. A 12-job sample (6 per arm, run 29692996979) found
+// that with the raster flags below, CI is pixel-EXACT on all nine shots in
+// every sample — 0 nonzero out of 45 — while the control arm differed on
+// three shots in 6 of 6 samples. So in CI the bands protect nothing and only
+// create room for a genuine 1-2 px regression to pass unnoticed.
+//
+// Local runs keep the bands: the same sample showed the big mid/main flake
+// (historically 0/40/76/84/124 px) does not reproduce on CI at all, i.e. it
+// is specific to the developer environment, which is exactly where a
+// zero-tolerance gate would cry wolf.
+const STRICT_PIXELS = process.env.PARITY_STRICT_PIXELS === "1";
+
 const RASTER_FLAGS = process.env.PARITY_RASTER_FLAGS === "off" ? [] : [
     "--num-raster-threads=1",
     "--disable-partial-raster",
     "--run-all-compositor-stages-before-draw",
     "--disable-new-content-rendering-timeout",
 ];
-log(`raster determinism flags: ${RASTER_FLAGS.length ? "ON" : "OFF (control)"}`);
+log(`raster determinism flags: ${RASTER_FLAGS.length ? "ON" : "OFF (control)"}; pixel tolerance: ${STRICT_PIXELS ? "STRICT (any diff fails)" : "bands"}`);
 const browser = await chromium.launch({
     args: [
         "--disable-gpu",
@@ -556,6 +572,14 @@ for (const state of STATES) {
             unexpected++;
         } else if (px.diffPixels === 0) {
             pixelClassification = "exact";
+        } else if (STRICT_PIXELS) {
+            // No tolerance bands: any difference at all is a failure. See the
+            // STRICT_PIXELS note above for why CI can afford this and a
+            // developer box cannot.
+            pixelClassification = `UNEXPECTED (strict: ${px.diffPixels} px, maxChannelDelta ${px.maxChannelDelta})`;
+            unexpected++;
+            console.error(`[ui-parity] UNEXPECTED pixel differences in '${state.name}/${label}' (strict mode): `
+                + `${px.diffPixels} px, maxChannelDelta ${px.maxChannelDelta}, bbox ${JSON.stringify(px.bbox)}`);
         } else if (px.maxChannelDelta <= 20 && px.diffPixels <= 500) {
             pixelClassification = "renderer compositing noise (persisted across retakes, low delta)";
         } else if (px.diffPixels <= 64 && px.maxChannelDelta <= 32) {
