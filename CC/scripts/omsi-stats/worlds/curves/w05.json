@@ -1,0 +1,539 @@
+{
+  "meta": {
+    "tool": "mint-world-config.mjs",
+    "knobs": {
+      "originalItemWeight": 0.5,
+      "dummyItemRatio": 0,
+      "scheduleSeed": 1,
+      "foreign": [
+        {
+          "substrate": "jta",
+          "type": "Food"
+        },
+        {
+          "substrate": "jta",
+          "type": "Coin"
+        }
+      ]
+    },
+    "realized": {
+      "Pots": {
+        "horizon": 100,
+        "shuffled": 43,
+        "realized": 0.43
+      },
+      "Locks": {
+        "horizon": 100,
+        "shuffled": 51,
+        "realized": 0.51
+      }
+    }
+  },
+  "awardSchedule": {
+    "version": 1,
+    "lootables": {
+      "Pots": {
+        "contents": [
+          {
+            "name": "gold",
+            "count": 1
+          },
+          {
+            "substrate": "jta",
+            "type": "Coin",
+            "count": 1
+          },
+          {
+            "name": "teamMembers",
+            "count": 1
+          },
+          {
+            "name": "map",
+            "count": 1
+          },
+          null,
+          {
+            "name": "favors",
+            "count": 1
+          },
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          {
+            "name": "teamMembers",
+            "count": 1
+          },
+          null,
+          null,
+          null,
+          {
+            "name": "completedMap",
+            "count": 1
+          },
+          null,
+          null,
+          {
+            "name": "enchantments",
+            "count": 1
+          },
+          {
+            "name": "hide",
+            "count": 1
+          },
+          {
+            "name": "favors",
+            "count": 1
+          },
+          {
+            "substrate": "jta",
+            "type": "Coin",
+            "count": 1
+          },
+          null,
+          {
+            "name": "hide",
+            "count": 1
+          },
+          null,
+          null,
+          null,
+          null,
+          {
+            "name": "houses",
+            "count": 1
+          },
+          null,
+          null,
+          null,
+          {
+            "name": "power",
+            "count": 1
+          },
+          null,
+          {
+            "name": "map",
+            "count": 1
+          },
+          null,
+          null,
+          {
+            "substrate": "jta",
+            "type": "Coin",
+            "count": 1
+          },
+          {
+            "name": "zombie",
+            "count": 1
+          },
+          {
+            "name": "heart",
+            "count": 1
+          },
+          {
+            "name": "herbs",
+            "count": 1
+          },
+          null,
+          {
+            "name": "teamMembers",
+            "count": 1
+          },
+          {
+            "name": "enchantments",
+            "count": 1
+          },
+          {
+            "name": "map",
+            "count": 1
+          },
+          null,
+          {
+            "substrate": "jta",
+            "type": "Food",
+            "count": 1
+          },
+          null,
+          {
+            "name": "hide",
+            "count": 1
+          },
+          null,
+          null,
+          null,
+          null,
+          {
+            "name": "enchantments",
+            "count": 1
+          },
+          {
+            "name": "reputation",
+            "count": 1
+          },
+          {
+            "name": "power",
+            "count": 1
+          },
+          null,
+          null,
+          null,
+          {
+            "name": "teamMembers",
+            "count": 1
+          },
+          null,
+          {
+            "name": "enchantments",
+            "count": 1
+          },
+          null,
+          null,
+          null,
+          null,
+          null,
+          {
+            "name": "zombie",
+            "count": 1
+          },
+          null,
+          {
+            "name": "enchantments",
+            "count": 1
+          },
+          null,
+          {
+            "name": "teamMembers",
+            "count": 1
+          },
+          {
+            "substrate": "jta",
+            "type": "Coin",
+            "count": 1
+          },
+          {
+            "name": "gold",
+            "count": 1
+          },
+          null,
+          null,
+          {
+            "name": "armor",
+            "count": 1
+          },
+          {
+            "name": "power",
+            "count": 1
+          },
+          null,
+          null,
+          {
+            "name": "completedMap",
+            "count": 1
+          },
+          {
+            "name": "potions",
+            "count": 1
+          },
+          null,
+          null,
+          null,
+          {
+            "name": "teamMembers",
+            "count": 1
+          },
+          {
+            "name": "armor",
+            "count": 1
+          },
+          {
+            "name": "power",
+            "count": 1
+          },
+          {
+            "name": "zombie",
+            "count": 1
+          },
+          null,
+          null,
+          null,
+          null,
+          null,
+          {
+            "substrate": "jta",
+            "type": "Coin",
+            "count": 1
+          },
+          null,
+          null
+        ]
+      },
+      "Locks": {
+        "contents": [
+          null,
+          null,
+          {
+            "name": "blood",
+            "count": 1
+          },
+          null,
+          null,
+          {
+            "name": "armor",
+            "count": 1
+          },
+          {
+            "name": "enchantments",
+            "count": 1
+          },
+          null,
+          {
+            "name": "armor",
+            "count": 1
+          },
+          null,
+          {
+            "name": "completedMap",
+            "count": 1
+          },
+          {
+            "name": "reputation",
+            "count": 1
+          },
+          null,
+          {
+            "name": "pylons",
+            "count": 1
+          },
+          null,
+          null,
+          null,
+          {
+            "name": "pylons",
+            "count": 1
+          },
+          null,
+          null,
+          {
+            "name": "gold",
+            "count": 1
+          },
+          {
+            "name": "enchantments",
+            "count": 1
+          },
+          {
+            "name": "pylons",
+            "count": 1
+          },
+          null,
+          null,
+          {
+            "name": "herbs",
+            "count": 1
+          },
+          {
+            "name": "teamMembers",
+            "count": 1
+          },
+          {
+            "name": "teamMembers",
+            "count": 1
+          },
+          {
+            "substrate": "jta",
+            "type": "Food",
+            "count": 1
+          },
+          null,
+          null,
+          null,
+          {
+            "name": "gold",
+            "count": 1
+          },
+          {
+            "name": "blood",
+            "count": 1
+          },
+          {
+            "name": "teamMembers",
+            "count": 1
+          },
+          null,
+          {
+            "substrate": "jta",
+            "type": "Coin",
+            "count": 1
+          },
+          null,
+          {
+            "name": "herbs",
+            "count": 1
+          },
+          null,
+          {
+            "name": "enchantments",
+            "count": 1
+          },
+          null,
+          {
+            "name": "herbs",
+            "count": 1
+          },
+          null,
+          {
+            "name": "pylons",
+            "count": 1
+          },
+          {
+            "name": "gold",
+            "count": 1
+          },
+          null,
+          {
+            "name": "potions",
+            "count": 1
+          },
+          null,
+          {
+            "name": "pylons",
+            "count": 1
+          },
+          null,
+          null,
+          null,
+          null,
+          {
+            "name": "zombie",
+            "count": 1
+          },
+          {
+            "name": "pylons",
+            "count": 1
+          },
+          {
+            "substrate": "jta",
+            "type": "Coin",
+            "count": 1
+          },
+          null,
+          {
+            "substrate": "jta",
+            "type": "Food",
+            "count": 1
+          },
+          null,
+          {
+            "name": "enchantments",
+            "count": 1
+          },
+          {
+            "name": "blood",
+            "count": 1
+          },
+          null,
+          null,
+          {
+            "name": "blood",
+            "count": 1
+          },
+          null,
+          {
+            "name": "houses",
+            "count": 1
+          },
+          {
+            "name": "power",
+            "count": 1
+          },
+          null,
+          {
+            "name": "reputation",
+            "count": 1
+          },
+          null,
+          {
+            "name": "potions",
+            "count": 1
+          },
+          {
+            "name": "completedMap",
+            "count": 1
+          },
+          null,
+          null,
+          {
+            "name": "gold",
+            "count": 1
+          },
+          {
+            "substrate": "jta",
+            "type": "Coin",
+            "count": 1
+          },
+          null,
+          {
+            "name": "power",
+            "count": 1
+          },
+          {
+            "name": "favors",
+            "count": 1
+          },
+          {
+            "name": "artifacts",
+            "count": 1
+          },
+          null,
+          null,
+          {
+            "name": "pylons",
+            "count": 1
+          },
+          null,
+          {
+            "name": "houses",
+            "count": 1
+          },
+          null,
+          null,
+          {
+            "name": "teamMembers",
+            "count": 1
+          },
+          null,
+          null,
+          null,
+          {
+            "name": "pylons",
+            "count": 1
+          },
+          null,
+          null,
+          {
+            "name": "gold",
+            "count": 1
+          },
+          {
+            "substrate": "jta",
+            "type": "Coin",
+            "count": 1
+          },
+          null,
+          {
+            "name": "power",
+            "count": 1
+          },
+          {
+            "name": "houses",
+            "count": 1
+          }
+        ]
+      }
+    }
+  }
+}

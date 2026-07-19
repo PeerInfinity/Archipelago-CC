@@ -1,0 +1,356 @@
+{
+  "meta": {
+    "tool": "mint-world-config.mjs",
+    "knobs": {
+      "originalItemWeight": 0.8,
+      "dummyItemRatio": 0,
+      "scheduleSeed": 1,
+      "foreign": [
+        {
+          "substrate": "jta",
+          "type": "Food"
+        },
+        {
+          "substrate": "jta",
+          "type": "Coin"
+        }
+      ]
+    },
+    "realized": {
+      "Pots": {
+        "horizon": 100,
+        "shuffled": 19,
+        "realized": 0.19
+      },
+      "Locks": {
+        "horizon": 100,
+        "shuffled": 16,
+        "realized": 0.16
+      }
+    }
+  },
+  "awardSchedule": {
+    "version": 1,
+    "lootables": {
+      "Pots": {
+        "contents": [
+          null,
+          null,
+          null,
+          {
+            "substrate": "jta",
+            "type": "Coin",
+            "count": 1
+          },
+          null,
+          null,
+          null,
+          null,
+          {
+            "name": "favors",
+            "count": 1
+          },
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          {
+            "name": "potions",
+            "count": 1
+          },
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          {
+            "name": "potions",
+            "count": 1
+          },
+          {
+            "name": "map",
+            "count": 1
+          },
+          null,
+          null,
+          null,
+          {
+            "substrate": "jta",
+            "type": "Food",
+            "count": 1
+          },
+          null,
+          {
+            "name": "heart",
+            "count": 1
+          },
+          {
+            "name": "herbs",
+            "count": 1
+          },
+          null,
+          {
+            "name": "teamMembers",
+            "count": 1
+          },
+          {
+            "name": "enchantments",
+            "count": 1
+          },
+          {
+            "name": "map",
+            "count": 1
+          },
+          null,
+          null,
+          {
+            "name": "herbs",
+            "count": 1
+          },
+          {
+            "name": "hide",
+            "count": 1
+          },
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          {
+            "name": "power",
+            "count": 1
+          },
+          null,
+          null,
+          null,
+          {
+            "name": "teamMembers",
+            "count": 1
+          },
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          {
+            "substrate": "jta",
+            "type": "Coin",
+            "count": 1
+          },
+          {
+            "name": "gold",
+            "count": 1
+          },
+          null,
+          null,
+          {
+            "name": "armor",
+            "count": 1
+          },
+          null,
+          {
+            "name": "reputation",
+            "count": 1
+          },
+          null
+        ]
+      },
+      "Locks": {
+        "contents": [
+          {
+            "name": "completedMap",
+            "count": 1
+          },
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          {
+            "name": "armor",
+            "count": 1
+          },
+          {
+            "name": "power",
+            "count": 1
+          },
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          {
+            "substrate": "jta",
+            "type": "Coin",
+            "count": 1
+          },
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          {
+            "name": "armor",
+            "count": 1
+          },
+          {
+            "name": "enchantments",
+            "count": 1
+          },
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          {
+            "name": "pylons",
+            "count": 1
+          },
+          null,
+          null,
+          null,
+          null,
+          {
+            "name": "enchantments",
+            "count": 1
+          },
+          null,
+          null,
+          null,
+          null,
+          {
+            "name": "herbs",
+            "count": 1
+          },
+          null,
+          null,
+          null,
+          null,
+          null,
+          {
+            "name": "reputation",
+            "count": 1
+          },
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          {
+            "substrate": "jta",
+            "type": "Coin",
+            "count": 1
+          },
+          null,
+          {
+            "name": "herbs",
+            "count": 1
+          },
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          {
+            "name": "pylons",
+            "count": 1
+          },
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          {
+            "name": "gold",
+            "count": 1
+          },
+          {
+            "substrate": "jta",
+            "type": "Food",
+            "count": 1
+          },
+          null,
+          {
+            "name": "enchantments",
+            "count": 1
+          }
+        ]
+      }
+    }
+  }
+}
