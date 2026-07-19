@@ -584,22 +584,36 @@ are COMPLETE and pushed.** Next in order:
    lootable UI (design §9b-pre) is the mitigation. ~~The omsi half
    FOLLOWS XML Phase 6~~ — that chain (view-subscribe → Phase 6 → §2d
    carrier + §9b-pre lootable UI) completed 2026-07-19.
-2. **X1 — maze consumable tiles — DESIGN SETTLED 2026-07-19, READY TO
-   IMPLEMENT:** *(NewDocs)* `x1-maze-consumable-tiles-opus-kickoff.md`
-   (anchors verified 07-18: `compileRegionGraph`
-   procgenPipelineEngine.js:2185, `stepItems` sphereSteps.js:305,
-   mazeRoom/index.js:110 pickup dispatch; carries D10/S5/S6/D5/D2/S8 +
-   byte-inert-default discipline). **Five session-39 user rulings baked
-   into the kickoff (X1-R1..R5):** loop-reset = each substrate owns its
-   items (maze collectibles respawn per loop; AP checks stay checked);
-   v1 placement = any reachable tile; bot-collect default NEVER
-   (mana-optimizing policy recorded post-v1); mana-refill IN v1 if
-   cheap, respawns too; knobs = own additive vocab, byte-inert OFF,
-   panel exposure deferred to the UI session.
-   Independent of P2's omsi half and of Phase 6 — needs only the grant
-   bus, which is live: new tile type → compile classification → sidecar →
-   pickup dispatch → grant event; maze-only always/never bot-collect
-   setting (S6); mana-refill tiles = optional stretch (S5).
+2. **X1 — maze consumable tiles — COMPLETE + PUSHED 2026-07-19 (Opus
+   session 40).** Four slices: outer main `4ef7ae371` → `2ea3a8154`
+   (`52041d24d` overlays+sidecar → `0d19373ff` placement+knobs →
+   `99e25caa2` pickup/grant/respawn/render → `2ea3a8154` bot policy +
+   verify); shared submodule `30eaece` → `65e0156` (the content-module
+   generator lives there; gitlink bumped inside slice 2 — user ruled
+   "wherever cleaner, shared is okay, we might refactor procgen").
+   Gates: vitest 3092/3092, test-substrates 35/35 (3 new tests
+   registered in `playwright_tests_config-substrates.json`),
+   test-regression green, new
+   `scripts/procgen/verify-maze-consumable-tiles.mjs` OK, byte-inert
+   default proved (maze_loop_worldgen regen identical modulo the
+   pre-existing `loop_costs.generatedAt` timestamp).
+   **X1-R4 resolved: mana-refill tiles ARE in v1** — `gainMana` already
+   existed and maze already declares `sharing.mana`, so the seam was a
+   one-liner.
+   ⚠ **Three of the kickoff's pre-surveyed anchors pointed at the WRONG
+   LAYER.** Corrections are the record in *(NewDocs)*
+   `x1-maze-consumable-tiles-design.md` §1: the maze grid is BINARY and
+   all semantics are sparse "x,y" overlays (so the new tile types are
+   overlays, not tile values); `compileRegionGraph` never sees tiles and
+   is untouched (foreign tiles aren't AP locations, D10); `stepItems` is
+   node-level, so the real placement precedent is the HAZARDS content
+   module. Anyone citing those anchors for follow-on work should read
+   the design doc first.
+   **Remaining in this sub-arc:** panel exposure of the X1 knobs (joins
+   the deferred UI session alongside the shuffle knobs, S3); richer
+   placement policies (dead-end bias, per-sphere quotas — X1-R2); the
+   recorded-but-not-built mana-optimizing collect policy (X1-R3); pool
+   UI (S7); cross-game equivalence mappings (D2).
 3. **X2 — hardening** (S4-census-driven logic-inertness enforcement;
    balancing-aware placement aspiration).
 
