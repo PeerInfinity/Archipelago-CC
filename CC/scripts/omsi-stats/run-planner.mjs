@@ -91,6 +91,89 @@ const resultsDir = path.join(here, "results");
 // 2026-07-13): { loops: 500, ticks: 5_432_753, hash: "54506b48ec1758af" }.
 const V0_REFERENCE = { seed: 12345, loops: 461, ticks: 5_195_188, hash: "9d9952e68bc8373c" };
 
+// ---- worldConfig (cross-game P2-B: headless schedule + priority policy) ----
+//
+// A worldConfig installs the P2 award schedule and the lootable priority prefs
+// into every sim context this run builds, so headless sweeps can plan the
+// world that actually exists (the same payload automation.js/predictor.js ride
+// into the live workers). See NewDocs/plans/cross-game-p2-automation-transport
+// -opus-kickoff.md §3.1.
+//
+// A run WITH a worldConfig is a DIFFERENT WORLD and therefore never asserts the
+// frozen V0 reference — knobsAtDefaults excludes it.
+
+/** actionListXml.js lootCategoryOf, mirrored host-side (keep the two in sync). */
+function lootCategoryOf(entry) {
+    if (entry === null || entry === undefined) return "vanilla";
+    if (entry.dummy === true) return "dummy";
+    if (entry.substrate !== undefined) return `foreign:${entry.substrate}/${entry.type}`;
+    return `local:${entry.name}`;
+}
+
+/**
+ * Synthesize lootPrefs from the schedule's own categories. These two policies
+ * are the bounds the shuffle-scope curves sweep between:
+ *   vanilla-first — vanilla ahead of everything (≈ the engine's default order;
+ *     the OPTIMISTIC bound: the player always takes their own loot first);
+ *   vanilla-last  — vanilla behind every other category (the PESSIMAL bound).
+ * Categories are ordered by first appearance in the pool, matching the engine's
+ * default tiebreak.
+ */
+function synthesizeLootPrefs(schedule, policy) {
+    const prefs = {};
+    for (const varName in schedule?.lootables ?? {}) {
+        const contents = schedule.lootables[varName].contents ?? [];
+        const seen = [];
+        // "vanilla" always participates: contents shorter than the pool leaves
+        // the tail vanilla, and a null entry is vanilla by definition
+        for (const cat of ["vanilla", ...contents.map(lootCategoryOf)]) {
+            if (!seen.includes(cat)) seen.push(cat);
+        }
+        const others = seen.filter((c) => c !== "vanilla");
+        prefs[varName] = {
+            order: policy === "vanilla-last" ? [...others, "vanilla"] : ["vanilla", ...others],
+            disabled: [],
+        };
+    }
+    return prefs;
+}
+
+/** Stable stringify (sorted keys) so the provenance hash is order-independent. */
+function canonical(v) {
+    if (Array.isArray(v)) return `[${v.map(canonical).join(",")}]`;
+    if (v && typeof v === "object") {
+        return `{${Object.keys(v).sort().map((k) => `${JSON.stringify(k)}:${canonical(v[k])}`).join(",")}}`;
+    }
+    return JSON.stringify(v ?? null);
+}
+
+/**
+ * Resolve --world-config / --loot-policy into the payload installed everywhere.
+ * An explicit lootPrefs block in the file WINS over the policy flag (the file
+ * is the authored world; the policy is a convenience synthesizer).
+ * @returns {{cfg: object, provenance: {hash: string, policy: string|null}} | null}
+ */
+function loadWorldConfig(filePath, policy) {
+    if (!filePath) {
+        if (policy) throw new Error("--loot-policy requires --world-config");
+        return null;
+    }
+    const resolved = path.isAbsolute(filePath) ? filePath : path.join(here, filePath);
+    const raw = JSON.parse(fs.readFileSync(resolved, "utf8"));
+    // accept either the bare payload or a bare schedule
+    const awardSchedule = raw.awardSchedule ?? raw;
+    if (awardSchedule == null) throw new Error(`--world-config ${filePath}: no awardSchedule`);
+    const lootPrefs = raw.lootPrefs ?? (policy ? synthesizeLootPrefs(awardSchedule, policy) : {});
+    const cfg = { awardSchedule, lootPrefs };
+    return {
+        cfg,
+        provenance: {
+            hash: crypto.createHash("sha256").update(canonical(cfg)).digest("hex").slice(0, 16),
+            policy: raw.lootPrefs ? (policy ? `${policy} (overridden by file lootPrefs)` : null) : (policy ?? null),
+        },
+    };
+}
+
 const run = (cmd, args) => execFileSync(cmd, args, { encoding: "utf8" }).trim();
 
 // §W4 — vocabulary coverage report. Maps the ACTION-CENSUS.md blind-spot
@@ -323,7 +406,18 @@ async function main() {
     const wanderUntil = Number(val("--wander-until", 0));
     const wanderCap = Number(val("--wander-cap", 20000));
     if (wanderUntil > 0 && fromStatePath) throw new Error("--wander-until and --from-state are mutually exclusive");
-    const knobsAtDefaults = screenK === 8 && probeEvery === 1 && targetTown === 1 && multiTown
+    // cross-game P2-B: --world-config <file> installs the §3.1 payload into
+    // every sim context (main, eval pool, planner thread). --loot-policy
+    // synthesizes the priority prefs from the schedule's own categories; the
+    // two policies are the bounds the shuffle-scope curves sweep between.
+    const worldConfigPath = val("--world-config", null);
+    const lootPolicy = val("--loot-policy", null);
+    if (lootPolicy && !["vanilla-first", "vanilla-last"].includes(lootPolicy)) {
+        throw new Error(`--loot-policy must be vanilla-first|vanilla-last (got ${lootPolicy})`);
+    }
+    const world = loadWorldConfig(worldConfigPath, lootPolicy);
+
+    const knobsAtDefaults = !world && screenK === 8 && probeEvery === 1 && targetTown === 1 && multiTown
         && gainMult === 1 && !fromStatePath && !wanderUntil && screenMode === "predictor"
         && vocabulary === "empirical" && strategy === "heuristic" && !antiFixation
         && rngMode === "random" && replanEvery === 1;
@@ -342,11 +436,12 @@ async function main() {
     console.log(`fork: ${forkCommit}  seed: ${seed}  seedFromPredictor: ${seedFromPredictor}`);
 
     const { makeContext } = await import(pathToFileURL(path.join(srcDir, "test/harness.mjs")).href);
-    const ctx = makeContext(seed, ["planner-metadata.js", "planner.js"]);
+    const ctx = makeContext(seed, ["planner-metadata.js", "planner.js"], { worldConfig: world?.cfg ?? null });
     ctx.sandbox.__rngGet = ctx.getRng;
     ctx.sandbox.__rngSet = ctx.setRng;
     ctx.ev("IdlePlanner.setRngHooks({ get: __rngGet, set: __rngSet })");
     if (gainMult !== 1) ctx.ev(`options.expGainMultiplier = ${gainMult}`);
+    if (world) console.log(`worldConfig: ${worldConfigPath}  hash: ${world.provenance.hash}  policy: ${world.provenance.policy ?? "(none)"}`);
     if (rngMode !== "random") ctx.ev(`options.rngMode = ${JSON.stringify(rngMode)}`);
     const IP = ctx.ev("IdlePlanner");
 
@@ -367,7 +462,7 @@ async function main() {
     if (poolSize > 0) {
         const workerPath = path.join(here, "eval-worker.mjs");
         poolWorkers = Array.from({ length: poolSize }, () =>
-            new Worker(workerPath, { workerData: { srcDir, seed, gainMult } }));
+            new Worker(workerPath, { workerData: { srcDir, seed, gainMult, worldConfig: world?.cfg ?? null } }));
         await Promise.all(poolWorkers.map(w => new Promise((res, rej) => {
             w.once("message", res);
             w.once("error", rej);
@@ -508,6 +603,9 @@ async function main() {
         finished: r.finished, finalHash: hash,
         divergenceCount: r.divergences.length, divergences: r.divergences,
         rngConsumed: ctx.rngCount(),
+        // cross-game P2-B provenance: which world this run planned (null = the
+        // vanilla world, the only one that asserts the frozen reference)
+        worldConfig: world ? world.provenance : null,
         // keep the main results JSON lean: the heavy per-loop evals/state live
         // in the -detail.jsonl (when --dump-detail); strip them here.
         milestones: r.milestones,

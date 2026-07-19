@@ -1,0 +1,38 @@
+{
+  "_comment": [
+    "Hand-authored smoke world for the cross-game P2-B headless hooks",
+    "(--world-config / --loot-policy). Half of each pool's instances are",
+    "awarded to another game, so the local player's measured yield is roughly",
+    "halved and the PRIORITY POLICY decides which half they collect first when",
+    "a loop ends before the pool is exhausted — the separation the two bounds",
+    "(vanilla-first / vanilla-last) are meant to bracket.",
+    "This is a gate fixture, not a balance proposal: the shuffle-scope curve",
+    "session mints its own ratio-parameterized schedules."
+  ],
+  "version": 1,
+  "lootables": {
+    "Pots": {
+      "contents": [
+        null, { "substrate": "jta", "type": "Food", "count": 1 },
+        null, { "substrate": "jta", "type": "Food", "count": 1 },
+        null, { "substrate": "jta", "type": "Food", "count": 1 },
+        null, { "substrate": "jta", "type": "Food", "count": 1 },
+        null, { "substrate": "jta", "type": "Food", "count": 1 },
+        null, { "substrate": "jta", "type": "Food", "count": 1 },
+        null, { "substrate": "jta", "type": "Food", "count": 1 },
+        null, { "substrate": "jta", "type": "Food", "count": 1 },
+        null, { "substrate": "jta", "type": "Food", "count": 1 },
+        null, { "substrate": "jta", "type": "Food", "count": 1 }
+      ]
+    },
+    "Locks": {
+      "contents": [
+        null, { "substrate": "jta", "type": "Coin", "count": 1 },
+        null, { "substrate": "jta", "type": "Coin", "count": 1 },
+        null, { "substrate": "jta", "type": "Coin", "count": 1 },
+        null, { "substrate": "jta", "type": "Coin", "count": 1 },
+        null, { "substrate": "jta", "type": "Coin", "count": 1 }
+      ]
+    }
+  }
+}

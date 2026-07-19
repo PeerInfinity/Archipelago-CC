@@ -12,7 +12,11 @@
 //       --base "--worktree --pool 8 --screen-mode engine --max-loops 1200"
 //
 // Arm spec: { label, weights?: {..merged over DEFAULT_WEIGHTS by run-planner},
-//             flags?: "extra CLI flags for this arm" }.
+//             flags?: "extra CLI flags for this arm",
+//             worldConfig?: "worlds/x.json", lootPolicy?: "vanilla-first"|"vanilla-last" }.
+// The last two are the cross-game P2-B axes (schedule file × priority policy)
+// the shuffle-scope curves sweep; a worldConfig arm plans a DIFFERENT WORLD and
+// so is never comparable to a no-config arm.
 // Arms run SEQUENTIALLY (each already parallelizes via --pool). Defaults:
 //   --base "--worktree --pool 8 --screen-mode engine"   (the Round-11 ~5x
 //   iteration regime; final-check winners under predictor before concluding)
@@ -109,6 +113,11 @@ for (const [i, arm] of arms.entries()) {
     const argv = ["run-planner.mjs", ...base.split(/\s+/).filter(Boolean)];
     if (!argv.includes("--max-loops") && !(arm.flags ?? "").includes("--max-loops")) argv.push("--max-loops", "1200");
     if (arm.weights && Object.keys(arm.weights).length) argv.push("--weights", JSON.stringify(arm.weights));
+    // cross-game P2-B: first-class sweep axes (schedule file × priority policy).
+    // arm.flags still works for one-offs; these keys just make the two axes the
+    // shuffle-scope curves sweep readable in the arm spec and in SUMMARY.json.
+    if (arm.worldConfig) argv.push("--world-config", arm.worldConfig);
+    if (arm.lootPolicy) argv.push("--loot-policy", arm.lootPolicy);
     if (arm.flags) argv.push(...arm.flags.split(/\s+/).filter(Boolean));
     argv.push("--out", outFile);
     logLine(`[${i + 1}/${arms.length}] ${label}: node ${argv.join(" ")}`);
@@ -123,13 +132,16 @@ for (const [i, arm] of arms.entries()) {
         // a crashed arm is ALSO a first-class result — record it, keep going
         logLine(`[${i + 1}/${arms.length}] ${label}: CRASH (exit ${res.status}) after ${wall.toFixed(0)}s — ${
             (res.stderr ?? "").split("\n").filter(Boolean).slice(-3).join(" | ")}`);
-        rows.push({ label, weights: arm.weights ?? {}, flags: arm.flags ?? "", crash: true, wall });
+        rows.push({ label, weights: arm.weights ?? {}, flags: arm.flags ?? "",
+            worldConfig: arm.worldConfig ?? null, lootPolicy: arm.lootPolicy ?? null, crash: true, wall });
         continue;
     }
     const out = JSON.parse(fs.readFileSync(outFile, "utf8"));
     const cls = classify(out);
     const row = {
         label, weights: arm.weights ?? {}, flags: arm.flags ?? "",
+        // provenance of the world this arm planned (null = the vanilla world)
+        worldConfig: out.worldConfig ?? null, lootPolicy: arm.lootPolicy ?? null,
         loops: out.totalLoops, ticks: out.totalTicks, wall: out.wallSeconds,
         finished: out.finished, hash: out.finalHash, rng: out.rngConsumed,
         ...cls,

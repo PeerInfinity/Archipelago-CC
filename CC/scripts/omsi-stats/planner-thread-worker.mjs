@@ -9,9 +9,10 @@ import { parentPort, workerData } from "node:worker_threads";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
-const { srcDir, seed, params } = workerData;
+// worldConfig (cross-game P2-B): plan in the same world the executor runs.
+const { srcDir, seed, params, worldConfig } = workerData;
 const { makeContext } = await import(pathToFileURL(path.join(srcDir, "test/harness.mjs")).href);
-const ctx = makeContext(seed, ["planner-metadata.js", "planner.js"]);
+const ctx = makeContext(seed, ["planner-metadata.js", "planner.js"], { worldConfig: worldConfig ?? null });
 ctx.sandbox.__rngGet = ctx.getRng;
 ctx.sandbox.__rngSet = ctx.setRng;
 ctx.ev("IdlePlanner.setRngHooks({ get: __rngGet, set: __rngSet })");

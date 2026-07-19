@@ -7,9 +7,11 @@ import { parentPort, workerData } from "node:worker_threads";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
-const { srcDir, seed, gainMult } = workerData;
+// worldConfig (cross-game P2-B): the pool evaluates candidates in the SAME
+// world the main context plans in, or its measurements would contradict it.
+const { srcDir, seed, gainMult, worldConfig } = workerData;
 const { makeContext } = await import(pathToFileURL(path.join(srcDir, "test/harness.mjs")).href);
-const ctx = makeContext(seed, ["planner-metadata.js", "planner.js"]);
+const ctx = makeContext(seed, ["planner-metadata.js", "planner.js"], { worldConfig: worldConfig ?? null });
 ctx.sandbox.__rngGet = ctx.getRng;
 ctx.sandbox.__rngSet = ctx.setRng;
 ctx.ev("IdlePlanner.setRngHooks({ get: __rngGet, set: __rngSet })");
