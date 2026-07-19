@@ -584,11 +584,18 @@ are COMPLETE and pushed.** Next in order:
    lootable UI (design §9b-pre) is the mitigation. ~~The omsi half
    FOLLOWS XML Phase 6~~ — that chain (view-subscribe → Phase 6 → §2d
    carrier + §9b-pre lootable UI) completed 2026-07-19.
-2. **X1 — maze consumable tiles — Opus kickoff READY 2026-07-18:**
-   *(NewDocs)* `x1-maze-consumable-tiles-opus-kickoff.md` (anchors
-   verified: `compileRegionGraph` procgenPipelineEngine.js:2185,
-   `stepItems` sphereSteps.js:305, mazeRoom/index.js:110 pickup dispatch;
-   carries D10/S5/S6/D5/D2/S8 + byte-inert-default discipline).
+2. **X1 — maze consumable tiles — DESIGN SETTLED 2026-07-19, READY TO
+   IMPLEMENT:** *(NewDocs)* `x1-maze-consumable-tiles-opus-kickoff.md`
+   (anchors verified 07-18: `compileRegionGraph`
+   procgenPipelineEngine.js:2185, `stepItems` sphereSteps.js:305,
+   mazeRoom/index.js:110 pickup dispatch; carries D10/S5/S6/D5/D2/S8 +
+   byte-inert-default discipline). **Five session-39 user rulings baked
+   into the kickoff (X1-R1..R5):** loop-reset = each substrate owns its
+   items (maze collectibles respawn per loop; AP checks stay checked);
+   v1 placement = any reachable tile; bot-collect default NEVER
+   (mana-optimizing policy recorded post-v1); mana-refill IN v1 if
+   cheap, respawns too; knobs = own additive vocab, byte-inert OFF,
+   panel exposure deferred to the UI session.
    Independent of P2's omsi half and of Phase 6 — needs only the grant
    bus, which is live: new tile type → compile classification → sidecar →
    pickup dispatch → grant event; maze-only always/never bot-collect
