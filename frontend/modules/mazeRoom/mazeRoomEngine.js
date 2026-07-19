@@ -771,7 +771,7 @@ function reachableTiles(world, startState) {
 // have a non-empty path in the extracted rules. Used as the wall-
 // generator's feasibility predicate so no wall can isolate a target
 // from the entrance.
-function floorReachableSet(world) {
+export function floorReachableSet(world) {
     const visited = new Set([posKey(world.entrance.x, world.entrance.y)]);
     const queue = [{ x: world.entrance.x, y: world.entrance.y }];
     while (queue.length > 0) {

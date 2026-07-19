@@ -53,6 +53,17 @@
  *                            entries: 'cost' (default) | 'speed' | 'both'
  *                            | 'none'. Only meaningful with
  *                            --enable-loop-mode.
+ *   --consumable-tiles N     per-maze-region cross-game consumable tiles (X1).
+ *                            Default 0 = OFF: the content pass draws no rng and
+ *                            emits no sidecar key, so every existing preset
+ *                            regenerates byte-identically. The foreign pool is
+ *                            built from the OTHER quota'd substrates' registry
+ *                            sharing.items declarations; an empty pool places
+ *                            nothing.
+ *   --consumable-count N     grant count stamped per consumable tile (default 1)
+ *   --mana-tiles N           per-maze-region mana-refill tiles (default 0 = OFF)
+ *   --mana-tile-amount N     mana granted per refill tile (default 0; a refill
+ *                            tile is only placed when this is > 0)
  *   --rules-out PATH         additionally write the bare rules.json here
  *   -o, --out PATH           output JSON path (default ./sphere-growth-dump.json)
  *
@@ -82,11 +93,50 @@ import { planSpheres, computeItemSpheres, compareSpheresToPlan } from
     '../../frontend/modules/procgenPipeline/spherePlanner.js';
 import { DEFAULT_ITEMS } from
     '../../frontend/modules/shared/procgen/library.js';
+import { substrateRegistry } from
+    '../../frontend/modules/shared/procgen/substrateRegistry.js';
 import {
     defaultProcgenParams, activeSubstrateIds,
     collectSphereGrowthPrep, assembleRegionParams,
     mergeSubstrateItemLib, resolveVictoryItem,
 } from '../../frontend/modules/procgenPipeline/sphereConfigHooks.js';
+
+/**
+ * Build the X1 consumable-tile config, or null when byte-inert.
+ *
+ * Returning null (rather than an all-zero object) is the load-bearing
+ * half: the content-module pass is gated on the result being active, so
+ * at defaults it never runs, never draws rng, and never emits a sidecar
+ * key — the D3/S3 byte-inert requirement.
+ *
+ * The foreign pool is the union of the OTHER quota'd substrates'
+ * registry `sharing.items` declarations (D2), mirroring how
+ * spiral-step's buildOmsiSubstrateConfig assembles its pool. Maze is
+ * excluded — a maze tile granting a maze item would just be an item.
+ */
+function buildConsumableTileConfig(config) {
+    const consumableCount = Math.max(0, config.consumableTiles | 0);
+    const manaCount = Math.max(0, config.manaTiles | 0);
+    const manaAmount = Number(config.manaTileAmount) || 0;
+    if (consumableCount === 0 && !(manaCount > 0 && manaAmount > 0)) return null;
+
+    const pool = [];
+    for (const [id, n] of Object.entries(config.quotas)) {
+        if (!(n > 0) || id === 'maze') continue;
+        const decl = substrateRegistry.get(id)?.sharing?.items;
+        const types = decl?.types ?? decl?.getTypes?.() ?? null;
+        if (Array.isArray(types)) {
+            for (const t of types) pool.push({ substrate: id, type: t });
+        }
+    }
+    return {
+        consumableCount,
+        manaCount,
+        manaAmount,
+        countPerTile: Math.max(1, config.consumableCount | 0),
+        pool,
+    };
+}
 
 // --- CLI parser ---
 
@@ -114,6 +164,12 @@ function parseArgs(argv) {
         params: {},
         enableLoopMode: false,
         regionXpEffect: 'cost',
+        // X1 consumable tiles — byte-inert defaults (all zero ⇒ the
+        // content-module pass returns before touching the rng).
+        consumableTiles: 0,
+        consumableCount: 1,
+        manaTiles: 0,
+        manaTileAmount: 0,
         rulesOut: null,
         out: './sphere-growth-dump.json',
     };
@@ -182,6 +238,10 @@ function parseArgs(argv) {
             }
             case '--enable-loop-mode': out.enableLoopMode = true; break;
             case '--region-xp-effect': out.regionXpEffect = next(); break;
+            case '--consumable-tiles': out.consumableTiles = parseInt(next(), 10); break;
+            case '--consumable-count': out.consumableCount = parseInt(next(), 10); break;
+            case '--mana-tiles': out.manaTiles = parseInt(next(), 10); break;
+            case '--mana-tile-amount': out.manaTileAmount = parseFloat(next()); break;
             case '--rules-out': out.rulesOut = next(); break;
             case '-o':
             case '--out': out.out = next(); break;
@@ -286,11 +346,15 @@ async function main() {
         seed: config.seed,
     });
 
+    const consumableTileOpts = buildConsumableTileConfig(config);
+
     const { grid, stats, startCell, tree } = growSpheres({
         regionSize: config.region,
         itemLib,
         seed: config.seed,
         regionParams,
+        // null at defaults ⇒ the content pass never runs (byte-inert).
+        ...(consumableTileOpts ? { consumableTileOpts } : {}),
         growthParams: {
             spherePlan: plan,
             maxItemsPerRegion: config.maxItemsPerRegion,

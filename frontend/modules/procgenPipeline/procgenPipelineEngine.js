@@ -804,6 +804,7 @@ function buildSubstrateRegion({
     params,
     biome = null,
     hazardOpts = null,
+    consumableTileOpts = null,
 }) {
     const adapter = getAdapter(substrate);
     if (typeof adapter.generateRegionCore !== 'function') {
@@ -836,7 +837,7 @@ function buildSubstrateRegion({
     // Content-module pass: stamp substrate-specific content (maze hazards)
     // onto the world after the base layout. No-op for substrates that don't
     // declare the hook — the engine names no substrate here.
-    adapter.applyContentModules?.(core.world, { hazardOpts }, rng);
+    adapter.applyContentModules?.(core.world, { hazardOpts, consumableTileOpts }, rng);
     return {
         substrate,
         region_id,
@@ -950,6 +951,7 @@ export function* growMazeGen(config) {
         // Content-module options. Passed through to buildSubstrateRegion
         // — null disables. See mazeRoomLibrary's applyMazeContentModules for the option shape.
         hazardOpts = null,
+        consumableTileOpts = null,
     } = config;
 
     if (!gridDims || !gridDims.width || !gridDims.height) {
@@ -1070,6 +1072,7 @@ export function* growMazeGen(config) {
         obstacles_to_place: [],            // start region — no obstacles
         itemLib, obstacleLib, rng, params: regionParams,
         hazardOpts,
+        consumableTileOpts,
     });
     grid.placeRegion(startCell, startRegion);
     pool.markPlaced({
@@ -1182,6 +1185,7 @@ export function* growMazeGen(config) {
             obstacles_to_place: plan.obstacles_to_place,
             itemLib, obstacleLib, rng, params: regionParams,
             hazardOpts,
+            consumableTileOpts,
         });
 
         grid.placeRegion(childCell, region);
@@ -1715,6 +1719,7 @@ export function* realiseTopDownGen(layout, opts) {
         regionParams = { maxIterations: 0 },
         biomeByRegion,
         hazardOpts = null,
+        consumableTileOpts = null,
         freeItems = null,
     } = opts;
     const {
@@ -1789,6 +1794,7 @@ export function* realiseTopDownGen(layout, opts) {
             params: regionParams,
             biome: regionBiome,
             hazardOpts,
+            consumableTileOpts,
             useSourceLocationName: true,
             stampEntrance: true,
             freeItems,
@@ -2679,7 +2685,7 @@ export function assembleZoneRegion({
 //
 // spec = {
 //   substrate, region_id, size, rng, params, biome, itemLib, obstacleLib,
-//   hazardOpts,
+//   hazardOpts, consumableTileOpts,
 //   entrances: [{ side, tile }],                                  // 0 or 1
 //   exits:     [{ exit_id?, exitName?, side?, tile?, target_region?,
 //                 access_rule? }],
@@ -2825,7 +2831,10 @@ function generateRegionProcedural(spec) {
         if (exit_rules[ex.id]) ex.access_rule = exit_rules[ex.id];
     }
 
-    adapter.applyContentModules?.(core.world, { hazardOpts: spec.hazardOpts ?? null }, spec.rng);
+    adapter.applyContentModules?.(core.world, {
+        hazardOpts: spec.hazardOpts ?? null,
+        consumableTileOpts: spec.consumableTileOpts ?? null,
+    }, spec.rng);
 
     return {
         substrate: spec.substrate,
@@ -3365,6 +3374,7 @@ export function realiseSpiralRegions(plan, config) {
         regionParams = {},
         growthParams = {},
         hazardOpts = null,
+        consumableTileOpts = null,
     } = config;
     const { regionSize } = config;
     const { maxItemsPerRegion = 2, assumeBidirectional = true } = growthParams;
@@ -3428,6 +3438,7 @@ export function realiseSpiralRegions(plan, config) {
                 obstacles_to_place: placementPlan.obstacles_to_place,
                 itemLib, obstacleLib, rng, params: regionParams,
                 hazardOpts,
+                consumableTileOpts,
             });
             pool.markPlaced({
                 placed_items: region.placed_items,
@@ -3950,6 +3961,7 @@ export function rebuildEnvelopeFromRulesJson(rulesJson, opts = {}) {
         itemLib,
         regionParams: opts.regionParams ?? {},
         hazardOpts: opts.hazardOpts ?? undefined,
+        consumableTileOpts: opts.consumableTileOpts ?? undefined,
         maxItemsPerRegion,
         fillerCount: opts.fillerCount ?? 0,
         revisitRatio: opts.revisitRatio ?? 0.25,
@@ -4173,7 +4185,7 @@ export function rebuildSphereTopology(plan, nodes, opts = {}) {
 // is left to makeLocationName (sphere ids aren't AP-canonical names).
 function buildSphereProceduralRegion({
     substrate, region_id, size, entrances, exitPlans, locations,
-    itemLib, obstacleLib, rng, params, hazardOpts,
+    itemLib, obstacleLib, rng, params, hazardOpts, consumableTileOpts,
 }) {
     return generateRegion({
         substrate,
@@ -4185,6 +4197,7 @@ function buildSphereProceduralRegion({
         itemLib,
         obstacleLib,
         hazardOpts,
+        consumableTileOpts,
         entrances,
         exits: exitPlans.map((e) => ({
             side: e.side, ...(e.rule ? { access_rule: e.rule } : {}),
@@ -4955,12 +4968,12 @@ function placeSphereTreeCells(grid, nodes, rng, {
  */
 function* realiseSphereNodes(grid, nodes, tree, rng, {
     fromIndex = 0, total = nodes.length,
-    regionSize, itemLib, obstacleLib, regionParams, hazardOpts,
+    regionSize, itemLib, obstacleLib, regionParams, hazardOpts, consumableTileOpts,
     assumeBidirectional, childrenByParent, stats, librarySources = null,
 }) {
     for (let i = fromIndex; i < nodes.length; i++) {
         yield* realiseOneSphereNode(grid, nodes[i], tree, rng, {
-            total, regionSize, itemLib, obstacleLib, regionParams, hazardOpts,
+            total, regionSize, itemLib, obstacleLib, regionParams, hazardOpts, consumableTileOpts,
             assumeBidirectional, childrenByParent, stats, librarySources,
         });
     }
@@ -4978,7 +4991,7 @@ function* realiseSphereNodes(grid, nodes, tree, rng, {
  * replace=false this is byte-identical to the prior inline loop body.
  */
 function* realiseOneSphereNode(grid, node, tree, rng, {
-    total = 0, regionSize, itemLib, obstacleLib, regionParams, hazardOpts,
+    total = 0, regionSize, itemLib, obstacleLib, regionParams, hazardOpts, consumableTileOpts,
     assumeBidirectional, childrenByParent, stats, replace = false,
     librarySources = null,
 }) {
@@ -5026,7 +5039,7 @@ function* realiseOneSphereNode(grid, node, tree, rng, {
                 entrances,
                 exitPlans,
                 locations,
-                itemLib, obstacleLib, rng, params: regionParams, hazardOpts,
+                itemLib, obstacleLib, rng, params: regionParams, hazardOpts, consumableTileOpts,
             });
         } else if (typeof adapter.generateZoneForSpecs === 'function'
                 || typeof adapter.generateZoneForSpecsGen === 'function') {
@@ -5094,6 +5107,7 @@ export function* growSpheresGen(config) {
         regionParams = {},
         growthParams = {},
         hazardOpts = null,
+        consumableTileOpts = null,
     } = config;
     if (!regionSize || !regionSize.width || !regionSize.height) {
         throw new Error('growSpheres: regionSize.{width,height} required');
@@ -5189,7 +5203,7 @@ export function* growSpheresGen(config) {
     // the prior inline loops.
     placeSphereTreeCells(grid, tree.nodes, rng, { startCell, teleporterMinGap, dims });
     yield* realiseSphereNodes(grid, tree.nodes, tree, rng, {
-        regionSize, itemLib, obstacleLib, regionParams, hazardOpts,
+        regionSize, itemLib, obstacleLib, regionParams, hazardOpts, consumableTileOpts,
         assumeBidirectional, childrenByParent, stats, librarySources,
     });
 
@@ -5234,7 +5248,7 @@ function resolveBatchSize(spheresPerBatch, waves) {
  */
 export function* realiseSphereBatchGen(grid, nodes, tree, rng, {
     prevCount, placed, startCell, teleporterMinGap, dims,
-    total, regionSize, itemLib, obstacleLib, regionParams, hazardOpts,
+    total, regionSize, itemLib, obstacleLib, regionParams, hazardOpts, consumableTileOpts,
     assumeBidirectional, stats, librarySources = null,
 }) {
     // childrenByParent over ALL nodes, in index order (== stable exit-plan
@@ -5254,7 +5268,7 @@ export function* realiseSphereBatchGen(grid, nodes, tree, rng, {
     let realiseStart = prevCount;
     for (const h of touchedPriorHosts) realiseStart = Math.min(realiseStart, h);
     const realiseOpts = {
-        total, regionSize, itemLib, obstacleLib, regionParams, hazardOpts,
+        total, regionSize, itemLib, obstacleLib, regionParams, hazardOpts, consumableTileOpts,
         assumeBidirectional, childrenByParent, stats, librarySources,
     };
     for (let i = realiseStart; i < nodes.length; i++) {
@@ -5296,6 +5310,7 @@ export function* growSpheresBatchedGen(config) {
         regionParams = {},
         growthParams = {},
         hazardOpts = null,
+        consumableTileOpts = null,
     } = config;
     if (!regionSize || !regionSize.width || !regionSize.height) {
         throw new Error('growSpheres: regionSize.{width,height} required');
@@ -5398,7 +5413,7 @@ export function* growSpheresBatchedGen(config) {
         yield* realiseSphereBatchGen(grid, nodes, tree, rng, {
             prevCount, placed, startCell, teleporterMinGap, dims,
             total: totalNodes, regionSize, itemLib, obstacleLib, regionParams,
-            hazardOpts, assumeBidirectional, stats, librarySources,
+            hazardOpts, consumableTileOpts, assumeBidirectional, stats, librarySources,
         });
     }
 

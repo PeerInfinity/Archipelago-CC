@@ -115,6 +115,7 @@ export function growConfigFrom(config, plan) {
         itemLib: config.itemLib,
         seed: config.seed,
         hazardOpts: config.hazardOpts,
+        consumableTileOpts: config.consumableTileOpts,
         regionParams: config.regionParams ?? {},
         growthParams: {
             spherePlan: plan,
@@ -332,7 +333,7 @@ async function stepRegions(env, { onProgress = null } = {}) {
     const batchStart = env.grow?.grid ? (env.batchStart ?? 0) : 0;
     const {
         regionSize, itemLib = DEFAULT_ITEMS, obstacleLib = DEFAULT_OBSTACLES,
-        regionParams = {}, hazardOpts = null,
+        regionParams = {}, hazardOpts = null, consumableTileOpts = null,
     } = growConfig;
     const { teleporterMinGap = 2, assumeBidirectional = true } = growConfig.growthParams;
 
@@ -406,6 +407,7 @@ async function stepRegions(env, { onProgress = null } = {}) {
         obstacleLib,
         regionParams,
         hazardOpts,
+        consumableTileOpts,
         assumeBidirectional,
         stats,
         librarySources: env.librarySources,

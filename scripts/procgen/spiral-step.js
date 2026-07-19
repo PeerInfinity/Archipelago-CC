@@ -64,6 +64,18 @@
  *   --jta-starting-perks N  perks the player starts with (default 0)
  *   --jta-perk-shuffle-seed N   seeded cross-zone perk placement
  *
+ * X1 maze consumable-tile knobs (arrange / run; need a maze quota):
+ *   --consumable-tiles N    per-maze-region cross-game consumable tiles
+ *                           (byte-inert default 0). The foreign pool is the
+ *                           union of the OTHER quota'd substrates' registry
+ *                           sharing.items declarations; an empty pool places
+ *                           nothing. These tiles are NOT AP locations and are
+ *                           invisible to winnability logic (D10/D5).
+ *   --consumable-count N    grant count per consumable tile (default 1)
+ *   --mana-tiles N          per-maze-region mana-refill tiles (default 0)
+ *   --mana-tile-amount N    mana per refill tile (default 0; a tile is only
+ *                           placed when this is > 0)
+ *
  * I/O flags (all subcommands):
  *   -i, --input <envelope.json>   prior step's envelope
  *   -o, --out <envelope.json>     where to write the resulting envelope ('-' = stdout)
@@ -127,6 +139,11 @@ function parseArgs(argv) {
         enableLoopMode: false,
         regionXpEffect: 'cost',
         victoryItem: null,
+        // X1 maze consumable tiles — byte-inert defaults (all zero).
+        consumableTiles: 0,
+        consumableCount: 1,
+        manaTiles: 0,
+        manaTileAmount: 0,
         input: null,
         out: null,
         rulesOut: null,
@@ -187,6 +204,10 @@ function parseArgs(argv) {
             case '--jta-dummy-item-ratio': out.jtaDummyItemRatio = parseFloat(next()); break;
             case '--original-item-weight': out.originalItemWeight = parseFloat(next()); break;
             case '--dummy-item-ratio': out.dummyItemRatio = parseFloat(next()); break;
+            case '--consumable-tiles': out.consumableTiles = parseInt(next(), 10); break;
+            case '--consumable-count': out.consumableCount = parseInt(next(), 10); break;
+            case '--mana-tiles': out.manaTiles = parseInt(next(), 10); break;
+            case '--mana-tile-amount': out.manaTileAmount = parseFloat(next()); break;
             case '--jta-emit-locations': out.jtaEmitLocations = true; break;
             case '--jta-goal-zone': out.jtaGoalZone = parseInt(next(), 10); break;
             case '--jta-free-zones': out.jtaFreeZones = parseInt(next(), 10); break;
@@ -322,6 +343,50 @@ function buildOmsiSubstrateConfig(args, jtaCfg) {
     return schedule ? { awardSchedule: schedule } : null;
 }
 
+// Resolve the X1 maze consumable-tile config from the global knobs, or null
+// when byte-inert. Same discipline as buildOmsiSubstrateConfig above: the null
+// return is what keeps the content pass — and therefore the rng stream and the
+// sidecar keys — untouched at defaults.
+//
+// The foreign pool is the union of every OTHER quota'd substrate's registry
+// sharing.items declaration (D2). jta is read from the dataset document in
+// THIS build when one exists, for exactly the reason buildOmsiSubstrateConfig
+// documents: dataset worlds rename items, and the registry's getTypes only
+// reflects an INSTALLED dataset, which happens later at pipeline ①.
+function buildConsumableTileConfig(args, jtaCfg) {
+    if (!(args.quotas.maze > 0)) return null;
+    const consumableCount = Math.max(0, args.consumableTiles | 0);
+    const manaCount = Math.max(0, args.manaTiles | 0);
+    const manaAmount = Number(args.manaTileAmount) || 0;
+    if (consumableCount === 0 && !(manaCount > 0 && manaAmount > 0)) return null;
+
+    const pool = [];
+    for (const [id, n] of Object.entries(args.quotas)) {
+        if (!(n > 0) || id === 'maze') continue;
+        let types = null;
+        if (id === 'jta') {
+            const items = jtaCfg?.datasetDoc?.items;
+            types = items
+                ? items.filter((it) => it && it.behavior == null
+                    && typeof it.name === 'string' && it.name.length > 0).map((it) => it.name)
+                : substrateRegistry.get('jta')?.sharing?.items?.getTypes?.() ?? null;
+        } else {
+            const decl = substrateRegistry.get(id)?.sharing?.items;
+            types = decl?.types ?? decl?.getTypes?.() ?? null;
+        }
+        if (Array.isArray(types)) {
+            for (const t of types) pool.push({ substrate: id, type: t });
+        }
+    }
+    return {
+        consumableCount,
+        manaCount,
+        manaAmount,
+        countPerTile: Math.max(1, args.consumableCount | 0),
+        pool,
+    };
+}
+
 // Build a fresh envelope from the world flags (the { config, compileIn } shape
 // spiralSteps consumes; config is exactly what arrangeShuffledSpiral takes).
 function buildEnv(args) {
@@ -330,6 +395,7 @@ function buildEnv(args) {
     }
     const jtaCfg = buildJtaSubstrateConfig(args);
     const omsiCfg = buildOmsiSubstrateConfig(args, jtaCfg);
+    const consumableTileOpts = buildConsumableTileConfig(args, jtaCfg);
     const config = {
         regionSize: args.region,
         itemPool: { ...args.items },
@@ -346,6 +412,9 @@ function buildEnv(args) {
             } } : {}),
         },
         hazardOpts: null,
+        // X1 consumable tiles — null at defaults, so the maze content pass
+        // never runs and the spiral stays byte-identical to pre-X1.
+        consumableTileOpts,
     };
     const compileIn = {
         seed: args.seed,

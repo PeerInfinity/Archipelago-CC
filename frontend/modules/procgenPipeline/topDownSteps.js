@@ -160,7 +160,7 @@ export function newTopDownEnvelope({ source, opts, compileIn, regionSize }) {
 
 /**
  * Build a top-down envelope from a source rules.json + already-assembled inputs
- * (substrate mix, regionParams, hazardOpts, sphereLog). Shared by the panel
+ * (substrate mix, regionParams, hazardOpts, consumableTileOpts, sphereLog). Shared by the panel
  * (_buildTDEnvelope) and the CLI so the preamble — granting each in-mix
  * substrate's ability items as FREE starting items, and packing the engine opts
  * + compile inputs — lives in ONE place. `regionParams` is wrapped with the
@@ -168,7 +168,7 @@ export function newTopDownEnvelope({ source, opts, compileIn, regionSize }) {
  */
 export function buildTopDownEnvelope({
     source, seed = 1, gridDims, regionSizeBase,
-    substrateMix = null, regionParams = null, hazardOpts = null,
+    substrateMix = null, regionParams = null, hazardOpts = null, consumableTileOpts = null,
     sphereLog = null, enableLoopMode = false, regionXpEffect = 'cost',
 }) {
     const sourceStarting = source?.starting_items?.['1'] ?? [];
@@ -198,6 +198,7 @@ export function buildTopDownEnvelope({
             ...(substrateMix ? { substrateMix } : {}),
             ...(resolvedLog ? { sphereLog: resolvedLog } : {}),
             hazardOpts,
+            consumableTileOpts,
             freeItems: startingItems,
             regionParams: { maxIterations: 0, ...(regionParams ?? {}) },
         },
