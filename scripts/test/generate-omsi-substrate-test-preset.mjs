@@ -61,6 +61,13 @@ const AWARD_SCHEDULE = {
             ],
         },
     },
+    // Lootable contents (§9b-pre): good 0 of Smash Pots re-routes to gold.
+    // Non-vanilla contents are what make the fork render the lootDetails
+    // row + the "items" tooltip wording (slice 4); Pick Locks carries no
+    // schedule, so its row must NOT appear (the ui-parity discipline).
+    lootables: {
+        Pots: { contents: [{ name: 'gold', count: 5 }] },
+    },
 };
 
 async function main() {

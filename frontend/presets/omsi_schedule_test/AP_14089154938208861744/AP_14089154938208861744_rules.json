@@ -402,6 +402,16 @@
                   }
                 ]
               }
+            },
+            "lootables": {
+              "Pots": {
+                "contents": [
+                  {
+                    "name": "gold",
+                    "count": 5
+                  }
+                ]
+              }
             }
           }
         }

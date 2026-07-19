@@ -128,6 +128,25 @@ async function omsiAwardSchedule(testController) {
     testController.assertEqual('local re-route sent nothing to jta',
         foodBefore + 2, jtaItemCount(foodEnum));
 
+    // Leg 4b — the §9b-pre lootable UI (slice 4). The preset carries a
+    // non-vanilla contents schedule for Pots (and none for Locks): the
+    // details row and the "items" tooltip wording must appear for Pots
+    // ONLY — vanilla-shaped rows are the ui-parity discipline.
+    const uiRendered = await eventually(testController,
+        () => omsiEval(`document.getElementById('lootDetailsPots') !== null`),
+        'Pots lootDetails row rendered', 8000, 200);
+    testController.assertEqual('lootDetails row renders for the scheduled lootable', true, uiRendered);
+    testController.assertEqual('no lootDetails row for the unscheduled lootable',
+        true, omsiEval(`document.getElementById('lootDetailsLocks') === null`));
+    testController.assertEqual('tooltip swapped to the "items" wording (dynamic label)',
+        true, omsiEval(`document.querySelector('#infoContainerPots .showthis').innerHTML.includes('Pots with items left')`));
+    testController.assertEqual('Locks tooltip keeps the vanilla wording',
+        true, omsiEval(`document.querySelector('#infoContainerLocks .showthis').innerHTML.includes('Houses with valuables left')`));
+    omsiEval(`view.toggleLootDetails('Pots')`);
+    testController.assertEqual('details row expands on toggle',
+        true, omsiEval(`document.getElementById('lootDetailsPots').innerHTML.includes('\\u25be')`));
+    omsiEval(`view.toggleLootDetails('Pots')`);
+
     // Leg 5 — restart: the index rewinds (foreign again) and D4 wipes herbs.
     omsiEval('IdleLoopsManaged.restartLoop()');
     testController.assertEqual('loop reset wiped the granted herbs (D4)',
