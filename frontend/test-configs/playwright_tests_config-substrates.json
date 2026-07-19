@@ -159,6 +159,11 @@
       "id": "omsi-cross-substrate-item-grant",
       "enabled": true,
       "category": "Omsi substrate"
+    },
+    {
+      "id": "omsi-award-schedule",
+      "enabled": true,
+      "category": "Omsi substrate"
     }
   ]
 }

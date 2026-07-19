@@ -344,6 +344,27 @@ function _handleItemGranted(data) {
     }
 }
 
+/**
+ * Foreign-award outbound (P2 §2d): the fork's award carrier hands over a
+ * schedule entry that belongs to another substrate — the local player
+ * deliberately receives nothing, and the bridge forwards the award to the
+ * resourceChannels grant bus. The router validates it against the
+ * receiving substrate's sharing.items declaration (invalid grants
+ * warn+drop host-side); delivery is eager per D8/S8 — the receiving
+ * substrate's own arrival handler deposits it. Mirrors the jta bridge's
+ * _handleForeignAward.
+ */
+function _handleForeignAward(info) {
+    if (!_client) return;
+    _client.publishEventBus('substrate:itemGrant', {
+        to: info.substrate,
+        from: 'omsi',
+        itemType: info.type,
+        count: info.count,
+    });
+    log('debug', `foreign award ${info.varName}[${info.resource}#${info.index}] -> ${info.substrate}/${info.type} x${info.count}`);
+}
+
 // ────────────────────────────────────────────────────────────────
 // Mana mirroring
 // ────────────────────────────────────────────────────────────────
@@ -507,6 +528,20 @@ function _handleLoadRegion(payload) {
         log('warn', `omsiTown ${world.omsiTown} not supported in v0; treating as town 0`);
     }
 
+    // Award schedule (P2 §2d): world data rides the region payload.
+    // Install-or-clear on every load — a region without a schedule must
+    // clear one left by a previous world (the managed game outlives
+    // worlds). Absent schedule ⇒ the fork carrier stays byte-inert.
+    const m0 = _managed();
+    if (typeof m0?.setAwardSchedule === 'function') {
+        const ok = m0.setAwardSchedule(world.awardSchedule ?? null);
+        if (world.awardSchedule && !ok) {
+            log('warn', 'award schedule rejected by the fork carrier (world plays vanilla)');
+        }
+    } else if (world.awardSchedule) {
+        log('warn', 'fork build has no setAwardSchedule hook — award schedule ignored');
+    }
+
     // Apply any loop resets the host fired while we were inactive,
     // then report the native budget bonus and pin the game's remaining
     // budget to the pool (same ordering as the jta bridge).
@@ -643,6 +678,9 @@ async function main() {
         _expectedPool = null;
         _lastReportedBudget = null;
         _reportedLocationNames.clear();
+        // Award schedule is per-world data — the next omsi:loadRegion
+        // re-installs the new world's (or leaves the carrier inert).
+        _managed()?.setAwardSchedule?.(null);
     });
 
     // Region activation events (from procgenPlayer).
@@ -659,6 +697,13 @@ async function main() {
     const m = _managed();
     m.onRestart(_handleGameRestart);
     _ticksAtLastRestart = _fullState()?.totalTicks ?? 0;
+
+    // Foreign-award outbound (P2). No warning when missing: a build old
+    // enough to lack the hook also lacks the award carrier, so no
+    // foreign award can ever fire there.
+    if (typeof m.setForeignAwardCallback === 'function') {
+        m.setForeignAwardCallback(_handleForeignAward);
+    }
 
     // Debug/test surface (the in-app substrate tests read this — the
     // clock is bridge-owned, so there is no fork hook to ask).

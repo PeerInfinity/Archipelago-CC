@@ -10,6 +10,16 @@
  *                         the Start Journey victory location
  *                         (`<region>__start_journey` holding 'Victory').
  *
+ *   omsi_schedule_test    the SAME world plus a deterministic
+ *                         hand-authored P2 award schedule on the omsi
+ *                         region's payload: Buy Mana Z1's mana grants —
+ *                         grant 1 = FOREIGN jta/Food x2, grant 2 = local
+ *                         re-route herbs x3, later grants vanilla. Loaded
+ *                         by the omsi-award-schedule in-app test; kept
+ *                         separate so omsi_substrate_test stays
+ *                         schedule-free (its six tests exercise the
+ *                         vanilla managed engine).
+ *
  * Produced by the modern procgen pipeline's Pass A (arrangeShuffledSpiral
  * + buildRulesJson, no world_generator / Generate.py) — a complete
  * pipeline rules.json the frontend loads directly, deterministic per
@@ -33,6 +43,25 @@ const SEED = 1;
 const SEED_ID = 'AP_14089154938208861744';
 const GAME_ID = 'omsi_substrate_test';
 const GAME_NAME = 'Omsi Substrate Test';
+const SCHEDULE_GAME_ID = 'omsi_schedule_test';
+const SCHEDULE_GAME_NAME = 'Omsi Schedule Test';
+
+// The hand-authored P2 award schedule (fork carrier vocabulary,
+// actionListXml.js setAwardSchedule): Buy Mana Z1 is a normal-type
+// town-0 action with a single deterministic mana grant per completion —
+// grant indices restart every loop. 'Food' is a jta vanilla-roster
+// name (jta's sharing.items.getTypes serves dataset item names).
+const AWARD_SCHEDULE = {
+    version: 1,
+    awards: {
+        BuyManaZ1: {
+            mana: [
+                { substrate: 'jta', type: 'Food', count: 2 },
+                { name: 'herbs', count: 3 },
+            ],
+        },
+    },
+};
 
 async function main() {
     const engine = await import(pathToFileURL(path.join(repoRoot,
@@ -49,7 +78,15 @@ async function main() {
     await import(pathToFileURL(path.join(repoRoot,
         'frontend/modules/omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js')));
 
-    const outDir = path.join(repoRoot, 'frontend/presets', GAME_ID, SEED_ID);
+    await buildAndWrite({ engine, substrateRegistry, mergeSubstrateItemLib, DEFAULT_ITEMS,
+        gameId: GAME_ID, gameName: GAME_NAME, awardSchedule: null });
+    await buildAndWrite({ engine, substrateRegistry, mergeSubstrateItemLib, DEFAULT_ITEMS,
+        gameId: SCHEDULE_GAME_ID, gameName: SCHEDULE_GAME_NAME, awardSchedule: AWARD_SCHEDULE });
+}
+
+async function buildAndWrite({ engine, substrateRegistry, mergeSubstrateItemLib, DEFAULT_ITEMS,
+    gameId, gameName, awardSchedule }) {
+    const outDir = path.join(repoRoot, 'frontend/presets', gameId, SEED_ID);
     const outFile = path.join(outDir, `${SEED_ID}_rules.json`);
 
     const { grid, startCell } = engine.arrangeShuffledSpiral({
@@ -70,7 +107,7 @@ async function main() {
         startCell,
         seed: SEED,
         itemLib,
-        gameName: GAME_NAME,
+        gameName,
         completionConditionItem: victoryName,
     });
 
@@ -89,6 +126,17 @@ async function main() {
     // substrate region opts into the shared-pool mirroring.
     for (const sidecar of Object.values(rules.preset_sidecars?.[Object.keys(rules.regions)[0]] ?? {})) {
         if (sidecar?.playable_payload) sidecar.playable_payload.manaEnabled = true;
+    }
+
+    // The schedule preset: the award schedule is per-world data riding the
+    // omsi region's payload (the bridge installs it on omsi:loadRegion via
+    // IdleLoopsManaged.setAwardSchedule).
+    if (awardSchedule) {
+        for (const sidecar of Object.values(rules.preset_sidecars?.[Object.keys(rules.regions)[0]] ?? {})) {
+            if (sidecar?.substrate === 'omsi' && sidecar.playable_payload) {
+                sidecar.playable_payload.awardSchedule = awardSchedule;
+            }
+        }
     }
 
     fs.mkdirSync(outDir, { recursive: true });
@@ -122,16 +170,19 @@ async function main() {
     if (placedItem !== victoryName) {
         throw new Error(`victory location ${expectedLocation} holds '${placedItem}', expected '${victoryName}'`);
     }
+    if (awardSchedule && JSON.stringify(payload.awardSchedule) !== JSON.stringify(awardSchedule)) {
+        throw new Error(`omsi region ${omsiRegionId} payload.awardSchedule missing/mangled`);
+    }
     const startRegion = rules.start_regions?.[playerId]?.default?.[0]
         ?? rules.start_regions?.[0] ?? '(none)';
 
     console.log(`wrote ${path.relative(repoRoot, outFile)}`);
-    console.log(`  omsi region: ${omsiRegionId} (town 0, manaEnabled)`);
+    console.log(`  omsi region: ${omsiRegionId} (town 0, manaEnabled${awardSchedule ? ', awardSchedule' : ''})`);
     console.log(`  victory location: ${expectedLocation} -> '${victoryName}'`);
     console.log(`  start region: ${JSON.stringify(startRegion)}`);
     console.log('Register with:\n'
         + `  python3 scripts/utils/register-preset.py `
-        + `${path.relative(repoRoot, outFile)} --game-id ${GAME_ID} --game-name '${GAME_NAME}'`);
+        + `${path.relative(repoRoot, outFile)} --game-id ${gameId} --game-name '${gameName}'`);
 }
 
 main().catch((err) => { console.error(err); process.exit(1); });
