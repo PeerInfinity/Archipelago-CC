@@ -49,6 +49,15 @@
  *                                 original item (P2/S3; byte-inert default 1)
  *   --jta-dummy-item-ratio R      per-rep chance an award becomes the minted
  *                                 inert dummy item (P2; byte-inert default 0)
+ *
+ * Award-schedule knobs, GLOBAL (P2/S3 — one pair governs every generator;
+ * the --jta-* spellings above override them for jta only):
+ *   --original-item-weight W      per-award chance the original is kept
+ *                                 (byte-inert default 1); with an omsi quota
+ *                                 this also mints the omsi lootable contents
+ *                                 schedule (Pots/Locks, §9b-pre)
+ *   --dummy-item-ratio R          per-award chance of a dummy (byte-inert
+ *                                 default 0)
  *   --jta-emit-locations    surface each zone task as an AP location + a Victory
  *   --jta-goal-zone N       Victory zone (default: deepest zone when emitting)
  *   --jta-free-zones N      zones requiring no perks (default 1)
@@ -75,6 +84,7 @@ import '../../frontend/modules/runnerDemo/runnerDemoLibrary.js';
 import '../../frontend/modules/omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js';
 import { substrateRegistry } from '../../frontend/modules/shared/procgen/substrateRegistry.js';
 import { generateJtaDataset } from '../../frontend/modules/jtaSubstrateWrapper/generateDataset.js';
+import { generateOmsiAwardSchedule } from '../../frontend/modules/omsiSubstrateWrapper/generateAwardSchedule.js';
 import {
     SPIRAL_STEPS, runSpiralStep, runSpiralToStep, resumeSpiralEnvelope,
     nextSpiralStep, detectSpiralCompleted, newSpiralEnvelope,
@@ -175,6 +185,8 @@ function parseArgs(argv) {
             case '--jta-dataset-value-mode': out.jtaDatasetValueMode = next(); break;
             case '--jta-original-item-weight': out.jtaOriginalItemWeight = parseFloat(next()); break;
             case '--jta-dummy-item-ratio': out.jtaDummyItemRatio = parseFloat(next()); break;
+            case '--original-item-weight': out.originalItemWeight = parseFloat(next()); break;
+            case '--dummy-item-ratio': out.dummyItemRatio = parseFloat(next()); break;
             case '--jta-emit-locations': out.jtaEmitLocations = true; break;
             case '--jta-goal-zone': out.jtaGoalZone = parseInt(next(), 10); break;
             case '--jta-free-zones': out.jtaFreeZones = parseInt(next(), 10); break;
@@ -241,10 +253,14 @@ function buildJtaSubstrateConfig(args) {
         // Award-schedule knobs (P2/S3): only built when a knob departs from
         // its byte-inert default; the foreign pool is the co-present
         // substrates' declared item types (R3) drawn from the registry.
-        const awards = (args.jtaOriginalItemWeight !== undefined || args.jtaDummyItemRatio !== undefined)
+        // The knobs are GLOBAL (S3: one pair governs every generator);
+        // --jta-* spellings override the global values for jta alone.
+        const w = args.jtaOriginalItemWeight ?? args.originalItemWeight;
+        const r = args.jtaDummyItemRatio ?? args.dummyItemRatio;
+        const awards = (w !== undefined || r !== undefined)
             ? {
-                ...(args.jtaOriginalItemWeight !== undefined ? { originalItemWeight: args.jtaOriginalItemWeight } : {}),
-                ...(args.jtaDummyItemRatio !== undefined ? { dummyItemRatio: args.jtaDummyItemRatio } : {}),
+                ...(w !== undefined ? { originalItemWeight: w } : {}),
+                ...(r !== undefined ? { dummyItemRatio: r } : {}),
                 foreignTypes: foreignAwardTypes(args.quotas),
             } : undefined;
         datasetDoc = generateJtaDatasetFromFixtures({
@@ -271,6 +287,41 @@ function buildJtaSubstrateConfig(args) {
     };
 }
 
+// Resolve the omsi award-schedule config from the GLOBAL knobs (P2-omsi
+// slice 5; lootables-only scope ruled 2026-07-19), or null when byte-inert.
+// The foreign pool mirrors foreignAwardTypes but must serve omsi: jta's
+// types come from the dataset document IN THIS BUILD when one exists
+// (dataset worlds rename items — the registry's getTypes only reflects an
+// INSTALLED dataset, which happens later, at pipeline ①), falling back to
+// the registry declaration (vanilla names).
+function buildOmsiSubstrateConfig(args, jtaCfg) {
+    if (!(args.quotas.omsi > 0)) return null;
+    if (args.originalItemWeight === undefined && args.dummyItemRatio === undefined) return null;
+    const foreignTypes = [];
+    for (const [id, n] of Object.entries(args.quotas)) {
+        if (!(n > 0) || id === 'omsi') continue;
+        let types = null;
+        if (id === 'jta') {
+            const items = jtaCfg?.datasetDoc?.items;
+            types = items
+                ? items.filter((it) => it && it.behavior == null
+                    && typeof it.name === 'string' && it.name.length > 0).map((it) => it.name)
+                : substrateRegistry.get('jta')?.sharing?.items?.getTypes?.() ?? null;
+        } else {
+            const decl = substrateRegistry.get(id)?.sharing?.items;
+            types = decl?.types ?? decl?.getTypes?.() ?? null;
+        }
+        if (Array.isArray(types)) for (const t of types) foreignTypes.push({ substrate: id, type: t });
+    }
+    const schedule = generateOmsiAwardSchedule({
+        seed: args.seed,
+        ...(args.originalItemWeight !== undefined ? { originalItemWeight: args.originalItemWeight } : {}),
+        ...(args.dummyItemRatio !== undefined ? { dummyItemRatio: args.dummyItemRatio } : {}),
+        foreignTypes,
+    });
+    return schedule ? { awardSchedule: schedule } : null;
+}
+
 // Build a fresh envelope from the world flags (the { config, compileIn } shape
 // spiralSteps consumes; config is exactly what arrangeShuffledSpiral takes).
 function buildEnv(args) {
@@ -278,6 +329,7 @@ function buildEnv(args) {
         throw new Error('arrange/run require at least one --quota id=N (or -i <envelope.json>)');
     }
     const jtaCfg = buildJtaSubstrateConfig(args);
+    const omsiCfg = buildOmsiSubstrateConfig(args, jtaCfg);
     const config = {
         regionSize: args.region,
         itemPool: { ...args.items },
@@ -288,7 +340,10 @@ function buildEnv(args) {
             substrateQuotas: args.quotas,
             assumeBidirectional: args.bidirectional,
             ...(args.start && args.start !== 'auto' ? { startSubstrate: args.start } : {}),
-            ...(jtaCfg ? { substrateConfig: { jta: jtaCfg } } : {}),
+            ...(jtaCfg || omsiCfg ? { substrateConfig: {
+                ...(jtaCfg ? { jta: jtaCfg } : {}),
+                ...(omsiCfg ? { omsi: omsiCfg } : {}),
+            } } : {}),
         },
         hazardOpts: null,
     };

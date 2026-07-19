@@ -25,6 +25,15 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 let _playbackProxy = null;
 export function setPlaybackProxy(proxy) { _playbackProxy = proxy; }
 
+// P2 award schedule (cross-game §2d/§9b-pre): installed at pipeline ①
+// via applyPipelineConfig ({ awardSchedule }) and emitted into the
+// zone-0 payload, which the bridge feeds to the fork carrier
+// (IdleLoopsManaged.setAwardSchedule) on omsi:loadRegion. Absent config
+// clears it — module state must not leak across builds in one process
+// (the panel path re-arranges without reloading modules).
+let _awardSchedule = null;
+export function getOmsiAwardSchedule() { return _awardSchedule; }
+
 // The v0 victory location: one location on the Beginnersville region,
 // checked when the game completes Start Journey (the bridge watches
 // townsUnlocked). The id is the stable per-region location id;
@@ -137,6 +146,13 @@ export const substrateRegistryEntry = Object.freeze({
     // single victory location rides zone 0: `ap_locations` maps the
     // location id to the compileRegionGraph name so the bridge can
     // dispatch the user:locationCheck when Start Journey completes.
+    // Pipeline ① config install (spiral applySubstrateConfig): the P2
+    // award schedule rides here. Called for every quota'd substrate on
+    // every arrange — an absent/empty config CLEARS the slot.
+    applyPipelineConfig: (cfg) => {
+        _awardSchedule = cfg?.awardSchedule ?? null;
+    },
+
     extractZoneRules: (zoneIdx, { region_id } = {}) => {
         const locations = [];
         const payload = { omsiTown: zoneIdx };
@@ -150,6 +166,12 @@ export const substrateRegistryEntry = Object.freeze({
                 [OMSI_START_JOURNEY_LOCATION_ID]:
                     `${region_id}__${OMSI_START_JOURNEY_LOCATION_ID}`,
             };
+            // world data for the fork's award carrier (deep-copied: the
+            // payload is serialized into preset sidecars and must not
+            // alias module state)
+            if (_awardSchedule) {
+                payload.awardSchedule = JSON.parse(JSON.stringify(_awardSchedule));
+            }
         }
         return { locations, payload };
     },
