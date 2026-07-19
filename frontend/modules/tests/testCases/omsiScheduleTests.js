@@ -133,19 +133,25 @@ async function omsiAwardSchedule(testController) {
     // details row and the "items" tooltip wording must appear for Pots
     // ONLY — vanilla-shaped rows are the ui-parity discipline.
     const uiRendered = await eventually(testController,
-        () => omsiEval(`document.getElementById('lootDetailsPots') !== null`),
-        'Pots lootDetails row rendered', 8000, 200);
-    testController.assertEqual('lootDetails row renders for the scheduled lootable', true, uiRendered);
-    testController.assertEqual('no lootDetails row for the unscheduled lootable',
-        true, omsiEval(`document.getElementById('lootDetailsLocks') === null`));
+        () => omsiEval(`document.getElementById('lootTogglePots') !== null`),
+        'Pots collapse arrow rendered in the labelDone div', 8000, 200);
+    testController.assertEqual('collapse arrow renders for the scheduled lootable', true, uiRendered);
+    testController.assertEqual('collapsed state is a single row (no details row)',
+        true, omsiEval(`document.getElementById('lootDetailsPots') === null`));
+    testController.assertEqual('the arrow lives INSIDE the townLabel (8-children constraint)',
+        true, omsiEval(`document.getElementById('lootTogglePots').parentElement.classList.contains('townLabel')`));
+    testController.assertEqual('no controls for the unscheduled lootable',
+        true, omsiEval(`document.getElementById('lootToggleLocks') === null && document.getElementById('lootDetailsLocks') === null`));
     testController.assertEqual('tooltip swapped to the "items" wording (dynamic label)',
         true, omsiEval(`document.querySelector('#infoContainerPots .showthis').innerHTML.includes('Pots with items left')`));
     testController.assertEqual('Locks tooltip keeps the vanilla wording',
         true, omsiEval(`document.querySelector('#infoContainerLocks .showthis').innerHTML.includes('Houses with valuables left')`));
     omsiEval(`view.toggleLootDetails('Pots')`);
-    testController.assertEqual('details row expands on toggle',
-        true, omsiEval(`document.getElementById('lootDetailsPots').innerHTML.includes('\\u25be')`));
+    testController.assertEqual('details row appears on expand',
+        true, omsiEval(`document.getElementById('lootDetailsPots') !== null`));
     omsiEval(`view.toggleLootDetails('Pots')`);
+    testController.assertEqual('details row removed on collapse',
+        true, omsiEval(`document.getElementById('lootDetailsPots') === null`));
 
     // Leg 5 — restart: the index rewinds (foreign again) and D4 wipes herbs.
     omsiEval('IdleLoopsManaged.restartLoop()');
