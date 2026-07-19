@@ -1068,3 +1068,85 @@ describe('PlaybackBotUI — substrate-switch stops the previous controller', () 
         expect(textController.calls.filter((c) => c.method === 'stop')).toHaveLength(0);
     });
 });
+
+describe('PlaybackBotUI — X1 maze collect policy', () => {
+    function makeCollectController(tiles) {
+        const c = makeFakeController();
+        c.listUncollectedConsumables = () => tiles;
+        return c;
+    }
+
+    function makeBot(controller) {
+        const bot = new PlaybackBotUI({
+            getSphereData: () => SAMPLE_SPHERE_DATA,
+            getStaticData: () => ({ regions: { R: { locations: [{ name: 'Free Loc' }] } } }),
+            getActiveController: () => controller,
+        });
+        bot._currentRegion = 'R';
+        return bot;
+    }
+
+    it('defaults to never — no detour, playback unchanged (X1-R3)', () => {
+        const controller = makeCollectController([{ x: 2, y: 2 }]);
+        const bot = makeBot(controller);
+        expect(bot.getMazeCollectPolicy()).toBe('never');
+        expect(bot._nextCollectDetour()).toBe(null);
+    });
+
+    it('never even asks the controller under the default policy', () => {
+        // The default must be a true no-op, not "ask then ignore" —
+        // otherwise a substrate could observe the bot probing it.
+        let asked = 0;
+        const controller = makeFakeController();
+        controller.listUncollectedConsumables = () => { asked++; return [{ x: 1, y: 1 }]; };
+        const bot = makeBot(controller);
+        bot._nextCollectDetour();
+        expect(asked).toBe(0);
+    });
+
+    it('returns the first uncollected tile under always', () => {
+        const controller = makeCollectController([{ x: 2, y: 2 }, { x: 3, y: 1 }]);
+        const bot = makeBot(controller);
+        bot.setMazeCollectPolicy('always');
+        expect(bot._nextCollectDetour()).toEqual({ x: 2, y: 2 });
+    });
+
+    it('returns null under always when nothing is left to collect', () => {
+        const bot = makeBot(makeCollectController([]));
+        bot.setMazeCollectPolicy('always');
+        expect(bot._nextCollectDetour()).toBe(null);
+    });
+
+    it('degrades to a no-op for substrates without the optional slot', () => {
+        const bot = makeBot(makeFakeController());
+        bot.setMazeCollectPolicy('always');
+        expect(bot._nextCollectDetour()).toBe(null);
+    });
+
+    it('survives a controller that throws', () => {
+        const controller = makeFakeController();
+        controller.listUncollectedConsumables = () => { throw new Error('boom'); };
+        const bot = makeBot(controller);
+        bot.setMazeCollectPolicy('always');
+        expect(bot._nextCollectDetour()).toBe(null);
+    });
+
+    it('normalises any unrecognised policy value to never', () => {
+        const bot = makeBot(makeCollectController([{ x: 1, y: 1 }]));
+        expect(bot.setMazeCollectPolicy('sometimes')).toBe('never');
+        expect(bot.setMazeCollectPolicy('ALWAYS')).toBe('never');
+        expect(bot.setMazeCollectPolicy('always')).toBe('always');
+    });
+
+    it('onConsumableCollected is inert when idle or when detours are off', () => {
+        const controller = makeCollectController([{ x: 2, y: 2 }]);
+        const bot = makeBot(controller);
+        bot._isActive = false;
+        bot.onConsumableCollected();
+        expect(controller.calls.filter((c) => c.method === 'walkTo')).toHaveLength(0);
+
+        bot._isActive = true; // active, but policy still 'never'
+        bot.onConsumableCollected();
+        expect(controller.calls.filter((c) => c.method === 'walkTo')).toHaveLength(0);
+    });
+});

@@ -1721,6 +1721,9 @@ export class MazeRoomUI {
                 setRate: (rateHz) => this._visualizer?.setRate(rateHz),
                 walkTo:  (target) => this._handleWalkToCommand(target),
                 replayActions: (actions, opts) => this._replaySavedActions(actions, opts),
+                // X1: optional slot — lets a collect-policy-driven bot
+                // find detour targets without knowing it drives a maze.
+                listUncollectedConsumables: () => this.listUncollectedConsumables(),
             };
         }
         return this._playbackController;
@@ -1951,7 +1954,26 @@ export class MazeRoomUI {
         if (!ok) {
             console.warn('[mazeRoom] consumable tile grant rejected', { grant, position });
         }
+        this._announceConsumableCollected(position);
         return ok;
+    }
+
+    /**
+     * Announce that a consumable / mana tile was consumed.
+     *
+     * These tiles fire NEITHER user:locationCheck NOR user:regionMove —
+     * they are not locations and don't move you — so without this signal
+     * a playback bot on a collect detour would have nothing to wake it
+     * up and would stall mid-walk. Published even when the underlying
+     * grant was rejected: the tile is spent either way, and a stalled
+     * bot is worse than a dropped grant.
+     */
+    _announceConsumableCollected(position) {
+        eventBus?.publish?.('maze:consumableCollected', {
+            regionName: this.currentRegionId,
+            x: position?.x ?? null,
+            y: position?.y ?? null,
+        }, 'mazeRoom');
     }
 
     /**
@@ -1963,8 +1985,34 @@ export class MazeRoomUI {
         const amt = Number(amount) || 0;
         if (amt <= 0) return false;
         gainMana({ substrateId: 'maze', amount: amt });
-        void position;
+        this._announceConsumableCollected(position);
         return true;
+    }
+
+    /**
+     * Uncollected consumable / mana tiles in the CURRENT region, as
+     * {x, y} pairs in a stable row-major order.
+     *
+     * Optional slot on the PlaybackController contract: substrates that
+     * don't carry consumable tiles simply don't implement it, and the
+     * bot's collect policy degrades to a no-op rather than needing to
+     * know which substrate it is driving.
+     */
+    listUncollectedConsumables() {
+        const world = this.world;
+        if (!world) return [];
+        const out = [];
+        const keys = new Set([
+            ...(world.consumableTiles?.keys() ?? []),
+            ...(world.manaTiles?.keys() ?? []),
+        ]);
+        for (const key of keys) {
+            const [x, y] = key.split(',').map(Number);
+            if (this._visualizer?.isConsumableCollected?.(this.currentRegionId, x, y)) continue;
+            out.push({ x, y });
+        }
+        out.sort((a, b) => (a.y !== b.y ? a.y - b.y : a.x - b.x));
+        return out;
     }
 
     /**

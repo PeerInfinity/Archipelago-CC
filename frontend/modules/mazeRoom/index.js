@@ -100,6 +100,11 @@ export function register(registrationApi) {
     // register so the eventBus recognizes mazeRoom as a publisher too.
     registrationApi.registerEventBusPublisher('loops:substrateActionCompleted');
 
+    // X1: announces a consumed consumable / mana tile. These tiles fire
+    // no AP-level event (not locations, no region change), so this is
+    // the only signal a collect-detouring playback bot can wake on.
+    registrationApi.registerEventBusPublisher('maze:consumableCollected');
+
     // X1: the panel clears collected consumable / mana tiles on every
     // loop reset so they respawn (X1-R1). Declared here rather than
     // relying on the incidental fromReset regionMove, which can skip

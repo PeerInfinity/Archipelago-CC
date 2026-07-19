@@ -23,6 +23,18 @@ const DEFAULT_RATE_HZ = 4;
 // any per-session bot state because it's a settings-level switch
 // (off by default; matches the behaviour the plan specifies).
 const LS_INTERCEPT_KEY = 'playbackBot_intercept';
+// LS key for the X1 maze collect policy. MAZE-ONLY and BOT-ONLY (S6):
+// human keyboard play always collects. Values: 'never' (default) |
+// 'always'. The default is what keeps existing playback byte-identical
+// (X1-R3) — with 'never' the bot's queue behaviour is exactly what it
+// was before X1, no detours, no extra walkTo commands.
+//
+// A mana-optimizing policy (decide per tile by which choice nets more
+// mana) is a recorded FUTURE item, not built: it needs cost/benefit
+// modelling and its own slice.
+const LS_MAZE_COLLECT_KEY = 'playbackBot_mazeCollect';
+const COLLECT_NEVER = 'never';
+const COLLECT_ALWAYS = 'always';
 // Cap on how many dispatcher events to keep in the event log so the
 // panel stays bounded across long sessions.
 const DISPATCHER_LOG_CAP = 200;
@@ -194,6 +206,8 @@ export class PlaybackBotUI {
         // walkToExit instead. Persisted to LS so the choice survives
         // page reloads.
         this._interceptEnabled = loadInterceptFromLS();
+        // X1 collect policy (maze-only, bot-only, default 'never').
+        this._mazeCollect = loadMazeCollectFromLS();
         // Append-only log of dispatcher events the module received,
         // each tagged with the disposition (intercepted / propagated).
         // Surfaced in the panel so the user can see the seam working.
@@ -612,6 +626,63 @@ export class PlaybackBotUI {
      * `_checkedSoFar`. Called both before issuing each walkTo and
      * after each event so the cursor never sits on a stale head.
      */
+    /**
+     * The next consumable / mana tile to detour to, or null.
+     *
+     * Returns null unconditionally under the default 'never' policy, so
+     * the queue behaves exactly as it did before X1 (X1-R3) — no extra
+     * controller calls, no extra walkTo commands, byte-identical
+     * playback.
+     *
+     * The controller slot is OPTIONAL: substrates with no consumable
+     * tiles don't implement listUncollectedConsumables, and the policy
+     * degrades to a no-op without the bot needing to know which
+     * substrate it is driving.
+     */
+    _nextCollectDetour() {
+        if (this._mazeCollect !== COLLECT_ALWAYS) return null;
+        const controller = this._resolveController();
+        const list = controller?.listUncollectedConsumables;
+        if (typeof list !== 'function') return null;
+        try {
+            const tiles = list();
+            return Array.isArray(tiles) && tiles.length > 0 ? tiles[0] : null;
+        } catch (_e) {
+            return null;
+        }
+    }
+
+    /** Current collect policy ('never' | 'always'). */
+    getMazeCollectPolicy() {
+        return this._mazeCollect;
+    }
+
+    /**
+     * Set the collect policy and persist it. Anything other than
+     * 'always' normalises to 'never' so a bad LS value or a typo can't
+     * silently enable detours.
+     */
+    setMazeCollectPolicy(policy) {
+        this._mazeCollect = policy === COLLECT_ALWAYS ? COLLECT_ALWAYS : COLLECT_NEVER;
+        saveMazeCollectToLS(this._mazeCollect);
+        this._render();
+        return this._mazeCollect;
+    }
+
+    /**
+     * A consumable / mana tile was consumed (maze:consumableCollected).
+     *
+     * Needed because these tiles fire neither user:locationCheck nor
+     * user:regionMove — the two events that normally advance the bot. On
+     * a collect detour the bot would otherwise reach the tile and stall
+     * with nothing to wake it. No-op when idle or when detours are off.
+     */
+    onConsumableCollected() {
+        if (!this._isActive) return;
+        if (this._mazeCollect !== COLLECT_ALWAYS) return;
+        this._publishNextWalkTo();
+    }
+
     _advanceCursor() {
         if (!this._queue) return;
         while (this._cursor < this._queue.length
@@ -649,6 +720,20 @@ export class PlaybackBotUI {
             // Don't fail; just keep idle. The next event will retrigger
             // this method.
             this._setStatus(`${sphereTag}waiting for region ${progress}`);
+            this._render();
+            return;
+        }
+        // X1 collect detour (opt-in, X1-R3). Before heading for the
+        // queue head, sweep any uncollected consumable / mana tiles in
+        // the CURRENT region. Detours only ever LENGTHEN playback — they
+        // never change which locations get checked or in what order, so
+        // winnability is untouched (D5). Each collected tile drops out
+        // of the list, so successive calls walk the sweep down to empty
+        // and then fall through to the head as normal.
+        const detour = this._nextCollectDetour();
+        if (detour) {
+            this._setStatus(`${sphereTag}collecting tile (${detour.x},${detour.y}) ${progress}`);
+            this._publishWalkTo({ kind: 'tile', x: detour.x, y: detour.y });
             this._render();
             return;
         }
@@ -1110,6 +1195,25 @@ export class PlaybackBotUI {
         const time = new Date(entry.timestamp).toLocaleTimeString();
         row.textContent = `[${time}] ${entry.eventName} "${entry.target}" (${entry.disposition})`;
         return row;
+    }
+}
+
+function loadMazeCollectFromLS() {
+    if (typeof localStorage === 'undefined') return COLLECT_NEVER;
+    try {
+        return localStorage.getItem(LS_MAZE_COLLECT_KEY) === COLLECT_ALWAYS
+            ? COLLECT_ALWAYS : COLLECT_NEVER;
+    } catch (_e) {
+        return COLLECT_NEVER;
+    }
+}
+
+function saveMazeCollectToLS(policy) {
+    if (typeof localStorage === 'undefined') return;
+    try {
+        localStorage.setItem(LS_MAZE_COLLECT_KEY, policy);
+    } catch (_e) {
+        // ignore (private browsing, quota, etc.)
     }
 }
 
