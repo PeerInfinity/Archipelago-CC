@@ -1,169 +1,184 @@
 {
-  "autoStartTestsOnLoad": true,
-  "hideDisabledTests": true,
-  "randomizeOrder": false,
-  "defaultEnabledState": false,
-  "_comment": "Substrate in-app tests (text-adventure wrapper + flash + runner + jta). Runs under the full module config (modules.json) so the substrate runtimes register \u2014 unlike test-regression, which uses modules-nograph.json and therefore cannot load them. New substrate tests must be added here (they register enabled:false so they don't leak into other modes).",
-  "tests": [
-    {
-      "id": "tasw-location-check-direct-dispatch",
-      "enabled": true,
-      "category": "textAdventureSubstrateWrapper"
-    },
-    {
-      "id": "tasw-location-check-iframe-dispatch",
-      "enabled": true,
-      "category": "textAdventureSubstrateWrapper"
-    },
-    {
-      "id": "tasw-location-check-real-click",
-      "enabled": true,
-      "category": "textAdventureSubstrateWrapper"
-    },
-    {
-      "id": "tasw-location-check-fresh-procgen",
-      "enabled": true,
-      "category": "textAdventureSubstrateWrapper"
-    },
-    {
-      "id": "tasw-location-check-loop-mode-passthrough",
-      "enabled": true,
-      "category": "textAdventureSubstrateWrapper"
-    },
-    {
-      "id": "swf-location-check-direct-dispatch",
-      "enabled": true,
-      "category": "flashSubstrate"
-    },
-    {
-      "id": "swf-location-check-placeholder-click",
-      "enabled": true,
-      "category": "flashSubstrate"
-    },
-    {
-      "id": "flash-second-entry-shared-panel",
-      "enabled": true,
-      "category": "flashSubstrate"
-    },
-    {
-      "id": "flash-capability-gating",
-      "enabled": true,
-      "category": "flashSubstrate"
-    },
-    {
-      "id": "runner-location-check-real-physics",
-      "enabled": true,
-      "category": "runnerDemo"
-    },
-    {
-      "id": "runner-preset-sidecar-configured",
-      "enabled": true,
-      "category": "runnerDemo"
-    },
-    {
-      "id": "jta-out-of-mana-loop-reset",
-      "enabled": true,
-      "category": "JtA substrate"
-    },
-    {
-      "id": "jta-game-reset-triggers-loop-reset",
-      "enabled": true,
-      "category": "JtA substrate"
-    },
-    {
-      "id": "jta-pause-resume-on-region-switch",
-      "enabled": true,
-      "category": "JtA substrate"
-    },
-    {
-      "id": "jta-energy-mirrors-pool-both-ways",
-      "enabled": true,
-      "category": "JtA substrate"
-    },
-    {
-      "id": "jta-bot-walkto-exit",
-      "enabled": true,
-      "category": "JtA substrate"
-    },
-    {
-      "id": "jta-starting-energy-bonus-raises-pool",
-      "enabled": true,
-      "category": "JtA substrate"
-    },
-    {
-      "id": "jta-location-check-and-perk-grant",
-      "enabled": true,
-      "category": "JtA substrate"
-    },
-    {
-      "id": "jta-balance-solve-at-rules-load",
-      "enabled": true,
-      "category": "JtA substrate"
-    },
-    {
-      "id": "jta-randomized-balanced-progression",
-      "enabled": true,
-      "category": "JtA substrate"
-    },
-    {
-      "id": "jta-prestige-perk-regrant",
-      "enabled": true,
-      "category": "JtA substrate"
-    },
-    {
-      "id": "jta-dataset-world-progression",
-      "enabled": true,
-      "category": "JtA substrate"
-    },
-    {
-      "id": "jta-cross-substrate-item-grant",
-      "enabled": true,
-      "category": "JtA substrate"
-    },
-    {
-      "id": "jta-cross-substrate-foreign-award",
-      "enabled": true,
-      "category": "JtA substrate"
-    },
-    {
-      "id": "omsi-out-of-mana-loop-reset",
-      "enabled": true,
-      "category": "Omsi substrate"
-    },
-    {
-      "id": "omsi-loop-exhaustion-single-reset",
-      "enabled": true,
-      "category": "Omsi substrate"
-    },
-    {
-      "id": "omsi-clock-runs-only-in-region",
-      "enabled": true,
-      "category": "Omsi substrate"
-    },
-    {
-      "id": "omsi-budget-mirrors-pool-both-ways",
-      "enabled": true,
-      "category": "Omsi substrate"
-    },
-    {
-      "id": "omsi-native-budget-raises-pool",
-      "enabled": true,
-      "category": "Omsi substrate"
-    },
-    {
-      "id": "omsi-victory-start-journey",
-      "enabled": true,
-      "category": "Omsi substrate"
-    },
-    {
-      "id": "omsi-cross-substrate-item-grant",
-      "enabled": true,
-      "category": "Omsi substrate"
-    },
-    {
-      "id": "omsi-award-schedule",
-      "enabled": true,
-      "category": "Omsi substrate"
-    }
-  ]
+    "autoStartTestsOnLoad": true,
+    "hideDisabledTests": true,
+    "randomizeOrder": false,
+    "defaultEnabledState": false,
+    "_comment": "Substrate in-app tests (text-adventure wrapper + flash + runner + jta + omsi + maze consumable tiles). Runs under the full module config (modules.json) so the substrate runtimes register \u2014 unlike test-regression, which uses modules-nograph.json and therefore cannot load them. New substrate tests must be added here (they register enabled:false so they don't leak into other modes).",
+    "tests": [
+        {
+            "id": "tasw-location-check-direct-dispatch",
+            "enabled": true,
+            "category": "textAdventureSubstrateWrapper"
+        },
+        {
+            "id": "tasw-location-check-iframe-dispatch",
+            "enabled": true,
+            "category": "textAdventureSubstrateWrapper"
+        },
+        {
+            "id": "tasw-location-check-real-click",
+            "enabled": true,
+            "category": "textAdventureSubstrateWrapper"
+        },
+        {
+            "id": "tasw-location-check-fresh-procgen",
+            "enabled": true,
+            "category": "textAdventureSubstrateWrapper"
+        },
+        {
+            "id": "tasw-location-check-loop-mode-passthrough",
+            "enabled": true,
+            "category": "textAdventureSubstrateWrapper"
+        },
+        {
+            "id": "swf-location-check-direct-dispatch",
+            "enabled": true,
+            "category": "flashSubstrate"
+        },
+        {
+            "id": "swf-location-check-placeholder-click",
+            "enabled": true,
+            "category": "flashSubstrate"
+        },
+        {
+            "id": "flash-second-entry-shared-panel",
+            "enabled": true,
+            "category": "flashSubstrate"
+        },
+        {
+            "id": "flash-capability-gating",
+            "enabled": true,
+            "category": "flashSubstrate"
+        },
+        {
+            "id": "runner-location-check-real-physics",
+            "enabled": true,
+            "category": "runnerDemo"
+        },
+        {
+            "id": "runner-preset-sidecar-configured",
+            "enabled": true,
+            "category": "runnerDemo"
+        },
+        {
+            "id": "jta-out-of-mana-loop-reset",
+            "enabled": true,
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-game-reset-triggers-loop-reset",
+            "enabled": true,
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-pause-resume-on-region-switch",
+            "enabled": true,
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-energy-mirrors-pool-both-ways",
+            "enabled": true,
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-bot-walkto-exit",
+            "enabled": true,
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-starting-energy-bonus-raises-pool",
+            "enabled": true,
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-location-check-and-perk-grant",
+            "enabled": true,
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-balance-solve-at-rules-load",
+            "enabled": true,
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-randomized-balanced-progression",
+            "enabled": true,
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-prestige-perk-regrant",
+            "enabled": true,
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-dataset-world-progression",
+            "enabled": true,
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-cross-substrate-item-grant",
+            "enabled": true,
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-cross-substrate-foreign-award",
+            "enabled": true,
+            "category": "JtA substrate"
+        },
+        {
+            "id": "omsi-out-of-mana-loop-reset",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-loop-exhaustion-single-reset",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-clock-runs-only-in-region",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-budget-mirrors-pool-both-ways",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-native-budget-raises-pool",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-victory-start-journey",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-cross-substrate-item-grant",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-award-schedule",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "maze-consumable-tile-grants-foreign-item",
+            "enabled": true,
+            "category": "Maze consumable tiles"
+        },
+        {
+            "id": "maze-consumable-tile-one-shot-then-respawns",
+            "enabled": true,
+            "category": "Maze consumable tiles"
+        },
+        {
+            "id": "maze-mana-tile-refills-pool",
+            "enabled": true,
+            "category": "Maze consumable tiles"
+        }
+    ]
 }

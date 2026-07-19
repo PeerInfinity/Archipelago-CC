@@ -9,6 +9,8 @@ import {
     setEntrance,
     TILE_FLOOR,
     TILE_WALL,
+    setConsumableTile,
+    setManaTile,
 } from './mazeRoomEngine.js';
 
 const ITEM_LIB = {
@@ -594,5 +596,118 @@ describe('MazeRoomVisualizer — completion / stuck handling', () => {
         v._stuck = true;
         v.play(10);
         expect(v.isRunning()).toBe(false);
+    });
+});
+
+describe('MazeRoomVisualizer — X1 consumable tiles', () => {
+    function makeCallbacks() {
+        const consumables = [];
+        const manas = [];
+        return {
+            consumables,
+            manas,
+            onConsumableGrant: (grant, regionId) => consumables.push({ grant, regionId }),
+            onManaGrant: (amount, regionId) => manas.push({ amount, regionId }),
+        };
+    }
+
+    it('fires onConsumableGrant once when walked onto, and not again', () => {
+        const cb = makeCallbacks();
+        const v = new MazeRoomVisualizer(cb);
+        const world = makeOpenWorld(5, 3);
+        setConsumableTile(world, 1, 0, { substrate: 'omsi', type: 'gold', count: 2 });
+        v.setWorld(world, 'R');
+
+        v.walkToTile({ x: 1, y: 0 });
+        v.instant();
+        expect(cb.consumables).toEqual([
+            { grant: { substrate: 'omsi', type: 'gold', count: 2 }, regionId: 'R' },
+        ]);
+
+        // Walk away and back — no second grant within the same loop.
+        v.walkToTile({ x: 3, y: 0 });
+        v.instant();
+        v.walkToTile({ x: 1, y: 0 });
+        v.instant();
+        expect(cb.consumables).toHaveLength(1);
+    });
+
+    it('fires onManaGrant with the refill amount', () => {
+        const cb = makeCallbacks();
+        const v = new MazeRoomVisualizer(cb);
+        const world = makeOpenWorld(5, 3);
+        setManaTile(world, 2, 0, 35);
+        v.setWorld(world, 'R');
+        v.walkToTile({ x: 2, y: 0 });
+        v.instant();
+        expect(cb.manas).toEqual([{ amount: 35, regionId: 'R' }]);
+    });
+
+    it('re-grants after a loop reset — collected tiles respawn (X1-R1)', () => {
+        const cb = makeCallbacks();
+        const v = new MazeRoomVisualizer(cb);
+        const world = makeOpenWorld(5, 3);
+        setConsumableTile(world, 1, 0, { substrate: 'omsi', type: 'gold', count: 1 });
+        v.setWorld(world, 'R');
+
+        v.walkToTile({ x: 1, y: 0 });
+        v.instant();
+        expect(cb.consumables).toHaveLength(1);
+
+        v.resetCollectedConsumables();
+
+        v.walkToTile({ x: 3, y: 0 });
+        v.instant();
+        v.walkToTile({ x: 1, y: 0 });
+        v.instant();
+        expect(cb.consumables).toHaveLength(2);
+    });
+
+    it('keys collected state by REGION, so same coords in two regions stay independent', () => {
+        // The collected set survives cross-region continuations, so a
+        // bare "x,y" key would let region A's tile suppress region B's.
+        const cb = makeCallbacks();
+        const v = new MazeRoomVisualizer(cb);
+
+        const a = makeOpenWorld(5, 3);
+        setConsumableTile(a, 1, 0, { substrate: 'omsi', type: 'gold', count: 1 });
+        v.setWorld(a, 'RegionA');
+        v.walkToTile({ x: 1, y: 0 });
+        v.instant();
+
+        const b = makeOpenWorld(5, 3);
+        setConsumableTile(b, 1, 0, { substrate: 'jta', type: 'Food', count: 1 });
+        v.setWorld(b, 'RegionB');
+        v.walkToTile({ x: 1, y: 0 });
+        v.instant();
+
+        expect(cb.consumables.map((c) => c.regionId)).toEqual(['RegionA', 'RegionB']);
+    });
+
+    it('claimConsumable reports first-claim only, and isConsumableCollected tracks it', () => {
+        const v = new MazeRoomVisualizer({});
+        expect(v.isConsumableCollected('R', 1, 1)).toBe(false);
+        expect(v.claimConsumable('R', 1, 1)).toBe(true);
+        expect(v.claimConsumable('R', 1, 1)).toBe(false);
+        expect(v.isConsumableCollected('R', 1, 1)).toBe(true);
+        // A different region is a different tile.
+        expect(v.claimConsumable('R2', 1, 1)).toBe(true);
+        v.resetCollectedConsumables();
+        expect(v.isConsumableCollected('R', 1, 1)).toBe(false);
+    });
+
+    it('does not touch checkedLocations — consumables are not AP locations (D10)', () => {
+        const cb = makeCallbacks();
+        const onLocationCheck = vi.fn();
+        const v = new MazeRoomVisualizer({ ...cb, onLocationCheck });
+        const world = makeOpenWorld(5, 3);
+        setConsumableTile(world, 1, 0, { substrate: 'omsi', type: 'gold', count: 1 });
+        setManaTile(world, 2, 0, 10);
+        v.setWorld(world, 'R');
+        v.walkToTile({ x: 2, y: 0 });
+        v.instant();
+        expect(cb.consumables).toHaveLength(1);
+        expect(cb.manas).toHaveLength(1);
+        expect(onLocationCheck).not.toHaveBeenCalled();
     });
 });

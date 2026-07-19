@@ -40,7 +40,13 @@ const STEP_DELTAS = {
 const DEFAULT_RATE_HZ = 4;
 
 export class MazeRoomVisualizer {
-    constructor({ eventBus = null, onStateChange = null, onExitCross = null, onLocationCheck = null } = {}) {
+    constructor({
+        eventBus = null, onStateChange = null, onExitCross = null, onLocationCheck = null,
+        // X1: symmetric to _onLocationCheck but for the two consumable
+        // tile types, which are NOT AP locations and so must never go
+        // through the locationCheck path.
+        onConsumableGrant = null, onManaGrant = null,
+    } = {}) {
         this._eventBus = eventBus;
         this._onStateChange = onStateChange;
         // Called when the visualizer steps onto an exit tile that has
@@ -77,6 +83,21 @@ export class MazeRoomVisualizer {
         this._checkedLocations = new Set(); // Set<locationName>
         this._visitedItemPositions = new Set(); // Set<"x,y"> picked up
         this._visitedExits = new Set(); // Set<exit_id> already crossed
+        // X1 consumable tiles. Keyed by REGION + posKey rather than by
+        // AP location name, because these tiles deliberately have no
+        // location name to hang off stateManager's checkedLocations
+        // (D10). Region-qualified so the same coordinates in two regions
+        // stay independent — unlike _visitedItemPositions, this set has
+        // to survive cross-region continuations.
+        //
+        // Cleared wholesale on a loop reset (X1-R1: collected tiles are
+        // always available again in the next loop). Outside loop mode
+        // nothing clears it, which is exactly the ruled one-shot-per-
+        // world behaviour — non-loop worlds have no resets by
+        // construction.
+        this._collectedConsumables = new Set(); // Set<"region|x,y">
+        this._onConsumableGrant = onConsumableGrant ?? null;
+        this._onManaGrant = onManaGrant ?? null;
         this._target = null;           // { x, y, kind, name }
         this._plan = [];               // remaining inputs to reach target
         this._planIdx = 0;
@@ -172,6 +193,12 @@ export class MazeRoomVisualizer {
         this._checkedLocations = new Set();
         this._visitedItemPositions = new Set();
         this._visitedExits = new Set();
+        // X1: a full reset starts a clean session, so collected
+        // consumable / mana tiles come back too — same reasoning as
+        // _checkedLocations above. Without this the set would leak
+        // across preset loads (the panel instance outlives them),
+        // silently suppressing grants in a freshly loaded world.
+        this._collectedConsumables = new Set();
         this._target = null;
         this._plan = [];
         this._planIdx = 0;
@@ -441,6 +468,42 @@ export class MazeRoomVisualizer {
         this._notifyChange();
     }
 
+    /**
+     * Clear collected-consumable state so every consumable and mana tile
+     * is available again (X1-R1). Called by the panel on
+     * gameState:loopReset. Deliberately does NOT touch _checkedLocations
+     * — AP location checks persist across loops (D10 notes them as
+     * unaffected), and the maze never compensates for what a receiving
+     * substrate does with the items it was granted (each substrate owns
+     * its own inventory reset).
+     */
+    resetCollectedConsumables() {
+        this._collectedConsumables.clear();
+    }
+
+    /** Renderer query: has this consumable / mana tile been collected? */
+    isConsumableCollected(regionId, x, y) {
+        return this._collectedConsumables.has(`${regionId ?? '?'}|${x},${y}`);
+    }
+
+    /**
+     * Claim a consumable / mana tile, returning true only on the FIRST
+     * claim within the current loop.
+     *
+     * This set is the single source of truth for both play surfaces:
+     * the visualizer's own tick path (bot play) and the panel's
+     * _publishPlaybackEvents (keyboard play) both funnel through here,
+     * so walking back and forth over a tile cannot re-grant regardless
+     * of who is driving. The panel calls it with an explicit regionId
+     * because keyboard play can outrun the visualizer's _regionId.
+     */
+    claimConsumable(regionId, x, y) {
+        const key = `${regionId ?? '?'}|${x},${y}`;
+        if (this._collectedConsumables.has(key)) return false;
+        this._collectedConsumables.add(key);
+        return true;
+    }
+
     _handleEvent(ev) {
         if (ev.type === 'pickup') {
             const itemId = ev.itemId;
@@ -478,6 +541,35 @@ export class MazeRoomVisualizer {
                 this._onLocationCheck(locationName, itemId, this._regionId);
             }
             return `pickup ${itemId}`;
+        }
+        if (ev.type === 'consumable_pickup') {
+            // One-shot within a loop; the whole set clears on loop reset
+            // (X1-R1). No stateManager involvement — these are not AP
+            // locations (D10), so there is no checkedLocations entry and
+            // nothing to seed from a snapshot.
+            if (!this.claimConsumable(this._regionId, ev.position.x, ev.position.y)) return null;
+            const { substrate, type, count } = ev.grant;
+            this._log.push({
+                type: 'consumable_pickup',
+                grant: { substrate, type, count },
+                position: { ...ev.position },
+                description: `Collected ${count}x ${substrate}/${type}.`,
+            });
+            if (this._onConsumableGrant) {
+                this._onConsumableGrant(ev.grant, this._regionId);
+            }
+            return `consumable ${substrate}/${type}`;
+        }
+        if (ev.type === 'mana_pickup') {
+            if (!this.claimConsumable(this._regionId, ev.position.x, ev.position.y)) return null;
+            this._log.push({
+                type: 'mana_pickup',
+                amount: ev.amount,
+                position: { ...ev.position },
+                description: `Refilled ${ev.amount} mana.`,
+            });
+            if (this._onManaGrant) this._onManaGrant(ev.amount, this._regionId);
+            return `mana +${ev.amount}`;
         }
         if (ev.type === 'exit_cross') {
             const exit = this._world.exits?.get(ev.exit_id);

@@ -41,6 +41,8 @@ import { centralRegistry } from '../../app/core/centralRegistry.js';
 import {
     xpAdjustedCost,
     chargeMana,
+    gainMana,
+    grantItem,
     fireLoopResetTeleport,
 } from '../resourceChannels/resourceChannelsLibrary.js';
 import { findPath, stepsToActions } from './mazeAutopather.js';
@@ -116,7 +118,24 @@ const COLORS = {
     locationBlocked: '#d04040',
     player: '#4aa8ff',
     grid: '#1a1a1a',
+    // X1: mana-refill tiles get a fixed blue; cross-game consumable
+    // tiles get a per-substrate hue from consumableTileColor below.
+    manaTile: '#5ac8e8',
 };
+
+/**
+ * Stable hue per owning substrate for X1 consumable tiles, so every
+ * omsi tile looks like every other omsi tile without needing a
+ * registry-wide color declaration. Same hash-to-HSL trick
+ * getItemRenderHints uses for items with no library entry.
+ */
+function consumableTileColor(substrateId) {
+    let hash = 0;
+    for (let i = 0; i < (substrateId?.length ?? 0); i++) {
+        hash = ((hash << 5) - hash + substrateId.charCodeAt(i)) | 0;
+    }
+    return `hsl(${Math.abs(hash) % 360}, 70%, 60%)`;
+}
 
 // Maps DOM key strings to queue action specs. Queue verbs are the
 // substrate-neutral representation; the move executor translates
@@ -207,6 +226,8 @@ export class MazeRoomUI {
         this._isLoopModeActive = false;
         this._costDataManager = null; // lazy via centralRegistry
         this._unsubLoopMode = null;
+        this._unsubLoopReset = null;
+        this._lastConsumableResetCount = null;
         this._unsubManaChanged = null;
 
         // Region-visit recording for the savedQueueStore. Populated
@@ -258,6 +279,12 @@ export class MazeRoomUI {
             onExitCross: (exit, sourceRegion) => this._onVisualizerExitCross(exit, sourceRegion),
             onLocationCheck: (locationName, itemId, regionId) =>
                 this._onVisualizerLocationCheck(locationName, itemId, regionId),
+            // X1: bot-mode equivalents of the keyboard path's
+            // consumable_pickup / mana_pickup branches in
+            // _publishPlaybackEvents. Same panel methods, so both
+            // surfaces deliver grants identically.
+            onConsumableGrant: (grant) => this._grantConsumableTile(grant),
+            onManaGrant: (amount) => this._grantManaTile(amount),
         });
 
         // Tile-level action queue (Cavernous-2-style). Player keydowns
@@ -359,6 +386,7 @@ export class MazeRoomUI {
         this._subscribeToSnapshotUpdates();
         this._subscribeToDiscoveryEvents();
         this._subscribeToLoopMode();
+        this._subscribeToLoopReset();
         this._subscribeToManaChanges();
         this._subscribeToCostDataChanges();
         this._subscribeToLoopsQueue();
@@ -441,6 +469,43 @@ export class MazeRoomUI {
         eventBus.subscribe('gameState:loopModeChanged', handler, 'mazeRoom');
         this._unsubLoopMode =
             () => eventBus.unsubscribe?.('gameState:loopModeChanged', handler, 'mazeRoom');
+    }
+
+    /**
+     * X1-R1: collected consumable / mana tiles become available again
+     * on every loop reset.
+     *
+     * This is an EXPLICIT subscription rather than a piggyback on the
+     * incidental `fromReset` user:regionMove → _adoptLoadedRegion →
+     * setWorld({freshStart}) path, which is fragile in two concrete
+     * ways:
+     *   - fireLoopResetTeleport calls triggerLoopReset() unconditionally
+     *     but SKIPS the regionMove dispatch when no start region
+     *     resolves — the reset happens and tile state would survive into
+     *     the next loop.
+     *   - it is region-scoped, so a reset that teleports into the region
+     *     you already occupy (or state held for other regions) never
+     *     clears.
+     *
+     * Idempotent on resetCount, matching how the jta / omsi bridges
+     * guard their own reset handlers against replays.
+     *
+     * Only collectible tiles reset. AP location checks stay checked
+     * between loops (D10) — and each receiving substrate resets its own
+     * inventory on its own loop; the maze never tracks or compensates
+     * for that.
+     */
+    _subscribeToLoopReset() {
+        if (!eventBus?.subscribe) return;
+        const handler = (data) => {
+            const count = data?.resetCount;
+            if (Number.isFinite(count) && count === this._lastConsumableResetCount) return;
+            this._lastConsumableResetCount = Number.isFinite(count) ? count : null;
+            this._visualizer?.resetCollectedConsumables?.();
+        };
+        eventBus.subscribe('gameState:loopReset', handler, 'mazeRoom');
+        this._unsubLoopReset =
+            () => eventBus.unsubscribe?.('gameState:loopReset', handler, 'mazeRoom');
     }
 
     /**
@@ -1430,6 +1495,7 @@ export class MazeRoomUI {
         if (this._unsubDiscoveryMode) { this._unsubDiscoveryMode(); this._unsubDiscoveryMode = null; }
         if (this._unsubDiscoveryChanged) { this._unsubDiscoveryChanged(); this._unsubDiscoveryChanged = null; }
         if (this._unsubLoopMode) { this._unsubLoopMode(); this._unsubLoopMode = null; }
+        if (this._unsubLoopReset) { this._unsubLoopReset(); this._unsubLoopReset = null; }
         if (this._unsubManaChanged) { this._unsubManaChanged(); this._unsubManaChanged = null; }
         if (this._unsubCostData) { this._unsubCostData(); this._unsubCostData = null; }
         if (this._unsubLoopsBegan) { this._unsubLoopsBegan(); this._unsubLoopsBegan = null; }
@@ -1835,6 +1901,70 @@ export class MazeRoomUI {
             this._clearLoopsDrivenTracking();
             this._publishLoopsCompleted(true);
         }
+    }
+
+    /**
+     * Claim a consumable / mana tile for the keyboard-play path,
+     * delegating to the visualizer's collected set so both play
+     * surfaces share one source of truth (and one loop-reset clear).
+     * Returns true only on the first claim within the current loop.
+     */
+    _claimConsumableTile(position) {
+        const claim = this._visualizer?.claimConsumable;
+        if (typeof claim !== 'function') return true;
+        return this._visualizer.claimConsumable(
+            this.currentRegionId, position.x, position.y,
+        );
+    }
+
+    /**
+     * Deliver a cross-game consumable tile's grant (X1).
+     *
+     * Calls resourceChannels' grantItem DIRECTLY rather than publishing
+     * the `substrate:itemGrant` router event. The router leg is a thin
+     * unwrap-and-forward into this very function; it exists to give
+     * IFRAME BRIDGES a contract surface across the postMessage boundary.
+     * The maze is a native in-process panel module with no bridge — it
+     * already imports chargeMana / fireLoopResetTeleport from this same
+     * library — so routing through the eventBus would add a hop and buy
+     * nothing.
+     *
+     * Direction matters: we grant OUT of the maze (`from: 'maze'`),
+     * which only requires the maze to be a registered substrate. The
+     * maze needs no `sharing.items` declaration of its own — that would
+     * only be required to grant INTO it.
+     *
+     * A rejected grant (unknown substrate, undeclared type — e.g. a
+     * world generated against a substrate that isn't co-present in this
+     * session) is warned by the bus and dropped. Deliberately NOT fatal:
+     * these tiles are logic-inert (D5), so a dropped grant can never
+     * make a world unwinnable.
+     */
+    _grantConsumableTile(grant, position) {
+        if (!grant?.substrate || !grant?.type) return false;
+        const ok = grantItem({
+            to: grant.substrate,
+            from: 'maze',
+            itemType: grant.type,
+            count: Number.isInteger(grant.count) && grant.count > 0 ? grant.count : 1,
+        });
+        if (!ok) {
+            console.warn('[mazeRoom] consumable tile grant rejected', { grant, position });
+        }
+        return ok;
+    }
+
+    /**
+     * Deliver a mana-refill tile (X1-R4). The mana channel's gain leg is
+     * unclamped by design — maxMana is the loop's STARTING mana, not a
+     * ceiling — so a refill can legitimately carry the pool above max.
+     */
+    _grantManaTile(amount, position) {
+        const amt = Number(amount) || 0;
+        if (amt <= 0) return false;
+        gainMana({ substrateId: 'maze', amount: amt });
+        void position;
+        return true;
     }
 
     /**
@@ -3078,6 +3208,55 @@ export class MazeRoomUI {
                     }
                 }
 
+                // X1 consumable tiles. Drawn as a DIAMOND rather than a
+                // circle so they read as categorically different from
+                // AP item pickups at a glance — which they are: not
+                // locations, not tracked, no bearing on winnability.
+                // Not gated on locationVisible: discovery mode filters
+                // AP locations, and these aren't any.
+                const consumableHere = this.world.consumableTiles?.get(key);
+                const manaHere = this.world.manaTiles?.get(key);
+                if (consumableHere || manaHere) {
+                    const collected = this._visualizer
+                        ?.isConsumableCollected?.(this.currentRegionId, x, y);
+                    const cx = x * TILE_PX + TILE_PX / 2;
+                    const cy = y * TILE_PX + TILE_PX / 2;
+                    const r = TILE_PX * 0.32;
+                    ctx.save();
+                    // Collected tiles stay faintly visible rather than
+                    // vanishing: under loop mode they come back on the
+                    // next reset (X1-R1), so showing where they are is
+                    // useful information, not clutter.
+                    if (collected) ctx.globalAlpha = 0.25;
+                    ctx.beginPath();
+                    ctx.moveTo(cx, cy - r);
+                    ctx.lineTo(cx + r, cy);
+                    ctx.lineTo(cx, cy + r);
+                    ctx.lineTo(cx - r, cy);
+                    ctx.closePath();
+                    if (manaHere) {
+                        ctx.fillStyle = COLORS.manaTile;
+                    } else {
+                        // Hash the owning substrate id to a stable hue so
+                        // each foreign game's tiles read as a family,
+                        // mirroring getItemRenderHints' fallback.
+                        ctx.fillStyle = consumableTileColor(consumableHere.substrate);
+                    }
+                    ctx.fill();
+                    ctx.strokeStyle = '#000';
+                    ctx.lineWidth = 1.5;
+                    ctx.stroke();
+                    const label = manaHere
+                        ? 'M'
+                        : (consumableHere.type?.[0] ?? '?').toUpperCase();
+                    ctx.fillStyle = '#000';
+                    ctx.font = `bold ${Math.floor(TILE_PX * 0.4)}px sans-serif`;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(label, cx, cy);
+                    ctx.restore();
+                }
+
                 // Closed logic gate marker: 2px red border. Drawn
                 // independently of the item sprite so the gate stays
                 // visible even after its underlying location's item
@@ -3641,6 +3820,20 @@ export class MazeRoomUI {
                     locationName,
                     regionName: this.currentRegionId,
                 }, { initialTarget: 'bottom' });
+            } else if (ev.type === 'consumable_pickup') {
+                // X1: NOT a location check — a direct cross-substrate
+                // grant. Human keyboard play always collects (S6: the
+                // collect setting is bot-only). The claim guard lives in
+                // the visualizer so keyboard and bot play share one
+                // collected set — otherwise pacing back and forth over a
+                // tile would re-grant on every step.
+                if (this._claimConsumableTile(ev.position)) {
+                    this._grantConsumableTile(ev.grant, ev.position);
+                }
+            } else if (ev.type === 'mana_pickup') {
+                if (this._claimConsumableTile(ev.position)) {
+                    this._grantManaTile(ev.amount, ev.position);
+                }
             } else if (ev.type === 'exit_cross') {
                 const exit = this.world.exits.get(ev.exit_id);
                 if (!exit?.targetRegion) continue;

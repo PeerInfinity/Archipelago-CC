@@ -100,6 +100,14 @@ export function register(registrationApi) {
     // register so the eventBus recognizes mazeRoom as a publisher too.
     registrationApi.registerEventBusPublisher('loops:substrateActionCompleted');
 
+    // X1: the panel clears collected consumable / mana tiles on every
+    // loop reset so they respawn (X1-R1). Declared here rather than
+    // relying on the incidental fromReset regionMove, which can skip
+    // entirely when no start region resolves.
+    if (typeof registrationApi.registerEventBusSubscriberIntent === 'function') {
+        registrationApi.registerEventBusSubscriberIntent('mazeRoom', 'gameState:loopReset');
+    }
+
     // The maze panel is the original source of these AP-level events
     // when the player triggers them by walking around in playback
     // mode. Both go on the dispatcher (chain-of-authority) so other
