@@ -555,11 +555,22 @@ are COMPLETE and pushed.** Next in order:
    `c9e7cc045` (`--world-config` / `--loot-policy`, pool workerData,
    provenance hash, sweep axes). Gates: byte-gate 461 / 5,195,188 /
    `9d9952e68bc8373c` / 0 RNG EXACT, fork npm 230/230, separation
-   handshake 1,030,800 vs 316,800 ticks. Two facts for the ruling
-   session: SHORT runs are degenerate on the policy axis (at 120 loops the
+   handshake 1,030,800 vs 316,800 ticks. Two facts for any future curve
+   work: SHORT runs are degenerate on the policy axis (at 120 loops the
    two policies are bit-identical — pools must be big enough for a loop to
    end mid-walk), and BOTH policy arms DNF on the half-shuffled smoke world
-   (vs 461 vanilla). Gitlink NOT bumped — outstanding ask.** JtA-half record: design doc *(NewDocs)*
+   (vs 461 vanilla). Fable review APPROVED same day; gitlink bumped
+   `a2341d35e`.**
+   **SHUFFLE-SCOPE RULED WITHOUT CURVES (user, 2026-07-19): decision (a) —
+   DEFAULT generated worlds do NOT shuffle; the knobs stay 1/0 byte-inert
+   and shuffling is an opt-in procgen setting defaulting to OFF. The curve
+   sweep / frontier-optimization session is PARKED — the user wants manual
+   planner experimentation first. Machinery stays ready for it:
+   `mint-world-config.mjs` + `worlds/curves/` ladder (`04f920011`) + the
+   session brief *(NewDocs)*
+   `cross-game-shuffle-scope-ruling-session-brief.md` (banner'd PARKED).
+   Open sub-question, undecided: whether "procgen setting" means S3 panel
+   exposure (current surface = spiral-step CLI flags + params only).** JtA-half record: design doc *(NewDocs)*
    `cross-game-p2-award-schedules-design.md` (censuses + experiments +
    rulings R1–R4; 4 outer commits
    `11a633277`→`8bc0fa0cf` + jta fork Fork 1.13 `e1e38d9`, CI all green).
