@@ -377,6 +377,30 @@ log("both sides served OK on :8000");
 const saves = await craftSaves();
 log(`crafted save blobs: mid=${saves.mid.length}B deep=${saves.deep.length}B`);
 
+// The flags below fall into two groups.
+//
+// TEXT rendering (long-standing): srgb, no LCD subpixel AA, no hinting.
+//
+// SHAPE rasterization (added 2026-07-19): the mid/main shot has always been
+// flaky — 0/84/40 px across three idle runs of a commit, same bbox, DOM
+// identical. Reading the diff image finally showed WHAT differs: the
+// antialiased edge pixels of the action tiles' ROUNDED BOTTOM CORNERS. The
+// coverage profile (4 marked pixels per row at the span extremes, widening to
+// 16 as the curve flattens into the solid border row, never contiguous) is a
+// curve's AA blend, not a layout shift — the solid border row itself is
+// pixel-identical. None of the text flags touch shape raster, which is why
+// they never helped. These target Chromium's tiled/threaded rasterizer, whose
+// tile boundaries and raster order can shift between runs.
+//
+// PARITY_RASTER_FLAGS=off runs WITHOUT them, so CI can A/B the hypothesis
+// against a control instead of re-rolling until green.
+const RASTER_FLAGS = process.env.PARITY_RASTER_FLAGS === "off" ? [] : [
+    "--num-raster-threads=1",
+    "--disable-partial-raster",
+    "--run-all-compositor-stages-before-draw",
+    "--disable-new-content-rendering-timeout",
+];
+log(`raster determinism flags: ${RASTER_FLAGS.length ? "ON" : "OFF (control)"}`);
 const browser = await chromium.launch({
     args: [
         "--disable-gpu",
@@ -384,6 +408,7 @@ const browser = await chromium.launch({
         "--disable-lcd-text",
         "--font-render-hinting=none",
         "--hide-scrollbars",
+        ...RASTER_FLAGS,
     ],
 });
 const report = {
