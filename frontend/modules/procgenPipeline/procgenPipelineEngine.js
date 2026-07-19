@@ -2421,6 +2421,23 @@ export function serializeMazeWorld(world, extractedRules, baseObstacleLib = DEFA
         }))
         : null;
 
+    // Cross-game consumable tiles (X1). Both overlays serialize as
+    // position-keyed arrays and are OMITTED ENTIRELY when empty — the
+    // same conditional-spread discipline as hazards above, which is what
+    // keeps every pre-X1 preset sidecar byte-identical.
+    const consumableTilesOut = world.consumableTiles?.size > 0
+        ? [...world.consumableTiles].map(([key, g]) => {
+            const [x, y] = key.split(',').map(Number);
+            return { x, y, substrate: g.substrate, type: g.type, count: g.count };
+        })
+        : null;
+    const manaTilesOut = world.manaTiles?.size > 0
+        ? [...world.manaTiles].map(([key, amount]) => {
+            const [x, y] = key.split(',').map(Number);
+            return { x, y, amount };
+        })
+        : null;
+
     return {
         width: world.width,
         height: world.height,
@@ -2433,6 +2450,8 @@ export function serializeMazeWorld(world, extractedRules, baseObstacleLib = DEFA
         itemLib: itemLibExtras,
         longestShortestPath,
         ...(hazardsOut ? { hazards: hazardsOut } : {}),
+        ...(consumableTilesOut ? { consumableTiles: consumableTilesOut } : {}),
+        ...(manaTilesOut ? { manaTiles: manaTilesOut } : {}),
     };
 }
 

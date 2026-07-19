@@ -1512,6 +1512,37 @@ describe('buildPresetSidecars', () => {
         expect(restored.hazards).toBeUndefined();
     });
 
+    it('omits the X1 consumable keys entirely when the overlays are empty (byte-inert)', () => {
+        // The whole byte-inert-default proof rests on absence, not on a
+        // null/[] placeholder — a new key with ANY value would drift
+        // every existing preset sidecar.
+        const { grid } = smallGrid();
+        const sidecars = buildPresetSidecars(grid);
+        const payload = Object.values(sidecars['1'])[0].playable_payload;
+        expect('consumableTiles' in payload).toBe(false);
+        expect('manaTiles' in payload).toBe(false);
+    });
+
+    it('serializes the X1 overlays as position-keyed arrays and round-trips them', () => {
+        const { grid } = smallGrid();
+        const region = grid.allRegions()[0];
+        region.playable_payload.consumableTiles = new Map([
+            ['1,1', { substrate: 'omsi', type: 'gold', count: 2 }],
+        ]);
+        region.playable_payload.manaTiles = new Map([['2,1', 30]]);
+        const sidecars = buildPresetSidecars(grid);
+        const payload = sidecars['1'][region.region_id].playable_payload;
+        expect(payload.consumableTiles).toEqual([
+            { x: 1, y: 1, substrate: 'omsi', type: 'gold', count: 2 },
+        ]);
+        expect(payload.manaTiles).toEqual([{ x: 2, y: 1, amount: 30 }]);
+
+        const restored = deserializeMazeWorld(payload);
+        expect(restored.consumableTiles.get('1,1'))
+            .toEqual({ substrate: 'omsi', type: 'gold', count: 2 });
+        expect(restored.manaTiles.get('2,1')).toBe(30);
+    });
+
     it('growMaze places hazards on regions when hazardOpts.enabled is true', () => {
         // A modest grid + plentiful pool to give the maze room for
         // hazards. count=3 per region, plenty of fail-budget.

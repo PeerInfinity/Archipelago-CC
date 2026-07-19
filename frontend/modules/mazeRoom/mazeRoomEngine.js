@@ -111,6 +111,20 @@ export function createWorld(width, height, opts = {}) {
         // successful entry. Both sit on top of floor tiles.
         obstacles: new Map(),
         items: new Map(),
+        // Cross-game consumable tiles (X1). Two more sparse overlays on
+        // the same posKey scheme, both deliberately OUTSIDE the item /
+        // location machinery:
+        //   consumableTiles: Map<posKey, {substrate, type, count}> —
+        //     stepping on one grants another game's consumable through
+        //     the resourceChannels bus. NOT an AP location (D10): no
+        //     location table entry, no AP tracking, no pickup cost, and
+        //     winnability logic ignores them entirely (D5).
+        //   manaTiles: Map<posKey, amount> — refills the shared loop-mode
+        //     mana pool via the mana channel's gainMana leg.
+        // Both stay empty unless a generator's content-module pass fills
+        // them, so worlds built without the knobs are byte-identical.
+        consumableTiles: new Map(),
+        manaTiles: new Map(),
         itemLib: opts.itemLib ?? DEFAULT_ITEMS,
         obstacleLib: opts.obstacleLib ?? DEFAULT_OBSTACLES,
     };
@@ -237,6 +251,21 @@ export function deserializeMazeWorld(sidecar, opts = {}) {
     }
     world.itemLocationNames = itemLocationNames;
 
+    // Cross-game consumable tiles (X1). Absent on every pre-X1 sidecar
+    // and on any world generated with the knobs at their byte-inert
+    // defaults; createWorld already seeded empty Maps, so absence is a
+    // no-op rather than a special case.
+    for (const c of sidecar.consumableTiles ?? []) {
+        world.consumableTiles.set(posKey(c.x, c.y), {
+            substrate: c.substrate,
+            type: c.type,
+            count: c.count,
+        });
+    }
+    for (const m of sidecar.manaTiles ?? []) {
+        world.manaTiles.set(posKey(m.x, m.y), m.amount);
+    }
+
     // Loop-mode plumbing (Phase 3): both fields ride through verbatim
     // when present on the sidecar. The runtime substrate uses them to
     // compute per-tile cost = baseRegionCost / longestShortestPath.
@@ -296,6 +325,39 @@ export function setItem(world, x, y, itemId) {
 
 export function clearItem(world, x, y) {
     world.items.delete(posKey(x, y));
+}
+
+// --- Consumable tiles (X1) ---
+//
+// Accessors mirror the item overlay. `world.consumableTiles` /
+// `world.manaTiles` are optional on worlds built before X1 (and on
+// hand-authored / library-instantiated worlds), so every getter
+// tolerates their absence rather than assuming createWorld ran.
+
+export function getConsumableTile(world, x, y) {
+    return world.consumableTiles?.get(posKey(x, y));
+}
+
+export function setConsumableTile(world, x, y, grant) {
+    if (!world.consumableTiles) world.consumableTiles = new Map();
+    world.consumableTiles.set(posKey(x, y), grant);
+}
+
+export function clearConsumableTile(world, x, y) {
+    world.consumableTiles?.delete(posKey(x, y));
+}
+
+export function getManaTile(world, x, y) {
+    return world.manaTiles?.get(posKey(x, y));
+}
+
+export function setManaTile(world, x, y, amount) {
+    if (!world.manaTiles) world.manaTiles = new Map();
+    world.manaTiles.set(posKey(x, y), amount);
+}
+
+export function clearManaTile(world, x, y) {
+    world.manaTiles?.delete(posKey(x, y));
 }
 
 function assertInBounds(width, height, pt, label) {
@@ -419,6 +481,19 @@ export function reachedExit(state, world) {
  *   - 'exit_cross'  — moved onto the exit tile from elsewhere.
  *                     Fires only on the step that arrives, not while
  *                     the player is standing on the exit.
+ *   - 'consumable_pickup' (X1) — moved onto a cross-game consumable
+ *                     tile. Carries the {substrate, type, count} grant
+ *                     verbatim. Fires on EVERY arrival; respawn /
+ *                     one-shot semantics are the caller's concern (the
+ *                     visualizer's posKey-keyed collected set, cleared
+ *                     on gameState:loopReset per X1-R1) — the same
+ *                     division of labour as 'pickup' above.
+ *   - 'mana_pickup' (X1) — moved onto a mana-refill tile. Carries the
+ *                     refill `amount`. Same respawn division.
+ *
+ * A tile can carry more than one overlay, so a single step may emit a
+ * 'pickup' AND a 'consumable_pickup'. Placement keeps them disjoint in
+ * practice, but nothing in the engine enforces that.
  *
  * No events when the player didn't move (oldPos === newPos), since
  * step() only returns a new state on successful movement and a
@@ -443,6 +518,26 @@ export function detectStepEvents(world, oldPos, newPos, _inventory) {
         events.push({
             type: 'pickup',
             itemId,
+            position: { x: newPos.x, y: newPos.y },
+        });
+    }
+
+    // X1 consumable overlays. Optional chaining because worlds built
+    // before X1 (and library-instantiated ones) carry no such Maps.
+    const grant = world.consumableTiles?.get(newKey);
+    if (grant) {
+        events.push({
+            type: 'consumable_pickup',
+            grant,
+            position: { x: newPos.x, y: newPos.y },
+        });
+    }
+
+    const manaAmount = world.manaTiles?.get(newKey);
+    if (manaAmount) {
+        events.push({
+            type: 'mana_pickup',
+            amount: manaAmount,
             position: { x: newPos.x, y: newPos.y },
         });
     }

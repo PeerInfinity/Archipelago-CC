@@ -22,6 +22,8 @@ import {
     getDefaultExit,
     clockwisePerimeterTiles,
     deriveSingleKeyGatePairs,
+    getConsumableTile, setConsumableTile, clearConsumableTile,
+    getManaTile, setManaTile, clearManaTile,
 } from './mazeRoomEngine.js';
 import { isObstacleCleared, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
@@ -287,6 +289,61 @@ describe('detectStepEvents', () => {
         expect(events).toEqual([
             { type: 'pickup', itemId: 'key_red', position: { x: 1, y: 0 } },
         ]);
+    });
+
+    it('emits consumable_pickup carrying the grant verbatim (X1)', () => {
+        const w = makeWorld();
+        const grant = { substrate: 'omsi', type: 'gold', count: 2 };
+        setConsumableTile(w, 1, 0, grant);
+        const events = detectStepEvents(w, { x: 0, y: 0 }, { x: 1, y: 0 }, new Set());
+        expect(events).toEqual([
+            { type: 'consumable_pickup', grant, position: { x: 1, y: 0 } },
+        ]);
+    });
+
+    it('emits mana_pickup carrying the refill amount (X1)', () => {
+        const w = makeWorld();
+        setManaTile(w, 1, 0, 25);
+        const events = detectStepEvents(w, { x: 0, y: 0 }, { x: 1, y: 0 }, new Set());
+        expect(events).toEqual([
+            { type: 'mana_pickup', amount: 25, position: { x: 1, y: 0 } },
+        ]);
+    });
+
+    it('emits consumable_pickup on EVERY arrival — respawn is the caller\'s concern (X1-R1)', () => {
+        // The engine is stateless about collection, exactly like
+        // 'pickup' above. Loop-reset respawn lives in the visualizer's
+        // posKey-keyed collected set, not here.
+        const w = makeWorld();
+        setConsumableTile(w, 1, 0, { substrate: 'jta', type: 'Food', count: 1 });
+        const first = detectStepEvents(w, { x: 0, y: 0 }, { x: 1, y: 0 }, new Set());
+        const second = detectStepEvents(w, { x: 0, y: 0 }, { x: 1, y: 0 }, new Set());
+        expect(second).toEqual(first);
+        expect(second).toHaveLength(1);
+    });
+
+    it('emits both a pickup and a consumable_pickup when overlays share a tile (X1)', () => {
+        const w = makeWorld({ items: { '1,0': 'key_red' } });
+        setConsumableTile(w, 1, 0, { substrate: 'omsi', type: 'gold', count: 1 });
+        const events = detectStepEvents(w, { x: 0, y: 0 }, { x: 1, y: 0 }, new Set());
+        expect(events.map((e) => e.type)).toEqual(['pickup', 'consumable_pickup']);
+    });
+
+    it('emits nothing extra on a world with no consumable overlays (X1 byte-inert)', () => {
+        const w = makeWorld({ items: { '1,0': 'key_red' } });
+        expect(w.consumableTiles.size).toBe(0);
+        expect(w.manaTiles.size).toBe(0);
+        const events = detectStepEvents(w, { x: 0, y: 0 }, { x: 1, y: 0 }, new Set());
+        expect(events).toEqual([
+            { type: 'pickup', itemId: 'key_red', position: { x: 1, y: 0 } },
+        ]);
+    });
+
+    it('tolerates a world lacking the X1 Maps entirely (pre-X1 / library-instantiated)', () => {
+        const w = makeWorld({ items: { '1,0': 'key_red' } });
+        delete w.consumableTiles;
+        delete w.manaTiles;
+        expect(() => detectStepEvents(w, { x: 0, y: 0 }, { x: 1, y: 0 }, new Set())).not.toThrow();
     });
 
     it('emits exit_cross when stepping onto the exit tile', () => {
@@ -1301,5 +1358,57 @@ describe('deserializeMazeWorld', () => {
     it('rejects non-object input', () => {
         expect(() => deserializeMazeWorld(null)).toThrow(/must be an object/);
         expect(() => deserializeMazeWorld(undefined)).toThrow(/must be an object/);
+    });
+
+    it('leaves the X1 overlays empty when the sidecar omits them (byte-inert default)', () => {
+        const world = deserializeMazeWorld(makeSidecar());
+        expect(world.consumableTiles.size).toBe(0);
+        expect(world.manaTiles.size).toBe(0);
+    });
+
+    it('reads X1 consumable + mana tiles back off the sidecar', () => {
+        const world = deserializeMazeWorld(makeSidecar({
+            consumableTiles: [
+                { x: 1, y: 1, substrate: 'omsi', type: 'gold', count: 2 },
+                { x: 2, y: 1, substrate: 'jta', type: 'Food', count: 1 },
+            ],
+            manaTiles: [{ x: 3, y: 1, amount: 40 }],
+        }));
+        expect(getConsumableTile(world, 1, 1)).toEqual({ substrate: 'omsi', type: 'gold', count: 2 });
+        expect(getConsumableTile(world, 2, 1)).toEqual({ substrate: 'jta', type: 'Food', count: 1 });
+        expect(getManaTile(world, 3, 1)).toBe(40);
+        expect(getConsumableTile(world, 0, 1)).toBeUndefined();
+    });
+});
+
+describe('consumable tile accessors (X1)', () => {
+    it('set / get / clear round-trip on both overlays', () => {
+        const w = createWorld(4, 4);
+        expect(getConsumableTile(w, 1, 1)).toBeUndefined();
+        expect(getManaTile(w, 1, 1)).toBeUndefined();
+
+        const grant = { substrate: 'omsi', type: 'gold', count: 3 };
+        setConsumableTile(w, 1, 1, grant);
+        setManaTile(w, 2, 2, 15);
+        expect(getConsumableTile(w, 1, 1)).toBe(grant);
+        expect(getManaTile(w, 2, 2)).toBe(15);
+
+        clearConsumableTile(w, 1, 1);
+        clearManaTile(w, 2, 2);
+        expect(getConsumableTile(w, 1, 1)).toBeUndefined();
+        expect(getManaTile(w, 2, 2)).toBeUndefined();
+    });
+
+    it('lazily creates the Maps on a world that lacks them', () => {
+        // Library-instantiated / hand-authored worlds can predate X1.
+        const w = createWorld(4, 4);
+        delete w.consumableTiles;
+        delete w.manaTiles;
+        expect(getConsumableTile(w, 1, 1)).toBeUndefined();
+        expect(() => clearConsumableTile(w, 1, 1)).not.toThrow();
+        setConsumableTile(w, 1, 1, { substrate: 'jta', type: 'Food', count: 1 });
+        setManaTile(w, 1, 2, 5);
+        expect(getConsumableTile(w, 1, 1).type).toBe('Food');
+        expect(getManaTile(w, 1, 2)).toBe(5);
     });
 });
