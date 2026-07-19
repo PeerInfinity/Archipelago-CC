@@ -534,9 +534,19 @@ sharing.items declarations, jta Fork 1.12 `window.grantItem`, omsi
 bridge-direct `addResource` arrival handler, D4 wipe verified both sides)
 are COMPLETE and pushed.** Next in order:
 
-1. **P2 — award schedules + randomization: JTA HALF COMPLETE + PUSHED
-   2026-07-17** (design doc *(NewDocs)* `cross-game-p2-award-schedules-design.md`
-   with censuses + experiments + rulings R1–R4; 4 outer commits
+1. **P2 — award schedules + randomization: COMPLETE (both halves).** JtA
+   half PUSHED 2026-07-17 (below); **omsi half COMPLETE + PUSHED 2026-07-19
+   (session 38): §2d carrier + §9b-pre lootable UI + lootables-only
+   generator knobs; fork `b160473` (incl. the inline-toggle reshape), outer
+   gitlink bumped (`91ff331f8`), npm 217/217, strict ui-parity green.**
+   Detail: memory `project_cross_game_consumables` + `project_omsi_loops_fork`
+   session 38. **Follow-on QUEUED (user 2026-07-19): the planner/predictor
+   automation must be taught the P2 carrier + lootable controls** (workers
+   don't receive schedules; the category-priority walk isn't an automation
+   lever; `valueOfVar` has no per-category values) — scope in a planning
+   session. JtA-half record: design doc *(NewDocs)*
+   `cross-game-p2-award-schedules-design.md` (censuses + experiments +
+   rulings R1–R4; 4 outer commits
    `11a633277`→`8bc0fa0cf` + jta fork Fork 1.13 `e1e38d9`, CI all green).
    Shipped: per-rep `item_schedule` in the dataset doc (solver-visible by
    construction), schema/validator rules, generator knobs
@@ -544,9 +554,9 @@ are COMPLETE and pushed.** Next in order:
    foreign-award leg end-to-end. Key experiment facts: JtA has NO hard
    wall even with all 32 awards nulled (p100 completes at 17.7×
    baseline); omsi uniform dropping DNFs even at realized 15% — the
-   lootable UI (design §9b-pre) is the mitigation. **The omsi half
-   FOLLOWS XML Phase 6** (§4 item 1b: view-subscribe → Phase 6 → §2d
-   carrier + §9b-pre lootable UI).
+   lootable UI (design §9b-pre) is the mitigation. ~~The omsi half
+   FOLLOWS XML Phase 6~~ — that chain (view-subscribe → Phase 6 → §2d
+   carrier + §9b-pre lootable UI) completed 2026-07-19.
 2. **X1 — maze consumable tiles — Opus kickoff READY 2026-07-18:**
    *(NewDocs)* `x1-maze-consumable-tiles-opus-kickoff.md` (anchors
    verified: `compileRegionGraph` procgenPipelineEngine.js:2185,
@@ -579,7 +589,8 @@ runner rebalance ──► OR-lanes O1–O5
 action-queue port ──► Phase 6 audit ──► old-stack retirement
 scoring-horizon design ──► multi-town continuation (beyond M4)
 U0–U5 (independent of M-phases) ──► omsi randomization v1
-view-subscribe impl (kickoff ready) ──► XML Phase 6 ──► P2-omsi carrier + lootable UI ──► Phase 7 editor
+view-subscribe ──► XML Phase 6 ──► P2-omsi carrier + lootable UI (ALL DONE 2026-07-19) ──► Phase 7 editor
+P2-omsi automation follow-on (planner learns carrier + lootable controls — QUEUED, planning session first)
 X1 maze tiles (kickoff ready, independent — grant bus live)
 Cavernous Stage 2 (hooks/managed) ──► v0 substrate ──► Stage F (pool + trigger ready)
 world-persistence P1–P4 (independent)
