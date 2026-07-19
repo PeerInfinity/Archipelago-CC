@@ -548,7 +548,18 @@ are COMPLETE and pushed.** Next in order:
    valueOfVar/bank scoring) + D (priority walk as a planner lever) are
    DEFERRED until U0–U5 + AP semantics settle (U-plan §7 reshapes exactly
    those scoring surfaces; empirical self-correction from A makes deferral
-   cheap). B unblocks the shuffle-scope prioritized-play curves. JtA-half record: design doc *(NewDocs)*
+   cheap). B unblocks the shuffle-scope prioritized-play curves.
+   **A+B DONE + PUSHED 2026-07-19 (session 39, Opus): all three slices —
+   fork `ca0392f` (accessors + restore invalidation; worker transport on
+   both the planner and predictor legs; harness `worldConfig`), outer
+   `c9e7cc045` (`--world-config` / `--loot-policy`, pool workerData,
+   provenance hash, sweep axes). Gates: byte-gate 461 / 5,195,188 /
+   `9d9952e68bc8373c` / 0 RNG EXACT, fork npm 230/230, separation
+   handshake 1,030,800 vs 316,800 ticks. Two facts for the ruling
+   session: SHORT runs are degenerate on the policy axis (at 120 loops the
+   two policies are bit-identical — pools must be big enough for a loop to
+   end mid-walk), and BOTH policy arms DNF on the half-shuffled smoke world
+   (vs 461 vanilla). Gitlink NOT bumped — outstanding ask.** JtA-half record: design doc *(NewDocs)*
    `cross-game-p2-award-schedules-design.md` (censuses + experiments +
    rulings R1–R4; 4 outer commits
    `11a633277`→`8bc0fa0cf` + jta fork Fork 1.13 `e1e38d9`, CI all green).
@@ -594,7 +605,7 @@ action-queue port ──► Phase 6 audit ──► old-stack retirement
 scoring-horizon design ──► multi-town continuation (beyond M4)
 U0–U5 (independent of M-phases) ──► omsi randomization v1
 view-subscribe ──► XML Phase 6 ──► P2-omsi carrier + lootable UI (ALL DONE 2026-07-19) ──► Phase 7 editor
-P2-omsi automation follow-on (planner learns carrier + lootable controls — QUEUED, planning session first)
+P2-omsi automation follow-on: A+B DONE 2026-07-19 ──► shuffle-scope curves (Fable, consumes B); C+D deferred to U/AP
 X1 maze tiles (kickoff ready, independent — grant bus live)
 Cavernous Stage 2 (hooks/managed) ──► v0 substrate ──► Stage F (pool + trigger ready)
 world-persistence P1–P4 (independent)
