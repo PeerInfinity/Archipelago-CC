@@ -560,9 +560,18 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    `76655ac` — skip loop actions.js:259, getErrorMessage :280, blocked
    branch goes townNum-then-blocked-then-canStart per the settled
    message-priority ruling in plan §6's U3 block; suppressed/granted Sets
-   already exported by U2).** NEXT: **Opus runs U3**, then U4
-   batch-capacity substitution → U5 AP hooks; §7.5 towns wiring at the
-   AP phase.
+   already exported by U2).** **U3 SHIPPED 2026-07-20 (Opus): fork
+   `2d9aff6`, both branches pushed, CI green; npm 259/259, byte-gate
+   EXACT, V4 PASS (post-commit — ⚠ run-parity has NO --worktree, it
+   always gates the submodule's committed HEAD: commit → V4 → push);
+   §6.4 test mutation-checked (stubbed condition fails exactly legs
+   3+5); enforcement test drives actions.tick() + shouldRestart (the
+   step driver's prepareRestart rebuilds actions.current and destroys
+   errorMessage evidence); gitlink bumped (user-approved). Fork memory
+   session 47 = implementer detail.** NEXT: **U4 batch-capacity
+   substitution kickoff** (managed totals = grantedBatches×oneInEvery
+   behind suppression, plan §3.5 batch model), then U5 AP hooks; §7.5
+   towns wiring at the AP phase.
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
