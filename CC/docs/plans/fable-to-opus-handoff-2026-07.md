@@ -631,10 +631,33 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    change). **OUTER GITLINK NOT BUMPED — still pins `3853d18`; ask
    first.** Fork memory session 51 = implementer detail.**
    **The U-arc is now FORK-COMPLETE.**
-   NEXT: the AP integration phase (outer repo: §7.5 towns wiring +
-   victory watch + bridge push/grant/seed + pool emission from
-   unlockTable.json) — its own session, starting from plan §7 + the
-   substrate plan §7 + the playbook Stage 4. Not started.
+   **AP INTEGRATION V1 PLANNED 2026-07-20 (Fable, session 52): kickoff
+   READY — `omsiloops/omsi-loops-ap-integration-v1-opus-kickoff.md`
+   (ONE session, two slices: A = library pool emission + towns knob +
+   preset; B = bridge overlay/seed/reconcile/victory/filler; ZERO fork
+   edits, no byte-gate needed). Seven user rulings (recorded in the
+   plan's [AP-V1 PLANNING PASS] block at the end of §7.5): (a) towns =
+   `substrateConfig.omsi.towns` default 1 + `emitUnlockLocations`
+   default OFF (byte-inert defaults); (b) wrapper reads the fork's
+   unlockTable.json DIRECTLY (env-branched lazy loader — page-relative
+   fetch, NOT import.meta.url in bundled mode; no second carrier);
+   (c) rank rule = i-th location (town-major order by step/rowCount —
+   NOT trigger÷coeff, 300/620 rows are multi-dim) requires
+   floor(i·K_≤T/L_≤T) copies via **HasFromList over the towns ≤ T item
+   list** (the user's "sort items by town" ruling; HasFromListUnique
+   can't count progressive duplicate copies — both engines verified);
+   (d) filler = "Bonus Seconds" → bridge addOffline(60s), zero base-pool
+   copies; (e) items = "{Var} Supply Step" progressive per var,
+   progression_skip_balancing (recommendation, unobjected); (f) victory
+   = travel_onward in zone N−1 + watch `townsUnlocked.includes(N)`
+   (fixes the latent v0 length>1 hole vs alternate routes); (g) boot
+   order = seed → overlay (zero-inclusive qBatches for every included
+   var) → grantQuantityStep deltas; NO prestige re-push (U5-proven), NO
+   own-vs-foreign split in v1 (nothing wipes qBatches). Recon banked:
+   omsi bridge has NO snapshot/staticData intake yet (port jta's
+   snapshotUpdated reconcile); generateOmsiAwardSchedule stays UNWIRED;
+   pool derives 1:1 from location item fields at buildRulesJson; real AP
+   fill (Python round-trip) DEFERRED, jta parity.**
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
