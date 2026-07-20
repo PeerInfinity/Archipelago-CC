@@ -590,9 +590,24 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    U5-useful ground: `build()` filters excluded curves entirely (haul
    rows never minted); town-0 constants Pots 5/level·50 rows·ratio 10,
    Locks 1/level·10 rows·ratio 10. Gitlink bumped (user-approved).
-   Fork memory session 49 = implementer detail.** NEXT: **U5 AP hooks**
-   (suppression/grant surface + worldConfig overlay + prestige re-push);
-   §7.5 towns wiring at the AP phase.
+   Fork memory session 49 = implementer detail.** **U5 PLANNED 2026-07-20
+   (Fable, session 50): kickoff READY —
+   `omsiloops/omsi-loops-unlock-u5-opus-kickoff.md` (ONE slice:
+   `Unlocks.installOverlay`/`buildOverlay` seam + `unlocks` sibling key on
+   worldConfig + the refined §7.4 managed surface + prestige-contract
+   test). Design settled in the plan's [U5 PLANNING PASS] block at the end
+   of §7.4 — replace-whole overlay `{suppressed, granted, qBatches}`, null
+   when empty (byte-inert transport); install halves independent, the
+   useActionListXml flip stays schedule-only; view fan-out page-only at
+   the managed layer; `setUnlockOverlay` SUBSUMES §7.4's
+   setUnlockSuppression, `grantQuantityStep(varName)` supersedes "quantity
+   via q-row ids"; §7.3's prestige-multiplier sentence SUPERSEDED by the
+   U4 no-multipliers ruling; prestige re-push needs NO new code (overlay
+   is untouched module state; _onRestart already fires inside prestige's
+   restart(); the test proves it). Anchors verified at `3853d18`.**
+   NEXT: **Opus runs U5** (the LAST fork-side U phase), then the AP
+   integration phase (outer repo: §7.5 towns wiring + victory watch +
+   bridge push/grant/seed + pool emission from unlockTable.json).
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
