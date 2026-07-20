@@ -503,7 +503,27 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    keep the differential corpus + real-save-fixture stratum as a LIVE gate.
    Work runs on `xml-migration` (substrate ff-cadence; `automation` branch
    is gone); byte-gate reference 461/5,195,188/9d9952e68bc8373c.
-   **NEXT: Opus runs the U0/U1 kickoff; U2–U5 kickoffs after it lands.**
+   **U0+U1 SHIPPED 2026-07-19 (Opus session 42): fork `85dbd69`
+   (6452e95 U0 → 85dbd69 U1), both branches pushed, CI 5/5 green ×2;
+   outer gitlink bumped `4616b68a2` (user-approved). 314 predicate rows,
+   272 closures deleted, unlocks.js always-on; npm 237/237, byte-gate
+   EXACT, V4+V5 PASS, field-matrix golden UNCHANGED. Two banked lessons:
+   harness-boot-failure-reads-as-divergence; retiring a grep-oracle must
+   also fix its REGEN.**
+   **QUANTITY MODEL REVISED 2026-07-19 (post-ship, USER-RULED after the
+   base-game examination): the base game is already discrete (adjustAll
+   gated on level change: Pots +5/level, Locks +1/level; loot on every
+   `oneInEvery`-th check — per-action: 10/5/25/100/1000). The shipped
+   per-var G=8 quantile rows are SUPERSEDED by the LOOT-BATCH model:
+   item = "a full batch of oneInEvery instances, one guaranteed loot"
+   (+oneInEvery base capacity, no multipliers v1); location
+   `q:{town}:{var}:{k}` = base-rate formula crossing k×oneInEvery (Pots:
+   50 locations at Explored 2,4..100; Locks: 10 at 10,20..100); v1 caps
+   at base-rate first-100% (no prestige/survey extension); partial
+   batches and sub-ratio vars (hauls) mint no rows. §3.5 rewritten
+   (banner'd). NEXT: **U0b regen** (batch rows + golden + base-rate
+   replay verifier — small standalone slice), then U2 (events/dimIndex),
+   then U3–U5.**
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
