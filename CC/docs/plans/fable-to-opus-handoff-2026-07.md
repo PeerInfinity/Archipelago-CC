@@ -699,6 +699,17 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    emitUnlockLocations knobs, multi-town worlds (towns > 1 emits
    correctly and is vitest-covered but has never been played), and the
    deferred Python round-trip for a real AP fill.**
+   **NEXT CHOSEN 2026-07-20 (end of session 52's wrap-up turn):
+   multi-town play, DESIGN PASS FIRST (Fable) — substrate plan §6
+   deferred the concrete travel/focus semantics to "v1 time", and recon
+   confirmed two shipped-code gaps that need rulings, not just code: the
+   bridge holds ONE `_world` (current region payload) with ZONE-scoped
+   `ap_locations`, so a town-T row firing while another region is
+   focused is silently dropped (bridge.js:535); and the victory watch
+   arms only while the LAST town's region is loaded (`victoryTown`
+   rides that zone's payload alone). Session prompt in NewDocs
+   NEXT-SESSION-PROMPT.md. Panel exposure + Python round-trip stay
+   queued behind it.**
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
