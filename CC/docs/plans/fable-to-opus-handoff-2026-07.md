@@ -605,9 +605,36 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    U4 no-multipliers ruling; prestige re-push needs NO new code (overlay
    is untouched module state; _onRestart already fires inside prestige's
    restart(); the test proves it). Anchors verified at `3853d18`.**
-   NEXT: **Opus runs U5** (the LAST fork-side U phase), then the AP
-   integration phase (outer repo: §7.5 towns wiring + victory watch +
-   bridge push/grant/seed + pool emission from unlockTable.json).
+   **U5 SHIPPED 2026-07-20 (Opus, session 51): fork `e5ef307` on
+   `xml-migration` ≡ `substrate`, both PUSHED; fork CI green. Landed as
+   designed — `buildOverlay`/`installOverlay` (validate-before-mutate, so
+   a rejected overlay never half-applies; `q:` ids barred from
+   suppressed/granted; clearing an already-clear overlay returns before
+   even forcing the table build, which is what keeps the default worker
+   path doing nothing), the `unlocks` sibling key (null only when BOTH
+   halves empty; halves independent; useActionListXml flip stayed
+   schedule-only), the managed surface incl. the multiplexed
+   `onUnlockAchieved`, and `test/managed-unlocks.test.mjs` (7 legs, the
+   prestige leg driving the REAL `prestigeWithNewValues`). Transport
+   callers needed ZERO edits, as predicted. Gates: npm 273/273 · V3 EXACT
+   461/5,195,188/9d9952e68bc8373c/0 RNG · V4 PASS on the committed HEAD ·
+   V5 CI green. Implementer notes: a headless prestige needs four browser
+   shims (`closeTutorial`, `window`, `loadChallenge`, `recalcInterval`)
+   plus a permissive `getElementById` for the load() call ONLY — restore
+   the null stub after, it is load-bearing for tick-path search-toggle
+   semantics (field-matrix.lib.mjs precedent); and `installOverlay`
+   deliberately does not refresh, so a transport test must call
+   `adjustAll()` itself the way a worker's sim loop would. ⚠ The
+   run-planner progress log LAGS badly — it read ~30x slow mid-run while
+   actual wall was 648s; do not diagnose a slowdown from it without a
+   parent-commit control (one was run here and matched, exonerating the
+   change). **OUTER GITLINK NOT BUMPED — still pins `3853d18`; ask
+   first.** Fork memory session 51 = implementer detail.**
+   **The U-arc is now FORK-COMPLETE.**
+   NEXT: the AP integration phase (outer repo: §7.5 towns wiring +
+   victory watch + bridge push/grant/seed + pool emission from
+   unlockTable.json) — its own session, starting from plan §7 + the
+   substrate plan §7 + the playbook Stage 4. Not started.
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
