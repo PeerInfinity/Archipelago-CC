@@ -51,7 +51,21 @@
  *   - Victory location (v0, slice 3): completing Start Journey
  *     unlocks town 1 (townsUnlocked is persistent), reported once as
  *     a user:locationCheck on the sidecar's ap_locations.start_journey
- *     name — the Victory item rides that check.
+ *     name — the Victory item rides that check. AP-V1 generalizes this
+ *     to `townsUnlocked.includes(world.victoryTown)` on the last
+ *     included town's `travel_onward`.
+ *   - AP-V1 unlock randomization (plan §7): on an emission-ON world
+ *     (payload carries `unlockMeta`), the bridge is the AP↔fork
+ *     translator for discovery capacity. Boot order is RULED and load-
+ *     bearing: register onUnlockAchieved (passive) → seed the rows the
+ *     server already holds → push the whole overlay (its check() would
+ *     otherwise re-report them) → grant the quantity-step deltas.
+ *     Thereafter snapshotUpdated drives incremental grants. Prestige
+ *     needs NO re-push — the overlay and the fork's achievedReported
+ *     both survive it (U5-proven); only an iframe reload re-runs the
+ *     bulk sequence, and that path re-enters via omsi:loadRegion anyway.
+ *     A var's PRESENCE in qBatches is what makes it managed, so the
+ *     overlay names every var of every included town, zeros included.
  *   - No-progress guard: a restart after a loop that consumed (almost)
  *     no effective time means no queued action could run (empty queue
  *     slips past the step gate only in exotic states; a queue whose
@@ -75,6 +89,7 @@
  */
 
 import { IframeClient } from '../iframe-base/iframeClient.js';
+import { OMSI_FILLER_ITEM_NAME } from './unlockPool.js';
 
 function log(level, ...args) {
     const fn = console[level] || console.log;
@@ -139,6 +154,16 @@ let _ticksAtLastRestart = 0;       // totals.effectiveTime at the last restart (
 // Start Journey victory location). Re-seeded from checkedLocations on
 // every region load; cleared on rules reload (a new world).
 const _reportedLocationNames = new Set();
+
+// AP-V1 unlock randomization. Only live on an emission-ON world (one
+// whose payload carries `unlockMeta`); a v0 world leaves all of this
+// untouched. How many 'Bonus Seconds' filler copies we have already
+// spent on addOffline — count-based, so a re-sent item is a no-op.
+// Reset on rulesLoaded (a new world).
+let _fillerCopiesApplied = 0;
+
+// One grant of the 'Bonus Seconds' filler = 60s of offline time.
+const FILLER_OFFLINE_MS = 60_000;
 
 // Clock diagnostics, exposed via __omsiBridge.getDebugState().
 const _clockStats = {
@@ -290,18 +315,35 @@ function _reseedReportedLocations() {
 }
 
 /**
- * v0 victory watch: completing Start Journey calls the game's own
- * unlockTown(1), growing townsUnlocked past the starting [0] —
- * townsUnlocked is PERSISTENT (not per-loop), so this is exactly the
- * "completed Start Journey at least once" milestone the §6 ruling
- * places the Victory item on. Reported as a normal AP location check;
- * the location name comes from the sidecar's ap_locations map.
+ * Victory watch. Two shapes:
+ *
+ *   v0 (no unlock emission): completing Start Journey calls the game's
+ *     own unlockTown(1), growing townsUnlocked past the starting [0].
+ *     townsUnlocked is PERSISTENT (not per-loop), so this is exactly
+ *     the "completed Start Journey at least once" milestone the §6
+ *     ruling places the Victory item on.
+ *
+ *   AP-V1 (emission on): victory rides the LAST included town's
+ *     `travel_onward` location, and the milestone is that town N
+ *     JOINING townsUnlocked — `includes(N)`, not a length test. The
+ *     game's alternate routes count, which is the point: an N=5 world
+ *     completes via Open Rift (0→5) just as well as by walking.
+ *     The zone payload carries `victoryTown`, so no config plumbing.
+ *
+ * The v0 length semantics are kept verbatim on the no-emission path so
+ * existing worlds behave exactly as before.
  */
 function _checkVictoryProgress() {
-    const locationName = _world?.ap_locations?.start_journey;
+    const map = _world?.ap_locations;
+    const locationName = map?.travel_onward ?? map?.start_journey;
     if (!locationName || _reportedLocationNames.has(locationName)) return;
     const s = _fullState();
-    if (!s || !Array.isArray(s.townsUnlocked) || s.townsUnlocked.length <= 1) return;
+    if (!s || !Array.isArray(s.townsUnlocked)) return;
+    const victoryTown = _world?.victoryTown;
+    const reached = typeof victoryTown === 'number'
+        ? s.townsUnlocked.includes(victoryTown)
+        : s.townsUnlocked.length > 1;
+    if (!reached) return;
     _reportedLocationNames.add(locationName);
     if (!_client) return;
     _client.publishEventDispatcher('user:locationCheck', {
@@ -309,7 +351,223 @@ function _checkVictoryProgress() {
         regionName: _currentRegionId,
         originator: 'omsiSubstrate',
     }, { initialTarget: 'bottom' });
-    log('debug', `Start Journey complete -> user:locationCheck (${locationName})`);
+    log('debug', `victory milestone -> user:locationCheck (${locationName})`);
+}
+
+// ────────────────────────────────────────────────────────────────
+// AP-V1 unlock randomization (unlock-discretization plan §7)
+// ────────────────────────────────────────────────────────────────
+
+/** True on an emission-ON world (the library stamps unlockMeta). */
+function _hasUnlockPool() {
+    return !!_world?.unlockMeta?.itemToVar;
+}
+
+function _inventory() {
+    const inv = _client?.getStateSnapshot?.()?.inventory;
+    return (inv && typeof inv === 'object') ? inv : {};
+}
+
+/**
+ * The overlay's qBatches: `{var: copiesReceived}` for EVERY var of
+ * every included town, ZEROS INCLUDED. Presence in qBatches is what
+ * makes a var MANAGED — pushing `{Pots: 0}` pins Pots capacity to 0
+ * until steps arrive, while OMITTING Pots would leave it running native
+ * capacity. That is why unlockMeta is world-scoped rather than
+ * per-zone.
+ *
+ * Supply-step items are progressive: the i-th copy is batch i, so only
+ * the COUNT matters and arrival order never does.
+ */
+function _qBatchesFromInventory() {
+    const itemToVar = _world?.unlockMeta?.itemToVar ?? {};
+    const inv = _inventory();
+    const qBatches = {};
+    for (const [itemName, varName] of Object.entries(itemToVar)) {
+        qBatches[varName] = Number(inv[itemName]) || 0;
+    }
+    return qBatches;
+}
+
+/**
+ * Step 2 of the ruled boot order: tell the fork which rows the server
+ * already holds, BEFORE the overlay push. setUnlockOverlay triggers a
+ * full check(), and without the seed that pass's transition fan-out
+ * would re-report every already-checked row.
+ *
+ * The map's KEYS are the fork's raw row ids (`q:0:Pots:1`); its values
+ * are the AP location names. `travel_onward` is ours, not the fork's —
+ * it has no row.
+ */
+/**
+ * Drop the fork's reported-row ledger.
+ *
+ * `seedReportedLocations` is ADD-ONLY by design (surviving a prestige
+ * is the point), and the ledger is engine module state — so it also
+ * survives a RULES RELOAD, which a prestige is not. Without this, the
+ * first world's reported rows would permanently silence those same
+ * rows in every later world loaded into the same iframe: the second
+ * world could never check them. Clearing here lets the next region
+ * load rebuild the ledger from the NEW world's checkedLocations.
+ *
+ * `Unlocks` is an engine global (classic-script lexical binding) and
+ * exports `achievedReported` deliberately; there is no narrower
+ * clear API on the managed surface, and this phase makes no fork edits.
+ */
+function _clearForkReportedLedger() {
+    // eslint-disable-next-line no-undef
+    if (typeof Unlocks === 'undefined' || !Unlocks?.achievedReported?.clear) return;
+    try {
+        // eslint-disable-next-line no-undef
+        Unlocks.achievedReported.clear();
+        log('debug', 'cleared the fork reported-row ledger for the new world');
+    } catch (err) {
+        log('error', 'clearing achievedReported threw:', err);
+    }
+}
+
+function _seedReportedRows() {
+    const m = _managed();
+    const map = _world?.ap_locations;
+    if (typeof m?.seedReportedLocations !== 'function' || !map) return;
+    const checked = new Set(_client?.getStateSnapshot?.()?.checkedLocations ?? []);
+    const ids = [];
+    for (const [rowId, apName] of Object.entries(map)) {
+        if (!rowId.includes(':')) continue;   // travel_onward / legacy ids
+        if (checked.has(apName)) ids.push(rowId);
+    }
+    m.seedReportedLocations(ids);
+    if (ids.length) log('debug', `seeded ${ids.length} already-checked unlock row(s)`);
+}
+
+/**
+ * Re-run the engine's own total recomputation.
+ *
+ * Load-bearing, not cosmetic: `Unlocks.applyManagedTotals()` — the
+ * substitution that turns qBatches into real capacity — runs at the END
+ * of `adjustAll()`, and NEITHER `setUnlockOverlay` nor
+ * `grantQuantityStep` calls adjustAll themselves. Without this nudge a
+ * fresh overlay would sit inert until some unrelated level-up happened
+ * to trigger an adjustAll, and the player would smash pots at vanilla
+ * capacity in the meantime.
+ *
+ * `adjustAll` is a top-level function of the fork's classic scripts —
+ * a global lexical binding, so the bare-identifier-behind-typeof
+ * pattern is the correct access (same as addResource / addOffline).
+ */
+function _refreshManagedTotals() {
+    // eslint-disable-next-line no-undef
+    if (typeof adjustAll !== 'function') {
+        log('warn', 'engine adjustAll not available — managed capacity may lag');
+        return;
+    }
+    try {
+        // eslint-disable-next-line no-undef
+        adjustAll();
+    } catch (err) {
+        log('error', 'adjustAll() threw:', err);
+    }
+}
+
+/** Step 3: the bulk overlay push. Replace-whole, so no diffing. */
+function _pushUnlockOverlay() {
+    const m = _managed();
+    if (typeof m?.setUnlockOverlay !== 'function') {
+        log('warn', 'fork build has no setUnlockOverlay hook — unlock world plays vanilla');
+        return;
+    }
+    const qBatches = _qBatchesFromInventory();
+    try {
+        // v1 manages QUANTITY steps only: predicate rows are not
+        // locations yet, so both id halves stay empty.
+        m.setUnlockOverlay({ suppressed: [], granted: [], qBatches });
+        _refreshManagedTotals();
+        log('debug', 'unlock overlay pushed', qBatches);
+    } catch (err) {
+        log('error', 'setUnlockOverlay rejected the overlay:', err);
+    }
+}
+
+/**
+ * Step 4: ongoing reconcile. Deltas only — grantQuantityStep is the
+ * progressive path, and the fork's own getUnlockState().quantities is
+ * the authority on what it currently holds (getFullState().unlocks is
+ * counts-only and must NOT be used here).
+ *
+ * No own-vs-foreign split in v1: nothing wipes qBatches, so own and
+ * foreign copies act identically and capacity is a pure AP-authoritative
+ * meter fed from inventory counts. (jta's perkOrigin split exists only
+ * because prestige wipes perks.)
+ */
+function _reconcileQuantitySteps() {
+    const m = _managed();
+    if (!_hasUnlockPool() || typeof m?.grantQuantityStep !== 'function') return;
+    const target = _qBatchesFromInventory();
+    const current = m.getUnlockState?.()?.quantities ?? {};
+    let granted = 0;
+    for (const [varName, want] of Object.entries(target)) {
+        const have = Number(current[varName]?.batches) || 0;
+        for (let i = have; i < want; i++) {
+            try {
+                m.grantQuantityStep(varName);
+                granted += 1;
+            } catch (err) {
+                log('error', `grantQuantityStep('${varName}') threw:`, err);
+                break;
+            }
+        }
+    }
+    if (granted) {
+        _refreshManagedTotals();
+        log('debug', `granted ${granted} quantity step(s)`);
+    }
+}
+
+/**
+ * The location trigger. ONE multiplexed callback serves both row
+ * families; quantity rows are the `q:`-prefixed ids. Anything not in
+ * this world's ap_locations map is silently ignored — predicate (`u:`)
+ * rows DO fire for locally-earned action unlocks, and they are not
+ * locations in v1.
+ */
+function _handleUnlockAchieved(id) {
+    if (typeof id !== 'string') return;
+    const locationName = _world?.ap_locations?.[id];
+    if (!locationName || _reportedLocationNames.has(locationName)) return;
+    _reportedLocationNames.add(locationName);
+    if (!_client) return;
+    _client.publishEventDispatcher('user:locationCheck', {
+        locationName,
+        regionName: _currentRegionId,
+        originator: 'omsiSubstrate',
+    }, { initialTarget: 'bottom' });
+    log('debug', `unlock row ${id} -> user:locationCheck (${locationName})`);
+}
+
+/**
+ * The declared filler/balancer: each newly-seen 'Bonus Seconds' copy
+ * buys 60s of the game's own offline time. Count-based, so a reconnect
+ * replay costs nothing. The base pool contains ZERO copies (supply
+ * steps are 1:1 with locations) — this only fires if a fill ever opens
+ * a filler slot.
+ */
+function _applyFillerFromInventory() {
+    const copies = Number(_inventory()[OMSI_FILLER_ITEM_NAME]) || 0;
+    if (copies <= _fillerCopiesApplied) return;
+    const fresh = copies - _fillerCopiesApplied;
+    _fillerCopiesApplied = copies;
+    // eslint-disable-next-line no-undef
+    if (typeof addOffline !== 'function') {
+        log('warn', `'${OMSI_FILLER_ITEM_NAME}' x${fresh} dropped: engine addOffline not available`);
+        return;
+    }
+    try {
+        // eslint-disable-next-line no-undef
+        for (let i = 0; i < fresh; i++) addOffline(FILLER_OFFLINE_MS);
+        log('debug', `granted ${fresh}x '${OMSI_FILLER_ITEM_NAME}' (+${fresh * 60}s offline)`);
+    } catch (err) {
+        log('error', 'addOffline threw:', err);
+    }
 }
 
 // ────────────────────────────────────────────────────────────────
@@ -563,6 +821,29 @@ function _handleLoadRegion(payload) {
     // locations, then check immediately — a restored save may already
     // have town 1 unlocked with the location unchecked.
     _reseedReportedLocations();
+
+    // AP-V1 unlock randomization, in the RULED boot order (plan §7,
+    // ruling (g)). onUnlockAchieved is already registered in main() —
+    // passive, and safe before seeding because no check() runs until
+    // the overlay push below.
+    //   2. seed the rows the server already holds …
+    //   3. … then push the overlay, whose check() would otherwise
+    //      re-report every one of them.
+    //   4. reconcile any copies the (possibly stale) snapshot missed.
+    // No-ops entirely on a v0 world.
+    if (_hasUnlockPool()) {
+        _seedReportedRows();
+        _pushUnlockOverlay();
+        _reconcileQuantitySteps();
+        _applyFillerFromInventory();
+        // Starting items are applied to the worker before this iframe
+        // subscribed, so the cached snapshot read above may predate
+        // them. A fresh worker-pinged snapshot re-runs the reconcile
+        // through the same path a mid-play item receipt uses (jta
+        // precedent).
+        _client?.requestStateSnapshot?.();
+    }
+
     _checkVictoryProgress();
 
     _startClock();
@@ -678,9 +959,33 @@ async function main() {
         _expectedPool = null;
         _lastReportedBudget = null;
         _reportedLocationNames.clear();
+        _fillerCopiesApplied = 0;
         // Award schedule is per-world data — the next omsi:loadRegion
         // re-installs the new world's (or leaves the carrier inert).
         _managed()?.setAwardSchedule?.(null);
+        // Same for the unlock overlay: clearing it returns every var to
+        // native capacity, and the next omsi:loadRegion re-pushes the
+        // new world's (ruled boot order) or leaves the fork vanilla.
+        _managed()?.setUnlockOverlay?.(null);
+        // …and the fork's reported-row ledger, which is per-WORLD state
+        // even though it deliberately survives a prestige.
+        _clearForkReportedLedger();
+    });
+
+    // AP state changed (item received here or elsewhere, or a location
+    // checked by a co-op partner / on reconnect). Grant any newly
+    // received supply steps, re-derive the reported-row sets from the
+    // fresh snapshot, and spend any new filler copies. Cheap and
+    // idempotent on a v0 world (every branch gates on unlockMeta).
+    _client.subscribeEventBus('stateManager:snapshotUpdated', () => {
+        if (!_hasUnlockPool()) return;
+        _reconcileQuantitySteps();
+        // checkedLocations can grow outside our own completions, so
+        // re-derive BOTH dedupe layers: ours (AP names) and the fork's
+        // (row ids).
+        _reseedReportedLocations();
+        _seedReportedRows();
+        _applyFillerFromInventory();
     });
 
     // Region activation events (from procgenPlayer).
@@ -705,6 +1010,15 @@ async function main() {
         m.setForeignAwardCallback(_handleForeignAward);
     }
 
+    // AP-V1 location trigger. Registered ONCE, here rather than per
+    // region load: it is passive (no check() runs until an overlay
+    // push), and step 1 of the ruled boot order wants it live before
+    // any seeding happens. It self-filters on the active world's
+    // ap_locations, so it stays inert on a v0 world.
+    if (typeof m.onUnlockAchieved === 'function') {
+        m.onUnlockAchieved(_handleUnlockAchieved);
+    }
+
     // Debug/test surface (the in-app substrate tests read this — the
     // clock is bridge-owned, so there is no fork hook to ask).
     window.__omsiBridge = {
@@ -719,6 +1033,12 @@ async function main() {
             lastAppliedResetCount: _lastAppliedResetCount,
             clockRunning: _isClockRunning(),
             clockStats: { ..._clockStats },
+            // AP-V1 unlock randomization (null/0 on a v0 world).
+            hasUnlockPool: _hasUnlockPool(),
+            victoryTown: _world?.victoryTown ?? null,
+            qBatches: _hasUnlockPool() ? _qBatchesFromInventory() : null,
+            reportedLocationCount: _reportedLocationNames.size,
+            fillerCopiesApplied: _fillerCopiesApplied,
         }),
     };
 

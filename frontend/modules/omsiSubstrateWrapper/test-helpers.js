@@ -27,6 +27,14 @@ export const OMSI_TEST_REGION = 'region_1_1';       // the omsi region (town 0)
 export const OMSI_TEST_MAZE_REGION = 'region_0_0';  // a maze region to stand in / leave to
 export const OMSI_TEST_START_REGION = 'Menu';
 export const OMSI_TEST_VICTORY_LOCATION = 'region_1_1__start_journey';
+
+// AP-V1 unlock randomization fixture (regenerate with
+// scripts/test/generate-omsi-randomized-test-preset.mjs): the same
+// 2-maze + 1-omsi world, but the omsi region carries town 0's full
+// 90-location discovery pool plus `travel_onward` holding 'Victory'.
+export const OMSI_RANDOMIZED_PRESET_PATH =
+    './presets/omsi_randomized_test/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+export const OMSI_RANDOMIZED_VICTORY_LOCATION = 'region_1_1__travel_onward';
 // The game's native per-loop budget (timeNeededInitial = 5 * 50) — the
 // starting-budget bonus the bridge reports up to the shared pool.
 export const OMSI_NATIVE_BUDGET = 250;
@@ -69,6 +77,39 @@ export function bridgeState() {
 
 export function isBridgeClockRunning() {
     return getOmsiIframe()?.contentWindow?.__omsiBridge?.isClockRunning?.() === true;
+}
+
+/**
+ * Count `user:locationCheck` publishes for one location name.
+ *
+ * The host dispatcher is publish-only — it has no `subscribe` — so the
+ * only way to observe a dispatch is to wrap `publish`. This matters:
+ * the tests that assert a check was NOT re-reported are vacuous if the
+ * watcher silently observes nothing, so this THROWS rather than
+ * degrading when the dispatcher isn't patchable, and callers should
+ * assert a positive count before trusting a zero one.
+ *
+ * The iframe path lands here too: the bridge's publishEventDispatcher
+ * is forwarded by iframeAdapterCore into this same dispatcher.
+ */
+export function watchLocationChecks(locationName) {
+    const dispatcher = window.eventDispatcher;
+    if (!dispatcher || typeof dispatcher.publish !== 'function') {
+        throw new Error('watchLocationChecks: window.eventDispatcher.publish unavailable — '
+            + 'a silent watcher would make "not re-reported" assertions vacuous');
+    }
+    const original = dispatcher.publish.bind(dispatcher);
+    let count = 0;
+    dispatcher.publish = (originModuleId, eventName, data, options) => {
+        if (eventName === 'user:locationCheck' && data?.locationName === locationName) {
+            count += 1;
+        }
+        return original(originModuleId, eventName, data, options);
+    };
+    return {
+        get count() { return count; },
+        stop() { dispatcher.publish = original; return count; },
+    };
 }
 
 export function gameStateFn(name) {
@@ -144,6 +185,52 @@ export async function waitForOmsiActive(testController, timeoutMs = 20000) {
         250,
     );
     return ok ? win : null;
+}
+
+/**
+ * Wait for the bridge to exist WITHOUT requiring an active region.
+ *
+ * waitForOmsiActive gates on the clock, which only runs once an omsi
+ * region is entered — but a test that needs to normalize persistent
+ * engine state must do so BEFORE entering. Returns the contentWindow
+ * or null.
+ */
+export async function waitForOmsiBridge(testController, timeoutMs = 20000) {
+    let win = null;
+    const ok = await testController.pollForCondition(
+        () => {
+            const w = getOmsiIframe()?.contentWindow;
+            if (!w?.__omsiBridge) return false;
+            win = w;
+            return true;
+        },
+        'omsi bridge present (iframe booted)',
+        timeoutMs,
+        250,
+    );
+    return ok ? win : null;
+}
+
+/**
+ * Normalize the persistent engine state the unlock tests depend on.
+ *
+ * The managed game lives in its own `idleLoops_substrate` save slot and
+ * OUTLIVES individual tests — every test in a suite run shares one
+ * booted iframe. So town unlocks and town progress leak forward: the
+ * v0 victory test's `unlockTown(1)` would otherwise pre-satisfy a later
+ * victory assertion, and accumulated Wander progress would pre-fire
+ * unlock rows. Reset the specific dims each test sets up, through the
+ * engine's own state, then recompute totals.
+ */
+export function resetOmsiEngineProgress(progressVars = ['Wander']) {
+    const assignments = progressVars
+        .map((v) => `towns[0].exp${v} = 0;`)
+        .join(' ');
+    return omsiEval(`
+        townsUnlocked.splice(0, townsUnlocked.length, 0);
+        ${assignments}
+        adjustAll();
+    `);
 }
 
 /**

@@ -276,14 +276,29 @@ export function victoryAccessRule(pool) {
     return { rule: 'HasFromList', args: { item_names: pool.itemNames, count } };
 }
 
-/** `{itemName: varName}` + `{var: {town, rowCount}}` for one zone. */
-export function unlockMetaForZone(pool, town) {
-    const vars = pool.varsByTown.get(town) ?? [];
+/**
+ * `{itemName: varName}` + `{var: {town, rowCount}}` for the WHOLE world.
+ *
+ * Deliberately world-scoped, not zone-scoped, even though it rides each
+ * zone's payload. The unlock overlay is GLOBAL engine state, and a var
+ * absent from `qBatches` is UNMANAGED (native capacity) — so the
+ * bridge's overlay push must name every var of every included town no
+ * matter which town's region the player happens to be standing in.
+ * Handing a zone only its own town's vars would leave towns 1..N-1
+ * running native capacity until the player walked into them. Each var
+ * carries its own `town`, so per-zone information is not lost.
+ *
+ * (For the shipped towns=1 fixture, world scope and zone scope
+ * coincide.)
+ */
+export function unlockMetaForWorld(pool) {
     const itemToVar = {};
     const varMeta = {};
-    for (const v of vars) {
-        itemToVar[supplyStepItemName(v)] = v;
-        varMeta[v] = { town, rowCount: pool.rowCount.get(`${town}:${v}`) ?? 0 };
+    for (const [town, vars] of [...pool.varsByTown.entries()].sort((a, b) => a[0] - b[0])) {
+        for (const v of vars) {
+            itemToVar[supplyStepItemName(v)] = v;
+            varMeta[v] = { town, rowCount: pool.rowCount.get(`${town}:${v}`) ?? 0 };
+        }
     }
     return { itemToVar, vars: varMeta };
 }

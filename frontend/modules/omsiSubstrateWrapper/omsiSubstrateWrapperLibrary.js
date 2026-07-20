@@ -29,7 +29,7 @@ import {
     buildUnlockPool,
     accessRuleFor,
     victoryAccessRule,
-    unlockMetaForZone,
+    unlockMetaForWorld,
     OMSI_FILLER_ITEM_NAME,
 } from './unlockPool.js';
 
@@ -268,7 +268,7 @@ export const substrateRegistryEntry = Object.freeze({
                 payload.victoryTown = _townCount;
             }
             payload.ap_locations = apLocations;
-            payload.unlockMeta = unlockMetaForZone(pool, zoneIdx);
+            payload.unlockMeta = unlockMetaForWorld(pool);
             if (zoneIdx === 0 && _awardSchedule) {
                 payload.awardSchedule = JSON.parse(JSON.stringify(_awardSchedule));
             }

@@ -166,6 +166,36 @@
             "category": "Omsi substrate"
         },
         {
+            "id": "omsi-unlock-overlay-boot",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-unlock-seed-before-fanout",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-unlock-grant-raises-capacity",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-unlock-check-fires-once",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-unlock-survives-prestige",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-unlock-victory-town",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
             "id": "maze-consumable-tile-grants-foreign-item",
             "enabled": true,
             "category": "Maze consumable tiles"

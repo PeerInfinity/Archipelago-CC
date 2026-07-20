@@ -133,10 +133,27 @@ describe('ids and the ap_locations map', () => {
     });
 
     it('carries an explicit item->var map so the bridge never parses names', () => {
-        const meta = emitZone(0).payload.unlockMeta;
+        const meta = emitZone(0).payload.unlockMeta;   // world-scoped
         expect(meta.itemToVar['Pots Supply Step']).toBe('Pots');
         expect(meta.vars.Pots).toEqual({ town: 0, rowCount: 50 });
         expect(Object.keys(meta.vars).sort()).toEqual(['LQuests', 'Locks', 'Pots', 'SQuests']);
+    });
+
+    it('scopes unlockMeta to the WORLD, not the zone, on every zone payload', () => {
+        // The overlay is global engine state and an unlisted var runs
+        // NATIVE capacity, so the bridge must be able to name every
+        // included town's vars while standing in any one region.
+        omsi.applyPipelineConfig({ towns: 3, emitUnlockLocations: true });
+        const expected = ['Gamble', 'Herbs', 'Hunt', 'LQuests', 'Locks',
+            'Pots', 'SQuests', 'WildMana'];
+        for (const zoneIdx of [0, 1, 2]) {
+            const meta = emitZone(zoneIdx).payload.unlockMeta;
+            expect(Object.keys(meta.vars).sort()).toEqual(expected);
+        }
+        // Each var still carries its own town, so nothing is lost.
+        const meta = emitZone(0).payload.unlockMeta;
+        expect(meta.vars.Gamble.town).toBe(2);
+        expect(meta.vars.Herbs).toEqual({ town: 1, rowCount: 200 });
     });
 });
 
