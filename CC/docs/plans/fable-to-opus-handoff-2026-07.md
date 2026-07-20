@@ -525,10 +525,18 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    takes a town count N; victory = town N joining townsUnlocked (N=1 ≡
    the shipped R2 v0 world); pool scoped to included towns (predicate
    rows gain `town` in U0b); §7.5 wiring = outer/wrapper work at the AP
-   phase, not U0b.** NEXT: **U0b regen** (kickoff READY:
-   `omsiloops/omsi-loops-unlock-u0b-opus-kickoff.md` — batch rows + town
-   field + pinned-multiplier replay verifier), then U2 (events/dimIndex),
-   then U3–U5.**
+   phase, not U0b.** **U0b SHIPPED 2026-07-20 (Opus): fork `4a40b12`
+   (xml-migration ≡ substrate, both pushed, CI green), outer `6a18157d2`
+   (guard test). Table = 620 batch rows / 14 vars (town-0 = 90: Pots 50 +
+   Locks 10 + SQuests 20 + LQuests 10 — the §7.5 towns parameter, not the
+   batch model, right-sizes a world). Kickoff-contradicting recon finds:
+   Hauls are NOT sub-batch (StonesZ* = 2500×level ⇒ 250 rows each) — USER
+   RULED them EXCLUDED (`QUANTITY_EXCLUDED_VARS` + `meta.excludedVars` in
+   the artifact + an outer vitest guard on OMSI_LOOTABLES widening);
+   walkPredicates already emitted `town` (assertion added). Row-id reset
+   (G=8 → batches) ACCEPTED as the one free reset — **ids are load-bearing
+   from `4a40b12`** (plan §3.3 ID EPOCH note). Gitlink pin: pending ask.**
+   NEXT: **U2 (events/dimIndex) kickoff**, then U3–U5.
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
