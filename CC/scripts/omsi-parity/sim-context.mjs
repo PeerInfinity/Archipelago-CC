@@ -16,9 +16,23 @@ import vm from "node:vm";
 import fs from "node:fs";
 import path from "node:path";
 
-// The exact importScripts list from predictor-worker.js (11 files).
+// The importScripts list from predictor-worker.js.
+//
+// The four fork-only entries after actionList.js are loaded ONLY IF PRESENT,
+// because this harness boots two trees that no longer have the same file list:
+// upstream is the fork point (fe4a349), which predates all of them. They are
+// not optional on the fork side, though — since the unlock cutover,
+// Action.prototype.visible/unlocked answer from unlocks.js, so a fork context
+// booted without it has actions that throw ReferenceError when asked whether
+// they are unlocked. That failure is quiet in the worst way: the policy-queue
+// builder catches the throw and silently drops the action, which surfaces as a
+// bogus behavioural "divergence" rather than as a harness error.
 export const SIM_FILES = ["data.js", "localization.js", "helpers.js", "actionList.js",
+    "xmlLite.js", "actionListXml.js", "data/actionListXml.data.js", "unlocks.js",
     "driver.js", "stats.js", "actions.js", "town.js", "prestige.js", "saving.js", "predictor.js"];
+
+// present on the fork, absent at the fork point — skipped rather than fatal
+const FORK_ONLY = new Set(["xmlLite.js", "actionListXml.js", "data/actionListXml.data.js", "unlocks.js"]);
 
 const noopProxy = () => new Proxy({}, { get: (t, p) => (p in t ? t[p] : () => {}) });
 
@@ -53,7 +67,9 @@ export function makeContext(root, seed = 12345) {
     sandbox.self = sandbox; sandbox.globalThis = sandbox;
     vm.createContext(sandbox);
     for (const f of SIM_FILES) {
-        new vm.Script(fs.readFileSync(path.join(root, f), "utf8"), { filename: `${root}/${f}` })
+        const p = path.join(root, f);
+        if (FORK_ONLY.has(f) && !fs.existsSync(p)) continue;
+        new vm.Script(fs.readFileSync(p, "utf8"), { filename: `${root}/${f}` })
             .runInContext(sandbox);
     }
 

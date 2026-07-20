@@ -108,8 +108,18 @@ const SCENARIOS = {
 function extract(commit, dir) {
     fs.rmSync(dir, { recursive: true, force: true });
     fs.mkdirSync(dir, { recursive: true });
+    // Only ask for paths this commit actually has: the two sides no longer
+    // share a file list (the fork added the XML stack and unlocks.js, which
+    // the fork point predates), and `git archive` treats an unmatched pathspec
+    // as fatal. sim-context.mjs skips whatever is missing on the other side.
+    const present = SIM_FILES.filter(f => {
+        try {
+            execFileSync("git", ["-C", submoduleDir, "cat-file", "-e", `${commit}:${f}`], { stdio: "ignore" });
+            return true;
+        } catch { return false; }
+    });
     run("bash", ["-c",
-        `git -C ${JSON.stringify(submoduleDir)} archive --format=tar ${commit} -- ${SIM_FILES.join(" ")} | tar -x -C ${JSON.stringify(dir)}`]);
+        `git -C ${JSON.stringify(submoduleDir)} archive --format=tar ${commit} -- ${present.join(" ")} | tar -x -C ${JSON.stringify(dir)}`]);
 }
 
 // ---------------------------------------------------------------------------
