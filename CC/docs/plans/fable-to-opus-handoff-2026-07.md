@@ -568,10 +568,19 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    3+5); enforcement test drives actions.tick() + shouldRestart (the
    step driver's prepareRestart rebuilds actions.current and destroys
    errorMessage evidence); gitlink bumped (user-approved). Fork memory
-   session 47 = implementer detail.** NEXT: **U4 batch-capacity
-   substitution kickoff** (managed totals = grantedBatches×oneInEvery
-   behind suppression, plan §3.5 batch model), then U5 AP hooks; §7.5
-   towns wiring at the AP phase.
+   session 47 = implementer detail.** **U4 PLANNED 2026-07-20 (Fable):
+   kickoff READY — `omsiloops/omsi-loops-unlock-u4-opus-kickoff.md` (one
+   slice: `qManagedBatches` Map + `applyManagedTotals()` at the END of
+   adjustAll — SINGLE choke point superseding §9's 19 per-function
+   guards; verified: adjust*() called only by adjustAll, load() re-runs
+   adjustAll after total restore, so the loop covers every write path;
+   substituted total = min(batches,rowCount)×oneInEvery plain per the
+   v1 no-multipliers ruling; locations decoupled by construction — U2
+   triggers read levels, not totals; seven-leg test incl. batch
+   invariant + decoupling + excluded-var guard; V4 ordering rule baked
+   in).** NEXT: **Opus runs U4**, then U5 AP hooks (suppression/grant
+   surface + worldConfig overlay + prestige re-push); §7.5 towns wiring
+   at the AP phase.
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
