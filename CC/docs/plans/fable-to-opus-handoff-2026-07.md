@@ -521,8 +521,13 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    50 locations at Explored 2,4..100; Locks: 10 at 10,20..100); v1 caps
    at base-rate first-100% (no prestige/survey extension); partial
    batches and sub-ratio vars (hauls) mint no rows. §3.5 rewritten
-   (banner'd). NEXT: **U0b regen** (batch rows + golden + base-rate
-   replay verifier — small standalone slice), then U2 (events/dimIndex),
+   (banner'd). **WORLD SHAPE RULED same day (plan §7.5 NEW): worldgen
+   takes a town count N; victory = town N joining townsUnlocked (N=1 ≡
+   the shipped R2 v0 world); pool scoped to included towns (predicate
+   rows gain `town` in U0b); §7.5 wiring = outer/wrapper work at the AP
+   phase, not U0b.** NEXT: **U0b regen** (kickoff READY:
+   `omsiloops/omsi-loops-unlock-u0b-opus-kickoff.md` — batch rows + town
+   field + pinned-multiplier replay verifier), then U2 (events/dimIndex),
    then U3–U5.**
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
