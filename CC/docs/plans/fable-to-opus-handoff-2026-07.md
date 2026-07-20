@@ -699,17 +699,48 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    emitUnlockLocations knobs, multi-town worlds (towns > 1 emits
    correctly and is vitest-covered but has never been played), and the
    deferred Python round-trip for a real AP fill.**
-   **NEXT CHOSEN 2026-07-20 (end of session 52's wrap-up turn):
-   multi-town play, DESIGN PASS FIRST (Fable) — substrate plan §6
-   deferred the concrete travel/focus semantics to "v1 time", and recon
-   confirmed two shipped-code gaps that need rulings, not just code: the
-   bridge holds ONE `_world` (current region payload) with ZONE-scoped
-   `ap_locations`, so a town-T row firing while another region is
-   focused is silently dropped (bridge.js:535); and the victory watch
-   arms only while the LAST town's region is loaded (`victoryTown`
-   rides that zone's payload alone). Session prompt in NewDocs
-   NEXT-SESSION-PROMPT.md. Panel exposure + Python round-trip stay
-   queued behind it.**
+   ~~NEXT CHOSEN 2026-07-20: multi-town play design pass~~ —
+   **SUPERSEDED same day by a USER DIRECTION CHANGE (session 54).**
+   (The two shipped-code gaps that recon found remain true and roll into
+   arc E below: zone-scoped `ap_locations` silently drops cross-region
+   check firing at bridge.js:535, and the victory watch arms only while
+   the last town's region is loaded.)
+   **DIRECTION CHANGE + ROADMAP 2026-07-20 (user, session 54).** Before
+   multi-town travel: split each town into multiple procgen REGIONS with
+   randomly-distributed content, each region with its OWN Explore level;
+   JtA-style synthetic queueable "Exit North/East/…" actions
+   (procgen-only, unlocked by fully exploring the region; future: exit
+   unlock as a randomized AP item — the unused predicate-row overlay
+   machinery is the ready-made slot); before THAT, a counts refactor:
+   configurable AP item instances per var + configurable/auto-scaling
+   location counts (the Explore percentages that fire checks move).
+   Plus (user, same session): remove the town-number hardcoding, fitting
+   the XML format where possible; and add the Loop-mode features omsi
+   lacks "sometime soon". Three Opus recon sweeps verified feasibility —
+   condensed with anchors in *(NewDocs)*
+   `omsiloops/omsi-loops-region-split-recon-2026-07-20.md` (the design
+   passes' first read). Key verdicts: counts = HYBRID mechanism
+   (USER-AGREED — native 620 rows stay the id namespace/capacity
+   substrate, thin fork-side selection of L nearest-evenly-spaced native
+   rows moves the firing percentages, item count = grant-multiplicity
+   multiplier; id-epoch contract survives; partially supersedes the
+   loot-batch "item = one batch" ruling — record when ruled); region
+   split = region-overlay on ONE town (extra Town instances blocked by
+   hardcoded-9: type/static DOM/19 adjust* fns/flat save namespace —
+   re-evaluate after de-hardcoding); exit actions port cleanly from
+   JtA's `_injectExitTasks` (queue stores names only); per-region
+   sub-queues = the savedQueueStore + replayActions path (jtaActionQueue
+   3b is a linear script, NOT the model); omsi declares NO loopSupport
+   today.
+   **ARC ORDER: A counts refactor → B town de-hardcoding (XML-
+   declarative; the 19 adjust* fns duplicate the XML coeffs' math) →
+   C region splitting + per-region Explore + exit actions (mechanism
+   re-check after B) → D loops-mode support (loopSupport + queue write
+   channel + recorder/replayActions + sub-queues; parts may interleave
+   earlier per the user's "soon") → E multi-town travel (the deferred
+   design pass) → F panel per-region queue editor. Panel knob exposure +
+   Python round-trip stay queued. NEXT: arc-A design pass (Fable) —
+   prompt in NewDocs NEXT-SESSION-PROMPT.md.**
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
