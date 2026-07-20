@@ -544,7 +544,18 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    stateChanged channel (rejected-alternative rationale in plan §5.3's
    U2 block); quantity triggers = dot product (all 14 base formulas
    verified linear; additive `coeffs` field, ids untouched per the
-   epoch).** NEXT: **Opus runs U2**, then U3 enforcement → U4 → U5.
+   epoch).** **U2 SHIPPED 2026-07-20 (Opus): fork `76655ac` (`22865ab`
+   slice A dimIndex/check/coeffs → `76655ac` slice B events/dedupe/
+   onActionCompleted), both branches pushed, CI green incl. strict
+   ui-parity; npm 253/253, byte-gate EXACT per slice; gitlink bumped
+   (user-approved). ⚠ Kickoff gap closed IN unlocks.js: runtime derives
+   quantity rows from `<totalDiscovered>` coeffs — ONE minting shared
+   with the generator, NO new data carrier (don't add one at U4/U5).
+   Emission order = TABLE order (u:Locks before u:BuyGlasses at
+   Wander 20). Fork memory session 45 has the implementer detail incl.
+   the atomic-build() lesson.** NEXT: **U3 enforcement kickoff**
+   (suppression-scoped getNextValidAction check + §6.4 differential
+   test), then U4 batch-capacity substitution → U5 AP hooks.
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
