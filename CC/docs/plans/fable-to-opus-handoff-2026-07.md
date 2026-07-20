@@ -658,6 +658,47 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    snapshotUpdated reconcile); generateOmsiAwardSchedule stays UNWIRED;
    pool derives 1:1 from location item fields at buildRulesJson; real AP
    fill (Python round-trip) DEFERRED, jta parity.**
+   **AP-V1 SHIPPED 2026-07-20 (Opus session 53): outer `8390f7d80`
+   (slice A) + `2e70c0eed` (slice B), pushed to `main`. ZERO fork edits,
+   no gitlink bump (fork still `e5ef307`). All seven rulings implemented
+   as written. New: `omsiSubstrateWrapper/unlockPool.js` (lazy
+   env-branched loader + ordering + rule formula),
+   `omsi_randomized_test` preset (90 supply locations, counts 0…89,
+   travel_onward at 89), `omsiUnlockPool.test.js` (22 cases),
+   `tests/testCases/omsiUnlockTests.js` (6 in-app legs).
+   Gates: vitest 3115/3115 · test-substrates 41/41 · test-regression
+   31/31 · verify-omsi-mana-leg OK · omsi_substrate_test and
+   omsi_schedule_test byte-identical.
+   **Two ruling REFINEMENTS forced by implementation (both recorded in
+   code comments):** (i) `unlockMeta` is WORLD-scoped, not zone-scoped
+   as §3.3 said — the overlay is global engine state and an unlisted var
+   runs NATIVE capacity, so a zone-scoped map would leave towns 1..N−1
+   unmanaged until walked into; ruling (g) ("every var of every included
+   town") wins over the per-zone phrasing. (ii) The v0 victory path
+   keeps `length > 1`; only emission-ON worlds use `includes(N)`.
+   **Two real defects the in-app stratum caught — the payoff for the
+   independent-stratum discipline:** (1) neither `setUnlockOverlay` nor
+   `grantQuantityStep` calls `adjustAll`, and the capacity substitution
+   runs at the END of `adjustAll` — a fresh overlay sat INERT until an
+   unrelated level-up; bridge now nudges `adjustAll()` after push/grant.
+   (2) the fork's `achievedReported` ledger is add-only ENGINE MODULE
+   state, so it survived a RULES RELOAD, not just a prestige — world 1's
+   reported rows permanently silenced those rows in every later world in
+   the same iframe; bridge clears it on `rulesLoaded` then rebuilds from
+   the new world's checkedLocations. Both fixed OUTER-side.
+   ⚠ Implementer traps for the next session: the host dispatcher has NO
+   `subscribe()` (publish-only) — observing a dispatch means wrapping
+   `publish`, and a silent watcher makes every "not re-reported"
+   assertion vacuous; quantity `ratio` is the row's `grant.batch`
+   (Pots/Locks = 10, SQuests/LQuests = 5), NOT 1; `checkLocation`
+   REJECTS inaccessible locations, so a victory test must satisfy the
+   89-copy access rule before unlocking the town; and the managed game's
+   save slot OUTLIVES individual tests, so persistent `townsUnlocked` /
+   progress must be normalized before each region entry.
+   NEXT for this arc: panel/UI exposure of the towns +
+   emitUnlockLocations knobs, multi-town worlds (towns > 1 emits
+   correctly and is vitest-covered but has never been played), and the
+   deferred Python round-trip for a real AP fill.**
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
