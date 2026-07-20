@@ -553,9 +553,16 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    with the generator, NO new data carrier (don't add one at U4/U5).
    Emission order = TABLE order (u:Locks before u:BuyGlasses at
    Wander 20). Fork memory session 45 has the implementer detail incl.
-   the atomic-build() lesson.** NEXT: **U3 enforcement kickoff**
-   (suppression-scoped getNextValidAction check + §6.4 differential
-   test), then U4 batch-capacity substitution → U5 AP hooks.
+   the atomic-build() lesson.** **U3 PLANNED 2026-07-20 (Fable): kickoff
+   READY — `omsiloops/omsi-loops-unlock-u3-opus-kickoff.md` (one tiny
+   slice: Unlocks.blocked() + skip-loop condition + "This action is
+   locked." + the §6.4 six-leg differential test; anchors verified @
+   `76655ac` — skip loop actions.js:259, getErrorMessage :280, blocked
+   branch goes townNum-then-blocked-then-canStart per the settled
+   message-priority ruling in plan §6's U3 block; suppressed/granted Sets
+   already exported by U2).** NEXT: **Opus runs U3**, then U4
+   batch-capacity substitution → U5 AP hooks; §7.5 towns wiring at the
+   AP phase.
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
