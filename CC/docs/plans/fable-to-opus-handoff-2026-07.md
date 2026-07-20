@@ -535,8 +535,16 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    the artifact + an outer vitest guard on OMSI_LOOTABLES widening);
    walkPredicates already emitted `town` (assertion added). Row-id reset
    (G=8 → batches) ACCEPTED as the one free reset — **ids are load-bearing
-   from `4a40b12`** (plan §3.3 ID EPOCH note). Gitlink pin: pending ask.**
-   NEXT: **U2 (events/dimIndex) kickoff**, then U3–U5.
+   from `4a40b12`** (plan §3.3 ID EPOCH note). Gitlink bumped `b002973f4`
+   (user-approved).** **U2 PLANNED 2026-07-20 (Fable): kickoff READY —
+   `omsiloops/omsi-loops-unlock-u2-opus-kickoff.md` (2 slices: coeffs
+   regen + dimIndex + check() call sites; then events + achievedReported
+   + onActionCompleted + event-order test). Seam RULED: direct
+   Unlocks.check() at the funnels, NOT the single-sink view-owned
+   stateChanged channel (rejected-alternative rationale in plan §5.3's
+   U2 block); quantity triggers = dot product (all 14 base formulas
+   verified linear; additive `coeffs` field, ids untouched per the
+   epoch).** NEXT: **Opus runs U2**, then U3 enforcement → U4 → U5.
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
