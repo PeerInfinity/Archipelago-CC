@@ -18,6 +18,25 @@ describe('generateOmsiAwardSchedule', () => {
         })).toBeNull();
     });
 
+    it('never shuffles the soulstone hauls', () => {
+        // USER RULING 2026-07-20: the four Hauls are excluded from ALL
+        // randomization — AP locations, AP items, and cross-game item
+        // shuffling. The unlock table enforces the first two (its
+        // QUANTITY_EXCLUDED_VARS); this is the third surface. Today they are
+        // out by construction because v1 only names the town-0 lootables, so
+        // this test exists to make widening that list confront the ruling
+        // rather than quietly pull the hauls in.
+        const HAULS = ['StonesZ1', 'StonesZ3', 'StonesZ5', 'StonesZ6'];
+        expect([...OMSI_LOOTABLES]).toEqual(['Pots', 'Locks']);
+        for (const v of HAULS) expect(OMSI_LOOTABLES).not.toContain(v);
+
+        // and no haul key can reach a generated schedule at any knob setting
+        const s = generateOmsiAwardSchedule({
+            seed: 3, originalItemWeight: 0, dummyItemRatio: 0.5, foreignTypes: FOREIGN,
+        });
+        for (const v of HAULS) expect(Object.keys(s.lootables)).not.toContain(v);
+    });
+
     it('is deterministic per seed and differs across seeds', () => {
         const a1 = generateOmsiAwardSchedule({ seed: 7, originalItemWeight: 0.5, foreignTypes: FOREIGN });
         const a2 = generateOmsiAwardSchedule({ seed: 7, originalItemWeight: 0.5, foreignTypes: FOREIGN });
