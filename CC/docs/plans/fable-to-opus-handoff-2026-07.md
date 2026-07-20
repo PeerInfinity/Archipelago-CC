@@ -578,9 +578,21 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    v1 no-multipliers ruling; locations decoupled by construction — U2
    triggers read levels, not totals; seven-leg test incl. batch
    invariant + decoupling + excluded-var guard; V4 ordering rule baked
-   in).** NEXT: **Opus runs U4**, then U5 AP hooks (suppression/grant
-   surface + worldConfig overlay + prestige re-push); §7.5 towns wiring
-   at the AP phase.
+   in).** **U4 SHIPPED 2026-07-20 (Opus, session 49): fork `3853d18`
+   (xml-migration ≡ substrate, both pushed, CI green incl. strict
+   ui-parity + ui-smoke). Implemented exactly the session-48 design:
+   `qManagedBatches` Map + lazily-built `quantityMeta()` (nulled in
+   `build()`) + `applyManagedTotals()`; ONE line at the end of
+   `adjustAll()`; the 19 adjust fns untouched; empty-Map fast path
+   BEFORE `ensure()` kept the hot path free. Seven-leg
+   `quantity-substitution.test.mjs` passed first run; npm 266/266;
+   byte-gate EXACT 461/5,195,188/9d9952e68bc8373c; V4 post-commit PASS.
+   U5-useful ground: `build()` filters excluded curves entirely (haul
+   rows never minted); town-0 constants Pots 5/level·50 rows·ratio 10,
+   Locks 1/level·10 rows·ratio 10. Gitlink bumped (user-approved).
+   Fork memory session 49 = implementer detail.** NEXT: **U5 AP hooks**
+   (suppression/grant surface + worldConfig overlay + prestige re-push);
+   §7.5 towns wiring at the AP phase.
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
