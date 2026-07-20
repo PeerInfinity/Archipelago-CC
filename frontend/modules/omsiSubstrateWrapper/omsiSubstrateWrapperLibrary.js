@@ -9,13 +9,29 @@
  * driver may allocate (1 in v0; multi-town v1+ raises it) and
  * `extractZoneRules` is the per-zone payload contributor.
  *
- * Unlike jta there is no opt-in flag for the location emission: no
- * existing preset lists 'omsi' as a content source, so emitting the
- * single Start Journey victory location unconditionally is inert for
- * every existing world.
+ * The single Start Journey victory location is emitted unconditionally
+ * on the v0 path: no existing preset lists 'omsi' as a content source,
+ * so it is inert for every existing world.
+ *
+ * AP-V1 (unlock-discretization plan §7) adds an OPT-IN randomized
+ * pool on top: `substrateConfig.omsi.towns` (1–9, default 1) and
+ * `.emitUnlockLocations` (default false). With both at their defaults
+ * this module behaves exactly as it did in v0 — the byte-inertness
+ * gate every existing preset is regenerated against. With emission on,
+ * each town's discovery quantity steps become AP locations carrying
+ * `"<Var> Supply Step"` items, and victory moves from town 0's
+ * `start_journey` to the last town's `travel_onward`. Pool derivation
+ * and the access-rule formula live in ./unlockPool.js.
  */
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import {
+    buildUnlockPool,
+    accessRuleFor,
+    victoryAccessRule,
+    unlockMetaForZone,
+    OMSI_FILLER_ITEM_NAME,
+} from './unlockPool.js';
 
 // Host-side PlaybackProxy slot, mirroring the jta library's setter
 // injection. v0 registers NO playback controller (one region, no
@@ -33,6 +49,26 @@ export function setPlaybackProxy(proxy) { _playbackProxy = proxy; }
 // (the panel path re-arranges without reloading modules).
 let _awardSchedule = null;
 export function getOmsiAwardSchedule() { return _awardSchedule; }
+
+// AP-V1 unlock randomization (unlock-discretization plan §7). Both
+// knobs ride the same pipeline-① channel as awardSchedule and default
+// to today's behavior exactly: ONE town, NO unlock locations. Every
+// existing preset must therefore regenerate byte-identical.
+//
+// `towns` also drives `zoneCount` (a getter — see below), which bounds
+// how many omsi regions a layout driver may allocate.
+const OMSI_MAX_TOWNS = 9;
+let _townCount = 1;
+let _emitUnlockLocations = false;
+export function getOmsiTownCount() { return _townCount; }
+export function getOmsiEmitUnlockLocations() { return _emitUnlockLocations; }
+
+// The victory location id for an emission-ON world (ruling (f)): it
+// rides the LAST included town, not town 0. The legacy
+// `start_journey` id stays the emission-OFF path's id, byte-inert.
+export const OMSI_TRAVEL_ONWARD_LOCATION_ID = 'travel_onward';
+
+let _libraryItemsCache = null;
 
 // The v0 victory location: one location on the Beginnersville region,
 // checked when the game completes Start Journey (the bridge watches
@@ -74,7 +110,36 @@ export const substrateRegistryEntry = Object.freeze({
         'arbitrary_ap_locations',
     ]),
 
-    libraryItems: OMSI_LIBRARY_ITEMS,
+    // A getter so an emission-ON world contributes its supply-step
+    // items (jta precedent, jtaSubstrateWrapperLibrary.js libraryItems).
+    // With emission off this returns the frozen vanilla object —
+    // byte-identical to before the knob existed.
+    //
+    // Supply steps are `progression_skip_balancing`: they ARE logic
+    // relevant (the HasFromList counts), but multiworld progression
+    // balancing must not churn over hundreds of interchangeable copies
+    // of 14 names. 'Bonus Seconds' is the declared filler/balancer; the
+    // base pool contains zero copies of it (supply steps are 1:1 with
+    // locations), so it only appears if a filler slot ever opens.
+    get libraryItems() {
+        if (!_emitUnlockLocations) return OMSI_LIBRARY_ITEMS;
+        const pool = buildUnlockPool(_townCount);
+        if (_libraryItemsCache?.key === `${_townCount}:${pool.itemNames.length}`) {
+            return _libraryItemsCache.lib;
+        }
+        const lib = {
+            [OMSI_FILLER_ITEM_NAME]: { classification: 'filler' },
+            [OMSI_VICTORY_ITEM_NAME]: { classification: 'progression', is_victory: true },
+        };
+        for (const name of pool.itemNames) {
+            lib[name] = { classification: 'progression_skip_balancing' };
+        }
+        _libraryItemsCache = {
+            key: `${_townCount}:${pool.itemNames.length}`,
+            lib: Object.freeze(lib),
+        };
+        return _libraryItemsCache.lib;
+    },
 
     // procgenPlayer passes the sidecar entry's `playable_payload` to
     // this function; the bridge reads `world.omsiTown` directly.
@@ -137,9 +202,14 @@ export const substrateRegistryEntry = Object.freeze({
 
     // --- Zone-based substrate metadata ---
     //
-    // v0: exactly one zone — Beginnersville. Layout drivers refuse to
-    // allocate more omsi regions than this.
-    zoneCount: 1,
+    // How many omsi regions (towns) a layout driver may allocate. A
+    // GETTER, not a static 1 — the pipeline-① config installs the
+    // world's `towns` BEFORE arrangement precisely so the
+    // quota-vs-zoneCount validation sees the live value. Getters
+    // defined in an object literal survive Object.freeze and keep
+    // evaluating, so the frozen entry still tracks the config.
+    // Default 1 ⇒ v0 behavior (Beginnersville only), unchanged.
+    get zoneCount() { return _townCount; },
 
     // Per-zone payload contributor. `omsiTown` is the town ordinal the
     // bridge passes through to the game (0 = Beginnersville). The
@@ -151,11 +221,61 @@ export const substrateRegistryEntry = Object.freeze({
     // every arrange — an absent/empty config CLEARS the slot.
     applyPipelineConfig: (cfg) => {
         _awardSchedule = cfg?.awardSchedule ?? null;
+        const towns = Number(cfg?.towns);
+        _townCount = Number.isFinite(towns)
+            ? Math.min(OMSI_MAX_TOWNS, Math.max(1, Math.trunc(towns)))
+            : 1;
+        _emitUnlockLocations = cfg?.emitUnlockLocations === true;
+        _libraryItemsCache = null;
     },
 
     extractZoneRules: (zoneIdx, { region_id } = {}) => {
         const locations = [];
         const payload = { omsiTown: zoneIdx };
+
+        // ── Emission ON (AP-V1): the zone's town contributes its
+        // discovery quantity-step locations, and the LAST included town
+        // carries the victory location. Throws (via buildUnlockPool) if
+        // the caller enabled emission without awaiting ensureUnlockTable.
+        if (_emitUnlockLocations) {
+            const pool = buildUnlockPool(_townCount);
+            const zone = pool.zones[zoneIdx];
+            const apLocations = {};
+            for (const loc of (zone?.locations ?? [])) {
+                const rule = accessRuleFor(loc);
+                locations.push({
+                    id: loc.id,
+                    item: loc.item,
+                    position: null,
+                    ...(rule ? { access_rule: rule } : {}),
+                });
+                // Keyed by the RAW row id — that is the vocabulary the
+                // fork's seedReportedLocations/onUnlockAchieved speak.
+                apLocations[loc.rowId] = `${region_id}__${loc.id}`;
+            }
+            if (zoneIdx === _townCount - 1) {
+                const vRule = victoryAccessRule(pool);
+                locations.push({
+                    id: OMSI_TRAVEL_ONWARD_LOCATION_ID,
+                    item: OMSI_VICTORY_ITEM_NAME,
+                    position: null,
+                    ...(vRule ? { access_rule: vRule } : {}),
+                });
+                apLocations[OMSI_TRAVEL_ONWARD_LOCATION_ID] =
+                    `${region_id}__${OMSI_TRAVEL_ONWARD_LOCATION_ID}`;
+                // The bridge's victory watch is `townsUnlocked.includes(N)`;
+                // carrying N on the payload spares it any config plumbing.
+                payload.victoryTown = _townCount;
+            }
+            payload.ap_locations = apLocations;
+            payload.unlockMeta = unlockMetaForZone(pool, zoneIdx);
+            if (zoneIdx === 0 && _awardSchedule) {
+                payload.awardSchedule = JSON.parse(JSON.stringify(_awardSchedule));
+            }
+            return { locations, payload };
+        }
+
+        // ── Emission OFF (default): the v0 path, untouched.
         if (zoneIdx === 0) {
             locations.push({
                 id: OMSI_START_JOURNEY_LOCATION_ID,
