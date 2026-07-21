@@ -1287,7 +1287,13 @@ export class LoopState {
     const controller = substrateRegistry?.get?.(this._lookupSubstrateId(region))?.getPlaybackController?.();
     if (typeof controller?.replayActions === 'function') {
       try {
-        controller.replayActions(saved.actions, { onComplete: () => { /* reserved for future UI */ } });
+        controller.replayActions(saved.actions, {
+          onComplete: () => { /* reserved for future UI */ },
+          // Substrates whose recorded actions exclude the departure (e.g.
+          // textAdventure) use this to issue the closing regionMove so the
+          // parked queue advances; maze self-exits and ignores it.
+          departureExitId: saved.departureExitId ?? null,
+        });
       } catch (err) {
         log('warn', '[LoopState] playback replayActions threw:', err);
       }

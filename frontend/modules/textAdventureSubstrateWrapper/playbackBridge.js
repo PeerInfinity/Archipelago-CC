@@ -38,12 +38,16 @@ export class PlaybackBridge {
         this._rateHz = DEFAULT_RATE_HZ;
         this._target = null;          // queued walkTo target
         this._unsubscribe = null;
+        this._replayQueue = null;     // remaining recorded actions during replay
+        this._replayClock = null;     // dedicated replay clock
+        this._replayDeparture = null; // exit id to issue when the replay drains
 
         this._subscribe();
     }
 
     destroy() {
         this.stop();
+        this._stopReplay();
         this._target = null;
         // IframeClient.subscribeEventBus has no unsubscribe primitive
         // exposed; rely on the iframe being torn down with the panel.
@@ -71,6 +75,7 @@ export class PlaybackBridge {
             case 'reset':   this.reset(); return;
             case 'setRate': this.setRate(args[0]); return;
             case 'walkTo':  this.walkTo(args[0]); return;
+            case 'replayActions': this.replayActions(args[0], args[1]); return;
             default:
                 this._log('warn', 'playbackBridge: unknown control method', method);
         }
@@ -106,6 +111,7 @@ export class PlaybackBridge {
 
     reset() {
         this.stop();
+        this._stopReplay();
         this._target = null;
     }
 
@@ -122,6 +128,82 @@ export class PlaybackBridge {
     walkTo(target) {
         // Last write wins — mirrors TextAdventurePlaybackController.
         this._target = target;
+    }
+
+    /**
+     * Replay a recorded visit (M2 Playback). Walks the recorded
+     * locationCheck / explore commands one per clock tick, dispatching the
+     * same AP dispatcher events the engine would emit during live play
+     * (never calls the engine — so no engine-submodule dependency). When the
+     * list drains, issues the closing regionMove via `departureExitId` so the
+     * parked loops queue advances.
+     *
+     * @param {Array} actions
+     * @param {{departureExitId?: string}} [opts]
+     */
+    replayActions(actions, opts = {}) {
+        this._stopReplay();
+        this._replayQueue = Array.isArray(actions) ? actions.slice() : [];
+        this._replayDeparture = opts?.departureExitId ?? null;
+        const intervalMs = Math.max(1, Math.round(1000 / this._rateHz));
+        this._replayClock = setInterval(() => this._replayTick(), intervalMs);
+        return true;
+    }
+
+    _replayTick() {
+        if (this._replayQueue && this._replayQueue.length > 0) {
+            const action = this._replayQueue.shift();
+            this._replayOne(action);
+            return;
+        }
+        // Interior drained — issue the departure (if any), then stop.
+        const departure = this._replayDeparture;
+        this._replayDeparture = null;
+        this._stopReplay();
+        if (departure) this._issueDeparture(departure);
+    }
+
+    _replayOne(action) {
+        if (!action || typeof action !== 'object') return;
+        const currentRegion = this._getCurrentRegion();
+        if (action.type === 'locationCheck' && action.locationName) {
+            this._client.publishEventDispatcher('user:locationCheck', {
+                locationName: action.locationName,
+                regionName: currentRegion ?? null,
+                originator: 'textAdventureSubstrateWrapper',
+            });
+            return;
+        }
+        if (action.type === 'explore') {
+            this._client.publishEventDispatcher('loop:exploreCompleted', {
+                regionName: action.regionName ?? currentRegion ?? null,
+            });
+            return;
+        }
+        this._log('warn', 'playbackBridge: unknown replay action', action);
+    }
+
+    _issueDeparture(exitId) {
+        const world = this._getWorld();
+        const currentRegion = this._getCurrentRegion();
+        const exitInfo = this._resolveExit(world, currentRegion, exitId);
+        if (!exitInfo) {
+            this._log('warn', 'playbackBridge: replay departure exit not found', exitId, 'in', currentRegion);
+            return;
+        }
+        this._client.publishEventDispatcher('user:regionMove', {
+            sourceRegion: currentRegion ?? null,
+            targetRegion: exitInfo.targetRoomId,
+            exitName: exitInfo.id,
+        });
+    }
+
+    _stopReplay() {
+        if (this._replayClock) {
+            clearInterval(this._replayClock);
+            this._replayClock = null;
+        }
+        this._replayQueue = null;
     }
 
     _performAction(target) {

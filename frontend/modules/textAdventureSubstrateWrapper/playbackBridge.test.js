@@ -214,6 +214,79 @@ describe('PlaybackBridge — clock', () => {
     });
 });
 
+describe('PlaybackBridge — replayActions (M2 Playback)', () => {
+    beforeEach(() => { vi.useFakeTimers(); });
+    afterEach(() => { vi.useRealTimers(); });
+
+    it('walks recorded locationCheck / explore on the clock, then issues the departure regionMove', () => {
+        const { bridge, client } = makeBridge();
+        bridge.replayActions(
+            [
+                { type: 'locationCheck', locationName: 'Coin' },
+                { type: 'explore', regionName: 'Cave' },
+            ],
+            { departureExitId: 'NorthDoor' },
+        );
+        // Default rate 4Hz → 250ms/tick.
+        vi.advanceTimersByTime(250);
+        expect(client._dispatched()).toHaveLength(1);
+        expect(client._dispatched()[0]).toEqual({
+            event: 'user:locationCheck',
+            data: { locationName: 'Coin', regionName: 'Cave', originator: 'textAdventureSubstrateWrapper' },
+        });
+        vi.advanceTimersByTime(250);
+        expect(client._dispatched()[1]).toEqual({
+            event: 'loop:exploreCompleted',
+            data: { regionName: 'Cave' },
+        });
+        // Interior drained → next tick issues the closing regionMove.
+        vi.advanceTimersByTime(250);
+        expect(client._dispatched()[2]).toEqual({
+            event: 'user:regionMove',
+            data: { sourceRegion: 'Cave', targetRegion: 'Outside', exitName: 'NorthDoor' },
+        });
+        // Clock stopped — no further dispatches.
+        vi.advanceTimersByTime(1000);
+        expect(client._dispatched()).toHaveLength(3);
+    });
+
+    it('with no departureExitId, drains the interior and stops without a regionMove', () => {
+        const { bridge, client } = makeBridge();
+        bridge.replayActions([{ type: 'locationCheck', locationName: 'Coin' }], {});
+        vi.advanceTimersByTime(250); // locationCheck
+        vi.advanceTimersByTime(250); // drained → stop (no departure)
+        vi.advanceTimersByTime(500);
+        expect(client._dispatched()).toEqual([
+            {
+                event: 'user:locationCheck',
+                data: { locationName: 'Coin', regionName: 'Cave', originator: 'textAdventureSubstrateWrapper' },
+            },
+        ]);
+    });
+
+    it('routes replayActions through the control event', () => {
+        const { client } = makeBridge();
+        client._fire('textAdventureSubstrateWrapper:control', {
+            method: 'replayActions',
+            args: [[{ type: 'locationCheck', locationName: 'Coin' }], { departureExitId: null }],
+        });
+        vi.advanceTimersByTime(250);
+        expect(client._dispatched()).toHaveLength(1);
+        expect(client._dispatched()[0].event).toBe('user:locationCheck');
+    });
+
+    it('reset() cancels an in-flight replay', () => {
+        const { bridge, client } = makeBridge();
+        bridge.replayActions(
+            [{ type: 'locationCheck', locationName: 'Coin' }],
+            { departureExitId: 'NorthDoor' },
+        );
+        bridge.reset();
+        vi.advanceTimersByTime(1000);
+        expect(client._dispatched()).toEqual([]);
+    });
+});
+
 describe('PlaybackBridge — control event routing', () => {
     it('dispatches walkTo + step + play through the control event', () => {
         const { client } = makeBridge();

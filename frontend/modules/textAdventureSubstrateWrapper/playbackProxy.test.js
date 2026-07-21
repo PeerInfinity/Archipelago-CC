@@ -77,6 +77,23 @@ describe('PlaybackProxy — publishes control events for each method', () => {
         );
     });
 
+    it('replayActions(actions, opts) publishes actions + a serializable departureExitId (drops onComplete)', () => {
+        const actions = [{ type: 'locationCheck', locationName: 'Coin' }];
+        proxy.replayActions(actions, { departureExitId: 'NorthDoor', onComplete: () => {} });
+        expect(bus.publish).toHaveBeenCalledWith(
+            PLAYBACK_CONTROL_EVENT,
+            { method: 'replayActions', args: [actions, { departureExitId: 'NorthDoor' }] },
+        );
+    });
+
+    it('replayActions tolerates missing actions/opts', () => {
+        proxy.replayActions();
+        expect(bus.publish).toHaveBeenCalledWith(
+            PLAYBACK_CONTROL_EVENT,
+            { method: 'replayActions', args: [[], { departureExitId: null }] },
+        );
+    });
+
     it('preserves call order across mixed methods', () => {
         proxy.walkTo({ kind: 'location', name: 'A' });
         proxy.play(4);
