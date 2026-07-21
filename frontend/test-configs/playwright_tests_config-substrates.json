@@ -201,6 +201,11 @@
             "category": "Omsi substrate"
         },
         {
+            "id": "omsi-region-split-round-trip",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
             "id": "maze-consumable-tile-grants-foreign-item",
             "enabled": true,
             "category": "Maze consumable tiles"

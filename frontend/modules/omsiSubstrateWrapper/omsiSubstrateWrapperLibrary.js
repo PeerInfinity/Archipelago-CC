@@ -68,6 +68,33 @@ export function getOmsiTownCount() { return _townCount; }
 export function getOmsiEmitUnlockLocations() { return _emitUnlockLocations; }
 export function getOmsiUnlockScale() { return _unlockScale; }
 
+// arc C region splitting. Absent ⇒ today's behavior exactly (byte-inert):
+// zoneCount is _townCount and no zone carries an omsiRegion descriptor. When
+// set, the substrate emits `count` SEPARATE zones that ALL map to the ONE
+// `townIndex` (region-overlay on one town — arc C ruling 1), each carrying an
+// `omsiRegion` gate descriptor. The exits BETWEEN those zones come from the
+// layout's grid adjacency (the region graph the bridge derives synthetics
+// from), so the descriptor holds only the gate: which Explore var, and how
+// far explored (fraction of the level-100 cap) an exit needs.
+let _regionSplit = null;   // { townIndex, count, exploreVar, exploreThreshold } | null
+export function getOmsiRegionSplit() { return _regionSplit; }
+
+// Coerce a config value to a region-split descriptor, or null (the byte-inert
+// default). Requires an integer count >= 1; townIndex defaults 0, threshold
+// defaults 1.0 (100% explored), exploreVar optional (absent ⇒ no gate).
+function _readRegionSplit(rs) {
+    if (!rs || typeof rs !== 'object') return null;
+    const count = Math.trunc(Number(rs.count));
+    if (!Number.isFinite(count) || count < 1) return null;
+    const townIdx = Math.trunc(Number(rs.townIndex));
+    const townIndex = Number.isFinite(townIdx) && townIdx >= 0 ? townIdx : 0;
+    const exploreVar = typeof rs.exploreVar === 'string' && rs.exploreVar ? rs.exploreVar : null;
+    let threshold = Number(rs.exploreThreshold);
+    if (!Number.isFinite(threshold) || threshold < 0) threshold = 1.0;
+    if (threshold > 1) threshold = 1.0;
+    return { townIndex, count, exploreVar, exploreThreshold: threshold };
+}
+
 // Coerce a config value to a valid scale: a finite number in (0, 1],
 // anything else (missing / NaN / ≤0 / >1) → the byte-inert default 1.
 function _readScale(v) {
@@ -223,7 +250,7 @@ export const substrateRegistryEntry = Object.freeze({
     // defined in an object literal survive Object.freeze and keep
     // evaluating, so the frozen entry still tracks the config.
     // Default 1 ⇒ v0 behavior (Beginnersville only), unchanged.
-    get zoneCount() { return _townCount; },
+    get zoneCount() { return _regionSplit ? _regionSplit.count : _townCount; },
 
     // Per-zone payload contributor. `omsiTown` is the town ordinal the
     // bridge passes through to the game (0 = Beginnersville). The
@@ -241,11 +268,46 @@ export const substrateRegistryEntry = Object.freeze({
             : 1;
         _emitUnlockLocations = cfg?.emitUnlockLocations === true;
         _unlockScale = _readScale(cfg?.unlockScale);
+        _regionSplit = _readRegionSplit(cfg?.regionSplit);
         _libraryItemsCache = null;
     },
 
     extractZoneRules: (zoneIdx, { region_id } = {}) => {
         const locations = [];
+
+        // ── arc C region splitting: every zone is an OVERLAY of the one
+        // town (omsiTown = townIndex, not the zone ordinal), carrying only
+        // the Explore-gate descriptor. Exits between zones come from the
+        // layout's grid adjacency (the bridge derives synthetics from the
+        // region graph). No AP location partition (ruling 7) — the single
+        // completion item rides zone 0, emission-off shape.
+        if (_regionSplit) {
+            const payload = {
+                omsiTown: _regionSplit.townIndex,
+                omsiRegion: {
+                    townIndex: _regionSplit.townIndex,
+                    regionId: region_id,
+                    ...(_regionSplit.exploreVar ? { exploreVar: _regionSplit.exploreVar } : {}),
+                    exploreThreshold: _regionSplit.exploreThreshold,
+                },
+            };
+            if (zoneIdx === 0) {
+                locations.push({
+                    id: OMSI_START_JOURNEY_LOCATION_ID,
+                    item: OMSI_VICTORY_ITEM_NAME,
+                    position: null,
+                });
+                payload.ap_locations = {
+                    [OMSI_START_JOURNEY_LOCATION_ID]:
+                        `${region_id}__${OMSI_START_JOURNEY_LOCATION_ID}`,
+                };
+                if (_awardSchedule) {
+                    payload.awardSchedule = JSON.parse(JSON.stringify(_awardSchedule));
+                }
+            }
+            return { locations, payload };
+        }
+
         const payload = { omsiTown: zoneIdx };
 
         // ── Emission ON (AP-V1): the zone's town contributes its

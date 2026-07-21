@@ -44,6 +44,24 @@ export const OMSI_RANDOMIZED_VICTORY_LOCATION = 'region_1_1__travel_onward';
 export const OMSI_SCALED_PRESET_PATH =
     './presets/omsi_scaled_test/AP_14089154938208861744/AP_14089154938208861744_rules.json';
 export const OMSI_SCALED_VICTORY_LOCATION = 'region_1_1__travel_onward';
+
+// arc C region-split fixture (regenerate with
+// scripts/test/generate-omsi-region-split-test-preset.mjs): one maze start +
+// TWO omsi regions, both town 0 (r1 is a clone of r0 — the omsi substrate is
+// single-zone). Each carries a `world.omsiRegion` overlay descriptor with a
+// low Explore gate on 'Wander' and a directional exit to the other. Entering
+// one swaps its per-region value props live, so the round-trip (r0 explore ->
+// exit -> r1 fresh -> return -> r0 restored) exercises the managed-only region
+// machinery the byte-gate can't witness.
+export const OMSI_REGION_SPLIT_PRESET_PATH =
+    './presets/omsi_region_split_test/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+// The two omsi zones the region-split fixture emits (deterministic, seed 1).
+// Both are overlays of town 0; the synthetic exit-action names are DERIVED
+// from the spiral's exit geometry, so the leg reads them off the bridge's
+// syntheticExits debug field rather than hard-coding a label.
+export const OMSI_REGION_SPLIT_R0 = 'region_0_1';
+export const OMSI_REGION_SPLIT_R1 = 'region_1_0';
+
 // The game's native per-loop budget (timeNeededInitial = 5 * 50) — the
 // starting-budget bonus the bridge reports up to the shared pool.
 export const OMSI_NATIVE_BUDGET = 250;

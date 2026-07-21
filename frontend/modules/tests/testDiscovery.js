@@ -52,6 +52,7 @@ const TEST_CASE_FILES = [
   './testCases/jtaScheduleTests.js',
   './testCases/omsiScheduleTests.js',
   './testCases/omsiUnlockTests.js',
+  './testCases/omsiRegionSplitTests.js',
   './testCases/mazeConsumableTileTests.js',
   //'./testCases/manualTests.js',
 ];

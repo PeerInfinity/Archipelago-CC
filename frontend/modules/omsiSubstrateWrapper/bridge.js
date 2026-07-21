@@ -165,6 +165,16 @@ let _fillerCopiesApplied = 0;
 // One grant of the 'Bonus Seconds' filler = 60s of offline time.
 const FILLER_OFFLINE_MS = 60_000;
 
+// Region splitting (arc C). A world may carry `world.omsiRegion`, splitting
+// ONE town into region overlays. The fork keeps exactly the ACTIVE region's
+// value props live in the town object; the host holds the rest here, keyed by
+// region id — a swap on every region entry (dump the outgoing, load the
+// incoming, fresh on first entry). Absent `world.omsiRegion` ⇒ vanilla: no
+// swap, no synthetic exits, byte-inert. Per-world state, cleared on rulesLoaded.
+const _regionStore = new Map();          // regionId -> the fork's value-prop snapshot
+let _activeRegionMeta = null;            // the region metadata currently installed
+let _activeSyntheticExits = [];          // [{ name, targetRegion }] injected for the active region
+
 // Clock diagnostics, exposed via __omsiBridge.getDebugState().
 const _clockStats = {
     messages: 0, inactiveSkips: 0, callbacks: 0,
@@ -779,6 +789,105 @@ function _handleGameRestart() {
 // Region loading
 // ────────────────────────────────────────────────────────────────
 
+// ────────────────────────────────────────────────────────────────
+// Region splitting (arc C) — overlay swap + synthetic exit actions
+// ────────────────────────────────────────────────────────────────
+
+const _SIDE_LABEL = { N: 'North', E: 'East', S: 'South', W: 'West' };
+
+/**
+ * The active region's graph exits, from `world.exits` (the same
+ * spiral-adjacency exits procgenPlayer routes on). deserializeWorld hands
+ * them over as a Map keyed by exitName; tolerate an Array too (jta pattern).
+ */
+function _getRegionExits(world) {
+    const exits = world?.exits;
+    if (exits instanceof Map) return [...exits.values()];
+    if (Array.isArray(exits)) return exits;
+    return [];
+}
+
+/** Human label for a synthetic exit action (jta _exitLabel port). */
+function _exitLabel(exit) {
+    const target = exit?.targetRegion;
+    const side = exit?.side;
+    if (side && _SIDE_LABEL[side] && target) return `Go ${_SIDE_LABEL[side]} (to ${target})`;
+    if (side && _SIDE_LABEL[side]) return `Go ${_SIDE_LABEL[side]}`;
+    if (target) return `Take exit: ${exit?.exitName ?? '?'} (to ${target})`;
+    return `Take exit: ${exit?.exitName ?? '?'}`;
+}
+
+/**
+ * Taking an exit dispatches a region move; the host moves the region and
+ * re-fires omsi:loadRegion (jta _dispatchRegionMove shape). The omsi bridge
+ * is otherwise publish-only on the dispatcher — this is an added publish, not
+ * a subscribe.
+ */
+function _dispatchRegionMove(targetRegion, exitName) {
+    if (!_client) return;
+    _client.publishEventDispatcher('user:regionMove', {
+        sourceRegion: _currentRegionId,
+        targetRegion,
+        exitName: exitName ?? null,
+    }, { initialTarget: 'bottom' });
+}
+
+/**
+ * Swap the fork's per-region value props: dump the outgoing region into the
+ * host store, then load the incoming one (fresh — null — on first entry).
+ * No-op on a vanilla world (no omsiRegion, no active split region). Must run
+ * BEFORE the unlock-overlay push so applyManagedTotals re-pins for the
+ * incoming region's levels.
+ */
+function _applyRegionSwap(world) {
+    const m = _managed();
+    const next = world?.omsiRegion ?? null;
+    if (!m || typeof m.loadRegionState !== 'function') {
+        if (next) log('warn', 'fork build has no region-overlay hooks — omsiRegion ignored');
+        return;
+    }
+    if (_activeRegionMeta) {
+        try {
+            _regionStore.set(_activeRegionMeta.regionId,
+                m.dumpRegionState(_activeRegionMeta.townIndex ?? 0));
+        } catch (e) {
+            log('warn', 'dumpRegionState failed', e);
+        }
+    }
+    if (next) {
+        const townIndex = next.townIndex ?? 0;
+        const snapshot = _regionStore.has(next.regionId) ? _regionStore.get(next.regionId) : null;
+        m.loadRegionState(townIndex, snapshot);
+    }
+}
+
+/**
+ * Register the incoming region's gate + synthetic exit actions (or clear
+ * everything on a vanilla world). One synthetic exit action per GRAPH exit
+ * (the same spiral-adjacency exits procgenPlayer routes on — jta derives its
+ * exit tasks the same way), gated by the region's Explore threshold. Runs
+ * near the end of a region load so the gate reads the freshly-swapped state.
+ */
+function _installRegionExits(world) {
+    const m = _managed();
+    if (!m || typeof m.setActiveRegion !== 'function') return;
+    const next = world?.omsiRegion ?? null;
+    m.setActiveRegion(next);           // clears prior synthetics + stores the gate meta (null = none)
+    _activeRegionMeta = next;
+    _activeSyntheticExits = [];
+    if (!next) return;
+    const townIndex = next.townIndex ?? 0;
+    for (const exit of _getRegionExits(world)) {
+        if (!exit?.targetRegion) continue;   // a dangling exit routes nowhere — skip it
+        const name = _exitLabel(exit);
+        const r = m.injectSyntheticAction({ name, townNum: townIndex }, () => {
+            _dispatchRegionMove(exit.targetRegion, exit.exitName ?? name);
+        });
+        if (r?.ok) _activeSyntheticExits.push({ name, targetRegion: exit.targetRegion });
+        else log('warn', `injectSyntheticAction('${name}') refused: ${r?.error}`);
+    }
+}
+
 function _handleLoadRegion(payload) {
     if (!payload || !payload.region_id) {
         log('warn', 'omsi:loadRegion with no region_id', payload);
@@ -809,6 +918,11 @@ function _handleLoadRegion(payload) {
     } else if (world.awardSchedule) {
         log('warn', 'fork build has no setAwardSchedule hook — award schedule ignored');
     }
+
+    // Region overlay swap (arc C): dump the outgoing region, load the
+    // incoming one. BEFORE the unlock-overlay push below so applyManagedTotals
+    // re-pins for the incoming levels; no-op on a vanilla world.
+    _applyRegionSwap(world);
 
     // Apply any loop resets the host fired while we were inactive,
     // then report the native budget bonus and pin the game's remaining
@@ -856,9 +970,14 @@ function _handleLoadRegion(payload) {
 
     _checkVictoryProgress();
 
+    // Register the incoming region's exit gate + synthetic exit actions (or
+    // clear them on a vanilla world). Last, so the gate reads the swapped-in
+    // explore state.
+    _installRegionExits(world);
+
     _startClock();
     _engineView()?.update();
-    log('debug', `loaded region ${payload.region_id} (town ${world.omsiTown}, manaEnabled=${!!world.manaEnabled})`);
+    log('debug', `loaded region ${payload.region_id} (town ${world.omsiTown}, manaEnabled=${!!world.manaEnabled}, split=${!!world.omsiRegion})`);
 }
 
 // ────────────────────────────────────────────────────────────────
@@ -980,6 +1099,13 @@ async function main() {
         // …and the fork's reported-row ledger, which is per-WORLD state
         // even though it deliberately survives a prestige.
         _clearForkReportedLedger();
+        // Region overlays are per-WORLD too: drop the host snapshot store and
+        // clear the fork's gate + synthetic exits (the next omsi:loadRegion
+        // re-installs the new world's, or leaves the fork vanilla).
+        _regionStore.clear();
+        _activeRegionMeta = null;
+        _activeSyntheticExits = [];
+        _managed()?.setActiveRegion?.(null);
     });
 
     // AP state changed (item received here or elsewhere, or a location
@@ -1049,6 +1175,11 @@ async function main() {
             qBatches: _hasUnlockPool() ? _qBatchesFromInventory() : null,
             reportedLocationCount: _reportedLocationNames.size,
             fillerCopiesApplied: _fillerCopiesApplied,
+            // Region splitting (arc C; null/false on an unsplit world).
+            activeRegionId: _activeRegionMeta?.regionId ?? null,
+            regionStoreKeys: [..._regionStore.keys()],
+            regionExitAvailable: _managed()?.regionExitAvailable?.() ?? null,
+            syntheticExits: _activeSyntheticExits.map((e) => ({ ...e })),
         }),
     };
 
