@@ -1,10 +1,17 @@
 /**
  * Saved-queue recorder for the text-adventure substrate.
  *
- * Subscribes to bridge-published events and translates them into
- * SavedQueue records persisted by loops/savedQueueStore.js. One
- * recording is active at a time (there's only one TA panel) and it
- * matches the player's current region in the engine.
+ * Subscribes to bridge-published events and buffers the player's current
+ * region visit. One recording is active at a time (there's only one TA
+ * panel) and it matches the player's current region in the engine.
+ *
+ * As of M2 the recorder no longer persists directly: loops is the sole
+ * persister. On exit the finalized capture is stashed in a module-level
+ * slot; loopState pulls it via the substrate registry's `takeLastRecording`
+ * ONLY when a Record-mode block completes through its expected exit — so a
+ * wrong exit / mana-out simply leaves the stash to be overwritten (and thus
+ * discarded, per the M2 ruling). The persistent recording tag (arrivalKey,
+ * ordinal) and rules-hash are stamped by loopState at persist time.
  *
  * Wiring (in textAdventureSubstrateWrapper/index.js initialize):
  *   const stopRecorder = startTextAdventureRecorder({ eventBus });
@@ -17,25 +24,34 @@
  *       payload.arrivedFrom.exit_id; defaults to 'entrance'. Captures
  *       entry mana via gameState.getCurrentMana.
  *   - textAdventure:commandRecorded (eventBus, bridge-published):
- *       'regionMove' → finalize the current recording with
+ *       'regionMove' → finalize the current recording (stash) with
  *                      departureExitId = payload.exitName.
  *       'locationCheck' / 'explore' → append the action to the
  *                                     current recording's buffer.
- *   - stateManager:rawJsonDataLoaded (eventBus):
- *       Cache the raw rules data so the savedQueueStore can be keyed
- *       by a stable content-hash.
  *   - gameState:manaChanged (eventBus):
  *       Update the rolling-minimum mana of the current recording.
  */
 
-import { saveQueue } from '../loops/savedQueueStore.js';
-import { hashRulesData } from '../shared/rulesHash.js';
 import { getGameStateSingleton } from '../gameState/singleton.js';
+
+// Module-level pending stash — the last finalized visit recording,
+// awaiting a loops pull. Overwritten by each new finalize; cleared on read.
+let _lastRecording = null;
+
+/**
+ * Pull-and-clear the last finalized text-adventure visit recording.
+ * loops' sole-persister protocol — exposed on the substrate registry as
+ * `takeLastRecording`. Returns the stashed SavedQueue-shaped payload or null.
+ */
+export function takeLastTextAdventureRecording() {
+    const rec = _lastRecording;
+    _lastRecording = null;
+    return rec;
+}
 
 export function startTextAdventureRecorder({ eventBus, moduleName = 'textAdventureSubstrateWrapper' } = {}) {
     if (!eventBus?.subscribe) return () => {};
 
-    let cachedRulesData = null;
     let visit = null; // { regionName, arrivalExitId, actions, manaAtEntry, manaMin }
 
     function getCurrentMana() {
@@ -62,14 +78,11 @@ export function startTextAdventureRecorder({ eventBus, moduleName = 'textAdventu
         if (!visit) return;
         const rec = visit;
         visit = null;
-        if (!cachedRulesData) return;
-        const rulesHash = hashRulesData(cachedRulesData);
-        if (!rulesHash) return;
         const manaAtExit = getCurrentMana();
         const locationsChecked = rec.actions
             .filter((a) => a.type === 'locationCheck' && a.locationName)
             .map((a) => a.locationName);
-        saveQueue(rulesHash, {
+        _lastRecording = {
             regionName: rec.regionName,
             substrate: 'text_adventure',
             arrivalExitId: rec.arrivalExitId,
@@ -80,7 +93,7 @@ export function startTextAdventureRecorder({ eventBus, moduleName = 'textAdventu
             manaMin: rec.manaMin,
             locationsChecked,
             itemsPickedUp: [],
-        });
+        };
     }
 
     const onLoadRegion = (payload) => {
@@ -111,10 +124,6 @@ export function startTextAdventureRecorder({ eventBus, moduleName = 'textAdventu
         }
     };
 
-    const onRulesLoaded = (payload) => {
-        cachedRulesData = payload?.rawJsonData ?? null;
-    };
-
     const onManaChanged = () => {
         if (!visit) return;
         const cur = getCurrentMana();
@@ -125,15 +134,12 @@ export function startTextAdventureRecorder({ eventBus, moduleName = 'textAdventu
 
     eventBus.subscribe('textAdventure:loadRegion', onLoadRegion, moduleName);
     eventBus.subscribe('textAdventure:commandRecorded', onCommandRecorded, moduleName);
-    eventBus.subscribe('stateManager:rawJsonDataLoaded', onRulesLoaded, moduleName);
     eventBus.subscribe('gameState:manaChanged', onManaChanged, moduleName);
 
     return function stop() {
         eventBus.unsubscribe?.('textAdventure:loadRegion', onLoadRegion, moduleName);
         eventBus.unsubscribe?.('textAdventure:commandRecorded', onCommandRecorded, moduleName);
-        eventBus.unsubscribe?.('stateManager:rawJsonDataLoaded', onRulesLoaded, moduleName);
         eventBus.unsubscribe?.('gameState:manaChanged', onManaChanged, moduleName);
         visit = null;
-        cachedRulesData = null;
     };
 }

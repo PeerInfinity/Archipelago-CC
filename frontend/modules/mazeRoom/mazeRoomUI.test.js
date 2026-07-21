@@ -863,16 +863,19 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
         const rulesData = { regions: { 1: ['Forest'] } };
         const rulesHash = hashRulesData(rulesData);
         // exit_a: cheap (10 mana cost). exit_b: expensive (50 mana cost).
+        // Distinct ordinals so both recordings coexist under the M2 tag
+        // model (same arrival collapses by tag otherwise); _pickBestExit
+        // still compares them by departure.
         saveQueue(rulesHash, {
             regionName: 'Forest', substrate: 'maze',
-            arrivalExitId: 'south', departureExitId: 'exit_a',
+            arrivalExitId: 'south', ordinal: 0, departureExitId: 'exit_a',
             actions: [{ type: 'move', dir: 'E' }],
             manaAtEntry: 100, manaAtExit: 90, manaMin: 90,
             locationsChecked: [], itemsPickedUp: [], recordedAt: 1,
         });
         saveQueue(rulesHash, {
             regionName: 'Forest', substrate: 'maze',
-            arrivalExitId: 'south', departureExitId: 'exit_b',
+            arrivalExitId: 'south', ordinal: 1, departureExitId: 'exit_b',
             actions: [{ type: 'move', dir: 'S' }],
             manaAtEntry: 100, manaAtExit: 50, manaMin: 50,
             locationsChecked: [], itemsPickedUp: [], recordedAt: 2,
@@ -999,7 +1002,9 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
         expect(panel._shouldDeductMazeMana()).toBe(true);
     });
 
-    it('_finalizeVisitOnExit persists a SavedQueue with action slice + mana fields', () => {
+    it('_finalizeVisitOnExit stashes a SavedQueue with action slice + mana fields', () => {
+        // M2: the recorder no longer persists directly — it stashes the
+        // finalized capture for loops to pull via _takeLastRecording().
         _resetSavedQueueStore();
         clearRulesHashCache();
         createGameStateSingleton(null); // gameState.getCurrentMana fallback
@@ -1025,9 +1030,11 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
         panel._updateVisitMinMana(); // min stays at 60
         // Cross an exit to depart.
         panel._finalizeVisitOnExit('north_door');
-        const queues = getSavedQueues(rulesHash, 'Forest', 'maze');
-        expect(queues).toHaveLength(1);
-        expect(queues[0]).toMatchObject({
+        // Nothing persisted directly to the store.
+        expect(getSavedQueues(rulesHash, 'Forest', 'maze')).toEqual([]);
+        // The stash carries the capture; pull-and-clear it.
+        const rec = panel._takeLastRecording();
+        expect(rec).toMatchObject({
             regionName: 'Forest',
             substrate: 'maze',
             arrivalExitId: 'south_door',
@@ -1038,21 +1045,26 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
             ],
             manaMin: 60,
         });
+        // Second pull is empty — the stash is cleared on read.
+        expect(panel._takeLastRecording()).toBeNull();
     });
 
-    it('_finalizeVisitOnExit silently skips persistence when no rules are cached', () => {
+    it('_finalizeVisitOnExit stashes regardless of cached rules (loops owns the rules-hash)', () => {
         _resetSavedQueueStore();
         clearRulesHashCache();
         const panel = new MazeRoomUI(null, {});
-        // _cachedRulesData stays null
+        // _cachedRulesData stays null — no longer gates the stash.
         panel.currentRegionId = 'Forest';
         panel._startVisitRecording({
             region_id: 'Forest',
             arrivedFrom: { exit_id: 'south' },
         });
         panel._finalizeVisitOnExit('north');
-        const rulesHash = hashRulesData({ any: true });
-        expect(getSavedQueues(rulesHash, 'Forest', 'maze')).toEqual([]);
+        expect(panel._takeLastRecording()).toMatchObject({
+            regionName: 'Forest',
+            arrivalExitId: 'south',
+            departureExitId: 'north',
+        });
     });
 
     it('_finalizeVisitOnExit extracts locationCheck actions into locationsChecked', () => {
@@ -1060,7 +1072,6 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
         clearRulesHashCache();
         createGameStateSingleton(null);
         const rulesData = { regions: { 1: ['Forest'] } };
-        const rulesHash = hashRulesData(rulesData);
         const panel = new MazeRoomUI(null, {});
         panel._cachedRulesData = rulesData;
         panel.currentRegionId = 'Forest';
@@ -1072,8 +1083,7 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
         panel._mazeQueue.handleInput({ type: ACTION_MOVE, dir: 'E' });
         panel._mazeQueue.handleInput({ type: ACTION_LOCATION_CHECK, locationName: 'Slay Yorgle' });
         panel._finalizeVisitOnExit('north');
-        const [q] = getSavedQueues(rulesHash, 'Forest', 'maze');
-        expect(q.locationsChecked).toEqual(['Slay Yorgle']);
+        expect(panel._takeLastRecording().locationsChecked).toEqual(['Slay Yorgle']);
     });
 
     it('_deductMazeStepMana with freshLocationCheck override charges location cost', () => {
@@ -1317,11 +1327,13 @@ describe('MazeRoomUI — saved queue replay', () => {
 
     it('_getReplayableTargets returns saved queues for matching (region, arrival)', () => {
         const rulesHash = hashRulesData(RULES_DATA);
-        // Matching queue, departs via 'exit_a'.
+        // Matching queue, departs via 'exit_a'. Distinct ordinals keep the
+        // two same-arrival recordings from collapsing under the M2 tag model.
         saveQueue(rulesHash, {
             regionName: 'Forest',
             substrate: 'maze',
             arrivalExitId: 'south',
+            ordinal: 0,
             departureExitId: 'exit_a',
             actions: [{ type: 'move', dir: 'N' }],
             manaAtEntry: 100,
@@ -1364,6 +1376,7 @@ describe('MazeRoomUI — saved queue replay', () => {
             regionName: 'Forest',
             substrate: 'maze',
             arrivalExitId: 'south',
+            ordinal: 1,
             departureExitId: 'exit_b',
             actions: [{ type: 'move', dir: 'E' }],
             manaAtEntry: 100,

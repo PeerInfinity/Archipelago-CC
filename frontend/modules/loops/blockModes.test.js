@@ -13,6 +13,12 @@ import { LoopState } from './loopState.js';
 import { GameState } from '../gameState/state.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import {
+  getSavedQueueByTag,
+  saveQueue,
+  _testOnly_clearAll as resetSavedQueueStore,
+} from './savedQueueStore.js';
+import { hashRulesData, clearRulesHashCache } from '../shared/rulesHash.js';
 
 beforeAll(installRafShim);
 afterAll(uninstallRafShim);
@@ -272,5 +278,191 @@ describe('per-block mode — execution parks the right visit', () => {
     loopState.currentAction = queue[idx];
     // The current block (A#2) resolves to playback → not manual.
     expect(loopState._currentBlockIsManual()).toBe(false);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// M2 — Record mode + playback-of-recordings (maze + textAdventure model).
+// ---------------------------------------------------------------------------
+
+const RULES_DATA = { regions: { 1: ['A'] } };
+
+// Register a record/playback-capable substrate for region 'A' with a
+// controllable recording stash and a replayActions spy. Returns handles.
+function registerRecordSubstrate() {
+  try { centralRegistry.publicFunctions.get('procgenPlayer')?.delete('getRegionInfo'); } catch { /* ignore */ }
+  try { centralRegistry.publicFunctions.get('procgenPlayer')?.delete('getWarehouse'); } catch { /* ignore */ }
+  try { substrateRegistry.clear?.(); } catch { /* ignore */ }
+  const handles = { stash: null, takeCalls: 0, replayCalls: [] };
+  substrateRegistry.register?.({
+    id: 'rec_sub',
+    label: 'Rec',
+    panelComponentType: 'recPanel',
+    loadRegionEvent: 'rec:loadRegion',
+    loopSupport: {
+      queueActions: ['regionMove', 'locationCheck'],
+      manual: true, customQueues: false, record: true, playback: true,
+    },
+    takeLastRecording: () => {
+      handles.takeCalls += 1;
+      const s = handles.stash;
+      handles.stash = null; // pull-and-clear, like the real sinks
+      return s;
+    },
+    getPlaybackController: () => ({
+      replayActions: (actions, opts) => { handles.replayCalls.push({ actions, opts }); return true; },
+    }),
+  });
+  centralRegistry.registerPublicFunction('procgenPlayer', 'getRegionInfo', (region) => (
+    region === 'A' ? { substrate: 'rec_sub', label: 'Rec', manaEnabled: true } : null
+  ));
+  return handles;
+}
+
+function makeStash(overrides = {}) {
+  return {
+    regionName: 'A',
+    substrate: 'rec_sub',
+    arrivalExitId: 'IGNORED_recorder_value',
+    departureExitId: 'exit',
+    actions: [{ type: 'locationCheck', locationName: 'Loc1' }],
+    manaAtEntry: 100, manaAtExit: 80, manaMin: 75,
+    locationsChecked: ['Loc1'], itemsPickedUp: [],
+    ...overrides,
+  };
+}
+
+describe('M2 — Record lifecycle', () => {
+  let loopState, gs, bus, tick, handles;
+  beforeEach(() => {
+    resetSavedQueueStore();
+    clearRulesHashCache();
+    ({ loopState, gs, bus } = wire());
+    tick = makeTicker();
+    handles = registerRecordSubstrate();
+    loopState._cachedRulesData = RULES_DATA;
+    // Menu → A (record) → B.
+    gs.updatePath('A', 'go', 'Menu');
+    gs.addLocationCheck('Loc1', 'A');
+    gs.updatePath('B', 'exit', 'A');
+    loopState.setBlockMode('A', 1, 'record');
+  });
+
+  function parkOnRecordBlock() {
+    // Cursor on A#1's locationCheck (index 1) → record parks like manual.
+    loopState.currentActionIndex = 1;
+    loopState.currentAction = loopState.getActionQueue()[1];
+    loopState.isProcessing = true;
+    tick(loopState);
+  }
+
+  it('parks a Record block like Manual and flags it for capture', () => {
+    parkOnRecordBlock();
+    expect(loopState._manualActionEntered).toBe(true);
+    expect(loopState._manualRegionName).toBe('A');
+    expect(loopState._recordingBlock).toEqual({ region: 'A', instance: 1 });
+    expect(loopState.isProcessing).toBe(false);
+  });
+
+  it('on a successful exit: persists under the queue-derived tag + auto-switches to Playback', () => {
+    parkOnRecordBlock();
+    handles.stash = makeStash();
+    // Player leaves via the expected regionMove → B.
+    loopState._handleManualWake_regionMove({ targetRegion: 'B' });
+
+    // Pulled the substrate stash exactly once.
+    expect(handles.takeCalls).toBe(1);
+    // Persisted under the loops-derived tag: arrivalKey = source exit name
+    // 'go' (no warehouse), ordinal 0 — NOT the recorder's own arrivalExitId.
+    const rulesHash = hashRulesData(RULES_DATA);
+    const saved = getSavedQueueByTag(rulesHash, 'A', 'rec_sub', 'go', 0);
+    expect(saved).toBeTruthy();
+    expect(saved.arrivalExitId).toBe('go');
+    expect(saved.ordinal).toBe(0);
+    expect(saved.actions).toEqual([{ type: 'locationCheck', locationName: 'Loc1' }]);
+    // Auto-switch (default ON) flipped the block to Playback + announced it.
+    expect(loopState.getBlockMode('A', 1)).toBe('playback');
+    expect(bus.events.some((e) =>
+      e.name === 'loopState:blockModeChanged' && e.data?.mode === 'playback')).toBe(true);
+    expect(loopState._recordingBlock).toBeNull();
+  });
+
+  it('auto-switch OFF leaves the block in Record but still persists', () => {
+    loopState.autoSwitchToPlaybackAfterRecord = false;
+    parkOnRecordBlock();
+    handles.stash = makeStash();
+    loopState._handleManualWake_regionMove({ targetRegion: 'B' });
+    expect(getSavedQueueByTag(hashRulesData(RULES_DATA), 'A', 'rec_sub', 'go', 0)).toBeTruthy();
+    expect(loopState.getBlockMode('A', 1)).toBe('record');
+  });
+
+  it('wrong exit DISCARDS the recording and pauses until reset', () => {
+    parkOnRecordBlock();
+    handles.stash = makeStash();
+    // Player leaves toward the wrong region.
+    loopState._handleManualWake_regionMove({ targetRegion: 'Wrong' });
+
+    expect(loopState._queuePausedUntilReset).toBe(true);
+    // Nothing persisted; the stash was drained (discarded), not kept.
+    expect(getSavedQueueByTag(hashRulesData(RULES_DATA), 'A', 'rec_sub', 'go', 0)).toBeNull();
+    expect(handles.takeCalls).toBe(1); // drained
+    expect(handles.stash).toBeNull();
+    expect(loopState.getBlockMode('A', 1)).toBe('record'); // not switched
+    expect(loopState._recordingBlock).toBeNull();
+  });
+
+  it('mana-out mid-record discards the recording on reset', () => {
+    parkOnRecordBlock();
+    handles.stash = makeStash();
+    loopState._resetLoop();
+    expect(getSavedQueueByTag(hashRulesData(RULES_DATA), 'A', 'rec_sub', 'go', 0)).toBeNull();
+    expect(handles.stash).toBeNull(); // drained
+    expect(loopState._recordingBlock).toBeNull();
+  });
+});
+
+describe('M2 — Playback replays a bound recording', () => {
+  let loopState, gs, bus, tick, handles;
+  beforeEach(() => {
+    resetSavedQueueStore();
+    clearRulesHashCache();
+    ({ loopState, gs, bus } = wire());
+    tick = makeTicker();
+    handles = registerRecordSubstrate();
+    loopState._cachedRulesData = RULES_DATA;
+    gs.updatePath('A', 'go', 'Menu');
+    gs.addLocationCheck('Loc1', 'A');
+    gs.updatePath('B', 'exit', 'A');
+  });
+
+  it('a Playback block with a bound recording replays it (parks + dispatches replayActions)', () => {
+    // Seed a recording under A#1's tag (arrivalKey 'go', ordinal 0).
+    saveQueue(hashRulesData(RULES_DATA), {
+      regionName: 'A', substrate: 'rec_sub',
+      arrivalExitId: 'go', ordinal: 0, departureExitId: 'exit',
+      actions: [{ type: 'locationCheck', locationName: 'Loc1' }],
+      manaAtEntry: 100, manaAtExit: 80, manaMin: 75,
+      locationsChecked: ['Loc1'], itemsPickedUp: [],
+    });
+    loopState.setBlockMode('A', 1, 'playback');
+
+    loopState.currentActionIndex = 1;
+    loopState.currentAction = loopState.getActionQueue()[1];
+    loopState.isProcessing = true;
+    tick(loopState);
+
+    // Parked and replayed the recorded script.
+    expect(loopState._manualActionEntered).toBe(true);
+    expect(handles.replayCalls).toHaveLength(1);
+    expect(handles.replayCalls[0].actions).toEqual([{ type: 'locationCheck', locationName: 'Loc1' }]);
+  });
+
+  it('a Playback block with NO bound recording does not replay (falls through)', () => {
+    loopState.setBlockMode('A', 1, 'playback');
+    loopState.currentActionIndex = 1;
+    loopState.currentAction = loopState.getActionQueue()[1];
+    loopState.isProcessing = true;
+    tick(loopState);
+    expect(handles.replayCalls).toHaveLength(0);
   });
 });

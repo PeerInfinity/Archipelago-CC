@@ -19,8 +19,8 @@ import { ActionQueueManager } from './actionQueueManager.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
-import { blockKeyOf, resolveQueueBlocks } from './blockIdentity.js';
-import { getSavedQueues } from './savedQueueStore.js';
+import { blockKeyOf, resolveQueueBlocks, assignRecordingTags } from './blockIdentity.js';
+import { getSavedQueues, getSavedQueueByTag, saveQueue } from './savedQueueStore.js';
 import { hashRulesData } from '../shared/rulesHash.js';
 
 // Helper function for logging with fallback
@@ -126,6 +126,19 @@ export class LoopState {
     // like keepFocused / instantMode). 'playback' preserves today's
     // default (unchecked-Manual = the system runs the queue).
     this.defaultBlockMode = 'playback';
+    // Whether a successful Record-mode segment auto-switches its block to
+    // Playback. Schema-backed setting (loopUI pushes it in, like
+    // defaultBlockMode); default ON per the M2 ruling.
+    this.autoSwitchToPlaybackAfterRecord = true;
+    // The block currently being RECORDED ({region, instance}), or null.
+    // Set when a Record-mode block parks; the manual wake handler pulls
+    // the substrate's stashed recording and persists it on a SUCCESSFUL
+    // exit, and clears this (discard) on wrong-exit / mana-out / reset.
+    this._recordingBlock = null;
+    // The last queue index at which the Playback bound-recording lookup
+    // ran, so a non-recording playback block doesn't re-resolve tags every
+    // frame while it advances through the generic auto path.
+    this._boundReplayCheckedIndex = -1;
     // Region currently being played manually via the mode radios; null
     // when parked on a legacy 'manual' / 'customQueue' entry instead.
     // Discriminates the two modes inside the shared wake handlers.
@@ -935,15 +948,36 @@ export class LoopState {
 
     try {
       if (!this._ensureCurrentAction()) return;
-      // Per-region manual mode: the current action's region is
-      // checkbox-flagged → park and let the player drive the whole
-      // region segment. Checked before the legacy entry types so a
-      // flagged region wins even if old 'manual' entries are queued
-      // there too.
-      const manualRegion = this._manualRegionForCurrentAction();
-      if (manualRegion) {
-        this._handleManualRegionEntry(manualRegion);
+      // Per-block mode dispatch (M1 Manual + M2 Record / Playback-replay).
+      // Resolve the current action's block and mode once. Checked before
+      // the legacy entry types so a mode-flagged block wins even if old
+      // 'manual' entries are queued there too.
+      const modeBlock = this._blockForCurrentAction();
+      const blockMode = modeBlock
+        ? this.getBlockMode(modeBlock.region, modeBlock.instance)
+        : null;
+      // Manual OR Record: park and let the player drive the whole region
+      // segment. Record additionally flags the block so the wake handler
+      // pulls + persists the substrate's capture on a successful exit.
+      if (modeBlock && (blockMode === 'manual' || blockMode === 'record')) {
+        if (blockMode === 'record') {
+          this._recordingBlock = { region: modeBlock.region, instance: modeBlock.instance };
+        }
+        this._handleManualRegionEntry(modeBlock.region);
         return;
+      }
+      // Playback with a bound recording: replay the recorded script.
+      // Without a bound recording, fall through to today's auto path
+      // (delegation / bot / timer). Guard the tag lookup per queue index so
+      // a non-recording playback block doesn't re-resolve every frame.
+      if (modeBlock && blockMode === 'playback'
+          && this._boundReplayCheckedIndex !== this.currentActionIndex) {
+        this._boundReplayCheckedIndex = this.currentActionIndex;
+        const bound = this._lookupBoundRecording(modeBlock.region, modeBlock.instance);
+        if (bound) {
+          this._handlePlaybackReplayEntry(modeBlock.region, bound);
+          return;
+        }
       }
       // Manual entry: stop accruing progress, hand control to the
       // player via the substrate panel. The wake handlers (subscribed
@@ -1141,6 +1175,132 @@ export class LoopState {
     const block = this._blockForCurrentAction();
     if (!block) return false;
     return this.getBlockMode(block.region, block.instance) === 'manual';
+  }
+
+  /** The live procgenPlayer warehouse (region → { world }), or null. */
+  _getWarehouse() {
+    try {
+      return centralRegistry?.getPublicFunction?.('procgenPlayer', 'getWarehouse')?.() ?? null;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Persistent recording tag `(arrivalKey, ordinal)` for a block. Resolves
+   * the queue blocks, stamps recording tags against the live warehouse (so
+   * arrivalKey matches what the substrate recorders captured), and returns
+   * the matching block's tag. loops owns this derivation on BOTH the save
+   * and the auto-restore side, so the two always agree regardless of any
+   * recorder-side id drift. Returns null if the block isn't found.
+   */
+  _recordingTagForBlock(region, instance) {
+    if (!region) return null;
+    const { visits } = resolveQueueBlocks(this.getActionQueue());
+    assignRecordingTags(visits, this._getWarehouse());
+    const v = visits.find((x) => x.name === region && x.instance === instance);
+    return v ? { arrivalKey: v.arrivalKey, ordinal: v.ordinal } : null;
+  }
+
+  /** Content-hash of the cached rules, or null when rules aren't cached. */
+  _rulesHash() {
+    return this._cachedRulesData ? hashRulesData(this._cachedRulesData) : null;
+  }
+
+  /**
+   * The stored recording bound to a Playback block by its tag, or null.
+   * "Auto-restore" is an on-demand tag lookup at block entry — equivalent
+   * to binding at creation but always consistent with the current queue.
+   */
+  _lookupBoundRecording(region, instance) {
+    const rulesHash = this._rulesHash();
+    if (!rulesHash) return null;
+    const substrate = this._lookupSubstrateId(region);
+    if (!substrate) return null;
+    const tag = this._recordingTagForBlock(region, instance);
+    if (!tag) return null;
+    return getSavedQueueByTag(rulesHash, region, substrate, tag.arrivalKey, tag.ordinal);
+  }
+
+  /**
+   * Persist the substrate's stashed recording for a just-completed Record
+   * block under its `(region, arrivalKey, ordinal)` tag, then apply the
+   * auto-switch-to-Playback setting. Called only on a SUCCESSFUL exit (the
+   * wake handler matched the expected departing regionMove). arrivalExitId
+   * is stamped from the loops-owned arrivalKey so a later auto-restore
+   * lookup keys on the identical value.
+   */
+  _persistRecordingForBlock(region, instance) {
+    const substrate = this._lookupSubstrateId(region);
+    if (!substrate) return;
+    const rec = substrateRegistry?.get?.(substrate)?.takeLastRecording?.();
+    if (!rec) return;
+    const tag = this._recordingTagForBlock(region, instance);
+    if (!tag) return;
+    const rulesHash = this._rulesHash();
+    if (!rulesHash) return;
+    saveQueue(rulesHash, {
+      ...rec,
+      regionName: region,
+      substrate,
+      arrivalExitId: tag.arrivalKey,
+      ordinal: tag.ordinal,
+    });
+    if (this.autoSwitchToPlaybackAfterRecord) {
+      this.setBlockMode(region, instance, 'playback');
+      this.eventBus?.publish?.('loopState:blockModeChanged', {
+        region,
+        instance,
+        mode: 'playback',
+        reason: 'autoSwitchAfterRecord',
+      });
+    }
+  }
+
+  /** Discard any in-progress Record capture (wrong-exit / mana-out / reset). */
+  _discardActiveRecording() {
+    if (!this._recordingBlock) return;
+    // Drain the substrate's stash so it can't be pulled by a later block.
+    const substrate = this._lookupSubstrateId(this._recordingBlock.region);
+    try { substrateRegistry?.get?.(substrate)?.takeLastRecording?.(); } catch { /* ignore */ }
+    this._recordingBlock = null;
+  }
+
+  /**
+   * Playback with a bound recording: park the block and replay the recorded
+   * script through the substrate's replayActions (generalizes the
+   * customQueue path to mode-driven Playback). Same wake handlers as manual
+   * mode advance past the block on the expected exit.
+   */
+  _handlePlaybackReplayEntry(region, saved) {
+    if (this._manualActionEntered) return;
+    this._manualActionEntered = true;
+    this._manualRegionName = region;
+
+    const componentType = this._lookupSubstrateComponentType(region);
+    const focusLocked = centralRegistry?.getPublicFunction?.('loops', 'isFocusLocked')?.() ?? false;
+    if (componentType && !focusLocked && this.eventBus?.publish) {
+      this.eventBus.publish('ui:activatePanel', { panelId: componentType });
+    }
+    this.stopProcessing();
+
+    const controller = substrateRegistry?.get?.(this._lookupSubstrateId(region))?.getPlaybackController?.();
+    if (typeof controller?.replayActions === 'function') {
+      try {
+        controller.replayActions(saved.actions, { onComplete: () => { /* reserved for future UI */ } });
+      } catch (err) {
+        log('warn', '[LoopState] playback replayActions threw:', err);
+      }
+    }
+
+    if (this.eventBus?.publish) {
+      this.eventBus.publish('loopState:manualEntered', {
+        regionName: region,
+        expectedNextRegion: this._getExpectedNextRegion(this.currentActionIndex),
+        manualRegion: true,
+        playback: true,
+      });
+    }
   }
 
   /**
@@ -1591,6 +1751,16 @@ export class LoopState {
       // region segment (per-region manual mode).
       this._manualActionEntered = false;
       this._manualRegionName = null;
+      this._boundReplayCheckedIndex = -1;
+      // Successful Record exit: persist the substrate's stashed capture
+      // under the block's tag + apply auto-switch. Done before the cursor
+      // moves (it doesn't mutate the queue, but the tag resolves against
+      // the still-current queue). Cleared so a later block can't pull it.
+      const recordingBlock = this._recordingBlock;
+      this._recordingBlock = null;
+      if (recordingBlock) {
+        this._persistRecordingForBlock(recordingBlock.region, recordingBlock.instance);
+      }
       if (manualRegion) {
         this._completeManualRegionSegment();
       } else {
@@ -1611,7 +1781,10 @@ export class LoopState {
       this.resumeProcessing?.();
       return;
     }
-    // Mismatch — disable playback until the next loop reset.
+    // Mismatch — disable playback until the next loop reset. A Record in
+    // progress is DISCARDED (M2 ruling: wrong exit = Manual's wrong-region
+    // semantics, recording thrown away).
+    this._discardActiveRecording();
     this._queuePausedUntilReset = true;
     if (this.eventBus?.publish) {
       this.eventBus.publish('loopState:queuePausedUntilReset', {
@@ -2185,6 +2358,9 @@ export class LoopState {
     this._manualActionEntered = false;
     this._manualRegionName = null;
     this._queuePausedUntilReset = false;
+    // A Record in progress at reset (mana-out mid-record) is discarded.
+    this._discardActiveRecording();
+    this._boundReplayCheckedIndex = -1;
 
     // Notify loop reset
     this.eventBus.publish('loopState:loopReset', {

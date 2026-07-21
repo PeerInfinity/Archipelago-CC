@@ -19,6 +19,7 @@ import {
     tileGridDeserializer,
 } from '../shared/procgen/adapterPrimitives.js';
 import { getPlaybackProxy } from './index.js';
+import { takeLastTextAdventureRecording } from './recorder.js';
 
 export const substrateRegistryEntry = Object.freeze({
     // Identity / runtime
@@ -52,14 +53,24 @@ export const substrateRegistryEntry = Object.freeze({
     // initialize() runs (registry callers already handle null).
     getPlaybackController: () => getPlaybackProxy(),
 
-    // Loop-mode capabilities: manual play yes, custom queues NO — the
-    // engine's actions are exactly the basic loop queue actions, so a
-    // recorded queue would duplicate what the loops queue already
-    // expresses (user decision, 2026-06-12).
+    // Runtime — recording (M2 loops sole-persister protocol). Pull-and-
+    // clear the last finalized visit recording; loops persists it only on
+    // a successful Record-mode completion.
+    takeLastRecording: () => takeLastTextAdventureRecording(),
+
+    // Loop-mode capabilities. custom queues stays NO — the customQueue
+    // DROPDOWN would duplicate what the loops queue already expresses
+    // (user decision, 2026-06-12). M2's Record/Playback is a separate,
+    // block-mode-driven path gated on the DECLARED record/playback fields
+    // (not on customQueues), so the dropdown is untouched. Playback is
+    // real: the wrapper drives replayActions over the recorded command
+    // list; Record requires Playback, so both are true.
     loopSupport: Object.freeze({
         queueActions: Object.freeze(['regionMove', 'locationCheck', 'explore']),
         manual: true,
         customQueues: false,
+        record: true,
+        playback: true,
     }),
 
     // Cross-substrate sharing: participates in the shared-mana channel

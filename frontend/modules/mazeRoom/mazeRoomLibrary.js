@@ -137,12 +137,21 @@ export const substrateRegistryEntry = Object.freeze({
     // bot can drive the visualizer directly. null when no panel mounted.
     getPlaybackController: () => getPanelInstance()?.getPlaybackController?.() ?? null,
 
+    // Runtime — recording (M2 loops sole-persister protocol). Pull-and-
+    // clear the last finalized visit recording; loops persists it only on
+    // a successful Record-mode completion. null when no panel / no stash.
+    takeLastRecording: () => getPanelInstance()?._takeLastRecording?.() ?? null,
+
     // Loop-mode capabilities: maze supports everything — all queue
     // action types, manual play, and saved-queue recording/replay.
+    // `record`/`playback` are DECLARED (M2): the Record radio is offered
+    // only where both are true.
     loopSupport: Object.freeze({
         queueActions: Object.freeze(['regionMove', 'locationCheck', 'explore']),
         manual: true,
         customQueues: true,
+        record: true,
+        playback: true,
     }),
 
     // Cross-substrate sharing: participates in the shared-mana channel

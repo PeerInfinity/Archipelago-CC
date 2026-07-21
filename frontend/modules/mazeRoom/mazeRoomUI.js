@@ -48,7 +48,7 @@ import {
 import { findPath, stepsToActions } from './mazeAutopather.js';
 import { SubstrateInactiveOverlay } from '../shared/substrateInactiveOverlay.js';
 import { substrateRegistryEntry } from './mazeRoomLibrary.js';
-import { saveQueue, getSavedQueues } from '../loops/savedQueueStore.js';
+import { getSavedQueues } from '../loops/savedQueueStore.js';
 import { hashRulesData } from '../shared/rulesHash.js';
 import {
     MazeRoomQueue,
@@ -642,10 +642,16 @@ export class MazeRoomUI {
     }
 
     /**
-     * Snapshot the visit recording and hand it to savedQueueStore.
-     * Called from _onVisualizerExitCross with the departure exit id.
-     * Skips persistence when rules data isn't cached yet (e.g. tests
-     * that drive the panel directly without a stateManager).
+     * Snapshot the visit recording into a pending stash. Called from
+     * _onVisualizerExitCross with the departure exit id.
+     *
+     * As of M2 the recorder no longer persists directly: loops is the sole
+     * persister. loopState pulls this stash via the substrate registry's
+     * `takeLastRecording` ONLY when a Record-mode block completes through
+     * its expected exit — so a wrong exit / mana-out simply leaves the stash
+     * to be overwritten by the next visit (discarded, per the M2 ruling).
+     * The stash carries substrate-native fields; the persistent recording
+     * tag (arrivalKey, ordinal) is stamped by loopState at persist time.
      */
     _finalizeVisitOnExit(departureExitId) {
         const rec = this._visitRecording;
@@ -654,8 +660,6 @@ export class MazeRoomUI {
             return;
         }
         this._visitRecording = null;
-        const rulesHash = this._cachedRulesData ? hashRulesData(this._cachedRulesData) : null;
-        if (!rulesHash) return;
 
         const executionIndex = this._mazeQueue?.executionIndex ?? 0;
         const queueActions = this._mazeQueue?.actions ?? [];
@@ -673,7 +677,7 @@ export class MazeRoomUI {
         const gs = (() => { try { return getGameStateSingleton?.(); } catch { return null; } })();
         const manaAtExit = typeof gs?.getCurrentMana === 'function' ? gs.getCurrentMana() : rec.manaMin;
 
-        saveQueue(rulesHash, {
+        this._lastVisitRecording = {
             regionName: rec.regionName,
             substrate: 'maze',
             arrivalExitId: rec.arrivalExitId,
@@ -684,7 +688,19 @@ export class MazeRoomUI {
             manaMin: rec.manaMin,
             locationsChecked,
             itemsPickedUp: [],
-        });
+        };
+    }
+
+    /**
+     * Pull-and-clear the last finalized visit recording (loops' sole
+     * persister protocol). Returns the stashed SavedQueue-shaped payload
+     * or null. Clearing on read makes a second pull for the same visit a
+     * no-op, so a discarded (wrong-exit) recording is never double-counted.
+     */
+    _takeLastRecording() {
+        const rec = this._lastVisitRecording ?? null;
+        this._lastVisitRecording = null;
+        return rec;
     }
 
     /**
