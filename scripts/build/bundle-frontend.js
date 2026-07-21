@@ -65,6 +65,13 @@ const buildOptions = {
   // Keep dynamic imports for code splitting potential
   splitting: false,
 
+  // Node built-ins referenced only behind runtime env branches (e.g. the
+  // omsi unlockPool loader's `await import('node:fs')` on its non-browser
+  // path). esbuild resolves even dynamic literal specifiers at build time;
+  // marking them external leaves the import in place, where the browser
+  // path never executes it.
+  external: ['node:fs'],
+
   // Log level
   logLevel: 'info',
 
