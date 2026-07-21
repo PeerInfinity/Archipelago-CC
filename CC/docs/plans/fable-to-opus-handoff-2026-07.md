@@ -739,8 +739,33 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    channel + recorder/replayActions + sub-queues; parts may interleave
    earlier per the user's "soon") → E multi-town travel (the deferred
    design pass) → F panel per-region queue editor. Panel knob exposure +
-   Python round-trip stay queued. NEXT: arc-A design pass (Fable) —
-   prompt in NewDocs NEXT-SESSION-PROMPT.md.**
+   Python round-trip stay queued.**
+   **ARC A DESIGN PASS DONE 2026-07-20 (Fable, session 55): kickoff READY —
+   `omsiloops/omsi-loops-arc-a-counts-refactor-opus-kickoff.md`. All seven
+   rulings user-confirmed. HEADLINE: arc A is ENTIRELY OUTER-REPO — ZERO
+   fork edits, no byte-gate, no gitlink bump. The user-agreed hybrid
+   (native rows stay the id namespace + capacity substrate; a selection
+   picks L rows/var; item count rides a multiplier) is realized outer-side
+   because (1) firing is grind-based and decoupled from items, (2) the
+   bridge already drops fired ids absent from `ap_locations`
+   (`bridge.js:535`) so the selection = which rows the outer pool emits,
+   (3) the fork's `min(batches,rowCount)×ratio` caps capacity item-blind so
+   the multiplier lives in the bridge. Rulings: (a) selection
+   `k_j=round(j·R/L)`, top pinned to R, clamp L∈[1,R]; (b) ONE global
+   `substrateConfig.omsi.unlockScale∈(0,1]` default 1.0 byte-inert,
+   `L=I=clamp(round(scale·R),1,R)`, per-var map deferred; (c)/(d) bridge
+   maps `qBatches=round(count·R/I)` (even, no wasted copies, full set =
+   exact baseMax) — chosen over the recon's fixed `ceil(R/I)` stride which
+   wastes tail copies; (e) OUTER-ONLY, fork UNCHANGED — arc A opens NO fork
+   slice; (f) outer pool emits selected rows only, `unlockMeta.vars[v]`
+   gains `itemCount` (omitted when `=rowCount` → scale-1
+   `omsi_randomized_test` byte-identical), K/L machinery unchanged (ratio
+   stays 1 at L=I); (g) only OUTER `omsiUnlockPool.test.js` assertions
+   become parametric (fork tests untouched), independent stratum = an
+   in-app scaled-world leg proving checks fire at the SELECTED percentages
+   and capacity lands at the mapped totals. Plan §3.5 gained a supersession
+   banner; §7 a pointer. NEXT: arc-A IMPLEMENTATION (Opus, outer-only) — or
+   arc-B design pass — prompt in NewDocs NEXT-SESSION-PROMPT.md.**
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
