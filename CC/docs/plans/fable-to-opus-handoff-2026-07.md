@@ -827,9 +827,30 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    unlockTable.json unchanged. *(Queue record written post-hoc by the
    review session — session 58's wrap-up skipped it; third wrap-up slip
    in three sessions, checklist hardened in
-   feedback_push_by_default.)* NEXT: arc-C design pass (region split —
-   mechanism re-evaluation now that de-hardcoding landed) — prompt in
-   NewDocs NEXT-SESSION-PROMPT.md.
+   feedback_push_by_default.)*
+
+   **ARC C DESIGN PASS DONE 2026-07-21 (Opus session 59): kickoff READY —
+   `omsiloops/omsi-loops-arc-c-region-split-opus-kickoff.md`; all rulings
+   user-confirmed via AskUserQuestion.** Mechanism re-evaluated post-B and
+   CONFIRMED = **region-overlay on ONE town** (extra-instance route NOT
+   softened by B — action-name uniqueness / DOM / getTravelNum / the
+   `(town,varName)`-keyed unlock table all still hardcoded). Rulings:
+   multi-valued-dim dissolved by one-live-copy-at-a-time (NO region axis on
+   the table/AP surface); per-region state HOST-side (bridge store keyed
+   `region_id`, fork `dumpRegionState`/`loadRegionState`, ZERO new fork save
+   keys); region count CONFIGURABLE per town (default 1 = byte-inert vanilla);
+   config schema = arbitrary graph, v1 grid-arranged, **vanilla mode
+   preserved verbatim**; exit gate = configurable %-explored threshold
+   (default 1.0, local predicate); content distribution MECHANISM ONLY —
+   AP-location→region assignment DEFERRED (`unlockTable.json` stays
+   byte-identical); synthetic exit `finish()`→`user:regionMove` (JtA
+   `_injectExitTasks` port), OUT of vanilla enumeration + planner census;
+   scope fence excludes arcs D/E/F. KEY FIT: the omsi bridge ALREADY has a
+   region concept (`omsi:loadRegion`, `region_id`→`world.omsiTown`) —
+   `awardSchedule` riding the region payload is the transport template; arc C
+   EXTENDS it. Fork slice: byte-gate + V4 + ask-first gitlink cadence RESUME;
+   independent stratum = an in-app region round-trip leg. NEXT: arc-C
+   IMPLEMENTATION (Opus) — prompt in NewDocs NEXT-SESSION-PROMPT.md.
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
