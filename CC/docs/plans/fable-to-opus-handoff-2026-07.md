@@ -156,7 +156,16 @@ queue-builder = **planner**, inner per-task agent = **solver**
 
 Phases (one Opus session each, design §5): **M1** mode core —
 **✅ SHIPPED 2026-07-21 (Opus session 62, outer `96043df8a`)**; **M2**
-Record + playback-of-recordings (maze+textAdventure) — **NEXT**; **M3**
+Record + playback-of-recordings (maze+textAdventure) — **NEXT, kickoff
+READY** *(NewDocs)* `loops-block-modes-m2-opus-kickoff.md` (Fable session
+61b): two fresh user rulings — wrong-exit during Record = Manual's
+pause-until-reset + **DISCARD** the recording; auto-switch-to-Playback
+setting **default ON** — plus the corrected design §4 (transient mode-map
+key `(region, instanceNumber)` ≠ persistent recording tag
+`(region, arrivalKey, ordinal)`; canonical arrivalKey = the recorder's
+`arrivedFrom.exit_id`); recon-first items: arrivalKey canonicalization +
+gameState interior-entry replacement (boundary regionMoves untouched);
+**M3**
 Instant toggle + activation-suppression seam; **M4** jta instant pump +
 recorder; **M5** runner/bounce; **M6** solver unification + rename + Bot
 radio. Omsi arc D re-queues AFTER this track (see §4); omsi Instant last of
