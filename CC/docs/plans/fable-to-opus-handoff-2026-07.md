@@ -803,6 +803,33 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    `towns[N]` literal). `totalGamble` name mismatch vanishes under
    data-driven code. Recon §2 gained a settled-design banner. NEXT: arc-B
    IMPLEMENTATION (Opus) — prompt in NewDocs NEXT-SESSION-PROMPT.md.**
+   **ARC B SHIPPED 2026-07-20 (Opus session 58): fork `c200b5c`
+   (`substrate` ≡ `xml-migration`, both pushed); outer gitlink bumped
+   `aa9c75cff` (user-approved) and pushed.** Fork +254/−94: unconditional
+   `ActionListXml.getQuantityTotalFns()` + `applyQuantityTotals()`
+   compile the 14 `<totalDiscovered>` formulas; `driver.adjustAll()`
+   rewritten to ONE data-driven call; the 14 hand-pinned
+   `adjustPots()…adjustWells()` DELETED; `const TOWN_COUNT = 9`; new
+   `test/quantity-total-differential.test.mjs` (the independent stratum,
+   ~80k samples across every skillMod window boundary). **Two impl-time
+   corrections to the kickoff (verified, rulings untouched):** (i)
+   `computeTotal` is UNCONDITIONAL, not applyOverrides-gated —
+   `useActionListXml` defaults OFF, so the kickoff's "mirror
+   fields.goldCost" would have left it absent in vanilla and broken the
+   byte-gate; it's a memoized standalone compile off the always-loaded
+   XML carrier (the U1 always-on-cutover precedent), town resolution
+   still through `townFor`/`ctx.townNum` (arc C's free seam); (ii)
+   `TOWN_COUNT` lives in driver.js, not saving.js — saving.js loads
+   AFTER main.view.js whose count loops run at top-level (TDZ). Gates
+   ALL green: differential sweep · fork 275/275 · byte-gate `--worktree`
+   461/5,195,188/9d9952e68bc8373c/0 RNG · V4 PASS · vitest 3122 ·
+   substrates 42/42 · regression 31/31 · 4 omsi presets byte-identical ·
+   unlockTable.json unchanged. *(Queue record written post-hoc by the
+   review session — session 58's wrap-up skipped it; third wrap-up slip
+   in three sessions, checklist hardened in
+   feedback_push_by_default.)* NEXT: arc-C design pass (region split —
+   mechanism re-evaluation now that de-hardcoding landed) — prompt in
+   NewDocs NEXT-SESSION-PROMPT.md.
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
