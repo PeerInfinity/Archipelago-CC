@@ -154,12 +154,28 @@ recording becomes Record-mode-gated (today it's always-on); naming: outer
 queue-builder = **planner**, inner per-task agent = **solver**
 (`executeVia:'playbackBot'` renames in M6).
 
-Phases (one Opus session each, design §5): **M1** mode core — kickoff
-READY *(NewDocs)* `loops-block-modes-m1-opus-kickoff.md`, outer-only;
-**M2** Record + playback-of-recordings (maze+textAdventure); **M3** Instant
-toggle + activation-suppression seam; **M4** jta instant pump + recorder;
-**M5** runner/bounce; **M6** solver unification + rename + Bot radio.
-Omsi arc D re-queues AFTER this track (see §4); omsi Instant last of all.
+Phases (one Opus session each, design §5): **M1** mode core —
+**✅ SHIPPED 2026-07-21 (Opus session 62, outer `96043df8a`)**; **M2**
+Record + playback-of-recordings (maze+textAdventure) — **NEXT**; **M3**
+Instant toggle + activation-suppression seam; **M4** jta instant pump +
+recorder; **M5** runner/bounce; **M6** solver unification + rename + Bot
+radio. Omsi arc D re-queues AFTER this track (see §4); omsi Instant last of
+all.
+
+**M1 as-built (see design §5 M1 for full notes):** Manual checkbox → per-
+`(region, instanceNumber)` Manual/Playback radios; new shared resolver
+`frontend/modules/loops/blockIdentity.js` (both renderer + loopState
+execution key off it); `blockModeStates` map + `defaultBlockMode` setting +
+set-all control; legacy `manualRegionStates` retained as lossless migration
+fallback; `_handleCustomQueueEntry` `ui:activatePanel` now `isFocusLocked`-
+gated. **Recon call (user-confirmed):** mode-map key is
+`(region, instanceNumber)`, NOT the design's `(region, arrivalKey, ordinal)`
+tag — instanceNumber is a stable unique block identity (middle visits can't
+be deleted), and `arrivalKey` is only needed for **M2** recording-matching
+(deriving it in M1 would risk a value M2's recorder won't match). So M2 owns
+the `savedQueueStore` tag + arrivalKey derivation. Gates: vitest 3140 (+18),
+regression pass, substrates 43/43 (documented `jta-out-of-mana` cold-start
+flake cleared on re-run).
 
 ## 4. Omsi Loops — the one open design front
 
