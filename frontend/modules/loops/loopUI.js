@@ -150,6 +150,13 @@ export class LoopUI {
             const v = this.displaySettings.getSetting('keepFocused');
             if (v !== undefined) loopState.keepFocused = !!v;
           }
+          // Mirror defaultBlockMode so getBlockMode reflects changes made
+          // via the global settings panel (the inline select pushes
+          // through its own handler).
+          if (key === 'moduleSettings.loops.defaultBlockMode' || key === '*') {
+            const v = this.displaySettings.getSetting('defaultBlockMode');
+            if (v !== undefined) loopState.defaultBlockMode = v;
+          }
           this.renderLoopPanel(); // Re-render panel when setting changes
         }
       }
@@ -226,6 +233,15 @@ export class LoopUI {
                   <option value="off">Off</option>
                   <option value="append">Append to queue</option>
                   <option value="rebuildPath">Rebuild path (advanced)</option>
+                </select></label>
+                <label class="default-block-mode-label" title="Mode given to a region block that has no mode set yet. Playback runs it automatically; Manual parks it for hand-play where supported.">Default block mode: <select id="loop-ui-default-block-mode">
+                  <option value="playback">Playback</option>
+                  <option value="manual">Manual</option>
+                </select></label>
+                <label class="set-all-mode-label" title="Set every current block that supports it to this mode.">Set all blocks: <select id="loop-ui-set-all-mode">
+                  <option value="">—</option>
+                  <option value="manual">Manual</option>
+                  <option value="playback">Playback</option>
                 </select></label>
               </div>
               <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px; margin-bottom: 8px;">
@@ -626,6 +642,35 @@ export class LoopUI {
       });
     }
 
+    // Default-block-mode select — the mode a new block inherits when it
+    // has no stored mode. Mirrored into loopState so getBlockMode reads
+    // the fresh value; persisted through settingsManager.
+    const defaultBlockModeSelect = querySelector('#loop-ui-default-block-mode');
+    if (defaultBlockModeSelect) {
+      defaultBlockModeSelect.value = loopState.defaultBlockMode || 'playback';
+      defaultBlockModeSelect.addEventListener('change', async () => {
+        const mode = defaultBlockModeSelect.value || 'playback';
+        loopState.defaultBlockMode = mode;
+        await this.displaySettings.setSetting('defaultBlockMode', mode, true);
+        // Re-render so blocks relying on the default reflect it.
+        this.renderLoopPanel();
+      });
+    }
+
+    // Set-all-blocks select — applies a mode to every current block that
+    // supports it, then snaps back to the placeholder (it's an action,
+    // not a persisted choice).
+    const setAllModeSelect = querySelector('#loop-ui-set-all-mode');
+    if (setAllModeSelect) {
+      setAllModeSelect.addEventListener('change', () => {
+        const mode = setAllModeSelect.value;
+        setAllModeSelect.value = '';
+        if (!mode) return;
+        loopState.setAllBlockModes(mode);
+        this.renderLoopPanel();
+      });
+    }
+
     log('info', 'LoopUI: Internal listeners attached.');
   }
 
@@ -931,6 +976,10 @@ export class LoopUI {
     const keepFocused = this.displaySettings.getSetting('keepFocused');
     if (keepFocused !== undefined) {
       loopState.keepFocused = !!keepFocused;
+    }
+    const defaultBlockMode = this.displaySettings.getSetting('defaultBlockMode');
+    if (defaultBlockMode !== undefined) {
+      loopState.defaultBlockMode = defaultBlockMode;
     }
 
     // Get and set the gameState API

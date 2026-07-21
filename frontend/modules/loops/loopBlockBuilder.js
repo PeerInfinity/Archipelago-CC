@@ -94,7 +94,8 @@ export class LoopBlockBuilder {
       useColorblind,
       isExpanded,
       currentActionIndex,
-      analysisEntries
+      analysisEntries,
+      instanceNumber
     );
     regionBlock.appendChild(contentEl);
 
@@ -210,14 +211,21 @@ export class LoopBlockBuilder {
     useColorblind,
     isExpanded,
     currentActionIndex,
-    analysisEntries = null
+    analysisEntries = null,
+    instanceNumber = 1
   ) {
     const contentEl = document.createElement('div');
     contentEl.className = 'loop-region-content';
 
+    // Whether this block runs in manual mode — its pending actions
+    // display as EXPECTED outcomes of the player's hand-play rather than
+    // queue work. Resolved per (region, instance) block, not per region.
+    const isManualExpected = this.loopUI.isLoopModeActive &&
+      loopState.getBlockMode(regionName, instanceNumber) === 'manual';
+
     // Add actions container (always visible, even when collapsed)
     if (actions.length > 0) {
-      this.addActions(contentEl, actions, currentActionIndex, analysisEntries);
+      this.addActions(contentEl, actions, currentActionIndex, analysisEntries, isManualExpected);
     }
 
     // If expanded, add region details (exits, locations, explore button)
@@ -247,11 +255,12 @@ export class LoopBlockBuilder {
       // substrate) get neither — there's no panel to hand off to and
       // nothing to record.
       const loopSupport = this._getLoopSupport(regionName);
-      if (this.loopUI.isLoopModeActive && loopSupport?.manual) {
-        // Manual checkbox — when on, the queue parks here and the
-        // player drives the region by hand; the queued actions become
-        // the expected outcome of the manual play.
-        this.addManualCheckbox(detailsEl, regionName);
+      const offers = this.getModeOffers(regionName);
+      if (this.loopUI.isLoopModeActive && offers.hasRow) {
+        // Per-block mode radios (Manual / Playback) — replaces the old
+        // Manual checkbox. Manual parks the block for hand-play;
+        // Playback runs the block automatically (today's default).
+        this.addModeRadios(detailsEl, regionName, instanceNumber, offers);
       }
       if (this.loopUI.isLoopModeActive && loopSupport?.customQueues) {
         // Custom Queue dropdown — lists previously-saved queues for
@@ -297,7 +306,7 @@ export class LoopBlockBuilder {
    * @param {Array} actions - Array of actions
    * @param {number} currentActionIndex - Index of current action
    */
-  addActions(contentEl, actions, currentActionIndex, analysisEntries = null) {
+  addActions(contentEl, actions, currentActionIndex, analysisEntries = null, isManualExpected = false) {
     const actionsContainer = document.createElement('div');
     actionsContainer.className = 'region-actions-container';
 
@@ -306,7 +315,7 @@ export class LoopBlockBuilder {
       const analysisEntry = analysisEntries
         ? analysisEntries.find(e => e.index === index || e.pathIndex === pathEntry.pathIndex)
         : null;
-      const actionEl = this.createActionEntry(pathEntry, index, analysisEntry);
+      const actionEl = this.createActionEntry(pathEntry, index, analysisEntry, isManualExpected);
       if (actionEl) {
         actionsContainer.appendChild(actionEl);
       }
@@ -372,46 +381,95 @@ export class LoopBlockBuilder {
   }
 
   /**
-   * Adds the Manual checkbox to the region block (replaces the old
-   * "Add Manual entry" button). When checked, the loops queue parks
-   * whenever its cursor reaches this region: the substrate panel
-   * auto-activates, the region's queued actions display as the
-   * EXPECTED outcome, and the player drives by hand. Exiting through
-   * the expected exit resumes the queue past the region's segment;
-   * any other exit pauses the queue until the next loop reset. The
-   * checkbox survives loop resets.
+   * Which mode radios a region can offer, from its substrate's
+   * loopSupport. Manual is offered where declared; Playback is offered
+   * for any substrate that auto-runs today (maze delegation / playbackBot
+   * walkTo / generic timer — i.e. any real loopSupport declaration).
+   * AP-native (null) and NO_LOOP_SUPPORT (empty) regions offer nothing,
+   * so no mode row renders. Record / Bot arrive in later phases.
    */
-  addManualCheckbox(detailsEl, regionName) {
+  getModeOffers(regionName) {
+    const ls = this._getLoopSupport(regionName);
+    const offersManual = !!ls?.manual;
+    const offersPlayback = !!ls &&
+      (!!ls.manual || (ls.queueActions?.length > 0) || !!ls.executeVia);
+    return { offersManual, offersPlayback, hasRow: offersManual || offersPlayback };
+  }
+
+  /**
+   * Per-block mode radios (replaces the old per-region Manual checkbox).
+   * Mode is stored per (region, instanceNumber) VISIT so two visits to
+   * one region can differ. In M1 the choices are:
+   *   - Manual   — the queue parks on this block; the substrate panel
+   *                activates and the player drives by hand. The block's
+   *                queued actions display as the EXPECTED outcome; the
+   *                expected exit resumes past the segment, a wrong exit
+   *                pauses until the next loop reset.
+   *   - Playback — the system runs the block automatically (today's
+   *                unchecked-Manual behavior: delegation / walkTo / timer).
+   * (Record, Bot, Instant land in later phases — no dead UI here.)
+   */
+  addModeRadios(detailsEl, regionName, instanceNumber, offers = this.getModeOffers(regionName)) {
     const container = document.createElement('div');
-    container.className = 'region-manual-container';
+    container.className = 'region-mode-container';
     Object.assign(container.style, {
       display: 'flex',
       alignItems: 'center',
-      gap: '6px',
+      gap: '10px',
       marginTop: '4px',
     });
 
-    const label = document.createElement('label');
-    label.className = 'manual-region-label';
-    label.title =
-      'Play this region by hand when the queue reaches it. The queued actions become ' +
-      'the expected outcome; exiting through the expected exit resumes the queue, any ' +
-      'other exit pauses it until the next loop reset.';
+    const heading = document.createElement('span');
+    heading.className = 'region-mode-heading';
+    heading.textContent = 'Mode:';
+    heading.style.fontSize = '12px';
+    container.appendChild(heading);
 
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.className = 'manual-region-checkbox';
-    checkbox.checked = loopState.getManualRegion(regionName);
-    checkbox.addEventListener('change', () => {
-      loopState.setManualRegion(regionName, checkbox.checked);
-      // Re-render so the region's action entries flip between
-      // 'pending' and 'expected' display immediately.
-      this.loopUI.renderLoopPanel?.();
-    });
+    // Resolve the block's current mode and clamp the selection to a mode
+    // that's actually offered (e.g. a global default of Manual on a
+    // playback-only block shows Playback selected).
+    let selected = loopState.getBlockMode(regionName, instanceNumber);
+    if (selected === 'manual' && !offers.offersManual) selected = 'playback';
+    if (selected === 'playback' && !offers.offersPlayback) selected = 'manual';
 
-    label.appendChild(checkbox);
-    label.appendChild(document.createTextNode(' Manual'));
-    container.appendChild(label);
+    // Radios in one block share a name so exactly one is checked. The
+    // name is per (region, instance) so different blocks are independent.
+    const groupName = `loop-mode--${regionName}--${instanceNumber}`;
+
+    const MODES = [
+      { value: 'manual', text: 'Manual', offered: offers.offersManual,
+        title: 'Play this block by hand when the queue reaches it. Its queued '
+          + 'actions become the expected outcome; exiting through the expected exit '
+          + 'resumes the queue, any other exit pauses it until the next loop reset.' },
+      { value: 'playback', text: 'Playback', offered: offers.offersPlayback,
+        title: 'The system runs this block automatically when the queue reaches it.' },
+    ];
+
+    for (const mode of MODES) {
+      if (!mode.offered) continue;
+      const label = document.createElement('label');
+      label.className = `block-mode-label block-mode-${mode.value}`;
+      label.title = mode.title;
+      Object.assign(label.style, { display: 'flex', alignItems: 'center', gap: '3px' });
+
+      const radio = document.createElement('input');
+      radio.type = 'radio';
+      radio.className = 'block-mode-radio';
+      radio.name = groupName;
+      radio.value = mode.value;
+      radio.checked = selected === mode.value;
+      radio.addEventListener('change', () => {
+        if (!radio.checked) return;
+        loopState.setBlockMode(regionName, instanceNumber, mode.value);
+        // Re-render so this block's action entries flip between
+        // 'pending' and 'expected' display immediately.
+        this.loopUI.renderLoopPanel?.();
+      });
+
+      label.appendChild(radio);
+      label.appendChild(document.createTextNode(` ${mode.text}`));
+      container.appendChild(label);
+    }
 
     detailsEl.appendChild(container);
   }
@@ -757,7 +815,7 @@ export class LoopBlockBuilder {
    * @param {Object|null} analysisEntry - Analysis data from shared queueAnalysis
    * @returns {HTMLElement} The action entry element
    */
-  createActionEntry(pathEntry, index, analysisEntry) {
+  createActionEntry(pathEntry, index, analysisEntry, isManualExpected = false) {
     const actionDiv = document.createElement('div');
     actionDiv.className = 'loop-action-entry';
     actionDiv.dataset.actionIndex = index;
@@ -810,13 +868,12 @@ export class LoopBlockBuilder {
     // Display number (1-indexed)
     const displayIndex = index + 1;
 
-    // Per-region manual mode: pending actions in a manual-checked
-    // region are EXPECTED outcomes of the player's hand-play, not
-    // queue work. Same status styling, different label + a class
-    // hook for styling the whole entry.
-    const isManualRegion = loopState.getManualRegion?.(pathEntry.sourceRegion) || false;
-    if (isManualRegion) actionDiv.classList.add('manual-expected');
-    const statusLabel = status === 'pending' && isManualRegion ? 'expected' : status;
+    // Per-block manual mode: pending actions in a manual block are
+    // EXPECTED outcomes of the player's hand-play, not queue work. Same
+    // status styling, different label + a class hook for styling the
+    // whole entry. Resolved per (region, instance) block by the caller.
+    if (isManualExpected) actionDiv.classList.add('manual-expected');
+    const statusLabel = status === 'pending' && isManualExpected ? 'expected' : status;
 
     // Format cost
     const costStr = manaCost.toFixed(1);

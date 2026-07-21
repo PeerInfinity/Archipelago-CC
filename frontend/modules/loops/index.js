@@ -289,6 +289,12 @@ export function register(registrationApi) {
         default: false,
         label: 'Keep This Panel Focused',
       },
+      defaultBlockMode: {
+        type: 'string',
+        default: 'playback',
+        enum: ['playback', 'manual'],
+        label: 'Default Mode for New Blocks',
+      },
     },
   });
 

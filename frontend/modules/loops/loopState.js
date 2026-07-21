@@ -19,6 +19,7 @@ import { ActionQueueManager } from './actionQueueManager.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { blockKeyOf, resolveQueueBlocks } from './blockIdentity.js';
 import { getSavedQueues } from './savedQueueStore.js';
 import { hashRulesData } from '../shared/rulesHash.js';
 
@@ -110,7 +111,22 @@ export class LoopState {
     // _queuePausedUntilReset. Survives loop resets (cleared by
     // resetForNewRules / hard reset, like repeatExploreStates).
     this.manualRegionStates = new Map(); // regionName -> true
-    // Region currently being played manually via the checkbox; null
+    // Per-block mode map (the mode-radio system that replaces the Manual
+    // checkbox). Keyed by blockKeyOf(region, instanceNumber) so each
+    // region VISIT gets its own mode instead of a whole region sharing
+    // one checkbox. Values are a small string enum, currently
+    // 'manual' | 'playback' (extensible: 'record' | 'bot' land in later
+    // phases). Absent key → fall back to the legacy region checkbox
+    // (manualRegionStates, for migrated saves) then to defaultBlockMode.
+    // Serialized like manualRegionStates; survives loop resets, cleared
+    // by resetForNewRules.
+    this.blockModeStates = new Map(); // 'region#instance' -> mode
+    // Default mode applied to a block that has no stored mode. Mirrors
+    // the schema-backed `defaultBlockMode` setting (loopUI pushes it in,
+    // like keepFocused / instantMode). 'playback' preserves today's
+    // default (unchecked-Manual = the system runs the queue).
+    this.defaultBlockMode = 'playback';
+    // Region currently being played manually via the mode radios; null
     // when parked on a legacy 'manual' / 'customQueue' entry instead.
     // Discriminates the two modes inside the shared wake handlers.
     this._manualRegionName = null;
@@ -1095,15 +1111,110 @@ export class LoopState {
   }
 
   /**
-   * Per-region manual mode (checkbox): resolve the manual-flagged
-   * region for the current action, or null. Every queue action type
-   * carries sourceRegion = the region the action happens in (a
-   * regionMove's sourceRegion is the region being left, so the move
-   * out of a manual region is the player's to perform too).
+   * Per-block manual mode: resolve the region of the current action's
+   * block iff that block's mode is 'manual', else null. Uses the shared
+   * queue-block resolver so the block matches exactly what the panel
+   * renders — critical for the leaving regionMove, whose own
+   * instanceNumber names the DESTINATION block while it's driven from
+   * (and rendered inside) its SOURCE block.
    */
   _manualRegionForCurrentAction() {
-    const region = this.currentAction?.sourceRegion;
-    return region && this.getManualRegion(region) ? region : null;
+    return this._currentBlockIsManual() ? this.currentAction?.sourceRegion ?? null : null;
+  }
+
+  /**
+   * Resolve the (region, instance, key) block that owns the current
+   * action, or null when there's no current action. Walks the queue via
+   * the shared resolver (loopRenderer draws the mode radios off the same
+   * grouping), so a naive (sourceRegion, instanceNumber) lookup — wrong
+   * for a leaving regionMove — is avoided.
+   */
+  _blockForCurrentAction() {
+    if (!this.currentAction) return null;
+    const queue = this.getActionQueue();
+    const { indexToBlock } = resolveQueueBlocks(queue);
+    return indexToBlock.get(this.currentActionIndex) ?? null;
+  }
+
+  /** Whether the current action's block resolves to manual mode. */
+  _currentBlockIsManual() {
+    const block = this._blockForCurrentAction();
+    if (!block) return false;
+    return this.getBlockMode(block.region, block.instance) === 'manual';
+  }
+
+  /**
+   * Resolve a block's mode. Precedence:
+   *   1. explicit per-block mode (set via the radios / set-all);
+   *   2. legacy region checkbox (migrated saves) → 'manual';
+   *   3. defaultBlockMode — but a 'manual' default only applies where the
+   *      substrate actually supports manual (an AP-native / no-manual
+   *      block would otherwise park forever with no panel to hand to).
+   * Explicit / legacy manual are NOT capability-clamped: the radios and
+   * old checkbox only offered Manual where supported, so a stored value
+   * already implies capability (and tests set it directly by design).
+   */
+  getBlockMode(region, instance) {
+    if (!region) return this.defaultBlockMode || 'playback';
+    const key = blockKeyOf(region, instance);
+    if (this.blockModeStates.has(key)) return this.blockModeStates.get(key);
+    if (this.manualRegionStates.get(region)) return 'manual';
+    const dflt = this.defaultBlockMode || 'playback';
+    if (dflt === 'manual' && !this._regionSupportsManual(region)) return 'playback';
+    return dflt;
+  }
+
+  /** Store an explicit per-block mode (overrides legacy + default). */
+  setBlockMode(region, instance, mode) {
+    if (!region || !mode) return;
+    this.blockModeStates.set(blockKeyOf(region, instance), mode);
+  }
+
+  /**
+   * Apply `mode` to every block in the current queue whose substrate
+   * supports it (the "set all" control). Blocks that can't offer the
+   * mode are left untouched. Returns the number of blocks changed.
+   */
+  setAllBlockModes(mode) {
+    if (!mode) return 0;
+    const { visits } = resolveQueueBlocks(this.getActionQueue());
+    let changed = 0;
+    for (const v of visits) {
+      if (mode === 'manual' && !this._regionSupportsManual(v.name)) continue;
+      if (mode === 'playback' && !this._regionOffersPlayback(v.name)) continue;
+      this.setBlockMode(v.name, v.instance, mode);
+      changed += 1;
+    }
+    return changed;
+  }
+
+  /** Whether the region's substrate declares manual loop support. */
+  _regionSupportsManual(region) {
+    return !!this._loopSupportFor(region)?.manual;
+  }
+
+  /**
+   * Whether the region "auto-runs today" and can therefore offer the
+   * Playback radio: any substrate with a real loopSupport declaration
+   * (maze delegation / playbackBot walkTo / generic timer all count).
+   * AP-native (null) and NO_LOOP_SUPPORT (empty) regions get no row.
+   */
+  _regionOffersPlayback(region) {
+    const ls = this._loopSupportFor(region);
+    return !!ls && (ls.manual || (ls.queueActions?.length > 0) || !!ls.executeVia);
+  }
+
+  /** loopSupport for a region's substrate, or null (AP-native / lookup unavailable). */
+  _loopSupportFor(region) {
+    if (!region) return null;
+    try {
+      const fn = centralRegistry?.getPublicFunction?.('procgenPlayer', 'getRegionInfo');
+      const sub = fn?.(region)?.substrate;
+      if (!sub) return null;
+      return substrateRegistry.get(sub)?.loopSupport ?? null;
+    } catch {
+      return null;
+    }
   }
 
   /**
@@ -1251,8 +1362,13 @@ export class LoopState {
     if (this._manualActionEntered) return;
     this._manualActionEntered = true;
 
+    // Playback (customQueue) runs the block automatically — unlike a
+    // Manual entry, it should NOT steal panel focus when the user has
+    // "Keep this panel focused" on. Gate on the same isFocusLocked
+    // predicate the substrates consult before self-activating.
     const componentType = this._lookupSubstrateComponentType(action.sourceRegion);
-    if (componentType && this.eventBus?.publish) {
+    const focusLocked = centralRegistry?.getPublicFunction?.('loops', 'isFocusLocked')?.() ?? false;
+    if (componentType && !focusLocked && this.eventBus?.publish) {
       this.eventBus.publish('ui:activatePanel', { panelId: componentType });
     }
     this.stopProcessing();
@@ -1780,9 +1896,9 @@ export class LoopState {
    */
   _shouldDelegateCurrentAction() {
     if (!this.currentAction?.sourceRegion) return false;
-    // Manual-checked regions are player-driven — never delegate to
-    // the substrate's auto-walk; _processFrame parks on them instead.
-    if (this.getManualRegion(this.currentAction.sourceRegion)) return false;
+    // Manual-mode blocks are player-driven — never delegate to the
+    // substrate's auto-walk; _processFrame parks on them instead.
+    if (this._currentBlockIsManual()) return false;
     let info = null;
     try {
       const fn = centralRegistry?.getPublicFunction?.('procgenPlayer', 'getRegionInfo');
@@ -2014,6 +2130,7 @@ export class LoopState {
     // stateManager:rulesLoaded handler chain). Just clear loop-specific state.
     this.repeatExploreStates.clear();
     this.manualRegionStates.clear();
+    this.blockModeStates.clear();
     this._manualRegionName = null;
     this._manualActionEntered = false;
     this._delegatedAction = null;
@@ -2343,6 +2460,11 @@ export class LoopState {
       actionCompleted: queueState.actionCompleted,
       currentActionIndex: this.currentActionIndex,
       repeatExploreStates: Array.from(this.repeatExploreStates.entries()),
+      // blockModeStates is the per-block mode map. manualRegionStates is
+      // retained alongside it as a lossless read-side fallback for saves
+      // written before the mode system existed (and blocks whose mode is
+      // still region-inherited) — see loadFromSerializedState.
+      blockModeStates: Array.from(this.blockModeStates.entries()),
       manualRegionStates: Array.from(this.manualRegionStates.entries()),
     };
   }
@@ -2376,8 +2498,14 @@ export class LoopState {
     }
     this.currentActionIndex = state.currentActionIndex ?? 0;
 
-    // Load repeatExploreStates + manual region checkboxes
+    // Load repeatExploreStates + per-block modes. manualRegionStates is
+    // the legacy region-level fallback: an old save has only it (no
+    // blockModeStates), and getBlockMode falls through to it region-wide
+    // → every block of a formerly-checked region resolves to 'manual',
+    // exactly the migration the design calls for. New per-block choices
+    // land in blockModeStates and win per key.
     this.repeatExploreStates = new Map(state.repeatExploreStates || []);
+    this.blockModeStates = new Map(state.blockModeStates || []);
     this.manualRegionStates = new Map(state.manualRegionStates || []);
 
     // Notify mana/xp change so consumers reflect the loaded values
