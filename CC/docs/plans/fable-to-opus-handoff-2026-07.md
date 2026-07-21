@@ -764,8 +764,18 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    become parametric (fork tests untouched), independent stratum = an
    in-app scaled-world leg proving checks fire at the SELECTED percentages
    and capacity lands at the mapped totals. Plan §3.5 gained a supersession
-   banner; §7 a pointer. NEXT: arc-A IMPLEMENTATION (Opus, outer-only) — or
-   arc-B design pass — prompt in NewDocs NEXT-SESSION-PROMPT.md.**
+   banner; §7 a pointer.**
+   **ARC A SHIPPED 2026-07-20 (Opus session 56, outer `5066a31a8`, ZERO fork
+   edits, no gitlink bump).** Landed exactly as designed. `unlockScale`
+   knob + selection + `qBatchesForCount` multiplier + `omsi_scaled_test`
+   preset (scale 0.2, 18 supply locs) + in-app leg `omsi-unlock-scaled-world`.
+   Gates: vitest 3122/3122 · test-substrates 42/42 · test-regression 31/31 ·
+   byte-inert (omsi_randomized_test / omsi_substrate_test / omsi_schedule_test
+   all byte-identical). One kickoff miss: the substrates config enumerates
+   test ids, so the new leg needed a one-line config entry (§5 said "no
+   config change"). NEXT: arc-B design pass (town de-hardcoding — the 19
+   adjust*() fns duplicate the XML `<totalDiscovered>` coeffs' math; recon
+   §2 has the anchors) — prompt in NewDocs NEXT-SESSION-PROMPT.md.**
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
