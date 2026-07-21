@@ -140,6 +140,27 @@ tick-for-tick triple equivalence green). Memory:
    fidelity, exit-carve/true-tile-align, the auto-adjust-neighbours aspiration,
    and shared `zoneLibraryEntry` extraction (runner mirrors bounce today).
 
+## 3b. Loops region-block modes (arc opened 2026-07-21 — GATES omsi arc D)
+
+Memory: `project_loops_block_modes`. Design *(NewDocs)*
+`NewDocs/plans/loops-region-block-modes-design.md` — rulings SETTLED with
+the user 2026-07-21 (Fable session 61), don't re-litigate: four per-block
+radio modes **Manual / Record / Playback / Bot** + a separate **Instant**
+toggle (Playback/Bot only, capability-declared); mode is **per visit
+instance** (per-region `manualRegionStates` ruled a bug); Record requires
+Playback capability; recordings persist in `savedQueueStore` tagged
+`(region, arrivalKey, ordinal)` with auto-restore on block re-creation;
+recording becomes Record-mode-gated (today it's always-on); naming: outer
+queue-builder = **planner**, inner per-task agent = **solver**
+(`executeVia:'playbackBot'` renames in M6).
+
+Phases (one Opus session each, design §5): **M1** mode core — kickoff
+READY *(NewDocs)* `loops-block-modes-m1-opus-kickoff.md`, outer-only;
+**M2** Record + playback-of-recordings (maze+textAdventure); **M3** Instant
+toggle + activation-suppression seam; **M4** jta instant pump + recorder;
+**M5** runner/bounce; **M6** solver unification + rename + Bot radio.
+Omsi arc D re-queues AFTER this track (see §4); omsi Instant last of all.
+
 ## 4. Omsi Loops — the one open design front
 
 Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
@@ -871,7 +892,11 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    31/31, substrates 43/43 (a `jta-out-of-mana` cold-start flake cleared on
    re-run; not mine), 4 presets byte-identical, `unlockTable.json` unchanged.
    Full record: memory `project_omsi_loops_fork` session 60. NEXT: **arc D**
-   (loops-mode support — omsi declares NO `loopSupport`).
+   (loops-mode support — omsi declares NO `loopSupport`) — **DEFERRED
+   2026-07-21 behind the §3b region-block-modes track**: arc D's design
+   must target the new Manual/Record/Playback/Bot mode system (at minimum
+   after M1+M2, ideally M6 so the solver seam is final). Omsi INSTANT is
+   fork-slice work and comes LAST of all substrates.
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
@@ -1026,4 +1051,5 @@ P2-omsi automation follow-on: A+B DONE 2026-07-19 ──► shuffle-scope curves
 X1 maze tiles (kickoff ready, independent — grant bus live)
 Cavernous Stage 2 (hooks/managed) ──► v0 substrate ──► Stage F (pool + trigger ready)
 world-persistence P1–P4 (independent)
+block modes M1 ──► M2 ──► M3 ──► M4/M5 ──► M6 (solver rename) ──► omsi arc D ──► arc E/F; omsi instant LAST
 ```
