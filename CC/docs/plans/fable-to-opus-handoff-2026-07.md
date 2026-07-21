@@ -776,6 +776,33 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    config change"). NEXT: arc-B design pass (town de-hardcoding — the 19
    adjust*() fns duplicate the XML `<totalDiscovered>` coeffs' math; recon
    §2 has the anchors) — prompt in NewDocs NEXT-SESSION-PROMPT.md.**
+   **ARC B DESIGN PASS DONE 2026-07-20 (Fable, session 57): kickoff READY —
+   `omsiloops/omsi-loops-arc-b-town-dehardcoding-opus-kickoff.md`. All
+   rulings user-confirmed. HEADLINE: the recon under-sold it — the XML
+   `<totalDiscovered>` blocks ALREADY declare each of the 17 capacity
+   formulas IN FULL (base coeffs+divisors, prestigeContent, surveyBonus,
+   skillMod WITH min/max/percentChange, floor/round), and the fork ALREADY
+   has a tested evaluator (`applyAdjustment`/`evalNumeric`,
+   `actionListXml.js:353-423`) that compiles exactly these for
+   `<primaryValue>`. Rulings: (a) COMPILE THE EXISTING XML — a per-action
+   `computeTotal()` (like `fields.goldCost`) + a data-driven `adjustAll`
+   loop; byte-exact by construction (divisor = EXACT division :370;
+   additiveBonus = `base·skillMod + base·survey` :411-419); rejected the JS
+   table + the generator-emitted table. (b) SCOPE = the 14 vars that carry
+   `<totalDiscovered>` (census found 17 total-writing fns but only 14 have
+   XML; Pockets/Warehouses/Insurance = town-7 progress-type, no XML → stay
+   JS; the 4 HaulZ/StonesZ stay with adjustAllRocks, excluded via existing
+   `QUANTITY_EXCLUDED_VARS`). (c) COUNT = one `TOWN_COUNT=9` constant
+   (initializeTowns + two main.view.js loops), byte-inert; dynamic DOM +
+   getTravelNum DEFERRED to arc E. (d) FORK SLICE OPENS — byte-gate
+   461/5,195,188/9d9952e68bc8373c/0 + V4 + ask-first gitlink cadence resume;
+   independent stratum = a full-multiplier-space differential sweep vs the
+   pre-deletion JS (byte-gate can't witness unreached levels). (e) save
+   namespace + travel UNTOUCHED. Arc C's swappable-region seam is FREE (the
+   evaluator resolves town via `townFor(varName)`/`ctx.townNum`, not a
+   `towns[N]` literal). `totalGamble` name mismatch vanishes under
+   data-driven code. Recon §2 gained a settled-design banner. NEXT: arc-B
+   IMPLEMENTATION (Opus) — prompt in NewDocs NEXT-SESSION-PROMPT.md.**
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
