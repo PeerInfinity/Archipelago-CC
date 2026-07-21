@@ -419,6 +419,70 @@ describe('M2 — Record lifecycle', () => {
     expect(handles.stash).toBeNull(); // drained
     expect(loopState._recordingBlock).toBeNull();
   });
+
+  it('coarse replacement rewrites the block interior to the performed actions', () => {
+    parkOnRecordBlock();
+    // Player performed a DIFFERENT location than the queued Loc1.
+    handles.stash = makeStash({
+      actions: [{ type: 'locationCheck', locationName: 'LocPerformed' }],
+      locationsChecked: ['LocPerformed'],
+    });
+    loopState._handleManualWake_regionMove({ targetRegion: 'B' });
+
+    // The block's queued interior (Loc1) was replaced with the performed
+    // action; the boundary regionMove survived untouched.
+    const interior = gs.getPath()
+      .filter((e) => e.sourceRegion === 'A' && e.instanceNumber === 1 && e.type === 'locationCheck')
+      .map((e) => e.locationName);
+    expect(interior).toEqual(['LocPerformed']);
+    const aMoves = gs.getPath().filter((e) => e.type === 'regionMove' && e.sourceRegion === 'A');
+    expect(aMoves).toHaveLength(1);
+    // Cursor advanced past the whole segment.
+    expect(loopState.currentAction).toBeNull();
+  });
+
+  it('coarse replacement survives the gameState:pathUpdated auto-resume path (no cursor reentrancy)', () => {
+    // Faithful mimic of eventCoordinator._handlePathUpdated: auto-resume ONLY
+    // when the queue is 'waiting'. Record the state each pathUpdated sees so
+    // we can prove the finalizing block stays 'idle' — the reason the
+    // interior mutation can't re-enter processing on the un-advanced cursor.
+    const statesSeen = [];
+    let reentrantResumes = 0;
+    bus.subscribe('gameState:pathUpdated', () => {
+      const state = loopState.getProcessingState();
+      statesSeen.push(state);
+      if (state === 'waiting'
+          && loopState.getActionQueue().length > loopState.currentActionIndex) {
+        reentrantResumes += 1;
+        loopState.resumeProcessing();
+      }
+    });
+
+    parkOnRecordBlock();
+    handles.stash = makeStash({
+      actions: [{ type: 'locationCheck', locationName: 'LocPerformed' }],
+      locationsChecked: ['LocPerformed'],
+    });
+    loopState._handleManualWake_regionMove({ targetRegion: 'B' });
+
+    // The interior mutation DID emit pathUpdated (probe is real)...
+    expect(statesSeen.length).toBeGreaterThan(0);
+    // ...but the finalizing block was never 'waiting', so auto-resume never
+    // fired mid-mutation — no reentrancy corrupted the cursor.
+    expect(statesSeen).not.toContain('waiting');
+    expect(reentrantResumes).toBe(0);
+
+    // End state is correct + intact: interior rewritten, block completed
+    // once (not re-parked / re-replayed), auto-switched, persisted.
+    const interior = gs.getPath()
+      .filter((e) => e.sourceRegion === 'A' && e.instanceNumber === 1 && e.type === 'locationCheck')
+      .map((e) => e.locationName);
+    expect(interior).toEqual(['LocPerformed']);
+    expect(handles.replayCalls).toHaveLength(0);
+    expect(loopState.currentAction).toBeNull();
+    expect(loopState.getBlockMode('A', 1)).toBe('playback');
+    expect(getSavedQueueByTag(hashRulesData(RULES_DATA), 'A', 'rec_sub', 'go', 0)).toBeTruthy();
+  });
 });
 
 describe('M2 — Playback replays a bound recording', () => {

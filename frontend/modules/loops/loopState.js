@@ -1232,13 +1232,13 @@ export class LoopState {
    */
   _persistRecordingForBlock(region, instance) {
     const substrate = this._lookupSubstrateId(region);
-    if (!substrate) return;
+    if (!substrate) return null;
     const rec = substrateRegistry?.get?.(substrate)?.takeLastRecording?.();
-    if (!rec) return;
+    if (!rec) return null;
     const tag = this._recordingTagForBlock(region, instance);
-    if (!tag) return;
+    if (!tag) return null;
     const rulesHash = this._rulesHash();
-    if (!rulesHash) return;
+    if (!rulesHash) return null;
     saveQueue(rulesHash, {
       ...rec,
       regionName: region,
@@ -1254,6 +1254,35 @@ export class LoopState {
         mode: 'playback',
         reason: 'autoSwitchAfterRecord',
       });
+    }
+    return rec;
+  }
+
+  /**
+   * Coarse layer of Record (M2): replace the block's queued INTERIOR
+   * entries with the coarse actions the player actually performed
+   * (locationCheck / explore), so the queue reflects reality. The two
+   * boundary regionMoves are untouched (clearActionsAt type-filters them),
+   * and no regionMove is added or removed, so regionInstanceCounts /
+   * instanceNumber bookkeeping stays exactly correct (recon 2).
+   *
+   * Safe to run inside the manual wake: a parked block's processing state is
+   * 'idle' (not 'waiting'), so the gameState:pathUpdated this emits does NOT
+   * trip eventCoordinator's auto-resume — no cursor reentrancy. Covered by
+   * the "coarse replacement survives the pathUpdated reentrancy" test.
+   */
+  _applyCoarseReplacement(region, instance, rec) {
+    const gs = this._gs();
+    if (!gs || typeof gs.clearActionsAt !== 'function') return;
+    gs.clearActionsAt(region, instance);
+    for (const a of rec?.actions ?? []) {
+      if (a?.type === 'locationCheck' && a.locationName) {
+        gs.insertLocationCheckAt?.(a.locationName, region, instance, region);
+      } else if (a?.type === 'explore') {
+        gs.insertCustomActionAt?.('explore', region, instance, {});
+      }
+      // Fine-grained substrate actions (maze 'move', etc.) are NOT coarse
+      // queue entries — they live only in the recorded fine script.
     }
   }
 
@@ -1777,7 +1806,11 @@ export class LoopState {
       const recordingBlock = this._recordingBlock;
       this._recordingBlock = null;
       if (recordingBlock) {
-        this._persistRecordingForBlock(recordingBlock.region, recordingBlock.instance);
+        const rec = this._persistRecordingForBlock(recordingBlock.region, recordingBlock.instance);
+        // Coarse layer: rewrite the block's queued interior to the performed
+        // actions BEFORE completing the segment (the departing regionMove the
+        // segment-completer walks to stays untouched).
+        if (rec) this._applyCoarseReplacement(recordingBlock.region, recordingBlock.instance, rec);
       }
       if (manualRegion) {
         this._completeManualRegionSegment();
