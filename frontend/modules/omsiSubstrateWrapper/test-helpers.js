@@ -35,6 +35,15 @@ export const OMSI_TEST_VICTORY_LOCATION = 'region_1_1__start_journey';
 export const OMSI_RANDOMIZED_PRESET_PATH =
     './presets/omsi_randomized_test/AP_14089154938208861744/AP_14089154938208861744_rules.json';
 export const OMSI_RANDOMIZED_VICTORY_LOCATION = 'region_1_1__travel_onward';
+
+// arc A scaled fixture (regenerate with
+// scripts/test/generate-omsi-scaled-test-preset.mjs): the same world at
+// unlockScale 0.2, so town 0 thins to 18 supply locations at evenly-
+// spaced Explore steps (Pots at 5,10,…,50; the AP-check percentages
+// MOVE). Same omsi region id (region_1_1) as the other omsi fixtures.
+export const OMSI_SCALED_PRESET_PATH =
+    './presets/omsi_scaled_test/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+export const OMSI_SCALED_VICTORY_LOCATION = 'region_1_1__travel_onward';
 // The game's native per-loop budget (timeNeededInitial = 5 * 50) — the
 // starting-budget bonus the bridge reports up to the shared pool.
 export const OMSI_NATIVE_BUDGET = 250;
@@ -80,7 +89,12 @@ export function isBridgeClockRunning() {
 }
 
 /**
- * Count `user:locationCheck` publishes for one location name.
+ * Count `user:locationCheck` publishes matching a location.
+ *
+ * `match` is either an exact location NAME (string) or a PREDICATE
+ * `(locationName) => boolean` — the arc-A scaled leg passes a predicate
+ * to count every `q_0_Pots_*` check at once, proving only the SELECTED
+ * steps fire (not the intermediate rows the full pool would).
  *
  * The host dispatcher is publish-only — it has no `subscribe` — so the
  * only way to observe a dispatch is to wrap `publish`. This matters:
@@ -92,16 +106,17 @@ export function isBridgeClockRunning() {
  * The iframe path lands here too: the bridge's publishEventDispatcher
  * is forwarded by iframeAdapterCore into this same dispatcher.
  */
-export function watchLocationChecks(locationName) {
+export function watchLocationChecks(match) {
     const dispatcher = window.eventDispatcher;
     if (!dispatcher || typeof dispatcher.publish !== 'function') {
         throw new Error('watchLocationChecks: window.eventDispatcher.publish unavailable — '
             + 'a silent watcher would make "not re-reported" assertions vacuous');
     }
+    const matchFn = typeof match === 'function' ? match : (name) => name === match;
     const original = dispatcher.publish.bind(dispatcher);
     let count = 0;
     dispatcher.publish = (originModuleId, eventName, data, options) => {
-        if (eventName === 'user:locationCheck' && data?.locationName === locationName) {
+        if (eventName === 'user:locationCheck' && matchFn(data?.locationName)) {
             count += 1;
         }
         return original(originModuleId, eventName, data, options);

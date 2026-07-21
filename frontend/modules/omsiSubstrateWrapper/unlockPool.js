@@ -124,6 +124,26 @@ export function _setUnlockTableForTests(table) {
 
 export const OMSI_FILLER_ITEM_NAME = 'Bonus Seconds';
 
+/**
+ * Map an AP item copy `count` to capacity BATCHES for a var with native
+ * rowCount `R` and item count `I` (arc A ruling (c)/(d)). The bridge's
+ * `_qBatchesFromInventory` calls this so the multiplier has ONE home.
+ *
+ * `round(count × R / I)`: even distribution — every copy grants ≥1 batch
+ * (no wasted tail copies), and a full set (`count = I`) = `round(R) = R`
+ * batches = exactly baseMax capacity. The fork's `min(batches, rowCount)`
+ * cap is belt-and-braces (`count ≤ I ⇒ batches ≤ R`).
+ *
+ * Degrades to `count` when `R`/`I` is missing or ≤0 — the scale-1
+ * (itemCount absent ⇒ `I = R`) and unmanaged cases both land here as the
+ * identity, keeping the AP-V1 behavior byte-identical.
+ */
+export function qBatchesForCount(count, R, I) {
+    const r = Number(R);
+    const i = Number(I) || r;   // itemCount absent ⇒ 1:1 with rowCount
+    return r > 0 && i > 0 ? Math.round((count * r) / i) : count;
+}
+
 /** The AP item name carrying one capacity batch for `varName`. */
 export function supplyStepItemName(varName) {
     return `${varName} Supply Step`;
@@ -140,10 +160,48 @@ export function sanitizeRowId(rowId) {
     return String(rowId).replace(/[^A-Za-z0-9_]/g, '_');
 }
 
-let _poolCache = null;   // { towns, pool }
+/**
+ * Selected step set for a var with native rowCount `R` and target
+ * location count `L` (arc A ruling (a)). Steps are evenly-spaced in the
+ * step index (≡ base-rate total, since row k's base total is
+ * k × oneInEvery): `k_j = round(j × R / L)`, forced strictly increasing,
+ * with the deepest pinned to `R` so a full item set's last location
+ * fires at exactly 100% Explored.
+ *
+ * Collisions cannot occur while `L ≤ R` (target spacing `R/L ≥ 1`); the
+ * loop bumps a colliding index to the next higher row defensively, then
+ * clamps at `R`. The returned Set's size is the ACTUAL location count for
+ * the var (`= L` in every non-pathological case) and is what the pool
+ * reports as `itemCount` — keeping `|items| = |locations|` exact.
+ */
+function _selectSteps(R, L) {
+    const set = new Set();
+    let prev = 0;
+    for (let j = 1; j <= L; j++) {
+        let k = Math.round((j * R) / L);
+        if (k <= prev) k = prev + 1;   // defensive: strictly increasing
+        if (k > R) k = R;
+        set.add(k);
+        prev = k;
+    }
+    set.add(R);   // pin the deepest location to the native ceiling
+    return set;
+}
+
+let _poolCache = null;   // { towns, scale, table, pool }
 
 /**
- * Build the whole emitted pool for a world of `townCount` towns.
+ * Build the whole emitted pool for a world of `townCount` towns, scaled
+ * by `scale ∈ (0, 1]` (arc A). `scale = 1` selects every native row and
+ * reproduces the AP-V1 pool EXACTLY — the byte-inertness witness.
+ *
+ * Per (town, var) with native rowCount `R_v`:
+ *   `L_v = I_v = clamp(round(scale × R_v), 1, R_v)`
+ * locations = the `L_v` selected rows (see `_selectSteps`); items =
+ * `I_v = L_v` in v1 (one supply-step copy per selected location). The
+ * native `R_v` is computed BEFORE selection and is what
+ * `unlockMeta.rowCount` reports (the capacity grain) and the denominator
+ * of the town-major normalized-rank sort — neither shrinks with scale.
  *
  * Note each var lives in exactly ONE town (verified against the
  * artifact: 14 vars, disjoint town assignment), so "the supply-step
@@ -156,11 +214,15 @@ let _poolCache = null;   // { towns, pool }
  *   varsByTown: Map<number, string[]>,
  *   itemNames: string[],
  *   totalCopies: number,
+ *   rowCount: Map<string, number>,
+ *   itemCount: Map<string, number>,
  * }}
  */
-export function buildUnlockPool(townCount) {
+export function buildUnlockPool(townCount, scale = 1) {
     const towns = Math.max(0, Math.trunc(townCount));
-    if (_poolCache && _poolCache.towns === towns && _poolCache.table === _table) {
+    const s = Number.isFinite(scale) && scale > 0 ? Math.min(1, scale) : 1;
+    if (_poolCache && _poolCache.towns === towns
+        && _poolCache.scale === s && _poolCache.table === _table) {
         return _poolCache.pool;
     }
     const table = _table;
@@ -172,16 +234,38 @@ export function buildUnlockPool(townCount) {
         );
     }
 
-    const rows = (table.quantities ?? []).filter(
+    // Native (pre-selection) rows for the included towns.
+    const nativeRows = (table.quantities ?? []).filter(
         (r) => r.apEligible !== false && r.town < towns,
     );
 
-    // rowCount per (town, var) — the denominator of the normalized rank.
+    // Native rowCount per (town, var) — R_v. Computed BEFORE selection:
+    // it is the capacity grain (unlockMeta.rowCount) and the normalized-
+    // rank sort denominator, neither of which shrinks with scale.
     const rowCount = new Map();
-    for (const r of rows) {
+    for (const r of nativeRows) {
         const key = `${r.town}:${r.var}`;
         rowCount.set(key, (rowCount.get(key) ?? 0) + 1);
     }
+
+    // The selection: L_v = I_v = clamp(round(scale·R_v), 1, R_v), and the
+    // selected step set per var. `itemCount` is the actual selected count
+    // (= L_v), carried through as its own field so the later L ≠ I split
+    // touches only this computation and the `K = L` line, not the plumbing.
+    const itemCount = new Map();      // town:var → I_v (= L_v in v1)
+    const selectedSteps = new Map();  // town:var → Set<step>
+    for (const [key, R] of rowCount) {
+        const L = Math.min(R, Math.max(1, Math.round(s * R)));
+        const set = _selectSteps(R, L);
+        selectedSteps.set(key, set);
+        itemCount.set(key, set.size);
+    }
+
+    // Keep only the selected rows. Everything downstream sees fewer rows
+    // but is otherwise unchanged (scale 1 ⇒ every row selected).
+    const rows = nativeRows.filter(
+        (r) => selectedSteps.get(`${r.town}:${r.var}`)?.has(r.step),
+    );
 
     // Town-major order: (town, normalized rank, var, step).
     const ordered = [...rows].sort((a, b) => {
@@ -251,8 +335,10 @@ export function buildUnlockPool(townCount) {
         for (const v of (varsByTown.get(t) ?? [])) itemNames.push(supplyStepItemName(v));
     }
 
-    const pool = { townCount: towns, zones, varsByTown, itemNames, totalCopies, rowCount };
-    _poolCache = { towns, table: _table, pool };
+    const pool = {
+        townCount: towns, zones, varsByTown, itemNames, totalCopies, rowCount, itemCount,
+    };
+    _poolCache = { towns, scale: s, table: _table, pool };
     return pool;
 }
 
@@ -277,7 +363,10 @@ export function victoryAccessRule(pool) {
 }
 
 /**
- * `{itemName: varName}` + `{var: {town, rowCount}}` for the WHOLE world.
+ * `{itemName: varName}` + `{var: {town, rowCount[, itemCount]}}` for the
+ * WHOLE world. `itemCount` (I_v) is present only on a SCALED var
+ * (I_v ≠ R_v); the bridge reads it to map item copies → capacity batches
+ * as `round(count × R_v / I_v)`.
  *
  * Deliberately world-scoped, not zone-scoped, even though it rides each
  * zone's payload. The unlock overlay is GLOBAL engine state, and a var
@@ -297,7 +386,15 @@ export function unlockMetaForWorld(pool) {
     for (const [town, vars] of [...pool.varsByTown.entries()].sort((a, b) => a[0] - b[0])) {
         for (const v of vars) {
             itemToVar[supplyStepItemName(v)] = v;
-            varMeta[v] = { town, rowCount: pool.rowCount.get(`${town}:${v}`) ?? 0 };
+            const key = `${town}:${v}`;
+            const R = pool.rowCount.get(key) ?? 0;
+            const I = pool.itemCount?.get(key) ?? R;
+            // `itemCount` rides only when the pool is scaled (I ≠ R). Its
+            // ABSENCE at scale 1 is what keeps the shipped
+            // omsi_randomized_test payload byte-identical.
+            varMeta[v] = (I !== R)
+                ? { town, rowCount: R, itemCount: I }
+                : { town, rowCount: R };
         }
     }
     return { itemToVar, vars: varMeta };

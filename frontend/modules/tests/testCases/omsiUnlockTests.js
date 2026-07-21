@@ -49,6 +49,7 @@ import { registerTest } from '../testRegistry.js';
 import {
     OMSI_RANDOMIZED_PRESET_PATH,
     OMSI_RANDOMIZED_VICTORY_LOCATION,
+    OMSI_SCALED_PRESET_PATH,
     OMSI_TEST_REGION,
     OMSI_TEST_MAZE_REGION,
     waitForOmsiActive,
@@ -104,9 +105,9 @@ function readTownsUnlocked() {
  * Load the randomized preset, mount the panel, and walk into the omsi
  * region. Returns the iframe contentWindow (or null).
  */
-async function enterRandomizedOmsiRegion(testController) {
-    testController.log('Loading omsi_randomized_test preset…');
-    await testController.loadRulesFromFile(OMSI_RANDOMIZED_PRESET_PATH);
+async function enterRandomizedOmsiRegion(testController, presetPath = OMSI_RANDOMIZED_PRESET_PATH) {
+    testController.log(`Loading omsi preset ${presetPath}…`);
+    await testController.loadRulesFromFile(presetPath);
     await testController.stateManager.pingWorker('after-rules-load', 3000);
     testController.reportCondition('rules loaded', true);
 
@@ -569,6 +570,138 @@ registerTest({
                + 'townsUnlocked.includes(N) — an unrelated town (the Open Rift 0->5 '
                + 'shape) does not trigger it, town 1 does.',
     testFunction: unlockVictoryTown,
+    category: 'Omsi substrate',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
+// ────────────────────────────────────────────────────────────────
+// 7. arc A: a SCALED world — moved percentages + capacity mapping
+// ────────────────────────────────────────────────────────────────
+
+// The scaled preset (unlockScale 0.2): Pots keeps 10 of its 50 rows, at
+// steps 5,10,…,50 → the first selected Pots location fires at Explore
+// LEVEL 10 (baseTotal 50), not level 2 (the full pool's q:0:Pots:1). The
+// full pool would fire FIVE Pots checks by level 10 (q:0:Pots:1..5); the
+// scaled world fires exactly ONE (q:0:Pots:5). Item→capacity rides the
+// round(count·R/I) multiplier, so a full set of I=10 copies = baseMax.
+const SCALED_POTS = { ratio: 10, rowCount: 50, itemCount: 10 };
+const SCALED_POTS_STEP_5_LOCATION = 'region_1_1__q_0_Pots_5';
+const SCALED_POTS_STEP_10_LOCATION = 'region_1_1__q_0_Pots_10';
+// expWander for a Wander level (sqrt scaling): level L needs 50·L·(L+1).
+const EXP_FOR_WANDER_LEVEL_10 = 5500;   // fires q:0:Pots:5 (baseTotal 50)
+const EXP_FOR_WANDER_LEVEL_20 = 21000;  // fires q:0:Pots:10 (baseTotal 100)
+
+async function unlockScaledWorld(testController) {
+    const win = await enterRandomizedOmsiRegion(testController, OMSI_SCALED_PRESET_PATH);
+    if (!win) return testController.getOverallResult();
+
+    const state = bridgeState();
+    testController.assertEqual('bridge recognizes an unlock world', true, !!state?.hasUnlockPool);
+    testController.assertEqual('victoryTown carried on the payload', 1, state?.victoryTown);
+
+    // Pots stays managed at its NATIVE rowCount (50) even though only 10
+    // rows are AP locations — the capacity grain never shrinks with scale.
+    const q = readQuantityState('Pots');
+    testController.assertEqual('Pots managed', true, q != null && q.batches !== null);
+    testController.assertEqual('Pots rowCount stays native (50)', SCALED_POTS.rowCount, q?.rowCount);
+
+    // ── (2)/(3) capacity mapping: round(count·R/I) × ratio ───────────
+    testController.assertEqual('Pots capacity starts pinned at 0', 0, readCapacity('Pots'));
+
+    // 3 copies → batches = round(3·50/10) = 15 → totalPots = 15·10 = 150
+    // (an INTERMEDIATE item count lands the multiplied batches).
+    await testController.stateManager.addItemToInventory('Pots Supply Step', 3);
+    const midCapacity = Math.round((3 * SCALED_POTS.rowCount) / SCALED_POTS.itemCount)
+        * SCALED_POTS.ratio;
+    const roseMid = await eventually(
+        testController,
+        () => readCapacity('Pots') === midCapacity,
+        `Pots capacity = round(3·50/10)·10 = ${midCapacity}`,
+        10000,
+    );
+    testController.assertEqual('intermediate copies land the multiplied capacity', true, roseMid);
+    testController.assertEqual('fork batches = round(3·50/10) = 15', 15, readQuantityState('Pots')?.batches);
+
+    // A FULL set (I = 10 copies) → batches = round(10·50/10) = 50 = rowCount
+    // → totalPots = 50·10 = 500 = native baseMax (rowCount·ratio).
+    await testController.stateManager.addItemToInventory('Pots Supply Step', 7);
+    const baseMax = SCALED_POTS.rowCount * SCALED_POTS.ratio;   // 500
+    const roseFull = await eventually(
+        testController,
+        () => readCapacity('Pots') === baseMax,
+        `full set (10 copies) lands baseMax ${baseMax}`,
+        10000,
+    );
+    testController.assertEqual('a full supply-step set reaches native baseMax', true, roseFull);
+    testController.assertEqual('fork batches = round(10·50/10) = 50', 50, readQuantityState('Pots')?.batches);
+
+    // ── (1) the percentages MOVED ────────────────────────────────────
+    // Deliver up to 17 copies so every town-0 location satisfies its
+    // HasFromList access rule (max count 17) — checkLocation REJECTS an
+    // inaccessible location, which would make the observation below a
+    // false negative. Capacity is already capped at baseMax, so this is
+    // free.
+    await testController.stateManager.addItemToInventory('Pots Supply Step', 7);
+    await eventually(
+        testController,
+        () => Number(testController.stateManager.getSnapshot()?.inventory?.['Pots Supply Step'] ?? 0) >= 17,
+        '17 Pots supply-step copies held (all town-0 locations accessible)',
+        10000,
+    );
+
+    // Count EVERY Pots check, not just one location — the whole point is
+    // that only the SELECTED steps fire.
+    const watch = watchLocationChecks((name) => typeof name === 'string'
+        && name.startsWith('region_1_1__q_0_Pots_'));
+    try {
+        // Level 10 (baseTotal 50): the fork fires q:0:Pots:1..5, but only
+        // q:0:Pots:5 is an AP location — so exactly ONE check, not five.
+        omsiEval(`towns[0].finishProgress("Wander", ${EXP_FOR_WANDER_LEVEL_10})`);
+        const firstFired = await eventually(
+            testController,
+            () => snapshotHasLocation(testController.stateManager.getSnapshot(), SCALED_POTS_STEP_5_LOCATION),
+            'q:0:Pots:5 checked at Wander level 10',
+            10000,
+        );
+        testController.assertEqual('the first SELECTED Pots location checked', true, firstFired);
+        // Positive-and-exact: 1, not the 5 the full pool would have fired
+        // by this level. This is the moved-percentages proof.
+        testController.assertEqual(
+            'exactly one Pots check by level 10 (intermediate steps dropped)',
+            1,
+            watch.count,
+        );
+
+        // Level 20 (baseTotal 100): q:0:Pots:10 now fires; q:0:Pots:6..9
+        // are not locations, so the count rises by exactly one.
+        omsiEval(`towns[0].finishProgress("Wander", ${EXP_FOR_WANDER_LEVEL_20 - EXP_FOR_WANDER_LEVEL_10})`);
+        const secondFired = await eventually(
+            testController,
+            () => snapshotHasLocation(testController.stateManager.getSnapshot(), SCALED_POTS_STEP_10_LOCATION),
+            'q:0:Pots:10 checked at Wander level 20',
+            10000,
+        );
+        testController.assertEqual('the next SELECTED Pots location checked', true, secondFired);
+        testController.assertEqual(
+            'exactly two Pots checks by level 20 (steps 5 and 10 only)',
+            2,
+            watch.count,
+        );
+    } finally {
+        watch.stop();
+    }
+
+    resetWanderProgress();
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'omsi-unlock-scaled-world',
+    name: 'Omsi unlocks: a scaled world moves check percentages and maps capacity',
+    description: 'At unlockScale 0.2 the selected Pots steps fire AP checks at Explore '
+               + 'level 10/20 (not 2/4), exactly one check per selected step; item copies '
+               + 'map to capacity as round(count·R/I)·ratio, a full I-set reaching baseMax.',
+    testFunction: unlockScaledWorld,
     category: 'Omsi substrate',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });

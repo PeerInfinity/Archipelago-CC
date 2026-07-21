@@ -24,6 +24,8 @@ import { substrateRegistryEntry as omsi } from './omsiSubstrateWrapperLibrary.js
 import {
     ensureUnlockTable,
     buildUnlockPool,
+    unlockMetaForWorld,
+    qBatchesForCount,
     sanitizeRowId,
     supplyStepItemName,
     OMSI_FILLER_ITEM_NAME,
@@ -260,6 +262,112 @@ describe('libraryItems', () => {
                 expect(lib[loc.item]).toBeDefined();
             }
         }
+    });
+});
+
+// ────────────────────────────────────────────────────────────────
+// arc A: the scaled pool.
+// ────────────────────────────────────────────────────────────────
+
+describe('scaled pool (arc A)', () => {
+    // Town-0 selections under scale 0.2 (kickoff §5): L_v = round(0.2·R_v),
+    // steps k_j = round(j·R/L) → 5,10,… pinned to R_v.
+    const EXPECTED_STEPS_02 = {
+        Pots: [5, 10, 15, 20, 25, 30, 35, 40, 45, 50],   // R=50, L=10
+        Locks: [5, 10],                                   // R=10, L=2
+        SQuests: [5, 10, 15, 20],                         // R=20, L=4
+        LQuests: [5, 10],                                 // R=10, L=2
+    };
+    const stepsByVar = (pool) => {
+        const out = {};
+        for (const loc of pool.zones[0].locations) {
+            (out[loc.varName] ??= []).push(loc.step);
+        }
+        for (const v of Object.keys(out)) out[v].sort((a, b) => a - b);
+        return out;
+    };
+
+    it('selects evenly-spaced steps per var, deepest pinned to R', () => {
+        omsi.applyPipelineConfig({ towns: 1, emitUnlockLocations: true, unlockScale: 0.2 });
+        const pool = buildUnlockPool(1, 0.2);
+        expect(stepsByVar(pool)).toEqual(EXPECTED_STEPS_02);
+        // 10 + 2 + 4 + 2 = 18 supply locations.
+        expect(pool.zones[0].locations).toHaveLength(18);
+        expect(pool.totalCopies).toBe(18);
+    });
+
+    it('emits the selected raw row ids (deepest Pots at step 50 = 100%)', () => {
+        omsi.applyPipelineConfig({ towns: 1, emitUnlockLocations: true, unlockScale: 0.2 });
+        const ap = emitZone(0).payload.ap_locations;
+        const rowIds = Object.keys(ap).filter((k) => k.startsWith('q:')).sort();
+        const expected = Object.entries(EXPECTED_STEPS_02)
+            .flatMap(([v, steps]) => steps.map((k) => `q:0:${v}:${k}`))
+            .sort();
+        expect(rowIds).toEqual(expected);
+        // The deepest Pots location fires at exactly 100% Explored.
+        expect(ap['q:0:Pots:50']).toBe('R__q_0_Pots_50');
+        expect(supplyLocs(emitZone(0))).toHaveLength(18);
+    });
+
+    it('floors a var that would round to zero to a single deepest location', () => {
+        // scale 0.02 × Locks 10 = 0.2 → round 0 → clamp L = 1, one
+        // location at the native ceiling step R (q:0:Locks:10).
+        omsi.applyPipelineConfig({ towns: 1, emitUnlockLocations: true, unlockScale: 0.02 });
+        const pool = buildUnlockPool(1, 0.02);
+        expect(stepsByVar(pool).Locks).toEqual([10]);
+        expect(pool.itemCount.get('0:Locks')).toBe(1);
+        expect(pool.zones[0].locations.filter((l) => l.varName === 'Locks'))
+            .toHaveLength(1);
+    });
+
+    it('stamps itemCount on unlockMeta ONLY when scaled (byte-inert at 1)', () => {
+        expect(unlockMetaForWorld(buildUnlockPool(1, 0.2)).vars.Pots)
+            .toEqual({ town: 0, rowCount: 50, itemCount: 10 });
+        // Scale 1: itemCount omitted, so the shipped omsi_randomized_test
+        // payload is byte-identical.
+        expect(unlockMetaForWorld(buildUnlockPool(1, 1)).vars.Pots)
+            .toEqual({ town: 0, rowCount: 50 });
+        expect(unlockMetaForWorld(buildUnlockPool(1, 0.2)).vars.Locks)
+            .toEqual({ town: 0, rowCount: 10, itemCount: 2 });
+    });
+
+    it('keeps the ordinal access counts and ΣL-1 victory under scaling', () => {
+        omsi.applyPipelineConfig({ towns: 1, emitUnlockLocations: true, unlockScale: 0.2 });
+        // With I = L the ratio is 1, so the count degenerates to the
+        // ordinal i: 0 … 17 across the 18 selected locations.
+        expect(supplyLocs(emitZone(0)).map(ruleCount)).toEqual([...Array(18).keys()]);
+        // Victory = Σ L_v − 1 = 17.
+        const victory = emitZone(0).locations.at(-1);
+        expect(victory.id).toBe('travel_onward');
+        expect(victory.access_rule.args.count).toBe(17);
+    });
+});
+
+// ────────────────────────────────────────────────────────────────
+// arc A: the bridge item→batch multiplier (ruling (c)/(d)).
+// The bridge's _qBatchesFromInventory calls THIS helper, so the unit
+// test exercises the real multiplier, not a reimplementation.
+// ────────────────────────────────────────────────────────────────
+
+describe('quantity multiplier qBatchesForCount (arc A)', () => {
+    it('round(count·R/I): every copy grants ≥1 batch, full set = baseMax', () => {
+        // R=50, I=10 (Pots at scale 0.2): 0,5,10,…,50 — a full set of 10
+        // copies reaches exactly R=50 batches (baseMax).
+        expect([...Array(11).keys()].map((c) => qBatchesForCount(c, 50, 10)))
+            .toEqual([0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50]);
+        // R=10, I=6 (I does not divide R): no wasted tail copy, exact at 6.
+        expect([...Array(7).keys()].map((c) => qBatchesForCount(c, 10, 6)))
+            .toEqual([0, 2, 3, 5, 7, 8, 10]);
+    });
+
+    it('is the identity when itemCount is absent (scale-1 byte-inertness)', () => {
+        // itemCount absent ⇒ I = R ⇒ round(count·R/R) = count.
+        for (let c = 0; c <= 50; c++) {
+            expect(qBatchesForCount(c, 50, undefined)).toBe(c);
+        }
+        // Unmanaged / missing rowCount also falls back to the raw count.
+        expect(qBatchesForCount(7, 0, 0)).toBe(7);
+        expect(qBatchesForCount(7, undefined, undefined)).toBe(7);
     });
 });
 

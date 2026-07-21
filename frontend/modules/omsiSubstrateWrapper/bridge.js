@@ -89,7 +89,7 @@
  */
 
 import { IframeClient } from '../iframe-base/iframeClient.js';
-import { OMSI_FILLER_ITEM_NAME } from './unlockPool.js';
+import { OMSI_FILLER_ITEM_NAME, qBatchesForCount } from './unlockPool.js';
 
 function log(level, ...args) {
     const fn = console[level] || console.log;
@@ -378,13 +378,23 @@ function _inventory() {
  *
  * Supply-step items are progressive: the i-th copy is batch i, so only
  * the COUNT matters and arrival order never does.
+ *
+ * arc A: on a SCALED world the var carries `itemCount` (I_v) alongside
+ * `rowCount` (R_v), and `I_v` supply-step copies must reach FULL native
+ * capacity. `qBatchesForCount` (the multiplier's one home) maps
+ * `batches = round(count × R_v / I_v)`. `itemCount` absent (scale 1) ⇒
+ * I = R ⇒ the identity `count`, byte-identical to AP-V1.
  */
 function _qBatchesFromInventory() {
     const itemToVar = _world?.unlockMeta?.itemToVar ?? {};
+    const varMeta = _world?.unlockMeta?.vars ?? {};
     const inv = _inventory();
     const qBatches = {};
     for (const [itemName, varName] of Object.entries(itemToVar)) {
-        qBatches[varName] = Number(inv[itemName]) || 0;
+        const count = Number(inv[itemName]) || 0;
+        qBatches[varName] = qBatchesForCount(
+            count, varMeta[varName]?.rowCount, varMeta[varName]?.itemCount,
+        );
     }
     return qBatches;
 }

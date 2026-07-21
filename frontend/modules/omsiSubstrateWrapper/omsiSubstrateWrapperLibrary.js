@@ -60,8 +60,21 @@ export function getOmsiAwardSchedule() { return _awardSchedule; }
 const OMSI_MAX_TOWNS = 9;
 let _townCount = 1;
 let _emitUnlockLocations = false;
+// arc A: one global scale factor ∈ (0, 1], default 1.0 (byte-inert).
+// Per var L_v = I_v = clamp(round(scale·R_v), 1, R_v); scale 1 selects
+// every native row so the shipped AP-V1 pool is reproduced exactly.
+let _unlockScale = 1;
 export function getOmsiTownCount() { return _townCount; }
 export function getOmsiEmitUnlockLocations() { return _emitUnlockLocations; }
+export function getOmsiUnlockScale() { return _unlockScale; }
+
+// Coerce a config value to a valid scale: a finite number in (0, 1],
+// anything else (missing / NaN / ≤0 / >1) → the byte-inert default 1.
+function _readScale(v) {
+    const n = Number(v);
+    if (!Number.isFinite(n) || n <= 0) return 1;
+    return Math.min(1, n);
+}
 
 // The victory location id for an emission-ON world (ruling (f)): it
 // rides the LAST included town, not town 0. The legacy
@@ -123,8 +136,9 @@ export const substrateRegistryEntry = Object.freeze({
     // locations), so it only appears if a filler slot ever opens.
     get libraryItems() {
         if (!_emitUnlockLocations) return OMSI_LIBRARY_ITEMS;
-        const pool = buildUnlockPool(_townCount);
-        if (_libraryItemsCache?.key === `${_townCount}:${pool.itemNames.length}`) {
+        const pool = buildUnlockPool(_townCount, _unlockScale);
+        const cacheKey = `${_townCount}:${_unlockScale}:${pool.itemNames.length}`;
+        if (_libraryItemsCache?.key === cacheKey) {
             return _libraryItemsCache.lib;
         }
         const lib = {
@@ -135,7 +149,7 @@ export const substrateRegistryEntry = Object.freeze({
             lib[name] = { classification: 'progression_skip_balancing' };
         }
         _libraryItemsCache = {
-            key: `${_townCount}:${pool.itemNames.length}`,
+            key: cacheKey,
             lib: Object.freeze(lib),
         };
         return _libraryItemsCache.lib;
@@ -226,6 +240,7 @@ export const substrateRegistryEntry = Object.freeze({
             ? Math.min(OMSI_MAX_TOWNS, Math.max(1, Math.trunc(towns)))
             : 1;
         _emitUnlockLocations = cfg?.emitUnlockLocations === true;
+        _unlockScale = _readScale(cfg?.unlockScale);
         _libraryItemsCache = null;
     },
 
@@ -238,7 +253,7 @@ export const substrateRegistryEntry = Object.freeze({
         // carries the victory location. Throws (via buildUnlockPool) if
         // the caller enabled emission without awaiting ensureUnlockTable.
         if (_emitUnlockLocations) {
-            const pool = buildUnlockPool(_townCount);
+            const pool = buildUnlockPool(_townCount, _unlockScale);
             const zone = pool.zones[zoneIdx];
             const apLocations = {};
             for (const loc of (zone?.locations ?? [])) {
