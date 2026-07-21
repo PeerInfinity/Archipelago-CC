@@ -102,6 +102,27 @@ describe('LoopBlockBuilder — loopSupport capability gating', () => {
         expect(builder._supportsQueueAction('whatever', 'explore')).toBe(true);
     });
 
+    it('getModeOffers gates Record on declared record + playback', () => {
+        substrateRegistry.register({
+            id: 'rec', label: 'Rec', panelComponentType: 'p', loadRegionEvent: 'x',
+            loopSupport: { queueActions: ['regionMove'], manual: true, record: true, playback: true },
+        });
+        stubRegionSubstrate('rec');
+        const offers = builder.getModeOffers('R');
+        expect(offers).toMatchObject({ offersManual: true, offersRecord: true, hasRow: true });
+    });
+
+    it('getModeOffers withholds Record when only manual/playback are declared', () => {
+        substrateRegistry.register({
+            id: 'norec', label: 'NoRec', panelComponentType: 'p', loadRegionEvent: 'x',
+            loopSupport: { queueActions: ['regionMove'], manual: true },
+        });
+        stubRegionSubstrate('norec');
+        const offers = builder.getModeOffers('R');
+        expect(offers.offersManual).toBe(true);
+        expect(offers.offersRecord).toBe(false);
+    });
+
     it('reads loopSupport from the substrate registry entry', () => {
         substrateRegistry.register({
             id: 'maze',
@@ -155,13 +176,20 @@ describe('LoopBlockBuilder — loopSupport capability gating', () => {
         const bounce = (await import('../bounceDemo/bounceDemoLibrary.js')).substrateRegistryEntry;
         const flash = (await import('../flashSubstrate/flashSubstrateLibrary.js')).substrateRegistryEntry;
 
-        expect(maze.loopSupport).toMatchObject({ manual: true, customQueues: true });
+        // M2: maze + textAdventure DECLARE record + playback (Record requires
+        // both). The others don't yet (their recorders/replay land M4–M5).
+        expect(maze.loopSupport).toMatchObject({
+            manual: true, customQueues: true, record: true, playback: true,
+        });
         expect([...maze.loopSupport.queueActions]).toEqual(['regionMove', 'locationCheck', 'explore']);
 
-        expect(tasw.loopSupport).toMatchObject({ manual: true, customQueues: false });
+        expect(tasw.loopSupport).toMatchObject({
+            manual: true, customQueues: false, record: true, playback: true,
+        });
         expect([...tasw.loopSupport.queueActions]).toContain('explore');
 
         expect(jta.loopSupport).toMatchObject({ manual: true, customQueues: false });
+        expect(jta.loopSupport.record ?? false).toBe(false);
         expect([...jta.loopSupport.queueActions]).toEqual(['regionMove']);
 
         expect(bounce.loopSupport).toMatchObject({ manual: true, customQueues: false });

@@ -157,6 +157,12 @@ export class LoopUI {
             const v = this.displaySettings.getSetting('defaultBlockMode');
             if (v !== undefined) loopState.defaultBlockMode = v;
           }
+          // Mirror autoSwitchToPlaybackAfterRecord onto loopState (the
+          // Record finalize path reads it directly).
+          if (key === 'moduleSettings.loops.autoSwitchToPlaybackAfterRecord' || key === '*') {
+            const v = this.displaySettings.getSetting('autoSwitchToPlaybackAfterRecord');
+            if (v !== undefined) loopState.autoSwitchToPlaybackAfterRecord = !!v;
+          }
           this.renderLoopPanel(); // Re-render panel when setting changes
         }
       }
@@ -241,8 +247,10 @@ export class LoopUI {
                 <label class="set-all-mode-label" title="Set every current block that supports it to this mode.">Set all blocks: <select id="loop-ui-set-all-mode">
                   <option value="">—</option>
                   <option value="manual">Manual</option>
+                  <option value="record">Record</option>
                   <option value="playback">Playback</option>
                 </select></label>
+                <label class="auto-switch-playback-label" title="After a block is recorded (exited through its expected exit), switch it to Playback so the next loop replays the fresh recording."><input type="checkbox" id="loop-ui-auto-switch-playback" /> Auto-switch to Playback after recording</label>
               </div>
               <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px; margin-bottom: 8px;">
                 <button id="loop-ui-save-state" class="button" title="Save the current game state to local storage">Save Game</button>
@@ -671,6 +679,18 @@ export class LoopUI {
       });
     }
 
+    // Auto-switch-to-Playback-after-record checkbox (default ON). Mirrored
+    // into loopState (the Record finalize path reads it directly).
+    const autoSwitchCheckbox = querySelector('#loop-ui-auto-switch-playback');
+    if (autoSwitchCheckbox) {
+      autoSwitchCheckbox.checked = loopState.autoSwitchToPlaybackAfterRecord !== false;
+      autoSwitchCheckbox.addEventListener('change', async () => {
+        const on = !!autoSwitchCheckbox.checked;
+        loopState.autoSwitchToPlaybackAfterRecord = on;
+        await this.displaySettings.setSetting('autoSwitchToPlaybackAfterRecord', on, true);
+      });
+    }
+
     log('info', 'LoopUI: Internal listeners attached.');
   }
 
@@ -980,6 +1000,10 @@ export class LoopUI {
     const defaultBlockMode = this.displaySettings.getSetting('defaultBlockMode');
     if (defaultBlockMode !== undefined) {
       loopState.defaultBlockMode = defaultBlockMode;
+    }
+    const autoSwitch = this.displaySettings.getSetting('autoSwitchToPlaybackAfterRecord');
+    if (autoSwitch !== undefined) {
+      loopState.autoSwitchToPlaybackAfterRecord = !!autoSwitch;
     }
 
     // Get and set the gameState API

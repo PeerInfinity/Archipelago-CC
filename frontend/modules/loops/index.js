@@ -295,6 +295,11 @@ export function register(registrationApi) {
         enum: ['playback', 'manual'],
         label: 'Default Mode for New Blocks',
       },
+      autoSwitchToPlaybackAfterRecord: {
+        type: 'boolean',
+        default: true,
+        label: 'Auto-switch to Playback after recording',
+      },
     },
   });
 

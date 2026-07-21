@@ -48,6 +48,11 @@ const DEFAULTS = {
   // new blocks automatically; 'manual' parks each new block for
   // hand-play where its substrate supports manual.
   defaultBlockMode: 'playback',
+
+  // After a successful Record segment (exited through the expected exit),
+  // flip the block to Playback so the next loop replays the fresh recording.
+  // Default ON per the M2 ruling.
+  autoSwitchToPlaybackAfterRecord: true,
 };
 
 const CLICK_TO_QUEUE_MODES = ['off', 'append', 'rebuildPath'];

@@ -1347,6 +1347,7 @@ export class LoopState {
     let changed = 0;
     for (const v of visits) {
       if (mode === 'manual' && !this._regionSupportsManual(v.name)) continue;
+      if (mode === 'record' && !this._regionSupportsRecord(v.name)) continue;
       if (mode === 'playback' && !this._regionOffersPlayback(v.name)) continue;
       this.setBlockMode(v.name, v.instance, mode);
       changed += 1;
@@ -1357,6 +1358,17 @@ export class LoopState {
   /** Whether the region's substrate declares manual loop support. */
   _regionSupportsManual(region) {
     return !!this._loopSupportFor(region)?.manual;
+  }
+
+  /**
+   * Whether the region's substrate can offer Record — it must DECLARE both
+   * a recorder and replay (record requires playback). Mirrors
+   * loopBlockBuilder.getModeOffers so the set-all control and the radios
+   * agree on where Record is offered.
+   */
+  _regionSupportsRecord(region) {
+    const ls = this._loopSupportFor(region);
+    return !!ls?.record && !!ls?.playback;
   }
 
   /**

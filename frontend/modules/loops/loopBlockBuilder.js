@@ -393,7 +393,16 @@ export class LoopBlockBuilder {
     const offersManual = !!ls?.manual;
     const offersPlayback = !!ls &&
       (!!ls.manual || (ls.queueActions?.length > 0) || !!ls.executeVia);
-    return { offersManual, offersPlayback, hasRow: offersManual || offersPlayback };
+    // Record (M2) is offered only where the substrate DECLARES both a
+    // recorder and replay (record requires playback — a capture you can't
+    // play back is useless).
+    const offersRecord = !!ls?.record && !!ls?.playback;
+    return {
+      offersManual,
+      offersPlayback,
+      offersRecord,
+      hasRow: offersManual || offersPlayback || offersRecord,
+    };
   }
 
   /**
@@ -430,6 +439,7 @@ export class LoopBlockBuilder {
     // playback-only block shows Playback selected).
     let selected = loopState.getBlockMode(regionName, instanceNumber);
     if (selected === 'manual' && !offers.offersManual) selected = 'playback';
+    if (selected === 'record' && !offers.offersRecord) selected = 'playback';
     if (selected === 'playback' && !offers.offersPlayback) selected = 'manual';
 
     // Radios in one block share a name so exactly one is checked. The
@@ -441,8 +451,15 @@ export class LoopBlockBuilder {
         title: 'Play this block by hand when the queue reaches it. Its queued '
           + 'actions become the expected outcome; exiting through the expected exit '
           + 'resumes the queue, any other exit pauses it until the next loop reset.' },
+      { value: 'record', text: 'Record', offered: offers.offersRecord,
+        title: 'Play this block by hand AND capture what you do as a reusable '
+          + 'recording. Exiting through the expected exit saves the recording '
+          + '(and, by default, switches this block to Playback); any other exit '
+          + 'or running out of mana discards it.' },
       { value: 'playback', text: 'Playback', offered: offers.offersPlayback,
-        title: 'The system runs this block automatically when the queue reaches it.' },
+        title: 'The system runs this block automatically when the queue reaches '
+          + 'it — replaying a saved recording when one exists, else the default '
+          + 'auto behavior.' },
     ];
 
     for (const mode of MODES) {
