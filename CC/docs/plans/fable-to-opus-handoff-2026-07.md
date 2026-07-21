@@ -849,8 +849,29 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    region concept (`omsi:loadRegion`, `region_id`→`world.omsiTown`) —
    `awardSchedule` riding the region payload is the transport template; arc C
    EXTENDS it. Fork slice: byte-gate + V4 + ask-first gitlink cadence RESUME;
-   independent stratum = an in-app region round-trip leg. NEXT: arc-C
-   IMPLEMENTATION (Opus) — prompt in NewDocs NEXT-SESSION-PROMPT.md.
+   independent stratum = an in-app region round-trip leg.
+   **ARC C SHIPPED + PUSHED 2026-07-21 (Opus, session 60): fork `2bda39b`
+   (both branches), outer `f0eb5b3ff` on main (gitlink bumped c200b5c→2bda39b,
+   user-approved).** USER STEER mid-flight: "separate regions are supposed to
+   be separate zones" → the design shifted from a hand-cloned region to **the
+   omsi substrate emitting N GENUINE zones all mapping to `omsiTown 0`** via a
+   new `regionSplit` pipeline-① config (byte-inert when absent). Fork
+   `managed.js`: `dumpRegionState`/`loadRegionState` (swap VALUE props derived
+   from the town's var lists, `adjustAll`+`check` both branches, ZERO new save
+   keys), `setActiveRegion`/`regionExitAvailable` (Explore-% gate
+   `exp/505000≥threshold`, default 1.0), `injectSyntheticAction`/
+   `clearSyntheticActions` (register `Action[key]` AFTER initializeActions ⇒
+   queueable via getActionPrototype but NEVER in totalActionList/census/DOM).
+   Bridge derives ONE synthetic exit per GRAPH exit from `world.exits` (jta
+   `_getRegionExits` pattern — NOT a hand-authored exits list;
+   `handleRegionMove` routes purely by `targetRegion`). Independent stratum =
+   `omsi_region_split_test` preset + `omsi-region-split-round-trip` in-app leg
+   (r0 fresh→explore→exit→r1 fresh→return→r0 restored). Gates: fork 279/279,
+   byte-gate 461/5195188/9d9952e68bc8373c/0, V4 PASS, vitest 3122, regression
+   31/31, substrates 43/43 (a `jta-out-of-mana` cold-start flake cleared on
+   re-run; not mine), 4 presets byte-identical, `unlockTable.json` unchanged.
+   Full record: memory `project_omsi_loops_fork` session 60. NEXT: **arc D**
+   (loops-mode support — omsi declares NO `loopSupport`).
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
