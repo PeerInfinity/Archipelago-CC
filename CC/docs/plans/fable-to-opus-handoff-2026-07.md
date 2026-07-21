@@ -156,20 +156,37 @@ queue-builder = **planner**, inner per-task agent = **solver**
 
 Phases (one Opus session each, design §5): **M1** mode core —
 **✅ SHIPPED 2026-07-21 (Opus session 62, outer `96043df8a`)**; **M2**
-Record + playback-of-recordings (maze+textAdventure) — **NEXT, kickoff
-READY** *(NewDocs)* `loops-block-modes-m2-opus-kickoff.md` (Fable session
-61b): two fresh user rulings — wrong-exit during Record = Manual's
-pause-until-reset + **DISCARD** the recording; auto-switch-to-Playback
-setting **default ON** — plus the corrected design §4 (transient mode-map
-key `(region, instanceNumber)` ≠ persistent recording tag
-`(region, arrivalKey, ordinal)`; canonical arrivalKey = the recorder's
-`arrivedFrom.exit_id`); recon-first items: arrivalKey canonicalization +
-gameState interior-entry replacement (boundary regionMoves untouched);
-**M3**
-Instant toggle + activation-suppression seam; **M4** jta instant pump +
+Record + playback-of-recordings (maze+textAdventure) — **✅ CODE COMPLETE
+2026-07-21 (Opus session 63; `cbf461238`→`da26a5b7d`→`10c5851a7`→
+`c627e4e48`→`506a7c51c`)** (as-built below); **M3** Instant toggle +
+activation-suppression seam — **NEXT**; **M4** jta instant pump +
 recorder; **M5** runner/bounce; **M6** solver unification + rename + Bot
 radio. Omsi arc D re-queues AFTER this track (see §4); omsi Instant last of
 all.
+
+**M2 as-built (see design §5 M2 + memory `project_loops_block_modes` for
+full notes):** Key pivot (user-confirmed via AskUserQuestion, overriding the
+kickoff's recon-3 recorder-gated seam): **loops is the SOLE persister** —
+recorders STASH their capture (`takeLastRecording` on the substrate
+registry), loopState PULLS only on a successful Record exit → wrong-exit /
+mana-out DISCARD is race-free (never pulls), and recon-1's recorder↔queue
+arrivalKey equality is NON-load-bearing (loops derives the
+`(arrivalKey, ordinal)` tag via `assignRecordingTags` +
+`procgenPlayer.getWarehouse()` on both save and auto-restore, stamping
+`arrivalExitId := arrivalKey`). `savedQueueStore` gained `ordinal` +
+replace-on-tag + `getSavedQueueByTag` (⚠ collapses maze's own
+`_pickBestExit`/`_getReplayableTargets` multi-entry model — tests reseeded
+with distinct ordinals; intended, recording is now Record-gated). Coarse
+interior replacement landed with a PROVEN-SAFE reentrancy test (parked block
+is `'idle'` not `'waiting'`, so eventCoordinator's pathUpdated auto-resume
+never fires mid-mutation). textAdventure got a REAL wrapper-side
+`replayActions` (proxy+bridge, ZERO engine-submodule edits) that issues the
+closing regionMove via `departureExitId` (TA has no self-exit tile). Record
+radio + auto-switch setting (default ON) both capability-gated on declared
+`loopSupport.record`+`.playback`. Gates: vitest 3166 (+26), regression 1/1,
+substrates 43/43. **⚠ REMAINING to fully close M2: in-app record→playback
+leg (needs a `test-substrates` config id) + in-browser sanity (M1's too) —
+do with the user; bundle into M3's session.**
 
 **M1 as-built (see design §5 M1 for full notes):** Manual checkbox → per-
 `(region, instanceNumber)` Manual/Playback radios; new shared resolver
