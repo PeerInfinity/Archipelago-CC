@@ -59,12 +59,17 @@ export class PlaybackProxy {
      * emitted regionMove, not this callback).
      *
      * @param {Array} actions - recorded substrate-native action list
-     * @param {{departureExitId?: string, onComplete?: Function}} [opts]
+     * @param {{departureExitId?: string, instant?: boolean, onComplete?: Function}} [opts]
      */
     replayActions(actions, opts = {}) {
         this._send('replayActions', [
             Array.isArray(actions) ? actions : [],
-            { departureExitId: opts?.departureExitId ?? null },
+            {
+                departureExitId: opts?.departureExitId ?? null,
+                // Instant (M3): drain the whole replay in one frame rather
+                // than one action per bridge clock tick.
+                instant: opts?.instant === true,
+            },
         ]);
         return true;
     }

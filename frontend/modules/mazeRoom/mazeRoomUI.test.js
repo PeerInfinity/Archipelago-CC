@@ -451,6 +451,34 @@ describe('MazeRoomUI — M2 Playback departure crossing', () => {
             vi.useRealTimers();
         }
     });
+
+    it('instant drains the interior + crosses the departure synchronously (M3, no clock)', () => {
+        const panel = panelAtExitRegion();
+        const order = [];
+        let remaining = 2;
+        // Fake queue: stepOne runs the executor (advances position); length
+        // bounds the instant drain guard.
+        panel._mazeQueue = {
+            appendAll: () => {},
+            isIdle: () => remaining <= 0,
+            stepOne: () => { remaining -= 1; order.push('step'); },
+            drainPending: () => {},
+            length: 2,
+        };
+        // Guard against a stray animation clock ever starting.
+        panel._startReplayDriver = vi.fn(() => order.push('driver'));
+        panel._crossRecordedDeparture = vi.fn(() => { order.push('cross'); return true; });
+
+        const started = panel._replaySavedActions(
+            [{ type: 'move', dir: 'E' }, { type: 'move', dir: 'E' }],
+            { departureExitId: 'east_id', instant: true },
+        );
+        expect(started).toBe(true);
+        // Everything already ran, in order, with NO animation driver.
+        expect(order).toEqual(['step', 'step', 'cross']);
+        expect(panel._startReplayDriver).not.toHaveBeenCalled();
+        expect(panel._crossRecordedDeparture).toHaveBeenCalledWith('east_id');
+    });
 });
 
 describe('MazeRoomUI — visualizer pickup → system:locationCheck dispatch', () => {

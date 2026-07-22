@@ -139,12 +139,25 @@ export class PlaybackBridge {
      * parked loops queue advances.
      *
      * @param {Array} actions
-     * @param {{departureExitId?: string}} [opts]
+     * @param {{departureExitId?: string, instant?: boolean}} [opts]
      */
     replayActions(actions, opts = {}) {
         this._stopReplay();
         this._replayQueue = Array.isArray(actions) ? actions.slice() : [];
         this._replayDeparture = opts?.departureExitId ?? null;
+        // Instant (M3): drain the entire interior + issue the departure in one
+        // synchronous pass, no clock. _replayTick already ends by issuing the
+        // departure and stopping when the queue empties, so we just pump it
+        // until the queue is drained (a guard bounds it against any surprise).
+        if (opts?.instant === true) {
+            let guard = this._replayQueue.length + 1;
+            while (this._replayQueue && this._replayQueue.length > 0 && guard-- > 0) {
+                this._replayTick();
+            }
+            // Final tick drains the (now empty) queue → issues the departure.
+            this._replayTick();
+            return true;
+        }
         const intervalMs = Math.max(1, Math.round(1000 / this._rateHz));
         this._replayClock = setInterval(() => this._replayTick(), intervalMs);
         return true;

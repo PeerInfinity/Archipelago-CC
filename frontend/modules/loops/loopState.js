@@ -1357,6 +1357,10 @@ export class LoopState {
    */
   _handlePlaybackReplayEntry(region, saved) {
     if (this._manualActionEntered) return;
+    // Capture the block's Instant flag (M3) BEFORE stopProcessing so the
+    // running-block resolution is still valid; a truthy flag drains the
+    // replay in one frame and (via isFocusLocked) suppresses the panel below.
+    const instant = this._currentBlockIsInstant();
     this._manualActionEntered = true;
     this._manualRegionName = region;
 
@@ -1378,6 +1382,9 @@ export class LoopState {
           // physically walks its player across the exit tile) — the parked
           // loops block advances on the resulting regionMove wake.
           departureExitId: saved.departureExitId ?? null,
+          // Instant (M3): drain the whole replay in one frame instead of
+          // animating one action per clock tick.
+          instant,
         });
       } catch (err) {
         log('warn', '[LoopState] playback replayActions threw:', err);
@@ -1677,6 +1684,10 @@ export class LoopState {
    */
   _handleCustomQueueEntry(action) {
     if (this._manualActionEntered) return;
+    // Capture the block's Instant flag (M3) before stopProcessing, same as
+    // the mode-driven Playback path — a customQueue replay on an Instant
+    // block drains in one frame too.
+    const instant = this._currentBlockIsInstant();
     this._manualActionEntered = true;
 
     // Playback (customQueue) runs the block automatically — unlike a
@@ -1704,6 +1715,7 @@ export class LoopState {
         try {
           controller.replayActions(saved.actions, {
             onComplete: () => { /* reserved for future UI */ },
+            instant,
           });
         } catch (err) {
           log('warn', '[LoopState] customQueue replayActions threw:', err);

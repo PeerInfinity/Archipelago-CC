@@ -311,6 +311,37 @@ describe('PlaybackBridge — replayActions (M2 Playback)', () => {
         }
     });
 
+    it('instant:true drains the whole interior + departure synchronously (no clock)', () => {
+        const { bridge, client } = makeBridge();
+        bridge.replayActions(
+            [
+                { type: 'locationCheck', locationName: 'Coin' },
+                { type: 'explore', regionName: 'Cave' },
+            ],
+            { departureExitId: 'NorthDoor', instant: true },
+        );
+        // Everything already dispatched — no timer advance needed.
+        const events = client._dispatched();
+        expect(events.map((e) => e.event)).toEqual([
+            'user:locationCheck', 'loop:exploreCompleted', 'user:regionMove',
+        ]);
+        // The fromLoop double-append guards still hold on the instant path.
+        expect(events[0].data.fromLoop).toBe(true);
+        expect(events[2].data.fromLoop).toBe(true);
+        // No clock was ever started.
+        vi.advanceTimersByTime(2000);
+        expect(client._dispatched()).toHaveLength(3);
+    });
+
+    it('instant:true with empty interior still issues the departure', () => {
+        const { bridge, client } = makeBridge();
+        bridge.replayActions([], { departureExitId: 'NorthDoor', instant: true });
+        const events = client._dispatched();
+        expect(events).toHaveLength(1);
+        expect(events[0].event).toBe('user:regionMove');
+        expect(events[0].data.fromLoop).toBe(true);
+    });
+
     it('reset() cancels an in-flight replay', () => {
         const { bridge, client } = makeBridge();
         bridge.replayActions(

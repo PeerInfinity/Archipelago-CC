@@ -1752,7 +1752,7 @@ export class MazeRoomUI {
      * Returns true if a replay was started; false when actions is
      * empty or invalid.
      */
-    _replaySavedActions(actions, { onComplete, departureExitId = null } = {}) {
+    _replaySavedActions(actions, { onComplete, departureExitId = null, instant = false } = {}) {
         const hasActions = Array.isArray(actions) && actions.length > 0;
         // Nothing to replay AND no exit to cross — genuinely a no-op.
         if (!hasActions && !departureExitId) return false;
@@ -1771,7 +1771,24 @@ export class MazeRoomUI {
         };
         if (hasActions) {
             this._mazeQueue.appendAll(actions);
-            this._startReplayDriver({ onComplete: onReplayComplete });
+            if (instant) {
+                // Instant (M3): drain the whole interior synchronously (no
+                // animation clock), then cross the departure in the same
+                // frame. The interior advances the panel engine state exactly
+                // as the ticked driver would — just without the 200ms/step
+                // wait — so _crossRecordedDeparture still issues the transition
+                // from the (now-at-exit) engine state.
+                // stepOne() runs the executor (advances the engine state),
+                // unlike drainPending() which only marks statuses — we need the
+                // real position advance so the departure crosses from the exit.
+                let guard = (this._mazeQueue.length ?? actions.length) + 1;
+                while (!this._mazeQueue.isIdle() && guard-- > 0) {
+                    this._mazeQueue.stepOne();
+                }
+                onReplayComplete();
+            } else {
+                this._startReplayDriver({ onComplete: onReplayComplete });
+            }
         } else {
             // Empty-interior recording (arrival tile is the exit tile): no
             // driver needed, just cross the exit.
