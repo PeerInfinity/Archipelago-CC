@@ -123,6 +123,28 @@ describe('LoopBlockBuilder — loopSupport capability gating', () => {
         expect(offers.offersRecord).toBe(false);
     });
 
+    it('getModeOffers gates Instant (M3) on the declared instant capability', () => {
+        substrateRegistry.register({
+            id: 'inst', label: 'Inst', panelComponentType: 'p', loadRegionEvent: 'x',
+            loopSupport: { queueActions: ['regionMove'], manual: true, playback: true, instant: true },
+        });
+        substrateRegistry.register({
+            id: 'noinst', label: 'NoInst', panelComponentType: 'p', loadRegionEvent: 'y',
+            loopSupport: { queueActions: ['regionMove'], manual: true, playback: true },
+        });
+        stubRegionSubstrate('inst');
+        expect(builder.getModeOffers('R').offersInstant).toBe(true);
+        // Re-stub to the non-instant substrate.
+        registeredGetRegionInfo = () => ({ substrate: 'noinst', label: 'noinst' });
+        centralRegistry.registerPublicFunction('procgenPlayer', 'getRegionInfo', registeredGetRegionInfo);
+        expect(builder.getModeOffers('R').offersInstant).toBe(false);
+    });
+
+    it('getModeOffers offersInstant is false for AP-native regions', () => {
+        stubRegionSubstrate(null);
+        expect(builder.getModeOffers('Menu').offersInstant).toBe(false);
+    });
+
     it('reads loopSupport from the substrate registry entry', () => {
         substrateRegistry.register({
             id: 'maze',

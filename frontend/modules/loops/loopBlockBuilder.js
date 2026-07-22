@@ -397,10 +397,15 @@ export class LoopBlockBuilder {
     // recorder and replay (record requires playback — a capture you can't
     // play back is useless).
     const offersRecord = !!ls?.record && !!ls?.playback;
+    // Instant (M3) is offered where the substrate DECLARES the capability;
+    // the checkbox itself is only shown for a Playback (M6+: Bot) block, so
+    // it rides alongside offersPlayback in practice.
+    const offersInstant = !!ls?.instant;
     return {
       offersManual,
       offersPlayback,
       offersRecord,
+      offersInstant,
       hasRow: offersManual || offersPlayback || offersRecord,
     };
   }
@@ -486,6 +491,35 @@ export class LoopBlockBuilder {
       label.appendChild(radio);
       label.appendChild(document.createTextNode(` ${mode.text}`));
       container.appendChild(label);
+    }
+
+    // Instant toggle (M3): a per-block checkbox offered only where the
+    // substrate DECLARES loopSupport.instant AND the block runs in an auto
+    // mode (Playback now; Bot in M6). Instant doesn't apply to Manual/Record
+    // (the player drives those by hand), so it's hidden for those selections.
+    // Toggling re-renders so a mode switch shows/hides it immediately.
+    if (offers.offersInstant && selected === 'playback') {
+      const instLabel = document.createElement('label');
+      instLabel.className = 'block-instant-label';
+      instLabel.title =
+        'Run this block headlessly in a single frame instead of animating it — '
+        + 'no substrate panel activation while it runs. Applies to Playback (and Bot).';
+      Object.assign(instLabel.style, {
+        display: 'flex', alignItems: 'center', gap: '3px', marginLeft: '6px',
+      });
+
+      const instBox = document.createElement('input');
+      instBox.type = 'checkbox';
+      instBox.className = 'block-instant-checkbox';
+      instBox.checked = loopState.getBlockInstant(regionName, instanceNumber);
+      instBox.addEventListener('change', () => {
+        loopState.setBlockInstant(regionName, instanceNumber, instBox.checked);
+        this.loopUI.renderLoopPanel?.();
+      });
+
+      instLabel.appendChild(instBox);
+      instLabel.appendChild(document.createTextNode(' Instant'));
+      container.appendChild(instLabel);
     }
 
     detailsEl.appendChild(container);

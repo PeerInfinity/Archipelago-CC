@@ -250,6 +250,11 @@ export class LoopUI {
                   <option value="record">Record</option>
                   <option value="playback">Playback</option>
                 </select></label>
+                <label class="set-all-instant-label" title="Turn the Instant toggle on or off for every current block whose substrate supports it. Instant runs a Playback/Bot block headlessly in one frame.">Set all Instant: <select id="loop-ui-set-all-instant">
+                  <option value="">—</option>
+                  <option value="on">On</option>
+                  <option value="off">Off</option>
+                </select></label>
                 <label class="auto-switch-playback-label" title="After a block is recorded (exited through its expected exit), switch it to Playback so the next loop replays the fresh recording."><input type="checkbox" id="loop-ui-auto-switch-playback" /> Auto-switch to Playback after recording</label>
               </div>
               <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px; margin-bottom: 8px;">
@@ -675,6 +680,20 @@ export class LoopUI {
         setAllModeSelect.value = '';
         if (!mode) return;
         loopState.setAllBlockModes(mode);
+        this.renderLoopPanel();
+      });
+    }
+
+    // Set-all Instant (M3): one-shot action mirroring set-all-mode. Applies
+    // the flag to every current block whose substrate declares instant, then
+    // snaps back to the placeholder.
+    const setAllInstantSelect = querySelector('#loop-ui-set-all-instant');
+    if (setAllInstantSelect) {
+      setAllInstantSelect.addEventListener('change', () => {
+        const choice = setAllInstantSelect.value;
+        setAllInstantSelect.value = '';
+        if (!choice) return;
+        loopState.setAllBlockInstant(choice === 'on');
         this.renderLoopPanel();
       });
     }
