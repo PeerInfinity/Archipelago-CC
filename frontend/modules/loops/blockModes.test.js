@@ -293,6 +293,31 @@ describe('per-block Instant (M3) — storage, capability & set-all', () => {
     loopState.setBlockInstant('A', 1, false);
     expect(loopState._currentBlockIsInstant()).toBe(false);
   });
+
+  it('the generic timer completes a nonzero-cost action in one frame when the block is Instant', () => {
+    // A#1 owns an explore customAction (default cost ~50). With the GLOBAL
+    // instantMode off, only the per-block Instant flag can drive the
+    // single-frame completion — so this isolates the M3 seam.
+    gs.updatePath('A', 'go', 'Menu');
+    gs.addCustomAction('explore', { regionName: 'A' });
+    gs.maxMana = 1000; gs.currentMana = 1000;
+    loopState.instantMode = false;
+    const queue = loopState.getActionQueue();
+    const idx = queue.findIndex((e) => e.type === 'customAction');
+    loopState.currentActionIndex = idx;
+    loopState.currentAction = queue[idx];
+    const pathIndex = loopState.currentAction.pathIndex;
+
+    // Not instant yet → a 16ms frame makes only partial progress.
+    loopState._advanceActionProgress(16);
+    expect(loopState.actionQueueManager.getProgress(pathIndex)).toBeLessThan(100);
+
+    // Flag the block Instant, reset progress → one frame completes it.
+    loopState.actionQueueManager.setProgress(pathIndex, 0);
+    loopState.setBlockInstant('A', 1, true);
+    loopState._advanceActionProgress(16);
+    expect(loopState.actionQueueManager.getProgress(pathIndex)).toBe(100);
+  });
 });
 
 describe('per-block mode — execution parks the right visit', () => {

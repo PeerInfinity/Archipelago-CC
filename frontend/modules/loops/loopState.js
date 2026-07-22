@@ -1983,7 +1983,8 @@ export class LoopState {
    *   - gs.deductMana (handles noManaDepletionReset / manaDebt internally)
    *   - gs.addRegionXP + gameState:xpChanged event for fine-grained UI updates
    *
-   * Zero-cost actions and instantMode complete in a single frame.
+   * Zero-cost actions, the global instantMode debug flag, and a per-block
+   * Instant toggle (M3) all complete the action in a single frame.
    */
   _advanceActionProgress(deltaTime) {
     const actionCost = this._calculateActionCost(this.currentAction);
@@ -1991,7 +1992,7 @@ export class LoopState {
       this.actionQueueManager.getProgress(this.currentAction.pathIndex) || 0;
 
     let progressIncrement;
-    if (actionCost === 0 || this.instantMode) {
+    if (actionCost === 0 || this.instantMode || this._currentBlockIsInstant()) {
       progressIncrement = 100 - currentProgress;
     } else {
       // Slow down the action for better visibility — 20 instead of 100.

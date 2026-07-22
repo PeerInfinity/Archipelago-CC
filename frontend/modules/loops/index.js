@@ -239,6 +239,14 @@ export function register(registrationApi) {
   // stack layouts (panels are independent → activation doesn't push
   // loops off → suppression unnecessary).
   registrationApi.registerPublicFunction(moduleInfo.name, 'isFocusLocked', () => {
+    // Instant (M3): while the running block is set to Instant, suppress
+    // substrate panel self-activation for its whole run — an instant block
+    // completes headlessly in one frame, so there's nothing to watch. This
+    // is independent of keepFocused / the active tab (an instant block must
+    // not steal focus even when loops isn't the active panel). Reuses the
+    // same predicate the substrates and the Playback panel-activation gates
+    // (_handlePlaybackReplayEntry / _handleCustomQueueEntry) already consult.
+    if (loopStateSingleton._currentBlockIsInstant?.() === true) return true;
     return loopStateSingleton.keepFocused === true
       && panelManagerInstance.isPanelActive(moduleInfo.componentType);
   });
