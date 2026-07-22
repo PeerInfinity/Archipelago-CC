@@ -369,6 +369,11 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('loopState:manualEntered');
   registrationApi.registerEventBusPublisher('loopState:manualResumed');
   registrationApi.registerEventBusPublisher('loopState:queuePausedUntilReset');
+  // loopState activates the substrate panel on manual / playback entry
+  // (loopState.js _handleManualRegionEntry / _handlePlaybackReplayEntry /
+  // customQueue). Every other ui:activatePanel publisher registers itself;
+  // loops was the lone omission, which warned when Playback fired.
+  registrationApi.registerEventBusPublisher('ui:activatePanel');
 
   // Cost generation events
   registrationApi.registerEventBusPublisher('costGenerator:progress');
