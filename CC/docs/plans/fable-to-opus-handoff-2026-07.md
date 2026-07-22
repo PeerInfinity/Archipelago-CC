@@ -226,8 +226,17 @@ empty pull → `_persistRecordingForBlock` returns before the auto-switch. Fixed
 by publishing `commandRecorded` first (maze finalizes its stash before the
 regionMove for the same reason). ⚠ general trap: a recorder that stashes on a
 separate event from the regionMove must finalize BEFORE the regionMove.
-**⚠ REMAINING to fully close M2: in-browser sanity (M1's too) — do with the
-user; bundle into M3's session. NOT pushed (user holds push until sanity).**
+**M2 CLOSED: pushed through `dfbce4425` (11/n), verified session 64** — the
+in-app leg `maze-record-playback-crosses-exit` landed WITH its
+`test-substrates` config id; maze-side in-browser sanity happened live in
+session 63 (fixes 8/9/10/11 were sanity-caught). **⚠ OPEN BUG carried into
+M3 (confirmed session 64, Fable): TA Playback double-append** —
+`playbackBridge.js` `_issueDeparture` publishes `user:regionMove` without
+`fromLoop:true` (`gameState/index.js:383` appends without the flag; the
+exact bug maze 10/n fixed), and `_replayOne`'s `user:locationCheck` lacks
+the flag too (`index.js:457`, same guard). Fix both + a path-length
+assertion, FIRST in the M3 session; TA Playback also still needs its
+in-browser sanity pass.**
 
 **M1 as-built (see design §5 M1 for full notes):** Manual checkbox → per-
 `(region, instanceNumber)` Manual/Playback radios; new shared resolver
