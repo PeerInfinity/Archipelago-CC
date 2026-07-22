@@ -197,10 +197,19 @@ marking a synthetic loops-driven action so `_onVisualizerExitCross` publishes
 block advances. Also: mode-based unparked-capture unit tests; UI re-render on
 auto-switch (`_persistRecordingForBlock` now publishes `loopState:queueUpdated`
 so the radio flips immediately, not only on loop restart); stripped the 4
-`[loops M2]` TEMP diag console.logs. Gates: **vitest 3173 (+7)**, regression
-1/1, substrates 43/43 (`jta-out-of-mana` cold-start flake → warm re-run).
-**⚠ REMAINING to fully close M2: in-app record→playback leg (needs a
-`test-substrates` config id) + in-browser sanity (M1's too) — do with the
+`[loops M2]` TEMP diag console.logs.
+
+**Session-63 in-app leg (commit 7/n):** `maze-record-playback-crosses-exit`
+(`mazeBlockModeTests.js`, category "Maze block modes", new `test-substrates`
+config id + `testDiscovery.js` import) replays a recording carrying a
+`departureExitId` in a live maze region and asserts the player physically
+crosses the recorded exit (region changes) through the REAL
+visualizer/pathfinder/gameState — exercising the fix path the stubbed-
+visualizer unit tests can't. ⚠ drive the cross via the `replayActions` path
+(not `loops:substrateActionBegan` delegation, which didn't cross in the
+substrates harness). Gates: **vitest 3173 (+7)**, regression 1/1, substrates
+**44/44** (warm; `jta-out-of-mana` cold-start flake → warm re-run).
+**⚠ REMAINING to fully close M2: in-browser sanity (M1's too) — do with the
 user; bundle into M3's session. NOT pushed (user holds push until sanity).**
 
 **M1 as-built (see design §5 M1 for full notes):** Manual checkbox → per-

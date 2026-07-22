@@ -219,6 +219,11 @@
             "id": "maze-mana-tile-refills-pool",
             "enabled": true,
             "category": "Maze consumable tiles"
+        },
+        {
+            "id": "maze-record-playback-crosses-exit",
+            "enabled": true,
+            "category": "Maze block modes"
         }
     ]
 }

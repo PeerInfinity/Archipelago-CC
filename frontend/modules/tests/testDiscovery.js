@@ -54,6 +54,7 @@ const TEST_CASE_FILES = [
   './testCases/omsiUnlockTests.js',
   './testCases/omsiRegionSplitTests.js',
   './testCases/mazeConsumableTileTests.js',
+  './testCases/mazeBlockModeTests.js',
   //'./testCases/manualTests.js',
 ];
 
