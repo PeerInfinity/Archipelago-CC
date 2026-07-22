@@ -1540,7 +1540,9 @@ export class LoopState {
           entry.locationName === locationName &&
           !entry.completed) {
         this.actionQueueManager?.markCompleted(entry.pathIndex);
-        this.eventBus?.publish('loopState:queueUpdated', {});
+        // Payload MUST carry `queue` — _handleQueueUpdated →
+        // _updateRegionsInQueue iterates it (an empty {} throws).
+        this.eventBus?.publish('loopState:queueUpdated', { queue });
         return;
       }
     }

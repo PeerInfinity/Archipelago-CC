@@ -185,30 +185,37 @@ closing regionMove via `departureExitId` (TA has no self-exit tile). Record
 radio + auto-switch setting (default ON) both capability-gated on declared
 `loopSupport.record`+`.playback`.
 
-**Session-63 finish (`loopState.js` + `mazeRoomUI.js`, 6/n):** fixed the M2
-BLOCKER — maze Playback stopped one tile before the exit because a maze
-recording captures only INTERIOR moves (the exit-crossing move is excluded
-from `_finalizeVisitOnExit`'s slice, same as TA excluding its departure); the
-kickoff's "maze self-exits" assumption was wrong. Maze `_replaySavedActions`
-now takes `departureExitId` → `_crossRecordedDeparture` physically walks the
-visualizer across the recorded exit tile after the interior replay drains,
-marking a synthetic loops-driven action so `_onVisualizerExitCross` publishes
-`user:regionMove {fromLoop:true}` (no duplicate path entry) and the parked
-block advances. Also: mode-based unparked-capture unit tests; UI re-render on
-auto-switch (`_persistRecordingForBlock` now publishes `loopState:queueUpdated`
-so the radio flips immediately, not only on loop restart); stripped the 4
-`[loops M2]` TEMP diag console.logs.
+**Session-63 finish (`loopState.js` + `mazeRoomUI.js`, commits 6/n–10/n):**
+fixed the M2 BLOCKER — maze Playback stopped one tile before the exit because
+a maze recording captures only INTERIOR moves (the exit-crossing move is
+excluded from `_finalizeVisitOnExit`'s slice, same as TA excluding its
+departure); the kickoff's "maze self-exits" assumption was wrong. Maze
+`_replaySavedActions` now takes `departureExitId` → `_crossRecordedDeparture`
+after the interior replay drains. ⚠ **6/n first drove the VISUALIZER across
+the exit — a double-walk/teleport bug (caught in in-browser sanity):** the
+interior replay runs through the maze QUEUE (`_executeMoveAction` → PANEL
+engine state), NOT the visualizer (separate position tracker still at the
+entrance), so re-walking the visualizer restarted from the entrance and walked
+the region twice. **10/n corrected it to ISSUE the transition DIRECTLY**
+(mirroring TA's `_issueDeparture`): publish `user:regionMove {sourceRegion,
+targetRegion, exitName, fromLoop:true}` from the exit's `targetRegion`, no
+visualizer, no re-walk. `fromLoop:true` (updatePath appends forward moves, so
+the parked block's queued regionMove-out would double). ⚠ TA's `_issueDeparture`
+uses NO fromLoop — verify TA Playback doesn't double-append. Also: mode-based
+unparked-capture unit tests; UI re-render on auto-switch
+(`_persistRecordingForBlock` publishes `loopState:queueUpdated` — ⚠ payload
+MUST carry `{queue}` or `_updateRegionsInQueue` throws; sanity-caught in 8/n,
+also fixed the same latent empty-`{}` in `noteLocationChecked`); registered
+loops as a `ui:activatePanel` publisher (9/n, sanity-caught warn); stripped
+the 4 `[loops M2]` TEMP diag console.logs.
 
-**Session-63 in-app leg (commit 7/n):** `maze-record-playback-crosses-exit`
-(`mazeBlockModeTests.js`, category "Maze block modes", new `test-substrates`
-config id + `testDiscovery.js` import) replays a recording carrying a
-`departureExitId` in a live maze region and asserts the player physically
-crosses the recorded exit (region changes) through the REAL
-visualizer/pathfinder/gameState — exercising the fix path the stubbed-
-visualizer unit tests can't. ⚠ drive the cross via the `replayActions` path
-(not `loops:substrateActionBegan` delegation, which didn't cross in the
-substrates harness). Gates: **vitest 3173 (+7)**, regression 1/1, substrates
-**44/44** (warm; `jta-out-of-mana` cold-start flake → warm re-run).
+**Session-63 in-app leg (commit 7/n, updated 10/n):**
+`maze-record-playback-crosses-exit` (`mazeBlockModeTests.js`, category "Maze
+block modes", new `test-substrates` config id + `testDiscovery.js` import)
+replays a recording carrying a `departureExitId` in a live maze region and
+asserts the REGION CHANGES through the real substrate controller / dispatcher
+/ gameState / procgen region load. Gates: **vitest 3174**, regression 1/1,
+substrates **44/44** (warm; `jta-out-of-mana` cold-start flake → warm re-run).
 **⚠ REMAINING to fully close M2: in-browser sanity (M1's too) — do with the
 user; bundle into M3's session. NOT pushed (user holds push until sanity).**
 

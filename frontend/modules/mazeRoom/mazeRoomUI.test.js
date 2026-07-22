@@ -374,46 +374,47 @@ describe('MazeRoomUI — M2 Playback departure crossing', () => {
             }),
             arrivedFrom: null,
         });
-        // Neutralize the real visualizer clock — we assert intent, not ticks.
+        // The departure ISSUES a regionMove directly (mirroring TA) rather
+        // than driving the visualizer — the interior replay already advanced
+        // the panel engine state to the exit. Re-walking via the visualizer
+        // would double-walk from its stale entrance position. Spy walkToTile
+        // to prove we DON'T touch it.
         panel._visualizer.walkToTile = vi.fn();
-        panel._visualizer.play = vi.fn();
-        panel._visualizer.isRunning = () => false;
         return panel;
     }
 
-    it('empty-interior recording still crosses the recorded departure exit', () => {
+    it('empty-interior recording issues the departure regionMove directly', () => {
         const panel = panelAtExitRegion();
         const started = panel._replaySavedActions([], { departureExitId: 'east_id' });
         expect(started).toBe(true);
-        // Aimed the visualizer at the exit tile and marked the walk
-        // loops-driven so the crossing is attributed to the loop.
-        expect(panel._visualizer.walkToTile).toHaveBeenCalledWith({ x: 7, y: 3, name: 'east_id' });
-        expect(panel._loopsDrivenAction).toMatchObject({
-            type: 'regionMove', _playbackDeparture: true,
-        });
-
-        // Simulate the visualizer reaching + crossing the exit tile.
-        panel._onVisualizerExitCross(
-            { exit_id: 'east_id', exitName: 'east_to_b', targetRegion: 'B' }, 'A',
-        );
+        // Issued the region transition straight from the engine state — with
+        // fromLoop:true so the parked block's queued regionMove isn't
+        // duplicated — and did NOT re-walk the visualizer.
         const move = published.find((p) => p.topic === 'user:regionMove');
         expect(move).toBeTruthy();
         expect(move.payload).toMatchObject({
             sourceRegion: 'A', targetRegion: 'B', exitName: 'east_to_b', fromLoop: true,
         });
+        expect(panel._visualizer.walkToTile).not.toHaveBeenCalled();
+    });
+
+    it('resolves the exit by exitName as well as exit_id', () => {
+        const panel = panelAtExitRegion();
+        panel._crossRecordedDeparture('east_to_b');
+        const move = published.find((p) => p.topic === 'user:regionMove');
+        expect(move?.payload).toMatchObject({ targetRegion: 'B', fromLoop: true });
     });
 
     it('returns false when there is nothing to replay and no departure', () => {
         const panel = panelAtExitRegion();
         expect(panel._replaySavedActions([], {})).toBe(false);
-        expect(panel._visualizer.walkToTile).not.toHaveBeenCalled();
+        expect(published.find((p) => p.topic === 'user:regionMove')).toBeFalsy();
     });
 
-    it('drops a departure with an unresolvable exit id without dangling loops-driven state', () => {
+    it('drops a departure with an unresolvable exit id without dispatching', () => {
         const panel = panelAtExitRegion();
         expect(panel._crossRecordedDeparture('no_such_exit')).toBe(false);
-        expect(panel._loopsDrivenAction).toBeFalsy();
-        expect(panel._visualizer.walkToTile).not.toHaveBeenCalled();
+        expect(published.find((p) => p.topic === 'user:regionMove')).toBeFalsy();
     });
 
     it('crosses the departure only AFTER the interior replay drains', () => {
