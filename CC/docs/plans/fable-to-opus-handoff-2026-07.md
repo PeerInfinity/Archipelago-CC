@@ -161,10 +161,11 @@ Record + playback-of-recordings (maze+textAdventure) — **✅ CODE COMPLETE
 `c627e4e48`→`506a7c51c`)** (as-built below); **M3** Instant toggle +
 activation-suppression seam — **✅ CODE COMPLETE 2026-07-22 (Opus session 65;
 `1f38fbc56`→`bc5b02c43`→`477bad187`→`bac38f1d8`→`fd01e84f1`); pending TA
-Playback + Instant in-browser sanity + push** (as-built below); **M4** jta
-instant pump + recorder — **NEXT**; **M5** runner/bounce; **M6** solver
-unification + rename + Bot radio. Omsi arc D re-queues AFTER this track (see
-§4); omsi Instant last of all.
+Playback + Instant in-browser sanity + push** (as-built below); **M3b**
+coarse-capture refactor (arc opened 2026-07-22, below) — **NEXT, and gates
+M4's recorder half**; **M4** jta instant pump + recorder; **M5**
+runner/bounce; **M6** solver unification + rename + Bot radio. Omsi arc D
+re-queues AFTER this track (see §4); omsi Instant last of all.
 
 **M2 as-built (see design §5 M2 + memory `project_loops_block_modes` for
 full notes):** Key pivot (user-confirmed via AskUserQuestion, overriding the
@@ -252,6 +253,28 @@ Instant select. Gates: **vitest 3191, regression 1/1, substrates 44/44**.
 **⚠ REMAINING to close M3: in-browser sanity — TA Playback double-append AND
 the Instant paths (maze half sanity-covered session 63; TA Playback + Instant
 were NOT). Do with the user; NOT pushed until sanity.**
+
+**M3b — coarse-capture refactor (arc opened 2026-07-22, Fable session 66;
+design SETTLED with the user, don't re-litigate).** Plan:
+`CC/docs/plans/loops-coarse-capture-plan.md`; durable contract:
+`docs/json/developer/procgen/loop-recording.md`. Ruling: the TA wrapper's
+internal recorder/replay machinery (recorder.js, the
+`textAdventure:commandRecorded` side-channel, the replay half of
+playbackBridge/playbackProxy) is REMOVED — for a **coarse-only** substrate
+(every action is queue-grade) loops owns capture (host-side observation
+during parked Record + the existing insert-at-block coarse replacement) and
+replay (the generic timer over the block's own interior; costs charged
+normally). Only **fine-grained** substrates (maze; sub-queue-grade actions)
+supply a recorder — ONE full-visit interleaved stream, loops projects the
+coarse subset; NO dual-channel hybrids (ordering). Future queue-grade verbs
+extend the queue vocabulary, not the recording system. **Sequencing: M3b
+lands BEFORE M4's jta-recorder half** (don't build a jta recorder against
+the old contract; classify jta coarse-vs-fine first). Three open questions
+for the implementing session (details in the plan): the explore
+live-append gap, the replay economy shift (generic timer charges
+`loop_costs`; the bridge replay was free — recommended: accept), and the
+UNVERIFIED parked-mid-queue stray-append behavior (in-app probe required;
+possible latent pre-existing bug).
 
 **M1 as-built (see design §5 M1 for full notes):** Manual checkbox → per-
 `(region, instanceNumber)` Manual/Playback radios; new shared resolver
