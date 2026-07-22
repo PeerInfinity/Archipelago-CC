@@ -71,6 +71,10 @@ export const substrateRegistryEntry = Object.freeze({
         customQueues: false,
         record: true,
         playback: true,
+        // instant (M3): the wrapper can drain its replay list in one frame
+        // (replayActions with instant:true). Enables the per-block Instant
+        // toggle for Playback blocks in this substrate.
+        instant: true,
     }),
 
     // Cross-substrate sharing: participates in the shared-mana channel

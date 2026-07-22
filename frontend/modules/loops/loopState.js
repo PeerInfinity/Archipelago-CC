@@ -121,6 +121,14 @@ export class LoopState {
     // Serialized like manualRegionStates; survives loop resets, cleared
     // by resetForNewRules.
     this.blockModeStates = new Map(); // 'region#instance' -> mode
+    // Per-block Instant toggle (M3). Keyed the same way as blockModeStates.
+    // A truthy entry means "run this block headlessly in one frame" — it
+    // applies to Playback/Bot blocks on substrates that DECLARE
+    // loopSupport.instant. Absent key → not instant. Serialized alongside
+    // blockModeStates; cleared by resetForNewRules. Distinct from the
+    // GLOBAL this.instantMode debug flag (which instant-completes ALL
+    // blocks) — the two OR together in the generic timer.
+    this.blockInstantStates = new Map(); // 'region#instance' -> boolean
     // Default mode applied to a block that has no stored mode. Mirrors
     // the schema-backed `defaultBlockMode` setting (loopUI pushes it in,
     // like keepFocused / instantMode). 'playback' preserves today's
@@ -1414,6 +1422,48 @@ export class LoopState {
   }
 
   /**
+   * Whether a block is set to run Instant (M3). Only meaningful for a
+   * Playback/Bot block whose substrate declares loopSupport.instant; the
+   * generic timer / substrate replay consult this to complete the block
+   * headlessly in one frame. Absent key → false.
+   */
+  getBlockInstant(region, instance) {
+    if (!region) return false;
+    return this.blockInstantStates.get(blockKeyOf(region, instance)) === true;
+  }
+
+  /** Store a per-block Instant flag. Absent/false entries are dropped. */
+  setBlockInstant(region, instance, on) {
+    if (!region) return;
+    const key = blockKeyOf(region, instance);
+    if (on) this.blockInstantStates.set(key, true);
+    else this.blockInstantStates.delete(key);
+  }
+
+  /**
+   * Apply an Instant flag to every block in the current queue whose
+   * substrate declares instant support (the "set all Instant" control).
+   * Blocks that can't offer it are left untouched. Returns the count changed.
+   */
+  setAllBlockInstant(on) {
+    const { visits } = resolveQueueBlocks(this.getActionQueue());
+    let changed = 0;
+    for (const v of visits) {
+      if (!this._regionSupportsInstant(v.name)) continue;
+      this.setBlockInstant(v.name, v.instance, on);
+      changed += 1;
+    }
+    return changed;
+  }
+
+  /** Whether the current action's block resolves to Instant. */
+  _currentBlockIsInstant() {
+    const block = this._blockForCurrentAction();
+    if (!block) return false;
+    return this.getBlockInstant(block.region, block.instance);
+  }
+
+  /**
    * Apply `mode` to every block in the current queue whose substrate
    * supports it (the "set all" control). Blocks that can't offer the
    * mode are left untouched. Returns the number of blocks changed.
@@ -1446,6 +1496,16 @@ export class LoopState {
   _regionSupportsRecord(region) {
     const ls = this._loopSupportFor(region);
     return !!ls?.record && !!ls?.playback;
+  }
+
+  /**
+   * Whether the region's substrate declares Instant support (M3). The
+   * per-block Instant toggle is offered only where this is true AND the
+   * block runs in Playback/Bot (instant applies to the auto paths, not
+   * Manual). Requires a real replay/timer instant primitive on the substrate.
+   */
+  _regionSupportsInstant(region) {
+    return !!this._loopSupportFor(region)?.instant;
   }
 
   /**
@@ -2413,6 +2473,7 @@ export class LoopState {
     this.repeatExploreStates.clear();
     this.manualRegionStates.clear();
     this.blockModeStates.clear();
+    this.blockInstantStates.clear();
     this._manualRegionName = null;
     this._manualActionEntered = false;
     this._delegatedAction = null;
@@ -2750,6 +2811,9 @@ export class LoopState {
       // written before the mode system existed (and blocks whose mode is
       // still region-inherited) — see loadFromSerializedState.
       blockModeStates: Array.from(this.blockModeStates.entries()),
+      // Per-block Instant flags (M3), keyed like blockModeStates. Only
+      // truthy entries are stored, so old saves simply carry none.
+      blockInstantStates: Array.from(this.blockInstantStates.entries()),
       manualRegionStates: Array.from(this.manualRegionStates.entries()),
     };
   }
@@ -2791,6 +2855,7 @@ export class LoopState {
     // land in blockModeStates and win per key.
     this.repeatExploreStates = new Map(state.repeatExploreStates || []);
     this.blockModeStates = new Map(state.blockModeStates || []);
+    this.blockInstantStates = new Map(state.blockInstantStates || []);
     this.manualRegionStates = new Map(state.manualRegionStates || []);
 
     // Notify mana/xp change so consumers reflect the loaded values

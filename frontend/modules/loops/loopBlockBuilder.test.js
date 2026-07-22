@@ -178,25 +178,31 @@ describe('LoopBlockBuilder — loopSupport capability gating', () => {
 
         // M2: maze + textAdventure DECLARE record + playback (Record requires
         // both). The others don't yet (their recorders/replay land M4–M5).
+        // M3: maze + textAdventure additionally DECLARE instant (per-block
+        // Instant toggle); the others don't yet (jta pump = M4, runner/bounce
+        // = M5, omsi = arc D).
         expect(maze.loopSupport).toMatchObject({
-            manual: true, customQueues: true, record: true, playback: true,
+            manual: true, customQueues: true, record: true, playback: true, instant: true,
         });
         expect([...maze.loopSupport.queueActions]).toEqual(['regionMove', 'locationCheck', 'explore']);
 
         expect(tasw.loopSupport).toMatchObject({
-            manual: true, customQueues: false, record: true, playback: true,
+            manual: true, customQueues: false, record: true, playback: true, instant: true,
         });
         expect([...tasw.loopSupport.queueActions]).toContain('explore');
 
         expect(jta.loopSupport).toMatchObject({ manual: true, customQueues: false });
         expect(jta.loopSupport.record ?? false).toBe(false);
+        expect(jta.loopSupport.instant ?? false).toBe(false);
         expect([...jta.loopSupport.queueActions]).toEqual(['regionMove']);
 
         expect(bounce.loopSupport).toMatchObject({ manual: true, customQueues: false });
+        expect(bounce.loopSupport.instant ?? false).toBe(false);
         expect([...bounce.loopSupport.queueActions]).toEqual(['regionMove', 'locationCheck']);
         expect([...bounce.loopSupport.queueActions]).not.toContain('explore');
 
         expect(flash.loopSupport).toMatchObject({ manual: true, customQueues: false });
+        expect(flash.loopSupport.instant ?? false).toBe(false);
         expect([...flash.loopSupport.queueActions]).toEqual(['regionMove']);
     });
 });

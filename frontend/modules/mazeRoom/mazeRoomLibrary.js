@@ -145,13 +145,17 @@ export const substrateRegistryEntry = Object.freeze({
     // Loop-mode capabilities: maze supports everything — all queue
     // action types, manual play, and saved-queue recording/replay.
     // `record`/`playback` are DECLARED (M2): the Record radio is offered
-    // only where both are true.
+    // only where both are true. `instant` (M3) declares the substrate can
+    // run a Playback/Bot block headlessly in one frame (maze drains its
+    // replay queue synchronously); the per-block Instant toggle is offered
+    // only where it's true.
     loopSupport: Object.freeze({
         queueActions: Object.freeze(['regionMove', 'locationCheck', 'explore']),
         manual: true,
         customQueues: true,
         record: true,
         playback: true,
+        instant: true,
     }),
 
     // Cross-substrate sharing: participates in the shared-mana channel

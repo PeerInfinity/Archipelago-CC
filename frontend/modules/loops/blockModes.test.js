@@ -196,6 +196,105 @@ describe('per-block mode — setAllBlockModes', () => {
   });
 });
 
+// Register a substrate that DECLARES instant (M3) for region 'A', plus a
+// playback-but-not-instant substrate for region 'P'.
+function registerInstantSubstrate() {
+  try { centralRegistry.publicFunctions.get('procgenPlayer')?.delete('getRegionInfo'); } catch { /* ignore */ }
+  try { substrateRegistry.clear?.(); } catch { /* ignore */ }
+  substrateRegistry.register?.({
+    id: 'instant_sub', label: 'Inst', panelComponentType: 'instPanel', loadRegionEvent: 'i:load',
+    loopSupport: { queueActions: ['regionMove', 'locationCheck'], manual: true, playback: true, instant: true },
+  });
+  substrateRegistry.register?.({
+    id: 'plain_sub', label: 'Plain', panelComponentType: 'plainPanel', loadRegionEvent: 'p:load',
+    loopSupport: { queueActions: ['regionMove', 'locationCheck'], manual: true, playback: true },
+  });
+  centralRegistry.registerPublicFunction('procgenPlayer', 'getRegionInfo', (region) => {
+    if (region === 'A') return { substrate: 'instant_sub', label: 'Inst', manaEnabled: true };
+    if (region === 'P') return { substrate: 'plain_sub', label: 'Plain', manaEnabled: true };
+    return null;
+  });
+}
+
+describe('per-block Instant (M3) — storage, capability & set-all', () => {
+  let loopState, gs;
+  beforeEach(() => {
+    ({ loopState, gs } = wire());
+    registerInstantSubstrate();
+  });
+
+  it('defaults to not-instant and stores a per-(region,instance) flag', () => {
+    expect(loopState.getBlockInstant('A', 1)).toBe(false);
+    loopState.setBlockInstant('A', 1, true);
+    expect(loopState.getBlockInstant('A', 1)).toBe(true);
+    // A different visit is independent.
+    expect(loopState.getBlockInstant('A', 2)).toBe(false);
+  });
+
+  it('clearing a flag deletes the entry (only truthy flags are stored)', () => {
+    loopState.setBlockInstant('A', 1, true);
+    loopState.setBlockInstant('A', 1, false);
+    expect(loopState.getBlockInstant('A', 1)).toBe(false);
+    expect(loopState.getSerializableState().blockInstantStates).toEqual([]);
+  });
+
+  it('round-trips through serialization', () => {
+    loopState.setBlockInstant('A', 1, true);
+    loopState.setBlockInstant('A', 3, true);
+    const state = loopState.getSerializableState();
+    expect(state.blockInstantStates).toEqual([['A#1', true], ['A#3', true]]);
+    const fresh = wire().loopState;
+    fresh.loadFromSerializedState(state);
+    expect(fresh.getBlockInstant('A', 1)).toBe(true);
+    expect(fresh.getBlockInstant('A', 3)).toBe(true);
+    expect(fresh.getBlockInstant('A', 2)).toBe(false);
+  });
+
+  it('an old save without blockInstantStates loads with no flags', () => {
+    const fresh = wire().loopState;
+    fresh.loadFromSerializedState({ blockModeStates: [['A#1', 'playback']] });
+    expect(fresh.getBlockInstant('A', 1)).toBe(false);
+  });
+
+  it('resetForNewRules clears the instant flags', () => {
+    loopState.setBlockInstant('A', 1, true);
+    loopState.resetForNewRules();
+    expect(loopState.getBlockInstant('A', 1)).toBe(false);
+  });
+
+  it('_regionSupportsInstant reflects the substrate declaration', () => {
+    expect(loopState._regionSupportsInstant('A')).toBe(true);     // declares instant
+    expect(loopState._regionSupportsInstant('P')).toBe(false);    // playback but no instant
+    expect(loopState._regionSupportsInstant('APNative')).toBe(false); // no substrate
+  });
+
+  it('setAllBlockInstant applies only to instant-capable blocks', () => {
+    // Menu (AP-native) → A (instant) → P (playback, no instant).
+    gs.updatePath('A', 'go', 'Menu');
+    gs.updatePath('P', 'go', 'A');
+    const changed = loopState.setAllBlockInstant(true);
+    expect(changed).toBe(1);
+    expect(loopState.getBlockInstant('A', 1)).toBe(true);
+    expect(loopState.getBlockInstant('P', 1)).toBe(false); // unsupported, untouched
+    // Clearing again touches only the capable block.
+    expect(loopState.setAllBlockInstant(false)).toBe(1);
+    expect(loopState.getBlockInstant('A', 1)).toBe(false);
+  });
+
+  it('_currentBlockIsInstant resolves the running block', () => {
+    gs.updatePath('A', 'go', 'Menu');
+    gs.addLocationCheck('Loc1', 'A');
+    loopState.setBlockInstant('A', 1, true);
+    const queue = loopState.getActionQueue();
+    const idx = queue.findIndex((e) => e.type === 'locationCheck' && e.locationName === 'Loc1');
+    loopState.currentActionIndex = idx;
+    loopState.currentAction = queue[idx];
+    expect(loopState._currentBlockIsInstant()).toBe(true);
+    loopState.setBlockInstant('A', 1, false);
+    expect(loopState._currentBlockIsInstant()).toBe(false);
+  });
+});
+
 describe('per-block mode — execution parks the right visit', () => {
   let loopState, gs, bus, tick;
   beforeEach(() => {
