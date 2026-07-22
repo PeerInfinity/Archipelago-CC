@@ -1263,7 +1263,10 @@ export class LoopState {
       // but not blockModeChanged, and the unparked-capture path applies no
       // coarse replacement (whose pathUpdated would otherwise refresh it),
       // so without this the radio only flips on the next loop restart.
-      this.eventBus?.publish?.('loopState:queueUpdated', {});
+      // The payload MUST carry `queue` — _handleQueueUpdated →
+      // _updateRegionsInQueue iterates it (an empty {} throws on the
+      // for-of).
+      this.eventBus?.publish?.('loopState:queueUpdated', { queue: this.getActionQueue() });
     }
     return rec;
   }

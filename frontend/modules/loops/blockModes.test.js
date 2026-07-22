@@ -523,6 +523,12 @@ describe('M2 — mode-based unparked Record capture', () => {
     expect(loopState.getBlockMode('A', 1)).toBe('playback');
     expect(bus.events.some((e) =>
       e.name === 'loopState:blockModeChanged' && e.data?.mode === 'playback')).toBe(true);
+    // The panel-refresh event MUST carry an iterable `queue` — the
+    // eventCoordinator's _handleQueueUpdated → _updateRegionsInQueue does a
+    // for-of over data.queue, so an empty {} payload throws in the browser.
+    const qu = bus.events.filter((e) => e.name === 'loopState:queueUpdated');
+    expect(qu.length).toBeGreaterThan(0);
+    expect(qu.every((e) => Array.isArray(e.data?.queue))).toBe(true);
   });
 
   it('does NOT capture on a loop reset (fromReset)', () => {
