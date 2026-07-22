@@ -230,20 +230,23 @@ describe('PlaybackBridge — replayActions (M2 Playback)', () => {
         // Default rate 4Hz → 250ms/tick.
         vi.advanceTimersByTime(250);
         expect(client._dispatched()).toHaveLength(1);
+        // fromLoop:true so gameState doesn't append a duplicate path entry the
+        // parked Playback block already holds (the TA double-append fix).
         expect(client._dispatched()[0]).toEqual({
             event: 'user:locationCheck',
-            data: { locationName: 'Coin', regionName: 'Cave', originator: 'textAdventureSubstrateWrapper' },
+            data: { locationName: 'Coin', regionName: 'Cave', originator: 'textAdventureSubstrateWrapper', fromLoop: true },
         });
         vi.advanceTimersByTime(250);
         expect(client._dispatched()[1]).toEqual({
             event: 'loop:exploreCompleted',
             data: { regionName: 'Cave' },
         });
-        // Interior drained → next tick issues the closing regionMove.
+        // Interior drained → next tick issues the closing regionMove (also
+        // fromLoop:true so updatePath doesn't duplicate the queued exit).
         vi.advanceTimersByTime(250);
         expect(client._dispatched()[2]).toEqual({
             event: 'user:regionMove',
-            data: { sourceRegion: 'Cave', targetRegion: 'Outside', exitName: 'NorthDoor' },
+            data: { sourceRegion: 'Cave', targetRegion: 'Outside', exitName: 'NorthDoor', fromLoop: true },
         });
         // Clock stopped — no further dispatches.
         vi.advanceTimersByTime(1000);
@@ -259,7 +262,7 @@ describe('PlaybackBridge — replayActions (M2 Playback)', () => {
         expect(client._dispatched()).toEqual([
             {
                 event: 'user:locationCheck',
-                data: { locationName: 'Coin', regionName: 'Cave', originator: 'textAdventureSubstrateWrapper' },
+                data: { locationName: 'Coin', regionName: 'Cave', originator: 'textAdventureSubstrateWrapper', fromLoop: true },
             },
         ]);
     });
@@ -273,6 +276,39 @@ describe('PlaybackBridge — replayActions (M2 Playback)', () => {
         vi.advanceTimersByTime(250);
         expect(client._dispatched()).toHaveLength(1);
         expect(client._dispatched()[0].event).toBe('user:locationCheck');
+    });
+
+    it('every replay publish carries fromLoop:true (double-append guard)', () => {
+        // Regression: without fromLoop:true, gameState.handleLocationCheck /
+        // handleRegionMove append duplicate path entries the parked Playback
+        // block already holds (gameState/index.js:457,383). Both the interior
+        // locationCheck and the closing departure regionMove must carry it.
+        const { bridge, client } = makeBridge();
+        bridge.replayActions(
+            [{ type: 'locationCheck', locationName: 'Coin' }],
+            { departureExitId: 'NorthDoor' },
+        );
+        vi.advanceTimersByTime(250); // locationCheck
+        vi.advanceTimersByTime(250); // drained → departure regionMove
+        const gameStateMutations = client._dispatched().filter(
+            (d) => d.event === 'user:locationCheck' || d.event === 'user:regionMove');
+        expect(gameStateMutations).toHaveLength(2);
+        for (const d of gameStateMutations) {
+            expect(d.data.fromLoop).toBe(true);
+        }
+    });
+
+    it('live walkTo publishes stay flag-free (only replay sets fromLoop)', () => {
+        // The bot/manual walkTo path (_performAction) is a genuine live action,
+        // so gameState SHOULD append its path entry — it must NOT carry fromLoop.
+        const { bridge, client } = makeBridge();
+        bridge.walkTo({ kind: 'location', name: 'Coin' });
+        bridge.step();
+        bridge.walkTo({ kind: 'exit', name: 'NorthDoor' });
+        bridge.step();
+        for (const d of client._dispatched()) {
+            expect(d.data.fromLoop).toBeUndefined();
+        }
     });
 
     it('reset() cancels an in-flight replay', () => {

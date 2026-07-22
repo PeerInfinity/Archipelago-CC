@@ -167,10 +167,19 @@ export class PlaybackBridge {
         if (!action || typeof action !== 'object') return;
         const currentRegion = this._getCurrentRegion();
         if (action.type === 'locationCheck' && action.locationName) {
+            // fromLoop:true — this is a Playback replay of a recorded visit,
+            // so the parked loops block already holds this location's path
+            // entry. Without the flag, gameState.handleLocationCheck →
+            // addLocationCheck appends a DUPLICATE path entry
+            // (gameState/index.js:457 guards on !fromLoop). The event still
+            // propagates up, so the location is genuinely checked, and loops'
+            // noteLocationChecked still marks the queued entry complete. Mirrors
+            // the maze 10/n departure fix.
             this._client.publishEventDispatcher('user:locationCheck', {
                 locationName: action.locationName,
                 regionName: currentRegion ?? null,
                 originator: 'textAdventureSubstrateWrapper',
+                fromLoop: true,
             });
             return;
         }
@@ -191,10 +200,16 @@ export class PlaybackBridge {
             this._log('warn', 'playbackBridge: replay departure exit not found', exitId, 'in', currentRegion);
             return;
         }
+        // fromLoop:true — the parked Playback block already holds the queued
+        // regionMove-out, so gameState.updatePath would otherwise append a
+        // duplicate forward move (gameState/index.js:383 guards on !fromLoop).
+        // The block still advances on the resulting regionChanged wake. Mirrors
+        // the maze 10/n departure fix.
         this._client.publishEventDispatcher('user:regionMove', {
             sourceRegion: currentRegion ?? null,
             targetRegion: exitInfo.targetRoomId,
             exitName: exitInfo.id,
+            fromLoop: true,
         });
     }
 
