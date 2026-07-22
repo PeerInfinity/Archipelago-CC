@@ -159,10 +159,12 @@ Phases (one Opus session each, design §5): **M1** mode core —
 Record + playback-of-recordings (maze+textAdventure) — **✅ CODE COMPLETE
 2026-07-21 (Opus session 63; `cbf461238`→`da26a5b7d`→`10c5851a7`→
 `c627e4e48`→`506a7c51c`)** (as-built below); **M3** Instant toggle +
-activation-suppression seam — **NEXT**; **M4** jta instant pump +
-recorder; **M5** runner/bounce; **M6** solver unification + rename + Bot
-radio. Omsi arc D re-queues AFTER this track (see §4); omsi Instant last of
-all.
+activation-suppression seam — **✅ CODE COMPLETE 2026-07-22 (Opus session 65;
+`1f38fbc56`→`bc5b02c43`→`477bad187`→`bac38f1d8`→`fd01e84f1`); pending TA
+Playback + Instant in-browser sanity + push** (as-built below); **M4** jta
+instant pump + recorder — **NEXT**; **M5** runner/bounce; **M6** solver
+unification + rename + Bot radio. Omsi arc D re-queues AFTER this track (see
+§4); omsi Instant last of all.
 
 **M2 as-built (see design §5 M2 + memory `project_loops_block_modes` for
 full notes):** Key pivot (user-confirmed via AskUserQuestion, overriding the
@@ -229,14 +231,27 @@ separate event from the regionMove must finalize BEFORE the regionMove.
 **M2 CLOSED: pushed through `dfbce4425` (11/n), verified session 64** — the
 in-app leg `maze-record-playback-crosses-exit` landed WITH its
 `test-substrates` config id; maze-side in-browser sanity happened live in
-session 63 (fixes 8/9/10/11 were sanity-caught). **⚠ OPEN BUG carried into
-M3 (confirmed session 64, Fable): TA Playback double-append** —
-`playbackBridge.js` `_issueDeparture` publishes `user:regionMove` without
-`fromLoop:true` (`gameState/index.js:383` appends without the flag; the
-exact bug maze 10/n fixed), and `_replayOne`'s `user:locationCheck` lacks
-the flag too (`index.js:457`, same guard). Fix both + a path-length
-assertion, FIRST in the M3 session; TA Playback also still needs its
-in-browser sanity pass.**
+session 63 (fixes 8/9/10/11 were sanity-caught).
+
+**M3 CODE COMPLETE 2026-07-22 (Opus session 65)** — the Instant toggle +
+the carried-open TA double-append fix. Outer-only (arc-A). Commits
+`1f38fbc56` (TA fromLoop fix, 1/n) → `bc5b02c43` (foundation) → `477bad187`
+(seams) → `bac38f1d8` (replay wiring) → `fd01e84f1` (UI). Full as-built in
+design §5 M3. Highlights: (1/n) `_replayOne` + `_issueDeparture` now publish
+`fromLoop:true` — verified safe (addLocationCheck only pushes a PATH entry;
+the real AP check rides the up-propagation; `noteLocationChecked` still runs;
+the live `_performAction` bot/manual walkTo path stays flag-free). (2/n)
+`loopSupport.instant` on maze+tasw; `blockInstantStates` map +
+get/set/setAll/`_currentBlockIsInstant`/`_regionSupportsInstant`, serialized
+truthy-only. (3/n) `isFocusLocked` locks while the running block is Instant;
+generic timer instant-completes on `_currentBlockIsInstant()`. (4/n) both
+loops replay callers pass `instant`; maze drains `_mazeQueue.stepOne()` to
+idle then crosses; TA proxy forwards `instant`, bridge pumps `_replayTick()`
+synchronously. (5/n) per-block Instant checkbox (Playback-only) + set-all
+Instant select. Gates: **vitest 3191, regression 1/1, substrates 44/44**.
+**⚠ REMAINING to close M3: in-browser sanity — TA Playback double-append AND
+the Instant paths (maze half sanity-covered session 63; TA Playback + Instant
+were NOT). Do with the user; NOT pushed until sanity.**
 
 **M1 as-built (see design §5 M1 for full notes):** Manual checkbox → per-
 `(region, instanceNumber)` Manual/Playback radios; new shared resolver
