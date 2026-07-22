@@ -216,6 +216,16 @@ replays a recording carrying a `departureExitId` in a live maze region and
 asserts the REGION CHANGES through the real substrate controller / dispatcher
 / gameState / procgen region load. Gates: **vitest 3174**, regression 1/1,
 substrates **44/44** (warm; `jta-out-of-mana` cold-start flake → warm re-run).
+
+**11/n (sanity-caught): TA Record didn't auto-switch to Playback.** The TA
+bridge (`bridge.js` `command:move`) published `user:regionMove` BEFORE
+`textAdventure:commandRecorded`; both cross the iframe→host boundary as ordered
+postMessages, so the host ran the loops Record-exit wake (which PULLS the
+recorder stash via `takeLastRecording`) before the recorder finalized it →
+empty pull → `_persistRecordingForBlock` returns before the auto-switch. Fixed
+by publishing `commandRecorded` first (maze finalizes its stash before the
+regionMove for the same reason). ⚠ general trap: a recorder that stashes on a
+separate event from the regionMove must finalize BEFORE the regionMove.
 **⚠ REMAINING to fully close M2: in-browser sanity (M1's too) — do with the
 user; bundle into M3's session. NOT pushed (user holds push until sanity).**
 

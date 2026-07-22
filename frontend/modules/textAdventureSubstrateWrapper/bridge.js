@@ -315,16 +315,26 @@ async function main() {
         if (templated) {
             engine.displayMessage(templated, 'normal', { html: true });
         }
-        client.publishEventDispatcher('user:regionMove', {
+        // Substrate-internal recording signal. Bypasses the dispatcher
+        // chain (so loops intercepts can't swallow it) and carries the
+        // exact action shape the saved-queue recorder will persist.
+        //
+        // MUST be published BEFORE user:regionMove: both cross the
+        // iframe→host boundary as ordered postMessages, so the host
+        // finalizes the recorder's stash (this event) before it processes
+        // the region move (below), whose gameState:regionChanged drives the
+        // loops Record-exit wake that PULLS the stash via takeLastRecording.
+        // Publish the move first and the wake pulls an empty stash — the
+        // recording never persists and Record never auto-switches to
+        // Playback. (Maze finalizes its stash before publishing regionMove
+        // for the same reason.)
+        client.publishEventBus('textAdventure:commandRecorded', {
+            type: 'regionMove',
             sourceRegion: fromRoomId,
             targetRegion: targetRoomId,
             exitName: exitId,
         });
-        // Substrate-internal recording signal. Bypasses the dispatcher
-        // chain (so loops intercepts can't swallow it) and carries the
-        // exact action shape the saved-queue recorder will persist.
-        client.publishEventBus('textAdventure:commandRecorded', {
-            type: 'regionMove',
+        client.publishEventDispatcher('user:regionMove', {
             sourceRegion: fromRoomId,
             targetRegion: targetRoomId,
             exitName: exitId,
