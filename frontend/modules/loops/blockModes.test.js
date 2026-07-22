@@ -485,6 +485,66 @@ describe('M2 — Record lifecycle', () => {
   });
 });
 
+// Mode-based capture (M2, user ruling 2026-07-21): leaving a Record-mode
+// region saves + auto-switches EVEN WHEN the loop queue never parked on the
+// block (open-ended block, or free-walking with the queue not driving). Any
+// player exit of a Record region is a correct exit. Fires from the wake's
+// `!_manualActionEntered` branch via _maybeCaptureUnparkedRecordExit.
+describe('M2 — mode-based unparked Record capture', () => {
+  let loopState, gs, bus, handles;
+  beforeEach(() => {
+    resetSavedQueueStore();
+    clearRulesHashCache();
+    ({ loopState, gs, bus } = wire());
+    handles = registerRecordSubstrate();
+    loopState._cachedRulesData = RULES_DATA;
+    // Menu → A (record) → B, but WITHOUT parking on the block: the player
+    // free-walked and the queue never entered manual/record parking, so
+    // _manualActionEntered stays false.
+    gs.updatePath('A', 'go', 'Menu');
+    gs.addLocationCheck('Loc1', 'A');
+    gs.updatePath('B', 'exit', 'A');
+    loopState.setBlockMode('A', 1, 'record');
+  });
+
+  it('persists + auto-switches when a Record block is left with nothing parked', () => {
+    expect(loopState._manualActionEntered).toBeFalsy();
+    handles.stash = makeStash();
+    // Player left A → B; the wake runs the unparked branch.
+    loopState._handleManualWake_regionMove({ targetRegion: 'B', oldRegion: 'A' });
+
+    // Pulled the stash and persisted under the queue-derived tag.
+    expect(handles.takeCalls).toBe(1);
+    const saved = getSavedQueueByTag(hashRulesData(RULES_DATA), 'A', 'rec_sub', 'go', 0);
+    expect(saved).toBeTruthy();
+    expect(saved.arrivalExitId).toBe('go');
+    expect(saved.actions).toEqual([{ type: 'locationCheck', locationName: 'Loc1' }]);
+    // Auto-switch (default ON) flipped it to Playback + announced it.
+    expect(loopState.getBlockMode('A', 1)).toBe('playback');
+    expect(bus.events.some((e) =>
+      e.name === 'loopState:blockModeChanged' && e.data?.mode === 'playback')).toBe(true);
+  });
+
+  it('does NOT capture on a loop reset (fromReset)', () => {
+    handles.stash = makeStash();
+    loopState._handleManualWake_regionMove({ targetRegion: 'B', oldRegion: 'A', fromReset: true });
+    expect(handles.takeCalls).toBe(0);
+    expect(getSavedQueueByTag(hashRulesData(RULES_DATA), 'A', 'rec_sub', 'go', 0)).toBeNull();
+    // Stash left intact for a later real exit; block still in Record.
+    expect(handles.stash).not.toBeNull();
+    expect(loopState.getBlockMode('A', 1)).toBe('record');
+  });
+
+  it('does NOT capture when the left block is not in Record mode', () => {
+    loopState.setBlockMode('A', 1, 'manual');
+    handles.stash = makeStash();
+    loopState._handleManualWake_regionMove({ targetRegion: 'B', oldRegion: 'A' });
+    expect(handles.takeCalls).toBe(0);
+    expect(getSavedQueueByTag(hashRulesData(RULES_DATA), 'A', 'rec_sub', 'go', 0)).toBeNull();
+    expect(loopState.getBlockMode('A', 1)).toBe('manual');
+  });
+});
+
 describe('M2 — Playback replays a bound recording', () => {
   let loopState, gs, bus, tick, handles;
   beforeEach(() => {

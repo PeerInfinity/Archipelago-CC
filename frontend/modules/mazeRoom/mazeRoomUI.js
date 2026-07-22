@@ -1752,12 +1752,71 @@ export class MazeRoomUI {
      * Returns true if a replay was started; false when actions is
      * empty or invalid.
      */
-    _replaySavedActions(actions, { onComplete } = {}) {
-        if (!Array.isArray(actions) || actions.length === 0) return false;
+    _replaySavedActions(actions, { onComplete, departureExitId = null } = {}) {
+        const hasActions = Array.isArray(actions) && actions.length > 0;
+        // Nothing to replay AND no exit to cross — genuinely a no-op.
+        if (!hasActions && !departureExitId) return false;
         this._stopReplay();
-        this._mazeQueue.appendAll(actions);
-        this._startReplayDriver({ onComplete });
+        // A maze region recording captures only the INTERIOR moves — the
+        // exit-crossing move is NOT in the slice (see _finalizeVisitOnExit;
+        // this mirrors textAdventure recordings excluding their departure).
+        // So after the interior moves drain we must physically cross the
+        // recorded departure exit, or Playback stalls one tile short and the
+        // parked loops block never departs. Cross it in the completion.
+        const onReplayComplete = () => {
+            if (departureExitId) this._crossRecordedDeparture(departureExitId);
+            if (typeof onComplete === 'function') {
+                try { onComplete(); } catch { /* best-effort UI signal */ }
+            }
+        };
+        if (hasActions) {
+            this._mazeQueue.appendAll(actions);
+            this._startReplayDriver({ onComplete: onReplayComplete });
+        } else {
+            // Empty-interior recording (arrival tile is the exit tile): no
+            // driver needed, just cross the exit.
+            onReplayComplete();
+        }
         this.render();
+        return true;
+    }
+
+    /**
+     * Physically cross the recorded departure exit after a Playback replay's
+     * interior moves drain. The recording excludes the exit-crossing move, so
+     * we aim the visualizer at the exit tile and mark the walk loops-driven:
+     * _onVisualizerExitCross then publishes user:regionMove with
+     * fromLoop:true (gameState skips the duplicate path entry the parked
+     * block already holds) and starts the visualizer clock so the walk
+     * actually runs. The natural exit-cross's user:regionMove is what
+     * advances the parked loops block on its regionChanged wake.
+     * Returns true when a departure walk was started.
+     */
+    _crossRecordedDeparture(departureExitId) {
+        if (!departureExitId || !this._visualizer || !this.world) return false;
+        // Resolve first so a bad exit id doesn't leave _loopsDrivenAction
+        // dangling (which would poison a subsequent manual walk).
+        const tile = this._resolveWalkToTile({ kind: 'exit', name: departureExitId }, this.world);
+        if (!tile) {
+            console.warn('[mazeRoom] playback departure: could not resolve exit', departureExitId);
+            return false;
+        }
+        // Mark the walk loops-driven so the exit-cross is attributed to the
+        // loop, not a manual player exit. Seed the per-walk tracking the
+        // visualizer tick handler reads so it doesn't crash mid-walk.
+        this._loopsDrivenAction = {
+            type: 'regionMove',
+            sourceRegion: this.currentRegionId,
+            _playbackDeparture: true,
+        };
+        const startPos = this.state?.player_pos ?? { x: 0, y: 0 };
+        this._loopsDrivenSteps = [{ x: startPos.x, y: startPos.y }];
+        this._loopsDrivenCost = 0;
+        this._loopsDrivenArrivedFrom = this.arrivedFromExitId;
+        this._loopsDrivenItems = [];
+        this._loopsDrivenLocations = [];
+        this._handleWalkToCommand({ kind: 'exit', name: departureExitId });
+        this._ensureVisualizerPlaying();
         return true;
     }
 

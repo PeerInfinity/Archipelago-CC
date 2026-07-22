@@ -273,7 +273,11 @@ export class LoopState {
       this._handleManualWake_mana();
     });
     this.eventBus.subscribe('gameState:regionChanged', (data) => {
-      this._handleManualWake_regionMove({ targetRegion: data?.newRegion });
+      this._handleManualWake_regionMove({
+        targetRegion: data?.newRegion,
+        oldRegion: data?.oldRegion,
+        fromReset: data?.fromReset,
+      });
       this._handleBotWake_regionChanged(data?.newRegion);
     });
 
@@ -1254,6 +1258,12 @@ export class LoopState {
         mode: 'playback',
         reason: 'autoSwitchAfterRecord',
       });
+      // Re-render the panel so the block's mode radio flips to Playback
+      // immediately on exit. eventCoordinator re-renders on queueUpdated
+      // but not blockModeChanged, and the unparked-capture path applies no
+      // coarse replacement (whose pathUpdated would otherwise refresh it),
+      // so without this the radio only flips on the next loop restart.
+      this.eventBus?.publish?.('loopState:queueUpdated', {});
     }
     return rec;
   }
@@ -1284,6 +1294,39 @@ export class LoopState {
       // Fine-grained substrate actions (maze 'move', etc.) are NOT coarse
       // queue entries — they live only in the recorded fine script.
     }
+  }
+
+  /**
+   * The block the player just LEFT — the SOURCE block of the most recent
+   * regionMove entry (optionally constrained to leaving `oldRegion`).
+   * Resolved via the shared block resolver so the instance matches the panel.
+   */
+  _blockPlayerJustLeft(oldRegion = null) {
+    const queue = this.getActionQueue();
+    const { indexToBlock } = resolveQueueBlocks(queue);
+    for (let i = queue.length - 1; i >= 0; i--) {
+      if (queue[i]?.type === 'regionMove'
+          && (oldRegion == null || queue[i].sourceRegion === oldRegion)) {
+        return indexToBlock.get(i) ?? null;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Mode-based Record capture (M2, user ruling 2026-07-21): a player exiting
+   * a Record-mode region saves its recording + auto-switches, independent of
+   * whether the loop queue parked on the block. Any player exit counts as
+   * correct (the exit was appended to the queue; there is no parked
+   * expected-exit to violate). No coarse replacement — a free-walked queue
+   * already reflects the performed actions. Skips loop resets (which discard).
+   */
+  _maybeCaptureUnparkedRecordExit(data) {
+    if (!data || data.fromReset) return;
+    const leftBlock = this._blockPlayerJustLeft(data.oldRegion);
+    if (!leftBlock) return;
+    if (this.getBlockMode(leftBlock.region, leftBlock.instance) !== 'record') return;
+    this._persistRecordingForBlock(leftBlock.region, leftBlock.instance);
   }
 
   /** Discard any in-progress Record capture (wrong-exit / mana-out / reset). */
@@ -1318,9 +1361,11 @@ export class LoopState {
       try {
         controller.replayActions(saved.actions, {
           onComplete: () => { /* reserved for future UI */ },
-          // Substrates whose recorded actions exclude the departure (e.g.
-          // textAdventure) use this to issue the closing regionMove so the
-          // parked queue advances; maze self-exits and ignores it.
+          // Recorded actions exclude the region-departure move, so the
+          // substrate uses this to cross the recorded exit after the interior
+          // replay drains (textAdventure issues the closing regionMove; maze
+          // physically walks its player across the exit tile) — the parked
+          // loops block advances on the resulting regionMove wake.
           departureExitId: saved.departureExitId ?? null,
         });
       } catch (err) {
@@ -1782,7 +1827,15 @@ export class LoopState {
    * queue paused-until-reset and publish a warning.
    */
   _handleManualWake_regionMove(data) {
-    if (!this._manualActionEntered) return;
+    // Mode-based Record capture: a player leaving a Record-mode region saves
+    // its recording even when the loop queue never PARKED on the block (an
+    // open-ended block with nothing queued, or free-walking with the queue
+    // not driving). When the queue DID park, the parked success path below
+    // owns capture + coarse replacement instead.
+    if (!this._manualActionEntered) {
+      this._maybeCaptureUnparkedRecordExit(data);
+      return;
+    }
     if (!this.currentAction) return;
     const manualRegion = this._manualRegionName;
     const t = this.currentAction.type;

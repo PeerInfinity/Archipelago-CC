@@ -183,10 +183,25 @@ never fires mid-mutation). textAdventure got a REAL wrapper-side
 `replayActions` (proxy+bridge, ZERO engine-submodule edits) that issues the
 closing regionMove via `departureExitId` (TA has no self-exit tile). Record
 radio + auto-switch setting (default ON) both capability-gated on declared
-`loopSupport.record`+`.playback`. Gates: vitest 3166 (+26), regression 1/1,
-substrates 43/43. **⚠ REMAINING to fully close M2: in-app record→playback
-leg (needs a `test-substrates` config id) + in-browser sanity (M1's too) —
-do with the user; bundle into M3's session.**
+`loopSupport.record`+`.playback`.
+
+**Session-63 finish (`loopState.js` + `mazeRoomUI.js`, 6/n):** fixed the M2
+BLOCKER — maze Playback stopped one tile before the exit because a maze
+recording captures only INTERIOR moves (the exit-crossing move is excluded
+from `_finalizeVisitOnExit`'s slice, same as TA excluding its departure); the
+kickoff's "maze self-exits" assumption was wrong. Maze `_replaySavedActions`
+now takes `departureExitId` → `_crossRecordedDeparture` physically walks the
+visualizer across the recorded exit tile after the interior replay drains,
+marking a synthetic loops-driven action so `_onVisualizerExitCross` publishes
+`user:regionMove {fromLoop:true}` (no duplicate path entry) and the parked
+block advances. Also: mode-based unparked-capture unit tests; UI re-render on
+auto-switch (`_persistRecordingForBlock` now publishes `loopState:queueUpdated`
+so the radio flips immediately, not only on loop restart); stripped the 4
+`[loops M2]` TEMP diag console.logs. Gates: **vitest 3173 (+7)**, regression
+1/1, substrates 43/43 (`jta-out-of-mana` cold-start flake → warm re-run).
+**⚠ REMAINING to fully close M2: in-app record→playback leg (needs a
+`test-substrates` config id) + in-browser sanity (M1's too) — do with the
+user; bundle into M3's session. NOT pushed (user holds push until sanity).**
 
 **M1 as-built (see design §5 M1 for full notes):** Manual checkbox → per-
 `(region, instanceNumber)` Manual/Playback radios; new shared resolver

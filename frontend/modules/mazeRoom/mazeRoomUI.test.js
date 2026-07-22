@@ -347,6 +347,111 @@ describe('MazeRoomUI — playback controller adapter', () => {
     });
 });
 
+describe('MazeRoomUI — M2 Playback departure crossing', () => {
+    let published;
+    beforeEach(() => {
+        _testOnly_resetModuleState();
+        resetDiscoverySingleton();
+        published = [];
+        MazeRoomUI.setModuleApis({
+            dispatcher: {
+                publish: (topic, payload, options) => published.push({ topic, payload, options }),
+            },
+            eventBus: { publish: () => {}, subscribe: () => {}, unsubscribe: () => {} },
+        });
+    });
+
+    // Region A with a single east exit at (7,3); player enters at (4,3).
+    function panelAtExitRegion() {
+        const panel = new MazeRoomUI(null, {});
+        panel.applyLoadedRegion({
+            region_id: 'A',
+            world: makeWorld({
+                entrance: { x: 4, y: 3 },
+                exits: [
+                    { exit_id: 'east_id', x: 7, y: 3, side: 'E', exitName: 'east_to_b', targetRegion: 'B' },
+                ],
+            }),
+            arrivedFrom: null,
+        });
+        // Neutralize the real visualizer clock — we assert intent, not ticks.
+        panel._visualizer.walkToTile = vi.fn();
+        panel._visualizer.play = vi.fn();
+        panel._visualizer.isRunning = () => false;
+        return panel;
+    }
+
+    it('empty-interior recording still crosses the recorded departure exit', () => {
+        const panel = panelAtExitRegion();
+        const started = panel._replaySavedActions([], { departureExitId: 'east_id' });
+        expect(started).toBe(true);
+        // Aimed the visualizer at the exit tile and marked the walk
+        // loops-driven so the crossing is attributed to the loop.
+        expect(panel._visualizer.walkToTile).toHaveBeenCalledWith({ x: 7, y: 3, name: 'east_id' });
+        expect(panel._loopsDrivenAction).toMatchObject({
+            type: 'regionMove', _playbackDeparture: true,
+        });
+
+        // Simulate the visualizer reaching + crossing the exit tile.
+        panel._onVisualizerExitCross(
+            { exit_id: 'east_id', exitName: 'east_to_b', targetRegion: 'B' }, 'A',
+        );
+        const move = published.find((p) => p.topic === 'user:regionMove');
+        expect(move).toBeTruthy();
+        expect(move.payload).toMatchObject({
+            sourceRegion: 'A', targetRegion: 'B', exitName: 'east_to_b', fromLoop: true,
+        });
+    });
+
+    it('returns false when there is nothing to replay and no departure', () => {
+        const panel = panelAtExitRegion();
+        expect(panel._replaySavedActions([], {})).toBe(false);
+        expect(panel._visualizer.walkToTile).not.toHaveBeenCalled();
+    });
+
+    it('drops a departure with an unresolvable exit id without dangling loops-driven state', () => {
+        const panel = panelAtExitRegion();
+        expect(panel._crossRecordedDeparture('no_such_exit')).toBe(false);
+        expect(panel._loopsDrivenAction).toBeFalsy();
+        expect(panel._visualizer.walkToTile).not.toHaveBeenCalled();
+    });
+
+    it('crosses the departure only AFTER the interior replay drains', () => {
+        vi.useFakeTimers();
+        try {
+            const panel = panelAtExitRegion();
+            const order = [];
+            let remaining = 2;
+            panel._replayTickMs = 1;
+            // Inject a fake queue so we drive the replay driver deterministically
+            // without executing real move side effects.
+            panel._mazeQueue = {
+                appendAll: () => {},
+                isIdle: () => remaining <= 0,
+                stepOne: () => { remaining -= 1; order.push('step'); },
+                drainPending: () => {},
+            };
+            panel._crossRecordedDeparture = vi.fn(() => { order.push('cross'); return true; });
+
+            const started = panel._replaySavedActions(
+                [{ type: 'move', dir: 'E' }, { type: 'move', dir: 'E' }],
+                { departureExitId: 'east_id' },
+            );
+            expect(started).toBe(true);
+            // Interior still draining — departure not issued yet.
+            expect(panel._crossRecordedDeparture).not.toHaveBeenCalled();
+
+            vi.advanceTimersByTime(10);
+            expect(panel._crossRecordedDeparture).toHaveBeenCalledTimes(1);
+            expect(panel._crossRecordedDeparture).toHaveBeenCalledWith('east_id');
+            // Departure crossed strictly after both interior steps ran.
+            expect(order).toEqual(['step', 'step', 'cross']);
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+});
+
 describe('MazeRoomUI — visualizer pickup → system:locationCheck dispatch', () => {
     let calls;
     function fakeApis() {
