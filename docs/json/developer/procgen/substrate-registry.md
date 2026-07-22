@@ -43,7 +43,7 @@ All fields below are observed in the registered entries; every group after Ident
 |-------|------|---------|
 | `getPlaybackController` | `() → PlaybackController \| null` | Resolved by the playback bot (and by the loops `customQueue` action) for the current region's substrate. Returning `null` means "no panel mounted / playback unsupported" and the caller no-ops. |
 
-The **PlaybackController** contract is substrate-neutral: `play(rateHz?)`, `stop()`, `step()`, `instant()`, `reset()`, `setRate(rateHz)`, `walkTo(target)` where target is `{ kind: 'location'|'exit'|'tile', name?, region?, x?, y? }`, and optional `replayActions(actions, { onComplete })` for substrate-native saved-queue replay. Every method returns `void` or `Promise<void>`; the bot's dispatch is fire-and-forget and progress comes back through the normal dispatcher events (`user:locationCheck`, `user:regionMove`). Iframe-backed substrates implement the controller as a host-side proxy that forwards commands to an in-iframe bridge — the wrapper's proxy publishes `textAdventureSubstrateWrapper:control` events; bounce's publishes on `bounce:playbackControl` and the in-game bot driver plays real physics from input synthesis.
+The **PlaybackController** contract is substrate-neutral: `play(rateHz?)`, `stop()`, `step()`, `instant()`, `reset()`, `setRate(rateHz)`, `walkTo(target)` where target is `{ kind: 'location'|'exit'|'tile', name?, region?, x?, y? }`, and optional `replayActions(actions, { onComplete, departureExitId, instant })` for replaying a recorded visit — the substrate replays the interior actions, then crosses `departureExitId` itself (recordings exclude the departing move), draining in one frame when `instant` is set. See [Loop Recording and Block Modes](./loop-recording.md). Every method returns `void` or `Promise<void>`; the bot's dispatch is fire-and-forget and progress comes back through the normal dispatcher events (`user:locationCheck`, `user:regionMove`). Iframe-backed substrates implement the controller as a host-side proxy that forwards commands to an in-iframe bridge — the wrapper's proxy publishes `textAdventureSubstrateWrapper:control` events; bounce's publishes on `bounce:playbackControl` and the in-game bot driver plays real physics from input synthesis.
 
 ### Loop mode
 
@@ -52,8 +52,14 @@ The **PlaybackController** contract is substrate-neutral: `play(rateHz?)`, `stop
 | `loopSupport` | object | Declares which loops-panel affordances this substrate's regions get. **Absent ⇒ no loop-mode affordances** (AP-native regions without a substrate are unaffected — loops drives those itself). |
 | `loopSupport.queueActions` | string[] | Which loop-queue action types can be authored for a region: `'regionMove'`, `'locationCheck'`, `'explore'`. |
 | `loopSupport.manual` | boolean | The region can be played by hand in loop mode. |
-| `loopSupport.customQueues` | boolean | Saved substrate-native action queues can be recorded and replayed. |
+| `loopSupport.record` | boolean | The Record block mode is offered (requires `playback` — no replay, no point recording). Gates the Record radio and set-all-Record control. |
+| `loopSupport.playback` | boolean | A recorded visit can be replayed through the substrate's `replayActions`. Gates binding saved recordings to Playback blocks. |
+| `loopSupport.instant` | boolean | The substrate can drain a replay in one frame (`replayActions` with `instant: true`). Gates the per-block Instant toggle. |
+| `loopSupport.customQueues` | boolean | The legacy custom-queue dropdown (manually attach a saved queue as a `customQueue` action). Distinct from `record`/`playback`, which are block-mode-driven. |
 | `loopSupport.executeVia` | `'playbackBot'` (optional) | Makes the loops queue execute the region's actions by driving the substrate's PlaybackController (`walkTo`); the queue parks until the resulting event arrives, then charges the action's `loop_costs` value. Absent ⇒ generic timer execution. Used by bounce and jta. |
+| `takeLastRecording` | `() → SavedQueue \| null` (top-level entry field) | Pull-and-clear the substrate recorder's stashed visit capture. Loops (the **sole persister**) pulls it only when a Record-mode block completes through its expected exit; wrong exits / mana-outs / resets are discarded by simply never pulling. Only **fine-grained** substrates supply this — see the capture contract below. |
+
+**The capture contract** (settled 2026-07-22): declare `record` + a recorder (`takeLastRecording`) only if the substrate has *sub-queue-grade* actions — actions finer than a loop-queue entry, like the maze's per-tile moves. Such a recorder captures the whole visit as one interleaved stream (coarse actions included) and loops projects the queue-grade subset into the block interior. A **coarse-only** substrate (every action is a queue-grade `regionMove`/`locationCheck`/`explore`/custom verb) gets Record/Playback from loops itself — no recorder, no saved recordings; the block's own queue entries are the recording. Never both channels at once. Full rationale and flows: [Loop Recording and Block Modes](./loop-recording.md).
 
 ### Cross-substrate sharing
 
@@ -113,6 +119,7 @@ The sphere-growth driver and the Procgen Pipeline panel read a further set of op
 | Playback controller | live panel's controller | host proxy → in-game bot driver | host proxy → in-game bot driver | host proxy → iframe bridge | none (`null`) | host proxy → iframe bridge |
 | Loop queue actions | move, check, explore | move, check (`executeVia: 'playbackBot'`) | move, check (`executeVia: 'playbackBot'`) | move, check, explore | move | move (`executeVia: 'playbackBot'`) |
 | Manual loop play | yes | yes | yes | yes | yes | yes |
+| Record / Playback / Instant | **yes** (fine-grained recorder) | no | no | **yes** (coarse-only; recorder slated for removal — see [loop-recording.md](./loop-recording.md#status-and-planned-refactor)) | no | no |
 | Custom queues | **yes** | no | no | no | no | no |
 | Procedural build hooks | yes (+ hazards via `applyContentModules`) | no | no | yes (shared tile-grid primitives) | no | no |
 | Zone-based | no | yes (`zoneCount` from zone table, `extractZoneRules`, `victoryItem`) | yes (lazy zone table, `extractZoneRules`, `victoryItem`) | no | no | yes (`zoneCount: 30`, `extractZoneRules`, `victoryItem`) |
@@ -136,4 +143,5 @@ The minimal checklist, derived from the smallest existing entry (jta):
 
 - [Architecture](./architecture.md) — where the registry sits in the overall flow
 - [Module System](../guides/module-system.md) — module registration and panels
+- [Loop Recording and Block Modes](./loop-recording.md) — the block-mode system, recording flows, and the coarse/fine capture contract
 - [Loops feature](../../features/loops.md) — what `loopSupport` gates from the user side

@@ -10,6 +10,7 @@ Developer documentation for the procedural-generation ("procgen") system: the pi
 | [Bounce Substrate](./bounce.md) | The Doodle-Jump-style platformer substrate: physics core, ability suppression, the canJump solver, the derive-rules verifier, level/braid generation, renderers, and the bot driver. |
 | [Runner Substrate](./runner.md) | The auto-runner platformer substrate: the GMTK toolkit physics port, the canRun solver and its doom/touch/launch model, strip generation and spec planning, and the greedy re-plan bot. |
 | [Playback and Debugging Tools](./playback-and-debugging.md) | The playback bot, the PlaybackController proxies, shared clock/control-bar primitives, the forward simulator (sphere-log generation), and the simulator core. |
+| [Loop Recording and Block Modes](./loop-recording.md) | Per-block Manual/Record/Playback modes and the Instant toggle, the saved-recording store and tags, the Record/Playback flows, and the coarse-only vs. fine-grained capture contract. |
 | [Maze Substrate](./maze.md) | The grid-of-tiles substrate: engine, biomes and wall backends, the action queue, content modules (hazards), the autopather, panel/editor. |
 | [Sphere-Driven Growth](./sphere-growth.md) | The plan-first driver: the sphere plan and its oracle role, the stratification rule, gate compatibility, the three-phase tree split, config assembly. |
 | [Paths and Obstacles](./paths-and-obstacles.md) | The intermediate access-rule representation: the item/obstacle vocabulary, per-substrate producers, the Rule Builder compiler, and the rule→requirement inverse. |
