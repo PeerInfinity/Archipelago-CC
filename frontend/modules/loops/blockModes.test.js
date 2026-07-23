@@ -14,11 +14,14 @@ import { GameState } from '../gameState/state.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import {
+  getSavedQueues,
   getSavedQueueByTag,
   saveQueue,
+  hasPlayableRecording,
   _testOnly_clearAll as resetSavedQueueStore,
 } from './savedQueueStore.js';
 import { hashRulesData, clearRulesHashCache } from '../shared/rulesHash.js';
+import { annotationsAreEmpty } from './blockAnnotations.js';
 
 beforeAll(installRafShim);
 afterAll(uninstallRafShim);
@@ -837,10 +840,16 @@ describe('M3b — loops-owned coarse capture + live-play economy', () => {
     expect(interior.map((e) => e.type === 'locationCheck' ? e.locationName : e.actionName))
       .toEqual(['Performed', 'explore']);
     expect(gs.getPath().filter((e) => e.type === 'regionMove' && e.sourceRegion === 'A')).toHaveLength(1);
-    // Auto-switched; buffer cleared; NOTHING persisted to savedQueueStore.
+    // Auto-switched; buffer cleared; no ACTIONS persisted to
+    // savedQueueStore. M4 stores an annotations-only envelope there
+    // (actions: []), which never reads as a playable recording — the M3b
+    // invariant "coarse Playback never reads actions from the store" is
+    // what matters, not the absence of a row.
     expect(loopState.getBlockMode('A', 1)).toBe('playback');
     expect(loopState._liveCaptureBuffer).toEqual([]);
-    expect(getSavedQueueByTag(hashRulesData(RULES_DATA), 'A', 'coarse_sub', 'go', 0)).toBeNull();
+    const coarseEntry = getSavedQueueByTag(hashRulesData(RULES_DATA), 'A', 'coarse_sub', 'go', 0);
+    expect(coarseEntry?.actions).toEqual([]);
+    expect(hasPlayableRecording(coarseEntry)).toBe(false);
     // The auto-switch refresh carried an iterable queue payload.
     const qu = bus.events.filter((e) => e.name === 'loopState:queueUpdated');
     expect(qu.length).toBeGreaterThan(0);
@@ -1036,5 +1045,192 @@ describe('M2 — Playback replays a bound recording', () => {
     loopState.isProcessing = true;
     tick(loopState);
     expect(handles.replayCalls).toHaveLength(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// M4 slice 4 — queue annotations (item deltas + minima, XP), the universal
+// savedQueueStore envelope.
+// ---------------------------------------------------------------------------
+
+describe('M4 — Record annotations (fine-grained)', () => {
+  let loopState, gs, bus, tick, handles;
+  beforeEach(() => {
+    resetSavedQueueStore();
+    clearRulesHashCache();
+    ({ loopState, gs, bus } = wire());
+    tick = makeTicker();
+    handles = registerRecordSubstrate();
+    loopState._cachedRulesData = RULES_DATA;
+    gs.updatePath('A', 'go', 'Menu');
+    gs.addLocationCheck('Loc1', 'A');
+    gs.updatePath('B', 'exit', 'A');
+    loopState.setBlockMode('A', 1, 'record');
+  });
+
+  function park() {
+    loopState.currentActionIndex = 1;
+    loopState.currentAction = loopState.getActionQueue()[1];
+    loopState.isProcessing = true;
+    tick(loopState);
+  }
+
+  function savedEntry() {
+    return getSavedQueueByTag(hashRulesData(RULES_DATA), 'A', 'rec_sub', 'go', 0);
+  }
+
+  it('records item movement as DELTAS from block start, not absolutes', () => {
+    // A pre-existing stock of 500 before the block must not appear anywhere:
+    // the tracker is created empty at every park.
+    bus.publish('crossSubstrate:itemGranted', { to: 'rec_sub', from: 'host', itemType: 'Food', count: 500 });
+    park();
+    bus.publish('crossSubstrate:itemGranted', { to: 'rec_sub', from: 'maze', itemType: 'Food', count: 3 });
+    handles.stash = makeStash({ actions: [] });
+    loopState._handleManualWake_regionMove({ targetRegion: 'B' });
+
+    expect(savedEntry().annotations.items['rec_sub/Food']).toEqual({ net: 3, min: 0 });
+  });
+
+  it('counts CROSS-SUBSTRATE pool items, keyed by their owning substrate', () => {
+    park();
+    // A grant this block caused into ANOTHER substrate's pool still belongs
+    // to the block's economy — it is keyed by its owner, not by us.
+    bus.publish('crossSubstrate:itemGranted', { to: 'other_sub', from: 'rec_sub', itemType: 'Gem', count: 2 });
+    bus.publish('crossSubstrate:itemGranted', { to: 'rec_sub', from: 'host', itemType: 'Gem', count: 1 });
+    handles.stash = makeStash({ actions: [] });
+    loopState._handleManualWake_regionMove({ targetRegion: 'B' });
+
+    const { items } = savedEntry().annotations;
+    expect(items['other_sub/Gem']).toEqual({ net: 2, min: 0 });
+    expect(items['rec_sub/Gem']).toEqual({ net: 1, min: 0 });
+  });
+
+  it('folds the recording\'s item USES in as consumption, and the minimum is the trough', () => {
+    park();
+    bus.publish('crossSubstrate:itemGranted', { to: 'rec_sub', from: 'host', itemType: 'Food', count: 4 });
+    handles.stash = makeStash({
+      actions: [
+        { actionType: 'clickTask', actionId: 7, label: 'Chop', loops: 2 },
+        { actionType: 'useItem', actionId: 1, label: 'Food', loops: 6 },
+      ],
+    });
+    loopState._handleManualWake_regionMove({ targetRegion: 'B' });
+
+    // net = +4 granted − 6 used = −2. The minimum is the CONSERVATIVE
+    // interleaving (every spend before any gain) = −6, so the UI's
+    // "needs ≥6 at start" can only overstate, never understate.
+    expect(savedEntry().annotations.items['rec_sub/Food']).toEqual({ net: -2, min: -6 });
+  });
+
+  it('a block that moved no economy stores no annotations object', () => {
+    park();
+    handles.stash = makeStash({ actions: [] });
+    loopState._handleManualWake_regionMove({ targetRegion: 'B' });
+    expect(savedEntry().annotations).toBeNull();
+  });
+
+  it('a DISCARDED recording takes its annotations with it', () => {
+    park();
+    bus.publish('crossSubstrate:itemGranted', { to: 'rec_sub', from: 'host', itemType: 'Food', count: 9 });
+    handles.stash = makeStash();
+    // Wrong exit → discard.
+    loopState._handleManualWake_regionMove({ targetRegion: 'Wrong' });
+    expect(savedEntry()).toBeNull();
+    expect(loopState._annotationTracker).toBeNull();
+
+    // The next Record of the same block starts from zero, not from 9.
+    loopState._queuePausedUntilReset = false;
+    park();
+    handles.stash = makeStash({ actions: [] });
+    bus.publish('crossSubstrate:itemGranted', { to: 'rec_sub', from: 'host', itemType: 'Food', count: 1 });
+    loopState._handleManualWake_regionMove({ targetRegion: 'B' });
+    expect(savedEntry().annotations.items['rec_sub/Food']).toEqual({ net: 1, min: 0 });
+  });
+
+  it('grants outside a Record block are ignored (no tracker, no leak)', () => {
+    bus.publish('crossSubstrate:itemGranted', { to: 'rec_sub', from: 'host', itemType: 'Food', count: 7 });
+    expect(loopState._annotationTracker).toBeNull();
+    park();
+    handles.stash = makeStash({ actions: [] });
+    loopState._handleManualWake_regionMove({ targetRegion: 'B' });
+    expect(savedEntry().annotations).toBeNull();
+  });
+});
+
+describe('M4 — coarse substrates get an ACTIONS-LESS annotations entry', () => {
+  let loopState, gs, bus, tick;
+  beforeEach(() => {
+    resetSavedQueueStore();
+    clearRulesHashCache();
+    ({ loopState, gs, bus } = wire());
+    tick = makeTicker();
+    registerCoarseSubstrate();
+    loopState._cachedRulesData = RULES_DATA;
+    gs.setLoopModeActive(true);
+    gs.maxMana = 1000;
+    gs.currentMana = 1000;
+    gs.updatePath('A', 'go', 'Menu');
+    gs.addLocationCheck('Planned', 'A');
+    gs.updatePath('B', 'exit', 'A');
+  });
+
+  function park() {
+    loopState.setBlockMode('A', 1, 'record');
+    loopState.currentActionIndex = 1;
+    loopState.currentAction = loopState.getActionQueue()[1];
+    loopState.isProcessing = true;
+    tick(loopState);
+  }
+
+  function savedEntry() {
+    return getSavedQueueByTag(hashRulesData(RULES_DATA), 'A', 'coarse_sub', 'go', 0);
+  }
+
+  it('stores annotations with NO actions, and that entry never reads as playable', () => {
+    park();
+    bus.publish('crossSubstrate:itemGranted', { to: 'coarse_sub', from: 'host', itemType: 'Lamp', count: 1 });
+    loopState.observeParkedLiveAction({ type: 'locationCheck', locationName: 'Performed', regionName: 'A' });
+    loopState._handleManualWake_regionMove({ targetRegion: 'B', oldRegion: 'A' });
+
+    const entry = savedEntry();
+    expect(entry).toBeTruthy();
+    expect(entry.actions).toEqual([]);
+    expect(entry.annotations.items['coarse_sub/Lamp']).toEqual({ net: 1, min: 0 });
+    // XP is tracked (live-play charges award it) but never displayed.
+    expect(entry.annotations.xp.net).toBeGreaterThan(0);
+    // The M3b invariant: coarse Playback never reads actions from the store.
+    expect(hasPlayableRecording(entry)).toBe(false);
+    expect(loopState._lookupBoundRecording('A', 1)).toBeNull();
+    // …but the annotations themselves are readable for the UI.
+    expect(loopState.getBlockAnnotations('A', 1)).toEqual(entry.annotations);
+  });
+
+  it('re-recording the same coarse block REPLACES its annotations (not a no-op duplicate)', () => {
+    park();
+    bus.publish('crossSubstrate:itemGranted', { to: 'coarse_sub', from: 'host', itemType: 'Lamp', count: 1 });
+    loopState._handleManualWake_regionMove({ targetRegion: 'B', oldRegion: 'A' });
+    expect(savedEntry().annotations.items['coarse_sub/Lamp'].net).toBe(1);
+
+    // Second visit of the same block: identical (empty) actions and null
+    // departure, so only the annotations differ — the duplicate check must
+    // notice, or the stale economy survives forever.
+    park();
+    bus.publish('crossSubstrate:itemGranted', { to: 'coarse_sub', from: 'host', itemType: 'Lamp', count: 5 });
+    loopState._handleManualWake_regionMove({ targetRegion: 'B', oldRegion: 'A' });
+    expect(savedEntry().annotations.items['coarse_sub/Lamp'].net).toBe(5);
+    // Still exactly one entry for the tag — replace-on-tag, not append.
+    expect(getSavedQueues(hashRulesData(RULES_DATA), 'A', 'coarse_sub')).toHaveLength(1);
+  });
+
+  it('a walk-through with no item movement still records its (undisplayed) XP', () => {
+    // The departing move is itself charged live play, so every coarse
+    // Record exit has SOME economy. What matters is that it carries no
+    // item annotations to display.
+    park();
+    loopState._handleManualWake_regionMove({ targetRegion: 'B', oldRegion: 'A' });
+    const entry = savedEntry();
+    expect(entry.annotations.items).toEqual({});
+    expect(entry.annotations.xp.net).toBeGreaterThan(0);
+    expect(annotationsAreEmpty(entry.annotations)).toBe(false);
   });
 });

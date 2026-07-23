@@ -20,7 +20,8 @@ import discoveryStateSingleton from '../discovery/singleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { blockKeyOf, resolveQueueBlocks, assignRecordingTags } from './blockIdentity.js';
-import { getSavedQueues, getSavedQueueByTag, saveQueue } from './savedQueueStore.js';
+import { getSavedQueues, getSavedQueueByTag, saveQueue, hasPlayableRecording } from './savedQueueStore.js';
+import { BlockAnnotationTracker, itemKey } from './blockAnnotations.js';
 import { hashRulesData } from '../shared/rulesHash.js';
 import { isLoopModePlanningSource } from './loopModeExemptions.js';
 
@@ -163,6 +164,12 @@ export class LoopState {
     // substrates (maze) keep their own full-visit recorder instead and
     // never touch this. Cleared on park, discard, and finalize.
     this._liveCaptureBuffer = [];
+    // M4 slice 4: the economy annotations accumulating for the parked
+    // Record block ({items, xp} deltas from block start), or null when no
+    // block is recording. Built into the saved entry's `annotations` field
+    // on a successful exit; discarded with the recording otherwise.
+    // See blockAnnotations.js.
+    this._annotationTracker = null;
     // The last queue index at which the Playback bound-recording lookup
     // ran, so a non-recording playback block doesn't re-resolve tags every
     // frame while it advances through the generic auto path.
@@ -314,6 +321,18 @@ export class LoopState {
     // each consumer that needs the raw JSON caches its own copy.
     this.eventBus.subscribe('stateManager:rawJsonDataLoaded', (data) => {
       this._cachedRulesData = data?.rawJsonData ?? null;
+    });
+
+    // M4 slice 4: cross-substrate consumable arrivals are the one item
+    // movement loops can observe LIVE (the notification bus; the owning
+    // substrate keeps the inventory, the host keeps no store). Folded into
+    // the parked Record block's annotations as a positive delta. Items
+    // CONSUMED during the block come out of the finalized recording
+    // instead — see blockAnnotations.js on why the minimum is conservative.
+    this.eventBus.subscribe('crossSubstrate:itemGranted', (data) => {
+      if (!this._annotationTracker) return;
+      const count = (typeof data?.count === 'number' && data.count > 0) ? data.count : 1;
+      this._annotationTracker.noteItemDelta(itemKey(data?.to, data?.itemType), count);
     });
   }
 
@@ -996,6 +1015,9 @@ export class LoopState {
           this._recordingBlock = { region: modeBlock.region, instance: modeBlock.instance };
           // Coarse-only capture starts fresh at every park (M3b).
           this._liveCaptureBuffer = [];
+          // Annotations are deltas FROM BLOCK START, so the tracker starts
+          // empty at every park (M4 slice 4).
+          this._annotationTracker = new BlockAnnotationTracker();
         }
         this._handleManualRegionEntry(modeBlock.region);
         return;
@@ -1273,7 +1295,27 @@ export class LoopState {
     if (!substrate) return null;
     const tag = this._recordingTagForBlock(region, instance);
     if (!tag) return null;
-    return getSavedQueueByTag(rulesHash, region, substrate, tag.arrivalKey, tag.ordinal);
+    const entry = getSavedQueueByTag(rulesHash, region, substrate, tag.arrivalKey, tag.ordinal);
+    // An ACTIONS-LESS entry is a coarse substrate's annotations envelope
+    // (M4 slice 4), not a playable recording — replaying it would park the
+    // block on an empty script. Only playable entries bind.
+    return hasPlayableRecording(entry) ? entry : null;
+  }
+
+  /**
+   * The stored annotations for a block, or null. Separate from
+   * _lookupBoundRecording because annotations exist for COARSE blocks too,
+   * where there is no playable recording to bind. Used by the panel.
+   */
+  getBlockAnnotations(region, instance) {
+    const rulesHash = this._rulesHash();
+    if (!rulesHash) return null;
+    const substrate = this._lookupSubstrateId(region);
+    if (!substrate) return null;
+    const tag = this._recordingTagForBlock(region, instance);
+    if (!tag) return null;
+    const entry = getSavedQueueByTag(rulesHash, region, substrate, tag.arrivalKey, tag.ordinal);
+    return entry?.annotations ?? null;
   }
 
   /**
@@ -1283,6 +1325,11 @@ export class LoopState {
    * wake handler matched the expected departing regionMove). arrivalExitId
    * is stamped from the loops-owned arrivalKey so a later auto-restore
    * lookup keys on the identical value.
+   *
+   * M4 slice 4: the entry also carries the block's `annotations` — the
+   * recording's item deltas + minima and its XP, as deltas from block start.
+   * The recording's own `useItem` entries are the consumption half, folded
+   * in here (blockAnnotations.js).
    */
   _persistRecordingForBlock(region, instance) {
     const substrate = this._lookupSubstrateId(region);
@@ -1293,15 +1340,51 @@ export class LoopState {
     if (!tag) return null;
     const rulesHash = this._rulesHash();
     if (!rulesHash) return null;
+    this._annotationTracker?.foldRecordedItemUses(rec.actions, substrate);
+    const annotations = this._annotationTracker?.build() ?? null;
     saveQueue(rulesHash, {
       ...rec,
       regionName: region,
       substrate,
       arrivalExitId: tag.arrivalKey,
       ordinal: tag.ordinal,
+      annotations,
     });
     this._autoSwitchAfterRecord(region, instance);
     return rec;
+  }
+
+  /**
+   * Persist a COARSE-ONLY block's annotations (M4 slice 4). savedQueueStore
+   * is the universal recording+metadata envelope, so a coarse substrate gets
+   * an entry under the same `(region, arrivalKey, ordinal)` tag holding only
+   * annotations — `actions: []`. That entry must NEVER read as a playable
+   * recording: the coarse Playback contract is that the block's own INTERIOR
+   * is the recording and the store is never consulted for actions (M3b
+   * invariant), which `hasPlayableRecording` enforces on every read.
+   *
+   * Nothing is written when the block moved no economy at all, so a plain
+   * walk-through doesn't litter the store.
+   */
+  _persistAnnotationsForBlock(region, instance) {
+    const annotations = this._annotationTracker?.build() ?? null;
+    if (!annotations) return null;
+    const substrate = this._lookupSubstrateId(region);
+    if (!substrate) return null;
+    const tag = this._recordingTagForBlock(region, instance);
+    if (!tag) return null;
+    const rulesHash = this._rulesHash();
+    if (!rulesHash) return null;
+    saveQueue(rulesHash, {
+      regionName: region,
+      substrate,
+      arrivalExitId: tag.arrivalKey,
+      ordinal: tag.ordinal,
+      departureExitId: null,
+      actions: [],
+      annotations,
+    });
+    return annotations;
   }
 
   /**
@@ -1313,9 +1396,9 @@ export class LoopState {
    *     subset into the block interior.
    *   - COARSE-ONLY (text adventure): the loops-side capture buffer of
    *     observed live actions IS the recording — rewrite the block
-   *     interior from it directly. Nothing is written to savedQueueStore
-   *     (the queue itself persists the same information; one source of
-   *     truth).
+   *     interior from it directly. No ACTIONS are written to
+   *     savedQueueStore (the queue itself persists the same information;
+   *     one source of truth), only the M4 annotations envelope.
    * Both paths apply the auto-switch-to-Playback setting.
    */
   _finalizeRecordBlock(region, instance) {
@@ -1325,9 +1408,11 @@ export class LoopState {
       if (rec) this._applyCoarseReplacement(region, instance, rec);
     } else {
       this._applyCoarseReplacement(region, instance, { actions: this._liveCaptureBuffer.slice() });
+      this._persistAnnotationsForBlock(region, instance);
       this._autoSwitchAfterRecord(region, instance);
     }
     this._liveCaptureBuffer = [];
+    this._annotationTracker = null;
   }
 
   /**
@@ -1361,6 +1446,7 @@ export class LoopState {
   /** Discard any in-progress Record capture (wrong-exit / mana-out / reset). */
   _discardActiveRecording() {
     this._liveCaptureBuffer = [];
+    this._annotationTracker = null;
     if (!this._recordingBlock) return;
     // Drain the substrate's stash so it can't be pulled by a later block.
     const substrate = this._lookupSubstrateId(this._recordingBlock.region);
@@ -1734,6 +1820,7 @@ export class LoopState {
     const region = actionShape.sourceRegion;
     if (region) {
       this.addRegionXP(region, cost);
+      this._annotationTracker?.noteXp(cost);
       this.eventBus?.publish('gameState:xpChanged', {
         regionName: region,
         xpData: this.getRegionXP(region),

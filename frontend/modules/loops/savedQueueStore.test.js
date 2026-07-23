@@ -6,6 +6,7 @@ import {
     getSavedQueueByTag,
     saveQueue,
     clearForRegion,
+    hasPlayableRecording,
     _testOnly_clearAll,
 } from './savedQueueStore.js';
 
@@ -176,5 +177,52 @@ describe('savedQueueStore', () => {
         saveQueue(RULES_HASH, makeQueue({ name: 'my-custom-queue' }));
         const [q] = getSavedQueues(RULES_HASH, 'region_0_0', 'maze');
         expect(q.name).toBe('my-custom-queue');
+    });
+});
+
+describe('savedQueueStore — the M4 universal envelope', () => {
+    // An ACTIONS-LESS entry is how a COARSE-ONLY substrate stores its
+    // annotations: its recording is the block's own queue interior, so the
+    // store holds economy metadata and nothing replayable.
+    function makeAnnotationsOnly(overrides = {}) {
+        return {
+            regionName: 'region_0_0',
+            substrate: 'text_adventure',
+            arrivalExitId: 'entrance',
+            departureExitId: null,
+            actions: [],
+            annotations: { items: { 'text_adventure/Lamp': { net: 1, min: 0 } }, xp: { net: 20 } },
+            ...overrides,
+        };
+    }
+
+    it('hasPlayableRecording separates a real recording from an annotations envelope', () => {
+        expect(hasPlayableRecording(makeQueue())).toBe(true);
+        expect(hasPlayableRecording(makeAnnotationsOnly())).toBe(false);
+        expect(hasPlayableRecording(null)).toBe(false);
+        expect(hasPlayableRecording({})).toBe(false);
+    });
+
+    it('stores and returns annotations alongside a recording', () => {
+        saveQueue(RULES_HASH, makeQueue({ annotations: { items: {}, xp: { net: 5 } } }));
+        const q = getSavedQueueByTag(RULES_HASH, 'region_0_0', 'maze', 'entrance');
+        expect(q.annotations).toEqual({ items: {}, xp: { net: 5 } });
+    });
+
+    it('changed annotations are NOT a duplicate, even with identical actions', () => {
+        // The coarse case: actions are [] and departure null on every
+        // re-record, so annotations are the only thing that can differ. If
+        // the duplicate check ignored them the stale economy would stick.
+        expect(saveQueue(RULES_HASH, makeAnnotationsOnly())).toBe('saved');
+        expect(saveQueue(RULES_HASH, makeAnnotationsOnly())).toBe('duplicate');
+        const changed = makeAnnotationsOnly({
+            annotations: { items: { 'text_adventure/Lamp': { net: 4, min: -1 } }, xp: { net: 20 } },
+        });
+        expect(saveQueue(RULES_HASH, changed)).toBe('saved');
+
+        // Replace-on-tag: still exactly one entry, carrying the new economy.
+        const bucket = getSavedQueues(RULES_HASH, 'region_0_0', 'text_adventure');
+        expect(bucket).toHaveLength(1);
+        expect(bucket[0].annotations.items['text_adventure/Lamp']).toEqual({ net: 4, min: -1 });
     });
 });
