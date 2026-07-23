@@ -77,30 +77,8 @@ describe('PlaybackProxy — publishes control events for each method', () => {
         );
     });
 
-    it('replayActions(actions, opts) publishes actions + a serializable departureExitId + instant (drops onComplete)', () => {
-        const actions = [{ type: 'locationCheck', locationName: 'Coin' }];
-        proxy.replayActions(actions, { departureExitId: 'NorthDoor', onComplete: () => {} });
-        expect(bus.publish).toHaveBeenCalledWith(
-            PLAYBACK_CONTROL_EVENT,
-            { method: 'replayActions', args: [actions, { departureExitId: 'NorthDoor', instant: false }] },
-        );
-    });
-
-    it('replayActions forwards instant:true (M3)', () => {
-        const actions = [{ type: 'locationCheck', locationName: 'Coin' }];
-        proxy.replayActions(actions, { departureExitId: 'NorthDoor', instant: true });
-        expect(bus.publish).toHaveBeenCalledWith(
-            PLAYBACK_CONTROL_EVENT,
-            { method: 'replayActions', args: [actions, { departureExitId: 'NorthDoor', instant: true }] },
-        );
-    });
-
-    it('replayActions tolerates missing actions/opts', () => {
-        proxy.replayActions();
-        expect(bus.publish).toHaveBeenCalledWith(
-            PLAYBACK_CONTROL_EVENT,
-            { method: 'replayActions', args: [[], { departureExitId: null, instant: false }] },
-        );
+    it('has no replayActions (M3b: coarse-only substrate — loops runs the block interior host-side)', () => {
+        expect(proxy.replayActions).toBeUndefined();
     });
 
     it('preserves call order across mixed methods', () => {

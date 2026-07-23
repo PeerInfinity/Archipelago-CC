@@ -17,7 +17,6 @@ import { substrateRegistryEntry } from './textAdventureSubstrateWrapperLibrary.j
 import { PlaybackProxy, PLAYBACK_CONTROL_EVENT } from './playbackProxy.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { initManaWiring, getHeaderInfoEvent } from './mana.js';
-import { startTextAdventureRecorder } from './recorder.js';
 
 const SETTINGS_DEFAULTS = Object.freeze({
     messageHistoryLimit: 10,
@@ -137,13 +136,8 @@ export function register(registrationApi) {
     // Panel-shown event published by the panel's onShow lifecycle.
     // Bridge subscribes and refocuses the engine's command input.
     registrationApi.registerEventBusPublisher(PANEL_SHOWN_EVENT);
-    // Substrate-internal recording channel. Bridge publishes one
-    // event per engine command (move / examine / explore); the
-    // saved-queue recorder subscribes.
-    registrationApi.registerEventBusPublisher('textAdventure:commandRecorded');
     registrationApi.registerEventBusSubscriberIntent('iframe:appReady');
     registrationApi.registerEventBusSubscriberIntent('textAdventure:loadRegion');
-    registrationApi.registerEventBusSubscriberIntent('textAdventure:commandRecorded');
     // Procgen mode detection — subscribe to rawJsonDataLoaded to spot
     // preset_sidecars and forward the substrate's sidecar-region set
     // to the bridge so it can filter Menu / other non-sidecar regions
@@ -268,12 +262,10 @@ export async function initialize(_moduleId, _priorityIndex, initializationApi) {
     // don't leave us with a null current region.
     initManaWiring({ eventBus, dispatcher });
 
-    // Saved-queue recorder — subscribes to textAdventure:loadRegion
-    // and textAdventure:commandRecorded; persists a SavedQueue to
-    // savedQueueStore on every region exit. Lives for the module's
-    // lifetime; this module isn't unloaded mid-session, so the
-    // returned stop() is captured but not currently invoked.
-    startTextAdventureRecorder({ eventBus });
+    // M3b: no substrate recorder. The text adventure is a coarse-only
+    // substrate — every performed action is queue-grade, so loops
+    // observes and captures Record-mode visits host-side and the block
+    // interior itself is the recording (loop-recording.md).
 
     // Reload settings on change and re-broadcast initialState so the
     // bridge applies them. Cheap (small payload, idempotent for

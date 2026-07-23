@@ -19,7 +19,6 @@ import {
     tileGridDeserializer,
 } from '../shared/procgen/adapterPrimitives.js';
 import { getPlaybackProxy } from './index.js';
-import { takeLastTextAdventureRecording } from './recorder.js';
 
 export const substrateRegistryEntry = Object.freeze({
     // Identity / runtime
@@ -53,27 +52,30 @@ export const substrateRegistryEntry = Object.freeze({
     // initialize() runs (registry callers already handle null).
     getPlaybackController: () => getPlaybackProxy(),
 
-    // Runtime — recording (M2 loops sole-persister protocol). Pull-and-
-    // clear the last finalized visit recording; loops persists it only on
-    // a successful Record-mode completion.
-    takeLastRecording: () => takeLastTextAdventureRecording(),
+    // Runtime — recording: NONE. The text adventure is the reference
+    // COARSE-ONLY substrate (M3b capture contract): it supplies no
+    // takeLastRecording, loops owns coarse capture during Record blocks,
+    // and Playback runs the block's own interior through the generic
+    // executor. Only fine-grained substrates (maze) supply a recorder.
 
     // Loop-mode capabilities. custom queues stays NO — the customQueue
     // DROPDOWN would duplicate what the loops queue already expresses
-    // (user decision, 2026-06-12). M2's Record/Playback is a separate,
-    // block-mode-driven path gated on the DECLARED record/playback fields
-    // (not on customQueues), so the dropdown is untouched. Playback is
-    // real: the wrapper drives replayActions over the recorded command
-    // list; Record requires Playback, so both are true.
+    // (user decision, 2026-06-12). Record/Playback are block-mode-driven
+    // and gated on the DECLARED record/playback fields (not on
+    // customQueues), so the dropdown is untouched. Both are real via the
+    // loops-owned coarse path: Record = parked live play + host-side
+    // capture into the block interior; Playback = the generic executor
+    // over that interior. Declaring record+playback also opts this
+    // substrate into the strict loop-mode action gate (M3b).
     loopSupport: Object.freeze({
         queueActions: Object.freeze(['regionMove', 'locationCheck', 'explore']),
         manual: true,
         customQueues: false,
         record: true,
         playback: true,
-        // instant (M3): the wrapper can drain its replay list in one frame
-        // (replayActions with instant:true). Enables the per-block Instant
-        // toggle for Playback blocks in this substrate.
+        // instant (M3): a Playback block can drain in one burst — the
+        // loops generic executor honors the per-block Instant flag when
+        // running the block interior (M3b: no substrate replay involved).
         instant: true,
     }),
 

@@ -214,143 +214,44 @@ describe('PlaybackBridge — clock', () => {
     });
 });
 
-describe('PlaybackBridge — replayActions (M2 Playback)', () => {
+// M3b: the recorded-visit replay half (replayActions & friends) was removed
+// from the bridge — the text adventure is coarse-only, so a Playback block's
+// interior runs through the loops generic executor host-side. Only the
+// walkTo/play/step bot half remains (covered above); the bridge must now
+// treat replayActions control events as unknown and stay flag-free on live
+// walkTos.
+describe('PlaybackBridge — replay machinery removed (M3b)', () => {
     beforeEach(() => { vi.useFakeTimers(); });
     afterEach(() => { vi.useRealTimers(); });
 
-    it('walks recorded locationCheck / explore on the clock, then issues the departure regionMove', () => {
-        const { bridge, client } = makeBridge();
-        bridge.replayActions(
-            [
-                { type: 'locationCheck', locationName: 'Coin' },
-                { type: 'explore', regionName: 'Cave' },
-            ],
-            { departureExitId: 'NorthDoor' },
-        );
-        // Default rate 4Hz → 250ms/tick.
-        vi.advanceTimersByTime(250);
-        expect(client._dispatched()).toHaveLength(1);
-        // fromLoop:true so gameState doesn't append a duplicate path entry the
-        // parked Playback block already holds (the TA double-append fix).
-        expect(client._dispatched()[0]).toEqual({
-            event: 'user:locationCheck',
-            data: { locationName: 'Coin', regionName: 'Cave', originator: 'textAdventureSubstrateWrapper', fromLoop: true },
-        });
-        vi.advanceTimersByTime(250);
-        expect(client._dispatched()[1]).toEqual({
-            event: 'loop:exploreCompleted',
-            data: { regionName: 'Cave' },
-        });
-        // Interior drained → next tick issues the closing regionMove (also
-        // fromLoop:true so updatePath doesn't duplicate the queued exit).
-        vi.advanceTimersByTime(250);
-        expect(client._dispatched()[2]).toEqual({
-            event: 'user:regionMove',
-            data: { sourceRegion: 'Cave', targetRegion: 'Outside', exitName: 'NorthDoor', fromLoop: true },
-        });
-        // Clock stopped — no further dispatches.
-        vi.advanceTimersByTime(1000);
-        expect(client._dispatched()).toHaveLength(3);
+    it('has no replayActions method', () => {
+        const { bridge } = makeBridge();
+        expect(bridge.replayActions).toBeUndefined();
     });
 
-    it('with no departureExitId, drains the interior and stops without a regionMove', () => {
-        const { bridge, client } = makeBridge();
-        bridge.replayActions([{ type: 'locationCheck', locationName: 'Coin' }], {});
-        vi.advanceTimersByTime(250); // locationCheck
-        vi.advanceTimersByTime(250); // drained → stop (no departure)
-        vi.advanceTimersByTime(500);
-        expect(client._dispatched()).toEqual([
-            {
-                event: 'user:locationCheck',
-                data: { locationName: 'Coin', regionName: 'Cave', originator: 'textAdventureSubstrateWrapper', fromLoop: true },
-            },
-        ]);
-    });
-
-    it('routes replayActions through the control event', () => {
+    it('a replayActions control event is ignored (unknown method, no dispatch)', () => {
         const { client } = makeBridge();
         client._fire('textAdventureSubstrateWrapper:control', {
             method: 'replayActions',
-            args: [[{ type: 'locationCheck', locationName: 'Coin' }], { departureExitId: null }],
+            args: [[{ type: 'locationCheck', locationName: 'Coin' }], { departureExitId: 'NorthDoor' }],
         });
-        vi.advanceTimersByTime(250);
-        expect(client._dispatched()).toHaveLength(1);
-        expect(client._dispatched()[0].event).toBe('user:locationCheck');
+        vi.advanceTimersByTime(1000);
+        expect(client._dispatched()).toEqual([]);
     });
 
-    it('every replay publish carries fromLoop:true (double-append guard)', () => {
-        // Regression: without fromLoop:true, gameState.handleLocationCheck /
-        // handleRegionMove append duplicate path entries the parked Playback
-        // block already holds (gameState/index.js:457,383). Both the interior
-        // locationCheck and the closing departure regionMove must carry it.
-        const { bridge, client } = makeBridge();
-        bridge.replayActions(
-            [{ type: 'locationCheck', locationName: 'Coin' }],
-            { departureExitId: 'NorthDoor' },
-        );
-        vi.advanceTimersByTime(250); // locationCheck
-        vi.advanceTimersByTime(250); // drained → departure regionMove
-        const gameStateMutations = client._dispatched().filter(
-            (d) => d.event === 'user:locationCheck' || d.event === 'user:regionMove');
-        expect(gameStateMutations).toHaveLength(2);
-        for (const d of gameStateMutations) {
-            expect(d.data.fromLoop).toBe(true);
-        }
-    });
-
-    it('live walkTo publishes stay flag-free (only replay sets fromLoop)', () => {
-        // The bot/manual walkTo path (_performAction) is a genuine live action,
-        // so gameState SHOULD append its path entry — it must NOT carry fromLoop.
+    it('live walkTo publishes stay flag-free (genuine live actions carry no fromLoop)', () => {
+        // The bot/manual walkTo path (_performAction) is a genuine live action
+        // — it must NOT carry fromLoop (the strict gate and gameState handle
+        // it as performed play).
         const { bridge, client } = makeBridge();
         bridge.walkTo({ kind: 'location', name: 'Coin' });
         bridge.step();
         bridge.walkTo({ kind: 'exit', name: 'NorthDoor' });
         bridge.step();
+        expect(client._dispatched().length).toBeGreaterThan(0);
         for (const d of client._dispatched()) {
             expect(d.data.fromLoop).toBeUndefined();
         }
-    });
-
-    it('instant:true drains the whole interior + departure synchronously (no clock)', () => {
-        const { bridge, client } = makeBridge();
-        bridge.replayActions(
-            [
-                { type: 'locationCheck', locationName: 'Coin' },
-                { type: 'explore', regionName: 'Cave' },
-            ],
-            { departureExitId: 'NorthDoor', instant: true },
-        );
-        // Everything already dispatched — no timer advance needed.
-        const events = client._dispatched();
-        expect(events.map((e) => e.event)).toEqual([
-            'user:locationCheck', 'loop:exploreCompleted', 'user:regionMove',
-        ]);
-        // The fromLoop double-append guards still hold on the instant path.
-        expect(events[0].data.fromLoop).toBe(true);
-        expect(events[2].data.fromLoop).toBe(true);
-        // No clock was ever started.
-        vi.advanceTimersByTime(2000);
-        expect(client._dispatched()).toHaveLength(3);
-    });
-
-    it('instant:true with empty interior still issues the departure', () => {
-        const { bridge, client } = makeBridge();
-        bridge.replayActions([], { departureExitId: 'NorthDoor', instant: true });
-        const events = client._dispatched();
-        expect(events).toHaveLength(1);
-        expect(events[0].event).toBe('user:regionMove');
-        expect(events[0].data.fromLoop).toBe(true);
-    });
-
-    it('reset() cancels an in-flight replay', () => {
-        const { bridge, client } = makeBridge();
-        bridge.replayActions(
-            [{ type: 'locationCheck', locationName: 'Coin' }],
-            { departureExitId: 'NorthDoor' },
-        );
-        bridge.reset();
-        vi.advanceTimersByTime(1000);
-        expect(client._dispatched()).toEqual([]);
     });
 });
 

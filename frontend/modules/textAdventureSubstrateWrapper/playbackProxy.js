@@ -47,32 +47,11 @@ export class PlaybackProxy {
     setRate(rateHz) { this._send('setRate', [rateHz]); }
     walkTo(target)  { this._send('walkTo', [target]); }
 
-    /**
-     * Replay a recorded visit's action list (M2 loops Playback mode). Walks
-     * the recorded locationCheck / explore commands on the bridge's clock,
-     * then — since the recorded actions exclude the departure — issues the
-     * closing regionMove via `opts.departureExitId` so the parked loops queue
-     * advances (maze self-exits by crossing the tile; TA has no such tile).
-     *
-     * onComplete is host-side and cannot cross postMessage, so it is NOT
-     * forwarded (the loops caller passes a no-op; the block advances off the
-     * emitted regionMove, not this callback).
-     *
-     * @param {Array} actions - recorded substrate-native action list
-     * @param {{departureExitId?: string, instant?: boolean, onComplete?: Function}} [opts]
-     */
-    replayActions(actions, opts = {}) {
-        this._send('replayActions', [
-            Array.isArray(actions) ? actions : [],
-            {
-                departureExitId: opts?.departureExitId ?? null,
-                // Instant (M3): drain the whole replay in one frame rather
-                // than one action per bridge clock tick.
-                instant: opts?.instant === true,
-            },
-        ]);
-        return true;
-    }
+    // M3b: no replayActions. The text adventure is a coarse-only
+    // substrate — loops runs a Playback block's own interior through the
+    // generic executor host-side, so nothing crosses the iframe for
+    // replay. The absence of replayActions here is also what routes
+    // loopState's fine-grained replay path away from this substrate.
 
     _send(method, args) {
         this._eventBus.publish(this._controlEvent, { method, args });
