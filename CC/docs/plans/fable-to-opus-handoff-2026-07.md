@@ -166,20 +166,23 @@ coarse-capture refactor + the three loop-mode rules — **✅ IMPLEMENTED
 closed M3+M3b in one combined push**; **M4** jta fine-grained recording +
 instant pump + UNIVERSAL queue annotations — **DESIGN RULED 2026-07-23
 (Fable session 68); KICKOFF:** *(NewDocs)*
-`NewDocs/plans/loops-m4-jta-opus-kickoff.md`. **PAUSED MID-IMPLEMENTATION
-same day: slices 1+2 landed (fork `755056809` gitlink un-bumped/unpushed —
-ask first; outer `59ddb867f`); slice-3 mechanism saved as
-`CC/docs/plans/loops-m4-slice3-wip.patch` (tree reverted clean). The gate
-opt-in surfaced the loop-mode-vs-standalone-jta question — RULED same day:
-jta regions are NOT supported outside loop mode (always-on economy
-coupling = the CONTRACT; `requiresLoopMode` generalizes to omsi arc D +
-future loop-game substrates). RESUME from
-`CC/docs/plans/loops-m4-status-and-standalone-jta-investigation.md`
-§"Ruling + revised plan" (invariant + toggle guard rail; 2 perk tests →
-parked-Manual live play; walkto test → enabled:false deferred M6; apply
-patch; slices 3–6). Kickoff open-qs ANSWERED (memory topic): customQueues
-stays deferred; record-clamp = 'manual'; annotation resources =
-consumable items + XP tracked-not-displayed, mana DEFERRED.** jta CLASSIFIED FINE-GRAINED
+`NewDocs/plans/loops-m4-jta-opus-kickoff.md`. **SLICES 1+2+3 SHIPPED+PUSHED
+2026-07-23, CI green (slice 3 `cf5d5d286`; gitlink bump `f6e7de1ca`, fork
+pushed first; maze memo fix `c78e8a78b`; status correction `ced4c6d7a`).**
+jta declares record+playback+instant + the new GENERAL `requiresLoopMode`
+flag (user ruling: jta regions NOT supported outside loop mode — native
+reset-to-zone-0 ≡ the loop teleport; always-on economy coupling = the
+CONTRACT; omsi arc D + future loop-games adopt the flag). Gate opt-in
+broke SIX jta in-app tests (bridge `_dispatchRegionMove` carries no
+`fromLoop` → every walkTo crossing gate-blocked): 2 perk tests → green as
+parked-Manual live play; 4 walkTo tests → `enabled:false` KNOWN-DEFERRED
+to M6. Substrates 45/45. **REMAINING: (a) the in-app record→playback leg
+— PRIORITY, it replaces jta's ONLY end-to-end progression coverage (the
+deferred walkTo tests) — make it multi-region + fold in an
+energy-bonus-raises-pool assertion; (b) slices 4–6 (annotations → UI →
+docs). Kickoff open-qs ANSWERED (memory topic): customQueues stays
+deferred; record-clamp = 'manual'; annotation resources = consumable
+items + XP tracked-not-displayed, mana DEFERRED.** jta CLASSIFIED FINE-GRAINED
 (the fork performed-actions recorder is the stream; per-visit slice →
 shared-actionQueue vocabulary → `takeLastRecording`; replay via the
 jtaQueueEngine executor; fork stamps `zone_id` on item entries). Universal
