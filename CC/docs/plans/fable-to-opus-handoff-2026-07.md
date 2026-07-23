@@ -251,23 +251,31 @@ idle then crosses; TA proxy forwards `instant`, bridge pumps `_replayTick()`
 synchronously. (5/n) per-block Instant checkbox (Playback-only) + set-all
 Instant select. Gates: **vitest 3191, regression 1/1, substrates 44/44**.
 **⚠ M3 close-out REDEFINED (session 66, user):** the TA-side manual sanity
-legs (TA Playback double-append + Instant; maze half was sanity-covered in
-session 63) are what this arc's M3b investigation grew out of, and the user
-ruled manual re-testing **too tedious to gate on** — the gate is now the
-Phase A automated in-app tests in `loops-coarse-capture-plan.md`
-(`ta-playback-no-double-append`, `ta-playback-instant`,
-`ta-record-coarse-and-autoswitch`, `ta-queue-integrity-during-live-play`).
-**The five M3 commits stay LOCAL until M3b lands and the automated gates
-pass; one combined push closes M3+M3b** (user decision 2026-07-22).
+legs are what this arc's M3b investigation grew out of, and the user ruled
+manual re-testing **too tedious to gate on** — the gate is the Phase A
+automated in-app tests. **Phase A LANDED same session (Fable, session 66):**
+`taswBlockModeTests.js`, category "TA block modes" —
+`tasw-playback-no-double-append` **GREEN** (the M3 1/n fromLoop fix is
+machine-verified), `tasw-playback-instant` **GREEN** (Instant drain
+verified), `tasw-record-coarse-autoswitch` **GREEN** (parked Record →
+coarse replacement → auto-switch works end-to-end in-app), and
+`tasw-queue-integrity-parked` **RED — the stray-append symptom is
+CONFIRMED** (a parked check end-appends outside the block; registered
+`enabled:false` KNOWN-RED in the substrates config; **M3b must flip it
+on** — it goes green by design). So M3's own fixes are verified; the
+remaining defect is the pre-existing stray-append that M3b's rulings
+eliminate. **The five M3 commits stay LOCAL until M3b lands; one combined
+push closes M3+M3b** (user decision 2026-07-22).
 
 **M3b — coarse-capture refactor (arc opened 2026-07-22, Fable session 66;
 design SETTLED with the user, don't re-litigate). This arc IS the fix path
 for M3's failing close-out gate** — the TA queue-machinery misbehavior the
 M3 sanity legs were meant to catch is what triggered the investigation.
-**Work item 0 is test-first: write the Phase A automated tests against
-CURRENT code** (they pin the behaviors as specs; #4 doubles as the
-diagnostic for the suspected stray-append symptom), then refactor with
-them green, then add Phase B (gate matrix, drain, capture). Plan:
+**Work item 0 (test-first Phase A) is ✅ DONE — session 66 wrote and ran
+the four tests; see the M3 paragraph above.** The refactor session starts
+from: keep tests 1–3 green through the refactor, flip #4 on (it's the
+KNOWN-RED stray-append repro that the refactor fixes by design), then add
+Phase B (gate matrix, drain, capture). Plan:
 `CC/docs/plans/loops-coarse-capture-plan.md`; durable contract:
 `docs/json/developer/procgen/loop-recording.md`. Ruling: the TA wrapper's
 internal recorder/replay machinery (recorder.js, the

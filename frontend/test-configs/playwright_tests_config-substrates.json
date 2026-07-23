@@ -31,6 +31,27 @@
             "category": "textAdventureSubstrateWrapper"
         },
         {
+            "id": "tasw-playback-no-double-append",
+            "enabled": true,
+            "category": "TA block modes"
+        },
+        {
+            "id": "tasw-playback-instant",
+            "enabled": true,
+            "category": "TA block modes"
+        },
+        {
+            "id": "tasw-record-coarse-autoswitch",
+            "enabled": true,
+            "category": "TA block modes"
+        },
+        {
+            "id": "tasw-queue-integrity-parked",
+            "enabled": false,
+            "_comment": "KNOWN-RED diagnostic: reproduces the parked stray-append bug (gameState end-appends non-fromLoop checks while a block is parked). Enable together with the M3b coarse-capture refactor (CC/docs/plans/loops-coarse-capture-plan.md), which fixes it by design.",
+            "category": "TA block modes"
+        },
+        {
             "id": "swf-location-check-direct-dispatch",
             "enabled": true,
             "category": "flashSubstrate"
