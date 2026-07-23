@@ -272,7 +272,11 @@ design SETTLED with the user, don't re-litigate). This arc IS the fix path
 for M3's failing close-out gate** — the TA queue-machinery misbehavior the
 M3 sanity legs were meant to catch is what triggered the investigation.
 **Work item 0 (test-first Phase A) is ✅ DONE — session 66 wrote and ran
-the four tests; see the M3 paragraph above.** The refactor session starts
+the four tests; see the M3 paragraph above. Kickoff READY:**
+*(NewDocs)* `NewDocs/plans/loops-m3b-coarse-capture-opus-kickoff.md`
+(verified anchors incl. the missing `user:regionMove` receiver +
+sender-only `loop:exploreCompleted` gate seams, baselines, order of work,
+combined-push instruction). The refactor session starts
 from: keep tests 1–3 green through the refactor, flip #4 on (it's the
 KNOWN-RED stray-append repro that the refactor fixes by design), then add
 Phase B (gate matrix, drain, capture). Plan:
