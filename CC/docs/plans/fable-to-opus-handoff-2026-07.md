@@ -206,8 +206,27 @@ recording-exists indicator; Playback DISABLED without playable content
 `defaultBlockMode` default flips to RECORD (enum currently lacks
 'record'). Declaring `record`+`playback` opts jta into the strict gate —
 restructure its free-travel flows/tests in the same arc (rulings detail:
-memory `project_loops_block_modes` M4 block); **M5** runner/bounce (same
-opt-in note; annotations arrive for free via the universal half);
+memory `project_loops_block_modes` M4 block); **M5** runner/bounce —
+**DESIGN RULED 2026-07-23 (Fable session 71); KICKOFF READY:** *(NewDocs)*
+`NewDocs/plans/loops-m5-runner-bounce-opus-kickoff.md`. NOT coarse/fine — a
+NEW third **SUMMARY** capture category (user ruling, amends the M3b
+two-shape contract): recording = the visit's net result (duration +
+performed checks + costed actions + M4 annotations + departure); Playback =
+instant-only host-side apply with REPLAY-TIME repricing (recorded seconds ×
+current XP-discounted per-region rate; iframe does not replay); their first
+live economy = a time drain (default 1 mana/s, per-region
+`timeDrainPerSecond`, XP-scaled) charged ONLY during parked live play;
+per-action costs charge only when EXPLICIT in loop_costs (no 50/100
+fallbacks; costGenerator must not double-charge); Record rewrites the
+interior to performed checks; bot walkTo untouched but Playback-unreachable
+(M6); requiresLoopMode NOT declared (not loop games). Gate opt-in fallout ≈
+NIL (verified by mechanism: no runner/bounce test or committed preset
+carries loop_costs); the one loop-mode artifact
+`verify-bounce-loop-mode.mjs` is expected ALREADY red at HEAD (M4
+record-default clamp parks bounce blocks Manual) — confirm with a
+parent-commit control, then restructure or defer. Runner/bounce are
+IDENTICAL across the whole loop surface (shared bridge/proxy) — one
+implementation, two declarations;
 **M6** solver unification + rename + Bot radio. Omsi arc D re-queues AFTER
 this track (see §4); omsi Instant last of all.
 
