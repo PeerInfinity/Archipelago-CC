@@ -25,6 +25,7 @@ import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 import { executeRegionMovePath } from '../shared/pathExecutor.js';
+import { DEFAULT_TIME_DRAIN_PER_SECOND } from './costDataManager.js';
 
 const logger = createUniversalLogger('costGenerator');
 
@@ -145,6 +146,32 @@ export class CostGenerator {
     } finally {
       this.isGenerating = false;
     }
+  }
+
+  /**
+   * Whether a region belongs to a SUMMARY substrate (runner, bounce — M5).
+   * Those regions are priced by TIME, not per action: a per-action cost
+   * would double-charge on top of the time drain, so the generator emits a
+   * drain rate for them and no moveCost / location costs at all (user
+   * ruling 2026-07-23: summary substrates charge per-action only where the
+   * data says so EXPLICITLY, which a generated sidecar must therefore not
+   * say by default).
+   *
+   * Resolution goes through loopState's single capture-shape resolver so
+   * the generator can never disagree with the runtime about what a region
+   * is. Unknown / unavailable → false (today's behavior).
+   */
+  _isSummaryRegion(regionName) {
+    try {
+      return this.loopState?.getRegionCaptureShape?.(regionName) === 'summary';
+    } catch {
+      return false;
+    }
+  }
+
+  /** The region a static location belongs to (same field order as _processLocationEntry). */
+  _regionOfLocation(locationData) {
+    return locationData?.parent_region || locationData?.region || null;
   }
 
   /**
@@ -290,6 +317,14 @@ export class CostGenerator {
       let remainingUncosted = uncostedRegions.length;
 
       for (const region of uncostedRegions) {
+        if (this._isSummaryRegion(region)) {
+          // Time-priced: a drain rate instead of a per-move cost.
+          costs.regions[region] = { timeDrainPerSecond: DEFAULT_TIME_DRAIN_PER_SECOND };
+          this.assignedRegions.add(region);
+          remainingUncosted--;
+          logger.debug(`Summary region — time-priced instead of per-move: ${region}`);
+          continue;
+        }
         const costPerRegion = Math.floor(manaForRegions / remainingUncosted);
         costs.regions[region] = {
           moveCost: Math.max(1, costPerRegion), // Minimum cost of 1
@@ -304,8 +339,14 @@ export class CostGenerator {
       this.costDataManager.setCostData(costs, 'generation-in-progress');
     }
 
-    // Calculate and assign location cost BEFORE queuing (use half of remaining mana)
-    if (!this.assignedLocations.has(locationName)) {
+    // Calculate and assign location cost BEFORE queuing (use half of remaining mana).
+    // A check inside a SUMMARY region is free by default — the visit's time
+    // is what costs — so it gets no entry at all and is marked assigned so
+    // the default pass below doesn't fill one in.
+    if (!this.assignedLocations.has(locationName) && this._isSummaryRegion(targetRegion)) {
+      this.assignedLocations.add(locationName);
+      logger.debug(`Summary region — location left free (time-priced): ${locationName}`);
+    } else if (!this.assignedLocations.has(locationName)) {
       const locationCost = Math.floor(currentMana / 2);
       costs.locations[locationName] = Math.max(1, locationCost);
       this.assignedLocations.add(locationName);
@@ -404,6 +445,11 @@ export class CostGenerator {
     if (staticData.regions) {
       for (const [regionName, regionData] of staticData.regions.entries()) {
         if (!this.assignedRegions.has(regionName)) {
+          if (this._isSummaryRegion(regionName)) {
+            costs.regions[regionName] = { timeDrainPerSecond: DEFAULT_TIME_DRAIN_PER_SECOND };
+            logger.debug(`Summary region — time-priced instead of per-move: ${regionName}`);
+            continue;
+          }
           const neighborCost = this._getHighestNeighborCost(regionName, regionData, costs);
           costs.regions[regionName] = {
             moveCost: neighborCost || costs.defaultRegionCost,
@@ -413,17 +459,21 @@ export class CostGenerator {
       }
     }
 
-    // Find uncosted locations and use highest existing location cost
+    // Find uncosted locations and use highest existing location cost.
+    // Locations inside a SUMMARY region stay uncosted (time-priced visit).
     if (staticData.locations) {
       const existingCosts = Object.values(costs.locations);
       const maxLocationCost = existingCosts.length > 0
         ? Math.max(costs.defaultLocationCost, ...existingCosts)
         : costs.defaultLocationCost;
 
-      for (const [locationName] of staticData.locations.entries()) {
-        if (!this.assignedLocations.has(locationName)) {
-          costs.locations[locationName] = maxLocationCost;
+      for (const [locationName, locationData] of staticData.locations.entries()) {
+        if (this.assignedLocations.has(locationName)) continue;
+        if (this._isSummaryRegion(this._regionOfLocation(locationData))) {
+          logger.debug(`Summary region — location left free (time-priced): ${locationName}`);
+          continue;
         }
+        costs.locations[locationName] = maxLocationCost;
       }
     }
   }

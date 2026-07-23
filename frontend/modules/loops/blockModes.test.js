@@ -4,7 +4,7 @@
  * (region, instanceNumber) visit; a region's two visits can differ.
  */
 import {
-  describe, it, expect, beforeEach, beforeAll, afterAll,
+  describe, it, expect, beforeEach, afterEach, beforeAll, afterAll, vi,
 } from 'vitest';
 import {
   installRafShim, uninstallRafShim, makeTicker, makeStubStateManager,
@@ -22,6 +22,7 @@ import {
 } from './savedQueueStore.js';
 import { hashRulesData, clearRulesHashCache } from '../shared/rulesHash.js';
 import { annotationsAreEmpty } from './blockAnnotations.js';
+import { CostDataManager } from './costDataManager.js';
 
 beforeAll(installRafShim);
 afterAll(uninstallRafShim);
@@ -1411,5 +1412,243 @@ describe('M5 — summary binding and Playback dispatch', () => {
     loopState.setBlockMode('A', 1, 'playback');
     parkCursorOnBlockInterior();
     expect(loopState._manualActionEntered).toBe(false);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// M5 slice 2 — the live-play time drain and explicit-only per-action costs.
+// A summary substrate's visit is priced by how long it takes; its actions
+// cost mana only where the loop_costs data says so explicitly.
+// ---------------------------------------------------------------------------
+
+describe('M5 — the summary time drain', () => {
+  let loopState, gs, tick;
+
+  function costsFor(regionData = {}, locations = {}) {
+    const cdm = new CostDataManager();
+    cdm.setCostData({
+      regions: { A: regionData },
+      locations,
+      defaultRegionCost: 50,
+      defaultLocationCost: 100,
+    }, 'test');
+    return cdm;
+  }
+
+  function setUp({ regionData = {}, locations = {}, coarse = false } = {}) {
+    ({ loopState, gs } = wire());
+    tick = makeTicker();
+    if (coarse) registerCoarseSubstrate(); else registerSummarySubstrate();
+    loopState.setCostDataManager(costsFor(regionData, locations));
+    loopState._cachedRulesData = RULES_DATA;
+    gs.updatePath('A', 'go', 'Menu');
+    gs.addLocationCheck('Loc1', 'A');
+    gs.updatePath('B', 'exit', 'A');
+    loopState.setBlockMode('A', 1, 'record');
+    gs.setLoopModeActive(true);
+  }
+
+  function park() {
+    loopState.currentActionIndex = 1;
+    loopState.currentAction = loopState.getActionQueue()[1];
+    loopState.isProcessing = true;
+    tick(loopState);
+  }
+
+  beforeEach(() => {
+    resetSavedQueueStore();
+    clearRulesHashCache();
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    loopState?.stopTimeDrain();
+    vi.useRealTimers();
+  });
+
+  it('drains the region rate once per second while parked, and counts the seconds', () => {
+    setUp({ regionData: { timeDrainPerSecond: 3 } });
+    park();
+    const before = gs.getCurrentMana();
+
+    vi.advanceTimersByTime(3000);
+
+    expect(gs.getCurrentMana()).toBe(before - 9);
+    // The tick count IS the visit's recorded duration (slice 3 persists it).
+    expect(loopState._summaryDrainSeconds).toBe(3);
+  });
+
+  it('defaults to 1 mana per second when the sidecar names no rate', () => {
+    setUp();
+    park();
+    const before = gs.getCurrentMana();
+    vi.advanceTimersByTime(5000);
+    expect(gs.getCurrentMana()).toBe(before - 5);
+  });
+
+  it('charges nothing unparked, paused, or hard-paused', () => {
+    setUp({ regionData: { timeDrainPerSecond: 3 } });
+
+    // Never parked at all.
+    const idle = gs.getCurrentMana();
+    vi.advanceTimersByTime(4000);
+    expect(gs.getCurrentMana()).toBe(idle);
+
+    park();
+    loopState.isPaused = true;
+    const paused = gs.getCurrentMana();
+    vi.advanceTimersByTime(4000);
+    expect(gs.getCurrentMana()).toBe(paused);
+    loopState.isPaused = false;
+
+    loopState._queuePausedUntilReset = true;
+    const hardPaused = gs.getCurrentMana();
+    vi.advanceTimersByTime(4000);
+    expect(gs.getCurrentMana()).toBe(hardPaused);
+    loopState._queuePausedUntilReset = false;
+
+    // ...and it resumes once the queue is live again — proving the zeroes
+    // above are a gated drain, not a dead timer.
+    const resumed = gs.getCurrentMana();
+    vi.advanceTimersByTime(2000);
+    expect(gs.getCurrentMana()).toBe(resumed - 6);
+  });
+
+  it('charges nothing in a COARSE region (the drain is summary-only)', () => {
+    setUp({ regionData: { timeDrainPerSecond: 3 }, coarse: true });
+    park();
+    const before = gs.getCurrentMana();
+    vi.advanceTimersByTime(4000);
+    expect(gs.getCurrentMana()).toBe(before);
+  });
+
+  it('runs only while loop mode is active', () => {
+    setUp({ regionData: { timeDrainPerSecond: 3 } });
+    park();
+    gs.setLoopModeActive(false);
+    const before = gs.getCurrentMana();
+    vi.advanceTimersByTime(4000);
+    expect(gs.getCurrentMana()).toBe(before);
+
+    gs.setLoopModeActive(true);
+    vi.advanceTimersByTime(1000);
+    expect(gs.getCurrentMana()).toBe(before - 3);
+  });
+
+  it('is XP-scaled and awards region XP 1:1, like every other cost', () => {
+    setUp({ regionData: { timeDrainPerSecond: 10 } });
+    park();
+
+    const before = gs.getCurrentMana();
+    vi.advanceTimersByTime(1000);
+    const firstCharge = before - gs.getCurrentMana();
+    expect(firstCharge).toBe(10);
+    // XP awarded equals the mana spent (the one economy).
+    expect(loopState.getRegionXP('A').xp).toBeCloseTo(10, 10);
+
+    // Enough XP to level the region reduces what a second of the same
+    // region costs (xpEffect defaults to 'cost').
+    loopState.addRegionXP('A', 100000);
+    const beforeDiscounted = gs.getCurrentMana();
+    vi.advanceTimersByTime(1000);
+    expect(beforeDiscounted - gs.getCurrentMana()).toBeLessThan(firstCharge);
+  });
+
+  it('resets the counted duration at each park and on discard', () => {
+    setUp({ regionData: { timeDrainPerSecond: 1 } });
+    park();
+    vi.advanceTimersByTime(2000);
+    expect(loopState._summaryDrainSeconds).toBe(2);
+
+    loopState._discardActiveRecording();
+    expect(loopState._summaryDrainSeconds).toBe(0);
+  });
+});
+
+describe('M5 — explicit-only per-action costs', () => {
+  let loopState, gs, tick;
+
+  function setUp(locations = {}, regionData = {}) {
+    ({ loopState, gs } = wire());
+    tick = makeTicker();
+    registerSummarySubstrate();
+    const cdm = new CostDataManager();
+    cdm.setCostData({
+      regions: { A: regionData },
+      locations,
+      defaultRegionCost: 50,
+      defaultLocationCost: 100,
+    }, 'test');
+    loopState.setCostDataManager(cdm);
+    loopState._cachedRulesData = RULES_DATA;
+    gs.updatePath('A', 'go', 'Menu');
+    gs.addLocationCheck('Loc1', 'A');
+    gs.updatePath('B', 'exit', 'A');
+    loopState.setBlockMode('A', 1, 'record');
+    gs.setLoopModeActive(true);
+    loopState.currentActionIndex = 1;
+    loopState.currentAction = loopState.getActionQueue()[1];
+    loopState.isProcessing = true;
+    tick(loopState);
+  }
+
+  beforeEach(() => {
+    resetSavedQueueStore();
+    clearRulesHashCache();
+  });
+
+  it('a performed check is FREE unless the sidecar names its cost', () => {
+    // The sidecar has a defaultLocationCost of 100 and says nothing about
+    // Loc1 — for a summary substrate that means free, not 100.
+    setUp();
+    const before = gs.getCurrentMana();
+    loopState.observeParkedLiveAction({ type: 'locationCheck', locationName: 'Loc1', regionName: 'A' });
+    expect(gs.getCurrentMana()).toBe(before);
+    // ...but it is still CAPTURED: free does not mean invisible.
+    expect(loopState._liveCaptureBuffer).toEqual([{ type: 'locationCheck', locationName: 'Loc1' }]);
+  });
+
+  it('an EXPLICIT per-action cost is charged (and XP-scaled)', () => {
+    setUp({ Loc1: 40 });
+    const before = gs.getCurrentMana();
+    loopState.observeParkedLiveAction({ type: 'locationCheck', locationName: 'Loc1', regionName: 'A' });
+    expect(gs.getCurrentMana()).toBe(before - 40);
+  });
+
+  it('the departure move is free by default and charged when explicit', () => {
+    setUp();
+    const before = gs.getCurrentMana();
+    loopState._handleManualWake_regionMove({ targetRegion: 'B', oldRegion: 'A' });
+    expect(gs.getCurrentMana()).toBe(before);
+
+    setUp({}, { moveCost: 25 });
+    const beforeCosted = gs.getCurrentMana();
+    loopState._handleManualWake_regionMove({ targetRegion: 'B', oldRegion: 'A' });
+    expect(gs.getCurrentMana()).toBe(beforeCosted - 25);
+  });
+
+  it('a COARSE substrate still gets the sidecar defaults (no cross-contamination)', () => {
+    ({ loopState, gs } = wire());
+    tick = makeTicker();
+    registerCoarseSubstrate();
+    const cdm = new CostDataManager();
+    // Well under max mana: a charge that empties the pool would trip the
+    // depletion reset, which refills it and hides the deduction.
+    cdm.setCostData({ regions: { A: {} }, locations: {}, defaultRegionCost: 50, defaultLocationCost: 40 }, 'test');
+    loopState.setCostDataManager(cdm);
+    loopState._cachedRulesData = RULES_DATA;
+    gs.updatePath('A', 'go', 'Menu');
+    gs.addLocationCheck('Loc1', 'A');
+    gs.updatePath('B', 'exit', 'A');
+    loopState.setBlockMode('A', 1, 'record');
+    gs.setLoopModeActive(true);
+    loopState.currentActionIndex = 1;
+    loopState.currentAction = loopState.getActionQueue()[1];
+    loopState.isProcessing = true;
+    tick(loopState);
+
+    const before = gs.getCurrentMana();
+    loopState.observeParkedLiveAction({ type: 'locationCheck', locationName: 'Loc1', regionName: 'A' });
+    expect(gs.getCurrentMana()).toBe(before - 40);
   });
 });

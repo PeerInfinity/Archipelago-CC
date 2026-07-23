@@ -26,6 +26,14 @@ import {
 import { BlockAnnotationTracker, itemKey } from './blockAnnotations.js';
 import { hashRulesData } from '../shared/rulesHash.js';
 import { isLoopModePlanningSource } from './loopModeExemptions.js';
+import { DEFAULT_TIME_DRAIN_PER_SECOND } from './costDataManager.js';
+
+/**
+ * Tick period of the SUMMARY substrates' live-play time drain (M5). One
+ * second: the drain rate is stated per second, and the tick count during a
+ * Record park IS the visit's recorded duration.
+ */
+const TIME_DRAIN_INTERVAL_MS = 1000;
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -174,6 +182,15 @@ export class LoopState {
     // on a successful exit; discarded with the recording otherwise.
     // See blockAnnotations.js.
     this._annotationTracker = null;
+    // M5: the 1 Hz live-play time drain for SUMMARY substrates (runner,
+    // bounce), whose visits are priced by how long they take rather than by
+    // what they do. The interval runs only while loop mode is active and
+    // every tick self-gates on livePlayRegion(), so an unparked, paused or
+    // hard-paused queue costs nothing. `_summaryDrainSeconds` counts the
+    // ticks charged during the parked block — that count IS the recorded
+    // duration (slice 3), which excludes pauses for free.
+    this._drainIntervalId = null;
+    this._summaryDrainSeconds = 0;
     // The last queue index at which the Playback bound-recording lookup
     // ran, so a non-recording playback block doesn't re-resolve tags every
     // frame while it advances through the generic auto path.
@@ -338,6 +355,58 @@ export class LoopState {
       const count = (typeof data?.count === 'number' && data.count > 0) ? data.count : 1;
       this._annotationTracker.noteItemDelta(itemKey(data?.to, data?.itemType), count);
     });
+
+    // M5: the summary substrates' live-play time drain runs for exactly as
+    // long as loop mode does. gameState is the sole writer of the flag and
+    // publishes only on an actual change, so this is the one edge to track.
+    this.eventBus.subscribe('gameState:loopModeChanged', (data) => {
+      if (data?.active) this.startTimeDrain();
+      else this.stopTimeDrain();
+    });
+    // Loop mode may already be on when dependencies land (a preset with
+    // loop_costs auto-enables it before loops finishes wiring).
+    if (this._gs()?.isLoopModeActive) this.startTimeDrain();
+  }
+
+  /**
+   * Start the 1 Hz live-play time drain (M5). Idempotent — a second call
+   * while it runs is a no-op, which matters because _setupEventListeners
+   * runs again on every setDependencies.
+   */
+  startTimeDrain() {
+    if (this._drainIntervalId !== null) return;
+    if (typeof setInterval !== 'function') return;
+    this._drainIntervalId = setInterval(() => this._timeDrainTick(), TIME_DRAIN_INTERVAL_MS);
+  }
+
+  /** Stop the live-play time drain (M5). Idempotent. */
+  stopTimeDrain() {
+    if (this._drainIntervalId === null) return;
+    clearInterval(this._drainIntervalId);
+    this._drainIntervalId = null;
+  }
+
+  /**
+   * One second of parked live play in a SUMMARY substrate's region (M5).
+   *
+   * Self-gating: `livePlayRegion()` is null unless the queue is parked on a
+   * Manual or Record block, and already returns null while paused or
+   * hard-paused — so idle, replaying, paused and wrong-shape states all
+   * cost nothing and no separate suppression is needed.
+   *
+   * The seconds are counted BEFORE the charge, because charging can end the
+   * park: deductMana fires gameState:manaChanged synchronously, whose wake
+   * runs the depletion reset (which refills the pool and discards any
+   * in-progress capture). Nothing may be touched after the charge.
+   */
+  _timeDrainTick() {
+    const region = this.livePlayRegion();
+    if (!region) return;
+    if (this._captureShapeForRegion(region) !== 'summary') return;
+    // Duration is TIME PARKED, independent of what that time cost — a
+    // zero-rate region still accrues seconds.
+    this._summaryDrainSeconds += 1;
+    this._chargeLiveAction({ type: 'timeDrain', sourceRegion: region });
   }
 
   /**
@@ -1487,6 +1556,8 @@ export class LoopState {
   _discardActiveRecording() {
     this._liveCaptureBuffer = [];
     this._annotationTracker = null;
+    // M5: the duration accrued for this visit dies with the capture.
+    this._summaryDrainSeconds = 0;
     if (!this._recordingBlock) return;
     // Drain the substrate's stash so it can't be pulled by a later block.
     const substrate = this._lookupSubstrateId(this._recordingBlock.region);
@@ -1975,6 +2046,9 @@ export class LoopState {
     if (this._manualActionEntered) return;
     this._manualActionEntered = true;
     this._manualRegionName = regionName;
+    // M5: the visit's duration is counted from this park (summary
+    // substrates only — the counter simply stays 0 elsewhere).
+    this._summaryDrainSeconds = 0;
 
     const componentType = this._lookupSubstrateComponentType(regionName);
     if (componentType && this.eventBus?.publish) {
@@ -2836,6 +2910,36 @@ export class LoopState {
   }
 
   /**
+   * The pre-XP base cost of one action in a SUMMARY substrate's region
+   * (M5). Time is the default economy: a second of live play costs the
+   * region's drain rate, and everything else is FREE unless the loop_costs
+   * data names a cost for it explicitly.
+   *
+   * @param {Object} action - {type, sourceRegion, locationName?}
+   * @returns {number} base mana cost (0 when the data states none)
+   */
+  _summaryBaseCost(action) {
+    const cdm = this.costDataManager;
+    const region = action.sourceRegion;
+    switch (action.type) {
+      case 'timeDrain':
+        return cdm?.getTimeDrainPerSecond?.(region) ?? DEFAULT_TIME_DRAIN_PER_SECOND;
+      case 'regionMove':
+        return cdm?.getExplicitRegionCost?.(region) ?? 0;
+      case 'locationCheck':
+        return cdm?.getExplicitLocationCost?.(action.locationName) ?? 0;
+      case 'customAction': {
+        // Explore is 2× the move cost where one exists (matching the
+        // generic model); neither runner nor bounce declares the action.
+        const move = cdm?.getExplicitRegionCost?.(region);
+        return typeof move === 'number' ? move * 2 : 0;
+      }
+      default:
+        return 0;
+    }
+  }
+
+  /**
    * Calculate the mana cost of an action.
    * Uses per-region/per-location costs from costDataManager when available,
    * falling back to hardcoded defaults.
@@ -2844,6 +2948,20 @@ export class LoopState {
    */
   _calculateActionCost(action) {
     let baseCost;
+
+    // M5: SUMMARY substrates (runner, bounce) are priced by TIME. Their
+    // per-action costs apply only where the loop_costs data states one
+    // EXPLICITLY (user ruling 2026-07-23) — the 50/100 fallbacks below,
+    // and the sidecar-level defaults behind them, must never reach a
+    // summary action, or every visit would be charged twice.
+    if (action?.sourceRegion && this._captureShapeForRegion(action.sourceRegion) === 'summary') {
+      baseCost = this._summaryBaseCost(action);
+      return applyRegionXpCostEffect(
+        baseCost,
+        this.getRegionXP(action.sourceRegion).level,
+        this.costDataManager?.getRegionXpEffect?.(action.sourceRegion),
+      );
+    }
 
     if (this.costDataManager?.isLoaded()) {
       // Use per-region/per-location costs from cost data
@@ -2868,6 +2986,11 @@ export class LoopState {
           // consume mana as they run.
           baseCost = 0;
           break;
+        case 'timeDrain':
+          // Only the summary branch above produces these; a stray one on
+          // any other substrate is free, never the 50 default.
+          baseCost = 0;
+          break;
         default:
           baseCost = 50;
       }
@@ -2885,6 +3008,7 @@ export class LoopState {
           break;
         case 'manual':
         case 'customQueue':
+        case 'timeDrain':
           baseCost = 0;
           break;
         default:

@@ -20,6 +20,13 @@ import {
 const logger = createUniversalLogger('costDataManager');
 
 /**
+ * Mana per second charged while live-playing a SUMMARY substrate's region
+ * (runner, bounce — M5) when neither the region nor the sidecar states a
+ * rate. One mana per second is the user-set default (2026-07-23).
+ */
+export const DEFAULT_TIME_DRAIN_PER_SECOND = 1;
+
+/**
  * Returns true when the source string looks like a URL or filesystem
  * path that fetch() can resolve. Filters out synthetic source names
  * the rest of the app uses for in-memory loads (procgenPipeline,
@@ -321,6 +328,63 @@ export class CostDataManager {
     }
 
     return this.costData.defaultLocationCost || 100;
+  }
+
+  /**
+   * The EXPLICIT per-region move cost, or null when the sidecar states
+   * none (M5). Distinct from `getRegionCost`, which always answers with a
+   * number by falling back to `defaultRegionCost` / 50.
+   *
+   * SUMMARY substrates (runner, bounce) are priced by TIME, not per action:
+   * their actions cost mana only where the loop_costs data says so
+   * explicitly (user ruling 2026-07-23). A sidecar-level default is a
+   * fallback for regions the data didn't mention — exactly the case this
+   * must answer "free" for — so it deliberately does NOT count as explicit.
+   *
+   * @param {string} regionName
+   * @returns {number|null}
+   */
+  getExplicitRegionCost(regionName) {
+    const regionData = this.costData?.regions?.[regionName];
+    return (regionData && typeof regionData.moveCost === 'number')
+      ? regionData.moveCost
+      : null;
+  }
+
+  /**
+   * The EXPLICIT per-location check cost, or null when the sidecar states
+   * none (M5). See getExplicitRegionCost for why the sidecar-level default
+   * is not consulted.
+   *
+   * @param {string} locationName
+   * @returns {number|null}
+   */
+  getExplicitLocationCost(locationName) {
+    const cost = this.costData?.locations?.[locationName];
+    return typeof cost === 'number' ? cost : null;
+  }
+
+  /**
+   * Mana drained per second of live play in this region (M5) — the summary
+   * substrates' whole default economy: their visits are priced by how long
+   * they take, not by what they do. Per-region, with a sidecar-level
+   * default and a final fallback of 1/s.
+   *
+   * The value is a BASE cost: callers scale it by region XP through
+   * `applyRegionXpCostEffect`, exactly like every other cost.
+   *
+   * @param {string} regionName
+   * @returns {number} mana per second (>= 0)
+   */
+  getTimeDrainPerSecond(regionName) {
+    const regionData = this.costData?.regions?.[regionName];
+    if (regionData && typeof regionData.timeDrainPerSecond === 'number') {
+      return Math.max(0, regionData.timeDrainPerSecond);
+    }
+    if (typeof this.costData?.defaultTimeDrainPerSecond === 'number') {
+      return Math.max(0, this.costData.defaultTimeDrainPerSecond);
+    }
+    return DEFAULT_TIME_DRAIN_PER_SECOND;
   }
 
   /**

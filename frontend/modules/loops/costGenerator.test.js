@@ -382,3 +382,62 @@ describe('CostGenerator — generate() concurrency guard', () => {
     await expect(gen.generate([])).rejects.toThrow('Generation already in progress');
   });
 });
+
+describe('CostGenerator — SUMMARY regions are time-priced, not per-action (M5)', () => {
+  // A generated sidecar must not double-charge a summary substrate's visit:
+  // the time drain is its economy, so per-action costs would be charged on
+  // top of it. Region → shape resolution goes through loopState's single
+  // resolver, so the generator can never disagree with the runtime.
+  function makeSummaryAwareGen({ summaryRegions = ['B'] } = {}) {
+    const deps = makeStubDeps({
+      staticData: {
+        regions: new Map([
+          ['A', { exits: [{ connected_region: 'B' }] }],
+          ['B', { exits: [{ connected_region: 'A' }] }],
+        ]),
+        locations: new Map([
+          ['Loc1', { parent_region: 'A' }],
+          ['LocInB', { parent_region: 'B' }],
+        ]),
+      },
+    });
+    deps.deps.loopState.getRegionCaptureShape =
+      (r) => (summaryRegions.includes(r) ? 'summary' : 'coarse');
+    return new CostGenerator(deps.deps);
+  }
+
+  it('emits a drain rate and NO moveCost for a summary region', () => {
+    const gen = makeSummaryAwareGen();
+    const costs = { regions: {}, locations: {}, defaultRegionCost: 50, defaultLocationCost: 10 };
+    gen._assignDefaultCosts(costs);
+
+    expect(costs.regions.B).toEqual({ timeDrainPerSecond: 1 });
+    expect(costs.regions.B.moveCost).toBeUndefined();
+    // Non-summary regions are untouched by this rule.
+    expect(costs.regions.A.moveCost).toBe(50);
+  });
+
+  it('leaves locations inside a summary region uncosted', () => {
+    const gen = makeSummaryAwareGen();
+    const costs = { regions: {}, locations: {}, defaultRegionCost: 50, defaultLocationCost: 10 };
+    gen._assignDefaultCosts(costs);
+
+    expect(costs.locations.LocInB).toBeUndefined();
+    expect(costs.locations.Loc1).toBe(10);
+  });
+
+  it('falls back to today\'s behavior when the shape is unknown', () => {
+    const deps = makeStubDeps({
+      staticData: {
+        regions: new Map([['A', { exits: [] }]]),
+        locations: new Map([['Loc1', {}]]),
+      },
+    });
+    // No getRegionCaptureShape on the stub loopState at all.
+    const gen = new CostGenerator(deps.deps);
+    const costs = { regions: {}, locations: {}, defaultRegionCost: 50, defaultLocationCost: 10 };
+    gen._assignDefaultCosts(costs);
+    expect(costs.regions.A.moveCost).toBe(50);
+    expect(costs.locations.Loc1).toBe(10);
+  });
+});
