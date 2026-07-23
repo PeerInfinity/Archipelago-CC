@@ -47,8 +47,8 @@
         },
         {
             "id": "tasw-queue-integrity-parked",
-            "enabled": false,
-            "_comment": "KNOWN-RED diagnostic: reproduces the parked stray-append bug (gameState end-appends non-fromLoop checks while a block is parked). Enable together with the M3b coarse-capture refactor (CC/docs/plans/loops-coarse-capture-plan.md), which fixes it by design.",
+            "enabled": true,
+            "_comment": "Former KNOWN-RED stray-append diagnostic \u2014 green since the M3b coarse-capture refactor retired loop-mode end-appends (CC/docs/plans/loops-coarse-capture-plan.md).",
             "category": "TA block modes"
         },
         {

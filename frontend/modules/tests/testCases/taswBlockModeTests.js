@@ -3,31 +3,37 @@
  * wrapper — the automated replacement for the M3 manual sanity legs
  * (plan: CC/docs/plans/loops-coarse-capture-plan.md, "Test-first").
  *
- * Phase A scope: pin CURRENT observable behavior as specs that must
- * survive the M3b coarse-capture refactor:
+ * Rewired for M3b (loops-owned coarse capture): the wrapper's internal
+ * recorder/replay machinery is gone, so Playback drives the loops
+ * GENERIC EXECUTOR over the block's own interior, Record captures
+ * host-side during parked live play, and the strict action gate blocks
+ * substrate actions outside parked Manual/Record blocks. The tests pin
+ * the same observable outcomes as the Phase A originals (region
+ * changes, path/queue shape, timing) against the new paths:
  *
- *   1. tasw-playback-no-double-append — replaying a recorded visit
- *      (interior + departureExitId) crosses the exit WITHOUT growing
- *      the gameState path (the M3 1/n fromLoop fix, never
- *      sanity-confirmed).
- *   2. tasw-playback-instant — the same replay with instant:true
- *      completes in one synchronous drain (bounded wall-clock well
- *      under the per-tick pacing a non-instant replay would need).
+ *   1. tasw-playback-no-double-append — a Playback block (interior
+ *      explore + boundary move) runs via the generic executor, crosses
+ *      the exit, and the gameState path length stays constant.
+ *   2. tasw-playback-instant — the same block with the per-block
+ *      Instant flag drains interior + departure in a bounded burst,
+ *      far under the paced-timer wall clock.
  *   3. tasw-record-coarse-autoswitch — a parked Record block captures
- *      live explores, rewrites the block interior on the expected
- *      exit, and auto-switches the block to Playback.
- *   4. tasw-queue-integrity-parked — DIAGNOSTIC: a location check
- *      performed while parked must not append entries outside the
- *      parked block. Expected RED against current code (gameState
- *      end-appends non-fromLoop checks; the suspected M3 symptom);
- *      goes green with the M3b refactor (Manual captures nothing,
- *      Record inserts at the block).
+ *      live explore clicks (charging mana — one economy), rewrites the
+ *      block interior on the expected exit, and auto-switches to
+ *      Playback.
+ *   4. tasw-queue-integrity-parked — a location check performed while
+ *      parked on a Manual block performs for real, drains mana,
+ *      captures nothing, and appends nothing outside the parked block.
+ *      (The former KNOWN-RED stray-append diagnostic — green since the
+ *      M3b loop-mode end-append retirement.)
  *
  * Setup mirrors tasw-location-check-loop-mode-passthrough
  * (textAdventureWrapperTests.js): fresh shuffled-spiral rules with
  * loop_costs (loops auto-enters loop mode), wrapper iframe mounted,
  * real DOM clicks inside the engine. Worlds here use an EMPTY obstacle
  * pool so no exit is rule-gated (departure clicks can't be blocked).
+ * Under the strict gate, exits are planned from staticData (free-walk
+ * discovery is no longer possible before a block parks).
  */
 
 import { registerTest } from '../testRegistry.js';
@@ -38,7 +44,6 @@ import {
 import { getGameStateSingleton } from '../../gameState/singleton.js';
 import loopStateSingleton from '../../loops/loopStateSingleton.js';
 import { resolveQueueBlocks } from '../../loops/blockIdentity.js';
-import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
 
 // ─── Shared setup ─────────────────────────────────────────────────
 
@@ -128,26 +133,6 @@ function clickInIframe({ iframeWin }, el) {
     el.dispatchEvent(evt);
 }
 
-/**
- * Click explore until an exit link is revealed (fog discovery), then
- * return { exitId, clicks } — clicks = number of explore commands
- * actually issued (each is recorded by the visit recorder).
- */
-async function exploreUntilExitRevealed(testController, mount, maxClicks = 25) {
-    let clicks = 0;
-    for (let i = 0; i < maxClicks; i++) {
-        const exitEl = mount.iframe.contentDocument.querySelector('[data-exit-id]');
-        if (exitEl) return { exitId: exitEl.dataset.exitId, clicks };
-        const explore = mount.iframe.contentDocument.querySelector('[data-action="explore"]');
-        if (!explore) break;
-        clickInIframe(mount, explore);
-        clicks += 1;
-        await new Promise(r => setTimeout(r, 200));
-    }
-    const exitEl = mount.iframe.contentDocument.querySelector('[data-exit-id]');
-    return { exitId: exitEl?.dataset.exitId ?? null, clicks };
-}
-
 function currentRegion() {
     try { return getGameStateSingleton()?.getCurrentRegion?.() ?? null; } catch { return null; }
 }
@@ -168,16 +153,23 @@ function dumpQueue(testController, label) {
     return queue;
 }
 
-/** Resolve the exit's target region from staticData. */
-function exitTarget(testController, region, exitId) {
+/**
+ * Pick an exit of `region` (and its target) straight from staticData —
+ * under the strict gate a departure must be PLANNED before the block
+ * can park, so discovery can't be used to find one first.
+ */
+function pickExitFromStaticData(testController, region) {
     const staticData = testController.stateManager.getStaticData?.();
     const exits = staticData?.regions?.get(region)?.exits ?? [];
-    return exits.find(e => e.name === exitId)?.connected_region ?? null;
+    const exit = exits.find(e => e.connected_region);
+    return exit ? { exitId: exit.name, target: exit.connected_region } : null;
 }
 
-/** The wrapper's PlaybackController (host-side proxy). */
-function taswController() {
-    return substrateRegistry.get('text_adventure')?.getPlaybackController?.() ?? null;
+/** Resolve the queue block (visit) for `region`, newest instance first. */
+function resolveBlockFor(region) {
+    const queue = loopStateSingleton.getActionQueue?.() ?? [];
+    const { visits } = resolveQueueBlocks(queue);
+    return [...visits].reverse().find(v => v.name === region) ?? null;
 }
 
 async function eventually(testController, fn, label, timeoutMs = 15000, intervalMs = 100) {
@@ -185,7 +177,22 @@ async function eventually(testController, fn, label, timeoutMs = 15000, interval
     return !!ok;
 }
 
-// ─── 1. Playback replay must not grow the path ────────────────────
+/**
+ * Author a queue for the current region entirely via the gameState
+ * planning APIs: `exploreCount` interior explores followed by the
+ * departure through `exitId` → `target`. Returns the block descriptor.
+ */
+function authorExploresAndDeparture(testController, region, { exploreCount, exitId, target }) {
+    const gs = getGameStateSingleton();
+    for (let i = 0; i < exploreCount; i++) {
+        gs.addCustomAction('explore', { regionName: region });
+    }
+    gs.updatePath(target, exitId, region);
+    dumpQueue(testController, 'authored');
+    return resolveBlockFor(region);
+}
+
+// ─── 1. Playback (generic executor) must not grow the path ────────
 
 async function playbackNoDoubleAppend(testController) {
     if (!await loadLoopWorld(testController, 'tasw-bm-replay-1')) {
@@ -197,66 +204,75 @@ async function playbackNoDoubleAppend(testController) {
     const region = currentRegion();
     testController.log(`current region: ${region}`);
 
-    // Reveal an exit so its id is known-valid for the replay departure.
-    const { exitId } = await exploreUntilExitRevealed(testController, mount);
-    testController.assertEqual('an exit was revealed by exploring', true, !!exitId);
-    if (!exitId) return testController.getOverallResult();
-    const target = exitTarget(testController, region, exitId);
-    testController.assertEqual('the revealed exit maps to a target region', true, !!target);
-    if (!target) return testController.getOverallResult();
+    const picked = pickExitFromStaticData(testController, region);
+    testController.assertEqual('an exit was resolvable from staticData', true, !!picked);
+    if (!picked) return testController.getOverallResult();
+    const { exitId, target } = picked;
 
-    dumpQueue(testController, 'pre-replay');
-    const before = pathLength();
-    testController.log(`path length before replay: ${before}`);
+    const gs = getGameStateSingleton();
+    const savedNoReset = gs.noManaDepletionReset;
+    const savedSpeed = loopStateSingleton.gameSpeed;
+    try {
+        gs.noManaDepletionReset = true;
+        loopStateSingleton.setGameSpeed(10000);
 
-    // Replay a recorded-visit shape: one interior explore + the
-    // departure. The bridge dispatches the same events live play
-    // would, with fromLoop:true — so the path must not grow.
-    const controller = taswController();
-    testController.assertEqual('wrapper PlaybackController available', true, !!controller);
-    if (!controller) return testController.getOverallResult();
-    controller.replayActions(
-        [{ type: 'explore', regionName: region }],
-        { departureExitId: exitId },
-    );
+        const block = authorExploresAndDeparture(testController, region, {
+            exploreCount: 1, exitId, target,
+        });
+        testController.assertEqual(`resolved a queue block for ${region}`, true, !!block);
+        if (!block) return testController.getOverallResult();
+        // Default block mode is Playback; with no substrate recorder the
+        // generic executor runs the interior + boundary move host-side.
 
-    const crossed = await eventually(testController,
-        () => currentRegion() === target,
-        `replay crossed '${exitId}' into '${target}'`);
-    testController.assertEqual(
-        'replaying a recording crossed its departure exit (region changed)',
-        true, crossed);
+        const before = pathLength();
+        testController.log(`path length after authoring: ${before}`);
 
-    await testController.stateManager.pingWorker('after-replay', 3000);
-    const after = pathLength();
-    testController.log(`path length after replay: ${after}`);
-    dumpQueue(testController, 'post-replay');
-    testController.assertEqual(
-        'replay did not append path entries (no fromLoop double-append)',
-        before, after);
+        loopStateSingleton.startProcessing();
+        const crossed = await eventually(testController,
+            () => currentRegion() === target,
+            `generic executor crossed '${exitId}' into '${target}'`);
+        testController.assertEqual(
+            'Playback ran the block and crossed its boundary move (region changed)',
+            true, crossed);
+
+        await testController.stateManager.pingWorker('after-playback', 3000);
+        const after = pathLength();
+        testController.log(`path length after run: ${after}`);
+        dumpQueue(testController, 'post-run');
+        testController.assertEqual(
+            'the run did not append path entries (no fromLoop double-append)',
+            before, after);
+    } finally {
+        gs.noManaDepletionReset = savedNoReset;
+        loopStateSingleton.setGameSpeed(savedSpeed);
+        // Leave loop mode OFF: nothing auto-disables it on preset switch,
+        // and a leaked active flag turns the strict gate loose on later
+        // tests' (non-loop) worlds.
+        gs.setLoopModeActive(false);
+    }
 
     return testController.getOverallResult();
 }
 
 registerTest({
     id: 'tasw-playback-no-double-append',
-    name: 'TA blocks: Playback replay crosses its exit without growing the queue',
-    description: 'Replays a recorded-visit shape (interior explore + departureExitId) '
-               + 'through the wrapper PlaybackController under active loop mode and '
-               + 'asserts the region changes while the gameState path length stays '
-               + 'constant — the M3 1/n fromLoop double-append fix.',
+    name: 'TA blocks: Playback runs the block interior without growing the queue',
+    description: 'Authors a TA block (interior explore + planned departure), runs it '
+               + 'in Playback via the loops generic executor (M3b: no substrate '
+               + 'recorder), and asserts the region changes while the gameState path '
+               + 'length stays constant — the fromLoop double-append guard.',
     testFunction: playbackNoDoubleAppend,
     category: 'TA block modes',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
-// ─── 2. Instant replay drains in one pass ─────────────────────────
+// ─── 2. Instant block drains in one burst ─────────────────────────
 
 const INSTANT_INTERIOR_EXPLORES = 6;
-// A non-instant replay paces one action per tick at 4 Hz: 6 interior
-// explores + the departure ≥ ~1750 ms. Instant must come in far under
-// that; 1200 ms leaves slack for postMessage + engine latency while
-// still cleanly distinguishing the two.
+// The paced generic timer at default speed needs seconds per action; an
+// Instant block completes one action per animation frame. 1200 ms from
+// the first TA-block action to the region change leaves generous slack
+// while still cleanly distinguishing the two.
 const INSTANT_MAX_MS = 1200;
 
 async function playbackInstant(testController) {
@@ -267,60 +283,81 @@ async function playbackInstant(testController) {
     if (!mount) return testController.getOverallResult();
 
     const region = currentRegion();
-    const { exitId } = await exploreUntilExitRevealed(testController, mount);
-    testController.assertEqual('an exit was revealed by exploring', true, !!exitId);
-    if (!exitId) return testController.getOverallResult();
-    const target = exitTarget(testController, region, exitId);
-    if (!target) {
-        testController.reportCondition('revealed exit maps to a target region', false);
-        return testController.getOverallResult();
+    const picked = pickExitFromStaticData(testController, region);
+    testController.assertEqual('an exit was resolvable from staticData', true, !!picked);
+    if (!picked) return testController.getOverallResult();
+    const { exitId, target } = picked;
+
+    const gs = getGameStateSingleton();
+    const savedNoReset = gs.noManaDepletionReset;
+    try {
+        gs.noManaDepletionReset = true;
+
+        const block = authorExploresAndDeparture(testController, region, {
+            exploreCount: INSTANT_INTERIOR_EXPLORES, exitId, target,
+        });
+        testController.assertEqual(`resolved a queue block for ${region}`, true, !!block);
+        if (!block) return testController.getOverallResult();
+        loopStateSingleton.setBlockInstant(region, block.instance, true);
+
+        const before = pathLength();
+
+        // Measure from the first TA-block action (the initial Menu→start
+        // hop runs on the paced timer at default speed and is not part of
+        // the Instant block under test).
+        let tFirstAction = null;
+        const unsubscribe = testController.eventBus.subscribe('loopState:newActionStarted', ({ action }) => {
+            if (tFirstAction === null && action?.sourceRegion === region) {
+                tFirstAction = performance.now();
+            }
+        });
+
+        loopStateSingleton.startProcessing();
+        const crossed = await eventually(testController,
+            () => currentRegion() === target,
+            `instant block crossed '${exitId}' into '${target}'`,
+            20000, 50);
+        const tEnd = performance.now();
+        try { unsubscribe?.(); } catch { /* ignore */ }
+
+        testController.assertEqual('instant block crossed the departure exit', true, crossed);
+        testController.assertEqual('first TA-block action was observed', true, tFirstAction !== null);
+        if (crossed && tFirstAction !== null) {
+            const elapsed = Math.round(tEnd - tFirstAction);
+            testController.log(`instant TA block completed in ${elapsed}ms `
+                + `(${INSTANT_INTERIOR_EXPLORES} interior explores + departure; `
+                + `the paced timer needs seconds per action at default speed)`);
+            testController.assertEqual(
+                `instant block finished in one burst (<${INSTANT_MAX_MS}ms)`,
+                true, elapsed < INSTANT_MAX_MS);
+        }
+
+        await testController.stateManager.pingWorker('after-instant', 3000);
+        testController.assertEqual(
+            'instant run did not append path entries',
+            before, pathLength());
+    } finally {
+        gs.noManaDepletionReset = savedNoReset;
+        // Leave loop mode OFF (see test 1's cleanup note).
+        gs.setLoopModeActive(false);
     }
-
-    const before = pathLength();
-    const interior = Array.from(
-        { length: INSTANT_INTERIOR_EXPLORES },
-        () => ({ type: 'explore', regionName: region }),
-    );
-
-    const controller = taswController();
-    const t0 = performance.now();
-    controller.replayActions(interior, { departureExitId: exitId, instant: true });
-
-    const crossed = await eventually(testController,
-        () => currentRegion() === target,
-        `instant replay crossed '${exitId}' into '${target}'`,
-        10000, 50);
-    const elapsed = Math.round(performance.now() - t0);
-    testController.log(`instant replay completed in ${elapsed}ms `
-        + `(${INSTANT_INTERIOR_EXPLORES} interior actions + departure; `
-        + `non-instant pacing would need ≥${(INSTANT_INTERIOR_EXPLORES + 1) * 250}ms)`);
-
-    testController.assertEqual('instant replay crossed the departure exit', true, crossed);
-    testController.assertEqual(
-        `instant replay finished in one drain (<${INSTANT_MAX_MS}ms)`,
-        true, crossed && elapsed < INSTANT_MAX_MS);
-
-    await testController.stateManager.pingWorker('after-instant-replay', 3000);
-    testController.assertEqual(
-        'instant replay did not append path entries',
-        before, pathLength());
 
     return testController.getOverallResult();
 }
 
 registerTest({
     id: 'tasw-playback-instant',
-    name: 'TA blocks: Instant replay drains interior + departure in one pass',
-    description: 'Replays six interior explores plus a departure with instant:true '
-               + 'and asserts the region change lands well under the per-tick pacing '
-               + 'a non-instant replay would need, with no path growth — the M3 '
-               + 'Instant drain path.',
+    name: 'TA blocks: Instant block drains interior + departure in one burst',
+    description: 'Authors six interior explores plus a departure, flags the block '
+               + 'Instant, and asserts the whole block completes far under the paced '
+               + 'timer\'s wall clock with no path growth — the M3 Instant seam on '
+               + 'the M3b generic-executor path.',
     testFunction: playbackInstant,
     category: 'TA block modes',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
-// ─── 3. Record: coarse capture + auto-switch ──────────────────────
+// ─── 3. Record: parked live capture + auto-switch ─────────────────
 
 async function recordCoarseAutoswitch(testController) {
     if (!await loadLoopWorld(testController, 'tasw-bm-record-1')) {
@@ -332,101 +369,120 @@ async function recordCoarseAutoswitch(testController) {
     const region = currentRegion();
     const gs = getGameStateSingleton();
 
-    // Reveal an exit first — the departure click needs a rendered link,
-    // and planning needs its id. These discovery explores happen inside
-    // the SAME visit, so the recorder buffers them; they are part of
-    // the expected captured interior.
-    const { exitId, clicks: discoveryClicks } = await exploreUntilExitRevealed(testController, mount);
-    testController.assertEqual('an exit was revealed by exploring', true, !!exitId);
-    if (!exitId) return testController.getOverallResult();
-    const target = exitTarget(testController, region, exitId);
-    testController.assertEqual('revealed exit maps to a target region', true, !!target);
-    if (!target) return testController.getOverallResult();
+    // Under the strict gate the departure must be planned BEFORE the
+    // block parks (free-walk discovery is retired) — pick it from
+    // staticData.
+    const picked = pickExitFromStaticData(testController, region);
+    testController.assertEqual('an exit was resolvable from staticData', true, !!picked);
+    if (!picked) return testController.getOverallResult();
+    const { exitId, target } = picked;
 
-    // Plan the departure so the region has a block with an expected
-    // exit, then flag that block Record.
-    gs.updatePath(target, exitId, region);
-    const queue = dumpQueue(testController, 'planned');
-    const { visits } = resolveQueueBlocks(queue);
-    const visit = [...visits].reverse().find(v => v.name === region);
-    testController.assertEqual(`resolved a queue block for ${region}`, true, !!visit);
-    if (!visit) return testController.getOverallResult();
-    loopStateSingleton.setBlockMode(region, visit.instance, 'record');
-    testController.log(`block (${region}, ${visit.instance}) set to record; starting processing`);
+    const savedNoReset = gs.noManaDepletionReset;
+    try {
+        gs.noManaDepletionReset = true;
 
-    loopStateSingleton.startProcessing();
-    const parked = await eventually(testController,
-        () => loopStateSingleton._manualActionEntered === true,
-        'queue parked on the Record block',
-        8000, 100);
-    testController.assertEqual('queue parked on the Record block', true, parked);
-    if (!parked) {
-        dumpQueue(testController, 'not-parked');
-        return testController.getOverallResult();
+        gs.updatePath(target, exitId, region);
+        const queue = dumpQueue(testController, 'planned');
+        const { visits } = resolveQueueBlocks(queue);
+        const visit = [...visits].reverse().find(v => v.name === region);
+        testController.assertEqual(`resolved a queue block for ${region}`, true, !!visit);
+        if (!visit) return testController.getOverallResult();
+        loopStateSingleton.setBlockMode(region, visit.instance, 'record');
+        testController.log(`block (${region}, ${visit.instance}) set to record; starting processing`);
+
+        loopStateSingleton.startProcessing();
+        const parked = await eventually(testController,
+            () => loopStateSingleton._manualActionEntered === true,
+            'queue parked on the Record block',
+            8000, 100);
+        testController.assertEqual('queue parked on the Record block', true, parked);
+        if (!parked) {
+            dumpQueue(testController, 'not-parked');
+            return testController.getOverallResult();
+        }
+
+        const manaAtPark = gs.getCurrentMana();
+
+        // Perform live explore clicks while parked (each click is a real
+        // engine explore — observed, charged, and captured by loops). At
+        // least two always run (the capture/drain assertions need
+        // material); then keep exploring until the PLANNED exit's link is
+        // revealed, in case it wasn't already (the start region often has
+        // its arrival exit pre-discovered). Bounded by the region content.
+        let parkedClicks = 0;
+        let exitEl = null;
+        for (let i = 0; i < 25; i++) {
+            exitEl = mount.iframe.contentDocument.querySelector(`[data-exit-id="${exitId}"]`);
+            if (exitEl && parkedClicks >= 2) break;
+            const explore = mount.iframe.contentDocument.querySelector('[data-action="explore"]');
+            if (!explore) break;
+            clickInIframe(mount, explore);
+            parkedClicks += 1;
+            await new Promise(r => setTimeout(r, 250));
+        }
+        exitEl = mount.iframe.contentDocument.querySelector(`[data-exit-id="${exitId}"]`);
+        testController.log(`parked explores this visit: ${parkedClicks}`);
+        testController.assertEqual('performed at least one parked explore', true, parkedClicks > 0);
+        testController.assertEqual('planned departure exit link was revealed', true, !!exitEl);
+        if (!exitEl) return testController.getOverallResult();
+
+        // Rule 2 (one economy): parked live play drains mana.
+        const manaAfterExplores = gs.getCurrentMana();
+        testController.assertEqual(
+            'parked live explores drained mana (Record drains)',
+            true, manaAfterExplores < manaAtPark);
+        testController.log(`mana: ${manaAtPark.toFixed(1)} → ${manaAfterExplores.toFixed(1)} after ${parkedClicks} explores`);
+
+        clickInIframe(mount, exitEl);
+
+        const crossed = await eventually(testController,
+            () => currentRegion() === target,
+            `player crossed '${exitId}' into '${target}'`);
+        testController.assertEqual('Record exit reached the expected region', true, crossed);
+        if (!crossed) return testController.getOverallResult();
+        await testController.stateManager.pingWorker('after-record-exit', 3000);
+
+        // Coarse layer (loops-owned, M3b): the block interior must now be
+        // exactly the performed explores (inserted before the boundary move).
+        const afterQueue = dumpQueue(testController, 'post-record');
+        const { visits: afterVisits } = resolveQueueBlocks(afterQueue);
+        const afterVisit = afterVisits.find(v => v.name === region && v.instance === visit.instance);
+        // visit.actions holds wrappers { pathEntry, index, instanceNumber }.
+        const interior = (afterVisit?.actions ?? [])
+            .map(w => w.pathEntry ?? w)
+            .filter(a => a.type === 'customAction' && a.actionName === 'explore'
+                && (a.sourceRegion == null || a.sourceRegion === region));
+        testController.assertEqual(
+            `coarse capture wrote ${parkedClicks} explore entries into the block interior`,
+            parkedClicks, interior.length);
+
+        // Auto-switch (default ON): the block is now Playback.
+        testController.assertEqual(
+            'block auto-switched to playback after the successful Record exit',
+            'playback', loopStateSingleton.getBlockMode(region, visit.instance));
+    } finally {
+        gs.noManaDepletionReset = savedNoReset;
+        // Leave loop mode OFF (see test 1's cleanup note).
+        gs.setLoopModeActive(false);
     }
-
-    // Perform two more interior explores while parked, then depart
-    // through the planned exit.
-    let parkedClicks = 0;
-    for (let i = 0; i < 2; i++) {
-        const explore = mount.iframe.contentDocument.querySelector('[data-action="explore"]');
-        if (!explore) break;
-        clickInIframe(mount, explore);
-        parkedClicks += 1;
-        await new Promise(r => setTimeout(r, 250));
-    }
-    const totalExplores = discoveryClicks + parkedClicks;
-    testController.log(`explores this visit: ${discoveryClicks} discovery + ${parkedClicks} parked = ${totalExplores}`);
-    testController.assertEqual('performed at least one interior explore', true, totalExplores > 0);
-
-    const exitEl = mount.iframe.contentDocument.querySelector(`[data-exit-id="${exitId}"]`)
-        ?? mount.iframe.contentDocument.querySelector('[data-exit-id]');
-    testController.assertEqual('departure exit link still rendered', true, !!exitEl);
-    if (!exitEl) return testController.getOverallResult();
-    clickInIframe(mount, exitEl);
-
-    const crossed = await eventually(testController,
-        () => currentRegion() === target,
-        `player crossed '${exitId}' into '${target}'`);
-    testController.assertEqual('Record exit reached the expected region', true, crossed);
-    if (!crossed) return testController.getOverallResult();
-    await testController.stateManager.pingWorker('after-record-exit', 3000);
-
-    // Coarse layer: the block interior must now be the performed
-    // explores (inserted before the boundary regionMove).
-    const afterQueue = dumpQueue(testController, 'post-record');
-    const { visits: afterVisits } = resolveQueueBlocks(afterQueue);
-    const afterVisit = afterVisits.find(v => v.name === region && v.instance === visit.instance);
-    // visit.actions holds wrappers { pathEntry, index, instanceNumber }.
-    const interior = (afterVisit?.actions ?? [])
-        .map(w => w.pathEntry ?? w)
-        .filter(a => a.type === 'customAction' && a.actionName === 'explore'
-            && (a.sourceRegion == null || a.sourceRegion === region));
-    testController.assertEqual(
-        `coarse replacement wrote ${totalExplores} explore entries into the block interior`,
-        totalExplores, interior.length);
-
-    // Auto-switch (default ON): the block is now Playback.
-    testController.assertEqual(
-        'block auto-switched to playback after the successful Record exit',
-        'playback', loopStateSingleton.getBlockMode(region, visit.instance));
 
     return testController.getOverallResult();
 }
 
 registerTest({
     id: 'tasw-record-coarse-autoswitch',
-    name: 'TA blocks: Record captures live explores and auto-switches to Playback',
-    description: 'Parks a Record block in a TA region, performs real explore clicks '
-               + 'in the engine, departs through the planned exit, and asserts the '
-               + 'coarse replacement rewrote the block interior to the performed '
-               + 'actions and the block auto-switched to Playback.',
+    name: 'TA blocks: Record captures parked live explores and auto-switches to Playback',
+    description: 'Plans a departure from staticData, parks a Record block, performs '
+               + 'real explore clicks in the engine (charged — live play drains), '
+               + 'departs through the planned exit, and asserts the loops-owned '
+               + 'coarse capture rewrote the block interior to the performed actions '
+               + 'and the block auto-switched to Playback.',
     testFunction: recordCoarseAutoswitch,
     category: 'TA block modes',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
-// ─── 4. DIAGNOSTIC: parked live play must not leak entries ────────
+// ─── 4. Parked Manual live play: performs, drains, leaks nothing ──
 
 async function queueIntegrityParked(testController) {
     if (!await loadLoopWorld(testController, 'tasw-bm-integrity-1')) {
@@ -438,53 +494,14 @@ async function queueIntegrityParked(testController) {
     const region = currentRegion();
     const gs = getGameStateSingleton();
 
-    const { exitId } = await exploreUntilExitRevealed(testController, mount);
-    testController.assertEqual('an exit was revealed by exploring', true, !!exitId);
-    if (!exitId) return testController.getOverallResult();
-    const target = exitTarget(testController, region, exitId);
-    if (!target) {
-        testController.reportCondition('revealed exit maps to a target region', false);
-        return testController.getOverallResult();
-    }
+    const picked = pickExitFromStaticData(testController, region);
+    testController.assertEqual('an exit was resolvable from staticData', true, !!picked);
+    if (!picked) return testController.getOverallResult();
+    const { exitId, target } = picked;
 
-    // Plan the departure, park the block in Manual.
-    gs.updatePath(target, exitId, region);
-    const queue = dumpQueue(testController, 'planned');
-    const { visits } = resolveQueueBlocks(queue);
-    const visit = [...visits].reverse().find(v => v.name === region);
-    if (!visit) {
-        testController.reportCondition(`resolved a queue block for ${region}`, false);
-        return testController.getOverallResult();
-    }
-    loopStateSingleton.setBlockMode(region, visit.instance, 'manual');
-    loopStateSingleton.startProcessing();
-    const parked = await eventually(testController,
-        () => loopStateSingleton._manualActionEntered === true,
-        'queue parked on the Manual block',
-        8000, 100);
-    testController.assertEqual('queue parked on the Manual block', true, parked);
-    if (!parked) return testController.getOverallResult();
-
-    // Perform a location check while parked — a real engine click if a
-    // location is revealed, else a host-dispatcher publish for a
-    // location of this region from staticData.
     const staticData = testController.stateManager.getStaticData?.();
     const regionLocations = staticData?.regions?.get(region)?.locations ?? [];
-    let checkedName = null;
-    const domItem = mount.iframe.contentDocument.querySelector('[data-item-id]');
-    if (domItem) {
-        checkedName = domItem.dataset.itemId;
-        testController.log(`clicking revealed location '${checkedName}' while parked`);
-        clickInIframe(mount, domItem);
-    } else if (regionLocations.length > 0) {
-        checkedName = regionLocations[0].name;
-        testController.log(`no revealed location link; dispatching check for '${checkedName}'`);
-        window.eventDispatcher.publish(
-            'iframeAdapter', 'user:locationCheck',
-            { locationName: checkedName, regionName: region, originator: 'taswBlockModeTests' },
-            { initialTarget: 'bottom' },
-        );
-    } else {
+    if (regionLocations.length === 0) {
         // Region has no locations at all — nothing to check; the
         // diagnostic can't run on this seed. Fail loudly rather than
         // pass vacuously.
@@ -492,40 +509,89 @@ async function queueIntegrityParked(testController) {
         return testController.getOverallResult();
     }
 
-    const checked = await eventually(testController, () => {
-        const snap = testController.stateManager.getSnapshot();
-        const set = snap?.checkedLocations;
-        return set instanceof Set ? set.has(checkedName)
-            : Array.isArray(set) && set.includes(checkedName);
-    }, `'${checkedName}' was actually checked`, 8000);
-    testController.assertEqual('the parked check was performed for real', true, checked);
+    const savedNoReset = gs.noManaDepletionReset;
+    try {
+        gs.noManaDepletionReset = true;
 
-    // THE DIAGNOSTIC: nothing may have appended outside the parked
-    // block. The path must still END with the planned boundary
-    // regionMove — a trailing locationCheck entry is the stray-append
-    // bug (gameState end-appends non-fromLoop checks while parked).
-    const afterQueue = dumpQueue(testController, 'post-check');
-    const last = afterQueue[afterQueue.length - 1];
-    const lastIsBoundary = last?.type === 'regionMove'
-        && last?.sourceRegion === region
-        && last?.destinationRegion === target;
-    testController.assertEqual(
-        'no entry appended after the planned boundary regionMove '
-        + '(parked live play must not leak queue entries — expected RED '
-        + 'until the M3b coarse-capture refactor lands)',
-        true, lastIsBoundary);
+        // Plan the departure, park the block in Manual.
+        gs.updatePath(target, exitId, region);
+        const queue = dumpQueue(testController, 'planned');
+        const queueLenPlanned = queue.length;
+        const { visits } = resolveQueueBlocks(queue);
+        const visit = [...visits].reverse().find(v => v.name === region);
+        if (!visit) {
+            testController.reportCondition(`resolved a queue block for ${region}`, false);
+            return testController.getOverallResult();
+        }
+        loopStateSingleton.setBlockMode(region, visit.instance, 'manual');
+        loopStateSingleton.startProcessing();
+        const parked = await eventually(testController,
+            () => loopStateSingleton._manualActionEntered === true,
+            'queue parked on the Manual block',
+            8000, 100);
+        testController.assertEqual('queue parked on the Manual block', true, parked);
+        if (!parked) return testController.getOverallResult();
+
+        const manaAtPark = gs.getCurrentMana();
+
+        // Perform a location check while parked. The strict gate allows it
+        // (parked Manual block, matching region) and it must perform for
+        // real. Dispatch through the host dispatcher — a rendered location
+        // link would need discovery explores first, which this diagnostic
+        // doesn't require.
+        const checkedName = regionLocations[0].name;
+        testController.log(`dispatching parked check for '${checkedName}'`);
+        window.eventDispatcher.publish(
+            'iframeAdapter', 'user:locationCheck',
+            { locationName: checkedName, regionName: region, originator: 'taswBlockModeTests' },
+            { initialTarget: 'bottom' },
+        );
+
+        const checked = await eventually(testController, () => {
+            const snap = testController.stateManager.getSnapshot();
+            const set = snap?.checkedLocations;
+            return set instanceof Set ? set.has(checkedName)
+                : Array.isArray(set) && set.includes(checkedName);
+        }, `'${checkedName}' was actually checked`, 8000);
+        testController.assertEqual('the parked check was performed for real', true, checked);
+
+        // Rule 2: Manual live play drains mana too.
+        testController.assertEqual(
+            'the parked check drained mana (Manual drains)',
+            true, gs.getCurrentMana() < manaAtPark);
+
+        // THE INTEGRITY ASSERTIONS: Manual captures NOTHING and nothing
+        // end-appends in loop mode — the queue is byte-identical to the
+        // planned one, still ending with the boundary regionMove.
+        const afterQueue = dumpQueue(testController, 'post-check');
+        testController.assertEqual(
+            'queue length unchanged by parked Manual live play (captures nothing)',
+            queueLenPlanned, afterQueue.length);
+        const last = afterQueue[afterQueue.length - 1];
+        const lastIsBoundary = last?.type === 'regionMove'
+            && last?.sourceRegion === region
+            && last?.destinationRegion === target;
+        testController.assertEqual(
+            'no entry appended after the planned boundary regionMove '
+            + '(loop-mode end-appends are retired)',
+            true, lastIsBoundary);
+    } finally {
+        gs.noManaDepletionReset = savedNoReset;
+        // Leave loop mode OFF (see test 1's cleanup note).
+        gs.setLoopModeActive(false);
+    }
 
     return testController.getOverallResult();
 }
 
 registerTest({
     id: 'tasw-queue-integrity-parked',
-    name: 'TA blocks: parked live play does not leak entries outside the block',
-    description: 'DIAGNOSTIC for the stray-append symptom: parks a Manual block, '
-               + 'performs a real location check, and asserts the queue still ends '
-               + 'with the planned boundary regionMove. Expected RED against current '
-               + 'code (gameState end-appends non-fromLoop checks while parked); '
-               + 'goes green with the M3b coarse-capture refactor.',
+    name: 'TA blocks: parked Manual live play performs + drains but leaks no entries',
+    description: 'Parks a Manual block, performs a real location check while parked, '
+               + 'and asserts the check happened (gate allows parked live play), mana '
+               + 'drained (one economy), and the queue is untouched — Manual captures '
+               + 'nothing and loop-mode end-appends are retired (the former '
+               + 'KNOWN-RED stray-append diagnostic, green since M3b).',
     testFunction: queueIntegrityParked,
     category: 'TA block modes',
     enabled: false, // off by default — runs only in the test-substrates mode

@@ -599,21 +599,20 @@ registerTest({
 });
 
 /**
- * Regression test for the loops-mode rework (2026-06-12): with LOOP
- * MODE ACTIVE, a substrate click must check the location IMMEDIATELY.
+ * M3b strict-action-gate contract (session 66b rulings; rewritten from
+ * the pre-M3b "pass-through" regression): with LOOP MODE ACTIVE, a
+ * substrate location check is BLOCKED unless the queue is parked on a
+ * matching Manual/Record block.
  *
- * This is the 2026-06-10 confusion case inverted. Historically, a
- * rules.json carrying loop_costs auto-enabled loop mode, and the
- * loops dispatcher receiver then INTERCEPTED user:locationCheck —
- * the engine showed "you discover X" but checkedLocations never
- * updated. The rework made interception opt-in (clickToQueue setting,
- * default 'off' = plain pass-through), so the same flow must now
- * behave exactly as with loop mode off.
- *
- * Flow mirrors locationCheckFreshProcgen, except:
- *   - the world is generated with enableLoopMode: true (loop_costs
- *     in rules.json → loops auto-enters loop mode on load), and
- *   - loop mode is left ON for the click.
+ * Historically this test asserted the opposite (the 2026-06 rework's
+ * clickToQueue=off pass-through: any loop-mode click checked
+ * immediately). Under M3b that default is retired — free play would
+ * bypass the loop economy and corrupt parked blocks — so the same flow
+ * now asserts both halves of the new contract:
+ *   1. Not parked (queue not running) → the check does NOT happen and
+ *      loops:clickIgnored feedback fires.
+ *   2. Parked on a Manual block in the region → the same check
+ *      performs for real.
  */
 async function locationCheckLoopModePassThrough(testController) {
     testController.log('Generating fresh shuffled-spiral rules (loop mode ON)…');
@@ -623,7 +622,7 @@ async function locationCheckLoopModePassThrough(testController) {
         const result = arrangeShuffledSpiral({
             regionSize: { width: 7, height: 7 },
             itemPool: { victory: 1, key_red: 1, key_green: 1, key_blue: 1 },
-            obstaclePool: { door_red: 1, door_green: 1, door_blue: 1 },
+            obstaclePool: {},
             seed: 'tasw-loop-test-1',
             regionParams: {},
             growthParams: {
@@ -651,13 +650,6 @@ async function locationCheckLoopModePassThrough(testController) {
     });
     testController.reportCondition('built rules.json with loop_costs', !!rulesJson?.loop_costs);
 
-    // Record loop-mode transitions: loops auto-enters loop mode when
-    // loop_costs is present (gameState.setLoopModeActive → gameState:loopModeChanged).
-    let lastModeChange = null;
-    testController.eventBus.subscribe('gameState:loopModeChanged', (data) => {
-        lastModeChange = data;
-    });
-
     const rulesLoadedPromise = testController.waitForEvent('stateManager:rulesLoaded', 8000);
     testController.eventBus.publish('files:jsonLoaded', {
         jsonData: rulesJson,
@@ -668,101 +660,131 @@ async function locationCheckLoopModePassThrough(testController) {
     await testController.stateManager.pingWorker('after-rules-load', 3000);
     testController.reportCondition('rules loaded into frontend', true);
 
-    // Give the auto-enable handler chain a beat, then assert loop mode
-    // IS active — the whole point is that the click below happens
-    // UNDER loop mode.
-    await testController.pollForCondition(
-        () => lastModeChange?.active === true,
-        'loop mode auto-enabled by loop_costs',
-        5000,
-        100,
+    // Poll the gameState flag (a prior test may have left loop mode
+    // active, in which case no transition event fires).
+    const { getGameStateSingleton } = await import('../../gameState/singleton.js');
+    const loopOn = await testController.pollForCondition(
+        () => getGameStateSingleton()?.isLoopModeActive === true,
+        'loop mode active (auto-enabled by loop_costs)',
+        5000, 100,
     );
-    testController.assertEqual(
-        'loop mode auto-enabled by loop_costs',
-        true,
-        lastModeChange?.active === true,
-    );
+    testController.assertEqual('loop mode auto-enabled by loop_costs', true, !!loopOn);
+    if (!loopOn) return testController.getOverallResult();
 
     // Make the wrapper panel active so its iframe mounts.
     testController.eventBus.publish('ui:activatePanel', {
         panelId: 'textAdventureSubstrateWrapperPanel',
     });
-
-    let iframeWin = null;
     const mounted = await testController.pollForCondition(
         () => {
             const iframe = document.querySelector('iframe.tasw-iframe');
-            if (!iframe?.contentDocument) return false;
-            iframeWin = iframe.contentWindow;
-            return iframe.contentDocument.querySelector('.tae-actions') !== null;
+            return !!iframe?.contentDocument?.querySelector('.tae-actions');
         },
         'wrapper iframe rendered a room',
         15000,
         300,
     );
-    if (!mounted) {
-        testController.reportCondition('wrapper iframe rendered a room', false);
-        return testController.getOverallResult();
-    }
-    const iframe = document.querySelector('iframe.tasw-iframe');
+    testController.reportCondition('wrapper iframe rendered a room', !!mounted);
+    if (!mounted) return testController.getOverallResult();
 
-    // Explore until a location link is revealed (discovery default).
-    let foundItem = false;
-    for (let i = 0; i < 20; i++) {
-        const item = iframe.contentDocument.querySelector('[data-item-id]');
-        if (item) { foundItem = true; break; }
-        const explore = iframe.contentDocument.querySelector('[data-action="explore"]');
-        if (!explore) break;
-        const evt = new iframeWin.MouseEvent('click', { bubbles: true, cancelable: true });
-        explore.dispatchEvent(evt);
-        await new Promise(r => setTimeout(r, 200));
-    }
-    if (!foundItem) {
-        testController.reportCondition('found a clickable location after explore', false);
-        return testController.getOverallResult();
-    }
-    testController.reportCondition('found a clickable location after explore', true);
+    const gs = getGameStateSingleton();
+    const region = gs.getCurrentRegion();
+    const staticData = testController.stateManager.getStaticData?.();
+    const regionLocations = staticData?.regions?.get(region)?.locations ?? [];
+    testController.assertEqual(`region ${region} has a checkable location`, true, regionLocations.length > 0);
+    if (regionLocations.length === 0) return testController.getOverallResult();
+    const locationName = regionLocations[0].name;
 
-    const targetSpan = iframe.contentDocument.querySelector('[data-item-id]');
-    const locationName = targetSpan.dataset.itemId;
-    testController.log(`Clicking location under ACTIVE loop mode: ${locationName}`);
+    const isChecked = () => {
+        const snap = testController.stateManager.getSnapshot();
+        const set = snap?.checkedLocations;
+        return set instanceof Set ? set.has(locationName)
+            : Array.isArray(set) && set.includes(locationName);
+    };
+    const dispatchCheck = () => {
+        window.eventDispatcher.publish(
+            'iframeAdapter', 'user:locationCheck',
+            { locationName, regionName: region, originator: 'textAdventureWrapperTests' },
+            { initialTarget: 'bottom' },
+        );
+    };
 
-    const beforeSnap = testController.stateManager.getSnapshot();
-    const beforeChecked = (beforeSnap?.checkedLocations instanceof Set
-        ? beforeSnap.checkedLocations.has(locationName)
-        : (Array.isArray(beforeSnap?.checkedLocations) && beforeSnap.checkedLocations.includes(locationName)));
-    testController.assertEqual('location not yet checked before click', false, beforeChecked);
-
-    const snapshotPromise = testController.waitForEvent('stateManager:snapshotUpdated', 5000)
-        .catch(() => null);
-
-    const evt = new iframeWin.MouseEvent('click', { bubbles: true, cancelable: true });
-    targetSpan.dispatchEvent(evt);
-
-    await snapshotPromise;
-    await testController.stateManager.pingWorker('after-loop-mode-click', 3000);
-
-    const afterSnap = testController.stateManager.getSnapshot();
-    const afterChecked = (afterSnap?.checkedLocations instanceof Set
-        ? afterSnap.checkedLocations.has(locationName)
-        : (Array.isArray(afterSnap?.checkedLocations) && afterSnap.checkedLocations.includes(locationName)));
+    // ── Half 1: NOT parked → blocked with feedback ────────────────
+    testController.assertEqual('location not yet checked before the blocked click', false, isChecked());
+    let ignoredPayload = null;
+    const unsubscribe = testController.eventBus.subscribe('loops:clickIgnored', (data) => {
+        if (!ignoredPayload) ignoredPayload = data;
+    });
+    testController.log(`Dispatching check for '${locationName}' with the queue NOT running (must be blocked)`);
+    dispatchCheck();
+    await new Promise(r => setTimeout(r, 1500));
+    await testController.stateManager.pingWorker('after-blocked-click', 3000);
     testController.assertEqual(
-        `location ${locationName} checked immediately despite active loop mode (pass-through default)`,
-        true,
-        afterChecked,
-    );
+        `blocked: '${locationName}' was NOT checked while no Manual/Record block is parked`,
+        false, isChecked());
+    testController.assertEqual(
+        'loops:clickIgnored feedback fired for the blocked click',
+        true, !!ignoredPayload);
+    if (ignoredPayload) {
+        testController.log(`blocked-click feedback: kind=${ignoredPayload.kind}, reason=${ignoredPayload.reason}`);
+    }
+    try { unsubscribe?.(); } catch { /* ignore */ }
+
+    // ── Half 2: parked Manual block → the same check performs ─────
+    const exits = staticData?.regions?.get(region)?.exits ?? [];
+    const exit = exits.find(e => e.connected_region);
+    testController.assertEqual('an exit was resolvable from staticData', true, !!exit);
+    if (!exit) return testController.getOverallResult();
+
+    const loopStateSingleton = (await import('../../loops/loopStateSingleton.js')).default;
+    const { resolveQueueBlocks } = await import('../../loops/blockIdentity.js');
+    const savedNoReset = gs.noManaDepletionReset;
+    try {
+        gs.noManaDepletionReset = true;
+        gs.updatePath(exit.connected_region, exit.name, region);
+        const { visits } = resolveQueueBlocks(loopStateSingleton.getActionQueue());
+        const visit = [...visits].reverse().find(v => v.name === region);
+        testController.assertEqual(`resolved a queue block for ${region}`, true, !!visit);
+        if (!visit) return testController.getOverallResult();
+        loopStateSingleton.setBlockMode(region, visit.instance, 'manual');
+        loopStateSingleton.startProcessing();
+        const parked = await testController.pollForCondition(
+            () => loopStateSingleton._manualActionEntered === true,
+            'queue parked on the Manual block',
+            8000, 100,
+        );
+        testController.assertEqual('queue parked on the Manual block', true, !!parked);
+        if (!parked) return testController.getOverallResult();
+
+        testController.log(`Dispatching the same check while PARKED (must perform)`);
+        const snapshotPromise = testController.waitForEvent('stateManager:snapshotUpdated', 5000)
+            .catch(() => null);
+        dispatchCheck();
+        await snapshotPromise;
+        await testController.stateManager.pingWorker('after-parked-click', 3000);
+        testController.assertEqual(
+            `allowed: '${locationName}' checked while parked on a matching Manual block`,
+            true, isChecked());
+    } finally {
+        gs.noManaDepletionReset = savedNoReset;
+        // Leave loop mode OFF: nothing auto-disables it on preset switch,
+        // and a leaked active flag turns the strict gate loose on later
+        // tests' (non-loop) worlds.
+        gs.setLoopModeActive(false);
+    }
 
     return testController.getOverallResult();
 }
 
 registerTest({
     id: 'tasw-location-check-loop-mode-passthrough',
-    name: 'Wrapper: location click checks immediately while loop mode is active',
-    description: 'Generates a loop-enabled (loop_costs) shuffled-spiral world, lets '
-               + 'loops auto-enter loop mode, clicks a wrapper location WITHOUT '
-               + 'disabling loop mode, and asserts checkedLocations updates '
-               + 'immediately — the clickToQueue=off pass-through default from the '
-               + 'loops-mode rework (regression for the 2026-06-10 intercept confusion).',
+    name: 'Wrapper: loop-mode checks are gated — blocked unparked, allowed while parked',
+    description: 'M3b strict action gate: with loop mode active, a location check is '
+               + 'blocked (with loops:clickIgnored feedback) while no Manual/Record '
+               + 'block is parked, and the same check performs for real once the '
+               + 'queue parks on a Manual block in the region. Rewritten from the '
+               + 'pre-M3b pass-through regression, which asserted the retired '
+               + 'free-play default.',
     testFunction: locationCheckLoopModePassThrough,
     category: 'textAdventureSubstrateWrapper',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
