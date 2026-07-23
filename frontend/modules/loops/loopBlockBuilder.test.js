@@ -8,6 +8,8 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 import { LoopBlockBuilder } from './loopBlockBuilder.js';
+import loopState from './loopStateSingleton.js';
+import { formatAnnotations } from './blockAnnotations.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 
@@ -243,3 +245,103 @@ describe('LoopBlockBuilder — loopSupport capability gating', () => {
         expect([...flash.loopSupport.queueActions]).toEqual(['regionMove']);
     });
 });
+
+// ---------------------------------------------------------------------------
+// M4 slice 5 — recording-exists indicator / Playback gating / badge rule
+// ---------------------------------------------------------------------------
+
+describe('LoopBlockBuilder.getBlockPlayableContent (M4)', () => {
+    let builder;
+
+    beforeEach(() => {
+        builder = new LoopBlockBuilder({});
+        substrateRegistry.clear();
+    });
+
+    afterEach(() => {
+        const moduleFns = centralRegistry.publicFunctions.get('procgenPlayer');
+        if (moduleFns) moduleFns.delete('getRegionInfo');
+        substrateRegistry.clear();
+    });
+
+    function stub(substrateId, { recorder = false } = {}) {
+        substrateRegistry.register({
+            id: substrateId, label: substrateId, panelComponentType: 'p',
+            loadRegionEvent: `${substrateId}:load`,
+            ...(recorder ? { takeLastRecording: () => null } : {}),
+            loopSupport: { queueActions: ['regionMove'], manual: true, record: true, playback: true },
+        });
+        centralRegistry.registerPublicFunction('procgenPlayer', 'getRegionInfo',
+            () => ({ substrate: substrateId, label: substrateId }));
+    }
+
+    const move = { pathEntry: { type: 'regionMove' } };
+    const check = { pathEntry: { type: 'locationCheck' } };
+
+    it('FINE-GRAINED: content means a bound store recording, never the interior', () => {
+        stub('fine', { recorder: true });
+        // A fine-grained block's queued interior is NOT its recording — the
+        // recording lives in savedQueueStore. With none bound, a block full
+        // of queued actions still has nothing to play back.
+        expect(builder.getBlockPlayableContent('R', 1, [move, check, move]))
+            .toEqual({ fineGrained: true, hasContent: false });
+    });
+
+    it('COARSE-ONLY: content means a non-empty interior (boundary moves do not count)', () => {
+        stub('coarse');
+        expect(builder.getBlockPlayableContent('R', 1, [move, move]))
+            .toEqual({ fineGrained: false, hasContent: false });
+        expect(builder.getBlockPlayableContent('R', 1, [move, check, move]))
+            .toEqual({ fineGrained: false, hasContent: true });
+    });
+
+    it('reads the fine/coarse split off the registry, not off the region name', () => {
+        stub('coarse');
+        expect(builder.getBlockPlayableContent('R', 1, []).fineGrained).toBe(false);
+        expect(loopState.isFineGrainedRegion('R')).toBe(false);
+        substrateRegistry.clear();
+        stub('fine', { recorder: true });
+        expect(builder.getBlockPlayableContent('R', 1, []).fineGrained).toBe(true);
+        expect(loopState.isFineGrainedRegion('R')).toBe(true);
+    });
+});
+
+describe('M4 annotation display rule', () => {
+    it('shows NET deltas whenever nonzero and strips the owner namespace', () => {
+        const { nets } = formatAnnotations({
+            items: {
+                'jta/Food': { net: 3, min: 0 },
+                'maze/Gem': { net: -2, min: -2 },
+                'jta/Rope': { net: 0, min: 0 },
+            },
+            xp: { net: 0 },
+        });
+        expect(nets).toEqual(['+3 Food', '-2 Gem']);
+    });
+
+    it('shows a minimum ONLY when it went below zero, as "needs ≥X at start"', () => {
+        const { needs } = formatAnnotations({
+            items: {
+                'jta/Food': { net: 3, min: 0 },     // never dipped → no badge
+                'jta/Potion': { net: 1, min: -4 },  // dipped → the useful hint
+            },
+            xp: { net: 0 },
+        });
+        expect(needs).toEqual(['needs ≥4 Potion at start']);
+    });
+
+    it('keeps XP out of the badges but in the detail view', () => {
+        const { nets, needs, detail } = formatAnnotations({
+            items: {}, xp: { net: 137.4 },
+        });
+        expect(nets).toEqual([]);
+        expect(needs).toEqual([]);
+        expect(detail).toBe('XP earned: 137');
+    });
+
+    it('renders nothing for an absent or empty annotation', () => {
+        expect(formatAnnotations(null)).toEqual({ nets: [], needs: [], detail: '' });
+        expect(formatAnnotations({ items: {}, xp: { net: 0 } }).nets).toEqual([]);
+    });
+});
+

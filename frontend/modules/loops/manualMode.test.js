@@ -86,6 +86,10 @@ function wireWithFunctionalBus({ startRegion = 'Menu' } = {}) {
     });
     gs.setStartRegions([startRegion]);
     gs.setCurrentRegion(startRegion);
+    // This suite is about the LEGACY per-region Manual checkbox, so pin the
+    // pre-M4 default: M4 flipped defaultBlockMode to 'record', which would
+    // park every manual-capable block whether the checkbox is set or not.
+    loopState.defaultBlockMode = 'playback';
     return { loopState, gs, bus, dispatcher };
 }
 

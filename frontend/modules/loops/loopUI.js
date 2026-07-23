@@ -240,7 +240,8 @@ export class LoopUI {
                   <option value="append">Append to queue</option>
                   <option value="rebuildPath">Rebuild path (advanced)</option>
                 </select></label>
-                <label class="default-block-mode-label" title="Mode given to a region block that has no mode set yet. Playback runs it automatically; Manual parks it for hand-play where supported.">Default block mode: <select id="loop-ui-default-block-mode">
+                <label class="default-block-mode-label" title="Mode given to a region block that has no mode set yet. Record parks it for hand-play and captures what you do (then auto-switches to Playback); Manual parks it without capturing; Playback runs it automatically. A substrate that can't record falls back to Manual.">Default block mode: <select id="loop-ui-default-block-mode">
+                  <option value="record">Record</option>
                   <option value="playback">Playback</option>
                   <option value="manual">Manual</option>
                 </select></label>
@@ -686,9 +687,9 @@ export class LoopUI {
     // the fresh value; persisted through settingsManager.
     const defaultBlockModeSelect = querySelector('#loop-ui-default-block-mode');
     if (defaultBlockModeSelect) {
-      defaultBlockModeSelect.value = loopState.defaultBlockMode || 'playback';
+      defaultBlockModeSelect.value = loopState.defaultBlockMode || 'record';
       defaultBlockModeSelect.addEventListener('change', async () => {
-        const mode = defaultBlockModeSelect.value || 'playback';
+        const mode = defaultBlockModeSelect.value || 'record';
         loopState.defaultBlockMode = mode;
         await this.displaySettings.setSetting('defaultBlockMode', mode, true);
         // Re-render so blocks relying on the default reflect it.

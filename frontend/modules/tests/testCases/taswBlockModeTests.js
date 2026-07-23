@@ -221,8 +221,11 @@ async function playbackNoDoubleAppend(testController) {
         });
         testController.assertEqual(`resolved a queue block for ${region}`, true, !!block);
         if (!block) return testController.getOverallResult();
-        // Default block mode is Playback; with no substrate recorder the
-        // generic executor runs the interior + boundary move host-side.
+        // M4 flipped defaultBlockMode to Record, which PARKS the block —
+        // this test is about the Playback path, so ask for it explicitly.
+        // With no substrate recorder the generic executor runs the interior
+        // + boundary move host-side.
+        loopStateSingleton.setBlockMode(region, block.instance, 'playback');
 
         const before = pathLength();
         testController.log(`path length after authoring: ${before}`);
@@ -298,6 +301,9 @@ async function playbackInstant(testController) {
         });
         testController.assertEqual(`resolved a queue block for ${region}`, true, !!block);
         if (!block) return testController.getOverallResult();
+        // Instant applies to Playback blocks; M4's Record default would park
+        // this one instead of running it.
+        loopStateSingleton.setBlockMode(region, block.instance, 'playback');
         loopStateSingleton.setBlockInstant(region, block.instance, true);
 
         const before = pathLength();

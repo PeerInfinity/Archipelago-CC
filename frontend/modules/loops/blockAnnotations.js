@@ -121,6 +121,33 @@ export class BlockAnnotationTracker {
 }
 
 /**
+ * The panel's view of an annotations object (M4 slice 5). Kept here, apart
+ * from the DOM, so the display RULE is testable on its own.
+ *
+ * The rule (user, 2026-07-23): show NET deltas whenever nonzero; show a
+ * minimum ONLY when it went below zero, rendered "needs ≥X at start" — a
+ * minimum is only ever useful as a can-I-run-this-block hint. XP is tracked
+ * but never gets a badge; it appears in the detail tooltip alongside the
+ * full per-item numbers.
+ *
+ * @returns {{nets: string[], needs: string[], detail: string}}
+ */
+export function formatAnnotations(annotations) {
+    const items = annotations?.items ?? {};
+    const nets = [];
+    const needs = [];
+    const detail = [];
+    for (const [key, v] of Object.entries(items)) {
+        const name = key.includes('/') ? key.slice(key.indexOf('/') + 1) : key;
+        if (v?.net) nets.push(`${v.net > 0 ? '+' : ''}${v.net} ${name}`);
+        if (v?.min < 0) needs.push(`needs ≥${-v.min} ${name} at start`);
+        detail.push(`${key}: net ${v?.net >= 0 ? '+' : ''}${v?.net ?? 0}, lowest ${v?.min ?? 0}`);
+    }
+    if (annotations?.xp?.net > 0) detail.push(`XP earned: ${Math.round(annotations.xp.net)}`);
+    return { nets, needs, detail: detail.join('\n') };
+}
+
+/**
  * Whether an annotations object says anything worth showing. Used by the
  * UI so an all-zero annotation renders nothing.
  */

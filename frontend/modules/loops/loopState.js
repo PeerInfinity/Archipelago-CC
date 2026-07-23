@@ -145,9 +145,11 @@ export class LoopState {
     this.blockInstantStates = new Map(); // 'region#instance' -> boolean
     // Default mode applied to a block that has no stored mode. Mirrors
     // the schema-backed `defaultBlockMode` setting (loopUI pushes it in,
-    // like keepFocused / instantMode). 'playback' preserves today's
-    // default (unchecked-Manual = the system runs the queue).
-    this.defaultBlockMode = 'playback';
+    // like keepFocused / instantMode). M4 flips this to 'record': a fresh
+    // run live-plays each block once and (with auto-switch, default ON)
+    // replays it thereafter. Capability-clamped in getBlockMode — a
+    // substrate without Record falls back to Manual, then to Playback.
+    this.defaultBlockMode = 'record';
     // Whether a successful Record-mode segment auto-switches its block to
     // Playback. Schema-backed setting (loopUI pushes it in, like
     // defaultBlockMode); default ON per the M2 ruling.
@@ -1522,9 +1524,37 @@ export class LoopState {
     const key = blockKeyOf(region, instance);
     if (this.blockModeStates.has(key)) return this.blockModeStates.get(key);
     if (this.manualRegionStates.get(region)) return 'manual';
-    const dflt = this.defaultBlockMode || 'playback';
+    const dflt = this.defaultBlockMode || 'record';
     if (dflt === 'manual' && !this._regionSupportsManual(region)) return 'playback';
+    // M4: the default is Record. A substrate that can't record falls back to
+    // MANUAL, not Playback (user ruling 2026-07-23) — the point of the
+    // Record default is "live-play each block once", and Manual is the
+    // live-play mode. Manual is itself clamped to Playback where the
+    // substrate can't park, so the two clamps compose in one step.
+    if (dflt === 'record' && !this._regionSupportsRecord(region)) {
+      return this._regionSupportsManual(region) ? 'manual' : 'playback';
+    }
     return dflt;
+  }
+
+  /**
+   * Whether the region's substrate follows the FINE-GRAINED capture
+   * contract (M4 slice 5, public form of _substrateHasRecorder). The panel
+   * needs it to decide what "a recording exists" means for a block: a bound
+   * store recording for fine-grained substrates, a non-empty block interior
+   * for coarse ones.
+   */
+  isFineGrainedRegion(region) {
+    return this._substrateHasRecorder(this._lookupSubstrateId(region));
+  }
+
+  /**
+   * Whether a PLAYABLE recording is bound to this block. Only meaningful
+   * for fine-grained substrates; coarse blocks store no playable actions
+   * (their interior is the recording), so this is always false for them.
+   */
+  hasBoundRecording(region, instance) {
+    return !!this._lookupBoundRecording(region, instance);
   }
 
   /** Store an explicit per-block mode (overrides legacy + default). */

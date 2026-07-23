@@ -99,6 +99,10 @@ describe('Bot-backed queue execution (loopSupport.executeVia = playbackBot)', ()
         });
         gs.setStartRegions(['Menu']);
         gs.setCurrentRegion('Menu');
+        // These tests exercise the AUTO (bot) path, so pin the pre-M4
+        // default: M4 flipped defaultBlockMode to 'record', which parks a
+        // manual-capable block instead of letting the bot drive it.
+        loopState.defaultBlockMode = 'playback';
         tick = makeTicker();
         walkToCalls.length = 0;
         stopCalls.length = 0;

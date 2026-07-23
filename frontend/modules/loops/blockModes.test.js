@@ -97,15 +97,27 @@ describe('per-block mode — storage & precedence', () => {
     registerManualSubstrate();
   });
 
-  it('defaults to defaultBlockMode (playback) when nothing stored', () => {
-    expect(loopState.getBlockMode('A', 1)).toBe('playback');
+  it('defaults to defaultBlockMode — RECORD (M4), clamped where unsupported', () => {
+    // test_substrate declares manual but NOT record/playback, so the M4
+    // Record default falls back to MANUAL (user ruling: the point of the
+    // default is "live-play each block once", and Manual is the live-play
+    // mode) — not to Playback.
+    expect(loopState.defaultBlockMode).toBe('record');
+    expect(loopState.getBlockMode('A', 1)).toBe('manual');
+    // An AP-native region can't park at all → the second clamp applies.
+    expect(loopState.getBlockMode('APNative', 1)).toBe('playback');
+  });
+
+  it('a Record default is honoured where the substrate declares record+playback', () => {
+    registerRecordSubstrate(); // rec_sub declares record + playback for 'A'
+    expect(loopState.getBlockMode('A', 1)).toBe('record');
   });
 
   it('stores an explicit mode per (region, instance)', () => {
-    loopState.setBlockMode('A', 1, 'manual');
-    expect(loopState.getBlockMode('A', 1)).toBe('manual');
-    // A different visit is independent.
-    expect(loopState.getBlockMode('A', 2)).toBe('playback');
+    loopState.setBlockMode('A', 1, 'playback');
+    expect(loopState.getBlockMode('A', 1)).toBe('playback');
+    // A different visit is independent — it still resolves from the default.
+    expect(loopState.getBlockMode('A', 2)).toBe('manual');
   });
 
   it('two visits to one region can diverge', () => {
@@ -164,6 +176,7 @@ describe('per-block mode — serialization & migration', () => {
 
   it('resetForNewRules clears per-block modes', () => {
     const { loopState } = wire();
+    loopState.defaultBlockMode = 'playback';
     loopState.setBlockMode('A', 1, 'manual');
     loopState.resetForNewRules();
     expect(loopState.getBlockMode('A', 1)).toBe('playback');
@@ -947,6 +960,9 @@ describe('M3b — loops-owned coarse capture + live-play economy', () => {
     const fresh = wire();
     registerCoarseSubstrate();
     fresh.loopState._cachedRulesData = RULES_DATA;
+    // Run B is the AUTO path by construction, so pin Playback rather than
+    // inheriting M4's Record default (which would park the block).
+    fresh.loopState.defaultBlockMode = 'playback';
     fresh.gs.setLoopModeActive(true);
     fresh.gs.maxMana = 1000;
     fresh.gs.currentMana = 1000;

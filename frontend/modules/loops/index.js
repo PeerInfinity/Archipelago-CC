@@ -362,8 +362,8 @@ export function register(registrationApi) {
       },
       defaultBlockMode: {
         type: 'string',
-        default: 'playback',
-        enum: ['playback', 'manual'],
+        default: 'record',
+        enum: ['record', 'playback', 'manual'],
         label: 'Default Mode for New Blocks',
       },
       autoSwitchToPlaybackAfterRecord: {
