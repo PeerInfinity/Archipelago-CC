@@ -160,10 +160,10 @@ Record + playback-of-recordings (maze+textAdventure) — **✅ CODE COMPLETE
 2026-07-21 (Opus session 63; `cbf461238`→`da26a5b7d`→`10c5851a7`→
 `c627e4e48`→`506a7c51c`)** (as-built below); **M3** Instant toggle +
 activation-suppression seam — **✅ CODE COMPLETE 2026-07-22 (Opus session 65;
-`1f38fbc56`→`bc5b02c43`→`477bad187`→`bac38f1d8`→`fd01e84f1`); pending TA
-Playback + Instant in-browser sanity + push** (as-built below); **M3b**
-coarse-capture refactor (arc opened 2026-07-22, below) — **NEXT, and gates
-M4's recorder half**; **M4** jta instant pump + recorder; **M5**
+`1f38fbc56`→`bc5b02c43`→`477bad187`→`bac38f1d8`→`fd01e84f1`); UNPUSHED —
+closes together with M3b via the automated gates** (see below); **M3b**
+coarse-capture refactor + automated M3 gates (arc opened 2026-07-22, below)
+— **NEXT, and gates M4's recorder half**; **M4** jta instant pump + recorder; **M5**
 runner/bounce; **M6** solver unification + rename + Bot radio. Omsi arc D
 re-queues AFTER this track (see §4); omsi Instant last of all.
 
@@ -250,12 +250,24 @@ loops replay callers pass `instant`; maze drains `_mazeQueue.stepOne()` to
 idle then crosses; TA proxy forwards `instant`, bridge pumps `_replayTick()`
 synchronously. (5/n) per-block Instant checkbox (Playback-only) + set-all
 Instant select. Gates: **vitest 3191, regression 1/1, substrates 44/44**.
-**⚠ REMAINING to close M3: in-browser sanity — TA Playback double-append AND
-the Instant paths (maze half sanity-covered session 63; TA Playback + Instant
-were NOT). Do with the user; NOT pushed until sanity.**
+**⚠ M3 close-out REDEFINED (session 66, user):** the TA-side manual sanity
+legs (TA Playback double-append + Instant; maze half was sanity-covered in
+session 63) are what this arc's M3b investigation grew out of, and the user
+ruled manual re-testing **too tedious to gate on** — the gate is now the
+Phase A automated in-app tests in `loops-coarse-capture-plan.md`
+(`ta-playback-no-double-append`, `ta-playback-instant`,
+`ta-record-coarse-and-autoswitch`, `ta-queue-integrity-during-live-play`).
+**The five M3 commits stay LOCAL until M3b lands and the automated gates
+pass; one combined push closes M3+M3b** (user decision 2026-07-22).
 
 **M3b — coarse-capture refactor (arc opened 2026-07-22, Fable session 66;
-design SETTLED with the user, don't re-litigate).** Plan:
+design SETTLED with the user, don't re-litigate). This arc IS the fix path
+for M3's failing close-out gate** — the TA queue-machinery misbehavior the
+M3 sanity legs were meant to catch is what triggered the investigation.
+**Work item 0 is test-first: write the Phase A automated tests against
+CURRENT code** (they pin the behaviors as specs; #4 doubles as the
+diagnostic for the suspected stray-append symptom), then refactor with
+them green, then add Phase B (gate matrix, drain, capture). Plan:
 `CC/docs/plans/loops-coarse-capture-plan.md`; durable contract:
 `docs/json/developer/procgen/loop-recording.md`. Ruling: the TA wrapper's
 internal recorder/replay machinery (recorder.js, the

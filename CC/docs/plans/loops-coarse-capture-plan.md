@@ -1,6 +1,7 @@
 # Loops coarse capture — remove the TA-internal recorder, loops owns coarse recording
 
 **Status: PLANNED** (design settled with the user 2026-07-22, Fable session 66; not yet implemented).
+**Motivation / relationship to M3:** this arc IS the fix path for M3's failing close-out gate. M3 (Instant toggle) is CODE COMPLETE but its TA-side in-browser sanity legs (TA Playback double-append + Instant) never passed — the session-66 investigation into why the TA queue machinery misbehaves is what produced this plan. The user has ruled the manual sanity legs **too tedious to be the gate**: automated in-app tests replace them (see "Test-first" below). **The five unpushed M3 commits are HELD locally until M3b lands and the automated gates pass** (user decision 2026-07-22) — one combined push closes M3+M3b.
 **Sequencing:** should land **before the block-modes M4 session's jta recorder half** — a jta recorder built against the old always-supply-a-recorder contract would be built against the wrong seam. See the queue doc §3b (`fable-to-opus-handoff-2026-07.md`).
 **Contract reference:** `docs/json/developer/procgen/loop-recording.md` (the durable architecture page this plan implements).
 
@@ -69,6 +70,19 @@ Substrates whose live play natively drains (maze per-step drain via `sharing.man
 
 Capability surface: coarse-only substrates keep declaring `record`/`playback`/`instant` (the radios still make sense to the user); the *implementation* branches on whether the registry entry supplies `takeLastRecording`/`replayActions`. Alternatively add an explicit `loopSupport.captureStyle: 'coarse' | 'fine'` — decide at implementation time; keep the registry doc in sync.
 
+## Test-first: automated coverage replacing the manual sanity legs
+
+**Work item 0 of the implementing session — written BEFORE the refactor.** User ruling (2026-07-22): manual in-browser sanity is too tedious to gate on; these behaviors get in-app automated tests. Harness facts: the substrates harness already drives the real TA iframe (`textAdventureWrapperTests.js` — real clicks, iframe postMessage dispatch, loop-mode cases) and the block-mode/loops wiring precedent is `mazeBlockModeTests.js` (registered via `testDiscovery.js` + a `test-substrates` config id — new tests must be added to that config or they never run). Use `eventually`/`pollForValue` helpers; refill mana before walks.
+
+**Phase A — automate the M3 sanity legs against CURRENT code.** These pin the behaviors as specs; they must stay green through the refactor (they assert observable outcomes, not the machinery):
+
+1. `ta-playback-no-double-append` — bind a recording to a parked TA Playback block, replay with a `departureExitId`; assert the region changes AND the queue/path length is unchanged afterward (no duplicated regionMove or locationCheck entries). This automates the M3 1/n `fromLoop` fix that was never sanity-confirmed.
+2. `ta-playback-instant` — same, `instant: true`; assert the block completes and the region changes in one synchronous drain (no intermediate clock ticks observable).
+3. `ta-record-coarse-and-autoswitch` — park a Record block, perform interior actions through the real iframe dispatch, exit through the expected exit; assert the block interior equals the performed actions and the block's mode flipped to Playback.
+4. `ta-queue-integrity-during-live-play` — while parked, perform actions and assert nothing appends outside the parked block (no end-of-queue strays). **Diagnostic: this may legitimately FAIL against current code** (the suspected stray-append behavior) — a red result here is the confirmed M3 symptom, and the test goes green with the refactor.
+
+**Phase B — new behavior tests landing WITH the refactor:** the strict-gate allow/block matrix (one test per exemption: `fromLoop`, `fromReset`, `system:*`, solver/delegation, planning-click originator — plus one blocked case per disallowed state: not started / completed / empty queue / wrong-region); Manual drains + captures nothing; Record drains + captures; maze free-walk append retired. ⚠ The existing `locationCheckLoopModePassThrough` in-app test asserts the OLD contract ("location click checks immediately while loop mode is active") — under the strict gate that click is *blocked* unless parked on a matching Manual/Record block; the test must be rewritten to assert the new contract, not deleted.
+
 ## Open questions (verify during implementation)
 
 *(Former #1 explore gap, #2 replay economy, and #3 stray appends are resolved by the session-66b rulings — see that section.)*
@@ -81,5 +95,5 @@ Capability surface: coarse-only substrates keep declaring `record`/`playback`/`i
 
 ## Gates
 
-- vitest (loops + TA wrapper suites; recorder/replay tests removed or rewritten against the loops-side capture; new gate-exemption tests per open question #2), regression 1/1, substrates suite — including the M2 in-app leg `maze-record-playback-crosses-exit` (must stay green; maze path untouched apart from the gate) and a NEW in-app leg for TA Record→Playback through the loops-owned path.
-- In-browser sanity with the user: TA Record (parked; drain visible), Manual (drain, no capture), the strict gate (blocked outside the active block; planning clicks still work; empty-queue bootstrap), auto-switch, and Playback (timed + Instant).
+- vitest (loops + TA wrapper suites; recorder/replay tests removed or rewritten against the loops-side capture; new gate-exemption tests per open question #2), regression 1/1, substrates suite — including the M2 in-app leg `maze-record-playback-crosses-exit` (must stay green; maze path untouched apart from the gate) plus the Phase A + Phase B automated tests above. **The automated suite is the close-out gate for BOTH M3 and M3b** — manual in-browser checking is reduced to a short final visual confirm with the user (drain readouts, blocked-click feedback), not a correctness gate.
+- On green: push everything — the five held M3 commits, the session-66 docs commits, and the M3b work — in one go.
