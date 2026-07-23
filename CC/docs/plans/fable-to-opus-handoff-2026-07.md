@@ -276,7 +276,10 @@ live-append gap, the replay economy shift (generic timer charges
 UNVERIFIED parked-mid-queue stray-append behavior (in-app probe required;
 possible latent pre-existing bug).
 
-**M3b rulings round 2 (session 66b, same day — settled):** (1) **capture is
+**M3b rulings round 2 (session 66b, same day — settled; ALL THREE
+SUBSTRATE-UNIVERSAL, user-confirmed — maze/jta/bounce/runner/omsi/flash,
+not just TA; maze free-walk append retires too; M4/M5/omsi-D build against
+this model):** (1) **capture is
 Record-gated** — performed substrate actions enter the queue ONLY when the
 active block is Record for the matching substrate+region, inserted at the
 block position; Manual performs with real effects but captures NOTHING; the
