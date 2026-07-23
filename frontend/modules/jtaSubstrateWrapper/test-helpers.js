@@ -114,6 +114,21 @@ export function readExpectedResetTarget() {
 }
 
 /**
+ * The loaded procgen exits of a region, host-side — the same
+ * `playable_payload.exits` array the in-iframe bridge reads as
+ * `_world.exits` (so a test picks the exact `exitName` the bridge
+ * dispatches and `crossExit` resolves against). Empty when no world is
+ * warehoused for the region.
+ * @returns {{exit_id?: string, exitName?: string, targetRegion?: string}[]}
+ */
+export function readRegionExits(regionName) {
+    const wh = centralRegistry.getPublicFunction?.('procgenPlayer', 'getWarehouse')?.();
+    const exits = wh?.get?.(regionName)?.world?.exits;
+    if (exits instanceof Map) return [...exits.values()];
+    return Array.isArray(exits) ? exits : [];
+}
+
+/**
  * Dispatch a user:regionMove the same way the tasw tests do — via the
  * raw host dispatcher with initialTarget bottom, mirroring what a real
  * substrate transition publishes.

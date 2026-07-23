@@ -141,6 +141,12 @@
             "_comment": "KNOWN-DEFERRED to M6 (Bot radio), same class as jta-bot-walkto-exit \u2014 cross-region walkTo progression (walkOneZone) blocked by the M3b strict gate now that jta declares record+playback (walkTo departures carry no fromLoop). Revive with the M6 Bot radio. User-ruled 2026-07-23."
         },
         {
+            "id": "jta-record-playback-crosses-zone-boundary",
+            "enabled": true,
+            "category": "JtA substrate",
+            "_comment": "M4 fine-grained record→playback round trip across a zone boundary — jta's in-app progression stratum while the four walkTo progression tests stay KNOWN-DEFERRED to M6. Also carries the folded-in energyBonusSync assertion from jta-starting-energy-bonus-raises-pool."
+        },
+        {
             "id": "jta-cross-substrate-item-grant",
             "enabled": true,
             "category": "JtA substrate"

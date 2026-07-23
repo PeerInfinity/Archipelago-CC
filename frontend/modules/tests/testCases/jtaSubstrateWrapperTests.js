@@ -67,7 +67,11 @@ import {
     JTA_PRESTIGETEST_FOREIGN_ITEM,
     JTA_PRESTIGE_TASK_ID,
     JTA_PRESTIGE_TASK_ZONE,
+    readRegionExits,
 } from '../../jtaSubstrateWrapper/test-helpers.js';
+
+/** Ids at or above this are the bridge's injected synthetic exit tasks. */
+const SYNTHETIC_EXIT_TASK_MIN = 10000;
 
 /** True if the snapshot lists `name` among its checked locations. */
 function snapshotHasLocation(snapshot, name) {
@@ -78,9 +82,10 @@ function snapshotHasLocation(snapshot, name) {
 }
 
 /**
- * Park a Manual loops block on `region` so the zone's live actions (AP
- * location checks from task completions) pass the M3b strict action gate
- * via the `parkedLivePlay` exemption.
+ * Park a Manual (or Record) loops block on `region` so the zone's live
+ * actions (AP location checks from task completions, and the departing
+ * exit crossing) pass the M3b strict action gate via the `parkedLivePlay`
+ * exemption.
  *
  * M4 opts jta into the strict gate (loopSupport declares record+playback),
  * and jta presets carry loop_costs → loop mode auto-enables. A jta region's
@@ -93,10 +98,17 @@ function snapshotHasLocation(snapshot, name) {
  * economy). Mirrors mazeBlockModeTests' parked-live-drain setup, adapted to
  * jta's graph exit.
  *
- * Returns a restore handle, or null if loop mode is off (gate inactive —
- * no parking needed) or the block could not be parked.
+ * `mode` selects the parked block's radio: 'manual' (default) for the
+ * AP-integration tests, or 'record' for the M4 record→playback leg — both
+ * park identically and both count as live play; Record additionally flags
+ * the block so the successful-exit wake pulls and persists the substrate's
+ * per-visit capture.
+ *
+ * Returns a restore handle (including the resolved block `instance`), or
+ * null if loop mode is off (gate inactive — no parking needed) or the block
+ * could not be parked.
  */
-async function parkManualBlockInRegion(testController, region, targetRegion, exitId) {
+async function parkManualBlockInRegion(testController, region, targetRegion, exitId, mode = 'manual') {
     const gs = getGameStateSingleton();
     if (gs?.isLoopModeActive !== true) {
         testController.log(`loop mode inactive — no parked block needed for ${region}`);
@@ -114,19 +126,19 @@ async function parkManualBlockInRegion(testController, region, targetRegion, exi
         testController.log(`could not resolve a queue block for ${region}`);
         return null;
     }
-    loopStateSingleton.setBlockMode(region, visit.instance, 'manual');
+    loopStateSingleton.setBlockMode(region, visit.instance, mode);
     const savedSpeed = loopStateSingleton.gameSpeed;
     loopStateSingleton.setGameSpeed(10000); // hurry the arrival move to the park
     loopStateSingleton.startProcessing();
     const parked = await testController.pollForCondition(
         () => loopStateSingleton._manualActionEntered === true,
-        `queue parked on the Manual block in ${region}`,
+        `queue parked on the ${mode} block in ${region}`,
         8000, 100);
     if (!parked) {
-        testController.log(`queue did not park on the Manual block in ${region}`);
+        testController.log(`queue did not park on the ${mode} block in ${region}`);
         return null;
     }
-    return { loopStateSingleton, savedSpeed, gs };
+    return { loopStateSingleton, savedSpeed, gs, instance: visit.instance };
 }
 
 /** Undo parkManualBlockInRegion: restore speed and leave loop mode off so
@@ -1009,4 +1021,293 @@ registerTest({
     testFunction: crossSubstrateItemGrant,
     category: 'JtA substrate',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
+
+// ---------------------------------------------------------------------------
+// M4 — the fine-grained record → playback leg (2026-07-23)
+// ---------------------------------------------------------------------------
+
+/**
+ * jta's end-to-end block-mode round trip, ACROSS A ZONE BOUNDARY.
+ *
+ * M4 makes jta a FINE-GRAINED Record/Playback substrate: the fork's
+ * performed-actions log is the full-visit stream, the bridge slices one
+ * region visit out of it and stashes it host-side, loops persists the slice
+ * on a successful Record exit, and Playback replays it through the
+ * jtaQueueEngine executor before crossing the recorded exit. Every piece of
+ * that has unit coverage; NOTHING had in-app coverage, and the four
+ * walkTo-driven jta progression tests the M3b strict gate deferred to M6
+ * were jta's only end-to-end in-app stratum. This test is that stratum.
+ *
+ * Deliberately multi-region and driven through the REAL loops queue rather
+ * than a direct replayActions() call (the maze precedent
+ * `maze-record-playback-crosses-exit` is a focused replay-crosses test; jta
+ * needs the whole path):
+ *
+ *   1. Park a RECORD block on zone 0 and play it by hand — drive a real
+ *      zone-0 task to a completed rep through the fork, then complete the
+ *      bridge's synthetic exit task. That fires the bridge's own
+ *      _dispatchRegionMove, which finalizes + publishes the visit slice
+ *      BEFORE the departing user:regionMove (the 11/n stash-before-move
+ *      ordering) and crosses into the next zone. The move carries no
+ *      fromLoop — it passes the strict gate only because the Record block
+ *      is parked (`parkedLivePlay`), which is exactly the contract.
+ *   2. Assert the recording PERSISTED and BINDS: the block's
+ *      (arrivalKey, ordinal) tag resolves to a savedQueueStore entry whose
+ *      actions are shared/actionQueue vocabulary (a clickTask for the task
+ *      actually played), carrying the departure exit id — and that the
+ *      block auto-switched to Playback.
+ *   3. Walk back into zone 0, reset the fork run so the recorded reps are
+ *      performable again, and restart the queue. The SAME block — now
+ *      Playback with a bound recording — replays through loops'
+ *      _handlePlaybackReplayEntry → the jta PlaybackProxy → the
+ *      jtaQueueEngine executor → the live fork, then crossExit()s the
+ *      recorded exit and CROSSES THE ZONE BOUNDARY again. Instant is set on
+ *      the block, so the bridge's energy-respecting stepTick pump drives it.
+ *
+ * Folded in (rather than waiting for M6 to revive
+ * `jta-starting-energy-bonus-raises-pool`): with energyBonusSync on, the
+ * fork's starting-energy bonus is reported up and RAISES THE SHARED POOL —
+ * asserted on maxMana and on the refilled loop starting mana that the
+ * recorded run is then played against.
+ */
+async function recordPlaybackCrossesZoneBoundary(testController) {
+    const loopState = (await import('../../loops/loopStateSingleton.js')).default;
+    const { clearForRegion } = await import('../../loops/savedQueueStore.js');
+
+    let win = await enterJtaRegion(testController);
+    if (!win) return testController.getOverallResult();
+    // Fresh game — the substrate save slot is shared across a run, and this
+    // test plays real tasks whose reps must start at zero.
+    win = await resetJtaSaveAndReload(testController);
+    testController.reportCondition('fresh jta game active after save reset', !!win);
+    if (!win) return testController.getOverallResult();
+
+    const gs = getGameStateSingleton();
+    const loopOn = await testController.pollForCondition(
+        () => gs.isLoopModeActive === true,
+        'loop mode active (auto-enabled by loop_costs)', 5000, 100);
+    testController.assertEqual('loop mode active (auto-enabled by loop_costs)', true, !!loopOn);
+    if (!loopOn) return testController.getOverallResult();
+
+    const exit = readRegionExits(JTA_TEST_REGION)[0];
+    testController.assertEqual(`${JTA_TEST_REGION} has a warehoused exit`, true, !!exit?.targetRegion);
+    if (!exit?.targetRegion) return testController.getOverallResult();
+    const exitId = exit.exit_id ?? exit.exitName;
+    const targetRegion = exit.targetRegion;
+    testController.log(`zone-0 exit '${exitId}' → '${targetRegion}'`);
+
+    // Wipe any recording this test left behind on an earlier run — otherwise
+    // the Playback leg could replay a stale entry and the "recording
+    // persisted" assertions would be vacuous.
+    try { clearForRegion(loopState._rulesHash(), JTA_TEST_REGION, 'jta'); } catch { /* best-effort */ }
+
+    const BONUS_SETTING = 'moduleSettings.jtaSubstrateWrapper.energyBonusSync';
+    const getMaxMana = () => gameStateFn('getMaxMana')?.();
+    const getJtaBonus = () => gameStateFn('getSubstrateMaxManaBonus')?.('jta') ?? 0;
+    const savedNoReset = gs.noManaDepletionReset;
+    const savedSpeed = loopState.gameSpeed;
+    let park = null;
+    let playedTaskId = null;
+
+    try {
+        // ── Starting-energy bonus raises the shared pool ────────────────
+        // (folded-in coverage from the M6-deferred
+        // jta-starting-energy-bonus-raises-pool; the recorded run below is
+        // played against the raised pool.)
+        await settingsManager.updateSetting(BONUS_SETTING, true, { persist: false });
+        const bonusZeroed = await eventually(testController, () => getJtaBonus() === 0,
+            'jta bonus starts at 0 on the fresh game', 8000);
+        testController.assertEqual('jta bonus starts at 0', true, !!bonusZeroed);
+        const maxMana0 = getMaxMana();
+        win.getGamestate.jta_starting_energy_bonus = 50;
+        const bonusApplied = await eventually(testController, () => getJtaBonus() === 50,
+            'jta starting-energy bonus (50) reported to the shared pool', 10000);
+        testController.assertEqual('bridge reported the starting-energy bonus', true, !!bonusApplied);
+        testController.assertEqual('maxMana rose by the bonus', maxMana0 + 50, getMaxMana());
+        gs.refillMana();
+        testController.assertEqual('the raised maxMana is the loop starting mana',
+            getMaxMana(), gs.getCurrentMana());
+
+        // ── Leg 1: RECORD a real zone-0 visit and cross the boundary ────
+        park = await parkManualBlockInRegion(
+            testController, JTA_TEST_REGION, targetRegion, exitId, 'record');
+        testController.assertEqual('parked a Record block in the zone region', true, !!park);
+        if (!park) return testController.getOverallResult();
+        const instance = park.instance;
+
+        testController.assertEqual('no recording bound to the block before recording',
+            null, loopState._lookupBoundRecording(JTA_TEST_REGION, instance));
+
+        // Drains apply to parked live play (one economy) — keep them from
+        // resetting the loop mid-recording; the recording's content, not its
+        // affordability, is what's under test here.
+        gs.noManaDepletionReset = true;
+        const playWin = await waitForJtaActive(testController) ?? win;
+
+        // Play a real zone-0 task by hand until the fork records a completed
+        // rep for it (the recorder IS the stream being sliced, so polling it
+        // is the exact "this is in the recording" signal).
+        const interior = (playWin.getAvailableTasks?.() ?? [])
+            .filter((t) => t.id < SYNTHETIC_EXIT_TASK_MIN);
+        testController.assertEqual('zone 0 offers a real (non-exit) task', true, interior.length > 0);
+        if (interior.length === 0) return testController.getOverallResult();
+        playedTaskId = interior[0].id;
+        testController.log(`hand-playing zone-0 task ${playedTaskId} ('${interior[0].name ?? '?'}')`);
+        const repRecorded = await eventually(testController, () => {
+            playWin.setEnergy(1e9);
+            if (playWin.getFullState?.().activeTaskId !== playedTaskId) playWin.performTask(playedTaskId);
+            pumpTicks(playWin);
+            return (playWin.getCurrentRunActions?.() ?? [])
+                .some((a) => a?.type === 'task' && a.task_id === playedTaskId);
+        }, `the fork recorded a completed rep of task ${playedTaskId}`, 25000, 20);
+        testController.assertEqual('hand play produced a recorded task rep', true, !!repRecorded);
+
+        // Depart. A FIRST-traversal single-exit zone has no synthetic exit
+        // task to click — the departure fires when the zone's Travel task
+        // completes, so the zone has to be genuinely played. Hand the walk
+        // to the game's own automation (walkTo, the 'activate' policy) and
+        // keep energy topped up so it finishes inside one loop: the
+        // deferred walkTo tests fail only because they run UNPARKED, and
+        // this is the parked counterpart — the bridge's fromLoop-less
+        // _dispatchRegionMove passes the gate as parkedLivePlay.
+        const controller = substrateRegistry.get('jta')?.getPlaybackController?.();
+        testController.assertEqual('registry exposes a live PlaybackController', true, !!controller);
+        if (!controller) return testController.getOverallResult();
+        controller.walkTo({ kind: 'exit', name: exit.exitName ?? exitId });
+        testController.log(`walkTo dispatched toward '${exit.exitName ?? exitId}'…`);
+        const crossed = await eventually(testController, () => {
+            const w = getJtaIframe()?.contentWindow;
+            if (w?.isGameLoopPaused?.() === false) {
+                w.setEnergy(1e9);
+                pumpTicks(w, 50);
+            }
+            return readCurrentRegion() === targetRegion;
+        }, `the recorded run crossed into '${targetRegion}'`, 120000, 20);
+        testController.assertEqual(
+            'a parked Record block\'s hand-played exit crosses the zone boundary '
+            + '(gate-allowed as parkedLivePlay, unlike an unparked walkTo)',
+            true, !!crossed);
+        if (!crossed) return testController.getOverallResult();
+
+        // ── Leg 2: the recording persisted, bound, and auto-switched ────
+        const bound = loopState._lookupBoundRecording(JTA_TEST_REGION, instance);
+        testController.assertEqual('the visit recording persisted and binds to the block',
+            true, !!bound);
+        if (!bound) return testController.getOverallResult();
+        testController.log(`bound recording: ${JSON.stringify(bound.actions)} `
+            + `departureExitId=${bound.departureExitId}`);
+        testController.assertEqual('the recording carries the departure exit id',
+            exitId, bound.departureExitId);
+        testController.assertEqual(
+            'the recording holds the hand-played task in shared actionQueue vocabulary',
+            true, (bound.actions ?? []).some(
+                (a) => a.actionType === 'clickTask' && a.actionId === playedTaskId));
+        // The visit slice is the zone's performed actions MINUS the departure
+        // trigger (the Travel task that fired the regionMove) — the same
+        // interior-only shape maze/TA recordings have. The fork stamps
+        // zone_id on every entry, so the zone's own slice of the run log is
+        // directly comparable.
+        const zoneLog = (getJtaIframe()?.contentWindow?.getCurrentRunActions?.() ?? [])
+            .filter((a) => a?.zone_id === 0);
+        testController.log(`fork zone-0 run log: ${zoneLog.length} entries, `
+            + `recorded interior: ${(bound.actions ?? []).length}`);
+        testController.assertEqual(
+            'the recorded interior is the visit minus its departure trigger',
+            Math.max(zoneLog.length - 1, 0), (bound.actions ?? []).length);
+        testController.assertEqual('the block auto-switched to Playback after recording',
+            'playback', loopState.getBlockMode(JTA_TEST_REGION, instance));
+
+        // ── Leg 3: PLAYBACK replays it and crosses the boundary again ───
+        // Walk back into zone 0 (a bare reposition — gate-exempt
+        // syntheticMove) and reset the fork run so the recorded reps are
+        // performable again rather than skipped as already-completed.
+        moveToRegion(JTA_TEST_REGION, readCurrentRegion());
+        let replayWin = await waitForJtaActive(testController);
+        testController.assertEqual('back in the recorded zone', true, !!replayWin);
+        if (!replayWin) return testController.getOverallResult();
+        replayWin.doEnergyReset();
+        // The fork's reset propagates a host loop reset whose teleport may
+        // land elsewhere — walk back if so.
+        await eventually(testController, () => readCurrentRegion() != null, 'reset settled', 3000);
+        if (readCurrentRegion() !== JTA_TEST_REGION) {
+            moveToRegion(JTA_TEST_REGION, readCurrentRegion());
+        }
+        replayWin = await waitForJtaActive(testController) ?? replayWin;
+        testController.assertEqual('zone 0 live again after the fork reset',
+            JTA_TEST_REGION, readCurrentRegion());
+
+        gs.noManaDepletionReset = true;
+        gs.refillMana();
+        // Instant: drain the replay through the bridge's energy-respecting
+        // stepTick pump (M4) rather than the game's normal tick rate.
+        loopState.setBlockInstant(JTA_TEST_REGION, instance, true);
+        loopState.setGameSpeed(10000);
+        loopState.startProcessing();
+
+        const replayCrossed = await eventually(testController, () => {
+            // Keep the replay affordable — the recording's minima are a
+            // slice-4 concern; this leg tests the replay path, not the economy.
+            try { getJtaIframe()?.contentWindow?.setEnergy?.(1e9); } catch { /* iframe swapping */ }
+            return readCurrentRegion() === targetRegion;
+        }, `Playback replayed the recording and crossed into '${targetRegion}'`, 60000, 100);
+        testController.assertEqual(
+            'Playback replayed the bound recording through the jtaQueueEngine executor '
+            + 'and crossed the zone boundary (loops _handlePlaybackReplayEntry → '
+            + 'PlaybackProxy.replayActions → executor → crossExit)',
+            true, !!replayCrossed);
+        if (!replayCrossed) {
+            testController.log(`DIAG: region '${readCurrentRegion()}', `
+                + `parked=${loopState._manualActionEntered}, `
+                + `mode=${loopState.getBlockMode(JTA_TEST_REGION, instance)}`);
+        }
+        testController.assertEqual('the replayed block left the queue parked-free',
+            false, loopState._manualActionEntered);
+
+        // Non-vacuity: the crossing must be the END of a real replay, not an
+        // empty drain straight to crossExit. doEnergyReset() snapshotted the
+        // run log away, so every zone-0 entry in it now was performed by the
+        // executor — including the task the recording carries (the fork's own
+        // automation is off for the duration, BridgeTransport.beginRun).
+        const replayLog = (getJtaIframe()?.contentWindow?.getCurrentRunActions?.() ?? [])
+            .filter((a) => a?.zone_id === 0);
+        testController.log(`replay re-performed ${replayLog.length} zone-0 action(s)`);
+        testController.assertEqual(
+            'the replay re-performed the recorded task through the live fork',
+            true, replayLog.some((a) => a?.type === 'task' && a.task_id === playedTaskId));
+    } finally {
+        // Stop the instant pump even if the replay never exhausted, so it
+        // can't keep stepping the fork into later tests.
+        try {
+            testController.eventBus.publish('jta:playbackControl', { method: 'stopInstantPump' });
+        } catch { /* best-effort */ }
+        try { loopState.setBlockInstant(JTA_TEST_REGION, park?.instance ?? 1, false); } catch { /* ignore */ }
+        gs.noManaDepletionReset = savedNoReset;
+        loopState.setGameSpeed(savedSpeed);
+        await settingsManager.clearOverride(BONUS_SETTING);
+        // Leave loop mode off so the auto-enabled flag can't leak into a
+        // later test's non-loop preset.
+        unparkManualBlock(park ?? { loopStateSingleton: loopState, savedSpeed, gs });
+    }
+
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'jta-record-playback-crosses-zone-boundary',
+    name: 'JtA: a recorded zone visit replays through the executor and crosses the zone boundary',
+    description: 'The M4 fine-grained round trip on jta, multi-region: hand-plays a '
+               + 'parked RECORD block in zone 0 (real fork task + the bridge\'s '
+               + 'synthetic exit task) so the visit slice is stashed before the '
+               + 'departing regionMove and persisted by loops; asserts the recording '
+               + 'binds to the block in shared actionQueue vocabulary with the '
+               + 'departure exit id and auto-switches to Playback; then restarts the '
+               + 'queue on the same block so Playback replays it through the '
+               + 'jtaQueueEngine executor and crosses the zone boundary again. Also '
+               + 'asserts the starting-energy bonus raises the shared pool the '
+               + 'recorded run is played against (energyBonusSync).',
+    testFunction: recordPlaybackCrossesZoneBoundary,
+    category: 'JtA substrate',
+    enabled: false, // off by default — runs only in the test-substrates mode
 });

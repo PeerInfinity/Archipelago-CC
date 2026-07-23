@@ -214,7 +214,7 @@
     },
     "jtaQueueEngine": {
       "path": "./modules/jtaQueueEngine/index.js",
-      "enabled": false
+      "enabled": true
     },
     "jtaActionQueue": {
       "path": "./modules/jtaActionQueue/index.js",

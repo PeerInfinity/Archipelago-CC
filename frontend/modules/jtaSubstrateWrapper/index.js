@@ -107,8 +107,15 @@ function _driveReplay(eventBus, recordedActions, opts = {}) {
 
     const engine = getEngine();
     if (!engine || typeof engine.replayRecording !== 'function') {
-        // No live engine (shouldn't happen in the default/substrate mode where
-        // jtaQueueEngine initializes) — still cross so the block isn't stuck.
+        // No live engine — cross anyway so the parked block isn't stuck, but
+        // say so loudly: silently degrading a replay into a bare teleport is
+        // indistinguishable from a working Playback from the queue's side.
+        // jtaQueueEngine must be ENABLED in the module config wherever the jta
+        // substrate runs (it was off in modules.json until 2026-07-23, which
+        // is exactly this failure).
+        console.warn('[jtaSubstrateWrapper] Playback replay skipped: the '
+            + 'jtaQueueEngine module is not loaded; crossing the recorded exit '
+            + 'without replaying the recording.');
         finish();
         return;
     }
