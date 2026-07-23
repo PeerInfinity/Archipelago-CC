@@ -609,69 +609,329 @@ describe('M2 — Record lifecycle', () => {
   });
 });
 
-// Mode-based capture (M2, user ruling 2026-07-21): leaving a Record-mode
-// region saves + auto-switches EVEN WHEN the loop queue never parked on the
-// block (open-ended block, or free-walking with the queue not driving). Any
-// player exit of a Record region is a correct exit. Fires from the wake's
-// `!_manualActionEntered` branch via _maybeCaptureUnparkedRecordExit.
-describe('M2 — mode-based unparked Record capture', () => {
-  let loopState, gs, bus, handles;
+// M3b (session 66b): free-walk authoring is RETIRED — the wake's unparked
+// Record capture (_maybeCaptureUnparkedRecordExit) was removed with it.
+// A wake with nothing parked is now a no-op:
+describe('M3b — unparked wakes are inert (free-walk capture removed)', () => {
+  it('leaving a Record-mode block with nothing parked captures nothing', () => {
+    resetSavedQueueStore();
+    clearRulesHashCache();
+    const { loopState, gs } = wire();
+    const handles = registerRecordSubstrate();
+    loopState._cachedRulesData = RULES_DATA;
+    gs.updatePath('A', 'go', 'Menu');
+    gs.updatePath('B', 'exit', 'A');
+    loopState.setBlockMode('A', 1, 'record');
+
+    expect(loopState._manualActionEntered).toBeFalsy();
+    handles.stash = makeStash();
+    loopState._handleManualWake_regionMove({ targetRegion: 'B', oldRegion: 'A' });
+
+    expect(handles.takeCalls).toBe(0);
+    expect(getSavedQueueByTag(hashRulesData(RULES_DATA), 'A', 'rec_sub', 'go', 0)).toBeNull();
+    expect(loopState.getBlockMode('A', 1)).toBe('record');
+  });
+});
+
+// Register a COARSE-ONLY record+playback substrate: no takeLastRecording,
+// no replayActions — loops owns capture and the generic executor owns
+// playback (the text-adventure shape after M3b).
+function registerCoarseSubstrate({ regions = ['A'] } = {}) {
+  try { centralRegistry.publicFunctions.get('procgenPlayer')?.delete('getRegionInfo'); } catch { /* ignore */ }
+  try { centralRegistry.publicFunctions.get('procgenPlayer')?.delete('getWarehouse'); } catch { /* ignore */ }
+  try { substrateRegistry.clear?.(); } catch { /* ignore */ }
+  substrateRegistry.register?.({
+    id: 'coarse_sub',
+    label: 'Coarse',
+    panelComponentType: 'coarsePanel',
+    loadRegionEvent: 'coarse:loadRegion',
+    loopSupport: {
+      queueActions: ['regionMove', 'locationCheck', 'explore'],
+      manual: true, customQueues: false, record: true, playback: true,
+    },
+  });
+  centralRegistry.registerPublicFunction('procgenPlayer', 'getRegionInfo', (region) => (
+    regions.includes(region) ? { substrate: 'coarse_sub', label: 'Coarse', manaEnabled: true } : null
+  ));
+}
+
+describe('M3b — strict action gate (evaluateActionGate)', () => {
+  let loopState, gs;
+  beforeEach(() => {
+    resetSavedQueueStore();
+    clearRulesHashCache();
+    ({ loopState, gs } = wire());
+    registerCoarseSubstrate({ regions: ['A', 'A2'] });
+    loopState._cachedRulesData = RULES_DATA;
+    gs.setLoopModeActive(true);
+  });
+
+  const evalGate = (over = {}) => loopState.evaluateActionGate({
+    kind: 'location', regionName: 'A', eventName: 'user:locationCheck', data: {}, ...over,
+  });
+
+  it('loop mode off → allowed (gate out of scope)', () => {
+    gs.setLoopModeActive(false);
+    expect(evalGate()).toMatchObject({ allowed: true, reason: 'loopModeOff' });
+  });
+
+  it('exemption matrix: fromLoop / fromReset / system:* / planning sources / delegation / bot', () => {
+    expect(evalGate({ data: { fromLoop: true } }).reason).toBe('fromLoop');
+    expect(evalGate({ data: { fromReset: true } }).reason).toBe('fromReset');
+    expect(evalGate({ eventName: 'system:locationCheck' }).reason).toBe('systemEvent');
+    expect(evalGate({ data: { source: 'regionGraph-addToPath' } }).reason).toBe('planningSource');
+    expect(evalGate({ data: { source: 'loops-costGenerator' } }).reason).toBe('planningSource');
+    expect(evalGate({ data: { source: 'procgenPlayer-start' } }).reason).toBe('planningSource');
+    loopState._delegatedAction = { type: 'regionMove' };
+    expect(evalGate().reason).toBe('queueExecution');
+    loopState._delegatedAction = null;
+    loopState._botExecutedAction = { type: 'locationCheck' };
+    expect(evalGate().reason).toBe('queueExecution');
+    loopState._botExecutedAction = null;
+  });
+
+  it('AP-native region → out of scope', () => {
+    expect(evalGate({ regionName: 'B' })).toMatchObject({ allowed: true, reason: 'apNative' });
+  });
+
+  it('substrate without record+playback declarations → not yet gated (staged rollout)', () => {
+    registerManualSubstrate(); // test_substrate declares manual only
+    expect(evalGate({ regionName: 'A' })).toMatchObject({ allowed: true, reason: 'substrateNotGated' });
+  });
+
+  it('blocked states: empty queue / not started / completed / hard-pause / paused', () => {
+    expect(evalGate()).toMatchObject({ allowed: false, reason: 'emptyQueue' });
+
+    gs.updatePath('A', 'go', 'Menu');
+    gs.updatePath('B', 'exit', 'A');
+    expect(evalGate()).toMatchObject({ allowed: false, reason: 'notStarted' });
+
+    loopState._queueCompleted = true;
+    expect(evalGate()).toMatchObject({ allowed: false, reason: 'queueCompleted' });
+    loopState._queueCompleted = false;
+
+    loopState._queuePausedUntilReset = true;
+    expect(evalGate()).toMatchObject({ allowed: false, reason: 'hardPause' });
+    loopState._queuePausedUntilReset = false;
+
+    loopState.isPaused = true;
+    expect(evalGate()).toMatchObject({ allowed: false, reason: 'paused' });
+    loopState.isPaused = false;
+  });
+
+  function parkOn(mode) {
+    gs.updatePath('A', 'go', 'Menu');
+    gs.addLocationCheck('Loc1', 'A');
+    gs.updatePath('B', 'exit', 'A');
+    loopState.setBlockMode('A', 1, mode);
+    loopState.currentActionIndex = 1;
+    loopState.currentAction = loopState.getActionQueue()[1];
+    loopState._manualActionEntered = true;
+    loopState._manualRegionName = 'A';
+  }
+
+  it('parked Manual live play in the matching region → allowed', () => {
+    parkOn('manual');
+    expect(evalGate()).toMatchObject({ allowed: true, reason: 'parkedLivePlay' });
+    expect(loopState.livePlayRegion()).toBe('A');
+  });
+
+  it('parked Record live play in the matching region → allowed', () => {
+    parkOn('record');
+    expect(evalGate()).toMatchObject({ allowed: true, reason: 'parkedLivePlay' });
+  });
+
+  it('parked live play, action in a DIFFERENT gated region → blocked wrongRegion', () => {
+    parkOn('manual');
+    expect(evalGate({ regionName: 'A2' }))
+      .toMatchObject({ allowed: false, reason: 'wrongRegion', expectedRegion: 'A' });
+  });
+
+  it('a parked Playback block is NOT live play', () => {
+    parkOn('playback');
+    expect(loopState.livePlayRegion()).toBeNull();
+    expect(evalGate().allowed).toBe(false);
+  });
+
+  it("a move without a sourceRegion falls back to the player's current region", () => {
+    gs.setCurrentRegion('A');
+    gs.updatePath('A', 'go', 'Menu');
+    gs.updatePath('B', 'exit', 'A');
+    const verdict = loopState.evaluateActionGate({
+      kind: 'move', regionName: null, data: { exitName: 'east' },
+    });
+    expect(verdict).toMatchObject({ allowed: false, reason: 'notStarted' });
+  });
+
+  it('a move WITHOUT an exitName is a synthetic reposition — exempt', () => {
+    // Test harnesses / debug tooling reposition the player with bare
+    // user:regionMove publishes (exitName: null); every real substrate
+    // exit-crossing carries its exit. Not player-performed → not gated.
+    gs.setCurrentRegion('A');
+    gs.updatePath('A', 'go', 'Menu');
+    gs.updatePath('B', 'exit', 'A');
+    const verdict = loopState.evaluateActionGate({
+      kind: 'move', regionName: 'A', data: { exitName: null },
+    });
+    expect(verdict).toMatchObject({ allowed: true, reason: 'syntheticMove' });
+  });
+});
+
+describe('M3b — loops-owned coarse capture + live-play economy', () => {
+  let loopState, gs, bus, tick;
   beforeEach(() => {
     resetSavedQueueStore();
     clearRulesHashCache();
     ({ loopState, gs, bus } = wire());
-    handles = registerRecordSubstrate();
+    tick = makeTicker();
+    registerCoarseSubstrate();
     loopState._cachedRulesData = RULES_DATA;
-    // Menu → A (record) → B, but WITHOUT parking on the block: the player
-    // free-walked and the queue never entered manual/record parking, so
-    // _manualActionEntered stays false.
+    gs.setLoopModeActive(true);
+    gs.maxMana = 1000;
+    gs.currentMana = 1000;
+    // Menu → A → B with one planned interior check.
     gs.updatePath('A', 'go', 'Menu');
-    gs.addLocationCheck('Loc1', 'A');
+    gs.addLocationCheck('Planned', 'A');
     gs.updatePath('B', 'exit', 'A');
-    loopState.setBlockMode('A', 1, 'record');
   });
 
-  it('persists + auto-switches when a Record block is left with nothing parked', () => {
-    expect(loopState._manualActionEntered).toBeFalsy();
-    handles.stash = makeStash();
-    // Player left A → B; the wake runs the unparked branch.
-    loopState._handleManualWake_regionMove({ targetRegion: 'B', oldRegion: 'A' });
+  function park(mode) {
+    loopState.setBlockMode('A', 1, mode);
+    loopState.currentActionIndex = 1;
+    loopState.currentAction = loopState.getActionQueue()[1];
+    loopState.isProcessing = true;
+    tick(loopState);
+  }
 
-    // Pulled the stash and persisted under the queue-derived tag.
-    expect(handles.takeCalls).toBe(1);
-    const saved = getSavedQueueByTag(hashRulesData(RULES_DATA), 'A', 'rec_sub', 'go', 0);
-    expect(saved).toBeTruthy();
-    expect(saved.arrivalExitId).toBe('go');
-    expect(saved.actions).toEqual([{ type: 'locationCheck', locationName: 'Loc1' }]);
-    // Auto-switch (default ON) flipped it to Playback + announced it.
+  it('Record: observed live actions are charged AND buffered; exit rewrites the interior + auto-switches; no store write', () => {
+    park('record');
+    expect(loopState._recordingBlock).toEqual({ region: 'A', instance: 1 });
+
+    const before = gs.getCurrentMana();
+    loopState.observeParkedLiveAction({ type: 'locationCheck', locationName: 'Performed', regionName: 'A' });
+    // Fallback locationCheck cost: exactly 100 at level 0.
+    expect(before - gs.getCurrentMana()).toBe(100);
+    const afterCheck = gs.getCurrentMana();
+    loopState.observeParkedLiveAction({ type: 'explore', regionName: 'A' });
+    // Fallback explore (customAction) cost: 50, discounted by the XP the
+    // first charge awarded (xp-adjusted costs — same economy as the
+    // executor).
+    const exploreCharge = afterCheck - gs.getCurrentMana();
+    expect(exploreCharge).toBeGreaterThan(0);
+    expect(exploreCharge).toBeLessThanOrEqual(50);
+    // XP awarded 1:1 with the charge (same economy as the executor).
+    expect(gs.getRegionXP('A').xp).toBeGreaterThan(0);
+    expect(loopState._liveCaptureBuffer).toEqual([
+      { type: 'locationCheck', locationName: 'Performed' },
+      { type: 'explore', regionName: 'A' },
+    ]);
+
+    const manaBeforeExit = gs.getCurrentMana();
+    loopState._handleManualWake_regionMove({ targetRegion: 'B', oldRegion: 'A' });
+    // The departing move was charged on the wake (fallback regionMove 50,
+    // XP-discounted by the XP the observed actions accrued).
+    expect(gs.getCurrentMana()).toBeLessThan(manaBeforeExit);
+
+    // Interior rewritten to the observed actions (boundary moves intact).
+    const interior = gs.getPath().filter((e) => e.sourceRegion === 'A' && e.type !== 'regionMove');
+    expect(interior.map((e) => e.type === 'locationCheck' ? e.locationName : e.actionName))
+      .toEqual(['Performed', 'explore']);
+    expect(gs.getPath().filter((e) => e.type === 'regionMove' && e.sourceRegion === 'A')).toHaveLength(1);
+    // Auto-switched; buffer cleared; NOTHING persisted to savedQueueStore.
     expect(loopState.getBlockMode('A', 1)).toBe('playback');
-    expect(bus.events.some((e) =>
-      e.name === 'loopState:blockModeChanged' && e.data?.mode === 'playback')).toBe(true);
-    // The panel-refresh event MUST carry an iterable `queue` — the
-    // eventCoordinator's _handleQueueUpdated → _updateRegionsInQueue does a
-    // for-of over data.queue, so an empty {} payload throws in the browser.
+    expect(loopState._liveCaptureBuffer).toEqual([]);
+    expect(getSavedQueueByTag(hashRulesData(RULES_DATA), 'A', 'coarse_sub', 'go', 0)).toBeNull();
+    // The auto-switch refresh carried an iterable queue payload.
     const qu = bus.events.filter((e) => e.name === 'loopState:queueUpdated');
     expect(qu.length).toBeGreaterThan(0);
     expect(qu.every((e) => Array.isArray(e.data?.queue))).toBe(true);
   });
 
-  it('does NOT capture on a loop reset (fromReset)', () => {
-    handles.stash = makeStash();
+  it('Manual: observed live actions are charged but captured NOWHERE; exit leaves the interior untouched', () => {
+    park('manual');
+    const before = gs.getCurrentMana();
+    loopState.observeParkedLiveAction({ type: 'locationCheck', locationName: 'Performed', regionName: 'A' });
+    expect(before - gs.getCurrentMana()).toBe(100);
+    expect(loopState._liveCaptureBuffer).toEqual([]);
+
+    loopState._handleManualWake_regionMove({ targetRegion: 'B', oldRegion: 'A' });
+    // The planned interior is still exactly what was authored.
+    const interior = gs.getPath().filter((e) => e.sourceRegion === 'A' && e.type === 'locationCheck');
+    expect(interior.map((e) => e.locationName)).toEqual(['Planned']);
+    expect(loopState.getBlockMode('A', 1)).toBe('manual');
+  });
+
+  it('wrong exit: the departing move is still charged, the capture is discarded, the queue hard-pauses', () => {
+    park('record');
+    loopState.observeParkedLiveAction({ type: 'explore', regionName: 'A' });
+    expect(loopState._liveCaptureBuffer).toHaveLength(1);
+
+    const before = gs.getCurrentMana();
+    loopState._handleManualWake_regionMove({ targetRegion: 'Wrong', oldRegion: 'A' });
+    expect(gs.getCurrentMana()).toBeLessThan(before);
+    expect(loopState._queuePausedUntilReset).toBe(true);
+    expect(loopState._liveCaptureBuffer).toEqual([]);
+    expect(loopState._recordingBlock).toBeNull();
+    expect(loopState.getBlockMode('A', 1)).toBe('record');
+    const interior = gs.getPath().filter((e) => e.sourceRegion === 'A' && e.type === 'locationCheck');
+    expect(interior.map((e) => e.locationName)).toEqual(['Planned']);
+  });
+
+  it('fromReset wake: no charge, no finalize — the reset flow owns queue state', () => {
+    park('record');
+    const before = gs.getCurrentMana();
     loopState._handleManualWake_regionMove({ targetRegion: 'B', oldRegion: 'A', fromReset: true });
-    expect(handles.takeCalls).toBe(0);
-    expect(getSavedQueueByTag(hashRulesData(RULES_DATA), 'A', 'rec_sub', 'go', 0)).toBeNull();
-    // Stash left intact for a later real exit; block still in Record.
-    expect(handles.stash).not.toBeNull();
+    expect(gs.getCurrentMana()).toBe(before);
+    expect(loopState._manualActionEntered).toBe(true); // still parked
     expect(loopState.getBlockMode('A', 1)).toBe('record');
   });
 
-  it('does NOT capture when the left block is not in Record mode', () => {
-    loopState.setBlockMode('A', 1, 'manual');
-    handles.stash = makeStash();
-    loopState._handleManualWake_regionMove({ targetRegion: 'B', oldRegion: 'A' });
-    expect(handles.takeCalls).toBe(0);
-    expect(getSavedQueueByTag(hashRulesData(RULES_DATA), 'A', 'rec_sub', 'go', 0)).toBeNull();
-    expect(loopState.getBlockMode('A', 1)).toBe('manual');
+  it('depletion mid-live-play triggers the loop reset and discards the capture', () => {
+    park('record');
+    loopState.observeParkedLiveAction({ type: 'explore', regionName: 'A' });
+    gs.currentMana = 60; // next check (100) depletes
+    loopState.observeParkedLiveAction({ type: 'locationCheck', locationName: 'Expensive', regionName: 'A' });
+    // deductMana → manaChanged → _handleManualWake_mana → _resetLoop:
+    // refilled, unparked, capture discarded.
+    expect(gs.getCurrentMana()).toBe(gs.getMaxMana());
+    expect(loopState._manualActionEntered).toBe(false);
+    expect(loopState._recordingBlock).toBeNull();
+    expect(loopState._liveCaptureBuffer).toEqual([]);
+  });
+
+  it('fine-grained substrates (with a recorder) are exempt from loops-side charging and buffering', () => {
+    registerRecordSubstrate(); // rec_sub supplies takeLastRecording
+    loopState.setBlockMode('A', 1, 'record');
+    loopState.currentActionIndex = 1;
+    loopState.currentAction = loopState.getActionQueue()[1];
+    loopState.isProcessing = true;
+    tick(loopState);
+
+    const before = gs.getCurrentMana();
+    loopState.observeParkedLiveAction({ type: 'locationCheck', locationName: 'Performed', regionName: 'A' });
+    expect(gs.getCurrentMana()).toBe(before);
+    expect(loopState._liveCaptureBuffer).toEqual([]);
+  });
+
+  it('coarse-only Playback never consults the recording store (stale entries are ignored)', () => {
+    // Seed a stale pre-M3b recording under the block's tag — a coarse-only
+    // substrate must NOT bind it (there is no substrate replayActions to
+    // hand it to; the generic executor runs the block interior instead).
+    saveQueue(hashRulesData(RULES_DATA), {
+      regionName: 'A', substrate: 'coarse_sub',
+      arrivalExitId: 'go', ordinal: 0, departureExitId: 'exit',
+      actions: [{ type: 'locationCheck', locationName: 'Stale' }],
+      manaAtEntry: 100, manaAtExit: 80, manaMin: 75,
+      locationsChecked: ['Stale'], itemsPickedUp: [],
+    });
+    loopState.setBlockMode('A', 1, 'playback');
+    loopState.currentActionIndex = 1;
+    loopState.currentAction = loopState.getActionQueue()[1];
+    loopState.isProcessing = true;
+    tick(loopState);
+
+    // Not parked for replay — fell through to the generic executor path.
+    expect(loopState._manualActionEntered).toBe(false);
   });
 });
 

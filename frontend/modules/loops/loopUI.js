@@ -518,15 +518,41 @@ export class LoopUI {
     // doesn't match the loops queue's current end region.
     if (!this._clickIgnoredUnsubscribe) {
       const bannerEl = querySelector('#loop-feedback-banner');
-      const handler = ({ kind, regionName, expectedRegion }) => {
+      const handler = ({ kind, regionName, expectedRegion, reason }) => {
         if (!bannerEl) return;
-        const kindLabel = kind === 'exit' ? 'exit click' : 'location check';
-        const expectedText = expectedRegion
-          ? `the queue ends in ${expectedRegion}`
-          : 'the queue has no region yet';
-        bannerEl.textContent =
-          `Ignored ${kindLabel}: clicked in ${regionName}, but ${expectedText}. ` +
-          `Queue a regionMove to ${regionName} first, or set Click-to-queue to "Rebuild path" in Controls.`;
+        const kindLabel = {
+          exit: 'exit click',
+          location: 'location check',
+          move: 'region move',
+          explore: 'explore',
+        }[kind] ?? 'action';
+        let message;
+        if (reason && reason !== 'wrongRegion') {
+          // M3b strict action gate: performing is only possible while the
+          // queue is parked on a matching Manual/Record block. Hint at the
+          // authoring path (planning clicks) for the empty-queue bootstrap.
+          const reasonText = {
+            emptyQueue: 'the queue is empty',
+            notStarted: 'the queue is not running',
+            queueCompleted: 'the queue has completed',
+            paused: 'the queue is paused',
+            hardPause: 'the queue is paused until the next loop reset',
+          }[reason] ?? 'no Manual/Record block is parked here';
+          message =
+            `Blocked ${kindLabel} in ${regionName}: ${reasonText}. ` +
+            `In loop mode you can act only while parked on a Manual or Record block — ` +
+            `build the queue with planning clicks (region graph / Click-to-queue) and press Start.`;
+        } else {
+          const expectedText = expectedRegion
+            ? (reason === 'wrongRegion'
+              ? `the parked block is in ${expectedRegion}`
+              : `the queue ends in ${expectedRegion}`)
+            : 'the queue has no region yet';
+          message =
+            `Ignored ${kindLabel}: clicked in ${regionName}, but ${expectedText}. ` +
+            `Queue a regionMove to ${regionName} first, or set Click-to-queue to "Rebuild path" in Controls.`;
+        }
+        bannerEl.textContent = message;
         bannerEl.style.display = 'block';
         clearTimeout(this._clickIgnoredHideTimeout);
         this._clickIgnoredHideTimeout = setTimeout(() => {

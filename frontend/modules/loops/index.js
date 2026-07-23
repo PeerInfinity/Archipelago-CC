@@ -1,7 +1,7 @@
 // Core state and UI for this module
 import loopStateSingleton from './loopStateSingleton.js';
 import { LoopUI } from './loopUI.js';
-import { handleUserLocationCheckForLoops, handleUserItemCheckForLoops, handleUserExitClickedForLoops, initializeLoopEvents } from './loopEvents.js'; // Import handlers
+import { handleUserLocationCheckForLoops, handleUserItemCheckForLoops, handleUserExitClickedForLoops, handleLoopExploreCompletedForLoops, initializeLoopEvents } from './loopEvents.js'; // Import handlers
 import panelManagerInstance from '../../app/core/panelManager.js';
 
 // Cost generation and management
@@ -93,9 +93,19 @@ function log(level, message, ...data) {
 
 // --- Event Handlers --- //
 
+// Whether the CURRENT load cycle populated cost data via the in-memory
+// files:jsonLoaded path. handleRulesLoaded consumes (and resets) this to
+// decide whether still-loaded cost data is fresh or a stale leftover
+// from the previous preset — isLoaded() alone can't tell the two apart,
+// and stale costs used to survive a switch to a preset WITHOUT
+// loop_costs (and re-trigger the loop-mode auto-enable there).
+let _freshInMemoryCostLoad = false;
+
 // Pick up loop_costs from an in-memory rules.json before stateManager
 // finishes loading them. Fires for editor / procgenPipeline paths where
-// there's no URL to refetch from.
+// there's no URL to refetch from. A payload WITHOUT loop_costs clears
+// any previous preset's cost data — the new world wasn't generated with
+// loop mode in mind.
 function handleFilesJsonLoaded(eventData) {
   if (!_costDataManager) return;
   const jsonData = eventData?.jsonData;
@@ -103,6 +113,10 @@ function handleFilesJsonLoaded(eventData) {
   const embedded = jsonData?.loop_costs;
   if (embedded) {
     _costDataManager.applyEmbeddedLoopCosts(embedded, sourceName);
+    _freshInMemoryCostLoad = true;
+  } else {
+    _costDataManager.clear();
+    _freshInMemoryCostLoad = false;
   }
 }
 
@@ -132,9 +146,14 @@ async function handleRulesLoaded(eventData) {
         log('warn', '[Loops Module] tryLoadEmbedded threw:', err);
       }
     }
-    // Clear only when no source resolved AND no in-memory load
-    // populated cost data. isLoaded() reflects either path.
-    if (!loadedNow && !_costDataManager.isLoaded()) {
+    // Clear unless THIS load cycle populated cost data (either the
+    // real-file path above or the in-memory files:jsonLoaded handler).
+    // Checking isLoaded() here was not enough — data left over from the
+    // PREVIOUS preset also reads as loaded, and it must not survive
+    // into a preset without loop_costs.
+    const fresh = loadedNow || _freshInMemoryCostLoad;
+    _freshInMemoryCostLoad = false;
+    if (!fresh) {
       _costDataManager.clear();
       log('info', '[Loops Module] No embedded loop_costs; cost data cleared for new rules');
     }
@@ -162,6 +181,18 @@ async function handleRulesLoaded(eventData) {
     log('info', '[Loops Module] Cost data is loaded; auto-entering loop mode');
     _moduleEventBus.publish('loops:setLoopMode', {
       action: 'enable',
+      activatePanel: false,
+    });
+  } else if (_moduleEventBus?.publish
+      && (_gameStateAPI?.getState?.()?.isLoopModeActive ?? false)) {
+    // Symmetric auto-exit: the freshly-loaded preset carries no
+    // loop_costs, so an active loop mode is a leftover from the
+    // previous preset. Under the M3b strict action gate a leaked
+    // active flag would lock down the new world's mode-integrated
+    // substrates (maze free play blocked with an empty queue).
+    log('info', '[Loops Module] No cost data for the new rules; auto-exiting loop mode');
+    _moduleEventBus.publish('loops:setLoopMode', {
+      action: 'disable',
       activatePanel: false,
     });
   }
@@ -238,6 +269,34 @@ export function register(registrationApi) {
   // (loops + substrate share a tab group → suppress) and different-
   // stack layouts (panels are independent → activation doesn't push
   // loops off → suppression unnecessary).
+  // M3b: the region currently open for parked Manual/Record live play,
+  // or null. Substrates consult this for the live-play drain rule —
+  // e.g. the maze enables its native per-tile mana drain during parked
+  // live play (fine-grained substrates own their live-play economy).
+  registrationApi.registerPublicFunction(moduleInfo.name, 'livePlayRegion', () => {
+    return loopStateSingleton.livePlayRegion?.() ?? null;
+  });
+
+  // M3b: the strict loop-mode action gate, as consulted by modules
+  // OUTSIDE the loops dispatcher receivers. procgenPlayer calls this at
+  // the top of its user:regionMove handler — it sits at a higher load
+  // priority than loops (it receives the event first and publishes the
+  // substrate loadRegion), so a loops-side receiver could not block the
+  // substrate-visible move. Returns true when the action may proceed;
+  // publishes loops:clickIgnored feedback when blocking.
+  registrationApi.registerPublicFunction(moduleInfo.name, 'gateSubstrateAction', ({ kind, regionName, eventName = null, data = null } = {}) => {
+    const verdict = loopStateSingleton.evaluateActionGate?.({ kind, regionName, eventName, data });
+    if (!verdict || verdict.allowed) return true;
+    _moduleEventBus?.publish?.('loops:clickIgnored', {
+      kind,
+      regionName,
+      expectedRegion: verdict.expectedRegion ?? null,
+      reason: verdict.reason,
+      payload: data ?? {},
+    });
+    return false;
+  });
+
   registrationApi.registerPublicFunction(moduleInfo.name, 'isFocusLocked', () => {
     // Instant (M3): while the running block is set to Instant, suppress
     // substrate panel self-activation for its whole run — an instant block
@@ -336,6 +395,18 @@ export function register(registrationApi) {
     moduleInfo.name,
     'user:exitClicked',
     handleUserExitClickedForLoops,
+    { direction: 'up', condition: 'conditional', timing: 'immediate' }
+  );
+
+  // M3b: receiver for performed substrate explores. Loops sits at a
+  // higher load priority than discovery, so an initialTarget:'bottom'
+  // dispatch reaches this handler first — the strict action gate can
+  // swallow disallowed explores, and allowed parked live-play ones are
+  // charged + captured before propagating up to discovery.
+  registrationApi.registerDispatcherReceiver(
+    moduleInfo.name,
+    'loop:exploreCompleted',
+    handleLoopExploreCompletedForLoops,
     { direction: 'up', condition: 'conditional', timing: 'immediate' }
   );
 

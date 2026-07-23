@@ -1072,7 +1072,22 @@ export class MazeRoomUI {
     _shouldDeductMazeMana() {
         if (!this.world?.manaEnabled) return false;
         if (this._loopsDrivenAction) return true;
-        if (this._isLoopModeActive) return false;
+        if (this._isLoopModeActive) {
+            // M3b rule 2 (session 66b): parked Manual/Record live play
+            // drains, and the maze — a fine-grained substrate — owns its
+            // live-play economy natively (per-tile, the same charging its
+            // delegated walks use), so live play and playback share one
+            // economy. Loops charges nothing for fine-grained substrates.
+            // Outside a parked live-play block, loop-mode hand play stays
+            // free — the strict action gate blocks its coarse effects
+            // anyway.
+            try {
+                const livePlayRegion = centralRegistry.getPublicFunction?.('loops', 'livePlayRegion')?.();
+                return livePlayRegion != null && livePlayRegion === this.currentRegionId;
+            } catch {
+                return false;
+            }
+        }
         return true;
     }
 

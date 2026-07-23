@@ -40,6 +40,7 @@ export const moduleInfo = {
 let eventBus = null;
 let dispatcher = null;
 let logger = null;
+let gateSubstrateAction = null;
 let unsubRawJsonLoaded = null;
 let unsubRulesLoaded = null;
 let unsubIframeAppReady = null;
@@ -134,15 +135,34 @@ function handleRulesLoaded() {
     // code path — this module's own handleRegionMove does the
     // actual loadRegion publish when the event circulates back
     // through the dispatcher chain.
+    // source marks this as a synthesized system placement — exempt from
+    // the loop-mode action gate and from the loop-mode path-append
+    // retirement (loops/loopModeExemptions.js), so the initial hop
+    // behaves identically whether or not loop mode auto-enabled first.
     dispatcher.publish('user:regionMove', {
         sourceRegion: pendingStartTransition.sourceRegion,
         targetRegion: pendingStartTransition.region,
         exitName: pendingStartTransition.exitName,
+        source: 'procgenPlayer-start',
     }, { initialTarget: 'bottom' });
     pendingStartTransition = null;
 }
 
 function handleRegionMove(data) {
+    // M3b strict loop-mode action gate. Blocked performed moves are
+    // swallowed whole — no substrate loadRegion, no propagation down
+    // the chain (gameState never moves the player) — and loops
+    // publishes the blocked-click feedback. Queue execution
+    // (fromLoop), reset teleports (fromReset), planning sources, and
+    // substrates that haven't adopted the block-mode system yet all
+    // pass (the exemption matrix lives in loops' evaluateActionGate).
+    if (gateSubstrateAction
+        && !gateSubstrateAction({ kind: 'move', regionName: data?.sourceRegion ?? null, data })) {
+        // warn (not info): a silently-swallowed move is painful to
+        // debug, and blocked moves are user-click-bounded.
+        logger?.warn?.('[procgenPlayer] user:regionMove blocked by the loop-mode action gate', data);
+        return;
+    }
     const target = data?.targetRegion;
     if (target && warehouse?.has(target)) {
         // arrivedFrom carries the exit_id IN THE TARGET region that
@@ -254,6 +274,17 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
     dispatcher = initializationApi.getDispatcher();
     logger = initializationApi.getLogger?.() ?? null;
 
+    // M3b strict action gate: loops' gate predicate, consulted at the
+    // top of handleRegionMove. This module receives user:regionMove
+    // BEFORE loops (higher load priority) and is the first receiver
+    // with side effects (the substrate loadRegion publish), so the
+    // gate must be applied here — a loops-side receiver would fire
+    // after the substrate already switched regions. Loops is
+    // initialized before this module (lower load priority), so the
+    // function is available; absent (loops disabled / test harness)
+    // means no gating.
+    gateSubstrateAction = initializationApi.getModuleFunction?.('loops', 'gateSubstrateAction') ?? null;
+
     // Register as publisher for every substrate's loadRegion event.
     // The substrate registry is populated by all substrates' register()
     // hooks, which run before any module's initialize().
@@ -296,6 +327,7 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
         eventBus = null;
         dispatcher = null;
         logger = null;
+        gateSubstrateAction = null;
     };
 }
 

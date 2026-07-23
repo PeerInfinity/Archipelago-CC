@@ -1,6 +1,7 @@
 import { createGameStateSingleton, getGameStateSingleton } from './singleton.js';
 import { stateManagerProxySingleton } from '../stateManager/index.js';
 import settingsManager from '../../app/core/settingsManager.js';
+import { isLoopModePlanningSource } from '../loops/loopModeExemptions.js';
 
 // --- Module Info ---
 export const moduleInfo = {
@@ -380,7 +381,15 @@ function handleRegionMove(data, propagationOptions) {
         //  - fromLoop:true (the loops queue or substrate-driven Phase 6
         //    walking is dispatching this; the path entry is already in
         //    the queue from when the action was originally enqueued)
-        const shouldUpdatePath = data.updatePath !== false && !data.fromLoop;
+        //  - loop mode is active (M3b, session-66b ruling 1: performed
+        //    play never end-appends in loop mode — capture is Record-
+        //    gated and inserts at the block). Planning/authoring
+        //    surfaces (region graph, cost generator, procgenPlayer's
+        //    synthesized start hop) mark their events with a `source`
+        //    tag and keep appending; non-loop-mode path tracking is
+        //    unchanged.
+        const shouldUpdatePath = data.updatePath !== false && !data.fromLoop
+            && (!gameState.isLoopModeActive || isLoopModePlanningSource(data.source));
         log('info', `[${moduleId} Module] Path update enabled: ${shouldUpdatePath}`);
 
         if (shouldUpdatePath) {
@@ -453,8 +462,11 @@ function handleLocationCheck(data, eventName = 'user:locationCheck') {
     if (data && data.locationName) {
         // Skip adding to path when the event comes from the loops module's
         // action queue completion — the path entry was already added when
-        // the loop queue was initially built.
-        if (!data.fromLoop) {
+        // the loop queue was initially built. Also skipped whenever loop
+        // mode is active (M3b ruling 1): performed checks never end-append
+        // in loop mode; Record-mode capture inserts at the block instead,
+        // and authoring surfaces call addLocationCheck directly.
+        if (!data.fromLoop && !gameState.isLoopModeActive) {
             const staticData = stateManagerProxySingleton.getStaticData();
             gameState.addLocationCheck(data.locationName, data.regionName, staticData);
         }
