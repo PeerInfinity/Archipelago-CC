@@ -245,6 +245,11 @@
             "id": "maze-record-playback-crosses-exit",
             "enabled": true,
             "category": "Maze block modes"
+        },
+        {
+            "id": "maze-parked-live-drain",
+            "enabled": true,
+            "category": "Maze block modes"
         }
     ]
 }

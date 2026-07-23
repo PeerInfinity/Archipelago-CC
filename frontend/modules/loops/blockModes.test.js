@@ -913,6 +913,64 @@ describe('M3b — loops-owned coarse capture + live-play economy', () => {
     expect(loopState._liveCaptureBuffer).toEqual([]);
   });
 
+  it('ONE ECONOMY: live-playing a block costs exactly what the generic executor charges to replay it', () => {
+    // Ruling 2's core claim: live play, Record, and Playback share one
+    // economy — recording a block costs what replaying it costs. Charge
+    // the same interior (check + explore) + departure twice:
+    //   run A — parked live play (observation layer + regionMove wake);
+    //   run B — the generic executor over the same authored block
+    //           (instantMode so each action charges once at its
+    //           start-of-action XP level, like the live path).
+    // XP awards (1:1 with the charge) discount later actions in BOTH
+    // runs, in the same order — the totals must match exactly.
+
+    // Run A: live play. Queue already authored in beforeEach
+    // (Menu→A, check 'Planned', A→B); park Record and perform.
+    park('record');
+    const liveStart = gs.getCurrentMana();
+    loopState.observeParkedLiveAction({ type: 'locationCheck', locationName: 'Planned', regionName: 'A' });
+    loopState.observeParkedLiveAction({ type: 'explore', regionName: 'A' });
+    loopState._handleManualWake_regionMove({ targetRegion: 'B', oldRegion: 'A' });
+    const liveTotal = liveStart - gs.getCurrentMana();
+    expect(liveTotal).toBeGreaterThan(0);
+
+    // Run B: a fresh world, identical block, generic executor.
+    const fresh = wire();
+    registerCoarseSubstrate();
+    fresh.loopState._cachedRulesData = RULES_DATA;
+    fresh.gs.setLoopModeActive(true);
+    fresh.gs.maxMana = 1000;
+    fresh.gs.currentMana = 1000;
+    fresh.gs.updatePath('A', 'go', 'Menu');
+    fresh.gs.addLocationCheck('Planned', 'A');
+    fresh.gs.addCustomAction('explore', { regionName: 'A' });
+    fresh.gs.updatePath('B', 'exit', 'A');
+    fresh.loopState.setInstantMode(true);
+
+    // Mana after the arrival move (Menu→A) completes = the baseline the
+    // A-block charges are measured from.
+    let manaAfterArrival = null;
+    fresh.bus.subscribe('loopState:actionCompleted', ({ action }) => {
+      if (manaAfterArrival === null && action?.type === 'regionMove' && action.destinationRegion === 'A') {
+        manaAfterArrival = fresh.gs.getCurrentMana();
+      }
+    });
+
+    const freshTick = makeTicker();
+    fresh.loopState.startProcessing();
+    for (let i = 0; i < 200 && !fresh.loopState._queueCompleted; i++) {
+      freshTick(fresh.loopState);
+    }
+    expect(fresh.loopState._queueCompleted).toBe(true);
+    expect(manaAfterArrival).not.toBeNull();
+    const playbackTotal = manaAfterArrival - fresh.gs.getCurrentMana();
+
+    // Live run A also captured a check into its interior — but the
+    // authored interiors were identical (check + explore), so the
+    // executor replays exactly what live play performed.
+    expect(playbackTotal).toBeCloseTo(liveTotal, 10);
+  });
+
   it('coarse-only Playback never consults the recording store (stale entries are ignored)', () => {
     // Seed a stale pre-M3b recording under the block's tag — a coarse-only
     // substrate must NOT bind it (there is no substrate replayActions to

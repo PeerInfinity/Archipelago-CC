@@ -10,6 +10,7 @@ import {
     _testOnly_clearAll as _resetSavedQueueStore,
 } from '../loops/savedQueueStore.js';
 import { hashRulesData, clearRulesHashCache } from '../shared/rulesHash.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
 
 // Vitest runs under the 'node' environment (no DOM). The panel's
 // constructor guards document access for exactly this reason — these
@@ -2030,5 +2031,67 @@ describe('MazeRoomUI — hazard runtime integration (Phase 2e)', () => {
         // Loops walks the visualizer; the queue-executor path
         // doesn't tick — _onVisualizerChange does.
         expect(haz.phase).toBe(0);
+    });
+});
+
+// --- M3b: native live-play drain gate ---------------------------------
+
+describe('MazeRoomUI — _shouldDeductMazeMana (M3b parked live-play drain)', () => {
+    let panel;
+    let livePlayRegionValue;
+
+    function setLivePlayRegionFn(fn) {
+        try { centralRegistry.publicFunctions.get('loops')?.delete('livePlayRegion'); } catch { /* ignore */ }
+        if (fn) centralRegistry.registerPublicFunction('loops', 'livePlayRegion', fn);
+    }
+
+    beforeEach(() => {
+        _testOnly_resetModuleState();
+        panel = new MazeRoomUI(null, {});
+        panel.world = makeWorld();
+        panel.world.manaEnabled = true;
+        panel.currentRegionId = 'region_A';
+        panel._isLoopModeActive = false;
+        panel._loopsDrivenAction = null;
+        livePlayRegionValue = null;
+        setLivePlayRegionFn(() => livePlayRegionValue);
+    });
+
+    it('no manaEnabled → never drains', () => {
+        panel.world.manaEnabled = false;
+        expect(panel._shouldDeductMazeMana()).toBe(false);
+    });
+
+    it('loop mode off → drains (the out-of-loop economy)', () => {
+        expect(panel._shouldDeductMazeMana()).toBe(true);
+    });
+
+    it('loops-driven walks always drain, regardless of parking', () => {
+        panel._isLoopModeActive = true;
+        panel._loopsDrivenAction = { type: 'regionMove' };
+        expect(panel._shouldDeductMazeMana()).toBe(true);
+    });
+
+    it('loop mode on, nothing parked → free (blocked-anyway hand play must not bleed mana)', () => {
+        panel._isLoopModeActive = true;
+        expect(panel._shouldDeductMazeMana()).toBe(false);
+    });
+
+    it('loop mode on, parked live play in THIS region → drains (rule 2: Manual/Record drain)', () => {
+        panel._isLoopModeActive = true;
+        livePlayRegionValue = 'region_A';
+        expect(panel._shouldDeductMazeMana()).toBe(true);
+    });
+
+    it('loop mode on, parked live play in a DIFFERENT region → free', () => {
+        panel._isLoopModeActive = true;
+        livePlayRegionValue = 'region_B';
+        expect(panel._shouldDeductMazeMana()).toBe(false);
+    });
+
+    it('loops livePlayRegion unavailable (loops disabled / test env) → free, no throw', () => {
+        panel._isLoopModeActive = true;
+        setLivePlayRegionFn(null);
+        expect(panel._shouldDeductMazeMana()).toBe(false);
     });
 });
