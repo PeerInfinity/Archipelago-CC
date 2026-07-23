@@ -1,5 +1,26 @@
 # Loops M4 — status + the standalone-jta (loop-mode-off) investigation
 
+> **✅ SLICE 3 SHIPPED + PUSHED 2026-07-23 (Opus session 69).** The
+> "Ruling + revised plan" work list at the bottom is DONE. Outer
+> `cf5d5d286`; jta gitlink bumped + fork pushed `f6e7de1ca` (fork
+> `7550568` now on `origin/substrate` — user approved both ask-first
+> steps). The WIP patch is spent; the mechanism landed unchanged.
+> **Two corrections to what this doc originally said — read them:**
+> 1. **"3 red tests" was an UNDERCOUNT — it is SIX.** `bridge.js`
+>    `_dispatchRegionMove` publishes `user:regionMove` with NO
+>    `fromLoop`, so EVERY walkTo-driven exit crossing is gate-blocked
+>    once jta declares record+playback. Also affected:
+>    `jta-randomized-balanced-progression`,
+>    `jta-dataset-world-progression`,
+>    `jta-starting-energy-bonus-raises-pool`. All four walkTo tests are
+>    now `enabled:false` KNOWN-DEFERRED to M6 (user-ruled); the 2 perk
+>    tests run parked-Manual and PASS.
+> 2. A latent, unrelated maze bug surfaced when those 4 tests stopped
+>    padding the loop-reset counts — fixed in `c78e8a78b`.
+> **Substrates 45/45** (49 baseline − 4 deferred); vitest 3227/3228 (the
+> odd one is the documented braidRegime2 flake, 40/40 alone).
+> **STILL OWED:** the in-app record→playback leg, then slices 4-6.
+
 **Written 2026-07-23 (Opus session, mid-M4). Paused at slice 3 pending an
 architectural decision the user flagged for a fresh session.** Companion to
 the kickoff `NewDocs/plans/loops-m4-jta-opus-kickoff.md` (which holds the
@@ -19,7 +40,8 @@ settled M4 design rulings — don't re-litigate those).
 |---|---|
 | **1. Fork zone-stamp on item entries** | ✅ **DONE + BYTE-GATED.** Submodule commit `755056809` (branch `substrate`). `recordPerformedItem` stamps `zone_id: GAMESTATE.current_zone`. jta-parity PASS all 4 scenarios; perturbation canary confirmed non-vacuous. **Gitlink bump NOT yet applied** (outer still points at `e1e38d9f0`); ASK before bumping. Submodule branch UNPUSHED. |
 | **2. Wrapper per-visit slice + converter + stash** | ✅ **DONE + COMMITTED.** Outer commit `59ddb867f`. Bridge slices one visit from the fork's performed-actions log (index-mark at `jta:loadRegion`, drop the departure trigger at exit), publishes `jta:visitRecording` BEFORE the departing `user:regionMove` (11/n ordering); host converts to shared/actionQueue vocab + stashes; registry exposes `takeLastRecording`. +10 unit tests. Byte-inert to jta runtime (nothing pulls the stash until slice 3's caps). |
-| **3. Declare record+playback + executor replay + instant pump** | 🔨 **MECHANISM BUILT, UNCOMMITTED, vitest green (579), but the gate opt-in breaks 3 in-app tests — PAUSED.** WIP saved as `CC/docs/plans/loops-m4-slice3-wip.patch`. |
+| **3. Declare record+playback + executor replay + instant pump** | ✅ **SHIPPED + PUSHED** (`cf5d5d286`). Mechanism landed unchanged from the WIP patch, plus the `requiresLoopMode` invariant + disable guard rail, the parked-Manual restructure of the 2 perk tests, and 4 walkTo tests deferred to M6. ⚠ the in-app **record→playback leg is still owed** (see below). |
+| 3b. In-app record→playback leg | ⏸ **STILL OWED** — precedent `maze-record-playback-crosses-exit` (a focused replay-crosses test). `jtaSubstrateWrapperTests.js` is already in testDiscovery, so it only needs the test + a config id (tests resolve BY ID, `7c3506c52`). |
 | 4. Universal annotations | ⏸ not started |
 | 5. Universal UI | ⏸ not started |
 | 6. Docs | ⏸ not started |
