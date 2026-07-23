@@ -163,10 +163,25 @@ activation-suppression seam — **✅ CODE COMPLETE 2026-07-22 (Opus session 65;
 `1f38fbc56`→`bc5b02c43`→`477bad187`→`bac38f1d8`→`fd01e84f1`)**; **M3b**
 coarse-capture refactor + the three loop-mode rules — **✅ IMPLEMENTED
 2026-07-22 (Fable session 67; as-built notes below + in the plan doc);
-closed M3+M3b in one combined push**; **M4** jta instant pump + recorder
-half (classify jta coarse-vs-fine against the M3b contract first; declaring
-`record`+`playback` opts jta into the strict gate — restructure its
-free-travel flows/tests then); **M5** runner/bounce (same opt-in note);
+closed M3+M3b in one combined push**; **M4** jta fine-grained recording +
+instant pump + UNIVERSAL queue annotations — **DESIGN RULED 2026-07-23
+(Fable session 68); KICKOFF READY:** *(NewDocs)*
+`NewDocs/plans/loops-m4-jta-opus-kickoff.md`. jta CLASSIFIED FINE-GRAINED
+(the fork performed-actions recorder is the stream; per-visit slice →
+shared-actionQueue vocabulary → `takeLastRecording`; replay via the
+jtaQueueEngine executor; fork stamps `zone_id` on item entries). Universal
+half (all queue substrates): annotations = item deltas incl.
+cross-substrate + per-resource minima, as DELTAS from block start, in
+savedQueueStore as the universal envelope (coarse substrates get
+actions-less tag-keyed entries); UI shows minima only below zero
+("needs ≥X at start") and net deltas whenever nonzero; NEW
+recording-exists indicator; Playback DISABLED without playable content
+(fallback = MANUAL parking, "for now" — Bot radio still M6);
+`defaultBlockMode` default flips to RECORD (enum currently lacks
+'record'). Declaring `record`+`playback` opts jta into the strict gate —
+restructure its free-travel flows/tests in the same arc (rulings detail:
+memory `project_loops_block_modes` M4 block); **M5** runner/bounce (same
+opt-in note; annotations arrive for free via the universal half);
 **M6** solver unification + rename + Bot radio. Omsi arc D re-queues AFTER
 this track (see §4); omsi Instant last of all.
 
