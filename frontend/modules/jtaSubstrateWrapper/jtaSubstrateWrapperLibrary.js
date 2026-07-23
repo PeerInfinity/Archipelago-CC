@@ -28,6 +28,7 @@ import { JTA_VANILLA_DATASET } from './vanillaDataset.js';
 import { activePerkItemNames } from './perkOrigin.js';
 import { createRng } from '../shared/rng.js';
 import { validateJtaDataset, stampDatasetIdentity } from './datasetValidator.js';
+import { generateEntryId } from '../shared/actionQueue/actionTypes.js';
 
 // Host-side PlaybackProxy, injected by index.js's initialize() once the
 // eventBus exists (setter injection rather than importing index.js so
@@ -36,6 +37,93 @@ import { validateJtaDataset, stampDatasetIdentity } from './datasetValidator.js'
 // treat null as "no controller available" and no-op.
 let _playbackProxy = null;
 export function setPlaybackProxy(proxy) { _playbackProxy = proxy; }
+
+// --- Per-visit fine recording (M4 loops sole-persister protocol) ---
+//
+// jta is a FINE-GRAINED loop-mode substrate: the fork's performed-actions
+// log is the full-visit stream. The in-iframe bridge slices ONE region
+// visit out of that log (marking the log index at region entry, slicing at
+// exit, dropping the departure trigger), and publishes the raw slice as a
+// `jta:visitRecording` event BEFORE it publishes the departing
+// user:regionMove — both cross the iframe→host boundary over the same
+// postMessage channel in call order, so the host stores the slice before
+// the loops Record-exit wake pulls it (the M2/M3b stash-before-regionMove
+// ordering; the maze/TA precedent).
+//
+// Loops is the SOLE persister: this module never writes savedQueueStore.
+// It converts the raw slice to the shared/actionQueue vocabulary the
+// jtaQueueEngine executor replays and stashes it in a pull-once slot;
+// loopState pulls via takeLastRecording() only on a successful Record-mode
+// exit, and drains-and-discards it on wrong-exit / mana-out / reset. Since
+// the pull clears the slot, a discarded visit can't be re-pulled by a
+// later block — the next visit overwrites the slot regardless.
+let _lastVisitRecording = null;
+
+/**
+ * Host-side receiver for the bridge's `jta:visitRecording` event. Converts
+ * the raw performed-actions slice to actionQueue entries and stashes the
+ * recording for the loops sole-persister pull. Overwrites any un-pulled
+ * prior recording (a visit whose Record exit never pulled — e.g. Manual
+ * mode, or a discarded capture — is simply replaced).
+ * @param {{ region?: string, departureExitId?: string|null, actions?: object[] }} payload
+ */
+export function ingestVisitRecording(payload) {
+    _lastVisitRecording = {
+        actions: convertPerformedActionsToQueue(payload?.actions),
+        departureExitId: payload?.departureExitId ?? null,
+    };
+}
+
+/**
+ * Pull-and-clear the last finalized per-visit recording. Returns null when
+ * no recording is stashed. Registry hook `takeLastRecording` delegates here.
+ * @returns {{ actions: object[], departureExitId: string|null }|null}
+ */
+export function takeLastVisitRecording() {
+    const rec = _lastVisitRecording;
+    _lastVisitRecording = null;
+    return rec;
+}
+
+/**
+ * Convert the fork's performed-actions slice into the game-agnostic
+ * shared/actionQueue vocabulary the jtaQueueEngine executor consumes:
+ *   - a coalesced task rep-run → one `clickTask` entry, `loops` = reps;
+ *   - an item use → one `useItem` entry, `loops` = count.
+ * The departure trigger (Travel / synthetic exit task) is already excluded
+ * upstream by the bridge slice, so every entry here is replayable interior
+ * content. Item entries carry the fork's numeric ItemType as actionId
+ * (what BridgeTransport.clickItem forwards); task entries carry task_id.
+ * @param {object[]} actions
+ * @returns {object[]}
+ */
+export function convertPerformedActionsToQueue(actions) {
+    const out = [];
+    for (const a of Array.isArray(actions) ? actions : []) {
+        if (a?.type === 'task') {
+            if (typeof a.task_id !== 'number') continue;
+            out.push({
+                entryId: generateEntryId(),
+                actionType: 'clickTask',
+                actionId: a.task_id,
+                label: a.name ?? String(a.task_id),
+                loops: (typeof a.reps === 'number' && a.reps > 0) ? a.reps : 1,
+                disabled: false,
+            });
+        } else if (a?.type === 'item') {
+            if (a.item == null) continue;
+            out.push({
+                entryId: generateEntryId(),
+                actionType: 'useItem',
+                actionId: a.item,
+                label: a.name ?? String(a.item),
+                loops: (typeof a.count === 'number' && a.count > 0) ? a.count : 1,
+                disabled: false,
+            });
+        }
+    }
+    return out;
+}
 
 // --- Zone-locations channel (Phase 1 skeleton, param-gated) ---
 //
@@ -466,6 +554,13 @@ export const substrateRegistryEntry = Object.freeze({
     // doEnergyReset, walkTo(exit) → drive mandatory+travel tasks then
     // take the requested exit). Null before index.js initializes.
     getPlaybackController: () => _playbackProxy,
+
+    // Runtime — recording (M4 loops sole-persister protocol). Pull-and-clear
+    // the last finalized per-visit recording the bridge stashed. Its presence
+    // is what marks jta FINE-GRAINED to loops (the coarse-vs-fine
+    // discriminator is `takeLastRecording` on the registry entry); loops
+    // persists it to savedQueueStore only on a successful Record-mode exit.
+    takeLastRecording: () => takeLastVisitRecording(),
 
     // Loop-mode capabilities. executeVia makes the loops queue drive
     // regionMove actions through the PlaybackController's walkTo (the

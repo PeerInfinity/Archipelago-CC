@@ -3,7 +3,13 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { JTA_VANILLA_DATASET } from './vanillaDataset.js';
 import { stampDatasetIdentity } from './datasetValidator.js';
-import { setJtaDataset, substrateRegistryEntry } from './jtaSubstrateWrapperLibrary.js';
+import {
+    setJtaDataset,
+    substrateRegistryEntry,
+    convertPerformedActionsToQueue,
+    ingestVisitRecording,
+    takeLastVisitRecording,
+} from './jtaSubstrateWrapperLibrary.js';
 
 // The library registers on import (side effect) — same pattern the
 // maze / textAdventure / omsi libraries use.
@@ -50,5 +56,107 @@ describe('jta sharing declaration (cross-game P1 slice 1)', () => {
 
         setJtaDataset(null);
         expect(substrateRegistryEntry.sharing.items.getTypes()).toContain('Food');
+    });
+});
+
+describe('jta per-visit recording converter (M4 fine-grained)', () => {
+    it('converts a coalesced task rep-run to one clickTask with loops=reps', () => {
+        const out = convertPerformedActionsToQueue([
+            { type: 'task', name: 'Chop Wood', task_id: 12, zone_id: 3, reps: 5 },
+        ]);
+        expect(out).toHaveLength(1);
+        expect(out[0]).toMatchObject({
+            actionType: 'clickTask',
+            actionId: 12,
+            label: 'Chop Wood',
+            loops: 5,
+            disabled: false,
+        });
+        expect(typeof out[0].entryId).toBe('string');
+    });
+
+    it('converts an item use to one useItem with actionId=ItemType and loops=count', () => {
+        const out = convertPerformedActionsToQueue([
+            { type: 'item', name: 'Food', item: 7, count: 3, zone_id: 3 },
+        ]);
+        expect(out).toHaveLength(1);
+        expect(out[0]).toMatchObject({
+            actionType: 'useItem',
+            actionId: 7,
+            label: 'Food',
+            loops: 3,
+            disabled: false,
+        });
+    });
+
+    it('preserves interleaved order across tasks and items', () => {
+        const out = convertPerformedActionsToQueue([
+            { type: 'task', name: 'A', task_id: 1, reps: 2 },
+            { type: 'item', name: 'Potion', item: 4, count: 1 },
+            { type: 'task', name: 'B', task_id: 2, reps: 1 },
+        ]);
+        expect(out.map((e) => e.actionType)).toEqual(['clickTask', 'useItem', 'clickTask']);
+        expect(out.map((e) => e.actionId)).toEqual([1, 4, 2]);
+    });
+
+    it('defaults a missing/zero rep-count to 1 (never a zero-loop entry)', () => {
+        const out = convertPerformedActionsToQueue([
+            { type: 'task', name: 'A', task_id: 1 },
+            { type: 'item', name: 'P', item: 2 },
+        ]);
+        expect(out[0].loops).toBe(1);
+        expect(out[1].loops).toBe(1);
+    });
+
+    it('skips malformed entries (no task_id / no item) rather than emitting bad actions', () => {
+        const out = convertPerformedActionsToQueue([
+            { type: 'task', name: 'no id' },
+            { type: 'item', name: 'no item' },
+            { type: 'task', name: 'ok', task_id: 9, reps: 1 },
+        ]);
+        expect(out).toHaveLength(1);
+        expect(out[0].actionId).toBe(9);
+    });
+
+    it('returns [] for non-array input', () => {
+        expect(convertPerformedActionsToQueue(null)).toEqual([]);
+        expect(convertPerformedActionsToQueue(undefined)).toEqual([]);
+    });
+
+    it('gives each entry a unique entryId', () => {
+        const out = convertPerformedActionsToQueue([
+            { type: 'task', name: 'A', task_id: 1, reps: 1 },
+            { type: 'task', name: 'A', task_id: 1, reps: 1 },
+        ]);
+        expect(out[0].entryId).not.toBe(out[1].entryId);
+    });
+});
+
+describe('jta per-visit recording stash (M4 sole-persister pull)', () => {
+    it('takeLastRecording pulls-and-clears the last ingested recording', () => {
+        ingestVisitRecording({
+            region: 'r1',
+            departureExitId: 'east',
+            actions: [{ type: 'task', name: 'A', task_id: 1, reps: 2 }],
+        });
+        const rec = takeLastVisitRecording();
+        expect(rec.departureExitId).toBe('east');
+        expect(rec.actions).toHaveLength(1);
+        expect(rec.actions[0].actionType).toBe('clickTask');
+        // Pull-once: a second take returns null (can't be re-pulled by a later block).
+        expect(takeLastVisitRecording()).toBeNull();
+    });
+
+    it('the registry entry exposes takeLastRecording delegating to the stash', () => {
+        ingestVisitRecording({ region: 'r2', departureExitId: null, actions: [] });
+        const rec = substrateRegistryEntry.takeLastRecording();
+        expect(rec).toMatchObject({ departureExitId: null, actions: [] });
+        expect(substrateRegistryEntry.takeLastRecording()).toBeNull();
+    });
+
+    it('a later ingest overwrites an un-pulled recording', () => {
+        ingestVisitRecording({ region: 'r1', departureExitId: 'a', actions: [] });
+        ingestVisitRecording({ region: 'r1', departureExitId: 'b', actions: [] });
+        expect(takeLastVisitRecording().departureExitId).toBe('b');
     });
 });

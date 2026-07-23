@@ -123,6 +123,14 @@ let _lastSampledEnergy = null;              // JtA's energy at the last poll
 // Per-loop completion tracking. Cleared on gameState:loopReset.
 const _completedThisLoop = new Set();
 
+// Per-visit fine-recording slice window (M4). The fork's performed-actions
+// log (getCurrentRunActions) accumulates across a whole run — every region
+// visit in the run appends to it. To slice ONE visit out we remember the
+// log length at region entry; on exit the visit is [_visitRecordStartIndex
+// .. now). Re-marked on every jta:loadRegion (a loop-reset retry snapshots
+// the log to empty, so this resets to 0 with it). See _finalizeVisitRecording.
+let _visitRecordStartIndex = 0;
+
 // Zone-locations (Phase 2). AP location names already reported this
 // session — dedupes loop-reset replays and region revisits (location
 // semantics = first full completion). Re-seeded from checkedLocations on
@@ -352,8 +360,59 @@ function _getRegionExits() {
     return [];
 }
 
+// Current length of the fork's performed-actions log (0 if the hook is
+// unavailable). getCurrentRunActions returns a copy — we only read .length.
+function _currentRunActionsLength() {
+    try {
+        return (typeof _w.getCurrentRunActions === 'function'
+            ? _w.getCurrentRunActions()?.length : 0) ?? 0;
+    } catch (e) {
+        return 0;
+    }
+}
+
+// Slice the current region visit out of the fork's performed-actions log and
+// publish it host-ward as a jta:visitRecording BEFORE the caller's
+// user:regionMove. The departure trigger (the Travel task for a single-exit /
+// first-traversal region, or the synthetic exit-choice task for a multi-exit
+// region) is the LAST recorded action: onFullyFinishTask records the rep via
+// applyFinishTaskRepEffects and only THEN fires the callback that reaches
+// here, so at this point the departing action is already in the log. We drop
+// it — like maze/TA exclude the departing move — leaving only the visit's
+// interior content; loops re-issues the departure from departureExitId on
+// replay. A same-region reset retry snapshots the log to empty, in which case
+// full.length < _visitRecordStartIndex and we publish an empty slice (loops
+// discards a reset visit anyway).
+function _finalizeVisitRecording(departureExitId) {
+    if (!_client) return;
+    let actions = [];
+    try {
+        if (typeof _w.getCurrentRunActions === 'function') {
+            const full = _w.getCurrentRunActions();
+            if (Array.isArray(full) && full.length >= _visitRecordStartIndex) {
+                actions = full.slice(_visitRecordStartIndex);
+                if (actions.length > 0) actions = actions.slice(0, -1);
+            }
+        }
+    } catch (e) {
+        log('warn', 'visit recording slice failed', e);
+        actions = [];
+    }
+    // publishEventBus + the subsequent publishEventDispatcher share one
+    // postMessage channel, so the host stores this before it handles the
+    // regionMove (the stash-before-regionMove ordering guarantee).
+    _client.publishEventBus('jta:visitRecording', {
+        region: _currentRegionId,
+        departureExitId: departureExitId ?? null,
+        actions,
+    });
+}
+
 function _dispatchRegionMove(targetRegion, exitName) {
     if (!_client) return;
+    // Finalize + stash the visit recording BEFORE the regionMove crosses the
+    // boundary — the loops Record-exit wake pulls it when the move lands.
+    _finalizeVisitRecording(exitName);
     _client.publishEventDispatcher('user:regionMove', {
         sourceRegion: _currentRegionId,
         targetRegion,
@@ -538,6 +597,14 @@ function _handleLoadRegion(payload) {
     // For first-traversal regions: nothing to inject — the player
     // works through the zone normally; the Travel-task callback below
     // handles the exit choice when the zone's Travel task completes.
+
+    // Mark the performed-actions log index for this visit's recording slice
+    // (M4). After all catch-up resets and perk reconciliation, before the
+    // clock resumes: any log entries so far belong to prior visits in this
+    // run (or were snapshotted away by a reset), so the visit records from
+    // here forward. Nothing appends synchronously during loadRegion — the
+    // first task rep lands on a later tick.
+    _visitRecordStartIndex = _currentRunActionsLength();
 
     // Entering a jta region resumes the game clock (paused since boot
     // or since the last region exit).

@@ -21,7 +21,7 @@
 
 import { JtaSubstrateWrapperPanel } from './jtaSubstrateWrapperPanel.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
-import { substrateRegistryEntry, setPlaybackProxy } from './jtaSubstrateWrapperLibrary.js';
+import { substrateRegistryEntry, setPlaybackProxy, ingestVisitRecording } from './jtaSubstrateWrapperLibrary.js';
 import { getGameStateSingleton } from '../gameState/singleton.js';
 import { PlaybackProxy } from '../textAdventureSubstrateWrapper/playbackProxy.js';
 import settingsManager from '../../app/core/settingsManager.js';
@@ -118,6 +118,11 @@ export function register(registrationApi) {
     // Published by this module on jta:loadRegion so Golden Layout
     // brings the jta panel forward when the player enters a jta region.
     registrationApi.registerEventBusPublisher('ui:activatePanel');
+    // Per-visit fine recording (M4): the in-iframe bridge publishes this,
+    // relayed host-side by the iframeAdapter — register the publisher so the
+    // relay isn't warned about an unregistered event (the jta:queueAction
+    // precedent), and this module subscribes to stash it for the loops pull.
+    registrationApi.registerEventBusPublisher('jta:visitRecording');
 
     // Events the host module subscribes to. The bridge's channel
     // events (substrate:resourceDelta/Bonus/Reset) are handled by the
@@ -125,6 +130,7 @@ export function register(registrationApi) {
     registrationApi.registerEventBusSubscriberIntent('iframe:appReady');
     registrationApi.registerEventBusSubscriberIntent('jta:loadRegion');
     registrationApi.registerEventBusSubscriberIntent('settings:changed');
+    registrationApi.registerEventBusSubscriberIntent('jta:visitRecording');
 
     // Guarded register so re-registration of the same id is harmless
     // (mirrors the textAdventureSubstrateWrapper pattern).
@@ -230,6 +236,14 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
         const isFocusLocked = initializationApi.getModuleFunction?.('loops', 'isFocusLocked');
         if (isFocusLocked?.()) return;
         eventBus.publish('ui:activatePanel', { panelId: 'jtaSubstrateWrapperPanel' });
+    });
+
+    // Stash each per-visit fine recording the bridge slices, for the loops
+    // sole-persister pull (takeLastRecording). Delivered BEFORE the visit's
+    // departing user:regionMove (same postMessage channel), so the recording
+    // is in the slot when the loops Record-exit wake pulls it.
+    eventBus.subscribe('jta:visitRecording', (payload) => {
+        ingestVisitRecording(payload);
     });
 
     // The bridge's energy↔mana mirroring (drains, gains, bonus
