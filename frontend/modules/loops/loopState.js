@@ -191,6 +191,11 @@ export class LoopState {
     // duration (slice 3), which excludes pauses for free.
     this._drainIntervalId = null;
     this._summaryDrainSeconds = 0;
+    // M5: the performed actions of a summary visit that carried an EXPLICIT
+    // loop_costs price. Stored with the recording so Playback can re-price
+    // them at the current XP level (the duration covers everything else,
+    // which is free by default). Cleared with the capture.
+    this._summaryCostedActions = [];
     // The last queue index at which the Playback bound-recording lookup
     // ran, so a non-recording playback block doesn't re-resolve tags every
     // frame while it advances through the generic auto path.
@@ -333,6 +338,11 @@ export class LoopState {
         targetRegion: data?.newRegion,
         oldRegion: data?.oldRegion,
         fromReset: data?.fromReset,
+        // M5: the exit the player actually crossed. gameState merges it in
+        // from the originating user:regionMove (gameState/index.js), so the
+        // summary recording can store the departure without loops needing
+        // its own dispatcher receiver.
+        exitName: data?.exitName,
       });
       this._handleBotWake_regionChanged(data?.newRegion);
     });
@@ -1505,23 +1515,87 @@ export class LoopState {
    *     one source of truth), only the M4 annotations envelope.
    * Both paths apply the auto-switch-to-Playback setting.
    */
-  _finalizeRecordBlock(region, instance) {
-    const substrate = this._lookupSubstrateId(region);
-    // M5 slice 3 adds the SUMMARY branch here (persist the visit's net
-    // result — duration, checks, costed actions — alongside the coarse
-    // interior replacement). Until then a summary substrate finalizes on
-    // the coarse path, which is the correct interior rewrite (ruling 6)
-    // minus the summary envelope.
-    if (this._captureShapeFor(substrate) === 'fine') {
+  _finalizeRecordBlock(region, instance, departureExitId = null) {
+    const shape = this._captureShapeFor(this._lookupSubstrateId(region));
+    if (shape === 'fine') {
       const rec = this._persistRecordingForBlock(region, instance);
       if (rec) this._applyCoarseReplacement(region, instance, rec);
     } else {
+      // COARSE and SUMMARY share the interior rewrite — the block's queued
+      // interior becomes what the player actually did (ruling 6: queue
+      // readability, consistent with the maze/TA UX). They differ in what
+      // is persisted: a coarse block stores only its annotations envelope
+      // (its interior IS its recording), while a summary block stores the
+      // visit's net RESULT, which the interior cannot express.
       this._applyCoarseReplacement(region, instance, { actions: this._liveCaptureBuffer.slice() });
-      this._persistAnnotationsForBlock(region, instance);
+      if (shape === 'summary') {
+        this._persistSummaryForBlock(region, instance, departureExitId);
+      } else {
+        this._persistAnnotationsForBlock(region, instance);
+      }
       this._autoSwitchAfterRecord(region, instance);
     }
     this._liveCaptureBuffer = [];
     this._annotationTracker = null;
+    this._summaryDrainSeconds = 0;
+    this._summaryCostedActions = [];
+  }
+
+  /**
+   * The exit the queue intends to leave the current block by — the first
+   * `regionMove` at or after the cursor. Used as the departure fallback
+   * when the substrate's move carried no exit name (M5).
+   */
+  _queuedDepartureExit() {
+    const queue = this.getActionQueue() ?? [];
+    for (let i = Math.max(0, this.currentActionIndex); i < queue.length; i++) {
+      if (queue[i]?.type === 'regionMove') return queue[i].exitUsed ?? null;
+    }
+    return null;
+  }
+
+  /**
+   * Persist a SUMMARY block's recording (M5): the NET RESULT of the visit,
+   * under the same `(region, arrivalKey, ordinal)` tag every other category
+   * uses. `actions` stays EMPTY — a summary is not a replayable script, and
+   * `hasPlayableRecording` must stay false for it — and the payload lives
+   * in `summary`:
+   *
+   *   durationSeconds — drain ticks charged while parked. Playback prices
+   *     this at the region's CURRENT rate, so region-XP growth keeps
+   *     mattering for replays (a frozen mana number would not).
+   *   checks         — the locations checked, refired on Playback.
+   *   costedActions  — the performed actions that carried an EXPLICIT
+   *     loop_costs price, re-priced at replay the same way.
+   *
+   * Unlike the coarse annotations envelope, this is written even when the
+   * visit moved no economy at all: the duration alone is a real recording.
+   */
+  _persistSummaryForBlock(region, instance, departureExitId = null) {
+    const substrate = this._lookupSubstrateId(region);
+    if (!substrate) return null;
+    const tag = this._recordingTagForBlock(region, instance);
+    if (!tag) return null;
+    const rulesHash = this._rulesHash();
+    if (!rulesHash) return null;
+    const summary = {
+      durationSeconds: this._summaryDrainSeconds,
+      checks: this._liveCaptureBuffer
+        .filter((a) => a?.type === 'locationCheck' && a.locationName)
+        .map((a) => a.locationName),
+      costedActions: this._summaryCostedActions.slice(),
+    };
+    saveQueue(rulesHash, {
+      regionName: region,
+      substrate,
+      arrivalExitId: tag.arrivalKey,
+      ordinal: tag.ordinal,
+      departureExitId: departureExitId ?? null,
+      actions: [],
+      annotations: this._annotationTracker?.build() ?? null,
+      summary,
+    });
+    return summary;
   }
 
   /**
@@ -1556,8 +1630,10 @@ export class LoopState {
   _discardActiveRecording() {
     this._liveCaptureBuffer = [];
     this._annotationTracker = null;
-    // M5: the duration accrued for this visit dies with the capture.
+    // M5: the duration and costed-action list accrued for this visit die
+    // with the capture.
     this._summaryDrainSeconds = 0;
+    this._summaryCostedActions = [];
     if (!this._recordingBlock) return;
     // Drain the substrate's stash so it can't be pulled by a later block.
     const substrate = this._lookupSubstrateId(this._recordingBlock.region);
@@ -1979,15 +2055,37 @@ export class LoopState {
     // are both charged and captured here; M5 slice 2 splits their PRICING
     // (summary substrates charge only costs explicitly present in the
     // loop_costs data, never the 50/100 fallbacks).
-    if (this._captureShapeFor(substrate) === 'fine') return;
-    this._chargeLiveAction(type === 'explore'
+    const shape = this._captureShapeFor(substrate);
+    if (shape === 'fine') return;
+    const actionShape = type === 'explore'
       ? { type: 'customAction', sourceRegion: regionName }
-      : { type: 'locationCheck', locationName, sourceRegion: regionName });
+      : { type: 'locationCheck', locationName, sourceRegion: regionName };
+    if (shape === 'summary') this._noteSummaryCostedAction(actionShape);
+    this._chargeLiveAction(actionShape);
     if (this._recordingBlock) {
       this._liveCaptureBuffer.push(type === 'explore'
         ? { type: 'explore', regionName }
         : { type: 'locationCheck', locationName });
     }
+  }
+
+  /**
+   * Remember a summary-visit action that carried an EXPLICIT loop_costs
+   * price, so Playback can re-price it (M5). Free actions are deliberately
+   * NOT listed: the recorded duration already prices them, and listing them
+   * would invite a future reader to charge them twice.
+   *
+   * Recorded at CHARGE time rather than derived at finalize, so the list is
+   * exactly what was paid for — including the departing move, which is
+   * charged on the wake before the capture is finalized.
+   */
+  _noteSummaryCostedAction(actionShape) {
+    if (!this._recordingBlock) return;
+    if (!(this._summaryBaseCost(actionShape) > 0)) return;
+    const { type, locationName = null } = actionShape;
+    this._summaryCostedActions.push(
+      locationName ? { type, locationName } : { type },
+    );
   }
 
   /**
@@ -2046,9 +2144,10 @@ export class LoopState {
     if (this._manualActionEntered) return;
     this._manualActionEntered = true;
     this._manualRegionName = regionName;
-    // M5: the visit's duration is counted from this park (summary
-    // substrates only — the counter simply stays 0 elsewhere).
+    // M5: the visit's duration and costed actions are counted from this
+    // park (summary substrates only — they stay empty elsewhere).
     this._summaryDrainSeconds = 0;
+    this._summaryCostedActions = [];
 
     const componentType = this._lookupSubstrateComponentType(regionName);
     if (componentType && this.eventBus?.publish) {
@@ -2425,7 +2524,11 @@ export class LoopState {
     const liveRegion = this.livePlayRegion();
     if (liveRegion && liveRegion === (data?.oldRegion ?? liveRegion)
         && this._captureShapeForRegion(liveRegion) !== 'fine') {
-      this._chargeLiveAction({ type: 'regionMove', sourceRegion: liveRegion });
+      const move = { type: 'regionMove', sourceRegion: liveRegion };
+      if (this._captureShapeForRegion(liveRegion) === 'summary') {
+        this._noteSummaryCostedAction(move);
+      }
+      this._chargeLiveAction(move);
       // The charge may have depleted mana: deductMana fires manaChanged
       // synchronously, whose wake runs _resetLoop (mana-out mid-Record
       // discards, M2 ruling). The park state is gone — stop here.
@@ -2449,7 +2552,15 @@ export class LoopState {
       const recordingBlock = this._recordingBlock;
       this._recordingBlock = null;
       if (recordingBlock) {
-        this._finalizeRecordBlock(recordingBlock.region, recordingBlock.instance);
+        // The crossed exit, or the one the queue meant to cross. A summary
+        // recording needs it to replay the departure (M5); resolve it
+        // BEFORE _completeManualRegionSegment moves the cursor past the
+        // queued regionMove the fallback reads.
+        this._finalizeRecordBlock(
+          recordingBlock.region,
+          recordingBlock.instance,
+          data?.exitName ?? this._queuedDepartureExit(),
+        );
       }
       if (manualRegion) {
         this._completeManualRegionSegment();

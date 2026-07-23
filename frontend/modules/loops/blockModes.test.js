@@ -1652,3 +1652,167 @@ describe('M5 — explicit-only per-action costs', () => {
     expect(gs.getCurrentMana()).toBe(before - 40);
   });
 });
+
+// ---------------------------------------------------------------------------
+// M5 slice 3 — summary Record: capture the visit's net result, persist it on
+// a successful exit, rewrite the interior, discard it otherwise.
+// ---------------------------------------------------------------------------
+
+describe('M5 — summary Record capture', () => {
+  let loopState, gs, bus, tick;
+
+  function setUp({ regionData = { timeDrainPerSecond: 2 }, locations = {} } = {}) {
+    ({ loopState, gs, bus } = wire());
+    tick = makeTicker();
+    registerSummarySubstrate();
+    const cdm = new CostDataManager();
+    cdm.setCostData({
+      regions: { A: regionData }, locations,
+      defaultRegionCost: 50, defaultLocationCost: 100,
+    }, 'test');
+    loopState.setCostDataManager(cdm);
+    loopState._cachedRulesData = RULES_DATA;
+    gs.updatePath('A', 'go', 'Menu');
+    gs.addLocationCheck('Loc1', 'A');
+    gs.updatePath('B', 'exit', 'A');
+    loopState.setBlockMode('A', 1, 'record');
+    gs.setLoopModeActive(true);
+  }
+
+  function park() {
+    loopState.currentActionIndex = 1;
+    loopState.currentAction = loopState.getActionQueue()[1];
+    loopState.isProcessing = true;
+    tick(loopState);
+  }
+
+  const saved = () => getSavedQueueByTag(hashRulesData(RULES_DATA), 'A', 'sum_sub', 'go', 0);
+
+  beforeEach(() => {
+    resetSavedQueueStore();
+    clearRulesHashCache();
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    loopState?.stopTimeDrain();
+    vi.useRealTimers();
+  });
+
+  it('persists duration, checks and the crossed departure on a successful exit', () => {
+    setUp();
+    park();
+    vi.advanceTimersByTime(3000);
+    loopState.observeParkedLiveAction({ type: 'locationCheck', locationName: 'Loc1', regionName: 'A' });
+    loopState._handleManualWake_regionMove({ targetRegion: 'B', oldRegion: 'A', exitName: 'exit' });
+
+    const entry = saved();
+    expect(entry.summary).toEqual({
+      durationSeconds: 3,
+      checks: ['Loc1'],
+      costedActions: [],
+    });
+    expect(entry.departureExitId).toBe('exit');
+    // Actions stay EMPTY: a summary is not a replayable script.
+    expect(entry.actions).toEqual([]);
+    expect(hasPlayableRecording(entry)).toBe(false);
+    expect(loopState.hasBoundSummary('A', 1)).toBe(true);
+  });
+
+  it('lists only EXPLICITLY costed actions, so Playback cannot double-charge', () => {
+    setUp({ regionData: { timeDrainPerSecond: 1, moveCost: 5 }, locations: { Loc1: 7 } });
+    park();
+    vi.advanceTimersByTime(1000);
+    loopState.observeParkedLiveAction({ type: 'locationCheck', locationName: 'Loc1', regionName: 'A' });
+    loopState._handleManualWake_regionMove({ targetRegion: 'B', oldRegion: 'A', exitName: 'exit' });
+
+    expect(saved().summary.costedActions).toEqual([
+      { type: 'locationCheck', locationName: 'Loc1' },
+      { type: 'regionMove' },
+    ]);
+  });
+
+  it('records a free visit with an EMPTY costed list (the duration is the price)', () => {
+    setUp();
+    park();
+    vi.advanceTimersByTime(2000);
+    loopState.observeParkedLiveAction({ type: 'locationCheck', locationName: 'Loc1', regionName: 'A' });
+    loopState._handleManualWake_regionMove({ targetRegion: 'B', oldRegion: 'A', exitName: 'exit' });
+
+    expect(saved().summary.costedActions).toEqual([]);
+    expect(saved().summary.durationSeconds).toBe(2);
+  });
+
+  it('falls back to the queued exit when the move carried no exit name', () => {
+    setUp();
+    park();
+    loopState._handleManualWake_regionMove({ targetRegion: 'B', oldRegion: 'A' });
+    expect(saved().departureExitId).toBe('exit');
+  });
+
+  it('rewrites the block interior to the performed checks (ruling 6)', () => {
+    setUp();
+    park();
+    // The player checks a DIFFERENT location than the one queued.
+    loopState.observeParkedLiveAction({ type: 'locationCheck', locationName: 'Other', regionName: 'A' });
+    loopState._handleManualWake_regionMove({ targetRegion: 'B', oldRegion: 'A', exitName: 'exit' });
+
+    const interior = gs.getPath()
+      .filter((e) => e.type === 'locationCheck' && e.sourceRegion === 'A')
+      .map((e) => e.locationName);
+    expect(interior).toEqual(['Other']);
+  });
+
+  it('auto-switches the block to Playback after a successful Record', () => {
+    setUp();
+    park();
+    loopState._handleManualWake_regionMove({ targetRegion: 'B', oldRegion: 'A', exitName: 'exit' });
+    expect(loopState.getBlockMode('A', 1)).toBe('playback');
+  });
+
+  it('records a zero-economy visit too — the duration alone is a recording', () => {
+    // Unlike the coarse annotations envelope (which writes nothing when the
+    // block moved no economy), a summary block always has something to say.
+    setUp({ regionData: { timeDrainPerSecond: 0 } });
+    park();
+    vi.advanceTimersByTime(2000);
+    loopState._handleManualWake_regionMove({ targetRegion: 'B', oldRegion: 'A', exitName: 'exit' });
+
+    expect(saved().summary).toEqual({ durationSeconds: 2, checks: [], costedActions: [] });
+  });
+
+  it('discards everything on a WRONG exit', () => {
+    setUp();
+    park();
+    vi.advanceTimersByTime(3000);
+    loopState.observeParkedLiveAction({ type: 'locationCheck', locationName: 'Loc1', regionName: 'A' });
+    loopState._handleManualWake_regionMove({ targetRegion: 'Elsewhere', oldRegion: 'A', exitName: 'other' });
+
+    expect(saved()).toBeNull();
+    expect(loopState._summaryDrainSeconds).toBe(0);
+    expect(loopState._summaryCostedActions).toEqual([]);
+    expect(loopState._queuePausedUntilReset).toBe(true);
+  });
+
+  it('a re-record with a different duration REPLACES the stale one', () => {
+    // The isDuplicate trap: a summary entry is actions-less, so without the
+    // summary field in the comparison the second recording would read as a
+    // duplicate and the first duration would survive forever.
+    setUp();
+    park();
+    vi.advanceTimersByTime(2000);
+    loopState._handleManualWake_regionMove({ targetRegion: 'B', oldRegion: 'A', exitName: 'exit' });
+    expect(saved().summary.durationSeconds).toBe(2);
+
+    loopState.setBlockMode('A', 1, 'record');
+    loopState.currentActionIndex = 0;
+    loopState._manualActionEntered = false;
+    loopState._boundReplayCheckedIndex = -1;
+    park();
+    vi.advanceTimersByTime(5000);
+    loopState._handleManualWake_regionMove({ targetRegion: 'B', oldRegion: 'A', exitName: 'exit' });
+
+    expect(saved().summary.durationSeconds).toBe(5);
+    expect(getSavedQueues(hashRulesData(RULES_DATA), 'A', 'sum_sub')).toHaveLength(1);
+  });
+});
