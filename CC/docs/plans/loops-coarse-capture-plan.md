@@ -13,6 +13,23 @@ The text-adventure wrapper's internal recording machinery is removed; the loops 
 - **Never two concurrent capture channels for one visit**, and once a visit has any fine action the whole visit replays through the substrate (interleaving/ordering — the double-append bug family).
 - Future queue-grade verbs ("pull lever", "talk to NPC") extend the **queue vocabulary** (`customAction` + `loopSupport.queueActions` + `loop_costs` + a generic-executor dispatch), NOT the recording system. A coarse-only substrate that gains a genuinely sub-queue-grade action migrates wholesale to the maze shape (hybrid ruling, session 66 — settled, don't re-litigate).
 
+## Session-66b rulings — Record-gated capture, drain, and the loop-mode action gate
+
+Second round of user rulings, same session (2026-07-22) — settled, don't re-litigate:
+
+1. **Capture is Record-gated.** Performed substrate actions enter the loops queue ONLY when the active block is Record mode for the substrate+region the player is in. Manual play performs actions with real effects but captures and appends NOTHING. The current always-append behavior while loop mode is active (`gameState.updatePath` / `addLocationCheck` on any non-`fromLoop` event) is retired *for loop mode* — non-loop-mode path tracking is unchanged. Record inserts at the block position (`insertLocationCheckAt` / `insertCustomActionAt`), never at the path end.
+2. **Live play drains mana — Manual AND Record** (AskUserQuestion: "Manual drains too"). Loops charges each observed action's `loop_costs` value (xp-adjusted) as it is performed, for any parked live-play block. Actions perform immediately — real checks, real region moves, real discovery; Record is live play + capture, never plan-only. Result: live play, Record, and Playback share ONE economy (recording a block costs what replaying it costs). Mana-out mid-Record still discards (M2 ruling).
+3. **Strict action gate** (AskUserQuestion: "parked only"). While loop mode is active, the player may perform substrate actions ONLY when the queue is processing and parked on a Manual/Record block whose substrate+region match the player's current position. Not started, completed, empty queue, paused, or wrong-exit hard-pause → all substrate actions blocked. Applies to every substrate, not just TA.
+
+**Consequences (by design):**
+- **Free-walk authoring is retired.** Queue authoring = planning clicks (region graph / click-to-queue / block builder) + Record-mode interiors. With an empty queue no substrate action is possible in loop mode — the first block comes from planning.
+- **M2's unparked Record capture (`_maybeCaptureUnparkedRecordExit` / `_blockPlayerJustLeft`) becomes dead code** — remove it in this refactor (free-walking can no longer happen).
+- **Former open question #3 (parked-mid-queue stray appends) is RESOLVED BY DESIGN** — nothing end-appends in loop mode anymore; verify no other end-append path survives rather than probing stray behavior.
+- **Former open question #1 (explore live-append gap) is subsumed** — explores are captured during Record via the loops-side observation like everything else, and deliberately NOT appended during Manual (nothing is).
+- **Former open question #2 (replay economy) is RESOLVED** — one economy everywhere; the "bridge replay was free" discrepancy disappears with the bridge replay itself.
+
+**Gate mechanics (recommended shape):** central loops-side interception — extend the existing clickToQueue dispatcher interception seam (`handleUserLocationCheckForLoops` and siblings) to swallow disallowed `user:*` actions and publish `loops:clickIgnored`-style feedback; optionally surface the blocked state visually later via the shared `substrateInactiveOverlay`. **Exempt from the gate:** `fromLoop`, `fromReset`, `system:*` events (substrate-internal / delegated execution), and bot/solver-driven dispatches — the queue's own execution must always pass. Planning-click surfaces (region graph, clickToQueue append/rebuildPath modes) are authoring, not performing — they must NOT be blocked; discriminate by `originator` (substrate panels set it; see bridge.js publishes).
+
 ## Why (session-66 investigation findings)
 
 For TA, the M2 recording is redundant by construction:
@@ -34,28 +51,35 @@ For TA, the M2 recording is redundant by construction:
 
 **Keep (loops):** `savedQueueStore`, tags, `takeLastRecording` pull protocol, coarse replacement, `_handlePlaybackReplayEntry` — all still serve fine-grained substrates (maze now; jta if its recorder half lands in M4).
 
-**Add (loops):** host-side coarse capture during Record blocks (design below), and a "coarse-only" path in the Playback entry: no recording lookup (or an always-miss), fall through to the generic timer over the block's own interior.
+**Remove (loops):** the unparked Record capture (`_maybeCaptureUnparkedRecordExit` / `_blockPlayerJustLeft`) — dead under the strict action gate — and the loop-mode always-append behavior in `gameState` event handling (non-loop-mode path tracking stays).
+
+**Add (loops):** host-side observation during parked Manual/Record blocks (charges `loop_costs` for both; captures in Record — design below); the strict loop-mode action gate with its exemptions and blocked-click feedback; and a "coarse-only" path in the Playback entry: no recording lookup (or an always-miss), fall through to the generic timer over the block's own interior.
 
 ## Design sketch — loops-owned coarse capture
 
-During a parked Record block, loops observes the same dispatcher/eventBus traffic it already sees:
+During a parked Manual/Record block, loops observes the same dispatcher/eventBus traffic it already sees:
 
-- `locationCheck`: the `noteLocationChecked` seam already fires for every pass-through check while a manual-family segment is active — extend it (or a sibling) to append to a host-side capture buffer.
-- `explore`: needs a new observation — a performed TA explore only dispatches `loop:exploreCompleted` today (consumed by discovery). Loops should subscribe (or intercept-and-pass) and record it while a Record block is parked. **This also closes the explore live-append gap** (see Open Questions #1).
-- `regionMove`: the existing Record-exit wake (`_handleManualWake_regionMove`) already knows the departure — no substrate involvement needed.
+- `locationCheck`: the `noteLocationChecked` seam already fires for every pass-through check while a manual-family segment is active — extend it (or a sibling) to charge the action and, in Record, append to a host-side capture buffer.
+- `explore`: needs a new observation — a performed TA explore only dispatches `loop:exploreCompleted` today (consumed by discovery). Loops subscribes (or intercepts-and-passes), charges it, and records it while a Record block is parked.
+- `regionMove`: the existing Record-exit wake (`_handleManualWake_regionMove`) already knows the departure — no substrate involvement needed; charge the move on the wake.
 
-On successful exit, loops applies the capture directly via the existing `clearActionsAt` + `insertLocationCheckAt` / `insertCustomActionAt` coarse-replacement path (insert-at-block-position, NOT end-append). Record for a coarse-only substrate thus reduces to "Manual + interior rewrite from observed actions"; Playback reduces to the generic executor. Whether a `savedQueueStore` entry is still written for coarse-only substrates is **not needed** for replay (the queue persists the same information); recommend NOT writing one — one source of truth.
+Per ruling 2 above, the observation layer charges `loop_costs` (xp-adjusted) for BOTH Manual and Record; per ruling 1, only Record captures. On successful exit, loops applies the capture directly via the existing `clearActionsAt` + `insertLocationCheckAt` / `insertCustomActionAt` coarse-replacement path (insert-at-block-position, NOT end-append). Record for a coarse-only substrate thus reduces to "Manual + interior rewrite from observed actions"; Playback reduces to the generic executor. Whether a `savedQueueStore` entry is still written for coarse-only substrates is **not needed** for replay (the queue persists the same information); recommend NOT writing one — one source of truth.
+
+Substrates whose live play natively drains (maze per-step drain via `sharing.mana.loopActionDelegation`-adjacent wiring) must not be double-charged by the observation layer — the charging seam needs a per-substrate "natively drains" exemption, or the charge moves behind the same declaration. Resolve at implementation time against the maze's actual drain path.
 
 Capability surface: coarse-only substrates keep declaring `record`/`playback`/`instant` (the radios still make sense to the user); the *implementation* branches on whether the registry entry supplies `takeLastRecording`/`replayActions`. Alternatively add an explicit `loopSupport.captureStyle: 'coarse' | 'fine'` — decide at implementation time; keep the registry doc in sync.
 
 ## Open questions (verify during implementation)
 
-1. **Explore live-append gap.** Typed/clicked TA explores never enter the queue during live play (only `loop:exploreCompleted` fires; clickToQueue interception and coarse replacement are the only append paths). The unparked-Record capture path (`_maybeCaptureUnparkedRecordExit`, "a free-walked queue already reflects the performed actions") is therefore WRONG for explores today — a free-walked Record visit with explores persists a recording whose actions the queue doesn't hold. The loops-side explore observation should fix free-walk authoring too — decide whether explore appends always in loop mode, or only during Record.
-2. **Replay-semantics shift.** Generic-timer execution differs from the removed bridge replay: pacing (cost-based progress × gameSpeed vs. fixed 4 Hz) and **mana** (the generic timer charges per-action `loop_costs`; the parked bridge replay was free). Recommendation: accept the generic-timer economy — Playback of a TA block should cost the same as any auto-run block — but confirm with the user if the observed behavior change is surprising in-app.
-3. **Parked-mid-queue stray appends (pre-existing, in-app verification needed).** While a block is parked, a live check passes through to `gameState.addLocationCheck`, which pushes at the *path end* — correct only when the parked block is last. With later blocks queued, strays may accumulate at the end AND coarse replacement may duplicate them into the interior. Session-66 reading found no suppression mechanism; either one exists and should be documented, or this is a latent bug the refactor should fix (suppress end-appends while parked, or route them through insert-at-block).
-4. **`textAdventure:commandRecorded` ordering trap becomes moot** for TA (the stash-before-regionMove postMessage race, M2 11/n) — confirm no other consumer of the event exists before deleting it (session-66 grep: recorder.js was the only subscriber).
+*(Former #1 explore gap, #2 replay economy, and #3 stray appends are resolved by the session-66b rulings — see that section.)*
+
+1. **`textAdventure:commandRecorded` ordering trap becomes moot** for TA (the stash-before-regionMove postMessage race, M2 11/n) — confirm no other consumer of the event exists before deleting it (session-66 grep: recorder.js was the only subscriber).
+2. **Gate exemption matrix.** Enumerate every dispatch source that must bypass the strict action gate and assert each in tests: `fromLoop` replays, `fromReset` teleports, `system:*` substrate-internal events, delegation/solver-driven actions, and the planning-click surfaces (discriminated by `originator`). A missed exemption bricks queue execution; an over-broad one reopens free play.
+3. **clickToQueue mode disposition.** The 'append'/'rebuildPath' interception modes are now the *primary* authoring path (free-walk is retired) but their current implementation also intercepts substrate-panel clicks. Decide whether they become planning-surface-only (region graph etc.) or keep intercepting substrate clicks as "plan instead of perform" — and make sure the pass-through 'off' default composes with the new gate (gate first, then mode).
+4. **Empty-queue bootstrap UX.** Under the strict gate, a fresh loop-mode session cannot act in any substrate until a queue exists. Confirm the planning surfaces make this obvious enough in-app (blocked-click feedback should hint at it); an overlay/message affordance may be wanted — user-facing docs note it post-refactor.
+5. **Native-drain double-charge exemption** (see the design sketch) — verify against the maze's real drain path.
 
 ## Gates
 
-- vitest (loops + TA wrapper suites; recorder/replay tests removed or rewritten against the loops-side capture), regression 1/1, substrates suite — including the M2 in-app leg `maze-record-playback-crosses-exit` (must stay green; maze path untouched) and a NEW in-app leg for TA Record→Playback through the loops-owned path.
-- In-browser sanity with the user: TA Record (parked + free-walk), auto-switch, Playback (timed + Instant), and open-question #3's stray-append probe.
+- vitest (loops + TA wrapper suites; recorder/replay tests removed or rewritten against the loops-side capture; new gate-exemption tests per open question #2), regression 1/1, substrates suite — including the M2 in-app leg `maze-record-playback-crosses-exit` (must stay green; maze path untouched apart from the gate) and a NEW in-app leg for TA Record→Playback through the loops-owned path.
+- In-browser sanity with the user: TA Record (parked; drain visible), Manual (drain, no capture), the strict gate (blocked outside the active block; planning clicks still work; empty-queue bootstrap), auto-switch, and Playback (timed + Instant).

@@ -69,13 +69,19 @@ Adding a queue-grade verb to a coarse-only substrate means extending the queue v
 
 As built (M2/M3), the text adventure has its own recorder and replay queue (`recorder.js`, the `textAdventure:commandRecorded` side-channel, the replay half of `playbackBridge.js`) even though it is coarse-only — its recordings are redundant with the block interior by construction. The planned refactor removes that machinery and moves coarse capture into loops per the contract above: [`CC/docs/plans/loops-coarse-capture-plan.md`](../../../../CC/docs/plans/loops-coarse-capture-plan.md). Until it lands, the TA wrapper follows the fine-grained shape in code; the maze is the reference implementation either way.
 
+The same refactor tightens the loop-mode interaction model (rulings settled 2026-07-22; the mode table above describes as-built behavior until it lands):
+
+- **Capture is Record-gated.** Performed actions enter the queue only when the active block is Record for the player's current substrate+region — inserted at the block position, never end-appended. Manual play performs actions (real effects) but captures nothing; the always-append-while-loop-mode behavior is retired (non-loop-mode path tracking unchanged). Free-walk authoring goes with it: planning clicks + Record interiors become the authoring path.
+- **Live play drains mana — Manual and Record alike.** Loops charges each observed action's `loop_costs` value as it is performed, so live play, Record, and Playback share one economy (recording a block costs what replaying it costs). Actions always perform immediately — Record is live play plus capture, never plan-only.
+- **Strict action gate.** While loop mode is active, substrate actions are only possible when the queue is processing and parked on a Manual/Record block matching the player's substrate+region; everything else (not started, completed, empty queue, paused, wrong-exit hard-pause) is blocked, for every substrate. Queue-driven dispatches (`fromLoop`, `fromReset`, `system:*`, delegation/solver) and planning-surface clicks are exempt.
+
 ## Gotchas
 
 - **Stash before the regionMove.** A recorder that finalizes its stash on a *separate event* from the `user:regionMove` must publish/finalize it **before** the regionMove — both cross the iframe→host boundary as ordered postMessages, and the loops Record-exit wake pulls the stash when the regionMove lands. Publish the move first and the pull comes back empty: nothing persists, no auto-switch. (Bit the TA bridge; the maze finalizes first for the same reason.)
 - **`fromLoop: true` on every replay-emitted event** — see the Playback flow above.
 - **`loopState:queueUpdated` payloads must carry `{ queue }`** — `eventCoordinator._updateRegionsInQueue` iterates it; an empty `{}` throws.
-- **Explore does not live-append.** During live play, `gameState` appends `locationCheck` and `regionMove` path entries instantly, but a performed explore only dispatches `loop:exploreCompleted` (consumed by discovery) — explore entries reach the queue via click-to-queue interception or Record's coarse replacement. The coarse-capture refactor must close this gap.
-- **Parked-mid-queue live appends are unverified territory.** While a block is parked, a live check passes through to `gameState.addLocationCheck`, which appends at the *path end* — correct only when the parked block is last. Coarse replacement papers over the block interior; whether strays can accumulate after later blocks needs in-app verification (tracked in the refactor plan).
+- **Explore does not live-append (as-built).** During live play, `gameState` appends `locationCheck` and `regionMove` path entries instantly, but a performed explore only dispatches `loop:exploreCompleted` (consumed by discovery) — explore entries reach the queue via click-to-queue interception or Record's coarse replacement. Resolved by the refactor's Record-gated capture: *nothing* live-appends outside Record, and Record captures explores like everything else.
+- **Parked-mid-queue live appends (as-built).** While a block is parked, a live check passes through to `gameState.addLocationCheck`, which appends at the *path end* — correct only when the parked block is last. Coarse replacement papers over the block interior. Resolved by design in the refactor: loop-mode end-appends are retired entirely.
 
 ## Related documentation
 

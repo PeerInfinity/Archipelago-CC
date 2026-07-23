@@ -276,6 +276,27 @@ live-append gap, the replay economy shift (generic timer charges
 UNVERIFIED parked-mid-queue stray-append behavior (in-app probe required;
 possible latent pre-existing bug).
 
+**M3b rulings round 2 (session 66b, same day — settled):** (1) **capture is
+Record-gated** — performed substrate actions enter the queue ONLY when the
+active block is Record for the matching substrate+region, inserted at the
+block position; Manual performs with real effects but captures NOTHING; the
+loop-mode always-append (`updatePath`/`addLocationCheck` on non-fromLoop
+events) is RETIRED (non-loop path tracking unchanged). (2) **Manual AND
+Record drain mana** (AskUserQuestion) — loops charges observed actions'
+`loop_costs` as performed; one economy across live play / Record / Playback;
+actions always perform immediately. (3) **STRICT action gate**
+(AskUserQuestion: parked-only) — with loop mode active, substrate actions
+are possible ONLY while the queue is processing AND parked on a matching
+Manual/Record block; empty queue / not started / completed / paused /
+hard-pause all BLOCK, every substrate. Consequences: free-walk authoring
+RETIRED (planning clicks + Record interiors are the authoring path);
+`_maybeCaptureUnparkedRecordExit` becomes dead code — remove; the three
+session-66 open questions (explore gap, replay economy, stray appends) are
+all RESOLVED BY DESIGN. New open items in the plan: gate exemption matrix
+(fromLoop/fromReset/system:*/solver/planning-click originators — a missed
+exemption bricks execution), clickToQueue mode disposition, empty-queue
+bootstrap UX, native-drain double-charge exemption (maze).
+
 **M1 as-built (see design §5 M1 for full notes):** Manual checkbox → per-
 `(region, instanceNumber)` Manual/Playback radios; new shared resolver
 `frontend/modules/loops/blockIdentity.js` (both renderer + loopState
