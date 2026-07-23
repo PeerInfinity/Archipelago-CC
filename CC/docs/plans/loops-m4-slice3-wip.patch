@@ -1,0 +1,325 @@
+diff --git a/frontend/modules/jtaQueueEngine/jtaQueueEngine.js b/frontend/modules/jtaQueueEngine/jtaQueueEngine.js
+index bc0fcd755..64ac254df 100644
+--- a/frontend/modules/jtaQueueEngine/jtaQueueEngine.js
++++ b/frontend/modules/jtaQueueEngine/jtaQueueEngine.js
+@@ -282,6 +282,44 @@ export class JTAQueueEngine {
+         this.#notifyStatusChange();
+     }
+ 
++    /**
++     * Replay a recorded action script through a transient executor (M4 loops
++     * fine-grained Playback). The recorded clickTask/useItem entries run over
++     * the live transport with the fork's automation off (beginRun / endRun),
++     * WITHOUT touching the user's built queue or its snapshot. When the queue
++     * exhausts, automation is restored and onComplete fires — loops crosses
++     * the recorded departure exit on that signal. Auto-drain and auto-reset
++     * are disabled: a replay is exactly the recorded interior, no more.
++     * @param {object[]} actions - actionQueue entries (clickTask / useItem)
++     * @param {{ onComplete?: Function }} [opts]
++     */
++    replayRecording(actions, { onComplete } = {}) {
++        if (this.#executor) this.#executor.stop();
++
++        const replayQueue = new ActionQueue();
++        for (const a of Array.isArray(actions) ? actions : []) replayQueue.add(a);
++
++        const replaySettings = { ...this.#settings, drainEnabled: false, autoReset: false };
++        const replayExecutor = new JTAQueueExecutor(replayQueue, this.#transport, replaySettings);
++        replayExecutor.onStatusChange = () => this.#notifyStatusChange();
++        replayExecutor.onQueueExhausted = () => {
++            replayExecutor.stop();
++            if (this.#transport.isBridge) this.#transport.endRun();
++            this.#executor = null;
++            this.#emitStatusMessage('Replay complete');
++            this.#notifyStatusChange();
++            try { onComplete?.(); } catch (e) { /* isolate a bad completion cb */ }
++        };
++
++        this.#executor = replayExecutor;
++        // Automation off before the first command (beginRun publishes the mode
++        // change ahead of the executor's first performTask, same as start()).
++        if (this.#transport.isBridge) this.#transport.beginRun();
++        replayExecutor.start();
++        this.#emitStatusMessage('Replaying recording...');
++        this.#notifyStatusChange();
++    }
++
+     /** Clear the execution snapshot (reset progress without clearing queue). */
+     reset() {
+         this.#loadoutRunCount = 0;
+diff --git a/frontend/modules/jtaSubstrateWrapper/bridge.js b/frontend/modules/jtaSubstrateWrapper/bridge.js
+index f4bad670c..d4ac96259 100644
+--- a/frontend/modules/jtaSubstrateWrapper/bridge.js
++++ b/frontend/modules/jtaSubstrateWrapper/bridge.js
+@@ -535,6 +535,10 @@ function _handleLoadRegion(payload) {
+     if (regionId !== _currentRegionId) {
+         _clearPendingWalk();
+     }
++    // Defensive: a Playback instant pump belongs to the visit we're leaving;
++    // stop it before loading a new region (the replay driver normally stops it
++    // on completion, but a mid-replay reset/interrupt could leave it running).
++    _stopInstantPump();
+ 
+     // Apply any loop resets the host fired while we were inactive,
+     // then push the host pool's current/max into JtA.
+@@ -1015,6 +1019,54 @@ function _handleWalkTo(target) {
+     log('debug', `walkTo: zone playing toward exit '${exit.exitName}' (policy=${_playbackAutomationPolicy})`);
+ }
+ 
++// Instant-mode replay pump (M4). A Playback block flagged Instant drains its
++// recorded script in "one frame" — but the fork's setInstantMode uses
++// completeTaskInstantly, which is AFFORDABILITY-BLIND (it ignores energy) and
++// would let a replay complete tasks the recording couldn't afford. So the
++// pump instead drives the fork's NORMAL tick (stepTick) in fast batches on top
++// of the running game loop — energy-respecting, matching the jtaDatasetTests
++// stepTick-pump discipline. The host executor's clickTask round-trips
++// interleave between interval ticks; the pump only accelerates completion.
++let _instantPumpId = null;
++const INSTANT_PUMP_BATCH = 50;
++
++function _startInstantPump() {
++    if (_instantPumpId != null) return;
++    if (typeof _w.resumeGameLoop === 'function') _w.resumeGameLoop();
++    if (typeof _w.stepTick !== 'function' || typeof setInterval !== 'function') return;
++    _instantPumpId = setInterval(() => {
++        // Skip a batch while the loop is paused (game over / mid-reset) — the
++        // same guard the dataset test uses; stepping then would be invalid.
++        if (_w.isGameLoopPaused?.() === true) return;
++        for (let i = 0; i < INSTANT_PUMP_BATCH; i++) _w.stepTick();
++    }, 0);
++}
++
++function _stopInstantPump() {
++    if (_instantPumpId == null) return;
++    clearInterval(_instantPumpId);
++    _instantPumpId = null;
++}
++
++// Cross a recorded departure exit during Playback replay (M4). The recording
++// EXCLUDES the departing move, and multi-exit regions re-inject synthetic
++// exit-choice tasks with fresh ids each visit (so a recorded exit-task id
++// wouldn't match) — replay crosses via the STABLE exitName instead. Resolves
++// the target from the live world and publishes user:regionMove with
++// fromLoop:true (queue execution — gate-exempt, and gameState must not treat
++// it as performed play or double-append the parked block's queued move). Does
++// NOT finalize a recording (that path is Record-only).
++function _crossExit(exitName) {
++    if (!_client) return;
++    const exit = _getRegionExits().find((e) => (e?.exitName ?? e?.exit_id) === exitName);
++    _client.publishEventDispatcher('user:regionMove', {
++        sourceRegion: _currentRegionId,
++        targetRegion: exit?.targetRegion ?? null,
++        exitName: exitName ?? null,
++        fromLoop: true,
++    }, { initialTarget: 'bottom' });
++}
++
+ function _handlePlaybackControl(payload) {
+     const method = payload?.method;
+     const args = Array.isArray(payload?.args) ? payload.args : [];
+@@ -1032,6 +1084,15 @@ function _handlePlaybackControl(payload) {
+         case 'instant':
+             if (typeof _w.setInstantMode === 'function') _w.setInstantMode(true);
+             return;
++        case 'startInstantPump':
++            _startInstantPump();
++            return;
++        case 'stopInstantPump':
++            _stopInstantPump();
++            return;
++        case 'crossExit':
++            _crossExit(args[0]);
++            return;
+         case 'reset':
+             // Game-initiated reset semantics: flows through the
+             // energy-reset callback → host loop reset, like a player
+diff --git a/frontend/modules/jtaSubstrateWrapper/index.js b/frontend/modules/jtaSubstrateWrapper/index.js
+index a8aa90e21..59f376dfd 100644
+--- a/frontend/modules/jtaSubstrateWrapper/index.js
++++ b/frontend/modules/jtaSubstrateWrapper/index.js
+@@ -24,6 +24,7 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+ import { substrateRegistryEntry, setPlaybackProxy, ingestVisitRecording } from './jtaSubstrateWrapperLibrary.js';
+ import { getGameStateSingleton } from '../gameState/singleton.js';
+ import { PlaybackProxy } from '../textAdventureSubstrateWrapper/playbackProxy.js';
++import { getEngine } from '../jtaQueueEngine/index.js';
+ import settingsManager from '../../app/core/settingsManager.js';
+ 
+ export const moduleInfo = {
+@@ -81,6 +82,43 @@ const ENERGY_BONUS_SYNC_SETTING = 'moduleSettings.jtaSubstrateWrapper.energyBonu
+ const ENERGY_BONUS_SYNC_DEFAULT = true;
+ let _energyBonusSync = ENERGY_BONUS_SYNC_DEFAULT;
+ 
++/**
++ * Drive a loops fine-grained Playback replay (M4). Runs the recorded
++ * clickTask/useItem script through the jtaQueueEngine executor; on completion
++ * (or immediately, if the engine is somehow unavailable) crosses the recorded
++ * departure exit so the parked loops block advances. Instant blocks start the
++ * bridge's stepTick pump for the duration of the replay.
++ * @param {object} eventBus
++ * @param {object[]} recordedActions - actionQueue entries (clickTask / useItem)
++ * @param {{ onComplete?: Function, departureExitId?: string|null, instant?: boolean }} [opts]
++ */
++function _driveReplay(eventBus, recordedActions, opts = {}) {
++    const { onComplete, departureExitId = null, instant = false } = opts;
++    const sendControl = (method, args = []) =>
++        eventBus.publish(PLAYBACK_CONTROL_EVENT, { method, args });
++
++    const finish = () => {
++        if (instant) sendControl('stopInstantPump');
++        // Cross the recorded departure (stable exitName) — the substrate issues
++        // the closing user:regionMove; the parked block advances on the wake.
++        sendControl('crossExit', [departureExitId]);
++        try { onComplete?.(); } catch { /* isolate a bad completion cb */ }
++    };
++
++    const engine = getEngine();
++    if (!engine || typeof engine.replayRecording !== 'function') {
++        // No live engine (shouldn't happen in the default/substrate mode where
++        // jtaQueueEngine initializes) — still cross so the block isn't stuck.
++        finish();
++        return;
++    }
++    // Instant: accelerate the replay with the bridge's stepTick pump. Non-
++    // instant: the game loop is already running (loadRegion resumed it) and the
++    // executor drives at the normal tick rate.
++    if (instant) sendControl('startInstantPump');
++    engine.replayRecording(recordedActions, { onComplete: finish });
++}
++
+ async function _loadEnergyBonusSyncSetting() {
+     if (!settingsManager?.getSetting) return;
+     try {
+@@ -179,10 +217,19 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
+     // Host-side PlaybackController proxy (same class the tasw wrapper
+     // uses, on jta's own control channel). Injected into the library
+     // so the registry entry's getPlaybackController can return it.
+-    setPlaybackProxy(new PlaybackProxy({
++    const playbackProxy = new PlaybackProxy({
+         eventBus,
+         controlEvent: PLAYBACK_CONTROL_EVENT,
+-    }));
++    });
++    // M4: attach fine-grained Playback replay to THIS proxy instance (not the
++    // shared PlaybackProxy class — the text adventure stays coarse-only). Its
++    // presence is what routes loopState's fine-grained replay path to jta.
++    // Runs the recorded clickTask/useItem script through the jtaQueueEngine
++    // executor; on exhaustion, crosses the recorded departure exit so the
++    // parked loops block advances on the resulting regionMove wake.
++    playbackProxy.replayActions = (recordedActions, opts) =>
++        _driveReplay(eventBus, recordedActions, opts);
++    setPlaybackProxy(playbackProxy);
+ 
+     // On every iframe app-ready event (this fires for any iframe
+     // module, not just ours — payload is small + idempotent so the
+diff --git a/frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js b/frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js
+index f62e5c23e..d3a292649 100644
+--- a/frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js
++++ b/frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js
+@@ -562,17 +562,32 @@ export const substrateRegistryEntry = Object.freeze({
+     // persists it to savedQueueStore only on a successful Record-mode exit.
+     takeLastRecording: () => takeLastVisitRecording(),
+ 
+-    // Loop-mode capabilities. executeVia makes the loops queue drive
+-    // regionMove actions through the PlaybackController's walkTo (the
+-    // queue parks until the resulting user:regionMove arrives) instead
+-    // of the generic progress timer. Custom queues are wanted
+-    // eventually but jta has no queue recording yet — flip
+-    // customQueues when that lands. No locations / explore in v1
+-    // regions, so regionMove is the only queueable action.
++    // Loop-mode capabilities (M4). jta is a FINE-GRAINED substrate:
++    //   - record + playback: DECLARED — the fork performed-actions recorder
++    //     is the full-visit stream (takeLastRecording above), and Playback
++    //     replays the captured clickTask/useItem script through the
++    //     jtaQueueEngine executor. Declaring both OPTS JTA INTO THE STRICT
++    //     ACTION GATE (M3b staged enforcement): substrate actions are only
++    //     possible while the queue is parked on a matching Manual/Record
++    //     block. A Playback block WITHOUT a bound recording parks for live
++    //     play (Manual behavior) — the walkTo/delegation auto chain is
++    //     unreachable from Playback until M6's Bot radio (executeVia stays
++    //     declared for that future path + the current pre-record flows).
++    //   - instant: DECLARED — a Playback block drains its recorded script in
++    //     one frame via the fork's stepTick pump (setInstantMode + drive
++    //     stepTick while the game loop is unpaused).
++    //   - customQueues stays false — the queue panel (port arc Phase 3b) is
++    //     deferred; flip it when that lands (user ruling 2026-07-23).
++    // regionMove is still the only queue-grade (block-interior) action; the
++    // fine clickTask/useItem script lives in the saved recording, not the
++    // block interior (jta v1 regions emit no AP locations / explores).
+     loopSupport: Object.freeze({
+         queueActions: Object.freeze(['regionMove']),
+         manual: true,
+         customQueues: false,
++        record: true,
++        playback: true,
++        instant: true,
+         executeVia: 'playbackBot',
+     }),
+ 
+diff --git a/frontend/modules/loops/loopBlockBuilder.test.js b/frontend/modules/loops/loopBlockBuilder.test.js
+index e763e5b9f..d44e0767d 100644
+--- a/frontend/modules/loops/loopBlockBuilder.test.js
++++ b/frontend/modules/loops/loopBlockBuilder.test.js
+@@ -199,10 +199,11 @@ describe('LoopBlockBuilder — loopSupport capability gating', () => {
+         const flash = (await import('../flashSubstrate/flashSubstrateLibrary.js')).substrateRegistryEntry;
+ 
+         // M2: maze + textAdventure DECLARE record + playback (Record requires
+-        // both). The others don't yet (their recorders/replay land M4–M5).
+-        // M3: maze + textAdventure additionally DECLARE instant (per-block
+-        // Instant toggle); the others don't yet (jta pump = M4, runner/bounce
+-        // = M5, omsi = arc D).
++        // both). M4: jta additionally DECLARES record + playback + instant
++        // (fine-grained via the fork recorder; executor replay + stepTick
++        // pump). The remaining ones don't yet (runner/bounce = M5, omsi = arc
++        // D). M3/M4: maze + textAdventure + jta DECLARE instant (per-block
++        // Instant toggle); the others don't yet.
+         expect(maze.loopSupport).toMatchObject({
+             manual: true, customQueues: true, record: true, playback: true, instant: true,
+         });
+@@ -213,9 +214,12 @@ describe('LoopBlockBuilder — loopSupport capability gating', () => {
+         });
+         expect([...tasw.loopSupport.queueActions]).toContain('explore');
+ 
+-        expect(jta.loopSupport).toMatchObject({ manual: true, customQueues: false });
+-        expect(jta.loopSupport.record ?? false).toBe(false);
+-        expect(jta.loopSupport.instant ?? false).toBe(false);
++        // M4: jta declares record + playback + instant; customQueues stays
++        // false (queue panel deferred). regionMove remains its only
++        // queue-grade action — the fine script lives in the saved recording.
++        expect(jta.loopSupport).toMatchObject({
++            manual: true, customQueues: false, record: true, playback: true, instant: true,
++        });
+         expect([...jta.loopSupport.queueActions]).toEqual(['regionMove']);
+ 
+         expect(bounce.loopSupport).toMatchObject({ manual: true, customQueues: false });
+diff --git a/frontend/modules/loops/loopState.js b/frontend/modules/loops/loopState.js
+index 30aeb574b..7262ea9b1 100644
+--- a/frontend/modules/loops/loopState.js
++++ b/frontend/modules/loops/loopState.js
+@@ -1012,13 +1012,26 @@ export class LoopState {
+       if (modeBlock && blockMode === 'playback'
+           && this._boundReplayCheckedIndex !== this.currentActionIndex) {
+         this._boundReplayCheckedIndex = this.currentActionIndex;
+-        const bound = this._substrateHasRecorder(this._lookupSubstrateId(modeBlock.region))
++        const isFineGrained = this._substrateHasRecorder(this._lookupSubstrateId(modeBlock.region));
++        const bound = isFineGrained
+           ? this._lookupBoundRecording(modeBlock.region, modeBlock.instance)
+           : null;
+         if (bound) {
+           this._handlePlaybackReplayEntry(modeBlock.region, bound);
+           return;
+         }
++        // M4 ruling: a FINE-GRAINED substrate in Playback with NO bound
++        // recording has no playable content — the auto walkTo/delegation chain
++        // is unreachable from Playback until M6's Bot radio. Park for live play
++        // (Manual behavior) instead of falling through to that chain. (This is
++        // the safety net for a cleared/missing recording; the Playback radio is
++        // disabled without playable content, so it rarely triggers.) Coarse-
++        // only substrates are unaffected: their block interior IS the
++        // recording, run by the generic executor below.
++        if (isFineGrained) {
++          this._handleManualRegionEntry(modeBlock.region);
++          return;
++        }
+       }
+       // Manual entry: stop accruing progress, hand control to the
+       // player via the substrate panel. The wake handlers (subscribed
