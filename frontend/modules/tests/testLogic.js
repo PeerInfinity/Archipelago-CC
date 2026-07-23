@@ -6,7 +6,7 @@ import {
   discoverTests,
   getDiscoveredTests,
   getDiscoveredCategories,
-  getDiscoveredTestFunctions,
+  getDiscoveredTestFunctionById,
   isDiscoveryComplete,
 } from './testDiscovery.js';
 
@@ -765,14 +765,17 @@ export const testLogic = {
       return;
     }
 
-    // Get the test function from discovered functions
-    const testFunctions = getDiscoveredTestFunctions();
-    const testFunction = testFunctions[test.functionName];
+    // Resolve the test function BY ID via the registry. Resolving
+    // through the functionName-keyed map let same-named functions in
+    // different test files shadow each other — three tests silently ran
+    // the wrong file's body for weeks (the "jta-out-of-mana cold-start
+    // flake" was the omsi test running under the jta id).
+    const testFunction = getDiscoveredTestFunctionById(testId);
 
     if (!testFunction) {
       log(
         'error',
-        `[TestLogic] Test function '${test.functionName}' not found for test '${testId}'.`
+        `[TestLogic] Test function not found for test '${testId}'.`
       );
       return;
     }

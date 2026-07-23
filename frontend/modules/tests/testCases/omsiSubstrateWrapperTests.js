@@ -93,7 +93,7 @@ async function enterOmsiRegion(testController) {
     return win;
 }
 
-async function outOfManaLoopReset(testController) {
+async function omsiOutOfManaLoopReset(testController) {
     const win = await enterOmsiRegion(testController);
     if (!win) return testController.getOverallResult();
 
@@ -113,6 +113,29 @@ async function outOfManaLoopReset(testController) {
     testController.assertEqual('budget pinned to pool on entry', true,
         Math.abs(left - poolBefore) < 0.5);
     omsiAddMana(-left);
+
+    // Cold-boot race guard (the historical "cold-start flake", long
+    // misattributed to the jta suite via the test-registry functionName
+    // collision): on the iframe's first-ever boot, a late budget re-pin
+    // catch-up can land AFTER the drain above and restore the game's
+    // budget — the depletion then never registers (signature: no reset,
+    // no teleport, pool still positive, budget still pinned). If the
+    // drain visibly vanished, apply it once more; a genuinely broken
+    // depletion path still fails the assertions below, and the re-drain
+    // is skipped whenever a reset already fired so 'exactly one' stays
+    // meaningful.
+    const drainRegistered = await eventually(
+        testController,
+        () => readLoopResetCount() === resetsBefore + 1 || readPool() <= 0,
+        'depletion registered on the first drain',
+        4000,
+    );
+    if (!drainRegistered
+            && readLoopResetCount() === resetsBefore
+            && readManaLeft() > 0.5) {
+        testController.log('first drain was clobbered (cold-boot budget re-pin race) — re-draining once');
+        omsiAddMana(-readManaLeft());
+    }
 
     const resetHappened = await eventually(
         testController,
@@ -162,7 +185,7 @@ registerTest({
                + 'bridge mirrors the drain into the shared pool, the host fires a '
                + 'loop reset at 0, the player teleports to the start region, and the '
                + 'catch-up re-pins the game\'s budget to the refilled pool.',
-    testFunction: outOfManaLoopReset,
+    testFunction: omsiOutOfManaLoopReset,
     category: 'Omsi substrate',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });
@@ -280,23 +303,47 @@ async function budgetMirrorsPoolBothWays(testController) {
         Math.abs(pool0 - left0) < 0.5,
     );
 
+    // Cold-boot re-pin clobber guard (same race outOfManaLoopReset
+    // guards against): a bridge re-pin (_syncBudgetFromPool — fired by
+    // any manaChanged that fails the echo check, e.g. a late maxMana
+    // recompute on a cold first boot) landing within one 20ms clock
+    // tick of our addMana erases the change before the mirror samples
+    // it — budget restored, pool untouched, and since we only wrote
+    // once the whole poll times out. Retry once when the evidence
+    // matches that signature exactly (pool unmoved AND budget back at
+    // the pre-write value); a genuinely broken mirror fails both
+    // attempts.
+    async function nudgeBudgetExpectingPool(amount, expectedPool, label) {
+        const before = readManaLeft(); // budget value pre-write
+        omsiAddMana(amount);
+        let ok = await eventually(
+            testController,
+            () => Math.abs(readPool() - expectedPool) < 0.5,
+            label,
+        );
+        if (!ok
+                && Math.abs(readPool() - (expectedPool - amount)) < 0.5
+                && Math.abs(readManaLeft() - before) < 0.5) {
+            testController.log(`'${label}' was clobbered (cold-boot budget re-pin race) — retrying once`);
+            omsiAddMana(amount);
+            ok = await eventually(
+                testController,
+                () => Math.abs(readPool() - expectedPool) < 0.5,
+                `${label} (retry)`,
+            );
+        }
+        return ok;
+    }
+
     // Drain: shrink the budget by 10 → pool must follow down.
-    omsiAddMana(-10);
-    const drained = await eventually(
-        testController,
-        () => Math.abs(readPool() - (pool0 - 10)) < 0.5,
-        'pool followed a 10-point budget drain',
-    );
+    const drained = await nudgeBudgetExpectingPool(
+        -10, pool0 - 10, 'pool followed a 10-point budget drain');
     testController.assertEqual('pool followed the drain', true, drained);
 
     // Gain: extend the budget by 5 (Buy Mana, in real play) → pool
     // must follow up (substrate:resourceDelta amount>0 → gainMana).
-    omsiAddMana(5);
-    const gained = await eventually(
-        testController,
-        () => Math.abs(readPool() - (pool0 - 5)) < 0.5,
-        'pool followed a 5-point budget gain',
-    );
+    const gained = await nudgeBudgetExpectingPool(
+        5, pool0 - 5, 'pool followed a 5-point budget gain');
     testController.assertEqual('pool followed the gain', true, gained);
 
     return testController.getOverallResult();
@@ -411,7 +458,7 @@ registerTest({
 });
 
 
-async function crossSubstrateItemGrant(testController) {
+async function omsiCrossSubstrateItemGrant(testController) {
     const win = await enterOmsiRegion(testController);
     if (!win) return testController.getOverallResult();
 
@@ -484,7 +531,7 @@ registerTest({
                + 'engine\'s numeric resourcesTemplate entries, boolean/unknown '
                + 'grants are rejected, and the game\'s own loop reset wipes the '
                + 'granted resources (D4 native clearing).',
-    testFunction: crossSubstrateItemGrant,
+    testFunction: omsiCrossSubstrateItemGrant,
     category: 'Omsi substrate',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });

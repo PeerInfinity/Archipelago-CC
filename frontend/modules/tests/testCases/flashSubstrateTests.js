@@ -59,7 +59,7 @@ function snapshotHasLocation(snapshot, locationName) {
  * assert the snapshot lists it as checked. If this fails, the bug is in
  * host-side handling, not the iframe transport.
  */
-async function locationCheckDirectDispatch(testController) {
+async function swfLocationCheckDirectDispatch(testController) {
     testController.log('Loading procgen_maze preset…');
     await testController.loadRulesFromFile(PROCGEN_RULES_PATH);
     await testController.stateManager.pingWorker('after-rules-load', 3000);
@@ -118,7 +118,7 @@ registerTest({
                + 'user:locationCheck via the host dispatcher with the bridge\'s '
                + 'locationName-keyed payload, and asserts the snapshot lists it as '
                + 'checked. Isolates the host-side chain from the iframe transport.',
-    testFunction: locationCheckDirectDispatch,
+    testFunction: swfLocationCheckDirectDispatch,
     category: 'flashSubstrate',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });

@@ -7,6 +7,7 @@ import {
   getAllRegisteredTests,
   getAllRegisteredCategories,
   getAllTestFunctions,
+  getTestFunction,
   getRegistryStats,
 } from './testRegistry.js';
 
@@ -151,6 +152,10 @@ export function getDiscoveredCategories() {
 /**
  * Get all test functions (after discovery is complete)
  * @returns {Object} Object with functionName as key and function as value
+ *
+ * ⚠ Keyed by JS FUNCTION NAME — two test files defining same-named
+ * functions collide in this map (the later registration wins both
+ * slots). Prefer getDiscoveredTestFunctionById for running a test.
  */
 export function getDiscoveredTestFunctions() {
   if (!discoveryComplete) {
@@ -162,6 +167,22 @@ export function getDiscoveredTestFunctions() {
   }
 
   return getAllTestFunctions();
+}
+
+/**
+ * Get one test's function by its registered id — the collision-proof
+ * resolution path the runner uses. Returns null when the id is unknown
+ * (or discovery hasn't run).
+ */
+export function getDiscoveredTestFunctionById(testId) {
+  if (!discoveryComplete) {
+    log(
+      'warn',
+      '[TestDiscovery] Tests not yet discovered. Call discoverTests() first.'
+    );
+    return null;
+  }
+  return getTestFunction(testId);
 }
 
 /**
