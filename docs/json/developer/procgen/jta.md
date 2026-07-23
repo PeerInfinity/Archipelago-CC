@@ -26,6 +26,17 @@ The registry entry exposes a PlaybackController as a host-side proxy (the shared
 
 A walk routinely **spans multiple loop resets**: full-zone play at fresh skills costs more than one pool, so the pool empties, the loop resets (skills persist), and loops' parked-action retry re-dispatches the walk — attempts get cheaper as skills compound until the zone completes within a single loop. The bridge keeps a pending walk alive across a same-region reload (the reset-retry case) and re-arms automation for it. `loopSupport.executeVia: 'playbackBot'` makes loops queue `regionMove` actions execute through this path, parking until the resulting `user:regionMove` arrives.
 
+## Block modes: Record, Playback, Instant (M4)
+
+jta is the **second fine-grained substrate** (after the maze) in the loops block-mode system, and the first to speak the shared recording vocabulary. Contract and rationale: [Loop Recording and Block Modes](./loop-recording.md).
+
+- **The recorder is the fork's own performed-actions log.** `getCurrentRunActions()` accumulates an ordered task/item stream across a whole run, with `zone_id` stamped on task *and* item entries. The bridge marks the log length at `jta:loadRegion` and slices `[mark .. now)` at exit — one region visit — dropping the LAST entry, which is always the departure trigger (`applyFinishTaskRepEffects` records the rep *before* `onFullyFinishTask` fires the callback that dispatches the move). Recordings therefore exclude the departing move, like every other substrate's.
+- **The slice is published before the departing `user:regionMove`** (`jta:visitRecording`, same postMessage channel, in call order) — the stash-before-regionMove rule, because the loops Record-exit wake pulls the stash when the move lands.
+- **The payload is converted to the shared `actionQueue` vocabulary** at capture time (task → `clickTask` with `loops` = reps, item → `useItem` with `loops` = count) and stashed for the loops pull via the registry's `takeLastRecording`. Replay runs the script through the shipped **`jtaQueueEngine` executor**, then crosses the recorded exit via the bridge's `crossExit(exitName)` — by stable exit NAME, because multi-exit regions re-inject synthetic exit tasks with fresh ids each visit. ⚠ `jtaQueueEngine` must be **enabled in the module config** wherever jta runs, or the replay silently degrades to "cross the exit without replaying" (it was off in `modules.json` until 2026-07-23).
+- **Instant** drives the fork's `stepTick` in fast batches on top of the running game loop — deliberately *not* `setInstantMode`, whose `completeTaskInstantly` is affordability-blind and would let a replay complete tasks the recording could not afford.
+- **Declaring `record` + `playback` opts jta into the M3b strict action gate.** Substrate actions are only possible while the queue is parked on a matching Manual/Record block. The bridge's `_dispatchRegionMove` carries no `fromLoop`, so a walkTo-driven exit crossing passes only when a block is parked — which is why the four walkTo-driven progression tests are KNOWN-DEFERRED to M6's Bot radio while `jta-record-playback-crosses-zone-boundary` (parked Record, then Playback) is jta's in-app end-to-end stratum.
+- **`requiresLoopMode: true`.** jta regions are not supported outside loop mode: the fork's native reset-to-zone-0 *is* the loop-mode teleport once zones are host regions, so the energy↔pool sync and reset propagation are always-on by contract. Standalone play stays on the legacy `?mode=jta` stack. See [loop-recording.md](./loop-recording.md#requiresloopmode--loop-game-substrates).
+
 ## Play notes
 
 **Automation can park in under-leveled zones.** Free region travel lets you enter zones far ahead of your skills; a Boss whose base cost exceeds `current energy × disparity limit` counts as *blocked*, and the game's default **Pause on Block** stops the automation queue at the first blocked entry (by design in standalone, where you can't out-travel your level). If automation seems dead in an advanced zone, switch the automation panel's setting to **Skip on Block** — automation then does whatever it can and skips what it can't. Deliberately left as the game's default (user decision 2026-07-05); revisit only if it keeps confusing substrate players.
@@ -87,7 +98,7 @@ Two conservatisms to expect. The pass's convergence bar is in-sample: seed 4 fai
 
 ## Capabilities
 
-`supportedFeatures: ['region_topology_from_source', 'arbitrary_ap_locations']` — AP location checks inside zones are live (see above); loop support is queueable `regionMove` (bot-executed, see above) plus manual play, without custom queues. Full contract: [Substrate Registry Reference](./substrate-registry.md).
+`supportedFeatures: ['region_topology_from_source', 'arbitrary_ap_locations']` — AP location checks inside zones are live (see above); loop support is queueable `regionMove` (bot-executed, see above) plus manual play, Record/Playback/Instant and `requiresLoopMode` (see [Block modes](#block-modes-record-playback-instant-m4)), without custom queues (the queue panel is deferred with port-arc Phase 3b). Full contract: [Substrate Registry Reference](./substrate-registry.md).
 
 ## Related documentation
 

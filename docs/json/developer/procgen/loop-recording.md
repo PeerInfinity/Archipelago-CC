@@ -1,8 +1,8 @@
 # Loop Recording and Block Modes
 
-How loop mode captures what a player does in a region and plays it back: the per-block **mode system** (Manual / Record / Playback, with Bot planned), the per-block **Instant** toggle, the **saved-recording store**, the **capture contract** that decides whether the loops module or the substrate owns recording, and the **loop-mode interaction rules** (Record-gated capture, live-play drain, the strict action gate). Built across the M1–M3b sessions of the block-modes arc (2026-07-21/22); the capture contract and interaction rules were settled 2026-07-22 and implemented by the M3b coarse-capture refactor.
+How loop mode captures what a player does in a region and plays it back: the per-block **mode system** (Manual / Record / Playback, with Bot planned), the per-block **Instant** toggle, the **saved-recording store**, the **capture contract** that decides whether the loops module or the substrate owns recording, the **queue annotations** describing what a recorded visit cost, and the **loop-mode interaction rules** (Record-gated capture, live-play drain, the strict action gate). Built across the M1–M4 sessions of the block-modes arc (2026-07-21/23); the capture contract and interaction rules were settled 2026-07-22 and implemented by the M3b coarse-capture refactor, and M4 (2026-07-23) added jta as the second fine-grained substrate plus the annotations layer.
 
-Code lives in `frontend/modules/loops/` (`blockIdentity.js`, `savedQueueStore.js`, `loopModeExemptions.js`, the mode dispatch + gate + observation layer in `loopState.js`) plus per-substrate recorders where the contract calls for them (`mazeRoomUI.js`'s visit recorder — the fine-grained reference; the text adventure has none, being the coarse-only reference).
+Code lives in `frontend/modules/loops/` (`blockIdentity.js`, `savedQueueStore.js`, `blockAnnotations.js`, `loopModeExemptions.js`, the mode dispatch + gate + observation layer in `loopState.js`, the panel affordances in `loopBlockBuilder.js`) plus per-substrate recorders where the contract calls for them (`mazeRoomUI.js`'s visit recorder and the jta wrapper's per-visit slice of the fork's performed-actions log — the two fine-grained substrates; the text adventure has none, being the coarse-only reference).
 
 ## Block modes
 
@@ -12,7 +12,7 @@ A **block** is one region visit in the loops queue — the run of interior entri
 |------|----------|
 | **Manual** | The queue parks; the player drives the region by hand (live play — drains mana, captures nothing). A `user:regionMove` to the expected next region completes the segment; a wrong exit pauses the queue until reset. |
 | **Record** | Manual, plus: the visit is captured (by loops for coarse-only substrates, by the substrate recorder for fine-grained ones), and on a *successful* exit the block's queued interior is rewritten to what the player actually did (the *coarse replacement*; fine-grained substrates also persist the fine recording). Optionally auto-switches the block to Playback (schema-backed setting, default ON). |
-| **Playback** | Fine-grained substrates: if a recording is bound to the block (tag lookup, below), the queue parks and replays it through the substrate. Coarse-only substrates never consult the store — the block's own interior *is* the recording and the generic executor runs it. Otherwise falls through to the auto execution chain: substrate delegation → playback-bot `walkTo` (`executeVia`) → generic timer. |
+| **Playback** | Fine-grained substrates: if a recording is bound to the block (tag lookup, below), the queue parks and replays it through the substrate; **with no bound recording the block parks for live play instead** (Manual behavior) — M4 ruling, and the radio is disabled in that state, so this is a safety net rather than a normal path. Coarse-only substrates never consult the store — the block's own interior *is* the recording and the generic executor runs it, falling through to the auto execution chain (substrate delegation → playback-bot `walkTo` (`executeVia`) → generic timer) where there is nothing to run. |
 | **Bot** *(planned, M6)* | Explicit solver-driven execution; until then Playback's fallback chain covers it. |
 
 **Instant** is a separate per-block toggle (not a mode): a Playback block whose substrate declares `loopSupport.instant` drains its whole replay in one frame instead of animating per tick, and suppresses panel focus-stealing while it runs. The generic timer path honors it too.
@@ -20,14 +20,15 @@ A **block** is one region visit in the loops queue — the run of interior entri
 Identity and resolution:
 
 - The **mode map key is `(region, instanceNumber)`** — a stable, unique block identity (middle visits can't be deleted through the UI; only suffix truncation removes blocks). `blockIdentity.js`'s `resolveQueueBlocks` is the shared resolver both the renderer and execution key off; it exists because a leaving `regionMove`'s own `instanceNumber` names its *destination* block while it renders and drives from its *source* block.
-- Mode precedence: explicit per-block choice → legacy `manualRegionStates` (migrated saves) → the `defaultBlockMode` setting (a `manual` default is capability-clamped so blocks that can't be hand-played never park).
+- Mode precedence: explicit per-block choice → legacy `manualRegionStates` (migrated saves) → the `defaultBlockMode` setting. The default is **Record** (M4; it was Playback through M3b): a fresh run live-plays each block once and, with auto-switch-to-Playback on, replays it thereafter. Defaults are capability-clamped — a `record` default falls back to **Manual** where the substrate can't record (Manual is the live-play mode, which is the point of the Record default), and Manual in turn falls back to Playback where the substrate can't park.
+- **Playback is disabled until the block has playable content** (M4). Fine-grained: a recording bound in the store. Coarse-only: a non-empty block interior. A per-block **recording-exists indicator** in the mode row reports the same answer (`● recorded` / `○ not recorded`). The no-content behavior is Manual parking, so offering Playback would promise a replay the block cannot do — the walkTo/delegation auto chain is unreachable from Playback until M6's Bot radio.
 - Radios only appear where the substrate's `loopSupport` capabilities allow: Record requires `record && playback`; Instant requires `instant`. See the [Substrate Registry Reference](./substrate-registry.md#loop-mode).
 
 ## Recordings and the saved-queue store
 
-*Fine-grained substrates only* — coarse-only substrates write nothing here (the queue itself persists the same information; one source of truth).
+`savedQueueStore.js` persists recordings in localStorage, bucketed by `(rulesHash, substrate, region)`. Each entry is a `SavedQueue`: the substrate-native `actions` array, `arrivalExitId` / `departureExitId`, the M4 `annotations` object, legacy mana metadata (`manaAtEntry` / `manaAtExit` / `manaMin`), and checked-location bookkeeping.
 
-`savedQueueStore.js` persists recordings in localStorage, bucketed by `(rulesHash, substrate, region)`. Each entry is a `SavedQueue`: the substrate-native `actions` array, `arrivalExitId` / `departureExitId`, mana metadata (`manaAtEntry` / `manaAtExit` / `manaMin`), and checked-location bookkeeping.
+Since M4 the store is the **universal recording+metadata envelope**, not a fine-grained-only store. A coarse-only substrate gets an **actions-less** entry under the same tag holding annotations alone — its recording is still the block interior, and coarse Playback still never reads actions from the store. `hasPlayableRecording(entry)` (actions present and non-empty) is the guard on every read, so an annotations envelope can never bind to a Playback block or count as "a recording exists". Two consequences worth knowing: the duplicate check compares `annotations` as well as actions (a coarse re-record always agrees on `actions: []` and a null departure, so without that its stale economy would survive forever), and `loopState.getBlockAnnotations()` — not the recording lookup — is what the panel reads, because coarse blocks have annotations but no playable recording.
 
 A recording is bound to a block by its **persistent recording tag `(arrivalKey, ordinal)`** — distinct from the transient mode-map key. `arrivalKey` is the exit the player arrived through (`'entrance'` for the start region); `ordinal` counts blocks sharing the same `(region, arrivalKey)` pattern. Loops derives the tag on *both* the save and lookup side (`assignRecordingTags` against the live procgenPlayer warehouse), so recorder-side id drift can't desynchronize them. Saving is **replace-on-tag** (re-recording a block replaces its recording; never appends a same-tag duplicate), other-tag entries are kept as FIFO history with a per-region cap, and recordings **survive block deletion** — recreating a matching block auto-restores its recording via tag lookup.
 
@@ -35,7 +36,7 @@ A recording is bound to a block by its **persistent recording tag `(arrivalKey, 
 
 **Coarse-only substrates** (text adventure): loops itself observes the parked live play — every gate-allowed `user:locationCheck` / `loop:exploreCompleted` in the parked region is charged and appended to a host-side capture buffer (`_liveCaptureBuffer`). On a successful exit the buffer is written into the block interior via the coarse replacement and the auto-switch applies. Nothing touches `savedQueueStore`.
 
-**Fine-grained substrates** (maze) keep the M2 **sole-persister protocol**: the substrate's recorder never writes the store. It **stashes** its finalized full-visit capture in a pull-once slot, exposed on the registry entry as `takeLastRecording()`. `loopState` pulls the stash **only when a Record-mode block completes through its expected exit**, then persists it under the block's tag and applies the coarse replacement (the projection of the fine stream).
+**Fine-grained substrates** (maze, jta) keep the M2 **sole-persister protocol**: the substrate's recorder never writes the store. It **stashes** its finalized full-visit capture in a pull-once slot, exposed on the registry entry as `takeLastRecording()`. `loopState` pulls the stash **only when a Record-mode block completes through its expected exit**, then persists it under the block's tag and applies the coarse replacement (the projection of the fine stream).
 
 Either way, **wrong exit, mana-out, or loop reset → the capture is discarded** — loops clears its buffer and never pulls the stash (the next visit overwrites it). Discard is race-free because there is no revoke step. Free-walk capture no longer exists: under the strict action gate a Record region cannot be played without the queue parking on it.
 
@@ -45,9 +46,32 @@ The **coarse replacement** (`_applyCoarseReplacement`) rewrites the block's queu
 
 **Coarse-only substrates**: no recording lookup at all — the generic executor runs the block's own interior, dispatching the same events live play produces (`loop:exploreCompleted`, `user:locationCheck` and `user:regionMove` with `fromLoop: true`). The per-block Instant flag drains it one action per frame.
 
-**Fine-grained substrates**: on entering a Playback block, loops looks up the bound recording by tag; if found it parks the queue and calls the substrate controller's `replayActions(actions, { departureExitId, instant })`. The substrate replays the fine interior, then crosses the recorded departure itself — recordings deliberately **exclude** the departing move (maze slices it out of the queue capture), so the substrate issues the closing `user:regionMove` from `departureExitId` and the parked block advances on the resulting wake, exactly like Manual.
+**Fine-grained substrates**: on entering a Playback block, loops looks up the bound recording by tag; if found it parks the queue and calls the substrate controller's `replayActions(actions, { departureExitId, instant })`. If none is bound the block parks for live play instead of falling through to the auto chain (M4). The substrate replays the fine interior, then crosses the recorded departure itself — recordings deliberately **exclude** the departing move (maze slices it out of the queue capture), so the substrate issues the closing `user:regionMove` from `departureExitId` and the parked block advances on the resulting wake, exactly like Manual.
 
 Replay-emitted events must carry **`fromLoop: true`** — they are queue execution, exempt from the strict action gate, and `gameState` must not treat them as performed play. Both the maze and TA replay paths were bitten by missing flags once (the "double-append" fixes); treat it as a contract.
+
+## Queue annotations — what a recorded visit cost
+
+*All queue-supporting substrates, coarse and fine alike (M4, 2026-07-23).* Code: `blockAnnotations.js`; stored on the `SavedQueue` as `annotations`.
+
+Post-M3b loops is the sole economy observer, so it is the only place that can say what a region visit **cost** and what it **yielded**. A parked Record block runs a tracker for the length of the visit; on a successful exit the tracker is built into:
+
+```js
+{ items: { 'jta/Food': { net: -2, min: -6 } }, xp: { net: 137.4 } }
+```
+
+Rules, all settled with the user:
+
+- **Everything is a delta from block start, never an absolute.** The tracker is created empty at every park, so an annotation describes what *this visit* did and stays meaningful when the block is replayed from a different starting inventory.
+- **The tracked resources are consumable items — including cross-substrate pool items — plus XP.** XP is tracked but never displayed as a badge (it appears in the detail tooltip). **Mana is deferred**: it is not part of the annotations layer yet.
+- **Item identity is the D2 namespaced id `${owningSubstrate}/${itemType}`**, so a grant *into* a substrate and that substrate's own use of the same item fold into one key. Badges strip the namespace; the tooltip keeps it.
+- **Collection is observed live** off the `crossSubstrate:itemGranted` notification bus (the owning substrate keeps the inventory; the host keeps no store). **Consumption comes out of the finalized recording's `useItem` entries.**
+- **The minimum is conservative on purpose.** The two sources have no shared clock — reconstructing an interleaving from two channels is the bug family M3b's coarse-capture refactor exists to prevent — so the stored minimum is the *most conservative* interleaving: every spend before any gain, `min = min(0, total consumed)`. The UI renders it as "needs ≥X at start", which can then overstate but never understate what you need. If a substrate ever publishes live consumption on the same channel as grants, `BlockAnnotationTracker.build()` is the single place that changes.
+- Annotations describe the **recording run**. Playback under different XP discounts drifts; minima are a feasibility estimate, not a measurement, and that is accepted.
+
+**Display rule** (`formatAnnotations`, kept apart from the DOM so it is testable): show NET deltas whenever nonzero; show a minimum **only when it went below zero**; XP and the full per-item numbers ride in the row tooltip.
+
+A discarded recording (wrong exit / mana-out / reset) takes its annotations with it — the tracker is cleared alongside the capture.
 
 ## The capture contract: coarse-only vs. fine-grained substrates
 
@@ -61,7 +85,9 @@ The contract then has exactly two shapes (discriminated **by whether the registr
 | Substrate class | Capture | Replay | Live-play drain | Recorder? |
 |---|---|---|---|---|
 | **Coarse-only** — every action is queue-grade (text adventure) | Loops owns it: observed parked live actions are buffered and written into the block interior | The generic executor runs the block's entries | Loops charges each observed action's `loop_costs` value | **None** — no substrate recorder, no saved recordings |
-| **Fine-grained** — has sub-queue-grade actions (maze) | One substrate recorder captures the **whole visit as a single interleaved stream**, coarse actions included | The substrate replays the fine stream (`replayActions`) | The substrate charges natively at its own granularity (maze: per tile, gated on loops' `livePlayRegion()`) | Yes — the coarse layer is a *projection*: loops filters the stream down to queue-grade entries for the interior |
+| **Fine-grained** — has sub-queue-grade actions (maze, jta) | One substrate recorder captures the **whole visit as a single interleaved stream**, coarse actions included | The substrate replays the fine stream (`replayActions`) | The substrate charges natively at its own granularity (maze: per tile, gated on loops' `livePlayRegion()`; jta: the fork's energy drain, mirrored into the pool by the bridge) | Yes — the coarse layer is a *projection*: loops filters the stream down to queue-grade entries for the interior |
+
+**Recording vocabulary** differs between the two fine-grained substrates and that is deliberate. The maze is grandfathered on its native `move`/`wait` vocabulary. jta (M4) converts at capture time to the **shared `actionQueue` vocabulary** (`clickTask` with `loops` = reps, `useItem` with `loops` = count) and replays through the shipped `jtaQueueEngine` executor — the option that generalizes, so future loop-game substrates (Idle Loops, Cavernous) speak the same dialect. Converging the maze is optional and was explicitly not done in M4.
 
 Two rules fall out, and both exist to prevent real bug classes:
 
@@ -82,7 +108,15 @@ Implementation seams (`loopState.evaluateActionGate` is the single decision poin
 
 - **`user:locationCheck` / `user:exitClicked` / `loop:exploreCompleted`** are gated in the loops dispatcher receivers (`loopEvents.js`) — loops sits below discovery/gameState in the chain, so a swallow blocks the whole effect. The `loop:exploreCompleted` receiver is new in M3b (loops also charges + captures allowed explores there before propagating to discovery).
 - **`user:regionMove` is gated in procgenPlayer's receiver** (via the loops public function `gateSubstrateAction`), NOT in a loops receiver: procgenPlayer has a higher load priority — it receives the event first and publishes the substrate `loadRegion`, so only a consult there can block the move before the substrate visibly switches regions.
-- **Enforcement is staged per substrate**: the gate (and loops-side charging) applies only where the substrate declares `loopSupport.record && loopSupport.playback` — the block-mode-integrated substrates (maze and the text adventure today). Substrates that haven't adopted the mode system (jta, omsi, runner, bounce, flash) keep their current loop-mode behavior until their integration arcs (M4/M5/omsi arc D) declare the capabilities, which opts them in.
+- **Enforcement is staged per substrate**: the gate (and loops-side charging) applies only where the substrate declares `loopSupport.record && loopSupport.playback` — maze, the text adventure, and (since M4) jta. Substrates that haven't adopted the mode system (omsi, runner, bounce, flash) keep their current loop-mode behavior until their integration arcs (M5 / omsi arc D) declare the capabilities, which opts them in.
+
+## `requiresLoopMode` — loop-game substrates
+
+Some substrates are loop games in their own right: their native economy already has "run out of resource → restart from the beginning" baked in. Once their zones are mapped to host regions, a native reset **is** a host teleport-to-start — i.e. the loop-mode reset teleport. A "standalone" mode for such a substrate would reimplement loop mode under another name, and would leave the host path/queue semantics of a game-initiated region-5→region-0 yank undefined.
+
+**User ruling (2026-07-23): such substrates are not supported outside loop mode**, and their always-on economy coupling (energy↔shared-pool sync, reset propagation, the reset teleport) is the documented CONTRACT rather than a bug. `loopSupport.requiresLoopMode` declares it. jta declares it today; omsi and future loop-game substrates (Idle Loops, Cavernous) adopt it as their arcs land. Non-loop substrates (maze, text adventure, runner, bounce, flash) are unaffected.
+
+Enforcement is one guard rail at the single decision point `eventCoordinator._handleSetLoopMode`: a **user-initiated** loop-mode disable is refused while a requires-loop-mode world is loaded (detected by enumerating `procgenPlayer.getWarehouse()` and reading each region's substrate declaration). The preset auto-disable carries `auto: true` and is exempt — it only ever fires for a preset *without* `loop_costs`, which is never a requires-loop-mode world. Standalone play for jta remains available on the legacy `?mode=jta` stack.
 
 ## Gotchas
 
@@ -90,6 +124,7 @@ Implementation seams (`loopState.evaluateActionGate` is the single decision poin
 - **`fromLoop: true` on every replay/executor-emitted event** — see the Playback flow above. Under the strict gate a missing flag doesn't just double-append; it gets the queue's own dispatch *blocked* as unparked live play.
 - **`loopState:queueUpdated` payloads must carry `{ queue }`** — `eventCoordinator._updateRegionsInQueue` iterates it; an empty `{}` throws.
 - **A blocked substrate action may leave the substrate's own UI slightly ahead** — e.g. the TA engine prints its flavor message before the host swallows the check, and a maze player can still walk interior tiles (tile moves emit no host events; only their coarse effects are gated). The host state is authoritative; a visual blocked-state overlay is a possible later affordance.
+- **A fine-grained replay needs its executor MODULE loaded.** jta's replay runs through `jtaQueueEngine`, which was `enabled: false` in `modules.json` until 2026-07-23 — so `getEngine()` returned null and the replay path fell through to "cross the recorded exit anyway", turning Playback into a bare teleport that looked identical to a working replay from the queue's side. Unit tests stub the engine and cannot see this. The fallback now logs loudly; if you add a substrate whose replay depends on another module, enable it in every module config the substrate runs in and assert the replay's *effects*, not just its outcome.
 - **Live-play depletion is owned by the mana wake.** Charging fires `gameState:manaChanged` synchronously; `_handleManualWake_mana` runs the loop reset (refill + discard) before the charging call site regains control — so substrate-side "depleted" checks read the refilled pool and must not fire a second reset. Don't add depletion handling to a charging path without checking the wake.
 
 ## Related documentation
@@ -97,4 +132,5 @@ Implementation seams (`loopState.evaluateActionGate` is the single decision poin
 - [Substrate Registry Reference](./substrate-registry.md) — the `loopSupport` capability fields and `takeLastRecording` hook
 - [Playback and Debugging Tools](./playback-and-debugging.md) — the PlaybackController contract and iframe proxies the replay path rides on
 - [Maze Substrate](./maze.md) — the reference fine-grained recording substrate
+- [JtA Substrate](./jta.md) — the second fine-grained substrate; shared-vocabulary recordings and `requiresLoopMode`
 - [Text Adventure Substrate](./text-adventure.md) — the reference coarse-only substrate

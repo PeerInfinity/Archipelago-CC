@@ -176,13 +176,23 @@ CONTRACT; omsi arc D + future loop-games adopt the flag). Gate opt-in
 broke SIX jta in-app tests (bridge `_dispatchRegionMove` carries no
 `fromLoop` → every walkTo crossing gate-blocked): 2 perk tests → green as
 parked-Manual live play; 4 walkTo tests → `enabled:false` KNOWN-DEFERRED
-to M6. Substrates 45/45. **REMAINING: (a) the in-app record→playback leg
-— PRIORITY, it replaces jta's ONLY end-to-end progression coverage (the
-deferred walkTo tests) — make it multi-region + fold in an
-energy-bonus-raises-pool assertion; (b) slices 4–6 (annotations → UI →
-docs). Kickoff open-qs ANSWERED (memory topic): customQueues stays
-deferred; record-clamp = 'manual'; annotation resources = consumable
-items + XP tracked-not-displayed, mana DEFERRED.** jta CLASSIFIED FINE-GRAINED
+to M6. Substrates 45/45. **M4 COMPLETE 2026-07-23 (Opus session 70): the in-app
+record→playback leg `9e5881a8c`, annotations `7d6837e04`, UI
+`47c3a7f34`, docs — all pushed; substrates 46/46, vitest 3247/3248 (the
+one red is the documented braidRegime2 flake).** The in-app leg
+(`jta-record-playback-crosses-zone-boundary`) is multi-region and drives
+the REAL loops queue: parked Record → hand-played fork task → walkTo
+departure → recording persisted+bound+auto-switched → the same block
+restarted in Playback replays through the jtaQueueEngine executor and
+crosses the zone boundary again, with the energyBonusSync assertion
+folded in. **It found a real slice-3 bug: `jtaQueueEngine` was
+`enabled: false` in `modules.json`, so `getEngine()` returned null and
+jta Playback crossed the exit WITHOUT replaying — a bare teleport the
+unit tests (which stub the engine) could not see.** Kickoff open-qs
+ANSWERED (memory topic): customQueues stays deferred; record-clamp =
+'manual'; annotation resources = consumable items + XP
+tracked-not-displayed, mana DEFERRED. **NEXT: M5 (runner/bounce), then
+M6, then omsi arc D.** jta CLASSIFIED FINE-GRAINED
 (the fork performed-actions recorder is the stream; per-visit slice →
 shared-actionQueue vocabulary → `takeLastRecording`; replay via the
 jtaQueueEngine executor; fork stamps `zone_id` on item entries). Universal

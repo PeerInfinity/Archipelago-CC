@@ -19,7 +19,17 @@
 >    padding the loop-reset counts — fixed in `c78e8a78b`.
 > **Substrates 45/45** (49 baseline − 4 deferred); vitest 3227/3228 (the
 > odd one is the documented braidRegime2 flake, 40/40 alone).
-> **STILL OWED:** the in-app record→playback leg, then slices 4-6.
+>
+> **✅ M4 COMPLETE 2026-07-23 (Opus session 70).** The record→playback leg
+> `9e5881a8c`, annotations `7d6837e04`, UI `47c3a7f34`, docs — all
+> pushed. Substrates **46/46**; vitest 3247/3248 (same braidRegime2
+> flake). The leg found a real slice-3 bug: `jtaQueueEngine` was
+> `enabled: false` in `modules.json`, so `getEngine()` returned null and
+> jta Playback crossed the recorded exit WITHOUT replaying anything —
+> indistinguishable from a working replay from the queue's side, and
+> invisible to unit tests that stub the engine. Enabled the module; the
+> fallback now warns loudly. Durable contract:
+> `docs/json/developer/procgen/loop-recording.md`.
 
 **Written 2026-07-23 (Opus session, mid-M4). Paused at slice 3 pending an
 architectural decision the user flagged for a fresh session.** Companion to
@@ -41,10 +51,10 @@ settled M4 design rulings — don't re-litigate those).
 | **1. Fork zone-stamp on item entries** | ✅ **DONE + BYTE-GATED.** Submodule commit `755056809` (branch `substrate`). `recordPerformedItem` stamps `zone_id: GAMESTATE.current_zone`. jta-parity PASS all 4 scenarios; perturbation canary confirmed non-vacuous. **Gitlink bump NOT yet applied** (outer still points at `e1e38d9f0`); ASK before bumping. Submodule branch UNPUSHED. |
 | **2. Wrapper per-visit slice + converter + stash** | ✅ **DONE + COMMITTED.** Outer commit `59ddb867f`. Bridge slices one visit from the fork's performed-actions log (index-mark at `jta:loadRegion`, drop the departure trigger at exit), publishes `jta:visitRecording` BEFORE the departing `user:regionMove` (11/n ordering); host converts to shared/actionQueue vocab + stashes; registry exposes `takeLastRecording`. +10 unit tests. Byte-inert to jta runtime (nothing pulls the stash until slice 3's caps). |
 | **3. Declare record+playback + executor replay + instant pump** | ✅ **SHIPPED + PUSHED** (`cf5d5d286`). Mechanism landed unchanged from the WIP patch, plus the `requiresLoopMode` invariant + disable guard rail, the parked-Manual restructure of the 2 perk tests, and 4 walkTo tests deferred to M6. ⚠ the in-app **record→playback leg is still owed** (see below). |
-| 3b. In-app record→playback leg | ⏸ **STILL OWED** — precedent `maze-record-playback-crosses-exit` (a focused replay-crosses test). `jtaSubstrateWrapperTests.js` is already in testDiscovery, so it only needs the test + a config id (tests resolve BY ID, `7c3506c52`). |
-| 4. Universal annotations | ⏸ not started |
-| 5. Universal UI | ⏸ not started |
-| 6. Docs | ⏸ not started |
+| 3b. In-app record→playback leg | ✅ **SHIPPED** (`9e5881a8c`) — `jta-record-playback-crosses-zone-boundary`, multi-region and driven through the real loops queue (parked Record → hand-played fork task → walkTo departure → persisted+bound+auto-switched recording → the same block restarted in Playback replays through the jtaQueueEngine executor and crosses the boundary again). Folds in the energyBonusSync assertion from the M6-deferred `jta-starting-energy-bonus-raises-pool`. Found + fixed the `jtaQueueEngine` module-disabled bug. |
+| 4. Universal annotations | ✅ **SHIPPED** (`7d6837e04`) — `blockAnnotations.js`; item deltas + conservative minima + XP, savedQueueStore as the universal envelope with actions-less coarse entries and `hasPlayableRecording` guarding every read. |
+| 5. Universal UI | ✅ **SHIPPED** (`47c3a7f34`) — recording-exists indicator, Playback disabled without playable content, annotation badges per the display rule, `defaultBlockMode` → 'record' with the Manual clamp. |
+| 6. Docs | ✅ **SHIPPED** — loop-recording.md (jta joins the fine-grained column; the annotations contract; `requiresLoopMode`), substrate-registry.md, jta.md, this doc + the handoff queue. |
 
 ### Slice 3 — what's built (in the WIP patch)
 
