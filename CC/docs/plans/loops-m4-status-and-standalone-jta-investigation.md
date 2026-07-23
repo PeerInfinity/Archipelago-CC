@@ -5,6 +5,14 @@ architectural decision the user flagged for a fresh session.** Companion to
 the kickoff `NewDocs/plans/loops-m4-jta-opus-kickoff.md` (which holds the
 settled M4 design rulings — don't re-litigate those).
 
+> **⚠ RESOLVED 2026-07-23 (Fable review session, USER RULING): jta regions
+> are NOT supported outside loop mode — the standalone split proposed in
+> "Deferred to a fresh session" below is SUPERSEDED.** The findings (§
+> Investigation) were verified against the code and stand; the *fix
+> direction* changed. See "Ruling + revised plan" at the bottom — that
+> section, not the original deferred-fix list, is what the resuming
+> session implements.
+
 ## M4 progress
 
 | Slice | State |
@@ -121,7 +129,7 @@ not cleanly separate.
    is the architectural decoupling in (4); the tests then choose their axis
    deliberately (standalone bridge-mechanic vs. loops-integrated flow).
 
-## Deferred to a fresh session (the fix)
+## ~~Deferred to a fresh session (the fix)~~ SUPERSEDED — see "Ruling + revised plan" below
 
 1. **Decide + implement the loop-mode ↔ standalone-jta split.** Likely: gate
    the bridge's energy-sync + reset-propagation (and the resourceChannels
@@ -139,9 +147,78 @@ not cleanly separate.
 ## Artifacts / pointers
 
 - Slice-3 WIP: `CC/docs/plans/loops-m4-slice3-wip.patch` (apply with
-  `git apply` from repo root; excludes the submodule pointer).
+  `git apply` from repo root; excludes the submodule pointer). The
+  working-tree copy was REVERTED 2026-07-23 after verifying the patch is
+  byte-identical to it — `git apply` restores it exactly.
 - Fork commit (slice 1): submodule `755056809` (UNPUSHED; gitlink un-bumped).
 - Slice 2 commit: `59ddb867f`.
 - Substrates run log this session: was under the session scratchpad.
 - Kickoff (design rulings): `NewDocs/plans/loops-m4-jta-opus-kickoff.md`.
 - Memory: `project_loops_block_modes`.
+
+## Ruling + revised plan (Fable review session, 2026-07-23 — THE plan for the resuming session)
+
+**Review outcome first: every investigation claim above was verified
+against the code** — bridge.js has zero `isLoopModeActive`/
+`getLoopModeActive` references (energy sync + reset propagation
+unguarded); `resourceChannels/index.js:160,182` → `_fireReset` →
+`fireLoopResetTeleport` with no loop-mode check; `evaluateActionGate`'s
+first check returns allowed when loop mode is off; auto-enable/disable at
+`loops/index.js:180-196`. The slice-3 mechanism matches the M4 rulings on
+every checked point (crossExit `fromLoop:true`, energy-respecting
+`stepTick` pump, executor-routed replay, fine-grained
+Playback-without-recording parks).
+
+**USER RULING (2026-07-23): jta regions are NOT supported outside loop
+mode.** Rationale: the fork's native economy has reset-to-zone-0
+semantics baked in. With zones mapped to host regions, a native reset IS
+a host teleport-to-start — i.e. `fireLoopResetTeleport`, the loop-mode
+reset mechanism. A "standalone" jta-regions mode would reimplement loop
+mode under another name (and leave the host path/queue semantics of a
+game-initiated region-5→region-0 yank undefined). **The always-on
+economy coupling the investigation flagged as the bug is hereby the
+documented CONTRACT.** Standalone jta play remains available via the
+legacy `?mode=jta` stack (different module config; untouched).
+**Generalizes:** the same ruling applies to omsi (native mana-out
+restarts the loop) for arc D, and to future loop-game substrates
+(Idle Loops, Cavernous) — capture as a general declaration (e.g.
+`requiresLoopMode`), not a jta special case. Non-loop substrates
+(maze/TA/runner/bounce/flash) are unaffected.
+
+**Revised work list (replaces the superseded deferred-fix list):**
+
+1. **Formalize the invariant.** `requiresLoopMode`-style declaration on
+   the jta wrapper + a guard rail: the only remaining path to the
+   incoherent state is the user-facing manual toggle
+   (`loopUI.js:334`, `action:'toggle'`) — refuse (warn-and-refuse) a
+   manual DISABLE while a requires-loop-mode substrate's world is
+   loaded. The M3b preset auto-enable/auto-disable already handles rules
+   loads (jta presets carry loop_costs; auto-enable fires at rules load,
+   before any region load / bridge activation). Optional: defensive warn
+   in the bridge if it activates with loop mode off.
+2. **Restructure the 3 red tests WITHIN loop mode** (not around it):
+   - `jta-location-check-and-perk-grant` + `jta-prestige-perk-regrant`
+     test AP integration (perk grants), which is NOT loop economy — they
+     work under the gate via **parked-Manual live play** (park a Manual
+     block in the zone region, drive checks as live play; the
+     `parkedLivePlay` exemption exists for exactly this, and it is the
+     honest post-M3b shape of manual play). Drains apply — one economy.
+   - `jta-bot-walkto-exit` tests the executeVia-walkTo path slice 3
+     makes deliberately unreachable until M6's Bot radio: register it
+     `enabled:false` KNOWN-DEFERRED with a pointer to M6 (tasw #4
+     precedent). The walkTo machinery itself STAYS (it becomes the M6
+     Bot path). Note: it also relied on the reset teleport to compound
+     skills across attempts — restructure when M6 revives it.
+3. **Finish slice 3 as built** (`git apply
+   CC/docs/plans/loops-m4-slice3-wip.patch`) — the mechanism needed NO
+   changes for this ruling — then substrates green, the in-app
+   record→playback leg, commit slice 3, ASK before the gitlink bump,
+   then slices 4–6 per the kickoff.
+
+**Boundary note for implementers (from the review):** nothing gets gated
+on loop mode anymore, but keep the conceptual boundary straight — the
+bridge's AP-integration surface (perk grants/`perkOrigin.js`,
+location-check reconciliation, prestige regrant) is AP semantics, not
+loop economy; the invariant + guard rail are about the ECONOMY coupling
+(energy sync, reset propagation, reset teleport) being loop-mode-only by
+contract.
