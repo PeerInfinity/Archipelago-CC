@@ -562,17 +562,44 @@ export const substrateRegistryEntry = Object.freeze({
     // persists it to savedQueueStore only on a successful Record-mode exit.
     takeLastRecording: () => takeLastVisitRecording(),
 
-    // Loop-mode capabilities. executeVia makes the loops queue drive
-    // regionMove actions through the PlaybackController's walkTo (the
-    // queue parks until the resulting user:regionMove arrives) instead
-    // of the generic progress timer. Custom queues are wanted
-    // eventually but jta has no queue recording yet — flip
-    // customQueues when that lands. No locations / explore in v1
-    // regions, so regionMove is the only queueable action.
+    // Loop-mode capabilities (M4). jta is a FINE-GRAINED substrate:
+    //   - record + playback: DECLARED — the fork performed-actions recorder
+    //     is the full-visit stream (takeLastRecording above), and Playback
+    //     replays the captured clickTask/useItem script through the
+    //     jtaQueueEngine executor. Declaring both OPTS JTA INTO THE STRICT
+    //     ACTION GATE (M3b staged enforcement): substrate actions are only
+    //     possible while the queue is parked on a matching Manual/Record
+    //     block. A Playback block WITHOUT a bound recording parks for live
+    //     play (Manual behavior) — the walkTo/delegation auto chain is
+    //     unreachable from Playback until M6's Bot radio (executeVia stays
+    //     declared for that future path + the current pre-record flows).
+    //   - instant: DECLARED — a Playback block drains its recorded script in
+    //     one frame via the fork's stepTick pump (setInstantMode + drive
+    //     stepTick while the game loop is unpaused).
+    //   - customQueues stays false — the queue panel (port arc Phase 3b) is
+    //     deferred; flip it when that lands (user ruling 2026-07-23).
+    //   - requiresLoopMode: DECLARED — a general contract flag (not a jta
+    //     special case; omsi and future loop-game substrates adopt it too).
+    //     jta regions are NOT supported outside loop mode: the fork's native
+    //     economy has reset-to-zone-0 baked in, and with zones mapped to host
+    //     regions a native reset IS a host teleport-to-start (the loop-mode
+    //     reset teleport). The energy<->shared-pool sync + reset propagation
+    //     are therefore always-on by CONTRACT (user ruling 2026-07-23). loops
+    //     enforces this by refusing a manual loop-mode DISABLE while a
+    //     requires-loop-mode world is loaded (preset auto-enable/disable
+    //     already covers rules loads). Standalone jta play stays on the legacy
+    //     ?mode=jta stack. See loop-recording.md.
+    // regionMove is still the only queue-grade (block-interior) action; the
+    // fine clickTask/useItem script lives in the saved recording, not the
+    // block interior (jta v1 regions emit no AP locations / explores).
     loopSupport: Object.freeze({
         queueActions: Object.freeze(['regionMove']),
         manual: true,
         customQueues: false,
+        record: true,
+        playback: true,
+        instant: true,
+        requiresLoopMode: true,
         executeVia: 'playbackBot',
     }),
 

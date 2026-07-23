@@ -35,6 +35,7 @@
 import { registerTest } from '../testRegistry.js';
 import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
 import { centralRegistry } from '../../../app/core/centralRegistry.js';
+import { getGameStateSingleton } from '../../gameState/singleton.js';
 import settingsManager from '../../../app/core/settingsManager.js';
 import { JTA_PERK_ITEM_NAMES } from '../../jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
 import {
@@ -46,6 +47,7 @@ import {
     JTA_LOCTEST_START_REGION,
     JTA_LOCTEST_PERK_LOCATION,
     JTA_LOCTEST_PERK_ITEM,
+    JTA_LOCTEST_PERK_TASK_ID,
     waitForJtaActive,
     moveToRegion,
     resetJtaSaveAndReload,
@@ -73,6 +75,66 @@ function snapshotHasLocation(snapshot, name) {
     if (Array.isArray(checked)) return checked.includes(name);
     if (checked && typeof checked === 'object') return !!checked[name];
     return false;
+}
+
+/**
+ * Park a Manual loops block on `region` so the zone's live actions (AP
+ * location checks from task completions) pass the M3b strict action gate
+ * via the `parkedLivePlay` exemption.
+ *
+ * M4 opts jta into the strict gate (loopSupport declares record+playback),
+ * and jta presets carry loop_costs → loop mode auto-enables. A jta region's
+ * task-completion `user:locationCheck` publishes carry no fromLoop
+ * (bridge.js `_handleTaskCompleted`), so with no parked block the gate
+ * blocks them (`notStarted`). These tests verify AP integration (perk
+ * grants), NOT loop economy — the honest post-M3b shape of driving them is
+ * parked-Manual LIVE PLAY (user ruling 2026-07-23): park a Manual block,
+ * then drive the perk task to completion in-place (drains apply, one
+ * economy). Mirrors mazeBlockModeTests' parked-live-drain setup, adapted to
+ * jta's graph exit.
+ *
+ * Returns a restore handle, or null if loop mode is off (gate inactive —
+ * no parking needed) or the block could not be parked.
+ */
+async function parkManualBlockInRegion(testController, region, targetRegion, exitId) {
+    const gs = getGameStateSingleton();
+    if (gs?.isLoopModeActive !== true) {
+        testController.log(`loop mode inactive — no parked block needed for ${region}`);
+        return null;
+    }
+    const loopStateSingleton = (await import('../../loops/loopStateSingleton.js')).default;
+    const { resolveQueueBlocks } = await import('../../loops/blockIdentity.js');
+
+    // Queue a regionMove OUT of `region` — that defines the block loops
+    // parks on (the maze precedent; the graph exit is the preset's exit_E).
+    gs.updatePath(targetRegion, exitId, region);
+    const { visits } = resolveQueueBlocks(loopStateSingleton.getActionQueue());
+    const visit = [...visits].reverse().find((v) => v.name === region);
+    if (!visit) {
+        testController.log(`could not resolve a queue block for ${region}`);
+        return null;
+    }
+    loopStateSingleton.setBlockMode(region, visit.instance, 'manual');
+    const savedSpeed = loopStateSingleton.gameSpeed;
+    loopStateSingleton.setGameSpeed(10000); // hurry the arrival move to the park
+    loopStateSingleton.startProcessing();
+    const parked = await testController.pollForCondition(
+        () => loopStateSingleton._manualActionEntered === true,
+        `queue parked on the Manual block in ${region}`,
+        8000, 100);
+    if (!parked) {
+        testController.log(`queue did not park on the Manual block in ${region}`);
+        return null;
+    }
+    return { loopStateSingleton, savedSpeed, gs };
+}
+
+/** Undo parkManualBlockInRegion: restore speed and leave loop mode off so
+ *  the active flag can't leak into a later test's non-loop preset. */
+function unparkManualBlock(handle) {
+    if (!handle) return;
+    try { handle.loopStateSingleton.setGameSpeed(handle.savedSpeed); } catch { /* best-effort */ }
+    try { handle.gs.setLoopModeActive(false); } catch { /* best-effort */ }
 }
 
 /** Shared setup: load the preset, enter the jta region, wait for the bridge. */
@@ -557,26 +619,37 @@ async function locationCheckAndPerkGrant(testController) {
     testController.assertEqual('perk location not yet checked', false,
         snapshotHasLocation(testController.stateManager.getSnapshot(), JTA_LOCTEST_PERK_LOCATION));
 
-    // Drive zone 0 with the PlaybackController walkTo — the proven driver
-    // (it arms the game's automation to play the zone toward the exit).
-    // Instant Mode + abundant energy completes the zone in ONE pass
-    // (manaEnabled is off here, so nothing re-pins the energy and no loop
-    // reset is needed). Taking the exit disarms automation at zone 1, so
-    // only zone 0's single perk-task (13 = How to Read) is completed.
-    const controller = substrateRegistry.get('jta')?.getPlaybackController?.();
-    testController.assertEqual('registry exposes a live PlaybackController', true, !!controller);
-    if (!controller) return testController.getOverallResult();
-    controller.instant();
-    gameWin.setEnergy(1e9);
-    controller.walkTo({ kind: 'exit', name: 'exit_E' });
-    testController.log('walkTo exit_E — playing zone 0…');
+    // M4: jta now opts into the M3b strict action gate, and this preset's
+    // loop_costs auto-enables loop mode — so the perk-task location check
+    // needs a parked Manual block to pass (parked-Manual live play, user
+    // ruling 2026-07-23; this test verifies AP integration, not loop
+    // economy). Park the block, then complete the single zone-0 perk-task
+    // (13 = How to Read) in-place via the fork — the player stays in the
+    // region so the block stays parked while the check fires.
+    const parkHandle = await parkManualBlockInRegion(
+        testController, JTA_LOCTEST_REGION, 'region_1_0', 'exit_E');
+    testController.assertEqual('parked a Manual block in the zone region', true, !!parkHandle);
+    if (!parkHandle) return testController.getOverallResult();
+    // Parking replayed the queue and reloaded the region — re-acquire the
+    // (same) game window and keep drains from resetting mid-completion.
+    const playWin = await waitForJtaActive(testController) ?? gameWin;
+    const savedNoReset = parkHandle.gs.noManaDepletionReset;
+    parkHandle.gs.noManaDepletionReset = true;
+    try {
+        const done = await completeTask(testController, playWin, JTA_LOCTEST_PERK_TASK_ID,
+            `zone-0 perk task ${JTA_LOCTEST_PERK_TASK_ID} completed`);
+        testController.assertEqual('zone-0 perk task completed', true, done);
 
-    // Leg 1 — the perk-task completion is reported as an AP location check
-    // (durable: stays checked once it lands).
-    const checked = await eventually(testController,
-        () => snapshotHasLocation(testController.stateManager.getSnapshot(), JTA_LOCTEST_PERK_LOCATION),
-        `perk location ${JTA_LOCTEST_PERK_LOCATION} checked`, 60000, 500);
-    testController.assertEqual('perk-task completion reported as an AP location check', true, checked);
+        // Leg 1 — the perk-task completion is reported as an AP location check
+        // (durable: stays checked once it lands).
+        const checked = await eventually(testController,
+            () => snapshotHasLocation(testController.stateManager.getSnapshot(), JTA_LOCTEST_PERK_LOCATION),
+            `perk location ${JTA_LOCTEST_PERK_LOCATION} checked`, 30000, 500);
+        testController.assertEqual('perk-task completion reported as an AP location check', true, checked);
+    } finally {
+        parkHandle.gs.noManaDepletionReset = savedNoReset;
+        unparkManualBlock(parkHandle);
+    }
 
     // Leg 2 — the AP round-trip delivers the perk item back.
     const gotItem = await eventually(testController,
@@ -720,6 +793,19 @@ async function prestigePerkRegrant(testController) {
     // foreign one; the one that appears next is task 13's own-world perk.
     const [foreignPerk] = [...heldPerks(win)];
 
+    // M4: task-13's location check (leg 2) needs a parked Manual block to
+    // pass the strict gate (parked-Manual live play; this leg verifies AP
+    // integration, not loop economy — user ruling 2026-07-23). Legs 3–5
+    // exercise the reset/prestige machinery, which already runs under loop
+    // mode, so park only for leg 2 and let leg 3's energy-reset teleport
+    // clear the block via the mana-wake reset.
+    const prestigePark = await parkManualBlockInRegion(
+        testController, JTA_PRESTIGETEST_REGION, 'region_1_0', 'exit_E');
+    testController.assertEqual('parked a Manual block for the leg-2 location check', true, !!prestigePark);
+    if (!prestigePark) return testController.getOverallResult();
+    const savedPrestigeNoReset = prestigePark.gs.noManaDepletionReset;
+    prestigePark.gs.noManaDepletionReset = true;
+
     // Leg 2 — completing task 13 checks its AP location and grants its perk.
     const ownDone = await completeTask(testController, win, JTA_PRESTIGETEST_OWN_TASK_ID,
         `task ${JTA_PRESTIGETEST_OWN_TASK_ID} completed`);
@@ -737,6 +823,10 @@ async function prestigePerkRegrant(testController) {
         () => Number(testController.stateManager.getSnapshot()?.inventory?.[JTA_PRESTIGETEST_OWN_ITEM] ?? 0) > 0,
         `received AP item '${JTA_PRESTIGETEST_OWN_ITEM}'`, 15000, 250);
     testController.assertEqual('own perk returned as a received AP item', true, gotOwnItem);
+
+    // Restore reset behavior so leg 3's energy depletion teleports as
+    // designed (and clears the parked block via the mana-wake reset).
+    prestigePark.gs.noManaDepletionReset = savedPrestigeNoReset;
 
     // Leg 3 — reach a real prestige. Complete the zone-14 Prestige task (cost
     // zeroed, so normal ticking finishes it), then let the wealth trigger turn
@@ -808,6 +898,10 @@ async function prestigePerkRegrant(testController) {
         1, Number(invAfter[JTA_PRESTIGETEST_OWN_ITEM] ?? 0));
     testController.assertEqual('perks held == perk items received once the task is re-run',
         JTA_PERK_ITEM_NAMES.filter((n) => Number(invAfter[n] ?? 0) > 0).length, heldPerks(win).size);
+
+    // Leave loop mode off so the auto-enabled flag can't leak into a later
+    // test's non-loop preset (leg 3's reset already unparked the block).
+    unparkManualBlock(prestigePark);
 
     return testController.getOverallResult();
 }

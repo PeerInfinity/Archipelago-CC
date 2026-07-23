@@ -199,10 +199,11 @@ describe('LoopBlockBuilder — loopSupport capability gating', () => {
         const flash = (await import('../flashSubstrate/flashSubstrateLibrary.js')).substrateRegistryEntry;
 
         // M2: maze + textAdventure DECLARE record + playback (Record requires
-        // both). The others don't yet (their recorders/replay land M4–M5).
-        // M3: maze + textAdventure additionally DECLARE instant (per-block
-        // Instant toggle); the others don't yet (jta pump = M4, runner/bounce
-        // = M5, omsi = arc D).
+        // both). M4: jta additionally DECLARES record + playback + instant
+        // (fine-grained via the fork recorder; executor replay + stepTick
+        // pump). The remaining ones don't yet (runner/bounce = M5, omsi = arc
+        // D). M3/M4: maze + textAdventure + jta DECLARE instant (per-block
+        // Instant toggle); the others don't yet.
         expect(maze.loopSupport).toMatchObject({
             manual: true, customQueues: true, record: true, playback: true, instant: true,
         });
@@ -213,10 +214,24 @@ describe('LoopBlockBuilder — loopSupport capability gating', () => {
         });
         expect([...tasw.loopSupport.queueActions]).toContain('explore');
 
-        expect(jta.loopSupport).toMatchObject({ manual: true, customQueues: false });
-        expect(jta.loopSupport.record ?? false).toBe(false);
-        expect(jta.loopSupport.instant ?? false).toBe(false);
+        // M4: jta declares record + playback + instant; customQueues stays
+        // false (queue panel deferred). regionMove remains its only
+        // queue-grade action — the fine script lives in the saved recording.
+        // requiresLoopMode: jta's native reset-to-zone-0 economy is the
+        // loop-mode reset teleport once zones are host regions — a general
+        // contract flag (omsi/future loop-games adopt it), not a jta special
+        // case; loops refuses a manual loop-mode disable while it is loaded.
+        expect(jta.loopSupport).toMatchObject({
+            manual: true, customQueues: false, record: true, playback: true,
+            instant: true, requiresLoopMode: true,
+        });
         expect([...jta.loopSupport.queueActions]).toEqual(['regionMove']);
+        // The other substrates do NOT require loop mode (non-loop-game or
+        // native-standalone economies).
+        expect(maze.loopSupport.requiresLoopMode ?? false).toBe(false);
+        expect(tasw.loopSupport.requiresLoopMode ?? false).toBe(false);
+        expect(bounce.loopSupport.requiresLoopMode ?? false).toBe(false);
+        expect(flash.loopSupport.requiresLoopMode ?? false).toBe(false);
 
         expect(bounce.loopSupport).toMatchObject({ manual: true, customQueues: false });
         expect(bounce.loopSupport.instant ?? false).toBe(false);

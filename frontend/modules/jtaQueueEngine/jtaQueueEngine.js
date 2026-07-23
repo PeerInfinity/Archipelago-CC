@@ -282,6 +282,44 @@ export class JTAQueueEngine {
         this.#notifyStatusChange();
     }
 
+    /**
+     * Replay a recorded action script through a transient executor (M4 loops
+     * fine-grained Playback). The recorded clickTask/useItem entries run over
+     * the live transport with the fork's automation off (beginRun / endRun),
+     * WITHOUT touching the user's built queue or its snapshot. When the queue
+     * exhausts, automation is restored and onComplete fires — loops crosses
+     * the recorded departure exit on that signal. Auto-drain and auto-reset
+     * are disabled: a replay is exactly the recorded interior, no more.
+     * @param {object[]} actions - actionQueue entries (clickTask / useItem)
+     * @param {{ onComplete?: Function }} [opts]
+     */
+    replayRecording(actions, { onComplete } = {}) {
+        if (this.#executor) this.#executor.stop();
+
+        const replayQueue = new ActionQueue();
+        for (const a of Array.isArray(actions) ? actions : []) replayQueue.add(a);
+
+        const replaySettings = { ...this.#settings, drainEnabled: false, autoReset: false };
+        const replayExecutor = new JTAQueueExecutor(replayQueue, this.#transport, replaySettings);
+        replayExecutor.onStatusChange = () => this.#notifyStatusChange();
+        replayExecutor.onQueueExhausted = () => {
+            replayExecutor.stop();
+            if (this.#transport.isBridge) this.#transport.endRun();
+            this.#executor = null;
+            this.#emitStatusMessage('Replay complete');
+            this.#notifyStatusChange();
+            try { onComplete?.(); } catch (e) { /* isolate a bad completion cb */ }
+        };
+
+        this.#executor = replayExecutor;
+        // Automation off before the first command (beginRun publishes the mode
+        // change ahead of the executor's first performTask, same as start()).
+        if (this.#transport.isBridge) this.#transport.beginRun();
+        replayExecutor.start();
+        this.#emitStatusMessage('Replaying recording...');
+        this.#notifyStatusChange();
+    }
+
     /** Clear the execution snapshot (reset progress without clearing queue). */
     reset() {
         this.#loadoutRunCount = 0;

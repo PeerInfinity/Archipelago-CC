@@ -2,6 +2,7 @@
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { SubscriptionTracker } from '../shared/subscriptionTracker.js';
 import { getCostDataManager } from './index.js';
 
@@ -414,6 +415,27 @@ export class EventCoordinator {
     const activatePanel = data?.activatePanel !== false;
     logger.info(`Received loops:setLoopMode with action: ${action}, current mode: ${this.loopUI.isLoopModeActive}, activatePanel: ${activatePanel}`);
 
+    // requiresLoopMode invariant guard rail (M4). A substrate can declare
+    // loopSupport.requiresLoopMode when its native economy is inseparable
+    // from loop mode (jta: reset-to-zone-0 ≡ the loop-mode reset teleport
+    // once zones are host regions). Disabling loop mode while such a world
+    // is loaded leaves the host path/queue semantics of a game-initiated
+    // region-yank undefined, so refuse a USER-initiated disable. The only
+    // path here that would disable is the manual toggle button
+    // (loopUI.js:334) or an explicit disable; the preset auto-DISABLE
+    // (loops/index.js) carries `auto:true` and is exempt — it only ever
+    // fires for a preset WITHOUT loop_costs (never a requires-loop-mode
+    // world). Enabling is always allowed.
+    const wouldDisable =
+      this.loopUI.isLoopModeActive &&
+      (action === 'disable' || action === 'toggle');
+    if (wouldDisable && !data?.auto && this._worldRequiresLoopMode()) {
+      logger.warn(
+        'Refusing to disable loop mode: the loaded world contains a substrate that requires loop mode (loopSupport.requiresLoopMode). Load a different preset to leave loop mode.'
+      );
+      return;
+    }
+
     // Get panelManager for panel activation (if available)
     const panelManagerInstance = (activatePanel && this.loopUI.getPanelManager)
       ? this.loopUI.getPanelManager()
@@ -495,6 +517,32 @@ export class EventCoordinator {
     } else if (!this.loopUI.isLoopModeActive) {
       this._restoreDiscoverySettings();
     }
+  }
+
+  /**
+   * True when the currently-loaded world contains any region whose
+   * substrate declares loopSupport.requiresLoopMode. Enumerates the
+   * procgen warehouse (region → substrate id) and checks the registry.
+   * Returns false when no warehouse is loaded (non-procgen rules / test
+   * harness) so the guard never blocks in those cases.
+   * @private
+   */
+  _worldRequiresLoopMode() {
+    try {
+      const warehouse = centralRegistry
+        .getPublicFunction('procgenPlayer', 'getWarehouse')?.();
+      if (!warehouse?.values) return false;
+      for (const entry of warehouse.values()) {
+        const sub = entry?.substrate;
+        if (!sub) continue;
+        if (substrateRegistry.get(sub)?.loopSupport?.requiresLoopMode) {
+          return true;
+        }
+      }
+    } catch {
+      // A lookup failure must not brick the toggle — fail open (allow).
+    }
+    return false;
   }
 
   /**

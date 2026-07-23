@@ -194,6 +194,10 @@ async function handleRulesLoaded(eventData) {
     _moduleEventBus.publish('loops:setLoopMode', {
       action: 'disable',
       activatePanel: false,
+      // Exempt from the requiresLoopMode guard rail: this is the system
+      // auto-disable for a preset WITHOUT loop_costs (never a
+      // requires-loop-mode world), not a user-initiated leave.
+      auto: true,
     });
   }
 

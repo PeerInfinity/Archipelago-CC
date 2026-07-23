@@ -535,6 +535,10 @@ function _handleLoadRegion(payload) {
     if (regionId !== _currentRegionId) {
         _clearPendingWalk();
     }
+    // Defensive: a Playback instant pump belongs to the visit we're leaving;
+    // stop it before loading a new region (the replay driver normally stops it
+    // on completion, but a mid-replay reset/interrupt could leave it running).
+    _stopInstantPump();
 
     // Apply any loop resets the host fired while we were inactive,
     // then push the host pool's current/max into JtA.
@@ -1015,6 +1019,54 @@ function _handleWalkTo(target) {
     log('debug', `walkTo: zone playing toward exit '${exit.exitName}' (policy=${_playbackAutomationPolicy})`);
 }
 
+// Instant-mode replay pump (M4). A Playback block flagged Instant drains its
+// recorded script in "one frame" — but the fork's setInstantMode uses
+// completeTaskInstantly, which is AFFORDABILITY-BLIND (it ignores energy) and
+// would let a replay complete tasks the recording couldn't afford. So the
+// pump instead drives the fork's NORMAL tick (stepTick) in fast batches on top
+// of the running game loop — energy-respecting, matching the jtaDatasetTests
+// stepTick-pump discipline. The host executor's clickTask round-trips
+// interleave between interval ticks; the pump only accelerates completion.
+let _instantPumpId = null;
+const INSTANT_PUMP_BATCH = 50;
+
+function _startInstantPump() {
+    if (_instantPumpId != null) return;
+    if (typeof _w.resumeGameLoop === 'function') _w.resumeGameLoop();
+    if (typeof _w.stepTick !== 'function' || typeof setInterval !== 'function') return;
+    _instantPumpId = setInterval(() => {
+        // Skip a batch while the loop is paused (game over / mid-reset) — the
+        // same guard the dataset test uses; stepping then would be invalid.
+        if (_w.isGameLoopPaused?.() === true) return;
+        for (let i = 0; i < INSTANT_PUMP_BATCH; i++) _w.stepTick();
+    }, 0);
+}
+
+function _stopInstantPump() {
+    if (_instantPumpId == null) return;
+    clearInterval(_instantPumpId);
+    _instantPumpId = null;
+}
+
+// Cross a recorded departure exit during Playback replay (M4). The recording
+// EXCLUDES the departing move, and multi-exit regions re-inject synthetic
+// exit-choice tasks with fresh ids each visit (so a recorded exit-task id
+// wouldn't match) — replay crosses via the STABLE exitName instead. Resolves
+// the target from the live world and publishes user:regionMove with
+// fromLoop:true (queue execution — gate-exempt, and gameState must not treat
+// it as performed play or double-append the parked block's queued move). Does
+// NOT finalize a recording (that path is Record-only).
+function _crossExit(exitName) {
+    if (!_client) return;
+    const exit = _getRegionExits().find((e) => (e?.exitName ?? e?.exit_id) === exitName);
+    _client.publishEventDispatcher('user:regionMove', {
+        sourceRegion: _currentRegionId,
+        targetRegion: exit?.targetRegion ?? null,
+        exitName: exitName ?? null,
+        fromLoop: true,
+    }, { initialTarget: 'bottom' });
+}
+
 function _handlePlaybackControl(payload) {
     const method = payload?.method;
     const args = Array.isArray(payload?.args) ? payload.args : [];
@@ -1031,6 +1083,15 @@ function _handlePlaybackControl(payload) {
             return;
         case 'instant':
             if (typeof _w.setInstantMode === 'function') _w.setInstantMode(true);
+            return;
+        case 'startInstantPump':
+            _startInstantPump();
+            return;
+        case 'stopInstantPump':
+            _stopInstantPump();
+            return;
+        case 'crossExit':
+            _crossExit(args[0]);
             return;
         case 'reset':
             // Game-initiated reset semantics: flows through the

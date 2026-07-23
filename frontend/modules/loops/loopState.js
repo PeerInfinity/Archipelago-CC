@@ -1012,11 +1012,24 @@ export class LoopState {
       if (modeBlock && blockMode === 'playback'
           && this._boundReplayCheckedIndex !== this.currentActionIndex) {
         this._boundReplayCheckedIndex = this.currentActionIndex;
-        const bound = this._substrateHasRecorder(this._lookupSubstrateId(modeBlock.region))
+        const isFineGrained = this._substrateHasRecorder(this._lookupSubstrateId(modeBlock.region));
+        const bound = isFineGrained
           ? this._lookupBoundRecording(modeBlock.region, modeBlock.instance)
           : null;
         if (bound) {
           this._handlePlaybackReplayEntry(modeBlock.region, bound);
+          return;
+        }
+        // M4 ruling: a FINE-GRAINED substrate in Playback with NO bound
+        // recording has no playable content — the auto walkTo/delegation chain
+        // is unreachable from Playback until M6's Bot radio. Park for live play
+        // (Manual behavior) instead of falling through to that chain. (This is
+        // the safety net for a cleared/missing recording; the Playback radio is
+        // disabled without playable content, so it rarely triggers.) Coarse-
+        // only substrates are unaffected: their block interior IS the
+        // recording, run by the generic executor below.
+        if (isFineGrained) {
+          this._handleManualRegionEntry(modeBlock.region);
           return;
         }
       }

@@ -467,3 +467,50 @@ describe('EventCoordinator — loop-state lifecycle events', () => {
     expect(checkbox.checked).toBe(true);
   });
 });
+
+describe('EventCoordinator — requiresLoopMode disable guard rail (M4)', () => {
+  // The guard refuses a USER-initiated loop-mode disable while a world
+  // containing a requiresLoopMode substrate (jta) is loaded. It reads
+  // _worldRequiresLoopMode(), which enumerates the procgen warehouse; we
+  // override it on the instance to isolate the guard from that lookup.
+  function setup(isLoopModeActive, worldRequires) {
+    const bus = makeBus();
+    const loopUI = makeStubLoopUI({ isLoopModeActive });
+    const coord = new EventCoordinator(bus, loopUI);
+    coord._worldRequiresLoopMode = () => worldRequires;
+    coord.subscribeToEvents();
+    return { bus, loopUI, coord };
+  }
+
+  it('refuses a manual TOGGLE that would disable while a requiresLoopMode world is loaded', () => {
+    const { bus, loopUI } = setup(true, true);
+    bus.publish('loops:setLoopMode', { action: 'toggle' });
+    expect(loopUI.calls.find(c => c.method === 'toggleLoopMode')).toBeUndefined();
+  });
+
+  it('refuses an explicit DISABLE while a requiresLoopMode world is loaded', () => {
+    const { bus, loopUI } = setup(true, true);
+    bus.publish('loops:setLoopMode', { action: 'disable' });
+    expect(loopUI.calls.find(c => c.method === 'toggleLoopMode')).toBeUndefined();
+  });
+
+  it('EXEMPTS the system auto-disable (auto:true) even in a requiresLoopMode world', () => {
+    const { bus, loopUI } = setup(true, true);
+    bus.publish('loops:setLoopMode', { action: 'disable', auto: true });
+    expect(loopUI.calls.find(c => c.method === 'toggleLoopMode')).toBeDefined();
+  });
+
+  it('allows a manual toggle-disable when the loaded world does NOT require loop mode', () => {
+    const { bus, loopUI } = setup(true, false);
+    bus.publish('loops:setLoopMode', { action: 'toggle' });
+    expect(loopUI.calls.find(c => c.method === 'toggleLoopMode')).toBeDefined();
+  });
+
+  it('does not block a toggle that would ENABLE (loop mode currently off)', () => {
+    // Loop mode off → a toggle enables; the guard only fires on disables.
+    // With cost data absent the enable path routes through toggleLoopMode.
+    const { bus, loopUI } = setup(false, true);
+    bus.publish('loops:setLoopMode', { action: 'toggle' });
+    expect(loopUI.calls.find(c => c.method === 'toggleLoopMode')).toBeDefined();
+  });
+});
