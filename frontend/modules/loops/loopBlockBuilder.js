@@ -432,10 +432,13 @@ export class LoopBlockBuilder {
    * Whether a block has PLAYABLE CONTENT — what the M4 recording-exists
    * indicator reports and what the Playback radio is gated on.
    *
-   * The two capture contracts answer this differently (loop-recording.md):
+   * The three capture contracts answer this differently (loop-recording.md):
    *   - FINE-GRAINED (maze, jta): the recording lives in savedQueueStore,
    *     bound to the block by its (arrivalKey, ordinal) tag. An
    *     annotations-only envelope does NOT count (hasPlayableRecording).
+   *   - SUMMARY (runner, bounce — M5): the recording is the visit's net
+   *     result, bound by the same tag but guarded on hasSummaryRecording.
+   *     The block interior is a readability projection, not the content.
    *   - COARSE-ONLY (text adventure): the block's own INTERIOR is the
    *     recording — the generic executor replays it and never consults the
    *     store. So a non-empty interior IS the playable content.
@@ -443,11 +446,20 @@ export class LoopBlockBuilder {
    * @param {Array} actions - the block's queued actions ({pathEntry, index})
    */
   getBlockPlayableContent(regionName, instanceNumber, actions = []) {
-    const fineGrained = loopState.isFineGrainedRegion(regionName);
-    const hasContent = fineGrained
-      ? loopState.hasBoundRecording(regionName, instanceNumber)
-      : actions.some((a) => (a?.pathEntry?.type ?? a?.type) !== 'regionMove');
-    return { fineGrained, hasContent };
+    const shape = loopState.getRegionCaptureShape?.(regionName)
+      ?? (loopState.isFineGrainedRegion(regionName) ? 'fine' : 'coarse');
+    let hasContent;
+    if (shape === 'fine') {
+      hasContent = loopState.hasBoundRecording(regionName, instanceNumber);
+    } else if (shape === 'summary') {
+      hasContent = loopState.hasBoundSummary(regionName, instanceNumber);
+    } else {
+      hasContent = actions.some((a) => (a?.pathEntry?.type ?? a?.type) !== 'regionMove');
+    }
+    // `fineGrained` is retained for the indicator tooltips, which read
+    // "a saved recording is bound" vs "this block has queued actions" —
+    // a summary block answers like the former.
+    return { shape, fineGrained: shape !== 'coarse', hasContent };
   }
 
   addModeRadios(detailsEl, regionName, instanceNumber, offers = this.getModeOffers(regionName),

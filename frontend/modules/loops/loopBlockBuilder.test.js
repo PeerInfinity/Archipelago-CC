@@ -198,14 +198,16 @@ describe('LoopBlockBuilder — loopSupport capability gating', () => {
         const tasw = (await import('../textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js')).substrateRegistryEntry;
         const jta = (await import('../jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js')).substrateRegistryEntry;
         const bounce = (await import('../bounceDemo/bounceDemoLibrary.js')).substrateRegistryEntry;
+        const runner = (await import('../runnerDemo/runnerDemoLibrary.js')).substrateRegistryEntry;
         const flash = (await import('../flashSubstrate/flashSubstrateLibrary.js')).substrateRegistryEntry;
 
         // M2: maze + textAdventure DECLARE record + playback (Record requires
         // both). M4: jta additionally DECLARES record + playback + instant
         // (fine-grained via the fork recorder; executor replay + stepTick
-        // pump). The remaining ones don't yet (runner/bounce = M5, omsi = arc
-        // D). M3/M4: maze + textAdventure + jta DECLARE instant (per-block
-        // Instant toggle); the others don't yet.
+        // pump). M5: runner + bounce declare record + playback + instant too,
+        // as the SUMMARY category (`summaryRecording`) — no recorder, so they
+        // are not fine-grained. Only omsi (arc D) and the bare flash entry
+        // still don't declare.
         expect(maze.loopSupport).toMatchObject({
             manual: true, customQueues: true, record: true, playback: true, instant: true,
         });
@@ -235,10 +237,27 @@ describe('LoopBlockBuilder — loopSupport capability gating', () => {
         expect(bounce.loopSupport.requiresLoopMode ?? false).toBe(false);
         expect(flash.loopSupport.requiresLoopMode ?? false).toBe(false);
 
-        expect(bounce.loopSupport).toMatchObject({ manual: true, customQueues: false });
-        expect(bounce.loopSupport.instant ?? false).toBe(false);
-        expect([...bounce.loopSupport.queueActions]).toEqual(['regionMove', 'locationCheck']);
-        expect([...bounce.loopSupport.queueActions]).not.toContain('explore');
+        // M5: runner + bounce are the SUMMARY substrates — field-for-field
+        // equal declarations (one implementation, two declaration sites).
+        // They declare `summaryRecording` and NO recorder; `instant` is
+        // declared for the focus-suppression seam (summary playback is
+        // inherently instant, so no per-block Instant checkbox is offered).
+        for (const [name, entry] of [['bounce', bounce], ['runner', runner]]) {
+            expect(entry.loopSupport, name).toMatchObject({
+                manual: true, customQueues: false,
+                record: true, playback: true, instant: true, summaryRecording: true,
+                executeVia: 'playbackBot',
+            });
+            expect([...entry.loopSupport.queueActions], name)
+                .toEqual(['regionMove', 'locationCheck']);
+            expect([...entry.loopSupport.queueActions], name).not.toContain('explore');
+            // Not fine-grained: no full-visit recorder to pull a stream from.
+            expect(typeof entry.takeLastRecording, name).not.toBe('function');
+            // Ruling 7: runner/bounce are NOT loop games — no native
+            // "resource out → restart run" economy — so they must not
+            // cargo-cult jta's loop-game contract flag.
+            expect(entry.loopSupport.requiresLoopMode ?? false, name).toBe(false);
+        }
 
         expect(flash.loopSupport).toMatchObject({ manual: true, customQueues: false });
         expect(flash.loopSupport.instant ?? false).toBe(false);
@@ -264,12 +283,15 @@ describe('LoopBlockBuilder.getBlockPlayableContent (M4)', () => {
         substrateRegistry.clear();
     });
 
-    function stub(substrateId, { recorder = false } = {}) {
+    function stub(substrateId, { recorder = false, summary = false } = {}) {
         substrateRegistry.register({
             id: substrateId, label: substrateId, panelComponentType: 'p',
             loadRegionEvent: `${substrateId}:load`,
             ...(recorder ? { takeLastRecording: () => null } : {}),
-            loopSupport: { queueActions: ['regionMove'], manual: true, record: true, playback: true },
+            loopSupport: {
+                queueActions: ['regionMove'], manual: true, record: true, playback: true,
+                ...(summary ? { summaryRecording: true } : {}),
+            },
         });
         centralRegistry.registerPublicFunction('procgenPlayer', 'getRegionInfo',
             () => ({ substrate: substrateId, label: substrateId }));
@@ -284,25 +306,41 @@ describe('LoopBlockBuilder.getBlockPlayableContent (M4)', () => {
         // recording lives in savedQueueStore. With none bound, a block full
         // of queued actions still has nothing to play back.
         expect(builder.getBlockPlayableContent('R', 1, [move, check, move]))
-            .toEqual({ fineGrained: true, hasContent: false });
+            .toEqual({ shape: 'fine', fineGrained: true, hasContent: false });
     });
 
     it('COARSE-ONLY: content means a non-empty interior (boundary moves do not count)', () => {
         stub('coarse');
         expect(builder.getBlockPlayableContent('R', 1, [move, move]))
-            .toEqual({ fineGrained: false, hasContent: false });
+            .toEqual({ shape: 'coarse', fineGrained: false, hasContent: false });
         expect(builder.getBlockPlayableContent('R', 1, [move, check, move]))
-            .toEqual({ fineGrained: false, hasContent: true });
+            .toEqual({ shape: 'coarse', fineGrained: false, hasContent: true });
     });
 
-    it('reads the fine/coarse split off the registry, not off the region name', () => {
+    it('SUMMARY (M5): content means a bound summary, never the interior', () => {
+        stub('summary_sub', { summary: true });
+        // Like a fine-grained block, a summary block's interior is a
+        // readability projection of what was recorded — not the thing
+        // Playback runs. With no summary bound there is nothing to apply,
+        // however many actions the block holds.
+        expect(builder.getBlockPlayableContent('R', 1, [move, check, move]))
+            .toEqual({ shape: 'summary', fineGrained: true, hasContent: false });
+    });
+
+    it('reads the capture shape off the registry, not off the region name', () => {
         stub('coarse');
-        expect(builder.getBlockPlayableContent('R', 1, []).fineGrained).toBe(false);
+        expect(builder.getBlockPlayableContent('R', 1, []).shape).toBe('coarse');
         expect(loopState.isFineGrainedRegion('R')).toBe(false);
         substrateRegistry.clear();
         stub('fine', { recorder: true });
-        expect(builder.getBlockPlayableContent('R', 1, []).fineGrained).toBe(true);
+        expect(builder.getBlockPlayableContent('R', 1, []).shape).toBe('fine');
         expect(loopState.isFineGrainedRegion('R')).toBe(true);
+        substrateRegistry.clear();
+        stub('summary_sub', { summary: true });
+        expect(builder.getBlockPlayableContent('R', 1, []).shape).toBe('summary');
+        // A summary substrate is NOT fine-grained: it has no recorder, so
+        // nothing may pull a fine stream from it.
+        expect(loopState.isFineGrainedRegion('R')).toBe(false);
     });
 });
 

@@ -474,16 +474,32 @@ export function createRunnerSubstrateEntry({
         // Loop-mode capabilities: regionMove + locationCheck queue
         // actions map to the playback bot's implementations via
         // executeVia: 'playbackBot' (bounce's contract — the loops
-        // queue parks and the bot plays; loops charges the action's
-        // loop_costs value on completion). Until the phase-8 bot
-        // driver lands, getPlaybackController's null makes the bot
-        // no-op. NO explore action; manual play yes; custom queues no
-        // (same judgment as bounce, user decision 2026-06-12).
+        // queue parks and the bot plays). `executeVia` stays declared
+        // for M6's Bot radio, which re-homes that path; it is NOT
+        // reachable from Playback (see below). NO explore action;
+        // manual play yes; custom queues no (same judgment as bounce,
+        // user decision 2026-06-12).
+        //
+        // M5 (2026-07-23): runner is a SUMMARY-recording substrate — the
+        // third capture category beside coarse-only (text adventure) and
+        // fine-grained (maze, jta). Record captures the NET RESULT of the
+        // visit (duration in drain seconds, performed checks, departure
+        // exit) rather than a replayable action stream; Playback applies
+        // that envelope instantly. Hence `summaryRecording: true` as the
+        // discriminator (fine-grained is discriminated by the registry
+        // entry supplying `takeLastRecording`, which runner does not).
+        // `instant: true` is declared for the focus-suppression seam —
+        // summary playback is inherently instant, so no per-block Instant
+        // checkbox is offered. See docs loop-recording.md.
         loopSupport: Object.freeze({
             queueActions: Object.freeze(['regionMove', 'locationCheck']),
             executeVia: 'playbackBot',
             manual: true,
             customQueues: false,
+            record: true,
+            playback: true,
+            instant: true,
+            summaryRecording: true,
         }),
 
         // The substrate's zone table places this item itself

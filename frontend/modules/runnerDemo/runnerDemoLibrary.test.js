@@ -127,13 +127,20 @@ describe('runner entry — playback + loop support', () => {
         expect(substrateRegistryEntry.getPlaybackController()).toBe(proxy);
     });
 
-    it('declares the bounce-shaped loop capabilities', () => {
+    it('declares the bounce-shaped loop capabilities — the SUMMARY category (M5)', () => {
         expect(substrateRegistryEntry.loopSupport).toEqual({
             queueActions: ['regionMove', 'locationCheck'],
             executeVia: 'playbackBot',
             manual: true,
             customQueues: false,
+            record: true,
+            playback: true,
+            instant: true,
+            summaryRecording: true,
         });
+        // Summary ≠ fine-grained: no full-visit recorder exists to pull a
+        // replayable action stream from. The recording is the net RESULT.
+        expect(substrateRegistryEntry.takeLastRecording).toBeUndefined();
     });
 });
 

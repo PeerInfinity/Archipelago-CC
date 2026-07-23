@@ -33,8 +33,13 @@
  *     departureExitId,    // string or null if the visit didn't exit
  *     actions,            // substrate-native action array; EMPTY for a
  *                         //   coarse substrate's annotations-only entry
+ *                         //   and for a SUMMARY entry (M5)
  *     annotations,        // M4: {items: {key: {net, min}}, xp: {net}} —
  *                         //   deltas from block start, or null/absent
+ *     summary,            // M5: {durationSeconds, checks: string[],
+ *                         //   costedActions: [...]} — the NET RESULT of a
+ *                         //   summary substrate's visit (runner, bounce).
+ *                         //   Absent for coarse / fine-grained entries.
  *     manaAtEntry,        // number — currentMana when the visit began
  *     manaAtExit,         // number — currentMana when the visit ended
  *     manaMin,            // number — lowest currentMana reached during visit
@@ -106,17 +111,22 @@ function sameTag(existing, candidate) {
 
 /**
  * Byte-identical recording — same tag AND same departure AND same actions
- * AND the same annotations. Annotations matter to the comparison because a
- * COARSE substrate's entry (M4 slice 4) is ACTIONS-LESS: two successive
- * coarse recordings of the same block always agree on `actions: []` and a
- * null departure, so without this a re-record with a different economy would
- * read as a duplicate and the stale annotations would survive.
+ * AND the same annotations AND the same summary. Annotations matter to the
+ * comparison because a COARSE substrate's entry (M4 slice 4) is
+ * ACTIONS-LESS: two successive coarse recordings of the same block always
+ * agree on `actions: []` and a null departure, so without this a re-record
+ * with a different economy would read as a duplicate and the stale
+ * annotations would survive. The `summary` field (M5) is ACTIONS-LESS for
+ * the same reason and needs the same treatment: a re-record of a summary
+ * block that took a different amount of time — the thing Playback prices
+ * off — must not read as a duplicate.
  */
 function isDuplicate(existing, candidate) {
     return sameTag(existing, candidate)
         && existing.departureExitId === candidate.departureExitId
         && actionsEqual(existing.actions, candidate.actions)
-        && JSON.stringify(existing.annotations ?? null) === JSON.stringify(candidate.annotations ?? null);
+        && JSON.stringify(existing.annotations ?? null) === JSON.stringify(candidate.annotations ?? null)
+        && JSON.stringify(existing.summary ?? null) === JSON.stringify(candidate.summary ?? null);
 }
 
 /**
@@ -129,6 +139,25 @@ function isDuplicate(existing, candidate) {
  */
 export function hasPlayableRecording(entry) {
     return Array.isArray(entry?.actions) && entry.actions.length > 0;
+}
+
+/**
+ * Whether a stored entry holds a SUMMARY recording (M5) — the net result of
+ * a summary substrate's visit (runner, bounce): how long it took, which
+ * checks it performed, which explicitly-costed actions it ran. A summary
+ * entry is deliberately ACTIONS-LESS (`actions: []`), so
+ * `hasPlayableRecording` is false for it: it is not a replayable script and
+ * must never bind to a fine-grained Playback block. This is its parallel
+ * guard — the one summary Playback and the ● indicator read.
+ *
+ * `durationSeconds` is the required field: it is what replay-time repricing
+ * multiplies the region's current drain rate by, so an entry without it is
+ * not a usable summary regardless of what else it carries.
+ */
+export function hasSummaryRecording(entry) {
+    const s = entry?.summary;
+    return !!s && typeof s === 'object' && !Array.isArray(s)
+        && Number.isFinite(s.durationSeconds);
 }
 
 /**

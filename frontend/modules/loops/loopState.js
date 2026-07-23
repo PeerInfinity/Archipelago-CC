@@ -20,7 +20,9 @@ import discoveryStateSingleton from '../discovery/singleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { blockKeyOf, resolveQueueBlocks, assignRecordingTags } from './blockIdentity.js';
-import { getSavedQueues, getSavedQueueByTag, saveQueue, hasPlayableRecording } from './savedQueueStore.js';
+import {
+  getSavedQueues, getSavedQueueByTag, saveQueue, hasPlayableRecording, hasSummaryRecording,
+} from './savedQueueStore.js';
 import { BlockAnnotationTracker, itemKey } from './blockAnnotations.js';
 import { hashRulesData } from '../shared/rulesHash.js';
 import { isLoopModePlanningSource } from './loopModeExemptions.js';
@@ -1036,26 +1038,34 @@ export class LoopState {
       if (modeBlock && blockMode === 'playback'
           && this._boundReplayCheckedIndex !== this.currentActionIndex) {
         this._boundReplayCheckedIndex = this.currentActionIndex;
-        const isFineGrained = this._substrateHasRecorder(this._lookupSubstrateId(modeBlock.region));
-        const bound = isFineGrained
-          ? this._lookupBoundRecording(modeBlock.region, modeBlock.instance)
-          : null;
-        if (bound) {
-          this._handlePlaybackReplayEntry(modeBlock.region, bound);
-          return;
-        }
-        // M4 ruling: a FINE-GRAINED substrate in Playback with NO bound
-        // recording has no playable content — the auto walkTo/delegation chain
-        // is unreachable from Playback until M6's Bot radio. Park for live play
-        // (Manual behavior) instead of falling through to that chain. (This is
-        // the safety net for a cleared/missing recording; the Playback radio is
-        // disabled without playable content, so it rarely triggers.) Coarse-
-        // only substrates are unaffected: their block interior IS the
-        // recording, run by the generic executor below.
-        if (isFineGrained) {
+        const shape = this._captureShapeForRegion(modeBlock.region);
+        if (shape === 'fine') {
+          const bound = this._lookupBoundRecording(modeBlock.region, modeBlock.instance);
+          if (bound) {
+            this._handlePlaybackReplayEntry(modeBlock.region, bound);
+            return;
+          }
+          // M4 ruling: a FINE-GRAINED substrate in Playback with NO bound
+          // recording has no playable content — the auto walkTo/delegation
+          // chain is unreachable from Playback until M6's Bot radio. Park for
+          // live play (Manual behavior) instead of falling through to that
+          // chain. (This is the safety net for a cleared/missing recording;
+          // the Playback radio is disabled without playable content, so it
+          // rarely triggers.)
           this._handleManualRegionEntry(modeBlock.region);
           return;
         }
+        if (shape === 'summary') {
+          // M5: a SUMMARY substrate (runner, bounce) in Playback applies its
+          // recorded net result instantly — slice 4 installs that branch
+          // here. With no bound summary it joins the fine-grained ruling
+          // above: park for live play rather than fall through to the
+          // walkTo/bot chain, which stays M6's to re-home.
+          this._handleManualRegionEntry(modeBlock.region);
+          return;
+        }
+        // Coarse-only substrates are unaffected: their block interior IS the
+        // recording, run by the generic executor below.
       }
       // Manual entry: stop accruing progress, hand control to the
       // player via the substrate panel. The wake handlers (subscribed
@@ -1305,6 +1315,29 @@ export class LoopState {
   }
 
   /**
+   * The stored SUMMARY bound to a summary-substrate block by its tag, or
+   * null (M5). Parallel to _lookupBoundRecording: same tag lookup, but
+   * guarded on `hasSummaryRecording` instead of `hasPlayableRecording` —
+   * a summary entry is actions-less by design and must never bind to a
+   * fine-grained replay, nor a fine recording to an instant apply.
+   */
+  _lookupBoundSummary(region, instance) {
+    const rulesHash = this._rulesHash();
+    if (!rulesHash) return null;
+    const substrate = this._lookupSubstrateId(region);
+    if (!substrate) return null;
+    const tag = this._recordingTagForBlock(region, instance);
+    if (!tag) return null;
+    const entry = getSavedQueueByTag(rulesHash, region, substrate, tag.arrivalKey, tag.ordinal);
+    return hasSummaryRecording(entry) ? entry : null;
+  }
+
+  /** Whether a SUMMARY recording is bound to this block (M5). */
+  hasBoundSummary(region, instance) {
+    return !!this._lookupBoundSummary(region, instance);
+  }
+
+  /**
    * The stored annotations for a block, or null. Separate from
    * _lookupBoundRecording because annotations exist for COARSE blocks too,
    * where there is no playable recording to bind. Used by the panel.
@@ -1405,7 +1438,12 @@ export class LoopState {
    */
   _finalizeRecordBlock(region, instance) {
     const substrate = this._lookupSubstrateId(region);
-    if (this._substrateHasRecorder(substrate)) {
+    // M5 slice 3 adds the SUMMARY branch here (persist the visit's net
+    // result — duration, checks, costed actions — alongside the coarse
+    // interior replacement). Until then a summary substrate finalizes on
+    // the coarse path, which is the correct interior rewrite (ruling 6)
+    // minus the summary envelope.
+    if (this._captureShapeFor(substrate) === 'fine') {
       const rec = this._persistRecordingForBlock(region, instance);
       if (rec) this._applyCoarseReplacement(region, instance, rec);
     } else {
@@ -1545,7 +1583,7 @@ export class LoopState {
    * for coarse ones.
    */
   isFineGrainedRegion(region) {
-    return this._substrateHasRecorder(this._lookupSubstrateId(region));
+    return this._captureShapeForRegion(region) === 'fine';
   }
 
   /**
@@ -1693,6 +1731,47 @@ export class LoopState {
   }
 
   /**
+   * The substrate's CAPTURE SHAPE — the single resolver every
+   * shape-dependent branch goes through, so a new category can never fall
+   * into another's behavior by omission (M5). Three categories:
+   *
+   *   'fine'    — the registry entry supplies `takeLastRecording` (maze,
+   *               jta): the substrate captures + replays a full interleaved
+   *               action stream and charges its own native economy.
+   *   'summary' — loopSupport declares `summaryRecording` (runner, bounce):
+   *               the recording is the NET RESULT of the visit (duration,
+   *               performed checks, departure exit) and Playback applies it
+   *               instantly; the game replays nothing.
+   *   'coarse'  — everything else (text adventure): the block's own queued
+   *               interior IS the recording, run by the generic executor.
+   *
+   * The fine check wins if a substrate somehow declared both — a real
+   * recorder is the stronger contract. See loop-recording.md.
+   */
+  _captureShapeFor(substrateId) {
+    if (!substrateId) return 'coarse';
+    if (this._substrateHasRecorder(substrateId)) return 'fine';
+    try {
+      if (substrateRegistry?.get?.(substrateId)?.loopSupport?.summaryRecording) return 'summary';
+    } catch { /* fall through to coarse */ }
+    return 'coarse';
+  }
+
+  /** The capture shape of a REGION's substrate (see _captureShapeFor). */
+  _captureShapeForRegion(region) {
+    return this._captureShapeFor(this._lookupSubstrateId(region));
+  }
+
+  /**
+   * Public form of _captureShapeForRegion — the panel needs it to decide
+   * what "a recording exists" means for a block (loopBlockBuilder's
+   * getBlockPlayableContent).
+   */
+  getRegionCaptureShape(region) {
+    return this._captureShapeForRegion(region);
+  }
+
+  /**
    * Whether the strict action gate is ENFORCED for a region's substrate.
    * The gate model is substrate-universal, but enforcement rolls out with
    * each substrate's block-mode integration (declared record + playback —
@@ -1823,7 +1902,13 @@ export class LoopState {
     const liveRegion = this.livePlayRegion();
     if (!liveRegion || liveRegion !== regionName) return;
     const substrate = this._lookupSubstrateId(regionName);
-    if (!substrate || this._substrateHasRecorder(substrate)) return;
+    if (!substrate) return;
+    // FINE-GRAINED substrates drain natively and capture through their own
+    // recorder — loops observes nothing. COARSE-ONLY and SUMMARY substrates
+    // are both charged and captured here; M5 slice 2 splits their PRICING
+    // (summary substrates charge only costs explicitly present in the
+    // loop_costs data, never the 50/100 fallbacks).
+    if (this._captureShapeFor(substrate) === 'fine') return;
     this._chargeLiveAction(type === 'explore'
       ? { type: 'customAction', sourceRegion: regionName }
       : { type: 'locationCheck', locationName, sourceRegion: regionName });
@@ -2258,11 +2343,14 @@ export class LoopState {
     if (!manualRegion && t !== 'manual' && t !== 'customQueue') return;
     // Rule 2 (session 66b): live play drains — charge the departing
     // regionMove the player just performed, success or wrong exit alike
-    // (the move happened either way). Coarse-only substrates only; fine-
-    // grained substrates charge their own native economy per tile.
+    // (the move happened either way). Coarse-only AND summary substrates
+    // (M5) are charged here; fine-grained substrates charge their own
+    // native economy per tile. M5 slice 2 splits the two pricings — a
+    // summary substrate's departure costs only what loop_costs states
+    // explicitly, never the 50 fallback.
     const liveRegion = this.livePlayRegion();
     if (liveRegion && liveRegion === (data?.oldRegion ?? liveRegion)
-        && !this._substrateHasRecorder(this._lookupSubstrateId(liveRegion))) {
+        && this._captureShapeForRegion(liveRegion) !== 'fine') {
       this._chargeLiveAction({ type: 'regionMove', sourceRegion: liveRegion });
       // The charge may have depleted mana: deductMana fires manaChanged
       // synchronously, whose wake runs _resetLoop (mana-out mid-Record

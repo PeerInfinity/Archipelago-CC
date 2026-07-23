@@ -7,6 +7,7 @@ import {
     saveQueue,
     clearForRegion,
     hasPlayableRecording,
+    hasSummaryRecording,
     _testOnly_clearAll,
 } from './savedQueueStore.js';
 
@@ -224,5 +225,60 @@ describe('savedQueueStore — the M4 universal envelope', () => {
         const bucket = getSavedQueues(RULES_HASH, 'region_0_0', 'text_adventure');
         expect(bucket).toHaveLength(1);
         expect(bucket[0].annotations.items['text_adventure/Lamp']).toEqual({ net: 4, min: -1 });
+    });
+});
+
+describe('savedQueueStore — the M5 summary envelope', () => {
+    // A SUMMARY entry is how a summary substrate (runner, bounce) stores the
+    // net result of a visit: how long it took, which checks it performed,
+    // which explicitly-costed actions it ran. Also actions-less — its
+    // "recording" is not a replayable script — so the two guards must not
+    // confuse it with either of the other categories.
+    function makeSummary(overrides = {}) {
+        return {
+            regionName: 'region_2_2',
+            substrate: 'runner',
+            arrivalExitId: 'entrance',
+            departureExitId: 'Right arrow',
+            actions: [],
+            annotations: { items: { 'runner/Coin': { net: 1, min: 0 } }, xp: { net: 12 } },
+            summary: { durationSeconds: 4, checks: ['Coin 1'], costedActions: [] },
+            ...overrides,
+        };
+    }
+
+    it('hasSummaryRecording separates a summary from the other two categories', () => {
+        expect(hasSummaryRecording(makeSummary())).toBe(true);
+        // A fine recording is not a summary...
+        expect(hasSummaryRecording(makeQueue())).toBe(false);
+        // ...and a summary is not a playable (fine) recording: it is
+        // actions-less by design, so it must never bind to a replay.
+        expect(hasPlayableRecording(makeSummary())).toBe(false);
+        expect(hasSummaryRecording(null)).toBe(false);
+        expect(hasSummaryRecording({})).toBe(false);
+        // durationSeconds is what replay-time repricing multiplies by, so a
+        // summary without it is not usable.
+        expect(hasSummaryRecording(makeSummary({ summary: { checks: [] } }))).toBe(false);
+        expect(hasSummaryRecording(makeSummary({ summary: [] }))).toBe(false);
+    });
+
+    it('a changed summary is NOT a duplicate, even with identical actions and annotations', () => {
+        // The same trap as annotations (M4): a summary entry always agrees on
+        // `actions: []`, so if the duplicate check ignored `summary` a
+        // re-record that took a different amount of time — the very thing
+        // Playback prices off — would be discarded and the stale duration
+        // would survive forever.
+        expect(saveQueue(RULES_HASH, makeSummary())).toBe('saved');
+        expect(saveQueue(RULES_HASH, makeSummary())).toBe('duplicate');
+
+        const slower = makeSummary({
+            summary: { durationSeconds: 9, checks: ['Coin 1'], costedActions: [] },
+        });
+        expect(saveQueue(RULES_HASH, slower)).toBe('saved');
+
+        // Replace-on-tag: still exactly one entry, carrying the new duration.
+        const bucket = getSavedQueues(RULES_HASH, 'region_2_2', 'runner');
+        expect(bucket).toHaveLength(1);
+        expect(bucket[0].summary.durationSeconds).toBe(9);
     });
 });

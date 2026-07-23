@@ -1250,3 +1250,166 @@ describe('M4 — coarse substrates get an ACTIONS-LESS annotations entry', () =>
     expect(annotationsAreEmpty(entry.annotations)).toBe(false);
   });
 });
+
+// ---------------------------------------------------------------------------
+// M5 slice 1 — the SUMMARY capture category (runner, bounce). A third shape
+// beside coarse-only and fine-grained: the recording is the visit's NET
+// RESULT, and Playback applies it instantly rather than replaying anything.
+// This slice lands the shape resolver, the store guards, and the Playback
+// dispatch branch; the drain, the capture and the instant apply follow.
+// ---------------------------------------------------------------------------
+
+// Register a SUMMARY substrate for region 'A' — record+playback+instant
+// declared, NO takeLastRecording, and a playback controller shaped like the
+// real runner/bounce PlaybackProxy: walkTo (the M6 bot path) but NO
+// replayActions, by design.
+function registerSummarySubstrate({ regions = ['A'] } = {}) {
+  try { centralRegistry.publicFunctions.get('procgenPlayer')?.delete('getRegionInfo'); } catch { /* ignore */ }
+  try { centralRegistry.publicFunctions.get('procgenPlayer')?.delete('getWarehouse'); } catch { /* ignore */ }
+  try { substrateRegistry.clear?.(); } catch { /* ignore */ }
+  const handles = { walkToCalls: [] };
+  substrateRegistry.register?.({
+    id: 'sum_sub',
+    label: 'Summary',
+    panelComponentType: 'sumPanel',
+    loadRegionEvent: 'sum:loadRegion',
+    loopSupport: {
+      queueActions: ['regionMove', 'locationCheck'],
+      executeVia: 'playbackBot',
+      manual: true, customQueues: false,
+      record: true, playback: true, instant: true, summaryRecording: true,
+    },
+    getPlaybackController: () => ({
+      walkTo: (...args) => { handles.walkToCalls.push(args); return true; },
+    }),
+  });
+  centralRegistry.registerPublicFunction('procgenPlayer', 'getRegionInfo', (region) => (
+    regions.includes(region) ? { substrate: 'sum_sub', label: 'Summary', manaEnabled: true } : null
+  ));
+  return handles;
+}
+
+function makeSummaryEntry(overrides = {}) {
+  return {
+    regionName: 'A', substrate: 'sum_sub',
+    arrivalExitId: 'go', ordinal: 0, departureExitId: 'exit',
+    actions: [],
+    annotations: { items: {}, xp: { net: 12 } },
+    summary: { durationSeconds: 4, checks: ['Loc1'], costedActions: [] },
+    ...overrides,
+  };
+}
+
+describe('M5 — capture shape resolution', () => {
+  let loopState;
+  beforeEach(() => {
+    resetSavedQueueStore();
+    clearRulesHashCache();
+    ({ loopState } = wire());
+  });
+
+  it('resolves the three categories off the registry', () => {
+    registerSummarySubstrate();
+    expect(loopState.getRegionCaptureShape('A')).toBe('summary');
+    // An AP-native region has no substrate at all → the coarse default,
+    // which is what every non-declaring caller has always assumed.
+    expect(loopState.getRegionCaptureShape('APNative')).toBe('coarse');
+
+    registerCoarseSubstrate();
+    expect(loopState.getRegionCaptureShape('A')).toBe('coarse');
+
+    registerRecordSubstrate();
+    expect(loopState.getRegionCaptureShape('A')).toBe('fine');
+  });
+
+  it('a summary substrate is NOT fine-grained (nothing may pull a fine stream from it)', () => {
+    registerSummarySubstrate();
+    expect(loopState.isFineGrainedRegion('A')).toBe(false);
+    expect(loopState._substrateHasRecorder('sum_sub')).toBe(false);
+  });
+
+  it('a real recorder WINS over a summary declaration (the stronger contract)', () => {
+    try { substrateRegistry.clear?.(); } catch { /* ignore */ }
+    substrateRegistry.register?.({
+      id: 'both_sub', label: 'Both', panelComponentType: 'p', loadRegionEvent: 'b:load',
+      takeLastRecording: () => null,
+      loopSupport: { manual: true, record: true, playback: true, summaryRecording: true },
+    });
+    centralRegistry.registerPublicFunction('procgenPlayer', 'getRegionInfo',
+      () => ({ substrate: 'both_sub', label: 'Both' }));
+    expect(loopState.getRegionCaptureShape('A')).toBe('fine');
+  });
+
+  it('summary substrates opt into the Record default and the strict action gate', () => {
+    registerSummarySubstrate();
+    // Declaring record+playback means the M4 Record default no longer clamps
+    // to Manual for these blocks — fresh runner/bounce queues park in Record.
+    expect(loopState.defaultBlockMode).toBe('record');
+    expect(loopState.getBlockMode('A', 1)).toBe('record');
+    // ...and the same declaration arms the strict action gate (staged
+    // rollout: `record && playback`).
+    expect(loopState._substrateGateEnforced('A')).toBe(true);
+  });
+});
+
+describe('M5 — summary binding and Playback dispatch', () => {
+  let loopState, gs, tick, handles;
+  beforeEach(() => {
+    resetSavedQueueStore();
+    clearRulesHashCache();
+    ({ loopState, gs } = wire());
+    tick = makeTicker();
+    handles = registerSummarySubstrate();
+    loopState._cachedRulesData = RULES_DATA;
+    // Menu → A (summary) → B.
+    gs.updatePath('A', 'go', 'Menu');
+    gs.addLocationCheck('Loc1', 'A');
+    gs.updatePath('B', 'exit', 'A');
+  });
+
+  function parkCursorOnBlockInterior() {
+    loopState.currentActionIndex = 1;
+    loopState.currentAction = loopState.getActionQueue()[1];
+    loopState.isProcessing = true;
+    tick(loopState);
+  }
+
+  it('binds a summary entry by tag — and never a fine recording', () => {
+    expect(loopState.hasBoundSummary('A', 1)).toBe(false);
+
+    saveQueue(hashRulesData(RULES_DATA), makeSummaryEntry());
+    expect(loopState.hasBoundSummary('A', 1)).toBe(true);
+    // The summary is actions-less, so the fine lookup must not see it.
+    expect(loopState.hasBoundRecording('A', 1)).toBe(false);
+  });
+
+  it('a stale FINE recording under the same tag does not bind as a summary', () => {
+    saveQueue(hashRulesData(RULES_DATA), {
+      regionName: 'A', substrate: 'sum_sub',
+      arrivalExitId: 'go', ordinal: 0, departureExitId: 'exit',
+      actions: [{ type: 'locationCheck', locationName: 'Stale' }],
+      manaAtEntry: 100, manaAtExit: 80, manaMin: 75,
+      locationsChecked: ['Stale'], itemsPickedUp: [],
+    });
+    expect(loopState.hasBoundSummary('A', 1)).toBe(false);
+  });
+
+  it('a Playback block with no bound summary parks for live play, never the bot', () => {
+    loopState.setBlockMode('A', 1, 'playback');
+    parkCursorOnBlockInterior();
+
+    // Ruling 5: the walkTo/bot chain is unreachable from Playback until M6's
+    // Bot radio re-homes it. The block parks for hand-play instead of
+    // falling through to the generic executor's bot path.
+    expect(loopState._manualActionEntered).toBe(true);
+    expect(loopState._manualRegionName).toBe('A');
+    expect(handles.walkToCalls).toHaveLength(0);
+  });
+
+  it('a COARSE block still falls through to the generic executor (no shape leakage)', () => {
+    registerCoarseSubstrate();
+    loopState.setBlockMode('A', 1, 'playback');
+    parkCursorOnBlockInterior();
+    expect(loopState._manualActionEntered).toBe(false);
+  });
+});
