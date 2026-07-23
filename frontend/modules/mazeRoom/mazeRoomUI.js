@@ -1454,6 +1454,16 @@ export class MazeRoomUI {
         // new world start at phase 0. resetHazards no-ops when the
         // world has no hazards.
         resetHazards(payload?.world?.hazards);
+        // Drop the consumable-reset dedupe memo. It remembers the
+        // gameState loop-reset COUNT that last cleared the collected set
+        // (_subscribeToLoopReset), but that counter restarts at 0 with
+        // every new ruleset — so a value remembered from a PREVIOUS world
+        // can collide with the new world's first reset, silently skipping
+        // the clear and leaving collected tiles permanently un-respawned
+        // (X1-R1). Clearing it here scopes the memo to the loaded world;
+        // the clear it gates is idempotent, so the only thing a dropped
+        // memo can cost is a redundant no-op.
+        this._lastConsumableResetCount = null;
         this.world = payload.world;
         this.state = createState(this.world);
         const arrivedExitId = payload.arrivedFrom?.exit_id;
