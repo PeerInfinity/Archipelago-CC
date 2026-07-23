@@ -160,12 +160,47 @@ Record + playback-of-recordings (maze+textAdventure) — **✅ CODE COMPLETE
 2026-07-21 (Opus session 63; `cbf461238`→`da26a5b7d`→`10c5851a7`→
 `c627e4e48`→`506a7c51c`)** (as-built below); **M3** Instant toggle +
 activation-suppression seam — **✅ CODE COMPLETE 2026-07-22 (Opus session 65;
-`1f38fbc56`→`bc5b02c43`→`477bad187`→`bac38f1d8`→`fd01e84f1`); UNPUSHED —
-closes together with M3b via the automated gates** (see below); **M3b**
-coarse-capture refactor + automated M3 gates (arc opened 2026-07-22, below)
-— **NEXT, and gates M4's recorder half**; **M4** jta instant pump + recorder; **M5**
-runner/bounce; **M6** solver unification + rename + Bot radio. Omsi arc D
-re-queues AFTER this track (see §4); omsi Instant last of all.
+`1f38fbc56`→`bc5b02c43`→`477bad187`→`bac38f1d8`→`fd01e84f1`)**; **M3b**
+coarse-capture refactor + the three loop-mode rules — **✅ IMPLEMENTED
+2026-07-22 (Fable session 67; as-built notes below + in the plan doc);
+closed M3+M3b in one combined push**; **M4** jta instant pump + recorder
+half (classify jta coarse-vs-fine against the M3b contract first; declaring
+`record`+`playback` opts jta into the strict gate — restructure its
+free-travel flows/tests then); **M5** runner/bounce (same opt-in note);
+**M6** solver unification + rename + Bot radio. Omsi arc D re-queues AFTER
+this track (see §4); omsi Instant last of all.
+
+**M3b as-built (session 67, Fable) — key facts for M4/M5/omsi-D (full
+notes: plan doc implementation-notes block + memory
+`project_loops_block_modes` + `docs/json/developer/procgen/loop-recording.md`
+which now documents the implemented model):** the strict gate's single
+decision point is `loopState.evaluateActionGate`; locationCheck /
+exitClicked / the NEW `loop:exploreCompleted` receiver gate inside loops'
+dispatcher receivers, but **`user:regionMove` is gated in procgenPlayer**
+(higher load priority — it publishes the substrate loadRegion before loops
+sees the event) via the loops public function `gateSubstrateAction`.
+**Enforcement is STAGED on `loopSupport.record && playback`** (maze + TA
+today) — turning it on universally would have broken the shipped jta/omsi
+loop arcs and ~15 green in-app tests; integration arcs opt in by declaring
+the capabilities (flagged for user review). Coarse-vs-fine discriminator =
+`takeLastRecording` presence. Coarse-only (TA): loops charges observed
+parked live actions + buffers Record captures → coarse replacement;
+Playback = generic executor, no store lookups. Fine-grained (maze): M2
+sole-persister path unchanged + NATIVE live drain (`_shouldDeductMazeMana`
+consults loops' `livePlayRegion()`; the kickoff's "maze natively drains"
+was wrong — loop-mode hand play was FREE pre-M3b). Exemption matrix:
+fromLoop / fromReset / system:* / delegation+solver / planning sources
+(`loops/loopModeExemptions.js`) / **exit-less moves** (synthetic harness
+repositions). gameState's loop-mode event appends are retired (planning
+sources excepted). Two adjacent fixes landed: loops' stale-cost-data
+carryover on preset switch (cost data + loop mode now auto-track the
+loaded preset — auto-DISABLE when a preset has no loop_costs) and
+warn-level logs on gate blocks. Removed: TA recorder.js + commandRecorded
+channel + playbackBridge/Proxy replay halves +
+`_maybeCaptureUnparkedRecordExit`. Phase A tests 1–3 rewired to the new
+paths, #4 (`tasw-queue-integrity-parked`) flipped ON and green;
+`locationCheckLoopModePassThrough` rewritten to the gate contract
+(blocked-unparked / allowed-parked halves).
 
 **M2 as-built (see design §5 M2 + memory `project_loops_block_modes` for
 full notes):** Key pivot (user-confirmed via AskUserQuestion, overriding the
