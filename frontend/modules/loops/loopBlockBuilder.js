@@ -388,7 +388,7 @@ export class LoopBlockBuilder {
   /**
    * Which mode radios a region can offer, from its substrate's
    * loopSupport. Manual is offered where declared; Playback is offered
-   * for any substrate that auto-runs today (maze delegation / playbackBot
+   * for any substrate that auto-runs today (maze delegation / solver
    * walkTo / generic timer — i.e. any real loopSupport declaration).
    * AP-native (null) and NO_LOOP_SUPPORT (empty) regions offer nothing,
    * so no mode row renders. Record / Bot arrive in later phases.

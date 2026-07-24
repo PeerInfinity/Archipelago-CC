@@ -205,7 +205,7 @@ export class LoopState {
     // Discriminates the two modes inside the shared wake handlers.
     this._manualRegionName = null;
     // Bot-backed queue execution (substrates whose loopSupport
-    // declares executeVia: 'playbackBot', e.g. bounce). The queue
+    // declares executeVia: 'solver', e.g. bounce). The queue
     // parks on the action while the playback bot walks to the target
     // on real physics; completion arrives via the resulting
     // locationCheck / regionChanged events. Holds the in-flight
@@ -1934,7 +1934,7 @@ export class LoopState {
   /**
    * Whether the region "auto-runs today" and can therefore offer the
    * Playback radio: any substrate with a real loopSupport declaration
-   * (maze delegation / playbackBot walkTo / generic timer all count).
+   * (maze delegation / solver walkTo / generic timer all count).
    * AP-native (null) and NO_LOOP_SUPPORT (empty) regions get no row.
    */
   _regionOffersPlayback(region) {
@@ -2450,7 +2450,7 @@ export class LoopState {
    * Whether the current action should be executed by the substrate's
    * playback bot instead of the generic progress-timer path. Requires
    * the substrate's registry entry to declare loopSupport.executeVia
-   * === 'playbackBot' with the action's type in queueActions, and a
+   * === 'solver' with the action's type in queueActions, and a
    * live playback controller exposing walkTo. A missing controller
    * (panel not mounted / headless) falls back to generic execution —
    * the event-driven teleport still works, just without the physics.
@@ -2463,7 +2463,7 @@ export class LoopState {
     if (!substrate) return false;
     const entry = substrateRegistry?.get?.(substrate);
     const loopSupport = entry?.loopSupport;
-    if (loopSupport?.executeVia !== 'playbackBot') return false;
+    if (loopSupport?.executeVia !== 'solver') return false;
     if (!loopSupport.queueActions?.includes(action.type)) return false;
     return typeof entry.getPlaybackController?.()?.walkTo === 'function';
   }

@@ -600,7 +600,7 @@ export const substrateRegistryEntry = Object.freeze({
         playback: true,
         instant: true,
         requiresLoopMode: true,
-        executeVia: 'playbackBot',
+        executeVia: 'solver',
     }),
 
     // Cross-substrate sharing: participates in the shared-mana channel.

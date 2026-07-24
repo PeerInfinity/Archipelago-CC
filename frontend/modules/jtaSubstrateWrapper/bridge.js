@@ -49,7 +49,7 @@
  *     automation engine (activated for the walk under the default
  *     'activate' host setting, or left entirely to the player's
  *     automation config under 'respect'). This is what loops'
- *     executeVia: 'playbackBot' queue execution calls into.
+ *     executeVia: 'solver' queue execution calls into.
  *
  * Host-side counterpart wiring: ../jtaSubstrateWrapper/index.js pushes
  * the initial pool state to this bridge on `iframe:appReady`; the

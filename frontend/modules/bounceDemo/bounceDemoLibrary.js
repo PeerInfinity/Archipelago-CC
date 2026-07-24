@@ -834,7 +834,7 @@ export function createBounceSubstrateEntry({
         // Loop-mode capabilities: regionMove + locationCheck queue
         // actions map to the playback bot's implementations (walkTo an
         // exit portal / a location on real physics) via
-        // executeVia: 'playbackBot' — the loops queue parks and the bot
+        // executeVia: 'solver' — the loops queue parks and the bot
         // plays. `executeVia` stays declared for M6's Bot radio, which
         // re-homes that path; it is NOT reachable from Playback (see
         // below). NO explore action exists for bounce. Manual play yes;
@@ -853,7 +853,7 @@ export function createBounceSubstrateEntry({
         // checkbox is offered. See docs loop-recording.md.
         loopSupport: Object.freeze({
             queueActions: Object.freeze(['regionMove', 'locationCheck']),
-            executeVia: 'playbackBot',
+            executeVia: 'solver',
             manual: true,
             customQueues: false,
             record: true,

@@ -246,7 +246,7 @@ describe('LoopBlockBuilder — loopSupport capability gating', () => {
             expect(entry.loopSupport, name).toMatchObject({
                 manual: true, customQueues: false,
                 record: true, playback: true, instant: true, summaryRecording: true,
-                executeVia: 'playbackBot',
+                executeVia: 'solver',
             });
             expect([...entry.loopSupport.queueActions], name)
                 .toEqual(['regionMove', 'locationCheck']);

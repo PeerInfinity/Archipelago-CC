@@ -1276,7 +1276,7 @@ function registerSummarySubstrate({ regions = ['A'] } = {}) {
     loadRegionEvent: 'sum:loadRegion',
     loopSupport: {
       queueActions: ['regionMove', 'locationCheck'],
-      executeVia: 'playbackBot',
+      executeVia: 'solver',
       manual: true, customQueues: false,
       record: true, playback: true, instant: true, summaryRecording: true,
     },

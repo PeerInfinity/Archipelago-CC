@@ -2,7 +2,7 @@
  * Tests for bot-backed queue execution in loopState (loops-mode
  * rework Phase 4).
  *
- * Substrates whose loopSupport declares executeVia: 'playbackBot'
+ * Substrates whose loopSupport declares executeVia: 'solver'
  * (bounce) get their regionMove / locationCheck queue actions
  * executed by the playback bot: the queue parks, walkTo is
  * dispatched, and the resulting locationCheck / regionChanged event
@@ -58,7 +58,7 @@ function makeFunctionalBus() {
     };
 }
 
-describe('Bot-backed queue execution (loopSupport.executeVia = playbackBot)', () => {
+describe('Bot-backed queue execution (loopSupport.executeVia = solver)', () => {
     let loopState, gs, bus;
     let tick;
     let dispatcherPublishes;
@@ -120,7 +120,7 @@ describe('Bot-backed queue execution (loopSupport.executeVia = playbackBot)', ()
             getPlaybackController: () => controller,
             loopSupport: {
                 queueActions: ['regionMove', 'locationCheck'],
-                executeVia: 'playbackBot',
+                executeVia: 'solver',
                 manual: true,
                 customQueues: false,
             },

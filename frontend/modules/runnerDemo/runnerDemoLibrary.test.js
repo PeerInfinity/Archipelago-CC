@@ -130,7 +130,7 @@ describe('runner entry — playback + loop support', () => {
     it('declares the bounce-shaped loop capabilities — the SUMMARY category (M5)', () => {
         expect(substrateRegistryEntry.loopSupport).toEqual({
             queueActions: ['regionMove', 'locationCheck'],
-            executeVia: 'playbackBot',
+            executeVia: 'solver',
             manual: true,
             customQueues: false,
             record: true,
