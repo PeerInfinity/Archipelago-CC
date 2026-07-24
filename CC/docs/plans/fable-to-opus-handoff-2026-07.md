@@ -281,6 +281,32 @@ and the catch-up's `gameState:loopReset` subscriber clears the set — a
 re-entry carrying an unapplied reset delta injects no synthetic exit
 tasks. Fix = reorder the read. Documented in jta.md known-issues +
 the disabled `jta-synthetic-exit-task-id-stability`.
+(1b) **jta latched-energy-reset deadlock — FIXED 2026-07-24 (session 68,
+outer `7cdbc153f`), a DIFFERENT bug from (1).** This is what made
+`jta-bot-walkto-exit` hang ~1 run in 3 (long misfiled as the documented
+concurrent-load flake; the new poll-timeout evidence disproved that —
+861/900 polls on schedule, load 0.94/8 cpus → STUCK, on an idle box).
+The fork latches `is_in_energy_reset` at energy 0 and `updateGamestate()`
+returns early while it is set; in managed mode only the bridge clears it,
+via `_applyCatchUpResets()`, which fires only when the HOST's reset count
+advances — which needs the pool at 0, which needs drains, which need a
+running game. `_syncEnergyFromPool()` closes the loop by pinning energy
+above 0 while latched, hiding the run's end. Bridge now completes the
+reset when it sees the impossible state (latched WITH energy > 0),
+persisted ~1s so it cannot race the legitimate catch-up-then-pin order;
+plus a 30s walk-stall watchdog and per-call-site `_clearPendingWalk`
+reasons. Verified by 8 consecutive green substrates runs **with the
+breaker firing in 4 of them** (the deadlock still occurs at ~50% and is
+repaired each time — positive evidence, not absence of failure).
+**STILL OPEN — the deeper fix, RECOMMENDED as its own slice BEFORE arc D
+slice 4:** the pin should decline to raise energy while the fork is
+latched, leaving the drain visible so the host fires the reset normally
+and stays the sole reset authority. It is a contract change (same
+"who resets a frozen substrate" question as D2 recon item 4), so it wants
+a design pass rather than a tack-on; slice 1 does not touch it. The
+breaker doubles as its **oracle**: if the deeper fix is right, breaker
+firings drop to zero across a run batch. Until then, every firing is a
+real deadlock papered over.
 (2) **The 2 jta progression marathons**
 (`jta-randomized-balanced-progression`, `jta-dataset-world-progression`)
 stay disabled: balance/dataset validation must run NORMAL ticking
@@ -1268,6 +1294,18 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    only). `requiresLoopMode: true` per the standing M4 ruling; NO
    `instant` (fork fast-step unbuilt, omsi last). NEXT: arc D1
    IMPLEMENTATION (Opus).**
+   **SLICE 0 SHIPPED + PUSHED 2026-07-24 (session 68, outer `7738f1899`,
+   zero fork edits):** the re-pin clobber fix — `_samplePoolMirror()` now
+   returns the delta it published, `_syncBudgetFromPool({flushMirror})`
+   flushes the pending delta before pinning **at the manaChanged-external
+   site only** and then targets the pool value the host will hold once
+   that delta lands (converges in one round trip, not two); a
+   `_pinningBudget` guard documents the re-entrancy hazard (unreachable
+   over postMessage today). The two evidence-gated retry guards STAY —
+   they were silent in every run, so a firing guard is now a regression
+   signal. Gates: substrates 50/50 solo · vitest 3334/3334 · regression.
+   **NEXT: slice 1** (declaration + `fromLoop` stamping + the 5
+   parked-Manual restructures).
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
