@@ -66,6 +66,14 @@
  *     bulk sequence, and that path re-enters via omsi:loadRegion anyway.
  *     A var's PRESENCE in qBatches is what makes it managed, so the
  *     overlay names every var of every included town, zeros included.
+ *   - Loop-mode block support (arc D1): the host-side PlaybackProxy
+ *     reaches this bridge over `omsi:playbackControl`. While a Playback
+ *     replay is in flight, every publish is queue execution and carries
+ *     `fromLoop: true` — location checks included, which is omsi-
+ *     specific: a replay GRINDS the recorded queue across native
+ *     resets, so it can cross a new unlock threshold and fire a
+ *     first-time check that the strict action gate would otherwise
+ *     swallow (killing the AP award, not just the capture).
  *   - No-progress guard: a restart after a loop that consumed (almost)
  *     no effective time means no queued action could run (empty queue
  *     slips past the step gate only in exotic states; a queue whose
@@ -179,6 +187,21 @@ const FILLER_OFFLINE_MS = 60_000;
 const _regionStore = new Map();          // regionId -> the fork's value-prop snapshot
 let _activeRegionMeta = null;            // the region metadata currently installed
 let _activeSyntheticExits = [];          // [{ name, targetRegion }] injected for the active region
+
+// Playback replay in flight (arc D1). Set by the host-side PlaybackProxy
+// over `omsi:playbackControl` for the duration of a Playback block's
+// replay; cleared when the replay's departure crosses, when the player
+// leaves the region, and on a rules reload.
+//
+// While it is set, everything this bridge publishes is QUEUE EXECUTION and
+// must carry `fromLoop: true` — under the M3b strict action gate a missing
+// flag doesn't merely double-append, it gets the queue's own dispatch
+// BLOCKED as unparked live play (livePlayRegion() is null during a replay
+// park). Omsi needs this on its LOCATION CHECKS as well as on the
+// departure, unlike jta: an omsi replay GRINDS the recorded queue across
+// native resets, so it can cross a new unlock threshold and fire a
+// first-time check mid-replay.
+let _replayInFlight = false;
 
 // Clock diagnostics, exposed via __omsiBridge.getDebugState().
 const _clockStats = {
@@ -330,6 +353,28 @@ function _reseedReportedLocations() {
 }
 
 /**
+ * Publish an AP location check for the active region.
+ *
+ * The ONE publish site for both check families (victory milestone, unlock
+ * rows) so the loop-mode stamping can't be applied to one and forgotten on
+ * the other. `fromLoop` marks queue execution: a check fired while a
+ * Playback replay grinds the recorded queue is the QUEUE's doing, and
+ * without the flag the strict gate would swallow it — the award would
+ * never reach AP (loopEvents blocks propagation, it doesn't just skip the
+ * capture). Live play needs no flag: a parked Manual/Record block passes on
+ * the `parkedLivePlay` exemption.
+ */
+function _publishLocationCheck(locationName) {
+    if (!_client) return;
+    _client.publishEventDispatcher('user:locationCheck', {
+        locationName,
+        regionName: _currentRegionId,
+        originator: 'omsiSubstrate',
+        ...(_replayInFlight ? { fromLoop: true } : {}),
+    }, { initialTarget: 'bottom' });
+}
+
+/**
  * Victory watch. Two shapes:
  *
  *   v0 (no unlock emission): completing Start Journey calls the game's
@@ -361,11 +406,7 @@ function _checkVictoryProgress() {
     if (!reached) return;
     _reportedLocationNames.add(locationName);
     if (!_client) return;
-    _client.publishEventDispatcher('user:locationCheck', {
-        locationName,
-        regionName: _currentRegionId,
-        originator: 'omsiSubstrate',
-    }, { initialTarget: 'bottom' });
+    _publishLocationCheck(locationName);
     log('debug', `victory milestone -> user:locationCheck (${locationName})`);
 }
 
@@ -561,11 +602,7 @@ function _handleUnlockAchieved(id) {
     if (!locationName || _reportedLocationNames.has(locationName)) return;
     _reportedLocationNames.add(locationName);
     if (!_client) return;
-    _client.publishEventDispatcher('user:locationCheck', {
-        locationName,
-        regionName: _currentRegionId,
-        originator: 'omsiSubstrate',
-    }, { initialTarget: 'bottom' });
+    _publishLocationCheck(locationName);
     log('debug', `unlock row ${id} -> user:locationCheck (${locationName})`);
 }
 
@@ -867,13 +904,26 @@ function _exitLabel(exit) {
  * re-fires omsi:loadRegion (jta _dispatchRegionMove shape). The omsi bridge
  * is otherwise publish-only on the dispatcher — this is an added publish, not
  * a subscribe.
+ *
+ * A move crossed while a Playback replay is in flight is the REPLAY's
+ * departure — queue execution, so it carries `fromLoop: true` (the jta
+ * `_crossExit` precedent) and the parked block advances on the wake instead
+ * of the gate blocking the move outright. Crossing ends the replay: under
+ * ruling 1 a replay runs the recorded queue until its departure exit fires,
+ * and that firing is exactly this dispatch.
+ *
+ * Live play needs no flag — a parked Manual/Record block passes the gate on
+ * `parkedLivePlay`, and a wrong exit there must stay a wrong exit.
  */
 function _dispatchRegionMove(targetRegion, exitName) {
     if (!_client) return;
+    const fromLoop = _replayInFlight;
+    if (fromLoop) _endReplay('departure crossed');
     _client.publishEventDispatcher('user:regionMove', {
         sourceRegion: _currentRegionId,
         targetRegion,
         exitName: exitName ?? null,
+        ...(fromLoop ? { fromLoop: true } : {}),
     }, { initialTarget: 'bottom' });
 }
 
@@ -1026,6 +1076,61 @@ function _handleLoadRegion(payload) {
 }
 
 // ────────────────────────────────────────────────────────────────
+// Playback control — host proxy commands (omsi:playbackControl)
+// ────────────────────────────────────────────────────────────────
+
+function _beginReplay() {
+    if (_replayInFlight) return;
+    _replayInFlight = true;
+    log('debug', 'replay in flight — bridge publishes carry fromLoop');
+}
+
+function _endReplay(reason = 'unspecified') {
+    if (!_replayInFlight) return;
+    _replayInFlight = false;
+    log('debug', `replay no longer in flight — ${reason}`);
+}
+
+/**
+ * Commands from the host-side PlaybackProxy (arc D1).
+ *
+ * D1 implements the REPLAY WINDOW only: `beginReplay` / `endReplay` bracket
+ * a Playback block's replay so everything the bridge publishes inside it is
+ * stamped as queue execution. The replay driver itself (install the
+ * recorded queue, let the game grind to the departure exit) lands in slice
+ * 4, and the step gate that decides when the clock may run lands in slice 2
+ * — both ride this same channel.
+ *
+ * The PlaybackProxy's generic pacing methods are deliberately NOT wired:
+ * managed mode has no fast-step surface (the standing "omsi Instant last"
+ * ruling) and the clock is bridge-owned, so honouring play/stop/step here
+ * would fight the clock rather than serve it.
+ */
+function _handlePlaybackControl(payload) {
+    const method = payload?.method;
+    switch (method) {
+        case 'beginReplay':
+            _beginReplay();
+            return;
+        case 'endReplay':
+            _endReplay('host ended the replay');
+            return;
+        case 'play':
+        case 'stop':
+        case 'step':
+        case 'instant':
+        case 'setRate':
+        case 'reset':
+        case 'walkTo':
+            log('debug', `playback control '${method}' ignored (arc D1: the bridge owns the clock, `
+                + 'and omsi declares neither instant nor a solver)');
+            return;
+        default:
+            log('warn', 'playback control: unknown method', method);
+    }
+}
+
+// ────────────────────────────────────────────────────────────────
 // Main
 // ────────────────────────────────────────────────────────────────
 
@@ -1122,6 +1227,10 @@ async function main() {
         if (data?.newRegion && data.newRegion !== _currentRegionId) {
             _isActive = false;
             _stopClock();
+            // A replay whose region we just left is over either way (its
+            // own departure, a reset teleport, or the player). Leaving the
+            // flag latched would stamp fromLoop on a later LIVE check.
+            _endReplay('left the region');
         }
     });
 
@@ -1136,6 +1245,7 @@ async function main() {
         _lastReportedBudget = null;
         _reportedLocationNames.clear();
         _fillerCopiesApplied = 0;
+        _endReplay('rules reloaded');
         // Award schedule is per-world data — the next omsi:loadRegion
         // re-installs the new world's (or leaves the carrier inert).
         _managed()?.setAwardSchedule?.(null);
@@ -1173,6 +1283,9 @@ async function main() {
 
     // Region activation events (from procgenPlayer).
     _client.subscribeEventBus('omsi:loadRegion', _handleLoadRegion);
+
+    // PlaybackController commands from the host-side proxy (arc D1).
+    _client.subscribeEventBus('omsi:playbackControl', _handlePlaybackControl);
 
     // Cross-substrate consumable grants (resourceChannels bus) — every
     // bridge sees the event; this one deposits grants addressed to
@@ -1227,6 +1340,9 @@ async function main() {
             regionStoreKeys: [..._regionStore.keys()],
             regionExitAvailable: _managed()?.regionExitAvailable?.() ?? null,
             syntheticExits: _activeSyntheticExits.map((e) => ({ ...e })),
+            // Loop-mode replay window (arc D1): true while this bridge's
+            // publishes are stamped fromLoop.
+            replayInFlight: _replayInFlight,
         }),
     };
 

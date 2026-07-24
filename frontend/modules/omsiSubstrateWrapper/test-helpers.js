@@ -27,6 +27,11 @@ export const OMSI_TEST_REGION = 'region_1_1';       // the omsi region (town 0)
 export const OMSI_TEST_MAZE_REGION = 'region_0_0';  // a maze region to stand in / leave to
 export const OMSI_TEST_START_REGION = 'Menu';
 export const OMSI_TEST_VICTORY_LOCATION = 'region_1_1__start_journey';
+// The omsi region's one graph exit, and where it leads. The three AP-test
+// fixtures (substrate / randomized / scaled) share this topology, and the
+// parked-Manual helper queues this hop as the block's departure.
+export const OMSI_TEST_EXIT = 'exit_N';
+export const OMSI_TEST_EXIT_TARGET = 'region_1_0';
 
 // AP-V1 unlock randomization fixture (regenerate with
 // scripts/test/generate-omsi-randomized-test-preset.mjs): the same
@@ -61,6 +66,11 @@ export const OMSI_REGION_SPLIT_PRESET_PATH =
 // syntheticExits debug field rather than hard-coding a label.
 export const OMSI_REGION_SPLIT_R0 = 'region_0_1';
 export const OMSI_REGION_SPLIT_R1 = 'region_1_0';
+// The direct graph edge between the two split zones, both ways. These are
+// the GRAPH exit names the synthetic exit actions dispatch (the action's own
+// label differs) — the parked-Manual helper queues the round trip with them.
+export const OMSI_REGION_SPLIT_R0_TO_R1 = 'exit_to_region_1_0';
+export const OMSI_REGION_SPLIT_R1_TO_R0 = 'exit_to_region_0_1';
 
 // The game's native per-loop budget (timeNeededInitial = 5 * 50) — the
 // starting-budget bonus the bridge reports up to the shared pool.
@@ -143,6 +153,90 @@ export function watchLocationChecks(match) {
         get count() { return count; },
         stop() { dispatcher.publish = original; return count; },
     };
+}
+
+/**
+ * Park a Manual (or Record) loops block on each hop's SOURCE region, so the
+ * substrate's live actions — AP location checks, and exit crossings that
+ * carry a real exit name — pass the M3b strict action gate on the
+ * `parkedLivePlay` exemption.
+ *
+ * Arc D1 opts omsi into that gate (loopSupport declares record + playback),
+ * and every omsi preset carries loop_costs → loop mode auto-enables. The
+ * bridge's `user:locationCheck` publishes carry no fromLoop during LIVE play
+ * (correctly — only a replay is queue execution), so with no parked block
+ * the gate blocks them and the AP award never propagates. These tests verify
+ * AP integration, not loop economy, so the honest post-gate shape is
+ * parked-Manual live play (user ruling 2026-07-23) — park, then drive the
+ * engine in place through the same hooks the tests already use.
+ *
+ * `hops` is the path to queue, IN ORDER: `[{ from, to, exit }]`. One hop is
+ * enough to park on `from` (the queued departure defines the block); a
+ * multi-hop path parks each source block in turn as the previous crossing
+ * completes — that is how a round trip through synthetic exits stays legal.
+ * omsi is FINE-GRAINED (the registry supplies takeLastRecording), so loops
+ * charges nothing for this play: the bridge's mana mirror is the economy.
+ *
+ * The existing path is CLEARED first (gameState.clearPath, not loops'
+ * clearQueue — that one teleports the player to the loop start). The tests
+ * put the player in the region with a synthetic exit-less move, which loop
+ * mode does not record in the path, so whatever the path holds is the
+ * procgen start hop: replaying it from index 0 would walk the player out of
+ * the region before ever reaching our block. Clearing makes the first hop's
+ * source block the one the queue parks on immediately.
+ *
+ * Returns a restore handle (with the resolved block instances), or null if
+ * loop mode is off (gate inactive — no parking needed) or the queue never
+ * parked. Mirrors jta's parkManualBlockInRegion.
+ */
+export async function parkManualBlocks(testController, hops, mode = 'manual') {
+    const gs = getGameStateSingleton();
+    if (gs?.isLoopModeActive !== true) {
+        testController.log('loop mode inactive — no parked block needed');
+        return null;
+    }
+    const loopStateSingleton = (await import('../loops/loopStateSingleton.js')).default;
+    const { resolveQueueBlocks } = await import('../loops/blockIdentity.js');
+
+    gs.clearPath?.();
+    for (const hop of hops) gs.updatePath(hop.to, hop.exit ?? null, hop.from);
+    const { visits } = resolveQueueBlocks(loopStateSingleton.getActionQueue());
+    const sources = new Set(hops.map((h) => h.from));
+    const instances = new Map();
+    for (const visit of visits) {
+        if (!sources.has(visit.name)) continue;
+        loopStateSingleton.setBlockMode(visit.name, visit.instance, mode);
+        instances.set(visit.name, visit.instance);
+    }
+    if (instances.size !== sources.size) {
+        testController.log(`could not resolve a queue block for every hop source `
+            + `(${[...sources].join(', ')})`);
+        return null;
+    }
+    const savedSpeed = loopStateSingleton.gameSpeed;
+    loopStateSingleton.setGameSpeed(10000);   // hurry any arrival move to the park
+    loopStateSingleton.startProcessing();
+    const parked = await testController.pollForCondition(
+        () => loopStateSingleton._manualActionEntered === true,
+        `queue parked on the ${mode} block in ${hops[0].from}`,
+        8000, 100);
+    if (!parked) {
+        testController.log(`queue did not park on the ${mode} block in ${hops[0].from}`);
+        return null;
+    }
+    return { loopStateSingleton, savedSpeed, gs, instances };
+}
+
+/**
+ * Undo parkManualBlocks: restore the queue speed and leave loop mode off so
+ * the active flag can't leak into a later test's non-loop preset. (Direct
+ * gameState write — the requiresLoopMode guard rail lives in
+ * eventCoordinator and governs USER-initiated disables.)
+ */
+export function unparkManualBlocks(handle) {
+    if (!handle) return;
+    try { handle.loopStateSingleton.setGameSpeed(handle.savedSpeed); } catch { /* best-effort */ }
+    try { handle.gs.setLoopModeActive(false); } catch { /* best-effort */ }
 }
 
 export function gameStateFn(name) {

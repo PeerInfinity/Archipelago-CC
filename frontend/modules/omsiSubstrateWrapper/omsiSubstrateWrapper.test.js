@@ -3,6 +3,8 @@ import { describe, it, expect } from 'vitest';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import {
     substrateRegistryEntry,
+    ingestVisitRecording,
+    takeLastVisitRecording,
     OMSI_START_JOURNEY_LOCATION_ID,
     OMSI_VICTORY_ITEM_NAME,
     OMSI_LIBRARY_ITEMS,
@@ -56,6 +58,31 @@ describe('omsi substrate registry entry', () => {
             is_victory: true,
         });
         expect(substrateRegistryEntry.libraryItems).toBe(OMSI_LIBRARY_ITEMS);
+    });
+});
+
+describe('per-visit recording stash (arc D1)', () => {
+    it('takeLastRecording drains the slot once (loops sole-persister pull)', () => {
+        // Empty until the bridge publishes (arc D slice 4) — and an empty
+        // pull is what keeps a Record block persisting NOTHING today.
+        expect(takeLastVisitRecording()).toBeNull();
+
+        ingestVisitRecording({
+            actions: [{ actionType: 'clickTask', actionId: 'Wander', loops: 3 }],
+            departureExitId: 'exit_N',
+        });
+        const pulled = substrateRegistryEntry.takeLastRecording();
+        expect(pulled.departureExitId).toBe('exit_N');
+        expect(pulled.actions).toHaveLength(1);
+        // Pull-once: a discarded visit can't be re-pulled by a later block.
+        expect(substrateRegistryEntry.takeLastRecording()).toBeNull();
+    });
+
+    it('tolerates a malformed payload without stashing a bogus script', () => {
+        ingestVisitRecording({ actions: 'nope' });
+        const pulled = takeLastVisitRecording();
+        expect(pulled.actions).toEqual([]);
+        expect(pulled.departureExitId).toBeNull();
     });
 });
 

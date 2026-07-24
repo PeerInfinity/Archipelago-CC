@@ -34,12 +34,61 @@ import {
 } from './unlockPool.js';
 
 // Host-side PlaybackProxy slot, mirroring the jta library's setter
-// injection. v0 registers NO playback controller (one region, no
-// travel — walkTo semantics belong to the multi-town v1+ design);
-// the setter exists so that arc can slot one in without reshaping
-// the registry entry.
+// injection. Filled by index.js since arc D1: the proxy publishes
+// PlaybackController commands on `omsi:playbackControl`, which the
+// in-iframe bridge executes.
 let _playbackProxy = null;
 export function setPlaybackProxy(proxy) { _playbackProxy = proxy; }
+
+// --- Per-visit recording (loops sole-persister protocol; arc D) ---
+//
+// omsi is a FINE-GRAINED loop-mode substrate in the capture contract's
+// mechanical sense: supplying `takeLastRecording` is what makes
+// loopState._captureShapeFor() answer 'fine', so loops charges nothing
+// (the bridge's mana mirror IS the economy) and Playback replays through
+// the substrate rather than through the generic executor.
+//
+// What omsi records is an omsi-local fact invisible to loops: ruling 1 of
+// the arc-D design makes a visit recording the game's OWN authored queue
+// (`actions.next` minus the synthetic exits) at a successful Record exit —
+// a plan snapshot, not a performed-action log — because omsi's genre is
+// author-a-queue-and-replay and a performed log of an N-loop visit is just
+// that queue repeated N times.
+//
+// D1 wires the SLOT and the contract only: the bridge does not publish
+// `omsi:visitRecording` until arc D slice 4, so the stash stays empty and a
+// Record block persists nothing (loopState._persistRecordingForBlock
+// returns null on an empty pull — today's behavior exactly). Loops remains
+// the sole persister: this module never writes savedQueueStore.
+let _lastVisitRecording = null;
+
+/**
+ * Host-side receiver for the bridge's `omsi:visitRecording` event (slice 4).
+ * Stashes the visit for the loops sole-persister pull, overwriting any
+ * un-pulled prior recording (a visit whose Record exit never pulled — Manual
+ * mode, or a discarded capture — is simply replaced).
+ *
+ * `actions` arrive in the shared `actionQueue` vocabulary (the jta
+ * precedent: `{actionType, actionId, loops}`), converted at capture.
+ * @param {{ actions?: object[], departureExitId?: string|null }} payload
+ */
+export function ingestVisitRecording(payload) {
+    _lastVisitRecording = {
+        actions: Array.isArray(payload?.actions) ? payload.actions : [],
+        departureExitId: payload?.departureExitId ?? null,
+    };
+}
+
+/**
+ * Pull-and-clear the last finalized per-visit recording. Returns null when
+ * no recording is stashed. Registry hook `takeLastRecording` delegates here.
+ * @returns {{ actions: object[], departureExitId: string|null }|null}
+ */
+export function takeLastVisitRecording() {
+    const rec = _lastVisitRecording;
+    _lastVisitRecording = null;
+    return rec;
+}
 
 // P2 award schedule (cross-game §2d/§9b-pre): installed at pipeline ①
 // via applyPipelineConfig ({ awardSchedule }) and emitted into the
@@ -210,8 +259,46 @@ export const substrateRegistryEntry = Object.freeze({
         return { ...w, exits: exitsArray };
     },
 
-    // v0 registers no PlaybackController (see setPlaybackProxy above).
     getPlaybackController: () => _playbackProxy,
+
+    // --- Loop-mode block support (arc D1) ---
+    //
+    // Declaring `record && playback` is what ARMS the M3b strict action
+    // gate for omsi regions: from here on a substrate action (an AP
+    // location check, an exit crossing) is only possible while the loops
+    // queue is parked on this region's Manual/Record block. Every omsi
+    // preset carries loop_costs, so loop mode auto-enables and the gate is
+    // live for all of them.
+    //
+    //   queueActions — regionMove only. The fine script lives in the saved
+    //     recording (jta's shape), not in the block interior.
+    //   customQueues — false: no queue-authoring panel for omsi.
+    //   requiresLoopMode — the M4 loop-game contract flag, which the ruling
+    //     explicitly generalizes to omsi: the fork's "budget out → restart
+    //     the loop" economy IS the loop-mode reset once its zones are host
+    //     regions, so there is no coherent standalone mode to fall back to.
+    //   NO `instant` — the fork has no fast-step surface (no setInstantMode
+    //     / stepTick; the clock is deliberately flat at 50 t/s), and omsi
+    //     Instant is the standing last-of-all-substrates item.
+    //   NO `executeVia` — the Bot is the fork's own automation PLANNER,
+    //     scheduled as arc D2 behind a feasibility recon. Until then
+    //     regionSolver() returns null and the Bot radio never renders.
+    //   NO `summaryRecording` — omsi is fine-grained (takeLastRecording).
+    loopSupport: Object.freeze({
+        queueActions: Object.freeze(['regionMove']),
+        manual: true,
+        customQueues: false,
+        record: true,
+        playback: true,
+        requiresLoopMode: true,
+    }),
+
+    // The fine-grained capture hook. Its PRESENCE is what classifies omsi
+    // as fine-grained (loopState._captureShapeFor), so it is declared with
+    // the capabilities rather than with slice 4's capture implementation —
+    // a coarse omsi would double-bill every visit (loops charging
+    // loop_costs on top of the bridge's native mana mirror).
+    takeLastRecording: () => takeLastVisitRecording(),
 
     // Cross-substrate sharing: participates in the shared-mana channel
     // (cross-game plan D1/D8). The in-iframe bridge publishes the

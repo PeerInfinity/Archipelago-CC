@@ -21,6 +21,13 @@
  * are pinned headlessly by the fork's region-overlay.test.mjs; this leg proves
  * the whole host+fork loop, including that taking a synthetic exit's finish()
  * dispatches user:regionMove and the host swaps the region.
+ *
+ * Since arc D1 the round trip runs from PARKED MANUAL BLOCKS. omsi declares
+ * record + playback, which arms the M3b strict action gate, and a synthetic
+ * exit crossing carries a REAL exit name — so unlike the suite's exit-less
+ * repositions it is a performed player action, blocked unless the queue is
+ * parked on the region it leaves. Queueing the round trip is therefore not a
+ * test workaround: it is what playing a split world in loop mode is.
  */
 
 import { registerTest } from '../testRegistry.js';
@@ -28,6 +35,8 @@ import {
     OMSI_REGION_SPLIT_PRESET_PATH,
     OMSI_REGION_SPLIT_R0,
     OMSI_REGION_SPLIT_R1,
+    OMSI_REGION_SPLIT_R0_TO_R1,
+    OMSI_REGION_SPLIT_R1_TO_R0,
     waitForOmsiActive,
     waitForOmsiBridge,
     resetOmsiEngineProgress,
@@ -35,6 +44,8 @@ import {
     omsiEval,
     omsiClearQueue,
     bridgeState,
+    parkManualBlocks,
+    unparkManualBlocks,
     eventually,
 } from '../../omsiSubstrateWrapper/test-helpers.js';
 
@@ -69,10 +80,34 @@ async function regionRoundTrip(testController) {
     resetOmsiEngineProgress(['Wander']);
 
     // ── Enter r0: a FRESH region, gate CLOSED ───────────────────────────────
-    let win = await enterRegion(testController, OMSI_REGION_SPLIT_R0);
+    const win = await enterRegion(testController, OMSI_REGION_SPLIT_R0);
     testController.reportCondition('entered r0', !!win);
     if (!win) return testController.getOverallResult();
     testController.assertEqual('bridge active in r0', OMSI_REGION_SPLIT_R0, bridgeState()?.activeRegionId);
+
+    // Arc D1 arms the M3b strict action gate for omsi, and unlike the
+    // tests' synthetic exit-less repositions, a SYNTHETIC EXIT crossing
+    // carries a real exit name — a performed player action, blocked unless
+    // the queue is parked on the region it leaves. Queue the whole round
+    // trip as Manual blocks: parking on r0 lets the first crossing through,
+    // which completes that block and parks the next one on r1 for the
+    // return. (The strict gate's own semantics, not a test workaround —
+    // this is what playing a split world in loop mode looks like.)
+    const park = await parkManualBlocks(testController, [
+        { from: OMSI_REGION_SPLIT_R0, to: OMSI_REGION_SPLIT_R1, exit: OMSI_REGION_SPLIT_R0_TO_R1 },
+        { from: OMSI_REGION_SPLIT_R1, to: OMSI_REGION_SPLIT_R0, exit: OMSI_REGION_SPLIT_R1_TO_R0 },
+    ]);
+    testController.assertEqual('parked Manual blocks for the round trip', true, !!park);
+    if (!park) return testController.getOverallResult();
+    try {
+        return await roundTripLegs(testController);
+    } finally {
+        unparkManualBlocks(park);
+    }
+}
+
+/** The round trip itself, run with both region blocks parked Manual. */
+async function roundTripLegs(testController) {
     testController.assertEqual('r0 Explore starts fresh', 0, Number(omsiEval('towns[0].expWander')));
     testController.assertEqual('r0 exit gate closed at 0% explored', false, bridgeState()?.regionExitAvailable);
 

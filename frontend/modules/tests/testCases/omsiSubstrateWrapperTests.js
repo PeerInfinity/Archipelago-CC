@@ -23,7 +23,10 @@
  *      unlocked, simulated via the game's own unlockTown(1) — the
  *      exact call Start Journey's completion makes; a real playthrough
  *      is a multi-hundred-loop event) checks the victory location and
- *      the Victory item arrives in the AP inventory.
+ *      the Victory item arrives in the AP inventory. Driven from a
+ *      PARKED MANUAL BLOCK since arc D1: omsi declares record +
+ *      playback, which arms the M3b strict action gate, and an
+ *      unparked location check is swallowed whole (award included).
  *
  * All tests load the omsi_substrate_test preset (2 maze regions + 1
  * omsi Beginnersville region, manaEnabled sidecars, loop_costs
@@ -41,7 +44,11 @@ import {
     OMSI_TEST_REGION,
     OMSI_TEST_MAZE_REGION,
     OMSI_TEST_VICTORY_LOCATION,
+    OMSI_TEST_EXIT,
+    OMSI_TEST_EXIT_TARGET,
     OMSI_NATIVE_BUDGET,
+    parkManualBlocks,
+    unparkManualBlocks,
     waitForOmsiActive,
     moveToRegion,
     readManaLeft,
@@ -394,28 +401,46 @@ async function victoryStartJourney(testController) {
         snapshotHasLocation(testController.stateManager.getSnapshot(), OMSI_TEST_VICTORY_LOCATION),
     );
 
-    // Complete Start Journey: its finish handler calls unlockTown(1) —
-    // call the same engine function directly (a real playthrough is a
-    // multi-hundred-loop event; townsUnlocked is the persistent
-    // milestone the victory location is defined on).
-    testController.log('Simulating Start Journey completion via unlockTown(1)…');
-    omsiEval('unlockTown(1)');
+    // Arc D1 arms the strict action gate for omsi (loopSupport declares
+    // record + playback) and this preset's loop_costs auto-enables loop
+    // mode — so the victory check needs a parked Manual block to reach AP
+    // (a blocked check isn't merely uncaptured: loops swallows the event,
+    // and the award never propagates). Park, then drive the milestone
+    // in-place: parked-Manual LIVE PLAY, the honest post-gate shape for an
+    // AP-integration test.
+    const park = await parkManualBlocks(testController,
+        [{ from: OMSI_TEST_REGION, to: OMSI_TEST_EXIT_TARGET, exit: OMSI_TEST_EXIT }]);
+    testController.assertEqual('parked a Manual block in the omsi region', true, !!park);
+    if (!park) return testController.getOverallResult();
 
-    const checked = await eventually(
-        testController,
-        () => snapshotHasLocation(testController.stateManager.getSnapshot(), OMSI_TEST_VICTORY_LOCATION),
-        'victory location checked',
-        10000,
-    );
-    testController.assertEqual('victory location checked', true, checked);
+    try {
+        // Complete Start Journey: its finish handler calls unlockTown(1) —
+        // call the same engine function directly (a real playthrough is a
+        // multi-hundred-loop event; townsUnlocked is the persistent
+        // milestone the victory location is defined on).
+        testController.log('Simulating Start Journey completion via unlockTown(1)…');
+        omsiEval('unlockTown(1)');
 
-    const victoryReceived = await eventually(
-        testController,
-        () => Number(testController.stateManager.getSnapshot()?.inventory?.Victory ?? 0) > 0,
-        "'Victory' item in the AP inventory",
-        10000,
-    );
-    testController.assertEqual("'Victory' item received", true, victoryReceived);
+        const checked = await eventually(
+            testController,
+            () => snapshotHasLocation(testController.stateManager.getSnapshot(), OMSI_TEST_VICTORY_LOCATION),
+            'victory location checked',
+            10000,
+        );
+        testController.assertEqual('victory location checked', true, checked);
+
+        const victoryReceived = await eventually(
+            testController,
+            () => Number(testController.stateManager.getSnapshot()?.inventory?.Victory ?? 0) > 0,
+            "'Victory' item in the AP inventory",
+            10000,
+        );
+        testController.assertEqual("'Victory' item received", true, victoryReceived);
+    } finally {
+        // The re-entry leg below is a synthetic exit-less hop, not queue
+        // execution — leave the park (and loop mode) behind for it.
+        unparkManualBlocks(park);
+    }
 
     // The check is once-only: town 1 stays unlocked, the dedupe (and
     // the reseed on region reload) must not re-dispatch it. Re-enter

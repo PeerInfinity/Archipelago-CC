@@ -200,14 +200,15 @@ describe('LoopBlockBuilder — loopSupport capability gating', () => {
         const bounce = (await import('../bounceDemo/bounceDemoLibrary.js')).substrateRegistryEntry;
         const runner = (await import('../runnerDemo/runnerDemoLibrary.js')).substrateRegistryEntry;
         const flash = (await import('../flashSubstrate/flashSubstrateLibrary.js')).substrateRegistryEntry;
+        const omsi = (await import('../omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js')).substrateRegistryEntry;
 
         // M2: maze + textAdventure DECLARE record + playback (Record requires
         // both). M4: jta additionally DECLARES record + playback + instant
         // (fine-grained via the fork recorder; executor replay + stepTick
         // pump). M5: runner + bounce declare record + playback + instant too,
         // as the SUMMARY category (`summaryRecording`) — no recorder, so they
-        // are not fine-grained. Only omsi (arc D) and the bare flash entry
-        // still don't declare.
+        // are not fine-grained. Arc D1: omsi joins as the third FINE-GRAINED
+        // substrate. Only the bare flash entry still doesn't declare.
         expect(maze.loopSupport).toMatchObject({
             manual: true, customQueues: true, record: true, playback: true, instant: true,
         });
@@ -230,6 +231,25 @@ describe('LoopBlockBuilder — loopSupport capability gating', () => {
             instant: true, requiresLoopMode: true,
         });
         expect([...jta.loopSupport.queueActions]).toEqual(['regionMove']);
+
+        // Arc D1: omsi is the second loop-GAME substrate — record + playback
+        // (which arms the strict gate for its regions) + requiresLoopMode,
+        // and regionMove as its only queue-grade action, jta's shape. It
+        // declares NO instant (the fork has no fast-step surface) and NO
+        // executeVia (the Bot is the fork's own planner — arc D2), so the
+        // Instant checkbox and the Bot radio must stay unoffered.
+        expect(omsi.loopSupport).toMatchObject({
+            manual: true, customQueues: false, record: true, playback: true,
+            requiresLoopMode: true,
+        });
+        expect([...omsi.loopSupport.queueActions]).toEqual(['regionMove']);
+        expect(omsi.loopSupport.instant ?? false).toBe(false);
+        expect(omsi.loopSupport.executeVia ?? null).toBe(null);
+        expect(omsi.loopSupport.summaryRecording ?? false).toBe(false);
+        // FINE-GRAINED: the recorder hook is what classifies it (a coarse
+        // omsi would be charged loop_costs on top of its native mana mirror).
+        expect(typeof omsi.takeLastRecording).toBe('function');
+
         // The other substrates do NOT require loop mode (non-loop-game or
         // native-standalone economies).
         expect(maze.loopSupport.requiresLoopMode ?? false).toBe(false);

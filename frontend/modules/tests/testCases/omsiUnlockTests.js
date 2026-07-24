@@ -30,6 +30,12 @@
  *   6. omsi-unlock-victory-town — victory fires on town N JOINING
  *      townsUnlocked, and NOT on an unrelated town unlocking.
  *
+ * Since arc D1 every leg that banks a REAL AP check runs from a PARKED
+ * MANUAL BLOCK (parkOmsiBlock below): omsi declares record + playback, which
+ * arms the M3b strict action gate, and an unparked `user:locationCheck` is
+ * swallowed by loops — the award never lands. The legs that only exercise
+ * the overlay/capacity path (1 and 3) need no park.
+ *
  * Engine facts these rely on (fork @ e5ef307):
  *   - Effective capacity for var V in town t is the plain field
  *     `towns[t]['total' + V]`; the managed substitution is
@@ -52,6 +58,10 @@ import {
     OMSI_SCALED_PRESET_PATH,
     OMSI_TEST_REGION,
     OMSI_TEST_MAZE_REGION,
+    OMSI_TEST_EXIT,
+    OMSI_TEST_EXIT_TARGET,
+    parkManualBlocks,
+    unparkManualBlocks,
     waitForOmsiActive,
     waitForOmsiBridge,
     resetOmsiEngineProgress,
@@ -131,6 +141,27 @@ async function enterRandomizedOmsiRegion(testController, presetPath = OMSI_RANDO
     testController.reportCondition('omsi bridge active in region', !!win);
     if (win) omsiClearQueue();
     return win;
+}
+
+/**
+ * Park a Manual loops block on the omsi region so this world's unlock-row
+ * location checks reach AP.
+ *
+ * Arc D1 arms the M3b strict action gate for omsi (loopSupport declares
+ * record + playback) and every omsi preset's loop_costs auto-enables loop
+ * mode, so an UNPARKED `user:locationCheck` is swallowed by loops — the AP
+ * award dies with it, while `watchLocationChecks` (which wraps the
+ * dispatcher's entry point) would still count the dispatch. That is exactly
+ * the shape that makes a surviving count vacuous, so every leg asserting a
+ * real award runs from a parked block instead.
+ *
+ * These legs verify AP integration, not loop economy: parked-Manual live
+ * play is the ruled way to drive them (2026-07-23), and omsi being
+ * fine-grained means loops charges nothing for the visit.
+ */
+function parkOmsiBlock(testController) {
+    return parkManualBlocks(testController,
+        [{ from: OMSI_TEST_REGION, to: OMSI_TEST_EXIT_TARGET, exit: OMSI_TEST_EXIT }]);
 }
 
 /** Give the engine enough Wander progress to fire the first Pots row. */
@@ -221,6 +252,12 @@ async function unlockSeedBeforeFanout(testController) {
     // make "not re-reported" pass for the wrong reason, so we require
     // it to have counted the positive case first.
     const watch = watchLocationChecks(POTS_ROW_1_LOCATION);
+    // Leg A banks a REAL AP check, so it needs a parked Manual block
+    // (arc D1 strict gate — see parkOmsiBlock). Leg B is a synthetic
+    // exit-less region round trip and runs unparked.
+    let park = await parkOmsiBlock(testController);
+    testController.assertEqual('parked a Manual block in the omsi region', true, !!park);
+    if (!park) { watch.stop(); return testController.getOverallResult(); }
     try {
         // Leg A: an un-checked, locally-satisfied row DOES report.
         testController.assertEqual(
@@ -242,6 +279,9 @@ async function unlockSeedBeforeFanout(testController) {
             watch.count,
         );
 
+        unparkManualBlocks(park);
+        park = null;
+
         // Leg B: now that it is banked, a fresh region load must NOT
         // re-report it — seedReportedLocations runs before the overlay
         // push whose check() would otherwise fan it back out.
@@ -259,6 +299,7 @@ async function unlockSeedBeforeFanout(testController) {
         );
     } finally {
         watch.stop();
+        unparkManualBlocks(park);
     }
     testController.assertEqual(
         'row stays checked',
@@ -349,6 +390,10 @@ async function unlockCheckFiresOnce(testController) {
     const win = await enterRandomizedOmsiRegion(testController);
     if (!win) return testController.getOverallResult();
 
+    const park = await parkOmsiBlock(testController);
+    testController.assertEqual('parked a Manual block in the omsi region', true, !!park);
+    if (!park) return testController.getOverallResult();
+
     const watch = watchLocationChecks(POTS_ROW_1_LOCATION);
     try {
         // Cross the row's base-rate dimension through the game's own
@@ -373,6 +418,7 @@ async function unlockCheckFiresOnce(testController) {
         testController.assertEqual('location fired exactly once', 1, watch.count);
     } finally {
         watch.stop();
+        unparkManualBlocks(park);
     }
 
     resetWanderProgress();
@@ -396,6 +442,10 @@ registerTest({
 async function unlockSurvivesPrestige(testController) {
     const win = await enterRandomizedOmsiRegion(testController);
     if (!win) return testController.getOverallResult();
+
+    const park = await parkOmsiBlock(testController);
+    testController.assertEqual('parked a Manual block in the omsi region', true, !!park);
+    if (!park) return testController.getOverallResult();
 
     const watch = watchLocationChecks(POTS_ROW_1_LOCATION);
     try {
@@ -467,6 +517,7 @@ async function unlockSurvivesPrestige(testController) {
         testController.assertEqual('banked check was not re-reported', 1, watch.count);
     } finally {
         watch.stop();
+        unparkManualBlocks(park);
     }
 
     return testController.getOverallResult();
@@ -498,6 +549,22 @@ async function unlockVictoryTown(testController) {
             OMSI_RANDOMIZED_VICTORY_LOCATION),
     );
 
+    // Both the negative (town 5) and the positive (town 1) milestone run
+    // from a parked Manual block: the positive one banks a REAL AP award,
+    // and the negative must be blocked BY THE TOWN PREDICATE, not by the
+    // strict action gate — an unparked negative would pass for the wrong
+    // reason (arc D1; see parkOmsiBlock).
+    const park = await parkOmsiBlock(testController);
+    testController.assertEqual('parked a Manual block in the omsi region', true, !!park);
+    if (!park) return testController.getOverallResult();
+    try {
+        return await unlockVictoryTownParked(testController);
+    } finally {
+        unparkManualBlocks(park);
+    }
+}
+
+async function unlockVictoryTownParked(testController) {
     // Satisfy the victory location's ACCESS RULE first. It requires
     // K_total - 1 = 89 supply-step copies, and the host rejects a check
     // on a location that is not accessible — so without the items the
@@ -649,6 +716,14 @@ async function unlockScaledWorld(testController) {
         10000,
     );
 
+    // The step legs bank REAL AP checks, so they run from a parked Manual
+    // block (arc D1 strict gate — see parkOmsiBlock). The exactness
+    // assertions cut both ways here: a blocked check would both lose the
+    // award and make "exactly one" pass for the wrong reason.
+    const park = await parkOmsiBlock(testController);
+    testController.assertEqual('parked a Manual block in the omsi region', true, !!park);
+    if (!park) return testController.getOverallResult();
+
     // Count EVERY Pots check, not just one location — the whole point is
     // that only the SELECTED steps fire.
     const watch = watchLocationChecks((name) => typeof name === 'string'
@@ -689,6 +764,7 @@ async function unlockScaledWorld(testController) {
         );
     } finally {
         watch.stop();
+        unparkManualBlocks(park);
     }
 
     resetWanderProgress();
