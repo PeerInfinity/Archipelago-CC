@@ -1136,10 +1136,16 @@ export class LoopState {
         }
         if (shape === 'summary') {
           // M5: a SUMMARY substrate (runner, bounce) in Playback applies its
-          // recorded net result instantly — slice 4 installs that branch
-          // here. With no bound summary it joins the fine-grained ruling
-          // above: park for live play rather than fall through to the
-          // walkTo/bot chain, which stays M6's to re-home.
+          // recorded net result instantly — no replay, the game does not
+          // participate.
+          const summary = this._lookupBoundSummary(modeBlock.region, modeBlock.instance);
+          if (summary) {
+            this._handleSummaryApplyEntry(modeBlock.region, summary);
+            return;
+          }
+          // With no bound summary it joins the fine-grained ruling above:
+          // park for live play rather than fall through to the walkTo/bot
+          // chain, which stays M6's to re-home.
           this._handleManualRegionEntry(modeBlock.region);
           return;
         }
@@ -1694,6 +1700,96 @@ export class LoopState {
   }
 
   /**
+   * The mana a stored summary costs to replay RIGHT NOW (M5): its recorded
+   * seconds at the region's current XP-discounted drain rate, plus the
+   * current XP-discounted price of each explicitly-costed action it
+   * performed. Everything else the visit did is free by construction.
+   *
+   * Pricing at replay time (rather than storing a frozen number) is what
+   * keeps region-XP growth meaningful for replays, and matches how the
+   * generic executor prices a coarse replay.
+   */
+  _priceSummaryReplay(region, summary) {
+    const seconds = Math.max(0, summary?.durationSeconds ?? 0);
+    let total = this._calculateActionCost({ type: 'timeDrain', sourceRegion: region }) * seconds;
+    for (const action of summary?.costedActions ?? []) {
+      total += this._calculateActionCost({ ...action, sourceRegion: region });
+    }
+    return total;
+  }
+
+  /**
+   * Playback for a SUMMARY substrate (M5): apply the recorded net result
+   * directly instead of replaying anything. The game iframe does not
+   * participate and the player character stays where it is — that is the
+   * design of the category, not a bug.
+   *
+   * Order matters. The mana is spent FIRST, because spending can end the
+   * visit: deductMana fires the depletion wake synchronously, which refills
+   * the pool and snaps the queue back to index 0. If that happened, the
+   * park flag is already cleared and the apply ABORTS — firing the checks
+   * and the departure into a freshly reset loop would advance a block that
+   * was never paid for.
+   *
+   * Summary playback is ALWAYS instant, so the per-block Instant flag is
+   * not consulted; `instant` stays declared for the focus-suppression seam.
+   */
+  _handleSummaryApplyEntry(region, saved) {
+    if (this._manualActionEntered) return;
+    this._manualActionEntered = true;
+    this._manualRegionName = region;
+
+    const componentType = this._lookupSubstrateComponentType(region);
+    const focusLocked = centralRegistry?.getPublicFunction?.('loops', 'isFocusLocked')?.() ?? false;
+    if (componentType && !focusLocked && this.eventBus?.publish) {
+      this.eventBus.publish('ui:activatePanel', { panelId: componentType });
+    }
+    this.stopProcessing();
+
+    // Published BEFORE the apply, unlike the fine-grained replay path: the
+    // apply below is synchronous end to end, so the departure's wake would
+    // otherwise advance the block before this "we parked" event went out.
+    this.eventBus?.publish?.('loopState:manualEntered', {
+      regionName: region,
+      expectedNextRegion: this._getExpectedNextRegion(this.currentActionIndex),
+      manualRegion: true,
+      playback: true,
+      summary: true,
+    });
+
+    this._spendMana(region, this._priceSummaryReplay(region, saved?.summary));
+    if (!this._manualActionEntered) return; // depletion reset fired — abort
+
+    // Refire the recorded checks. Same dispatch as the generic executor:
+    // host state is name-keyed and idempotent, and fromLoop marks these as
+    // queue execution so neither the gate nor the path-append sees them as
+    // performed play.
+    for (const locationName of saved?.summary?.checks ?? []) {
+      if (!locationName) continue;
+      this.dispatcher?.publishToNextModule?.('loops', 'user:locationCheck', {
+        locationName,
+        regionName: region,
+        fromLoop: true,
+      }, { direction: 'up' });
+    }
+
+    // Cross the recorded departure. The TARGET comes from the queue, not
+    // the recording: it is what the wake handler compares against, so
+    // taking it from anywhere else could park the block forever on a
+    // "wrong region" mismatch. The parked block advances on the resulting
+    // regionMove wake.
+    const targetRegion = this._getExpectedNextRegion(this.currentActionIndex);
+    if (targetRegion) {
+      this.dispatcher?.publish?.('user:regionMove', {
+        sourceRegion: region,
+        targetRegion,
+        exitName: saved?.departureExitId ?? this._queuedDepartureExit(),
+        fromLoop: true,
+      }, { initialTarget: 'bottom' });
+    }
+  }
+
+  /**
    * Resolve a block's mode. Precedence:
    *   1. explicit per-block mode (set via the radios / set-all);
    *   2. legacy region checkbox (migrated saves) → 'manual';
@@ -2096,12 +2192,24 @@ export class LoopState {
    * _resetLoop), which fires synchronously from deductMana.
    */
   _chargeLiveAction(actionShape) {
-    const cost = this._calculateActionCost(actionShape);
+    this._spendMana(actionShape.sourceRegion, this._calculateActionCost(actionShape));
+  }
+
+  /**
+   * Deduct mana and award the matching region XP 1:1 — the single spend
+   * path shared by live-play charges, the M5 time drain, and the M5
+   * summary replay, so all three keep one economy.
+   *
+   * CALLER BEWARE: deductMana fires gameState:manaChanged SYNCHRONOUSLY,
+   * whose wake can run the depletion reset (refilling the pool, snapping
+   * the queue to index 0 and discarding any capture). Anything a caller
+   * does after this must tolerate that, or check for it.
+   */
+  _spendMana(region, cost) {
     if (!(cost > 0)) return;
     const gs = this._gs();
     if (!gs?.deductMana) return;
     gs.deductMana(cost);
-    const region = actionShape.sourceRegion;
     if (region) {
       this.addRegionXP(region, cost);
       this._annotationTracker?.noteXp(cost);

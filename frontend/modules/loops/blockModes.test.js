@@ -1816,3 +1816,155 @@ describe('M5 — summary Record capture', () => {
     expect(getSavedQueues(hashRulesData(RULES_DATA), 'A', 'sum_sub')).toHaveLength(1);
   });
 });
+
+// ---------------------------------------------------------------------------
+// M5 slice 4 — instant-apply Playback: the recorded net result is applied
+// directly, priced at the CURRENT XP level. The game replays nothing.
+// ---------------------------------------------------------------------------
+
+describe('M5 — instant-apply Playback', () => {
+  let loopState, gs, bus, tick, handles, dispatched;
+
+  function setUp({ regionData = { timeDrainPerSecond: 2 }, locations = {}, summary, maxMana } = {}) {
+    ({ loopState, gs, bus } = wire());
+    dispatched = [];
+    loopState.dispatcher = {
+      publish: (name, data, opts) => dispatched.push({ name, data, opts }),
+      publishToNextModule: (mod, name, data, opts) => dispatched.push({ name, data, opts }),
+    };
+    tick = makeTicker();
+    handles = registerSummarySubstrate();
+    const cdm = new CostDataManager();
+    cdm.setCostData({
+      regions: { A: regionData }, locations,
+      defaultRegionCost: 50, defaultLocationCost: 100,
+    }, 'test');
+    loopState.setCostDataManager(cdm);
+    loopState._cachedRulesData = RULES_DATA;
+    gs.updatePath('A', 'go', 'Menu');
+    gs.addLocationCheck('Loc1', 'A');
+    gs.updatePath('B', 'exit', 'A');
+    if (maxMana !== undefined) { gs.maxMana = maxMana; gs.currentMana = maxMana; }
+    gs.setLoopModeActive(true);
+    if (summary) {
+      saveQueue(hashRulesData(RULES_DATA), makeSummaryEntry({ summary }));
+    }
+    loopState.setBlockMode('A', 1, 'playback');
+  }
+
+  function run() {
+    loopState.currentActionIndex = 1;
+    loopState.currentAction = loopState.getActionQueue()[1];
+    loopState.isProcessing = true;
+    tick(loopState);
+  }
+
+  beforeEach(() => {
+    resetSavedQueueStore();
+    clearRulesHashCache();
+  });
+
+  it('prices the recorded duration at the CURRENT rate and spends it', () => {
+    setUp({ summary: { durationSeconds: 4, checks: [], costedActions: [] } });
+    const before = gs.getCurrentMana();
+    run();
+    // 4 recorded seconds × 2 mana/s = 8 — the envelope was used, not any
+    // per-action default (which would have been 50 for the move alone).
+    expect(before - gs.getCurrentMana()).toBe(8);
+  });
+
+  it('re-prices at the current XP level rather than replaying a frozen cost', () => {
+    setUp({ regionData: { timeDrainPerSecond: 10 }, summary: { durationSeconds: 2, checks: [], costedActions: [] } });
+    loopState.addRegionXP('A', 100000);
+    const before = gs.getCurrentMana();
+    run();
+    const charged = before - gs.getCurrentMana();
+    expect(charged).toBeGreaterThan(0);
+    expect(charged).toBeLessThan(20); // the un-discounted price
+  });
+
+  it('adds the current price of each explicitly-costed recorded action', () => {
+    setUp({
+      regionData: { timeDrainPerSecond: 1, moveCost: 5 },
+      locations: { Loc1: 7 },
+      summary: {
+        durationSeconds: 3,
+        checks: ['Loc1'],
+        costedActions: [{ type: 'locationCheck', locationName: 'Loc1' }, { type: 'regionMove' }],
+      },
+    });
+    const before = gs.getCurrentMana();
+    run();
+    expect(before - gs.getCurrentMana()).toBe(3 + 7 + 5);
+  });
+
+  it('refires the recorded checks and crosses the departure, both fromLoop', () => {
+    setUp({
+      summary: { durationSeconds: 1, checks: ['Loc1', 'Loc2'], costedActions: [] },
+    });
+    run();
+
+    const checks = dispatched.filter((e) => e.name === 'user:locationCheck');
+    expect(checks.map((e) => e.data.locationName)).toEqual(['Loc1', 'Loc2']);
+    expect(checks.every((e) => e.data.fromLoop === true && e.data.regionName === 'A')).toBe(true);
+
+    const moves = dispatched.filter((e) => e.name === 'user:regionMove');
+    expect(moves).toHaveLength(1);
+    expect(moves[0].data).toMatchObject({
+      sourceRegion: 'A', targetRegion: 'B', exitName: 'exit', fromLoop: true,
+    });
+    // Reaches procgenPlayer, which sits below loops in the chain.
+    expect(moves[0].opts).toMatchObject({ initialTarget: 'bottom' });
+  });
+
+  it('the game replays NOTHING — no walkTo, no replayActions', () => {
+    setUp({ summary: { durationSeconds: 1, checks: ['Loc1'], costedActions: [] } });
+    // Prove the watcher is live before trusting its zero: the substrate's
+    // controller must exist and expose the method we are counting.
+    const controller = substrateRegistry.get('sum_sub').getPlaybackController();
+    expect(typeof controller.walkTo).toBe('function');
+
+    run();
+
+    expect(handles.walkToCalls).toHaveLength(0);
+    expect(controller.replayActions).toBeUndefined();
+    // ...paired with a positive assertion, so the zero cannot be vacuous.
+    expect(dispatched.filter((e) => e.name === 'user:locationCheck')).toHaveLength(1);
+  });
+
+  it('ABORTS the apply when the charge depletes mana (the ordering trap)', () => {
+    // A recording that costs more than the pool holds: the deduction fires
+    // the depletion reset synchronously, refilling mana and snapping the
+    // queue to index 0. Nothing after the charge may run.
+    setUp({
+      regionData: { timeDrainPerSecond: 10 },
+      summary: { durationSeconds: 50, checks: ['Loc1'], costedActions: [] },
+      maxMana: 100,
+    });
+    run();
+
+    expect(loopState._manualActionEntered).toBe(false);
+    expect(dispatched.filter((e) => e.name === 'user:locationCheck')).toHaveLength(0);
+    expect(dispatched.filter((e) => e.name === 'user:regionMove')).toHaveLength(0);
+    // The reset refilled the pool and restarted the queue.
+    expect(gs.getCurrentMana()).toBe(gs.getMaxMana());
+    expect(loopState.currentActionIndex).toBe(0);
+  });
+
+  it('a fine recording under the same tag does NOT instant-apply', () => {
+    setUp();
+    saveQueue(hashRulesData(RULES_DATA), {
+      regionName: 'A', substrate: 'sum_sub',
+      arrivalExitId: 'go', ordinal: 0, departureExitId: 'exit',
+      actions: [{ type: 'locationCheck', locationName: 'Stale' }],
+      manaAtEntry: 100, manaAtExit: 80, manaMin: 75,
+      locationsChecked: ['Stale'], itemsPickedUp: [],
+    });
+    const before = gs.getCurrentMana();
+    run();
+    // Parked for live play instead — no charge, no dispatches.
+    expect(loopState._manualActionEntered).toBe(true);
+    expect(gs.getCurrentMana()).toBe(before);
+    expect(dispatched).toHaveLength(0);
+  });
+});
