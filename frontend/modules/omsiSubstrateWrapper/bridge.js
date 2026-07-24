@@ -17,7 +17,10 @@
  *     semantics: the clock runs ONLY while an omsi region is active.
  *     Stepping is skipped while the game has no enabled queued actions
  *     — with an empty queue every singleTick would restart the loop
- *     (shouldRestart), ping-ponging resets with the host at 50/s.
+ *     (shouldRestart), ping-ponging resets with the host at 50/s — and,
+ *     since arc D1 slice 2, while the loops STEP GATE is closed: the
+ *     game advances only while the queue is parked on this region or a
+ *     replay is in flight. Sampling and the victory watch stay ungated.
  *   - Mana mirroring: after each interval the bridge samples the
  *     game's remaining loop budget (manaLeft = timeNeeded − timer, the
  *     §4 mapping) and publishes the signed delta as the generic
@@ -203,10 +206,26 @@ let _activeSyntheticExits = [];          // [{ name, targetRegion }] injected fo
 // first-time check mid-replay.
 let _replayInFlight = false;
 
+// Step gate (arc D1 slice 2, ruling 3). The bridge advances the game ONLY
+// while the loops queue is parked on THIS region's Manual/Record block, or
+// while a replay is in flight. Unparked ⇒ frozen — otherwise the game keeps
+// grinding in the background and its mana mirror keeps draining the SHARED
+// pool for play nobody is watching or paying for, which is the one economy
+// hole the park-gated-stepping ruling closes.
+//
+// The host pushes the live-play half over `omsi:playbackControl` (it is the
+// only side that can see the loops queue); the bridge owns the replay half.
+// `enforced` mirrors loops' own staging: the gate applies only where loops
+// enforces the strict action gate, so a hypothetical omsi world with no
+// loop_costs (loop mode off) is never frozen. Both default to the OPEN
+// position, so the game is never stuck waiting for a push that never comes.
+let _stepGateEnforced = false;
+let _stepGateLiveRegion = null;
+
 // Clock diagnostics, exposed via __omsiBridge.getDebugState().
 const _clockStats = {
     messages: 0, inactiveSkips: 0, callbacks: 0,
-    ticksStepped: 0, skippedNoQueue: 0, maxElapsedMs: 0,
+    ticksStepped: 0, skippedNoQueue: 0, skippedGated: 0, maxElapsedMs: 0,
 };
 
 // ────────────────────────────────────────────────────────────────
@@ -295,6 +314,28 @@ function _hasRunnableQueue() {
     return next.some((e) => e && !e.disabled && (e.loops ?? 0) > 0);
 }
 
+/**
+ * Whether the game may ADVANCE right now (arc D1 slice 2, ruling 3).
+ *
+ * Open when the gate isn't enforced (loop mode off / before the host's
+ * first push), while a replay is in flight, and while the loops queue is
+ * parked for live play on the region this bridge currently has loaded.
+ * Closed otherwise — an unparked omsi region is frozen, not idling.
+ *
+ * Note the region COMPARISON: loops may be parked on some other substrate's
+ * region entirely, which must not license this one to run.
+ *
+ * ⚠ arc D2: a Bot block drives through the fork's planner, and
+ * `livePlayRegion()` is null while a solver drives — so D2 must extend the
+ * pushed payload with the bot-park case or the bot will run against a
+ * frozen clock.
+ */
+function _mayStepClock() {
+    if (!_stepGateEnforced) return true;
+    if (_replayInFlight) return true;
+    return _stepGateLiveRegion !== null && _stepGateLiveRegion === _currentRegionId;
+}
+
 function _clockTick() {
     _clockStats.messages += 1;
     const m = _managed();
@@ -304,11 +345,18 @@ function _clockTick() {
     }
     const now = Date.now();
     const elapsedMs = _lastClockTime === null ? CLOCK_INTERVAL_MS : now - _lastClockTime;
+    // Re-baselined on EVERY callback, gated or not: a closed gate must not
+    // bank elapsed time and replay it as a burst when the block parks.
     _lastClockTime = now;
     _clockStats.callbacks += 1;
     if (elapsedMs > _clockStats.maxElapsedMs) _clockStats.maxElapsedMs = elapsedMs;
+    // The mana mirror and the victory watch below stay UNGATED: they only
+    // observe (a direct addMana — Buy Mana, a test, a future hook — must
+    // still reach the pool), while stepping is what the gate withholds.
+    const mayStep = _hasRunnableQueue() && _mayStepClock();
     if (!_hasRunnableQueue()) _clockStats.skippedNoQueue += 1;
-    if (_hasRunnableQueue()) {
+    else if (!mayStep) _clockStats.skippedGated += 1;
+    if (mayStep) {
         // Step by elapsed wall time so the average rate stays at the
         // game's base speed even when the browser throttles callbacks.
         const ticks = Math.min(
@@ -1092,14 +1140,30 @@ function _endReplay(reason = 'unspecified') {
 }
 
 /**
+ * Install the host's step-gate state (slice 2). Pushed on every CHANGE of
+ * (loop mode active, loops' livePlayRegion) plus a force-push on region
+ * load, so the bridge never has to ask.
+ */
+function _setStepGate(state) {
+    const enforced = state?.enforced === true;
+    const region = typeof state?.livePlayRegion === 'string' ? state.livePlayRegion : null;
+    if (enforced === _stepGateEnforced && region === _stepGateLiveRegion) return;
+    _stepGateEnforced = enforced;
+    _stepGateLiveRegion = region;
+    log('debug', `step gate: ${_mayStepClock() ? 'OPEN' : 'CLOSED'} `
+        + `(enforced=${enforced}, livePlay=${region ?? 'none'}, here=${_currentRegionId ?? 'none'})`);
+}
+
+/**
  * Commands from the host-side PlaybackProxy (arc D1).
  *
- * D1 implements the REPLAY WINDOW only: `beginReplay` / `endReplay` bracket
- * a Playback block's replay so everything the bridge publishes inside it is
- * stamped as queue execution. The replay driver itself (install the
- * recorded queue, let the game grind to the departure exit) lands in slice
- * 4, and the step gate that decides when the clock may run lands in slice 2
- * — both ride this same channel.
+ * Two things ride this channel today:
+ *   `beginReplay` / `endReplay` — the REPLAY WINDOW (slice 1), inside which
+ *     every publish is stamped as queue execution. The replay DRIVER
+ *     (install the recorded queue, grind to the departure exit) is slice 4.
+ *   `setStepGate` — the host's view of whether the game may advance
+ *     (slice 2): loop mode active, and which region loops is parked on for
+ *     live play.
  *
  * The PlaybackProxy's generic pacing methods are deliberately NOT wired:
  * managed mode has no fast-step surface (the standing "omsi Instant last"
@@ -1108,12 +1172,16 @@ function _endReplay(reason = 'unspecified') {
  */
 function _handlePlaybackControl(payload) {
     const method = payload?.method;
+    const args = Array.isArray(payload?.args) ? payload.args : [];
     switch (method) {
         case 'beginReplay':
             _beginReplay();
             return;
         case 'endReplay':
             _endReplay('host ended the replay');
+            return;
+        case 'setStepGate':
+            _setStepGate(args[0]);
             return;
         case 'play':
         case 'stop':
@@ -1343,6 +1411,13 @@ async function main() {
             // Loop-mode replay window (arc D1): true while this bridge's
             // publishes are stamped fromLoop.
             replayInFlight: _replayInFlight,
+            // Step gate (slice 2): whether the game may advance, and the
+            // host state that decides it.
+            mayStep: _mayStepClock(),
+            stepGate: {
+                enforced: _stepGateEnforced,
+                livePlayRegion: _stepGateLiveRegion,
+            },
         }),
     };
 

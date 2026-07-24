@@ -189,6 +189,11 @@
             "category": "Omsi substrate"
         },
         {
+            "id": "omsi-step-gate-parks-the-clock",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
             "id": "omsi-budget-mirrors-pool-both-ways",
             "enabled": true,
             "category": "Omsi substrate"

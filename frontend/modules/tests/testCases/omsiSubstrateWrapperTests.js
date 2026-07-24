@@ -14,6 +14,12 @@
  *   3. omsi-clock-runs-only-in-region — strict clock ownership: the
  *      bridge's host-driven clock runs only while an omsi region is
  *      active.
+ *   3b. omsi-step-gate-parks-the-clock — arc D1 slice 2: WITHIN an active
+ *      region the clock advances the game only while the loops queue is
+ *      parked on its block (or a replay is in flight). Unparked is
+ *      frozen — the clock still ticks, but it withholds the steps, so
+ *      the mana mirror can no longer drain the shared pool for play
+ *      nobody is watching.
  *   4. omsi-budget-mirrors-pool-both-ways — drains deduct the pool,
  *      gains add to it; entry pins the budget to the pool.
  *   5. omsi-native-budget-raises-pool — the game's native per-loop
@@ -57,6 +63,7 @@ import {
     omsiClearQueue,
     omsiEval,
     isBridgeClockRunning,
+    bridgeState,
     readPool,
     readLoopResetCount,
     readCurrentRegion,
@@ -206,6 +213,17 @@ async function loopExhaustionSingleReset(testController) {
     const poolBefore = readPool();
     testController.log(`pool=${poolBefore}, loopResets=${resetsBefore}`);
 
+    // Arc D1 slice 2 park-gates the bridge clock: an UNPARKED omsi region
+    // is frozen, so a real run only happens while the queue is parked on
+    // its block. This leg is the one test that genuinely depended on
+    // background stepping (the others drive the engine by direct eval), and
+    // parking is simply what a real run now is — the same live play whose
+    // drains this leg is about.
+    const park = await parkManualBlocks(testController,
+        [{ from: OMSI_TEST_REGION, to: OMSI_TEST_EXIT_TARGET, exit: OMSI_TEST_EXIT }]);
+    testController.assertEqual('parked a Manual block in the omsi region', true, !!park);
+    if (!park) return testController.getOverallResult();
+
     // A real run: queue far more Wander reps than the budget can pay
     // for. The host-driven clock steps the engine at 50 ticks/s and
     // each tick drains 1 mana; the budget is pinned to the pool, so
@@ -242,6 +260,7 @@ async function loopExhaustionSingleReset(testController) {
         readLoopResetCount(),
     );
 
+    unparkManualBlocks(park);
     return testController.getOverallResult();
 }
 
@@ -253,6 +272,150 @@ registerTest({
                + 'pool hitting 0, and the reset-count race guard collapses the two '
                + 'paths into exactly one loop reset.',
     testFunction: loopExhaustionSingleReset,
+    category: 'Omsi substrate',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
+
+async function stepGateParksTheClock(testController) {
+    const win = await enterOmsiRegion(testController);
+    if (!win) return testController.getOverallResult();
+
+    // WITNESSES. The gate decides whether the bridge calls `m.step()`, so
+    // the bridge's own step counter is the direct one, and the pool is the
+    // effect that matters (an unparked region must not drain the shared
+    // pool). The fork's effective time (`totalTicks`) is deliberately NOT a
+    // witness: a fork left mid-restart-loop by an earlier suite leg burns
+    // budget — 400 mana in one observed run — while accruing ZERO effective
+    // time, so it reads as "frozen" when the bridge is stepping it hard. It
+    // is logged for diagnosis only.
+    const readSteps = () => Number(bridgeState()?.clockStats?.ticksStepped ?? 0);
+    const gatedSkips = () => Number(bridgeState()?.clockStats?.skippedGated ?? 0);
+    const readForkTime = () => Number(omsiEval('IdleLoopsManaged.getFullState().totalTicks'));
+
+    // A REAL runnable plan, so "the game didn't advance" can never be
+    // "there was nothing to advance" (the bridge's own no-queue skip).
+    omsiQueueAction('Wander', 9999);
+
+    // ── Phase 1: unparked ⇒ FROZEN ──────────────────────────────────────
+    // The preset carries loop_costs, so loop mode is on and — since omsi
+    // declares record + playback — the gate is enforced. Nothing is parked.
+    const closed = await eventually(
+        testController,
+        () => bridgeState()?.mayStep === false,
+        'step gate closed while unparked',
+    );
+    testController.assertEqual('step gate closed while unparked', true, closed);
+    testController.assertEqual('gate is ENFORCED (loop mode on, omsi is gated)',
+        true, bridgeState()?.stepGate?.enforced);
+
+    const steps0 = readSteps();
+    const pool0 = readPool();
+    const skips0 = gatedSkips();
+    testController.log(`frozen baseline: steps=${steps0}, pool=${pool0}, `
+        + `gatedSkips=${skips0}, forkTime=${readForkTime()}`);
+    await new Promise((r) => setTimeout(r, 1500));
+
+    // Attribute the freeze: the clock must still be RUNNING and the gate
+    // must be visibly skipping steps. Without these two, a stopped clock or
+    // an empty plan would make the frozen-tick assertion vacuous.
+    testController.assertEqual('the bridge clock is still running', true, isBridgeClockRunning());
+    testController.assertEqual('bridge still active in the region', true, bridgeState()?.isActive);
+    testController.assertEqual('the GATE is what withheld the steps',
+        true, gatedSkips() > skips0);
+    testController.assertEqual('the bridge stepped the game ZERO times while unparked',
+        steps0, readSteps());
+    testController.assertEqual('pool did not drain while unparked',
+        true, Math.abs(readPool() - pool0) < 0.5);
+
+    // ── Phase 2: parked ⇒ the game RUNS ─────────────────────────────────
+    // Buy headroom first. Parked play drains 1 mana/tick at 50 t/s, and the
+    // pool this leg inherits can be as low as ~50 — a second of running
+    // would empty it, fire the depletion reset and teleport the player out
+    // of the region, which would then look like "the game stopped" in
+    // phase 3. The gain mirrors into the pool through the same addMana hook
+    // the mana legs use (sampling is ungated, so it lands while frozen).
+    omsiAddMana(500);
+    const toppedUp = await eventually(
+        testController,
+        () => readPool() > pool0 + 400,
+        'the budget top-up mirrored into the pool (drain headroom)',
+    );
+    testController.assertEqual('drain headroom in place', true, toppedUp);
+    const poolAtPark = readPool();
+
+    const park = await parkManualBlocks(testController,
+        [{ from: OMSI_TEST_REGION, to: OMSI_TEST_EXIT_TARGET, exit: OMSI_TEST_EXIT }]);
+    testController.assertEqual('parked a Manual block in the omsi region', true, !!park);
+    if (!park) return testController.getOverallResult();
+
+    const opened = await eventually(
+        testController,
+        () => bridgeState()?.mayStep === true,
+        'step gate opened for the parked block',
+    );
+    testController.assertEqual('step gate opened for the parked block', true, opened);
+    const stepped = await eventually(
+        testController,
+        () => readSteps() > steps0,
+        'the bridge stepped the game once parked',
+    );
+    testController.assertEqual('the bridge stepped the game once parked', true, stepped);
+    // …and the steps reach the shared economy: the mirrored drain lands in
+    // the pool. Measured against the POST-TOP-UP baseline, since the top-up
+    // itself moved the pool.
+    const drained = await eventually(
+        testController,
+        () => readPool() < poolAtPark - 20,
+        'the mirrored drain reached the pool while parked',
+    );
+    testController.assertEqual('parked play drains the shared pool', true, drained);
+    testController.log(`parked: steps=${readSteps()}, pool=${readPool()}, forkTime=${readForkTime()}`);
+
+    // ── Phase 3: park ends, loop mode STAYS ON ⇒ frozen again ───────────
+    // Pausing the queue (not disabling loop mode) is what proves the gate
+    // tracks the PARK rather than merely "loop mode is active".
+    //
+    // Pause AS SOON AS the drain is visible: parked play burns the pool at
+    // 50/s, and a long window would exhaust the (topped-up) budget, fire
+    // the depletion reset and TELEPORT the player out of the region —
+    // after which "the game stopped" would be true for the wrong reason.
+    park.loopStateSingleton.setPaused(true);
+    const reclosed = await eventually(
+        testController,
+        () => bridgeState()?.mayStep === false,
+        'step gate closed again when the park ended',
+    );
+    testController.assertEqual('step gate closed again when the park ended', true, reclosed);
+    const steps1 = readSteps();
+    const skips1 = gatedSkips();
+    await new Promise((r) => setTimeout(r, 1000));
+    testController.assertEqual('gate still enforced (loop mode never went off)',
+        true, bridgeState()?.stepGate?.enforced);
+    testController.assertEqual('the bridge clock is still running', true, isBridgeClockRunning());
+    testController.assertEqual('bridge still active in the region (no reset teleport)',
+        true, bridgeState()?.isActive);
+    testController.assertEqual('the GATE is what withheld the steps',
+        true, gatedSkips() > skips1);
+    testController.assertEqual('the bridge stepped the game ZERO times once nothing was parked',
+        steps1, readSteps());
+
+    omsiClearQueue();
+    park.loopStateSingleton.setPaused(false);
+    unparkManualBlocks(park);
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'omsi-step-gate-parks-the-clock',
+    name: 'Omsi: the bridge clock advances the game only while the block is parked',
+    description: 'Arc D1 slice 2 (park-gated stepping): with a runnable plan queued, an '
+               + 'UNPARKED omsi region is stepped ZERO times and drains nothing from the '
+               + 'shared pool — while the clock still runs and the gate visibly skips the '
+               + 'steps, so the freeze is attributable. Parking a Manual block starts the '
+               + 'stepping and the mirrored drain; pausing the queue (loop mode still on) '
+               + 'freezes it again.',
+    testFunction: stepGateParksTheClock,
     category: 'Omsi substrate',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });

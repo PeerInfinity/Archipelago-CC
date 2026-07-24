@@ -56,6 +56,17 @@ const PLAYBACK_CONTROL_EVENT = 'omsi:playbackControl';
 // slice 4; the receiver is wired here so the stash contract is in place).
 const VISIT_RECORDING_EVENT = 'omsi:visitRecording';
 
+// How often the step gate (arc D1 slice 2) is re-derived. A POLL rather
+// than a set of event subscriptions, deliberately: the answer depends on
+// loops' park state, which changes on a park, a successful exit, a wrong
+// exit, a hard pause, a user pause, a loop reset, a block-mode change, a
+// queue edit and a loop-mode toggle. Subscribing to eight edges means a
+// missed ninth silently freezes the game (or silently lets it grind and
+// drain the shared pool) — the failure mode the gate exists to prevent.
+// Re-deriving two cheap reads five times a second cannot miss an edge, and
+// only a CHANGE is pushed, so the iframe sees one message per transition.
+const STEP_GATE_POLL_MS = 200;
+
 export function register(registrationApi) {
     if (typeof document !== 'undefined') {
         const link = document.createElement('link');
@@ -112,6 +123,42 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
         controlEvent: PLAYBACK_CONTROL_EVENT,
     }));
 
+    // ── Step gate (arc D1 slice 2, ruling 3) ────────────────────────────
+    //
+    // The bridge advances the game only while the loops queue is parked on
+    // the region it has loaded (or a replay is in flight — that half is the
+    // bridge's own). Only the host can see the queue, so it derives the
+    // live-play half and pushes it over the control channel.
+    //
+    // `enforced` mirrors loops' staged gate adoption: with loop mode off,
+    // nothing is parked and freezing the game would brick a hypothetical
+    // omsi world that carries no loop_costs. Since omsi declares
+    // record + playback, "loop mode active" IS "this substrate is gated".
+    //
+    // The pushed region is loops' `livePlayRegion()` verbatim, NOT a
+    // boolean: the queue may be parked on some other substrate's region,
+    // and only the bridge knows which region it currently has loaded.
+    let lastGateKey = null;
+    const pushStepGate = (force = false) => {
+        const gs = getGameStateSingleton();
+        const enforced = gs?.isLoopModeActive === true;
+        let livePlayRegion = null;
+        if (enforced) {
+            const fn = initializationApi.getModuleFunction?.('loops', 'livePlayRegion');
+            livePlayRegion = fn?.() ?? null;
+        }
+        const key = `${enforced}|${livePlayRegion ?? ''}`;
+        if (!force && key === lastGateKey) return;
+        lastGateKey = key;
+        eventBus.publish(PLAYBACK_CONTROL_EVENT, {
+            method: 'setStepGate',
+            args: [{ enforced, livePlayRegion }],
+        });
+    };
+    if (typeof setInterval === 'function') {
+        setInterval(() => pushStepGate(), STEP_GATE_POLL_MS);
+    }
+
     // Stash each per-visit recording the bridge publishes, for the loops
     // sole-persister pull (takeLastRecording). Delivered BEFORE the visit's
     // departing user:regionMove over the same postMessage channel, so the
@@ -127,6 +174,10 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
     // caches. The bridge's subscriptions to gameState:manaChanged +
     // gameState:loopReset keep it fresh after that.
     eventBus.subscribe('iframe:appReady', () => {
+        // Force-push the step gate: a freshly booted (or reloaded) bridge
+        // starts at the OPEN default and would otherwise keep it until the
+        // next host-side CHANGE, which may never come while it idles.
+        pushStepGate(true);
         const gs = getGameStateSingleton();
         if (!gs) return;
         eventBus.publish(INITIAL_STATE_EVENT, {
@@ -142,6 +193,12 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
     // still receives the loadRegion through its own subscription, only
     // the tab-switch is suppressed. Mirrors the jta/tasw handlers.
     eventBus.subscribe('omsi:loadRegion', () => {
+        // Re-push on entry so the incoming region starts from the truth
+        // rather than from up to one poll interval of the outgoing one.
+        // (The payload deliberately carries no bridge-side region: the
+        // bridge compares the pushed livePlayRegion against whichever
+        // region it has loaded, so a region SWAP needs no push at all.)
+        pushStepGate(true);
         const isFocusLocked = initializationApi.getModuleFunction?.('loops', 'isFocusLocked');
         if (isFocusLocked?.()) return;
         eventBus.publish('ui:activatePanel', { panelId: 'omsiSubstrateWrapperPanel' });
