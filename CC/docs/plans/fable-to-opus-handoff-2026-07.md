@@ -1238,6 +1238,36 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    must target the new Manual/Record/Playback/Bot mode system (at minimum
    after M1+M2, ideally M6 so the solver seam is final). Omsi INSTANT is
    fork-slice work and comes LAST of all substrates.
+   **ARC D DESIGN PASS DONE 2026-07-24 (Fable, post-M6): kickoff READY —
+   *(NewDocs)* `omsiloops/omsi-loops-arc-d-loops-mode-opus-kickoff.md`.
+   Four user rulings (AskUserQuestion, settled): (1) recording = the
+   AUTHORED native queue, region-scoped (`actions.next` minus synthetic
+   exits; NOT a performed log — an N-loop visit's log is the queue ×N);
+   Playback installs it and RUNS THE GAME to the exit, across native
+   resets; (2) **Bot = the fork automation planner** — scheduled as
+   **arc D2** behind a mandatory feasibility recon (the planner has never
+   run under `?managed=1`; `interceptPrepareRestart` inside the
+   synchronous 100ms step is a stall risk; managed automation controls =
+   a fork slice, byte-gate cadence returns); D1 declares NO `executeVia`,
+   so the Bot radio doesn't render until D2; (3) park-gated stepping (the
+   bridge steps ONLY while parked live play on the region or a replay is
+   in flight — closes the "grinds+drains while unparked" hole); (4)
+   per-region sub-queues NOW (`actions.next` joins the arc-C
+   `_regionStore` swap). HEADLINE recon finds: **D1 is entirely
+   outer-repo** (fork surface complete — `onActionCompleted` shipped with
+   U2 and is UNCONSUMED, the substrate-plan's "still open" note is stale;
+   queue write + reset propagation + gated synthetic exits all built;
+   stable exit names make `departureExitId` trivial); every omsi preset
+   auto-enables loop mode, so declaring `record+playback` arms the strict
+   gate immediately — 5 in-app tests assert real AP awards and need the
+   parked-Manual restructure (jta precedent), and **first-time checks
+   during a grinding replay are an omsi-specific hazard** (unlike jta's
+   deduped re-completions) — the bridge must stamp `fromLoop:true` on
+   replay-time publishes. Slice 0 = the session-67 `_syncBudgetFromPool`
+   re-pin clobber fix (flush-before-pin at the manaChanged-external site
+   only). `requiresLoopMode: true` per the standing M4 ruling; NO
+   `instant` (fork fast-step unbuilt, omsi last). NEXT: arc D1
+   IMPLEMENTATION (Opus).**
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
