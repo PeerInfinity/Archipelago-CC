@@ -250,7 +250,31 @@ the kickoff hadn't predicted: its `bounce_loop_worldgen` fixture is not
 in the repo at all, so it dies at the first assertion and never reaches
 the walkTo contract. Header note added; M6 should rebuild it around the
 Bot radio (the contract it was written for) or delete it;
-**M6** solver unification + rename + Bot radio. Omsi arc D re-queues AFTER
+**M6** solver unification + rename + Bot radio — **DESIGN RULED 2026-07-23
+(Fable planning session, post-M5); KICKOFF READY:** *(NewDocs)*
+`NewDocs/plans/loops-m6-bot-solver-opus-kickoff.md` (recon-verified anchors
+at `29d40ce35`). Rulings: (1) FULL solver unification — the Bot radio is
+the ONLY trigger for maze delegation AND the walkTo path; the pre-dispatch
+auto-delegation tick (loopState.js:1077) retires. Recon found it currently
+SHADOWS Record/Playback blocks on manaEnabled maze regions (its manual-only
+exclusion predates the mode system — latent bug, fixed by construction +
+regression-pinned). A Bot block with no engageable solver parks for live
+play with a LOUD warn. (2) Bot economy = one economy by capture shape:
+fine charges natively ONLY (today's flat completion charge double-charges
+jta and awards no XP — dropped), summary gets the per-second time drain
+during bot play + explicit-only action costs, all via `_chargeLiveAction`.
+(3) Bot×Instant offered only where the solver honors it (jta v1; summary
+hidden; maze attempt-or-defer). (4) `verify-bounce-loop-mode.mjs` DELETED
+in favor of an in-app runner Bot leg (gate-run, can't rot). Rename: value
+`executeVia:'playbackBot'`→`'solver'` is HOST-ONLY — the shared submodule
+mentions it in substrateRegistry.js JSDoc comments only (NO validator);
+the comment fix rides the next submodule-touching commit. The playbackBot
+MODULE (sphere-log auto-player) keeps its name. Test revivals:
+jta-bot-walkto-exit + the 2 progression tests restructure onto Bot blocks
+(the hand-rolled reset-retry emulations collapse into the real queue
+machinery); jta-starting-energy-bonus-raises-pool contains NO walkTo (its
+deferral comment is wrong) — empirical-first, delete acceptable (coverage
+folded into the record→playback leg). Omsi arc D re-queues AFTER
 this track (see §4); omsi Instant last of all.
 
 **M3b as-built (session 67, Fable) — key facts for M4/M5/omsi-D (full
