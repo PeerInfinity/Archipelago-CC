@@ -2236,3 +2236,329 @@ describe('M6 — Bot in the mode vocabulary', () => {
     expect(fresh.getBlockMode('A', 1)).toBe('bot');
   });
 });
+
+// ---------------------------------------------------------------------------
+// M6 slice 3 — Bot economy. One economy by CAPTURE SHAPE: bot execution costs
+// what live play of the same content costs. Fine substrates charge natively
+// (the flat completion charge that predates them would double-bill); summary
+// substrates are priced by TIME, so their drain runs while the bot plays and
+// their actions cost only what the loop_costs data names explicitly.
+//
+// Sign conventions throughout: costs and drain rates are POSITIVE numbers that
+// DEDUCT from the pool (mana goes down), and every spend awards region XP 1:1
+// with the mana spent (_spendMana), so an XP rise of N pins a spend of N.
+// ---------------------------------------------------------------------------
+
+// A jta-shaped substrate: FINE capture (a real recorder) driven by the walkTo
+// solver. This is the combination the flat completion charge double-billed —
+// the substrate's own economy has already run by the time loops completes.
+function registerFineSolverSubstrate({ regions = ['A'] } = {}) {
+  try { centralRegistry.publicFunctions.get('procgenPlayer')?.delete('getRegionInfo'); } catch { /* ignore */ }
+  try { centralRegistry.publicFunctions.get('procgenPlayer')?.delete('getWarehouse'); } catch { /* ignore */ }
+  try { substrateRegistry.clear?.(); } catch { /* ignore */ }
+  const handles = { stash: null, walkToCalls: [], stopCalls: 0 };
+  substrateRegistry.register?.({
+    id: 'fine_solver_sub',
+    label: 'FineSolver',
+    panelComponentType: 'fsPanel',
+    loadRegionEvent: 'fs:loadRegion',
+    loopSupport: {
+      queueActions: ['regionMove', 'locationCheck'],
+      executeVia: 'solver',
+      manual: true, customQueues: false, record: true, playback: true, instant: true,
+    },
+    takeLastRecording: () => { const s = handles.stash; handles.stash = null; return s; },
+    getPlaybackController: () => ({
+      walkTo: (target) => { handles.walkToCalls.push(target); return true; },
+      stop: () => { handles.stopCalls += 1; },
+    }),
+  });
+  centralRegistry.registerPublicFunction('procgenPlayer', 'getRegionInfo', (region) => (
+    regions.includes(region) ? { substrate: 'fine_solver_sub', label: 'FineSolver', manaEnabled: true } : null
+  ));
+  return handles;
+}
+
+// A summary substrate with NO solver: same time-priced economy, but nothing
+// for a Bot block to engage, so it takes the warn-and-park fallback.
+function registerSummarySubstrateWithoutSolver({ regions = ['A'] } = {}) {
+  try { centralRegistry.publicFunctions.get('procgenPlayer')?.delete('getRegionInfo'); } catch { /* ignore */ }
+  try { centralRegistry.publicFunctions.get('procgenPlayer')?.delete('getWarehouse'); } catch { /* ignore */ }
+  try { substrateRegistry.clear?.(); } catch { /* ignore */ }
+  const handles = { walkToCalls: [] };
+  substrateRegistry.register?.({
+    id: 'sum_nosolver_sub',
+    label: 'SummaryNoSolver',
+    panelComponentType: 'snsPanel',
+    loadRegionEvent: 'sns:loadRegion',
+    loopSupport: {
+      queueActions: ['regionMove', 'locationCheck'],
+      manual: true, customQueues: false,
+      record: true, playback: true, instant: true, summaryRecording: true,
+    },
+  });
+  centralRegistry.registerPublicFunction('procgenPlayer', 'getRegionInfo', (region) => (
+    regions.includes(region)
+      ? { substrate: 'sum_nosolver_sub', label: 'SummaryNoSolver', manaEnabled: true }
+      : null
+  ));
+  return handles;
+}
+
+function botCosts({ regionData = {}, locations = {} } = {}) {
+  const cdm = new CostDataManager();
+  cdm.setCostData({
+    regions: { A: regionData },
+    locations,
+    defaultRegionCost: 50,
+    defaultLocationCost: 100,
+  }, 'test');
+  return cdm;
+}
+
+describe('M6 — Bot economy: the completion charge follows the capture shape', () => {
+  let loopState, gs, tick;
+
+  function setUp(register, costs) {
+    ({ loopState, gs } = wire());
+    tick = makeTicker();
+    const handles = register();
+    loopState.setCostDataManager(costs);
+    loopState._cachedRulesData = RULES_DATA;
+    gs.updatePath('A', 'go', 'Menu');
+    gs.addLocationCheck('Loc1', 'A');
+    gs.updatePath('B', 'exit', 'A');
+    loopState.setBlockMode('A', 1, 'bot');
+    loopState.currentActionIndex = 1;
+    loopState.currentAction = loopState.getActionQueue()[1];
+    loopState.isProcessing = true;
+    tick(loopState);
+    return handles;
+  }
+
+  beforeEach(() => {
+    resetSavedQueueStore();
+    clearRulesHashCache();
+  });
+
+  it('FINE: completing a bot action charges NOTHING — the substrate already did', () => {
+    // The jta double-charge, pinned dead. loop_costs names a real 40 for
+    // Loc1; a fine substrate must not be billed it on top of its native drain.
+    const handles = setUp(registerFineSolverSubstrate, botCosts({ locations: { Loc1: 40 } }));
+    expect(handles.walkToCalls).toHaveLength(1); // liveness: the bot really parked
+    const manaBefore = gs.getCurrentMana();
+    const xpBefore = loopState.getRegionXP('A').xp;
+
+    loopState._handleBotWake_locationCheck('Loc1');
+
+    // Completion really ran (else "no charge" would be vacuous)...
+    expect(loopState._botExecutedAction).toBeNull();
+    expect(loopState.actionQueueManager.isCompleted(1)).toBe(true);
+    // ...and cost nothing, in either currency.
+    expect(gs.getCurrentMana()).toBe(manaBefore);
+    expect(loopState.getRegionXP('A').xp).toBe(xpBefore);
+  });
+
+  it('SUMMARY: completing charges the EXPLICIT cost only, and awards XP 1:1', () => {
+    const handles = setUp(registerSummarySubstrate,
+      botCosts({ regionData: { timeDrainPerSecond: 0 }, locations: { Loc1: 7 } }));
+    expect(handles.walkToCalls).toHaveLength(1);
+    const manaBefore = gs.getCurrentMana();
+    const xpBefore = loopState.getRegionXP('A').xp;
+
+    loopState._handleBotWake_locationCheck('Loc1');
+
+    expect(loopState.actionQueueManager.isCompleted(1)).toBe(true);
+    expect(gs.getCurrentMana()).toBe(manaBefore - 7);
+    // XP 1:1 with the spend — the old direct deductMana awarded none.
+    expect(loopState.getRegionXP('A').xp).toBe(xpBefore + 7);
+  });
+
+  it('SUMMARY with no explicit cost: the completion is FREE (the duration was the price)', () => {
+    // Pins that the 50/100 generic fallbacks never reach a summary action.
+    setUp(registerSummarySubstrate, botCosts({ regionData: { timeDrainPerSecond: 0 } }));
+    const manaBefore = gs.getCurrentMana();
+
+    loopState._handleBotWake_locationCheck('Loc1');
+
+    expect(loopState.actionQueueManager.isCompleted(1)).toBe(true);
+    expect(gs.getCurrentMana()).toBe(manaBefore);
+  });
+});
+
+describe('M6 — Bot economy: the time drain matrix', () => {
+  let loopState, gs, tick, handles;
+
+  // Region rate 3/s, no explicit action costs: every mana delta below is
+  // drain, and drain alone.
+  function setUp({ register = registerSummarySubstrate, rate = 3, locations = {} } = {}) {
+    ({ loopState, gs } = wire());
+    tick = makeTicker();
+    handles = register();
+    loopState.setCostDataManager(botCosts({ regionData: { timeDrainPerSecond: rate }, locations }));
+    loopState._cachedRulesData = RULES_DATA;
+    gs.updatePath('A', 'go', 'Menu');
+    gs.addLocationCheck('Loc1', 'A');
+    gs.updatePath('B', 'exit', 'A');
+    gs.setLoopModeActive(true);
+    loopState.setBlockMode('A', 1, 'bot');
+    loopState.currentActionIndex = 1;
+    loopState.currentAction = loopState.getActionQueue()[1];
+    loopState.isProcessing = true;
+  }
+
+  beforeEach(() => {
+    resetSavedQueueStore();
+    clearRulesHashCache();
+    vi.useFakeTimers();
+  });
+  afterEach(() => {
+    loopState?.stopTimeDrain();
+    vi.useRealTimers();
+  });
+
+  it('PATH A — a solver driving a summary region drains at the region rate', () => {
+    setUp();
+    loopState.startTimeDrain();
+    tick(loopState);
+    expect(handles.walkToCalls).toHaveLength(1); // liveness: a bot really parked
+    const before = gs.getCurrentMana();
+
+    vi.advanceTimersByTime(3000);
+
+    expect(gs.getCurrentMana()).toBe(before - 9);
+    expect(loopState.getRegionXP('A').xp).toBeGreaterThan(0);
+    // A bot is not live play, and it records nothing: the duration counter
+    // is Record-capture state and stays owned by the live-play path.
+    expect(loopState.livePlayRegion()).toBeNull();
+    expect(loopState._summaryDrainSeconds).toBe(0);
+  });
+
+  it('PATH B — a Bot block with NO solver falls back to live play, which drains', () => {
+    // No code path of its own: the fallback park IS live play, so the M5
+    // live branch prices it. Its second counter runs but is inert — nothing
+    // persists it, because a Bot block never arms a Record capture.
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      setUp({ register: () => registerSummarySubstrateWithoutSolver() });
+      loopState.startTimeDrain();
+      tick(loopState);
+      expect(loopState.livePlayRegion()).toBe('A');
+      const before = gs.getCurrentMana();
+
+      vi.advanceTimersByTime(2000);
+
+      expect(gs.getCurrentMana()).toBe(before - 6);
+      expect(loopState._summaryDrainSeconds).toBe(2);
+      expect(loopState._recordingBlock).toBeNull();
+    } finally {
+      warn.mockRestore();
+    }
+  });
+
+  it('the two paths can never both charge in one tick', () => {
+    // They are mutually exclusive by construction — livePlayRegion() returns
+    // null whenever a solver park is active — and this pins it: one tick
+    // moves the pool by exactly one rate, never two.
+    setUp();
+    loopState.startTimeDrain();
+    tick(loopState);
+    expect(loopState._botExecutedAction).not.toBeNull();
+    expect(loopState.livePlayRegion()).toBeNull();
+    const before = gs.getCurrentMana();
+
+    vi.advanceTimersByTime(1000);
+
+    expect(gs.getCurrentMana()).toBe(before - 3);
+  });
+
+  it('FINE substrates are not drained by loops while a bot drives them', () => {
+    // jta charges natively through the energy mirror; a loops-side drain on
+    // top would be the same double-bill the completion charge used to be.
+    setUp({ register: registerFineSolverSubstrate });
+    loopState.startTimeDrain();
+    tick(loopState);
+    expect(handles.walkToCalls).toHaveLength(1);
+    const before = gs.getCurrentMana();
+
+    vi.advanceTimersByTime(5000);
+
+    expect(gs.getCurrentMana()).toBe(before);
+  });
+
+  it('paused, hard-paused and stopped bot parks all cost nothing', () => {
+    setUp();
+    loopState.startTimeDrain();
+    tick(loopState);
+
+    loopState.isPaused = true;
+    let before = gs.getCurrentMana();
+    vi.advanceTimersByTime(2000);
+    expect(gs.getCurrentMana()).toBe(before);
+
+    loopState.isPaused = false;
+    loopState._queuePausedUntilReset = true;
+    before = gs.getCurrentMana();
+    vi.advanceTimersByTime(2000);
+    expect(gs.getCurrentMana()).toBe(before);
+
+    loopState._queuePausedUntilReset = false;
+    loopState.isProcessing = false;
+    before = gs.getCurrentMana();
+    vi.advanceTimersByTime(2000);
+    expect(gs.getCurrentMana()).toBe(before);
+
+    // Liveness: with the gates cleared the same clock DOES charge, so the
+    // three zeros above are gating, not a dead drain.
+    loopState.isProcessing = true;
+    before = gs.getCurrentMana();
+    vi.advanceTimersByTime(1000);
+    expect(gs.getCurrentMana()).toBe(before - 3);
+  });
+
+  it('draining the pool dry mid-walk resets the loop and re-engages the bot', () => {
+    // The production retry: a solver park runs no frames, so neither the
+    // generic timer's OOM check nor the manual mana wake would ever notice
+    // the depletion. The drain tick owns it. This is what makes a bot walk
+    // that costs more than one pool completable at all — the jta zone case,
+    // where skills compound across resets until one loop suffices.
+    setUp({ rate: 40 });
+    loopState.autoRestartQueue = true;
+    loopState.startTimeDrain();
+    tick(loopState);
+    expect(handles.walkToCalls).toHaveLength(1);
+    const max = gs.getMaxMana();
+
+    vi.advanceTimersByTime(3000); // 120 drained against a 100 pool
+
+    // Reset fired: pool refilled, the walk stopped, the queue snapped to 0.
+    expect(gs.getCurrentMana()).toBe(max);
+    expect(loopState._botExecutedAction).toBeNull();
+    expect(loopState.currentActionIndex).toBe(0);
+    expect(loopState.isProcessing).toBe(true);
+    // ...and the requeued frame re-engages the solver.
+    loopState.currentActionIndex = 1;
+    loopState.currentAction = loopState.getActionQueue()[1];
+    tick(loopState);
+    expect(handles.walkToCalls).toHaveLength(2);
+  });
+
+  it('with auto-restart OFF the same depletion pauses instead of retrying', () => {
+    setUp({ rate: 40 });
+    loopState.autoRestartQueue = false; // the default
+    loopState.startTimeDrain();
+    tick(loopState);
+    const max = gs.getMaxMana();
+
+    vi.advanceTimersByTime(3000);
+
+    expect(gs.getCurrentMana()).toBe(max);
+    expect(loopState._botExecutedAction).toBeNull();
+    expect(loopState.isPaused).toBe(true);
+    expect(loopState.isProcessing).toBe(false);
+    // Paused means paused: the drain does not keep billing a stopped bot.
+    const after = gs.getCurrentMana();
+    vi.advanceTimersByTime(3000);
+    expect(gs.getCurrentMana()).toBe(after);
+  });
+});

@@ -183,12 +183,18 @@ describe('Bot-backed queue execution (loopSupport.executeVia = solver)', () => {
         setupBounceQueue(1);
         tick(loopState);
         const manaBefore = gs.getCurrentMana();
+        const xpBefore = loopState.getRegionXP('bounceRegion').xp;
 
         loopState._handleBotWake_locationCheck('Coin');
 
         expect(loopState._botExecutedAction).toBeNull();
         expect(loopState.actionQueueManager.isCompleted(1)).toBe(true);
         expect(gs.getCurrentMana()).toBe(manaBefore - 20);
+        // M6: the spend routes through _chargeLiveAction, so it awards region
+        // XP 1:1 like every other spend. The direct deductMana it replaced
+        // awarded none — a bot could grind a region forever without it
+        // getting any cheaper.
+        expect(loopState.getRegionXP('bounceRegion').xp).toBe(xpBefore + 20);
         // Cursor advanced to the leaving regionMove.
         expect(loopState.currentActionIndex).toBe(2);
     });

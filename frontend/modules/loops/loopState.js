@@ -397,26 +397,58 @@ export class LoopState {
   }
 
   /**
-   * One second of parked live play in a SUMMARY substrate's region (M5).
+   * One second of a SUMMARY substrate's region being PLAYED (M5, extended
+   * by M6). Time is that category's economy, and Bot execution costs what
+   * live play of the same content costs, so the drain runs in exactly two
+   * states — parked live play, and a solver driving the region.
    *
-   * Self-gating: `livePlayRegion()` is null unless the queue is parked on a
-   * Manual or Record block, and already returns null while paused or
-   * hard-paused — so idle, replaying, paused and wrong-shape states all
-   * cost nothing and no separate suppression is needed.
-   *
-   * The seconds are counted BEFORE the charge, because charging can end the
-   * park: deductMana fires gameState:manaChanged synchronously, whose wake
-   * runs the depletion reset (which refills the pool and discards any
-   * in-progress capture). Nothing may be touched after the charge.
+   * The two are mutually exclusive by construction: livePlayRegion() is
+   * null whenever _botExecutedAction is set, so a tick can never charge
+   * twice. Everything else — idle, replaying, paused, hard-paused, the
+   * wrong capture shape — costs nothing, with no separate suppression.
    */
   _timeDrainTick() {
-    const region = this.livePlayRegion();
-    if (!region) return;
-    if (this._captureShapeForRegion(region) !== 'summary') return;
-    // Duration is TIME PARKED, independent of what that time cost — a
-    // zero-rate region still accrues seconds.
-    this._summaryDrainSeconds += 1;
-    this._chargeLiveAction({ type: 'timeDrain', sourceRegion: region });
+    const liveRegion = this.livePlayRegion();
+    if (liveRegion) {
+      if (this._captureShapeForRegion(liveRegion) !== 'summary') return;
+      // Duration is TIME PARKED, independent of what that time cost — a
+      // zero-rate region still accrues seconds. Counted BEFORE the charge,
+      // because charging can end the park: deductMana fires
+      // gameState:manaChanged synchronously, whose wake runs the depletion
+      // reset (refilling the pool and discarding any in-progress capture).
+      // Nothing may be touched after the charge on this path.
+      this._summaryDrainSeconds += 1;
+      this._chargeLiveAction({ type: 'timeDrain', sourceRegion: liveRegion });
+      return;
+    }
+    const botRegion = this._botDrainRegion();
+    if (!botRegion) return;
+    // No _summaryDrainSeconds increment: that counter is Record-CAPTURE
+    // state (it becomes the saved visit's duration), and a Bot block
+    // records nothing. It stays owned by the live-play branch above.
+    this._chargeLiveAction({ type: 'timeDrain', sourceRegion: botRegion });
+    // The one thing that may follow the charge here — and it must. A solver
+    // park runs no frames, so the generic timer's _maybeResetForOOM never
+    // gets a turn, and _handleManualWake_mana ignores a non-manual park:
+    // without this the pool would run negative for as long as the bot keeps
+    // walking. _maybeResetForOOM stops the walk, snaps the queue to index 0
+    // and re-schedules a frame, so the Bot branch re-engages — the same
+    // depletion-retry loop the queue has always had, reached from the only
+    // spend that happens while no frame is running.
+    this._maybeResetForOOM();
+  }
+
+  /**
+   * The region a SOLVER is currently driving on the time-drained economy,
+   * or null (M6). Only the walkTo path qualifies: delegation is the maze's,
+   * which is fine-grained and charges natively per tile.
+   */
+  _botDrainRegion() {
+    const region = this._botExecutedAction?.sourceRegion;
+    if (!region) return null;
+    if (!this.isProcessing || this.isPaused || this._queuePausedUntilReset) return null;
+    if (this._captureShapeForRegion(region) !== 'summary') return null;
+    return region;
   }
 
   /**
@@ -2666,22 +2698,40 @@ export class LoopState {
   }
 
   /**
-   * Complete the parked bot-executed action: charge its loops-fallback
-   * mana cost (v1 decision — bounce-style substrates track no mana
-   * natively, so the queue charges the loop_costs value on completion;
-   * a resulting mana ≤ 0 lands on the next frame's _maybeResetForOOM),
-   * then run the normal completion flow. For regionMoves the bridge
-   * already moved the player, so the duplicate user:regionMove
-   * dispatch is suppressed exactly like substrate delegation.
+   * Complete the parked bot-executed action: charge it, then run the
+   * normal completion flow. For regionMoves the bridge already moved the
+   * player, so the duplicate user:regionMove dispatch is suppressed
+   * exactly like substrate delegation.
+   *
+   * THE CHARGE (M6 ruling 3 — Bot execution costs what live play of the
+   * same content costs, so the charge follows the region's CAPTURE SHAPE):
+   *
+   *   - FINE (jta, maze): nothing. The substrate charges natively while
+   *     the bot plays — jta's energy drain mirrors into the pool. The flat
+   *     completion charge this replaces was a v1 decision made when bounce
+   *     was the only user; on a natively-charging substrate it double-bills
+   *     the same play.
+   *   - SUMMARY (runner, bounce): the per-second drain has been running
+   *     throughout, and the action itself costs only what the loop_costs
+   *     data names EXPLICITLY (_calculateActionCost's summary branch) —
+   *     no 50/100 fallbacks, which would price the visit twice.
+   *   - Anything else (unreachable today — no coarse substrate declares a
+   *     solver): charge as the safe default, matching the generic executor.
+   *
+   * All of it routes through _chargeLiveAction, so a bot's spend awards
+   * region XP 1:1 like every other spend. The old direct deductMana call
+   * awarded none. A resulting mana ≤ 0 lands on the next frame's
+   * _maybeResetForOOM — the completion flow below is safe to run either
+   * way, because the depletion wake ignores a non-manual park.
    */
   _completeBotExecutedAction({ viaRegionMove = false } = {}) {
     const action = this._botExecutedAction;
     this._botExecutedAction = null;
     if (!action || this.currentAction !== action) return;
 
-    const gs = this._gs();
-    const cost = this._calculateActionCost(action);
-    if (gs?.deductMana && cost > 0) gs.deductMana(cost);
+    if (this._captureShapeForRegion(action.sourceRegion) !== 'fine') {
+      this._chargeLiveAction(action);
+    }
 
     if (this.actionQueueManager) {
       this.actionQueueManager.setProgress(action.pathIndex, 100);
