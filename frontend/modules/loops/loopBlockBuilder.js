@@ -553,7 +553,13 @@ export class LoopBlockBuilder {
     // mode (Playback now; Bot in M6). Instant doesn't apply to Manual/Record
     // (the player drives those by hand), so it's hidden for those selections.
     // Toggling re-renders so a mode switch shows/hides it immediately.
-    if (offers.offersInstant && selected === 'playback') {
+    //
+    // M5: hidden for SUMMARY blocks. Their Playback applies a recorded net
+    // result in one step — it is inherently instant and a paced variant
+    // does not exist, so the checkbox would be a control with no off state.
+    // `instant` stays DECLARED on those substrates for the focus-
+    // suppression seam (isFocusLocked while a block runs).
+    if (offers.offersInstant && selected === 'playback' && playable.shape !== 'summary') {
       const instLabel = document.createElement('label');
       instLabel.className = 'block-instant-label';
       instLabel.title =
@@ -579,8 +585,8 @@ export class LoopBlockBuilder {
 
     // M4 recording-exists indicator. Fine-grained blocks report their bound
     // store recording; coarse blocks report a non-empty interior (which IS
-    // their recording). The dot is the at-a-glance answer to "will Playback
-    // do anything here?".
+    // their recording); M5 summary blocks report their bound summary. The
+    // dot is the at-a-glance answer to "will Playback do anything here?".
     const indicator = document.createElement('span');
     indicator.className = 'block-recording-indicator'
       + (playable.hasContent ? ' has-recording' : ' no-recording');
@@ -590,13 +596,24 @@ export class LoopBlockBuilder {
       color: playable.hasContent ? '#8c8' : '#888',
     });
     indicator.textContent = playable.hasContent ? '● recorded' : '○ not recorded';
-    indicator.title = playable.hasContent
-      ? (playable.fineGrained
-        ? 'A saved recording is bound to this block; Playback replays it.'
-        : 'This block has queued actions; Playback runs them.')
-      : (playable.fineGrained
-        ? 'No saved recording for this block yet — Record it once to enable Playback.'
-        : 'This block has no actions yet — queue some, or Record it, to enable Playback.');
+    const TITLES = {
+      summary: {
+        yes: 'A recorded visit is bound to this block; Playback applies its '
+          + 'result — the checks and the exit — instantly, priced by how long '
+          + 'the recorded visit took.',
+        no: 'No recorded visit for this block yet — Record it once to enable Playback.',
+      },
+      fine: {
+        yes: 'A saved recording is bound to this block; Playback replays it.',
+        no: 'No saved recording for this block yet — Record it once to enable Playback.',
+      },
+      coarse: {
+        yes: 'This block has queued actions; Playback runs them.',
+        no: 'This block has no actions yet — queue some, or Record it, to enable Playback.',
+      },
+    };
+    const titles = TITLES[playable.shape] ?? (playable.fineGrained ? TITLES.fine : TITLES.coarse);
+    indicator.title = playable.hasContent ? titles.yes : titles.no;
     container.appendChild(indicator);
 
     detailsEl.appendChild(container);

@@ -16,15 +16,13 @@ import {
   DEFAULT_REGION_XP_EFFECT,
   normalizeRegionXpEffect,
 } from './xpFormulas.js';
+// The generated-sidecar vocabulary is owned by the generator (a pure
+// module), so reader and writer share one default and cannot drift.
+import { DEFAULT_TIME_DRAIN_PER_SECOND } from '../shared/procgen/loopCostGenerator.js';
+
+export { DEFAULT_TIME_DRAIN_PER_SECOND };
 
 const logger = createUniversalLogger('costDataManager');
-
-/**
- * Mana per second charged while live-playing a SUMMARY substrate's region
- * (runner, bounce — M5) when neither the region nor the sidecar states a
- * rate. One mana per second is the user-set default (2026-07-23).
- */
-export const DEFAULT_TIME_DRAIN_PER_SECOND = 1;
 
 /**
  * Returns true when the source string looks like a URL or filesystem

@@ -82,6 +82,11 @@
             "category": "runnerDemo"
         },
         {
+            "id": "runner-summary-record-playback",
+            "enabled": true,
+            "category": "Runner block modes"
+        },
+        {
             "id": "jta-out-of-mana-loop-reset",
             "enabled": true,
             "category": "JtA substrate"
