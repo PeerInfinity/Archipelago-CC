@@ -1304,8 +1304,63 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    over postMessage today). The two evidence-gated retry guards STAY —
    they were silent in every run, so a firing guard is now a regression
    signal. Gates: substrates 50/50 solo · vitest 3334/3334 · regression.
-   **NEXT: slice 1** (declaration + `fromLoop` stamping + the 5
-   parked-Manual restructures).
+   **SLICE 1 SHIPPED + PUSHED 2026-07-24 (outer `71acfd435`, zero fork
+   edits):** the `loopSupport` declaration (manual/record/playback/
+   `requiresLoopMode`, `queueActions: ['regionMove']`, no `instant`, no
+   `executeVia`) + the shared `PlaybackProxy` on `omsi:playbackControl` +
+   `fromLoop` stamping + the parked-Manual test restructures. Two
+   corrections to the kickoff worth carrying forward: (a)
+   **`takeLastRecording` ships WITH the capability block, not with slice
+   4's capture** — its PRESENCE is what makes `_captureShapeFor` answer
+   `'fine'`, so declaring `record+playback` without it would make omsi
+   COARSE for slices 1–3 and loops would charge `loop_costs` on every
+   observed check ON TOP of the bridge's native mana mirror (double
+   billing, enough to trip a depletion reset mid-visit); the library now
+   holds the jta-shaped pull-once slot and the stash simply stays empty
+   until slice 4 (an empty pull persists nothing = today's behavior).
+   (b) **The gate-fallout inventory missed two legs**: the kickoff's
+   "test moves are exit-less → syntheticMove-exempt" holds for
+   `moveToRegion` but NOT for `omsi-region-split-round-trip`, whose
+   SYNTHETIC-EXIT crossings carry the real graph `exitName` and are
+   therefore performed player actions; and `omsi-unlock-seed-before-
+   fanout` asserts a real award too. 7 legs restructured, not 5. Shared
+   helper `parkManualBlocks(tc, hops, mode)` (jta's helper generalized to
+   a hop LIST; clears the path via `gameState.clearPath` first — loops'
+   `clearQueue` would teleport the player to the loop start). ⚠ The
+   `fromLoop` stamping is NOT yet exercised — nothing drives a replay
+   until slice 4/5. Gates: substrates 50/50 cold+warm · vitest 3336
+   (+2) · regression 31/31.
+   **SLICE 2 SHIPPED + PUSHED 2026-07-24 (outer `f2e392df1`, zero fork
+   edits):** park-gated stepping. Gate = `(enforced, livePlayRegion)`
+   pushed over `omsi:playbackControl` + the bridge's own replay flag.
+   Design points: the host pushes loops' `livePlayRegion()` **verbatim,
+   not a boolean** (the queue may be parked on another substrate's
+   region, and only the bridge knows which region it has loaded — so a
+   region SWAP needs no push); it is a **200ms poll, NOT event
+   subscriptions** (the answer changes on park / exit / wrong-exit /
+   hard-pause / user-pause / loop-reset / block-mode change / queue edit
+   / loop-mode toggle — a missed edge silently freezes the game or
+   silently lets it grind, which is the failure the gate exists to
+   prevent), push-on-change only; the gate withholds `m.step()` ONLY
+   (the mana mirror + victory watch stay ungated, the clock interval
+   keeps running, elapsed is re-baselined every callback so a closed
+   gate can't bank time). ⚠ **arc D2 must extend the payload**:
+   `livePlayRegion()` is null while a solver drives, so the Bot would
+   run against a frozen clock. The kickoff's recon that no test relied
+   on background stepping was WRONG — `omsi-loop-exhaustion-single-
+   reset` is exactly that test and now parks. New leg
+   `omsi-step-gate-parks-the-clock` (substrates 50→**51**; the config
+   ENUMERATES ids). Two witness lessons from building it, both in its
+   comments: the fork's `totalTicks` (effective time) is NOT a witness —
+   a fork left mid-restart-loop by an earlier suite leg burned 400 mana
+   with ZERO effective time (passed solo, failed in-suite); and the
+   first form polled for a pool drop from a 50-mana pool that parked
+   play empties in ~1s before the depletion reset refills it (a poll
+   cannot see a transient a synchronous refill erases). Gates:
+   substrates **51/51 cold+warm** · vitest 3336 · regression 31/31.
+   **NEXT: slice 3** (per-region sub-queues) — then the queued
+   `_syncEnergyFromPool` reset-authority fix (§3b item 1b) BEFORE slice
+   4, then slices 4–6.
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
