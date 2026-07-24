@@ -2170,10 +2170,10 @@ export class LoopState {
    * Whether the strict action gate is ENFORCED for a region's substrate.
    * The gate model is substrate-universal, but enforcement rolls out with
    * each substrate's block-mode integration (declared record + playback —
-   * maze and the text adventure today). Substrates that haven't adopted
-   * the mode system yet (jta / omsi / runner / bounce / flash, pending
-   * M4 / M5 / omsi arc D) keep their current loop-mode behavior until
-   * their integration arc declares the capabilities.
+   * maze and the text adventure since M3b, jta since M4, runner and bounce
+   * since M5). Only omsi (pending arc D) and the manual-only flash keep
+   * their pre-mode loop behavior; each opts in when it declares the
+   * capabilities.
    */
   _substrateGateEnforced(region) {
     const ls = this._loopSupportFor(region);
