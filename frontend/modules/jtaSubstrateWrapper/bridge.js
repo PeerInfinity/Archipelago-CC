@@ -1082,7 +1082,14 @@ function _handlePlaybackControl(payload) {
             if (typeof _w.stepTick === 'function') _w.stepTick();
             return;
         case 'instant':
-            if (typeof _w.setInstantMode === 'function') _w.setInstantMode(true);
+            // A MODE, not a one-shot: instant_mode stays set until something
+            // clears it. Honour an explicit false so a per-block Instant
+            // choice can be turned back off (M6) — without it, one Instant
+            // block left the fork instant for the rest of the session, so
+            // later paced blocks, Manual play and Record captures on the
+            // same iframe all silently ran instant. A bare instant() still
+            // means true, which is what the standalone bot panel wants.
+            if (typeof _w.setInstantMode === 'function') _w.setInstantMode(args[0] !== false);
             return;
         case 'startInstantPump':
             _startInstantPump();

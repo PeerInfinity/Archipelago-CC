@@ -2655,13 +2655,22 @@ export class LoopState {
       : { kind: 'exit', name: action.exitUsed };
     try {
       // Instant (M6 ruling 4): collapse the walk where the solver really
-      // honors it. Set BEFORE walkTo — it is a mode the substrate reads as
-      // the walk runs, not an argument to it — and idempotent (jta's maps to
-      // setInstantMode(true)). Gated on regionBotHonorsInstant so a flag
-      // left over from a Playback session can't reach a solver that would
-      // ignore it, or worse, half-honor it.
-      if (this._currentBlockIsInstant() && this.regionBotHonorsInstant(action.sourceRegion)) {
-        controller?.instant?.();
+      // honors it. Set BEFORE walkTo — it is a MODE the substrate reads as
+      // the walk runs, not an argument to it.
+      //
+      // Set BOTH WAYS, unconditionally, for solvers that honor it: jta's
+      // instant maps to setInstantMode, which is sticky with no unset path
+      // of its own, so only ever turning it ON would let one Instant block
+      // leave the fork instant for the rest of the session — silently
+      // collapsing later paced blocks, Manual play and Record captures in
+      // the same iframe. Each block establishes its own pacing instead.
+      //
+      // Scoped to regionBotHonorsInstant regions so this never reaches a
+      // solver that would ignore it (or half-honor it) — and so the
+      // standalone playback-bot panel's deliberate instant() is not
+      // clobbered by a queue running elsewhere.
+      if (this.regionBotHonorsInstant(action.sourceRegion)) {
+        controller?.instant?.(this._currentBlockIsInstant());
       }
       controller?.walkTo?.(target);
       log('info', `[LoopState] Bot walking to ${target.kind} '${target.name}' in ${action.sourceRegion}`);

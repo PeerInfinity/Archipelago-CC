@@ -3,7 +3,7 @@
     "hideDisabledTests": true,
     "randomizeOrder": false,
     "defaultEnabledState": false,
-    "_comment": "Substrate in-app tests (text-adventure wrapper + flash + runner + jta + omsi + maze consumable tiles). Runs under the full module config (modules.json) so the substrate runtimes register \u2014 unlike test-regression, which uses modules-nograph.json and therefore cannot load them. New substrate tests must be added here (they register enabled:false so they don't leak into other modes).",
+    "_comment": "Substrate in-app tests (text-adventure wrapper + flash + runner + jta + omsi + maze consumable tiles). Runs under the full module config (modules.json) so the substrate runtimes register — unlike test-regression, which uses modules-nograph.json and therefore cannot load them. New substrate tests must be added here (they register enabled:false so they don't leak into other modes).",
     "tests": [
         {
             "id": "tasw-location-check-direct-dispatch",
@@ -48,7 +48,7 @@
         {
             "id": "tasw-queue-integrity-parked",
             "enabled": true,
-            "_comment": "Former KNOWN-RED stray-append diagnostic \u2014 green since the M3b coarse-capture refactor retired loop-mode end-appends (CC/docs/plans/loops-coarse-capture-plan.md).",
+            "_comment": "Former KNOWN-RED stray-append diagnostic — green since the M3b coarse-capture refactor retired loop-mode end-appends (CC/docs/plans/loops-coarse-capture-plan.md).",
             "category": "TA block modes"
         },
         {
@@ -109,14 +109,14 @@
         {
             "id": "jta-bot-walkto-exit",
             "enabled": false,
-            "_comment": "KNOWN-DEFERRED to M6 (Bot radio). Drives the PlaybackController walkTo/executeVia auto chain and relies on the loop-reset teleport to compound skills across attempts \u2014 a path M4's fine-grained Playback makes deliberately unreachable until M6 revives it as the Bot path (the walkTo machinery stays). Under the M3b strict gate the jta loop_costs preset auto-enables loop mode and this test's direct walkTo/regionMoves have no parked block, so the gate blocks them. Restructure when M6 lands. See CC/docs/plans/loops-m4-status-and-standalone-jta-investigation.md.",
+            "_comment": "KNOWN-DEFERRED to M6 (Bot radio). Drives the PlaybackController walkTo/executeVia auto chain and relies on the loop-reset teleport to compound skills across attempts — a path M4's fine-grained Playback makes deliberately unreachable until M6 revives it as the Bot path (the walkTo machinery stays). Under the M3b strict gate the jta loop_costs preset auto-enables loop mode and this test's direct walkTo/regionMoves have no parked block, so the gate blocks them. Restructure when M6 lands. See CC/docs/plans/loops-m4-status-and-standalone-jta-investigation.md.",
             "category": "JtA substrate"
         },
         {
             "id": "jta-starting-energy-bonus-raises-pool",
-            "enabled": false,
+            "enabled": true,
             "category": "JtA substrate",
-            "_comment": "KNOWN-DEFERRED to M6 (Bot radio), same class as jta-bot-walkto-exit \u2014 drives zone 0 via PlaybackController.walkTo, whose exit crossing the M3b strict gate blocks now that jta declares record+playback. Revive with the M6 Bot radio. User-ruled 2026-07-23."
+            "_comment": "RE-ENABLED in M6 slice 5 after an empirical check: this test contains NO walkTo at all. It enters the region with the synthetic-move-exempt moveToRegion helper and then makes pure settings/pool assertions, so the M3b strict gate was never in its way. Its old deferral note (\"drives zone 0 via PlaybackController.walkTo\") described a different test — it was swept into M4's bulk deferral of the four jta walkTo tests. Verified green at HEAD before any M6 slice-5 change touched it."
         },
         {
             "id": "jta-location-check-and-perk-grant",
@@ -143,7 +143,7 @@
             "id": "jta-dataset-world-progression",
             "enabled": false,
             "category": "JtA substrate",
-            "_comment": "KNOWN-DEFERRED to M6 (Bot radio), same class as jta-bot-walkto-exit \u2014 cross-region walkTo progression (walkOneZone) blocked by the M3b strict gate now that jta declares record+playback (walkTo departures carry no fromLoop). Revive with the M6 Bot radio. User-ruled 2026-07-23."
+            "_comment": "KNOWN-DEFERRED to M6 (Bot radio), same class as jta-bot-walkto-exit — cross-region walkTo progression (walkOneZone) blocked by the M3b strict gate now that jta declares record+playback (walkTo departures carry no fromLoop). Revive with the M6 Bot radio. User-ruled 2026-07-23."
         },
         {
             "id": "jta-record-playback-crosses-zone-boundary",

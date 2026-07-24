@@ -44,11 +44,22 @@ describe('PlaybackProxy — publishes control events for each method', () => {
         );
     });
 
-    it('instant() publishes', () => {
+    it('instant() publishes, defaulting to ON', () => {
         proxy.instant();
         expect(bus.publish).toHaveBeenCalledWith(
             PLAYBACK_CONTROL_EVENT,
-            { method: 'instant', args: [] },
+            { method: 'instant', args: [true] },
+        );
+    });
+
+    it('instant(false) publishes the OFF direction (M6)', () => {
+        // Substrates whose instant is a persistent MODE (jta's setInstantMode)
+        // need an unset path, or one Instant block leaves the game instant for
+        // the rest of the session.
+        proxy.instant(false);
+        expect(bus.publish).toHaveBeenCalledWith(
+            PLAYBACK_CONTROL_EVENT,
+            { method: 'instant', args: [false] },
         );
     });
 

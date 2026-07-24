@@ -2599,7 +2599,7 @@ function registerInstantOrderedSubstrate({ fine, regions = ['A'] }) {
       ? { takeLastRecording: () => { const s = handles.stash; handles.stash = null; return s; } }
       : {}),
     getPlaybackController: () => ({
-      instant: () => { handles.calls.push('instant'); },
+      instant: (on) => { handles.calls.push(`instant:${on}`); },
       walkTo: () => { handles.calls.push('walkTo'); return true; },
       stop: () => {},
     }),
@@ -2675,19 +2675,24 @@ describe('M6 — Bot × Instant, the effect', () => {
     const handles = setUp(registerInstantOrderedFineSolverSubstrate);
     loopState.setBlockInstant('A', 1, true);
     tick(loopState);
-    expect(handles.calls).toEqual(['instant', 'walkTo']);
+    expect(handles.calls).toEqual(['instant:true', 'walkTo']);
   });
 
-  it('a non-Instant Bot block never touches instant mode', () => {
+  it('a NON-Instant Bot block turns instant mode OFF — pacing is per block', () => {
+    // jta's instant is sticky (setInstantMode with no unset path), so only
+    // ever setting it ON would let one Instant block collapse every later
+    // block, Manual visit and Record capture in the same iframe. Each block
+    // establishes its own pacing.
     const handles = setUp(registerInstantOrderedFineSolverSubstrate);
     tick(loopState);
-    expect(handles.calls).toEqual(['walkTo']);
+    expect(handles.calls).toEqual(['instant:false', 'walkTo']);
   });
 
   it('a stored Instant flag does NOT reach a solver that cannot honor it', () => {
     // The checkbox is hidden for summary bots, but the flag is per BLOCK and
     // survives a mode switch — a block toggled Instant under Playback and
-    // then switched to Bot must not half-apply it.
+    // then switched to Bot must not half-apply it. Nothing is sent at all
+    // here, in either direction.
     const handles = setUp(registerInstantOrderedSummarySubstrate);
     loopState.setBlockInstant('A', 1, true);
     tick(loopState);

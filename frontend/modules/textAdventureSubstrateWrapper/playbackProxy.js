@@ -42,7 +42,12 @@ export class PlaybackProxy {
     play(rateHz)    { this._send('play', [rateHz]); }
     stop()          { this._send('stop', []); }
     step()          { this._send('step', []); }
-    instant()       { this._send('instant', []); }
+    // `on` is forwarded so a substrate whose instant is a persistent MODE
+    // (jta's setInstantMode) can be turned back off — a per-block pacing
+    // choice must not leak into the next block. Substrates whose instant is
+    // a one-shot action (the text adventure drains its pending target)
+    // ignore the argument, and the no-arg call keeps its old meaning.
+    instant(on = true)  { this._send('instant', [on]); }
     reset()         { this._send('reset', []); }
     setRate(rateHz) { this._send('setRate', [rateHz]); }
     walkTo(target)  { this._send('walkTo', [target]); }
