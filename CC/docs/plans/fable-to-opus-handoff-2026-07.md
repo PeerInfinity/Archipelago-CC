@@ -1358,9 +1358,46 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    play empties in ~1s before the depletion reset refills it (a poll
    cannot see a transient a synchronous refill erases). Gates:
    substrates **51/51 cold+warm** · vitest 3336 · regression 31/31.
-   **NEXT: slice 3** (per-region sub-queues) — then the queued
-   `_syncEnergyFromPool` reset-authority fix (§3b item 1b) BEFORE slice
-   4, then slices 4–6.
+   **SLICE 3 SHIPPED + PUSHED 2026-07-24 (outer `0112a9fc5`, zero fork
+   edits):** per-region authored queues. `actions.next` joins the arc-C
+   swap via `_regionQueueStore` — **its own Map, NOT a key inside
+   `_regionStore`'s snapshots** (those go verbatim to
+   `m.loadRegionState`, which walks the town's value-prop keys). Dumped
+   on exit, reinstalled on entry, EMPTY on a region entered for the first
+   time, cleared on rulesLoaded with the rest of the per-world region
+   state. Two filters, both load-bearing: the **DUMP strips
+   synthetic-exit entries** (region-scoped actions — `setActiveRegion`
+   deletes the outgoing region's, `_installRegionExits` injects the
+   incoming region's — so a stored exit name is one that no longer
+   resolves, and `actions.restart()`'s `translateClassNames` THROWS on an
+   unknown name rather than skipping it; stripping at DUMP time also
+   makes the load-order question moot and is symmetric with slice 4's
+   capture filter), and the **RESTORE filters `totalActionList`
+   membership** (the saving.js:1362 guard) as the crash backstop. The two
+   orderings that hold it together: restore lands BEFORE
+   `_applyCatchUpResets` (so a catch-up restart compiles the INCOMING
+   region's plan), and `_installRegionExits` clears synthetics with a
+   NAME PREDICATE (so a restored plan of real actions passes through it).
+   ⚠ **Known boundary left to slice 4:** the restore rewrites `next`, not
+   `actions.current`, so a loop already in flight finishes on the
+   OUTGOING region's compiled list (≤1 loop of lag; omsi restarts
+   constantly). Slice 4's replay install is the case that cannot tolerate
+   that and must force the recompile. New leg
+   `omsi-region-split-per-region-queues` (substrates 51→**52**; the
+   config ENUMERATES ids), 19 conditions — **proven non-vacuous by a
+   control run with strip+restore neutered: 6 conditions red while
+   `omsi-region-split-round-trip` stayed green.** Test note worth
+   carrying: the leg queues its synthetic exit entry DISABLED, because an
+   enabled one fires itself the moment the engine's own `Wander` progress
+   crosses the Explore gate and the leg would race its own crossing; the
+   gate-open→`finish()` window is kept synchronous for the same reason
+   (the bridge clock is a Worker message, so nothing ticks inside one
+   synchronous block). Gates: substrates **52/52 cold+warm** (compare-runs:
+   the new leg is the only roster change) · vitest 3336 · regression
+   31/31 · fork clean at `2bda39b`.
+   **NEXT: the queued `_syncEnergyFromPool` reset-authority fix (§3b item
+   1b) BEFORE slice 4**, then slices 4–6 (and arc D2 behind its
+   feasibility recon).
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
