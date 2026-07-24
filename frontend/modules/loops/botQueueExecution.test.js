@@ -246,6 +246,60 @@ describe('Bot-backed queue execution (loopSupport.executeVia = solver)', () => {
         expect(loopState.actionQueueManager.isCompleted(2)).toBe(false);
     });
 
+    it('a loop-reset teleport releases the bot park WITHOUT pausing, and resumes the loop', () => {
+        // M6 5d: the fix for the fromReset/bot-wake gap. A fork-propagated loop
+        // reset teleports the player to the start region mid-walk; that is the
+        // reset flow owning queue state, NOT a wrong exit. The park is released
+        // and the frame loop resumes so the queue re-drives (the generic
+        // queue-restart retry) — without this the bot hard-paused on every
+        // reset that teleported off the region it was walking.
+        setupBounceQueue(2);
+        tick(loopState);
+        expect(loopState._botExecutedAction).not.toBeNull();
+        const paused = [];
+        bus.subscribe('loopState:queuePausedUntilReset', (d) => paused.push(d));
+
+        bus.publish('gameState:regionChanged', { newRegion: 'Menu', fromReset: true });
+
+        // Released cleanly: the bot stopped, no hard pause, no unexpected-region event.
+        expect(stopCalls).toEqual(['stop']);
+        expect(loopState._botExecutedAction).toBeNull();
+        expect(loopState._queuePausedUntilReset).toBe(false);
+        expect(paused).toEqual([]);
+        // The dormant frame loop (a bot park leaves _animationFrameId null, and
+        // the fork-propagated reset schedules nothing) was resumed...
+        expect(loopState._animationFrameId).not.toBeNull();
+        // ...so the next frame re-parks the bot and re-dispatches walkTo.
+        tick(loopState);
+        expect(walkToCalls).toHaveLength(2);
+        expect(loopState._botExecutedAction).not.toBeNull();
+    });
+
+    it('a reset teleport onto the destination still retries, never falsely completes', () => {
+        // fromReset is checked BEFORE the destination-match, so a reset that
+        // happens to target the walk's destination retries the interrupted
+        // walk rather than reading as a successful arrival.
+        setupBounceQueue(2); // destinationRegion is 'after'
+        tick(loopState);
+        const manaBefore = gs.getCurrentMana();
+
+        bus.publish('gameState:regionChanged', { newRegion: 'after', fromReset: true });
+
+        expect(loopState._botExecutedAction).toBeNull();       // released
+        expect(stopCalls).toEqual(['stop']);
+        expect(loopState.actionQueueManager.isCompleted(2)).toBe(false); // NOT completed
+        expect(gs.getCurrentMana()).toBe(manaBefore);          // and not charged
+    });
+
+    it('a NON-reset unexpected region still hard-pauses (the guard is intact)', () => {
+        // The fromReset exemption must not soften the real wrong-exit guard.
+        setupBounceQueue(2);
+        tick(loopState);
+        bus.publish('gameState:regionChanged', { newRegion: 'somewhereElse' });
+        expect(loopState._queuePausedUntilReset).toBe(true);
+        expect(loopState._botExecutedAction).toBeNull();
+    });
+
     it('stopProcessing stops an in-flight bot walk; resume re-dispatches walkTo', () => {
         setupBounceQueue(1);
         tick(loopState);

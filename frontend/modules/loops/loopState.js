@@ -344,7 +344,7 @@ export class LoopState {
         // its own dispatcher receiver.
         exitName: data?.exitName,
       });
-      this._handleBotWake_regionChanged(data?.newRegion);
+      this._handleBotWake_regionChanged(data?.newRegion, { fromReset: data?.fromReset });
     });
 
     // Cache raw rules data for the customQueue action's saved-queue
@@ -2713,15 +2713,42 @@ export class LoopState {
   }
 
   /**
-   * Wake for bot-executed actions on a region change. A regionMove
-   * arriving at its destination completes; any other region change
-   * while the bot drives (an open non-target portal swallowed a
-   * landing, the player grabbed the controls...) gets the same
-   * paused-until-reset semantics as a manual wrong-exit.
+   * Wake for bot-executed actions on a region change. Three cases:
+   *
+   *   1. A LOOP-RESET teleport (`fromReset`). The reset flow owns queue
+   *      state — the same exemption the manual wake takes — so a reset
+   *      teleport is NEVER a wrong exit. The bot park is released and the
+   *      frame loop resumes so the queue re-drives from index 0 (which
+   *      `_resetActionsProgress` has already snapped to). This is the
+   *      generic queue-restart retry, the path a solver with no bridge
+   *      memory of its own (runner, bounce) relies on when a walk outruns
+   *      a pool. Checked FIRST, before the completion match, so a reset
+   *      that happens to land on the destination still retries rather than
+   *      falsely completing an interrupted walk.
+   *   2. A regionMove arriving at its DESTINATION completes.
+   *   3. Any OTHER region change while the bot drives (an open non-target
+   *      portal swallowed a landing, the player grabbed the controls...)
+   *      keeps the paused-until-reset semantics of a manual wrong-exit.
+   *
+   * @param {string} newRegion
+   * @param {{ fromReset?: boolean }} [opts]
    */
-  _handleBotWake_regionChanged(newRegion) {
+  _handleBotWake_regionChanged(newRegion, opts = {}) {
     const action = this._botExecutedAction;
     if (!action || !newRegion) return;
+    if (opts.fromReset) {
+      this._stopBotExecutedAction();
+      // Nothing else re-schedules a frame during a bot park (the park leaves
+      // _animationFrameId null and does not stopProcessing), and the fork-
+      // propagated reset only ran _resetActionsProgress — so resume the loop
+      // here or the queue would sit dormant with the cursor at 0. The Bot
+      // branch re-parks and re-dispatches on the next frame once the player
+      // is in index 0's region; a multi-region walk that teleported away
+      // additionally needs the queue to route back there (its own leading
+      // moves, or the caller), which is not the wake's concern.
+      this._resumeFrameLoopIfProcessing();
+      return;
+    }
     if (action.type === 'regionMove' && newRegion === action.destinationRegion) {
       this._completeBotExecutedAction({ viaRegionMove: true });
       return;
@@ -2738,6 +2765,22 @@ export class LoopState {
         reason: 'botUnexpectedRegion',
       });
     }
+  }
+
+  /**
+   * Resume the RAF frame loop from wherever the cursor is, if the queue is
+   * still processing. Shared by the completion path and the loop-reset bot
+   * wake — both need to kick the dormant loop back to life after a park.
+   */
+  _resumeFrameLoopIfProcessing() {
+    if (!this.isProcessing || this.isPaused) return;
+    this._lastFrameTime = null;
+    if (this._animationFrameId) {
+      cancelAnimationFrame(this._animationFrameId);
+    }
+    this._animationFrameId = requestAnimationFrame(
+      this._processFrame.bind(this),
+    );
   }
 
   /**
@@ -2789,15 +2832,7 @@ export class LoopState {
 
     // Resume the frame loop to tick the next action (or hit the
     // queue-completed / OOM transitions cleanly).
-    if (this.isProcessing && !this.isPaused) {
-      this._lastFrameTime = null;
-      if (this._animationFrameId) {
-        cancelAnimationFrame(this._animationFrameId);
-      }
-      this._animationFrameId = requestAnimationFrame(
-        this._processFrame.bind(this),
-      );
-    }
+    this._resumeFrameLoopIfProcessing();
   }
 
   /**
