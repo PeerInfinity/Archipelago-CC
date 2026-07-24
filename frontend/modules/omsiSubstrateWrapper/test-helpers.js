@@ -107,6 +107,30 @@ export function omsiClearQueue() {
     return omsiEval('actions.next.splice(0, actions.next.length)');
 }
 
+/**
+ * Append one entry to the END of the game's plan, order-preserving.
+ *
+ * `addAction` puts the entry wherever the game's options say and re-homes it to
+ * the closest town-valid index; the per-region-queue leg needs a plan whose
+ * ORDER it authored, so it uses the same `(-1, false)` call the save restore and
+ * the bridge's region-queue restore both make.
+ */
+export function omsiAppendAction(name, loops, disabled = false) {
+    return omsiEval(`actions.addActionRecord({ name: ${JSON.stringify(name)}, `
+        + `loops: ${Number(loops)}, disabled: ${!!disabled}, loopsType: 'actions' }, -1, false)`);
+}
+
+/**
+ * The game's plan as a plain comparable list — the witness for the per-region
+ * queue swap (`actions.next` is the layer slice 3 changes; the fork's own
+ * progress counters are NOT a witness of anything here).
+ */
+export function omsiReadQueue() {
+    return JSON.parse(omsiEval(
+        'JSON.stringify(actions.next.map((e) => '
+        + '({ name: e.name, loops: e.loops, disabled: !!e.disabled })))'));
+}
+
 /** The bridge's debug surface (window property, set by bridge.js). */
 export function bridgeState() {
     return getOmsiIframe()?.contentWindow?.__omsiBridge?.getDebugState?.() ?? null;

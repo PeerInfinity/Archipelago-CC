@@ -191,6 +191,17 @@ const _regionStore = new Map();          // regionId -> the fork's value-prop sn
 let _activeRegionMeta = null;            // the region metadata currently installed
 let _activeSyntheticExits = [];          // [{ name, targetRegion }] injected for the active region
 
+// Per-region authored PLANS (arc D1 slice 3, ruling 4). The fork keeps exactly
+// one plan (`actions.next`); on a split world each region keeps its own, so the
+// plan joins the region swap above — dumped on exit, reinstalled on entry, and
+// a region entered for the first time starts EMPTY.
+//
+// Deliberately a store of its OWN rather than a key inside `_regionStore`'s
+// snapshots: those objects are handed verbatim to `m.loadRegionState`, which
+// walks the town's value-prop keys, and the plan is host bookkeeping rather
+// than fork town state. Per-world, cleared on rulesLoaded alongside the other.
+const _regionQueueStore = new Map();     // regionId -> plain NextActionEntry-shaped entries
+
 // Playback replay in flight (arc D1). Set by the host-side PlaybackProxy
 // over `omsi:playbackControl` for the duration of a Playback block's
 // replay; cleared when the replay's departure crosses, when the player
@@ -976,11 +987,89 @@ function _dispatchRegionMove(targetRegion, exitName) {
 }
 
 /**
- * Swap the fork's per-region value props: dump the outgoing region into the
- * host store, then load the incoming one (fresh — null — on first entry).
- * No-op on a vanilla world (no omsiRegion, no active split region). Must run
- * BEFORE the unlock-overlay push so applyManagedTotals re-pins for the
- * incoming region's levels.
+ * True when `name` is an action THIS BUILD knows — the save-restore guard
+ * (saving.js:1362), which is the only thing standing between a stored plan and
+ * a crash: a queue entry naming an unknown action makes the next loop start
+ * throw out of `translateClassNames` (actionList.js:143), taking down the loop
+ * rather than skipping the entry.
+ *
+ * Synthetic exit actions are injected AFTER initializeActions() and so are
+ * never in `totalActionList` — which makes this the same filter twice over
+ * (see _dumpRegionQueue), deliberately.
+ */
+function _isKnownActionName(name) {
+    if (typeof name !== 'string' || !name) return false;
+    // eslint-disable-next-line no-undef
+    if (typeof totalActionList === 'undefined' || !Array.isArray(totalActionList)) return false;
+    // eslint-disable-next-line no-undef
+    return totalActionList.some((a) => a?.name === name);
+}
+
+/**
+ * The active region's authored plan, as plain entries the host can stash
+ * (arc D1 slice 3). Non-enumerable `actionId` is deliberately not copied —
+ * the restore mints a fresh one.
+ *
+ * SYNTHETIC EXIT ENTRIES ARE STRIPPED HERE. Those actions are region-scoped:
+ * `setActiveRegion` deletes the outgoing region's from the Action table and
+ * `_installRegionExits` injects the incoming region's, so a stored exit name is
+ * a name that no longer resolves on the next visit. Stripping at DUMP time
+ * (rather than filtering at restore) is immune to the load-order question
+ * entirely, and it is symmetric with the slice-4 Record capture, which
+ * snapshots this same plan minus these same entries.
+ */
+function _dumpRegionQueue() {
+    const next = _engineActions()?.next;
+    if (!Array.isArray(next)) return [];
+    const synthetic = new Set(_activeSyntheticExits.map((e) => e.name));
+    return next
+        .filter((e) => e && typeof e.name === 'string' && !synthetic.has(e.name))
+        .map((e) => ({ ...e }));
+}
+
+/**
+ * Install a stashed plan into the fork's queue — or, for a region entered for
+ * the first time, just clear it (ruling 4: a fresh region starts EMPTY).
+ *
+ * `addActionRecord(entry, -1, false)` — append at the end, no
+ * closest-valid-index reshuffling — is exactly the call the save restore makes,
+ * so a dump/restore round trip preserves the authored order.
+ *
+ * KNOWN BOUNDARY: this rewrites `actions.next` (the PLAN), not
+ * `actions.current` (the loop already in flight, compiled at the last restart).
+ * So a loop running when the swap happens finishes on the OUTGOING region's
+ * compiled list — at most one loop of lag, and omsi restarts constantly. Slice
+ * 4's replay install is the case that cannot tolerate the lag and must force
+ * the recompile itself.
+ */
+function _restoreRegionQueue(entries) {
+    const a = _engineActions();
+    if (typeof a?.clearActions !== 'function' || typeof a.addActionRecord !== 'function') {
+        if (entries?.length) log('warn', 'fork build has no queue-write surface — stored plan dropped');
+        return;
+    }
+    a.clearActions();
+    let skipped = 0;
+    for (const entry of entries ?? []) {
+        if (!_isKnownActionName(entry?.name)) { skipped += 1; continue; }
+        a.addActionRecord({ ...entry }, -1, false);
+    }
+    if (skipped) log('warn', `dropped ${skipped} stored queue entry/entries naming unknown actions`);
+}
+
+/**
+ * Swap the fork's per-region value props AND authored plan: dump the outgoing
+ * region into the host stores, then load the incoming one (fresh — null /
+ * empty plan — on first entry). No-op on a vanilla world (no omsiRegion, no
+ * active split region). Must run BEFORE the unlock-overlay push so
+ * applyManagedTotals re-pins for the incoming region's levels.
+ *
+ * Two orderings this relies on, both inside `_handleLoadRegion`:
+ *   - it runs BEFORE `_applyCatchUpResets`, so a catch-up restart compiles the
+ *     INCOMING region's plan rather than the one we just stashed;
+ *   - `_installRegionExits` runs after and clears synthetic actions with a
+ *     NAME PREDICATE (managed.js clearSyntheticActions), so a restored plan of
+ *     real actions passes through it untouched.
  */
 function _applyRegionSwap(world) {
     const m = _managed();
@@ -996,11 +1085,13 @@ function _applyRegionSwap(world) {
         } catch (e) {
             log('warn', 'dumpRegionState failed', e);
         }
+        _regionQueueStore.set(_activeRegionMeta.regionId, _dumpRegionQueue());
     }
     if (next) {
         const townIndex = next.townIndex ?? 0;
         const snapshot = _regionStore.has(next.regionId) ? _regionStore.get(next.regionId) : null;
         m.loadRegionState(townIndex, snapshot);
+        _restoreRegionQueue(_regionQueueStore.get(next.regionId) ?? []);
     }
 }
 
@@ -1327,7 +1418,11 @@ async function main() {
         // Region overlays are per-WORLD too: drop the host snapshot store and
         // clear the fork's gate + synthetic exits (the next omsi:loadRegion
         // re-installs the new world's, or leaves the fork vanilla).
+        // …including the per-region authored plans (slice 3): a stored plan
+        // names the OLD world's actions, and the queue the fork is holding right
+        // now belongs to a region that no longer exists.
         _regionStore.clear();
+        _regionQueueStore.clear();
         _activeRegionMeta = null;
         _activeSyntheticExits = [];
         _managed()?.setActiveRegion?.(null);
@@ -1406,6 +1501,11 @@ async function main() {
             // Region splitting (arc C; null/false on an unsplit world).
             activeRegionId: _activeRegionMeta?.regionId ?? null,
             regionStoreKeys: [..._regionStore.keys()],
+            // Per-region authored plans (slice 3): regionId -> stashed entry
+            // count, plus the length of the plan currently installed.
+            regionQueueCounts: Object.fromEntries(
+                [..._regionQueueStore].map(([id, q]) => [id, q.length])),
+            queuedActionCount: _engineActions()?.next?.length ?? null,
             regionExitAvailable: _managed()?.regionExitAvailable?.() ?? null,
             syntheticExits: _activeSyntheticExits.map((e) => ({ ...e })),
             // Loop-mode replay window (arc D1): true while this bridge's

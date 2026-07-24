@@ -1,5 +1,6 @@
 /**
- * Region splitting, end to end (arc C). This is the INDEPENDENT STRATUM the
+ * Region splitting, end to end (arc C) and the per-region authored plans that
+ * ride the same swap (arc D1 slice 3). This is the INDEPENDENT STRATUM the
  * byte-gate can't provide: the region-overlay machinery is managed-mode-only
  * and off the vanilla path, so only a real managed round-trip through the real
  * bridge + real fork can witness it.
@@ -10,7 +11,7 @@
  * descriptor gated on 'Wander' at 5% explored, with a direct graph edge
  * between them. Entering a zone swaps its per-region value props live.
  *
- * The leg drives one full round-trip:
+ * The FIRST leg drives one full round-trip:
  *   enter r0 -> r0 is FRESH -> exit gate is CLOSED (0% explored)
  *   explore r0 to the threshold + bank some state -> gate OPENS
  *   take the synthetic exit to r1 -> r1 has its OWN FRESH Explore level
@@ -21,6 +22,12 @@
  * are pinned headlessly by the fork's region-overlay.test.mjs; this leg proves
  * the whole host+fork loop, including that taking a synthetic exit's finish()
  * dispatches user:regionMove and the host swaps the region.
+ *
+ * The second leg drives the same round trip to witness the PLAN swap, which
+ * only a real managed round trip can see either:
+ *   r0 entered fresh -> EMPTY plan -> author one (plus its synthetic exit)
+ *   cross to r1 -> r1's plan is EMPTY, r0's is stashed WITHOUT the exit entry
+ *   author a different r1 plan -> return -> r0's plan is back intact
  *
  * Since arc D1 the round trip runs from PARKED MANUAL BLOCKS. omsi declares
  * record + playback, which arms the M3b strict action gate, and a synthetic
@@ -43,6 +50,8 @@ import {
     moveToRegion,
     omsiEval,
     omsiClearQueue,
+    omsiAppendAction,
+    omsiReadQueue,
     bridgeState,
     parkManualBlocks,
     unparkManualBlocks,
@@ -159,6 +168,148 @@ async function roundTripLegs(testController) {
     return testController.getOverallResult();
 }
 
+// ────────────────────────────────────────────────────────────────────────────
+// Per-region authored queues (arc D1 slice 3, ruling 4)
+// ────────────────────────────────────────────────────────────────────────────
+
+/**
+ * The plans this leg authors. Both name real town-0 actions (every `Action.*`
+ * is in `totalActionList` regardless of unlock state, so the bridge's
+ * membership filter passes them) and both are DISTINCTIVE, so a restored plan
+ * that came from the wrong region is obvious rather than plausible.
+ *
+ * `Smash Pots` rides along DISABLED to prove the flag round-trips, and r0's
+ * synthetic exit is queued disabled as well: an enabled exit entry would fire
+ * itself the moment the engine's own `Wander` progress crossed the Explore
+ * gate, and the leg would race its own crossing.
+ */
+const R0_PLAN = [
+    { name: 'Wander', loops: 3, disabled: false },
+    { name: 'Smash Pots', loops: 5, disabled: true },
+];
+const R1_PLAN = [
+    { name: 'Pick Locks', loops: 11, disabled: false },
+];
+
+/**
+ * Enter a region WITHOUT clearing the plan — unlike the round-trip leg's
+ * `enterRegion`, the plan is precisely what this leg measures.
+ */
+async function enterRegionKeepingPlan(testController, region) {
+    moveToRegion(region);
+    return waitForOmsiActive(testController);
+}
+
+/** Open the active region's Explore gate and take the synthetic exit toward `region`. */
+function crossTo(testController, region, label) {
+    const exit = exitToward(region);
+    testController.assertEqual(`synthetic exit toward ${label} injected`, true, !!exit);
+    if (!exit) return false;
+    // Set the gate open and cross in ONE synchronous block: the bridge clock is
+    // a Worker message, so nothing can tick between these two statements.
+    omsiEval(`towns[0].expWander = ${EXPLORE_ABOVE}; adjustAll();`);
+    omsiEval(`getActionPrototype(${JSON.stringify(exit)}).finish()`);
+    return true;
+}
+
+async function perRegionQueues(testController) {
+    testController.log(`Loading ${OMSI_REGION_SPLIT_PRESET_PATH}…`);
+    await testController.loadRulesFromFile(OMSI_REGION_SPLIT_PRESET_PATH);
+    await testController.stateManager.pingWorker('after-rules-load', 3000);
+
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'omsiSubstrateWrapperPanel' });
+    const booted = await waitForOmsiBridge(testController);
+    testController.reportCondition('omsi bridge booted', !!booted);
+    if (!booted) return testController.getOverallResult();
+    resetOmsiEngineProgress(['Wander']);
+
+    // ── r0, entered for the first time: an EMPTY plan ────────────────────────
+    // Not merely "we didn't author one yet": the managed game outlives tests, so
+    // an earlier leg's plan can still be live in `actions.next` right up to this
+    // entry. Emptiness here is the fresh-region restore firing — with the restore
+    // neutered, this leg's OTHER six conditions go red (verified by control run).
+    const win = await enterRegionKeepingPlan(testController, OMSI_REGION_SPLIT_R0);
+    testController.reportCondition('entered r0', !!win);
+    if (!win) return testController.getOverallResult();
+    testController.assertEqual('bridge active in r0', OMSI_REGION_SPLIT_R0, bridgeState()?.activeRegionId);
+    testController.assertEqual('r0 entered for the first time starts with an EMPTY plan',
+        '[]', JSON.stringify(omsiReadQueue()));
+
+    // Same strict-gate story as the round trip: a synthetic exit crossing
+    // carries a real exit name, so both hops run from parked Manual blocks.
+    const park = await parkManualBlocks(testController, [
+        { from: OMSI_REGION_SPLIT_R0, to: OMSI_REGION_SPLIT_R1, exit: OMSI_REGION_SPLIT_R0_TO_R1 },
+        { from: OMSI_REGION_SPLIT_R1, to: OMSI_REGION_SPLIT_R0, exit: OMSI_REGION_SPLIT_R1_TO_R0 },
+    ]);
+    testController.assertEqual('parked Manual blocks for the round trip', true, !!park);
+    if (!park) return testController.getOverallResult();
+    try {
+        return await perRegionQueueLegs(testController);
+    } finally {
+        unparkManualBlocks(park);
+        omsiClearQueue();
+        resetOmsiEngineProgress(['Wander']);
+    }
+}
+
+/** The plan round trip itself, run with both region blocks parked Manual. */
+async function perRegionQueueLegs(testController) {
+    // ── Author r0's plan, plus its synthetic exit (which must NOT be stored) ──
+    for (const e of R0_PLAN) omsiAppendAction(e.name, e.loops, e.disabled);
+    const toR1 = exitToward(OMSI_REGION_SPLIT_R1);
+    testController.assertEqual('synthetic exit toward r1 injected', true, !!toR1);
+    if (!toR1) return testController.getOverallResult();
+    omsiAppendAction(toR1, 1, true);
+    testController.assertEqual('r0 plan authored (incl. the exit entry)',
+        JSON.stringify([...R0_PLAN, { name: toR1, loops: 1, disabled: true }]),
+        JSON.stringify(omsiReadQueue()));
+
+    // ── Cross to r1: a region entered for the first time, so an EMPTY plan ────
+    if (!crossTo(testController, OMSI_REGION_SPLIT_R1, 'r1')) return testController.getOverallResult();
+    const inR1 = await eventually(testController,
+        () => bridgeState()?.activeRegionId === OMSI_REGION_SPLIT_R1, 'host swapped into r1');
+    testController.assertEqual('taking the exit swapped into r1', true, inR1);
+    if (!inR1) return testController.getOverallResult();
+
+    testController.assertEqual('r1 entered for the first time starts with an EMPTY plan',
+        '[]', JSON.stringify(omsiReadQueue()));
+    // r0's plan was stashed host-side — WITHOUT the synthetic exit entry. The
+    // exit action itself is gone from the fork by now (setActiveRegion deleted
+    // it), so a stored exit name would make r0's next loop start throw out of
+    // translateClassNames; the dump-time strip is what prevents that.
+    testController.assertEqual('r0 plan stashed host-side, synthetic exit stripped',
+        R0_PLAN.length, bridgeState()?.regionQueueCounts?.[OMSI_REGION_SPLIT_R0]);
+    // (Read the Action table directly — getActionPrototype console.warns on a miss.)
+    testController.assertEqual('the r0 exit action is gone from the fork in r1', true,
+        omsiEval(`!(${JSON.stringify(toR1.replace(/ /gu, ''))} in Action)`));
+
+    // ── Author a DIFFERENT plan in r1, then return to r0 ─────────────────────
+    for (const e of R1_PLAN) omsiAppendAction(e.name, e.loops, e.disabled);
+    testController.assertEqual('r1 plan authored',
+        JSON.stringify(R1_PLAN), JSON.stringify(omsiReadQueue()));
+
+    if (!crossTo(testController, OMSI_REGION_SPLIT_R0, 'r0')) return testController.getOverallResult();
+    const backInR0 = await eventually(testController,
+        () => bridgeState()?.activeRegionId === OMSI_REGION_SPLIT_R0, 'host swapped back into r0');
+    testController.assertEqual('taking the exit swapped back into r0', true, backInR0);
+    if (!backInR0) return testController.getOverallResult();
+
+    // ── r0's plan came back INTACT, and carries no synthetic-exit entry ───────
+    const restored = omsiReadQueue();
+    testController.assertEqual('r0 plan restored intact (order, loops and disabled flags)',
+        JSON.stringify(R0_PLAN), JSON.stringify(restored));
+    testController.assertEqual('restored r0 plan contains no synthetic-exit entry', true,
+        restored.every((e) => !/^(Go |Take exit:)/u.test(e.name)));
+    testController.assertEqual('r1 plan is now the stashed one',
+        R1_PLAN.length, bridgeState()?.regionQueueCounts?.[OMSI_REGION_SPLIT_R1]);
+    // A restored plan makes the region RUNNABLE again — the state slice 2's gate
+    // has to hold back when nothing is parked here.
+    testController.assertEqual('restored plan is the live one', R0_PLAN.length,
+        bridgeState()?.queuedActionCount);
+
+    return testController.getOverallResult();
+}
+
 registerTest({
     id: 'omsi-region-split-round-trip',
     name: 'Omsi region split: a managed region round-trip swaps per-region state',
@@ -167,6 +318,18 @@ registerTest({
                + 'a fresh r1, and returning restores r0 state intact — the region machinery the '
                + 'byte-gate cannot witness.',
     testFunction: regionRoundTrip,
+    category: 'Omsi substrate',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
+registerTest({
+    id: 'omsi-region-split-per-region-queues',
+    name: 'Omsi region split: each region keeps its own authored plan',
+    description: 'The fork\'s authored queue joins the region swap (arc D slice 3): a region entered '
+               + 'for the first time starts with an empty plan, the plan authored in r0 is stashed on '
+               + 'exit — minus its synthetic-exit entry, whose action no longer exists on return — and '
+               + 'comes back intact (order, loops, disabled flags) while r1 keeps its own.',
+    testFunction: perRegionQueues,
     category: 'Omsi substrate',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });
