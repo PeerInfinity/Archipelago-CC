@@ -198,6 +198,88 @@ function _syntheticExitTaskId(exitIndex) {
 // Polling — mirror JtA energy drain into the shared pool
 // ────────────────────────────────────────────────────────────────
 
+// The fork LATCHES `is_in_energy_reset` the moment energy reaches 0
+// (checkEnergyReset), and `updateGamestate()` returns early for as long
+// as it is set — the game is frozen until `doAnyReset()` clears it. In
+// managed mode nothing in the game clears it: only this bridge does, via
+// _applyCatchUpResets(), and that fires only when the HOST's reset count
+// advances. The host advances it when the shared pool hits 0, which
+// needs drains, which need a running game.
+//
+// That is a closed loop, and _syncEnergyFromPool() can slam it shut: the
+// pin pushes pool energy into the game unconditionally, including while
+// the latch is set. Energy then reads > 0, so the game never drains to 0
+// again, so the host never fires another reset, so nothing ever clears
+// the latch. Observed as `jta-bot-walkto-exit` hanging ~1 run in 3 with
+// inReset=true, energy 1e9, pool 1e9 and hostResets=2/2 — both sides
+// believing they are square while the game sat frozen for 180s.
+//
+// Energy above zero WITH the latch set is unreachable through the game's
+// own logic (the latch is set at exactly energy 0, and doAnyReset both
+// refills and clears). Seeing it means an external pin masked the run's
+// end, and only we can finish it. Require the state to persist for a
+// beat so this cannot race the legitimate ordering (catch-up first, pin
+// second) in the loopReset and loadRegion paths.
+const LATCHED_RESET_BREAK_POLLS = 20;   // 20 x 50ms poll = 1s
+let _latchedResetPolls = 0;
+
+function _breakLatchedEnergyReset(fullState) {
+    const latchedWithEnergy = fullState.isInEnergyReset === true
+        && fullState.currentEnergy > 0;
+    if (!latchedWithEnergy) {
+        _latchedResetPolls = 0;
+        return;
+    }
+    _latchedResetPolls += 1;
+    if (_latchedResetPolls < LATCHED_RESET_BREAK_POLLS) return;
+    _latchedResetPolls = 0;
+    if (typeof _w.doEnergyReset !== 'function') {
+        log('warn', 'game is latched in an energy reset and doEnergyReset is missing — cannot recover');
+        return;
+    }
+    // Report it: the game's run genuinely ended (it did reach 0), the
+    // host just never saw it because the pin hid the drain. Completing it
+    // through the normal callback keeps the host's reset accounting and
+    // the pool refill in step — hence NOT under _applyingHostReset.
+    log('warn', 'breaking a latched energy reset (run ended while the pool pin held energy '
+        + `above zero; energy=${Math.round(fullState.currentEnergy)}, pool=${Math.round(_hostCurrentMana)})`);
+    _w.doEnergyReset();
+}
+
+// Walk-stall watchdog. A walkTo that stops advancing produces no output
+// at all — the bridge logs only on transitions, so a frozen zone reads
+// exactly like a working one, and diagnosing the deadlock above meant
+// adding instrumentation after the fact. One warning per stalled walk
+// keeps that from being invisible again, without the noise of a
+// heartbeat: the poll runs at 50ms.
+const WALK_STALL_WARN_MS = 30000;
+let _walkStallSince = 0;
+let _walkStallWarned = false;
+
+function _walkStallDiagnostic(fullState) {
+    if (!_pendingWalkExit) {
+        _walkStallSince = 0;
+        _walkStallWarned = false;
+        return;
+    }
+    const now = Date.now();
+    if (_walkStallSince === 0) {
+        _walkStallSince = now;
+        return;
+    }
+    if (_walkStallWarned || now - _walkStallSince < WALK_STALL_WARN_MS) return;
+    _walkStallWarned = true;
+    const automationMode = typeof _w.getAutomationMode === 'function'
+        ? _w.getAutomationMode() : 'n/a';
+    log('warn', `walk to '${_pendingWalkExit.exitName}' has not completed in `
+        + `${Math.round((now - _walkStallSince) / 1000)}s — `
+        + `energy=${Math.round(fullState.currentEnergy)}/${Math.round(fullState.maxEnergy)} `
+        + `zone=${fullState.currentZone} active=${fullState.activeTaskId ?? 'idle'} `
+        + `autoMode=${automationMode} inReset=${fullState.isInEnergyReset} `
+        + `resets=${fullState.energyResetCount} pool=${Math.round(_hostCurrentMana)} `
+        + `hostResets=${_hostResetCount}/${_lastAppliedResetCount}`);
+}
+
 function _startPolling() {
     if (_pollIntervalId !== null) return;
     _pollIntervalId = setInterval(_pollTick, POLL_INTERVAL_MS);
@@ -216,6 +298,8 @@ function _pollTick() {
 
     const fullState = _w.getFullState();
     const currentEnergy = fullState.currentEnergy;
+    _breakLatchedEnergyReset(fullState);
+    _walkStallDiagnostic(fullState);
 
     // Report JtA's native starting-energy bonus up to the shared pool
     // (independent of the per-tick drain mirroring below).
@@ -533,7 +617,7 @@ function _handleLoadRegion(payload) {
         _w.clearSyntheticTasks();
     }
     if (regionId !== _currentRegionId) {
-        _clearPendingWalk();
+        _clearPendingWalk('loadRegion:different-region');
     }
     // Defensive: a Playback instant pump belongs to the visit we're leaving;
     // stop it before loading a new region (the replay driver normally stops it
@@ -949,7 +1033,12 @@ function _applyTaskPatches() {
 // Playback control — host proxy commands (jta:playbackControl)
 // ────────────────────────────────────────────────────────────────
 
-function _clearPendingWalk() {
+function _clearPendingWalk(reason = 'unspecified') {
+    // A walk that was destroyed and one that stalled both go silent, and
+    // telling them apart is the first question when a bot leg hangs.
+    if (_pendingWalkExit) {
+        log('debug', `cleared pending walk to '${_pendingWalkExit.exitName}' — ${reason}`);
+    }
     _pendingWalkExit = null;
     // If we activated the automation engine for this walk, restore the
     // mode the player had (automation_mode is session-transient in the
@@ -1075,7 +1164,7 @@ function _handlePlaybackControl(payload) {
             if (typeof _w.resumeGameLoop === 'function') _w.resumeGameLoop();
             return;
         case 'stop':
-            _clearPendingWalk();
+            _clearPendingWalk('playbackControl:stop');
             if (typeof _w.pauseGameLoop === 'function') _w.pauseGameLoop();
             return;
         case 'step':
@@ -1280,7 +1369,7 @@ function _handleTravelTaskCompleted(zone, task) {
     // tasks, no single-exit fallthrough.
     if (_pendingWalkExit) {
         const exit = _pendingWalkExit;
-        _clearPendingWalk();
+        _clearPendingWalk('travelTaskCompleted');
         _dispatchRegionMove(exit.targetRegion ?? null, exit.exitName);
         return;
     }
@@ -1404,7 +1493,7 @@ async function main() {
         if (data?.newRegion && data.newRegion !== _currentRegionId) {
             _isActive = false;
             _stopPolling();
-            _clearPendingWalk();
+            _clearPendingWalk('regionChanged:left-region');
             if (typeof _w.pauseGameLoop === 'function') _w.pauseGameLoop();
         }
     });
@@ -1464,7 +1553,7 @@ async function main() {
         _staleStaticData = _client?.getStaticData?.() ?? null;
         _ownPlacements = null;
         _nonPerkItemNames.clear();
-        _clearPendingWalk();
+        _clearPendingWalk('rulesLoaded:new-world');
         _client?.requestStaticData?.();
         _client?.requestStateSnapshot?.();
     });
