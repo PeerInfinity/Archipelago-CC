@@ -2142,6 +2142,31 @@ export class LoopState {
   }
 
   /**
+   * Whether a BOT block in this region can actually honor the Instant flag
+   * (M6 ruling 4). The M1 "Instant applies to Playback and Bot" ruling is
+   * satisfied PER CAPABILITY, not per declaration: showing a checkbox where
+   * it does nothing is a vacuous control, so the Bot Instant checkbox is
+   * offered only here.
+   *
+   * v1 is the walkTo solver on a FINE substrate — jta, whose controller
+   * `instant()` maps to the fork's setInstantMode and really does collapse
+   * the walk. The other two are deliberately out:
+   *   - SUMMARY bots (runner, bounce) play real-time physics; no instant
+   *     variant of that exists, so the checkbox would promise nothing.
+   *   - MAZE DELEGATION is deferred, not impossible: its controller's
+   *     instant() drives the VISUALIZER, while a delegated walk is tracked
+   *     through the visualizer's per-tick change stream (step buffer,
+   *     per-tile charging, mirrored queue, stuck detection). Wiring it
+   *     means touching the two-position-tracker split, which is out of
+   *     scope for this arc.
+   */
+  regionBotHonorsInstant(region) {
+    if (!this._regionSupportsInstant(region)) return false;
+    if (this.regionSolver(region) !== 'walkTo') return false;
+    return this._captureShapeForRegion(region) === 'fine';
+  }
+
+  /**
    * Whether the strict action gate is ENFORCED for a region's substrate.
    * The gate model is substrate-universal, but enforcement rolls out with
    * each substrate's block-mode integration (declared record + playback —
@@ -2629,6 +2654,15 @@ export class LoopState {
       ? { kind: 'location', name: action.locationName }
       : { kind: 'exit', name: action.exitUsed };
     try {
+      // Instant (M6 ruling 4): collapse the walk where the solver really
+      // honors it. Set BEFORE walkTo — it is a mode the substrate reads as
+      // the walk runs, not an argument to it — and idempotent (jta's maps to
+      // setInstantMode(true)). Gated on regionBotHonorsInstant so a flag
+      // left over from a Playback session can't reach a solver that would
+      // ignore it, or worse, half-honor it.
+      if (this._currentBlockIsInstant() && this.regionBotHonorsInstant(action.sourceRegion)) {
+        controller?.instant?.();
+      }
       controller?.walkTo?.(target);
       log('info', `[LoopState] Bot walking to ${target.kind} '${target.name}' in ${action.sourceRegion}`);
     } catch (err) {

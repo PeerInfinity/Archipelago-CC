@@ -2562,3 +2562,135 @@ describe('M6 — Bot economy: the time drain matrix', () => {
     expect(gs.getCurrentMana()).toBe(after);
   });
 });
+
+// ---------------------------------------------------------------------------
+// M6 slice 4 — Instant for Bot blocks. Ruling 4: offered only where the solver
+// actually honors it, because a checkbox that does nothing is a vacuous
+// control. v1 is the walkTo solver on a FINE substrate (jta, whose instant()
+// maps to the fork's setInstantMode). Summary bots play real-time physics;
+// maze delegation is DEFERRED — its instant() drives the visualizer, while a
+// delegated walk is tracked through that same visualizer's per-tick change
+// stream, so wiring it means touching the two-position-tracker split.
+// ---------------------------------------------------------------------------
+
+// A solver substrate whose controller records the ORDER of instant/walkTo
+// calls. `fine` picks the capture shape: fine (a recorder, jta-shaped) vs
+// summary — the two sides of the honors-instant split, with an identical
+// controller so only the shape differs.
+function registerInstantOrderedSubstrate({ fine, regions = ['A'] }) {
+  try { centralRegistry.publicFunctions.get('procgenPlayer')?.delete('getRegionInfo'); } catch { /* ignore */ }
+  try { centralRegistry.publicFunctions.get('procgenPlayer')?.delete('getWarehouse'); } catch { /* ignore */ }
+  try { substrateRegistry.clear?.(); } catch { /* ignore */ }
+  const handles = { calls: [], stash: null };
+  const id = fine ? 'inst_fine_sub' : 'inst_sum_sub';
+  substrateRegistry.register?.({
+    id,
+    label: 'InstantOrdered',
+    panelComponentType: 'ioPanel',
+    loadRegionEvent: 'io:loadRegion',
+    loopSupport: {
+      queueActions: ['regionMove', 'locationCheck'],
+      executeVia: 'solver',
+      manual: true, customQueues: false,
+      record: true, playback: true, instant: true,
+      ...(fine ? {} : { summaryRecording: true }),
+    },
+    ...(fine
+      ? { takeLastRecording: () => { const s = handles.stash; handles.stash = null; return s; } }
+      : {}),
+    getPlaybackController: () => ({
+      instant: () => { handles.calls.push('instant'); },
+      walkTo: () => { handles.calls.push('walkTo'); return true; },
+      stop: () => {},
+    }),
+  });
+  centralRegistry.registerPublicFunction('procgenPlayer', 'getRegionInfo', (region) => (
+    regions.includes(region) ? { substrate: id, label: 'InstantOrdered', manaEnabled: true } : null
+  ));
+  return handles;
+}
+const registerInstantOrderedFineSolverSubstrate = () => registerInstantOrderedSubstrate({ fine: true });
+const registerInstantOrderedSummarySubstrate = () => registerInstantOrderedSubstrate({ fine: false });
+
+describe('M6 — Bot × Instant is offered per CAPABILITY', () => {
+  let loopState;
+  beforeEach(() => {
+    resetSavedQueueStore();
+    clearRulesHashCache();
+    ({ loopState } = wire());
+  });
+
+  it('YES for the walkTo solver on a fine substrate (jta)', () => {
+    registerFineSolverSubstrate();
+    expect(loopState.regionBotHonorsInstant('A')).toBe(true);
+  });
+
+  it('NO for summary bots — real-time physics, no instant variant exists', () => {
+    // `instant` IS declared on these (the focus-suppression seam), so this
+    // must not be inferred from the declaration alone.
+    registerSummarySubstrate();
+    expect(loopState._regionSupportsInstant('A')).toBe(true);
+    expect(loopState.regionBotHonorsInstant('A')).toBe(false);
+  });
+
+  it('NO for maze delegation (deferred — the visualizer/panel-engine split)', () => {
+    registerDelegationSubstrate();
+    expect(loopState.regionSolver('A')).toBe('delegation');
+    expect(loopState.regionBotHonorsInstant('A')).toBe(false);
+  });
+
+  it('NO where the substrate never declared instant at all', () => {
+    registerCoarseSubstrate();
+    expect(loopState.regionBotHonorsInstant('A')).toBe(false);
+    expect(loopState.regionBotHonorsInstant('APNative')).toBe(false);
+  });
+});
+
+describe('M6 — Bot × Instant, the effect', () => {
+  let loopState, gs, tick;
+
+  function setUp(register) {
+    ({ loopState, gs } = wire());
+    tick = makeTicker();
+    const handles = register();
+    loopState._cachedRulesData = RULES_DATA;
+    gs.updatePath('A', 'go', 'Menu');
+    gs.addLocationCheck('Loc1', 'A');
+    gs.updatePath('B', 'exit', 'A');
+    loopState.setBlockMode('A', 1, 'bot');
+    loopState.currentActionIndex = 1;
+    loopState.currentAction = loopState.getActionQueue()[1];
+    loopState.isProcessing = true;
+    return handles;
+  }
+
+  beforeEach(() => {
+    resetSavedQueueStore();
+    clearRulesHashCache();
+  });
+
+  it('an Instant Bot block sets instant mode BEFORE dispatching the walk', () => {
+    // Order matters: instant is a MODE the substrate reads as the walk runs,
+    // not an argument to walkTo.
+    const handles = setUp(registerInstantOrderedFineSolverSubstrate);
+    loopState.setBlockInstant('A', 1, true);
+    tick(loopState);
+    expect(handles.calls).toEqual(['instant', 'walkTo']);
+  });
+
+  it('a non-Instant Bot block never touches instant mode', () => {
+    const handles = setUp(registerInstantOrderedFineSolverSubstrate);
+    tick(loopState);
+    expect(handles.calls).toEqual(['walkTo']);
+  });
+
+  it('a stored Instant flag does NOT reach a solver that cannot honor it', () => {
+    // The checkbox is hidden for summary bots, but the flag is per BLOCK and
+    // survives a mode switch — a block toggled Instant under Playback and
+    // then switched to Bot must not half-apply it.
+    const handles = setUp(registerInstantOrderedSummarySubstrate);
+    loopState.setBlockInstant('A', 1, true);
+    tick(loopState);
+    expect(handles.calls).toEqual(['walkTo']);
+  });
+});

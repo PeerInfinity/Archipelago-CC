@@ -575,12 +575,21 @@ export class LoopBlockBuilder {
     // does not exist, so the checkbox would be a control with no off state.
     // `instant` stays DECLARED on those substrates for the focus-
     // suppression seam (isFocusLocked while a block runs).
-    if (offers.offersInstant && selected === 'playback' && playable.shape !== 'summary') {
+    //
+    // M6: for a BOT block the checkbox appears only where the SOLVER honors
+    // it (loopState.regionBotHonorsInstant — v1: the walkTo solver on a fine
+    // substrate, i.e. jta). Summary bots play real-time physics with no
+    // instant variant, and maze delegation is deferred; offering the box
+    // there would be a control that does nothing.
+    const instantApplies = selected === 'bot'
+      ? !!loopState.regionBotHonorsInstant?.(regionName)
+      : (selected === 'playback' && playable.shape !== 'summary');
+    if (offers.offersInstant && instantApplies) {
       const instLabel = document.createElement('label');
       instLabel.className = 'block-instant-label';
       instLabel.title =
         'Run this block headlessly in a single frame instead of animating it — '
-        + 'no substrate panel activation while it runs. Applies to Playback (and Bot).';
+        + 'no substrate panel activation while it runs. Applies to Playback and Bot.';
       Object.assign(instLabel.style, {
         display: 'flex', alignItems: 'center', gap: '3px', marginLeft: '6px',
       });
