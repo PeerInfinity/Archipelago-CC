@@ -53,6 +53,14 @@ const TEST_LEVEL = {
 const currentRegion = () => getGameStateSingleton()?.getCurrentRegion?.() ?? null;
 const currentMana = () => getGameStateSingleton()?.getCurrentMana?.() ?? 0;
 
+/** True if the snapshot lists `name` among its checked locations. */
+function snapshotHasLocation(snapshot, name) {
+    const checked = snapshot?.checkedLocations;
+    if (Array.isArray(checked)) return checked.includes(name);
+    if (checked && typeof checked === 'object') return !!checked[name];
+    return false;
+}
+
 function runnerIframe() {
     return document.querySelector('iframe[src*="runnerDemo/game/index.html"]');
 }
@@ -439,6 +447,234 @@ registerTest({
                + 'refire the check and cross the departure with fromLoop — while the '
                + 'game replays nothing (walkTo never called).',
     testFunction: summaryRecordThenInstantPlayback,
+    category: 'Runner block modes',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+// ─── The Bot leg (M6) ─────────────────────────────────────────────
+//
+// Replaces scripts/procgen/verify-bounce-loop-mode.mjs, which was deleted in
+// M6 slice 5: its premise (auto walkTo from the queue with no mode system)
+// is obsolete, and it rotted red for months because nothing gate-ran it.
+// This is its contract, moved into the gate-run substrate suite.
+//
+// A BOT block on a runner region hands the queued regionMove to the walkTo
+// solver; the auto-runner plays the level on real physics and crosses the
+// exit. The point of the test is the ECONOMY: a summary Bot is priced by
+// TIME (M6 ruling 3), so the pool falls by the per-second drain for as long
+// as the bot plays, and NOT by the per-action defaults (50 a move / 100 a
+// check) — with region XP rising 1:1 with the drain.
+
+async function summaryBotBlockDrainsWhileDriving(testController) {
+    if (!await loadRunnerLoopWorld(testController)) {
+        return testController.getOverallResult();
+    }
+
+    await testController.pollForCondition(
+        () => loopStateSingleton.getRegionCaptureShape?.(currentRegion()) === 'summary',
+        'the player landed in a runner region',
+        10000, 200,
+    );
+    const region = currentRegion();
+    testController.log(`start region: ${region}`);
+    const shape = loopStateSingleton.getRegionCaptureShape?.(region);
+    testController.assertEqual(
+        'the start region is a SUMMARY substrate region', 'summary', shape);
+    if (shape !== 'summary') return testController.getOverallResult();
+
+    // A summary substrate plays real-time physics — no instant variant — so
+    // the Bot Instant checkbox is deliberately withheld. Assert that here:
+    // it is the other half of ruling 4 (jta YES, summary NO), and the
+    // runner in-app context is where "NO" is real.
+    testController.assertEqual(
+        'a summary Bot does NOT offer Instant (ruling 4)',
+        false, loopStateSingleton.regionBotHonorsInstant?.(region) ?? false);
+
+    const picked = pickTargets(testController, region);
+    testController.assertEqual('a location and an exit were resolvable', true, !!picked);
+    if (!picked) return testController.getOverallResult();
+    const { location, exitId, target } = picked;
+    testController.log(`mapping pickup 'obj_alpha' → '${location}'; portal → '${exitId}' → '${target}'`);
+
+    if (!await mountRunner(testController, region)) return testController.getOverallResult();
+
+    const gs = getGameStateSingleton();
+    const savedNoReset = gs.noManaDepletionReset;
+    let restoreWalkTo = () => {};
+    let unsubMana = () => {};
+    try {
+        // Keep a depletion reset from cutting the walk short: this leg is
+        // about the per-second economy, and a flat strip drains only a few
+        // mana anyway (so the walk does NOT span a pool — the queue-restart
+        // retry stays slice-3's unit-pinned path; see the closing report).
+        gs.noManaDepletionReset = true;
+
+        // Liveness-proven walkTo watcher, wrapped BEFORE the block engages so
+        // it cannot miss the dispatch. THROW-equivalent: assert the seam is
+        // real first, so a zero count below means "the bot did not drive",
+        // never "the API vanished".
+        const controller = substrateRegistry.get('runner')?.getPlaybackController?.();
+        const canWatchWalkTo = !!controller && typeof controller.walkTo === 'function';
+        testController.assertEqual(
+            'the runner playback controller exposes walkTo (the watcher is live)',
+            true, canWatchWalkTo);
+        if (!canWatchWalkTo) return testController.getOverallResult();
+        const walkToCalls = [];
+        const origWalkTo = controller.walkTo;
+        controller.walkTo = (...args) => { walkToCalls.push(args); return origWalkTo.apply(controller, args); };
+        restoreWalkTo = () => { controller.walkTo = origWalkTo; };
+
+        // Sample the pool from EVENTS, never a poller: a summary Bot's drain
+        // is deducted a tick at a time, and (finding from the jta leg) under
+        // any reset a poller can miss values a synchronous refill restores.
+        // Each per-action default (50/100) would show here as one large
+        // delta; the drain shows as a stream of small ones.
+        const manaDeltas = [];
+        let lastMana = null;
+        const onMana = () => {
+            const now = currentMana();
+            if (lastMana !== null) manaDeltas.push(lastMana - now); // positive = spent
+            lastMana = now;
+        };
+
+        // ── Author the block and engage the BOT solver ─────────────
+        gs.updatePath(target, exitId, region);
+        const block = resolveBlockFor(region);
+        testController.assertEqual(`resolved a queue block for ${region}`, true, !!block);
+        if (!block) return testController.getOverallResult();
+        loopStateSingleton.setBlockMode(region, block.instance, 'bot');
+
+        gs.refillMana();
+        lastMana = currentMana();
+        testController.eventBus.subscribe('gameState:manaChanged', onMana);
+        unsubMana = () => testController.eventBus.unsubscribe?.('gameState:manaChanged', onMana);
+
+        loopStateSingleton.startProcessing();
+        const engaged = await testController.pollForCondition(
+            () => loopStateSingleton._botExecutedAction !== null,
+            'the Bot block engaged the walkTo solver',
+            15000, 100,
+        );
+        testController.reportCondition('the Bot block engaged the walkTo solver', !!engaged);
+        if (!engaged) return testController.getOverallResult();
+        const manaAtEngage = currentMana();
+
+        // The Bot branch dispatched the walk toward the queued exit...
+        testController.assertEqual('loops dispatched walkTo', true, walkToCalls.length >= 1);
+        testController.assertEqual('walkTo targeted the queued exit', 'exit',
+            walkToCalls[0]?.[0]?.kind);
+        // ...and a bot is NOT live play (its events pass the gate on the
+        // queueExecution exemption). Paired with the positive drain below so
+        // this null is not vacuous.
+        testController.assertEqual(
+            'livePlayRegion is null while the solver drives (a bot is not live play)',
+            null, loopStateSingleton.livePlayRegion());
+
+        // ── Configure the flat level and let the runner play it ────
+        // AFTER engage: the region load on entry would have overwritten a
+        // level set earlier (the record leg's lesson).
+        testController.eventBus.publish('runner:loadRegion', {
+            region_id: region,
+            world: {
+                gameId: 'runnerDemo',
+                params: { runnerLevel: TEST_LEVEL, sidePortals: { E: 'exit_main' } },
+                ap_locations: { obj_alpha: location },
+                exits: [{ side: 'E', exitName: exitId, targetRegion: target }],
+            },
+        });
+        const configured = await testController.pollForCondition(
+            () => runnerIframe()?.contentWindow?.__runnerDebug?.()?.levelId === TEST_LEVEL.id,
+            'the flat test level configured into the runner iframe',
+            10000, 300,
+        );
+        testController.reportCondition('the flat test level configured into the runner iframe', !!configured);
+        if (!configured) return testController.getOverallResult();
+
+        // The auto-runner plays the block and crosses its exit — real
+        // physics, driven by the bot, through the real dispatcher.
+        const crossed = await testController.pollForCondition(
+            () => currentRegion() === target,
+            `the bot crossed '${exitId}' into '${target}'`,
+            25000, 200,
+        );
+        testController.assertEqual(
+            'the bot played the block and crossed its exit on real physics',
+            true, !!crossed);
+        if (!crossed) return testController.getOverallResult();
+        await testController.stateManager.pingWorker('after-bot', 3000);
+        unsubMana();
+
+        // ── The EFFECT: the check landed ───────────────────────────
+        const snapshot = testController.stateManager.getLatestStateSnapshot?.();
+        testController.assertEqual(
+            'the bot-driven pickup landed the AP location check',
+            true, snapshotHasLocation(snapshot, location));
+
+        // ── The ECONOMY: TIME-priced, not per-action ───────────────
+        const drained = manaAtEngage - currentMana();
+        const rate = loopStateSingleton.costDataManager?.getTimeDrainPerSecond?.(region) ?? 1;
+        const drainTicks = manaDeltas.filter(d => d > 0);
+        testController.log(`drained ${drained} over ${drainTicks.length} tick(s) at base rate ${rate}/s; `
+            + `deltas=[${manaDeltas.map(d => d.toFixed(2)).join(', ')}]`);
+
+        // The drain ran — the pool fell while the bot drove. (Pairs with the
+        // livePlayRegion-null assertion above: a bot drains without being
+        // live play.)
+        testController.assertEqual(
+            'the pool drained while the bot drove', true, drained > 0);
+        // TIME, not per-action: every deduction is a drain tick of at most
+        // the base rate (XP discounts it, never inflates it). A per-action
+        // default (50 a move / 100 a check) would be an order of magnitude
+        // larger — its absence is the summary-economy pin.
+        const biggest = drainTicks.length ? Math.max(...drainTicks) : 0;
+        testController.assertEqual(
+            `no per-action charge reached the bot (largest deduction ${biggest.toFixed(2)} ≤ rate ${rate})`,
+            true, biggest <= rate + 0.001);
+        // The completion charge for a summary Bot is explicit-only, and a
+        // time-priced region names none — so the total is the drain, nothing
+        // on top. drained == Σ ticks, within floating-point slack.
+        const summed = drainTicks.reduce((a, b) => a + b, 0);
+        testController.assertEqual(
+            'the total spend is exactly the drain (no flat completion charge on top)',
+            true, Math.abs(drained - summed) < 0.001);
+        // Region XP rose 1:1 with the drain — every loops spend awards it.
+        const xpNow = loopStateSingleton.getRegionXP(region).xp;
+        testController.log(`region XP after the walk: ${xpNow} (drained ${drained})`);
+        testController.assertEqual(
+            'region XP rose by the drained mana (1:1, the loops spend signature)',
+            true, Math.abs(xpNow - drained) < 0.001);
+
+        // Retry disposition (reported, per the slice plan): a flat strip
+        // drains only a few mana against a full pool, so this walk does NOT
+        // span a loop reset — runner's queue-restart retry (the bridge holds
+        // no pending walk, unlike jta) is not exercised here. It stays
+        // covered by slice 3's unit pins (the depletion-mid-bot reset +
+        // re-engage). Forcing a depletion would mean a level reload across
+        // the reset, which buys fragility for a path already pinned.
+        testController.log('RETRY DISPOSITION: walk did not span a pool (flat strip, ~few mana); '
+            + 'runner queue-restart retry stays unit-pinned (slice 3), not exercised in-app.');
+    } finally {
+        unsubMana();
+        restoreWalkTo();
+        gs.noManaDepletionReset = savedNoReset;
+        gs.setLoopModeActive(false);
+        loopStateSingleton.stopProcessing?.();
+    }
+
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'runner-bot-block-summary-economy',
+    name: 'Runner: a Bot block drives the level and is priced by TIME, not per-action',
+    description: 'Parks a BOT block on a runner region of a synthetic loop world and hands '
+               + 'the queued regionMove to the walkTo solver; the auto-runner plays the flat '
+               + 'level on real physics and crosses the exit. Asserts loops dispatched walkTo '
+               + '(liveness-proven), livePlayRegion is null while the bot drives, the pickup '
+               + 'landed its AP check, and the ECONOMY is the per-second drain (XP-scaled, '
+               + 'rising 1:1 with region XP) with NO per-action default charge on top. '
+               + 'Replaces the deleted verify-bounce-loop-mode.mjs.',
+    testFunction: summaryBotBlockDrainsWhileDriving,
     category: 'Runner block modes',
     enabled: false, // off by default — runs only in the test-substrates mode
 });

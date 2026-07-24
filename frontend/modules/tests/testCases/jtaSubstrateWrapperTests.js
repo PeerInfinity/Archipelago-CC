@@ -619,20 +619,6 @@ async function botWalkToExit(testController) {
         unparkBotBlock(park);
     }
 
-    // Regression (user-reported): synthetic exit-task ids must be
-    // STABLE across re-entries — the game's per-zone automation
-    // priorities reference task ids, so a player who prioritizes
-    // "Go East" must find the same id live next visit.
-    const reEnter = async (label) => {
-        moveToRegion(JTA_TEST_REGION, readCurrentRegion());
-        return eventually(
-            testController,
-            () => readCurrentRegion() === JTA_TEST_REGION
-                && getJtaIframe()?.contentWindow?.isGameLoopPaused?.() === false,
-            label,
-            10000,
-        );
-    };
     return testController.getOverallResult();
 }
 

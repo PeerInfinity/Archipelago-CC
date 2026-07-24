@@ -87,6 +87,12 @@
             "category": "Runner block modes"
         },
         {
+            "id": "runner-bot-block-summary-economy",
+            "enabled": true,
+            "category": "Runner block modes",
+            "_comment": "M6 slice 5c: the summary Bot economy leg. Replaces the deleted scripts/procgen/verify-bounce-loop-mode.mjs (whose premise — auto walkTo with no mode system — is obsolete, and which rotted red for months because nothing gate-ran it). A Bot block hands the queued regionMove to the walkTo solver; the auto-runner plays the flat level on real physics and the pool falls by the per-second TIME drain, not per-action defaults."
+        },
+        {
             "id": "jta-out-of-mana-loop-reset",
             "enabled": true,
             "category": "JtA substrate"
