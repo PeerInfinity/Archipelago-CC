@@ -142,6 +142,11 @@ let _expectedPool = null;
 // resets aren't reported back to the host.
 let _applyingHostReset = false;
 
+// True while _syncBudgetFromPool() is pinning the budget — a flush
+// publishes on the event bus, so this keeps a synchronously delivered
+// echo from re-entering the pin (see _syncBudgetFromPool).
+let _pinningBudget = false;
+
 // Clock + sampling
 let _clockWorker = null;           // Worker metronome (throttling-exempt)
 let _clockIntervalId = null;       // setInterval fallback
@@ -647,16 +652,22 @@ function _handleForeignAward(info) {
 // Mana mirroring
 // ────────────────────────────────────────────────────────────────
 
+/**
+ * Publish the budget movement since the last sample as a pool delta.
+ * Returns the delta actually published (0 when there was nothing to
+ * publish) so a caller that is about to pin can predict where the host
+ * pool lands once that delta arrives.
+ */
 function _samplePoolMirror() {
     const left = _manaLeft();
-    if (left === null) return;
+    if (left === null) return 0;
     if (_lastSampledManaLeft === null) {
         _lastSampledManaLeft = left;
-        return;
+        return 0;
     }
     const delta = left - _lastSampledManaLeft;   // negative = drain, positive = gain
     _lastSampledManaLeft = left;
-    if (delta === 0 || !_client || !_world?.manaEnabled) return;
+    if (delta === 0 || !_client || !_world?.manaEnabled) return 0;
     if (_expectedPool !== null) {
         // Predict the host pool after our delta lands. Drains clamp at
         // 0 (gameState reports depletion there); gains are unclamped —
@@ -670,21 +681,55 @@ function _samplePoolMirror() {
         resource: 'mana',
         amount: delta,
     });
+    return delta;
 }
 
 /**
  * Pin the game's remaining budget to the host pool (entry, loop reset,
  * external pool change). addMana is signed: timeNeeded += amount.
+ *
+ * `flushMirror` — sample the mirror BEFORE pinning. A pin re-baselines
+ * `_lastSampledManaLeft`, so any game-side budget change that has not
+ * been sampled yet would be erased (the session-67 re-pin clobber: a
+ * re-pin landing within one clock tick of an addMana restored the
+ * budget and the delta never reached the pool). Flushing publishes that
+ * pending delta first, and the pin then targets the pool value the host
+ * will hold once the delta lands — not the pre-delta value it is
+ * reporting right now. ONLY the external-manaChanged call site flushes:
+ * at the entry / loop-reset pins the budget jump is the pin's own doing
+ * (or the reset's refill) and must NOT be mirrored back into the pool.
  */
-function _syncBudgetFromPool() {
+function _syncBudgetFromPool({ flushMirror = false } = {}) {
     const m = _managed();
     if (!m) return;
     const left = _manaLeft();
     if (left === null) return;
-    const adjust = _hostCurrentMana - left;
-    if (Math.abs(adjust) > POOL_EPSILON) m.addMana(adjust);
-    _lastSampledManaLeft = _manaLeft();
-    _expectedPool = _hostCurrentMana;
+    // Re-entrancy guard: the flush publishes on the event bus, and a
+    // synchronous transport would land the echo back in the
+    // manaChanged handler mid-pin. The outer pin owns the outcome.
+    if (_pinningBudget) return;
+    _pinningBudget = true;
+    try {
+        let target = _hostCurrentMana;
+        if (flushMirror) {
+            // Does not move `left` — it only publishes and re-baselines.
+            const pending = _samplePoolMirror();
+            if (pending !== 0) {
+                // Same clamp the mirror predicts with: drains bottom out
+                // at 0 (gameState reports depletion there), gains are
+                // unclamped (maxMana is the loop's STARTING mana).
+                target = pending < 0
+                    ? Math.max(0, target + pending)
+                    : target + pending;
+            }
+        }
+        const adjust = target - left;
+        if (Math.abs(adjust) > POOL_EPSILON) m.addMana(adjust);
+        _lastSampledManaLeft = _manaLeft();
+        _expectedPool = target;
+    } finally {
+        _pinningBudget = false;
+    }
 }
 
 /**
@@ -1046,7 +1091,9 @@ async function main() {
         if (isEcho) {
             _expectedPool = _hostCurrentMana;   // resync to the exact float
         } else {
-            _syncBudgetFromPool();
+            // Flush here and ONLY here: an external pool change must not
+            // swallow a game-side budget change we have not sampled yet.
+            _syncBudgetFromPool({ flushMirror: true });
         }
     });
 
