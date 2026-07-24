@@ -30,6 +30,29 @@
  *
  * Prereq: dev server on :8000 (python -m http.server 8000).
  * Run: node scripts/procgen/verify-bounce-loop-mode.mjs
+ *
+ * ⚠ DEFERRED TO M6 — RED, and red for two independent reasons (verified
+ * 2026-07-23 at parent commit 12c4ce900, BEFORE the loops M5 arc, so
+ * neither is a regression from it):
+ *
+ *   1. The `bounce_loop_worldgen` fixture preset is not in the repo. The
+ *      app falls back to the adventure preset and the run dies at the
+ *      first assertion ("cost data manager not loaded"), so nothing
+ *      below it — including the walkTo assertion — is even reached.
+ *      Regenerating it needs `dump-sphere-growth.js --enable-loop-mode`.
+ *   2. What it asserts is no longer the contract. It expects the loops
+ *      queue to drive bounce through the playback bot's `walkTo`. Since
+ *      M4 flipped `defaultBlockMode` to Record its blocks park instead,
+ *      and since M5 bounce is a SUMMARY substrate whose Playback applies
+ *      a recorded envelope — the walkTo/bot path is deliberately
+ *      unreachable from Playback until M6's Bot radio re-homes it.
+ *
+ * Restructuring it means regenerating the fixture AND rewriting it to the
+ * summary contract (Record park → live play → summary persisted → instant
+ * Playback re-crosses), at which point it largely duplicates the in-app
+ * `runner-summary-record-playback` leg. M6 should either rebuild it around
+ * the Bot radio — the contract it was actually written for — or delete it.
+ * Not in CI.
  */
 import { chromium } from 'playwright';
 

@@ -23,6 +23,8 @@ Four files deal with loop-mode mana costs and they are easy to conflate:
 - `frontend/modules/loopsCostDebugger/costPlanner.js` — a **debugger/verifier**, not a production generator. It simulates cost assignment step-by-step with a richer and *intentionally different* model (XP levels, per-loop mana budgets, explore/check phases), so its numbers do not match the generators'; it can also verify an existing sidecar against its formula.
 - `frontend/modules/loops/costDataManager.js` — not a generator at all: the runtime **store** (load/validate/serve) that both generators write into and the loop simulation reads from.
 
+A change to the *pricing vocabulary* has to land in **both** generators or it is a no-op where it matters. M5's summary time-pricing (`timeDrainPerSecond` instead of a `moveCost`) went into the live generator first; only the pure one actually stamps `loop_costs` into generated presets, so until it followed, every generated world still assigned a moveCost and location costs to runner/bounce regions — charging the time drain *and* the per-action costs on every visit, which is exactly what the ruling forbade. The live generator is the one almost nobody runs.
+
 ## procgenPlayer has no panel
 
 The module that recognizes a procgen `rules.json` and routes every region transition at play time — `frontend/modules/procgenPlayer/` — never appears in the layout. It is a headless coordinator: it builds the region warehouse from `preset_sidecars` and publishes each substrate's `loadRegion` event. If play-time routing misbehaves, look here first, not in the substrate panels.
@@ -46,6 +48,12 @@ The procgen host owns zone transitions, so the fork's `onFullyFinishTask` fires 
 ## `shared/` is a git submodule
 
 `frontend/modules/shared/` (home of the substrate registry, rng, procgen primitives) and `frontend/modules/textAdventureEngine/` are git submodules with their own history and remotes. `git log`/`git blame` from the outer repo won't see their commits — run git *inside* the submodule directory. Edits to files under these paths land in the submodule, not the outer repo; landing a change means committing inside the submodule, then bumping the submodule pointer in a separate outer-repo commit.
+
+## Generating a procgen world in-page can time out every iframe
+
+`arrangeShuffledSpiral` + `buildRulesJson` are convenient for building a synthetic loop-mode world inside an in-app test, but they run **synchronously on the main thread**, and the per-substrate level generators are not cheap. A 6-region *runner* spiral measured ~2 minutes of blocked main thread — long enough that the iframeAdapter declared every substrate bridge dead ("heartbeat timeout, disconnecting"), so the test that needed one of those bridges failed for a reason with no visible connection to its subject, and the whole Playwright suite blew its 5-minute budget.
+
+Cheap substrates (text adventure) are fine — `taswBlockModeTests` does exactly this. For an expensive one, load a **committed preset** instead and synthesize only the small piece you need (`runnerBlockModeTests` loads `runner_worldgen` and generates just the `loop_costs` sidecar with the pure generator, which is a fast pure function — and doubles as an end-to-end check of that generator).
 
 ## Related documentation
 

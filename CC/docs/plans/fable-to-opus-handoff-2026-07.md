@@ -191,8 +191,7 @@ jta Playback crossed the exit WITHOUT replaying — a bare teleport the
 unit tests (which stub the engine) could not see.** Kickoff open-qs
 ANSWERED (memory topic): customQueues stays deferred; record-clamp =
 'manual'; annotation resources = consumable items + XP
-tracked-not-displayed, mana DEFERRED. **NEXT: M5 (runner/bounce), then
-M6, then omsi arc D.** jta CLASSIFIED FINE-GRAINED
+tracked-not-displayed, mana DEFERRED. **NEXT: M6, then omsi arc D.** jta CLASSIFIED FINE-GRAINED
 (the fork performed-actions recorder is the stream; per-visit slice →
 shared-actionQueue vocabulary → `takeLastRecording`; replay via the
 jtaQueueEngine executor; fork stamps `zone_id` on item entries). Universal
@@ -207,7 +206,12 @@ recording-exists indicator; Playback DISABLED without playable content
 'record'). Declaring `record`+`playback` opts jta into the strict gate —
 restructure its free-travel flows/tests in the same arc (rulings detail:
 memory `project_loops_block_modes` M4 block); **M5** runner/bounce —
-**DESIGN RULED 2026-07-23 (Fable session 71); KICKOFF READY:** *(NewDocs)*
+**SHIPPED + PUSHED 2026-07-23 (session 72, Opus): `0e3a2751c` (1/n
+category plumbing), `15c5f206c` (2/n drain + explicit-only costs),
+`11e570812` (3/n summary Record), `2406ce422` (4/n instant-apply
+Playback), `8910cafdf` (5/n UI + in-app leg, gitlink bump to shared
+`be281ba` — user-approved), docs (6/n).** Design ruled 2026-07-23 (Fable
+session 71); kickoff *(NewDocs)*
 `NewDocs/plans/loops-m5-runner-bounce-opus-kickoff.md`. NOT coarse/fine — a
 NEW third **SUMMARY** capture category (user ruling, amends the M3b
 two-shape contract): recording = the visit's net result (duration +
@@ -219,14 +223,33 @@ live economy = a time drain (default 1 mana/s, per-region
 per-action costs charge only when EXPLICIT in loop_costs (no 50/100
 fallbacks; costGenerator must not double-charge); Record rewrites the
 interior to performed checks; bot walkTo untouched but Playback-unreachable
-(M6); requiresLoopMode NOT declared (not loop games). Gate opt-in fallout ≈
-NIL (verified by mechanism: no runner/bounce test or committed preset
-carries loop_costs); the one loop-mode artifact
-`verify-bounce-loop-mode.mjs` is expected ALREADY red at HEAD (M4
-record-default clamp parks bounce blocks Manual) — confirm with a
-parent-commit control, then restructure or defer. Runner/bounce are
+(M6); requiresLoopMode NOT declared (not loop games). Gate opt-in fallout was NIL as predicted
+(substrates 46/46 unchanged after the declarations). Runner/bounce are
 IDENTICAL across the whole loop surface (shared bridge/proxy) — one
-implementation, two declarations;
+implementation, two declarations.
+
+**AS-BUILT deltas from the kickoff (3, all worth knowing):** (a) the
+kickoff's costGenerator requirement had to land in **both** cost
+generators — only the PURE one (`shared/procgen/loopCostGenerator.js`,
+submodule) actually stamps `loop_costs` into generated presets, so
+without it "explicit-only per-action costs" was a no-op in every real
+world; that forced the one gitlink bump of the arc (asked + approved).
+(b) The in-app leg does NOT procgen its world: generating a 6-region
+runner spiral in-page blocks the main thread ~2 min and times out every
+iframe heartbeat, so `runner-summary-record-playback` loads the committed
+`runner_worldgen` preset and generates only the loop_costs sidecar (which
+doubles as end-to-end proof the generator time-prices summary regions);
+the flat test level is configured AFTER the block parks, because the
+queue's arrival move makes procgenPlayer re-publish `runner:loadRegion`.
+(c) `gameState:regionChanged` already carries `exitName` through from the
+originating `user:regionMove` — loops was just discarding it — so the
+recorded departure needed no new receiver.
+**DEFERRED TO M6:** `verify-bounce-loop-mode.mjs`. Parent-commit control
+run at `12c4ce900` confirms it was ALREADY red pre-M5, and for a reason
+the kickoff hadn't predicted: its `bounce_loop_worldgen` fixture is not
+in the repo at all, so it dies at the first assertion and never reaches
+the walkTo contract. Header note added; M6 should rebuild it around the
+Bot radio (the contract it was written for) or delete it;
 **M6** solver unification + rename + Bot radio. Omsi arc D re-queues AFTER
 this track (see §4); omsi Instant last of all.
 
@@ -1324,5 +1347,6 @@ P2-omsi automation follow-on: A+B DONE 2026-07-19 ──► shuffle-scope curves
 X1 maze tiles (kickoff ready, independent — grant bus live)
 Cavernous Stage 2 (hooks/managed) ──► v0 substrate ──► Stage F (pool + trigger ready)
 world-persistence P1–P4 (independent)
-block modes M1 ──► M2 ──► M3 ──► M4/M5 ──► M6 (solver rename) ──► omsi arc D ──► arc E/F; omsi instant LAST
+block modes M1 ──► M2 ──► M3 ──► M4 ──► M5 ──► M6 (solver rename) ──► omsi arc D ──► arc E/F; omsi instant LAST
+(M1–M5 all SHIPPED 2026-07-21/23; M6 is next)
 ```

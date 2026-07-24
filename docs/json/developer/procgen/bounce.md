@@ -94,6 +94,13 @@ Bounce rides `flashSubstrate`'s machinery as shared **code**, not shared instanc
 
 Loop mode: bounce regions queue `regionMove` and `locationCheck` actions with `executeVia: 'playbackBot'` — the loops queue parks while the bot plays the action, then charges its `loop_costs` value.
 
+**Loop mode: the SUMMARY capture category (M5, 2026-07-23).** Bounce is one of the two *summary* substrates — a third capture contract beside coarse-only and fine-grained. Its play is real-time and its action stream is not worth replaying, so **Record** captures the visit's net RESULT (duration in drain seconds, the checks performed, the actions that carried an explicit cost, the exit crossed) and **Playback** applies that envelope instantly: deduct the repriced mana, refire the checks, cross the departure. The game replays nothing and the player character stays where it is — that is the design of the category, not a bug.
+
+The economy is **time**: a per-second drain (`timeDrainPerSecond`, per region, default 1/s, XP-discounted like every other cost) is charged for every second the queue is parked on a Manual or Record block here, and per-action costs apply only where the `loop_costs` data names one explicitly. Playback prices at replay time (recorded seconds × the *current* rate), so region XP keeps mattering. The per-block Instant checkbox is hidden — summary playback is inherently instant.
+
+`executeVia: 'playbackBot'` stays declared but is **not reachable from Playback**: a summary block with no bound recording parks for live play instead. M6's Bot radio re-homes that path. Bounce does *not* declare `requiresLoopMode` — it is not a loop game. Full contract: [Loop Recording and Block Modes](./loop-recording.md#summary-substrates-m5-2026-07-23).
+
+
 ## CLI tools
 
 - `scripts/procgen/dump-bounce-level.js` — one generated level: platform geometry, physics config, compiled rules.

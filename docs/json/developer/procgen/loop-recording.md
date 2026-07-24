@@ -1,8 +1,8 @@
 # Loop Recording and Block Modes
 
-How loop mode captures what a player does in a region and plays it back: the per-block **mode system** (Manual / Record / Playback, with Bot planned), the per-block **Instant** toggle, the **saved-recording store**, the **capture contract** that decides whether the loops module or the substrate owns recording, the **queue annotations** describing what a recorded visit cost, and the **loop-mode interaction rules** (Record-gated capture, live-play drain, the strict action gate). Built across the M1–M4 sessions of the block-modes arc (2026-07-21/23); the capture contract and interaction rules were settled 2026-07-22 and implemented by the M3b coarse-capture refactor, and M4 (2026-07-23) added jta as the second fine-grained substrate plus the annotations layer.
+How loop mode captures what a player does in a region and plays it back: the per-block **mode system** (Manual / Record / Playback, with Bot planned), the per-block **Instant** toggle, the **saved-recording store**, the **capture contract** that decides whether the loops module or the substrate owns recording, the **queue annotations** describing what a recorded visit cost, and the **loop-mode interaction rules** (Record-gated capture, live-play drain, the strict action gate). Built across the M1–M5 sessions of the block-modes arc (2026-07-21/23); the capture contract and interaction rules were settled 2026-07-22 and implemented by the M3b coarse-capture refactor, M4 (2026-07-23) added jta as the second fine-grained substrate plus the annotations layer, and M5 (2026-07-23) added **summary** recording — a user-directed third capture category for runner and bounce, with the first live-play economy those substrates have had.
 
-Code lives in `frontend/modules/loops/` (`blockIdentity.js`, `savedQueueStore.js`, `blockAnnotations.js`, `loopModeExemptions.js`, the mode dispatch + gate + observation layer in `loopState.js`, the panel affordances in `loopBlockBuilder.js`) plus per-substrate recorders where the contract calls for them (`mazeRoomUI.js`'s visit recorder and the jta wrapper's per-visit slice of the fork's performed-actions log — the two fine-grained substrates; the text adventure has none, being the coarse-only reference).
+Code lives in `frontend/modules/loops/` (`blockIdentity.js`, `savedQueueStore.js`, `blockAnnotations.js`, `loopModeExemptions.js`, the mode dispatch + gate + observation layer in `loopState.js`, the panel affordances in `loopBlockBuilder.js`) plus per-substrate recorders where the contract calls for them (`mazeRoomUI.js`'s visit recorder and the jta wrapper's per-visit slice of the fork's performed-actions log — the two fine-grained substrates; the text adventure has none, being the coarse-only reference, and neither do runner and bounce, whose summary recordings are built entirely host-side).
 
 ## Block modes
 
@@ -28,7 +28,7 @@ Identity and resolution:
 
 `savedQueueStore.js` persists recordings in localStorage, bucketed by `(rulesHash, substrate, region)`. Each entry is a `SavedQueue`: the substrate-native `actions` array, `arrivalExitId` / `departureExitId`, the M4 `annotations` object, legacy mana metadata (`manaAtEntry` / `manaAtExit` / `manaMin`), and checked-location bookkeeping.
 
-Since M4 the store is the **universal recording+metadata envelope**, not a fine-grained-only store. A coarse-only substrate gets an **actions-less** entry under the same tag holding annotations alone — its recording is still the block interior, and coarse Playback still never reads actions from the store. `hasPlayableRecording(entry)` (actions present and non-empty) is the guard on every read, so an annotations envelope can never bind to a Playback block or count as "a recording exists". Two consequences worth knowing: the duplicate check compares `annotations` as well as actions (a coarse re-record always agrees on `actions: []` and a null departure, so without that its stale economy would survive forever), and `loopState.getBlockAnnotations()` — not the recording lookup — is what the panel reads, because coarse blocks have annotations but no playable recording.
+Since M4 the store is the **universal recording+metadata envelope**, not a fine-grained-only store. A coarse-only substrate gets an **actions-less** entry under the same tag holding annotations alone — its recording is still the block interior, and coarse Playback still never reads actions from the store. M5 added a second actions-less shape beside it: a **summary** entry, whose payload is the `summary` object. `hasPlayableRecording(entry)` (actions present and non-empty) is the guard on every read, so neither an annotations envelope nor a summary can bind to a fine-grained Playback block or count as "a recording exists"; `hasSummaryRecording(entry)` is the parallel guard for the summary category. Two consequences worth knowing: the duplicate check compares `annotations` and `summary` as well as actions (a coarse re-record always agrees on `actions: []` and a null departure, so without that its stale economy would survive forever), and `loopState.getBlockAnnotations()` — not the recording lookup — is what the panel reads, because coarse blocks have annotations but no playable recording.
 
 A recording is bound to a block by its **persistent recording tag `(arrivalKey, ordinal)`** — distinct from the transient mode-map key. `arrivalKey` is the exit the player arrived through (`'entrance'` for the start region); `ordinal` counts blocks sharing the same `(region, arrivalKey)` pattern. Loops derives the tag on *both* the save and lookup side (`assignRecordingTags` against the live procgenPlayer warehouse), so recorder-side id drift can't desynchronize them. Saving is **replace-on-tag** (re-recording a block replaces its recording; never appends a same-tag duplicate), other-tag entries are kept as FIFO history with a per-region cap, and recordings **survive block deletion** — recreating a matching block auto-restores its recording via tag lookup.
 
@@ -37,6 +37,8 @@ A recording is bound to a block by its **persistent recording tag `(arrivalKey, 
 **Coarse-only substrates** (text adventure): loops itself observes the parked live play — every gate-allowed `user:locationCheck` / `loop:exploreCompleted` in the parked region is charged and appended to a host-side capture buffer (`_liveCaptureBuffer`). On a successful exit the buffer is written into the block interior via the coarse replacement and the auto-switch applies. Nothing touches `savedQueueStore`.
 
 **Fine-grained substrates** (maze, jta) keep the M2 **sole-persister protocol**: the substrate's recorder never writes the store. It **stashes** its finalized full-visit capture in a pull-once slot, exposed on the registry entry as `takeLastRecording()`. `loopState` pulls the stash **only when a Record-mode block completes through its expected exit**, then persists it under the block's tag and applies the coarse replacement (the projection of the fine stream).
+
+**Summary substrates** (runner, bounce): loops observes the same live play as for a coarse substrate — the performed checks feed the capture buffer and the interior rewrite — and additionally counts the **drain ticks** charged during the park and the actions that carried an explicit cost. On a successful exit those become the `summary` object, written to the store under the block's tag. Unlike the coarse annotations envelope, a summary is written even when the visit moved no economy at all: the duration alone is a real recording. The departure comes from the exit the player actually crossed (`gameState:regionChanged` carries `exitName` through from the originating `user:regionMove`), falling back to the queued exit.
 
 Either way, **wrong exit, mana-out, or loop reset → the capture is discarded** — loops clears its buffer and never pulls the stash (the next visit overwrites it). Discard is race-free because there is no revoke step. Free-walk capture no longer exists: under the strict action gate a Record region cannot be played without the queue parking on it.
 
@@ -47,6 +49,8 @@ The **coarse replacement** (`_applyCoarseReplacement`) rewrites the block's queu
 **Coarse-only substrates**: no recording lookup at all — the generic executor runs the block's own interior, dispatching the same events live play produces (`loop:exploreCompleted`, `user:locationCheck` and `user:regionMove` with `fromLoop: true`). The per-block Instant flag drains it one action per frame.
 
 **Fine-grained substrates**: on entering a Playback block, loops looks up the bound recording by tag; if found it parks the queue and calls the substrate controller's `replayActions(actions, { departureExitId, instant })`. If none is bound the block parks for live play instead of falling through to the auto chain (M4). The substrate replays the fine interior, then crosses the recorded departure itself — recordings deliberately **exclude** the departing move (maze slices it out of the queue capture), so the substrate issues the closing `user:regionMove` from `departureExitId` and the parked block advances on the resulting wake, exactly like Manual.
+
+**Summary substrates**: loops looks up the bound summary by tag and applies it instantly — price the envelope at the current XP level, spend it, refire the recorded checks, dispatch the recorded departure. If none is bound the block parks for live play, joining the fine-grained rule above. The order is load-bearing: the mana is spent **first**, and the apply **aborts** if the park flag is gone, because spending can trip the depletion wake synchronously (refill + snap the queue to index 0) and the rest would then advance a block nobody paid for.
 
 Replay-emitted events must carry **`fromLoop: true`** — they are queue execution, exempt from the strict action gate, and `gameState` must not treat them as performed play. Both the maze and TA replay paths were bitten by missing flags once (the "double-append" fixes); treat it as a contract.
 
@@ -73,19 +77,20 @@ Rules, all settled with the user:
 
 A discarded recording (wrong exit / mana-out / reset) takes its annotations with it — the tracker is cleared alongside the capture.
 
-## The capture contract: coarse-only vs. fine-grained substrates
+## The capture contract: coarse-only vs. fine-grained vs. summary substrates
 
-Settled ruling (2026-07-22). Classify every substrate action:
+Settled ruling (2026-07-22), **extended 2026-07-23 with a third category** (M5, user-directed — see "Summary substrates" below). Classify every substrate action:
 
 - **Queue-grade**: player-meaningful, individually costed, worth a line in the block interior — `regionMove`, `locationCheck`, `explore`, and any future verb of the same weight ("pull lever", "talk to NPC"). The queue vocabulary is extensible here: `explore` is just a `customAction` entry, and the generic executor dispatches a generic event per action that interested modules consume.
 - **Sub-queue-grade**: finer than a queue entry — the maze's per-tile `move`/`wait` inputs, where many make up one meaningful step and none belongs in the block interior.
 
-The contract then has exactly two shapes (discriminated **by whether the registry entry supplies `takeLastRecording`** — no separate declaration):
+The contract then has three shapes. The first two are discriminated **by whether the registry entry supplies `takeLastRecording`** (no separate declaration); the third declares itself with `loopSupport.summaryRecording`. One resolver, `loopState._captureShapeFor()`, answers `'fine' | 'summary' | 'coarse'` for every branch site, so a category can never fall into another's behavior by omission (a real recorder wins if a substrate somehow declares both):
 
 | Substrate class | Capture | Replay | Live-play drain | Recorder? |
 |---|---|---|---|---|
 | **Coarse-only** — every action is queue-grade (text adventure) | Loops owns it: observed parked live actions are buffered and written into the block interior | The generic executor runs the block's entries | Loops charges each observed action's `loop_costs` value | **None** — no substrate recorder, no saved recordings |
 | **Fine-grained** — has sub-queue-grade actions (maze, jta) | One substrate recorder captures the **whole visit as a single interleaved stream**, coarse actions included | The substrate replays the fine stream (`replayActions`) | The substrate charges natively at its own granularity (maze: per tile, gated on loops' `livePlayRegion()`; jta: the fork's energy drain, mirrored into the pool by the bridge) | Yes — the coarse layer is a *projection*: loops filters the stream down to queue-grade entries for the interior |
+| **Summary** — real-time play with no meaningful action stream (runner, bounce) | Loops owns it: the visit's **net result** — duration in drain seconds, performed checks, explicitly-costed actions, departure exit | Loops applies the envelope **instantly**: deduct the repriced mana, refire the checks, cross the departure. The game replays nothing | Loops charges a **per-second time drain**, plus any action cost the data names explicitly | **None** — the recording is a result, not a script |
 
 **Recording vocabulary** differs between the two fine-grained substrates and that is deliberate. The maze is grandfathered on its native `move`/`wait` vocabulary. jta (M4) converts at capture time to the **shared `actionQueue` vocabulary** (`clickTask` with `loops` = reps, `useItem` with `loops` = count) and replays through the shipped `jtaQueueEngine` executor — the option that generalizes, so future loop-game substrates (Idle Loops, Cavernous) speak the same dialect. Converging the maze is optional and was explicitly not done in M4.
 
@@ -93,6 +98,30 @@ Two rules fall out, and both exist to prevent real bug classes:
 
 1. **Never two concurrent capture channels for one visit.** A "hybrid" where loops records the basic actions while the substrate separately records new ones has no shared clock to reconstruct interleaving from ("pull lever, *then* walk through the door") — the same two-writers problem behind the double-append fixes.
 2. **Once a visit contains any fine action, the whole visit replays through the substrate.** Coarse entries can't go to the generic timer while fine ones go to the bridge mid-visit — ordering again.
+
+### Summary substrates (M5, 2026-07-23)
+
+Runner and bounce are neither coarse nor fine, and forcing them into either shape loses the thing that actually happened. Their play is *real-time*: an auto-runner holding right for four seconds produces no action stream worth replaying, and its queue-grade actions (the pickups it ran over, the portal it left by) are the *outcome*, not the recipe. So the user ruled a third category rather than a hybrid.
+
+**Record** captures the visit's net result and stores it under the same `(region, arrivalKey, ordinal)` tag every other category uses, in the same universal envelope:
+
+```
+{ actions: [], annotations, departureExitId,
+  summary: { durationSeconds, checks: [...], costedActions: [...] } }
+```
+
+`actions` is empty by design, so `hasPlayableRecording()` stays false — a summary must never bind to a fine-grained replay. `hasSummaryRecording()` is its parallel guard, and the entry's required field is `durationSeconds`, because that is what replay pricing multiplies. The block interior is still rewritten to the performed checks (queue readability, consistent with the maze/TA UX), but the interior is a *projection*: Playback ignores it and applies the envelope.
+
+**The economy is TIME.** A per-second drain (`timeDrainPerSecond`, per region, default 1/s) is charged for every second the queue is parked on a summary substrate's Manual or Record block — the tick self-gates on `livePlayRegion()`, so idle, replaying, paused and hard-paused all cost nothing. Per-action costs apply **only where the loop_costs data names one explicitly**: the 50/100 fallbacks (and the sidecar-level `defaultRegionCost` / `defaultLocationCost` behind them) must never reach a summary action, or every visit is charged twice. Both cost generators cooperate — they emit `timeDrainPerSecond` for a summary region and leave its `moveCost` and its locations unset.
+
+**Playback prices at replay time**, not at record time: recorded seconds × the region's *current* XP-discounted rate, plus the current price of each explicitly-costed recorded action. Storing seconds rather than a frozen mana number is what keeps region-XP growth meaningful for replays, and it matches how the generic executor prices a coarse replay.
+
+Two consequences worth internalizing:
+
+- **The game does not participate in Playback.** The player character stays wherever it is; loops refires the checks and dispatches the departure itself (both `fromLoop`). That is the design of the category, not a bug — a summary is a result, and a result can be applied without re-simulating anything.
+- **The per-block Instant checkbox is hidden** for summary blocks: their Playback is inherently instant and a paced variant does not exist. `instant` stays *declared* on those substrates for the focus-suppression seam.
+
+Runner and bounce do **not** declare `requiresLoopMode`. They are not loop games — no native "resource out → restart the run" economy exists (a runner death is a free in-iframe respawn) — so jta's loop-game contract flag would be cargo-cult.
 
 Adding a queue-grade verb to a coarse-only substrate means extending the queue vocabulary (declare it in `loopSupport.queueActions`, cost it in `loop_costs`, teach the generic executor its dispatch) — not adding a recorder. A coarse-only substrate that later gains a genuinely sub-queue-grade action migrates wholesale to the fine-grained shape: flip the capability declaration and implement a maze-shaped full-visit recorder.
 
@@ -125,6 +154,8 @@ Enforcement is one guard rail at the single decision point `eventCoordinator._ha
 - **`loopState:queueUpdated` payloads must carry `{ queue }`** — `eventCoordinator._updateRegionsInQueue` iterates it; an empty `{}` throws.
 - **A blocked substrate action may leave the substrate's own UI slightly ahead** — e.g. the TA engine prints its flavor message before the host swallows the check, and a maze player can still walk interior tiles (tile moves emit no host events; only their coarse effects are gated). The host state is authoritative; a visual blocked-state overlay is a possible later affordance.
 - **A fine-grained replay needs its executor MODULE loaded.** jta's replay runs through `jtaQueueEngine`, which was `enabled: false` in `modules.json` until 2026-07-23 — so `getEngine()` returned null and the replay path fell through to "cross the recorded exit anyway", turning Playback into a bare teleport that looked identical to a working replay from the queue's side. Unit tests stub the engine and cannot see this. The fallback now logs loudly; if you add a substrate whose replay depends on another module, enable it in every module config the substrate runs in and assert the replay's *effects*, not just its outcome.
+- **A summary apply must spend BEFORE it acts, and check that it still can.** Same wake, sharper edge: `_handleSummaryApplyEntry` deducts first and returns if `_manualActionEntered` was cleared, because a depletion reset between the deduction and the departure would refire checks and cross an exit into a freshly reset loop.
+- **An actions-less entry needs its payload in the duplicate check.** Coarse entries agree on `actions: []` and a null departure; summary entries agree on `actions: []` too. Both would therefore read as duplicates of their own stale predecessors, so `isDuplicate` compares `annotations` *and* `summary`. Any future actions-less category must join that comparison — for a summary the stale field is the recorded duration, which is exactly what Playback prices off.
 - **Live-play depletion is owned by the mana wake.** Charging fires `gameState:manaChanged` synchronously; `_handleManualWake_mana` runs the loop reset (refill + discard) before the charging call site regains control — so substrate-side "depleted" checks read the refilled pool and must not fire a second reset. Don't add depletion handling to a charging path without checking the wake.
 
 ## Related documentation
@@ -134,3 +165,4 @@ Enforcement is one guard rail at the single decision point `eventCoordinator._ha
 - [Maze Substrate](./maze.md) — the reference fine-grained recording substrate
 - [JtA Substrate](./jta.md) — the second fine-grained substrate; shared-vocabulary recordings and `requiresLoopMode`
 - [Text Adventure Substrate](./text-adventure.md) — the reference coarse-only substrate
+- [Runner Substrate](./runner.md) / [Bounce Substrate](./bounce.md) — the two summary substrates
