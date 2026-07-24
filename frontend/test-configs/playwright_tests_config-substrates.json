@@ -108,9 +108,15 @@
         },
         {
             "id": "jta-bot-walkto-exit",
-            "enabled": false,
-            "_comment": "KNOWN-DEFERRED to M6 (Bot radio). Drives the PlaybackController walkTo/executeVia auto chain and relies on the loop-reset teleport to compound skills across attempts — a path M4's fine-grained Playback makes deliberately unreachable until M6 revives it as the Bot path (the walkTo machinery stays). Under the M3b strict gate the jta loop_costs preset auto-enables loop mode and this test's direct walkTo/regionMoves have no parked block, so the gate blocks them. Restructure when M6 lands. See CC/docs/plans/loops-m4-status-and-standalone-jta-investigation.md.",
+            "enabled": true,
+            "_comment": "M6: restructured onto the Bot radio and re-enabled. It no longer calls walkTo directly with a hand-rolled reset-retry loop — it parks a BOT block and lets the real queue machinery drive, so the gate exemption, the multi-reset walk, and the fine-substrate economy are under test rather than emulated. The former leg 2 (synthetic exit-task id stability) is now jta-synthetic-exit-task-id-stability.",
             "category": "JtA substrate"
+        },
+        {
+            "id": "jta-synthetic-exit-task-id-stability",
+            "enabled": false,
+            "category": "JtA substrate",
+            "_comment": "KNOWN-RED, cause DIAGNOSED (M6 slice 5) — not a Bot-radio issue; split out of jta-bot-walkto-exit, whose leg 1 is green and stable. Its precondition is a zone marked completed-THIS-LOOP, which is what makes the bridge inject the synthetic exit tasks under test. bridge.js loadRegion calls _applyCatchUpResets() BEFORE reading `const completed = _completedThisLoop.has(regionId)`, and a catch-up reset publishes gameState:loopReset, whose subscriber CLEARS that set — so any re-entry carrying an unapplied host-reset delta loads the zone un-completed and injects nothing. Observed flaky exactly on that delta: green after an 8-reset walk, red after a 2-reset one. Fixing it means reordering the bridge read against the catch-up, which is jta bridge work, not loops work."
         },
         {
             "id": "jta-starting-energy-bonus-raises-pool",
