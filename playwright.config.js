@@ -73,8 +73,16 @@ export default defineConfig({
   //   },
   // ],
 
-  /* Folder for test artifacts such as screenshots, videos, traces, etc. */
-  // outputDir: 'test-results/',
+  /* Folder for test artifacts such as screenshots, videos, traces, etc.
+   * Playwright CLEARS this directory at the start of every run. It must
+   * therefore NOT be the bare `test-results/`, because the in-app suite
+   * writes its per-run JSON to `test-results/in-app-tests/` — with the
+   * default, every run wiped the previous runs' results and left only
+   * the newest, so run-to-run comparison was impossible (documented as
+   * known issue #9 in CC/cloud-environment-issues.md). Scoping the
+   * cleanup to a subdirectory keeps Playwright's own artifact hygiene
+   * while leaving sibling directories alone. */
+  outputDir: 'test-results/playwright',
 
   /* Run your local dev server before starting the tests */
   webServer: {

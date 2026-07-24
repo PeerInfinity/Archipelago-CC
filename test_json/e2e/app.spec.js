@@ -39,12 +39,21 @@ test.describe('Application End-to-End Tests', () => {
   test('run in-app tests and check results', async ({ page }) => {
     // Listen for console logs from the page and relay them to Playwright's output
     page.on('console', (msg) => {
+      const text = msg.text();
+      // The in-app runner's per-case heartbeat (testLogic.js). Relayed
+      // bare, so a run in flight can be read at a glance — without it
+      // the only per-case signal in the log is buried in thousands of
+      // browser lines, and a finished run looks exactly like a hung one.
+      if (text.startsWith('[PROGRESS ')) {
+        console.log(text);
+        return;
+      }
       // Filter out less relevant DevTools message if needed, but for now, log most things
       // if (msg.type() !== 'verbose') { // Example: ignore 'verbose' if too noisy
       //     console.log(`BROWSER LOG (${msg.type()}): ${msg.text()}`);
       // }
       // For debugging, let's log everything from the browser console
-      console.log(`BROWSER LOG (${msg.type()}): ${msg.text()}`);
+      console.log(`BROWSER LOG (${msg.type()}): ${text}`);
     });
 
     console.log(`PW DEBUG: Navigating to application with parameters:`);
@@ -192,8 +201,42 @@ test.describe('Application End-to-End Tests', () => {
 
       fs.writeFileSync(outputFile, JSON.stringify(results, null, 2));
       console.log(`PW DEBUG: Test results saved to: ${outputFile}`);
+
+      // These files now survive across runs (see outputDir in
+      // playwright.config.js), so keep the directory bounded.
+      const KEEP_RUNS = 30;
+      const stale = fs.readdirSync(outputDir)
+        .filter((f) => f.startsWith('test-results-') && f.endsWith('.json'))
+        .sort()                      // ISO timestamps sort chronologically
+        .slice(0, -KEEP_RUNS);
+      for (const f of stale) fs.unlinkSync(path.join(outputDir, f));
+      if (stale.length > 0) {
+        console.log(`PW DEBUG: Pruned ${stale.length} result file(s) older than the last ${KEEP_RUNS} runs.`);
+      }
     } catch (error) {
       console.error('PW DEBUG: Failed to save test results to file:', error);
+    }
+
+    // Failure summary. Printed BEFORE the assertions below, which throw
+    // on the first failure: without this, a red run reports only
+    // Playwright's own "1 failed" and the actual in-app leg — and the
+    // condition it died on — is visible only by digging through the
+    // saved JSON.
+    const failedTests = (results.testDetails || []).filter((t) => t.status === 'failed');
+    if (failedTests.length > 0) {
+      console.log(`\nPW DEBUG: ===== ${failedTests.length} IN-APP TEST(S) FAILED =====`);
+      for (const t of failedTests) {
+        const secs = t.durationMs != null ? ` after ${(t.durationMs / 1000).toFixed(1)}s` : '';
+        console.log(`  FAILED: ${t.id}${secs}`);
+        const failedConditions = (t.conditions || []).filter((c) => c.status === 'failed');
+        for (const c of failedConditions) {
+          console.log(`    condition: ${c.description}`);
+        }
+        if (failedConditions.length === 0) {
+          console.log('    (no failed condition recorded — the test died before asserting)');
+        }
+      }
+      console.log('PW DEBUG: =========================================\n');
     }
 
     // The test system should complete successfully regardless of whether tests run

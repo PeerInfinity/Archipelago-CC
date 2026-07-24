@@ -139,7 +139,18 @@ python scripts/test/test-all-templates.py --include-list "Game1.yaml" "Game2.yam
 
 **Output:**
 - `playwright-report.json` (project root)
-- `test-results/in-app-tests/test-results-[TIMESTAMP].json`
+- `test-results/in-app-tests/test-results-[TIMESTAMP].json` — kept for the last
+  30 runs (Playwright's own cleanup is scoped to `test-results/playwright/`), so
+  runs can be compared against each other
+
+### Reading a run
+Any `npm test` mode emits one line per in-app test as it finishes:
+```
+grep '^\[PROGRESS' <logfile>     # [PROGRESS 24/50] omsi-out-of-mana-loop-reset PASSED 1.5s
+```
+Use it to tell a run in flight from a stalled one. A red run prints an
+`IN-APP TEST(S) FAILED` block naming each failing test and the condition it died
+on, before Playwright's own output.
 
 ### Configure Spoiler Settings
 ```

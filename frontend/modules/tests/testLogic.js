@@ -37,6 +37,28 @@ function setLoadedStateApplied(value) {
   loadedStateApplied = value;
 }
 
+/**
+ * Per-case progress heartbeat for a full run.
+ *
+ * Deliberately `console.log` rather than the universal logger: the
+ * logger's level filtering drops these in the Playwright modes, which
+ * is exactly where they are needed — with no per-case line in the
+ * output, a run in flight is indistinguishable from a hung one, and the
+ * only other per-case signal ("Test completion signal: PASSED") carries
+ * neither the test id nor a duration. app.spec.js relays the
+ * `[PROGRESS ` prefix verbatim.
+ */
+function logTestProgress(index, total, testId) {
+  const finished = TestState.getTests().find((t) => t.id === testId);
+  const status = (finished?.status || 'unknown').toUpperCase();
+  let elapsed = '';
+  if (finished?.startTime && finished?.endTime) {
+    const ms = new Date(finished.endTime) - new Date(finished.startTime);
+    elapsed = ` ${(ms / 1000).toFixed(1)}s`;
+  }
+  console.log(`[PROGRESS ${index}/${total}] ${testId} ${status}${elapsed}`);
+}
+
 // Initialize test discovery
 async function initializeTestDiscovery() {
   if (discoveryInitialized) {
@@ -871,7 +893,9 @@ export const testLogic = {
         testCount: enabledTests.length,
       });
 
+    let progressIndex = 0;
     for (const test of enabledTests) {
+      progressIndex += 1;
       log('info', `[TestLogic] Starting test: ${test.name} (${test.id})`);
 
       // Set up completion listener BEFORE starting the test to avoid race condition
@@ -895,6 +919,7 @@ export const testLogic = {
       await testCompletionPromise;
 
       log('info', `[TestLogic] Completed test: ${test.name} (${test.id})`);
+      logTestProgress(progressIndex, enabledTests.length, test.id);
     }
 
     // Emit summary event
