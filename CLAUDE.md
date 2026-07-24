@@ -152,6 +152,29 @@ Use it to tell a run in flight from a stalled one. A red run prints an
 `IN-APP TEST(S) FAILED` block naming each failing test and the condition it died
 on, before Playwright's own output.
 
+A poll that times out reports why, so a red run does not need a rerun to
+attribute:
+- `STUCK` — the poll ran its expected iterations; the condition really never
+  became true. **This one is a real defect.**
+- `STARVED` — the page did not get scheduled (app work on the main thread, or
+  machine load). Re-run solo before believing it.
+- `CHECK-BOUND` — the condition function itself ate the poll budget; fix the
+  check, not the code under test.
+
+### Comparing two runs
+```
+node scripts/test/compare-runs.js            # newest two runs
+node scripts/test/compare-runs.js --list     # what is on disk
+node scripts/test/compare-runs.js <prev> <curr>
+```
+Prints new failures (with the condition), fixed tests, roster changes, and
+duration outliers; exits 1 when the current run has failures the previous did
+not. This is the fast answer to "is this red mine?" — it replaces stashing the
+change and running a control. The default baseline is the newest earlier run of
+the **same mode** (results carry the mode that produced them); comparing a
+substrates run against a regression one would report the whole roster as
+changed.
+
 ### Configure Spoiler Settings
 ```
 python scripts/setup/update_host_settings.py minimal-spoilers

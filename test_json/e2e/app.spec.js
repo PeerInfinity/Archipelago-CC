@@ -1,6 +1,19 @@
 import { test, expect } from '@playwright/test';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as os from 'os';
+
+/**
+ * Machine load, sampled at run start and again when a test fails.
+ * Several in-app legs are long polls against a live game, and under
+ * contention they time out without being broken — the poll-level
+ * evidence in testController tells STARVED from STUCK per condition,
+ * and this gives the run-level context for that reading.
+ */
+function loadSnapshot() {
+  const [oneMin] = os.loadavg();
+  return `load ${oneMin.toFixed(2)} across ${os.cpus().length} cpus`;
+}
 
 test.describe('Application End-to-End Tests', () => {
   const testMode = process.env.TEST_MODE || 'test'; // Default to 'test' if not specified
@@ -57,6 +70,7 @@ test.describe('Application End-to-End Tests', () => {
     });
 
     console.log(`PW DEBUG: Navigating to application with parameters:`);
+    console.log(`  - machine: ${loadSnapshot()}`);
     console.log(`  - mode: ${testMode}`);
     if (testGame) {
       console.log(`  - game: ${testGame}`);
@@ -199,7 +213,10 @@ test.describe('Application End-to-End Tests', () => {
       const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
       const outputFile = path.join(outputDir, `test-results-${timestamp}.json`);
 
-      fs.writeFileSync(outputFile, JSON.stringify(results, null, 2));
+      // Stamp the mode: without it, comparing "the last two runs" can
+      // silently pit a substrates run against a regression one and
+      // report the entire roster as changed.
+      fs.writeFileSync(outputFile, JSON.stringify({ mode: testMode, ...results }, null, 2));
       console.log(`PW DEBUG: Test results saved to: ${outputFile}`);
 
       // These files now survive across runs (see outputDir in
@@ -225,6 +242,7 @@ test.describe('Application End-to-End Tests', () => {
     const failedTests = (results.testDetails || []).filter((t) => t.status === 'failed');
     if (failedTests.length > 0) {
       console.log(`\nPW DEBUG: ===== ${failedTests.length} IN-APP TEST(S) FAILED =====`);
+      console.log(`  machine at failure: ${loadSnapshot()}`);
       for (const t of failedTests) {
         const secs = t.durationMs != null ? ` after ${(t.durationMs / 1000).toFixed(1)}s` : '';
         console.log(`  FAILED: ${t.id}${secs}`);
