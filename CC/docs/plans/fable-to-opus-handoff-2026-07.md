@@ -250,32 +250,53 @@ the kickoff hadn't predicted: its `bounce_loop_worldgen` fixture is not
 in the repo at all, so it dies at the first assertion and never reaches
 the walkTo contract. Header note added; M6 should rebuild it around the
 Bot radio (the contract it was written for) or delete it;
-**M6** solver unification + rename + Bot radio — **DESIGN RULED 2026-07-23
-(Fable planning session, post-M5); KICKOFF READY:** *(NewDocs)*
-`NewDocs/plans/loops-m6-bot-solver-opus-kickoff.md` (recon-verified anchors
-at `29d40ce35`). Rulings: (1) FULL solver unification — the Bot radio is
-the ONLY trigger for maze delegation AND the walkTo path; the pre-dispatch
-auto-delegation tick (loopState.js:1077) retires. Recon found it currently
-SHADOWS Record/Playback blocks on manaEnabled maze regions (its manual-only
-exclusion predates the mode system — latent bug, fixed by construction +
-regression-pinned). A Bot block with no engageable solver parks for live
-play with a LOUD warn. (2) Bot economy = one economy by capture shape:
-fine charges natively ONLY (today's flat completion charge double-charges
-jta and awards no XP — dropped), summary gets the per-second time drain
-during bot play + explicit-only action costs, all via `_chargeLiveAction`.
-(3) Bot×Instant offered only where the solver honors it (jta v1; summary
-hidden; maze attempt-or-defer). (4) `verify-bounce-loop-mode.mjs` DELETED
-in favor of an in-app runner Bot leg (gate-run, can't rot). Rename: value
-`executeVia:'playbackBot'`→`'solver'` is HOST-ONLY — the shared submodule
-mentions it in substrateRegistry.js JSDoc comments only (NO validator);
-the comment fix rides the next submodule-touching commit. The playbackBot
-MODULE (sphere-log auto-player) keeps its name. Test revivals:
-jta-bot-walkto-exit + the 2 progression tests restructure onto Bot blocks
-(the hand-rolled reset-retry emulations collapse into the real queue
-machinery); jta-starting-energy-bonus-raises-pool contains NO walkTo (its
-deferral comment is wrong) — empirical-first, delete acceptable (coverage
-folded into the record→playback leg). Omsi arc D re-queues AFTER
-this track (see §4); omsi Instant last of all.
+**M6 COMPLETE 2026-07-24 (Opus implementation, Fable-verified per slice):**
+`74a2ca62f` (rename) → `05979752f` (Bot radio, one trigger for both
+solvers) → `6d70e112b` (economy by capture shape) → `018930e58` (Instant
+per-capability) → `3c89ad817` (sticky-Instant both-ways fix + the
+never-real energy-bonus deferral reversed) → `257763770` (jta Bot in-app
+leg) → `cbe30a107` (runner Bot economy leg; verify-bounce-loop-mode.mjs
+DELETED) → `6ea706380` (docs) → `cecab4b19` (bot-wake fromReset fix +
+honest deferrals). Durable contract: loop-recording.md (Bot flow, solver,
+per-capability Instant, the solver-park depletion + reset-teleport
+gotchas). Kickoff *(NewDocs)* `loops-m6-bot-solver-opus-kickoff.md`.
+Gates at close: substrates **50/50**, vitest 3333/3334 (braidRegime2
+flake), regression 1/1, CI green per slice.
+Delivered vs kickoff: full solver unification (the pre-dispatch
+auto-delegation tick — which silently SHADOWED Record/Playback on
+manaEnabled maze regions — is retired, regression-pinned positive-first);
+`executeVia:'playbackBot'`→`'solver'` host-only (shared-submodule JSDoc
+x2 still rides the next submodule-touching commit); one economy by shape
+(jta double-charge dead; summary bots drain by time, XP 1:1); Bot×Instant
+jta-only, set BOTH WAYS (jta `setInstantMode` is a sticky MODE with no
+native unset — one Instant block used to leave the whole session
+instant); bot wake now fromReset-gated (a fork-propagated reset teleport
+mid-walk used to hard-pause the queue PERMANENTLY — release + resume
+instead, checked before the destination match so a reset onto the
+destination retries, never falsely completes).
+**FOLLOW-UPS QUEUED OUT OF M6 (both jta-domain, not loops):**
+(1) **jta bridge bug, diagnosed:** `loadRegion` calls
+`_applyCatchUpResets()` BEFORE reading `_completedThisLoop.has(regionId)`
+and the catch-up's `gameState:loopReset` subscriber clears the set — a
+re-entry carrying an unapplied reset delta injects no synthetic exit
+tasks. Fix = reorder the read. Documented in jta.md known-issues +
+the disabled `jta-synthetic-exit-task-id-stability`.
+(2) **The 2 jta progression marathons**
+(`jta-randomized-balanced-progression`, `jta-dataset-world-progression`)
+stay disabled: balance/dataset validation must run NORMAL ticking
+(Instant = completeTaskInstantly, affordability-blind —
+jtaBalanceTests.js:173) and multi-zone normal-ticking exceeds gate
+budgets regardless of drive mechanism. As written they are gate-blocked
+(direct unparked walkTo) and NOT runnable even on demand; revival =
+restructure onto Bot blocks (unblocked by the 5d wake fix) in a
+runtime-budgeted home. Their unique strata (randomized-world cold solve +
+AP-authoritative perk accounting; dataset-world progression) are
+otherwise uncovered.
+Omsi arc D re-queues AFTER this track (see §4); it inherits the mode
+seams plus TWO contracts written for it: the solver-park depletion rule
+(the mana wake only owns `_manualActionEntered` parks — a spend site that
+fires while no frame runs must call its own OOM check) and the
+reset-teleport bot-wake semantics. Omsi Instant last of all.
 
 **M3b as-built (session 67, Fable) — key facts for M4/M5/omsi-D (full
 notes: plan doc implementation-notes block + memory
