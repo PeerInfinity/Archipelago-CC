@@ -1968,3 +1968,271 @@ describe('M5 — instant-apply Playback', () => {
     expect(dispatched).toHaveLength(0);
   });
 });
+
+// ---------------------------------------------------------------------------
+// M6 — the Bot radio and solver unification. Two solver mechanisms existed
+// before this arc: the maze's substrate DELEGATION and the walkTo path
+// (jta / runner / bounce). Neither had an explicit trigger — delegation fired
+// from a pre-dispatch tick for any non-Manual block (shadowing Record and
+// Playback on delegation-capable regions), and walkTo was an unconditional
+// fall-through at the end of the frame dispatch. M6 gives both ONE trigger:
+// a block set to 'bot'.
+// ---------------------------------------------------------------------------
+
+// A DELEGATION-capable fine-grained substrate, shaped like the real maze:
+// a recorder (fine capture), sharing.mana.loopActionDelegation, and regions
+// that carry manaEnabled. Delegation needs BOTH the declaration and the flag.
+function registerDelegationSubstrate({ regions = ['A'], manaEnabled = true } = {}) {
+  try { centralRegistry.publicFunctions.get('procgenPlayer')?.delete('getRegionInfo'); } catch { /* ignore */ }
+  try { centralRegistry.publicFunctions.get('procgenPlayer')?.delete('getWarehouse'); } catch { /* ignore */ }
+  try { substrateRegistry.clear?.(); } catch { /* ignore */ }
+  const handles = { stash: null, replayCalls: [], walkToCalls: [] };
+  substrateRegistry.register?.({
+    id: 'dele_sub',
+    label: 'Delegation',
+    panelComponentType: 'delePanel',
+    loadRegionEvent: 'dele:loadRegion',
+    sharing: { mana: { loopActionDelegation: true } },
+    loopSupport: {
+      queueActions: ['regionMove', 'locationCheck'],
+      manual: true, customQueues: false, record: true, playback: true,
+    },
+    takeLastRecording: () => { const s = handles.stash; handles.stash = null; return s; },
+    // The maze's controller walkTo drives its VISUALIZER, not the charging
+    // panel engine — delegation is its solver, and walkTo must stay unused.
+    getPlaybackController: () => ({
+      replayActions: (actions, opts) => { handles.replayCalls.push({ actions, opts }); return true; },
+      walkTo: (target) => { handles.walkToCalls.push(target); return true; },
+    }),
+  });
+  centralRegistry.registerPublicFunction('procgenPlayer', 'getRegionInfo', (region) => (
+    regions.includes(region) ? { substrate: 'dele_sub', label: 'Delegation', manaEnabled } : null
+  ));
+  return handles;
+}
+
+describe('M6 — regionSolver', () => {
+  let loopState;
+  beforeEach(() => {
+    resetSavedQueueStore();
+    clearRulesHashCache();
+    ({ loopState } = wire());
+  });
+
+  it("resolves 'delegation' from the capability declaration PLUS manaEnabled", () => {
+    registerDelegationSubstrate();
+    expect(loopState.regionSolver('A')).toBe('delegation');
+  });
+
+  it('a delegation-capable substrate on a mana-less region has NO solver', () => {
+    registerDelegationSubstrate({ manaEnabled: false });
+    expect(loopState.regionSolver('A')).toBeNull();
+    expect(loopState._regionSupportsBot('A')).toBe(false);
+  });
+
+  it("resolves 'walkTo' from executeVia: 'solver'", () => {
+    registerSummarySubstrate();
+    expect(loopState.regionSolver('A')).toBe('walkTo');
+    expect(loopState._regionSupportsBot('A')).toBe(true);
+  });
+
+  it('a substrate with neither mechanism has no solver, and neither does an AP-native region', () => {
+    registerCoarseSubstrate();
+    expect(loopState.regionSolver('A')).toBeNull();
+    expect(loopState.regionSolver('APNative')).toBeNull();
+    expect(loopState.regionSolver(null)).toBeNull();
+  });
+});
+
+describe('M6 — Bot is the ONLY trigger for delegation (the shadowing regression pin)', () => {
+  let loopState, gs, bus, tick, handles;
+  beforeEach(() => {
+    resetSavedQueueStore();
+    clearRulesHashCache();
+    ({ loopState, gs, bus } = wire());
+    tick = makeTicker();
+    handles = registerDelegationSubstrate();
+    loopState._cachedRulesData = RULES_DATA;
+    gs.updatePath('A', 'go', 'Menu');
+    gs.addLocationCheck('Loc1', 'A');
+    gs.updatePath('B', 'exit', 'A');
+  });
+
+  function runBlock(mode) {
+    loopState.setBlockMode('A', 1, mode);
+    loopState.currentActionIndex = 1;
+    loopState.currentAction = loopState.getActionQueue()[1];
+    loopState.isProcessing = true;
+    tick(loopState);
+  }
+
+  const beganEvents = () => bus.events.filter((e) => e.name === 'loops:substrateActionBegan');
+
+  // The POSITIVE first, so the negatives below can't be vacuous: if the Bot
+  // branch could not delegate at all, every "was not delegated" assertion
+  // would pass for the wrong reason.
+  it('a BOT block delegates: the action is parked and substrateActionBegan fires', () => {
+    runBlock('bot');
+    expect(loopState._delegatedAction).not.toBeNull();
+    expect(beganEvents()).toHaveLength(1);
+    expect(beganEvents()[0].data.action.locationName).toBe('Loc1');
+    // Parked, not stopped, and no progress ticked.
+    expect(loopState.isProcessing).toBe(true);
+    expect(loopState._animationFrameId).toBeNull();
+    // Delegation drives the panel engine — the visualizer's walkTo stays put.
+    expect(handles.walkToCalls).toEqual([]);
+  });
+
+  it('a RECORD block parks for hand-play and is NEVER delegated', () => {
+    runBlock('record');
+    expect(loopState._delegatedAction).toBeNull();
+    expect(beganEvents()).toEqual([]);
+    expect(loopState._manualActionEntered).toBe(true);
+    expect(loopState._manualRegionName).toBe('A');
+    // ...and the Record capture actually armed, which the pre-M6 delegation
+    // tick pre-empted before this branch ever ran.
+    expect(loopState._recordingBlock).toEqual({ region: 'A', instance: 1 });
+  });
+
+  it('a PLAYBACK block replays its bound recording and is NEVER delegated', () => {
+    saveQueue(hashRulesData(RULES_DATA), {
+      regionName: 'A', substrate: 'dele_sub',
+      arrivalExitId: 'go', ordinal: 0, departureExitId: 'exit',
+      actions: [{ type: 'locationCheck', locationName: 'Loc1' }],
+      manaAtEntry: 100, manaAtExit: 80, manaMin: 75,
+      locationsChecked: ['Loc1'], itemsPickedUp: [],
+    });
+    runBlock('playback');
+    expect(loopState._delegatedAction).toBeNull();
+    expect(beganEvents()).toEqual([]);
+    expect(handles.replayCalls).toHaveLength(1);
+  });
+
+  it('a MANUAL block parks and is NEVER delegated', () => {
+    runBlock('manual');
+    expect(loopState._delegatedAction).toBeNull();
+    expect(beganEvents()).toEqual([]);
+    expect(loopState._manualActionEntered).toBe(true);
+  });
+});
+
+describe('M6 — the Bot branch dispatch matrix', () => {
+  let loopState, gs, bus, tick;
+  beforeEach(() => {
+    resetSavedQueueStore();
+    clearRulesHashCache();
+    ({ loopState, gs, bus } = wire());
+    tick = makeTicker();
+    loopState._cachedRulesData = RULES_DATA;
+  });
+
+  function seedQueue() {
+    gs.updatePath('A', 'go', 'Menu');
+    gs.addLocationCheck('Loc1', 'A');
+    gs.updatePath('B', 'exit', 'A');
+    loopState.setBlockMode('A', 1, 'bot');
+    loopState.currentActionIndex = 1;
+    loopState.currentAction = loopState.getActionQueue()[1];
+    loopState.isProcessing = true;
+  }
+
+  it("a walkTo-solver region dispatches walkTo and parks", () => {
+    const handles = registerSummarySubstrate();
+    seedQueue();
+    tick(loopState);
+    expect(handles.walkToCalls).toEqual([[{ kind: 'location', name: 'Loc1' }]]);
+    expect(loopState._botExecutedAction).not.toBeNull();
+    expect(loopState._delegatedAction).toBeNull();
+  });
+
+  it('a region with NO solver parks for live play and warns — never the generic timer', () => {
+    // Ruling 2: a Bot block that cannot engage a solver must announce itself.
+    // A silent fall-through to the timer would teleport the player through
+    // content the bot was meant to play (the jtaQueueEngine lesson).
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      registerCoarseSubstrate();
+      seedQueue();
+      tick(loopState);
+      expect(loopState._botExecutedAction).toBeNull();
+      expect(loopState._delegatedAction).toBeNull();
+      expect(loopState._manualActionEntered).toBe(true);
+      expect(loopState._manualRegionName).toBe('A');
+      // The generic timer did NOT advance the action.
+      expect(loopState.actionQueueManager.isCompleted(1)).toBe(false);
+      expect(warn).toHaveBeenCalled();
+      expect(warn.mock.calls.flat().join(' ')).toMatch(/no engageable solver/);
+    } finally {
+      warn.mockRestore();
+    }
+  });
+
+  it('a Bot block records nothing (capture stays Record-gated)', () => {
+    registerSummarySubstrate();
+    seedQueue();
+    tick(loopState);
+    expect(loopState._recordingBlock).toBeNull();
+  });
+
+  it('livePlayRegion is null while a solver drives, but open during the fallback park', () => {
+    // A bot is not live play — its events pass the gate on the queueExecution
+    // exemption. The FALLBACK park is live play, though: the player has to
+    // drive it by hand, so the gate must let them.
+    const handles = registerSummarySubstrate();
+    seedQueue();
+    tick(loopState);
+    expect(handles.walkToCalls).toHaveLength(1); // liveness: the bot really parked
+    expect(loopState.livePlayRegion()).toBeNull();
+
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      ({ loopState, gs, bus } = wire());
+      tick = makeTicker();
+      loopState._cachedRulesData = RULES_DATA;
+      registerCoarseSubstrate();
+      seedQueue();
+      tick(loopState);
+      expect(loopState.livePlayRegion()).toBe('A');
+    } finally {
+      warn.mockRestore();
+    }
+  });
+});
+
+describe('M6 — Bot in the mode vocabulary', () => {
+  let loopState, gs;
+  beforeEach(() => {
+    resetSavedQueueStore();
+    clearRulesHashCache();
+    ({ loopState, gs } = wire());
+    loopState._cachedRulesData = RULES_DATA;
+  });
+
+  it("set-all Bot applies only where a solver exists", () => {
+    // A (walkTo solver) gets it; the AP-native block does not.
+    registerSummarySubstrate({ regions: ['A'] });
+    gs.updatePath('A', 'go', 'Menu');
+    gs.addLocationCheck('Loc1', 'A');
+    gs.updatePath('APNative', 'exit', 'A');
+    gs.addLocationCheck('Loc2', 'APNative');
+    const changed = loopState.setAllBlockModes('bot');
+    expect(changed).toBe(1);
+    expect(loopState.getBlockMode('A', 1)).toBe('bot');
+    expect(loopState.getBlockMode('APNative', 1)).not.toBe('bot');
+  });
+
+  it("Bot is NOT part of the defaultBlockMode enum (explicit per-block choice, v1)", () => {
+    registerSummarySubstrate();
+    expect(loopState.defaultBlockMode).toBe('record');
+    expect(loopState.getBlockMode('A', 1)).toBe('record');
+  });
+
+  it("a 'bot' mode round-trips through serialization with no schema change", () => {
+    loopState.setBlockMode('A', 1, 'bot');
+    const state = loopState.getSerializableState();
+    expect(state.blockModeStates).toEqual([['A#1', 'bot']]);
+    const fresh = wire().loopState;
+    fresh.loadFromSerializedState(state);
+    expect(fresh.getBlockMode('A', 1)).toBe('bot');
+  });
+});

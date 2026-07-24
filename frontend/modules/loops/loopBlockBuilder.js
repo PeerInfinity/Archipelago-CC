@@ -391,7 +391,7 @@ export class LoopBlockBuilder {
    * for any substrate that auto-runs today (maze delegation / solver
    * walkTo / generic timer — i.e. any real loopSupport declaration).
    * AP-native (null) and NO_LOOP_SUPPORT (empty) regions offer nothing,
-   * so no mode row renders. Record / Bot arrive in later phases.
+   * so no mode row renders.
    */
   getModeOffers(regionName) {
     const ls = this._getLoopSupport(regionName);
@@ -402,16 +402,22 @@ export class LoopBlockBuilder {
     // recorder and replay (record requires playback — a capture you can't
     // play back is useless).
     const offersRecord = !!ls?.record && !!ls?.playback;
+    // Bot (M6) is offered where the region has a SOLVER — either the walkTo
+    // path (executeVia) or maze-style delegation, which also needs the
+    // region's manaEnabled, so this asks loopState rather than reading
+    // loopSupport alone.
+    const offersBot = !!loopState.regionSolver?.(regionName);
     // Instant (M3) is offered where the substrate DECLARES the capability;
-    // the checkbox itself is only shown for a Playback (M6+: Bot) block, so
+    // the checkbox itself is only shown for a Playback / Bot block, so
     // it rides alongside offersPlayback in practice.
     const offersInstant = !!ls?.instant;
     return {
       offersManual,
       offersPlayback,
       offersRecord,
+      offersBot,
       offersInstant,
-      hasRow: offersManual || offersPlayback || offersRecord,
+      hasRow: offersManual || offersPlayback || offersRecord || offersBot,
     };
   }
 
@@ -424,9 +430,12 @@ export class LoopBlockBuilder {
    *                queued actions display as the EXPECTED outcome; the
    *                expected exit resumes past the segment, a wrong exit
    *                pauses until the next loop reset.
-   *   - Playback — the system runs the block automatically (today's
-   *                unchecked-Manual behavior: delegation / walkTo / timer).
-   * (Record, Bot, Instant land in later phases — no dead UI here.)
+   *   - Record   — hand-play that also CAPTURES the visit (M2).
+   *   - Playback — the system replays the block's saved content (M2/M4/M5).
+   *   - Bot      — a solver plays the block live: the substrate's own bot
+   *                walks each queued target (walkTo), or the panel walks it
+   *                itself (maze delegation). M6; offered only where the
+   *                region actually has a solver.
    */
   /**
    * Whether a block has PLAYABLE CONTENT — what the M4 recording-exists
@@ -485,6 +494,7 @@ export class LoopBlockBuilder {
     let selected = loopState.getBlockMode(regionName, instanceNumber);
     if (selected === 'manual' && !offers.offersManual) selected = 'playback';
     if (selected === 'record' && !offers.offersRecord) selected = 'playback';
+    if (selected === 'bot' && !offers.offersBot) selected = 'playback';
     if (selected === 'playback' && !offers.offersPlayback) selected = 'manual';
 
     // Radios in one block share a name so exactly one is checked. The
@@ -505,6 +515,12 @@ export class LoopBlockBuilder {
         title: 'The system runs this block automatically when the queue reaches '
           + 'it — replaying a saved recording when one exists, else the default '
           + 'auto behavior.' },
+      { value: 'bot', text: 'Bot', offered: offers.offersBot,
+        title: 'A solver plays this block for you, live: the substrate walks to '
+          + 'each queued target itself — on real physics where it has them — and '
+          + 'the queue parks until it arrives. Needs no recording, and costs what '
+          + 'playing the block by hand would cost. A wrong exit pauses the queue '
+          + 'until the next loop reset, same as Manual.' },
     ];
 
     // M4: Playback is DISABLED until the block has playable content. Its

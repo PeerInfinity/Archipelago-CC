@@ -250,6 +250,7 @@ export class LoopUI {
                   <option value="manual">Manual</option>
                   <option value="record">Record</option>
                   <option value="playback">Playback</option>
+                  <option value="bot">Bot</option>
                 </select></label>
                 <label class="set-all-instant-label" title="Turn the Instant toggle on or off for every current block whose substrate supports it. Instant runs a Playback/Bot block headlessly in one frame.">Set all Instant: <select id="loop-ui-set-all-instant">
                   <option value="">—</option>

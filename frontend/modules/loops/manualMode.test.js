@@ -441,9 +441,15 @@ describe('Per-region manual mode (Manual checkbox)', () => {
         expect(fresh.getManualRegion('manualRegion')).toBe(true);
     });
 
-    it('substrate delegation is suppressed for manual-checked regions', () => {
+    it('_shouldDelegateCurrentAction is a pure capability predicate (M6)', () => {
         // Delegation requires a registry-declared delegation capability
-        // (maze's sharing.mana.loopActionDelegation) + manaEnabled.
+        // (maze's sharing.mana.loopActionDelegation) + manaEnabled. Since M6
+        // the predicate answers CAPABILITY only — whether delegation fires is
+        // decided by block MODE in the frame dispatch, where the Bot branch is
+        // its one initiator. (It used to carry a "not Manual" exclusion and be
+        // called from a pre-dispatch tick, which delegated Record and Playback
+        // blocks out from under their own mode; blockModes.test.js pins that
+        // shadowing dead.)
         try { centralRegistry.publicFunctions.get('procgenPlayer')?.delete('getRegionInfo'); } catch { /* ignore */ }
         centralRegistry.registerPublicFunction('procgenPlayer', 'getRegionInfo', () => (
             { substrate: 'maze', label: 'Maze', manaEnabled: true }
@@ -459,8 +465,16 @@ describe('Per-region manual mode (Manual checkbox)', () => {
         loopState.currentActionIndex = 1;
         loopState.currentAction = loopState.getActionQueue()[1];
         expect(loopState._shouldDelegateCurrentAction()).toBe(true);
+        expect(loopState.regionSolver('mazeRegion')).toBe('delegation');
+        // The legacy Manual checkbox no longer suppresses the predicate...
         loopState.setManualRegion('mazeRegion', true);
-        expect(loopState._shouldDelegateCurrentAction()).toBe(false);
+        expect(loopState._shouldDelegateCurrentAction()).toBe(true);
+        // ...it suppresses the DISPATCH: a Manual block parks, and nothing is
+        // ever handed to the substrate.
+        loopState.isProcessing = true;
+        makeTicker()(loopState);
+        expect(loopState._delegatedAction).toBeNull();
+        expect(loopState._manualRegionName).toBe('mazeRegion');
     });
 });
 

@@ -1074,7 +1074,7 @@ export class LoopState {
       this.isProcessing = false;
       return;
     }
-    if (this._tickSubstrateDelegation()) return;
+    if (this._tickParkedSolver()) return;
     if (!this._primeFrameClock(timestamp)) return;
 
     const deltaTime = (timestamp - this._lastFrameTime) * this.gameSpeed;
@@ -1152,6 +1152,34 @@ export class LoopState {
         // Coarse-only substrates are unaffected: their block interior IS the
         // recording, run by the generic executor below.
       }
+      // Bot (M6): explicit solver-driven execution. This branch is the ONE
+      // trigger for BOTH solver mechanisms — the maze's substrate delegation
+      // and the walkTo path (jta / runner / bounce). Dispatch is per ACTION:
+      // each solver parks on one action, and its completion resumes the frame
+      // loop, which re-enters here for the block's next action.
+      //
+      // A Bot block whose solver can't engage parks for LIVE PLAY with a loud
+      // warning rather than falling through to the generic timer — a silent
+      // timer teleport through content the bot was meant to play is the
+      // failure mode this arc exists to prevent (loop-recording.md gotchas).
+      if (modeBlock && blockMode === 'bot') {
+        const solver = this.regionSolver(modeBlock.region);
+        if (solver === 'delegation' && this._shouldDelegateCurrentAction()) {
+          this._beginDelegatedAction();
+          return;
+        }
+        if (solver === 'walkTo' && this._shouldBotExecuteCurrentAction()) {
+          this._handleBotExecutedAction();
+          return;
+        }
+        if (!this._manualActionEntered) {
+          log('warn', `[LoopState] Bot block in '${modeBlock.region}' has no engageable `
+            + `solver (solver=${solver ?? 'none'}, action=${this.currentAction?.type}) — `
+            + 'parking for live play instead of running it on the generic timer.');
+        }
+        this._handleManualRegionEntry(modeBlock.region);
+        return;
+      }
       // Manual entry: stop accruing progress, hand control to the
       // player via the substrate panel. The wake handlers (subscribed
       // in _setupEventListeners) advance past this entry on the next
@@ -1168,15 +1196,11 @@ export class LoopState {
         this._handleCustomQueueEntry(this.currentAction);
         return;
       }
-      // Bot-backed execution: substrates like bounce map regionMove /
-      // locationCheck queue actions to the playback bot's walkTo. The
-      // queue parks while the bot plays the real physics; the
-      // resulting locationCheck / regionChanged events complete the
-      // action (and charge its loops-fallback mana cost).
-      if (this._shouldBotExecuteCurrentAction()) {
-        this._handleBotExecutedAction();
-        return;
-      }
+      // (M6: the unconditional bot dispatch that used to sit here — the
+      // last leg of the auto execution chain — is gone. Solver execution
+      // is reachable only through the Bot branch above. What remains here
+      // is the generic timer, which runs coarse Playback interiors and
+      // AP-native blocks.)
       this._advanceActionProgress(deltaTime);
       this._maybeCompleteCurrentAction();
       // Queue ran to the end — no current action to reset, terminal events
@@ -1196,30 +1220,41 @@ export class LoopState {
   }
 
   /**
-   * Phase 6 substrate delegation. When the current action's sourceRegion
-   * is a maze substrate region with manaEnabled, hand control off — the
-   * substrate panel walks tile-by-tile, deducts mana per tile, and
-   * publishes loops:substrateActionCompleted when done. The queue parks
-   * (no progress tick, no animation frame) until that event arrives;
-   * _handleSubstrateActionCompleted resumes.
+   * Stay parked while a SOLVER action is in flight (M6). Runs BEFORE the
+   * mode dispatch purely as a guard: no progress tick, no animation frame
+   * while the maze panel walks a delegated action tile-by-tile or a bot
+   * walks to its target. _handleSubstrateActionCompleted /
+   * _completeBotExecutedAction resume the loop.
    *
-   * @returns {boolean} true if we parked this frame (caller should bail).
+   * INITIATION does not happen here. Until M6 this tick also FIRED
+   * delegation for any non-Manual block, which ran before the mode
+   * dispatch and so silently shadowed Record and Playback on
+   * delegation-capable regions. Both solvers are now started only from
+   * the Bot branch of the mode dispatch (_processFrame).
+   *
+   * @returns {boolean} true if we are parked (caller should bail).
    */
-  _tickSubstrateDelegation() {
-    if (!this._delegatedAction && this._shouldDelegateCurrentAction()) {
-      this._delegatedAction = this.currentAction;
-      this._lastFrameTime = null;
-      this.eventBus?.publish('loops:substrateActionBegan', {
-        action: this.currentAction,
-      });
-      this._animationFrameId = null;
-      return true;
-    }
-    if (this._delegatedAction) {
+  _tickParkedSolver() {
+    if (this._delegatedAction || this._botExecutedAction) {
       this._animationFrameId = null;
       return true;
     }
     return false;
+  }
+
+  /**
+   * Phase 6 substrate delegation, initiated by a Bot block (M6). Hand the
+   * current action off to the substrate panel, which walks it tile-by-tile,
+   * deducts mana per tile, and publishes loops:substrateActionCompleted
+   * when done. The queue parks until that event arrives.
+   */
+  _beginDelegatedAction() {
+    this._delegatedAction = this.currentAction;
+    this._lastFrameTime = null;
+    this.eventBus?.publish('loops:substrateActionBegan', {
+      action: this.currentAction,
+    });
+    this._animationFrameId = null;
   }
 
   /**
@@ -1343,11 +1378,16 @@ export class LoopState {
     return indexToBlock.get(this.currentActionIndex) ?? null;
   }
 
+  /** The mode of the current action's block, or null when there is none. */
+  _currentBlockMode() {
+    const block = this._blockForCurrentAction();
+    if (!block) return null;
+    return this.getBlockMode(block.region, block.instance);
+  }
+
   /** Whether the current action's block resolves to manual mode. */
   _currentBlockIsManual() {
-    const block = this._blockForCurrentAction();
-    if (!block) return false;
-    return this.getBlockMode(block.region, block.instance) === 'manual';
+    return this._currentBlockMode() === 'manual';
   }
 
   /** The live procgenPlayer warehouse (region → { world }), or null. */
@@ -1899,6 +1939,7 @@ export class LoopState {
       if (mode === 'manual' && !this._regionSupportsManual(v.name)) continue;
       if (mode === 'record' && !this._regionSupportsRecord(v.name)) continue;
       if (mode === 'playback' && !this._regionOffersPlayback(v.name)) continue;
+      if (mode === 'bot' && !this._regionSupportsBot(v.name)) continue;
       this.setBlockMode(v.name, v.instance, mode);
       changed += 1;
     }
@@ -2015,6 +2056,60 @@ export class LoopState {
   }
 
   /**
+   * Which SOLVER can execute a region's actions under a Bot block, or null
+   * where none can (M6). The companion of _captureShapeForRegion: one
+   * public resolver, derived from EXISTING declarations — there is no new
+   * capability flag (settled).
+   *
+   *   'walkTo'     — the substrate declares loopSupport.executeVia: 'solver'.
+   *                  Loops drives its PlaybackController.walkTo and parks
+   *                  until the resulting event arrives (jta, runner, bounce).
+   *   'delegation' — the registry entry declares sharing.mana.loopAction-
+   *                  Delegation AND the region has manaEnabled. The substrate
+   *                  panel walks the action itself, charging natively, and
+   *                  publishes loops:substrateActionCompleted (maze).
+   *
+   * The two are mutually exclusive in practice; walkTo wins if a substrate
+   * ever declared both. Maze may NOT be moved onto walkTo: its controller's
+   * walkTo drives the VISUALIZER (a separate position tracker), while
+   * delegation drives the charging panel engine. M6 unifies the TRIGGER and
+   * keeps both drivers.
+   *
+   * @param {string} region
+   * @returns {'walkTo'|'delegation'|null}
+   */
+  regionSolver(region) {
+    if (!region) return null;
+    if (this._loopSupportFor(region)?.executeVia === 'solver') return 'walkTo';
+    if (this._regionSupportsDelegation(region)) return 'delegation';
+    return null;
+  }
+
+  /**
+   * The delegation half of regionSolver: the region's substrate declares
+   * the loop-action-delegation capability and the region has manaEnabled.
+   * Reads procgenPlayer.getRegionInfo via centralRegistry to avoid a hard
+   * dep — false in standalone / non-procgen contexts.
+   */
+  _regionSupportsDelegation(region) {
+    let info = null;
+    try {
+      const fn = centralRegistry?.getPublicFunction?.('procgenPlayer', 'getRegionInfo');
+      info = fn?.(region) ?? null;
+    } catch {
+      info = null;
+    }
+    const entry = info?.substrate ? substrateRegistry.get(info.substrate) : null;
+    return entry?.sharing?.mana?.loopActionDelegation === true
+      && info?.manaEnabled === true;
+  }
+
+  /** Whether a region can offer the Bot radio — i.e. it has a solver (M6). */
+  _regionSupportsBot(region) {
+    return this.regionSolver(region) !== null;
+  }
+
+  /**
    * Whether the strict action gate is ENFORCED for a region's substrate.
    * The gate model is substrate-universal, but enforcement rolls out with
    * each substrate's block-mode integration (declared record + playback —
@@ -2042,14 +2137,22 @@ export class LoopState {
     if (!this._manualActionEntered) return null;
     if (this._queuePausedUntilReset) return null;
     if (this.isPaused) return null;
+    // A solver is driving: not live play (M6). Its events pass the gate on
+    // the 'queueExecution' exemption instead. Belt-and-braces — a solver
+    // park never sets _manualActionEntered — so the negative can't rot.
+    if (this._delegatedAction || this._botExecutedAction) return null;
     if (this._manualRegionName) {
-      // Mode-driven park: discriminate hand-play (manual/record) from
-      // replay parks (playback / fine-grained recording replay), which
-      // set the same _manualActionEntered/_manualRegionName flags.
+      // Mode-driven park: discriminate hand-play (manual/record, plus a Bot
+      // block whose solver could not engage and fell back to live play —
+      // M6 ruling 2) from replay parks (playback / fine-grained recording
+      // replay), which set the same _manualActionEntered/_manualRegionName
+      // flags. Without 'bot' here the fallback park would be unplayable:
+      // the strict gate would block the very hand-play it fell back to.
       const block = this._blockForCurrentAction();
       if (!block) return null;
       const mode = this.getBlockMode(block.region, block.instance);
-      return (mode === 'manual' || mode === 'record') ? this._manualRegionName : null;
+      return (mode === 'manual' || mode === 'record' || mode === 'bot')
+        ? this._manualRegionName : null;
     }
     // Legacy parks: a 'manual' path entry is hand-play; 'customQueue'
     // may fall back to hand-play when no replay is available.
@@ -2447,13 +2550,13 @@ export class LoopState {
   // -------------------- Bot-backed queue execution --------------------
 
   /**
-   * Whether the current action should be executed by the substrate's
-   * playback bot instead of the generic progress-timer path. Requires
-   * the substrate's registry entry to declare loopSupport.executeVia
-   * === 'solver' with the action's type in queueActions, and a
-   * live playback controller exposing walkTo. A missing controller
-   * (panel not mounted / headless) falls back to generic execution —
-   * the event-driven teleport still works, just without the physics.
+   * Whether the current ACTION can be executed by the walkTo solver.
+   * The per-action half of the Bot branch's check (regionSolver answers
+   * the per-REGION half): the action's type must be in queueActions and
+   * a live playback controller exposing walkTo must exist. A missing
+   * controller (panel not mounted / headless) means the solver cannot
+   * engage — since M6 that parks the block for live play with a warning
+   * rather than silently teleporting it on the generic timer.
    */
   _shouldBotExecuteCurrentAction() {
     const action = this.currentAction;
@@ -2971,31 +3074,22 @@ export class LoopState {
   }
 
   /**
-   * True when the current action's sourceRegion belongs to a substrate
-   * that declares the loop-action-delegation capability
-   * (sharing.mana.loopActionDelegation in its registry entry — maze
-   * today) and the region has manaEnabled — i.e. one that wants to
-   * handle the action via tile-by-tile walking instead of the queue's
-   * flat tick-progress-to-100 model.
+   * Whether the current action's region can be handled by the DELEGATION
+   * solver — one that wants to walk the action tile-by-tile instead of
+   * running the queue's flat tick-progress-to-100 model.
    *
-   * Reads procgenPlayer.getRegionInfo via centralRegistry to avoid
-   * a hard dep. Returns false in standalone / non-procgen contexts.
+   * This is a pure CAPABILITY predicate. Whether delegation actually fires
+   * is a question of block MODE, and since M6 exactly one mode answers yes:
+   * the Bot branch of _processFrame's dispatch is the only caller that
+   * initiates. (Before M6 this predicate carried a "not Manual" exclusion
+   * and doubled as the trigger from a pre-dispatch tick — which is how
+   * Record and Playback blocks on delegation-capable regions got delegated
+   * out from under their own mode.)
    */
   _shouldDelegateCurrentAction() {
-    if (!this.currentAction?.sourceRegion) return false;
-    // Manual-mode blocks are player-driven — never delegate to the
-    // substrate's auto-walk; _processFrame parks on them instead.
-    if (this._currentBlockIsManual()) return false;
-    let info = null;
-    try {
-      const fn = centralRegistry?.getPublicFunction?.('procgenPlayer', 'getRegionInfo');
-      info = fn?.(this.currentAction.sourceRegion) ?? null;
-    } catch {
-      info = null;
-    }
-    const entry = info?.substrate ? substrateRegistry.get(info.substrate) : null;
-    return entry?.sharing?.mana?.loopActionDelegation === true
-      && info?.manaEnabled === true;
+    const region = this.currentAction?.sourceRegion;
+    if (!region) return false;
+    return this.regionSolver(region) === 'delegation';
   }
 
   /**
