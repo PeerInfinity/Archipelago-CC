@@ -1495,9 +1495,71 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    arguments swapped, so it really polls for 50ms; worth a one-line fix
    in its own commit, which may unmask a genuine slow path) · fork clean
    at `2bda39b`, no gitlink bump · presets untouched.
+   **SLICE 4b SHIPPED 2026-07-25 (outer `8550d3d30`, zero fork edits):**
+   the multi-run replay retry — and the retry path above turned out to be
+   BROKEN, not merely uncovered. New leg `omsi-multi-run-replay-retry`
+   (substrates 54→**55**) drives a replay at the pool real play has and
+   watched it hang: STUCK, 675/720 polls, checkFn 0.0s, with
+   `manualEntered=true manualRegion=<the region the player was teleported
+   OUT of> isProcessing=false index=0`. **The fix is HOST-SIDE in loops**
+   (shared block-mode machinery — jta/maze/TA/runner/bounce all ride it;
+   shape confirmed with the user before implementing, per the kickoff's
+   stop-and-ask). `gameState:loopReset` is published ONLY by
+   `gameState.triggerLoopReset`, i.e. exclusively by resourceChannels'
+   out-of-mana flow, while loops' own reset is `_resetLoop`
+   (`loopState:loopReset`) — and the two disagreed: the substrate seam ran
+   `_resetActionsProgress()` alone, so FOUR pieces of park state survived
+   a reset that had just teleported the player away: the park flags,
+   `isProcessing` (⚠ **both park entries call `stopProcessing()`, so the
+   frame loop is DEAD, not dormant — M6's `_resumeFrameLoopIfProcessing`
+   would NOT have sufficed**; it bails on `!isProcessing`, and a bot park
+   never stops processing), `_boundReplayCheckedIndex` (left stale, a
+   retry re-entering the block falls through to the generic executor — a
+   **silent crossing of an exit that was never replayed**, worse than the
+   hang) and `_queuePausedUntilReset`. New `_releaseParkForReset()` clears
+   all four, discards an in-flight Record capture the way `_resetLoop`
+   already does, and resumes. Two judgement calls worth carrying: (a) it
+   lives on the **loopReset subscriber, not the manual wake's `fromReset`
+   branch** — `setCurrentRegion` publishes `regionChanged` only on an
+   actual CHANGE, so a Playback block ON the start region gets a reset
+   with no regionChanged at all and a wake-side fix would never fire; the
+   subscriber runs before the teleport, which is safe because the resume
+   schedules a rAF; (b) the resume is **unconditional**, matching the M6
+   bot branch rather than `_maybeResetForOOM`'s `autoRestartQueue` check —
+   that flag defaults OFF, so honouring it would make multi-run replays
+   something users had to find a checkbox for. ⚠ **User wants that
+   revisited eventually** ("investigate if we can honour autoRestartQueue")
+   — a standing follow-up, not a slice-4b decision. Leg shape: a LEADING
+   hop (`region_0_0 -exit_0-> r0 -> r1`), because `region_0_0` is the
+   fixture's resolved start and therefore the teleport target, so the
+   queue's index 0 is where the player lands each run; its maze approach
+   block is Manual and the leg WALKS it every run (a regionMove carrying
+   the real exit, gate-allowed as `parkedLivePlay`) — `parkManualBlocks`
+   gained a per-hop `mode` override for that, since one mode on every hop
+   source cannot express Manual-approach + Playback-target. Effects
+   asserted and events folded: ≥1 `fromReset` teleport between replay
+   start and crossing, every teleport landing on index 0's region, ≥2
+   walk-backs (**a park that never released cannot produce a second one**)
+   and a fork action count only a multi-run grind reaches. Observed: 3
+   reset-interrupted runs, 4 walk-backs, 3 Wanders + the departure, 21s.
+   Non-vacuity by THREE controls (pre-fix / resume removed / park flag
+   left set — all FAILED at 1 walk-back). ⚠ **Removing
+   `_boundReplayCheckedIndex = -1` alone did NOT redden the leg** — its
+   queue routes through a manual wake, whose match branch clears the guard
+   for unrelated reasons — so that field and `_queuePausedUntilReset` are
+   pinned by a new `blockModes.test.js` describe instead (which also
+   covers the Record discard, the unparked no-op, the paused no-op and the
+   bot-park hands-off). Sizing note for anyone re-running it: the FIRST
+   interrupted run starts at ~100 mana, not 350 — the Record leg leaves
+   the pool drained and only the reset refills to max. Gates: substrates
+   **55/55 cold+warm** (compare-runs: the new leg is the only roster
+   change) · vitest 3342→**3349** (+7) · regression 31/31 first try · fork
+   clean at `2bda39b`, no gitlink bump · presets untouched.
    **NEXT: slice 5 is COVERED by the leg above** (the kickoff's separate
-   in-app slice) — remaining are **slice 6 (docs/bookkeeping)** and
-   **arc D2** behind its feasibility recon.
+   in-app slice) — remaining are **slice 6 (docs/bookkeeping)**, which now
+   has the multi-run contract to write down, and **arc D2** behind its
+   feasibility recon (its multi-reset bot leg rides the wake path slice 4b
+   just settled).
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
