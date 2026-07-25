@@ -351,9 +351,12 @@ export const substrateRegistryEntry = Object.freeze({
     //   NO `instant` — the fork has no fast-step surface (no setInstantMode
     //     / stepTick; the clock is deliberately flat at 50 t/s), and omsi
     //     Instant is the standing last-of-all-substrates item.
-    //   NO `executeVia` — the Bot is the fork's own automation PLANNER,
-    //     scheduled as arc D2 behind a feasibility recon. Until then
-    //     regionSolver() returns null and the Bot radio never renders.
+    //   executeVia 'solver' (arc D2 slice 2) — the Bot IS the fork's own
+    //     automation planner. Declared here only now that `walkTo` really
+    //     works: this declaration is what renders the Bot radio, so an
+    //     earlier one would have offered a mode that parks and never moves.
+    //     Paired with queueActions above, it scopes the solver to exit
+    //     walks; a locationCheck falls through to normal handling.
     //   NO `summaryRecording` — omsi is fine-grained (takeLastRecording).
     loopSupport: Object.freeze({
         queueActions: Object.freeze(['regionMove']),
@@ -362,6 +365,7 @@ export const substrateRegistryEntry = Object.freeze({
         record: true,
         playback: true,
         requiresLoopMode: true,
+        executeVia: 'solver',
     }),
 
     // The fine-grained capture hook. Its PRESENCE is what classifies omsi

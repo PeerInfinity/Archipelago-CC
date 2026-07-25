@@ -234,17 +234,21 @@ describe('LoopBlockBuilder — loopSupport capability gating', () => {
 
         // Arc D1: omsi is the second loop-GAME substrate — record + playback
         // (which arms the strict gate for its regions) + requiresLoopMode,
-        // and regionMove as its only queue-grade action, jta's shape. It
-        // declares NO instant (the fork has no fast-step surface) and NO
-        // executeVia (the Bot is the fork's own planner — arc D2), so the
-        // Instant checkbox and the Bot radio must stay unoffered.
+        // and regionMove as its only queue-grade action, jta's shape.
+        //
+        // Arc D2 slice 2 adds executeVia 'solver': the Bot is the fork's own
+        // automation planner, engaged by the bridge for the duration of a
+        // walkTo. Paired with queueActions, it scopes the solver to EXIT
+        // walks — a locationCheck still falls through to normal handling.
+        // Still NO instant: the fork has no fast-step surface, so the
+        // Instant checkbox stays unoffered (omsi Instant is the standing
+        // last-of-all-substrates item).
         expect(omsi.loopSupport).toMatchObject({
             manual: true, customQueues: false, record: true, playback: true,
-            requiresLoopMode: true,
+            requiresLoopMode: true, executeVia: 'solver',
         });
         expect([...omsi.loopSupport.queueActions]).toEqual(['regionMove']);
         expect(omsi.loopSupport.instant ?? false).toBe(false);
-        expect(omsi.loopSupport.executeVia ?? null).toBe(null);
         expect(omsi.loopSupport.summaryRecording ?? false).toBe(false);
         // FINE-GRAINED: the recorder hook is what classifies it (a coarse
         // omsi would be charged loop_costs on top of its native mana mirror).

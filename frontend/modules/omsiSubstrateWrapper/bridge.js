@@ -252,6 +252,45 @@ let _stepGateLiveRegion = null;
 // solver is driving, which livePlayRegion() deliberately never reports.
 let _stepGateBotRegion = null;
 
+// ── Bot window (arc D2 slice 2) ──────────────────────────────────────────
+// True between a `walkTo` from the parked Bot block and the departure that
+// answers it. Mirrors _replayInFlight, with one deliberate difference: a
+// replay carries its own script, while the bot has the FORK'S PLANNER write
+// one loop at a time until the region's exit gate opens.
+let _botInFlight = false;
+let _botTargetExitName = null;
+// Set once the exit-only plan is installed: from here the bot is no longer
+// grinding, it is crossing, and the gate poll must not fire again.
+let _botExitInstalled = false;
+// Cold start: the engage asks the planner for a plan, but nothing is running
+// to consume it. Cleared by the one recompile that starts it (see _clockTick).
+let _botColdStartPending = false;
+// Pre-engagement values of every option the engage writes, so a Manual visit
+// after a Bot visit never finds the planner still armed.
+let _botSavedOptions = null;
+
+/**
+ * What the bot engage writes, and why each one (ruling 1 + ruling 2):
+ *   advancedAutomation / advancedAutomationEnabled — the planner masters.
+ *   plannerMode 'auto' — install plans, don't merely suggest them.
+ *   plannerPauseWhilePlanning — hold the boundary until the plan for the NEXT
+ *     loop lands, so the fork plays exactly what it planned. Set explicitly
+ *     rather than trusted as a default: the clock gate's cross-at-a-held-
+ *     boundary path depends on boundaries actually being held.
+ *   plannerPipeline false — v1 stays on the classic pause path.
+ *   plannerMultiTown false — trap 6: the planner plans over the whole census
+ *     and nothing structurally pins it to this region. Multi-town routing is
+ *     the escape hatch we CAN close from out here.
+ */
+const _BOT_PLANNER_OPTIONS = Object.freeze({
+    advancedAutomation: true,
+    advancedAutomationEnabled: true,
+    plannerMode: 'auto',
+    plannerPauseWhilePlanning: true,
+    plannerPipeline: false,
+    plannerMultiTown: false,
+});
+
 // Clock diagnostics, exposed via __omsiBridge.getDebugState().
 const _clockStats = {
     messages: 0, inactiveSkips: 0, callbacks: 0,
@@ -310,6 +349,45 @@ function _loopClock() {
     }
     const s = _fullState();
     return s ? { ...s, shouldRestart: flag } : { shouldRestart: flag };
+}
+
+/** The fork's live options bag, or null (arc D2). */
+function _forkOptions() {
+    // eslint-disable-next-line no-undef
+    return typeof options !== 'undefined' && options ? options : null;
+}
+
+/**
+ * Write a fork option through its REAL setter, not by assignment: setOption
+ * runs the `optionValueHandlers`, which is where the planner's own
+ * engage/disengage bookkeeping lives (shutting the worker down, resuming a
+ * planner pause, forgetting installedQueueJSON). All of them are DOM-guarded,
+ * so this is safe from the bridge.
+ */
+function _setForkOption(name, value) {
+    // eslint-disable-next-line no-undef
+    if (typeof setOption !== 'function') return false;
+    // eslint-disable-next-line no-undef
+    setOption(name, value);
+    return true;
+}
+
+/** The fork's Advanced Automation module, or null. */
+function _automation() {
+    // eslint-disable-next-line no-undef
+    return typeof AdvancedAutomation !== 'undefined' ? AdvancedAutomation : null;
+}
+
+/** Is the active region's exit runnable right now? (managed regionExitAvailable) */
+function _regionExitAvailable() {
+    const m = _managed();
+    if (typeof m?.regionExitAvailable !== 'function') return false;
+    try {
+        return m.regionExitAvailable() === true;
+    } catch (err) {
+        log('warn', 'regionExitAvailable threw:', err);
+        return false;
+    }
 }
 
 /** The game's remaining loop budget — the §4 mana mapping. */
@@ -428,6 +506,24 @@ function _clockTick() {
     if (skip === 'noQueue') _clockStats.skippedNoQueue += 1;
     else if (skip === 'gated') _clockStats.skippedGated += 1;
     else if (skip === 'heldBoundary') _clockStats.skippedHeldBoundary += 1;
+    // Ruling 4: the exit crosses at the NEXT LOOP BOUNDARY after the gate
+    // opens — never mid-loop. A held boundary IS that moment, and the best
+    // one available: the engine is parked, the clock gate is shut, and
+    // nothing is in flight to interrupt. With the engage's auto +
+    // pauseWhilePlanning the planner holds EVERY boundary, so one always
+    // comes. (Ruling 4's "let the in-flight loop finish" is why this waits
+    // for the hold rather than acting the moment the gate flips.)
+    if (skip === 'heldBoundary' && _botInFlight && !_botExitInstalled && _regionExitAvailable()) {
+        _crossBotExit('gate opened, boundary held');
+    } else if (skip === 'heldBoundary' && _botInFlight && _botColdStartPending) {
+        // The engage's plan has landed (a held boundary implies a runnable
+        // queue — 'noQueue' is checked first) but nothing is running it. One
+        // suppressed recompile starts the grind; from here the planner's own
+        // onResult → resume drives every later boundary.
+        _botColdStartPending = false;
+        _forceLoopRecompile();
+        log('debug', 'bot cold start: recompiled the loop onto the planner\'s first plan');
+    }
     if (ticks > 0) {
         m.step(ticks);
         _clockStats.ticksStepped += ticks;
@@ -1028,11 +1124,19 @@ function _exitLabel(exit) {
  *
  * Live play needs no flag — a parked Manual/Record block passes the gate on
  * `parkedLivePlay`, and a wrong exit there must stay a wrong exit.
+ *
+ * A BOT departure is deliberately NOT stamped (arc D2 slice 2), matching the
+ * jta Bot leg: while a solver drives, `_botExecutedAction` is set, so the
+ * strict gate exempts the move as `queueExecution` before any flag is
+ * consulted. Stamping it would work by accident and hide which exemption is
+ * really carrying the crossing. Crossing still ends the window — that
+ * departure IS the answer to the walkTo.
  */
 function _dispatchRegionMove(targetRegion, exitName) {
     if (!_client) return;
     const fromLoop = _replayInFlight;
     if (fromLoop) _endReplay('departure crossed');
+    if (_botInFlight) _endBotWalk('departure crossed');
     _client.publishEventDispatcher('user:regionMove', {
         sourceRegion: _currentRegionId,
         targetRegion,
@@ -1440,6 +1544,181 @@ function _startReplay(entries, opts = {}) {
         + `'${exitAction}' (departure '${departureExitId}')`);
 }
 
+// ────────────────────────────────────────────────────────────────
+// Bot window (arc D2 slice 2) — the fork's planner IS the solver
+// ────────────────────────────────────────────────────────────────
+
+/**
+ * Arm the fork's Advanced Automation planner for the grind.
+ *
+ * COLD ENGAGE. `interceptPrepareRestart` only fires at loop boundaries, and a
+ * region whose plan is empty (or already exhausted) will never reach one — the
+ * clock idles on `_hasRunnableQueue`, so no boundary, so no first plan. The
+ * kick-start is `planNow()`: verified in slice-0 recon that an auto-mode result
+ * installs its queue through `onResult` with no `applySuggestion` by hand.
+ *
+ * ⚠ THE PLAN LANDING IS NOT THE PLAN STARTING, and assuming otherwise
+ * deadlocks the bot — measured, not theorised: 0 loops, 0 ticks, forever.
+ * `onResult` writes the queue but only `resumeIfPlannerPaused` starts the
+ * engine, and that acts solely on a pause the PLANNER took, which it can only
+ * take at a boundary, which needs a step. Meanwhile the engine reaches the bot
+ * already parked past a loop end (`shouldRestart` is init-true, and every
+ * arrival here follows one), so the slice-1 gate is shut and nothing steps.
+ * Frozen substrate, no reset of its own to unfreeze it.
+ *
+ * So the cold start needs ONE recompile, and `_clockTick` fires it the moment
+ * a runnable plan exists. It must be `_forceLoopRecompile` — restarting under
+ * `_applyingHostReset` — and never a bare `restartLoop()`/`pauseGame()`: those
+ * report a run end to the host, inventing a reset and its teleport out of a
+ * loop the game never actually finished.
+ */
+function _engagePlanner() {
+    const opts = _forkOptions();
+    const auto = _automation();
+    if (!opts || !auto || typeof _setForkOption !== 'function') {
+        log('error', 'Bot REFUSED the planner: fork build has no options/automation surface');
+        return false;
+    }
+    _botSavedOptions = {};
+    for (const key of Object.keys(_BOT_PLANNER_OPTIONS)) _botSavedOptions[key] = opts[key];
+    for (const [key, value] of Object.entries(_BOT_PLANNER_OPTIONS)) _setForkOption(key, value);
+    _botColdStartPending = true;
+    try {
+        auto.planNow();
+    } catch (err) {
+        log('warn', 'planNow threw:', err);
+    }
+    log('debug', `bot engaged the planner for exit '${_botTargetExitName}' `
+        + `(gate ${_regionExitAvailable() ? 'OPEN' : 'closed'})`);
+    return true;
+}
+
+/**
+ * Put every option the engage wrote back the way the player had it.
+ *
+ * Runs when the WINDOW ends, not when the planner disengages: between those
+ * two moments the exit-only plan is crossing, and restoring an
+ * `advancedAutomationEnabled: true` that the player happened to have set would
+ * re-arm the planner mid-crossing.
+ */
+function _restoreAutomationOptions() {
+    if (!_botSavedOptions) return;
+    const saved = _botSavedOptions;
+    _botSavedOptions = null;
+    for (const [key, value] of Object.entries(saved)) {
+        if (value !== undefined) _setForkOption(key, value);
+    }
+    log('debug', 'bot restored the pre-engagement automation options');
+}
+
+/**
+ * Hand the loop back: the planner stops writing plans, we write the last one.
+ *
+ * ORDER IS THE OPPOSITE of the kickoff's trap-3 advice, for a reason worth
+ * keeping. Trap 3 says disengage before touching the queue, because
+ * `interceptPrepareRestart` reads any queue it did not install as a manual
+ * edit. But disengaging at a HELD boundary runs `resumeIfPlannerPaused` →
+ * `pauseGame()`, and pauseGame restarts the loop when `shouldRestart ||
+ * timer >= timeNeeded` — which is precisely the state a held boundary is in.
+ * That restart is NOT suppressed, so it reports a run end, and the host
+ * answers with a reset and a teleport out of the region we are mid-crossing.
+ *
+ * Installing first avoids it: `_forceLoopRecompile` restarts under
+ * `_applyingHostReset` (suppressed) and leaves `timer` at 0 with
+ * `shouldRestart` false, so the disengage that follows finds nothing to
+ * restart. And trap 3's misfire cannot bite, because the disengage happens in
+ * this same synchronous step — `isEnabled()` is already false before the next
+ * boundary, so `interceptPrepareRestart` returns at its own gate without ever
+ * reaching the manual-edit compare.
+ */
+function _crossBotExit(reason) {
+    if (!_botInFlight || _botExitInstalled) return;
+    if (!_installBotExit()) return;
+    _setForkOption('advancedAutomationEnabled', false);
+    log('debug', `bot installed the exit plan and disengaged the planner (${reason})`);
+}
+
+/**
+ * Write the exit-only plan — the slice-4 replay install, minus the recording.
+ *
+ * The synthetic exit action's own `canStart()` is `regionExitAvailable()`, so
+ * a plan installed while the gate is shut would simply be skipped and end the
+ * loop by exhaustion. Every caller checks the gate first; this is the
+ * belt-and-braces half.
+ */
+function _installBotExit() {
+    const a = _engineActions();
+    const exitAction = _syntheticExitActionFor(_botTargetExitName);
+    if (!exitAction) {
+        log('error', `Bot exit REFUSED: no synthetic exit action for '${_botTargetExitName}' `
+            + `in ${_currentRegionId}`);
+        return false;
+    }
+    if (typeof a?.clearActions !== 'function' || typeof a.addActionRecord !== 'function') {
+        log('error', 'Bot exit REFUSED: fork build has no queue-write surface');
+        return false;
+    }
+    a.clearActions();
+    // Bypasses the totalActionList membership filter for the same reason the
+    // replay install does: a synthetic exit action is registered after
+    // initializeActions() and lives only in the Action table.
+    a.addActionRecord({ name: exitAction, loops: 1, loopsType: 'actions', disabled: false }, -1, false);
+    _forceLoopRecompile();
+    _botExitInstalled = true;
+    return true;
+}
+
+/**
+ * A Bot block parked on a `regionMove` dispatched `walkTo` at us (M6 solver
+ * contract). The target is an EXIT: omsi declares `queueActions: ['regionMove']`
+ * only, so location targets never reach here.
+ *
+ * Two ways this ends, and the window covers both. If the exit gate is already
+ * open — the usual case on a re-entry after a reset teleport and walk-back —
+ * there is nothing to grind for and the exit plan goes in immediately. If not,
+ * the planner grinds until it opens, across as many host runs as that takes:
+ * each fork loop end reports a run end, the host resets and teleports, the M6
+ * bot wake re-dispatches, and this runs again from the top. Written to be
+ * idempotent for exactly that reason, like `_startReplay`.
+ */
+function _startBotWalk(target) {
+    if (target?.kind !== 'exit' || typeof target?.name !== 'string' || !target.name) {
+        log('warn', 'walkTo ignored — omsi solves exits only', target);
+        return;
+    }
+    if (!_syntheticExitActionFor(target.name)) {
+        log('error', `walkTo REFUSED: exit '${target.name}' has no synthetic action in `
+            + `${_currentRegionId} — the block stays parked rather than crossing an exit `
+            + 'it never walked to.');
+        return;
+    }
+    // Re-dispatch of a walk already in flight (the retry path): re-assert the
+    // target and let the state below decide afresh.
+    _botInFlight = true;
+    _botTargetExitName = target.name;
+    _botExitInstalled = false;
+    if (_regionExitAvailable()) {
+        _crossBotExit('gate already open at dispatch');
+        return;
+    }
+    _engagePlanner();
+}
+
+/**
+ * Close the window: the departure landed, the host stopped us, or the region
+ * went away under us. Restores the player's automation options — a Manual
+ * visit after a Bot visit must not find the planner still armed.
+ */
+function _endBotWalk(reason) {
+    if (!_botInFlight) return;
+    _botInFlight = false;
+    _botTargetExitName = null;
+    _botExitInstalled = false;
+    _setForkOption('advancedAutomationEnabled', false);
+    _restoreAutomationOptions();
+    log('debug', `bot window closed — ${reason}`);
+}
+
 /**
  * Install the host's step-gate state (slice 2). Pushed on every CHANGE of
  * (loop mode active, loops' livePlayRegion) plus a force-push on region
@@ -1493,15 +1772,23 @@ function _handlePlaybackControl(payload) {
         case 'setStepGate':
             _setStepGate(args[0]);
             return;
-        case 'play':
+        case 'walkTo':
+            _startBotWalk(args[0]);
+            return;
         case 'stop':
+            // loops' _stopBotExecutedAction calls stop() when it tears a bot
+            // park down (pause, hard pause, an unexpected region). The clock
+            // stays the bridge's — what stops is the WINDOW, and with it the
+            // planner we armed.
+            _endBotWalk('host stopped the walk');
+            return;
+        case 'play':
         case 'step':
         case 'instant':
         case 'setRate':
         case 'reset':
-        case 'walkTo':
             log('debug', `playback control '${method}' ignored (arc D1: the bridge owns the clock, `
-                + 'and omsi declares neither instant nor a solver)');
+                + 'and omsi declares no instant)');
             return;
         default:
             log('warn', 'playback control: unknown method', method);
@@ -1609,6 +1896,10 @@ async function main() {
             // own departure, a reset teleport, or the player). Leaving the
             // flag latched would stamp fromLoop on a later LIVE check.
             _endReplay('left the region');
+            // Same for the bot window — and here it also matters that the
+            // planner gets disarmed: a reset teleport out of a grind must not
+            // leave automation running for whoever visits next.
+            _endBotWalk('left the region');
         }
     });
 
@@ -1739,6 +2030,15 @@ async function main() {
                 enforced: _stepGateEnforced,
                 livePlayRegion: _stepGateLiveRegion,
                 botSolverRegion: _stepGateBotRegion,
+            },
+            bot: {
+                inFlight: _botInFlight,
+                targetExit: _botTargetExitName,
+                exitInstalled: _botExitInstalled,
+                exitGateOpen: _regionExitAvailable(),
+                plannerArmed: !!_botSavedOptions,
+                plannerStatus: (typeof document !== 'undefined'
+                    ? document.getElementById('plannerStatus')?.textContent : null) ?? null,
             },
         }),
     };
