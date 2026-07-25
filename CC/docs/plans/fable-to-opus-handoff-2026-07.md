@@ -1467,12 +1467,27 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    dispatcher, not polled (new `watchRegionMoves` helper): an omsi loop
    ends one tick after a departure fires, so the run-end report and its
    reset teleport make "current region is the target" a transient.
-   ⚠ **Observed, pre-existing, not slice 4's doing:** because a loop ends
-   by exhausting its queue and the departure is the queue's last entry,
-   EVERY omsi region departure (live or replayed) is followed within a
-   tick by a native loop end → run-end report → host loop reset +
-   teleport. That is omsi's `requiresLoopMode` contract, but slice 6
-   should document it. Gates: substrates **54/54 cold+warm**
+   ⚠ **Observed, pre-existing, not slice 4's doing — and it bounds what
+   "grinds across resets" can mean.** A fork loop boundary does NOT stay
+   inside the fork: `_handleGameRestart` reports it, the host fires a real
+   loop reset, and `fireLoopResetTeleport` yanks the player to the loop
+   start — which reaches the bridge as a regionChanged-away and ENDS the
+   replay window (`_endReplay('left the region')`). Only two boundaries
+   are invisible to the host: our own `_applyingHostReset` restarts
+   (including the replay install's recompile) and the no-progress guard's
+   zero-effective-time ones. So a replay that outlives one run resumes
+   NOT by the window surviving but by loops' **generic queue-restart
+   retry** (loop-recording.md M6) re-entering the block and calling
+   `replayActions` again — which is why the install is written to be
+   idempotent. ⚠ **That retry path is UNCOVERED**: the leg sizes the pool
+   so the whole replay fits in one loop, precisely so the teleport can't
+   interrupt it mid-assertion. A multi-run replay leg is the obvious
+   follow-up (and is the same wake path arc D2's bot needs). Separately:
+   because a loop also ends by exhausting its queue and the departure is
+   the queue's last entry, EVERY omsi departure — live or replayed — is
+   followed within a tick by a native loop end, a run-end report and that
+   teleport. All of it is omsi's `requiresLoopMode` contract rather than
+   a defect, but slice 6 should say so out loud. Gates: substrates **54/54 cold+warm**
    (compare-runs: the new leg is the only roster change) · vitest 3342
    (+6) · regression 31/31 (one re-run: `test_path_analyzer_panel` failed
    once under load and passed solo — a PRE-EXISTING flake, its

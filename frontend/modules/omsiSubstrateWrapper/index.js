@@ -80,10 +80,16 @@ const STEP_GATE_POLL_MS = 200;
  * to recompile, and holds the replay window open until that exit fires.
  *
  * The replay is OPEN-ENDED by design (ruling 1): it grinds the recorded
- * queue across the fork's own resets until the departure's gate opens. If
- * that gate never opens the block parks indefinitely — Manual-equivalent,
- * and explicitly NOT to be papered over with a timeout teleport, which
- * would be a replay that "worked" while replaying nothing.
+ * queue until the departure's gate opens. If that gate never opens the block
+ * parks indefinitely — Manual-equivalent, and explicitly NOT to be papered
+ * over with a timeout teleport, which would be a replay that "worked" while
+ * replaying nothing.
+ *
+ * ⚠ It does not grind ACROSS runs on its own: a fork loop boundary is
+ * reported to the host, which fires a loop reset and teleports the player to
+ * the loop start, ending the bridge's replay window. A replay that outlives
+ * one run resumes through loops' generic queue-restart retry re-entering the
+ * block and calling this again (see the bridge's `_startReplay`).
  *
  * `onComplete` is therefore not invoked here: there is no host-visible
  * completion moment short of the departing `user:regionMove`, which the

@@ -84,9 +84,12 @@
  *     sends the recorded plan back over the control channel; the bridge
  *     installs it with the recorded departure exit queued LAST, forces
  *     the loop to recompile, and lets the fork's own queue grind it
- *     across native resets until that exit fires. There is no separate
- *     executor because there is nothing to add: the fork's queue IS the
- *     executor for an omsi recording.
+ *     until that exit fires. There is no separate executor because there
+ *     is nothing to add: the fork's queue IS the executor for an omsi
+ *     recording. ⚠ A fork loop boundary is NOT internal — it is reported
+ *     and the host answers with a loop reset whose teleport ends the
+ *     replay window; a replay spanning runs resumes through loops'
+ *     queue-restart retry, not through this window (see _startReplay).
  *   - No-progress guard: a restart after a loop that consumed (almost)
  *     no effective time means no queued action could run (empty queue
  *     slips past the step gate only in exotic states; a queue whose
@@ -1338,11 +1341,28 @@ function _forceLoopRecompile() {
  * omsi has no separate replay executor and needs none — the recording IS a
  * plan and the fork's own queue is what executes plans. So the install is:
  * clear, add each recorded entry, then queue the recorded departure exit LAST,
- * and hold the replay window open while the game grinds. Native resets
- * propagate normally throughout; each loop recompiles the same plan, so the
- * replay is a multi-loop grind by construction — and if loops re-enters the
- * block after a reset teleport, this whole install runs again and lands in the
- * same state (idempotent).
+ * and hold the replay window open while the game grinds.
+ *
+ * ⚠ WHAT "ACROSS RESETS" ACTUALLY MEANS. A fork loop boundary does NOT stay
+ * inside the fork: `_handleGameRestart` reports it as `substrate:resourceReset`,
+ * the host answers with a real loop reset, and that reset TELEPORTS the player
+ * to the loop start (resourceChannels `fireLoopResetTeleport`) — which lands
+ * here as a `gameState:regionChanged` away, ending this replay window
+ * (`_endReplay('left the region')`) and stopping the clock. That is the
+ * `requiresLoopMode` contract, not a bug: the fork's run IS the host's run, so
+ * a replay that outlives one run outlives the run that was paying for it.
+ * Only two loop boundaries are invisible to the host — our own suppressed
+ * restarts (`_applyingHostReset`, including this install's recompile) and the
+ * no-progress guard's zero-effective-time restarts.
+ *
+ * So a multi-loop replay continues NOT by this window surviving, but by loops'
+ * generic queue-restart retry (loop-recording.md, M6): the reset restarts the
+ * queue, it routes back to this region, re-enters the Playback block, and
+ * dispatches `replayActions` again — at which point this whole install runs
+ * again and lands in the same state, which is why it is written to be
+ * idempotent. A replay whose gate needs more than one run's worth of resource
+ * therefore depends on that retry, and the in-app leg deliberately does NOT
+ * cover it (it sizes the pool so the whole replay fits in one loop).
  *
  * The departure is the TERMINATION CONDITION, so a replay that cannot resolve
  * one is refused outright rather than started: an unbounded grind with no exit
