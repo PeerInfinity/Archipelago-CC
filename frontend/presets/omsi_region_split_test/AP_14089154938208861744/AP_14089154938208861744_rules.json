@@ -321,7 +321,8 @@
             "townIndex": 0,
             "regionId": "region_1_0",
             "exploreVar": "Wander",
-            "exploreThreshold": 0.05
+            "exploreThreshold": 1,
+            "exploreMaxLevel": 10
           },
           "ap_locations": {
             "start_journey": "region_1_0__start_journey"
@@ -487,7 +488,8 @@
             "townIndex": 0,
             "regionId": "region_0_1",
             "exploreVar": "Wander",
-            "exploreThreshold": 0.05
+            "exploreThreshold": 1,
+            "exploreMaxLevel": 10
           },
           "exits": [
             {

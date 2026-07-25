@@ -34,14 +34,22 @@ const SEED_ID = 'AP_14089154938208861744';
 const GAME_ID = 'omsi_region_split_test';
 const GAME_NAME = 'Omsi Region Split Test';
 
-// The region-split config: 2 overlays of town 0, gated on 'Wander' explored to
-// 5% of the level-100 cap (0.05 * 505000 = 25250 exp) — low enough that the
-// in-app leg can cross it by setting expWander directly.
+// The region-split config: 2 overlays of town 0, gated on 'Wander' FULLY
+// explored — where "fully" means the REGION's own ceiling (arc D2 slice 2b),
+// not the town's. At exploreMaxLevel 10 that is expFromLevel(10) = 5500 exp
+// against the town's 505000, so the fixture is a short region a bot can
+// actually grind out rather than one an in-app leg has to seed past.
+//
+// Before 2b this read `exploreThreshold: 0.05` — a fraction of the level-100
+// cap (25250 exp) — which is what the threshold now means against 5500. The
+// fraction kept its meaning; only the ceiling it is a fraction OF changed.
+const EXPLORE_MAX_LEVEL = 10;
 const REGION_SPLIT = {
     townIndex: 0,
     count: 2,
     exploreVar: 'Wander',
-    exploreThreshold: 0.05,
+    exploreThreshold: 1.0,
+    exploreMaxLevel: EXPLORE_MAX_LEVEL,
 };
 
 async function main() {
@@ -138,8 +146,11 @@ async function main() {
     console.log(`wrote ${path.relative(repoRoot, outFile)}`);
     console.log(`  omsi region r0: ${r0Id} (town 0 overlay)`);
     console.log(`  omsi region r1: ${r1Id} (town 0 overlay)`);
+    // expFromLevel(N) = N*(N+1)*50 — the REGION's ceiling, not the town's.
+    const regionExpCap = EXPLORE_MAX_LEVEL * (EXPLORE_MAX_LEVEL + 1) * 50;
     console.log(`  explore gate: ${REGION_SPLIT.exploreVar} >= ${REGION_SPLIT.exploreThreshold * 100}% `
-        + `(exp ${Math.ceil(REGION_SPLIT.exploreThreshold * 505000)})`);
+        + `of a ${EXPLORE_MAX_LEVEL}-level region (exp ${Math.ceil(REGION_SPLIT.exploreThreshold * regionExpCap)}`
+        + ` of ${regionExpCap})`);
     console.log('Register with:\n'
         + `  python3 scripts/utils/register-preset.py `
         + `${path.relative(repoRoot, outFile)} --game-id ${GAME_ID} --game-name '${GAME_NAME}'`);

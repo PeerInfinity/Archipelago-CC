@@ -67,9 +67,12 @@ import {
     eventually,
 } from '../../omsiSubstrateWrapper/test-helpers.js';
 
-// Gate: expWander >= 0.05 * 505000 = 25250. Pick a value comfortably above.
-const EXPLORE_ABOVE = 60000;
-const R1_MARK = 40000;   // a distinct expWander value banked in r1
+// Gate (arc D2 slice 2b): the fixture's regions cap Explore at level 10, so
+// "fully explored" is expFromLevel(10) = 5500 exp, not the town's 505000.
+// EXPLORE_ABOVE is the cap exactly — which is also where finishProgress clamps,
+// so a Wander landing between the write and the read cannot drift it.
+const EXPLORE_ABOVE = 5500;
+const R1_MARK = 3000;   // a distinct expWander value banked in r1 (gate shut)
 
 /** The synthetic exit-action name whose move targets `region`, or null. */
 function exitToward(region) {
@@ -339,9 +342,9 @@ async function perRegionQueueLegs(testController) {
  */
 const RECORDED_ACTION = 'Wander';
 const RECORDED_LOOPS = 1;
-// Gate = 0.05 × PROGRESS_EXP_CAP (505000) = 25250 exp. One Wander (+200) is
-// the difference between closed and open.
-const BELOW_GATE = 25100;
+// Gate = the region's own ceiling, expFromLevel(10) = 5500 exp (slice 2b).
+// One Wander (+200) is the difference between closed and open.
+const BELOW_GATE = 5350;
 // The fork's native loop budget is 250 mana and one Wander costs all of it,
 // so the replay only fits in ONE loop if the pool (which the bridge pins the
 // budget to) is comfortably larger. A loop that ended mid-replay would still
@@ -552,8 +555,8 @@ async function recordPlaybackLegs(testController, { loopState, gs, watcher, setP
  * the maze is fine-grained too, and a fine-grained Playback block with no
  * bound recording parks for live play (M4), so the queue would stall there.
  */
-// Gate = 0.05 × PROGRESS_EXP_CAP (505000).
-const EXPLORE_GATE = 25250;
+// Gate = the region's own ceiling, expFromLevel(10) = 5500 exp (slice 2b).
+const EXPLORE_GATE = 5500;
 // `<progress value="200"/>` on Wander in the fork's actionList.xml, with the
 // ×4 multiplier gated on an item this fixture never grants.
 const WANDER_EXP = 200;
