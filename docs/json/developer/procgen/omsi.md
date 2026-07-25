@@ -21,11 +21,38 @@ Arc D2 (a Bot driven by the fork's own automation planner), E (multi-town travel
 
 omsi is a **content source** in the registry's sense (`zoneCount` + `extractZoneRules`), but its zones are not independent content the way jta's are. Extra `Town` instances are blocked all over the engine — action-name uniqueness, static DOM, `getTravelNum`, the `(town, varName)`-keyed unlock table — so a "region" is an **overlay on one town** rather than a second town:
 
-- Pipeline ① config `substrateConfig.omsi.regionSplit = { townIndex, count, exploreVar, exploreThreshold }` makes the substrate emit `count` separate zones whose payloads all carry the **same** `omsiTown`, each with an `omsiRegion` gate descriptor. Absent ⇒ today's single-region behaviour, byte-inert (every pre-arc-C preset regenerates byte-identical).
+- Pipeline ① config `substrateConfig.omsi.regionSplit = { townIndex, count, exploreVar, exploreThreshold, exploreMaxLevel, regions }` makes the substrate emit `count` separate zones whose payloads all carry the **same** `omsiTown`, each with an `omsiRegion` gate descriptor. Absent ⇒ today's single-region behaviour, byte-inert (every pre-arc-C preset regenerates byte-identical).
 - **Per-region state is HOST-side.** The fork exposes `dumpRegionState(townIndex)` / `loadRegionState(townIndex, snapshot)` — they swap the town's value props, derived from the town's own var lists, and run `adjustAll` + `check` on both branches. The snapshots live in the bridge's `_regionStore`, keyed by `region_id`. **Zero new fork save keys** — which also means per-region state is **session-scoped**: `loadRegionState(town, null)` zeroes the region's value props, so after an iframe or page reload every region reads as freshly-entered on its next visit, whatever the fork's own save holds.
 - **Exits are derived, not authored.** `_installRegionExits` walks `world.exits` (the same spiral-adjacency exits procgenPlayer routes on, exactly like jta's `_getRegionExits`) and injects one **synthetic exit action** per graph exit through `managed.js`'s `injectSyntheticAction`. Those actions are registered *after* `initializeActions()`, so they are resolvable through `getActionPrototype` (the queue's name lookup) but never appear in `totalActionList`, the planner census, or the DOM — vanilla enumeration and the byte-exact replay gate never see them.
-- **The exit gate is Explore-%.** A synthetic exit's `canStart()` consults `regionExitAvailable()`: `min(1, town[exp<Var>] / 505000) >= exploreThreshold` (default 1.0 — fully explored). Below the threshold the exit reads as an ordinary locked action.
+- **The exit gate is Explore-%.** A synthetic exit's `canStart()` consults `regionExitAvailable()`: `min(1, town[exp<Var>] / cap) >= exploreThreshold` (default 1.0 — fully explored), where `cap` is the region's own ceiling (`expFromLevel(exploreMaxLevel)`, below) and the town's 505000 when it declares none. Below the threshold the exit reads as an ordinary locked action.
 - Taking the exit runs `finish()`, which publishes the visit recording and then dispatches `user:regionMove` carrying the **real graph exit name**. That matters for tests and for the strict action gate: an omsi exit crossing is a genuine player-performed exit, not an exit-less synthetic reposition.
+
+### Per-region max Explore level — two views of level (arc D2 slice 2b)
+
+A region that had to be explored to the *town's* level 100 before its exit opened would be the whole game, N times over. `regionSplit.exploreMaxLevel` makes a region a **mini-town compressed into N levels**: its exp hard-caps at `expFromLevel(N)`, and everything the player experiences as "how far along am I" reaches its end there.
+
+Config is a shared default plus per-zone overrides — `regionSplit.exploreMaxLevel`, `regionSplit.regions[i].exploreMaxLevel` — resolved per zone as *override → shared → `max(1, round(100 / count))`*. `exploreThreshold` keeps its meaning and stays a fraction; it is a fraction **of the region's own ceiling** now, so the 1.0 default still reads "fully explored".
+
+The whole mechanism is one seam, `Town.getLevel`, because the arc-B `<totalDiscovered>` curves, the unlock rows, the action thresholds and the UI percentage all consume it. But they must not consume it the *same way*, so level has **two views**:
+
+| view | who reads it | what it is |
+|---|---|---|
+| **EFFECTIVE** — `getLevel` | unlock-row predicates, action `visible`/`unlocked` thresholds, the UI %, the exit gate | `min(100, floor(raw · 100 / N))` — **schedules compress** into the region's N levels |
+| **RAW** — `getRawLevel`, capped at N by the exp clamp | the `<totalDiscovered>` evaluator and the unlock table's quantity-row dot product | the vanilla level — **quantities partition** |
+
+The partition is the load-bearing half and it is why the full-complement model was vetoed: those curves are **linear in level**, so a raw cap at `100/count` hands each region ≈`1/count` of the town's discoverables *for free* — no formula rewriting, and no region minting the town's whole complement. The effective view would have given every region everything.
+
+Details that bite:
+
+- **Three `505000` sites, not one.** `finishProgress` carries the literal at the overflow compare, the assignment, **and** the `=== 505000` capped-already fast path — which also owns the `pauseOnComplete` "Progress complete!" branch. Moving only the two clamp sites still clamps exp correctly and *hides* the bug: at a region cap the equality never matches, so the perf early-return and the completion pause quietly stop working for every rescaled region.
+- **`getLevel` has two scaling branches** (`linear` and the default quadratic). The effective wrap sits at the single return site after both, so a linear-scaled var rescales on the same ladder a quadratic one does — and `expForLevel` picks the matching curve for the cap.
+- **`setActiveRegion` owes a recompute.** The host swaps region *value* state first (`loadRegionState`, whose `adjustAll` + `Unlocks.check` therefore run under the **outgoing** region's ladder) and installs region *metadata* second. Installing a different scale re-runs both; a same-scale swap skips it, since `loadRegionState` already did the work.
+- **Installing a lower maximum clamps stored exp**, or the var would sit forever above a ceiling whose equality never matches.
+- **The planner's engine copy is not managed**, so the scale rides `buildWorldConfig`/`installWorldConfig` as a third half beside the award schedule and the unlock overlay (the P2-A principle) — otherwise a plan would be computed against vanilla thresholds and played against compressed ones.
+- Cosmetic, accepted: `getPrcToNext` interpolates within **raw** levels, so the bar fills toward the next raw step while the level printed beside it jumps in `100/N` increments.
+- ⚠ **Composition landmine for the future emission×split arc** (arc-C ruling 7 still stands — split worlds emit no unlock locations today, so nothing is mis-partitioned yet): quantity row ids are **global** with global dedupe, while each region climbs its own local ladder from zero. Naive composition lets region A's local batches consume the global ids and dedupe region B's identical locals to nothing, stranding batches `count+1..B` forever. The fix is host-side — per-region step counters in the bridge (it knows the active region when a step fires) mapping to region-suffixed location ids, access-ruled on reaching that region. `Unlocks.applyManagedTotals` needs its own ruling there too: `qManagedBatches` is global and overwrites the **active** region's totals.
+
+Everything is off the vanilla path behind one falsy check (`Town.regionScale` is null), and an arc-C region that declares no `exploreMaxLevel` — every pre-2b preset — installs nothing. The byte-gate is what proves the inertness of a change in a white-hot function.
 
 ## Host-side clock and mana brokering
 

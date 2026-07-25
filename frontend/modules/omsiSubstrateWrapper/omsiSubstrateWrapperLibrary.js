@@ -194,10 +194,35 @@ export function getOmsiUnlockScale() { return _unlockScale; }
 // `townIndex` (region-overlay on one town — arc C ruling 1), each carrying an
 // `omsiRegion` gate descriptor. The exits BETWEEN those zones come from the
 // layout's grid adjacency (the region graph the bridge derives synthetics
-// from), so the descriptor holds only the gate: which Explore var, and how
-// far explored (fraction of the level-100 cap) an exit needs.
-let _regionSplit = null;   // { townIndex, count, exploreVar, exploreThreshold } | null
+// from), so the descriptor holds the gate: which Explore var, how far explored
+// (a fraction of the region's OWN cap) an exit needs, and — arc D2 slice 2b —
+// how many levels that region's Explore ladder is compressed into.
+let _regionSplit = null;   // { townIndex, count, exploreVar, exploreThreshold, exploreMaxLevels } | null
 export function getOmsiRegionSplit() { return _regionSplit; }
+
+// arc D2 slice 2b: a region is a mini-town compressed into N Explore levels.
+// Config is a shared default plus per-region overrides:
+//
+//   regionSplit: {
+//     count: 4, exploreVar: 'Explored',
+//     exploreMaxLevel: 10,                       // the world default
+//     regions: [{ exploreMaxLevel: 4 }, ...],    // per-zone overrides, by ordinal
+//   }
+//
+// Precedence per zone: the zone's own override → the shared default →
+// `max(1, round(100 / count))`, which spreads the town's 100 levels evenly
+// across its regions. `exploreThreshold` keeps its meaning and stays a
+// FRACTION — of the region's own cap now, so the 1.0 default still reads
+// "fully explored".
+const OMSI_MAX_EXPLORE_LEVEL = 100;
+
+// An integer max level in [1, 100], or null when absent/unusable.
+function _readMaxLevel(v) {
+    if (v === undefined || v === null || v === '') return null;
+    const n = Math.trunc(Number(v));
+    if (!Number.isFinite(n) || n < 1) return null;
+    return Math.min(OMSI_MAX_EXPLORE_LEVEL, n);
+}
 
 // Coerce a config value to a region-split descriptor, or null (the byte-inert
 // default). Requires an integer count >= 1; townIndex defaults 0, threshold
@@ -212,7 +237,12 @@ function _readRegionSplit(rs) {
     let threshold = Number(rs.exploreThreshold);
     if (!Number.isFinite(threshold) || threshold < 0) threshold = 1.0;
     if (threshold > 1) threshold = 1.0;
-    return { townIndex, count, exploreVar, exploreThreshold: threshold };
+    const shared = _readMaxLevel(rs.exploreMaxLevel);
+    const evenSplit = Math.max(1, Math.round(OMSI_MAX_EXPLORE_LEVEL / count));
+    const overrides = Array.isArray(rs.regions) ? rs.regions : [];
+    const exploreMaxLevels = Array.from({ length: count }, (_, i) =>
+        _readMaxLevel(overrides[i]?.exploreMaxLevel) ?? shared ?? evenSplit);
+    return { townIndex, count, exploreVar, exploreThreshold: threshold, exploreMaxLevels };
 }
 
 // Coerce a config value to a valid scale: a finite number in (0, 1],
@@ -451,6 +481,11 @@ export const substrateRegistryEntry = Object.freeze({
                     regionId: region_id,
                     ...(_regionSplit.exploreVar ? { exploreVar: _regionSplit.exploreVar } : {}),
                     exploreThreshold: _regionSplit.exploreThreshold,
+                    // slice 2b: this region's own Explore ladder length. The
+                    // bridge passes the whole descriptor to managed.js
+                    // setActiveRegion, which installs it as the town's rescale
+                    // for as long as this region is the active one.
+                    exploreMaxLevel: _regionSplit.exploreMaxLevels[zoneIdx],
                 },
             };
             if (zoneIdx === 0) {

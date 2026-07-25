@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { afterEach, describe, it, expect } from 'vitest';
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import {
@@ -10,6 +10,7 @@ import {
     OMSI_START_JOURNEY_LOCATION_ID,
     OMSI_VICTORY_ITEM_NAME,
     OMSI_LIBRARY_ITEMS,
+    getOmsiRegionSplit,
 } from './omsiSubstrateWrapperLibrary.js';
 
 // The library registers on import (side effect) — same pattern the
@@ -204,5 +205,84 @@ describe('world (de)serialization', () => {
         expect(substrateRegistryEntry.deserializeWorld(null).exits.size).toBe(0);
         expect(substrateRegistryEntry.serializeWorld(null).exits).toEqual([]);
         expect(substrateRegistryEntry.serializeWorld({ exits: 'bogus' }).exits).toEqual([]);
+    });
+});
+
+describe('region split — per-region max Explore level (arc D2 slice 2b)', () => {
+    // applyPipelineConfig is module state, so every case installs what it needs
+    // and the block clears it at the end (the extractZoneRules block above runs
+    // against the unsplit default).
+    const zone = (i) => substrateRegistryEntry
+        .extractZoneRules(i, { region_id: `region_${i}` }).payload.omsiRegion;
+
+    afterEach(() => substrateRegistryEntry.applyPipelineConfig({}));
+
+    it('defaults to an even split of the town’s 100 levels', () => {
+        substrateRegistryEntry.applyPipelineConfig({
+            regionSplit: { townIndex: 0, count: 4, exploreVar: 'Wander' },
+        });
+        expect(zone(0).exploreMaxLevel).toBe(25);
+        expect(zone(3).exploreMaxLevel).toBe(25);
+        expect(getOmsiRegionSplit().exploreMaxLevels).toEqual([25, 25, 25, 25]);
+    });
+
+    it('rounds the even split and never yields 0', () => {
+        substrateRegistryEntry.applyPipelineConfig({
+            regionSplit: { count: 3, exploreVar: 'Wander' },
+        });
+        expect(getOmsiRegionSplit().exploreMaxLevels).toEqual([33, 33, 33]);
+
+        substrateRegistryEntry.applyPipelineConfig({
+            regionSplit: { count: 250, exploreVar: 'Wander' },
+        });
+        // 100/250 rounds to 0 — a zero-level region could never be explored.
+        expect(getOmsiRegionSplit().exploreMaxLevels[0]).toBe(1);
+    });
+
+    it('a shared default overrides the even split', () => {
+        substrateRegistryEntry.applyPipelineConfig({
+            regionSplit: { count: 4, exploreVar: 'Wander', exploreMaxLevel: 10 },
+        });
+        expect(getOmsiRegionSplit().exploreMaxLevels).toEqual([10, 10, 10, 10]);
+    });
+
+    it('per-region entries override the shared default, by zone ordinal', () => {
+        substrateRegistryEntry.applyPipelineConfig({
+            regionSplit: {
+                count: 3, exploreVar: 'Wander', exploreMaxLevel: 10,
+                regions: [{ exploreMaxLevel: 4 }, {}, { exploreMaxLevel: 40 }],
+            },
+        });
+        expect(getOmsiRegionSplit().exploreMaxLevels).toEqual([4, 10, 40]);
+        expect(zone(0).exploreMaxLevel).toBe(4);
+        expect(zone(2).exploreMaxLevel).toBe(40);
+    });
+
+    it('clamps to [1, 100] and falls back on unusable values', () => {
+        substrateRegistryEntry.applyPipelineConfig({
+            regionSplit: {
+                count: 4, exploreVar: 'Wander', exploreMaxLevel: 10,
+                regions: [{ exploreMaxLevel: 0 }, { exploreMaxLevel: 999 },
+                    { exploreMaxLevel: 'nope' }, { exploreMaxLevel: 7.9 }],
+            },
+        });
+        // 0 and a non-number are unusable -> the shared default; 999 clamps to
+        // the town's own ceiling; a fraction truncates.
+        expect(getOmsiRegionSplit().exploreMaxLevels).toEqual([10, 100, 10, 7]);
+    });
+
+    it('exploreThreshold keeps its meaning as a FRACTION of the region cap', () => {
+        substrateRegistryEntry.applyPipelineConfig({
+            regionSplit: { count: 2, exploreVar: 'Wander', exploreMaxLevel: 10, exploreThreshold: 0.5 },
+        });
+        // The descriptor carries both, and the fork derives the exp from the
+        // region's own ceiling — the host never multiplies out a cap here.
+        expect(zone(0)).toEqual({
+            townIndex: 0,
+            regionId: 'region_0',
+            exploreVar: 'Wander',
+            exploreThreshold: 0.5,
+            exploreMaxLevel: 10,
+        });
     });
 });
