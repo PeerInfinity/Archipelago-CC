@@ -83,9 +83,22 @@ Worth stating for omsi specifically: a loop there also ends by **exhausting its 
 
 A Bot block dispatches per **action**: each solver parks on one action (`_botExecutedAction` for `walkTo`, `_delegatedAction` for delegation), and its completion resumes the frame loop, which re-enters the Bot branch for the block's next action. A bot is **not** live play — `livePlayRegion()` returns null while a solver drives — so its events pass the strict gate on the `queueExecution` exemption (`_delegatedAction || _botExecutedAction`), not `parkedLivePlay`. The bridges' `fromLoop`-less departures ride that exemption.
 
+**No stamping, and that is a ruling rather than an omission.** `_botExecutedAction` grants the exemption *before* any `fromLoop` flag is consulted, so stamping a solver-driven publish would work by accident and hide which exemption is actually carrying it. jta set the precedent; omsi follows it (see [omsi.md](./omsi.md#no-ap-award-fires-under-a-bot-in-a-split-fixture) for how a leg pins the verdict when no AP location can fire to demonstrate it end to end).
+
+Two substrates declare `executeVia: 'solver'` today and they solve very differently:
+
+|  | **jta** | **omsi** |
+|---|---|---|
+| `queueActions` | `regionMove` | `regionMove` — so the Bot only ever handles **exit walks**; location-check actions fall through to normal handling |
+| What drives the walk | the fork's automation, re-armed by the BRIDGE (it holds `_pendingWalkExit` across a same-region reload) | the fork's own **Advanced Automation planner**, engaged by the bridge and left to plan |
+| Retry across a reset | the bridge's own memory — the park stays up and the resumed walk's events keep passing | the **generic queue-restart retry** below: the window closes on the teleport, the queue re-drives from index 0, routes back, and re-dispatches `walkTo` |
+| Cost of one attempt | sub-second under Instant | **~12 s** — every fork loop end is a full host round trip, and omsi has no `instant` |
+
+omsi's multi-run walk is therefore the same contract as [a replay bigger than one run](#a-replay-bigger-than-one-run), driven by a planner instead of a recording: the window does not survive the reset, the *queue* does. Anything waiting on an omsi bot must be sized against the round-trip rate, not against fork loops.
+
 **Bot economy is one economy, by capture shape** — Bot execution costs what live play of the same content costs, and *which* charge that means follows the region's category, not the fact that a bot drove it:
 
-- **Fine (jta, maze)**: nothing charged on completion. The substrate bills the same play natively — jta's energy drain mirrors into the pool, the maze charges per tile — so `_completeBotExecutedAction` charges only when the shape is *not* fine. The flat completion charge that predates the summary/fine split double-billed a natively-charging substrate; dropping it is the fix.
+- **Fine (jta, maze, omsi)**: nothing charged on completion. The substrate bills the same play natively — jta's energy drain mirrors into the pool, the maze charges per tile, omsi's per-tick mana mirror publishes every drain the fork takes — so `_completeBotExecutedAction` charges only when the shape is *not* fine. The flat completion charge that predates the summary/fine split double-billed a natively-charging substrate; dropping it is the fix.
 - **Summary (runner, bounce)**: priced by TIME. The per-second drain runs while the bot plays (`_timeDrainTick` charges a solver-driven summary region exactly as it charges a parked live-play one — the two states are mutually exclusive, so a tick never charges twice), and the completion itself costs only what the `loop_costs` data names explicitly. Both route through `_chargeLiveAction`, so a bot's spend awards region XP 1:1 like every other spend.
 
 The drain tick does **not** increment `_summaryDrainSeconds` on the bot path: that counter is Record-*capture* state (it becomes a saved visit's duration), and a Bot block records nothing.

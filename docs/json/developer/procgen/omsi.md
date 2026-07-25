@@ -12,8 +12,9 @@ The iframe boots with `?managed=1`, which makes the fork call `IdleLoopsManaged.
 | **B** — town de-hardcoding | the 14 hand-pinned `adjustPots()…adjustWells()` capacity functions replaced by compiling the XML `<totalDiscovered>` formulas the fork already declares | fork |
 | **C** — region split | N genuine AP regions all overlaying **one** town, with host-side per-region state and synthetic exit actions | fork (`managed.js`) + bridge |
 | **D1** — loops mode | `loopSupport`, the step gate, per-region authored queues, Record capture and Playback replay | outer repo only |
+| **D2** — the Bot | the fork's own automation planner as the `walkTo` solver, plus the per-region Explore rescale it needs | outer repo (slices 1/2/3) + fork (slice 2b) |
 
-Arc D2 (a Bot driven by the fork's own automation planner), E (multi-town travel) and F (a panel queue editor) are not built. **omsi Instant is last of all substrates by standing ruling** — the fork has no fast-step surface.
+Arc E (multi-town travel) and F (a panel queue editor) are not built. **omsi Instant is last of all substrates by standing ruling** — the fork has no fast-step surface.
 
 **The fork byte-gate.** Fork-side changes are gated on reproducing the reference planner run exactly: `CC/scripts/omsi-stats/run-planner.mjs` at seed 12345 must still report **461 loops / 5,195,188 ticks / final-state hash `9d9952e68bc8373c` / 0 RNG draws**. ⚠ Run it with `--worktree`: the harness sims `git archive HEAD`, so without the flag a green gate is testing the *parent* commit.
 
@@ -75,7 +76,7 @@ Two restarts are deliberately **not** reported, and both matter for reasoning ab
 
 ## Loop-mode block support (arc D1)
 
-omsi declares `manual`, `record`, `playback`, `requiresLoopMode` and `queueActions: ['regionMove']` — **no `instant`** (no fast-step surface exists) and **no `executeVia`** (the Bot is arc D2, so `regionSolver()` returns null and the Bot radio never renders). Contract and rationale for the block-mode system: [Loop Recording and Block Modes](./loop-recording.md).
+omsi declares `manual`, `record`, `playback`, `requiresLoopMode`, `queueActions: ['regionMove']` and (since arc D2) `executeVia: 'solver'` — **no `instant`**, because no fast-step surface exists. Contract and rationale for the block-mode system: [Loop Recording and Block Modes](./loop-recording.md).
 
 Declaring `record && playback` is what **arms the M3b strict action gate** for omsi regions, and every omsi preset carries `loop_costs`, so loop mode auto-enables and the gate is live for all of them. That is why arc D slice 1 restructured seven in-app legs to park a Manual block before performing anything.
 
@@ -91,7 +92,7 @@ Only the host can see the queue, so `index.js` derives the live-play half and pu
 - **It is a 200 ms poll, not a set of event subscriptions.** The answer changes on a park, a successful exit, a wrong exit, a hard pause, a user pause, a loop reset, a block-mode change, a queue edit and a loop-mode toggle. Subscribing to eight edges means a missed ninth silently freezes the game or silently lets it grind — precisely the failure the gate exists to prevent. Only changes are pushed, so the iframe sees one message per transition (plus a force-push on `iframe:appReady` and on region entry).
 - **The gate withholds `m.step()` only.** The mana mirror and the victory watch stay ungated (they observe), the clock interval keeps running, and elapsed time is re-baselined on every callback so a closed gate cannot bank time and replay it as a burst.
 
-⚠ **Arc D2 must extend this payload.** `livePlayRegion()` returns null while a solver drives, so a Bot block would run against a frozen clock.
+⚠ **A solver needs its own half of this payload**, and arc D2 added it. `livePlayRegion()` returns null while a solver drives, so a Bot block on the bridge's own region would otherwise run against a frozen clock; the push carries `botSolverRegion` alongside `livePlayRegion` and `_mayStepClock` opens on either.
 
 ### Per-region authored queues
 
@@ -131,6 +132,57 @@ Two consequences specific to omsi:
 - **Every omsi departure — live or replayed — is followed within a tick by a native loop end, a run-end report and a reset teleport.** A loop also ends by exhausting its queue, and the departure is the queue's last entry. That is the `requiresLoopMode` contract, not a defect; it is also why the in-app leg *folds* region-move events from the dispatcher instead of polling for "current region is the target", which is only ever a transient.
 - **This path was broken until arc D slice 4b** and the fix is host-side in loops, not in omsi: the substrate-driven reset seam ran `_resetActionsProgress()` alone and left four pieces of park state behind. See [gotchas](./gotchas.md#two-reset-flows-and-they-disagreed).
 
+## The Bot — the fork's own planner as the solver (arc D2)
+
+omsi's Bot is not a host-side pathfinder. The fork already ships **Advanced Automation**: a planner that runs in its own Web Worker on a private copy of the sim, scores candidate queues, and installs the winner. Arc D2 makes loops' `walkTo` solver *engage that planner* and stand back — the same instinct as Playback, where the recording is a plan and the fork's own queue is the executor.
+
+The planner runs unmodified under `?managed=1`, and the bridge executes **inside** the fork's iframe, so it drives the planner through plain globals (`setOption`, `AdvancedAutomation.planNow()`, `AdvancedAutomation._debug`). No transport was needed and the whole Bot is outer-repo; only the [Explore rescale](#per-region-max-explore-level--two-views-of-level-arc-d2-slice-2b) it depends on is a fork change.
+
+### The lifecycle
+
+1. A Bot-mode block whose action is a `regionMove` out of an omsi region parks (`isProcessing` stays true) and dispatches `walkTo({kind:'exit', name})`.
+2. The bridge opens the **bot window** (`_botInFlight`, mirroring `_replayInFlight`), remembers the target exit, **saves every automation option it is about to write**, and engages the planner (`plannerMode: 'auto'`, pause-while-planning on, `plannerMultiTown` **off** so a plan cannot route out of the town).
+3. The fork grinds under the planner. Each fork loop end is reported, so the host resets and teleports — see pacing below.
+4. At the first **held boundary** where `regionExitAvailable()` has become true, the bridge installs an exit-only plan and disengages. Ruling 4: the crossing happens at the *next loop boundary after the gate opens*, never mid-loop, and a held boundary is that moment — the engine is parked and nothing is in flight to interrupt.
+5. The synthetic exit fires, the departing `regionMove` completes the block, and the window closes, **putting the player's automation options back**.
+
+Three orderings inside that are load-bearing:
+
+- **Install the exit plan FIRST, disengage SECOND** — the opposite of the obvious order. Disengaging runs the fork's `resumeIfPlannerPaused` → `pauseGame()`, and `pauseGame` restarts the loop when `shouldRestart || timer >= timeNeeded`, which is exactly what a held boundary is. That restart is *not* suppressed, so it reports a run end and the host teleports the player out mid-crossing. Installing first zeroes the hold, so the disengage finds nothing to restart. The manual-edit detector (`interceptPrepareRestart` reads any queue it did not install as a player edit) cannot misfire either, because the disengage lands in the same synchronous step and its own enabled-gate returns before the compare.
+- **The cold start needs one suppressed recompile.** A plan LANDING is not a plan STARTING: `onResult` writes the queue, but only `resumeIfPlannerPaused` starts the engine, and that acts solely on a pause the planner took — which needs a boundary, which needs a step, while the clock gate is shut on the boundary the bot arrived past. Frozen substrate, no reset of its own to unfreeze it — the [D1 gotcha](./gotchas.md#a-frozen-substrate-cannot-generate-the-reset-that-unfreezes-it) reincarnated. `_clockTick` fires one `_forceLoopRecompile` (restart under `_applyingHostReset`) once a runnable plan exists. A bare `restartLoop()`/`pauseGame()` here would fabricate a run end for a loop the game never finished.
+- **Only a window that ENGAGED may disable the planner.** `_startBotWalk` returns early without engaging when the gate is already open at dispatch — the *common* case on the last re-dispatch of a multi-run walk, where the previous run finished the grind. Both `_crossBotExit` and `_endBotWalk` therefore gate their disable on `_botSavedOptions`. Without that they force `advancedAutomationEnabled` off with nothing saved to restore from, silently taking Advanced Automation away from a player who had switched it on. The invariant is *the bot restores what the bot saved*, never *the bot writes the default*.
+
+### The held-boundary clock gate
+
+Managed mode's `singleTick()` has no `gameIsStopped` guard — that check lives in the rAF `tick()` path, which managed mode disables. So while the planner pauses at a boundary, an ungated clock re-runs `loopEnd()` + `prepareRestart()` on **every tick**: 500 stepped ticks minted 500 phantom loops, inflating `totals` and `totals.effectiveTime` *quadratically* (effectiveTime is never zeroed without a `restart()`, so each held tick re-banks a growing value).
+
+⚠ **The predicate is a HELD BOUNDARY, not `stoppedAt`.** `load()` ends with a `pauseGame()` toggle, so `gameIsStopped` is **ambient-true throughout ordinary managed play** — gating on it freezes omsi entirely (240 ticks of real Wander progress were measured with `stoppedAt: true`). The correct test is `timer >= timeNeeded` still true **after** a step batch returns: a legitimate crossing restarts inside the crossing tick, so post-batch persistence means something is *holding* the restart. Validated at 0 false positives across 1,600 batches / 481 real loops / 120,400 ticks, and it fires within 4 batches of a real planner pause. It is also planner-agnostic, which sidesteps `pausedByPlanner`/`awaitingPlan` being private to the fork's IIFE.
+
+The gate has the same shape as the step gate: it withholds `m.step()` only, and the held boundary is also where the bot's two decisions are taken (cross if the gate opened, cold-start if a plan is waiting).
+
+### Pacing: a bot walk is a chain of host round trips
+
+**There is no such thing as a single-run bot walk on omsi.** Any walk needing any grinding spans host loop resets, because a fork loop end always reports one — that is the `requiresLoopMode` contract, not a defect. Each fork boundary costs a full round trip: report → host reset → reset teleport to the queue's index-0 region → the bot window closes on the regionChanged-away → the queue re-drives from 0 and routes back → the M6 bot wake re-dispatches `walkTo` → re-engage. The install is idempotent for exactly this reason, like `_startReplay`.
+
+⚠ **A standalone probe of the planner will badly overstate in-app progress.** Driven continuously the planner opens the region-split fixture's gate in 19–44 fork loops; in-app the same seed spent **25 fork loops to gain one Wander**. Two things account for the gap, and both are inherent:
+
+- Every loop end is a round trip, measured at **~12 s** wall clock (the bridge steps the fork at 50 ticks/s of *real* time, so a ~350-mana loop is ~7 s of that).
+- The bridge **re-pins the budget to the host pool** on every reset, which neutralises the planner's favourite early strategy — "invest" *is* buying mana, and the pin takes it back.
+
+Net measured rate: **~1 productive Wander per 6–7 host round trips.** Size anything that waits on a bot against the round-trip rate, never against fork loops.
+
+### Known issue: the planner's threshold probe reads the wrong view of level
+
+`planner.js` perturbs candidate dimensions to discover which ones drive a capacity, reading levels through `getLevel` (the **effective** view under a rescale) but writing exp back through a **raw**-level formula. It restores the snapshot exactly, so nothing is corrupted and no state leaks — but under a compressed region the probe explores levels the stored exp could never reach, so its answers are miscalibrated. Heuristic quality, not correctness, and deliberately left out of a byte-gated fork slice. If bot behaviour near a threshold ever looks wrong in a split region, look here first.
+
+### No AP award fires under a Bot in a split fixture
+
+Worth stating so nobody goes looking for the test: **split worlds emit no unlock locations at all** (arc-C ruling 7), and the one victory location needs town 1 unlocked — thousands of loops away. So there is no end-to-end "the bot earned an AP check" observation available today.
+
+What the legs pin instead is the **exemption an award would ride**. A departing synthetic exit carries a real exit name, so it is a performed player action the strict gate would block; `livePlayRegion()` is null while a solver drives, so the `parkedLivePlay` exemption the Manual legs use is unavailable; and the arc-D2 ruling is **no `fromLoop` stamping** (jta-consistent — `_botExecutedAction` gives loops' gate a blanket `queueExecution` pass *before* any flag is consulted). So the crossing landing at all is itself the observation, and `omsi-bot-crosses-region` additionally reads `evaluateActionGate` on a location check **in the same tick the window is observed open** — it must return `queueExecution`. Reading it a poll later reads a different moment, because the window opens and closes once per round trip.
+
+The true end-to-end award under a bot belongs to the future emission × split composition arc, together with the [quantity-row identity landmine](#per-region-max-explore-level--two-views-of-level-arc-d2-slice-2b) that arc has to solve first.
+
 ## AP locations, unlock discretization and `unlockScale`
 
 The default (v0) shape is one location: **Start Journey**, checked when the game unlocks town 1, carrying the `Victory` item.
@@ -158,7 +210,7 @@ Arc C's swappable-region seam came free from this: the evaluator resolves a town
 
 ## Capabilities
 
-`supportedFeatures: ['region_topology_from_source', 'arbitrary_ap_locations']`. Loop support is a queueable `regionMove` plus manual play, **Record / Playback**, `requiresLoopMode`, and the fine-grained `takeLastRecording` hook — **no `instant`**, **no `executeVia`** (no Bot until arc D2), **no `customQueues`**. `sharing` declares the continuous mana channel plus 18 shareable consumable types (the numeric entries of the engine's per-loop `resources` bag; boolean entries like glasses/supplies are unlock flags, not consumables, because `addResource` *assigns* them). Zone-based metadata: `zoneCount` (a live getter — the region-split count, else the town count), `extractZoneRules`, `victoryItem: 'Victory'`. Full contract: [Substrate Registry Reference](./substrate-registry.md).
+`supportedFeatures: ['region_topology_from_source', 'arbitrary_ap_locations']`. Loop support is a queueable `regionMove` plus manual play, **Record / Playback**, `requiresLoopMode`, `executeVia: 'solver'` (arc D2's Bot), and the fine-grained `takeLastRecording` hook — **no `instant`**, **no `customQueues`**. `sharing` declares the continuous mana channel plus 18 shareable consumable types (the numeric entries of the engine's per-loop `resources` bag; boolean entries like glasses/supplies are unlock flags, not consumables, because `addResource` *assigns* them). Zone-based metadata: `zoneCount` (a live getter — the region-split count, else the town count), `extractZoneRules`, `victoryItem: 'Victory'`. Full contract: [Substrate Registry Reference](./substrate-registry.md).
 
 ## Presets and in-app coverage
 
@@ -170,9 +222,13 @@ Arc C's swappable-region seam came free from this: the evaluator resolves a town
 | `omsi_scaled_test` | arc A `unlockScale` 0.2 (18 supply locations) |
 | `omsi_region_split_test` | arc C region split, per-region queues, and the arc-D Record/Playback legs |
 
-In-app legs (they run in `test-substrates` mode, whose config **enumerates test ids** — a new leg needs a config entry). On `omsi_substrate_test`: `omsi-clock-runs-only-in-region`, `omsi-budget-mirrors-pool-both-ways`, `omsi-native-budget-raises-pool`, `omsi-out-of-mana-loop-reset`, `omsi-loop-exhaustion-single-reset`, `omsi-victory-start-journey`, `omsi-cross-substrate-item-grant`, `omsi-step-gate-parks-the-clock`. On `omsi_schedule_test`: `omsi-award-schedule`. On the randomized/scaled presets: the seven `omsi-unlock-*` legs. On `omsi_region_split_test`: `omsi-region-split-round-trip`, `omsi-region-split-per-region-queues`, `omsi-record-playback-crosses-region`, `omsi-multi-run-replay-retry`.
+In-app legs (they run in `test-substrates` mode, whose config **enumerates test ids** — a new leg needs a config entry). On `omsi_substrate_test`: `omsi-clock-runs-only-in-region`, `omsi-budget-mirrors-pool-both-ways`, `omsi-native-budget-raises-pool`, `omsi-out-of-mana-loop-reset`, `omsi-loop-exhaustion-single-reset`, `omsi-victory-start-journey`, `omsi-cross-substrate-item-grant`, `omsi-step-gate-parks-the-clock`. On `omsi_schedule_test`: `omsi-award-schedule`. On the randomized/scaled presets: the seven `omsi-unlock-*` legs. On `omsi_region_split_test`: `omsi-region-split-round-trip`, `omsi-region-split-per-region-queues`, `omsi-record-playback-crosses-region`, `omsi-multi-run-replay-retry`, `omsi-bot-crosses-region`, `omsi-bot-multi-reset-walk`.
+
+⚠ The two bot legs cost **~85 s and ~285 s**, and that is structural rather than fixable: see [round-trip pacing](#pacing-a-bot-walk-is-a-chain-of-host-round-trips). Playwright's per-test timeout was raised 300 s → 900 s to fit them (one Playwright test wraps the whole in-app suite). It is a ceiling, not a cost — and the layers below it, `[PROGRESS]` liveness lines and the polls' own STUCK/STARVED/CHECK-BOUND classification, are what actually diagnose a hang.
 
 Each arc-D leg was proven **non-vacuous by a control run** with the mechanism under test neutered — worth repeating for any new one, since an omsi leg that merely watches the game grind will pass without the feature it names.
+
+**Assert restoration of a value you deliberately made non-default.** The slice-3 option-restore bug was live for a whole slice because the fork's `advancedAutomationEnabled` defaults to *false* and the bot's clobber also wrote *false*: an assertion that the option came back unchanged was true for the wrong reason. The leg switches it **on** first, the way a player would, and only then is "the bot leaves the options as it found them" a real pin. The same shape caught arc D2 slice 2b's missing `setActiveRegion` recompute — there the trap was choosing a witness that *cannot* move (discovery totals are raw-driven, so they read the same either way) instead of one that can (an unlock row, which reads the effective level). Before asserting that something was restored or recomputed, check that the value would have differed had the code done nothing.
 
 ## Related documentation
 
