@@ -1744,10 +1744,20 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    sim agrees with live play. THIS IS A FORK SLICE — byte-gate
    (`--worktree`), V4, fork npm, ask-first gitlink all return. Lands
    BEFORE slice 3 (legs use the knob instead of seeded explore state).
-   Stated-unless-vetoed: full discoverable complement per region
-   (quantity partition = separate deferred axis); only the exploreVar
-   rescales; unlock rows fire at effective levels, globally deduped —
-   nothing stranded for AP.
+   ⚠ ROUND-2 CORRECTION (user, same day): the full-complement-per-
+   region consequence is VETOED — **quantities MUST partition** (user:
+   "otherwise there will be logic mismatch somewhere"). Design is now
+   TWO VIEWS of level: EFFECTIVE (raw·100/N) for schedules — unlock-row
+   predicates, action thresholds, UI %, exit gate — and RAW capped for
+   the discovery-quantity consumers (totalDiscovered evaluator +
+   quantity-row dot product), whose LINEAR curves make the 1/count
+   partition fall out of the cap for free. Verified current state:
+   split worlds emit NO unlock locations at all (arc-C ruling 7 — only
+   victory on zone 0), so nothing is mis-partitioned today; the
+   composition landmine is documented in the kickoff (global q-row ids
+   + per-region local ladders would dedupe regions B..N to nothing —
+   host-side per-region step counters at composition time;
+   applyManagedTotals needs its own ruling there too).
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
