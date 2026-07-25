@@ -103,6 +103,12 @@
             "category": "JtA substrate"
         },
         {
+            "id": "jta-latched-run-end-not-masked-by-pin",
+            "enabled": true,
+            "_comment": "The deterministic leg for the reset-authority fix (2026-07-24): the energy pin DECLINES while the fork is latched, and the bridge reports the run end so the host — the sole reset authority — fires the loop reset. Builds the divergence directly (latched at 0 with mana still in the pool, so no drain can ever arrive) and folds setEnergy mutations rather than polling, because the reset erases the state within a beat. Its companion oracle is the bridge's 'breaking a latched energy reset' warning: with this fix that circuit breaker must never fire across a run batch.",
+            "category": "JtA substrate"
+        },
+        {
             "id": "jta-pause-resume-on-region-switch",
             "enabled": true,
             "category": "JtA substrate"

@@ -246,6 +246,54 @@ function _breakLatchedEnergyReset(fullState) {
     _w.doEnergyReset();
 }
 
+// Run-end reporting. The fork latches `is_in_energy_reset` at every run
+// end — energy reaching 0 (checkEnergyReset) AND the threshold "End Run"
+// / no-viable-grind fallbacks (handleThresholdStall), which latch with
+// energy still LEFT. That latch is the substrate's statement that its
+// run is over, but the fork fires its energy-reset callback only from
+// doEnergyReset, so a latched-but-not-yet-reset game reports nothing.
+//
+// The host is the sole reset authority, and it decides on the pool
+// reaching 0. Two ways that signal never arrives on its own:
+//   - the pool still holds something when the fork hits 0 (the two
+//     numbers refill from different places — the fork's doAnyReset uses
+//     its own max_energy, the host refills to maxMana, and in bonus-sync
+//     mode the bonus reconciling them is reported a poll later), and the
+//     frozen game can produce no further drain to close the gap;
+//   - a threshold End Run, where the drain to 0 never happens at all.
+// Either way the run end is real and only we can see it, so report it on
+// the same generic channel a game-initiated reset uses and let the host
+// fire the loop reset. We do NOT run doEnergyReset ourselves and do NOT
+// touch _lastAppliedResetCount: the host's reset lands as a normal
+// gameState:loopReset and its catch-up applies the reset that clears the
+// latch, which keeps the host the sole reset authority.
+//
+// The router already guards the common race (pool and energy hitting 0
+// together): a report carrying a hostResetCount the host has already
+// passed is dropped as covered. Reported once per latch — re-armed when
+// the latch clears — and gated exactly like the drain mirroring, since a
+// region that doesn't mirror drains has no host reset authority to
+// appeal to.
+let _latchRunEndReported = false;
+
+function _reportRunEndIfLatched(fullState) {
+    if (fullState.isInEnergyReset !== true) {
+        _latchRunEndReported = false;
+        return;
+    }
+    if (_latchRunEndReported) return;
+    if (!_client || !_world?.manaEnabled) return;
+    _latchRunEndReported = true;
+    log('debug', 'fork latched in an energy reset — reporting the run end to the host '
+        + `(energy=${Math.round(fullState.currentEnergy)}, pool=${Math.round(_hostCurrentMana)}, `
+        + `hostResets=${_hostResetCount}/${_lastAppliedResetCount})`);
+    _client.publishEventBus('substrate:resourceReset', {
+        substrateId: 'jta',
+        resource: 'mana',
+        hostResetCount: _hostResetCount,
+    });
+}
+
 // Walk-stall watchdog. A walkTo that stops advancing produces no output
 // at all — the bridge logs only on transitions, so a frozen zone reads
 // exactly like a working one, and diagnosing the deadlock above meant
@@ -335,6 +383,12 @@ function _pollTick() {
         });
     }
     _lastSampledEnergy = currentEnergy;
+
+    // AFTER the drain mirroring above, deliberately: the run's last drain
+    // has to reach the host first, so a pool that empties in the same beat
+    // fires the reset on its own and this report is dropped as covered
+    // (instead of firing a second reset against an already-refilled pool).
+    _reportRunEndIfLatched(fullState);
 }
 
 // ────────────────────────────────────────────────────────────────
@@ -377,8 +431,36 @@ function _applyCatchUpResets() {
     log('debug', `applied ${delta} catch-up reset(s)`);
 }
 
+// True while the fork is latched in an energy reset (run over, game
+// frozen). Fail-open: a fork without getFullState reads as not latched,
+// so the pin behaves exactly as it did before this guard existed.
+function _isLatchedInEnergyReset() {
+    if (typeof _w.getFullState !== 'function') return false;
+    return _w.getFullState().isInEnergyReset === true;
+}
+
 function _syncEnergyFromPool() {
     if (typeof _w.setEnergy !== 'function') return;
+    // NEVER raise energy while the fork is latched. The latch means the
+    // run ended (energy reached 0, or a threshold End Run); the host
+    // decides that a loop reset is due by watching the pool drain, and
+    // the game is frozen until the resulting catch-up runs doEnergyReset.
+    // Pinning here would hide the run's end from the only party that can
+    // end it — the deadlock this guard exists to prevent (see
+    // _breakLatchedEnergyReset above, and the run-end report in the poll
+    // that gets the host to fire the reset).
+    //
+    // The declined pool value is DROPPED, not deferred: the resync point
+    // is the catch-up-then-pin ordering after the host's reset, and that
+    // pin carries the REFILLED pool — a stale pre-reset value applied
+    // afterwards would overwrite the refill. The bookkeeping below is
+    // skipped for the same reason: writing _lastSampledEnergy = pool
+    // while the game actually sits at 0 would make the next poll publish
+    // a fabricated drain of the whole difference.
+    if (_isLatchedInEnergyReset()) {
+        log('debug', `declining the energy pin: fork is latched in an energy reset (pool=${Math.round(_hostCurrentMana)})`);
+        return;
+    }
     if (_energyBonusSync) {
         // JtA owns its max_energy in bonus-sync mode; sync CURRENT energy
         // only (the max param is optional). Pinning max here would fight
@@ -640,7 +722,14 @@ function _handleLoadRegion(payload) {
     _currentRegionId = regionId;
     _world = world;
     _isActive = true;
-    _lastSampledEnergy = _hostCurrentMana;
+    // Baseline the poll against the fork's ACTUAL energy, not the pool.
+    // They are the same number whenever the pin above applied (it just
+    // wrote one into the other), but the pin DECLINES while the fork is
+    // latched — and baselining to the pool there would make the very next
+    // poll read the gap as a drain and publish mana the game never spent.
+    _lastSampledEnergy = typeof _w.getFullState === 'function'
+        ? _w.getFullState().currentEnergy
+        : _hostCurrentMana;
     // Force the next poll to re-report our starting-energy bonus (the host
     // may have been reset — losing our bonus — while we were inactive).
     _lastReportedBonus = null;
@@ -1493,6 +1582,11 @@ async function main() {
         if (data?.newRegion && data.newRegion !== _currentRegionId) {
             _isActive = false;
             _stopPolling();
+            // Re-arm the run-end report for the next visit: if we come
+            // back still latched (the catch-up on re-entry didn't clear
+            // it), the host never acted on the first report and deserves
+            // a second one.
+            _latchRunEndReported = false;
             _clearPendingWalk('regionChanged:left-region');
             if (typeof _w.pauseGameLoop === 'function') _w.pauseGameLoop();
         }

@@ -298,15 +298,47 @@ plus a 30s walk-stall watchdog and per-call-site `_clearPendingWalk`
 reasons. Verified by 8 consecutive green substrates runs **with the
 breaker firing in 4 of them** (the deadlock still occurs at ~50% and is
 repaired each time — positive evidence, not absence of failure).
-**STILL OPEN — the deeper fix, RECOMMENDED as its own slice BEFORE arc D
-slice 4:** the pin should decline to raise energy while the fork is
-latched, leaving the drain visible so the host fires the reset normally
-and stays the sole reset authority. It is a contract change (same
-"who resets a frozen substrate" question as D2 recon item 4), so it wants
-a design pass rather than a tack-on; slice 1 does not touch it. The
-breaker doubles as its **oracle**: if the deeper fix is right, breaker
-firings drop to zero across a run batch. Until then, every firing is a
-real deadlock papered over.
+(1c) **The deeper reset-authority fix — SHIPPED 2026-07-24 (session 69),
+its own slice before arc D slice 4.** Four rulings taken up front (it is
+a contract change, same "who resets a frozen substrate" question as D2
+recon item 4): decline the WHOLE pin (current *and* max) while latched;
+DROP the declined pool value (a deferred pre-reset value would overwrite
+the refill the post-reset pin carries); NO call-site exemptions — the
+guard lives inside `_syncEnergyFromPool` so the contract is "the pin
+never raises energy while the fork is latched", full stop; breaker STAYS
+as a tripwire.
+**The design pass earned its keep: declining ALONE would have shipped a
+second, quieter deadlock.** The latch is set at exactly energy 0 but the
+host decides on the POOL reaching 0, and those diverge (the fork's
+`doAnyReset` refills to its own `max_energy`, the host to `maxMana`, and
+in bonus-sync mode the reconciling bonus is reported a poll later) — so
+declining leaves the fork frozen at 0 with mana still in the pool, which
+nothing can drain, and **the breaker is blind to it** (it requires energy
+> 0). So the slice also has the poll REPORT the latch as
+`substrate:resourceReset` — the same run-end event a game-initiated reset
+uses — published AFTER the drain mirroring, so a pool that empties in the
+same beat fires the reset itself and the report is dropped by the
+router's existing race guard. The bridge never runs `doEnergyReset` for
+this and never touches `_lastAppliedResetCount`: the host fires the loop
+reset and its catch-up clears the latch, so **the host stays the sole
+reset authority — the fix is to stop lying to it, not to take the
+decision away from it.** This also covers a run end drain-watching cannot
+see at all: `handleThresholdStall`'s "End Run" latches with energy left
+over. Third find, from the first green run's own log: `loadRegion`'s
+`_lastSampledEnergy = _hostCurrentMana` re-baseline became a LIE once the
+pin can decline (it made the next poll publish a drain of the whole pool
+the game never spent) — now baselines to the fork's real energy.
+New deterministic leg `jta-latched-run-end-not-masked-by-pin` (substrates
+52→53) builds the divergence directly and FOLDS `setEnergy` mutations
+rather than polling, because the reset erases the state within a beat.
+Both halves proven to bite by neutering: dropping the guard reddens the
+masking assertion; dropping the report hangs the fork for 41s with the
+breaker never firing — deadlock B, observed.
+ACCEPTANCE (the breaker as oracle, since the deadlock occurred at ~50%
+and one green run is a coin flip): **8 consecutive green substrates runs
+53/53 with ZERO breaker firings** (prior baseline: 4 firings in 8), and
+the new path exercised — 5 run-end reports per run. Gates: vitest 3336,
+regression 31/31, compare-runs clean, submodules clean (outer-repo only).
 (2) **The 2 jta progression marathons**
 (`jta-randomized-balanced-progression`, `jta-dataset-world-progression`)
 stay disabled: balance/dataset validation must run NORMAL ticking

@@ -1559,3 +1559,144 @@ registerTest({
     category: 'JtA substrate',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
+
+
+async function latchedRunEndNotMaskedByPin(testController) {
+    const win = await enterJtaRegion(testController);
+    if (!win) return testController.getOverallResult();
+
+    const resetsBefore = readLoopResetCount();
+    const poolBefore = readPool();
+    testController.log(`pool=${poolBefore}, loopResets=${resetsBefore}`);
+    testController.assertEqual('pool starts above zero', true, poolBefore > 0);
+
+    // Build the state the energy pin used to deadlock on: the fork
+    // LATCHED at energy 0 while the shared pool still holds mana.
+    //
+    // Stepping away first is what makes it deterministic — the bridge
+    // deactivates, its poll stops, and the energy we zero below is
+    // therefore never mirrored into the pool. That is the divergence
+    // this fix is about: the fork's run is over, but the host (the sole
+    // reset authority, deciding on the pool reaching 0) will never see a
+    // drain saying so, because the only thing that could produce one is
+    // the frozen game.
+    testController.log(`Stepping out to ${JTA_TEST_START_REGION} so the bridge poll stops…`);
+    moveToRegion(JTA_TEST_START_REGION, JTA_TEST_REGION);
+    const pausedAway = await eventually(
+        testController,
+        () => win.isGameLoopPaused() === true,
+        'game clock paused after stepping out',
+    );
+    testController.assertEqual('bridge deactivated before we latch the fork', true, pausedAway);
+
+    // Zero energy, then hand-run one tick: checkEnergyReset latches
+    // is_in_energy_reset, and updateGamestate returns early from here on
+    // — the fork is frozen until a doEnergyReset clears it.
+    win.setEnergy(0);
+    win.stepTick();
+    const latchedState = win.getFullState();
+    testController.assertEqual('fork latched in an energy reset', true, latchedState.isInEnergyReset === true);
+    testController.assertEqual('fork energy is 0 while latched', 0, Math.round(latchedState.currentEnergy));
+    testController.assertEqual('shared pool still holds mana (no drain was mirrored)', true, readPool() > 0);
+
+    // Witness at the layer under test: every write the bridge makes to
+    // the fork's energy, stamped with whether the fork was latched at
+    // the time. A poll cannot measure this — the reset that follows
+    // erases the state within a beat — so fold the mutations instead.
+    const energyWrites = [];
+    const realSetEnergy = win.setEnergy;
+    win.setEnergy = function spySetEnergy(current, max) {
+        let latched = null;
+        try { latched = win.getFullState().isInEnergyReset === true; } catch { /* ignore */ }
+        energyWrites.push({ current, max, latched });
+        return realSetEnergy.call(win, current, max);
+    };
+
+    // Second witness: the run-end report the bridge now publishes when it
+    // sees the latch. The host module forwards it onto the host bus,
+    // where resourceChannels answers it with a loop reset (unless one
+    // already fired for the same depletion).
+    let runEndReports = 0;
+    const unsubscribe = testController.eventBus.subscribe('substrate:resourceReset', (data) => {
+        if (data?.substrateId === 'jta') runEndReports += 1;
+    });
+
+    try {
+        // Re-enter: loadRegion runs the catch-up (delta 0 — the host has
+        // fired no reset) and then the pin, which is the exact write that
+        // used to mask the run's end.
+        testController.log(`Re-entering ${JTA_TEST_REGION} — loadRegion's pin runs against a latched fork…`);
+        moveToRegion(JTA_TEST_REGION, JTA_TEST_START_REGION);
+
+        const recovered = await eventually(
+            testController,
+            () => readLoopResetCount() === resetsBefore + 1,
+            'host fired a loop reset for the latched run',
+            15000,
+        );
+        testController.assertEqual('host fired a loop reset for the latched run', true, recovered);
+
+        // The bridge told the host its run ended rather than waiting for a
+        // drain that could never come.
+        testController.assertEqual('bridge reported the run end while latched', true, runEndReports >= 1);
+
+        // Land back in the jta region so the catch-up applies (the reset
+        // teleport may have moved us out, which defers it to re-entry).
+        if (readCurrentRegion() !== JTA_TEST_REGION) {
+            moveToRegion(JTA_TEST_REGION, readCurrentRegion());
+        }
+        const unlatched = await eventually(
+            testController,
+            () => win.getFullState().isInEnergyReset === false,
+            'fork unlatched by the host-driven reset',
+            15000,
+        );
+        testController.assertEqual('fork unlatched by the host-driven reset', true, unlatched);
+        const refilled = await eventually(
+            testController,
+            () => win.getFullState().currentEnergy > 0,
+            'fork energy back above zero for the fresh run',
+            10000,
+        );
+        testController.assertEqual('fork energy refilled for the fresh run', true, refilled);
+
+        // THE assertion: the pin never raised energy while the fork was
+        // latched. Every masking write is one of these.
+        const maskingWrites = energyWrites.filter((w) => w.latched === true && w.current > 0);
+        testController.log(`energy writes seen: ${energyWrites.length}, masking: ${maskingWrites.length}`);
+        testController.assertEqual(
+            'no energy write raised the fork above zero while it was latched',
+            0,
+            maskingWrites.length,
+        );
+
+        // Liveness: the spy DOES see pins, so the zero above is not vacuous.
+        // The post-reset resync is the legitimate one.
+        testController.assertEqual(
+            'the spy observed the legitimate post-reset pin',
+            true,
+            energyWrites.some((w) => w.latched === false && w.current > 0),
+        );
+    } finally {
+        win.setEnergy = realSetEnergy;
+        try { unsubscribe?.(); } catch { /* best-effort */ }
+    }
+
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'jta-latched-run-end-not-masked-by-pin',
+    name: 'JtA: the energy pin declines while the fork is latched, and the run end is reported',
+    description: 'Builds the deadlock state directly — the fork latched at energy 0 '
+               + 'while the shared pool still holds mana, so no drain will ever tell '
+               + 'the host a reset is due — then re-enters the region so loadRegion\'s '
+               + 'pin runs against it. Asserts (via a spy on the fork\'s setEnergy, '
+               + 'which also proves it sees the legitimate post-reset pin) that no '
+               + 'write raised energy while latched, that the bridge reported the run '
+               + 'end on the resource channel, and that the host-driven reset unlatched '
+               + 'the fork and refilled it.',
+    testFunction: latchedRunEndNotMaskedByPin,
+    category: 'JtA substrate',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
