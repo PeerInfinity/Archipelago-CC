@@ -1427,9 +1427,62 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    synchronous block). Gates: substrates **52/52 cold+warm** (compare-runs:
    the new leg is the only roster change) · vitest 3336 · regression
    31/31 · fork clean at `2bda39b`.
-   **NEXT: the queued `_syncEnergyFromPool` reset-authority fix (§3b item
-   1b) BEFORE slice 4**, then slices 4–6 (and arc D2 behind its
-   feasibility recon).
+   **SLICE 4 SHIPPED 2026-07-25 (outer `8c79f58ae`, zero fork edits):**
+   Record capture + Playback replay — the fine-grained round trip omsi
+   declared in slice 1 but never drove. CAPTURE: the synthetic-exit
+   callback publishes `omsi:visitRecording` BEFORE `_dispatchRegionMove`
+   (stash-before-regionMove — the loops Record-exit wake pulls when the
+   move lands), and the snapshot is `_dumpRegionQueue()` ITSELF: under
+   ruling 1 a recording IS a plan snapshot, so the capture and slice 3's
+   per-region dump are one function, one strip filter. Published on
+   EVERY synthetic departure (the host slot is pull-once and only a
+   Record block pulls); a replay's own departure re-publishes the plan it
+   replayed, so that is idempotent rather than lossy. REPLAY: no separate
+   executor and none needed — the recording is a plan and the fork's
+   queue is what executes plans, so the bridge clears, installs
+   (`totalActionList`-filtered), queues the recorded departure exit LAST
+   **bypassing that filter** (a synthetic exit is in the `Action` table,
+   which is what `translateClassNames` resolves against, but never in
+   `totalActionList`), and holds the replay window open while the fork
+   grinds across its own resets. Three judgement calls worth carrying:
+   (a) a replay that cannot RESOLVE its departure is **refused, not
+   started** — the departure is the termination condition and an
+   unbounded grind would drain the shared pool forever — while a recorded
+   queue whose GATE never opens parks indefinitely (Manual-equivalent,
+   deliberately no timeout teleport); (b) the install forces the loop to
+   recompile (the staleness slice 3 deferred), and that `restartLoop()`
+   runs under `_applyingHostReset` — ⚠ **the bridge must not fabricate a
+   run-end signal for the host**, which is the sole reset authority (the
+   session-69 contract); (c) the vocabulary conversion lives host-side in
+   the library, BOTH directions, where vitest can reach it without engine
+   globals and the bridge keeps importing nothing from `shared/` (omsi
+   action names are stable engine ids, so name ≡ actionId). New leg
+   `omsi-record-playback-crosses-region` (substrates 53→**54**; the
+   config ENUMERATES ids), asserting EFFECTS: the replay starts with the
+   Explore gate CLOSED and 150 exp short of it while the recorded
+   `Wander` grants exactly 200, so the crossing is IMPOSSIBLE unless the
+   fork completed the recorded action — proven non-vacuous by two control
+   runs (capture neutered → the Record half red; replay install neutered
+   → the install/crossing red). The crossing is FOLDED from the
+   dispatcher, not polled (new `watchRegionMoves` helper): an omsi loop
+   ends one tick after a departure fires, so the run-end report and its
+   reset teleport make "current region is the target" a transient.
+   ⚠ **Observed, pre-existing, not slice 4's doing:** because a loop ends
+   by exhausting its queue and the departure is the queue's last entry,
+   EVERY omsi region departure (live or replayed) is followed within a
+   tick by a native loop end → run-end report → host loop reset +
+   teleport. That is omsi's `requiresLoopMode` contract, but slice 6
+   should document it. Gates: substrates **54/54 cold+warm**
+   (compare-runs: the new leg is the only roster change) · vitest 3342
+   (+6) · regression 31/31 (one re-run: `test_path_analyzer_panel` failed
+   once under load and passed solo — a PRE-EXISTING flake, its
+   `pollForCondition(fn, 15000, 50, label)` call has the label/timeout
+   arguments swapped, so it really polls for 50ms; worth a one-line fix
+   in its own commit, which may unmask a genuine slow path) · fork clean
+   at `2bda39b`, no gitlink bump · presets untouched.
+   **NEXT: slice 5 is COVERED by the leg above** (the kickoff's separate
+   in-app slice) — remaining are **slice 6 (docs/bookkeeping)** and
+   **arc D2** behind its feasibility recon.
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
