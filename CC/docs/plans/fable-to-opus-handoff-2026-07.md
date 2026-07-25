@@ -1840,8 +1840,36 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
      assertions and leg B red on the crossing.
    Gates: substrates 57/57 compare-runs clean (the two new legs are the
    only roster change) · vitest 3368 · regression 31/31 · fork clean at
-   `cb00b3d`. NEXT: **slice 4 (docs)** — omsi.md's Bot section,
-   loop-recording.md's Bot columnry.
+   `cb00b3d`.
+   **D2 SLICE 4 (docs) SHIPPED + PUSHED 2026-07-25 (Opus, `d2d578cc5`) —
+   ARC D2 COMPLETE (slices 0-4).** omsi.md gains the Bot section
+   (lifecycle + its three load-bearing orderings, the held-boundary clock
+   gate and why `stoppedAt` is unusable, the round-trip pacing reality,
+   the planner.js probe wrinkle as a named known-issue, and the
+   no-AP-award-in-split-fixtures caveat with the gate-verdict pin that
+   stands in for it); the arc table, the stale "not built" /
+   "no executeVia" / "arc D2 must extend this payload" lines and the
+   in-app roster are all resolved. loop-recording.md's Bot flow gains a
+   jta-vs-omsi table + the no-stamping ruling stated as a ruling;
+   substrate-registry.md's capability matrix shows omsi's Bot as built.
+   The durable TESTING lesson landed in omsi.md's non-vacuity paragraph:
+   **assert restoration of a value you deliberately made NON-DEFAULT** —
+   the option-restore clobber wrote the same `false` the fork defaults
+   to, and 2b's recompute witness had the mirror-image trap (a value that
+   cannot move). All anchors verified to resolve.
+   **ARC D2 CLOSED.** Nothing open. What remains on the omsi roadmap:
+   **arc E** (multi-town travel), **arc F** (panel queue editor), and
+   **omsi Instant LAST of all substrates** (standing ruling — no fork
+   fast-step surface). Two recorded POST-D2 design items, both needing
+   their own design pass: (1) the **procgen automation profile** — a
+   budget split as percentages of available mana across
+   unlock-new-things / grind-stats / reach-exit, which must now be priced
+   against the ~12 s round-trip rate rather than fork loops; (2) the
+   **emission x split composition** arc, which owns the true end-to-end
+   AP award under a Bot and must first solve the quantity-row identity
+   landmine (global q-row ids vs per-region local ladders → host-side
+   per-region step counters; `applyManagedTotals` needs its own ruling
+   there too). Both are documented in `omsi.md`.
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
