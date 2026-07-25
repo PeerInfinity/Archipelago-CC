@@ -1728,6 +1728,26 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    a plan landing inside one 100ms clock interval un-holds a boundary
    unseen → crossing slips one loop (harmless, but don't time legs
    tightly against it).
+   **D2 SLICE 2b QUEUED 2026-07-25 (user design addition, rulings
+   settled; kickoff §"Slice 2b" is the spec): per-region max Explore
+   level — a full explore RESCALE, not gate tuning.** Region = a
+   mini-town compressed into N levels: exit timing, discovery
+   schedules, and the UI % all scale; exp hard-capped at
+   `expFromLevel(N)`. Config: `regionSplit.exploreMaxLevel` shared
+   default + per-region `regions[i]` overrides; default = `max(1,
+   round(100/count))`; fixtures 10 or lower; `exploreThreshold` becomes
+   a fraction of the REGION's cap (default 1.0 unchanged in meaning).
+   Recon: **`Town.getLevel` is the single choke point** (totalDiscovered
+   dot-products over levels, unlock rows, UI % all consume it) →
+   effective level `min(100, floor(raw·100/N))` + the exp clamp are the
+   only fork edits; ride the scale through worldConfig so the planner's
+   sim agrees with live play. THIS IS A FORK SLICE — byte-gate
+   (`--worktree`), V4, fork npm, ask-first gitlink all return. Lands
+   BEFORE slice 3 (legs use the knob instead of seeded explore state).
+   Stated-unless-vetoed: full discoverable complement per region
+   (quantity partition = separate deferred axis); only the exploreVar
+   rescales; unlock rows fire at effective levels, globally deduped —
+   nothing stranded for AP.
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
