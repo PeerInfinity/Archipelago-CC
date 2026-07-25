@@ -1594,6 +1594,36 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    predates the whole M1–M6 arc. Nothing on it is *false*, so slice 6 added
    only a "not yet described here" pointer to `loop-recording.md`; writing
    the user-facing block-mode section is its own slice.
+   **ARC D2 FEASIBILITY RECON + RULINGS DONE 2026-07-25 (Fable): kickoff
+   READY — *(NewDocs)* `omsiloops/omsi-loops-arc-d2-bot-planner-opus-kickoff.md`
+   (probe script preserved beside it). D2 is FEASIBLE and outer-repo by
+   design.** Recon headlines, all live-verified: (R1) the planner RUNS
+   under `?managed=1` — probe drove a real worker plan in 126ms, zero
+   errors; the automation branch is ALREADY in the pinned fork line
+   (`48bd32e` ∈ ancestors of `2bda39b`), no fork merge needed. (R2) the
+   kickoff's stall fear was misaimed — boundary main-thread cost is
+   ~5.5ms (planning is worker-side); the REAL bug is PHANTOM LOOPS:
+   `singleTick()` has no `gameIsStopped` guard (it lives in the rAF path
+   managed mode disables), so a planner pause mints one fake loop per
+   stepped tick (measured 500/500); fix = bridge gates stepping on the
+   already-exposed `stoppedAt`. (R3) the parent kickoff's "managed
+   automation controls = a fork slice" assumption was STALE — bridge.js
+   runs IN the iframe with direct global access (`setOption`,
+   `AdvancedAutomation.planNow`/`._debug`), and the AP unlock overlay
+   already rides `buildWorldConfig()` into every worker request. (R4)
+   omsi needs NO host-side OOM call (drains → `substrate:resourceDelta` →
+   resourceChannels owns OOM; native run ends already report). Four user
+   rulings settled: Bot goal = EXIT-PRIORITY ("always prioritize
+   unlocking and reaching the exit"; the budget-split procgen automation
+   profile — % of mana for unlock/grind/exit — is recorded as a POST-D2
+   design item); boundary mode = auto + pauseWhilePlanning (pipeline
+   OFF); fork edits ALLOWED-when-discovered, not planned (byte-gate
+   cadence returns only then); exit crossing at the NEXT LOOP BOUNDARY
+   via slice-4's install machinery. Kickoff carries 6 verified traps
+   (phantom loops, bot-window stamping, manual-edit-detection misfire,
+   the step-gate payload extension, planner-pause × host-reset
+   interleave, region confinement) + slices 0–4 with the mandatory
+   multi-reset bot leg. NEXT: D2 IMPLEMENTATION (Opus).
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
