@@ -1870,6 +1870,27 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    landmine (global q-row ids vs per-region local ladders → host-side
    per-region step counters; `applyManagedTotals` needs its own ruling
    there too). Both are documented in `omsi.md`.
+   **POST-D2 SEQUENCING (user, 2026-07-25): CLEANUP PHASE →
+   INSTANT-POLICY DESIGN PASS → arc E.** Cleanup kickoff *(NewDocs)*
+   `cleanup-2026-07-post-d2-opus-kickoff.md`: all four quick fixes
+   (path-analyzer flake one-liner; the jta catch-up reorder bug +
+   re-enable its witness; the shared-submodule JSDoc rename leftovers;
+   the planner.js probe wrinkle — a byte-gated fork slice) + three
+   bigger items (autoRestartQueue honor investigation — "no change,
+   documented why" is an acceptable close; the cleanup-backlog.md items
+   incl. the balance-walk solve-at-completion NON-drive-by; the
+   features/loops.md user-facing rewrite LAST so it documents the
+   settled state). The jta progression marathons stay QUEUED — excluded
+   from this phase. **NEW DESIGN FACT (user): normal loop-mode play =
+   ALL regions Instant except the frontier** — loop wall-clock models
+   must assume it; recorded in `project_loops_block_modes`. **And the
+   Instant PHILOSOPHY shifted (user): these are IDLE games — waiting is
+   expected and strategic; the original omsi had no instant mode.
+   Direction for the design pass: Instant ONLY for substrates that were
+   not originally idle games — possibly REMOVE jta's Instant (it "still
+   has some bugs"; inventory them as recon) and omsi's answer may be
+   NEVER rather than "last".** The old "omsi Instant last of all
+   substrates" wording above is superseded by this pass.
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
