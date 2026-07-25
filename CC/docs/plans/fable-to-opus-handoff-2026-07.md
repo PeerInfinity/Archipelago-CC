@@ -1758,6 +1758,45 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    + per-region local ladders would dedupe regions B..N to nothing —
    host-side per-region step counters at composition time;
    applyManagedTotals needs its own ruling there too).
+   **D2 SLICE 2b SHIPPED 2026-07-25 (Opus; fork `cb00b3d` on
+   `xml-migration`, outer `95d6981de` + `05e03423d`; NOT pushed, gitlink
+   NOT bumped — both awaiting the user).** Built to spec, no ruling
+   changed. `Town.regionScale` is a CLASS-STATIC (not an instance prop):
+   the planner worker installs it via worldConfig BEFORE `plRestoreSave`,
+   which rebuilds `towns` — an instance prop would not survive, and would
+   need omitting from every save. Two views landed as `getLevel`
+   (effective, wrapped at the SINGLE return site after both scaling
+   branches) and `getRawLevel` (raw); the two raw consumers are
+   `unlocks.js` `quantityBaseTotal` and the `<totalDiscovered>` compile
+   context (marked by `ctx.rawLevels`, since `<progressLevel>` shares one
+   evaluator case with `<primaryValue>` and the predicate walk). Verified
+   partition: at exploreMaxLevel 10 a fully-explored region holds
+   `totalPots` 50 against the town's 500, and fires a tenth of the
+   quantity ROWS. Three things the spec did not call out and are now
+   pinned: (a) `expForLevel` must pick the LINEAR vs quadratic curve —
+   `expFromLevel(N)` is only right for quadratic vars, the two coincide
+   solely at level 100; (b) `setActiveRegion` OWES an `adjustAll` +
+   `Unlocks.check`, because the host swaps region VALUE state
+   (`loadRegionState`, which adjusts under the OUTGOING ladder) before
+   region METADATA — witnessed on an unlock row, not on totals (totals
+   are raw-driven and would not move); (c) `getPrcToNext` had to move to
+   RAW levels or it indexes `expFromLevel` with a level the stored exp
+   has never been near. `saving.js`'s two cheat functions took the var's
+   own cap too, keeping "exp never exceeds its ceiling" a true global
+   invariant (the capped-already fast path depends on it). **RE-MEASURED
+   loops-to-gate on the regenerated fixture: 44 loops / 23,050 ticks / 16
+   distinct plans** (was 90 / 63,650 / 28 at the 25,250-exp gate; ~2x, not
+   the naive 4.6x), trap 6 still clean — that is slice 3's sizing number.
+   Gates: byte-gate **461 / 5,195,188 / 9d9952e68bc8373c / 0 RNG
+   (`--worktree`)** run BOTH as a parent-commit control and against the
+   exact committed bytes · **V4 omsi-parity PASS** (ticks + loops, fork
+   HEAD `cb00b3d` vs fork point) · fork `npm test` **288/288** (+9, proven
+   non-vacuous by two neutering controls: 6/9 then 8/9 red) · vitest
+   **3368** (+6) · substrates **55/55** compare-runs clean (no roster
+   change) · regression **31/31**. ⚠ The fixture commit `05e03423d` is
+   COUPLED to the gitlink bump: against the old pin the fork's gate still
+   divides by 505000, so the legs' 5500-exp seeds read as 1% explored.
+   NEXT: slice 3 (the two in-app bot legs), then slice 4 (docs).
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
