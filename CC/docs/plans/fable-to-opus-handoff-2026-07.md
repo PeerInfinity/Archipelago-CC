@@ -1668,6 +1668,27 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    slice-4 recompile-under-`_applyingHostReset` pattern (bare restart
    fabricates a run end); stamping decision waits for an observed
    grind-time check.
+   **D2 SLICE 1b SHIPPED + PUSHED 2026-07-25 (Opus, `4349f1566`, zero
+   fork edits; Fable-verified).** The shouldRestart half of the hold,
+   reproduced empirically first (a one-action plan under an
+   addMana-EXTENDED budget — held at timer 260/5250 with 4,990 mana in
+   the pool, 300 phantom loops invisible to the timer half; ⚠ probe
+   lesson: a plan that consumes its whole budget reproduces the SLICE-1
+   hold instead — extend the budget past the plan, which is exactly the
+   bot-flow shape). `isBoundaryHeld` now mirrors singleTick's full
+   `shouldRestart || timer >= timeNeeded`, each half failing open
+   INDEPENDENTLY; strict `=== true` (a non-boolean flag can't
+   truthy-coerce into a freeze); `_loopClock()` reads the flag off the
+   fork global and stamps it onto the getFullState fallback (that
+   readout never carried it — and the test fake OMITS it there so the
+   pins can't pass through a channel production lacks). Boot window
+   checked: saving.js:119 inits shouldRestart TRUE, but noQueue skips
+   first and the install path's restartLoop() clears it — suite
+   confirms. False-positive control re-run on the OR: 0 firings either
+   half across the same 1,600 batches. Gates: vitest 3362/3362 (+3),
+   substrates 55/55 cold+warm compare-runs clean, regression 31/31,
+   fork clean. NEXT: **slice 2 (the bot window)** with both riders
+   standing.
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
