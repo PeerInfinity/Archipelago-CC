@@ -214,9 +214,9 @@ export async function testPathAnalyzerPanel(testController) {
           const buttonDisabled = pathAnalyzerAnalyzeButton.disabled;
           return buttonText === 'Hide Paths' && buttonDisabled === false;
         },
+        'Analysis to complete (button shows "Hide Paths")',
         15000,
-        50,
-        'Analysis to complete (button shows "Hide Paths")'
+        50
       ))) {
         throw new Error('Analysis did not complete - button did not change to "Hide Paths" state');
       }
@@ -230,9 +230,9 @@ export async function testPathAnalyzerPanel(testController) {
           const buttonDisabled = pathAnalyzerAnalyzeButton.disabled;
           return buttonText === 'Hide Paths' && buttonDisabled === false;
         },
+        'Analysis to complete (button shows "Hide Paths")',
         15000,
-        10, // Faster polling for quick analysis
-        'Analysis to complete (button shows "Hide Paths")'
+        10 // Faster polling for quick analysis
       ))) {
         throw new Error('Analysis did not complete - button did not change to "Hide Paths" state');
       }
