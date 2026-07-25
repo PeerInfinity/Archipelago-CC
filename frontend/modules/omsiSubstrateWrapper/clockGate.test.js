@@ -23,19 +23,33 @@ const TICKS_PER_SECOND = 50;
 const MAX_TICKS = 500;
 const TIME_NEEDED = 250;
 
-/** A minimal stand-in for the fork's driver.js loop clock. */
-function createFakeEngine({ heldFromLoop = null } = {}) {
+/**
+ * A minimal stand-in for the fork's driver.js loop clock.
+ *
+ * `planLength` models the COMPILED queue: once that many ticks have run in a
+ * loop, actions.tick() finds no valid action and sets shouldRestart — the
+ * second way a loop ends (slice 1b), reachable with the budget barely
+ * touched. Left null, loops only ever end on the timer.
+ */
+function createFakeEngine({ heldFromLoop = null, planLength = null, timeNeeded = TIME_NEEDED } = {}) {
     const engine = {
         timer: 0,
-        timeNeeded: TIME_NEEDED,
+        timeNeeded,
         effectiveTime: 0,
+        shouldRestart: false,
+        ticksThisLoop: 0,
         totals: { loops: 0, effectiveTime: 0 },
         stepCalls: 0,
         ticksStepped: 0,
         /** True once the boundary is being held rather than restarted. */
         holding: false,
         getFullState() {
+            // Deliberately WITHOUT shouldRestart: the real getFullState does
+            // not carry it either, which is why the bridge reads the global.
             return { timer: this.timer, timeNeeded: this.timeNeeded };
+        },
+        loopEndState() {
+            return { shouldRestart: this.shouldRestart, timer: this.timer, timeNeeded: this.timeNeeded };
         },
         step(n) {
             this.stepCalls += 1;
@@ -44,18 +58,23 @@ function createFakeEngine({ heldFromLoop = null } = {}) {
         },
         singleTick() {
             this.timer += 1;
+            this.ticksThisLoop += 1;
             this.effectiveTime += 1 / TICKS_PER_SECOND;
-            if (this.timer >= this.timeNeeded) {
+            // actions.tick(): the compiled list ran dry (actions.js:90)
+            if (planLength !== null && this.ticksThisLoop >= planLength) this.shouldRestart = true;
+            if (this.shouldRestart || this.timer >= this.timeNeeded) {
                 // loopEnd(): banks whatever effectiveTime has accumulated
                 this.totals.loops += 1;
                 this.totals.effectiveTime += this.effectiveTime;
                 // prepareRestart(): restart() unless something holds it
                 const holdNow = heldFromLoop !== null && this.totals.loops >= heldFromLoop;
                 if (holdNow) {
-                    this.holding = true;      // timer stays >= timeNeeded
+                    this.holding = true;      // the loop-end flags stay set
                 } else {
                     this.timer = 0;
                     this.effectiveTime = 0;
+                    this.ticksThisLoop = 0;
+                    this.shouldRestart = false;   // restart() (driver.js:347)
                 }
             }
         },
@@ -73,7 +92,7 @@ function runClock(engine, callbacks, { gateOpen = true, hasRunnableQueue = true 
             maxTicks: MAX_TICKS,
             hasRunnableQueue,
             gateOpen,
-            state: engine.getFullState(),
+            state: engine.loopEndState(),
         });
         if (skip) skips[skip] += 1;
         if (ticks > 0) engine.step(ticks);
@@ -89,14 +108,29 @@ describe('isBoundaryHeld', () => {
         expect(isBoundaryHeld({ timer: 251, timeNeeded: 250 })).toBe(true);
     });
 
-    it('never freezes on an unreadable clock', () => {
-        // A fork build that stopped reporting the pair must degrade to the
-        // pre-D2 behaviour, not to a dead substrate.
+    it('sees the OTHER loop end — a plan that finished before its budget', () => {
+        // slice 1b. actions.tick() sets shouldRestart when the compiled list
+        // runs dry; only restart() clears it. Measured on the fork: held at
+        // timer 260 of 5250, i.e. 4,990 mana still in the pool — invisible to
+        // the timer half, and 300 further ticks minted 300 loops.
+        expect(isBoundaryHeld({ shouldRestart: true, timer: 260, timeNeeded: 5250 })).toBe(true);
+        expect(isBoundaryHeld({ shouldRestart: false, timer: 260, timeNeeded: 5250 })).toBe(false);
+    });
+
+    it('never freezes on an unreadable clock — each half fails open alone', () => {
+        // A fork build that stopped reporting one of them must degrade to the
+        // other, not to a dead substrate.
         expect(isBoundaryHeld(null)).toBe(false);
         expect(isBoundaryHeld(undefined)).toBe(false);
         expect(isBoundaryHeld({})).toBe(false);
         expect(isBoundaryHeld({ timer: NaN, timeNeeded: 250 })).toBe(false);
         expect(isBoundaryHeld({ timer: 250, timeNeeded: undefined })).toBe(false);
+        // no shouldRestart reported → the timer half still decides
+        expect(isBoundaryHeld({ timer: 250, timeNeeded: 250 })).toBe(true);
+        // no timer pair reported → the shouldRestart half still decides
+        expect(isBoundaryHeld({ shouldRestart: true })).toBe(true);
+        // and a non-boolean flag is not truthy-coerced into a freeze
+        expect(isBoundaryHeld({ shouldRestart: 'yes', timer: 10, timeNeeded: 250 })).toBe(false);
     });
 
     it('does NOT use stoppedAt — which is ambient-true in managed play', () => {
@@ -168,6 +202,41 @@ describe('planClockStep — the held boundary', () => {
         const skips = runClock(engine, 10);
         expect(skips.heldBoundary).toBe(0);
         expect(engine.ticksStepped).toBeGreaterThan(0);
+    });
+
+    it('closes on a QUEUE-EXHAUSTION hold, with the budget barely touched', () => {
+        // The slice-1b case: a 40-tick plan inside a 5000-tick budget. The
+        // loop ends on shouldRestart, the planner holds it, and the timer half
+        // of the predicate never fires — timer sits at 40 of 5000 forever.
+        const engine = createFakeEngine({ planLength: 40, timeNeeded: 5000, heldFromLoop: 1 });
+        runClock(engine, 20);
+
+        expect(engine.holding).toBe(true);
+        expect(engine.shouldRestart).toBe(true);
+        // The hold is REAL and the timer half is genuinely blind to it —
+        // otherwise this test would pass for slice 1's reason, not 1b's.
+        expect(engine.timer).toBeLessThan(engine.timeNeeded);
+        expect(isBoundaryHeld({ timer: engine.timer, timeNeeded: engine.timeNeeded })).toBe(false);
+
+        const stepCallsAtHold = engine.stepCalls;
+        const loopsAtHold = engine.totals.loops;
+        const skips = runClock(engine, 200);
+
+        expect(skips.heldBoundary).toBe(200);
+        expect(engine.stepCalls).toBe(stepCallsAtHold);
+        expect(engine.totals.loops).toBe(loopsAtHold);
+    });
+
+    it('a plan finishing early during PRODUCTIVE play still steps normally', () => {
+        // The false-positive control for the shouldRestart half: short plans
+        // that restart in-tick must never be caught holding the flag. (On the
+        // fork: 0 firings across 1,600 batches / 481 real loops.)
+        const engine = createFakeEngine({ planLength: 40, timeNeeded: 5000 });
+        const skips = runClock(engine, 100);
+
+        expect(skips.heldBoundary).toBe(0);
+        expect(engine.stepCalls).toBe(100);
+        expect(engine.totals.loops).toBe(25);   // 1000 ticks / 40 per plan
     });
 
     it('is what stands between the host and the measured phantom-loop mint', () => {

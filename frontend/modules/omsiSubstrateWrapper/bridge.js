@@ -290,19 +290,26 @@ function _fullState() {
 }
 
 /**
- * The loop clock alone — read straight off the fork's globals (the
+ * The engine's loop-END state — read straight off the fork's globals (the
  * `timeNeededInitial` pattern above) rather than through getFullState(),
  * which rebuilds the whole skills/buffs/towns readout. The clock gate
  * consults this on EVERY callback, and _samplePoolMirror already pays for one
- * full build per tick; a second would double that for two numbers.
+ * full build per tick; a second would double that for three values.
+ *
+ * `shouldRestart` is the half getFullState does not carry at all (slice 1b):
+ * a plan that finishes before its budget ends its loop through THAT flag,
+ * with timer still short of timeNeeded.
  */
 function _loopClock() {
     // eslint-disable-next-line no-undef
+    const flag = typeof shouldRestart !== 'undefined' ? shouldRestart : undefined;
+    // eslint-disable-next-line no-undef
     if (typeof timer !== 'undefined' && typeof timeNeeded !== 'undefined') {
         // eslint-disable-next-line no-undef
-        return { timer, timeNeeded };
+        return { shouldRestart: flag, timer, timeNeeded };
     }
-    return _fullState();
+    const s = _fullState();
+    return s ? { ...s, shouldRestart: flag } : { shouldRestart: flag };
 }
 
 /** The game's remaining loop budget — the §4 mana mapping. */
