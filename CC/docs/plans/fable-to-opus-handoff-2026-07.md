@@ -1604,9 +1604,21 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    kickoff's stall fear was misaimed — boundary main-thread cost is
    ~5.5ms (planning is worker-side); the REAL bug is PHANTOM LOOPS:
    `singleTick()` has no `gameIsStopped` guard (it lives in the rAF path
-   managed mode disables), so a planner pause mints one fake loop per
-   stepped tick (measured 500/500); fix = bridge gates stepping on the
-   already-exposed `stoppedAt`. (R3) the parent kickoff's "managed
+   managed mode disables), so a held boundary mints one fake loop per
+   stepped tick (measured 500/500) and inflates effectiveTime
+   quadratically. ⚠ SLICE-0 CORRECTION (implementing session,
+   2026-07-25): the originally proposed `stoppedAt` gate is WRONG —
+   `load()` ends with a `pauseGame()` toggle so `stoppedAt` is
+   ambient-TRUE in ordinary managed play and gating on it freezes omsi;
+   the correct gate is the HELD-BOUNDARY predicate (`timer >= timeNeeded`
+   still true after a step batch returns — 0 false positives across
+   1,600 batches, fires within 4 of a real pause; planner-agnostic, so
+   no fork edit for the private `pausedByPlanner`). Cold engage
+   auto-installs but does NOT resume — the engage path starts the plan
+   via the slice-4 recompile-under-`_applyingHostReset` pattern, never a
+   bare restart (fabricated run-end). jta precedent: the bot departure is
+   UNSTAMPED (passes as queue execution); only `_publishLocationCheck`
+   during the grind is the open stamping question. (R3) the parent kickoff's "managed
    automation controls = a fork slice" assumption was STALE — bridge.js
    runs IN the iframe with direct global access (`setOption`,
    `AdvancedAutomation.planNow`/`._debug`), and the AP unlock overlay
