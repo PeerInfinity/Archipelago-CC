@@ -1797,6 +1797,51 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    COUPLED to the gitlink bump: against the old pin the fork's gate still
    divides by 505000, so the legs' 5500-exp seeds read as 1% explored.
    NEXT: slice 3 (the two in-app bot legs), then slice 4 (docs).
+   **D2 SLICE 3 SHIPPED + PUSHED 2026-07-25 (Opus, outer `7a247e8ae`,
+   zero fork edits).** `omsi-bot-crosses-region` (24 conditions, 85s) +
+   `omsi-bot-multi-reset-walk` (19 conditions, 287s), both on
+   `omsi_region_split_test`; substrates baseline **55 -> 57**.
+   - **The award observation, resolved.** No AP location CAN fire in a
+     split fixture (arc-C ruling 7 emits none; victory needs town 1), so
+     the leg pins the strict gate's VERDICT instead — a locationCheck
+     evaluated in the same tick the window is observed open returns
+     `queueExecution`, with `livePlayRegion()` null. That is the slice-2
+     no-stamping ruling's confirming observation, and the crossing itself
+     is the second one (a real exit name the gate would otherwise block).
+   - **TWO BRIDGE FIXES the legs found** — one defect, two paths: the bot
+     force-disabled `advancedAutomationEnabled` even when the window never
+     ENGAGED (`_startBotWalk` returns early when the gate is already open
+     at dispatch — the COMMON case on the last re-dispatch), so nothing
+     was saved to restore and a player lost their Advanced Automation.
+     `_crossBotExit` + `_endBotWalk` now both gate on `_botSavedOptions`.
+     Leg A only caught it because it now SETS the option on first — an
+     ambient-false default would have made the assertion vacuous.
+   - **⚠ THE 44-LOOP PROBE NUMBER DOES NOT TRANSFER IN-APP.** Standalone
+     the planner opens the fixture gate in 19-44 loops; in-app the same
+     seed took 25 fork loops for ONE Wander. The probe runs the fork
+     continuously, but in-app EVERY fork loop end is reported, the host
+     resets, teleports, and the walk is re-dispatched — and the bridge
+     re-PINS the budget to the host pool each time, which neutralises the
+     planner's favourite early strategy (invest = buy mana). Measured
+     in-app: ~12 s per host round trip, ~1 Wander per 6-7 of them.
+     Size future legs against the ROUND-TRIP rate, not the probe.
+   - **There is no "single-run" bot leg for omsi.** Any walk needing any
+     grind spans host resets, because a fork loop end always reports. The
+     kickoff's leg (a)/(b) split survives as "short grind" vs "guaranteed
+     multi-run" (2 Wanders short = one fork loop cannot do it).
+   - Also added `resetOmsiSaveAndReload` (the `idleLoops_substrate` slot
+     is shared across a suite run and the planner scores against banked
+     stats — jta's bot leg resets for the same reason). Must run with a
+     region ACTIVE: the reload waits on the bridge clock.
+   - **Playwright per-test timeout 300s -> 900s.** A bot walk is expensive
+     in WALL time by construction (50 ticks/s of real time, ~7 s per fork
+     loop); test-substrates is now 8.5 min. A ceiling, not a cost.
+   - Non-vacuity: neutering `_engagePlanner` turns leg A red on 4 core
+     assertions and leg B red on the crossing.
+   Gates: substrates 57/57 compare-runs clean (the two new legs are the
+   only roster change) · vitest 3368 · regression 31/31 · fork clean at
+   `cb00b3d`. NEXT: **slice 4 (docs)** — omsi.md's Bot section,
+   loop-recording.md's Bot columnry.
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
