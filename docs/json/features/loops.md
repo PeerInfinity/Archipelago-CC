@@ -389,6 +389,8 @@ The test suite (`frontend/modules/tests/testCases/loopsPanelTests.js`) covers:
 
 The core systems are implemented and working: mana, XP, action queues, loop reset, cost calculations, cost generation, and the Loop Stats panel with cost predictions.
 
+**Not yet described on this page:** the per-block **mode system** (Manual / Record / Playback / Bot), the per-block Instant toggle, saved per-region recordings, and the strict action gate that governs when substrate play is allowed — all built in the M1–M6 arc (2026-07-21/24) and extended by the omsi arc D. Until this page grows a user-facing section for it, the reference is the developer doc [Loop Recording and Block Modes](../developer/procgen/loop-recording.md).
+
 ### Planned Features
 
 - Missing item cost penalties (double cost if required item not collected in the current loop)

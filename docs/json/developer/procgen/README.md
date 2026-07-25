@@ -5,7 +5,7 @@ Developer documentation for the procedural-generation ("procgen") system: the pi
 | Document | Description |
 |----------|-------------|
 | [Architecture](./architecture.md) | Orientation: the pipeline, drivers, substrates, rules.json extensions, runtime, and Python round-trip. Read this first. |
-| [Substrate Registry Reference](./substrate-registry.md) | The registry entry contract, field by field, with a capability matrix of the six substrates and a checklist for adding one. |
+| [Substrate Registry Reference](./substrate-registry.md) | The registry entry contract, field by field, with a capability matrix of the seven substrates and a checklist for adding one. |
 | [Gotchas and Disambiguations](./gotchas.md) | The things most likely to mislead someone orienting in the procgen code — naming overlaps, shared-code-vs-shared-identity, invariants. |
 | [Bounce Substrate](./bounce.md) | The Doodle-Jump-style platformer substrate: physics core, ability suppression, the canJump solver, the derive-rules verifier, level/braid generation, renderers, and the bot driver. |
 | [Runner Substrate](./runner.md) | The auto-runner platformer substrate: the GMTK toolkit physics port, the canRun solver and its doom/touch/launch model, strip generation and spec planning, and the greedy re-plan bot. |
@@ -18,6 +18,7 @@ Developer documentation for the procedural-generation ("procgen") system: the pi
 | [Text Adventure Substrate](./text-adventure.md) | The prose-rendered tile-grid substrate: the AP-naive engine, the iframe wrapper, and the two-module coexistence. |
 | [Flash Substrate](./flash.md) | Recompiled Flash games as regions: the `__swfBridge` contract and the per-game entry factory the bounce substrate builds on. |
 | [JtA Substrate](./jta.md) | Journey to Ascension as the reference zone-based substrate, with host-side shared-mana brokering. |
+| [Omsi Substrate](./omsi.md) | Idle Loops as a loop-game substrate: the host-owned clock and mana mirror, N regions overlaying one town, and the arc-D loops-mode support (step gate, per-region queues, plan-snapshot Record/Playback). |
 
 ## Related documentation
 

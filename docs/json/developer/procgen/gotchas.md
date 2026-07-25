@@ -60,6 +60,20 @@ This also covers a run end the drain-watching model cannot see at all: `handleTh
 
 The circuit breaker that shipped first stays as a **tripwire**: it detects the impossible state (latched **with** energy above zero — unreachable through the game's own logic, since the latch is set at exactly 0 and `doAnyReset` both refills and clears) and completes the reset through the normal reported path after it persists ~1s. Under the two rules above nothing can reach that state, so its predicate is now unreachable and its silence is the oracle for the fix — a firing means something external is writing energy while latched again. `jta-latched-run-end-not-masked-by-pin` is the deterministic leg: it builds the divergence directly (latched at 0 with mana still in the pool) and folds `setEnergy` mutations instead of polling, because the reset erases the state within a beat.
 
+## Two reset flows, and they disagreed
+
+The entry above is about a bridge lying to the host. This one is about loops lying to itself. **Loop mode has two reset paths, and for a whole arc only one of them was reasoned about.**
+
+- `gameState.triggerLoopReset()` → **`gameState:loopReset`** is the SUBSTRATE-DRIVEN reset. Its only production caller is resourceChannels' `fireLoopResetTeleport`, which fires the reset and then teleports the player to the resolved loop start.
+- `loopState._resetLoop()` → **`loopState:loopReset`** is the loops-INTERNAL one (the mana-out wake, the generic executor's own depletion path).
+
+The whole M1–M6 block-modes arc was designed and tested against the internal flow. The substrate seam had only ever needed `_resetActionsProgress()` (snap the cursor to 0), so that is all it ran — and it was enough right up until a substrate whose native economy *is* the reset (`requiresLoopMode`: jta, omsi) drove a Playback block across a run boundary. Then the seam real play actually takes carried **four pieces of stale park state and a dead frame loop** through a reset that had just teleported the player somewhere else: the park flags, `isProcessing` (both Manual/Record/Playback park entries call `stopProcessing()`, so the frame loop is *dead*, not the dormant-but-processing state a Bot park leaves), `_boundReplayCheckedIndex` (stale — a retry re-entering the block falls through to the generic executor and **silently crosses an exit it never replayed**, which is worse than the hang it usually produced) and `_queuePausedUntilReset`. `loopState._releaseParkForReset()` now clears all four and resumes; full account in [loop-recording.md](./loop-recording.md#the-bot-flow-m6).
+
+Two things worth carrying beyond this bug:
+
+- **A reset whose teleport target is the region the player is already in fires no `regionChanged` at all.** `gameState.setCurrentRegion` publishes only on an actual CHANGE. So a fix hung on the region-change wake covers every case except the one where the block sits on the start region — which is exactly the case a queue that re-drives from index 0 keeps producing. That is why the release lives on the reset subscriber.
+- **When a subsystem can be reset both by itself and by an external authority, diff the two paths field by field before adding behaviour to either.** Grep the callers of each publish: the flow with a single production caller is usually the one real play takes, and the one your unit tests are least likely to be driving.
+
 ## `shared/` is a git submodule
 
 `frontend/modules/shared/` (home of the substrate registry, rng, procgen primitives) and `frontend/modules/textAdventureEngine/` are git submodules with their own history and remotes. `git log`/`git blame` from the outer repo won't see their commits — run git *inside* the submodule directory. Edits to files under these paths land in the submodule, not the outer repo; landing a change means committing inside the submodule, then bumping the submodule pointer in a separate outer-repo commit.
