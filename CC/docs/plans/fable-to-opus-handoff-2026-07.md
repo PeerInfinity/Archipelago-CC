@@ -1636,6 +1636,38 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    the step-gate payload extension, planner-pause × host-reset
    interleave, region confinement) + slices 0–4 with the mandatory
    multi-reset bot leg. NEXT: D2 IMPLEMENTATION (Opus).
+   **D2 SLICE 1 SHIPPED + PUSHED 2026-07-25 (Opus, outer `ea843dab3`,
+   zero fork edits; slice 0 = recon-only, nothing committed, and it
+   CORRECTED the kickoff's gate predicate — see the ⚠ above).** The
+   held-boundary clock gate lives in NEW `clockGate.js`
+   (`isBoundaryHeld` + `planClockStep`, extracted solely to be pinnable;
+   header carries the full stoppedAt refutation), routed through
+   `_clockTick` with `_clockStats.skippedHeldBoundary`; reads
+   timer/timeNeeded off the fork GLOBALS (getFullState() rebuild is too
+   expensive per-callback), fail-OPEN on a non-finite clock (phantom
+   loops degrade, a frozen substrate dies). Bot half of the step gate:
+   loops public `botSolverRegion()` (shape-independent;
+   `_botDrainRegion` delegates, keeping its summary filter), pushed
+   beside livePlayRegion in the same payload/cache key;
+   `_mayStepClock` opens on a bot park on the bridge's own region.
+   Pins: held→zero steps + zero totals movement, productive control,
+   out-of-band reopen, 300-for-300 non-vacuity, getter park/dormant
+   legs. Gates: vitest 3359/3359 (+10), substrates 55/55 cold+warm
+   compare-runs CLEAN (the inertness proof), regression 31/31, fork
+   clean at `2bda39b`. ⚠ **Fable review finding for slice 2 (or 1b):
+   the gate mirrors only HALF of singleTick's boundary condition** —
+   `shouldRestart` (set at actions.js:90 when the compiled list runs
+   out of valid actions mid-loop, cleared only by restart()) holds a
+   boundary with timer < timeNeeded, and a bot plan that COMPLETES
+   before the budget exhausts hits exactly that; `_hasRunnableQueue`
+   reads `actions.next`, not the exhausted compiled list, so it does
+   not cover it. Same between-batches argument applies — extend
+   `isBoundaryHeld` to `shouldRestart || timer >= timeNeeded` (same
+   typeof fail-open), falsify with a held queue-exhaustion boundary.
+   Riders standing for slice 2: cold-engage starts the plan via the
+   slice-4 recompile-under-`_applyingHostReset` pattern (bare restart
+   fabricates a run end); stamping decision waits for an observed
+   grind-time check.
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
