@@ -180,6 +180,40 @@ export function watchLocationChecks(match) {
 }
 
 /**
+ * Fold every `user:regionMove` publish into a list — the crossing counterpart
+ * of watchLocationChecks, and for the same reason it wraps `publish`: the host
+ * dispatcher has no `subscribe`.
+ *
+ * FOLDING rather than polling the current region is load-bearing for anything
+ * that watches an omsi crossing. An omsi loop ends the moment its queue is
+ * spent, which is one tick after a departure exit fires — so the fork reports
+ * a run end, the host answers with a loop reset, and its teleport moves the
+ * player to the loop start. "Current region is the target" is therefore a
+ * TRANSIENT that a 100ms poller can sail straight past; the move event is not.
+ *
+ * The payload is captured, so a caller can assert on `exitName` and on the
+ * `fromLoop` stamp — the flag that decides whether the strict action gate lets
+ * a replay's departure through at all.
+ */
+export function watchRegionMoves() {
+    const dispatcher = window.eventDispatcher;
+    if (!dispatcher || typeof dispatcher.publish !== 'function') {
+        throw new Error('watchRegionMoves: window.eventDispatcher.publish unavailable — '
+            + 'a silent watcher would make every crossing assertion vacuous');
+    }
+    const original = dispatcher.publish.bind(dispatcher);
+    const moves = [];
+    dispatcher.publish = (originModuleId, eventName, data, options) => {
+        if (eventName === 'user:regionMove') moves.push({ ...data });
+        return original(originModuleId, eventName, data, options);
+    };
+    return {
+        get moves() { return moves; },
+        stop() { dispatcher.publish = original; return moves; },
+    };
+}
+
+/**
  * Park a Manual (or Record) loops block on each hop's SOURCE region, so the
  * substrate's live actions — AP location checks, and exit crossings that
  * carry a real exit name — pass the M3b strict action gate on the

@@ -77,6 +77,16 @@
  *     resets, so it can cross a new unlock threshold and fire a
  *     first-time check that the strict action gate would otherwise
  *     swallow (killing the AP award, not just the capture).
+ *   - Record / Playback (slice 4). RECORD: taking a synthetic exit
+ *     publishes the region's authored plan as `omsi:visitRecording`
+ *     BEFORE the departing regionMove (ruling 1 — the recording is a
+ *     plan snapshot, not a performed-action log). PLAYBACK: the host
+ *     sends the recorded plan back over the control channel; the bridge
+ *     installs it with the recorded departure exit queued LAST, forces
+ *     the loop to recompile, and lets the fork's own queue grind it
+ *     across native resets until that exit fires. There is no separate
+ *     executor because there is nothing to add: the fork's queue IS the
+ *     executor for an omsi recording.
  *   - No-progress guard: a restart after a loop that consumed (almost)
  *     no effective time means no queued action could run (empty queue
  *     slips past the step gate only in exotic states; a queue whose
@@ -216,6 +226,8 @@ const _regionQueueStore = new Map();     // regionId -> plain NextActionEntry-sh
 // native resets, so it can cross a new unlock threshold and fire a
 // first-time check mid-replay.
 let _replayInFlight = false;
+// The graph exit id the in-flight replay must cross to end (slice 4).
+let _replayDepartureExitId = null;
 
 // Step gate (arc D1 slice 2, ruling 3). The bridge advances the game ONLY
 // while the loops queue is parked on THIS region's Manual/Record block, or
@@ -1028,6 +1040,38 @@ function _dumpRegionQueue() {
 }
 
 /**
+ * Publish the visit recording for a departure through `exitName` (arc D1
+ * slice 4, ruling 1).
+ *
+ * What omsi records is the game's OWN authored plan for this region — a plan
+ * SNAPSHOT, not a performed-action log — because omsi's genre is author-a-
+ * queue-and-replay and a performed log of an N-loop visit is that same queue
+ * repeated N times. `_dumpRegionQueue()` is exactly that snapshot (synthetic
+ * exit entries stripped), which is why the two are one function: a recording
+ * and a stashed per-region plan are the same object, captured for different
+ * reasons.
+ *
+ * ORDERING IS A CONTRACT, not a preference. This must be published BEFORE the
+ * departing `user:regionMove`: both cross the iframe→host boundary as ordered
+ * postMessages, and the loops Record-exit wake pulls the stash when the move
+ * lands. Publish the move first and the pull comes back empty — nothing
+ * persists and no auto-switch happens.
+ *
+ * Published on EVERY synthetic-exit departure, not only during Record: the
+ * host slot is pull-once and loops pulls only on a Record block's successful
+ * exit, so a Manual departure just overwrites an un-pulled stash. A REPLAY's
+ * departure re-publishes the plan it was replaying (the install strips back to
+ * the same entries), so that case is idempotent rather than lossy.
+ */
+function _publishVisitRecording(exitName) {
+    if (!_client) return;
+    _client.publishEventBus('omsi:visitRecording', {
+        actions: _dumpRegionQueue(),
+        departureExitId: exitName ?? null,
+    });
+}
+
+/**
  * Install a stashed plan into the fork's queue — or, for a region entered for
  * the first time, just clear it (ruling 4: a fresh region starts EMPTY).
  *
@@ -1038,9 +1082,9 @@ function _dumpRegionQueue() {
  * KNOWN BOUNDARY: this rewrites `actions.next` (the PLAN), not
  * `actions.current` (the loop already in flight, compiled at the last restart).
  * So a loop running when the swap happens finishes on the OUTGOING region's
- * compiled list — at most one loop of lag, and omsi restarts constantly. Slice
- * 4's replay install is the case that cannot tolerate the lag and must force
- * the recompile itself.
+ * compiled list — at most one loop of lag, and omsi restarts constantly. The
+ * REPLAY install is the case that cannot tolerate the lag and forces the
+ * recompile itself (_forceLoopRecompile).
  */
 function _restoreRegionQueue(entries) {
     const a = _engineActions();
@@ -1114,10 +1158,17 @@ function _installRegionExits(world) {
     for (const exit of _getRegionExits(world)) {
         if (!exit?.targetRegion) continue;   // a dangling exit routes nowhere — skip it
         const name = _exitLabel(exit);
+        const exitName = exit.exitName ?? name;
         const r = m.injectSyntheticAction({ name, townNum: townIndex }, () => {
-            _dispatchRegionMove(exit.targetRegion, exit.exitName ?? name);
+            // Slice 4: the visit recording goes out BEFORE the departing move
+            // (the stash-before-regionMove contract) — see _publishVisitRecording.
+            _publishVisitRecording(exitName);
+            _dispatchRegionMove(exit.targetRegion, exitName);
         });
-        if (r?.ok) _activeSyntheticExits.push({ name, targetRegion: exit.targetRegion });
+        // `exitName` is the GRAPH exit id the move carries (and therefore the
+        // `departureExitId` a recording stores); `name` is the action label the
+        // fork's queue knows it by. The replay install needs the mapping.
+        if (r?.ok) _activeSyntheticExits.push({ name, exitName, targetRegion: exit.targetRegion });
         else log('warn', `injectSyntheticAction('${name}') refused: ${r?.error}`);
     }
 }
@@ -1227,7 +1278,106 @@ function _beginReplay() {
 function _endReplay(reason = 'unspecified') {
     if (!_replayInFlight) return;
     _replayInFlight = false;
+    _replayDepartureExitId = null;
     log('debug', `replay no longer in flight — ${reason}`);
+}
+
+/** The synthetic exit ACTION name whose crossing carries `exitName`, or null. */
+function _syntheticExitActionFor(exitName) {
+    if (!exitName) return null;
+    return _activeSyntheticExits.find((e) => e.exitName === exitName)?.name ?? null;
+}
+
+/**
+ * Force the fork to recompile its loop from the plan we just wrote.
+ *
+ * `actions.next` is the PLAN; `actions.current` is the loop in flight,
+ * compiled at the last restart. A replay that only wrote the plan would run
+ * whatever the region was doing before for up to a full loop — and since a
+ * loop ends by exhausting its queue, "up to a full loop" can be the entire
+ * replay. So the install restarts the loop itself.
+ *
+ * Two things this must NOT do:
+ *   - report a run end to the host. `restartLoop()` fires the managed
+ *     onRestart callback, and `_handleGameRestart` publishes
+ *     `substrate:resourceReset` — which the host answers with a real loop
+ *     reset and its teleport. `_applyingHostReset` is the same suppression
+ *     the catch-up path uses: the bridge must not fabricate run-end signals
+ *     for the sole reset authority (procgen gotchas, "A frozen substrate
+ *     cannot generate the reset that unfreezes it").
+ *   - mirror the restart's budget refill into the shared pool.
+ *     `_handleGameRestart` re-baselines the sample for us even on the
+ *     suppressed path; the pin afterwards is the loadRegion ordering
+ *     verbatim (catch-up, then pin to the pool).
+ *
+ * `actions.current` is emptied first so the recompile is unconditional: with
+ * `options.keepCurrentList` on (off by default) a restart REUSES the compiled
+ * list, which is precisely the staleness being fixed.
+ */
+function _forceLoopRecompile() {
+    const m = _managed();
+    const a = _engineActions();
+    if (typeof m?.restartLoop !== 'function') {
+        log('warn', 'fork build has no restartLoop hook — the replay plan may lag one loop');
+        return;
+    }
+    if (a && Array.isArray(a.current)) a.current = [];
+    _applyingHostReset = true;
+    try {
+        m.restartLoop();
+    } finally {
+        _applyingHostReset = false;
+    }
+    _lastSampledManaLeft = _manaLeft();
+    if (_world?.manaEnabled) _syncBudgetFromPool();
+}
+
+/**
+ * Playback: install a recorded plan and let the fork RUN it (ruling 1).
+ *
+ * omsi has no separate replay executor and needs none — the recording IS a
+ * plan and the fork's own queue is what executes plans. So the install is:
+ * clear, add each recorded entry, then queue the recorded departure exit LAST,
+ * and hold the replay window open while the game grinds. Native resets
+ * propagate normally throughout; each loop recompiles the same plan, so the
+ * replay is a multi-loop grind by construction — and if loops re-enters the
+ * block after a reset teleport, this whole install runs again and lands in the
+ * same state (idempotent).
+ *
+ * The departure is the TERMINATION CONDITION, so a replay that cannot resolve
+ * one is refused outright rather than started: an unbounded grind with no exit
+ * would drain the shared pool forever. A recorded queue whose exit GATE never
+ * opens is a different thing and is allowed to park indefinitely — that is
+ * Manual-equivalent behavior, and a timeout teleport "completing" it would be
+ * a replay that crossed without replaying.
+ */
+function _startReplay(entries, opts = {}) {
+    const departureExitId = opts?.departureExitId ?? null;
+    const a = _engineActions();
+    if (typeof a?.clearActions !== 'function' || typeof a.addActionRecord !== 'function') {
+        log('error', 'Playback replay REFUSED: fork build has no queue-write surface. '
+            + 'The block stays parked rather than crossing an exit it never replayed.');
+        return;
+    }
+    const exitAction = _syntheticExitActionFor(departureExitId);
+    if (!exitAction) {
+        log('error', `Playback replay REFUSED: no synthetic exit action for departure `
+            + `'${departureExitId}' in ${_currentRegionId} — refusing to grind a recording `
+            + 'with no way to end it.');
+        return;
+    }
+    _beginReplay();
+    _replayDepartureExitId = departureExitId;
+    // Same membership filter and append semantics the per-region restore uses.
+    _restoreRegionQueue(entries);
+    // …and the departure LAST, bypassing that filter: a synthetic exit action
+    // is registered after initializeActions() and so is never in
+    // `totalActionList`, but it IS in the Action table, which is what the
+    // loop's own translateClassNames resolves against.
+    a.addActionRecord({ name: exitAction, loops: 1, loopsType: 'actions', disabled: false }, -1, false);
+    _forceLoopRecompile();
+    log('debug', `replay installed: ${entries?.length ?? 0} entry/entries + exit `
+        + `'${exitAction}' (departure '${departureExitId}')`);
 }
 
 /**
@@ -1248,10 +1398,12 @@ function _setStepGate(state) {
 /**
  * Commands from the host-side PlaybackProxy (arc D1).
  *
- * Two things ride this channel today:
- *   `beginReplay` / `endReplay` — the REPLAY WINDOW (slice 1), inside which
- *     every publish is stamped as queue execution. The replay DRIVER
- *     (install the recorded queue, grind to the departure exit) is slice 4.
+ * Three things ride this channel today:
+ *   `replayActions` — fine-grained Playback (slice 4): install the recorded
+ *     plan plus its departure exit and run the game until that exit fires.
+ *     Opens the replay window itself.
+ *   `beginReplay` / `endReplay` — the REPLAY WINDOW (slice 1) on its own,
+ *     inside which every publish is stamped as queue execution.
  *   `setStepGate` — the host's view of whether the game may advance
  *     (slice 2): loop mode active, and which region loops is parked on for
  *     live play.
@@ -1265,6 +1417,9 @@ function _handlePlaybackControl(payload) {
     const method = payload?.method;
     const args = Array.isArray(payload?.args) ? payload.args : [];
     switch (method) {
+        case 'replayActions':
+            _startReplay(args[0], args[1]);
+            return;
         case 'beginReplay':
             _beginReplay();
             return;
@@ -1509,8 +1664,10 @@ async function main() {
             regionExitAvailable: _managed()?.regionExitAvailable?.() ?? null,
             syntheticExits: _activeSyntheticExits.map((e) => ({ ...e })),
             // Loop-mode replay window (arc D1): true while this bridge's
-            // publishes are stamped fromLoop.
+            // publishes are stamped fromLoop, plus the exit the in-flight
+            // replay is grinding toward (slice 4).
             replayInFlight: _replayInFlight,
+            replayDepartureExitId: _replayDepartureExitId,
             // Step gate (slice 2): whether the game may advance, and the
             // host state that decides it.
             mayStep: _mayStepClock(),

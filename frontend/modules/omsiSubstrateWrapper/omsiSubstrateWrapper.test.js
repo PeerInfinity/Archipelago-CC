@@ -5,6 +5,8 @@ import {
     substrateRegistryEntry,
     ingestVisitRecording,
     takeLastVisitRecording,
+    convertPlanToQueue,
+    convertQueueToPlan,
     OMSI_START_JOURNEY_LOCATION_ID,
     OMSI_VICTORY_ITEM_NAME,
     OMSI_LIBRARY_ITEMS,
@@ -63,17 +65,22 @@ describe('omsi substrate registry entry', () => {
 
 describe('per-visit recording stash (arc D1)', () => {
     it('takeLastRecording drains the slot once (loops sole-persister pull)', () => {
-        // Empty until the bridge publishes (arc D slice 4) — and an empty
-        // pull is what keeps a Record block persisting NOTHING today.
+        // Empty until the bridge publishes — and an empty pull is what keeps a
+        // Record block persisting NOTHING.
         expect(takeLastVisitRecording()).toBeNull();
 
+        // The bridge publishes the fork's NATIVE plan entries; the ingest
+        // converts them to the shared vocabulary loops stores.
         ingestVisitRecording({
-            actions: [{ actionType: 'clickTask', actionId: 'Wander', loops: 3 }],
+            actions: [{ name: 'Wander', loops: 3, loopsType: 'actions', disabled: false }],
             departureExitId: 'exit_N',
         });
         const pulled = substrateRegistryEntry.takeLastRecording();
         expect(pulled.departureExitId).toBe('exit_N');
         expect(pulled.actions).toHaveLength(1);
+        expect(pulled.actions[0]).toMatchObject({
+            actionType: 'clickTask', actionId: 'Wander', loops: 3,
+        });
         // Pull-once: a discarded visit can't be re-pulled by a later block.
         expect(substrateRegistryEntry.takeLastRecording()).toBeNull();
     });
@@ -83,6 +90,60 @@ describe('per-visit recording stash (arc D1)', () => {
         const pulled = takeLastVisitRecording();
         expect(pulled.actions).toEqual([]);
         expect(pulled.departureExitId).toBeNull();
+    });
+});
+
+describe('recording vocabulary conversion (arc D slice 4)', () => {
+    const PLAN = [
+        { name: 'Wander', loops: 2, loopsType: 'actions', disabled: false },
+        { name: 'Smash Pots', loops: 5, loopsType: 'actions', disabled: true },
+    ];
+
+    it('converts a native plan to the shared actionQueue vocabulary', () => {
+        const q = convertPlanToQueue(PLAN);
+        expect(q).toHaveLength(2);
+        expect(q[0]).toMatchObject({
+            actionType: 'clickTask', actionId: 'Wander', label: 'Wander',
+            loops: 2, disabled: false, loopsType: 'actions',
+        });
+        // The action NAME is the id (omsi names are stable engine ids), and
+        // the disabled flag rides along so a recording reinstalls as the plan
+        // it was captured from.
+        expect(q[1]).toMatchObject({ actionId: 'Smash Pots', loops: 5, disabled: true });
+        // Every entry carries a unique shared-vocabulary entry id.
+        expect(new Set(q.map((e) => e.entryId)).size).toBe(2);
+    });
+
+    it('round-trips a plan through the shared vocabulary unchanged', () => {
+        expect(convertQueueToPlan(convertPlanToQueue(PLAN))).toEqual(PLAN);
+    });
+
+    it('preserves a 0-rep entry rather than inventing a rep', () => {
+        const q = convertPlanToQueue([{ name: 'Wander', loops: 0 }]);
+        expect(q[0].loops).toBe(0);
+        expect(convertQueueToPlan(q)[0].loops).toBe(0);
+    });
+
+    it('drops entries that name nothing, and defaults a missing rep count', () => {
+        expect(convertPlanToQueue([{ loops: 3 }, { name: '' }, null])).toEqual([]);
+        expect(convertPlanToQueue([{ name: 'Wander' }])[0].loops).toBe(1);
+    });
+
+    it('drops non-clickTask entries on the way back to a plan', () => {
+        // A plan entry naming an action this build has never heard of makes
+        // the fork's next loop start THROW out of translateClassNames, so a
+        // foreign-vocabulary recording must not be guessed at here (the
+        // bridge filters against totalActionList again on install).
+        expect(convertQueueToPlan([
+            { actionType: 'useItem', actionId: 7, loops: 1 },
+            { actionType: 'clickTask', actionId: 42 },
+            { actionType: 'clickTask', actionId: 'Wander', loops: 1 },
+        ])).toEqual([{ name: 'Wander', loops: 1, disabled: false, loopsType: 'actions' }]);
+    });
+
+    it('both tolerate a non-array', () => {
+        expect(convertPlanToQueue(undefined)).toEqual([]);
+        expect(convertQueueToPlan('nope')).toEqual([]);
     });
 });
 

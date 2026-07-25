@@ -30,6 +30,7 @@ import {
     substrateRegistryEntry,
     setPlaybackProxy,
     ingestVisitRecording,
+    convertQueueToPlan,
 } from './omsiSubstrateWrapperLibrary.js';
 import { getGameStateSingleton } from '../gameState/singleton.js';
 import { PlaybackProxy } from '../textAdventureSubstrateWrapper/playbackProxy.js';
@@ -52,8 +53,8 @@ export const moduleInfo = {
 const INITIAL_STATE_EVENT = 'omsiSubstrateWrapper:initialState';
 // PlaybackController commands, host proxy → in-iframe bridge (arc D1).
 const PLAYBACK_CONTROL_EVENT = 'omsi:playbackControl';
-// Per-visit recording, in-iframe bridge → host stash (published from arc D
-// slice 4; the receiver is wired here so the stash contract is in place).
+// Per-visit recording, in-iframe bridge → host stash (published by the
+// bridge's synthetic-exit callback since arc D slice 4).
 const VISIT_RECORDING_EVENT = 'omsi:visitRecording';
 
 // How often the step gate (arc D1 slice 2) is re-derived. A POLL rather
@@ -66,6 +67,38 @@ const VISIT_RECORDING_EVENT = 'omsi:visitRecording';
 // Re-deriving two cheap reads five times a second cannot miss an edge, and
 // only a CHANGE is pushed, so the iframe sees one message per transition.
 const STEP_GATE_POLL_MS = 200;
+
+/**
+ * Fine-grained Playback (arc D slice 4): hand the bound recording back to
+ * the game as its own authored plan and let the fork RUN it.
+ *
+ * Unlike jta there is no host-side executor to step: omsi's recording IS a
+ * plan, and the fork's own queue is the thing that executes plans. So the
+ * host's whole job is to convert the stored shared-vocabulary entries back
+ * to native plan entries and send them over the control channel; the bridge
+ * installs them, appends the recorded departure exit last, forces the loop
+ * to recompile, and holds the replay window open until that exit fires.
+ *
+ * The replay is OPEN-ENDED by design (ruling 1): it grinds the recorded
+ * queue across the fork's own resets until the departure's gate opens. If
+ * that gate never opens the block parks indefinitely — Manual-equivalent,
+ * and explicitly NOT to be papered over with a timeout teleport, which
+ * would be a replay that "worked" while replaying nothing.
+ *
+ * `onComplete` is therefore not invoked here: there is no host-visible
+ * completion moment short of the departing `user:regionMove`, which the
+ * parked block already wakes on. (loopState passes a no-op reserved for
+ * future UI; a UI that needs it would need the bridge to report the window
+ * close.) `instant` is ignored — omsi declares no `instant` capability, so
+ * the per-block checkbox never renders.
+ */
+function _driveReplay(eventBus, recordedActions, opts = {}) {
+    const departureExitId = opts?.departureExitId ?? null;
+    eventBus.publish(PLAYBACK_CONTROL_EVENT, {
+        method: 'replayActions',
+        args: [convertQueueToPlan(recordedActions), { departureExitId }],
+    });
+}
 
 export function register(registrationApi) {
     if (typeof document !== 'undefined') {
@@ -114,14 +147,17 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
     // Host-side PlaybackController proxy (the shared class the tasw/jta
     // wrappers use, on omsi's own control channel — arc D1). Injected into
     // the library so the registry entry's getPlaybackController returns it.
-    // `replayActions` — the fine-grained Playback driver — is attached in
-    // arc D slice 4; until then no recording can bind to a block, so
-    // loopState never reaches the replay path (a fine-grained Playback
-    // block with no bound recording parks for live play instead, M4).
-    setPlaybackProxy(new PlaybackProxy({
+    const playbackProxy = new PlaybackProxy({
         eventBus,
         controlEvent: PLAYBACK_CONTROL_EVENT,
-    }));
+    });
+    // Slice 4: attach fine-grained Playback replay to THIS proxy instance,
+    // not the shared PlaybackProxy class (the text adventure stays coarse-
+    // only) — the jta precedent. Its presence is what routes loopState's
+    // fine-grained replay path to omsi.
+    playbackProxy.replayActions = (recordedActions, opts) =>
+        _driveReplay(eventBus, recordedActions, opts);
+    setPlaybackProxy(playbackProxy);
 
     // ── Step gate (arc D1 slice 2, ruling 3) ────────────────────────────
     //
@@ -163,7 +199,6 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
     // sole-persister pull (takeLastRecording). Delivered BEFORE the visit's
     // departing user:regionMove over the same postMessage channel, so the
     // recording is in the slot when the loops Record-exit wake pulls it.
-    // (The bridge starts publishing in arc D slice 4.)
     eventBus.subscribe(VISIT_RECORDING_EVENT, (payload) => {
         ingestVisitRecording(payload);
     });

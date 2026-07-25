@@ -38,6 +38,7 @@
  */
 
 import { registerTest } from '../testRegistry.js';
+import { getGameStateSingleton } from '../../gameState/singleton.js';
 import {
     OMSI_REGION_SPLIT_PRESET_PATH,
     OMSI_REGION_SPLIT_R0,
@@ -55,6 +56,9 @@ import {
     bridgeState,
     parkManualBlocks,
     unparkManualBlocks,
+    watchRegionMoves,
+    gameStateFn,
+    readPool,
     eventually,
 } from '../../omsiSubstrateWrapper/test-helpers.js';
 
@@ -309,6 +313,221 @@ async function perRegionQueueLegs(testController) {
 
     return testController.getOverallResult();
 }
+
+// ────────────────────────────────────────────────────────────────────────────
+// Record → Playback (arc D1 slice 4, ruling 1)
+// ────────────────────────────────────────────────────────────────────────────
+
+/**
+ * What a Record visit captures and a Playback visit replays.
+ *
+ * `Wander` is the recorded plan for one reason: its completion is the ONLY
+ * thing in the replayed queue that can move the region's Explore gate. The
+ * leg sets Explore to 150 exp BELOW the gate and Wander grants exactly 200
+ * (`finishProgress(varName, 200)`, unmultiplied on a fresh loop), so the
+ * departure exit's `canStart()` is FALSE when the replay starts and can only
+ * become true if the fork actually completes the recorded action.
+ *
+ * That is what makes the crossing an EFFECT assertion rather than an outcome
+ * one: a replay that installed nothing, or degraded into a bare teleport,
+ * cannot cross an exit whose gate never opened.
+ */
+const RECORDED_ACTION = 'Wander';
+const RECORDED_LOOPS = 1;
+// Gate = 0.05 × PROGRESS_EXP_CAP (505000) = 25250 exp. One Wander (+200) is
+// the difference between closed and open.
+const BELOW_GATE = 25100;
+// The fork's native loop budget is 250 mana and one Wander costs all of it,
+// so the replay only fits in ONE loop if the pool (which the bridge pins the
+// budget to) is comfortably larger. A loop that ended mid-replay would still
+// replay correctly — it recompiles the same plan — but it would report a run
+// end, and the reset teleport would pull the player out mid-assertion.
+const REPLAY_POOL_TOPUP = 2000;
+
+async function recordPlaybackCrossesRegion(testController) {
+    const loopState = (await import('../../loops/loopStateSingleton.js')).default;
+    const { clearForRegion } = await import('../../loops/savedQueueStore.js');
+
+    testController.log(`Loading ${OMSI_REGION_SPLIT_PRESET_PATH}…`);
+    await testController.loadRulesFromFile(OMSI_REGION_SPLIT_PRESET_PATH);
+    await testController.stateManager.pingWorker('after-rules-load', 3000);
+
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'omsiSubstrateWrapperPanel' });
+    const booted = await waitForOmsiBridge(testController);
+    testController.reportCondition('omsi bridge booted', !!booted);
+    if (!booted) return testController.getOverallResult();
+    resetOmsiEngineProgress(['Wander']);
+
+    const win = await enterRegion(testController, OMSI_REGION_SPLIT_R0);
+    testController.reportCondition('entered r0', !!win);
+    if (!win) return testController.getOverallResult();
+
+    // A recording this leg left behind on an earlier run would make every
+    // "persisted" assertion below vacuous (and could be replayed instead).
+    try {
+        clearForRegion(loopState._rulesHash(), OMSI_REGION_SPLIT_R0, 'omsi');
+    } catch { /* best-effort */ }
+
+    const gs = getGameStateSingleton();
+    const savedNoReset = gs.noManaDepletionReset;
+    const watcher = watchRegionMoves();
+    let park = null;
+    try {
+        return await recordPlaybackLegs(testController, { loopState, gs, watcher, setPark: (p) => { park = p; } });
+    } finally {
+        watcher.stop();
+        gs.noManaDepletionReset = savedNoReset;
+        unparkManualBlocks(park);
+        omsiClearQueue();
+        resetOmsiEngineProgress(['Wander']);
+    }
+}
+
+async function recordPlaybackLegs(testController, { loopState, gs, watcher, setPark }) {
+    const HOP = [{
+        from: OMSI_REGION_SPLIT_R0,
+        to: OMSI_REGION_SPLIT_R1,
+        exit: OMSI_REGION_SPLIT_R0_TO_R1,
+    }];
+
+    // ── Leg 1: RECORD — the visit recording IS the authored plan ─────────────
+    // Live play drains, and this leg is about the recording's CONTENT, not its
+    // affordability; a depletion reset mid-record would discard the capture.
+    gs.noManaDepletionReset = true;
+    const park = await parkManualBlocks(testController, HOP, 'record');
+    testController.assertEqual('parked a Record block on r0', true, !!park);
+    if (!park) return testController.getOverallResult();
+    setPark(park);
+    const instance = park.instances.get(OMSI_REGION_SPLIT_R0);
+
+    testController.assertEqual('no recording bound to the block before recording',
+        null, loopState._lookupBoundRecording(OMSI_REGION_SPLIT_R0, instance));
+
+    const toR1 = exitToward(OMSI_REGION_SPLIT_R1);
+    testController.assertEqual('synthetic exit toward r1 injected', true, !!toR1);
+    if (!toR1) return testController.getOverallResult();
+
+    // Author the plan, open the gate and cross — all in ONE synchronous block,
+    // so the clock (a Worker message) cannot tick between them. The capture is
+    // a SNAPSHOT of `actions.next` taken in the exit's finish(), so the plan
+    // never has to be played to be recorded: that is ruling 1.
+    omsiClearQueue();
+    omsiAppendAction(RECORDED_ACTION, RECORDED_LOOPS);
+    omsiEval(`towns[0].expWander = ${EXPLORE_ABOVE}; adjustAll();`);
+    omsiEval(`getActionPrototype(${JSON.stringify(toR1)}).finish()`);
+
+    const inR1 = await eventually(testController,
+        () => bridgeState()?.activeRegionId === OMSI_REGION_SPLIT_R1, 'host swapped into r1');
+    testController.assertEqual('the Record visit crossed into r1', true, inR1);
+    if (!inR1) return testController.getOverallResult();
+
+    // ── The recording persisted, binds, and auto-switched ────────────────────
+    const bound = loopState._lookupBoundRecording(OMSI_REGION_SPLIT_R0, instance);
+    testController.assertEqual('the visit recording persisted and binds to the block', true, !!bound);
+    if (!bound) return testController.getOverallResult();
+    testController.log(`bound recording: ${JSON.stringify(bound.actions)} `
+        + `departureExitId=${bound.departureExitId}`);
+    testController.assertEqual('the recording carries the departure exit id (the stable GRAPH exit name)',
+        OMSI_REGION_SPLIT_R0_TO_R1, bound.departureExitId);
+    testController.assertEqual('the recording is the authored plan in shared actionQueue vocabulary',
+        JSON.stringify([{ actionType: 'clickTask', actionId: RECORDED_ACTION, loops: RECORDED_LOOPS }]),
+        JSON.stringify((bound.actions ?? []).map(
+            (a) => ({ actionType: a.actionType, actionId: a.actionId, loops: a.loops }))));
+    testController.assertEqual('the recording carries no synthetic-exit entry', true,
+        (bound.actions ?? []).every((a) => !/^(Go |Take exit:)/u.test(String(a.actionId))));
+    testController.assertEqual('the block auto-switched to Playback after recording',
+        'playback', loopState.getBlockMode(OMSI_REGION_SPLIT_R0, instance));
+
+    // ── Leg 2: PLAYBACK — install the recording and let the fork RUN it ──────
+    moveToRegion(OMSI_REGION_SPLIT_R0, OMSI_REGION_SPLIT_R1);
+    const backInR0 = await waitForOmsiActive(testController);
+    testController.assertEqual('back in r0 for the replay', true, !!backInR0);
+    if (!backInR0) return testController.getOverallResult();
+
+    // Re-entering restored r0's stashed state — including the wide-open
+    // Explore level leg 1 set. Put the gate just out of reach so only the
+    // REPLAYED action can open it, and clear the live plan so anything in the
+    // queue afterwards is unambiguously the replay's install.
+    omsiEval(`towns[0].expWander = ${BELOW_GATE}; adjustAll();`);
+    omsiClearQueue();
+    testController.assertEqual('r0 exit gate CLOSED at replay start', false,
+        bridgeState()?.regionExitAvailable);
+    testController.assertEqual('the live plan is empty at replay start',
+        '[]', JSON.stringify(omsiReadQueue()));
+
+    gameStateFn('gainMana')?.(REPLAY_POOL_TOPUP);
+    testController.log(`pool before the replay: ${readPool()}`);
+    const actionsBefore = Number(omsiEval('totals.actions'));
+    const movesBefore = watcher.moves.length;
+
+    const park2 = await parkManualBlocks(testController, HOP, 'playback');
+    testController.assertEqual('parked the Playback block on r0', true, !!park2);
+    if (!park2) return testController.getOverallResult();
+
+    // The install: the recorded plan, with the recorded departure queued LAST.
+    const installed = await eventually(testController, () => {
+        const q = omsiReadQueue();
+        return q.length === 2 && q[0].name === RECORDED_ACTION && q[1].name === toR1;
+    }, 'the replay installed the recorded plan with its departure exit LAST');
+    testController.assertEqual('replay installed the recorded plan, departure exit last',
+        true, !!installed);
+    // …and the loop RECOMPILED onto it. Writing `actions.next` alone would
+    // leave the loop already in flight running the region's previous plan —
+    // for a replay that is the whole replay, since a loop ends by exhausting
+    // its queue.
+    testController.assertEqual('the loop recompiled onto the installed plan', true,
+        omsiEval(`actions.current.some((a) => a.name === ${JSON.stringify(RECORDED_ACTION)})`) === true);
+    testController.assertEqual('the bridge holds the replay window open', true,
+        bridgeState()?.replayInFlight === true);
+    testController.assertEqual('the replay knows which exit ends it',
+        OMSI_REGION_SPLIT_R0_TO_R1, bridgeState()?.replayDepartureExitId);
+
+    // The crossing, folded from the dispatcher rather than polled: the fork's
+    // own loop ends one tick after the exit fires (its queue is spent), which
+    // reports a run end and teleports the player to the loop start — so
+    // "current region is r1" is a transient a poller can miss.
+    const crossed = await eventually(testController,
+        () => watcher.moves.slice(movesBefore).some(
+            (m) => m?.sourceRegion === OMSI_REGION_SPLIT_R0
+                && m?.targetRegion === OMSI_REGION_SPLIT_R1
+                && m?.exitName === OMSI_REGION_SPLIT_R0_TO_R1
+                && m?.fromLoop === true),
+        'the replay crossed the recorded departure with fromLoop stamped', 60000, 200);
+    testController.assertEqual(
+        'Playback ran the recorded plan through the live fork and crossed the recorded exit — '
+        + 'whose gate was CLOSED at replay start, so only the replayed action can have opened it',
+        true, !!crossed);
+    if (!crossed) {
+        testController.log(`DIAG: expWander=${omsiEval('towns[0].expWander')}, `
+            + `gate=${bridgeState()?.regionExitAvailable}, queue=${JSON.stringify(omsiReadQueue())}, `
+            + `replayInFlight=${bridgeState()?.replayInFlight}, pool=${readPool()}`);
+        return testController.getOverallResult();
+    }
+
+    const performed = Number(omsiEval('totals.actions')) - actionsBefore;
+    testController.log(`fork completed ${performed} action(s) during the replay`);
+    testController.assertEqual('the fork completed the recorded action and the departure', true,
+        performed >= RECORDED_LOOPS + 1);
+    testController.assertEqual('the replay window closed when the departure crossed',
+        false, bridgeState()?.replayInFlight);
+
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'omsi-record-playback-crosses-region',
+    name: 'Omsi: a recorded region plan replays through the fork and crosses the recorded exit',
+    description: 'The arc D slice 4 fine-grained round trip: a parked RECORD block captures r0\'s '
+               + 'authored plan when its synthetic exit fires (stashed before the departing '
+               + 'regionMove, persisted by loops in shared actionQueue vocabulary with the graph '
+               + 'exit id, auto-switched to Playback); the same block then replays it — the bridge '
+               + 'installs the plan with the departure queued last, forces the loop to recompile, '
+               + 'and the fork grinds until the recorded action opens an exit gate that was CLOSED '
+               + 'when the replay started.',
+    testFunction: recordPlaybackCrossesRegion,
+    category: 'Omsi substrate',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
 
 registerTest({
     id: 'omsi-region-split-round-trip',

@@ -25,6 +25,7 @@
  */
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { generateEntryId } from '../shared/actionQueue/actionTypes.js';
 import {
     buildUnlockPool,
     accessRuleFor,
@@ -55,11 +56,11 @@ export function setPlaybackProxy(proxy) { _playbackProxy = proxy; }
 // author-a-queue-and-replay and a performed log of an N-loop visit is just
 // that queue repeated N times.
 //
-// D1 wires the SLOT and the contract only: the bridge does not publish
-// `omsi:visitRecording` until arc D slice 4, so the stash stays empty and a
-// Record block persists nothing (loopState._persistRecordingForBlock
-// returns null on an empty pull — today's behavior exactly). Loops remains
-// the sole persister: this module never writes savedQueueStore.
+// Loops remains the sole persister: this module never writes savedQueueStore.
+// It converts the bridge's plan snapshot into the shared `actionQueue`
+// vocabulary and stashes it in a pull-once slot; loopState pulls via
+// takeLastRecording() only on a successful Record-mode exit, and drains-and-
+// discards it on wrong-exit / mana-out / reset.
 let _lastVisitRecording = null;
 
 /**
@@ -68,15 +69,85 @@ let _lastVisitRecording = null;
  * un-pulled prior recording (a visit whose Record exit never pulled — Manual
  * mode, or a discarded capture — is simply replaced).
  *
- * `actions` arrive in the shared `actionQueue` vocabulary (the jta
- * precedent: `{actionType, actionId, loops}`), converted at capture.
+ * `actions` arrive as the fork's NATIVE plan entries (`{name, loops,
+ * loopsType, disabled}` — the same shape the bridge stashes per region) and
+ * are converted here, host-side, to the shared vocabulary. The conversion
+ * lives on this side of the iframe boundary for the jta reason
+ * (convertPerformedActionsToQueue is a library function, unit-testable
+ * without engine globals) and because the bridge deliberately imports
+ * nothing from `shared/`.
  * @param {{ actions?: object[], departureExitId?: string|null }} payload
  */
 export function ingestVisitRecording(payload) {
     _lastVisitRecording = {
-        actions: Array.isArray(payload?.actions) ? payload.actions : [],
+        actions: convertPlanToQueue(payload?.actions),
         departureExitId: payload?.departureExitId ?? null,
     };
+}
+
+/**
+ * The fork's authored plan → the shared `actionQueue` vocabulary (jta
+ * precedent: `convertPerformedActionsToQueue`). A native entry names an
+ * action and how many reps of it the loop should run, which is exactly a
+ * `clickTask` with `loops` = reps; `loopsType` and `disabled` ride along as
+ * riders so a recording can be reinstalled as the plan it was captured from.
+ *
+ * The action NAME is the id: omsi action names are stable engine identifiers
+ * (`getActionPrototype` keys off them, and the fork's own save format stores
+ * names), unlike jta's numeric task ids.
+ * @param {object[]} entries native NextActionEntry-shaped objects
+ * @returns {object[]}
+ */
+export function convertPlanToQueue(entries) {
+    const out = [];
+    for (const e of Array.isArray(entries) ? entries : []) {
+        if (typeof e?.name !== 'string' || !e.name) continue;
+        out.push({
+            entryId: generateEntryId(),
+            actionType: 'clickTask',
+            actionId: e.name,
+            label: e.name,
+            loops: _readLoops(e.loops),
+            disabled: e.disabled === true,
+            loopsType: typeof e.loopsType === 'string' ? e.loopsType : 'actions',
+        });
+    }
+    return out;
+}
+
+/**
+ * The inverse: a stored recording → native plan entries the bridge can hand
+ * straight to `actions.addActionRecord`. Runs host-side (in `replayActions`)
+ * for the same reason the forward conversion does, so the bridge's replay
+ * install and its per-region plan restore consume ONE shape.
+ *
+ * Non-`clickTask` entries are dropped rather than guessed at: a recording
+ * that somehow carries another substrate's vocabulary must not be turned
+ * into a plan entry naming an action this build has never heard of (the
+ * fork's loop start THROWS on an unknown name — actionList.js
+ * translateClassNames — which is why the bridge filters again on install).
+ * @param {object[]} actions shared actionQueue entries
+ * @returns {object[]}
+ */
+export function convertQueueToPlan(actions) {
+    const out = [];
+    for (const a of Array.isArray(actions) ? actions : []) {
+        if (a?.actionType !== 'clickTask') continue;
+        if (typeof a.actionId !== 'string' || !a.actionId) continue;
+        out.push({
+            name: a.actionId,
+            loops: _readLoops(a.loops),
+            disabled: a.disabled === true,
+            loopsType: typeof a.loopsType === 'string' ? a.loopsType : 'actions',
+        });
+    }
+    return out;
+}
+
+/** Reps, preserved faithfully (0 included — a plan may hold a 0-rep entry). */
+function _readLoops(v) {
+    const n = Number(v);
+    return Number.isFinite(n) && n >= 0 ? n : 1;
 }
 
 /**
