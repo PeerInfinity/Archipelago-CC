@@ -275,12 +275,22 @@ mid-walk used to hard-pause the queue PERMANENTLY — release + resume
 instead, checked before the destination match so a reset onto the
 destination retries, never falsely completes).
 **FOLLOW-UPS QUEUED OUT OF M6 (both jta-domain, not loops):**
-(1) **jta bridge bug, diagnosed:** `loadRegion` calls
+(1) **jta bridge bug, diagnosed — REFUTED and CLOSED 2026-07-25**
+(post-D2 cleanup item 2). The M6-era diagnosis said `loadRegion` calls
 `_applyCatchUpResets()` BEFORE reading `_completedThisLoop.has(regionId)`
-and the catch-up's `gameState:loopReset` subscriber clears the set — a
-re-entry carrying an unapplied reset delta injects no synthetic exit
-tasks. Fix = reorder the read. Documented in jta.md known-issues +
-the disabled `jta-synthetic-exit-task-id-stability`.
+and prescribed reordering the read. Both halves were wrong. The ordering
+is CORRECT — a loop reset genuinely un-plays the zone (`doAnyReset`
+rebuilds it) and `loadZone({completed:true})` grants every task FOR FREE,
+so honoring a pre-reset completion would hand back a zone the reset took
+away — and the reorder was INERT anyway: the `gameState:loopReset`
+subscriber bumps `_hostResetCount` and clears `_completedThisLoop` in the
+SAME handler, so a pending delta always comes with an already-cleared
+set. What was actually broken was the witness's own prep (it only pumped
+ticks; managed zone play has no automation unless a walk arms it, so the
+zone never completed). Shipped instead: prep plays zone 0 with explicit
+`performTask` calls (Travel last), witness ENABLED with a leg pinning the
+reset semantics, plus a warn-level tripwire in `loadRegion` in case a
+refactor ever splits the count bump from the clear. Ruling in jta.md.
 (1b) **jta latched-energy-reset deadlock — FIXED 2026-07-24 (session 68,
 outer `7cdbc153f`), a DIFFERENT bug from (1).** This is what made
 `jta-bot-walkto-exit` hang ~1 run in 3 (long misfiled as the documented

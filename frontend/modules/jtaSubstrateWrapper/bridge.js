@@ -708,6 +708,26 @@ function _handleLoadRegion(payload) {
 
     // Apply any loop resets the host fired while we were inactive,
     // then push the host pool's current/max into JtA.
+    //
+    // The catch-up runs BEFORE the _completedThisLoop read below, and that
+    // order is deliberate: loadZone({completed:true}) marks every task
+    // reps=max_reps for free, so honoring a PRE-reset completion after a
+    // reset applied would hand the player a zone the reset just wiped.
+    // Today the read can't see a stale completion anyway — the
+    // gameState:loopReset subscriber bumps _hostResetCount and clears
+    // _completedThisLoop in the same handler, so a pending delta always
+    // comes with an already-cleared set — but that is an invariant of how
+    // those two lines sit together, not something the type system holds.
+    // The tripwire below makes a future refactor that splits them say so
+    // instead of silently granting free zones.
+    const _pendingResetDelta = _hostResetCount - _lastAppliedResetCount;
+    if (_pendingResetDelta > 0 && _completedThisLoop.has(regionId)) {
+        log('warn', `catch-up reset(s) pending (${_pendingResetDelta}) while `
+            + `${regionId} is still marked completed-this-loop. The catch-up does `
+            + 'NOT clear that set (the loopReset subscriber does), so the read below '
+            + 'is about to grant a zone the reset just wiped. Regression: whoever '
+            + 'bumps _hostResetCount must clear _completedThisLoop with it.');
+    }
     _applyCatchUpResets();
     _syncEnergyFromPool();
 

@@ -623,6 +623,43 @@ async function botWalkToExit(testController) {
 }
 
 
+// zones.ts TaskType, as getAvailableTasks() reports it.
+const JTA_TASK_TYPE_TRAVEL = 1;
+// Synthetic (bridge-injected) task ids start here; the fork's own are lower.
+const JTA_SYNTHETIC_TASK_ID_BASE = 10000;
+
+/**
+ * Play the loaded zone through to its Travel completion, the way every other
+ * test in this file plays one: explicit performTask calls with energy topped
+ * up (see completeTask above). Resolves true once the zone is played out or
+ * the Travel completion carried us out of the region.
+ *
+ * Ticking alone plays NOTHING under the substrate host — managed zone play has
+ * no automation unless something arms it (the bridge's _armWalkAutomation, on
+ * a walk) — so a prep that only pumps ticks can never finish a zone.
+ *
+ * Travel goes LAST, and not just for tidiness: the fork keeps every Travel task
+ * disabled while a Mandatory one is unfinished (updateEnabledTasks), and this
+ * zone's single exit is item-gated on a perk that one of its own tasks awards,
+ * so finishing everything else first is also what leaves the region traversable.
+ */
+async function playZoneToTravelCompletion(testController, win, label, timeoutMs = 60000) {
+    return eventually(testController, () => {
+        // The Travel completion dispatched a region move and it landed.
+        if (readCurrentRegion() !== JTA_TEST_REGION) return true;
+        if (win?.isGameLoopPaused?.() !== false) return false;
+        win.setEnergy(1e9);
+        const tasks = (win.getAvailableTasks?.() ?? [])
+            .filter((t) => t.id < JTA_SYNTHETIC_TASK_ID_BASE);
+        // Nothing of the fork's own left to run: the zone is played out.
+        if (tasks.length === 0) return true;
+        const next = tasks.find((t) => t.type !== JTA_TASK_TYPE_TRAVEL) ?? tasks[0];
+        if (win.getFullState?.().activeTaskId !== next.id) win.performTask(next.id);
+        pumpTicks(win, 50);
+        return false;
+    }, label, timeoutMs, 20);
+}
+
 /**
  * Synthetic exit-task id STABILITY across re-entries (user-reported
  * regression). The game's per-zone automation priorities reference task
@@ -630,9 +667,8 @@ async function botWalkToExit(testController) {
  * the next visit — and Auto-Prioritize's per-zone regen on entry must not
  * erase a manually prioritized exit task.
  *
- * Split out of jta-bot-walkto-exit in M6 slice 5. It is NOT about the Bot
- * radio; it shares nothing with that test but the preset. See its config
- * note for why it is currently disabled.
+ * Split out of jta-bot-walkto-exit in M6 slice 5.  It is NOT about the Bot
+ * radio; it shares nothing with that test but the preset.
  */
 async function syntheticExitTaskIdStability(testController) {
     const win = await enterJtaRegion(testController);
@@ -654,34 +690,23 @@ async function syntheticExitTaskIdStability(testController) {
         );
     };
 
-    // Leg 2 needs the zone marked COMPLETED-this-loop on re-entry, which is
-    // what makes the bridge inject the synthetic exit tasks whose ids are
-    // under test. Leg 1's walk deliberately spans loop resets, and that is
-    // exactly what destroys the precondition: loadRegion runs
-    // _applyCatchUpResets() BEFORE reading _completedThisLoop, and a
-    // catch-up reset publishes gameState:loopReset, whose subscriber clears
-    // that set — so the zone re-loads un-completed and nothing is injected.
-    // (Bridge behaviour, independent of the Bot radio.)
-    //
-    // So establish it here rather than inheriting it: re-enter, complete the
-    // zone once INSIDE one loop with energy topped up (no reset, nothing to
-    // catch up), which auto-departs through the single exit, then re-enter
-    // again. The assertions below are unchanged.
+    // This test needs the zone marked COMPLETED-this-loop on re-entry: that is
+    // what makes the bridge inject the synthetic exit tasks whose ids are under
+    // test. Establish it here rather than inheriting it from a walk — complete
+    // the zone once INSIDE one loop, with energy topped up so no reset can land
+    // mid-play. A loop reset legitimately un-completes the zone (the fork's
+    // doAnyReset wipes zone progress, and the bridge clears _completedThisLoop
+    // on gameState:loopReset to match), which is what made the pre-split version
+    // of this leg flaky — it inherited a completion from a reset-spanning walk.
+    // That was the precondition being wrong, not the bridge; see jta.md.
     await reEnter('re-entered the zone to complete it cleanly');
-    // Bounded prep, not an assertion: a single-exit zone injects nothing IN
-    // PLACE (the Travel-task handler dispatches the move directly), so the
-    // only observable signal that the zone is marked completed is the exit
-    // tasks appearing on the NEXT entry — which is leg 2's own first
-    // assertion below, and the judge of whether this worked.
-    for (let i = 0; i < 400; i++) {
-        const w = getJtaIframe()?.contentWindow;
-        if (w?.isGameLoopPaused?.() === false) {
-            w.setEnergy(1e9);
-            pumpTicks(w, 50);
-        }
-        if (readCurrentRegion() !== JTA_TEST_REGION) break;
-        await new Promise(r => setTimeout(r, 20));
-    }
+    const played = await playZoneToTravelCompletion(
+        testController,
+        getJtaIframe()?.contentWindow,
+        'prep: zone 0 played through its Travel task inside one loop',
+    );
+    testController.assertEqual('prep: zone 0 completed inside one loop', true, !!played);
+    if (!played) return testController.getOverallResult();
     testController.log(`prep: zone play finished with the player in '${readCurrentRegion()}'`);
 
     await reEnter('re-entered completed region');
@@ -720,6 +745,27 @@ async function syntheticExitTaskIdStability(testController) {
     );
     win2.setMod('auto_prioritize', false);
     win2.setMod('force_automation', false);
+
+    // The reset semantics the pre-split version of this leg misread, pinned so
+    // they stop being folklore: a loop reset genuinely un-plays the zone (the
+    // fork's doAnyReset rebuilds it) and the bridge clears _completedThisLoop
+    // to match, so the NEXT entry loads un-completed and injects nothing. That
+    // is correct, not the bug it was recorded as for a month —
+    // loadZone({completed:true}) grants every task for free, so honoring a
+    // pre-reset completion here would hand back a zone the reset took away.
+    const resetsBefore = readLoopResetCount();
+    win2.doEnergyReset();
+    const resetLanded = await eventually(
+        testController,
+        () => readLoopResetCount() === resetsBefore + 1,
+        'the host answered with a loop reset',
+        10000,
+    );
+    testController.assertEqual('a loop reset landed', true, resetLanded);
+    await reEnter('re-entered after the loop reset');
+    testController.assertEqual(
+        'a loop reset un-completes the zone — no exit tasks injected on the next entry',
+        0, exitIds().length);
 
     return testController.getOverallResult();
 }
