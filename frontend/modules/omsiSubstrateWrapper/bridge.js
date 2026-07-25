@@ -114,6 +114,7 @@
 
 import { IframeClient } from '../iframe-base/iframeClient.js';
 import { OMSI_FILLER_ITEM_NAME, qBatchesForCount } from './unlockPool.js';
+import { planClockStep } from './clockGate.js';
 
 function log(level, ...args) {
     const fn = console[level] || console.log;
@@ -247,11 +248,15 @@ let _replayDepartureExitId = null;
 // position, so the game is never stuck waiting for a push that never comes.
 let _stepGateEnforced = false;
 let _stepGateLiveRegion = null;
+// The solver half of the same push (arc D2 slice 1): the region a Bot block's
+// solver is driving, which livePlayRegion() deliberately never reports.
+let _stepGateBotRegion = null;
 
 // Clock diagnostics, exposed via __omsiBridge.getDebugState().
 const _clockStats = {
     messages: 0, inactiveSkips: 0, callbacks: 0,
-    ticksStepped: 0, skippedNoQueue: 0, skippedGated: 0, maxElapsedMs: 0,
+    ticksStepped: 0, skippedNoQueue: 0, skippedGated: 0,
+    skippedHeldBoundary: 0, maxElapsedMs: 0,
 };
 
 // ────────────────────────────────────────────────────────────────
@@ -282,6 +287,22 @@ function _nativeStartingBudget() {
 function _fullState() {
     const m = _managed();
     return m ? m.getFullState() : null;
+}
+
+/**
+ * The loop clock alone — read straight off the fork's globals (the
+ * `timeNeededInitial` pattern above) rather than through getFullState(),
+ * which rebuilds the whole skills/buffs/towns readout. The clock gate
+ * consults this on EVERY callback, and _samplePoolMirror already pays for one
+ * full build per tick; a second would double that for two numbers.
+ */
+function _loopClock() {
+    // eslint-disable-next-line no-undef
+    if (typeof timer !== 'undefined' && typeof timeNeeded !== 'undefined') {
+        // eslint-disable-next-line no-undef
+        return { timer, timeNeeded };
+    }
+    return _fullState();
 }
 
 /** The game's remaining loop budget — the §4 mana mapping. */
@@ -351,14 +372,17 @@ function _hasRunnableQueue() {
  * Note the region COMPARISON: loops may be parked on some other substrate's
  * region entirely, which must not license this one to run.
  *
- * ⚠ arc D2: a Bot block drives through the fork's planner, and
- * `livePlayRegion()` is null while a solver drives — so D2 must extend the
- * pushed payload with the bot-park case or the bot will run against a
- * frozen clock.
+ * Arc D2 slice 1 adds the BOT half. `livePlayRegion()` is null while a solver
+ * drives (a solver park is not live play — its events pass the strict gate on
+ * the 'queueExecution' exemption), so without the separate bot-park push a
+ * Bot block would drive a frozen game. The region comparison applies here for
+ * the same reason it does above: the park is per-action, with its own
+ * sourceRegion.
  */
 function _mayStepClock() {
     if (!_stepGateEnforced) return true;
     if (_replayInFlight) return true;
+    if (_stepGateBotRegion !== null && _stepGateBotRegion === _currentRegionId) return true;
     return _stepGateLiveRegion !== null && _stepGateLiveRegion === _currentRegionId;
 }
 
@@ -379,22 +403,31 @@ function _clockTick() {
     // The mana mirror and the victory watch below stay UNGATED: they only
     // observe (a direct addMana — Buy Mana, a test, a future hook — must
     // still reach the pool), while stepping is what the gate withholds.
-    const mayStep = _hasRunnableQueue() && _mayStepClock();
-    if (!_hasRunnableQueue()) _clockStats.skippedNoQueue += 1;
-    else if (!mayStep) _clockStats.skippedGated += 1;
-    if (mayStep) {
-        // Step by elapsed wall time so the average rate stays at the
-        // game's base speed even when the browser throttles callbacks.
-        const ticks = Math.min(
-            MAX_TICKS_PER_CALLBACK,
-            Math.round((elapsedMs * TICKS_PER_SECOND) / 1000),
-        );
-        if (ticks > 0) m.step(ticks);
+    // Step by elapsed wall time so the average rate stays at the game's base
+    // speed even when the browser throttles callbacks — unless the queue is
+    // empty, the loops gate is closed, or the engine is parked past a loop end
+    // that never restarted (arc D2 slice 1: stepping a HELD boundary mints a
+    // phantom loop per tick and inflates effectiveTime quadratically; see
+    // clockGate.js for why the predicate is `timer >= timeNeeded` and
+    // emphatically not `stoppedAt`).
+    const { ticks, skip } = planClockStep({
+        elapsedMs,
+        ticksPerSecond: TICKS_PER_SECOND,
+        maxTicks: MAX_TICKS_PER_CALLBACK,
+        hasRunnableQueue: _hasRunnableQueue(),
+        gateOpen: _mayStepClock(),
+        state: _loopClock(),
+    });
+    if (skip === 'noQueue') _clockStats.skippedNoQueue += 1;
+    else if (skip === 'gated') _clockStats.skippedGated += 1;
+    else if (skip === 'heldBoundary') _clockStats.skippedHeldBoundary += 1;
+    if (ticks > 0) {
+        m.step(ticks);
         _clockStats.ticksStepped += ticks;
         // Managed mode never drains the coalesced render queue
         // (view.update is UPS-driven in normal boots) — do it here,
         // rate-limited, so the UI tracks the host-driven time.
-        if (ticks > 0 && now - _lastViewUpdateTime >= VIEW_UPDATE_MIN_MS) {
+        if (now - _lastViewUpdateTime >= VIEW_UPDATE_MIN_MS) {
             _lastViewUpdateTime = now;
             _engineView()?.update();
         }
@@ -1408,11 +1441,15 @@ function _startReplay(entries, opts = {}) {
 function _setStepGate(state) {
     const enforced = state?.enforced === true;
     const region = typeof state?.livePlayRegion === 'string' ? state.livePlayRegion : null;
-    if (enforced === _stepGateEnforced && region === _stepGateLiveRegion) return;
+    const botRegion = typeof state?.botSolverRegion === 'string' ? state.botSolverRegion : null;
+    if (enforced === _stepGateEnforced && region === _stepGateLiveRegion
+        && botRegion === _stepGateBotRegion) return;
     _stepGateEnforced = enforced;
     _stepGateLiveRegion = region;
+    _stepGateBotRegion = botRegion;
     log('debug', `step gate: ${_mayStepClock() ? 'OPEN' : 'CLOSED'} `
-        + `(enforced=${enforced}, livePlay=${region ?? 'none'}, here=${_currentRegionId ?? 'none'})`);
+        + `(enforced=${enforced}, livePlay=${region ?? 'none'}, `
+        + `bot=${botRegion ?? 'none'}, here=${_currentRegionId ?? 'none'})`);
 }
 
 /**
@@ -1694,6 +1731,7 @@ async function main() {
             stepGate: {
                 enforced: _stepGateEnforced,
                 livePlayRegion: _stepGateLiveRegion,
+                botSolverRegion: _stepGateBotRegion,
             },
         }),
     };

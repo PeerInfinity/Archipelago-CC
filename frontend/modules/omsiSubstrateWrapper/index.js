@@ -180,21 +180,32 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
     // The pushed region is loops' `livePlayRegion()` verbatim, NOT a
     // boolean: the queue may be parked on some other substrate's region,
     // and only the bridge knows which region it currently has loaded.
+    // The BOT half rides the same push (arc D2 slice 1). A solver park is
+    // not live play — `livePlayRegion()` returns null while one drives, by
+    // design, because its events pass the strict gate on the
+    // 'queueExecution' exemption rather than the parked-live-play one. So a
+    // Bot block would run against a frozen game unless the bot park is
+    // pushed alongside. Same shape as the live-play half: a REGION, not a
+    // boolean, because the park is per-action and may belong to some other
+    // substrate entirely.
     let lastGateKey = null;
     const pushStepGate = (force = false) => {
         const gs = getGameStateSingleton();
         const enforced = gs?.isLoopModeActive === true;
         let livePlayRegion = null;
+        let botSolverRegion = null;
         if (enforced) {
             const fn = initializationApi.getModuleFunction?.('loops', 'livePlayRegion');
             livePlayRegion = fn?.() ?? null;
+            const botFn = initializationApi.getModuleFunction?.('loops', 'botSolverRegion');
+            botSolverRegion = botFn?.() ?? null;
         }
-        const key = `${enforced}|${livePlayRegion ?? ''}`;
+        const key = `${enforced}|${livePlayRegion ?? ''}|${botSolverRegion ?? ''}`;
         if (!force && key === lastGateKey) return;
         lastGateKey = key;
         eventBus.publish(PLAYBACK_CONTROL_EVENT, {
             method: 'setStepGate',
-            args: [{ enforced, livePlayRegion }],
+            args: [{ enforced, livePlayRegion, botSolverRegion }],
         });
     };
     if (typeof setInterval === 'function') {

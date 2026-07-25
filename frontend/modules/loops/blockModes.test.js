@@ -2651,6 +2651,50 @@ describe('M6 — Bot economy: the time drain matrix', () => {
     expect(gs.getCurrentMana()).toBe(before - 3);
   });
 
+  it('botSolverRegion reports the park livePlayRegion hides, in BOTH shapes', () => {
+    // D2 slice 1: omsi gates its clock on the queue's park, and
+    // livePlayRegion() is null while a solver drives — so without a separate
+    // getter a Bot block would drive a FROZEN substrate. Unlike the drain
+    // rule, the step gate is shape-independent: a fine substrate is not
+    // loops-drained, but its clock still has to run.
+    setUp();
+    tick(loopState);
+    expect(handles.walkToCalls).toHaveLength(1);   // liveness: a bot really parked
+    expect(loopState.livePlayRegion()).toBeNull(); // the hole being filled
+    expect(loopState.botSolverRegion()).toBe('A');
+
+    setUp({ register: registerFineSolverSubstrate });
+    tick(loopState);
+    expect(handles.walkToCalls).toHaveLength(1);
+    expect(loopState.botSolverRegion()).toBe('A');
+  });
+
+  it('botSolverRegion closes with the park — paused, hard-paused or stopped', () => {
+    // The gate must shut again the moment the park goes dormant, or a paused
+    // queue would leave the substrate free-running.
+    setUp();
+    tick(loopState);
+    expect(loopState.botSolverRegion()).toBe('A');
+
+    loopState.isPaused = true;
+    expect(loopState.botSolverRegion()).toBeNull();
+    loopState.isPaused = false;
+    loopState._queuePausedUntilReset = true;
+    expect(loopState.botSolverRegion()).toBeNull();
+    loopState._queuePausedUntilReset = false;
+    loopState.isProcessing = false;
+    expect(loopState.botSolverRegion()).toBeNull();
+
+    // Liveness: cleared, it reports again — the three nulls are gating, not
+    // a getter that simply stopped answering.
+    loopState.isProcessing = true;
+    expect(loopState.botSolverRegion()).toBe('A');
+
+    // And no park at all is null, whatever the queue is doing.
+    loopState._botExecutedAction = null;
+    expect(loopState.botSolverRegion()).toBeNull();
+  });
+
   it('draining the pool dry mid-walk resets the loop and re-engages the bot', () => {
     // The production retry: a solver park runs no frames, so neither the
     // generic timer's OOM check nor the manual mana wake would ever notice

@@ -444,14 +444,34 @@ export class LoopState {
   }
 
   /**
+   * The region a SOLVER is currently driving, or null — regardless of
+   * capture shape.
+   *
+   * Exposed as the loops public function 'botSolverRegion'. A substrate
+   * whose clock is gated on live play needs it because `livePlayRegion()`
+   * is deliberately null while a solver drives (its events pass on the
+   * 'queueExecution' exemption instead): without this the substrate would
+   * freeze the very solver it was asked to run. omsi's step gate is the
+   * first caller (arc D2 slice 1).
+   *
+   * The park is per-action, so the answer is a REGION, not a boolean — the
+   * queue may be parked on some other substrate's region entirely.
+   */
+  botSolverRegion() {
+    const region = this._botExecutedAction?.sourceRegion;
+    if (!region) return null;
+    if (!this.isProcessing || this.isPaused || this._queuePausedUntilReset) return null;
+    return region;
+  }
+
+  /**
    * The region a SOLVER is currently driving on the time-drained economy,
    * or null (M6). Only the walkTo path qualifies: delegation is the maze's,
    * which is fine-grained and charges natively per tile.
    */
   _botDrainRegion() {
-    const region = this._botExecutedAction?.sourceRegion;
+    const region = this.botSolverRegion();
     if (!region) return null;
-    if (!this.isProcessing || this.isPaused || this._queuePausedUntilReset) return null;
     if (this._captureShapeForRegion(region) !== 'summary') return null;
     return region;
   }

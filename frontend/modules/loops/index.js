@@ -281,6 +281,14 @@ export function register(registrationApi) {
     return loopStateSingleton.livePlayRegion?.() ?? null;
   });
 
+  // D2 slice 1: the region a SOLVER is driving, or null. The companion to
+  // livePlayRegion() for substrates that gate their clock on the queue's
+  // park — livePlayRegion() is null while a solver drives, so a Bot block
+  // would otherwise run against a frozen substrate.
+  registrationApi.registerPublicFunction(moduleInfo.name, 'botSolverRegion', () => {
+    return loopStateSingleton.botSolverRegion?.() ?? null;
+  });
+
   // M3b: the strict loop-mode action gate, as consulted by modules
   // OUTSIDE the loops dispatcher receivers. procgenPlayer calls this at
   // the top of its user:regionMove handler — it sits at a higher load
