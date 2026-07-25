@@ -182,7 +182,7 @@ test.describe('Application End-to-End Tests', () => {
         return flag === true;
       },
       null,
-      { timeout: parseInt(process.env.TEST_TIMEOUT) || 300000, polling: 500 }
+      { timeout: parseInt(process.env.TEST_TIMEOUT) || 900000, polling: 500 }
     ); // Poll every 500ms. Timeout can be overridden via TEST_TIMEOUT env var.
 
     console.log(

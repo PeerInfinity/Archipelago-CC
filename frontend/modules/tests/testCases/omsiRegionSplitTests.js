@@ -8,8 +8,10 @@
  * Fixture: the omsi_region_split_test preset (regenerate with
  * scripts/test/generate-omsi-region-split-test-preset.mjs) — a maze start +
  * TWO omsi zones, BOTH town 0, each carrying a `world.omsiRegion` overlay
- * descriptor gated on 'Wander' at 5% explored, with a direct graph edge
- * between them. Entering a zone swaps its per-region value props live.
+ * descriptor gated on 'Wander' FULLY explored — where "fully" is the REGION's
+ * own ceiling, `exploreMaxLevel: 10` = 5500 exp (arc D2 slice 2b), not the
+ * town's 505000 — with a direct graph edge between them. Entering a zone swaps
+ * its per-region value props live.
  *
  * The FIRST leg drives one full round-trip:
  *   enter r0 -> r0 is FRESH -> exit gate is CLOSED (0% explored)
@@ -39,6 +41,7 @@
 
 import { registerTest } from '../testRegistry.js';
 import { getGameStateSingleton } from '../../gameState/singleton.js';
+import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
 import {
     OMSI_REGION_SPLIT_PRESET_PATH,
     OMSI_REGION_SPLIT_R0,
@@ -50,6 +53,7 @@ import {
     waitForOmsiActive,
     waitForOmsiBridge,
     resetOmsiEngineProgress,
+    resetOmsiSaveAndReload,
     moveToRegion,
     omsiEval,
     omsiClearQueue,
@@ -842,6 +846,451 @@ registerTest({
                + 'exit — minus its synthetic-exit entry, whose action no longer exists on return — and '
                + 'comes back intact (order, loops, disabled flags) while r1 keeps its own.',
     testFunction: perRegionQueues,
+    category: 'Omsi substrate',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
+// ────────────────────────────────────────────────────────────────────────────
+// The Bot: the fork's own automation planner as the solver (arc D2 slice 3)
+// ────────────────────────────────────────────────────────────────────────────
+
+/**
+ * What a Bot block on an omsi region actually does, and what these two legs
+ * are here to witness.
+ *
+ * loops reaches a BOT-mode block whose action is a `regionMove` out of an omsi
+ * region, parks it (`isProcessing` stays true), and dispatches
+ * `walkTo({kind:'exit', name})` on omsi's PlaybackController. The bridge opens
+ * a BOT WINDOW: it engages the fork's Advanced Automation planner, the fork
+ * grinds loop after loop under it, and at the first HELD BOUNDARY where
+ * `regionExitAvailable()` has become true the bridge installs an exit-only
+ * plan and disengages — the fork's own queue does the crossing.
+ *
+ * ⚠ THE AWARD PATH IS THE CROSSING ITSELF, and that is not a shortcut. Slice 2
+ * ruled stamping NONE: `_botExecutedAction` gives loops' strict action gate a
+ * blanket `queueExecution` pass BEFORE any `fromLoop` flag is consulted
+ * (loopState.evaluateActionGate). A departing synthetic exit carries a REAL
+ * exit name, so it is a performed player action the gate would otherwise
+ * BLOCK — and `livePlayRegion()` is null while a solver drives, so the
+ * `parkedLivePlay` exemption the Manual legs ride is unavailable. If the
+ * exemption did not cover the bot window the departure would be swallowed and
+ * the block would never complete. Both legs therefore assert the crossing
+ * arrived UNSTAMPED (`fromLoop !== true`) with `livePlayRegion()` null, and
+ * leg A additionally pins the gate's own verdict on a location check —
+ * `queueExecution` inside the window, BLOCKED outside it. That verdict is the
+ * award path: an AP location check fired mid-grind rides exactly this
+ * exemption.
+ *
+ * (No AP location can actually fire in this fixture: split worlds emit no
+ * unlock locations by arc-C ruling 7, and the one victory location needs town
+ * 1 unlocked — thousands of loops away. Asserting the gate verdict is the
+ * honest observation available, and it is the mechanism the award depends on.)
+ */
+
+/** Wrap a live controller method so calls can be counted, THROWING if it is gone. */
+function spyOnOmsiController(controller, method, log) {
+    if (!controller) throw new Error('omsi PlaybackController is missing — nothing to observe');
+    if (typeof controller[method] !== 'function') {
+        throw new Error(`omsi PlaybackController.${method} is missing — cannot observe the bot`);
+    }
+    const original = controller[method].bind(controller);
+    const calls = [];
+    controller[method] = (...args) => {
+        calls.push(args.length === 1 ? args[0] : args);
+        log?.(`controller.${method}(${JSON.stringify(args)})`);
+        return original(...args);
+    };
+    return { calls, restore: () => { controller[method] = original; } };
+}
+
+/** MULTI_RUN_HOPS with r0's block in Bot mode. */
+const BOT_HOPS = () => hopsWithR0Mode('bot');
+
+/**
+ * Leg A's seed: one Wander (200 exp) short of the gate.
+ *
+ * The planner must still CHOOSE to explore — this only makes the choice cheap
+ * enough that a short grind proves engagement without the leg having to sit
+ * through the measured 44 loops a from-scratch region costs. Leg B is the one
+ * that pays that price on purpose.
+ */
+const BOT_NEAR_GATE_SEED = EXPLORE_GATE - WANDER_EXP;
+/**
+ * Leg B's seed: far enough below the gate that no single fork loop can reach
+ * it. One fork loop affords ONE Wander (250 of ~350 mana), so a seed TWO
+ * Wanders short guarantees a boundary — and therefore a host reset, a
+ * teleport, and a re-dispatch — before the crossing.
+ *
+ * Two, not more, because a bot walk is expensive in WALL TIME and the cost is
+ * inherent: the bridge steps the fork at 50 ticks/s of real time, so one
+ * ~350-mana loop is ~7 s, and each loop end is followed by a full host round
+ * trip (report, reset, teleport, walk back, re-dispatch, re-engage). The
+ * planner also does not spend every loop exploring — it invests first — so
+ * even a one-Wander gap takes several loops in practice. Measured in-app:
+ * ~12 s per round trip, ~1 Wander per 6-7 of them.
+ */
+const BOT_MULTI_RUN_SEED = EXPLORE_GATE - 2 * WANDER_EXP;
+
+/** The bridge's view of the bot window, or an empty object. */
+const botState = () => bridgeState()?.bot ?? {};
+
+/**
+ * Poll for `fn`, walking the maze approach block back on EVERY iteration.
+ *
+ * This is not a convenience — it is the shape a bot leg has to have. An omsi
+ * bot walk is a sequence of host round trips, not one continuous grind: the
+ * fork ends a loop, reports it, the host resets and teleports the player to
+ * the queue's index-0 maze region, and the bot window closes. Nothing moves
+ * again until the player walks back and the block re-dispatches. A poll that
+ * waits for ANY bot-side condition without walking back therefore waits
+ * forever — the first version of these legs did exactly that and timed out
+ * with `livePlayRegion` sitting on the maze.
+ *
+ * `progress.walkBacks` counts the round trips, which is also the multi-reset
+ * leg's direct witness that the queue re-drove from index 0.
+ */
+function pollWalkingBack(testController, loopState, progress, fn, label, timeoutMs, intervalMs = 250) {
+    return eventually(testController, () => {
+        if (walkBackIfParkedOnMaze(loopState)) progress.walkBacks += 1;
+        if (botState().inFlight === false) progress.windowEnded = true;
+        return fn();
+    }, label, timeoutMs, intervalMs);
+}
+
+/**
+ * Enter r0, seed its Explore level, and step back out to the maze — the
+ * queue's index-0 region and where both legs start.
+ *
+ * The seed is stashed with the rest of r0's per-region state on the way out
+ * and comes back when the bot re-enters; nothing can move it in between,
+ * because the bridge clock only runs while an omsi region is active.
+ */
+async function seedR0Explore(testController, exp) {
+    const inR0 = await enterRegion(testController, OMSI_REGION_SPLIT_R0);
+    testController.assertEqual('entered r0 to seed its Explore level', true, !!inR0);
+    if (!inR0) return false;
+
+    // A FRESH game, not just zeroed Explore vars. The planner scores every
+    // action against the stats and progress already banked, so an inherited
+    // part-played save makes it prefer different plans — and a bot leg that
+    // depends on which tests ran first is worthless. `resetOmsiEngineProgress`
+    // is no substitute: it zeroes town-progress vars in the live engine and
+    // leaves skills, talents and the save alone.
+    //
+    // It has to happen HERE, with an omsi region already active: the reset
+    // reloads the iframe and waits for the bridge clock to run again, and the
+    // clock only runs while the player is standing in an omsi region.
+    const fresh = await resetOmsiSaveAndReload(testController);
+    testController.assertEqual('fresh omsi game active after save reset', true, !!fresh);
+    if (!fresh) return false;
+    resetOmsiEngineProgress(['Wander']);
+
+    omsiEval(`towns[0].expWander = ${exp}; adjustAll();`);
+    omsiClearQueue();
+    testController.assertEqual('r0 exit gate CLOSED at the seeded level', false,
+        bridgeState()?.regionExitAvailable);
+    testController.assertEqual('Explore seeded below the gate', exp,
+        Number(omsiEval('towns[0].expWander')));
+    moveToRegion(OMSI_REGION_SPLIT_MAZE, OMSI_REGION_SPLIT_R0);
+    return true;
+}
+
+/** Shared boot for both bot legs. Returns null when the fixture never came up. */
+async function bootBotFixture(testController, seed) {
+    testController.log(`Loading ${OMSI_REGION_SPLIT_PRESET_PATH}…`);
+    await testController.loadRulesFromFile(OMSI_REGION_SPLIT_PRESET_PATH);
+    await testController.stateManager.pingWorker('after-rules-load', 3000);
+
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'omsiSubstrateWrapperPanel' });
+    const booted = await waitForOmsiBridge(testController);
+    testController.reportCondition('omsi bridge booted', !!booted);
+    if (!booted) return null;
+
+    const loopState = (await import('../../loops/loopStateSingleton.js')).default;
+    const gs = getGameStateSingleton();
+    const loopOn = await eventually(testController,
+        () => gs.isLoopModeActive === true, 'loop mode active (auto-enabled by loop_costs)', 5000);
+    testController.assertEqual('loop mode active (auto-enabled by loop_costs)', true, !!loopOn);
+    if (!loopOn) return null;
+
+    if (!(await seedR0Explore(testController, seed))) return null;
+    return { loopState, gs };
+}
+
+/**
+ * The pre-engagement value of the one automation option whose restoration is
+ * observable from the host: a Bot visit must not leave the planner armed for
+ * the Manual visit that follows.
+ */
+const readAutomationEnabled = () => omsiEval('options.advancedAutomationEnabled');
+
+async function botCrossesRegion(testController) {
+    const booted = await bootBotFixture(testController, BOT_NEAR_GATE_SEED);
+    if (!booted) return testController.getOverallResult();
+    const { loopState, gs } = booted;
+
+    const controller = substrateRegistry.get('omsi')?.getPlaybackController?.();
+    const walkToSpy = spyOnOmsiController(controller, 'walkTo', (m) => testController.log(m));
+    const watcher = watchRegionMoves();
+    const savedNoReset = gs.noManaDepletionReset;
+    // Switch Advanced Automation ON as a player might have, so the restore
+    // assertion at the end is a REAL pin. Left at the fork's default it reads
+    // false both before and after, and a bot that clobbered the option would
+    // pass — which is exactly how the bug this catches would have shipped.
+    omsiEval('setOption("advancedAutomation", true); setOption("advancedAutomationEnabled", true);');
+    const automationBefore = readAutomationEnabled();
+    let park = null;
+    try {
+        const movesBefore = watcher.moves.length;
+        const progress = { walkBacks: 0, windowEnded: false };
+        park = await parkManualBlocks(testController, BOT_HOPS());
+        testController.assertEqual('parked the maze approach + a Bot block on r0', true, !!park);
+        if (!park) return testController.getOverallResult();
+
+        // ── The bot engaged the planner ──────────────────────────────────
+        const engaged = await pollWalkingBack(testController, loopState, progress,
+            () => loopState._botExecutedAction !== null && botState().inFlight === true,
+            'the Bot block dispatched walkTo and the bridge opened its window', 30000, 100);
+        testController.assertEqual('a Bot block engaged the walkTo solver', true, !!engaged);
+        if (!engaged) return testController.getOverallResult();
+        testController.assertEqual('loops dispatched walkTo', true, walkToSpy.calls.length >= 1);
+        testController.assertEqual('walkTo targeted an exit', 'exit', walkToSpy.calls[0]?.kind);
+        testController.assertEqual('walkTo named the queued r0->r1 exit',
+            OMSI_REGION_SPLIT_R0_TO_R1, walkToSpy.calls[0]?.name);
+        testController.assertEqual('the bridge is walking toward that exit',
+            OMSI_REGION_SPLIT_R0_TO_R1, botState().targetExit);
+
+        // ENGAGEMENT is a fork-side fact, not a host-side one: the bridge wrote
+        // the planner options and the planner answered. `plannerArmed` is the
+        // saved-options slot (so a disengage really has something to restore)
+        // and plannerStatus is the fork's own readout.
+        testController.assertEqual('the bridge armed the fork planner', true,
+            botState().plannerArmed === true);
+        testController.assertEqual('the fork planner is switched on', true,
+            readAutomationEnabled() === true);
+        // The gate's verdict IS the award path. Read it in the SAME tick the
+        // window is observed open: an omsi bot walk is a chain of host round
+        // trips, so the window opens and closes repeatedly and a verdict read
+        // a poll later would be reading a different moment.
+        let gateDuring = null;
+        let liveDuring = 'unread';
+        const planned = await pollWalkingBack(testController, loopState, progress, () => {
+            if (!botState().inFlight) return false;
+            liveDuring = loopState.livePlayRegion();
+            gateDuring = loopState.evaluateActionGate({
+                kind: 'location', regionName: OMSI_REGION_SPLIT_R0,
+                eventName: 'user:locationCheck', data: {},
+            });
+            const status = botState().plannerStatus;
+            return typeof status === 'string' && /plan:/iu.test(status);
+        }, 'the fork planner produced a plan', 60000, 100);
+        testController.assertEqual('the fork planner produced a plan', true, !!planned);
+        testController.log(`planner status: ${botState().plannerStatus}`);
+
+        // ── The strict gate's verdict IS the award path ──────────────────
+        // Inside the window the only thing letting a substrate publish through
+        // is the queueExecution exemption — livePlayRegion is null, so
+        // parkedLivePlay is unavailable, and slice 2 ruled NO fromLoop stamp.
+        testController.assertEqual('livePlayRegion is null while the solver drives',
+            null, liveDuring);
+        testController.assertEqual('an AP check fired mid-grind passes the strict gate',
+            true, gateDuring?.allowed === true);
+        testController.assertEqual('…on the queueExecution exemption, not a fromLoop stamp',
+            'queueExecution', gateDuring?.reason);
+
+        // ── The fork really ground, measured where the change is ─────────
+        // Explore exp, NOT totalTicks: the clock runs for other reasons, and a
+        // bot that engaged but never planned anything useful would still tick.
+        const ground = await pollWalkingBack(testController, loopState, progress,
+            () => Number(omsiEval('towns[0].expWander')) > BOT_NEAR_GATE_SEED,
+            'the planner ground the region\'s Explore var upward', 180000, 250);
+        testController.assertEqual('the planner ground Explore exp above the seed', true, !!ground);
+        testController.log(`expWander: ${BOT_NEAR_GATE_SEED} -> ${omsiEval('towns[0].expWander')}`);
+
+        // ── …until the gate opened and the exit crossed ──────────────────
+        const crossed = await pollWalkingBack(testController, loopState, progress,
+            () => watcher.moves.slice(movesBefore).some(
+                (m) => m?.sourceRegion === OMSI_REGION_SPLIT_R0
+                    && m?.targetRegion === OMSI_REGION_SPLIT_R1
+                    && m?.exitName === OMSI_REGION_SPLIT_R0_TO_R1),
+            'the bot opened the gate and crossed the queued exit', 180000, 250);
+        testController.assertEqual('the bot crossed the exit it was sent to', true, !!crossed);
+        if (!crossed) {
+            testController.log(`DIAG: expWander=${omsiEval('towns[0].expWander')}, `
+                + `gate=${bridgeState()?.regionExitAvailable}, bot=${JSON.stringify(botState())}, `
+                + `queue=${JSON.stringify(omsiReadQueue())}, pool=${readPool()}, `
+                + `region=${readCurrentRegion()}, walkTos=${walkToSpy.calls.length}, `
+                + `walkBacks=${progress.walkBacks}, mayStep=${bridgeState()?.mayStep}`);
+            return testController.getOverallResult();
+        }
+        const departure = watcher.moves.slice(movesBefore).find(
+            (m) => m?.exitName === OMSI_REGION_SPLIT_R0_TO_R1 && !m?.fromReset);
+        testController.assertEqual('the departure was NOT fromLoop-stamped (slice-2 ruling)',
+            true, departure?.fromLoop !== true);
+
+        // ── The window closed and the player's options came back ─────────
+        const restored = await eventually(testController,
+            () => botState().inFlight === false && botState().plannerArmed === false,
+            'the bot window closed on the departure', 15000, 200);
+        testController.assertEqual('the bot window closed when the departure crossed',
+            true, !!restored);
+        testController.assertEqual('the player really had the planner switched on beforehand',
+            true, automationBefore === true);
+        testController.assertEqual(
+            'a Manual visit after a Bot visit finds the options exactly as the player left them',
+            automationBefore, readAutomationEnabled());
+        return testController.getOverallResult();
+    } finally {
+        walkToSpy.restore();
+        watcher.stop();
+        gs.noManaDepletionReset = savedNoReset;
+        unparkManualBlocks(park);
+        omsiClearQueue();
+        resetOmsiEngineProgress(['Wander']);
+    }
+}
+
+async function botCrossesAcrossResets(testController) {
+    const booted = await bootBotFixture(testController, BOT_MULTI_RUN_SEED);
+    if (!booted) return testController.getOverallResult();
+    const { loopState, gs } = booted;
+
+    const controller = substrateRegistry.get('omsi')?.getPlaybackController?.();
+    const walkToSpy = spyOnOmsiController(controller, 'walkTo', (m) => testController.log(m));
+    const watcher = watchRegionMoves();
+    // No depletion suppression: outrunning the pool is the point of this leg.
+    const savedNoReset = gs.noManaDepletionReset;
+    gs.noManaDepletionReset = false;
+    let park = null;
+    try {
+        const movesBefore = watcher.moves.length;
+        const resetsBefore = readLoopResetCount();
+        const forkLoopsBefore = Number(omsiEval('totals.loops'));
+        testController.log(`pool before the walk: ${readPool()} / ${readMaxPool()}`);
+
+        const progress = { walkBacks: 0, windowEnded: false };
+        park = await parkManualBlocks(testController, BOT_HOPS());
+        testController.assertEqual('parked the maze approach + a Bot block on r0', true, !!park);
+        if (!park) return testController.getOverallResult();
+
+        const engaged = await pollWalkingBack(testController, loopState, progress,
+            () => loopState._botExecutedAction !== null && botState().inFlight === true,
+            'the Bot block dispatched walkTo and the bridge opened its window', 30000, 100);
+        testController.assertEqual('a Bot block engaged the walkTo solver', true, !!engaged);
+        if (!engaged) return testController.getOverallResult();
+
+        // ── Grind across resets, walking back each time ──────────────────
+        // pollWalkingBack does the walking (and records the window closing on
+        // each teleport, a transient the re-dispatch immediately reopens).
+        // Counting the walk-backs is the direct witness that the queue
+        // re-drove from index 0 — a park that never released could not
+        // produce a second one.
+        const crossed = await pollWalkingBack(testController, loopState, progress,
+            () => watcher.moves.slice(movesBefore).some(
+                (m) => m?.sourceRegion === OMSI_REGION_SPLIT_R0
+                    && m?.targetRegion === OMSI_REGION_SPLIT_R1
+                    && m?.exitName === OMSI_REGION_SPLIT_R0_TO_R1),
+            'the bot crossed after grinding across loop resets', 360000, 250);
+        const moves = watcher.moves.slice(movesBefore);
+        const walkBacks = progress.walkBacks;
+        const windowEnded = progress.windowEnded;
+        const resets = readLoopResetCount() - resetsBefore;
+        const forkLoops = Number(omsiEval('totals.loops')) - forkLoopsBefore;
+        testController.log(`walk-backs: ${walkBacks}; walkTo dispatches: ${walkToSpy.calls.length}; `
+            + `host resets: ${resets}; fork loops: ${forkLoops}`);
+        testController.log(`moves: ${JSON.stringify(moves.map((m) => `${m.sourceRegion}->${m.targetRegion}`
+            + `${m.exitName ? ` via ${m.exitName}` : ''}${m.fromReset ? ' [reset]' : ''}`))}`);
+        testController.assertEqual(
+            'the bot crossed the queued exit at a pool too small to open the gate in one run',
+            true, !!crossed);
+        if (!crossed) {
+            testController.log(`DIAG: expWander=${omsiEval('towns[0].expWander')}, `
+                + `gate=${bridgeState()?.regionExitAvailable}, bot=${JSON.stringify(botState())}, `
+                + `pool=${readPool()}, region=${readCurrentRegion()}, `
+                + `manualRegion=${loopState._manualRegionName}, `
+                + `isProcessing=${loopState.isProcessing}, index=${loopState.currentActionIndex}`);
+            return testController.getOverallResult();
+        }
+
+        // ── A reset really interrupted the walk ──────────────────────────
+        const resetMoves = moves.filter((m) => m?.fromReset === true);
+        testController.assertEqual('a loop reset teleport interrupted the walk', true,
+            resetMoves.length >= 1);
+        testController.assertEqual('every reset teleport landed on the queue\'s index-0 region',
+            true, resetMoves.every((m) => m?.targetRegion === OMSI_REGION_SPLIT_MAZE));
+        testController.assertEqual('loops counted the interrupting resets', true, resets >= 1);
+        testController.assertEqual('the queue re-parked on index 0 after each reset', true,
+            walkBacks >= 2);
+
+        // ── walkTo was RE-dispatched, and the install is idempotent ──────
+        // The M6 bot wake releases the park, resumes, and re-dispatches on the
+        // fromReset branch. More than one walkTo is that path having run; the
+        // crossing above is the proof the repeated install did not corrupt
+        // anything.
+        testController.assertEqual('the bot wake re-dispatched walkTo after the reset', true,
+            walkToSpy.calls.length >= 2);
+        testController.assertEqual('every re-dispatch named the same exit', true,
+            walkToSpy.calls.every((c) => c?.name === OMSI_REGION_SPLIT_R0_TO_R1));
+        testController.assertEqual('the bot window ended on the teleport\'s regionChanged-away',
+            true, windowEnded);
+
+        // ── Trap 5: no double reset per fork boundary ────────────────────
+        // Both reset producers are live during a bot walk (the mirror's
+        // drain-to-zero and the fork's own loop-end report), and a planner
+        // pause can interleave a host reset with a held boundary. The router's
+        // race guard is what collapses them; a double report would show up
+        // here as more host resets than the fork had loops.
+        testController.assertEqual(
+            `no fork boundary produced two host resets (${resets} resets / ${forkLoops} fork loops)`,
+            true, forkLoops > 0 && resets <= forkLoops);
+
+        // ── …and the fork ground rather than being teleported through ────
+        const departure = moves.find(
+            (m) => m?.exitName === OMSI_REGION_SPLIT_R0_TO_R1 && !m?.fromReset);
+        testController.assertEqual('the departure was NOT fromLoop-stamped (slice-2 ruling)',
+            true, departure?.fromLoop !== true);
+        testController.assertEqual('the gate really opened before the crossing', true,
+            Number(omsiEval('towns[0].expWander')) >= EXPLORE_GATE
+                || bridgeState()?.activeRegionId !== OMSI_REGION_SPLIT_R0);
+        return testController.getOverallResult();
+    } finally {
+        walkToSpy.restore();
+        watcher.stop();
+        gs.noManaDepletionReset = savedNoReset;
+        unparkManualBlocks(park);
+        omsiClearQueue();
+        resetOmsiEngineProgress(['Wander']);
+    }
+}
+
+registerTest({
+    id: 'omsi-bot-crosses-region',
+    name: 'Omsi: a Bot block engages the fork planner and crosses the region exit',
+    description: 'Arc D2 slice 3: a BOT-mode loops block on an omsi region hands its queued '
+               + 'regionMove to the walkTo solver. Asserts loops dispatched walkTo at the queued '
+               + 'exit, the bridge ARMED the fork\'s Advanced Automation planner and the planner '
+               + 'produced a plan, the fork really ground (the region\'s Explore exp rises — not a '
+               + 'tick counter), the gate opened and the exit crossed UNSTAMPED, and the window '
+               + 'closed restoring the player\'s automation options. Also pins the strict action '
+               + 'gate\'s own verdict mid-grind: queueExecution, which is the exemption an AP award '
+               + 'fired by the planner would ride.',
+    testFunction: botCrossesRegion,
+    category: 'Omsi substrate',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
+registerTest({
+    id: 'omsi-bot-multi-reset-walk',
+    name: 'Omsi: a Bot walk too big for one run grinds across loop resets',
+    description: 'Arc D2 slice 3, the mandatory multi-reset leg: the Explore gate is seeded far '
+               + 'enough away that no single fork loop can reach it, so the walk outlives its run. '
+               + 'Each fork loop end reports to the host, the reset teleports the player to the '
+               + 'queue\'s index-0 region, the M6 bot wake releases and re-dispatches walkTo, and '
+               + 'the leg walks the maze approach back each time. Asserts the reset really '
+               + 'interrupted the walk, the queue re-parked on index 0, walkTo was re-dispatched at '
+               + 'the same exit (install idempotence), the bot window ended on the teleport\'s '
+               + 'regionChanged-away, and no fork boundary produced two host resets (trap 5).',
+    testFunction: botCrossesAcrossResets,
     category: 'Omsi substrate',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });

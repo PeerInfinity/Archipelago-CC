@@ -440,6 +440,35 @@ export function resetOmsiEngineProgress(progressVars = ['Wander']) {
 }
 
 /**
+ * Wipe the fork's managed save slot and reload the iframe, so the leg that
+ * follows plays a FRESH game.
+ *
+ * The `idleLoops_substrate` slot is shared across a whole suite run, and an
+ * inherited part-played save is not a neutral starting point for anything
+ * involving the fork's PLANNER: its scorer weighs the marginal value of every
+ * action against the stats and progress already banked, so a save carrying
+ * another leg's skills makes it prefer entirely different plans. That turns a
+ * bot leg non-deterministic in the worst way — it passes or stalls depending
+ * on which tests ran first. (jta's bot leg resets its save for exactly this
+ * reason; the failure mode was observed there first.)
+ *
+ * `resetOmsiEngineProgress` is NOT a substitute: it zeroes named town-progress
+ * vars in the live engine and leaves skills, talents and the save itself
+ * untouched.
+ */
+export async function resetOmsiSaveAndReload(testController) {
+    try {
+        const ls = getOmsiIframe()?.contentWindow?.localStorage;
+        for (let i = (ls?.length ?? 0) - 1; i >= 0; i--) {
+            const key = ls.key(i);
+            if (key?.startsWith('idleLoops_substrate')) ls.removeItem(key);
+        }
+    } catch { /* cross-origin guard — same-origin here, ignore */ }
+    getOmsiIframe()?.contentWindow?.location?.reload();
+    return waitForOmsiActive(testController);
+}
+
+/**
  * Poll until fn() is truthy or timeout; thin wrapper so tests read as
  * one-liners for "eventually" assertions on host state.
  */

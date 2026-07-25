@@ -1634,8 +1634,15 @@ function _restoreAutomationOptions() {
 function _crossBotExit(reason) {
     if (!_botInFlight || _botExitInstalled) return;
     if (!_installBotExit()) return;
-    _setForkOption('advancedAutomationEnabled', false);
-    log('debug', `bot installed the exit plan and disengaged the planner (${reason})`);
+    // Only disengage a planner THIS window engaged. `_startBotWalk` crosses
+    // straight through when the gate is already open at dispatch — the common
+    // case on the last re-dispatch of a multi-run walk — and there is nothing
+    // to hand back on that path. Disabling anyway would switch off an Advanced
+    // Automation the PLAYER turned on, with no saved value to restore it from
+    // (slice-3 fix; `omsi-bot-crosses-region` pins it).
+    if (_botSavedOptions) _setForkOption('advancedAutomationEnabled', false);
+    log('debug', `bot installed the exit plan${_botSavedOptions ? ' and disengaged the planner' : ''}`
+        + ` (${reason})`);
 }
 
 /**
@@ -1708,14 +1715,25 @@ function _startBotWalk(target) {
  * Close the window: the departure landed, the host stopped us, or the region
  * went away under us. Restores the player's automation options — a Manual
  * visit after a Bot visit must not find the planner still armed.
+ *
+ * ⚠ ONLY A WINDOW THAT ENGAGED MAY DISABLE THE PLANNER (slice-3 fix, found by
+ * `omsi-bot-crosses-region`). `_startBotWalk` returns early without engaging
+ * when the gate is already open at dispatch — the common case on the LAST
+ * re-dispatch of a multi-run walk, where the previous run finished the grind.
+ * An unconditional disable here has nothing saved to restore afterwards, so it
+ * would silently take Advanced Automation away from a player who had switched
+ * it on themselves. Gating both halves on `_botSavedOptions` keeps "the bot
+ * leaves the options exactly as it found them" true on every path.
  */
 function _endBotWalk(reason) {
     if (!_botInFlight) return;
     _botInFlight = false;
     _botTargetExitName = null;
     _botExitInstalled = false;
-    _setForkOption('advancedAutomationEnabled', false);
-    _restoreAutomationOptions();
+    if (_botSavedOptions) {
+        _setForkOption('advancedAutomationEnabled', false);
+        _restoreAutomationOptions();
+    }
     log('debug', `bot window closed — ${reason}`);
 }
 
