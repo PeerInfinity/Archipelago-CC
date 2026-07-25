@@ -1689,6 +1689,45 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    substrates 55/55 cold+warm compare-runs clean, regression 31/31,
    fork clean. NEXT: **slice 2 (the bot window)** with both riders
    standing.
+   **D2 SLICE 2 SHIPPED + PUSHED 2026-07-25 (Opus, `1a2ece76a`, zero
+   fork edits; Fable-verified).** The bot window: `walkTo` → engage
+   (setOption through the REAL setter; plannerMultiTown forced off;
+   pre-engagement options restored on disengage) → grind → exit at a
+   held boundary → disengage. Rider 1 was LOAD-BEARING: the cold start
+   deadlocks without it (onResult installs but only
+   resumeIfPlannerPaused starts the engine, and that needs a pause the
+   planner can only take at a boundary, which needs a step — while
+   shouldRestart is init-true so the slice-1 gate is SHUT; a frozen
+   substrate with no reset of its own, the D1 gotcha reincarnated).
+   Fix = one suppressed `_forceLoopRecompile` from `_clockTick` once a
+   runnable plan exists. **The crossing INVERTED the kickoff's trap-3
+   order — install the exit plan FIRST, then disengage**: disengaging at
+   a held boundary runs resumeIfPlannerPaused → pauseGame, which
+   RESTARTS on `shouldRestart || timer >= timeNeeded` (exactly the held
+   state) — unsuppressed, so it reports a run end and the host teleports
+   mid-crossing; installing first zeroes the hold so the disengage finds
+   nothing to restart, and the same-synchronous-step landing means the
+   manual-edit compare never runs. **Stamping RULED: NONE** (jta
+   precedent) — `_botExecutedAction` gives a blanket `queueExecution`
+   pass (loopState.js:2281) before any flag is consulted, covering both
+   grind checks and the departure; stamping would work by accident and
+   obscure the carrying exemption; kept reversible, slice 3's award
+   assertion is the confirming observation. Measurement (fixture gate
+   Wander@5%): default heuristic opens in 90 loops / 63,650 ticks / 28
+   plans → **v1 ships default weights, NO targeted escalation**; trap 6
+   clean (no travel action in any installed plan). `executeVia:
+   'solver'` DECLARED (Bot radio renders; capability-matrix pin updated
+   deliberately). Gates: vitest 3362/3362, substrates 55/55 compare-runs
+   clean, fork clean — stated plainly: NO test exercises the bot window
+   yet; the suites prove inertness for existing paths, the legs are
+   slice 3. **Slice-3 notes:** single-run leg needs a seeded explore
+   state or lower threshold (90 fork loops ≈ 90 host runs under the D1
+   contract); multi-reset leg must ALSO verify walkTo re-dispatch
+   idempotence + bot-window end on the teleport's regionChanged-away
+   (the `_endReplay` analog) and the trap-5 no-double-reset interleave;
+   a plan landing inside one 100ms clock interval un-holds a boundary
+   unseen → crossing slips one loop (harmless, but don't time legs
+   tightly against it).
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
