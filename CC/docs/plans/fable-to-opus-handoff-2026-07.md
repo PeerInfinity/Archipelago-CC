@@ -1560,6 +1560,40 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    has the multi-run contract to write down, and **arc D2** behind its
    feasibility recon (its multi-reset bot leg rides the wake path slice 4b
    just settled).
+   **SLICE 6 SHIPPED 2026-07-25 — ARC D1 COMPLETE.** Docs-only (no
+   `frontend/` file touched, so the suites were not the gate; every
+   relative link + anchor verified, `find_orphaned_docs.py` clean inside
+   `docs/json`). Three deliverables: (1) NEW
+   `docs/json/developer/procgen/omsi.md` — the first per-substrate page
+   omsi has ever had, covering all four arcs (A unlockScale, B XML
+   de-hardcoding, C region split, D1 loops mode), the fork pin + byte-gate
+   cadence (⚠ `--worktree`), the clock/mana-mirror/reset-propagation
+   contract, the step gate, per-region queues, plan-snapshot Record,
+   Playback and the ~350-mana economy note; linked from `procgen/README.md`
+   (six→seven substrates). (2) The **multi-run Playback contract** as a new
+   `loop-recording.md` §"A replay bigger than one run": the replay window
+   does NOT survive a run boundary, loops' generic queue-restart retry is
+   what continues it, and the three requirements that bind every
+   fine-grained substrate (idempotent install; departure = termination
+   condition, refuse a replay that can't resolve one; a route home from the
+   reset target). (3) Stale claims fixed: the reset-teleport paragraph
+   rewritten as a **two-park-kinds × two-reset-flows** table (the M6
+   `_resumeFrameLoopIfProcessing` bails on `!isProcessing`, which is why it
+   never generalized to the Manual/Playback park), `loop-recording.md`
+   :162/:168, `substrate-registry.md` :60 + the capability matrix (seventh
+   `omsi` column + a new `requiresLoopMode` row + entry source), and the
+   fine-grained roster in four more places. New gotcha **"Two reset flows,
+   and they disagreed"** in `gotchas.md`, beside the frozen-substrate entry
+   — including "`setCurrentRegion` publishes `regionChanged` only on an
+   actual CHANGE", the reason the slice-4b fix lives on the reset
+   subscriber. ONE home per trap, no duplication. Also swept:
+   `architecture.md`'s substrate roster (omsi AND runner were both missing;
+   content-source list too). ⚠ **Finding, scoped separately, NOT fixed
+   here:** `docs/json/features/loops.md` — the user-facing loops page — has
+   ZERO mentions of block modes / Record / Playback / substrates; it
+   predates the whole M1–M6 arc. Nothing on it is *false*, so slice 6 added
+   only a "not yet described here" pointer to `loop-recording.md`; writing
+   the user-facing block-mode section is its own slice.
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
