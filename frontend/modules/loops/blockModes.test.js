@@ -1066,6 +1066,141 @@ describe('M2 — Playback replays a bound recording', () => {
 });
 
 // ---------------------------------------------------------------------------
+// Arc D slice 4b — the substrate-driven reset releases a stale park.
+//
+// `gameState:loopReset` is published only by `gameState.triggerLoopReset`,
+// i.e. exclusively by resourceChannels' out-of-mana flow; loops' own reset is
+// `_resetLoop` (which publishes `loopState:loopReset`). Until this slice the
+// substrate seam ran `_resetActionsProgress()` alone, so a Manual / Record /
+// Playback park survived a reset that had just teleported the player out of
+// the parked region — with the frame loop STOPPED, since both park entries
+// call stopProcessing(). Nothing re-dispatched, and a multi-run Playback
+// replay hung forever.
+//
+// The in-app leg `omsi-multi-run-replay-retry` witnesses the park-flag and
+// resume halves end to end. These pin the whole field set, including the two
+// it cannot reach: `_boundReplayCheckedIndex` (the leg's queue passes through
+// a manual wake on the way back, which clears it for other reasons) and
+// `_queuePausedUntilReset`.
+// ---------------------------------------------------------------------------
+
+describe('slice 4b — a substrate-driven loop reset releases the park', () => {
+  let loopState, gs, bus, tick, handles;
+  beforeEach(() => {
+    resetSavedQueueStore();
+    clearRulesHashCache();
+    ({ loopState, gs, bus } = wire());
+    tick = makeTicker();
+    handles = registerRecordSubstrate();
+    loopState._cachedRulesData = RULES_DATA;
+    gs.setLoopModeActive(true);
+    gs.updatePath('A', 'go', 'Menu');
+    gs.addLocationCheck('Loc1', 'A');
+    gs.updatePath('B', 'exit', 'A');
+  });
+
+  /** Park A#1 in `mode` with the queue processing, as the frame loop would. */
+  function park(mode) {
+    loopState.setBlockMode('A', 1, mode);
+    loopState.currentActionIndex = 1;
+    loopState.currentAction = loopState.getActionQueue()[1];
+    loopState.isProcessing = true;
+    tick(loopState);
+  }
+
+  function seedRecording() {
+    saveQueue(hashRulesData(RULES_DATA), {
+      regionName: 'A', substrate: 'rec_sub',
+      arrivalExitId: 'go', ordinal: 0, departureExitId: 'exit',
+      actions: [{ type: 'locationCheck', locationName: 'Loc1' }],
+    });
+  }
+
+  it('a Playback replay park is released, the cursor snaps to 0 and processing resumes', () => {
+    seedRecording();
+    park('playback');
+    expect(loopState._manualActionEntered).toBe(true);
+    expect(handles.replayCalls).toHaveLength(1);
+    // The park stopped the frame loop — this is why _resumeFrameLoopIfProcessing
+    // (the M6 bot cure, which bails on !isProcessing) would not have sufficed.
+    expect(loopState.isProcessing).toBe(false);
+
+    gs.triggerLoopReset();
+
+    expect(loopState._manualActionEntered).toBe(false);
+    expect(loopState._manualRegionName).toBeNull();
+    expect(loopState.currentActionIndex).toBe(0);
+    expect(loopState.isProcessing).toBe(true);
+  });
+
+  it('the per-index replay guard is cleared, so the retry can re-dispatch replayActions', () => {
+    seedRecording();
+    park('playback');
+    expect(loopState._boundReplayCheckedIndex).toBe(1);
+
+    gs.triggerLoopReset();
+    expect(loopState._boundReplayCheckedIndex).toBe(-1);
+
+    // Re-entering the block replays AGAIN. Left stale, the guard would send a
+    // Playback block down the bot/generic-executor path instead — a silent
+    // crossing of an exit that was never replayed, which is worse than a hang.
+    loopState.currentActionIndex = 1;
+    loopState.currentAction = loopState.getActionQueue()[1];
+    tick(loopState);
+    expect(handles.replayCalls).toHaveLength(2);
+  });
+
+  it('an in-flight Record capture is discarded, matching _resetLoop', () => {
+    park('record');
+    loopState.observeParkedLiveAction({ type: 'locationCheck', locationName: 'Performed', regionName: 'A' });
+    expect(loopState._recordingBlock).toEqual({ region: 'A', instance: 1 });
+
+    gs.triggerLoopReset();
+
+    expect(loopState._recordingBlock).toBeNull();
+    expect(loopState._liveCaptureBuffer).toEqual([]);
+    // Nothing was persisted: the visit never crossed its exit.
+    expect(getSavedQueueByTag(hashRulesData(RULES_DATA), 'A', 'rec_sub', 'go', 0)).toBeNull();
+  });
+
+  it('the wrong-exit hard pause is lifted — its contract is "until the next loop reset"', () => {
+    park('manual');
+    loopState._handleManualWake_regionMove({ targetRegion: 'Elsewhere', oldRegion: 'A' });
+    expect(loopState._queuePausedUntilReset).toBe(true);
+
+    gs.triggerLoopReset();
+    expect(loopState._queuePausedUntilReset).toBe(false);
+    expect(loopState.isProcessing).toBe(true);
+  });
+
+  it('an UNPARKED queue is untouched — the release is a park release, not a start button', () => {
+    expect(loopState._manualActionEntered).toBe(false);
+    expect(loopState.isProcessing).toBe(false);
+    gs.triggerLoopReset();
+    expect(loopState.isProcessing).toBe(false);
+  });
+
+  it('a user PAUSE survives the release', () => {
+    seedRecording();
+    park('playback');
+    loopState.isPaused = true;
+    gs.triggerLoopReset();
+    // The park is still released (it is stale either way), but resumeProcessing
+    // declines while paused, so the reset cannot un-pause the player.
+    expect(loopState._manualActionEntered).toBe(false);
+    expect(loopState.isProcessing).toBe(false);
+  });
+
+  it('a Bot park is left to _handleBotWake_regionChanged (M6)', () => {
+    loopState._botExecutedAction = { type: 'regionMove', sourceRegion: 'A', destinationRegion: 'B' };
+    gs.triggerLoopReset();
+    expect(loopState._botExecutedAction).toEqual({
+      type: 'regionMove', sourceRegion: 'A', destinationRegion: 'B',
+    });
+  });
+});
+
+// ---------------------------------------------------------------------------
 // M4 slice 4 — queue annotations (item deltas + minima, XP), the universal
 // savedQueueStore envelope.
 // ---------------------------------------------------------------------------

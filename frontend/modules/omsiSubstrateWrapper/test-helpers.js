@@ -71,6 +71,15 @@ export const OMSI_REGION_SPLIT_R1 = 'region_1_0';
 // label differs) — the parked-Manual helper queues the round trip with them.
 export const OMSI_REGION_SPLIT_R0_TO_R1 = 'exit_to_region_1_0';
 export const OMSI_REGION_SPLIT_R1_TO_R0 = 'exit_to_region_0_1';
+// The fixture's maze START region and its edge into r0.
+//
+// `start_regions` is `Menu`, which is not in the warehouse, so
+// procgenPlayerEngine's findStartRegion follows Menu's `GameStart` exit and
+// the RESOLVED start — i.e. what a loop reset teleports to — is region_0_0.
+// That makes it the only region a multi-run replay can be re-driven from:
+// after every reset the player lands here, and `exit_0` is the way back in.
+export const OMSI_REGION_SPLIT_MAZE = 'region_0_0';
+export const OMSI_REGION_SPLIT_MAZE_TO_R0 = 'exit_0';
 
 // The game's native per-loop budget (timeNeededInitial = 5 * 50) — the
 // starting-budget bonus the bridge reports up to the shared pool.
@@ -232,6 +241,10 @@ export function watchRegionMoves() {
  * enough to park on `from` (the queued departure defines the block); a
  * multi-hop path parks each source block in turn as the previous crossing
  * completes — that is how a round trip through synthetic exits stays legal.
+ * A hop may carry its own `mode`, overriding the argument for that source
+ * only: the multi-run replay leg needs the maze approach block Manual (so
+ * the leg can walk it) while r0's block is Playback (the thing under test),
+ * and one mode for every source cannot express that.
  * omsi is FINE-GRAINED (the registry supplies takeLastRecording), so loops
  * charges nothing for this play: the bridge's mana mirror is the economy.
  *
@@ -259,11 +272,12 @@ export async function parkManualBlocks(testController, hops, mode = 'manual') {
     gs.clearPath?.();
     for (const hop of hops) gs.updatePath(hop.to, hop.exit ?? null, hop.from);
     const { visits } = resolveQueueBlocks(loopStateSingleton.getActionQueue());
+    const modeFor = new Map(hops.map((h) => [h.from, h.mode ?? mode]));
     const sources = new Set(hops.map((h) => h.from));
     const instances = new Map();
     for (const visit of visits) {
         if (!sources.has(visit.name)) continue;
-        loopStateSingleton.setBlockMode(visit.name, visit.instance, mode);
+        loopStateSingleton.setBlockMode(visit.name, visit.instance, modeFor.get(visit.name));
         instances.set(visit.name, visit.instance);
     }
     if (instances.size !== sources.size) {
@@ -338,12 +352,19 @@ export function readExpectedResetTarget() {
  * Dispatch a user:regionMove via the raw host dispatcher with
  * initialTarget bottom, mirroring what a real substrate transition
  * publishes (same helper shape as the jta/tasw tests).
+ *
+ * `exitName` defaults to null — an exit-LESS reposition, which the strict
+ * action gate waves through as `syntheticMove`. Passing a real exit name
+ * makes the dispatch a PERFORMED player crossing instead, subject to the
+ * gate exactly like a substrate's own publish: it needs the queue parked on
+ * the source region (`parkedLivePlay`). That is what the multi-run replay
+ * leg uses to model "the player walked back" after a reset teleport.
  */
-export function moveToRegion(targetRegion, sourceRegion = null) {
+export function moveToRegion(targetRegion, sourceRegion = null, exitName = null) {
     window.eventDispatcher?.publish('test', 'user:regionMove', {
         sourceRegion,
         targetRegion,
-        exitName: null,
+        exitName,
     }, { initialTarget: 'bottom' });
 }
 

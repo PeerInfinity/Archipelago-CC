@@ -45,6 +45,8 @@ import {
     OMSI_REGION_SPLIT_R1,
     OMSI_REGION_SPLIT_R0_TO_R1,
     OMSI_REGION_SPLIT_R1_TO_R0,
+    OMSI_REGION_SPLIT_MAZE,
+    OMSI_REGION_SPLIT_MAZE_TO_R0,
     waitForOmsiActive,
     waitForOmsiBridge,
     resetOmsiEngineProgress,
@@ -59,6 +61,9 @@ import {
     watchRegionMoves,
     gameStateFn,
     readPool,
+    readMaxPool,
+    readCurrentRegion,
+    readLoopResetCount,
     eventually,
 } from '../../omsiSubstrateWrapper/test-helpers.js';
 
@@ -514,6 +519,275 @@ async function recordPlaybackLegs(testController, { loopState, gs, watcher, setP
     return testController.getOverallResult();
 }
 
+// ────────────────────────────────────────────────────────────────────────────
+// The MULTI-RUN replay retry (arc D slice 4b)
+// ────────────────────────────────────────────────────────────────────────────
+
+/**
+ * The same Record → Playback round trip as the leg above, but at the pool
+ * size real play actually has — so the replay CANNOT finish in one run.
+ *
+ * `omsi_region_split_test` carries no starting-mana override, so a run's
+ * budget is gameState's default maxMana 100 plus omsi's native starting-budget
+ * bonus 250 ≈ 350 mana, and one `Wander` costs 250. A recorded plan whose gate
+ * needs several Wanders therefore outlives its run: the fork's loop boundary is
+ * reported to the host, the host fires a real loop reset, and the reset
+ * TELEPORTS the player to the resolved start region — out of the region being
+ * replayed, ending the replay window. The leg above sizes the pool to 2000
+ * precisely to dodge that, which means the path real play takes had no
+ * coverage at all.
+ *
+ * A multi-run replay continues not by the replay window surviving but by the
+ * queue-restart RETRY: the reset snaps the cursor to 0, the queue re-routes
+ * back to the region, re-enters the Playback block, and dispatches
+ * replayActions again — the bridge's install is idempotent by construction.
+ *
+ * Hence the LEADING hop. The reset teleports to `region_0_0` (the fixture's
+ * resolved start — see OMSI_REGION_SPLIT_MAZE), so the queue is
+ * `region_0_0 -exit_0-> r0 -exit_to_region_1_0-> r1`: after every reset the
+ * player lands on the queue's index 0 and has a route home. The maze block is
+ * MANUAL and this leg walks it (a `user:regionMove` carrying the real exit,
+ * gate-allowed as `parkedLivePlay`) — modelling the player walking back, and
+ * keeping the omsi half honest. Playback on the maze block would not work:
+ * the maze is fine-grained too, and a fine-grained Playback block with no
+ * bound recording parks for live play (M4), so the queue would stall there.
+ */
+// Gate = 0.05 × PROGRESS_EXP_CAP (505000).
+const EXPLORE_GATE = 25250;
+// `<progress value="200"/>` on Wander in the fork's actionList.xml, with the
+// ×4 multiplier gated on an item this fixture never grants.
+const WANDER_EXP = 200;
+// How many Wander completions the seeded Explore level leaves between the
+// replay start and the gate. One run affords ONE Wander (250 of ~350 mana),
+// so this is also the number of runs — hence the number of resets that must
+// land mid-replay.
+const REPLAY_RUNS = 3;
+const MULTI_RUN_SEED = EXPLORE_GATE - REPLAY_RUNS * WANDER_EXP;
+
+const MULTI_RUN_HOPS = [
+    {
+        from: OMSI_REGION_SPLIT_MAZE,
+        to: OMSI_REGION_SPLIT_R0,
+        exit: OMSI_REGION_SPLIT_MAZE_TO_R0,
+        mode: 'manual',
+    },
+    {
+        from: OMSI_REGION_SPLIT_R0,
+        to: OMSI_REGION_SPLIT_R1,
+        exit: OMSI_REGION_SPLIT_R0_TO_R1,
+        mode: 'record',   // overridden to 'playback' for the second park
+    },
+];
+
+/** MULTI_RUN_HOPS with r0's block in `mode` (record for leg 1, playback for leg 2). */
+function hopsWithR0Mode(mode) {
+    return MULTI_RUN_HOPS.map((h) => (h.from === OMSI_REGION_SPLIT_R0 ? { ...h, mode } : h));
+}
+
+/**
+ * Walk the maze approach block if the queue is parked on it — "the player
+ * walked back". Returns true when a crossing was dispatched.
+ *
+ * Called from the crossing poll rather than once, because the retry needs it
+ * on EVERY run: each reset teleports the player back to the maze and re-parks
+ * index 0 there. Counting the calls is therefore the direct witness that the
+ * queue re-drove from index 0 at all — a park that never released cannot
+ * produce a second one.
+ */
+function walkBackIfParkedOnMaze(loopState) {
+    if (loopState._manualActionEntered !== true) return false;
+    if (loopState._manualRegionName !== OMSI_REGION_SPLIT_MAZE) return false;
+    if (readCurrentRegion() !== OMSI_REGION_SPLIT_MAZE) return false;
+    moveToRegion(OMSI_REGION_SPLIT_R0, OMSI_REGION_SPLIT_MAZE, OMSI_REGION_SPLIT_MAZE_TO_R0);
+    return true;
+}
+
+async function multiRunReplayRetry(testController) {
+    const loopState = (await import('../../loops/loopStateSingleton.js')).default;
+    const { clearForRegion } = await import('../../loops/savedQueueStore.js');
+
+    testController.log(`Loading ${OMSI_REGION_SPLIT_PRESET_PATH}…`);
+    await testController.loadRulesFromFile(OMSI_REGION_SPLIT_PRESET_PATH);
+    await testController.stateManager.pingWorker('after-rules-load', 3000);
+
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'omsiSubstrateWrapperPanel' });
+    const booted = await waitForOmsiBridge(testController);
+    testController.reportCondition('omsi bridge booted', !!booted);
+    if (!booted) return testController.getOverallResult();
+    resetOmsiEngineProgress(['Wander']);
+
+    // Enter r0 once to normalize its per-region state (an empty plan, so the
+    // Record park below starts from a known queue), then step out to the maze
+    // — which is where the queue's index 0 lives.
+    const win = await enterRegion(testController, OMSI_REGION_SPLIT_R0);
+    testController.reportCondition('entered r0', !!win);
+    if (!win) return testController.getOverallResult();
+    try {
+        clearForRegion(loopState._rulesHash(), OMSI_REGION_SPLIT_R0, 'omsi');
+    } catch { /* best-effort */ }
+
+    const gs = getGameStateSingleton();
+    const savedNoReset = gs.noManaDepletionReset;
+    const watcher = watchRegionMoves();
+    let park = null;
+    try {
+        return await multiRunReplayLegs(testController, {
+            loopState, gs, watcher, setPark: (p) => { park = p; },
+        });
+    } finally {
+        watcher.stop();
+        gs.noManaDepletionReset = savedNoReset;
+        unparkManualBlocks(park);
+        omsiClearQueue();
+        resetOmsiEngineProgress(['Wander']);
+    }
+}
+
+async function multiRunReplayLegs(testController, { loopState, gs, watcher, setPark }) {
+    // ── Leg 1: RECORD, entered THROUGH the maze ──────────────────────────────
+    // The recording binds by `(region, arrivalKey, ordinal)`, and arrivalKey is
+    // the exit the block was entered by — so the Record visit has to happen on
+    // the same two-hop path the replay will run, or the Playback block would
+    // find nothing bound to it.
+    gs.noManaDepletionReset = true;
+    moveToRegion(OMSI_REGION_SPLIT_MAZE, OMSI_REGION_SPLIT_R0);
+    const park = await parkManualBlocks(testController, hopsWithR0Mode('record'));
+    testController.assertEqual('parked the maze approach + a Record block on r0', true, !!park);
+    if (!park) return testController.getOverallResult();
+    setPark(park);
+
+    testController.assertEqual('the queue parked on the maze approach block first',
+        OMSI_REGION_SPLIT_MAZE, loopState._manualRegionName);
+    walkBackIfParkedOnMaze(loopState);
+    const recording = await eventually(testController,
+        () => loopState._manualRegionName === OMSI_REGION_SPLIT_R0,
+        'walking the maze approach parked the Record block on r0');
+    testController.assertEqual('walking the maze approach handed the queue to r0\'s block',
+        true, !!recording);
+    if (!recording) return testController.getOverallResult();
+    const active = await waitForOmsiActive(testController);
+    testController.assertEqual('the bridge loaded r0 for the Record visit', true, !!active);
+    if (!active) return testController.getOverallResult();
+
+    const instance = park.instances.get(OMSI_REGION_SPLIT_R0);
+    const toR1 = exitToward(OMSI_REGION_SPLIT_R1);
+    testController.assertEqual('synthetic exit toward r1 injected', true, !!toR1);
+    if (!toR1) return testController.getOverallResult();
+
+    // Author, open the gate and cross in ONE synchronous block (the clock is a
+    // Worker message, so nothing can tick between the statements).
+    omsiClearQueue();
+    omsiAppendAction(RECORDED_ACTION, RECORDED_LOOPS);
+    omsiEval(`towns[0].expWander = ${EXPLORE_ABOVE}; adjustAll();`);
+    omsiEval(`getActionPrototype(${JSON.stringify(toR1)}).finish()`);
+
+    const inR1 = await eventually(testController,
+        () => bridgeState()?.activeRegionId === OMSI_REGION_SPLIT_R1, 'host swapped into r1');
+    testController.assertEqual('the Record visit crossed into r1', true, inR1);
+    if (!inR1) return testController.getOverallResult();
+
+    const bound = loopState._lookupBoundRecording(OMSI_REGION_SPLIT_R0, instance);
+    testController.assertEqual('the visit recording binds to the maze-entered block', true, !!bound);
+    if (!bound) return testController.getOverallResult();
+    testController.assertEqual('the recording carries the departure exit id',
+        OMSI_REGION_SPLIT_R0_TO_R1, bound.departureExitId);
+
+    // ── Seed r0 so the replay needs REPLAY_RUNS runs ─────────────────────────
+    // Set the Explore level while r0 is loaded, then step out to the maze: the
+    // seeded value is stashed with the rest of r0's per-region state and comes
+    // back when the replay re-enters. Nothing can move it in between — the
+    // bridge clock only runs while an omsi region is active.
+    moveToRegion(OMSI_REGION_SPLIT_R0, OMSI_REGION_SPLIT_R1);
+    const backInR0 = await waitForOmsiActive(testController);
+    testController.assertEqual('back in r0 to seed the replay', true, !!backInR0);
+    if (!backInR0) return testController.getOverallResult();
+    omsiEval(`towns[0].expWander = ${MULTI_RUN_SEED}; adjustAll();`);
+    omsiClearQueue();
+    testController.assertEqual('r0 exit gate CLOSED at replay start', false,
+        bridgeState()?.regionExitAvailable);
+    testController.assertEqual(`Explore seeded ${REPLAY_RUNS} Wanders below the gate`,
+        MULTI_RUN_SEED, Number(omsiEval('towns[0].expWander')));
+    moveToRegion(OMSI_REGION_SPLIT_MAZE, OMSI_REGION_SPLIT_R0);
+
+    // ── Leg 2: PLAYBACK at the pool real play has ────────────────────────────
+    // No top-up: the natural pool is the point of this leg. Depletion resets
+    // are exactly what it is here to survive, so the Record leg's suppression
+    // comes back off.
+    gs.noManaDepletionReset = false;
+    testController.log(`pool before the replay: ${readPool()} / ${readMaxPool()}`);
+    const actionsBefore = Number(omsiEval('totals.actions'));
+    const resetsBefore = readLoopResetCount();
+    const movesBefore = watcher.moves.length;
+
+    const park2 = await parkManualBlocks(testController, hopsWithR0Mode('playback'));
+    testController.assertEqual('parked the maze approach + the Playback block on r0',
+        true, !!park2);
+    if (!park2) return testController.getOverallResult();
+
+    let walkBacks = 0;
+    const crossed = await eventually(testController, () => {
+        if (walkBackIfParkedOnMaze(loopState)) walkBacks += 1;
+        return watcher.moves.slice(movesBefore).some(
+            (m) => m?.sourceRegion === OMSI_REGION_SPLIT_R0
+                && m?.targetRegion === OMSI_REGION_SPLIT_R1
+                && m?.exitName === OMSI_REGION_SPLIT_R0_TO_R1
+                && m?.fromLoop === true);
+    }, 'the replay crossed the recorded departure after grinding across resets', 180000, 250);
+    const moves = watcher.moves.slice(movesBefore);
+    testController.log(`walk-backs: ${walkBacks}; moves during the replay: `
+        + JSON.stringify(moves.map((m) => `${m.sourceRegion}->${m.targetRegion}`
+            + `${m.exitName ? ` via ${m.exitName}` : ''}${m.fromReset ? ' [reset]' : ''}`
+            + `${m.fromLoop ? ' [loop]' : ''}`)));
+    testController.assertEqual(
+        'Playback ran the recorded plan through the live fork and crossed the recorded exit — '
+        + 'at the pool real play has, so the plan could not fit in one run',
+        true, !!crossed);
+    if (!crossed) {
+        testController.log(`DIAG: expWander=${omsiEval('towns[0].expWander')}, `
+            + `gate=${bridgeState()?.regionExitAvailable}, queue=${JSON.stringify(omsiReadQueue())}, `
+            + `replayInFlight=${bridgeState()?.replayInFlight}, pool=${readPool()}, `
+            + `region=${readCurrentRegion()}, manualRegion=${loopState._manualRegionName}, `
+            + `manualEntered=${loopState._manualActionEntered}, `
+            + `isProcessing=${loopState.isProcessing}, index=${loopState.currentActionIndex}, `
+            + `boundReplayCheckedIndex=${loopState._boundReplayCheckedIndex}, `
+            + `resets=${readLoopResetCount() - resetsBefore}`);
+        return testController.getOverallResult();
+    }
+
+    // ── A reset really did interrupt the replay ──────────────────────────────
+    // The EFFECT that makes this leg different from the single-run one: not
+    // "the replay finished" but "the replay was cut in half by a loop reset
+    // and picked itself back up". Folded from the dispatcher, because the
+    // teleport is a transient a poller can miss.
+    const resetMoves = moves.filter((m) => m?.fromReset === true);
+    testController.assertEqual('a loop reset teleport interrupted the replay', true,
+        resetMoves.length >= 1);
+    testController.assertEqual('every reset teleport landed on the queue\'s index-0 region',
+        true, resetMoves.every((m) => m?.targetRegion === OMSI_REGION_SPLIT_MAZE));
+    // The queue re-drove from index 0 after each of those: a park that never
+    // released could not produce a second walk-back.
+    testController.assertEqual('the queue re-parked on index 0 after each reset', true,
+        walkBacks >= 2);
+    testController.assertEqual('loops counted the interrupting resets', true,
+        readLoopResetCount() - resetsBefore >= 1);
+
+    // ── …and the fork really ground, rather than being teleported through ────
+    // The crossing alone is not enough here: a Playback block that fell
+    // through to the generic executor would dispatch the same regionMove with
+    // the same fromLoop stamp without replaying anything. Only the fork's own
+    // completed-action count separates the two, and a single-run replay could
+    // not reach REPLAY_RUNS Wanders.
+    const performed = Number(omsiEval('totals.actions')) - actionsBefore;
+    testController.log(`fork completed ${performed} action(s) across the replay`);
+    testController.assertEqual(
+        `the fork completed the recorded plan more than once (${REPLAY_RUNS} Wanders + the departure)`,
+        true, performed >= REPLAY_RUNS + 1);
+    testController.assertEqual('the replay window closed when the departure crossed',
+        false, bridgeState()?.replayInFlight);
+
+    return testController.getOverallResult();
+}
+
 registerTest({
     id: 'omsi-record-playback-crosses-region',
     name: 'Omsi: a recorded region plan replays through the fork and crosses the recorded exit',
@@ -525,6 +799,22 @@ registerTest({
                + 'and the fork grinds until the recorded action opens an exit gate that was CLOSED '
                + 'when the replay started.',
     testFunction: recordPlaybackCrossesRegion,
+    category: 'Omsi substrate',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
+registerTest({
+    id: 'omsi-multi-run-replay-retry',
+    name: 'Omsi: a Playback replay too big for one run grinds across loop resets',
+    description: 'Arc D slice 4b: at the pool real play has (~350 mana, one Wander costs 250) a '
+               + 'recorded plan outlives its run. The fork\'s loop end is reported to the host, the '
+               + 'host\'s reset teleports the player to the queue\'s index-0 region, and the replay '
+               + 'continues only via the generic queue-restart retry — the queue re-drives from 0, '
+               + 'routes back, re-enters the Playback block and re-dispatches replayActions. The leg '
+               + 'walks the maze approach block each run (the player walking back) and asserts the '
+               + 'reset really interrupted the replay, that the queue re-parked on index 0 each time, '
+               + 'and that the fork ground more than one run\'s worth of actions.',
+    testFunction: multiRunReplayRetry,
     category: 'Omsi substrate',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });

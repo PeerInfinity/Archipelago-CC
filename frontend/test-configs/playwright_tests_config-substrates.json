@@ -275,6 +275,11 @@
             "category": "Omsi substrate"
         },
         {
+            "id": "omsi-multi-run-replay-retry",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
             "id": "maze-consumable-tile-grants-foreign-item",
             "enabled": true,
             "category": "Maze consumable tiles"

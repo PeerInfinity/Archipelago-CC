@@ -317,8 +317,13 @@ export class LoopState {
     // action 0 with clean progress, mirroring the loops-queue's own
     // _resetLoop. Path is preserved (the queue stays); only progress
     // and the action cursor reset.
+    // …and release any Manual/Record/Playback park the reset invalidated
+    // (arc D slice 4b). Progress alone is not enough: the park's flags and
+    // its stopProcessing() survive, and nothing else on this seam undoes
+    // them. See _releaseParkForReset.
     this.eventBus.subscribe('gameState:loopReset', () => {
       this._resetActionsProgress();
+      this._releaseParkForReset();
     });
 
     // Manual mode wake handlers. Active only while a manual entry is
@@ -3479,6 +3484,78 @@ export class LoopState {
     // Reset current action index so startProcessing() starts from the beginning
     this.currentActionIndex = 0;
     this.currentAction = null;
+  }
+
+  /**
+   * Release a Manual / Record / Playback park that a SUBSTRATE-DRIVEN loop
+   * reset just invalidated, and restart the queue (arc D slice 4b).
+   *
+   * `gameState:loopReset` is published only by `gameState.triggerLoopReset`,
+   * i.e. exclusively by resourceChannels' `fireLoopResetTeleport` — the
+   * substrate-driven out-of-mana flow. The loops-internal flow is
+   * `_resetLoop`, which publishes `loopState:loopReset` instead. Until this
+   * slice the two disagreed: `_resetLoop` clears the park, this seam ran
+   * `_resetActionsProgress()` alone, and FOUR pieces of park state survived a
+   * reset that had just teleported the player out of the parked region —
+   *
+   *   - `_manualActionEntered` / `_manualRegionName`: a park pointing at a
+   *     region the player is no longer in. A Manual block was recoverable by
+   *     hand (walk back, cross the expected exit — the wake still listens),
+   *     which is why this went unnoticed. Nobody walks for Playback.
+   *   - `isProcessing`: both park entries call `stopProcessing()`, so the
+   *     frame loop is DEAD, not dormant. (`_resumeFrameLoopIfProcessing`, the
+   *     M6 bot-park cure, bails on `!isProcessing` — the bot park never stops
+   *     processing, so it needed only the animation frame back.)
+   *   - `_boundReplayCheckedIndex`: the per-index guard in `_processFrame`
+   *     that stops a Playback block re-resolving its recording every frame.
+   *     Left stale, a retry that re-enters the block WITHOUT an intervening
+   *     manual wake (which clears it at `_handleManualWake_regionMove`'s match
+   *     branch) falls through to the bot/generic executor — a silent teleport
+   *     across an exit that was never replayed, worse than the hang. The
+   *     in-app leg routes through a manual wake and so does not witness this
+   *     one; blockModes.test.js does.
+   *   - `_queuePausedUntilReset`, whose contract is literally "until the next
+   *     loop reset".
+   *
+   * With those cleared the queue re-drives from index 0 (which
+   * `_resetActionsProgress` has just snapped to) and re-parks wherever the
+   * reset's teleport actually left the player — the generic queue-restart
+   * retry, and the only way a replay bigger than one run continues at all.
+   *
+   * THE RESUME IS UNCONDITIONAL, matching `_handleBotWake_regionChanged`'s
+   * `fromReset` branch (M6) rather than `_maybeResetForOOM`, which honours
+   * `autoRestartQueue`. That flag defaults to off, so honouring it here would
+   * make multi-run replays a behaviour users had to find a checkbox for.
+   * Revisiting that is a standing follow-up, not a slice-4b decision.
+   *
+   * `resumeProcessing()` (not `startProcessing()`) because the cursor is
+   * already at 0 and the resume path skips the `processingStarted` publish —
+   * the same call the successful manual wake makes.
+   *
+   * Ordering: this runs BEFORE the reset's `fromReset` teleport dispatch
+   * (`fireLoopResetTeleport` calls `triggerLoopReset()` first). That is safe
+   * because the resume schedules a requestAnimationFrame, which cannot run
+   * until the synchronous reset+teleport has finished. It is also why the fix
+   * lives here rather than in the manual wake's `fromReset` branch: a reset
+   * whose teleport target IS the current region fires no `regionChanged` at
+   * all (`gameState.setCurrentRegion` publishes only on a change), so a
+   * Playback block on the start region would never be released there.
+   *
+   * A Record capture in flight is DISCARDED, as `_resetLoop` already does
+   * (M2 ruling: mana-out mid-Record discards) — the visit it belongs to
+   * cannot be honestly finished from the region the player was teleported to.
+   *
+   * Bot parks are untouched: they never set `_manualActionEntered`, and
+   * `_handleBotWake_regionChanged` releases them on the teleport that follows.
+   */
+  _releaseParkForReset() {
+    if (!this._manualActionEntered) return;
+    this._discardActiveRecording();
+    this._manualActionEntered = false;
+    this._manualRegionName = null;
+    this._boundReplayCheckedIndex = -1;
+    this._queuePausedUntilReset = false;
+    this.resumeProcessing();
   }
 
   /**
