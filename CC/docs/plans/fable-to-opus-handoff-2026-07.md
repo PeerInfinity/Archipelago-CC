@@ -1970,6 +1970,21 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    inventory is experiential and needs the user's symptom descriptions
    as seed; (3) flash/old-TA coverage + the features/loops.md
    "under design review" line updated to the settled ruling.
+   **SLICE RULINGS (user, 2026-07-25, same session):** jta bug
+   inventory **PARKED** (only evidence = a forgotten past-session
+   mention; revisit on a real symptom). **flash = SUMMARY substrate**
+   like runner/bounce (1 mana/s drain while running, resource-delta
+   summary envelope, instant playback — M5 pattern; own kickoff
+   later). **Old `textAdventureSubstrate` module: DEPRECATE** (wrapper
+   is the survivor; recon references first, size disable-vs-delete
+   from that). **PRIORITY: omsi Instant pump first** — kickoff drafted
+   *(NewDocs)* `omsiloops/omsi-loops-instant-pump-opus-kickoff.md`:
+   pure-outer-repo expected (the `index.js:98` seam already receives
+   `instant` and drops it; pump = `m.step()` batches inside the
+   existing step-gate/clockGate machinery, cadence change only), Bot
+   honors Instant (jta precedent; the ~285 s bot legs are the payoff),
+   keep the real-time walk leg, paced-vs-instant byte-identity check
+   as the independent stratum.
    **ARC F DESIGN SKETCH RULED (Fable + user, 2026-07-25):** the panel
    queue editor starts with **omsi** — its recording IS the game's own
    authored queue, and both conversions already round-trip through the
