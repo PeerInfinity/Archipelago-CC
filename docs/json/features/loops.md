@@ -141,12 +141,13 @@ All four cost the same. A region visit is priced by what happens in it, not by w
 
 **Instant** is a separate checkbox next to the radios, not a fifth mode. It applies to Playback and Bot blocks: instead of animating, the block resolves in a single frame.
 
-Two things to know:
+Three things to know:
 
 - **It is per-block.** You choose which visits you watch and which ones just happen.
-- **It is not offered everywhere.** The checkbox appears only where the game underneath actually supports it — some games have no fast-forward at all, and where the Bot is involved it appears only where the automation itself honours it. A box that did nothing would be worse than no box.
+- **It is a fast-forward, not a skip.** Instant changes how long you watch a block, not what the block does. The game underneath still runs — in Idle Loops, for instance, Instant runs exactly the same ticks in the same order and simply stops waiting between them, so the result is identical to having sat through it. And it is never the cheap route: a block costs the same mana and earns the same XP whether you watch it or not (see [What each mode costs](#what-each-mode-costs)).
+- **It is offered wherever it can mechanically exist** — the idle games included. On **Playback** you get the box in the maze, the text adventure, Journey to Ascension and Idle Loops. On **Bot** you get it wherever the automation itself honours it, which today means Journey to Ascension and Idle Loops. Where the box is missing it is missing for a reason you would agree with: the runner and bounce levels leave it out because their playback is *already* instantaneous — there would be nothing to switch off — and a game with no fast-forward to offer gets no box rather than a dead one.
 
-Which games *should* offer Instant is under active design review. Several substrates are idle games whose pacing is the point — waiting is a real strategic cost, and removing it changes the game rather than speeding it up. Expect the set of Instant-capable regions to change.
+Idle games get the box too, and that is a deliberate choice rather than an oversight. Waiting really is part of how an idle game plays — the pacing is a cost you are meant to feel, which is why paced play stays the default and why **Record** starts every new block. But that argument is about the region you are *currently* playing. Once a region is solved and you are only re-walking it on the way to the frontier, the waiting has stopped being a decision and become a toll. Instant is how you stop paying it — one block at a time, on your own judgement.
 
 ### The normal way to play
 
@@ -452,9 +453,11 @@ The test suite (`frontend/modules/tests/testCases/loopsPanelTests.js`) covers:
 
 ## Current Status
 
-The core systems are implemented and working: mana, XP, action queues, loop reset, cost calculations, cost generation, the Loop Stats panel with cost predictions, and the per-block mode system described above (Manual / Record / Playback / Bot, the Instant toggle, persistent recordings and the strict action gate) — built in the M1–M6 arc (2026-07-21/24) and extended by the omsi arcs D1/D2 (2026-07-25).
+The core systems are implemented and working: mana, XP, action queues, loop reset, cost calculations, cost generation, the Loop Stats panel with cost predictions, and the per-block mode system described above (Manual / Record / Playback / Bot, the Instant toggle, persistent recordings and the strict action gate) — built in the M1–M6 arc (2026-07-21/24) and extended by the omsi arcs D1/D2 (2026-07-25) and the Instant-policy pass (2026-07-25/26).
 
-**Under active design review:** which substrates should offer **Instant** at all. The current thinking is that idle games keep their native pacing, because waiting in them is a strategic cost rather than dead time; a separate question is whether a fast-forward should exist as a testing capability regardless. Treat the Instant availability described above as the state today, not a commitment.
+**Settled (2026-07-25/26):** **Instant** is a normal player-facing control, offered in every game where it can mechanically exist — idle games included. It is not a testing-only capability and not a per-game privilege. The earlier worry, that fast-forwarding an idle game removes a cost the game is built around, turned out to be an argument about the *frontier* rather than about the feature: it is why paced play stays the default and why Record starts every block, not a reason to withhold the checkbox from regions you have already solved. Idle Loops was the last gap and closed on 2026-07-25 (arcs D1/D2 plus the Instant-policy pass), on Playback and on Bot.
+
+The availability described under [Instant](#instant) is therefore the settled shape, not a snapshot. What can still move is the set of games that *can* offer it — a substrate gains the box by implementing a fast-forward, not by being granted permission.
 
 ### Planned Features
 
