@@ -192,3 +192,101 @@ class TestExporterApworldRead:
 
     def test_missing_internal_path_returns_none(self, apworld):
         assert _read_source_from_path(f"{apworld}/foo/Missing.py") is None
+
+
+class TestExporterApworldWorldSourceFallback:
+    """A .pyc-only apworld has no .py entry to read; the upstream world
+    source holds the same file under worlds/<world>/. The apworld branch used
+    to give up before trying it, so every rule in such a world exported null
+    even with the component installed."""
+
+    @pytest.fixture
+    def sourceless_apworld(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Utils, "__version__", f"{FAKE_VERSION}-zz_test")
+        monkeypatch.setattr(
+            Utils, "local_path",
+            lambda *parts: str(tmp_path.joinpath(*parts)))
+        path = tmp_path / "foo.apworld"
+        with zipfile.ZipFile(path, "w") as zf:
+            zf.writestr("foo/Rules.pyc", b"\x00compiled")
+        target = tmp_path / WORLD_SOURCE_DIR / FAKE_VERSION / "worlds" / "foo"
+        target.mkdir(parents=True)
+        (target / "Rules.py").write_text("# upstream foo rules\n")
+        return path
+
+    def test_falls_back_to_world_source(self, sourceless_apworld):
+        assert _read_source_from_path(f"{sourceless_apworld}/foo/Rules.py") == \
+            "# upstream foo rules\n"
+
+    def test_backslash_internal_path_falls_back(self, sourceless_apworld):
+        assert _read_source_from_path(f"{sourceless_apworld}\\foo\\Rules.py") == \
+            "# upstream foo rules\n"
+
+    def test_still_none_when_world_source_lacks_the_file(self, sourceless_apworld):
+        assert _read_source_from_path(f"{sourceless_apworld}/foo/Other.py") is None
+
+
+class TestSourceUnavailableDiagnostic:
+    """Source-free installs fail identically for every rule, so the per-rule
+    log was thousands of lines that buried the only actionable message."""
+
+    @pytest.fixture(autouse=True)
+    def clean_reports(self):
+        from exporter.analyzer.cache import source_unavailable_reported
+        source_unavailable_reported.clear()
+        yield
+        source_unavailable_reported.clear()
+
+    @pytest.fixture
+    def frozen_no_world_source(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(Utils, "is_frozen", lambda: True)
+        monkeypatch.setattr(Utils, "__version__", f"{FAKE_VERSION}-zz_test")
+        monkeypatch.setattr(
+            Utils, "local_path",
+            lambda *parts: str(tmp_path.joinpath(*parts)))
+        return tmp_path
+
+    def _errors(self, caplog):
+        return [r.getMessage() for r in caplog.records if r.levelname == "ERROR"]
+
+    def test_source_install_logs_once_per_file(self, caplog, monkeypatch):
+        from exporter.analyzer.source_extraction import report_source_unavailable
+        monkeypatch.setattr(Utils, "is_frozen", lambda: False)
+
+        with caplog.at_level("ERROR"):
+            report_source_unavailable(lambda state: True)
+            report_source_unavailable(lambda state: False)
+            report_source_unavailable(json.dumps)  # a different source file
+
+        errors = self._errors(caplog)
+        assert len(errors) == 2, errors
+        assert all("Failed to clean source" in e for e in errors)
+
+    def test_frozen_without_world_source_logs_one_actionable_error(
+            self, caplog, frozen_no_world_source):
+        from exporter.analyzer.source_extraction import report_source_unavailable
+
+        with caplog.at_level("ERROR"):
+            for _ in range(5):
+                report_source_unavailable(lambda state: True)
+            report_source_unavailable(json.dumps)
+
+        errors = self._errors(caplog)
+        assert len(errors) == 1, errors
+        assert "Original World Source" in errors[0]
+        assert "null" in errors[0]
+
+    def test_frozen_with_world_source_reports_the_file(
+            self, caplog, frozen_no_world_source):
+        from exporter.analyzer.source_extraction import report_source_unavailable
+        root = frozen_no_world_source / WORLD_SOURCE_DIR / FAKE_VERSION
+        root.mkdir(parents=True)
+        (root / "manifest.json").write_text("{}")
+
+        with caplog.at_level("ERROR"):
+            report_source_unavailable(lambda state: True)
+
+        errors = self._errors(caplog)
+        assert len(errors) == 1, errors
+        assert "Original World Source" not in errors[0]
+        assert "Failed to clean source" in errors[0]

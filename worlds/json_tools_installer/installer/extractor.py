@@ -10,7 +10,7 @@ import zipfile
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import List, Optional, Set, Callable, Dict
+from typing import Iterable, List, Optional, Set, Callable, Dict
 
 from Utils import local_path, is_frozen
 
@@ -301,6 +301,33 @@ DEFAULT_COMPONENTS = {
 # fork-modified world files onto vanilla worlds, so it is opt-in (CLI
 # --upstream-fixes, or included by --all) until the patched files are reviewed
 # against the current upstream versions.
+
+
+def resolve_components(components: Iterable[str]) -> List[str]:
+    """
+    Apply install-target rules to a selected component list.
+
+    Compiled (frozen) Archipelago builds ship their worlds as .pyc-only, so
+    the exporter's AST analysis has no source to read and every location
+    exports ``"access_rule": null``. The 'world_source' component (upstream
+    source matching the installed AP version, downloaded separately) is what
+    makes rule export work there, so on a frozen target it is a dependency of
+    the exporter, not an option. This is the single point both the CLI and the
+    GUI go through — component selection in either one lands here.
+
+    Order is preserved and nothing is removed; extract_tools separately drops
+    components that cannot work on frozen installs.
+
+    Args:
+        components: Selected component names.
+
+    Returns:
+        The effective component list for this install target.
+    """
+    resolved = list(components)
+    if is_frozen() and "exporter" in resolved and "world_source" not in resolved:
+        resolved.append("world_source")
+    return resolved
 
 # Patterns to always exclude
 EXCLUDE_PATTERNS: Set[str] = {

@@ -40,12 +40,16 @@ Four hooks are installed in order:
 
 **Target:** `AutoWorld.call_stage()`
 
-**Purpose:** Capture the temporary output directory so exported files can be written inside it and included in the output ZIP.
+**Purpose:** Set the sphere log destination before `create_playthrough()` opens it.
 
 **How it works:**
 - Wraps `call_stage(multiworld, method_name, *args)`
-- When `method_name == "generate_output"`, stores the temp dir path as `multiworld.temp_dir_for_sphere_log`
+- When `method_name == "generate_output"`, stores `Utils.output_path()` as `multiworld.temp_dir_for_sphere_log`
 - Passes through to the original function
+
+The name is historical: the destination used to be the temp dir `call_stage`
+receives, which is Main's ZIP staging directory. See
+[Where artifacts are written](#where-artifacts-are-written).
 
 ### 2. Slot Data Cache (`slot_data_cache`)
 
@@ -79,25 +83,47 @@ Four hooks are installed in order:
 **How it works:**
 
 **Primary path** — wraps `Spoiler.to_file()`:
-- Called inside `with output as temp_dir:`, so exported files are written to temp_dir and included in the output ZIP
-- After calling the original `to_file()`, runs `export_post_output_hook()` with the temp directory
+- Called inside `with output as temp_dir:`, but exports go to `Utils.output_path()`, next to the final `AP_<seed>.zip` — never into `temp_dir`
+- After calling the original `to_file()`, runs `export_post_output_hook()` with the output directory, passing `temp_dir` as `staging_dir`
 - Sets `_module_state['export_ran'] = True` to prevent the fallback from running
 
 **Fallback path** — wraps `Main.main()`:
 - Also triggers deferred subclass patching for `slot_data_cache` (since all worlds are now loaded)
 - After `main()` returns, checks if the primary path already ran
-- If not (e.g. spoiler was disabled so `to_file()` was never called), runs `_post_generation_export()` which creates its own temp directory — files are NOT included in the ZIP but are still copied to `frontend/presets/` if `update_frontend_presets` is enabled
+- If not (e.g. spoiler was disabled so `to_file()` was never called), runs `_post_generation_export()`. Artifacts go to the same output directory, but the staging directory is already gone, so the multidata and per-player game files cannot be mirrored into `frontend/presets/`
+
+## Where artifacts are written
+
+The rules JSON, sphere log and tracker pickle are written to Archipelago's
+output directory (`Utils.output_path()`), alongside the final `AP_<seed>.zip`.
+
+They must never be left in Main's ZIP staging directory. Everything in that
+directory is bundled into the hostable archive, and a stock Archipelago WebHost
+(e.g. archipelago.gg) rejects the *entire* upload when it finds a member it
+cannot parse as a per-player slot file: `WebHostLib/upload.py` runs
+`int(slot_id[1:])` over unrecognized names, so `AP_<seed>_rules.json` raises and
+the seed is reported as corrupt multidata. The fork's `Main.py` also filters
+these suffixes at zip time, but that only protects the fork — the hook has to be
+correct on a stock install too.
+
+The staging directory is still passed to the hook as `staging_dir`, for two
+reasons: per-world `post_output()` hooks operate on the files `generate_output`
+wrote there, and its files are mirrored into `frontend/presets/` next to the
+artifacts.
 
 ## Export Flow
 
-The primary path runs inside `Spoiler.to_file()`, within the output temp directory:
+The primary path runs inside `Spoiler.to_file()`:
 
 ```
 Spoiler.to_file(filename)
        │
        ├─► Call original to_file() (writes spoiler)
        │
-       └─► export_post_output_hook(multiworld, temp_dir, filename_base)
+       └─► export_post_output_hook(multiworld, output_dir, filename_base,
+       │                           staging_dir=temp_dir)
+               │
+               ├─► Call each world's post_output() on staging_dir
                │
                ├─► Call export_game_rules()
                │   └─► Exporter decides internally whether to export based on settings
@@ -116,9 +142,8 @@ _post_generation_export(multiworld)
        │
        ├─► Build filename from seed_name (e.g., "AP_14089154938208861744")
        │
-       ├─► Create temporary directory
-       │
-       └─► export_post_output_hook(multiworld, temp_dir, filename_base)
+       └─► export_post_output_hook(multiworld, output_dir, filename_base)
+           (no staging_dir — it no longer exists)
 ```
 
 ### Key Point: Exporters Handle Decisions
@@ -248,7 +273,7 @@ You'll see messages like:
 
 ## Limitations
 
-1. **Fallback timing** - When spoiler output is disabled, the fallback path runs after generation completes, so exported files are NOT included in the output ZIP (they go to `frontend/presets/` instead). The primary path does not have this limitation.
+1. **Fallback timing** - When spoiler output is disabled, the fallback path runs after generation completes, once the staging directory is gone. The artifacts still land in the output directory, but the multidata, spoiler and per-player game files cannot be mirrored into `frontend/presets/`. The primary path does not have this limitation.
 2. **Settings** - Requires either configured host.yaml or installer config for settings.
 3. **Dependencies** - Requires the exporter module and its dependencies (astunparse, dill) to be installed. The installer auto-installs these during setup.
 4. **Single wrap** - If another system also wraps `Spoiler.to_file()` or `Main.main()`, behavior depends on wrap order.

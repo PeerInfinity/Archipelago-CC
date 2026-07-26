@@ -13,6 +13,12 @@ from worlds.json_tools_installer.installer.extractor import (
 )
 
 
+def _default_selection():
+    """The selection the GUI shows on open (see installer_gui.DEFAULT_SELECTION)."""
+    from worlds.json_tools_installer.gui import installer_gui
+    return installer_gui.DEFAULT_SELECTION
+
+
 def _installer_app():
     pytest.importorskip("kivy")
     try:
@@ -24,6 +30,7 @@ def _installer_app():
 
 def test_component_property_defaults_match_default_components():
     app_cls = _installer_app()
+    default_selection = _default_selection()
     checked = []
     for name in COMPONENTS:
         prop = getattr(app_cls, f"comp_{name}", None)
@@ -31,10 +38,10 @@ def test_component_property_defaults_match_default_components():
             # not every component has a GUI checkbox (e.g. upstream_fixes
             # is deliberately CLI-only)
             continue
-        assert prop.defaultvalue == (name in DEFAULT_COMPONENTS), (
+        assert prop.defaultvalue == (name in default_selection), (
             f"comp_{name} default is {prop.defaultvalue} but "
-            f"{name!r} {'IS' if name in DEFAULT_COMPONENTS else 'is NOT'} "
-            f"in DEFAULT_COMPONENTS")
+            f"{name!r} {'IS' if name in default_selection else 'is NOT'} "
+            f"in DEFAULT_SELECTION")
         checked.append(name)
     assert checked, "no comp_<name> properties found — GUI layout changed?"
 

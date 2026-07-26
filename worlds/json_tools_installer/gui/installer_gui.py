@@ -29,8 +29,19 @@ from kivy.properties import StringProperty, BooleanProperty, NumericProperty
 from ..config import load_config, save_config, InstallerConfig, configure_export_settings, EXPORT_PRESETS
 from ..installer.version_detector import detect_ap_version, get_version_support_status
 from ..installer.downloader import download_archive, get_latest_commit_hash, check_connectivity, check_installer_compatibility
-from ..installer.extractor import extract_tools, COMPONENTS, DEFAULT_COMPONENTS, list_installed_components
+from ..installer.extractor import (
+    extract_tools,
+    COMPONENTS,
+    DEFAULT_COMPONENTS,
+    list_installed_components,
+    resolve_components,
+)
 from ..installer.romless_patcher import apply_romless_patches, revert_romless_patches
+
+# Selection shown when the GUI opens. resolve_components adds what this install
+# target requires (world_source on frozen), so the checkboxes show the same
+# selection the install will actually use.
+DEFAULT_SELECTION = frozenset(resolve_components(sorted(DEFAULT_COMPONENTS)))
 
 
 class InstallerApp(App):
@@ -44,7 +55,7 @@ class InstallerApp(App):
     version_stable = BooleanProperty(True)
     version_dev = BooleanProperty(False)
 
-    # Component properties — keep defaults in sync with DEFAULT_COMPONENTS
+    # Component properties — keep defaults in sync with DEFAULT_SELECTION
     # (the checkbox build also syncs them, but stale defaults are confusing)
     comp_exporter = BooleanProperty(True)
     comp_rule_builder = BooleanProperty(True)
@@ -58,7 +69,7 @@ class InstallerApp(App):
     comp_tracker = BooleanProperty(True)
     comp_testing = BooleanProperty(True)
     comp_worldgen_worlds = BooleanProperty(False)
-    comp_world_source = BooleanProperty(False)
+    comp_world_source = BooleanProperty("world_source" in DEFAULT_SELECTION)
 
     # Patch options
     apply_monkey_patch = BooleanProperty(True)
@@ -173,17 +184,17 @@ class InstallerApp(App):
         for name, comp in COMPONENTS.items():
             row = BoxLayout(size_hint_y=None, height=row_height)
 
-            # Checkbox with fixed width, default based on DEFAULT_COMPONENTS.
+            # Checkbox with fixed width, default based on DEFAULT_SELECTION.
             # Bind BEFORE setting active so the comp_<name> property is synced
             # with the displayed state — otherwise a comp_ property whose
-            # default disagrees with DEFAULT_COMPONENTS silently desyncs
+            # default disagrees with DEFAULT_SELECTION silently desyncs
             # (rule_builder showed checked but was never installed).
             cb = CheckBox(
                 size_hint_x=None,
                 width=40,
             )
             cb.bind(active=lambda instance, value, n=name: self.on_component_toggle(n, value))
-            cb.active = name in DEFAULT_COMPONENTS
+            cb.active = name in DEFAULT_SELECTION
             self.component_checkboxes[name] = cb
             row.add_widget(cb)
 
@@ -481,7 +492,7 @@ class InstallerApp(App):
             prop_name = f'comp_{name}'
             if hasattr(self, prop_name) and getattr(self, prop_name):
                 components.append(name)
-        return components
+        return resolve_components(components)
 
     def get_selected_version(self) -> str:
         """Get selected version string."""

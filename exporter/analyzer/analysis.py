@@ -14,7 +14,7 @@ import types
 from typing import Optional, Callable, Dict, Any, Tuple
 
 from .rule_analyzer import RuleAnalyzer
-from .source_extraction import _clean_source
+from .source_extraction import _clean_source, report_source_unavailable
 from .utils import make_json_serializable
 from .cache import parameterless_func_cache, closure_func_identity_cache
 from exporter.constants import MAX_ANALYZE_RULE_CALLS
@@ -305,7 +305,7 @@ def _analyze_rule_impl(rule_func: Optional[Callable[..., Any]] = None,
             with profiler.section("source_extraction"):
                 cleaned_source = _clean_source(rule_func)
             if cleaned_source is None:
-                logging.error("analyze_rule: Failed to clean source, returning error.")
+                report_source_unavailable(rule_func)
                 # Need to initialize analyzer logs for the error result
                 analyzer = RuleAnalyzer(game_handler=game_handler)
                 return {

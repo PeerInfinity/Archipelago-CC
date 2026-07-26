@@ -50,6 +50,7 @@ from ..installer.extractor import (
     list_component_backups,
     COMPONENTS,
     DEFAULT_COMPONENTS,
+    resolve_components,
 )
 from ..installer.romless_patcher import (
     apply_romless_patches,
@@ -123,6 +124,7 @@ def do_install(
     Returns:
         True if successful.
     """
+    components = resolve_components(components)
     source = config.get_source(version)
 
     print_header(f"Installing JSON Tools ({version})")

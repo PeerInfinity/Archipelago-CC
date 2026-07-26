@@ -6,7 +6,7 @@ replacing the direct exporter calls that were previously in Main.py.
 """
 
 import logging
-from typing import TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from BaseClasses import MultiWorld
@@ -14,8 +14,25 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-def export_post_output_hook(multiworld: "MultiWorld", output_dir: str, filename_base: str) -> None:
-    """Export game rules and multiworld pickle after output generation."""
+def export_post_output_hook(
+    multiworld: "MultiWorld",
+    output_dir: str,
+    filename_base: str,
+    staging_dir: Optional[str] = None,
+) -> None:
+    """Export game rules and multiworld pickle after output generation.
+
+    Args:
+        multiworld: The generated MultiWorld.
+        output_dir: Where the JSON Tools artifacts are written — Archipelago's
+            output directory, never Main's ZIP staging directory (see
+            monkey_patches/hooks.py for why).
+        filename_base: Base name for this seed's files, e.g. "AP_<seed>".
+        staging_dir: Main's ZIP staging directory, when one exists. Per-world
+            output (multidata, spoiler, per-player game files) lives there; it is
+            passed through so those files still reach the preset copy, and it is
+            what per-world post_output hooks operate on.
+    """
     try:
         from exporter import export_game_rules, clear_rule_cache
         from exporter.games import clear_handler_cache
@@ -32,10 +49,13 @@ def export_post_output_hook(multiworld: "MultiWorld", output_dir: str, filename_
 
     # Call per-world post_output hooks (e.g., JTA cost adjustment).
     # Runs before export_game_rules so generated files are included in preset copy.
+    # These operate on the staging directory: that is where generate_output wrote
+    # the per-world files they read, and where their own output belongs.
+    post_output_dir = staging_dir or output_dir
     for player_id, world in multiworld.worlds.items():
         if hasattr(world, "post_output"):
             try:
-                world.post_output(output_dir, filename_base)
+                world.post_output(post_output_dir, filename_base)
             except Exception as e:
                 logger.warning(
                     f"post_output failed for {world.game} player {player_id}: {e}"
@@ -69,6 +89,7 @@ def export_post_output_hook(multiworld: "MultiWorld", output_dir: str, filename_
         rules_format,
         clear_game_presets=jt.clear_game_presets,
         clear_all_presets=jt.clear_all_presets,
+        staging_dir=staging_dir,
     )
     # Clear exporter caches to allow GC
     clear_rule_cache()

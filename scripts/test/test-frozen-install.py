@@ -665,12 +665,27 @@ def find_action(report: dict, action_type: str) -> dict:
     return {}
 
 
-def rules_json_from_zip(zip_path: Path) -> Optional[dict]:
-    with zipfile.ZipFile(zip_path) as zf:
-        names = [n for n in zf.namelist() if n.endswith("_rules.json")]
-        if not names:
-            return None
-        return json.loads(zf.read(names[0]).decode("utf-8"))
+# JSON Tools artifacts are written next to the output zip and must never be
+# bundled INTO it: a stock WebHost parses every unrecognized archive member as a
+# per-player slot file (int(slot_id[1:])), so "AP_<seed>_rules.json" makes it
+# reject the upload as corrupt multidata.
+NON_HOSTABLE_SUFFIXES = (
+    "_rules.json", "_rules-ast.json", "_sphere_log.jsonl",
+    ".pkl.gz", "_pickle_meta.json",
+)
+
+
+def artifact_path(zip_path: Path, suffix: str) -> Path:
+    """Path of a JSON Tools artifact for the seed that produced zip_path."""
+    return zip_path.with_name(f"{zip_path.stem}{suffix}")
+
+
+def rules_json_for_zip(zip_path: Path) -> Optional[dict]:
+    """Load the rules JSON exported alongside zip_path in the output dir."""
+    rules_path = artifact_path(zip_path, "_rules.json")
+    if not rules_path.is_file():
+        return None
+    return json.loads(rules_path.read_text(encoding="utf-8"))
 
 
 def count_location_rules(rules: dict) -> Dict[str, int]:
@@ -806,14 +821,19 @@ def scenario_baseline(harness) -> CheckList:
                  str([z.name for z in gen2.new_zips]))
 
     if gen2.new_zips:
-        with zipfile.ZipFile(gen2.new_zips[-1]) as zf:
+        seed_zip = gen2.new_zips[-1]
+        with zipfile.ZipFile(seed_zip) as zf:
             names = zf.namelist()
-        checks.check(any(n.endswith("_rules.json") for n in names),
-                     "output zip contains the exported rules JSON", str(names))
-        checks.check(any(n.endswith("_sphere_log.jsonl") for n in names),
-                     "output zip contains the sphere log", str(names))
+        smuggled = [n for n in names if n.endswith(NON_HOSTABLE_SUFFIXES)]
+        checks.check(not smuggled,
+                     "output zip stays hostable (no JSON Tools artifacts in it)",
+                     str(smuggled))
+        checks.check(artifact_path(seed_zip, "_rules.json").is_file(),
+                     "rules JSON exported next to the output zip")
+        checks.check(artifact_path(seed_zip, "_sphere_log.jsonl").is_file(),
+                     "sphere log exported next to the output zip")
 
-        rules = rules_json_from_zip(gen2.new_zips[-1])
+        rules = rules_json_for_zip(seed_zip)
         checks.check(rules is not None, "rules JSON parses")
         if rules is not None:
             game = rules.get("game_name", "")
@@ -1033,10 +1053,8 @@ def scenario_worldgen(harness) -> CheckList:
                  f"rc={gen2.returncode}; tail: {gen2.output[-400:]}")
     checks.check(len(gen2.new_zips) == 1, "output zip produced")
     if gen2.new_zips:
-        with zipfile.ZipFile(gen2.new_zips[-1]) as zf:
-            names = zf.namelist()
-        checks.check(any(n.endswith("_rules.json") for n in names),
-                     "worldgen output zip contains exported rules", str(names))
+        checks.check(artifact_path(gen2.new_zips[-1], "_rules.json").is_file(),
+                     "worldgen run exported rules next to the output zip")
     # 'Failed to clean source' is EXPECTED here and deliberately not
     # asserted: without the extended rule_builder the export falls back to
     # ast format, which cannot source-analyze Rule Builder Resolved objects
@@ -1089,7 +1107,7 @@ def scenario_export_parity(harness) -> CheckList:
     if not gen2.new_zips:
         return checks
 
-    frozen_rules = rules_json_from_zip(gen2.new_zips[-1])
+    frozen_rules = rules_json_for_zip(gen2.new_zips[-1])
     checks.check(frozen_rules is not None,
                  "frozen run exported a rules JSON")
     if frozen_rules is None:

@@ -7,6 +7,7 @@ functions, including multiline lambdas, using AST parsing and caching.
 
 import ast
 import inspect
+import os
 import re
 import logging
 import textwrap
@@ -14,7 +15,14 @@ import zipfile
 from typing import Optional, Callable
 import astunparse
 
-from .cache import file_content_cache, ast_cache, clean_source_cache, unparsed_lambda_cache
+from .cache import (
+    file_content_cache,
+    ast_cache,
+    clean_source_cache,
+    unparsed_lambda_cache,
+    source_unavailable_reported,
+    FROZEN_WORLD_SOURCE_KEY,
+)
 
 
 def _extract_multiline_lambda(source_code: str, start_line: int) -> Optional[str]:
@@ -217,7 +225,6 @@ def _world_source_fallback_path(filename: str) -> Optional[str]:
     version match matters: lambda extraction works by line number, so only
     the exact running AP version's source is trusted.
     """
-    import os
     norm = filename.replace("\\", "/")
     if os.path.isabs(norm) or (len(norm) > 1 and norm[1] == ":"):
         return None
@@ -232,6 +239,22 @@ def _world_source_fallback_path(filename: str) -> Optional[str]:
     except Exception:
         pass
     return None
+
+
+def _read_world_source_fallback(filename: str) -> Optional[str]:
+    """Read `filename` from the downloaded upstream world source, if present."""
+    fallback = _world_source_fallback_path(filename)
+    if not fallback:
+        return None
+    try:
+        with open(fallback, 'r', encoding='utf-8-sig') as f:
+            logging.debug(f"Read source from world source fallback: {fallback}")
+            return f.read()
+    except Exception as fallback_error:
+        logging.error(
+            f"Failed to read world source fallback {fallback}: {fallback_error}"
+        )
+        return None
 
 
 def _read_source_from_path(filename: str) -> Optional[str]:
@@ -265,6 +288,13 @@ def _read_source_from_path(filename: str) -> Optional[str]:
                     logging.debug(f"Read source from apworld: {zip_path}!{internal_path}")
                     return content
             except Exception as e:
+                # A .pyc-only apworld has no .py entry to read; the upstream
+                # world source stores the same file under worlds/<world>/...,
+                # and the apworld's internal path is already <world>/... .
+                content = (_read_world_source_fallback('worlds/' + internal_path)
+                           or _read_world_source_fallback(internal_path))
+                if content is not None:
+                    return content
                 logging.error(f"Failed to read from apworld {zip_path}!{internal_path}: {e}")
                 return None
 
@@ -273,18 +303,66 @@ def _read_source_from_path(filename: str) -> Optional[str]:
         with open(filename, 'r', encoding='utf-8-sig') as f:
             return f.read()
     except Exception as e:
-        fallback = _world_source_fallback_path(filename)
-        if fallback:
-            try:
-                with open(fallback, 'r', encoding='utf-8-sig') as f:
-                    logging.debug(f"Read source from world source fallback: {fallback}")
-                    return f.read()
-            except Exception as fallback_error:
-                logging.error(
-                    f"Failed to read world source fallback {fallback}: {fallback_error}"
-                )
+        content = _read_world_source_fallback(filename)
+        if content is not None:
+            return content
         logging.error(f"Failed to read source file {filename}: {e}")
         return None
+
+
+def _frozen_without_world_source() -> bool:
+    """
+    True on a compiled Archipelago install that lacks the downloaded
+    upstream world source.
+
+    Mirrors installer.world_source.is_world_source_installed() (manifest
+    presence under json_tools_world_source/<ap_version>/) rather than
+    importing it: the installer ships as an apworld and is not reliably
+    importable from the exporter.
+    """
+    try:
+        from Utils import is_frozen, local_path, __version__
+        if not is_frozen():
+            return False
+        base_version = __version__.split("-")[0]
+        return not os.path.isfile(
+            os.path.join(local_path("json_tools_world_source", base_version),
+                         "manifest.json")
+        )
+    except Exception:
+        return False
+
+
+def report_source_unavailable(func: Callable) -> None:
+    """
+    Log that a rule's source could not be read — once per source file.
+
+    Every rule in a source-free module fails identically, so the per-rule
+    message is thousands of lines of noise that buries the one thing the
+    user can act on.
+    """
+    if _frozen_without_world_source():
+        if FROZEN_WORLD_SOURCE_KEY not in source_unavailable_reported:
+            source_unavailable_reported.add(FROZEN_WORLD_SOURCE_KEY)
+            logging.error(
+                "Rule source is unavailable: this compiled Archipelago install does not "
+                "have the 'Original World Source' component, so access rules will export "
+                "as null. Run the JSON Tools installer and enable the 'Original World "
+                "Source' component to fix this."
+            )
+        return
+
+    try:
+        filename = inspect.getfile(func)
+    except (TypeError, OSError):
+        filename = "<unknown source>"
+
+    if filename not in source_unavailable_reported:
+        source_unavailable_reported.add(filename)
+        logging.error(
+            f"Failed to clean source for rules in {filename} — their access rules "
+            f"will export as null. (Further failures in this file are not logged.)"
+        )
 
 
 class LambdaLineFinder(ast.NodeVisitor):

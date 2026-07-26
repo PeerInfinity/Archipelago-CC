@@ -28,7 +28,6 @@ Usage:
 
 import functools
 import logging
-import tempfile
 from typing import Callable, TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -122,17 +121,41 @@ def get_installed_hooks() -> list:
     return list(_installed_hooks.keys())
 
 
+def _resolve_export_dir() -> str:
+    """
+    Resolve the directory JSON Tools artifacts are written to.
+
+    This is Archipelago's real output directory — the one holding the final
+    AP_<seed>.zip — and deliberately NOT the temporary staging directory Main
+    zips up. Anything left in the staging directory ends up inside the hostable
+    archive, and a stock WebHost (e.g. archipelago.gg) rejects the entire upload
+    when it finds a member it cannot parse as a slot file: WebHostLib/upload.py
+    runs int(slot_id[1:]) over unrecognized names, so "AP_<seed>_rules.json"
+    raises and the seed is reported as corrupt multidata.
+
+    Utils.output_path() exists on vanilla Archipelago too, so this works on a
+    stock install where Main.py is not ours to patch.
+    """
+    import os
+    from Utils import output_path
+
+    export_dir = output_path()
+    os.makedirs(export_dir, exist_ok=True)
+    return export_dir
+
+
 # ---------------------------------------------------------------------------
 # Hook: temp_dir_capture — wrap AutoWorld.call_stage
 # ---------------------------------------------------------------------------
 
 def _install_temp_dir_hook() -> bool:
     """
-    Install hook to capture temp_dir from call_stage("generate_output", temp_dir).
+    Install hook to set multiworld.temp_dir_for_sphere_log.
 
-    This wraps AutoWorld.call_stage() to set multiworld.temp_dir_for_sphere_log
-    when generate_output is called, mirroring what the file patch does in Main.py
-    after the thread pool exits (line 381).
+    This wraps AutoWorld.call_stage() so the destination is set when
+    generate_output runs, i.e. before create_playthrough opens the sphere log.
+    The value is the real output directory, not the staging directory
+    call_stage is handed — see _resolve_export_dir for why.
     """
     hook_name = "temp_dir_capture"
 
@@ -148,9 +171,11 @@ def _install_temp_dir_hook() -> bool:
 
         @functools.wraps(original_call_stage)
         def hooked_call_stage(multiworld, method_name, *args):
-            """Wrapped call_stage that captures temp_dir for sphere logging."""
+            """Wrapped call_stage that sets the sphere log destination."""
             if method_name == "generate_output" and args:
-                multiworld.temp_dir_for_sphere_log = args[0]
+                # args[0] is Main's ZIP staging directory; the sphere log must
+                # not be written there, so point it at the output directory.
+                multiworld.temp_dir_for_sphere_log = _resolve_export_dir()
             return original_call_stage(multiworld, method_name, *args)
 
         AutoWorld.call_stage = hooked_call_stage
@@ -260,13 +285,17 @@ def _install_export_hook() -> bool:
     """
     Install hook to export rules JSON after seed generation.
 
-    Primary path: wraps Spoiler.to_file() which is called inside
-    `with output as temp_dir:` — exported files are written to temp_dir
-    and included in the output ZIP.
+    Primary path: wraps Spoiler.to_file(), which Main calls inside
+    `with output as temp_dir:`. Exported files are written to Archipelago's
+    output directory, alongside the final AP_<seed>.zip — never into temp_dir,
+    because everything left there is bundled into the hostable archive and a
+    stock WebHost rejects the whole upload when it sees a member it cannot
+    parse as a slot file (see _resolve_export_dir). The staging directory is
+    still passed through so its files reach the preset copy.
 
     Fallback path: wraps Main.main() for the rare case where spoiler is
     disabled (args.spoiler == 0, to_file not called). In this case,
-    exports run after main() returns — outside temp_dir, not in ZIP.
+    exports run after main() returns, when the staging directory is gone.
     """
     hook_name = "export_rules"
 
@@ -286,16 +315,21 @@ def _install_export_hook() -> bool:
 
         @functools.wraps(original_to_file)
         def hooked_to_file(self, filename, *args, **kwargs):
-            """Wrapped to_file that runs export_post_output_hook in temp_dir."""
+            """Wrapped to_file that exports next to the final ZIP, not into it."""
             import os
             result = original_to_file(self, filename, *args, **kwargs)
 
-            temp_dir = os.path.dirname(filename)
+            staging_dir = os.path.dirname(filename)
             outfilebase = os.path.basename(filename).removesuffix('_Spoiler.txt')
 
             try:
                 from ..export_hook import export_post_output_hook
-                export_post_output_hook(self.multiworld, temp_dir, outfilebase)
+                export_post_output_hook(
+                    self.multiworld,
+                    _resolve_export_dir(),
+                    outfilebase,
+                    staging_dir=staging_dir,
+                )
                 _module_state['export_ran'] = True
             except Exception:
                 logger.exception("Export hook failed in to_file wrapper")
@@ -394,24 +428,22 @@ def _install_sphere_logging_hook() -> bool:
 
 
 # ---------------------------------------------------------------------------
-# Fallback export (degraded path — files NOT in ZIP)
+# Fallback export (degraded path — no staging directory left)
 # ---------------------------------------------------------------------------
 
 def _post_generation_export(multiworld: "MultiWorld"):
     """
     Fallback export when spoiler is disabled (to_file never called).
 
-    This is the degraded path — exports run after Main.main() returns,
-    outside `with output as temp_dir:`, so files are NOT included in
-    the output ZIP. They are still written to frontend/presets/ if
-    update_frontend_presets is enabled.
+    This is the degraded path — exports run after Main.main() returns, when the
+    staging directory has already been cleaned up, so the multidata and the
+    per-player game files cannot be mirrored into frontend/presets/. The rules
+    JSON and the sphere log go to the same output directory as on the primary
+    path, so the two agree on where artifacts live.
 
     Args:
         multiworld: The MultiWorld object from generation
     """
-    import os
-    import shutil
-
     # Build the filename base from seed_name
     seed_name = getattr(multiworld, 'seed_name', None)
     if not seed_name:
@@ -420,39 +452,14 @@ def _post_generation_export(multiworld: "MultiWorld"):
 
     filename_base = f"AP_{seed_name}"
 
-    # Find where the sphere_log was written by the sphere_logging hook
-    sphere_log_filename = f"{filename_base}_sphere_log.jsonl"
-    sphere_log_source = None
-
-    possible_dirs = [
-        getattr(multiworld, 'temp_dir_for_sphere_log', None),
-        getattr(multiworld, 'output_path', None),
-        'output',
-    ]
-    for check_dir in possible_dirs:
-        if check_dir and os.path.isdir(check_dir):
-            check_path = os.path.join(check_dir, sphere_log_filename)
-            if os.path.exists(check_path):
-                sphere_log_source = check_path
-                logger.debug(f"Found sphere_log at: {sphere_log_source}")
-                break
-
-    with tempfile.TemporaryDirectory() as temp_dir:
-        if sphere_log_source:
-            dest_path = os.path.join(temp_dir, sphere_log_filename)
-            try:
-                shutil.copy2(sphere_log_source, dest_path)
-            except Exception as e:
-                logger.warning(f"Failed to copy sphere_log: {e}")
-
-        try:
-            from ..export_hook import export_post_output_hook
-            logger.info("Exporting rules via monkey patch fallback (spoiler disabled)")
-            export_post_output_hook(multiworld, temp_dir, filename_base)
-        except ImportError:
-            logger.debug("Export hook not available, skipping")
-        except Exception as e:
-            logger.warning(f"Fallback rules export failed: {e}")
+    try:
+        from ..export_hook import export_post_output_hook
+        logger.info("Exporting rules via monkey patch fallback (spoiler disabled)")
+        export_post_output_hook(multiworld, _resolve_export_dir(), filename_base)
+    except ImportError:
+        logger.debug("Export hook not available, skipping")
+    except Exception as e:
+        logger.warning(f"Fallback rules export failed: {e}")
 
 
 def _create_playthrough_with_logging(

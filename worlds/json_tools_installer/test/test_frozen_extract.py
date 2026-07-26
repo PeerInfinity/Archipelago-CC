@@ -114,3 +114,36 @@ def test_frozen_skips_unsupported_components(extracted, frozen):
         assert len(matching) == 1, (name, result.warnings)
         assert comp.unsupported_frozen in matching[0]
     assert len(result.warnings) == len(UNSUPPORTED_COMPONENTS), result.warnings
+
+
+class TestResolveComponentsFrozen:
+    """Rule export on a frozen install needs the downloaded upstream source,
+    so 'world_source' is a dependency of the exporter there — not an option
+    the user has to know about (it was opt-in, and every access rule silently
+    exported as null without it)."""
+
+    def test_source_install_selection_is_unchanged(self, frozen):
+        frozen(False)
+        selected = ["exporter", "frontend"]
+        assert extractor.resolve_components(selected) == selected
+
+    def test_frozen_exporter_pulls_in_world_source(self, frozen):
+        frozen(True)
+        resolved = extractor.resolve_components(["exporter", "frontend"])
+        assert "world_source" in resolved
+        # nothing dropped, order preserved
+        assert resolved[:2] == ["exporter", "frontend"]
+
+    def test_frozen_defaults_pull_in_world_source(self, frozen):
+        frozen(True)
+        assert "world_source" in extractor.resolve_components(
+            sorted(extractor.DEFAULT_COMPONENTS))
+
+    def test_frozen_without_exporter_is_unchanged(self, frozen):
+        frozen(True)
+        assert extractor.resolve_components(["frontend"]) == ["frontend"]
+
+    def test_already_selected_is_not_duplicated(self, frozen):
+        frozen(True)
+        resolved = extractor.resolve_components(["exporter", "world_source"])
+        assert resolved.count("world_source") == 1

@@ -4,12 +4,16 @@ Kivy-based GUI for running JSON Tools scripts.
 Provides a menu to launch utility scripts and quick actions.
 """
 
+import functools
 import os
 import queue
+import shutil
 import subprocess
 import sys
 import threading
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from typing import Callable, Dict, List, Optional
 
 os.environ.setdefault("KIVY_NO_CONSOLELOG", "1")
 os.environ.setdefault("KIVY_NO_FILELOG", "1")
@@ -24,224 +28,380 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.textinput import TextInput
 from kivy.uix.popup import Popup
 
-from Utils import local_path
+from Utils import is_frozen, local_path
+
+DEV_SERVER_PORT = 8000
+
+# Shown instead of a Run button for actions that need an interpreter or repo
+# files a compiled Archipelago build does not have.
+NEEDS_SOURCE_INSTALL = ("needs a source (git) install — a compiled Archipelago "
+                        "ships no Python interpreter or repo scripts")
+NEEDS_NODE_REPO = ("needs a source (git) install — the npm test infrastructure "
+                   "is not part of a compiled Archipelago")
 
 
 class ScriptAction:
     """Represents a script action that can be run."""
-    def __init__(self, name: str, description: str, command: list = None,
-                 script_path: str = None, working_dir: str = None):
+    def __init__(self, name: str, description: str,
+                 command: Optional[List[str]] = None,
+                 script_path: Optional[str] = None,
+                 working_dir: Optional[str] = None,
+                 handler: Optional[Callable[[], str]] = None,
+                 unsupported: Optional[str] = None):
         self.name = name
         self.description = description
         self.command = command  # Direct command to run
         self.script_path = script_path  # Path to script file
         self.working_dir = working_dir  # Working directory for command
+        self.handler = handler  # In-process callable returning a result message
+        self.unsupported = unsupported  # Why this action can't run on this install
 
 
-# Define script categories and actions
-SCRIPT_CATEGORIES = {
-    "Dev Server": [
-        ScriptAction(
-            "Start Dev Server",
-            "Start local HTTP server on port 8000 for the frontend",
-            command=[sys.executable, "-m", "http.server", "8000"]
-        ),
-        ScriptAction(
-            "Stop Dev Server",
-            "Stop any running HTTP server on port 8000",
-            command=[sys.executable, "-c",
-                     "import subprocess, sys; "
-                     "r = subprocess.run(['pkill', '-f', 'http.server 8000'] if sys.platform != 'win32' "
-                     "else ['taskkill', '/F', '/FI', 'WINDOWTITLE eq http.server*'], "
-                     "capture_output=True, text=True); "
-                     "print('Server stopped.' if r.returncode == 0 else 'No server running.')"]
-        ),
-    ],
-    "Setup": [
-        ScriptAction(
-            "Setup Dev Environment (Full)",
-            "Run complete development environment setup",
-            script_path="scripts/setup/setup_dev_environment.py"
-        ),
-        ScriptAction(
-            "Check Prerequisites",
-            "Verify Python and Node.js are installed",
-            command=[sys.executable, "-c",
-                     "import shutil; "
-                     "print('[OK] Python:', shutil.which('python') or shutil.which('python3')); "
-                     "print('[OK] Node:', shutil.which('node') or 'Not found'); "
-                     "print('[OK] npm:', shutil.which('npm') or 'Not found'); "
-                     "input('Press Enter to close...')"]
-        ),
-        ScriptAction(
-            "Set Up Virtual Environment",
-            "Create .venv Python virtual environment",
-            command=[sys.executable, "-m", "venv", ".venv"]
-        ),
-        ScriptAction(
-            "Install Dependencies",
-            "Run ModuleUpdate.py to install game dependencies",
-            command=[sys.executable, "ModuleUpdate.py", "--yes"]
-        ),
-        ScriptAction(
-            "Generate Template Files",
-            "Generate YAML template files for all games",
-            command=[sys.executable, "-c",
-                     "from Options import generate_yaml_templates; "
-                     "generate_yaml_templates('Players/Templates'); "
-                     "print('Templates generated!'); "
-                     "input('Press Enter to close...')"]
-        ),
-        ScriptAction(
-            "Set Up Host Configuration",
-            "Create host.yaml with minimal-spoilers preset",
-            command=[sys.executable, "Launcher.py", "--update_settings"]
-        ),
-        ScriptAction(
-            "Install Node.js Dependencies",
-            "Run npm install for test infrastructure",
-            command=["npm", "install"]
-        ),
-    ],
-    "Update Host Settings": [
-        ScriptAction(
-            "Normal (Disable JSON Features)",
-            "Reset to normal Archipelago settings (no JSON export)",
-            script_path="scripts/setup/update_host_settings.py",
-            command=[sys.executable, "scripts/setup/update_host_settings.py", "normal"]
-        ),
-        ScriptAction(
-            "Minimal Spoilers (Enable JSON)",
-            "Enable JSON export with minimal spoiler data",
-            script_path="scripts/setup/update_host_settings.py",
-            command=[sys.executable, "scripts/setup/update_host_settings.py", "minimal-spoilers"]
-        ),
-        ScriptAction(
-            "Full Spoilers (Extended Logs)",
-            "Enable JSON export with full sphere log data",
-            script_path="scripts/setup/update_host_settings.py",
-            command=[sys.executable, "scripts/setup/update_host_settings.py", "full-spoilers"]
-        ),
-        ScriptAction(
-            "UT Hybrid",
-            "Config picks best tracking mode per game (uses tracking-mode-config.json)",
-            script_path="scripts/setup/update_host_settings.py",
-            command=[sys.executable, "scripts/setup/update_host_settings.py", "ut-hybrid"]
-        ),
-        ScriptAction(
-            "UT Worldgen",
-            "Export rules.json for worldgen-based tracking",
-            script_path="scripts/setup/update_host_settings.py",
-            command=[sys.executable, "scripts/setup/update_host_settings.py", "ut-worldgen"]
-        ),
-        ScriptAction(
-            "UT Pickle",
-            "Export tracker pickle for pickle-based tracking",
-            script_path="scripts/setup/update_host_settings.py",
-            command=[sys.executable, "scripts/setup/update_host_settings.py", "ut-pickle"]
-        ),
-        ScriptAction(
-            "UT Original",
-            "YAML-based tracking (no extra exports needed)",
-            script_path="scripts/setup/update_host_settings.py",
-            command=[sys.executable, "scripts/setup/update_host_settings.py", "ut-original"]
-        ),
-    ],
-    "Patches": [
-        ScriptAction(
-            "Apply ROM-less Patches",
-            "Enable generation without ROM files (for testing)",
-            command=None  # Handled specially
-        ),
-        ScriptAction(
-            "Revert ROM-less Patches",
-            "Restore original world files from backups",
-            command=None  # Handled specially
-        ),
-        ScriptAction(
-            "Enable Auto Monkey Patches",
-            "Use runtime hooks on every AP startup (no file changes)",
-            command=None  # Handled specially
-        ),
-        ScriptAction(
-            "Disable Auto Monkey Patches",
-            "Stop using runtime hooks on startup",
-            command=None  # Handled specially
-        ),
-    ],
-    "Quick Actions": [
-        ScriptAction(
-            "Test Adventure Generation",
-            "Generate Adventure seed with Generate.py",
-            command=[sys.executable, "Generate.py",
-                     "--weights_file_path", "Templates/Adventure.yaml",
-                     "--multi", "1", "--seed", "1"]
-        ),
-        ScriptAction(
-            "Test Adventure Spoiler",
-            "Run spoiler test for Adventure preset",
-            command=["npm", "test", "--", "--mode=test-spoilers", "--game=adventure", "--seed=1"]
-        ),
-        ScriptAction(
-            "Adventure Full Test",
-            "Run full test-all-templates.py for Adventure",
-            script_path="scripts/test/test-all-templates.py",
-            command=[sys.executable, "scripts/test/test-all-templates.py",
-                     "--include-list", "Adventure.yaml", "--minimal-spoilers", "-p"]
-        ),
-        ScriptAction(
-            "Test Adventure UT Worldgen",
-            "Run UT worldgen fuzz test for Adventure",
-            command=[sys.executable, "scripts/test/test-all-ut-fuzz.py",
-                     "--include-list", "Adventure.yaml", "--runs", "10",
-                     "--ut-version", "worldgen", "--no-use-tracking-config",
-                     "--starting-seed", "1"]
-        ),
-        ScriptAction(
-            "Test Adventure UT Pickle",
-            "Run UT pickle fuzz test for Adventure",
-            command=[sys.executable, "scripts/test/test-all-ut-fuzz.py",
-                     "--include-list", "Adventure.yaml", "--runs", "10",
-                     "--ut-version", "pickle", "--no-use-tracking-config",
-                     "--starting-seed", "1"]
-        ),
-        ScriptAction(
-            "Test ALTTP Generation",
-            "Generate ALTTP seed with Generate.py",
-            command=[sys.executable, "Generate.py",
-                     "--weights_file_path", "Templates/A Link to the Past.yaml",
-                     "--multi", "1", "--seed", "1"]
-        ),
-        ScriptAction(
-            "Test ALTTP Spoiler",
-            "Run spoiler test for ALTTP preset",
-            command=["npm", "test", "--", "--mode=test-spoilers", "--game=alttp", "--seed=1"]
-        ),
-        ScriptAction(
-            "ALTTP Full Test",
-            "Run full test-all-templates.py for ALTTP",
-            script_path="scripts/test/test-all-templates.py",
-            command=[sys.executable, "scripts/test/test-all-templates.py",
-                     "--include-list", "A Link to the Past.yaml", "--minimal-spoilers", "-p"]
-        ),
-        ScriptAction(
-            "Test ALTTP UT Worldgen",
-            "Run UT worldgen fuzz test for ALTTP",
-            command=[sys.executable, "scripts/test/test-all-ut-fuzz.py",
-                     "--include-list", "A Link to the Past.yaml", "--runs", "10",
-                     "--ut-version", "worldgen", "--no-use-tracking-config",
-                     "--starting-seed", "1"]
-        ),
-        ScriptAction(
-            "Test ALTTP UT Pickle",
-            "Run UT pickle fuzz test for ALTTP",
-            command=[sys.executable, "scripts/test/test-all-ut-fuzz.py",
-                     "--include-list", "A Link to the Past.yaml", "--runs", "10",
-                     "--ut-version", "pickle", "--no-use-tracking-config",
-                     "--starting-seed", "1"]
-        ),
-    ],
-}
+# Dev server owned by this process (frozen installs have no interpreter to
+# spawn `python -m http.server` with, so the server runs in a daemon thread
+# here and dies with the window).
+_dev_server: Optional[ThreadingHTTPServer] = None
+_dev_server_thread: Optional[threading.Thread] = None
+
+
+def _start_dev_server() -> str:
+    """Serve the Archipelago root on DEV_SERVER_PORT from this process."""
+    global _dev_server, _dev_server_thread
+
+    if _dev_server is not None:
+        return f"Dev server is already running on http://localhost:{DEV_SERVER_PORT}/"
+
+    root = local_path()
+    handler = functools.partial(SimpleHTTPRequestHandler, directory=root)
+    try:
+        server = ThreadingHTTPServer(("0.0.0.0", DEV_SERVER_PORT), handler)
+    except OSError as e:
+        return (f"Could not start the dev server on port {DEV_SERVER_PORT}: {e}\n\n"
+                f"Another server may already be using that port.")
+
+    _dev_server_thread = threading.Thread(target=server.serve_forever, daemon=True)
+    _dev_server_thread.start()
+    _dev_server = server
+    return (f"Dev server running on http://localhost:{server.server_address[1]}/\n\n"
+            f"Serving: {root}\n\n"
+            f"It stops with 'Stop Dev Server' or when this window closes.")
+
+
+def _stop_dev_server() -> str:
+    """Stop the in-process dev server, if this window started one."""
+    global _dev_server, _dev_server_thread
+
+    if _dev_server is None:
+        return "No dev server was started from this window."
+
+    _dev_server.shutdown()
+    _dev_server.server_close()
+    _dev_server = None
+    _dev_server_thread = None
+    return "Dev server stopped."
+
+
+def _check_prerequisites() -> str:
+    """Report interpreter/tooling availability without spawning anything."""
+    return "\n".join([
+        f"[OK] Python: {shutil.which('python') or shutil.which('python3') or 'Not found'}",
+        f"[OK] Node: {shutil.which('node') or 'Not found'}",
+        f"[OK] npm: {shutil.which('npm') or 'Not found'}",
+    ])
+
+
+def _apply_export_preset(preset: str) -> str:
+    """Write an export preset into host.yaml in-process."""
+    from ..config import configure_export_settings
+    if configure_export_settings(preset):
+        return f"host.yaml updated with the '{preset}' export preset."
+    return f"Failed to update host.yaml with the '{preset}' export preset."
+
+
+def _sibling_exe(name: str) -> Optional[str]:
+    """Path to a sibling Archipelago executable, if the build ships one.
+
+    On frozen builds sys.executable is ArchipelagoLauncher(.exe); its siblings
+    (ArchipelagoGenerate, ...) are separate entry points taking the same
+    arguments as the scripts they were frozen from.
+    """
+    exe = Path(sys.executable)
+    candidate = exe.with_name(name + exe.suffix)
+    return str(candidate) if candidate.is_file() else None
+
+
+def build_script_categories() -> Dict[str, List[ScriptAction]]:
+    """
+    Build the script menu for the install this is running on.
+
+    Built per call rather than at import: every command here is anchored on
+    sys.executable, which on a compiled build is ArchipelagoLauncher(.exe) —
+    its argparse rejects '-m' and script paths outright ("unrecognized
+    arguments: -m"). The frozen variants below either run in-process, remap to
+    a sibling executable, or say why they cannot run.
+    """
+    frozen = is_frozen()
+    python = sys.executable
+    generate_exe = _sibling_exe("ArchipelagoGenerate") if frozen else None
+
+    def generate_cmd(*args) -> List[str]:
+        """Generate.py invocation (the frozen build's ArchipelagoGenerate)."""
+        return [generate_exe or python, *([] if frozen else ["Generate.py"]), *args]
+
+    generate_unsupported = None
+    if frozen and not generate_exe:
+        generate_unsupported = "this build ships no ArchipelagoGenerate executable"
+
+    return {
+        "Dev Server": [
+            ScriptAction(
+                "Start Dev Server",
+                "Start local HTTP server on port 8000 for the frontend",
+                command=None if frozen else [python, "-m", "http.server", "8000"],
+                handler=_start_dev_server if frozen else None,
+            ),
+            ScriptAction(
+                "Stop Dev Server",
+                "Stop any running HTTP server on port 8000",
+                command=None if frozen else [
+                    python, "-c",
+                    "import subprocess, sys; "
+                    "r = subprocess.run(['pkill', '-f', 'http.server 8000'] if sys.platform != 'win32' "
+                    "else ['taskkill', '/F', '/FI', 'WINDOWTITLE eq http.server*'], "
+                    "capture_output=True, text=True); "
+                    "print('Server stopped.' if r.returncode == 0 else 'No server running.')"],
+                handler=_stop_dev_server if frozen else None,
+            ),
+        ],
+        "Setup": [
+            ScriptAction(
+                "Setup Dev Environment (Full)",
+                "Run complete development environment setup",
+                script_path="scripts/setup/setup_dev_environment.py",
+                unsupported=NEEDS_SOURCE_INSTALL if frozen else None,
+            ),
+            ScriptAction(
+                "Check Prerequisites",
+                "Verify Python and Node.js are installed",
+                command=None if frozen else [
+                    python, "-c",
+                    "import shutil; "
+                    "print('[OK] Python:', shutil.which('python') or shutil.which('python3')); "
+                    "print('[OK] Node:', shutil.which('node') or 'Not found'); "
+                    "print('[OK] npm:', shutil.which('npm') or 'Not found'); "
+                    "input('Press Enter to close...')"],
+                handler=_check_prerequisites if frozen else None,
+            ),
+            ScriptAction(
+                "Set Up Virtual Environment",
+                "Create .venv Python virtual environment",
+                command=None if frozen else [python, "-m", "venv", ".venv"],
+                unsupported=NEEDS_SOURCE_INSTALL if frozen else None,
+            ),
+            ScriptAction(
+                "Install Dependencies",
+                "Run ModuleUpdate.py to install game dependencies",
+                command=None if frozen else [python, "ModuleUpdate.py", "--yes"],
+                unsupported=NEEDS_SOURCE_INSTALL if frozen else None,
+            ),
+            ScriptAction(
+                "Generate Template Files",
+                "Generate YAML template files for all games",
+                # Frozen: the launcher's own "Generate Template Options"
+                # component writes the same templates under the user directory.
+                command=[python, "Generate Template Options"] if frozen else [
+                    python, "-c",
+                    "from Options import generate_yaml_templates; "
+                    "generate_yaml_templates('Players/Templates'); "
+                    "print('Templates generated!'); "
+                    "input('Press Enter to close...')"],
+            ),
+            ScriptAction(
+                "Set Up Host Configuration",
+                "Create host.yaml with minimal-spoilers preset",
+                # Frozen: sys.executable IS the launcher, and it takes
+                # --update_settings itself.
+                command=[python, "--update_settings"] if frozen
+                else [python, "Launcher.py", "--update_settings"],
+            ),
+            ScriptAction(
+                "Install Node.js Dependencies",
+                "Run npm install for test infrastructure",
+                command=["npm", "install"],
+                unsupported=NEEDS_NODE_REPO if frozen else None,
+            ),
+        ],
+        "Update Host Settings": [
+            ScriptAction(
+                "Normal (Disable JSON Features)",
+                "Reset to normal Archipelago settings (no JSON export)",
+                script_path="scripts/setup/update_host_settings.py",
+                command=None if frozen else
+                [python, "scripts/setup/update_host_settings.py", "normal"],
+                handler=functools.partial(_apply_export_preset, "normal") if frozen else None,
+            ),
+            ScriptAction(
+                "Minimal Spoilers (Enable JSON)",
+                "Enable JSON export with minimal spoiler data",
+                script_path="scripts/setup/update_host_settings.py",
+                command=None if frozen else
+                [python, "scripts/setup/update_host_settings.py", "minimal-spoilers"],
+                handler=functools.partial(_apply_export_preset, "minimal-spoilers") if frozen else None,
+            ),
+            ScriptAction(
+                "Full Spoilers (Extended Logs)",
+                "Enable JSON export with full sphere log data",
+                script_path="scripts/setup/update_host_settings.py",
+                command=None if frozen else
+                [python, "scripts/setup/update_host_settings.py", "full-spoilers"],
+                # config.EXPORT_PRESETS carries only normal/minimal-spoilers,
+                # so the rest have no in-process equivalent.
+                unsupported=NEEDS_SOURCE_INSTALL if frozen else None,
+            ),
+            ScriptAction(
+                "UT Hybrid",
+                "Config picks best tracking mode per game (uses tracking-mode-config.json)",
+                script_path="scripts/setup/update_host_settings.py",
+                command=None if frozen else
+                [python, "scripts/setup/update_host_settings.py", "ut-hybrid"],
+                unsupported=NEEDS_SOURCE_INSTALL if frozen else None,
+            ),
+            ScriptAction(
+                "UT Worldgen",
+                "Export rules.json for worldgen-based tracking",
+                script_path="scripts/setup/update_host_settings.py",
+                command=None if frozen else
+                [python, "scripts/setup/update_host_settings.py", "ut-worldgen"],
+                unsupported=NEEDS_SOURCE_INSTALL if frozen else None,
+            ),
+            ScriptAction(
+                "UT Pickle",
+                "Export tracker pickle for pickle-based tracking",
+                script_path="scripts/setup/update_host_settings.py",
+                command=None if frozen else
+                [python, "scripts/setup/update_host_settings.py", "ut-pickle"],
+                unsupported=NEEDS_SOURCE_INSTALL if frozen else None,
+            ),
+            ScriptAction(
+                "UT Original",
+                "YAML-based tracking (no extra exports needed)",
+                script_path="scripts/setup/update_host_settings.py",
+                command=None if frozen else
+                [python, "scripts/setup/update_host_settings.py", "ut-original"],
+                unsupported=NEEDS_SOURCE_INSTALL if frozen else None,
+            ),
+        ],
+        "Patches": [
+            ScriptAction(
+                "Apply ROM-less Patches",
+                "Enable generation without ROM files (for testing)",
+                command=None  # Handled specially
+            ),
+            ScriptAction(
+                "Revert ROM-less Patches",
+                "Restore original world files from backups",
+                command=None  # Handled specially
+            ),
+            ScriptAction(
+                "Enable Auto Monkey Patches",
+                "Use runtime hooks on every AP startup (no file changes)",
+                command=None  # Handled specially
+            ),
+            ScriptAction(
+                "Disable Auto Monkey Patches",
+                "Stop using runtime hooks on startup",
+                command=None  # Handled specially
+            ),
+        ],
+        "Quick Actions": [
+            ScriptAction(
+                "Test Adventure Generation",
+                "Generate Adventure seed with Generate.py",
+                command=generate_cmd("--weights_file_path", "Templates/Adventure.yaml",
+                                     "--multi", "1", "--seed", "1"),
+                unsupported=generate_unsupported,
+            ),
+            ScriptAction(
+                "Test Adventure Spoiler",
+                "Run spoiler test for Adventure preset",
+                command=["npm", "test", "--", "--mode=test-spoilers", "--game=adventure", "--seed=1"],
+                unsupported=NEEDS_NODE_REPO if frozen else None,
+            ),
+            ScriptAction(
+                "Adventure Full Test",
+                "Run full test-all-templates.py for Adventure",
+                script_path="scripts/test/test-all-templates.py",
+                command=None if frozen else [
+                    python, "scripts/test/test-all-templates.py",
+                    "--include-list", "Adventure.yaml", "--minimal-spoilers", "-p"],
+                unsupported=NEEDS_SOURCE_INSTALL if frozen else None,
+            ),
+            ScriptAction(
+                "Test Adventure UT Worldgen",
+                "Run UT worldgen fuzz test for Adventure",
+                command=None if frozen else [
+                    python, "scripts/test/test-all-ut-fuzz.py",
+                    "--include-list", "Adventure.yaml", "--runs", "10",
+                    "--ut-version", "worldgen", "--no-use-tracking-config",
+                    "--starting-seed", "1"],
+                unsupported=NEEDS_SOURCE_INSTALL if frozen else None,
+            ),
+            ScriptAction(
+                "Test Adventure UT Pickle",
+                "Run UT pickle fuzz test for Adventure",
+                command=None if frozen else [
+                    python, "scripts/test/test-all-ut-fuzz.py",
+                    "--include-list", "Adventure.yaml", "--runs", "10",
+                    "--ut-version", "pickle", "--no-use-tracking-config",
+                    "--starting-seed", "1"],
+                unsupported=NEEDS_SOURCE_INSTALL if frozen else None,
+            ),
+            ScriptAction(
+                "Test ALTTP Generation",
+                "Generate ALTTP seed with Generate.py",
+                command=generate_cmd("--weights_file_path", "Templates/A Link to the Past.yaml",
+                                     "--multi", "1", "--seed", "1"),
+                unsupported=generate_unsupported,
+            ),
+            ScriptAction(
+                "Test ALTTP Spoiler",
+                "Run spoiler test for ALTTP preset",
+                command=["npm", "test", "--", "--mode=test-spoilers", "--game=alttp", "--seed=1"],
+                unsupported=NEEDS_NODE_REPO if frozen else None,
+            ),
+            ScriptAction(
+                "ALTTP Full Test",
+                "Run full test-all-templates.py for ALTTP",
+                script_path="scripts/test/test-all-templates.py",
+                command=None if frozen else [
+                    python, "scripts/test/test-all-templates.py",
+                    "--include-list", "A Link to the Past.yaml", "--minimal-spoilers", "-p"],
+                unsupported=NEEDS_SOURCE_INSTALL if frozen else None,
+            ),
+            ScriptAction(
+                "Test ALTTP UT Worldgen",
+                "Run UT worldgen fuzz test for ALTTP",
+                command=None if frozen else [
+                    python, "scripts/test/test-all-ut-fuzz.py",
+                    "--include-list", "A Link to the Past.yaml", "--runs", "10",
+                    "--ut-version", "worldgen", "--no-use-tracking-config",
+                    "--starting-seed", "1"],
+                unsupported=NEEDS_SOURCE_INSTALL if frozen else None,
+            ),
+            ScriptAction(
+                "Test ALTTP UT Pickle",
+                "Run UT pickle fuzz test for ALTTP",
+                command=None if frozen else [
+                    python, "scripts/test/test-all-ut-fuzz.py",
+                    "--include-list", "A Link to the Past.yaml", "--runs", "10",
+                    "--ut-version", "pickle", "--no-use-tracking-config",
+                    "--starting-seed", "1"],
+                unsupported=NEEDS_SOURCE_INSTALL if frozen else None,
+            ),
+        ],
+    }
+
+
 
 
 class ScriptsApp(App):
@@ -251,6 +411,7 @@ class ScriptsApp(App):
         super().__init__(**kwargs)
         self.title = "JSON Tools Scripts"
         self.output_text = ""
+        self.script_categories = build_script_categories()
 
     def build(self):
         """Build the UI."""
@@ -274,7 +435,7 @@ class ScriptsApp(App):
         content = BoxLayout(orientation='vertical', spacing=5, size_hint_y=None, padding=10)
         content.bind(minimum_height=content.setter('height'))
 
-        for category, actions in SCRIPT_CATEGORIES.items():
+        for category, actions in self.script_categories.items():
             # Skip scripts category if not installed (but keep patches)
             if category not in ["Dev Server", "Patches", "Update Host Settings"] and not scripts_available:
                 continue
@@ -301,12 +462,16 @@ class ScriptsApp(App):
                 )
                 run_btn.action = action
                 run_btn.category = category
+                run_btn.disabled = bool(action.unsupported)
                 run_btn.bind(on_press=self.run_action)
                 row.add_widget(run_btn)
 
-                # Action info
+                # Action info — an unsupported action stays listed, with the
+                # reason in place of its description, so the menu doesn't
+                # silently differ between install types
+                description = action.unsupported or action.description
                 info = Label(
-                    text=f'{action.name}\n[size=12]{action.description}[/size]',
+                    text=f'{action.name}\n[size=12]{description}[/size]',
                     markup=True,
                     halign='left',
                     valign='middle',
@@ -346,14 +511,28 @@ class ScriptsApp(App):
 
         return root
 
+    def on_stop(self):
+        """Release the dev server port when the window closes."""
+        if _dev_server is not None:
+            _stop_dev_server()
+
     def run_action(self, instance):
         """Run a script action."""
         action = instance.action
         category = instance.category
 
+        if action.unsupported:
+            self.show_message(action.name, action.unsupported)
+            return
+
         # Handle patch actions specially
         if category == "Patches":
             self.run_patch_action(action)
+            return
+
+        # In-process action (frozen installs cannot spawn a Python interpreter)
+        if action.handler:
+            self.run_handler(action)
             return
 
         # Run command
@@ -365,6 +544,19 @@ class ScriptsApp(App):
                 self.run_command_with_output([sys.executable, str(script_path)], action.name)
             else:
                 self.show_message("Error", f"Script not found: {action.script_path}")
+
+    def run_handler(self, action):
+        """Run an in-process action off the UI thread and show its result."""
+        def do_run():
+            try:
+                message = action.handler()
+            except Exception as e:
+                message = f"Failed: {e}"
+            Clock.schedule_once(lambda dt: self.show_message(action.name, message))
+
+        thread = threading.Thread(target=do_run)
+        thread.daemon = True
+        thread.start()
 
     def run_patch_action(self, action):
         """Handle patch-related actions."""

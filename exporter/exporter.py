@@ -2549,8 +2549,52 @@ def _get_cleaned_rules_data(multiworld) -> Dict[str, Any]:
         return {}
 
 
+# Suffixes of the artifacts JSON Tools writes into Archipelago's output directory.
+# They are deliberately kept out of Main's zip staging directory (see
+# worlds/json_tools_installer/monkey_patches/hooks.py), because a stock WebHost
+# rejects an upload whose archive contains them. The output directory is shared
+# by every seed, so the preset copy has to pick these out by name instead of
+# mirroring the whole folder the way it can for a per-seed staging directory.
+PRESET_ARTIFACT_SUFFIXES = ("_rules.json", "_rules-ast.json", "_sphere_log.jsonl")
+
+
+def _collect_preset_source_files(output_dir: str, staging_dir: Optional[str], filename_base: str) -> List[str]:
+    """
+    Collect the files that should be mirrored into a preset directory.
+
+    Args:
+        output_dir: Archipelago's output directory — shared by all seeds, so only
+            this seed's JSON Tools artifacts are taken from it.
+        staging_dir: Main's per-seed zip staging directory, when the export runs
+            from the Spoiler.to_file hook. It only ever holds this seed's files
+            (multidata, spoiler, per-player game files), so all of them are taken.
+        filename_base: Base name for this seed's output files
+
+    Returns:
+        Sorted list of absolute-or-relative source paths, one per basename.
+    """
+    sources: Dict[str, str] = {}
+
+    if (staging_dir and os.path.isdir(staging_dir)
+            and os.path.abspath(staging_dir) != os.path.abspath(output_dir)):
+        for name in os.listdir(staging_dir):
+            path = os.path.join(staging_dir, name)
+            if os.path.isfile(path):
+                sources[name] = path
+
+    if os.path.isdir(output_dir):
+        for name in os.listdir(output_dir):
+            if not name.startswith(filename_base) or not name.endswith(PRESET_ARTIFACT_SUFFIXES):
+                continue
+            path = os.path.join(output_dir, name)
+            if os.path.isfile(path):
+                sources[name] = path
+
+    return [sources[name] for name in sorted(sources)]
+
+
 # --- Game Rules Export ---
-def export_game_rules(multiworld, output_dir: str, filename_base: str, save_presets: bool = False, skip_preset_copy_if_rules_identical: bool = False, rules_json_format: str = "rule_builder", cleanup_multiworld: bool = False, clear_game_presets: bool = False, clear_all_presets: bool = False) -> Dict[str, str]:
+def export_game_rules(multiworld, output_dir: str, filename_base: str, save_presets: bool = False, skip_preset_copy_if_rules_identical: bool = False, rules_json_format: str = "rule_builder", cleanup_multiworld: bool = False, clear_game_presets: bool = False, clear_all_presets: bool = False, staging_dir: Optional[str] = None) -> Dict[str, str]:
     """
     Exports game rules to JSON files for frontend consumption.
     Also saves a copy of rules to frontend/presets with game name as prefix if save_presets is True.
@@ -2566,6 +2610,8 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
             collection. Disabled by default as it invalidates the multiworld object.
         clear_game_presets: If True, delete all existing presets for the current game before generating
         clear_all_presets: If True, delete all existing presets for ALL games before generating
+        staging_dir: Optional per-seed staging directory (Main's zip staging folder) whose
+            files are mirrored into the preset directory alongside this seed's artifacts.
 
     Returns:
         Dict containing paths to generated files
@@ -2969,19 +3015,26 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         # Create a folder for this specific preset
         preset_dir = os.path.join(game_dir, filename_base)
 
+        # The files that make up this preset: this seed's artifacts from the output
+        # directory plus everything Main staged for the ZIP.
+        preset_sources = _collect_preset_source_files(output_dir, staging_dir, filename_base)
+        source_json_paths = {
+            os.path.basename(path): path for path in preset_sources if path.endswith('.json')
+        }
+
         # --- Check if preset update is needed ---
-        needs_update = True 
+        needs_update = True
         if os.path.exists(preset_dir):
             try:
-                # Compare files in output_dir and preset_dir
-                output_files = sorted([f for f in os.listdir(output_dir) if f.endswith('.json') and os.path.isfile(os.path.join(output_dir, f))])
+                # Compare the source files against those already in preset_dir
+                output_files = sorted(source_json_paths)
                 preset_files = sorted([f for f in os.listdir(preset_dir) if f.endswith('.json') and os.path.isfile(os.path.join(preset_dir, f))])
 
                 if set(output_files) == set(preset_files):
                     # Same files exist in both dirs, compare content
                     all_match = True
                     for filename in output_files:
-                        output_path = os.path.join(output_dir, filename)
+                        output_path = source_json_paths[filename]
                         preset_path = os.path.join(preset_dir, filename)
                         try:
                             with open(output_path, 'r', encoding='utf-8') as f_out, open(preset_path, 'r', encoding='utf-8') as f_pre:
@@ -3023,17 +3076,15 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
                     except Exception as e:
                         logger.error(f"Error removing item {item_path}: {e}")
 
-            # Copy files from output_dir to preset_dir
+            # Copy this preset's source files to preset_dir
             files_copied = 0
-            for file_name in os.listdir(output_dir):
-                src_file = os.path.join(output_dir, file_name)
-                if os.path.isfile(src_file):
-                    try:
-                        dst_file = os.path.join(preset_dir, file_name)
-                        shutil.copy2(src_file, dst_file)
-                        files_copied += 1
-                    except Exception as e:
-                        logger.error(f"Error copying file {src_file} to {preset_dir}: {e}")
+            for src_file in preset_sources:
+                try:
+                    dst_file = os.path.join(preset_dir, os.path.basename(src_file))
+                    shutil.copy2(src_file, dst_file)
+                    files_copied += 1
+                except Exception as e:
+                    logger.error(f"Error copying file {src_file} to {preset_dir}: {e}")
             
             logger.info(f"Copied {files_copied} files to preset directory {preset_dir}")
             
