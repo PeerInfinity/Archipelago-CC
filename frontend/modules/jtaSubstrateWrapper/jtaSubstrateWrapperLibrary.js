@@ -731,7 +731,7 @@ export const substrateRegistryEntry = Object.freeze({
 
 // Side-effect on import: register the JtA substrate so the procgen
 // pipeline can resolve it without booting the panel module. Same
-// pattern as mazeRoom/textAdventureSubstrate libraries — idempotent
+// pattern as mazeRoom/textAdventureSubstrateWrapper libraries — idempotent
 // because index.js's host hook also calls register() in the live app.
 if (!substrateRegistry.has(substrateRegistryEntry.id)) {
     substrateRegistry.register(substrateRegistryEntry);

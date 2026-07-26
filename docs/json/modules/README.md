@@ -48,7 +48,7 @@ Modules marked *(disabled)* are present in the codebase but not enabled in the d
 - [Spoiler Checklist](./spoilerChecklist.md)
 - [Spoiler Test](./spoilerTest.md)
 - [Text Adventure](./textAdventure.md)
-- [Text Adventure (Substrate)](./textAdventureSubstrate.md)
+- [Text Adventure (substrate wrapper)](../developer/procgen/text-adventure.md)
 - [Timer Panel](./timerPanel.md)
 - [Vibe Coding Simulator](./vibeCodingSim.md)
 - [Proof Queue](./proofQueue.md)

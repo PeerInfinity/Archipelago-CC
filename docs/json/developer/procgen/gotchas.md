@@ -10,11 +10,36 @@ The pipeline's Mode toggle offers exactly four drivers (grid growth, sphere grow
 
 `bounceDemo` has no panel class of its own — its entry is literally built by `createFlashSubstrateEntry(...)` and its panel comes from `flashSubstrate`'s panel factory and bridge. But it registers its **own** routing identity: component type `bounceDemoPanel`, load event `bounce:loadRegion`, iframe id `bounceDemo` (`frontend/modules/bounceDemo/bounceDemoLibrary.js`). Bounce region loads therefore never configure the flash placeholder's bridge, and host activation brings the bounce panel forward. Shared code, separate instances.
 
-## Two text-adventure modules register the same substrate id
+## Substrate libraries register on IMPORT — headless scripts depend on it
 
-`textAdventureSubstrate` (direct panel, **deprecated 2026-07-26**) and `textAdventureSubstrateWrapper` (iframe-hosted, the survivor) both define substrate id `text_adventure` with the same load event and build-time hooks. Registration is first-wins behind a `has()` guard, and the deprecated module loads first — so enabling **both** hands it the id and the wrapper "loses gracefully". That is not a cosmetic difference: its `loopSupport` is a strict subset, with no `record`/`playback`/`instant`, so a half-migrated mode config silently downgrades loop support with no error anywhere. When verifying a config flip, assert *which module owns the registry entry* (`substrateRegistry.get('text_adventure').panelComponentType`), never absence-of-errors.
+`mazeRoomLibrary.js`, `bounceDemoLibrary.js`, `runnerDemoLibrary.js` and
+`textAdventureSubstrateWrapperLibrary.js` all end with the same block:
 
-Every config now disables it, `modules-textadventure.json` included — nothing reaches it any more. If you grep for the text-adventure substrate you will still hit the deprecated module first, so check `frontend/module-configs/` before reading either.
+```js
+if (!substrateRegistry.has(substrateRegistryEntry.id)) {
+    substrateRegistry.register(substrateRegistryEntry);
+}
+```
+
+That side effect is a contract, not an implementation detail. The app registers
+substrates from each module's `register()`, but the **headless procgen scripts**
+(`scripts/procgen/*.js`, `scripts/utils/generate-topdown-preset.js`) and
+`procgenPipelineEngine.test.js` are a separate boot context where no module
+`register()` ever runs — they get their substrates purely by importing the
+libraries, as their own comment says ("Substrate libraries register their
+adapters on import").
+
+**Why this bites:** a substrate that fails to register is not an error. The
+pipeline just skips regions asking for it, so a script writes a world *missing*
+that substrate and exits 0. The wrapper library was the one substrate library
+lacking the block, which went unnoticed for as long as the deprecated
+`textAdventureSubstrate`'s own side effect happened to cover those scripts;
+deleting that module (2026-07-26) would have silently broken seven consumers had
+the block not been added first.
+
+When you re-home an import like this, assert the registry actually contains the
+id afterwards — and check the ENTRY, not just presence: pointing a script at a
+different library can register a *different* entry shape.
 
 ## Three loop-cost engines, one store
 

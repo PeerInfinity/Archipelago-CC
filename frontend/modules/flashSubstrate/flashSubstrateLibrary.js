@@ -168,7 +168,7 @@ export const substrateRegistryEntry = createFlashSubstrateEntry({
 
 // Side-effect on import: register the default substrate so the procgen
 // pipeline can resolve it without booting the panel module. Same pattern
-// as mazeRoom / textAdventureSubstrate / jtaSubstrateWrapper libraries —
+// as mazeRoom / textAdventureSubstrateWrapper / jtaSubstrateWrapper libraries —
 // idempotent because index.js's host hook also calls register() in the
 // live app.
 if (!substrateRegistry.has(substrateRegistryEntry.id)) {

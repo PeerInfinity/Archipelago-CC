@@ -23,6 +23,7 @@ import {
     tileGridSerializer,
     tileGridDeserializer,
 } from '../shared/procgen/adapterPrimitives.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { getPlaybackProxy } from './index.js';
 
 export const substrateRegistryEntry = Object.freeze({
@@ -98,3 +99,19 @@ export const substrateRegistryEntry = Object.freeze({
     extractPathsAndObstacles: tileGridPathExtractor,
     serializeWorld: tileGridSerializer,
 });
+
+// Side-effect on import: register the substrate, matching mazeRoomLibrary.js,
+// bounceDemoLibrary.js and runnerDemoLibrary.js — "substrate libraries register
+// their adapters on import" is the house contract the headless procgen scripts
+// rely on (scripts/procgen/*.js, scripts/utils/generate-topdown-preset.js,
+// procgenPipelineEngine.test.js). Those are a SEPARATE BOOT CONTEXT from the
+// app: nothing calls this module's register() there, so without this block the
+// scripts would build worlds with no text_adventure substrate registered —
+// silently, since a missing substrate is a skipped region, not an error.
+//
+// This library was the only substrate library lacking it, which went unnoticed
+// while the deprecated textAdventureSubstrate's own side effect covered those
+// scripts. Idempotent: index.js's register() is guarded by the same has() check.
+if (!substrateRegistry.has(substrateRegistryEntry.id)) {
+    substrateRegistry.register(substrateRegistryEntry);
+}

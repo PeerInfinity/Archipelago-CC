@@ -233,11 +233,6 @@
             },
             {
               "type": "component",
-              "componentType": "textAdventureSubstratePanel",
-              "title": "Text Adventure"
-            },
-            {
-              "type": "component",
               "componentType": "textAdventureSubstrateWrapperPanel",
               "title": "Text Adventure (wrapper)"
             },

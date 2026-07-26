@@ -16,7 +16,7 @@ Note: files under `frontend/modules/shared/` and `frontend/modules/textAdventure
 |---|---|---|---|
 | `procgen-player.md` | 3 (+2 implicit, no `NewDocs/` prefix, in `substrateRegistry.js` header) | `procgenPlayer/index.js`, `procgenPlayerEngine.js`, `mazeRoomLibrary.js` | `docs/json/developer/procgen/architecture.md` + `substrate-registry.md` |
 | `substrate-pipeline-architecture.md` | ~5 | `world_generator/generator.py`, `exporter/games/base/handler.py`, `mazeRoomEngine.js`, `scenarioPool.js`, `procgenPipelineEngine.js` | `architecture.md` (sidecar round-trip, dispatch) — verify each ref's specific claim is covered |
-| `text-adventure-substrate.md` (registry-entry aspects only) | ~4 | `adapterPrimitives.js`, `spatialPrimitives.js`, `textAdventureSubstrate{Library,/index}.js` | `substrate-registry.md` for entry-contract refs; build-time primitive internals need the substrate doc below |
+| `text-adventure-substrate.md` (registry-entry aspects only) | ~4 | `adapterPrimitives.js`, `spatialPrimitives.js`, `textAdventureSubstrateWrapper{Library,/index}.js` | `substrate-registry.md` for entry-contract refs; build-time primitive internals need the substrate doc below |
 
 ## Blocked on documents still to write
 

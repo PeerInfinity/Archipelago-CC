@@ -2064,13 +2064,23 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    `textAdventureSubstrate` is now disabled in all eleven configs and
    reached by nothing; its portable tests were ported first
    (`060c1f88d`, +46, vitest 3395 → 3441).
-   ⇒ **DELETE QUESTION STILL OPEN (user ruling needed):** the directory
-   is 4705 lines / 15 files, of which 8 test files (~2199 lines) are in
-   the current 3441 baseline — deleting drops vitest to ~3242. Nothing
-   unique is lost: the registry entry is a strict subset of the
-   wrapper's, templating/customData/library coverage is ported, and the
-   parser (engine submodule) + UI (iframe) suites test code the wrapper
-   does not have.
+   ⇒ **DELETED 2026-07-26 (user ruling).** The directory and every
+   reference are gone. **vitest baseline 3441 → 3270**, fully accounted:
+   the 171 lost tests are exactly the deleted module's own 8 suites
+   (11+6+5+28+15+16+18+72), so nothing else broke.
+   ⚠ The real risk was NOT the configs. Six headless scripts
+   (`scripts/procgen/{sphere-step,spiral-step,dump-sphere-growth,
+   dump-shuffled-spiral,dump-grid-growth}.js`,
+   `scripts/utils/generate-topdown-preset.js`) plus
+   `procgenPipelineEngine.test.js` imported the OLD LIBRARY for its
+   registration side effect — and the wrapper library was the one
+   substrate library WITHOUT that side effect (it registers only from
+   the app's `register()`, which never runs in those contexts). A naive
+   path swap would have left `text_adventure` unregistered there, and a
+   missing substrate is a skipped region, not an error: the scripts
+   would have written worlds silently missing it. Fixed by giving the
+   wrapper library the same self-registration block maze/bounce/runner
+   have; now documented as its own gotcha.
    ⚠ **TEST HARNESS, shipped this pass** (`0ad4a5443`, `e3112ad2d`): the
    in-app runner raced the whole roster against a 600 s budget and, on
    expiry, published completion flags anyway — so a truncated run

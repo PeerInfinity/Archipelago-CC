@@ -2,10 +2,9 @@
 
 The text-adventure substrate (id `text_adventure`) renders a procgen region as prose: a textual description with compass-labelled clickable exits and clickable locations. Under the hood it is a *tile-grid world wearing a text skin* — its build-time hooks reuse the shared tile-grid adapter primitives verbatim, so its sidecar shape is identical to the maze's; only the panel differs.
 
-Two modules implement the same substrate id (first registration wins — see [Gotchas](./gotchas.md#two-text-adventure-modules-register-the-same-substrate-id)):
+One module implements it: **`textAdventureSubstrateWrapper`**, an iframe-hosted engine with a host↔iframe bridge.
 
-- **`textAdventureSubstrateWrapper`** — the **surviving** module: an iframe-hosted engine with a host↔iframe bridge.
-- **`textAdventureSubstrate`** — the direct-panel variant, **deprecated 2026-07-26**. Disabled in every module config, absent from `__BUNDLED_MODULES__`, and reached by nothing. Retained pending a decision to delete.
+A second implementation, the direct-panel `textAdventureSubstrate`, was **deleted 2026-07-26** after `?mode=textadventure` migrated onto the wrapper. It had registered the same substrate id and, because it loaded first, won that id wherever both were enabled — silently downgrading loop support, since its entry declared no `record`/`playback`/`instant`. If you find a reference to it, it is stale.
 
 ### Standalone play, and why the overlay steps aside for it
 

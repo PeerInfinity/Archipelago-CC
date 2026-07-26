@@ -5,7 +5,7 @@ import { createRng } from '../shared/rng.js';
 // Driver tests below dispatch via substrateRegistry, which needs both
 // available for the mixed-substrate end-to-end checks at the bottom.
 import '../mazeRoom/mazeRoomLibrary.js';
-import '../textAdventureSubstrate/textAdventureSubstrateLibrary.js';
+import '../textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js';
 import '../jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import {

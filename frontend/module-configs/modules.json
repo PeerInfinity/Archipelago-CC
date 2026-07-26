@@ -240,10 +240,6 @@
       "path": "./modules/mazeRoom/index.js",
       "enabled": true
     },
-    "textAdventureSubstrate": {
-      "path": "./modules/textAdventureSubstrate/index.js",
-      "enabled": false
-    },
     "textAdventureSubstrateWrapper": {
       "path": "./modules/textAdventureSubstrateWrapper/index.js",
       "enabled": true
@@ -350,7 +346,6 @@
     "apcalc",
     "apworldEditor",
     "mazeRoom",
-    "textAdventureSubstrate",
     "textAdventureSubstrateWrapper",
     "jtaSubstrateWrapper",
     "omsiSubstrateWrapper",

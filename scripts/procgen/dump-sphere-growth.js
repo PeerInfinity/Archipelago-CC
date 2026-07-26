@@ -83,7 +83,7 @@ import { fileURLToPath } from 'node:url';
 
 // Substrate libraries register their adapters on import.
 import '../../frontend/modules/mazeRoom/mazeRoomLibrary.js';
-import '../../frontend/modules/textAdventureSubstrate/textAdventureSubstrateLibrary.js';
+import '../../frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js';
 import '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
 import '../../frontend/modules/runnerDemo/runnerDemoLibrary.js';
 
