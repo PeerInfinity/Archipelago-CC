@@ -1980,7 +1980,14 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    mention; revisit on a real symptom). **flash = SUMMARY substrate**
    like runner/bounce (1 mana/s drain while running, resource-delta
    summary envelope, instant playback — M5 pattern; own kickoff
-   later). **Old `textAdventureSubstrate` module: DEPRECATE** (wrapper
+   later). **CORRECTED post-slice-1 (user): PARKED — flash is not a
+   real substrate yet (no game runs on it); the summary plan waits for
+   the first real game, and identity leans PER-GAME substrates (the
+   `createFlashSubstrateEntry` factory + 'flash_seedling' comment
+   already anticipate exactly this). When unparked: bake the summary
+   economy into the FACTORY; likely lands with Seedling Stage 2
+   planning, not as a pass slice.** **Old `textAdventureSubstrate`
+   module: DEPRECATE** (wrapper
    is the survivor; recon references first, size disable-vs-delete
    from that). **PRIORITY: omsi Instant pump first** — kickoff drafted
    *(NewDocs)* `omsiloops/omsi-loops-instant-pump-opus-kickoff.md`:
