@@ -2023,6 +2023,33 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    the substrate id, so flips must be verified by EFFECT; delete is
    ask-first, deprecate = flip + mark). Flash summary conversion is
    PARKED out of the pass (Seedling Stage 2).
+   **CLOSE-OUT SLICE A + B SHIPPED 2026-07-26** (`6f5cf556e`,
+   `aedd076ae`): old TA module deprecated + disabled in three of the
+   four configs, and features/loops.md settled to the ruling. The
+   fourth, `modules-textadventure.json`, is a REAL GAP — see the
+   `?mode=textadventure` item below.
+   **JTA INSTANT FIXED AT THE SOURCE 2026-07-26** (fork `8383af0`):
+   `completeTaskInstantly` was affordability-blind — measured, it
+   completed a task needing ~36 energy on **5** energy, banking its
+   finish effects and unlocks, where paced play died with nothing. It
+   now loops the same `progressTask` paced play calls instead of
+   predicting cost with a parallel closed-form model (that model was
+   independently wrong: it sampled progress-per-tick once, but
+   progress-per-tick RISES as skills level, so it over-billed 40 ticks
+   where paced spent 36). Paced-vs-instant now agree on reps, run state
+   and progress to four decimals across an energy sweep; negative
+   control flags 4/4 pre-fix.
+   ⇒ **TODO — switch jta Playback from `startInstantPump` to
+   `setInstantMode`** (`jtaSubstrateWrapper/bridge.js`, `_startInstantPump`
+   / the `case 'instant'` control). The pump exists ONLY because
+   `setInstantMode` used to be affordability-blind; that premise is now
+   void, so the pump is retained for being working tested code, not for
+   safety. `setInstantMode` would be simpler and faster (one tick vs
+   50-tick batches on an interval). Not done here because it touches
+   replay semantics and wants its own witness — the paced-vs-instant
+   differential is the natural one. The stale premise is already
+   annotated at the pump in bridge.js. Bot needs NO change: it already
+   uses `setInstantMode`, which is now correct.
    **ARC F DESIGN SKETCH RULED (Fable + user, 2026-07-25):** the panel
    queue editor starts with **omsi** — its recording IS the game's own
    authored queue, and both conversions already round-trip through the

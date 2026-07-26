@@ -1218,13 +1218,23 @@ function _handleWalkTo(target) {
 }
 
 // Instant-mode replay pump (M4). A Playback block flagged Instant drains its
-// recorded script in "one frame" — but the fork's setInstantMode uses
-// completeTaskInstantly, which is AFFORDABILITY-BLIND (it ignores energy) and
-// would let a replay complete tasks the recording couldn't afford. So the
-// pump instead drives the fork's NORMAL tick (stepTick) in fast batches on top
-// of the running game loop — energy-respecting, matching the jtaDatasetTests
-// stepTick-pump discipline. The host executor's clickTask round-trips
-// interleave between interval ticks; the pump only accelerates completion.
+// recorded script in "one frame" by driving the fork's NORMAL tick (stepTick)
+// in fast batches on top of the running game loop, matching the
+// jtaDatasetTests stepTick-pump discipline. The host executor's clickTask
+// round-trips interleave between interval ticks; the pump only accelerates
+// completion.
+//
+// ⚠ ITS ORIGINAL REASON IS GONE (fork 8383af0, 2026-07-26). The pump exists
+// because the fork's setInstantMode used to be AFFORDABILITY-BLIND — its
+// completeTaskInstantly finished and billed every remaining rep without
+// checking the pool, so a replay could complete tasks the recording could not
+// afford. completeTaskInstantly now drives the same per-tick path paced play
+// uses, and a paced-vs-instant differential agrees on reps, run state and
+// progress to four decimals. So this pump is retained for being working,
+// tested code, NOT because setInstantMode is unsafe — switching Playback to
+// setInstantMode is now a free choice and would be simpler and faster (one
+// tick vs 50-tick batches on an interval). Queued, not done: see the
+// Instant paragraph in CC/docs/plans/fable-to-opus-handoff-2026-07.md.
 let _instantPumpId = null;
 const INSTANT_PUMP_BATCH = 50;
 
