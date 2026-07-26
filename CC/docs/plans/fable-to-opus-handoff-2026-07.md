@@ -2050,6 +2050,42 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    differential is the natural one. The stale premise is already
    annotated at the pump in bridge.js. Bot needs NO change: it already
    uses `setInstantMode`, which is now correct.
+   **INSTANT-POLICY PASS CLOSED 2026-07-26.** Slices 1 (omsi pump) / 4
+   (old-TA deprecation) / 5 (features/loops.md) shipped + pushed; 2 and
+   3 stay parked (the jta bug inventory is superseded in practice by the
+   affordability fix above; flash summary waits for Seedling Stage 2).
+   `?mode=textadventure` now runs on the wrapper (`763468dcf`) — the
+   blocker was one panel predicate, `SubstrateInactiveOverlay` covering
+   the wrapper whenever procgenPlayer reported no active substrate,
+   which is always without a procgen world; the panel now skips it in
+   standalone play. That migration ALSO fixed the deployed live demo,
+   which had been showing a dead "Waiting for region…" panel because the
+   deprecated module is not in `__BUNDLED_MODULES__`. The deprecated
+   `textAdventureSubstrate` is now disabled in all eleven configs and
+   reached by nothing; its portable tests were ported first
+   (`060c1f88d`, +46, vitest 3395 → 3441).
+   ⇒ **DELETE QUESTION STILL OPEN (user ruling needed):** the directory
+   is 4705 lines / 15 files, of which 8 test files (~2199 lines) are in
+   the current 3441 baseline — deleting drops vitest to ~3242. Nothing
+   unique is lost: the registry entry is a strict subset of the
+   wrapper's, templating/customData/library coverage is ported, and the
+   parser (engine submodule) + UI (iframe) suites test code the wrapper
+   does not have.
+   ⚠ **TEST HARNESS, shipped this pass** (`0ad4a5443`, `e3112ad2d`): the
+   in-app runner raced the whole roster against a 600 s budget and, on
+   expiry, published completion flags anyway — so a truncated run
+   reported "All Playwright assertions passed" with exit 0. It now fails
+   loudly, naming the cause, the test cut off mid-flight and the ones
+   that never started. test-substrates is split into `fast` (57 tests,
+   ~2m43s) and `bot-walks` (3 real-time legs, ~6m31s) via
+   `npm test -- --mode=test-substrates --batch=<name>`; batches select
+   whole CATEGORIES and `fast` is the default batch that absorbs
+   anything unclaimed, so a new category costs speed, never coverage.
+   ⚠ **OPEN, not diagnosed:** `omsi-bot-instant-multi-reset-walk` is
+   STUCK (~364 s) in a full-roster run but passes in **7.9 s** in the
+   `bot-walks` batch — order/state dependent, not inherent. The 600 s
+   cap had been masking it: truncation hit at test 51, exactly where it
+   sits. User will investigate.
    **ARC F DESIGN SKETCH RULED (Fable + user, 2026-07-25):** the panel
    queue editor starts with **omsi** — its recording IS the game's own
    authored queue, and both conversions already round-trip through the
