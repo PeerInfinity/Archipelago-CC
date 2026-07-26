@@ -1990,6 +1990,24 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    honors Instant (jta precedent; the ~285 s bot legs are the payoff),
    keep the real-time walk leg, paced-vs-instant byte-identity check
    as the independent stratum.
+   **SLICE 1 SHIPPED + PUSHED 2026-07-25 (`316cc667f`, pure outer-repo
+   — no fork edits, no gitlink).** omsi `loopSupport.instant` live for
+   Playback AND Bot (the declaration flips both, now pinned as a
+   capability-matrix implication + substrate-registry.md note).
+   Measured: Playback 14.9 s → 0.60 s (24.7×, same 4 fork actions both
+   ways); Bot multi-reset walk 7.2 s (7 walk-backs, 6 host resets,
+   2550 pump ticks). Gates: substrates **60/60**, vitest **3395**,
+   compare-runs clean. As-built findings live in the kickoff doc:
+   `PUMP_BATCH_TICKS === MAX_TICKS_PER_CALLBACK` (the byte-identity
+   check fired on a REFERENCE artifact — different tick counts, not a
+   pump defect; the tie means the pump never overshoots more than
+   paced play can); TWO extra yields required (run end — resets are
+   host round trips, and window close — a departure fires mid-batch).
+   ⚠ the PACED `omsi-bot-multi-reset-walk` leg's duration is
+   load-dependent (measured 102–289 s; the planner is time-boxed
+   worker-side) — compare-runs will keep flagging it as a duration
+   outlier; it is NOT a regression signal. REMAINING SLICES: flash
+   summary conversion, old-TA deprecation, features/loops.md line.
    **ARC F DESIGN SKETCH RULED (Fable + user, 2026-07-25):** the panel
    queue editor starts with **omsi** — its recording IS the game's own
    authored queue, and both conversions already round-trip through the
