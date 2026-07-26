@@ -2095,7 +2095,13 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    STUCK (~364 s) in a full-roster run but passes in **7.9 s** in the
    `bot-walks` batch — order/state dependent, not inherent. The 600 s
    cap had been masking it: truncation hit at test 51, exactly where it
-   sits. User will investigate.
+   sits. **Diagnosis kickoff drafted 2026-07-26** *(NewDocs)*
+   `stuck-instant-walk-diagnosis-opus-kickoff.md` (constructed-subset
+   bisection of the poisoning prefix, then classify: production state
+   leak vs test-teardown residue vs file-with-writeup). The jta
+   Playback→setInstantMode follow-up was handed to an Opus SUBAGENT
+   2026-07-26 (verify-equivalence-first brief; report lands in the
+   Fable session).
    **ARC F DESIGN SKETCH RULED (Fable + user, 2026-07-25):** the panel
    queue editor starts with **omsi** — its recording IS the game's own
    authored queue, and both conversions already round-trip through the
