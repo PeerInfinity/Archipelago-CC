@@ -12,6 +12,11 @@ import { substrateRegistryEntry } from './textAdventureSubstrateWrapperLibrary.j
 
 export const PANEL_SHOWN_EVENT = 'textAdventureSubstrateWrapper:panelShown';
 
+// Published by index.js with the host-side snapshot the bridge boots from.
+// Declared here rather than imported because index.js imports THIS module —
+// the same direction PANEL_SHOWN_EVENT already travels.
+export const INITIAL_STATE_EVENT = 'textAdventureSubstrateWrapper:initialState';
+
 // Unique iframeId so multiple wrapper panels each get their own slot
 // in iframeAdapterCore.iframes — without this, the in-iframe
 // AdapterClient defaults to generateClientId('iframe-client'),
@@ -33,11 +38,17 @@ export class TextAdventureSubstrateWrapperPanel {
         this._inactiveOverlay = null;
         this._activeSubstrate = null;
         this._isLoopModeActive = false;
+        // Whether the loaded rules.json is a PROCGEN world (it carries
+        // preset_sidecars). False means standalone play, where the overlay
+        // must stay out of the way — see _updateInactiveOverlay.
+        this._procgenMode = false;
         this._unsubActiveSubstrate = null;
         this._unsubLoopMode = null;
+        this._unsubInitialState = null;
         this._initializeUI();
         this._subscribeToActiveSubstrate();
         this._subscribeToLoopMode();
+        this._subscribeToProcgenMode();
     }
 
     getRootElement() {
@@ -118,6 +129,24 @@ export class TextAdventureSubstrateWrapperPanel {
             eventBus.unsubscribe?.('gameState:loopModeChanged', handler, 'textAdventureSubstrateWrapper');
     }
 
+    /**
+     * Track whether we are in a procgen world. index.js republishes the
+     * initial-state snapshot on every rules load, so this arrives before any
+     * region does — and it is the only signal that distinguishes "standalone
+     * preset" from "procgen world whose current region isn't mine".
+     * `procgen:activeSubstrateChanged` cannot: it is null in BOTH cases.
+     */
+    _subscribeToProcgenMode() {
+        if (!eventBus?.subscribe) return;
+        const handler = (payload) => {
+            this._procgenMode = !!payload?.procgenMode;
+            this._updateInactiveOverlay();
+        };
+        eventBus.subscribe(INITIAL_STATE_EVENT, handler, 'textAdventureSubstrateWrapper');
+        this._unsubInitialState = () =>
+            eventBus.unsubscribe?.(INITIAL_STATE_EVENT, handler, 'textAdventureSubstrateWrapper');
+    }
+
     _activateCurrentSubstratePanel() {
         const target = this._activeSubstrate?.componentType;
         if (target && eventBus?.publish) {
@@ -136,6 +165,21 @@ export class TextAdventureSubstrateWrapperPanel {
         const myComponent = substrateRegistryEntry.panelComponentType;
         const active = this._activeSubstrate;
         const isActiveForMe = !!(active && active.componentType === myComponent);
+
+        // STANDALONE PLAY. The overlay answers "some OTHER substrate owns the
+        // current region", which is only a meaningful question inside a procgen
+        // world. Without one there is no substrate routing at all: the bridge
+        // builds the engine's world from the whole staticData region set and
+        // follows gameState:regionChanged, so the engine has something to show
+        // for every region. Overlaying it there hid a working text adventure
+        // behind "No procgen substrate is active for the current region" — the
+        // sole reason ?mode=textadventure could not migrate off the deprecated
+        // direct-panel module.
+        if (!this._procgenMode) {
+            this._inactiveOverlay.setVisible(false);
+            this.iframe.style.display = '';
+            return;
+        }
 
         if (isActiveForMe) {
             this._inactiveOverlay.setVisible(false);
@@ -156,6 +200,7 @@ export class TextAdventureSubstrateWrapperPanel {
     destroy() {
         if (this._unsubActiveSubstrate) { this._unsubActiveSubstrate(); this._unsubActiveSubstrate = null; }
         if (this._unsubLoopMode) { this._unsubLoopMode(); this._unsubLoopMode = null; }
+        if (this._unsubInitialState) { this._unsubInitialState(); this._unsubInitialState = null; }
         if (this.iframe) {
             this.iframe.src = 'about:blank';
             this.iframe = null;

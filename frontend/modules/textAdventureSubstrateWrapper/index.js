@@ -4,13 +4,17 @@
  * panel that loads the synthetic Archipelago-naive text-adventure
  * engine; an in-iframe bridge.js translates host AP state into engine
  * API calls. Supersedes the deprecated direct-panel
- * textAdventureSubstrate/, which registers the same substrate id and
- * is disabled everywhere except ?mode=textadventure.
+ * textAdventureSubstrate/, which registers the same substrate id and is
+ * now disabled in every mode config, ?mode=textadventure included.
  *
  * See docs/json/developer/procgen/text-adventure.md.
  */
 
-import { TextAdventureSubstrateWrapperPanel, PANEL_SHOWN_EVENT } from './textAdventureSubstrateWrapperPanel.js';
+import {
+    TextAdventureSubstrateWrapperPanel,
+    PANEL_SHOWN_EVENT,
+    INITIAL_STATE_EVENT,
+} from './textAdventureSubstrateWrapperPanel.js';
 import { getDiscoverySettings } from '../discovery/index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
@@ -79,7 +83,6 @@ export const moduleInfo = {
     requires: ['stateManager', 'gameState', 'discovery', 'iframeAdapter'],
 };
 
-const INITIAL_STATE_EVENT = 'textAdventureSubstrateWrapper:initialState';
 
 // Singleton PlaybackProxy — created in initialize() once the eventBus
 // is available. The substrate registry entry's getPlaybackController

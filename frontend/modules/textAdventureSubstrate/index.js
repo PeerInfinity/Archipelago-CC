@@ -5,21 +5,13 @@
  * that carries record/playback/instant loop support. Do not add
  * features here; do not enable this module in a new mode config.
  *
- * Still present because ONE mode has not been migrated:
- * `?mode=textadventure` (`modules-textadventure.json` + the
- * `textadventure` layout preset), the documented live demo, which
- * plays a NON-procgen preset. The wrapper's panel cannot serve that
- * yet: it unconditionally covers itself with SubstrateInactiveOverlay
- * ("No procgen substrate is active for the current region") whenever
- * procgenPlayer reports no active substrate — which is always, absent
- * a procgen world. The wrapper's engine renders that preset correctly
- * behind the overlay, so the gap is the panel's gating, not the
- * bridge. Close that gap and this module can go.
- *
- * (Note the boot-context divergence in the meantime: this module is
- * not bundled, so `?mode=textadventure` on the deployed site already
- * shows a dead "Waiting for region…" panel. Only local dev /
- * `?dev` gets the working direct panel.)
+ * NOTHING ENABLES IT ANY MORE (2026-07-26). `?mode=textadventure` was
+ * the last holdout and now runs on the wrapper: the wrapper's panel
+ * used to cover itself with SubstrateInactiveOverlay whenever
+ * procgenPlayer reported no active substrate — which is always without
+ * a procgen world — and it now skips the overlay entirely in
+ * standalone play. So this module is dead code kept only until the
+ * decision to delete it is made; it is not a fallback anyone reaches.
  *
  * What it does: subscribes to textAdventure:loadRegion (published by
  * procgenPlayer when a procgen world transitions to a region whose
@@ -110,12 +102,12 @@ export const moduleInfo = {
     icon: '📜',
     column: 3,
     description:
-        'DEPRECATED — superseded by Text Adventure (wrapper). Renders'
-        + ' Archipelago regions as textual descriptions with clickable'
-        + ' exits and locations. Handles both procgen-emitted text-adventure'
-        + ' substrates and standalone (raw rules.json) playback. Still'
-        + ' enabled only for ?mode=textadventure, which the wrapper cannot'
-        + ' serve yet; enable the wrapper instead in any new mode config.',
+        'DEPRECATED — superseded by Text Adventure (wrapper), which every'
+        + ' mode config now enables instead. Renders Archipelago regions as'
+        + ' textual descriptions with clickable exits and locations, for both'
+        + ' procgen-emitted text-adventure substrates and standalone (raw'
+        + ' rules.json) playback. Nothing enables this module; do not enable'
+        + ' it in a new mode config.',
     requires: ['stateManager', 'gameState', 'discovery'],
 };
 

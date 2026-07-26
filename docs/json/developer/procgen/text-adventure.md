@@ -5,13 +5,17 @@ The text-adventure substrate (id `text_adventure`) renders a procgen region as p
 Two modules implement the same substrate id (first registration wins — see [Gotchas](./gotchas.md#two-text-adventure-modules-register-the-same-substrate-id)):
 
 - **`textAdventureSubstrateWrapper`** — the **surviving** module: an iframe-hosted engine with a host↔iframe bridge.
-- **`textAdventureSubstrate`** — the direct-panel variant, **deprecated 2026-07-26**. Disabled in every module config but one, and absent from `__BUNDLED_MODULES__` entirely.
+- **`textAdventureSubstrate`** — the direct-panel variant, **deprecated 2026-07-26**. Disabled in every module config, absent from `__BUNDLED_MODULES__`, and reached by nothing. Retained pending a decision to delete.
 
-### Why the deprecated module is still here
+### Standalone play, and why the overlay steps aside for it
 
-`?mode=textadventure` — the [documented live demo](../../games/text-adventure/README.md) — plays a **non-procgen** preset, and the wrapper's *panel* cannot serve that: it covers itself with `SubstrateInactiveOverlay` ("No procgen substrate is active for the current region") whenever `procgenPlayer` reports no active substrate, which is always without a procgen world. The wrapper's *bridge* is fine — it builds the engine world straight from `staticData.regions` with the sidecar filter bypassed, and renders that preset's prose correctly behind the overlay. So the gap is one panel predicate, not a missing capability. Migrating that mode also needs its `layout_presets.json` component type swapped and `iframeAdapter` enabled in `modules-textadventure.json`.
+A substrate panel shows `SubstrateInactiveOverlay` when some *other* substrate owns the current region — a question that only means anything inside a procgen world. With a plain AP `rules.json` there is no substrate routing at all: the bridge builds the engine's world from the whole `staticData` region set (the sidecar filter is bypassed) and follows `gameState:regionChanged`, so the engine has something to show for every region.
 
-Until then the mode is **dev-only in practice**: the deprecated module is not bundled, so the deployed site's `?mode=textadventure` shows a dead "Waiting for region…" panel, and only local dev (or `?dev`) gets the working direct panel.
+The wrapper panel therefore **skips the overlay entirely when the loaded rules carry no `preset_sidecars` for the player**, tracked from the host's `initialState` snapshot. `procgen:activeSubstrateChanged` cannot answer this — it is `null` both for "standalone preset" and for "procgen world whose current region isn't mine".
+
+This is what unblocked `?mode=textadventure`, the [documented live demo](../../games/text-adventure/README.md), which plays the non-procgen Adventure preset. It previously ran on the deprecated module and was hiding a *working* text adventure behind "No procgen substrate is active for the current region". Migrating it also needed the `textadventure` layout preset's component type swapped and `iframeAdapter` enabled in `modules-textadventure.json`.
+
+That migration also fixed the deployed site, where the mode was already broken for a different reason: the deprecated module is not bundled, so `?mode=textadventure` showed a dead "Waiting for region…" panel there while working in local dev.
 
 ## The engine (`frontend/modules/textAdventureEngine/` — git submodule)
 

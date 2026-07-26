@@ -10,9 +10,9 @@
  * register(). The old module loads first, so enabling BOTH silently
  * hands it the id — and with it a loopSupport that has no
  * record/playback/instant. Every mode config that needs a text
- * adventure should enable this wrapper and leave textAdventureSubstrate
- * disabled; that is already true everywhere except ?mode=textadventure
- * (see textAdventureSubstrate/index.js for what still blocks it).
+ * adventure enables this wrapper and leaves textAdventureSubstrate
+ * disabled; as of 2026-07-26 that is true of ALL of them, so nothing
+ * reaches the deprecated entry any more.
  */
 
 import {

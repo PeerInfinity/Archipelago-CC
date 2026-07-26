@@ -14,7 +14,7 @@ The pipeline's Mode toggle offers exactly four drivers (grid growth, sphere grow
 
 `textAdventureSubstrate` (direct panel, **deprecated 2026-07-26**) and `textAdventureSubstrateWrapper` (iframe-hosted, the survivor) both define substrate id `text_adventure` with the same load event and build-time hooks. Registration is first-wins behind a `has()` guard, and the deprecated module loads first — so enabling **both** hands it the id and the wrapper "loses gracefully". That is not a cosmetic difference: its `loopSupport` is a strict subset, with no `record`/`playback`/`instant`, so a half-migrated mode config silently downgrades loop support with no error anywhere. When verifying a config flip, assert *which module owns the registry entry* (`substrateRegistry.get('text_adventure').panelComponentType`), never absence-of-errors.
 
-Every config now disables it except `modules-textadventure.json` ([why](./text-adventure.md#why-the-deprecated-module-is-still-here)). If you grep for the text-adventure substrate you will hit the deprecated module first — check `frontend/module-configs/` before reading either.
+Every config now disables it, `modules-textadventure.json` included — nothing reaches it any more. If you grep for the text-adventure substrate you will still hit the deprecated module first, so check `frontend/module-configs/` before reading either.
 
 ## Three loop-cost engines, one store
 

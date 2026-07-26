@@ -642,7 +642,7 @@
           "content": [
             {
               "type": "component",
-              "componentType": "textAdventureSubstratePanel",
+              "componentType": "textAdventureSubstrateWrapperPanel",
               "title": "Text Adventure"
             },
             {
