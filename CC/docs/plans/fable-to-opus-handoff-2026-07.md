@@ -1957,6 +1957,19 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    fast-forward capability (now WANTED for omsi); whether it ships as
    declared `loopSupport.instant` or a test-only surface is the pass's
    call.
+   **PASS OPENED 2026-07-25 (Fable + user) — HEADLINE RULING: Instant
+   stays USER-FACING in ALL substrates for now.** Supersedes both the
+   remove-jta/omsi-never exploration AND the same-day test-only
+   framing; the pass = fix jta's Instant bugs, build omsi's pump
+   (user-facing), close coverage gaps. Design doc *(NewDocs)*
+   `instant-policy-pass-2026-07.md`: verified coverage matrix (declared:
+   maze/tasw/jta/runner/bounce; ABSENT: omsi — the gap; flash + old
+   textAdventureSubstrate — slice-3 stragglers) and three slices:
+   (1) omsi whole-queue tick pump, Opus kickoff next; (2) jta Instant
+   hands-on bug inventory — NOTHING is filed, docs show green, so the
+   inventory is experiential and needs the user's symptom descriptions
+   as seed; (3) flash/old-TA coverage + the features/loops.md
+   "under design review" line updated to the settled ruling.
    **ARC F DESIGN SKETCH RULED (Fable + user, 2026-07-25):** the panel
    queue editor starts with **omsi** — its recording IS the game's own
    authored queue, and both conversions already round-trip through the
