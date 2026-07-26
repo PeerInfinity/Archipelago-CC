@@ -2960,7 +2960,28 @@ export class LoopState {
     }
   }
 
-  /** Mana-zero during manual mode → standard loop reset. */
+  /**
+   * Mana-zero during manual mode → standard loop reset.
+   *
+   * This is a depletion reset LOOPS OWNS: the spend that emptied the pool was
+   * `_chargeLiveAction`'s, on a block loops parked. So `autoRestartQueue`
+   * governs it, the same way it governs the frame OOM check and the drain
+   * tick's — see loop-recording.md, "`autoRestartQueue` governs the resets
+   * loops OWNS". Until 2026-07-25 this row honoured the flag in NEITHER
+   * direction: `_resetLoop` deliberately leaves pause state alone, so the
+   * park's own `stopProcessing()` survived and the queue sat stopped with the
+   * cursor at 0 — even for a player who had ticked the box.
+   *
+   * ON-direction only, deliberately (user 2026-07-25). Flag off keeps today's
+   * behaviour exactly: the queue stops, as it always has. Making that an
+   * explicit pause to match `_maybeResetForOOM` would change what every
+   * default-config player sees after a mana-out in hand-play, and buys
+   * nothing they can act on — stopped and paused both mean "press Start".
+   *
+   * Step mode is excluded for the same reason `_maybeResetForOOM` excludes it:
+   * the reset IS the step's terminal event. A user pause is excluded by
+   * `_beginProcessing`, which bails on `isPaused`.
+   */
   _handleManualWake_mana() {
     if (!this._manualActionEntered) return;
     if (!this.currentAction) return;
@@ -2974,6 +2995,7 @@ export class LoopState {
     // (manaDebt) instead.
     if (gs.noManaDepletionReset) return;
     this._resetLoop();
+    if (this.autoRestartQueue && !this._stepMode) this.resumeProcessing();
   }
 
   /**
@@ -3544,9 +3566,17 @@ export class LoopState {
    *
    * THE RESUME IS UNCONDITIONAL, matching `_handleBotWake_regionChanged`'s
    * `fromReset` branch (M6) rather than `_maybeResetForOOM`, which honours
-   * `autoRestartQueue`. That flag defaults to off, so honouring it here would
-   * make multi-run replays a behaviour users had to find a checkbox for.
-   * Revisiting that is a standing follow-up, not a slice-4b decision.
+   * `autoRestartQueue`. RULED 2026-07-25 (loop-recording.md,
+   * "`autoRestartQueue` governs the resets loops OWNS"): the flag governs a
+   * depletion reset loops itself owns. This one belongs to the SUBSTRATE —
+   * it has already happened, the fork has already restarted and the player
+   * has already been teleported, so declining to resume prevents nothing and
+   * only desynchronises the queue from a running game (and, because
+   * `livePlayRegion()` is null while paused, makes the strict gate answer
+   * `paused` to the player's own hand-play). Nor does an "in-flight replay
+   * or bot walk is implicit consent" carve-out help: on these substrates
+   * Manual and Record span runs exactly as Playback and Bot do, so the
+   * exemption would swallow the rule.
    *
    * `resumeProcessing()` (not `startProcessing()`) because the cursor is
    * already at 0 and the resume path skips the `processingStarted` publish —

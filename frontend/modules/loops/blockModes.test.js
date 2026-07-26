@@ -920,6 +920,57 @@ describe('M3b — loops-owned coarse capture + live-play economy', () => {
     expect(loopState._manualActionEntered).toBe(false);
     expect(loopState._recordingBlock).toBeNull();
     expect(loopState._liveCaptureBuffer).toEqual([]);
+    // ...and with auto-restart off (the default) the queue is left stopped:
+    // the park's own stopProcessing() survives a reset that deliberately does
+    // not touch pause state. Unchanged behaviour, pinned so the ON case below
+    // is visibly a difference and not the ambient state.
+    expect(loopState.autoRestartQueue).toBe(false);
+    expect(loopState.isProcessing).toBe(false);
+  });
+
+  // The Manual/Record live-play mana wake is a depletion reset LOOPS OWNS —
+  // its spend is _chargeLiveAction's — so autoRestartQueue governs it, like
+  // the frame OOM check and the drain tick's. It honoured the flag in neither
+  // direction until 2026-07-25; the ON direction is what a player who ticked
+  // the box asked for. (The substrate-driven reset is a different owner and
+  // stays unconditional — loop-recording.md, "autoRestartQueue governs the
+  // resets loops OWNS".)
+  it('with auto-restart ON the same depletion resumes the queue from index 0', () => {
+    loopState.autoRestartQueue = true;
+    park('record');
+    loopState.observeParkedLiveAction({ type: 'explore', regionName: 'A' });
+    gs.currentMana = 60;
+    loopState.observeParkedLiveAction({ type: 'locationCheck', locationName: 'Expensive', regionName: 'A' });
+
+    expect(gs.getCurrentMana()).toBe(gs.getMaxMana());
+    expect(loopState._manualActionEntered).toBe(false);
+    expect(loopState.isProcessing).toBe(true);
+    expect(loopState.isPaused).toBe(false);
+    expect(loopState.currentActionIndex).toBe(0);
+  });
+
+  it('auto-restart does NOT revive a step or a user pause', () => {
+    // Both exclusions match _maybeResetForOOM: the reset is a step's terminal
+    // event, and a user pause outranks the checkbox (_beginProcessing bails
+    // on isPaused).
+    loopState.autoRestartQueue = true;
+    loopState._stepMode = true;
+    park('record');
+    gs.currentMana = 60;
+    loopState.observeParkedLiveAction({ type: 'locationCheck', locationName: 'Expensive', regionName: 'A' });
+    expect(loopState.isProcessing).toBe(false);
+
+    // The user pause is enforced one level down, so drive the wake directly:
+    // park, pause, empty the pool, wake. (Going through observeParkedLiveAction
+    // could not reach it — livePlayRegion() is null while paused, so nothing
+    // would be charged and nothing would deplete.)
+    loopState._stepMode = false;
+    park('record');
+    loopState.isPaused = true;
+    gs.currentMana = 0;
+    loopState._handleManualWake_mana();
+    expect(loopState._manualActionEntered).toBe(false); // the reset still ran
+    expect(loopState.isProcessing).toBe(false);
   });
 
   it('fine-grained substrates (with a recorder) are exempt from loops-side charging and buffering', () => {
