@@ -2202,6 +2202,44 @@ are COMPLETE and pushed.** Next in order:
 3. **X2 — hardening** (S4-census-driven logic-inertness enforcement;
    balancing-aware placement aspiration).
 
+## 5c. Region atlas — real-game maps as procgen regions (arc opened 2026-07-26, post-dates this doc)
+
+Design FULLY RULED in one Fable session 2026-07-26; the durable ruling set,
+schema sketch, and phase plan are in **`CC/docs/plans/region-atlas-plan.md`
+(read it FIRST — it records the rejected alternatives too, don't re-litigate)**.
+One-line summary: per-game "region atlas" document (jta-dataset pattern:
+content-hash id, restamp-on-edit) describing a real game's map as physical
+regions with logical sub-region subgraphs, sided + teleporter exits, entrance
+spawn tiles, and located vanilla items; three compiled projections (vanilla
+rules.json → top-down, sphere-sorter via an `atlasDoc` substrateConfig seam,
+play-time `playable_payload` binding). Seedling first, RWK second, staged bots
+last.
+
+**KICKOFF READY — Phase 1: atlas schema + validator + fixture (Opus-safe,
+independent of every other queue item).**
+- Deliverables: `frontend/schema/region-atlas.schema.json`; a validator module
+  (structural checks; content-hash stamp/restamp; referential integrity —
+  every exit/location `sub_region` must exist, every sub_region reachable in
+  its subgraph); a tiny hand-written 2–3-region Seedling atlas fixture; vitest
+  coverage. Settle open question 1 (sub-region AP naming, `__` compound vs
+  flat) here — it shapes the fixture.
+- Anchors (RECON FIRST — verify each before building on it):
+  `frontend/modules/procgenPipeline/regionLibraryValidator.js` +
+  `frontend/schema/region-library.schema.json` are the validator/identity
+  precedent (FNV-1a content hash over sorted-key JSON minus
+  provenance/identity fields; validator authoritative, schema
+  documentation-grade — mirror that split);
+  `frontend/modules/jtaSubstrateWrapper/datasetValidator.js` +
+  `frontend/schema/jta-dataset.schema.json` are the per-game-document
+  precedent. Access rules in the atlas are ordinary Rule Builder trees.
+- Traps: if the validator lands as a new frontend module it must be added to
+  `__BUNDLED_MODULES__` in init-bundled.js; pure-validator tests belong in
+  vitest, not the in-app suite; atlas docs live beside the game's wrapper
+  (jta `datasets/` precedent), NOT in `frontend/region-libraries/`.
+- Phases 2+ (marking tool, projections, transitions, sorter, RWK, bots) stay
+  Fable-or-later until Phase 1's format is real; see the plan doc's phase
+  list.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
@@ -2229,4 +2267,6 @@ Cavernous Stage 2 (hooks/managed) ──► v0 substrate ──► Stage F (pool
 world-persistence P1–P4 (independent)
 block modes M1 ──► M2 ──► M3 ──► M4 ──► M5 ──► M6 (solver rename) ──► omsi arc D ──► arc E/F; omsi instant LAST
 (M1–M5 all SHIPPED 2026-07-21/23; M6 is next)
+region atlas Phase 1 (kickoff ready, independent) ──► marking tool ──► Seedling
+  projection/transitions ──► sorter pre-pass / RWK ──► staged bots (§5c)
 ```
