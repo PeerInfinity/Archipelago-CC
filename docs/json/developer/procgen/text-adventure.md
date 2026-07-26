@@ -4,8 +4,14 @@ The text-adventure substrate (id `text_adventure`) renders a procgen region as p
 
 Two modules implement the same substrate id (first registration wins — see [Gotchas](./gotchas.md#two-text-adventure-modules-register-the-same-substrate-id)):
 
-- **`textAdventureSubstrateWrapper`** — the **enabled** path: an iframe-hosted engine with a host↔iframe bridge.
-- **`textAdventureSubstrate`** — the direct-panel variant, disabled in the default module config.
+- **`textAdventureSubstrateWrapper`** — the **surviving** module: an iframe-hosted engine with a host↔iframe bridge.
+- **`textAdventureSubstrate`** — the direct-panel variant, **deprecated 2026-07-26**. Disabled in every module config but one, and absent from `__BUNDLED_MODULES__` entirely.
+
+### Why the deprecated module is still here
+
+`?mode=textadventure` — the [documented live demo](../../games/text-adventure/README.md) — plays a **non-procgen** preset, and the wrapper's *panel* cannot serve that: it covers itself with `SubstrateInactiveOverlay` ("No procgen substrate is active for the current region") whenever `procgenPlayer` reports no active substrate, which is always without a procgen world. The wrapper's *bridge* is fine — it builds the engine world straight from `staticData.regions` with the sidecar filter bypassed, and renders that preset's prose correctly behind the overlay. So the gap is one panel predicate, not a missing capability. Migrating that mode also needs its `layout_presets.json` component type swapped and `iframeAdapter` enabled in `modules-textadventure.json`.
+
+Until then the mode is **dev-only in practice**: the deprecated module is not bundled, so the deployed site's `?mode=textadventure` shows a dead "Waiting for region…" panel, and only local dev (or `?dev`) gets the working direct panel.
 
 ## The engine (`frontend/modules/textAdventureEngine/` — git submodule)
 

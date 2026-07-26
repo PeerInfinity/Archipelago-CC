@@ -1,4 +1,8 @@
 /**
+ * ⚠ DEPRECATED (2026-07-26) along with the rest of this module — see
+ * index.js. `textAdventureSubstrateWrapper`'s entry is the survivor;
+ * this one declares strictly less (no record/playback/instant).
+ *
  * Text Adventure substrate library — registry entry composing
  * adapter primitives. The text-adventure substrate reuses the
  * tile-grid generator / placer / extractor / serializer / deserializer
@@ -47,8 +51,11 @@ export const substrateRegistryEntry = Object.freeze({
     // is mounted.
     getPlaybackController: () => getPanelInstance()?.getPlaybackController?.() ?? null,
 
-    // Loop-mode capabilities — mirrors the wrapper entry (same id,
-    // whichever registers first wins): manual yes, custom queues no.
+    // Loop-mode capabilities. A SUBSET of the wrapper's entry (same id,
+    // whichever registers first wins, and the wrapper "loses gracefully"
+    // when both are enabled): same queue verbs, manual yes, custom
+    // queues no — but no record/playback/instant. That delta is why a
+    // half-migrated mode config silently downgrades loop support.
     loopSupport: Object.freeze({
         queueActions: Object.freeze(['regionMove', 'locationCheck', 'explore']),
         manual: true,

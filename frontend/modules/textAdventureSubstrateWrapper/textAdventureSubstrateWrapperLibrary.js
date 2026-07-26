@@ -4,10 +4,15 @@
  * same loadRegionEvent) but points the panelComponentType at the
  * wrapper's iframe panel.
  *
- * Coexistence: the existing substrate and this wrapper register the
- * same id 'text_adventure'. Whichever module loads first wins; the
- * loser no-ops via the substrateRegistry.has() guard in register().
- * To test the wrapper, disable textAdventureSubstrate in modules.json.
+ * Coexistence: the deprecated textAdventureSubstrate and this wrapper
+ * register the same id 'text_adventure'. Whichever module loads first
+ * wins; the loser no-ops via the substrateRegistry.has() guard in
+ * register(). The old module loads first, so enabling BOTH silently
+ * hands it the id — and with it a loopSupport that has no
+ * record/playback/instant. Every mode config that needs a text
+ * adventure should enable this wrapper and leave textAdventureSubstrate
+ * disabled; that is already true everywhere except ?mode=textadventure
+ * (see textAdventureSubstrate/index.js for what still blocks it).
  */
 
 import {

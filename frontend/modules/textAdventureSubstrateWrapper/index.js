@@ -3,8 +3,9 @@
  * substrate (the enabled 'text_adventure' path). Mounts an iframe
  * panel that loads the synthetic Archipelago-naive text-adventure
  * engine; an in-iframe bridge.js translates host AP state into engine
- * API calls. Coexists with the disabled direct-panel
- * textAdventureSubstrate/ under the same substrate id.
+ * API calls. Supersedes the deprecated direct-panel
+ * textAdventureSubstrate/, which registers the same substrate id and
+ * is disabled everywhere except ?mode=textadventure.
  *
  * See docs/json/developer/procgen/text-adventure.md.
  */
@@ -97,9 +98,10 @@ export const moduleInfo = {
     icon: '📜',
     column: 3,
     description:
-        'Parallel text-adventure renderer driven by the synthetic engine. '
-        + 'Phase 1: standalone rules.json playback only. Coexists with '
-        + 'textAdventureSubstrate; intended to eventually replace it.',
+        'Text-adventure renderer driven by the synthetic engine in an '
+        + 'iframe. The surviving text-adventure module — supersedes the '
+        + 'deprecated textAdventureSubstrate, which registers the same '
+        + 'substrate id and wins it if both are enabled.',
     requires: ['stateManager', 'gameState', 'discovery', 'iframeAdapter'],
 };
 
