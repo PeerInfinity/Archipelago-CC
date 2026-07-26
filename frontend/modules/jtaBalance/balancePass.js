@@ -526,6 +526,45 @@ export async function runBalancePass({
         }
     }
 
+    // --- 3b. WALK-END SOLVE SWEEP -------------------------------------------
+    // An entry can COMPLETE before its solve ever fires: released, then
+    // finished organically inside the boundary fallback's >=2-run guard,
+    // without a fresh rep-start in between. The fork's first-start hook is
+    // gated on `reps == 0 && progress == 0` (simulation.ts
+    // applyTaskRepStartEffects), so a task already under way when it was
+    // released does not trigger it, and the completion arrives first.
+    //
+    // MID-WALK that heals itself, which is why the measured batch reports
+    // completedUnsolved: 0 — reps reset every run, so the next run replays the
+    // task from a fresh start and first-start assigns the cost then. What does
+    // NOT heal is an entry completing on the walk's LAST runs: the loop exits,
+    // no further run ever starts it, and the task keeps its Pass-A provisional
+    // multiplier while being replayed at that price every run thereafter.
+    //
+    // So give those entries the run they were short of. Tick to the next
+    // boundary with the callbacks still installed — first-start solves them
+    // the organic way if they start — and solve whatever is still pending
+    // there: full pool at zone 0, the same context the boundary fallback uses
+    // and the context a replay actually begins from. Solving inline in the
+    // completion callback was the originally filed candidate; it is avoided
+    // deliberately, because solveCostMultiplier patches the very task
+    // definition the sim is mid-completion on (the reason the first-start hook
+    // carries a reentrancy guard) and would price the replay against
+    // post-completion energy rather than a run's real starting budget.
+    //
+    // Inert when nothing is pending, which is the normal case: no ticks, no
+    // solves, no change to `run` and therefore none to `totalResets`.
+    const pendingCompleted = () => entryReports
+        .map((r, k) => ({ r, k }))
+        .filter(({ r }) => r.solvedRun == null && !r.stalled && r.completedRun != null
+            && pendingEntry.has(r.taskId));
+    if (pendingCompleted().length) {
+        // Bounded by the stepper itself: a run ends at DEFAULT_MAX_TICKS_PER_RUN
+        // or DEFAULT_MAX_IDLE_TICKS whichever comes first, so this terminates.
+        while (!tick());
+        for (const { r, k } of pendingCompleted()) solveEntry(r.taskId, k, 'walk-end');
+    }
+
     win.setTaskFirstStartCallback(null);
     win.setTaskCompletionCallback(null);
     win.setCostedTaskIds(null);
@@ -583,12 +622,13 @@ export async function runBalancePass({
             unengagedMilestones: entryReports
                 .filter((r) => r.unengaged && r.completedRun == null && r.milestone).length,
             unengagedCostMultiplier: unengagedCm,
-            // An entry can COMPLETE before its solve fires: released, then
-            // finished organically within one run — inside the boundary
-            // fallback's >=2-run guard — so first-start never assigned a
-            // cost and the task keeps its Pass-A provisional multiplier.
-            // Coverage is unaffected (it completed); the replay economy
-            // carries one unsolved cost. Split from neverStarted so the
+            // An entry that COMPLETED before its solve fired and never got
+            // one. Both escape routes now close it — the next run's replay
+            // starts it fresh and first-start assigns the cost, and the
+            // walk-end sweep covers the entries that completed too late for
+            // that — so this should read 0. Kept as the TRIPWIRE for both:
+            // a non-zero here means an entry is being replayed forever at its
+            // Pass-A provisional multiplier. Split from neverStarted so the
             // convergence bar only fails on entries that truly never ran.
             completedUnsolved: entryReports
                 .filter((r) => r.solvedRun == null && !r.stalled && r.completedRun != null).length,
