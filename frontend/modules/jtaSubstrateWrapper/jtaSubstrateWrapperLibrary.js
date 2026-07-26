@@ -573,9 +573,14 @@ export const substrateRegistryEntry = Object.freeze({
     //     play (Manual behavior) — the walkTo/delegation auto chain is
     //     unreachable from Playback until M6's Bot radio (executeVia stays
     //     declared for that future path + the current pre-record flows).
-    //   - instant: DECLARED — a Playback block drains its recorded script in
-    //     one frame via the fork's stepTick pump (setInstantMode + drive
-    //     stepTick while the game loop is unpaused).
+    //   - instant: DECLARED — a Playback block drains its recorded script via
+    //     the bridge's stepTick PUMP (fast batches of the fork's normal tick
+    //     while the game loop is unpaused), NOT the fork's setInstantMode.
+    //     setInstantMode ignores GAMESTATE.repeat_tasks and so completes every
+    //     remaining rep of a task, which over-performs any recording holding a
+    //     partial rep-run; a Bot block, having no recording to be unfaithful
+    //     to, does use setInstantMode. Measured differential + numbers:
+    //     bridge.js's pump comment and docs/json/developer/procgen/jta.md.
     //   - customQueues stays false — the queue panel (port arc Phase 3b) is
     //     deferred; flip it when that lands (user ruling 2026-07-23).
     //   - requiresLoopMode: DECLARED — a general contract flag (not a jta

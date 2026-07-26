@@ -65,8 +65,12 @@ settled M4 design rulings — don't re-litigate those).
 - `bridge.js`: `crossExit(exitName)` (stable-exit departure, `fromLoop:true`,
   resolves target from `_world.exits`) + an energy-respecting instant
   `stepTick` pump (`startInstantPump`/`stopInstantPump`; NOT the
-  affordability-blind `setInstantMode` flag — matches the jtaDatasetTests
-  pump discipline).
+  `setInstantMode` flag — matches the jtaDatasetTests pump discipline).
+  ⚠ The original reason (`setInstantMode` was affordability-blind) was fixed
+  in fork `8383af0`, but the pump STAYS: `setInstantMode` ignores
+  `repeat_tasks` and completes every remaining rep, over-performing any
+  recording that holds a partial rep-run. Measured 2026-07-26; see
+  `docs/json/developer/procgen/jta.md` §"Block modes".
 - `jtaQueueEngine.js`: `replayRecording(actions, {onComplete})` — transient
   executor over the recorded queue (the `drain()` precedent; `drainEnabled:
   false` → exhaust fires `onQueueExhausted`).

@@ -1014,8 +1014,9 @@ function heldPerks(win) {
 
 /**
  * Run one task to full completion under NORMAL ticking (never Instant Mode,
- * whose completeTaskInstantly is affordability-blind). Energy is topped up as
- * we go, so affordability is never the thing under test here.
+ * which ignores GAMESTATE.repeat_tasks and so completes EVERY remaining rep at
+ * once — fork 8383af0 fixed its affordability blindness, not that). Energy is
+ * topped up as we go, so affordability is never the thing under test here.
  *
  * getAvailableTasks() filters out `reps >= max_reps`, so a task DROPPING OUT of
  * the list is what full completion looks like from here.

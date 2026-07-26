@@ -2039,17 +2039,41 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    where paced spent 36). Paced-vs-instant now agree on reps, run state
    and progress to four decimals across an energy sweep; negative
    control flags 4/4 pre-fix.
-   ⇒ **TODO — switch jta Playback from `startInstantPump` to
-   `setInstantMode`** (`jtaSubstrateWrapper/bridge.js`, `_startInstantPump`
-   / the `case 'instant'` control). The pump exists ONLY because
-   `setInstantMode` used to be affordability-blind; that premise is now
-   void, so the pump is retained for being working tested code, not for
-   safety. `setInstantMode` would be simpler and faster (one tick vs
-   50-tick batches on an interval). Not done here because it touches
-   replay semantics and wants its own witness — the paced-vs-instant
-   differential is the natural one. The stale premise is already
-   annotated at the pump in bridge.js. Bot needs NO change: it already
-   uses `setInstantMode`, which is now correct.
+   ⇒ ~~**TODO — switch jta Playback from `startInstantPump` to
+   `setInstantMode`**~~ **INVESTIGATED AND DECLINED 2026-07-26. KEEP THE
+   PUMP.** The affordability premise really is void, but it was not the
+   only difference. `setInstantMode` deliberately IGNORES
+   `GAMESTATE.repeat_tasks` (the fork's one documented intended
+   divergence from paced play): it completes EVERY remaining rep of a
+   task. A recording holding a **partial rep-run** — entry `.loops` <
+   the task's remaining `max_reps`, ordinary once the player has hit
+   "Don't Repeat Tasks", a persisted per-save toggle with hotkey `R`
+   that the substrate iframe renders unconditionally — would replay as
+   MORE than was recorded. Witness: a record-then-replay differential
+   over the committed fork build, each mode in its own process, faithful
+   to the real pipeline (recorder coalesces reps → `loops`; the executor
+   re-clicks `loops` times and skips an already-completed task).
+   Measured, zone 0, 4-entry partial recording, `repeat_tasks` off, pool
+   1000: pump spends **109** energy / banks 1,1,1,1 reps / skill 0 at
+   level 14; `setInstantMode` spends **190** (+74%) / banks 1,3,1,10 /
+   skill 0 at level **72**; at pool 100 the pump completes the recording
+   while instant empties the pool, enters an energy reset and never
+   performs the last entry. On FULL-rep-run recordings, or with
+   `repeat_tasks` on (the default), the two agree EXACTLY: **39/39**
+   scenarios over an energy sweep 5..1e6 on final energy, per-task
+   reps/progress, all 12 skill levels, items, perks and the fork's run
+   log. So the pump is the only one of the two that replays a recording
+   AS RECORDED — it is a correctness choice, not legacy caution. Bot
+   needs NO change: it drives the live game with no recording to be
+   unfaithful to, and `setInstantMode` there is now doubly correct.
+   Rationale + numbers now live durably at the pump in `bridge.js` and
+   in `docs/json/developer/procgen/jta.md` §"Block modes".
+   ⇒ Small follow-up left open: three other comments still cite
+   "affordability-blind" as the reason to avoid instant mode
+   (`jtaBalance/balancePass.js`, `testCases/jtaBalanceTests.js`,
+   `testCases/jtaDatasetTests.js`). Their DECISION (normal ticking) is
+   still right — for the `repeat_tasks` reason, plus balancePass's own
+   measured fidelity argument — only the cited premise is stale.
    **INSTANT-POLICY PASS CLOSED 2026-07-26.** Slices 1 (omsi pump) / 4
    (old-TA deprecation) / 5 (features/loops.md) shipped + pushed; 2 and
    3 stay parked (the jta bug inventory is superseded in practice by the

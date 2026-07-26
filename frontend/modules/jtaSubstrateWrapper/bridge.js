@@ -43,9 +43,13 @@
  *     after a prestige, which has no task to re-run. See perkOrigin.js.
  *   - Playback control (jta:playbackControl, from the host-side
  *     PlaybackProxy): play/stop map to the game clock, step/instant to
- *     the fork's stepTick/setInstantMode, reset to doEnergyReset, and
- *     walkTo(exit) designates the exit to take once the zone's Travel
- *     task completes — the zone itself is played by the game's OWN
+ *     the fork's stepTick/setInstantMode, reset to doEnergyReset. Two
+ *     DIFFERENT fast-forwards live here on purpose: `instant`
+ *     (→ setInstantMode) is the BOT path, and `startInstantPump` /
+ *     `stopInstantPump` (fast stepTick batches) is the PLAYBACK path —
+ *     see the pump's own comment for why a replay may NOT use
+ *     setInstantMode. And walkTo(exit) designates the exit to take once
+ *     the zone's Travel task completes — the zone itself is played by the game's OWN
  *     automation engine (activated for the walk under the default
  *     'activate' host setting, or left entirely to the player's
  *     automation config under 'respect'). This is what loops'
@@ -1224,17 +1228,32 @@ function _handleWalkTo(target) {
 // round-trips interleave between interval ticks; the pump only accelerates
 // completion.
 //
-// ⚠ ITS ORIGINAL REASON IS GONE (fork 8383af0, 2026-07-26). The pump exists
-// because the fork's setInstantMode used to be AFFORDABILITY-BLIND — its
-// completeTaskInstantly finished and billed every remaining rep without
-// checking the pool, so a replay could complete tasks the recording could not
-// afford. completeTaskInstantly now drives the same per-tick path paced play
-// uses, and a paced-vs-instant differential agrees on reps, run state and
-// progress to four decimals. So this pump is retained for being working,
-// tested code, NOT because setInstantMode is unsafe — switching Playback to
-// setInstantMode is now a free choice and would be simpler and faster (one
-// tick vs 50-tick batches on an interval). Queued, not done: see the
-// Instant paragraph in CC/docs/plans/fable-to-opus-handoff-2026-07.md.
+// ⚠ DO NOT "SIMPLIFY" THIS INTO setInstantMode. Its ORIGINAL reason is indeed
+// gone (fork 8383af0, 2026-07-26): setInstantMode's completeTaskInstantly used
+// to be AFFORDABILITY-BLIND — it finished and billed every remaining rep
+// without checking the pool — and now drives the same per-tick path paced play
+// uses, stopping when energy runs out. But a SECOND difference survives and is
+// what keeps this pump: setInstantMode deliberately IGNORES
+// GAMESTATE.repeat_tasks. It completes EVERY remaining rep of a task; that is
+// what instant mode IS, and it is the fork's one documented intended
+// divergence from paced play. A recording holding a PARTIAL rep-run (entry
+// .loops < the task's remaining max_reps — ordinary once the player has hit
+// "Don't Repeat Tasks", a persisted per-save toggle with hotkey R that the
+// substrate iframe renders unconditionally) would then replay as MORE than was
+// recorded.
+//
+// Measured (record-then-replay differential, zone 0, 4-entry partial
+// recording, repeat_tasks off, pool 1000): this pump spends 109 energy and
+// banks 1/1/1/1 reps; setInstantMode spends 190 (+74%), banks 1/3/1/10, and
+// takes skill 0 to level 72 instead of 14. On full-rep-run recordings, or with
+// repeat_tasks on (the default), the two agree EXACTLY — 39/39 scenarios over
+// an energy sweep 5..1e6 on final energy, per-task reps/progress, all 12 skill
+// levels, items, perks and the fork's own run log.
+//
+// So: the pump is the only one of the two that replays a recording AS
+// RECORDED. The Bot path (case 'instant' below) uses setInstantMode and is
+// right to — it drives the live game, with no recording to be unfaithful to.
+// Rationale + numbers: docs/json/developer/procgen/jta.md, "Block modes".
 let _instantPumpId = null;
 const INSTANT_PUMP_BATCH = 50;
 
