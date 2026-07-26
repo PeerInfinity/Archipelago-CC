@@ -171,9 +171,17 @@ The gate has the same shape as the step gate: it withholds `m.step()` only, and 
 
 Net measured rate: **~1 productive Wander per 6–7 host round trips.** Size anything that waits on a bot against the round-trip rate, never against fork loops.
 
-### Known issue: the planner's threshold probe reads the wrong view of level
+### The threshold probe speaks RAW level (post-D2 cleanup)
 
-`planner.js` perturbs candidate dimensions to discover which ones drive a capacity, reading levels through `getLevel` (the **effective** view under a rescale) but writing exp back through a **raw**-level formula. It restores the snapshot exactly, so nothing is corrupted and no state leaks — but under a compressed region the probe explores levels the stored exp could never reach, so its answers are miscalibrated. Heuristic quality, not correctness, and deliberately left out of a byte-gated fork slice. If bot behaviour near a threshold ever looks wrong in a split region, look here first.
+`plProbeThresholds` discovers what gates a locked action by perturbing one dimension at a time and re-evaluating `visible() && unlocked()`. It used to **read** levels through `getLevel` (the effective view) while **writing** exp back through a raw-level formula. Invisible in vanilla, where the two ladders coincide; wrong under a rescale, where the effective level it read became the lower bound of a binary search whose steps are raw levels.
+
+Measured on a 10-level region holding raw Wander 1 (effective 10): every Wander gate answered `need: 11` — one above its own floor, above a cap of 10, and **identical for gates that are raw levels apart**. Unreachability was the visible half; the lost resolution was the damaging half, because `rankFrontierDims` and the unlock-fraction scorer rank dims by how close `need` is.
+
+The probe now speaks raw on both sides: `getRawLevel` to read, `Town.expForLevel` to write, and the search ceiling is the region's own `regionMaxLevel` rather than a flat 100, so it only ever visits states the save can hold. **Raw is the view that survives the round trip** — `reqFraction` converts `need` straight back to exp on the raw curve, so any other unit would have to be undone again downstream. `test()` stays effective-driven (that is what the predicates read) and effective is monotone in raw, so the searches themselves are unchanged. The same state now answers 2 / 2 / 3 / 2 for Buy Glasses / Buy Mana Z1 / Meet People / Pick Locks, all inside the cap. Vanilla is byte-identical by construction (`regionMaxLevel` is 0 ⇒ raw ≡ effective, ceiling 100); the V0 reference is the gate on that claim, and `test/planner.test.mjs` pins both the compressed answers and the vanilla control.
+
+`plProbePoolCap` reads and writes **raw** on purpose and was left alone: its read side is `total<Var>`, a `<totalDiscovered>` consumer, which *is* the raw view — and its MAXP bump deliberately overshoots a compressed region's ceiling, because it is a Δ>0 sensitivity test, not a reachability claim.
+
+Still open, smaller: `reqFraction` converts a progress `need` to exp on the **quadratic** curve unconditionally, so a linear-scaled progress dim's fraction is wrong. The only linear progress var is town 8's `BuildTower`, far outside anything the substrate reaches, so it is recorded here rather than fixed inside a byte-gated slice.
 
 ### No AP award fires under a Bot in a split fixture
 
