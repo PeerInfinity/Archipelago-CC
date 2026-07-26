@@ -65,3 +65,39 @@ describe('SphereState metadata retention', () => {
         expect(full).toEqual(s.rawData);
     });
 });
+
+// One multiworld log, two players' slices in every sphere.
+const MULTIWORLD_LOG = [
+    JSON.stringify({
+        type: 'state_update', sphere_index: '0',
+        player_data: {
+            1: {
+                new_inventory_details: { base_items: { Sword: 1 }, resolved_items: {} },
+                new_accessible_regions: ['P1 Menu'],
+            },
+            2: {
+                new_inventory_details: { base_items: { Boots: 1 }, resolved_items: {} },
+                new_accessible_regions: ['P2 Menu'],
+            },
+        },
+    }),
+].join('\n');
+
+describe('SphereState.setCurrentPlayerId', () => {
+    it('re-filters the retained log instead of re-fetching the path', async () => {
+        const s = new SphereState(null);
+        s.setCurrentPlayerId('1');
+        // Pre-loaded content: the "path" is a bare file name, exactly as it is
+        // for a manually uploaded log — a re-fetch would 404 and leave the
+        // sphere data stale.
+        await s.loadSphereLog('AP_1_sphere_log.jsonl', MULTIWORLD_LOG);
+
+        expect(s.sphereData[0].inventoryDetails.base_items).toEqual({ Sword: 1 });
+        expect(s.sphereData[0].accessibleRegions).toEqual(['P1 Menu']);
+
+        s.setCurrentPlayerId('2');
+
+        expect(s.sphereData[0].inventoryDetails.base_items).toEqual({ Boots: 1 });
+        expect(s.sphereData[0].accessibleRegions).toEqual(['P2 Menu']);
+    });
+});

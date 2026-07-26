@@ -86,7 +86,9 @@ import stateManagerProxySingleton from './stateManagerProxySingleton.js';
 // REMOVE: import { createSnapshotInterface } from './stateManagerProxy.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import settingsManager from '../../app/core/settingsManager.js';
-import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
+// Player-ID selection (including the DEFAULT_PLAYER_ID fallback) lives in
+// utils/playerInference.js so the presets UI and this module agree.
+import { resolvePlayerId } from '../../utils/playerInference.js';
 import { resolveFirstPresetPath } from '../../utils/presetResolver.js';
 import { FALLBACK_RULES } from '../../data/fallbackRules.js';
 import { persistLastWorld } from './worldPersistence.js';
@@ -386,38 +388,44 @@ async function postInitialize(initializationApi, moduleSpecificConfig = {}) {
       }
     }
 
-    const playerIds = Object.keys(rulesConfigToUse.player_names || {});
     const playerNames = rulesConfigToUse.player_names || {};
 
     if (!playerIdToUse) {
-      // For multiworld: Try game_info field to identify this player's rules file
-      // In multiworld, game_info has a single key matching the player ID
-      if (rulesConfigToUse.game_info) {
-        const gameInfoKeys = Object.keys(rulesConfigToUse.game_info);
-        if (gameInfoKeys.length === 1) {
-          playerIdToUse = gameInfoKeys[0];
-          logger.info(
-            moduleInfo.name,
-            `[StateManager Module] Detected multiworld player ID from game_info: ${playerIdToUse}`
-          );
-        }
-      }
-
-      // Fallback to first player from player_names if game_info didn't work
-      if (!playerIdToUse) {
-        if (playerIds.length === 0) {
+      // Infer from the source name (a _P<N>_rules.json slice names its
+      // player) or from a game_info map holding a single player. UI callers
+      // ask the user when this comes back ambiguous; here — the programmatic
+      // path — we still have to pick something, so pick loudly.
+      const resolved = resolvePlayerId(
+        sourceNameForTheseRules,
+        rulesConfigToUse
+      );
+      if (resolved.playerId !== null) {
+        playerIdToUse = resolved.playerId;
+        if (resolved.reason === 'noPlayers') {
           logger.warn(
             moduleInfo.name,
-            `[StateManager Module] No players found in rules data. Defaulting to player ${DEFAULT_PLAYER_ID}.`
+            `[StateManager Module] No players found in rules data. Defaulting to player ${playerIdToUse}.`
           );
-          playerIdToUse = DEFAULT_PLAYER_ID;
         } else {
-          playerIdToUse = playerIds[0];
           logger.info(
             moduleInfo.name,
-            `[StateManager Module] Auto-selected player ID from rules: ${playerIdToUse}`
+            `[StateManager Module] Player ID ${playerIdToUse} determined from rules (${resolved.reason}).`
           );
         }
+      } else {
+        // Several players and nothing identifies one. Guessing is how the
+        // "website only ever shows the first game" bug looked, so name the
+        // guess and the alternatives.
+        playerIdToUse = resolved.players[0].id;
+        const available = resolved.players
+          .map((p) => `${p.id} (${p.name}${p.game ? `, ${p.game}` : ''})`)
+          .join(', ');
+        logger.warn(
+          moduleInfo.name,
+          `[StateManager Module] Multiworld rules '${sourceNameForTheseRules}' describe ${resolved.players.length} players and none was requested. ` +
+            `Guessing player ${playerIdToUse}. Available players: ${available}. ` +
+            `Load a per-player _P<N>_rules.json file, or pass playerId, to choose a different one.`
+        );
       }
     }
     playerInfo = {

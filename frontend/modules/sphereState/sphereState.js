@@ -384,12 +384,44 @@ export class SphereState {
       log('info', `Setting current player ID to: ${newId}`);
       this.currentPlayerId = newId;
 
-      // If we have sphere data, re-filter it for the new player
-      if (this.sphereLogPath) {
-        // Trigger reload to re-filter for new player
-        this.loadSphereLog(this.sphereLogPath);
+      // Re-filter the log we already hold for the new player. This used to
+      // re-fetch this.sphereLogPath, which only works for logs loaded from
+      // the server: a manually uploaded log's "path" is just the file name,
+      // so the fetch 404'd and the sphere data was silently left stale.
+      if (this.rawData && this.rawData.length > 0) {
+        this._reparseForCurrentPlayer();
       }
     }
+  }
+
+  /**
+   * Re-derive sphereData from the retained raw entries for the current
+   * player. Used when the player changes after the log was loaded — no
+   * re-fetch, and the header/metadata entries are preserved.
+   * @private
+   */
+  _reparseForCurrentPlayer() {
+    this.sphereData = [];
+
+    if (this.logFormat === 'incremental') {
+      this._parseIncrementalFormat(this.rawData);
+    } else {
+      this._parseVerboseFormat(this.rawData);
+    }
+
+    this.sphereData.sort(compareSphereIndices);
+    log('info',
+      `Re-filtered ${this.sphereData.length} sphere entries for player ${this.currentPlayerId}`
+    );
+
+    if (this.eventBus) {
+      this.eventBus.publish('sphereState:dataLoaded', {
+        sphereCount: this.sphereData.length,
+        filePath: this.sphereLogPath
+      });
+    }
+
+    this.updateCurrentSphere();
   }
 
   /**

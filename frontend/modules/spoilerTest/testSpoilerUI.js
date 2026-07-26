@@ -20,6 +20,7 @@ import { AnalysisReporter } from './analysisReporter.js';
 import { EventProcessor } from './eventProcessor.js';
 import { TestOrchestrator } from './testOrchestrator.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
+import { inferPlayerIdFromFileName } from '../../utils/playerInference.js';
 
 const logger = createUniversalLogger('testSpoilerUI');
 
@@ -437,9 +438,9 @@ export class TestSpoilerUI {
 
       // Extract playerId from multiworld rules filename (e.g., "AP_xxx_P2_rules.json")
       if (rulesetPath && this.playerId === null) {
-        const playerIdMatch = rulesetPath.match(/_P(\d+)_rules\.json$/);
-        if (playerIdMatch) {
-          this.playerId = parseInt(playerIdMatch[1], 10);
+        const inferredPlayerId = inferPlayerIdFromFileName(rulesetPath);
+        if (inferredPlayerId) {
+          this.playerId = parseInt(inferredPlayerId, 10);
           this.log('info', `Extracted playerId ${this.playerId} from multiworld rules filename: ${rulesetPath}`);
         }
       }
