@@ -10,6 +10,28 @@ import {
   isDiscoveryComplete,
 } from './testDiscovery.js';
 
+// Wall-clock budget for a whole auto-started run. When it expires the run is
+// abandoned mid-roster, so this is a CAP ON THE SUITE, not a per-test timeout:
+// tests after the cut never start and never appear in testDetails at all. The
+// completion flags are still published (Playwright would otherwise hang), which
+// is exactly why the roster accounting below has to travel with them — a
+// truncated run is green in every other respect.
+export const AUTO_START_TIMEOUT_MS = 600000;
+
+/** Thrown when AUTO_START_TIMEOUT_MS expires, so the budget case is typed
+ *  rather than matched on message text. */
+export class AutoStartTimeoutError extends Error {
+  constructor(timeoutMs) {
+    super(`Auto-start timeout after ${Math.round(timeoutMs / 1000)} seconds`);
+    this.name = 'AutoStartTimeoutError';
+    this.timeoutMs = timeoutMs;
+  }
+}
+
+// A test that reached one of these is done; anything else was still pending or
+// mid-flight when results were published.
+const TERMINAL_TEST_STATUSES = new Set(['passed', 'failed']);
+
 // Helper function for logging with fallback
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -530,7 +552,10 @@ export const testLogic = {
           await Promise.race([
             this.runAllEnabledTests(),
             new Promise((_, reject) => {
-              setTimeout(() => reject(new Error('Auto-start timeout after 600 seconds')), 600000);
+              setTimeout(
+                () => reject(new AutoStartTimeoutError(AUTO_START_TIMEOUT_MS)),
+                AUTO_START_TIMEOUT_MS
+              );
             })
           ]);
         } catch (error) {
@@ -554,7 +579,13 @@ export const testLogic = {
             passedCount: passedTests.length,
             failedCount: failedTests.length,
             failedConditionsCount: failedConditions,
-            error: error.message
+            error: error.message,
+            // Distinguishes "the suite ran out of wall clock" from any other
+            // auto-start failure. Without it the two are one opaque string,
+            // and the budget is the case that needs its own answer (split the
+            // roster / raise the budget), not a debugging session.
+            timedOut: error instanceof AutoStartTimeoutError,
+            timeoutMs: error instanceof AutoStartTimeoutError ? AUTO_START_TIMEOUT_MS : undefined,
           };
           this._setPlaywrightCompletionFlags(summary, tests);
         }
@@ -999,8 +1030,24 @@ export const testLogic = {
           };
         });
 
+      // Roster accounting, attached on EVERY completion path rather than only
+      // the timeout one — a run can be cut short by any thrown error, and the
+      // tests it never reached are invisible to every other signal here (they
+      // are absent from testDetails, so counting what IS there can never
+      // reveal them). Comparing against the enabled set is the only way to see
+      // the gap from inside the payload.
+      const enabledTests = allTests.filter((test) => test.enabled);
+      const notRun = enabledTests.filter(
+        (test) => !TERMINAL_TEST_STATUSES.has(test.status)
+      );
+      const roster = {
+        enabledCount: enabledTests.length,
+        notRunCount: notRun.length,
+        notRunIds: notRun.map((test) => test.id),
+      };
+
       const playwrightResults = {
-        summary,
+        summary: { ...summary, ...roster },
         testDetails,
         completedAt: new Date().toISOString(),
       };

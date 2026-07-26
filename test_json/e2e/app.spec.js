@@ -257,8 +257,73 @@ test.describe('Application End-to-End Tests', () => {
       console.log('PW DEBUG: =========================================\n');
     }
 
+    // Truncation guard. The in-app runner races the whole suite against a
+    // wall-clock budget (testLogic.js AUTO_START_TIMEOUT_MS); when it expires
+    // the catch path still publishes completion flags, so a run that never
+    // reached the end of its roster used to satisfy every assertion below and
+    // print "All Playwright assertions passed". Silence is not success: assert
+    // the roster was FINISHED, not merely that what ran was green.
+    //
+    // Three independent signals, because each can appear alone: summary.error
+    // (the runner recorded why it stopped), a test left in 'running' (cut off
+    // mid-test), and notRunCount (enabled tests the runner never reached —
+    // these are absent from testDetails entirely, so they are invisible to
+    // every other check here).
+    const stillRunning = (results.testDetails || []).filter((t) => t.status === 'running');
+    const notRunCount = results.summary.notRunCount ?? null;
+    const truncated =
+      !!results.summary.error || stillRunning.length > 0 || (notRunCount ?? 0) > 0;
+
+    if (truncated) {
+      console.log('\nPW DEBUG: ===== IN-APP RUN DID NOT FINISH ITS ROSTER =====');
+      if (results.summary.error) {
+        console.log(`  runner stopped because: ${results.summary.error}`);
+      }
+      if (results.summary.timedOut) {
+        console.log(
+          `  cause: the suite's wall-clock budget (${results.summary.timeoutMs / 1000}s) expired`
+          + ' — split the roster or raise AUTO_START_TIMEOUT_MS in testLogic.js'
+        );
+      }
+      if (results.summary.enabledCount != null) {
+        console.log(
+          `  roster: ${results.summary.totalRun}/${results.summary.enabledCount} enabled tests completed`
+          + (notRunCount ? ` — ${notRunCount} did not` : '')
+        );
+      }
+      for (const t of stillRunning) {
+        const secs = t.durationMs != null ? ` (${(t.durationMs / 1000).toFixed(1)}s in)` : '';
+        console.log(`  CUT OFF MID-TEST: ${t.id}${secs}`);
+      }
+      const neverStarted = (results.summary.notRunIds || [])
+        .filter((id) => !stillRunning.some((t) => t.id === id));
+      if (neverStarted.length > 0) {
+        console.log(`  NEVER STARTED (${neverStarted.length}): ${neverStarted.join(', ')}`);
+      }
+      console.log(`  machine at truncation: ${loadSnapshot()}`);
+      console.log('  NOTE: the tests that did run may all be green — that is not a pass.');
+      console.log('PW DEBUG: ================================================\n');
+    }
+
     // The test system should complete successfully regardless of whether tests run
     expect(results.summary.failedCount).toBe(0);
+
+    // Fail the run when the roster was not finished. Kept after failedCount so
+    // a genuinely-failing test still reports as a test failure first.
+    expect(
+      results.summary.error ?? null,
+      'in-app runner stopped early (see "DID NOT FINISH ITS ROSTER" above)'
+    ).toBeNull();
+    expect(
+      stillRunning.map((t) => t.id),
+      'in-app run was cut off mid-test'
+    ).toEqual([]);
+    if (notRunCount != null) {
+      expect(
+        results.summary.notRunIds ?? [],
+        'enabled tests that did not complete'
+      ).toEqual([]);
+    }
     
     // If tests actually ran, they should pass
     if (results.summary.totalRun > 0) {
