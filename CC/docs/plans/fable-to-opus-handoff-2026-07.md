@@ -2013,8 +2013,16 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    ⚠ the PACED `omsi-bot-multi-reset-walk` leg's duration is
    load-dependent (measured 102–289 s; the planner is time-boxed
    worker-side) — compare-runs will keep flagging it as a duration
-   outlier; it is NOT a regression signal. REMAINING SLICES: flash
-   summary conversion, old-TA deprecation, features/loops.md line.
+   outlier; it is NOT a regression signal. REMAINING SLICES: old-TA
+   deprecation + features/loops.md line — close-out kickoff drafted
+   *(NewDocs)* `instant-pass-closeout-opus-kickoff.md` (recon verified
+   2026-07-26: default modules.json already runs the wrapper; FOUR
+   configs still enable the old module with no wrapper —
+   flash/nograph/textadventure/test-spoilers-headed — while bundled
+   mode already excludes it; ⚠ when both enabled the OLD module wins
+   the substrate id, so flips must be verified by EFFECT; delete is
+   ask-first, deprecate = flip + mark). Flash summary conversion is
+   PARKED out of the pass (Seedling Stage 2).
    **ARC F DESIGN SKETCH RULED (Fable + user, 2026-07-25):** the panel
    queue editor starts with **omsi** — its recording IS the game's own
    authored queue, and both conversions already round-trip through the
