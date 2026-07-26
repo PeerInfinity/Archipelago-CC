@@ -47,6 +47,7 @@ These modules each correspond to a UI panel that the user can interact with in t
 -   **[JSON](./json.md):** Handles saving and loading of the application's entire configuration state (modes).
 -   **[Locations](./locations.md):** Displays all game locations and their real-time accessibility status.
 -   **[Loops](./loops.md):** The main UI panel for the Archipelago Loops incremental game mode.
+-   **[Loops Cost Debugger](./loopsCostDebugger.md):** Step-through planner/verifier for loop-mode mana costs, and the headless path that stamps generated costs into the live store.
 -   **[Modules](./modules.md):** A panel for viewing and managing the loaded frontend modules.
 -   **[Path Analyzer Panel](./pathAnalyzerPanel.md):** A dedicated panel for running the path analysis tool.
 -   **[Game State Panel](./gameStatePanel.md):** A simple panel for displaying the player's current state (e.g., current region).

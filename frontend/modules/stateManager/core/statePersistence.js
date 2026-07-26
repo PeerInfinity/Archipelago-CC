@@ -976,6 +976,10 @@ export function getStaticGameData(sm) {
     game_directory: sm.rules?.game_directory,
     flash_panel: sm.rules?.flash_panel,
     playerId: sm.playerId, // String player ID
+    // Every player named by the rules file, not just the loaded one — UI that
+    // labels a player (cost debugger status, spoiler checklist) already reads
+    // this and was silently getting undefined.
+    player_names: sm.rules?.player_names,
     locations: sm.locations || new Map(),  // Return Map directly
     regions: sm.regions || new Map(),      // Return Map directly
     exits: sm.exits,

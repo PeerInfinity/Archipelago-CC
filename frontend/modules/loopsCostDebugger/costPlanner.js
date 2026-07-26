@@ -22,7 +22,6 @@ import {
   calculateXPGain,
 } from '../loops/xpFormulas.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
-import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 
 // =========================================================================
 // SimulatedState
@@ -180,6 +179,7 @@ export class CostPlanner {
     this._startRegion = null;
     this._adjacencyMap = null;
     this._isLoaded = false;
+    this._sphereLog = null;           // Retained so reset() can re-derive entries
 
     // State machine
     this._currentEntryIndex = 0;
@@ -191,6 +191,13 @@ export class CostPlanner {
     this._pendingCostAssignments = []; // Cost assignments for next step's reasoning
     this._defaultsAssigned = false;
     this._skippedEventEntries = 0;    // Count of event locations skipped (auto-collected)
+    this._skippedForeignEntries = 0;  // Sphere-log locations absent from THIS player's world
+    this._truncated = null;           // { limit, scope } when a plan guard tripped
+
+    // Player-slice diagnostics, filled by _extractLocationEntries
+    this._playerId = null;
+    this._playerIdError = null;
+    this._logDiagnostics = null;
 
     // Verification mode
     this._mode = 'plan';              // 'plan' or 'verify'
@@ -198,16 +205,30 @@ export class CostPlanner {
   }
 
   loadSphereLog(sphereLog) {
+    this._sphereLog = sphereLog;
     this._entries = this._extractLocationEntries(sphereLog);
-    this._plannedSteps = [];
-    this._currentEntryIndex = 0;
-    this._currentEntry = null;
-    this._phase = null;
     this._mode = 'plan';
     this._loadedCostData = null;
-    this._defaultsAssigned = false;
-    this._skippedEventEntries = 0;
+    this._deriveTopology();
+    this._resetPlanningState();
+    this._isLoaded = true;
 
+    return {
+      entryCount: this._entries.length,
+      startRegion: this._startRegion,
+      playerId: this._playerId,
+      playerIdError: this._playerIdError,
+      diagnostics: this._logDiagnostics,
+    };
+  }
+
+  /**
+   * Re-derive start region + adjacency from the CURRENT static data. Kept
+   * separate from _resetPlanningState so reset() picks up a rules reload
+   * instead of replanning against the topology of the previous world.
+   * @private
+   */
+  _deriveTopology() {
     // Get start region from snapshot (proxy doesn't expose getStartRegions)
     const snapshot = this.stateManager.getLatestStateSnapshot?.();
     const startRegions = snapshot?.startRegions || [];
@@ -215,15 +236,25 @@ export class CostPlanner {
       || this._getFirstRegion();
 
     this._adjacencyMap = this._buildStaticAdjacencyMap();
+  }
+
+  /** @private Clear everything the state machine accumulates across a run. */
+  _resetPlanningState() {
+    this._plannedSteps = [];
+    this._currentEntryIndex = 0;
+    this._currentEntry = null;
+    this._phase = null;
+    this._currentPath = null;
+    this._regionsToExplore = [];
+    this._currentExploreRegionIdx = 0;
+    this._pendingCostAssignments = [];
+    this._defaultsAssigned = false;
+    this._skippedEventEntries = 0;
+    this._skippedForeignEntries = 0;
+    this._truncated = null;
 
     const staticData = this.stateManager.getStaticData();
     this._simState = new SimulatedState(this._startRegion, 100, staticData);
-    this._isLoaded = true;
-
-    return {
-      entryCount: this._entries.length,
-      startRegion: this._startRegion,
-    };
   }
 
   /**
@@ -303,7 +334,8 @@ export class CostPlanner {
     if (!this._isLoaded || this.isComplete()) return [];
 
     const newSteps = [];
-    let guard = 1000;
+    const limit = 1000;
+    let guard = limit;
 
     while (guard-- > 0) {
       const step = this.planNextStep();
@@ -313,40 +345,46 @@ export class CostPlanner {
       if (step.phase === 'CHECK') break;
     }
 
+    if (guard < 0) this._truncated = { limit, scope: 'sphere' };
+
     return newSteps;
   }
 
   planAll() {
     const newSteps = [];
-    let guard = 10000;
+    const limit = 10000;
+    let guard = limit;
     while (guard-- > 0) {
       const step = this.planNextStep();
       if (!step) break;
       newSteps.push(step);
     }
 
+    if (guard < 0) this._truncated = { limit, scope: 'all' };
+
     this.eventBus?.publish('loopsCostDebugger:allPlanned', {
       steps: this._plannedSteps,
       total: this._entries.length,
+      truncated: this._truncated,
     });
 
     return newSteps;
   }
 
+  /**
+   * Return to the pre-planning state. Re-derives the entries, start region and
+   * adjacency map as well: static data may have changed (player switch, rules
+   * reload) since the log was loaded, and replanning against the previous
+   * world's topology silently produced costs for a game that isn't loaded.
+   */
   reset() {
     if (!this._isLoaded) return;
 
-    this._plannedSteps = [];
-    this._currentEntryIndex = 0;
-    this._currentEntry = null;
-    this._phase = null;
-    this._currentPath = null;
-    this._regionsToExplore = [];
-    this._pendingCostAssignments = [];
-    this._defaultsAssigned = false;
-
-    const staticData = this.stateManager.getStaticData();
-    this._simState = new SimulatedState(this._startRegion, 100, staticData);
+    if (this._sphereLog) {
+      this._entries = this._extractLocationEntries(this._sphereLog);
+    }
+    this._deriveTopology();
+    this._resetPlanningState();
 
     // Re-apply loaded costs in verify mode
     if (this._mode === 'verify' && this._loadedCostData?.regions) {
@@ -366,6 +404,58 @@ export class CostPlanner {
   getCurrentStepIndex() { return this._plannedSteps.length; }
   getTotalEntries() { return this._entries.length; }
   getSkippedEventEntries() { return this._skippedEventEntries; }
+
+  /** Sphere-log locations skipped because they are not in this player's world. */
+  getSkippedForeignEntries() { return this._skippedForeignEntries; }
+
+  /** Entries that name a location (i.e. excluding the phantom item-only ones). */
+  getLocationEntryCount() {
+    return this._entries.filter(e => e.locationName).length;
+  }
+
+  /** The player id the loaded log was sliced for, or null when unresolved. */
+  getPlayerId() { return this._playerId; }
+
+  /**
+   * What the last load saw in the log:
+   *   { playerId, availablePlayers, stateUpdateCount, matchedCount, error }
+   * `error` is set when no player id could be resolved at all.
+   */
+  getLogDiagnostics() { return this._logDiagnostics; }
+
+  /** { limit, scope } when a planning guard cut the run short, else null. */
+  getTruncation() { return this._truncated; }
+
+  /**
+   * Why the planned costs must NOT be stamped into the live cost store, or
+   * null when the plan is legitimate. A player/seed mismatch otherwise looks
+   * exactly like a small world: every location falls through to defaults.
+   * @returns {string|null}
+   */
+  getPlanRejectionReason() {
+    if (!this._isLoaded) return 'No sphere log loaded.';
+
+    if (this._playerIdError) return this._playerIdError;
+
+    const d = this._logDiagnostics;
+    if (this._entries.length === 0) {
+      if (d && d.stateUpdateCount > 0) {
+        return `Sphere log has no data for player ${d.playerId} — ` +
+          `available players: [${d.availablePlayers.join(', ') || 'none'}]. ` +
+          `The loaded rules and the sphere log disagree about which player this is.`;
+      }
+      return 'Sphere log contained no usable entries.';
+    }
+
+    const locationEntries = this.getLocationEntryCount();
+    if (locationEntries > 0 && this._skippedForeignEntries >= locationEntries) {
+      return `All ${locationEntries} sphere-log locations are missing from this ` +
+        `player's world (player ${this._playerId}) — wrong player or wrong seed.`;
+    }
+
+    return null;
+  }
+
   isComplete() {
     const entriesDone = this._currentEntryIndex >= this._entries.length && !this._currentEntry;
     return entriesDone && (this._defaultsAssigned || this._mode === 'verify');
@@ -550,7 +640,10 @@ export class CostPlanner {
 
     if (!targetRegion) {
       // Location not in this game's static data (belongs to another player) — skip
-      // but still apply any mana boost from items received
+      // but still apply any mana boost from items received. Counted: when this
+      // is most or all of the log the plan is worthless, and it used to be
+      // indistinguishable from a genuinely small world.
+      this._skippedForeignEntries++;
       if (entry.itemsReceived > 0) {
         this._simState.maxMana += entry.itemsReceived * 10;
         this._simState.resetManaToMax();
@@ -984,12 +1077,39 @@ export class CostPlanner {
   _extractLocationEntries(sphereLog) {
     const entries = [];
     const playerId = this._getCurrentPlayerId();
+    this._playerId = playerId;
+    this._playerIdError = null;
+
+    const availablePlayers = new Set();
+    let stateUpdateCount = 0;
+    let matchedCount = 0;
+
+    if (!playerId) {
+      // No '1' fallback: planning the wrong player's slice produces a plausible
+      // but wrong cost set instead of an error.
+      this._playerIdError =
+        'Cannot plan costs: no current player id (sphereState has none and the ' +
+        'loaded rules carry no playerId). Load a rules file first.';
+      this._logDiagnostics = {
+        playerId: null,
+        availablePlayers: [],
+        stateUpdateCount: 0,
+        matchedCount: 0,
+        error: this._playerIdError,
+      };
+      return entries;
+    }
 
     for (const logEntry of sphereLog) {
       if (logEntry.type !== 'state_update') continue;
+      stateUpdateCount++;
+      for (const key of Object.keys(logEntry.player_data || {})) {
+        availablePlayers.add(key);
+      }
 
       const playerData = logEntry.player_data?.[playerId];
       if (!playerData) continue;
+      matchedCount++;
 
       const sphereLocations = playerData.sphere_locations || [];
       const newRegions = playerData.new_accessible_regions || [];
@@ -1021,13 +1141,33 @@ export class CostPlanner {
       }
     }
 
+    this._logDiagnostics = {
+      playerId,
+      availablePlayers: [...availablePlayers].sort((a, b) => Number(a) - Number(b)),
+      stateUpdateCount,
+      matchedCount,
+      error: null,
+    };
+
     return entries;
   }
 
+  /**
+   * The player whose slice of the sphere log is being planned.
+   * sphereState learns the id from `stateManager:rulesLoaded` even when no
+   * sphere log is present; staticData.playerId is the same value stamped by
+   * the state manager, kept as a fallback for callers that run before
+   * sphereState is up. Returns null rather than defaulting to player 1 —
+   * planning the wrong slice fails silently, an unset id must not.
+   * @returns {string|null}
+   */
   _getCurrentPlayerId() {
     const getIdFn = centralRegistry.getPublicFunction('sphereState', 'getCurrentPlayerId');
     const id = getIdFn?.();
-    return id ? String(id) : DEFAULT_PLAYER_ID;
+    if (id) return String(id);
+
+    const fromStatic = this.stateManager?.getStaticData?.()?.playerId;
+    return fromStatic ? String(fromStatic) : null;
   }
 
   // =========================================================================

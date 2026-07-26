@@ -11,7 +11,6 @@ import { CostPlanner } from './costPlanner.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
 import eventBus from '../../app/core/eventBus.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
-import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -126,24 +125,48 @@ export function getModuleEventBus() {
 }
 
 /**
- * Get sphere log data from multiple sources.
- * Mirrors the pattern used by loopUI._handleGenerateCostsClick().
+ * True when the raw entries carry the incremental (`new_inventory_details`)
+ * shape the planner reads. A verbose log's raw entries only have cumulative
+ * `inventory_details`, so every itemsReceived would read as 0 — those must go
+ * through the cumulative→delta reconstruction below instead.
+ */
+function rawLogIsIncremental(entries) {
+  const first = entries.find(e => e?.type === 'state_update' && e.player_data);
+  const firstPlayerData = first && Object.values(first.player_data)[0];
+  return !!firstPlayerData && firstPlayerData.new_inventory_details !== undefined;
+}
+
+/**
+ * Get sphere log data for the cost planner, in raw JSONL entry shape
+ * (`{ type: 'state_update', sphere_index, player_data: { <id>: {...} } }`).
+ *
+ * Prefers sphereState's retained raw entries: they carry EVERY player's slice,
+ * so the planner's own player filter decides which one is used. The fallback
+ * rebuilds entries from the current player's parsed (cumulative) sphere data.
+ *
  * @returns {Array|null} Sphere log entries in raw JSONL format
  */
 export function getSphereLog() {
-  // Try 1: From stateManager snapshot (may have raw JSONL data)
-  const snapshot = stateManagerProxySingleton?.getLatestStateSnapshot?.();
-  if (snapshot?.sphereLog && Array.isArray(snapshot.sphereLog) && snapshot.sphereLog.length > 0) {
-    return snapshot.sphereLog;
+  // Preferred: the literal log sphereState parsed, all players intact.
+  const getRawSphereLog = centralRegistry.getPublicFunction('sphereState', 'getRawSphereLog');
+  const rawLog = getRawSphereLog?.();
+  if (Array.isArray(rawLog) && rawLog.length > 0 && rawLogIsIncremental(rawLog)) {
+    return rawLog;
   }
 
-  // Try 2: Get parsed sphere data and convert to raw format
+  // Fallback: parsed sphere data (current player only) converted to raw format
   const getSphereData = centralRegistry.getPublicFunction('sphereState', 'getSphereData');
   if (getSphereData) {
     const sphereData = getSphereData();
     if (sphereData && Array.isArray(sphereData) && sphereData.length > 0) {
       const getIdFn = centralRegistry.getPublicFunction('sphereState', 'getCurrentPlayerId');
-      const playerId = getIdFn?.() || DEFAULT_PLAYER_ID;
+      // No player-1 default: keying the rebuilt log to a guessed player makes a
+      // mismatch look like a successful load with an empty world.
+      const playerId = getIdFn?.() || stateManagerProxySingleton?.getStaticData?.()?.playerId;
+      if (!playerId) {
+        log('error', 'Cannot build sphere log: no current player id is known');
+        return null;
+      }
       // sphereData.inventoryDetails is CUMULATIVE (accumulated by sphereState).
       // Convert to incremental deltas to match the raw JSONL new_inventory_details format.
       let previousBaseItems = {};

@@ -80,7 +80,7 @@ Documented in depth in the [procgen developer docs](../developer/procgen/README.
 
 - **Loops** (`loops`) — loop mode logic and UI panel. See the [Loops feature guide](../features/loops.md) and [Loops Module States](../developer/reference/loops-module-states.md).
 - **Loop Stats** (`loopStats`) — detailed action-queue analysis with mana cost predictions.
-- **Loops Cost Debugger** (`loopsCostDebugger`) — step-through debugger for the loop-cost generation algorithm. See the [loop-cost engine disambiguation](../developer/procgen/gotchas.md#three-loop-cost-engines-one-store).
+- [Loops Cost Debugger](./loopsCostDebugger.md) (`loopsCostDebugger`) — step-through debugger for the loop-cost generation algorithm. See also the [loop-cost engine disambiguation](../developer/procgen/gotchas.md#three-loop-cost-engines-one-store).
 
 ## Game and Tool Modules
 

@@ -57,6 +57,22 @@
   font-size: 0.85em;
 }
 
+/* Player/seed mismatch and truncation notices — deliberately loud: an empty
+   or defaults-only plan is otherwise indistinguishable from a small world. */
+.cd-status-warn {
+  font-size: 0.85em;
+  margin-top: 2px;
+}
+
+.cd-status-warning {
+  color: #d4a017;
+}
+
+.cd-status-error {
+  color: #e06c6c;
+  font-weight: bold;
+}
+
 /* Step list */
 .cd-step-list-container {
   flex: 1;

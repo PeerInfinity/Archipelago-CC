@@ -23,7 +23,6 @@
 
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
-import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 import { executeRegionMovePath } from '../shared/pathExecutor.js';
 import { DEFAULT_TIME_DRAIN_PER_SECOND } from './costDataManager.js';
 
@@ -208,6 +207,15 @@ export class CostGenerator {
     const entries = [];
     const playerId = this._getCurrentPlayerId();
 
+    if (!playerId) {
+      logger.error(
+        'CostGenerator: cannot extract sphere-log entries — no current player id ' +
+        '(sphereState has none and the loaded rules carry no playerId). ' +
+        'Refusing to generate costs for a guessed player.'
+      );
+      return entries;
+    }
+
     for (const logEntry of sphereLog) {
       if (logEntry.type !== 'state_update') continue;
 
@@ -245,10 +253,20 @@ export class CostGenerator {
     return entries;
   }
 
+  /**
+   * The player whose sphere-log slice drives generation.
+   * Falls back to the state manager's stamped playerId (same value, available
+   * before sphereState is up) and then to null — never to player 1, which
+   * silently generated a plausible cost set for the wrong world.
+   * @returns {string|null}
+   */
   _getCurrentPlayerId() {
     const getIdFn = centralRegistry.getPublicFunction('sphereState', 'getCurrentPlayerId');
     const id = getIdFn?.();
-    return id ? String(id) : DEFAULT_PLAYER_ID;
+    if (id) return String(id);
+
+    const fromStatic = this.stateManager?.getStaticData?.()?.playerId;
+    return fromStatic ? String(fromStatic) : null;
   }
 
   /**

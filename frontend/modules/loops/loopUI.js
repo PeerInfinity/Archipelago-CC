@@ -869,6 +869,7 @@ export class LoopUI {
     const acceptBtn = this.rootElement.querySelector('#loop-ui-accept-defaults');
 
     if (progressContainer) progressContainer.style.display = 'block';
+    if (progressLabel) progressLabel.style.color = ''; // clear a previous refusal
     if (generateBtn) generateBtn.disabled = true;
     if (acceptBtn) acceptBtn.disabled = true;
 
@@ -876,7 +877,16 @@ export class LoopUI {
       // Load sphere log into planner
       costPlanner.reset();
       const loadResult = costPlanner.loadSphereLog(sphereLog);
-      log('info', `Loaded sphere log: ${loadResult.entryCount} entries`);
+      log('info', `Loaded sphere log: ${loadResult.entryCount} entries for player ${loadResult.playerId}`);
+
+      // A log with no slice for this player plans zero entries and still yields
+      // a full defaults-only cost set — indistinguishable from a real one once
+      // it is in the store. Refuse before planning rather than stamp it.
+      const earlyRejection = costPlanner.getPlanRejectionReason();
+      if (earlyRejection) {
+        this._reportCostGenerationRefusal(earlyRejection);
+        return;
+      }
 
       // Plan all steps, updating progress by sphere
       const totalEntries = costPlanner.getTotalEntries();
@@ -901,6 +911,14 @@ export class LoopUI {
         }
       }
 
+      // Re-check after planning: the foreign-location count is only known once
+      // the entries have been walked.
+      const rejection = costPlanner.getPlanRejectionReason();
+      if (rejection) {
+        this._reportCostGenerationRefusal(rejection);
+        return;
+      }
+
       // Get generated cost data and load it into costDataManager
       const costData = costPlanner.getCostData();
       if (costData) {
@@ -922,6 +940,37 @@ export class LoopUI {
       if (acceptBtn) acceptBtn.disabled = false;
       if (progressContainer) progressContainer.style.display = 'none';
     }
+  }
+
+  /**
+   * Refuse to stamp a cost set the planner says is a player/seed mismatch.
+   * Leaves the "no cost data" prompt usable (Accept Defaults still works) and
+   * says WHY instead of silently installing a defaults-only cost set.
+   * @param {string} reason - Human-readable cause from CostPlanner
+   */
+  _reportCostGenerationRefusal(reason) {
+    log('error', `Cost generation refused: ${reason}`);
+
+    // The auto-generate path (eventCoordinator, entering loop mode) can run
+    // before the prompt exists — render it so the refusal has somewhere to go.
+    if (!this.rootElement.querySelector('#loop-ui-cost-progress')) {
+      this.renderLoopPanel();
+    }
+
+    const progressContainer = this.rootElement.querySelector('#loop-ui-cost-progress');
+    const progressLabel = this.rootElement.querySelector('#loop-ui-cost-progress-label');
+    const progressBar = this.rootElement.querySelector('#loop-ui-cost-progress-bar');
+    const generateBtn = this.rootElement.querySelector('#loop-ui-generate-costs-inline');
+    const acceptBtn = this.rootElement.querySelector('#loop-ui-accept-defaults');
+
+    if (progressBar) progressBar.style.width = '0%';
+    if (progressLabel) {
+      progressLabel.textContent = `Cost generation refused: ${reason}`;
+      progressLabel.style.color = '#e06c6c';
+    }
+    if (progressContainer) progressContainer.style.display = 'block';
+    if (generateBtn) generateBtn.disabled = false;
+    if (acceptBtn) acceptBtn.disabled = false;
   }
 
   /**
