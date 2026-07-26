@@ -32,7 +32,9 @@ When you enter a region, the panel shows:
 
 ## Custom Data
 
-The dropdown at the top lets you load custom "flavor text" data files that provide game-specific descriptions for regions, locations, and exits instead of the generic defaults.
+Games can supply custom "flavor text" — game-specific descriptions for regions, locations and exits, used instead of the generic defaults. It loads **automatically**: the panel looks for a file named after the game you have loaded, so playing Adventure picks up Adventure's prose with nothing for you to select. If no such file exists you simply get the generic descriptions.
+
+To point at a different file, set **Auto-load custom data** in the panel's settings — a bare name (`tunic`) or a full URL. Leave it empty for the automatic behaviour.
 
 ## Features
 

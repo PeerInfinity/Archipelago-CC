@@ -57,7 +57,7 @@ These modules each correspond to a UI panel that the user can interact with in t
 -   **[Spoiler Checklist](./spoilerChecklist.md):** Interactive checklist for tracking sphere log progression with multiworld support.
 -   **[Spoiler Test](./spoilerTest.md):** The primary tool for validating game logic by replaying a game's progression against its spoiler log.
 -   **[Tests](./tests.md):** A developer panel that provides an in-app framework for running automated feature tests and integrates with Playwright for end-to-end validation.
--   **[Text Adventure](./textAdventure.md):** Provides a text-based interface for interacting with the game world.
+-   **[Text Adventure](../procgen/text-adventure.md):** Provides a text-based interface for interacting with the game world. Implemented by the `textAdventureSubstrateWrapper` module over the `textAdventureEngine` submodule; documented with the other substrates.
 -   **[Timer Panel](./timerPanel.md):** A dedicated panel that can host the Timer UI component.
 -   **[Proof Queue](./proofQueue.md):** Arrange MetaMath proof steps in dependency order with difficulty-based hypothesis assignment.
 -   **[Proof Graph](./proofGraph.md):** Reconstruct proof dependency edges in an interactive Cytoscape.js graph.
