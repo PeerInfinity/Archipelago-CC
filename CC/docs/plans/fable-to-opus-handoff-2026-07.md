@@ -1905,6 +1905,33 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    has some bugs"; inventory them as recon) and omsi's answer may be
    NEVER rather than "last".** The old "omsi Instant last of all
    substrates" wording above is superseded by this pass.
+   **REFINED (user, 2026-07-25, later same day): omsi Instant IS wanted
+   at least FOR TESTING, working like jta's — i.e. a TICK PUMP, not a
+   tick skip.** Results stay byte-identical by construction because the
+   same per-tick code runs the same number of times, just synchronously
+   in one frame (jta Instant is already exactly this — the stepTick
+   pump). Two variants: (1) per-action — pump `singleTick()` until the
+   current action completes; (2) whole-queue batch — pump until the
+   region block's queue finishes, display suppressed, ONE view refresh
+   at the end (the payoff: the two in-app Bot legs currently run a
+   real-time game loop, hence the 900s Playwright timeout). The
+   standing "no fast-step surface" premise is STALE post-D2: under
+   `?managed=1` the rAF tick() is disabled and the in-iframe bridge
+   already drives `singleTick()` batches — an Instant pump is plausibly
+   PURE OUTER-REPO (no fork edit, no byte-gate). Carry-over landmines,
+   all already codified: completion predicate = the HELD BOUNDARY
+   (`timer >= timeNeeded` post-batch, clockGate.js), never `stoppedAt`;
+   the no-runnable-entry skip states stay; the mana mirror publishes
+   one big delta + a BURST of AP awards at pump end (tests need
+   burst-aware assertions); no host round trip mid-pump — scope is one
+   region block's queue up to its departing regionMove. Recon item:
+   whether `singleTick()` touches `view` or managed mode already leaves
+   rendering to the disabled loop (if the latter, display suppression
+   is free). POLICY SPLIT for the design pass: player-facing Instant
+   (the idle-pacing philosophy question, still open) vs a testing/dev
+   fast-forward capability (now WANTED for omsi); whether it ships as
+   declared `loopSupport.instant` or a test-only surface is the pass's
+   call.
    **ARC F DESIGN SKETCH RULED (Fable + user, 2026-07-25):** the panel
    queue editor starts with **omsi** — its recording IS the game's own
    authored queue, and both conversions already round-trip through the
