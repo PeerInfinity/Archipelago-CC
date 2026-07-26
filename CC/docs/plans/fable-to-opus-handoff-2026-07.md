@@ -1901,6 +1901,29 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    has some bugs"; inventory them as recon) and omsi's answer may be
    NEVER rather than "last".** The old "omsi Instant last of all
    substrates" wording above is superseded by this pass.
+   **ARC F DESIGN SKETCH RULED (Fable + user, 2026-07-25):** the panel
+   queue editor starts with **omsi** — its recording IS the game's own
+   authored queue, and both conversions already round-trip through the
+   shared `actionQueue` vocabulary (`convertPlanToQueue` /
+   `convertQueueToPlan` in omsiSubstrateWrapperLibrary.js; the write
+   path already feeds Playback via index.js). Shape: each omsi region
+   block in the Loops panel shows its queue in **Record/Playback**
+   modes only (Manual/Bot keep the current summary); Playback replays
+   the displayed (possibly edited) queue; a successful Record-exit
+   replaces it (already the storage behavior — recordings are keyed per
+   region block, loops is sole persister). v1 controls =
+   **edit-existing-only** (reorder / rep count / delete / disable);
+   INSERT needs a per-region action catalog — its own later slice.
+   Mid-Record the block shows the stale saved queue (+ a "recording…"
+   badge) until the exit lands. Edits **write through** loops' own APIs
+   to savedQueueStore immediately — no draft state. This confirms the
+   **NEW-module direction** for queue editing (NOT reviving the
+   1205-line jtaActionQueue panel): the jta custom-queues
+   cleanup-backlog item is REFRAMED as "adapt jta to the arc F editor,
+   after omsi" — the post-D2 cleanup phase should NOT attempt it
+   (kickoff item 6 annotated accordingly). Flip omsi
+   `loopSupport.customQueues` → true when the editor ships; jta's flip
+   waits for its adaptation.
 3. **Housekeeping when stable:** merge `automation` → `substrate`, then bump
    the outer submodule pointer (currently held on `substrate` per standing
    ruling). Remaining Phase E slices: action-completion callback,
