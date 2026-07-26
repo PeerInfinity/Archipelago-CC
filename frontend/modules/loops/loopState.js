@@ -80,6 +80,22 @@ export class LoopState {
     this.isProcessing = false;
     this.isPaused = false; // Not paused — idle (no queue started yet)
     this._queueCompleted = false; // True after queue runs to the end (distinct from idle)
+    // Why the queue completed: 'queueEnd' (the ordinary end-of-queue with
+    // auto-restart off) or 'zeroCostPass' (the free-pass park below). Read
+    // by loopUI's status line; meaningless while _queueCompleted is false.
+    this._queueCompletedReason = null;
+    // Mana actually spent since the cursor last snapped to index 0 — the
+    // current PASS over the queue. Read at the auto-restart wrap: a pass
+    // that cost nothing must NOT wrap (see _completeCurrentAction).
+    // Measured rather than summed from the queue because costs are
+    // dynamic (region XP effects, per-block Instant, live-play drains).
+    this._passManaSpent = 0;
+    // gameState's mana at the start of the current pass, or null when it
+    // couldn't be read. Second, independent witness for the same question:
+    // substrates that own their own economy (resourceChannels) deduct
+    // straight from gameState and never touch _spendMana, so the tally
+    // alone would call their passes free.
+    this._passStartMana = null;
     this.autoRestartQueue = false; // Flag to auto-restart queue when complete
     this.autoResumeOnNewAction = false; // Flag to auto-resume when a new action is added after completion
     this.autoRemoveCompleted = false; // Flag to auto-remove completed actions from queue
@@ -805,6 +821,10 @@ export class LoopState {
 
     if (resetIndex) {
       this.currentActionIndex = 0;
+      // Start-from-the-top: a new pass, so a new spend tally. The resume
+      // path deliberately keeps the running total — a park (manual block,
+      // pause) in the middle of a pass must not make that pass look free.
+      this._beginPass();
     } else if (this.currentActionIndex >= queue.length) {
       // Resume path: nothing left to advance to.
       return;
@@ -2395,6 +2415,7 @@ export class LoopState {
     const gs = this._gs();
     if (!gs?.deductMana) return;
     gs.deductMana(cost);
+    this._passManaSpent += cost;
     if (region) {
       this.addRegionXP(region, cost);
       this._annotationTracker?.noteXp(cost);
@@ -3030,7 +3051,10 @@ export class LoopState {
 
     const manaCost = (progressIncrement / 100) * actionCost;
     const gs = this._gs();
-    if (gs) gs.deductMana(manaCost);
+    if (gs) {
+      gs.deductMana(manaCost);
+      if (manaCost > 0) this._passManaSpent += manaCost;
+    }
 
     if (this.currentAction.sourceRegion) {
       const xpGain = (progressIncrement / 100) * actionCost;
@@ -3205,20 +3229,43 @@ export class LoopState {
 
     // If we reached the end of the queue
     if (this.currentActionIndex >= queue.length) {
-      // Reset to beginning if auto-restart is enabled
-      if (this.autoRestartQueue) {
+      // A pass that spent NO mana must not wrap, even with auto-restart on.
+      // Zero-cost actions (and Instant blocks) complete in a single frame,
+      // so an all-free path re-runs the whole queue every animation frame:
+      // nothing is ever spent, so `_maybeResetForOOM` — the only thing that
+      // normally ends an auto-restarting run — can never fire, and the
+      // per-completion re-render storm starves the panel of clicks, so the
+      // user cannot even edit the path out of it. Park on the ordinary
+      // queueCompleted path instead: "Restart" re-runs it deliberately.
+      //
+      // Measured, not summed from the queue: costs are dynamic (region XP
+      // effects, live-play drains, delegated walks), so the only honest
+      // question is what this pass actually burned — by loops' spends or
+      // by a substrate drawing on the pool itself (see _passWasFree).
+      const freePass = this._passWasFree();
+      if (this.autoRestartQueue && !freePass) {
         this.currentActionIndex = 0;
         this._resetActionsProgress();
       } else {
+        if (freePass && this.autoRestartQueue) {
+          log('warn',
+            '[LoopState] Auto-restart declined: the queue completed a full '
+            + 'pass without spending any mana. Parking instead of restarting '
+            + 'at frame rate.');
+        }
         // Queue completed — transition to completed state
         this.currentAction = null;
         this.isProcessing = false;
         this.isPaused = false;
         this._queueCompleted = true;
+        this._queueCompletedReason =
+          freePass && this.autoRestartQueue ? 'zeroCostPass' : 'queueEnd';
         // Step mode is irrelevant once the queue ends; the completed
         // state already meets "stop after one action".
         this._stepMode = false;
-        this.eventBus.publish('loopState:queueCompleted', {});
+        this.eventBus.publish('loopState:queueCompleted', {
+          reason: this._queueCompletedReason,
+        });
         this.eventBus.publish('loopState:pauseStateChanged', {
           isPaused: this.isPaused,
           processingState: this.getProcessingState(),
@@ -3526,6 +3573,38 @@ export class LoopState {
     // Reset current action index so startProcessing() starts from the beginning
     this.currentActionIndex = 0;
     this.currentAction = null;
+    // The cursor is back at 0 — a fresh pass, so a fresh spend tally.
+    this._beginPass();
+  }
+
+  /**
+   * Start a new PASS over the queue: zero the spend tally and re-read the
+   * mana high-water mark the free-pass guard compares against. Called from
+   * every seam that snaps the cursor back to index 0.
+   */
+  _beginPass() {
+    this._passManaSpent = 0;
+    const gs = this._gs();
+    this._passStartMana = typeof gs?.currentMana === 'number' ? gs.currentMana : null;
+  }
+
+  /**
+   * Did the pass that just ended consume any mana — by loops' own spends
+   * (_advanceActionProgress / _spendMana) or by anyone else drawing on the
+   * pool (a substrate with its own economy)? Only a pass that consumed
+   * NOTHING by either measure may decline the auto-restart wrap.
+   */
+  _passWasFree() {
+    if (this._passManaSpent > 0) return false;
+    const gs = this._gs();
+    if (
+      typeof gs?.currentMana === 'number' &&
+      typeof this._passStartMana === 'number' &&
+      gs.currentMana < this._passStartMana
+    ) {
+      return false;
+    }
+    return true;
   }
 
   /**

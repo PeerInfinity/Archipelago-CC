@@ -21,7 +21,7 @@ state.
 |---|---|---|---|
 | `isProcessing` | `_beginProcessing` (called by `startProcessing` / `resumeProcessing`) | `stopProcessing`, queue-completion in `_completeCurrentAction`, OOM reset pause path | The animation-frame loop is active; actions are being ticked. |
 | `isPaused` | `setPaused(true)`, OOM reset pause path, `_pauseAfterStep` | `setPaused(false)`, `step()` from paused | User explicitly paused (or the system paused us as a step's terminal event). Suppresses several auto-start paths. |
-| `_queueCompleted` | Queue-end branch in `_completeCurrentAction` (no `autoRestartQueue`) | `_resetLoop`, `_beginProcessing`, `resetForNewRules` | The queue ran past its last action without auto-restart. Distinguishes "completed" from "idle" (both have `!isProcessing && !isPaused`). |
+| `_queueCompleted` | Queue-end branch in `_completeCurrentAction` (no `autoRestartQueue`, or a free pass — see below) | `_resetLoop`, `_beginProcessing`, `resetForNewRules` | The queue ran past its last action without auto-restart. Distinguishes "completed" from "idle" (both have `!isProcessing && !isPaused`). `_queueCompletedReason` says which branch got here: `'queueEnd'` or `'zeroCostPass'`. |
 | `_stepMode` (overlay) | `step()` | `_pauseAfterStep`, OOM reset pause path, queue-end branch | Single-action step is in flight. Forces the pause path on completion or OOM regardless of `autoRestartQueue`. |
 
 `stopProcessing()` only clears `isProcessing`. `_queueCompleted` and
@@ -274,13 +274,39 @@ Effects:
 
 | Trigger | `autoRestartQueue = false` | `autoRestartQueue = true` |
 |---|---|---|
-| Queue runs past its last action (in `_completeCurrentAction`, line 1216) | `currentAction = null`, `isProcessing = false`, `_queueCompleted = true` → state becomes `completed` (or `waiting`) | `currentActionIndex = 0`, `_resetActionsProgress()` → queue keeps running from index 0 |
+| Queue runs past its last action (in `_completeCurrentAction`, line 1216) | `currentAction = null`, `isProcessing = false`, `_queueCompleted = true` → state becomes `completed` (or `waiting`) | `currentActionIndex = 0`, `_resetActionsProgress()` → queue keeps running from index 0 — **unless the pass was free** (see below), in which case it takes the left-hand column's park instead |
 | OOM reset (in `_maybeResetForOOM`) | Pause path: `isPaused = true`, `stopProcessing()` → state becomes `paused` | Continue path: re-schedule animation frame → state stays `running` |
 | `_completeCurrentAction` reaches an explore action that should repeat | New explore action appended; queue continues either way | Same |
 
 Note: `_stepMode = true` overrides `autoRestartQueue = true` in both
 the queue-end and OOM branches — step mode forces the pause path so
 the step's terminal event is "queue stops" regardless of the toggle.
+
+#### The free-pass guard on the wrap
+
+`autoRestartQueue = true` wraps only a pass that CONSUMED mana. A queue
+whose entries all resolve for 0 (zero-cost actions and Instant blocks
+complete in a single frame) would otherwise re-run the whole queue every
+animation frame forever: nothing is ever spent, so `_maybeResetForOOM` —
+the only thing that normally ends an auto-restarting run — can never
+fire, and the per-completion re-render storm swallows the user's clicks,
+so the path cannot even be edited out of the loop.
+
+"Consumed" is measured over the pass (cursor at index 0 → past the last
+action), never summed from the queue, because costs are dynamic:
+
+- `_passManaSpent` — what loops itself spent (`_advanceActionProgress`
+  and `_spendMana`, which every live-play / Record / Playback / bot /
+  time-drain charge routes through).
+- `_passStartMana` — gameState's mana when the pass began, so a
+  substrate with its own economy (resourceChannels deducting straight
+  from gameState) also counts as consumption.
+
+A pass free by BOTH measures (`_passWasFree()`) parks on the ordinary
+queue-end branch with `_queueCompletedReason = 'zeroCostPass'`;
+`loopState:queueCompleted` carries that reason, and the panel's status
+line reads "auto-restart paused: this path costs no mana". Restart runs
+the pass again deliberately.
 
 ### `autoResumeOnNewAction`
 

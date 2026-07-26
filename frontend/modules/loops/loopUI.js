@@ -1590,7 +1590,17 @@ export class LoopUI {
           completed: 'Queue complete',
           waiting: 'Queue waiting for new actions',
         };
-        const msg = statusMessages[processingState];
+        let msg = statusMessages[processingState];
+        // A completion that came from the free-pass guard (auto-restart on,
+        // but the whole pass cost no mana) says so — otherwise "Queue
+        // complete" with the auto-restart box ticked reads as a bug.
+        if (
+          msg &&
+          (processingState === 'completed' || processingState === 'waiting') &&
+          loopState._queueCompletedReason === 'zeroCostPass'
+        ) {
+          msg = 'Queue complete — auto-restart paused: this path costs no mana';
+        }
         if (msg) {
           actionContainer.innerHTML = `<div class="no-action-message">${msg}</div>`;
         }

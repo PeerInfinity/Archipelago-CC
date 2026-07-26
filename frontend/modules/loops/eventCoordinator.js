@@ -26,8 +26,67 @@ export class EventCoordinator {
     this.loopUI = loopUI; // Reference to LoopUI instance for callbacks
     this._subs = new SubscriptionTracker();
     this._stateManagerReady = false;
+    // Pending id of a coalesced renderLoopPanel (see _scheduleRender).
+    this._renderFrameId = null;
 
     logger.debug('EventCoordinator constructed');
+  }
+
+  /**
+   * Coalesce renderLoopPanel() calls to one per animation frame.
+   *
+   * renderLoopPanel wipes and rebuilds the whole panel (loopRenderer's
+   * `innerHTML = ''`), and location rows get fresh listeners on every
+   * rebuild. Event bursts — a running queue completing an action per frame,
+   * discovery events arriving together, a snapshot landing on top of a queue
+   * update — used to rebuild the DOM once per event, which at frame rate put
+   * mousedown and mouseup on different elements and so swallowed the user's
+   * clicks entirely. One render per frame keeps the DOM stable within a frame
+   * and drops the redundant work.
+   *
+   * Without requestAnimationFrame (unit-test / node context) this renders
+   * synchronously, so callers keep the old "rendered by the time publish
+   * returns" contract there.
+   */
+  _scheduleRender() {
+    const raf =
+      typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function'
+        ? window.requestAnimationFrame.bind(window)
+        : null;
+    if (!raf) {
+      this._flushRender();
+      return;
+    }
+    if (this._renderFrameId !== null) return; // already queued for this frame
+    this._renderFrameId = raf(() => {
+      this._renderFrameId = null;
+      this._flushRender();
+    });
+  }
+
+  /**
+   * Render now. renderLoopPanel rewrites the status line from the CURRENT
+   * action ("Queue idle" when there is none), so the button/status refresh
+   * that used to follow these renders inline has to run after it — same
+   * order, one place. `_updatePauseButtonState` derives everything it needs
+   * from loopState when called with no arguments.
+   * @private
+   */
+  _flushRender() {
+    this.loopUI.renderLoopPanel();
+    this.loopUI._updatePauseButtonState?.();
+  }
+
+  /**
+   * Drop a render queued for a frame that will never matter (panel torn
+   * down). Called from unsubscribeAll, the coordinator's teardown seam.
+   */
+  _cancelScheduledRender() {
+    if (this._renderFrameId === null) return;
+    if (typeof window !== 'undefined' && typeof window.cancelAnimationFrame === 'function') {
+      window.cancelAnimationFrame(this._renderFrameId);
+    }
+    this._renderFrameId = null;
   }
 
   /**
@@ -101,6 +160,7 @@ export class EventCoordinator {
   unsubscribeAll() {
     logger.info(`Unsubscribing from ${this._subs.size()} events`);
     this._subs.unsubscribeAll();
+    this._cancelScheduledRender();
   }
 
   // ==================== Event Handlers ====================
@@ -137,10 +197,10 @@ export class EventCoordinator {
   _handleQueueUpdated(data) {
     this.loopUI._updateRegionsInQueue(data.queue);
     this.loopUI._updateLoopStats();
-    this.loopUI.renderLoopPanel();
-    // Refresh control button states (Step in particular toggles on
-    // queue length, which the pauseStateChanged path doesn't cover).
-    this.loopUI._updatePauseButtonState(false);
+    // The scheduled render refreshes the control button states after it
+    // (Step in particular toggles on queue length, which the
+    // pauseStateChanged path doesn't cover).
+    this._scheduleRender();
   }
 
   /**
@@ -191,7 +251,10 @@ export class EventCoordinator {
    */
   _handleActionCompleted(data) {
     this.loopUI._updateLoopStats();
-    this.loopUI.renderLoopPanel();
+    // Coalesced: a queue of instant/zero-cost actions completes several
+    // per frame, and every un-throttled render wiped the DOM out from
+    // under the user's mousedown.
+    this._scheduleRender();
   }
 
   /**
@@ -252,7 +315,7 @@ export class EventCoordinator {
     if (loopState?.autoRemoveCompleted) {
       loopState.removeCompletedActions();
     }
-    this.loopUI.renderLoopPanel();
+    this._scheduleRender();
   }
 
   /**
@@ -276,7 +339,7 @@ export class EventCoordinator {
       // Remove completed actions from the queue
       loopState.removeCompletedActions();
     }
-    this.loopUI.renderLoopPanel();
+    this._scheduleRender();
   }
 
   /**
@@ -372,7 +435,9 @@ export class EventCoordinator {
    */
   _handleExploreRepeated(data) {
     this.loopUI.regionsInQueue.add(data.regionName);
-    this.loopUI.renderLoopPanel();
+    // Fires from inside a running queue (repeat-explore re-queues itself),
+    // so it belongs on the coalesced path with actionCompleted.
+    this._scheduleRender();
   }
 
   /**
@@ -393,13 +458,12 @@ export class EventCoordinator {
     }
 
     logger.info('Received gameState:pathUpdated, re-rendering loop panel');
-    this.loopUI.renderLoopPanel();
     // Path updates that come from gameState directly (e.g. exit/location
     // clicks routed through gameStateAPI.updatePath) don't fire
     // loopState:queueUpdated, so _handleQueueUpdated doesn't see them.
-    // Refresh control button states here too — Step in particular
-    // toggles enabled when the queue grows from empty.
-    this.loopUI._updatePauseButtonState(false);
+    // The scheduled render refreshes control button states too — Step in
+    // particular toggles enabled when the queue grows from empty.
+    this._scheduleRender();
   }
 
   /**

@@ -12,7 +12,7 @@
  *  - The `window.requestAnimationFrame` branch in _handleProgressUpdated
  *    (DOM-ish; we cover the data-routing parts only).
  */
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { EventCoordinator } from './eventCoordinator.js';
 
 function makeBus() {
@@ -465,6 +465,96 @@ describe('EventCoordinator — loop-state lifecycle events', () => {
     new EventCoordinator(bus, loopUI).subscribeToEvents();
     bus.publish('loopState:autoRestartChanged', { autoRestart: true });
     expect(checkbox.checked).toBe(true);
+  });
+});
+
+describe('EventCoordinator — render coalescing', () => {
+  // renderLoopPanel wipes and rebuilds the whole panel, and location rows
+  // get fresh listeners each rebuild — at frame rate that put mousedown and
+  // mouseup on different elements and swallowed the user's clicks. The
+  // render sites on the hot path therefore schedule one render per frame.
+  //
+  // In node there is no `window`, so _scheduleRender renders synchronously
+  // (which is what every other test in this file relies on). These tests
+  // install a fake window so the COALESCING branch is actually exercised.
+  let frames;
+  function installFakeRaf() {
+    frames = [];
+    globalThis.window = {
+      requestAnimationFrame(cb) {
+        frames.push(cb);
+        return frames.length; // 1-based id, never 0
+      },
+      cancelAnimationFrame(id) {
+        frames[id - 1] = null;
+      },
+    };
+  }
+  function runFrame() {
+    const pending = frames;
+    frames = [];
+    globalThis.window.requestAnimationFrame = (cb) => {
+      frames.push(cb);
+      return frames.length;
+    };
+    pending.forEach(cb => cb && cb());
+  }
+  beforeEach(installFakeRaf);
+  afterEach(() => { delete globalThis.window; });
+
+  it('a burst of actionCompleted events produces ONE render, on the next frame', () => {
+    const bus = makeBus();
+    const loopUI = makeStubLoopUI();
+    new EventCoordinator(bus, loopUI).subscribeToEvents();
+
+    for (let i = 0; i < 5; i++) bus.publish('loopState:actionCompleted', { action: { id: `a${i}` } });
+    // Nothing rendered yet — the render is queued, not run.
+    expect(loopUI.calls.filter(c => c.method === 'renderLoopPanel').length).toBe(0);
+    // …but the per-event work that is NOT a render still happened 5x.
+    expect(loopUI.calls.filter(c => c.method === '_updateLoopStats').length).toBe(5);
+
+    runFrame();
+    expect(loopUI.calls.filter(c => c.method === 'renderLoopPanel').length).toBe(1);
+  });
+
+  it('the next burst schedules a fresh render (the flag is not sticky)', () => {
+    const bus = makeBus();
+    const loopUI = makeStubLoopUI();
+    new EventCoordinator(bus, loopUI).subscribeToEvents();
+
+    bus.publish('loopState:actionCompleted', { action: { id: 'a' } });
+    runFrame();
+    bus.publish('loopState:actionCompleted', { action: { id: 'b' } });
+    runFrame();
+    expect(loopUI.calls.filter(c => c.method === 'renderLoopPanel').length).toBe(2);
+  });
+
+  it('the coalesced render refreshes the control buttons after rendering', () => {
+    // renderLoopPanel rewrites the status line from the current action, so
+    // the button/status refresh that used to follow these renders inline
+    // has to run AFTER the render, not before it.
+    const bus = makeBus();
+    const loopUI = makeStubLoopUI();
+    new EventCoordinator(bus, loopUI).subscribeToEvents();
+
+    bus.publish('gameState:pathUpdated', {});
+    runFrame();
+    const order = loopUI.calls.map(c => c.method);
+    expect(order.indexOf('renderLoopPanel')).toBeGreaterThanOrEqual(0);
+    expect(order.indexOf('_updatePauseButtonState')).toBeGreaterThan(order.indexOf('renderLoopPanel'));
+  });
+
+  it('a render scheduled right before teardown does not fire on the dead panel', () => {
+    const bus = makeBus();
+    const loopUI = makeStubLoopUI();
+    const coord = new EventCoordinator(bus, loopUI);
+    coord.subscribeToEvents();
+
+    bus.publish('loopState:actionCompleted', { action: { id: 'a' } });
+    coord.unsubscribeAll();
+    runFrame();
+    expect(loopUI.calls.find(c => c.method === 'renderLoopPanel')).toBeUndefined();
+    expect(coord._renderFrameId).toBe(null);
   });
 });
 
