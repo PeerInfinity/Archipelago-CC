@@ -378,9 +378,11 @@ export const substrateRegistryEntry = Object.freeze({
     //     explicitly generalizes to omsi: the fork's "budget out → restart
     //     the loop" economy IS the loop-mode reset once its zones are host
     //     regions, so there is no coherent standalone mode to fall back to.
-    //   NO `instant` — the fork has no fast-step surface (no setInstantMode
-    //     / stepTick; the clock is deliberately flat at 50 t/s), and omsi
-    //     Instant is the standing last-of-all-substrates item.
+    //   `instant` (Instant-policy pass, slice 1) — the old reading was that
+    //     the fork has no fast-step surface. It does: `step(n)`, and the
+    //     bridge already owns the clock that calls it, so Instant is that
+    //     clock declining to consult wall time. See the field below for why
+    //     declaring it was not separable from wiring the Bot half.
     //   executeVia 'solver' (arc D2 slice 2) — the Bot IS the fork's own
     //     automation planner. Declared here only now that `walkTo` really
     //     works: this declaration is what renders the Bot radio, so an
@@ -396,6 +398,15 @@ export const substrateRegistryEntry = Object.freeze({
         playback: true,
         requiresLoopMode: true,
         executeVia: 'solver',
+        // Instant-policy pass, slice 1. Declaring this lights up BOTH
+        // per-block checkboxes at once — Playback's (loopBlockBuilder gates
+        // it on `instant` + a non-summary shape) and Bot's (omsi already
+        // satisfies loopState.regionBotHonorsInstant's other two conditions,
+        // `executeVia: 'solver'` and a fine capture shape). Both entry points
+        // are wired: Playback's flag rides replayActions' opts, Bot's arrives
+        // as the control channel's `instant` method. Neither is a skip — the
+        // bridge pumps the same ticks faster (bridge.js `_runInstantPump`).
+        instant: true,
     }),
 
     // The fine-grained capture hook. Its PRESENCE is what classifies omsi

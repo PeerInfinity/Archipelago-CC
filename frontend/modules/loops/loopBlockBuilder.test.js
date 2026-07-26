@@ -240,19 +240,34 @@ describe('LoopBlockBuilder — loopSupport capability gating', () => {
         // automation planner, engaged by the bridge for the duration of a
         // walkTo. Paired with queueActions, it scopes the solver to EXIT
         // walks — a locationCheck still falls through to normal handling.
-        // Still NO instant: the fork has no fast-step surface, so the
-        // Instant checkbox stays unoffered (omsi Instant is the standing
-        // last-of-all-substrates item).
+        //
+        // Instant-policy pass slice 1 adds `instant`, superseding the old
+        // "the fork has no fast-step surface" reading: it has `step(n)`, and
+        // the bridge already owns the clock that calls it — Instant is that
+        // clock declining to consult wall time (a PUMP, not a skip). The
+        // declaration is not independently shippable from the Bot half: omsi
+        // already satisfies regionBotHonorsInstant's other two conditions
+        // (executeVia 'solver' + a fine capture shape), so this one field
+        // lights up BOTH per-block checkboxes at once.
         expect(omsi.loopSupport).toMatchObject({
             manual: true, customQueues: false, record: true, playback: true,
-            requiresLoopMode: true, executeVia: 'solver',
+            instant: true, requiresLoopMode: true, executeVia: 'solver',
         });
         expect([...omsi.loopSupport.queueActions]).toEqual(['regionMove']);
-        expect(omsi.loopSupport.instant ?? false).toBe(false);
         expect(omsi.loopSupport.summaryRecording ?? false).toBe(false);
         // FINE-GRAINED: the recorder hook is what classifies it (a coarse
         // omsi would be charged loop_costs on top of its native mana mirror).
         expect(typeof omsi.takeLastRecording).toBe('function');
+        // …and those three together are exactly regionBotHonorsInstant's
+        // conditions, so omsi's BOT Instant checkbox is offered. Asserted as
+        // an implication because the failure mode is a VACUOUS CONTROL: drop
+        // any one of them and the checkbox silently changes meaning, which is
+        // what the per-capability ruling exists to prevent.
+        expect({
+            declaresInstant: omsi.loopSupport.instant === true,
+            walkToSolver: omsi.loopSupport.executeVia === 'solver',
+            fineShape: typeof omsi.takeLastRecording === 'function',
+        }).toEqual({ declaresInstant: true, walkToSolver: true, fineShape: true });
 
         // The other substrates do NOT require loop mode (non-loop-game or
         // native-standalone economies).

@@ -795,6 +795,336 @@ async function multiRunReplayLegs(testController, { loopState, gs, watcher, setP
     return testController.getOverallResult();
 }
 
+// ────────────────────────────────────────────────────────────────────────────
+// Playback × INSTANT (Instant-policy pass, slice 1)
+// ────────────────────────────────────────────────────────────────────────────
+
+/**
+ * The same recorded plan replayed TWICE — paced, then Instant — in one leg.
+ *
+ * Running both is what makes the duration bound mean something. An absolute
+ * threshold ("under 3 s") would encode this machine's speed and would go
+ * amber on a loaded CI box; a RATIO between two replays of the identical plan,
+ * measured back to back, is self-calibrating. And it is the assertion the
+ * feature is actually about: a silent fallback to paced stepping — the exact
+ * failure a `case 'instant'` that logs-and-drops would produce — passes every
+ * correctness assertion here and fails only this one.
+ *
+ * The second half is the in-app echo of the byte-identity contract that
+ * clockGate.test.js pins headlessly: the two replays must produce the SAME
+ * effects (same actions completed, same gate opened, same exit crossed). A
+ * pump that changed results would not be a pump.
+ *
+ * The pool is topped up so each replay fits in ONE run, deliberately:
+ * multi-run replay under Instant is round-trip-bound, not tick-bound, so a
+ * multi-run variant would measure the host round trip rather than the pump.
+ * The single-run shape is where the pump's effect is actually visible.
+ *
+ * The queue still carries the MAZE APPROACH hop even so — see instantHops for
+ * the two reasons, one of which (the post-crossing reset teleport landing
+ * between the two replays) only bites a leg that replays more than once.
+ */
+// Three Wanders (600 exp) below the region ceiling, so the replayed plan has
+// to complete all three before the departure gate opens — long enough that
+// paced (750 ticks ≈ 15 s at 50 ticks/s) and Instant are far apart.
+const INSTANT_REPLAY_LOOPS = 3;
+const INSTANT_REPLAY_SEED = EXPLORE_GATE - INSTANT_REPLAY_LOOPS * WANDER_EXP;
+// One Wander costs the fork's whole native 250-mana budget, so three need
+// 750 plus the departure — topped well past that to keep it inside one run.
+const INSTANT_REPLAY_TOPUP = 4000;
+// Instant must beat paced by at least this factor. The real gap is ~15 s vs
+// a few hundred ms; 3× leaves enormous headroom for a loaded machine while
+// still being unreachable for a paced fallback (which would score ~1×).
+const INSTANT_SPEEDUP_MIN = 3;
+
+/** The bridge's cumulative pump counters, or zeros before the first pump. */
+function pumpStats() {
+    const s = bridgeState()?.clockStats ?? {};
+    return {
+        ticks: Number(s.pumpTicks ?? 0),
+        batches: Number(s.pumpBatches ?? 0),
+        collapsed: Number(s.pumpViewRequestsCollapsed ?? 0),
+    };
+}
+
+/**
+ * The queue this leg parks, r0's block in `mode` with `instant` set.
+ *
+ * The MAZE APPROACH hop is not optional, for two independent reasons — both
+ * learned the hard way when a single-hop version of this leg failed:
+ *
+ *   1. A recording binds by `(region, arrivalKey, ordinal)`, and arrivalKey is
+ *      the exit the block was entered by. Record and Playback must therefore
+ *      run the SAME path, or the replay finds nothing bound to it.
+ *   2. The fork's loop ends one tick after a departure fires (its queue is
+ *      spent), which reports a run end; the host answers with a loop reset
+ *      whose teleport lands on the queue's index-0 region. With no approach
+ *      hop the player ends up in the maze with no queued route home, and the
+ *      NEXT replay can never park. Harmless in the single-run leg, where that
+ *      teleport happens after the last assertion — but this leg runs two
+ *      replays back to back, so it lands squarely between them.
+ *
+ * So the queue is `region_0_0 -exit_0-> r0 -exit_to_region_1_0-> r1`, the maze
+ * block is Manual, and the leg walks it — the player walking back.
+ */
+function instantHops(mode, instant) {
+    return MULTI_RUN_HOPS.map((h) => (h.from === OMSI_REGION_SPLIT_R0
+        ? { ...h, mode, instant }
+        : h));
+}
+
+async function omsiPlaybackInstant(testController) {
+    const loopState = (await import('../../loops/loopStateSingleton.js')).default;
+    const { clearForRegion } = await import('../../loops/savedQueueStore.js');
+
+    testController.log(`Loading ${OMSI_REGION_SPLIT_PRESET_PATH}…`);
+    await testController.loadRulesFromFile(OMSI_REGION_SPLIT_PRESET_PATH);
+    await testController.stateManager.pingWorker('after-rules-load', 3000);
+
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'omsiSubstrateWrapperPanel' });
+    const booted = await waitForOmsiBridge(testController);
+    testController.reportCondition('omsi bridge booted', !!booted);
+    if (!booted) return testController.getOverallResult();
+    resetOmsiEngineProgress(['Wander']);
+
+    const win = await enterRegion(testController, OMSI_REGION_SPLIT_R0);
+    testController.reportCondition('entered r0', !!win);
+    if (!win) return testController.getOverallResult();
+    try {
+        clearForRegion(loopState._rulesHash(), OMSI_REGION_SPLIT_R0, 'omsi');
+    } catch { /* best-effort */ }
+
+    const gs = getGameStateSingleton();
+    const savedNoReset = gs.noManaDepletionReset;
+    const watcher = watchRegionMoves();
+    let park = null;
+    try {
+        return await omsiPlaybackInstantLegs(testController, {
+            loopState, gs, watcher, setPark: (p) => { park = p; },
+        });
+    } finally {
+        watcher.stop();
+        gs.noManaDepletionReset = savedNoReset;
+        unparkManualBlocks(park);
+        omsiClearQueue();
+        resetOmsiEngineProgress(['Wander']);
+    }
+}
+
+/**
+ * Run one replay of the bound recording and time it.
+ *
+ * Returns the wall time to the crossing, the actions the fork completed, and
+ * how much of the stepping went through the PUMP — the last being the
+ * positive witness that Instant engaged at all (a paced replay must score
+ * exactly zero, or the "Instant" leg is measuring nothing).
+ */
+/**
+ * Put the player back in r0 from wherever they are, and stay until it sticks.
+ *
+ * Both callers need this and neither can assume a source region: after a
+ * replay crosses, the fork's loop ends (its queue is spent), the host answers
+ * with a loop reset, and the teleport lands on the maze — possibly AFTER a
+ * one-shot move would already have run. Re-issuing the move every poll until
+ * the bridge reports r0 active is what makes that race unlosable.
+ */
+async function settleInR0(testController, label) {
+    return eventually(testController, () => {
+        const here = readCurrentRegion();
+        if (here !== OMSI_REGION_SPLIT_R0) {
+            moveToRegion(OMSI_REGION_SPLIT_R0, here);
+            return false;
+        }
+        return bridgeState()?.activeRegionId === OMSI_REGION_SPLIT_R0;
+    }, `settled in r0 ${label}`, 30000, 200);
+}
+
+async function timeOneReplay(testController, { loopState, watcher, instant, label }) {
+    const backInR0 = await settleInR0(testController, `to stage the ${label} replay`);
+    testController.assertEqual(`back in r0 to stage the ${label} replay`, true, !!backInR0);
+    if (!backInR0) return null;
+
+    // Identical starting conditions for both replays — the comparison is only
+    // meaningful if the plan, the gate distance and the budget all match. The
+    // seeded level is stashed with the rest of r0's per-region state when we
+    // step out below, and comes back when the replay re-enters.
+    omsiEval(`towns[0].expWander = ${INSTANT_REPLAY_SEED}; adjustAll();`);
+    omsiClearQueue();
+    testController.assertEqual(`r0 exit gate CLOSED at the ${label} replay start`, false,
+        bridgeState()?.regionExitAvailable);
+    gameStateFn('gainMana')?.(INSTANT_REPLAY_TOPUP);
+    testController.log(`pool before the ${label} replay: ${readPool()} / ${readMaxPool()}`);
+
+    const actionsBefore = Number(omsiEval('totals.actions'));
+    const movesBefore = watcher.moves.length;
+    const pumpBefore = pumpStats();
+
+    // Step out to the maze — the queue's index 0, where the park begins.
+    moveToRegion(OMSI_REGION_SPLIT_MAZE, OMSI_REGION_SPLIT_R0);
+
+    // The clock starts BEFORE the approach walk, not at r0 entry. Starting it
+    // at entry would clip the first poll interval off the measurement, and
+    // clipping 100 ms off a ~300 ms Instant replay flatters the ratio. Paying
+    // the approach in BOTH measurements understates the speed-up instead,
+    // which is the honest direction for a bound.
+    const startedAt = performance.now();
+    const parked = await parkManualBlocks(testController, instantHops('playback', instant));
+    testController.assertEqual(`parked the maze approach + the ${label} Playback block`,
+        true, !!parked);
+    if (!parked) return null;
+
+    let walkBacks = 0;
+    const crossed = await eventually(testController,
+        () => {
+            if (walkBackIfParkedOnMaze(loopState)) walkBacks += 1;
+            return watcher.moves.slice(movesBefore).some(
+                (m) => m?.sourceRegion === OMSI_REGION_SPLIT_R0
+                    && m?.targetRegion === OMSI_REGION_SPLIT_R1
+                    && m?.exitName === OMSI_REGION_SPLIT_R0_TO_R1
+                    && m?.fromLoop === true);
+        },
+        `the ${label} replay crossed the recorded departure`, 120000, 100);
+    const elapsedMs = performance.now() - startedAt;
+
+    // r0's final Explore level, read by RE-ENTERING rather than by sampling.
+    // Sampling during the replay cannot work and is how this leg first failed:
+    // an Instant replay finishes between two 100 ms polls, so the poller only
+    // ever saw the seed (4900) while paced caught a mid-grind value (5300) —
+    // a poller cannot measure what a fast path passes through. Re-entry reads
+    // the region's STASHED state, which is a settled fact rather than a
+    // transient, and is equally valid for both cadences.
+    const reread = await settleInR0(testController, `to read the ${label} final level`);
+    const exploreAfter = reread ? Number(omsiEval('towns[0].expWander')) : null;
+
+    const pumpAfter = pumpStats();
+    const result = {
+        parked,
+        crossed: !!crossed,
+        elapsedMs,
+        performed: Number(omsiEval('totals.actions')) - actionsBefore,
+        exploreAfter,
+        pumpTicks: pumpAfter.ticks - pumpBefore.ticks,
+        pumpBatches: pumpAfter.batches - pumpBefore.batches,
+        collapsed: pumpAfter.collapsed - pumpBefore.collapsed,
+    };
+    testController.log(`${label} replay: crossed=${result.crossed} in `
+        + `${Math.round(elapsedMs)} ms, ${result.performed} action(s), `
+        + `${walkBacks} walk-back(s), pump ${result.pumpTicks} tick(s) in `
+        + `${result.pumpBatches} batch(es), ${result.collapsed} view request(s) collapsed`);
+    if (!result.crossed) {
+        testController.log(`DIAG (${label}): expWander=${omsiEval('towns[0].expWander')}, `
+            + `gate=${bridgeState()?.regionExitAvailable}, queue=${JSON.stringify(omsiReadQueue())}, `
+            + `replayInFlight=${bridgeState()?.replayInFlight}, `
+            + `instant=${JSON.stringify(bridgeState()?.instant)}, pool=${readPool()}`);
+    }
+    return result;
+}
+
+async function omsiPlaybackInstantLegs(testController, { loopState, gs, watcher, setPark }) {
+    // ── Leg 1: RECORD, entered THROUGH the maze ──────────────────────────────
+    // Same two-hop path the replays will run, because the recording binds by
+    // the exit the block was entered by (see instantHops).
+    gs.noManaDepletionReset = true;
+    moveToRegion(OMSI_REGION_SPLIT_MAZE, OMSI_REGION_SPLIT_R0);
+    const park = await parkManualBlocks(testController, instantHops('record', false));
+    testController.assertEqual('parked the maze approach + a Record block on r0', true, !!park);
+    if (!park) return testController.getOverallResult();
+    setPark(park);
+    const instance = park.instances.get(OMSI_REGION_SPLIT_R0);
+
+    testController.assertEqual('the queue parked on the maze approach block first',
+        OMSI_REGION_SPLIT_MAZE, loopState._manualRegionName);
+    walkBackIfParkedOnMaze(loopState);
+    const recording = await eventually(testController,
+        () => loopState._manualRegionName === OMSI_REGION_SPLIT_R0,
+        'walking the maze approach parked the Record block on r0');
+    testController.assertEqual('walking the maze approach handed the queue to r0\'s block',
+        true, !!recording);
+    if (!recording) return testController.getOverallResult();
+    const active = await waitForOmsiActive(testController);
+    testController.assertEqual('the bridge loaded r0 for the Record visit', true, !!active);
+    if (!active) return testController.getOverallResult();
+
+    const toR1 = exitToward(OMSI_REGION_SPLIT_R1);
+    testController.assertEqual('synthetic exit toward r1 injected', true, !!toR1);
+    if (!toR1) return testController.getOverallResult();
+
+    omsiClearQueue();
+    omsiAppendAction(RECORDED_ACTION, INSTANT_REPLAY_LOOPS);
+    omsiEval(`towns[0].expWander = ${EXPLORE_ABOVE}; adjustAll();`);
+    omsiEval(`getActionPrototype(${JSON.stringify(toR1)}).finish()`);
+
+    const inR1 = await eventually(testController,
+        () => bridgeState()?.activeRegionId === OMSI_REGION_SPLIT_R1, 'host swapped into r1');
+    testController.assertEqual('the Record visit crossed into r1', true, inR1);
+    if (!inR1) return testController.getOverallResult();
+
+    const bound = loopState._lookupBoundRecording(OMSI_REGION_SPLIT_R0, instance);
+    testController.assertEqual('the visit recording binds to the block', true, !!bound);
+    if (!bound) return testController.getOverallResult();
+    testController.assertEqual(`the recording carries the ${INSTANT_REPLAY_LOOPS}-loop plan`,
+        INSTANT_REPLAY_LOOPS, bound.actions?.[0]?.loops);
+
+    // Both replays run at the natural pool plus a top-up, so a depletion reset
+    // cannot cut either one short and skew the comparison.
+    gs.noManaDepletionReset = true;
+
+    // ── Leg 2: PACED — the control ───────────────────────────────────────────
+    const paced = await timeOneReplay(testController,
+        { loopState, watcher, instant: false, label: 'paced' });
+    if (!paced) return testController.getOverallResult();
+    testController.assertEqual('the paced replay crossed the recorded departure', true, paced.crossed);
+    if (!paced.crossed) return testController.getOverallResult();
+    // The control must NOT have pumped, or the comparison below is between two
+    // Instant replays and proves nothing.
+    testController.assertEqual('the paced replay used the paced clock, not the pump',
+        0, paced.pumpTicks);
+
+    // ── Leg 3: INSTANT — the same plan, the same distance, one flag apart ────
+    const instant = await timeOneReplay(testController,
+        { loopState, watcher, instant: true, label: 'instant' });
+    if (!instant) return testController.getOverallResult();
+    testController.assertEqual('the Instant replay crossed the recorded departure', true,
+        instant.crossed);
+    if (!instant.crossed) return testController.getOverallResult();
+
+    // ── The pump really ran ──────────────────────────────────────────────────
+    // Positive first: a zero here means the flag never reached the bridge, and
+    // every timing assertion below would be measuring noise.
+    testController.assertEqual('the bridge pumped ticks for the Instant replay', true,
+        instant.pumpTicks > 0);
+    testController.assertEqual('the pump ran in bounded batches, not one giant step', true,
+        instant.pumpBatches > 1);
+    testController.assertEqual('the pump collapsed the view request queue between batches', true,
+        instant.collapsed > 0);
+
+    // ── The duration bound: what a silent paced fallback fails ───────────────
+    const speedup = paced.elapsedMs / Math.max(instant.elapsedMs, 1);
+    testController.log(`paced ${Math.round(paced.elapsedMs)} ms vs instant `
+        + `${Math.round(instant.elapsedMs)} ms — ${speedup.toFixed(1)}× faster`);
+    testController.assertEqual(
+        `the Instant replay drained at least ${INSTANT_SPEEDUP_MIN}× faster than the paced one `
+        + `(measured ${speedup.toFixed(1)}×) — a fallback to paced stepping scores ~1×`,
+        true, speedup >= INSTANT_SPEEDUP_MIN);
+
+    // ── …and produced the SAME results (byte identity, in-app) ───────────────
+    testController.assertEqual('both replays completed the same number of fork actions',
+        paced.performed, instant.performed);
+    testController.assertEqual(
+        'both replays ground r0 to the same Explore level (read back by re-entering)',
+        paced.exploreAfter, instant.exploreAfter);
+    testController.assertEqual('…and that level really is the gate the replay had to open',
+        EXPLORE_GATE, instant.exploreAfter);
+    testController.assertEqual('the fork really ground the recorded plan (not a bare teleport)',
+        true, instant.performed >= INSTANT_REPLAY_LOOPS + 1);
+    testController.assertEqual('the replay window closed when the departure crossed',
+        false, bridgeState()?.replayInFlight);
+    testController.assertEqual('the pump is no longer active once the window closed',
+        false, bridgeState()?.instant?.pumpActive);
+
+    return testController.getOverallResult();
+}
+
 registerTest({
     id: 'omsi-record-playback-crosses-region',
     name: 'Omsi: a recorded region plan replays through the fork and crosses the recorded exit',
@@ -1263,6 +1593,122 @@ async function botCrossesAcrossResets(testController) {
     }
 }
 
+/**
+ * Bot × Instant (Instant-policy pass, slice 1) — the multi-reset walk again,
+ * with the block's Instant checkbox on.
+ *
+ * COMPLEMENTS `omsi-bot-multi-reset-walk`, never replaces it: that leg is the
+ * only real-time coverage of a bot walk, and the pump is precisely the thing
+ * that would hide a real-time defect.
+ *
+ * Deliberately NOT duration-asserted, unlike the Playback leg. An omsi bot
+ * walk is a sequence of HOST ROUND TRIPS — report, reset, teleport, walk back,
+ * re-dispatch, re-engage, measured in-app at ~12 s each — and Instant collapses
+ * only the ticking inside each run, not the round trips between them. A
+ * speed-up ratio here would be dominated by machinery Instant does not touch,
+ * so the witness is the pump COUNTER instead: the flag reached the bridge, the
+ * stepping went through the pump, and the walk still crossed. That is the
+ * honest claim, and `instant.botMode` is the thing that would be false if the
+ * Bot half had been left as a vacuous checkbox.
+ */
+async function botInstantCrossesAcrossResets(testController) {
+    const booted = await bootBotFixture(testController, BOT_MULTI_RUN_SEED);
+    if (!booted) return testController.getOverallResult();
+    const { loopState, gs } = booted;
+
+    const controller = substrateRegistry.get('omsi')?.getPlaybackController?.();
+    const walkToSpy = spyOnOmsiController(controller, 'walkTo', (m) => testController.log(m));
+    const watcher = watchRegionMoves();
+    const savedNoReset = gs.noManaDepletionReset;
+    gs.noManaDepletionReset = false;
+    let park = null;
+    try {
+        const movesBefore = watcher.moves.length;
+        const resetsBefore = readLoopResetCount();
+        const pumpBefore = pumpStats();
+        testController.log(`pool before the walk: ${readPool()} / ${readMaxPool()}`);
+
+        const progress = { walkBacks: 0, windowEnded: false };
+        park = await parkManualBlocks(testController,
+            BOT_HOPS().map((h) => (h.from === OMSI_REGION_SPLIT_R0 ? { ...h, instant: true } : h)));
+        testController.assertEqual('parked the maze approach + an INSTANT Bot block on r0',
+            true, !!park);
+        if (!park) return testController.getOverallResult();
+
+        const engaged = await pollWalkingBack(testController, loopState, progress,
+            () => loopState._botExecutedAction !== null && botState().inFlight === true,
+            'the Bot block dispatched walkTo and the bridge opened its window', 30000, 100);
+        testController.assertEqual('a Bot block engaged the walkTo solver', true, !!engaged);
+        if (!engaged) return testController.getOverallResult();
+
+        // The mode arrived BEFORE the walk — loopState sets it ahead of every
+        // walkTo, and a checkbox that never reached the bridge is exactly the
+        // vacuous control this slice exists to avoid.
+        testController.assertEqual('the Instant flag reached the bridge as a bot MODE',
+            true, bridgeState()?.instant?.botMode === true);
+
+        const crossed = await pollWalkingBack(testController, loopState, progress,
+            () => watcher.moves.slice(movesBefore).some(
+                (m) => m?.sourceRegion === OMSI_REGION_SPLIT_R0
+                    && m?.targetRegion === OMSI_REGION_SPLIT_R1
+                    && m?.exitName === OMSI_REGION_SPLIT_R0_TO_R1),
+            'the Instant bot crossed after grinding across loop resets', 360000, 250);
+        const moves = watcher.moves.slice(movesBefore);
+        const resets = readLoopResetCount() - resetsBefore;
+        const pump = pumpStats();
+        const pumped = {
+            ticks: pump.ticks - pumpBefore.ticks,
+            batches: pump.batches - pumpBefore.batches,
+            collapsed: pump.collapsed - pumpBefore.collapsed,
+        };
+        testController.log(`walk-backs: ${progress.walkBacks}; walkTo dispatches: `
+            + `${walkToSpy.calls.length}; host resets: ${resets}; `
+            + `pump: ${pumped.ticks} tick(s) in ${pumped.batches} batch(es), `
+            + `${pumped.collapsed} view request(s) collapsed`);
+        testController.assertEqual('the Instant bot crossed the queued exit', true, !!crossed);
+        if (!crossed) {
+            testController.log(`DIAG: expWander=${omsiEval('towns[0].expWander')}, `
+                + `gate=${bridgeState()?.regionExitAvailable}, bot=${JSON.stringify(botState())}, `
+                + `instant=${JSON.stringify(bridgeState()?.instant)}, pool=${readPool()}, `
+                + `region=${readCurrentRegion()}, walkTos=${walkToSpy.calls.length}, `
+                + `walkBacks=${progress.walkBacks}`);
+            return testController.getOverallResult();
+        }
+
+        // ── The pump carried the walk ────────────────────────────────────
+        testController.assertEqual('the bridge pumped ticks for the Instant bot walk', true,
+            pumped.ticks > 0);
+        testController.assertEqual('the pump ran in bounded batches', true, pumped.batches > 1);
+
+        // ── …and Instant did not break the multi-reset machinery ─────────
+        // The properties the real-time leg pins, re-asserted under the pump:
+        // the pump yields at run boundaries precisely so these still hold.
+        const resetMoves = moves.filter((m) => m?.fromReset === true);
+        testController.assertEqual('a loop reset teleport interrupted the Instant walk', true,
+            resetMoves.length >= 1);
+        testController.assertEqual('every reset teleport landed on the queue\'s index-0 region',
+            true, resetMoves.every((m) => m?.targetRegion === OMSI_REGION_SPLIT_MAZE));
+        testController.assertEqual('the queue re-parked on index 0 after each reset', true,
+            progress.walkBacks >= 2);
+        testController.assertEqual('the bot wake re-dispatched walkTo after the reset', true,
+            walkToSpy.calls.length >= 2);
+        testController.assertEqual('the bot window ended on the teleport\'s regionChanged-away',
+            true, progress.windowEnded);
+        const departure = moves.find(
+            (m) => m?.exitName === OMSI_REGION_SPLIT_R0_TO_R1 && !m?.fromReset);
+        testController.assertEqual('the departure was NOT fromLoop-stamped (slice-2 ruling)',
+            true, departure?.fromLoop !== true);
+        return testController.getOverallResult();
+    } finally {
+        walkToSpy.restore();
+        watcher.stop();
+        gs.noManaDepletionReset = savedNoReset;
+        unparkManualBlocks(park);
+        omsiClearQueue();
+        resetOmsiEngineProgress(['Wander']);
+    }
+}
+
 registerTest({
     id: 'omsi-bot-crosses-region',
     name: 'Omsi: a Bot block engages the fork planner and crosses the region exit',
@@ -1291,6 +1737,39 @@ registerTest({
                + 'the same exit (install idempotence), the bot window ended on the teleport\'s '
                + 'regionChanged-away, and no fork boundary produced two host resets (trap 5).',
     testFunction: botCrossesAcrossResets,
+    category: 'Omsi substrate',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
+registerTest({
+    id: 'omsi-playback-instant',
+    name: 'Omsi: Instant drains a Playback replay without changing its results',
+    description: 'Instant-policy pass slice 1: the same recorded plan replayed twice, paced then '
+               + 'Instant, one flag apart. Asserts the Instant replay drained at least 3x faster '
+               + '(the bound a silent fallback to paced stepping fails, scoring ~1x), that the '
+               + 'bridge really pumped — non-zero pump ticks in more than one bounded batch, with '
+               + 'the view request queue collapsed between them, against a paced control pinned at '
+               + 'exactly zero pump ticks — and that both replays produced the SAME effects: same '
+               + 'fork actions completed, same Explore level, same exit crossed. The in-app echo of '
+               + 'the byte-identity contract clockGate.test.js pins headlessly.',
+    testFunction: omsiPlaybackInstant,
+    category: 'Omsi substrate',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
+registerTest({
+    id: 'omsi-bot-instant-multi-reset-walk',
+    name: 'Omsi: an Instant Bot walk still grinds correctly across loop resets',
+    description: 'Instant-policy pass slice 1, the Bot half: the multi-reset bot walk with the '
+               + 'block\'s Instant checkbox on. COMPLEMENTS omsi-bot-multi-reset-walk (the only '
+               + 'real-time bot coverage) rather than replacing it. Asserts the flag reached the '
+               + 'bridge as a bot MODE and the stepping went through the pump — the witness that '
+               + 'the Bot checkbox is not vacuous — and then re-pins the multi-reset machinery '
+               + 'under the pump: resets still interrupt, the queue still re-parks on index 0, '
+               + 'walkTo is still re-dispatched, the window still ends on the teleport. No duration '
+               + 'bound: a bot walk is host-round-trip-bound (~12 s each), and Instant collapses '
+               + 'only the ticking inside a run.',
+    testFunction: botInstantCrossesAcrossResets,
     category: 'Omsi substrate',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });

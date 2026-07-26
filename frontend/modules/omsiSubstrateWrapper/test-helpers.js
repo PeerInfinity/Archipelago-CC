@@ -245,6 +245,11 @@ export function watchRegionMoves() {
  * only: the multi-run replay leg needs the maze approach block Manual (so
  * the leg can walk it) while r0's block is Playback (the thing under test),
  * and one mode for every source cannot express that.
+ * A hop may also carry `instant: true` — the per-block Instant checkbox
+ * (Instant-policy pass, slice 1). It is set with the mode, BEFORE processing
+ * starts, because the flag is read as the block is ENTERED: setting it
+ * afterwards would leave the first entry paced and make an Instant leg pass
+ * for the wrong reason.
  * omsi is FINE-GRAINED (the registry supplies takeLastRecording), so loops
  * charges nothing for this play: the bridge's mana mirror is the economy.
  *
@@ -273,11 +278,17 @@ export async function parkManualBlocks(testController, hops, mode = 'manual') {
     for (const hop of hops) gs.updatePath(hop.to, hop.exit ?? null, hop.from);
     const { visits } = resolveQueueBlocks(loopStateSingleton.getActionQueue());
     const modeFor = new Map(hops.map((h) => [h.from, h.mode ?? mode]));
+    const instantFor = new Map(hops.map((h) => [h.from, h.instant === true]));
     const sources = new Set(hops.map((h) => h.from));
     const instances = new Map();
     for (const visit of visits) {
         if (!sources.has(visit.name)) continue;
         loopStateSingleton.setBlockMode(visit.name, visit.instance, modeFor.get(visit.name));
+        // Set BOTH ways, never only when true: these blocks persist across
+        // legs, so an Instant leg that ran earlier would otherwise leave the
+        // flag on for a later paced one.
+        loopStateSingleton.setBlockInstant(
+            visit.name, visit.instance, instantFor.get(visit.name) === true);
         instances.set(visit.name, visit.instance);
     }
     if (instances.size !== sources.size) {

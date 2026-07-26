@@ -90,6 +90,16 @@
  *     and the host answers with a loop reset whose teleport ends the
  *     replay window; a replay spanning runs resumes through loops'
  *     queue-restart retry, not through this window (see _startReplay).
+ *   - Instant (Instant-policy pass, slice 1). A Playback or Bot block
+ *     flagged Instant runs the SAME stepping through a synchronous PUMP:
+ *     `m.step()` in batches sized by the remaining loop budget instead of
+ *     by elapsed wall time. Cadence only — same ticks, same order, same
+ *     gate — so results are byte-identical to paced play by construction.
+ *     It is a pump, NOT a skip: nothing here completes an action the
+ *     economy could not afford. The pump yields at every run boundary,
+ *     because a reset is a HOST round trip and nothing can round-trip
+ *     mid-synchronous-pump; a multi-run replay under Instant is therefore
+ *     round-trip-bound rather than tick-bound, which is the whole win.
  *   - No-progress guard: a restart after a loop that consumed (almost)
  *     no effective time means no queued action could run (empty queue
  *     slips past the step gate only in exotic states; a queue whose
@@ -114,7 +124,8 @@
 
 import { IframeClient } from '../iframe-base/iframeClient.js';
 import { OMSI_FILLER_ITEM_NAME, qBatchesForCount } from './unlockPool.js';
-import { planClockStep } from './clockGate.js';
+import { planClockStep, planPumpBatch } from './clockGate.js';
+import { dedupeViewRequests } from './viewRequests.js';
 
 function log(level, ...args) {
     const fn = console[level] || console.log;
@@ -137,6 +148,28 @@ const TICKS_PER_SECOND = 50;
 const MAX_TICKS_PER_CALLBACK = 100;
 // The view's coalesced render queue is drained at most this often.
 const VIEW_UPDATE_MIN_MS = 200;
+// ── Instant pump (Instant-policy pass, slice 1) ──────────────────────────
+// One synchronous batch, bounded so the between-batch checks — held
+// boundary, run end, window close, and the budget clamp's recompute — get to
+// run often enough to matter.
+//
+// Deliberately EQUAL to MAX_TICKS_PER_CALLBACK, and that equality is the
+// whole argument. The budget clamp lands a batch exactly on the TIMER
+// boundary, but the other loop end — `shouldRestart`, a compiled plan
+// running dry — is unpredictable from out here, so a batch that crosses it
+// restarts in-tick and grinds the remainder into the NEXT run. Paced play has
+// the identical overshoot, bounded by its own per-callback cap; matching that
+// cap means the pump can never overshoot a boundary by more than the paced
+// path already can, so Instant introduces no new exposure. It costs nothing:
+// the pump's win comes from not WAITING between callbacks, not from the size
+// of a batch — 10 batches of 100 are exactly as instant as 4 of 250.
+const PUMP_BATCH_TICKS = MAX_TICKS_PER_CALLBACK;
+// Ceiling on ONE pump invocation. Not a truncation: the pump's flag survives,
+// so hitting this YIELDS to the event loop and the next clock callback picks
+// the pump straight back up. It exists so a pathological run (a plan whose
+// timeNeeded grows faster than it is spent) can't wedge the iframe's main
+// thread forever. 200k ticks = 4000 s of game time in one go.
+const PUMP_MAX_TICKS_PER_CALLBACK = 200_000;
 const POOL_EPSILON = 0.001;
 // A loop that ended after less than this much effective time (seconds;
 // 1 tick = 1/50 s) made no real progress — see the no-progress guard.
@@ -233,6 +266,32 @@ let _replayInFlight = false;
 // The graph exit id the in-flight replay must cross to end (slice 4).
 let _replayDepartureExitId = null;
 
+// ── Instant (Instant-policy pass, slice 1) ───────────────────────────────
+// Two independent flags because Instant reaches the bridge two ways, and
+// they belong to different windows:
+//
+//   _replayInstant — the per-block Instant checkbox on a PLAYBACK block,
+//     forwarded as `opts.instant` on the replayActions payload. Scoped to
+//     the replay it arrived with, so _endReplay clears it.
+//   _botInstantMode — the same checkbox on a BOT block, arriving as the
+//     control channel's `instant` method before every walkTo. A MODE, not
+//     an argument (the jta precedent): loopState sets it BOTH ways before
+//     each walk precisely so one Instant block can't leave the substrate
+//     instant for the next one. It is only ever READ under _botInFlight,
+//     so a stale true can't leak into live play.
+//
+// Neither one is consulted for Manual/Record: Instant is an automation
+// control, and live play is the player's own cadence.
+let _replayInstant = false;
+let _botInstantMode = false;
+// Set by _handleGameRestart, cleared at pump entry: the pump yields on a run
+// END as well as on a held boundary. A restart is reported to the host as
+// `substrate:resourceReset` and answered with a real loop reset whose
+// teleport ends the window — and NOTHING can round-trip mid-synchronous-pump.
+// Without this the pump would grind run after run, minting resets faster than
+// the host can consume them.
+let _pumpRunEnded = false;
+
 // Step gate (arc D1 slice 2, ruling 3). The bridge advances the game ONLY
 // while the loops queue is parked on THIS region's Manual/Record block, or
 // while a replay is in flight. Unparked ⇒ frozen — otherwise the game keeps
@@ -296,6 +355,11 @@ const _clockStats = {
     messages: 0, inactiveSkips: 0, callbacks: 0,
     ticksStepped: 0, skippedNoQueue: 0, skippedGated: 0,
     skippedHeldBoundary: 0, maxElapsedMs: 0,
+    // Instant pump. `pumpTicks` is a SUBSET of ticksStepped (the pump steps
+    // through the same counter), so a leg can assert "the pump really ran"
+    // positively instead of inferring it from a duration.
+    pumpInvocations: 0, pumpBatches: 0, pumpTicks: 0,
+    pumpViewRequestsCollapsed: 0, pumpBudgetExhausted: 0,
 };
 
 // ────────────────────────────────────────────────────────────────
@@ -471,6 +535,109 @@ function _mayStepClock() {
     return _stepGateLiveRegion !== null && _stepGateLiveRegion === _currentRegionId;
 }
 
+/**
+ * Whether stepping should run as an Instant PUMP rather than paced.
+ *
+ * Each flag is paired with its own window, so an Instant checkbox can only
+ * ever accelerate the block that set it — a replay that ended, or a bot walk
+ * that was stopped, leaves nothing behind that live play could inherit.
+ */
+function _instantPumpActive() {
+    return (_replayInFlight && _replayInstant) || (_botInFlight && _botInstantMode);
+}
+
+/**
+ * Drain the current run in tight synchronous batches (Instant-policy pass,
+ * slice 1).
+ *
+ * CADENCE ONLY. The same `singleTick` runs the same number of times as it
+ * would paced, in the same order, against the same gate — what changes is
+ * that the tick count comes from the remaining loop budget instead of from
+ * wall time. That is the whole contract, and the paced-vs-instant byte
+ * identity check is it made executable.
+ *
+ * Three things end a pump invocation, and the first two are the interesting
+ * ones:
+ *
+ *   - A HELD BOUNDARY or a closed gate or an exhausted plan — whatever
+ *     `planPumpBatch` withholds a batch for. The caller's normal async
+ *     machinery then runs, which is where the bot's exit crossing and cold
+ *     start already live.
+ *   - A RUN END (`_pumpRunEnded`). A restart is reported to the host, the
+ *     host answers with a loop reset, and that reset TELEPORTS — a host
+ *     round trip that cannot happen while this function holds the thread.
+ *     Multi-run replays therefore become round-trip-bound instead of
+ *     tick-bound, which is exactly the win: the ticks stop costing anything
+ *     and only the round trips remain.
+ *   - The safety ceiling, which yields rather than truncates.
+ *
+ * The view queue is collapsed BETWEEN batches (see viewRequests.js — without
+ * it the pump is quadratic in ticks) and rendered ONCE at yield: a pump that
+ * repainted per batch would pay the rendering cost it exists to skip, and one
+ * that never repainted would leave the panel showing pre-pump state.
+ */
+function _runInstantPump() {
+    const m = _managed();
+    if (!m) return;
+    _pumpRunEnded = false;
+    _clockStats.pumpInvocations += 1;
+    let stepped = 0;
+    let batches = 0;
+    let reason = 'ceiling';
+    while (stepped < PUMP_MAX_TICKS_PER_CALLBACK) {
+        const { ticks, skip } = planPumpBatch({
+            // Never let the last batch overshoot the invocation ceiling.
+            maxBatch: Math.min(PUMP_BATCH_TICKS, PUMP_MAX_TICKS_PER_CALLBACK - stepped),
+            hasRunnableQueue: _hasRunnableQueue(),
+            gateOpen: _mayStepClock(),
+            // Re-read EVERY batch: timer advances, and timeNeeded can grow
+            // under the player's feet (Buy Mana, a host budget pin).
+            state: _loopClock(),
+        });
+        if (skip !== null) {
+            reason = skip;
+            if (skip === 'noQueue') _clockStats.skippedNoQueue += 1;
+            else if (skip === 'gated') _clockStats.skippedGated += 1;
+            else if (skip === 'heldBoundary') _clockStats.skippedHeldBoundary += 1;
+            break;
+        }
+        if (ticks <= 0) {
+            // Budget clamp resolved to nothing without a skip reason — treat
+            // it as a yield rather than spinning on a zero-width batch.
+            reason = 'noBudget';
+            _clockStats.pumpBudgetExhausted += 1;
+            break;
+        }
+        m.step(ticks);
+        stepped += ticks;
+        batches += 1;
+        _clockStats.pumpBatches += 1;
+        _clockStats.pumpTicks += ticks;
+        _clockStats.ticksStepped += ticks;
+        _clockStats.pumpViewRequestsCollapsed += dedupeViewRequests(_engineView()?.requests);
+        if (_pumpRunEnded) {
+            reason = 'runEnd';
+            break;
+        }
+        // The window can close INSIDE a batch: a replay's departure exit
+        // fires mid-tick, which dispatches the region move and ends the
+        // replay. Keeping the pump running past that would grind the queue
+        // for a region the player has already left.
+        if (!_instantPumpActive()) {
+            reason = 'windowClosed';
+            break;
+        }
+    }
+    // One repaint for the whole pump, and re-baseline the paced path's
+    // rate limiter so it doesn't immediately repaint again.
+    if (stepped > 0) {
+        _lastViewUpdateTime = Date.now();
+        _engineView()?.update();
+    }
+    log('debug', `instant pump: ${stepped} tick(s) in ${batches} batch(es) `
+        + `— yielded on ${reason}`);
+}
+
 function _clockTick() {
     _clockStats.messages += 1;
     const m = _managed();
@@ -525,14 +692,23 @@ function _clockTick() {
         log('debug', 'bot cold start: recompiled the loop onto the planner\'s first plan');
     }
     if (ticks > 0) {
-        m.step(ticks);
-        _clockStats.ticksStepped += ticks;
-        // Managed mode never drains the coalesced render queue
-        // (view.update is UPS-driven in normal boots) — do it here,
-        // rate-limited, so the UI tracks the host-driven time.
-        if (now - _lastViewUpdateTime >= VIEW_UPDATE_MIN_MS) {
-            _lastViewUpdateTime = now;
-            _engineView()?.update();
+        // Instant (Instant-policy pass, slice 1): same decision layer, faster
+        // clock. The gate above still decides WHETHER to advance — the pump
+        // only replaces the paced tick count with batches sized by the
+        // remaining budget, and so is reached only on a tick that would have
+        // stepped anyway.
+        if (_instantPumpActive()) {
+            _runInstantPump();
+        } else {
+            m.step(ticks);
+            _clockStats.ticksStepped += ticks;
+            // Managed mode never drains the coalesced render queue
+            // (view.update is UPS-driven in normal boots) — do it here,
+            // rate-limited, so the UI tracks the host-driven time.
+            if (now - _lastViewUpdateTime >= VIEW_UPDATE_MIN_MS) {
+                _lastViewUpdateTime = now;
+                _engineView()?.update();
+            }
         }
     }
     // Sample OUTSIDE the stepping gate: host-visible drains/gains can
@@ -1046,6 +1222,13 @@ function _handleGameRestart() {
     const loopDuration = ticksNow - _ticksAtLastRestart;
     _ticksAtLastRestart = ticksNow;
 
+    // Yield the Instant pump on EVERY restart, including the ones that go
+    // unreported below. A reported one needs the host round trip it is about
+    // to trigger; an unreported one (the no-progress guard) means the plan is
+    // spinning, and a pump would spin it at full synchronous speed instead of
+    // at 50/s. Both want the thread back.
+    _pumpRunEnded = true;
+
     // The restart reset timer/timeNeeded; drains from the in-flight
     // step batch can no longer be told apart from the refill, so
     // re-baseline (they wash out in the reset's pool refill).
@@ -1426,6 +1609,9 @@ function _endReplay(reason = 'unspecified') {
     if (!_replayInFlight) return;
     _replayInFlight = false;
     _replayDepartureExitId = null;
+    // Instant is scoped to the replay that carried it: the next block sets
+    // its own pacing, and live play in between is never pumped.
+    _replayInstant = false;
     log('debug', `replay no longer in flight — ${reason}`);
 }
 
@@ -1532,6 +1718,10 @@ function _startReplay(entries, opts = {}) {
     }
     _beginReplay();
     _replayDepartureExitId = departureExitId;
+    // Instant (Instant-policy pass, slice 1): the per-block checkbox, ridden
+    // in on the replay payload. Read AFTER the two refusals above — a replay
+    // that never starts must not leave the flag set for the next one.
+    _replayInstant = opts?.instant === true;
     // Same membership filter and append semantics the per-region restore uses.
     _restoreRegionQueue(entries);
     // …and the departure LAST, bypassing that filter: a synthetic exit action
@@ -1768,11 +1958,16 @@ function _setStepGate(state) {
  *   `setStepGate` — the host's view of whether the game may advance
  *     (slice 2): loop mode active, and which region loops is parked on for
  *     live play.
+ *   `walkTo` / `stop` — the Bot window (arc D2 slice 2).
+ *   `instant` — the Bot half of Instant (Instant-policy pass, slice 1).
+ *     Playback's half rides `replayActions`' opts instead, because it is
+ *     scoped to one replay; this one is a mode spanning a walk.
  *
- * The PlaybackProxy's generic pacing methods are deliberately NOT wired:
- * managed mode has no fast-step surface (the standing "omsi Instant last"
- * ruling) and the clock is bridge-owned, so honouring play/stop/step here
- * would fight the clock rather than serve it.
+ * The PlaybackProxy's remaining generic pacing methods (play/stop/step/
+ * setRate/reset) are still deliberately NOT wired: the clock is bridge-owned,
+ * so honouring them would fight it rather than serve it. Instant is the
+ * exception because it is not a rate — it is a request to stop consulting
+ * wall time at all, which the bridge's own clock is free to grant.
  */
 function _handlePlaybackControl(payload) {
     const method = payload?.method;
@@ -1800,13 +1995,21 @@ function _handlePlaybackControl(payload) {
             // planner we armed.
             _endBotWalk('host stopped the walk');
             return;
+        case 'instant':
+            // The BOT half of Instant (Instant-policy pass, slice 1).
+            // loopState sets this both ways before every walkTo — see
+            // _botInstantMode for why the OFF direction is load-bearing.
+            // Default ON matches PlaybackProxy.instant()'s own default.
+            _botInstantMode = args.length === 0 ? true : args[0] === true;
+            log('debug', `bot instant mode ${_botInstantMode ? 'ON' : 'OFF'}`);
+            return;
         case 'play':
         case 'step':
-        case 'instant':
         case 'setRate':
         case 'reset':
-            log('debug', `playback control '${method}' ignored (arc D1: the bridge owns the clock, `
-                + 'and omsi declares no instant)');
+            log('debug', `playback control '${method}' ignored (arc D1: the bridge owns `
+                + 'the clock, so the generic pacing methods would fight it rather than '
+                + 'serve it — Instant is honoured, on its own path)');
             return;
         default:
             log('warn', 'playback control: unknown method', method);
@@ -2041,6 +2244,14 @@ async function main() {
             // replay is grinding toward (slice 4).
             replayInFlight: _replayInFlight,
             replayDepartureExitId: _replayDepartureExitId,
+            // Instant (Instant-policy pass, slice 1). Both raw flags plus the
+            // resolved answer, so a leg can tell "the checkbox never arrived"
+            // apart from "it arrived and the window was closed".
+            instant: {
+                replay: _replayInstant,
+                botMode: _botInstantMode,
+                pumpActive: _instantPumpActive(),
+            },
             // Step gate (slice 2): whether the game may advance, and the
             // host state that decides it.
             mayStep: _mayStepClock(),

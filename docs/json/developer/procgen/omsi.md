@@ -14,7 +14,7 @@ The iframe boots with `?managed=1`, which makes the fork call `IdleLoopsManaged.
 | **D1** — loops mode | `loopSupport`, the step gate, per-region authored queues, Record capture and Playback replay | outer repo only |
 | **D2** — the Bot | the fork's own automation planner as the `walkTo` solver, plus the per-region Explore rescale it needs | outer repo (slices 1/2/3) + fork (slice 2b) |
 
-Arc E (multi-town travel) and F (a panel queue editor) are not built. **omsi Instant is last of all substrates by standing ruling** — the fork has no fast-step surface.
+Arc E (multi-town travel) and F (a panel queue editor) are not built. **Instant shipped** in slice 1 of the Instant-policy pass (2026-07-25), superseding the old "omsi Instant is last of all substrates" ruling and its premise that the fork has no fast-step surface — it has `step(n)`, and the bridge already owns the clock that calls it. See [Instant](#instant-a-pump-not-a-skip) below.
 
 **The fork byte-gate.** Fork-side changes are gated on reproducing the reference planner run exactly: `CC/scripts/omsi-stats/run-planner.mjs` at seed 12345 must still report **461 loops / 5,195,188 ticks / final-state hash `9d9952e68bc8373c` / 0 RNG draws**. ⚠ Run it with `--worktree`: the harness sims `git archive HEAD`, so without the flag a green gate is testing the *parent* commit.
 
@@ -76,7 +76,7 @@ Two restarts are deliberately **not** reported, and both matter for reasoning ab
 
 ## Loop-mode block support (arc D1)
 
-omsi declares `manual`, `record`, `playback`, `requiresLoopMode`, `queueActions: ['regionMove']` and (since arc D2) `executeVia: 'solver'` — **no `instant`**, because no fast-step surface exists. Contract and rationale for the block-mode system: [Loop Recording and Block Modes](./loop-recording.md).
+omsi declares `manual`, `record`, `playback`, `requiresLoopMode`, `queueActions: ['regionMove']`, (since arc D2) `executeVia: 'solver'` and (since the Instant-policy pass) `instant`. Contract and rationale for the block-mode system: [Loop Recording and Block Modes](./loop-recording.md).
 
 Declaring `record && playback` is what **arms the M3b strict action gate** for omsi regions, and every omsi preset carries `loop_costs`, so loop mode auto-enables and the gate is live for all of them. That is why arc D slice 1 restructured seven in-app legs to park a Manual block before performing anything.
 
@@ -191,6 +191,39 @@ What the legs pin instead is the **exemption an award would ride**. A departing 
 
 The true end-to-end award under a bot belongs to the future emission × split composition arc, together with the [quantity-row identity landmine](#per-region-max-explore-level--two-views-of-level-arc-d2-slice-2b) that arc has to solve first.
 
+## Instant — a pump, not a skip
+
+Slice 1 of the Instant-policy pass (2026-07-25) gives omsi a user-facing `loopSupport.instant`. A Playback or Bot block with the box ticked runs **the same stepping through a synchronous pump**: `bridge.js`'s `_runInstantPump` calls `m.step(batch)` in a tight loop, sizing each batch from the *remaining loop budget* instead of from elapsed wall time. Same ticks, same order, same gate — **cadence only**, so results are byte-identical to paced play by construction. There is deliberately nothing analogous to jta's affordability-blind `completeTaskInstantly`: no action completes that the economy could not pay for.
+
+**The decision layer is unchanged.** `planPumpBatch` (clockGate.js) shares `planClockStep`'s skip ordering through one `stepSkipReason` helper, so a batch is withheld for exactly the reasons a paced tick is: no runnable queue, a closed step gate, a [held boundary](#the-held-boundary-clock-gate).
+
+**The batch is clamped to `ceil(timeNeeded - timer)`**, recomputed every batch because `timeNeeded` grows mid-run (Buy Mana, the host pinning the budget to a refilled pool). Without the clamp a batch overshoots the timer boundary and spends mana the shared pool never had — and the host's out-of-mana → `triggerLoopReset` answer is a round trip away.
+
+**`PUMP_BATCH_TICKS === MAX_TICKS_PER_CALLBACK`, and that equality is load-bearing.** The clamp predicts the *timer* boundary only; the other loop end (`shouldRestart`, a compiled plan running dry) cannot be predicted from outside, so a batch crossing it restarts in-tick and grinds its remainder into the next run. Paced play has the identical overshoot bounded by its own per-callback cap — matching that cap means Instant adds no new exposure. It costs nothing, because the win comes from not *waiting* between callbacks, not from batch size.
+
+**The pump yields at every run boundary.** A restart is reported to the host as `substrate:resourceReset`, answered with a real loop reset whose teleport ends the window — and nothing can round-trip while a synchronous pump holds the thread. So `_handleGameRestart` sets a flag the pump checks between batches (on *every* restart, including the no-progress guard's unreported ones — a spinning plan should spin at 50/s, not at full synchronous speed). The consequence is the actual headline: **a multi-run replay under Instant is round-trip-bound instead of tick-bound.**
+
+**Two entry points, two scopes.** Playback's flag rides `replayActions`' opts (scoped to one replay, cleared by `_endReplay`); Bot's arrives as the control channel's `instant` method, a persistent *mode* that loopState sets **both ways** before every `walkTo`. Declaring `instant` was not independently shippable from the Bot half: omsi already satisfied `regionBotHonorsInstant`'s other two conditions (`executeVia: 'solver'` + a fine capture shape), so the one field lit up both checkboxes at once — and a `case 'instant'` that still logged-and-dropped would have been exactly the vacuous control the per-capability ruling forbids.
+
+### ⚠ The view request queue does not dedupe
+
+`view.requestUpdate` (`views/main.view.js`) coalesces with `includes`, i.e. **reference** equality — and the hot callers hand it a fresh object literal every call (`town.js:194`, unconditional once per progress tick, plus `:244` and `:151/190`). The dedupe therefore never fires for the entries that repeat most: the array grows ~1 per tick, each push linear-scans it, and the eventual `view.update()` replays every duplicate as its own DOM update.
+
+Paced play never reaches this — `view.update()` drains every `VIEW_UPDATE_MIN_MS`, so the queue holds ≤10 entries. A pump running a whole loop between drains makes it **quadratic in ticks**, and it would have presented as an unexplained slowdown rather than as a bug: the pump would still be correct, just slower than the paced play it exists to beat.
+
+The fix is `viewRequests.js`'s `dedupeViewRequests`, run **between batches**, with one real `view.update()` at pump yield. It is pump-scoped (paced play stays byte-inert) and outer-repo by choice: fixing `requestUpdate` in the fork would touch every paced boot — the byte-gate surface — to fix a cost only the pump can reach. Collapsing is safe because every request is an idempotent "repaint this row from *current* state" call; unmodelled target shapes fall back to reference identity, so they can never be collapsed wrongly.
+
+### Coverage
+
+| Layer | What it pins |
+|---|---|
+| `clockGate.test.js` | The gate parity, the clamp (swept at every offset for overshoot), the four yield reasons, and the **byte-identity contract**: N ticks land in the same state at every batch shape (1/7/10/100/250/N) across six budget-and-plan scenarios |
+| `viewRequests.test.js` | Collapse correctness on the fork's real target shapes, first-occurrence order, no collapse of unmodelled shapes, and the asymptotics (queue length bounded by one batch, not by the run) |
+| `omsi-playback-instant` | Two replays of one recording, paced then Instant, one flag apart: a **≥3× duration bound** (a silent paced fallback scores ~1×), a paced control pinned at *exactly zero* pump ticks, and the same effects both ways |
+| `omsi-bot-instant-multi-reset-walk` | The Bot half: the flag arrives as a bot mode, the pump carries the walk, and the multi-reset machinery still holds under it. **Complements** `omsi-bot-multi-reset-walk` — the only real-time bot coverage — rather than replacing it |
+
+No duration bound on the bot leg, deliberately: a bot walk is host-round-trip-bound (~12 s each, see [Pacing](#pacing-a-bot-walk-is-a-chain-of-host-round-trips)) and Instant collapses only the ticking *inside* a run, so a ratio there would measure machinery Instant does not touch.
+
 ## AP locations, unlock discretization and `unlockScale`
 
 The default (v0) shape is one location: **Start Journey**, checked when the game unlocks town 1, carrying the `Victory` item.
@@ -218,7 +251,7 @@ Arc C's swappable-region seam came free from this: the evaluator resolves a town
 
 ## Capabilities
 
-`supportedFeatures: ['region_topology_from_source', 'arbitrary_ap_locations']`. Loop support is a queueable `regionMove` plus manual play, **Record / Playback**, `requiresLoopMode`, `executeVia: 'solver'` (arc D2's Bot), and the fine-grained `takeLastRecording` hook — **no `instant`**, **no `customQueues`**. `sharing` declares the continuous mana channel plus 18 shareable consumable types (the numeric entries of the engine's per-loop `resources` bag; boolean entries like glasses/supplies are unlock flags, not consumables, because `addResource` *assigns* them). Zone-based metadata: `zoneCount` (a live getter — the region-split count, else the town count), `extractZoneRules`, `victoryItem: 'Victory'`. Full contract: [Substrate Registry Reference](./substrate-registry.md).
+`supportedFeatures: ['region_topology_from_source', 'arbitrary_ap_locations']`. Loop support is a queueable `regionMove` plus manual play, **Record / Playback**, `requiresLoopMode`, `executeVia: 'solver'` (arc D2's Bot), `instant` (the Instant-policy pass), and the fine-grained `takeLastRecording` hook — **no `customQueues`**. `sharing` declares the continuous mana channel plus 18 shareable consumable types (the numeric entries of the engine's per-loop `resources` bag; boolean entries like glasses/supplies are unlock flags, not consumables, because `addResource` *assigns* them). Zone-based metadata: `zoneCount` (a live getter — the region-split count, else the town count), `extractZoneRules`, `victoryItem: 'Victory'`. Full contract: [Substrate Registry Reference](./substrate-registry.md).
 
 ## Presets and in-app coverage
 

@@ -95,14 +95,20 @@ const STEP_GATE_POLL_MS = 200;
  * completion moment short of the departing `user:regionMove`, which the
  * parked block already wakes on. (loopState passes a no-op reserved for
  * future UI; a UI that needs it would need the bridge to report the window
- * close.) `instant` is ignored — omsi declares no `instant` capability, so
- * the per-block checkbox never renders.
+ * close.)
+ *
+ * `instant` (Instant-policy pass, slice 1) is FORWARDED, not consumed: the
+ * bridge owns the clock, so the host's only job is to tell it which cadence
+ * this replay was authored for. It rides the payload rather than the control
+ * channel's `instant` method because it is scoped to one replay — the method
+ * form is a persistent MODE and belongs to the Bot path.
  */
 function _driveReplay(eventBus, recordedActions, opts = {}) {
     const departureExitId = opts?.departureExitId ?? null;
+    const instant = opts?.instant === true;
     eventBus.publish(PLAYBACK_CONTROL_EVENT, {
         method: 'replayActions',
-        args: [convertQueueToPlan(recordedActions), { departureExitId }],
+        args: [convertQueueToPlan(recordedActions), { departureExitId, instant }],
     });
 }
 

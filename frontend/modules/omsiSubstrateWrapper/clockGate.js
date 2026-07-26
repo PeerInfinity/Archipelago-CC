@@ -1,9 +1,14 @@
 /**
- * The bridge's clock-step decision (arc D2 slice 1).
+ * The bridge's clock-step decision (arc D2 slice 1; Instant pump added by
+ * slice 1 of the Instant-policy pass).
  *
  * Extracted from bridge.js purely so it can be unit-pinned: bridge.js runs
  * inside the omsi iframe and imports nothing testable, while this decision is
  * the one place a mistake freezes the substrate outright.
+ *
+ * Two tick derivations live here, sharing one gate (`stepSkipReason`):
+ * `planClockStep` (paced — ticks from wall time) and `planPumpBatch`
+ * (Instant — ticks from the remaining loop budget).
  *
  * ── Why a HELD-BOUNDARY predicate ────────────────────────────────────────
  *
@@ -85,6 +90,22 @@ export function isBoundaryHeld(state) {
 }
 
 /**
+ * The three reasons stepping is withheld, in the order they are checked.
+ *
+ * Shared by BOTH tick derivations (paced and Instant-pump) so the two can
+ * never drift: Instant is a CADENCE change, and a cadence change that also
+ * moved a gate would stop being one. Returns null when stepping may proceed.
+ *
+ * @returns {null|'noQueue'|'gated'|'heldBoundary'}
+ */
+function stepSkipReason({ hasRunnableQueue, gateOpen, state }) {
+    if (!hasRunnableQueue) return 'noQueue';
+    if (!gateOpen) return 'gated';
+    if (isBoundaryHeld(state)) return 'heldBoundary';
+    return null;
+}
+
+/**
  * Decide what a single clock callback should do.
  *
  * Returns the tick count to step and, when that is zero, WHY — so the caller
@@ -108,9 +129,59 @@ export function planClockStep({
     gateOpen,
     state,
 }) {
-    if (!hasRunnableQueue) return { ticks: 0, skip: 'noQueue' };
-    if (!gateOpen) return { ticks: 0, skip: 'gated' };
-    if (isBoundaryHeld(state)) return { ticks: 0, skip: 'heldBoundary' };
+    const skip = stepSkipReason({ hasRunnableQueue, gateOpen, state });
+    if (skip) return { ticks: 0, skip };
     const ticks = Math.min(maxTicks, Math.round((elapsedMs * ticksPerSecond) / 1000));
+    return { ticks: ticks > 0 ? ticks : 0, skip: null };
+}
+
+/**
+ * Decide ONE batch of an Instant pump (slice 1 of the Instant-policy pass).
+ *
+ * Same gate, different clock. `planClockStep` derives its tick count from
+ * WALL TIME; the pump derives it from how much loop budget is left, because
+ * Instant's whole content is "stop consulting wall time". Every other input
+ * — and the skip ordering — is shared with the paced path on purpose
+ * (`stepSkipReason`): Instant changes cadence only, so a batch is withheld
+ * for exactly the reasons a paced tick is.
+ *
+ * ── Why the batch is CLAMPED to the remaining budget ─────────────────────
+ *
+ * `timer` is compared against `timeNeeded` inside `singleTick`, so a batch
+ * that overshoots the boundary has already spent mana the pool did not have:
+ * the bridge mirrors drains 1:1 into a SHARED pool, and the host's
+ * out-of-mana → `triggerLoopReset` answer is a round trip away. Paced play
+ * bounds that overdraw at `MAX_TICKS_PER_CALLBACK` (100 ticks) by accident of
+ * its rate; an unclamped pump would bound it only by the batch size. Stepping
+ * exactly `ceil(timeNeeded - timer)` instead lands ON the boundary — the
+ * crossing tick runs `loopEnd()`/`prepareRestart()` itself, which is an
+ * ordinary in-tick restart and not a hold.
+ *
+ * Recompute EVERY batch rather than once per pump: `timeNeeded` GROWS mid-run
+ * (Buy Mana, and the host pinning the budget to a refilled pool), so a clamp
+ * computed once would truncate a run that legitimately got longer.
+ *
+ * The `shouldRestart` half of the boundary is still checked between batches —
+ * a plan that exhausts its compiled list ends the loop with `timer` well short
+ * of `timeNeeded`, which no budget clamp can predict.
+ *
+ * @param {Object} args
+ * @param {number} args.maxBatch          - ceiling on one synchronous batch
+ * @param {boolean} args.hasRunnableQueue - the plan has an enabled action
+ * @param {boolean} args.gateOpen         - the loops step gate (D1 slice 2)
+ * @param {{shouldRestart?: boolean, timer?: number, timeNeeded?: number}|null}
+ *        args.state - the engine's loop-end state
+ * @returns {{ticks: number, skip: null|'noQueue'|'gated'|'heldBoundary'}}
+ */
+export function planPumpBatch({ maxBatch, hasRunnableQueue, gateOpen, state }) {
+    const skip = stepSkipReason({ hasRunnableQueue, gateOpen, state });
+    if (skip) return { ticks: 0, skip };
+    const remaining = state?.timeNeeded - state?.timer;
+    // A non-finite budget (a fork build that stopped reporting one half)
+    // fails open to the ceiling rather than to a stalled pump — the same
+    // posture isBoundaryHeld takes, for the same reason.
+    const ticks = Number.isFinite(remaining)
+        ? Math.min(maxBatch, Math.ceil(remaining))
+        : maxBatch;
     return { ticks: ticks > 0 ? ticks : 0, skip: null };
 }

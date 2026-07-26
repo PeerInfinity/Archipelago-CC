@@ -365,7 +365,9 @@ Omsi arc D re-queues AFTER this track (see §4); it inherits the mode
 seams plus TWO contracts written for it: the solver-park depletion rule
 (the mana wake only owns `_manualActionEntered` parks — a spend site that
 fires while no frame runs must call its own OOM check) and the
-reset-teleport bot-wake semantics. Omsi Instant last of all.
+reset-teleport bot-wake semantics. ~~Omsi Instant last of all.~~
+SUPERSEDED 2026-07-25 by the Instant-policy pass — omsi Instant SHIPPED as
+slice 1 (see §"Instant-policy pass" below).
 
 **M3b as-built (session 67, Fable) — key facts for M4/M5/omsi-D (full
 notes: plan doc implementation-notes block + memory
@@ -1305,8 +1307,11 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    (loops-mode support — omsi declares NO `loopSupport`) — **DEFERRED
    2026-07-21 behind the §3b region-block-modes track**: arc D's design
    must target the new Manual/Record/Playback/Bot mode system (at minimum
-   after M1+M2, ideally M6 so the solver seam is final). Omsi INSTANT is
-   fork-slice work and comes LAST of all substrates.
+   after M1+M2, ideally M6 so the solver seam is final). ~~Omsi INSTANT is
+   fork-slice work and comes LAST of all substrates.~~ **BOTH halves of
+   that were wrong, and it SHIPPED 2026-07-25** — Instant needed no fork
+   slice at all (the fork has `step(n)` and the bridge already owns the
+   clock calling it), and it went first, not last.
    **ARC D DESIGN PASS DONE 2026-07-24 (Fable, post-M6): kickoff READY —
    *(NewDocs)* `omsiloops/omsi-loops-arc-d-loops-mode-opus-kickoff.md`.
    Four user rulings (AskUserQuestion, settled): (1) recording = the
