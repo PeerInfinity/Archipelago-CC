@@ -1711,6 +1711,12 @@ async function botInstantCrossesAcrossResets(testController) {
 
 registerTest({
     id: 'omsi-bot-crosses-region',
+    // category 'Omsi bot walks' (not 'Omsi substrate') is load-bearing, not
+    // cosmetic: it is what the `bot-walks` test batch selects on
+    // (modules/tests/testBatches.js). These three drive a real game loop at
+    // human pace and were ~70% of the whole substrates suite, which is what
+    // pushed it past the runner's wall-clock budget. Retagging one of them
+    // back to 'Omsi substrate' would silently move minutes into the fast batch.
     name: 'Omsi: a Bot block engages the fork planner and crosses the region exit',
     description: 'Arc D2 slice 3: a BOT-mode loops block on an omsi region hands its queued '
                + 'regionMove to the walkTo solver. Asserts loops dispatched walkTo at the queued '
@@ -1721,7 +1727,7 @@ registerTest({
                + 'gate\'s own verdict mid-grind: queueExecution, which is the exemption an AP award '
                + 'fired by the planner would ride.',
     testFunction: botCrossesRegion,
-    category: 'Omsi substrate',
+    category: 'Omsi bot walks',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });
 
@@ -1737,7 +1743,7 @@ registerTest({
                + 'the same exit (install idempotence), the bot window ended on the teleport\'s '
                + 'regionChanged-away, and no fork boundary produced two host resets (trap 5).',
     testFunction: botCrossesAcrossResets,
-    category: 'Omsi substrate',
+    category: 'Omsi bot walks',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });
 
@@ -1770,6 +1776,6 @@ registerTest({
                + 'bound: a bot walk is host-round-trip-bound (~12 s each), and Instant collapses '
                + 'only the ticking inside a run.',
     testFunction: botInstantCrossesAcrossResets,
-    category: 'Omsi substrate',
+    category: 'Omsi bot walks',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });

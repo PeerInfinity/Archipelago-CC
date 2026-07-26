@@ -143,6 +143,25 @@ python scripts/test/test-all-templates.py --include-list "Game1.yaml" "Game2.yam
   30 runs (Playwright's own cleanup is scoped to `test-results/playwright/`), so
   runs can be compared against each other
 
+### Test batches
+The in-app runner races the whole roster against one wall-clock budget
+(`AUTO_START_TIMEOUT_MS`, 600s, in `frontend/modules/tests/testLogic.js`).
+`test-substrates` outgrew it: three real-time omsi bot walks are ~70% of its
+540s. Run it in batches instead:
+```
+npm test -- --mode=test-substrates --batch=fast        # 57 tests, ~2.5 min
+npm test -- --mode=test-substrates --batch=bot-walks   # 3 real-time bot legs, ~6.5 min
+```
+Batches select whole **categories** and live in `frontend/modules/tests/testBatches.js`.
+`fast` is the default batch: it absorbs every category no other batch claims, so
+a new test category still *runs* even if nobody classified it. Omitting `--batch`
+runs the whole roster — which for `test-substrates` currently exceeds the budget.
+
+A run that blows the budget no longer reports green: it prints
+`IN-APP RUN DID NOT FINISH ITS ROSTER`, naming the cause, the test cut off
+mid-flight, and the ones that never started, then fails. Results are stamped with
+their batch so `compare-runs.js` never diffs a `fast` run against a full one.
+
 ### Reading a run
 Any `npm test` mode emits one line per in-app test as it finishes:
 ```

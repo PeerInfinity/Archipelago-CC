@@ -282,12 +282,12 @@
         {
             "id": "omsi-bot-crosses-region",
             "enabled": true,
-            "category": "Omsi substrate"
+            "category": "Omsi bot walks"
         },
         {
             "id": "omsi-bot-multi-reset-walk",
             "enabled": true,
-            "category": "Omsi substrate"
+            "category": "Omsi bot walks"
         },
         {
             "id": "omsi-playback-instant",
@@ -297,7 +297,7 @@
         {
             "id": "omsi-bot-instant-multi-reset-walk",
             "enabled": true,
-            "category": "Omsi substrate"
+            "category": "Omsi bot walks"
         },
         {
             "id": "maze-consumable-tile-grants-foreign-item",

@@ -9,6 +9,7 @@ import {
   getDiscoveredTestFunctionById,
   isDiscoveryComplete,
 } from './testDiscovery.js';
+import { categoryInBatch, listBatchNames } from './testBatches.js';
 
 // Wall-clock budget for a whole auto-started run. When it expires the run is
 // abandoned mid-roster, so this is a CAP ON THE SUITE, not a per-test timeout:
@@ -31,6 +32,44 @@ export class AutoStartTimeoutError extends Error {
 // A test that reached one of these is done; anything else was still pending or
 // mid-flight when results were published.
 const TERMINAL_TEST_STATUSES = new Set(['passed', 'failed']);
+
+/**
+ * Narrow an already-merged roster to the batch named by `?testBatch=`.
+ * No parameter means no filtering, so every existing mode keeps running its
+ * whole roster and this is inert until a caller asks for a batch.
+ *
+ * Mutates `tests` in place (it is the array about to become TestState's).
+ * An unknown batch name THROWS rather than falling back to "run everything":
+ * a typo'd batch that silently ran the full suite would blow the very budget
+ * batching exists to stay inside, and a typo'd batch that silently ran nothing
+ * would report a green empty run.
+ */
+function applyTestBatchFilter(tests) {
+  if (typeof window === 'undefined' || !window.location) return;
+  const batchName = new URLSearchParams(window.location.search).get('testBatch');
+  if (!batchName) return;
+
+  if (!listBatchNames().includes(batchName)) {
+    throw new Error(
+      `[TestLogic] Unknown testBatch '${batchName}'. Known batches: ${listBatchNames().join(', ')}`
+    );
+  }
+
+  let excluded = 0;
+  for (const test of tests) {
+    if (!test.enabled) continue;
+    if (!categoryInBatch(test.category, batchName)) {
+      test.enabled = false;
+      excluded += 1;
+    }
+  }
+  const remaining = tests.filter((t) => t.enabled).length;
+  log(
+    'info',
+    `[TestLogic] testBatch '${batchName}': running ${remaining} test(s), `
+    + `${excluded} excluded as out-of-batch`
+  );
+}
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -481,6 +520,12 @@ export const testLogic = {
       if (!test.conditions) test.conditions = [];
       if (test.status === undefined) test.status = 'pending';
     });
+
+    // Batch selection (?testBatch=). Applied HERE, at the single point where
+    // the roster reaches TestState, so it lands after the config's enabled
+    // states have been merged — a batch narrows what an already-enabled roster
+    // runs, it never enables something the config disabled.
+    applyTestBatchFilter(currentTests);
 
     TestState.testLogicState.tests = currentTests;
     TestState.testLogicState.fromDiscovery = true;

@@ -24,6 +24,7 @@ test.describe('Application End-to-End Tests', () => {
   const testLayout = process.env.TEST_LAYOUT; // Optional layout parameter (mobile/desktop)
   const testOrderSeed = process.env.TEST_ORDER_SEED; // Optional test order seed for reproducible randomization
   const testProfiling = process.env.TEST_PROFILING; // Optional profiling flag (1 to enable)
+  const testBatch = process.env.TEST_BATCH; // Optional roster subset (see modules/tests/testBatches.js)
 
   // Build URL with all optional parameters
   let APP_URL = `http://localhost:8000/frontend/?mode=${testMode}`;
@@ -47,6 +48,9 @@ test.describe('Application End-to-End Tests', () => {
   }
   if (testProfiling) {
     APP_URL += `&profiling=${encodeURIComponent(testProfiling)}`;
+  }
+  if (testBatch) {
+    APP_URL += `&testBatch=${encodeURIComponent(testBatch)}`;
   }
 
   test('run in-app tests and check results', async ({ page }) => {
@@ -215,8 +219,14 @@ test.describe('Application End-to-End Tests', () => {
 
       // Stamp the mode: without it, comparing "the last two runs" can
       // silently pit a substrates run against a regression one and
-      // report the entire roster as changed.
-      fs.writeFileSync(outputFile, JSON.stringify({ mode: testMode, ...results }, null, 2));
+      // report the entire roster as changed. The batch is stamped for
+      // exactly the same reason — a `fast` batch and a full run of the
+      // same mode have deliberately different rosters, so comparing
+      // across them would report every quarantined test as REMOVED.
+      fs.writeFileSync(
+        outputFile,
+        JSON.stringify({ mode: testMode, batch: testBatch || null, ...results }, null, 2)
+      );
       console.log(`PW DEBUG: Test results saved to: ${outputFile}`);
 
       // These files now survive across runs (see outputDir in

@@ -41,13 +41,30 @@ function load(file) {
     const data = JSON.parse(fs.readFileSync(file, 'utf8'));
     const byId = new Map();
     for (const t of data.testDetails || []) byId.set(t.id, t);
-    // `mode` is absent from runs recorded before it was stamped.
-    return { file, mode: data.mode || null, summary: data.summary || {}, byId };
+    // `mode`/`batch` are absent from runs recorded before they were stamped.
+    return {
+        file,
+        mode: data.mode || null,
+        batch: data.batch || null,
+        summary: data.summary || {},
+        byId,
+    };
+}
+
+/**
+ * Human label for a run's identity. Names the batch as well as the mode: two
+ * runs of the same mode but different batches have deliberately different
+ * rosters, and a warning that printed only the mode would read as though the
+ * baseline matched.
+ */
+function label(run) {
+    if (!run.mode) return 'unknown (recorded before mode stamping)';
+    return `"${run.mode}${run.batch ? `/${run.batch}` : ''}"`;
 }
 
 function describe(run) {
     const s = run.summary;
-    const mode = run.mode ? `[${run.mode}] ` : '';
+    const mode = run.mode ? `[${run.mode}${run.batch ? `/${run.batch}` : ''}] ` : '';
     return `${mode}${path.basename(run.file)} — ${s.passedCount ?? '?'}/${s.totalRun ?? '?'} passed`;
 }
 
@@ -61,8 +78,14 @@ function pickBaseline(files) {
     const current = load(files[files.length - 1]);
     const earlier = files.slice(0, -1).reverse().map(load);
 
-    // Pass 1: the newest earlier run KNOWN to be the same mode.
-    const sameMode = earlier.find((r) => r.mode && current.mode && r.mode === current.mode);
+    // Pass 1: the newest earlier run KNOWN to be the same mode AND batch.
+    // Batch must match too: a `fast` batch deliberately omits the quarantined
+    // categories, so diffing it against a full run of the same mode reports
+    // every quarantined test as REMOVED — the same false alarm the mode stamp
+    // exists to prevent.
+    const sameMode = earlier.find(
+        (r) => r.mode && current.mode && r.mode === current.mode && r.batch === current.batch
+    );
     if (sameMode) return { prev: sameMode, curr: current, warning: null };
 
     // Pass 2: nothing stamped matches. Runs recorded before mode
@@ -74,8 +97,8 @@ function pickBaseline(files) {
         return {
             prev: guess,
             curr: current,
-            warning: `baseline mode is ${guess.mode ? `"${guess.mode}"` : 'unknown (recorded before mode stamping)'}`
-                + `, current is "${current.mode || 'unknown'}" — roster differences below may be spurious.`,
+            warning: `baseline is ${label(guess)}, current is ${label(current)}`
+                + ' — roster differences below may be spurious.',
         };
     }
     return null;
@@ -109,7 +132,8 @@ function main() {
         }
         const picked = pickBaseline(files);
         if (!picked) {
-            const mode = load(files[files.length - 1]).mode;
+            const last = load(files[files.length - 1]);
+            const mode = last.batch ? `${last.mode}/${last.batch}` : last.mode;
             console.error(
                 `No earlier run of mode "${mode}" to compare against. `
                 + 'Run that mode again, or pass two files explicitly.'

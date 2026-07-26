@@ -9,6 +9,7 @@
 
 import { spawn } from 'child_process';
 import { parseArgs } from 'node:util';
+import { listBatchNames } from '../../frontend/modules/tests/testBatches.js';
 
 // Parse command-line arguments
 const { values } = parseArgs({
@@ -20,6 +21,7 @@ const { values } = parseArgs({
     rules: { type: 'string' },
     layout: { type: 'string' },
     testOrderSeed: { type: 'string' },
+    batch: { type: 'string' },
     headed: { type: 'boolean' },
     debug: { type: 'boolean' },
     ui: { type: 'boolean' }
@@ -36,7 +38,10 @@ const config = {
   player: values.player || process.env.npm_config_player || '',
   rules: values.rules || process.env.npm_config_rules || '',
   layout: values.layout || process.env.npm_config_layout || '',
-  testOrderSeed: values.testOrderSeed || process.env.npm_config_testOrderSeed || process.env.TEST_ORDER_SEED || ''
+  testOrderSeed: values.testOrderSeed || process.env.npm_config_testOrderSeed || process.env.TEST_ORDER_SEED || '',
+  // Named subset of the in-app roster (frontend/modules/tests/testBatches.js).
+  // Empty = the whole roster, so every existing invocation is unchanged.
+  batch: values.batch || process.env.npm_config_batch || ''
 };
 
 // Build environment variables
@@ -48,8 +53,21 @@ const env = {
   TEST_PLAYER: config.player,
   RULES_OVERRIDE: config.rules,
   TEST_LAYOUT: config.layout,
-  TEST_ORDER_SEED: config.testOrderSeed
+  TEST_ORDER_SEED: config.testOrderSeed,
+  TEST_BATCH: config.batch
 };
+
+// Validate the batch name HERE rather than letting the in-app filter throw.
+// That throw happens inside applyLoadedState, which breaks init badly enough
+// that the tests never start — Playwright then reports "page may have failed
+// to load" 30 s later, which points at the wrong thing entirely. A typo
+// should cost a second and name itself.
+if (config.batch && !listBatchNames().includes(config.batch)) {
+  console.error(
+    `Unknown --batch '${config.batch}'. Known batches: ${listBatchNames().join(', ')}`
+  );
+  process.exit(2);
+}
 
 // Build Playwright command
 const playwrightArgs = ['test', 'test_json/e2e/app.spec.js'];
@@ -68,6 +86,7 @@ const additionalArgs = process.argv.slice(2).filter(arg =>
   !arg.startsWith('--rules=') &&
   !arg.startsWith('--layout=') &&
   !arg.startsWith('--testOrderSeed=') &&
+  !arg.startsWith('--batch=') &&
   arg !== '--headed' &&
   arg !== '--debug' &&
   arg !== '--ui'
