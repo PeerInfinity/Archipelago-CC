@@ -240,6 +240,19 @@ export class LoopUI {
                   <option value="append">Append to queue</option>
                   <option value="rebuildPath">Rebuild path (advanced)</option>
                 </select></label>
+              </div>
+              <!--
+                Procgen-only group. Every control below drives the per-block
+                mode system (see docs/json/developer/procgen/loop-recording.md),
+                which only exists where a region has a substrate: an AP-native
+                region offers no mode row at all (loopBlockBuilder.getModeOffers),
+                so these are inert in a plain world. Kept contiguous under one
+                id so a later redesign can hide the whole group with one
+                predicate — do NOT move controls in or out without checking
+                that they're genuinely block-mode-only.
+              -->
+              <div id="loops-procgen-controls" class="loops-procgen-controls" style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; padding-top: 6px; border-top: 1px solid #555;">
+                <span class="procgen-controls-header" style="font-weight: bold; margin-right: 4px;" title="These controls apply to procgen worlds with block recording">Block recording (procgen worlds):</span>
                 <label class="default-block-mode-label" title="Mode given to a region block that has no mode set yet. Record parks it for hand-play and captures what you do (then auto-switches to Playback); Manual parks it without capturing; Playback runs it automatically. A substrate that can't record falls back to Manual.">Default block mode: <select id="loop-ui-default-block-mode">
                   <option value="record">Record</option>
                   <option value="playback">Playback</option>
