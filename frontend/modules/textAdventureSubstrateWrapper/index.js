@@ -18,6 +18,7 @@ import { substrateRegistryEntry } from './textAdventureSubstrateWrapperLibrary.j
 import { PlaybackProxy, PLAYBACK_CONTROL_EVENT } from './playbackProxy.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { initManaWiring, getHeaderInfoEvent } from './mana.js';
+import { pickAutoLoadCustomDataUrl } from './customData.js';
 
 const SETTINGS_DEFAULTS = Object.freeze({
     messageHistoryLimit: 10,
@@ -52,33 +53,6 @@ export function getTextAdventureSubstrateWrapperSettings() { return _settings; }
 // custom-data templating lands.
 let _customData = null;
 export function getCustomData() { return _customData; }
-
-// Resolve a setting value to a fetch URL. Bare names map to the
-// conventional ./modules/shared/customData/<name>_textadventure.json
-// path; anything with a slash or protocol is treated as a literal URL;
-// empty returns null. Mirrors the original substrate so users can
-// migrate their settings unchanged.
-function resolveCustomDataUrl(value) {
-    if (!value || typeof value !== 'string') return null;
-    const trimmed = value.trim();
-    if (!trimmed) return null;
-    if (trimmed.includes('/') || /^[a-z]+:/i.test(trimmed)) return trimmed;
-    return customDataUrlForGame(trimmed);
-}
-
-function customDataUrlForGame(gameName) {
-    if (!gameName || typeof gameName !== 'string') return null;
-    const slug = gameName.trim().toLowerCase();
-    if (!slug) return null;
-    return `./modules/shared/customData/${slug}_textadventure.json`;
-}
-
-function pickAutoLoadCustomDataUrl(rulesJson, playerId, settingValue) {
-    const explicit = resolveCustomDataUrl(settingValue);
-    if (explicit) return explicit;
-    const gameName = rulesJson?.world?.[playerId]?.game;
-    return customDataUrlForGame(gameName);
-}
 
 async function fetchAndCacheCustomData(url) {
     if (!url) { _customData = null; return; }
