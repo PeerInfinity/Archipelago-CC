@@ -265,8 +265,9 @@ flake), regression 1/1, CI green per slice.
 Delivered vs kickoff: full solver unification (the pre-dispatch
 auto-delegation tick — which silently SHADOWED Record/Playback on
 manaEnabled maze regions — is retired, regression-pinned positive-first);
-`executeVia:'playbackBot'`→`'solver'` host-only (shared-submodule JSDoc
-x2 still rides the next submodule-touching commit); one economy by shape
+`executeVia:'playbackBot'`→`'solver'` host-only (the shared-submodule
+JSDoc x2 followed in the post-D2 cleanup phase, shared `006cb40`); one
+economy by shape
 (jta double-charge dead; summary bots drain by time, XP 1:1); Bot×Instant
 jta-only, set BOTH WAYS (jta `setInstantMode` is a sticky MODE with no
 native unset — one Instant block used to leave the whole session
@@ -1883,9 +1884,12 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    **POST-D2 SEQUENCING (user, 2026-07-25): CLEANUP PHASE →
    INSTANT-POLICY DESIGN PASS → arc E.** Cleanup kickoff *(NewDocs)*
    `cleanup-2026-07-post-d2-opus-kickoff.md`: all four quick fixes
-   (path-analyzer flake one-liner; the jta catch-up reorder bug +
-   re-enable its witness; the shared-submodule JSDoc rename leftovers;
-   the planner.js probe wrinkle — a byte-gated fork slice) + three
+   (path-analyzer flake one-liner ✅ `6fddeded1`; the jta catch-up
+   reorder bug + re-enable its witness ✅ `21160646d`, REFUTED and
+   rescoped to the witness's own prep; the shared-submodule JSDoc rename
+   leftovers ✅ shared `006cb40` / outer `3c2fb2457`, own commit per user;
+   the planner.js probe wrinkle ✅ fork `b05bce9` / outer `9d740989f`) +
+   three
    bigger items (autoRestartQueue honor investigation — "no change,
    documented why" is an acceptable close; the cleanup-backlog.md items
    incl. the balance-walk solve-at-completion NON-drive-by; the
