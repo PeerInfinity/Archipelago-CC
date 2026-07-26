@@ -1890,12 +1890,37 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    leftovers ✅ shared `006cb40` / outer `3c2fb2457`, own commit per user;
    the planner.js probe wrinkle ✅ fork `b05bce9` / outer `9d740989f`) +
    three
-   bigger items (autoRestartQueue honor investigation — "no change,
-   documented why" is an acceptable close; the cleanup-backlog.md items
-   incl. the balance-walk solve-at-completion NON-drive-by; the
-   features/loops.md user-facing rewrite LAST so it documents the
-   settled state). The jta progression marathons stay QUEUED — excluded
-   from this phase. **NEW DESIGN FACT (user): normal loop-mode play =
+   bigger items (autoRestartQueue honor investigation ✅ `db3b48c65`;
+   the cleanup-backlog.md items ✅ `050a8262c` + `c9888d28f`; the
+   features/loops.md user-facing rewrite ✅ `aaa0d9aa8`).
+   **PHASE COMPLETE 2026-07-25.** The jta progression marathons stayed
+   QUEUED — excluded from this phase.
+   Three outcomes worth carrying:
+   (a) **`autoRestartQueue` governs the resets loops OWNS** — a
+   substrate-driven reset is not loops' to veto, and the "in-flight
+   replay/bot is implicit consent" carve-out swallows its own rule
+   because Manual and Record span runs on jta/omsi exactly as Playback
+   and Bot do. The premise was also wrong: the Bot resume was never
+   uniformly unconditional (the drain tick already pauses summary bot
+   walks when the flag is off, pinned since M6). One real gap closed
+   ON-direction only (user): `_handleManualWake_mana` honoured the flag
+   in neither direction. Ruling + the four-resets table live in
+   loop-recording.md.
+   (b) **The balance-walk fix shipped as a POST-WALK sweep**, not the
+   filed solve-in-the-completion-callback: that would patch the task
+   definition the sim is mid-completion on and price the replay against
+   post-completion energy. The filed open question is answered — the
+   fork's first-start hook needs `reps == 0 && progress == 0`, so a task
+   already under way when released never fires it, and mid-walk the miss
+   self-heals on the next run's replay; only the walk's last runs strand.
+   (c) ⚠ **NEW, FILED NOT ACTED ON: the committed `dataset-passb`
+   records no longer reproduce.** Re-running the batch gives stalls on 5
+   of 6 pairs where Round 2 (2026-07-10) had 0 everywhere. A control run
+   proves it is NOT the walk-end sweep; the likely cause is that the
+   GENERATED WORLDS moved under Phase A / U-a / the Phase-D rungs, so
+   `ds1` seed 1 is a different world now — hypothesis, not finding.
+   Deliberately left unbaselined: enshrining a red convergence bar is how
+   a regression becomes the reference. Details in cleanup-backlog.md. **NEW DESIGN FACT (user): normal loop-mode play =
    ALL regions Instant except the frontier** — loop wall-clock models
    must assume it; recorded in `project_loops_block_modes`. **And the
    Instant PHILOSOPHY shifted (user): these are IDLE games — waiting is
