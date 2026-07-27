@@ -8,8 +8,11 @@ sub-region splits and their rules are computed from the tile map), Phase 5b
 (the maze projection — the same geometry and gating, playable with no engine
 artifact, so the in-app suite can test it) and Phase 6 (sphere growth — a grown
 world contains real map regions, gated on what the real game charges to enter
-them) complete — Phase 7 (RWK) next
-**Games:** Seedling first (redistributable, discrete sections, source available), then Robot Wants Kitty
+them) complete — **Phase 7 (RWK) POSTPONED INDEFINITELY (user ruling
+2026-07-28); the arc continues Seedling-only, so Phase 8 (staged bots,
+Seedling legs) is next**
+**Games:** Seedling only for now (redistributable, discrete sections, source
+available); Robot Wants Kitty postponed indefinitely (2026-07-28)
 
 ## Goal
 
@@ -951,7 +954,13 @@ remains is the UI: serving pools, ticking one, and running the sorter in
 `_buildSphereConfig` before the plan reaches the driver. Deliberately out of this
 phase's scope (the kickoff fenced it to sphere growth).
 
-### Phase 7 — RWK
+### Phase 7 — RWK — **POSTPONED INDEFINITELY (user ruling 2026-07-28)**
+
+The arc is Seedling-only for now. Nothing below is cancelled — the checklist
+stands for whenever RWK resumes — but no session should pick it up without a
+fresh user ruling. Phase 8 proceeds with its Seedling legs only; the RWK bot
+bullet inherits this postponement.
+
 - [ ] Tile map editor feature: select region-transition tiles (H/V lines)
 - [ ] Analyzer update: evaluate one region at a time; per-region access
       rules for locations and exits (sub-region split computed from

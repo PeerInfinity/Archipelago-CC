@@ -2630,7 +2630,9 @@ to get into them.
   library arc) IS already done — `sphereSteps` resolves atlas sources and
   threads `atlasAssignments` — so what remains is the UI: serve pools, tick one,
   and run the sorter in `_buildSphereConfig` before the plan reaches the driver.
-- NEXT: Phase 7 (RWK) and Phase 8 (staged playback bots). Phases 7+ unchanged.
+- NEXT: **Phase 7 (RWK) POSTPONED INDEFINITELY (user ruling 2026-07-28) —
+  the arc is Seedling-only for now.** Next is Phase 8 (staged playback
+  bots), Seedling legs only; the RWK bot bullet inherits the postponement.
 
 ## 6. Everything else (unchanged queues)
 
@@ -2661,5 +2663,6 @@ block modes M1 ──► M2 ──► M3 ──► M4 ──► M5 ──► M6 
 (M1–M5 all SHIPPED 2026-07-21/23; M6 is next)
 region atlas Phases 1–6 ALL SHIPPED (2026-07-27/28: format ──► marking tool
   ──► rules.json projection ──► play-time transitions ──► analyzer ──► maze
-  projection ──► sphere sorter) ──► RWK (Phase 7) ──► staged bots (Phase 8, §5c)
+  projection ──► sphere sorter) ──► staged bots (Phase 8, Seedling legs, §5c)
+  [RWK (Phase 7) POSTPONED indefinitely 2026-07-28]
 ```
