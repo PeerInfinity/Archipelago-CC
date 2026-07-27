@@ -121,32 +121,42 @@ export function sortAtlasRegionsIntoSpheres(plan, pool, opts = {}) {
             }
             continue;
         }
+        // Refuse BEFORE scheduling anything: an item injected for a group that
+        // then turns out to be unplaceable would sit in the plan gating nothing.
+        const unusable = group.gate.find((item) => {
+            const s = sphereOf(item);
+            return s !== null && s > lastGatingSphere;
+        });
+        if (unusable) {
+            for (const m of group.members) {
+                declined.push({
+                    entry_id: m.entry.entry_id,
+                    reason: `"${unusable}" is a final-sphere item and final-sphere items `
+                        + 'gate nothing',
+                });
+            }
+            continue;
+        }
         // Schedule every required item, then take the LATEST of them: the region
         // opens exactly when the last one becomes obtainable.
         let wave = 0;
-        let failed = null;
+        let scheduled = false;
         for (const item of group.gate) {
             let s = sphereOf(item);
             if (s === null) {
                 s = Math.min(nextFreshSphere, lastGatingSphere);
                 spheres[s - 1].items.push(item);
                 injected.push({ item, sphere: s });
-            } else if (s > lastGatingSphere) {
-                failed = `"${item}" is a final-sphere item and final-sphere items gate nothing`;
-                break;
+                scheduled = true;
             }
             wave = Math.max(wave, s);
         }
-        if (failed) {
-            for (const m of group.members) {
-                declined.push({ entry_id: m.entry.entry_id, reason: failed });
-            }
-            continue;
-        }
         // Distinct frontiers spread across the spheres rather than all piling
         // into sphere 1 — the "come back with the new item" texture, read off
-        // the map instead of drawn.
-        if (nextFreshSphere <= lastGatingSphere) nextFreshSphere += 1;
+        // the map instead of drawn. Only a group that actually scheduled
+        // something moves the cursor: a frontier the plan already covered is not
+        // a new requirement.
+        if (scheduled && nextFreshSphere <= lastGatingSphere) nextFreshSphere += 1;
         for (const m of group.members) {
             assignments.push({
                 entry_id: m.entry.entry_id, wave, gate: [...group.gate], sourceId,

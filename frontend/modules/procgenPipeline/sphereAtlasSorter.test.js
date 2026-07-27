@@ -117,6 +117,28 @@ describe('sortAtlasRegionsIntoSpheres', () => {
         expect(r.declined[0].reason).toMatch(/final-sphere item/);
     });
 
+    it('schedules NOTHING for a group it goes on to decline', () => {
+        // Half a requirement injected for a region that is then refused would
+        // leave an item in the plan gating nothing at all.
+        const plan = planOf(['a'], ['victory', 'Swim']);
+        const before = JSON.stringify(plan);
+        const r = sortAtlasRegionsIntoSpheres(plan, pool(entry('vault', [{
+            via: 'gate', access_rule: { rule: 'And', children: [has('Key'), has('Swim')] },
+        }])));
+        expect(r.assignments).toEqual([]);
+        expect(r.injected).toEqual([]);
+        expect(JSON.stringify(plan)).toBe(before);
+    });
+
+    it('does not advance the fresh-sphere cursor for a frontier already planned', () => {
+        const plan = planOf(['Feather'], ['b'], ['c'], ['victory']);
+        const r = sortAtlasRegionsIntoSpheres(plan, pool(
+            entry('peak', [{ via: 'c', access_rule: has('Feather') }]), // already sphere 1
+            entry('lake', [{ via: 'w', access_rule: has('Swim') }]),    // fresh
+        ));
+        expect(r.injected).toEqual([{ item: 'Swim', sphere: 1 }]);
+    });
+
     it('never schedules a fresh item into the final sphere', () => {
         const plan = planOf(['a'], ['b'], ['victory']);
         const r = sortAtlasRegionsIntoSpheres(plan, pool(
