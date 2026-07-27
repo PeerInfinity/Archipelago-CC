@@ -3,7 +3,11 @@ import { defineConfig, configDefaults } from 'vitest/config';
 export default defineConfig({
   test: {
     // Test file patterns
-    include: ['frontend/**/*.test.js', 'test_json/unit/**/*.test.js'],
+    // scripts/**: pure logic that backs a scripts/procgen CLI (the Seedling
+    // .oel / level-table parsers) — node-only build tooling, so it has no home
+    // in the bundled frontend graph, but it is exactly the kind of code unit
+    // tests are for.
+    include: ['frontend/**/*.test.js', 'test_json/unit/**/*.test.js', 'scripts/**/*.test.js'],
 
     // Heavy, CPU-bound generate-and-test property suites (*.slow.test.js) are
     // excluded from the default run — they're synchronous and, under parallel
