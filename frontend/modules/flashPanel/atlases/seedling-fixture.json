@@ -1,0 +1,198 @@
+{
+  "schema_version": 1,
+  "atlas_id": "seedling-fixture-b656bf3b",
+  "game": "seedling",
+  "name": "Seedling (Phase-1 fixture)",
+  "description": "Hand-written three-region atlas exercising every feature of the region-atlas format: a multi-tile edge exit span with a single entrance spawn tile, a teleporter exit pair, a region with no subgraph, subgraph splits with item-gated bidirectional and one-way internal exits, boundary and location access rules, locations with vanilla items, both analyzer- and hand-annotated rules_source flavours, and the vanilla layout. The region names and items are Seedling's; the GEOMETRY is invented — this is the Phase-1 test anchor, not the real Seedling map.",
+  "provenance": {
+    "generator": "hand-authored",
+    "content_hash": "b656bf3b"
+  },
+  "tile_space": {
+    "tile_size": 16,
+    "map_source": "hand-authored"
+  },
+  "regions": [
+    {
+      "region_id": "owls_nest",
+      "name": "Owl's Nest",
+      "bounds": { "x": 0, "y": 0, "w": 20, "h": 15 },
+      "exits": [
+        {
+          "exit_id": "south_stair",
+          "name": "Stair down to the southern overworld",
+          "kind": "edge",
+          "side": "S",
+          "exit_tiles": [[8, 14], [9, 14], [10, 14]],
+          "entrance_tile": [9, 14]
+        },
+        {
+          "exit_id": "nest_ladder",
+          "name": "Ladder into the Gundernourd pit",
+          "kind": "teleporter",
+          "exit_tiles": [[4, 3]],
+          "entrance_tile": [4, 3]
+        }
+      ],
+      "locations": [
+        {
+          "name": "Sword",
+          "tile": [10, 6],
+          "vanilla_item": "Progressive Sword"
+        },
+        {
+          "name": "Chest (Owl's Nest)",
+          "tile": [16, 3],
+          "vanilla_item": "Green Key",
+          "access_rule": {
+            "rule": "Compare",
+            "args": {
+              "left": { "rule": "CountItem", "args": { "item_name": "Totem Shard" } },
+              "operator": ">=",
+              "right": 3
+            }
+          }
+        }
+      ],
+      "annotations": {
+        "rules_source": "manual",
+        "notes": "The owl's shard trade is a puzzle the analyzer cannot compute; hand-annotated."
+      }
+    },
+    {
+      "region_id": "overworld_south",
+      "name": "Southern Overworld",
+      "bounds": { "x": 0, "y": 15, "w": 20, "h": 20 },
+      "exits": [
+        {
+          "exit_id": "north_pass",
+          "name": "Pass up to the Owl's Nest",
+          "kind": "edge",
+          "side": "N",
+          "exit_tiles": [[8, 15], [9, 15], [10, 15]],
+          "entrance_tile": [9, 15],
+          "sub_region": "shore"
+        },
+        {
+          "exit_id": "rock_gap",
+          "name": "Gap in the eastern rocks",
+          "kind": "edge",
+          "side": "E",
+          "exit_tiles": [[19, 26], [19, 27]],
+          "entrance_tile": [19, 26],
+          "sub_region": "pit"
+        }
+      ],
+      "subgraph": {
+        "sub_regions": ["shore", "island", "pit"],
+        "internal_exits": [
+          {
+            "from": "shore",
+            "to": "island",
+            "bidirectional": true,
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
+          },
+          {
+            "from": "shore",
+            "to": "pit",
+            "bidirectional": false
+          }
+        ]
+      },
+      "locations": [
+        {
+          "name": "Chest (Spawn House)",
+          "sub_region": "shore",
+          "tile": [5, 18],
+          "vanilla_item": "Health"
+        },
+        {
+          "name": "Chest (South Rocks)",
+          "sub_region": "island",
+          "tile": [3, 30],
+          "vanilla_item": "Blue Key"
+        }
+      ],
+      "annotations": {
+        "rules_source": "analyzer",
+        "notes": "Water split and the one-way drop into the pit are mechanically computed."
+      }
+    },
+    {
+      "region_id": "gundernourd",
+      "name": "Gundernourd",
+      "bounds": { "x": 20, "y": 15, "w": 16, "h": 20 },
+      "exits": [
+        {
+          "exit_id": "west_mouth",
+          "name": "Locked west door",
+          "kind": "edge",
+          "side": "W",
+          "exit_tiles": [[20, 26], [20, 27]],
+          "entrance_tile": [20, 26],
+          "sub_region": "entry",
+          "access_rule": { "rule": "Has", "args": { "item_name": "Red Key" } }
+        },
+        {
+          "exit_id": "pit_mouth",
+          "name": "Bottom of the pit",
+          "kind": "teleporter",
+          "exit_tiles": [[26, 25]],
+          "entrance_tile": [26, 25],
+          "sub_region": "water"
+        }
+      ],
+      "subgraph": {
+        "sub_regions": ["entry", "water"],
+        "internal_exits": [
+          {
+            "from": "entry",
+            "to": "water",
+            "bidirectional": true,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Progressive Swim" } },
+                {
+                  "rule": "Or",
+                  "children": [
+                    { "rule": "Has", "args": { "item_name": "Light" } },
+                    { "rule": "Has", "args": { "item_name": "Fire" } }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "locations": [
+        {
+          "name": "Shield",
+          "sub_region": "entry",
+          "tile": [24, 18],
+          "vanilla_item": "Progressive Shield",
+          "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Sword", "count": 1 } }
+        },
+        {
+          "name": "Chest (Gundernourd Water)",
+          "sub_region": "water",
+          "tile": [30, 28],
+          "vanilla_item": "Red Key"
+        }
+      ],
+      "annotations": {
+        "rules_source": "mixed",
+        "notes": "Swim split computed; the locked west door was hand-annotated."
+      }
+    }
+  ],
+  "vanilla_layout": {
+    "start_region": "overworld_south",
+    "start_sub_region": "shore",
+    "connections": [
+      { "from": ["owls_nest", "south_stair"], "to": ["overworld_south", "north_pass"] },
+      { "from": ["overworld_south", "rock_gap"], "to": ["gundernourd", "west_mouth"] },
+      { "from": ["owls_nest", "nest_ladder"], "to": ["gundernourd", "pit_mouth"] }
+    ]
+  }
+}
