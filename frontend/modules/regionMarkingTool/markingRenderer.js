@@ -69,6 +69,20 @@ export class RegionMarkingRenderer extends TileMapCanvasRenderer {
         this._markTo = null;
     }
 
+    /**
+     * Client (viewport) coordinates of a tile's centre — the inverse of
+     * tileAt. Used to place the canvas overlay's own hit targets, and by the
+     * UI verifier to drag on a real tile rather than a guessed pixel.
+     */
+    tileToClient(tile) {
+        const rect = this.canvas.getBoundingClientRect();
+        const ts = this.tilePixelSize;
+        return {
+            x: rect.left + tile[0] * ts - this.panX + ts / 2,
+            y: rect.top + tile[1] * ts - this.panY + ts / 2,
+        };
+    }
+
     /** Tile under a mouse event, or null when it falls outside the level. */
     tileAt(e) {
         if (!this.tilemap) return null;

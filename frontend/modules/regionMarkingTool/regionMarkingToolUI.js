@@ -106,6 +106,10 @@ export class RegionMarkingToolUI {
     // ── DOM ──────────────────────────────────────────────────────────────
     _buildDom() {
         this.rootElement = el('div', { class: 'rmt-panel panel-container' });
+        // A handle on the root element rather than a global: the UI verifier
+        // (scripts/procgen/verify-region-marking-tool.mjs) drives real canvas
+        // drags, which needs the renderer's current pan/zoom to aim at a tile.
+        this.rootElement.__panel = this;
 
         this.levelSelect = el('select', { class: 'rmt-select', onChange: () => this._selectLevel(Number(this.levelSelect.value)) });
         this.modeButtons = new Map();
@@ -132,6 +136,9 @@ export class RegionMarkingToolUI {
                 this.entityToggle = el('input', { type: 'checkbox', checked: true, onChange: () => { this.showEntities = this.entityToggle.checked; this._refreshCanvas(); } }),
                 document.createTextNode(' entities'),
             ]),
+            el('button', { class: 'rmt-btn', textContent: '−', title: 'zoom out', onClick: () => this.renderer.zoomOut() }),
+            el('button', { class: 'rmt-btn', textContent: '+', title: 'zoom in', onClick: () => this.renderer.zoomIn() }),
+            el('button', { class: 'rmt-btn', textContent: 'Fit', title: 'zoom so the level fills the canvas', onClick: () => this.fitLevel() }),
             el('button', { class: 'rmt-btn', textContent: 'New', onClick: () => this._newAtlas() }),
             el('button', { class: 'rmt-btn', textContent: 'Load', onClick: () => this.loadFile.click() }),
             el('button', { class: 'rmt-btn', textContent: 'Validate', onClick: () => this._validate() }),
@@ -188,8 +195,21 @@ export class RegionMarkingToolUI {
         this.levelSelect.value = String(levelId);
         const view = buildLevelView(level);
         this.renderer.setData(view.tilemap, view.categoryGrid, view.config);
+        this.fitLevel();
         this._refreshCanvas();
         this.render();
+    }
+
+    /** Zoom to the largest step that keeps the whole level on screen. */
+    fitLevel() {
+        const level = this.levelsById.get(this.levelId);
+        if (!level || !this.canvas.width || !this.canvas.height) return;
+        const fit = Math.min(this.canvas.width / level.width, this.canvas.height / level.height);
+        const steps = [1, 2, 3, 4, 6, 8, 12, 16, 24];
+        const size = [...steps].reverse().find((s) => s <= fit) ?? steps[0];
+        this.renderer.panX = 0;
+        this.renderer.panY = 0;
+        this.renderer.setTilePixelSize(size);
     }
 
     // ── marking ──────────────────────────────────────────────────────────
