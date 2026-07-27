@@ -53,6 +53,10 @@ export function register(registrationApi) {
     registrationApi.registerPanelComponent(REGION_MARKING_COMPONENT_TYPE, RegionMarkingToolUI);
     registrationApi.registerEventBusPublisher(LOAD_EVENT);
     registrationApi.registerEventBusPublisher('ui:activatePanel');
+    // "Edit in APWorld Editor" (Phase 3): the dedicated hand-off channel, not
+    // files:jsonLoaded — see regionMarkingToolUI._editInApworldEditor. The bus
+    // rejects unregistered publishers, so this line is load-bearing.
+    registrationApi.registerEventBusPublisher('apworldEditor:loadRules');
 }
 
 export async function initialize(_moduleId, _priorityIndex, initializationApi) {

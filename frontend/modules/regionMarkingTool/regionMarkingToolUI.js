@@ -20,6 +20,8 @@ import { AtlasSession, createEmptyAtlas, rectBounds } from './atlasSession.js';
 import { RegionMarkingRenderer, MARK_MODES } from './markingRenderer.js';
 import { buildLevelView, indexLevels, levelLabel, entityMarkers } from './mapSource.js';
 import { compactJsonFile } from '../procgenPipeline/compactJson.js';
+import { compileRegionAtlas, formatCompileReport } from '../procgenPipeline/regionAtlasCompiler.js';
+import { stringifyRulesJson } from '../shared/rulesJsonBuilder.js';
 
 function log(level, message, ...data) {
     if (typeof window !== 'undefined' && window.logger) window.logger[level]('regionMarkingToolUI', message, ...data);
@@ -143,6 +145,16 @@ export class RegionMarkingToolUI {
             el('button', { class: 'rmt-btn', textContent: 'Load', onClick: () => this.loadFile.click() }),
             el('button', { class: 'rmt-btn', textContent: 'Validate', onClick: () => this._validate() }),
             el('button', { class: 'rmt-btn rmt-primary', textContent: 'Save', onClick: () => this._save() }),
+            el('button', {
+                class: 'rmt-btn', textContent: 'Export rules.json',
+                title: 'compile this atlas into the vanilla AP rules.json (projection 1) and download it',
+                onClick: () => this._exportRules(),
+            }),
+            el('button', {
+                class: 'rmt-btn', textContent: 'Edit in APWorld Editor',
+                title: 'compile and hand the rules.json straight to the APWorld Editor for detail-filling',
+                onClick: () => this._editInApworldEditor(),
+            }),
         ]);
 
         this.loadFile = el('input', {
@@ -397,6 +409,81 @@ export class RegionMarkingToolUI {
 
     /** The exact bytes Save would download — the seam the UI verifier reads. */
     serialize() { return compactJsonFile(this.session.toDocument()); }
+
+    // ── projection 1: the vanilla rules.json ─────────────────────────────
+    //
+    // The compiler is the same module the CLI runs
+    // (scripts/procgen/region-atlas-compile.mjs), fed the same stamped document
+    // Save writes — so what the panel exports is what the command line would
+    // produce for the saved atlas, not a second implementation of the
+    // projection. Phase 3 is GRAPH ONLY: no preset_sidecars ride along.
+
+    _compileRules({ allowInvalid = false } = {}) {
+        return compileRegionAtlas(this.session.toDocument(), {
+            ...(this.mapDoc ? { mapDoc: this.mapDoc } : {}),
+            allowInvalid,
+        });
+    }
+
+    /** The exact bytes "Export rules.json" would download — the verifier's seam. */
+    serializeRules({ allowInvalid = false } = {}) {
+        return `${stringifyRulesJson(this._compileRules({ allowInvalid }).rules)}\n`;
+    }
+
+    // Shared front half of both hand-off buttons: validate, let the author
+    // decide about errors, compile. Returns null when they backed out or the
+    // compile itself refused (a region colliding with the reserved Menu name).
+    _compileForHandoff() {
+        const result = this._validate();
+        if (!result.ok) {
+            // eslint-disable-next-line no-alert
+            if (!window.confirm(`This atlas has ${result.errors.length} validation error(s). Compile anyway?`)) return null;
+        }
+        try {
+            return this._compileRules({ allowInvalid: true });
+        } catch (e) {
+            this._setStatus(`compile failed: ${e.message}`, true);
+            return null;
+        }
+    }
+
+    // The report is surfaced, not swallowed: unwired boundary exits are OMITTED
+    // from the graph, and an author who cannot see that reads a partial atlas
+    // as a complete one.
+    _reportStatus(report, prefix) {
+        const unwired = report.unwired_exits.length;
+        this._setStatus(
+            `${prefix} — ${report.ap_regions_incl_menu} AP regions, ${report.exits} exits, `
+            + `${report.locations} locations`
+            + (unwired ? `; ${unwired} unwired boundary exit(s) OMITTED: ${report.unwired_exits.map((e) => `${e.region_id}/${e.exit_id}`).join(', ')}` : ''),
+        );
+        for (const line of formatCompileReport(report)) log('info', line);
+    }
+
+    _exportRules() {
+        const compiled = this._compileForHandoff();
+        if (!compiled) return;
+        const blob = new Blob([this.serializeRules({ allowInvalid: true })], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = el('a', { href: url, download: `${this.session.baseId}_rules.json` });
+        document.body.append(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        this._reportStatus(compiled.report, `exported ${this.session.baseId}_rules.json`);
+    }
+
+    // Hand-off copied from procgenPipelineUI's §2.2 button: the dedicated
+    // apworldEditor:loadRules channel routes the world to the editor only. NOT
+    // files:jsonLoaded — a full app load makes the substrate panels
+    // self-activate and steal focus from the editor.
+    _editInApworldEditor() {
+        const compiled = this._compileForHandoff();
+        if (!compiled) return;
+        this.eventBus.publish('apworldEditor:loadRules', { jsonData: compiled.rules });
+        this.eventBus.publish('ui:activatePanel', { panelId: 'apworldEditorPanel' });
+        this._reportStatus(compiled.report, 'opened in the APWorld Editor');
+    }
 
     _setStatus(message, isError = false) {
         this.status = message;

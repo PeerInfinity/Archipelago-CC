@@ -18,6 +18,12 @@
  *     compact writer produce for the same edits. That last equality is what
  *     makes this a verification rather than a smoke test: the panel's save path
  *     is proven to be the model's, not a parallel one.
+ *   Phase E (Phase 3) — "Export rules.json" downloads the compiled projection,
+ *     byte-identical to what the headless compiler produces for the same atlas:
+ *     the panel's export path is the CLI's compiler, not a second projection.
+ *   Phase F (Phase 3) — "Edit in APWorld Editor" hands the compiled world over
+ *     the dedicated apworldEditor:loadRules channel, and the EDITOR'S OWN model
+ *     ends up holding the compiled regions.
  *
  * Prereq: dev server on :8000 (localhost -> unbundled ES modules, so source
  * edits are picked up). Run: node scripts/procgen/verify-region-marking-tool.mjs
@@ -37,6 +43,10 @@ const { validateRegionAtlas } = await import(pathToFileURL(
     path.join(repoRoot, 'frontend/modules/procgenPipeline/regionAtlasValidator.js')));
 const { compactJsonFile } = await import(pathToFileURL(
     path.join(repoRoot, 'frontend/modules/procgenPipeline/compactJson.js')));
+const { compileRegionAtlas } = await import(pathToFileURL(
+    path.join(repoRoot, 'frontend/modules/procgenPipeline/regionAtlasCompiler.js')));
+const { stringifyRulesJson } = await import(pathToFileURL(
+    path.join(repoRoot, 'frontend/modules/shared/rulesJsonBuilder.js')));
 
 const MAP_DOC = JSON.parse(fs.readFileSync(MAP_FILE, 'utf8'));
 
@@ -49,7 +59,7 @@ const EXIT_TILES = [[4, 2], [5, 2], [6, 2]];
 const LOCATION_TILE = [5, 5];
 const LOCATION_NAME = 'Verify - Chest';
 
-function headlessDocument() {
+function headlessSession() {
     const s = new AtlasSession(createEmptyAtlas({
         game: 'seedling', tileSize: MAP_DOC.tile_size, mapSource: 'ogmo-extract', mapDocument: 'seedling-map.json',
     }));
@@ -57,7 +67,16 @@ function headlessDocument() {
     s.addExit(REGION_ID, { exit_id: EXIT_ID, tiles: EXIT_TILES });
     s.addLocation(REGION_ID, { name: LOCATION_NAME, tile: LOCATION_TILE });
     s.setStart(REGION_ID);
-    return compactJsonFile(s.toDocument());
+    return s;
+}
+
+function headlessDocument() {
+    return compactJsonFile(headlessSession().toDocument());
+}
+
+/** The projection the CLI would emit for the same atlas (Phase 3). */
+function headlessRules() {
+    return compileRegionAtlas(headlessSession().toDocument(), { mapDoc: MAP_DOC });
 }
 
 let failures = 0;
@@ -190,6 +209,68 @@ try {
         savedText === expected ? '' : `saved ${savedText.length}B vs headless ${expected.length}B`);
 
     fs.rmSync(savedPath, { force: true });
+
+    // ── Phase E — Export rules.json (projection 1) ────────────────────────
+    const { rules: expectedRules } = headlessRules();
+    const expectedRulesText = `${stringifyRulesJson(expectedRules)}\n`;
+
+    const rulesDownloadPromise = page.waitForEvent('download', { timeout: 15000 });
+    await clickToolbar('Export rules.json');
+    const rulesDownload = await rulesDownloadPromise;
+    const rulesPath = path.join(repoRoot, 'test_dumps', `rmt-verify-${rulesDownload.suggestedFilename()}`);
+    await rulesDownload.saveAs(rulesPath);
+    const rulesText = fs.readFileSync(rulesPath, 'utf8');
+    check('Phase E: Export rules.json downloaded the projection',
+        rulesText.length > 0, rulesDownload.suggestedFilename());
+    check('Phase E: the panel\'s export path IS the CLI\'s compiler (byte-identical)',
+        rulesText === expectedRulesText,
+        rulesText === expectedRulesText ? '' : `exported ${rulesText.length}B vs headless ${expectedRulesText.length}B`);
+    // Not vacuous: the projection actually carries the marked region.
+    const exported = JSON.parse(rulesText);
+    const EXPECTED_AP_REGIONS = [REGION_ID, 'Menu'].sort().join(',');
+    check('Phase E: the exported graph holds the marked region and the start wiring',
+        Object.keys(exported.regions['1']).sort().join(',') === EXPECTED_AP_REGIONS
+        && exported.regions['1'].Menu.exits[0].connected_region === REGION_ID
+        && exported.regions['1'][REGION_ID].locations[0].name === LOCATION_NAME
+        && exported.preset_sidecars === undefined,
+        Object.keys(exported.regions['1']).join(', '));
+    // The status line must NAME what was dropped — the marked exit is unwired,
+    // so the projection omits it, and an author who cannot see that reads a
+    // partial atlas as a complete one.
+    const exportStatus = (await page.textContent('.rmt-status')).trim();
+    check('Phase E: the status line names the omitted unwired exit',
+        exportStatus.includes('unwired') && exportStatus.includes(EXIT_ID), exportStatus);
+
+    fs.rmSync(rulesPath, { force: true });
+
+    // ── Phase F — hand off to the APWorld Editor ──────────────────────────
+    //
+    // Under ?mode=flash the editor panel is enabled but not mounted, so the
+    // path this exercises is the module-level stash: apworldEditor/index.js
+    // subscribes to apworldEditor:loadRules at initialize() and holds the world
+    // until the panel drains it on mount (apworldEditorUI.js:129). Reading the
+    // stash through the module's own consumePendingEditorRules() is the same
+    // call the panel makes.
+    //
+    // Cleared FIRST so the assertion afterwards cannot pass on something stale:
+    // the slot is empty, the click fills it. A publish the bus rejected (the
+    // publisher not registered in regionMarkingTool/index.js) leaves it empty,
+    // so this check pins that registration too.
+    const readStash = () => page.evaluate(async () => {
+        const mod = await import('./modules/apworldEditor/index.js');
+        const doc = mod.consumePendingEditorRules();
+        return doc?.regions?.['1'] ? Object.keys(doc.regions['1']) : null;
+    });
+    check('Phase F: nothing stashed for the editor before the button is pressed',
+        (await readStash()) === null);
+
+    // The publish is synchronous inside the click handler, so the stash is
+    // filled by the time clickToolbar returns.
+    await clickToolbar('Edit in APWorld Editor');
+    const adopted = await readStash();
+    check('Phase F: the APWorld Editor\'s OWN model holds the compiled regions',
+        Array.isArray(adopted) && adopted.sort().join(',') === EXPECTED_AP_REGIONS,
+        JSON.stringify(adopted));
 } finally {
     await browser.close();
 }
