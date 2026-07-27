@@ -380,18 +380,24 @@ export const ENTITY_SEMANTICS = Object.freeze({
     bonetorch2: { kind: 'wall', class: 'BoneTorch', variant: { boneType: 1 } },
     iceturret: { kind: 'wall', class: 'IceTurret', size: [2, 2] },
     // Buildings collide through a Pixelmask (Scenery/Building.as:22), so their
-    // real outline is per-pixel. Sizes here are the sprite rectangles, rounded
-    // UP to whole tiles: over-blocking splits a region the author then reviews,
-    // where under-blocking would merge two rooms silently.
-    building: { kind: 'wall', class: 'Building', size: [4, 4], pixelMask: true },
-    building1: { kind: 'wall', class: 'Building', size: [3, 3], pixelMask: true, variant: { buildingType: 1 } },
-    building2: { kind: 'wall', class: 'Building', size: [4, 4], pixelMask: true, variant: { buildingType: 2 } },
-    building3: { kind: 'wall', class: 'Building', size: [3, 7], pixelMask: true, variant: { buildingType: 3 } },
-    building4: { kind: 'wall', class: 'Building', size: [9, 9], pixelMask: true, variant: { buildingType: 4 } },
-    building5: { kind: 'wall', class: 'Building', size: [4, 4], pixelMask: true, variant: { buildingType: 5 } },
-    building6: { kind: 'wall', class: 'Building', size: [5, 8], pixelMask: true, variant: { buildingType: 6 } },
-    building7: { kind: 'wall', class: 'Building', size: [5, 6], pixelMask: true, variant: { buildingType: 7 } },
-    building8: { kind: 'wall', class: 'Building', size: [12, 4], pixelMask: true, variant: { buildingType: 8 } },
+    // real outline is per-pixel and this transcription does not have it. Neither
+    // rectangle approximation is safe: the sprite rect swallows the building's
+    // OWN doorway (OverWorld.oel puts the teleporter into the house at the
+    // centre of a 3x3 rect), and shrinking it would merge rooms a wall really
+    // separates. So a building is `manual` — real crossing material with no
+    // derivable outline. Everything walks THROUGH it in the flood, so a house
+    // standing in open ground costs nothing, and a building that is genuinely
+    // the only way between two areas becomes a hand-authoring row instead of an
+    // invented wall. `size` is the sprite rectangle, kept for the overlay.
+    building: M('per-pixel collision mask (Scenery/Building.as:22) is not transcribed — its outline has to be authored by hand', { class: 'Building', size: [4, 4], pixelMask: true }),
+    building1: M('per-pixel collision mask (Scenery/Building.as:22) is not transcribed — its outline has to be authored by hand', { class: 'Building', size: [3, 3], pixelMask: true, variant: { buildingType: 1 } }),
+    building2: M('per-pixel collision mask (Scenery/Building.as:22) is not transcribed — its outline has to be authored by hand', { class: 'Building', size: [4, 4], pixelMask: true, variant: { buildingType: 2 } }),
+    building3: M('per-pixel collision mask (Scenery/Building.as:22) is not transcribed — its outline has to be authored by hand', { class: 'Building', size: [3, 7], pixelMask: true, variant: { buildingType: 3 } }),
+    building4: M('per-pixel collision mask (Scenery/Building.as:22) is not transcribed — its outline has to be authored by hand', { class: 'Building', size: [9, 9], pixelMask: true, variant: { buildingType: 4 } }),
+    building5: M('per-pixel collision mask (Scenery/Building.as:22) is not transcribed — its outline has to be authored by hand', { class: 'Building', size: [4, 4], pixelMask: true, variant: { buildingType: 5 } }),
+    building6: M('per-pixel collision mask (Scenery/Building.as:22) is not transcribed — its outline has to be authored by hand', { class: 'Building', size: [5, 8], pixelMask: true, variant: { buildingType: 6 } }),
+    building7: M('per-pixel collision mask (Scenery/Building.as:22) is not transcribed — its outline has to be authored by hand', { class: 'Building', size: [5, 6], pixelMask: true, variant: { buildingType: 7 } }),
+    building8: M('per-pixel collision mask (Scenery/Building.as:22) is not transcribed — its outline has to be authored by hand', { class: 'Building', size: [12, 4], pixelMask: true, variant: { buildingType: 8 } }),
     // NPCs size their hitbox from their graphic (NPCs/NPC.as) and are "Solid".
     adnanchar: { kind: 'wall', class: 'AdnanCharacter' },
     forestchar: { kind: 'wall', class: 'ForestCharacter' },
@@ -686,40 +692,12 @@ export { DIRECTIONS as SEEDLING_DIRECTIONS };
  */
 export function buildSeedlingRegionGrid(bounds, level) {
     const { w: width, h: height } = bounds;
-    const cells = new Array(width * height);
-    for (let i = 0; i < cells.length; i += 1) {
-        cells[i] = { kind: 'open', conditions: [], faces: {}, dirs: {}, manual: [], labels: [] };
-    }
+    const claims = Array.from({ length: width * height }, () => []);
 
     const unclassified = [];
-    const review = [];
-    const sinks = [];
     const inside = (x, y) => x >= 0 && y >= 0 && x < width && y < height;
-
-    // Higher rank wins the cell's kind; every claim still contributes its
-    // conditions, faces and manual reasons.
-    const RANK = { open: 0, gated: 1, directional: 1, sink: 2, manual: 3, wall: 4 };
     const claim = (x, y, semantics, origin) => {
-        if (!inside(x, y)) return;
-        const cell = cells[y * width + x];
-        if (RANK[semantics.kind] >= RANK[cell.kind]) cell.kind = semantics.kind;
-        if (semantics.label) cell.labels.push(semantics.label);
-        if (semantics.condition) cell.conditions.push(semantics.condition);
-        if (semantics.kind === 'manual') {
-            cell.manual.push(`${origin}: ${semantics.reason ?? 'no derivable rule'}`);
-        }
-        // A blocked face/direction always wins; two gated ones AND together,
-        // which the analyzer does by seeing the list.
-        for (const key of ['faces', 'dirs']) {
-            for (const [dir, cond] of Object.entries(semantics[key] ?? {})) {
-                const current = cell[key][dir];
-                if (current === null) continue;
-                if (cond === null) cell[key][dir] = null;
-                else cell[key][dir] = [...(current ?? []), cond];
-            }
-        }
-        if (semantics.review) review.push({ tile: [x + bounds.x, y + bounds.y], reason: semantics.review });
-        if (semantics.kind === 'sink') sinks.push({ tile: [x + bounds.x, y + bounds.y], label: semantics.label ?? null });
+        if (inside(x, y)) claims[y * width + x].push({ semantics, origin });
     };
 
     for (const layer of level?.layers ?? []) {
@@ -759,6 +737,38 @@ export function buildSeedlingRegionGrid(bounds, level) {
                 claim(fp.x + dx - bounds.x, fp.y + dy - bounds.y, semantics, `entity ${entity.type}`);
             }
         }
+    }
+
+    // Fold the claims. The cell takes the STRONGEST kind; every claim still
+    // contributes its conditions, faces and manual reasons.
+    const RANK = { open: 0, gated: 1, directional: 1, sink: 2, manual: 3, wall: 4 };
+    const cells = new Array(width * height);
+    const review = [];
+    const sinks = [];
+    for (let i = 0; i < cells.length; i += 1) {
+        const cell = { kind: 'open', conditions: [], faces: {}, dirs: {}, manual: [], labels: [] };
+        const x = i % width;
+        const y = (i - x) / width;
+        for (const { semantics, origin } of claims[i]) {
+            if (RANK[semantics.kind] >= RANK[cell.kind]) cell.kind = semantics.kind;
+            if (semantics.label) cell.labels.push(semantics.label);
+            if (semantics.condition) cell.conditions.push(semantics.condition);
+            if (semantics.kind === 'manual') {
+                cell.manual.push(`${origin}: ${semantics.reason ?? 'no derivable rule'}`);
+            }
+            // A blocked face/direction always wins; two gated ones AND together,
+            // which the analyzer does by seeing the list.
+            for (const key of ['faces', 'dirs']) {
+                for (const [dir, cond] of Object.entries(semantics[key] ?? {})) {
+                    if (cell[key][dir] === null) continue;
+                    if (cond === null) cell[key][dir] = null;
+                    else cell[key][dir] = [...(cell[key][dir] ?? []), cond];
+                }
+            }
+            if (semantics.review) review.push({ tile: [x + bounds.x, y + bounds.y], reason: semantics.review });
+            if (semantics.kind === 'sink') sinks.push({ tile: [x + bounds.x, y + bounds.y], label: semantics.label ?? null });
+        }
+        cells[i] = cell;
     }
 
     return {

@@ -130,6 +130,12 @@
 .rmt-mono { flex: 1 1 auto; color: #ccc; overflow: hidden; text-overflow: ellipsis; }
 .rmt-note { color: #777; font-style: italic; padding: 2px 0; }
 
+/* A row or note the author still owes something to: a crossing the analyzer
+   could not label, a tile it flagged for review. Amber rather than red — it is
+   work outstanding, not an error. */
+.rmt-warn { color: #d9a441; }
+.rmt-warn .rmt-mono { color: #d9a441; }
+
 .rmt-status {
   flex: 0 0 auto;
   padding: 4px 8px;

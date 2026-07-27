@@ -24,6 +24,11 @@
  *   Phase F (Phase 3) — "Edit in APWorld Editor" hands the compiled world over
  *     the dedicated apworldEditor:loadRules channel, and the EDITOR'S OWN model
  *     ends up holding the compiled regions.
+ *   Phase G (Phase 5a) — "Analyze region" on a real room with a real item gate
+ *     (Dungeon1_1, whose breakable rock walls off the way down) PROPOSES a split
+ *     without touching the document, and Accept applies it. The accepted atlas
+ *     is byte-identical to a headless analyze+apply of the same edits, so the
+ *     panel's analyzer path is the CLI's, not a second one.
  *
  * Prereq: dev server on :8000 (localhost -> unbundled ES modules, so source
  * edits are picked up). Run: node scripts/procgen/verify-region-marking-tool.mjs
@@ -47,8 +52,12 @@ const { compileRegionAtlas } = await import(pathToFileURL(
     path.join(repoRoot, 'frontend/modules/procgenPipeline/regionAtlasCompiler.js')));
 const { stringifyRulesJson } = await import(pathToFileURL(
     path.join(repoRoot, 'frontend/modules/shared/rulesJsonBuilder.js')));
+const { analyzeSeedlingRegion, applySeedlingRegionAnalysis } = await import(pathToFileURL(
+    path.join(repoRoot, 'frontend/modules/flashPanel/seedlingAtlasAnalysis.js')));
 
 const MAP_DOC = JSON.parse(fs.readFileSync(MAP_FILE, 'utf8'));
+const GAME_CONFIG = JSON.parse(fs.readFileSync(
+    path.join(repoRoot, 'frontend/modules/flashPanel/games/seedling.json'), 'utf8'));
 
 // The edits the browser will perform, and the headless model's answer to them.
 const LEVEL = 12;                       // OverWorld1_1 — a 20x20 overworld room
@@ -58,6 +67,16 @@ const EXIT_ID = 'verify_north';
 const EXIT_TILES = [[4, 2], [5, 2], [6, 2]];
 const LOCATION_TILE = [5, 5];
 const LOCATION_NAME = 'Verify - Chest';
+
+// Phase G: a room the analyzer has something to say about. Dungeon1_1's
+// breakable rock sits between the room and the tile holding the stairs down, so
+// the split is 18 walkable tiles + 1, crossed by "Sword OR Spear".
+const SPLIT_LEVEL = 3;
+const SPLIT_REGION_ID = 'verify_split';
+const SPLIT_BOUNDS = { x: 0, y: 0, w: 9, h: 9 };
+const SPLIT_EXIT_ID = 'verify_up';
+const SPLIT_EXIT_TILE = [4, 0];
+const EXPECTED_SUB_REGIONS = ['r0c4', 'r8c6'];
 
 function headlessSession() {
     const s = new AtlasSession(createEmptyAtlas({
@@ -77,6 +96,21 @@ function headlessDocument() {
 /** The projection the CLI would emit for the same atlas (Phase 3). */
 function headlessRules() {
     return compileRegionAtlas(headlessSession().toDocument(), { mapDoc: MAP_DOC });
+}
+
+/**
+ * The document the model produces for phases B-D PLUS the Phase-G split region,
+ * analyzed and accepted. Mirrors what the panel does, through the same modules
+ * — including the panel's `stamp: false` (the session owns identity, and
+ * toDocument() is the single stamping path).
+ */
+function headlessAfterAnalyze() {
+    const s = headlessSession();
+    s.addRegion({ region_id: SPLIT_REGION_ID, bounds: SPLIT_BOUNDS, map_ref: SPLIT_LEVEL });
+    s.addExit(SPLIT_REGION_ID, { exit_id: SPLIT_EXIT_ID, tiles: [SPLIT_EXIT_TILE], kind: 'teleporter' });
+    const analysis = analyzeSeedlingRegion(s.atlas, SPLIT_REGION_ID, { mapDoc: MAP_DOC, gameConfig: GAME_CONFIG });
+    applySeedlingRegionAnalysis(s.atlas, analysis, { stamp: false });
+    return { text: compactJsonFile(s.toDocument()), analysis };
 }
 
 let failures = 0;
@@ -228,12 +262,21 @@ try {
     // Not vacuous: the projection actually carries the marked region.
     const exported = JSON.parse(rulesText);
     const EXPECTED_AP_REGIONS = [REGION_ID, 'Menu'].sort().join(',');
+    // `preset_sidecars` used to be asserted ABSENT here — Phase 3 was graph
+    // only. Phase 4 made the compiler emit projection 3 for every region naming
+    // a level, so the marked region (map_ref 12) now carries one, and the
+    // assertion has been stale since 49a70ff35. It asserts the Phase-4 truth
+    // instead: a sidecar exists, bound to the per-game substrate, with no exit
+    // entries because the region's one exit is unwired.
+    const sidecar = exported.preset_sidecars?.['1']?.[REGION_ID];
     check('Phase E: the exported graph holds the marked region and the start wiring',
         Object.keys(exported.regions['1']).sort().join(',') === EXPECTED_AP_REGIONS
         && exported.regions['1'].Menu.exits[0].connected_region === REGION_ID
         && exported.regions['1'][REGION_ID].locations[0].name === LOCATION_NAME
-        && exported.preset_sidecars === undefined,
-        Object.keys(exported.regions['1']).join(', '));
+        && sidecar?.substrate === 'flash_seedling'
+        && sidecar?.playable_payload?.level === LEVEL
+        && sidecar?.playable_payload?.exits.length === 0,
+        `${Object.keys(exported.regions['1']).join(', ')}; sidecar ${JSON.stringify(sidecar?.substrate ?? null)}`);
     // The status line must NAME what was dropped — the marked exit is unwired,
     // so the projection omits it, and an author who cannot see that reads a
     // partial atlas as a complete one.
@@ -271,6 +314,108 @@ try {
     check('Phase F: the APWorld Editor\'s OWN model holds the compiled regions',
         Array.isArray(adopted) && adopted.sort().join(',') === EXPECTED_AP_REGIONS,
         JSON.stringify(adopted));
+
+    // ── Phase G (Phase 5a) — analyze a real room ──────────────────────────
+    //
+    // Phase F's `ui:activatePanel` handed focus to the editor, so the tool's tab
+    // has to come back forward before anything can be clicked on it.
+    await page.evaluate(() => {
+        const tab = [...document.querySelectorAll('.lm_tab .lm_title')]
+            .find((t) => t.textContent.trim() === 'Region Marking Tool');
+        if (!tab) throw new Error('no "Region Marking Tool" tab in the layout');
+        tab.click();
+    });
+    await page.waitForSelector('.rmt-panel select', { state: 'visible', timeout: 15000 });
+
+    // The prompt queue from Phase A is exhausted, so it is re-armed with the
+    // two ids this phase needs.
+    await page.evaluate(({ regionId, exitId }) => {
+        const answers = [regionId, exitId];
+        window.prompt = () => answers.shift() ?? null;
+    }, { regionId: SPLIT_REGION_ID, exitId: SPLIT_EXIT_ID });
+
+    await selectLevel(SPLIT_LEVEL);
+    await clickToolbar('Region');
+    await drag([SPLIT_BOUNDS.x, SPLIT_BOUNDS.y],
+        [SPLIT_BOUNDS.x + SPLIT_BOUNDS.w - 1, SPLIT_BOUNDS.y + SPLIT_BOUNDS.h - 1]);
+    await clickToolbar('Teleporter');
+    await drag(SPLIT_EXIT_TILE, SPLIT_EXIT_TILE);
+    const marked = await page.evaluate((id) => {
+        const r = document.querySelector('.rmt-panel').__panel.session.regions().find((x) => x.region_id === id);
+        return r ? { bounds: r.bounds, exits: r.exits.length, subgraph: r.subgraph ?? null } : null;
+    }, SPLIT_REGION_ID);
+    check('Phase G: the split region was marked and has no subgraph yet',
+        marked && marked.exits === 1 && marked.subgraph === null
+        && JSON.stringify(marked.bounds) === JSON.stringify(SPLIT_BOUNDS),
+        JSON.stringify(marked));
+
+    await clickToolbar('Analyze region');
+    await page.waitForFunction(() => document.querySelector('.rmt-panel').__panel.analysis !== null,
+        null, { timeout: 15000 });
+    const proposal = await page.evaluate((id) => {
+        const panel = document.querySelector('.rmt-panel').__panel;
+        const region = panel.session.regions().find((x) => x.region_id === id);
+        return {
+            components: panel.analysis.components.map((c) => c.id),
+            rows: panel.analysis.internal_exits,
+            // The proposal must not have touched the document.
+            liveSubgraph: region.subgraph ?? null,
+            overlay: panel.renderer.partitionOverlay?.components?.length ?? 0,
+            section: [...document.querySelectorAll('.rmt-section h4')].map((h) => h.textContent).includes('Proposed split'),
+        };
+    }, SPLIT_REGION_ID);
+    check('Phase G: Analyze PROPOSED a split without touching the document',
+        proposal.components.join(',') === EXPECTED_SUB_REGIONS.join(',')
+        && proposal.liveSubgraph === null
+        && proposal.overlay === 2
+        && proposal.section === true,
+        JSON.stringify({ components: proposal.components, live: proposal.liveSubgraph, overlay: proposal.overlay }));
+    check('Phase G: the proposed crossing carries the breakable rock\'s real rule',
+        proposal.rows.length === 1
+        && proposal.rows[0].source === 'analyzer'
+        && proposal.rows[0].bidirectional === true
+        && JSON.stringify(proposal.rows[0].access_rule) === JSON.stringify({
+            rule: 'Or',
+            children: [
+                { rule: 'Has', args: { item_name: 'Progressive Sword' } },
+                { rule: 'Has', args: { item_name: 'Ghost Spear' } },
+            ],
+        }),
+        JSON.stringify(proposal.rows));
+
+    await clickToolbar('Accept');
+    const accepted = await page.evaluate((id) => {
+        const panel = document.querySelector('.rmt-panel').__panel;
+        const region = panel.session.regions().find((x) => x.region_id === id);
+        return {
+            pending: panel.analysis,
+            subRegions: region.subgraph?.sub_regions ?? null,
+            rows: region.subgraph?.internal_exits ?? null,
+            rulesSource: region.annotations?.rules_source,
+            exitSub: region.exits[0].sub_region,
+            overlay: panel.renderer.partitionOverlay,
+        };
+    }, SPLIT_REGION_ID);
+    check('Phase G: Accept applied the split and cleared the proposal',
+        accepted.pending === null
+        && accepted.overlay === null
+        && (accepted.subRegions ?? []).join(',') === EXPECTED_SUB_REGIONS.join(',')
+        && accepted.rows?.length === 1
+        && accepted.rulesSource === 'analyzer'
+        && accepted.exitSub === EXPECTED_SUB_REGIONS[0],
+        JSON.stringify({ subs: accepted.subRegions, source: accepted.rulesSource, exitSub: accepted.exitSub }));
+
+    // The strong check, the same shape as Phase D's: the panel's analyzer path
+    // is the headless one, byte for byte.
+    const { text: expectedAfterAnalyze } = headlessAfterAnalyze();
+    const panelAfterAnalyze = await page.evaluate(
+        () => document.querySelector('.rmt-panel').__panel.serialize(),
+    );
+    check('Phase G: the panel\'s analyze+accept path IS the model\'s (byte-identical)',
+        panelAfterAnalyze === expectedAfterAnalyze,
+        panelAfterAnalyze === expectedAfterAnalyze
+            ? ''
+            : `panel ${panelAfterAnalyze.length}B vs headless ${expectedAfterAnalyze.length}B`);
 } finally {
     await browser.close();
 }

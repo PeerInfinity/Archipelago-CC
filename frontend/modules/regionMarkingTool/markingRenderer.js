@@ -34,6 +34,18 @@ const ENTRANCE_STROKE = '#fff';
 const LOCATION_STROKE = 'rgba(255, 120, 120, 1)';
 const PREVIEW_STROKE = 'rgba(255, 255, 255, 0.95)';
 
+// Proposed sub-regions (Phase 5a): one hue per component, cycled. Distinct from
+// every colour above, because the partition overlay is drawn UNDER the region
+// and exit marks and has to stay readable through them. `CROSSING_FILL` is the
+// material between components — the tiles the rule was read off.
+const PARTITION_FILLS = [
+    'rgba(80, 160, 255, 0.34)', 'rgba(120, 230, 140, 0.34)', 'rgba(255, 190, 90, 0.34)',
+    'rgba(220, 120, 255, 0.34)', 'rgba(90, 230, 230, 0.34)', 'rgba(255, 130, 150, 0.34)',
+    'rgba(190, 220, 100, 0.34)', 'rgba(160, 150, 255, 0.34)',
+];
+const CROSSING_FILL = 'rgba(255, 255, 255, 0.28)';
+const CROSSING_STROKE = 'rgba(255, 255, 255, 0.85)';
+
 export class RegionMarkingRenderer extends TileMapCanvasRenderer {
     constructor(canvas, canvasWrap) {
         super(canvas, canvasWrap);
@@ -41,6 +53,13 @@ export class RegionMarkingRenderer extends TileMapCanvasRenderer {
         this.markMode = MARK_MODES.NONE;
         /** @type {Array<{region_id, bounds, exits, locations, selected}>} */
         this.regionOverlays = [];
+        /**
+         * A PROPOSED partition, drawn while the author reviews an Analyze
+         * result. Session-local and never persisted (Phase 5a ruling: the tile
+         * partition recomputes deterministically, so the schema stays lean).
+         * @type {null|{ components: Array<{id, tiles}>, crossings: Array<{tiles}> }}
+         */
+        this.partitionOverlay = null;
         this.showLabels = true;
 
         this.onMarkRect = null;   // ({x,y,w,h}) => void
@@ -60,6 +79,12 @@ export class RegionMarkingRenderer extends TileMapCanvasRenderer {
 
     setRegionOverlays(overlays) {
         this.regionOverlays = Array.isArray(overlays) ? overlays : [];
+        this.draw();
+    }
+
+    /** Show (or clear, with null) a proposed sub-region partition. */
+    setPartitionOverlay(partition) {
+        this.partitionOverlay = partition ?? null;
         this.draw();
     }
 
@@ -163,6 +188,25 @@ export class RegionMarkingRenderer extends TileMapCanvasRenderer {
         const ts = this.tilePixelSize;
         const px = (tx) => tx * ts - this.panX;
         const py = (ty) => ty * ts - this.panY;
+
+        // Drawn FIRST, so the region rectangle, exits and locations stay legible
+        // on top of it — the author is comparing a proposal against the marks
+        // they made, not replacing their view of them.
+        if (this.partitionOverlay) {
+            this.partitionOverlay.components.forEach((component, i) => {
+                ctx.fillStyle = PARTITION_FILLS[i % PARTITION_FILLS.length];
+                for (const [x, y] of component.tiles) ctx.fillRect(px(x), py(y), ts, ts);
+            });
+            ctx.strokeStyle = CROSSING_STROKE;
+            ctx.lineWidth = 1;
+            for (const crossing of this.partitionOverlay.crossings ?? []) {
+                for (const [x, y] of crossing.tiles ?? []) {
+                    ctx.fillStyle = CROSSING_FILL;
+                    ctx.fillRect(px(x), py(y), ts, ts);
+                    ctx.strokeRect(px(x) + 0.5, py(y) + 0.5, ts - 1, ts - 1);
+                }
+            }
+        }
 
         for (const ov of this.regionOverlays) {
             const b = ov.bounds;

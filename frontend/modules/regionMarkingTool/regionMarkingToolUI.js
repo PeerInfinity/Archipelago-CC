@@ -21,7 +21,14 @@ import { RegionMarkingRenderer, MARK_MODES } from './markingRenderer.js';
 import { buildLevelView, indexLevels, levelLabel, entityMarkers } from './mapSource.js';
 import { compactJsonFile } from '../procgenPipeline/compactJson.js';
 import { compileRegionAtlas, formatCompileReport } from '../procgenPipeline/regionAtlasCompiler.js';
+import { formatAnalysisReport, describeRule } from '../procgenPipeline/regionAtlasAnalyzer.js';
+import { analyzeSeedlingRegion, applySeedlingRegionAnalysis } from '../flashPanel/seedlingAtlasAnalysis.js';
 import { stringifyRulesJson } from '../shared/rulesJsonBuilder.js';
+
+// Per-game analyzers, the same registry shape the batch CLI carries
+// (scripts/procgen/region-atlas-analyze.mjs). One entry today; Phase 7 adds RWK.
+const ANALYZERS = { seedling: analyzeSeedlingRegion };
+const GAME_CONFIG_URL = (game) => `modules/flashPanel/games/${game}.json`;
 
 function log(level, message, ...data) {
     if (typeof window !== 'undefined' && window.logger) window.logger[level]('regionMarkingToolUI', message, ...data);
@@ -62,6 +69,9 @@ export class RegionMarkingToolUI {
         this.selectedRegionId = null;
         this.selectedExitId = null;
         this.pendingExitKind = null;
+        // A pending analyzer proposal, session-local until accepted.
+        this.analysis = null;
+        this._gameConfigCache = null;
         this.showEntities = true;
         this.status = 'loading map…';
 
@@ -90,6 +100,7 @@ export class RegionMarkingToolUI {
             this.session = new AtlasSession(session.atlas);
             this.selectedRegionId = this.session.regions()[0]?.region_id ?? null;
             this.selectedExitId = null;
+            this.analysis = null;
         }
         const level = session.levelId
             ?? this.session.regions().find((r) => r.map_ref !== undefined)?.map_ref;
@@ -154,6 +165,11 @@ export class RegionMarkingToolUI {
                 class: 'rmt-btn', textContent: 'Edit in APWorld Editor',
                 title: 'compile and hand the rules.json straight to the APWorld Editor for detail-filling',
                 onClick: () => this._editInApworldEditor(),
+            }),
+            el('button', {
+                class: 'rmt-btn', textContent: 'Analyze region',
+                title: 'compute the selected region\'s sub-region split from the tile map, and propose the rules that cross between the pieces',
+                onClick: () => this._analyzeRegion(),
             }),
         ]);
 
@@ -334,9 +350,31 @@ export class RegionMarkingToolUI {
         this.renderer.setRegionOverlays(this.session.regions()
             .filter((r) => r.map_ref === this.levelId)
             .map((r) => ({ ...r, selected: r.region_id === this.selectedRegionId })));
+        this.renderer.setPartitionOverlay(this._partitionOverlay());
         this.renderer.setMarkers(this.showEntities && level
             ? entityMarkers(level, this.mapDoc.tile_size ?? 16, { types: DEFAULT_MARKER_TYPES })
             : []);
+    }
+
+    /**
+     * The proposed partition in LEVEL coordinates. The analyzer works in
+     * region-local ones (its grid starts at the region's bounds), so this is
+     * where the translation happens — once, at the point of drawing.
+     */
+    _partitionOverlay() {
+        const a = this.analysis;
+        if (!a || a.region_id !== this.selectedRegionId) return null;
+        const region = this._currentRegion();
+        if (!region || region.map_ref !== this.levelId) return null;
+        const { x: ox, y: oy } = region.bounds;
+        return {
+            components: a.components.map((c) => ({
+                id: c.id, tiles: c.tiles.map(([x, y]) => [x + ox, y + oy]),
+            })),
+            // Crossing tiles are already in atlas coordinates (findCrossings
+            // translates them), so they pass through.
+            crossings: a.crossings.map((c) => ({ tiles: c.tiles })),
+        };
     }
 
     // ── save / load ──────────────────────────────────────────────────────
@@ -350,6 +388,7 @@ export class RegionMarkingToolUI {
         }));
         this.selectedRegionId = null;
         this.selectedExitId = null;
+        this.analysis = null;
         this._setStatus('new atlas');
         this.render();
     }
@@ -360,6 +399,7 @@ export class RegionMarkingToolUI {
             this.session = new AtlasSession(JSON.parse(await file.text()));
             this.selectedRegionId = this.session.regions()[0]?.region_id ?? null;
             this.selectedExitId = null;
+            this.analysis = null;
             const first = this.session.regions().find((r) => r.map_ref !== undefined);
             if (first) this._selectLevel(first.map_ref);
             this._validate();
@@ -485,6 +525,131 @@ export class RegionMarkingToolUI {
         this._reportStatus(compiled.report, 'opened in the APWorld Editor');
     }
 
+    // ── Phase 5a: the analyzer ───────────────────────────────────────────
+    //
+    // Propose -> review -> accept. Analyze computes a partition and a set of
+    // internal exits and shows them (coloured overlay + a list); nothing touches
+    // the document until Accept, which applies through the SESSION so every
+    // authoring rule still runs and the identity is restamped once.
+    //
+    // The tile partition itself is session-local and never persisted: it
+    // recomputes deterministically from the map document, so storing it would
+    // only give the schema a second copy of the terrain to drift from.
+
+    /** The per-game config that maps engine flags to AP items, fetched once. */
+    async _gameConfig() {
+        const game = this.session.atlas.game;
+        if (this._gameConfigCache?.game === game) return this._gameConfigCache.config;
+        const response = await fetch(GAME_CONFIG_URL(game));
+        if (!response.ok) throw new Error(`HTTP ${response.status} for ${GAME_CONFIG_URL(game)}`);
+        const config = await response.json();
+        this._gameConfigCache = { game, config };
+        return config;
+    }
+
+    async _analyzeRegion() {
+        const region = this._currentRegion();
+        if (!region) { this._setStatus('select a region first', true); return; }
+        const analyze = ANALYZERS[this.session.atlas.game];
+        if (!analyze) {
+            this._setStatus(`no analyzer for game "${this.session.atlas.game}" — its tile semantics have not been transcribed`, true);
+            return;
+        }
+        if (!this.mapDoc) { this._setStatus('the map document is not loaded yet', true); return; }
+        try {
+            const gameConfig = await this._gameConfig();
+            // Analyze a CLONE: the proposal must not touch the live document
+            // before the author accepts it.
+            const snapshot = JSON.parse(JSON.stringify(this.session.atlas));
+            const analysis = analyze(snapshot, region.region_id, { mapDoc: this.mapDoc, gameConfig });
+            if (analysis.skipped) { this._setStatus(`cannot analyze "${region.region_id}": ${analysis.skipped}`, true); return; }
+            this.analysis = analysis;
+            for (const line of formatAnalysisReport(analysis)) log('info', line);
+            this._setStatus(
+                `${region.region_id}: ${analysis.components.length} component(s), `
+                + `${analysis.internal_exits.length} proposed internal exit(s)`
+                + (analysis.needs_authoring.length ? `, ${analysis.needs_authoring.length} needing a hand-written rule` : '')
+                + ' — review below, then Accept',
+            );
+        } catch (e) {
+            log('error', 'analyze failed', e);
+            this._setStatus(`analyze failed: ${e.message}`, true);
+        }
+        this.render();
+    }
+
+    _acceptAnalysis() {
+        if (!this.analysis) return;
+        try {
+            const result = applySeedlingRegionAnalysis(this.session.atlas, this.analysis, { stamp: false });
+            // The session owns identity: applying with stamp:false keeps
+            // toDocument() the single stamping path, exactly as every other
+            // mutation here does.
+            for (const p of result.problems) log('warn', `apply: ${p.message}`);
+            const accepted = this.analysis;
+            this.analysis = null;
+            this._validate();
+            this._setStatus(
+                `applied ${accepted.internal_exits.length} internal exit(s) to "${accepted.region_id}"`
+                + (result.problems.length ? ` — ${result.problems.length} problem(s), see the log` : '')
+                + `; ${this.status}`,
+            );
+        } catch (e) {
+            this._setStatus(`accept failed: ${e.message}`, true);
+        }
+        this.render();
+    }
+
+    _discardAnalysis() {
+        this.analysis = null;
+        this._setStatus('analysis discarded — the atlas is unchanged');
+        this.render();
+    }
+
+    _analysisSection(region) {
+        const a = this.analysis;
+        if (!a || a.region_id !== region.region_id) return null;
+        const children = [
+            el('div', { class: 'rmt-note', textContent: a.split
+                ? `${a.components.length} zero-item components — accepting splits this region into them`
+                : 'one walkable piece — accepting REMOVES any subgraph (a region with no obstacle carries no boilerplate)' }),
+        ];
+
+        const list = el('div', { class: 'rmt-list' });
+        for (const row of a.internal_exits) {
+            const rule = row.access_rule
+                ? describeRule(row.access_rule)
+                : (row.source === 'analyzer' ? 'free' : 'NEEDS A RULE');
+            list.append(el('div', { class: `rmt-row${row.source === 'analyzer' ? '' : ' rmt-warn'}` }, [
+                el('span', { class: 'rmt-mono', textContent: `${row.from} ${row.bidirectional ? '↔' : '→'} ${row.to}` }),
+                el('span', { class: 'rmt-note', textContent: `[${row.source}] ${rule}` }),
+            ]));
+        }
+        if (a.internal_exits.length > 0) children.push(list);
+
+        for (const n of a.needs_authoring) {
+            children.push(el('div', { class: 'rmt-note rmt-warn', textContent: `hand-authoring needed: ${n.from} → ${n.to} — ${n.reasons.join('; ') || 'no derivable rule'}` }));
+        }
+        for (const b of a.boundary_candidates) {
+            children.push(el('div', { class: 'rmt-note', textContent: `one-way drop out of the region at [${b.tile}] — a boundary exit candidate, not an internal crossing` }));
+        }
+        for (const p of a.bindings.filter((x) => x.component && !x.exact)) {
+            children.push(el('div', { class: 'rmt-note', textContent: `${p.kind} "${p.id}" is not on a walkable tile — it would bind to ${p.component.id} by proximity` }));
+        }
+        for (const r of a.review) {
+            children.push(el('div', { class: 'rmt-note rmt-warn', textContent: `review [${r.tile}]: ${r.reason}` }));
+        }
+        for (const u of a.unclassified) {
+            children.push(el('div', { class: 'rmt-note rmt-warn', textContent: `UNCLASSIFIED [${u.tile}]: ${u.what}` }));
+        }
+
+        children.push(el('div', { class: 'rmt-addrow' }, [
+            el('button', { class: 'rmt-btn rmt-primary', textContent: 'Accept', onClick: () => this._acceptAnalysis() }),
+            el('button', { class: 'rmt-btn', textContent: 'Discard', onClick: () => this._discardAnalysis() }),
+        ]));
+        return this._section('Proposed split', children);
+    }
+
     _setStatus(message, isError = false) {
         this.status = message;
         this.statusBar.textContent = message;
@@ -495,17 +660,19 @@ export class RegionMarkingToolUI {
     render() {
         this._refreshCanvas();
         const region = this._currentRegion();
-        this.sidebar.replaceChildren(
+        this.sidebar.replaceChildren(...[
             this._atlasSection(),
             this._regionListSection(),
             ...(region ? [
                 this._regionSection(region),
+                // Null unless there is a proposal for THIS region.
+                this._analysisSection(region),
                 this._subgraphSection(region),
                 this._exitsSection(region),
                 this._locationsSection(region),
             ] : []),
             this._layoutSection(),
-        );
+        ].filter(Boolean));
     }
 
     _section(title, children) {
@@ -592,8 +759,31 @@ export class RegionMarkingToolUI {
         if (subs.length > 0) {
             const list = el('div', { class: 'rmt-list' });
             (region.subgraph.internal_exits ?? []).forEach((ie, i) => {
-                list.append(el('div', { class: 'rmt-row' }, [
-                    el('span', { class: 'rmt-mono', textContent: `${ie.from} ${ie.bidirectional ? '↔' : '→'} ${ie.to}${ie.access_rule ? ' ⚿' : ''}` }),
+                const source = ie.source ?? 'manual';
+                // Editing a row in place is the other half of the analyzer
+                // workflow: an analyzer proposal the author disagrees with gets
+                // its rule rewritten and its provenance taken over, which is
+                // what keeps the next re-analysis from overwriting the decision.
+                const rule = el('textarea', {
+                    class: 'rmt-rule', rows: 1,
+                    placeholder: 'access_rule JSON — empty clears it',
+                    value: ie.access_rule ? JSON.stringify(ie.access_rule) : '',
+                });
+                list.append(el('div', { class: `rmt-row${source === 'analyzer' ? '' : ' rmt-warn'}` }, [
+                    el('span', {
+                        class: 'rmt-mono',
+                        textContent: `${ie.from} ${ie.bidirectional ? '↔' : '→'} ${ie.to} [${source}]`,
+                        title: ie.access_rule ? describeRule(ie.access_rule) : 'no rule — this crossing is free',
+                    }),
+                    rule,
+                    el('button', {
+                        class: 'rmt-btn', textContent: 'Set rule',
+                        title: 'rewrite this crossing\'s rule by hand and take the row over from the analyzer',
+                        onClick: () => this._try(() => this.session.setInternalExitRule(region.region_id, i, {
+                            access_rule: this._parseRule(rule.value) ?? null,
+                            source: 'manual',
+                        }), 'internal exit rule set by hand'),
+                    }),
                     el('button', { class: 'rmt-x', textContent: '×', onClick: () => this._try(
                         () => this.session.removeInternalExit(region.region_id, i), 'internal exit removed',
                     ) }),

@@ -340,10 +340,14 @@ describe('grid construction over real levels', () => {
             entities: [],
         };
         const grid = buildSeedlingRegionGrid({ x: 0, y: 0, w: 1, h: 2 }, level);
+        // The cave's gate is on its north FACE (paid crossing it either way);
+        // the waterfall's is on the DIRECTION of travel (only the climb).
         expect(grid.cells[0].kind).toBe('directional');
-        expect(grid.cells[0].faces).toEqual({ N: null, S: null });
+        expect(grid.cells[0].faces).toEqual({ N: null });
+        expect(grid.cells[0].dirs).toEqual({});
         expect(grid.cells[1].kind).toBe('directional');
-        expect(grid.cells[1].faces).toEqual({ N: [flag('hasFeather')] });
+        expect(grid.cells[1].faces).toEqual({});
+        expect(grid.cells[1].dirs).toEqual({ N: [flag('hasFeather')] });
     });
 
     it('treats a cliffsides placement as tile-granular solid', () => {
