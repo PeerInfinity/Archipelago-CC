@@ -9627,5 +9627,23 @@
         "has_procgen_data": true
       }
     }
+  },
+  "seedling_atlas": {
+    "name": "seedling",
+    "folders": {
+      "AP_1": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "seedling"
+          }
+        ],
+        "files": [
+          "AP_1_rules.json"
+        ]
+      }
+    }
   }
 }

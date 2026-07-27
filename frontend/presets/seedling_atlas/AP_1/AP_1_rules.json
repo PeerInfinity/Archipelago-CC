@@ -1,0 +1,151 @@
+{
+  "schema_version": 3,
+  "game_name": "seedling",
+  "game_directory": "seedling",
+  "archipelago_version": "0.6.7",
+  "generation_seed": 1,
+  "seed_name": "",
+  "player_names": {
+    "1": "Player1"
+  },
+  "world_classes": {
+    "1": "SeedlingWorld"
+  },
+  "regions": {
+    "1": {
+      "overworld_start": {
+        "name": "overworld_start",
+        "exits": [
+          {
+            "name": "overworld_start -> starting_house",
+            "connected_region": "starting_house",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "overworld_start -> owls_nest_entrance",
+            "connected_region": "owls_nest_entrance",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "starting_house": {
+        "name": "starting_house",
+        "exits": [
+          {
+            "name": "starting_house -> overworld_start",
+            "connected_region": "overworld_start",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Starting House - Chest",
+            "id": 30000000,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Seal",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
+      "owls_nest_entrance": {
+        "name": "owls_nest_entrance",
+        "exits": [
+          {
+            "name": "owls_nest_entrance -> overworld_start",
+            "connected_region": "overworld_start",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "GameStart",
+            "connected_region": "overworld_start",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      }
+    }
+  },
+  "start_regions": {
+    "1": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "1": {
+      "Seal": {
+        "name": "Seal",
+        "id": 30000000,
+        "groups": [],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      }
+    }
+  },
+  "item_groups": {
+    "1": []
+  },
+  "itempool_counts": {
+    "1": {
+      "Seal": 1
+    }
+  },
+  "world": {
+    "1": {
+      "game": "seedling",
+      "world_class_name": "SeedlingWorld",
+      "options": {},
+      "world_directory": "seedling"
+    }
+  },
+  "game_info": {
+    "1": {
+      "completion_condition": {
+        "type": "constant",
+        "value": true
+      }
+    }
+  },
+  "helpers": {},
+  "exporter": {},
+  "canonical_placements": {
+    "1": {}
+  },
+  "progression_mapping": {
+    "1": {}
+  },
+  "starting_items": {
+    "1": []
+  },
+  "region_atlas": {
+    "atlas_id": "seedling-6f17eb8e",
+    "game": "seedling",
+    "map_document": "seedling-map.json"
+  }
+}

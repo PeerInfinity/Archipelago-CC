@@ -9250,6 +9250,24 @@
       }
     }
   },
+  "seedling_atlas": {
+    "name": "seedling",
+    "folders": {
+      "AP_1": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "seedling"
+          }
+        ],
+        "files": [
+          "AP_1_rules.json"
+        ]
+      }
+    }
+  },
   "metadata": {
     "test_data_updated": "2026-06-30T04:06:52.867827+00:00",
     "games_with_test_data": 130,
