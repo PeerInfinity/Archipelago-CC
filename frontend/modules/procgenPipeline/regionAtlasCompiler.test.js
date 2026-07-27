@@ -346,8 +346,11 @@ describe('projection 3 — play-time sidecars (Phase 4)', () => {
         expect(rules.flash_panel).toEqual({
             config: 'seedling.json', wasm: 'seedling_teleport_ap/game.html',
         });
+        // The flavour is named now that there are two of them (Phase 5b).
         expect(formatCompileReport(report).join('\n'))
-            .toContain('projection 3: 10 region(s) bound to substrate flash_seedling');
+            .toContain('projection 3 (flash): 10 region(s) bound to substrate flash_seedling');
+        expect(report.sidecar_flavor).toBe('flash');
+        expect(report.maze_notes).toBeNull();
     });
 
     it('the fixture names no map_ref, so it stays GRAPH-ONLY', () => {

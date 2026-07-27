@@ -90,3 +90,29 @@ export function applySeedlingRegionAnalysis(atlas, analysis, options = {}) {
 export function analyzeSeedlingAtlas(atlas, deps) {
     return (atlas.regions ?? []).map((r) => analyzeSeedlingRegion(atlas, r.region_id, deps));
 }
+
+/**
+ * The maze-projection deps for a Seedling atlas (Phase 5b) — the same three
+ * things the analyzer needs, since the projection recomputes the partition
+ * through it: a cell grid per region plus the condition vocabulary.
+ *
+ * `gridFor` returns null for a region whose `map_ref` is not in the map document
+ * (the projection then leaves it graph-only and names it) rather than throwing,
+ * because a partial atlas grown region by region is the normal state.
+ *
+ * @param {{ mapDoc:object, gameConfig:object }} deps
+ * @returns {{ gridFor:Function, conditionKey:Function, resolveCondition:Function, unresolved:string[] }}
+ */
+export function seedlingMazeProjectionDeps({ mapDoc, gameConfig }) {
+    const levels = indexSeedlingLevels(mapDoc);
+    const options = seedlingAnalyzerOptions(gameConfig);
+    return {
+        conditionKey: options.conditionKey,
+        resolveCondition: options.resolveCondition,
+        unresolved: options.unresolved,
+        gridFor: (region) => {
+            const level = levels.get(String(region.map_ref));
+            return level ? buildSeedlingRegionGrid(region.bounds, level) : null;
+        },
+    };
+}

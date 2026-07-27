@@ -14,6 +14,14 @@
 // arriving in a region teleports the player to the marked entrance spawn.
 // A region with no `map_ref` has no physical binding and stays graph-only.
 //
+// Phase 5b adds a SECOND sidecar flavour of the same graph (`sidecarFlavor:
+// 'maze'`, regionAtlasMazeProjection.js): the region's analyzed tile map
+// projected into the maze substrate, so the geometry and its item gating are
+// walkable with nothing but the committed repo — no wasm artifact. The two
+// flavours are SEPARATE PRESETS and never merged: one sidecar per AP region per
+// preset is the contract, and a preset carrying both would ask two substrates to
+// own one region.
+//
 // The graph projection, concretely:
 //
 //   region without a subgraph   → one AP region, its bare `region_id`
@@ -52,6 +60,11 @@ import {
     makeLocation,
 } from '../shared/rulesJsonBuilder.js';
 import { validateRegionAtlas, apRegionName } from './regionAtlasValidator.js';
+import {
+    projectAtlasToMaze,
+    formatMazeProjectionNotes,
+    MAZE_SUBSTRATE,
+} from './regionAtlasMazeProjection.js';
 
 // AP id namespaces for compiled atlases. Deliberately clear of the per-game
 // engine-binding namespace — frontend/modules/flashPanel/games/seedling.json
@@ -206,6 +219,10 @@ function deriveIdentifiers(atlas, options) {
  * @param {string} [options.gameName] defaults to `atlas.game`
  * @param {string} [options.gameDirectory] defaults to gameName, lowercased
  * @param {string} [options.worldClassName] defaults to PascalCase(gameName)+World
+ * @param {'flash'|'maze'} [options.sidecarFlavor] which projection-3 sidecars to
+ *   emit (default 'flash' — the real game). 'maze' needs options.mazeProjection
+ * @param {object} [options.mazeProjection] maze-flavour deps:
+ *   { gridFor(region), conditionKey, resolveCondition } — all game-supplied
  * @param {number} [options.seed] rules.json generation_seed (default 1)
  * @param {string} [options.seedName] rules.json seed_name (default '')
  * @param {string} [options.playerName] player 1's name (default 'Player1')
@@ -257,14 +274,26 @@ export function compileRegionAtlas(atlas, options = {}) {
     };
 
     // --- internal exits (the sub-region subgraph) ------------------------
+    //
+    // What each DIRECTED internal crossing became, keyed `region|from|to`. The
+    // maze projection reads it rather than re-deriving names: a crossing's maze
+    // exit has to carry the AP exit name the graph actually minted, `#2` suffixes
+    // and all, because that name is how procgenPlayer resolves the crossing.
+    const internalInfo = new Map();
     for (const region of atlasRegions) {
         for (const ie of region.subgraph?.internal_exits ?? []) {
             const from = apRegionName(region.region_id, ie.from);
             const to = apRegionName(region.region_id, ie.to);
-            addExit(from, to, ie.access_rule);
+            const forward = addExit(from, to, ie.access_rule);
+            const fkey = `${region.region_id}|${ie.from}|${ie.to}`;
+            if (!internalInfo.has(fkey)) internalInfo.set(fkey, forward);
             // rules.json exits are strictly one-way ({name, connected_region,
             // access_rule}) — a bidirectional internal exit is two of them.
-            if (ie.bidirectional === true) addExit(to, from, ie.access_rule);
+            if (ie.bidirectional === true) {
+                const back = addExit(to, from, ie.access_rule);
+                const bkey = `${region.region_id}|${ie.to}|${ie.from}`;
+                if (!internalInfo.has(bkey)) internalInfo.set(bkey, back);
+            }
         }
     }
 
@@ -402,16 +431,53 @@ export function compileRegionAtlas(atlas, options = {}) {
     };
 
     // --- projection 3: play-time binding -----------------------------------
-    const substrate = options.substrateId ?? substrateIdFor(atlas.game);
-    const { sidecars, unbound } = buildPresetSidecars(atlas, atlasRegions, wiredInfo, substrate);
+    //
+    // Two flavours of the SAME graph, one preset each (never both in one file):
+    //   'flash' (default) — the real recompiled game, needs its wasm artifact
+    //   'maze'            — the analyzed tile map in the maze substrate, which
+    //                       runs anywhere the repo does (Phase 5b)
+    const mazeFlavor = options.sidecarFlavor === MAZE_SUBSTRATE;
+    const substrate = options.substrateId ?? (mazeFlavor ? MAZE_SUBSTRATE : substrateIdFor(atlas.game));
+    let mazeNotes = null;
+    let sidecars;
+    let unbound;
+    if (mazeFlavor) {
+        if (!options.mazeProjection?.gridFor) {
+            throw new Error(
+                'sidecarFlavor "maze" needs options.mazeProjection.{gridFor,conditionKey,resolveCondition} — '
+                + 'the cell grid and the condition vocabulary are the GAME\'s, not the compiler\'s',
+            );
+        }
+        const projected = projectAtlasToMaze(atlas, {
+            ...options.mazeProjection,
+            wiredExit: (regionId, exitId) => {
+                const info = wiredInfo.get(endpointKey(regionId, exitId));
+                return info === undefined ? undefined : {
+                    apExitName: info.apExitName,
+                    targetApRegion: info.targetApRegion,
+                    targetExitId: info.target.exit.exit_id,
+                };
+            },
+            internalExitName: (regionId, from, to) => internalInfo.get(`${regionId}|${from}|${to}`),
+        });
+        sidecars = projected.sidecars;
+        unbound = projected.regions_without_map_ref;
+        mazeNotes = projected.notes;
+    } else {
+        ({ sidecars, unbound } = buildPresetSidecars(atlas, atlasRegions, wiredInfo, substrate));
+    }
     const sidecarRegions = Object.keys(sidecars);
     if (sidecarRegions.length > 0) {
         // The flashPanel wiring boots the real game for this preset. It is the
         // same hand-added block the seed-1 seedling preset carries — except
         // here it is COMPILED, so a regeneration no longer drops it (the
         // rulesExporter precedent, and the trap the plan's decision 2 names).
-        const wiring = options.flashPanel ?? FLASH_PANEL_WIRING[atlas.game];
-        if (wiring) rules.flash_panel = { ...wiring };
+        // The maze flavour deliberately carries NONE of it: nothing boots the
+        // original engine there, and a stray flash_panel block would start it.
+        if (!mazeFlavor) {
+            const wiring = options.flashPanel ?? FLASH_PANEL_WIRING[atlas.game];
+            if (wiring) rules.flash_panel = { ...wiring };
+        }
         rules.preset_sidecars = { 1: sidecars };
     }
 
@@ -430,8 +496,12 @@ export function compileRegionAtlas(atlas, options = {}) {
         unwired_exits: unwiredExits,
         start_region: startApRegion,
         substrate,
+        sidecar_flavor: mazeFlavor ? MAZE_SUBSTRATE : 'flash',
         sidecar_regions: sidecarRegions,
         flash_panel: rules.flash_panel ?? null,
+        // Maze flavour only: every approximation, carve and walled crossing the
+        // projection took, so a fidelity fence is recorded rather than assumed.
+        maze_notes: mazeNotes,
         // Atlas regions with no `map_ref`: graph-only, no physical binding, so
         // no sidecar. Named rather than counted for the same reason unwired
         // exits are — a silent omission reads as a fully-bound map.
@@ -461,10 +531,13 @@ export function formatCompileReport(report) {
         }
     }
     if (report.sidecar_regions?.length > 0) {
-        lines.push(`projection 3: ${report.sidecar_regions.length} region(s) bound to substrate `
+        lines.push(`projection 3 (${report.sidecar_flavor ?? 'flash'}): ${report.sidecar_regions.length} region(s) bound to substrate `
             + `${report.substrate}${report.flash_panel ? ` (flash_panel: ${report.flash_panel.config})` : ''}`);
     } else {
         lines.push('projection 3: no region names a map_ref — graph-only, no preset_sidecars');
+    }
+    if (report.maze_notes?.length > 0) {
+        lines.push(...formatMazeProjectionNotes(report.maze_notes));
     }
     if (report.regions_without_map_ref?.length > 0 && report.sidecar_regions?.length > 0) {
         lines.push(`${report.regions_without_map_ref.length} region(s) have no map_ref — no play-time binding: `
