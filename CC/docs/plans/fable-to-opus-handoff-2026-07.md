@@ -2523,8 +2523,58 @@ COMPUTED from the tile map.
   optional and the compiler passes that through. Right default for an atlas
   grown incrementally, but the needs-authoring list is a logic obligation, not a
   cosmetic one.
-- NEXT: Phase 5b (maze-mode substrate projection, own kickoff) and/or Phase 6
-  (sphere growth: pre-built regions). Phases 7+ unchanged.
+**Phase 5b — the maze projection: SHIPPED + PUSHED 2026-07-28**
+(`aef86a853` the projection, `2241b8aba` the preset + verifier, `82c5adcff` the
+in-app legs; vitest **3690/3690**, `test-substrates --batch=fast` **59/59**).
+The real Seedling map — real geometry, real computed item gating — is now
+walkable in the browser with nothing but the committed repo, and therefore
+testable in the suite, which the flash flavour never could be.
+- **Rulings (user, 2026-07-28):** (1) the atlas + the semantics tables are the
+  **single source of truth** — the projection derives everything and hand-codes
+  no Seedling behaviour (the two-truths rule); (2) combat and anything outside
+  access-rule-relevant mechanics is OUT of scope; (3) the maze flavour is a
+  SECOND registered preset, never merged into the flash one.
+- As built: `procgenPipeline/regionAtlasMazeProjection.js` (GAME-AGNOSTIC, like
+  the analyzer core — `gridFor`/`conditionKey`/`resolveCondition` come from the
+  game, and `seedlingMazeProjectionDeps()` is the single wiring point),
+  `compileRegionAtlas({sidecarFlavor: 'maze'})`, `region-atlas-compile.mjs
+  --maze`, `frontend/presets/seedling_atlas_maze/` (10 sidecars, 20 exits, 14
+  rule-typed gates), `verify-seedling-atlas-maze.mjs` (four phases, nothing
+  SKIPs), and two enumerated in-app legs in category `Seedling atlas maze`.
+- **The crossing representation** (the phase's one open design point) collapses
+  the kickoff's point-vs-area distinction instead of implementing both: ONE exit
+  tile on the crossing material's first cell out of the sub-region, gated by the
+  atlas row's rule. A point gate is the degenerate case where both sides' first
+  cells coincide; an area span puts them on opposite banks, so you step into the
+  water on one side and arrive standing in it on the far side. Both rejected
+  alternatives are recorded in the plan doc — notably "exit tiles on the far
+  bank", which cannot work at all, because the far bank differs by direction and
+  the arrival tile would not be an exit in the destination world.
+- ⚠ **A maze payload's `exit_id` IS its `exitName`** — found by the legs and
+  fixed. mazeRoomEngine keys `world.exits` on `exit_id` while
+  procgenPlayer.handleRegionMove resolves an arrival by `exits.get(exitName)`,
+  so keying them apart makes that lookup MISS SILENTLY and every arrival falls
+  back to the region's entrance tile. `targetExitId` is the AP exit name of the
+  edge coming back; the atlas's own id rides along as `atlas_exit_id`. The flash
+  payload is different and correct as it stands (its glue resolves against
+  `exits[].exit_id`).
+- **Fidelity fences, all REPORTED by the projection:** a crossing collapses to
+  one tile (interior material cells are walls); a multi-route crossing realises
+  only the cheapest route's entry cell while the rule ORs them all; a one-way
+  crossing's arrival falls back to the destination's entrance; a multi-tile
+  boundary span collapses to its `entrance_tile`; an UNLABELLED crossing is
+  **WALLED** (5a's free-AP-exit default must not become a free WALK); sinks and
+  unclassified terrain are walled and named. Directionality came out BETTER than
+  the kickoff expected — the analyzer already emits each direction as its own
+  row, so each is gated at its own cost (one Progressive Swim down, two back up).
+- **A door drawn on solid ground is the NORMAL case** (four of seven starter
+  exits): such a tile is opened and, when not adjacent to its sub-region, a
+  corridor is CARVED through non-wall cells — never through a wall, and **a
+  carved cell keeps its own gate**, so a carve can never under-gate.
+- No mazeRoom change was needed; the phase's guardrail ("if you are editing the
+  engine, check the projection instead") held.
+- NEXT: Phase 6 (sphere growth: pre-built regions — adapter + `atlasDoc` seam,
+  the sorting pre-pass, and the gate-rung ruling). Phases 7+ unchanged.
 
 ## 6. Everything else (unchanged queues)
 
@@ -2553,6 +2603,7 @@ Cavernous Stage 2 (hooks/managed) ──► v0 substrate ──► Stage F (pool
 world-persistence P1–P4 (independent)
 block modes M1 ──► M2 ──► M3 ──► M4 ──► M5 ──► M6 (solver rename) ──► omsi arc D ──► arc E/F; omsi instant LAST
 (M1–M5 all SHIPPED 2026-07-21/23; M6 is next)
-region atlas Phase 1 (SHIPPED 2026-07-27) ──► marking tool ──► Seedling
-  projection/transitions ──► sorter pre-pass / RWK ──► staged bots (§5c)
+region atlas Phases 1–5b ALL SHIPPED (2026-07-27/28: format ──► marking tool
+  ──► rules.json projection ──► play-time transitions ──► analyzer ──► maze
+  projection) ──► sorter pre-pass (Phase 6) / RWK ──► staged bots (§5c)
 ```

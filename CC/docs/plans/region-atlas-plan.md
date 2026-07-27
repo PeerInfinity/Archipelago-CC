@@ -1,11 +1,13 @@
 # Region Atlas: Real-Game Maps as Procgen Regions
 
-**Date:** 2026-07-26 (Phases 1–4 shipped 2026-07-27, Phase 5a 2026-07-28)
+**Date:** 2026-07-26 (Phases 1–4 shipped 2026-07-27, Phases 5a–5b 2026-07-28)
 **Status:** Design ruled; Phase 1 (atlas format), Phase 2 (marking tool),
 Phase 3 (vanilla rules.json projection), Phase 4 (play-time transitions — the
-real game walks between atlas regions) and Phase 5a (the reachability analyzer —
-sub-region splits and their rules are computed from the tile map) complete —
-Phase 5b (maze projection) or Phase 6 (sphere growth) next
+real game walks between atlas regions), Phase 5a (the reachability analyzer —
+sub-region splits and their rules are computed from the tile map) and Phase 5b
+(the maze projection — the same geometry and gating, playable with no engine
+artifact, so the in-app suite can test it) complete — Phase 6 (sphere growth)
+next
 **Games:** Seedling first (redistributable, discrete sections, source available), then Robot Wants Kitty
 
 ## Goal
@@ -657,9 +659,149 @@ split, asserted rather than skipped, with the subgraph correctly OMITTED. The
 compiled preset regenerated to 11 AP regions / 23 exits, and the end-to-end
 verifier still walks the real game between them.
 
-### Phase 5b — Maze-mode substrate projection (deferred here from 5a, ruling 4)
-- [ ] Project an atlas region's analyzed grid into the maze substrate, so a
+### Phase 5b — Maze-mode substrate projection — **COMPLETE 2026-07-28**
+- [x] Project an atlas region's analyzed grid into the maze substrate, so a
       marked region is playable without the original engine
+
+**Rulings (user, 2026-07-28):**
+1. **The atlas + the semantics tables are the SINGLE SOURCE OF TRUTH** (the
+   two-truths rule): the projection derives everything and never hand-codes
+   Seedling behaviour.
+2. Combat, and anything outside access-rule-relevant mechanics, is OUT of scope.
+3. The maze flavour is a SECOND registered preset beside the canonical flash one,
+   never a merged file.
+
+**As built:**
+- **Projection:** `procgenPipeline/regionAtlasMazeProjection.js` — game-agnostic
+  like the analyzer core; the caller supplies `gridFor(region)` /
+  `conditionKey` / `resolveCondition`, and `seedlingMazeProjectionDeps()` in
+  `flashPanel/seedlingAtlasAnalysis.js` is the one place Seedling is wired in.
+  The tile PARTITION is recomputed through `analyzeRegion` (it is deliberately
+  never persisted — Phase 5a); the RULES and sub-region identities come from the
+  atlas, which is also where the hand-authored rows live.
+- **Compiler:** `sidecarFlavor: 'maze'` swaps the projection-3 sidecars and
+  carries NO `flash_panel` block (nothing there boots the original engine, and a
+  stray block would start it). The compiler now also records the AP exit names of
+  internal crossings, which the projection needs.
+- **CLI + preset:** `region-atlas-compile.mjs --maze` (loads the per-game config
+  the analyze CLI uses) →
+  `frontend/presets/seedling_atlas_maze/AP_1/AP_1_rules.json`: 10 sidecars, 20
+  exits, 14 rule-typed gates, 1 location. Registered, and mirrored into
+  `preset_files.live.json` BY HAND again.
+- **In-app legs (the payoff):** `tests/testCases/seedlingAtlasMazeTests.js`,
+  category `Seedling atlas maze`, both enumerated in the substrates config. No
+  batch claims the category, so it rides the default `fast` batch. Everything is
+  read off the LIVE world — which exit is ungated, which is gated, what item its
+  rule wants, which tile to stand on — so a projection change retargets them
+  instead of breaking them.
+- **Verifier:** `scripts/procgen/verify-seedling-atlas-maze.mjs` — four phases
+  over the COMMITTED preset (payload consistency, walkability through the real
+  engine, byte-stable regeneration, and a browser phase in the DEFAULT mode). It
+  PRINTS the projection report. Nothing SKIPs: no artifact is involved.
+- **Tests:** 3635 → **3690** vitest (55 new). Two strata: hand-built ASCII grids
+  in a made-up one-item game (which also prove the core is game-agnostic) and the
+  real committed atlas, every payload loaded through the REAL
+  `deserializeMazeWorld` and asserted walkable from its spawn.
+  `test-substrates --batch=fast` **59/59**, up from 57.
+
+**Acceptance on real data:** `?game=seedling_atlas_maze&seed=1` boots the default
+procgen mode into `overworld_start__r8c0` — 20×20, 109 floor tiles, six exits
+(two ungated level links, four computed crossings) — the player spawns on the
+sub-region's own entrance tile, walks to the house door and crosses into
+`starting_house`, and cannot reach `overworld_start__r11c19` until a Progressive
+Sword is in the inventory.
+
+**A red first run worth remembering:** both legs failed on a mis-signed
+direction. The staging tile really was beside the gate, but the key walked the
+player AWAY from it, so "the step did not move the player" passed for entirely
+the wrong reason and the crossing half then failed. `assertAimedAt` now proves
+the key aims at the tile under test BEFORE either half is believed — the same
+lesson as every other "a negative assertion needs a positive control" entry in
+this repo.
+
+**What a sub-region becomes** — one maze world per AP sub-region, sized to the
+atlas region's `bounds` in region-LOCAL coordinates so every world of one region
+shares a coordinate space. Its own component cells are floor and everything else
+(including the other sub-regions) is wall, so a crossing is the only way out.
+
+**The crossing representation (the phase's one open design point), as chosen:**
+a crossing gets ONE exit tile, on the crossing material's FIRST cell out of the
+sub-region — `crossings[].tiles[0]` from the analyzer — plus a
+`clear_set_type: 'rule'` obstacle carrying the atlas row's rule. This collapses
+the kickoff's point-vs-area distinction instead of implementing both: a point
+gate (rock, lock, rope) is the degenerate case where both sides' first cells are
+the SAME cell, so the two worlds put their exits on one shared tile and an
+arrival lands exactly where the player left; an area span (water, lava) has the
+two sides' first cells on opposite banks, so you step into the water on one side
+and arrive standing in the water on the far side. Uniform, and it keeps the
+invariant: crossing into another sub-region produces a real `user:regionMove`,
+and a gated cell is impassable without the rule's items.
+- *Rejected: exit tiles on every gate cell of a point gate* — a maze exit
+  carries one target, and a material group touching three components would make
+  the attribution of each cell ambiguous.
+- *Rejected: an obstacle span walkable tile-by-tile with exit tiles on the far
+  bank* — the far bank differs by direction, so the arrival tile would not be an
+  exit in the destination world and could not be resolved at all. The maze model
+  is "boundary tiles are single tiles"; the span texture is incompatible with it.
+
+**The exit-id invariant (a real defect found and fixed here):** a maze payload's
+`exit_id` IS its `exitName` — check any committed maze preset
+(`{exit_id: 'exit_1', exitName: 'exit_1'}`). It is load-bearing:
+`mazeRoomEngine` keys `world.exits` on `exit_id`, the panel publishes
+`user:regionMove` with `exitName`, and `procgenPlayer.handleRegionMove` resolves
+the arrival by asking the SOURCE world for `exits.get(exitName)` and reading its
+`targetExitId`. The first cut keyed exits by the atlas's short id, that lookup
+missed silently, and every arrival fell back to the region's entrance tile. So
+both fields are the AP exit name, `targetExitId` is the AP exit name of the edge
+coming BACK, and the atlas's own id rides along as `atlas_exit_id` for
+traceability. (The FLASH payload is different and correct as it stands: its glue
+resolves an arrival against `exits[].exit_id`, so it keeps the atlas id.)
+
+**A door drawn on solid ground is the NORMAL case**, not an edge case: four of
+the starter atlas's seven overworld exits sit on non-walkable cells (the house
+door is inside a building whose per-pixel mask Phase 5a deliberately did not
+transcribe). Such a tile is opened, and when it is not adjacent to its own
+sub-region a corridor is CARVED to it through the non-wall cells between —
+never through a wall. **A carved cell keeps its own gate:** carving a water tile
+emits the water's rule as an obstacle, because a carve that opened it free would
+hand the player a route the real game charges for (the starter atlas's unwired
+`north_crossing` is exactly that case, three water cells deep).
+
+**v1 fidelity fences, all reported by the projection rather than assumed:**
+- A crossing collapses to one tile: you enter the material at the near side and
+  emerge at the reverse crossing's near cell. Interior material cells are walls.
+- A crossing with several routes realises only the CHEAPEST route's entry cell;
+  the rule still ORs every route.
+- A one-way crossing (no reverse row) has nothing to arrive at, so arriving in
+  the destination falls back to its entrance tile (`one_way_arrival`).
+- A multi-tile boundary span collapses to its `entrance_tile`; the other span
+  tiles stay whatever terrain the map says they are.
+- An unlabelled crossing is **WALLED** and named (`walled_unlabelled`). Phase
+  5a's "an unlabelled internal exit compiles to a FREE AP exit" must not become
+  a free WALK; the starter atlas's building crossing is walled in both
+  directions. A row the ANALYZER wrote with no rule is different — that one is
+  genuinely free and projects ungated.
+- Directional physics is BETTER than the kickoff expected: the analyzer already
+  emits each direction of an asymmetric crossing as its own row, so the
+  projection gates each direction at its own cost (the water column comes out
+  one Progressive Swim down and two back up). A direction with no row at all is
+  a wall — conservative, never under-gated.
+- Sinks (pit drops) are walls, named as boundary-exit candidates; ice slides as
+  ordinary floor and the analyzer's `review` note is carried through;
+  unclassified terrain is walled and named.
+- A carve through a blocker with no derivable rule is passable, and said so
+  (`carved_through_manual` — the two house doorways).
+
+**Known incompleteness (not a 5b defect):** the computed crossings gate on AP
+items the partial atlas has no location for, so granting one logs
+`[InventoryManager] Adding unknown item`. That is the graph's pre-existing state
+(the atlas records one `vanilla_item` so far) and is why the in-app leg grants
+through stateManager rather than by checking a location.
+
+**No mazeRoom change was needed** — the phase's own guardrail held: every
+runtime behaviour rides existing machinery (arrival spawn at the arrival exit's
+tile, `clear_set_type: 'rule'` clearance through the panel's stateManager-backed
+evaluator, `exit_cross` → `user:regionMove`, item overlays → `user:locationCheck`).
 
 ### Phase 6 — Sphere growth: pre-built regions
 - [ ] Adapter + `atlasDoc` seam (pool, per-region extract)

@@ -43,6 +43,8 @@ No `SubstrateInactiveOverlay` in v1: the flashPanel panel predates the overlay a
 
 Gate: `scripts/procgen/verify-seedling-atlas-play.mjs` (skips when the wasm artifact is absent).
 
+The same atlas also compiles to a **maze**-flavoured preset (`seedling_atlas_maze`) — the same geometry and the same computed item gating, playable with no wasm artifact, which is why the in-app suite can test that one and not this one. The two are separate presets and never merged: one sidecar per AP region per preset. See [Maze Substrate](./maze.md#a-real-games-map-as-maze-regions).
+
 ## Related documentation
 
 - [Architecture](./architecture.md) · [Substrate Registry Reference](./substrate-registry.md) · [Bounce Substrate](./bounce.md) (the flagship consumer of this machinery)

@@ -60,6 +60,26 @@ Around the core panel:
 - The **editor** (`mazeRoomEditor.js`) edits a loaded region in place with a tile palette: floor/wall, the entrance, items (with AP-canonical location names), and obstacles. Exit placement and logic-gate editing are not part of its palette.
 - The **game-data inspector** is a separate read-only module/panel (`frontend/modules/mazeGameDataPanel/`).
 
+## A real game's map as maze regions
+
+Besides generating worlds, the maze substrate can be handed one: the region
+atlas's **maze projection** (`procgenPipeline/regionAtlasMazeProjection.js`,
+plan `CC/docs/plans/region-atlas-plan.md` Phase 5b, preset
+`seedling_atlas_maze`) compiles a marked real-game region into one maze world
+per AP sub-region. The sub-region's own zero-item-reachable cells are floor and
+everything else is wall, a crossing between sub-regions is an exit tile carrying
+a `clear_set_type: 'rule'` obstacle with the atlas's access rule, and a location
+is an item overlay with its AP location name. Nothing in mazeRoom knows about
+it — the projection speaks the ordinary sidecar shape, which is the point.
+
+Two payload facts are load-bearing for **any** hand-built or projected maze
+sidecar, not just that one:
+
+| | |
+|---|---|
+| **`exit_id` IS `exitName`** | Every generated maze sidecar holds this (`{exit_id: 'exit_1', exitName: 'exit_1'}`) and it is not cosmetic. `createWorld` keys `world.exits` on `exit_id`, the panel publishes `user:regionMove` with `exitName`, and `procgenPlayer.handleRegionMove` resolves the arrival by asking the SOURCE world for `exits.get(exitName)` and reading its `targetExitId`. Key them apart and that lookup misses **silently**: `targetExitId` is never read and every arrival falls back to `world.entrance` instead of the crossing the player walked through. (The flash family differs — its `deserializeWorld` keys on `exitName ?? exit_id` and its glue resolves an arrival against `exits[].exit_id`.) |
+| **Semantics live in the overlays** | The tile grid is binary (floor/wall). Anything conditional is an obstacle, an item, a consumable or a mana tile on top of a floor tile — never a new tile value. |
+
 ## Registry entry
 
 The maze entry implements the full procedural build-time contract (`generateRegionCore`, `placeFromItems`, `placeFromRules`, `extractPathsAndObstacles`, `serializeWorld`, plus `applyContentModules`) and the full loop-mode surface (`regionMove`/`locationCheck`/`explore` queue actions, manual play, custom queues, `record`/`playback`/`instant`, and the `takeLastRecording` recorder hook). Field-by-field detail: [Substrate Registry Reference](./substrate-registry.md).
