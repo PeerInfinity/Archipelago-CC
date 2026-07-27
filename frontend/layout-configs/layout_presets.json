@@ -223,6 +223,11 @@
             },
             {
               "type": "component",
+              "componentType": "regionMarkingTool",
+              "title": "Region Marking Tool"
+            },
+            {
+              "type": "component",
               "componentType": "apworldEditorPanel",
               "title": "APWorld Editor"
             },

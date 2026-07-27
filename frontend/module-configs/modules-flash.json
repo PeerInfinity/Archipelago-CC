@@ -160,6 +160,10 @@
       "path": "./modules/tileMapAnalyzer/index.js",
       "enabled": true
     },
+    "regionMarkingTool": {
+      "path": "./modules/regionMarkingTool/index.js",
+      "enabled": true
+    },
     "iframeAdapter": {
       "path": "./modules/iframeAdapter/index.js",
       "enabled": true
@@ -274,6 +278,7 @@
     "metaGamePanel",
     "flashPanel",
     "tileMapAnalyzer",
+    "regionMarkingTool",
     "iframeAdapter",
     "iframePanel",
     "iframeManagerPanel",

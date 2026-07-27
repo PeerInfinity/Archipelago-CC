@@ -100,6 +100,7 @@ import * as metaGameModule from './modules/metaGame/index.js';
 import * as metaGamePanelModule from './modules/metaGamePanel/index.js';
 import * as flashPanelModule from './modules/flashPanel/index.js';
 import * as tileMapAnalyzerModule from './modules/tileMapAnalyzer/index.js';
+import * as regionMarkingToolModule from './modules/regionMarkingTool/index.js';
 import * as iframeAdapterModule from './modules/iframeAdapter/index.js';
 import * as iframePanelModule from './modules/iframePanel/index.js';
 import * as iframeManagerPanelModule from './modules/iframeManagerPanel/index.js';
@@ -202,6 +203,7 @@ const BUNDLED_MODULES = {
   metaGamePanel: metaGamePanelModule,
   flashPanel: flashPanelModule,
   tileMapAnalyzer: tileMapAnalyzerModule,
+  regionMarkingTool: regionMarkingToolModule,
   iframeAdapter: iframeAdapterModule,
   iframePanel: iframePanelModule,
   iframeManagerPanel: iframeManagerPanelModule,
