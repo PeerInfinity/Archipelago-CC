@@ -2115,14 +2115,31 @@ Memory: `project_omsi_loops_fork`. Plan docs *(NewDocs)* in
    `npm test -- --mode=test-substrates --batch=<name>`; batches select
    whole CATEGORIES and `fast` is the default batch that absorbs
    anything unclaimed, so a new category costs speed, never coverage.
-   ⚠ **OPEN, not diagnosed:** `omsi-bot-instant-multi-reset-walk` is
-   STUCK (~364 s) in a full-roster run but passes in **7.9 s** in the
-   `bot-walks` batch — order/state dependent, not inherent. The 600 s
-   cap had been masking it: truncation hit at test 51, exactly where it
-   sits. **Diagnosis kickoff drafted 2026-07-26** *(NewDocs)*
-   `stuck-instant-walk-diagnosis-opus-kickoff.md` (constructed-subset
-   bisection of the poisoning prefix, then classify: production state
-   leak vs test-teardown residue vs file-with-writeup). The jta
+   ✅ **DIAGNOSED + FIXED 2026-07-26.** `omsi-bot-instant-multi-reset-walk`
+   was **not** order-dependent — that framing was an artifact of the
+   `bot-walks` batch happening to win a race. Run entirely alone the test
+   failed **5 of 8** times. There is no poisoning prefix: the leg is a
+   **~60 % flake** whose losing branch is a permanent deadlock.
+   *Mechanism:* the walk survives on the maze park between fork runs, and
+   a depletion `manaChanged` that lands **on that park** takes
+   `_handleManualWake_mana` → `_resetLoop()`, which tears the park down
+   and then — `autoRestartQueue` off, the default — declines to resume.
+   The queue is left stopped with `isPaused` false, `_queueCompleted`
+   false and no park, so every wake handler bails on the missing park;
+   `livePlayRegion()`/`botSolverRegion()` answer null, the step gate
+   closes, and the frozen fork can never end a run and fire the
+   substrate reset whose resume is unconditional. The leg then polls a
+   dead world for 364 s. Instant made it likely rather than causing it:
+   a whole fork run drains inside one synchronous pump. *Fix:* both omsi
+   bot legs now set `autoRestartQueue = true` — the flag's own contract
+   ("auto-restart IS the retry"), already the practice in the jta bot
+   legs; 8/8 green after, `bot-walks` 3/3 with the paced leg unchanged
+   at 283 s. The production stop is a **ruled** behaviour (2026-07-25,
+   ON-direction only) and is left alone: a present player presses Start.
+   Its unattended-walk consequence is now written down in
+   loop-recording.md and gotchas.md. `omsi-multi-run-replay-retry` has
+   the same exposure and was left alone only because it is green today.
+   The jta
    Playback→setInstantMode follow-up was handed to an Opus SUBAGENT
    2026-07-26 (verify-equivalence-first brief; report lands in the
    Fable session).

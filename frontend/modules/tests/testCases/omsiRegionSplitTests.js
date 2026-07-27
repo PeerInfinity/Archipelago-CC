@@ -1491,6 +1491,26 @@ async function botCrossesAcrossResets(testController) {
     // No depletion suppression: outrunning the pool is the point of this leg.
     const savedNoReset = gs.noManaDepletionReset;
     gs.noManaDepletionReset = false;
+    // AUTO-RESTART IS THE PREREQUISITE FOR A MULTI-RUN WALK, not decoration.
+    //
+    // A walk bigger than one pool survives only if the queue survives the
+    // depletions along the way, and loops has TWO depletion paths that answer
+    // to this flag (blockModes.test.js pins both): the drain tick's
+    // `_maybeResetForOOM`, which pauses outright when the flag is off, and
+    // `_handleManualWake_mana`, whose `_resetLoop()` tears the maze park down
+    // and then — flag off — declines to resume. The second one is terminal
+    // HERE and nowhere else: the queue is left stopped-but-not-paused with no
+    // park, every wake handler bails on the missing park, and the step gate
+    // closes on the fork, so the substrate can no longer end a run and fire
+    // the reset that would have revived it. The leg then polls a frozen world
+    // to its timeout. (Diagnosed 2026-07-26; the same standing deadlock the
+    // frozen-substrate breaker exists for.)
+    //
+    // Leaving it at the default worked only by accident: the depletion usually
+    // lands while the BOT is driving (no park ⇒ the wake bails) rather than on
+    // the maze park between runs. Which one you get is a race.
+    const savedAutoRestart = loopState.autoRestartQueue;
+    loopState.autoRestartQueue = true;
     let park = null;
     try {
         const movesBefore = watcher.moves.length;
@@ -1538,7 +1558,10 @@ async function botCrossesAcrossResets(testController) {
                 + `gate=${bridgeState()?.regionExitAvailable}, bot=${JSON.stringify(botState())}, `
                 + `pool=${readPool()}, region=${readCurrentRegion()}, `
                 + `manualRegion=${loopState._manualRegionName}, `
-                + `isProcessing=${loopState.isProcessing}, index=${loopState.currentActionIndex}`);
+                + `isProcessing=${loopState.isProcessing}, `
+                + `pausedUntilReset=${loopState._queuePausedUntilReset}, `
+                + `isPaused=${loopState.isPaused}, `
+                + `index=${loopState.currentActionIndex}`);
             return testController.getOverallResult();
         }
 
@@ -1584,6 +1607,7 @@ async function botCrossesAcrossResets(testController) {
                 || bridgeState()?.activeRegionId !== OMSI_REGION_SPLIT_R0);
         return testController.getOverallResult();
     } finally {
+        loopState.autoRestartQueue = savedAutoRestart;
         walkToSpy.restore();
         watcher.stop();
         gs.noManaDepletionReset = savedNoReset;
@@ -1621,6 +1645,13 @@ async function botInstantCrossesAcrossResets(testController) {
     const watcher = watchRegionMoves();
     const savedNoReset = gs.noManaDepletionReset;
     gs.noManaDepletionReset = false;
+    // AUTO-RESTART IS THE PREREQUISITE FOR A MULTI-RUN WALK, not decoration.
+    // See botCrossesAcrossResets for the full reasoning; the Instant leg needs
+    // it MORE, because Instant collapses a whole fork run into one synchronous
+    // pump and so lands the depletion far more often on the maze park than the
+    // paced leg does.
+    const savedAutoRestart = loopState.autoRestartQueue;
+    loopState.autoRestartQueue = true;
     let park = null;
     try {
         const movesBefore = watcher.moves.length;
@@ -1671,7 +1702,22 @@ async function botInstantCrossesAcrossResets(testController) {
                 + `gate=${bridgeState()?.regionExitAvailable}, bot=${JSON.stringify(botState())}, `
                 + `instant=${JSON.stringify(bridgeState()?.instant)}, pool=${readPool()}, `
                 + `region=${readCurrentRegion()}, walkTos=${walkToSpy.calls.length}, `
-                + `walkBacks=${progress.walkBacks}`);
+                + `walkBacks=${progress.walkBacks}, `
+                // The QUEUE half, which the paced leg's DIAG has always printed
+                // and this one was missing: a walk that stops walking has
+                // usually had its queue die under it, and the four ways it can
+                // die are all distinguishable HERE and nowhere else — parked,
+                // hard-paused, user-paused, completed, or (the 2026-07-26
+                // diagnosis) stopped as none of those. Without them the
+                // failure is indistinguishable from a fork that simply ground
+                // too slowly.
+                + `manualRegion=${loopState._manualRegionName}, `
+                + `isProcessing=${loopState.isProcessing}, `
+                + `pausedUntilReset=${loopState._queuePausedUntilReset}, `
+                + `isPaused=${loopState.isPaused}, `
+                + `queueCompleted=${loopState._queueCompleted}, `
+                + `hasCurrentAction=${!!loopState.currentAction}, `
+                + `index=${loopState.currentActionIndex}`);
             return testController.getOverallResult();
         }
 
@@ -1700,6 +1746,7 @@ async function botInstantCrossesAcrossResets(testController) {
             true, departure?.fromLoop !== true);
         return testController.getOverallResult();
     } finally {
+        loopState.autoRestartQueue = savedAutoRestart;
         walkToSpy.restore();
         watcher.stop();
         gs.noManaDepletionReset = savedNoReset;

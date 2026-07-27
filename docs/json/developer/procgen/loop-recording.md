@@ -142,6 +142,16 @@ So the two seams the follow-up named keep their unconditional resume, and the Bo
 
 **ON direction only** (user 2026-07-25). Flag *off* keeps the stop it has always produced rather than becoming an explicit `isPaused` pause to match `_maybeResetForOOM`: that would change what every default-config player sees after a mana-out in hand-play, and stopped and paused both mean "press Start". Step mode is excluded for the same reason `_maybeResetForOOM` excludes it — the reset is the step's terminal event — and a user pause is excluded one level down by `_beginProcessing`. All three legs are pinned in `blockModes.test.js`, the ON one against a control that fails without the resume.
 
+##### …and with the flag off that stop is TERMINAL for an unattended walk
+
+*Diagnosed 2026-07-26, from `omsi-bot-instant-multi-reset-walk` going STUCK.* "Press Start" is the whole recovery, and it presupposes a **player**. Nothing else can restart the queue, and on a gated substrate nothing else will ever try:
+
+- The park is **gone** (`_resetLoop` clears `_manualActionEntered` / `_manualRegionName`), and every wake handler — the manual wake, the bot wake, `_releaseParkForReset` — opens with a bail on the missing park. There is no event left that reaches this queue.
+- The queue is stopped but **`isPaused` is false and `_queueCompleted` is false**, so it is not any of the three states the panel renders as "stopped on purpose". A watcher polling for progress sees a queue that simply never moves.
+- Worst, the **substrate freezes with it.** `livePlayRegion()` and `botSolverRegion()` both answer null, so the next `setStepGate` push closes the gate — and a fork that cannot advance cannot end a run, cannot report `substrate:resourceReset`, and so can never fire the substrate reset whose release/resume is unconditional. The one flow that could have healed this is the flow the stop disarmed. Same shape as [a frozen substrate cannot generate the reset that unfreezes it](./gotchas.md#a-frozen-substrate-cannot-generate-the-reset-that-unfreezes-it), reached from the loops side.
+
+None of that contradicts the ruling — a present player still presses Start — but it does mean **any automated multi-run walk must set `autoRestartQueue` ON**, which is the flag's own contract ("auto-restart IS the retry", already the case in the jta bot legs). The omsi bot legs were relying on an ordering accident: the depletion usually lands while the *bot* is driving, where the manual wake bails on the missing park, rather than on the index-0 park between runs. Instant made the accident far likelier — a whole fork run drains inside one synchronous pump — and turned a latent race into a ~60%-reproducible hang. Both omsi bot legs now set the flag explicitly; `omsi-multi-run-replay-retry` has the same exposure and is left alone only because it is green today.
+
 ## Queue annotations — what a recorded visit cost
 
 *All queue-supporting substrates, coarse and fine alike (M4, 2026-07-23).* Code: `blockAnnotations.js`; stored on the `SavedQueue` as `annotations`.
