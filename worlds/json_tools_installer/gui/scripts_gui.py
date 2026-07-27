@@ -64,15 +64,40 @@ _dev_server: Optional[ThreadingHTTPServer] = None
 _dev_server_thread: Optional[threading.Thread] = None
 
 
+class DevServerHandler(SimpleHTTPRequestHandler):
+    # On Windows, mimetypes reads Content Type from the registry, which often
+    # maps .js to text/plain — and browsers refuse ES modules served with a
+    # non-JavaScript MIME type ("Failed to fetch dynamically imported
+    # module"). Pin the web types the frontend needs, ahead of the registry.
+    extensions_map = {
+        **SimpleHTTPRequestHandler.extensions_map,
+        ".js": "text/javascript",
+        ".mjs": "text/javascript",
+        ".json": "application/json",
+        ".jsonl": "application/json",
+        ".css": "text/css",
+        ".svg": "image/svg+xml",
+        ".wasm": "application/wasm",
+        ".html": "text/html",
+    }
+
+    def end_headers(self):
+        # The frontend is replaced in place by installer upgrades; without
+        # this, browsers keep serving the previous version from cache.
+        self.send_header("Cache-Control", "no-cache")
+        super().end_headers()
+
+
 def _start_dev_server() -> str:
     """Serve the Archipelago root on DEV_SERVER_PORT from this process."""
     global _dev_server, _dev_server_thread
 
     if _dev_server is not None:
-        return f"Dev server is already running on http://localhost:{DEV_SERVER_PORT}/"
+        return (f"Dev server is already running on "
+                f"http://localhost:{DEV_SERVER_PORT}/frontend/")
 
     root = local_path()
-    handler = functools.partial(SimpleHTTPRequestHandler, directory=root)
+    handler = functools.partial(DevServerHandler, directory=root)
     try:
         server = ThreadingHTTPServer(("0.0.0.0", DEV_SERVER_PORT), handler)
     except OSError as e:
@@ -82,7 +107,9 @@ def _start_dev_server() -> str:
     _dev_server_thread = threading.Thread(target=server.serve_forever, daemon=True)
     _dev_server_thread.start()
     _dev_server = server
-    return (f"Dev server running on http://localhost:{server.server_address[1]}/\n\n"
+    return (f"Dev server running.\n\n"
+            f"Open the website at: "
+            f"http://localhost:{server.server_address[1]}/frontend/\n\n"
             f"Serving: {root}\n\n"
             f"It stops with 'Stop Dev Server' or when this window closes.")
 

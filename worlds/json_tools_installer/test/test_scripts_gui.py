@@ -128,3 +128,35 @@ def test_frozen_generation_disabled_without_sibling_executable(frozen_sg, tmp_pa
 
     action = frozen_sg.build_script_categories()["Quick Actions"][0]
     assert action.unsupported is not None
+
+
+def test_dev_server_serves_js_with_module_safe_mime(sg):
+    # Windows registry often maps .js to text/plain; browsers refuse ES
+    # modules with a non-JavaScript MIME type, which broke the served
+    # frontend ("Failed to fetch dynamically imported module: .../init.js").
+    handler = sg.DevServerHandler.__new__(sg.DevServerHandler)
+    assert handler.guess_type("frontend/init.js") == "text/javascript"
+    assert handler.guess_type("frontend/x.mjs") == "text/javascript"
+    assert handler.guess_type("frontend/settings/settings.json") == "application/json"
+    assert handler.guess_type("presets/log.jsonl") == "application/json"
+
+
+def test_dev_server_end_to_end_mime_and_no_cache(sg, monkeypatch, tmp_path):
+    import urllib.request
+
+    (tmp_path / "probe.js").write_text("export const x = 1;\n")
+    monkeypatch.setattr(sg, "DEV_SERVER_PORT", 0)
+    monkeypatch.setattr(sg, "local_path", lambda *a: str(tmp_path))
+
+    try:
+        message = sg._start_dev_server()
+        assert "/frontend/" in message  # start message names the app URL
+        port = sg._dev_server.server_address[1]
+        with urllib.request.urlopen(
+            f"http://127.0.0.1:{port}/probe.js"
+        ) as response:
+            assert response.headers["Content-Type"].startswith("text/javascript")
+            assert response.headers["Cache-Control"] == "no-cache"
+            assert response.read() == b"export const x = 1;\n"
+    finally:
+        sg._stop_dev_server()
