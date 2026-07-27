@@ -334,6 +334,12 @@
             "id": "seedling-atlas-maze-gated-crossing",
             "enabled": true,
             "category": "Seedling atlas maze"
+        },
+        {
+            "id": "seedling-atlas-sphere-placed-region",
+            "enabled": true,
+            "category": "Seedling atlas maze",
+            "_comment": "Region-atlas Phase 6. Same map, but walked in a world sphere growth GREW: the leg that catches an arrival landing inside a wall, which no compile or sphere oracle can."
         }
     ]
 }

@@ -1,13 +1,13 @@
 /**
  * In-app tests for the region atlas's MAZE projection
- * (CC/docs/plans/region-atlas-plan.md, Phase 5b).
+ * (CC/docs/plans/region-atlas-plan.md, Phases 5b and 6).
  *
  * Phase 4 bound an atlas region to the real recompiled Seedling game, and that
  * leg can only ever be a standalone verifier that SKIPs: it needs a 31 MB
  * gitignored wasm artifact, so an enumerated in-app test would be red on every
  * machine missing it. The maze projection is the answer to that — the same
  * geometry and the same item gating, playable from the committed repo — so these
- * two legs CAN live in the suite, and they are the payoff of the phase.
+ * legs CAN live in the suite, and they are the payoff of the phase.
  *
  *   1. seedling-atlas-maze-boundary-crossing — walking onto a boundary exit tile
  *      of the start sub-region crosses into the neighbouring ATLAS region
@@ -21,6 +21,13 @@
  *      by positives: the walk to the tile beside the gate has to succeed first,
  *      and the crossing has to happen afterwards, so "nothing moved" cannot pass
  *      because the machinery was dead.
+ *   3. seedling-atlas-sphere-placed-region (Phase 6) — the same map, but walked
+ *      in a world sphere growth GREW: generated maze regions with pieces of the
+ *      real Seedling map hung off them behind the driver's synthetic gates. Its
+ *      own assertion is that the arrival lands on a FLOOR tile — an atlas region
+ *      is sized to its own bounds and is mostly wall, so the grid-mirror arrival
+ *      a generated region uses would drop the player inside solid rock, and
+ *      neither the compile nor the sphere oracle would notice.
  *
  * Everything is read off the LIVE world rather than hard-coded: which exit is
  * ungated, which is gated, what item its rule wants, and which tile to stand on.
@@ -33,6 +40,9 @@ import { getPanelInstance } from '../../mazeRoom/index.js';
 import { getGameStateSingleton } from '../../gameState/singleton.js';
 
 const PRESET_PATH = './presets/seedling_atlas_maze/AP_1/AP_1_rules.json';
+// A world sphere growth GREW with pieces of the same map hung off it
+// (region-atlas Phase 6). Regenerate with the command in the preset's README.
+const SPHERE_PRESET_PATH = './presets/seedling_atlas_sphere/AP_1/AP_1_rules.json';
 const START_REGION = 'overworld_start__r8c0';
 
 const KEY_FOR = Object.freeze({
@@ -99,20 +109,52 @@ function itemsSatisfying(rule) {
 }
 
 /**
- * A tile beside `target` that is plain floor: not an exit, not an obstacle.
+ * Tiles the player can stand on and walk to, without crossing an exit or a gate:
+ * an ordinary flood over plain floor from `from`. A staging tile the player
+ * cannot actually get to makes the whole leg red for a reason that has nothing
+ * to do with what it tests, and in a generated world that happens — an exit can
+ * sit in a pocket whose only approach is another exit tile.
+ */
+function walkableFrom(world, from) {
+    const key = (x, y) => `${x},${y}`;
+    const blocked = new Set([...world.obstacles.keys()]);
+    for (const e of world.exits.values()) blocked.add(key(e.x, e.y));
+    const seen = new Set([key(from.x, from.y)]);
+    const queue = [{ x: from.x, y: from.y }];
+    while (queue.length > 0) {
+        const { x, y } = queue.shift();
+        for (const [dx, dy] of [[0, -1], [1, 0], [0, 1], [-1, 0]]) {
+            const nx = x + dx;
+            const ny = y + dy;
+            const k = key(nx, ny);
+            if (seen.has(k) || blocked.has(k)) continue;
+            if (nx < 0 || ny < 0 || nx >= world.width || ny >= world.height) continue;
+            if (world.tiles[ny * world.width + nx] !== 0) continue;
+            seen.add(k);
+            queue.push({ x: nx, y: ny });
+        }
+    }
+    return seen;
+}
+
+/**
+ * A tile beside `target` that is plain floor: not an exit, not an obstacle —
+ * and, when `from` is given, one the player can actually walk to.
  *
  * `towardKey` is the key that walks FROM that tile ONTO `target` — i.e. the
  * direction back, (-dx, -dy). Getting this backwards makes the whole test
  * vacuous: the player walks AWAY from the gate, nothing moves onto it, and
  * "blocked" passes for the wrong reason.
  */
-function stagingTileBeside(world, target) {
+function stagingTileBeside(world, target, from = null) {
     const dirs = [
         { dx: 0, dy: -1, toward: 'S' }, // the tile is NORTH of target: press South
         { dx: 1, dy: 0, toward: 'W' },
         { dx: 0, dy: 1, toward: 'N' },
         { dx: -1, dy: 0, toward: 'E' },
     ];
+    const reachable = from ? walkableFrom(world, from) : null;
+    let fallback = null;
     for (const d of dirs) {
         const x = target.x + d.dx;
         const y = target.y + d.dy;
@@ -122,9 +164,13 @@ function stagingTileBeside(world, target) {
         let onExit = false;
         for (const e of world.exits.values()) if (e.x === x && e.y === y) { onExit = true; break; }
         if (onExit) continue;
-        return { x, y, towardKey: KEY_FOR[d.toward] };
+        const tile = { x, y, towardKey: KEY_FOR[d.toward] };
+        if (!reachable || reachable.has(`${x},${y}`)) return tile;
+        // Keep the first unreachable candidate so the failure stays the old
+        // "the walk did not arrive" rather than turning into "no tile at all".
+        fallback = fallback ?? tile;
     }
-    return null;
+    return fallback;
 }
 
 /** Walk the panel's real playback controller onto a tile and wait for arrival. */
@@ -184,7 +230,7 @@ async function boundaryCrossing(testController) {
         + `(arrive at '${exit.targetExitId}')`);
 
     // Walk to the tile beside it, then step ON — the step is what crosses.
-    const staging = stagingTileBeside(world, exit);
+    const staging = stagingTileBeside(world, exit, panel.state.player_pos);
     testController.assertEqual('there is a floor tile beside the exit to step from',
         true, !!staging);
     if (!staging) return testController.getOverallResult();
@@ -263,7 +309,7 @@ async function gatedCrossing(testController) {
         + `'${exit.targetRegion}'; rule ${JSON.stringify(gate.def.clear_rule)}`);
 
     // ── positive control: get to the tile beside the gate ──────────
-    const staging = stagingTileBeside(world, exit);
+    const staging = stagingTileBeside(world, exit, panel.state.player_pos);
     testController.assertEqual('there is a floor tile beside the gate to step from',
         true, !!staging);
     if (!staging) return testController.getOverallResult();
@@ -313,6 +359,145 @@ async function gatedCrossing(testController) {
     return testController.getOverallResult();
 }
 
+// ────────────────────────────────────────────────────────────────
+// 3. A GENERATED sphere world contains real map regions, behind its gate
+// ────────────────────────────────────────────────────────────────
+//
+// The two legs above walk the vanilla map: the atlas's own regions, connected
+// the way the game connects them. This one walks a world sphere growth GREW
+// (region-atlas Phase 6): generated maze regions with pieces of the real
+// Seedling map hung off them behind the driver's synthetic gates. The witness
+// that matters is that the placed region is enterable AT ALL — an atlas region
+// is sized to its own bounds and most of its tiles are wall, so an arrival
+// computed the way a generated region's would be lands the player inside solid
+// rock and the world is unplayable while still compiling and passing its oracle.
+async function generatedSphereWorld(testController) {
+    testController.log('Loading seedling_atlas_sphere (a grown sphere world with real map regions)…');
+    await testController.loadRulesFromFile(SPHERE_PRESET_PATH);
+    await testController.stateManager.pingWorker('after-rules-load', 5000);
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'mazeRoomPanel' });
+
+    const panel = await testController.pollForValue(
+        () => {
+            const p = getPanelInstance();
+            return (p?.world && p.state && p.currentRegionId) ? p : null;
+        },
+        'maze panel mounted in the grown world', 20000, 250);
+    testController.assertEqual('the grown world loaded', true, !!panel);
+    if (!panel) return testController.getOverallResult();
+
+    const startRegion = panel.currentRegionId;
+    testController.assertEqual('gameState agrees which region we are in',
+        startRegion, readCurrentRegion());
+
+    // An atlas region is named after the map (`overworld_start__r1c6`), never
+    // after its grid cell — which is how a leg can find one without being told.
+    const world = panel.world;
+    const toAtlas = [...world.exits.values()]
+        .find((e) => e.targetRegion && !/^region_\d+_\d+$/.test(e.targetRegion));
+    testController.assertEqual(
+        'the start region has an exit into a placed atlas region', true, !!toAtlas);
+    if (!toAtlas) return testController.getOverallResult();
+    testController.log(`exit '${toAtlas.exit_id}' -> atlas region '${toAtlas.targetRegion}'`);
+
+    // The sphere driver's synthetic gate: the HOST is a generated maze region, so
+    // the gate is realised physically on the way out of it. Read the wanted items
+    // off it rather than naming them — this leg should survive a re-grow.
+    const gate = gateOn(world, toAtlas);
+    testController.assertEqual('the exit into the atlas region carries the driver\'s gate',
+        true, !!gate?.def?.clear_rule);
+    const wants = itemsSatisfying(gate?.def?.clear_rule);
+    testController.log(`gate rule ${JSON.stringify(gate?.def?.clear_rule)}`);
+
+    const staging = stagingTileBeside(world, toAtlas, panel.state.player_pos);
+    testController.assertEqual('there is a floor tile beside the exit to step from',
+        true, !!staging);
+    if (!staging) return testController.getOverallResult();
+    if (!await walkTo(testController, panel, staging,
+        `walked to (${staging.x},${staging.y}), beside the exit into the atlas region`)) {
+        return testController.getOverallResult();
+    }
+    if (!assertAimedAt(testController, staging, toAtlas)) return testController.getOverallResult();
+
+    // The negative, bracketed by the walk that had to succeed before it.
+    //
+    // The inventory is EMPTIED of the gate items rather than assumed empty: the
+    // only route to the staging tile can run over the very pickup the gate wants
+    // (it does in the committed world — sphere-1 items live in the wave-0 start
+    // region), and a "blocked" that passed because the walk failed, or failed
+    // because the walk collected the key, would say nothing either way.
+    const held = [];
+    for (const wItem of wants) {
+        const count = Number(
+            testController.stateManager.getSnapshot()?.inventory?.[wItem.name] ?? 0);
+        held.push({ ...wItem, count: Math.max(count, wItem.count) });
+        if (count > 0) {
+            testController.log(`removing ${wItem.name} x${count} picked up on the way`);
+            await testController.stateManager.removeItemFromInventory(wItem.name, count);
+        }
+    }
+    await testController.stateManager.pingWorker('after-item-clear', 5000);
+
+    press(panel, staging.towardKey);
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    const blocked = getPanelInstance().state.player_pos;
+    testController.assertEqual(
+        'without the gate items the step onto the exit does not move the player',
+        `${staging.x},${staging.y}`, `${blocked.x},${blocked.y}`);
+    testController.assertEqual('and the AP region did not change',
+        startRegion, readCurrentRegion());
+
+    for (const wItem of held) {
+        testController.log(`granting ${wItem.name} x${wItem.count}`);
+        await testController.stateManager.addItemToInventory(wItem.name, wItem.count);
+    }
+    await testController.stateManager.pingWorker('after-item-grant', 5000);
+
+    press(panel, staging.towardKey);
+    const crossed = await testController.pollForCondition(
+        () => readCurrentRegion() === toAtlas.targetRegion,
+        `stepping onto the exit crossed into the placed atlas region `
+        + `'${toAtlas.targetRegion}'`, 15000, 200);
+    testController.assertEqual(
+        'a grown sphere world can be walked into a region of the REAL Seedling map',
+        true, !!crossed);
+    if (!crossed) {
+        testController.log(`DIAG: gameState region '${readCurrentRegion()}', panel `
+            + `'${getPanelInstance()?.currentRegionId}', pos `
+            + JSON.stringify(getPanelInstance()?.state?.player_pos));
+        return testController.getOverallResult();
+    }
+
+    const arrived = await testController.pollForValue(
+        () => {
+            const p = getPanelInstance();
+            return (p?.world && p.currentRegionId === toAtlas.targetRegion) ? p : null;
+        },
+        `the maze panel adopted '${toAtlas.targetRegion}'`, 15000, 200);
+    testController.assertEqual('the maze panel adopted the placed atlas region',
+        true, !!arrived);
+    if (!arrived) return testController.getOverallResult();
+
+    // THE assertion of this leg: the arrival tile is walkable. Most of an atlas
+    // region is wall, so the driver's usual grid-mirror arrival tile would put
+    // the player inside solid terrain with nowhere to step.
+    const w = arrived.world;
+    const pos = arrived.state.player_pos;
+    testController.assertEqual(
+        'the player arrived standing on a FLOOR tile of the real map, not inside a wall',
+        0, w.tiles[pos.y * w.width + pos.x]);
+
+    // And the real map came with it: its own gates are in the grown world.
+    const ruleGates = [...w.obstacles.values()]
+        .filter((id) => w.obstacleLib?.[id]?.clear_set_type === 'rule');
+    testController.log(`the placed region carries ${ruleGates.length} of the map's own `
+        + `rule gate(s) and ${w.exits.size} routed exit(s)`);
+    testController.assertEqual('the placed region kept a way back to its parent',
+        true, [...w.exits.values()].some((e) => e.targetRegion === startRegion));
+
+    return testController.getOverallResult();
+}
+
 registerTest({
     id: 'seedling-atlas-maze-boundary-crossing',
     name: 'Seedling atlas (maze): walking a marked boundary crosses the AP region',
@@ -335,6 +520,19 @@ registerTest({
                + 'path. Both halves are asserted, the negative bracketed by the walk that '
                + 'must succeed before it and the crossing that must succeed after.',
     testFunction: gatedCrossing,
+    category: 'Seedling atlas maze',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'seedling-atlas-sphere-placed-region',
+    name: 'Seedling atlas (sphere): a grown world can be walked into a real map region',
+    description: 'Loads a sphere-grown world that placed pieces of the real Seedling map '
+               + 'behind the driver\'s synthetic gates, proves the gate blocks and then '
+               + 'opens, and asserts the arrival lands on a FLOOR tile of the real map — '
+               + 'the failure an atlas region sized to its own bounds invites, and one no '
+               + 'compile or sphere oracle would catch.',
+    testFunction: generatedSphereWorld,
     category: 'Seedling atlas maze',
     enabled: false, // off by default — runs only in the test-substrates mode
 });

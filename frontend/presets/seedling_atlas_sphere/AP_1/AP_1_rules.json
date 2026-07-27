@@ -1,0 +1,4512 @@
+{
+  "schema_version": 3,
+  "game_name": "Procgen Maze",
+  "game_directory": "procgen_maze_worldgen",
+  "archipelago_version": "0.6.7",
+  "generation_seed": 1,
+  "seed_name": "",
+  "player_names": {
+    "1": "Player1"
+  },
+  "world_classes": {
+    "1": "ProcgenMazeWorld"
+  },
+  "regions": {
+    "1": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "GameStart",
+            "connected_region": "region_4_4",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "overworld_start__r8c0": {
+        "name": "overworld_start__r8c0",
+        "exits": [
+          {
+            "name": "region_3_3",
+            "connected_region": "region_3_3",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "starting_house": {
+        "name": "starting_house",
+        "exits": [
+          {
+            "name": "region_3_3",
+            "connected_region": "region_3_3",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Starting House - Chest",
+            "id": 1000,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Region Library Filler",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          }
+        ]
+      },
+      "region_3_3": {
+        "name": "region_3_3",
+        "exits": [
+          {
+            "name": "exit_0",
+            "connected_region": "overworld_start__r8c0",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "exit_1",
+            "connected_region": "starting_house",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "exit_2",
+            "connected_region": "owls_nest_entrance",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "region_3_4",
+            "connected_region": "region_3_4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "key_blue"
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "owls_nest_entrance": {
+        "name": "owls_nest_entrance",
+        "exits": [
+          {
+            "name": "region_3_3",
+            "connected_region": "region_3_3",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "overworld_start__r14c0": {
+        "name": "overworld_start__r14c0",
+        "exits": [
+          {
+            "name": "region_2_4",
+            "connected_region": "region_2_4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "region_2_4": {
+        "name": "region_2_4",
+        "exits": [
+          {
+            "name": "exit_0",
+            "connected_region": "region_2_5",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "key_red"
+              }
+            }
+          },
+          {
+            "name": "exit_1",
+            "connected_region": "overworld_start__r14c0",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "region_3_4",
+            "connected_region": "region_3_4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "key_blue"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_2_4__loc_0__1_4",
+            "id": 1001,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "key_green",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          },
+          {
+            "name": "region_2_4__loc_1__5_3",
+            "id": 1002,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "key_yellow",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
+      "region_3_4": {
+        "name": "region_3_4",
+        "exits": [
+          {
+            "name": "exit_0",
+            "connected_region": "region_3_3",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "key_blue"
+              }
+            }
+          },
+          {
+            "name": "exit_1",
+            "connected_region": "dungeon1_room1__r0c4",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "exit_2",
+            "connected_region": "region_2_4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "key_blue"
+              }
+            }
+          },
+          {
+            "name": "region_4_4",
+            "connected_region": "region_4_4",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_3_4__loc_0__6_3",
+            "id": 1003,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "key_red",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
+      "region_4_4": {
+        "name": "region_4_4",
+        "exits": [
+          {
+            "name": "exit_0",
+            "connected_region": "region_3_4",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "exit_1",
+            "connected_region": "overworld_start__r2c13",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "exit_2",
+            "connected_region": "region_5_4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "key_green"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_4_4__loc_0__1_2",
+            "id": 1004,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "key_blue",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          },
+          {
+            "name": "region_4_4__loc_1__7_0",
+            "id": 1005,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Progressive Swim",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
+      "region_5_4": {
+        "name": "region_5_4",
+        "exits": [
+          {
+            "name": "region_4_4",
+            "connected_region": "region_4_4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "key_green"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_5_4__loc_0__0_5",
+            "id": 1006,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "victory",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
+      "region_2_5": {
+        "name": "region_2_5",
+        "exits": [
+          {
+            "name": "exit",
+            "connected_region": "region_2_6",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "key_red"
+              }
+            }
+          },
+          {
+            "name": "region_2_4",
+            "connected_region": "region_2_4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "key_red"
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "dungeon1_room1__r0c4": {
+        "name": "dungeon1_room1__r0c4",
+        "exits": [
+          {
+            "name": "region_3_4",
+            "connected_region": "region_3_4",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "overworld_start__r2c13": {
+        "name": "overworld_start__r2c13",
+        "exits": [
+          {
+            "name": "region_4_4",
+            "connected_region": "region_4_4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "overworld_start__r4c16": {
+        "name": "overworld_start__r4c16",
+        "exits": [
+          {
+            "name": "region_2_6",
+            "connected_region": "region_2_6",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "region_2_6": {
+        "name": "region_2_6",
+        "exits": [
+          {
+            "name": "exit",
+            "connected_region": "overworld_start__r4c16",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "region_2_5",
+            "connected_region": "region_2_5",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "key_red"
+              }
+            }
+          }
+        ],
+        "locations": []
+      }
+    }
+  },
+  "start_regions": {
+    "1": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "1": {
+      "Region Library Filler": {
+        "name": "Region Library Filler",
+        "id": 1,
+        "classification": "filler",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "key_green": {
+        "name": "key_green",
+        "id": 2,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "key_yellow": {
+        "name": "key_yellow",
+        "id": 3,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "key_red": {
+        "name": "key_red",
+        "id": 4,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "key_blue": {
+        "name": "key_blue",
+        "id": 5,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "Progressive Swim": {
+        "name": "Progressive Swim",
+        "id": 6,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "victory": {
+        "name": "victory",
+        "id": 7,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      }
+    }
+  },
+  "item_groups": {
+    "1": [
+      "Everything"
+    ]
+  },
+  "itempool_counts": {
+    "1": {
+      "Region Library Filler": 1,
+      "key_green": 1,
+      "key_yellow": 1,
+      "key_red": 1,
+      "key_blue": 1,
+      "Progressive Swim": 1,
+      "victory": 1
+    }
+  },
+  "world": {
+    "1": {
+      "game": "Procgen Maze",
+      "world_class_name": "ProcgenMazeWorld",
+      "options": {}
+    }
+  },
+  "game_info": {
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "victory"
+      }
+    }
+  },
+  "helpers": {},
+  "exporter": {},
+  "canonical_placements": {
+    "1": {
+      "Starting House - Chest": "Region Library Filler",
+      "region_2_4__loc_0__1_4": "key_green",
+      "region_2_4__loc_1__5_3": "key_yellow",
+      "region_3_4__loc_0__6_3": "key_red",
+      "region_4_4__loc_0__1_2": "key_blue",
+      "region_4_4__loc_1__7_0": "Progressive Swim",
+      "region_5_4__loc_0__0_5": "victory"
+    }
+  },
+  "progression_mapping": {
+    "1": {}
+  },
+  "starting_items": {
+    "1": []
+  },
+  "assume_bidirectional_exits": true,
+  "preset_sidecars": {
+    "1": {
+      "region_4_4": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 4,
+          "gy": 4
+        },
+        "playable_payload": {
+          "width": 8,
+          "height": 6,
+          "tiles": [
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1
+          ],
+          "entrance": {
+            "x": 4,
+            "y": 3
+          },
+          "exits": [
+            {
+              "exit_id": "exit_0",
+              "x": 0,
+              "y": 3,
+              "side": "W",
+              "exitName": "exit_0",
+              "targetRegion": "region_3_4",
+              "targetExitId": "region_4_4",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "exit_1",
+              "x": 4,
+              "y": 5,
+              "side": "S",
+              "exitName": "exit_1",
+              "targetRegion": "overworld_start__r2c13",
+              "targetExitId": "region_4_4",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "exit_2",
+              "x": 7,
+              "y": 1,
+              "side": "E",
+              "exitName": "exit_2",
+              "targetRegion": "region_5_4",
+              "targetExitId": "region_4_4",
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 4,
+              "y": 5,
+              "id": "logic_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 1,
+              "id": "logic_gate_1"
+            }
+          ],
+          "items": [
+            {
+              "x": 1,
+              "y": 2,
+              "id": "key_blue",
+              "locationName": "region_4_4__loc_0__1_2"
+            },
+            {
+              "x": 7,
+              "y": 0,
+              "id": "Progressive Swim",
+              "locationName": "region_4_4__loc_1__7_0"
+            }
+          ],
+          "obstacleLib": {
+            "logic_gate_0": {
+              "name": "Logic Gate",
+              "id": "logic_gate_0",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Progressive Swim"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "feature": "logic_gate"
+            },
+            "logic_gate_1": {
+              "name": "Logic Gate",
+              "id": "logic_gate_1",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "key_green"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "feature": "logic_gate"
+            }
+          },
+          "itemLib": {},
+          "longestShortestPath": 15,
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "classic"
+        },
+        "grow_telemetry": {
+          "requested_size": {
+            "width": 8,
+            "height": 6
+          },
+          "final_size": {
+            "width": 8,
+            "height": 6
+          },
+          "grow_attempts": 0
+        }
+      },
+      "region_3_4": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 3,
+          "gy": 4
+        },
+        "playable_payload": {
+          "width": 8,
+          "height": 6,
+          "tiles": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1
+          ],
+          "entrance": {
+            "x": 7,
+            "y": 3
+          },
+          "exits": [
+            {
+              "exit_id": "exit_0",
+              "x": 6,
+              "y": 0,
+              "side": "N",
+              "exitName": "exit_0",
+              "targetRegion": "region_3_3",
+              "targetExitId": "region_3_4",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "exit_1",
+              "x": 6,
+              "y": 5,
+              "side": "S",
+              "exitName": "exit_1",
+              "targetRegion": "dungeon1_room1__r0c4",
+              "targetExitId": "region_3_4",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "exit_2",
+              "x": 0,
+              "y": 1,
+              "side": "W",
+              "exitName": "exit_2",
+              "targetRegion": "region_2_4",
+              "targetExitId": "region_3_4",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "region_4_4",
+              "x": 7,
+              "y": 3,
+              "side": "E",
+              "exitName": "region_4_4",
+              "targetRegion": "region_4_4",
+              "targetExitId": "exit_0",
+              "isBackExit": true,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 6,
+              "y": 0,
+              "id": "logic_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 1,
+              "id": "logic_gate_1"
+            }
+          ],
+          "items": [
+            {
+              "x": 6,
+              "y": 3,
+              "id": "key_red",
+              "locationName": "region_3_4__loc_0__6_3"
+            }
+          ],
+          "obstacleLib": {
+            "logic_gate_0": {
+              "name": "Logic Gate",
+              "id": "logic_gate_0",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "key_blue"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "feature": "logic_gate"
+            },
+            "logic_gate_1": {
+              "name": "Logic Gate",
+              "id": "logic_gate_1",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "key_blue"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "feature": "logic_gate"
+            }
+          },
+          "itemLib": {},
+          "longestShortestPath": 11,
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "classic"
+        },
+        "grow_telemetry": {
+          "requested_size": {
+            "width": 8,
+            "height": 6
+          },
+          "final_size": {
+            "width": 8,
+            "height": 6
+          },
+          "grow_attempts": 0
+        }
+      },
+      "region_3_3": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 3,
+          "gy": 3
+        },
+        "playable_payload": {
+          "width": 8,
+          "height": 6,
+          "tiles": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1
+          ],
+          "entrance": {
+            "x": 6,
+            "y": 5
+          },
+          "exits": [
+            {
+              "exit_id": "exit_0",
+              "x": 6,
+              "y": 0,
+              "side": "N",
+              "exitName": "exit_0",
+              "targetRegion": "overworld_start__r8c0",
+              "targetExitId": "region_3_3",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "exit_1",
+              "x": 0,
+              "y": 2,
+              "side": "W",
+              "exitName": "exit_1",
+              "targetRegion": "starting_house",
+              "targetExitId": "region_3_3",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "exit_2",
+              "x": 7,
+              "y": 3,
+              "side": "E",
+              "exitName": "exit_2",
+              "targetRegion": "owls_nest_entrance",
+              "targetExitId": "region_3_3",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "region_3_4",
+              "x": 6,
+              "y": 5,
+              "side": "S",
+              "exitName": "region_3_4",
+              "targetRegion": "region_3_4",
+              "targetExitId": "exit_0",
+              "isBackExit": true,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [],
+          "items": [],
+          "obstacleLib": {},
+          "itemLib": {},
+          "longestShortestPath": 14,
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "classic"
+        },
+        "grow_telemetry": {
+          "requested_size": {
+            "width": 8,
+            "height": 6
+          },
+          "final_size": {
+            "width": 8,
+            "height": 6
+          },
+          "grow_attempts": 0
+        }
+      },
+      "overworld_start__r8c0": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 3,
+          "gy": 2
+        },
+        "playable_payload": {
+          "width": 20,
+          "height": 20,
+          "tiles": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "entrance": {
+            "x": 0,
+            "y": 8
+          },
+          "exits": [
+            {
+              "exit_id": "region_3_3",
+              "x": 0,
+              "y": 8,
+              "side": "S",
+              "exitName": "region_3_3",
+              "targetRegion": "region_3_3",
+              "targetExitId": "exit_0",
+              "isBackExit": true,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 13,
+              "y": 8,
+              "id": "atlas_gate_2"
+            },
+            {
+              "x": 15,
+              "y": 8,
+              "id": "atlas_gate_2"
+            },
+            {
+              "x": 18,
+              "y": 11,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 15,
+              "id": "atlas_gate_1"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "(Progressive Sword OR Ghost Spear)",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Sword"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Ghost Spear"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_1": {
+              "id": "atlas_gate_1",
+              "name": "Progressive Swim",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Progressive Swim"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_2": {
+              "id": "atlas_gate_2",
+              "name": "Progressive Swim x2",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Progressive Swim",
+                  "count": 2
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "itemLib": {},
+          "longestShortestPath": 1,
+          "fogEnabled": true
+        }
+      },
+      "starting_house": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 2,
+          "gy": 3
+        },
+        "playable_payload": {
+          "width": 6,
+          "height": 5,
+          "tiles": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1
+          ],
+          "entrance": {
+            "x": 1,
+            "y": 2
+          },
+          "exits": [
+            {
+              "exit_id": "region_3_3",
+              "x": 1,
+              "y": 2,
+              "side": "E",
+              "exitName": "region_3_3",
+              "targetRegion": "region_3_3",
+              "targetExitId": "exit_1",
+              "isBackExit": true,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [],
+          "items": [
+            {
+              "x": 3,
+              "y": 1,
+              "id": "Region Library Filler",
+              "locationName": "Starting House - Chest"
+            }
+          ],
+          "obstacleLib": {},
+          "itemLib": {},
+          "longestShortestPath": 1,
+          "fogEnabled": true
+        }
+      },
+      "owls_nest_entrance": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 4,
+          "gy": 3
+        },
+        "playable_payload": {
+          "width": 7,
+          "height": 7,
+          "tiles": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1
+          ],
+          "entrance": {
+            "x": 4,
+            "y": 1
+          },
+          "exits": [
+            {
+              "exit_id": "region_3_3",
+              "x": 4,
+              "y": 1,
+              "side": "W",
+              "exitName": "region_3_3",
+              "targetRegion": "region_3_3",
+              "targetExitId": "exit_2",
+              "isBackExit": true,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [],
+          "items": [],
+          "obstacleLib": {},
+          "itemLib": {},
+          "longestShortestPath": 1,
+          "fogEnabled": true
+        }
+      },
+      "dungeon1_room1__r0c4": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 3,
+          "gy": 5
+        },
+        "playable_payload": {
+          "width": 9,
+          "height": 9,
+          "tiles": [
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "entrance": {
+            "x": 4,
+            "y": 0
+          },
+          "exits": [
+            {
+              "exit_id": "region_3_4",
+              "x": 4,
+              "y": 0,
+              "side": "N",
+              "exitName": "region_3_4",
+              "targetRegion": "region_3_4",
+              "targetExitId": "exit_1",
+              "isBackExit": true,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 6,
+              "y": 7,
+              "id": "atlas_gate_0"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "(Progressive Sword OR Ghost Spear)",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Sword"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Ghost Spear"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "itemLib": {},
+          "longestShortestPath": 1,
+          "fogEnabled": true
+        }
+      },
+      "region_2_4": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 2,
+          "gy": 4
+        },
+        "playable_payload": {
+          "width": 8,
+          "height": 6,
+          "tiles": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "entrance": {
+            "x": 7,
+            "y": 1
+          },
+          "exits": [
+            {
+              "exit_id": "exit_0",
+              "x": 1,
+              "y": 5,
+              "side": "S",
+              "exitName": "exit_0",
+              "targetRegion": "region_2_5",
+              "targetExitId": "region_2_4",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "exit_1",
+              "x": 0,
+              "y": 2,
+              "side": "W",
+              "exitName": "exit_1",
+              "targetRegion": "overworld_start__r14c0",
+              "targetExitId": "region_2_4",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "region_3_4",
+              "x": 7,
+              "y": 1,
+              "side": "E",
+              "exitName": "region_3_4",
+              "targetRegion": "region_3_4",
+              "targetExitId": "exit_2",
+              "isBackExit": true,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 1,
+              "y": 5,
+              "id": "logic_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 2,
+              "id": "logic_gate_1"
+            }
+          ],
+          "items": [
+            {
+              "x": 1,
+              "y": 4,
+              "id": "key_green",
+              "locationName": "region_2_4__loc_0__1_4"
+            },
+            {
+              "x": 5,
+              "y": 3,
+              "id": "key_yellow",
+              "locationName": "region_2_4__loc_1__5_3"
+            }
+          ],
+          "obstacleLib": {
+            "logic_gate_0": {
+              "name": "Logic Gate",
+              "id": "logic_gate_0",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "key_red"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "feature": "logic_gate"
+            },
+            "logic_gate_1": {
+              "name": "Logic Gate",
+              "id": "logic_gate_1",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Progressive Swim"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "feature": "logic_gate"
+            }
+          },
+          "itemLib": {},
+          "longestShortestPath": 12,
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "classic"
+        },
+        "grow_telemetry": {
+          "requested_size": {
+            "width": 8,
+            "height": 6
+          },
+          "final_size": {
+            "width": 8,
+            "height": 6
+          },
+          "grow_attempts": 0
+        }
+      },
+      "region_2_5": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 2,
+          "gy": 5
+        },
+        "playable_payload": {
+          "width": 8,
+          "height": 6,
+          "tiles": [
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1
+          ],
+          "entrance": {
+            "x": 1,
+            "y": 0
+          },
+          "exits": [
+            {
+              "exit_id": "exit",
+              "x": 2,
+              "y": 5,
+              "side": "S",
+              "exitName": "exit",
+              "targetRegion": "region_2_6",
+              "targetExitId": "region_2_5",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "region_2_4",
+              "x": 1,
+              "y": 0,
+              "side": "N",
+              "exitName": "region_2_4",
+              "targetRegion": "region_2_4",
+              "targetExitId": "exit_0",
+              "isBackExit": true,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 2,
+              "y": 5,
+              "id": "logic_gate_0"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "logic_gate_0": {
+              "name": "Logic Gate",
+              "id": "logic_gate_0",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "key_red"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "feature": "logic_gate"
+            }
+          },
+          "itemLib": {},
+          "longestShortestPath": 8,
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "classic"
+        },
+        "grow_telemetry": {
+          "requested_size": {
+            "width": 8,
+            "height": 6
+          },
+          "final_size": {
+            "width": 8,
+            "height": 6
+          },
+          "grow_attempts": 0
+        }
+      },
+      "region_2_6": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 2,
+          "gy": 6
+        },
+        "playable_payload": {
+          "width": 8,
+          "height": 6,
+          "tiles": [
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "entrance": {
+            "x": 2,
+            "y": 0
+          },
+          "exits": [
+            {
+              "exit_id": "exit",
+              "x": 0,
+              "y": 1,
+              "side": "W",
+              "exitName": "exit",
+              "targetRegion": "overworld_start__r4c16",
+              "targetExitId": "region_2_6",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "region_2_5",
+              "x": 2,
+              "y": 0,
+              "side": "N",
+              "exitName": "region_2_5",
+              "targetRegion": "region_2_5",
+              "targetExitId": "exit",
+              "isBackExit": true,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 0,
+              "y": 1,
+              "id": "logic_gate_0"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "logic_gate_0": {
+              "name": "Logic Gate",
+              "id": "logic_gate_0",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Progressive Swim"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "feature": "logic_gate"
+            }
+          },
+          "itemLib": {},
+          "longestShortestPath": 3,
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "classic"
+        },
+        "grow_telemetry": {
+          "requested_size": {
+            "width": 8,
+            "height": 6
+          },
+          "final_size": {
+            "width": 8,
+            "height": 6
+          },
+          "grow_attempts": 0
+        }
+      },
+      "overworld_start__r2c13": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 4,
+          "gy": 5
+        },
+        "playable_payload": {
+          "width": 20,
+          "height": 20,
+          "tiles": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "entrance": {
+            "x": 13,
+            "y": 2
+          },
+          "exits": [
+            {
+              "exit_id": "region_4_4",
+              "x": 13,
+              "y": 2,
+              "side": "N",
+              "exitName": "region_4_4",
+              "targetRegion": "region_4_4",
+              "targetExitId": "exit_1",
+              "isBackExit": true,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 12,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 15,
+              "y": 4,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 13,
+              "y": 6,
+              "id": "atlas_gate_1"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "(Progressive Sword OR Ghost Spear)",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Sword"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Ghost Spear"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_1": {
+              "id": "atlas_gate_1",
+              "name": "Progressive Swim",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Progressive Swim"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "itemLib": {},
+          "longestShortestPath": 1,
+          "fogEnabled": true
+        }
+      },
+      "overworld_start__r4c16": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 1,
+          "gy": 6
+        },
+        "playable_payload": {
+          "width": 20,
+          "height": 20,
+          "tiles": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "entrance": {
+            "x": 16,
+            "y": 4
+          },
+          "exits": [
+            {
+              "exit_id": "region_2_6",
+              "x": 16,
+              "y": 4,
+              "side": "E",
+              "exitName": "region_2_6",
+              "targetRegion": "region_2_6",
+              "targetExitId": "exit",
+              "isBackExit": true,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 15,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 16,
+              "y": 6,
+              "id": "atlas_gate_0"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "Progressive Swim",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Progressive Swim"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "itemLib": {},
+          "longestShortestPath": 1,
+          "fogEnabled": true
+        }
+      },
+      "overworld_start__r14c0": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 1,
+          "gy": 4
+        },
+        "playable_payload": {
+          "width": 20,
+          "height": 20,
+          "tiles": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "entrance": {
+            "x": 0,
+            "y": 14
+          },
+          "exits": [
+            {
+              "exit_id": "region_2_4",
+              "x": 0,
+              "y": 14,
+              "side": "E",
+              "exitName": "region_2_4",
+              "targetRegion": "region_2_4",
+              "targetExitId": "exit_1",
+              "isBackExit": true,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 1,
+              "y": 15,
+              "id": "atlas_gate_0"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "Progressive Swim",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Progressive Swim"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "itemLib": {},
+          "longestShortestPath": 1,
+          "fogEnabled": true
+        }
+      },
+      "region_5_4": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 5,
+          "gy": 4
+        },
+        "playable_payload": {
+          "width": 8,
+          "height": 6,
+          "tiles": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "entrance": {
+            "x": 0,
+            "y": 1
+          },
+          "exits": [
+            {
+              "exit_id": "region_4_4",
+              "x": 0,
+              "y": 1,
+              "side": "W",
+              "exitName": "region_4_4",
+              "targetRegion": "region_4_4",
+              "targetExitId": "exit_2",
+              "isBackExit": true,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [],
+          "items": [
+            {
+              "x": 0,
+              "y": 5,
+              "id": "victory",
+              "locationName": "region_5_4__loc_0__0_5"
+            }
+          ],
+          "obstacleLib": {},
+          "itemLib": {},
+          "longestShortestPath": 1,
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "classic"
+        },
+        "grow_telemetry": {
+          "requested_size": {
+            "width": 8,
+            "height": 6
+          },
+          "final_size": {
+            "width": 8,
+            "height": 6
+          },
+          "grow_attempts": 0
+        }
+      }
+    }
+  },
+  "procgen_metadata": {
+    "driver": "sphere-growth",
+    "stop_reason": "plan_complete",
+    "sphere_plan": {
+      "seed": 1,
+      "spheres": [
+        {
+          "sphere": 1,
+          "items": [
+            "key_blue",
+            "key_red",
+            "Progressive Swim"
+          ]
+        },
+        {
+          "sphere": 2,
+          "items": [
+            "key_green",
+            "key_yellow"
+          ]
+        },
+        {
+          "sphere": 3,
+          "items": [
+            "victory"
+          ]
+        }
+      ]
+    },
+    "sphere_tree": {
+      "nodes": [
+        {
+          "index": 0,
+          "wave": 0,
+          "parent": null,
+          "side": null,
+          "cell": {
+            "gx": 4,
+            "gy": 4
+          },
+          "isTeleporter": false,
+          "substrate": "maze",
+          "gate": [],
+          "gateCounts": {},
+          "usedSides": [
+            "W",
+            "N",
+            "S"
+          ],
+          "childGates": [
+            [],
+            [
+              {
+                "item": "Progressive Swim",
+                "count": 1
+              }
+            ],
+            [
+              {
+                "item": "key_green",
+                "count": 1
+              }
+            ]
+          ],
+          "isFiller": false
+        },
+        {
+          "index": 1,
+          "wave": 0,
+          "parent": 0,
+          "side": "W",
+          "cell": {
+            "gx": 3,
+            "gy": 4
+          },
+          "isTeleporter": false,
+          "substrate": "maze",
+          "gate": [],
+          "gateCounts": {},
+          "usedSides": [
+            "E",
+            "W",
+            "N",
+            "S"
+          ],
+          "childGates": [
+            [],
+            [
+              {
+                "item": "key_blue",
+                "count": 1
+              }
+            ],
+            [],
+            [
+              {
+                "item": "key_blue",
+                "count": 1
+              }
+            ]
+          ],
+          "isFiller": false
+        },
+        {
+          "index": 2,
+          "wave": 0,
+          "parent": 1,
+          "side": "N",
+          "cell": {
+            "gx": 3,
+            "gy": 3
+          },
+          "isTeleporter": false,
+          "substrate": "maze",
+          "gate": [
+            "key_blue"
+          ],
+          "gateCounts": {
+            "key_blue": 1
+          },
+          "usedSides": [
+            "E",
+            "N",
+            "S",
+            "W"
+          ],
+          "childGates": [
+            [
+              {
+                "item": "key_blue",
+                "count": 1
+              }
+            ],
+            [],
+            [],
+            []
+          ],
+          "isFiller": true
+        },
+        {
+          "index": 3,
+          "wave": 0,
+          "parent": 2,
+          "side": "N",
+          "cell": {
+            "gx": 3,
+            "gy": 2
+          },
+          "region_id": "overworld_start__r8c0",
+          "isTeleporter": false,
+          "substrate": "atlas:seedling",
+          "gate": [],
+          "gateCounts": {},
+          "usedSides": [
+            "S"
+          ],
+          "childGates": [
+            []
+          ],
+          "isFiller": true
+        },
+        {
+          "index": 4,
+          "wave": 0,
+          "parent": 2,
+          "side": "W",
+          "cell": {
+            "gx": 2,
+            "gy": 3
+          },
+          "region_id": "starting_house",
+          "isTeleporter": false,
+          "substrate": "atlas:seedling",
+          "gate": [],
+          "gateCounts": {},
+          "usedSides": [
+            "N"
+          ],
+          "childGates": [
+            []
+          ],
+          "isFiller": true
+        },
+        {
+          "index": 5,
+          "wave": 0,
+          "parent": 2,
+          "side": "E",
+          "cell": {
+            "gx": 4,
+            "gy": 3
+          },
+          "region_id": "owls_nest_entrance",
+          "isTeleporter": false,
+          "substrate": "atlas:seedling",
+          "gate": [],
+          "gateCounts": {},
+          "usedSides": [
+            "E"
+          ],
+          "childGates": [
+            []
+          ],
+          "isFiller": true
+        },
+        {
+          "index": 6,
+          "wave": 0,
+          "parent": 1,
+          "side": "S",
+          "cell": {
+            "gx": 3,
+            "gy": 5
+          },
+          "region_id": "dungeon1_room1__r0c4",
+          "isTeleporter": false,
+          "substrate": "atlas:seedling",
+          "gate": [],
+          "gateCounts": {},
+          "usedSides": [
+            "S"
+          ],
+          "childGates": [
+            []
+          ],
+          "isFiller": true
+        },
+        {
+          "index": 7,
+          "wave": 1,
+          "parent": 1,
+          "side": "W",
+          "cell": {
+            "gx": 2,
+            "gy": 4
+          },
+          "isTeleporter": false,
+          "substrate": "maze",
+          "gate": [
+            "key_blue"
+          ],
+          "gateCounts": {
+            "key_blue": 1
+          },
+          "usedSides": [
+            "N",
+            "E",
+            "W"
+          ],
+          "childGates": [
+            [
+              {
+                "item": "key_blue",
+                "count": 1
+              }
+            ],
+            [
+              {
+                "item": "key_red",
+                "count": 1
+              }
+            ],
+            [
+              {
+                "item": "Progressive Swim",
+                "count": 1
+              }
+            ]
+          ],
+          "isFiller": false
+        },
+        {
+          "index": 8,
+          "wave": 1,
+          "parent": 7,
+          "side": "S",
+          "cell": {
+            "gx": 2,
+            "gy": 5
+          },
+          "isTeleporter": false,
+          "substrate": "maze",
+          "gate": [
+            "key_red"
+          ],
+          "gateCounts": {
+            "key_red": 1
+          },
+          "usedSides": [
+            "W",
+            "N"
+          ],
+          "childGates": [
+            [
+              {
+                "item": "key_red",
+                "count": 1
+              }
+            ],
+            [
+              {
+                "item": "key_red",
+                "count": 1
+              }
+            ]
+          ],
+          "isFiller": true
+        },
+        {
+          "index": 9,
+          "wave": 1,
+          "parent": 8,
+          "side": "S",
+          "cell": {
+            "gx": 2,
+            "gy": 6
+          },
+          "isTeleporter": false,
+          "substrate": "maze",
+          "gate": [
+            "key_red"
+          ],
+          "gateCounts": {
+            "key_red": 1
+          },
+          "usedSides": [
+            "S",
+            "W"
+          ],
+          "childGates": [
+            [
+              {
+                "item": "key_red",
+                "count": 1
+              }
+            ],
+            [
+              {
+                "item": "Progressive Swim",
+                "count": 1
+              }
+            ]
+          ],
+          "isFiller": true
+        },
+        {
+          "index": 10,
+          "wave": 1,
+          "parent": 0,
+          "side": "S",
+          "cell": {
+            "gx": 4,
+            "gy": 5
+          },
+          "region_id": "overworld_start__r2c13",
+          "isTeleporter": false,
+          "substrate": "atlas:seedling",
+          "gate": [
+            "Progressive Swim"
+          ],
+          "gateCounts": {
+            "Progressive Swim": 1
+          },
+          "usedSides": [
+            "S"
+          ],
+          "childGates": [
+            [
+              {
+                "item": "Progressive Swim",
+                "count": 1
+              }
+            ]
+          ],
+          "isFiller": true
+        },
+        {
+          "index": 11,
+          "wave": 1,
+          "parent": 9,
+          "side": "W",
+          "cell": {
+            "gx": 1,
+            "gy": 6
+          },
+          "region_id": "overworld_start__r4c16",
+          "isTeleporter": false,
+          "substrate": "atlas:seedling",
+          "gate": [
+            "Progressive Swim"
+          ],
+          "gateCounts": {
+            "Progressive Swim": 1
+          },
+          "usedSides": [
+            "E"
+          ],
+          "childGates": [
+            [
+              {
+                "item": "Progressive Swim",
+                "count": 1
+              }
+            ]
+          ],
+          "isFiller": true
+        },
+        {
+          "index": 12,
+          "wave": 1,
+          "parent": 7,
+          "side": "W",
+          "cell": {
+            "gx": 1,
+            "gy": 4
+          },
+          "region_id": "overworld_start__r14c0",
+          "isTeleporter": false,
+          "substrate": "atlas:seedling",
+          "gate": [
+            "Progressive Swim"
+          ],
+          "gateCounts": {
+            "Progressive Swim": 1
+          },
+          "usedSides": [
+            "E"
+          ],
+          "childGates": [
+            [
+              {
+                "item": "Progressive Swim",
+                "count": 1
+              }
+            ]
+          ],
+          "isFiller": true
+        },
+        {
+          "index": 13,
+          "wave": 2,
+          "parent": 0,
+          "side": "E",
+          "cell": {
+            "gx": 5,
+            "gy": 4
+          },
+          "isTeleporter": false,
+          "substrate": "maze",
+          "gate": [
+            "key_green"
+          ],
+          "gateCounts": {
+            "key_green": 1
+          },
+          "usedSides": [
+            "N"
+          ],
+          "childGates": [
+            [
+              {
+                "item": "key_green",
+                "count": 1
+              }
+            ]
+          ],
+          "isFiller": false
+        }
+      ],
+      "substrateCounts": {
+        "maze": 7,
+        "atlas:seedling": 7
+      },
+      "quotaFallbacks": 1
+    },
+    "region_count": 14,
+    "grid_dims": {
+      "width": 6,
+      "height": 7
+    }
+  },
+  "sphere_log": [
+    {
+      "type": "metadata",
+      "seed": 1,
+      "seed_name": "",
+      "event_locations": {},
+      "event_items": {}
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {},
+            "resolved_items": {}
+          },
+          "new_accessible_locations": [
+            "region_3_4__loc_0__6_3",
+            "region_4_4__loc_0__1_2",
+            "region_4_4__loc_1__7_0"
+          ],
+          "new_accessible_regions": [
+            "dungeon1_room1__r0c4",
+            "Menu",
+            "region_3_4",
+            "region_4_4"
+          ],
+          "sphere_locations": []
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "key_red": 1
+            },
+            "resolved_items": {
+              "key_red": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_3_4__loc_0__6_3"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "key_blue": 1
+            },
+            "resolved_items": {
+              "key_blue": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_2_4__loc_0__1_4",
+            "region_2_4__loc_1__5_3",
+            "Starting House - Chest"
+          ],
+          "new_accessible_regions": [
+            "overworld_start__r8c0",
+            "owls_nest_entrance",
+            "region_2_4",
+            "region_2_5",
+            "region_2_6",
+            "region_3_3",
+            "starting_house"
+          ],
+          "sphere_locations": [
+            "region_4_4__loc_0__1_2"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.3",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Progressive Swim": 1
+            },
+            "resolved_items": {
+              "Progressive Swim": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [
+            "overworld_start__r14c0",
+            "overworld_start__r2c13",
+            "overworld_start__r4c16"
+          ],
+          "sphere_locations": [
+            "region_4_4__loc_1__7_0"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "1.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "key_green": 1
+            },
+            "resolved_items": {
+              "key_green": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_5_4__loc_0__0_5"
+          ],
+          "new_accessible_regions": [
+            "region_5_4"
+          ],
+          "sphere_locations": [
+            "region_2_4__loc_0__1_4"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "1.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "key_yellow": 1
+            },
+            "resolved_items": {
+              "key_yellow": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_2_4__loc_1__5_3"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "2.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "victory": 1
+            },
+            "resolved_items": {
+              "victory": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_5_4__loc_0__0_5"
+          ]
+        }
+      }
+    }
+  ]
+}
