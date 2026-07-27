@@ -22,6 +22,8 @@ import {
     TILE_WALL,
 } from '../mazeRoom/mazeRoomEngine.js';
 import { isObstacleCleared } from '../shared/procgen/library.js';
+import { stringifyRulesJson } from '../shared/rulesJsonBuilder.js';
+import { rulesJsonSchemaErrors } from '../runnerDemo/ruleSchemaCheck.js';
 import { seedlingMazeProjectionDeps } from '../flashPanel/seedlingAtlasAnalysis.js';
 import { compileRegionAtlas } from './regionAtlasCompiler.js';
 import {
@@ -554,6 +556,7 @@ describe('whole-atlas projection', () => {
 const STARTER = read('../flashPanel/atlases/seedling.json');
 const MAP_DOC = read('../flashPanel/atlases/seedling-map.json');
 const GAME_CONFIG = read('../flashPanel/games/seedling.json');
+const PRESET_PATH = fileURLToPath(new URL('../../presets/seedling_atlas_maze/AP_1/AP_1_rules.json', import.meta.url));
 
 const compileMaze = (atlas = STARTER) => compileRegionAtlas(clone(atlas), {
     mapDoc: MAP_DOC,
@@ -682,6 +685,17 @@ describe('the real Seedling starter atlas as a maze world', () => {
 
     it('compiles deterministically — the same atlas, the same bytes', () => {
         expect(JSON.stringify(compileMaze().rules)).toBe(JSON.stringify(compileMaze().rules));
+    });
+
+    it('compiles to a schema-valid rules.json', () => {
+        expect(rulesJsonSchemaErrors(rules)).toEqual([]);
+    });
+
+    it('the COMMITTED seedling_atlas_maze preset is exactly what the atlas compiles to', () => {
+        // The same gate the flash preset carries: a semantics-table or atlas edit
+        // that changes the projection shows up red here rather than leaving the
+        // committed preset quietly disagreeing with the map it describes.
+        expect(`${stringifyRulesJson(rules)}\n`).toBe(readFileSync(PRESET_PATH, 'utf8'));
     });
 
     it('projects the SAME graph as the flash flavour — only the sidecars differ', () => {
