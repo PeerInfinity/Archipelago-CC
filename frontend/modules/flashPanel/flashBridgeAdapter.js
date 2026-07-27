@@ -71,6 +71,10 @@ export class FlashBridgeAdapter {
     this.attached = false;
     this.bridgeConfigured = false;
 
+    // Optional `(property, value) => void` installed by a host-side consumer
+    // of raw BridgeGeneric reports (see _onStateChanged).
+    this.onStateReport = null;
+
     // Lookup maps built from the game config
     this.apItemIdToFlash = {};
     this.locationFlashToApId = {};
@@ -373,6 +377,21 @@ export class FlashBridgeAdapter {
   // --------------------------------------------------------------
   _onStateChanged(property, value) {
     this.gameState[property] = value;
+
+    // Raw report hook for host-side consumers that are not about AP
+    // locations — today the region-atlas glue, which reads level /
+    // playerPositionX / playerPositionY. Deliberately at the TOP: the echo
+    // and first-read suppressions below exist for location detection and
+    // would swallow reports this consumer must see (it does its own
+    // baseline and echo handling, on its own terms). Never let a consumer
+    // throw into the bridge's report path.
+    if (this.onStateReport) {
+      try {
+        this.onStateReport(property, value);
+      } catch (e) {
+        this.log(`onStateReport handler threw: ${e.message}`, 'error');
+      }
+    }
 
     // Any stateChanged at all proves the bridge is successfully
     // reading Main.* properties, which only happens after

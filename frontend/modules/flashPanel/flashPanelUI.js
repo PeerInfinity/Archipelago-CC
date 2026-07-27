@@ -1,6 +1,8 @@
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import settingsManager from '../../app/core/settingsManager.js';
-import { getDispatcher, getModuleEventBus, setActivePanelInstance } from './index.js';
+import {
+  getDispatcher, getModuleEventBus, setActivePanelInstance, getSeedlingRegionGlue,
+} from './index.js';
 import { FlashBridgeAdapter } from './flashBridgeAdapter.js';
 import { WasmBridgeAdapter } from './wasmBridgeAdapter.js';
 
@@ -161,6 +163,7 @@ export class FlashPanelUI {
 
   _teardownForReinit() {
     if (this.adapter) {
+      this._detachRegionGlue();
       this.adapter.detach();
       this.adapter = null;
     }
@@ -406,6 +409,7 @@ export class FlashPanelUI {
       log: (msg, cls) => this._panelLog(msg, cls),
     });
     this.adapter = adapter;
+    this._attachRegionGlue(adapter);
 
     try {
       this._setStatus('loading wasm page…');
@@ -524,6 +528,7 @@ export class FlashPanelUI {
         eventBus: this.eventBus,
         log: (msg, cls) => this._panelLog(msg, cls),
       });
+      this._attachRegionGlue(this.adapter);
 
       try {
         await this.adapter.waitForBridge(15000);
@@ -552,6 +557,26 @@ export class FlashPanelUI {
       this._panelLog(`init failed: ${err.message}`, 'error');
       this._setStatus('error');
     }
+  }
+
+  /**
+   * Hand a freshly-built adapter to the region-atlas glue, which installs its
+   * raw-report hook and restarts its view of the game (region-atlas Phase 4).
+   * Both transports go through here; the glue is inert unless a preset's
+   * sidecars actually name the flash_seedling substrate.
+   */
+  _attachRegionGlue(adapter) {
+    try {
+      getSeedlingRegionGlue()?.attachAdapter(adapter);
+    } catch (err) {
+      this._panelLog(`region-atlas glue attach failed: ${err.message}`, 'error');
+    }
+  }
+
+  _detachRegionGlue() {
+    try {
+      getSeedlingRegionGlue()?.detachAdapter();
+    } catch { /* module torn down */ }
   }
 
   async _loadConfig(path) {
@@ -653,6 +678,7 @@ export class FlashPanelUI {
       this._rulesLoadedHandler = null;
     }
     if (this.adapter) {
+      this._detachRegionGlue();
       this.adapter.detach();
       this.adapter = null;
     }

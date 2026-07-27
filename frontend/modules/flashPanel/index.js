@@ -1,9 +1,17 @@
 import { FlashPanelUI } from './flashPanelUI.js';
 import eventBus from '../../app/core/eventBus.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+// Import side effect registers `flash_seedling` (region-atlas Phase 4).
+import {
+  substrateRegistryEntry as flashSeedlingEntry,
+  FLASH_SEEDLING_LOAD_REGION_EVENT,
+} from './flashSeedlingLibrary.js';
+import { SeedlingRegionGlue } from './seedlingRegionGlue.js';
 
 let moduleDispatcher = null;
 let _moduleEventBus = null;
 let activePanelInstance = null;
+let seedlingRegionGlue = null;
 
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -30,6 +38,16 @@ export function register(registrationApi) {
   registrationApi.registerPanelComponent('flashPanel', FlashPanelUI);
 
   registrationApi.registerDispatcherSender('user:locationCheck', 'bottom', 'first');
+
+  // Region-atlas play-time binding: the glue publishes a boundary crossing as
+  // user:regionMove, the same dialect the substrate bridges use.
+  registrationApi.registerDispatcherSender('user:regionMove', 'bottom', 'first');
+
+  // The registry is also populated by flashSeedlingLibrary's import side
+  // effect; repeating it here is the standing convention (idempotent, guarded).
+  if (!substrateRegistry.has(flashSeedlingEntry.id)) {
+    substrateRegistry.register(flashSeedlingEntry);
+  }
 
   // Observe user:locationCheck as it flows through the dispatcher
   // chain, so the panel's "TP on UI click" feature can react to
@@ -70,6 +88,7 @@ export function register(registrationApi) {
   registrationApi.registerEventBusSubscriberIntent('stateManager:ready');
   registrationApi.registerEventBusSubscriberIntent('stateManager:snapshotUpdated');
   registrationApi.registerEventBusSubscriberIntent('regionGraph:nodeSelected');
+  registrationApi.registerEventBusSubscriberIntent(FLASH_SEEDLING_LOAD_REGION_EVENT);
 
   log('info', '[FlashPanel Module] Registration complete.');
 }
@@ -102,6 +121,15 @@ export function setActivePanelInstance(instance) {
   activePanelInstance = instance;
 }
 
+/**
+ * The region-atlas glue, or null when the module hasn't initialized. The panel
+ * hands it every adapter it builds (see FlashPanelUI), and the verify script
+ * reads its stats.
+ */
+export function getSeedlingRegionGlue() {
+  return seedlingRegionGlue;
+}
+
 // Test/diagnostic handle (used by scripts/procgen/verify-seedling-wasm-
 // bridge.mjs to reach the live adapter).
 export function getActivePanelInstance() {
@@ -112,7 +140,24 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
   log('info', `[FlashPanel Module] Initializing with priority ${priorityIndex}...`);
   moduleDispatcher = initializationApi.getDispatcher();
   _moduleEventBus = initializationApi.getEventBus();
+
+  // Region-atlas play-time binding. Started unconditionally: it is inert until
+  // a preset whose sidecars name the flash_seedling substrate is loaded, and
+  // subscribing here (rather than when a flash region first appears) is what
+  // keeps it ahead of procgenPlayer's start-region publish.
+  seedlingRegionGlue = new SeedlingRegionGlue({
+    eventBus: getModuleEventBus(),
+    getDispatcher: () => moduleDispatcher,
+    loadRegionEvent: FLASH_SEEDLING_LOAD_REGION_EVENT,
+    getPanel: () => activePanelInstance,
+  });
+  seedlingRegionGlue.start();
+
   log('info', '[FlashPanel Module] Initialization complete.');
+
+  return () => {
+    if (seedlingRegionGlue) { seedlingRegionGlue.stop(); seedlingRegionGlue = null; }
+  };
 }
 
 export function getDispatcher() {

@@ -158,7 +158,7 @@
     },
     "flashPanel": {
       "path": "./modules/flashPanel/index.js",
-      "enabled": false
+      "enabled": true
     },
     "tileMapAnalyzer": {
       "path": "./modules/tileMapAnalyzer/index.js",
