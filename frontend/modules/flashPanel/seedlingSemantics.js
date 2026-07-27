@@ -155,10 +155,18 @@ const WALL = Object.freeze({ kind: 'wall' });
  * `Tile.types` entry. Everything absent here falls back to that entry: "Solid"
  * => wall, anything else => open.
  *
- * `faces` on a directional cell maps a movement direction to the condition of
- * moving THROUGH this cell in that direction: `null` blocks, `[]`/absent is
- * free, a condition node gates. Directions are compass letters with y growing
- * DOWNWARD, so 'N' is decreasing y.
+ * A directional cell carries one or both of:
+ *
+ *   `faces`  a gate on a geometric FACE of the tile, paid crossing it in either
+ *            direction (the cave mouth's north wall)
+ *   `dirs`   a gate on MOVING a given way while on the tile, paid only that way
+ *            (climbing a waterfall)
+ *
+ * In both, `null` blocks and a condition node gates. Directions are compass
+ * letters with y growing DOWNWARD, so 'N' is decreasing y. Keeping them apart
+ * is what makes the cave right: its north face walls off the tile above in both
+ * directions, while walking north INTO the cave from below crosses the south
+ * face and is free.
  */
 export const TILE_TYPE_SEMANTICS = Object.freeze({
     // Water (Tile.as:39, Player.checkDrowning at Player.as:1420): standing in
@@ -177,8 +185,8 @@ export const TILE_TYPE_SEMANTICS = Object.freeze({
     13: {
         kind: 'directional',
         label: 'cave',
-        faces: { N: null, S: null },
-        note: 'the north face is walled by the cave-mouth Solid; E/W are free',
+        faces: { N: null },
+        note: 'the cave-mouth Solid walls the north FACE — you cannot step down into the mouth or climb back out of it, but walking in from below or the side is free',
     },
 
     // Lava (Player.checkDrowning, Player.as:1424): without the Dark Suit it
@@ -197,8 +205,8 @@ export const TILE_TYPE_SEMANTICS = Object.freeze({
     25: {
         kind: 'directional',
         label: 'waterfall',
-        faces: { N: flag('hasFeather') },
-        note: 'the fall pushes you down; climbing needs the Feather',
+        dirs: { N: flag('hasFeather') },
+        note: 'the fall pushes you down; climbing needs the Feather. A DIRECTION gate, not a face gate — going down is free from any side.',
     },
 
     // Bridge (Tile.as:381-404 + Player.genericHit, Player.as:1096): solid until
@@ -680,7 +688,7 @@ export function buildSeedlingRegionGrid(bounds, level) {
     const { w: width, h: height } = bounds;
     const cells = new Array(width * height);
     for (let i = 0; i < cells.length; i += 1) {
-        cells[i] = { kind: 'open', conditions: [], faces: {}, manual: [], labels: [] };
+        cells[i] = { kind: 'open', conditions: [], faces: {}, dirs: {}, manual: [], labels: [] };
     }
 
     const unclassified = [];
@@ -700,13 +708,15 @@ export function buildSeedlingRegionGrid(bounds, level) {
         if (semantics.kind === 'manual') {
             cell.manual.push(`${origin}: ${semantics.reason ?? 'no derivable rule'}`);
         }
-        for (const [dir, cond] of Object.entries(semantics.faces ?? {})) {
-            // A blocked face always wins; two gated faces AND together, which
-            // the analyzer does by seeing the list.
-            const current = cell.faces[dir];
-            if (current === null) continue;
-            if (cond === null) cell.faces[dir] = null;
-            else cell.faces[dir] = [...(current ?? []), cond];
+        // A blocked face/direction always wins; two gated ones AND together,
+        // which the analyzer does by seeing the list.
+        for (const key of ['faces', 'dirs']) {
+            for (const [dir, cond] of Object.entries(semantics[key] ?? {})) {
+                const current = cell[key][dir];
+                if (current === null) continue;
+                if (cond === null) cell[key][dir] = null;
+                else cell[key][dir] = [...(current ?? []), cond];
+            }
         }
         if (semantics.review) review.push({ tile: [x + bounds.x, y + bounds.y], reason: semantics.review });
         if (semantics.kind === 'sink') sinks.push({ tile: [x + bounds.x, y + bounds.y], label: semantics.label ?? null });
