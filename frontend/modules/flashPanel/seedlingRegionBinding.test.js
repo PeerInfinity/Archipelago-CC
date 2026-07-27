@@ -267,12 +267,16 @@ describe('unmapped levels — the atlas is partial by design', () => {
         expect(effects[0].message).toMatch(/carries no arrival spawn/);
     });
 
-    it('warns when arrivedFrom names an exit the region does not declare', () => {
+    it('notes — but does not warn about — an arrivedFrom the region does not declare', () => {
+        // This is the synthesized Menu -> start-region hop (exit `GameStart`)
+        // and any move from a region outside the warehouse. There is no marked
+        // entrance to honour; the first exit stands in. Not a defect.
         const b = binding();
         load(b, OVERWORLD, null);
         b.onStateReport('level', 0);
         const effects = load(b, HOUSE, { exit_id: 'ghost_door' });
-        expect(types(effects)).toEqual(['warn', 'teleport']);
+        expect(types(effects)).toEqual(['info', 'teleport']);
+        expect(effects[0].message).toMatch(/not one of its marked exits/);
     });
 });
 

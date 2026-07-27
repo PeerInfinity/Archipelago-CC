@@ -145,10 +145,16 @@ export class SeedlingRegionBinding {
         }
         const effects = [];
         if (this.arrivedFrom?.exit_id && !spawn.matchedArrivedFrom) {
+            // Not a defect, and deliberately not loud: it is what the
+            // synthesized Menu -> start-region hop looks like (its exit is
+            // `GameStart`, which no atlas region declares), and what any move
+            // whose source region is outside the warehouse looks like. There is
+            // no marked entrance to honour, so the region's first exit stands
+            // in — the same rule as the no-arrivedFrom case.
             effects.push({
-                type: 'warn',
-                message: `[region atlas] arrived through exit "${this.arrivedFrom.exit_id}", which region `
-                    + `"${this.region}" does not declare — spawning at "${spawn.exitId}" instead`,
+                type: 'info',
+                message: `[region atlas] entered "${this.region}" through "${this.arrivedFrom.exit_id}", `
+                    + `which is not one of its marked exits — spawning at "${spawn.exitId}"`,
             });
         }
         if (!this.baselineSeen) {

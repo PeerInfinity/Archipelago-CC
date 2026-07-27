@@ -43,7 +43,7 @@ export class SeedlingRegionGlue {
         this._handler = (payload) => this.handleLoadRegion(payload);
         // Diagnostics — the verify script reads these rather than inferring
         // behaviour from console text.
-        this.stats = { loads: 0, teleports: 0, regionMoves: 0, warnings: 0, swallowed: 0 };
+        this.stats = { loads: 0, teleports: 0, regionMoves: 0, warnings: 0 };
     }
 
     start() {
