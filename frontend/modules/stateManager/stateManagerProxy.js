@@ -168,7 +168,21 @@ export class StateManagerProxy {
   }
 
   getGameName() {
-    // Primary source: game_name from static data
+    // Primary source: the loaded player's own entry in `world`. A combined
+    // multiworld rules.json carries the placeholder `game_name: "Multiworld"`
+    // at the top level while the real per-slot game lives in
+    // world[playerId].game — and callers (the AP Connect packet, data-package
+    // lookups) need the game the SERVER knows this slot by. For a
+    // single-player file the two agree, so this is a no-op there.
+    const playerId = this.staticDataCache?.playerId;
+    const playerGame =
+      playerId !== undefined && playerId !== null
+        ? this.staticDataCache?.world?.[String(playerId)]?.game
+        : null;
+    if (playerGame) {
+      return playerGame;
+    }
+    // Fallback: game_name from static data
     if (this.staticDataCache && this.staticDataCache.game_name) {
       return this.staticDataCache.game_name;
     }

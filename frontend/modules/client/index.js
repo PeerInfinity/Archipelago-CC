@@ -197,6 +197,7 @@ export function register(registrationApi) {
 
   // Register EventBus publisher intentions
   registrationApi.registerEventBusPublisher('error:client');
+  registrationApi.registerEventBusPublisher('connection:connecting');
   registrationApi.registerEventBusPublisher('connection:open');
   registrationApi.registerEventBusPublisher('connection:message');
   registrationApi.registerEventBusPublisher('connection:close');

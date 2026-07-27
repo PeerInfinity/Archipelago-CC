@@ -58,22 +58,62 @@ class MainContentUI {
     this.stateManager = stateManager;
     this.messageHandler = messageHandler;
 
+    // The panel's view of the connection. "Connected" means the AP handshake
+    // finished (a Connected packet), NOT that a websocket opened — a refused
+    // handshake leaves an open socket behind. The connect/disconnect toggle
+    // reads this, so it can never offer "Disconnect" for a connection that
+    // was never established.
+    // One of: 'disconnected' | 'connecting' | 'connected' | 'error'
+    this._connectionState =
+      this.messageHandler?.getClientSlot?.() !== null &&
+      this.messageHandler?.getClientSlot?.() !== undefined
+        ? 'connected'
+        : this.connection.isConnected()
+          ? 'connecting'
+          : 'disconnected';
+    this._connectionDetail = '';
+    this._lastConnectionError = null;
+
     // Subscribe to connection events using the scoped eventBus
+    this.eventBus.subscribe('connection:connecting', () => {
+      this.setConnectionState('connecting');
+    });
+    // A websocket that opened is still only half way there: the AP handshake
+    // (Connect → Connected) runs next, so stay in 'connecting'.
     this.eventBus.subscribe('connection:open', () => {
-      this.updateConnectionStatus(true);
+      this.setConnectionState('connecting');
     });
     this.eventBus.subscribe('connection:close', () => {
-      this.updateConnectionStatus(false);
+      this.setConnectionState('disconnected');
     });
-    this.eventBus.subscribe('connection:error', () => {
-      this.updateConnectionStatus(false);
+    this.eventBus.subscribe('connection:error', (data) => {
+      const message = data?.message || 'Connection failed.';
+      // The reconnect loop republishes the same failure every few seconds;
+      // print it once and let the status line carry the retries. A user-
+      // initiated attempt (or a successful connection) re-arms this.
+      if (message !== this._lastConnectionError) {
+        this.appendConsoleMessage(message, 'error');
+        this._lastConnectionError = message;
+      }
+      this.setConnectionState('error', message);
     });
     this.eventBus.subscribe('connection:reconnecting', () => {
-      this.updateConnectionStatus('connecting');
+      this.setConnectionState('connecting');
+    });
+    // The server rejected the login (bad slot name, wrong game, bad
+    // password). messageHandler prints the reason to the console; the status
+    // line names it too so the failure isn't invisible.
+    this.eventBus.subscribe('network:connectionRefused', (data) => {
+      const reason = (data?.errors || []).join(', ') || 'refused by server';
+      this.setConnectionState('error', `Connection refused: ${reason}`);
     });
 
     // ADDED: Subscribe to the game:connected event to show the final success message
     this.eventBus.subscribe('game:connected', (data) => {
+      // The AP handshake completed — this, and only this, is "connected".
+      this.setConnectionState('connected');
+      this._lastConnectionError = null;
+
       // Find player name
       const player = data.players.find((p) => p.slot === data.slot);
       const playerName = player ? player.name : `Player ${data.slot}`;
@@ -247,9 +287,10 @@ class MainContentUI {
     this.attachEventListeners();
     this.initializeConsole();
     this.registerConsoleCommands();
-    this.updateConnectionStatus(
-      this.connection.isConnected() ? 'connected' : 'disconnected'
-    );
+    // Repaint whatever state the panel is already in — events may have
+    // arrived before the elements existed (updateConnectionStatus keeps the
+    // state but has nothing to draw on until now).
+    this.updateConnectionStatus(this._connectionState, this._connectionDetail);
 
     // Inject Timer UI
     const timerPlaceholder = this.rootElement.querySelector(
@@ -286,7 +327,11 @@ class MainContentUI {
       log('error', '[MainContentUI] Error reading playerName from storage:', e);
     }
 
-    const slotName = prompt('Enter your slot name:', storedName || 'Player1');
+    // Default to the loaded player's own name (a multiworld loaded as player
+    // 3 shouldn't offer player 1's name).
+    const defaultName =
+      storedName || this.messageHandler?.getDefaultSlotName?.() || 'Player1';
+    const slotName = prompt('Enter your slot name:', defaultName);
     if (!slotName) return null;
 
     // Save to localStorage for next time
@@ -306,12 +351,26 @@ class MainContentUI {
   attachEventListeners() {
     if (this.connectButton && this.serverAddressInput) {
       this.connectButton.addEventListener('click', () => {
-        log('info', '[MainContentUI] Connect button clicked');
-        if (this.connection.isConnected()) {
+        log('info',
+          `[MainContentUI] Connect button clicked (state: ${this._connectionState})`
+        );
+        // The toggle acts on the panel's state, not on the raw socket: a
+        // refused or half-open socket must still offer "Connect", and one
+        // press of "Disconnect"/"Cancel" must both close and repaint.
+        if (
+          this._connectionState === 'connected' ||
+          this._connectionState === 'connecting'
+        ) {
           this.connection.disconnect();
+          this.setConnectionState('disconnected');
+          this.appendConsoleMessage('Disconnected from the server.', 'system');
         } else {
           const slotName = this._promptPlayerName();
           if (!slotName) return; // User cancelled the prompt
+
+          // A deliberate retry: report its outcome even if it fails the same
+          // way the last attempt did.
+          this._lastConnectionError = null;
 
           const serverAddress =
             this.serverAddressInput.value || 'ws://localhost:38281';
@@ -1105,21 +1164,55 @@ class MainContentUI {
     log('info', '[MainContentUI] Registered all console commands');
   }
 
-  updateConnectionStatus(status) {
-    if (this.statusIndicator) {
-      if (status === true || status === 'connected') {
-        this.statusIndicator.textContent = 'Connected';
-        this.statusIndicator.style.color = 'lightgreen';
-        if (this.connectButton) this.connectButton.textContent = 'Disconnect';
-      } else if (status === 'connecting') {
-        this.statusIndicator.textContent = 'Connecting...';
-        this.statusIndicator.style.color = 'orange';
-        if (this.connectButton) this.connectButton.textContent = 'Cancel';
-      } else {
-        this.statusIndicator.textContent = 'Not Connected';
-        this.statusIndicator.style.color = 'yellow';
-        if (this.connectButton) this.connectButton.textContent = 'Connect';
-      }
+  /**
+   * Record the panel's connection state and repaint the status line + toggle.
+   * This is the only writer of both, so the two can never disagree.
+   *
+   * @param {'disconnected'|'connecting'|'connected'|'error'} state
+   * @param {string} [detail] - Reason shown for the 'error' state
+   */
+  setConnectionState(state, detail = '') {
+    this._connectionState = state;
+    this._connectionDetail = detail;
+    this.updateConnectionStatus(state, detail);
+  }
+
+  updateConnectionStatus(status, detail = this._connectionDetail) {
+    // Accept the legacy boolean/string forms as well as the state names.
+    let state = status;
+    if (status === true) state = 'connected';
+    else if (status === false) state = 'disconnected';
+    else if (status !== 'connected' && status !== 'connecting' && status !== 'error') {
+      state = 'disconnected';
+    }
+    this._connectionState = state;
+
+    if (!this.statusIndicator) return;
+
+    if (state === 'connected') {
+      this.statusIndicator.textContent = 'Connected';
+      this.statusIndicator.style.color = 'lightgreen';
+      this.statusIndicator.title = '';
+      if (this.connectButton) this.connectButton.textContent = 'Disconnect';
+    } else if (state === 'connecting') {
+      this.statusIndicator.textContent = 'Connecting...';
+      this.statusIndicator.style.color = 'orange';
+      this.statusIndicator.title = '';
+      if (this.connectButton) this.connectButton.textContent = 'Cancel';
+    } else if (state === 'error') {
+      const reason = detail || 'Connection failed.';
+      // The status line sits in a one-line bar: keep it short and hang the
+      // full reason off the tooltip (the console keeps the untruncated text).
+      this.statusIndicator.textContent =
+        reason.length > 60 ? `${reason.slice(0, 57)}...` : reason;
+      this.statusIndicator.style.color = '#ff6b6b';
+      this.statusIndicator.title = reason;
+      if (this.connectButton) this.connectButton.textContent = 'Connect';
+    } else {
+      this.statusIndicator.textContent = 'Not Connected';
+      this.statusIndicator.style.color = 'yellow';
+      this.statusIndicator.title = '';
+      if (this.connectButton) this.connectButton.textContent = 'Connect';
     }
   }
 
