@@ -12,7 +12,6 @@ import { writeFileSync } from 'node:fs';
 
 // Substrate libraries register on import (same set as dump-shuffled-spiral.js).
 import '../../frontend/modules/mazeRoom/mazeRoomLibrary.js';
-import '../../frontend/modules/textAdventureSubstrate/textAdventureSubstrateLibrary.js';
 import '../../frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
 import '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
 import {
