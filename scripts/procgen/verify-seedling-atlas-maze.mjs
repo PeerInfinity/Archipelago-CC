@@ -91,6 +91,11 @@ for (const [name, sc] of Object.entries(sidecars)) {
     }
     for (const e of p.exits) {
         exitCount += 1;
+        // The invariant every committed maze preset holds. mazeRoomEngine keys
+        // world.exits on exit_id while procgenPlayer resolves an arrival by
+        // exitName, so keying them apart sends every arrival to the entrance
+        // tile instead of the crossing the player walked through.
+        if (e.exit_id !== e.exitName) where(`exit_id "${e.exit_id}" is not its exitName "${e.exitName}" — arrivals would fall back to the entrance`);
         if (!inBounds(e.x, e.y)) where(`exit ${e.exit_id} at (${e.x},${e.y}) is out of bounds`);
         else if (!isFloor(e.x, e.y)) where(`exit ${e.exit_id} at (${e.x},${e.y}) sits on a wall`);
         if (!apExitNames.has(e.exitName)) where(`exit ${e.exit_id} names AP exit "${e.exitName}", which this AP region does not have`);

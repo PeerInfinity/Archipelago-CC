@@ -51,6 +51,20 @@
 // a water tile emits the water's rule as an obstacle rather than a free pass.
 // Every carve is reported.
 //
+// --- the exit-id invariant ---------------------------------------------------
+//
+// A maze payload's `exit_id` IS its `exitName` (check any committed maze preset:
+// `{exit_id: 'exit_1', exitName: 'exit_1'}`), and that identity is load-bearing
+// rather than cosmetic. mazeRoomEngine keys `world.exits` on `exit_id`, while
+// the panel publishes `user:regionMove` with `exitName` and
+// procgenPlayer.handleRegionMove resolves the arrival by asking the SOURCE world
+// for `exits.get(exitName)` and reading its `targetExitId`. Key them apart and
+// that lookup misses, `targetExitId` is never read, and every arrival silently
+// falls back to the region's entrance tile instead of the crossing the player
+// walked through. So both are the AP exit name here, and `targetExitId` is the
+// AP exit name of the edge coming BACK. The atlas's own short id rides along as
+// `atlas_exit_id` for traceability; nothing at run time reads it.
+//
 // Deterministic: no clock, no rng, everything emitted in atlas/geometry order,
 // so the committed preset carries an exact `--check` regeneration gate.
 //
@@ -353,13 +367,19 @@ export function projectRegionToMaze(region, grid, ctx) {
         for (const [x, y] of component.tiles) builder.floor(x, y);
 
         const note = (n) => notes.push({ region_id: region.region_id, sub_region: component.id, ...n });
+        /**
+         * `entry.exitName` is the id (see the exit-id invariant above); it is
+         * globally unique by construction, so a collision here means the graph
+         * projection handed out the same name twice and is a bug, not a case.
+         */
         const addExit = (entry) => {
-            let id = entry.exit_id;
-            for (let i = 2; builder.exitIds.has(id); i += 1) id = `${entry.exit_id}#${i}`;
-            if (id !== entry.exit_id) {
+            const id = entry.exitName ?? entry.atlas_exit_id;
+            if (builder.exitIds.has(id)) {
                 note({
-                    kind: 'exit_id_collision', message: `two exits of "${apName}" both wanted the id "${entry.exit_id}"; the second became "${id}"`,
+                    kind: 'exit_id_collision',
+                    message: `two exits of "${apName}" both resolve to the AP exit name "${id}" — the second is DROPPED`,
                 });
+                return;
             }
             const occupied = builder.exits.find((e) => e.x === entry.x && e.y === entry.y);
             if (occupied) {
@@ -370,7 +390,7 @@ export function projectRegionToMaze(region, grid, ctx) {
                 return;
             }
             builder.exitIds.add(id);
-            builder.exits.push({ ...entry, exit_id: id });
+            builder.exits.push({ exit_id: id, ...entry });
         };
 
         // --- boundary exits ------------------------------------------------
@@ -382,14 +402,16 @@ export function projectRegionToMaze(region, grid, ctx) {
             for (const n of openTileTowards(builder, grid, component, [x, y], `exit "${exit.exit_id}"`, resolveCondition)) note(n);
             if (exit.access_rule) builder.gate(x, y, exit.access_rule);
             addExit({
-                exit_id: exit.exit_id,
                 x,
                 y,
                 side: exit.side ?? null,
                 exitName: wired.apExitName,
                 targetRegion: wired.targetApRegion,
-                targetExitId: wired.targetExitId ?? null,
+                // The AP exit name of the edge coming back, so arriving lands on
+                // the crossing tile rather than the region's entrance.
+                targetExitId: wired.returnApExitName ?? null,
                 isTeleporter: exit.kind === 'teleporter',
+                atlas_exit_id: exit.exit_id,
             });
         }
 
@@ -407,14 +429,15 @@ export function projectRegionToMaze(region, grid, ctx) {
                 });
             }
             addExit({
-                exit_id: crossingExitId(plan.to),
                 x,
                 y,
                 side: null,
                 exitName: internalExitName(region.region_id, plan.from, plan.to) ?? null,
                 targetRegion: apRegionName(region.region_id, plan.to),
-                targetExitId: reverse ? crossingExitId(plan.from) : null,
+                targetExitId: reverse
+                    ? internalExitName(region.region_id, plan.to, plan.from) ?? null : null,
                 isTeleporter: false,
+                atlas_exit_id: crossingExitId(plan.to),
             });
         }
 

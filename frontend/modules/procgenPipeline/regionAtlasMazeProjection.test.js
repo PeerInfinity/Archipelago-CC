@@ -95,7 +95,7 @@ const project = (region, rows, ctx = {}) => projectRegionToMaze(
 );
 
 const at = (payload, x, y) => payload.tiles[y * payload.width + x];
-const exitOf = (payload, id) => payload.exits.find((e) => e.exit_id === id);
+const exitOf = (payload, id) => payload.exits.find((e) => e.atlas_exit_id === id || e.exit_id === id);
 const obstacleAt = (payload, x, y) => payload.obstacles.find((o) => o.x === x && o.y === y);
 const noteKinds = (notes) => notes.map((n) => n.kind);
 
@@ -210,9 +210,22 @@ describe('a crossing', () => {
         expect(exitOf(q, 'cross_r1c0').exitName).toBe('vault:r1c2->r1c0');
     });
 
+    it('keys the exit BY that AP name — mazeRoomEngine keys world.exits on exit_id', () => {
+        // The invariant every committed maze preset holds ({exit_id: 'exit_1',
+        // exitName: 'exit_1'}), and it is load-bearing: procgenPlayer resolves an
+        // arrival by asking the source world for exits.get(exitName). Key them
+        // apart and every arrival falls back to the entrance tile instead.
+        for (const payload of [p, q]) {
+            for (const e of payload.exits) expect(e.exit_id).toBe(e.exitName);
+        }
+        expect(exitOf(p, 'cross_r1c2').atlas_exit_id).toBe('cross_r1c2');
+    });
+
     it('links both halves so arriving lands ON the crossing, not at the entrance', () => {
-        expect(exitOf(p, 'cross_r1c2').targetExitId).toBe('cross_r1c0');
-        expect(exitOf(q, 'cross_r1c0').targetExitId).toBe('cross_r1c2');
+        expect(exitOf(p, 'cross_r1c2').targetExitId).toBe('vault:r1c2->r1c0');
+        expect(exitOf(q, 'cross_r1c0').targetExitId).toBe('vault:r1c0->r1c2');
+        // Each side's targetExitId is a REAL exit of the other side, pointing back.
+        expect(q.exits.find((e) => e.exit_id === 'vault:r1c2->r1c0').targetRegion).toBe('vault__r1c0');
         // A symmetric one-cell gate is the SAME tile on both sides.
         expect([exitOf(q, 'cross_r1c0').x, exitOf(q, 'cross_r1c0').y]).toEqual([1, 1]);
         expect(notes.filter((n) => n.kind === 'one_way_arrival')).toEqual([]);
@@ -312,6 +325,7 @@ describe('a boundary exit', () => {
             apExitName: `AP:${regionId}/${exitId}`,
             targetApRegion: 'somewhere_else',
             targetExitId: 'way_back',
+            returnApExitName: 'AP:back_here',
         }),
     };
 
@@ -324,14 +338,16 @@ describe('a boundary exit', () => {
         });
         const p = project(region, CORRIDOR_ROWS, wired).sidecars.vault__r1c2.playable_payload;
         expect(exitOf(p, 'south_gate')).toEqual({
-            exit_id: 'south_gate',
+            exit_id: 'AP:vault/south_gate',
             x: 3,
             y: 1,
             side: 'S',
             exitName: 'AP:vault/south_gate',
             targetRegion: 'somewhere_else',
-            targetExitId: 'way_back',
+            // The edge coming BACK, by its own AP name — not the atlas's short id.
+            targetExitId: 'AP:back_here',
             isTeleporter: false,
+            atlas_exit_id: 'south_gate',
         });
     });
 
@@ -388,7 +404,9 @@ describe('opening a door the map draws on solid ground', () => {
     // Phase 5a already found four of seven starter-atlas exits sit on
     // non-walkable cells. The projection opens them and says what it did.
     const wired = {
-        wiredExit: () => ({ apExitName: 'AP:door', targetApRegion: 'elsewhere', targetExitId: 'back' }),
+        wiredExit: () => ({
+            apExitName: 'AP:door', targetApRegion: 'elsewhere', targetExitId: 'back', returnApExitName: 'AP:back',
+        }),
     };
 
     it('opens a solid exit tile that is already adjacent, and reports it', () => {
@@ -524,7 +542,7 @@ describe('refusals and collisions', () => {
             wiredExit: () => ({ apExitName: 'AP:x', targetApRegion: 'elsewhere', targetExitId: 'back' }),
         });
         const p = sidecars.vault__r1c0.playable_payload;
-        expect(p.exits.map((e) => e.exit_id)).toEqual(['on_the_door']);
+        expect(p.exits.map((e) => e.atlas_exit_id)).toEqual(['on_the_door']);
         expect(noteKinds(notes)).toContain('exit_tile_collision');
     });
 });
@@ -637,7 +655,7 @@ describe('the real Seedling starter atlas as a maze world', () => {
     it('gates the analyzer-computed crossings with the items the atlas names', () => {
         // The rock between the first dungeon room and its stairs down.
         const p = sidecars.dungeon1_room1__r0c4.playable_payload;
-        const cross = p.exits.find((e) => e.exit_id === 'cross_r8c6');
+        const cross = exitOf(p, 'cross_r8c6');
         const def = p.obstacleLib[p.obstacles.find((o) => o.x === cross.x && o.y === cross.y).id];
         expect(isObstacleCleared(def.id, new Set(), p.obstacleLib)).toBe(false);
         expect(isObstacleCleared(def.id, new Set(['Progressive Sword']), p.obstacleLib)).toBe(true);
@@ -656,7 +674,7 @@ describe('the real Seedling starter atlas as a maze world', () => {
         const walled = report.maze_notes.filter((n) => n.kind === 'walled_unlabelled');
         expect(walled.map((n) => `${n.from}->${n.to}`)).toEqual(['r1c6->r8c0', 'r8c0->r1c6']);
         const p = sidecars.overworld_start__r1c6.playable_payload;
-        expect(p.exits.map((e) => e.exit_id)).toEqual(['cross_r2c13']);
+        expect(p.exits.map((e) => e.atlas_exit_id)).toEqual(['cross_r2c13']);
     });
 
     it('records every carve it made through the house walls', () => {
@@ -668,7 +686,7 @@ describe('the real Seedling starter atlas as a maze world', () => {
     it('the start sub-region can leave through both its wired doors, ungated', () => {
         const p = sidecars.overworld_start__r8c0.playable_payload;
         const ungated = p.exits.filter((e) => !p.obstacles.some((o) => o.x === e.x && o.y === e.y));
-        expect(ungated.map((e) => e.exit_id).sort()).toEqual(['house_door', 'owls_nest_stairs']);
+        expect(ungated.map((e) => e.atlas_exit_id).sort()).toEqual(['house_door', 'owls_nest_stairs']);
     });
 
     it('keeps each direction of an asymmetric crossing at its own cost', () => {
@@ -676,7 +694,7 @@ describe('the real Seedling starter atlas as a maze world', () => {
         const down = sidecars.overworld_start__r2c13.playable_payload;
         const up = sidecars.overworld_start__r8c0.playable_payload;
         const ruleAt = (p, id) => {
-            const e = p.exits.find((x) => x.exit_id === id);
+            const e = exitOf(p, id);
             return p.obstacleLib[p.obstacles.find((o) => o.x === e.x && o.y === e.y).id].clear_rule;
         };
         expect(ruleAt(down, 'cross_r8c0')).toEqual({ rule: 'Has', args: { item_name: 'Progressive Swim' } });

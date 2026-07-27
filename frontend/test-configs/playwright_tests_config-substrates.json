@@ -323,6 +323,17 @@
             "id": "maze-parked-live-drain",
             "enabled": true,
             "category": "Maze block modes"
+        },
+        {
+            "id": "seedling-atlas-maze-boundary-crossing",
+            "enabled": true,
+            "category": "Seedling atlas maze",
+            "_comment": "Region-atlas Phase 5b. The Phase-4 flash flavour of the same atlas can only be a SKIP-able standalone verifier (it needs a gitignored 31 MB wasm artifact); the maze projection of the same geometry runs from the committed repo, which is why these two legs can be enumerated here at all. No batch claims this category, so it rides the default `fast` batch."
+        },
+        {
+            "id": "seedling-atlas-maze-gated-crossing",
+            "enabled": true,
+            "category": "Seedling atlas maze"
         }
     ]
 }

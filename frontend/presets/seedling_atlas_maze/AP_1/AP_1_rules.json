@@ -440,14 +440,15 @@
           },
           "exits": [
             {
-              "exit_id": "cross_r2c13",
+              "exit_id": "overworld_start__r1c6 -> overworld_start__r2c13",
               "x": 12,
               "y": 2,
               "side": null,
               "exitName": "overworld_start__r1c6 -> overworld_start__r2c13",
               "targetRegion": "overworld_start__r2c13",
-              "targetExitId": "cross_r1c6",
-              "isTeleporter": false
+              "targetExitId": "overworld_start__r2c13 -> overworld_start__r1c6",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r2c13"
             }
           ],
           "obstacles": [
@@ -508,34 +509,37 @@
           },
           "exits": [
             {
-              "exit_id": "cross_r1c6",
+              "exit_id": "overworld_start__r2c13 -> overworld_start__r1c6",
               "x": 12,
               "y": 2,
               "side": null,
               "exitName": "overworld_start__r2c13 -> overworld_start__r1c6",
               "targetRegion": "overworld_start__r1c6",
-              "targetExitId": "cross_r2c13",
-              "isTeleporter": false
+              "targetExitId": "overworld_start__r1c6 -> overworld_start__r2c13",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r1c6"
             },
             {
-              "exit_id": "cross_r4c16",
+              "exit_id": "overworld_start__r2c13 -> overworld_start__r4c16",
               "x": 15,
               "y": 4,
               "side": null,
               "exitName": "overworld_start__r2c13 -> overworld_start__r4c16",
               "targetRegion": "overworld_start__r4c16",
-              "targetExitId": "cross_r2c13",
-              "isTeleporter": false
+              "targetExitId": "overworld_start__r4c16 -> overworld_start__r2c13",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r4c16"
             },
             {
-              "exit_id": "cross_r8c0",
+              "exit_id": "overworld_start__r2c13 -> overworld_start__r8c0",
               "x": 13,
               "y": 6,
               "side": null,
               "exitName": "overworld_start__r2c13 -> overworld_start__r8c0",
               "targetRegion": "overworld_start__r8c0",
-              "targetExitId": "cross_r2c13",
-              "isTeleporter": false
+              "targetExitId": "overworld_start__r8c0 -> overworld_start__r2c13",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r8c0"
             }
           ],
           "obstacles": [
@@ -621,24 +625,26 @@
           },
           "exits": [
             {
-              "exit_id": "cross_r2c13",
+              "exit_id": "overworld_start__r4c16 -> overworld_start__r2c13",
               "x": 15,
               "y": 4,
               "side": null,
               "exitName": "overworld_start__r4c16 -> overworld_start__r2c13",
               "targetRegion": "overworld_start__r2c13",
-              "targetExitId": "cross_r4c16",
-              "isTeleporter": false
+              "targetExitId": "overworld_start__r2c13 -> overworld_start__r4c16",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r2c13"
             },
             {
-              "exit_id": "cross_r8c0",
+              "exit_id": "overworld_start__r4c16 -> overworld_start__r8c0",
               "x": 16,
               "y": 6,
               "side": null,
               "exitName": "overworld_start__r4c16 -> overworld_start__r8c0",
               "targetRegion": "overworld_start__r8c0",
-              "targetExitId": "cross_r4c16",
-              "isTeleporter": false
+              "targetExitId": "overworld_start__r8c0 -> overworld_start__r4c16",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r8c0"
             }
           ],
           "obstacles": [
@@ -693,64 +699,70 @@
           },
           "exits": [
             {
-              "exit_id": "house_door",
+              "exit_id": "overworld_start__r8c0 -> starting_house",
               "x": 10,
               "y": 17,
               "side": null,
               "exitName": "overworld_start__r8c0 -> starting_house",
               "targetRegion": "starting_house",
-              "targetExitId": "door",
-              "isTeleporter": true
+              "targetExitId": "starting_house -> overworld_start__r8c0",
+              "isTeleporter": true,
+              "atlas_exit_id": "house_door"
             },
             {
-              "exit_id": "owls_nest_stairs",
+              "exit_id": "overworld_start__r8c0 -> owls_nest_entrance",
               "x": 16,
               "y": 17,
               "side": null,
               "exitName": "overworld_start__r8c0 -> owls_nest_entrance",
               "targetRegion": "owls_nest_entrance",
-              "targetExitId": "stairs_up",
-              "isTeleporter": true
+              "targetExitId": "owls_nest_entrance -> overworld_start__r8c0",
+              "isTeleporter": true,
+              "atlas_exit_id": "owls_nest_stairs"
             },
             {
-              "exit_id": "cross_r11c19",
+              "exit_id": "overworld_start__r8c0 -> overworld_start__r11c19",
               "x": 18,
               "y": 11,
               "side": null,
               "exitName": "overworld_start__r8c0 -> overworld_start__r11c19",
               "targetRegion": "overworld_start__r11c19",
-              "targetExitId": "cross_r8c0",
-              "isTeleporter": false
+              "targetExitId": "overworld_start__r11c19 -> overworld_start__r8c0",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r11c19"
             },
             {
-              "exit_id": "cross_r14c0",
+              "exit_id": "overworld_start__r8c0 -> overworld_start__r14c0",
               "x": 2,
               "y": 15,
               "side": null,
               "exitName": "overworld_start__r8c0 -> overworld_start__r14c0",
               "targetRegion": "overworld_start__r14c0",
-              "targetExitId": "cross_r8c0",
-              "isTeleporter": false
+              "targetExitId": "overworld_start__r14c0 -> overworld_start__r8c0",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r14c0"
             },
             {
-              "exit_id": "cross_r2c13",
+              "exit_id": "overworld_start__r8c0 -> overworld_start__r2c13",
               "x": 13,
               "y": 8,
               "side": null,
               "exitName": "overworld_start__r8c0 -> overworld_start__r2c13",
               "targetRegion": "overworld_start__r2c13",
-              "targetExitId": "cross_r8c0",
-              "isTeleporter": false
+              "targetExitId": "overworld_start__r2c13 -> overworld_start__r8c0",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r2c13"
             },
             {
-              "exit_id": "cross_r4c16",
+              "exit_id": "overworld_start__r8c0 -> overworld_start__r4c16",
               "x": 15,
               "y": 8,
               "side": null,
               "exitName": "overworld_start__r8c0 -> overworld_start__r4c16",
               "targetRegion": "overworld_start__r4c16",
-              "targetExitId": "cross_r8c0",
-              "isTeleporter": false
+              "targetExitId": "overworld_start__r4c16 -> overworld_start__r8c0",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r4c16"
             }
           ],
           "obstacles": [
@@ -857,14 +869,15 @@
           },
           "exits": [
             {
-              "exit_id": "cross_r8c0",
+              "exit_id": "overworld_start__r11c19 -> overworld_start__r8c0",
               "x": 18,
               "y": 11,
               "side": null,
               "exitName": "overworld_start__r11c19 -> overworld_start__r8c0",
               "targetRegion": "overworld_start__r8c0",
-              "targetExitId": "cross_r11c19",
-              "isTeleporter": false
+              "targetExitId": "overworld_start__r8c0 -> overworld_start__r11c19",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r8c0"
             }
           ],
           "obstacles": [
@@ -925,14 +938,15 @@
           },
           "exits": [
             {
-              "exit_id": "cross_r8c0",
+              "exit_id": "overworld_start__r14c0 -> overworld_start__r8c0",
               "x": 1,
               "y": 15,
               "side": null,
               "exitName": "overworld_start__r14c0 -> overworld_start__r8c0",
               "targetRegion": "overworld_start__r8c0",
-              "targetExitId": "cross_r14c0",
-              "isTeleporter": false
+              "targetExitId": "overworld_start__r8c0 -> overworld_start__r14c0",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r8c0"
             }
           ],
           "obstacles": [
@@ -982,14 +996,15 @@
           },
           "exits": [
             {
-              "exit_id": "door",
+              "exit_id": "starting_house -> overworld_start__r8c0",
               "x": 3,
               "y": 4,
               "side": null,
               "exitName": "starting_house -> overworld_start__r8c0",
               "targetRegion": "overworld_start__r8c0",
-              "targetExitId": "house_door",
-              "isTeleporter": true
+              "targetExitId": "overworld_start__r8c0 -> starting_house",
+              "isTeleporter": true,
+              "atlas_exit_id": "door"
             }
           ],
           "obstacles": [],
@@ -1023,24 +1038,26 @@
           },
           "exits": [
             {
-              "exit_id": "stairs_up",
+              "exit_id": "owls_nest_entrance -> overworld_start__r8c0",
               "x": 3,
               "y": 1,
               "side": null,
               "exitName": "owls_nest_entrance -> overworld_start__r8c0",
               "targetRegion": "overworld_start__r8c0",
-              "targetExitId": "owls_nest_stairs",
-              "isTeleporter": true
+              "targetExitId": "overworld_start__r8c0 -> owls_nest_entrance",
+              "isTeleporter": true,
+              "atlas_exit_id": "stairs_up"
             },
             {
-              "exit_id": "descent",
+              "exit_id": "owls_nest_entrance -> dungeon1_room1__r0c4",
               "x": 3,
               "y": 6,
               "side": null,
               "exitName": "owls_nest_entrance -> dungeon1_room1__r0c4",
               "targetRegion": "dungeon1_room1__r0c4",
-              "targetExitId": "stairs_up",
-              "isTeleporter": true
+              "targetExitId": "dungeon1_room1__r0c4 -> owls_nest_entrance",
+              "isTeleporter": true,
+              "atlas_exit_id": "descent"
             }
           ],
           "obstacles": [],
@@ -1067,24 +1084,26 @@
           },
           "exits": [
             {
-              "exit_id": "stairs_up",
+              "exit_id": "dungeon1_room1__r0c4 -> owls_nest_entrance",
               "x": 4,
               "y": 0,
               "side": null,
               "exitName": "dungeon1_room1__r0c4 -> owls_nest_entrance",
               "targetRegion": "owls_nest_entrance",
-              "targetExitId": "descent",
-              "isTeleporter": true
+              "targetExitId": "owls_nest_entrance -> dungeon1_room1__r0c4",
+              "isTeleporter": true,
+              "atlas_exit_id": "stairs_up"
             },
             {
-              "exit_id": "cross_r8c6",
+              "exit_id": "dungeon1_room1__r0c4 -> dungeon1_room1__r8c6",
               "x": 6,
               "y": 7,
               "side": null,
               "exitName": "dungeon1_room1__r0c4 -> dungeon1_room1__r8c6",
               "targetRegion": "dungeon1_room1__r8c6",
-              "targetExitId": "cross_r0c4",
-              "isTeleporter": false
+              "targetExitId": "dungeon1_room1__r8c6 -> dungeon1_room1__r0c4",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r8c6"
             }
           ],
           "obstacles": [
@@ -1145,14 +1164,15 @@
           },
           "exits": [
             {
-              "exit_id": "cross_r0c4",
+              "exit_id": "dungeon1_room1__r8c6 -> dungeon1_room1__r0c4",
               "x": 6,
               "y": 7,
               "side": null,
               "exitName": "dungeon1_room1__r8c6 -> dungeon1_room1__r0c4",
               "targetRegion": "dungeon1_room1__r0c4",
-              "targetExitId": "cross_r8c6",
-              "isTeleporter": false
+              "targetExitId": "dungeon1_room1__r0c4 -> dungeon1_room1__r8c6",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r0c4"
             }
           ],
           "obstacles": [

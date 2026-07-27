@@ -452,10 +452,19 @@ export function compileRegionAtlas(atlas, options = {}) {
             ...options.mazeProjection,
             wiredExit: (regionId, exitId) => {
                 const info = wiredInfo.get(endpointKey(regionId, exitId));
-                return info === undefined ? undefined : {
+                if (info === undefined) return undefined;
+                // The partner exit's own AP name — the edge coming BACK. The maze
+                // keys its exits by AP exit name, so that is what an arrival is
+                // resolved by there (the flash payload uses the atlas exit id,
+                // which is what its own glue resolves against).
+                const back = wiredInfo.get(
+                    endpointKey(info.target.region.region_id, info.target.exit.exit_id),
+                );
+                return {
                     apExitName: info.apExitName,
                     targetApRegion: info.targetApRegion,
                     targetExitId: info.target.exit.exit_id,
+                    returnApExitName: back?.apExitName ?? null,
                 };
             },
             internalExitName: (regionId, from, to) => internalInfo.get(`${regionId}|${from}|${to}`),
