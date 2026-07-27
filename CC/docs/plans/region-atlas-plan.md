@@ -1,9 +1,11 @@
 # Region Atlas: Real-Game Maps as Procgen Regions
 
-**Date:** 2026-07-26 (Phases 1–4 shipped 2026-07-27)
+**Date:** 2026-07-26 (Phases 1–4 shipped 2026-07-27, Phase 5a 2026-07-28)
 **Status:** Design ruled; Phase 1 (atlas format), Phase 2 (marking tool),
-Phase 3 (vanilla rules.json projection) and Phase 4 (play-time transitions —
-the real game walks between atlas regions) complete — Phase 5 next
+Phase 3 (vanilla rules.json projection), Phase 4 (play-time transitions — the
+real game walks between atlas regions) and Phase 5a (the reachability analyzer —
+sub-region splits and their rules are computed from the tile map) complete —
+Phase 5b (maze projection) or Phase 6 (sphere growth) next
 **Games:** Seedling first (redistributable, discrete sections, source available), then Robot Wants Kitty
 
 ## Goal
@@ -151,7 +153,7 @@ information.
     "subgraph": {
       "sub_regions": ["hall_west", "hall_east"],
       "internal_exits": [{ "from": "hall_west", "to": "hall_east",
-        "bidirectional": true,
+        "bidirectional": true, "source": "analyzer",
         "access_rule": { "rule": "Has", "args": { "item_name": "Acid Boots" } } }]
     },
     "locations": [{ "name": "Sunken Hall - Chest", "sub_region": "hall_east",
@@ -165,9 +167,12 @@ information.
 }
 ```
 
-Access rules are ordinary Rule Builder trees. `annotations.rules_source`
-distinguishes analyzer-computed from hand-annotated (Seedling's puzzles
-force manual annotation; that is expected, not a gap).
+Access rules are ordinary Rule Builder trees. `internal_exits[].source` records
+who wrote each row — absent means `manual`, so every pre-analyzer atlas reads
+correctly — and `annotations.rules_source` is DERIVED from the mix once any row
+is analyzer-written (Phase 5a, ruling 2). Seedling's puzzles still force some
+hand annotation; that is expected, not a gap, and those rows are what the
+analyzer's needs-authoring list names.
 
 ## The three projections
 
@@ -515,9 +520,138 @@ it needs a batch category.
 **Test counts:** 3503 → **3548** vitest (10 compiler cases for projection 3, 22
 for the binding state machine, 7 for the glue wiring, 6 for the registry entry).
 
-### Phase 5 — Seedling analyzer
-- [ ] Per-region reachability where mechanically computable; manual
+### Phase 5a — Seedling analyzer — **COMPLETE 2026-07-28**
+- [x] Per-region reachability where mechanically computable; manual
       annotation workflow for puzzle-gated edges (`rules_source` marks which)
+- [ ] ~~Maze-mode substrate projection~~ **DEFERRED to Phase 5b** (ruling 4):
+      a separate kickoff after this lands. The semantics tables shipped here are
+      its input, which is why they are a clean data module with no atlas or AP
+      concepts in them.
+
+**Rulings (user, 2026-07-28):**
+1. **Direct gate-vocabulary analysis, NOT a leave-one-out ability diff.**
+   Diffing cannot express disjunctions: Seedling's magical lock opens with the
+   Wand OR the Fire Wand, and removing either one alone leaves the other route
+   open, so the diff would call the crossing free. Every Seedling blocker names
+   its own condition, so the analyzer floods transparently, partitions into
+   zero-item components, and labels each crossing with the blocking cells'
+   declared conditions — decision 1's algorithm, directly. (Real output on the
+   committed map confirms the ruling: `(Wand OR (Fire Wand Fusion AND Wand AND
+   Fire))` for a magical lock, `(Progressive Sword OR Ghost Spear)` for a
+   breakable rock.)
+2. **Per-exit provenance, additive:** `internal_exits[]` gains
+   `source: 'analyzer' | 'manual'`; ABSENT means `'manual'`. Re-analysis
+   replaces only its own rows; hand-authored rows and their sub-region
+   assignments survive byte-exact. `annotations.rules_source` becomes DERIVED
+   (all-analyzer → `analyzer`, any hand-authored row → `mixed`), and the
+   analyzer keeps it consistent.
+3. **Surface = pure module + marking-tool action + CLI.** Propose→review→accept
+   in the tool is the authoring workflow; the CLI is the batch/regeneration gate.
+4. The maze-mode substrate projection is **Phase 5b**, above.
+
+**As built:**
+- **Semantics tables:** `frontend/modules/flashPanel/seedlingSemantics.js` —
+  tileset column → tile type (all 45 cases of `Game.as:1909-2004`), tile type →
+  cell kind (`Tile.as:23-26` + the specials), entity tag → {solidity, condition}
+  for all 130 placed tags, and `buildFlagItemRules()` deriving engine flag → AP
+  item from `games/seedling.json` (progressive counts, fusion conjunctions).
+  Conditions in the tables are ENGINE FLAGS, never AP names — an item-shuffle
+  change lands in the config without touching the transcription.
+- **Analyzer:** `procgenPipeline/regionAtlasAnalyzer.js`, game-agnostic: it
+  takes a cell grid plus `conditionKey` / `resolveCondition` and knows nothing
+  about Seedling. `flashPanel/seedlingAtlasAnalysis.js` is the one place the two
+  are wired together, so the analyzer stays reusable for RWK in Phase 7.
+- **Surfaces:** an **Analyze region** toolbar action (propose → coloured overlay
+  + review list → Accept/Discard), `AtlasSession.setInternalExitRule()` for
+  taking a row over by hand, and
+  `scripts/procgen/region-atlas-analyze.mjs` (whole-atlas, `--check`,
+  `--region`, `--dry-run`, `--quiet`, condition census + needs-authoring list).
+- **Tests:** 3548 → **3635** vitest. Two strata: hand-built ASCII grids in a
+  made-up one-item game (which also prove the core is game-agnostic) and the
+  real 116-level extract, where every cell must classify and every emitted rule
+  must name an item the game config knows. `verify-region-marking-tool.mjs`
+  gains Phase G (analyze the real Dungeon1_1 in the browser; assert the document
+  is UNTOUCHED while the proposal exists; Accept; prove the result
+  byte-identical to a headless analyze+apply).
+
+**Findings that changed the kickoff's sketch, all from source:**
+- **Solidity comes from `Mobile.as:17`** — `solids = ["Solid","Tree","Rock",
+  "Rope","ShieldBoss"]` is the game's own oracle. Enemies are type `"Enemy"` and
+  therefore do **not** block traversal at all, which is why enemy handling is a
+  playback-bot concern (decision 10, stage 5) and never a region-split one.
+- **A plain breakable rock and a rope fall to `Sword OR Spear`.** The spear
+  thrust (`Player.as:960`) routes through the same `genericHit` as the slash, so
+  either weapon breaks them. Conversely the **bridge stays Spear-only**: the
+  Ghost Sword's slash types as `"Spear"` too, but holding the Ghost Sword
+  already implies holding the Ghost Spear (the `ghostsword` fusion requires the
+  `spear` item), so that path adds nothing.
+- **A FACE gate and a DIRECTION gate are different physics, and both are
+  needed.** The cave mouth's north face is walled in BOTH directions
+  (`Tile.check` case 13 spawns a 1px Solid along the top edge), so walking north
+  INTO a cave from below is free — the kickoff's "one-way top ledge" reading
+  would have blocked it. The waterfall is the direction case: down is free, the
+  climb needs the Feather.
+- **Buildings are `manual`, not walls.** They collide through a Pixelmask
+  (`Building.as:22`) this transcription does not have, and NEITHER rectangle
+  approximation is safe: the sprite rect swallows the building's own doorway
+  (the overworld house puts its teleporter at the centre of a 3×3 rect, which
+  made two exits unplaceable and invented two phantom sub-regions), while
+  shrinking it would merge rooms a wall really separates. As crossing material a
+  house in open ground costs nothing, and a building that IS the only way
+  between two areas becomes a hand-authoring row instead of an invented wall.
+
+**Decisions worth knowing:**
+- **Components are 4-connected floods over freely-walkable cells only.**
+  Everything else is crossing MATERIAL and never joins a component. Components
+  joined by a crossing that is free in BOTH directions are then fused —
+  "zero-item component" means mutually free-reachable, and the two sides of a
+  cave mouth are one place, not two with a free exit between them.
+- **Every Pareto-minimal condition set is a way across, and the ways OR
+  together.** A route that costs strictly more than another is dropped.
+- **Component ids are their own geometry** (`r<y>c<x>` at the minimum (y,x)
+  tile, in atlas coordinates). Re-analysing unchanged terrain reproduces the
+  same ids, which is what makes `--check` exact and keeps hand-written
+  references from churning.
+- **A hand-authored row is remapped by what its sub-region HELD.** A sub-region
+  has no tiles of its own, so old id → new is read off the exits and locations
+  bound to it; a sub-region that bound nothing cannot be remapped and is
+  reported rather than guessed at.
+- **The round trip needed an explicit rule.** The analyzer writes its own
+  unlabelled crossings as `source: "manual"` — that is what "someone has to
+  author this" means in the format — so a naive second run preserved them as
+  hand-authored AND emitted them again, growing the file by a row per run. Two
+  cases collapse: a ruleless preserved row the analyzer just re-emitted, and a
+  fresh unlabelled row for a crossing the author has since labelled.
+- **The tile partition is session-local and never persisted.** It recomputes
+  deterministically from the map document; storing it would only give the schema
+  a second copy of the terrain to drift from.
+- **`simplifyRule` collapses what composition says twice.** A swim followed by a
+  waterfall climb came out as `Has(Swim) AND Has(Swim, 2)`; n copies of an item
+  imply n−1 in any game, so this lives in the game-agnostic core.
+- **An unlabelled internal exit compiles to a FREE AP exit.** `access_rule` is
+  optional in the format and the compiler passes that through, so a crossing
+  awaiting a hand-written rule is permissive downstream. That is the right
+  default for an atlas grown incrementally, but it means the needs-authoring
+  list is a logic obligation, not a cosmetic one.
+- **The starter atlas is analyzed by its own generator**, so `--check` gates the
+  analysis: a semantics-table edit that changes a rule shows up red instead of
+  leaving the atlas quietly disagreeing with the map it describes. Two
+  independent idempotence gates cover it (the generator's `--check` and the
+  analyze CLI's).
+
+**Acceptance on real data:** the starter atlas gained `dungeon1_room1` (level 3,
+closing the `descent` exit that was on the growth list) and every region now
+carries computed rules. `overworld_start` → 6 sub-regions, `mixed` (water,
+breakable rocks, an asymmetric waterfall, and one building crossing left for
+hand authoring); `dungeon1_room1` → 2 sub-regions, `analyzer` (a breakable rock
+walls off the stairs down); `starting_house` and `owls_nest_entrance` → no
+split, asserted rather than skipped, with the subgraph correctly OMITTED. The
+compiled preset regenerated to 11 AP regions / 23 exits, and the end-to-end
+verifier still walks the real game between them.
+
+### Phase 5b — Maze-mode substrate projection (deferred here from 5a, ruling 4)
+- [ ] Project an atlas region's analyzed grid into the maze substrate, so a
+      marked region is playable without the original engine
 
 ### Phase 6 — Sphere growth: pre-built regions
 - [ ] Adapter + `atlasDoc` seam (pool, per-region extract)

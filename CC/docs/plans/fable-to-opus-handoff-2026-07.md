@@ -2471,9 +2471,60 @@ entrance spawn.
   not procgen-only (it still serves the Stage-1 direct-client presets), so a
   `procgen:activeSubstrateChanged`-null predicate would blank a legitimately
   active panel.
-- NEXT: Phase 5 (Seedling analyzer — per-region reachability where mechanically
-  computable, manual annotation for puzzle-gated edges), then Phase 6 (sphere
-  growth: pre-built regions). Phases 7+ unchanged.
+**Phase 5a — the reachability analyzer: SHIPPED + PUSHED 2026-07-28**
+(`3724e0de1` semantics tables + census guard, `5497d70ba` per-exit provenance,
+`499901f22` the analyzer, `aec5d69e4` Analyze action + batch CLI, `4ce805f7b`
+the real atlas analyzed; full vitest **3635/3635** green, up from the 3548
+Phase-4 baseline). Sub-region splits and the rules that cross them are now
+COMPUTED from the tile map.
+- **Rulings (user, 2026-07-28)**, recorded in the plan doc's Phase 5a section:
+  (1) **direct gate-vocabulary analysis, NOT a leave-one-out ability diff** —
+  diffing cannot express disjunctions, and Seedling's magical lock (Wand OR Fire
+  Wand) would collapse to free; (2) **per-exit provenance**
+  `internal_exits[].source`, absent = `manual`, with `annotations.rules_source`
+  DERIVED once any row is analyzer-written; (3) surface = pure module +
+  marking-tool action + CLI; (4) the maze-mode substrate projection is **Phase
+  5b**, a separate kickoff, and the semantics tables shipped here are its input.
+- As built: `flashPanel/seedlingSemantics.js` (the transcription — 45 tileset
+  columns, 38 tile types, 130 entity tags, plus flag → AP-item derivation from
+  `games/seedling.json`), `procgenPipeline/regionAtlasAnalyzer.js` (GAME-AGNOSTIC
+  — grid in, components + crossings + merge out), `flashPanel/
+  seedlingAtlasAnalysis.js` as the single wiring point, an **Analyze region**
+  toolbar action with propose→review→accept, `AtlasSession.setInternalExitRule()`
+  for taking a row over by hand, and `scripts/procgen/region-atlas-analyze.mjs`
+  with a `--check` idempotence gate.
+- **Findings that moved the kickoff's sketch, all from source:** solidity is
+  `Mobile.as:17`'s `["Solid","Tree","Rock","Rope","ShieldBoss"]`, so **enemies do
+  not block traversal at all**; a plain breakable rock and a rope fall to `Sword
+  OR Spear` (the spear thrust uses the same `genericHit`), while the bridge stays
+  Spear-only (the Ghost Sword path already implies the spear); and a FACE gate
+  (cave mouth, both directions) is different physics from a DIRECTION gate
+  (waterfall climb) — the kickoff's "one-way top ledge" would have wrongly
+  blocked walking into a cave from below.
+- **Buildings are `manual`, not walls.** Their Pixelmask is not transcribed and
+  neither rectangle approximation is safe: the sprite rect swallows the
+  building's own doorway (two unplaceable exits, two phantom sub-regions), a
+  smaller one would merge rooms. As crossing material a house in open ground
+  costs nothing, and a building that IS the only route becomes a hand-authoring
+  row instead of an invented wall.
+- **Round-trip trap, found by running it twice:** the analyzer writes its own
+  unlabelled crossings as `source:"manual"`, so a naive second run preserved
+  them as hand-authored AND re-emitted them — one extra row per run, for ever.
+- **Acceptance on real data:** the starter atlas gained `dungeon1_room1`
+  (closing the `descent` exit that was on the growth list) and is analyzed by
+  its own generator, so `--check` gates the analysis. `overworld_start` → 6
+  sub-regions, `mixed`; `dungeon1_room1` → 2, `analyzer`; the other two → no
+  split, ASSERTED rather than skipped, subgraph correctly omitted. Preset
+  regenerated to 11 AP regions / 23 exits; `verify-seedling-atlas-play.mjs`
+  still walks the real game between them, and the marking-tool verifier gained
+  Phase G (analyze in the browser, assert the document is untouched while the
+  proposal exists, Accept, prove byte-identical to a headless analyze+apply).
+- ⚠ **An unlabelled internal exit compiles to a FREE AP exit** — `access_rule` is
+  optional and the compiler passes that through. Right default for an atlas
+  grown incrementally, but the needs-authoring list is a logic obligation, not a
+  cosmetic one.
+- NEXT: Phase 5b (maze-mode substrate projection, own kickoff) and/or Phase 6
+  (sphere growth: pre-built regions). Phases 7+ unchanged.
 
 ## 6. Everything else (unchanged queues)
 
