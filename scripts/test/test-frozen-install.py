@@ -31,6 +31,9 @@ Sources (--source):
     repo    pack the local working tree's HEAD via `git archive` (offline,
             but does NOT include uncommitted changes)
 
+The legacy-exporter and stable-to-dev scenarios pin their own sources (the
+mix IS what they test), so --source does not apply to them.
+
 State handling: every scenario starts with a reset (installer-owned
 artifacts removed, the AP installation itself untouched). On failure the
 install is left as-is for inspection; on success it is reset again unless
@@ -267,6 +270,9 @@ class GenerateResult:
     output: str                # captured stdout+stderr
     log_text: str              # logs/ files written during the run
     new_zips: List[Path] = field(default_factory=list)
+    started_at: float = 0.0    # mtime cutoff separating this run's artifacts
+                               # from leftovers of earlier runs (output/ is
+                               # never cleared by reset)
 
     @property
     def all_text(self) -> str:
@@ -327,12 +333,20 @@ class FrozenHarness:
 
     def installer_owned_paths(self) -> Set[Path]:
         """Every location a component install can write, derived from
-        COMPONENTS metadata."""
+        COMPONENTS metadata.
+
+        Every frozen_dest is a candidate root for EVERY component, not just
+        the ones declaring it: a legacy exporter's preset copy mirrors its own
+        package location, so it writes frontend/presets under lib/ even though
+        the frontend component itself never installs there.
+        """
+        frozen_dests = {comp.frozen_dest
+                        for comp in self.extractor.COMPONENTS.values()
+                        if comp.frozen_dest}
         paths: Set[Path] = set()
         for comp in self.extractor.COMPONENTS.values():
             roots = [self.install_dir]
-            if comp.frozen_dest:
-                roots.append(self.install_dir / comp.frozen_dest)
+            roots.extend(self.install_dir / dest for dest in sorted(frozen_dests))
             for source_path in comp.source_paths:
                 for root in roots:
                     paths.add(root / source_path)
@@ -397,7 +411,8 @@ class FrozenHarness:
                 removed += 1
 
         # installer bookkeeping, backups, world source (all versions)
-        for name in (self.installer_config.CONFIG_FILENAME,):
+        for name in (self.installer_config.CONFIG_FILENAME,
+                     self.extractor.INSTALL_MANIFEST_FILENAME):
             target = self.install_dir / name
             if target.is_file():
                 target.unlink()
@@ -485,12 +500,17 @@ class FrozenHarness:
 
     # -- scenario I/O ---------------------------------------------------------
 
-    def source_spec(self) -> dict:
-        """The extract action's source part, per --source."""
+    def source_spec(self, source: Optional[str] = None) -> dict:
+        """The extract action's source part, per --source.
+
+        Scenarios that codify a specific source mix (legacy-exporter,
+        stable-to-dev) pass it explicitly and ignore the CLI flag.
+        """
+        source = source or self.source
         cfg = self.installer_config
-        if self.source == "dev":
+        if source == "dev":
             return {"repo": cfg.DEFAULT_DEV_REPO, "branch": cfg.DEFAULT_DEV_BRANCH}
-        if self.source == "stable":
+        if source == "stable":
             return {"repo": cfg.DEFAULT_STABLE_REPO,
                     "branch": cfg.DEFAULT_STABLE_BRANCH}
         # repo: pack HEAD once, stage it into the install root
@@ -639,7 +659,44 @@ class FrozenHarness:
         duration = time.time() - start
         print(f"  Generate ({label}) rc={returncode} in {duration:.0f}s, "
               f"new zips: {[z.name for z in new_zips]}")
-        return GenerateResult(returncode, output, log_text, new_zips)
+        return GenerateResult(returncode, output, log_text, new_zips, start)
+
+    # -- installed-file snapshots (upgrade orphan detection) -----------------
+
+    def snapshot_installed_files(self) -> Dict[str, int]:
+        """Map install-relative path -> mtime_ns for every file currently
+        sitting in an installer-owned destination.
+
+        Comparing two snapshots across an overwrite-install identifies
+        ORPHANS: files the previous source installed that the new extraction
+        did not rewrite (same mtime), and therefore left behind.
+        """
+        snapshot: Dict[str, int] = {}
+        # The downloaded world source is not extract-managed (installer.
+        # world_source installs it and short-circuits on reinstall), so every
+        # one of its ~1800 files would read as an orphan. Excluded.
+        world_source_root = self.install_dir / self.world_source.WORLD_SOURCE_DIR
+
+        def add(path: Path) -> None:
+            if world_source_root in path.parents:
+                return
+            try:
+                rel = path.relative_to(self.install_dir).as_posix()
+            except ValueError:
+                return
+            snapshot[rel] = path.stat().st_mtime_ns
+
+        for owned in self.installer_owned_paths():
+            if owned.is_file():
+                add(owned)
+            elif owned.is_dir():
+                for path in owned.rglob("*"):
+                    if path.is_file():
+                        add(path)
+        # installer_owned_paths() already covers component-owned apworlds
+        # (including the worldgen glob); the harness's own deployed
+        # json_tools_installer/probe apworlds are deliberately not in it.
+        return snapshot
 
     def cleanup_scratch(self) -> None:
         shutil.rmtree(self._scratch, ignore_errors=True)
@@ -678,6 +735,18 @@ NON_HOSTABLE_SUFFIXES = (
 def artifact_path(zip_path: Path, suffix: str) -> Path:
     """Path of a JSON Tools artifact for the seed that produced zip_path."""
     return zip_path.with_name(f"{zip_path.stem}{suffix}")
+
+
+def artifact_written_by(gen: GenerateResult, zip_path: Path,
+                        suffix: str) -> bool:
+    """Whether THIS run wrote the artifact next to zip_path.
+
+    Mere existence proves nothing: the output directory is never cleared, so
+    an artifact from an earlier run of a different scenario would make the
+    assertion vacuous (and would hide a legacy exporter writing nothing).
+    """
+    path = artifact_path(zip_path, suffix)
+    return path.is_file() and path.stat().st_mtime >= gen.started_at
 
 
 def rules_json_for_zip(zip_path: Path) -> Optional[dict]:
@@ -828,9 +897,9 @@ def scenario_baseline(harness) -> CheckList:
         checks.check(not smuggled,
                      "output zip stays hostable (no JSON Tools artifacts in it)",
                      str(smuggled))
-        checks.check(artifact_path(seed_zip, "_rules.json").is_file(),
+        checks.check(artifact_written_by(gen2, seed_zip, "_rules.json"),
                      "rules JSON exported next to the output zip")
-        checks.check(artifact_path(seed_zip, "_sphere_log.jsonl").is_file(),
+        checks.check(artifact_written_by(gen2, seed_zip, "_sphere_log.jsonl"),
                      "sphere log exported next to the output zip")
 
         rules = rules_json_for_zip(seed_zip)
@@ -1053,8 +1122,9 @@ def scenario_worldgen(harness) -> CheckList:
                  f"rc={gen2.returncode}; tail: {gen2.output[-400:]}")
     checks.check(len(gen2.new_zips) == 1, "output zip produced")
     if gen2.new_zips:
-        checks.check(artifact_path(gen2.new_zips[-1], "_rules.json").is_file(),
-                     "worldgen run exported rules next to the output zip")
+        checks.check(
+            artifact_written_by(gen2, gen2.new_zips[-1], "_rules.json"),
+            "worldgen run exported rules next to the output zip")
     # 'Failed to clean source' is EXPECTED here and deliberately not
     # asserted: without the extended rule_builder the export falls back to
     # ast format, which cannot source-analyze Rule Builder Resolved objects
@@ -1107,6 +1177,8 @@ def scenario_export_parity(harness) -> CheckList:
     if not gen2.new_zips:
         return checks
 
+    checks.check(artifact_written_by(gen2, gen2.new_zips[-1], "_rules.json"),
+                 "THIS run exported the rules JSON next to the output zip")
     frozen_rules = rules_json_for_zip(gen2.new_zips[-1])
     checks.check(frozen_rules is not None,
                  "frozen run exported a rules JSON")
@@ -1130,6 +1202,243 @@ def scenario_export_parity(harness) -> CheckList:
     return checks
 
 
+# The one-shot warning export_hook emits when the installed exporter predates
+# the staging_dir convention (worlds/json_tools_installer/export_hook.py).
+LEGACY_WARNING_FRAGMENTS = [
+    "predates this installer apworld",
+    "Re-run the JSON Tools Installer with the Development source",
+]
+# What the old-exporter crash looked like before the compat shim existed
+# (guigui0246's report).
+LEGACY_CRASH_PATTERNS = [
+    "unexpected keyword argument",
+    "TypeError",
+]
+
+
+def zip_members_ending(zip_path: Path, suffix: str) -> List[str]:
+    with zipfile.ZipFile(zip_path) as zf:
+        return [n for n in zf.namelist() if n.endswith(suffix)]
+
+
+def scenario_legacy_exporter(harness) -> CheckList:
+    """Stable-source exporter + working-tree installer apworld — the mix that
+    crashed with `export_game_rules() got an unexpected keyword argument
+    'staging_dir'`. The compat shim must detect the old signature, drive it
+    with the legacy convention (artifacts into the ZIP staging directory) and
+    warn once, instead of losing the whole export to a TypeError."""
+    checks = CheckList("legacy-exporter")
+    harness.reset()
+    harness.deploy_installer()
+
+    components = [name for name in harness.extractor.COMPONENTS
+                  if name in harness.extractor.DEFAULT_COMPONENTS]
+    gen1, report = harness.run_probe("legacy-exporter", [
+        {"type": "extract", "components": components,
+         **harness.source_spec("stable")},
+        {"type": "install_dependencies"},
+        {"type": "install_world_source"},
+        {"type": "configure_export", "preset": "minimal-spoilers"},
+        {"type": "record_install", "components": components,
+         "version": "stable", "patch_method": "monkey"},
+    ])
+    checks.check(gen1.returncode == 0, "stable-source install run exits 0",
+                 f"rc={gen1.returncode}")
+    checks.check(bool(find_action(report, "extract").get("ok")),
+                 "stable-source extraction succeeded",
+                 str(find_action(report, "extract").get("errors")))
+
+    exporter_root = harness.install_dir / "lib" / "exporter"
+    checks.check(exporter_root.is_dir(), "stable exporter installed under lib/")
+    checks.check(
+        "staging_dir" not in (exporter_root / "exporter.py").read_text(
+            encoding="utf-8", errors="replace")
+        if (exporter_root / "exporter.py").is_file() else False,
+        "installed exporter really is the legacy one (no staging_dir param)")
+
+    gen2 = harness.run_generate(
+        harness.stage_probe_player_yaml("legacy"), "legacy-exporter generation")
+    checks.check(gen2.returncode == 0, "Generate exits 0 with a legacy exporter",
+                 f"rc={gen2.returncode}; tail: {gen2.output[-600:]}")
+    for pattern in LEGACY_CRASH_PATTERNS:
+        checks.check(pattern not in gen2.all_text,
+                     f"generation output/logs free of {pattern!r}",
+                     gen2.all_text[-600:])
+    for fragment in LEGACY_WARNING_FRAGMENTS:
+        checks.check(fragment in gen2.all_text,
+                     f"legacy-exporter warning present ({fragment!r})")
+    checks.check(len(gen2.new_zips) == 1, "output zip produced",
+                 str([z.name for z in gen2.new_zips]))
+    if not gen2.new_zips:
+        return checks
+
+    # Legacy placement: the old exporter mirrors whatever directory it writes
+    # into, so both artifacts stay in the ZIP staging directory and end up
+    # INSIDE the seed archive. That is the legacy-correct location — the whole
+    # point of the shim is that the export happens at all.
+    seed_zip = gen2.new_zips[-1]
+    rules_members = zip_members_ending(seed_zip, "_rules.json")
+    sphere_members = zip_members_ending(seed_zip, "_sphere_log.jsonl")
+    checks.check(bool(rules_members), "rules JSON exported (legacy placement: "
+                 "inside the output zip)")
+    checks.check(bool(sphere_members), "sphere log exported (legacy placement: "
+                 "inside the output zip)")
+    checks.check(not artifact_written_by(gen2, seed_zip, "_rules.json"),
+                 "this run wrote no rules JSON next to the zip (a legacy "
+                 "exporter cannot put one there)")
+
+    if rules_members:
+        with zipfile.ZipFile(seed_zip) as zf:
+            rules = json.loads(zf.read(rules_members[0]).decode("utf-8"))
+        counts = count_location_rules(rules)
+        checks.check(counts["total"] > 0,
+                     f"legacy-exported rules JSON has locations "
+                     f"(got {counts['total']})")
+    return checks
+
+
+def scenario_stable_to_dev(harness) -> CheckList:
+    """Upgrade path: install from the stable source, then overwrite-install
+    from the dev source with no uninstall in between. The new artifact
+    contract must hold afterwards, and the orphan inventory (files the stable
+    install left that the dev extraction did not rewrite) must contain no
+    importable Python left under lib/ and no stale apworld."""
+    return _stable_to_dev(harness, "stable-to-dev", drop_record=False)
+
+
+def scenario_stable_to_dev_no_record(harness) -> CheckList:
+    """The same upgrade from an install made BEFORE ownership tracking
+    existed: the record is deleted after the stable install, so the dev
+    install has nothing to prune from and must fall back to clearing each
+    unrecorded component's own destination. Same 0-orphan expectation — this
+    is the state every install in the wild is in today."""
+    return _stable_to_dev(harness, "stable-to-dev-no-record", drop_record=True)
+
+
+def _stable_to_dev(harness, name: str, drop_record: bool) -> CheckList:
+    checks = CheckList(name)
+    harness.reset()
+    harness.deploy_installer()
+
+    components = [comp for comp in harness.extractor.COMPONENTS
+                  if comp in harness.extractor.DEFAULT_COMPONENTS]
+
+    gen1, report1 = harness.run_probe(f"{name}-stable", [
+        {"type": "extract", "components": components,
+         **harness.source_spec("stable")},
+        {"type": "install_dependencies"},
+        {"type": "install_world_source"},
+        {"type": "configure_export", "preset": "minimal-spoilers"},
+        {"type": "record_install", "components": components,
+         "version": "stable", "patch_method": "monkey"},
+    ], tag="stable")
+    checks.check(gen1.returncode == 0, "stable install run exits 0")
+    checks.check(bool(find_action(report1, "extract").get("ok")),
+                 "stable extraction succeeded",
+                 str(find_action(report1, "extract").get("errors")))
+    record_path = (harness.install_dir
+                   / harness.extractor.INSTALL_MANIFEST_FILENAME)
+    checks.check(record_path.is_file(),
+                 "stable install wrote an ownership record")
+    if drop_record:
+        # Every install made before ownership tracking has no record; deleting
+        # it reproduces that state exactly.
+        record_path.unlink(missing_ok=True)
+        print("  ownership record deleted — upgrading a pre-manifest install")
+
+    before = harness.snapshot_installed_files()
+    print(f"  stable install: {len(before)} files in installer-owned "
+          f"destinations")
+
+    # Upgrade in place — no reset, no uninstall (what a user does when they
+    # re-run the installer and switch the source to Development).
+    gen2, report2 = harness.run_probe(f"{name}-dev", [
+        {"type": "extract", "components": components,
+         **harness.source_spec("dev")},
+        {"type": "install_dependencies"},
+        {"type": "install_world_source"},
+        {"type": "configure_export", "preset": "minimal-spoilers"},
+        {"type": "record_install", "components": components,
+         "version": "dev", "patch_method": "monkey"},
+    ], tag="dev")
+    checks.check(gen2.returncode == 0, "dev upgrade run exits 0")
+    checks.check(bool(find_action(report2, "extract").get("ok")),
+                 "dev extraction succeeded",
+                 str(find_action(report2, "extract").get("errors")))
+    after = harness.snapshot_installed_files()
+
+    orphans = sorted(rel for rel, mtime in after.items()
+                     if before.get(rel) == mtime)
+    print(f"  orphan inventory: {len(orphans)} file(s) the dev extraction "
+          f"did not rewrite")
+    for rel in orphans[:40]:
+        print(f"    - {rel}")
+    if len(orphans) > 40:
+        print(f"    ... and {len(orphans) - 40} more")
+
+    lib_prefix = "lib/"
+    orphan_modules = [rel for rel in orphans
+                      if rel.startswith(lib_prefix) and rel.endswith(".py")]
+    checks.check(
+        not orphan_modules,
+        f"no stale importable Python left under lib/ after the upgrade "
+        f"({len(orphan_modules)} found)",
+        str(orphan_modules[:12]))
+    orphan_apworlds = [rel for rel in orphans if rel.endswith(".apworld")]
+    checks.check(not orphan_apworlds,
+                 "no stale apworld left in custom_worlds/ after the upgrade",
+                 str(orphan_apworlds))
+
+    # --- the NEW contract must hold now ------------------------------------
+    canonical = sorted((REPO_ROOT / "frontend" / "presets" / "apquest")
+                       .glob("AP_*/AP_*_rules.json"))
+    if not canonical:
+        raise HarnessError("no canonical APQuest preset in the repo to "
+                           "compare against")
+    source_counts = count_location_rules(
+        json.loads(canonical[0].read_text(encoding="utf-8")))
+
+    gen3 = harness.run_generate(
+        harness.stage_probe_player_yaml("upgraded"), "post-upgrade generation")
+    checks.check(gen3.returncode == 0, "post-upgrade Generate exits 0",
+                 f"rc={gen3.returncode}; tail: {gen3.output[-600:]}")
+    for fragment in LEGACY_WARNING_FRAGMENTS:
+        checks.check(fragment not in gen3.all_text,
+                     f"legacy-exporter warning gone after the upgrade "
+                     f"({fragment!r})")
+    checks.check(len(gen3.new_zips) == 1, "output zip produced")
+    if not gen3.new_zips:
+        return checks
+
+    seed_zip = gen3.new_zips[-1]
+    with zipfile.ZipFile(seed_zip) as zf:
+        smuggled = [n for n in zf.namelist()
+                    if n.endswith(NON_HOSTABLE_SUFFIXES)]
+    checks.check(not smuggled,
+                 "output zip stays hostable (new artifact contract)",
+                 str(smuggled))
+    checks.check(artifact_written_by(gen3, seed_zip, "_rules.json"),
+                 "rules JSON exported NEXT TO the output zip")
+    checks.check(artifact_written_by(gen3, seed_zip, "_sphere_log.jsonl"),
+                 "sphere log exported NEXT TO the output zip")
+
+    frozen_rules = rules_json_for_zip(seed_zip)
+    checks.check(frozen_rules is not None, "post-upgrade rules JSON parses")
+    if frozen_rules is not None:
+        frozen_counts = count_location_rules(frozen_rules)
+        checks.check(
+            frozen_counts["total"] == source_counts["total"],
+            f"location totals match source preset "
+            f"(upgraded {frozen_counts['total']} vs "
+            f"source {source_counts['total']})")
+        checks.check(
+            frozen_counts["null"] <= source_counts["null"] + 1,
+            f"typed-rule parity within allowance "
+            f"(upgraded null={frozen_counts['null']}, "
+            f"source null={source_counts['null']})")
+    return checks
+
+
 SCENARIOS: Dict[str, Callable] = {
     "baseline": scenario_baseline,
     "pip-guard": scenario_pip_guard,
@@ -1137,6 +1446,9 @@ SCENARIOS: Dict[str, Callable] = {
     "uninstall": scenario_uninstall,
     "worldgen": scenario_worldgen,
     "export-parity": scenario_export_parity,
+    "legacy-exporter": scenario_legacy_exporter,
+    "stable-to-dev": scenario_stable_to_dev,
+    "stable-to-dev-no-record": scenario_stable_to_dev_no_record,
 }
 
 

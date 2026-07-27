@@ -179,6 +179,26 @@ python -m worlds.json_tools_installer config --stable-repo owner/repo --stable-b
 python -m worlds.json_tools_installer config --dev-repo owner/repo --dev-branch branch
 ```
 
+### Switching sources (e.g. Stable → Development)
+
+Re-running the installer with a different source overwrites the installed
+components in place; no manual uninstall is needed. Each extraction records
+the files it wrote in `json_tools_install_manifest.json`, and the next
+install of the same component removes what it recorded but no longer ships —
+without that, files deleted upstream stay behind and keep running (exporter
+game handlers, for instance, are discovered by scanning their directory).
+
+An install made before the manifest existed has no record to prune from, so
+each selected component's own destination is cleared before the new files are
+extracted over it, and the record is written as usual — later upgrades then
+use the precise per-file path.
+
+Nothing outside a component's own destination is ever touched: components you
+did not select, files another component owns (`frontend/presets` survives a
+Frontend reinstall), and the presets directory itself — generation runs write
+their own presets there, and the installer will not delete what it cannot
+prove it shipped.
+
 ## Patching Methods
 
 ### Monkey Patching

@@ -215,6 +215,10 @@ def do_install(
         if extract_result.skipped_files:
             print(f"  [INFO] Skipped {len(extract_result.skipped_files)} existing files")
 
+        if extract_result.removed_files:
+            print(f"  [INFO] Removed {len(extract_result.removed_files)} files "
+                  f"the previous install left behind (no longer shipped)")
+
         for warning in extract_result.warnings:
             print(f"  [WARN] {warning}")
 
@@ -353,6 +357,14 @@ def do_uninstall(config: InstallerConfig, dry_run: bool = False) -> bool:
             print("    - Uninstalled monkey patch hooks")
         except Exception as e:
             print(f"  [WARN] Could not uninstall hooks: {e}")
+
+        # Drop the ownership record too — the files it names are gone, and a
+        # later install must not try to prune them.
+        try:
+            from ..installer.extractor import clear_install_manifest
+            clear_install_manifest()
+        except Exception as e:
+            print(f"  [WARN] Could not clear the install manifest: {e}")
 
         clear_installation(config)
 

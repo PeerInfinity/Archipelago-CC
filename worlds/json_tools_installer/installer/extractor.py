@@ -67,6 +67,12 @@ class Component:
     # source_paths would delete the vanilla files — so detection and removal
     # skip them entirely (the install config records them instead).
     overlay: bool = False
+    # The component's destination also receives user-generated content (a
+    # generation run writes its own presets into frontend/presets), so it is
+    # never wholesale-cleaned: the installer cannot tell its own shipped
+    # files there from the user's. Precise, manifest-recorded pruning still
+    # applies — that only touches files this installer wrote.
+    user_writable: bool = False
 
 
 @dataclass
@@ -77,6 +83,12 @@ class ExtractionResult:
     errors: List[str] = field(default_factory=list)
     skipped_files: List[str] = field(default_factory=list)
     warnings: List[str] = field(default_factory=list)
+    # component name -> destination paths this extraction wrote (recorded in
+    # the install manifest so the NEXT install can prune what it drops)
+    installed_paths: Dict[str, List[str]] = field(default_factory=dict)
+    # manifest-recorded files removed because this extraction no longer ships
+    # them (see prune_stale_files)
+    removed_files: List[str] = field(default_factory=list)
 
 
 def _ap_base_version() -> str:
@@ -154,6 +166,8 @@ COMPONENTS: Dict[str, Component] = {
         source_paths=["frontend/presets"],
         required=False,
         size_estimate_mb=75.0,
+        # Generation runs write presets here too; see Component.user_writable.
+        user_writable=True,
     ),
     "docs": Component(
         name="docs",
@@ -353,6 +367,273 @@ COMPONENT_BACKUP_SUBDIR = "components"
 # Directory (under the AP user dir / install root) that receives packed
 # .apworld files on frozen installs. Archipelago itself loads worlds from it.
 CUSTOM_WORLDS_DIR_NAME = "custom_worlds"
+
+
+# Ownership record: which destination files each component's LAST extraction
+# wrote. Nothing else proves the installer owns a file — component
+# destinations are shared with vanilla content (docs/), user content
+# (frontend/presets/) and hand-dropped apworlds — so pruning is confined to
+# what this file records.
+INSTALL_MANIFEST_FILENAME = "json_tools_install_manifest.json"
+INSTALL_MANIFEST_VERSION = 1
+
+
+def get_install_manifest_path(dest_root: Optional[Path] = None) -> Path:
+    """Path of the install manifest for a destination root."""
+    if dest_root is None:
+        dest_root = Path(local_path())
+    return dest_root / INSTALL_MANIFEST_FILENAME
+
+
+def load_install_manifest(dest_root: Optional[Path] = None) -> Dict[str, List[str]]:
+    """Load the previous extraction's per-component file record.
+
+    Returns an empty mapping when no manifest exists (a first install, or one
+    made by an installer predating manifests) — in which case nothing is
+    pruned, because nothing is proven owned.
+    """
+    import json
+    path = get_install_manifest_path(dest_root)
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    components = data.get("components")
+    if not isinstance(components, dict):
+        return {}
+    return {
+        name: [p for p in paths if isinstance(p, str)]
+        for name, paths in components.items()
+        if isinstance(paths, list)
+    }
+
+
+def save_install_manifest(
+    manifest: Dict[str, List[str]],
+    dest_root: Optional[Path] = None,
+) -> None:
+    """Persist the per-component file record."""
+    import json
+    path = get_install_manifest_path(dest_root)
+    payload = {
+        "manifest_version": INSTALL_MANIFEST_VERSION,
+        "updated_at": datetime.now().isoformat(),
+        "components": {name: sorted(paths) for name, paths in manifest.items()},
+    }
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+
+def clear_install_manifest(dest_root: Optional[Path] = None) -> None:
+    """Drop the ownership record (used by uninstall)."""
+    path = get_install_manifest_path(dest_root)
+    if path.is_file():
+        path.unlink()
+
+
+def _manifest_key(path: Path, dest_root: Path) -> str:
+    """Manifest entry for a destination path: relative to dest_root when it
+    lives under it, absolute otherwise (custom_worlds can sit outside
+    dest_root on frozen macOS)."""
+    try:
+        return path.relative_to(dest_root).as_posix()
+    except ValueError:
+        return path.as_posix()
+
+
+def _manifest_path(entry: str, dest_root: Path) -> Path:
+    path = Path(entry)
+    return path if path.is_absolute() else dest_root / path
+
+
+def _is_protected(entry: str, protected: Iterable[str]) -> bool:
+    return any(entry == prefix or entry.startswith(prefix + "/")
+               for prefix in protected)
+
+
+def _resolve_roots(allowed_roots: Iterable[Path]) -> List[Path]:
+    resolved = []
+    for root in allowed_roots:
+        try:
+            resolved.append(root.resolve())
+        except OSError:
+            continue
+    return resolved
+
+
+def _within_roots(path: Path, resolved_roots: Iterable[Path]) -> bool:
+    """Whether path sits inside one of the allowed destination roots."""
+    try:
+        resolved = path.resolve()
+    except OSError:
+        return False
+    return any(root in resolved.parents for root in resolved_roots)
+
+
+def _remove_file(path: Path, resolved_roots: List[Path]) -> bool:
+    """Delete one file, refusing anything outside the destination roots."""
+    if not _within_roots(path, resolved_roots):
+        return False  # never delete outside a component destination
+    if not path.is_file():
+        return False
+    try:
+        path.unlink()
+    except OSError:
+        return False
+    return True
+
+
+def _remove_empty_dirs(directories: Iterable[Path],
+                       resolved_roots: List[Path]) -> None:
+    """Remove directories emptied by removals, deepest first, stopping at
+    the allowed roots themselves."""
+    for directory in sorted(directories, key=lambda p: len(p.parts),
+                            reverse=True):
+        while True:
+            try:
+                resolved_dir = directory.resolve()
+            except OSError:
+                break
+            if resolved_dir in resolved_roots:
+                break
+            if not _within_roots(directory, resolved_roots):
+                break
+            if not directory.is_dir() or any(directory.iterdir()):
+                break
+            try:
+                directory.rmdir()
+            except OSError:
+                break
+            directory = directory.parent
+
+
+def user_writable_prefixes() -> List[str]:
+    """Destination prefixes that also receive user-generated content.
+
+    Always off-limits to wholesale cleaning, selected or not: the installer
+    cannot tell a preset it shipped from one a generation run produced.
+    """
+    prefixes: List[str] = []
+    for comp in COMPONENTS.values():
+        if not comp.user_writable:
+            continue
+        for source_path in comp.source_paths:
+            prefixes.append(source_path)
+            if comp.frozen_dest:
+                prefixes.append(f"{comp.frozen_dest}/{source_path}")
+    return prefixes
+
+
+def clean_unrecorded_component(
+    targets: Iterable[Path],
+    dest_root: Path,
+    allowed_roots: List[Path],
+    protected: Optional[List[str]] = None,
+) -> List[str]:
+    """Clear a component's own destination territory.
+
+    The fallback for a component with no manifest record: an install made by
+    an installer that predated ownership tracking left files nobody can name,
+    and some of them run (a deleted exporter game handler is still imported by
+    the directory scan that discovers handlers). This is the same territory
+    remove_component owns, minus anything protected — another component's
+    nested paths and user-writable destinations.
+
+    Args:
+        targets: Destination paths (files or directories) to clear.
+        dest_root: Destination root the manifest entries resolve against.
+        allowed_roots: Directories a removal may target.
+        protected: Destination prefixes that must survive.
+
+    Returns:
+        The manifest entries actually removed.
+    """
+    protected = protected or []
+    resolved_roots = _resolve_roots(allowed_roots)
+    removed: List[str] = []
+    emptied: Set[Path] = set()
+
+    for target in targets:
+        if target.is_file():
+            files = [target]
+        elif target.is_dir():
+            files = [p for p in target.rglob("*") if p.is_file()]
+        else:
+            continue  # nothing installed there
+        for path in files:
+            entry = _manifest_key(path, dest_root)
+            if _is_protected(entry, protected):
+                continue
+            if _remove_file(path, resolved_roots):
+                removed.append(entry)
+                emptied.add(path.parent)
+
+    _remove_empty_dirs(emptied, resolved_roots)
+    return removed
+
+
+def protected_prefixes(selected: Iterable[str]) -> List[str]:
+    """Destination prefixes belonging to components NOT being installed.
+
+    Component territories nest: frontend/presets is the 'presets' component's
+    but is claimed by 'frontend' whenever presets are selected too. Without
+    this, reinstalling Frontend with Presets deselected would read every
+    installed preset as dropped and delete it.
+    """
+    selected = set(selected)
+    prefixes: List[str] = []
+    for name, comp in COMPONENTS.items():
+        if name in selected:
+            continue
+        for source_path in comp.source_paths:
+            prefixes.append(source_path)
+            if comp.frozen_dest:
+                prefixes.append(f"{comp.frozen_dest}/{source_path}")
+    return prefixes
+
+
+def prune_stale_files(
+    previous: Dict[str, List[str]],
+    current: Dict[str, List[str]],
+    dest_root: Path,
+    allowed_roots: List[Path],
+    protected: Optional[List[str]] = None,
+) -> List[str]:
+    """Remove files a previous install wrote that this one no longer ships.
+
+    Only files recorded in ``previous`` for a component present in
+    ``current`` are considered: components not being reinstalled are left
+    alone (dropping them would be a surprise uninstall), and files the
+    installer never recorded are never touched.
+
+    Args:
+        previous: Component -> file entries from the last extraction.
+        current: Component -> file entries this extraction just wrote.
+        dest_root: Destination root the relative entries resolve against.
+        allowed_roots: Directories a removal may target; anything resolving
+            outside all of them is refused.
+        protected: Destination prefixes another, unselected component owns
+            (see protected_prefixes).
+
+    Returns:
+        The manifest entries actually removed.
+    """
+    removed: List[str] = []
+    protected = protected or []
+    resolved_roots = _resolve_roots(allowed_roots)
+
+    for comp_name, current_entries in current.items():
+        stale = set(previous.get(comp_name, [])) - set(current_entries)
+        emptied: Set[Path] = set()
+        for entry in sorted(stale):
+            if _is_protected(entry, protected):
+                continue
+            path = _manifest_path(entry, dest_root)
+            if _remove_file(path, resolved_roots):
+                removed.append(entry)
+                emptied.add(path.parent)
+        _remove_empty_dirs(emptied, resolved_roots)
+    return removed
 
 
 def get_component_backup_root(dest_root: Optional[Path] = None) -> Path:
@@ -613,6 +894,14 @@ def extract_tools(
             return dest_root / comp.frozen_dest / rel_path
         return dest_root / rel_path
 
+    # Destination files written per component, for the install manifest.
+    installed_paths: Dict[str, Set[str]] = {}
+
+    def record(comp_name: Optional[str], path: Path) -> None:
+        if comp_name:
+            installed_paths.setdefault(comp_name, set()).add(
+                _manifest_key(path, dest_root))
+
     # Per-world apworld zips being written (frozen_apworld routing).
     # Defined before the try so the finally can always close them.
     apworld_zips: Dict[str, zipfile.ZipFile] = {}
@@ -661,6 +950,42 @@ def extract_tools(
                             backup_component_directory(clean_path, comp_name, dest_root)
                             shutil.rmtree(clean_path)
 
+            # Pre-manifest fallback: a component whose destination exists but
+            # carries NO ownership record was installed by an installer that
+            # predated manifests, so nothing can say which of its files the
+            # new source dropped. Clear its own territory before extracting
+            # over it — otherwise the leftovers keep running (deleted exporter
+            # game handlers are still imported by the discovery scan). Only
+            # components this archive actually ships are cleared, and only
+            # when overwriting: overwrite=False means keep what is there.
+            if overwrite:
+                previous_manifest = load_install_manifest(dest_root)
+                shipped: Set[str] = set()
+                for file_path in files_to_extract:
+                    if archive_root and file_path.startswith(archive_root + "/"):
+                        shipped_rel = file_path[len(archive_root) + 1:]
+                    else:
+                        shipped_rel = file_path
+                    shipped_comp = matching_component(shipped_rel, components)
+                    if shipped_comp:
+                        shipped.add(shipped_comp)
+                fallback_protected = (protected_prefixes(components)
+                                      + user_writable_prefixes())
+                for comp_name in components:
+                    comp = COMPONENTS.get(comp_name)
+                    if not comp or comp_name not in shipped:
+                        continue
+                    if comp_name in previous_manifest:
+                        continue  # recorded: the precise prune handles it
+                    if comp.overlay or comp.clean_before_extract:
+                        continue  # vanilla files / already wiped above
+                    targets = [dest_for(comp_name, source_path)
+                               for source_path in comp.source_paths]
+                    targets.extend(component_apworld_paths(comp, dest_root))
+                    result.removed_files.extend(clean_unrecorded_component(
+                        targets, dest_root, [dest_root, custom_worlds_root],
+                        fallback_protected))
+
             total = len(files_to_extract)
 
             for i, file_path in enumerate(files_to_extract):
@@ -698,11 +1023,16 @@ def extract_tools(
                             if apworld_path.exists() and not overwrite:
                                 skipped_apworlds.add(world_name)
                                 result.skipped_files.append(rel_path)
+                                # Kept on disk and still shipped by this
+                                # source — record it so the prune step does
+                                # not read the skip as "dropped".
+                                record(comp_name, apworld_path)
                                 continue
                             custom_worlds_root.mkdir(parents=True, exist_ok=True)
                             apworld_zips[world_name] = zipfile.ZipFile(
                                 apworld_path, "w", zipfile.ZIP_DEFLATED
                             )
+                            record(comp_name, apworld_path)
                         file_data = zf.read(file_path)
                         if arcname.endswith("/archipelago.json"):
                             file_data = stamp_container_version(file_data)
@@ -719,6 +1049,7 @@ def extract_tools(
                 # Check if file exists
                 if dest_path.exists() and not overwrite:
                     result.skipped_files.append(rel_path)
+                    record(comp_name, dest_path)  # still shipped; not dropped
                     continue
 
                 try:
@@ -731,6 +1062,7 @@ def extract_tools(
                             shutil.copyfileobj(src, dst)
 
                     result.extracted_files.append(rel_path)
+                    record(comp_name, dest_path)
 
                 except Exception as e:
                     result.errors.append(f"{rel_path}: {str(e)}")
@@ -755,6 +1087,29 @@ def extract_tools(
                     f"archipelago.json manifest; Archipelago logs a "
                     f"deprecation warning for it and will refuse it in 0.7.0"
                 )
+
+    result.installed_paths = {
+        name: sorted(paths) for name, paths in installed_paths.items()
+    }
+
+    # Ownership bookkeeping: drop what the PREVIOUS install of these same
+    # components wrote and this one no longer ships (e.g. exporter game
+    # handlers deleted upstream, which the discovery scan would otherwise
+    # keep importing), then record the new file set. Components with no
+    # record were already handled by the pre-extraction fallback above.
+    # Skipped on a failed extraction — a partial file list is not evidence
+    # a file was dropped.
+    if result.success:
+        try:
+            previous = load_install_manifest(dest_root)
+            result.removed_files.extend(prune_stale_files(
+                previous, result.installed_paths, dest_root,
+                [dest_root, custom_worlds_root],
+                protected_prefixes(components)))
+            previous.update(result.installed_paths)
+            save_install_manifest(previous, dest_root)
+        except OSError as e:
+            result.warnings.append(f"Could not update the install manifest: {e}")
 
     return result
 

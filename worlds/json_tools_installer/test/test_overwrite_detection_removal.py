@@ -132,6 +132,10 @@ def test_remove_component_clears_root_and_frozen_dest(tmp_path, frozen):
     # install into both locations (as a stale source layout + frozen layout would)
     frozen(False)
     extractor.extract_tools(archive, [FROZEN_DEST_COMPONENT], dest_root=dest)
+    # The root copy stands in for one an OLDER installer left behind, so drop
+    # the ownership record it just wrote — otherwise the frozen install
+    # legitimately prunes it as a superseded layout.
+    extractor.clear_install_manifest(dest)
     frozen(True)
     extractor.extract_tools(archive, [FROZEN_DEST_COMPONENT], dest_root=dest)
     for source_path in comp.source_paths:
@@ -156,10 +160,15 @@ def test_remove_component_clears_apworlds_and_world_dirs(tmp_path, frozen):
     dest = tmp_path / "dest"
     dest.mkdir()
 
-    frozen(False)
-    extractor.extract_tools(archive, [APWORLD_COMPONENT], dest_root=dest)
     frozen(True)
     extractor.extract_tools(archive, [APWORLD_COMPONENT], dest_root=dest)
+    # A stale root worlds/ copy an OLDER installer left behind — laid down by
+    # hand, since a current extraction would either record it (precise prune)
+    # or clear it (pre-manifest fallback).
+    for rel, data in entries.items():
+        stale = dest / rel
+        stale.parent.mkdir(parents=True, exist_ok=True)
+        stale.write_bytes(data)
     assert (dest / "worlds" / world).is_dir()
     assert (dest / CUSTOM_WORLDS_DIR_NAME / f"{world}.apworld").exists()
 
