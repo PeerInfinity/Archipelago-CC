@@ -40,6 +40,29 @@ For the stepped pipeline, the tree build splits into three composable phases sur
 
 `buildSphereTree` recomposes the three on one threaded rng, so the unedited stepped pipeline reproduces the single-pass output exactly. This is the concrete instance of the byte-identity contract described in [Architecture](./architecture.md#the-stepped-pipeline); the step-boundary rng snapshot rules live in `sphereSteps.js`'s header. Per-sphere batching (`spheresPerBatch`) turns the ②a→③ middle into a per-batch loop; the default (one batch covering every wave) is byte-identical to monolithic `growSpheres`, while smaller batches grow sphere-major and diverge by design.
 
+## Pre-built content: region libraries and region atlases
+
+Two kinds of content source can fill sphere slots with regions that already exist instead of generating one:
+
+- **`library:<id>`** — a region-library pack of interchangeable synthetic regions. Its document rides on `growthParams.substrateConfig['library:<id>'].libraryDoc`; each gate is overlaid as an `access_rule` on the entry's exits (logic-looser-than-physics). See [region-library-f6-plan.md](../../../../CC/docs/plans/region-library-f6-plan.md).
+- **`atlas:<game>`** — a *region atlas* pool: pieces of a **real game's map**, projected into the maze substrate. Its document rides on `growthParams.substrateConfig['<game>'].atlasDoc` — keyed by the game, not the source id, because that is the install seam the atlas arc fixed. Built by `scripts/procgen/region-atlas-pool.mjs`; see [region-atlas-plan.md](../../../../CC/docs/plans/region-atlas-plan.md) Phase 6.
+
+An atlas entry differs from a library entry in ways that are all consequences of it being a *specific place*:
+
+- It is placed **at most once** per world (two copies of the starting house would duplicate its location identity), and the placed region takes the **map's own name**.
+- Its access rules are **authored**, carried in with the entry, and the driver's gate is **AND-composed** onto them rather than replacing them — overwriting would hand the player a route the real game charges for.
+- Surplus exits are **pruned** (a real region has more ways out than a cell has sides) and the arrival is retargeted to the projection's own entrance tile, because the grid-mirror tile is very likely a wall.
+- It offers exactly the locations the map was marked with, and they keep their in-game names.
+- **v1 fence: an atlas region hosts no children.** Its exits are gated by the map's own rules, and the planner assigns child gates before the entry is fit-selected, so it cannot know whether an ungated exit will be available — declining keeps the stratification invariant exact.
+
+### The sorter
+
+`sphereAtlasSorter.js` is the ruled primary route. Rather than gating a placed region with a synthetic gate drawn from the plan, it reads the region's **intrinsic entry requirement** (the cheapest way in, priced by the atlas's own rows), **schedules** each required item into a strictly earlier sphere, and places the region in the wave that sphere gates. The gate is then both the real game's requirement and a proper sphere-*k* gate, so the sphere log oracle stays exact. It **mutates the plan** — and the plan is the oracle, so the caller must verify against the same object.
+
+A requirement the gate vocabulary cannot carry (a disjunction, a count) is **declined with a reason**, never encoded wrong: three of the ten Seedling sub-regions sit behind "Progressive Sword OR Ghost Spear". Sorted atlas nodes carry no items — a real map offers exactly the locations it was marked with, which the item round-robin knows nothing about.
+
+The fallback (`--atlas-placement quota`) keeps the older behaviour: the grower draws atlas regions like any substrate and gates them synthetically.
+
 ## Config assembly (`sphereConfigHooks.js`)
 
 The panel and both headless CLIs build a sphere-growth config the same way: merge every active substrate's `defaultProcgenParams`, `prepareSphereGrowth`, and `buildRegionParams` registry hooks. Active substrates are those with a positive quota plus the start substrate. Centralising this keeps the drivers substrate-agnostic and stops the CLIs drifting from the panel — there is one assembly path.
@@ -50,7 +73,7 @@ A compiled sphere-growth `rules.json` carries enough structure in `procgen_metad
 
 ## CLI
 
-- `scripts/procgen/dump-sphere-growth.js` — plan, grow, compile, verify the oracle, dump to disk.
+- `scripts/procgen/dump-sphere-growth.js` — plan, grow, compile, verify the oracle, dump to disk. `--atlas <pool.json>` installs a region-atlas pool (with `--quota atlas:<game>=N`); `--atlas-placement sorter|quota` chooses the route.
 - `scripts/procgen/sphere-step.js` — the per-step driver (`plan → allocate → topology → items → regions → compile`), byte-identical to the dump script when unedited.
 
 See [scripts/procgen/README.md](../../../../scripts/procgen/README.md).

@@ -2573,8 +2573,59 @@ testable in the suite, which the flash flavour never could be.
   carved cell keeps its own gate**, so a carve can never under-gate.
 - No mazeRoom change was needed; the phase's guardrail ("if you are editing the
   engine, check the projection instead") held.
-- NEXT: Phase 6 (sphere growth: pre-built regions — adapter + `atlasDoc` seam,
-  the sorting pre-pass, and the gate-rung ruling). Phases 7+ unchanged.
+**Phase 6 — sphere growth places pieces of the real map: SHIPPED 2026-07-28**
+(vitest **3753/3753** + 25 `*.slow`, `test-substrates --batch=fast` **60/60**,
+`verify-atlas-sphere-roundtrip.mjs` 43/43 through Generate.py). A sphere-grown
+world can now contain real Seedling regions, gated on what the real game charges
+to get into them.
+- **Rulings (user, 2026-07-28):** (1) **sorter-first, with a built-in fallback**
+  — the region's intrinsic entry rule IS its sphere gate, made legitimate by the
+  sorter scheduling every required item into a strictly earlier sphere;
+  (2) required-item **injection** into an earlier sphere's item plan, and a
+  region whose requirements cannot be scheduled is DECLINED loudly;
+  (3) locations keep their Seedling names, the world's fill places items
+  normally; (4) v1 entry-rule vocabulary is **conjunctions of `Has(item)`** — OR
+  or counts are declined with a report line.
+- **The attempt SUCCEEDED**, so open question 2 (the gate-rung ruling for
+  decision 9) is RESOLVED: a pre-built region MAY serve as a gate rung, and its
+  gate is its own intrinsic entry rule. Decision 9's "beside the skeleton with
+  synthetic gates in front" survives as the FALLBACK route
+  (`--atlas-placement quota`), not the default — and because of the slice order
+  it was built first and is kept.
+- As built: `procgenPipeline/regionAtlasPool.js` (a THIRD capture contract —
+  payload + AUTHORED rules, beside the library's 'procedural' and 'content'),
+  `scripts/procgen/region-atlas-pool.mjs` → committed
+  `frontend/atlas-pools/seedling-atlas-pool.json` (content-hashed, `--check`),
+  `resolveSphereAtlasSources` on the seam
+  `substrateConfig['<game>'].atlasDoc` (the library route's precedent — the
+  sphere path still has NO `applySubstrateConfig`),
+  `mazeLibraryEntry.instantiateAtlasEntryForSpecs`,
+  `procgenPipeline/sphereAtlasSorter.js`, `dump-sphere-growth.js --atlas /
+  --atlas-placement`, the committed `seedling_atlas_sphere` preset, and the
+  in-app leg `seedling-atlas-sphere-placed-region`.
+- ⚠ **An atlas entry is a SPECIFIC PLACE, not a palette chip** — placed at most
+  once per world, and the placed region takes the MAP's name
+  (`overworld_start__r8c0`), which is why the entry is claimed before the
+  realiser specs are built.
+- ⚠ **The back-exit must be retargeted to the projection's own entrance tile.**
+  The grid-mirror tile a generated region uses is very likely a WALL in a real
+  map, and an atlas region is sized to its own bounds — so without this the
+  arrival lands in solid rock while every compile and every oracle stays green.
+  That is the failure the in-app leg exists to catch (F6 deferred-thread 2, and
+  for an atlas region it is not a nicety).
+- ⚠ **The driver's gate AND-composes onto the authored rule**, never replaces it
+  — the library path's overlay-WRITE assumption does not carry over.
+- **v1 fences, each with a named next step:** an atlas region hosts NO children
+  (`canHost` — the F6b tree-build-vs-realise split; widening needs a
+  conservative per-pool ungated-exit envelope, F6b ruling (a)); a sorted atlas
+  node carries no items (capacity-aware assignment is the next step); the entry
+  vocabulary is conjunctive; the starter atlas has ONE marked location, so an
+  atlas region is currently geography and gating rather than loot.
+- Real-data acceptance: four Seedling sub-regions are free to enter, three sit
+  behind a plain `Progressive Swim` (scheduled into sphere 1, so they become
+  wave-1 nodes), and three are DECLINED because their only way in is
+  `(Progressive Sword OR Ghost Spear)`.
+- NEXT: Phase 7 (RWK) and Phase 8 (staged playback bots). Phases 7+ unchanged.
 
 ## 6. Everything else (unchanged queues)
 
@@ -2603,7 +2654,7 @@ Cavernous Stage 2 (hooks/managed) ──► v0 substrate ──► Stage F (pool
 world-persistence P1–P4 (independent)
 block modes M1 ──► M2 ──► M3 ──► M4 ──► M5 ──► M6 (solver rename) ──► omsi arc D ──► arc E/F; omsi instant LAST
 (M1–M5 all SHIPPED 2026-07-21/23; M6 is next)
-region atlas Phases 1–5b ALL SHIPPED (2026-07-27/28: format ──► marking tool
+region atlas Phases 1–6 ALL SHIPPED (2026-07-27/28: format ──► marking tool
   ──► rules.json projection ──► play-time transitions ──► analyzer ──► maze
-  projection) ──► sorter pre-pass (Phase 6) / RWK ──► staged bots (§5c)
+  projection ──► sphere sorter) ──► RWK (Phase 7) ──► staged bots (Phase 8, §5c)
 ```

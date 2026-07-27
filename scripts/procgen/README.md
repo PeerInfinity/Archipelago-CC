@@ -185,3 +185,42 @@ reconfigure after every region move, through Victory.
 ```
 node scripts/procgen/verify-bounce-embed.mjs
 ```
+
+## region-atlas-pool.mjs
+
+Builds a game's **region-atlas sphere pool** — the document sphere growth reads
+when it is asked to place pieces of a real game's map into a world it grows
+(`CC/docs/plans/region-atlas-plan.md`, Phase 6). It is the Phase-5b maze
+projection plus, per exit, the atlas's own authored access rule, so the pool
+carries payload AND rules (the third capture contract; see
+`frontend/modules/procgenPipeline/regionAtlasPool.js`).
+
+Derived, not authored: the committed pool is a build artifact with an exact
+`--check` regeneration gate, and its `pool_id` ends in a content hash.
+
+```
+node scripts/procgen/region-atlas-pool.mjs \
+    frontend/modules/flashPanel/atlases/seedling.json \
+    -o frontend/atlas-pools/seedling-atlas-pool.json [--check] [--quiet]
+```
+
+The run prints the requirement census — for each region, the way in the sorter
+would use and what the real game charges for it, or why the region is declined.
+
+To grow with one, see `dump-sphere-growth.js --atlas` /
+`--atlas-placement sorter|quota`.
+
+## verify-atlas-sphere-roundtrip.mjs
+
+End-to-end gate for atlas placement in sphere growth: sorts the committed
+Seedling pool into a plan, grows a world, and runs it through world_generator
+and `Generate.py`. The independent stratum is AP's own fill (it emits a sphere
+log only for a completable world); what it cannot see — whether a placed region
+is physically enterable — is checked structurally here and walked for real by
+the in-app leg `seedling-atlas-sphere-placed-region`.
+
+Needs the repo Python env; runs in a throwaway world/preset and cleans up.
+
+```
+node scripts/procgen/verify-atlas-sphere-roundtrip.mjs
+```

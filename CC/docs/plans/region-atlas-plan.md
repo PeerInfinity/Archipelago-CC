@@ -1,13 +1,14 @@
 # Region Atlas: Real-Game Maps as Procgen Regions
 
-**Date:** 2026-07-26 (Phases 1–4 shipped 2026-07-27, Phases 5a–5b 2026-07-28)
+**Date:** 2026-07-26 (Phases 1–4 shipped 2026-07-27, Phases 5a–6 2026-07-28)
 **Status:** Design ruled; Phase 1 (atlas format), Phase 2 (marking tool),
 Phase 3 (vanilla rules.json projection), Phase 4 (play-time transitions — the
 real game walks between atlas regions), Phase 5a (the reachability analyzer —
-sub-region splits and their rules are computed from the tile map) and Phase 5b
+sub-region splits and their rules are computed from the tile map), Phase 5b
 (the maze projection — the same geometry and gating, playable with no engine
-artifact, so the in-app suite can test it) complete — Phase 6 (sphere growth)
-next
+artifact, so the in-app suite can test it) and Phase 6 (sphere growth — a grown
+world contains real map regions, gated on what the real game charges to enter
+them) complete — Phase 7 (RWK) next
 **Games:** Seedling first (redistributable, discrete sections, source available), then Robot Wants Kitty
 
 ## Goal
@@ -104,7 +105,11 @@ information.
    gates in front) as the safe default. Whether a pre-built region may
    *serve as* a gate rung (its intrinsic entry rule becoming the sphere gate)
    is an open ruling — touches the braid rigidity contract; decide when the
-   sorter is designed.
+   sorter is designed. **RESOLVED in Phase 6 (2026-07-28): it may**, because the
+   sorter first schedules the rule's items into an earlier sphere, which makes
+   the intrinsic rule a legitimate sphere-k gate. This decision's
+   beside-the-skeleton placement survives as the FALLBACK route
+   (`--atlas-placement quota`), not the default.
 
 10. **Bot strategy = staged collision** (Seedling first): no collision →
     walls → item-gated terrain → puzzles (hand-written solutions) → enemies.
@@ -124,7 +129,14 @@ information.
   A region with no subgraph keeps its bare `region_id`. Encoded as
   `apRegionName()` in `regionAtlasValidator.js`, which forbids `__` inside
   `region_id` and sub-region ids so the split stays unambiguous.
-- Gate-rung ruling for pre-built regions (decision 9).
+- ~~Gate-rung ruling for pre-built regions (decision 9)~~ **RULED + RESOLVED
+  2026-07-28 (Phase 6): sorter-first with a built-in fallback.** A pre-built
+  region's intrinsic entry rule IS its sphere gate; the sorter makes that
+  legitimate by scheduling every required item into a strictly earlier sphere,
+  so the stratification invariant holds by construction and the sphere-log
+  oracle stays exact. The attempt succeeded, so the fallback (synthetic gates in
+  front, intrinsic rules AND-composed) is kept as an option rather than the
+  default. Full ruling text and as-built in Phase 6 below.
 - ~~How the marking tool and the existing RWK tile map editor share code~~
   **RULED 2026-07-27: separate modules, shared canvas.** The marking tool is
   its own GL panel (`regionMarkingTool`); `markingRenderer.js` subclasses the
@@ -803,12 +815,132 @@ runtime behaviour rides existing machinery (arrival spawn at the arrival exit's
 tile, `clear_set_type: 'rule'` clearance through the panel's stateManager-backed
 evaluator, `exit_cross` → `user:regionMove`, item overlays → `user:locationCheck`).
 
-### Phase 6 — Sphere growth: pre-built regions
-- [ ] Adapter + `atlasDoc` seam (pool, per-region extract)
-- [ ] Sorting pre-pass: assign pre-built regions to spheres from intrinsic
-      rules; settle the gate-rung ruling (open question 2)
-- [ ] Placement with fixed exit sides; connector regions; gaps allowed
-- [ ] Oracle/verification parity with existing sphere-growth gates
+### Phase 6 — Sphere growth: pre-built regions — **COMPLETE 2026-07-28**
+- [x] Adapter + `atlasDoc` seam (pool, per-region extract)
+- [x] Sorting pre-pass: assign pre-built regions to spheres from intrinsic
+      rules; settle the gate-rung ruling (open question 2 — **RESOLVED**, below)
+- [x] Placement with fixed exit sides; connector regions; gaps allowed
+- [x] Oracle/verification parity with existing sphere-growth gates
+
+**Rulings (user, 2026-07-28):**
+1. **Sorter-first, with a built-in fallback.** A pre-pass sorts atlas regions
+   into spheres from their intrinsic access rules BEFORE growth fills the rest in
+   around them; the region's intrinsic entry rule serves as its sphere gate, made
+   legitimate by the sorter scheduling every required item into a strictly
+   earlier sphere — so the stratification invariant holds by construction and the
+   sphere-log oracle stays exact. If the attempt proved unworkable, the fallback
+   was beside-the-skeleton placement with engine-drawn synthetic gates and
+   intrinsic rules AND-composed. **The attempt SUCCEEDED**; the fallback is built
+   and kept (`--atlas-placement quota`), because slice order made it the first
+   thing that worked and it remains the honest answer when a pool's frontiers are
+   mostly out of vocabulary.
+2. **Required-item injection**: intrinsic-rule items are added to the item plan
+   of an earlier sphere by the sorter. A region whose requirements cannot be
+   scheduled is DECLINED loudly, never forced.
+3. **Locations keep their Seedling names**; the world's fill places items
+   normally (`vanilla_item` is vanilla-preset-only).
+4. Scope fences: sphere growth only; maze flavour only; Seedling only. **v1
+   entry-rule vocabulary: conjunctions of `Has(item)`** — a region whose entrance
+   rule contains OR or counts is declined with a report line.
+
+**This resolves open question 2 (the gate-rung ruling for decision 9):** a
+pre-built region MAY serve as a gate rung, and its gate is its own intrinsic
+entry rule — but only because the sorter first makes that rule a legitimate
+sphere-k gate. Decision 9's "beside the skeleton with synthetic gates in front"
+survives as the fallback route, not as the default.
+
+**As built:**
+- **The pool (`procgenPipeline/regionAtlasPool.js`)** — a THIRD capture contract
+  beside the region library's two. The library has 'procedural' (payload only,
+  rules re-derived from geometry) and 'content' (payload + carried rules); an
+  atlas entry is **payload + AUTHORED rules**. Its geometry IS re-derivable, but
+  its rules are rows a human or the Phase-5a analyzer wrote, and re-deriving them
+  from the projected tiles would quietly promote the projection's v1 fidelity
+  fences into AP logic. One entry per AP sub-region, carrying the 5b payload,
+  every OUTBOUND exit with the atlas's rule for it, and every way IN with what
+  the real game charges to come that way.
+- **CLI + artifact:** `scripts/procgen/region-atlas-pool.mjs` →
+  `frontend/atlas-pools/seedling-atlas-pool.json` (derived, `--check`-gated,
+  content-hashed `pool_id`). It prints the requirement census, which is the
+  sorter's input and therefore the place an atlas or semantics change shows up.
+- **Seam:** `growthParams.substrateConfig['<game>'].atlasDoc`, read directly by
+  `resolveSphereAtlasSources` — the library route's precedent, keyed by the GAME
+  (decision 5) while the quota is keyed `atlas:<game>`. No `applySubstrateConfig`
+  was added to the sphere path.
+- **Substrate hook:** `mazeLibraryEntry.instantiateAtlasEntryForSpecs`, registered
+  on maze. Prunes surplus exits (keeping their geometry), stamps the authored
+  rules, and gives each slot the atlas's own location name via `global_name`.
+- **The sorter (`procgenPipeline/sphereAtlasSorter.js`)** — pure, rng-free, and
+  it MUTATES the plan (which is also the oracle, so the caller must verify
+  against the same object). Groups regions by frontier, schedules fresh
+  requirement items into successive spheres, and places each group in the wave
+  its requirement earns.
+
+**Decisions worth knowing:**
+- **An atlas entry is placed AT MOST ONCE.** A library entry is a palette chip; an
+  atlas entry is a SPECIFIC PLACE, and two copies of the starting house would
+  duplicate its location identity. Selection is declaration order among unplaced
+  entries, tightest location fit first (so a node needing no chest does not eat
+  the one sub-region the map marked one in). Zero rng, as F6a requires.
+- **The placed region takes the MAP's name** (`overworld_start__r8c0`, not
+  `region_4_3`), so the compiled world, its spoiler and the sphere tree all say
+  which piece of the map this is. That is why the entry is claimed BEFORE the
+  realiser specs are built.
+- **The driver's gate AND-composes onto the authored rule**, never replaces it
+  (the library path's overlay-write assumption does not carry over).
+- **The back-exit is retargeted to the projection's own entrance tile.** The
+  grid-mirror tile a generated region uses is very likely a WALL in a real map,
+  and an atlas region is sized to its own bounds so the mirror may not even be
+  inside it. This is F6 deferred-thread 2 ("maze back-exit tile fidelity"), and
+  for an atlas region it is not a nicety: without it the arrival lands in solid
+  rock while every compile and every oracle stays green. Gated on the atlas
+  source id, so it is byte-inert everywhere else.
+- **v1 fence: an atlas region hosts NO children** (`canHost`). Its exits are the
+  real map's and most are gated by the map's own rules; a child hung behind one
+  would need those items scheduled before its own wave — exactly the invariant
+  the oracle checks — and the planner cannot know which exit the fit-selector
+  will pick (the F6b tree-build-vs-realise split). Widening it means advertising
+  a conservative per-pool ungated-exit envelope, F6b ruling (a). The
+  AND-composition path is therefore not reachable through growth today and is
+  tested by driving the source directly; it must already be right on the day the
+  fence lifts.
+- **A sorted atlas node carries no items.** A real map offers exactly the
+  locations it was marked with (the starter atlas has ONE), and the grower's item
+  round-robin knows nothing about that capacity. The quota route does assign
+  items and DECLINES loudly when the map has no slot — which is the honest
+  failure, and the reason the sorter route is the default. Capacity-aware item
+  assignment is the natural next step, not a v1 claim.
+- **The gate's COUNT comes from the plan's cumulative table**, not the atlas row.
+  It can only ever be stricter than the map's own requirement; over-gating is
+  safe, opening a sphere early is not.
+- **Byte-inertness** is by construction: with no `atlas:` quota and no
+  assignments, `resolveSphereAtlasSources` returns `{}`, `pickQuotas` is the
+  original object, and no new branch is taken. Verified against the parent commit
+  with `dump-sphere-byteidentity` and `dump-topdown-byteidentity`, plus
+  `sphere-step.js` ≡ `dump-sphere-growth.js` for seed 1.
+
+**Acceptance on real data.** The committed pool's requirement census reads the
+map exactly: four sub-regions are free to enter, three sit behind a plain
+`Progressive Swim`, and three are DECLINED because their only way in is
+`(Progressive Sword OR Ghost Spear)` — a disjunction the gate representation
+cannot carry. Sorted into a three-sphere plan, `Progressive Swim` is scheduled
+into sphere 1 and the three water-locked sub-regions become wave-1 nodes gated on
+it; the sphere oracle is exact, `Generate.py` finds a winnable fill, and
+`Starting House - Chest` appears in the spoiler under the name the map gave it,
+holding a real item.
+
+**Gates:** `scripts/procgen/verify-atlas-sphere-roundtrip.mjs` (43 assertions,
+world_generator + Generate.py, the independent stratum); the in-app leg
+`seedling-atlas-sphere-placed-region` walking the committed
+`seedling_atlas_sphere` preset (the witness the oracle cannot be: it asserts the
+arrival lands on FLOOR); vitest 3690 → **3753** (33 pool, 16 maze hook, 14
+sorter) plus **25** `*.slow` cases for sphere placement + the sorter route;
+`test-substrates --batch=fast` 59 → **60**.
+
+**Known incompleteness (recorded, not defects):** the atlas hosts no children;
+sorted atlas nodes hold no items; the entry-rule vocabulary is conjunctive; the
+Seedling starter atlas has one marked location, so an atlas region is currently
+geography and gating rather than loot. Each is a fence with a named next step.
 
 ### Phase 7 — RWK
 - [ ] Tile map editor feature: select region-transition tiles (H/V lines)
