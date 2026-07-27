@@ -1,0 +1,209 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "region-atlas.schema.json",
+  "title": "Region atlas",
+  "description": "A per-game map partition: the real game's tile map divided into procgen regions, with boundary/teleporter exits, per-region sub-region subgraphs, locations, and the vanilla layout (CC/docs/plans/region-atlas-plan.md, Phase 1). One authored document per game, stored beside the game's wrapper, edited by the region-marking tool, and compiled into three projections (vanilla rules.json / sphere-sorter input / play-time payload). This schema is DOCUMENTATION: the cross-reference rules it cannot express (content-hash identity, sub-region referential integrity + reachability, edge-exit geometry, vanilla_layout endpoint resolution, Rule Builder tree shape) are enforced authoritatively by frontend/modules/procgenPipeline/regionAtlasValidator.js.",
+  "type": "object",
+  "required": ["schema_version", "atlas_id", "game", "tile_space", "regions", "vanilla_layout"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "atlas_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Stamped content-hash id; ends with '-<content_hash>'. Downstream pipeline steps key on it, so an edited document must be restamped (that restamp is what invalidates them)."
+    },
+    "game": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The game this atlas maps (e.g. 'seedling'). Engine-binding mechanics for the game live in its wrapper config (flashPanel games/<id>.json), NOT here — the atlas holds map semantics only."
+    },
+    "name": { "type": "string", "description": "Human-readable label for pickers." },
+    "description": { "type": "string" },
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "generator": { "type": "string", "description": "e.g. 'region-marking-tool' or 'hand-authored'." },
+        "content_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}$",
+          "description": "FNV-1a over the canonical (sorted-key) document minus provenance and atlas_id; atlas_id must end with '-<content_hash>'. Restamp with scripts/procgen/region-atlas-validate.mjs --restamp after a hand edit."
+        }
+      }
+    },
+    "tile_space": {
+      "type": "object",
+      "required": ["tile_size"],
+      "description": "The coordinate system every tile/bounds value in this document is expressed in. Tile coordinates are absolute in the game's own map space; y grows DOWNWARD (so side 'N' is the minimum-y row).",
+      "properties": {
+        "tile_size": { "type": "integer", "minimum": 1, "description": "Pixels per tile in the source map." },
+        "map_source": { "type": "string", "description": "Where the tile map came from, e.g. 'runtime-extract'. The atlas never embeds the tile grid — it references it (plan decision 7)." }
+      }
+    },
+    "regions": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/region" }
+    },
+    "vanilla_layout": {
+      "type": "object",
+      "required": ["start_region", "connections"],
+      "description": "The original game's own wiring. Map truth, and the input the vanilla-rules.json projection needs (plan decision 4).",
+      "properties": {
+        "start_region": { "type": "string", "minLength": 1, "description": "region_id the player starts in." },
+        "start_sub_region": {
+          "type": "string",
+          "description": "Required when the start region has a subgraph (otherwise the projection cannot tell which sub-region Menu connects to); forbidden when it does not."
+        },
+        "connections": {
+          "type": "array",
+          "description": "Undirected pairings of exits. Each endpoint is [region_id, exit_id] and may appear in at most one connection. Edge/edge pairs are normally opposite sides (N↔S, E↔W); teleporter endpoints need not be grid neighbours.",
+          "items": {
+            "type": "object",
+            "required": ["from", "to"],
+            "properties": {
+              "from": { "$ref": "#/$defs/exitRef" },
+              "to": { "$ref": "#/$defs/exitRef" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "tile": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": { "type": "integer" },
+      "description": "[x, y] in absolute tile-space coordinates."
+    },
+    "exitRef": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": { "type": "string" },
+      "description": "[region_id, exit_id]."
+    },
+    "rule": {
+      "type": "object",
+      "required": ["rule"],
+      "description": "An ordinary Rule Builder rule tree, exactly as the pipeline emits into rules.json — e.g. {\"rule\": \"Has\", \"args\": {\"item_name\": \"Progressive Swim\"}} or {\"rule\": \"And\", \"children\": [...]}. See frontend/schema/rules.schema.json $defs/ruleBuilderRule. The validator checks the tree's SHAPE only; rule names may be game-specific helpers.",
+      "properties": {
+        "rule": { "type": "string", "minLength": 1 },
+        "args": { "description": "Object for named args, array for positional args." },
+        "children": { "type": "array", "items": { "$ref": "#/$defs/rule" } }
+      },
+      "additionalProperties": true
+    },
+    "region": {
+      "type": "object",
+      "required": ["region_id", "bounds", "exits"],
+      "properties": {
+        "region_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?!.*__).+$",
+          "description": "Unique within the atlas. Must NOT contain '__': the AP projection names a sub-region '<region_id>__<sub_region>' (see apRegionName in the validator), so the separator has to stay unambiguous."
+        },
+        "name": { "type": "string" },
+        "bounds": {
+          "type": "object",
+          "required": ["x", "y", "w", "h"],
+          "description": "The region's tile rectangle in absolute tile space. Every exit tile and location tile must lie inside it.",
+          "properties": {
+            "x": { "type": "integer" },
+            "y": { "type": "integer" },
+            "w": { "type": "integer", "minimum": 1 },
+            "h": { "type": "integer", "minimum": 1 }
+          }
+        },
+        "exits": {
+          "type": "array",
+          "description": "Boundary exits. An exit is a LOGICAL edge with a multi-tile span (exit_tiles) and a single arrival spawn point (entrance_tile).",
+          "items": { "$ref": "#/$defs/exit" }
+        },
+        "subgraph": {
+          "type": "object",
+          "required": ["sub_regions", "internal_exits"],
+          "description": "OPTIONAL. Present only when the region's interior has traversal obstacles (plan decision 1). When ABSENT the region is one implicit sub-region and every exit/location MUST omit `sub_region`; when PRESENT every exit/location MUST name one. A single-entry subgraph is redundant — omit the subgraph instead.",
+          "properties": {
+            "sub_regions": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": { "type": "string", "minLength": 1, "pattern": "^(?!.*__).+$" },
+              "description": "Local ids, unique within the region, no '__' (see region_id)."
+            },
+            "internal_exits": {
+              "type": "array",
+              "description": "The traversal obstacles, as directed (or bidirectional) edges carrying the rule that crosses them. A one-way drop is bidirectional:false.",
+              "items": {
+                "type": "object",
+                "required": ["from", "to", "bidirectional"],
+                "properties": {
+                  "from": { "type": "string", "minLength": 1 },
+                  "to": { "type": "string", "minLength": 1 },
+                  "bidirectional": { "type": "boolean", "description": "Explicit — never defaulted." },
+                  "access_rule": { "$ref": "#/$defs/rule" }
+                }
+              }
+            }
+          }
+        },
+        "locations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "tile"],
+            "properties": {
+              "name": { "type": "string", "minLength": 1, "description": "AP location name; unique across the whole atlas." },
+              "sub_region": { "type": "string", "description": "Required iff the region has a subgraph." },
+              "tile": { "$ref": "#/$defs/tile" },
+              "vanilla_item": { "type": "string", "minLength": 1, "description": "What the original game puts here; the vanilla rules.json projection places it." },
+              "access_rule": { "$ref": "#/$defs/rule", "description": "OPTIONAL extra condition beyond reaching the sub-region (e.g. defeating a guard)." }
+            }
+          }
+        },
+        "annotations": {
+          "type": "object",
+          "required": ["rules_source"],
+          "properties": {
+            "rules_source": {
+              "enum": ["analyzer", "manual", "mixed"],
+              "description": "Where this region's access rules came from. Puzzle-gated games (Seedling) force 'manual' — that is expected, not a gap."
+            },
+            "notes": { "type": "string" }
+          }
+        }
+      }
+    },
+    "exit": {
+      "type": "object",
+      "required": ["exit_id", "kind", "exit_tiles", "entrance_tile"],
+      "properties": {
+        "exit_id": { "type": "string", "minLength": 1, "description": "Unique within its region; vanilla_layout references [region_id, exit_id]." },
+        "name": { "type": "string" },
+        "kind": {
+          "enum": ["edge", "teleporter"],
+          "description": "'edge' = a straight boundary run whose direction gives the side label. Anything that does not fit a side (stairs, doors, warps) is a first-class 'teleporter' whose destination need not be a grid neighbour (plan decision 3)."
+        },
+        "side": {
+          "enum": ["N", "E", "S", "W"],
+          "description": "Required for kind 'edge', forbidden for 'teleporter'. The exit_tiles must form a contiguous run along that side of `bounds` (N = minimum y)."
+        },
+        "exit_tiles": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/tile" },
+          "description": "The tiles that trigger the transition. All inside `bounds`, no duplicates."
+        },
+        "entrance_tile": {
+          "$ref": "#/$defs/tile",
+          "description": "Where the player spawns when ARRIVING through this exit. Must be one of exit_tiles — exits are logical edges, the entrance is a spawn point."
+        },
+        "sub_region": { "type": "string", "description": "Required iff the region has a subgraph." },
+        "access_rule": { "$ref": "#/$defs/rule", "description": "OPTIONAL intrinsic gate on the exit itself (a locked door). The sphere sorter reads these as the region's frontier rules." }
+      }
+    }
+  }
+}
