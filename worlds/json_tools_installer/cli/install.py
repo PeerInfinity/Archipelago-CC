@@ -87,6 +87,13 @@ def progress_callback(current: int, total: int) -> None:
         print(f"\r  Downloading: {current_mb:.1f} of about {approx_mb:.0f} MB", end="", flush=True)
 
 
+def submodule_progress_callback(path: str, current: int, total: int) -> None:
+    """Print submodule download progress (a separate archive per submodule —
+    GitHub archives carry no submodule content)."""
+    print(f"\n  Fetching submodule content {current}/{total}: {path}",
+          end="", flush=True)
+
+
 def extract_progress_callback(filename: str, current: int, total: int) -> None:
     """Print extraction progress."""
     pct = current * 100 // total
@@ -201,6 +208,8 @@ def do_install(
             archive_path,
             components,
             progress_callback=extract_progress_callback,
+            source=source,
+            submodule_progress=submodule_progress_callback,
         )
         print()  # New line after progress
 
@@ -211,6 +220,9 @@ def do_install(
             return False
 
         print(f"  [OK] Extracted {len(extract_result.extracted_files)} files")
+
+        for submodule in extract_result.submodules:
+            print(f"  [OK] Submodule {submodule}")
 
         if extract_result.skipped_files:
             print(f"  [INFO] Skipped {len(extract_result.skipped_files)} existing files")

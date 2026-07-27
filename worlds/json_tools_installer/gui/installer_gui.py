@@ -674,7 +674,18 @@ For more information, see the README.md file."""
                         pct = 50 + (current * 30 // total)
                         self.update_progress(pct)
 
-                extract_result = extract_tools(archive_path, components, progress_callback=extract_cb)
+                def submodule_cb(path, current, total):
+                    # A separate archive per submodule: GitHub archives
+                    # carry no submodule content at all
+                    self.update_status(
+                        f"Fetching submodule content {current}/{total}: {path}")
+
+                extract_result = extract_tools(
+                    archive_path, components,
+                    progress_callback=extract_cb,
+                    source=source,
+                    submodule_progress=submodule_cb,
+                )
 
                 if not extract_result.success:
                     self.show_message("Error", f"Extraction failed: {extract_result.errors}")

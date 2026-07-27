@@ -6,13 +6,17 @@ Handles extracting specific components from downloaded archives.
 
 import fnmatch
 import shutil
+import tempfile
 import zipfile
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Iterable, List, Optional, Set, Callable, Dict
+from typing import TYPE_CHECKING, Iterable, List, Optional, Set, Callable, Dict
 
 from Utils import local_path, is_frozen
+
+if TYPE_CHECKING:
+    from ..config import SourceConfig
 
 # Container manifest version stamped into archipelago.json when packing an
 # .apworld zip. Per the apworld spec this key must NOT appear in world SOURCE
@@ -89,6 +93,10 @@ class ExtractionResult:
     # manifest-recorded files removed because this extraction no longer ships
     # them (see prune_stale_files)
     removed_files: List[str] = field(default_factory=list)
+    # one line per submodule whose content was fetched separately, e.g.
+    # "frontend/modules/shared @ 006cb402d7d5 (pinned)" — GitHub archives
+    # carry no submodule content (see installer/submodules.py)
+    submodules: List[str] = field(default_factory=list)
 
 
 def _ap_base_version() -> str:
@@ -844,6 +852,9 @@ def extract_tools(
     dest_root: Optional[Path] = None,
     progress_callback: Optional[Callable[[str, int, int], None]] = None,
     overwrite: bool = True,
+    source: Optional["SourceConfig"] = None,
+    fetch_submodules: bool = True,
+    submodule_progress: Optional[Callable[[str, int, int], None]] = None,
 ) -> ExtractionResult:
     """
     Extract selected components from an archive.
@@ -854,6 +865,13 @@ def extract_tools(
         dest_root: Destination root directory (default: Archipelago root).
         progress_callback: Optional callback(filename, current, total).
         overwrite: Whether to overwrite existing files.
+        source: Source the archive came from. Used to resolve the commit
+            each submodule is PINNED at; without it the submodule fetch
+            falls back to a branch and warns.
+        fetch_submodules: Whether to download submodule content the archive
+            does not carry (see installer/submodules.py). Requires network.
+        submodule_progress: Optional callback(submodule_path, index, count),
+            called once per submodule before its download starts.
 
     Returns:
         ExtractionResult with extracted files and any errors.
@@ -902,6 +920,21 @@ def extract_tools(
             installed_paths.setdefault(comp_name, set()).add(
                 _manifest_key(path, dest_root))
 
+    def keep_existing(comp_name: str, rel_path: str) -> None:
+        """Record what is already installed under rel_path.
+
+        Used when a submodule could not be fetched: without this the prune
+        step would read the absent files as content this source dropped and
+        delete a working install's submodule content over a transient
+        network failure.
+        """
+        existing = dest_for(comp_name, rel_path)
+        if not existing.is_dir():
+            return
+        for path in existing.rglob("*"):
+            if path.is_file():
+                record(comp_name, path)
+
     # Per-world apworld zips being written (frozen_apworld routing).
     # Defined before the try so the finally can always close them.
     apworld_zips: Dict[str, zipfile.ZipFile] = {}
@@ -918,6 +951,85 @@ def extract_tools(
         if len(parts) < 3 or parts[0] != "worlds":
             return None
         return parts[1], "/".join(parts[1:])
+
+    def extract_submodule_archive(fetch, sub_path: str) -> int:
+        """Write one downloaded submodule archive into its path."""
+        written = 0
+        with zipfile.ZipFile(fetch.archive_path, "r") as sub_zf:
+            for entry in sub_zf.namelist():
+                if entry.endswith("/"):
+                    continue
+                # Strip the archive root (<repo>-<ref>/)
+                parts = entry.split("/", 1)
+                if len(parts) != 2 or not parts[1]:
+                    continue
+                rel_path = f"{sub_path}/{parts[1]}"
+                if ".." in Path(rel_path).parts:
+                    continue
+                # Same claim/exclusion rules as the outer archive
+                if matching_component(rel_path, components) != fetch.component:
+                    continue
+                sub_dest = dest_for(fetch.component, rel_path)
+                if sub_dest.exists() and not overwrite:
+                    result.skipped_files.append(rel_path)
+                    record(fetch.component, sub_dest)
+                    continue
+                try:
+                    sub_dest.parent.mkdir(parents=True, exist_ok=True)
+                    with sub_zf.open(entry) as src:
+                        with open(sub_dest, "wb") as dst:
+                            shutil.copyfileobj(src, dst)
+                    result.extracted_files.append(rel_path)
+                    record(fetch.component, sub_dest)
+                    written += 1
+                except Exception as e:
+                    result.errors.append(f"{rel_path}: {str(e)}")
+                    result.success = False
+        return written
+
+    def install_submodule_content(zf: zipfile.ZipFile, archive_root: str) -> None:
+        """Fetch and install the content GitHub archives leave out.
+
+        A submodule is a gitlink, and an archive omits it entirely — so
+        without this step the frontend component installs with empty
+        frontend/modules/* directories and the served site cannot resolve
+        its core imports. See installer/submodules.py.
+        """
+        from . import submodules as submodules_module
+
+        content = submodules_module.read_gitmodules(zf, archive_root)
+        if content is None:
+            return  # source predates the submodule split; nothing to fetch
+        selected = submodules_module.submodules_for_components(
+            submodules_module.parse_gitmodules(content),
+            lambda path: matching_component(path, components),
+        )
+        if not selected:
+            return
+
+        with tempfile.TemporaryDirectory() as sub_temp:
+            fetches = submodules_module.fetch_submodules(
+                selected, source, Path(sub_temp),
+                progress_callback=submodule_progress,
+            )
+            for fetch in fetches:
+                result.warnings.extend(fetch.warnings)
+                if fetch.error or fetch.archive_path is None:
+                    result.warnings.append(
+                        f"Could not install submodule '{fetch.spec.path}': "
+                        f"{fetch.error}; anything already installed there is "
+                        f"left in place"
+                    )
+                    keep_existing(fetch.component, fetch.spec.path)
+                    continue
+                try:
+                    written = extract_submodule_archive(fetch, fetch.spec.path)
+                except Exception as e:
+                    result.success = False
+                    result.errors.append(
+                        f"{fetch.spec.path}: submodule extraction failed: {e}")
+                    continue
+                result.submodules.append(f"{fetch.summary}, {written} files")
 
     try:
         with zipfile.ZipFile(archive_path, "r") as zf:
@@ -1067,6 +1179,11 @@ def extract_tools(
                 except Exception as e:
                     result.errors.append(f"{rel_path}: {str(e)}")
                     result.success = False
+
+            # Submodule content is NOT in the archive — fetch it separately
+            # so the manifest, prune and skip handling see one file set.
+            if fetch_submodules:
+                install_submodule_content(zf, archive_root)
 
     except zipfile.BadZipFile as e:
         result.success = False

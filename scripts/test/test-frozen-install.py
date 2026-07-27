@@ -93,6 +93,16 @@ BAD_LOG_PATTERNS = [
     "Invalid or missing manifest",
 ]
 
+# A file that must exist inside a given submodule for the frontend to boot.
+# GitHub archives carry NO submodule content, so an install made from one
+# used to leave frontend/modules/* empty and the served site died with
+# "Failed to fetch dynamically imported module: init.js" — this harness never
+# boots a browser, which is exactly how that shipped. The witness is a
+# file-presence check, not a boot: shared/ is what frontend core imports.
+SUBMODULE_WITNESS_FILES = {
+    "frontend/modules/shared": "playerIdUtils.js",
+}
+
 # Per-game expectations for the exported rules JSON of the verification run
 RULES_EXPECTATIONS = {
     # MetaMath: the frozen arc verified every access rule analyzes (the
@@ -294,9 +304,11 @@ class FrozenHarness:
 
         # Production modules (imported lazily by main() before construction)
         from worlds.json_tools_installer.installer import extractor
+        from worlds.json_tools_installer.installer import submodules
         from worlds.json_tools_installer.installer import world_source
         from worlds.json_tools_installer import config as installer_config
         self.extractor = extractor
+        self.submodules = submodules
         self.world_source = world_source
         self.installer_config = installer_config
 
@@ -722,6 +734,71 @@ def find_action(report: dict, action_type: str) -> dict:
     return {}
 
 
+def expected_submodules(harness, components: List[str]) -> List[tuple]:
+    """(spec, component) pairs a component selection must install content for.
+
+    Read from the repository's own .gitmodules through the production
+    parser — no submodule path is spelled out here, so adding or moving one
+    changes what the harness demands automatically.
+    """
+    gitmodules = REPO_ROOT / ".gitmodules"
+    if not gitmodules.is_file():
+        return []
+    specs = harness.submodules.parse_gitmodules(
+        gitmodules.read_text(encoding="utf-8"))
+    return harness.submodules.submodules_for_components(
+        specs,
+        lambda path: harness.extractor.matching_component(path, components))
+
+
+def submodule_root(harness, component: str) -> Path:
+    """Install root a component's files land in (lib/ for frozen_dest ones)."""
+    comp = harness.extractor.COMPONENTS[component]
+    if comp.frozen_dest:
+        return harness.install_dir / comp.frozen_dest
+    return harness.install_dir
+
+
+def check_submodule_content(harness, checks: CheckList, components: List[str],
+                            label: str = "") -> List[str]:
+    """Assert the installed tree carries real submodule content.
+
+    Returns (component, manifest entry) for each witness file, so the caller
+    can also prove they were recorded as installer-owned.
+    """
+    pairs = expected_submodules(harness, components)
+    checks.check(bool(pairs),
+                 f"{label}repo declares submodules under installed components")
+    witnesses: List[tuple] = []
+    for spec, component in pairs:
+        target = submodule_root(harness, component) / spec.path
+        files = ([p for p in target.rglob("*") if p.is_file()]
+                 if target.is_dir() else [])
+        checks.check(bool(files),
+                     f"{label}submodule content installed: {spec.path}",
+                     f"{len(files)} files under {target}")
+        witness = SUBMODULE_WITNESS_FILES.get(spec.path)
+        if witness:
+            witness_path = target / witness
+            checks.check(witness_path.is_file(),
+                         f"{label}{spec.path}/{witness} present "
+                         f"(frontend core imports it)")
+            witnesses.append((
+                component,
+                witness_path.relative_to(harness.install_dir).as_posix()))
+    return witnesses
+
+
+def manifest_entries(harness) -> Dict[str, List[str]]:
+    """The install manifest's component -> file record, as installed."""
+    path = harness.install_dir / harness.extractor.INSTALL_MANIFEST_FILENAME
+    if not path.is_file():
+        return {}
+    data = json.loads(path.read_text(encoding="utf-8"))
+    components = data.get("components")
+    return components if isinstance(components, dict) else {}
+
+
 # JSON Tools artifacts are written next to the output zip and must never be
 # bundled INTO it: a stock WebHost parses every unrecognized archive member as a
 # per-player slot file (int(slot_id[1:])), so "AP_<seed>_rules.json" makes it
@@ -821,9 +898,28 @@ def scenario_baseline(harness) -> CheckList:
     excluded_worlds = sorted(
         world for name in components
         for world in extractor.COMPONENTS[name].frozen_exclude_worlds)
+    # Submodule warnings are their own contract (below): a fallback fetch
+    # warns by design, and only a --source repo run has no source to pin from.
+    component_warnings = [w for w in warnings if "submodule" not in w]
     checks.check(
-        len(warnings) == len(expected_warned) + len(excluded_worlds),
-        "no unexpected extraction warnings", str(warnings))
+        len(component_warnings) == len(expected_warned) + len(excluded_worlds),
+        "no unexpected extraction warnings", str(component_warnings))
+
+    # Submodule content: GitHub archives carry none, so the frontend needs a
+    # second fetch per submodule or the served site cannot resolve its imports.
+    expected_subs = expected_submodules(harness, components)
+    fetched_subs = extract.get("submodules", [])
+    checks.check(len(fetched_subs) == len(expected_subs),
+                 f"every submodule under an installed component was fetched "
+                 f"({len(fetched_subs)} of {len(expected_subs)})",
+                 str(fetched_subs))
+    if harness.source in ("dev", "stable"):
+        checks.check(all("(pinned)" in line for line in fetched_subs),
+                     "submodules fetched at the commit the source PINS",
+                     str(fetched_subs))
+        checks.check(not [w for w in warnings if "submodule" in w],
+                     "no submodule fallback warnings",
+                     str([w for w in warnings if "submodule" in w]))
 
     deps = find_action(report, "install_dependencies")
     checks.check(bool(deps.get("ok")), "dependency install succeeded",
@@ -871,6 +967,13 @@ def scenario_baseline(harness) -> CheckList:
                     (harness.custom_worlds / f"{world}.apworld").is_file(),
                     f"{name}: {world}.apworld packed into "
                     f"{extractor.CUSTOM_WORLDS_DIR_NAME}/")
+
+    witnesses = check_submodule_content(harness, checks, components)
+    recorded = manifest_entries(harness)
+    for component, entry in witnesses:
+        checks.check(entry in recorded.get(component, []),
+                     f"{entry} recorded in the install manifest under "
+                     f"{component!r} (installer-owned, so an upgrade prunes it)")
 
     ws_root = (install_dir / harness.world_source.WORLD_SOURCE_DIR
                / harness.ap_version)
@@ -1365,6 +1468,19 @@ def _stable_to_dev(harness, name: str, drop_record: bool) -> CheckList:
     checks.check(bool(find_action(report2, "extract").get("ok")),
                  "dev extraction succeeded",
                  str(find_action(report2, "extract").get("errors")))
+
+    # The dev source keeps its frontend substrates in submodules, whose
+    # content no GitHub archive carries; the stable source predates the split
+    # and needs none. So the upgrade is exactly where a missing submodule
+    # fetch produces a frontend that cannot boot.
+    witnesses = check_submodule_content(harness, checks, components,
+                                        label="post-upgrade ")
+    recorded = manifest_entries(harness)
+    for component, entry in witnesses:
+        checks.check(entry in recorded.get(component, []),
+                     f"post-upgrade {entry} recorded in the install manifest "
+                     f"under {component!r}")
+
     after = harness.snapshot_installed_files()
 
     orphans = sorted(rel for rel, mtime in after.items()

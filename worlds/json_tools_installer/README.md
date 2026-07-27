@@ -130,6 +130,28 @@ The installer can install these components:
 | `worldgen_worlds` | Auto-generated world packages from JSON rules (~15MB) | No |
 | `world_source` | Original world source for full rule export on compiled installs (~15MB, downloaded from the matching upstream Archipelago release) | No |
 
+### Submodule content
+
+The fork keeps every frontend substrate in a git submodule under
+`frontend/modules/` — and a GitHub branch archive contains **no** submodule
+content (git records a submodule as a gitlink, and the archive omits it). So
+whenever a selected component's destination contains a submodule (today:
+`frontend`), the installer downloads that submodule separately and extracts
+it into its path; without it the served site cannot resolve its core imports
+and dies with "Failed to fetch dynamically imported module: init.js".
+
+The version fetched is the commit the source repository **pins**, resolved
+through the GitHub contents API. If that lookup fails (offline, rate limited)
+the `.gitmodules` branch — or the submodule repository's default branch — is
+used instead, with a warning that the content may differ from the version the
+source was built with. A failed fetch leaves whatever is already installed in
+place rather than deleting it.
+
+Those files are recorded in the install manifest under the component that
+owns the destination, so upgrades prune them like any other installed file.
+The Stable source predates the submodule split and has no `.gitmodules`, in
+which case this step does nothing.
+
 ### APWorld dependencies
 
 The install step also scans every apworld in `custom_worlds/` for a

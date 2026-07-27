@@ -36,12 +36,16 @@ def _action_extract(spec: dict) -> dict:
 
     components = spec["components"]
 
-    def do_extract(archive_path: Path) -> dict:
-        result = extract_tools(archive_path, components)
+    def do_extract(archive_path: Path, source=None) -> dict:
+        # source drives the submodule fetch's pinned-SHA lookup; GitHub
+        # archives carry no submodule content, so without that step the
+        # frontend installs with empty frontend/modules/* directories
+        result = extract_tools(archive_path, components, source=source)
         return {
             "ok": result.success,
             "extracted_files": len(result.extracted_files),
             "skipped_files": len(result.skipped_files),
+            "submodules": result.submodules,
             "warnings": result.warnings,
             "errors": result.errors[:10],
         }
@@ -58,7 +62,7 @@ def _action_extract(spec: dict) -> dict:
         dl = download_archive(source, dest_path=archive)
         if not dl.success:
             return {"ok": False, "errors": [f"download failed: {dl.error}"]}
-        out = do_extract(archive)
+        out = do_extract(archive, source)
         out["downloaded_mb"] = round((dl.size_bytes or 0) / 1024 / 1024, 1)
         return out
 
