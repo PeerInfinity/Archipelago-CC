@@ -1,7 +1,7 @@
 # Region Atlas: Real-Game Maps as Procgen Regions
 
-**Date:** 2026-07-26
-**Status:** Design ruled; implementation not started
+**Date:** 2026-07-26 (Phase 1 shipped 2026-07-27)
+**Status:** Design ruled; Phase 1 (atlas format) complete — Phase 2 next
 **Games:** Seedling first (redistributable, discrete sections, source available), then Robot Wants Kitty
 
 ## Goal
@@ -109,8 +109,15 @@ information.
 
 ## Open questions (settle during implementation)
 
-- AP naming convention for sub-regions in the rules.json projection
-  (`<region>__<sub>` compound — jta precedent — vs flat names).
+- ~~AP naming convention for sub-regions in the rules.json projection~~
+  **RULED 2026-07-27: `<region_id>__<sub_region>` compound.** `__` is already
+  the fork-wide separator for region-scoped names (jta's
+  `${region_id}__${task_id}` AP locations, procgenPipelineEngine's
+  `${regionName}__${locId}`); it keeps sub-region ids unique across regions
+  with no global registry, and splitting on the first `__` recovers the pair.
+  A region with no subgraph keeps its bare `region_id`. Encoded as
+  `apRegionName()` in `regionAtlasValidator.js`, which forbids `__` inside
+  `region_id` and sub-region ids so the split stays unambiguous.
 - Gate-rung ruling for pre-built regions (decision 9).
 - How the marking tool and the existing RWK tile map editor share code
   (the marking tool is game-agnostic; the RWK editor is one host for it).
@@ -180,13 +187,55 @@ force manual annotation; that is expected, not a gap).
 Ordering follows the agreed sequencing: data model → marking tool → Seedling
 end-to-end → sorter → RWK → bots. Each phase lands separately.
 
-### Phase 1 — Atlas format
-- [ ] Atlas JSON schema (`frontend/schema/region-atlas.schema.json`) +
+### Phase 1 — Atlas format — **COMPLETE 2026-07-27**
+- [x] Atlas JSON schema (`frontend/schema/region-atlas.schema.json`) +
       validator module (structural checks, content-hash stamp/restamp,
       sub-region referential integrity: every exit/location `sub_region`
       exists; every sub_region reachable in the subgraph)
-- [ ] Rule: decide sub-region AP naming convention (open question 1)
-- [ ] Hand-write a tiny 2–3-region Seedling atlas fixture as the test anchor
+- [x] Rule: decide sub-region AP naming convention (open question 1)
+- [x] Hand-write a tiny 2–3-region Seedling atlas fixture as the test anchor
+
+**As built:**
+- Validator: `frontend/modules/procgenPipeline/regionAtlasValidator.js` —
+  beside `regionLibraryValidator.js` (its identity/split precedent) and the
+  Phase-6 sphere-growth consumer. procgenPipeline is already a bundled module,
+  so no `__BUNDLED_MODULES__` registration was needed.
+- CLI: `scripts/procgen/region-atlas-validate.mjs [--restamp]`, mirroring
+  `region-library-validate.mjs`.
+- Fixture: `frontend/modules/flashPanel/atlases/seedling-fixture.json`
+  (+ `atlases/README.md`) — beside the game's wrapper config in
+  `flashPanel/games/`, the `jtaSubstrateWrapper/datasets/` precedent. Three
+  regions with Seedling's real region/item names but invented geometry; it is
+  the format anchor, not the real map (which arrives with the Phase-2 tool).
+- Tests: `regionAtlasValidator.test.js`, 52 vitest cases reading the committed
+  fixture off disk.
+
+**Deltas from the schema sketch** (all additive; the sketch stays accurate):
+- `vanilla_layout.start_sub_region` — required when the start region has a
+  subgraph, forbidden when it doesn't. Without it the rules.json projection
+  cannot tell which sub-region `Menu` connects to.
+- `access_rule` is also allowed on **boundary exits** (the intrinsic frontier
+  gates decision 5 hands the sorter) and on **locations** (a condition beyond
+  reaching the sub-region).
+- `internal_exits[].bidirectional` is **required**, never defaulted — a
+  silently-defaulted direction is exactly the bug the subgraph split exists to
+  avoid.
+- Optional top-level `name` / `description`; `annotations.rules_source` gains
+  a third value `mixed` (analyzer-computed split + hand-annotated gate in one
+  region) and an optional `notes` string.
+- **Single-sub-region regions carry no boilerplate:** a region with no
+  traversal obstacles omits `subgraph` entirely and its exits/locations MUST
+  omit `sub_region`; once a subgraph exists, every exit/location MUST name
+  one. A one-entry subgraph validates but warns.
+- Enforcement beyond the kickoff list: edge-exit geometry (a straight,
+  contiguous run on the bounds line the `side` names — y grows downward, so N
+  is minimum-y), `entrance_tile ∈ exit_tiles`, all tiles inside `bounds`,
+  globally-unique location names, Rule Builder tree shape (recursing through
+  `children`, rule-shaped named args like `Compare.left/right`, and positional
+  `args` arrays), `vanilla_layout` endpoint resolution with each exit wired at
+  most once. Warnings (not errors) for: unwired exits, non-opposite edge
+  pairings, one-way dead-end sub-regions, missing `vanilla_item`, missing
+  annotations, unstamped provenance.
 
 ### Phase 2 — Region-marking tool (minimal)
 - [ ] Load a game's tile map for display (Seedling first; reuse tile map
