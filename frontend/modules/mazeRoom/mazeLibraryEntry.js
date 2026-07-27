@@ -291,6 +291,168 @@ export function instantiateTileGridLibraryEntryForSpecs(entry, ctx = {}, deps) {
 }
 
 /**
+ * Requirement-aware sphere instantiate for a REGION-ATLAS entry
+ * (CC/docs/plans/region-atlas-plan.md, Phase 6). The atlas analogue of
+ * instantiateTileGridLibraryEntryForSpecs, and it differs in three ways that all
+ * come from the same fact — an atlas entry is a piece of a REAL GAME MAP, not
+ * interchangeable synthetic content:
+ *
+ *   1. **Rules are AUTHORED, never re-derived.** A library maze entry's rules
+ *      come back out of its geometry (that is what makes the 'procedural'
+ *      capture contract safe). An atlas region's rules are rows a human or the
+ *      Phase-5a analyzer wrote into the atlas, so they ride IN with the entry
+ *      (`ctx.exitRules`, keyed by exit id) and are stamped onto the extracted
+ *      exits verbatim. Re-deriving them from the projection's geometry would
+ *      quietly promote the projection's v1 fidelity fences into AP logic.
+ *   2. **Surplus exits are PRUNED, not walled off.** A real region has as many
+ *      ways out as the map gives it (Seedling's overworld start has six), and a
+ *      sphere cell has four sides. Exits the slot does not need lose their
+ *      ROUTING (they are removed from world.exits) while keeping their GEOMETRY
+ *      — the tile stays walkable and keeps whatever gate the projection put on
+ *      it. Every prune is reported so a partial map never reads as a complete one.
+ *   3. **Locations keep their game names** (Phase-6 ruling 3): each slot's
+ *      `global_name` is the atlas's own location name, so the compiled world
+ *      says "Starting House - Chest" and not `region_4_3__slot_0`. The ITEM is
+ *      still the engine's (the atlas's `vanilla_item` is vanilla-preset-only),
+ *      so the world's fill places items normally.
+ *
+ * @param entry  the atlas pool entry (regionAtlasPool.js)
+ * @param ctx    { region_id, exitSides, exitRules, locationSpecs, fillerItem }
+ *   exitSides     — sides this region needs (entrance FIRST, then child sides).
+ *                   The entrance side carries no forward exit: the driver's
+ *                   back-portal provides the return route, exactly as for a
+ *                   library maze entry.
+ *   exitRules     — { [exit_id]: RuleBuilder|null } the atlas's authored rules.
+ *   locationSpecs — [{ item }] the node's items to place, in order.
+ *   fillerItem    — engine filler stamped on slots beyond the node's items.
+ * @param deps   { deserialize, extract, substrate }
+ * @returns {{ region: object, notes: Array<object> }}
+ */
+export function instantiateAtlasEntryForSpecs(entry, ctx = {}, deps) {
+    const { deserialize, extract, substrate } = deps;
+    const region_id = ctx.region_id ?? entry.entry_id;
+    const neededSides = ctx.exitSides ?? [];
+    const exitRules = ctx.exitRules ?? {};
+    const locationSpecs = ctx.locationSpecs ?? [];
+    const fillerItem = ctx.fillerItem ?? null;
+    const notes = [];
+
+    // The entrance side is served by the driver's back-portal; only CHILD sides
+    // need a forward opening out of this region.
+    const childSides = neededSides.slice(1);
+
+    const world = deserialize(entry.payload);
+    for (const ex of world.exits.values()) {
+        // The exit-id invariant (Phase 5b): a maze payload's exit_id IS its
+        // exitName, because procgenPlayer resolves an arrival by asking the
+        // SOURCE world for exits.get(exitName) and reading its targetExitId.
+        // The library hook RESETS exitName to exit_id; for an atlas payload that
+        // must already be an identity, so assert rather than silently repair —
+        // a divergence here sends every arrival to the entrance tile instead.
+        if (ex.exitName != null && ex.exitName !== ex.exit_id) {
+            throw new Error(
+                `instantiateAtlasEntryForSpecs(${substrate}): entry '${entry.entry_id}' exit `
+                + `'${ex.exit_id}' has exitName '${ex.exitName}' — a maze payload's exit_id IS `
+                + 'its exitName, and arrivals are resolved through it');
+        }
+        ex.exitName = ex.exit_id;
+        ex.targetRegion = null;
+        ex.targetExitId = null;
+        ex.isBackExit = false;
+        ex.isTeleporter = false;
+    }
+
+    // Assign a projected exit to each needed child side, in payload order. An
+    // atlas exit's own `side` is the map's, not the grid's (most are teleporters
+    // with no side at all), so the assignment is a RELABEL — the connection is
+    // side-based via stitchGrid, the physical hole stays where the map put it.
+    const capturedExits = [...world.exits.values()];
+    if (childSides.length > capturedExits.length) {
+        throw new Error(
+            `instantiateAtlasEntryForSpecs(${substrate}): entry '${entry.entry_id}' offers `
+            + `${capturedExits.length} exit(s) but the slot needs ${childSides.length} child `
+            + `side(s) [${childSides.join(',')}]`);
+    }
+    const assigned = new Map(); // exit_id -> side
+    childSides.forEach((side, i) => assigned.set(capturedExits[i].exit_id, side));
+
+    for (const ex of capturedExits) {
+        if (assigned.has(ex.exit_id)) {
+            ex.side = assigned.get(ex.exit_id);
+            continue;
+        }
+        world.exits.delete(ex.exit_id);
+        notes.push({
+            kind: 'pruned_exit', region_id, exit_id: ex.exit_id,
+            message: `"${entry.entry_id}" exit "${ex.exit_id}" has no side to route to in this `
+                + 'world (a sphere cell has four sides) — its routing is dropped; the tile stays '
+                + 'walkable and keeps its gate',
+        });
+    }
+
+    const extracted = extract(world, { regionId: region_id });
+    // Authored rules, stamped verbatim (delta 1 above). compileRegion prefers an
+    // exit's access_rule over the path-walked derivation, so this is what the
+    // compiled world says about getting out of here.
+    for (const ex of extracted.exits) {
+        const rule = exitRules[ex.id];
+        if (rule) ex.access_rule = rule;
+    }
+
+    // Slots: the atlas's own location NAMES (delta 3), the engine's items.
+    const locs = [...extracted.locations].sort(byPosition);
+    if (locationSpecs.length > locs.length) {
+        throw new Error(
+            `instantiateAtlasEntryForSpecs(${substrate}): atlas region '${entry.entry_id}' has `
+            + `${locs.length} location slot(s) but the node needs ${locationSpecs.length}. A real `
+            + 'map offers exactly the locations it was marked with — lower maxItemsPerRegion, '
+            + 'raise fillerCount, or mark more locations in the atlas');
+    }
+    locs.forEach((loc, i) => {
+        const key = `${loc.position.x},${loc.position.y}`;
+        const name = world.itemLocationNames?.get(key) ?? null;
+        loc.id = `${region_id}__slot_${i}`;
+        loc.item = i < locationSpecs.length ? locationSpecs[i].item : fillerItem;
+        if (name) loc.global_name = name;
+        else {
+            notes.push({
+                kind: 'unnamed_slot', region_id, tile: [loc.position.x, loc.position.y],
+                message: `"${entry.entry_id}" has an item slot at [${loc.position.x},`
+                    + `${loc.position.y}] the atlas never named — it falls back to a generated name`,
+            });
+        }
+        // Keep the world's own item id in step with what the location grants, so
+        // the placed region RENDERS the item the fill put there (generated maze
+        // regions do the same via placeFromItems).
+        if (loc.item != null) world.items.set(key, loc.item);
+    });
+    extracted.locations = locs;
+
+    const exits_placed = [...world.exits.values()].map((e) => ({
+        exit_id: e.exit_id, side: e.side, tile_position: { x: e.x, y: e.y },
+    }));
+    return {
+        region: {
+            substrate,
+            region_id,
+            playable_payload: world,
+            exits: world.exits,
+            entrance: world.entrance,
+            extracted_rules: extracted,
+            placed_items: [],
+            placed_obstacles: [],
+            exits_placed,
+            render_hint: substrate,
+            sidecar_filename: `${region_id}.json`,
+            wall_stats: null,
+            biome: world.biome ?? null,
+            grow_telemetry: null,
+        },
+        notes,
+    };
+}
+
+/**
  * Capability-vs-payload revalidation (the F1 validator's entryCapabilityCheck):
  * the denormalized capability metadata (region_size, exit_sides, location_slots)
  * must not lie about the payload. Returns { errors, warnings }.

@@ -30,6 +30,7 @@ import {
     captureTileGridLibraryEntry,
     instantiateTileGridLibraryEntry,
     instantiateTileGridLibraryEntryForSpecs,
+    instantiateAtlasEntryForSpecs,
     validateTileGridLibraryEntry,
 } from './mazeLibraryEntry.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
@@ -212,6 +213,18 @@ export const substrateRegistryEntry = Object.freeze({
     }),
     validateLibraryEntry: (entry) => validateTileGridLibraryEntry(entry, {
         deserialize: tileGridDeserializer,
+    }),
+
+    // --- Region-atlas content-source hook (region-atlas Phase 6) ---
+    // The THIRD capture contract: an atlas entry is a piece of a real game map,
+    // so its payload is re-derivable geometry but its rules are AUTHORED and
+    // ride in with the entry. Surplus exits are pruned (a real region has more
+    // ways out than a sphere cell has sides) and locations keep their game
+    // names. See mazeLibraryEntry.js + procgenPipeline/regionAtlasPool.js.
+    instantiateAtlasEntryForSpecs: (entry, ctx) => instantiateAtlasEntryForSpecs(entry, ctx, {
+        deserialize: tileGridDeserializer,
+        extract: tileGridPathExtractor,
+        substrate: 'maze',
     }),
 });
 
