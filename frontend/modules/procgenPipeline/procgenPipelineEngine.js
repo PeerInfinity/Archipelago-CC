@@ -25,6 +25,7 @@ import {
 } from '../shared/procgen/spatialPrimitives.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { extractItemRequirementFromRule } from './ruleRequirements.js';
+import { isAtlasSourceId, atlasSourceGame } from './regionAtlasPool.js';
 
 function getAdapter(substrateId) {
     const adapter = substrateRegistry.get(substrateId);
@@ -3723,6 +3724,16 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
         // which no fixed geometry can veto. Bounded only by the 4-side budget
         // above. (Physical enforcement / capability negotiation is F6b.)
         if (isLibrarySourceId(host.substrate)) return true;
+        // An ATLAS region hosts NO children in v1 (region-atlas Phase 6). Its
+        // exits are the real map's, and most of them are gated by the real map's
+        // own rules — a child hung behind one would need those items scheduled
+        // before its own wave, which is precisely the stratification guarantee
+        // the sphere oracle checks. The planner can't know which exit the
+        // fit-selector will end up with (the F6b tree-build-vs-realise split), so
+        // it declines rather than gambles: pre-built regions attach BESIDE the
+        // skeleton with a synthetic gate in front (plan decision 9). Widening
+        // this needs a conservative per-pool ungated-exit envelope (F6b (a)).
+        if (isAtlasSourceId(host.substrate)) return false;
         const adapter = substrateRegistry.get(host.substrate);
         if (!adapter) return false;
         const gateable = adapter.gateableItems ?? null;
@@ -3801,6 +3812,13 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
         const hints = [...new Set([...hintIds]
             .map((id) => substrateRegistry.get(id)?.gateHostingHint?.(regionParams))
             .filter(Boolean))];
+        // Atlas sources have no registry entry, so their (deliberate) refusal to
+        // host would otherwise be an unexplained wall.
+        if ([...hintIds].some(isAtlasSourceId)) {
+            hints.push('A region-atlas region hosts no children (region-atlas Phase 6), so an '
+                + 'atlas quota needs enough non-atlas regions to hang the tree on — lower the '
+                + 'atlas quota or raise the others.');
+        }
         throw new Error(`growSpheres: no host can realise a wave-${wave} entry gate.`
             + (hints.length ? ` ${hints.join(' ')}` : ''));
     };
@@ -4460,6 +4478,199 @@ export function resolveSphereLibrarySources(substrateQuotas, config) {
     return sources;
 }
 
+// --- Sphere-growth region-ATLAS content source (region-atlas Phase 6) --------
+//
+// The atlas analogue of buildSphereLibrarySource. Same seam, three differences,
+// all of them because an atlas entry is a piece of a REAL GAME MAP rather than
+// interchangeable synthetic content (see procgenPipeline/regionAtlasPool.js):
+//
+//   - **An entry is placed AT MOST ONCE.** Two copies of Seedling's starting
+//     house in one world would duplicate its location identity. Selection is
+//     therefore declaration order among the entries that still fit — rng-free,
+//     like the library source, but consuming rather than repeating.
+//   - **The region takes the atlas's NAME.** A placed region is
+//     `overworld_start__r8c0`, not `region_4_3`, so the compiled world, its
+//     spoiler and the sphere tree all say which piece of the map this is. That
+//     is why the entry is reserved BEFORE the realiser specs are built.
+//   - **Rules are AUTHORED and AND-COMPOSED.** The library path OVERWRITES an
+//     exit's rule with the driver's gate; here the exit already carries the
+//     atlas's own rule for that crossing, and the driver's gate is ANDed ONTO
+//     it. Overwriting would hand the player a route the real game charges for.
+//
+// v1 fence: an atlas node hosts NO children (see canHost). The reason is the
+// same tree-build-vs-realise-time split F6b names — the planner assigns a node's
+// child gates before the entry is fit-selected, so it cannot know whether the
+// eventual entry has an UNGATED exit to hand that child. A child behind an
+// intrinsically gated exit would need the intrinsic items scheduled before its
+// own wave, which is exactly the guarantee the sphere oracle checks; declining
+// to host is the conservative reading of plan decision 9 ("pre-built regions are
+// added BESIDE the skeleton, synthetic gates in front"). Widening it means
+// advertising a conservative per-pool ungated-exit envelope, F6b ruling (a).
+function buildSphereAtlasSource(sourceId, doc) {
+    const entries = Array.isArray(doc.entries) ? doc.entries : [];
+    const used = new Set(); // entry_id -> placed in this world
+    const byId = new Map(entries.map((e) => [e.entry_id, e]));
+
+    const fits = (entry, nLocs, nChildSides) =>
+        (entry.location_slots ?? 0) >= nLocs && (entry.exits?.length ?? 0) >= nChildSides;
+
+    return {
+        poolSize: entries.length,
+        doc,
+        /**
+         * Claim an entry for a node and return its id, which becomes the placed
+         * region's name. Idempotent per node (a re-realised host keeps its
+         * entry). Loud when nothing fits: a real map has the locations it has.
+         */
+        reserve: (node, { nLocs, nChildSides }) => {
+            // Already claimed by THIS source (a re-realised host) → keep it.
+            if (node.atlasEntry && used.has(node.atlasEntry)) return node.atlasEntry;
+            // A node the SORTER pinned (Phase-6 slice 2) names its own entry;
+            // an unpinned node takes the first unplaced entry that fits.
+            const pinned = node.atlasEntry ?? null;
+            // TIGHTEST fit, then declaration order: a node needing no location
+            // must not consume the one region the map marked a chest in, or the
+            // next node that does need one has nowhere to go. Deterministic and
+            // rng-free either way.
+            const pool = pinned
+                ? [byId.get(pinned)].filter(Boolean)
+                : entries.map((e, i) => ({ e, i }))
+                    .sort((a, b) => ((a.e.location_slots ?? 0) - (b.e.location_slots ?? 0))
+                        || (a.i - b.i))
+                    .map(({ e }) => e);
+            const pick = pool.find((e) => !used.has(e.entry_id) && fits(e, nLocs, nChildSides));
+            if (!pick) {
+                const free = entries.filter((e) => !used.has(e.entry_id)).length;
+                throw new Error(
+                    `${sourceId}: no unplaced atlas region fits this slot (needs ${nLocs} `
+                    + `location(s) + ${nChildSides} child side(s)`
+                    + (pinned ? `; the tree pinned '${pinned}'` : `; ${free} of ${entries.length} `
+                        + 'entries unplaced')
+                    + '). An atlas entry is a SPECIFIC place and is placed at most once — lower '
+                    + 'the quota, lower maxItemsPerRegion, raise fillerCount, or mark more of '
+                    + 'the map');
+            }
+            used.add(pick.entry_id);
+            node.atlasEntry = pick.entry_id;
+            return pick.entry_id;
+        },
+        instantiate: (specs) => {
+            const entry = byId.get(specs.atlasEntryId);
+            if (!entry) {
+                throw new Error(`${sourceId}: atlas entry '${specs.atlasEntryId}' is not in the `
+                    + `pool (${entries.length} entries) — the pool changed under the tree`);
+            }
+            // Sides this region needs, ORDERED: entrance first (served by the
+            // driver's back-portal, so it takes no atlas exit), then children in
+            // exit-plan order.
+            const neededSides = [
+                ...(specs.entranceSide ? [specs.entranceSide] : []),
+                ...specs.exitPlans.map((e) => e.side),
+            ];
+            return buildSphereAtlasRegion(sourceId, entry, { ...specs, neededSides });
+        },
+    };
+}
+
+// AND-compose two rules, keeping both. null means "no constraint", so composing
+// with null is the identity — which is what makes the driver's gate safe to lay
+// on top of an atlas rule that may or may not exist.
+function andComposeRules(a, b) {
+    if (!a) return b ?? null;
+    if (!b) return a;
+    return makeAndRule([a, b]);
+}
+
+/**
+ * Realise ONE atlas node: hand the entry to the substrate's atlas hook for
+ * geometry + authored rules, then AND the driver's per-child gate onto each
+ * retained exit. Draws no rng. Returns { region, notes }.
+ */
+function buildSphereAtlasRegion(sourceId, entry, {
+    region_id, exitPlans, locations, neededSides,
+}) {
+    const adapter = getAdapter(entry.substrate);
+    if (typeof adapter.instantiateAtlasEntryForSpecs !== 'function') {
+        throw new Error(
+            `${sourceId}: substrate '${entry.substrate}' (atlas region '${entry.entry_id}') has `
+            + 'no instantiateAtlasEntryForSpecs hook — a projected atlas region needs a tile '
+            + 'substrate wired for it (maze)');
+    }
+    const exitRules = {};
+    for (const ex of entry.exits ?? []) {
+        if (ex.access_rule) exitRules[ex.exit_id] = ex.access_rule;
+    }
+    const { region, notes } = adapter.instantiateAtlasEntryForSpecs(entry, {
+        region_id,
+        exitSides: neededSides,
+        exitRules,
+        locationSpecs: locations.map((l) => ({ item: l.item })),
+        fillerItem: LIBRARY_SLOT_FILLER_ITEM,
+    });
+
+    // The driver's gate rides ON TOP of the atlas's own rule for that exit —
+    // never instead of it (the library path's overwrite would drop the real
+    // game's charge for the crossing).
+    const sideToExitId = new Map((region.exits_placed ?? []).map((e) => [e.side, e.exit_id]));
+    const exitById = new Map((region.extracted_rules?.exits ?? []).map((e) => [e.id, e]));
+    for (const e of exitPlans) {
+        const gate = sphereGateRule(e.gate, e.gateCounts ?? {});
+        if (!gate) continue;
+        const ex = exitById.get(sideToExitId.get(e.side));
+        if (ex) ex.access_rule = andComposeRules(ex.access_rule ?? null, gate);
+    }
+    region.placed_logic_gates = region.placed_logic_gates ?? [];
+    return { region, notes: notes ?? [] };
+}
+
+/**
+ * Resolve the sphere ATLAS content sources named in substrateQuotas as
+ * `atlas:<game>` ids (region-atlas Phase 6). Mirrors resolveSphereLibrarySources,
+ * with ONE deliberate difference: an atlas pool rides on
+ * `growthParams.substrateConfig['<game>'].atlasDoc` — keyed by the GAME, not by
+ * the source id — because that is the install seam plan decision 5 fixed (the
+ * same one jta datasets use). Returns { id: source }, empty when no atlas quota
+ * is set, so an atlas-absent world takes no new code path at all.
+ *
+ * The sphere path has no applySubstrateConfig; this direct read is byte-inert by
+ * construction and deliberately mirrors the library route rather than inventing
+ * a second config mechanism.
+ */
+export function resolveSphereAtlasSources(substrateQuotas, config) {
+    const sources = {};
+    for (const [id, count] of Object.entries(substrateQuotas ?? {})) {
+        if (count <= 0 || !isAtlasSourceId(id)) continue;
+        const game = atlasSourceGame(id);
+        const doc = config?.growthParams?.substrateConfig?.[game]?.atlasDoc;
+        if (doc == null) {
+            throw new Error(
+                `growSpheres: atlas content source '${id}' has no atlasDoc in `
+                + `growthParams.substrateConfig['${game}'] — a selected atlas pool must ride `
+                + 'the config');
+        }
+        const entries = Array.isArray(doc.entries) ? doc.entries : [];
+        if (entries.length === 0) {
+            throw new Error(`growSpheres: atlas pool '${id}' has no entries`);
+        }
+        if (count > entries.length) {
+            throw new Error(
+                `growSpheres: atlas quota for '${id}' is ${count} but the pool has only `
+                + `${entries.length} region(s), and an atlas region is a SPECIFIC place that is `
+                + 'placed at most once per world — lower the quota or mark more of the map');
+        }
+        const unrealisable = entries.filter((e) =>
+            typeof substrateRegistry.get(e.substrate)?.instantiateAtlasEntryForSpecs !== 'function');
+        if (unrealisable.length === entries.length) {
+            throw new Error(
+                `growSpheres: atlas pool '${id}' has no entries whose substrate can realise a `
+                + 'sphere slot (no registered instantiateAtlasEntryForSpecs hook) — import the '
+                + "substrate's library module before growing");
+        }
+        sources[id] = buildSphereAtlasSource(id, doc);
+    }
+    return sources;
+}
+
 /**
  * Build the realiser specs for ONE tree node — the per-child exit plans
  * (side + gate + composed rule), the entrance mirrored from the parent's
@@ -4998,6 +5209,22 @@ function* realiseOneSphereNode(grid, node, tree, rng, {
     // Cell + side were resolved by the placement pre-pass
     // (occupancy-aware adjacency, remote only when fully surrounded).
     const isTeleporter = node.isTeleporter;
+    // An ATLAS node takes the atlas's own region NAME, so the entry is claimed
+    // BEFORE the specs are built (region_id is the first thing they compute).
+    let atlasSource = null;
+    if (isAtlasSourceId(node.substrate)) {
+        atlasSource = librarySources?.[node.substrate] ?? null;
+        if (!atlasSource) {
+            throw new Error(`growSpheres: atlas node '${node.index}' has no resolved content `
+                + `source for '${node.substrate}' — a selected atlas pool must ride `
+                + "growthParams.substrateConfig['<game>'].atlasDoc");
+        }
+        const kids = childrenByParent?.get(node.index)?.length
+            ?? tree.nodes.filter((n) => n.parent === node.index).length;
+        node.region_id = atlasSource.reserve(node, {
+            nLocs: node.items.length, nChildSides: kids,
+        });
+    }
     const specs = buildNodeRealiserSpecs(node, tree, grid, regionSize, { childrenByParent });
     const {
         region_id, cell, parentNode, exitPlans, entrances, entranceSide, locations,
@@ -5015,7 +5242,26 @@ function* realiseOneSphereNode(grid, node, tree, rng, {
     };
 
     let region;
-    if (isLibrarySourceId(node.substrate)) {
+    if (atlasSource) {
+        // Region-atlas content source (region-atlas Phase 6): place a projected
+        // piece of a real game map. Draws NO rng (selection is declaration
+        // order among unplaced entries), so atlas-absent worlds are byte-inert.
+        const placed = atlasSource.instantiate({
+            region_id, regionSize, exitPlans, locations, entranceSide,
+            entryGate: node.gate, entryGateCounts: node.gateCounts, regionParams,
+            atlasEntryId: node.atlasEntry,
+        });
+        region = placed.region;
+        if (stats && placed.notes.length > 0) {
+            stats.atlasNotes = [...(stats.atlasNotes ?? []), ...placed.notes];
+        }
+        // The driver's back-exit normally lands on the grid-MIRROR of the
+        // parent's exit tile, which for a real map is very likely a wall (and,
+        // since atlas regions are sized to their own bounds, may not even be in
+        // this region). Arrive where the projection spawns instead — the tile
+        // Phase 5b's in-app legs already prove is a valid, reachable spawn.
+        specs.entranceTile = { x: region.entrance.x, y: region.entrance.y };
+    } else if (isLibrarySourceId(node.substrate)) {
         // Library content source (region-library F6a): place a pre-built entry
         // against the node's specs. Draws NO rng (Q4 ruling — rng-free
         // selection, no per-node seed) so library-absent worlds are byte-inert.
@@ -5137,7 +5383,7 @@ export function* growSpheresGen(config) {
     // sources (`library:<id>`) have no registry entry; they are validated by
     // resolveSphereLibrarySources below (F6a) and skipped here.
     for (const [sub, count] of Object.entries(substrateQuotas ?? {})) {
-        if (count <= 0 || isLibrarySourceId(sub)) continue;
+        if (count <= 0 || isLibrarySourceId(sub) || isAtlasSourceId(sub)) continue;
         const adapter = substrateRegistry.get(sub);
         if (!adapter) {
             throw new Error(`growSpheres: substrate '${sub}' is not registered`);
@@ -5149,9 +5395,14 @@ export function* growSpheresGen(config) {
                 + 'realise requirement-targeted regions');
         }
     }
-    // Region-library sphere content sources (F6a). Empty unless a `library:<id>`
-    // quota is set — so library-absent worlds take no new code path.
-    const librarySources = resolveSphereLibrarySources(substrateQuotas, config);
+    // Pre-built content sources, keyed by source id: region-library packs
+    // (`library:<id>`, F6a) and region-atlas pools (`atlas:<game>`, region-atlas
+    // Phase 6). Both empty unless such a quota is set — so a world with neither
+    // takes no new code path and stays byte-identical.
+    const librarySources = {
+        ...resolveSphereLibrarySources(substrateQuotas, config),
+        ...resolveSphereAtlasSources(substrateQuotas, config),
+    };
 
     // The tree-build and region-build can run as SEPARATE pipeline steps:
     // when a pre-built tree (and its live rng — see buildSphereGrowthTree)
@@ -5343,7 +5594,7 @@ export function* growSpheresBatchedGen(config) {
         throw new Error(`growSpheres: invalid sphere plan — ${planErrors[0]}`);
     }
     for (const [sub, count] of Object.entries(substrateQuotas ?? {})) {
-        if (count <= 0 || isLibrarySourceId(sub)) continue;
+        if (count <= 0 || isLibrarySourceId(sub) || isAtlasSourceId(sub)) continue;
         const adapter = substrateRegistry.get(sub);
         if (!adapter) {
             throw new Error(`growSpheres: substrate '${sub}' is not registered`);
@@ -5355,8 +5606,12 @@ export function* growSpheresBatchedGen(config) {
                 + 'realise requirement-targeted regions');
         }
     }
-    // Region-library sphere content sources (F6a) — same as growSpheresGen.
-    const librarySources = resolveSphereLibrarySources(substrateQuotas, config);
+    // Pre-built content sources (library packs + atlas pools) — same as
+    // growSpheresGen.
+    const librarySources = {
+        ...resolveSphereLibrarySources(substrateQuotas, config),
+        ...resolveSphereAtlasSources(substrateQuotas, config),
+    };
 
     const opts = {
         maxItemsPerRegion, fillerCount, revisitRatio,

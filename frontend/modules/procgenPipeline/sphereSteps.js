@@ -46,6 +46,7 @@ import {
     placeSphereTreeItems,
     realiseSphereBatchGen,
     resolveSphereLibrarySources,
+    resolveSphereAtlasSources,
     compactSphereTree,
     buildRulesJson,
     serializeGrid,
@@ -123,10 +124,12 @@ export function growConfigFrom(config, plan) {
             fillerCount: config.fillerCount,
             revisitRatio: config.revisitRatio,
             ...(config.substrateQuotas ? { substrateQuotas: config.substrateQuotas } : {}),
-            // Region-library content sources (F6d): each selected bounce library
-            // rides its document on substrateConfig['library:<id>'].libraryDoc,
-            // consumed by the engine's resolveSphereLibrarySources. Absent unless a
-            // library is selected, so library-less worlds stay byte-identical.
+            // Pre-built content sources: each selected region library rides its
+            // document on substrateConfig['library:<id>'].libraryDoc (F6d) and
+            // each selected region-ATLAS pool on substrateConfig['<game>'].atlasDoc
+            // (region-atlas Phase 6), consumed by the engine's
+            // resolveSphereLibrarySources / resolveSphereAtlasSources. Absent
+            // unless one is selected, so worlds with neither stay byte-identical.
             ...(config.substrateConfig ? { substrateConfig: config.substrateConfig } : {}),
             ...(config.startSubstrate ? { startSubstrate: config.startSubstrate } : {}),
             // Carried for any standalone batched driver consumer; the step
@@ -349,8 +352,12 @@ async function stepRegions(env, { onProgress = null } = {}) {
     // runs; a cross-process CLI resume simply rebuilds it, same as the counter reset
     // that a fresh process implies.
     if (batchStart === 0 || !env.librarySources) {
-        env.librarySources = resolveSphereLibrarySources(
-            growConfig.growthParams?.substrateQuotas, growConfig);
+        env.librarySources = {
+            ...resolveSphereLibrarySources(
+                growConfig.growthParams?.substrateQuotas, growConfig),
+            ...resolveSphereAtlasSources(
+                growConfig.growthParams?.substrateQuotas, growConfig),
+        };
     }
 
     // Size the grid from the CURRENT allocation (deterministic — matches

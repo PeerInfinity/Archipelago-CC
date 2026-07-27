@@ -26,7 +26,15 @@
  *   --victory id             pin item to the final sphere + use as the
  *                            completion-condition item (default: an
  *                            is_victory item from the pool, if any)
- *   --quota id=N             per-substrate region quota; repeat
+ *   --quota id=N             per-substrate region quota; repeat. A region
+ *                            library rides as `library:<id>` and a region-ATLAS
+ *                            pool as `atlas:<game>` (see --atlas)
+ *   --atlas PATH             load a region-atlas pool document (built by
+ *                            scripts/procgen/region-atlas-pool.mjs) and install
+ *                            it on substrateConfig['<game>'].atlasDoc, so
+ *                            `--quota atlas:<game>=N` can place N pieces of that
+ *                            game's real map. Repeat per game. Absent = no atlas
+ *                            code path is taken at all (byte-inert).
  *   --start id               start substrate
  *   --max-items-per-region N (default 2)
  *   --fillers N              filler regions, no items (default 0)
@@ -77,7 +85,7 @@
  *   }
  */
 
-import { writeFileSync, mkdirSync } from 'node:fs';
+import { writeFileSync, mkdirSync, readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -95,6 +103,8 @@ import { DEFAULT_ITEMS } from
     '../../frontend/modules/shared/procgen/library.js';
 import { substrateRegistry } from
     '../../frontend/modules/shared/procgen/substrateRegistry.js';
+import { validateAtlasPool } from
+    '../../frontend/modules/procgenPipeline/regionAtlasPool.js';
 import {
     defaultProcgenParams, activeSubstrateIds,
     collectSphereGrowthPrep, assembleRegionParams,
@@ -170,6 +180,7 @@ function parseArgs(argv) {
         consumableCount: 1,
         manaTiles: 0,
         manaTileAmount: 0,
+        atlasPools: [],
         rulesOut: null,
         out: './sphere-growth-dump.json',
     };
@@ -218,6 +229,7 @@ function parseArgs(argv) {
                 out.quotas[id] = n;
                 break;
             }
+            case '--atlas': out.atlasPools.push(next()); break;
             case '--start': out.start = next(); break;
             case '--max-items-per-region':
                 out.maxItemsPerRegion = parseInt(next(), 10);
@@ -348,6 +360,22 @@ async function main() {
 
     const consumableTileOpts = buildConsumableTileConfig(config);
 
+    // Region-atlas pools (region-atlas Phase 6). Each rides on
+    // substrateConfig['<game>'].atlasDoc — the seam plan decision 5 fixed, keyed
+    // by the GAME, while its quota is keyed `atlas:<game>`. Empty unless --atlas
+    // is passed, so the growth config is byte-identical without it.
+    const substrateConfig = {};
+    for (const p of config.atlasPools) {
+        const pool = JSON.parse(readFileSync(resolve(process.cwd(), p), 'utf8'));
+        const vr = validateAtlasPool(pool);
+        if (!vr.ok) {
+            throw new Error(`atlas pool ${p} is invalid: ${vr.errors.join('; ')}`);
+        }
+        substrateConfig[pool.game] = { atlasDoc: pool };
+        console.log(`  atlas pool: ${pool.pool_id} (${pool.entries.length} regions) `
+            + `-> substrateConfig['${pool.game}'].atlasDoc`);
+    }
+
     const { grid, stats, startCell, tree } = growSpheres({
         regionSize: config.region,
         itemLib,
@@ -365,6 +393,7 @@ async function main() {
             ...(Object.keys(config.quotas).length > 0
                 ? { substrateQuotas: config.quotas } : {}),
             ...(config.start ? { startSubstrate: config.start } : {}),
+            ...(Object.keys(substrateConfig).length > 0 ? { substrateConfig } : {}),
         },
     });
 
