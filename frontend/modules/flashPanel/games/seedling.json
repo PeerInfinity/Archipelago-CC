@@ -31,7 +31,10 @@
     { "class": "main", "property": "hasSpear",       "type": "boolean" },
     { "class": "main", "property": "hasDarkSuit",    "type": "boolean" },
     { "class": "main", "property": "hasTorch",       "type": "boolean" },
-    { "class": "main", "property": "hitsMax",        "type": "int" }
+    { "class": "main", "property": "hitsMax",        "type": "int" },
+    { "class": "main", "property": "playerPositionX", "type": "int" },
+    { "class": "main", "property": "playerPositionY", "type": "int" },
+    { "class": "main", "property": "level",           "type": "int" }
   ],
 
   "ap_items": [

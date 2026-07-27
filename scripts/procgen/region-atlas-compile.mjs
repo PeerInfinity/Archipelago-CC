@@ -1,10 +1,11 @@
 #!/usr/bin/env node
-// Region-atlas → vanilla rules.json compiler CLI (projection 1;
-// CC/docs/plans/region-atlas-plan.md, Phase 3).
+// Region-atlas → vanilla rules.json compiler CLI (projections 1 and 3;
+// CC/docs/plans/region-atlas-plan.md, Phases 3 and 4).
 //
 // Compiles an authored atlas into the AP rules.json the frontend loads: the
-// real game's map as an ordinary region graph. GRAPH ONLY — no
-// `preset_sidecars`; play-time walking runs the real game (Phase 4).
+// real game's map as an ordinary region graph (projection 1), plus the
+// `preset_sidecars` + `flash_panel` blocks that bind every region naming a real
+// level to the flash substrate so the real game plays inside it (projection 3).
 //
 // The output is deterministic (no timestamps, no clock), so --check is an exact
 // "does the committed preset still regenerate byte-identically" gate, the same

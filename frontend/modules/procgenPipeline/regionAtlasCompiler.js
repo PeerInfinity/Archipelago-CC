@@ -1,17 +1,20 @@
-// Region-atlas → vanilla rules.json compiler — projection 1 of the three the
-// atlas feeds (CC/docs/plans/region-atlas-plan.md, Phase 3).
+// Region-atlas → vanilla rules.json compiler — projections 1 AND 3 of the three
+// the atlas feeds (CC/docs/plans/region-atlas-plan.md, Phases 3 and 4).
 //
 // Takes an authored region atlas (the single source of truth: regions, boundary
 // exits, per-region sub-region subgraphs, locations with their vanilla items,
 // and the game's own vanilla layout) and emits the AP rules.json the frontend
 // loads — the real game's map expressed as an ordinary AP region graph.
 //
-// GRAPH ONLY (ruled 2026-07-27). The compiler emits NO `preset_sidecars`:
-// play-time walking runs the REAL game with the engine teleporting the player
-// to an entrance spawn tile, which is projection 3 (Phase 4). A rules.json from
-// here has regions, exits, locations and items and nothing substrate-shaped.
+// Phase 3 was GRAPH ONLY. Phase 4 adds **projection 3** on top of the same
+// compile: every region that names a real level (`map_ref`) also emits a
+// `preset_sidecars` entry binding it to the `flash_seedling` substrate, so the
+// real recompiled game plays inside the generated world — walking through one
+// of the game's own level transitions crosses the AP region boundary, and
+// arriving in a region teleports the player to the marked entrance spawn.
+// A region with no `map_ref` has no physical binding and stays graph-only.
 //
-// The projection, concretely:
+// The graph projection, concretely:
 //
 //   region without a subgraph   → one AP region, its bare `region_id`
 //   region with a subgraph      → one AP region per sub-region, named by
@@ -63,14 +66,113 @@ export const REGION_ATLAS_ITEM_ID_BASE = 30000000;
 export const MENU_REGION = 'Menu';
 export const GAME_START_EXIT = 'GameStart';
 
+// Projection 3. Per-game substrate ids are the standing ruling (2026-07-25),
+// so an atlas binds to `flash_<game>` rather than the generic `flash` entry.
+export const substrateIdFor = (game) => `flash_${String(game).toLowerCase().replace(/[^a-z0-9]+/g, '_')}`;
+
+// Which flashPanel game wiring boots a given atlas's game. This is ENGINE
+// BINDING, not map semantics (decision 6) — the atlas holds neither, and the
+// per-game config it points at (`games/<id>.json`) holds the teleport recipe,
+// the item/location maps, and now the position signals the crossing detector
+// reads. Games with no wiring here compile graph-only.
+export const FLASH_PANEL_WIRING = Object.freeze({
+    seedling: Object.freeze({ config: 'seedling.json', wasm: 'seedling_teleport_ap/game.html' }),
+});
+
 const endpointKey = (regionId, exitId) => `${regionId}/${exitId}`;
+
+/** Tile coordinate -> game pixel. The atlas is tile-space; the engine is pixels. */
+const toPixels = (tile, tileSize) => ({
+    x: (tile?.[0] ?? 0) * tileSize,
+    y: (tile?.[1] ?? 0) * tileSize,
+});
+
+/**
+ * The (sub-)regions one atlas region binds to, paired with the sub_region name
+ * whose exits and locations belong to each. A region without a subgraph is a
+ * single implicit sub-region and its exits carry no `sub_region` at all
+ * (validator-enforced both ways), so `sub` is undefined there.
+ */
+function apBindingsFor(region) {
+    const subs = region.subgraph?.sub_regions;
+    return Array.isArray(subs) && subs.length > 0
+        ? subs.map((sub) => ({ sub, apName: apRegionName(region.region_id, sub) }))
+        : [{ sub: undefined, apName: apRegionName(region.region_id) }];
+}
+
+/**
+ * Build projection 3 — the play-time `preset_sidecars` block.
+ *
+ * One sidecar per AP region of every atlas region that names a level
+ * (`map_ref`). The payload carries everything the host-side glue needs for BOTH
+ * halves of a crossing, so it never has to re-read the atlas at play time:
+ *
+ *   arrival   — `level` + the arrival exit's own `entrance_tile`, which
+ *               procgenPlayer resolves from the SOURCE exit's `targetExitId`
+ *   crossing  — each exit's `target_level` + `target_spawn` (the destination
+ *               entrance tile in pixels), so a reported level change resolves to
+ *               the exit that goes there, tie-broken on the reported spawn
+ *               coordinates when two exits of one region reach the same level
+ *
+ * `exitName` MUST equal the AP exit's `name`: the flash-family
+ * `deserializeWorld` keys the exits Map on `exitName ?? exit_id`, and
+ * procgenPlayer.handleRegionMove looks the crossing up by the AP exit name.
+ *
+ * Only WIRED exits appear. An unwired boundary exit has no destination in this
+ * atlas at all — it is already omitted from the graph, and a payload entry for
+ * it could only mis-resolve a crossing.
+ */
+function buildPresetSidecars(atlas, atlasRegions, wiredInfo, substrate) {
+    const tileSize = atlas.tile_space?.tile_size ?? 1;
+    const sidecars = {};
+    const unbound = [];
+    for (const region of atlasRegions) {
+        if (!Number.isInteger(region.map_ref)) {
+            unbound.push(region.region_id);
+            continue;
+        }
+        for (const { sub, apName } of apBindingsFor(region)) {
+            const exits = [];
+            for (const exit of region.exits ?? []) {
+                if (region.subgraph && exit.sub_region !== sub) continue;
+                const info = wiredInfo.get(endpointKey(region.region_id, exit.exit_id));
+                if (!info) continue; // unwired — omitted from the graph too
+                exits.push({
+                    exit_id: exit.exit_id,
+                    kind: exit.kind,
+                    ...(exit.side === undefined ? {} : { side: exit.side }),
+                    exit_tiles: exit.exit_tiles,
+                    entrance_tile: exit.entrance_tile,
+                    entrance_spawn: toPixels(exit.entrance_tile, tileSize),
+                    exitName: info.apExitName,
+                    targetRegion: info.targetApRegion,
+                    targetExitId: info.target.exit.exit_id,
+                    target_level: Number.isInteger(info.target.region.map_ref)
+                        ? info.target.region.map_ref : null,
+                    target_spawn: Number.isInteger(info.target.region.map_ref)
+                        ? toPixels(info.target.exit.entrance_tile, tileSize) : null,
+                });
+            }
+            sidecars[apName] = {
+                substrate,
+                playable_payload: {
+                    gameId: atlas.game,
+                    atlas_ref: atlas.atlas_id,
+                    atlas_region: region.region_id,
+                    ...(sub === undefined ? {} : { atlas_sub_region: sub }),
+                    level: region.map_ref,
+                    tile_size: tileSize,
+                    exits,
+                },
+            };
+        }
+    }
+    return { sidecars, unbound };
+}
 
 /** The AP region names a single atlas region projects into, in declared order. */
 export function apRegionNamesFor(region) {
-    const subs = region.subgraph?.sub_regions;
-    return Array.isArray(subs) && subs.length > 0
-        ? subs.map((s) => apRegionName(region.region_id, s))
-        : [apRegionName(region.region_id)];
+    return apBindingsFor(region).map((b) => b.apName);
 }
 
 /**
@@ -173,19 +275,26 @@ export function compileRegionAtlas(atlas, options = {}) {
             exitIndex.set(endpointKey(region.region_id, exit.exit_id), { region, exit });
         }
     }
-    const wired = new Set();
+    // What each wired boundary exit became, keyed by its atlas endpoint. This is
+    // the graph projection's own record, and projection 3 reads it rather than
+    // re-deriving names — the sidecar's `exitName` has to be the exit name the
+    // graph actually carries, suffix collisions and all.
+    const wiredInfo = new Map();
     const connections = atlas.vanilla_layout?.connections ?? [];
     for (const conn of connections) {
         const a = exitIndex.get(endpointKey(conn.from?.[0], conn.from?.[1]));
         const b = exitIndex.get(endpointKey(conn.to?.[0], conn.to?.[1]));
         if (!a || !b) continue; // unresolvable endpoints are validator errors
-        wired.add(endpointKey(a.region.region_id, a.exit.exit_id));
-        wired.add(endpointKey(b.region.region_id, b.exit.exit_id));
         const aName = apRegionNameForBinding(a.region, a.exit.sub_region);
         const bName = apRegionNameForBinding(b.region, b.exit.sub_region);
-        addExit(aName, bName, a.exit.access_rule);
-        addExit(bName, aName, b.exit.access_rule);
+        const aExitName = addExit(aName, bName, a.exit.access_rule);
+        const bExitName = addExit(bName, aName, b.exit.access_rule);
+        wiredInfo.set(endpointKey(a.region.region_id, a.exit.exit_id),
+            { apExitName: aExitName, targetApRegion: bName, target: b });
+        wiredInfo.set(endpointKey(b.region.region_id, b.exit.exit_id),
+            { apExitName: bExitName, targetApRegion: aName, target: a });
     }
+    const wired = new Set(wiredInfo.keys());
 
     // Unwired boundary exits are map crossings this atlas does not cover yet.
     // They are omitted from the graph and NAMED here — never silently dropped.
@@ -292,6 +401,20 @@ export function compileRegionAtlas(atlas, options = {}) {
         ...(atlas.tile_space?.map_document ? { map_document: atlas.tile_space.map_document } : {}),
     };
 
+    // --- projection 3: play-time binding -----------------------------------
+    const substrate = options.substrateId ?? substrateIdFor(atlas.game);
+    const { sidecars, unbound } = buildPresetSidecars(atlas, atlasRegions, wiredInfo, substrate);
+    const sidecarRegions = Object.keys(sidecars);
+    if (sidecarRegions.length > 0) {
+        // The flashPanel wiring boots the real game for this preset. It is the
+        // same hand-added block the seed-1 seedling preset carries — except
+        // here it is COMPILED, so a regeneration no longer drops it (the
+        // rulesExporter precedent, and the trap the plan's decision 2 names).
+        const wiring = options.flashPanel ?? FLASH_PANEL_WIRING[atlas.game];
+        if (wiring) rules.flash_panel = { ...wiring };
+        rules.preset_sidecars = { 1: sidecars };
+    }
+
     const report = {
         atlas_id: atlas.atlas_id,
         game_name: gameName,
@@ -306,6 +429,13 @@ export function compileRegionAtlas(atlas, options = {}) {
         distinct_items: itemNames.length,
         unwired_exits: unwiredExits,
         start_region: startApRegion,
+        substrate,
+        sidecar_regions: sidecarRegions,
+        flash_panel: rules.flash_panel ?? null,
+        // Atlas regions with no `map_ref`: graph-only, no physical binding, so
+        // no sidecar. Named rather than counted for the same reason unwired
+        // exits are — a silent omission reads as a fully-bound map.
+        regions_without_map_ref: unbound,
         atlas_valid: validation.ok,
         atlas_errors: validation.errors,
         atlas_warnings: validation.warnings,
@@ -329,6 +459,16 @@ export function formatCompileReport(report) {
         for (const e of report.unwired_exits) {
             lines.push(`  ${e.region_id}/${e.exit_id} (${e.kind}${e.side ? ` ${e.side}` : ''})`);
         }
+    }
+    if (report.sidecar_regions?.length > 0) {
+        lines.push(`projection 3: ${report.sidecar_regions.length} region(s) bound to substrate `
+            + `${report.substrate}${report.flash_panel ? ` (flash_panel: ${report.flash_panel.config})` : ''}`);
+    } else {
+        lines.push('projection 3: no region names a map_ref — graph-only, no preset_sidecars');
+    }
+    if (report.regions_without_map_ref?.length > 0 && report.sidecar_regions?.length > 0) {
+        lines.push(`${report.regions_without_map_ref.length} region(s) have no map_ref — no play-time binding: `
+            + report.regions_without_map_ref.join(', '));
     }
     return lines;
 }

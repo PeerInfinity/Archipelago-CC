@@ -16,9 +16,11 @@
  *     points at the atlas's start region, which is what
  *     procgenPlayerEngine.findStartRegion follows.
  *
- * Phase 3 is graph-only (ruled 2026-07-27): walking between sections in the
- * real game is projection 3, Phase 4. This checks the graph, and asserts the
- * preset carries no sidecars.
+ * This script stays the GRAPH gate. Phase 4 added projection 3 on top of the
+ * same compile, so Phase C now asserts the sidecars are present and consistent
+ * with the graph rather than absent; the play-time behaviour they drive is
+ * verify-seedling-atlas-play.mjs's job (it needs the wasm artifact, this does
+ * not).
  *
  * Prereq: dev server on :8000. Run:
  *   node scripts/procgen/verify-seedling-atlas-preset.mjs
@@ -119,9 +121,25 @@ try {
         JSON.stringify(loaded.menuExits));
 
     const preset = JSON.parse(fs.readFileSync(PRESET_FILE, 'utf8'));
-    check('Phase C: the preset is graph-only — no preset_sidecars (Phase 3 ruling)',
-        preset.preset_sidecars === undefined,
-        `region_atlas: ${preset.region_atlas?.atlas_id}`);
+    // Phase 4: every region naming a level carries a play-time sidecar, and its
+    // exits name AP exits that really exist in the graph — the registry's
+    // exits-Map key requirement, checked against the loaded model.
+    const sidecars = preset.preset_sidecars?.['1'] ?? {};
+    const sidecarNames = Object.keys(sidecars).sort();
+    check('Phase C: every sidecar region is a region in the loaded graph',
+        sidecarNames.length === report.sidecar_regions.length
+        && sidecarNames.every((n) => loaded.regions.includes(n)),
+        sidecarNames.join(', '));
+    const payloadExitNames = Object.values(sidecars)
+        .flatMap((s) => s.playable_payload.exits.map((e) => e.exitName));
+    const graphExitNames = new Set(Object.values(preset.regions['1'])
+        .flatMap((r) => r.exits.map((e) => e.name)));
+    check('Phase C: every sidecar exitName is a real AP exit name',
+        payloadExitNames.length > 0 && payloadExitNames.every((n) => graphExitNames.has(n)),
+        `${payloadExitNames.length} payload exits`);
+    check('Phase C: the preset carries the flashPanel wiring that boots the game',
+        preset.flash_panel?.config === 'seedling.json' && !!preset.flash_panel?.wasm,
+        JSON.stringify(preset.flash_panel));
 } finally {
     await browser.close();
 }

@@ -19,7 +19,7 @@ import { describe, it, expect } from 'vitest';
 
 import { stringifyRulesJson } from '../shared/rulesJsonBuilder.js';
 import { rulesJsonSchemaErrors } from '../runnerDemo/ruleSchemaCheck.js';
-import { apRegionName } from './regionAtlasValidator.js';
+import { apRegionName, stampAtlasIdentity } from './regionAtlasValidator.js';
 import {
     compileRegionAtlas,
     formatCompileReport,
@@ -27,6 +27,7 @@ import {
     apRegionNameForBinding,
     MENU_REGION,
     GAME_START_EXIT,
+    substrateIdFor,
     REGION_ATLAS_LOCATION_ID_BASE,
     REGION_ATLAS_ITEM_ID_BASE,
 } from './regionAtlasCompiler.js';
@@ -240,6 +241,147 @@ describe('compiling the real Seedling starter atlas', () => {
         expect(report.atlas_valid).toBe(true);
         expect(report.atlas_warnings).toHaveLength(6);
         expect(report.atlas_warnings.every((w) => /is not wired by vanilla_layout/.test(w))).toBe(true);
+    });
+});
+
+describe('projection 3 — play-time sidecars (Phase 4)', () => {
+    const { rules, report } = compileStarter();
+    const sidecars = rules.preset_sidecars['1'];
+    const payload = (name) => sidecars[name].playable_payload;
+    const exitOf = (name, exitId) => payload(name).exits.find((e) => e.exit_id === exitId);
+
+    it('binds every region that names a real level to the per-game flash substrate', () => {
+        expect(substrateIdFor('seedling')).toBe('flash_seedling');
+        expect(Object.keys(sidecars))
+            .toEqual(['overworld_start', 'starting_house', 'owls_nest_entrance']);
+        expect(Object.values(sidecars).every((s) => s.substrate === 'flash_seedling')).toBe(true);
+        expect(report.substrate).toBe('flash_seedling');
+        expect(report.regions_without_map_ref).toEqual([]);
+    });
+
+    it('carries the atlas identity, the level and the tile size in each payload', () => {
+        expect(payload('starting_house')).toMatchObject({
+            gameId: 'seedling',
+            atlas_ref: STARTER.atlas_id,
+            atlas_region: 'starting_house',
+            level: 86,
+            tile_size: 16,
+        });
+        expect(payload('overworld_start').level).toBe(0);
+        expect(payload('owls_nest_entrance').level).toBe(2);
+    });
+
+    it('keys each exit on the AP exit NAME — the registry deserializer requires it', () => {
+        // flashSubstrateLibrary.deserializeWorld keys the exits Map on
+        // `exitName ?? exit_id`, and procgenPlayer.handleRegionMove looks a
+        // crossing up by the AP exit name. A mismatch silently breaks moves.
+        for (const [apRegion, sidecar] of Object.entries(sidecars)) {
+            const graphExitNames = exitsOf(rules, apRegion).map((e) => e.name);
+            for (const e of sidecar.playable_payload.exits) {
+                expect(graphExitNames).toContain(e.exitName);
+            }
+        }
+        expect(exitOf('overworld_start', 'house_door').exitName)
+            .toBe('overworld_start -> starting_house');
+    });
+
+    it('stamps the destination level and spawn pixels the crossing detector needs', () => {
+        // entrance_tile [3,4] x tile_size 16 -> (48, 64), the spawn a player
+        // arriving through starting_house/door lands on.
+        expect(exitOf('overworld_start', 'house_door')).toMatchObject({
+            kind: 'teleporter',
+            targetRegion: 'starting_house',
+            targetExitId: 'door',
+            target_level: 86,
+            target_spawn: { x: 48, y: 64 },
+            entrance_tile: [10, 17],
+            entrance_spawn: { x: 160, y: 272 },
+        });
+        // ...and the return trip is the mirror image.
+        expect(exitOf('starting_house', 'door')).toMatchObject({
+            targetRegion: 'overworld_start',
+            targetExitId: 'house_door',
+            target_level: 0,
+            target_spawn: { x: 160, y: 272 },
+            entrance_spawn: { x: 48, y: 64 },
+        });
+    });
+
+    it('omits the unwired boundary exits — they have no destination to resolve', () => {
+        expect(payload('overworld_start').exits.map((e) => e.exit_id))
+            .toEqual(['house_door', 'owls_nest_stairs']);
+        expect(payload('owls_nest_entrance').exits.map((e) => e.exit_id)).toEqual(['stairs_up']);
+    });
+
+    it('stamps the flashPanel wiring so a regeneration can no longer drop it', () => {
+        expect(rules.flash_panel).toEqual({
+            config: 'seedling.json', wasm: 'seedling_teleport_ap/game.html',
+        });
+        expect(formatCompileReport(report).join('\n'))
+            .toContain('projection 3: 3 region(s) bound to substrate flash_seedling');
+    });
+
+    it('the fixture names no map_ref, so it stays GRAPH-ONLY', () => {
+        const { rules: fixtureRules, report: fixtureReport } = compileFixture();
+        expect(fixtureRules.preset_sidecars).toBeUndefined();
+        expect(fixtureRules.flash_panel).toBeUndefined();
+        expect(fixtureReport.sidecar_regions).toEqual([]);
+        expect(fixtureReport.regions_without_map_ref)
+            .toEqual(['owls_nest', 'overworld_south', 'gundernourd']);
+        expect(formatCompileReport(fixtureReport).join('\n'))
+            .toContain('no region names a map_ref — graph-only');
+    });
+
+    it('a subgraph region gets one sidecar per sub-region, exits partitioned by binding', () => {
+        // The starter atlas has no subgraph yet; the fixture has three, so give
+        // its regions levels and check the split. Level-granular v1 binds every
+        // sub-region of a region to the SAME level — a sub-region boundary is
+        // not physically triggered (ruling 1), it only carries rules.
+        const levelled = clone(FIXTURE);
+        levelled.regions.forEach((r, i) => { r.map_ref = 10 + i; });
+        levelled.tile_space.map_document = 'seedling-map.json';
+        stampAtlasIdentity(levelled, 'seedling-fixture');
+        const built = compileRegionAtlas(levelled).rules.preset_sidecars['1'];
+        expect(Object.keys(built)).toEqual([
+            'owls_nest',
+            'overworld_south__shore', 'overworld_south__island', 'overworld_south__pit',
+            'gundernourd__entry', 'gundernourd__water',
+        ]);
+        for (const name of ['overworld_south__shore', 'overworld_south__island', 'overworld_south__pit']) {
+            expect(built[name].playable_payload.level).toBe(11);
+            expect(built[name].playable_payload.atlas_region).toBe('overworld_south');
+        }
+        expect(built.overworld_south__shore.playable_payload.atlas_sub_region).toBe('shore');
+        // north_pass binds to `shore`, rock_gap to `pit`; `island` has neither.
+        expect(built.overworld_south__shore.playable_payload.exits.map((e) => e.exit_id))
+            .toEqual(['north_pass']);
+        expect(built.overworld_south__pit.playable_payload.exits.map((e) => e.exit_id))
+            .toEqual(['rock_gap']);
+        expect(built.overworld_south__island.playable_payload.exits).toEqual([]);
+        // A crossing INTO a sub-region names that sub-region, not the parent.
+        expect(built.owls_nest.playable_payload.exits.find((e) => e.exit_id === 'south_stair'))
+            .toMatchObject({ targetRegion: 'overworld_south__shore', targetExitId: 'north_pass' });
+    });
+
+    it('a region whose neighbour has no map_ref still wires, with a null target level', () => {
+        const mixed = clone(STARTER);
+        delete atlasRegion(mixed, 'starting_house').map_ref;
+        stampAtlasIdentity(mixed, 'seedling');
+        const { rules: mixedRules, report: mixedReport } = compileRegionAtlas(mixed, { mapDoc: MAP_DOC });
+        const built = mixedRules.preset_sidecars['1'];
+        expect(Object.keys(built)).toEqual(['overworld_start', 'owls_nest_entrance']);
+        expect(mixedReport.regions_without_map_ref).toEqual(['starting_house']);
+        const door = built.overworld_start.playable_payload.exits.find((e) => e.exit_id === 'house_door');
+        expect(door.target_level).toBeNull();
+        expect(door.target_spawn).toBeNull();
+    });
+
+    it('the substrate id and flashPanel wiring are overridable per compile', () => {
+        const { rules: over } = compileStarter({
+            substrateId: 'flash_other', flashPanel: { config: 'other.json' },
+        });
+        expect(over.preset_sidecars['1'].starting_house.substrate).toBe('flash_other');
+        expect(over.flash_panel).toEqual({ config: 'other.json' });
     });
 });
 
