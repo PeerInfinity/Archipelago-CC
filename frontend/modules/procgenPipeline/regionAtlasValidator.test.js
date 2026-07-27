@@ -9,6 +9,7 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, it, expect } from 'vitest';
 
+import { compactJsonFile } from './compactJson.js';
 import {
     validateRegionAtlas,
     stampAtlasIdentity,
@@ -586,5 +587,62 @@ describe('map_ref (multi-level coordinate spaces)', () => {
         expect([...indexMapDocument(MAP_DOC).keys()]).toEqual(['0', '12']);
         expect([...indexMapDocument({ a: { width: 1 }, b: { width: 2 } }).keys()]).toEqual(['a', 'b']);
         expect(indexMapDocument(null).size).toBe(0);
+    });
+});
+
+// --- the committed Seedling starter atlas (Phase 2, Deliverable 5) ----------
+//
+// The real map, unlike the invented fixture above: three regions around the
+// game start whose geometry is DERIVED from the committed map extract. It is
+// regenerated here rather than merely read, which is the gate that keeps it and
+// the extract from drifting apart — everything the builder needs is committed,
+// so no Seedling checkout is involved.
+describe('the Seedling starter atlas', () => {
+    const MAP = JSON.parse(readFileSync(
+        fileURLToPath(new URL('../flashPanel/atlases/seedling-map.json', import.meta.url)), 'utf8',
+    ));
+    const PATH = fileURLToPath(new URL('../flashPanel/atlases/seedling.json', import.meta.url));
+    const TEXT = readFileSync(PATH, 'utf8');
+    const ATLAS = JSON.parse(TEXT);
+
+    it('validates with zero errors, map_ref resolved against the map extract', () => {
+        const r = validateRegionAtlas(ATLAS, { mapDoc: MAP });
+        expect(r.errors).toEqual([]);
+        expect(r.stats).toEqual({ regions: 3, sub_regions: 0, exits: 10, locations: 1, connections: 2 });
+    });
+
+    it('warns only about the exits this partial atlas has not grown into yet', () => {
+        const r = validateRegionAtlas(ATLAS, { mapDoc: MAP });
+        expect(r.warnings.every((w) => /is not wired by vanilla_layout/.test(w))).toBe(true);
+        expect(r.warnings).toHaveLength(6);
+    });
+
+    it('regenerates byte-identically from the committed map extract', async () => {
+        const { buildStarterAtlas } = await import('../../../scripts/procgen/make-seedling-starter-atlas.mjs');
+        expect(compactJsonFile(buildStarterAtlas())).toBe(TEXT);
+    });
+
+    it('places every exit tile on a real level-link entity', () => {
+        // The claim the builder makes: nothing here is a hand-typed coordinate.
+        const tile = (e) => [Math.floor(e.x / MAP.tile_size), Math.floor(e.y / MAP.tile_size)].join(',');
+        for (const region of ATLAS.regions) {
+            const level = MAP.levels.find((l) => l.level === region.map_ref);
+            const links = new Set(level.entities
+                .filter((e) => ['teleporter', 'stairsdown', 'stairsup'].includes(e.type))
+                .map(tile));
+            for (const exit of region.exits) {
+                for (const t of exit.exit_tiles) {
+                    expect(links, `${region.region_id}/${exit.exit_id} [${t}]`).toContain(t.join(','));
+                }
+            }
+        }
+    });
+
+    it('places its one location on the real chest', () => {
+        const level = MAP.levels.find((l) => l.level === 86);
+        const chest = level.entities.find((e) => e.type === 'chest');
+        const loc = ATLAS.regions.find((r) => r.region_id === 'starting_house').locations[0];
+        expect(loc.tile).toEqual([Math.floor(chest.x / 16), Math.floor(chest.y / 16)]);
+        expect(loc.vanilla_item).toBe('Seal');
     });
 });

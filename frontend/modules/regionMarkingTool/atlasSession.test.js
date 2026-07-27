@@ -28,6 +28,17 @@ describe('geometry helpers', () => {
         expect(deriveEdgeSide(BOUNDS, [[9, 2], [9, 3]])).toBe('E');
     });
 
+    it('reads a SINGLE tile in both orientations', () => {
+        // A one-tile run is a valid horizontal AND vertical span. Trying only
+        // the horizontal reading reported "not on a boundary" for a one-tile
+        // exit on the east edge — which is what most of Seedling's real map
+        // crossings are.
+        expect(deriveEdgeSide(BOUNDS, [[9, 4]])).toBe('E');
+        expect(deriveEdgeSide(BOUNDS, [[0, 4]])).toBe('W');
+        expect(deriveEdgeSide(BOUNDS, [[4, 0]])).toBe('N');
+        expect(deriveEdgeSide(BOUNDS, [[4, 7]])).toBe('S');
+    });
+
     it('refuses runs that are not a straight contiguous line on a boundary', () => {
         expect(deriveEdgeSide(BOUNDS, [[3, 3]])).toBeNull();          // interior
         expect(deriveEdgeSide(BOUNDS, [[3, 0], [5, 0]])).toBeNull();  // gap

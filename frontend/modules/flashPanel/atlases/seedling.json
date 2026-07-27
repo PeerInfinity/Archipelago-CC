@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "atlas_id": "seedling-6f17eb8e",
+  "game": "seedling",
+  "name": "Seedling — vanilla (starter)",
+  "description": "PARTIAL: the first three regions around the game start, authored with the region-marking tool as the seed to grow the full map from. Geometry is derived from seedling-map.json, so every exit tile is a real level-link entity.",
+  "provenance": { "generator": "region-marking-tool", "content_hash": "6f17eb8e" },
+  "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
+  "regions": [
+    {
+      "region_id": "overworld_start",
+      "name": "Overworld — Start",
+      "bounds": { "x": 0, "y": 0, "w": 20, "h": 20 },
+      "map_ref": 0,
+      "exits": [
+        {
+          "exit_id": "west_crossing",
+          "kind": "edge",
+          "side": "W",
+          "exit_tiles": [[0,8],[0,9]],
+          "entrance_tile": [0,8]
+        },
+        {
+          "exit_id": "north_crossing",
+          "kind": "edge",
+          "side": "N",
+          "exit_tiles": [[15,0]],
+          "entrance_tile": [15,0]
+        },
+        {
+          "exit_id": "east_crossing",
+          "kind": "edge",
+          "side": "E",
+          "exit_tiles": [[19,11]],
+          "entrance_tile": [19,11]
+        },
+        {
+          "exit_id": "house_door",
+          "kind": "teleporter",
+          "exit_tiles": [[10,17]],
+          "entrance_tile": [10,17]
+        },
+        {
+          "exit_id": "owls_nest_stairs",
+          "kind": "teleporter",
+          "exit_tiles": [[16,17]],
+          "entrance_tile": [16,17]
+        },
+        {
+          "exit_id": "hut_door",
+          "kind": "teleporter",
+          "exit_tiles": [[5,6]],
+          "entrance_tile": [5,6]
+        },
+        {
+          "exit_id": "gundernourd_stairs",
+          "kind": "teleporter",
+          "exit_tiles": [[2,12]],
+          "entrance_tile": [2,12]
+        }
+      ],
+      "locations": [],
+      "annotations": {
+        "rules_source": "manual",
+        "notes": "The room the game starts in. Its sub-region split awaits the Phase-5 analyzer: the breakable rocks and water here are real traversal obstacles, but which tiles they separate is a reachability question, not something to guess by hand."
+      }
+    },
+    {
+      "region_id": "starting_house",
+      "name": "Starting House",
+      "bounds": { "x": 0, "y": 0, "w": 6, "h": 5 },
+      "map_ref": 86,
+      "exits": [
+        { "exit_id": "door", "kind": "teleporter", "exit_tiles": [[3,4]], "entrance_tile": [3,4] }
+      ],
+      "locations": [
+        { "name": "Starting House - Chest", "tile": [3,1], "vanilla_item": "Seal" }
+      ],
+      "annotations": {
+        "rules_source": "manual",
+        "notes": "One room, no traversal obstacle — so no subgraph (a region without one is a single implicit sub-region, and carries no boilerplate)."
+      }
+    },
+    {
+      "region_id": "owls_nest_entrance",
+      "name": "Owl's Nest — Entrance",
+      "bounds": { "x": 0, "y": 0, "w": 7, "h": 7 },
+      "map_ref": 2,
+      "exits": [
+        {
+          "exit_id": "stairs_up",
+          "kind": "teleporter",
+          "exit_tiles": [[3,1]],
+          "entrance_tile": [3,1]
+        },
+        {
+          "exit_id": "descent",
+          "kind": "teleporter",
+          "exit_tiles": [[3,6]],
+          "entrance_tile": [3,6]
+        }
+      ],
+      "locations": [],
+      "annotations": {
+        "rules_source": "manual",
+        "notes": "The Dungeon 1 stairwell. `descent` is a real map edge this partial atlas does not yet cover — the validator warns about it, which is the growth list working as intended."
+      }
+    }
+  ],
+  "vanilla_layout": {
+    "start_region": "overworld_start",
+    "connections": [
+      { "from": ["overworld_start","house_door"], "to": ["starting_house","door"] },
+      { "from": ["overworld_start","owls_nest_stairs"], "to": ["owls_nest_entrance","stairs_up"] }
+    ]
+  }
+}

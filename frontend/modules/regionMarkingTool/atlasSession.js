@@ -63,17 +63,18 @@ export function deriveEdgeSide(bounds, tiles) {
         const run = [...values].sort((a, b) => a - b);
         return run.every((v, i) => i === 0 || v === run[i - 1] + 1);
     };
+    // Both branches are tried: a SINGLE tile is a valid run in either
+    // orientation, so short-circuiting on the horizontal reading would report
+    // "not on a boundary" for a one-tile exit sitting on the east edge.
     if (ys.size === 1 && contiguous(xs)) {
         const y = [...ys][0];
         if (y === bounds.y) return 'N';
         if (y === bounds.y + bounds.h - 1) return 'S';
-        return null;
     }
     if (xs.size === 1 && contiguous(ys)) {
         const x = [...xs][0];
         if (x === bounds.x) return 'W';
         if (x === bounds.x + bounds.w - 1) return 'E';
-        return null;
     }
     return null;
 }
@@ -99,19 +100,24 @@ export function rectBounds(from, to) {
     return { x, y, w: Math.abs(to[0] - from[0]) + 1, h: Math.abs(to[1] - from[1]) + 1 };
 }
 
-export function createEmptyAtlas({ game = 'seedling', name = '', tileSize = 16, mapDocument = null, mapSource = null } = {}) {
+export function createEmptyAtlas({
+    game = 'seedling', name = '', description = '', tileSize = 16, mapDocument = null, mapSource = null,
+} = {}) {
+    // Built in the order the schema documents, so a saved atlas reads
+    // top-down: what it is, then where its coordinates live, then the map.
     const atlas = {
         schema_version: REGION_ATLAS_SCHEMA_VERSION,
         atlas_id: game,
         game,
-        provenance: { generator: 'region-marking-tool' },
-        tile_space: { tile_size: tileSize },
-        regions: [],
-        vanilla_layout: { start_region: '', connections: [] },
     };
     if (name) atlas.name = name;
+    if (description) atlas.description = description;
+    atlas.provenance = { generator: 'region-marking-tool' };
+    atlas.tile_space = { tile_size: tileSize };
     if (mapSource) atlas.tile_space.map_source = mapSource;
     if (mapDocument) atlas.tile_space.map_document = mapDocument;
+    atlas.regions = [];
+    atlas.vanilla_layout = { start_region: '', connections: [] };
     return atlas;
 }
 

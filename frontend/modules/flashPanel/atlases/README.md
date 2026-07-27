@@ -65,6 +65,24 @@ atlas, the CLI loads it and resolves every `map_ref` against a real level.
   Semantic tile categories (walkable/solid) are deliberately absent: that is
   Phase 5's job, and this document keeps raw tileset identity only.
 
+- `seedling.json` — the real Seedling atlas, **partial**: the three regions
+  around the game start (the overworld start room, the house, and the Owl's Nest
+  entrance), authored with the marking-tool panel and meant to be grown from
+  there. Every exit tile is a real level-link entity in `seedling-map.json` —
+  the geometry is derived, not typed — so it is rebuilt rather than hand-edited
+  when the map changes:
+
+  ```sh
+  node scripts/procgen/make-seedling-starter-atlas.mjs           # rebuild
+  node scripts/procgen/make-seedling-starter-atlas.mjs --check   # gate
+  ```
+
+  Its six warnings are all `exit … is not wired`: real map crossings out of the
+  start room that this atlas does not cover yet. That list is the growth queue,
+  not a defect. The sub-region splits are deliberately absent — which tiles a
+  breakable rock separates is a reachability question for the Phase-5 analyzer,
+  not something to guess by hand.
+
 - `seedling-fixture.json` — the Phase-1 test anchor. Three regions using
   Seedling's real region and item names, but **invented geometry**: it exists to
   exercise every feature of the format (multi-tile edge spans, teleporters, a
