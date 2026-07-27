@@ -942,6 +942,15 @@ sorted atlas nodes hold no items; the entry-rule vocabulary is conjunctive; the
 Seedling starter atlas has one marked location, so an atlas region is currently
 geography and gating rather than loot. Each is a fence with a named next step.
 
+**No panel exposure yet** — an atlas pool reaches sphere growth through the
+headless CLI only. The region-library arc needed a whole phase for this (F6d),
+and it found a real wire missing: the panel drives the STEPPED runner, which had
+to learn to resolve the sources itself. That half is already done here
+(`sphereSteps` resolves atlas sources and threads `atlasAssignments`), so what
+remains is the UI: serving pools, ticking one, and running the sorter in
+`_buildSphereConfig` before the plan reaches the driver. Deliberately out of this
+phase's scope (the kickoff fenced it to sphere growth).
+
 ### Phase 7 — RWK
 - [ ] Tile map editor feature: select region-transition tiles (H/V lines)
 - [ ] Analyzer update: evaluate one region at a time; per-region access

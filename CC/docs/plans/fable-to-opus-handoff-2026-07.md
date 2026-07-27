@@ -2625,6 +2625,11 @@ to get into them.
   behind a plain `Progressive Swim` (scheduled into sphere 1, so they become
   wave-1 nodes), and three are DECLINED because their only way in is
   `(Progressive Sword OR Ghost Spear)`.
+- **No panel exposure yet** — the atlas reaches sphere growth through the
+  headless CLI only. The stepped-runner half (the wire F6d found missing in the
+  library arc) IS already done — `sphereSteps` resolves atlas sources and
+  threads `atlasAssignments` — so what remains is the UI: serve pools, tick one,
+  and run the sorter in `_buildSphereConfig` before the plan reaches the driver.
 - NEXT: Phase 7 (RWK) and Phase 8 (staged playback bots). Phases 7+ unchanged.
 
 ## 6. Everything else (unchanged queues)
