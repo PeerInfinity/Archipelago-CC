@@ -29,18 +29,46 @@ is what invalidates the downstream pipeline steps keyed on it:
 node scripts/procgen/region-atlas-validate.mjs --restamp atlases/<game>.json
 ```
 
-(`--restamp` rewrites the file with `JSON.stringify(…, 2)`, which explodes the
-tile pairs one number per line. For a hand-maintained document, prefer running
-the CLI without `--restamp` to check, and paste the reported hash into
-`atlas_id` + `provenance.content_hash` by hand — the hash is computed over the
-parsed document, so formatting never moves it.)
+`--restamp` rewrites through
+[`compactJson.js`](../../procgenPipeline/compactJson.js) — the same writer the
+marking tool saves with — so tile pairs and small objects like `bounds` stay on
+one line and a restamp of an unedited document is a no-op diff. (Before Phase 2
+it used `JSON.stringify(…, 2)`, which put every coordinate on its own line;
+the "paste the hash in by hand" workaround that forced is gone.)
+
+## Coordinate spaces
+
+RWK is one big tile map. Seedling is 116 separate levels, each with its own
+origin — so a region names the space its `bounds` and tiles live in with
+`map_ref` (a level id), and `tile_space.map_document` names the document those
+ids index. Both are optional and additive: a single-space atlas omits them and
+validates exactly as it did in Phase 1. When the map document sits beside the
+atlas, the CLI loads it and resolves every `map_ref` against a real level.
 
 ## Files
+
+- `seedling-map.json` — the **map source**, not an atlas: 116 levels extracted
+  from the Seedling source checkout (Ogmo `.oel` levels + `Game.as`'s level
+  table), holding per-level tile placements with raw tileset identity and the
+  full entity layer. Regenerate and verify with:
+
+  ```sh
+  node scripts/procgen/extract-seedling-map.mjs --source ~/CC/seedling
+  node scripts/procgen/extract-seedling-map.mjs --source ~/CC/seedling --check
+  ```
+
+  It carries no timestamp, so `--check` is exact: the same checkout produces
+  the same bytes. Seedling is MIT, so unlike RWK's tile map this is committed.
+  `level` is the 0-based index into `Game.as`'s `levels` array — the same
+  number `games/seedling.json` uses in `teleport` / `region_coords` /
+  `location_coords`, and the same one a `teleporter` entity's `to` names.
+  Semantic tile categories (walkable/solid) are deliberately absent: that is
+  Phase 5's job, and this document keeps raw tileset identity only.
 
 - `seedling-fixture.json` — the Phase-1 test anchor. Three regions using
   Seedling's real region and item names, but **invented geometry**: it exists to
   exercise every feature of the format (multi-tile edge spans, teleporters, a
   region with no subgraph, item-gated and one-way internal exits, boundary and
   location access rules, both `rules_source` flavours, the vanilla layout), not
-  to describe the real map. The real Seedling atlas arrives with the marking
-  tool in Phase 2.
+  to describe the real map. It is the format anchor the validator tests read off
+  disk — leave it alone; author real maps in their own file.

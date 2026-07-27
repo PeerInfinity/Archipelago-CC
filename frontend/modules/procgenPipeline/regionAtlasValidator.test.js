@@ -16,6 +16,7 @@ import {
     apRegionName,
     AP_SUBREGION_SEPARATOR,
     REGION_ATLAS_SCHEMA_VERSION,
+    indexMapDocument,
 } from './regionAtlasValidator.js';
 
 const FIXTURE_PATH = fileURLToPath(
@@ -495,5 +496,95 @@ describe('vanilla_layout', () => {
         const r = mutated((a) => { a.vanilla_layout.connections.pop(); });
         expect(hasWarning(r, /exit "nest_ladder" of region "owls_nest" is not wired/)).toBe(true);
         expect(hasWarning(r, /exit "pit_mouth" of region "gundernourd" is not wired/)).toBe(true);
+    });
+});
+
+// --- Phase 2 delta: multi-level coordinate spaces ---------------------------
+//
+// Seedling's map is not one tile space but 116 of them, one per level, each
+// with its own origin. `map_ref` names which one a region lives in. The whole
+// point of the delta is that it is ADDITIVE: the Phase-1 fixture, which has no
+// map_ref anywhere, must keep validating byte-for-byte as it did.
+describe('map_ref (multi-level coordinate spaces)', () => {
+    // Two levels, shaped like the committed Seedling extract.
+    const MAP_DOC = { levels: [{ level: 0, width: 40, height: 30 }, { level: 12, width: 10, height: 10 }] };
+
+    // Put every region in level 0 and widen it enough to hold their bounds.
+    const withMapRef = (fn = () => {}) => {
+        const atlas = makeAtlas();
+        atlas.tile_space.map_document = 'seedling-map.json';
+        const span = atlas.regions.reduce((m, r) => ({
+            w: Math.max(m.w, r.bounds.x + r.bounds.w),
+            h: Math.max(m.h, r.bounds.y + r.bounds.h),
+        }), { w: 0, h: 0 });
+        MAP_DOC.levels[0].width = span.w;
+        MAP_DOC.levels[0].height = span.h;
+        for (const r of atlas.regions) r.map_ref = 0;
+        fn(atlas);
+        stampAtlasIdentity(atlas);
+        return atlas;
+    };
+
+    it('leaves the Phase-1 fixture untouched — no map_ref, no new complaints', () => {
+        const r = validateRegionAtlas(makeAtlas());
+        expect(r.errors).toEqual([]);
+        expect(r.warnings).toEqual([]);
+        // Passing a map document changes nothing when nothing references one.
+        expect(validateRegionAtlas(makeAtlas(), { mapDoc: MAP_DOC }).warnings).toEqual([]);
+    });
+
+    it('validates clean with map_ref set and the map document supplied', () => {
+        const r = validateRegionAtlas(withMapRef(), { mapDoc: MAP_DOC });
+        expect(r.errors).toEqual([]);
+        expect(r.warnings).toEqual([]);
+    });
+
+    it('checks only the shape when no map document is available', () => {
+        const r = validateRegionAtlas(withMapRef());
+        expect(r.errors).toEqual([]);
+        const bogus = validateRegionAtlas(withMapRef((a) => { a.regions[0].map_ref = 9999; }));
+        expect(bogus.errors).toEqual([]);
+    });
+
+    it('rejects a map_ref that names no level in the document', () => {
+        const r = validateRegionAtlas(withMapRef((a) => { a.regions[0].map_ref = 9999; }), { mapDoc: MAP_DOC });
+        expect(hasError(r, /map_ref 9999 is not a level in seedling-map\.json/)).toBe(true);
+    });
+
+    it('rejects bounds that do not fit the level they name', () => {
+        const r = validateRegionAtlas(withMapRef((a) => { a.regions[0].map_ref = 12; }), { mapDoc: MAP_DOC });
+        expect(hasError(r, /does not fit level 12, which is 10x10 tiles/)).toBe(true);
+    });
+
+    it('accepts a string level id as readily as an integer', () => {
+        const doc = { levels: [{ level: 'overworld', width: 200, height: 200 }] };
+        const atlas = withMapRef((a) => { for (const r of a.regions) r.map_ref = 'overworld'; });
+        expect(validateRegionAtlas(atlas, { mapDoc: doc }).errors).toEqual([]);
+    });
+
+    it('rejects a map_ref that is neither an integer nor a string', () => {
+        const r = validateRegionAtlas(withMapRef((a) => { a.regions[0].map_ref = [0]; }), { mapDoc: MAP_DOC });
+        expect(hasError(r, /map_ref must be an integer or non-empty string level id/)).toBe(true);
+    });
+
+    it('requires tile_space.map_document once any region uses map_ref', () => {
+        const r = validateRegionAtlas(withMapRef((a) => { delete a.tile_space.map_document; }));
+        expect(hasError(r, /tile_space\.map_document is required/)).toBe(true);
+    });
+
+    it('rejects a non-string map_document', () => {
+        const r = validateRegionAtlas(withMapRef((a) => { a.tile_space.map_document = 7; }));
+        expect(hasError(r, /map_document must be a non-empty string/)).toBe(true);
+    });
+
+    it('warns when only some regions name a space — the rest are ambiguous', () => {
+        const r = validateRegionAtlas(withMapRef((a) => { delete a.regions[1].map_ref; }), { mapDoc: MAP_DOC });
+        expect(hasWarning(r, /has no map_ref, but other regions in this atlas do/)).toBe(true);
+    });
+
+    it('indexes both map-document shapes', () => {
+        expect([...indexMapDocument(MAP_DOC).keys()]).toEqual(['0', '12']);
+        expect([...indexMapDocument({ a: { width: 1 }, b: { width: 2 } }).keys()]).toEqual(['a', 'b']);
+        expect(indexMapDocument(null).size).toBe(0);
     });
 });

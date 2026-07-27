@@ -36,7 +36,8 @@
       "description": "The coordinate system every tile/bounds value in this document is expressed in. Tile coordinates are absolute in the game's own map space; y grows DOWNWARD (so side 'N' is the minimum-y row).",
       "properties": {
         "tile_size": { "type": "integer", "minimum": 1, "description": "Pixels per tile in the source map." },
-        "map_source": { "type": "string", "description": "Where the tile map came from, e.g. 'runtime-extract'. The atlas never embeds the tile grid — it references it (plan decision 7)." }
+        "map_source": { "type": "string", "description": "Where the tile map came from, e.g. 'runtime-extract'. The atlas never embeds the tile grid — it references it (plan decision 7)." },
+        "map_document": { "type": "string", "description": "Filename of the map-source document these coordinates live in, resolved relative to the atlas file (e.g. 'seedling-map.json'). Required once any region carries map_ref." }
       }
     },
     "regions": {
@@ -116,6 +117,10 @@
             "w": { "type": "integer", "minimum": 1 },
             "h": { "type": "integer", "minimum": 1 }
           }
+        },
+        "map_ref": {
+          "type": ["integer", "string"],
+          "description": "Which coordinate space this region's bounds and tiles live in: the id of a level in tile_space.map_document. A game whose map is ONE space (RWK) omits it; a game built of many per-level spaces (Seedling: 116 levels, each with its own origin) names one per region. Geometry checks never cross regions, so this adds only the resolution check — and only when the map document is available to the validator."
         },
         "exits": {
           "type": "array",

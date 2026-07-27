@@ -157,11 +157,49 @@ function checkRuleTree(node, where, err, depth = 0) {
 
 // --- structural validation ---------------------------------------------------
 
-export function validateRegionAtlas(atlas) {
+// --- multi-level coordinate spaces (Phase 2 delta) ---------------------------
+//
+// Phase 1 assumed one coordinate space per game, which is true of RWK (one big
+// tile map) and false of Seedling (116 levels, each its own 0,0). A region may
+// therefore name the space it lives in with `map_ref` — a level id in the
+// document `tile_space.map_document` points at. It is purely ADDITIVE: an
+// atlas with no map_ref anywhere validates exactly as before, because every
+// geometry check the validator does (edge runs on the bounds line, tiles inside
+// bounds) already stays inside a single region and never compares two.
+//
+// Resolution needs the map document, which the validator has no way to read —
+// so callers that have it pass it in. Given one, `map_ref` must name a level
+// and the region's bounds must fit inside that level.
+
+/**
+ * Index a map-source document for validateRegionAtlas's `mapDoc` option.
+ * Accepts the Seedling extract shape ({ levels: [{ level, width, height }] })
+ * or any { id -> { width, height } } map.
+ */
+export function indexMapDocument(doc) {
+    const byId = new Map();
+    if (isPlainObject(doc) && Array.isArray(doc.levels)) {
+        for (const lvl of doc.levels) {
+            if (isPlainObject(lvl) && lvl.level !== undefined) byId.set(String(lvl.level), lvl);
+        }
+    } else if (isPlainObject(doc)) {
+        for (const [k, v] of Object.entries(doc)) if (isPlainObject(v)) byId.set(String(k), v);
+    }
+    return byId;
+}
+
+/**
+ * @param {object} atlas
+ * @param {{ mapDoc?: object }} [options] the parsed document named by
+ *   tile_space.map_document. Supply it and map_ref values are resolved against
+ *   real levels; omit it and only the shape of map_ref is checked.
+ */
+export function validateRegionAtlas(atlas, options = {}) {
     const errors = [];
     const warnings = [];
     const err = (m) => errors.push(m);
     const warn = (m) => warnings.push(m);
+    const mapIndex = options.mapDoc === undefined ? null : indexMapDocument(options.mapDoc);
 
     if (!isPlainObject(atlas)) {
         return { ok: false, errors: ['atlas is not an object'], warnings, stats: null };
@@ -208,6 +246,14 @@ export function validateRegionAtlas(atlas) {
         if (tileSpace.map_source !== undefined && typeof tileSpace.map_source !== 'string') {
             err('tile_space.map_source must be a string when present');
         }
+        if (tileSpace.map_document !== undefined && !isNonEmptyString(tileSpace.map_document)) {
+            err('tile_space.map_document must be a non-empty string when present');
+        }
+    }
+    const usesMapRef = Array.isArray(atlas.regions)
+        && atlas.regions.some((r) => isPlainObject(r) && r.map_ref !== undefined);
+    if (usesMapRef && !isNonEmptyString(tileSpace?.map_document)) {
+        err('tile_space.map_document is required — a region names a map_ref, so the document those level ids live in has to be identified');
     }
 
     // --- regions ---
@@ -254,6 +300,29 @@ export function validateRegionAtlas(atlas) {
             && Number.isInteger(b.h) && b.h > 0;
         if (!boundsOk) {
             err(`${where}.bounds must be { x, y integers; w, h positive integers }`);
+        }
+
+        // --- map_ref: which coordinate space these bounds are in ---
+        if (region.map_ref !== undefined) {
+            if (!(Number.isInteger(region.map_ref) || isNonEmptyString(region.map_ref))) {
+                err(`${where}.map_ref must be an integer or non-empty string level id (got ${JSON.stringify(region.map_ref)})`);
+            } else if (mapIndex) {
+                const level = mapIndex.get(String(region.map_ref));
+                if (!level) {
+                    err(`${where}.map_ref ${JSON.stringify(region.map_ref)} is not a level in ${tileSpace?.map_document ?? 'the map document'}`);
+                } else if (boundsOk && Number.isInteger(level.width) && Number.isInteger(level.height)) {
+                    if (b.x < 0 || b.y < 0 || b.x + b.w > level.width || b.y + b.h > level.height) {
+                        err(
+                            `${where}.bounds (${b.x},${b.y} ${b.w}x${b.h}) does not fit level ${region.map_ref}, `
+                            + `which is ${level.width}x${level.height} tiles`,
+                        );
+                    }
+                }
+            }
+        } else if (usesMapRef) {
+            // Mixing spaces silently is how two regions end up "overlapping" at
+            // the same coordinates while sitting in different rooms.
+            warn(`${where} has no map_ref, but other regions in this atlas do — its coordinate space is ambiguous`);
         }
 
         // --- subgraph (optional: absent ⇒ one implicit sub-region) ---
