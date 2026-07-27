@@ -1,8 +1,9 @@
 # Region Atlas: Real-Game Maps as Procgen Regions
 
-**Date:** 2026-07-26 (Phases 1, 2 and 3 shipped 2026-07-27)
-**Status:** Design ruled; Phase 1 (atlas format), Phase 2 (marking tool) and
-Phase 3 (vanilla rules.json projection) complete — Phase 4 next
+**Date:** 2026-07-26 (Phases 1–4 shipped 2026-07-27)
+**Status:** Design ruled; Phase 1 (atlas format), Phase 2 (marking tool),
+Phase 3 (vanilla rules.json projection) and Phase 4 (play-time transitions —
+the real game walks between atlas regions) complete — Phase 5 next
 **Games:** Seedling first (redistributable, discrete sections, source available), then Robot Wants Kitty
 
 ## Goal
@@ -395,15 +396,124 @@ end-to-end → sorter → RWK → bots. Each phase lands separately.
   `completion_condition` stays `{constant: true}` — the atlas has no goal
   concept yet.
 
-### Phase 4 — Seedling play-time transitions
-- [ ] Projection 3: engine stamps atlas binding into `playable_payload`
-- [ ] Wrapper-side triggers over the wasm-iframe transport (position →
+### Phase 4 — Seedling play-time transitions — **COMPLETE 2026-07-27**
+- [x] Projection 3: the compiler stamps atlas binding into `playable_payload`
+- [x] Host-side triggers over the wasm-iframe transport (level change →
       boundary crossing → region exit; arrival → entrance spawn teleport)
-- [ ] **Milestone (moved here from Phase 3, ruling 1):** walk between real
+- [x] **Milestone (moved here from Phase 3, ruling 1):** walk between real
       Seedling sections via boundary transitions in-app
-- [ ] Boundary visual indication (whatever the transport makes cheap)
-- [ ] Substrate tests (remember: test-substrates config ENUMERATES ids;
-      new tests must be added there, and to a batch category)
+- [ ] ~~Boundary visual indication~~ **SATISFIED BY NATURE for v1** (ruling 3):
+      the game's own teleporters and level edges ARE the visible affordance —
+      the player already sees a door. Recorded as deferred: it becomes real work
+      only when a *generated* world puts a boundary somewhere the vanilla game
+      draws nothing.
+- [ ] ~~Substrate tests in the test-substrates config~~ **DELIBERATE
+      DEVIATION** — see "Testing deviation" below.
+
+**Rulings (user, 2026-07-27):**
+1. **Level-granular v1.** A physical atlas region binds to a whole Seedling
+   level; boundary crossings are detected by the game's own level change
+   (`Main.level`), disambiguated by spawn coordinates when two connections join
+   the same level pair. Sub-level physical boundaries (live player x/y against a
+   marked tile line) are DEFERRED — no BridgeGeneric changes, no re-injection,
+   no wasm rebuild in this phase. Logical sub-regions are unaffected: they carry
+   rules and are never physically triggered, so every sub-region of a region
+   shares its level.
+2. **One sync implementation.** The `flash_seedling` substrate entry DELEGATES
+   to flashPanel's shipped `WasmBridgeAdapter` (teleports, item writes,
+   progressives/fusions, location checks — all Stage-1-verified). No second
+   AP↔game translation in flashSubstrate's `bridge.js`, and no use of the
+   substrate-bridge dialect (`__swfBridge.configure(obj)` / `pollItems`): the
+   wasm shim speaks `game.configure(json)` + `queueItems`, which the adapter
+   already handles.
+3. **Boundary visuals: satisfied by nature for v1** (above).
+
+**As built:**
+- **Position signals** — `games/seedling.json` `state_properties` gains
+  `playerPositionX`, `playerPositionY`, `level`, three `Main` statics written at
+  every `Game` construction. They are therefore SPAWN coordinates, not live
+  position, which is precisely why ruling 1 works. Declared positions-first so a
+  `new Game(level,x,y)` reports its tie-break coordinates before the level
+  change that triggers the crossing. ⚠ `BridgeGeneric.doConfigure` refuses a
+  second configure for the life of a game instance, so these ride the ONE
+  configure at boot — widening the set later needs a page reload.
+- **Compiler** — `regionAtlasCompiler` emits `preset_sidecars['1']` for every
+  region naming a level, plus the top-level `flash_panel` block (so a
+  regeneration no longer drops the wiring — the trap decision 2 names). The
+  payload carries `gameId` / `atlas_ref` / `atlas_region` / `level` /
+  `tile_size` and one entry per WIRED exit with `exit_id`, `kind`, `side`,
+  `exit_tiles`, `entrance_tile`, `entrance_spawn`, `exitName`, `targetRegion`,
+  `targetExitId`, `target_level`, `target_spawn` — everything both halves of a
+  crossing need, resolved compiler-side from the whole atlas.
+- **Substrate** — `frontend/modules/flashPanel/flashSeedlingLibrary.js`
+  registers `flash_seedling` off `createFlashSubstrateEntry`, overriding the
+  panel to `flashPanel` and the load event to `flashSeedling:loadRegion`, and
+  dropping the inherited `iframeId` (flashPanel's embed is a plain iframe that
+  never announces `appReady`). Glue: `seedlingRegionBinding.js` (pure state
+  machine) + `seedlingRegionGlue.js` (effects → adapter + dispatcher).
+  `FlashBridgeAdapter.onStateReport` is the new seam, fired at the TOP of
+  `_onStateChanged` — above the echo/first-read suppressions, which exist for AP
+  *location* detection and would swallow the reports this consumer needs.
+- **flashPanel is enabled in `modules.json`** (the default/procgen mode). It
+  stays idle unless the loaded rules carry `flash_panel` wiring, and the
+  `e2623bead` re-init-on-rules-change fix already covers preset switches; the
+  "Flash Game" panel was already in the default layout.
+
+**Decisions worth knowing:**
+- **Both traps are real and are handled explicitly.** (a) *Teleport echo:* the
+  glue's own arrival teleport changes `level`, and that report is
+  indistinguishable from a player crossing — an arrival is marked in flight, the
+  matching report swallowed, cleared on match or after 15 s. A teleport to the
+  level the game is already on arms nothing, because arming would eat the next
+  real crossing. (b) *First-read baseline:* BridgeGeneric reports the whole
+  declared set at boot, so the first `level` report is where the game already
+  is; it doubles as the "game is alive" signal that releases an arrival queued
+  while the wasm page was still waiting on its ▶ Start gesture (minutes,
+  legitimately).
+- **Unmapped-level policy:** a level change the current region has no marked
+  exit to WARNS LOUDLY (console + panel log, naming the levels and pointing at
+  the Region Marking Tool) and does NOT move the AP region. The atlas covers 3
+  of 116 levels by design; a silent no-op would read as a complete map and a
+  crash would make a partial atlas unusable.
+- **Initial arrival spawn:** with no `arrivedFrom` (the synthesized
+  `Menu → start-region` hop) the region's FIRST declared exit's entrance spawn
+  is used. `region_coords` in `games/seedling.json` was the alternative and was
+  rejected: it is keyed by display names no atlas `region_id` matches, and it is
+  engine binding for the manual teleport UI, not map truth. The same fallback
+  covers a move whose source region is outside the warehouse; both are logged as
+  info, not warnings — there is no marked entrance to honour, and neither is a
+  defect.
+- **A region with no `map_ref` stays graph-only** and is NAMED in the compile
+  report, the same discipline unwired exits get.
+- **A region with a subgraph emits one sidecar per sub-region**, exits
+  partitioned by their `sub_region` binding, all sharing the parent's level
+  (ruling 1).
+- **`has_procgen_data` is now true** for `seedling_atlas` in both preset
+  indexes (the live one mirrored by hand again — `register-preset.py` does not
+  touch it).
+- **No `SubstrateInactiveOverlay`** in v1, and deliberately not half-wired: the
+  flashPanel panel is not procgen-only (it still serves the Stage-1 direct-client
+  presets), so a `procgen:activeSubstrateChanged`-null predicate would blank a
+  panel that is legitimately in use. Recorded here rather than stubbed.
+
+**Testing deviation (deliberate):** the plan's "substrate tests in
+test-substrates" bullet is NOT satisfied, because the leg that matters needs the
+gitignored 31 MB wasm artifact, which is machine-local — an enumerated in-app
+test would be red everywhere it is missing. The e2e gate for this phase is
+`scripts/procgen/verify-seedling-atlas-play.mjs`, which SKIPs (exit 0) when the
+artifact is absent. It asserts effects, not silence: the arrival teleport
+reaching the game as a `new Game(...)` and confirmed by an independent
+`readState`; a NATIVE crossing (a `new Game(...)` queued straight into the
+iframe, the glue's suppression path uninvolved) publishing `user:regionMove`
+AND moving gameState; a second crossing so the count is not a one-off; and only
+then the negative — a host-driven region move whose cross-level arrival teleport
+must not become a second crossing. The watcher wraps the dispatcher's real
+`publish` and throws if it cannot, so the negative cannot pass vacuously. If an
+in-app leg is ever added, remember the test-substrates config ENUMERATES ids and
+it needs a batch category.
+
+**Test counts:** 3503 → **3548** vitest (10 compiler cases for projection 3, 22
+for the binding state machine, 7 for the glue wiring, 6 for the registry entry).
 
 ### Phase 5 — Seedling analyzer
 - [ ] Per-region reachability where mechanically computable; manual

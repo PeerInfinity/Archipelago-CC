@@ -2407,9 +2407,73 @@ baseline).
   `frontend/schema/rules.schema.json`. Python's `jsonschema` covers the
   committed preset for free: `test/general/test_schema_validation.py` globs
   every preset (255 subtests green).
-- NEXT: Phase 4 — projection 3 (`playable_payload` binding), wrapper-side
-  transition triggers over the wasm-iframe transport, and the moved
-  walk-between-real-Seedling-sections milestone. Phases 5+ unchanged.
+**Phase 4 — projection 3 + play-time transitions: SHIPPED 2026-07-27**
+(`49a70ff35` position signals + compiler sidecars, `aaf09e512` substrate entry +
+glue, `396ca170b` end-to-end verify, docs; full vitest **3548/3548** green, up
+from the 3503 Phase-3 baseline). **The milestone landed: the real recompiled
+Seedling game walks between atlas regions in-app** — a native level transition
+crosses the AP region boundary, and arriving teleports the player to the marked
+entrance spawn.
+- **Rulings (user, 2026-07-27)**, recorded in the plan doc's Phase 4 section:
+  (1) **Level-granular v1** — a physical region binds to a whole Seedling level,
+  crossings are the game's own `Main.level` change, tie-broken on spawn
+  coordinates; sub-level physical boundaries DEFERRED (no BridgeGeneric change,
+  no re-injection, no wasm rebuild). Logical sub-regions are unaffected — they
+  carry rules, they are not physically triggered. (2) **One sync
+  implementation** — the substrate entry DELEGATES to flashPanel's shipped
+  `WasmBridgeAdapter`; no second AP↔game translation in flashSubstrate's bridge,
+  and not the substrate-bridge dialect (the wasm shim speaks
+  `game.configure(json)` + `queueItems`). (3) **Boundary visuals: satisfied by
+  nature** — the game's own teleporters and level edges are the affordance;
+  real work only when a *generated* world puts a boundary where vanilla draws
+  nothing.
+- As built: three `Main` statics in `games/seedling.json`
+  (`playerPositionX`/`playerPositionY`/`level`, positions first so the tie-break
+  coordinates land before the level change; they ride the ONE configure at boot,
+  since `BridgeGeneric.doConfigure` refuses a second for the life of a game
+  instance); `regionAtlasCompiler` emits `preset_sidecars` + the top-level
+  `flash_panel` block (so regeneration no longer drops the wiring — the trap
+  decision 2 names); `flashPanel/flashSeedlingLibrary.js` registers
+  `flash_seedling` off `createFlashSubstrateEntry` with the **flashPanel** panel,
+  its own `flashSeedling:loadRegion`, and no `iframeId`;
+  `seedlingRegionBinding.js` (pure state machine) + `seedlingRegionGlue.js`
+  (effects → adapter + dispatcher); `FlashBridgeAdapter.onStateReport` as the
+  raw-report seam, fired ABOVE the echo/first-read suppressions (those exist for
+  AP *location* detection and would swallow these reports); flashPanel enabled in
+  the default `modules.json`; `has_procgen_data: true` in both preset indexes
+  (live mirrored by hand again).
+- **Both predicted traps were real.** Teleport echo: the glue's own arrival
+  teleport changes `level` indistinguishably from a player crossing — marked in
+  flight, matching report swallowed, cleared on match or 15 s, and NOT armed
+  when the target level is the one the game is already on (arming would eat the
+  next real crossing). First-read baseline: BridgeGeneric reports the whole
+  declared set at boot, so the first `level` report is baseline — and it doubles
+  as the "game is alive" signal releasing an arrival queued while the wasm page
+  waited on its ▶ Start gesture.
+- **Unmapped-level policy** (the atlas covers 3 of 116 levels by design): warn
+  LOUDLY on console + panel log, naming the levels and pointing at the Region
+  Marking Tool, and do NOT move the AP region. Initial arrival with no
+  `arrivedFrom` spawns at the region's FIRST declared exit — `region_coords` was
+  rejected (keyed by display names no `region_id` matches, and it is manual-UI
+  engine binding, not map truth).
+- **Testing deviation, deliberate:** no in-app test-substrates leg. The leg that
+  matters needs the gitignored 31 MB wasm artifact, which is machine-local, so
+  an enumerated test would be red wherever it is missing. The gate is
+  `scripts/procgen/verify-seedling-atlas-play.mjs` (SKIPs exit-0 without the
+  artifact): arrival teleport confirmed by an independent `readState`; a NATIVE
+  crossing queued straight into the iframe publishing `user:regionMove` AND
+  moving gameState; a second crossing; and only then the negative — a
+  host-driven cross-level arrival that must not echo. The watcher wraps the
+  dispatcher's real `publish` and THROWS if it cannot, so the negative cannot
+  pass vacuously. `verify-seedling-atlas-preset.mjs` stays the graph gate and now
+  asserts the sidecars are present and consistent instead of absent.
+- **No `SubstrateInactiveOverlay`**, deliberately not half-wired: flashPanel is
+  not procgen-only (it still serves the Stage-1 direct-client presets), so a
+  `procgen:activeSubstrateChanged`-null predicate would blank a legitimately
+  active panel.
+- NEXT: Phase 5 (Seedling analyzer — per-region reachability where mechanically
+  computable, manual annotation for puzzle-gated edges), then Phase 6 (sphere
+  growth: pre-built regions). Phases 7+ unchanged.
 
 ## 6. Everything else (unchanged queues)
 

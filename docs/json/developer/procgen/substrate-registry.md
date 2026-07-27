@@ -13,7 +13,7 @@ Registration happens in two places, deliberately redundant and idempotent:
 
 That first bullet is load-bearing, not merely convenient — see [Gotchas](./gotchas.md#substrate-libraries-register-on-import--headless-scripts-depend-on-it). `text_adventure` had two implementations until 2026-07-26, when the direct-panel `textAdventureSubstrate` was deleted; the surviving wrapper's `loopSupport` (with `record`/`playback`/`instant`) is pinned by `textAdventureSubstrateWrapperLibrary.test.js`.
 
-Entry factories exist for families of similar substrates: `createFlashSubstrateEntry` (`flashSubstrateLibrary.js`) builds an entry per Flash game, and `createBounceSubstrateEntry` (`bounceDemoLibrary.js`) builds on top of it, overriding the panel identity and adding bounce's build-time hooks.
+Entry factories exist for families of similar substrates: `createFlashSubstrateEntry` (`flashSubstrateLibrary.js`) builds an entry per Flash game, and `createBounceSubstrateEntry` (`bounceDemoLibrary.js`) builds on top of it, overriding the panel identity and adding bounce's build-time hooks. `flash_seedling` (`flashPanel/flashSeedlingLibrary.js`, 2026-07-27) is the third: same factory, but it renders in the **flashPanel** panel with its own `flashSeedling:loadRegion` event and drops the inherited `iframeId` — see [Flash Substrate](./flash.md#flash_seedling--a-real-games-map-as-procgen-regions).
 
 ## Entry contract
 
@@ -132,7 +132,9 @@ The sphere-growth driver and the Procgen Pipeline panel read a further set of op
 | Zone-based | no | yes (`zoneCount` from zone table, `extractZoneRules`, `victoryItem`) | yes (lazy zone table, `extractZoneRules`, `victoryItem`) | no | no | yes (`zoneCount: 30`, `extractZoneRules`, `victoryItem`) | yes (`zoneCount` = region-split count or town count, `extractZoneRules`, `victoryItem`) |
 | Sphere-growth adapter hooks | no | **yes** | **yes** | no | no | no | no |
 
-Entry sources: `mazeRoomLibrary.js`, `bounceDemoLibrary.js`, `runnerDemoLibrary.js`, `textAdventureSubstrateWrapperLibrary.js`, `flashSubstrateLibrary.js`, `jtaSubstrateWrapperLibrary.js`, `omsiSubstrateWrapperLibrary.js`.
+Entry sources: `mazeRoomLibrary.js`, `bounceDemoLibrary.js`, `runnerDemoLibrary.js`, `textAdventureSubstrateWrapperLibrary.js`, `flashSubstrateLibrary.js`, `flashPanel/flashSeedlingLibrary.js`, `jtaSubstrateWrapperLibrary.js`, `omsiSubstrateWrapperLibrary.js`.
+
+`flash_seedling` is not a column of its own above: it inherits the `flash` column verbatim (`arbitrary_ap_locations`, no playback, move-only loop support, no build hooks) and differs only in panel identity, load event, and the host-side glue that turns the game's own level changes into region moves.
 
 ## Adding a substrate
 

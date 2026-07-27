@@ -46,9 +46,36 @@ Transport choice: `moduleSettings.flashPanel.runtime` — `auto` (default:
 wasm when a `wasm` page is wired, real Flash otherwise), `flash`, `wasm`.
 
 Note: preset rules.json files are generated artifacts — the `flash_panel`
-section is a hand-added block (currently on the seed-1 seedling preset and
+section is a hand-added block (on the seed-1 seedling preset and
 robotkitty_tilemap) that a regeneration would drop; re-add it after
-regenerating.
+regenerating. The `seedling_atlas` preset is the exception: its block is
+**compiled** by `regionAtlasCompiler`, so regenerating it preserves the wiring.
+
+The module is enabled in the default module config (as of the region-atlas
+Phase-4 work) as well as in `modules-flash.json`. It stays idle — status "no
+game configured" — until the loaded rules carry a `flash_panel` section, so
+presets without one are unaffected.
+
+## Region-atlas play mode (`flash_seedling`)
+
+Beyond the direct-client role above, this module hosts the region atlas's
+play-time substrate: atlas regions are real Seedling levels, and the game's own
+level transitions drive procgen region moves.
+
+| File | Role |
+|---|---|
+| `flashSeedlingLibrary.js` | the `flash_seedling` registry entry (flashPanel component, own `flashSeedling:loadRegion`) |
+| `seedlingRegionBinding.js` | the pure state machine — arrival spawn, crossing resolution, echo suppression, boot baseline, unmapped-level policy |
+| `seedlingRegionGlue.js` | applies its effects: teleports through the adapter's invocation queue, crossings as `user:regionMove` |
+| `atlases/` | the authored atlases + the extracted level map |
+
+`FlashBridgeAdapter.onStateReport` is the seam: a raw `(property, value)` hook
+fired at the TOP of `_onStateChanged`, above the echo and first-read
+suppressions (which exist for AP *location* detection and would swallow the
+position/level reports this consumer needs).
+
+Architecture, traps and the ruling history: `docs/json/developer/procgen/flash.md`
+and `CC/docs/plans/region-atlas-plan.md`.
 
 ## Wasm artifacts (not committed)
 
