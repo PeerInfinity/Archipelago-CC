@@ -636,12 +636,66 @@ async function multiRunReplayRetry(testController) {
     const gs = getGameStateSingleton();
     const savedNoReset = gs.noManaDepletionReset;
     const watcher = watchRegionMoves();
+    // ── WHY THIS LEG SURVIVES ITS RESETS, made witnessable ───────────────────
+    //
+    // This leg runs at the natural pool with depletion resets live, and it
+    // works only because the pool never quite EMPTIES: omsi's run ends at its
+    // own ~350-mana budget and the reset arrives on that run end
+    // (`substrate:resourceReset`), which lands while a few mana are still
+    // left. Measured margin: 5–10 of 350.
+    //
+    // That margin is load-bearing, not incidental. A Playback park sets
+    // `_manualActionEntered` exactly like a hand-play park, so if a drain ever
+    // took the pool to <= 0 here, `gameState:manaChanged` would reach
+    // `_handleManualWake_mana` → `_resetLoop()`, which tears the park down and
+    // — `autoRestartQueue` off, the default — declines to resume. The queue is
+    // then unreachable (every wake bails on the missing park) AND the step
+    // gate closes on the fork, so it can never end another run to fire the
+    // reset that would have revived it. That is the deadlock that made
+    // `omsi-bot-instant-multi-reset-walk` a ~60 % flake (diagnosed 2026-07-26;
+    // see loop-recording.md). The bot legs answer it with
+    // `autoRestartQueue = true`; this leg does NOT need that, and setting it
+    // here would be a control with nothing to control — measured 8/8 green
+    // either way, because the branch is never taken.
+    //
+    // So pin the REASON instead. If a future economy change (a bigger native
+    // budget, a cost tweak, an Instant variant that drains a whole run in one
+    // batch) eats the margin, this fails immediately naming the pool, instead
+    // of the leg hanging 180 s on a crossing that can no longer happen.
+    //
+    // Folded from the mutation events, never sampled: the reset refills
+    // synchronously, so a poller would step straight over the low-water mark.
+    // Samples are counted so the `> 0` assertion cannot pass vacuously on a
+    // subscription that never fired, and the suppressed leg-1 window is
+    // skipped — `noManaDepletionReset` is exactly when negative mana is legal.
+    let manaLowWater = Infinity;
+    let manaSamples = 0;
+    let unsubMana = testController.eventBus.subscribe('gameState:manaChanged', () => {
+        if (gs.noManaDepletionReset) return;
+        manaSamples += 1;
+        const mana = gs.getCurrentMana();
+        if (mana < manaLowWater) manaLowWater = mana;
+    });
     let park = null;
     try {
-        return await multiRunReplayLegs(testController, {
+        await multiRunReplayLegs(testController, {
             loopState, gs, watcher, setPark: (p) => { park = p; },
         });
+        // Asserted HERE, not in the `finally`: getOverallResult() is the AND of
+        // the assertions made SO FAR, so anything reported after the return
+        // expression has been evaluated would never reach the returned verdict.
+        unsubMana?.(); unsubMana = null;
+        testController.log(`pool low-water across the replay: ${manaLowWater} `
+            + `(${manaSamples} unsuppressed manaChanged samples)`);
+        testController.assertEqual('the drain watcher actually saw the replay spend',
+            true, manaSamples > 0);
+        testController.assertEqual(
+            'the pool never EMPTIED — the run-end reset always beat it, which is the '
+            + 'only reason this leg needs no autoRestartQueue (see the comment above)',
+            true, manaLowWater > 0);
+        return testController.getOverallResult();
     } finally {
+        unsubMana?.();
         watcher.stop();
         gs.noManaDepletionReset = savedNoReset;
         unparkManualBlocks(park);
