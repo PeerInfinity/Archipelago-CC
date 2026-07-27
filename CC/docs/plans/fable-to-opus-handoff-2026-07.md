@@ -2363,9 +2363,53 @@ the 3380 Phase-1 baseline).
   what most of Seedling's real map crossings are.
 - `vitest.config.js` `include` gains `scripts/**/*.test.js` (node-only CLI
   logic has no home in the bundled frontend graph).
-- NEXT: Phase 3 — the atlas → vanilla rules.json compiler, the top-down
-  walk-between-real-Seedling-sections milestone, and the deferred APWorld
-  Editor handoff. Phases 4+ unchanged.
+**Phase 3 — atlas → vanilla rules.json compiler + registered preset + APWorld
+Editor handoff: SHIPPED + PUSHED 2026-07-27** (`c7a1c8f16` compiler + CLI +
+preset, `4d599f125` in-app milestone check, `1205928b0` panel buttons +
+verifier phases; full vitest **3503/3503** green, up from the 3471 Phase-2
+baseline).
+- **Rulings (user, 2026-07-27)**, recorded in the plan doc's Phase 3 section:
+  (1) **Phase 3 is GRAPH-ONLY — the compiler emits no `preset_sidecars`.**
+  Play-time walking runs the REAL Seedling game with the teleport recipe
+  placing the player at the entrance spawn tile, which is projection 3 — so the
+  plan's "walk between sections in-app" milestone MOVED to Phase 4, and Phase
+  3's milestone became "the projected preset loads in the frontend with the full
+  region graph, and the APWorld Editor handoff works". (2) The Phase-2-deferred
+  APWorld Editor handoff lands here.
+- As built: `frontend/modules/procgenPipeline/regionAtlasCompiler.js` (on
+  `shared/rulesJsonBuilder.js`, submodule consumed read-only);
+  `scripts/procgen/region-atlas-compile.mjs` with an exact `--check`
+  regeneration gate; `frontend/presets/seedling_atlas/AP_1/AP_1_rules.json`
+  registered via `register-preset.py` **and mirrored by hand into
+  `preset_files.live.json`** (the script does not touch the live index), with
+  no `has_procgen_data` — that flag means "has sidecars"; two toolbar buttons in
+  `regionMarkingToolUI.js` (Export rules.json / Edit in APWorld Editor) plus the
+  `apworldEditor:loadRules` publisher registration the bus requires.
+- Projection decisions worth knowing (detail in the plan doc): a connection
+  direction carries its **source** exit's `access_rule`; unwired boundary exits
+  are omitted and NAMED everywhere (the starter atlas's 6 are the growth queue);
+  v1 classifies every `vanilla_item` as progression; AP ids are base 30000000 +
+  sorted index, clear of the flashPanel `ap_id_offset` (20000000) whose
+  *alignment* is Phase 4's concern; `Menu` is reserved and a colliding atlas
+  region is a hard error.
+- Verification is by EFFECT, not by silence: `verify-seedling-atlas-preset.mjs`
+  boots `?game=seedling_atlas&seed=1` and compares the state manager's own
+  regions/exits/locations against a headless compile; the marking-tool verifier
+  gained Phase E (the downloaded rules.json is byte-identical to the headless
+  compile — the panel's export path IS the CLI's compiler) and Phase F (the
+  hand-off lands in the editor's own model; under `?mode=flash` the editor panel
+  is not mounted, so the path exercised is the module-level stash, cleared and
+  asserted empty BEFORE the click so it cannot pass on something stale).
+- The repo ships no JS JSON-Schema library, so
+  `frontend/modules/runnerDemo/ruleSchemaCheck.js` (test-only) grew
+  `patternProperties` / `enum` / `anyOf` / `allOf` / list-valued `type` and a
+  `rulesJsonSchemaErrors()` export — a WHOLE rules.json now validates against
+  `frontend/schema/rules.schema.json`. Python's `jsonschema` covers the
+  committed preset for free: `test/general/test_schema_validation.py` globs
+  every preset (255 subtests green).
+- NEXT: Phase 4 — projection 3 (`playable_payload` binding), wrapper-side
+  transition triggers over the wasm-iframe transport, and the moved
+  walk-between-real-Seedling-sections milestone. Phases 5+ unchanged.
 
 ## 6. Everything else (unchanged queues)
 

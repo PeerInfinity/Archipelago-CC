@@ -17,6 +17,26 @@ The atlas is the single source of truth; the three projections (vanilla
 `rules.json`, sphere-sorter input, play-time `playable_payload`) are compiled
 from it and never read each other.
 
+## Projection 1 — the vanilla `rules.json`
+
+[`regionAtlasCompiler.js`](../../procgenPipeline/regionAtlasCompiler.js) turns an
+atlas into the AP `rules.json` the frontend loads: sub-regions become AP regions
+(`<region_id>__<sub_region>`), internal exits and `vanilla_layout.connections`
+become AP exits, and locations carry their `vanilla_item`. It is **graph only** —
+no `preset_sidecars`; play-time walking runs the real game (Phase 4).
+
+```sh
+node scripts/procgen/region-atlas-compile.mjs atlases/seedling.json \
+    -o frontend/presets/seedling_atlas/AP_1/AP_1_rules.json
+node scripts/procgen/region-atlas-compile.mjs atlases/seedling.json \
+    -o frontend/presets/seedling_atlas/AP_1/AP_1_rules.json --check   # gate
+```
+
+The output has no timestamp, so `--check` is exact. Unwired boundary exits are
+**omitted** from the graph and named in the report — the compile is not a silent
+truncation. The marking tool's *Export rules.json* and *Edit in APWorld Editor*
+buttons run the same compiler.
+
 ## Format
 
 - Schema (documentation): [`frontend/schema/region-atlas.schema.json`](../../../schema/region-atlas.schema.json)

@@ -1,7 +1,8 @@
 # Region Atlas: Real-Game Maps as Procgen Regions
 
-**Date:** 2026-07-26 (Phases 1 and 2 shipped 2026-07-27)
-**Status:** Design ruled; Phase 1 (atlas format) and Phase 2 (marking tool) complete — Phase 3 next
+**Date:** 2026-07-26 (Phases 1, 2 and 3 shipped 2026-07-27)
+**Status:** Design ruled; Phase 1 (atlas format), Phase 2 (marking tool) and
+Phase 3 (vanilla rules.json projection) complete — Phase 4 next
 **Games:** Seedling first (redistributable, discrete sections, source available), then Robot Wants Kitty
 
 ## Goal
@@ -318,19 +319,88 @@ end-to-end → sorter → RWK → bots. Each phase lands separately.
   too, so the extract does, recording the per-level count so the drop is never
   silent.
 
-### Phase 3 — Projection 1 + top-down milestone (Seedling)
-- [ ] Atlas → vanilla rules.json compiler
-- [ ] **Milestone:** load the projected Seedling vanilla rules.json in
-      top-down mode; walk between real Seedling sections via boundary
-      transitions in-app
-- [ ] Handoff seam to APWorld Editor (`apworldEditor:loadRules` with the
+### Phase 3 — Projection 1 + APWorld Editor handoff (Seedling) — **COMPLETE 2026-07-27**
+- [x] Atlas → vanilla rules.json compiler
+- [x] **Milestone:** the projected preset loads in the frontend with the full
+      region graph, and the APWorld Editor handoff works
+- [x] Handoff seam to APWorld Editor (`apworldEditor:loadRules` with the
       projected rules.json) for detail-filling — deferred here from Phase 2
       (ruling 5): it needs the projected rules.json this phase produces
+- [ ] ~~walk between real Seedling sections in-app~~ **MOVED to Phase 4**
+      (ruling 1): walking runs the REAL game with a teleport to the entrance
+      spawn tile, which is projection 3
+
+**Rulings (user, 2026-07-27):**
+1. **Phase 3 is graph-only: the compiler emits NO `preset_sidecars`.**
+   Play-time walking runs the real Seedling game with the teleport recipe
+   placing the player at the entrance spawn tile — that is projection 3, and
+   the "walk between sections in-app" milestone therefore belongs to Phase 4.
+   Phase 3's milestone is the projected preset loading in the frontend with the
+   full region graph, plus a working APWorld Editor handoff.
+2. The Phase-2-deferred **APWorld Editor handoff lands here** (Phase-2 ruling 5).
+
+**As built:**
+- Compiler: `frontend/modules/procgenPipeline/regionAtlasCompiler.js`
+  (`compileRegionAtlas(atlas, options) -> { rules, report }`), beside the
+  validator — built on `shared/rulesJsonBuilder.js`, the same helpers
+  `tileMapAnalyzer/rulesExporter.js` uses; `shared/` was consumed read-only.
+- CLI: `scripts/procgen/region-atlas-compile.mjs` — atlas in, rules.json out,
+  with `--check` (byte-identical regeneration gate), `--game-name`, `--seed`,
+  `--allow-invalid`. The output carries no timestamp, so `--check` is exact.
+- Preset: `frontend/presets/seedling_atlas/AP_1/AP_1_rules.json`, registered by
+  `scripts/utils/register-preset.py --game-id seedling_atlas` and mirrored by
+  hand into `preset_files.live.json` (the script does not touch the live index).
+  No `has_procgen_data` — that flag means "has sidecars", which this preset
+  deliberately does not.
+- Panel: two toolbar buttons after Save in `regionMarkingToolUI.js` — **Export
+  rules.json** (download the projection; the status line NAMES the omitted
+  unwired exits) and **Edit in APWorld Editor** (`apworldEditor:loadRules` then
+  `ui:activatePanel`, copying procgenPipelineUI §2.2 — deliberately not
+  `files:jsonLoaded`, which wakes the substrate panels and steals focus).
+  `regionMarkingTool/index.js` registers the new publisher; the bus rejects
+  unregistered ones.
+- Verifiers: `scripts/procgen/verify-seedling-atlas-preset.mjs` (boots
+  `?game=seedling_atlas&seed=1` and compares the state manager's regions/exits/
+  locations against a headless compile) and two new phases in
+  `verify-region-marking-tool.mjs` (E: the downloaded rules.json is
+  byte-identical to the headless compile; F: the hand-off lands in the editor's
+  own model).
+- Tests: **3503** vitest (3471 Phase-2 baseline + 32 compiler cases over BOTH
+  atlases). `runnerDemo/ruleSchemaCheck.js` grew `patternProperties` / `enum` /
+  `anyOf` / `allOf` / list-valued `type` so a WHOLE rules.json validates against
+  `frontend/schema/rules.schema.json`, not just its rule subtrees; Python's
+  `jsonschema` covers the committed preset through
+  `test/general/test_schema_validation.py` (it globs every preset).
+
+**Projection decisions worth knowing:**
+- **A connection direction carries its SOURCE exit's `access_rule`** — the exit
+  you leave through is the frontier you have to get past. A gate authored on the
+  far side therefore does not apply to arrivals; when Phase 5's analyzer starts
+  computing these mechanically, revisit whether a crossing wants both.
+- **Unwired boundary exits are omitted and NAMED** — in the compile report, in
+  the CLI output, and in the panel's status line. The starter atlas has 6; that
+  list is the growth queue, not a defect, and a silent drop would read as a
+  complete map.
+- **v1 classifies every `vanilla_item` as progression.** Real classifications
+  need per-game knowledge the atlas deliberately does not hold (decision 6).
+- **AP ids** are a stable base (30000000) plus the index of the name in sorted
+  order. That base is clear of the flashPanel per-game `ap_id_offset`
+  (`games/seedling.json`: 20000000); *aligning* the two is Phase 4's binding
+  concern.
+- `Menu` is reserved: an atlas region that would project onto it is a hard
+  error, not a silent merge.
+- The rules.json carries a `region_atlas: { atlas_id, game, map_document }`
+  block, so a restamped atlas visibly invalidates a stale preset.
+- No `Generate.py` roundtrip was attempted (not a Phase-3 gate): the scaffold's
+  `completion_condition` stays `{constant: true}` — the atlas has no goal
+  concept yet.
 
 ### Phase 4 — Seedling play-time transitions
 - [ ] Projection 3: engine stamps atlas binding into `playable_payload`
 - [ ] Wrapper-side triggers over the wasm-iframe transport (position →
       boundary crossing → region exit; arrival → entrance spawn teleport)
+- [ ] **Milestone (moved here from Phase 3, ruling 1):** walk between real
+      Seedling sections via boundary transitions in-app
 - [ ] Boundary visual indication (whatever the transport makes cheap)
 - [ ] Substrate tests (remember: test-substrates config ENUMERATES ids;
       new tests must be added there, and to a batch category)
