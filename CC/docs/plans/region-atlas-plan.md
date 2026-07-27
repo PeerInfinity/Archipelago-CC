@@ -638,6 +638,14 @@ for the binding state machine, 7 for the glue wiring, 6 for the registry entry).
   leaving the atlas quietly disagreeing with the map it describes. Two
   independent idempotence gates cover it (the generator's `--check` and the
   analyze CLI's).
+- **Phase 3's "revisit whether a crossing wants both directions' rules" stays
+  open, and is narrower than it looked.** The analyzer computes each DIRECTION of
+  an internal crossing independently and emits them separately when they differ
+  (the waterfall proves it), so the subgraph half of that question is answered.
+  What is untouched is BOUNDARY exits: a `vanilla_layout` connection still
+  carries only its source exit's `access_rule`, and the analyzer authors no
+  boundary rules at all. That is decision 5's intrinsic-frontier territory, so
+  it belongs with the sorter in Phase 6.
 
 **Acceptance on real data:** the starter atlas gained `dungeon1_room1` (level 3,
 closing the `descent` exit that was on the growth list) and every region now
