@@ -144,7 +144,9 @@ def test_dev_server_serves_js_with_module_safe_mime(sg):
 def test_dev_server_end_to_end_mime_and_no_cache(sg, monkeypatch, tmp_path):
     import urllib.request
 
-    (tmp_path / "probe.js").write_text("export const x = 1;\n")
+    # Bytes, not text: write_text would newline-translate on Windows and the
+    # exact-bytes assertion below would see \r\n.
+    (tmp_path / "probe.js").write_bytes(b"export const x = 1;\n")
     monkeypatch.setattr(sg, "DEV_SERVER_PORT", 0)
     monkeypatch.setattr(sg, "local_path", lambda *a: str(tmp_path))
 
