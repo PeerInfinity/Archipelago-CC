@@ -406,6 +406,35 @@ describe('re-analysis and hand-authored rows (ruling 2)', () => {
         expect(validateRegionAtlas(atlas).ok).toBe(true);
     });
 
+    it('does not grow a duplicate row each run for a crossing it cannot label', () => {
+        // The analyzer writes its own unlabelled crossings as source:"manual",
+        // so without the round-trip rule a second run preserves them AND emits
+        // them again — one extra row per run, for ever.
+        const atlas = makeAtlas();
+        applyRegionAnalysis(atlas, analyzeRoom(atlas, ['.?.']));
+        const first = JSON.stringify(atlas.regions[0].subgraph.internal_exits);
+        expect(JSON.parse(first)).toEqual([
+            { from: 'r0c0', to: 'r0c2', bidirectional: true, source: 'manual' },
+        ]);
+        applyRegionAnalysis(atlas, analyzeRoom(atlas, ['.?.']));
+        expect(JSON.stringify(atlas.regions[0].subgraph.internal_exits)).toBe(first);
+    });
+
+    it('lets an authored rule stand instead of re-asking the question', () => {
+        const atlas = makeAtlas();
+        applyRegionAnalysis(atlas, analyzeRoom(atlas, ['.?.']));
+        // The author labels the crossing the analyzer could not.
+        atlas.regions[0].subgraph.internal_exits[0].access_rule = { rule: 'Has', args: { item_name: 'Crowbar' } };
+        applyRegionAnalysis(atlas, analyzeRoom(atlas, ['.?.']));
+        expect(atlas.regions[0].subgraph.internal_exits).toEqual([{
+            from: 'r0c0',
+            to: 'r0c2',
+            bidirectional: true,
+            source: 'manual',
+            access_rule: { rule: 'Has', args: { item_name: 'Crowbar' } },
+        }]);
+    });
+
     it('remaps a hand-authored row onto renamed sub-regions via what they held', () => {
         const atlas = makeAtlas({
             subgraph: {

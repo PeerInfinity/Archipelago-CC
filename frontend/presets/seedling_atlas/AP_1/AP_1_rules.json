@@ -13,21 +13,231 @@
   },
   "regions": {
     "1": {
-      "overworld_start": {
-        "name": "overworld_start",
+      "overworld_start__r1c6": {
+        "name": "overworld_start__r1c6",
         "exits": [
           {
-            "name": "overworld_start -> starting_house",
+            "name": "overworld_start__r1c6 -> overworld_start__r2c13",
+            "connected_region": "overworld_start__r2c13",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "overworld_start__r1c6 -> overworld_start__r8c0",
+            "connected_region": "overworld_start__r8c0",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "overworld_start__r2c13": {
+        "name": "overworld_start__r2c13",
+        "exits": [
+          {
+            "name": "overworld_start__r2c13 -> overworld_start__r1c6",
+            "connected_region": "overworld_start__r1c6",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "overworld_start__r2c13 -> overworld_start__r4c16",
+            "connected_region": "overworld_start__r4c16",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "overworld_start__r2c13 -> overworld_start__r8c0",
+            "connected_region": "overworld_start__r8c0",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "overworld_start__r4c16": {
+        "name": "overworld_start__r4c16",
+        "exits": [
+          {
+            "name": "overworld_start__r4c16 -> overworld_start__r2c13",
+            "connected_region": "overworld_start__r2c13",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "overworld_start__r4c16 -> overworld_start__r8c0",
+            "connected_region": "overworld_start__r8c0",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "overworld_start__r8c0": {
+        "name": "overworld_start__r8c0",
+        "exits": [
+          {
+            "name": "overworld_start__r8c0 -> overworld_start__r11c19",
+            "connected_region": "overworld_start__r11c19",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "overworld_start__r8c0 -> overworld_start__r14c0",
+            "connected_region": "overworld_start__r14c0",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "overworld_start__r8c0 -> overworld_start__r1c6",
+            "connected_region": "overworld_start__r1c6",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "overworld_start__r8c0 -> overworld_start__r2c13",
+            "connected_region": "overworld_start__r2c13",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim",
+                "count": 2
+              }
+            }
+          },
+          {
+            "name": "overworld_start__r8c0 -> overworld_start__r4c16",
+            "connected_region": "overworld_start__r4c16",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim",
+                "count": 2
+              }
+            }
+          },
+          {
+            "name": "overworld_start__r8c0 -> starting_house",
             "connected_region": "starting_house",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "overworld_start -> owls_nest_entrance",
+            "name": "overworld_start__r8c0 -> owls_nest_entrance",
             "connected_region": "owls_nest_entrance",
             "access_rule": {
               "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "overworld_start__r11c19": {
+        "name": "overworld_start__r11c19",
+        "exits": [
+          {
+            "name": "overworld_start__r11c19 -> overworld_start__r8c0",
+            "connected_region": "overworld_start__r8c0",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "overworld_start__r14c0": {
+        "name": "overworld_start__r14c0",
+        "exits": [
+          {
+            "name": "overworld_start__r14c0 -> overworld_start__r8c0",
+            "connected_region": "overworld_start__r8c0",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
             }
           }
         ],
@@ -37,8 +247,8 @@
         "name": "starting_house",
         "exits": [
           {
-            "name": "starting_house -> overworld_start",
-            "connected_region": "overworld_start",
+            "name": "starting_house -> overworld_start__r8c0",
+            "connected_region": "overworld_start__r8c0",
             "access_rule": {
               "rule": "True_"
             }
@@ -64,10 +274,78 @@
         "name": "owls_nest_entrance",
         "exits": [
           {
-            "name": "owls_nest_entrance -> overworld_start",
-            "connected_region": "overworld_start",
+            "name": "owls_nest_entrance -> overworld_start__r8c0",
+            "connected_region": "overworld_start__r8c0",
             "access_rule": {
               "rule": "True_"
+            }
+          },
+          {
+            "name": "owls_nest_entrance -> dungeon1_room1__r0c4",
+            "connected_region": "dungeon1_room1__r0c4",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "dungeon1_room1__r0c4": {
+        "name": "dungeon1_room1__r0c4",
+        "exits": [
+          {
+            "name": "dungeon1_room1__r0c4 -> dungeon1_room1__r8c6",
+            "connected_region": "dungeon1_room1__r8c6",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "dungeon1_room1__r0c4 -> owls_nest_entrance",
+            "connected_region": "owls_nest_entrance",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "dungeon1_room1__r8c6": {
+        "name": "dungeon1_room1__r8c6",
+        "exits": [
+          {
+            "name": "dungeon1_room1__r8c6 -> dungeon1_room1__r0c4",
+            "connected_region": "dungeon1_room1__r0c4",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -78,7 +356,7 @@
         "exits": [
           {
             "name": "GameStart",
-            "connected_region": "overworld_start",
+            "connected_region": "overworld_start__r8c0",
             "access_rule": {
               "rule": "True_"
             }
@@ -144,7 +422,7 @@
     "1": []
   },
   "region_atlas": {
-    "atlas_id": "seedling-6f17eb8e",
+    "atlas_id": "seedling-ab0b2709",
     "game": "seedling",
     "map_document": "seedling-map.json"
   },
@@ -154,12 +432,49 @@
   },
   "preset_sidecars": {
     "1": {
-      "overworld_start": {
+      "overworld_start__r1c6": {
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-6f17eb8e",
+          "atlas_ref": "seedling-ab0b2709",
           "atlas_region": "overworld_start",
+          "atlas_sub_region": "r1c6",
+          "level": 0,
+          "tile_size": 16,
+          "exits": []
+        }
+      },
+      "overworld_start__r2c13": {
+        "substrate": "flash_seedling",
+        "playable_payload": {
+          "gameId": "seedling",
+          "atlas_ref": "seedling-ab0b2709",
+          "atlas_region": "overworld_start",
+          "atlas_sub_region": "r2c13",
+          "level": 0,
+          "tile_size": 16,
+          "exits": []
+        }
+      },
+      "overworld_start__r4c16": {
+        "substrate": "flash_seedling",
+        "playable_payload": {
+          "gameId": "seedling",
+          "atlas_ref": "seedling-ab0b2709",
+          "atlas_region": "overworld_start",
+          "atlas_sub_region": "r4c16",
+          "level": 0,
+          "tile_size": 16,
+          "exits": []
+        }
+      },
+      "overworld_start__r8c0": {
+        "substrate": "flash_seedling",
+        "playable_payload": {
+          "gameId": "seedling",
+          "atlas_ref": "seedling-ab0b2709",
+          "atlas_region": "overworld_start",
+          "atlas_sub_region": "r8c0",
           "level": 0,
           "tile_size": 16,
           "exits": [
@@ -180,7 +495,7 @@
                 "x": 160,
                 "y": 272
               },
-              "exitName": "overworld_start -> starting_house",
+              "exitName": "overworld_start__r8c0 -> starting_house",
               "targetRegion": "starting_house",
               "targetExitId": "door",
               "target_level": 86,
@@ -206,7 +521,7 @@
                 "x": 256,
                 "y": 272
               },
-              "exitName": "overworld_start -> owls_nest_entrance",
+              "exitName": "overworld_start__r8c0 -> owls_nest_entrance",
               "targetRegion": "owls_nest_entrance",
               "targetExitId": "stairs_up",
               "target_level": 2,
@@ -218,11 +533,35 @@
           ]
         }
       },
+      "overworld_start__r11c19": {
+        "substrate": "flash_seedling",
+        "playable_payload": {
+          "gameId": "seedling",
+          "atlas_ref": "seedling-ab0b2709",
+          "atlas_region": "overworld_start",
+          "atlas_sub_region": "r11c19",
+          "level": 0,
+          "tile_size": 16,
+          "exits": []
+        }
+      },
+      "overworld_start__r14c0": {
+        "substrate": "flash_seedling",
+        "playable_payload": {
+          "gameId": "seedling",
+          "atlas_ref": "seedling-ab0b2709",
+          "atlas_region": "overworld_start",
+          "atlas_sub_region": "r14c0",
+          "level": 0,
+          "tile_size": 16,
+          "exits": []
+        }
+      },
       "starting_house": {
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-6f17eb8e",
+          "atlas_ref": "seedling-ab0b2709",
           "atlas_region": "starting_house",
           "level": 86,
           "tile_size": 16,
@@ -244,8 +583,8 @@
                 "x": 48,
                 "y": 64
               },
-              "exitName": "starting_house -> overworld_start",
-              "targetRegion": "overworld_start",
+              "exitName": "starting_house -> overworld_start__r8c0",
+              "targetRegion": "overworld_start__r8c0",
               "targetExitId": "house_door",
               "target_level": 0,
               "target_spawn": {
@@ -260,7 +599,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-6f17eb8e",
+          "atlas_ref": "seedling-ab0b2709",
           "atlas_region": "owls_nest_entrance",
           "level": 2,
           "tile_size": 16,
@@ -282,16 +621,93 @@
                 "x": 48,
                 "y": 16
               },
-              "exitName": "owls_nest_entrance -> overworld_start",
-              "targetRegion": "overworld_start",
+              "exitName": "owls_nest_entrance -> overworld_start__r8c0",
+              "targetRegion": "overworld_start__r8c0",
               "targetExitId": "owls_nest_stairs",
               "target_level": 0,
               "target_spawn": {
                 "x": 256,
                 "y": 272
               }
+            },
+            {
+              "exit_id": "descent",
+              "kind": "teleporter",
+              "exit_tiles": [
+                [
+                  3,
+                  6
+                ]
+              ],
+              "entrance_tile": [
+                3,
+                6
+              ],
+              "entrance_spawn": {
+                "x": 48,
+                "y": 96
+              },
+              "exitName": "owls_nest_entrance -> dungeon1_room1__r0c4",
+              "targetRegion": "dungeon1_room1__r0c4",
+              "targetExitId": "stairs_up",
+              "target_level": 3,
+              "target_spawn": {
+                "x": 64,
+                "y": 0
+              }
             }
           ]
+        }
+      },
+      "dungeon1_room1__r0c4": {
+        "substrate": "flash_seedling",
+        "playable_payload": {
+          "gameId": "seedling",
+          "atlas_ref": "seedling-ab0b2709",
+          "atlas_region": "dungeon1_room1",
+          "atlas_sub_region": "r0c4",
+          "level": 3,
+          "tile_size": 16,
+          "exits": [
+            {
+              "exit_id": "stairs_up",
+              "kind": "teleporter",
+              "exit_tiles": [
+                [
+                  4,
+                  0
+                ]
+              ],
+              "entrance_tile": [
+                4,
+                0
+              ],
+              "entrance_spawn": {
+                "x": 64,
+                "y": 0
+              },
+              "exitName": "dungeon1_room1__r0c4 -> owls_nest_entrance",
+              "targetRegion": "owls_nest_entrance",
+              "targetExitId": "descent",
+              "target_level": 2,
+              "target_spawn": {
+                "x": 48,
+                "y": 96
+              }
+            }
+          ]
+        }
+      },
+      "dungeon1_room1__r8c6": {
+        "substrate": "flash_seedling",
+        "playable_payload": {
+          "gameId": "seedling",
+          "atlas_ref": "seedling-ab0b2709",
+          "atlas_region": "dungeon1_room1",
+          "atlas_sub_region": "r8c6",
+          "level": 3,
+          "tile_size": 16,
+          "exits": []
         }
       }
     }

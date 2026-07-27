@@ -193,10 +193,18 @@ describe('compiling the Phase-1 fixture (subgraphs, internal exits, start sub-re
 describe('compiling the real Seedling starter atlas', () => {
     const { rules, report } = compileStarter();
 
-    it('emits one AP region per atlas region (none has a subgraph yet), plus Menu', () => {
-        expect(Object.keys(regionsOf(rules)))
-            .toEqual(['overworld_start', 'starting_house', 'owls_nest_entrance', MENU_REGION]);
-        expect(regionsOf(rules)[MENU_REGION].exits[0].connected_region).toBe('overworld_start');
+    // Phase 5a: two of the four regions carry an analyzer-computed subgraph, so
+    // they project to one AP region PER SUB-REGION; the two with no traversal
+    // obstacle keep their bare region_id.
+    it('emits one AP region per sub-region, and a bare one where there is no split, plus Menu', () => {
+        expect(Object.keys(regionsOf(rules))).toEqual([
+            'overworld_start__r1c6', 'overworld_start__r2c13', 'overworld_start__r4c16',
+            'overworld_start__r8c0', 'overworld_start__r11c19', 'overworld_start__r14c0',
+            'starting_house', 'owls_nest_entrance',
+            'dungeon1_room1__r0c4', 'dungeon1_room1__r8c6', MENU_REGION,
+        ]);
+        // The start sub-region is the one the start region's exits bind to.
+        expect(regionsOf(rules)[MENU_REGION].exits[0].connected_region).toBe('overworld_start__r8c0');
     });
 
     it('OMITS the unwired boundary exits and names every one of them', () => {
@@ -206,22 +214,30 @@ describe('compiling the real Seedling starter atlas', () => {
             { region_id: 'overworld_start', exit_id: 'east_crossing', kind: 'edge', side: 'E' },
             { region_id: 'overworld_start', exit_id: 'hut_door', kind: 'teleporter' },
             { region_id: 'overworld_start', exit_id: 'gundernourd_stairs', kind: 'teleporter' },
-            { region_id: 'owls_nest_entrance', exit_id: 'descent', kind: 'teleporter' },
+            { region_id: 'dungeon1_room1', exit_id: 'east_door', kind: 'teleporter' },
+            { region_id: 'dungeon1_room1', exit_id: 'descent', kind: 'teleporter' },
+            { region_id: 'dungeon1_room1', exit_id: 'west_door', kind: 'teleporter' },
         ]);
-        // 7 authored exits in overworld_start, 5 of them unwired -> 2 AP exits.
+        // 7 authored exits in overworld_start, 5 of them unwired, and the 2 that
+        // survive both bind to the sub-region the analyzer put them in.
         expect(atlasRegion(STARTER, 'overworld_start').exits).toHaveLength(7);
-        expect(exitsOf(rules, 'overworld_start')).toHaveLength(2);
+        expect(exitsOf(rules, 'overworld_start__r8c0')
+            .filter((e) => !e.connected_region.startsWith('overworld_start__'))).toHaveLength(2);
         const summary = formatCompileReport(report).join('\n');
-        expect(summary).toContain('6 boundary exit(s) unwired');
-        expect(summary).toContain('owls_nest_entrance/descent (teleporter)');
+        expect(summary).toContain('8 boundary exit(s) unwired');
+        expect(summary).toContain('dungeon1_room1/west_door (teleporter)');
     });
 
     it('emits both directions of each wired connection', () => {
-        expect(exitTo(rules, 'overworld_start', 'starting_house')).toBeTruthy();
-        expect(exitTo(rules, 'starting_house', 'overworld_start')).toBeTruthy();
-        expect(exitTo(rules, 'overworld_start', 'owls_nest_entrance')).toBeTruthy();
-        expect(exitTo(rules, 'owls_nest_entrance', 'overworld_start')).toBeTruthy();
-        expect(report.exits).toBe(5); // 2 connections x 2 directions + GameStart
+        expect(exitTo(rules, 'overworld_start__r8c0', 'starting_house')).toBeTruthy();
+        expect(exitTo(rules, 'starting_house', 'overworld_start__r8c0')).toBeTruthy();
+        expect(exitTo(rules, 'overworld_start__r8c0', 'owls_nest_entrance')).toBeTruthy();
+        expect(exitTo(rules, 'owls_nest_entrance', 'overworld_start__r8c0')).toBeTruthy();
+        expect(exitTo(rules, 'owls_nest_entrance', 'dungeon1_room1__r0c4')).toBeTruthy();
+        expect(exitTo(rules, 'dungeon1_room1__r0c4', 'owls_nest_entrance')).toBeTruthy();
+        // 3 connections x 2 directions + GameStart + 16 internal-exit edges
+        // (9 rows, 7 of them bidirectional).
+        expect(report.exits).toBe(23);
     });
 
     it('places the one vanilla item the starter atlas records', () => {
@@ -239,7 +255,7 @@ describe('compiling the real Seedling starter atlas', () => {
 
     it('reports the atlas valid with only the unwired-exit warnings', () => {
         expect(report.atlas_valid).toBe(true);
-        expect(report.atlas_warnings).toHaveLength(6);
+        expect(report.atlas_warnings).toHaveLength(8);
         expect(report.atlas_warnings.every((w) => /is not wired by vanilla_layout/.test(w))).toBe(true);
     });
 });
@@ -252,8 +268,14 @@ describe('projection 3 — play-time sidecars (Phase 4)', () => {
 
     it('binds every region that names a real level to the per-game flash substrate', () => {
         expect(substrateIdFor('seedling')).toBe('flash_seedling');
-        expect(Object.keys(sidecars))
-            .toEqual(['overworld_start', 'starting_house', 'owls_nest_entrance']);
+        // One sidecar per AP region — a split region emits one per sub-region,
+        // all sharing the parent's level (Phase-4 ruling 1).
+        expect(Object.keys(sidecars)).toEqual([
+            'overworld_start__r1c6', 'overworld_start__r2c13', 'overworld_start__r4c16',
+            'overworld_start__r8c0', 'overworld_start__r11c19', 'overworld_start__r14c0',
+            'starting_house', 'owls_nest_entrance',
+            'dungeon1_room1__r0c4', 'dungeon1_room1__r8c6',
+        ]);
         expect(Object.values(sidecars).every((s) => s.substrate === 'flash_seedling')).toBe(true);
         expect(report.substrate).toBe('flash_seedling');
         expect(report.regions_without_map_ref).toEqual([]);
@@ -267,8 +289,10 @@ describe('projection 3 — play-time sidecars (Phase 4)', () => {
             level: 86,
             tile_size: 16,
         });
-        expect(payload('overworld_start').level).toBe(0);
+        expect(payload('overworld_start__r8c0')).toMatchObject({ level: 0, atlas_sub_region: 'r8c0' });
+        expect(payload('overworld_start__r1c6').level).toBe(0);
         expect(payload('owls_nest_entrance').level).toBe(2);
+        expect(payload('dungeon1_room1__r8c6')).toMatchObject({ level: 3, atlas_sub_region: 'r8c6' });
     });
 
     it('keys each exit on the AP exit NAME — the registry deserializer requires it', () => {
@@ -281,14 +305,14 @@ describe('projection 3 — play-time sidecars (Phase 4)', () => {
                 expect(graphExitNames).toContain(e.exitName);
             }
         }
-        expect(exitOf('overworld_start', 'house_door').exitName)
-            .toBe('overworld_start -> starting_house');
+        expect(exitOf('overworld_start__r8c0', 'house_door').exitName)
+            .toBe('overworld_start__r8c0 -> starting_house');
     });
 
     it('stamps the destination level and spawn pixels the crossing detector needs', () => {
         // entrance_tile [3,4] x tile_size 16 -> (48, 64), the spawn a player
         // arriving through starting_house/door lands on.
-        expect(exitOf('overworld_start', 'house_door')).toMatchObject({
+        expect(exitOf('overworld_start__r8c0', 'house_door')).toMatchObject({
             kind: 'teleporter',
             targetRegion: 'starting_house',
             targetExitId: 'door',
@@ -299,7 +323,7 @@ describe('projection 3 — play-time sidecars (Phase 4)', () => {
         });
         // ...and the return trip is the mirror image.
         expect(exitOf('starting_house', 'door')).toMatchObject({
-            targetRegion: 'overworld_start',
+            targetRegion: 'overworld_start__r8c0',
             targetExitId: 'house_door',
             target_level: 0,
             target_spawn: { x: 160, y: 272 },
@@ -308,9 +332,14 @@ describe('projection 3 — play-time sidecars (Phase 4)', () => {
     });
 
     it('omits the unwired boundary exits — they have no destination to resolve', () => {
-        expect(payload('overworld_start').exits.map((e) => e.exit_id))
+        expect(payload('overworld_start__r8c0').exits.map((e) => e.exit_id))
             .toEqual(['house_door', 'owls_nest_stairs']);
-        expect(payload('owls_nest_entrance').exits.map((e) => e.exit_id)).toEqual(['stairs_up']);
+        expect(payload('owls_nest_entrance').exits.map((e) => e.exit_id))
+            .toEqual(['stairs_up', 'descent']);
+        // dungeon1_room1's three other doors are unwired, so only the way back
+        // up survives — and it belongs to the sub-region it is IN.
+        expect(payload('dungeon1_room1__r0c4').exits.map((e) => e.exit_id)).toEqual(['stairs_up']);
+        expect(payload('dungeon1_room1__r8c6').exits).toEqual([]);
     });
 
     it('stamps the flashPanel wiring so a regeneration can no longer drop it', () => {
@@ -318,7 +347,7 @@ describe('projection 3 — play-time sidecars (Phase 4)', () => {
             config: 'seedling.json', wasm: 'seedling_teleport_ap/game.html',
         });
         expect(formatCompileReport(report).join('\n'))
-            .toContain('projection 3: 3 region(s) bound to substrate flash_seedling');
+            .toContain('projection 3: 10 region(s) bound to substrate flash_seedling');
     });
 
     it('the fixture names no map_ref, so it stays GRAPH-ONLY', () => {
@@ -369,9 +398,9 @@ describe('projection 3 — play-time sidecars (Phase 4)', () => {
         stampAtlasIdentity(mixed, 'seedling');
         const { rules: mixedRules, report: mixedReport } = compileRegionAtlas(mixed, { mapDoc: MAP_DOC });
         const built = mixedRules.preset_sidecars['1'];
-        expect(Object.keys(built)).toEqual(['overworld_start', 'owls_nest_entrance']);
+        expect(Object.keys(built)).not.toContain('starting_house');
         expect(mixedReport.regions_without_map_ref).toEqual(['starting_house']);
-        const door = built.overworld_start.playable_payload.exits.find((e) => e.exit_id === 'house_door');
+        const door = built.overworld_start__r8c0.playable_payload.exits.find((e) => e.exit_id === 'house_door');
         expect(door.target_level).toBeNull();
         expect(door.target_spawn).toBeNull();
     });
@@ -454,7 +483,10 @@ describe('refusals', () => {
 
     it('refuses an atlas region that would collide with the reserved Menu region', () => {
         const collide = clone(STARTER);
-        collide.regions[0].region_id = MENU_REGION;
+        // A region with NO subgraph, so it projects onto its bare region_id —
+        // a split region would project onto `Menu__<sub>` and collide with
+        // nothing.
+        atlasRegion(collide, 'starting_house').region_id = MENU_REGION;
         expect(() => compileRegionAtlas(collide, { mapDoc: MAP_DOC, allowInvalid: true }))
             .toThrow(/reserves for the start region/);
     });

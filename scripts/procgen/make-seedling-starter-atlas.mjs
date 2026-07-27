@@ -1,8 +1,13 @@
 #!/usr/bin/env node
 /**
  * Author the Seedling STARTER atlas (region-atlas plan, Phase 2, Deliverable 5):
- * the first three real regions around the game start, which the user grows from
- * here with the marking-tool panel.
+ * the first real regions around the game start, which the user grows from here
+ * with the marking-tool panel.
+ *
+ * Phase 5a added a fourth region and an ANALYSIS pass: after the geometry is
+ * authored, every region goes through the reachability analyzer, so the
+ * sub-region splits and the rules that cross them are computed from the tile map
+ * rather than guessed. `--check` therefore gates the analysis too.
  *
  * It goes through the panel's own model — AtlasSession + the compact writer —
  * so what lands on disk is exactly what the panel's Save produces. (That
@@ -32,8 +37,14 @@ const { validateRegionAtlas } = await import(pathToFileURL(
     path.join(repoRoot, 'frontend/modules/procgenPipeline/regionAtlasValidator.js')));
 const { compactJsonFile } = await import(pathToFileURL(
     path.join(repoRoot, 'frontend/modules/procgenPipeline/compactJson.js')));
+const { analyzeSeedlingRegion, applySeedlingRegionAnalysis } = await import(pathToFileURL(
+    path.join(repoRoot, 'frontend/modules/flashPanel/seedlingAtlasAnalysis.js')));
 
 const MAP = JSON.parse(fs.readFileSync(MAP_FILE, 'utf8'));
+// The per-game engine binding, which is where the analyzer's engine-flag ->
+// AP-item mapping comes from (plan decision 6 keeps it out of the atlas).
+const GAME_CONFIG = JSON.parse(fs.readFileSync(
+    path.join(repoRoot, 'frontend/modules/flashPanel/games/seedling.json'), 'utf8'));
 const TILE = MAP.tile_size;
 const levelOf = (id) => {
     const lvl = MAP.levels.find((l) => l.level === id);
@@ -61,12 +72,14 @@ function linkTiles(levelId, destination) {
     return tiles.sort((a, b) => (a[0] - b[0]) || (a[1] - b[1]));
 }
 
-// ── The three regions ────────────────────────────────────────────────────────
+// ── The regions ────────────────────────────────────────────────────────
 //
 // Level 0 is where the game starts (Main.as: `new Game(0, 80, 128)`), and the
 // two rooms it opens directly onto are the house (86) and the Owl's Nest
-// entrance (2, the Dungeon 1 stairwell). Kept to three so this is a seed to
-// grow, not a half-finished map: everything in it is real.
+// entrance (2, the Dungeon 1 stairwell). Phase 5a added the room below that
+// stairwell (3), which is where the analyzer has a real item-gated crossing to
+// find. Kept small so this is a seed to grow, not a half-finished map:
+// everything in it is real.
 //
 // `kind` is forced to teleporter on the doors, because deriving it from
 // geometry would be true but misleading: the house door sits on its room's
@@ -79,9 +92,10 @@ const REGIONS = [
         region_id: 'overworld_start',
         name: 'Overworld — Start',
         level: 0,
-        notes: 'The room the game starts in. Its sub-region split awaits the Phase-5 analyzer: '
-            + 'the breakable rocks and water here are real traversal obstacles, but which tiles they '
-            + 'separate is a reachability question, not something to guess by hand.',
+        notes: 'The room the game starts in. Its split is analyzer-computed: the water, the '
+            + 'waterfall and the breakable rocks are all real traversal obstacles, and the one '
+            + 'crossing left unlabelled goes through a building, whose per-pixel collision mask is '
+            + 'not transcribed.',
         exits: [
             { exit_id: 'west_crossing', to: 94, kind: 'edge' },
             { exit_id: 'north_crossing', to: 89, kind: 'edge' },
@@ -107,11 +121,26 @@ const REGIONS = [
         region_id: 'owls_nest_entrance',
         name: "Owl's Nest — Entrance",
         level: 2,
-        notes: 'The Dungeon 1 stairwell. `descent` is a real map edge this partial atlas does not '
-            + 'yet cover — the validator warns about it, which is the growth list working as intended.',
+        notes: 'The Dungeon 1 stairwell, between the overworld and the first dungeon room.',
         exits: [
             { exit_id: 'stairs_up', to: 0, kind: 'teleporter' },
             { exit_id: 'descent', to: 3, kind: 'teleporter' },
+        ],
+        locations: [],
+    },
+    {
+        region_id: 'dungeon1_room1',
+        name: "Owl's Nest — First Room",
+        level: 3,
+        notes: 'Added in Phase 5a as the analyzer\'s acceptance case: a breakable rock walls off '
+            + 'the tile holding the stairs down, so the split and its "Sword OR Spear" rule are '
+            + 'computed from the tile map, not guessed. Its east and west doors are real map edges '
+            + 'this partial atlas does not yet cover.',
+        exits: [
+            { exit_id: 'stairs_up', to: 2, kind: 'teleporter' },
+            { exit_id: 'east_door', to: 4, kind: 'teleporter' },
+            { exit_id: 'descent', to: 11, kind: 'teleporter' },
+            { exit_id: 'west_door', to: 111, kind: 'teleporter' },
         ],
         locations: [],
     },
@@ -121,6 +150,7 @@ const REGIONS = [
 const CONNECTIONS = [
     [['overworld_start', 'house_door'], ['starting_house', 'door']],
     [['overworld_start', 'owls_nest_stairs'], ['owls_nest_entrance', 'stairs_up']],
+    [['owls_nest_entrance', 'descent'], ['dungeon1_room1', 'stairs_up']],
 ];
 
 /**
@@ -130,12 +160,14 @@ const CONNECTIONS = [
  * checkable without a Seedling checkout.
  */
 export function buildStarterAtlas() {
+    analysisNotes.length = 0;
     const session = new AtlasSession(createEmptyAtlas({
         game: 'seedling',
         name: 'Seedling — vanilla (starter)',
-        description: 'PARTIAL: the first three regions around the game start, authored with the '
+        description: 'PARTIAL: the first regions around the game start, authored with the '
             + 'region-marking tool as the seed to grow the full map from. Geometry is derived from '
-            + 'seedling-map.json, so every exit tile is a real level-link entity.',
+            + 'seedling-map.json, so every exit tile is a real level-link entity; the sub-region '
+            + 'splits and their access rules are computed by the Phase-5a reachability analyzer.',
         tileSize: TILE,
         mapSource: 'ogmo-extract',
         mapDocument: path.basename(MAP_FILE),
@@ -172,8 +204,33 @@ export function buildStarterAtlas() {
 
     for (const [from, to] of CONNECTIONS) session.connect(from, to);
     session.setStart('overworld_start');
+
+    // Phase 5a: the sub-region splits are COMPUTED, not authored. Running the
+    // analyzer here rather than committing its output by hand is what keeps the
+    // atlas honest about the terrain — `--check` then covers the analysis too,
+    // so a semantics-table edit that changes a rule shows up as a red gate
+    // rather than as an atlas quietly disagreeing with the map it describes.
+    //
+    // Applied with `stamp: false` so toDocument() stays the single stamping
+    // path, exactly as the panel's Accept does.
+    for (const region of session.regions().map((r) => r.region_id)) {
+        const analysis = analyzeSeedlingRegion(session.atlas, region, { mapDoc: MAP, gameConfig: GAME_CONFIG });
+        if (analysis.skipped) continue;
+        const applied = applySeedlingRegionAnalysis(session.atlas, analysis, { stamp: false });
+        for (const p of applied.problems) analysisNotes.push(`${region}: ${p.message}`);
+        for (const n of analysis.needs_authoring) {
+            analysisNotes.push(`${region}: ${n.from} ${n.bidirectional ? '<->' : '->'} ${n.to} NEEDS A HAND-WRITTEN RULE — ${n.reasons.join('; ')}`);
+        }
+    }
     return session.toDocument();
 }
+
+/**
+ * What the analysis pass had to say — inexact bindings and crossings it could
+ * not label. Populated by buildStarterAtlas; surfaced by main() so a
+ * regeneration never hides them.
+ */
+export const analysisNotes = [];
 
 export const STARTER_ATLAS_PATH = OUT_FILE;
 
@@ -184,6 +241,7 @@ function main() {
     const text = compactJsonFile(doc);
 
     const result = validateRegionAtlas(doc, { mapDoc: MAP });
+    for (const note of analysisNotes) console.log(`ANALYSIS: ${note}`);
     for (const w of result.warnings) console.log(`WARN: ${w}`);
     for (const e of result.errors) console.error(`ERROR: ${e}`);
     if (!result.ok) process.exit(1);
@@ -200,8 +258,12 @@ function main() {
         console.log(`wrote ${path.relative(repoRoot, OUT_FILE)}`);
     }
     const s = result.stats;
+    const rows = doc.regions.flatMap((r) => r.subgraph?.internal_exits ?? []);
     console.log(
-        `${doc.atlas_id} — ${s.regions} regions, ${s.exits} exits, ${s.locations} locations, `
-        + `${s.connections} connections (${result.warnings.length} warnings)`,
+        `${doc.atlas_id} — ${s.regions} regions, ${s.sub_regions} analyzer sub-regions, `
+        + `${s.exits} exits, ${s.locations} locations, ${s.connections} connections; `
+        + `${rows.filter((e) => e.source === 'analyzer').length} computed internal exit(s), `
+        + `${rows.filter((e) => (e.source ?? 'manual') !== 'analyzer').length} awaiting a hand-written rule `
+        + `(${result.warnings.length} warnings)`,
     );
 }

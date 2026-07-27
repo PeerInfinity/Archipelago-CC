@@ -780,9 +780,30 @@ export function applyRegionAnalysis(atlas, analysis, options = {}) {
         remapped.push({ ...e, from, to, source: internalExitSource(e) });
     }
 
+    // Round trip. The analyzer writes its OWN unlabelled crossings as
+    // source:"manual" — that is what "someone has to author this" means in the
+    // format — so a second run would preserve them as hand-authored AND emit
+    // them again. Two rows, growing by one every run.
+    //
+    // The two cases that are really the same edge twice, and nothing else:
+    const sameEdge = (a, b) => a.from === b.from && a.to === b.to && a.bidirectional === b.bidirectional;
+    const fresh = analysis.internal_exits.filter((row) => !(
+        // 2. the analyzer still cannot label this crossing, but the author has:
+        //    their rule stands, and re-adding the unlabelled version would
+        //    reopen a question that has been answered.
+        row.source !== 'analyzer' && row.access_rule === undefined
+        && remapped.some((e) => sameEdge(e, row) && e.access_rule !== undefined)
+    ));
+    const kept = remapped.filter((e) => !(
+        // 1. a ruleless preserved row the analyzer has just re-emitted: it is
+        //    the same edge, carrying no information the fresh row lacks.
+        e.access_rule === undefined
+        && analysis.internal_exits.some((row) => sameEdge(e, row))
+    ));
+
     region.subgraph = {
         sub_regions: subRegions,
-        internal_exits: [...analysis.internal_exits, ...remapped],
+        internal_exits: [...fresh, ...kept],
     };
 
     const assign = (target, label) => {

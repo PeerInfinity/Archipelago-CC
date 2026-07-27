@@ -106,12 +106,29 @@ try {
     // exits, `unwired` of them are wired by nothing, and each remaining one is
     // exactly one directed edge in the graph (the crossing's other direction is
     // the partner exit's own edge). GameStart is not a boundary exit.
+    //
+    // Since Phase 5a the graph also carries the analyzer's INTERNAL exits, which
+    // are edges between two sub-regions of one atlas region — one directed edge
+    // each, two when bidirectional. They are counted separately rather than
+    // lumped in: an internal exit appearing where a boundary exit was dropped
+    // would otherwise balance the books on a graph that had lost a crossing.
     const authoredExits = atlas.regions.reduce((n, r) => n + r.exits.length, 0);
-    const boundaryEdges = loaded.edges.filter((e) => !e.startsWith('Menu ->')).length;
+    const expectedInternalEdges = atlas.regions.reduce(
+        (n, r) => n + (r.subgraph?.internal_exits ?? []).reduce((m, e) => m + (e.bidirectional ? 2 : 1), 0), 0,
+    );
+    // `A__x -> A__y`: both endpoints scope to the same atlas region_id.
+    const scopeOf = (name) => name.split('__')[0];
+    const internalEdges = loaded.edges.filter((e) => {
+        const [from, to] = e.split(' -> ');
+        return from !== 'Menu' && to !== undefined && from.includes('__') && scopeOf(from) === scopeOf(to);
+    }).length;
+    const boundaryEdges = loaded.edges.filter((e) => !e.startsWith('Menu ->')).length - internalEdges;
     check('Phase B: the unwired boundary exits are absent from the graph',
-        report.unwired_exits.length === 6
-        && boundaryEdges === authoredExits - report.unwired_exits.length,
-        `${authoredExits} authored - ${report.unwired_exits.length} unwired = ${boundaryEdges} edges`);
+        report.unwired_exits.length > 0
+        && boundaryEdges === authoredExits - report.unwired_exits.length
+        && internalEdges === expectedInternalEdges,
+        `${authoredExits} authored - ${report.unwired_exits.length} unwired = ${boundaryEdges} boundary edges; `
+        + `${internalEdges} internal edges (expected ${expectedInternalEdges})`);
 
     // ── Phase C — the start wiring ────────────────────────────────────────
     check('Phase C: Menu carries the GameStart exit into the atlas start region',

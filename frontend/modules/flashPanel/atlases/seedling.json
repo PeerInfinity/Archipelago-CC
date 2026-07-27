@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-6f17eb8e",
+  "atlas_id": "seedling-ab0b2709",
   "game": "seedling",
   "name": "Seedling — vanilla (starter)",
-  "description": "PARTIAL: the first three regions around the game start, authored with the region-marking tool as the seed to grow the full map from. Geometry is derived from seedling-map.json, so every exit tile is a real level-link entity.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "6f17eb8e" },
+  "description": "PARTIAL: the first regions around the game start, authored with the region-marking tool as the seed to grow the full map from. Geometry is derived from seedling-map.json, so every exit tile is a real level-link entity; the sub-region splits and their access rules are computed by the Phase-5a reachability analyzer.",
+  "provenance": { "generator": "region-marking-tool", "content_hash": "ab0b2709" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -18,51 +18,132 @@
           "kind": "edge",
           "side": "W",
           "exit_tiles": [[0,8],[0,9]],
-          "entrance_tile": [0,8]
+          "entrance_tile": [0,8],
+          "sub_region": "r8c0"
         },
         {
           "exit_id": "north_crossing",
           "kind": "edge",
           "side": "N",
           "exit_tiles": [[15,0]],
-          "entrance_tile": [15,0]
+          "entrance_tile": [15,0],
+          "sub_region": "r2c13"
         },
         {
           "exit_id": "east_crossing",
           "kind": "edge",
           "side": "E",
           "exit_tiles": [[19,11]],
-          "entrance_tile": [19,11]
+          "entrance_tile": [19,11],
+          "sub_region": "r11c19"
         },
         {
           "exit_id": "house_door",
           "kind": "teleporter",
           "exit_tiles": [[10,17]],
-          "entrance_tile": [10,17]
+          "entrance_tile": [10,17],
+          "sub_region": "r8c0"
         },
         {
           "exit_id": "owls_nest_stairs",
           "kind": "teleporter",
           "exit_tiles": [[16,17]],
-          "entrance_tile": [16,17]
+          "entrance_tile": [16,17],
+          "sub_region": "r8c0"
         },
         {
           "exit_id": "hut_door",
           "kind": "teleporter",
           "exit_tiles": [[5,6]],
-          "entrance_tile": [5,6]
+          "entrance_tile": [5,6],
+          "sub_region": "r8c0"
         },
         {
           "exit_id": "gundernourd_stairs",
           "kind": "teleporter",
           "exit_tiles": [[2,12]],
-          "entrance_tile": [2,12]
+          "entrance_tile": [2,12],
+          "sub_region": "r8c0"
         }
       ],
       "locations": [],
       "annotations": {
-        "rules_source": "manual",
-        "notes": "The room the game starts in. Its sub-region split awaits the Phase-5 analyzer: the breakable rocks and water here are real traversal obstacles, but which tiles they separate is a reachability question, not something to guess by hand."
+        "rules_source": "mixed",
+        "notes": "The room the game starts in. Its split is analyzer-computed: the water, the waterfall and the breakable rocks are all real traversal obstacles, and the one crossing left unlabelled goes through a building, whose per-pixel collision mask is not transcribed."
+      },
+      "subgraph": {
+        "sub_regions": ["r1c6","r2c13","r4c16","r8c0","r11c19","r14c0"],
+        "internal_exits": [
+          {
+            "from": "r11c19",
+            "to": "r8c0",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          },
+          {
+            "from": "r14c0",
+            "to": "r8c0",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
+          },
+          {
+            "from": "r1c6",
+            "to": "r2c13",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          },
+          { "from": "r1c6", "to": "r8c0", "bidirectional": true, "source": "manual" },
+          {
+            "from": "r2c13",
+            "to": "r4c16",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
+          },
+          {
+            "from": "r2c13",
+            "to": "r8c0",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
+          },
+          {
+            "from": "r4c16",
+            "to": "r8c0",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
+          },
+          {
+            "from": "r8c0",
+            "to": "r2c13",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim", "count": 2 } }
+          },
+          {
+            "from": "r8c0",
+            "to": "r4c16",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim", "count": 2 } }
+          }
+        ]
       }
     },
     {
@@ -103,7 +184,66 @@
       "locations": [],
       "annotations": {
         "rules_source": "manual",
-        "notes": "The Dungeon 1 stairwell. `descent` is a real map edge this partial atlas does not yet cover — the validator warns about it, which is the growth list working as intended."
+        "notes": "The Dungeon 1 stairwell, between the overworld and the first dungeon room."
+      }
+    },
+    {
+      "region_id": "dungeon1_room1",
+      "name": "Owl's Nest — First Room",
+      "bounds": { "x": 0, "y": 0, "w": 9, "h": 9 },
+      "map_ref": 3,
+      "exits": [
+        {
+          "exit_id": "stairs_up",
+          "kind": "teleporter",
+          "exit_tiles": [[4,0]],
+          "entrance_tile": [4,0],
+          "sub_region": "r0c4"
+        },
+        {
+          "exit_id": "east_door",
+          "kind": "teleporter",
+          "exit_tiles": [[8,3]],
+          "entrance_tile": [8,3],
+          "sub_region": "r0c4"
+        },
+        {
+          "exit_id": "descent",
+          "kind": "teleporter",
+          "exit_tiles": [[6,8]],
+          "entrance_tile": [6,8],
+          "sub_region": "r8c6"
+        },
+        {
+          "exit_id": "west_door",
+          "kind": "teleporter",
+          "exit_tiles": [[0,4]],
+          "entrance_tile": [0,4],
+          "sub_region": "r0c4"
+        }
+      ],
+      "locations": [],
+      "annotations": {
+        "rules_source": "analyzer",
+        "notes": "Added in Phase 5a as the analyzer's acceptance case: a breakable rock walls off the tile holding the stairs down, so the split and its \"Sword OR Spear\" rule are computed from the tile map, not guessed. Its east and west doors are real map edges this partial atlas does not yet cover."
+      },
+      "subgraph": {
+        "sub_regions": ["r0c4","r8c6"],
+        "internal_exits": [
+          {
+            "from": "r0c4",
+            "to": "r8c6",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          }
+        ]
       }
     }
   ],
@@ -111,7 +251,9 @@
     "start_region": "overworld_start",
     "connections": [
       { "from": ["overworld_start","house_door"], "to": ["starting_house","door"] },
-      { "from": ["overworld_start","owls_nest_stairs"], "to": ["owls_nest_entrance","stairs_up"] }
-    ]
+      { "from": ["overworld_start","owls_nest_stairs"], "to": ["owls_nest_entrance","stairs_up"] },
+      { "from": ["owls_nest_entrance","descent"], "to": ["dungeon1_room1","stairs_up"] }
+    ],
+    "start_sub_region": "r8c0"
   }
 }

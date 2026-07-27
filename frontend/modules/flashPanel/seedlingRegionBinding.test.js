@@ -27,9 +27,11 @@ const SIDECARS = PRESET.preset_sidecars['1'];
 /** A warehouse-shaped world, built exactly the way procgenPlayer builds it. */
 const worldFor = (regionId) => seedlingEntry.deserializeWorld(SIDECARS[regionId].playable_payload);
 
-// The three levels the starter atlas covers: overworld 0, starting house 86,
-// owl's nest entrance 2.
-const OVERWORLD = 'overworld_start';
+// The levels the starter atlas covers: overworld 0, starting house 86, owl's
+// nest entrance 2, first dungeon room 3. Since Phase 5a the overworld is SPLIT,
+// so its play-time sidecar is per sub-region; `r8c0` is the piece the game
+// starts in and the one both its wired doors belong to.
+const OVERWORLD = 'overworld_start__r8c0';
 const HOUSE = 'starting_house';
 
 // A clock the tests drive by hand, so the echo timeout is exercised without
@@ -48,8 +50,8 @@ describe('payload shape the binding depends on', () => {
         const world = worldFor(OVERWORLD);
         expect(world.exits).toBeInstanceOf(Map);
         expect([...world.exits.keys()]).toEqual([
-            'overworld_start -> starting_house',
-            'overworld_start -> owls_nest_entrance',
+            'overworld_start__r8c0 -> starting_house',
+            'overworld_start__r8c0 -> owls_nest_entrance',
         ]);
         expect(world.level).toBe(0);
         expect(exitList(world)).toHaveLength(2);
@@ -168,9 +170,9 @@ describe('crossings', () => {
         const effects = b.onStateReport('level', 2);
         expect(effects).toEqual([{
             type: 'regionMove',
-            sourceRegion: 'overworld_start',
+            sourceRegion: 'overworld_start__r8c0',
             targetRegion: 'owls_nest_entrance',
-            exitName: 'overworld_start -> owls_nest_entrance',
+            exitName: 'overworld_start__r8c0 -> owls_nest_entrance',
             exitId: 'owls_nest_stairs',
             fromLevel: 0,
             toLevel: 2,

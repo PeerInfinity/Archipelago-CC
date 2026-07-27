@@ -100,7 +100,7 @@ describe('arrival', () => {
 describe('crossing', () => {
     const boot = () => {
         h.glue.attachAdapter(h.adapter);
-        loadRegion('overworld_start', null);
+        loadRegion('overworld_start__r8c0', null);
         h.adapter.onStateReport('level', 0);   // baseline
         h.adapter.onStateReport('level', 0);   // the arrival teleport, same level
         h.adapter.teleport.mockClear();
@@ -112,9 +112,9 @@ describe('crossing', () => {
         expect(h.published).toEqual([{
             name: 'user:regionMove',
             data: {
-                sourceRegion: 'overworld_start',
+                sourceRegion: 'overworld_start__r8c0',
                 targetRegion: 'owls_nest_entrance',
-                exitName: 'overworld_start -> owls_nest_entrance',
+                exitName: 'overworld_start__r8c0 -> owls_nest_entrance',
                 source: 'seedlingRegionGlue',
             },
             opts: { initialTarget: 'bottom' },

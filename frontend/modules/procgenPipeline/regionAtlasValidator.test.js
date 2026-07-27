@@ -672,13 +672,15 @@ describe('the Seedling starter atlas', () => {
     it('validates with zero errors, map_ref resolved against the map extract', () => {
         const r = validateRegionAtlas(ATLAS, { mapDoc: MAP });
         expect(r.errors).toEqual([]);
-        expect(r.stats).toEqual({ regions: 3, sub_regions: 0, exits: 10, locations: 1, connections: 2 });
+        // Phase 5a: two of the four regions now carry an analyzer-computed
+        // subgraph, so sub_regions is no longer zero.
+        expect(r.stats).toEqual({ regions: 4, sub_regions: 8, exits: 14, locations: 1, connections: 3 });
     });
 
     it('warns only about the exits this partial atlas has not grown into yet', () => {
         const r = validateRegionAtlas(ATLAS, { mapDoc: MAP });
         expect(r.warnings.every((w) => /is not wired by vanilla_layout/.test(w))).toBe(true);
-        expect(r.warnings).toHaveLength(6);
+        expect(r.warnings).toHaveLength(8);
     });
 
     it('regenerates byte-identically from the committed map extract', async () => {
