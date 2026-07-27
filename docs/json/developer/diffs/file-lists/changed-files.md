@@ -2,7 +2,7 @@
 
 Files modified from their upstream versions (commit `e6e0bc30`).
 
-## Root Directory (6 files)
+## Root Directory (7 files)
 
 ```
 .gitattributes
@@ -10,13 +10,15 @@ Files modified from their upstream versions (commit `e6e0bc30`).
 Main.py
 README.md
 pytest.ini
+requirements.txt
 settings.py
 ```
 
-## `.github/workflows/` (2 files)
+## `.github/workflows/` (3 files)
 
 ```
 .github/workflows/codeql-analysis.yml
+.github/workflows/scan-build.yml
 .github/workflows/unittests.yml
 ```
 
@@ -27,10 +29,9 @@ rule_builder/__init__.py
 rule_builder/rules.py
 ```
 
-## `test/general/` (4 files)
+## `test/general/` (3 files)
 
 ```
-test/general/test_implemented.py
 test/general/test_items.py
 test/general/test_reachability.py
 test/general/test_rule_builder.py
@@ -107,4 +108,4 @@ worlds/yoshisisland/__init__.py
 
 ---
 
-**Total:** 28 changed files
+**Total:** 29 changed files

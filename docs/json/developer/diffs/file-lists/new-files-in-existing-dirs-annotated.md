@@ -2,9 +2,11 @@
 
 Files added to directories that already existed in upstream commit `e6e0bc30`.
 
-## Root Directory (13 files)
+## Root Directory (14 files)
 
 - `.flake8`
+
+  Fork-owned flake8 config (upstream ships none): excludes the byte-pristine vendored Universal Tracker fixtures under scripts/test/fixtures/, whose Python 3.12+ f-string syntax is a hard SyntaxError for flake8 on 3.11.
 
 - `.gitmodules`
 
@@ -48,6 +50,10 @@ Files added to directories that already existed in upstream commit `e6e0bc30`.
 
   Playwright E2E test configuration targeting frontend spoiler and regression tests.
 
+- `vitest.calib.config.js`
+
+  Manual calibration vitest tier (not in CI): home for the demoted heavy runner sweeps that define gate windows but do not need to run every battery (`npm run test:unit:calib`).
+
 - `vitest.config.js`
 
   Vitest unit test configuration for frontend JavaScript testing with coverage reporting.
@@ -56,7 +62,7 @@ Files added to directories that already existed in upstream commit `e6e0bc30`.
 
   Vitest config for the slow/long-running JS test suite (e.g. full-solver braid cross-checks).
 
-## `.github/workflows/` (13 files)
+## `.github/workflows/` (14 files)
 
 - `.github/workflows/README.md`
 
@@ -73,6 +79,10 @@ Files added to directories that already existed in upstream commit `e6e0bc30`.
 - `.github/workflows/test-all-sequential.yml`
 
   Runs all seed generation tests sequentially.
+
+- `.github/workflows/test-frozen-install.yml`
+
+  Manual-dispatch workflow: installs a compiled (frozen) Archipelago release on a Windows runner and drives scripts/test/test-frozen-install.py against it (~250 MB of downloads, ~30-45 min).
 
 - `.github/workflows/test-multiworld-ut-fuzz.yml`
 
@@ -174,4 +184,4 @@ Files added to directories that already existed in upstream commit `e6e0bc30`.
 
 ---
 
-**Total:** 36 new files in existing directories
+**Total:** 38 new files in existing directories
