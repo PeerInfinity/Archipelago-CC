@@ -18,7 +18,7 @@ Changes to configuration and repository setup files:
 - **pytest.ini** - Added `test_json` to testpaths for fork-specific test modules
 - **README.md** - Project documentation
 
-These files configure the development environment and CI/CD pipeline. Note: `requirements.txt` matches upstream exactly.
+These files configure the development environment and CI/CD pipeline. Note: `requirements.txt` differs from upstream only in the typing_extensions pin (`>=4.15.0,<5` instead of `==4.15.0`, so world requirements upgrading it don't break the exact core pin).
 
 ### 3. `diff-files/alttp-bunny-rules.diff` (27 lines)
 Bug fixes for ALttP's `set_bunny_rules()` function:
@@ -32,9 +32,8 @@ Minor fixes to upstream world files that improve output consistency or fix UT tr
 - **worlds/landstalker/Hints.py** - Changed `list(set(hint_texts))` to `sorted(set(hint_texts))` so that deduplication produces a stable ordering before the seeded `random.shuffle`. Without this, the set iteration order is non-deterministic, causing different hints to be assigned to different Foxy NPCs on each run even with the same seed.
 - **worlds/shapez/__init__.py** - Removed forced `early_balancer_tunnel_and_trash = 0` override during UT regeneration. The override made UT more permissive than the server by removing balancer/tunnel/trash requirements from region transitions when the player's YAML had them set to `3_buildings` or `5_buildings`.
 
-### 5. `diff-files/test-files.diff` (62 lines)
+### 5. `diff-files/test-files.diff` (49 lines)
 Changes to upstream test files for fork compatibility:
-- **test/general/test_implemented.py** - Added "The Messenger" and "Overcooked! 2" to `excluded_games` in `test_slot_data` to prevent flaky fill failures caused by tight access rules at certain random seeds.
 - **test/general/test_items.py** - Added `DLCQuest` coins to item exclusion dict; added logic to propagate exclusions from base games to WorldGen variant worlds (e.g., "A Link to the Past WorldGen" inherits "A Link to the Past" exclusions).
 - **test/general/test_reachability.py** - Added `shapez` "Achievements needing a MAM" to unreachable regions; added same WorldGen variant propagation logic as test_items.py.
 

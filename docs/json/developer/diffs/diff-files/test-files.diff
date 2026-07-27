@@ -1,16 +1,3 @@
-diff --git a/test/general/test_implemented.py b/test/general/test_implemented.py
-index 090685220..9971c92d2 100644
---- a/test/general/test_implemented.py
-+++ b/test/general/test_implemented.py
-@@ -38,7 +38,7 @@ class TestImplemented(unittest.TestCase):
-     def test_slot_data(self):
-         """Tests that if a world creates slot data, it's json serializable."""
-         # has an await for generate_output which isn't being called
--        excluded_games = ("Ocarina of Time",)
-+        excluded_games = ("Ocarina of Time", "The Messenger", "Overcooked! 2")
-         worlds_to_test = {game: world
-                           for game, world in AutoWorldRegister.world_types.items() if game not in excluded_games}
-         for game_name, world_type in worlds_to_test.items():
 diff --git a/test/general/test_items.py b/test/general/test_items.py
 index 9c300cf94..4a89f34b9 100644
 --- a/test/general/test_items.py

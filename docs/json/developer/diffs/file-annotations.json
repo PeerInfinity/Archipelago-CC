@@ -97,6 +97,9 @@
         "worlds/metamath/": {
             "description": "Original demo world that turns MetaMath formal proofs into playable Archipelago worlds."
         },
+        "worlds/rulebuilder_test/": {
+            "description": "Tiny hidden world that exercises the rule_builder feature surface end-to-end (Python generation → exporter → frontend evaluation), including a game-specific custom Rule subclass, FieldResolver counts, and dynamic Has.count forms."
+        },
         "worlds/toem_original/": {
             "description": "Original TOEM world implementation (non-Rule Builder version, used as a comparison benchmark)."
         },
@@ -161,6 +164,9 @@
         "pytest.ini": {
             "description": "Added `test_json` to pytest test discovery paths for fork-specific test modules."
         },
+        "requirements.txt": {
+            "description": "Relaxed the typing_extensions pin from `==4.15.0` to `>=4.15.0,<5`. CI's ModuleUpdate --force pip-installs every world's requirements file with --upgrade; zillion's `typing-extensions>=4.7,<5` upgraded past the exact core pin when 4.16.0 released, killing every unittests matrix job at setup."
+        },
         "settings.py": {
             "description": "Added `skip_required_files` global, `Group.__getattribute__` bypass for missing ROM paths, and early extraction from host.yaml `json_tools` section.",
             "links": [
@@ -180,6 +186,9 @@
             "links": [
                 {"title": "Diff", "path": "docs/json/developer/diffs/diff-files/config-files.diff"}
             ]
+        },
+        ".github/workflows/scan-build.yml": {
+            "description": "Added a `workflow_dispatch` trigger so the native-code static analysis can be run manually."
         },
 
         "_section: Changed Files - Rule Builder": "",
@@ -201,9 +210,6 @@
 
         "_section: Changed Files - Tests": "",
 
-        "test/general/test_implemented.py": {
-            "description": "Added 'The Messenger' and 'Overcooked! 2' to excluded_games in test_slot_data to prevent flaky fill failures caused by upstream worlds with tight access rules at certain random seeds."
-        },
         "test/general/test_items.py": {
             "description": "Added DLCQuest coin exclusion and logic to propagate item exclusions from base games to WorldGen variant worlds."
         },
@@ -317,8 +323,14 @@
         "conftest.py": {
             "description": "Root pytest conftest that filters upstream Archipelago worlds out of collection and AutoWorldRegister so CI only exercises this fork's own code."
         },
+        ".flake8": {
+            "description": "Fork-owned flake8 config (upstream ships none): excludes the byte-pristine vendored Universal Tracker fixtures under scripts/test/fixtures/, whose Python 3.12+ f-string syntax is a hard SyntaxError for flake8 on 3.11."
+        },
         "vitest.slow.config.js": {
             "description": "Vitest config for the slow/long-running JS test suite (e.g. full-solver braid cross-checks)."
+        },
+        "vitest.calib.config.js": {
+            "description": "Manual calibration vitest tier (not in CI): home for the demoted heavy runner sweeps that define gate windows but do not need to run every battery (`npm run test:unit:calib`)."
         },
 
         "CLAUDE.md": {
@@ -428,6 +440,9 @@
         },
         ".github/workflows/test-all-sequential.yml": {
             "description": "Runs all seed generation tests sequentially."
+        },
+        ".github/workflows/test-frozen-install.yml": {
+            "description": "Manual-dispatch workflow: installs a compiled (frozen) Archipelago release on a Windows runner and drives scripts/test/test-frozen-install.py against it (~250 MB of downloads, ~30-45 min)."
         },
         ".github/workflows/test-multiworld-ut-fuzz.yml": {
             "description": "Fuzz tests for multiworld Universal Tracker scenarios."
