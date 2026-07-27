@@ -28,6 +28,38 @@ const VALID_SIDES = new Set(['N', 'E', 'S', 'W']);
 const VALID_EXIT_KINDS = new Set(['edge', 'teleporter']);
 const VALID_RULES_SOURCES = new Set(['analyzer', 'manual', 'mixed']);
 
+// --- per-exit provenance (Phase 5a, ruling 2) --------------------------------
+//
+// An internal exit records WHO wrote it. Re-running the analyzer replaces only
+// its own rows; hand-authored ones (the puzzle gates no analyzer can derive)
+// survive byte-exact, which is what makes re-analysis safe on an atlas someone
+// has already annotated.
+//
+// ABSENT means 'manual'. That is the whole back-compat story: every atlas
+// written before the analyzer existed was hand-authored, so reading the missing
+// field as 'manual' is not a default, it is the truth about those documents.
+export const VALID_EXIT_SOURCES = new Set(['analyzer', 'manual']);
+export const DEFAULT_EXIT_SOURCE = 'manual';
+
+/** The provenance of one internal exit; absent means hand-authored. */
+export const internalExitSource = (edge) => edge?.source ?? DEFAULT_EXIT_SOURCE;
+
+/**
+ * The `annotations.rules_source` a region's internal exits imply.
+ *
+ * Derived once any row is analyzer-written: all-analyzer => 'analyzer', a mix
+ * => 'mixed'. A region with no analyzer rows keeps whatever the author declared
+ * (returns null) — a hand-annotated region is not "manual because the analyzer
+ * has not run", it is manual because a person decided its rules.
+ */
+export function derivedRulesSource(region) {
+    const edges = region?.subgraph?.internal_exits;
+    if (!Array.isArray(edges) || edges.length === 0) return null;
+    const sources = edges.map(internalExitSource);
+    if (!sources.includes('analyzer')) return null;
+    return sources.every((s) => s === 'analyzer') ? 'analyzer' : 'mixed';
+}
+
 // Guard against a hand-built cyclic rule object (JSON can't be cyclic, but a
 // caller can hand us a live object graph).
 const MAX_RULE_DEPTH = 64;
@@ -382,6 +414,9 @@ export function validateRegionAtlas(atlas, options = {}) {
                         if (typeof e.bidirectional !== 'boolean') {
                             err(`${elabel}.bidirectional must be a boolean (explicit — a one-way drop is false)`);
                         }
+                        if (e.source !== undefined && !VALID_EXIT_SOURCES.has(e.source)) {
+                            err(`${elabel}.source must be one of ${[...VALID_EXIT_SOURCES].join('/')} when present (absent means "${DEFAULT_EXIT_SOURCE}"), got ${JSON.stringify(e.source)}`);
+                        }
                         if (e.access_rule !== undefined) {
                             checkRuleTree(e.access_rule, `${elabel}.access_rule`, err);
                         }
@@ -556,6 +591,18 @@ export function validateRegionAtlas(atlas, options = {}) {
             err(`${where}.annotations must be an object when present`);
         } else if (!VALID_RULES_SOURCES.has(region.annotations.rules_source)) {
             err(`${where}.annotations.rules_source must be one of ${[...VALID_RULES_SOURCES].join('/')}, got ${JSON.stringify(region.annotations.rules_source)}`);
+        } else {
+            // Once any internal exit is analyzer-written, rules_source is
+            // DERIVED, not declared (Phase 5a, ruling 2) — a region whose label
+            // disagrees with its own rows would misreport what a reviewer has
+            // to check by hand.
+            const derived = derivedRulesSource(region);
+            if (derived !== null && region.annotations.rules_source !== derived) {
+                err(
+                    `${where}.annotations.rules_source is "${region.annotations.rules_source}" but its internal exits say "${derived}" `
+                    + '(all-analyzer => "analyzer", any hand-authored row => "mixed") — rules_source is derived once the analyzer has run',
+                );
+            }
         }
 
         // --- sub-region reachability ---

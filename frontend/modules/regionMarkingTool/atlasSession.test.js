@@ -13,6 +13,8 @@ import {
 import { computeAtlasContentHash } from '../procgenPipeline/regionAtlasValidator.js';
 
 const BOUNDS = { x: 0, y: 0, w: 10, h: 8 };
+const RULE = { rule: 'Has', args: { item_name: 'Progressive Swim' } };
+const OTHER_RULE = { rule: 'Has', args: { item_name: 'Ghost Spear' } };
 
 function session() {
     const s = new AtlasSession(createEmptyAtlas({ game: 'seedling', mapDocument: 'seedling-map.json' }));
@@ -223,6 +225,82 @@ describe('subgraphs', () => {
     it('refuses internal exits on a region with no subgraph', () => {
         expect(() => session().addInternalExit('hall', { from: 'a', to: 'b', bidirectional: true }))
             .toThrow(/declare its sub-regions first/);
+    });
+});
+
+describe('internal-exit provenance (Phase 5a, ruling 2)', () => {
+    const split = () => {
+        const s = session();
+        s.setSubRegions('hall', ['west', 'east']);
+        return s;
+    };
+    const edges = (s) => s.region('hall').subgraph.internal_exits;
+
+    it('writes no source by default, which reads as hand-authored', () => {
+        const s = split();
+        expect(s.addInternalExit('hall', { from: 'west', to: 'east', bidirectional: true }))
+            .toEqual({ from: 'west', to: 'east', bidirectional: true });
+        expect(s.region('hall').annotations.rules_source).toBe('manual');
+    });
+
+    it('rejects an unknown source rather than storing it', () => {
+        expect(() => split().addInternalExit('hall', {
+            from: 'west', to: 'east', bidirectional: true, source: 'guessed',
+        })).toThrow(/source must be one of/);
+    });
+
+    it('derives rules_source from the mix of rows', () => {
+        const s = split();
+        s.addInternalExit('hall', {
+            from: 'west', to: 'east', bidirectional: true, source: 'analyzer', access_rule: RULE,
+        });
+        expect(s.region('hall').annotations.rules_source).toBe('analyzer');
+
+        s.addInternalExit('hall', { from: 'east', to: 'west', bidirectional: false, source: 'manual' });
+        expect(s.region('hall').annotations.rules_source).toBe('mixed');
+
+        s.removeInternalExit('hall', 1);
+        expect(s.region('hall').annotations.rules_source).toBe('analyzer');
+    });
+
+    it('edits an existing row\'s rule and provenance in place', () => {
+        const s = split();
+        s.addInternalExit('hall', { from: 'west', to: 'east', bidirectional: true, source: 'analyzer', access_rule: RULE });
+        // The review step: the author disagrees with the computed rule and
+        // takes the row over.
+        s.setInternalExitRule('hall', 0, { access_rule: OTHER_RULE, source: 'manual' });
+        expect(edges(s)[0]).toEqual({
+            from: 'west', to: 'east', bidirectional: true, source: 'manual', access_rule: OTHER_RULE,
+        });
+        expect(s.region('hall').annotations.rules_source).toBe('manual');
+    });
+
+    it('clears a rule when handed null, and leaves it alone when omitted', () => {
+        const s = split();
+        s.addInternalExit('hall', { from: 'west', to: 'east', bidirectional: true, access_rule: RULE });
+        s.setInternalExitRule('hall', 0, { bidirectional: false });
+        expect(edges(s)[0].access_rule).toEqual(RULE);
+        expect(edges(s)[0].bidirectional).toBe(false);
+        s.setInternalExitRule('hall', 0, { access_rule: null });
+        expect(edges(s)[0].access_rule).toBeUndefined();
+    });
+
+    it('refuses to edit a row that is not there', () => {
+        const s = split();
+        expect(() => s.setInternalExitRule('hall', 0, { source: 'manual' }))
+            .toThrow(/has no internal exit #0/);
+    });
+
+    it('keeps a row\'s source when a sub-region list edit rewrites the subgraph', () => {
+        const s = session();
+        s.setSubRegions('hall', ['west', 'mid', 'east']);
+        s.addInternalExit('hall', { from: 'west', to: 'mid', bidirectional: true, source: 'analyzer', access_rule: RULE });
+        s.addInternalExit('hall', { from: 'mid', to: 'east', bidirectional: false, source: 'manual' });
+        s.setSubRegions('hall', ['west', 'mid']);
+        expect(edges(s)).toEqual([
+            { from: 'west', to: 'mid', bidirectional: true, source: 'analyzer', access_rule: RULE },
+        ]);
+        expect(s.region('hall').annotations.rules_source).toBe('analyzer');
     });
 });
 

@@ -17,7 +17,10 @@
 //     locations to match;
 //   - `internal_exits[].bidirectional` is always written explicitly — the
 //     format forbids a default, because a silently-defaulted direction is the
-//     bug the sub-region split exists to prevent.
+//     bug the sub-region split exists to prevent;
+//   - `annotations.rules_source` is DERIVED, never typed, once any internal
+//     exit is analyzer-written (Phase 5a, ruling 2) — every mutation that can
+//     change the mix re-syncs it.
 //
 // The validator remains authoritative (this model can produce a document that
 // still fails a cross-reference check, e.g. an unreachable sub-region); this
@@ -27,8 +30,11 @@ import {
     validateRegionAtlas,
     stampAtlasIdentity,
     computeAtlasContentHash,
+    derivedRulesSource,
     AP_SUBREGION_SEPARATOR,
+    DEFAULT_EXIT_SOURCE,
     REGION_ATLAS_SCHEMA_VERSION,
+    VALID_EXIT_SOURCES,
 } from '../procgenPipeline/regionAtlasValidator.js';
 
 const clone = (v) => JSON.parse(JSON.stringify(v));
@@ -347,6 +353,7 @@ export class AtlasSession {
             // An internal exit whose endpoint disappeared has nothing to mean.
             internal_exits: previous.filter((e) => subs.includes(e.from) && subs.includes(e.to)),
         };
+        this._syncRulesSource(region);
         const layout = this.atlas.vanilla_layout;
         if (layout.start_region === regionId && !subs.includes(layout.start_sub_region)) {
             layout.start_sub_region = fallback;
@@ -365,7 +372,7 @@ export class AtlasSession {
     }
 
     /** `bidirectional` is required — the format never defaults a direction. */
-    addInternalExit(regionId, { from, to, bidirectional, access_rule = undefined }) {
+    addInternalExit(regionId, { from, to, bidirectional, access_rule = undefined, source = undefined }) {
         const region = this.region(regionId);
         const subs = region.subgraph?.sub_regions;
         if (!subs) throw new Error(`region "${regionId}" has no subgraph — declare its sub-regions first`);
@@ -377,16 +384,77 @@ export class AtlasSession {
             throw new Error('bidirectional must be given explicitly (a one-way drop is false) — the format never defaults it');
         }
         const edge = { from, to, bidirectional };
+        if (source !== undefined) {
+            if (!VALID_EXIT_SOURCES.has(source)) {
+                throw new Error(`internal exit source must be one of ${[...VALID_EXIT_SOURCES].join('/')} (omit it for "${DEFAULT_EXIT_SOURCE}")`);
+            }
+            edge.source = source;
+        }
         if (access_rule !== undefined) edge.access_rule = access_rule;
         region.subgraph.internal_exits.push(edge);
+        this._syncRulesSource(region);
+        return edge;
+    }
+
+    /**
+     * Edit an existing internal exit's rule and provenance in place — the
+     * annotate-a-proposed-crossing move the analyzer's review step needs, and
+     * the one mutation the Phase-2 model had no seam for.
+     *
+     * Passing `access_rule: null` CLEARS the rule (an analyzer proposal the
+     * author judged wrong); omitting the key leaves it alone.
+     */
+    setInternalExitRule(regionId, index, { access_rule, source, bidirectional } = {}) {
+        const region = this.region(regionId);
+        const list = region.subgraph?.internal_exits;
+        if (!list || index < 0 || index >= list.length) throw new Error(`region "${regionId}" has no internal exit #${index}`);
+        const edge = list[index];
+        if (access_rule !== undefined) {
+            if (access_rule === null) delete edge.access_rule;
+            else edge.access_rule = access_rule;
+        }
+        if (source !== undefined) {
+            if (!VALID_EXIT_SOURCES.has(source)) {
+                throw new Error(`internal exit source must be one of ${[...VALID_EXIT_SOURCES].join('/')} (omit it for "${DEFAULT_EXIT_SOURCE}")`);
+            }
+            edge.source = source;
+        }
+        if (bidirectional !== undefined) {
+            if (typeof bidirectional !== 'boolean') {
+                throw new Error('bidirectional must be a boolean — the format never defaults it');
+            }
+            edge.bidirectional = bidirectional;
+        }
+        this._syncRulesSource(region);
         return edge;
     }
 
     removeInternalExit(regionId, index) {
-        const list = this.region(regionId).subgraph?.internal_exits;
+        const region = this.region(regionId);
+        const list = region.subgraph?.internal_exits;
         if (!list || index < 0 || index >= list.length) throw new Error(`region "${regionId}" has no internal exit #${index}`);
         list.splice(index, 1);
+        this._syncRulesSource(region);
         return this;
+    }
+
+    /**
+     * Keep `annotations.rules_source` consistent with the rows (Phase 5a,
+     * ruling 2). It is DERIVED once any row is analyzer-written; a region with
+     * only hand-authored rows keeps whatever the author declared.
+     */
+    _syncRulesSource(region) {
+        const derived = derivedRulesSource(region);
+        const current = region.annotations?.rules_source;
+        // No analyzer rows left: the derivation says nothing, EXCEPT that
+        // "analyzer" is now false — that word can only have been derived, and a
+        // region whose last computed row was taken over by hand is hand-authored.
+        // A region the author called "mixed" (its boundary gate was written by
+        // hand, say) keeps that word.
+        const next = derived ?? (current === 'analyzer' ? DEFAULT_EXIT_SOURCE : null);
+        if (next === null) return;
+        if (region.annotations == null || typeof region.annotations !== 'object') region.annotations = {};
+        region.annotations.rules_source = next;
     }
 
     // --- vanilla layout ---

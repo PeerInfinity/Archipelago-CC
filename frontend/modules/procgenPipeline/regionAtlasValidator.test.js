@@ -15,7 +15,10 @@ import {
     stampAtlasIdentity,
     computeAtlasContentHash,
     apRegionName,
+    derivedRulesSource,
+    internalExitSource,
     AP_SUBREGION_SEPARATOR,
+    DEFAULT_EXIT_SOURCE,
     REGION_ATLAS_SCHEMA_VERSION,
     indexMapDocument,
 } from './regionAtlasValidator.js';
@@ -451,6 +454,67 @@ describe('annotations', () => {
         const r = mutated((a) => { delete regionOf(a, 'owls_nest').annotations; });
         expect(r.ok).toBe(true);
         expect(hasWarning(r, /region "owls_nest" has no annotations\.rules_source/)).toBe(true);
+    });
+});
+
+describe('internal-exit provenance (Phase 5a, ruling 2)', () => {
+    const internalExits = (a, id) => regionOf(a, id).subgraph.internal_exits;
+
+    it('reads an absent source as manual, so every pre-5a atlas is unchanged', () => {
+        // The committed fixture's rows were hand-written and carry no `source`.
+        for (const region of FIXTURE.regions) {
+            for (const e of region.subgraph?.internal_exits ?? []) {
+                expect(e.source).toBeUndefined();
+                expect(internalExitSource(e)).toBe(DEFAULT_EXIT_SOURCE);
+            }
+        }
+        expect(validateRegionAtlas(makeAtlas()).ok).toBe(true);
+    });
+
+    it('accepts the two declared sources and rejects anything else', () => {
+        for (const source of ['analyzer', 'manual']) {
+            const r = mutated((a) => { internalExits(a, 'overworld_south')[0].source = source; });
+            expect(hasError(r, /\.source must be one of/)).toBe(false);
+        }
+        const bad = mutated((a) => { internalExits(a, 'overworld_south')[0].source = 'guessed'; });
+        expect(hasError(bad, /\.source must be one of analyzer\/manual/)).toBe(true);
+    });
+
+    it('derives rules_source only once a row is analyzer-written', () => {
+        // No analyzer rows: the author's declaration stands, whatever it is.
+        expect(derivedRulesSource(regionOf(makeAtlas(), 'overworld_south'))).toBeNull();
+        expect(derivedRulesSource(regionOf(makeAtlas(), 'owls_nest'))).toBeNull();
+
+        const allAnalyzer = makeAtlas();
+        for (const e of internalExits(allAnalyzer, 'overworld_south')) e.source = 'analyzer';
+        expect(derivedRulesSource(regionOf(allAnalyzer, 'overworld_south'))).toBe('analyzer');
+
+        const mixed = makeAtlas();
+        internalExits(mixed, 'overworld_south')[0].source = 'analyzer';
+        internalExits(mixed, 'overworld_south')[1].source = 'manual';
+        expect(derivedRulesSource(regionOf(mixed, 'overworld_south'))).toBe('mixed');
+    });
+
+    it('errors when a region\'s label disagrees with its own rows', () => {
+        // overworld_south is annotated "analyzer"; a hand-authored row in it
+        // makes that a lie, and the lie is what a reviewer would act on.
+        const r = mutated((a) => {
+            const [first, second] = internalExits(a, 'overworld_south');
+            first.source = 'analyzer';
+            second.source = 'manual';
+        });
+        expect(hasError(r, /rules_source is "analyzer" but its internal exits say "mixed"/)).toBe(true);
+
+        const consistent = mutated((a) => {
+            for (const e of internalExits(a, 'overworld_south')) e.source = 'analyzer';
+        });
+        expect(consistent.ok).toBe(true);
+    });
+
+    it('leaves a region with no subgraph out of the derivation entirely', () => {
+        expect(derivedRulesSource(regionOf(makeAtlas(), 'owls_nest'))).toBeNull();
+        expect(derivedRulesSource({})).toBeNull();
+        expect(derivedRulesSource({ subgraph: { internal_exits: [] } })).toBeNull();
     });
 });
 

@@ -149,6 +149,10 @@
                   "from": { "type": "string", "minLength": 1 },
                   "to": { "type": "string", "minLength": 1 },
                   "bidirectional": { "type": "boolean", "description": "Explicit — never defaulted." },
+                  "source": {
+                    "enum": ["analyzer", "manual"],
+                    "description": "Who authored this row. ABSENT means 'manual' (every atlas written before the analyzer existed). Re-analysis replaces only its own rows; manual rows survive byte-exact."
+                  },
                   "access_rule": { "$ref": "#/$defs/rule" }
                 }
               }
@@ -175,7 +179,7 @@
           "properties": {
             "rules_source": {
               "enum": ["analyzer", "manual", "mixed"],
-              "description": "Where this region's access rules came from. Puzzle-gated games (Seedling) force 'manual' — that is expected, not a gap."
+              "description": "Where this region's access rules came from. DERIVED from the subgraph's internal_exits[].source once any of them is 'analyzer': all-analyzer => 'analyzer', a mix => 'mixed'. A region with no analyzer rows is whatever the author says. Puzzle-gated games (Seedling) force hand-authored rows — that is expected, not a gap."
             },
             "notes": { "type": "string" }
           }
