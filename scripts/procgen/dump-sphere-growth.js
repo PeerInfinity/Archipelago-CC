@@ -35,6 +35,13 @@
  *                            `--quota atlas:<game>=N` can place N pieces of that
  *                            game's real map. Repeat per game. Absent = no atlas
  *                            code path is taken at all (byte-inert).
+ *   --atlas-placement MODE   how atlas regions reach the tree: 'sorter'
+ *                            (default) sorts each region into the wave its own
+ *                            entry requirement earns, scheduling that
+ *                            requirement's items into an earlier sphere;
+ *                            'quota' is the fallback, where the grower draws
+ *                            atlas regions like any substrate and gates them
+ *                            with a synthetic gate from the plan.
  *   --start id               start substrate
  *   --max-items-per-region N (default 2)
  *   --fillers N              filler regions, no items (default 0)
@@ -105,6 +112,8 @@ import { substrateRegistry } from
     '../../frontend/modules/shared/procgen/substrateRegistry.js';
 import { validateAtlasPool } from
     '../../frontend/modules/procgenPipeline/regionAtlasPool.js';
+import { sortAtlasRegionsIntoSpheres, formatAtlasSortReport } from
+    '../../frontend/modules/procgenPipeline/sphereAtlasSorter.js';
 import {
     defaultProcgenParams, activeSubstrateIds,
     collectSphereGrowthPrep, assembleRegionParams,
@@ -181,6 +190,7 @@ function parseArgs(argv) {
         manaTiles: 0,
         manaTileAmount: 0,
         atlasPools: [],
+        atlasPlacement: 'sorter',
         rulesOut: null,
         out: './sphere-growth-dump.json',
     };
@@ -230,6 +240,7 @@ function parseArgs(argv) {
                 break;
             }
             case '--atlas': out.atlasPools.push(next()); break;
+            case '--atlas-placement': out.atlasPlacement = next(); break;
             case '--start': out.start = next(); break;
             case '--max-items-per-region':
                 out.maxItemsPerRegion = parseInt(next(), 10);
@@ -365,6 +376,7 @@ async function main() {
     // by the GAME, while its quota is keyed `atlas:<game>`. Empty unless --atlas
     // is passed, so the growth config is byte-identical without it.
     const substrateConfig = {};
+    const atlasAssignments = [];
     for (const p of config.atlasPools) {
         const pool = JSON.parse(readFileSync(resolve(process.cwd(), p), 'utf8'));
         const vr = validateAtlasPool(pool);
@@ -374,6 +386,17 @@ async function main() {
         substrateConfig[pool.game] = { atlasDoc: pool };
         console.log(`  atlas pool: ${pool.pool_id} (${pool.entries.length} regions) `
             + `-> substrateConfig['${pool.game}'].atlasDoc`);
+        if (config.atlasPlacement === 'sorter') {
+            // MUTATES `plan` — the required items are scheduled into earlier
+            // spheres, and the plan is also the oracle, so this must happen
+            // before the plan reaches the driver AND the same object must be
+            // what the oracle compares against below.
+            const sorted = sortAtlasRegionsIntoSpheres(plan, pool, {
+                quota: config.quotas[`atlas:${pool.game}`],
+            });
+            atlasAssignments.push(...sorted.assignments);
+            for (const line of formatAtlasSortReport(sorted)) console.log(`  ${line}`);
+        }
     }
 
     const { grid, stats, startCell, tree } = growSpheres({
@@ -394,6 +417,7 @@ async function main() {
                 ? { substrateQuotas: config.quotas } : {}),
             ...(config.start ? { startSubstrate: config.start } : {}),
             ...(Object.keys(substrateConfig).length > 0 ? { substrateConfig } : {}),
+            ...(atlasAssignments.length > 0 ? { atlasAssignments } : {}),
         },
     });
 

@@ -3611,10 +3611,21 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
         // so the grower's gate accounting matches what the substrate
         // realises, without the engine naming any substrate.
         regionParams = {},
+        // Region-atlas Phase 6 (slice 2): pre-decided placements from the
+        // sorter, `[{ entry_id, wave, gate, sourceId }]`. Absent (the default,
+        // and every world with no atlas pool) ⇒ nothing below changes.
+        atlasAssignments = null,
     } = opts;
     const spheres = plan.spheres;
     const waves = spheres.length;
     const { regionsPerWave, fillerWaves } = allocation;
+    // With a sorter in play the atlas quota is the sorter's budget, not a draw:
+    // leaving the id in the pick pool would place the same regions twice, once
+    // at their honest wave and once wherever the shuffle put them.
+    const pickQuotas = atlasAssignments
+        ? Object.fromEntries(Object.entries(substrateQuotas ?? {})
+            .filter(([id]) => !isAtlasSourceId(id)))
+        : substrateQuotas;
 
     // Cumulative instance counts per sphere: cumCounts[k] maps item →
     // number of instances in spheres 1..k+1. A wave-w gate on item X
@@ -3647,13 +3658,13 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
     const pickSub = (preferred = null) => {
         let sub = null;
         if (preferred && preferred !== 'auto') {
-            const remaining = substrateQuotas
-                ? (substrateQuotas[preferred] ?? 0) - (substrateCounts[preferred] || 0)
+            const remaining = pickQuotas
+                ? (pickQuotas[preferred] ?? 0) - (substrateCounts[preferred] || 0)
                 : 1;
             if (remaining > 0) sub = preferred;
         }
-        if (!sub && substrateQuotas) {
-            sub = pickSubstrateWithQuota(substrateQuotas, substrateCounts, rng);
+        if (!sub && pickQuotas) {
+            sub = pickSubstrateWithQuota(pickQuotas, substrateCounts, rng);
             if (!sub) quotaFallbacks += 1;
         }
         if (!sub) sub = 'maze';
@@ -3662,7 +3673,9 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
     };
 
     const nodes = resume?.nodes ?? [];
-    const addNode = ({ wave, gate, gateCounts = {}, parent, substrate, isFiller = false }) => {
+    const addNode = ({
+        wave, gate, gateCounts = {}, parent, substrate, isFiller = false, atlasEntry = null,
+    }) => {
         const node = {
             index: nodes.length,
             wave,
@@ -3677,6 +3690,9 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
             isFiller,
             childGates: [],
             usedSides: new Set(),
+            // Which atlas region the sorter pinned to this node; the realiser
+            // claims exactly that entry rather than fit-selecting one.
+            ...(atlasEntry ? { atlasEntry } : {}),
         };
         if (parent != null) {
             const host = nodes[parent];
@@ -3769,15 +3785,23 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
     // bounce). The CHILD's substrate doesn't constrain the gate:
     // bounce realises any entry gate's back portal via authored
     // locks (anyone inside satisfies the entry gate by construction).
-    const pickHostAndGate = (wave, { gateWave = wave } = {}) => {
+    const pickHostAndGate = (wave, { gateWave = wave, fixedGate = null } = {}) => {
         // Required count for a gate item at this gate's sphere: the
         // cumulative instance count through sphere gateWave (1 for
         // single-instance items — the common case).
         const cum = gateWave > 0 ? cumCounts[gateWave - 1] : null;
         const gateCount = (item) => cum?.get(item) ?? 1;
-        const gateChoices = gateWave === 0
-            ? [[]]
-            : rng.shuffle([...new Set(spheres[gateWave - 1].items)]).map((item) => [item]);
+        // `fixedGate` (region-atlas Phase 6): the sorter already decided this
+        // node's gate — it IS the real game's requirement for getting in — so
+        // there is nothing to choose, only a host that can carry it. The COUNT
+        // still comes from the plan's cumulative table, which can only ever be
+        // stricter than the atlas's own rule; over-gating is safe, opening a
+        // sphere early is not.
+        const gateChoices = fixedGate
+            ? [fixedGate]
+            : (gateWave === 0
+                ? [[]]
+                : rng.shuffle([...new Set(spheres[gateWave - 1].items)]).map((item) => [item]));
         const eligible = nodes.filter((h) => h.usedSides.size < 4
             && (gateWave === 0 ? h.wave === 0 : true));
         const older = eligible.filter((h) => h.wave < wave - 1);
@@ -3850,6 +3874,23 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
                 gateWave: w === 0 && waves > 1 ? 1 : w,
             });
             addNode({ wave: w, gate, gateCounts, parent: host.index, substrate, isFiller: true });
+        }
+        // Pre-built ATLAS regions the sorter assigned to this wave (region-atlas
+        // Phase 6). They come LAST so the draw order of everything above is
+        // untouched, they carry no items (a real map offers exactly the
+        // locations it was marked with, which the round-robin knows nothing
+        // about), and their gate is the map's own entry requirement rather than
+        // one drawn from the sphere.
+        for (const a of atlasAssignments ?? []) {
+            if (a.wave !== w) continue;
+            const { host, gate, gateCounts } = pickHostAndGate(w, {
+                gateWave: w, fixedGate: a.gate,
+            });
+            substrateCounts[a.sourceId] = (substrateCounts[a.sourceId] || 0) + 1;
+            addNode({
+                wave: w, gate, gateCounts, parent: host.index, substrate: a.sourceId,
+                isFiller: true, atlasEntry: a.entry_id,
+            });
         }
     };
 
@@ -5368,6 +5409,7 @@ export function* growSpheresGen(config) {
         gridDims = null,
         teleporterMinGap = 2,
         assumeBidirectional = true,
+        atlasAssignments = null,
     } = growthParams;
     if (!spherePlan) {
         throw new Error('growSpheres: growthParams.spherePlan required');
@@ -5413,7 +5455,7 @@ export function* growSpheresGen(config) {
     const rng = prebuilt ? (growthParams.rng ?? createRng(seed)) : createRng(seed);
     const tree = prebuilt ?? buildSphereTree(spherePlan, {
         maxItemsPerRegion, fillerCount, revisitRatio, substrateQuotas, startSubstrate,
-        regionParams,
+        regionParams, atlasAssignments,
     }, rng);
     yield {
         type: 'plan',
@@ -5742,6 +5784,7 @@ function sphereTreeSetup(config, label) {
         revisitRatio = 0.25,
         substrateQuotas = null,
         startSubstrate = null,
+        atlasAssignments = null,
     } = growthParams;
     if (!spherePlan) {
         throw new Error(`${label}: growthParams.spherePlan required`);
@@ -5752,7 +5795,7 @@ function sphereTreeSetup(config, label) {
     }
     const opts = {
         maxItemsPerRegion, fillerCount, revisitRatio, substrateQuotas, startSubstrate,
-        regionParams,
+        regionParams, atlasAssignments,
     };
     return { plan: spherePlan, opts };
 }

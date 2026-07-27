@@ -131,6 +131,10 @@ export function growConfigFrom(config, plan) {
             // resolveSphereLibrarySources / resolveSphereAtlasSources. Absent
             // unless one is selected, so worlds with neither stay byte-identical.
             ...(config.substrateConfig ? { substrateConfig: config.substrateConfig } : {}),
+            // Region-atlas Phase 6 (slice 2): the sorter's pre-decided
+            // placements, produced BEFORE the plan reaches any driver (the plan
+            // it mutates is the oracle, so it has to be augmented first).
+            ...(config.atlasAssignments ? { atlasAssignments: config.atlasAssignments } : {}),
             ...(config.startSubstrate ? { startSubstrate: config.startSubstrate } : {}),
             // Carried for any standalone batched driver consumer; the step
             // runner reads env.config.spheresPerBatch directly to drive its

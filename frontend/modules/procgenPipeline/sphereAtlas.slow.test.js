@@ -5,10 +5,16 @@
 // per node BESIDE the gated skeleton — synthetic gate in front, the map's own
 // rules kept underneath — which is plan decision 9's safe default.
 //
+// Slice 2 replaces the synthetic gate with the map's OWN entry requirement: the
+// sorter schedules that requirement into an earlier sphere and places the region
+// in the wave that sphere gates, so the gate is both honest and a proper
+// sphere-k gate and the oracle stays exact.
+//
 // Covers: placement + naming, the leaf fence (an atlas region hosts no
 // children), AND-composition of the driver's gate onto an authored rule, the
 // back-exit landing on a walkable tile, at-most-once placement, byte-inertness
-// with no atlas quota, and every loud decline. Grows real sphere worlds → *.slow.
+// with no atlas quota, every loud decline, and the whole sorter route.
+// Grows real sphere worlds → *.slow.
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -19,6 +25,7 @@ import {
     getRegionExits, getRegionEntrance,
 } from './procgenPipelineEngine.js';
 import { planSpheres, computeItemSpheres, compareSpheresToPlan } from './spherePlanner.js';
+import { sortAtlasRegionsIntoSpheres } from './sphereAtlasSorter.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(here, '../../..');
@@ -195,6 +202,105 @@ describe('loud declines', () => {
         expect(() => grow({
             quotas: { 'atlas:seedling': 9 }, config: ATLAS_CONFIG,
         })).toThrow(/hosts no children/);
+    });
+});
+
+describe('the SORTER route (slice 2): the map\'s own requirement IS the gate', () => {
+    // The plan is mutated by the sorter (it schedules the required items), and
+    // the plan is also the oracle — so the same object has to be used for both.
+    function sortedGrow(seed = 1) {
+        const p = plan();
+        const sorted = sortAtlasRegionsIntoSpheres(p, POOL);
+        const grown = growSpheres({
+            regionSize: { width: 8, height: 6 },
+            seed,
+            growthParams: {
+                spherePlan: p,
+                substrateQuotas: { maze: 6, 'atlas:seedling': 8 },
+                ...ATLAS_CONFIG,
+                atlasAssignments: sorted.assignments,
+                startSubstrate: 'maze',
+                maxItemsPerRegion: 2,
+            },
+        });
+        return { plan: p, sorted, ...grown };
+    }
+
+    const { plan: sortedPlan, sorted, grid, startCell, tree } = sortedGrow();
+
+    it('places exactly the regions the sorter accepted, at the wave it chose', () => {
+        const placed = tree.nodes.filter((n) => n.substrate === 'atlas:seedling');
+        expect(placed.map((n) => n.region_id).sort())
+            .toEqual(sorted.assignments.map((a) => a.entry_id).sort());
+        for (const a of sorted.assignments) {
+            const node = placed.find((n) => n.region_id === a.entry_id);
+            expect(node.wave).toBe(a.wave);
+            expect(node.gate).toEqual(a.gate);
+        }
+    });
+
+    it('gates the water-locked regions on the swim the REAL game charges', () => {
+        const wet = tree.nodes.filter((n) => n.gate.includes('Progressive Swim'));
+        expect(wet.map((n) => n.region_id).sort()).toEqual([
+            'overworld_start__r14c0', 'overworld_start__r2c13', 'overworld_start__r4c16',
+        ]);
+    });
+
+    it('scheduled that requirement into a STRICTLY EARLIER sphere', () => {
+        expect(sorted.injected).toEqual([{ item: 'Progressive Swim', sphere: 1 }]);
+        expect(sortedPlan.spheres[0].items).toContain('Progressive Swim');
+        for (const n of tree.nodes.filter((x) => x.gate.includes('Progressive Swim'))) {
+            expect(n.wave).toBe(1); // gated by sphere-1 items ⇒ a wave-1 node
+        }
+    });
+
+    it('keeps the sphere oracle exact with the injected item counted', () => {
+        const rules = buildRulesJson(grid, {
+            startCell, seed: 1, completionConditionItem: 'victory',
+            procgenMetadata: { driver: 'sphere-growth', stop_reason: 'plan_complete' },
+        });
+        expect(compareSpheresToPlan(computeItemSpheres(rules), sortedPlan)).toEqual([]);
+    });
+
+    it('the scheduled item is really placed in the world, in its sphere', () => {
+        const rules = buildRulesJson(grid, {
+            startCell, seed: 1, completionConditionItem: 'victory',
+        });
+        const placedItems = Object.values(rules.regions).flatMap((byName) =>
+            Object.values(byName).flatMap((r) => (r.locations ?? []).map((l) => l.item?.name)));
+        expect(placedItems).toContain('Progressive Swim');
+    });
+
+    it('does NOT also draw atlas regions from the quota (no double placement)', () => {
+        const ids = tree.nodes.filter((n) => n.substrate === 'atlas:seedling')
+            .map((n) => n.region_id);
+        expect(new Set(ids).size).toBe(ids.length);
+        expect(ids).toHaveLength(sorted.assignments.length);
+    });
+
+    it('declines the disjunctive frontiers rather than encoding them wrong', () => {
+        expect(sorted.declined.map((d) => d.entry_id)).toEqual([
+            'overworld_start__r1c6', 'overworld_start__r11c19', 'dungeon1_room1__r8c6',
+        ]);
+        const placed = tree.nodes.map((n) => n.region_id);
+        for (const d of sorted.declined) expect(placed).not.toContain(d.entry_id);
+    });
+
+    it('is byte-inert for a world with no assignments and no atlas quota', () => {
+        const p = plan();
+        const withEmpty = growSpheres({
+            regionSize: { width: 8, height: 6 },
+            seed: 2,
+            growthParams: {
+                spherePlan: p,
+                substrateQuotas: { maze: 9 },
+                startSubstrate: 'maze',
+                maxItemsPerRegion: 2,
+                fillerCount: 2,
+                atlasAssignments: null,
+            },
+        });
+        expect(dumpGrid(withEmpty.grid)).toBe(dumpGrid(grow({ seed: 2, quotas: { maze: 9 } }).grid));
     });
 });
 
