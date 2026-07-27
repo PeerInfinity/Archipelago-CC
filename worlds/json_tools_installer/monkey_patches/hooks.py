@@ -175,7 +175,14 @@ def _install_temp_dir_hook() -> bool:
             if method_name == "generate_output" and args:
                 # args[0] is Main's ZIP staging directory; the sphere log must
                 # not be written there, so point it at the output directory.
-                multiworld.temp_dir_for_sphere_log = _resolve_export_dir()
+                # Exception: a legacy exporter (predating staging_dir) finds
+                # its artifacts by mirroring the staging directory, so the
+                # sphere log must stay there for it (old behavior).
+                from ..export_hook import exporter_supports_staging_dir
+                if exporter_supports_staging_dir() is False:
+                    multiworld.temp_dir_for_sphere_log = args[0]
+                else:
+                    multiworld.temp_dir_for_sphere_log = _resolve_export_dir()
             return original_call_stage(multiworld, method_name, *args)
 
         AutoWorld.call_stage = hooked_call_stage

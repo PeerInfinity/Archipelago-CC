@@ -5,6 +5,7 @@ Registered by json_tools_installer to run after seed generation output,
 replacing the direct exporter calls that were previously in Main.py.
 """
 
+import functools
 import logging
 from typing import Optional, TYPE_CHECKING
 
@@ -12,6 +13,40 @@ if TYPE_CHECKING:
     from BaseClasses import MultiWorld
 
 logger = logging.getLogger(__name__)
+
+_legacy_exporter_warned = False
+
+
+@functools.lru_cache(maxsize=1)
+def exporter_supports_staging_dir() -> Optional[bool]:
+    """Whether the installed exporter's export_game_rules accepts staging_dir.
+
+    The installer apworld (custom_worlds/) and the exporter package (installed
+    separately by the JSON Tools Installer) update independently, so an older
+    exporter must be driven with its old calling convention instead of letting
+    the whole export crash on an unexpected keyword. Returns None when the
+    exporter is not importable.
+    """
+    try:
+        import inspect
+        from exporter import export_game_rules
+        return "staging_dir" in inspect.signature(export_game_rules).parameters
+    except Exception:
+        return None
+
+
+def _warn_legacy_exporter() -> None:
+    global _legacy_exporter_warned
+    if _legacy_exporter_warned:
+        return
+    _legacy_exporter_warned = True
+    logger.warning(
+        "The installed JSON Tools exporter predates this installer apworld; "
+        "using its legacy calling convention. Artifacts are written to the ZIP "
+        "staging directory and may be bundled into the hostable AP_<seed>.zip "
+        "(a stock WebHost rejects such uploads). Re-run the JSON Tools "
+        "Installer with the Development source to update the exporter."
+    )
 
 
 def export_post_output_hook(
@@ -80,17 +115,41 @@ def export_post_output_hook(
     # Export rules data after create_playthrough so sphere_log.jsonl is included.
     # The exporter uses cached _cached_slot_data instead of calling fill_slot_data,
     # so it won't repopulate caches that were cleared by stage_modify_multidata.
-    export_game_rules(
-        multiworld,
-        output_dir,
-        filename_base,
-        jt.update_frontend_presets,
-        jt.skip_preset_copy_if_rules_identical,
-        rules_format,
-        clear_game_presets=jt.clear_game_presets,
-        clear_all_presets=jt.clear_all_presets,
-        staging_dir=staging_dir,
-    )
+    if exporter_supports_staging_dir():
+        export_game_rules(
+            multiworld,
+            output_dir,
+            filename_base,
+            jt.update_frontend_presets,
+            jt.skip_preset_copy_if_rules_identical,
+            rules_format,
+            clear_game_presets=jt.clear_game_presets,
+            clear_all_presets=jt.clear_all_presets,
+            staging_dir=staging_dir,
+        )
+    else:
+        # Legacy exporter: no staging_dir parameter, and its preset copy
+        # mirrors whatever directory it writes into — so reproduce the old
+        # behavior exactly (artifacts into the staging dir). Without a staging
+        # dir (spoiler-disabled fallback path) that mirroring would sweep the
+        # whole shared output directory into the presets, so skip instead.
+        _warn_legacy_exporter()
+        if staging_dir is None:
+            logger.warning(
+                "Legacy exporter with no staging directory available "
+                "(spoiler-disabled fallback); skipping rules export."
+            )
+        else:
+            export_game_rules(
+                multiworld,
+                staging_dir,
+                filename_base,
+                jt.update_frontend_presets,
+                jt.skip_preset_copy_if_rules_identical,
+                rules_format,
+                clear_game_presets=jt.clear_game_presets,
+                clear_all_presets=jt.clear_all_presets,
+            )
     # Clear exporter caches to allow GC
     clear_rule_cache()
     clear_handler_cache()
