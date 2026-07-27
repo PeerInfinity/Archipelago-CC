@@ -1,7 +1,7 @@
 # Region Atlas: Real-Game Maps as Procgen Regions
 
-**Date:** 2026-07-26 (Phase 1 shipped 2026-07-27)
-**Status:** Design ruled; Phase 1 (atlas format) complete — Phase 2 next
+**Date:** 2026-07-26 (Phases 1 and 2 shipped 2026-07-27)
+**Status:** Design ruled; Phase 1 (atlas format) and Phase 2 (marking tool) complete — Phase 3 next
 **Games:** Seedling first (redistributable, discrete sections, source available), then Robot Wants Kitty
 
 ## Goal
@@ -119,8 +119,11 @@ information.
   `apRegionName()` in `regionAtlasValidator.js`, which forbids `__` inside
   `region_id` and sub-region ids so the split stays unambiguous.
 - Gate-rung ruling for pre-built regions (decision 9).
-- How the marking tool and the existing RWK tile map editor share code
-  (the marking tool is game-agnostic; the RWK editor is one host for it).
+- ~~How the marking tool and the existing RWK tile map editor share code~~
+  **RULED 2026-07-27: separate modules, shared canvas.** The marking tool is
+  its own GL panel (`regionMarkingTool`); `markingRenderer.js` subclasses the
+  analyzer's `TileMapCanvasRenderer` rather than either module absorbing the
+  other. The analyzer's own reachability/physics data model stays RWK-specific.
 
 ## Atlas schema sketch
 
@@ -237,23 +240,92 @@ end-to-end → sorter → RWK → bots. Each phase lands separately.
   pairings, one-way dead-end sub-regions, missing `vanilla_item`, missing
   annotations, unstamped provenance.
 
-### Phase 2 — Region-marking tool (minimal)
-- [ ] Load a game's tile map for display (Seedling first; reuse tile map
+### Phase 2 — Region-marking tool (minimal) — **COMPLETE 2026-07-27**
+- [x] Load a game's tile map for display (Seedling first; reuse tile map
       analyzer rendering where possible)
-- [ ] Mark boundary lines (H/V → side label), teleporter exits, entrance
+- [x] Mark boundary lines (H/V → side label), teleporter exits, entrance
       spawn tiles; name/number regions
-- [ ] Mark locations + vanilla items
-- [ ] Edit subgraph: declare sub-regions, assign exits/locations, author
+- [x] Mark locations + vanilla items
+- [x] Edit subgraph: declare sub-regions, assign exits/locations, author
       internal-exit rules (annotation-first)
-- [ ] Save/load atlas documents (restamp on edit)
-- [ ] Handoff seam to APWorld Editor (`apworldEditor:loadRules` with the
-      projected rules.json) for detail-filling
+- [x] Save/load atlas documents (restamp on edit)
+- [x] Seedling map extractor + a real starter atlas (added this phase)
+- [ ] ~~Handoff seam to APWorld Editor~~ **DEFERRED to Phase 3** (ruling 5):
+      it hands over the *projected rules.json*, which is Phase 3's compiler —
+      there is nothing to hand over until that exists.
+
+**Rulings (user, 2026-07-27):**
+1. Seedling map display comes from a **source extractor** over the Ogmo `.oel`
+   level files in a Seedling source checkout — not a runtime capture.
+2. The marking tool is a **new GL panel module** (`regionMarkingTool`), NOT a
+   mode inside tileMapAnalyzer. The analyzer is an RWK-specific
+   reachability/physics tool with its own tilemap+categories data model; what
+   the two genuinely share is the canvas, and that is shared as code.
+3. The extracted Seedling map data is **committed** — Seedling is MIT, so
+   decision 7's "coordinates only, never the tile map" constraint is RWK-only.
+4. Phase-2 acceptance includes a **real starter atlas** (2–3 regions around the
+   game start) authored with the tool and committed.
+5. The APWorld Editor handoff is deferred to Phase 3 (above).
+
+**As built:**
+- Extractor: `scripts/procgen/extract-seedling-map.mjs` +
+  `scripts/procgen/seedlingOgmo.js` (pure `.oel` / `Game.as` parsers) →
+  `frontend/modules/flashPanel/atlases/seedling-map.json`: **116** levels
+  (not 120 — four `.oel` files are unreferenced by the level table and are
+  recorded by name only), 28803 tile placements, 2461 entities, no timestamp so
+  `--check` is an exact regenerates-byte-identically gate.
+- Panel: `frontend/modules/regionMarkingTool/` — `atlasSession.js` (the editing
+  model, no DOM), `mapSource.js`, `markingRenderer.js` (subclasses the
+  analyzer's `TileMapCanvasRenderer`, adding rect/line drags + the region
+  overlay it lacks), `regionMarkingToolUI.js`, CSS. Registered in all four
+  places; default off, enabled in `modules-flash.json`.
+- Starter atlas: `frontend/modules/flashPanel/atlases/seedling.json`, built by
+  `scripts/procgen/make-seedling-starter-atlas.mjs`.
+- Verifier: `scripts/procgen/verify-region-marking-tool.mjs` drives the real
+  panel in chromium under `?mode=flash` with actual mouse drags.
+- Tests: 3380 → **3471** vitest (35 atlasSession, 25 extractor, 15 compact
+  writer, +16 validator/starter-atlas). `vitest.config.js` `include` gains
+  `scripts/**/*.test.js`.
+
+**Deltas from Phase 1** (all additive; the Phase-1 fixture validates unchanged):
+- **`map_ref` + `tile_space.map_document`** — Phase 1 assumed one coordinate
+  space per game. True of RWK, false of Seedling: 116 levels, each with its own
+  origin. A region may name its space with `map_ref`; `map_document` names the
+  document those ids index. Every geometry check already stayed inside one
+  region and never compared two, so nothing else moved. Given the map document
+  (the CLI loads it from beside the atlas), `map_ref` must resolve and the
+  region's bounds must fit inside that level. Partial adoption warns.
+- **Compact atlas writer** (`procgenPipeline/compactJson.js`) used by both the
+  tool's save path and the CLI's `--restamp`, which used to explode every tile
+  pair to one number per line. The `atlases/README.md` "never use `--restamp`,
+  paste the hash in by hand" workaround is gone.
+- **Authoring-time enforcement.** The rules a UI can enforce before the
+  validator sees a document now throw in `AtlasSession`: no `__` in ids, an
+  edge exit's `side` DERIVED from which bounds line its tiles sit on,
+  `entrance_tile ∈ exit_tiles`, `sub_region` present exactly when the region has
+  a subgraph (adding/dropping one rewrites exits and locations to match),
+  `bidirectional` never defaulted.
+- **A door on a room's outer wall is a teleporter, not an edge exit.** Geometry
+  alone would call Seedling's house door "side S"; its destination is a spot in
+  the middle of the overworld, not a grid neighbour. `kind` is therefore
+  overridable when the author knows better — decision 3's teleporter case.
+- **Entrance tile vs. spawn pixel.** The atlas's `entrance_tile` is the boundary
+  trigger tile; the game's actual arrival pixel is one tile inside it. That
+  conversion is engine binding and belongs in `games/seedling.json`
+  (decision 6), not in the atlas.
+- **Overpaint is dropped, not carried.** 506 tile placements across 51 levels
+  sit outside their own level rectangle; the game's `loadlevel` discards them
+  too, so the extract does, recording the per-level count so the drop is never
+  silent.
 
 ### Phase 3 — Projection 1 + top-down milestone (Seedling)
 - [ ] Atlas → vanilla rules.json compiler
 - [ ] **Milestone:** load the projected Seedling vanilla rules.json in
       top-down mode; walk between real Seedling sections via boundary
       transitions in-app
+- [ ] Handoff seam to APWorld Editor (`apworldEditor:loadRules` with the
+      projected rules.json) for detail-filling — deferred here from Phase 2
+      (ruling 5): it needs the projected rules.json this phase produces
 
 ### Phase 4 — Seedling play-time transitions
 - [ ] Projection 3: engine stamps atlas binding into `playable_payload`

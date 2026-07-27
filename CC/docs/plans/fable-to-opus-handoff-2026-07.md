@@ -2328,8 +2328,44 @@ older "3313" figure has drifted).
   defaulted; `rules_source: "mixed"`; and the no-boilerplate rule for
   obstacle-free regions (omit `subgraph`, and then `sub_region` is forbidden
   rather than optional).
-- NEXT: Phase 2, the region-marking tool (Fable-or-later; the format is now
-  real). Phases 3+ unchanged — see the plan doc's phase list.
+**Phase 2 — Seedling map extractor + region-marking tool: SHIPPED + PUSHED
+2026-07-27** (`4b152391b` extractor + compact writer, `fbeef5d06` map_ref +
+compact restamp, `4903e38a4` the panel, `15a45de03` in-app verifier,
+`3fab2ea47` the real starter atlas; full vitest **3471/3471** green, up from
+the 3380 Phase-1 baseline).
+- **Rulings (user, 2026-07-27)**, all recorded in the plan doc's Phase 2
+  section: (1) map display comes from a SOURCE EXTRACTOR over the Ogmo `.oel`
+  files, not a runtime capture; (2) the tool is its own GL panel module
+  (`regionMarkingTool`), NOT a tileMapAnalyzer mode; (3) the Seedling extract
+  is COMMITTED (MIT — decision 7's gitignore constraint is RWK-only);
+  (4) Phase-2 acceptance includes a real starter atlas; (5) the APWorld-Editor
+  handoff DEFERRED to Phase 3, which is where the projected rules.json it
+  hands over actually gets built.
+- Open question 3 RULED: separate modules, shared canvas —
+  `markingRenderer.js` subclasses the analyzer's `TileMapCanvasRenderer`.
+- As built: `scripts/procgen/extract-seedling-map.mjs` +
+  `scripts/procgen/seedlingOgmo.js` → committed `atlases/seedling-map.json`
+  (**116** levels, not the 120 `.oel` files — four are unreferenced by the
+  level table); `frontend/modules/regionMarkingTool/` (model / mapSource /
+  renderer / UI / CSS), registered in all four places;
+  `atlases/seedling.json` (3 real regions, 10 exits, 1 location, 0 errors)
+  built by `make-seedling-starter-atlas.mjs`;
+  `verify-region-marking-tool.mjs` drives the real panel in chromium.
+- Additive format deltas: **`map_ref` + `tile_space.map_document`** (Seedling
+  is 116 coordinate spaces, not one) and a **compact atlas writer** shared by
+  the tool's save path and the CLI's `--restamp`, which kills the
+  atlases/README "paste the hash in by hand" workaround.
+- **Traps hit, worth remembering:** `.gitignore` line 89 `lib/` (a Python-venv
+  rule) silently ignores ANY `lib/` directory — `scripts/procgen/lib/` was
+  invisible to `git status`; the kickoff's `*_tilemap.json` warning was real
+  but incomplete. And `deriveEdgeSide` short-circuited on the horizontal
+  reading, so a single-tile E/W exit read as "not on a boundary" — which is
+  what most of Seedling's real map crossings are.
+- `vitest.config.js` `include` gains `scripts/**/*.test.js` (node-only CLI
+  logic has no home in the bundled frontend graph).
+- NEXT: Phase 3 — the atlas → vanilla rules.json compiler, the top-down
+  walk-between-real-Seedling-sections milestone, and the deferred APWorld
+  Editor handoff. Phases 4+ unchanged.
 
 ## 6. Everything else (unchanged queues)
 
