@@ -22,6 +22,11 @@ except (ImportError, AttributeError):
     # Converter requires the fork's extended rule_builder package.
     # When unavailable, rule_builder format is not supported — ast format still works.
     convert_rules_file_to_rule_builder = None  # type: ignore[assignment]
+from .foreign_rule_builder import (
+    ForeignRuleSerializationError,
+    is_foreign_resolved_rule,
+    serialize_foreign_resolved_rule,
+)
 from .constants import (
     MAX_RULE_SIZE_KB,
     MAX_INTERIM_EXPORT_SIZE_MB_BASE, MAX_INTERIM_EXPORT_SIZE_MB_PER_EXTRA_GAME,
@@ -1444,6 +1449,34 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                 except Exception as e:
                     logger.warning(f"Rule Builder to_dict() failed for {target_type} '{rule_target_name}': {e}")
                     # Fall through to AST analysis as fallback
+
+            # Rule Builder rules from a *foreign* (vendored upstream) rule_builder:
+            # same frozen-dataclass shape, but no fork-only to_dict(). AST analysis
+            # cannot read them at all (inspect.getfile() on a dataclass instance
+            # raises), so serialize them structurally instead.
+            elif is_foreign_resolved_rule(rule_func):
+                try:
+                    rb_dict = serialize_foreign_resolved_rule(rule_func)
+                    rb_dict = _make_rule_dict_serializable(rb_dict)
+                    if game_handler and hasattr(game_handler, 'expand_rule'):
+                        rb_dict = game_handler.expand_rule(rb_dict)
+                    _rule_analysis_cache[cache_key] = rb_dict
+                    logger.debug(
+                        f"Exported foreign Rule Builder format for {target_type} "
+                        f"'{rule_target_name}': {rb_dict.get('rule', 'unknown')}"
+                    )
+                    return rb_dict
+                except ForeignRuleSerializationError as e:
+                    logger.warning(
+                        f"Foreign Rule Builder serialization failed for {target_type} "
+                        f"'{rule_target_name}' ({type(rule_func).__qualname__}): {e}"
+                    )
+                    # Fall through to the normal analysis path
+                except Exception as e:
+                    logger.warning(
+                        f"Foreign Rule Builder serialization errored for {target_type} "
+                        f"'{rule_target_name}' ({type(rule_func).__qualname__}): {e}"
+                    )
 
             # Check if game handler has an override for rule analysis (e.g., Blasphemous, Terraria)
             if game_handler and hasattr(game_handler, 'override_rule_analysis'):

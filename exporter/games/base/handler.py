@@ -16,6 +16,7 @@ import json
 import logging
 import os
 
+from exporter.foreign_rule_builder import is_foreign_resolved_rule, serialize_foreign_resolved_rule
 from exporter.games.base.rule_expansion import RuleExpansionMixin
 from exporter.games.base.world_data import WorldDataMixin
 from exporter.games.base.helper_discovery import HelperDiscoveryMixin
@@ -1886,6 +1887,16 @@ class BaseGameExportHandler(
                         from exporter.exporter import _make_rule_dict_serializable
                         rb_dict = completion_func.to_dict()
                         rb_dict = _make_rule_dict_serializable(rb_dict)
+                        if hasattr(self, 'expand_rule'):
+                            rb_dict = self.expand_rule(rb_dict)
+                        game_info['completion_condition'] = rb_dict
+                    elif is_foreign_resolved_rule(completion_func):
+                        # Rule Builder rule from a vendored (upstream) rule_builder:
+                        # no fork-only to_dict(), and AST analysis cannot read it.
+                        from exporter.exporter import _make_rule_dict_serializable
+                        rb_dict = _make_rule_dict_serializable(
+                            serialize_foreign_resolved_rule(completion_func)
+                        )
                         if hasattr(self, 'expand_rule'):
                             rb_dict = self.expand_rule(rb_dict)
                         game_info['completion_condition'] = rb_dict
