@@ -10,11 +10,18 @@
 // in the wave that sphere gates, so the gate is both honest and a proper
 // sphere-k gate and the oracle stays exact.
 //
-// Covers: placement + naming, the leaf fence (an atlas region hosts no
-// children), AND-composition of the driver's gate onto an authored rule, the
-// back-exit landing on a walkable tile, at-most-once placement, byte-inertness
-// with no atlas quota, every loud decline, and the whole sorter route.
-// Grows real sphere worlds → *.slow.
+// Both of slice 2's v1 fences are now lifted. The gate vocabulary is a
+// DISJUNCTION of conjunctions, and the world carries the map's AUTHORED rule
+// rather than a re-synthesis of it; and an atlas region HOSTS CHILDREN on the
+// real map's own doors, gated so the composed exit rule opens in exactly the
+// child's own gate sphere. The QUOTA route pins no entry and keeps the v1 leaf
+// behaviour, which is why both shapes appear below.
+//
+// Covers: placement + naming, the quota route's leaf behaviour, hosting through
+// growth on free and gated doors alike, the map's charge surviving into the
+// compiled world, the back-exit landing on a walkable tile and still routing to
+// its parent, at-most-once placement, byte-inertness with no atlas quota, every
+// loud decline, and the whole sorter route. Grows real sphere worlds → *.slow.
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -438,9 +445,10 @@ describe('the SORTER route (slice 2): the map\'s own requirement IS the gate', (
 });
 
 describe('the driver gate composes ONTO the atlas rule, never over it', () => {
-    // The leaf fence means growth never hands an atlas node a child today, so
-    // drive the source directly: this is the behaviour that must already be
-    // right on the day the fence lifts.
+    // Growth reaches this path now (see the hosting cases above), but these
+    // drive the SOURCE directly: they pin `instantiate`'s contract on a chosen
+    // entry and a chosen gate, which a grown world can only exercise wherever
+    // the plan happens to send it.
     const source = resolveSphereAtlasSources({ 'atlas:seedling': 1 }, {
         growthParams: ATLAS_CONFIG,
     })['atlas:seedling'];
