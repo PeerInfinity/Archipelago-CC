@@ -1804,7 +1804,7 @@ export class PresetUI {
         seedName,
         folderData,
         playerId,
-        folderId
+        seedName
       ).catch((error) => {
         log('error', 'Error auto-loading preset rules:', error);
       });
