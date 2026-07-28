@@ -108,48 +108,160 @@ export function stampPoolIdentity(pool, baseId = null) {
     return pool;
 }
 
-// --- the v1 entry-rule vocabulary -------------------------------------------
+// --- the entry-rule vocabulary ------------------------------------------------
+//
+// v1 (Phase 6) accepted only a CONJUNCTION of single-instance `Has` terms,
+// because a sphere gate is `{ gate: [item…], gateCounts }` and `sphereGateRule`
+// ANDs one `Has` per item — an OR ("the lock opens with the Wand or the Fire
+// Wand") had no faithful encoding there, so three of the ten Seedling
+// sub-regions were declined rather than gated wrong.
+//
+// The lift (Phase 6 fence 1) keeps that honesty and drops the fence: a rule is
+// normalized to DISJUNCTIVE NORMAL FORM over `Has` terms, and the AUTHORED rule
+// — not a re-synthesis of it — becomes the gate the compiled world carries. The
+// DNF is what the SORTER reasons about:
+//
+//   - the honest wave is `min over disjuncts of (max over the disjunct's items'
+//     spheres)`, i.e. the first sphere in which SOME way through the rule is
+//     satisfiable;
+//   - scheduling picks ONE disjunct (cheapest, then lexical — rng-free) and
+//     pushes its items into earlier spheres.
+//
+// Anything a DNF over `Has` cannot say (Compare, Count*, helpers, False_) still
+// declines with a reason. A count rides as the term's `count`: `Has(x, 2)` means
+// two of the game's own x, and the sorter schedules two instances of it.
+
+/** How many disjuncts a normalized requirement may have before it declines. */
+export const DNF_DISJUNCT_LIMIT = 32;
+
+/** Canonical string for one conjunct (an ordered array of {item, count}). */
+export const conjunctKey = (conj) => (conj ?? [])
+    .map((t) => (t.count > 1 ? `${t.item}*${t.count}` : t.item)).join('+');
+
+/** Canonical string for a whole DNF — the sorter's grouping key. */
+export const requirementKey = (dnf) => (dnf ?? []).map(conjunctKey).join('|');
+
+/** Does conjunct `a` imply conjunct `b`? (a ⊆ b with counts ≤ ⇒ b is redundant.) */
+function implies(a, b) {
+    for (const [item, count] of a) {
+        if ((b.get(item) ?? 0) < count) return false;
+    }
+    return true;
+}
+
+function dnfRec(rule) {
+    if (rule == null) return [new Map()];
+    if (typeof rule !== 'object') return null;
+    switch (rule.rule) {
+        case 'True_':
+            return [new Map()];
+        case 'Has': {
+            const name = rule.args?.item_name;
+            if (typeof name !== 'string' || name.length === 0) return null;
+            const count = rule.args?.count ?? 1;
+            if (!Number.isInteger(count) || count < 1) return null;
+            return [new Map([[name, count]])];
+        }
+        case 'HasAll': {
+            const items = rule.args?.items ?? rule.args?.item_names;
+            if (!Array.isArray(items)) return null;
+            if (items.some((i) => typeof i !== 'string' || i.length === 0)) return null;
+            return [new Map(items.map((i) => [i, 1]))];
+        }
+        case 'HasAny': {
+            const items = rule.args?.items ?? rule.args?.item_names;
+            if (!Array.isArray(items) || items.length === 0) return null;
+            if (items.some((i) => typeof i !== 'string' || i.length === 0)) return null;
+            return items.map((i) => new Map([[i, 1]]));
+        }
+        case 'And': {
+            // Cartesian product: (a|b) AND (c|d) = ac|ad|bc|bd.
+            let acc = [new Map()];
+            for (const child of rule.children ?? []) {
+                const sub = dnfRec(child);
+                if (sub === null) return null;
+                const next = [];
+                for (const left of acc) {
+                    for (const right of sub) {
+                        const merged = new Map(left);
+                        for (const [item, count] of right) {
+                            merged.set(item, Math.max(merged.get(item) ?? 0, count));
+                        }
+                        next.push(merged);
+                    }
+                }
+                if (next.length > DNF_DISJUNCT_LIMIT) return null;
+                acc = next;
+            }
+            return acc;
+        }
+        case 'Or': {
+            const out = [];
+            for (const child of rule.children ?? []) {
+                const sub = dnfRec(child);
+                if (sub === null) return null;
+                out.push(...sub);
+                if (out.length > DNF_DISJUNCT_LIMIT) return null;
+            }
+            return out.length > 0 ? out : null; // an Or with no branches is False_
+        }
+        default:
+            return null; // Compare, Count*, helpers, False_, anything else
+    }
+}
 
 /**
- * Reduce a Rule Builder tree to the sphere grower's gate vocabulary: a
- * CONJUNCTION OF SINGLE-INSTANCE `Has` terms. Returns an array of item names
- * (possibly empty = "free"), or `null` when the rule says something the gate
- * representation cannot carry.
+ * Normalize a Rule Builder tree to DNF over `Has` terms.
  *
- * The fence is the gate representation's, not the atlas's (Phase-6 ruling 4):
- * a sphere gate is `{ gate: [item…], gateCounts }` and `sphereGateRule` ANDs one
- * `Has` per item, so an OR ("the lock opens with the Wand or the Fire Wand") has
- * no faithful encoding — and a wrong encoding would either over-gate the world
- * or break the oracle. Counts are excluded for the same reason a sphere gate's
- * count is DERIVED from the plan's cumulative instance table: an atlas row's
- * `Has(x, 2)` means "two of the game's own x", which is not the same statement
- * as the grower's "the second instance, through sphere k".
- *
- * Widening this is its own change (the sorter would need disjunctive gates and
- * `computeItemSpheres` would have to agree); until then a region whose only way
- * in is an OR is DECLINED and named, never silently over- or under-gated.
+ * @returns {Array<Array<{item: string, count: number}>>|null}
+ *   one entry per disjunct (a conjunction of terms, sorted by item name);
+ *   `[[]]` means FREE (one empty conjunction); `null` means out of vocabulary.
+ *   Disjuncts are deduplicated, redundant supersets are dropped (satisfying the
+ *   cheaper conjunct already satisfies the rule), and the result is ordered by
+ *   (term count, canonical key) so grouping and disjunct choice are stable.
+ */
+export function requirementDnf(rule) {
+    const raw = dnfRec(rule);
+    if (raw === null) return null;
+    // Drop any conjunct implied by another (keeping the cheaper one), then
+    // dedupe and order canonically.
+    const kept = [];
+    for (const cand of raw) {
+        if (kept.some((k) => implies(k, cand))) continue;
+        for (let i = kept.length - 1; i >= 0; i -= 1) {
+            if (implies(cand, kept[i])) kept.splice(i, 1);
+        }
+        kept.push(cand);
+    }
+    return kept
+        .map((m) => [...m.entries()]
+            .sort(([a], [b]) => (a < b ? -1 : (a > b ? 1 : 0)))
+            .map(([item, count]) => ({ item, count })))
+        .sort((a, b) => (a.length - b.length)
+            || (conjunctKey(a) < conjunctKey(b) ? -1 : (conjunctKey(a) > conjunctKey(b) ? 1 : 0)));
+}
+
+/** Total instances a conjunct demands — the "cost" that picks the cheapest way. */
+export const conjunctCost = (conj) => conj.reduce((n, t) => n + t.count, 0);
+
+/**
+ * The disjunct the SORTER will schedule: fewest terms, then the canonical key.
+ * A pure function of the rule (no rng, no plan), so two runs agree.
+ */
+export const schedulingDisjunct = (dnf) => (dnf?.length ? dnf[0] : []);
+
+/**
+ * Reduce a rule to a CONJUNCTION OF SINGLE-INSTANCE `Has` terms — the v1 gate
+ * vocabulary, kept because a single conjunction of plain `Has` is still the case
+ * the engine can re-synthesise exactly. Returns item names (possibly empty =
+ * "free"), or `null` when the rule needs a disjunction, a count, or something
+ * outside `requirementDnf` altogether.
  */
 export function conjunctiveHasTerms(rule) {
-    if (rule == null) return [];
-    if (typeof rule !== 'object') return null;
-    if (rule.rule === 'True_') return [];
-    if (rule.rule === 'Has') {
-        const name = rule.args?.item_name;
-        if (typeof name !== 'string' || name.length === 0) return null;
-        const count = rule.args?.count;
-        if (count != null && count !== 1) return null; // counts: out of vocabulary
-        return [name];
-    }
-    if (rule.rule === 'And') {
-        const out = [];
-        for (const child of rule.children ?? []) {
-            const terms = conjunctiveHasTerms(child);
-            if (terms === null) return null;
-            out.push(...terms);
-        }
-        return [...new Set(out)];
-    }
-    return null; // Or, Compare, Count*, False_, anything else
+    const dnf = requirementDnf(rule);
+    if (dnf === null || dnf.length !== 1) return null;
+    if (dnf[0].some((t) => t.count !== 1)) return null;
+    return dnf[0].map((t) => t.item);
 }
 
 // --- pool construction -------------------------------------------------------
@@ -416,44 +528,69 @@ export function validateAtlasPool(pool) {
 }
 
 /**
- * The intrinsic entry requirement of one pool entry, in the grower's gate
- * vocabulary — the Phase-6 sorter's input.
+ * The intrinsic entry requirement of one pool entry — the sorter's input.
  *
- * The chosen entrance is the CHEAPEST expressible one (fewest required items,
- * ties broken by the entrance's own id so the choice is deterministic and
- * reproducible), because that is the earliest sphere the region could honestly
- * open in; a stronger entrance would over-gate a place the real game lets you
- * into sooner. Entrances whose rule is outside the v1 vocabulary are skipped and
- * REPORTED, and an entry with no expressible entrance is DECLINED — never forced
- * in behind an invented gate.
+ * The chosen entrance is the CHEAPEST expressible one (its cheapest disjunct
+ * demands the fewest item instances, ties broken by the entrance's own id so the
+ * choice is deterministic and reproducible), because that is the earliest sphere
+ * the region could honestly open in; a stronger entrance would over-gate a place
+ * the real game lets you into sooner. Entrances whose rule is outside the DNF
+ * vocabulary are skipped and REPORTED, and an entry with no expressible entrance
+ * is DECLINED — never forced in behind an invented gate.
  *
- * @returns {{ entry_id, gate: string[]|null, via: string|null, declined: string|null }}
+ * `rule` is the AUTHORED rule of the chosen entrance, kept verbatim: it — not a
+ * re-synthesis from `gate` — is what the compiled world gates on, so an OR stays
+ * an OR and both ways in stay open.
+ *
+ * @returns {{
+ *   entry_id: string,
+ *   dnf: Array<Array<{item, count}>>|null,
+ *   gate: string[]|null,          // the disjunct the sorter would schedule
+ *   counts: {[item]: number},     // its counts (> 1 only)
+ *   rule: object|null,            // the authored rule, verbatim
+ *   via: string|null,
+ *   declined: string|null,
+ * }}
  */
 export function entryRequirement(entry) {
     const rejected = [];
     let best = null;
     for (const ent of [...(entry.entrances ?? [])].sort((a, b) => a.via.localeCompare(b.via))) {
-        const terms = conjunctiveHasTerms(ent.access_rule);
-        if (terms === null) {
+        const dnf = requirementDnf(ent.access_rule);
+        if (dnf === null) {
             rejected.push(ent.via);
             continue;
         }
-        if (best === null || terms.length < best.gate.length) {
-            best = { gate: terms, via: ent.via };
+        const cost = conjunctCost(schedulingDisjunct(dnf));
+        if (best === null || cost < best.cost) {
+            best = { dnf, cost, via: ent.via, rule: ent.access_rule ?? null };
         }
     }
     if (best === null) {
         return {
             entry_id: entry.entry_id,
+            dnf: null,
             gate: null,
+            counts: {},
+            rule: null,
             via: null,
             declined: (entry.entrances ?? []).length === 0
                 ? 'no projected way in'
-                : `every way in (${rejected.join(', ')}) needs a rule outside the v1 gate `
-                    + 'vocabulary (a conjunction of single-instance Has terms)',
+                : `every way in (${rejected.join(', ')}) needs a rule outside the gate `
+                    + 'vocabulary (a disjunction of conjunctions of Has terms)',
         };
     }
-    return { entry_id: entry.entry_id, gate: best.gate, via: best.via, declined: null };
+    const chosen = schedulingDisjunct(best.dnf);
+    return {
+        entry_id: entry.entry_id,
+        dnf: best.dnf,
+        gate: chosen.map((t) => t.item),
+        counts: Object.fromEntries(chosen.filter((t) => t.count > 1)
+            .map((t) => [t.item, t.count])),
+        rule: best.rule,
+        via: best.via,
+        declined: null,
+    };
 }
 
 /** One-line-per-item human summary of a pool build's notes, for CLIs. */

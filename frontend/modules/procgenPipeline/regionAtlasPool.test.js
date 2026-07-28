@@ -13,7 +13,8 @@ import path from 'node:path';
 import {
     ATLAS_POOL_SCHEMA_VERSION,
     atlasSourceId, isAtlasSourceId, atlasSourceGame,
-    conjunctiveHasTerms, entryRequirement,
+    conjunctiveHasTerms, entryRequirement, requirementDnf, requirementKey,
+    DNF_DISJUNCT_LIMIT,
     buildAtlasPool, validateAtlasPool, stampPoolIdentity, computePoolContentHash,
 } from './regionAtlasPool.js';
 
@@ -80,6 +81,87 @@ describe('conjunctiveHasTerms — the v1 gate vocabulary', () => {
     });
 });
 
+describe('requirementDnf — the lifted vocabulary', () => {
+    const t = (item, count = 1) => ({ item, count });
+
+    it('treats no rule and True_ as ONE free way in', () => {
+        expect(requirementDnf(null)).toEqual([[]]);
+        expect(requirementDnf({ rule: 'True_' })).toEqual([[]]);
+    });
+
+    it('carries a COUNT rather than declining it', () => {
+        expect(requirementDnf(has('Swim', 2))).toEqual([[t('Swim', 2)]]);
+        expect(requirementDnf({
+            rule: 'And', children: [has('Swim', 2), has('Swim')],
+        })).toEqual([[t('Swim', 2)]]); // the stricter demand wins
+    });
+
+    it('splits an OR into disjuncts, cheapest then lexical', () => {
+        expect(requirementDnf({
+            rule: 'Or',
+            children: [has('Progressive Sword'), has('Ghost Spear')],
+        })).toEqual([[t('Ghost Spear')], [t('Progressive Sword')]]);
+        expect(requirementDnf({ rule: 'HasAny', args: { items: ['B', 'A'] } }))
+            .toEqual([[t('A')], [t('B')]]);
+    });
+
+    it('multiplies an AND of ORs out to DNF', () => {
+        const rule = {
+            rule: 'And',
+            children: [
+                { rule: 'Or', children: [has('A'), has('B')] },
+                { rule: 'Or', children: [has('C'), has('D')] },
+            ],
+        };
+        expect(requirementDnf(rule).map((d) => d.map((x) => x.item))).toEqual([
+            ['A', 'C'], ['A', 'D'], ['B', 'C'], ['B', 'D'],
+        ]);
+    });
+
+    it('drops a disjunct another one already implies', () => {
+        // "A, or A-and-B" is just "A" — and keeping the superset would make the
+        // honest wave read later than the map really is.
+        const rule = {
+            rule: 'Or',
+            children: [has('A'), { rule: 'And', children: [has('A'), has('B')] }],
+        };
+        expect(requirementDnf(rule)).toEqual([[t('A')]]);
+        // A True_ branch swallows everything: the way in is free.
+        expect(requirementDnf({ rule: 'Or', children: [{ rule: 'True_' }, has('A')] }))
+            .toEqual([[]]);
+    });
+
+    it('declines what a DNF over Has still cannot say', () => {
+        expect(requirementDnf({ rule: 'False_' })).toBeNull();
+        expect(requirementDnf({ rule: 'Compare', args: {} })).toBeNull();
+        expect(requirementDnf({ rule: 'CountItem', args: {} })).toBeNull();
+        expect(requirementDnf('Has(x)')).toBeNull();
+        expect(requirementDnf({ rule: 'Or', children: [] })).toBeNull();
+        expect(requirementDnf({ rule: 'Has', args: { item_name: 'x', count: 0 } })).toBeNull();
+        // ...including a nested one, rather than dropping the branch it can't read.
+        expect(requirementDnf({
+            rule: 'And', children: [has('A'), { rule: 'Compare', args: {} }],
+        })).toBeNull();
+    });
+
+    it('declines a blow-up rather than enumerating it', () => {
+        const orOf = (a, b) => ({ rule: 'Or', children: [has(a), has(b)] });
+        const wide = {
+            rule: 'And',
+            children: Array.from({ length: 8 }, (_, i) => orOf(`a${i}`, `b${i}`)),
+        };
+        expect(2 ** 8).toBeGreaterThan(DNF_DISJUNCT_LIMIT);
+        expect(requirementDnf(wide)).toBeNull();
+    });
+
+    it('gives equivalent rules the SAME key, so they group together', () => {
+        const a = requirementDnf({ rule: 'Or', children: [has('X'), has('Y')] });
+        const b = requirementDnf({ rule: 'HasAny', args: { items: ['Y', 'X'] } });
+        expect(requirementKey(a)).toBe(requirementKey(b));
+        expect(requirementKey(requirementDnf(has('Swim', 2)))).toBe('Swim*2');
+    });
+});
+
 describe('entryRequirement — which way in, and what it costs', () => {
     const entry = (entrances) => ({ entry_id: 'e', entrances });
 
@@ -104,7 +186,7 @@ describe('entryRequirement — which way in, and what it costs', () => {
 
     it('skips an out-of-vocabulary entrance but keeps an expressible one', () => {
         const req = entryRequirement(entry([
-            { via: 'a', access_rule: { rule: 'Or', children: [has('X'), has('Y')] } },
+            { via: 'a', access_rule: { rule: 'Compare', args: {} } },
             { via: 'b', access_rule: has('Z') },
         ]));
         expect(req.gate).toEqual(['Z']);
@@ -112,11 +194,39 @@ describe('entryRequirement — which way in, and what it costs', () => {
 
     it('DECLINES when every way in is out of vocabulary, and says which', () => {
         const req = entryRequirement(entry([
-            { via: 'a', access_rule: { rule: 'Or', children: [has('X'), has('Y')] } },
+            { via: 'a', access_rule: { rule: 'Compare', args: {} } },
         ]));
         expect(req.gate).toBeNull();
+        expect(req.dnf).toBeNull();
         expect(req.declined).toContain('a');
-        expect(req.declined).toContain('v1 gate vocabulary');
+        expect(req.declined).toContain('gate vocabulary');
+    });
+
+    it('takes a DISJUNCTIVE entrance, and keeps the authored rule beside it', () => {
+        // The lifted fence: an OR is a way in, not a decline. `gate` is the one
+        // disjunct the sorter will schedule; `rule` is what the world must gate
+        // on, so the branch the sorter did not pick stays open.
+        const rule = { rule: 'Or', children: [has('Sword'), has('Ghost Spear')] };
+        const req = entryRequirement(entry([{ via: 'a', access_rule: rule }]));
+        expect(req.declined).toBeNull();
+        expect(req.dnf).toEqual([[{ item: 'Ghost Spear', count: 1 }], [{ item: 'Sword', count: 1 }]]);
+        expect(req.gate).toEqual(['Ghost Spear']); // fewest terms, then lexical
+        expect(req.rule).toBe(rule);
+    });
+
+    it('prices a COUNT entrance by the instances it demands', () => {
+        const req = entryRequirement(entry([
+            { via: 'a', access_rule: has('Swim', 2) },
+            { via: 'b', access_rule: has('Feather') },
+        ]));
+        // Two instances cost more than one, so the Feather door is the cheaper
+        // way in — the earliest sphere this region could honestly open in.
+        expect(req.gate).toEqual(['Feather']);
+        expect(req.via).toBe('b');
+
+        const only = entryRequirement(entry([{ via: 'a', access_rule: has('Swim', 2) }]));
+        expect(only.gate).toEqual(['Swim']);
+        expect(only.counts).toEqual({ Swim: 2 });
     });
 
     it('DECLINES a region with no projected way in', () => {
@@ -353,13 +463,17 @@ describe('the COMMITTED Seedling pool', () => {
             return [e.entry_id, req.declined ? 'DECLINED' : req.gate.join('+') || 'FREE'];
         }));
         expect(census).toEqual({
-            // Reachable only across a "Sword OR Ghost Spear" crossing — a
-            // disjunction, which the v1 gate vocabulary cannot carry.
-            overworld_start__r1c6: 'DECLINED',
-            overworld_start__r11c19: 'DECLINED',
-            dungeon1_room1__r8c6: 'DECLINED',
-            // Across water: a single-instance Has, which it can.
-            overworld_start__r2c13: 'Progressive Swim',
+            // Reachable only across a "Progressive Sword OR Ghost Spear"
+            // crossing. v1 declined these three; the lifted vocabulary takes
+            // the cheaper-then-lexical disjunct as the SCHEDULING gate while
+            // the world keeps the whole OR.
+            overworld_start__r1c6: 'Ghost Spear',
+            overworld_start__r11c19: 'Ghost Spear',
+            dungeon1_room1__r8c6: 'Ghost Spear',
+            // r2c13 touches both frontiers, and the sword crossing is the
+            // cheaper way in (one item either way, and it sorts first).
+            overworld_start__r2c13: 'Ghost Spear',
+            // Across water: a single-instance Has.
             overworld_start__r4c16: 'Progressive Swim',
             overworld_start__r14c0: 'Progressive Swim',
             // Doors and stairs the map charges nothing for.

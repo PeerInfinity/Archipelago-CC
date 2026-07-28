@@ -25,7 +25,7 @@ import {
 } from '../shared/procgen/spatialPrimitives.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { extractItemRequirementFromRule } from './ruleRequirements.js';
-import { isAtlasSourceId, atlasSourceGame } from './regionAtlasPool.js';
+import { isAtlasSourceId, atlasSourceGame, requirementDnf } from './regionAtlasPool.js';
 
 function getAdapter(substrateId) {
     const adapter = substrateRegistry.get(substrateId);
@@ -3675,6 +3675,7 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
     const nodes = resume?.nodes ?? [];
     const addNode = ({
         wave, gate, gateCounts = {}, parent, substrate, isFiller = false, atlasEntry = null,
+        gateRule = null,
     }) => {
         const node = {
             index: nodes.length,
@@ -3683,6 +3684,13 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
             gateCounts,       // item → required count (> 1 only for
                               // multi-instance items; emitted as
                               // Has(item, count) — the count gate)
+            // An AUTHORED entry gate (region-atlas): the real game's own rule
+            // for getting in, which the compiled world carries VERBATIM rather
+            // than re-synthesised from `gate`. Set only for atlas nodes, so
+            // every other world takes the sphereGateRule path unchanged — and
+            // it matters because a re-synthesis would narrow an OR to the one
+            // branch the sorter scheduled and kill the other.
+            ...(gateRule ? { gateRule } : {}),
             parent,           // parent node index (null for the root)
             side: null,       // side ON THE PARENT hosting this child
             substrate,
@@ -3785,12 +3793,16 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
     // bounce). The CHILD's substrate doesn't constrain the gate:
     // bounce realises any entry gate's back portal via authored
     // locks (anyone inside satisfies the entry gate by construction).
-    const pickHostAndGate = (wave, { gateWave = wave, fixedGate = null } = {}) => {
+    const pickHostAndGate = (wave, {
+        gateWave = wave, fixedGate = null, fixedCounts = null,
+    } = {}) => {
         // Required count for a gate item at this gate's sphere: the
         // cumulative instance count through sphere gateWave (1 for
-        // single-instance items — the common case).
+        // single-instance items — the common case). An atlas gate may ALSO
+        // demand a count of its own (`Has(x, 2)` in the map's own row); the
+        // stricter of the two is the one the accounting must see.
         const cum = gateWave > 0 ? cumCounts[gateWave - 1] : null;
-        const gateCount = (item) => cum?.get(item) ?? 1;
+        const gateCount = (item) => Math.max(cum?.get(item) ?? 1, fixedCounts?.[item] ?? 1);
         // `fixedGate` (region-atlas Phase 6): the sorter already decided this
         // node's gate — it IS the real game's requirement for getting in — so
         // there is nothing to choose, only a host that can carry it. The COUNT
@@ -3884,12 +3896,12 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
         for (const a of atlasAssignments ?? []) {
             if (a.wave !== w) continue;
             const { host, gate, gateCounts } = pickHostAndGate(w, {
-                gateWave: w, fixedGate: a.gate,
+                gateWave: w, fixedGate: a.gate, fixedCounts: a.gateCounts ?? null,
             });
             substrateCounts[a.sourceId] = (substrateCounts[a.sourceId] || 0) + 1;
             addNode({
                 wave: w, gate, gateCounts, parent: host.index, substrate: a.sourceId,
-                isFiller: true, atlasEntry: a.entry_id,
+                isFiller: true, atlasEntry: a.entry_id, gateRule: a.gateRule ?? null,
             });
         }
     };
@@ -4133,6 +4145,11 @@ export function compactSphereTree(tree) {
             substrate: n.substrate,
             gate: n.gate,
             gateCounts: n.gateCounts,
+            // The AUTHORED entry gate (region-atlas), when there is one — a
+            // rebuilt envelope that lost it would re-emit the scheduled
+            // disjunct and narrow an OR. Omitted otherwise, so every other
+            // world's compacted tree is byte-identical.
+            ...(n.gateRule ? { gateRule: n.gateRule } : {}),
             usedSides: [...(n.usedSides ?? [])],
             childGates: n.childGates,
             isFiller: n.isFiller,
@@ -4210,13 +4227,28 @@ export function rebuildSphereTopology(plan, nodes, opts = {}) {
         // The entry gate should contain an item INTRODUCED at the gate's
         // sphere (the stratification rule that makes the plan a sphere-log
         // oracle). Flag a gate item that isn't a sphere-gateWave item.
+        //
+        // An AUTHORED gate (region-atlas) may be DISJUNCTIVE, and then the rule
+        // is satisfied the moment ANY way through it is — so the check is per
+        // disjunct, and one disjunct meeting the sphere is enough. Flagging each
+        // item of an OR separately would report the branch the sorter did not
+        // schedule as a defect on every atlas world.
         const gw = gateWaveOf(nd);
         if (gw > 0 && (nd.gate ?? []).length) {
             const sphereSet = new Set(plan.spheres[gw - 1]?.items ?? []);
-            for (const it of nd.gate) {
-                if (!sphereSet.has(it)) {
-                    warnings.push(`#${nd.index}: gate item "${it}" isn't a sphere-${gw} `
-                        + 'item — the oracle will mismatch.');
+            const dnf = nd.gateRule ? requirementDnf(nd.gateRule) : null;
+            if (dnf) {
+                if (!dnf.some((conj) => conj.some((t) => sphereSet.has(t.item)))) {
+                    warnings.push(`#${nd.index}: no way through gate rule `
+                        + `[${nd.gate.join(',')}] holds a sphere-${gw} item — `
+                        + 'the oracle will mismatch.');
+                }
+            } else {
+                for (const it of nd.gate) {
+                    if (!sphereSet.has(it)) {
+                        warnings.push(`#${nd.index}: gate item "${it}" isn't a sphere-${gw} `
+                            + 'item — the oracle will mismatch.');
+                    }
                 }
             }
         }
@@ -4283,6 +4315,24 @@ function buildSphereProceduralRegion({
 // forward gate's copy, matching the portal's derived rule exactly.
 // Routing never relies on falling; fall behavior is a per-world
 // bounce parameter (regionParams.fallBehavior).
+// How a ZONE substrate is told about one child's entry gate.
+//
+// Normally the driver's gate IS an item-name conjunction, so requirement/counts
+// say everything and the substrate's derived rules reproduce it exactly. An
+// AUTHORED gate (region-atlas) can say more than that — an OR, a count — and a
+// zone region has no way to derive such a rule back out of its geometry. So the
+// two halves are passed separately, which is what generateRegionZoneGen already
+// supports: `requirement` is the NECESSARY SUBSET (the items every way through
+// the rule needs — possibly none, i.e. open-enough geometry), and `access_rule`
+// is the true gate, stamped onto the extracted exit and preferred by
+// compileRegion. Building the geometry on the scheduled disjunct instead would
+// physically wall off the OR's other branch while the logic still promised it.
+function zoneExitGate(e) {
+    if (!e.authoredRule) return { requirement: e.gate, counts: e.gateCounts ?? {} };
+    const { requirement, counts } = extractItemRequirementFromRule(e.authoredRule);
+    return { requirement, counts, access_rule: e.authoredRule };
+}
+
 function* buildSphereZoneRegion({
     substrate, region_id, regionSize, exitPlans, locations,
     entranceSide, entryGate = [], entryGateCounts = {},
@@ -4305,9 +4355,7 @@ function* buildSphereZoneRegion({
         size: regionSize,
         params: regionParams,
         seed,
-        exits: exitPlans.map((e) => ({
-            side: e.side, requirement: e.gate, counts: e.gateCounts ?? {},
-        })),
+        exits: exitPlans.map((e) => ({ side: e.side, ...zoneExitGate(e) })),
         locations: locations.map((l) => ({ id: l.id, item: l.item, requirement: [] })),
         entrances: entranceSide
             ? [{ side: entranceSide, requirement: entryGate, counts: entryGateCounts }]
@@ -4425,7 +4473,9 @@ function buildSphereLibraryRegion(sourceId, entry, {
         const sideToExitId = new Map((region.exits_placed ?? []).map((e) => [e.side, e.exit_id]));
         const exitById = new Map((region.extracted_rules?.exits ?? []).map((e) => [e.id, e]));
         for (const e of exitPlans) {
-            const r = sphereGateRule(e.gate, e.gateCounts ?? {});
+            // The plan's own rule when it has one (an atlas child's AUTHORED
+            // gate); otherwise the item-name gate synthesised here as before.
+            const r = e.rule ?? sphereGateRule(e.gate, e.gateCounts ?? {});
             if (!r) continue;
             const ex = exitById.get(sideToExitId.get(e.side));
             if (ex) ex.access_rule = r;
@@ -4451,7 +4501,7 @@ function buildSphereLibraryRegion(sourceId, entry, {
     // access_rule (which compileRegion prefers over the always-open path).
     const exitRules = {};
     for (const e of exitPlans) {
-        const r = sphereGateRule(e.gate, e.gateCounts ?? {});
+        const r = e.rule ?? sphereGateRule(e.gate, e.gateCounts ?? {});
         if (r) exitRules[e.side] = r;
     }
     if (entranceSide) {
@@ -4613,12 +4663,28 @@ function buildSphereAtlasSource(sourceId, doc) {
     };
 }
 
+// Structural equality for two Rule Builder trees — key order included, because
+// both sides of the one comparison below come from the same authored row.
+function rulesEqual(a, b) {
+    if (a === b) return true;
+    if (a == null || b == null || typeof a !== 'object' || typeof b !== 'object') return false;
+    return JSON.stringify(a) === JSON.stringify(b);
+}
+
 // AND-compose two rules, keeping both. null means "no constraint", so composing
 // with null is the identity — which is what makes the driver's gate safe to lay
 // on top of an atlas rule that may or may not exist.
+//
+// Composing a rule with ITSELF is the identity too, and that case is load-bearing
+// rather than cosmetic: under gated-exit child hosting (Phase-6 fence 2) a child
+// behind an atlas exit is gated on that exit's OWN authored rule, so the naive
+// compose would emit `And(R, R)`. For a disjunctive R the redundant copy is
+// harmless but noisy; for the general case it is exactly the narrowing this
+// function must not do.
 function andComposeRules(a, b) {
     if (!a) return b ?? null;
     if (!b) return a;
+    if (rulesEqual(a, b)) return a;
     return makeAndRule([a, b]);
 }
 
@@ -4655,7 +4721,7 @@ function buildSphereAtlasRegion(sourceId, entry, {
     const sideToExitId = new Map((region.exits_placed ?? []).map((e) => [e.side, e.exit_id]));
     const exitById = new Map((region.extracted_rules?.exits ?? []).map((e) => [e.id, e]));
     for (const e of exitPlans) {
-        const gate = sphereGateRule(e.gate, e.gateCounts ?? {});
+        const gate = e.rule ?? sphereGateRule(e.gate, e.gateCounts ?? {});
         if (!gate) continue;
         const ex = exitById.get(sideToExitId.get(e.side));
         if (ex) ex.access_rule = andComposeRules(ex.access_rule ?? null, gate);
@@ -4749,7 +4815,13 @@ function buildNodeRealiserSpecs(node, tree, grid, regionSize, deps = {}) {
         side: child.side,
         gate: child.gate,
         gateCounts: child.gateCounts,
-        rule: gateRule(child.gate, child.gateCounts),
+        // A child with an AUTHORED entry gate (region-atlas) contributes the
+        // real game's own rule for coming this way, verbatim. `gate` is still
+        // the item-level view the substrates gate their GEOMETRY on; the rule is
+        // what the compiled world says, so an OR keeps both ways in instead of
+        // collapsing to the one branch the sorter scheduled.
+        rule: child.gateRule ?? gateRule(child.gate, child.gateCounts),
+        ...(child.gateRule ? { authoredRule: child.gateRule } : {}),
     }));
 
     let entrances = [];

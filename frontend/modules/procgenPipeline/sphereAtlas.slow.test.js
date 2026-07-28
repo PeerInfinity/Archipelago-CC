@@ -239,18 +239,56 @@ describe('the SORTER route (slice 2): the map\'s own requirement IS the gate', (
         }
     });
 
+    // A scheduled item is a plain sphere item once it is in the plan, so the
+    // grower may draw it for a GENERATED region's gate too. These are claims
+    // about the map's regions, so they filter to the atlas nodes.
+    const atlasNodes = () => tree.nodes.filter((n) => n.substrate === 'atlas:seedling');
+
     it('gates the water-locked regions on the swim the REAL game charges', () => {
-        const wet = tree.nodes.filter((n) => n.gate.includes('Progressive Swim'));
+        const wet = atlasNodes().filter((n) => n.gate.includes('Progressive Swim'));
         expect(wet.map((n) => n.region_id).sort()).toEqual([
-            'overworld_start__r14c0', 'overworld_start__r2c13', 'overworld_start__r4c16',
+            'overworld_start__r14c0', 'overworld_start__r4c16',
         ]);
     });
 
-    it('scheduled that requirement into a STRICTLY EARLIER sphere', () => {
-        expect(sorted.injected).toEqual([{ item: 'Progressive Swim', sphere: 1 }]);
-        expect(sortedPlan.spheres[0].items).toContain('Progressive Swim');
-        for (const n of tree.nodes.filter((x) => x.gate.includes('Progressive Swim'))) {
+    it('gates the sword-or-spear regions on the OR ITSELF, not on one branch', () => {
+        // The lifted fence. The grower's item-level gate is the scheduled
+        // disjunct (Ghost Spear), but the rule the WORLD carries is the map's
+        // whole OR — so the Progressive Sword route it also allows stays open.
+        const armed = atlasNodes().filter((n) => n.gate.includes('Ghost Spear'));
+        expect(armed.map((n) => n.region_id).sort()).toEqual([
+            'dungeon1_room1__r8c6', 'overworld_start__r11c19',
+            'overworld_start__r1c6', 'overworld_start__r2c13',
+        ]);
+        for (const n of armed) {
+            expect(n.gateRule.rule).toBe('Or');
+            expect(JSON.stringify(n.gateRule)).toContain('Progressive Sword');
+        }
+        // ...and it really is the rule the parent's exit into it compiles to.
+        const rules = buildRulesJson(grid, {
+            startCell, seed: 1, completionConditionItem: 'victory',
+        });
+        const byName = Object.fromEntries(Object.values(rules.regions)
+            .flatMap((m) => Object.entries(m)));
+        for (const n of armed) {
+            const parent = tree.nodes[n.parent];
+            const exit = (byName[parent.region_id].exits ?? [])
+                .find((e) => e.connected_region === n.region_id);
+            expect(exit.access_rule).toEqual(n.gateRule);
+        }
+    });
+
+    it('scheduled every requirement into a STRICTLY EARLIER sphere', () => {
+        expect(sorted.injected).toEqual([
+            { item: 'Ghost Spear', sphere: 1 }, { item: 'Progressive Swim', sphere: 2 },
+        ]);
+        expect(sortedPlan.spheres[0].items).toContain('Ghost Spear');
+        expect(sortedPlan.spheres[1].items).toContain('Progressive Swim');
+        for (const n of atlasNodes().filter((x) => x.gate.includes('Ghost Spear'))) {
             expect(n.wave).toBe(1); // gated by sphere-1 items ⇒ a wave-1 node
+        }
+        for (const n of atlasNodes().filter((x) => x.gate.includes('Progressive Swim'))) {
+            expect(n.wave).toBe(2);
         }
     });
 
@@ -278,12 +316,11 @@ describe('the SORTER route (slice 2): the map\'s own requirement IS the gate', (
         expect(ids).toHaveLength(sorted.assignments.length);
     });
 
-    it('declines the disjunctive frontiers rather than encoding them wrong', () => {
-        expect(sorted.declined.map((d) => d.entry_id)).toEqual([
-            'overworld_start__r1c6', 'overworld_start__r11c19', 'dungeon1_room1__r8c6',
-        ]);
+    it('places the WHOLE map — nothing in the starter atlas is out of vocabulary', () => {
+        expect(sorted.declined).toEqual([]);
+        expect(sorted.assignments).toHaveLength(POOL.entries.length);
         const placed = tree.nodes.map((n) => n.region_id);
-        for (const d of sorted.declined) expect(placed).not.toContain(d.entry_id);
+        for (const e of POOL.entries) expect(placed).toContain(e.entry_id);
     });
 
     it('is byte-inert for a world with no assignments and no atlas quota', () => {
