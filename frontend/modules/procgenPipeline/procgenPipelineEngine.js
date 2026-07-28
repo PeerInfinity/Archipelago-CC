@@ -573,8 +573,6 @@ function finalizeTopDownExits(grid, cellsByName) {
     }
 }
 
-function posKey(p) { return `${p.x},${p.y}`; }
-
 // Union of placed items across all built regions. Valid as an
 // arrival_inventory approximation under v1's tree shape + local
 // keys-before-doors invariant: every placed item is reachable from
@@ -2558,8 +2556,9 @@ export function buildShuffledSubstrateSequence(quotas, startSubstrate, rng) {
 // Perimeter midpoint for a synthetic exit on the given side. Used
 // only for zone-based substrates where tile geometry is fictional
 // but the procgen pipeline still wants a tile_position. The values
-// satisfy stitchGrid's posKey lookup and procgenPlayer's entrance
-// tracking; the substrate runtime ignores them.
+// feed procgenPlayer's entrance tracking; the substrate runtime ignores
+// them. (stitchGrid matches on exit ID, not position, so it no longer
+// depends on this convention.)
 function perimeterMidpoint(side, size) {
     const w = size.width, h = size.height;
     if (side === 'N') return { x: Math.floor(w / 2), y: 0 };
@@ -3461,9 +3460,8 @@ export function realiseSpiralRegions(plan, config) {
     }
 
     // Resolve exit targets to neighbor region ids. Same pass the
-    // grid-growth driver uses; for zone-based regions our synthetic
-    // tile positions match the perimeter-midpoint convention so the
-    // posKey lookup inside stitchGrid hits.
+    // grid-growth driver uses; it matches exits_placed to extracted exits
+    // by ID, so zone regions' synthetic tile positions are irrelevant to it.
     stitchGrid(grid);
     if (assumeBidirectional) {
         reconcileBidirectionalExits(grid, regionSize, 'add');
@@ -3831,10 +3829,10 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
         const gateCount = (item) => Math.max(cum?.get(item) ?? 1, fixedCounts?.[item] ?? 1);
         // `fixedGate` (region-atlas Phase 6): the sorter already decided this
         // node's gate — it IS the real game's requirement for getting in — so
-        // there is nothing to choose, only a host that can carry it. The COUNT
-        // still comes from the plan's cumulative table, which can only ever be
-        // stricter than the atlas's own rule; over-gating is safe, opening a
-        // sphere early is not.
+        // there is nothing to choose, only a host that can carry it. `fixedRule`
+        // is that requirement's AUTHORED form, which is what the compiled world
+        // ends up gating on; `gate` is the item-level view the accounting and
+        // the substrate vetoes see.
         const gateChoices = fixedGate
             ? [{ gate: fixedGate, rule: fixedRule }]
             : (gateWave === 0
