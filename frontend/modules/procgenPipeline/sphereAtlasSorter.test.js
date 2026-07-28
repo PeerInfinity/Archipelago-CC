@@ -284,15 +284,38 @@ describe('sortAtlasRegionsIntoSpheres', () => {
         // the doors are priced against the FINISHED plan — which is why this is
         // read in the sorter's second pass, after every injection.
         expect(r.assignments[0].exitEnvelope).toEqual([
-            { exit_id: 'd_free', access_rule: null, wave: 0, gate: [], gateCounts: {} },
             {
-                exit_id: 'd_swim', access_rule: has('Swim'), wave: null,
+                exit_id: 'd_free', access_rule: null, wave: 0, hostable: true,
+                gate: [], gateCounts: {},
+            },
+            {
+                exit_id: 'd_swim', access_rule: has('Swim'), wave: null, hostable: true,
                 gate: ['Swim'], gateCounts: {},
             },
             {
                 exit_id: 'd_weird', access_rule: { rule: 'Compare', args: {} }, wave: null,
-                gate: [], gateCounts: {},
+                hostable: true, gate: [], gateCounts: {},
             },
+        ]);
+    });
+
+    it('refuses to host on a door another exit already shares a CELL with', () => {
+        // The driver's back-exit is retargeted onto the projection's own
+        // entrance tile, so a door standing there would share it — and one cell
+        // leading two places is one connection nothing will ever resolve. Doors
+        // go to children in order, so an unhostable slot ends the envelope.
+        const plan = planOf(['a'], ['b'], ['victory']);
+        const e = entry('hub', [{ via: 'front', access_rule: null }], [
+            { exit_id: 'd_ok', access_rule: null, tile: { x: 3, y: 0 } },
+            { exit_id: 'd_on_entrance', access_rule: null, tile: { x: 4, y: 0 } },
+            { exit_id: 'd_dup', access_rule: null, tile: { x: 3, y: 0 } },
+        ]);
+        e.entrance_tile = { x: 4, y: 0 };
+        const env = sortAtlasRegionsIntoSpheres(plan, pool(e)).assignments[0].exitEnvelope;
+        expect(env.map((s) => [s.exit_id, s.hostable])).toEqual([
+            ['d_ok', true],            // a cell of its own
+            ['d_on_entrance', false],  // the back-exit already owns (4,0)
+            ['d_dup', false],          // d_ok already owns (3,0)
         ]);
     });
 

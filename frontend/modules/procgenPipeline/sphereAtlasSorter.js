@@ -251,19 +251,37 @@ export function sortAtlasRegionsIntoSpheres(plan, pool, opts = {}) {
      * otherwise the map's own rule IS the child's gate and `wave` is the sphere
      * it becomes satisfiable in. `wave: null` = out of vocabulary; nothing may
      * hang there, because its reachability cannot be reasoned about at all.
+     *
+     * `hostable: false` marks a door that CANNOT carry a child at all, because
+     * some other exit already owns its cell:
+     *   - the driver's back-exit is retargeted onto the projection's own
+     *     entrance tile, so a door standing on that tile would share it; or
+     *   - an EARLIER door already claimed the cell.
+     * Two exits on one cell is one cell leading two places: the engine resolves
+     * it one way, a router the other, and the second connection is dead. Doors
+     * are handed to children in order, so an unhostable slot ends the envelope
+     * rather than being skipped over — child k always takes door k.
      */
-    const envelopeFor = (entry) => (entry.exits ?? []).map((ex) => {
-        const dnf = ex.access_rule == null ? [[]] : requirementDnf(ex.access_rule);
-        const chosen = dnf ? schedulingDisjunct(dnf) : [];
-        return {
-            exit_id: ex.exit_id,
-            access_rule: ex.access_rule ?? null,
-            wave: dnf ? honestWave(dnf) : null,
-            gate: chosen.map((t) => t.item),
-            gateCounts: Object.fromEntries(chosen.filter((t) => t.count > 1)
-                .map((t) => [t.item, t.count])),
-        };
-    });
+    const envelopeFor = (entry) => {
+        const ent = entry.entrance_tile ?? null;
+        const claimed = new Set(ent ? [`${ent.x},${ent.y}`] : []);
+        return (entry.exits ?? []).map((ex) => {
+            const dnf = ex.access_rule == null ? [[]] : requirementDnf(ex.access_rule);
+            const chosen = dnf ? schedulingDisjunct(dnf) : [];
+            const key = ex.tile ? `${ex.tile.x},${ex.tile.y}` : null;
+            const hostable = !(key !== null && claimed.has(key));
+            if (key !== null) claimed.add(key);
+            return {
+                exit_id: ex.exit_id,
+                access_rule: ex.access_rule ?? null,
+                wave: dnf ? honestWave(dnf) : null,
+                hostable,
+                gate: chosen.map((t) => t.item),
+                gateCounts: Object.fromEntries(chosen.filter((t) => t.count > 1)
+                    .map((t) => [t.item, t.count])),
+            };
+        });
+    };
 
     // --- pass B: the honest wave, read off the FINISHED plan ------------------
     // The exit envelope is read here too: an exit's rule can name an item THIS

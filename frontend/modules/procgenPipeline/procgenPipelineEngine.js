@@ -3781,8 +3781,8 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
         // is absent for an atlas node the QUOTA route placed (no pinned entry),
         // so that route keeps the v1 leaf behaviour.
         if (isAtlasSourceId(host.substrate)) {
-            const env = host.exitEnvelope;
-            return !!env && childSlotIndex(host) < env.length;
+            const slot = host.exitEnvelope?.[childSlotIndex(host)];
+            return !!slot && slot.hostable !== false;
         }
         const adapter = substrateRegistry.get(host.substrate);
         if (!adapter) return false;
@@ -3850,6 +3850,8 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
         // realised exit rule is that door's rule AND the child's gate, so the
         // whole question is when the COMPOSITION opens — it must be exactly the
         // child's own gate sphere, or the plan and the world disagree:
+        //   - a door another exit already shares a CELL with (`hostable: false`)
+        //     → refused. One cell leading two places is one dead connection.
         //   - a door that opens LATER than this gate → refused. Composing would
         //     drag the child past the wave the plan gave it.
         //   - a door whose rule is out of VOCABULARY → refused. Its sphere is
@@ -3864,7 +3866,7 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
         const gateChoicesFor = (host) => {
             if (!isAtlasSourceId(host.substrate)) return gateChoices;
             const slot = host.exitEnvelope?.[childSlotIndex(host)];
-            if (!slot) return [];
+            if (!slot || slot.hostable === false) return [];
             if (slot.wave == null || slot.wave > gateWave) return [];
             if (!fixedGate && slot.access_rule != null && slot.wave === gateWave) {
                 return [{ gate: slot.gate, rule: slot.access_rule, counts: slot.gateCounts }];
@@ -4806,6 +4808,24 @@ function buildSphereAtlasRegion(sourceId, entry, {
                 + 'exit envelope and the substrate hook disagree about payload order');
         }
     });
+
+    // No two exits may end up on ONE CELL. The driver's back-exit is retargeted
+    // onto this region's entrance tile, and a real map regularly puts a door
+    // there too — one cell leading two places is one connection the engine will
+    // never resolve, and it looks like nothing at all in the compiled world. The
+    // envelope refuses to host on such a door; this is the backstop that says so
+    // out loud if any other path ever reaches it.
+    const byTile = new Map();
+    for (const ex of [...getRegionExits(region).values(),
+        ...(entry.entrance_tile ? [{ exit_id: '<driver back-exit>', ...entry.entrance_tile }] : [])]) {
+        const key = `${ex.x},${ex.y}`;
+        if (byTile.has(key)) {
+            throw new Error(
+                `${sourceId}: atlas region '${entry.entry_id}' has two exits on tile ${key} `
+                + `('${byTile.get(key)}' and '${ex.exit_id}') — one cell cannot lead two places`);
+        }
+        byTile.set(key, ex.exit_id);
+    }
 
     for (const e of exitPlans) {
         const gate = e.rule ?? sphereGateRule(e.gate, e.gateCounts ?? {});
