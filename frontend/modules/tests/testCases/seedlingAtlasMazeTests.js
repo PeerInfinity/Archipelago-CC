@@ -561,17 +561,14 @@ async function sphereWorldBotCompletion(testController) {
     testController.reportCondition('bot picked up its starting region',
         !!bot.getCurrentRegion?.());
 
-    // Watch every status the bot passes through. `finished` is polled for, but
-    // an `error:` status is TERMINAL in intent and must fail the leg even if a
-    // later status somehow overwrites it — a stall that resolves itself is
-    // still a defect, and this is the only place it is visible.
-    const errorStatuses = [];
-    const watch = setInterval(() => {
-        const status = bot.getStatus?.() ?? '';
-        if (status.startsWith('error:') && !errorStatuses.includes(status)) {
-            errorStatuses.push(status);
-        }
-    }, 100);
+    // Every status the bot passes through, READ OFF ITS LOG rather than
+    // sampled. `_setStatus` appends each distinct status to `_log`, so the log
+    // is the mutation record: an `error:` that is overwritten a millisecond
+    // later still appears in it, and an interval sampler would miss exactly
+    // that case — which is the interesting one, since `instant()` drives the
+    // whole queue in a tight loop.
+    const errorStatuses = () => (bot.getLog?.() ?? [])
+        .filter((line) => typeof line === 'string' && line.startsWith('error:'));
 
     await bot.instant();
     const finished = await testController.pollForCondition(
@@ -580,7 +577,7 @@ async function sphereWorldBotCompletion(testController) {
 
     if (!finished) {
         testController.log(`bot final status: "${bot.getStatus()}"`);
-        testController.log(`bot transition log (tail): `
+        testController.log('bot status log (tail): '
             + JSON.stringify(bot.getLog?.().slice(-12) ?? []));
     }
     testController.assertEqual(
@@ -590,9 +587,16 @@ async function sphereWorldBotCompletion(testController) {
     // The silent-stall guard. A router pick the maze projection walled (the AP
     // graph lists crossings the projection deliberately does not) used to leave
     // the bot waiting forever; it now names the target it cannot reach.
+    //
+    // Positive control FIRST: an empty error list means nothing unless the log
+    // it is filtered from was actually written. Assert the bot recorded real
+    // statuses before believing it recorded no errors.
+    const statusLog = bot.getLog?.() ?? [];
+    testController.assertEqual('the bot wrote a status log to read errors out of',
+        true, statusLog.length > 1 && statusLog.some((l) => String(l).startsWith('finished')));
     testController.assertEqual(
         'the bot never hit an unreachable-target error draining the queue',
-        '[]', JSON.stringify(errorStatuses));
+        '[]', JSON.stringify(errorStatuses()));
 
     // Completion means the goal item, not just an empty queue.
     await testController.stateManager.pingWorker('after-bot-run', 5000);
@@ -633,7 +637,6 @@ async function sphereWorldBotCompletion(testController) {
     const reachedAtlas = await testController.pollForCondition(
         () => [...walked()].some((r) => r !== 'Menu' && !/^region_\d+_\d+$/.test(r)),
         'the bot routed itself into a region of the REAL Seedling map', 40000, 250);
-    clearInterval(watch);
 
     const atlasRegions = [...walked()]
         .filter((r) => r !== 'Menu' && !/^region_\d+_\d+$/.test(r));
@@ -647,7 +650,7 @@ async function sphereWorldBotCompletion(testController) {
     // walled AP-only crossing would strand the router, so the silent-stall guard
     // has to cover this half too.
     testController.assertEqual(
-        'no unreachable-target error at any point', '[]', JSON.stringify(errorStatuses));
+        'no unreachable-target error at any point', '[]', JSON.stringify(errorStatuses()));
 
     return testController.getOverallResult();
 }
