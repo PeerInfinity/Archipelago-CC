@@ -66,15 +66,22 @@ import {
 } from '../shared/procgen/contentModules/hazardRuntime.js';
 
 // stateManager's snapshot.inventory is a plain object { itemName: count }.
-// Convert to a Set of item ids that the player currently holds (count > 0)
-// — that's what step() and the rendering code want.
+// Convert to a Map<itemName, count> of what the player currently holds.
+//
+// A Map, NOT a Set: `isObstacleCleared`'s local evaluator reads counts
+// straight off a Map (`inventoryCount`), so a `Has(item, count: 2)` gate
+// needs two copies to open. Collapsing to a Set made every count gate open
+// at ONE copy on the paths that use the local evaluator — the walkTo
+// planner's, which is the whole reason the two evaluators disagreed.
+// Everything downstream only calls `.has` / `.size` / iterates `.keys()`,
+// all of which a Map answers the same way.
 function inventoryFromSnapshot(snapshot) {
-    if (!snapshot || !snapshot.inventory) return new Set();
-    const set = new Set();
+    const out = new Map();
+    if (!snapshot || !snapshot.inventory) return out;
     for (const [id, count] of Object.entries(snapshot.inventory)) {
-        if (count > 0) set.add(id);
+        if (count > 0) out.set(id, count);
     }
-    return set;
+    return out;
 }
 
 // Snapshot's checkedLocations is a Set in some code paths, an Array
@@ -977,6 +984,7 @@ export class MazeRoomUI {
                 seenTiles,
                 inventory: this.externalInventory,
                 obstacleLib: this.world?.obstacleLib,
+                clearanceOpts: this._planningClearanceOpts(),
                 excludeOtherExits: true,
                 hazards: this.world?.hazards,
             },
@@ -1036,6 +1044,7 @@ export class MazeRoomUI {
                     {
                         inventory: this.externalInventory,
                         obstacleLib: this.world?.obstacleLib,
+                        clearanceOpts: this._planningClearanceOpts(),
                         excludeOtherExits: true,
                         hazards: this.world?.hazards,
                     },
@@ -1414,6 +1423,17 @@ export class MazeRoomUI {
     }
 
     /**
+     * The clearance bag every PLANNER in this panel must use, so a route is
+     * planned against the same gate verdicts the engine will enforce when it
+     * walks it. Undefined when stateManager isn't loaded — callers then fall
+     * back to the local subset evaluator, exactly as `step` does.
+     */
+    _planningClearanceOpts() {
+        const ruleEvaluator = this._currentRuleEvaluator();
+        return ruleEvaluator ? { evaluateRule: ruleEvaluator } : undefined;
+    }
+
+    /**
      * Apply a region payload published via maze:loadRegion. Called by
      * the module-level handler when this panel is already mounted, and
      * (via constructor) on initial mount with any buffered payload.
@@ -1712,12 +1732,19 @@ export class MazeRoomUI {
         const world = this.world;
         if (!world) {
             console.warn('[mazeRoom] walkTo received before world loaded; ignoring');
-            return;
+            return false;
         }
         const tile = this._resolveWalkToTile(target, world);
         if (!tile) {
+            // Report the failure to the CALLER rather than only to the console.
+            // A router that picks an exit this world has no tile for (a
+            // region-atlas crossing the projection walled, still present in the
+            // AP graph) would otherwise leave the bot waiting on a transition
+            // that can never happen — a silent stall, which reads exactly like
+            // slow progress. The playback bot turns this `false` into a named
+            // error status.
             console.warn('[mazeRoom] walkTo: could not resolve target', target);
-            return;
+            return false;
         }
         // Refresh externalInventory from the latest cached snapshot
         // before the visualizer's tile-pathfinder runs. The snapshot
@@ -1742,7 +1769,15 @@ export class MazeRoomUI {
             this.externalCheckedLocations = checkedLocationsFromSnapshot(snap);
             this._visualizer.setInventory?.(this.externalInventory);
         }
+        // ONE evaluator, both paths. The keyboard / queue path has always
+        // stepped through _currentRuleEvaluator (the full Rule Builder schema
+        // over stateManager's snapshot interface); the walkTo path planned and
+        // stepped with only the procgen-local subset evaluator, so the two
+        // could disagree about any gate the subset cannot express — and did.
+        const ruleEvaluator = this._currentRuleEvaluator();
+        this._visualizer.setClearanceOpts?.(ruleEvaluator ? { evaluateRule: ruleEvaluator } : null);
         this._visualizer.walkToTile({ x: tile.x, y: tile.y, name: target.name ?? null });
+        return true;
     }
 
     /**
@@ -2769,7 +2804,7 @@ export class MazeRoomUI {
         if (this.state && currentInv.size > 0) {
             const inv = document.createElement('div');
             inv.className = 'maze-room-inventory';
-            const itemNames = [...currentInv].map((id) => {
+            const itemNames = [...currentInv.keys()].map((id) => {
                 const item = (this.world?.itemLib ?? DEFAULT_ITEMS)[id];
                 return item?.name ?? id;
             });

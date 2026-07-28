@@ -606,3 +606,65 @@ describe('mazeAutopather — findPath', () => {
         });
     });
 });
+
+describe('mazeAutopather — clearanceOpts', () => {
+    // findPath must judge a rule-typed gate with the SAME evaluator the caller
+    // will hand `step`. Without this bag the planner falls back to the
+    // procgen-local subset evaluator and can route through a door the engine
+    // then refuses (or around one that is really open) — the two-evaluator
+    // divergence that made the maze panel's walkTo path disagree with its own
+    // keyboard path.
+    const OBSTACLES = {
+        gate: { clear_set_type: 'rule', clear_rule: { rule: 'CountItem', args: { item: 'x' } } },
+    };
+    // 5x2: row 0 floor, row 1 wall, so the gate at (2,0) is the only way past.
+    const corridor = () => {
+        const tiles = new Int8Array(10);
+        for (let x = 0; x < 5; x++) tiles[5 + x] = 1;
+        const w = makeWorld({ width: 5, height: 2, tiles });
+        w.obstacles = new Map([['2,0', 'gate']]);
+        w.obstacleLib = OBSTACLES;
+        return w;
+    };
+    const walk = (opts) => findPath(corridor(), { x: 0, y: 0 }, { kind: 'tile', x: 4, y: 0 }, opts);
+
+    it('without an evaluator, an unexpressible rule blocks the route', () => {
+        expect(walk({ inventory: new Set() })).toBeNull();
+    });
+
+    it('forwards the bag so the caller\'s evaluator decides', () => {
+        const seen = [];
+        const r = walk({
+            inventory: new Set(),
+            clearanceOpts: { evaluateRule: (rule) => { seen.push(rule.rule); return true; } },
+        });
+        expect(r?.length).toBe(4);
+        expect(seen).toContain('CountItem');
+    });
+
+    it('an evaluator that refuses still blocks', () => {
+        expect(walk({
+            inventory: new Set(),
+            clearanceOpts: { evaluateRule: () => false },
+        })).toBeNull();
+    });
+
+    it('a Map inventory keeps counts, so a count gate needs the count', () => {
+        const w = () => {
+            const c = corridor();
+            c.obstacleLib = {
+                gate: {
+                    clear_set_type: 'rule',
+                    clear_rule: { rule: 'Has', args: { item_name: 'Swim', count: 2 } },
+                },
+            };
+            return c;
+        };
+        const goal = { kind: 'tile', x: 4, y: 0 };
+        expect(findPath(w(), { x: 0, y: 0 }, goal, { inventory: new Map([['Swim', 1]]) })).toBeNull();
+        expect(findPath(w(), { x: 0, y: 0 }, goal, { inventory: new Map([['Swim', 2]]) })?.length).toBe(4);
+        // A count-collapsed Set can never satisfy it — which is precisely why
+        // the panel now carries counts all the way to the planner.
+        expect(findPath(w(), { x: 0, y: 0 }, goal, { inventory: new Set(['Swim']) })).toBeNull();
+    });
+});

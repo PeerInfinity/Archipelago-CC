@@ -711,3 +711,130 @@ describe('MazeRoomVisualizer — X1 consumable tiles', () => {
         expect(onLocationCheck).not.toHaveBeenCalled();
     });
 });
+
+// --- ONE EVALUATOR, BOTH PATHS (region atlas Phase 8, slice B) ---
+//
+// The panel has two ways to move the player: the keyboard / queue path
+// (mazeRoomUI._executeMoveAction) and the walkTo path (this visualizer's
+// planner + _tick). They used to judge a gate differently — the keyboard path
+// passed a stateManager-backed Rule Builder evaluator to `step`, while walkTo
+// planned and stepped with a count-collapsed Set and no evaluator at all. A
+// `Has(count: 2)` gate therefore opened on walkTo at ONE copy, and any rule the
+// procgen-local subset evaluator cannot express (CountItem, helpers,
+// count_check) was judged by the wrong engine entirely.
+
+const COUNT_GATE_LIB = {
+    // Two Progressive Swims to cross, exactly as the Seedling water column
+    // charges in the committed atlas projection.
+    swim_x2: {
+        clear_set_type: 'rule',
+        clear_rule: { rule: 'Has', args: { item_name: 'Progressive Swim', count: 2 } },
+    },
+};
+
+// A one-tile-wide corridor: row 0 is floor, row 1 is solid, so tile (2,0) is
+// the ONLY way past and the gate on it cannot be walked around.
+function makeCorridor(obstacleLib, obstacleId) {
+    const world = createWorld(5, 2, { itemLib: ITEM_LIB, obstacleLib, exits: [] });
+    for (let x = 0; x < 5; x++) {
+        setTile(world, x, 0, TILE_FLOOR);
+        setTile(world, x, 1, TILE_WALL);
+    }
+    setEntrance(world, 0, 0);
+    setObstacle(world, 2, 0, obstacleId);
+    return world;
+}
+
+const makeGatedCorridor = () => makeCorridor(COUNT_GATE_LIB, 'swim_x2');
+
+describe('MazeRoomVisualizer — walkTo uses the same inventory + evaluator as the engine', () => {
+    const walkAcross = (inventory) => {
+        const v = new MazeRoomVisualizer({});
+        v.setWorld(makeGatedCorridor(), 'Corridor');
+        v.setInventory(inventory);
+        v.walkToTile({ x: 4, y: 0 });
+        v.instant();
+        return v;
+    };
+
+    it('a count gate stays SHUT one copy short', () => {
+        const v = walkAcross(new Map([['Progressive Swim', 1]]));
+        expect(v.isStuck(), 'planner refused the route').toBe(true);
+        expect(v.getState().player_pos).toEqual({ x: 0, y: 0 });
+    });
+
+    it('a count gate OPENS at exactly the required count', () => {
+        const v = walkAcross(new Map([['Progressive Swim', 2]]));
+        expect(v.isStuck()).toBe(false);
+        expect(v.getState().player_pos).toEqual({ x: 4, y: 0 });
+    });
+
+    it('counts survive setInventory — a Map is not collapsed to presence', () => {
+        // The regression itself: before this, setInventory built a Set, so the
+        // planner saw "holds Progressive Swim" and opened a x2 gate at 1.
+        const v = new MazeRoomVisualizer({});
+        v.setWorld(makeGatedCorridor(), 'Corridor');
+        v.setInventory(new Map([['Progressive Swim', 2]]));
+        expect(v.getState().inventory.get('Progressive Swim')).toBe(2);
+    });
+
+    it('a count-collapsed source still works, and still counts as one', () => {
+        // Callers handing a Set / array (dev flows, older call sites) get the
+        // honest reading of that shape rather than a crash.
+        const v = new MazeRoomVisualizer({});
+        v.setWorld(makeGatedCorridor(), 'Corridor');
+        v.setInventory(new Set(['Progressive Swim']));
+        expect(v.getState().inventory.get('Progressive Swim')).toBe(1);
+        v.walkToTile({ x: 4, y: 0 });
+        v.instant();
+        expect(v.isStuck()).toBe(true);
+    });
+
+    it('the injected rule evaluator governs BOTH the plan and the step', () => {
+        // A gate the local subset evaluator cannot judge at all: an unknown
+        // rule name. Without the evaluator the plan is refused; with an
+        // evaluator that says "open", the visualizer plans AND walks through —
+        // proving the bag reaches findPath, not just step().
+        const world = () => makeCorridor(
+            { exotic: { clear_set_type: 'rule', clear_rule: { rule: 'CountItem', args: {} } } },
+            'exotic',
+        );
+
+        const withoutEvaluator = new MazeRoomVisualizer({});
+        withoutEvaluator.setWorld(world(), 'Corridor');
+        withoutEvaluator.setInventory(new Map());
+        withoutEvaluator.walkToTile({ x: 4, y: 0 });
+        withoutEvaluator.instant();
+        expect(withoutEvaluator.isStuck(), 'subset evaluator cannot open it').toBe(true);
+
+        const seen = [];
+        const withEvaluator = new MazeRoomVisualizer({});
+        withEvaluator.setWorld(world(), 'Corridor');
+        withEvaluator.setInventory(new Map());
+        withEvaluator.setClearanceOpts({ evaluateRule: (rule) => { seen.push(rule.rule); return true; } });
+        withEvaluator.walkToTile({ x: 4, y: 0 });
+        withEvaluator.instant();
+        expect(withEvaluator.isStuck()).toBe(false);
+        expect(withEvaluator.getState().player_pos).toEqual({ x: 4, y: 0 });
+        expect(seen, 'the evaluator was actually consulted').toContain('CountItem');
+    });
+
+    it('setClearanceOpts(null) reverts to the local subset evaluator', () => {
+        const v = new MazeRoomVisualizer({});
+        v.setWorld(makeGatedCorridor(), 'Corridor');
+        v.setInventory(new Map([['Progressive Swim', 2]]));
+        v.setClearanceOpts({ evaluateRule: () => false });
+        v.walkToTile({ x: 4, y: 0 });
+        v.instant();
+        expect(v.isStuck(), 'the injected evaluator shut it').toBe(true);
+
+        const v2 = new MazeRoomVisualizer({});
+        v2.setWorld(makeGatedCorridor(), 'Corridor');
+        v2.setInventory(new Map([['Progressive Swim', 2]]));
+        v2.setClearanceOpts({ evaluateRule: () => false });
+        v2.setClearanceOpts(null);
+        v2.walkToTile({ x: 4, y: 0 });
+        v2.instant();
+        expect(v2.isStuck()).toBe(false);
+    });
+});

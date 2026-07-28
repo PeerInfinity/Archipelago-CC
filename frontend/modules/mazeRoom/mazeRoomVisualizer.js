@@ -79,7 +79,15 @@ export class MazeRoomVisualizer {
         this._awaitingRegionLoad = false;
 
         this._state = null;            // { player_pos: {x,y}, turn }
-        this._inventory = new Set();   // Set<itemId>
+        // Map<itemId, count>, never a Set. Counts are load-bearing: a
+        // `Has(item, count: 2)` gate opens at one copy if the shape collapses,
+        // and the planner and the renderer would then disagree with the
+        // engine. One shape, one evaluator, both paths — see setInventory.
+        this._inventory = new Map();
+        // Forwarded to isObstacleCleared by BOTH the tile planner and step(),
+        // so a rule-typed gate is judged the same way whichever path moves the
+        // player. Null = fall back to the procgen-local subset evaluator.
+        this._clearanceOpts = null;
         this._checkedLocations = new Set(); // Set<locationName>
         this._visitedItemPositions = new Set(); // Set<"x,y"> picked up
         this._visitedExits = new Set(); // Set<exit_id> already crossed
@@ -189,7 +197,7 @@ export class MazeRoomVisualizer {
     reset({ silent = false } = {}) {
         this._clock.stop();
         this._state = this._world ? createState(this._world) : null;
-        this._inventory = new Set();
+        this._inventory = new Map();
         this._checkedLocations = new Set();
         this._visitedItemPositions = new Set();
         this._visitedExits = new Set();
@@ -254,11 +262,33 @@ export class MazeRoomVisualizer {
      * pathfinder refuses to plan through them.
      */
     setInventory(inventory) {
-        if (inventory instanceof Set) {
-            this._inventory = new Set(inventory);
-        } else if (inventory && typeof inventory[Symbol.iterator] === 'function') {
-            this._inventory = new Set(inventory);
+        if (inventory instanceof Map) {
+            this._inventory = new Map(inventory);
+        } else if (inventory instanceof Set
+            || (inventory && typeof inventory[Symbol.iterator] === 'function')) {
+            // A count-collapsed source (a Set, or an array of ids). Every id
+            // counts once — the best that shape can say.
+            this._inventory = new Map();
+            for (const id of inventory) {
+                this._inventory.set(id, (this._inventory.get(id) ?? 0) + 1);
+            }
+        } else if (inventory && typeof inventory === 'object') {
+            this._inventory = new Map(Object.entries(inventory));
         }
+    }
+
+    /**
+     * Install the clearance-options bag (typically
+     * `{ evaluateRule: <stateManager-backed Rule Builder evaluator> }`) used
+     * for `clear_set_type: 'rule'` obstacles.
+     *
+     * The panel's keyboard / queue path has always passed this to `step`; the
+     * walkTo path planned and stepped WITHOUT it, so the two disagreed on
+     * every rule the local subset evaluator cannot express. Setting it here
+     * makes _planTilePath and _tick use the caller's evaluator too.
+     */
+    setClearanceOpts(opts) {
+        this._clearanceOpts = opts ?? null;
     }
 
     isRunning() { return this._clock.isRunning(); }
@@ -343,7 +373,7 @@ export class MazeRoomVisualizer {
                 attempted: { x, y },
                 obstacleId: null,
                 obstacleRule: null,
-                inventory: [...this._inventory],
+                inventory: [...this._inventory.keys()],
                 reason: 'unreachable',
                 description: `walkToTile: no path from (${this._state.player_pos.x},${this._state.player_pos.y}) to (${x},${y}) under current inventory.`,
             });
@@ -359,7 +389,7 @@ export class MazeRoomVisualizer {
     getState() {
         return {
             player_pos: this._state ? { ...this._state.player_pos } : null,
-            inventory: new Set(this._inventory),
+            inventory: new Map(this._inventory),
             checkedLocations: new Set(this._checkedLocations),
             target: this._target ? { ...this._target } : null,
             log: this._log.slice(),
@@ -427,7 +457,8 @@ export class MazeRoomVisualizer {
             this._notifyChange();
             return;
         }
-        const next = step(this._world, this._state, input, this._inventory);
+        const next = step(this._world, this._state, input, this._inventory,
+            this._clearanceOpts ?? undefined);
 
         if (next === null) {
             // Blocked — log with rule eval, then halt and let the
@@ -523,7 +554,7 @@ export class MazeRoomVisualizer {
             // Inventory + visited-position tracking is idempotent and
             // useful even on repeats (e.g. for fog-of-war seen-set
             // bookkeeping), so update those unconditionally.
-            this._inventory.add(itemId);
+            this._inventory.set(itemId, (this._inventory.get(itemId) ?? 0) + 1);
             this._visitedItemPositions.add(key);
             if (locationName) this._checkedLocations.add(locationName);
             if (alreadyChecked) return null;
@@ -608,7 +639,7 @@ export class MazeRoomVisualizer {
         } else if (obstacleId) {
             const obstacle = this._world.obstacleLib?.[obstacleId];
             const ruleStr = obstacle?.clear_rule ? describeRule(obstacle.clear_rule) : '(no clear_rule)';
-            const inventoryList = [...this._inventory].sort().join(', ') || '(empty)';
+            const inventoryList = [...this._inventory.keys()].sort().join(', ') || '(empty)';
             reason = 'obstacle';
             detail = `Blocked by ${obstacleId} — clear_rule: ${ruleStr}; inventory: {${inventoryList}}`;
         } else {
@@ -621,7 +652,7 @@ export class MazeRoomVisualizer {
             attempted: { x: nx, y: ny },
             obstacleId: obstacleId ?? null,
             obstacleRule: obstacleId ? this._world.obstacleLib?.[obstacleId]?.clear_rule ?? null : null,
-            inventory: [...this._inventory],
+            inventory: [...this._inventory.keys()],
             reason,
             description: `Tried ${input} from (${pos.x},${pos.y}) — ${detail}`,
         });
@@ -699,6 +730,10 @@ export class MazeRoomVisualizer {
             {
                 inventory: this._inventory,
                 obstacleLib: this._world?.obstacleLib,
+                // The SAME bag _tick hands to step(). One evaluator, both
+                // paths — a route the planner allows is a route the engine
+                // will walk, and vice versa.
+                clearanceOpts: this._clearanceOpts ?? undefined,
                 excludeOtherExits: true,
                 // Hazard-aware planning: when world.hazards is set,
                 // findPath uses time-expanded BFS to route around the
@@ -722,7 +757,7 @@ export class MazeRoomVisualizer {
         if (!this._eventBus?.publish) return;
         this._eventBus.publish('playback:snapshotUpdated', {
             snapshot: {
-                inventory: inventoryAsCounts(this._inventory),
+                inventory: Object.fromEntries(this._inventory),
                 checkedLocations: [...this._checkedLocations],
             },
             source: 'mazeRoomVisualizer',
@@ -732,12 +767,6 @@ export class MazeRoomVisualizer {
     _notifyChange() {
         if (this._onStateChange) this._onStateChange();
     }
-}
-
-function inventoryAsCounts(set) {
-    const out = {};
-    for (const id of set) out[id] = (out[id] ?? 0) + 1;
-    return out;
 }
 
 function describeRule(rule) {
