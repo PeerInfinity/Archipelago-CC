@@ -22,6 +22,7 @@ const { values } = parseArgs({
     layout: { type: 'string' },
     testOrderSeed: { type: 'string' },
     batch: { type: 'string' },
+    test: { type: 'string' },
     headed: { type: 'boolean' },
     debug: { type: 'boolean' },
     ui: { type: 'boolean' }
@@ -41,7 +42,11 @@ const config = {
   testOrderSeed: values.testOrderSeed || process.env.npm_config_testOrderSeed || process.env.TEST_ORDER_SEED || '',
   // Named subset of the in-app roster (frontend/modules/tests/testBatches.js).
   // Empty = the whole roster, so every existing invocation is unchanged.
-  batch: values.batch || process.env.npm_config_batch || ''
+  batch: values.batch || process.env.npm_config_batch || '',
+  // One or more test ids (comma-separated) to run INSTEAD of the rest of the
+  // roster — the "run it alone 8x and count" protocol for triaging a flake.
+  // Empty = no narrowing, so every existing invocation is unchanged.
+  testIds: values.test || process.env.npm_config_test || ''
 };
 
 // Build environment variables
@@ -54,7 +59,8 @@ const env = {
   RULES_OVERRIDE: config.rules,
   TEST_LAYOUT: config.layout,
   TEST_ORDER_SEED: config.testOrderSeed,
-  TEST_BATCH: config.batch
+  TEST_BATCH: config.batch,
+  TEST_IDS: config.testIds
 };
 
 // Validate the batch name HERE rather than letting the in-app filter throw.
@@ -87,6 +93,7 @@ const additionalArgs = process.argv.slice(2).filter(arg =>
   !arg.startsWith('--layout=') &&
   !arg.startsWith('--testOrderSeed=') &&
   !arg.startsWith('--batch=') &&
+  !arg.startsWith('--test=') &&
   arg !== '--headed' &&
   arg !== '--debug' &&
   arg !== '--ui'

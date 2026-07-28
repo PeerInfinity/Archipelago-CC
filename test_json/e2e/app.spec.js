@@ -25,6 +25,7 @@ test.describe('Application End-to-End Tests', () => {
   const testOrderSeed = process.env.TEST_ORDER_SEED; // Optional test order seed for reproducible randomization
   const testProfiling = process.env.TEST_PROFILING; // Optional profiling flag (1 to enable)
   const testBatch = process.env.TEST_BATCH; // Optional roster subset (see modules/tests/testBatches.js)
+  const testIds = process.env.TEST_IDS; // Optional explicit id list (--test=), for solo flake triage
 
   // Build URL with all optional parameters
   let APP_URL = `http://localhost:8000/frontend/?mode=${testMode}`;
@@ -51,6 +52,9 @@ test.describe('Application End-to-End Tests', () => {
   }
   if (testBatch) {
     APP_URL += `&testBatch=${encodeURIComponent(testBatch)}`;
+  }
+  if (testIds) {
+    APP_URL += `&testIds=${encodeURIComponent(testIds)}`;
   }
 
   test('run in-app tests and check results', async ({ page }) => {
@@ -222,10 +226,23 @@ test.describe('Application End-to-End Tests', () => {
       // report the entire roster as changed. The batch is stamped for
       // exactly the same reason — a `fast` batch and a full run of the
       // same mode have deliberately different rosters, so comparing
-      // across them would report every quarantined test as REMOVED.
+      // across them would report every quarantined test as REMOVED. An
+      // explicit id list is stamped for the third time for the same reason,
+      // and it is the sharpest case: a one-test solo run left unstamped would
+      // become the baseline for the next full run and report sixty tests as
+      // ADDED — and the solo run itself as sixty REMOVED.
       fs.writeFileSync(
         outputFile,
-        JSON.stringify({ mode: testMode, batch: testBatch || null, ...results }, null, 2)
+        JSON.stringify(
+          {
+            mode: testMode,
+            batch: testBatch || null,
+            testIds: testIds || null,
+            ...results,
+          },
+          null,
+          2
+        )
       );
       console.log(`PW DEBUG: Test results saved to: ${outputFile}`);
 

@@ -71,6 +71,70 @@ function applyTestBatchFilter(tests) {
   );
 }
 
+/**
+ * Narrow an already-merged roster to the comma-separated ids in `?testIds=`.
+ * No parameter means no filtering, so every existing mode is unaffected.
+ *
+ * WHY ids here when batches are deliberately category-only: a batch is a
+ * standing division of the roster that CI runs, and an id list would drift away
+ * from a renamed test. This is the other thing — running ONE test, over and
+ * over, to decide whether a red is a real defect or load. That protocol
+ * ("run it alone 8x and count") had no way to express itself, so a flake
+ * investigation had to run 60 neighbours each time and could never separate
+ * "fails alone" from "fails in company", which is the whole question.
+ *
+ * Like the batch filter it only ever narrows: an id the mode's config disabled
+ * stays disabled. Both failure modes throw rather than run something else —
+ * an unknown id (a typo that would otherwise run the wrong thing, or nothing)
+ * and a selection that leaves the roster empty (which would report green
+ * having tested nothing at all).
+ */
+function applyTestIdFilter(tests) {
+  if (typeof window === 'undefined' || !window.location) return;
+  const raw = new URLSearchParams(window.location.search).get('testIds');
+  if (raw === null) return;
+
+  const wanted = raw.split(',').map((s) => s.trim()).filter(Boolean);
+  if (wanted.length === 0) {
+    throw new Error(
+      '[TestLogic] ?testIds= was given with no ids. Name at least one test id, '
+      + 'or drop the parameter to run the whole roster.'
+    );
+  }
+
+  const known = new Set(tests.map((t) => t.id));
+  const unknown = wanted.filter((id) => !known.has(id));
+  if (unknown.length > 0) {
+    throw new Error(
+      `[TestLogic] Unknown testIds: ${unknown.join(', ')}. `
+      + 'Ids are the `id` field of a registerTest() call.'
+    );
+  }
+
+  const keep = new Set(wanted);
+  let excluded = 0;
+  for (const test of tests) {
+    if (!test.enabled) continue;
+    if (!keep.has(test.id)) {
+      test.enabled = false;
+      excluded += 1;
+    }
+  }
+
+  const remaining = tests.filter((t) => t.enabled).length;
+  if (remaining === 0) {
+    throw new Error(
+      `[TestLogic] ?testIds= named ${wanted.join(', ')}, but none of them are `
+      + 'enabled in this mode (or batch). A run of nothing would report green.'
+    );
+  }
+  log(
+    'info',
+    `[TestLogic] testIds: running ${remaining} test(s), `
+    + `${excluded} excluded as unselected`
+  );
+}
+
 // Helper function for logging with fallback
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -526,6 +590,10 @@ export const testLogic = {
     // states have been merged — a batch narrows what an already-enabled roster
     // runs, it never enables something the config disabled.
     applyTestBatchFilter(currentTests);
+    // After the batch, so `?testIds=` names a test the batch already kept —
+    // a contradictory pair leaves nothing enabled and throws rather than
+    // quietly running the id the batch had excluded.
+    applyTestIdFilter(currentTests);
 
     TestState.testLogicState.tests = currentTests;
     TestState.testLogicState.fromDiscovery = true;

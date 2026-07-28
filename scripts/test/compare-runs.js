@@ -41,11 +41,13 @@ function load(file) {
     const data = JSON.parse(fs.readFileSync(file, 'utf8'));
     const byId = new Map();
     for (const t of data.testDetails || []) byId.set(t.id, t);
-    // `mode`/`batch` are absent from runs recorded before they were stamped.
+    // `mode`/`batch`/`testIds` are absent from runs recorded before they were
+    // stamped.
     return {
         file,
         mode: data.mode || null,
         batch: data.batch || null,
+        testIds: data.testIds || null,
         summary: data.summary || {},
         byId,
     };
@@ -57,14 +59,19 @@ function load(file) {
  * rosters, and a warning that printed only the mode would read as though the
  * baseline matched.
  */
+function identity(run) {
+    return `${run.mode}${run.batch ? `/${run.batch}` : ''}`
+        + `${run.testIds ? ` --test=${run.testIds}` : ''}`;
+}
+
 function label(run) {
     if (!run.mode) return 'unknown (recorded before mode stamping)';
-    return `"${run.mode}${run.batch ? `/${run.batch}` : ''}"`;
+    return `"${identity(run)}"`;
 }
 
 function describe(run) {
     const s = run.summary;
-    const mode = run.mode ? `[${run.mode}${run.batch ? `/${run.batch}` : ''}] ` : '';
+    const mode = run.mode ? `[${identity(run)}] ` : '';
     return `${mode}${path.basename(run.file)} — ${s.passedCount ?? '?'}/${s.totalRun ?? '?'} passed`;
 }
 
@@ -78,13 +85,16 @@ function pickBaseline(files) {
     const current = load(files[files.length - 1]);
     const earlier = files.slice(0, -1).reverse().map(load);
 
-    // Pass 1: the newest earlier run KNOWN to be the same mode AND batch.
-    // Batch must match too: a `fast` batch deliberately omits the quarantined
-    // categories, so diffing it against a full run of the same mode reports
-    // every quarantined test as REMOVED — the same false alarm the mode stamp
-    // exists to prevent.
+    // Pass 1: the newest earlier run KNOWN to be the same mode AND batch AND
+    // id selection. Batch must match too: a `fast` batch deliberately omits the
+    // quarantined categories, so diffing it against a full run of the same mode
+    // reports every quarantined test as REMOVED — the same false alarm the mode
+    // stamp exists to prevent. `--test=` narrows harder still, to a roster of
+    // one, and the eight solo runs of a flake triage must compare against each
+    // other rather than against the full run that prompted them.
     const sameMode = earlier.find(
-        (r) => r.mode && current.mode && r.mode === current.mode && r.batch === current.batch
+        (r) => r.mode && current.mode && r.mode === current.mode
+            && r.batch === current.batch && r.testIds === current.testIds
     );
     if (sameMode) return { prev: sameMode, curr: current, warning: null };
 
