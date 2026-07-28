@@ -340,6 +340,12 @@
             "enabled": true,
             "category": "Seedling atlas maze",
             "_comment": "Region-atlas Phase 6. Same map, but walked in a world sphere growth GREW: the leg that catches an arrival landing inside a wall, which no compile or sphere oracle can."
+        },
+        {
+            "id": "seedling-atlas-sphere-bot-completion",
+            "enabled": true,
+            "category": "Seedling atlas maze",
+            "_comment": "Region-atlas Phase 8 slice B. The SHIPPED playback bot beats the grown world end to end; the headless witness (atlasMazeBot.slow.test.js) proves the same world beatable by walking tiles directly, so the two strata are independent."
         }
     ]
 }

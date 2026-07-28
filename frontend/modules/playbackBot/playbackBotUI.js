@@ -818,7 +818,21 @@ export class PlaybackBotUI {
         const sig = `${this._currentRegion}:${target.kind}:${tail}`;
         if (sig === this._lastPublishedTarget) return;
         this._lastPublishedTarget = sig;
-        this._dispatch('walkTo', [target]);
+        // A controller that cannot RESOLVE the target reports false. That
+        // happens when the router picks an exit the substrate has no tile for
+        // — e.g. a region-atlas crossing the maze projection deliberately
+        // walled, which the AP graph still lists. Before this the panel logged
+        // a console.warn and returned, the visualizer got no target, and the
+        // bot waited for a transition that could never come: a SILENT STALL,
+        // indistinguishable from slow progress. Make it terminal and named.
+        if (this._dispatch('walkTo', [target]) === false) {
+            this._setStatus(
+                `error: ${this._currentRegion ?? '?'} has no tile for `
+                + `${target.kind} "${tail}" — the router picked a target the `
+                + 'substrate cannot reach',
+            );
+            return;
+        }
         // Make sure the controller's clock is ticking. The sphere
         // queue's play() pattern is "set target, then start clock";
         // manual walkTos (intercept, manual input, cross-region
@@ -841,18 +855,21 @@ export class PlaybackBotUI {
      */
     _dispatch(method, args = []) {
         const controller = this._resolveController();
-        if (!controller) return;
+        if (!controller) return undefined;
         const fn = controller[method];
-        if (typeof fn !== 'function') return;
+        if (typeof fn !== 'function') return undefined;
         try {
             const result = fn.apply(controller, args);
             if (result && typeof result.then === 'function') {
                 result.catch(() => { /* fire-and-forget */ });
+                return undefined;
             }
+            return result;
         } catch (e) {
             if (typeof window !== 'undefined' && window.logger) {
                 window.logger.warn('playbackBot', `controller.${method} threw`, e);
             }
+            return undefined;
         }
     }
 

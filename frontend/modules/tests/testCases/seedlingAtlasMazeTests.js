@@ -21,6 +21,15 @@
  *      by positives: the walk to the tile beside the gate has to succeed first,
  *      and the crossing has to happen afterwards, so "nothing moved" cannot pass
  *      because the machinery was dead.
+ *   4. seedling-atlas-sphere-bot-completion (Phase 8) — the real playback bot
+ *      BEATS that grown world: it builds its queue from the preset's EMBEDDED
+ *      sphere log (this preset has no .jsonl sidecar), routes itself across
+ *      generated regions and real map regions alike, and reaches `finished`
+ *      holding the victory item. Its negative half matters as much: a router
+ *      that picks an exit the projection walled used to stall in silence, and
+ *      a timed poll cannot tell a silent stall from slow progress — so the
+ *      leg also asserts the bot never entered an error status.
+ *
  *   3. seedling-atlas-sphere-placed-region (Phase 6) — the same map, but walked
  *      in a world sphere growth GREW: generated maze regions with pieces of the
  *      real Seedling map hung off them behind the driver's synthetic gates. Its
@@ -38,6 +47,8 @@
 import { registerTest } from '../testRegistry.js';
 import { getPanelInstance } from '../../mazeRoom/index.js';
 import { getGameStateSingleton } from '../../gameState/singleton.js';
+import { getActivePanel as getBotPanel } from '../../playbackBot/index.js';
+import { getSphereStateSingleton } from '../../sphereState/singleton.js';
 
 const PRESET_PATH = './presets/seedling_atlas_maze/AP_1/AP_1_rules.json';
 // A world sphere growth GREW with pieces of the same map hung off it
@@ -498,6 +509,149 @@ async function generatedSphereWorld(testController) {
     return testController.getOverallResult();
 }
 
+/**
+ * Phase 8, slice B — the real playback bot BEATS the grown atlas world.
+ *
+ * The headless witness (frontend/modules/procgenPipeline/atlasMazeBot.slow.test.js)
+ * proves the same world beatable by walking tiles through the engine directly.
+ * This leg proves the SHIPPED bot does it: the sphere queue, the PathFinder
+ * router, the maze playback controller, procgenPlayer's warehouse and the real
+ * dispatcher, all in a browser.
+ *
+ * Two things this can witness that the headless walk cannot:
+ *   - the queue comes from the preset's EMBEDDED `sphere_log` (there is no
+ *     .jsonl beside this preset), through the module that prefers it;
+ *   - a router pick the substrate cannot reach is now a NAMED error status
+ *     instead of a silent stall. That distinction is the whole reason this
+ *     leg is not just "poll until finished": a stalled bot and a slow bot look
+ *     identical to a timeout, so the run asserts no error status ever appeared
+ *     as well as asserting completion.
+ */
+async function sphereWorldBotCompletion(testController) {
+    // The bot panel must be mounted BEFORE the rules load: procgenPlayer
+    // publishes its synthetic initial user:regionMove on rulesLoaded, and a bot
+    // that is not listening yet never learns its starting region.
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' });
+    const botPanel = await testController.pollForValue(
+        () => getBotPanel(), 'playback bot panel instance', 5000, 100);
+    testController.reportCondition('playback bot panel mounted', !!botPanel);
+    const bot = botPanel?.getBot?.();
+    testController.reportCondition('bot reachable via panel.getBot()', !!bot);
+    if (!bot) return testController.getOverallResult();
+
+    testController.log('Loading the sphere-grown Seedling atlas world…');
+    await testController.loadRulesFromFile(SPHERE_PRESET_PATH);
+    await testController.stateManager.pingWorker('after-rules-load', 5000);
+
+    // The queue's source. This preset carries its sphere log INSIDE rules.json;
+    // sphereState prefers that embedded array over a sidecar file, and there is
+    // no sidecar to fall back to — so a non-empty queue here IS the assertion
+    // that the embedded path works.
+    const sphereState = getSphereStateSingleton();
+    const sphereLoaded = await testController.pollForCondition(
+        () => (sphereState.getSphereData()?.length ?? 0) > 0,
+        'the EMBEDDED sphere log was loaded (this preset has no .jsonl sidecar)',
+        10000, 200);
+    testController.reportCondition('embedded sphere log loaded', !!sphereLoaded);
+    if (!sphereLoaded) return testController.getOverallResult();
+
+    bot.refresh();
+    testController.log(`start region '${bot.getCurrentRegion?.() ?? '?'}' `
+        + '(the queue is built lazily on the first play/instant)');
+    testController.reportCondition('bot picked up its starting region',
+        !!bot.getCurrentRegion?.());
+
+    // Watch every status the bot passes through. `finished` is polled for, but
+    // an `error:` status is TERMINAL in intent and must fail the leg even if a
+    // later status somehow overwrites it — a stall that resolves itself is
+    // still a defect, and this is the only place it is visible.
+    const errorStatuses = [];
+    const watch = setInterval(() => {
+        const status = bot.getStatus?.() ?? '';
+        if (status.startsWith('error:') && !errorStatuses.includes(status)) {
+            errorStatuses.push(status);
+        }
+    }, 100);
+
+    await bot.instant();
+    const finished = await testController.pollForCondition(
+        () => (bot.getStatus() || '').startsWith('finished'),
+        'the bot drained its whole sphere queue', 60000, 250);
+
+    if (!finished) {
+        testController.log(`bot final status: "${bot.getStatus()}"`);
+        testController.log(`bot transition log (tail): `
+            + JSON.stringify(bot.getLog?.().slice(-12) ?? []));
+    }
+    testController.assertEqual(
+        'the shipped playback bot BEAT a sphere-grown world containing real map regions',
+        true, !!finished);
+
+    // The silent-stall guard. A router pick the maze projection walled (the AP
+    // graph lists crossings the projection deliberately does not) used to leave
+    // the bot waiting forever; it now names the target it cannot reach.
+    testController.assertEqual(
+        'the bot never hit an unreachable-target error draining the queue',
+        '[]', JSON.stringify(errorStatuses));
+
+    // Completion means the goal item, not just an empty queue.
+    await testController.stateManager.pingWorker('after-bot-run', 5000);
+    const inventory = testController.stateManager.getSnapshot()?.inventory ?? {};
+    testController.assertEqual('the bot is holding the victory item',
+        true, Number(inventory.victory ?? 0) > 0);
+
+    // It really crossed regions rather than finishing where it started. The
+    // witness is gameState's own PATH — the AP-side record of every regionMove
+    // that actually landed — not the bot's status log (plain text) and not its
+    // own cursor, which would just be the bot agreeing with itself.
+    const gs = getGameStateSingleton();
+    const walked = () => new Set(
+        (gs?.getPath?.() ?? [])
+            .filter((e) => e.type === 'regionMove')
+            .map((e) => e.destinationRegion)
+            .filter(Boolean));
+    const afterQueue = walked();
+    testController.log(`gameState path visited ${afterQueue.size} region(s): `
+        + JSON.stringify([...afterQueue]));
+    testController.assertEqual('the run was cross-region, not a single-room walk',
+        true, afterQueue.size > 1);
+
+    // Now the atlas half. The SPHERE QUEUE alone never enters a placed map
+    // region in this world: every advancement item sits in a generated region,
+    // and the one location the atlas marks (`Starting House - Chest`) holds
+    // filler, so the sphere log does not name it. Asserting "the queue walked
+    // into the real map" would therefore have been an assertion about this
+    // particular fill, not about the bot.
+    //
+    // What IS worth proving is that the bot can ROUTE INTO a placed atlas
+    // region — the leg where a walled AP-only crossing would strand it. Send it
+    // there by name; walkToLocation routes across regions one exit at a time,
+    // re-entering on every arrival.
+    const ATLAS_LOCATION = 'Starting House - Chest';
+    testController.log(`routing the bot to '${ATLAS_LOCATION}' in a placed atlas region…`);
+    bot.walkToLocation(ATLAS_LOCATION);
+    const reachedAtlas = await testController.pollForCondition(
+        () => [...walked()].some((r) => r !== 'Menu' && !/^region_\d+_\d+$/.test(r)),
+        'the bot routed itself into a region of the REAL Seedling map', 40000, 250);
+    clearInterval(watch);
+
+    const atlasRegions = [...walked()]
+        .filter((r) => r !== 'Menu' && !/^region_\d+_\d+$/.test(r));
+    testController.log(`real-map regions walked: ${JSON.stringify(atlasRegions)}; `
+        + `bot status "${bot.getStatus()}"`);
+    testController.assertEqual(
+        'the bot routed itself into a region of the REAL Seedling map',
+        true, !!reachedAtlas);
+
+    // Re-checked AFTER the manual leg: routing into the atlas is exactly where a
+    // walled AP-only crossing would strand the router, so the silent-stall guard
+    // has to cover this half too.
+    testController.assertEqual(
+        'no unreachable-target error at any point', '[]', JSON.stringify(errorStatuses));
+
+    return testController.getOverallResult();
+}
+
 registerTest({
     id: 'seedling-atlas-maze-boundary-crossing',
     name: 'Seedling atlas (maze): walking a marked boundary crosses the AP region',
@@ -533,6 +687,19 @@ registerTest({
                + 'the failure an atlas region sized to its own bounds invites, and one no '
                + 'compile or sphere oracle would catch.',
     testFunction: generatedSphereWorld,
+    category: 'Seedling atlas maze',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'seedling-atlas-sphere-bot-completion',
+    name: 'Seedling atlas (sphere): the playback bot beats the grown world',
+    description: 'Drives the SHIPPED playback bot through the sphere-grown Seedling atlas '
+               + 'world: queue built from the preset\'s embedded sphere log, cross-region '
+               + 'routing over generated and real-map regions, terminal "finished" status '
+               + 'with the victory item held — and no unreachable-target error along the '
+               + 'way, since a silent stall is indistinguishable from slow progress.',
+    testFunction: sphereWorldBotCompletion,
     category: 'Seedling atlas maze',
     enabled: false, // off by default — runs only in the test-substrates mode
 });

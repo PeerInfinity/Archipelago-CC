@@ -1150,3 +1150,61 @@ describe('PlaybackBotUI — X1 maze collect policy', () => {
         expect(controller.calls.filter((c) => c.method === 'walkTo')).toHaveLength(0);
     });
 });
+
+describe('PlaybackBotUI — an unresolvable walkTo is a NAMED failure, not a stall', () => {
+    // The router routes over the AP region graph; the substrate walks tiles.
+    // Those two can disagree: the region-atlas maze projection deliberately
+    // WALLS some crossings the AP compiler still emits, so the router can pick
+    // an exit the maze world has no tile for. The controller answers `false`;
+    // before this the panel logged to the console and returned, and the bot
+    // sat waiting for a region transition that could never arrive — a silent
+    // stall that reads exactly like slow progress in a timed test.
+    function makeRefusingController() {
+        const calls = [];
+        const record = (method) => (...args) => { calls.push({ method, args }); };
+        return {
+            calls,
+            play: record('play'),
+            stop: record('stop'),
+            step: record('step'),
+            instant: record('instant'),
+            reset: record('reset'),
+            setRate: record('setRate'),
+            walkTo: (...args) => { calls.push({ method: 'walkTo', args }); return false; },
+        };
+    }
+
+    const sphereData = [{ sphereIndex: 0, fractionalIndex: 1, locations: ['Loc A'] }];
+    const staticData = {
+        regions: new Map([['region_a', { locations: [{ name: 'Loc A', id: 1 }] }]]),
+    };
+
+    it('reports an error status naming the target the substrate cannot reach', () => {
+        const controller = makeRefusingController();
+        const bot = new PlaybackBotUI({
+            getSphereData: () => sphereData,
+            getStaticData: () => staticData,
+            getActiveController: () => controller,
+        });
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.play();
+        expect(controller.calls.some((c) => c.method === 'walkTo')).toBe(true);
+        expect(bot.getStatus()).toContain('error:');
+        expect(bot.getStatus()).toContain('Loc A');
+        // And it did NOT go on to kick the clock as if the target had landed.
+        expect(controller.calls.filter((c) => c.method === 'play')).toHaveLength(0);
+    });
+
+    it('a controller that accepts the target is unaffected', () => {
+        const controller = makeFakeController();
+        const bot = new PlaybackBotUI({
+            getSphereData: () => sphereData,
+            getStaticData: () => staticData,
+            getActiveController: () => controller,
+        });
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.play();
+        expect(bot.getStatus()).not.toContain('error:');
+        expect(controller.calls.some((c) => c.method === 'play')).toBe(true);
+    });
+});
