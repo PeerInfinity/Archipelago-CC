@@ -117,9 +117,13 @@ try {
             `sorter: every region behind ${inj.item} sits at wave >= ${inj.sphere} `
             + `(the stratification invariant) — waves [${gatedWaves.join(', ')}]`);
     }
-    ok(sorted.declined.length > 0,
-        `sorter: declined ${sorted.declined.length} region(s) rather than encoding an `
-        + 'out-of-vocabulary frontier wrong');
+    ok(sorted.declined.length === 0,
+        `sorter: the whole starter atlas is in vocabulary — ${sorted.declined.length} declined `
+        + `(${sorted.declined.map((d) => d.entry_id).join(', ') || 'none'})`);
+    const orGated = sorted.assignments.filter((a) => a.gateRule?.rule === 'Or');
+    ok(orGated.length > 0,
+        `sorter: ${orGated.length} region(s) keep a DISJUNCTIVE gate — the map says either `
+        + 'weapon opens the crossing, and so does the world');
 
     const { grid, startCell, tree } = engine.growSpheres({
         regionSize: { width: 8, height: 6 },
@@ -148,6 +152,19 @@ try {
     }
     ok(sorted.declined.every((d) => !atlasRegionIds.includes(d.entry_id)),
         'Pass A: no declined region was placed anyway');
+    // Child hosting (Phase-6 fence 2, lifted): the tree hangs regions off the
+    // real map's own doors, never more of them than the pinned entry has.
+    const atlasIdx = new Set(atlasNodes.map((n) => n.index));
+    const hostedOnAtlas = tree.nodes.filter((n) => atlasIdx.has(n.parent));
+    ok(hostedOnAtlas.length > 0,
+        `Pass A: ${hostedOnAtlas.length} region(s) hang off an atlas region's own exits`);
+    for (const host of atlasNodes) {
+        const entry = pool.entries.find((e) => e.entry_id === host.region_id);
+        const kids = tree.nodes.filter((n) => n.parent === host.index);
+        ok(kids.length <= entry.exits.length,
+            `Pass A: ${host.region_id} hosts ${kids.length} child(ren) on its `
+            + `${entry.exits.length} door(s)`);
+    }
     ok(atlasRegionIds.every((id) => pool.entries.some((e) => e.entry_id === id)),
         'Pass A: every placed region is named after the map it came from');
     ok(new Set(atlasRegionIds).size === atlasRegionIds.length,
@@ -264,7 +281,7 @@ try {
         const regen = path.join(repoRoot, 'scripts/procgen/.atlas-sphere-regen.json');
         try {
             run('node', ['scripts/procgen/dump-sphere-growth.js', '--seed', '1',
-                '--region', '8x6', '--quota', 'maze=6', '--quota', 'atlas:seedling=8',
+                '--region', '8x6', '--quota', 'maze=6', '--quota', 'atlas:seedling=10',
                 '--start', 'maze', '--fillers', '3',
                 '--atlas', 'frontend/atlas-pools/seedling-atlas-pool.json',
                 '-o', path.join(repoRoot, 'scripts/procgen/.atlas-sphere-dump.json'),

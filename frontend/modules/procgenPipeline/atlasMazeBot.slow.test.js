@@ -519,10 +519,49 @@ describe('region atlas Phase 8 — a sphere-grown world with real Seedling regio
     it('really walked — bounded steps, and enough of them to be a walk', () => {
         // A lower bound as well as an upper one: every assertion above is
         // satisfiable by a bot that teleports, so pin that real tiles went by.
-        // Measured 2026-07-28: 245 steps, 25 crossings.
+        // Measured 2026-07-28 on the whole-atlas world: 573 steps, 33 crossings
+        // (245 / 25 before the vocabulary lift put all ten map regions in).
         expect(bot.steps, `steps=${bot.steps}`).toBeGreaterThan(100);
         expect(bot.steps, `steps=${bot.steps}`).toBeLessThan(20000);
         expect(bot.crossed.size, 'crossings').toBeGreaterThanOrEqual(bot.worlds.size - 1);
+    });
+
+    it('opens the map\'s sword-or-spear crossings with EITHER weapon', () => {
+        // The acceptance headline for the vocabulary lift. Four of the ten map
+        // regions sit behind `Progressive Sword OR Ghost Spear`; the sorter
+        // scheduled only ONE of those items, and a gate re-synthesised from the
+        // scheduled disjunct would have quietly killed the other branch. So walk
+        // it: hold only the Sword, then only the Spear, and each time the tiles
+        // in front of those crossings must actually be walkable.
+        const orGated = [];
+        for (const [regionName, world] of bot.worlds) {
+            for (const exit of world.exits.values()) {
+                const obstacleId = getObstacle(world, exit.x, exit.y);
+                const def = obstacleId ? world.obstacleLib?.[obstacleId] : null;
+                const text = JSON.stringify(def?.clear_set ?? def?.rule ?? def ?? null);
+                if (text.includes('Ghost Spear') && text.includes('Progressive Sword')) {
+                    orGated.push({ regionName, exit, obstacleId });
+                }
+            }
+        }
+        expect(orGated.length, 'this world really has sword-or-spear crossings')
+            .toBeGreaterThan(0);
+        for (const branch of ['Progressive Sword', 'Ghost Spear']) {
+            const only = new Map([[branch, 1]]);
+            for (const { regionName, exit, obstacleId } of orGated) {
+                const world = bot.worlds.get(regionName);
+                expect(isObstacleCleared(obstacleId, only, world.obstacleLib),
+                    `${regionName}|${exit.exit_id} with only ${branch}`).toBe(true);
+            }
+            // ...and neither branch is a free pass: with NEITHER weapon the same
+            // crossing stays shut, so the assertion above is about the OR and
+            // not about a gate that was never really there.
+            for (const { regionName, exit, obstacleId } of orGated) {
+                const world = bot.worlds.get(regionName);
+                expect(isObstacleCleared(obstacleId, new Map(), world.obstacleLib),
+                    `${regionName}|${exit.exit_id} with nothing`).toBe(false);
+            }
+        }
     });
 
     it('the preset\'s EMBEDDED sphere log is what the shared simulator regenerates', () => {
@@ -566,49 +605,58 @@ describe('region atlas Phase 8 — a sphere-grown world with real Seedling regio
     });
 
     it('routes AROUND a crossing that excludeOtherExits severs, via the region graph', () => {
-        // The positive control for invariant 2. region_3_3's back-exit sits on
-        // its own entrance tile (6,5), and its three other exits are mutually
-        // unreachable without stepping over it. Treating that cell as floor
-        // would publish a regionMove nobody asked for; walling it severs the
-        // region. The bot takes neither option — it crosses out and comes back,
-        // arriving ON (6,5), from which everything is reachable.
-        const world = bot.worlds.get('region_3_3');
-        const opts = (strict) => ({
-            inventory: bot.inventory, obstacleLib: world.obstacleLib, excludeOtherExits: strict,
-        });
-        const severed = [];
-        for (const from of world.exits.values()) {
-            for (const to of world.exits.values()) {
-                if (from.exit_id === to.exit_id) continue;
-                const goal = { kind: 'tile', x: to.x, y: to.y };
-                const start = { x: from.x, y: from.y };
-                if (findPath(world, start, goal, opts(false))
-                    && !findPath(world, start, goal, opts(true))) {
-                    severed.push(`${from.exit_id}->${to.exit_id}`);
+        // The positive control for invariant 2. A region whose exits are
+        // mutually unreachable without stepping OVER an intervening crossing
+        // (the common shape: a back-exit sitting on the region's own entrance
+        // tile) has no good in-region answer — treating that cell as floor
+        // publishes a regionMove nobody asked for; walling it severs the region.
+        // The bot takes neither option: it crosses out and comes back, arriving
+        // ON the tile that was in the way.
+        //
+        // The severed pair is DISCOVERED rather than named, so a regenerated
+        // world keeps testing the thing instead of testing a stale region id.
+        let found = null;
+        for (const [regionName, world] of bot.worlds) {
+            const opts = (strict) => ({
+                inventory: bot.inventory, obstacleLib: world.obstacleLib, excludeOtherExits: strict,
+            });
+            for (const from of world.exits.values()) {
+                for (const to of world.exits.values()) {
+                    if (from.exit_id === to.exit_id) continue;
+                    const goal = { kind: 'tile', x: to.x, y: to.y };
+                    const start = { x: from.x, y: from.y };
+                    if (findPath(world, start, goal, opts(false))
+                            && !findPath(world, start, goal, opts(true))) {
+                        found = found ?? { regionName, from: from.exit_id, to: to.exit_id };
+                    }
                 }
             }
         }
-        expect(severed, 'the severance this test is about still exists').toContain('exit_0->exit_1');
-        // ...and every one of those exits was crossed during the playthrough anyway.
-        for (const exit of world.exits.values()) {
-            expect(bot.crossed.has(`region_3_3|${exit.exit_id}`), exit.exit_id).toBe(true);
+        expect(found, 'some region in this world really is severed by excludeOtherExits')
+            .toBeTruthy();
+        const { regionName, from, to } = found;
+        // Every exit of that region was crossed during the playthrough anyway.
+        for (const exit of bot.worlds.get(regionName).exits.values()) {
+            expect(bot.crossed.has(`${regionName}|${exit.exit_id}`),
+                `${regionName}|${exit.exit_id}`).toBe(true);
         }
 
-        // And here is HOW: standing where an arrival from overworld_start__r8c0
-        // puts the player (exit_0's tile), the planner answers the severed
-        // request with a route that LEAVES region_3_3 and comes back — never
-        // with a straight walk over the intervening crossing.
+        // And here is HOW: standing where an arrival through `from` puts the
+        // player, the planner answers the severed request with a route that
+        // LEAVES the region and comes back — never with a straight walk over
+        // the intervening crossing.
         const probe = createBot(rulesDoc, {
             grantedItems: Object.fromEntries(bot.inventory),
-            startAt: { region: 'region_3_3', exitId: 'exit_0' },
+            startAt: { region: regionName, exitId: from },
         });
-        const route = probe.planRoute(exitGoal('region_3_3', 'exit_1'));
-        expect(route, 'the planner found a way').toBeTruthy();
+        const route = probe.planRoute(exitGoal(regionName, to));
+        expect(route, `the planner found a way from ${from} to ${to} in ${regionName}`)
+            .toBeTruthy();
         expect(route.legs.length, 'it is not a straight in-region walk').toBeGreaterThan(0);
-        expect(route.legs.some((leg) => leg.region !== 'region_3_3'),
+        expect(route.legs.some((leg) => leg.region !== regionName),
             `legs ${JSON.stringify(route.legs)}`).toBe(true);
         expect(probe.follow(route), 'and it is walkable').toBe(true);
-        expect(probe.crossed.has('region_3_3|exit_1')).toBe(true);
+        expect(probe.crossed.has(`${regionName}|${to}`)).toBe(true);
     });
 
     it('routes over the SIDECAR exit set, not the AP graph', () => {

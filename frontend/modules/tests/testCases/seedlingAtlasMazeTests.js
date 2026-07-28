@@ -388,7 +388,7 @@ async function generatedSphereWorld(testController) {
     await testController.stateManager.pingWorker('after-rules-load', 5000);
     testController.eventBus.publish('ui:activatePanel', { panelId: 'mazeRoomPanel' });
 
-    const panel = await testController.pollForValue(
+    let panel = await testController.pollForValue(
         () => {
             const p = getPanelInstance();
             return (p?.world && p.state && p.currentRegionId) ? p : null;
@@ -397,17 +397,56 @@ async function generatedSphereWorld(testController) {
     testController.assertEqual('the grown world loaded', true, !!panel);
     if (!panel) return testController.getOverallResult();
 
+    // Which GENERATED region hosts a GATED door into a placed atlas region. It is
+    // discovered from the committed preset rather than named, because the grown
+    // world is regenerated whenever the sorter changes and the leg should follow
+    // it — an atlas region is named after the map (`overworld_start__r1c6`),
+    // never after its grid cell, which is how the search can tell them apart.
+    const isGeneratedName = (n) => /^region_\d+_\d+$/.test(n);
+    const doc = await (await fetch(SPHERE_PRESET_PATH)).json();
+    const sidecars = doc.preset_sidecars?.['1'] ?? {};
+    let hostName = null;
+    for (const [name, sidecar] of Object.entries(sidecars)) {
+        if (!isGeneratedName(name)) continue;
+        const p = sidecar.playable_payload ?? {};
+        const gated = new Set((p.obstacles ?? [])
+            .filter((o) => p.obstacleLib?.[o.id]?.clear_set_type === 'rule')
+            .map((o) => `${o.x},${o.y}`));
+        const door = (p.exits ?? []).find((e) => e.targetRegion
+            && !isGeneratedName(e.targetRegion) && gated.has(`${e.x},${e.y}`));
+        if (door) { hostName = name; break; }
+    }
+    testController.assertEqual(
+        'some generated region gates a door into a placed atlas region', true, !!hostName);
+    if (!hostName) return testController.getOverallResult();
+
+    // Stand in it. The world's own start region need not be that host (growth
+    // hangs the map wherever the plan puts it), so the leg RELOCATES through the
+    // same seam a real crossing uses — procgenPlayer receives user:regionMove
+    // and publishes the panel's loadRegion — instead of assuming a layout.
+    if (panel.currentRegionId !== hostName) {
+        testController.log(`relocating from '${panel.currentRegionId}' to host '${hostName}'`);
+        window.eventDispatcher.publish('seedling-atlas-test', 'user:regionMove', {
+            sourceRegion: panel.currentRegionId, targetRegion: hostName, exitName: null,
+        }, { initialTarget: 'bottom' });
+        const moved = await testController.pollForCondition(
+            () => getPanelInstance()?.currentRegionId === hostName
+                && readCurrentRegion() === hostName,
+            `the panel and gameState both moved to '${hostName}'`, 15000, 200);
+        testController.assertEqual('relocated into the hosting region', true, !!moved);
+        if (!moved) return testController.getOverallResult();
+    }
+    panel = getPanelInstance();
+
     const startRegion = panel.currentRegionId;
     testController.assertEqual('gameState agrees which region we are in',
         startRegion, readCurrentRegion());
 
-    // An atlas region is named after the map (`overworld_start__r1c6`), never
-    // after its grid cell — which is how a leg can find one without being told.
     const world = panel.world;
     const toAtlas = [...world.exits.values()]
-        .find((e) => e.targetRegion && !/^region_\d+_\d+$/.test(e.targetRegion));
+        .find((e) => e.targetRegion && !isGeneratedName(e.targetRegion) && gateOn(world, e));
     testController.assertEqual(
-        'the start region has an exit into a placed atlas region', true, !!toAtlas);
+        'the hosting region has a gated exit into a placed atlas region', true, !!toAtlas);
     if (!toAtlas) return testController.getOverallResult();
     testController.log(`exit '${toAtlas.exit_id}' -> atlas region '${toAtlas.targetRegion}'`);
 
