@@ -1,6 +1,7 @@
 # Region Atlas: Real-Game Maps as Procgen Regions
 
-**Date:** 2026-07-26 (Phases 1–4 shipped 2026-07-27, Phases 5a–6 2026-07-28)
+**Date:** 2026-07-26 (Phases 1–4 shipped 2026-07-27, Phases 5a–6 and Phase 8
+slice 1 — the maze-surface bot — 2026-07-28)
 **Status:** Design ruled; Phase 1 (atlas format), Phase 2 (marking tool),
 Phase 3 (vanilla rules.json projection), Phase 4 (play-time transitions — the
 real game walks between atlas regions), Phase 5a (the reachability analyzer —
@@ -8,9 +9,11 @@ sub-region splits and their rules are computed from the tile map), Phase 5b
 (the maze projection — the same geometry and gating, playable with no engine
 artifact, so the in-app suite can test it) and Phase 6 (sphere growth — a grown
 world contains real map regions, gated on what the real game charges to enter
-them) complete — **Phase 7 (RWK) POSTPONED INDEFINITELY (user ruling
-2026-07-28); the arc continues Seedling-only, so Phase 8 (staged bots,
-Seedling legs) is next**
+them) complete, and **Phase 8 slice 1 (the MAZE-SURFACE playback bot: a
+headless tile-walking witness plus the shipped bot completing the grown world
+in-app) complete 2026-07-28** — **Phase 7 (RWK) POSTPONED INDEFINITELY (user
+ruling 2026-07-28); the arc continues Seedling-only. NEXT: Phase 8's
+real-game-surface slice, whose design space is recorded but UNEXPLORED**
 **Games:** Seedling only for now (redistributable, discrete sections, source
 available); Robot Wants Kitty postponed indefinitely (2026-07-28)
 
@@ -970,12 +973,192 @@ bullet inherits this postponement.
 - [ ] Same top-down milestone as Phase 3, for RWK
 
 ### Phase 8 — Playback bots (staged)
+
+**Ruling (user, 2026-07-28): the MAZE SURFACE comes first.** A bot that walks
+the projected map proves the generated worlds beatable without touching the
+original engine at all, and it is the surface every downstream consumer already
+runs on. The real-game bot (driving recompiled Seedling itself) is a LATER
+slice; its design space is recorded below, unexplored.
+
+#### Maze surface (slice 1) — **COMPLETE 2026-07-28**
+- [x] Headless witness: a world with real Seedling map regions in it is proven
+      beatable by walking it tile by tile through the real maze engine
+- [x] Traversal completeness on the maze fixture: every region entered, every
+      exit crossed, gated exits blocked-then-open
+- [x] In-app leg: the SHIPPED playback bot completes the sphere-grown world
+- [x] The walkTo evaluator divergence (found by this slice's recon) fixed
+
+**As built:**
+- **The headless witness** —
+  `frontend/modules/procgenPipeline/atlasMazeBot.slow.test.js` (20 cases), in the
+  `*.slow` tier beside `braidSphereBot`. Its whole input is the COMMITTED
+  presets: `rules.json` for the logic, `preset_sidecars` for the geometry. It
+  imports the sorter, the projection and the compiler NOT AT ALL, which is what
+  makes it the arc's independent stratum — the sphere oracle shares the
+  placement's assumptions, and this does not. Logic order comes from
+  `shared/procgen/forwardSimulator.js` (`buildAccessibilityModel` /
+  `pickNextTarget`), the drive from `deserializeMazeWorld` → `findPath` →
+  `stepsToInputs` → `step` / `detectStepEvents`. It is engine-stepped, not
+  wall-clock: ~400 steps across 24 maze worlds in about a tenth of a second.
+- **Two presets, two DIFFERENT claims.** `seedling_atlas_sphere` is
+  BEATABILITY (all 7 canonical locations checked in a logic-consistent order,
+  `victory` held, no stall). `seedling_atlas_maze` is TRAVERSAL COMPLETENESS —
+  it is a FIXTURE, not a beatable world (constant-true completion, gate items
+  absent from its pool), so the honest claim is that the projected map is
+  walkable: grant the gate items externally, enter all 10 regions, cross all 20
+  exits, check the one marked location. The suite asserts the fixture is still a
+  fixture, so a future regeneration that makes it beatable fails loudly rather
+  than silently changing what is being proven.
+- **The in-app leg** — `seedling-atlas-sphere-bot-completion` in
+  `tests/testCases/seedlingAtlasMazeTests.js`, enumerated in the substrates
+  config under the existing `Seedling atlas maze` category (no batch claims it,
+  so it rides `fast`). The queue is built from the preset's EMBEDDED
+  `sphere_log` — there is no `.jsonl` beside this preset, so a non-empty queue
+  IS the assertion that the embedded path works. Measured 28.3 s;
+  `--batch=fast` 60 → **61/61**.
+- **The sphere queue alone never enters a placed atlas region in this world,
+  and asserting that it did would have been an assertion about the FILL.** Every
+  advancement item sits in a generated region, and the one location the atlas
+  marks (`Starting House - Chest`) holds filler, so the sphere log does not name
+  it. The leg therefore has two halves: drain the queue (4 generated regions,
+  `victory` held), then `bot.walkToLocation('Starting House - Chest')` — which
+  routes across regions one exit at a time — and assert gameState's own path
+  reaches `starting_house`. That second half is the one where a walled AP-only
+  crossing would strand the router, so the silent-stall guard is re-checked
+  after it.
+- **The cross-region witness is gameState's PATH**, not the bot's log (plain
+  status strings) and not its own cursor — a bot agreeing with itself witnesses
+  nothing. The first cut read `bot.getLog()` expecting objects and silently
+  produced an empty set; it failed loudly only because the assertion was
+  `> 1`, which is the argument for asserting a lower bound rather than a
+  property of a set that might be empty.
+
+**Decisions and findings worth knowing:**
+- **An exit-tile step IS a crossing**, so the bot may never treat a crossing
+  cell as floor on the way somewhere else. Every in-region walk runs with
+  `excludeOtherExits`. That WALLS real corridors — `region_3_3`'s back-exit sits
+  on its own entrance tile and its three other exits are mutually unreachable
+  without stepping over it — and the answer is neither "walk through it" nor
+  "call it unreachable": the bot routes through the REGION GRAPH, crossing out
+  and coming back to arrive ON the tile that was in the way. The route search is
+  therefore over `(region, arrival-exit)` NODES, not regions; the position
+  inside a region is a function of which exit you came through, and that is
+  exactly what makes the detour expressible. Both halves are positively
+  controlled in the suite (the severance exists; the planner answers it with
+  legs that leave the region).
+- **Route over the SIDECAR exit set, never the AP graph.** AP lists exits the
+  projection deliberately walled (`overworld_start__r1c6 ↔ r8c0`, an unlabelled
+  crossing). A router trusting AP picks one, resolves no tile, and stalls in
+  silence.
+- **A silent stall is the vacuous-negative trap, and it is now impossible.**
+  `mazeRoomUI._handleWalkToCommand` used to `console.warn` and return when it
+  could not resolve a target; the visualizer got no target and the bot waited
+  forever for a transition that could never come — indistinguishable from slow
+  progress under a timed poll. It now returns `false`, `playbackBotUI._dispatch`
+  returns the controller's verdict, and `_publishWalkTo` turns it into a NAMED
+  error status. The in-app leg asserts completion AND that no error status ever
+  appeared.
+- **The entrance-==-exit-tile case is normal, not an edge case** (a retargeted
+  back-exit, and every point-gate crossing where both sides share one cell). A
+  zero-length walk fires no event, so the bot steps OFF and back ON — earning
+  the crossing rather than fabricating the event.
+- **Inventory is a `Map<name, count>` end to end.** `inventoryCount` reads a Map
+  directly, so Has/HasAll/HasAny/AtLeast and count gates all evaluate with zero
+  stubbing. This is the only reason `overworld_start__r8c0`'s
+  `Has(Progressive Swim, count: 2)` gate can be tested headlessly, and the suite
+  pins it opening at exactly 2 and not at 1.
+- **A real defect in the shared simulator, fixed here:**
+  `forwardSimulator.pickNextTarget` ran its inventory through
+  `new Set(value)` — which, handed the `Map` that `generateSphereLog` in the
+  same file builds, produced a set of `[name, count]` PAIRS. Every lookup then
+  missed and the caller saw "nothing is reachable" instead of an error. A Map
+  now passes through unchanged. (`frontend/modules/shared` is a submodule; this
+  landed there with its own regression case.)
+- **The witness verifies AP logic independently of its own router.** On every
+  pickup — including items walked over en route, which `pickNextTarget` never
+  chose — it checks the location really was AP-accessible with what was held a
+  moment earlier. A tile route that reaches a chest logic says is still locked
+  is an under-gated projection, and that is the bug class a tile-walking witness
+  exists to catch.
+- **Quantitative pins, not just green.** Every assertion above is satisfiable by
+  a bot that teleports, so the suite also pins step counts (245 sphere / 155
+  maze, measured 2026-07-28) and crossing counts (25 / 20). Two mutations were
+  run to confirm the suite bites: dropping `excludeOtherExits` and granting
+  nothing on pickup each turn it red.
+
+**The walkTo evaluator divergence (a pre-existing maze defect, found by this
+slice's recon and fixed here).** The panel had TWO ways to move the player that
+judged a gate differently:
+- the keyboard / queue path passed `_currentRuleEvaluator()` (the full Rule
+  Builder schema over stateManager's snapshot interface — CountItem, helpers,
+  `count_check`) to `step`;
+- the walkTo path planned AND stepped with a count-collapsed `Set`
+  (`inventoryFromSnapshot`) and NO clearance opts at all, so it fell back to the
+  procgen-local subset evaluator.
+
+A `Has(count: 2)` gate therefore behaved differently depending on which control
+the player used, and any rule the subset cannot express was judged by the wrong
+engine entirely. The fix is one shape and one evaluator on both paths:
+`inventoryFromSnapshot` returns a `Map<name, count>`; the visualizer's
+`_inventory` is a Map throughout; `MazeRoomVisualizer.setClearanceOpts()` installs
+the bag and both `_planTilePath` and `_tick`'s `step` use it;
+`mazeAutopather.findPath` gained `opts.clearanceOpts` and forwards it to
+`isObstacleCleared`. The panel's other planners (`_resolveExploreTarget`,
+`_pickBestExit`) go through the same `_planningClearanceOpts()`. Everything
+downstream only calls `.has` / `.size` / iterates `.keys()`, which a Map answers
+identically — the one spread over the raw collection (the inventory display) was
+changed to `.keys()`.
+
+*A planner and the engine that executes its plan must agree about every gate.
+When they do not, the walk is either routed through a door the engine then
+refuses (a stall) or around one that is really open (a detour) — and both look
+like content bugs, not harness bugs.*
+
+- **The stall guard folds the bot's LOG, it does not sample it.** `instant()`
+  drives the whole queue in a tight loop, so an error status can appear and be
+  overwritten between two poll ticks — and a transient is exactly the case worth
+  catching. `_setStatus` appends every distinct status to `_log`, so the log is
+  the mutation record. The empty-error assertion is bracketed by a positive
+  control: the log must contain real statuses (including a terminal `finished`)
+  before "no errors" means anything.
+
+**Test deltas and gates, all measured 2026-07-28:** vitest 3755 → **3768/3768**
+(1 shared-submodule regression case + 12 maze/bot cases: 6 visualizer, 4
+autopather, 2 bot); slow tier 339 → **359/359** (the new file; the tier takes
+~23 min, dominated by the runnerDemo battery, and CI runs it);
+`test-substrates --batch=fast` 60 → **61/61**. All five atlas verifiers green
+(`verify-seedling-atlas-maze`, `-preset`, `-play` — the wasm artifact was
+present, so it did not SKIP — `verify-atlas-sphere-roundtrip`,
+`verify-region-marking-tool`), both region-library round-trips green, and every
+`--check` gate byte-identical (map extract, starter atlas, analyze, pool,
+compile in both flavours).
+
+#### Real-game surface (later slice) — design space, UNEXPLORED
+Recorded 2026-07-28 so the next session starts from the question, not from
+scratch. Nothing here has been tried or verified.
+- **Two routes, both plausible.** (a) MORE INJECTED ACTIONSCRIPT: keep driving
+  the shipped game from outside, extending the Phase-4 `state_properties` /
+  teleport machinery with input synthesis. Note the Phase-4 fence —
+  `BridgeGeneric.doConfigure` refuses a second configure for the life of a game
+  instance, so widening the reported property set needs a page reload. (b) BUILD
+  THE BOT INTO THE SEEDLING SOURCE and recompile: the source checkout already
+  exists (the Phase-2 extractor reads it), and a bot compiled in gets the game's
+  own collision and physics for free instead of reimplementing them.
+- **⚠ UNVERIFIED caveat to check FIRST:** Phase 5a took `Mobile.solids`
+  (`Mobile.as:17`) as the game's own solidity oracle. It may be an INSTANCE
+  variable rather than a static — if so, per-entity overrides exist and the
+  transcription's single global solid set is an approximation. This does not
+  affect the maze surface (the projection is already fenced and reports its
+  approximations), but a real-game bot walking real collision would meet the
+  difference directly. Read the source before designing around either route.
+- The staged ladder below still stands for that surface.
+
 - [ ] Seedling v1: collision fully disabled, move to targets
 - [ ] v2: wall collision + pathing
 - [ ] v3: item-gated terrain awareness
 - [ ] v4: puzzle elements with hand-written solutions
 - [ ] v5 (ambitious): enemy collision + avoid/defeat
-- [ ] RWK bot (later): jump physics planning; start with enemy collision off
+- [ ] ~~RWK bot~~ — inherits Phase 7's indefinite postponement (2026-07-28)
 
 ### Deferred / adjacent (not this plan)
 - Tilemap Platformer substrate (JS clone of RWK reusing runner code; tile

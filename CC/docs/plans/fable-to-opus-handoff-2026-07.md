@@ -2630,9 +2630,63 @@ to get into them.
   library arc) IS already done — `sphereSteps` resolves atlas sources and
   threads `atlasAssignments` — so what remains is the UI: serve pools, tick one,
   and run the sorter in `_buildSphereConfig` before the plan reaches the driver.
-- NEXT: **Phase 7 (RWK) POSTPONED INDEFINITELY (user ruling 2026-07-28) —
-  the arc is Seedling-only for now.** Next is Phase 8 (staged playback
-  bots), Seedling legs only; the RWK bot bullet inherits the postponement.
+- **Phase 7 (RWK) POSTPONED INDEFINITELY (user ruling 2026-07-28) — the arc is
+  Seedling-only for now.**
+**Phase 8 slice 1 — the MAZE-SURFACE playback bot: SHIPPED 2026-07-28.** The
+generated worlds are now PROVEN BEATABLE by walking them, on two independent
+strata.
+- **Ruling (user, 2026-07-28): maze surface FIRST.** A bot on the projected map
+  proves beatability without touching the original engine, and it is the surface
+  every downstream consumer already runs on. The real-game bot is a later slice;
+  its design space is recorded in the plan doc's Phase 8 section, UNEXPLORED —
+  two routes (more injected ActionScript vs. building the bot into the Seedling
+  source and recompiling) plus an ⚠ **unverified** caveat to check first: Phase
+  5a took `Mobile.solids` as the solidity oracle, and it may be an INSTANCE var
+  rather than a static, in which case per-entity overrides exist.
+- **The headless witness is the INDEPENDENT STRATUM** —
+  `frontend/modules/procgenPipeline/atlasMazeBot.slow.test.js` (20 cases, `*.slow`
+  tier). rules.json + sidecars in, completion out; it imports the sorter, the
+  projection and the compiler NOT AT ALL. The sphere oracle shares the
+  placement's assumptions; this walks tiles instead.
+- Two presets, two DIFFERENT claims: `seedling_atlas_sphere` = BEATABILITY (all
+  7 locations, `victory`, no stall); `seedling_atlas_maze` = TRAVERSAL
+  COMPLETENESS, because it is a FIXTURE (constant-true completion, gate items
+  absent from its pool) and "beat it" was never a claim it could make. The suite
+  asserts the fixture is still a fixture.
+- ⚠ **An exit-tile step IS a crossing**, so `excludeOtherExits` on every
+  in-region walk — and that WALLS real corridors (`region_3_3`'s back-exit sits
+  on its own entrance tile). The answer is neither walking through nor giving
+  up: route over `(region, arrival-exit)` NODES and cross OUT and back to arrive
+  on the tile that was in the way.
+- ⚠ **Route over the SIDECAR exit set, never the AP graph** — AP lists crossings
+  the projection walled (`overworld_start__r1c6 ↔ r8c0`).
+- ⚠ **A silent stall was possible and is now impossible.** An unresolvable
+  walkTo target used to `console.warn` and return, leaving the bot waiting
+  forever — indistinguishable from slow progress under a timed poll. It is now a
+  NAMED bot error status, and the in-app leg asserts no error status ever
+  appeared as well as asserting completion.
+- **A real defect in the shared submodule, fixed:**
+  `forwardSimulator.pickNextTarget` ran its inventory through `new Set(value)`,
+  so the `Map<name,count>` that `generateSphereLog` builds in the same file
+  became a set of `[name, count]` PAIRS and every lookup missed. A Map now
+  passes through. ⚠ needs the outer gitlink bump.
+- **The walkTo evaluator divergence (pre-existing maze defect, found by this
+  slice's recon, fixed here):** the keyboard/queue path stepped through the full
+  Rule Builder evaluator while the walkTo path planned AND stepped with a
+  count-collapsed `Set` and no evaluator, so a `Has(count: 2)` gate opened at one
+  copy depending on which control you used. One shape and one evaluator on both
+  paths now: `inventoryFromSnapshot` → Map, `MazeRoomVisualizer.setClearanceOpts`,
+  and `mazeAutopather.findPath` gained `opts.clearanceOpts`.
+- Files: `atlasMazeBot.slow.test.js`, the in-app leg
+  `seedling-atlas-sphere-bot-completion`, `mazeRoomVisualizer.js`,
+  `mazeRoomUI.js`, `mazeAutopather.js`, `playbackBotUI.js`,
+  `shared/procgen/forwardSimulator.js`.
+- Gates (2026-07-28): vitest 3755 → **3768/3768**; slow tier 339 → **359/359**
+  (~23 min, dominated by the runnerDemo battery); `test-substrates
+  --batch=fast` 60 → **61/61**; all five atlas verifiers, both region-library
+  round-trips, and every atlas `--check` gate green.
+- NEXT: Phase 8's **real-game surface** slice (design space recorded, unexplored),
+  and the still-open Phase-6 thread — **no panel exposure for atlas pools**.
 
 ## 6. Everything else (unchanged queues)
 
