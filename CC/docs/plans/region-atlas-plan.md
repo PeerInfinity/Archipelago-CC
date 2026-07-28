@@ -847,7 +847,9 @@ evaluator, `exit_cross` → `user:regionMove`, item overlays → `user:locationC
    normally (`vanilla_item` is vanilla-preset-only).
 4. Scope fences: sphere growth only; maze flavour only; Seedling only. **v1
    entry-rule vocabulary: conjunctions of `Has(item)`** — a region whose entrance
-   rule contains OR or counts is declined with a report line.
+   rule contains OR or counts is declined with a report line. **(LIFTED
+   2026-07-28 — the vocabulary is now DNF over `Has`; see "fences 1 and 2
+   LIFTED" below.)**
 
 **This resolves open question 2 (the gate-rung ruling for decision 9):** a
 pre-built region MAY serve as a gate rung, and its gate is its own intrinsic
@@ -901,15 +903,13 @@ survives as the fallback route, not as the default.
   for an atlas region it is not a nicety: without it the arrival lands in solid
   rock while every compile and every oracle stays green. Gated on the atlas
   source id, so it is byte-inert everywhere else.
-- **v1 fence: an atlas region hosts NO children** (`canHost`). Its exits are the
-  real map's and most are gated by the map's own rules; a child hung behind one
-  would need those items scheduled before its own wave — exactly the invariant
-  the oracle checks — and the planner cannot know which exit the fit-selector
-  will pick (the F6b tree-build-vs-realise split). Widening it means advertising
-  a conservative per-pool ungated-exit envelope, F6b ruling (a). The
-  AND-composition path is therefore not reachable through growth today and is
-  tested by driving the source directly; it must already be right on the day the
-  fence lifts.
+- **v1 fence: an atlas region hosts NO children** (`canHost`) — **LIFTED
+  2026-07-28, see below.** Its exits are the real map's and most are gated by the
+  map's own rules; a child hung behind one would need those items scheduled
+  before its own wave — exactly the invariant the oracle checks — and the planner
+  could not know which exit the fit-selector would pick (the F6b
+  tree-build-vs-realise split). A SORTED node closes that gap by pinning the
+  entry, which is what the exit envelope is built on.
 - **A sorted atlas node carries no items.** A real map offers exactly the
   locations it was marked with (the starter atlas has ONE), and the grower's item
   round-robin knows nothing about that capacity. The quota route does assign
@@ -925,15 +925,15 @@ survives as the fallback route, not as the default.
   with `dump-sphere-byteidentity` and `dump-topdown-byteidentity`, plus
   `sphere-step.js` ≡ `dump-sphere-growth.js` for seed 1.
 
-**Acceptance on real data.** The committed pool's requirement census reads the
-map exactly: four sub-regions are free to enter, three sit behind a plain
-`Progressive Swim`, and three are DECLINED because their only way in is
-`(Progressive Sword OR Ghost Spear)` — a disjunction the gate representation
-cannot carry. Sorted into a three-sphere plan, `Progressive Swim` is scheduled
-into sphere 1 and the three water-locked sub-regions become wave-1 nodes gated on
-it; the sphere oracle is exact, `Generate.py` finds a winnable fill, and
-`Starting House - Chest` appears in the spoiler under the name the map gave it,
-holding a real item.
+**Acceptance on real data (as of the v1 fences; superseded by the lift below).**
+The committed pool's requirement census read the map exactly: four sub-regions
+free to enter, three behind a plain `Progressive Swim`, and three DECLINED
+because their only way in is `(Progressive Sword OR Ghost Spear)` — a
+disjunction the v1 gate representation could not carry. Sorted into a
+three-sphere plan, `Progressive Swim` was scheduled into sphere 1 and the three
+water-locked sub-regions became wave-1 nodes gated on it; the sphere oracle was
+exact, `Generate.py` found a winnable fill, and `Starting House - Chest`
+appeared in the spoiler under the name the map gave it, holding a real item.
 
 **Gates:** `scripts/procgen/verify-atlas-sphere-roundtrip.mjs` (43 assertions,
 world_generator + Generate.py, the independent stratum); the in-app leg
@@ -943,10 +943,123 @@ arrival lands on FLOOR); vitest 3690 → **3753** (33 pool, 16 maze hook, 14
 sorter) plus **25** `*.slow` cases for sphere placement + the sorter route;
 `test-substrates --batch=fast` 59 → **60**.
 
-**Known incompleteness (recorded, not defects):** the atlas hosts no children;
-sorted atlas nodes hold no items; the entry-rule vocabulary is conjunctive; the
-Seedling starter atlas has one marked location, so an atlas region is currently
-geography and gating rather than loot. Each is a fence with a named next step.
+**Known incompleteness (recorded, not defects):** ~~the atlas hosts no
+children~~ (LIFTED, below); sorted atlas nodes hold no items; ~~the entry-rule
+vocabulary is conjunctive~~ (LIFTED, below); the Seedling starter atlas has one
+marked location, so an atlas region is currently geography and gating rather
+than loot. Each is a fence with a named next step.
+
+---
+
+### Phase 6, fences 1 and 2 LIFTED — **COMPLETE 2026-07-28**
+
+**Rulings (user, 2026-07-28):**
+1. **The lift is default sorter behaviour**, no opt-in flag. The shipped
+   `seedling_atlas_sphere` preset is REGENERATED with the quota raised to admit
+   every accepted entry (a quota that truncates in declaration order serves
+   nothing), and every downstream witness re-pins against the richer world.
+2. **Child-hosting: gated exits are the primary design** — an atlas exit's
+   authored rule determines what must be scheduled before a child may connect
+   behind it. Fallback if it fought the tree/oracle invariants:
+   ungated-exits-only. **The primary design SUCCEEDED**; no fallback was taken.
+3. Count support lands with OR.
+
+#### Fence 1 — the entry-rule vocabulary (OR + counts)
+
+A requirement is normalized to **DNF over `Has` terms**
+(`regionAtlasPool.requirementDnf`): `Or`/`HasAny`/`HasAll`/`And` compositions and
+`Has(x, n)`. Redundant disjuncts are dropped (a conjunct another one implies),
+the result is ordered (fewest terms, then canonical key), and a blow-up past
+`DNF_DISJUNCT_LIMIT` declines rather than enumerating. `Compare`, `Count*`,
+helpers and `False_` still decline with a reason.
+
+- **The honest wave is `min over disjuncts of (max over that disjunct's items'
+  spheres)`** — the first sphere in which SOME way through the rule opens. It is
+  computed in a SECOND PASS against the finished plan, so a frontier another
+  group happened to complete is not missed.
+- **Scheduling picks ONE disjunct** (cheapest, then lexical — rng-free) and
+  pushes its items. A count pushes N instances and tops up a partially-planned
+  item. A disjunct the plan already satisfies is reused and nothing is scheduled.
+- ⚠ **The gate the world sees is the AUTHORED rule, verbatim.** This is the
+  whole point. `sphereGateRule` re-synthesises a gate from item names, and doing
+  that for a disjunctive requirement would AND one branch onto the map's own row
+  and kill the other — the exact over-gating the v1 decline existed to prevent.
+  So `gateRule` rides the tree node, `buildNodeRealiserSpecs` prefers it, and
+  `andComposeRules` became identity-aware.
+- ⚠ **A ZONE host cannot derive an OR back out of its geometry.** It is handed
+  BOTH the necessary subset (`extractItemRequirementFromRule` — open-enough
+  geometry) AND the `access_rule` (the true gate, which the zone assembler
+  already stamps). Building the geometry on the scheduled disjunct would
+  physically wall off the branch the logic still promised. Maze hosts need
+  nothing: `placeFromRules` realises arbitrary rule trees.
+- ⚠ **`rebuildSphereTopology`'s stratification advisory is per disjunct.** One
+  way through holding a sphere-k item is enough; flagging each item separately
+  would report every atlas world as broken.
+
+**On real data:** the three sword-or-spear sub-regions v1 declined are now
+placed, and `overworld_start__r2c13` moves with them — its sword crossing costs
+the same as its water one and sorts first, so the map's earliest way in is the
+sword. Census: four free, four behind `Progressive Sword OR Ghost Spear` (Ghost
+Spear scheduled into sphere 1), two behind `Progressive Swim` (sphere 2). **Zero
+declines — the whole starter atlas places.**
+
+#### Fence 2 — child hosting
+
+Each sorted assignment carries an **exit envelope**: the pinned entry's exits in
+payload order — which is the order `mazeLibraryEntry` assigns them to child
+sides — each priced with the sphere it opens in. `canHost` and the gate choice
+read it, so the planner knows exactly which of the real map's doors a child gets.
+
+**The rule, in one sentence:** the realised exit rule is the door's rule AND the
+child's gate, and that composition must become satisfiable in **exactly** the
+child's own gate sphere.
+
+- a door that opens LATER → refused (composing would drag the child past its wave)
+- a door whose rule is out of vocabulary → refused (its sphere is unknowable)
+- a door that opens EXACTLY at that sphere, for a child with no gate of its own →
+  **the map's own charge for the crossing IS the child's gate**; nothing
+  synthetic is added to a real door
+- a FREE or earlier door → the drawn gate (or an atlas child's own entry
+  requirement) ANDed onto whatever the door charges. This is the AND-composition
+  path Phase 6 could only drive directly; growth reaches it now.
+
+- ⚠ **The envelope bound is HARD, not advisory** — `reserve()` THROWS past
+  `entry.exits.length`.
+- ⚠ **A door standing on the region's ENTRANCE TILE cannot host.** The driver's
+  back-exit is retargeted onto that tile, so a door there shares a cell with it,
+  and one cell leading two places is one dead connection. Slots also refuse a
+  cell an EARLIER door claimed. Doors go to children in order and cannot be
+  skipped, so an unhostable slot ENDS the envelope.
+- ⚠ **A pre-existing `stitchGrid` defect this exposed.** It identified an exit
+  by its TILE. An atlas back-exit sharing a cell with a door matched that door's
+  row, lost its driver-managed exemption, and was re-stitched to the door's
+  geographic neighbour: the region ended up with two exits into its CHILD and
+  none back to its parent — a shortcut the plan never made, which compiled clean
+  and turned the sphere oracle red. Keyed by exit id now. Three engine fixtures
+  had been omitting `exit_id` from `exits_placed`; every real producer stamps it.
+- The QUOTA route pins no entry, so it keeps the v1 leaf behaviour.
+- `buildSphereAtlasRegion` asserts the realised child→exit mapping IS the one
+  the tree priced, and that no two exits share a cell. Both failures are
+  otherwise invisible.
+
+#### As shipped
+
+`seedling_atlas_sphere` carries all ten sub-regions in eighteen regions; seven
+hang off an atlas region's own doors, including a GENERATED region behind the
+map's sword-or-spear crossing.
+
+**Gates (2026-07-28):** vitest 3768 → **3792**; procgenPipeline slow tier
+117 → **121** (whole slow tier **363**); `test-substrates --batch=fast`
+**61/61**; `verify-atlas-sphere-roundtrip` fully green including its
+byte-equality regen pin and AP's own fill on the richer world; byte-inert
+against the parent commit on `dump-sphere-byteidentity`,
+`dump-topdown-byteidentity` and `dump-spiral-byteidentity`.
+
+**The acceptance headline:** the headless bot (573 steps, 33 crossings) beats
+the richer world, and every sword-or-spear crossing in it clears with ONLY the
+Progressive Sword and with ONLY the Ghost Spear — bracketed by holding neither
+and finding them shut. A gate re-synthesised from the one disjunct the sorter
+scheduled fails that test, which is what makes it the witness for fence 1.
 
 **No panel exposure yet** — an atlas pool reaches sphere growth through the
 headless CLI only. The region-library arc needed a whole phase for this (F6d),

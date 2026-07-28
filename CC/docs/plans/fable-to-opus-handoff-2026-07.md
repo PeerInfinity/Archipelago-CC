@@ -2615,16 +2615,11 @@ to get into them.
   for an atlas region it is not a nicety).
 - ⚠ **The driver's gate AND-composes onto the authored rule**, never replaces it
   — the library path's overlay-WRITE assumption does not carry over.
-- **v1 fences, each with a named next step:** an atlas region hosts NO children
-  (`canHost` — the F6b tree-build-vs-realise split; widening needs a
-  conservative per-pool ungated-exit envelope, F6b ruling (a)); a sorted atlas
-  node carries no items (capacity-aware assignment is the next step); the entry
-  vocabulary is conjunctive; the starter atlas has ONE marked location, so an
+- **v1 fences:** ~~an atlas region hosts NO children~~ and ~~the entry
+  vocabulary is conjunctive~~ — **BOTH LIFTED 2026-07-28, see the block below**.
+  Still standing: a sorted atlas node carries no items (capacity-aware
+  assignment is the next step); the starter atlas has ONE marked location, so an
   atlas region is currently geography and gating rather than loot.
-- Real-data acceptance: four Seedling sub-regions are free to enter, three sit
-  behind a plain `Progressive Swim` (scheduled into sphere 1, so they become
-  wave-1 nodes), and three are DECLINED because their only way in is
-  `(Progressive Sword OR Ghost Spear)`.
 - **No panel exposure yet** — the atlas reaches sphere growth through the
   headless CLI only. The stepped-runner half (the wire F6d found missing in the
   library arc) IS already done — `sphereSteps` resolves atlas sources and
@@ -2685,8 +2680,45 @@ strata.
   (~23 min, dominated by the runnerDemo battery); `test-substrates
   --batch=fast` 60 → **61/61**; all five atlas verifiers, both region-library
   round-trips, and every atlas `--check` gate green.
-- NEXT: Phase 8's **real-game surface** slice (design space recorded, unexplored),
-  and the still-open Phase-6 thread — **no panel exposure for atlas pools**.
+**Phase 6 fences 1 + 2 LIFTED — SHIPPED 2026-07-28.** The sorter speaks OR and
+counts, and an atlas region hosts children on the real map's own doors. Full
+as-built in `region-atlas-plan.md`; the load-bearing parts:
+- **Vocabulary:** requirements normalize to DNF over `Has`
+  (`regionAtlasPool.requirementDnf`). Honest wave = **min over disjuncts of (max
+  over that disjunct's items' spheres)**, computed in a SECOND pass against the
+  finished plan. Scheduling picks ONE disjunct (cheapest, then lexical); counts
+  push N instances.
+- ⚠ **The gate the world sees is the AUTHORED rule, verbatim** — `gateRule` on
+  the tree node, preferred over `sphereGateRule`. Re-synthesising it from the
+  scheduled disjunct would AND one branch of an OR onto the map's own row and
+  kill the other, which is the over-gating the v1 decline existed to prevent.
+  `andComposeRules` is identity-aware for the same reason.
+- ⚠ **A ZONE host gets BOTH the necessary subset and the access_rule** — it
+  cannot derive an OR back out of its geometry, and building on the scheduled
+  disjunct would physically wall off a branch the logic still promised.
+- **Hosting rule, one sentence:** the realised exit rule is the door's rule AND
+  the child's gate, and that composition must open in EXACTLY the child's gate
+  sphere. A door that opens exactly there and a child with no gate of its own →
+  the map's charge IS the gate, nothing synthetic added.
+- ⚠ **A door on the region's ENTRANCE TILE cannot host** (the driver's
+  back-exit lives there); an unhostable slot ENDS the envelope, because doors go
+  to children in payload order and cannot be skipped. The envelope bound is HARD
+  — `reserve()` throws past it.
+- ⚠ **A pre-existing `stitchGrid` defect this exposed:** it identified an exit
+  by TILE, so a back-exit sharing a cell with a door was re-stitched to that
+  door's neighbour — two exits into the CHILD, none back to the parent, compiling
+  clean and turning the oracle red. Keyed by exit id now.
+- **The whole starter atlas now places** (zero declines): eighteen regions, ten
+  of them map pieces, seven hanging off atlas doors.
+- Gates: vitest 3768 → **3792**, slow tier 359 → **363**, `--batch=fast`
+  **61/61**, all three byte-identity dumps inert, round-trip verifier green
+  including its byte-equality regen pin. **Acceptance headline:** the headless
+  bot beats the richer world (573 steps / 33 crossings) and every
+  sword-or-spear crossing clears with ONLY the Sword and with ONLY the Spear,
+  bracketed by holding neither and finding them shut.
+- NEXT: Phase 8's **real-game surface** slice (design space recorded, unexplored);
+  **no panel exposure for atlas pools**; capacity-aware item assignment for
+  sorted atlas nodes.
 
 ## 6. Everything else (unchanged queues)
 
