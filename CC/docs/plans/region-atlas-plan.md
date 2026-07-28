@@ -1246,6 +1246,59 @@ present, so it did not SKIP — `verify-atlas-sphere-roundtrip`,
 `--check` gate byte-identical (map extract, starter atlas, analyze, pool,
 compile in both flavours).
 
+#### In-app witness hardening — **COMPLETE 2026-07-28**
+The fence-lift arc left an apparent flake in
+`seedling-atlas-sphere-placed-region`. The on-disk run records
+(`test-results/in-app-tests/`, 30-run retention) split it into three distinct
+signatures, and the first job was dating them: **the run files are stamped UTC
+while git dates are local (PDT, −7)**, which is what made these look like reds
+against shipped code. Re-dated, *every one of them ran on code that predates the
+commit which introduced or rewrote that leg* — the leg did not exist at all in
+the tree two commits back (the file was 340 lines).
+
+- **The gate that did not block** (22:17Z = 15:17 local; leg committed 15:39 in
+  `363f72e60`). Reproduced ON DEMAND at HEAD by mutation — grant the gate item,
+  skip the clear — and the failure is identical to the record: the negative and
+  its region check fail while every positive after them passes, which is exactly
+  what a still-held key looks like. **A real residual defect was found here and
+  fixed.** The leg emptied the gate items rather than assuming an empty
+  inventory, but decided *whether* to empty them by reading `getSnapshot()` —
+  the proxy's `uiCache`, refreshed asynchronously — with no flush first. A
+  pickup the walk had just made could still be in flight, so the read returned a
+  stale zero, the removal was skipped, and the player walked through a gate that
+  was working correctly. It now flushes with `pingWorker` before the read and
+  asserts the items really are gone; without that positive check a removal that
+  silently did nothing is indistinguishable from a gate that failed to block.
+  The `gated-crossing` sibling had the older form of the same gap — it assumed
+  an empty inventory outright — and both now share `clearGateItems`.
+- **The walkTo stall** (22:33Z = 15:33 local; fix committed 15:39, six minutes
+  later). Not load: the poll self-classified **STUCK** — "101/100 polls in 20.2s
+  (max gap 218ms vs 200ms interval)" — so the tile really was never reached.
+  `(0,0)` was an unreachable staging tile, and `walkableFrom` (the flood that
+  makes `stagingTileBeside` prefer a tile the player can actually get to) is
+  that fix, already in the leg's first committed version.
+- **`.dispatch` of undefined** (02:2x Z = 19:2x local; `ddfe003b2` landed
+  19:35). Mid-rewrite, uncommitted: those runs' condition lists differ from each
+  other AND from HEAD, and no `.dispatch` call survives anywhere in the path —
+  the relocation publishes through `window.eventDispatcher.publish` with
+  `initialTarget: 'bottom'`.
+- **The bot-completion red** (00:23Z) is confirmed stale, with a mechanism: the
+  bot *won* — victory item held, "BEAT" passed — while the sampler watching it
+  recorded `0 leg(s)` and `0 region(s)`. A blind witness, replaced 39 minutes
+  later by `99c90784d`, which reads the bot's own log instead.
+
+**Counted on HEAD after the fix:** the leg 8× solo green (2.3–4.0s, no stalls)
+and 3 consecutive `test-substrates --batch=fast` runs green at 61/61. No
+assertion was loosened; the leg gained one.
+
+⚠ The "run it alone 8× and count" discipline had no way to express itself —
+batches select whole categories by design, so triaging one test meant running
+sixty neighbours. `npm test -- --test=<id>[,<id>]` now narrows an already-enabled
+roster (it never enables what a mode disabled, and throws rather than run
+nothing green). The id list is stamped into results and taken into
+`compare-runs.js`'s baseline identity: an unstamped one-test run would become
+the baseline for the next full run and report sixty tests as ADDED.
+
 #### Real-game surface (later slice) — design space, UNEXPLORED
 Recorded 2026-07-28 so the next session starts from the question, not from
 scratch. Nothing here has been tried or verified.

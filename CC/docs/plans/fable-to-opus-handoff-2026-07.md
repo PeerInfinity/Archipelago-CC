@@ -2716,6 +2716,30 @@ as-built in `region-atlas-plan.md`; the load-bearing parts:
   bot beats the richer world (573 steps / 33 crossings) and every
   sword-or-spear crossing clears with ONLY the Sword and with ONLY the Spear,
   bracketed by holding neither and finding them shut.
+**In-app witness hardening — DONE 2026-07-28.** The apparent flake in
+`seedling-atlas-sphere-placed-region` is dispositioned; detail in the plan
+doc's Phase 8 section.
+- ⚠ **The run records are stamped UTC; git dates are local.** That −7 offset is
+  what made these look like reds against shipped code. Re-dated, every red ran
+  on code that predates the commit which introduced or rewrote the leg — two
+  commits back the leg did not exist (the file was 340 lines). Convert before
+  concluding anything from a run record's filename.
+- One REAL residual defect found and fixed: the leg emptied the gate items
+  before its negative, but decided *whether* to, by reading `getSnapshot()` —
+  the proxy's async `uiCache` — with no `pingWorker` flush first. A stale zero
+  skipped the removal and the player walked through a working gate. Reproduced
+  on demand at HEAD by mutation, identical to the recorded failure. Both gate
+  legs now share `clearGateItems`, which flushes, then asserts the items are
+  really gone.
+- The other signatures: an unreachable staging tile (poll self-classified
+  **STUCK**, not load — `walkableFrom` already fixes it), a mid-rewrite
+  `.dispatch` crash (no such call survives), and a bot red where the bot WON
+  and the sampler watching it was blind (replaced by `99c90784d`).
+- Counted on HEAD: 8× solo green, 3 consecutive `--batch=fast` green at 61/61.
+- New: `npm test -- --test=<id>` runs one in-app test alone, so "run it alone
+  8× and count" is finally expressible — batches are category-only by design.
+  The id list is stamped into results and into `compare-runs.js`'s baseline
+  identity, or a one-test run would poison the next full run's diff.
 - NEXT: Phase 8's **real-game surface** slice (design space recorded, unexplored);
   **no panel exposure for atlas pools**; capacity-aware item assignment for
   sorted atlas nodes.
