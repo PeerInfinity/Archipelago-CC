@@ -186,6 +186,22 @@ reconfigure after every region move, through Victory.
 node scripts/procgen/verify-bounce-embed.mjs
 ```
 
+## verify-preset-panel-click.mjs
+
+The Presets-panel CLICK gate. Every suite loads presets via URL params or
+`files:jsonLoaded`, so the panel's own click path had no witness — a
+ReferenceError (`folderId is not defined`, introduced `0033a0dab`, fixed
+`d52cac101`) broke every panel click for two days while all gates stayed
+green. Needs the dev server on :8000. Activates the Presets tab, clicks
+through to a standard procgen preset plus the three atlas presets (three
+different rules.json shapes through one path), and asserts the EFFECT:
+detail view rendered, no "Error Loading Preset", auto-load status reports
+the rules loaded, no ReferenceError-shaped page errors.
+
+```
+node scripts/procgen/verify-preset-panel-click.mjs
+```
+
 ## region-atlas-pool.mjs
 
 Builds a game's **region-atlas sphere pool** — the document sphere growth reads
