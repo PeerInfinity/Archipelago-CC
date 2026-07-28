@@ -55,7 +55,7 @@
 // Headless-safe: no top-level await, no literal node: imports.
 
 import {
-    entryRequirement, atlasSourceId, requirementKey, conjunctKey,
+    entryRequirement, atlasSourceId, requirementDnf, requirementKey, conjunctKey,
     conjunctCost, schedulingDisjunct,
 } from './regionAtlasPool.js';
 
@@ -240,7 +240,34 @@ export function sortAtlasRegionsIntoSpheres(plan, pool, opts = {}) {
         placeable.push(group);
     }
 
+    /**
+     * The EXIT ENVELOPE of one entry: its outbound exits in payload order —
+     * which is exactly the order the maze hook assigns them to child sides
+     * (mazeLibraryEntry.js), so the k-th child of this region lands behind
+     * envelope[k] and the planner knows which rule that is before it commits.
+     *
+     * Each slot carries the wave a child hung there would OPEN in: `access_rule`
+     * null is a free exit (the engine draws the child's gate and ANDs it on),
+     * otherwise the map's own rule IS the child's gate and `wave` is the sphere
+     * it becomes satisfiable in. `wave: null` = out of vocabulary; nothing may
+     * hang there, because its reachability cannot be reasoned about at all.
+     */
+    const envelopeFor = (entry) => (entry.exits ?? []).map((ex) => {
+        const dnf = ex.access_rule == null ? [[]] : requirementDnf(ex.access_rule);
+        const chosen = dnf ? schedulingDisjunct(dnf) : [];
+        return {
+            exit_id: ex.exit_id,
+            access_rule: ex.access_rule ?? null,
+            wave: dnf ? honestWave(dnf) : null,
+            gate: chosen.map((t) => t.item),
+            gateCounts: Object.fromEntries(chosen.filter((t) => t.count > 1)
+                .map((t) => [t.item, t.count])),
+        };
+    });
+
     // --- pass B: the honest wave, read off the FINISHED plan ------------------
+    // The exit envelope is read here too: an exit's rule can name an item THIS
+    // sort scheduled, so its wave is only knowable once every injection is in.
     for (const group of placeable) {
         const wave = honestWave(group.dnf) ?? 0;
         for (const m of group.members) {
@@ -253,6 +280,7 @@ export function sortAtlasRegionsIntoSpheres(plan, pool, opts = {}) {
                 gate: [...m.req.gate],
                 gateCounts: { ...m.req.counts },
                 gateRule: m.req.rule ?? null,
+                exitEnvelope: envelopeFor(m.entry),
                 sourceId,
             });
         }

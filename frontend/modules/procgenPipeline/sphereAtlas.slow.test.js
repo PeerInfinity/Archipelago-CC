@@ -26,6 +26,7 @@ import {
 } from './procgenPipelineEngine.js';
 import { planSpheres, computeItemSpheres, compareSpheresToPlan } from './spherePlanner.js';
 import { sortAtlasRegionsIntoSpheres } from './sphereAtlasSorter.js';
+import { requirementDnf } from './regionAtlasPool.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(here, '../../..');
@@ -95,7 +96,11 @@ describe('sphere growth places real map regions', () => {
         }
     });
 
-    it('an atlas region hosts NO children (the v1 leaf fence)', () => {
+    it('a QUOTA-route atlas region still hosts NO children', () => {
+        // Child hosting reads the pinned entry's exit envelope. The quota route
+        // pins no entry (the fit-selector picks one at realisation time), so it
+        // keeps the v1 leaf behaviour — the tree-build-vs-realise gap the fence
+        // existed for is still open on this route, and only on this route.
         const atlasIdx = new Set(grown.tree.nodes
             .filter((n) => n.substrate === 'atlas:seedling').map((n) => n.index));
         expect(atlasIdx.size).toBeGreaterThan(0);
@@ -198,10 +203,10 @@ describe('loud declines', () => {
         })).toThrow(/no unplaced atlas region fits this slot/);
     });
 
-    it('an atlas-only world has nothing to hang the tree on, and says so', () => {
+    it('an atlas-only QUOTA world has nothing to hang the tree on, and says so', () => {
         expect(() => grow({
             quotas: { 'atlas:seedling': 9 }, config: ATLAS_CONFIG,
-        })).toThrow(/hosts no children/);
+        })).toThrow(/hosts children only on the real map's own exits/);
     });
 });
 
@@ -321,6 +326,97 @@ describe('the SORTER route (slice 2): the map\'s own requirement IS the gate', (
         expect(sorted.assignments).toHaveLength(POOL.entries.length);
         const placed = tree.nodes.map((n) => n.region_id);
         for (const e of POOL.entries) expect(placed).toContain(e.entry_id);
+    });
+
+    // --- child hosting, through GROWTH (Phase-6 fence 2, lifted) -------------
+
+    it('hangs children off the real map\'s own doors', () => {
+        const atlasIdx = new Set(atlasNodes().map((n) => n.index));
+        const hosted = tree.nodes.filter((n) => n.parent != null && atlasIdx.has(n.parent));
+        expect(hosted.length).toBeGreaterThan(0);
+        // Never more children than the pinned entry has doors — `reserve()`
+        // THROWS past that, so the tree-time envelope has to be a hard bound.
+        for (const host of atlasNodes()) {
+            const entry = POOL.entries.find((e) => e.entry_id === host.region_id);
+            const kids = tree.nodes.filter((n) => n.parent === host.index);
+            expect(kids.length).toBeLessThanOrEqual(entry.exits.length);
+        }
+    });
+
+    it('keeps the real map\'s charge for a door, and opens it in the RIGHT sphere', () => {
+        // The claim that makes hosting safe: whatever the door already charged
+        // survives into the compiled world, and the COMPOSITION of door rule and
+        // child gate becomes satisfiable in exactly the child's own gate sphere.
+        // Earlier and the child's contents move a sphere forward; later and they
+        // move back — both are oracle breaks, and this is the local reason the
+        // oracle above stays exact.
+        const rules = buildRulesJson(grid, {
+            startCell, seed: 1, completionConditionItem: 'victory',
+        });
+        const byName = Object.fromEntries(Object.values(rules.regions)
+            .flatMap((m) => Object.entries(m)));
+        // The sphere in which a rule first becomes satisfiable, read off the
+        // plan the growth used — min over disjuncts of max over items.
+        const opensIn = (rule) => {
+            const dnf = requirementDnf(rule);
+            expect(dnf).not.toBeNull();
+            return Math.min(...dnf.map((conj) => Math.max(0, ...conj.map((t) => {
+                let seen = 0;
+                for (let i = 0; i < sortedPlan.spheres.length; i += 1) {
+                    seen += sortedPlan.spheres[i].items.filter((x) => x === t.item).length;
+                    if (seen >= t.count) return i + 1;
+                }
+                return Infinity;
+            }))));
+        };
+        let gatedDoors = 0;
+        let freeDoors = 0;
+        for (const host of atlasNodes()) {
+            const entry = POOL.entries.find((e) => e.entry_id === host.region_id);
+            const kids = tree.nodes.filter((n) => n.parent === host.index);
+            kids.forEach((kid, i) => {
+                const door = entry.exits[i];           // payload order == child order
+                const exit = (byName[host.region_id].exits ?? [])
+                    .find((e) => e.connected_region === kid.region_id);
+                if (door.access_rule) {
+                    gatedDoors += 1;
+                    // The map's charge is still in there — never overwritten.
+                    const compiled = JSON.stringify(exit.access_rule);
+                    expect(compiled).toContain(JSON.stringify(door.access_rule).slice(1, -1));
+                } else {
+                    freeDoors += 1;
+                }
+                // Which sphere supplies this child's gate. An ordinary wave-0
+                // FILLER gates on sphere 1 (it carries no items, so that costs
+                // the plan nothing); an atlas node is flagged a filler too but
+                // gates on its own wave, because its gate is the map's.
+                const gateWave = kid.wave > 0 ? kid.wave
+                    : ((kid.isFiller && !kid.atlasEntry) ? 1 : 0);
+                expect(opensIn(exit.access_rule)).toBe(gateWave);
+                expect(host.wave).toBeLessThanOrEqual(kid.wave);
+            });
+        }
+        // Both halves are really exercised — a suite where every door happened
+        // to be free would prove nothing about the gated one.
+        expect(gatedDoors).toBeGreaterThan(0);
+        expect(freeDoors).toBeGreaterThan(0);
+    });
+
+    it('still routes every hosting region BACK to its parent', () => {
+        // The defect hosting exposed: `stitchGrid` identified an exit by its
+        // TILE, and an atlas region's back-exit is retargeted onto the
+        // projection's own entrance — regularly the same cell as one of its
+        // doors. The back-exit then matched that door's row, lost its
+        // driver-managed exemption, and was re-stitched to the door's
+        // neighbour: two exits into the CHILD, none back to the parent, and a
+        // shortcut the plan never made. Compile-clean and oracle-red.
+        for (const n of tree.nodes) {
+            if (n.parent == null) continue;
+            const region = grid.getRegion(n.cell);
+            const backs = [...getRegionExits(region).values()].filter((e) => e.isBackExit);
+            expect(backs).toHaveLength(1);
+            expect(backs[0].targetRegion).toBe(tree.nodes[n.parent].region_id);
+        }
     });
 
     it('is byte-inert for a world with no assignments and no atlas quota', () => {

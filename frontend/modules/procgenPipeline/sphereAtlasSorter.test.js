@@ -19,7 +19,9 @@ const has = (item, count) => ({ rule: 'Has', args: { item_name: item, ...(count 
 const planOf = (...waves) => ({
     spheres: waves.map((items, i) => ({ sphere: i + 1, items: [...items] })),
 });
-const entry = (id, entrances) => ({ entry_id: id, entrances, location_slots: 0 });
+const entry = (id, entrances, exits = []) => ({
+    entry_id: id, entrances, exits, location_slots: 0,
+});
 const pool = (...entries) => ({ game: 'toy', entries });
 
 describe('sortAtlasRegionsIntoSpheres', () => {
@@ -29,7 +31,7 @@ describe('sortAtlasRegionsIntoSpheres', () => {
             pool(entry('open', [{ via: 'door', access_rule: null }])));
         expect(r.assignments).toEqual([{
             entry_id: 'open', wave: 0, gate: [], gateCounts: {}, gateRule: null,
-            sourceId: 'atlas:toy',
+            exitEnvelope: [], sourceId: 'atlas:toy',
         }]);
         expect(r.injected).toEqual([]);
         expect(plan.spheres.map((s) => s.items)).toEqual([['a'], ['b']]);
@@ -46,7 +48,7 @@ describe('sortAtlasRegionsIntoSpheres', () => {
         expect(plan.spheres[0].items).toEqual(['a', 'Swim']);
         expect(r.assignments).toEqual([{
             entry_id: 'lake', wave: 1, gate: ['Swim'], gateCounts: {}, gateRule: rule,
-            sourceId: 'atlas:toy',
+            exitEnvelope: [], sourceId: 'atlas:toy',
         }]);
     });
 
@@ -263,6 +265,49 @@ describe('sortAtlasRegionsIntoSpheres', () => {
         ));
         expect(r.injected).toHaveLength(1); // one frontier, scheduled once
         expect(r.assignments.map((a) => a.wave)).toEqual([1, 1]);
+    });
+
+    // --- the exit envelope (what a child hung here would land behind) --------
+
+    it('prices every door of a placed region, in the order children get them', () => {
+        const plan = planOf(['a'], ['b'], ['victory']);
+        const r = sortAtlasRegionsIntoSpheres(plan, pool(entry(
+            'hub',
+            [{ via: 'front', access_rule: null }],
+            [
+                { exit_id: 'd_free', access_rule: null },
+                { exit_id: 'd_swim', access_rule: has('Swim') },
+                { exit_id: 'd_weird', access_rule: { rule: 'Compare', args: {} } },
+            ],
+        )));
+        // Nothing was scheduled for the region itself (it is free to enter), and
+        // the doors are priced against the FINISHED plan — which is why this is
+        // read in the sorter's second pass, after every injection.
+        expect(r.assignments[0].exitEnvelope).toEqual([
+            { exit_id: 'd_free', access_rule: null, wave: 0, gate: [], gateCounts: {} },
+            {
+                exit_id: 'd_swim', access_rule: has('Swim'), wave: null,
+                gate: ['Swim'], gateCounts: {},
+            },
+            {
+                exit_id: 'd_weird', access_rule: { rule: 'Compare', args: {} }, wave: null,
+                gate: [], gateCounts: {},
+            },
+        ]);
+    });
+
+    it('prices a door against an item THIS sort scheduled', () => {
+        const plan = planOf(['a'], ['b'], ['victory']);
+        const r = sortAtlasRegionsIntoSpheres(plan, pool(
+            entry('lake', [{ via: 'w', access_rule: has('Swim') }]),
+            entry('hub', [{ via: 'front', access_rule: null }],
+                [{ exit_id: 'd_swim', access_rule: has('Swim') }]),
+        ));
+        // 'lake' put Swim into sphere 1, so the hub's water door now opens at
+        // wave 1 — a child may hang there, and only at that wave.
+        expect(r.injected).toEqual([{ item: 'Swim', sphere: 1 }]);
+        const hub = r.assignments.find((a) => a.entry_id === 'hub');
+        expect(hub.exitEnvelope[0].wave).toBe(1);
     });
 
     it('is a pure function of its inputs (same in, same out)', () => {

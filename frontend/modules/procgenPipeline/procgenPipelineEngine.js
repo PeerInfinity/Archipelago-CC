@@ -491,12 +491,23 @@ export function setRegionEntrance(region, entrance) {
 
 export function stitchGrid(grid) {
     for (const region of grid.allRegions()) {
-        const exitsBySide = new Map();
+        // Keyed by exit ID, not by tile. Two exits CAN share a tile — a
+        // region-atlas region's driver back-exit is retargeted onto the
+        // projection's own entrance, which is regularly also a door (every
+        // point-gate crossing where both sides are one cell). Keyed by
+        // position, such a back-exit matched the door's row, lost its
+        // "the driver manages this one" exemption, and was re-stitched to the
+        // door's geographic neighbour: the region then had two exits into its
+        // CHILD and none back to its parent, which reads as a shortcut the
+        // sphere oracle never planned. Same answer as before for every exit
+        // whose id is in exits_placed, which is every exit the tile key ever
+        // resolved correctly.
+        const sideByExitId = new Map();
         for (const placed of region.exits_placed ?? []) {
-            exitsBySide.set(posKey(placed.tile_position), placed.side);
+            sideByExitId.set(placed.exit_id, placed.side);
         }
         for (const exit of region.extracted_rules?.exits ?? []) {
-            const side = exitsBySide.get(posKey(exit.position));
+            const side = sideByExitId.get(exit.id);
             if (!side) {
                 // Not in exits_placed — the driver manages this exit
                 // directly (e.g. a bidirectional back-exit pointing
@@ -3675,7 +3686,7 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
     const nodes = resume?.nodes ?? [];
     const addNode = ({
         wave, gate, gateCounts = {}, parent, substrate, isFiller = false, atlasEntry = null,
-        gateRule = null,
+        gateRule = null, exitEnvelope = null,
     }) => {
         const node = {
             index: nodes.length,
@@ -3701,6 +3712,10 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
             // Which atlas region the sorter pinned to this node; the realiser
             // claims exactly that entry rather than fit-selecting one.
             ...(atlasEntry ? { atlasEntry } : {}),
+            // The pinned entry's outbound exits, in the order the substrate hook
+            // hands them to child sides — so the planner knows which of the real
+            // map's doors each child will land behind, and what that door costs.
+            ...(exitEnvelope ? { exitEnvelope } : {}),
         };
         if (parent != null) {
             const host = nodes[parent];
@@ -3741,6 +3756,11 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
         return node;
     };
 
+    // How many children this host already has. Every non-root node pre-seeds the
+    // side it came IN through, so its child count is one less than its used
+    // sides — and that number is the index of the next envelope slot.
+    const childSlotIndex = (host) => host.usedSides.size - (host.parent == null ? 0 : 1);
+
     const canHost = (host, gateTerms) => {
         if (host.usedSides.size >= 4) return false;
         // A library content source (region-library F6a) hosts ANY gate — the gate
@@ -3748,16 +3768,22 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
         // which no fixed geometry can veto. Bounded only by the 4-side budget
         // above. (Physical enforcement / capability negotiation is F6b.)
         if (isLibrarySourceId(host.substrate)) return true;
-        // An ATLAS region hosts NO children in v1 (region-atlas Phase 6). Its
-        // exits are the real map's, and most of them are gated by the real map's
-        // own rules — a child hung behind one would need those items scheduled
-        // before its own wave, which is precisely the stratification guarantee
-        // the sphere oracle checks. The planner can't know which exit the
-        // fit-selector will end up with (the F6b tree-build-vs-realise split), so
-        // it declines rather than gambles: pre-built regions attach BESIDE the
-        // skeleton with a synthetic gate in front (plan decision 9). Widening
-        // this needs a conservative per-pool ungated-exit envelope (F6b (a)).
-        if (isAtlasSourceId(host.substrate)) return false;
+        // An ATLAS region hosts children ON THE REAL MAP'S OWN DOORS. v1 declined
+        // outright, because the planner could not know which exit the
+        // fit-selector would hand a child. A SORTED node has no such gap: the
+        // sorter pins the entry, and the substrate hook assigns exits to child
+        // sides in payload order, so this host knows exactly which door the next
+        // child gets — that is what `exitEnvelope` is. The bound below is HARD
+        // rather than advisory: `reserve()` THROWS past `entry.exits.length`, so
+        // a tree built beyond the envelope would die at realisation.
+        //
+        // Which gate that door implies is decided in gateChoicesFor; the envelope
+        // is absent for an atlas node the QUOTA route placed (no pinned entry),
+        // so that route keeps the v1 leaf behaviour.
+        if (isAtlasSourceId(host.substrate)) {
+            const env = host.exitEnvelope;
+            return !!env && childSlotIndex(host) < env.length;
+        }
         const adapter = substrateRegistry.get(host.substrate);
         if (!adapter) return false;
         const gateable = adapter.gateableItems ?? null;
@@ -3794,7 +3820,7 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
     // bounce realises any entry gate's back portal via authored
     // locks (anyone inside satisfies the entry gate by construction).
     const pickHostAndGate = (wave, {
-        gateWave = wave, fixedGate = null, fixedCounts = null,
+        gateWave = wave, fixedGate = null, fixedCounts = null, fixedRule = null,
     } = {}) => {
         // Required count for a gate item at this gate's sphere: the
         // cumulative instance count through sphere gateWave (1 for
@@ -3810,10 +3836,41 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
         // stricter than the atlas's own rule; over-gating is safe, opening a
         // sphere early is not.
         const gateChoices = fixedGate
-            ? [fixedGate]
+            ? [{ gate: fixedGate, rule: fixedRule }]
             : (gateWave === 0
-                ? [[]]
-                : rng.shuffle([...new Set(spheres[gateWave - 1].items)]).map((item) => [item]));
+                ? [{ gate: [], rule: null }]
+                : rng.shuffle([...new Set(spheres[gateWave - 1].items)])
+                    .map((item) => ({ gate: [item], rule: null })));
+        // Which gates a given HOST can offer. Every host but a sorted atlas
+        // region offers the drawn choices unchanged — so nothing about a
+        // non-atlas world moves, rng included (the shuffle above is still
+        // consumed exactly once per call, before any host is considered).
+        //
+        // A sorted atlas region offers what the real map's next door offers. The
+        // realised exit rule is that door's rule AND the child's gate, so the
+        // whole question is when the COMPOSITION opens — it must be exactly the
+        // child's own gate sphere, or the plan and the world disagree:
+        //   - a door that opens LATER than this gate → refused. Composing would
+        //     drag the child past the wave the plan gave it.
+        //   - a door whose rule is out of VOCABULARY → refused. Its sphere is
+        //     unknowable, so nothing can be reasoned about a child behind it.
+        //   - a door that opens EXACTLY at this gate's sphere, for a child with
+        //     no gate of its own → the map's own charge for the crossing IS the
+        //     child's gate. Nothing synthetic is added to a real door.
+        //   - anything else (a FREE door, or one that opens earlier) → the usual
+        //     drawn gate, or an atlas child's own entry requirement, ANDed onto
+        //     whatever the door already charges. That is the composition path
+        //     Phase 6 could only drive directly; growth reaches it now.
+        const gateChoicesFor = (host) => {
+            if (!isAtlasSourceId(host.substrate)) return gateChoices;
+            const slot = host.exitEnvelope?.[childSlotIndex(host)];
+            if (!slot) return [];
+            if (slot.wave == null || slot.wave > gateWave) return [];
+            if (!fixedGate && slot.access_rule != null && slot.wave === gateWave) {
+                return [{ gate: slot.gate, rule: slot.access_rule, counts: slot.gateCounts }];
+            }
+            return gateChoices;
+        };
         const eligible = nodes.filter((h) => h.usedSides.size < 4
             && (gateWave === 0 ? h.wave === 0 : true));
         const older = eligible.filter((h) => h.wave < wave - 1);
@@ -3822,16 +3879,19 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
         const pools = useOlder ? [older, frontier] : [frontier, older];
         for (const pool of pools) {
             for (const host of rng.shuffle([...pool])) {
-                for (const gate of gateChoices) {
-                    const gateTerms = gate.map((item) => ({
-                        item, count: gateCount(item),
+                for (const choice of gateChoicesFor(host)) {
+                    const countOf = (item) => Math.max(
+                        gateCount(item), choice.counts?.[item] ?? 1);
+                    const gateTerms = choice.gate.map((item) => ({
+                        item, count: countOf(item),
                     }));
                     if (canHost(host, gateTerms)) {
                         return {
                             host,
-                            gate,
+                            gate: choice.gate,
                             gateCounts: Object.fromEntries(
-                                gate.map((item) => [item, gateCount(item)])),
+                                choice.gate.map((item) => [item, countOf(item)])),
+                            gateRule: choice.rule ?? null,
                         };
                     }
                 }
@@ -3851,9 +3911,11 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
         // Atlas sources have no registry entry, so their (deliberate) refusal to
         // host would otherwise be an unexplained wall.
         if ([...hintIds].some(isAtlasSourceId)) {
-            hints.push('A region-atlas region hosts no children (region-atlas Phase 6), so an '
-                + 'atlas quota needs enough non-atlas regions to hang the tree on — lower the '
-                + 'atlas quota or raise the others.');
+            hints.push('A region-atlas region hosts children only on the real map\'s own exits: '
+                + 'as many as the pinned entry has, and a GATED one only for a child whose gate '
+                + 'sphere is when that crossing opens (a region the QUOTA route placed pins no '
+                + 'entry at all and hosts nothing). Raise the non-atlas quota or fillerCount to '
+                + 'give the tree more to hang on.');
         }
         throw new Error(`growSpheres: no host can realise a wave-${wave} entry gate.`
             + (hints.length ? ` ${hints.join(' ')}` : ''));
@@ -3873,8 +3935,8 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
                 continue;
             }
             const substrate = pickSub();
-            const { host, gate, gateCounts } = pickHostAndGate(w);
-            addNode({ wave: w, gate, gateCounts, parent: host.index, substrate });
+            const { host, gate, gateCounts, gateRule } = pickHostAndGate(w);
+            addNode({ wave: w, gate, gateCounts, gateRule, parent: host.index, substrate });
         }
         // Fillers assigned to this wave attach like regular wave
         // regions but carry no items — so their gates are free to use
@@ -3882,10 +3944,13 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
         for (const fw of fillerWaves) {
             if (fw !== w) continue;
             const substrate = pickSub();
-            const { host, gate, gateCounts } = pickHostAndGate(w, {
+            const { host, gate, gateCounts, gateRule } = pickHostAndGate(w, {
                 gateWave: w === 0 && waves > 1 ? 1 : w,
             });
-            addNode({ wave: w, gate, gateCounts, parent: host.index, substrate, isFiller: true });
+            addNode({
+                wave: w, gate, gateCounts, gateRule, parent: host.index, substrate,
+                isFiller: true,
+            });
         }
         // Pre-built ATLAS regions the sorter assigned to this wave (region-atlas
         // Phase 6). They come LAST so the draw order of everything above is
@@ -3896,12 +3961,16 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
         for (const a of atlasAssignments ?? []) {
             if (a.wave !== w) continue;
             const { host, gate, gateCounts } = pickHostAndGate(w, {
-                gateWave: w, fixedGate: a.gate, fixedCounts: a.gateCounts ?? null,
+                gateWave: w,
+                fixedGate: a.gate,
+                fixedCounts: a.gateCounts ?? null,
+                fixedRule: a.gateRule ?? null,
             });
             substrateCounts[a.sourceId] = (substrateCounts[a.sourceId] || 0) + 1;
             addNode({
                 wave: w, gate, gateCounts, parent: host.index, substrate: a.sourceId,
                 isFiller: true, atlasEntry: a.entry_id, gateRule: a.gateRule ?? null,
+                exitEnvelope: a.exitEnvelope ?? null,
             });
         }
     };
@@ -4720,6 +4789,24 @@ function buildSphereAtlasRegion(sourceId, entry, {
     // game's charge for the crossing).
     const sideToExitId = new Map((region.exits_placed ?? []).map((e) => [e.side, e.exit_id]));
     const exitById = new Map((region.extracted_rules?.exits ?? []).map((e) => [e.id, e]));
+
+    // The child→exit mapping the PLANNER assumed (region-atlas Phase 6, fence 2):
+    // the k-th child lands behind the k-th exit in payload order, which is how
+    // the substrate hook assigns them. The tree gated each child on THAT door's
+    // rule, so a divergence here would hang a child behind a door the sorter
+    // priced differently — logic saying one thing and the map another, with
+    // every compile and every oracle still green. Assert it instead.
+    exitPlans.forEach((e, i) => {
+        const expected = (entry.exits ?? [])[i]?.exit_id;
+        const actual = sideToExitId.get(e.side);
+        if (expected !== actual) {
+            throw new Error(
+                `${sourceId}: atlas region '${entry.entry_id}' put child ${i} (side ${e.side}) `
+                + `on exit '${actual}', but the tree planned it behind '${expected}' — the `
+                + 'exit envelope and the substrate hook disagree about payload order');
+        }
+    });
+
     for (const e of exitPlans) {
         const gate = e.rule ?? sphereGateRule(e.gate, e.gateCounts ?? {});
         if (!gate) continue;

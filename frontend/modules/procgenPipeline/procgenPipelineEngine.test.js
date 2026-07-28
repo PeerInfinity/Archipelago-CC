@@ -292,12 +292,12 @@ describe('stitchGrid', () => {
         const a = makeRegionStub({
             region_id: 'A',
             exits: [{ id: 'exit', position: { x: 9, y: 3 } }],
-            exits_placed: [{ side: 'E', tile_position: { x: 9, y: 3 } }],
+            exits_placed: [{ exit_id: 'exit', side: 'E', tile_position: { x: 9, y: 3 } }],
         });
         const b = makeRegionStub({
             region_id: 'B',
             exits: [{ id: 'exit', position: { x: 0, y: 3 } }],
-            exits_placed: [{ side: 'W', tile_position: { x: 0, y: 3 } }],
+            exits_placed: [{ exit_id: 'exit', side: 'W', tile_position: { x: 0, y: 3 } }],
         });
         g.placeRegion({ gx: 1, gy: 1 }, a);
         g.placeRegion({ gx: 2, gy: 1 }, b);
@@ -311,7 +311,7 @@ describe('stitchGrid', () => {
         const a = makeRegionStub({
             region_id: 'A',
             exits: [{ id: 'exit', position: { x: 9, y: 3 } }],
-            exits_placed: [{ side: 'E', tile_position: { x: 9, y: 3 } }],
+            exits_placed: [{ exit_id: 'exit', side: 'E', tile_position: { x: 9, y: 3 } }],
         });
         g.placeRegion({ gx: 1, gy: 1 }, a);
         stitchGrid(g);
@@ -323,7 +323,7 @@ describe('stitchGrid', () => {
         const a = makeRegionStub({
             region_id: 'A',
             exits: [{ id: 'exit', position: { x: 9, y: 3 } }],
-            exits_placed: [{ side: 'E', tile_position: { x: 9, y: 3 } }],
+            exits_placed: [{ exit_id: 'exit', side: 'E', tile_position: { x: 9, y: 3 } }],
         });
         g.placeRegion({ gx: 1, gy: 1 }, a);
         stitchGrid(g);
@@ -377,8 +377,8 @@ describe('wallOffUnusedExits', () => {
                 { id: 'exit_b', position: { x: 1, y: 1 } },
             ],
             exits_placed: [
-                { side: 'E', tile_position: { x: 0, y: 0 } },
-                { side: 'S', tile_position: { x: 1, y: 1 } },
+                { exit_id: 'exit_a', side: 'E', tile_position: { x: 0, y: 0 } },
+                { exit_id: 'exit_b', side: 'S', tile_position: { x: 1, y: 1 } },
             ],
         }));
         // stitchGrid leaves both target_region null (no neighbors built).
@@ -392,7 +392,7 @@ describe('wallOffUnusedExits', () => {
         g.placeRegion({ gx: 0, gy: 0 }, makeRegionStub({
             region_id: 'A',
             exits: [{ id: 'exit', position: { x: 9, y: 3 } }],
-            exits_placed: [{ side: 'E', tile_position: { x: 9, y: 3 } }],
+            exits_placed: [{ exit_id: 'exit', side: 'E', tile_position: { x: 9, y: 3 } }],
         }));
         g.placeRegion({ gx: 1, gy: 0 }, makeRegionStub({ region_id: 'B' }));
         stitchGrid(g);
