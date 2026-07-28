@@ -120,6 +120,54 @@ function itemsSatisfying(rule) {
 }
 
 /**
+ * Empty the inventory of the items a gate wants, and prove it is empty, so the
+ * negative half of a gate test means what it says. Returns what was held, in
+ * {name, count} form, ready to grant back for the positive half.
+ *
+ * Two hazards, both of which HAVE bitten this suite:
+ *
+ * The inventory is not assumed empty. The only route to the tile beside a gate
+ * can run over the very pickup that gate wants — it does in the committed
+ * sphere world, whose wave-0 start region holds the sphere-1 items — so a
+ * "blocked" asserted with the item in hand is a false red, and the crossing
+ * that follows would have proved nothing either way.
+ *
+ * And the snapshot is FLUSHED before it is read. `getSnapshot()` returns the
+ * proxy's uiCache, which the worker refreshes asynchronously: a pickup the walk
+ * just made can still be in flight, and reading a stale zero skips the very
+ * removal this exists to make. That is the subtler of the two, because it fails
+ * only when the walk was fast — an order-of-operations race that presents as an
+ * occasional unexplained red on a pinned world.
+ */
+async function clearGateItems(testController, wants) {
+    await testController.stateManager.pingWorker('before-item-clear', 5000);
+    const countOf = (name) => Number(
+        testController.stateManager.getSnapshot()?.inventory?.[name] ?? 0);
+
+    const held = [];
+    for (const wItem of wants) {
+        const count = countOf(wItem.name);
+        held.push({ ...wItem, count: Math.max(count, wItem.count) });
+        if (count > 0) {
+            testController.log(`removing ${wItem.name} x${count} picked up on the way`);
+            await testController.stateManager.removeItemFromInventory(wItem.name, count);
+        }
+    }
+    await testController.stateManager.pingWorker('after-item-clear', 5000);
+
+    // Positive check before the negative one: without it, a removal that
+    // silently did nothing would be indistinguishable from a gate that failed
+    // to block, and the leg would accuse the wrong subsystem.
+    const stillHeld = wants
+        .map((w) => ({ name: w.name, count: countOf(w.name) }))
+        .filter((w) => w.count > 0);
+    testController.assertEqual('the gate items really are gone before the negative',
+        '[]', JSON.stringify(stillHeld));
+
+    return held;
+}
+
+/**
  * Tiles the player can stand on and walk to, without crossing an exit or a gate:
  * an ordinary flood over plain floor from `from`. A staging tile the player
  * cannot actually get to makes the whole leg red for a reason that has nothing
@@ -332,10 +380,16 @@ async function gatedCrossing(testController) {
 
     // ── the negative: the same step, without the items ────────────
     //
+    // The inventory is emptied first rather than assumed empty — see
+    // clearGateItems; the walk above is exactly the kind that can collect the
+    // key on its way to the tile beside the lock.
+    //
     // The keyboard path is synchronous (handleInput appends AND executes), so the
     // step has already resolved when press() returns; the extra beat is only so
     // an asynchronous region-move chain would have had time to fire if the step
     // HAD gone through.
+    const held = await clearGateItems(testController, wants);
+
     press(panel, staging.towardKey);
     await new Promise((resolve) => setTimeout(resolve, 400));
     const posAfterBlock = { ...getPanelInstance().state.player_pos };
@@ -346,7 +400,10 @@ async function gatedCrossing(testController) {
         START_REGION, readCurrentRegion());
 
     // ── grant through the normal item path ────────────────────────
-    for (const w of wants) {
+    // `held`, not `wants`: whatever the walk collected is restored along with
+    // what the rule asks for, so the positive half runs against the inventory
+    // the player would really have had.
+    for (const w of held) {
         testController.log(`granting ${w.name} x${w.count}`);
         await testController.stateManager.addItemToInventory(w.name, w.count);
     }
@@ -469,24 +526,10 @@ async function generatedSphereWorld(testController) {
     }
     if (!assertAimedAt(testController, staging, toAtlas)) return testController.getOverallResult();
 
-    // The negative, bracketed by the walk that had to succeed before it.
-    //
-    // The inventory is EMPTIED of the gate items rather than assumed empty: the
-    // only route to the staging tile can run over the very pickup the gate wants
-    // (it does in the committed world — sphere-1 items live in the wave-0 start
-    // region), and a "blocked" that passed because the walk failed, or failed
-    // because the walk collected the key, would say nothing either way.
-    const held = [];
-    for (const wItem of wants) {
-        const count = Number(
-            testController.stateManager.getSnapshot()?.inventory?.[wItem.name] ?? 0);
-        held.push({ ...wItem, count: Math.max(count, wItem.count) });
-        if (count > 0) {
-            testController.log(`removing ${wItem.name} x${count} picked up on the way`);
-            await testController.stateManager.removeItemFromInventory(wItem.name, count);
-        }
-    }
-    await testController.stateManager.pingWorker('after-item-clear', 5000);
+    // The negative, bracketed by the walk that had to succeed before it and the
+    // crossing that must succeed after. See clearGateItems for why the inventory
+    // is emptied rather than assumed empty, and flushed before it is read.
+    const held = await clearGateItems(testController, wants);
 
     press(panel, staging.towardKey);
     await new Promise((resolve) => setTimeout(resolve, 400));
