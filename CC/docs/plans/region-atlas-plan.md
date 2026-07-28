@@ -1049,7 +1049,7 @@ hang off an atlas region's own doors, including a GENERATED region behind the
 map's sword-or-spear crossing.
 
 **Gates (2026-07-28):** vitest 3768 → **3792**; procgenPipeline slow tier
-117 → **121** (whole slow tier **363**); `test-substrates --batch=fast`
+117 → **121** (whole slow tier **364/364**); `test-substrates --batch=fast`
 **61/61**; `verify-atlas-sphere-roundtrip` fully green including its
 byte-equality regen pin and AP's own fill on the richer world; byte-inert
 against the parent commit on `dump-sphere-byteidentity`,

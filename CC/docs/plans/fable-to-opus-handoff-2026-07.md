@@ -2710,7 +2710,7 @@ as-built in `region-atlas-plan.md`; the load-bearing parts:
   clean and turning the oracle red. Keyed by exit id now.
 - **The whole starter atlas now places** (zero declines): eighteen regions, ten
   of them map pieces, seven hanging off atlas doors.
-- Gates: vitest 3768 → **3792**, slow tier 359 → **363**, `--batch=fast`
+- Gates: vitest 3768 → **3792**, slow tier 359 → **364/364**, `--batch=fast`
   **61/61**, all three byte-identity dumps inert, round-trip verifier green
   including its byte-equality regen pin. **Acceptance headline:** the headless
   bot beats the richer world (573 steps / 33 crossings) and every
