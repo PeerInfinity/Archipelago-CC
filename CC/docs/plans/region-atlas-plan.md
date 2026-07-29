@@ -1299,9 +1299,10 @@ nothing green). The id list is stamped into results and taken into
 `compare-runs.js`'s baseline identity: an unstamped one-test run would become
 the baseline for the next full run and report sixty tests as ADDED.
 
-#### Real-game surface (later slice) — design space, UNEXPLORED
+#### Real-game surface (later slice) — design space recorded, sequencing RULED
 Recorded 2026-07-28 so the next session starts from the question, not from
-scratch. Nothing here has been tried or verified.
+scratch. Sequencing and the JS-port question ruled 2026-07-29 (below); the
+routes themselves remain untried.
 - **Two routes, both plausible.** (a) MORE INJECTED ACTIONSCRIPT: keep driving
   the shipped game from outside, extending the Phase-4 `state_properties` /
   teleport machinery with input synthesis. Note the Phase-4 fence —
@@ -1309,15 +1310,54 @@ scratch. Nothing here has been tried or verified.
   instance, so widening the reported property set needs a page reload. (b) BUILD
   THE BOT INTO THE SEEDLING SOURCE and recompile: the source checkout already
   exists (the Phase-2 extractor reads it), and a bot compiled in gets the game's
-  own collision and physics for free instead of reimplementing them.
-- **⚠ UNVERIFIED caveat to check FIRST:** Phase 5a took `Mobile.solids`
-  (`Mobile.as:17`) as the game's own solidity oracle. It may be an INSTANCE
-  variable rather than a static — if so, per-entity overrides exist and the
-  transcription's single global solid set is an approximation. This does not
-  affect the maze surface (the projection is already fenced and reports its
-  approximations), but a real-game bot walking real collision would meet the
-  difference directly. Read the source before designing around either route.
-- The staged ladder below still stands for that surface.
+  own collision and physics for free instead of reimplementing them. Stage 1 of
+  the Seedling integration already proved the recompile-to-wasm toolchain, so
+  (b) is de-risked on that axis; the 2026-07-29 recommendation leans (b).
+- **The `Mobile.solids` caveat is RESOLVED (source read 2026-07-29), and
+  favorably.** It is a `public var` — an INSTANCE variable, not a static — so
+  per-entity overrides do exist, but every override in the tree is on enemies,
+  projectiles, and scenery (`Jellyfish`, `Drill`, `LavaRunner`, `IceTurret`,
+  `Puncher`, `Bomb`/`LavaBall`/`BossTotemShot` zeroing theirs, `Tree` carrying
+  its own private list). The ONLY Player-side change is `Player.as:359` pushing
+  `"LavaBoss"` — a boss-fight concern, not terrain. For PLAYER traversal — what
+  the Phase-5a analyzer and the atlas model — the base list
+  `["Solid","Tree","Rock","Rope","ShieldBoss"]` is the truth. The analyzer
+  needs no correction; a real-game bot should still expect entity-side
+  surprises in the v5 (enemies) rung, where the overrides live.
+- **RULING (recommended by Claude, accepted by user 2026-07-29): a JS port of
+  Seedling's core gameplay is a SEPARATE, LATER substrate arc — not the
+  Phase 8 instrument.** The question was whether porting the game to JS as a
+  substrate would help this slice. It cannot make this slice's claim: the
+  maze projection, the analyzer, the atlas, and any hand-written port are all
+  OUR TRANSCRIPTION of the same source, read by the same eyes — they would
+  disagree with the real game *together* (the verifier-shared-assumption
+  doctrine). "This grown world is beatable in the actual game" can only be
+  witnessed by the actual game, and route (b) gets the game's own collision
+  for free at a fraction of a port's cost. What the port DOES uniquely offer
+  (recorded for its own arc): it is the only route to GENERATED worlds with
+  real Seedling physics (the wasm game plays only its 116 baked-in levels —
+  Phase 4 teleports the player around them but can never load a sphere-grown
+  map); it is CI-testable from the committed repo where the 31 MB gitignored
+  wasm never will be; and it gives the bot ladder's puzzle/enemy rungs a
+  suite-runnable surface the maze projection deliberately lacks. Seedling is
+  a BETTER first target for the Tilemap-Platformer-substrate idea than RWK:
+  MIT-licensed, so the port and its maps are committable with no
+  SWF-at-runtime dance.
+- **Sequencing (same ruling): real-game bot FIRST, port SECOND — so the port
+  is born verified instead of retrofitted.** The real-game slice builds the
+  input-synthesis/drive machinery, and that machinery is exactly what anchors
+  a port afterwards: differential tape testing (same input tape through port
+  and wasm game, compare positions and level transitions) converts the port
+  from shared-assumption transcription into an artifact verified against the
+  oracle. The port never becomes a load-bearing stratum for Phase 8's
+  beatability claim; the real game stays the oracle.
+- **Port scope datum (source survey 2026-07-29):** ~30,500 lines of AS3 across
+  209 files on FlashPunk, but the core-gameplay subset (`Player.as`,
+  `Mobile.as`, tiles, `Pickups/`, `Stairs`, `Teleporter`, `Puzzlements/`) is a
+  modest fraction; the bulk is `Enemies/` (30+ classes), bosses, `NPCs/`, and
+  presentation. A staged port mirroring the bot ladder (terrain → gates →
+  puzzles → enemies) matches how the mass is distributed.
+- The staged ladder below still stands for the real-game surface.
 
 - [ ] Seedling v1: collision fully disabled, move to targets
 - [ ] v2: wall collision + pathing
@@ -1327,8 +1367,13 @@ scratch. Nothing here has been tried or verified.
 - [ ] ~~RWK bot~~ — inherits Phase 7's indefinite postponement (2026-07-28)
 
 ### Deferred / adjacent (not this plan)
+- **Seedling JS-port substrate** (ruled 2026-07-29, Phase 8 section above):
+  its own arc, AFTER the real-game bot slice; MIT so fully committable;
+  anchored by differential tapes against the wasm game; unlocks generated
+  worlds with real Seedling physics + suite-runnable puzzle/enemy surfaces
 - Tilemap Platformer substrate (JS clone of RWK reusing runner code; tile
-  map read from the user's SWF at runtime, never distributed)
+  map read from the user's SWF at runtime, never distributed) — if revived,
+  the Seedling port above is its precedent and template
 - Any-shape filler substrate for gap-free packing
 - Shipped panel presets that bundle a rules.json + sphere-log reference
   ("load vanilla <game>, ready to edit" one-click), per the 2026-07-26

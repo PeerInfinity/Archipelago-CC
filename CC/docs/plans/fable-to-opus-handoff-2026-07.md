@@ -2740,9 +2740,31 @@ doc's Phase 8 section.
   8× and count" is finally expressible — batches are category-only by design.
   The id list is stamped into results and into `compare-runs.js`'s baseline
   identity, or a one-test run would poison the next full run's diff.
-- NEXT: Phase 8's **real-game surface** slice (design space recorded, unexplored);
-  **no panel exposure for atlas pools**; capacity-aware item assignment for
-  sorted atlas nodes.
+- NEXT: Phase 8's **real-game surface** slice (design space recorded; sequencing
+  RULED 2026-07-29 — see below); **no panel exposure for atlas pools**;
+  capacity-aware item assignment for sorted atlas nodes.
+**Real-game surface + JS-port ruling — 2026-07-29 (Fable; recommended by
+Claude, accepted by user). Full detail in `region-atlas-plan.md` Phase 8.**
+- The `Mobile.solids` caveat is RESOLVED: `public var` (instance), but every
+  override is enemy/projectile/scenery-side; the only Player-side change adds
+  `LavaBoss`. The base list IS the player-traversal truth — the Phase-5a
+  analyzer needs no correction; entity overrides matter only at the v5
+  (enemies) bot rung.
+- **A JS port of Seedling core gameplay = its own LATER substrate arc, not
+  the Phase 8 instrument** — a port is our transcription and shares the
+  atlas/analyzer's assumptions, so it cannot witness "beatable in the actual
+  game". Route (b) (bot compiled into the source; recompile toolchain already
+  proven by Stage 1) is the leaning for the real-game slice.
+- **Sequencing: real-game bot FIRST, port SECOND** — the input-drive
+  machinery the bot slice builds is what anchors the port via differential
+  tapes (same tape through port + wasm, compare positions/level
+  transitions), so the port is born verified. Port's unique value, recorded
+  for its arc: generated worlds with real Seedling physics (the wasm plays
+  only its 116 baked-in levels), CI-testable from the committed repo (vs the
+  31 MB gitignored wasm), and a suite-runnable surface for the puzzle/enemy
+  bot rungs. MIT makes Seedling a better first Tilemap-Platformer-substrate
+  target than RWK. Scope datum: ~30.5k lines AS3 / 209 files on FlashPunk;
+  the core-gameplay subset is a modest fraction.
 
 ## 6. Everything else (unchanged queues)
 
