@@ -8,7 +8,6 @@ frontend/modules/tests/README.md (testController.dumpSnapshot).
 Dumps land in test_dumps/ (gitignored).
 """
 import http.server
-import socketserver
 import re
 from datetime import datetime
 import os
@@ -122,7 +121,12 @@ def main():
     print("Press Ctrl+C to stop")
     print("-" * 50)
 
-    with socketserver.TCPServer(("", PORT), NoCacheHTTPRequestHandler) as httpd:
+    # ThreadingHTTPServer, not a bare TCPServer: the app loads game modules as
+    # iframes alongside workers and wasm, so a single-threaded server
+    # head-of-line blocks — one slow transfer stalls every other request until
+    # it finishes. It also inherits HTTPServer's allow_reuse_address, so a
+    # restart doesn't trip "Address already in use" during TIME_WAIT.
+    with http.server.ThreadingHTTPServer(("", PORT), NoCacheHTTPRequestHandler) as httpd:
         try:
             httpd.serve_forever()
         except KeyboardInterrupt:
