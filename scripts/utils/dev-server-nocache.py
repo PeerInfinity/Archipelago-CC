@@ -98,9 +98,22 @@ class NoCacheHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 def main():
     PORT = 8000
 
-    # Change to the project root directory
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    project_root = os.path.dirname(script_dir)
+    # Change to the project root directory. Located by walking up to the
+    # directory holding package.json rather than counting levels: this file
+    # started life in scripts/ and moved to scripts/utils/, and the hardcoded
+    # single dirname() came along unchanged — so the server quietly served
+    # scripts/ and every app URL 404'd. Anchoring on a marker makes the next
+    # move a no-op, and a missing marker fails loudly instead of serving the
+    # wrong tree.
+    project_root = os.path.dirname(os.path.abspath(__file__))
+    while not os.path.exists(os.path.join(project_root, "package.json")):
+        parent = os.path.dirname(project_root)
+        if parent == project_root:
+            raise SystemExit(
+                "could not locate the project root: no package.json in any "
+                f"directory above {os.path.abspath(__file__)}"
+            )
+        project_root = parent
     os.chdir(project_root)
 
     print(f"Starting development server at http://localhost:{PORT}/")
