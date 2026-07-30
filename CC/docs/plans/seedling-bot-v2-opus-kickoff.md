@@ -616,3 +616,93 @@ always present.
 - vitest **3890/3890** (was 3876; +14).
 - `verify-seedling-bot-differential.mjs --win` green across all **7**
   fixtures; the v1 five still match their original recordings bit for bit.
+
+## 8. Slice 1 — AS BUILT (2026-07-30)
+
+`frontend/modules/seedlingDemo/levelWorld.js` + `levelWorld.test.js` (39
+cases, 9 mutations verified to bite). Dependency-free and browser-usable:
+it takes a level RECORD, not a file path, exactly as the other core
+modules take plain tapes. Reuse stopped where ruling 1 said it should —
+`TILE_COLUMN_TO_TYPE`, `TILE_TYPE_ENTITY_TYPES`, `TILE_TYPE_NAMES`,
+`SOLID_ENTITY_TYPES` and nothing from the analyzer's abstraction layer.
+
+Level 0: 400 tiles (397 walkable, 3 solid), 74 solids, 2 pixelmasks, 8
+teleporters. Level 94: 400 tiles (338 walkable), 88 solids, 10 pixelmasks,
+2 teleporters. Every count reconciles against a hand census of the extract.
+
+### ⚠ Correction to §2.2: CliffSide is a PIXELMASK, not a plain Solid
+
+The brief called it "a `"Solid"` plain Entity". It *is* `type = "Solid"` —
+but its collider is a **Pixelmask** (one of five 16×16 masks chosen by the
+tileset column, `Scenery/CliffSide.as:15-34`) and it **never calls
+`setHitbox`**, so its Hitbox is 0×0. A model that read the type and used
+the hitbox would give every cliffside a **zero-size rect and collide with
+none of them** — silent, and exactly wrong. It belongs in the pixelmask
+loud-throw seam. Level 0 has no cliffsides layer; **level 94 has 9**, so
+this is live for the fixture roster, not theoretical. 16 levels have the
+layer.
+
+### Other things the source said that the brief did not
+
+- **NPCs are SOLID.** `NPC extends Mobile` and sets `type = "Solid"` with a
+  hitbox from the *sprite's frame size*, centred (`NPCs/NPC.as:48-59`).
+  Level 0's `introchar` and level 94's `adnanchar`/`rekcahdam` all block
+  the player; nothing about the tag suggests it. `Watcher` overrides to
+  type `"Watcher"` and does NOT block.
+- **`Statue` sets its hitbox from `render()`, not the constructor**
+  (`Statue.as:34-45`), and its ctor y offset is `_y - Tile.h/2 +
+  Tile.h*int(_t==0)` — for the `statue2` tag `_t` is 1, so the second term
+  is zero and the net offset is **−8, not +8**. Reading it as "the usual
+  half-tile" is wrong by 16 px.
+- **`Rekcahdam` truncates its half-width origin**: `setHitbox(9, 10, 4.5,
+  5)` with `int` params gives originX **4**.
+- **`Moonrock` does not block.** It is constructed `type = ""` at
+  `y = -1000` and only drops in and becomes `"Solid"` once
+  `Game.moonrockSet` — a static that is false on a fresh boot. `Torch` and
+  `Orb` never assign `type` at all.
+- **A tagged, non-inverted teleporter is DEACTIVATED on a fresh boot.**
+  `tag >= 0 && (!checkPersistence(tag) == invert)`: with every persistence
+  flag `true`, `!checkPersistence` is false, so `invert == false` makes it
+  deactivated. Counter-intuitive, and a second reason fixtures must stay
+  off tagged teleporters. Level 0's are all `tag = -1`.
+- **`TreeLarge`'s ctor offset and mask offset cancel** — entity at
+  `(x+80, y+96)`, mask offset `(-80,-96)` — so the mask lands on the raw
+  oel coordinates. Dropping either half moves it by most of its own size.
+- **Bridge (t=29) fails at BUILD time, not from the resolver.** Its
+  `Tile.types` entry is `"Unused"` because it rewrites its own entity type
+  from an opening timer inside `render()`, so it cannot even be sorted
+  into the walkable or solid list. The merely special terrains (water,
+  pit, lava, ice, waterfall) load fine and throw only if the player
+  actually stands on one.
+- The extract has **already applied `loadlevel`'s out-of-bounds guard**
+  and records the count in `tiles_outside_level` (5 for level 0; 506
+  across 51 levels). `levelWorld` must not re-filter, and must not
+  un-filter.
+
+### Decisions worth keeping
+
+- `collidesSolid` throws on a pixelmask overlap **unconditionally**, even
+  when a rect solid would also have blocked. The bounding rect already
+  over-approximates the mask, so this can only over-throw — and an
+  over-throw is a loud "move the fixture" while an under-throw is a
+  divergence nobody sees.
+- The query methods close over their lists rather than reading `this`, so
+  `const { collidesSolid } = world` cannot silently break.
+- `MODELLED_TILE_TYPES` is pinned as the **complement** of the six
+  excluded types, so the list cannot drift in either direction.
+
+### The tests earn their keep
+
+Beyond census and footprints, the suite cross-checks the geometry against
+the **slice-0 oracle recordings**: the BreakableRock rect makes y=130.5
+free and y=129.5 blocked (the recorded stop, to half a pixel); the west
+trigger fires at exactly the recorded x=17.70000000000001 and not one tick
+earlier; each recorded arrival is the trigger's own `(playerx+8,
+playery+8)`; neither arrival re-arms a trigger; and **every recorded
+position of both fixtures is replayed through `collidesSolid`** to prove
+the routes are clear of the pixelmask seam and never overlap a solid. That
+last one is the fixtures' central claim checked rather than asserted in
+prose.
+
+Gates: vitest **3929/3929** (was 3890). No live-game leg — slice 1 adds no
+physics, so the differential is unchanged.
