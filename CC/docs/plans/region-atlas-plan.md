@@ -1490,6 +1490,60 @@ routes themselves remain untried.
     procgen README), which also records the dead ends: the black canvas
     and the unconfigured-BridgeGeneric page errors are both present in the
     untouched teleport build and mean nothing.
+- **v2 KICKOFF DESIGNED (2026-07-30, Fable design session)** — brief:
+  `NewDocs/plans/seedling-bot-v2-opus-kickoff.md` (→ `CC/docs/plans/` when
+  implementation starts). Queue §5c's three questions plus one the recon
+  surfaced, all ruled (user, 2026-07-30):
+  1. **Geometry: consume the committed Phase-2 extract directly**
+     (`flashPanel/atlases/seedling-map.json` + `seedlingSemantics.js`'s
+     verbatim AS3 tables) — no new committed artifact, no new regen chain;
+     a new `seedlingDemo/levelWorld.js` transcribes the `loadlevel` subset.
+     ⛔ reuse stops at the verbatim tables — the analyzer's
+     `CELL_KINDS`/`buildSeedlingRegionGrid` abstraction is the
+     region-verifier's altitude, not physics. Bonus: the oracle
+     differential now live-tests the same tables the Phase-5a analyzer
+     trusts. (Parse-at-test-time rejected — machine-local checkout would
+     make the CI differential SKIP forever.)
+  2. **Transitions modeled FULLY; `transitions` carries the minimal
+     symmetric record** `{t, from_level, to_level}` (t = first observation
+     tick in the new level), element-wise exact-diffed; teleporter identity
+     EXCLUDED (the AS3 bot cannot observe it — an asymmetrically-known
+     field cannot be differentially checked). Tapes may span levels.
+  3. **Pixelmask colliders (Building, TreeLarge, …) are a loud-throw
+     seam**, not modeled — a sweep step overlapping one's bounding rect
+     throws a named error; fixtures route around. Phase 5a already proved
+     both rect approximations unsafe; masks are extractable later if ever
+     needed.
+  4. **Pathing: in-level A\* + explicit cross-level legs** (the caller
+     names the teleporter; planner executes waypoints through the REAL
+     `step()` — the walkTo-divergence lesson). Auto cross-level routing
+     deferred to the rung that needs it.
+  **The headline recon correction: there is NO edge/bounds transition
+  logic in Seedling at all.** Room changes are authored `<teleporter>`
+  entities (16×16 AABB trigger with an anti-ping-pong latch;
+  `new Game(to, playerx, playery)`; arrival at `(playerx+8, playery+8)`;
+  velocity reset; held keys persist — no `Input.clear()` on teleport;
+  `Stairs` is a `Teleporter` subclass). Collision is ENTITY-based: one
+  `Tile` entity per cell whose type flips to `"Solid"` on its first
+  update per `Tile.types`; Tree = a 2×2-tile footprint
+  (`setHitbox(32,32,16,16)` at `+16,+16`); on a hit the sweep returns and
+  the caller DISCARDS it — position pins, **velocity is NOT zeroed**.
+  `getState()` is STICKY (nearest WALKABLE tile by center distance,
+  assigned only on rect intersection) — v1's pure `terrainStateAt(x,y)`
+  seam cannot express it and becomes a transcribed stateful resolver;
+  supported v2 states = plain grounds + stairs(10)/ghost-step(30), all
+  else throws (water physics is coupled to `Music.soundPosition` — v3+).
+  **Queue Q3 CONFIRMED**: player list = base + `"LavaBoss"` pushed
+  unconditionally in the ctor (`Player.as:359`, transcribe verbatim, inert
+  outside Dungeon 7); `Tree`'s private `solids` is DEAD CODE (extends
+  Entity, unused); enemy-side overrides stay v5. Also: **v2 expects ZERO
+  AS3 edits** — `Bot.as` already takes `noclip` per tape and survived a
+  transition in the discarded `clamp-left` recording, so the oracle is
+  available on day one (slice 0 records real collision runs FIRST and the
+  JS reconciles toward them); the `<player>` spawn-override caveat is
+  RETIRED (no `.oel` in the repo contains one); a recon-sweep claim that
+  the 1-px loop skips sub-pixel moves was REFUTED (`0 < 0.8` executes —
+  v1's bit-exact friction tails already proved it).
 - The staged ladder below still stands for the real-game surface.
 
 - [x] Seedling v1: collision fully disabled, move to targets

@@ -2795,36 +2795,34 @@ Claude, accepted by user). Full detail in `region-atlas-plan.md` Phase 8.**
   `docs/json/developer/procgen/seedling-bot.md` FIRST** — contracts, traps,
   dead ends. ⚡ always run the harness with `--win` (real-GPU Windows Chrome
   from WSL, ~25 fps vs ~0.5 on WSL SwiftShader — ~44x).
-- **NEXT FOR THIS ARC: a v2 DESIGN session (Fable) — collision + pathing.**
-  This is a rulings job, not an implementation one; queue the design first
-  and let it emit the Opus brief, exactly as v1's did. Three questions it
-  should settle before anyone writes a collision sweep:
-  1. **How does the JS side get level geometry?** v1's `terrainStateAt()`
-     seam is stubbed to ground on purpose. v2 needs the real level-0
-     tilemap AND the solid set. There is already an `.oel` parser
-     (`scripts/procgen/seedlingOgmo.js`) and the Phase-2 map extractor —
-     reuse them at build time into a committed fixture, or parse at test
-     time? Same shape as v1's committed-oracle-recording ruling, and it
-     wants the same kind of answer.
-  2. **What does the observation stream's `transitions` field carry?** v1
-     deliberately left it empty and the format now has its first real data:
-     the discarded `clamp-left` recording caught the game loading level 94
-     at tick 61 when the player walked off the left edge. "Entered level N
-     at tick T" vs. something exit-named is a contract BOTH consumers are
-     stuck with; decide it before v2 fixtures exist. Relatedly: **the world
-     clamp is unreachable in level 0** (a room transition always fires
-     first), so v2 must model transitions to model edges at all.
-  3. **Does `Mobile.solids` stay a v5 concern?** The 2026-07-29 ruling said
-     the base list is player-traversal truth and per-entity overrides are
-     enemy-side only. v2 is the first rung that actually runs the sweeps, so
-     confirm that holds for `Player.as:359` pushing `"LavaBoss"` and for
-     `Tree`'s private list, or scope it in.
-  Anchors the design session should NOT re-derive: `Player` overrides
-  `moveX`/`moveY` (the base-class movers are dead for the player, and the
-  v1 noclip flag already sits in the overrides — v2 just re-arms the
-  `collideTypes` call it skips); the 1-px swept-collision loop with X fully
-  resolved before Y; and the AS3 round-trip cost (~10 min) that makes
-  batching AS3 edits mandatory.
+- **v2 KICKOFF READY (2026-07-30, Fable design session): the Opus brief is
+  `NewDocs/plans/seedling-bot-v2-opus-kickoff.md`** — QUEUE THIS NEXT for
+  the arc (move it to `CC/docs/plans/` when implementation starts). All
+  three questions ruled (user, 2026-07-30) + one the recon surfaced:
+  (1) geometry = **consume the committed Phase-2 extract directly**
+  (`seedling-map.json` + `seedlingSemantics.js`'s verbatim AS3 tables; a
+  new `levelWorld.js` transcribes the `loadlevel` subset; NO new artifact
+  or regen chain; the analyzer's `CELL_KINDS` layer is off-limits);
+  (2) transitions **modeled fully**, `transitions` = element-wise
+  exact-diffed `{t, from_level, to_level}` (teleporter identity excluded —
+  the AS3 bot can't observe it); (3) `Mobile.solids` **confirmed v5-only**
+  (the `Player.as:359` LavaBoss push is unconditional-but-inert outside
+  Dungeon 7 — transcribe verbatim; `Tree`'s private list is DEAD CODE, it
+  extends Entity); (4, new) **pixelmask colliders are a loud-throw seam**
+  (Building/TreeLarge etc.; fixtures route around); pathing = in-level A\*
+  + explicit cross-level legs through the real `step()`.
+  **Headline recon correction: Seedling has NO edge-transition logic** —
+  room changes are authored `<teleporter>` trigger entities (AABB + latch
+  → `new Game`; arrival `(playerx+8, playery+8)`; velocity reset; held
+  keys persist), so "model edges" = model teleporters, far cheaper than
+  the queue feared. Collision is entity-based (per-cell `Tile` type-flip,
+  Tree = 2×2 footprint, hit ⇒ position pins but **velocity NOT zeroed**);
+  `getState()` is STICKY, so the v1 pure terrain seam becomes a
+  transcribed stateful resolver. **v2 expects ZERO AS3 edits** — `Bot.as`
+  already handles `noclip:false` and transitions, so slice 0 records real
+  collision oracles before any JS is written. All anchors recon-verified
+  same day (two agent sweeps + direct spot-checks; one agent claim about
+  sub-pixel sweeps REFUTED); recon-first still applies.
 
 ## 6. Everything else (unchanged queues)
 
