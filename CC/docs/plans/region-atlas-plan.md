@@ -1464,12 +1464,37 @@ routes themselves remain untried.
     length — a flat 60s timeout dies during the fade and is
     indistinguishable from a dead bot. Every tape also needs a FRESH PAGE
     (`botReset` cannot rewind the game).
+- **v1 COMPLETE — SLICES 3+4+5 SHIPPED+PUSHED 2026-07-30** (`dfd081bb8`).
+  All five expectations are now ORACLE RECORDINGS from the real game, and
+  **the JS transcription reproduces every one EXACTLY** — 220 ticks, bit
+  for bit, float noise included, on the first recording. Both gates green:
+  G1 (vitest: JS == recordings) and G2 (live wasm replay matches, and the
+  live bot-driver task lands the REAL GAME at (119.88, 100.61) for a
+  (120,100) target, read from the game's own observations).
+  - ⚡ **~44x faster harness via real-GPU Windows Chrome driven from WSL**
+    (`--win`; recipe in SWFRecomp-CC
+    `tools/divergence/perf/WINDOWS_PLAYWRIGHT_FROM_WSL.md`). WSL Chromium
+    is SwiftShader and must never be used for perf — ~0.5 fps there vs
+    **~25 fps** on the real GPU, turning a 20-minute sweep into ~50s. ⚠ that
+    doc says `python.exe`; on this box use **`py.exe -3.12`**.
+  - ⚠ **The world clamp is UNREACHABLE in level 0** — the `clamp-left`
+    fixture was invalid: walking left the game loaded an adjacent level
+    (recorded `level=94` at tick 61) long before x=2. Replaced by
+    `shuffle-stop`; the clamp keeps its hand-derived unit case. The
+    observation stream's `level` field is what caught it.
+  - ✅ **Cutscenes already skipped**, by design not luck: the intro fires
+    only from the `level < 0` branch (`Game.as:765-773`) and the teleport
+    boot passes an explicit level 0. `botStatus.saw_input_refused` has
+    never fired.
+  - Doc: `docs/json/developer/procgen/seedling-bot.md` (indexed in the
+    procgen README), which also records the dead ends: the black canvas
+    and the unconfigured-BridgeGeneric page errors are both present in the
+    untouched teleport build and mean nothing.
 - The staged ladder below still stands for the real-game surface.
 
-- [ ] Seedling v1: collision fully disabled, move to targets
-      — slices 1+2 done (JS module + AS3 bot + differential harness);
-        slice 3 (commit oracle recordings) / 4 (verify script) / 5 (docs)
-        remain
+- [x] Seedling v1: collision fully disabled, move to targets
+      — **COMPLETE 2026-07-30** (all 5 slices). Doc:
+        `docs/json/developer/procgen/seedling-bot.md`
 - [ ] v2: wall collision + pathing
 - [ ] v3: item-gated terrain awareness
 - [ ] v4: puzzle elements with hand-written solutions
