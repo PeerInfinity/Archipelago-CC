@@ -55,7 +55,8 @@
  */
 
 import { chromium } from 'playwright';
-import { existsSync, writeFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -84,6 +85,20 @@ const {
 } = await import(join(REPO, 'frontend/modules/seedlingDemo/botDriverV1.js'));
 
 const RECORD = process.argv.includes('--record');
+/**
+ * `--win` drives real-GPU Windows Chrome from WSL instead of the local
+ * SwiftShader Chromium. MEASURED 2026-07-30 on this box: 22.1 frames/sec
+ * (Intel gen-9) versus ~0.5 on WSL software rendering — a ~44x speedup,
+ * which turns a 20-minute fixture sweep into well under a minute. The
+ * physics is identical either way (a deterministic tick loop does not care
+ * what draws it); this only buys time. Recipe and the interop rules:
+ * SWFRecomp-CC `tools/divergence/perf/WINDOWS_PLAYWRIGHT_FROM_WSL.md`.
+ */
+const WIN = process.argv.includes('--win');
+const WIN_SCRATCH_WSL = '/mnt/c/playwright';
+const WIN_SCRATCH_DOS = 'C:\\playwright';
+const WIN_PY = '/mnt/c/Windows/py.exe';
+const WIN_DRIVER = join(HERE, 'seedling-bot-replay-win.py');
 const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
 
 let failures = 0;
@@ -92,7 +107,9 @@ function check(name, ok, detail = '') {
     if (!ok) failures++;
 }
 
-const browser = await chromium.launch({
+// Only the local (SwiftShader) path needs a browser here; --win drives
+// Windows Chrome out-of-process, per tape.
+const browser = WIN ? null : await chromium.launch({
     args: [
         '--enable-unsafe-webgpu',
         '--ignore-gpu-blocklist',
@@ -165,8 +182,44 @@ const botJsonOn = async (page, name, arg) => {
     }
 };
 
+/**
+ * Replay one tape on real-GPU Windows Chrome. The Python driver is a dumb
+ * browser driver — all fixture and diff logic stays here, so the tape
+ * format has exactly one implementation on the JS side.
+ *
+ * Windows `py.exe` cannot take Linux paths, so the driver and both JSON
+ * files are staged under C:\\playwright\\ (= /mnt/c/playwright/).
+ */
+function replayOnWindows(name, tapeObj) {
+    mkdirSync(WIN_SCRATCH_WSL, { recursive: true });
+    const driverWsl = join(WIN_SCRATCH_WSL, 'seedling-bot-replay-win.py');
+    writeFileSync(driverWsl, readFileSync(WIN_DRIVER));
+    const tapeWsl = join(WIN_SCRATCH_WSL, `tape-${name}.json`);
+    const outWsl = join(WIN_SCRATCH_WSL, `stream-${name}.json`);
+    writeFileSync(tapeWsl, JSON.stringify(tapeObj));
+    try { unlinkSync(outWsl); } catch { /* first run */ }
+
+    const out = execFileSync(WIN_PY, [
+        '-3.12', `${WIN_SCRATCH_DOS}\\seedling-bot-replay-win.py`,
+        '--url', PAGE_URL,
+        '--tape', `${WIN_SCRATCH_DOS}\\tape-${name}.json`,
+        '--out', `${WIN_SCRATCH_DOS}\\stream-${name}.json`,
+        '--deadline-sec', String(Math.ceil(deadlineFor(tapeObj.tick_count) / 1000)),
+    ], { cwd: WIN_SCRATCH_WSL, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+
+    // cmd.exe/py.exe launched from a WSL cwd emit a harmless UNC warning.
+    const clean = out.replace(/\r/g, '').split('\n')
+        .filter((l) => l && !/wsl\.localhost|CMD\.EXE|UNC paths/i.test(l));
+    clean.forEach((l) => console.log(`    ${l}`));
+    if (!existsSync(outWsl)) {
+        throw new Error(`windows driver wrote no stream for ${name}`);
+    }
+    return JSON.parse(readFileSync(outWsl, 'utf8'));
+}
+
 /** Replay one tape on its own fresh page and return the drained stream. */
 async function replay(name, tapeObj) {
+    if (WIN) return replayOnWindows(name, tapeObj);
     const page = await freshPage();
     try {
         const loaded = await botOn(page, 'botLoadTape', JSON.stringify(tapeObj));
@@ -192,14 +245,20 @@ async function replay(name, tapeObj) {
 try {
     // Boot once up front purely as a positive control: if the bot never
     // registers or never sees a player, everything below would "pass"
-    // vacuously by never running.
-    const probe = await freshPage();
-    check('bot control surface registered', true,
-        'botLoadTape/botStart/botStatus/botDrain/botReset');
-    const boot = await botJsonOn(probe, 'botStatus');
-    check('bot reports a live player before any tape', Number.isFinite(boot.x),
-        `x=${boot.x} y=${boot.y} level=${boot.level}`);
-    await probe.close();
+    // vacuously by never running. Under --win the per-tape driver does this
+    // itself (it fails loudly if the callbacks never appear) and each replay
+    // prints its WebGPU adapter, so a silent software fallback is visible.
+    if (!WIN) {
+        const probe = await freshPage();
+        check('bot control surface registered', true,
+            'botLoadTape/botStart/botStatus/botDrain/botReset');
+        const boot = await botJsonOn(probe, 'botStatus');
+        check('bot reports a live player before any tape', Number.isFinite(boot.x),
+            `x=${boot.x} y=${boot.y} level=${boot.level}`);
+        await probe.close();
+    } else {
+        console.log('MODE: real-GPU Windows Chrome (--win)');
+    }
 
     const names = fixtureNames();
     check('fixture roster is non-empty', names.length > 0, `${names.length} tapes`);
@@ -265,7 +324,7 @@ try {
     console.log(`FAIL: harness error — ${e.message}`);
     failures++;
 } finally {
-    await browser.close();
+    if (browser) await browser.close();
 }
 
 console.log(failures === 0
