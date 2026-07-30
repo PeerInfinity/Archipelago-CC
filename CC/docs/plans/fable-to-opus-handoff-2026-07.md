@@ -2765,6 +2765,16 @@ Claude, accepted by user). Full detail in `region-atlas-plan.md` Phase 8.**
   bot rungs. MIT makes Seedling a better first Tilemap-Platformer-substrate
   target than RWK. Scope datum: ~30.5k lines AS3 / 209 files on FlashPunk;
   the core-gameplay subset is a modest fraction.
+- **SEQUENCING AMENDED (user, 2026-07-30): per-stage JS-FIRST.** Each bot
+  ladder stage is implemented in JavaScript first (the iteration/testing
+  surface), then in the actual Seedling code — the port advances
+  incrementally alongside the bot instead of strictly after it. The oracle
+  doctrine stands: only the recompiled game witnesses "beatable in the
+  actual game"; per-stage differential tapes verify the JS side as it lands.
+  **Seedling is FORKED: `PeerInfinity/Seedling`** (parent
+  `ConnorUllmann/Seedling`); `~/CC/seedling` has origin=fork,
+  upstream=parent; the uncommitted Stage-1 edits there are still local-only.
+  Detail: `region-atlas-plan.md` Phase 8.
 
 ## 6. Everything else (unchanged queues)
 

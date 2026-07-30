@@ -13,7 +13,9 @@ them) complete, and **Phase 8 slice 1 (the MAZE-SURFACE playback bot: a
 headless tile-walking witness plus the shipped bot completing the grown world
 in-app) complete 2026-07-28** — **Phase 7 (RWK) POSTPONED INDEFINITELY (user
 ruling 2026-07-28); the arc continues Seedling-only. NEXT: Phase 8's
-real-game-surface slice, whose design space is recorded but UNEXPLORED**
+real-game-surface slice — per-stage JS-first (user amendment 2026-07-30: each
+ladder stage is implemented in JavaScript first, then in the Seedling source;
+fork exists at PeerInfinity/Seedling)**
 **Games:** Seedling only for now (redistributable, discrete sections, source
 available); Robot Wants Kitty postponed indefinitely (2026-07-28)
 
@@ -1351,6 +1353,25 @@ routes themselves remain untried.
   from shared-assumption transcription into an artifact verified against the
   oracle. The port never becomes a load-bearing stratum for Phase 8's
   beatability claim; the real game stays the oracle.
+- **SEQUENCING AMENDED (user ruling 2026-07-30): per-stage JS-first.** The
+  2026-07-29 "real-game bot first, port second" ordering is superseded at the
+  stage granularity: each ladder stage is implemented **in JavaScript first**
+  (fast iteration, suite-runnable, debuggable in the browser), **then in the
+  actual Seedling code**. The port is thereby pulled forward incrementally —
+  each stage ports only what that bot rung needs (v1 movement → v2
+  collision/pathing → v3 gated terrain → v4 puzzles → v5 enemies), matching
+  the staged-port observation in the scope datum below. What the 07-29 ruling
+  protected is UNCHANGED: the JS side is the ITERATION surface, never the
+  load-bearing stratum — "beatable in the actual game" is still witnessed
+  only by the recompiled game, and differential tapes (same input tape
+  through JS and wasm, compare positions/level transitions) verify each
+  stage's JS transcription against the oracle as it lands.
+- **The Seedling repository is FORKED (2026-07-30): `PeerInfinity/Seedling`**
+  (parent `ConnorUllmann/Seedling`, MIT). The local checkout
+  `~/CC/seedling` now has `origin` = fork, `upstream` = parent; its
+  long-standing uncommitted Stage-1 modifications (`src/Main.as`,
+  `assets/graphics/WhirlPool.png`) are still local-only. Bot-in-source work
+  lands on fork branches, following the omsi-loops fork precedent.
 - **Port scope datum (source survey 2026-07-29):** ~30,500 lines of AS3 across
   209 files on FlashPunk, but the core-gameplay subset (`Player.as`,
   `Mobile.as`, tiles, `Pickups/`, `Stairs`, `Teleporter`, `Puzzlements/`) is a
@@ -1367,10 +1388,13 @@ routes themselves remain untried.
 - [ ] ~~RWK bot~~ — inherits Phase 7's indefinite postponement (2026-07-28)
 
 ### Deferred / adjacent (not this plan)
-- **Seedling JS-port substrate** (ruled 2026-07-29, Phase 8 section above):
-  its own arc, AFTER the real-game bot slice; MIT so fully committable;
-  anchored by differential tapes against the wasm game; unlocks generated
-  worlds with real Seedling physics + suite-runnable puzzle/enemy surfaces
+- **Seedling JS-port substrate** (ruled 2026-07-29; sequencing amended
+  2026-07-30, Phase 8 section above): no longer strictly AFTER the bot slice —
+  the port grows incrementally, per ladder stage, as each stage's JS-first
+  iteration surface; the full SUBSTRATE (generated worlds with real Seedling
+  physics, suite-runnable puzzle/enemy surfaces) remains its own later arc.
+  MIT so fully committable; anchored by differential tapes against the wasm
+  game
 - Tilemap Platformer substrate (JS clone of RWK reusing runner code; tile
   map read from the user's SWF at runtime, never distributed) — if revived,
   the Seedling port above is its precedent and template
