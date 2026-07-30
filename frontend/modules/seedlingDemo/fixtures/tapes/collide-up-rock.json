@@ -1,0 +1,12 @@
+{
+  "tape_version": 1,
+  "game": "seedling",
+  "name": "collide-up-rock",
+  "description": "FIRST noclip:false tape. Hold UP for 40 ticks from the skip-splash spawn and press into the BreakableRock at oel (80,112), then keep holding. The rock's ctor is super(_x+8,_y+8) + setHitbox(16,16,8,8), so it occupies [80,96)x[112,128); the player's hitbox is 4x5 with origin (2,2), so the sweep must pin y just above 130 and hold there while UP stays down. Chosen over a solid TILE because level 0's only solid terrain (t=9 cliff at tiles (14,7),(15,7),(17,7)) is wedged between waterfall tiles, whose physics is coupled to sound state and is out of scope until v3. Chosen over a pole because it sits directly above the spawn: x stays 88 for the whole tape, so any x movement in a stream is a defect rather than a route. It is tag=4 and BreakableRock.check() removes itself when !Game.checkPersistence(4), but Main.as fills levelPersistence with `true` on a fresh boot and the recompiled runtime never persists, so it is present on every run. The approach is only ~6 px, which is the point: the stop lands mid-pixel and pins the sub-pixel sweep step (d = min(1,|rel|)*sign), not a tidy integer.",
+  "boot": { "level": 0, "x": 80, "y": 128 },
+  "noclip": false,
+  "tick_count": 45,
+  "inputs": [
+    { "key": "up", "from": 0, "to": 40 }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "tape_version": 1,
+  "game": "seedling",
+  "name": "transition-west-return",
+  "description": "FIRST cross-level tape: level 0 -> 94 -> 0 through the west teleporter pair, with collision on. Walking off the left edge is not edge logic — it is an AABB overlap with the authored trigger at OverWorld.oel (0,128) {to:94, playerx:288, playery:160}, whose 16x16 volume the player's rect reaches at x < 18 (the v1 engine puts that at tick 60, and v1's discarded clamp-left recording saw level=94 at tick 61). The lower trigger at (0,144) spans y [144,160) and the player's rect is [134,139), so exactly one of the pair can fire. LEFT is held 10 ticks PAST the crossing on purpose: FlashPunk's Input is static and no teleport path calls Input.clear(), so the hold must survive the world swap and keep the player moving left in level 94 from its fresh-Player arrival at (288+8, 160+8). It then coasts to a stop and walks RIGHT into level 94's return pair at (304,160)/(304,176), landing back in level 0 at (16+8, 128+8) = (24,136) — clear of the westbound triggers' [0,16) span, so the anti-ping-pong latch is never engaged in either direction and the round trip is not a two-way bounce. Routed to touch nothing else: no solid entity spans y [134,139) anywhere left of the spawn, row 8 is t=0/3 the whole way (no water, which starts at col 9 and is v3 material), and both buildings are far off the line.",
+  "boot": { "level": 0, "x": 80, "y": 128 },
+  "noclip": false,
+  "tick_count": 150,
+  "inputs": [
+    { "key": "left", "from": 0, "to": 72 },
+    { "key": "right", "from": 88, "to": 140 }
+  ]
+}

@@ -15,12 +15,19 @@
  * committed recordings still match what the live game does". Without the
  * artifact it SKIPs (exit 0), like every other seedling verifier.
  *
- *   default   replay + compare against the committed streams
- *   --record  write the streams as ORACLE recordings (expectations/<name>.json)
+ *   default        replay + compare against the committed streams
+ *   --record       write the streams as ORACLE recordings (expectations/<name>.json)
+ *   --only=a,b     restrict the sweep to these fixture names
  *
  * `--record` is the only thing in the repo allowed to write a
  * non-provisional expectation. `fixtures/regenerate.mjs` writes only
  * `.provisional.json`, so the two can never be confused for each other.
+ *
+ * `--only` exists BECAUSE of that: recording a newly authored fixture
+ * would otherwise rewrite every already-oracle-recorded expectation on the
+ * way past, and `--record` does not compare before it writes, so a genuine
+ * drift in an old fixture would be silently baked in instead of reported.
+ * Narrow the write; leave the regression net alone.
  *
  * ── Prereqs ───────────────────────────────────────────────────────────
  *   - dev server on :8000 at the REPO ROOT (`python -m http.server 8000`)
@@ -85,6 +92,13 @@ const {
 } = await import(join(REPO, 'frontend/modules/seedlingDemo/botDriverV1.js'));
 
 const RECORD = process.argv.includes('--record');
+/** `--only=name[,name...]` — restrict the sweep. Empty means "everything". */
+const ONLY = new Set(
+    process.argv.filter((a) => a.startsWith('--only='))
+        .flatMap((a) => a.slice('--only='.length).split(','))
+        .map((s) => s.trim())
+        .filter(Boolean),
+);
 /**
  * `--win` drives real-GPU Windows Chrome from WSL instead of the local
  * SwiftShader Chromium. MEASURED 2026-07-30 on this box: 22.1 frames/sec
@@ -260,8 +274,16 @@ try {
         console.log('MODE: real-GPU Windows Chrome (--win)');
     }
 
-    const names = fixtureNames();
-    check('fixture roster is non-empty', names.length > 0, `${names.length} tapes`);
+    const allNames = fixtureNames();
+    check('fixture roster is non-empty', allNames.length > 0, `${allNames.length} tapes`);
+
+    if (ONLY.size > 0) {
+        // A misspelled --only would otherwise "pass" by sweeping nothing.
+        const unknown = [...ONLY].filter((n) => !allNames.includes(n));
+        check('every --only name is a real fixture', unknown.length === 0,
+            unknown.length ? `unknown: ${unknown.join(', ')}` : `${ONLY.size} selected`);
+    }
+    const names = ONLY.size > 0 ? allNames.filter((n) => ONLY.has(n)) : allNames;
 
     for (const name of names) {
         const tape = loadTape(name);
@@ -297,14 +319,25 @@ try {
             continue;
         }
 
-        const { stream: expected, provisional } = loadExpectation(name);
+        // A fixture with no expectation yet must be a NAMED failure for that
+        // one tape, not an exception that aborts the sweep and leaves every
+        // tape after it unreported.
+        let expected;
+        let provisional;
+        try {
+            ({ stream: expected, provisional } = loadExpectation(name));
+        } catch (e) {
+            check(`${name}: has a committed expectation`, false,
+                `${e.message} — record it with --record --only=${name}`);
+            continue;
+        }
         const diff = diffObservationStreams(expected, stream);
         check(`${name}: live game matches the committed `
             + `${provisional ? 'PROVISIONAL' : 'oracle'} stream`,
             diff === null, diff ?? '');
     }
 
-    if (!RECORD) {
+    if (!RECORD && ONLY.size === 0) {
         // The live bot-driver task: targets in, tape synthesized by the JS
         // driver, and the arrival asserted from the GAME's own drained
         // observations — the game's word, not the driver's.
