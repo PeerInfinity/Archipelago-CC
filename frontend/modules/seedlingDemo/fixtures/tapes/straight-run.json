@@ -1,0 +1,12 @@
+{
+  "tape_version": 1,
+  "game": "seedling",
+  "name": "straight-run",
+  "description": "Hold RIGHT for 30 ticks from the skip-splash spawn. Exercises the input() limit cycle (velocity overshoots moveSpeed and oscillates ~0.85-1.45 on a 3-tick period) and the two-add case in the mover loop.",
+  "boot": { "level": 0, "x": 80, "y": 128 },
+  "noclip": true,
+  "tick_count": 40,
+  "inputs": [
+    { "key": "right", "from": 0, "to": 30 }
+  ]
+}

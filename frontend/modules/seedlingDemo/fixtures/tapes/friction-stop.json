@@ -1,0 +1,12 @@
+{
+  "tape_version": 1,
+  "game": "seedling",
+  "name": "friction-stop",
+  "description": "Hold RIGHT for 10 ticks then release and coast to a full stop. Exercises the friction decay tail and the 0.05 snap-to-zero, which is what makes the player ever come to rest exactly.",
+  "boot": { "level": 0, "x": 80, "y": 128 },
+  "noclip": true,
+  "tick_count": 30,
+  "inputs": [
+    { "key": "right", "from": 0, "to": 10 }
+  ]
+}

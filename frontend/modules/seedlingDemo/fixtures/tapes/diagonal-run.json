@@ -1,0 +1,13 @@
+{
+  "tape_version": 1,
+  "game": "seedling",
+  "name": "diagonal-run",
+  "description": "Hold RIGHT+UP for 30 ticks. Exercises vector-length friction: both axes saturate independently but only one friction quantum is removed from the combined length, so the diagonal covers ~sqrt(2)x the ground of an axis-aligned run. A per-axis damping port diverges here on tick 1. UP rather than DOWN deliberately — DOWN from the y=128 spawn runs into the y=157 world clamp within 30 ticks, which would silently turn this into a second clamp fixture; UP also exercises the negative-axis guard (v.y > -moveSpeed).",
+  "boot": { "level": 0, "x": 80, "y": 128 },
+  "noclip": true,
+  "tick_count": 40,
+  "inputs": [
+    { "key": "right", "from": 0, "to": 30 },
+    { "key": "up", "from": 0, "to": 30 }
+  ]
+}
