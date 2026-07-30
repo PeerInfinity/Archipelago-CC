@@ -79,16 +79,65 @@ export const MOVE_SPEEDS = Object.freeze([
  *   x = min(max(x, originX), FP.width  + originX - width)
  *   y = min(max(y, originY), FP.height + originY - height)
  * `normalHitbox = Rectangle(2, 2, 4, 5)` → `setHitbox(4, 5, 2, 2)`
- * (`Player.as:295, 414`), and `FP.width/height` are 160 (`Main.as:36`).
+ * (`Player.as:295, 414`).
  */
 export const HITBOX = Object.freeze({ width: 4, height: 5, originX: 2, originY: 2 });
-export const WORLD = Object.freeze({ width: 160, height: 160 });
-export const CLAMP = Object.freeze({
-    minX: HITBOX.originX,
-    maxX: WORLD.width + HITBOX.originX - HITBOX.width,   // 158
-    minY: HITBOX.originY,
-    maxY: WORLD.height + HITBOX.originY - HITBOX.height, // 157
-});
+
+/** `Scenery/Tile.as:22-23`. */
+export const TILE = Object.freeze({ w: 16, h: 16 });
+
+/**
+ * ⚠ The player entity does NOT spawn at the coordinates `new Game(level,
+ * x, y)` is given. `Player`'s constructor re-centres onto the tile
+ * (`Player.as:357`):
+ *     super(_x + Tile.w / 2, _y + Tile.h / 2);
+ * so `new Game(0, 80, 128)` puts `player.x/.y` at (88, 136).
+ *
+ * Found by the differential against the real game, which is exactly the
+ * arrangement working as intended: a tape's `boot` block carries the GAME
+ * CONSTRUCTOR arguments (what a human authoring a tape thinks in, and
+ * what the teleport machinery already speaks), and this offset is applied
+ * on top — transcribed, not baked into the fixtures.
+ *
+ * (`Game.as:2034-2037` can override the spawn entirely from a `<player>`
+ * object in the level file. Level 0's OverWorld.oel has none, so the
+ * constructor args stand; a v2 level that has one will need the level's
+ * own value.)
+ */
+export const SPAWN_OFFSET = Object.freeze({ x: TILE.w / 2, y: TILE.h / 2 });
+
+/** Entity spawn position for a `new Game(level, x, y)` boot block. */
+export function spawnFromBoot(boot) {
+    return { x: boot.x + SPAWN_OFFSET.x, y: boot.y + SPAWN_OFFSET.y };
+}
+
+/**
+ * ⚠ `FP.width`/`FP.height` are NOT the 160x160 screen size from
+ * `Main.as:36`. The level loader OVERWRITES them from the level file on
+ * every load — `Game.as:1854-1855`:
+ *     FP.width = xml.width; FP.height = xml.height;
+ * so they are the LEVEL's pixel dimensions, and the clamp is per-level.
+ * Level 0 (`assets/levels/OverWorld.oel`) is 320x320, giving bounds of
+ * x ∈ [2, 318], y ∈ [2, 317] — not the [2, 158] the 160 screen size
+ * would suggest.
+ *
+ * This is exactly the kind of thing a "transcribe the constant" shortcut
+ * gets wrong: the 160 is real, it is just not what the clamp reads.
+ */
+export const LEVEL0_WORLD = Object.freeze({ width: 320, height: 320 });
+
+/** Clamp bounds for a world of the given pixel dimensions. */
+export function clampFor(world) {
+    return {
+        minX: HITBOX.originX,
+        maxX: world.width + HITBOX.originX - HITBOX.width,
+        minY: HITBOX.originY,
+        maxY: world.height + HITBOX.originY - HITBOX.height,
+    };
+}
+
+/** Bounds for the v1 level. */
+export const CLAMP = Object.freeze(clampFor(LEVEL0_WORLD));
 
 /**
  * `Player.as:416` — `checkOffsetY = -originY + height - 2`, the vertical
@@ -237,12 +286,17 @@ export const groundTerrain = () => 0;
  *   4. clamp to world bounds             (`:560-561`)
  *
  * `opts.terrainStateAt(x, y)` overrides the terrain probe;
- * `opts.frozen` mirrors `Game.freezeObjects`, which gates the whole
+ * `opts.world` gives the level's pixel dimensions for the clamp (default
+ * level 0's 320x320 — see LEVEL0_WORLD, and note these are NOT the screen
+ * size); `opts.frozen` mirrors `Game.freezeObjects`, which gates the whole
  * friction/input/move block in `mobileUpdate` — a frozen tick moves
  * nothing, which is why the bot must not let one consume tape.
  */
 export function step(state, held, opts = {}) {
-    const { terrainStateAt = groundTerrain, frozen = false } = opts;
+    const {
+        terrainStateAt = groundTerrain, frozen = false, world = LEVEL0_WORLD,
+    } = opts;
+    const clamp = world === LEVEL0_WORLD ? CLAMP : clampFor(world);
 
     let x = state.x;
     let y = state.y;
@@ -270,8 +324,8 @@ export function step(state, held, opts = {}) {
     }
 
     // 4. The hard clamp is part of the tick, not a safety net.
-    x = Math.min(Math.max(x, CLAMP.minX), CLAMP.maxX);
-    y = Math.min(Math.max(y, CLAMP.minY), CLAMP.maxY);
+    x = Math.min(Math.max(x, clamp.minX), clamp.maxX);
+    y = Math.min(Math.max(y, clamp.minY), clamp.maxY);
 
     return { x, y, vx: v.x, vy: v.y };
 }

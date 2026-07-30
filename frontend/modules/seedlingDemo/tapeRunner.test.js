@@ -21,8 +21,12 @@
 import { describe, expect, it } from 'vitest';
 
 import { fixtureNames, loadExpectation, loadTape } from './fixtures/index.js';
+import { spawnFromBoot } from './playerPhysicsV1.js';
 import { diffObservationStreams } from './tapeFormat.js';
 import { runTape, runTapeToStream } from './tapeRunner.js';
+
+/** Entity spawn for the fixtures' shared boot block (Player.as:357: +8,+8). */
+const SPAWN = spawnFromBoot({ x: 80, y: 128 });
 
 const tape = (inputs, extra = {}) => ({
     tape_version: 1,
@@ -40,13 +44,16 @@ describe('record-then-act indexing', () => {
         // completed ticks and the last one needs its own disarm record.
         const { ticks } = runTape(tape([{ key: 'right', from: 0, to: 5 }]));
         expect(ticks).toHaveLength(6);
-        expect(ticks[0]).toEqual({ t: 0, x: 80, y: 128, level: 0 });
+        expect(ticks[0]).toEqual({ t: 0, x: SPAWN.x, y: SPAWN.y, level: 0 });
     });
 
-    it('observation 0 is the untouched boot position', () => {
+    it('observation 0 is the spawn, half a tile in from the boot args', () => {
+        // Player.as:357 re-centres onto the tile, so new Game(0,80,128)
+        // puts the entity at (88,136) — verified against the real game.
         const { ticks } = runTape(tape([{ key: 'right', from: 0, to: 3 }]));
-        expect(ticks[0].x).toBe(80);
-        expect(ticks[1].x).toBeCloseTo(80.8, 12);   // after ONE tick of input
+        expect(ticks[0].x).toBe(88);
+        expect(ticks[0].y).toBe(136);
+        expect(ticks[1].x).toBeCloseTo(88.8, 12);   // after ONE tick of input
     });
 
     it('carries the boot level on every observation', () => {
@@ -63,7 +70,7 @@ describe('record-then-act indexing', () => {
     it('handles a tape with no inputs at all', () => {
         const { ticks } = runTape(tape([], { tick_count: 3 }));
         expect(ticks).toHaveLength(4);
-        expect(ticks.every((o) => o.x === 80 && o.y === 128)).toBe(true);
+        expect(ticks.every((o) => o.x === SPAWN.x && o.y === SPAWN.y)).toBe(true);
     });
 });
 
@@ -122,8 +129,8 @@ describe('fixture behaviour each tape was written to exercise', () => {
         // thing and would pass for a per-axis-damping port.
         const diag = runTape(loadTape('diagonal-run')).final;
         const straight = runTape(loadTape('straight-run')).final;
-        const diagPath = Math.hypot(diag.x - 80, diag.y - 128);
-        const straightPath = Math.abs(straight.x - 80);
+        const diagPath = Math.hypot(diag.x - SPAWN.x, diag.y - SPAWN.y);
+        const straightPath = Math.abs(straight.x - SPAWN.x);
         expect(diagPath / straightPath).toBeCloseTo(Math.SQRT2, 1);
         expect(diagPath).toBeGreaterThan(straightPath * 1.3);
     });
@@ -135,16 +142,20 @@ describe('fixture behaviour each tape was written to exercise', () => {
     });
 
     it('direction-flip: ends left of the spawn', () => {
-        expect(runTape(loadTape('direction-flip')).final.x).toBeLessThan(80);
+        expect(runTape(loadTape('direction-flip')).final.x).toBeLessThan(SPAWN.x);
     });
 
     it('clamp-left: pins at the world bound and stays there', () => {
         const { ticks, final } = runTape(loadTape('clamp-left'));
         expect(final.x).toBe(2);
         expect(ticks.at(-1).x).toBe(2);
-        // Reached the wall well before the tape ends, i.e. the fixture
-        // really does exercise sustained clamping rather than just
-        // arriving at the boundary on the final tick.
-        expect(ticks[Math.floor(ticks.length / 2)].x).toBe(2);
+        // The fixture must exercise SUSTAINED clamping, not merely arrive
+        // at the boundary on its last tick — otherwise a port that let the
+        // player drift past the wall would still satisfy the two checks
+        // above. Count the pinned ticks rather than probing one index.
+        const pinned = ticks.filter((o) => o.x === 2).length;
+        expect(pinned).toBeGreaterThan(30);
+        // ...and it must actually travel to get there (not spawn pinned).
+        expect(ticks[0].x).toBeGreaterThan(50);
     });
 });

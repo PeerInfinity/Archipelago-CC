@@ -19,7 +19,7 @@
  */
 
 import { heldKeysAt, parseTape } from './tapeFormat.js';
-import { groundTerrain, step } from './playerPhysicsV1.js';
+import { groundTerrain, spawnFromBoot, step } from './playerPhysicsV1.js';
 
 /**
  * Run `tape` through the v1 physics.
@@ -50,7 +50,10 @@ export function runTape(tape, opts = {}) {
         );
     }
 
-    let state = { x: t.boot.x, y: t.boot.y, vx: 0, vy: 0 };
+    // The entity spawns half a tile in from the constructor args
+    // (Player.as:357) — see SPAWN_OFFSET.
+    const spawn = spawnFromBoot(t.boot);
+    let state = { x: spawn.x, y: spawn.y, vx: 0, vy: 0 };
     const ticks = [];
 
     // <= tick_count: the final iteration records the last tick's result

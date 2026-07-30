@@ -40,6 +40,7 @@ import {
     applyFriction,
     DEFAULT_FRICTION,
     groundTerrain,
+    spawnFromBoot,
     step,
 } from './playerPhysicsV1.js';
 
@@ -138,7 +139,8 @@ export function synthesizeTape(targets, opts = {}) {
         }
     });
 
-    let state = { x: boot.x, y: boot.y, vx: 0, vy: 0 };
+    const spawn = spawnFromBoot(boot);
+    let state = { x: spawn.x, y: spawn.y, vx: 0, vy: 0 };
     /** @type {Array<Set<string>>} held-key set per tick */
     const perTick = [];
     const arrivals = [];

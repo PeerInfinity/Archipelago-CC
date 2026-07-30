@@ -24,6 +24,8 @@ import {
     applyInput,
     CHECK_OFFSET_Y,
     CLAMP,
+    clampFor,
+    LEVEL0_WORLD,
     DEFAULT_FRICTION,
     MOVE_SPEEDS,
     moveAxis,
@@ -53,9 +55,17 @@ describe('constants transcribed from source', () => {
         });
     });
 
-    it('derives the world clamp from the normal hitbox', () => {
-        // setHitbox(4, 5, 2, 2) with FP.width/height 160 (Player.as:295/414, Main.as:36)
-        expect(CLAMP).toEqual({ minX: 2, maxX: 158, minY: 2, maxY: 157 });
+    it('derives the world clamp from the LEVEL size, not the screen size', () => {
+        // setHitbox(4, 5, 2, 2) (Player.as:295/414) with FP.width/height
+        // taken from the level file, NOT from Main's 160x160 screen:
+        // Game.as:1854-1855 overwrites them on every load, and level 0
+        // (OverWorld.oel) is 320x320.
+        expect(LEVEL0_WORLD).toEqual({ width: 320, height: 320 });
+        expect(CLAMP).toEqual({ minX: 2, maxX: 318, minY: 2, maxY: 317 });
+        // A 160x160 level would give the bounds the screen size suggests —
+        // pinning both shows the formula, not a memorised pair of numbers.
+        expect(clampFor({ width: 160, height: 160 }))
+            .toEqual({ minX: 2, maxX: 158, minY: 2, maxY: 157 });
     });
 
     it('samples terrain one pixel below the origin', () => {
