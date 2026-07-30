@@ -1384,8 +1384,9 @@ routes themselves remain untried.
   presentation. A staged port mirroring the bot ladder (terrain → gates →
   puzzles → enemies) matches how the mass is distributed.
 - **v1 KICKOFF DESIGNED (2026-07-30, Fable design session)** — brief:
-  `NewDocs/plans/seedling-bot-v1-opus-kickoff.md` (moves to `CC/docs/plans/`
-  when implementation starts). Four rulings taken (user, 2026-07-30):
+  **`CC/docs/plans/seedling-bot-v1-opus-kickoff.md`** (moved out of the
+  gitignored `NewDocs/` when implementation started, 2026-07-30). Four
+  rulings taken (user, 2026-07-30):
   (1) the JS-side stage code lives in a **new frontend module
   `frontend/modules/seedlingDemo/`** (runnerDemo precedent: pure engine core
   + vitest, no panel/substrate registration yet) — this closes the
@@ -1409,6 +1410,38 @@ routes themselves remain untried.
   an effectively cold emcc pass), so the AS3 bot is a generic data-driven
   tape interpreter compiled in once per rung, with all iteration in
   tapes + JS.
+- **v1 IMPLEMENTATION RECON COMPLETE (2026-07-30)** — full evidence trail in
+  the kickoff's §8; the corrections are applied inline throughout that doc.
+  All three flagged ⚠ items resolved, one unflagged risk cleared, and **two
+  substantive corrections to the design brief**:
+  - ⛔ **`Player` OVERRIDES `moveX`/`moveY`** (`Player.as:1687`/`:1717`). The
+    brief's suggested noclip patch site (`Mobile.moveX/moveY`) would have
+    been a **silent no-op for the player**. The flag belongs in the Player
+    overrides.
+  - ⛔ **`Player.input()` overshoots; it does not clamp.** The brief said
+    "one held frame saturates the axis — velocity is effectively binary".
+    The real guard is `if (v.x < moveSpeed) v.x += accel`, so velocity
+    exceeds `moveSpeed` on most ticks and runs a ~3-tick limit cycle
+    (0.80 → 1.35 → 1.10 → 0.85 → 1.40 …) against a `moveSpeed` of 0.8. **A
+    JS transcription written to the old description diverges on tick 1.**
+  - ✅ **SharedObject persistence — resolved, and the worry inverts.** The
+    recompiled runtime models no persistence at all (in-process cache;
+    `flush()` is a no-op returning `"flushed"`), so **every page load starts
+    from an empty save and reproducibility is free** — no fresh-context
+    dance, no reset command needed.
+  - ✅ **The unflagged risk: synthetic `KeyboardEvent` dispatch works in the
+    RECOMPILED runtime**, reaching the identical sink the hardware path uses
+    (`input_handle_key → dispatch_key → avm2_keyboard_event_new →
+    avm2_dispatch_event`). The whole zero-patch input design rested on this
+    and it had not been checked against the C runtime, only against the AS3.
+  - Also: **noclip does NOT bypass terrain speed** (`getState()` types the
+    tile under the player independently of collision), so v1's JS engine
+    takes a pluggable `terrainStateAt()` seam stubbed to ground rather than
+    a hardcoded `0.8` — that way the differential *catches* a tape that
+    wanders onto water/stairs instead of the assumption hiding in a constant.
+    The verify scripts also run **headless** (swiftshader), correcting a
+    stale "must be headed" note. Baseline re-measured fresh: vitest
+    **3790/3790**, 155 files, 34.8s.
 - The staged ladder below still stands for the real-game surface.
 
 - [ ] Seedling v1: collision fully disabled, move to targets
