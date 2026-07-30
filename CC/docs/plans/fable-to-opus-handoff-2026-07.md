@@ -2786,6 +2786,45 @@ Claude, accepted by user). Full detail in `region-atlas-plan.md` Phase 8.**
   the machine-local `seedling_bot_ap` artifact). Four rulings taken
   2026-07-30, recorded in the kickoff §1 and `region-atlas-plan.md` Phase 8.
   All anchors recon-verified same day; recon-first still applies.
+- **v1 SHIPPED — COMPLETE 2026-07-30** (`ebb30f46b`..`63c9b74e4`; fork `bot`
+  @ `25aaa43`). The kickoff moved to `CC/docs/plans/`. **The JS physics
+  transcription reproduces the real recompiled game EXACTLY — 220 ticks
+  across 5 fixtures, bit for bit.** Both gates green (G1 vitest
+  JS==recordings; G2 live replay + a live bot-driver task landing the real
+  game on its target). **Read
+  `docs/json/developer/procgen/seedling-bot.md` FIRST** — contracts, traps,
+  dead ends. ⚡ always run the harness with `--win` (real-GPU Windows Chrome
+  from WSL, ~25 fps vs ~0.5 on WSL SwiftShader — ~44x).
+- **NEXT FOR THIS ARC: a v2 DESIGN session (Fable) — collision + pathing.**
+  This is a rulings job, not an implementation one; queue the design first
+  and let it emit the Opus brief, exactly as v1's did. Three questions it
+  should settle before anyone writes a collision sweep:
+  1. **How does the JS side get level geometry?** v1's `terrainStateAt()`
+     seam is stubbed to ground on purpose. v2 needs the real level-0
+     tilemap AND the solid set. There is already an `.oel` parser
+     (`scripts/procgen/seedlingOgmo.js`) and the Phase-2 map extractor —
+     reuse them at build time into a committed fixture, or parse at test
+     time? Same shape as v1's committed-oracle-recording ruling, and it
+     wants the same kind of answer.
+  2. **What does the observation stream's `transitions` field carry?** v1
+     deliberately left it empty and the format now has its first real data:
+     the discarded `clamp-left` recording caught the game loading level 94
+     at tick 61 when the player walked off the left edge. "Entered level N
+     at tick T" vs. something exit-named is a contract BOTH consumers are
+     stuck with; decide it before v2 fixtures exist. Relatedly: **the world
+     clamp is unreachable in level 0** (a room transition always fires
+     first), so v2 must model transitions to model edges at all.
+  3. **Does `Mobile.solids` stay a v5 concern?** The 2026-07-29 ruling said
+     the base list is player-traversal truth and per-entity overrides are
+     enemy-side only. v2 is the first rung that actually runs the sweeps, so
+     confirm that holds for `Player.as:359` pushing `"LavaBoss"` and for
+     `Tree`'s private list, or scope it in.
+  Anchors the design session should NOT re-derive: `Player` overrides
+  `moveX`/`moveY` (the base-class movers are dead for the player, and the
+  v1 noclip flag already sits in the overrides — v2 just re-arms the
+  `collideTypes` call it skips); the 1-px swept-collision loop with X fully
+  resolved before Y; and the AS3 round-trip cost (~10 min) that makes
+  batching AS3 edits mandatory.
 
 ## 6. Everything else (unchanged queues)
 
