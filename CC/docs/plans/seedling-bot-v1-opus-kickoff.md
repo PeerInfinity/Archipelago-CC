@@ -637,6 +637,54 @@ hits an unimplemented runtime surface knows the escape hatch exists.
   materialize (exactly equal). The loop is still recommended, on code-shape
   grounds only; the doc no longer implies exactness depends on it.
 
+### 8.4b What the ORACLE corrected once it ran (slice 2, 2026-07-30)
+
+The recompiled game replayed a tape and **confirmed the §2.3 physics
+correction outright**: holding RIGHT it reports `x = 88,
+92.09999999999998, 99.15` at ticks 0/4/10, and the JS engine produces
+those same doubles including the float noise. That is the overshooting
+limit cycle, measured in the real game.
+
+It also caught two things recon had not:
+
+1. **The clamp reads the LEVEL size, not the screen size.**
+   `Game.as:1854-1855` overwrites `FP.width`/`FP.height` from the level
+   file on every load, so level 0 (`OverWorld.oel`, 320x320) clamps to
+   **x ∈ [2,318], y ∈ [2,317]** — not the [2,158] that `Main.as:36`'s
+   160x160 screen implies. §2.3 now states this; world size is an input.
+2. **The player does not spawn at the constructor's coordinates.**
+   `Player.as:357` re-centres onto the tile —
+   `super(_x + Tile.w / 2, _y + Tile.h / 2)` with `Tile.w = 16` — so
+   `new Game(0, 80, 128)` puts the entity at **(88, 136)**. A tape's
+   `boot` block carries the CONSTRUCTOR args (what the teleport machinery
+   already speaks) and the offset is transcribed on top.
+   (`Game.as:2034-2037` can override the spawn entirely from a `<player>`
+   object in the level file; level 0 has none, but a v2 level may.)
+
+**Two operational facts that dominate the harness design:**
+
+- ⏱ **The recompiled game runs at roughly HALF A FRAME PER SECOND**
+  under software WebGPU — measured 38 ticks in 80s, and the same headless
+  and headed, so it is not a headless-throttling artifact. With ~18-20
+  `blackCover` fade frames after every world load (≈40s of pure fade),
+  a 140-tick tape costs ~5 minutes. Deadlines MUST scale with tape
+  length: a flat 60s timeout expires during the fade and looks exactly
+  like a dead bot, which is precisely how this first presented and cost
+  the most diagnosis time. `NO_GRAPHICS` exists in the runtime but
+  `build_wasm_avm2.sh` does not expose it — building a graphics-less
+  variant is the obvious speed-up if this becomes painful.
+- 🔄 **Every tape needs a FRESH PAGE.** `botReset` forgets the tape but
+  cannot rewind the GAME: the player stays where the last tape left them,
+  so a second tape on the same page starts from the wrong position and
+  records plausible garbage. Reloading is the honest reset and, against a
+  multi-minute replay, its cost is noise.
+
+Dead ends worth not repeating: the black canvas is a red herring (the
+teleport page reads 0% non-black too — it is the headless WebGPU
+readback); the repeated `A valid external Instance reference no longer
+exists` page errors are an unconfigured BridgeGeneric and are present in
+the teleport build as well; neither had anything to do with the freeze.
+
 ### 8.5 Baseline, re-measured fresh
 
 `npm run test:unit` → **155 files, 3790/3790 passed, 34.8s, exit 0**

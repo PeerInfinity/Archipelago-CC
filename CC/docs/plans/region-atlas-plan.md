@@ -1442,9 +1442,34 @@ routes themselves remain untried.
     The verify scripts also run **headless** (swiftshader), correcting a
     stale "must be headed" note. Baseline re-measured fresh: vitest
     **3790/3790**, 155 files, 34.8s.
+- **v1 SLICES 1+2 SHIPPED+PUSHED 2026-07-30** (`d67edb55d`, `d1e5f4ac5`;
+  fork `bot` @ `25aaa43`). `frontend/modules/seedlingDemo/` holds the tape
+  contract, the v1 physics transcription, the tape runner and the bot
+  driver; `Bot.as` is compiled into a new `seedling_bot_ap` wasm page and
+  **the real recompiled Seedling now replays tapes and reports where the
+  player went**.
+  - **The physics correction is CONFIRMED BY THE ORACLE.** Holding RIGHT,
+    the game reports `x = 88, 92.09999999999998, 99.15` at ticks 0/4/10 and
+    the JS engine produces the same doubles, float noise included — the
+    overshooting limit cycle, measured in the real game rather than argued
+    from the source.
+  - **Two more transcription bugs the game caught**: the clamp reads the
+    LEVEL size (`Game.as:1854-1855` overwrites `FP.width/height` per load,
+    so level 0 is 320x320 → bounds [2,318]×[2,317], NOT the [2,158] the
+    160×160 screen implies), and the player spawns half a tile in from the
+    constructor args (`Player.as:357`, so `new Game(0,80,128)` → (88,136)).
+  - ⏱ **Operationally: the recompiled game runs at ~0.5 frames/sec** under
+    software WebGPU (headless AND headed alike), with ~18-20 `blackCover`
+    fade frames per world load. Harness deadlines must scale with tape
+    length — a flat 60s timeout dies during the fade and is
+    indistinguishable from a dead bot. Every tape also needs a FRESH PAGE
+    (`botReset` cannot rewind the game).
 - The staged ladder below still stands for the real-game surface.
 
 - [ ] Seedling v1: collision fully disabled, move to targets
+      — slices 1+2 done (JS module + AS3 bot + differential harness);
+        slice 3 (commit oracle recordings) / 4 (verify script) / 5 (docs)
+        remain
 - [ ] v2: wall collision + pathing
 - [ ] v3: item-gated terrain awareness
 - [ ] v4: puzzle elements with hand-written solutions
