@@ -1368,10 +1368,14 @@ routes themselves remain untried.
   stage's JS transcription against the oracle as it lands.
 - **The Seedling repository is FORKED (2026-07-30): `PeerInfinity/Seedling`**
   (parent `ConnorUllmann/Seedling`, MIT). The local checkout
-  `~/CC/seedling` now has `origin` = fork, `upstream` = parent; its
-  long-standing uncommitted Stage-1 modifications (`src/Main.as`,
-  `assets/graphics/WhirlPool.png`) are still local-only. Bot-in-source work
-  lands on fork branches, following the omsi-loops fork precedent.
+  `~/CC/seedling` now has `origin` = fork, `upstream` = parent; the fork's
+  `main` is kept PRISTINE (identical to upstream). The long-standing
+  Stage-1 modifications are committed and pushed on branch
+  **`stage1-teleport-build`** (checked out): the WhirlPool.png
+  case-sensitivity build fix (a symlink — any Linux build needs it or the
+  embed-path fix), and the Main.as skip-splash boot the teleport/AP wasm
+  builds were compiled with. Bot-in-source work lands on fork branches,
+  following the omsi-loops fork precedent.
 - **Port scope datum (source survey 2026-07-29):** ~30,500 lines of AS3 across
   209 files on FlashPunk, but the core-gameplay subset (`Player.as`,
   `Mobile.as`, tiles, `Pickups/`, `Stairs`, `Teleporter`, `Puzzlements/`) is a

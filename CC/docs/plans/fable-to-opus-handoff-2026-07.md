@@ -2773,7 +2773,8 @@ Claude, accepted by user). Full detail in `region-atlas-plan.md` Phase 8.**
   actual game"; per-stage differential tapes verify the JS side as it lands.
   **Seedling is FORKED: `PeerInfinity/Seedling`** (parent
   `ConnorUllmann/Seedling`); `~/CC/seedling` has origin=fork,
-  upstream=parent; the uncommitted Stage-1 edits there are still local-only.
+  upstream=parent; fork `main` pristine; the Stage-1 edits (WhirlPool case
+  fix + skip-splash boot) are pushed on branch `stage1-teleport-build`.
   Detail: `region-atlas-plan.md` Phase 8.
 
 ## 6. Everything else (unchanged queues)
