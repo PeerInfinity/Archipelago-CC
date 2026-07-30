@@ -1383,6 +1383,32 @@ routes themselves remain untried.
   modest fraction; the bulk is `Enemies/` (30+ classes), bosses, `NPCs/`, and
   presentation. A staged port mirroring the bot ladder (terrain → gates →
   puzzles → enemies) matches how the mass is distributed.
+- **v1 KICKOFF DESIGNED (2026-07-30, Fable design session)** — brief:
+  `NewDocs/plans/seedling-bot-v1-opus-kickoff.md` (moves to `CC/docs/plans/`
+  when implementation starts). Four rulings taken (user, 2026-07-30):
+  (1) the JS-side stage code lives in a **new frontend module
+  `frontend/modules/seedlingDemo/`** (runnerDemo precedent: pure engine core
+  + vitest, no panel/substrate registration yet) — this closes the
+  2026-07-30 open flag; (2) the wasm oracle's observation streams are
+  **committed fixtures**, so vitest runs a JS-vs-recorded-oracle
+  differential in CI despite the machine-local artifact, and the local
+  verify script becomes the staleness gate (SKIPs without the artifact);
+  (3) the bot build is a **separate page `seedling_bot_ap/`** beside
+  `seedling_teleport_ap/` — the Phase-4 artifacts stay untouched; (4) the
+  kickoff is **v1 only**. Recon findings that shaped it: Seedling reads raw
+  keycodes (`Player.as:59`) via check/pressed/**released** (dialogue needs
+  full down-then-up), FlashPunk input state is private but its listeners
+  hang on `FP.stage` so synthetic `KeyboardEvent`s drive it patch-free;
+  `FP.elapsed` appears in zero lines of game code, so a tick-indexed tape is
+  deterministic for movement (RNG only bites at the v5 rung; ~20 blackCover
+  dead ticks follow every room load); live position is `player.x/.y` only
+  (the `Main` statics are spawn-time, SharedObject-backed); the bot needs
+  **no BridgeGeneric/configure change at all** — it registers its own EI
+  callbacks, which the page shim auto-wraps under `__swfBridge.game.*`; and
+  a one-line AS3 edit costs the FULL pipeline (~15 min mxmlc+SWFRecomp plus
+  an effectively cold emcc pass), so the AS3 bot is a generic data-driven
+  tape interpreter compiled in once per rung, with all iteration in
+  tapes + JS.
 - The staged ladder below still stands for the real-game surface.
 
 - [ ] Seedling v1: collision fully disabled, move to targets

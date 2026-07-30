@@ -2776,6 +2776,16 @@ Claude, accepted by user). Full detail in `region-atlas-plan.md` Phase 8.**
   upstream=parent; fork `main` pristine; the Stage-1 edits (WhirlPool case
   fix + skip-splash boot) are pushed on branch `stage1-teleport-build`.
   Detail: `region-atlas-plan.md` Phase 8.
+- **v1 KICKOFF READY (2026-07-30, Fable): the Opus brief is
+  `NewDocs/plans/seedling-bot-v1-opus-kickoff.md`** — QUEUE THIS NEXT for the
+  arc. Scope: the tape contract (tick-indexed hold-spans), the
+  `frontend/modules/seedlingDemo/` JS engine seed, the compiled-in AS3 tape
+  bot on the fork's `bot` branch (own EI callbacks — no BridgeGeneric or
+  configure change), committed oracle recordings (vitest differential in CI)
+  + `verify-seedling-bot-differential.mjs` (staleness gate, SKIPs without
+  the machine-local `seedling_bot_ap` artifact). Four rulings taken
+  2026-07-30, recorded in the kickoff §1 and `region-atlas-plan.md` Phase 8.
+  All anchors recon-verified same day; recon-first still applies.
 
 ## 6. Everything else (unchanged queues)
 
