@@ -1374,7 +1374,8 @@ routes themselves remain untried.
   **`stage1-teleport-build`** (checked out): the WhirlPool.png
   case-sensitivity build fix (a symlink — any Linux build needs it or the
   embed-path fix), and the Main.as skip-splash boot the teleport/AP wasm
-  builds were compiled with. Bot-in-source work lands on fork branches,
+  builds were compiled with. **The bot-in-source work branch exists:
+  `bot`** (pristine `main` + the case fix ONLY, pushed 2026-07-30) —
   following the omsi-loops fork precedent.
 - **Port scope datum (source survey 2026-07-29):** ~30,500 lines of AS3 across
   209 files on FlashPunk, but the core-gameplay subset (`Player.as`,
