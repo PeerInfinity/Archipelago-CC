@@ -1201,3 +1201,47 @@ Any coverage claim about "level 0" should say which 103 tiles it means.
 - Four expectations written (`--record --only=`), none rewritten. The two
   driver fixtures were recorded twice: once before the statue correction,
   which is how it was found, and once after the re-plan.
+
+
+## 12. The real gate for v3+ is the CLASS TABLE, and it is big (2026-07-30)
+
+Slice 4 retired the parameterised-boot recommendation for the right
+reason: a boot that could start anywhere unblocks nothing, because
+`buildLevelWorld` throws on unclassified entities in every level worth
+going to. Verified independently — of level 0's eight exits, **only level
+94 builds**; all six §9 hole-adjacent levels and all four §10 ping-pong
+destinations throw.
+
+Sizing what widening it would actually cost, since "add the missing
+classes" is the sentence that will otherwise get written into a plan
+unpriced:
+
+- **3 of 116 levels build today.**
+- **115 distinct unclassified entity tags** across the extract.
+- The distribution has a very long tail. `lightalpha` alone blocks 98
+  levels, but classifying it takes you from 3 levels to **6**:
+
+  | classify top N tags | levels that build |
+  |---|---|
+  | 1 (`lightalpha`) | 6 / 116 |
+  | 3 | 10 / 116 |
+  | 5 | 12 / 116 |
+  | 10 | 16 / 116 |
+  | 20 | 27 / 116 |
+  | 40 | 44 / 116 |
+
+So there is no cheap prefix. Most of the 115 are enemies, pickups,
+puzzle furniture and presentation — i.e. the same mass the v1 port-scope
+note put at "Enemies (30+ classes), bosses, NPCs, presentation" — and
+classifying them is not a table-filling exercise so much as the v3/v4/v5
+rungs arriving one class at a time. That is the honest shape: **the ladder
+above v2 is gated on entity semantics, not on the boot, not on pathing,
+and not on the toolchain.**
+
+Two consequences worth carrying into any v3 planning:
+- Pricing a rung by "which levels does it need" is now a one-line query
+  against `ENTITY_CLASSES`, and should be done BEFORE the rung is scoped.
+- The census guard's altitude was chosen correctly. Classifying only what
+  fixture levels contain is what has kept 115 tags from being guessed at,
+  and every one of those throws is a rung boundary made visible rather
+  than a silent non-collider.
