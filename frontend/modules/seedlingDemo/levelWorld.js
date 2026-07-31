@@ -383,6 +383,13 @@ export function buildLevelWorld(levelRecord) {
     const tiles = [];
     const walkableTiles = [];
     const solids = [];
+    // Object entities only — the `solids` list minus everything a TILE
+    // contributed. It exists for the first-tick type flip (see the query
+    // methods' `beforeTypeFlip` option): a Tile is constructed
+    // `type = "Tile"` and only becomes `"Solid"` in its own first update,
+    // while every object class assigns its type in its CONSTRUCTOR, so on a
+    // world's very first live tick the object solids are the whole list.
+    const objectSolids = [];
     const pixelmasks = [];
     const teleporters = [];
 
@@ -469,7 +476,9 @@ export function buildLevelWorld(levelRecord) {
         const y = Number(e.y);
         if (cls.collider === 'none') continue;
         if (cls.collider === 'rect') {
-            solids.push({ rect: entityRect(cls, x, y), cls, tag: e.type, x, y });
+            const solid = { rect: entityRect(cls, x, y), cls, tag: e.type, x, y };
+            solids.push(solid);
+            objectSolids.push(solid);
         } else if (cls.collider === 'pixelmask') {
             pixelmasks.push({ rect: entityRect(cls, x, y), cls, tag: e.type, x, y });
         } else if (cls.collider === 'trigger') {
@@ -519,6 +528,7 @@ export function buildLevelWorld(levelRecord) {
         tiles,
         walkableTiles,
         solids,
+        objectSolids,
         pixelmasks,
         teleporters,
 
@@ -532,8 +542,17 @@ export function buildLevelWorld(levelRecord) {
          * the bounding rect is already an over-approximation, so this can
          * only over-throw, and an over-throw is a loud "route the fixture
          * elsewhere" while an under-throw is a silent divergence.
+         *
+         * ⚠ `opts.beforeTypeFlip` selects the world as it exists on its
+         * very FIRST live tick, when no tile is solid yet. See the note on
+         * `nearestWalkableTile` — this is the same one fact seen from the
+         * other side, and it is transcribed rather than tidied because the
+         * game's own comment says the order is deliberate.
          */
-        collidesSolid(box) {
+        collidesSolid(box, { beforeTypeFlip = false } = {}) {
+            // Pixelmask entities (Building, TreeLarge, CliffSide) assign
+            // their type in the CONSTRUCTOR, so the seam is armed on tick 1
+            // too — only Tiles are late.
             for (const p of pixelmasks) {
                 if (rectsOverlap(box, p.rect)) {
                     fail(`unmodeled pixelmask collider: ${p.cls.as3} (${p.tag}) at `
@@ -542,7 +561,7 @@ export function buildLevelWorld(levelRecord) {
                         + `Source: ${p.cls.src}`);
                 }
             }
-            for (const s of solids) {
+            for (const s of (beforeTypeFlip ? objectSolids : solids)) {
                 if (rectsOverlap(box, s.rect)) return s;
             }
             return null;
@@ -557,11 +576,26 @@ export function buildLevelWorld(levelRecord) {
          * transcribe FlashPunk's list order, this keeps the extract's
          * order and the fixtures stay off exact ties; if one ever lands on
          * a tie, move the fixture.
+         *
+         * ⚠ `opts.beforeTypeFlip` searches ALL tiles instead of the
+         * walkable ones. On a world's very first live tick every Tile is
+         * still typed `"Tile"` — the flip happens in each Tile's own first
+         * `update()` (`Tile.as:117-122`), and `World.addUpdate` PREPENDS
+         * while `loadlevel` adds the tiles (`Game.as:1902-2007`) before the
+         * Player (`:2040`), so the Player updates FIRST and reads the
+         * pre-flip lists. The game's own comment at that update says this
+         * is deliberate ("after all of the objects have run their
+         * first-frame check"), so it is transcribed, not fixed. It is very
+         * hard to observe — a fresh Player has v = 0, so tick 1 moves at
+         * most 0.8 px, and every SOLID tile type happens to carry the plain
+         * 0.8 walk speed, so a first-tick state of 9 (Cliff) and one of 0
+         * (Ground) pick the same physics. Modelled anyway: "unobservable"
+         * is a claim about today's fixtures, not about the game.
          */
-        nearestWalkableTile(x, y) {
+        nearestWalkableTile(x, y, { beforeTypeFlip = false } = {}) {
             let best = null;
             let bestDist = Infinity;
-            for (const tile of walkableTiles) {
+            for (const tile of (beforeTypeFlip ? tiles : walkableTiles)) {
                 const dx = tile.x - x;
                 const dy = tile.y - y;
                 const d = dx * dx + dy * dy;

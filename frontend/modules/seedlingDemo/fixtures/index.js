@@ -2,29 +2,30 @@
  * seedlingDemo/fixtures — the committed tapes and their expected
  * observation streams.
  *
- * ⚠ **The expectations in `expectations/` are PROVISIONAL at slice 1.**
- * They are produced by this repo's own JS engine (`regenerate.mjs`), so
- * the test that compares JS output against them is a CHANGE DETECTOR, not
- * a correctness proof — a verifier that shares the generator's
- * assumptions verifies nothing about whether the physics is right. It
- * catches an unintended physics edit, which is worth having, and nothing
- * more.
+ * ✅ **Every expectation in `expectations/` is an ORACLE RECORDING** —
+ * an observation stream drained from the recompiled Seedling wasm build,
+ * written only by `verify-seedling-bot-differential.mjs --record`. That is
+ * what makes the fixture differential a genuine independent stratum: the
+ * expected values came from the GAME, not from the module under test.
  *
- * The real correctness gate arrives at slice 3, when these files are
- * replaced by ORACLE RECORDINGS drained from the recompiled Seedling wasm
- * build. At that point the same test becomes a genuine independent
- * stratum, because the expected values will have come from the game
- * rather than from us. The `.provisional.json` suffix exists so that
- * substitution is visible in a diff and cannot happen by accident.
+ * The bootstrap path still exists for a fixture that has not been recorded
+ * yet: `regenerate.mjs` writes `<name>.provisional.json` from this repo's
+ * own engine, which is a CHANGE DETECTOR and nothing more — a verifier
+ * sharing the generator's assumptions verifies nothing about whether the
+ * physics is right. `loadExpectation` prefers the oracle file and reports
+ * which regime it used; `tapeRunner.test.js` pins that no current fixture
+ * is riding the bootstrap, so a new one cannot quietly weaken the suite's
+ * claim. The distinct suffix keeps the substitution visible in a diff.
  *
- * The genuinely independent checks that DO exist at slice 1 are the
- * hand-computed physics cases in `playerPhysicsV1.test.js` — values
- * derived from reading the AS3, not from running this port.
+ * The other independent stratum is the hand-computed physics in
+ * `playerPhysicsV1.test.js` / `playerPhysicsV2.test.js` — values derived
+ * from reading the AS3, not from running this port.
  *
- * This file uses `fs` and is node-only. The core modules
- * (`tapeFormat`, `playerPhysicsV1`, `tapeRunner`, `botDriverV1`) are
- * deliberately dependency-free so they stay usable in a browser when a
- * later rung gives this module a panel.
+ * This file uses `fs` and is node-only, as is `../levelSource.js`. The core
+ * modules (`tapeFormat`, `playerPhysicsV1`, `playerPhysicsV2`,
+ * `levelWorld`, `tapeRunner`, `botDriverV1`) are deliberately
+ * dependency-free so they stay usable in a browser when a later rung gives
+ * this module a panel.
  */
 
 import { readdirSync, readFileSync } from 'node:fs';

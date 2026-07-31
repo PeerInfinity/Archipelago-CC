@@ -14,10 +14,14 @@
  * v2 slice 0 added two more recordings — `collide-up-rock` and
  * `transition-west-return` — drained from the same build with collision
  * ON. They are the RECONCILIATION TARGETS the v2 engine is written toward,
- * so they arrive before the physics that has to reproduce them and this
- * engine cannot run them yet. What they pin is asserted directly against
- * the recordings at the bottom of this file; the exact-match assertion
- * turns on for them at slices 2 and 3.
+ * so they arrived before the physics that has to reproduce them.
+ * `collide-up-rock` was reconciled at slice 2 and now carries the ordinary
+ * exact-match assertion; `transition-west-return` waits for slice 3 and is
+ * pinned by name in the pending list below. What both of them PIN about the
+ * real game is asserted directly against the recordings at the bottom of
+ * this file, which stays worth having: it says what each fixture was for in
+ * values, so a later refactor that moves the whole stream in step cannot
+ * quietly take the meaning with it.
  *
  * Provisional (`*.provisional.json`, written by `fixtures/regenerate.mjs`
  * from our OWN engine) remains the bootstrap path for a NEW fixture that
@@ -33,12 +37,17 @@
 import { describe, expect, it } from 'vitest';
 
 import { fixtureNames, loadExpectation, loadTape } from './fixtures/index.js';
-import { spawnFromBoot } from './playerPhysicsV1.js';
+import { atlasLevelSource } from './levelSource.js';
+import { MOVE_SPEEDS, spawnFromBoot } from './playerPhysicsV1.js';
+import { TransitionNotModelledError } from './playerPhysicsV2.js';
 import { diffObservationStreams } from './tapeFormat.js';
 import { runTape, runTapeToStream } from './tapeRunner.js';
 
 /** Entity spawn for the fixtures' shared boot block (Player.as:357: +8,+8). */
 const SPAWN = spawnFromBoot({ x: 80, y: 128 });
+
+/** The injected geometry seam — see `playerPhysicsV2`'s docblock. */
+const levelSource = atlasLevelSource();
 
 const tape = (inputs, extra = {}) => ({
     tape_version: 1,
@@ -87,12 +96,19 @@ describe('record-then-act indexing', () => {
 });
 
 describe('guards', () => {
-    it('refuses a collision tape rather than silently running noclip physics', () => {
-        // v1 has no collision model, so running it would produce a stream
-        // that disagrees with the game for a reason the differential would
-        // misattribute to physics.
+    it('refuses a collision tape when no geometry was injected', () => {
+        // Without a levelSource there is no collision model, so the run
+        // would produce a stream that disagrees with the game for a reason
+        // the differential would misattribute to physics. Loud, not
+        // fallback: a graceful degrade here is how a whole slice's worth of
+        // assertions becomes vacuous.
         expect(() => runTape(tape([{ key: 'right', from: 0, to: 3 }], { noclip: false })))
-            .toThrow(/v2 rung/);
+            .toThrow(/no opts.levelSource/);
+    });
+
+    it('runs the same collision tape once geometry IS injected', () => {
+        const t = tape([{ key: 'up', from: 0, to: 3 }], { noclip: false });
+        expect(runTape(t, { levelSource }).ticks).toHaveLength(4);
     });
 
     it('re-validates the tape it is handed', () => {
@@ -103,40 +119,70 @@ describe('guards', () => {
 
 describe('fixture differential', () => {
     const names = fixtureNames();
-    // The roster is SPLIT by what this engine can run, not by what has been
-    // recorded. v2's slice 0 records collision and cross-level tapes from
-    // the real game FIRST and transcribes toward them, so the oracle
-    // recordings land before the physics that has to reproduce them. Until
-    // then `runTape` refuses a noclip:false tape by design (a v1 engine
-    // replaying one would emit a stream that disagrees with the game for a
-    // reason the differential would misattribute to physics).
-    const modelled = names.filter((n) => loadTape(n).noclip);
-    const pending = names.filter((n) => !loadTape(n).noclip);
+    /**
+     * The roster is SPLIT by what the engine can run, not by what has been
+     * recorded. v2's slice 0 recorded collision and cross-level tapes from
+     * the real game FIRST and transcribed toward them, so the oracle
+     * recordings landed before the physics that has to reproduce them.
+     *
+     * Slice 2 re-armed the sweeps, which moved `collide-up-rock` across.
+     * What is left pending is exactly what needs a modelled ROOM
+     * TRANSITION, which is slice 3 — the world swap, the arrival offset,
+     * the anti-ping-pong latch and the `transitions` records land together
+     * or not at all, so until then the engine throws by name rather than
+     * walking through a teleporter as if it were floor.
+     */
+    const PENDING = ['transition-west-return'];
+    const modelled = names.filter((n) => !PENDING.includes(n));
+    /** The v1 five: `noclip: true`, and the regression net for the refactor. */
+    const noclipTapes = names.filter((n) => loadTape(n).noclip);
 
     it('has fixtures on disk', () => {
         // Positive control: every "each fixture matches" assertion below is
         // vacuous if the roster is empty.
-        expect(names.length).toBeGreaterThanOrEqual(5);
-        expect(modelled.length).toBeGreaterThanOrEqual(5);
+        expect(names.length).toBeGreaterThanOrEqual(6);
+        expect(modelled.length).toBeGreaterThanOrEqual(6);
+        expect(noclipTapes.length).toBeGreaterThanOrEqual(5);
     });
 
     it.each(modelled)("%s: JS stream matches the real game recording, exactly", (name) => {
+        // Everything runs with the real level geometry here, the v1 tapes
+        // included — which for them is a second claim on top of the first:
+        // the stateful `getState` has to agree with the game over 220 ticks
+        // of real routes, not merely over the collision tape. Noclip does
+        // NOT bypass terrain typing in the game either, so if any of those
+        // routes crossed terrain the resolver got wrong, the recorded
+        // speeds would say so.
         const { stream: expected } = loadExpectation(name);
-        const actual = runTapeToStream(loadTape(name));
+        const actual = runTapeToStream(loadTape(name), { levelSource });
         expect(diffObservationStreams(expected, actual)).toBeNull();
     });
 
-    // Retires itself: when v2 lands collision these move into `modelled`
-    // above and this block empties out, which the guard below makes loud.
-    it.each(pending)('%s: recorded from the game, awaiting the v2 engine', (name) => {
+    it.each(noclipTapes)('%s: byte-identical on the v1 engine too', (name) => {
+        // THE REGRESSION PIN for slice 2. The v1 engine is the same
+        // `step()` with the collision arm of the ternary unselected and the
+        // terrain stubbed to ground, so these five must still produce the
+        // streams they produced before the sweeps were re-armed — measured
+        // against the recordings, not against a snapshot of ourselves.
+        const { stream: expected } = loadExpectation(name);
+        expect(diffObservationStreams(expected, runTapeToStream(loadTape(name))))
+            .toBeNull();
+    });
+
+    // Retires itself at slice 3: the list empties and the guard below goes
+    // red rather than the block silently passing by running nothing.
+    it.each(PENDING)('%s: recorded from the game, awaiting slice 3', (name) => {
         expect(loadExpectation(name).provisional).toBe(false);
-        expect(() => runTapeToStream(loadTape(name))).toThrow(/v2 rung/);
+        expect(() => runTapeToStream(loadTape(name), { levelSource }))
+            .toThrow(TransitionNotModelledError);
     });
 
     it('the pending split is real, not an artefact of an empty roster', () => {
         // Without this, deleting every collision tape would make the block
         // above pass by running nothing at all.
-        expect(pending).toEqual(['collide-up-rock', 'transition-west-return']);
+        expect(PENDING.every((n) => names.includes(n))).toBe(true);
+        expect(PENDING).toEqual(['transition-west-return']);
+        expect(modelled).toContain('collide-up-rock');
     });
 
     it('every fixture is backed by an ORACLE recording, not a bootstrap', () => {
@@ -199,16 +245,44 @@ describe('fixture behaviour each tape was written to exercise', () => {
         const restTicks = xs.filter((x, i) => i > 0 && x === xs[i - 1]).length;
         expect(restTicks).toBeGreaterThan(10);
     });
+
+    it('collide-up-rock: the engine holds VELOCITY into the wall it is pinned against', () => {
+        // The one thing the observation stream cannot carry: the game does
+        // not expose `v`, so "the position pinned" and "the velocity was
+        // zeroed" look identical in the recording for 38 ticks and only
+        // diverge at the delayed creep. Asserting it on `final`'s internal
+        // state says outright what the recording only implies — and it is
+        // asserted at a tick where the player has been motionless for a
+        // while, so nothing else could be holding it there.
+        let pinned = null;
+        const { ticks, final } = runTape(loadTape('collide-up-rock'), {
+            levelSource,
+            onTick: (t, s) => { if (t === 30) pinned = s; },
+        });
+        expect(ticks[25].y).toBe(130.5);
+        expect(ticks[30].y).toBe(130.5);       // motionless for 25 ticks...
+        expect(pinned.vy).toBeLessThan(-0.5);  // ...and still driving into it
+        // The terrain under it is BRICK (t = 3), not Ground: level 0's
+        // spawn column is tileset column 4. Worth pinning precisely because
+        // it is not what the v1 stub said and the stream cannot tell —
+        // brick and ground both walk at 0.8, so the recording is satisfied
+        // either way and only the resolver's own answer distinguishes them.
+        expect(final.terrain).toBe(3);
+        expect(MOVE_SPEEDS[3]).toBe(MOVE_SPEEDS[0]);
+    });
 });
 
 /**
  * What the v2 slice-0 recordings PROVE about the real game.
  *
- * These read the oracle recordings directly rather than running an engine,
- * because the engine that reproduces them does not exist yet — that is the
- * whole point of recording first. Each assertion is a target slice 2 or 3
- * has to hit, and several of them are facts the v2 brief could only
- * predict from reading the AS3.
+ * These read the oracle recordings directly rather than running an engine.
+ * That was a necessity at slice 0 — the engine that reproduces them did not
+ * exist yet, which is the whole point of recording first — and it is worth
+ * keeping now that `collide-up-rock` reconciles: the exact-match test says
+ * "the two streams are equal" and nothing about WHAT is equal, so if a
+ * later slice moved both the engine and its recording together, only these
+ * would notice. Each assertion is either a target a slice had to hit or a
+ * fact the v2 brief could only predict from reading the AS3.
  */
 describe('v2 slice 0: what the collision + transition recordings pin', () => {
     const recording = (name) => loadExpectation(name).stream;

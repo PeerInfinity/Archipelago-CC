@@ -34,6 +34,7 @@ import {
     sign,
     STAIR_SPEED,
     step,
+    sweepAxis,
     WALK_SPEED,
     WATER_SPEED,
 } from './playerPhysicsV1.js';
@@ -44,11 +45,15 @@ describe('constants transcribed from source', () => {
     it('has the 38-entry moveSpeeds table with the right special indices', () => {
         // Player.as:86-89. Only 1, 10, 17, 25, 30 differ from the walk speed.
         expect(MOVE_SPEEDS).toHaveLength(38);
-        expect(MOVE_SPEEDS[1]).toBe(WATER_SPEED);      // water
-        expect(MOVE_SPEEDS[17]).toBe(WATER_SPEED);     // deep water
-        expect(MOVE_SPEEDS[10]).toBe(STAIR_SPEED);     // stairs
-        expect(MOVE_SPEEDS[30]).toBe(STAIR_SPEED);     // stairs (dark)
-        expect(MOVE_SPEEDS[25]).toBe(WATER_SPEED / 2); // lava
+        // Labels are TILE_TYPE_NAMES; three were wrong at v1 (17 read
+        // "deep water", 25 read "lava", 30 read "stairs (dark)"). The
+        // VALUES were right, which is exactly why nothing caught it — this
+        // assertion pins the values, so the comments were free to drift.
+        expect(MOVE_SPEEDS[1]).toBe(WATER_SPEED);      // Water
+        expect(MOVE_SPEEDS[17]).toBe(WATER_SPEED);     // Lava
+        expect(MOVE_SPEEDS[10]).toBe(STAIR_SPEED);     // Cliff Stairs
+        expect(MOVE_SPEEDS[30]).toBe(STAIR_SPEED);     // Ghost Tile Step
+        expect(MOVE_SPEEDS[25]).toBe(WATER_SPEED / 2); // Waterfall
         const special = new Set([1, 10, 17, 25, 30]);
         MOVE_SPEEDS.forEach((s, i) => {
             if (!special.has(i)) expect(s, `index ${i}`).toBe(WALK_SPEED);
@@ -187,6 +192,95 @@ describe('the mover loop', () => {
     });
 });
 
+/**
+ * The `collideAt` / `collides` seam — the AS3's
+ *     var c:Entity = Bot.noclip ? null : collideTypes(solids, x + d, y);
+ * with the ternary decided once instead of per step. v1 always took the
+ * `null` arm; these pin the loop's behaviour on the other one WITHOUT any
+ * level geometry, so they say what the mover does rather than what level 0
+ * happens to contain.
+ */
+describe('the sweep with collision armed', () => {
+    it('is the noclip loop when no probe is given', () => {
+        expect(sweepAxis(80, 1.35)).toEqual({ pos: moveAxis(80, 1.35), hit: null });
+    });
+
+    it('stops at the LAST FREE step and reports the blocker', () => {
+        // Blocking at x >= 82 with rel = 2.5: +1 to 81 is free, +1 to 82 is
+        // not. The position is 81 — one step short — not 82, and not the
+        // 82.5 the velocity asked for.
+        const wall = { name: 'wall' };
+        expect(sweepAxis(80, 2.5, (p) => (p >= 82 ? wall : null)))
+            .toEqual({ pos: 81, hit: wall });
+    });
+
+    it('comes to rest MID-PIXEL, because the last FREE tick ended fractionally', () => {
+        // The recorded stop in collide-up-rock is y = 130.5, not 130 and not
+        // the wall edge. It is a two-tick effect: one tick completes on a
+        // fractional step, and the NEXT tick is refused on its very first
+        // step, so the resting position is wherever the fractional approach
+        // happened to leave the player. Nothing in the loop snaps.
+        const wall = { name: 'wall' };
+        const blocked = (p) => (p < 130 ? wall : null);
+        const free = sweepAxis(131.9, -1.4, blocked);       // -1 then -0.4
+        expect(free.pos).toBeCloseTo(130.5, 12);
+        expect(free.hit).toBeNull();
+        const refused = sweepAxis(free.pos, -1.95, blocked); // 129.5: refused
+        expect(refused.pos).toBe(free.pos);
+        expect(refused.hit).toBe(wall);
+    });
+
+    it('CONSULTS the probe on a sub-pixel step', () => {
+        // `for (i = 0; i < Math.abs(rel); i++)` with |rel| = 0.45 runs ONCE
+        // (0 < 0.45), so a sub-pixel move is still collision-tested. A recon
+        // pass claimed the loop skipped entirely for |rel| < 1; it does not,
+        // and the fixture's final 0.45px creep into the rock is the proof.
+        const probed = [];
+        const r = sweepAxis(80, 0.45, (p) => { probed.push(p); return null; });
+        expect(probed).toHaveLength(1);
+        expect(probed[0]).toBeCloseTo(80.45, 12);
+        expect(r.pos).toBeCloseTo(80.45, 12);
+    });
+
+    it('resolves X FULLY before Y, and Y probes at the NEW x', () => {
+        // `moveX(v.x); moveY(v.y);` (Mobile.as:38-39) — moveY reads the
+        // member `x` that moveX has already written. Asserted on the probe
+        // schedule rather than on a position, because a position can agree
+        // by luck while the order is wrong.
+        const probes = [];
+        step({ x: 80, y: 128, vx: 0, vy: 0 }, held('right', 'down'), {
+            collides: (x, y) => { probes.push([x, y]); return null; },
+        });
+        expect(probes).toHaveLength(2);
+        expect(probes[0][0]).toBeCloseTo(80.8, 12);   // X candidate...
+        expect(probes[0][1]).toBe(128);               // ...at the OLD y
+        expect(probes[1][0]).toBeCloseTo(80.8, 12);   // Y candidate at the NEW x
+        expect(probes[1][1]).toBeCloseTo(128.8, 12);
+    });
+
+    it('does NOT zero velocity when a sweep is blocked', () => {
+        // Mobile.as:39-40 discards the returned entity and never touches v.
+        // The whole into-wall behaviour hangs off this: the position pins
+        // while the limit cycle keeps running, and the player slips forward
+        // only once friction has brought the step small enough to fit.
+        const s = step({ x: 80, y: 128, vx: 0, vy: 0 }, held('right'), {
+            collides: () => ({ name: 'wall' }),
+        });
+        expect(s.x).toBe(80);
+        expect(s.vx).toBeCloseTo(0.8, 12);
+        expect(s.hitX).toEqual({ name: 'wall' });
+        expect(s.hitY).toBeNull();   // v.y is 0, so the Y loop never runs
+    });
+
+    it('never consults the probe when it is absent — the noclip arm', () => {
+        // Not "collides returns null"; the call is not made at all, which is
+        // what `Bot.noclip ? null : collideTypes(...)` does.
+        const s = step({ x: 80, y: 128, vx: 0, vy: 0 }, held('right'));
+        expect(s.hitX).toBeNull();
+        expect(s.x).toBeCloseTo(80.8, 12);
+    });
+});
+
 describe('step()', () => {
     it('reaches walk speed on the first held tick', () => {
         const s = step({ x: 80, y: 128, vx: 0, vy: 0 }, held('right'));
@@ -230,7 +324,9 @@ describe('step()', () => {
         // (Mobile.as:33-40) — which is why a frozen tick must not consume
         // tape on the AS3 side.
         const s = step({ x: 80, y: 128, vx: 0.8, vy: 0 }, held('right'), { frozen: true });
-        expect(s).toEqual({ x: 80, y: 128, vx: 0.8, vy: 0 });
+        // Exact shape, so a new field cannot appear unnoticed: `hitX`/`hitY`
+        // are this tick's sweep results, and a frozen tick runs no sweeps.
+        expect(s).toEqual({ x: 80, y: 128, vx: 0.8, vy: 0, hitX: null, hitY: null });
     });
 
     it('resolves X fully before Y', () => {

@@ -20,12 +20,17 @@
  * `flash.geom.Point`:
  *   `SWFModernRuntime/src/avm2/avm2_globals.c:888-909`
  *
- * ── What v1 does NOT do ───────────────────────────────────────────────
- * No collision. `Player.moveX/moveY` sweep 1px at a time and consult
- * `collideTypes(solids, ...)`; the v1 bot build sets a `Bot.noclip` flag
- * that skips exactly that consultation. Re-arming it is the v2 rung, and
- * the loop structure here is preserved precisely so that v2 is a small
- * diff rather than a rewrite.
+ * ── The name is a rung, not a fork ────────────────────────────────────
+ * `Player.moveX/moveY` sweep 1px at a time and consult
+ * `collideTypes(solids, ...)`; the bot build sets a `Bot.noclip` flag that
+ * skips exactly that consultation, and v1 ran every tape with it set. v2
+ * re-armed it — as an `opts.collides` seam on the SAME sweep loop and the
+ * SAME `step()`, because the AS3 has one loop and one update order too.
+ * The v2-specific parts (the level geometry, and the stateful `getState`
+ * that replaced v1's pure `terrainStateAt` probe) live in
+ * `playerPhysicsV2.js`; everything below is shared by both rungs. The file
+ * keeps its name so the v1 oracle recordings keep pointing at the module
+ * whose transcription they validated.
  *
  * Dependency-free, no RNG, no clock, no DOM — one `step()` call is one
  * fixed physics tick. (Seedling runs FlashPunk's variable-timestep loop,
@@ -55,20 +60,26 @@ export const SLIDING_FRICTION = 0.025;  // slidingFriction (ice)
  * Transcribed in full rather than collapsed to "0.8 unless special",
  * because the SELECTION STRUCTURE is what v2/v3 will exercise and a
  * table is checkable against the source at a glance.
+ *
+ * The labels are `TILE_TYPE_NAMES` (`flashPanel/seedlingSemantics.js`).
+ * Three of them were wrong at v1 and are corrected here (the VALUES were
+ * always right — `playerPhysicsV1.test.js` pins them against the AS3):
+ * index 17 is Lava, not "deep water"; index 25 is Waterfall, not "lava";
+ * index 30 is Ghost Tile Step, not "stairs (dark)".
  */
 export const MOVE_SPEEDS = Object.freeze([
     /*  0 */ WALK_SPEED,
-    /*  1 */ WATER_SPEED,       // water
+    /*  1 */ WATER_SPEED,       // Water
     /*  2.. 9 */ WALK_SPEED, WALK_SPEED, WALK_SPEED, WALK_SPEED,
     WALK_SPEED, WALK_SPEED, WALK_SPEED, WALK_SPEED,
-    /* 10 */ STAIR_SPEED,       // stairs
+    /* 10 */ STAIR_SPEED,       // Cliff Stairs
     /* 11..16 */ WALK_SPEED, WALK_SPEED, WALK_SPEED, WALK_SPEED, WALK_SPEED, WALK_SPEED,
-    /* 17 */ WATER_SPEED,       // deep water
+    /* 17 */ WATER_SPEED,       // Lava
     /* 18..24 */ WALK_SPEED, WALK_SPEED, WALK_SPEED, WALK_SPEED, WALK_SPEED,
     WALK_SPEED, WALK_SPEED,
-    /* 25 */ WATER_SPEED / 2,   // lava
+    /* 25 */ WATER_SPEED / 2,   // Waterfall
     /* 26..29 */ WALK_SPEED, WALK_SPEED, WALK_SPEED, WALK_SPEED,
-    /* 30 */ STAIR_SPEED,       // stairs (dark)
+    /* 30 */ STAIR_SPEED,       // Ghost Tile Step
     /* 31..37 */ WALK_SPEED, WALK_SPEED, WALK_SPEED, WALK_SPEED, WALK_SPEED,
     WALK_SPEED, WALK_SPEED,
 ]);
@@ -226,30 +237,54 @@ export function applyInput(v, held, moveSpeed) {
 }
 
 /**
- * `Player.moveX` / `Player.moveY` (`Player.as:1687` / `:1717`) with
- * collision skipped — the v1 noclip path.
+ * `Player.moveX` / `Player.moveY` (`Player.as:1687` / `:1717`) — ONE loop,
+ * used by both rungs, because the AS3 has one loop too.
  *
  * ⚠ `Player` OVERRIDES `Mobile.moveX/moveY`; the base-class versions are
  * dead for the player. (The overrides also carry a shield branch whose
  * `collideTypes` call is commented out, so `c_s` is unconditionally null
- * and the live condition is just `!c` — which noclip makes always true.)
+ * and the live condition is just `!c`.)
  *
- * The loop is kept rather than collapsed to `pos + rel`. The two are
- * algebraically identical with collision off, and a 60-tick check found
- * no float divergence between them — but keeping the shape costs nothing,
- * makes v2 a small diff, and means the step sequence is inspectable.
+ * `collideAt` IS the AS3's per-step test, verbatim:
+ *     var c:Entity = Bot.noclip ? null : collideTypes(solids, x + d, y);
+ * — pass `null` for the v1 noclip path, or a probe that returns the
+ * blocking entity (or null) for the v2 collision path. Two properties of
+ * the hit branch are load-bearing and are the whole reason the loop shape
+ * was preserved at v1:
+ *   - the loop RETURNS, so the position stays at the LAST FREE STEP, which
+ *     is wherever the fractional approach left it — mid-pixel, not on a
+ *     tile edge and not on an integer;
+ *   - `Mobile.as:39-40` DISCARDS the returned entity and never touches
+ *     `v`, so velocity is NOT zeroed on contact. Pressing into a wall is a
+ *     stable, oracle-observable state: the position pins while the limit
+ *     cycle keeps running in `v`.
+ *
  * Note `for (i:int = 0; i < Math.abs(rel); i++)` with a fractional bound:
- * a |rel| of 1.35 runs TWO iterations (+1, then +0.35), which is the
- * common case given the velocities above.
+ * a |rel| of 1.35 runs TWO iterations (+1, then +0.35), and a |rel| of
+ * 0.8 runs ONE (a sub-pixel step). Both are common given the velocities
+ * above; a recon pass that claimed sub-pixel `rel` skips the loop entirely
+ * was wrong, and the recorded mid-pixel stop at y = 130.5 is the proof.
+ *
+ * Returns `{pos, hit}`. The AS3 caller discards `hit`; it is surfaced here
+ * because the pathing driver needs to tell "walked the whole way" from
+ * "stopped early", and a planner that cannot is one that re-plans silently.
  */
-export function moveAxis(pos, rel) {
+export function sweepAxis(pos, rel, collideAt = null) {
     let p = pos;
     const magnitude = Math.abs(rel);
     const s = sign(rel);
     for (let i = 0; i < magnitude; i++) {
-        p += Math.min(1, magnitude - i) * s;
+        const d = Math.min(1, magnitude - i) * s;
+        const c = collideAt ? collideAt(p + d) : null;
+        if (c) return { pos: p, hit: c };
+        p += d;
     }
-    return p;
+    return { pos: p, hit: null };
+}
+
+/** The noclip sweep — `sweepAxis` with the collision test skipped. */
+export function moveAxis(pos, rel) {
+    return sweepAxis(pos, rel).pos;
 }
 
 // ── One tick ──────────────────────────────────────────────────────────
@@ -266,8 +301,13 @@ export function moveAxis(pos, rel) {
  * This is a SEAM, not a constant, on purpose: with it stubbed to ground
  * and v1 fixture tapes kept on open ground, a tape that strays produces a
  * loud differential mismatch (JS 0.8 vs game 0.45) instead of the
- * assumption hiding inside a hardcoded number. v2/v3 replace the stub
- * with the real level tilemap.
+ * assumption hiding inside a hardcoded number.
+ *
+ * v2 replaced the SEAM as well as the stub: `getState` is sticky, so a
+ * pure `(x, y) => t` cannot express it. `playerPhysicsV2.resolveTerrainState`
+ * is the transcription; this stub stays because the v1 tapes' byte-identical
+ * streams are the regression net for that refactor, and re-terraining them
+ * would move the goalposts along with the code.
  */
 export const groundTerrain = () => 0;
 
@@ -291,10 +331,18 @@ export const groundTerrain = () => 0;
  * size); `opts.frozen` mirrors `Game.freezeObjects`, which gates the whole
  * friction/input/move block in `mobileUpdate` — a frozen tick moves
  * nothing, which is why the bot must not let one consume tape.
+ *
+ * `opts.collides(x, y)` is the collision seam: it tests the PLAYER'S box
+ * placed at (x, y) and returns the blocking entity or null. Omitting it is
+ * the noclip path — the AS3's `Bot.noclip ? null : collideTypes(...)`,
+ * with the ternary decided once instead of per step. `playerPhysicsV2`
+ * supplies it from the level geometry; nothing else about the tick
+ * changes, which is why the v1 fixtures stay byte-identical.
  */
 export function step(state, held, opts = {}) {
     const {
         terrainStateAt = groundTerrain, frozen = false, world = LEVEL0_WORLD,
+        collides = null,
     } = opts;
     const clamp = world === LEVEL0_WORLD ? CLAMP : clampFor(world);
 
@@ -316,16 +364,29 @@ export function step(state, held, opts = {}) {
     const f = DEFAULT_FRICTION;
 
     // 3. mobileUpdate(), gated by Game.freezeObjects.
+    let hitX = null;
+    let hitY = null;
     if (!frozen) {
         v = applyFriction(v, f);
         v = applyInput(v, held, moveSpeed);
-        x = moveAxis(x, v.x);
-        y = moveAxis(y, v.y);
+        // X is FULLY resolved before Y, and Y's probe sees the NEW x —
+        // `moveX(v.x); moveY(v.y);` (`Mobile.as:38-39`), where moveY reads
+        // the member `x` that moveX has already written. Swapping the two
+        // changes where a diagonal into a corner comes to rest.
+        const sx = sweepAxis(x, v.x, collides && ((px) => collides(px, y)));
+        x = sx.pos;
+        hitX = sx.hit;
+        const sy = sweepAxis(y, v.y, collides && ((py) => collides(x, py)));
+        y = sy.pos;
+        hitY = sy.hit;
     }
 
     // 4. The hard clamp is part of the tick, not a safety net.
     x = Math.min(Math.max(x, clamp.minX), clamp.maxX);
     y = Math.min(Math.max(y, clamp.minY), clamp.maxY);
 
-    return { x, y, vx: v.x, vy: v.y };
+    // `hitX`/`hitY` are this tick's sweep RESULTS, not carried state — the
+    // AS3 discards them. They ride along so a caller can tell a completed
+    // move from one the geometry cut short.
+    return { x, y, vx: v.x, vy: v.y, hitX, hitY };
 }

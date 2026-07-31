@@ -321,6 +321,40 @@ describe('the queries the sweep will ask', () => {
         expect([near.tx, near.ty]).not.toEqual([15, 7]);
     });
 
+    it('beforeTypeFlip drops the TILE solids and keeps the object ones', () => {
+        // A Tile is constructed `type = "Tile"` and only becomes "Solid" in
+        // its own first update (Tile.as:117-122), while every object class
+        // assigns its type in its CONSTRUCTOR — so on a world's first live
+        // tick the object solids are the whole list. `World.addUpdate`
+        // prepends and loadlevel adds the tiles before the Player, so the
+        // Player really does read the lists in that state. The game's own
+        // comment at that update says the ordering is deliberate.
+        expect(L0.objectSolids.length).toBeGreaterThan(0);
+        expect(L0.objectSolids.length).toBeLessThan(L0.solids.length);
+        expect(L0.solids.length - L0.objectSolids.length)
+            .toBe(L0.tiles.filter((t) => t.entityType === 'Solid').length);
+        expect(L0.objectSolids.every((s) => s.cls !== null)).toBe(true);
+    });
+
+    it('beforeTypeFlip lets a solid TILE be walked through, but not an object', () => {
+        // Level 0's only solid terrain is the cliff at tile (15,7).
+        const onCliff = playerBox(248, 120);
+        expect(L0.collidesSolid(onCliff)).toMatchObject({ tag: 'tile:Cliff' });
+        expect(L0.collidesSolid(onCliff, { beforeTypeFlip: true })).toBeNull();
+        // The BreakableRock is an object and blocks on tick 1 too — which
+        // is why collide-up-rock is unaffected by any of this.
+        expect(L0.collidesSolid(playerBox(88, 129.5), { beforeTypeFlip: true }))
+            .toMatchObject({ tag: 'breakablerock' });
+    });
+
+    it('beforeTypeFlip widens nearestWalkableTile to every tile', () => {
+        // Same fact from the terrain side: on tick 1 the "Tile" list still
+        // holds the solid cells, so the nearest candidate over the cliff is
+        // the cliff itself rather than a neighbour.
+        expect(L0.nearestWalkableTile(248, 120, { beforeTypeFlip: true }))
+            .toMatchObject({ tx: 15, ty: 7, entityType: 'Solid' });
+    });
+
     it('collidesSolid finds the BreakableRock the oracle recording hit', () => {
         // The rock at oel (80,112) occupies [80,96) x [112,128).
         expect(L0.collidesSolid(playerBox(88, 129.5))).toMatchObject({ tag: 'breakablerock' });
