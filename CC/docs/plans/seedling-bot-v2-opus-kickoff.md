@@ -1038,3 +1038,166 @@ something tries to stand on it. Removing `stairsup` again turns 3 tests
 red; narrowing `isStairs` back to `=== 'stairsdown'` turns 1.
 
 vitest **3990/3990** (was 3987).
+
+## 12. Slice 4 — AS BUILT (2026-07-30)
+
+`botDriverV2.js` + `botDriverV2.test.js`, `levelRun.js` + `levelRun.test.js`,
+a `plannerBlockerAt` face on `levelWorld`, the `BUILD_SPAWN` check in
+`tapeFormat`, and four new fixtures — `wall-slide`, `thread-the-gap`,
+`cross-level-leg`, `statue-press` — **all oracle-recorded and all exact**.
+The v1 five, `collide-up-rock` and `transition-west-return` stayed
+byte-identical; no existing expectation was rewritten.
+
+### ⚠ The oracle corrected the geometry AGAIN, and this time by pathing
+
+`Statue` is the ONLY class in the table that adds an offset **on top of
+NPC's own constructor**:
+
+```as3
+Statue  super(_x + Tile.w, _y - Tile.h/2 + Tile.h*int(_t==0), ...)  // (+16, -8)
+NPC     super(_x + Tile.w/2, _y + Tile.h/2, _g)                     // ( +8, +8)
+```
+
+Slice 1 applied the first and stopped, putting level 0's statue collider
+**8 px up and left**. The first `thread-the-gap` recording is what found
+it: the game pinned x at **181.17065141119556** against a left edge at 184
+that the model did not have, and walked no further, while the JS strolled
+through. `IntroCharacter`, `AdnanCharacter`, `Rekcahdam` and `Watcher` all
+pass `_x`/`_y` straight through, so NPC's half-tile is their whole offset
+and their entries were right — this is a one-class fix, checked as one.
+
+Two things worth carrying forward:
+- **Slice 1's own note said the statue "sits far from any fixture route".**
+  It was true of the v1 routes. A pathing fixture goes where the geometry
+  says it may, so "unobservable" decays the moment the driver gets better.
+- With the route now planned AROUND the statue, no synthesized fixture
+  touches it — a driver whose job is to never hit a wall cannot press one.
+  **`statue-press` exists for that**: a driver-planned approach to tile
+  (10,11) plus a hand-authored 40-tick RIGHT into the edge. Tile (11,11) is
+  not even a legal A\* goal, so the press could not have been synthesized.
+- Also settled in passing: the statue's `setHitbox` comes from `render()`,
+  and unlike the Tile type flip that is NOT a first-tick subtlety —
+  `render` is driven by the Engine independently of `Game.update`'s
+  `blackCover` gate, so the ~18 fade frames have all rendered before tick 0.
+
+### ⚠ The brief's smoothing test was checking a curve the player never walks
+
+§3.4 says "smooth greedily while the straight SEGMENT stays clear". Doing
+exactly that put a fixture in the lake. The braking rule is **per axis**,
+and both axes accelerate by the same `accel` under vector friction, so
+while both are held they advance at the SAME rate: the player leaves a
+waypoint at **45 degrees** and only straightens out once the shorter axis
+arrives. For a shallow leg — dx 128, dy 16 — that is most of the level.
+From (104,184) toward (232,200) the straight line is at y = 185 by x = 112
+and the player is at y = **192**, over the Water at tile (7,12), where
+`assertModelledTerrain` fires.
+
+`controllerPathClear` models the two legs actually traversed (45-degree
+leg, then axis leg). Still approximate in two bounded ways — the X-first
+intra-tick corner, and up to one accel quantum of overshoot at a waypoint,
+which the 6 px between a tile centre and its edges absorbs — and the
+executor's throw is what makes approximation safe.
+
+### The seam has two faces, and only one may be quiet
+
+`collidesSolid` throws on a pixelmask deliberately. A planner cannot use
+it: routing around an obstacle by catching the exception that says you
+already hit it is not routing around it, and one stray probe aborts the
+search. `plannerBlockerAt` is the same geometry with the throw taken off —
+and **strictly wider**, because it also reports **unmodelled terrain**,
+which blocks nothing at all in the game (water is walkable geometry) but
+ends a v2 run. A planner asking only about solids routes straight into the
+lake. A fourth kind, **live teleporter volumes**, is planning POLICY and
+lives in the driver, not the geometry: an in-level route that clipped a
+trigger would silently end up in another level — the accident that ate
+v1's original `clamp-left` fixture.
+
+### `levelRun.js`, and why the factoring was not tidiness
+
+The driver's copy of a world swap is what **synthesizes the tape the
+differential then runs through the runner's copy**. Two copies would be
+wrong together and the tape would still reconcile against the game — a
+verifier sharing the generator's assumptions, one level up. So the swap
+(arrival offset, zeroed velocity, reset terrain, pre-armed latch, the
+destination world's own `beforeTypeFlip` tick) has one implementation and
+two callers. RECORD-THEN-ACT stayed in `tapeRunner`: it is a rule about
+where the AS3 hook sits, not about the engine.
+
+### §7's asymmetry trap is retired
+
+`parseTape` now checks `boot` against `BUILD_SPAWN` ({0, 80, 128}).
+`tapeRunner.test.js`'s old "carries the boot level" case booted into level
+7 to prove propagation; it now asserts the REFUSAL, and propagation is
+covered far better by `transition-west-return`, which crosses for real.
+
+### §3.5.5 terrain-speed: DROPPED, with the reason
+
+Cliff Stairs (t=10) exists in levels 12, 28, 37, 83, 87, 88, 90, 92, 93,
+99; Ghost Tile Step (t=30) in 61–67. **Neither appears in level 0 or 94**,
+and level 94 is the ONLY one of level 0's seven neighbours (1, 2, 12, 13,
+86, 89, 94) that `buildLevelWorld` can build — every other one throws on an
+entity class the table does not carry. So there is no dry stairs tile a v2
+tape can reach, and the brief's own instruction applies: drop it, do not
+force a fixture through water.
+
+### ⚠ No AS3 build — and the reason is NOT the pipeline cost
+
+The brief asked this to be decided early. It was, on evidence:
+
+**A parameterised boot would not unblock either bounded witness.** All six
+of §9's hole-adjacent candidate levels (99, 101, 28, 83, 102, 110) fail
+`buildLevelWorld`, and level 83 — §9's named target — additionally holds a
+**Pit (t=6), Water (t=1) and nine cliffside pixelmasks in a 5x5 room**, so
+its hole is unreachable at the v2 rung however the player arrives. All four
+of §10's ping-pong levels are equally unbuildable. **The blocker is the
+class table and the v2 terrain scope, not the boot**, and §9's "walk there
+or parameterise the boot" framing named two doors that are both shut for
+the same third reason. Nothing else wanted an AS3 edit, so §6's "decide
+only inside a batch that is already paying" left nothing paying. The loud
+boot check §7 asked for landed anyway — it is JS-side and costs nothing.
+
+Recorded so a later slice does not re-derive it: **cross-level walking from
+level 0 reaches exactly ONE other level, 94.** Any rung that wants more
+starts by transcribing entity classes, not by rebuilding the SWF.
+
+### Bounds this slice adds, recorded rather than implied
+
+- **The teleporter policy turns no fixture red** (2 hand-derived only). The
+  only trigger a committed route approaches is the exit, which is exempt.
+  The witness: a target on the far side of a trigger tile, forcing a detour.
+- **The executor's hit-throw is a DIAGNOSTIC, not a detector.** Removing it
+  turns nothing red, and running it together with the wrong statue rect
+  turns the SAME 5 tests red as the statue mutation alone — the geometry
+  error is already caught by the recordings and by the tape-reproduction
+  test. It buys a better message, not more detection. Keep it anyway: the
+  alternative, a silent re-plan, is how a model defect becomes a green run.
+- **The A\* tie-break is defensive.** Reversing the neighbour order AND
+  dropping the (ty, tx) tie-break both leave everything green: level 0's
+  routes have no equal-f tie that survives the smoother. The real cross-run
+  determinism pin is "the committed fixtures are what the driver emits
+  today" — a tape recorded from the game in another process on another day.
+
+### One property worth stealing for later rungs
+
+For a **synthesized** fixture, "the driver still emits this tape" converts
+any geometry error into a red, because the PLAN depends on the geometry.
+That is a strictly stronger net than a replay-only fixture, and it is how
+the statue mutation gets caught even along a route that avoids the statue.
+
+### Also true, and unpleasant to discover later
+
+**49 of level 0's 152 box-fitting tiles are unreachable from the spawn** —
+the north field behind the building, the east corridor, the west sliver.
+Any coverage claim about "level 0" should say which 103 tiles it means.
+
+### Gates at slice 4 close
+
+- vitest **4050/4050** (was 3990; +60).
+- `verify-seedling-bot-differential.mjs --win` green across all **11**
+  fixtures at ~25 fps, plus the swapped live driver task: the brief's
+  thread-the-gap + cross-level task, **517 ticks planned at run time**,
+  both targets reached in two levels and the crossing at the tick the
+  driver named — all asserted from the game's own drained observations.
+- Four expectations written (`--record --only=`), none rewritten. The two
+  driver fixtures were recorded twice: once before the statue correction,
+  which is how it was found, and once after the re-plan.
