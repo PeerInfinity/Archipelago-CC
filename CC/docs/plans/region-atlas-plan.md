@@ -13,11 +13,14 @@ them) complete, and **Phase 8 slice 1 (the MAZE-SURFACE playback bot: a
 headless tile-walking witness plus the shipped bot completing the grown world
 in-app) complete 2026-07-28** — **Phase 7 (RWK) POSTPONED INDEFINITELY (user
 ruling 2026-07-28); the arc continues Seedling-only.** Phase 8's real-game
-surface is **v1 + v2 COMPLETE (2026-07-30)** — the recompiled game replays
-tapes and the JS transcription reproduces it exactly through collision, room
-transitions and A\*-planned cross-level routes; per-stage JS-first (user
-amendment 2026-07-30). **NEXT: v3 (item-gated terrain), which is gated on
-the entity CLASS TABLE — 3 of 116 levels build today.**
+surface is **v1 + v2 + R0 COMPLETE (2026-07-30/31)** — the recompiled game
+replays tapes and the JS transcription reproduces it exactly through
+collision, room transitions, A\*-planned cross-level routes and now the
+subtractive ladder's three relaxations; per-stage JS-first (user amendment
+2026-07-30). **NEXT: R1, the relaxed full walk.** ⚠ Its terminal assertion
+is **11 of 13** items, not 13: with `noHazards` on, darkshield (L74) and
+darksuit (L79) are unreachable, because pits are a TRANSPORT primitive and
+not merely a hazard (R0 kickoff §8.7b).
 **Games:** Seedling only for now (redistributable, discrete sections, source
 available); Robot Wants Kitty postponed indefinitely (2026-07-28)
 
@@ -1618,8 +1621,20 @@ routes themselves remain untried.
 - [x] v2: wall collision + pathing
       — **COMPLETE 2026-07-30** (all 6 slices; see below). Doc: the same
         one, now extended to v2.
-- [ ] R0: acceptance signal + machinery (AS3 batch, tape v2, role-relaxed
-      builder, witness mini-walk) — kickoff ready
+- [x] R0: acceptance signal + machinery (AS3 batch, tape v2, role-relaxed
+      builder, witness mini-walk)
+      — **COMPLETE 2026-07-31** (slices 0/1a/1b/1c/2/3/4). The six-change
+        AS3 batch is built and deployed (fork `bot` @ b3c0c9b); tape format
+        v2 carries `noDamage`/`noHazards` (a SET, so R4 can re-arm one at a
+        time)/`grants`; `buildLevelWorld` relaxes BY ROLE with all 137 tags
+        censused for trigger/pickup/proximity-hazard (3/116 levels built at
+        v2 → 11 with every role → 82 with the cheap three); `botStatus`
+        reports the 14 item properties and the win statics. **14 fixtures,
+        1550 ticks, EXACT** — the eleven v1/v2 ones byte-identical against
+        the new build (the batch's byte-inertness gate), plus the witness
+        walk to the sword's room with the grant read from the game's own
+        report, a pit crossing that boots straight into level 83, and a
+        water crossing. Doc: the same one, now extended to R0.
 - [ ] R1: the relaxed full walk — 13 items granted room-by-room, exactly
       differentially verified end-to-end
 - [ ] R2: solids return (noclip off) — pays the blocking-role class table

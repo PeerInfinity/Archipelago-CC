@@ -2855,15 +2855,31 @@ Claude, accepted by user). Full detail in `region-atlas-plan.md` Phase 8.**
   class-table gate (3/116 levels, 115 tags, sizing in kickoff §13) now
   prices the SOLIDS rung, not the next one — the relaxed walk escapes it
   by relaxing `buildLevelWorld` by ROLE, and the exact differential holds
-  end-to-end at rung 1 (the JS mirrors every relaxation). **QUEUE NEXT for
-  this arc: `CC/docs/plans/seedling-bot-r0-opus-kickoff.md`** (rung 0: the
-  ONE six-change AS3 batch — auto-advance/readout/noDamage/param-boot/
-  noHazards/grants — tape format v2, role-relaxed builder, the item/win
-  acceptance signal, a witness mini-walk to the sword's room). Ladder +
-  rulings + new recon (pickup-ceremony deadlock, enemy knockback, the Seed
-  win condition, the full item census): 
+  end-to-end at rung 1 (the JS mirrors every relaxation). Ladder + rulings +
+  new recon (pickup-ceremony deadlock, enemy knockback, the Seed win
+  condition, the full item census):
   `CC/docs/plans/seedling-bot-subtractive-plan.md`; ruling record also in
   the plan doc's Phase 8 ladder.
+- **R0 SHIPPED 2026-07-31** (`CC/docs/plans/seedling-bot-r0-opus-kickoff.md`,
+  §8 onward = the as-built record). The six-change AS3 batch is built and
+  deployed; tape v2; the role-relaxed census over all 137 tags; the item/win
+  readout; **14 fixtures / 1550 ticks EXACT**, the eleven old ones
+  byte-identical against the new build. Two corrections it produced that
+  outlive it: the auto-advance key is **X (88), not V** (`keys[6]` is the
+  second `Key.X`), and `noHazards` had to ship as a SET because R4 re-arms
+  hazards one at a time.
+- **QUEUE NEXT for this arc: R1, the relaxed full walk** — needs its own
+  kickoff. ⚠ Two R0 recon findings change what R1 can CLAIM and should be
+  priced before it is scoped: (1) `Bot.noDamage` does NOT make enemies
+  harmless — seven classes (`lavatrap`, `whirlpool`, `pull`, `iceturret`,
+  `shieldlock*`, `pod`, `bosstotem`) write the player's position or input
+  state without going through `Player.hit()`, and their levels sit on the
+  shortest chains to the item rooms, so R1 must either price their avoid
+  volumes (all currently `'unpriced'`, i.e. a loud throw) or take a fourth
+  crutch nobody has ruled; (2) with hazards off the walk reaches **11 of 13**
+  item rooms, not 13 — darkshield (L74) and darksuit (L79) are behind a PIT
+  FALL, so pits are a transport primitive and reachability is 100/116 without
+  them and 114/116 with them.
 
 ## 6. Everything else (unchanged queues)
 

@@ -70,8 +70,10 @@ against. The ordering changes; the machinery does not.
   shield L20, feather L89, ghostsword L106, firewand L109. Plus:
   **darksword** — granted by the Witch NPC (L12) via `doneTalking()`,
   condition `hasWand && !hasDarkSword` (the ONE true item→item dependency);
-  **fire** — dropped by BobBoss (`bobboss1/2/3` tags; level = one-line extract
-  query) — the ONLY combat-gated item.
+  **fire** — dropped by BobBoss — the ONLY combat-gated item. ⚠ **RESOLVED at
+  R0: no `.oel` carries a `bobboss1/2/3` tag at all**, so `Game.as:2068-2070`
+  never fires; the only live construction is `Scenery/FallRockLarge.as:117`,
+  from the fallrocklarge with `bossrock && thirdboss` — **level 32**.
 - **The win condition is the Seed** (`Pickups/Seed.as` — the literal
   `//GAME WON` comment). FinalBoss (entity in L112) dies → the Watcher
   spawns the Seed → collecting it runs `drawCover` and swaps worlds: bloody
@@ -88,7 +90,10 @@ against. The ordering changes; the machinery does not.
   chests OPEN when the player line-collides beneath them (`Chest.update` —
   spawns a special SealPiece, consumes gameplay RNG for the seal index); NPCs
   can open dialogue on proximity (`talk()` fires on `hitKey || !keyNeeded`);
-  Watchers (12 in the extract) need the same check. A relaxed walk must
+  Watchers need the same check. ⚠ **RESOLVED at R0: there are ELEVEN watchers,
+  not twelve, `keyNeeded` is assigned in exactly ONE place in the codebase
+  (`Watcher.as:46`), and all eleven carry `tag >= 0` — so all eleven auto-talk
+  and every other NPC needs the key.** A relaxed walk must
   route around these volumes exactly as the v2 driver routes around live
   teleporter volumes.
 - **Hazard handling funnels through one place:** the post-`getState()` block
@@ -133,7 +138,8 @@ brittleness), (b) re-records oracles `--record --win --only=`, (c) keeps the
 exact differential green on everything modelled, (d) updates the honest
 "what still blocks us" list, which IS the progress metric.
 
-- **R0 — the acceptance signal + the machinery rung** (kickoff written).
+- **R0 — the acceptance signal + the machinery rung. ✅ SHIPPED 2026-07-31**
+  (as-built: kickoff §8–§13; 14 fixtures / 1550 ticks EXACT).
   The AS3 batch (one build); tape format v2 (`noDamage`, `noHazards`,
   `grants[]` — explicit, no defaults); the role-relaxed `buildLevelWorld`;
   the pickup/proximity-hazard classification; the item/win readout; a
@@ -143,11 +149,21 @@ exact differential green on everything modelled, (d) updates the honest
   acceptance signal every later rung asserts against. (The full win flags
   can only fire at the ladder's top; R0 proves the plumbing: readout fields
   present, false at boot, item flags flip on grant.)
-- **R1 — the relaxed full walk.** One driver-planned task covering all 13
-  non-combat items (wand before the Witch's room for darksword), crossing
-  the level graph on real triggers, avoiding proximity-side-effect volumes.
-  Terminal assertion: 13 item properties true, read from the game's own
-  readout, plus pinned tick/transition counts. Exactly differentially
+- **R1 — the relaxed full walk.** One driver-planned task covering the
+  reachable non-combat items (wand before the Witch's room for darksword),
+  crossing the level graph on real triggers, avoiding proximity-side-effect
+  volumes. ⚠ **The terminal assertion is 11 of 13, not 13** (R0 kickoff
+  §8.7b): with `noHazards` on, exactly 100 of 116 levels are reachable over
+  the trigger graph, and darkshield (L74) and darksuit (L79) are not among
+  them — the only way into that cluster is a PIT FALL, so pits are a
+  TRANSPORT primitive and not merely a hazard. Adding the 12 `control` pit
+  edges takes reachability to 114/116. Both rooms stay on the blocked list
+  until R4. ⚠ And `Bot.noDamage` does NOT make enemies harmless — seven
+  classes write the player's position or input state without going through
+  `Player.hit()` (kickoff §8.7a), several on the shortest chains, so R1 must
+  price their avoid volumes or take a fourth crutch nobody has ruled.
+  Terminal assertion: the item properties read from the game's own readout,
+  plus pinned tick/transition counts. Exactly differentially
   verified end-to-end. Likely side profit: the walk crosses enough of the
   map to convert several of v2's five bounded vacuities into oracle-backed
   fixtures (level-83 stickiness hole, an arrival-on-trigger latch pair) —

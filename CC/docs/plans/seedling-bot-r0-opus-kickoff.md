@@ -584,3 +584,207 @@ The auto-advance's inputs are all public statics (`Game.freezeObjects`,
 are too (`Game.cutscene[]` is a public static Array of 4, `Game.menu` a
 public static Boolean), and `Bot.as` already re-resolves `Main.level` every
 frame — so (a), (b) and (f) need no new plumbing.
+
+## 9. Slice 1 — AS BUILT (2026-07-31), in three commits
+
+Split because the three pieces have different failure modes and each wanted
+its own mutation table. All eleven committed fixtures stayed byte-identical
+throughout; no expectation was touched.
+
+### 9.1 Slice 1a — tape format v2 and the JS mirrors
+
+`tapeFormat.js`, `playerPhysicsV2.js`, `levelRun.js`, `tapeRunner.js`,
+`botDriverV1.buildTape`. vitest 4050 → 4091.
+
+- **`noHazards` ships as a SET of hazard NAMES** (§8.8's amendment). The R0
+  tapes declare all five, so the ruled semantics are exactly what got
+  recorded.
+- **The coerce keeps two values apart**, mirroring `Player.as` exactly:
+  `terrain` is what the resolver resolved and what the sticky state stores;
+  `effective` is what the physics consumes, and `assertModelledTerrain` runs
+  on the effective one so a coerced hazard is legal terrain and an un-coerced
+  one still throws by name.
+- **Grants: two call sites and no third.** Construction (the boot level,
+  observed at tick 0) and immediately after a world swap — because a swap
+  lands at END of tick `t`, so "the run's level just became L" and
+  "observation `t` reports level L" are the same instant. First entry only.
+- **An unfired grant is a named failure at run end.** It moves no pixel, so
+  the stream still matches its oracle and every downstream assertion passes
+  — which is precisely how a routing regression would hide.
+
+⚠ **Three shape decisions the eleven fixtures forced, each of which would
+otherwise have rewritten them:**
+
+1. **The v1 version check is on the VALUE, not on presence.** `parseTape` is
+   idempotent by design and every consumer re-validates, so a parsed tape
+   carries the three fields normalised — and re-parsing it must not throw.
+   Getting this backwards turned 37 tests red on the first attempt, and the
+   AS3 side then repeated the same mistake for real (§11).
+2. **`serializeTape` writes the v2 fields only for a v2 tape**, so a v1 tape
+   round-trips byte-identically even though `parseTape` normalised it.
+3. **`buildTape` decides the emitted version from what the CALLER declares**,
+   not from `TAPE_VERSION`. Reading the constant would have turned every
+   driver-emitted tape into a v2 tape the day it bumped, and the committed
+   fixtures are compared against what the driver emits TODAY — so the bump
+   would have read as eleven fixture changes.
+
+Mutations, all confirmed to bite: coerce dropped (6 tests), grant tick +1
+(1), grant one tick late (1), re-grant on a revisit (2 — and only `hitsMax`
+could reveal it, since a re-granted boolean is invisible), unfired-grant
+check removed (1).
+
+### 9.2 Slice 1b — `buildLevelWorld` relaxes BY ROLE; the 137-tag census
+
+`levelWorld.js` + tests. vitest 4091 → 4104. Detail in the doc's "Roles"
+section; what belongs here is the shape and the numbers.
+
+Roles are `blocking` / `trigger` / `pickup` / `proximity-hazard`; an entry
+LISTS the roles it answers for and the builder throws only for a role the
+caller consults. Existing callers get all four, so nothing they see changed.
+
+**Levels that build: 3/116 at v2 → 11/116 with all roles → 82/116 with the
+cheap three.** The 11 figure is itself a finding: classifying the level
+FLAGS, the fifteen pickups and the chest lifts the FULL census without
+touching a single collider.
+
+⚠ **A hazard whose volume nobody transcribed is `'unpriced'`, not omitted.**
+Only `chest` and `watcher` carry a rect — the two the R0 walk can reach.
+The other twelve throw when a consulted level contains one, carrying their
+evidence in the message. Guessing a rect for a rotating LavaTrap tongue
+would have been a model nobody derived; a loud throw is a rung boundary made
+visible.
+
+Mutations: consulted-role throw removed (3), unpriced hazard silently
+skipped (2), chest volume shrunk to its own cell so the open-line row stops
+being avoided (1).
+
+### 9.3 Slice 1c — the relaxed driver
+
+`botDriverV2.js`, `levelWorld.plannerBlockerAt`, `levelRun`, `tapeRunner`.
+vitest 4104 → 4112.
+
+`opts.relax` is ONE object deciding the plan, the run AND the emitted tape.
+That is the point of it being one argument: a driver that planned around
+water while emitting a tape which disables it produces a tape both the runner
+and the game accept and neither walks the way the planner imagined.
+
+⚠ **`avoidVolumes` defaults OFF for the v2 path, deliberately.** Level 94
+holds a Watcher and `cross-level-leg` plans through level 94; turning the
+volumes on there would re-route a committed oracle RECORDING, which is a
+re-record rather than a test update.
+
+⚠ **The runner had to learn the same census the driver plans with.** It built
+worlds with the FULL census, so it refused to replay a relaxed tape crossing
+level 2 — the driver could emit tapes the runner would not run. Both sides
+now derive the census from `noclip`.
+
+The executor's avoid-volume throw turns **nothing** red; recorded as a
+bounded vacuity with its witness (a route whose smoothed segment clips a
+volume the tile-centre test cleared), same shape and same verdict as v2's
+executor hit-throw.
+
+## 10. Slice 2 — the AS3 batch, AS BUILT (2026-07-31)
+
+Fork `PeerInfinity/Seedling` branch `bot` @ `b3c0c9b`. All six changes
+landed as specified, with two corrections found while writing them:
+
+⚠ **The auto-advance key is X (88), not V.** §2 said `Input.released(p.keys[6])`
+was "V, keycode 86". `Player.as:59` is
+`[RIGHT, UP, LEFT, DOWN, X, C, X, V, I]` — index 6 is the SECOND `Key.X`,
+the one the comment labels "Talk"; V is index 7 and opens the inventory,
+which would freeze the game rather than unfreeze it. Dispatching V would
+have shipped the feature silently dead, and since R0's routes avoid every
+ceremony nothing would have noticed until R3.
+
+⚠ **`atBootPosition()` is what keeps the v1 fixtures byte-inert.** `botStart`
+re-boots only when the tape's block differs from where the build already is,
+and `Main.playerPositionX/Y` are the right comparison because the `Game`
+ctor writes them from its own constructor args (`Game.as:557-560`) — i.e.
+"was this world built from these args", not "is the player standing there".
+
+## 11. ⚠ The batch took TWO pipeline runs, and the gate is why
+
+§5's "flags-off must be byte-inert; run it BEFORE recording anything new" is
+not ceremony. The first build failed it outright: **all eleven committed
+fixtures were rejected by `botLoadTape`.**
+
+The cause was the AS3 mirroring slice 1a's *first* mistake rather than its
+fix — the version-1 check was PRESENCE-based
+(`if (t.noDamage != null ...) return error`) while `parseTape`'s is
+VALUE-based. `parseTape` is idempotent by design, every consumer
+re-validates, and the harness sends the PARSED (normalised) object over the
+wire — so every v1 tape arrives carrying `noDamage: false`, `noHazards: []`,
+`grants: []`. Two consumers reading one tape differently: the exact failure
+the format exists to prevent, one version up.
+
+**The diagnostic was in the failure pattern itself:** all eleven fixtures
+failed while the LIVE DRIVER TASK passed. The driver's tape comes straight
+from `buildTape` and never goes through `parseTape`, so it carried no v2
+fields. Worth remembering — "everything failed except the one path that
+builds its input differently" localises a parse defect immediately.
+
+Second build: **81/81 checks, all eleven byte-identical, flags off.** The
+batch is byte-inert exactly as declared.
+
+## 12. Slice 3 — AS BUILT: three fixtures, all EXACT
+
+14 fixtures / 1550 ticks / 1564 observations / 8 transition records, all
+matching bit for bit. 102/102 checks under `--win`.
+
+- **`grant-sword-room`** (376 ticks) — the witness. Five legs, boot → 2 → 3
+  → 11 → the sword's room, crossings at 140/187/274/330 and the grant on the
+  last. The game reports `hasSword` true, the other thirteen properties
+  correct, `saw_auto_advance` 0 and the win statics false. It is only
+  plannable because slice 1b relaxed the census (levels 2 and 3 hold
+  `dungeonspire`, `moonrockpile`, `breakablerockghost` — no collider
+  classification exists for any of them) and because `noHazards` makes
+  levels 3 and 11, largely WATER, standable. Both avoid volumes are live and
+  on the path: level 11's chest open-line runs directly between the arrival
+  and the exit, and level 10's sword sits in the same 7×7 room as the goal.
+- **`hazard-boot-pit`** (30 ticks) — the ONLY fixture exercising the
+  parameterised boot, and the strongest coerce claim of the three. It boots
+  straight into level 83 — a room the v2 rung could reach by NEITHER door —
+  and walks onto a PIT. Without the coerce the game sets
+  `receiveInput = false` and TRANSPORTS the player to level 84, so the claim
+  is a level change that does not happen, carried by the observation stream
+  directly rather than by a speed.
+- **`hazard-walk-water`** (60 ticks) — hand-authored, level 0 row 8 into the
+  water at column 9. Hand-authored on purpose: a synthesized tape would only
+  prove the planner and the engine agree, while a held RIGHT proves the GAME
+  agrees.
+
+### Two test-side corrections the new fixtures forced
+
+- **The v1-engine regression block keyed on `noclip`**, which was the same
+  set as "the v1 rung" only until R0's relaxed tapes arrived.
+  `grant-sword-room` went red there (the v1 engine has no transitions) and
+  the two hazard tapes would have gone GREEN for a reason that proves
+  nothing — the v1 engine stubs terrain to ground, which is exactly what the
+  coerce produces, so it cannot tell a working coerce from a missing one.
+  Pinned BY NAME now, with a guard that the five are still v1 tapes.
+- **`substance()` now carries the relaxations.** The same key spans under a
+  different hazard set is not the same tape.
+
+### And one harness bug the recording found
+
+The grants comparison was `JSON.stringify(a) === JSON.stringify(b)`. AS3's
+JSON writer emits object keys in its own order (`{items, level, t}`) and JS
+in insertion order (`{t, level, items}`), so identical data compared unequal.
+Compared field by field now. A reminder that `JSON.stringify` equality across
+two runtimes is a comparison of two serializers, not of two values.
+
+## 13. Verdict against §7's gates
+
+- **G1** — vitest **4119/4119**; the eleven old fixtures byte-identical;
+  new strata for parse/coerce/grants/roles/avoid; eleven mutations run and
+  every one bites, with the two that do not (the executor's avoid-volume
+  throw, `noDamage` on the JS side) recorded as bounded vacuities with
+  witnesses rather than left implied.
+- **G2** — `--win`, **102/102**: the eleven re-verified EXACT against the new
+  build with flags off, then the witness walk and both hazard fixtures
+  recorded and EXACT, with `botStatus` asserting the grant, `hasSword`, the
+  thirteen negatives, `hitsMax`, the win statics and zero auto-advance — all
+  from the game's own reports.
+
+**The rung is closed.** What R1 inherits, and what §8.7 says it must price
+before being scoped, is in the doc's "What's next".
