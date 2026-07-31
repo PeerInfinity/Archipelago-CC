@@ -1,0 +1,28 @@
+{
+  "tape_version": 2,
+  "game": "seedling",
+  "name": "pit-fall-chain-85",
+  "description": "HAND-AUTHORED. The same boot and the same single held RIGHT as pit-fall-83, run long enough to carry the whole underworld entry: fall 83 -> 84, then the CHAINED fall 84 -> 85, then the arrival that BOUNCES. Level 84 is a 3x3 block of pit tiles and the 83 -> 84 arrival lands in its centre, so the player never touches free floor there - no input is dispatched after the span ends and the game moves the player for the rest of the tape. That makes this the fixture for three things nothing else can see: a fall whose arrival re-fires the pit edge on the very next tick (the pass-through), the ordinary landing where getStatePos reads Igneous Stone and the descent BOUNCES once at v.y = -2 for exactly 39 ticks before settling at yStart, and the two transitions records the derivation must produce from a tick stream whose level field changes twice with no teleporter anywhere. Level 85's landing tile (3,4) is Igneous Stone (16): the bounce is the NORMAL case, and only pit, water and lava stop the descent dead. See pit-fall-83 on why the approach is from the west.",
+  "boot": {
+    "level": 83,
+    "x": 16,
+    "y": 16
+  },
+  "noclip": true,
+  "noDamage": true,
+  "noHazards": [
+    "water",
+    "lava",
+    "ice",
+    "waterfall"
+  ],
+  "grants": [],
+  "tick_count": 220,
+  "inputs": [
+    {
+      "key": "right",
+      "from": 0,
+      "to": 12
+    }
+  ]
+}

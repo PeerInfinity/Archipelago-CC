@@ -151,16 +151,43 @@ describe('fixture differential', () => {
     const V1_FIVE = ['diagonal-run', 'direction-flip', 'friction-stop',
         'shuffle-stop', 'straight-run'];
 
-    it('has fixtures on disk, and NONE of them is pending any more', () => {
+    /**
+     * ⚠ THE PENDING SPLIT IS BACK, for exactly one slice — R1's slice 1
+     * recorded the pit oracles from the real game BEFORE the transport that
+     * has to reproduce them exists. That is this arc's standing slice order
+     * (v2 recorded collision and cross-level tapes the same way) and it is
+     * what lets the transcription be written TOWARD a recording instead of
+     * being graded by one afterwards.
+     *
+     * Pinned BY NAME and BY THE NAMED THROW, both: a pending tape that
+     * started passing, or that started failing for some OTHER reason, is a
+     * red here rather than a silent hole. Slice 2 deletes this list and the
+     * two names rejoin the exact-match roster.
+     */
+    const PENDING = ['pit-fall-83', 'pit-fall-chain-85'];
+    const modelled = names.filter((n) => !PENDING.includes(n));
+
+    it('has fixtures on disk, and the pending list is exactly the pit pair', () => {
+        for (const n of PENDING) {
+            expect(names, `${n} is missing`).toContain(n);
+            const t = loadTape(n);
+            // The one thing that makes them pending: pit is NOT coerced, so
+            // the terrain guard refuses the tape by name.
+            expect(t.noHazards, `${n} must leave pit LIVE`).not.toContain('pit');
+            expect(() => runTapeToStream(t, { levelSource }))
+                .toThrow(/tile type 6 \(Pit\) is not modelled/);
+        }
+    });
+
+    it('every non-pending fixture is on the exact-match roster', () => {
         // Positive control: every "each fixture matches" assertion below is
-        // vacuous if the roster is empty. The roster used to be SPLIT — v2's
-        // slice 0 recorded collision and cross-level tapes from the real
-        // game before the engine that had to reproduce them existed, and
-        // each waited in a PENDING list until its slice landed. Slice 2 took
-        // `collide-up-rock` off it and slice 3 took `transition-west-return`,
-        // which is why there is no split left to keep honest: every fixture
-        // on disk now runs the exact-match assertion.
-        expect(names.length).toBeGreaterThanOrEqual(7);
+        // vacuous if the roster is empty. v2's slice 0 recorded collision and
+        // cross-level tapes from the real game before the engine that had to
+        // reproduce them existed, and each waited in a PENDING list until its
+        // slice landed — slice 2 took `collide-up-rock` off it and slice 3
+        // took `transition-west-return`. R1's slice 1 re-opened it for the
+        // pit pair above; everything else runs the exact-match assertion.
+        expect(modelled.length).toBeGreaterThanOrEqual(7);
         expect(names).toContain('collide-up-rock');
         expect(names).toContain('transition-west-return');
         // The v1 five are all still on disk, and are still the tapes the v1
@@ -173,7 +200,7 @@ describe('fixture differential', () => {
         }
     });
 
-    it.each(names)("%s: JS stream matches the real game recording, exactly", (name) => {
+    it.each(modelled)("%s: JS stream matches the real game recording, exactly", (name) => {
         // Everything runs with the real level geometry here, the v1 tapes
         // included — which for them is a second claim on top of the first:
         // the stateful `getState` has to agree with the game over 220 ticks

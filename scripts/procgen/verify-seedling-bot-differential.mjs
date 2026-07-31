@@ -295,7 +295,7 @@ function withDerivedTransitions(name, drained) {
 function checkReadout(name, tape, status) {
     if (!status || typeof status !== 'object') {
         check(`${name}: botStatus is readable`, false, 'no status object');
-        return;
+        return null;
     }
     // The batch's readout must be PRESENT. A build without it would make
     // every assertion below vacuously true by comparing undefined to
@@ -307,7 +307,7 @@ function checkReadout(name, tape, status) {
         hasReadout ? `${Object.keys(status.items).length} item properties, `
             + `cutscene=${JSON.stringify(status.cutscene)}, menu=${status.menu}`
             : 'items/cutscene/menu/grants missing — is this the pre-R0 build?');
-    if (!hasReadout) return;
+    if (!hasReadout) return null;
 
     check(`${name}: no dialogue auto-advance fired`, status.saw_auto_advance === 0,
         status.saw_auto_advance === 0 ? 'saw_auto_advance=0'
@@ -318,7 +318,23 @@ function checkReadout(name, tape, status) {
     // The JS side's expectation for this tape, from the same tape the game
     // just ran. `runTape` throws if a grant never fires, so a stale route is
     // caught before the comparison rather than by it.
-    const expected = runTape(tape, { levelSource: atlasLevelSource() });
+    //
+    // ⚠ A throw here is a NAMED failure for THIS tape, never an exception
+    // that aborts the sweep — the same rule a missing expectation already
+    // follows, and for the same reason: one unmodelled tape must not leave
+    // every tape after it unreported. It is also what lets a rung RECORD an
+    // oracle for a mechanic the JS does not model yet (the v2 slice-0
+    // inversion): the recording is about the GAME, so `--record` still
+    // writes it, and this check stays red until the transcription lands.
+    let expected;
+    try {
+        expected = runTape(tape, { levelSource: atlasLevelSource() });
+    } catch (e) {
+        check(`${name}: the JS model runs this tape`, false,
+            `${e.message} — the recording is still valid (it is the game's), but every `
+            + 'readout expectation below needs the model, so they are not evaluated');
+        return null;
+    }
 
     // ⚠ Compared FIELD BY FIELD, not by JSON.stringify. AS3's JSON writer
     // emits object keys in its own order ({items, level, t}) and JS in
@@ -351,6 +367,8 @@ function checkReadout(name, tape, status) {
     check(`${name}: the win statics are still false`,
         status.menu === false && status.cutscene.every((c) => c === false),
         `menu=${status.menu}, cutscene=${JSON.stringify(status.cutscene)}`);
+
+    return expected;
 }
 
 /** Replay one tape on its own fresh page and return the drained stream. */
@@ -420,14 +438,39 @@ try {
         const { stream, status } = result;
         const secs = ((Date.now() - t0) / 1000).toFixed(0);
 
-        if (status.saw_input_refused) {
+        const expectedRun = checkReadout(name, tape, status);
+
+        // ⚠ `receiveInput == false` stopped being unconditionally a defect at
+        // R1. A pit transport refuses input BY DESIGN — `checkFallingInPit`
+        // sets it false for the twenty fall-out ticks and the arrival keeps it
+        // refused for the whole fall-from-ceiling descent. So the flag is read
+        // TWO-SIDEDLY, against the model's own answer:
+        //
+        //   the model says a transport happened  -> refusal is REQUIRED, and
+        //     its absence means the fall never fired and the fixture is vacuous
+        //   the model says none happened         -> refusal is a defect, as before
+        //
+        // Deriving the expectation from the model rather than from a new tape
+        // field is deliberate: a tape field would have to be validated by
+        // `Bot.as` too, i.e. an AS3 change and a pipeline run, to state
+        // something both sides can already work out.
+        const expectsTransport = Array.isArray(expectedRun?.transports)
+            && expectedRun.transports.length > 0;
+        if (expectsTransport) {
+            check(`${name}: the game refused input during the pit transport`,
+                status.saw_input_refused === true,
+                status.saw_input_refused
+                    ? `${expectedRun.transports.length} transport(s) modelled`
+                    : `the model expects ${expectedRun.transports.length} pit transport(s) `
+                    + 'but the game never refused input — no fall fired, so this fixture '
+                    + 'proves nothing about the transport');
+        } else if (status.saw_input_refused) {
             // Surfaced, not silently tolerated: receiveInput==false means the
             // game dropped input mid-tape and the stream is not comparable.
             check(`${name}: game accepted input throughout`, false,
-                'receiveInput went false mid-tape (cutscene/pit/boss?)');
+                'receiveInput went false mid-tape (cutscene/pit/boss?) and the model '
+                + 'does not account for it with a pit transport');
         }
-
-        checkReadout(name, tape, status);
 
         // Quantitative pin: a bot that recorded nothing, or teleported,
         // would satisfy a purely positional comparison.
