@@ -1588,9 +1588,9 @@ routes themselves remain untried.
   generate a full playthrough that reaches all the items, then reintroduce
   ONE obstacle type per rung until the full game is beatable — end-to-end
   coverage first, every rung a full playthrough, progress measured in "what
-  still blocks us". Plan: `NewDocs/plans/seedling-bot-subtractive-plan.md`;
-  rung-0 kickoff: `NewDocs/plans/seedling-bot-r0-opus-kickoff.md` (both →
-  `CC/docs/plans/` at implementation start). Rulings (user 2026-07-31):
+  still blocks us". Plan: `CC/docs/plans/seedling-bot-subtractive-plan.md`;
+  rung-0 kickoff: `CC/docs/plans/seedling-bot-r0-opus-kickoff.md` (both
+  tracked from implementation start, 2026-07-31). Rulings (user 2026-07-31):
   (1) rung 1 relaxes noclip + noDamage + noHazards, ALL mirrored exactly in
   JS — the exact differential holds end-to-end, R1 is not a reconnaissance
   artifact; (2) ONE AS3 batch (first since v1): dialogue auto-advance on

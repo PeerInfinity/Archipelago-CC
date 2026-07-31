@@ -2856,13 +2856,13 @@ Claude, accepted by user). Full detail in `region-atlas-plan.md` Phase 8.**
   prices the SOLIDS rung, not the next one — the relaxed walk escapes it
   by relaxing `buildLevelWorld` by ROLE, and the exact differential holds
   end-to-end at rung 1 (the JS mirrors every relaxation). **QUEUE NEXT for
-  this arc: `NewDocs/plans/seedling-bot-r0-opus-kickoff.md`** (rung 0: the
+  this arc: `CC/docs/plans/seedling-bot-r0-opus-kickoff.md`** (rung 0: the
   ONE six-change AS3 batch — auto-advance/readout/noDamage/param-boot/
   noHazards/grants — tape format v2, role-relaxed builder, the item/win
   acceptance signal, a witness mini-walk to the sword's room). Ladder +
   rulings + new recon (pickup-ceremony deadlock, enemy knockback, the Seed
   win condition, the full item census): 
-  `NewDocs/plans/seedling-bot-subtractive-plan.md`; ruling record also in
+  `CC/docs/plans/seedling-bot-subtractive-plan.md`; ruling record also in
   the plan doc's Phase 8 ladder.
 
 ## 6. Everything else (unchanged queues)
