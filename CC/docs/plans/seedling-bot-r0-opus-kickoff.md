@@ -258,3 +258,329 @@ verifier-shared-assumption.
   build with flags off; the witness walk and the hazard fixture recorded
   and EXACT; `botStatus` readout asserts the grant, `hasSword`, the 13
   negatives, and zero auto-advance — all from the game's own reports.
+
+## 8. Slice 0 — RECON, AS BUILT (2026-07-31)
+
+No code. Everything below is source-verified against `~/CC/seedling` branch
+`bot` (the tree the batch lands on) and the committed extract
+`flashPanel/atlases/seedling-map.json`. Where a §2 anchor was imprecise it is
+corrected here; §2 is the brief, this section is the record.
+
+### 8.1 The choke-point proof: terrain state has exactly ONE consumer file
+
+The question §3.2(e) asked — *does one coerce point cover speed, friction,
+ice, pit and drown?* — has a stronger answer than hoped.
+
+**Nothing outside `Player.as` reads the player's terrain state or any field
+derived from it.** `grep` for `.state`, `.inWater`, `.inLava`, `.onIce`,
+`.onWaterfall` across all 209 files returns **zero** hits outside
+`Player.as`. (`Enemy.getState()` and `LavaRunner`'s switch are a *different*
+function on a different class. `getStatePos` is the unrelated ungated lookup
+already recorded in the doc.)
+
+Inside `Player.as`, `getState()` (`:656-668`) assigns `state = tile.t` and
+the **setter** (`:685-716`) is where every consequence is computed:
+
+| derived field | assigned | read by |
+|---|---|---|
+| `fallInPit` | `:697` (`_s == 6`) | `checkFallingInPit` `:718-745` (the `receiveInput = false` + `Game.fallthroughLevel` world swap); `Moonrock.as:126` (guard only) |
+| `onIce` | `:700` (`_s == 22`) | `:516` (friction `slidingFriction` + `slidingSpeed`) |
+| `onWaterfall` | `:701` (`_s == 25`) | `:1521` (the waterfall push) |
+| `inWater` | `:702` (`_s == 1 \|\| _s == 25`) | `:524` (WATER_FRICTION + the swim-sound speed bonus at `:527`) |
+| `inLava` | `:703` (`_s == 17`) | `:524`, same branch |
+| `moveSpeed` | `:715` and `:523` | `input()` `:1489-1517` |
+| `lastState` | `:689` | **nobody — dead** |
+| `lastPosition` | `:712` | **nobody — the only two reads are commented out at `:1404-1405`** |
+
+Plus three direct reads of `state` outside the setter:
+
+- `:523` `moveSpeed = moveSpeeds[state]` — the live one. `onIce` is already
+  coerce-derived, so this sits in the `else` and would otherwise re-apply the
+  RAW water/lava speed after the setter had neutralised everything else.
+  **This is the site a naive "guard the setter" patch misses.**
+- `:1420` / `:1424` `checkDrowning()` — `state == 1 && !canSwim` and
+  `state == 17 && !hasDarkSuit`. Must see the coerced value or the drown
+  timer still runs to `die()`.
+- `:662` the `Music.playSound("Splash")` comparison, and `:1633-1650`
+  `states[state]` (the `"swim-"` sprite prefix). Both **cosmetic**; leave
+  them on the RAW value, which is also the less invasive edit.
+
+**So the shape is: keep `_state` RAW, add one private `effState` accessor,
+and route exactly four sites through it** — the setter body (one local
+`eff`, used by `:693/:700-703/:715`), `:523`, `:1420`, `:1424`. That
+satisfies §3.2(e)'s "one choke point" and §3.3's "the resolver still
+RESOLVES and stores raw state" simultaneously, and it is why the JS mirror
+can keep asserting the resolver's own answer (the brick-not-ground lesson).
+
+One thing the setter does that the coerce must NOT disturb: the
+`if (_s != _state)` change gate and `_state = _s` stay on the raw value, so
+change detection, `lastState` and the splash comparison are byte-identical
+to vanilla with the flag off *and on*.
+
+`onGround` gates the whole branch (`:691`). It is written in exactly one
+place in the codebase — `Enemies/LavaTrap.as:61/66` — so outside a lavatrap
+level it is permanently `true` and the `else` arm (`:707-710`) is dead.
+
+### 8.2 Knockback: guarding `Player.hit()` is exactly the minimal set
+
+`Player.knockback` has **two** callers:
+
+- `:1363`, inside `hit()` — enemy/hazard contact. Covered by guarding the
+  body of `hit()`, as §3.2(c) specifies.
+- `:761`, inside the `slashing` setter — the sword **dash**, a player-
+  initiated item use. Not contact. Leave it unguarded: the bot never
+  presses X at this rung, and guarding it would silently change an R3
+  mechanic.
+
+(`:1669` is `o.knockback(...)` — the shield bump applying knockback to
+*other* entities, not the player.)
+
+⚠ But `hit()` is not the only path by which the game moves the player, and
+`Bot.noDamage` as scoped does **not** make enemies harmless — see §8.7.
+
+### 8.3 NPC `keyNeeded` and Watcher proximity
+
+Census of `keyNeeded` across all 209 files: **`NPC.as:41` declares it
+`true`, and `Watcher.as:46` is the only assignment anywhere.**
+
+`NPC.talk()` (`:185-235`) auto-opens dialogue when
+`inRange && (hitKey || !keyNeeded) && !Game.talking && !Game.inventory.open`,
+with `inRange = FP.distance(x, y, p.x, p.y) <= talkRange` (24 px default;
+`Statue` widens it to 32). So **every NPC except a Watcher is safe to walk
+past** — they need a `V` release the bot never sends. They are still
+`type = "Solid"` (blocking role), which noclip already handles.
+
+Watchers are the exception, and the direction is counter-intuitive:
+`keyNeeded = !Game.checkPersistence(tag)`. `Main.as:319-330` fills
+`levelPersistence` with `true` on a fresh boot, so:
+
+- **`tag >= 0` → `checkPersistence` true → `keyNeeded` FALSE → the Watcher
+  AUTO-TALKS within 24 px** and freezes the game via `NPC.as:195`. A live
+  proximity hazard.
+- `tag == -1` → the index is `i*tagsPerLevel - 1`, `undefined`, coerced
+  `false` → `keyNeeded` true **and** `Watcher.update` gates `super.update()`
+  on the same `checkPersistence(tag)`, so `talk()` is never even called.
+  Wholly inert.
+
+The extract holds **11** watchers, not the 12 the brief carried — L12 tag=6,
+L32 tag=2, L37 tag=2, L43 tag=6, L57 tag=1, L69 tag=1, L82 tag=2, L89 tag=1,
+L94 tag=0, L103 tag=0, L114 tag=0. **All eleven have `tag >= 0`, so all
+eleven auto-talk.** (L94's is inside a committed fixture level; the v2 routes
+never came within 24 px of (152,128) — another "unobservable decays when the
+driver gets better".)
+
+`Watcher.doneTalking()` also calls `Game.setPersistence(tag, false)`, and
+`Scenery/FinalDoor.as:50` reads `!Game.checkPersistence(0, 114)` as
+"talked to the Watcher" — so a Watcher touch mutates endgame gating state.
+
+### 8.4 The proximity census: what actually freezes, teleports or eats RNG
+
+Enumerated by signature rather than by guess. `Game.freezeObjects = true`
+has **13** sites; `FP.world = new Game(...)` has 12 live ones. Filtered to
+what a *relaxed walk with no key presses* can trigger:
+
+| source | tags | count / levels | trigger |
+|---|---|---|---|
+| `Pickups/Pickup.as:95` | the 12 item tags + `seed`, `bosskey`, `totempart` | 12 / 1 each, 5 / 5, 5 / 4 | walk-over → freeze + an NPC text needing a `V` **release** → **tape deadlock** |
+| `Pickups/SealPiece.as:24` (`text = ""`) | spawned by `chest` | — | freeze, 150 frames, then self-resolves. No deadlock, but 150 frozen frames |
+| `Chest.as:59-88` | `chest` | 16 / 16 | `collideLine("Player", …, y+height+1)` — a 1-px line **beneath** the chest, inset 2 px each side → spawns the SealPiece, calls `setPersistence`, and burns an **unbounded** `while` of `Math.random()` for the seal index |
+| `NPCs/NPC.as:195` | `watcher` (tag ≥ 0) | 11 / 11 | within 24 px → freeze (see §8.3) |
+| `Scenery/FallRock.as:107/59`, `FallRockLarge.as:134/67` | `fallrock`, `fallrocklarge` | 8 / 6, 2 / 2 | proximity → freeze **and** `p.y = …` |
+| `Scenery/Moonrock.as:72/128` | `moonrock` | 1 / 1 (L0) | **inert on a fresh boot** — see below |
+
+Every one of the 12 item pickups is `special = true` with non-empty `text`,
+so §2's deadlock claim holds for all of them, not just the sword.
+`Sword.removed()` additionally does `Player.hasSword = true`,
+`Game.setPersistence(tag, false)` **and** `FP.world.add(new Help(3))` — the
+three-part collection ceremony R3 has to model.
+
+**Moonrock is inert, and the reason is worth pinning** because a careless
+read says otherwise. `Moonrock.update()`'s distance test sets `canBeam`, not
+`moonrockSet`; `Game.moonrockSet = true` happens only at `:118`, after the
+rock falls, which needs `beam && canBeam`, and `beam` is `Main.beam`
+(SAVE_FILE-backed, false on every load because the recompiled runtime never
+persists). The ctor therefore leaves it at `y = -1000`, `type = ""`.
+`ENTITY_CLASSES.moonrock` is correct as written. This matters concretely:
+L0's moonrock is at (240,256) with a 48×48 hitbox, and the witness walk's
+exit stairs are at (256,272) — *inside* that rect had it ever armed.
+
+`lightalpha`, `daynight`, `control` and `droplet` are **not entities at
+all**: `Game.as:1873/1875/2048/2056` read them as level FLAGS
+(`lightAlpha`, a `hasOwnProperty` check, the pit-fallthrough parameters, and
+the rain rect). Classifying `lightalpha` as a flag — with the citation, not
+as a guessed "ignorable" — is what takes the role census past its single
+biggest blocker: it appears in **98** of 116 levels.
+
+### 8.5 BobBoss: level 32, and it is not placed from a level file
+
+No `.oel` in the repo contains `bobboss1/2/3`, so `Game.as:2068-2070` never
+fires. The only live construction is **`Scenery/FallRockLarge.as:117`** —
+`new BobBoss(72, 72)` when a fallrocklarge with `bossrock && thirdboss`
+lands. Two fallrocklarge exist: **L32 `bossrock=1 thirdboss=1`** and L82
+`bossrock=1 thirdboss=0`. So the boss chain is **level 32**;
+`BobBoss.as:190` respawns the next type in place and `:194` drops `Fire`
+when type 2 dies. L32 is trigger-reachable (0→12→24→23→21→22→30→32).
+
+### 8.6 The L0 → L10 chain, and the shape of the witness room
+
+Shortest live-trigger chain, four hops:
+
+```
+L0  stairsdown oel(256,272) --> L2  arrive (56,40)
+L2  teleporter oel(48,96)   --> L3  arrive (72,24)
+L3  teleporter oel(96,128)  --> L11 arrive (40,24)
+L11 stairsdown oel(32,80)   --> L10 arrive (56,40)
+```
+
+(arrival = `(playerx+8, playery+8)`, the ctor half-tile, per the shipped
+contract.) Every hop is `tag = -1`, so none is the deactivated-on-fresh-boot
+case.
+
+What each level costs the ROLE census (roles the R0 walk consults:
+trigger / pickup / proximity-hazard):
+
+| level | size | already classified | NEW |
+|---|---|---|---|
+| L0 | 20×20 | all 15 tags | — |
+| L2 | 7×7 | stairsup, teleporter, pole, torch | `dungeonspire` (Solid), `moonrockpile` (Solid), `lightalpha` (flag) |
+| L3 | 9×9 | teleporter×4, breakablerock, torch, brickpole | `breakablerockghost` (= `BreakableRock`, blocking twin), `lightalpha` |
+| L11 | 5×7 | stairsdown, teleporter, torch | **`chest` (PROXIMITY HAZARD)**, `lightalpha` |
+| L10 | 7×7 | stairsup, tree×2, teleporter, orb×2 | **`sword` (PICKUP)**, `lightalpha` |
+
+No level in the chain has holes, a Bridge tile (t=29), or a cliffsides
+layer. L3 (32 cells) and L11 (10 cells) are substantially **Water**, which
+is precisely what `noHazards` makes walkable — the chain is a real exercise
+of the rung's own relaxation, not a route that avoids it.
+
+Two geometry facts the route must respect, both computable now:
+
+- **L11's chest at oel(32,48)** sits at world (40,56) with a 16×16 centred
+  hitbox → rect [32,48)×[48,64), and its open-line runs at **y = 65,
+  x ∈ [34,46]**. The straight run from the arrival (40,24) to the exit
+  trigger [32,48)×[80,96) goes **straight through it**. The level is 80 px
+  wide, so a detour exists — and this is the R0 walk earning its
+  avoid-volume policy rather than being handed it.
+- **L10's sword at oel(48,48)**: `super(_x+8, _y+8)` then
+  `setHitbox(8,8,4,4)` → rect **[52,60)×[52,60)**. The arrival (56,40) puts
+  the player's 4×5 box at [54,58)×[38,43) — clear by 9 px, so the grant can
+  be observed at the arrival tick without the walk ever risking the pickup.
+
+⚠ L3 holds **four** teleporters; the two-fire-on-one-tick throw is live
+there in a way level 0's west pair already showed. That is a routing
+constraint for slice 3, not a new seam.
+
+### 8.7 ⚠ Findings that change what R1 can claim (report, do not act at R0)
+
+Two came out of the census and both are load-bearing for the *next* rung.
+Neither blocks R0 and neither is a seventh AS3 change; both belong in the R1
+kickoff with the numbers attached.
+
+**(a) `Bot.noDamage` does not make enemies harmless.** Guarding
+`Player.hit()` covers damage and knockback. It does not cover the classes
+that write the player's position or input state **directly**:
+
+| site | tag | levels | what it does |
+|---|---|---|---|
+| `Enemies/LavaTrap.as:59-72` | `lavatrap` | 77, 78, 80, **108** | a rotating tongue `collideLine`s the player, then *drags* them (`attached.x/.y = …`) and calls `attached.die()`. `hitPlayer()` is overridden to `{}` — it never touches `hit()` at all |
+| `Puzzlements/Whirlpool.as:66-71` | `whirlpool` | **46**, **50**, 54 | radial displacement of `player.x/.y` |
+| `Projectiles/IceTurretBlast.as:52` | `iceturret` | **40**, **98** | `freeze(freezeTime)` on the player |
+| `Puzzlements/ShieldLock.as:35-49` | `shieldlocknorm`, `shieldlock` | **12**, **20**, 71 | snaps `p.y` and sets `receiveInput = false` |
+| `Scenery/FallRock(Large).as` | `fallrock`, `fallrocklarge` | **37**, **39**, **43**, 28, 29, 74, 32, 82 | freeze + `p.y = …` |
+| `Scenery/Pod.as:70-71` | `pod` | 112 | snaps `p.x/.y` |
+| `Enemies/BossTotem.as:284`, `BobBoss.as:219-227` | boss levels | 43, 32 | position + `receiveInput` |
+
+Bolded levels are on the **shortest live-trigger chains to the item rooms** —
+so an R1 walk following those chains meets several of these. The designed
+answer is the `proximity-hazard` role plus avoid-volumes (LavaTrap's is a
+disc of radius `max(tongueLengths)`, since the tongue sweeps); whether that
+is always routable is an R1 question. **Recommendation: keep the batch at
+six and let R1 decide between routing and a `Bot.noEnemyEffects` flag** —
+adding a fourth crutch the user did not rule, one that R5 would then have to
+retire, is not an implementation detail to slip into R0.
+
+**(b) With hazards off, 2 of the 13 item rooms are UNREACHABLE, because
+pits are not only a hazard — they are a TRANSPORT primitive.**
+
+- Over the trigger graph alone (teleporters + stairs, ignoring geometry):
+  **100 of 116** levels reachable from L0.
+- **L74 (`darkshield`) and L79 (`darksuit`) are not among them.** Every
+  inbound trigger to each comes from L73/L75/L78/L80, none of which is
+  trigger-reachable either.
+- Add the pit edges — the 12 `control` objects' `fallthrough` targets — and
+  reachability goes to **114 of 116**, and both rooms open.
+
+So R1's terminal assertion cannot be "13 item properties true" as written;
+with `noHazards` coercing the pit state it is **11 of 13**, with darkshield
+and darksuit named on the blocked list until R4 re-arms pits. That is
+exactly the honest "what still blocks us" metric the ladder is measured in,
+so it is a correction to R1's *claim*, not to its design.
+
+### 8.8 ⚠ One batch amendment, decided here per §5 ("add it BEFORE building")
+
+**`Bot.noHazards` ships as a SET of coerced terrain states, not a boolean.**
+The ruling is unchanged — the R0 tapes declare the full ruled set
+`{1 water, 6 pit, 17 lava, 22 ice, 25 waterfall}` and record exactly the
+semantics §3.2(e) specifies. Only the *shape* of the flag widens, and it is
+a handful of lines in a class that is already being edited.
+
+Two independent reasons, and the second is decisive:
+
+1. §8.7(b): the pit is the only route into the darkshield/darksuit cluster.
+   A boolean forces "all hazards or none", so R1 cannot even *choose* to
+   leave pits armed.
+2. **R4 re-arms hazards ONE AT A TIME by design** ("pits, then lava, ice,
+   and water/swim last"). A boolean cannot express a single rung of R4 — so
+   shipping one guarantees a second ~10-minute pipeline run at R4 to change
+   its type. The set costs nothing now and removes that.
+
+Tape shape: `"noHazards": ["water","pit","lava","ice","waterfall"]` — NAMES,
+not raw ints, so the tape says what it disables; both sides map through one
+5-entry table asserted against the tile-type constants, unknown names throw,
+and `[]` is "off" (still explicit, still no default). This is the same
+data-in-tapes / table-in-`Bot.as` shape as the 14-entry grant table.
+
+### 8.9 The grants decision: **property writes ONLY**, and the reason is not the one expected
+
+§6's open question, resolved with the source in hand. `Sword.removed()`
+shows real collection does three things — `Player.hasSword = true`,
+`Game.setPersistence(tag, false)`, `new Help(3)`. The grant writes only the
+first.
+
+The argument I expected to make — "the item's tag collides with another
+tagged entity in its level" — is **false**, and worth recording so nobody
+re-derives it as a justification: checked all 12 item levels, no other
+entity shares the item's tag in any of them. The real reasons:
+
+1. **Persistence tags are a shared, cross-level, endgame-load-bearing
+   namespace.** `Scenery/FinalDoor.as:50` reads
+   `!Game.checkPersistence(0, 114)` — level 114's tag 0, the Watcher's text
+   — as "talked to the Watcher"; `Scenery/Moonrock.as:135` writes level 2's
+   tag 0 from level 0. Persistence is not per-entity bookkeeping, and a
+   crutch should not write it.
+2. **It buys nothing.** A pickup despawns from `check()`, and
+   `Game.update` runs `check()` on a new `Game`'s **first frame, above the
+   `blackCover` gate** (the same fact that pre-arms the teleporter latch).
+   A grant applied on the arrival *tick* is already too late to despawn the
+   pickup for that visit — so the pickup rect joins the avoid-volumes either
+   way, which is what §3.3 assumed.
+3. **It would make the crutch and the skill a dirty swap.** R3 retires the
+   grant by collecting for real; if R0's grant had also cleared persistence,
+   "crutch off" and "skill on" would not be the same state transition.
+
+The 14 item properties are `Player` statics that delegate to `Main`
+(`Player.as:102-108` etc.), all reachable from `Bot.as`. **One shape
+correction for the readout:** 13 are booleans, but `health` is
+`hitsMax` — an **int** with `op: "add"` over base 3 in
+`games/seedling.json`. `botStatus.items` must report it as a number, and
+R1's "13 true" assertion is really "12 booleans true + `hitsMax == 4`",
+with `fire` the 14th left to R5.
+
+### 8.10 Verdict on the batch: still SIX changes
+
+Nothing found here needs a seventh. §8.8 reshapes change (e) before the
+build rather than adding to it; §8.7 is reported to R1 rather than acted on.
+The auto-advance's inputs are all public statics (`Game.freezeObjects`,
+`Game.talking`, `Game.talkingText`, `Game.currentCharacter`), the readout's
+are too (`Game.cutscene[]` is a public static Array of 4, `Game.menu` a
+public static Boolean), and `Bot.as` already re-resolves `Main.level` every
+frame — so (a), (b) and (f) need no new plumbing.
