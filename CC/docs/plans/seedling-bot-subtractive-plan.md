@@ -149,31 +149,46 @@ exact differential green on everything modelled, (d) updates the honest
   acceptance signal every later rung asserts against. (The full win flags
   can only fire at the ladder's top; R0 proves the plumbing: readout fields
   present, false at boot, item flags flip on grant.)
-- **R1 — the relaxed full walk, PITS LIVE (ruled by the user 2026-07-31;
-  kickoff: `seedling-bot-r1-opus-kickoff.md`).** The pit question above is
-  RESOLVED: pits are NOT coerced — R1 tapes declare
-  `noHazards: ["water","lava","ice","waterfall"]` (the SET shape R0 shipped
-  for exactly this) and **pit transport is modelled exactly in JS** (fall
-  edge on state 6, the live-tick lerp toward the pit centre, the deferred
-  swap to the level's `control.fallthrough` target, the fall-from-ceiling
-  arrival; the raw-`getStatePos` bounce landing is a loud throw, not
-  modelled). Pit tiles are forbidden floor for the planner except as a
-  leg's named `exit: {pit: …}`. That takes the walk into the fall-only
-  underworld cluster — falls 83→84, 84→85, trigger 85→71, the ring to L74
-  (darkshield) and L79 (darksuit), fall 71→82 out — so **the terminal
-  assertion is 13 of 13** (12 booleans + `hitsMax == 4`), with `fire` the
-  only blocked item (R5). Background: the cluster is fall-only in the
-  VANILLA game too (verified — no trigger enters or leaves it), so this
-  models a mandatory mechanic, not a shortcut. ⚠ `Bot.noDamage` does NOT
-  make enemies harmless — seven classes write the player's position or
-  input state without going through `Player.hit()` (R0 kickoff §8.7a), so
-  R1 prices their avoid volumes per walked level; **the checkpoint is L79's
-  ring approaches (both cross lavatrap levels 78/80, and LavaTrap drags and
-  kills directly)** — if no corridor clears every tongue disc, STOP and ask
-  (a `Bot.noEnemyEffects` crutch vs darksuit joining the blocked list is
-  the user's trade). Exactly differentially verified end-to-end. Likely
-  side profit: the route makes v2's stickiness witness (L83's holes) and an
-  arrival-on-trigger latch pair cheap — take them opportunistically.
+- **R1 — the relaxed full walk, PITS LIVE.** Slices 0–3 SHIPPED
+  2026-07-31 (kickoff `seedling-bot-r1-opus-kickoff.md`, §8 the recon and §9
+  the scope ruling; slice 4, the walk itself, is the remaining work). Pits
+  are NOT coerced: R1 tapes declare
+  `noHazards: ["water","lava","ice","waterfall"]` and **pit transport is
+  modelled exactly** — edge inside the state setter on a RAW change while
+  `onGround`, 20 fall-out ticks of a one-tenth lerp toward the pit tile's
+  centre, the deferred swap to the level's `control.fallthrough`, and a
+  fall-from-ceiling descent that is always exactly 83 px and 41 ticks. Pit
+  tiles are planner-forbidden floor except as a leg's named
+  `exit: {pit: …}`. Two oracle recordings reconcile bit for bit.
+  ⚠ **Two corrections to the design above, both from the recon:** the
+  landing polarity is INVERTED (pit/water/lava LAND, an ordinary floor
+  BOUNCES once for 39 ticks — you cannot bounce on a hole), and **L84 is a
+  PASS-THROUGH**: the 83→84 arrival lands in the centre of a 3×3 block of
+  pits, so the player never touches free floor there and the fall chains
+  automatically. A level-graph router calls the cluster unreachable without
+  that; routing had to become a `(level, component)` search.
+  ✅ **The L79 lavatrap checkpoint PASSES** — 71→80→79 clears both r=33
+  tongue discs comfortably.
+  ⛔ **But R1's claim is 11 of 13, for reasons the checkpoint did not
+  predict, and the user RULED minimum code changes + an honest blocked
+  list rather than a fourth crutch.** `ghostsword` (L106) and `firewand`
+  (L109) are blocked: L98's IceTurret has `attackRange = 128`, its disc
+  covers the whole of Dungeon 8's only entrance room — arrival at 64 px,
+  the sole door out at 80 px — and `IceTurretBlast` calls `Player.freeze`,
+  which neither `noclip` nor `noDamage` reaches; and L108, past it, is a
+  darksuit-gated LavaTrap FERRY over 153 lethal pit tiles (three traps
+  spaced exactly `chompRange` apart that haul the player across and release
+  instead of killing when `hasDarkSuit`). With `fire` that is three blocked
+  items and **all three are ENEMY-shaped, so all three land at R5** —
+  which is the plan for eventual completability the ruling asked for.
+  `Bot.noEnemyEffects` was DECLINED on the record, with its price.
+  ⚠ Two blockers that were NOT enemies got fixed instead: the priced
+  volumes (ten classes, three of them an evidenced INERT) and **the Bridge
+  timer** — `bridgeOpeningTimer` only ever decrements from a SPEAR hit
+  (`Player.as:1098`), so on a bot boot a Bridge is permanently Solid, which
+  unblocked levels 61 and 63 and with them ghostspear and health.
+  Relaxed census 82 → **115 of 116**; the 46-level route is validated
+  through the shipped planner.
 - **R2 — solids come back** (noclip off). v2's collision machinery re-armed
   everywhere the walk goes; cost = a blocking-role classification for tags
   in walked levels + **pixelmask extraction** (MIT; the loud-throw seam
