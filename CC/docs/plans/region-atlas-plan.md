@@ -1635,14 +1635,17 @@ routes themselves remain untried.
         walk to the sword's room with the grant read from the game's own
         report, a pit crossing that boots straight into level 83, and a
         water crossing. Doc: the same one, now extended to R0.
-- [ ] R1: the relaxed full walk — 13 items granted room-by-room, exactly
-      differentially verified end-to-end
+- [ ] R1: the relaxed full walk — **PITS LIVE (user 2026-07-31)**: pit
+      transport modelled + planner-aware, the fall-only underworld cluster
+      walked, all 13 items granted room-by-room, exactly differentially
+      verified end-to-end — kickoff ready
+      (`NewDocs/plans/seedling-bot-r1-opus-kickoff.md`)
 - [ ] R2: solids return (noclip off) — pays the blocking-role class table
       (sizing: v2 kickoff §13) + pixelmask extraction; interactive blockers
       bridged by named persistence grants
 - [ ] R3: interactions + real collection (item use, rocks/ropes, locks;
       grants retired) — absorbs old v3/v4's item-gate + puzzle scope
-- [ ] R4: hazards return (noHazards off): pits, water/swim (⚠ sound-stub
+- [ ] R4: remaining hazards return (pits live since R1): water/swim (⚠ sound-stub
       recon decides exactness), lava, ice
 - [ ] R5: enemies return (noDamage off) — `fire` from BobBoss → 14/14
       (old v5)

@@ -2868,18 +2868,28 @@ Claude, accepted by user). Full detail in `region-atlas-plan.md` Phase 8.**
   outlive it: the auto-advance key is **X (88), not V** (`keys[6]` is the
   second `Key.X`), and `noHazards` had to ship as a SET because R4 re-arms
   hazards one at a time.
-- **QUEUE NEXT for this arc: R1, the relaxed full walk** — needs its own
-  kickoff. ⚠ Two R0 recon findings change what R1 can CLAIM and should be
-  priced before it is scoped: (1) `Bot.noDamage` does NOT make enemies
-  harmless — seven classes (`lavatrap`, `whirlpool`, `pull`, `iceturret`,
-  `shieldlock*`, `pod`, `bosstotem`) write the player's position or input
-  state without going through `Player.hit()`, and their levels sit on the
-  shortest chains to the item rooms, so R1 must either price their avoid
-  volumes (all currently `'unpriced'`, i.e. a loud throw) or take a fourth
-  crutch nobody has ruled; (2) with hazards off the walk reaches **11 of 13**
-  item rooms, not 13 — darkshield (L74) and darksuit (L79) are behind a PIT
-  FALL, so pits are a transport primitive and reachability is 100/116 without
-  them and 114/116 with them.
+- **QUEUE NEXT for this arc: R1, the relaxed full walk with PITS LIVE —
+  kickoff ready: `NewDocs/plans/seedling-bot-r1-opus-kickoff.md`** (Fable
+  design session 2026-07-31; → `CC/docs/plans/` at implementation start).
+  Both §8.7 findings are resolved into the design: (1) **pits are NOT
+  coerced** (user ruling) — R1 tapes declare the 4-name `noHazards` set,
+  pit transport is modelled exactly in JS (fall edge → live-tick lerp →
+  deferred swap to `control.fallthrough` → fall-from-ceiling arrival;
+  bounce landings THROW), pit tiles are planner-forbidden floor except as
+  a named `exit: {pit: …}` leg, and the fall-only underworld cluster
+  (verified fall-only in the VANILLA game too — no trigger enters or
+  leaves it) is walked via 83→84→85→71→ring→71→82, so the terminal claim
+  is **13 of 13** items with only `fire` blocked (R5); (2) the seven
+  position-writer classes get priced avoid volumes per walked level, with
+  one named STOP checkpoint — both ring approaches to L79 (darksuit) cross
+  lavatrap levels (78/80) whose tongues drag-and-kill outside
+  `Player.hit()`, and if no corridor clears the discs the
+  guard-vs-blocked-list trade goes to the user, not the implementer. Pit
+  oracles are recorded FIRST (param boot makes them trivial); the headline
+  full-walk tape gates the rung, segment tapes permitted for iteration
+  (ends-meet asserted). Opportunistic non-gating extras: the L83
+  stickiness witness and an L11→L3 arrival-on-trigger latch witness, both
+  closing recorded v2 vacuities.
 
 ## 6. Everything else (unchanged queues)
 

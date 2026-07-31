@@ -149,25 +149,31 @@ exact differential green on everything modelled, (d) updates the honest
   acceptance signal every later rung asserts against. (The full win flags
   can only fire at the ladder's top; R0 proves the plumbing: readout fields
   present, false at boot, item flags flip on grant.)
-- **R1 — the relaxed full walk.** One driver-planned task covering the
-  reachable non-combat items (wand before the Witch's room for darksword),
-  crossing the level graph on real triggers, avoiding proximity-side-effect
-  volumes. ⚠ **The terminal assertion is 11 of 13, not 13** (R0 kickoff
-  §8.7b): with `noHazards` on, exactly 100 of 116 levels are reachable over
-  the trigger graph, and darkshield (L74) and darksuit (L79) are not among
-  them — the only way into that cluster is a PIT FALL, so pits are a
-  TRANSPORT primitive and not merely a hazard. Adding the 12 `control` pit
-  edges takes reachability to 114/116. Both rooms stay on the blocked list
-  until R4. ⚠ And `Bot.noDamage` does NOT make enemies harmless — seven
-  classes write the player's position or input state without going through
-  `Player.hit()` (kickoff §8.7a), several on the shortest chains, so R1 must
-  price their avoid volumes or take a fourth crutch nobody has ruled.
-  Terminal assertion: the item properties read from the game's own readout,
-  plus pinned tick/transition counts. Exactly differentially
-  verified end-to-end. Likely side profit: the walk crosses enough of the
-  map to convert several of v2's five bounded vacuities into oracle-backed
-  fixtures (level-83 stickiness hole, an arrival-on-trigger latch pair) —
-  take them opportunistically, they are listed witnesses.
+- **R1 — the relaxed full walk, PITS LIVE (ruled by the user 2026-07-31;
+  kickoff: `seedling-bot-r1-opus-kickoff.md`).** The pit question above is
+  RESOLVED: pits are NOT coerced — R1 tapes declare
+  `noHazards: ["water","lava","ice","waterfall"]` (the SET shape R0 shipped
+  for exactly this) and **pit transport is modelled exactly in JS** (fall
+  edge on state 6, the live-tick lerp toward the pit centre, the deferred
+  swap to the level's `control.fallthrough` target, the fall-from-ceiling
+  arrival; the raw-`getStatePos` bounce landing is a loud throw, not
+  modelled). Pit tiles are forbidden floor for the planner except as a
+  leg's named `exit: {pit: …}`. That takes the walk into the fall-only
+  underworld cluster — falls 83→84, 84→85, trigger 85→71, the ring to L74
+  (darkshield) and L79 (darksuit), fall 71→82 out — so **the terminal
+  assertion is 13 of 13** (12 booleans + `hitsMax == 4`), with `fire` the
+  only blocked item (R5). Background: the cluster is fall-only in the
+  VANILLA game too (verified — no trigger enters or leaves it), so this
+  models a mandatory mechanic, not a shortcut. ⚠ `Bot.noDamage` does NOT
+  make enemies harmless — seven classes write the player's position or
+  input state without going through `Player.hit()` (R0 kickoff §8.7a), so
+  R1 prices their avoid volumes per walked level; **the checkpoint is L79's
+  ring approaches (both cross lavatrap levels 78/80, and LavaTrap drags and
+  kills directly)** — if no corridor clears every tongue disc, STOP and ask
+  (a `Bot.noEnemyEffects` crutch vs darksuit joining the blocked list is
+  the user's trade). Exactly differentially verified end-to-end. Likely
+  side profit: the route makes v2's stickiness witness (L83's holes) and an
+  arrival-on-trigger latch pair cheap — take them opportunistically.
 - **R2 — solids come back** (noclip off). v2's collision machinery re-armed
   everywhere the walk goes; cost = a blocking-role classification for tags
   in walked levels + **pixelmask extraction** (MIT; the loud-throw seam
@@ -183,13 +189,12 @@ exact differential green on everything modelled, (d) updates the honest
   dialogue); the persistence grants from R2 retire class by class. May
   split into R3a (collection) / R3b (destructibles) / R3c (locks) —
   cheapest-first within the rung.
-- **R4 — hazards come back** (noHazards off), per hazard, cheapest first:
-  pits (deterministic transport — a transition-like event), then lava
-  (darksuit), ice (friction rewrite), and **water/swim LAST** (user ruling
-  2026-07-31: leave sound for last — the sound-stub recon and any
-  sound-coupled modelling wait until water is the rung being armed). An
-  item whose only real route needs a hazard not yet re-armed stays
-  reported until its rung.
+- **R4 — the remaining hazards come back** (pits already live since R1),
+  per hazard, cheapest first: lava (darksuit), ice (friction rewrite), and
+  **water/swim LAST** (user ruling 2026-07-31: leave sound for last — the
+  sound-stub recon and any sound-coupled modelling wait until water is the
+  rung being armed). An item whose only real route needs a hazard not yet
+  re-armed stays reported until its rung.
 - **R5 — enemies come back** (noDamage off). Avoid where possible (their
   paths are LFSR-deterministic per boot), kill where required; **fire** from
   BobBoss joins the item set → 14/14.
