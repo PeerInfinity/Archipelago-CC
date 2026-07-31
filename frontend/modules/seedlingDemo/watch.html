@@ -54,6 +54,10 @@
   button:disabled { opacity: .4; cursor: default; }
   input[type=range] { flex: 1 1 120px; min-width: 80px; }
   label { color: #8a8a98; display: flex; gap: 4px; align-items: center; }
+  #pick { display: flex; gap: 6px; align-items: center; margin: 4px 0; }
+  #pick label { color: #8a8a98; }
+  #tapes { background: #1e1e26; color: #d8d8e0; border: 1px solid #34343e; padding: 2px 6px; max-width: 60vw; }
+  #sidenote { color: #8a8a98; font-size: 11px; }
   #progress { height: 4px; background: #1a1a20; margin-top: 6px; }
   #bar { height: 100%; width: 0; background: #7fe0ff; }
 </style>
@@ -61,6 +65,11 @@
 <body>
 <header>
   <h1>Seedling bot — watch <span id="title"></span></h1>
+  <div id="pick">
+    <label for="tapes">tape</label>
+    <select id="tapes" disabled><option>loading…</option></select>
+    <span id="sidenote"></span>
+  </div>
   <div id="status">loading…</div>
   <div id="detail"></div>
   <div id="progress"><div id="bar"></div></div>

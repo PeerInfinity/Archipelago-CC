@@ -829,3 +829,37 @@ teleporter volumes, pit tiles outlined as the transport they are, the avoid
 volumes — rect and disc, each as the GAME tests it — and a breadcrumb of one
 raw sample per tick. A viewer that tidied any of that up would hide the next
 divergence.
+
+### 10.6 Two follow-ups from using it (user, 2026-07-31)
+
+**The breadcrumb is PER LEVEL.** It used to carry across a world swap, which
+is not a cosmetic slip: every level is its own coordinate space
+(`Game.as:1854` rewrites `FP.width`/`height` on each load), so a dot
+recorded at (296,168) in level 94 means nothing at (296,168) in level 0 —
+the viewer was drawing a path the player never walked. Each point keeps its
+level and the draw filters, rather than the trail being CLEARED on a
+crossing: scrubbing back across one then restores the old level's trail
+instead of losing it. Measured on `transition-west-return` — 57 dots in
+level 0 up to tick 60, **0** at tick 61 in level 94, and **56 again** at
+tick 109 on the way back.
+
+⚠ And the fix exposed why it had looked thin: a 1×1 rect at a half-pixel
+offset is anti-aliased over four pixels at ~25% alpha, which at scale 1 is
+nearly invisible against the floor. The draw position is rounded to the
+device pixel now — a rasterisation detail, not smoothing; the HUD still
+reports the exact doubles.
+
+**A tape picker**, read from the dev server's own DIRECTORY LISTING rather
+than a committed manifest — slice 4 records segment tapes as it goes, and a
+manifest would be stale between the recording and the regeneration that
+noticed. The directory comes from the current tape's own path, so a roster
+kept elsewhere lists its own siblings with no second parameter; a host that
+serves no listing gets a named note and the page still works from `?tape=`.
+Each entry summarises what you pick on — boot level, tick count, version,
+and whether the tape leaves the pit LIVE. Selecting one NAVIGATES rather
+than swapping in place, preserving `side` and `speed`: the wasm side cannot
+rewind the game (`botReset` forgets the tape, not the world — every tape
+needs a fresh page, the same rule the recording harness follows), and
+reloading keeps both sides on one code path instead of giving the JS side a
+teardown nobody tests. With no `?tape=` at all the page is a launcher rather
+than an error.

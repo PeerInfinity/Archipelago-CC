@@ -176,9 +176,28 @@ function makeRenderer(canvas, tape) {
 
             // The breadcrumb trail — raw sampled positions, one per tick,
             // never interpolated.
+            //
+            // ⚠ FILTERED TO THE LEVEL BEING DRAWN. Every level is its own
+            // coordinate space (`Game.as:1854` rewrites FP.width/height on
+            // each load), so a dot recorded at (296,168) in level 94 means
+            // nothing at (296,168) in level 0 — carrying the trail across a
+            // swap draws a path the player never walked. The points keep
+            // their level rather than being cleared, so scrubbing BACK
+            // across a crossing restores the old level's trail instead of
+            // losing it.
+            //
+            // ⚠ The DRAW position is rounded to the device pixel. That is a
+            // rasterisation detail, not smoothing: a 1x1 rect at a half-pixel
+            // offset is anti-aliased across four pixels at ~25% alpha each,
+            // which at scale 1 makes the whole trail nearly invisible over
+            // the floor colour. The HUD still reports the exact doubles, and
+            // nothing about the path itself is adjusted.
+            const dot = Math.max(1, scale);
             ctx.fillStyle = '#7fe0ff';
             for (const p of trail) {
-                ctx.fillRect(p.x * scale - 0.5, p.y * scale - 0.5, Math.max(1, scale), Math.max(1, scale));
+                if (p.level !== world.level) continue;
+                ctx.fillRect(Math.round(p.x * scale) - (dot >> 1),
+                    Math.round(p.y * scale) - (dot >> 1), dot, dot);
             }
 
             // The player: the collision box and, offset one pixel down, the
@@ -477,11 +496,89 @@ async function runWasm(params) {
 
 // ── entry ────────────────────────────────────────────────────────────────
 
+/** Where to look for sibling tapes when no `?tape=` names a directory. */
+const DEFAULT_TAPE_DIR = 'frontend/modules/seedlingDemo/fixtures/tapes';
+
+/**
+ * List the tapes next to the one being watched, and offer them.
+ *
+ * Read from the dev server's own DIRECTORY LISTING rather than from a
+ * committed manifest, deliberately: slice 4 records segment tapes as it
+ * goes, and a manifest would be stale between the recording and the
+ * regeneration that noticed. The listing is the live truth, and if the
+ * server does not emit one (a different static host) the picker says so and
+ * the page still works from `?tape=` alone.
+ *
+ * The directory comes from the CURRENT tape's own path, so a roster kept
+ * somewhere other than `fixtures/tapes/` lists its own siblings without a
+ * second parameter.
+ */
+async function populatePicker(params) {
+    const sel = $('tapes');
+    const dir = params.tape
+        ? params.tape.replace(/^\/+/, '').split('/').slice(0, -1).join('/')
+        : DEFAULT_TAPE_DIR;
+    let names = [];
+    try {
+        const res = await fetch(`/${dir}/`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const html = await res.text();
+        names = [...html.matchAll(/href="([^"?/]+\.json)"/g)]
+            .map((m) => decodeURIComponent(m[1]))
+            .filter((n, i, a) => a.indexOf(n) === i)
+            .sort();
+    } catch (e) {
+        sel.innerHTML = '<option>— no directory listing —</option>';
+        sel.disabled = true;
+        sel.title = `could not list /${dir}/: ${e.message}. The page still works `
+            + 'from ?tape= directly.';
+        return;
+    }
+
+    // A one-line summary per tape, from the tape itself: what it boots into
+    // and how long it runs are the two things you pick on.
+    const summarise = async (n) => {
+        try {
+            const t = await (await fetch(`/${dir}/${n}`)).json();
+            const relaxed = (t.noHazards || []);
+            const pit = t.tape_version === 2 && !relaxed.includes('pit') ? ' pit-LIVE' : '';
+            return `${n.replace(/\.json$/, '')} — L${t.boot?.level ?? '?'}, `
+                + `${t.tick_count} ticks, v${t.tape_version}${pit}`;
+        } catch { return n.replace(/\.json$/, ''); }
+    };
+    const labels = await Promise.all(names.map(summarise));
+
+    sel.innerHTML = '';
+    names.forEach((n, i) => {
+        const o = document.createElement('option');
+        o.value = `${dir}/${n}`;
+        o.textContent = labels[i];
+        if (o.value === (params.tape || '').replace(/^\/+/, '')) o.selected = true;
+        sel.appendChild(o);
+    });
+    sel.disabled = false;
+    // Load on select. A full navigation rather than an in-place swap: the
+    // wasm side cannot rewind the GAME (`botReset` forgets the tape, not the
+    // world — every tape needs a fresh page, which is the same rule the
+    // recording harness follows), and reloading keeps both sides on one
+    // code path instead of giving the JS side a teardown nobody tests.
+    sel.onchange = () => {
+        const q = new URLSearchParams(window.location.search);
+        q.set('tape', sel.value);
+        q.set('side', params.side);
+        window.location.search = q.toString();
+    };
+}
+
 export async function main() {
     const params = readParams();
     $('title').textContent = params.tape || '(no tape)';
+    // The picker is populated even with no tape, so the page is a launcher
+    // rather than an error when you arrive without one.
+    const picking = populatePicker(params);
     if (!params.tape) {
-        fatal('no ?tape= given',
+        await picking;
+        fatal('no ?tape= given — pick one above',
             'watch.html?tape=frontend/modules/seedlingDemo/fixtures/tapes/'
             + 'pit-fall-chain-85.json&side=js');
         return;
