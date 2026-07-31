@@ -648,3 +648,70 @@ batching if a future rung opens the pipeline anyway: `Player.as:699` builds
 (R0 §8.1) and the query only returns null in a level with zero walkable
 tiles, so it cannot fire on any real level — recorded so nobody re-derives
 it as a hazard.
+
+## 9. ⚖ THE SCOPE RULING (user, 2026-07-31) — minimum code changes, honest blocked list
+
+Put to the user as §8.6's STOP required. The exchange in full, because the
+first question it raised is one the rung turns on:
+
+> *"The original plan was to disable collision with enemies and puzzle
+> blocks. Does that not work for ice turret?"*
+
+**No, and the distinction is the point.** `noclip` governs the SWEEP — whether
+a solid stops movement — and it is already on, so the turret is walked
+straight through. The turret never blocks anybody. What it does is call
+`Player.freeze(90)` through `IceTurretBlast.as:52`, after which
+`Player.input()` (`:1501`) returns early for ninety frames: the bot holds
+RIGHT, the game ignores it, the streams diverge, and nothing was ever
+collided with. That is R0 §8.7a's finding restated — **the seven classes
+that reach around `Player.hit()` are neither a collision problem nor a
+damage problem**, so neither `noclip` nor `noDamage` touches them. Routing
+answers six of the seven; the turret is the one whose 128 px radius is
+larger than its room.
+
+**RULED: minimum required code changes. R1 does not have to be completable —
+it has to leave a PLAN for eventual completability.**
+
+So R1 ships with **zero AS3 edits**, exactly as §5 predicted, and publishes
+an honest blocked list instead of buying a fourth crutch:
+
+- **Terminal claim: 10 of the 12 booleans true + `hitsMax == 4`** — sword,
+  darksword, shield, darkshield, wand, conch, feather, spear, darksuit,
+  torch, plus health's `hitsMax`. Eleven of the thirteen non-combat items.
+- **Blocked: `fire`, `ghostsword`, `firewand` — and all three have ONE
+  cause.** That is the finding worth carrying, because it makes the ladder's
+  remaining distance a single number:
+
+| item | where | what blocks it | rung |
+|---|---|---|---|
+| `ghostsword` | L106 | L98's **IceTurret**: `attackRange = 128` covers its whole entrance room, arrival at 64 px and the only door to Dungeon 8 at 80 px. `IceTurretBlast` → `Player.freeze(90)`, outside both `noclip` and `noDamage` | **R5** (or a `noEnemyEffects` crutch, if one is ever wanted) |
+| `firewand` | L109 | L108 is a **darksuit-gated LavaTrap ferry**: 153 lethal pit tiles, no `control` block, four disconnected islands, and the only crossings are three traps spaced *exactly* `chompRange` apart that haul the player over the gaps and release rather than kill when `hasDarkSuit`. Killing them removes the ferry; avoiding them leaves the pits | **R5** — needs the tongue modelled, which needs FlashPunk Spritemap timing (`getTongueLength()` reads `sprLavaTrapTongue.frame`) |
+| `fire` | L32 | combat-gated by construction: `BobBoss` only exists once L32's `fallrocklarge` falls, and only its third form drops `Fire` | **R5** |
+| the ending | L112 → Seed | FinalBoss, the Watcher's Seed spawn, both ending branches | **R6** |
+
+**Every remaining blocker is ENEMY-shaped.** R1 takes the map as far as it
+goes without modelling an enemy, R5 takes the rest, R6 takes the ending —
+and no rung in between has to invent a crutch it would then have to retire.
+That is the plan for eventual completability the ruling asked for.
+
+⚠ **`Bot.noEnemyEffects` is DECLINED, not deferred-by-accident.** It buys
+exactly one item (ghostsword) for one AS3 batch, one ~10-minute pipeline
+run, a re-run of the flags-off byte-inertness gate, ~14 more levels and
+~4k more ticks on every recording — and R5 has to retire it afterwards.
+Recorded here so a later rung does not re-derive the trade from scratch.
+
+**Amendments to §3.5 and §0**, which were written expecting 13 of 13:
+
+- 10 booleans true, not 12; `ghostsword` and `firewand` FALSE and asserted
+  false, exactly like `fire`.
+- `hitsMax == 4`, `cutscene` all false, `menu` false, `saw_auto_advance == 0`,
+  `grants_applied` == the full grant list, pinned observation/transition
+  counts — all unchanged.
+- The published blocked list is `fire`, `ghostsword`, `firewand`, each with
+  the row above as its reason.
+
+Unchanged by the ruling: the pit-transport model (§3.1, §8.1–§8.3), the
+planner policy (§3.2, §8.3), the priced volumes (§3.6, §8.4), the route
+(§8.7) and both opportunistic witnesses (§8.8). The rung's actual subject —
+pits as a modelled transport primitive carrying the walk into the fall-only
+underworld — is untouched.
