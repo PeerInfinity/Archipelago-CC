@@ -92,8 +92,37 @@
  * is a named failure rather than something the derivation quietly masks.
  */
 
-/** Schema version. Bumped only on a breaking shape change. */
-export const TAPE_VERSION = 1;
+/**
+ * ── Version 2: the subtractive ladder's relaxations ───────────────────
+ * R0 of the SUBTRACTIVE ladder (`CC/docs/plans/seedling-bot-r0-opus-kickoff.md`)
+ * adds three fields, all REQUIRED on a v2 tape because each one selects
+ * which experiment BOTH consumers are running:
+ *
+ *   `noDamage`   `Bot.noDamage` — `Player.hit()` returns before
+ *                sound/shake/knockback/die.
+ *   `noHazards`  the SET of dangerous terrains whose EFFECTS are coerced
+ *                away, by name. Not a boolean: R4 re-arms hazards one at a
+ *                time, so a boolean could not express a single R4 rung and
+ *                would have forced a second ~10-minute AS3 build to change
+ *                its type (decided in the R0 kickoff §8.8, before the batch).
+ *   `grants`     items handed to the player on first ENTERING a level,
+ *                the crutch that lets an item walk gate R1 before the
+ *                pickup ceremony is modelled.
+ *
+ * Version 1 tapes stay parseable and are UNCHANGED on disk — the eleven
+ * committed fixtures are v1 and must stay byte-identical. A v1 tape that
+ * declares any v2 field is a named error rather than a tape whose extra
+ * fields one side honours and the other ignores; the parser then normalises
+ * v1 to the v2 semantics that ARE version 1 (`noDamage: false`,
+ * `noHazards: []`, `grants: []`) so no engine has to branch on version, and
+ * `serializeTape` writes the fields back only for a v2 tape.
+ */
+
+/** Schema version written by `serializeTape` for new tapes. */
+export const TAPE_VERSION = 2;
+
+/** Every version this parser accepts. v1 tapes are frozen, not deprecated. */
+export const SUPPORTED_TAPE_VERSIONS = Object.freeze([1, 2]);
 
 /**
  * ⚠ THE SPAWN IS BAKED INTO THE BUILD, so a tape's `boot` block is a CLAIM
@@ -156,6 +185,70 @@ export const FORBIDDEN_KEYS = Object.freeze({
 /** Every legal key name, for error messages and cross-consumer assertion. */
 export const KEY_NAMES = Object.freeze(Object.keys(KEY_CODES));
 
+/**
+ * `noHazards` vocabulary: the five DANGEROUS terrain states, by name.
+ *
+ * These are exactly the tile types whose EFFECTS the R0 kickoff §3.2(e)
+ * ruling coerces to Ground(0) — the ones where the physics stops being a
+ * function of position. Stairs (10) and Ghost Step (30) are deliberately
+ * absent: they are merely slower, they are already modelled, and flattening
+ * them would erase real physics rather than a hazard.
+ *
+ * NAMES rather than raw ints so a tape says what it disables and a reader
+ * of a committed fixture does not have to hold `Tile.types` in their head.
+ * Transcribed here rather than imported so this module stays dependency-free
+ * and browser-usable, exactly like `KEY_CODES`; `tapeFormat.test.js`
+ * cross-asserts every entry against `flashPanel/seedlingSemantics.js`, which
+ * is the same guard shape the key table has.
+ */
+export const HAZARD_STATES = Object.freeze({
+    water: 1,
+    pit: 6,
+    lava: 17,
+    ice: 22,
+    waterfall: 25,
+});
+
+/** The state a coerced hazard becomes: Ground, `Player.as:297`'s own initial. */
+export const COERCED_TERRAIN_STATE = 0;
+
+export const HAZARD_NAMES = Object.freeze(Object.keys(HAZARD_STATES));
+
+/**
+ * `grants` vocabulary: the 14 items, by the `flash_name` the rest of the
+ * repo already uses.
+ *
+ * Source of truth is `flashPanel/games/seedling.json`'s `items[]`, which is
+ * what the AP integration writes through; `tapeFormat.test.js` asserts this
+ * table against that file so the two cannot drift. The `property` is a
+ * `Player` static that delegates to a `Main` one (`Player.as:102-108` and
+ * its fourteen siblings), so `Bot.as` can write it directly and
+ * `botStatus.items` can read it back — which is what makes the game, not
+ * this mirror, the oracle for whether a grant landed.
+ *
+ * ⚠ Thirteen are booleans and **`health` is not**: it is `hitsMax`, an INT,
+ * `op: "add"` over `base: 3`. An "all items true" assertion that forgets
+ * that is asserting the wrong thing about one fourteenth of the set.
+ */
+export const ITEM_PROPERTIES = Object.freeze({
+    sword: { property: 'hasSword', kind: 'boolean' },
+    darksword: { property: 'hasDarkSword', kind: 'boolean' },
+    ghostsword: { property: 'hasGhostSword', kind: 'boolean' },
+    shield: { property: 'hasShield', kind: 'boolean' },
+    darkshield: { property: 'hasDarkShield', kind: 'boolean' },
+    fire: { property: 'hasFire', kind: 'boolean' },
+    wand: { property: 'hasWand', kind: 'boolean' },
+    firewand: { property: 'hasFireWand', kind: 'boolean' },
+    conch: { property: 'canSwim', kind: 'boolean' },
+    feather: { property: 'hasFeather', kind: 'boolean' },
+    spear: { property: 'hasSpear', kind: 'boolean' },
+    darksuit: { property: 'hasDarkSuit', kind: 'boolean' },
+    torch: { property: 'hasTorch', kind: 'boolean' },
+    health: { property: 'hitsMax', kind: 'add', base: 3, value: 1 },
+});
+
+export const ITEM_NAMES = Object.freeze(Object.keys(ITEM_PROPERTIES));
+
 class TapeFormatError extends Error {
     constructor(message) {
         super(message);
@@ -182,6 +275,107 @@ function requireFiniteNumber(value, what) {
 }
 
 /**
+ * The three version-2 relaxation fields. Every one is REQUIRED — a tape
+ * that omitted `noHazards` and a game that defaulted it to "none" would be
+ * running a different experiment from a JS engine that defaulted it to
+ * "all", and the differential would report it as a physics divergence.
+ */
+function parseRelaxations(raw) {
+    if (typeof raw.noDamage !== 'boolean') {
+        fail('noDamage must be a boolean on a tape_version 2 tape (no default — it '
+            + `selects whether Player.hit() runs), got ${JSON.stringify(raw.noDamage)}`);
+    }
+
+    if (!Array.isArray(raw.noHazards)) {
+        fail('noHazards must be an ARRAY of hazard names on a tape_version 2 tape, not '
+            + `a boolean — R4 re-arms hazards one at a time, so "all or nothing" cannot `
+            + `express a rung. Legal names: ${HAZARD_NAMES.join(', ')}; [] means none `
+            + `are disabled. Got ${JSON.stringify(raw.noHazards)}`);
+    }
+    const noHazards = raw.noHazards.map((name, i) => {
+        if (typeof name !== 'string'
+            || !Object.prototype.hasOwnProperty.call(HAZARD_STATES, name)) {
+            fail(`noHazards[${i}] is ${JSON.stringify(name)}, which is not a hazard `
+                + `name; legal names are ${HAZARD_NAMES.join(', ')}`);
+        }
+        return name;
+    });
+    for (let i = 1; i < noHazards.length; i++) {
+        if (noHazards.indexOf(noHazards[i]) !== i) {
+            fail(`noHazards names "${noHazards[i]}" more than once`);
+        }
+    }
+    // Sorted by STATE so two tapes disabling the same hazards serialize
+    // identically regardless of authoring order, exactly as spans are.
+    noHazards.sort((a, b) => HAZARD_STATES[a] - HAZARD_STATES[b]);
+
+    if (!Array.isArray(raw.grants)) {
+        fail('grants must be an array of {level, items} on a tape_version 2 tape '
+            + `([] when nothing is granted), got ${JSON.stringify(raw.grants)}`);
+    }
+    const grants = raw.grants.map((g, i) => {
+        const where = `grants[${i}]`;
+        if (g === null || typeof g !== 'object' || Array.isArray(g)) {
+            fail(`${where} must be an object { level, items }`);
+        }
+        requireInt(g.level, `${where}.level`);
+        if (g.level < 0) fail(`${where}.level must be >= 0, got ${g.level}`);
+        if (!Array.isArray(g.items) || g.items.length === 0) {
+            fail(`${where}.items must be a non-empty array of item names; an empty grant `
+                + 'is a route claim nobody checks');
+        }
+        const items = g.items.map((name, j) => {
+            if (typeof name !== 'string'
+                || !Object.prototype.hasOwnProperty.call(ITEM_PROPERTIES, name)) {
+                fail(`${where}.items[${j}] is ${JSON.stringify(name)}, which is not an `
+                    + `item name; legal names are ${ITEM_NAMES.join(', ')} (the `
+                    + 'flash_name vocabulary of games/seedling.json)');
+            }
+            return name;
+        });
+        for (let j = 1; j < items.length; j++) {
+            if (items.indexOf(items[j]) !== j) {
+                fail(`${where}.items names "${items[j]}" more than once`);
+            }
+        }
+        items.sort();
+        return { level: g.level, items };
+    });
+    grants.sort((a, b) => a.level - b.level);
+    for (let i = 1; i < grants.length; i++) {
+        if (grants[i].level === grants[i - 1].level) {
+            fail(`grants declares level ${grants[i].level} twice. One entry per level: `
+                + 'the grant fires on FIRST entry, so a second entry for the same level '
+                + 'would either never fire or fire at a tick neither side agrees on.');
+        }
+    }
+
+    return { noDamage: raw.noDamage, noHazards, grants };
+}
+
+/**
+ * The terrain state the PHYSICS consumes, given the state the resolver
+ * actually resolved.
+ *
+ * ⚠ The resolver's STORED state stays RAW on both sides. In `Player.as` the
+ * `_state` member keeps the real tile type, the `_s != _state` change gate
+ * and `lastState` are untouched, and only the effect sites read through the
+ * coerced value; this function is that rule, and `playerPhysicsV2` applies
+ * it at the same four places. Keeping storage raw is what lets the JS tests
+ * keep asserting the RESOLVER's own answer — the brick-not-ground lesson —
+ * instead of asserting a value the relaxation already flattened.
+ *
+ * `states` is the tape's `noHazards` names, not tile types, because that is
+ * what the tape carries and one translation point is enough.
+ */
+export function coerceTerrainState(state, noHazardNames) {
+    for (const name of noHazardNames) {
+        if (HAZARD_STATES[name] === state) return COERCED_TERRAIN_STATE;
+    }
+    return state;
+}
+
+/**
  * Parse + validate + normalize a tape. Accepts a JSON string or a plain
  * object; returns a NEW frozen tape with spans sorted (by `from`, then
  * `key`) so two tapes that mean the same thing serialize the same way.
@@ -204,8 +398,10 @@ export function parseTape(input) {
         fail(`tape must be an object, got ${Array.isArray(raw) ? 'array' : typeof raw}`);
     }
 
-    if (raw.tape_version !== TAPE_VERSION) {
-        fail(`tape_version must be ${TAPE_VERSION}, got ${JSON.stringify(raw.tape_version)}`);
+    const version = raw.tape_version;
+    if (!SUPPORTED_TAPE_VERSIONS.includes(version)) {
+        fail(`tape_version must be one of ${SUPPORTED_TAPE_VERSIONS.join(', ')}, `
+            + `got ${JSON.stringify(version)}`);
     }
     if (raw.game !== 'seedling') {
         fail(`game must be "seedling", got ${JSON.stringify(raw.game)}`);
@@ -215,6 +411,34 @@ export function parseTape(input) {
             + `both consumers run), got ${JSON.stringify(raw.noclip)}`);
     }
 
+    // A v1 tape that RELAXES anything is the exact failure this format
+    // exists to prevent, one version up: the field would be honoured by
+    // whichever consumer happened to look at it and ignored by the other.
+    //
+    // It may still CARRY the fields at version 1's own values, because
+    // `parseTape` is idempotent by design — every consumer re-validates,
+    // and a parsed tape (which is normalised, below) has to survive being
+    // parsed again. So the test is on the VALUE, not on presence.
+    if (version === 1) {
+        const v1Semantics = { noDamage: false, noHazards: [], grants: [] };
+        for (const [field, expected] of Object.entries(v1Semantics)) {
+            const got = raw[field];
+            if (got === undefined) continue;
+            const same = Array.isArray(expected)
+                ? Array.isArray(got) && got.length === 0
+                : got === expected;
+            if (!same) {
+                fail(`tape_version 1 declares ${field}: ${JSON.stringify(got)}, but `
+                    + `version 1 means ${field}: ${JSON.stringify(expected)} BY `
+                    + 'DEFINITION — the v1-era build had no such flag to read. Bump '
+                    + 'tape_version to 2 to relax anything.');
+            }
+        }
+    }
+    const relax = version === 1
+        ? { noDamage: false, noHazards: [], grants: [] }
+        : parseRelaxations(raw);
+
     const boot = raw.boot;
     if (boot === null || typeof boot !== 'object' || Array.isArray(boot)) {
         fail('boot must be an object { level, x, y }');
@@ -222,19 +446,21 @@ export function parseTape(input) {
     requireInt(boot.level, 'boot.level');
     requireFiniteNumber(boot.x, 'boot.x');
     requireFiniteNumber(boot.y, 'boot.y');
-    // See BUILD_SPAWN: the game cannot be told where to start, so a boot
-    // block that disagrees with the build is a tape the two consumers read
-    // differently — the one failure this format exists to prevent.
-    if (boot.level !== BUILD_SPAWN.level || boot.x !== BUILD_SPAWN.x
-        || boot.y !== BUILD_SPAWN.y) {
-        fail(`boot is {level: ${boot.level}, x: ${boot.x}, y: ${boot.y}}, but the bot `
-            + `build always spawns at {level: ${BUILD_SPAWN.level}, x: ${BUILD_SPAWN.x}, `
-            + `y: ${BUILD_SPAWN.y}} — it is baked in at Main.as:51 and Bot.as reads `
-            + 'neither boot.x nor boot.y. The JS engine would honour this block and the '
-            + 'game would ignore it, so the differential would blame physics for a '
-            + 'bookkeeping disagreement. Walk to another level instead of booting into '
-            + 'it, or parameterise the build (an AS3 edit — batch it) and update '
-            + 'BUILD_SPAWN.');
+    // ⚠ VERSION-SCOPED. A v1 tape was authored against a build that could not
+    // be told where to start, so declaring anything but the baked-in spawn
+    // means the JS engine honours a boot the game ignores and the
+    // differential blames physics for bookkeeping. R0's AS3 batch gives the
+    // build a parameterised boot, so a v2 tape may name any level — and
+    // BUILD_SPAWN stays exported as the DEFAULT a tape gets when it does not
+    // care, which is still every full-run tape.
+    if (version === 1 && (boot.level !== BUILD_SPAWN.level || boot.x !== BUILD_SPAWN.x
+        || boot.y !== BUILD_SPAWN.y)) {
+        fail(`boot is {level: ${boot.level}, x: ${boot.x}, y: ${boot.y}}, but a `
+            + `tape_version 1 tape must declare the build's baked-in spawn `
+            + `{level: ${BUILD_SPAWN.level}, x: ${BUILD_SPAWN.x}, y: ${BUILD_SPAWN.y}} `
+            + '(Main.as:51; the v1-era Bot.as read neither boot.x nor boot.y). The JS '
+            + 'engine would honour this block and that build would ignore it. Bump to '
+            + 'tape_version 2, which the R0 build honours.');
     }
 
     if (!Array.isArray(raw.inputs)) {
@@ -301,10 +527,17 @@ export function parseTape(input) {
     }
 
     return Object.freeze({
-        tape_version: TAPE_VERSION,
+        tape_version: version,
         game: 'seedling',
         boot: Object.freeze({ level: boot.level, x: boot.x, y: boot.y }),
         noclip: raw.noclip,
+        // Normalised, never defaulted: for a v1 tape these ARE version 1's
+        // semantics, stated once here so no engine carries a version branch.
+        noDamage: relax.noDamage,
+        noHazards: Object.freeze(relax.noHazards),
+        grants: Object.freeze(relax.grants.map((g) => Object.freeze({
+            level: g.level, items: Object.freeze(g.items),
+        }))),
         tick_count: tickCount,
         inputs: Object.freeze(inputs.map((s) => Object.freeze(s))),
         ...(raw.name ? { name: String(raw.name) } : {}),
@@ -345,7 +578,14 @@ export function keyEdgesAt(tape, t) {
     return { down, up };
 }
 
-/** Serialize a tape to canonical JSON (stable key order, 2-space indent). */
+/**
+ * Serialize a tape to canonical JSON (stable key order, 2-space indent).
+ *
+ * ⚠ The v2 fields are written ONLY for a v2 tape. A v1 tape round-trips
+ * byte-identically even though `parseTape` normalised the three fields onto
+ * it, because writing version 1's own semantics back into a version 1 file
+ * would rewrite all eleven committed fixtures for no change in meaning.
+ */
 export function serializeTape(tape) {
     const t = parseTape(tape);
     const ordered = {
@@ -355,6 +595,11 @@ export function serializeTape(tape) {
         ...(t.description ? { description: t.description } : {}),
         boot: { level: t.boot.level, x: t.boot.x, y: t.boot.y },
         noclip: t.noclip,
+        ...(t.tape_version >= 2 ? {
+            noDamage: t.noDamage,
+            noHazards: [...t.noHazards],
+            grants: t.grants.map((g) => ({ level: g.level, items: [...g.items] })),
+        } : {}),
         tick_count: t.tick_count,
         inputs: t.inputs.map((s) => ({ key: s.key, from: s.from, to: s.to })),
     };

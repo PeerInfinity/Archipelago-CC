@@ -199,6 +199,112 @@ describe('step(): the terrain state drives the speed, and persists', () => {
 });
 
 /**
+ * R0's `noHazards`: the terrain resolver keeps the RAW state, the physics
+ * consumes the coerced one.
+ *
+ * Every value here is hand-derived from `Player.as` rather than from
+ * running this module. The AS3 shape being mirrored: `_state = _s` stores
+ * the raw tile type and the `_s != _state` change gate is untouched, while
+ * the effect sites — the pit branch at `:693`, `onIce`/`onWaterfall`/
+ * `inWater`/`inLava` at `:700-703`, `moveSpeed` at `:715` AND the second
+ * assignment at `:523`, and `checkDrowning`'s tests at `:1420`/`:1424` —
+ * read through the coerced value. `:523` is the one a "guard the setter"
+ * patch misses, which is why the speed assertions below are the real check.
+ */
+describe('noHazards coerces what the physics CONSUMES, not what the resolver STORES', () => {
+    const ALL = ['water', 'pit', 'lava', 'ice', 'waterfall'];
+
+    it('lets a run stand on water instead of throwing', () => {
+        const w = world({ rows: ['water', 'ground', 'ground', 'ground'] });
+        const { x, y } = centre(2, 0);
+        const s = step({ x, y, vx: 0, vy: 0, terrain: 0 }, held(),
+            { level: w, noHazards: ALL });
+        expect(s.x).toBe(x);
+    });
+
+    it('STORES the raw hazard state — the brick-not-ground lesson', () => {
+        // The observation stream cannot tell (both walk at 0.8 once
+        // coerced), so this is asserted on the resolver's own answer. A
+        // model that coerced at STORAGE would report 0 here and would then
+        // be unable to re-arm one hazard at a time at R4, because the raw
+        // value it needs to test against would already be gone.
+        const w = world({ rows: ['water', 'ground', 'ground', 'ground'] });
+        const { x, y } = centre(2, 0);
+        const s = step({ x, y, vx: 0, vy: 0, terrain: 0 }, held(),
+            { level: w, noHazards: ALL });
+        expect(s.terrain).toBe(1);
+        expect(resolveTerrainState(w, x, y, 0)).toBe(1);
+    });
+
+    it('applies the coerced speed, not the hazard speed (Player.as:523)', () => {
+        // Water's MOVE_SPEEDS entry is not 0.8; Ground's is. One tick from
+        // rest holding RIGHT moves exactly one accel quantum, and accel IS
+        // moveSpeed (`Player.as:1489`), so the x delta names the speed the
+        // physics actually selected.
+        expect(MOVE_SPEEDS[1]).not.toBe(WALK_SPEED);
+        const w = world({ rows: ['water', 'ground', 'ground', 'ground'] });
+        const { x, y } = centre(2, 0);
+        const s = step({ x, y, vx: 0, vy: 0, terrain: 0 }, held('right'),
+            { level: w, noHazards: ALL });
+        // ⚠ Absolute position, never a delta: subtracting two doubles
+        // reintroduces float noise the values themselves do not have
+        // (40.8 - 40 is 0.7999999999999972). The arc has been bitten by
+        // this before; `vx` carries the quantum exactly.
+        expect(s.vx).toBe(WALK_SPEED);
+        expect(s.x).toBe(40.8);
+    });
+
+    it('coerces ONLY the named hazards — this is what makes R4 possible', () => {
+        // R4 re-arms hazards one at a time. A tape that disables pits but
+        // not water must still die loudly on water, or the rung is not a
+        // rung. Same level, same position, different tape.
+        const w = world({ rows: ['water', 'ground', 'ground', 'ground'] });
+        const { x, y } = centre(2, 0);
+        expect(() => step({ x, y, vx: 0, vy: 0, terrain: 0 }, held(),
+            { level: w, noHazards: ['pit', 'lava', 'ice', 'waterfall'] }))
+            .toThrow(/Water/);
+    });
+
+    it('leaves NON-hazard terrain alone, stairs included', () => {
+        // Stairs (10) are slower but harmless. Flattening them would erase
+        // real physics rather than a hazard, and the stream WOULD see it.
+        const w = world({ rows: ['stairs', 'ground', 'ground', 'ground'] });
+        const { x, y } = centre(2, 0);
+        const s = step({ x, y, vx: 0, vy: 0, terrain: 0 }, held('right'),
+            { level: w, noHazards: ALL });
+        expect(s.terrain).toBe(10);
+        expect(s.vx).toBe(MOVE_SPEEDS[10]);
+        expect(s.x).toBe(40.4);
+    });
+
+    it('defaults to coercing NOTHING, so a v1 tape is bit-identical', () => {
+        // The eleven committed fixtures are v1 tapes and must stay
+        // byte-identical. `parseTape` normalises them to `noHazards: []`,
+        // and [] must mean exactly what v2 meant before this field existed.
+        const w = world({ rows: ['water', 'ground', 'ground', 'ground'] });
+        const { x, y } = centre(2, 0);
+        expect(() => step({ x, y, vx: 0, vy: 0, terrain: 0 }, held(), { level: w }))
+            .toThrow(/Water/);
+        expect(() => step({ x, y, vx: 0, vy: 0, terrain: 0 }, held(),
+            { level: w, noHazards: [] })).toThrow(/Water/);
+    });
+
+    it('coerces the STICKY fallback too, not just a freshly resolved state', () => {
+        // Row 1 is missing, so mid-row-1 the intersect gate fails and the
+        // PREVIOUS state persists. If the coerce ran only on the resolver's
+        // fresh answer, a carried-in hazard state would reach the physics
+        // uncoerced — a hole in exactly the place stickiness lives.
+        const w = world({ rows: ['ground', null, 'ground', 'ground'] });
+        const { x, y } = centre(2, 1);
+        const s = step({ x, y, vx: 0, vy: 0, terrain: 1 }, held('right'),
+            { level: w, noHazards: ALL });
+        expect(s.terrain).toBe(1);        // still sticky, still raw
+        expect(s.vx).toBe(WALK_SPEED);    // but consumed as Ground
+        expect(s.x).toBe(40.8);
+    });
+});
+
+/**
  * The wall cases, hand-derived end to end. Row 0 of the synthetic level is
  * solid cliff, so the wall's bottom edge is y = 16 and the player's box
  * (origin 2, height 5) is blocked whenever the candidate y satisfies

@@ -82,9 +82,26 @@ export function runTape(tape, opts = {}) {
     // physics through the same transitions while choosing its keys instead
     // of reading them — and two copies of a five-fact world swap would
     // agree until one was edited. See that module's docblock.
+    // `parseTape` normalises a v1 tape's relaxations to version 1's own
+    // semantics, so this reads the same three fields for either version and
+    // no engine carries a version branch.
     const run = levelSource
-        ? createLevelRun({ levelSource, boot: t.boot, noclip: t.noclip })
+        ? createLevelRun({
+            levelSource,
+            boot: t.boot,
+            noclip: t.noclip,
+            noHazards: t.noHazards,
+            noDamage: t.noDamage,
+            grants: t.grants,
+        })
         : null;
+    if (!levelSource && t.grants.length > 0) {
+        throw new Error(
+            'runTape: the tape declares grants but no opts.levelSource was given. The v1 '
+            + 'engine has no level tracking, so it could not tell when the run entered a '
+            + "granted level — it would silently drop every grant. Pass a levelSource.",
+        );
+    }
 
     // The v1 engine keeps its own two lines: no geometry, no transitions,
     // and the entity spawns half a tile in from the constructor args
@@ -107,6 +124,20 @@ export function runTape(tape, opts = {}) {
         else state = stepV1(state, held, { terrainStateAt });
     }
 
+    // A grant for a level the tape never entered is a ROUTE CLAIM that
+    // stopped being true. Silently no-opping it is how a routing regression
+    // hides: the stream still matches its oracle (the grant changes no
+    // position), every assertion passes, and the tape quietly stopped
+    // visiting the room it exists to visit.
+    if (run && run.unfiredGrantLevels.length > 0) {
+        throw new Error(
+            'runTape: the tape grants items in level(s) '
+            + `${run.unfiredGrantLevels.join(', ')}, which the run never entered. A grant `
+            + 'fires on FIRST ENTRY, so this tape no longer walks where it claims to. '
+            + 'Fix the route or drop the grant — do not leave it as a silent no-op.',
+        );
+    }
+
     return {
         ticks,
         // Derived from the engine's OWN world swap — deliberately NOT
@@ -116,6 +147,11 @@ export function runTape(tape, opts = {}) {
         // tick stream against itself and check nothing new.
         transitions: run ? run.transitions : [],
         final: run ? run.state : state,
+        // The R0 relaxations' JS-side outcome. `inventory` is a MIRROR —
+        // an acceptance assertion reads `botStatus.items` from the game, not
+        // this. See `levelRun.initialInventory`.
+        inventory: run ? run.inventory : null,
+        grants: run ? run.grantsFired : [],
     };
 }
 

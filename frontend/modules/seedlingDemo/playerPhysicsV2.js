@@ -78,6 +78,7 @@
  */
 
 import { rectsOverlap } from './levelWorld.js';
+import { coerceTerrainState } from './tapeFormat.js';
 import {
     CHECK_OFFSET_Y,
     HITBOX,
@@ -289,13 +290,15 @@ export function arriveIn(level, teleporter) {
  *   `level`           a `buildLevelWorld` result (required)
  *   `noclip`          the TAPE's flag; picks the arm of the AS3's
  *                     `Bot.noclip ? null : collideTypes(...)` ternary
+ *   `noHazards`       the TAPE's hazard-name set; the effects of those
+ *                     terrains are coerced away (see below)
  *   `frozen`          `Game.freezeObjects`, as at v1
  *   `beforeTypeFlip`  this is the world's first live tick, so no Tile has
  *                     run its own first update yet
  */
 export function step(state, held, opts = {}) {
     const {
-        level, noclip = false, frozen = false, beforeTypeFlip = false,
+        level, noclip = false, noHazards = [], frozen = false, beforeTypeFlip = false,
     } = opts;
     if (!level || typeof level.collidesSolid !== 'function') {
         throw new PhysicsV2Error(
@@ -356,17 +359,39 @@ export function step(state, held, opts = {}) {
     //    ahead of `super.update()` (`Player.as:508-537`), so the terrain
     //    that sets this tick's speed is the terrain under the PRE-movement
     //    position — and it runs even when frozen.
-    const terrain = level.assertModelledTerrain(resolveTerrainState(
+    //
+    //    ⚠ TWO VALUES, and keeping them apart is the whole of `noHazards`.
+    //    `terrain` is what the resolver RESOLVED and what the sticky state
+    //    stores; `effective` is what the physics CONSUMES. `Player.as` does
+    //    the same: `_state = _s` keeps the raw tile type (so the `_s !=
+    //    _state` change gate, `lastState` and the splash comparison are
+    //    byte-identical with the flag on or off) while the effect sites —
+    //    the pit branch, `onIce`/`onWaterfall`/`inWater`/`inLava`,
+    //    `moveSpeed` at `:715` AND at `:523`, and `checkDrowning`'s two
+    //    tests at `:1420`/`:1424` — read through the coerced value.
+    //
+    //    Storing raw is not a detail: it is what lets the tests keep
+    //    asserting the RESOLVER's own answer (level 0's spawn tile is BRICK,
+    //    not Ground — a claim the observation stream cannot make) instead of
+    //    asserting a value the relaxation has already flattened.
+    const terrain = resolveTerrainState(
         level, state.x, state.y,
         state.terrain ?? INITIAL_TERRAIN_STATE,
         { beforeTypeFlip },
-    ));
+    );
+    // The guard runs on the EFFECTIVE value, so a coerced hazard is legal
+    // terrain and an un-coerced one still throws by name. Bridge (29) is not
+    // in the hazard vocabulary at all and cannot be coerced: it fails at
+    // BUILD time, because it cannot be sorted into a list at all.
+    const effective = level.assertModelledTerrain(
+        coerceTerrainState(terrain, noHazards),
+    );
 
     // 2-4. The v1 tick, unchanged, with the collision arm of the ternary
     //      selected. `world` is the LEVEL's pixel size, which is what
     //      `Game.as:1854-1855` writes into FP.width/height on every load.
     const next = stepV1(state, held, {
-        terrainStateAt: () => terrain,
+        terrainStateAt: () => effective,
         frozen,
         world: level.world,
         collides: noclip

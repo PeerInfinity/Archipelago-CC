@@ -116,3 +116,98 @@ describe('what the run owns', () => {
             .toThrow(/needs a levelSource/);
     });
 });
+
+/**
+ * R0's grants — the crutch that lets an item walk gate R1 before the pickup
+ * ceremony is modelled.
+ *
+ * The shared contract (R0 kickoff §3.1): a grant is applied by BOTH sides
+ * on the FIRST OBSERVATION TICK whose level equals the grant's level. On
+ * this side that is two call sites and no third — construction (the boot
+ * level, observed at tick 0) and immediately after a world swap — because a
+ * swap lands at END of tick `t`, so "the run's level just became L" and
+ * "observation `t` reports level L" are the same instant.
+ *
+ * ⚠ The inventory here is a MIRROR. R1's acceptance assertion reads
+ * `botStatus.items` from the recompiled game; these tests pin the TIMING
+ * contract the two sides share, not the item state.
+ */
+describe('grants fire on first entry, at the arrival tick', () => {
+    const withGrants = (grants) => createLevelRun({
+        levelSource, boot, noclip: true, grants,
+    });
+
+    it('starts from an empty inventory with hitsMax at the AS3 default', () => {
+        const run = withGrants([]);
+        expect(run.inventory.hasSword).toBe(false);
+        // `Player.hitsMaxDef` is 3 — health ADDS to it, so the mirror has to
+        // start at the base rather than at false.
+        expect(run.inventory.hitsMax).toBe(3);
+        expect(run.grantsFired).toEqual([]);
+    });
+
+    it('fires a BOOT-level grant at tick 0, before any tick runs', () => {
+        const run = withGrants([{ level: 0, items: ['sword'] }]);
+        expect(run.inventory.hasSword).toBe(true);
+        expect(run.grantsFired).toEqual([{ t: 0, level: 0, items: ['sword'] }]);
+    });
+
+    it('fires an ARRIVAL grant on the transition tick, not one tick either side', () => {
+        // `transition-west-return` crosses into level 94 at tick 61 and back
+        // at 109 — recorded from the real game, so the tick is not this
+        // module's opinion. A grant for level 94 must land at exactly 61.
+        const tape = loadTape('transition-west-return');
+        const run = createLevelRun({
+            levelSource, boot: tape.boot, noclip: tape.noclip,
+            grants: [{ level: 94, items: ['conch'] }],
+        });
+        for (let t = 0; t < 60; t++) run.advance(heldKeysAt(tape, t));
+        expect(run.inventory.canSwim).toBe(false);
+        const { grant } = run.advance(heldKeysAt(tape, 60));
+        expect(grant).toEqual({ t: 61, level: 94, items: ['conch'] });
+        expect(run.inventory.canSwim).toBe(true);
+    });
+
+    it('does NOT re-grant on a revisit — which only hitsMax could reveal', () => {
+        // The round trip enters level 0 twice. For a boolean a second grant
+        // is invisible; `health` ADDS, so a re-grant would silently inflate
+        // hitsMax to 5 and the "13 true" assertion would still pass.
+        const tape = loadTape('transition-west-return');
+        const run = createLevelRun({
+            levelSource, boot: tape.boot, noclip: tape.noclip,
+            grants: [{ level: 0, items: ['health'] }],
+        });
+        expect(run.inventory.hitsMax).toBe(4);
+        for (let t = 0; t < tape.tick_count; t++) run.advance(heldKeysAt(tape, t));
+        expect(run.level).toBe(0);
+        expect(run.inventory.hitsMax).toBe(4);
+        expect(run.grantsFired).toHaveLength(1);
+    });
+
+    it('reports a grant for a level the run never entered', () => {
+        const run = withGrants([{ level: 42, items: ['wand'] }]);
+        expect(run.unfiredGrantLevels).toEqual([42]);
+        expect(run.inventory.hasWand).toBe(false);
+    });
+
+    it('changes NOTHING about the observation stream', () => {
+        // A grant is inventory state, not position. If it ever moved the
+        // player, every committed expectation would be wrong — so this is
+        // the guard that lets the eleven v1 fixtures stay byte-identical
+        // while the engine grows a grant path.
+        const tape = loadTape('transition-west-return');
+        const plain = driveByHand(tape);
+        const granted = createLevelRun({
+            levelSource, boot: tape.boot, noclip: tape.noclip,
+            grants: [{ level: 94, items: ['conch', 'feather'] }],
+        });
+        const ticks = [{ t: 0, x: granted.state.x, y: granted.state.y, level: granted.level }];
+        for (let t = 0; t < tape.tick_count; t++) {
+            granted.advance(heldKeysAt(tape, t));
+            ticks.push({
+                t: t + 1, x: granted.state.x, y: granted.state.y, level: granted.level,
+            });
+        }
+        expect(ticks).toEqual(plain.ticks);
+    });
+});

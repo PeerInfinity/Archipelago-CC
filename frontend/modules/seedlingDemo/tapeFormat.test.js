@@ -18,12 +18,19 @@ import {
     heldKeysAt,
     KEY_CODES,
     keyEdgesAt,
+    COERCED_TERRAIN_STATE,
+    coerceTerrainState,
+    HAZARD_STATES,
+    ITEM_NAMES,
+    ITEM_PROPERTIES,
     parseObservationStream,
     parseTape,
     serializeTape,
+    SUPPORTED_TAPE_VERSIONS,
     TAPE_VERSION,
     TapeFormatError,
 } from './tapeFormat.js';
+import { TILE_TYPE_NAMES } from '../flashPanel/seedlingSemantics.js';
 
 const base = {
     tape_version: 1,
@@ -33,6 +40,16 @@ const base = {
     inputs: [{ key: 'right', from: 0, to: 5 }],
 };
 const withInputs = (inputs, extra = {}) => ({ ...base, ...extra, inputs });
+
+/** The R0 shape: same tape, plus the three relaxations, all explicit. */
+const v2Base = {
+    ...base,
+    tape_version: 2,
+    noDamage: true,
+    noHazards: ['water', 'pit', 'lava', 'ice', 'waterfall'],
+    grants: [],
+};
+const v2With = (extra) => ({ ...v2Base, ...extra });
 
 describe('the key table', () => {
     it('matches Player.as:59 exactly', () => {
@@ -55,8 +72,14 @@ describe('the key table', () => {
 });
 
 describe('validation is loud, never defaulting', () => {
-    it('rejects a wrong version', () => {
-        expect(() => parseTape({ ...base, tape_version: 2 })).toThrow(TapeFormatError);
+    it('rejects a version outside the supported set', () => {
+        // ⚠ This case used to be `tape_version: 2`, which R0 made legal.
+        // Left as-is it would still have PASSED — a v2 tape without the
+        // relaxation fields throws too — while testing something else
+        // entirely. A test that keeps passing for a new reason is worse
+        // than one that goes red.
+        expect(() => parseTape({ ...base, tape_version: 0 })).toThrow(TapeFormatError);
+        expect(() => parseTape({ ...base, tape_version: 3 })).toThrow(TapeFormatError);
     });
 
     it('rejects a non-seedling game', () => {
@@ -127,6 +150,13 @@ describe('the boot block is a CLAIM about the build, and is checked', () => {
     // entirely bookkeeping. Slice 4 made it a named error — the format's own
     // rule ("never a silent default") applied to the one field that was
     // exempt from it.
+    //
+    // ⚠ R0 makes the check VERSION-SCOPED rather than retiring it. The R0
+    // AS3 batch gives the build a parameterised boot, so a v2 tape may name
+    // any level — but a v1 tape is still a claim about the v1-era build,
+    // which could not be told, and the eleven committed fixtures are v1.
+    // Retiring the check outright would have quietly re-opened the trap for
+    // exactly the tapes that were authored under it.
 
     it('declares the build spawn as a constant, not a magic number', () => {
         expect(BUILD_SPAWN).toEqual({ level: 0, x: 80, y: 128 });
@@ -136,14 +166,28 @@ describe('the boot block is a CLAIM about the build, and is checked', () => {
         expect(parseTape(base).boot).toEqual(BUILD_SPAWN);
     });
 
-    it('refuses a different level, x, or y — each by name', () => {
+    it('refuses a different level, x, or y on a VERSION 1 tape — each by name', () => {
         for (const boot of [
             { level: 7, x: 80, y: 128 },
             { level: 0, x: 96, y: 128 },
             { level: 0, x: 80, y: 144 },
         ]) {
             expect(() => parseTape({ ...base, boot }))
-                .toThrow(/build always spawns at .*Main\.as:51/s);
+                .toThrow(/tape_version 1 tape must declare .*Main\.as:51/s);
+        }
+    });
+
+    it('HONOURS the same boots on a version 2 tape — the R0 build takes them', () => {
+        // The batch's parameterised boot is what unblocks the v2 vacuity
+        // witnesses (the level-83 stickiness hole, the four arrival-on-a-
+        // trigger latch pairs), all of which need to start somewhere other
+        // than level 0. Accepting them here is only half of it: the game has
+        // to honour them too, which is why (d) is in the batch.
+        for (const boot of [
+            { level: 83, x: 32, y: 32 },
+            { level: 0, x: 96, y: 128 },
+        ]) {
+            expect(parseTape({ ...v2Base, boot }).boot).toEqual(boot);
         }
     });
 
@@ -158,13 +202,14 @@ describe('the boot block is a CLAIM about the build, and is checked', () => {
 
     it('points at the way OUT, because there is one', () => {
         // The error has to say what to do instead, or the next person
-        // reaches for a default. Walking is the answer at this rung; the
-        // parameterised boot is an AS3 edit and therefore a batch.
+        // reaches for a default. At v1 the answer was "walk there"; now the
+        // answer is "bump the version", which is strictly better and is the
+        // reason the message changed rather than the check being deleted.
         let message = '';
         try { parseTape({ ...base, boot: { level: 94, x: 80, y: 128 } }); }
         catch (e) { message = e.message; }
-        expect(message).toMatch(/Walk to another level/);
-        expect(message).toMatch(/BUILD_SPAWN/);
+        expect(message).toMatch(/Bump to tape_version 2/);
+        expect(message).toMatch(/Main\.as:51/);
     });
 });
 
@@ -220,8 +265,38 @@ describe('serialization', () => {
         expect(a).toBe(b);
     });
 
-    it('keeps the version in the output', () => {
-        expect(JSON.parse(serializeTape(base)).tape_version).toBe(TAPE_VERSION);
+    it('keeps each tape at ITS OWN version, not the newest one', () => {
+        // The load-bearing half: bumping TAPE_VERSION must not rewrite the
+        // eleven committed v1 fixtures. `parseTape` normalises the three v2
+        // fields onto a v1 tape so no engine carries a version branch, and
+        // `serializeTape` must then NOT write them back — otherwise every
+        // fixture file changes for no change in meaning.
+        expect(JSON.parse(serializeTape(base)).tape_version).toBe(1);
+        expect(JSON.parse(serializeTape(v2Base)).tape_version).toBe(TAPE_VERSION);
+        expect(TAPE_VERSION).toBe(2);
+    });
+
+    it('writes NO v2 fields into a v1 tape, even though parseTape adds them', () => {
+        const parsed = parseTape(base);
+        expect(parsed.noDamage).toBe(false);
+        expect(parsed.noHazards).toEqual([]);
+        expect(parsed.grants).toEqual([]);
+        const written = JSON.parse(serializeTape(base));
+        expect(written).not.toHaveProperty('noDamage');
+        expect(written).not.toHaveProperty('noHazards');
+        expect(written).not.toHaveProperty('grants');
+    });
+
+    it('writes all three v2 fields into a v2 tape', () => {
+        const written = JSON.parse(serializeTape({
+            ...v2Base,
+            noHazards: ['pit', 'water'],
+            grants: [{ level: 10, items: ['sword'] }],
+        }));
+        expect(written.noDamage).toBe(true);
+        // Sorted by tile-type value, not by authoring order.
+        expect(written.noHazards).toEqual(['water', 'pit']);
+        expect(written.grants).toEqual([{ level: 10, items: ['sword'] }]);
     });
 });
 
@@ -356,5 +431,174 @@ describe('transition records', () => {
         expect(diffObservationStreams(crossing, elsewhere)).toMatch(/0->12/);
         expect(diffObservationStreams(crossing, { ...crossing, transitions: [] }))
             .toMatch(/transition count differs: expected 1 \[\{t:2, 0->94\}\], got 0 \[\]/);
+    });
+});
+
+// ─────────────────────────────────────────────────────────────────────────
+// R0: the subtractive ladder's three relaxation fields.
+//
+// The reason these are as fussy as the key table: each one selects WHICH
+// EXPERIMENT both consumers run. A tape that omits `noHazards` and a game
+// that defaults it differently from the JS engine is not a bug in either
+// side — it is two sides running different games and a differential that
+// reports the difference as physics.
+// ─────────────────────────────────────────────────────────────────────────
+
+describe('version 2: what a v1 tape may and may not say', () => {
+    it('still parses every v1 tape', () => {
+        expect(parseTape(base).tape_version).toBe(1);
+        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2]);
+    });
+
+    it('normalises v1 to version 1 SEMANTICS so no engine branches on version', () => {
+        const parsed = parseTape(base);
+        expect(parsed).toMatchObject({ noDamage: false, noHazards: [], grants: [] });
+    });
+
+    it('refuses a v1 tape that RELAXES anything', () => {
+        expect(() => parseTape({ ...base, noDamage: true }))
+            .toThrow(/tape_version 1 declares noDamage: true/);
+        expect(() => parseTape({ ...base, noHazards: ['water'] }))
+            .toThrow(/tape_version 1 declares noHazards/);
+        expect(() => parseTape({ ...base, grants: [{ level: 10, items: ['sword'] }] }))
+            .toThrow(/tape_version 1 declares grants/);
+    });
+
+    it('lets a PARSED v1 tape be parsed again — parseTape is idempotent', () => {
+        // Every consumer re-validates (`runTape`, `serializeTape`, the
+        // driver), so a normalised tape has to survive a second pass. The
+        // v1 rejection is therefore on the VALUE, not on presence; getting
+        // that backwards turned 37 tests red on the first attempt.
+        const once = parseTape(base);
+        expect(parseTape(once)).toEqual(once);
+        expect(parseTape(parseTape(once))).toEqual(once);
+    });
+
+    it('rejects an unknown version by name', () => {
+        expect(() => parseTape({ ...base, tape_version: 3 }))
+            .toThrow(/tape_version must be one of 1, 2/);
+    });
+});
+
+describe('version 2: noDamage and noHazards', () => {
+    it('requires all three fields — a partial relaxation is a named error', () => {
+        for (const missing of ['noDamage', 'noHazards', 'grants']) {
+            const tape = { ...v2Base, grants: [] };
+            delete tape[missing];
+            expect(() => parseTape(tape)).toThrow(new RegExp(missing));
+        }
+    });
+
+    it('refuses a BOOLEAN noHazards, and says why it is a set', () => {
+        // The R4 rung re-arms hazards one at a time; a boolean cannot
+        // express a single rung of it, and shipping one would have cost a
+        // second ~10-minute AS3 pipeline run to change its type.
+        expect(() => parseTape(v2With({ noHazards: true })))
+            .toThrow(/must be an ARRAY of hazard names.*one at a time/s);
+    });
+
+    it('names the five hazard states and nothing else', () => {
+        expect(HAZARD_STATES).toEqual({ water: 1, pit: 6, lava: 17, ice: 22, waterfall: 25 });
+        expect(() => parseTape(v2With({ noHazards: ['stairs'] })))
+            .toThrow(/not a hazard name/);
+        expect(() => parseTape(v2With({ noHazards: ['bridge'] })))
+            .toThrow(/not a hazard name/);
+    });
+
+    it('matches flashPanel/seedlingSemantics — the table is transcribed, not invented', () => {
+        // Same guard shape as the key table: this module stays
+        // dependency-free (browser-usable), so the semantics are
+        // transcribed here and cross-asserted there.
+        for (const [name, t] of Object.entries(HAZARD_STATES)) {
+            expect(TILE_TYPE_NAMES[t].toLowerCase()).toContain(name);
+        }
+        // And the coerced target really is Ground, not "whatever 0 means".
+        expect(TILE_TYPE_NAMES[COERCED_TERRAIN_STATE]).toBe('Ground');
+    });
+
+    it('rejects a repeated hazard and sorts by tile type', () => {
+        expect(() => parseTape(v2With({ noHazards: ['water', 'water'] })))
+            .toThrow(/names "water" more than once/);
+        expect(parseTape(v2With({ noHazards: ['ice', 'water', 'lava'] })).noHazards)
+            .toEqual(['water', 'lava', 'ice']);
+    });
+
+    it('accepts [] — "no hazard disabled" is a legal, explicit choice', () => {
+        expect(parseTape(v2With({ noHazards: [] })).noHazards).toEqual([]);
+    });
+});
+
+describe('version 2: coerceTerrainState', () => {
+    const ALL = ['water', 'pit', 'lava', 'ice', 'waterfall'];
+
+    it('flattens exactly the named hazards to Ground', () => {
+        for (const [name, t] of Object.entries(HAZARD_STATES)) {
+            expect(coerceTerrainState(t, ALL)).toBe(0);
+            expect(coerceTerrainState(t, [name])).toBe(0);
+        }
+    });
+
+    it('leaves a hazard NOT named alone — this is what makes R4 possible', () => {
+        expect(coerceTerrainState(HAZARD_STATES.water, ['pit'])).toBe(HAZARD_STATES.water);
+        expect(coerceTerrainState(HAZARD_STATES.pit, ['water'])).toBe(HAZARD_STATES.pit);
+        expect(coerceTerrainState(HAZARD_STATES.lava, [])).toBe(HAZARD_STATES.lava);
+    });
+
+    it('leaves every NON-hazard terrain alone, including the slow ones', () => {
+        // Stairs (10) and Ghost Step (30) are slower but harmless, and
+        // flattening them would erase real physics rather than a hazard.
+        for (const t of [0, 3, 8, 9, 10, 30, 29]) {
+            expect(coerceTerrainState(t, ALL)).toBe(t);
+        }
+    });
+});
+
+describe('version 2: grants', () => {
+    it('accepts the item vocabulary and rejects anything else', () => {
+        expect(parseTape(v2With({ grants: [{ level: 10, items: ['sword'] }] })).grants)
+            .toEqual([{ level: 10, items: ['sword'] }]);
+        expect(() => parseTape(v2With({ grants: [{ level: 10, items: ['excalibur'] }] })))
+            .toThrow(/not an item name/);
+    });
+
+    it('names all fourteen items, health included', () => {
+        expect(ITEM_NAMES).toHaveLength(14);
+        expect(ITEM_NAMES).toContain('health');
+        // ⚠ Thirteen booleans and ONE int. An "all items true" assertion
+        // that forgets this is asserting the wrong thing about hitsMax.
+        expect(ITEM_PROPERTIES.health).toEqual({
+            property: 'hitsMax', kind: 'add', base: 3, value: 1,
+        });
+        expect(ITEM_NAMES.filter((n) => ITEM_PROPERTIES[n].kind === 'boolean'))
+            .toHaveLength(13);
+    });
+
+    it('refuses a duplicate level, because a grant fires on FIRST entry', () => {
+        expect(() => parseTape(v2With({
+            grants: [{ level: 10, items: ['sword'] }, { level: 10, items: ['shield'] }],
+        }))).toThrow(/declares level 10 twice/);
+    });
+
+    it('refuses an empty items list — an unchecked route claim', () => {
+        expect(() => parseTape(v2With({ grants: [{ level: 10, items: [] }] })))
+            .toThrow(/non-empty array of item names/);
+    });
+
+    it('refuses a repeated item within one grant', () => {
+        expect(() => parseTape(v2With({
+            grants: [{ level: 10, items: ['sword', 'sword'] }],
+        }))).toThrow(/names "sword" more than once/);
+    });
+
+    it('sorts grants by level and items by name, so two tapes agree', () => {
+        expect(parseTape(v2With({
+            grants: [
+                { level: 43, items: ['wand'] },
+                { level: 10, items: ['shield', 'sword'] },
+            ],
+        })).grants).toEqual([
+            { level: 10, items: ['shield', 'sword'] },
+            { level: 43, items: ['wand'] },
+        ]);
     });
 });

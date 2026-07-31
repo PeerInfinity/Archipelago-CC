@@ -34,6 +34,7 @@
  */
 
 import { buildLevelWorld } from './levelWorld.js';
+import { ITEM_PROPERTIES, ITEM_NAMES } from './tapeFormat.js';
 import { spawnFromBoot } from './playerPhysicsV1.js';
 import {
     INITIAL_TERRAIN_STATE,
@@ -41,6 +42,34 @@ import {
     initialLatch,
     step as stepV2,
 } from './playerPhysicsV2.js';
+
+/**
+ * The inventory a fresh boot starts from — every boolean false, `hitsMax`
+ * at `Player.hitsMaxDef` (3).
+ *
+ * ⚠ THIS IS A MIRROR, NOT THE ORACLE. `Bot.as` writes the real `Player`
+ * statics and `botStatus.items` reads them back, and that readout is what
+ * an acceptance assertion must consult. This object exists so the JS engine
+ * can be asked "which items would the game have by now" without a second
+ * source of truth about WHEN — the two sides share the tick contract, not
+ * the storage. A test that asserted an item from here instead of from the
+ * game's own report would be asserting that this file agrees with itself.
+ */
+export function initialInventory() {
+    const inv = {};
+    for (const name of ITEM_NAMES) {
+        const spec = ITEM_PROPERTIES[name];
+        inv[spec.property] = spec.kind === 'add' ? spec.base : false;
+    }
+    return inv;
+}
+
+/** Apply one item name to an inventory mirror, in place. */
+function applyItem(inventory, name) {
+    const spec = ITEM_PROPERTIES[name];
+    if (spec.kind === 'add') inventory[spec.property] += spec.value;
+    else inventory[spec.property] = true;
+}
 
 /**
  * Start a run at `boot`, in the level the boot names.
@@ -52,13 +81,27 @@ import {
  *                                     the half-tile spawn offset is applied here
  * @param {boolean}  opts.noclip       the tape's flag: picks the arm of the AS3's
  *                                     `Bot.noclip ? null : collideTypes(...)`
+ * @param {Array}    [opts.noHazards]  the tape's hazard-name set (R0)
+ * @param {boolean}  [opts.noDamage]   the tape's flag (R0). Carried, not
+ *                                     consumed — see the note on `noDamage` below.
+ * @param {Array}    [opts.grants]     the tape's `{level, items}` list (R0)
  * @returns {{
  *   level: number, world: object, state: object, transitions: Array,
  *   ticksCompleted: number, advance: (held: Set<string>) => object,
  * }} a live view — `level`/`state`/... are getters over the run's own state,
  *    so a caller may hold the object and read fields after each `advance`.
+ *
+ * ⚠ `noDamage` IS CARRIED AND NOT CONSUMED, and that is a bounded vacuity
+ * rather than an oversight. The JS engine models no enemy, no projectile and
+ * no trap, so there is no site at which `Player.hit()` would have been
+ * called — `noDamage: false` is equally inert here. It is threaded anyway so
+ * the tape schema is symmetric and the field reaches the game, which is
+ * where it does something. The witness that would close it is the first
+ * fixture whose route is in range of a damage source, i.e. R5.
  */
-export function createLevelRun({ levelSource, boot, noclip = false }) {
+export function createLevelRun({
+    levelSource, boot, noclip = false, noHazards = [], noDamage = false, grants = [],
+}) {
     if (typeof levelSource !== 'function') {
         throw new TypeError('createLevelRun needs a levelSource (level) => levelRecord');
     }
@@ -95,12 +138,49 @@ export function createLevelRun({ levelSource, boot, noclip = false }) {
     let ticksCompleted = 0;
     const transitions = [];
 
+    // ── grants ────────────────────────────────────────────────────────
+    // The shared contract (R0 kickoff §3.1): a grant is applied by BOTH
+    // sides on the FIRST OBSERVATION TICK whose level equals the grant's
+    // level. Observation `t` is the state after `t` completed ticks, and a
+    // world swap lands at END of tick `t`, so "the run's level just became
+    // L" and "observation `t` reports level L" are the same instant. Hence
+    // the two call sites below and no third: construction (the boot level,
+    // observed at tick 0) and immediately after a swap.
+    //
+    // FIRST entry only — a revisit does not re-grant. For a boolean that is
+    // invisible, but `health` ADDS to `hitsMax`, so a re-grant on every
+    // visit would silently inflate it.
+    const inventory = initialInventory();
+    const grantsByLevel = new Map(grants.map((g) => [g.level, g.items]));
+    const firedGrants = [];
+    const applyGrantsFor = (n) => {
+        if (!grantsByLevel.has(n)) return null;
+        const items = grantsByLevel.get(n);
+        grantsByLevel.delete(n);
+        for (const item of items) applyItem(inventory, item);
+        const record = { t: ticksCompleted, level: n, items: [...items] };
+        firedGrants.push(record);
+        return record;
+    };
+    applyGrantsFor(level);
+
     return {
         get level() { return level; },
         get world() { return world; },
         get state() { return state; },
         get transitions() { return transitions; },
         get ticksCompleted() { return ticksCompleted; },
+        get inventory() { return { ...inventory }; },
+        /** `{t, level, items}` per grant that fired, in firing order. */
+        get grantsFired() { return firedGrants.map((g) => ({ ...g, items: [...g.items] })); },
+        /**
+         * Levels named by `grants` the run never entered. A grant that never
+         * fires is a ROUTE CLAIM that silently stopped being true, which is
+         * exactly how a routing regression hides behind a green tape — so
+         * the caller turns a non-empty list into a named failure.
+         */
+        get unfiredGrantLevels() { return [...grantsByLevel.keys()]; },
+        get noDamage() { return noDamage; },
         /** Build (and memoise) another level's world — for planning ahead. */
         worldFor,
 
@@ -125,6 +205,7 @@ export function createLevelRun({ levelSource, boot, noclip = false }) {
             const next = stepV2(state, held, {
                 level: world,
                 noclip,
+                noHazards,
                 beforeTypeFlip: firstTickInWorld,
             });
             ticksCompleted++;
@@ -133,7 +214,7 @@ export function createLevelRun({ levelSource, boot, noclip = false }) {
             if (!next.transition) {
                 state = next;
                 firstTickInWorld = false;
-                return { transition: null, ...hits };
+                return { transition: null, grant: null, ...hits };
             }
 
             // End-of-tick: `Engine.checkWorld` swaps only after the whole
@@ -152,7 +233,13 @@ export function createLevelRun({ levelSource, boot, noclip = false }) {
             world = worldFor(level);
             state = arriveIn(world, next.transition.teleporter);
             firstTickInWorld = true;
-            return { transition: record, ...hits };
+            // `ticksCompleted` is already the arrival observation's index, so
+            // the grant's `t` is that observation — the same tick the
+            // transition record carries, and the same tick `Bot.as` applies
+            // it on. Applied AFTER the swap, so a grant naming the level
+            // being LEFT does not fire on the way out.
+            const grant = applyGrantsFor(level);
+            return { transition: record, grant, ...hits };
         },
     };
 }

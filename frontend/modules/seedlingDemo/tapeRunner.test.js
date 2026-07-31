@@ -92,10 +92,10 @@ describe('record-then-act indexing', () => {
         // which crosses for real.
         expect(() => runTape(tape([{ key: 'right', from: 0, to: 3 }],
             { boot: { level: 7, x: 80, y: 128 } })))
-            .toThrow(/build always spawns at/);
+            .toThrow(/tape_version 1 tape must declare/);
         expect(() => runTape(tape([{ key: 'right', from: 0, to: 3 }],
             { boot: { level: 0, x: 96, y: 128 } })))
-            .toThrow(/build always spawns at/);
+            .toThrow(/tape_version 1 tape must declare/);
     });
 
     it('emits no transitions for a run that crosses no level', () => {
@@ -419,5 +419,67 @@ describe('v2 slice 0: what the collision + transition recordings pin', () => {
         expect(s.transitions).toEqual(deriveTransitions(s.ticks));
         // A tape that crosses nothing still records the empty array.
         expect(recording('collide-up-rock').transitions).toEqual([]);
+    });
+});
+
+/**
+ * R0: what `runTape` owes a version 2 tape.
+ *
+ * The engine reads the three relaxation fields off the PARSED tape, which
+ * `parseTape` normalises for either version — so there is no version branch
+ * in the runner and no place for a v1 tape to acquire v2 behaviour.
+ */
+describe('version 2 tapes', () => {
+    const v2 = (inputs, extra = {}) => tape(inputs, {
+        tape_version: 2, noDamage: true, noHazards: [], grants: [], ...extra,
+    });
+
+    it('carries the relaxations through to the engine', () => {
+        const out = runTape(v2([{ key: 'right', from: 0, to: 3 }]), { levelSource });
+        expect(out.inventory).toBeTruthy();
+        expect(out.inventory.hitsMax).toBe(3);
+        expect(out.grants).toEqual([]);
+    });
+
+    it('applies a boot-level grant and reports it at tick 0', () => {
+        const out = runTape(
+            v2([{ key: 'right', from: 0, to: 3 }], { grants: [{ level: 0, items: ['sword'] }] }),
+            { levelSource },
+        );
+        expect(out.grants).toEqual([{ t: 0, level: 0, items: ['sword'] }]);
+        expect(out.inventory.hasSword).toBe(true);
+    });
+
+    it('FAILS by name on a grant for a level the run never entered', () => {
+        // A grant that never fires is a route claim that silently stopped
+        // being true. It moves no pixel, so the stream still matches its
+        // oracle and every downstream assertion passes — which is exactly
+        // how a routing regression would hide behind a green tape.
+        expect(() => runTape(
+            v2([{ key: 'right', from: 0, to: 3 }], { grants: [{ level: 42, items: ['wand'] }] }),
+            { levelSource },
+        )).toThrow(/grants items in level\(s\) 42, which the run never entered/);
+    });
+
+    it('refuses grants on the v1 engine rather than dropping them', () => {
+        // Without a levelSource there is no level tracking at all, so the
+        // runner could not tell when a granted level was entered. Silently
+        // ignoring them would make a v2 tape mean two different things.
+        expect(() => runTape(
+            v2([{ key: 'right', from: 0, to: 3 }], { grants: [{ level: 0, items: ['sword'] }] }),
+        )).toThrow(/declares grants but no opts.levelSource/);
+    });
+
+    it('walks water when the tape disables it, and dies loudly when it does not', () => {
+        // Level 0's row 8 going right hits Water at column 9 (a v2-slice-0
+        // fixture-authoring note). Same tape, same geometry, two tapes:
+        // this is the whole of `noHazards` seen from the runner.
+        const walkIntoWater = (extra) => runTapeToStream(
+            v2([{ key: 'right', from: 0, to: 60 }], extra), { levelSource },
+        );
+        expect(() => walkIntoWater({ noHazards: [] })).toThrow(/Water/);
+        expect(() => walkIntoWater({ noHazards: ['lava', 'ice'] })).toThrow(/Water/);
+        const out = walkIntoWater({ noHazards: ['water', 'pit', 'lava', 'ice', 'waterfall'] });
+        expect(out.ticks).toHaveLength(61);
     });
 });

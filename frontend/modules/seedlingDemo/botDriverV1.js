@@ -35,7 +35,7 @@
  * half that. DEFAULT_TOLERANCE is 1.0px, comfortably above 0.85.
  */
 
-import { serializeTape, TAPE_VERSION } from './tapeFormat.js';
+import { serializeTape } from './tapeFormat.js';
 import {
     applyFriction,
     DEFAULT_FRICTION,
@@ -204,9 +204,28 @@ export function synthesizeTape(targets, opts = {}) {
  * tape it emits runs with collision off. `botDriverV2` passes false — it is
  * the one thing about the emitted tape that differs between the rungs, and
  * it stays an explicit argument rather than a second copy of the fold.
+ *
+ * ⚠ THE EMITTED TAPE VERSION IS DECIDED BY WHAT THE CALLER DECLARES, not by
+ * `tapeFormat.TAPE_VERSION`. Reading the constant would have silently turned
+ * every driver-emitted tape into a v2 tape the day R0 bumped it, and the
+ * eleven committed fixtures are compared against what the driver emits
+ * TODAY — so that bump would have read as eleven fixture changes. Passing
+ * any of the three relaxation fields makes it a v2 tape; passing a partial
+ * set is a named error rather than a tape with two of three experiments
+ * declared.
  */
 export function buildTape(perTick, boot = { level: 0, x: 80, y: 128 }, name,
-    { noclip = true } = {}) {
+    { noclip = true, noDamage, noHazards, grants } = {}) {
+    const relaxations = { noDamage, noHazards, grants };
+    const declared = Object.entries(relaxations).filter(([, v]) => v !== undefined);
+    if (declared.length > 0 && declared.length < 3) {
+        throw new Error('buildTape: a version 2 tape declares noDamage, noHazards AND '
+            + `grants; got only ${declared.map(([k]) => k).join(', ')}. There is no `
+            + 'default for a relaxation — the game and the JS engine would be running '
+            + 'different experiments.');
+    }
+    const v2 = declared.length === 3;
+
     const open = new Map();   // key → span start tick
     const inputs = [];
 
@@ -226,11 +245,12 @@ export function buildTape(perTick, boot = { level: 0, x: 80, y: 128 }, name,
     }
 
     return {
-        tape_version: TAPE_VERSION,
+        tape_version: v2 ? 2 : 1,
         game: 'seedling',
         ...(name ? { name } : {}),
         boot: { level: boot.level, x: boot.x, y: boot.y },
         noclip,
+        ...(v2 ? { noDamage, noHazards, grants } : {}),
         tick_count: perTick.length,
         inputs,
     };
