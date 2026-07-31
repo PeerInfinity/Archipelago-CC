@@ -728,3 +728,100 @@ prose.
 
 Gates: vitest **3929/3929** (was 3890). No live-game leg — slice 1 adds no
 physics, so the differential is unchanged.
+
+## 9. Slice 2 — AS BUILT (2026-07-30)
+
+`playerPhysicsV2.js` + `playerPhysicsV2.test.js` (23 hand-derived cases),
+`levelSource.js` (node-only), plus small extensions to `playerPhysicsV1.js`,
+`levelWorld.js` and `tapeRunner.js`. **`collide-up-rock` reconciles
+EXACTLY** — same doubles, float noise included — and the v1 five are
+byte-identical to their own recordings.
+
+### The seam shapes that slices 3 and 4 inherit
+
+- **One sweep loop, not two.** `sweepAxis(pos, rel, collideAt)` in
+  `playerPhysicsV1.js` carries the AS3's per-step test verbatim, and
+  `moveAxis` is that loop with the probe omitted. `step()` gained
+  `opts.collides(x, y) -> blocker|null` and nothing else — which is why
+  the regression net held. It also now returns `hitX`/`hitY` (this tick's
+  sweep results, not carried state), because §3.4's "hit a wall en route to
+  a waypoint → THROW" needs to tell a completed move from a cut-short one.
+- **The level is INJECTED, never loaded.** The caller passes
+  `levelSource(level) -> record`; `levelSource.js` is the node-only half
+  (`atlasLevelSource()`), and `levelSourceFromAtlas(atlas)` is the
+  browser-usable one. A record source rather than a prebuilt world for two
+  reasons that are both slice-3 reasons: the runner must build worlds for
+  levels nobody named at call time (a teleporter's `to`), and
+  `buildLevelWorld`'s loud throws should fire when a run walks INTO a level
+  rather than eagerly for all 116. `tapeRunner` memoises what it builds.
+- **`opts.levelSource` selects the engine.** Without it, the v1 engine
+  (stub terrain, no collision) and a `noclip:false` tape is refused. With
+  it, the v2 engine with the sweep's collision test on or off exactly as
+  the tape says. The v1 five are run BOTH ways by `tapeRunner.test.js`.
+- **The transition seam is in `playerPhysicsV2.step`,** at the top of the
+  tick, testing the position the previous tick left — which is where the
+  real trigger fires from. Slice 3 replaces the throw with the swap in one
+  place. It is deliberately blunt: it fires on ANY overlap including the
+  one the game suppresses (arriving ON a teleporter pre-latches it), which
+  can only over-throw.
+
+### The pending split no longer keys on `tape.noclip`
+
+`tapeRunner.test.js` now pins `PENDING = ['transition-west-return']` by
+name and by REASON (it throws `TransitionNotModelledError`), because
+`collide-up-rock` is `noclip:false` and modelled. Slice 3 empties the list
+and the guard beside it goes red rather than the block passing vacuously.
+
+### Things the running code said that the brief did not
+
+- **Level 0's spawn tile is BRICK (t = 3), not Ground.** Tileset column 4.
+  The observation stream cannot tell — brick and ground both walk at 0.8 —
+  so it is asserted on the resolver's own answer. A reminder that "the
+  streams match" is a weaker claim than it reads.
+- **The first-tick type flip is modelled, via `beforeTypeFlip`** on
+  `levelWorld.collidesSolid` / `nearestWalkableTile` (and a new
+  `objectSolids` list). Only TILES are late: every object class assigns its
+  type in its CONSTRUCTOR, `CliffSide` included, so the pixelmask seam is
+  armed on tick 1 too and `collide-up-rock`'s BreakableRock blocker is
+  unaffected. It is genuinely unobservable today — a fresh Player moves
+  ≤ 0.8 px, and every SOLID tile type carries the plain 0.8 walk speed, so
+  a first-tick state of 9 and one of 0 pick identical physics — which is
+  exactly why it needed a synthetic unit case rather than a fixture.
+- **`Rectangle.intersects` confirmed at the source that matters**:
+  `SWFModernRuntime/src/avm2/avm2_text.c:8029` is positive-area only
+  (`ax < bx+bw && ax+aw > bx && ...`) behind an isEmpty guard on both
+  rects — the same comparison as FlashPunk's `Entity.collide`, so
+  `rectsOverlap` legitimately serves both the sweep and the terrain gate.
+- **Three MOVE_SPEEDS comment labels were wrong** (§2.3 named two): 17 is
+  Lava, 25 is Waterfall, **30 is Ghost Tile Step** (it read "stairs
+  (dark)"). Values were always right, which is why nothing caught it.
+
+### What the fixtures cannot check, and what covers it
+
+The non-sticky-resolver mutation turns **no fixture red** — no v1 or v2
+route leaves level 0's tiled area, so the gate never fails along one and
+the recordings genuinely cannot see the difference. That is the case for
+the synthetic hand-built grids in `playerPhysicsV2.test.js`: a full tile
+grid covers every position, so the properties that only appear at a HOLE
+(sticky fallback, strict-touch) need a level with rows deliberately
+missing. Level 0 can only ever say "the two agree here".
+
+Mutation checks, each run, each confirmed to bite:
+
+| mutation | goes red |
+|---|---|
+| zero velocity on collision | `collide-up-rock` exact match + 2 hand-derived |
+| non-sticky resolver | 5 hand-derived (NO fixture — see above) |
+| Y-before-X sweep order | the probe-schedule case |
+| non-strict intersect | 3, across levelWorld and the resolver |
+| `checkOffsetY` dropped | 2 |
+| first-tick flip ignored | the pass-through-a-solid-tile case |
+| `nearestWalkableTile` over ALL tiles | 4 |
+| transition seam removed | the teleporter throw + the pending fixture |
+
+### Gates at slice 2 close
+
+- vitest **3969/3969** (was 3929; +40).
+- `verify-seedling-bot-differential.mjs --win` green across all **7**
+  fixtures at ~25 fps, live driver task included. No recording rewritten —
+  slice 2 changes no expectation, only the engine that has to hit them.
