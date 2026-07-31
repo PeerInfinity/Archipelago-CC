@@ -715,3 +715,103 @@ planner policy (§3.2, §8.3), the priced volumes (§3.6, §8.4), the route
 (§8.7) and both opportunistic witnesses (§8.8). The rung's actual subject —
 pits as a modelled transport primitive carrying the walk into the fall-only
 underworld — is untouched.
+
+## 10. The WATCH PAGE — insert-slice, AS BUILT (2026-07-31)
+
+User-requested, designed in `CC/docs/plans/seedling-bot-watch-page.md`.
+**Tooling only: it makes no claims, gates nothing, and no fixture or
+verifier depends on it.** G1/G2 are unchanged except the one pin below.
+
+```
+http://localhost:8000/frontend/modules/seedlingDemo/watch.html
+    ?tape=frontend/modules/seedlingDemo/fixtures/tapes/pit-fall-chain-85.json
+    &side=js            # or side=wasm; &speed=N paces the JS side
+```
+
+`watch.html` + `watchViewer.js`, plain ES modules served statically off the
+repo-root dev server. Deliberately NOT a GL panel: no `__BUNDLED_MODULES__`
+entry, no substrate registration — `seedlingDemo` is an engine-only module
+and a standalone static page needs neither.
+
+### 10.1 One engine loop, two faces
+
+`runTape` used to BE the tick loop. It now drives `createTapeStepper` and
+returns what that generator returns; the viewer consumes the same stepper
+one tick at a time. A private loop in the viewer would be the
+verifier-shared-assumption trap in tooling clothes — two copies agree until
+one is edited, and the one nobody tests is the one that drifts.
+
+Pinned in `tapeRunner.test.js`: stepping **all 16 committed fixtures** to
+completion yields observations, transitions, transports, grants, inventory
+and final state identical to `runTape`'s, byte for byte. Setup validation
+stays EAGER (a caller holding a stepper should already know the tape runs);
+only the loop is lazy. ⚠ The unfired-grant check fires at the END of the
+loop, so a consumer that stops early skips it — honestly, but silently,
+which is why nothing that makes a claim may consume the stepper.
+
+What the stepper hands the viewer is the point: **velocity, the sticky
+terrain state, the latch and the pit-transport phase** — model state the
+observation stream cannot carry, and exactly what makes a route debuggable.
+
+### 10.2 ⚠ The first browser caller found a trap in `levelSource`
+
+`levelSource.js` documented `levelSourceFromAtlas` as the browser seam and
+said it "has no node dependency". True of the FUNCTION, false of the FILE,
+which imports `node:fs`/`node:url` at the top for `atlasLevelSource()`. **An
+ES module runs every import before any export is reachable**, so a browser
+died on `node:fs` and never reached the function. Nothing was wrong until
+something tried it.
+
+Split into `atlasSource.js` — no imports of any kind — and re-exported from
+`levelSource.js`, so every existing node caller is untouched. Generalised in
+memory as `feedback_browser_safe_export_node_module`.
+
+### 10.3 ⚠⚠ The parent must NOT start the wasm game, not even as a fallback
+
+The frame's own entry point is
+`__swfBridgeStart = () => { if (started || !__runtimeReady) return false;
+started = true; btn.style.display = 'none'; Module.ccall('runSWF', …) }`,
+and its comment says it **must run inside a user-gesture handler in that
+document** — the WebGPU renderer init and the AudioContext consume the
+activation.
+
+A first cut here clicked `#btn-start` from the parent as a harmless-looking
+convenience. It is the opposite of harmless: it **latches `started = true`
+and hides the button** before `runSWF`, so the game starts with no
+activation AND the user's real click becomes impossible. Observed exactly
+that: `__swfBridge.game` present (so the shim looks healthy),
+`game.botStatus` never appearing, and the wait spinning for its whole
+timeout. The page now asks the user to press the frame's own Start and
+POLLS for the callbacks — and nothing else.
+
+### 10.4 What was verified, and what was not
+
+Headless against the running dev server:
+
+- **js side** — the pit chain (221 observations, transitions at 28 and 89,
+  the descent visible mid-air at tick 100 with `y = -4.4`, `v.y = 1.1`,
+  transport phase `descent yStart 72`); `grant-sword-room` (377
+  observations, 4 transitions, 1 grant); a v1 tape; the no-tape usage
+  message; a missing tape named as a 404. No page errors.
+- **wasm side** — the runtime detected, the click prompt shown, the frame's
+  own Start button VISIBLE (which is the proof the parent no longer burns
+  it), and a real click landing.
+- ⚠ **NOT confirmed headless: the wasm side driving a tape to completion.**
+  Once the game starts it pegs the main thread — WSL's Chromium is
+  SwiftShader at ~0.5 fps — and every `page.evaluate` comes back STARVED.
+  The calls themselves (`botLoadTape`/`botStart`/`botStatus` through
+  `frame.contentWindow.__swfBridge.game`) are the same ones
+  `seedling-bot-replay-win.py` has driven all rung long. This side is
+  local-only by nature and meant for a human on a real GPU; a headless
+  SwiftShader confirmation is not worth its wall-clock.
+
+### 10.5 Rendering rule: RAW TRUTH
+
+No smoothing, no interpolation between ticks, dead frames counted rather
+than elided, and the terrain readout shows the **RAW state beside the
+EFFECTIVE one** because `noHazards` is exactly their difference. The canvas
+draws tiles by TYPE (not by tileset column), object solids, pixelmasks,
+teleporter volumes, pit tiles outlined as the transport they are, the avoid
+volumes — rect and disc, each as the GAME tests it — and a breadcrumb of one
+raw sample per tick. A viewer that tidied any of that up would hide the next
+divergence.
