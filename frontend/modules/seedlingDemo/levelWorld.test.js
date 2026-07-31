@@ -28,6 +28,8 @@ import {
     LevelWorldError,
     MODELLED_TILE_TYPES,
     PLAYER_SOLID_TYPES,
+    RELAXED_ROLES,
+    ROLES,
     STAIRS_TAGS,
     buildLevelWorld,
     entityRect,
@@ -140,19 +142,30 @@ describe('census: every fixture level is fully classified', () => {
         // The provenance IS the review surface — the source is out of repo.
         for (const [tag, cls] of Object.entries(ENTITY_CLASSES)) {
             expect(cls.src, `${tag} has no src`).toBeTruthy();
-            expect(['rect', 'pixelmask', 'trigger', 'none']).toContain(cls.collider);
-            // A class that does not block must say WHY, so nobody later
-            // reads the omission as an oversight and "fixes" it.
-            if (cls.collider === 'none') expect(cls.why, `${tag} has no why`).toBeTruthy();
+            expect(Array.isArray(cls.roles), `${tag} has no roles`).toBe(true);
+            expect(cls.roles.length, `${tag} is classified for nothing`).toBeGreaterThan(0);
+            for (const role of cls.roles) expect(ROLES).toContain(role);
+            if (cls.roles.includes('blocking')) {
+                expect(['rect', 'pixelmask', 'trigger', 'none']).toContain(cls.collider);
+                // A class that does not block must say WHY, so nobody later
+                // reads the omission as an oversight and "fixes" it.
+                if (cls.collider === 'none') expect(cls.why, `${tag} has no why`).toBeTruthy();
+            } else {
+                // An entry that declines the blocking role must say what it
+                // IS, or "unclassified for blocking" reads as an oversight.
+                expect(cls.why, `${tag} has no why`).toBeTruthy();
+                expect(cls.collider, `${tag} declines blocking but has a collider`)
+                    .toBeUndefined();
+            }
         }
         expect(CLIFFSIDE_CLASS.src).toBeTruthy();
     });
 
-    it('an unclassified entity is a NAMED failure, not a silent non-collider', () => {
+    it('an entity absent from the table is a NAMED failure, not a silent non-collider', () => {
         expect(() => buildLevelWorld({
             level: 999, width: 2, height: 2, layers: [],
-            entities: [{ type: 'tentaclebeast', x: 0, y: 0 }],
-        })).toThrow(/tentaclebeast.*not in the transcribed class table/s);
+            entities: [{ type: 'nosuchtag', x: 0, y: 0 }],
+        })).toThrow(/nosuchtag.*not in the transcribed class table/s);
     });
 
     it('an unknown layer is a NAMED failure', () => {
@@ -614,5 +627,177 @@ describe('the pixelmask seam', () => {
                     `${name} tick ${o.t} at (${o.x},${o.y})`).toBeNull();
             }
         }
+    });
+});
+
+/**
+ * R0: the ROLE census.
+ *
+ * v2's all-or-nothing throw was right while every caller ran collision. It
+ * is the wrong shape for a `noclip` walk, which never asks whether a `bob`
+ * blocks — and pricing 115 collider footprints to find that out is R2's
+ * bill. So a tag is classified per role and the builder throws only for a
+ * role the caller consults.
+ *
+ * The two guards that make this honest rather than merely permissive:
+ * the CHEAP-role census is wider than the fixture levels (all 116, exactly
+ * like the trigger census that `stairsup` taught), and a hazard whose avoid
+ * volume nobody has transcribed is `'unpriced'` — a loud throw, not a
+ * guessed rect.
+ */
+describe('roles: the census is per-role, and wider than the fixture levels', () => {
+    const atlas = MAP;
+
+    it('classifies EVERY tag in all 116 levels for the three cheap roles', () => {
+        // The wide census. A missing trigger is an exit that silently does
+        // not exist; a missing pickup or proximity hazard is worse — not a
+        // loud throw anywhere useful, but a mid-walk deadlock, 150 frozen
+        // frames, or a shifted global RNG stream, all of which surface as
+        // "the physics diverged".
+        const unclassified = new Map();
+        for (const level of atlas.levels) {
+            for (const e of level.entities ?? []) {
+                const cls = ENTITY_CLASSES[e.type];
+                const missing = cls
+                    ? RELAXED_ROLES.filter((r) => !cls.roles.includes(r))
+                    : [...RELAXED_ROLES];
+                if (missing.length) unclassified.set(e.type, missing);
+            }
+        }
+        expect([...unclassified.entries()]).toEqual([]);
+    });
+
+    it('has exactly one entry per tag the extract actually uses', () => {
+        // Both directions. An entry for a tag no level carries is a
+        // transcription of something that cannot be checked against
+        // anything, and would rot silently.
+        const used = new Set();
+        for (const level of atlas.levels) {
+            for (const e of level.entities ?? []) used.add(e.type);
+        }
+        expect([...used].sort()).toEqual(Object.keys(ENTITY_CLASSES).sort());
+        expect(used.size).toBe(137);
+    });
+
+    it('lets a relaxed walk build levels the full census refuses', () => {
+        // The number that says whether the relaxation was worth doing.
+        // v2 built 3 of 116; classifying the level FLAGS (lightalpha alone
+        // appears in 98 levels), the fifteen pickups and the chest lifts the
+        // FULL census to 11, and consulting only the cheap roles reaches 82.
+        let full = 0;
+        let relaxed = 0;
+        for (const level of atlas.levels) {
+            try { buildLevelWorld(level); full++; } catch { /* priced at R2 */ }
+            try { buildLevelWorld(level, { roles: RELAXED_ROLES }); relaxed++; } catch {
+                /* an unpriced hazard or a Bridge tile */
+            }
+        }
+        expect(full).toBe(11);
+        expect(relaxed).toBe(82);
+    });
+
+    it('builds every level on the R0 witness chain, and level 94', () => {
+        // boot(0) -> 2 -> 3 -> 11 -> 10, the shortest live-trigger chain to
+        // the sword's room. If this ever stops holding, the witness walk is
+        // no longer synthesizable and the rung's fixture is the first thing
+        // to notice.
+        for (const n of [0, 2, 3, 11, 10, 94]) {
+            expect(() => buildLevelWorld(levelRecord(n), { roles: RELAXED_ROLES }),
+                `level ${n}`).not.toThrow();
+        }
+    });
+
+    it('still throws for a role the caller DOES consult', () => {
+        // The relaxation must not become "throws less". Level 2 is on the
+        // witness chain and builds relaxed; asking it about blocking still
+        // names the tag and the role.
+        expect(() => buildLevelWorld(levelRecord(2)))
+            .toThrow(/classified for \[trigger, pickup, proximity-hazard\] but NOT for the "blocking" role/);
+    });
+
+    it('rejects an unknown role name rather than silently consulting nothing', () => {
+        expect(() => buildLevelWorld(levelRecord(0), { roles: ['blockng'] }))
+            .toThrow(/unknown role "blockng"/);
+    });
+
+    it('defaults to ALL roles, so no existing caller changed behaviour', () => {
+        expect(buildLevelWorld(levelRecord(0)).roles).toEqual(ROLES);
+    });
+});
+
+describe('roles: pickups and proximity hazards are AVOID VOLUMES', () => {
+    const relaxed = (n) => buildLevelWorld(levelRecord(n), { roles: RELAXED_ROLES });
+
+    it('places the sword pickup at the ctor half-tile plus its setHitbox', () => {
+        // `Sword` is `super(_x + Tile.w/2, _y + Tile.h/2, ...)` then
+        // `setHitbox(8, 8, 4, 4)`, so oel (48,48) -> [52,60) x [52,60).
+        // Hand-derived; the same algebra as a blocking entry.
+        const w = relaxed(10);
+        expect(w.pickups).toHaveLength(1);
+        expect(w.pickups[0]).toMatchObject({ tag: 'sword', special: true });
+        expect(w.pickups[0].rect).toMatchObject({ x: 52, y: 52, right: 60, bottom: 60 });
+    });
+
+    it('gives the chest a volume that covers its OPEN LINE, not just its cell', () => {
+        // `Chest.update` collides a 1-px line at `y - originY + height + 1`,
+        // i.e. one pixel BELOW the cell. A volume that stopped at the cell
+        // would let a route walk the row that opens it — which spawns a
+        // special SealPiece and burns an unbounded number of Math.random()
+        // draws for the seal index.
+        const w = relaxed(11);
+        expect(w.proximityHazards).toHaveLength(1);
+        expect(w.proximityHazards[0]).toMatchObject({ tag: 'chest', kind: 'line-below' });
+        expect(w.proximityHazards[0].rect)
+            .toMatchObject({ x: 32, y: 48, right: 48, bottom: 66 });
+    });
+
+    it('bounds the watcher\'s 24 px talk CIRCLE by its square', () => {
+        // `FP.distance(x, y, p.x, p.y) <= talkRange` from the NPC's own
+        // centre (the ctor half-tile). Level 94's watcher is at oel
+        // (152,128) -> centre (160,136) -> [136,184) x [112,160).
+        const w = relaxed(94);
+        expect(w.proximityHazards).toHaveLength(1);
+        expect(w.proximityHazards[0]).toMatchObject({ tag: 'watcher', kind: 'auto-talk' });
+        expect(w.proximityHazards[0].rect)
+            .toMatchObject({ x: 136, y: 112, right: 184, bottom: 160 });
+    });
+
+    it('THROWS on a hazard whose volume nobody transcribed', () => {
+        // `'unpriced'` is a classification, not a gap: the tag IS a hazard,
+        // on cited evidence, and the volume is deliberately not guessed.
+        // Same shape as the pixelmask seam — a rung boundary made visible.
+        expect(() => buildLevelWorld({
+            level: 999, width: 2, height: 2, layers: [],
+            entities: [{ type: 'lavatrap', x: 0, y: 0 }],
+        }, { roles: RELAXED_ROLES })).toThrow(/PROXIMITY HAZARD whose avoid volume has not/);
+        // ...and the error carries the evidence, so nobody has to re-derive
+        // why a lava trap is not covered by `Bot.noDamage`.
+        expect(() => buildLevelWorld({
+            level: 999, width: 2, height: 2, layers: [],
+            entities: [{ type: 'lavatrap', x: 0, y: 0 }],
+        }, { roles: RELAXED_ROLES })).toThrow(/never goes through Player\.hit\(\)/);
+    });
+
+    it('reports overlaps through avoidVolumesAt, and nothing else does', () => {
+        const w = relaxed(10);
+        // The sword's own rect.
+        expect(w.avoidVolumesAt({ x: 54, y: 54, right: 58, bottom: 59 }))
+            .toMatchObject([{ kind: 'pickup' }]);
+        // One pixel clear of it.
+        expect(w.avoidVolumesAt({ x: 44, y: 54, right: 48, bottom: 59 })).toEqual([]);
+        // ⚠ And the v2 PLANNER face must not have noticed: a pickup is not
+        // a blocker, and if it became one the four v2 driver fixtures would
+        // re-route — and those are oracle recordings, so a re-route is a
+        // fixture rewrite rather than a test failure.
+        expect(w.plannerBlockerAt({ x: 54, y: 54, right: 58, bottom: 59 })).toBeNull();
+    });
+
+    it('reports nothing for a role the world was not built with', () => {
+        // Honest rather than empty: a world built without the pickup role
+        // has no pickups to report, and says so through its own `roles`.
+        const w = buildLevelWorld(levelRecord(10), { roles: ['trigger'] });
+        expect(w.roles).toEqual(['trigger']);
+        expect(w.pickups).toEqual([]);
+        expect(w.avoidVolumesAt({ x: 54, y: 54, right: 58, bottom: 59 })).toEqual([]);
     });
 });

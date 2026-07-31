@@ -106,7 +106,7 @@ describe('what the run owns', () => {
         // so eager construction would make level 0 itself unloadable.
         const run = createLevelRun({ levelSource, boot, noclip: false });
         expect(run.level).toBe(0);
-        expect(() => run.worldFor(12)).toThrow(/lightalpha/);
+        expect(() => run.worldFor(12)).toThrow(/NOT for the "blocking" role/);
         // ...and it memoises, so a revisited level is not rebuilt.
         expect(run.worldFor(0)).toBe(run.world);
     });
