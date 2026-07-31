@@ -1624,7 +1624,7 @@ routes themselves remain untried.
 - [x] R0: acceptance signal + machinery (AS3 batch, tape v2, role-relaxed
       builder, witness mini-walk)
       — **COMPLETE 2026-07-31** (slices 0/1a/1b/1c/2/3/4). The six-change
-        AS3 batch is built and deployed (fork `bot` @ b3c0c9b); tape format
+        AS3 batch is built and deployed (fork `bot` @ a976a07); tape format
         v2 carries `noDamage`/`noHazards` (a SET, so R4 can re-arm one at a
         time)/`grants`; `buildLevelWorld` relaxes BY ROLE with all 137 tags
         censused for trigger/pickup/proximity-hazard (3/116 levels built at

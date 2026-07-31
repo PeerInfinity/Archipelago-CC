@@ -685,8 +685,10 @@ executor hit-throw.
 
 ## 10. Slice 2 — the AS3 batch, AS BUILT (2026-07-31)
 
-Fork `PeerInfinity/Seedling` branch `bot` @ `b3c0c9b`. All six changes
-landed as specified, with two corrections found while writing them:
+Fork `PeerInfinity/Seedling` branch `bot` — `b3c0c9b` the batch itself,
+`a976a07` the version-1 check fix §11 forced, and **`a976a07` is the commit
+the deployed wasm was built from**. All six changes landed as specified,
+with two corrections found while writing them:
 
 ⚠ **The auto-advance key is X (88), not V.** §2 said `Input.released(p.keys[6])`
 was "V, keycode 86". `Player.as:59` is
