@@ -2845,13 +2845,25 @@ Claude, accepted by user). Full detail in `region-atlas-plan.md` Phase 8.**
   hit-throw — each killing hand-derived cases and NO fixture, because
   levels 0 and 94 are too benign. Witnesses are named, and **all are
   blocked by the same class table**, not by the baked-in boot.
-- **NEXT for the arc — v3 (item-gated terrain) is gated on ENTITY
-  SEMANTICS, not on anything v2 built:** 3 of 116 levels build, 115
-  unclassified entity tags, and no cheap prefix (`lightalpha` alone blocks
-  98 levels and buys 3 more; the top 20 tags buy 27 levels). Price any rung
-  by "which levels does it need" — a one-line query against
-  `levelWorld.ENTITY_CLASSES` — BEFORE scoping it. Sizing table: kickoff
-  §13.
+- ~~NEXT for the arc — v3 (item-gated terrain)~~ **SUPERSEDED: the ladder
+  above v2 is RE-PLANNED SUBTRACTIVE (Fable design session 2026-07-31,
+  four user rulings).** End-to-end first: disable collision + damage +
+  hazards, walk the whole game reaching all 13 non-combat items (granted
+  on entering each item's room, for now), then reintroduce one obstacle
+  type per rung — solids, interactions/real collection, hazards, enemies,
+  bosses — until the real game is beatable with zero crutches. The v2
+  class-table gate (3/116 levels, 115 tags, sizing in kickoff §13) now
+  prices the SOLIDS rung, not the next one — the relaxed walk escapes it
+  by relaxing `buildLevelWorld` by ROLE, and the exact differential holds
+  end-to-end at rung 1 (the JS mirrors every relaxation). **QUEUE NEXT for
+  this arc: `NewDocs/plans/seedling-bot-r0-opus-kickoff.md`** (rung 0: the
+  ONE six-change AS3 batch — auto-advance/readout/noDamage/param-boot/
+  noHazards/grants — tape format v2, role-relaxed builder, the item/win
+  acceptance signal, a witness mini-walk to the sword's room). Ladder +
+  rulings + new recon (pickup-ceremony deadlock, enemy knockback, the Seed
+  win condition, the full item census): 
+  `NewDocs/plans/seedling-bot-subtractive-plan.md`; ruling record also in
+  the plan doc's Phase 8 ladder.
 
 ## 6. Everything else (unchanged queues)
 

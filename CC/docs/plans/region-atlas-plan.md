@@ -1581,7 +1581,36 @@ routes themselves remain untried.
   - **NEXT (v3) is gated on entity semantics.** 3/116 levels build; 115
     unclassified tags; classifying the top 20 gets you 27 levels. Sizing
     table in kickoff §13.
-- The staged ladder below still stands for the real-game surface.
+- **THE LADDER ABOVE v2 IS RESTRUCTURED — SUBTRACTIVE, not additive
+  (user correction + 4 rulings, Fable design session 2026-07-31).** The
+  additive v3/v4/v5 sequence below was never the intended plan. The intended
+  one: disable collision/damage/hazards so the whole map is freely walkable,
+  generate a full playthrough that reaches all the items, then reintroduce
+  ONE obstacle type per rung until the full game is beatable — end-to-end
+  coverage first, every rung a full playthrough, progress measured in "what
+  still blocks us". Plan: `NewDocs/plans/seedling-bot-subtractive-plan.md`;
+  rung-0 kickoff: `NewDocs/plans/seedling-bot-r0-opus-kickoff.md` (both →
+  `CC/docs/plans/` at implementation start). Rulings (user 2026-07-31):
+  (1) rung 1 relaxes noclip + noDamage + noHazards, ALL mirrored exactly in
+  JS — the exact differential holds end-to-end, R1 is not a reconnaissance
+  artifact; (2) ONE AS3 batch (first since v1): dialogue auto-advance on
+  dead frames (walked-over special pickups otherwise DEADLOCK the tape —
+  dismissal is `Input.released` during frozen frames), item/win readout in
+  `botStatus` (the acceptance signal; win = the Seed's `Game.cutscene[]`/
+  `menu` statics), `Bot.noDamage` (enemy contact is a KNOCKBACK — position
+  divergence, not just damage), parameterised boot, `Bot.noHazards`
+  (coerce consumed terrain state at one choke point), tape-driven grants;
+  (3) removal order cheapest-machinery-first, invariant: after each rung
+  the full item walk is still completable with what is modelled; (4) items
+  are GRANTED ON REACHING THEIR ROOM for now (walk must physically reach
+  all 13 non-combat item rooms; real collection is its own later rung —
+  12 walk-over pickups + darksword from the Witch needing `hasWand`; only
+  `fire` is combat-gated, a BobBoss drop). The class-table gate (§13)
+  now prices R2 (solids return), not the next rung — R0/R1 escape it by
+  relaxing `buildLevelWorld` BY ROLE (blocking / trigger / pickup /
+  proximity-hazard / ignorable; census wider than fixture levels for the
+  graph-defining roles). The five bounded vacuities' witnesses become
+  reachable at R1.
 
 - [x] Seedling v1: collision fully disabled, move to targets
       — **COMPLETE 2026-07-30** (all 5 slices). Doc:
@@ -1589,14 +1618,21 @@ routes themselves remain untried.
 - [x] v2: wall collision + pathing
       — **COMPLETE 2026-07-30** (all 6 slices; see below). Doc: the same
         one, now extended to v2.
-- [ ] v3: item-gated terrain awareness — **gated on the ENTITY CLASS
-      TABLE, not on the boot, pathing or the toolchain** (3/116 levels
-      build; 115 unclassified tags; no cheap prefix — sizing table in the
-      v2 kickoff §13 and the doc)
-- [ ] v3 prerequisite worth doing first: price any rung by "which levels
-      does it need" — a one-line query against `levelWorld.ENTITY_CLASSES`
-- [ ] v4: puzzle elements with hand-written solutions
-- [ ] v5 (ambitious): enemy collision + avoid/defeat
+- [ ] R0: acceptance signal + machinery (AS3 batch, tape v2, role-relaxed
+      builder, witness mini-walk) — kickoff ready
+- [ ] R1: the relaxed full walk — 13 items granted room-by-room, exactly
+      differentially verified end-to-end
+- [ ] R2: solids return (noclip off) — pays the blocking-role class table
+      (sizing: v2 kickoff §13) + pixelmask extraction; interactive blockers
+      bridged by named persistence grants
+- [ ] R3: interactions + real collection (item use, rocks/ropes, locks;
+      grants retired) — absorbs old v3/v4's item-gate + puzzle scope
+- [ ] R4: hazards return (noHazards off): pits, water/swim (⚠ sound-stub
+      recon decides exactness), lava, ice
+- [ ] R5: enemies return (noDamage off) — `fire` from BobBoss → 14/14
+      (old v5)
+- [ ] R6: bosses + the ending — terminal win assertion live, zero crutches
+      = the real-game beatability proof
 - [ ] ~~RWK bot~~ — inherits Phase 7's indefinite postponement (2026-07-28)
 
 ### Deferred / adjacent (not this plan)
