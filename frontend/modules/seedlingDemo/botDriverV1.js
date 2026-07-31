@@ -74,8 +74,15 @@ export function coastDistance(vx, vy) {
     throw new Error('coastDistance did not converge — friction no longer snaps to zero?');
 }
 
-/** Which keys to hold this tick to approach `target` from `state`. */
-function chooseHeld(state, target, tolerance) {
+/**
+ * Which keys to hold this tick to approach `target` from `state`.
+ *
+ * Exported for `botDriverV2`: the pathing driver replaces WHERE it aims
+ * (waypoints from A* rather than the caller's target) and WHAT it drives
+ * (the real level, through `createLevelRun`), but the controller itself is
+ * this one. Two braking rules would be two models of the same physics.
+ */
+export function chooseHeld(state, target, tolerance) {
     const held = new Set();
     const coast = coastDistance(state.vx, state.vy);
 
@@ -98,7 +105,13 @@ function chooseHeld(state, target, tolerance) {
     return held;
 }
 
-function arrived(state, target, tolerance) {
+/**
+ * The arrival criterion, shared with `botDriverV2` for the same reason
+ * `chooseHeld` is: v2 carries it over unchanged, per the brief, and a
+ * second definition of "arrived" is a second definition of what the
+ * fixtures claim.
+ */
+export function hasArrived(state, target, tolerance) {
     return Math.abs(target.x - state.x) <= tolerance
         && Math.abs(target.y - state.y) <= tolerance
         // Require a full stop: an "arrival" while still moving would be a
@@ -147,7 +160,7 @@ export function synthesizeTape(targets, opts = {}) {
 
     targets.forEach((target, index) => {
         let ticksForThisTarget = 0;
-        while (!arrived(state, target, tolerance)) {
+        while (!hasArrived(state, target, tolerance)) {
             if (ticksForThisTarget >= maxTicksPerTarget) {
                 throw new Error(
                     `synthesizeTape: target ${index} (${target.x},${target.y}) not reached `
@@ -186,8 +199,14 @@ export function synthesizeTape(targets, opts = {}) {
  * (`perTick → spans → heldKeysAt`) is worth pinning in tests: an
  * off-by-one here would produce a tape that no longer means what the
  * planner simulated, and the game would be the first to notice.
+ *
+ * `opts.noclip` defaults TRUE because this module is the v1 rung and every
+ * tape it emits runs with collision off. `botDriverV2` passes false — it is
+ * the one thing about the emitted tape that differs between the rungs, and
+ * it stays an explicit argument rather than a second copy of the fold.
  */
-export function buildTape(perTick, boot = { level: 0, x: 80, y: 128 }, name) {
+export function buildTape(perTick, boot = { level: 0, x: 80, y: 128 }, name,
+    { noclip = true } = {}) {
     const open = new Map();   // key → span start tick
     const inputs = [];
 
@@ -211,7 +230,7 @@ export function buildTape(perTick, boot = { level: 0, x: 80, y: 128 }, name) {
         game: 'seedling',
         ...(name ? { name } : {}),
         boot: { level: boot.level, x: boot.x, y: boot.y },
-        noclip: true,
+        noclip,
         tick_count: perTick.length,
         inputs,
     };

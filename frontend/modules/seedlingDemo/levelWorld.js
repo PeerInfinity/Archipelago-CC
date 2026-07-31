@@ -233,18 +233,43 @@ export const ENTITY_CLASSES = Object.freeze({
     },
     statue2: {
         as3: 'Statue', collider: 'rect', type: 'Solid',
-        dx: 16, dy: -8, w: 48, h: 24, originX: 24, originY: 0,
-        src: 'NPCs/Statue.as:19-45 (new Statue(x, y, 1, ...))',
-        // Two transcription traps in one class:
-        // 1. The ctor y is `_y - Tile.h/2 + Tile.h*int(_t==0)`; for the
-        //    `statue2` tag `_t` is 1, so the second term is ZERO and the
-        //    offset is -8, not +8.
-        // 2. `setHitbox` is called from **render()**, not the constructor
-        //    (`Statue.as:34-45`). Until the first render the hitbox is
-        //    NPC's default (48x40 centred). Level 0's statue sits far from
-        //    any fixture route, so the first-frame difference is
-        //    unobservable — recorded rather than modelled, like the Tile
-        //    type flip.
+        dx: 24, dy: 0, w: 48, h: 24, originX: 24, originY: 0,
+        src: 'NPCs/Statue.as:19-45 via NPCs/NPC.as:47-49 (new Statue(x, y, 1, ...))',
+        // ⚠ CORRECTED at v2 slice 4 by the oracle, which is the only reason
+        // anybody found out. Level 0's statue is the ONLY entity in the
+        // table whose class adds an offset of its own ON TOP of NPC's, and
+        // the slice-1 transcription applied one of the two:
+        //     Statue ctor  super(_x + Tile.w, _y - Tile.h/2 + Tile.h*int(_t==0), ...)
+        //                  = (+16, -8) for the `statue2` tag, where _t is 1
+        //                    so the third term is ZERO
+        //     NPC ctor     super(_x + Tile.w/2, _y + Tile.h/2, _g)   = (+8, +8)
+        //     total        (+24, 0)
+        // (`IntroCharacter`, `AdnanCharacter`, `Rekcahdam` and `Watcher` all
+        // pass _x/_y straight through, so for them NPC's half-tile IS the
+        // whole offset and their entries were right.)
+        //
+        // With the render hitbox below, the world rect comes out as exactly
+        // [oel.x, oel.x + 48) x [oel.y, oel.y + 24) — which is worth stating
+        // because it looks like a coincidence and is not: originX is w/2 and
+        // dx is Tile.w + Tile.w/2 + ... no, it simply cancels.
+        //
+        // The old (16, -8) put the rect 8 px up and left of the truth, and
+        // NOTHING caught it until `thread-the-gap` walked past: the real
+        // game pinned x at 181.17065141119556 against the statue's left edge
+        // at 184, and the model walked straight through. Slice 1's own note
+        // said the statue "sits far from any fixture route" — true of the v1
+        // routes, and a reminder that "unobservable" is a claim about
+        // today's fixtures rather than about the game.
+        //
+        // ⚠ `setHitbox` is called from **render()**, not the constructor
+        // (`Statue.as:28-45`): frame 1 is `setHitbox(w, 24, w/2)` with
+        // originY defaulting to 0, and `w` is the Spritemap's FRAME width
+        // (`Game.as:348`: `new Spritemap(imgStatues, 48, 40)` over a 96x40
+        // sheet) — 48, not the image's 96. Before the first render the
+        // hitbox is NPC's default 48x40 centred. Unlike the Tile type flip
+        // that is NOT observable on tick 0, because render() is driven by
+        // the Engine independently of `Game.update`'s blackCover gate, so
+        // the ~18 fade frames have all rendered before the first live tick.
     },
     // --- pixelmask colliders: the loud-throw seam ------------------------
     // Ruled 2026-07-30: NOT modelled. Phase 5a already proved neither
@@ -621,6 +646,65 @@ export function buildLevelWorld(levelRecord) {
                 if (d < bestDist) { bestDist = d; best = tile; }
             }
             return best;
+        },
+
+        /**
+         * The PLANNER's view of the same geometry: what would stop, throw or
+         * strand the player at this position — reported, never thrown.
+         *
+         * `collidesSolid` above is the PHYSICS query and it throws on a
+         * pixelmask deliberately, so a tape that strays dies loudly. A
+         * planner cannot use it: routing around an obstacle by catching the
+         * exception that says you already hit it is not routing around it,
+         * and one stray probe would abort the whole search. So the seam has
+         * two faces, and the difference is exactly which of them is allowed
+         * to be quiet:
+         *
+         *   collidesSolid      physics — pixelmask THROWS, and must
+         *   plannerBlockerAt   planning — pixelmask is just a blocker
+         *
+         * The planner's is the STRICTLY WIDER notion of "blocked", because
+         * it also reports the two things that do not stop the player at all
+         * but end the run anyway:
+         *   - a pixelmask, which the physics refuses to model;
+         *   - an UNMODELLED TERRAIN tile (water, pit, lava, ice, waterfall)
+         *     overlapping the terrain probe rect. Those tiles are WALKABLE
+         *     geometry — nothing blocks the player — but standing on one
+         *     makes `assertModelledTerrain` throw. A planner that only asked
+         *     about solids would route a fixture straight into the lake.
+         *
+         * `probeRect` is `playerPhysicsV2.terrainProbeRect(x, y)`; pass it
+         * whenever the position is one the player would actually occupy.
+         * Omitting it skips the terrain arm (useful for asking a pure
+         * geometry question), which is why it is an explicit argument rather
+         * than derived from `box` here — this module does not own the
+         * probe's offset.
+         *
+         * The terrain arm OVER-approximates: it reports any unmodelled tile
+         * the probe rect touches, while `resolveTerrainState` picks only the
+         * NEAREST walkable tile and only when that one intersects. Wider is
+         * the right direction — an over-report routes the fixture elsewhere,
+         * an under-report is a run that dies mid-tape.
+         *
+         * Steady state only: no `beforeTypeFlip`. The first-tick pre-flip
+         * world is strictly more permissive (no tile is solid yet), so
+         * planning against the flipped world can only be more conservative.
+         */
+        plannerBlockerAt(box, probeRect = null) {
+            for (const p of pixelmasks) {
+                if (rectsOverlap(box, p.rect)) return { kind: 'pixelmask', blocker: p };
+            }
+            for (const s of solids) {
+                if (rectsOverlap(box, s.rect)) return { kind: 'solid', blocker: s };
+            }
+            if (probeRect) {
+                for (const tile of walkableTiles) {
+                    if (!MODELLED_TILE_SET.has(tile.t) && rectsOverlap(probeRect, tile.rect)) {
+                        return { kind: 'terrain', blocker: tile };
+                    }
+                }
+            }
+            return null;
         },
 
         /** Every live teleporter whose trigger volume the box overlaps. */

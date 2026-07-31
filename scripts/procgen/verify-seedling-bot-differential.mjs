@@ -93,8 +93,14 @@ const {
     EXPECTATIONS_DIR, fixtureNames, loadExpectation, loadTape,
 } = await import(join(REPO, 'frontend/modules/seedlingDemo/fixtures/index.js'));
 const {
-    DEFAULT_TOLERANCE, synthesizeTape,
+    DEFAULT_TOLERANCE,
 } = await import(join(REPO, 'frontend/modules/seedlingDemo/botDriverV1.js'));
+const {
+    synthesizeLegs,
+} = await import(join(REPO, 'frontend/modules/seedlingDemo/botDriverV2.js'));
+const {
+    atlasLevelSource,
+} = await import(join(REPO, 'frontend/modules/seedlingDemo/levelSource.js'));
 
 const RECORD = process.argv.includes('--record');
 /** `--only=name[,name...]` — restrict the sweep. Empty means "everything". */
@@ -375,20 +381,48 @@ try {
     }
 
     if (!RECORD && ONLY.size === 0) {
-        // The live bot-driver task: targets in, tape synthesized by the JS
-        // driver, and the arrival asserted from the GAME's own drained
-        // observations — the game's word, not the driver's.
-        const targets = [{ x: 120, y: 100 }];
-        const { tape, arrivals } = synthesizeTape(targets, { name: 'live-driver' });
+        // ── The live bot-driver task (v2 slice 4) ────────────────────────
+        // Targets in, tape synthesized by `botDriverV2` AT RUN TIME, and
+        // every claim asserted from the GAME's own drained observations —
+        // the game's word, not the driver's.
+        //
+        // v1's task was a straight line to one point with collision off,
+        // which the driver could not get wrong. This one is the brief's
+        // "thread-the-gap + cross-level" task: it plans A* around level 0's
+        // lake and its statue, walks into a NAMED teleporter, and plans
+        // again in level 94 — so a wrong hitbox, a wrong tile classification
+        // or a wrong transition anywhere in the model makes the real game
+        // end up somewhere else. It is deliberately NOT one of the committed
+        // fixtures: those replay a tape recorded earlier, while this plans
+        // a fresh one against the geometry as it stands right now.
+        const task = [
+            { level: 0, targets: [{ x: 264, y: 216 }], exit: { x: 0, y: 128 } },
+            { level: 94, targets: [{ x: 216, y: 200 }] },
+        ];
+        const levelSource = atlasLevelSource();
+        const { tape, arrivals, transitions } = synthesizeLegs(task, {
+            levelSource, name: 'live-driver',
+        });
         const { stream } = await replay('live-driver', tape);
         for (const a of arrivals) {
             const o = stream.ticks[a.tick];
             const ok = o
+                && o.level === a.level
                 && Math.abs(o.x - a.target.x) <= DEFAULT_TOLERANCE
                 && Math.abs(o.y - a.target.y) <= DEFAULT_TOLERANCE;
-            check(`live driver reaches target ${a.index} (${a.target.x},${a.target.y})`,
-                !!ok, o ? `game reported (${o.x}, ${o.y}) at tick ${a.tick}` : 'no observation');
+            check(`live driver reaches leg ${a.leg} target ${a.index} `
+                + `(${a.target.x},${a.target.y}) in level ${a.level}`,
+                !!ok, o ? `game reported (${o.x}, ${o.y}) in level ${o.level} at tick `
+                    + `${a.tick}` : 'no observation');
         }
+        // The crossing is the other half of the claim, and it is checked
+        // against the transitions DERIVED from the game's level field —
+        // which is why a driver that merely believed it had teleported
+        // cannot pass this.
+        check('live driver crosses exactly where it planned to',
+            JSON.stringify(stream.transitions) === JSON.stringify(transitions),
+            `game: ${JSON.stringify(stream.transitions)}, `
+            + `driver: ${JSON.stringify(transitions)}`);
     }
 } catch (e) {
     console.log(`FAIL: harness error — ${e.message}`);

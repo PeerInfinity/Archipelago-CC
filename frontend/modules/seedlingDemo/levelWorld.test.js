@@ -35,6 +35,7 @@ import {
 } from './levelWorld.js';
 import { loadExpectation } from './fixtures/index.js';
 import { HITBOX } from './playerPhysicsV1.js';
+import { playerBoxAt } from './playerPhysicsV2.js';
 import {
     TILE_COLUMN_TO_TYPE, TILE_TYPE_ENTITY_TYPES,
 } from '../flashPanel/seedlingSemantics.js';
@@ -162,6 +163,58 @@ describe('census: every fixture level is fully classified', () => {
     });
 });
 
+describe('plannerBlockerAt — the same seam with the throw taken off', () => {
+    // `collidesSolid` is the PHYSICS query and its pixelmask throw is
+    // load-bearing: a tape that strays must die loudly. A PLANNER cannot use
+    // it, because routing around an obstacle by catching the exception that
+    // says you already hit it is not routing around it, and one stray probe
+    // would abort the search. So the seam has two faces, and the tests below
+    // pin which of them is allowed to be quiet.
+
+    it('reports what collidesSolid THROWS on', () => {
+        const mask = L0.pixelmasks[0];
+        const box = playerBox(mask.rect.x + 4, mask.rect.y + 4);
+        expect(() => L0.collidesSolid(box)).toThrow(/unmodeled pixelmask collider/);
+        expect(L0.plannerBlockerAt(box)).toMatchObject({ kind: 'pixelmask' });
+    });
+
+    it('reports what collidesSolid returns', () => {
+        const rock = L0.solids.find((s) => s.tag === 'breakablerock');
+        const box = playerBox(rock.rect.x + 8, rock.rect.y + 8);
+        expect(L0.collidesSolid(box)).toBe(rock);
+        expect(L0.plannerBlockerAt(box)).toMatchObject({ kind: 'solid', blocker: rock });
+    });
+
+    it('ALSO reports unmodelled terrain, which collidesSolid cannot see', () => {
+        // This is the arm that is not a collision at all. Water is walkable
+        // geometry — the player swims straight in — but standing on it ends
+        // the run through `assertModelledTerrain`. A planner asking only
+        // about solids would route a fixture into the lake, which is exactly
+        // what a first cut of slice 4 did.
+        const water = L0.tiles.find((t) => t.t === 1);
+        const at = { x: water.x, y: water.y };
+        const box = playerBox(at.x, at.y);
+        const probe = { ...box, y: box.y + 1, bottom: box.bottom + 1 };
+        expect(L0.collidesSolid(box)).toBeNull();
+        expect(L0.plannerBlockerAt(box)).toBeNull();
+        expect(L0.plannerBlockerAt(box, probe))
+            .toMatchObject({ kind: 'terrain', blocker: { t: 1 } });
+    });
+
+    it('the terrain arm needs the probe rect passed in, not derived here', () => {
+        // `checkOffsetY` belongs to the PLAYER (`Player.as:416`), not to the
+        // level, so this module does not own it and does not invent it.
+        // Omitting the rect asks a pure geometry question instead.
+        const water = L0.tiles.find((t) => t.t === 1);
+        expect(L0.plannerBlockerAt(playerBox(water.x, water.y))).toBeNull();
+    });
+
+    it('is clear where the physics is clear', () => {
+        expect(L0.plannerBlockerAt(playerBox(88, 136), playerBox(88, 137))).toBeNull();
+        expect(L0.collidesSolid(playerBox(88, 136))).toBeNull();
+    });
+});
+
 describe('the player collides with Mobile.solids + LavaBoss', () => {
     it('is the base list plus the unconditional Player ctor push', () => {
         expect(PLAYER_SOLID_TYPES)
@@ -195,13 +248,40 @@ describe('footprints, hand-derived from the constructors', () => {
             .toMatchObject({ x: 172, y: 195, right: 181, bottom: 205 });
     });
 
-    it('the statue offsets DOWNWARD by a half tile, not upward', () => {
-        // `_y - Tile.h/2 + Tile.h*int(_t==0)`: the statue2 tag passes _t=1,
-        // so the second term is zero and the net offset is -8. Reading the
-        // expression as "+8 for the usual half-tile" is wrong by 16px.
-        expect(ENTITY_CLASSES.statue2.dy).toBe(-8);
+    it('the statue stacks TWO constructor offsets, and slice 1 applied one', () => {
+        // ⚠ CORRECTED at v2 slice 4 — by the real game, not by re-reading.
+        // `Statue` is the only class in the table that offsets on top of
+        // NPC's:
+        //     Statue  super(_x + Tile.w, _y - Tile.h/2 + Tile.h*int(_t==0))
+        //             = (+16, -8), since the statue2 tag passes _t = 1 and
+        //               the third term is therefore zero
+        //     NPC     super(_x + Tile.w/2, _y + Tile.h/2, _g) = (+8, +8)
+        // Slice 1 read the first and stopped, putting the rect 8 px up and
+        // left of the truth, and nothing noticed until `thread-the-gap`
+        // planned a route through it: the game pinned x at
+        // 181.17065141119556 against a left edge of 184 that the model did
+        // not have. See the entry's own comment for the full trail.
+        expect(ENTITY_CLASSES.statue2.dx).toBe(24);
+        expect(ENTITY_CLASSES.statue2.dy).toBe(0);
         expect(entityRect(ENTITY_CLASSES.statue2, 184, 160))
-            .toMatchObject({ x: 176, y: 152, right: 224, bottom: 176 });
+            .toMatchObject({ x: 184, y: 160, right: 232, bottom: 184 });
+        // The stop the game recorded, to the pixel: one more step right
+        // would put the player's box edge at 184.17 and inside the statue.
+        expect(rectsOverlap(playerBoxAt(181.17065141119556, 183.31024524876432),
+            entityRect(ENTITY_CLASSES.statue2, 184, 160))).toBe(false);
+        expect(rectsOverlap(playerBoxAt(182.17065141119556, 183.31024524876432),
+            entityRect(ENTITY_CLASSES.statue2, 184, 160))).toBe(true);
+    });
+
+    it('every other NPC passes its coordinates straight through to NPC', () => {
+        // The counter-check that makes the correction above a one-class fix
+        // rather than a guess: `IntroCharacter`, `AdnanCharacter`,
+        // `Rekcahdam` and `Watcher` all call `super(_x, _y, spr, ...)`, so
+        // NPC's half-tile IS their whole offset.
+        for (const tag of ['introchar', 'adnanchar', 'rekcahdam']) {
+            expect([tag, ENTITY_CLASSES[tag].dx, ENTITY_CLASSES[tag].dy])
+                .toEqual([tag, 8, 8]);
+        }
     });
 
     it('NPCs are SOLID — nothing about the tag says so', () => {

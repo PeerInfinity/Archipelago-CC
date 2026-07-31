@@ -1,0 +1,105 @@
+{
+  "tape_version": 1,
+  "game": "seedling",
+  "name": "statue-press",
+  "description": "THE STATUE PIN. A driver-planned approach with a HAND-AUTHORED tail: botDriverV2 walks to (168,184) — tile (10,11), the cell directly west of the statue at oel (184,160) — and then RIGHT is held for 40 ticks straight into its left edge. The driver cannot produce the press itself: its whole job is to never touch a wall, and tile (11,11) is not even a legal goal because the player box does not fit at its centre. This exists because the statue was the one entity in the class table carrying TWO constructor offsets — Statue's (+16,-8) on top of NPC's (+8,+8) — and slice 1 applied only the first, putting the collider 8 px up and left. Nothing caught it until a pathing fixture walked past. With the route now planned AROUND the statue, this is the fixture that puts the corrected rect back under the oracle: the pinned x is a direct measurement of the collider's left edge, and the 8 px error moves it.",
+  "boot": {
+    "level": 0,
+    "x": 80,
+    "y": 128
+  },
+  "noclip": false,
+  "tick_count": 150,
+  "inputs": [
+    {
+      "key": "right",
+      "from": 0,
+      "to": 11
+    },
+    {
+      "key": "down",
+      "from": 0,
+      "to": 39
+    },
+    {
+      "key": "left",
+      "from": 11,
+      "to": 12
+    },
+    {
+      "key": "right",
+      "from": 12,
+      "to": 13
+    },
+    {
+      "key": "left",
+      "from": 13,
+      "to": 14
+    },
+    {
+      "key": "right",
+      "from": 14,
+      "to": 15
+    },
+    {
+      "key": "left",
+      "from": 18,
+      "to": 20
+    },
+    {
+      "key": "right",
+      "from": 22,
+      "to": 24
+    },
+    {
+      "key": "left",
+      "from": 27,
+      "to": 28
+    },
+    {
+      "key": "up",
+      "from": 39,
+      "to": 40
+    },
+    {
+      "key": "down",
+      "from": 40,
+      "to": 41
+    },
+    {
+      "key": "up",
+      "from": 44,
+      "to": 45
+    },
+    {
+      "key": "right",
+      "from": 49,
+      "to": 102
+    },
+    {
+      "key": "left",
+      "from": 102,
+      "to": 103
+    },
+    {
+      "key": "right",
+      "from": 103,
+      "to": 104
+    },
+    {
+      "key": "left",
+      "from": 104,
+      "to": 105
+    },
+    {
+      "key": "right",
+      "from": 105,
+      "to": 106
+    },
+    {
+      "key": "right",
+      "from": 110,
+      "to": 150
+    }
+  ]
+}

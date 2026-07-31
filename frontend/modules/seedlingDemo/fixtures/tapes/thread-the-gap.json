@@ -1,0 +1,160 @@
+{
+  "tape_version": 1,
+  "game": "seedling",
+  "name": "thread-the-gap",
+  "description": "THE PATHING WITNESS, synthesized by botDriverV2 (A* over walkable tiles + greedy smoothing + the v1 bang-bang controller through the real step()). Spawn is tile (5,8); the target (264,216) is tile (16,13). The STRAIGHT line between them crosses level 0's lake — tiles (8,9),(9,9),(8,10) are Water (t=1), which blocks nothing in the game but ends a v2 run through assertModelledTerrain — so a driver that could not plan would either die on the terrain seam or need noclip. The route instead threads the 3-tile gap in row 10 (tx 4..6, walled by cliff at tx 0..3 and the lake at tx 7..8), runs east along the open row 11, and cuts down to row 13 clear of the statue at oel (184,160), whose collider covers [184,232)x[160,184). Smoothing collapses the tile path to three waypoints. Every waypoint is reached with a full stop (v1 arrival criterion, carried over) and the run touches nothing: a sweep hit en route would be a planner bug and the driver THROWS rather than re-planning. Its FIRST recording is why the statue rect is right: the driver planned through it with a hitbox 8 px off, and the game pinned x at 181.17065141119556 against an edge the model did not have.",
+  "boot": {
+    "level": 0,
+    "x": 80,
+    "y": 128
+  },
+  "noclip": false,
+  "tick_count": 197,
+  "inputs": [
+    {
+      "key": "right",
+      "from": 0,
+      "to": 11
+    },
+    {
+      "key": "down",
+      "from": 0,
+      "to": 39
+    },
+    {
+      "key": "left",
+      "from": 11,
+      "to": 12
+    },
+    {
+      "key": "right",
+      "from": 12,
+      "to": 13
+    },
+    {
+      "key": "left",
+      "from": 13,
+      "to": 14
+    },
+    {
+      "key": "right",
+      "from": 14,
+      "to": 15
+    },
+    {
+      "key": "left",
+      "from": 18,
+      "to": 20
+    },
+    {
+      "key": "right",
+      "from": 22,
+      "to": 24
+    },
+    {
+      "key": "left",
+      "from": 27,
+      "to": 28
+    },
+    {
+      "key": "up",
+      "from": 39,
+      "to": 40
+    },
+    {
+      "key": "down",
+      "from": 40,
+      "to": 41
+    },
+    {
+      "key": "up",
+      "from": 44,
+      "to": 45
+    },
+    {
+      "key": "right",
+      "from": 49,
+      "to": 102
+    },
+    {
+      "key": "left",
+      "from": 102,
+      "to": 103
+    },
+    {
+      "key": "right",
+      "from": 103,
+      "to": 104
+    },
+    {
+      "key": "left",
+      "from": 104,
+      "to": 105
+    },
+    {
+      "key": "right",
+      "from": 105,
+      "to": 106
+    },
+    {
+      "key": "down",
+      "from": 110,
+      "to": 134
+    },
+    {
+      "key": "right",
+      "from": 110,
+      "to": 187
+    },
+    {
+      "key": "up",
+      "from": 134,
+      "to": 135
+    },
+    {
+      "key": "down",
+      "from": 135,
+      "to": 136
+    },
+    {
+      "key": "up",
+      "from": 136,
+      "to": 137
+    },
+    {
+      "key": "down",
+      "from": 137,
+      "to": 138
+    },
+    {
+      "key": "up",
+      "from": 138,
+      "to": 139
+    },
+    {
+      "key": "down",
+      "from": 139,
+      "to": 140
+    },
+    {
+      "key": "up",
+      "from": 143,
+      "to": 144
+    },
+    {
+      "key": "left",
+      "from": 187,
+      "to": 188
+    },
+    {
+      "key": "right",
+      "from": 188,
+      "to": 190
+    },
+    {
+      "key": "left",
+      "from": 191,
+      "to": 193
+    }
+  ]
+}

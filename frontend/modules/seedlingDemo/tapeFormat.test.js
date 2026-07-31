@@ -11,6 +11,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+    BUILD_SPAWN,
     deriveTransitions,
     diffObservationStreams,
     FORBIDDEN_KEYS,
@@ -114,6 +115,56 @@ describe('validation is loud, never defaulting', () => {
             { key: 'right', from: 0, to: 5 },
             { key: 'down', from: 2, to: 12 },
         ])).tick_count).toBe(12);
+    });
+});
+
+describe('the boot block is a CLAIM about the build, and is checked', () => {
+    // v2 slice 0 found that `Bot.as` assigns `bootLevel = int(t.boot.level)`
+    // and never reads it, and never looks at boot.x/boot.y at all: the spawn
+    // is baked into the SWF at `Main.as:51` as `new Game(0, 80, 128)`. So a
+    // tape declaring anything else is HONOURED by the JS engine and IGNORED
+    // by the game, and the differential blames the physics for what is
+    // entirely bookkeeping. Slice 4 made it a named error — the format's own
+    // rule ("never a silent default") applied to the one field that was
+    // exempt from it.
+
+    it('declares the build spawn as a constant, not a magic number', () => {
+        expect(BUILD_SPAWN).toEqual({ level: 0, x: 80, y: 128 });
+    });
+
+    it('accepts the build spawn', () => {
+        expect(parseTape(base).boot).toEqual(BUILD_SPAWN);
+    });
+
+    it('refuses a different level, x, or y — each by name', () => {
+        for (const boot of [
+            { level: 7, x: 80, y: 128 },
+            { level: 0, x: 96, y: 128 },
+            { level: 0, x: 80, y: 144 },
+        ]) {
+            expect(() => parseTape({ ...base, boot }))
+                .toThrow(/build always spawns at .*Main\.as:51/s);
+        }
+    });
+
+    it('still type-checks the fields before comparing them', () => {
+        // The build check must not swallow the shape check: "boot.x must be
+        // a finite number" is a better error than "it is not 80".
+        expect(() => parseTape({ ...base, boot: { level: 0, x: 'eighty', y: 128 } }))
+            .toThrow(/boot\.x must be a finite number/);
+        expect(() => parseTape({ ...base, boot: { level: 0.5, x: 80, y: 128 } }))
+            .toThrow(/boot\.level must be an integer/);
+    });
+
+    it('points at the way OUT, because there is one', () => {
+        // The error has to say what to do instead, or the next person
+        // reaches for a default. Walking is the answer at this rung; the
+        // parameterised boot is an AS3 edit and therefore a batch.
+        let message = '';
+        try { parseTape({ ...base, boot: { level: 94, x: 80, y: 128 } }); }
+        catch (e) { message = e.message; }
+        expect(message).toMatch(/Walk to another level/);
+        expect(message).toMatch(/BUILD_SPAWN/);
     });
 });
 

@@ -76,10 +76,26 @@ describe('record-then-act indexing', () => {
         expect(ticks[1].x).toBeCloseTo(88.8, 12);   // after ONE tick of input
     });
 
-    it('carries the boot level on every observation', () => {
-        const { ticks } = runTape(tape([{ key: 'right', from: 0, to: 3 }],
-            { boot: { level: 7, x: 80, y: 128 } }));
-        expect(ticks.every((o) => o.level === 7)).toBe(true);
+    it('carries the level on every observation', () => {
+        const { ticks } = runTape(tape([{ key: 'right', from: 0, to: 3 }]));
+        expect(ticks.every((o) => o.level === 0)).toBe(true);
+    });
+
+    it('REFUSES a boot the baked-in build cannot take', () => {
+        // This test used to boot into level 7 to prove the level field
+        // propagates. It cannot any more, and that is the point: the spawn
+        // is baked in at Main.as:51 and Bot.as reads neither boot.x nor
+        // boot.y, so a tape declaring anything else is honoured here and
+        // ignored by the game — the exact asymmetry the format exists to
+        // prevent (v2 slice 0's finding, checked from slice 4). Level
+        // propagation is covered far better by `transition-west-return`,
+        // which crosses for real.
+        expect(() => runTape(tape([{ key: 'right', from: 0, to: 3 }],
+            { boot: { level: 7, x: 80, y: 128 } })))
+            .toThrow(/build always spawns at/);
+        expect(() => runTape(tape([{ key: 'right', from: 0, to: 3 }],
+            { boot: { level: 0, x: 96, y: 128 } })))
+            .toThrow(/build always spawns at/);
     });
 
     it('emits no transitions for a run that crosses no level', () => {

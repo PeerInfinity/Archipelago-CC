@@ -96,6 +96,26 @@
 export const TAPE_VERSION = 1;
 
 /**
+ * ⚠ THE SPAWN IS BAKED INTO THE BUILD, so a tape's `boot` block is a CLAIM
+ * about the build rather than an instruction to it.
+ *
+ * `Main.as:51` is `FP.world = new Game(0, 80, 128)`, and `Bot.as` assigns
+ * `bootLevel = int(t.boot.level)` and then never reads it — `boot.x`/`boot.y`
+ * it does not look at at all. So a tape declaring anything else is silently
+ * HONOURED by the JS engine and silently IGNORED by the game, and the
+ * differential blames the physics for a disagreement that is entirely
+ * bookkeeping. That is exactly the asymmetric interpretation this format
+ * exists to make impossible, so it is a named error like every other
+ * ambiguity here (found in v2 slice 0; the check is slice 4's).
+ *
+ * When the build gains a parameterised boot — an AS3 edit, and therefore
+ * something to batch — this constant is the ONE place that changes, and
+ * `parseTape` becomes a check that the tape names a boot the build can
+ * actually take rather than the single one it always takes.
+ */
+export const BUILD_SPAWN = Object.freeze({ level: 0, x: 80, y: 128 });
+
+/**
  * The ONE canonical key-name → AS3 keycode table, asserted by both
  * consumers. Source of truth: `Player.as:59`
  *   keys = [RIGHT, UP, LEFT, DOWN, X, C, X, V, I]
@@ -202,6 +222,20 @@ export function parseTape(input) {
     requireInt(boot.level, 'boot.level');
     requireFiniteNumber(boot.x, 'boot.x');
     requireFiniteNumber(boot.y, 'boot.y');
+    // See BUILD_SPAWN: the game cannot be told where to start, so a boot
+    // block that disagrees with the build is a tape the two consumers read
+    // differently — the one failure this format exists to prevent.
+    if (boot.level !== BUILD_SPAWN.level || boot.x !== BUILD_SPAWN.x
+        || boot.y !== BUILD_SPAWN.y) {
+        fail(`boot is {level: ${boot.level}, x: ${boot.x}, y: ${boot.y}}, but the bot `
+            + `build always spawns at {level: ${BUILD_SPAWN.level}, x: ${BUILD_SPAWN.x}, `
+            + `y: ${BUILD_SPAWN.y}} — it is baked in at Main.as:51 and Bot.as reads `
+            + 'neither boot.x nor boot.y. The JS engine would honour this block and the '
+            + 'game would ignore it, so the differential would blame physics for a '
+            + 'bookkeeping disagreement. Walk to another level instead of booting into '
+            + 'it, or parameterise the build (an AS3 edit — batch it) and update '
+            + 'BUILD_SPAWN.');
+    }
 
     if (!Array.isArray(raw.inputs)) {
         fail(`inputs must be an array, got ${typeof raw.inputs}`);

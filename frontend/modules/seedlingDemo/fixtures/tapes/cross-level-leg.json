@@ -1,0 +1,160 @@
+{
+  "tape_version": 1,
+  "game": "seedling",
+  "name": "cross-level-leg",
+  "description": "THE CROSS-LEVEL WITNESS, synthesized by botDriverV2 from three legs: level 0 (walk to (88,168), then exit through the teleporter at oel (0,128)), level 94 (walk to (216,200), then exit through (304,160)), level 0 (arrival, no targets). The CALLER names each teleporter; the driver never searches the graph. Unlike transition-west-return, whose crossings come from a hand-authored hold, every tick here is planned around real geometry in BOTH levels — level 94 is walled by a TreeLarge pixelmask and nine cliffsides, so the return route has to be planned, not guessed. It also pins the seam the physics refuses: the aim point for an exit is the trigger's centre, which for level 0's west pair at (0,128)/(0,144) means y=136 and not the ambiguous band y in (141,146) where both volumes overlap with different arrivals. Two transitions, at the ticks the transitions records name.",
+  "boot": {
+    "level": 0,
+    "x": 80,
+    "y": 128
+  },
+  "noclip": false,
+  "tick_count": 257,
+  "inputs": [
+    {
+      "key": "down",
+      "from": 0,
+      "to": 27
+    },
+    {
+      "key": "up",
+      "from": 29,
+      "to": 31
+    },
+    {
+      "key": "up",
+      "from": 35,
+      "to": 59
+    },
+    {
+      "key": "left",
+      "from": 35,
+      "to": 163
+    },
+    {
+      "key": "down",
+      "from": 59,
+      "to": 60
+    },
+    {
+      "key": "up",
+      "from": 60,
+      "to": 61
+    },
+    {
+      "key": "down",
+      "from": 61,
+      "to": 62
+    },
+    {
+      "key": "up",
+      "from": 62,
+      "to": 63
+    },
+    {
+      "key": "down",
+      "from": 66,
+      "to": 68
+    },
+    {
+      "key": "up",
+      "from": 69,
+      "to": 70
+    },
+    {
+      "key": "down",
+      "from": 96,
+      "to": 120
+    },
+    {
+      "key": "up",
+      "from": 120,
+      "to": 121
+    },
+    {
+      "key": "down",
+      "from": 121,
+      "to": 122
+    },
+    {
+      "key": "up",
+      "from": 122,
+      "to": 123
+    },
+    {
+      "key": "down",
+      "from": 123,
+      "to": 124
+    },
+    {
+      "key": "up",
+      "from": 127,
+      "to": 128
+    },
+    {
+      "key": "right",
+      "from": 165,
+      "to": 168
+    },
+    {
+      "key": "left",
+      "from": 169,
+      "to": 171
+    },
+    {
+      "key": "right",
+      "from": 175,
+      "to": 202
+    },
+    {
+      "key": "left",
+      "from": 204,
+      "to": 206
+    },
+    {
+      "key": "up",
+      "from": 210,
+      "to": 234
+    },
+    {
+      "key": "right",
+      "from": 210,
+      "to": 257
+    },
+    {
+      "key": "down",
+      "from": 234,
+      "to": 235
+    },
+    {
+      "key": "up",
+      "from": 235,
+      "to": 236
+    },
+    {
+      "key": "down",
+      "from": 236,
+      "to": 237
+    },
+    {
+      "key": "up",
+      "from": 237,
+      "to": 238
+    },
+    {
+      "key": "down",
+      "from": 241,
+      "to": 243
+    },
+    {
+      "key": "up",
+      "from": 245,
+      "to": 247
+    },
+    {
+      "key": "down",
+      "from": 249,
+      "to": 250
+    }
+  ]
+}

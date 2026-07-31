@@ -42,14 +42,8 @@
  */
 
 import { heldKeysAt, parseTape } from './tapeFormat.js';
-import { buildLevelWorld } from './levelWorld.js';
+import { createLevelRun } from './levelRun.js';
 import { groundTerrain, spawnFromBoot, step as stepV1 } from './playerPhysicsV1.js';
-import {
-    INITIAL_TERRAIN_STATE,
-    arriveIn,
-    initialLatch,
-    step as stepV2,
-} from './playerPhysicsV2.js';
 
 /**
  * Run `tape` through the physics.
@@ -83,89 +77,45 @@ export function runTape(tape, opts = {}) {
         );
     }
 
-    // Worlds are built lazily and memoised: `buildLevelWorld` throws by name
-    // on geometry v2 does not model, and that should fire when a run walks
-    // INTO the level, not eagerly for levels it never visits.
-    const worlds = new Map();
-    const worldFor = (level) => {
-        if (!worlds.has(level)) worlds.set(level, buildLevelWorld(levelSource(level)));
-        return worlds.get(level);
-    };
+    // The v2 engine's level tracking, world swapping and transition log all
+    // live in `createLevelRun`, because `botDriverV2` advances the same
+    // physics through the same transitions while choosing its keys instead
+    // of reading them — and two copies of a five-fact world swap would
+    // agree until one was edited. See that module's docblock.
+    const run = levelSource
+        ? createLevelRun({ levelSource, boot: t.boot, noclip: t.noclip })
+        : null;
 
-    // The entity spawns half a tile in from the constructor args
-    // (Player.as:357) — see SPAWN_OFFSET.
+    // The v1 engine keeps its own two lines: no geometry, no transitions,
+    // and the entity spawns half a tile in from the constructor args
+    // (Player.as:357 — see SPAWN_OFFSET).
     const spawn = spawnFromBoot(t.boot);
-    let level = t.boot.level;
-    let world = levelSource ? worldFor(level) : null;
-    let state = {
-        x: spawn.x,
-        y: spawn.y,
-        vx: 0,
-        vy: 0,
-        terrain: INITIAL_TERRAIN_STATE,
-        // The boot Game arms the latch on its first frame exactly as an
-        // arrival does (`Game.as:803-812` runs `check()` above the
-        // blackCover gate), so a tape whose spawn sits on a teleporter does
-        // not immediately fall through it.
-        latched: world ? initialLatch(world, spawn.x, spawn.y) : null,
-    };
+    let state = { x: spawn.x, y: spawn.y, vx: 0, vy: 0 };
     const ticks = [];
-    const transitions = [];
-    // The world's first LIVE tick, when no Tile has run its own first
-    // update yet and so no tile is solid. `blackCover` frames are dead
-    // frames on both sides and update nothing, so tape tick 0 is that tick
-    // for the boot world — and the tick after an arrival is that tick for
-    // the destination world, for the same reason.
-    let firstTickInWorld = true;
 
     // <= tick_count: the final iteration records the last tick's result
     // without dispatching anything, mirroring the bot's disarm tick.
+    // RECORD-THEN-ACT stays HERE and not in the run: it is a rule about
+    // where the AS3 hook sits, not about the engine.
     for (let tick = 0; tick <= t.tick_count; tick++) {
-        ticks.push({ t: tick, x: state.x, y: state.y, level });
-        if (onTick) onTick(tick, state, heldKeysAt(t, tick));
+        const now = run ? run.state : state;
+        ticks.push({ t: tick, x: now.x, y: now.y, level: run ? run.level : t.boot.level });
+        if (onTick) onTick(tick, now, heldKeysAt(t, tick));
         if (tick === t.tick_count) break;
         const held = heldKeysAt(t, tick);
-        if (!levelSource) {
-            state = stepV1(state, held, { terrainStateAt });
-            continue;
-        }
-        const next = stepV2(state, held, {
-            level: world,
-            noclip: t.noclip,
-            beforeTypeFlip: firstTickInWorld,
-        });
-        if (next.transition) {
-            // End-of-tick: `Engine.checkWorld` swaps the world only after
-            // the whole tick has run, so `next` is the old player's last
-            // (never observed) position and the state that survives is the
-            // arrival. `t + 1` is therefore "the first observation tick
-            // whose level is the new level" — the §1 ruling 2 definition,
-            // and what the recording shows (last level-0 observation at 60,
-            // arrival at 61).
-            transitions.push({
-                t: tick + 1,
-                from_level: next.transition.from_level,
-                to_level: next.transition.to_level,
-            });
-            level = next.transition.to_level;
-            world = worldFor(level);
-            state = arriveIn(world, next.transition.teleporter);
-            firstTickInWorld = true;
-        } else {
-            state = next;
-            firstTickInWorld = false;
-        }
+        if (run) run.advance(held);
+        else state = stepV1(state, held, { terrainStateAt });
     }
 
     return {
         ticks,
-        // Derived from the engine's OWN world swap above — deliberately NOT
+        // Derived from the engine's OWN world swap — deliberately NOT
         // re-derived from the level field, which is what the GAME's side is
         // derived from (`tapeFormat.deriveTransitions`). If both sides read
         // the level field the differential would degenerate into diffing the
         // tick stream against itself and check nothing new.
-        transitions,
-        final: state,
+        transitions: run ? run.transitions : [],
+        final: run ? run.state : state,
     };
 }
 
