@@ -101,14 +101,19 @@ function applyItem(inventory, name) {
  */
 export function createLevelRun({
     levelSource, boot, noclip = false, noHazards = [], noDamage = false, grants = [],
+    roles,
 }) {
     if (typeof levelSource !== 'function') {
         throw new TypeError('createLevelRun needs a levelSource (level) => levelRecord');
     }
 
+    // `roles` is the census a caller consults (see `levelWorld.ROLES`).
+    // Undefined means the builder's own default, which is ALL roles — so
+    // every pre-R0 caller keeps exactly the census it had.
     const worlds = new Map();
+    const buildOpts = roles ? { roles } : undefined;
     const worldFor = (n) => {
-        if (!worlds.has(n)) worlds.set(n, buildLevelWorld(levelSource(n)));
+        if (!worlds.has(n)) worlds.set(n, buildLevelWorld(levelSource(n), buildOpts));
         return worlds.get(n);
     };
 

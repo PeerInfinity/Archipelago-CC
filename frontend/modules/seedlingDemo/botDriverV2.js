@@ -66,7 +66,7 @@
 
 import { serializeTape } from './tapeFormat.js';
 import { createLevelRun } from './levelRun.js';
-import { TILE_SIZE } from './levelWorld.js';
+import { RELAXED_ROLES, TILE_SIZE } from './levelWorld.js';
 import { rectsOverlap } from './levelWorld.js';
 import { playerBoxAt, terrainProbeRect } from './playerPhysicsV2.js';
 import {
@@ -108,16 +108,42 @@ export function tileAt(x, y) {
 
 /**
  * Everything that would stop, throw or misdirect the player standing at
- * (x, y): the geometry's three kinds plus this module's teleporter policy.
+ * (x, y): the geometry's kinds plus this module's own planning policy.
  *
  * `allowTeleporter` is an INDEX into `level.teleporters`, or null. The leg's
  * own exit has to be steppable — walking into it is the entire point — while
  * every other live trigger is an obstacle.
+ *
+ * `opts` is the RELAXED mode (R0), and it has two halves that must move
+ * together with the tape:
+ *   `noclip` / `noHazards`  passed straight through to the geometry, so the
+ *      planner routes around exactly what the emitted tape will meet — no
+ *      more (routing around a wall a noclip tape walks through) and no less
+ *      (walking into water a tape has not disabled).
+ *   `avoidVolumes`  adds the R0 fourth obstacle kind: **pickups and
+ *      proximity hazards**. Walking over a special pickup freezes the game
+ *      behind a dialogue only `Input.released(V)` clears — during frozen
+ *      frames the tape cannot reach — so a route that clips one never
+ *      finishes. A chest's open-line and a Watcher's 24 px talk circle are
+ *      the same shape of problem without the pickup.
+ *
+ * ⚠ `avoidVolumes` DEFAULTS OFF, and that is deliberate rather than
+ * conservative. Level 94 holds a Watcher, and `cross-level-leg` plans
+ * through level 94; turning the volumes on for the v2 path would re-route a
+ * committed fixture, and those are oracle RECORDINGS — a re-route is a
+ * re-record, not a test update. The v2 driver's teleporter-only policy is
+ * what the eleven committed tapes were planned under and stays that way.
  */
-export function plannerObstacleAt(level, x, y, allowTeleporter = null) {
+export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}) {
+    const { noclip = false, noHazards = [], avoidVolumes = false } = opts;
     const box = playerBoxAt(x, y);
-    const geometry = level.plannerBlockerAt(box, terrainProbeRect(x, y));
+    const geometry = level.plannerBlockerAt(box, terrainProbeRect(x, y),
+        { noclip, noHazards });
     if (geometry) return geometry;
+    if (avoidVolumes) {
+        const [hit] = level.avoidVolumesAt(box);
+        if (hit) return hit;
+    }
     for (let i = 0; i < level.teleporters.length; i++) {
         const tp = level.teleporters[i];
         if (i === allowTeleporter || tp.deactivated) continue;
@@ -142,10 +168,10 @@ const describe = (o) => (o.kind === 'terrain'
  * throws if the real run touches anything regardless. The brief called for
  * exactly that belt and braces.
  */
-export function isWalkableTile(level, tx, ty, allowTeleporter = null) {
+export function isWalkableTile(level, tx, ty, allowTeleporter = null, opts = {}) {
     if (tx < 0 || ty < 0 || tx >= level.width || ty >= level.height) return false;
     const c = tileCentre(tx, ty);
-    return plannerObstacleAt(level, c.x, c.y, allowTeleporter) === null;
+    return plannerObstacleAt(level, c.x, c.y, allowTeleporter, opts) === null;
 }
 
 /**
@@ -162,14 +188,14 @@ export function isWalkableTile(level, tx, ty, allowTeleporter = null) {
  * differently on a different engine and the diff would look like a physics
  * change.
  */
-export function planTilePath(level, from, to, allowTeleporter = null) {
+export function planTilePath(level, from, to, allowTeleporter = null, opts = {}) {
     const start = tileAt(from.x, from.y);
     const goal = tileAt(to.x, to.y);
 
     for (const [what, t, pos] of [['start', start, from], ['goal', goal, to]]) {
-        if (!isWalkableTile(level, t.tx, t.ty, allowTeleporter)) {
+        if (!isWalkableTile(level, t.tx, t.ty, allowTeleporter, opts)) {
             const c = tileCentre(t.tx, t.ty);
-            const o = plannerObstacleAt(level, c.x, c.y, allowTeleporter);
+            const o = plannerObstacleAt(level, c.x, c.y, allowTeleporter, opts);
             fail(`A* ${what} tile (${t.tx},${t.ty}) in level ${level.level} — for `
                 + `(${pos.x},${pos.y}) — is not walkable: `
                 + `${o ? describe(o) : 'outside the level'}. The planner works in whole `
@@ -215,7 +241,7 @@ export function planTilePath(level, from, to, allowTeleporter = null) {
             const nx = cur.tx + dx;
             const ny = cur.ty + dy;
             const nk = key(nx, ny);
-            if (closed.has(nk) || !isWalkableTile(level, nx, ny, allowTeleporter)) continue;
+            if (closed.has(nk) || !isWalkableTile(level, nx, ny, allowTeleporter, opts)) continue;
             const g = cur.g + 1;
             if (gScore.has(nk) && gScore.get(nk) <= g) continue;
             gScore.set(nk, g);
@@ -263,7 +289,7 @@ export function planTilePath(level, from, to, allowTeleporter = null) {
  * the smoother is allowed to be approximate because something downstream
  * is not.
  */
-export function controllerPathClear(level, a, b, allowTeleporter = null) {
+export function controllerPathClear(level, a, b, allowTeleporter = null, opts = {}) {
     const dx = b.x - a.x;
     const dy = b.y - a.y;
     const diagonal = Math.min(Math.abs(dx), Math.abs(dy));
@@ -271,7 +297,7 @@ export function controllerPathClear(level, a, b, allowTeleporter = null) {
         x: a.x + Math.sign(dx) * diagonal,
         y: a.y + Math.sign(dy) * diagonal,
     };
-    if (plannerObstacleAt(level, a.x, a.y, allowTeleporter)) return false;
+    if (plannerObstacleAt(level, a.x, a.y, allowTeleporter, opts)) return false;
     for (const [from, to] of [[a, corner], [corner, b]]) {
         const dist = Math.hypot(to.x - from.x, to.y - from.y);
         const steps = Math.max(1, Math.ceil(dist / SEGMENT_SAMPLE_STEP));
@@ -279,8 +305,8 @@ export function controllerPathClear(level, a, b, allowTeleporter = null) {
         for (let i = 1; i <= steps; i++) {
             const f = i / steps;
             const p = { x: from.x + (to.x - from.x) * f, y: from.y + (to.y - from.y) * f };
-            if (plannerObstacleAt(level, p.x, prev.y, allowTeleporter)) return false;
-            if (plannerObstacleAt(level, p.x, p.y, allowTeleporter)) return false;
+            if (plannerObstacleAt(level, p.x, prev.y, allowTeleporter, opts)) return false;
+            if (plannerObstacleAt(level, p.x, p.y, allowTeleporter, opts)) return false;
             prev = p;
         }
     }
@@ -299,8 +325,8 @@ export function controllerPathClear(level, a, b, allowTeleporter = null) {
  * The last point is the TARGET ITSELF, not its tile's centre, so a caller
  * asking for (120, 100) gets (120, 100) and not (120, 104).
  */
-export function planWaypoints(level, from, to, allowTeleporter = null) {
-    const path = planTilePath(level, from, to, allowTeleporter);
+export function planWaypoints(level, from, to, allowTeleporter = null, opts = {}) {
+    const path = planTilePath(level, from, to, allowTeleporter, opts);
     const points = [
         { x: from.x, y: from.y },
         ...path.slice(1).map((t) => tileCentre(t.tx, t.ty)),
@@ -312,7 +338,7 @@ export function planWaypoints(level, from, to, allowTeleporter = null) {
     while (anchor < points.length - 1) {
         let next = anchor + 1;
         for (let j = points.length - 1; j > anchor; j--) {
-            if (controllerPathClear(level, points[anchor], points[j], allowTeleporter)) {
+            if (controllerPathClear(level, points[anchor], points[j], allowTeleporter, opts)) {
                 next = j;
                 break;
             }
@@ -350,7 +376,7 @@ function findExit(level, exit) {
  * an exit is reached by TOUCHING it, not by parking on it, and the trigger
  * fires from the position the previous tick left).
  */
-function drive(run, target, perTick, { until, tolerance, maxTicks, what }) {
+function drive(run, target, perTick, { until, tolerance, maxTicks, what, avoidVolumes }) {
     let ticks = 0;
     for (;;) {
         if (until === 'arrival' && hasArrived(run.state, target, tolerance)) return null;
@@ -387,6 +413,26 @@ function drive(run, target, perTick, { until, tolerance, maxTicks, what }) {
                 + 'overshoot or the geometry and the plan disagree. Not re-planned on '
                 + 'purpose: a silent re-plan turns a model defect into a green run.');
         }
+        // R0's counterpart to the hit-throw, and it is a DETECTOR rather
+        // than a diagnostic: an avoid volume stops nothing in the game, so
+        // the run walks straight through one and produces a perfectly
+        // plausible stream — which the real game then answers with 150
+        // frozen frames, a dialogue the tape cannot dismiss, or a shifted
+        // RNG stream. There is no wall here to notice, so this check IS the
+        // noticing. The smoother is approximate in two bounded ways (§ the
+        // controllerPathClear docblock); this is what makes that safe.
+        if (avoidVolumes) {
+            const s = run.state;
+            const [v] = run.world.avoidVolumesAt(playerBoxAt(s.x, s.y));
+            if (v) {
+                fail(`${what}: the route entered a ${v.kind} — ${v.blocker.tag} at `
+                    + `(${v.blocker.x},${v.blocker.y}) in level ${run.level} — at `
+                    + `(${s.x},${s.y}). ${v.blocker.effect ?? 'A pickup freezes the game '
+                    + 'behind a dialogue only Input.released(V) clears, during frozen '
+                    + 'frames the tape never reaches.'} Nothing in the game stops the `
+                    + `player here, so this is the only place it can be caught.`);
+            }
+        }
     }
 }
 
@@ -416,13 +462,43 @@ export function synthesizeLegs(legs, opts = {}) {
         tolerance = DEFAULT_TOLERANCE,
         maxTicksPerTarget = DEFAULT_MAX_TICKS_PER_TARGET,
         name,
+        relax = null,
     } = opts;
     if (typeof levelSource !== 'function') {
         fail('synthesizeLegs: opts.levelSource (level) => levelRecord is required — '
             + 'the v2 rung plans against real geometry and there is no default for it');
     }
+    // ⚠ ONE object decides the plan, the run AND the emitted tape. Splitting
+    // them is how a driver plans for a run it does not emit: the whole point
+    // of `relax` being a single argument is that `planWaypoints`,
+    // `createLevelRun` and `buildTape` cannot be given different ideas of
+    // which experiment this is.
+    if (relax !== null) {
+        for (const field of ['noDamage', 'noHazards', 'grants']) {
+            if (relax[field] === undefined) {
+                fail(`synthesizeLegs: opts.relax must declare ${field}. A relaxation `
+                    + 'with a default is a tape the planner and the game read '
+                    + 'differently.');
+            }
+        }
+    }
+    const plan = relax
+        ? { noclip: true, noHazards: relax.noHazards, avoidVolumes: true }
+        : {};
 
-    const run = createLevelRun({ levelSource, boot, noclip: false });
+    const run = createLevelRun({
+        levelSource,
+        boot,
+        noclip: Boolean(relax),
+        ...(relax ? {
+            noHazards: relax.noHazards,
+            noDamage: relax.noDamage,
+            grants: relax.grants,
+            // A relaxed walk consults no collider, so it must not be stopped
+            // by one being unpriced — that is the whole of slice 1b.
+            roles: RELAXED_ROLES,
+        } : {}),
+    });
     const perTick = [];
     const arrivals = [];
     const waypoints = [];
@@ -438,12 +514,13 @@ export function synthesizeLegs(legs, opts = {}) {
             if (!Number.isFinite(target?.x) || !Number.isFinite(target?.y)) {
                 fail(`legs[${li}].targets[${ti}] must be {x, y} finite numbers`);
             }
-            const wps = planWaypoints(run.world, run.state, target);
+            const wps = planWaypoints(run.world, run.state, target, null, plan);
             legWaypoints.push(...wps);
             wps.forEach((wp, wi) => drive(run, wp, perTick, {
                 until: 'arrival',
                 tolerance,
                 maxTicks: maxTicksPerTarget,
+                avoidVolumes: Boolean(relax),
                 what: `legs[${li}] level ${leg.level} target ${ti} waypoint ${wi} `
                     + `(${wp.x},${wp.y})`,
             }));
@@ -490,7 +567,7 @@ export function synthesizeLegs(legs, opts = {}) {
             x: teleporter.rect.x + TILE_SIZE / 2,
             y: teleporter.rect.y + TILE_SIZE / 2,
         };
-        const wps = planWaypoints(run.world, run.state, centre, index);
+        const wps = planWaypoints(run.world, run.state, centre, index, plan);
         legWaypoints.push(...wps);
         wps.forEach((wp, wi) => {
             const last = wi === wps.length - 1;
@@ -498,6 +575,7 @@ export function synthesizeLegs(legs, opts = {}) {
                 until: last ? 'transition' : 'arrival',
                 tolerance,
                 maxTicks: maxTicksPerTarget,
+                avoidVolumes: Boolean(relax),
                 what: `legs[${li}] level ${leg.level} exit (${leg.exit.x},${leg.exit.y}) `
                     + `waypoint ${wi} (${wp.x},${wp.y})`,
             });
@@ -511,11 +589,25 @@ export function synthesizeLegs(legs, opts = {}) {
         waypoints.push(legWaypoints);
     });
 
+    // A grant that never fired is a ROUTE CLAIM that stopped being true —
+    // and here it is worse than in `runTape`, because the driver PLANNED the
+    // route: a grant naming a level the plan does not enter means the legs
+    // and the grants disagree about what walk this is.
+    if (relax && run.unfiredGrantLevels.length > 0) {
+        fail(`the legs grant items in level(s) ${run.unfiredGrantLevels.join(', ')}, `
+            + 'which the planned walk never enters. A grant fires on FIRST ENTRY, so '
+            + 'either the legs stopped covering that room or the grant is stale.');
+    }
+
     return {
-        tape: buildTape(perTick, boot, name, { noclip: false }),
+        tape: buildTape(perTick, boot, name, relax
+            ? { noclip: true, ...relax }
+            : { noclip: false }),
         arrivals,
         transitions: run.transitions.map((t) => ({ ...t })),
         waypoints,
+        grants: relax ? run.grantsFired : [],
+        inventory: relax ? run.inventory : null,
     };
 }
 

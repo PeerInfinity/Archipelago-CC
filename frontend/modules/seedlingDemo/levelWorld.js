@@ -52,6 +52,7 @@ import {
     TILE_TYPE_NAMES,
     SOLID_ENTITY_TYPES,
 } from '../flashPanel/seedlingSemantics.js';
+import { coerceTerrainState } from './tapeFormat.js';
 
 export class LevelWorldError extends Error {
     constructor(message) {
@@ -1217,17 +1218,30 @@ export function buildLevelWorld(levelRecord, { roles = ROLES } = {}) {
          * Steady state only: no `beforeTypeFlip`. The first-tick pre-flip
          * world is strictly more permissive (no tile is solid yet), so
          * planning against the flipped world can only be more conservative.
+         *
+         * ⚠ `opts` mirrors the TAPE's relaxations, and must: a planner that
+         * routed around a wall the tape's `noclip` walks through, or around
+         * water the tape's `noHazards` has flattened, would be planning for
+         * a different run than the one it emits.
+         *   `noclip`     skip the solid and pixelmask arms entirely
+         *   `noHazards`  coerce a tile's type before asking whether the
+         *                terrain arm models it — so a disabled hazard stops
+         *                being an obstacle, and one still armed does not
          */
-        plannerBlockerAt(box, probeRect = null) {
-            for (const p of pixelmasks) {
-                if (rectsOverlap(box, p.rect)) return { kind: 'pixelmask', blocker: p };
-            }
-            for (const s of solids) {
-                if (rectsOverlap(box, s.rect)) return { kind: 'solid', blocker: s };
+        plannerBlockerAt(box, probeRect = null, { noclip = false, noHazards = [] } = {}) {
+            if (!noclip) {
+                for (const p of pixelmasks) {
+                    if (rectsOverlap(box, p.rect)) return { kind: 'pixelmask', blocker: p };
+                }
+                for (const s of solids) {
+                    if (rectsOverlap(box, s.rect)) return { kind: 'solid', blocker: s };
+                }
             }
             if (probeRect) {
                 for (const tile of walkableTiles) {
-                    if (!MODELLED_TILE_SET.has(tile.t) && rectsOverlap(probeRect, tile.rect)) {
+                    const effective = coerceTerrainState(tile.t, noHazards);
+                    if (!MODELLED_TILE_SET.has(effective)
+                        && rectsOverlap(probeRect, tile.rect)) {
                         return { kind: 'terrain', blocker: tile };
                     }
                 }

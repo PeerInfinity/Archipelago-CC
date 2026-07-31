@@ -43,6 +43,7 @@
 
 import { heldKeysAt, parseTape } from './tapeFormat.js';
 import { createLevelRun } from './levelRun.js';
+import { RELAXED_ROLES, ROLES } from './levelWorld.js';
 import { groundTerrain, spawnFromBoot, step as stepV1 } from './playerPhysicsV1.js';
 
 /**
@@ -93,6 +94,16 @@ export function runTape(tape, opts = {}) {
             noHazards: t.noHazards,
             noDamage: t.noDamage,
             grants: t.grants,
+            // ⚠ The runner consults the SAME census the driver plans with,
+            // and `noclip` is what decides it on both sides. A noclip tape
+            // asks no collider question, so requiring a blocking
+            // classification for every tag in every level it crosses would
+            // make the runner refuse tapes the driver can emit — the two
+            // would disagree about which levels exist. (`pickup` and
+            // `proximity-hazard` stay consulted either way: an unpriced
+            // hazard is a level whose behaviour is not modelled at all, and
+            // saying so at replay time is cheaper than a red recording.)
+            roles: t.noclip ? RELAXED_ROLES : ROLES,
         })
         : null;
     if (!levelSource && t.grants.length > 0) {

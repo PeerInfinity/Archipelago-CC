@@ -482,3 +482,147 @@ describe('what wall-slide pins, in values', () => {
         expect(loadTape('wall-slide').tick_count).toBe(70);
     });
 });
+
+/**
+ * R0: the RELAXED mode — the driver that plans the subtractive ladder's
+ * walks.
+ *
+ * The property that makes this worth testing here rather than only against
+ * the game: `relax` is ONE object, and it decides the plan, the run and the
+ * emitted tape together. A driver that planned around water while emitting
+ * a tape that disables it would produce a tape the runner and the game both
+ * accept and neither walks the way the planner imagined — the same class of
+ * bug as the maze arc's walkTo divergence, one level up.
+ *
+ * The witness walk itself (boot -> the sword's room) is a fixture and lives
+ * with its oracle recording; what is checked here is the machinery.
+ */
+describe('the relaxed driver', () => {
+    const RELAX = Object.freeze({
+        noDamage: true,
+        noHazards: ['water', 'pit', 'lava', 'ice', 'waterfall'],
+        grants: [],
+    });
+    /** The R0 witness chain: boot -> 2 -> 3 -> 11 -> the sword's room. */
+    const WITNESS_LEGS = [
+        { level: 0, exit: { x: 256, y: 272 } },
+        { level: 2, exit: { x: 48, y: 96 } },
+        { level: 3, exit: { x: 96, y: 128 } },
+        { level: 11, exit: { x: 32, y: 80 } },
+        { level: 10, targets: [{ x: 88, y: 24 }] },
+    ];
+
+    it('refuses a partial relaxation rather than defaulting one', () => {
+        for (const missing of ['noDamage', 'noHazards', 'grants']) {
+            const relax = { ...RELAX };
+            delete relax[missing];
+            expect(() => synthesizeLegs([{ level: 0, targets: [{ x: 96, y: 136 }] }],
+                { levelSource, relax })).toThrow(new RegExp(`must declare ${missing}`));
+        }
+    });
+
+    it('emits a version 2 tape carrying exactly the relaxations it planned with', () => {
+        const { tape } = synthesizeLegs([{ level: 0, targets: [{ x: 96, y: 136 }] }],
+            { levelSource, relax: RELAX });
+        const parsed = parseTape(tape);
+        expect(parsed.tape_version).toBe(2);
+        expect(parsed.noclip).toBe(true);
+        expect(parsed.noDamage).toBe(true);
+        expect(parsed.noHazards).toEqual(['water', 'pit', 'lava', 'ice', 'waterfall']);
+    });
+
+    it('still emits a version 1 tape without `relax` — the v2 path is untouched', () => {
+        const { tape } = synthesizeWalk([{ x: 104, y: 136 }], { levelSource });
+        expect(parseTape(tape).tape_version).toBe(1);
+        expect(parseTape(tape).noclip).toBe(false);
+    });
+
+    it('walks THROUGH level 0 water a relaxed tape has disabled', () => {
+        // Level 0's row 8 hits Water at column 9. At v2 that tile is an
+        // obstacle to the planner AND a throw to the physics; relaxed it is
+        // neither, and the route may cross it. This is the whole relaxation
+        // in one target — and the emitted tape is replayed independently
+        // below, so it is the TAPE that crosses, not the planner's opinion.
+        const target = { x: 9 * 16 + 8, y: 8 * 16 + 8 };
+        expect(() => synthesizeWalk([target], { levelSource })).toThrow(/Water/);
+        const { tape } = synthesizeWalk([target], { levelSource, relax: RELAX });
+        const { ticks } = runTapeToStream(tape, { levelSource });
+        expect(ticks[ticks.length - 1].x).toBeCloseTo(target.x, 0);
+        expect(ticks[ticks.length - 1].y).toBeCloseTo(target.y, 0);
+    });
+
+    it('routes AROUND a pickup and a proximity hazard', () => {
+        // Level 10 is a 7x7 room whose middle holds the sword; level 11's
+        // chest sits between the arrival and the exit. Neither stops the
+        // player in the game, so the only evidence the route respected them
+        // is that no planned waypoint and no executed tick overlaps one.
+        const { tape, waypoints } = synthesizeLegs(WITNESS_LEGS,
+            { levelSource, relax: RELAX });
+        const worlds = new Map([10, 11].map((n) => [n,
+            buildLevelWorld(levelSource(n), { roles: ['trigger', 'pickup', 'proximity-hazard'] })]));
+        expect(worlds.get(10).pickups).toHaveLength(1);
+        expect(worlds.get(11).proximityHazards).toHaveLength(1);
+
+        // Every WAYPOINT the planner kept, in the two levels that have
+        // volumes...
+        for (const wp of waypoints.flat()) {
+            for (const w of worlds.values()) {
+                expect(w.avoidVolumesAt(playerBoxAt(wp.x, wp.y))).toEqual([]);
+            }
+        }
+        // ...and every position the replayed TAPE actually occupied there.
+        const { ticks } = runTapeToStream(tape, { levelSource });
+        for (const o of ticks) {
+            const w = worlds.get(o.level);
+            if (w) expect(w.avoidVolumesAt(playerBoxAt(o.x, o.y)), `tick ${o.t}`).toEqual([]);
+        }
+    });
+
+    it('plans the whole witness chain and fires the grant at the arrival tick', () => {
+        const out = synthesizeLegs(WITNESS_LEGS, {
+            levelSource,
+            relax: { ...RELAX, grants: [{ level: 10, items: ['sword'] }] },
+        });
+        expect(out.transitions.map((t) => t.to_level)).toEqual([2, 3, 11, 10]);
+        const arrival = out.transitions[out.transitions.length - 1];
+        // The grant lands on the SAME tick as the arrival, which is the
+        // contract `Bot.as` implements on the other side.
+        expect(out.grants).toEqual([{ t: arrival.t, level: 10, items: ['sword'] }]);
+        expect(out.inventory.hasSword).toBe(true);
+        // ...and only that one.
+        expect(out.inventory.hasShield).toBe(false);
+        expect(out.inventory.hitsMax).toBe(3);
+    });
+
+    it('FAILS on a grant for a level the planned walk never enters', () => {
+        expect(() => synthesizeLegs(WITNESS_LEGS, {
+            levelSource,
+            relax: { ...RELAX, grants: [{ level: 43, items: ['wand'] }] },
+        })).toThrow(/grant items in level\(s\) 43, which the planned walk never enters/);
+    });
+
+    // ⚠ BOUNDED VACUITY, recorded rather than left implied by a green
+    // mutation table. Removing the EXECUTOR's avoid-volume throw turns
+    // nothing red — the planner's own policy keeps every current route
+    // clear, so the executor never gets a volume to notice. Same shape and
+    // same verdict as v2's executor hit-throw: keep it, because the
+    // alternative is a tape that walks over a pickup and produces a
+    // perfectly plausible stream the real game answers with a deadlock.
+    // The witness that would close it: a route whose SMOOTHED segment
+    // clips a volume that the tile-centre test cleared — which needs a
+    // volume placed off-centre in a tile the route must pass through.
+
+    it('builds worlds with the RELAXED census, so an unpriced collider is no bar', () => {
+        // Levels 2 and 3 fail the full census — `dungeonspire`,
+        // `moonrockpile` and `breakablerockghost` are unclassified for
+        // blocking, which is R2's bill. The relaxed walk crosses them
+        // anyway, and that is the point of slice 1b. (Level 11 now builds
+        // BOTH ways: its chest needed a blocking rect for its hazard volume
+        // to be derived from, so it got one.)
+        for (const n of [2, 3]) {
+            expect(() => buildLevelWorld(levelSource(n)), `level ${n}`).toThrow();
+        }
+        expect(() => synthesizeLegs(WITNESS_LEGS, { levelSource, relax: RELAX }))
+            .not.toThrow();
+    });
+});
