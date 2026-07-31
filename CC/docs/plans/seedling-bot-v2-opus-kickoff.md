@@ -594,6 +594,28 @@ always present.
   oel attrs). The v2 engine may model that step or skip it — the stream
   cannot tell. There is no intermediate observation to get wrong.
 
+### ⚠ A tape's `boot.x`/`boot.y` are NOT honored by the game
+
+Found during slice 0 and not recorded anywhere before. `Bot.as` assigns
+`bootLevel = int(t.boot.level)` and **never reads it**, and ignores
+`boot.x`/`boot.y` entirely. The spawn is baked into the SWF at
+`Main.as:51` — `new Game(0, 80, 128)`. So **every tape must declare
+`{level: 0, x: 80, y: 128}`** to match the build.
+
+This is a live trap, not a curiosity: a tape declaring anything else is
+silently honored by the JS side and silently ignored by the game, and the
+differential blames physics. That is precisely the asymmetric
+interpretation the tape format exists to make impossible, so it deserves a
+loud check — either `parseTape` validating `boot` against a declared build
+spawn, or the harness refusing a tape whose boot does not match. Cheap,
+and it belongs with the other "no silent defaults" rules.
+
+It also constrains §3.4: `botDriverV2`'s cross-level legs **cannot boot
+into an arbitrary level** to test a route. They must walk there from level
+0, or the build needs a parameterised boot — which is an AS3 edit, and
+therefore something to BATCH with any other AS3 change rather than pay the
+~10-minute pipeline for alone.
+
 ### Harness changes made in passing
 
 - **`--only=a,b`** on `verify-seedling-bot-differential.mjs`. Recording a
