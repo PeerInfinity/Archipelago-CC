@@ -796,14 +796,28 @@ Headless against the running dev server:
 - **wasm side** — the runtime detected, the click prompt shown, the frame's
   own Start button VISIBLE (which is the proof the parent no longer burns
   it), and a real click landing.
-- ⚠ **NOT confirmed headless: the wasm side driving a tape to completion.**
-  Once the game starts it pegs the main thread — WSL's Chromium is
-  SwiftShader at ~0.5 fps — and every `page.evaluate` comes back STARVED.
-  The calls themselves (`botLoadTape`/`botStart`/`botStatus` through
-  `frame.contentWindow.__swfBridge.game`) are the same ones
-  `seedling-bot-replay-win.py` has driven all rung long. This side is
-  local-only by nature and meant for a human on a real GPU; a headless
-  SwiftShader confirmation is not worth its wall-clock.
+- **wasm side, on REAL-GPU WINDOWS CHROME** (the standing `--win` recipe;
+  `/mnt/c/playwright/watch-page-check.py`, same shape as
+  `seedling-bot-replay-win.py`). ⚠ **Do not try this inside WSL** — its
+  Chromium is SwiftShader, the game pegs the main thread at ~0.5 fps and
+  every `page.evaluate` comes back STARVED, so a headless run is
+  inconclusive rather than slow. On the real GPU:
+
+  | tape | start | end | evidence |
+  |---|---|---|---|
+  | `hazard-boot-pit` (pit COERCED) | L83 (40,40) | L83 (40,19.5), tick 30/30 | level NEVER changes — the fixture's whole claim |
+  | `pit-fall-chain-85` (pit LIVE) | L83 (24,24) | **L85 (56,72)**, tick 220/220 | `saw input refused: true`, 58 dead frames over three world loads |
+
+  Both `finished: true`, both progress bars to 100%, and both end on exactly
+  the positions the committed recordings hold. The contrast pair is now
+  watchable from both sides.
+
+⚠ **And the real-GPU run is what found the wasm HUD's only bug**: `poll()`
+is called before `row` is declared, so a `const` arrow put it in its
+temporal dead zone. Headless WSL never got far enough to execute it —
+`ReferenceError: Cannot access 'row' before initialization` fires only once
+`botLoadTape` and `botStart` have both returned `ok`, which is to say only
+once everything else already worked. It is a function declaration now.
 
 ### 10.5 Rendering rule: RAW TRUTH
 

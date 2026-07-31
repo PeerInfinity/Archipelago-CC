@@ -436,7 +436,11 @@ async function runWasm(params) {
     $('status').textContent = `${params.tape} — running in the real game`;
     poll();
 
-    const row = (k, v) => `<div class="r"><span>${k}</span><b>${v}</b></div>`;
+    // A function DECLARATION, not a const arrow: `poll()` is called above
+    // this line and a `const` would be in its temporal dead zone. Caught by
+    // the real-GPU Windows run, which is the only place the wasm path gets
+    // far enough to execute it.
+    function row(k, v) { return `<div class="r"><span>${k}</span><b>${v}</b></div>`; }
     function poll() {
         const st = botJson('botStatus');
         if (st) {
