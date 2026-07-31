@@ -143,6 +143,19 @@ export function createLevelRun({
     let firstTickInWorld = true;
     let ticksCompleted = 0;
     const transitions = [];
+    /**
+     * The PIT TRANSPORTS this run drove, `{t, from_level, to_level}` — the
+     * subset of `transitions` a fall produced.
+     *
+     * Deliberately a SEPARATE list rather than a `kind` field on the
+     * transition records: those are the minimal symmetric record the
+     * differential compares element-wise, and the game side derives them
+     * from the level field alone, so it cannot know a kind. This is JS-side
+     * bookkeeping, and it exists so a consumer can say "the model expects a
+     * transport here" — which is what makes the harness's
+     * `saw_input_refused` check TWO-SIDED instead of a blanket tolerance.
+     */
+    const transports = [];
 
     // ── grants ────────────────────────────────────────────────────────
     // The shared contract (R0 kickoff §3.1): a grant is applied by BOTH
@@ -175,6 +188,8 @@ export function createLevelRun({
         get world() { return world; },
         get state() { return state; },
         get transitions() { return transitions; },
+        /** The `transitions` entries a PIT FALL produced, not a teleporter. */
+        get transports() { return transports.map((r) => ({ ...r })); },
         get ticksCompleted() { return ticksCompleted; },
         get inventory() { return { ...inventory }; },
         /** `{t, level, items}` per grant that fired, in firing order. */
@@ -235,6 +250,7 @@ export function createLevelRun({
                 to_level: next.transition.to_level,
             };
             transitions.push(record);
+            if (next.transition.kind === 'fall') transports.push({ ...record });
             level = next.transition.to_level;
             world = worldFor(level);
             // ONE swap, TWO arrival kinds. A fall lands the player at the

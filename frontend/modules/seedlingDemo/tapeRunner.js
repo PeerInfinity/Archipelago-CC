@@ -157,6 +157,11 @@ export function runTape(tape, opts = {}) {
         // the level field the differential would degenerate into diffing the
         // tick stream against itself and check nothing new.
         transitions: run ? run.transitions : [],
+        // The subset a PIT FALL produced. JS-side bookkeeping, not part of
+        // the stream contract — it exists so the differential harness can
+        // read `saw_input_refused` two-sidedly: a transport means the game
+        // MUST have refused input, and its absence means no fall fired.
+        transports: run ? run.transports : [],
         final: run ? run.state : state,
         // The R0 relaxations' JS-side outcome. `inventory` is a MIRROR —
         // an acceptance assertion reads `botStatus.items` from the game, not
