@@ -40,6 +40,56 @@
  * yields N+1 observations (0..N). `runTape` here mirrors that exactly.
  * Getting this off by one is the easiest way to make every differential
  * red for a reason that has nothing to do with physics.
+ *
+ * ── Room transitions: the settled tick order ──────────────────────────
+ * v2 slice 3. Documented here because the brief (§3.3) said the exact
+ * alignment was the kind of off-by-one the oracle had to settle, and the
+ * slice-0 recording settled it. Within one tick:
+ *
+ *   1. Teleporters update BEFORE the player — `World.addUpdate` PREPENDS
+ *      (`World.as:937-947`) and `loadlevel` adds the player (`Game.as:2040`)
+ *      before the teleporters (`:2169`) — so a trigger tests the position
+ *      the PREVIOUS tick left, which is the position this tick starts from.
+ *   2. If one fires, the old player still runs this tick's FULL movement in
+ *      the old level: `FP.world = new Game(...)` only sets `_goto` and the
+ *      swap is deferred to `Engine.checkWorld` at end-of-tick.
+ *   3. The swap lands at end-of-tick: a whole new `Game`, whose `Player` is
+ *      constructed at `(playerx + 8, playery + 8)` with zero velocity and a
+ *      fresh terrain state, while the HELD KEYS carry over (FlashPunk's
+ *      `Input` is static and no teleport path calls `Input.clear()`).
+ *   4. The ~19 `blackCover` frames that follow are DEAD FRAMES, skipped by
+ *      both consumers, so the old player's last doomed step is never
+ *      observed and never feeds the new one. There is no intermediate
+ *      observation: the last old-level observation is the first position
+ *      overlapping the trigger, and the next one is already the arrival.
+ *
+ * Recorded (`transition-west-return`): tick 60 is the last level-0
+ * observation at x = 17.70000000000001, tick 61 is the arrival (296, 168)
+ * in level 94. Hence a `transitions` entry's `t` is "the first observation
+ * tick whose `level` is the NEW level" (§1 ruling 2), and the record is the
+ * minimal symmetric one, `{t, from_level, to_level}` — arrival position is
+ * already `ticks[t]` and is not duplicated, and teleporter identity is
+ * EXCLUDED because the AS3 bot cannot observe it without a patch and an
+ * asymmetrically-known field cannot be differentially checked.
+ *
+ * ── Where each side's `transitions` come from ─────────────────────────
+ * The JS engine derives its entries from its OWN world swap (`tapeRunner`),
+ * which is what makes the comparison worth making. The GAME does not hand
+ * the field over at all — `Bot.as`'s `botDrain` returns `transitions: []`
+ * unconditionally and re-recording will never populate it — so the harness
+ * derives the game's side from the tick stream with `deriveTransitions`
+ * below, which the ruling's definition makes a pure function of it.
+ *
+ * That derivation is deliberately in ONE place, and it is applied at
+ * RECORD time rather than at compare time: the committed expectation then
+ * carries its transitions explicitly, so the fixture's central claim is
+ * readable and diffable in git instead of being conjured on both sides of
+ * every comparison. The cost is that adding the field to an existing
+ * expectation needs a re-record; that was paid once, for the two v2
+ * fixtures. `verify-seedling-bot-differential.mjs` applies it to the live
+ * stream on BOTH paths (record and compare) and checks that the game's own
+ * field is still empty, so an AS3 build that starts reporting transitions
+ * is a named failure rather than something the derivation quietly masks.
  */
 
 /** Schema version. Bumped only on a breaking shape change. */
@@ -278,9 +328,52 @@ export function serializeTape(tape) {
 }
 
 /**
- * Validate an observation stream's SHAPE (not its values). The
- * `transitions` array is empty at the v1 rung and exists now so the
- * format does not churn when v2 starts crossing levels.
+ * The GAME's side of the `transitions` record, derived from the tick
+ * stream it already drains.
+ *
+ * `Bot.as` hardcodes `transitions: []` and no re-recording will change
+ * that, but §1 ruling 2 defines an entry as "the first observation tick
+ * whose `level` is the new level" — a pure function of the ticks. So this
+ * is the whole of the game's side, and it lives here, in ONE place, used by
+ * every consumer of a drained stream. The JS engine must NOT be routed
+ * through it: `tapeRunner` derives its entries from its own world swap, and
+ * if both sides derived from the level field the transitions diff would
+ * degenerate into diffing the tick stream against itself.
+ *
+ * A same-level teleport is invisible to this definition, which is why
+ * `playerPhysicsV2` refuses to model one rather than emitting an entry the
+ * oracle could never produce.
+ */
+export function deriveTransitions(ticks) {
+    const out = [];
+    for (let i = 1; i < ticks.length; i++) {
+        if (ticks[i].level !== ticks[i - 1].level) {
+            out.push({
+                t: ticks[i].t,
+                from_level: ticks[i - 1].level,
+                to_level: ticks[i].level,
+            });
+        }
+    }
+    return out;
+}
+
+/**
+ * Validate an observation stream's SHAPE (not its values).
+ *
+ * `transitions` carries `{t, from_level, to_level}` per §1 ruling 2. The
+ * checks below are all intrinsic to a record — integer fields, `t >= 1`
+ * (the boot level is where observation 0 already is, so the earliest
+ * possible swap lands at observation 1), strictly ascending `t` (one world
+ * swap per tick at most), `t` within the stream, and a level change that
+ * actually changes level.
+ *
+ * What is deliberately NOT checked here: that each `t` is a tick where the
+ * `level` field changes, and that every such change has a record. That
+ * would be true by construction on both sides — the game's entries are
+ * DERIVED from the level field and the engine's swap writes both — so
+ * asserting it would cost the transitions diff its independence and leave
+ * it checking nothing the tick comparison had not already checked.
  */
 export function parseObservationStream(input) {
     let raw = input;
@@ -296,7 +389,7 @@ export function parseObservationStream(input) {
     }
     if (!Array.isArray(raw.ticks)) fail('observation stream .ticks must be an array');
     if (!Array.isArray(raw.transitions)) {
-        fail('observation stream .transitions must be an array (empty at the v1 rung)');
+        fail('observation stream .transitions must be an array');
     }
     raw.ticks.forEach((o, i) => {
         const where = `ticks[${i}]`;
@@ -308,9 +401,39 @@ export function parseObservationStream(input) {
         if (o.t !== i) fail(`${where}.t must equal its index (${i}), got ${o.t} — `
             + 'observations are dense and in order on both sides');
     });
+    raw.transitions.forEach((tr, i) => {
+        const where = `transitions[${i}]`;
+        if (tr === null || typeof tr !== 'object' || Array.isArray(tr)) {
+            fail(`${where} must be an object { t, from_level, to_level }`);
+        }
+        requireInt(tr.t, `${where}.t`);
+        requireInt(tr.from_level, `${where}.from_level`);
+        requireInt(tr.to_level, `${where}.to_level`);
+        if (tr.t < 1) {
+            fail(`${where}.t must be >= 1, got ${tr.t} — t is the first observation `
+                + 'in the NEW level, and observation 0 is the boot level by definition');
+        }
+        if (tr.t >= raw.ticks.length) {
+            fail(`${where}.t (${tr.t}) is past the end of the stream `
+                + `(${raw.ticks.length} observations)`);
+        }
+        if (i > 0 && tr.t <= raw.transitions[i - 1].t) {
+            fail(`${where}.t (${tr.t}) must be strictly greater than `
+                + `transitions[${i - 1}].t (${raw.transitions[i - 1].t}) — at most one `
+                + 'world swap lands per tick, and records are in order');
+        }
+        if (tr.from_level === tr.to_level) {
+            fail(`${where} goes from level ${tr.from_level} to itself. A same-level `
+                + 'teleport produces no level change in the tick stream, so the game '
+                + 'side could never report one — it is refused at the engine instead '
+                + 'of modelled asymmetrically');
+        }
+    });
     return {
         ticks: raw.ticks.map((o) => ({ t: o.t, x: o.x, y: o.y, level: o.level })),
-        transitions: raw.transitions.slice(),
+        transitions: raw.transitions.map((tr) => ({
+            t: tr.t, from_level: tr.from_level, to_level: tr.to_level,
+        })),
     };
 }
 
@@ -346,9 +469,26 @@ export function diffObservationStreams(expected, actual) {
                 + ` [dx=${at.x - et.x}, dy=${at.y - et.y}]`;
         }
     }
+    // The transitions leg is ELEMENT-WISE and exact. It is a weaker check
+    // than it looks if you forget where each side's entries came from: the
+    // game's are derived from its level field, the engine's from its own
+    // world swap, so this compares two independent accounts of the same
+    // crossing. A count-only comparison (what v1 shipped) passes a run that
+    // crossed the right number of times in the wrong places.
+    const renderT = (tr) => `{t:${tr.t}, ${tr.from_level}->${tr.to_level}}`;
+    const n = Math.min(e.transitions.length, a.transitions.length);
+    for (let i = 0; i < n; i++) {
+        const et = e.transitions[i];
+        const at = a.transitions[i];
+        if (et.t !== at.t || et.from_level !== at.from_level
+            || et.to_level !== at.to_level) {
+            return `transition ${i} differs: expected ${renderT(et)}, got ${renderT(at)}`;
+        }
+    }
     if (e.transitions.length !== a.transitions.length) {
-        return `transition count differs: expected ${e.transitions.length}, `
-            + `got ${a.transitions.length}`;
+        return `transition count differs: expected ${e.transitions.length} `
+            + `[${e.transitions.map(renderT).join(', ')}], got ${a.transitions.length} `
+            + `[${a.transitions.map(renderT).join(', ')}]`;
     }
     return null;
 }

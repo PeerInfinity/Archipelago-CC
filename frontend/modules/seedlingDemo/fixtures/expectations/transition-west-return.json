@@ -907,5 +907,16 @@
       "level": 0
     }
   ],
-  "transitions": []
+  "transitions": [
+    {
+      "t": 61,
+      "from_level": 0,
+      "to_level": 94
+    },
+    {
+      "t": 109,
+      "from_level": 94,
+      "to_level": 0
+    }
+  ]
 }

@@ -1,14 +1,14 @@
 /**
- * seedlingDemo/playerPhysicsV2 — the v1 tick with the sweeps RE-ARMED and
- * the terrain probe made stateful.
+ * seedlingDemo/playerPhysicsV2 — the v1 tick with the sweeps RE-ARMED, the
+ * terrain probe made stateful, and ROOM TRANSITIONS modelled.
  *
- * v2 slice 2 of the real-game bot ladder. Brief:
- * `CC/docs/plans/seedling-bot-v2-opus-kickoff.md` §3.2. This is an
+ * v2 slices 2 and 3 of the real-game bot ladder. Brief:
+ * `CC/docs/plans/seedling-bot-v2-opus-kickoff.md` §3.2 / §3.3. This is an
  * EXTENSION of `playerPhysicsV1`, not a fork: the sweep loop, the friction,
  * the input overshoot, the update order and the world clamp are all still
  * that module's, because the AS3 has one `Player.update` and one
- * `moveX`/`moveY` pair. What lives here is exactly the two things v1 could
- * not express:
+ * `moveX`/`moveY` pair. What lives here is exactly the three things v1
+ * could not express:
  *
  *   1. **The collision test.** `Player.moveX/moveY` do
  *      `var c:Entity = Bot.noclip ? null : collideTypes(solids, x + d, y);`
@@ -31,6 +31,16 @@
  *      `resolveTerrainState` below takes the previous value and returns the
  *      next one.
  *
+ *   3. **Room transitions.** There is no edge logic anywhere in Seedling:
+ *      "walking off the left edge" is an AABB overlap with an authored
+ *      `Teleporter` entity, and the tick order that produces the recorded
+ *      stream is transcribed across `updateTeleporters` (which runs BEFORE
+ *      the player, so it tests the position the previous tick left) and
+ *      `arriveIn` (the end-of-tick swap). The full settled order, and why
+ *      there is no intermediate observation, is in `tapeFormat.js`'s
+ *      docblock — it is a contract both consumers share, not an
+ *      implementation detail of this module.
+ *
  * ── How this module gets a level: INJECTION ───────────────────────────
  * A design decision slices 3 and 4 both build on, so it is stated here
  * rather than left implicit.
@@ -48,7 +58,7 @@
  * the data.
  *
  * A record source rather than a prebuilt world, for two reasons:
- *   - slice 3 crosses levels, and the runner must be able to build a world
+ *   - a tape crosses levels, and the runner must be able to build a world
  *     for a level nobody named at call time (a teleporter's `to`);
  *   - `buildLevelWorld` throws loudly on geometry v2 does not model, and
  *     that throw should fire when the level is actually ENTERED, naming the
@@ -57,12 +67,14 @@
  * once per level per run.
  *
  * ── Loud seams, not quiet approximations ──────────────────────────────
- * Unmodelled terrain (water, pit, lava, ice, waterfall), pixelmask
- * colliders and — until slice 3 — room transitions all THROW with the thing
- * named. v1's lesson was that every divergence came from a description
- * tidier than the code, so a fixture that strays dies loudly instead of
- * producing a plausible stream that the differential then blames on
- * physics.
+ * Unmodelled terrain (water, pit, lava, ice, waterfall) and pixelmask
+ * colliders THROW with the thing named. So do the two transition cases the
+ * model cannot honestly resolve: two teleporters firing on one tick (the
+ * winner depends on FlashPunk's update order) and a teleporter targeting
+ * its own level (invisible to the game side's derivation). v1's lesson was
+ * that every divergence came from a description tidier than the code, so a
+ * fixture that strays dies loudly instead of producing a plausible stream
+ * that the differential then blames on physics.
  */
 
 import { rectsOverlap } from './levelWorld.js';
@@ -76,19 +88,6 @@ export class PhysicsV2Error extends Error {
     constructor(message) {
         super(message);
         this.name = 'PhysicsV2Error';
-    }
-}
-
-/**
- * Thrown when a tape walks into a live teleporter. Room transitions are
- * slice 3; modelling them means the world swap, the arrival offset, the
- * anti-ping-pong latch and the `transitions` records, and half of that
- * silently would be worse than none of it.
- */
-export class TransitionNotModelledError extends PhysicsV2Error {
-    constructor(message) {
-        super(message);
-        this.name = 'TransitionNotModelledError';
     }
 }
 
@@ -166,11 +165,125 @@ export function resolveTerrainState(level, x, y, prevState, { beforeTypeFlip = f
 }
 
 /**
+ * The anti-ping-pong latch, as `Game`'s first frame arms it.
+ *
+ * `Teleporter.playerTouching` is set true in exactly ONE place —
+ * `Teleporter.check()` (`Teleporter.as:58-65`) — and `Game.update` runs
+ * `check()` on every entity on the first frame of a new `Game`
+ * (`Game.as:803-812`), ABOVE the `blackCover` gate, so it happens on the
+ * world's very first frame whether or not that frame is a live tick.
+ * Arriving ON a teleporter therefore pre-latches it and it cannot fire
+ * until the player steps off.
+ *
+ * ⚠ `check()` does not consult `deactivated` — it latches on overlap
+ * regardless — so this does not filter either. It is inert today (a
+ * deactivated teleporter's `update()` returns before it can fire OR clear),
+ * and transcribing it costs nothing.
+ *
+ * Returned as a Set of INDICES into `level.teleporters`, because the worlds
+ * are memoised and shared between runs: the latch is player state and
+ * belongs to the caller's per-tick state, not to the geometry. In the game
+ * that is automatic — a revisited level is a brand new `Game` with brand
+ * new `Teleporter` entities.
+ */
+const EMPTY_LATCH = new Set();
+
+export function initialLatch(level, x, y) {
+    const box = playerBoxAt(x, y);
+    const latched = new Set();
+    level.teleporters.forEach((tp, i) => {
+        if (rectsOverlap(box, tp.rect)) latched.add(i);
+    });
+    return latched;
+}
+
+/**
+ * `Teleporter.update()` (`Teleporter.as:81-100`), transcribed for every
+ * teleporter in the level:
+ *
+ *     checkDeactivated();
+ *     if (deactivated) return;
+ *     if (collide("Player", x, y)) {
+ *         if (!playerTouching) FP.world = new Game(to, playerPos.x, playerPos.y);
+ *     } else playerTouching = false;
+ *
+ * Three details that a tidier paraphrase loses:
+ *   - firing does NOT set `playerTouching`; only `check()` ever sets it.
+ *     Harmless, because the world the entity belongs to is about to be
+ *     discarded — but transcribe it rather than "fixing" it.
+ *   - a deactivated teleporter returns BEFORE the else-branch, so it does
+ *     not clear its own latch either.
+ *   - the whole loop runs before the player moves.
+ *
+ * It walks `level.teleporters` directly rather than calling
+ * `level.teleporterHit`, because that query answers only the middle arm.
+ *
+ * Returns the NEXT latch set and every teleporter that fired this tick.
+ */
+export function updateTeleporters(level, x, y, latched) {
+    const box = playerBoxAt(x, y);
+    const next = new Set(latched);
+    const fired = [];
+    level.teleporters.forEach((tp, i) => {
+        if (tp.deactivated) return;
+        if (rectsOverlap(box, tp.rect)) {
+            if (!next.has(i)) fired.push({ index: i, teleporter: tp });
+        } else {
+            next.delete(i);
+        }
+    });
+    return { latched: next, fired };
+}
+
+/**
+ * The other half of the swap: the state the arriving player starts from.
+ *
+ * `Game.as:2040` builds `new Player(playerx, playery)` and the Player ctor
+ * re-centres onto the tile (`Player.as:357`), so the arrival is
+ * `(playerx + 8, playery + 8)` — both ints, precomputed by `levelWorld` as
+ * `teleporter.arrival`. The whole entity is NEW, so velocity is zero and
+ * the sticky terrain state is back at `INITIAL_TERRAIN_STATE`; the latch is
+ * pre-armed for whatever the arrival overlaps. Held keys are NOT reset and
+ * do not appear here at all — FlashPunk's `Input` is static, its listeners
+ * live on `FP.stage`, and no teleport path calls `Input.clear()`, so a tape
+ * span simply continues across the swap.
+ *
+ * Recorded, not deduced: `transition-west-return` arrives at (296, 168) and
+ * (24, 136) and moves exactly one accel quantum on the tick after each.
+ *
+ * The caller supplies the already-built destination world, because building
+ * one needs the injected level source (see the docblock above) — which is
+ * why the swap is split across this function and `tapeRunner`'s loop.
+ */
+export function arriveIn(level, teleporter) {
+    const { x, y } = teleporter.arrival;
+    return {
+        x,
+        y,
+        vx: 0,
+        vy: 0,
+        terrain: INITIAL_TERRAIN_STATE,
+        latched: initialLatch(level, x, y),
+        hitX: null,
+        hitY: null,
+    };
+}
+
+/**
  * Advance one tick in a real level.
  *
- * `state` is `{x, y, vx, vy, terrain}` and a NEW state is returned, plus
- * this tick's sweep results (`hitX`, `hitY`) which are outputs rather than
- * carried state — the AS3 caller discards them.
+ * `state` is `{x, y, vx, vy, terrain, latched}` and a NEW state is
+ * returned, plus this tick's sweep results (`hitX`, `hitY`) which are
+ * outputs rather than carried state — the AS3 caller discards them.
+ *
+ * When a teleporter fires, the returned state also carries
+ * `transition: {from_level, to_level, teleporter, index}` — and its x/y are
+ * still the OLD level's, because the old player really does complete this
+ * tick's movement there. The caller applies `arriveIn` against the
+ * destination world to finish the end-of-tick swap. That last doomed step
+ * is never observed and never feeds the arrival (which comes from the
+ * teleporter's own oel attrs), so the stream cannot tell whether it was
+ * modelled; it is modelled because the game runs it.
  *
  * `opts`:
  *   `level`           a `buildLevelWorld` result (required)
@@ -192,27 +305,51 @@ export function step(state, held, opts = {}) {
         );
     }
 
-    // Teleporters update BEFORE the player (`World.addUpdate` prepends and
-    // `loadlevel` adds the player at `Game.as:2040`, the teleporters at
-    // `:2169`), so a trigger tests the position the PREVIOUS tick left —
-    // which is exactly the position this tick starts from.
-    //
-    // Slice 3 replaces this throw with the modelled swap. Until then the
-    // seam is deliberately blunt: it fires on ANY overlap, including the
-    // one case the real game suppresses (arriving ON a teleporter
-    // pre-latches it, `Teleporter.as:58-65`). That can only over-throw, and
-    // an over-throw names the fixture to move while an under-throw is a
-    // divergence nobody sees.
-    const standing = level.teleporterHit(playerBoxAt(state.x, state.y));
-    if (standing.length > 0) {
-        const tp = standing[0];
-        throw new TransitionNotModelledError(
-            `unmodelled room transition: the player overlaps a live teleporter at `
-            + `(${tp.x},${tp.y}) in level ${level.level}, bound for level ${tp.to} at `
-            + `(${tp.arrival.x},${tp.arrival.y}). Room transitions are slice 3 of the v2 `
-            + 'ladder — the world swap, the arrival offset, the anti-ping-pong latch and '
-            + 'the `transitions` records land together or not at all.',
+    // 0. Teleporters update BEFORE the player (`World.addUpdate` prepends
+    //    and `loadlevel` adds the player at `Game.as:2040`, the teleporters
+    //    at `:2169`), so a trigger tests the position the PREVIOUS tick
+    //    left — which is exactly the position this tick starts from. The
+    //    swap itself is deferred to `Engine.checkWorld` at end-of-tick, so
+    //    everything below still runs in the OLD level.
+    const { latched, fired } = updateTeleporters(
+        level, state.x, state.y, state.latched ?? EMPTY_LATCH,
+    );
+    let transition = null;
+    if (fired.length > 1) {
+        // `FP.world = ` only records a `_goto`, so two teleporters firing on
+        // one tick means the LAST one in FlashPunk's update order wins — and
+        // that order is the prepend order of a list this module deliberately
+        // does not transcribe. An ambiguity we cannot resolve is a named
+        // error, not a guess: move the fixture.
+        throw new PhysicsV2Error(
+            `${fired.length} teleporters fired on the same tick in level ${level.level} `
+            + `(${fired.map((f) => `(${f.teleporter.x},${f.teleporter.y})->`
+                + `${f.teleporter.to}`).join(', ')}). Which world swap wins depends on `
+            + 'FlashPunk\'s update order, which is not transcribed — route the tape '
+            + 'so that at most one trigger volume is overlapped per tick.',
         );
+    }
+    if (fired.length === 1) {
+        const { teleporter } = fired[0];
+        if (teleporter.to === level.level) {
+            // The oracle cannot see this one: the game's `transitions` are
+            // derived from the level field (`Bot.as` hardcodes the array),
+            // and a same-level teleport changes no level. Modelling it would
+            // put an entry in the JS stream that the game could never
+            // report, which is a divergence created by the model.
+            throw new PhysicsV2Error(
+                `teleporter at (${teleporter.x},${teleporter.y}) in level `
+                + `${level.level} targets its OWN level. A same-level teleport is not `
+                + 'differentially observable — the game side derives its transitions '
+                + 'from the level field — so it is refused rather than modelled.',
+            );
+        }
+        transition = {
+            from_level: level.level,
+            to_level: teleporter.to,
+            teleporter,
+            index: fired[0].index,
+        };
     }
 
     // 1. getState(), then the speed/friction selection it drives. Both run
@@ -237,5 +374,5 @@ export function step(state, held, opts = {}) {
             : (x, y) => level.collidesSolid(playerBoxAt(x, y), { beforeTypeFlip }),
     });
 
-    return { ...next, terrain };
+    return { ...next, terrain, latched, transition };
 }

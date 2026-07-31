@@ -860,3 +860,140 @@ Mutation checks, each run, each confirmed to bite:
 - `verify-seedling-bot-differential.mjs --win` green across all **7**
   fixtures at ~25 fps, live driver task included. No recording rewritten —
   slice 2 changes no expectation, only the engine that has to hit them.
+
+## 10. Slice 3 — AS BUILT (2026-07-30)
+
+Room transitions modelled. **`transition-west-return` reconciles EXACTLY** —
+all 151 observations plus both `transitions` records — so every committed
+fixture now carries the ordinary exact-match assertion and the `PENDING`
+list is gone. `collide-up-rock` and the v1 five stayed byte-identical
+(`collide-up-rock` was re-recorded and came back with no diff at all).
+
+Touched: `playerPhysicsV2.js` (the swap), `tapeRunner.js` (the loop that
+applies it), `tapeFormat.js` (the contract, the derivation, the differ),
+`verify-seedling-bot-differential.mjs` (the game's side), and the three
+test files. No AS3 edit, as §2.6 predicted.
+
+### The decision the brief left open: DERIVE AT RECORD TIME
+
+`botDrain` hardcodes `transitions: []`, so the game's side is derived from
+the tick stream (§1 ruling 2 makes that a pure function). The open question
+was whether to derive at COMPARE time and leave the committed expectations
+carrying `[]`, or at RECORD time so the file says it outright. **Record
+time**, for one reason that turned out to be visible in the diff: the
+re-record added twelve readable lines to `transition-west-return.json` and
+nothing else, so the fixture's central claim — *it crosses at 61 and comes
+back at 109* — is now reviewable in `git diff` instead of being conjured on
+both sides of every comparison. The cost was one `--record --only=` run
+(~16 s for the long tape, ~9 s for the short one).
+
+Two structural rules hold it up, and both are load-bearing:
+- the derivation lives ONCE, in `tapeFormat.deriveTransitions`, and the
+  harness applies it on BOTH paths (record and compare) — the live game
+  still reports `[]`, so compare mode would go red otherwise;
+- the JS engine derives its side from its OWN world swap, never from the
+  level field. If both sides read the level field the transitions diff
+  degenerates into diffing the tick stream against itself.
+- The harness also CHECKS that `botDrain`'s own field is still empty. A
+  future AS3 build that starts reporting transitions is then a named
+  failure to reconcile, not something the derivation silently overwrites.
+
+`tapeFormat` also grew the element schema and an element-wise exact diff
+(v1 validated array-only and compared LENGTH). A count-only comparison
+passes a run that crossed the right number of times in the wrong places —
+which is exactly the mutation the new differ was checked against.
+
+### The tick order, as it went in
+
+Transcribed in `tapeFormat.js`'s docblock (a contract both consumers share,
+not an implementation detail). Nothing here needed re-deriving — the
+slice-0 recording had already settled it — and the code came out in three
+pieces: `updateTeleporters` (before the movement), `playerPhysicsV1.step`
+(the movement, in the OLD level), `arriveIn` + the runner's loop (the
+end-of-tick swap). The swap is split across the module and the runner
+because building the destination world needs the injected level source;
+the SEMANTICS (arrival `+8`, zeroed velocity, fresh terrain state,
+pre-armed latch) are all in `arriveIn` and unit-testable without a runner.
+
+Two things worth writing down because the code reads oddly without them:
+- **The `beforeTypeFlip` tick is per WORLD, not per run.** The tick after
+  an arrival is the destination world's first live tick, for exactly the
+  reason tape tick 0 is the boot world's: `blackCover` frames update
+  nothing, so the Tiles have still not run their own first `update()`.
+- **`Teleporter.update` never sets `playerTouching`.** Only `check()` does
+  (`Teleporter.as:58-65`), and `Game.update` runs `check()` on every entity
+  on a new `Game`'s first frame ABOVE the `blackCover` gate
+  (`Game.as:803-812`), so the latch is armed before any live tick. Firing
+  therefore does not latch — harmless, because that world is discarded
+  moments later, and transcribed rather than tidied.
+
+### Two new loud seams, one live and one defensive
+
+- **Two teleporters firing on one tick THROWS.** `FP.world =` only records
+  a `_goto`, so the winner is whichever updates LAST — FlashPunk's prepend
+  order, which this module deliberately does not transcribe. Not
+  theoretical: level 0's own west pair sits at (0,128) and (0,144), and a
+  player whose y is in **(141, 146)** has their 5-tall box in both volumes
+  at once, with different arrivals (296,168) vs (296,184). The recorded
+  tape walks the row at y = 136 and misses it by five pixels.
+- **A teleporter targeting its own level THROWS.** The game side derives
+  transitions from the level field, so a same-level teleport is invisible
+  there; modelling it would put an entry in the JS stream the oracle could
+  never report. Defensive only — a scan of the extract finds **0 of 254**
+  teleporters self-targeting.
+
+### ⚠ The latch mutation does NOT turn the round trip red
+
+The brief (§3.5.4, §3.6) expected `transition-west-return` to pin "latch
+behavior in both directions". **It cannot, and the slice-0 recording
+already said so**: neither arrival lands on a trigger, which is why the
+round trip is two crossings rather than a bounce. Dropping the latch
+entirely turns **four hand-derived cases** red and **no fixture**. This is
+the same shape as slice 2's non-sticky vacuity and is recorded the same
+way rather than left implied by a mutation table.
+
+The bound is real but not permanent, and the witnesses are concrete. A scan
+of all 254 teleporters in the extract finds **three arrivals that land ON a
+trigger** — genuine ping-pong pairs where the latch is the only thing
+between the game and an infinite loop:
+
+| from | arrives | on |
+|---|---|---|
+| L11 (32,0) → L3 | (104,136) | L3 (96,128) → 11 |
+| L88 (192,0) → L87 | (440,312) | L87 (432,304) → 88 |
+| L107 (0,48) → L102 | (232,104) | L102 (224,96) → 107 |
+
+All `tag = -1`. None is reachable from level 0 in one hop (level 0 exits to
+1, 12, 94, 89, 86, 13, 2), and the boot is baked into the SWF (§7), so an
+oracle-backed latch fixture needs cross-level WALKING — slice 4 at the
+earliest — or the parameterised boot that §6 says to batch. Same gate as
+the level-83 stickiness witness, and it should be taken through the same
+door.
+
+### Mutation checks, each run, each confirmed
+
+| mutation | goes red |
+|---|---|
+| transition `t` = tick instead of tick+1 | `transition-west-return` exact match + 1 |
+| velocity survives the swap | `transition-west-return` exact match |
+| arrival without the half-tile ctor offset | the fixture + 1 hand-derived |
+| **drop the teleporter latch** | **4 hand-derived — NO fixture (see above)** |
+| sticky terrain state survives the swap | 1 hand-derived only |
+| SKIP the old level's doomed last step | 1 hand-derived only — *negative control* |
+| wrong `t` in a stream (differ leg) | the element-wise diff case |
+
+The last two are the interesting ones. The doomed-step mutation is the
+brief's own claim — "the v2 engine may model that step or skip it: the
+stream cannot tell" — put to the test, and the fixtures agree: only the
+transcription's own unit case notices. Modelling it is kept because the
+game runs it. The terrain-reset row is the same kind of finding: both
+arrival tiles walk at 0.8 either way.
+
+### Gates at slice 3 close
+
+- vitest **3987/3987** (was 3969; +18).
+- `verify-seedling-bot-differential.mjs --win` green across all **7**
+  fixtures at ~25 fps, live driver task included. One expectation
+  rewritten, by `--record --only=collide-up-rock,transition-west-return`:
+  `collide-up-rock` came back byte-identical and `transition-west-return`
+  gained only its two `transitions` records.

@@ -11,6 +11,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+    deriveTransitions,
     diffObservationStreams,
     FORBIDDEN_KEYS,
     heldKeysAt,
@@ -189,7 +190,7 @@ describe('observation streams', () => {
         })).toThrow(/must equal its index/);
     });
 
-    it('requires the transitions field even though v1 never fills it', () => {
+    it('requires the transitions field even on a stream that has none', () => {
         expect(() => parseObservationStream({ ticks: [] }))
             .toThrow(/transitions must be an array/);
     });
@@ -209,5 +210,100 @@ describe('observation streams', () => {
     it('reports a length mismatch distinctly', () => {
         expect(diffObservationStreams(stream, { ticks: stream.ticks.slice(0, 1), transitions: [] }))
             .toMatch(/tick count differs/);
+    });
+});
+
+/**
+ * The `transitions` record (v2 slice 3, §1 ruling 2).
+ *
+ * Two consumers again, and an asymmetry to be careful about: the GAME's
+ * side is derived from the tick stream by `deriveTransitions` (because
+ * `Bot.as` hardcodes `[]`), while the JS engine's comes from its own world
+ * swap. The differ therefore has to be element-wise and exact — a
+ * count-only comparison, which is what v1 shipped, passes a run that
+ * crossed the right NUMBER of times in the wrong places.
+ */
+describe('transition records', () => {
+    const crossing = {
+        ticks: [
+            { t: 0, x: 88, y: 136, level: 0 },
+            { t: 1, x: 87, y: 136, level: 0 },
+            { t: 2, x: 296, y: 168, level: 94 },
+            { t: 3, x: 295, y: 168, level: 94 },
+        ],
+        transitions: [{ t: 2, from_level: 0, to_level: 94 }],
+    };
+
+    it('derives the game\'s side from where the level field CHANGES', () => {
+        expect(deriveTransitions(crossing.ticks))
+            .toEqual([{ t: 2, from_level: 0, to_level: 94 }]);
+    });
+
+    it('derives one entry per crossing on a round trip, in order', () => {
+        const back = crossing.ticks.concat([
+            { t: 4, x: 24, y: 136, level: 0 },
+            { t: 5, x: 25, y: 136, level: 0 },
+        ]);
+        expect(deriveTransitions(back)).toEqual([
+            { t: 2, from_level: 0, to_level: 94 },
+            { t: 4, from_level: 94, to_level: 0 },
+        ]);
+    });
+
+    it('derives nothing from a stream that never leaves its level', () => {
+        expect(deriveTransitions(crossing.ticks.slice(0, 2))).toEqual([]);
+        expect(deriveTransitions([])).toEqual([]);
+    });
+
+    it('validates the element shape rather than accepting any array', () => {
+        const withTransitions = (transitions) => () =>
+            parseObservationStream({ ...crossing, transitions });
+        expect(withTransitions([{ t: 2, from_level: 0 }])).toThrow(/to_level must be an integer/);
+        expect(withTransitions([{ t: 2.5, from_level: 0, to_level: 94 }]))
+            .toThrow(/t must be an integer/);
+        expect(withTransitions([94])).toThrow(/must be an object/);
+    });
+
+    it('refuses a t that no observation could carry', () => {
+        // t is the first observation IN THE NEW LEVEL, so 0 is impossible
+        // (observation 0 is the boot level by definition) and anything past
+        // the end of the stream is a bookkeeping defect.
+        expect(() => parseObservationStream({
+            ...crossing, transitions: [{ t: 0, from_level: 0, to_level: 94 }],
+        })).toThrow(/must be >= 1/);
+        expect(() => parseObservationStream({
+            ...crossing, transitions: [{ t: 9, from_level: 0, to_level: 94 }],
+        })).toThrow(/past the end of the stream/);
+    });
+
+    it('refuses out-of-order records and same-level teleports', () => {
+        expect(() => parseObservationStream({
+            ...crossing,
+            transitions: [
+                { t: 3, from_level: 0, to_level: 94 },
+                { t: 2, from_level: 94, to_level: 0 },
+            ],
+        })).toThrow(/strictly greater/);
+        expect(() => parseObservationStream({
+            ...crossing, transitions: [{ t: 2, from_level: 7, to_level: 7 }],
+        })).toThrow(/to itself/);
+    });
+
+    it('DIFFS ELEMENT-WISE: a wrong t is a diff, not a matching count', () => {
+        // The mutation this leg exists for. Both streams cross once, from
+        // and to the same levels — only the tick differs, which is exactly
+        // what an off-by-one in the swap's end-of-tick placement produces.
+        const late = structuredClone(crossing);
+        late.transitions[0].t = 3;
+        expect(diffObservationStreams(crossing, late))
+            .toMatch(/transition 0 differs: expected \{t:2, 0->94\}, got \{t:3, 0->94\}/);
+    });
+
+    it('diffs the levels too, and reports both lists on a count mismatch', () => {
+        const elsewhere = structuredClone(crossing);
+        elsewhere.transitions[0].to_level = 12;
+        expect(diffObservationStreams(crossing, elsewhere)).toMatch(/0->12/);
+        expect(diffObservationStreams(crossing, { ...crossing, transitions: [] }))
+            .toMatch(/transition count differs: expected 1 \[\{t:2, 0->94\}\], got 0 \[\]/);
     });
 });

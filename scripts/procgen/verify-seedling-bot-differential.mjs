@@ -23,6 +23,11 @@
  * non-provisional expectation. `fixtures/regenerate.mjs` writes only
  * `.provisional.json`, so the two can never be confused for each other.
  *
+ * The recorded stream's `transitions` are DERIVED here, not drained:
+ * `botDrain` hardcodes `[]`, and the ruling's definition of an entry makes
+ * it a pure function of the ticks. See `withDerivedTransitions` below for
+ * where and why, and `tapeFormat.js`'s docblock for the contract.
+ *
  * `--only` exists BECAUSE of that: recording a newly authored fixture
  * would otherwise rewrite every already-oracle-recorded expectation on the
  * way past, and `--record` does not compare before it writes, so a genuine
@@ -82,7 +87,7 @@ if (!existsSync(join(ARTIFACT, 'game.html'))
 }
 
 const {
-    diffObservationStreams, serializeObservationStream,
+    deriveTransitions, diffObservationStreams, serializeObservationStream,
 } = await import(join(REPO, 'frontend/modules/seedlingDemo/tapeFormat.js'));
 const {
     EXPECTATIONS_DIR, fixtureNames, loadExpectation, loadTape,
@@ -231,9 +236,43 @@ function replayOnWindows(name, tapeObj) {
     return JSON.parse(readFileSync(outWsl, 'utf8'));
 }
 
+/**
+ * The GAME's `transitions`, derived from the ticks it drained.
+ *
+ * `Bot.as`'s `botDrain` hardcodes `transitions: []` — the game does not
+ * hand the field over and re-recording will never populate it — but §1
+ * ruling 2 defines an entry as "the first observation tick whose `level` is
+ * the new level", which makes it a pure function of the tick stream. So
+ * this is where the game's side is filled in, on BOTH paths (record and
+ * compare), from the one derivation in `tapeFormat.js`. The JS engine keeps
+ * deriving ITS side from its own world swap; if both sides read the level
+ * field, the transitions diff would degenerate into diffing the tick stream
+ * against itself.
+ *
+ * The empty-field check is the reason this is a function and not an inline
+ * spread: if a future AS3 build starts reporting transitions for real, that
+ * should be a NAMED failure to reconcile, not something the derivation
+ * quietly overwrites.
+ */
+function withDerivedTransitions(name, drained) {
+    const derived = deriveTransitions(drained.ticks);
+    const reported = drained.transitions ?? [];
+    if (reported.length > 0) {
+        check(`${name}: the game's own transitions agree with the derivation`,
+            JSON.stringify(reported) === JSON.stringify(derived),
+            `botDrain reported ${JSON.stringify(reported)}, derived `
+            + `${JSON.stringify(derived)} — Bot.as used to hardcode [], so this build `
+            + 'reports the field for real and the derivation needs revisiting');
+    }
+    return { ticks: drained.ticks, transitions: derived };
+}
+
 /** Replay one tape on its own fresh page and return the drained stream. */
 async function replay(name, tapeObj) {
-    if (WIN) return replayOnWindows(name, tapeObj);
+    if (WIN) {
+        const { stream, status } = replayOnWindows(name, tapeObj);
+        return { stream: withDerivedTransitions(name, stream), status };
+    }
     const page = await freshPage();
     try {
         const loaded = await botOn(page, 'botLoadTape', JSON.stringify(tapeObj));
@@ -247,10 +286,7 @@ async function replay(name, tapeObj) {
         }, deadlineFor(tapeObj.tick_count));
 
         const drained = await botJsonOn(page, 'botDrain');
-        return {
-            stream: { ticks: drained.ticks, transitions: drained.transitions },
-            status,
-        };
+        return { stream: withDerivedTransitions(name, drained), status };
     } finally {
         await page.close();
     }
@@ -310,6 +346,7 @@ try {
         const expectedTicks = tape.tick_count + 1;
         check(`${name}: observation count`, stream.ticks.length === expectedTicks,
             `${stream.ticks.length} (expected tick_count+1 = ${expectedTicks}), `
+            + `${stream.transitions.length} transition(s) derived, `
             + `${status.dead_frames} fade frames skipped, ${secs}s`);
 
         if (RECORD) {

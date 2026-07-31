@@ -15,13 +15,13 @@
  * `transition-west-return` — drained from the same build with collision
  * ON. They are the RECONCILIATION TARGETS the v2 engine is written toward,
  * so they arrived before the physics that has to reproduce them.
- * `collide-up-rock` was reconciled at slice 2 and now carries the ordinary
- * exact-match assertion; `transition-west-return` waits for slice 3 and is
- * pinned by name in the pending list below. What both of them PIN about the
- * real game is asserted directly against the recordings at the bottom of
- * this file, which stays worth having: it says what each fixture was for in
- * values, so a later refactor that moves the whole stream in step cannot
- * quietly take the meaning with it.
+ * `collide-up-rock` was reconciled at slice 2 and `transition-west-return`
+ * at slice 3, so the pending list is gone and every fixture now carries the
+ * ordinary exact-match assertion. What both of them PIN about the real game
+ * is asserted directly against the recordings at the bottom of this file,
+ * which stays worth having: it says what each fixture was for in values, so
+ * a later refactor that moves the whole stream in step cannot quietly take
+ * the meaning with it.
  *
  * Provisional (`*.provisional.json`, written by `fixtures/regenerate.mjs`
  * from our OWN engine) remains the bootstrap path for a NEW fixture that
@@ -39,8 +39,7 @@ import { describe, expect, it } from 'vitest';
 import { fixtureNames, loadExpectation, loadTape } from './fixtures/index.js';
 import { atlasLevelSource } from './levelSource.js';
 import { MOVE_SPEEDS, spawnFromBoot } from './playerPhysicsV1.js';
-import { TransitionNotModelledError } from './playerPhysicsV2.js';
-import { diffObservationStreams } from './tapeFormat.js';
+import { deriveTransitions, diffObservationStreams } from './tapeFormat.js';
 import { runTape, runTapeToStream } from './tapeRunner.js';
 
 /** Entity spawn for the fixtures' shared boot block (Player.as:357: +8,+8). */
@@ -83,9 +82,11 @@ describe('record-then-act indexing', () => {
         expect(ticks.every((o) => o.level === 7)).toBe(true);
     });
 
-    it('emits an empty transitions array at the v1 rung', () => {
+    it('emits no transitions for a run that crosses no level', () => {
         expect(runTapeToStream(tape([{ key: 'right', from: 0, to: 3 }])).transitions)
             .toEqual([]);
+        expect(runTapeToStream(tape([{ key: 'right', from: 0, to: 3 }]), { levelSource })
+            .transitions).toEqual([]);
     });
 
     it('handles a tape with no inputs at all', () => {
@@ -119,33 +120,25 @@ describe('guards', () => {
 
 describe('fixture differential', () => {
     const names = fixtureNames();
-    /**
-     * The roster is SPLIT by what the engine can run, not by what has been
-     * recorded. v2's slice 0 recorded collision and cross-level tapes from
-     * the real game FIRST and transcribed toward them, so the oracle
-     * recordings landed before the physics that has to reproduce them.
-     *
-     * Slice 2 re-armed the sweeps, which moved `collide-up-rock` across.
-     * What is left pending is exactly what needs a modelled ROOM
-     * TRANSITION, which is slice 3 — the world swap, the arrival offset,
-     * the anti-ping-pong latch and the `transitions` records land together
-     * or not at all, so until then the engine throws by name rather than
-     * walking through a teleporter as if it were floor.
-     */
-    const PENDING = ['transition-west-return'];
-    const modelled = names.filter((n) => !PENDING.includes(n));
     /** The v1 five: `noclip: true`, and the regression net for the refactor. */
     const noclipTapes = names.filter((n) => loadTape(n).noclip);
 
-    it('has fixtures on disk', () => {
+    it('has fixtures on disk, and NONE of them is pending any more', () => {
         // Positive control: every "each fixture matches" assertion below is
-        // vacuous if the roster is empty.
-        expect(names.length).toBeGreaterThanOrEqual(6);
-        expect(modelled.length).toBeGreaterThanOrEqual(6);
+        // vacuous if the roster is empty. The roster used to be SPLIT — v2's
+        // slice 0 recorded collision and cross-level tapes from the real
+        // game before the engine that had to reproduce them existed, and
+        // each waited in a PENDING list until its slice landed. Slice 2 took
+        // `collide-up-rock` off it and slice 3 took `transition-west-return`,
+        // which is why there is no split left to keep honest: every fixture
+        // on disk now runs the exact-match assertion.
+        expect(names.length).toBeGreaterThanOrEqual(7);
+        expect(names).toContain('collide-up-rock');
+        expect(names).toContain('transition-west-return');
         expect(noclipTapes.length).toBeGreaterThanOrEqual(5);
     });
 
-    it.each(modelled)("%s: JS stream matches the real game recording, exactly", (name) => {
+    it.each(names)("%s: JS stream matches the real game recording, exactly", (name) => {
         // Everything runs with the real level geometry here, the v1 tapes
         // included — which for them is a second claim on top of the first:
         // the stateful `getState` has to agree with the game over 220 ticks
@@ -169,20 +162,19 @@ describe('fixture differential', () => {
             .toBeNull();
     });
 
-    // Retires itself at slice 3: the list empties and the guard below goes
-    // red rather than the block silently passing by running nothing.
-    it.each(PENDING)('%s: recorded from the game, awaiting slice 3', (name) => {
-        expect(loadExpectation(name).provisional).toBe(false);
-        expect(() => runTapeToStream(loadTape(name), { levelSource }))
-            .toThrow(TransitionNotModelledError);
-    });
-
-    it('the pending split is real, not an artefact of an empty roster', () => {
-        // Without this, deleting every collision tape would make the block
-        // above pass by running nothing at all.
-        expect(PENDING.every((n) => names.includes(n))).toBe(true);
-        expect(PENDING).toEqual(['transition-west-return']);
-        expect(modelled).toContain('collide-up-rock');
+    it('transition-west-return: the engine derives BOTH crossings itself', () => {
+        // The exact-match test above compares transitions element-wise, but
+        // it would be satisfied by an engine that emitted the array from the
+        // recording's own level field. These are the values, stated once,
+        // against a run: the entries come from `tapeRunner`'s world swap and
+        // the recorded ones from the game's level changes, and they are the
+        // same two crossings.
+        const { transitions } = runTapeToStream(loadTape('transition-west-return'),
+            { levelSource });
+        expect(transitions).toEqual([
+            { t: 61, from_level: 0, to_level: 94 },
+            { t: 109, from_level: 94, to_level: 0 },
+        ]);
     });
 
     it('every fixture is backed by an ORACLE recording, not a bootstrap', () => {
@@ -392,17 +384,24 @@ describe('v2 slice 0: what the collision + transition recordings pin', () => {
         expect(changes).toHaveLength(2);
     });
 
-    it('both recordings carry an EMPTY transitions array — Bot.as hardcodes it', () => {
-        // Load-bearing for slice 3. `botDrain` returns `transitions: []`
-        // unconditionally, so the game does not hand the field over and
-        // re-recording will not populate it. The v2 ruling defines an entry
-        // as "the first observation tick whose level is the new level",
-        // which is a pure function of the tick stream — so the harness
-        // derives the game's side from the ticks it already has, and the
-        // zero-AS3-edit expectation survives. Keep the JS engine deriving
-        // ITS side from its own world swap, or the comparison degenerates
-        // into diffing the tick stream against itself.
+    it('the recorded transitions are the DERIVED ones, written at record time', () => {
+        // `Bot.as`'s `botDrain` returns `transitions: []` unconditionally —
+        // the game does not hand the field over and re-recording will never
+        // populate it. The v2 ruling defines an entry as "the first
+        // observation tick whose level is the new level", which is a pure
+        // function of the tick stream, so the harness derives the game's
+        // side with `deriveTransitions` and writes it into the expectation
+        // at RECORD time (rather than conjuring it on both sides of every
+        // comparison), which is what makes the file below readable and
+        // diffable. This asserts the committed file really is that
+        // derivation and not something hand-edited into place.
+        const s = recording('transition-west-return');
+        expect(s.transitions).toEqual([
+            { t: 61, from_level: 0, to_level: 94 },
+            { t: 109, from_level: 94, to_level: 0 },
+        ]);
+        expect(s.transitions).toEqual(deriveTransitions(s.ticks));
+        // A tape that crosses nothing still records the empty array.
         expect(recording('collide-up-rock').transitions).toEqual([]);
-        expect(recording('transition-west-return').transitions).toEqual([]);
     });
 });

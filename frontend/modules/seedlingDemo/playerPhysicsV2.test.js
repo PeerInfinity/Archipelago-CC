@@ -28,12 +28,14 @@ import { CHECK_OFFSET_Y, HITBOX, MOVE_SPEEDS, WALK_SPEED } from './playerPhysics
 import {
     INITIAL_TERRAIN_STATE,
     PhysicsV2Error,
-    TransitionNotModelledError,
+    arriveIn,
+    initialLatch,
     playerBoxAt,
     resolveTerrainState,
     resolveTerrainState as getState,
     step,
     terrainProbeRect,
+    updateTeleporters,
 } from './playerPhysicsV2.js';
 
 const held = (...keys) => new Set(keys);
@@ -325,38 +327,187 @@ describe('the seams that must stay loud', () => {
             { level: w })).toThrow(/unmodeled pixelmask/);
     });
 
-    it('THROWS by name when the player stands on a live teleporter', () => {
-        // Slice 3's seat. Room transitions land whole — the world swap, the
-        // arrival offset, the anti-ping-pong latch and the `transitions`
-        // records — or not at all.
+    it('THROWS when two teleporters fire on the same tick', () => {
+        // `FP.world =` only records a `_goto`, so the LAST teleporter to
+        // update wins — and that order is FlashPunk's prepend order, which
+        // this module deliberately does not transcribe. The player's box at
+        // the centre of (2,1) is [38,42)x[22,27), which reaches into both of
+        // these 16x16 volumes.
+        const w = world({
+            entities: [
+                { type: 'teleporter', x: 32, y: 16, attrs: { to: 94, playerx: 0, playery: 0 } },
+                { type: 'teleporter', x: 32, y: 8, attrs: { to: 12, playerx: 0, playery: 0 } },
+            ],
+        });
+        const { x, y } = centre(2, 1);
+        expect(() => step({ x, y, vx: 0, vy: 0, terrain: 0 }, held(), { level: w }))
+            .toThrow(PhysicsV2Error);
+        expect(() => step({ x, y, vx: 0, vy: 0, terrain: 0 }, held(), { level: w }))
+            .toThrow(/2 teleporters fired on the same tick/);
+    });
+
+    it('THROWS on a teleporter that targets its OWN level', () => {
+        // Not squeamishness: the GAME's transitions are derived from the
+        // level field, so a same-level teleport is invisible on that side.
+        // Modelling it would put an entry in the JS stream that the oracle
+        // could never report — a divergence created by the model itself.
         const w = world({
             entities: [{
-                type: 'teleporter',
-                x: 32,
-                y: 16,
-                attrs: { to: 94, playerx: 288, playery: 160, tag: -1 },
+                type: 'teleporter', x: 32, y: 16, attrs: { to: 900, playerx: 0, playery: 0 },
             }],
         });
         const { x, y } = centre(2, 1);
         expect(() => step({ x, y, vx: 0, vy: 0, terrain: 0 }, held(), { level: w }))
-            .toThrow(TransitionNotModelledError);
-        expect(() => step({ x, y, vx: 0, vy: 0, terrain: 0 }, held(), { level: w }))
-            .toThrow(/slice 3/);
+            .toThrow(/targets its OWN level/);
+    });
+});
+
+/**
+ * Room transitions — the slice-3 model, hand-derived from `Teleporter.as`
+ * and `Game.as` over the synthetic grid.
+ *
+ * The fixture differential proves the WHOLE thing end to end against the
+ * real game (`transition-west-return` crosses twice), but it can only
+ * exercise the paths that one route takes: level 0 and 94's teleporters are
+ * all `tag = -1`, no arrival lands on a trigger, and no tick overlaps two.
+ * The latch's arming, its clearing, and the deactivated arm therefore have
+ * no oracle at all, which is what these are for.
+ */
+describe('room transitions', () => {
+    /** A teleporter at oel (32,16), i.e. the trigger volume over cell (2,1). */
+    const gate = (attrs) => ({
+        type: 'teleporter', x: 32, y: 16, attrs: { playerx: 288, playery: 160, ...attrs },
+    });
+    const onGate = centre(2, 1);
+    const clearOfGate = centre(0, 3);
+
+    it('fires when the player overlaps a live, unlatched trigger', () => {
+        const w = world({ entities: [gate({ to: 94 })] });
+        const r = step({ ...onGate, vx: 0, vy: 0, terrain: 0 }, held(), { level: w });
+        expect(r.transition).toMatchObject({ from_level: 900, to_level: 94 });
+        expect(r.transition.teleporter.arrival).toEqual({ x: 296, y: 168 });
     });
 
-    it('does not fire the transition seam for a teleporter the player is clear of', () => {
-        // The negative control: without it, "throws on a teleporter" would
-        // be satisfied by throwing on every level that has one.
-        const w = world({
-            entities: [{
-                type: 'teleporter',
-                x: 0,
-                y: 0,
-                attrs: { to: 94, playerx: 288, playery: 160, tag: -1 },
-            }],
+    it('does not fire for a trigger the player is clear of', () => {
+        // The negative control. Without it, "fires on a teleporter" would be
+        // satisfied by firing on every level that contains one.
+        const w = world({ entities: [gate({ to: 94 })] });
+        const r = step({ ...clearOfGate, vx: 0, vy: 0, terrain: 0 }, held(), { level: w });
+        expect(r.transition).toBeNull();
+    });
+
+    it('runs the tick\'s FULL movement in the OLD level before the swap', () => {
+        // `FP.world = new Game(...)` sets `_goto`; the swap is deferred to
+        // `Engine.checkWorld` at end-of-tick, so the doomed player really
+        // does complete this tick. One accel quantum from rest = 0.8.
+        const w = world({ entities: [gate({ to: 94 })] });
+        const r = step({ ...onGate, vx: 0, vy: 0, terrain: 0 }, held('right'), { level: w });
+        expect(r.transition).not.toBeNull();
+        expect(r.x).toBeCloseTo(onGate.x + 0.8, 12);
+        expect(r.vx).toBe(0.8);
+    });
+
+    it('pre-arms the latch for a trigger the player is standing on', () => {
+        // `Teleporter.check()` is the ONLY place `playerTouching` is set,
+        // and `Game.update` runs check() on every entity on the world's
+        // first frame — above the blackCover gate, so it happens whether or
+        // not that frame is a live tick.
+        const w = world({ entities: [gate({ to: 94 })] });
+        expect([...initialLatch(w, onGate.x, onGate.y)]).toEqual([0]);
+        expect([...initialLatch(w, clearOfGate.x, clearOfGate.y)]).toEqual([]);
+    });
+
+    it('a pre-armed trigger does not fire until the player steps OFF it', () => {
+        // The anti-ping-pong rule, and the reason a round trip is two
+        // crossings rather than an endless bounce.
+        const w = world({ entities: [gate({ to: 94 })] });
+        const latched = initialLatch(w, onGate.x, onGate.y);
+        const held0 = updateTeleporters(w, onGate.x, onGate.y, latched);
+        expect(held0.fired).toEqual([]);
+        expect([...held0.latched]).toEqual([0]);
+
+        // Step off: the else-branch clears it.
+        const off = updateTeleporters(w, clearOfGate.x, clearOfGate.y, held0.latched);
+        expect(off.fired).toEqual([]);
+        expect([...off.latched]).toEqual([]);
+
+        // Step back on: now it fires.
+        const back = updateTeleporters(w, onGate.x, onGate.y, off.latched);
+        expect(back.fired).toHaveLength(1);
+        expect(back.fired[0].teleporter.to).toBe(94);
+    });
+
+    it('firing does not latch — only check() ever sets playerTouching', () => {
+        // Transcribed rather than tidied. It is harmless in the game (the
+        // world the entity belongs to is discarded moments later), but a
+        // model that latched on fire would be describing a rule the source
+        // does not have.
+        const w = world({ entities: [gate({ to: 94 })] });
+        const r = updateTeleporters(w, onGate.x, onGate.y, new Set());
+        expect(r.fired).toHaveLength(1);
+        expect([...r.latched]).toEqual([]);
+    });
+
+    it('a DEACTIVATED trigger neither fires nor clears its own latch', () => {
+        // `update()` returns before both arms. A tagged, non-inverted
+        // teleporter is deactivated on a fresh boot — see levelWorld — which
+        // is the second reason fixtures stay off tagged teleporters.
+        const w = world({ entities: [gate({ to: 94, tag: 4 })] });
+        expect(w.teleporters[0].deactivated).toBe(true);
+        expect(updateTeleporters(w, onGate.x, onGate.y, new Set()).fired).toEqual([]);
+        // Pre-armed by check() (which does NOT consult `deactivated`), then
+        // left armed even though the player has walked away.
+        const latched = initialLatch(w, onGate.x, onGate.y);
+        expect([...latched]).toEqual([0]);
+        expect([...updateTeleporters(w, clearOfGate.x, clearOfGate.y, latched).latched])
+            .toEqual([0]);
+    });
+
+    it('arriveIn lands at (playerx + 8, playery + 8) with a WHOLE new Player', () => {
+        // `Game.as:2040` builds `new Player(playerx, playery)` and the ctor
+        // re-centres onto the tile (`Player.as:357`). Velocity and the
+        // sticky terrain state go with the old entity; held keys do not
+        // appear here at all, because FlashPunk's Input is static.
+        const w = world({ entities: [gate({ to: 94 })] });
+        const tp = w.teleporters[0];
+        expect(tp.playerx).toBe(288);
+        expect(arriveIn(w, tp)).toEqual({
+            x: 296,
+            y: 168,
+            vx: 0,
+            vy: 0,
+            terrain: INITIAL_TERRAIN_STATE,
+            latched: new Set(),
+            hitX: null,
+            hitY: null,
         });
-        const { x, y } = centre(3, 3);
-        expect(step({ x, y, vx: 0, vy: 0, terrain: 0 }, held(), { level: w }).terrain)
-            .toBe(0);
+    });
+
+    it('arriveIn pre-arms the latch when the arrival lands ON a trigger', () => {
+        // The case the recorded round trip specifically does NOT exercise —
+        // both of its arrivals are clear of the return trigger — so it has
+        // no oracle and needs this. Arriving at (296,168) inside a trigger
+        // whose oel position is (288,160): without the pre-arm the very next
+        // tick would fire it straight back.
+        const w = world({
+            entities: [
+                gate({ to: 94 }),
+                { type: 'teleporter', x: 288, y: 160, attrs: { to: 12, playerx: 0, playery: 0 } },
+            ],
+        });
+        const arrived = arriveIn(w, w.teleporters[0]);
+        expect([...arrived.latched]).toEqual([1]);
+        expect(updateTeleporters(w, arrived.x, arrived.y, arrived.latched).fired).toEqual([]);
+    });
+
+    it('carries the latch through an ordinary tick', () => {
+        // `step` has to thread it: a model that recomputed the latch from
+        // scratch each tick would re-fire every trigger the player stood
+        // still on.
+        const w = world({ entities: [gate({ to: 94 })] });
+        const at = { ...onGate, vx: 0, vy: 0, terrain: 0, latched: new Set([0]) };
+        const r = step(at, held(), { level: w });
+        expect(r.transition).toBeNull();
+        expect([...r.latched]).toEqual([0]);
     });
 });
