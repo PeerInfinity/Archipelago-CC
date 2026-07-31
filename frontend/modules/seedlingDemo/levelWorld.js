@@ -54,8 +54,19 @@ import {
 } from '../flashPanel/seedlingSemantics.js';
 import { coerceTerrainState, HAZARD_STATES } from './tapeFormat.js';
 
+/**
+ * The player hitbox origin, for recovering the entity position from a box.
+ * Transcribed rather than imported: this module stays dependency-free of the
+ * physics (`Player.as:295` normalHitbox = (2, 2, 4, 5)).
+ */
+const HITBOX_ORIGIN_X = 2;
+const HITBOX_ORIGIN_Y = 2;
+
 /** `Tile.types` index for a Pit — the transport primitive, R1. */
 const PIT_STATE = HAZARD_STATES.pit;
+
+/** `Tile.types` index for a Bridge — Solid until something spears it. */
+const BRIDGE_STATE = 29;
 
 export class LevelWorldError extends Error {
     constructor(message) {
@@ -151,7 +162,6 @@ const UNMODELLED_REASON = Object.freeze({
     17: 'Lava — same sound-coupled stroke burst as water, plus damage',
     22: 'Ice — rewrites both moveSpeed (1) and friction (0.025)',
     25: 'Waterfall — sound-coupled like water, at half speed',
-    29: 'Bridge — rewrites its own entity type from a timer inside render()',
 });
 
 /**
@@ -604,15 +614,25 @@ export const ENTITY_CLASSES = Object.freeze({
             + 'x, y, v)` then `activate = v.length > 0`, which propagates to every '
             + '`Activators` sharing its `t` — including a ButtonRoom, which writes '
             + 'persistence for ANOTHER level (ButtonRoom.as:93). No key needed.',
-        hazard: 'unpriced',
-    },
+        hazard: {
+            dx: 4, dy: 5, w: 8, h: 6, originX: 0, originY: 0,
+            kind: 'stand-on',
+            effect: 'presses, which propagates to every Activators sharing its `t` — '
+                + 'and a ButtonRoom writes persistence for ANOTHER LEVEL, changing '
+                + 'what exists in a room this run models from a static extract',
+        },    },
     buttonroom: {
         as3: 'ButtonRoom', roles: RELAXED_ROLES,
         src: 'Game.as:2128 + Puzzlements/ButtonRoom.as:93',
         why: 'the other half of `button`: `Game.setPersistence(t, persist, room)` '
             + 'changes what EXISTS in a different level',
-        hazard: 'unpriced',
-    },
+        hazard: {
+            dx: 4, dy: 5, w: 8, h: 6, originX: 0, originY: 0,
+            kind: 'stand-on',
+            effect: 'presses, which propagates to every Activators sharing its `t` — '
+                + 'and a ButtonRoom writes persistence for ANOTHER LEVEL, changing '
+                + 'what exists in a room this run models from a static extract',
+        },    },
     pull: {
         as3: 'Pull', roles: RELAXED_ROLES,
         src: 'Game.as:2134 + Puzzlements/Pull.as:33-45',
@@ -620,16 +640,24 @@ export const ENTITY_CLASSES = Object.freeze({
             + '`e.x += force*cos(dir); e.y -= force*sin(dir)` every tick, with no '
             + 'call to Player.hit(), so `Bot.noDamage` does not touch it. 14 of them '
             + 'sit in level 12, which is on the shortest chain to several items.',
-        hazard: 'unpriced',
-    },
+        hazard: {
+            dx: 0, dy: 0, w: 16, h: 16, originX: 0, originY: 0,
+            kind: 'hitbox',
+            effect: 'adds force*cos(dir) to e.x and subtracts force*sin(dir) from e.y '
+                + 'every tick, for as long as the player overlaps it',
+        },    },
     whirlpool: {
         as3: 'Whirlpool', roles: RELAXED_ROLES,
         src: 'Game.as:2163 + Puzzlements/Whirlpool.as:61-81',
         why: 'writes player.x/player.y radially AND calls `player.drown()` directly '
             + '— bypassing the terrain state entirely, so `noHazards` does not stop '
             + 'it either',
-        hazard: 'unpriced',
-    },
+        hazard: {
+            dx: 0, dy: 0, w: 32, h: 32, originX: 0, originY: 0,
+            kind: 'hitbox',
+            effect: 'writes player.x/.y radially outward, then calls player.drown() '
+                + 'directly — so noHazards does not stop it either',
+        },    },
     lavatrap: {
         as3: 'LavaTrap', roles: RELAXED_ROLES,
         src: 'Game.as:2083 + Enemies/LavaTrap.as:56-72,145-148',
@@ -637,43 +665,84 @@ export const ENTITY_CLASSES = Object.freeze({
             + '(`attached.x/.y = ...`) and calls `attached.die()`. `hitPlayer()` is '
             + 'overridden to {} — it never goes through Player.hit(), so `noDamage` '
             + 'does not touch it. The volume is a DISC of radius max(tongueLengths).',
-        hazard: 'unpriced',
-    },
+        hazard: {
+            point: { dx: 8, dy: 8, r: 33 },
+            kind: 'chomp-disc',
+            effect: 'launches a tongue that ATTACHES the player and then writes '
+                + 'attached.x/.y every tick until it is fully retracted, at which '
+                + 'point it calls attached.die() unless Player.hasDarkSuit',
+        },    },
     iceturret: {
         as3: 'IceTurret', roles: RELAXED_ROLES,
         src: 'Game.as:2086 + Projectiles/IceTurretBlast.as:52',
         why: 'its projectile calls `(hits[i] as Player).freeze(freezeTime)` — a '
             + 'frozen player runs no friction/input/move block, which is a stream '
             + 'difference, and it does not go through Player.hit()',
-        hazard: 'unpriced',
-    },
+        hazard: {
+            point: { dx: 16, dy: 16, r: 129 },
+            kind: 'attack-range',
+            effect: 'aims and, after shootTimer, fires three IceTurretBlasts, each of '
+                + 'which calls Player.freeze(90) — ninety ticks with no input block',
+        },    },
     fallrock: {
         as3: 'FallRock', roles: RELAXED_ROLES,
         src: 'Game.as:2135 + Scenery/FallRock.as:59,107',
         why: 'triggers on the player being above it, then freezes the game and '
             + 'writes `p.y`',
-        hazard: 'unpriced',
-    },
+        hazard: {
+            inert: 'a FRESH BOOT parks it. `Main.as:319-330` fills levelPersistence '
+                + 'with true, and both the constructor and the whole falling branch of '
+                + 'update() are behind `!Game.checkPersistence(tag)` — so a tag >= 0 '
+                + 'rock sits at y = -16 with type "", never falls, never freezes the '
+                + 'game and never writes p.y. Every one on the R1 route carries a tag. '
+                + 'A tag = -1 rock would be live; there are none.',
+        },    },
     fallrocklarge: {
         as3: 'FallRockLarge', roles: RELAXED_ROLES,
         src: 'Game.as:2136 + Scenery/FallRockLarge.as:67,117,134',
         why: 'as `fallrock`, and the one in level 32 additionally spawns BobBoss '
             + '(`bossrock && thirdboss`) — the only construction site of the boss '
             + 'that drops `fire`, since no .oel carries a bobboss1/2/3 tag',
-        hazard: 'unpriced',
-    },
+        hazard: {
+            inert: 'a FRESH BOOT parks it. `Main.as:319-330` fills levelPersistence '
+                + 'with true, and both the constructor and the whole falling branch of '
+                + 'update() are behind `!Game.checkPersistence(tag)` — so a tag >= 0 '
+                + 'rock sits at y = -16 with type "", never falls, never freezes the '
+                + 'game and never writes p.y. Every one on the R1 route carries a tag. '
+                + 'A tag = -1 rock would be live; there are none.',
+        },    },
     shieldlock: {
         as3: 'ShieldLock', roles: RELAXED_ROLES,
         src: 'Game.as:2145 + Puzzlements/ShieldLock.as:35-49 (new ShieldLock(x,y,tag,1))',
         why: 'snaps `p.y` and sets `p.receiveInput = false` on approach',
-        hazard: 'unpriced',
-    },
+        hazard: {
+            dx: -1, dy: 0, w: 16, h: 16, originX: 0, originY: 0,
+            kind: 'lock-snap',
+            effect: 'snaps p.y and sets p.receiveInput = false',
+            // ⚠ PRICED UNCONDITIONALLY LIVE, deliberately over-approximating.
+            // `ShieldLock.update` fires only under `(hasDarkShield && type
+            // == 1) || (hasShield && type == 0)`, so the true volume is a
+            // function of the INVENTORY — it appears halfway through a walk,
+            // the moment the shield room is entered. A volume that switches
+            // on mid-route is a policy the planner has no vocabulary for,
+            // and over-avoiding is the safe direction, so it is always on.
+        },    },
     shieldlocknorm: {
         as3: 'ShieldLock', roles: RELAXED_ROLES,
         src: 'Game.as:2144 + Puzzlements/ShieldLock.as:35-49 (new ShieldLock(x,y,tag,0))',
         why: 'same class as `shieldlock`; the fourth argument picks a sprite',
-        hazard: 'unpriced',
-    },
+        hazard: {
+            dx: -1, dy: 0, w: 16, h: 16, originX: 0, originY: 0,
+            kind: 'lock-snap',
+            effect: 'snaps p.y and sets p.receiveInput = false',
+            // ⚠ PRICED UNCONDITIONALLY LIVE, deliberately over-approximating.
+            // `ShieldLock.update` fires only under `(hasDarkShield && type
+            // == 1) || (hasShield && type == 0)`, so the true volume is a
+            // function of the INVENTORY — it appears halfway through a walk,
+            // the moment the shield room is entered. A volume that switches
+            // on mid-route is a policy the planner has no vocabulary for,
+            // and over-avoiding is the safe direction, so it is always on.
+        },    },
     pod: {
         as3: 'Pod', roles: RELAXED_ROLES,
         src: 'Game.as:2191 + Scenery/Pod.as:70-73',
@@ -684,8 +753,15 @@ export const ENTITY_CLASSES = Object.freeze({
         as3: 'BossTotem', roles: RELAXED_ROLES,
         src: 'Game.as:2071 + Enemies/BossTotem.as:284,486',
         why: 'writes `p.y` directly during its fight sequence, and consumes RNG',
-        hazard: 'unpriced',
-    },
+        hazard: {
+            inert: 'it activates on `FP.world.classCount(Wand) <= 0` — i.e. when the '
+                + 'Wand has been COLLECTED. R0 ruled grants to be property writes only, '
+                + 'so the pickup is never removed from the world, classCount(Wand) is '
+                + 'never 0, the boss never activates, and its p.y write at :284 (behind '
+                + '`fullyActivated`) never runs. The grants ruling paying for itself in '
+                + 'a way nobody predicted — and it means R3, which collects for real, '
+                + 'has to price this volume properly.',
+        },    },
     finalboss: {
         as3: 'FinalBoss', roles: RELAXED_ROLES,
         src: 'Game.as:2074 + Enemies/FinalBoss.as:92',
@@ -972,16 +1048,42 @@ export function buildLevelWorld(levelRecord, { roles = ROLES } = {}) {
                 // become a wall type and the nearest walkable tile near a
                 // wall may be surprisingly distant.
                 walkableTiles.push(tile);
+            } else if (t === BRIDGE_STATE) {
+                // ⚠ A BRIDGE IS A SOLID, and it stays one for as long as
+                // nothing throws a spear at it.
+                //
+                // v2 failed the whole level here, because `Tile.types[29]`
+                // is "Unused" and the entity rewrites its own type from
+                // `bridgeOpeningTimer` inside render() — closed => "Solid",
+                // open => "Tile" — so it could not be sorted into either
+                // list. R1 read the timer instead of the table, and it is
+                // not a timer at all on a bot's boot: it is initialised to
+                // `bridgeOpeningTimerMax` (60) and the ONLY line in the
+                // whole codebase that decrements it is `Player.as:1098`,
+                // inside `genericHit` under `t == "Spear"`. Nothing ticks
+                // it down; nothing else writes it. A bridge opens because
+                // you SPEAR it, and R1 never presses an attack key — so the
+                // `bridgeOpeningTimer >= max` arm holds for the whole run
+                // and `type` is "Solid", every frame, deterministically.
+                //
+                // ⚠ It is an OBJECT solid, not a tile solid, and that is
+                // the same distinction CliffSide already draws: the type is
+                // assigned from render(), which the Engine drives
+                // independently of `Game.update`'s blackCover gate, so a
+                // bridge is already Solid on a world's first LIVE tick
+                // while an ordinary Stone is still typed "Tile".
+                //
+                // ⚠ R3 MUST REVISIT THIS. The moment the ladder teaches the
+                // bot to use the spear, the timer becomes a real timer and
+                // a bridge becomes a gated crossing with an opening
+                // animation. The classification is true of a rung, not of
+                // the game.
+                const solid = {
+                    rect: tile.rect, cls: null, tag: `tile:${tile.name}`, x, y,
+                };
+                solids.push(solid);
+                objectSolids.push(solid);
             } else {
-                // 'Unused' in `Tile.types` — Bridge, and only Bridge. It
-                // rewrites its own entity type from an opening timer
-                // inside render(), so it is neither reliably solid nor
-                // reliably walkable and cannot even be sorted into a list
-                // here. A level containing one is unmodellable rather than
-                // modellable-but-wrong, so it fails at BUILD time; the
-                // merely special terrains (water, pit, lava, ice,
-                // waterfall) load fine and throw from the resolver only if
-                // the player actually stands on one.
                 fail(`${where} tile (${tx},${ty}) is type ${t} `
                     + `(${TILE_TYPE_NAMES[t]}), whose Tile.types entry is "Unused": `
                     + `${UNMODELLED_REASON[t] ?? 'not modelled'}`);
@@ -1059,10 +1161,32 @@ export function buildLevelWorld(levelRecord, { roles = ROLES } = {}) {
                     + `${cls.why} Source: ${cls.src}. Price the volume before routing a `
                     + 'walk through this level, or drop the proximity-hazard role.');
             }
-            proximityHazards.push({
-                rect: entityRect(cls.hazard, x, y), cls, tag: e.type, x, y,
-                kind: cls.hazard.kind, effect: cls.hazard.effect,
-            });
+            // An INERT classification is an affirmative act with its
+            // evidence attached, never an omission: the class IS a proximity
+            // hazard, and the reason it cannot fire on a fresh boot is
+            // recorded so a later rung (R3 collects for real, which wakes
+            // BossTotem) knows exactly what it has to price.
+            if (!cls.hazard.inert) {
+                proximityHazards.push({
+                    cls, tag: e.type, x, y,
+                    kind: cls.hazard.kind, effect: cls.hazard.effect,
+                    // Two volume shapes, because the GAME uses two tests. A
+                    // rect hazard gates on `collide("Player", ...)`, i.e. the
+                    // player's BOX against the entity's hitbox. A `point`
+                    // hazard gates on `FP.distance(x, y, player.x, player.y)`
+                    // — the player's ENTITY POSITION against a radius, which
+                    // is not a box test at all and must not be approximated
+                    // by one when the radius is 129 px wide.
+                    rect: cls.hazard.point ? null : entityRect(cls.hazard, x, y),
+                    disc: cls.hazard.point
+                        ? {
+                            x: x + cls.hazard.point.dx,
+                            y: y + cls.hazard.point.dy,
+                            r: cls.hazard.point.r,
+                        }
+                        : null,
+                });
+            }
         }
 
         if (cls.collider === 'none' || cls.collider === undefined) continue;
@@ -1152,15 +1276,24 @@ export function buildLevelWorld(levelRecord, { roles = ROLES } = {}) {
          * a world built without the `pickup` role has no pickups to report,
          * which is honest rather than empty.
          */
-        avoidVolumesAt(box) {
+        avoidVolumesAt(box, pos = null) {
             const hits = [];
             for (const p of pickups) {
                 if (rectsOverlap(box, p.rect)) hits.push({ kind: 'pickup', blocker: p });
             }
             for (const h of proximityHazards) {
-                if (rectsOverlap(box, h.rect)) {
-                    hits.push({ kind: 'proximity-hazard', blocker: h });
-                }
+                const hit = h.disc
+                    // `FP.distance(x, y, player.x, player.y) <= range`, with
+                    // the result assigned to an `int` — so the true bound is
+                    // `dist < range + 1` and `r` already carries the +1.
+                    // Needs the player's POSITION; a caller that only has a
+                    // box gets it from the box's own origin.
+                    ? Math.hypot(
+                        (pos ? pos.x : box.x + HITBOX_ORIGIN_X) - h.disc.x,
+                        (pos ? pos.y : box.y + HITBOX_ORIGIN_Y) - h.disc.y,
+                    ) < h.disc.r
+                    : rectsOverlap(box, h.rect);
+                if (hit) hits.push({ kind: 'proximity-hazard', blocker: h });
             }
             return hits;
         },

@@ -363,12 +363,33 @@ describe('tiles', () => {
         expect(L0.tiles).toHaveLength(levelRecord(0).width * levelRecord(0).height);
     });
 
-    it('does not model bridge tiles at all — they rewrite their own type', () => {
+    it('builds a bridge tile as an OBJECT solid, not as terrain', () => {
+        // v2 failed the whole level here. R1 reads the timer instead of the
+        // table: `bridgeOpeningTimer` starts at 60 and the ONLY line in the
+        // codebase that decrements it is Player.as:1098, under `t ==
+        // "Spear"` — so on a run that never presses an attack key the bridge
+        // is "Solid" every frame, deterministically. It is an OBJECT solid
+        // because the type comes from render(), which the Engine drives
+        // independently of the blackCover gate, so it is armed on tick 1
+        // while an ordinary Stone is still typed "Tile".
         const bridgeColumn = TILE_COLUMN_TO_TYPE.indexOf(29);
-        expect(() => buildLevelWorld({
+        const w = buildLevelWorld({
             level: 999, width: 1, height: 1, entities: [],
             layers: [{ name: 'tiles', tiles: [[0, 0, bridgeColumn * 16, 0]] }],
-        })).toThrow(/Tile\.types entry is "Unused"/);
+        });
+        expect(w.solids).toHaveLength(1);
+        expect(w.objectSolids).toHaveLength(1);
+        expect(w.solids[0].tag).toBe('tile:Bridge');
+        // ...and it is NOT a getState candidate, so `state` can never become
+        // 29 and the resolver never has to answer for it.
+        expect(w.walkableTiles).toHaveLength(0);
+        expect(MODELLED_TILE_TYPES).not.toContain(29);
+        // The three route levels this unblocks — 61 and 63 stand between the
+        // walk and both ghostspear and health.
+        expect(() => buildLevelWorld(levelRecord(61), { roles: RELAXED_ROLES }))
+            .not.toThrow();
+        expect(() => buildLevelWorld(levelRecord(63), { roles: RELAXED_ROLES }))
+            .not.toThrow();
     });
 
     it('modelled terrain excludes exactly the special-mechanics types', () => {
@@ -378,8 +399,9 @@ describe('tiles', () => {
         // would let a fixture onto sound-coupled or input-stealing terrain.
         // ⚠ R1 MOVED 6 (Pit) OUT of this list: it is modelled, as a
         // TRANSPORT rather than as a floor. The other five stay out for the
-        // reasons in UNMODELLED_REASON, and Bridge still fails at build time
-        // rather than here.
+        // reasons in UNMODELLED_REASON. Bridge (29) is still not modelled
+        // TERRAIN — it is a solid, so it leaves the getState candidate list
+        // entirely and `state` can never become 29.
         const excluded = [1, 17, 22, 25, 29];
         const all = TILE_TYPE_ENTITY_TYPES.map((_, t) => t);
         expect([...MODELLED_TILE_TYPES].sort((a, b) => a - b))
@@ -714,7 +736,11 @@ describe('roles: the census is per-role, and wider than the fixture levels', () 
         // The number that says whether the relaxation was worth doing.
         // v2 built 3 of 116; classifying the level FLAGS (lightalpha alone
         // appears in 98 levels), the fifteen pickups and the chest lifts the
-        // FULL census to 11, and consulting only the cheap roles reaches 82.
+        // FULL census to 11, and consulting only the cheap roles reached 82
+        // at R0. R1 priced ten of the twelve remaining proximity volumes —
+        // three of them as an evidenced INERT — and that lifts the relaxed
+        // census to 111 of 116. What is left out is the 3 Bridge levels and
+        // the 2 holding a `pod` or the `finalboss`.
         let full = 0;
         let relaxed = 0;
         for (const level of atlas.levels) {
@@ -724,7 +750,7 @@ describe('roles: the census is per-role, and wider than the fixture levels', () 
             }
         }
         expect(full).toBe(11);
-        expect(relaxed).toBe(82);
+        expect(relaxed).toBe(115);
     });
 
     it('builds every level on the R0 witness chain, and level 94', () => {
@@ -799,14 +825,16 @@ describe('roles: pickups and proximity hazards are AVOID VOLUMES', () => {
         // Same shape as the pixelmask seam — a rung boundary made visible.
         expect(() => buildLevelWorld({
             level: 999, width: 2, height: 2, layers: [],
-            entities: [{ type: 'lavatrap', x: 0, y: 0 }],
+            entities: [{ type: 'pod', x: 0, y: 0 }],
         }, { roles: RELAXED_ROLES })).toThrow(/PROXIMITY HAZARD whose avoid volume has not/);
         // ...and the error carries the evidence, so nobody has to re-derive
-        // why a lava trap is not covered by `Bot.noDamage`.
+        // why a Pod is not covered by `Bot.noDamage`. Two tags are still
+        // unpriced — `pod` (level 112) and `finalboss` (level 112) — and
+        // both are R6's endgame room, which no R1 route enters.
         expect(() => buildLevelWorld({
             level: 999, width: 2, height: 2, layers: [],
-            entities: [{ type: 'lavatrap', x: 0, y: 0 }],
-        }, { roles: RELAXED_ROLES })).toThrow(/never goes through Player\.hit\(\)/);
+            entities: [{ type: 'pod', x: 0, y: 0 }],
+        }, { roles: RELAXED_ROLES })).toThrow(/snaps `p\.x`\/`p\.y` to its own position/);
     });
 
     it('reports overlaps through avoidVolumesAt, and nothing else does', () => {
@@ -830,5 +858,107 @@ describe('roles: pickups and proximity hazards are AVOID VOLUMES', () => {
         expect(w.roles).toEqual(['trigger']);
         expect(w.pickups).toEqual([]);
         expect(w.avoidVolumesAt({ x: 54, y: 54, right: 58, bottom: 59 })).toEqual([]);
+    });
+});
+
+describe('R1: the priced proximity volumes', () => {
+    const R = (id) => buildLevelWorld(levelRecord(id), { roles: RELAXED_ROLES });
+
+    it('every hazard is priced, INERT with evidence, or unpriced with evidence', () => {
+        // Three states and no fourth. "Unpriced" and "inert" are both
+        // affirmative classifications carrying their reason, so neither can
+        // be read later as an oversight and quietly "fixed".
+        for (const [tag, cls] of Object.entries(ENTITY_CLASSES)) {
+            if (!cls.hazard) continue;
+            if (cls.hazard === 'unpriced') {
+                expect(cls.why, `${tag} is unpriced with no evidence`).toBeTruthy();
+            } else if (cls.hazard.inert) {
+                expect(typeof cls.hazard.inert, `${tag} inert with no reason`).toBe('string');
+                expect(cls.hazard.inert.length).toBeGreaterThan(40);
+            } else {
+                expect(cls.hazard.effect, `${tag} has a volume but no effect`).toBeTruthy();
+                expect(cls.hazard.kind, `${tag} has a volume but no kind`).toBeTruthy();
+                // Exactly one shape, never both and never neither.
+                const isPoint = Boolean(cls.hazard.point);
+                const isRect = cls.hazard.w !== undefined;
+                expect(isPoint !== isRect, `${tag} must be a point OR a rect`).toBe(true);
+            }
+        }
+        // The two still unpriced are both in level 112, the endgame room.
+        const unpriced = Object.entries(ENTITY_CLASSES)
+            .filter(([, c]) => c.hazard === 'unpriced').map(([t]) => t).sort();
+        expect(unpriced).toEqual(['finalboss', 'pod']);
+    });
+
+    it('a lavatrap is a 33 px POINT disc, not a box overlap', () => {
+        // `chompRange = 32` and `var d:int = FP.distance(...)`, so `d <= 32`
+        // is `dist < 33` — and it measures to the PLAYER'S POSITION, not to
+        // the player's box. Level 80's traps are at oel (32,224) and (80,96).
+        const L80 = R(80);
+        const traps = L80.proximityHazards.filter((h) => h.tag === 'lavatrap');
+        expect(traps.map((t) => [t.disc.x, t.disc.y, t.disc.r]))
+            .toEqual([[40, 232, 33], [88, 104, 33]]);
+        expect(traps.every((t) => t.rect === null)).toBe(true);
+        // Just inside and just outside, measured from the player position.
+        const box = playerBoxAt(40, 200);
+        expect(L80.avoidVolumesAt(box, { x: 40, y: 200 }).length).toBe(1);   // 32 away
+        expect(L80.avoidVolumesAt(playerBoxAt(40, 199), { x: 40, y: 199 }).length).toBe(0);
+    });
+
+    it('an ice turret is a 129 px POINT disc — bigger than its own room', () => {
+        // `attackRange = 128`, same int truncation. Outside it `shootTimer`
+        // is reset every frame and no blast is ever constructed, so a route
+        // that stays clear is provably safe — and level 98's is at (120,40)
+        // in a 240x208 room, which is why Dungeon 8 is on R1's blocked list.
+        const L98 = R(98);
+        const turret = L98.proximityHazards.find((h) => h.tag === 'iceturret');
+        expect([turret.disc.x, turret.disc.y, turret.disc.r]).toEqual([120, 40, 129]);
+        // The only door out of level 98 is the stairs at tile (7,7) — 80 px
+        // from the turret, and inside the disc. This is the blocked-list
+        // claim, asserted rather than asserted-in-prose.
+        const stairs = L98.teleporters.find((tp) => tp.to === 99);
+        const c = { x: stairs.rect.x + 8, y: stairs.rect.y + 8 };
+        expect(L98.avoidVolumesAt(playerBoxAt(c.x, c.y), c)
+            .some((h) => h.blocker.tag === 'iceturret')).toBe(true);
+    });
+
+    it('the rect volumes match their constructor chains', () => {
+        // pull: `super(_x, _y)` with NO half-tile offset, setHitbox(16,16)
+        // and the default origin — one whole cell at the raw oel coords.
+        const L12 = R(12);
+        const pull = L12.proximityHazards.find((h) => h.tag === 'pull');
+        expect(pull.rect).toMatchObject({ x: 576, y: 640, right: 592, bottom: 656 });
+        // shieldlock: Lock's setHitbox(16,16,8,8) at (_x+8,_y+8), probed at
+        // `collide("Player", x - 1, y)` — one cell, shifted a pixel LEFT.
+        const lock = L12.proximityHazards.find((h) => h.tag === 'shieldlocknorm');
+        expect(lock.rect).toMatchObject({ x: 287, y: 704, right: 303, bottom: 720 });
+        // button/buttonroom: `super(_x+8,_y+8)` then setHitbox(8,6,4,3).
+        const L20 = R(20);
+        const room = L20.proximityHazards.find((h) => h.tag === 'buttonroom');
+        expect(room.rect).toMatchObject({ x: 196, y: 21, right: 204, bottom: 27 });
+        // whirlpool: `super(_x+16,_y+16)`, centerOO(), setHitbox(32,32,16,16).
+        const L50 = R(50);
+        const whirl = L50.proximityHazards.find((h) => h.tag === 'whirlpool');
+        expect(whirl.rect).toMatchObject({ x: 16, y: 48, right: 48, bottom: 80 });
+    });
+
+    it('a tagged FallRock contributes NO volume, and says why', () => {
+        // The evidenced inert. Level 74 is the darkshield room and holds one;
+        // it never falls on a fresh boot, so the route walks straight past.
+        const L74 = R(74);
+        expect(levelRecord(74).entities.some((e) => e.type === 'fallrock')).toBe(true);
+        expect(L74.proximityHazards.some((h) => h.tag === 'fallrock')).toBe(false);
+        expect(ENTITY_CLASSES.fallrock.hazard.inert).toMatch(/levelPersistence/);
+    });
+
+    it('BossTotem is inert only BECAUSE the grant leaves the Wand in the world', () => {
+        // Level 43 is the wand room and the boss sits in it. This is the one
+        // inert whose reason is a decision rather than a fact about the map,
+        // so it is pinned to the decision: R3 collects for real, the Wand
+        // leaves the world, classCount(Wand) hits 0, and the boss wakes.
+        const L43 = R(43);
+        expect(L43.proximityHazards.some((h) => h.tag === 'bosstotem')).toBe(false);
+        expect(ENTITY_CLASSES.bosstotem.hazard.inert).toMatch(/classCount\(Wand\)/);
+        expect(ENTITY_CLASSES.bosstotem.hazard.inert).toMatch(/R3/);
     });
 });

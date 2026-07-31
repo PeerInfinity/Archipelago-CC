@@ -161,7 +161,11 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
         if (rectsOverlap(probe, tile.rect)) return { kind: 'pit', blocker: tile };
     }
     if (avoidVolumes) {
-        const [hit] = level.avoidVolumesAt(box);
+        // The position, not just the box: a `point` hazard (lavatrap's
+        // 33 px chomp disc, an ice turret's 129 px attack range) tests the
+        // player's ENTITY position against a radius, which is what the game
+        // does and is not a box test at all.
+        const [hit] = level.avoidVolumesAt(box, { x, y });
         if (hit) return hit;
     }
     for (let i = 0; i < level.teleporters.length; i++) {
@@ -484,7 +488,7 @@ function drive(run, target, perTick, { until, tolerance, maxTicks, what, avoidVo
         // controllerPathClear docblock); this is what makes that safe.
         if (avoidVolumes) {
             const s = run.state;
-            const [v] = run.world.avoidVolumesAt(playerBoxAt(s.x, s.y));
+            const [v] = run.world.avoidVolumesAt(playerBoxAt(s.x, s.y), { x: s.x, y: s.y });
             if (v) {
                 fail(`${what}: the route entered a ${v.kind} — ${v.blocker.tag} at `
                     + `(${v.blocker.x},${v.blocker.y}) in level ${run.level} — at `
