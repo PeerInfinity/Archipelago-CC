@@ -806,6 +806,41 @@ grid covers every position, so the properties that only appear at a HOLE
 (sticky fallback, strict-touch) need a level with rows deliberately
 missing. Level 0 can only ever say "the two agree here".
 
+**The vacuity is a property of levels 0 and 94, not of the model — and it
+is not permanent.** Both have COMPLETE tile coverage (400/400 cells), so
+the intersect gate can never fail along any route in them. A hole cell has
+no tile, therefore no *solid* tile, so it is walkable unless an entity
+covers it — which makes a reachable hole an oracle-visible witness for
+stickiness. Surveying the extract:
+
+- **27 of 116 levels have holes** in their `tiles` layer (distinct from
+  `tiles_outside_level`, which is overpaint the extractor already drops).
+- **6 have a hole 4-adjacent to plain walkable floor**, i.e. steppable:
+  99, 101, 28, 83, 102, 110.
+- The nearest is **level 83 `OverWorld_fallhole`**, a 5x5 room whose
+  entire left and right columns are holes, reached **level 0 -> 12 -> 83
+  through two `tag=-1` teleporters** (level 0's (304,176) exit, then level
+  12's (32,848)). Standing mid-hole puts the player's 4-wide sample rect
+  at x in [6,10) while the nearest walkable tile's rect starts at 16 — no
+  intersection, so `state` must fall back to the sticky value. That is the
+  differential the current roster cannot produce.
+
+Two things stand between that and a fixture, both already known:
+1. **The boot is baked in** (§7's `boot.x`/`boot.y` finding), so the
+   oracle can only reach level 83 by WALKING there — which is slice 4 at
+   the earliest, and level 12's interior is unexamined (its exit sits at
+   y=848, so it is a tall level and the walk may cross terrain v2 will not
+   model). The alternative is a parameterised boot, which is an AS3 edit
+   and therefore something to BATCH per §6 rather than pay for alone.
+2. `buildLevelWorld(83)` would **throw today** on its `control` and
+   `lightalpha` entities — the census seam doing its job, and a reminder
+   that a new fixture level costs a class-table pass.
+
+So: record the gap as bounded, not accepted. Until one of those lands the
+synthetic grids are the only stratum that can see stickiness, and they
+share the generator's assumptions — which is worth saying out loud rather
+than letting the mutation table imply the property is covered.
+
 Mutation checks, each run, each confirmed to bite:
 
 | mutation | goes red |
