@@ -17,12 +17,12 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { loadTape } from './fixtures/index.js';
+import { loadExpectation, loadTape } from './fixtures/index.js';
 import { atlasLevelSource } from './levelSource.js';
 import { buildLevelWorld } from './levelWorld.js';
 import { spawnFromBoot } from './playerPhysicsV1.js';
 import { playerBoxAt, terrainProbeRect } from './playerPhysicsV2.js';
-import { runTapeToStream } from './tapeRunner.js';
+import { runTape, runTapeToStream } from './tapeRunner.js';
 import { parseTape } from './tapeFormat.js';
 import { DEFAULT_TOLERANCE } from './botDriverV1.js';
 import {
@@ -393,6 +393,15 @@ describe('the committed fixtures are what the driver emits today', () => {
         const t = parseTape(raw);
         return {
             boot: t.boot, noclip: t.noclip, tick_count: t.tick_count,
+            // ⚠ The RELAXATIONS are substance, not decoration: they decide
+            // which experiment the tape runs, so a driver that emitted the
+            // same key spans under a different hazard set has NOT reproduced
+            // the fixture — it has produced a tape whose oracle recording
+            // happens to still be readable.
+            tape_version: t.tape_version,
+            noDamage: t.noDamage,
+            noHazards: [...t.noHazards],
+            grants: t.grants.map((g) => ({ level: g.level, items: [...g.items] })),
             inputs: t.inputs.map((s) => ({ key: s.key, from: s.from, to: s.to })),
         };
     };
@@ -409,6 +418,81 @@ describe('the committed fixtures are what the driver emits today', () => {
             { level: 0, targets: [] },
         ], { levelSource });
         expect(substance(tape)).toEqual(substance(loadTape('cross-level-leg')));
+    });
+
+    it('grant-sword-room — the R0 witness', () => {
+        // The strongest net a synthesized fixture has: the PLAN depends on
+        // the geometry, so any change to a tile type, an entity rect, an
+        // avoid volume or the coerce rule moves the emitted tape and turns
+        // this red — even along stretches the route never comes near. It is
+        // how the statue offset was caught at v2 despite the route avoiding
+        // the statue.
+        const { tape } = synthesizeLegs([
+            { level: 0, exit: { x: 256, y: 272 } },
+            { level: 2, exit: { x: 48, y: 96 } },
+            { level: 3, exit: { x: 96, y: 128 } },
+            { level: 11, exit: { x: 32, y: 80 } },
+            { level: 10, targets: [{ x: 88, y: 24 }] },
+        ], {
+            levelSource,
+            relax: {
+                noDamage: true,
+                noHazards: ['water', 'pit', 'lava', 'ice', 'waterfall'],
+                grants: [{ level: 10, items: ['sword'] }],
+            },
+        });
+        expect(substance(tape)).toEqual(substance(loadTape('grant-sword-room')));
+    });
+});
+
+describe('what the R0 fixtures pin, in values', () => {
+    // Recorded from the real game, so these are claims about SEEDLING, not
+    // about this module. Stated in values so a later refactor that moved the
+    // whole stream in step could not quietly take the meaning with it.
+
+    it('grant-sword-room: four crossings, and the grant on the arrival tick', () => {
+        const { stream } = loadExpectation('grant-sword-room');
+        expect(stream.transitions).toEqual([
+            { t: 140, from_level: 0, to_level: 2 },
+            { t: 187, from_level: 2, to_level: 3 },
+            { t: 274, from_level: 3, to_level: 11 },
+            { t: 330, from_level: 11, to_level: 10 },
+        ]);
+        // The grant's tick IS the last crossing's tick — the contract both
+        // sides implement. The game's own `botStatus.grants` is what the
+        // verify script checks it against; this pins the JS side's half.
+        const out = runTapeToStream(loadTape('grant-sword-room'), { levelSource });
+        expect(out.transitions).toEqual(stream.transitions);
+    });
+
+    it('hazard-walk-water: ends STANDING on water, at the plain ground speed', () => {
+        const { stream } = loadExpectation('hazard-walk-water');
+        const last = stream.ticks[stream.ticks.length - 1];
+        // Column 9 of row 8 is Water; x = 158.3 is inside [144,160).
+        expect(Math.floor(last.x / 16)).toBe(9);
+        expect(last.y).toBe(136);
+        expect(last.level).toBe(0);
+        // The whole tape stays in level 0: nothing drowned, nothing reloaded.
+        expect(new Set(stream.ticks.map((o) => o.level))).toEqual(new Set([0]));
+        // And the resolver stored the RAW hazard state while the physics
+        // consumed the coerced one — the claim the stream alone cannot make.
+        const { final } = runTape(loadTape('hazard-walk-water'), { levelSource });
+        expect(final.terrain).toBe(1);
+    });
+
+    it('hazard-boot-pit: boots into level 83 and does NOT fall through to 84', () => {
+        const { stream } = loadExpectation('hazard-boot-pit');
+        // The parameterised boot, from the game's own first observation.
+        // `new Game(83, 32, 32)` puts the entity at (40,40) — the ctor's
+        // half-tile. Nothing but change (d) makes this observation possible.
+        expect(stream.ticks[0]).toEqual({ t: 0, x: 40, y: 40, level: 83 });
+        // The pit at tile (2,1) would set receiveInput = false and transport
+        // the player to level 84 (level 83's control block). It does not:
+        // ZERO transitions, and every observation still in 83.
+        expect(stream.transitions).toEqual([]);
+        expect(new Set(stream.ticks.map((o) => o.level))).toEqual(new Set([83]));
+        const { final } = runTape(loadTape('hazard-boot-pit'), { levelSource });
+        expect(final.terrain).toBe(6);
     });
 });
 

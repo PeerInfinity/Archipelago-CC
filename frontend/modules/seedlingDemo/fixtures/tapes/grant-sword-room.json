@@ -1,0 +1,246 @@
+{
+  "tape_version": 2,
+  "game": "seedling",
+  "name": "grant-sword-room",
+  "description": "THE R0 WITNESS, synthesized by the relaxed botDriverV2 across five legs: boot in level 0 out through the stairs at oel (256,272), then 2 -> 3 -> 11 -> 10, the sword's room. It is the first tape to exercise every R0 relaxation at once. noclip and noHazards are both load-bearing rather than decorative: levels 3 and 11 are substantially WATER (32 and 10 cells), which the v2 rung refuses to stand on at all, and levels 2 and 3 hold entities (dungeonspire, moonrockpile, breakablerockghost) that no collider classification exists for — so this route is only plannable at all because buildLevelWorld relaxes by ROLE. The two avoid volumes are real and on the path: level 11's chest at oel (32,48), whose OPEN LINE runs one pixel beneath it directly between the arrival and the exit, and level 10's sword at oel (48,48), whose 8x8 rect the route has to clear while standing in the same 7x7 room. Walking over either freezes the game behind a dialogue the tape can never dismiss, so a route that clipped one would HANG rather than diverge. The grant fires on the arrival tick in level 10 and is asserted from the GAME's own botStatus.items, never from the JS mirror.",
+  "boot": {
+    "level": 0,
+    "x": 80,
+    "y": 128
+  },
+  "noclip": true,
+  "noDamage": true,
+  "noHazards": [
+    "water",
+    "pit",
+    "lava",
+    "ice",
+    "waterfall"
+  ],
+  "grants": [
+    {
+      "level": 10,
+      "items": [
+        "sword"
+      ]
+    }
+  ],
+  "tick_count": 376,
+  "inputs": [
+    {
+      "key": "down",
+      "from": 0,
+      "to": 119
+    },
+    {
+      "key": "right",
+      "from": 0,
+      "to": 140
+    },
+    {
+      "key": "up",
+      "from": 119,
+      "to": 120
+    },
+    {
+      "key": "down",
+      "from": 120,
+      "to": 121
+    },
+    {
+      "key": "up",
+      "from": 123,
+      "to": 125
+    },
+    {
+      "key": "down",
+      "from": 125,
+      "to": 126
+    },
+    {
+      "key": "up",
+      "from": 126,
+      "to": 127
+    },
+    {
+      "key": "down",
+      "from": 131,
+      "to": 132
+    },
+    {
+      "key": "up",
+      "from": 138,
+      "to": 139
+    },
+    {
+      "key": "down",
+      "from": 140,
+      "to": 313
+    },
+    {
+      "key": "right",
+      "from": 187,
+      "to": 211
+    },
+    {
+      "key": "left",
+      "from": 211,
+      "to": 212
+    },
+    {
+      "key": "right",
+      "from": 212,
+      "to": 213
+    },
+    {
+      "key": "left",
+      "from": 213,
+      "to": 214
+    },
+    {
+      "key": "right",
+      "from": 214,
+      "to": 215
+    },
+    {
+      "key": "left",
+      "from": 218,
+      "to": 219
+    },
+    {
+      "key": "left",
+      "from": 274,
+      "to": 285
+    },
+    {
+      "key": "right",
+      "from": 285,
+      "to": 286
+    },
+    {
+      "key": "left",
+      "from": 286,
+      "to": 287
+    },
+    {
+      "key": "right",
+      "from": 287,
+      "to": 288
+    },
+    {
+      "key": "left",
+      "from": 288,
+      "to": 289
+    },
+    {
+      "key": "right",
+      "from": 292,
+      "to": 294
+    },
+    {
+      "key": "left",
+      "from": 296,
+      "to": 298
+    },
+    {
+      "key": "right",
+      "from": 301,
+      "to": 302
+    },
+    {
+      "key": "up",
+      "from": 313,
+      "to": 314
+    },
+    {
+      "key": "down",
+      "from": 314,
+      "to": 315
+    },
+    {
+      "key": "up",
+      "from": 318,
+      "to": 319
+    },
+    {
+      "key": "down",
+      "from": 323,
+      "to": 330
+    },
+    {
+      "key": "right",
+      "from": 323,
+      "to": 341
+    },
+    {
+      "key": "left",
+      "from": 341,
+      "to": 342
+    },
+    {
+      "key": "right",
+      "from": 342,
+      "to": 344
+    },
+    {
+      "key": "left",
+      "from": 346,
+      "to": 349
+    },
+    {
+      "key": "right",
+      "from": 350,
+      "to": 352
+    },
+    {
+      "key": "right",
+      "from": 356,
+      "to": 367
+    },
+    {
+      "key": "up",
+      "from": 356,
+      "to": 367
+    },
+    {
+      "key": "down",
+      "from": 367,
+      "to": 368
+    },
+    {
+      "key": "left",
+      "from": 367,
+      "to": 368
+    },
+    {
+      "key": "right",
+      "from": 368,
+      "to": 369
+    },
+    {
+      "key": "up",
+      "from": 368,
+      "to": 369
+    },
+    {
+      "key": "down",
+      "from": 369,
+      "to": 370
+    },
+    {
+      "key": "left",
+      "from": 369,
+      "to": 370
+    },
+    {
+      "key": "right",
+      "from": 370,
+      "to": 371
+    },
+    {
+      "key": "up",
+      "from": 370,
+      "to": 371
+    }
+  ]
+}

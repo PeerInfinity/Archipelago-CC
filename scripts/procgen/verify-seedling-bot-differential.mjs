@@ -101,6 +101,9 @@ const {
 const {
     atlasLevelSource,
 } = await import(join(REPO, 'frontend/modules/seedlingDemo/levelSource.js'));
+const {
+    runTape,
+} = await import(join(REPO, 'frontend/modules/seedlingDemo/tapeRunner.js'));
 
 const RECORD = process.argv.includes('--record');
 /** `--only=name[,name...]` — restrict the sweep. Empty means "everything". */
@@ -273,6 +276,83 @@ function withDerivedTransitions(name, drained) {
     return { ticks: drained.ticks, transitions: derived };
 }
 
+/**
+ * R0's ACCEPTANCE SIGNAL, asserted from the GAME's own `botStatus`.
+ *
+ * ⚠ The JS inventory mirror is NOT consulted for the verdict. It supplies
+ * the EXPECTATION — which tick a grant should fire on, and which properties
+ * should be true afterwards — and the game supplies the answer. Reading the
+ * mirror for both would be the mirror agreeing with itself; the whole point
+ * of putting the readout in the batch is that the recompiled game is the
+ * oracle for the acceptance signal too, not only for positions.
+ *
+ * `saw_auto_advance` is checked on EVERY tape, not only the relaxed ones.
+ * The auto-advance ships dark at R0 because every route avoids every
+ * ceremony — so a non-zero count means the proximity-hazard census missed
+ * something and a freeze fired that nobody planned for. That is exactly the
+ * failure the sticky counter exists to make visible rather than absorb.
+ */
+function checkReadout(name, tape, status) {
+    if (!status || typeof status !== 'object') {
+        check(`${name}: botStatus is readable`, false, 'no status object');
+        return;
+    }
+    // The batch's readout must be PRESENT. A build without it would make
+    // every assertion below vacuously true by comparing undefined to
+    // undefined.
+    const hasReadout = status.items && typeof status.items === 'object'
+        && Array.isArray(status.cutscene) && typeof status.menu === 'boolean'
+        && Array.isArray(status.grants);
+    check(`${name}: botStatus carries the R0 readout`, !!hasReadout,
+        hasReadout ? `${Object.keys(status.items).length} item properties, `
+            + `cutscene=${JSON.stringify(status.cutscene)}, menu=${status.menu}`
+            : 'items/cutscene/menu/grants missing — is this the pre-R0 build?');
+    if (!hasReadout) return;
+
+    check(`${name}: no dialogue auto-advance fired`, status.saw_auto_advance === 0,
+        status.saw_auto_advance === 0 ? 'saw_auto_advance=0'
+            : `saw_auto_advance=${status.saw_auto_advance} — a ceremony the route was `
+            + 'supposed to avoid froze the game, so the proximity-hazard census missed '
+            + 'something');
+
+    // The JS side's expectation for this tape, from the same tape the game
+    // just ran. `runTape` throws if a grant never fires, so a stale route is
+    // caught before the comparison rather than by it.
+    const expected = runTape(tape, { levelSource: atlasLevelSource() });
+
+    // ⚠ Compared FIELD BY FIELD, not by JSON.stringify. AS3's JSON writer
+    // emits object keys in its own order ({items, level, t}) and JS in
+    // insertion order ({t, level, items}), so a stringify comparison
+    // reports identical data as a mismatch — which is exactly what it did
+    // on the first recording run.
+    const renderGrant = (g) => `{t:${g.t}, L${g.level}, ${[...g.items].sort().join('+')}}`;
+    const gameGrants = status.grants.map(renderGrant).join(' ');
+    const wantGrants = expected.grants.map(renderGrant).join(' ');
+    check(`${name}: the game fired the grants the tape asked for, at the same ticks`,
+        gameGrants === wantGrants,
+        `game: [${gameGrants}], expected: [${wantGrants}]`);
+
+    // Every one of the 14, positives AND negatives. The negatives are what
+    // catch a grant firing early or a table wired to the wrong setter — a
+    // check that only asserted the granted item would pass a build that
+    // granted all fourteen.
+    const wrong = Object.entries(expected.inventory)
+        .filter(([prop, want]) => status.items[prop] !== want)
+        .map(([prop, want]) => `${prop}: game ${status.items[prop]}, expected ${want}`);
+    check(`${name}: all 14 item properties match, positives and negatives`,
+        wrong.length === 0, wrong.length ? wrong.join('; ')
+            : `hitsMax=${status.items.hitsMax}, `
+            + `${Object.values(expected.inventory).filter((v) => v === true).length} `
+            + 'flag(s) true');
+
+    // The win statics stay false until R6 actually beats the game. Pinned
+    // here so the terminal assertion has a baseline rather than being
+    // introduced at the rung that needs it to flip.
+    check(`${name}: the win statics are still false`,
+        status.menu === false && status.cutscene.every((c) => c === false),
+        `menu=${status.menu}, cutscene=${JSON.stringify(status.cutscene)}`);
+}
+
 /** Replay one tape on its own fresh page and return the drained stream. */
 async function replay(name, tapeObj) {
     if (WIN) {
@@ -346,6 +426,8 @@ try {
             check(`${name}: game accepted input throughout`, false,
                 'receiveInput went false mid-tape (cutscene/pit/boss?)');
         }
+
+        checkReadout(name, tape, status);
 
         // Quantitative pin: a bot that recorded nothing, or teleported,
         // would satisfy a purely positional comparison.

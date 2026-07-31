@@ -136,8 +136,20 @@ describe('guards', () => {
 
 describe('fixture differential', () => {
     const names = fixtureNames();
-    /** The v1 five: `noclip: true`, and the regression net for the refactor. */
-    const noclipTapes = names.filter((n) => loadTape(n).noclip);
+    /**
+     * THE V1 FIVE, pinned BY NAME because they are a frozen historical set.
+     *
+     * ⚠ This used to be `names.filter((n) => loadTape(n).noclip)`, which was
+     * the same set only while "noclip" and "the v1 rung" meant the same
+     * thing. R0's relaxed tapes are noclip too, and the predicate silently
+     * swept them into the v1-ENGINE block below — where `grant-sword-room`
+     * went red (the v1 engine has no transitions) and the two hazard tapes
+     * would have gone GREEN for a reason that proves nothing: the v1 engine
+     * stubs terrain to ground, which is exactly what the coerce produces, so
+     * it cannot tell a working coerce from a missing one.
+     */
+    const V1_FIVE = ['diagonal-run', 'direction-flip', 'friction-stop',
+        'shuffle-stop', 'straight-run'];
 
     it('has fixtures on disk, and NONE of them is pending any more', () => {
         // Positive control: every "each fixture matches" assertion below is
@@ -151,7 +163,14 @@ describe('fixture differential', () => {
         expect(names.length).toBeGreaterThanOrEqual(7);
         expect(names).toContain('collide-up-rock');
         expect(names).toContain('transition-west-return');
-        expect(noclipTapes.length).toBeGreaterThanOrEqual(5);
+        // The v1 five are all still on disk, and are still the tapes the v1
+        // ENGINE can run: single-level, and predating every relaxation.
+        for (const n of V1_FIVE) {
+            expect(names, `${n} is missing`).toContain(n);
+            const t = loadTape(n);
+            expect(t.tape_version, `${n} is no longer a v1 tape`).toBe(1);
+            expect(t.noclip).toBe(true);
+        }
     });
 
     it.each(names)("%s: JS stream matches the real game recording, exactly", (name) => {
@@ -167,7 +186,7 @@ describe('fixture differential', () => {
         expect(diffObservationStreams(expected, actual)).toBeNull();
     });
 
-    it.each(noclipTapes)('%s: byte-identical on the v1 engine too', (name) => {
+    it.each(V1_FIVE)('%s: byte-identical on the v1 engine too', (name) => {
         // THE REGRESSION PIN for slice 2. The v1 engine is the same
         // `step()` with the collision arm of the ternary unselected and the
         // terrain stubbed to ground, so these five must still produce the
