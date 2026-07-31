@@ -1203,7 +1203,7 @@ Any coverage claim about "level 0" should say which 103 tiles it means.
   which is how it was found, and once after the re-plan.
 
 
-## 12. The real gate for v3+ is the CLASS TABLE, and it is big (2026-07-30)
+## 13. The real gate for v3+ is the CLASS TABLE, and it is big (2026-07-30)
 
 Slice 4 retired the parameterised-boot recommendation for the right
 reason: a boot that could start anywhere unblocks nothing, because
@@ -1245,3 +1245,30 @@ Two consequences worth carrying into any v3 planning:
   fixture levels contain is what has kept 115 tags from being guessed at,
   and every one of those throws is a rung boundary made visible rather
   than a silent non-collider.
+
+## 14. Slice 5 — AS BUILT (2026-07-30): the rung is closed
+
+Documentation only; no behaviour changed and no expectation moved.
+
+- **`docs/json/developer/procgen/seedling-bot.md` is now the v1+v2 doc**,
+  and it is the thing to read first for this arc. Its stale header ("v1
+  scope: collision disabled, movement only, one level"; "all five fixtures
+  match") is gone. It carries the transitions contract (the settled tick
+  order plus the record-time derivation and its three load-bearing rules),
+  the resolver's four properties, the level-injection seam, the six loud
+  throws with the reason each is a throw rather than a fallback, the
+  45°-then-axis controller, the bounded vacuities as one table, and the
+  class-table sizing as the "what's next".
+- Plan-doc Phase 8 checkboxes: **v2 ticked**, v3 annotated with its real
+  gate. Queue §5c carries the same close-out. Memory topic updated.
+- **The two transcription lessons are written up as lessons, not
+  incidents** — a tag missing from a table while its twin is present
+  (`stairsup`; the guard is a census wider than the fixture levels), and an
+  offset applied at one level of a constructor chain but not the next
+  (`Statue`; found only because a route finally went near it).
+- Fixed in passing: this file had **two sections numbered §12**. The
+  class-table section is now §13, and every pointer at it was updated.
+
+Gate: vitest **4050/4050** unchanged; the procgen README still links the
+doc (its one-line description now names collision, transitions and
+pathing).

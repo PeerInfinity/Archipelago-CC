@@ -2823,6 +2823,35 @@ Claude, accepted by user). Full detail in `region-atlas-plan.md` Phase 8.**
   collision oracles before any JS is written. All anchors recon-verified
   same day (two agent sweeps + direct spot-checks; one agent claim about
   sub-pixel sweeps REFUTED); recon-first still applies.
+- **v2 SHIPPED — COMPLETE 2026-07-30** (`e923c627c`..`0c81c4b81`; kickoff
+  now at `CC/docs/plans/seedling-bot-v2-opus-kickoff.md`, whose **§7–§13
+  are the AS-BUILT record and correct §1–§6**). **Eleven fixtures, all
+  oracle recordings, all EXACT** — 1084 ticks / 1095 observations / 4
+  transition records, bit for bit, with the v1 five byte-identical
+  throughout. **The zero-AS3-edit prediction held for the entire rung.**
+  Landed: `levelWorld.js`, `playerPhysicsV2.js`, `levelSource.js` +
+  `levelRun.js`, `botDriverV2.js`, and the `transitions` contract in
+  `tapeFormat.js`. Vitest 3876 → **4050/4050**.
+  **Read `docs/json/developer/procgen/seedling-bot.md`** — now the v2 doc:
+  the transitions contract (settled tick order; `botDrain` hardcodes `[]`
+  so the field is DERIVED at record time by one `deriveTransitions` applied
+  on both harness paths), the resolver (sticky / nearest-walkable-by-centre
+  / strict-intersect / `checkOffsetY = 1`, and noclip does NOT bypass
+  terrain typing), the level-injection seam, the six loud throws, and
+  ⚠ **the controller is 45°-then-axis, not straight-line** (the brief's
+  §3.4 smoothing rule put a fixture in the lake).
+  ⚠ **Five properties are bounded vacuities** — stickiness, the latch,
+  terrain reset on a swap, the driver's teleporter policy, the executor's
+  hit-throw — each killing hand-derived cases and NO fixture, because
+  levels 0 and 94 are too benign. Witnesses are named, and **all are
+  blocked by the same class table**, not by the baked-in boot.
+- **NEXT for the arc — v3 (item-gated terrain) is gated on ENTITY
+  SEMANTICS, not on anything v2 built:** 3 of 116 levels build, 115
+  unclassified entity tags, and no cheap prefix (`lightalpha` alone blocks
+  98 levels and buys 3 more; the top 20 tags buy 27 levels). Price any rung
+  by "which levels does it need" — a one-line query against
+  `levelWorld.ENTITY_CLASSES` — BEFORE scoping it. Sizing table: kickoff
+  §13.
 
 ## 6. Everything else (unchanged queues)
 

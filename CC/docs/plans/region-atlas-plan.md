@@ -12,10 +12,12 @@ world contains real map regions, gated on what the real game charges to enter
 them) complete, and **Phase 8 slice 1 (the MAZE-SURFACE playback bot: a
 headless tile-walking witness plus the shipped bot completing the grown world
 in-app) complete 2026-07-28** — **Phase 7 (RWK) POSTPONED INDEFINITELY (user
-ruling 2026-07-28); the arc continues Seedling-only. NEXT: Phase 8's
-real-game-surface slice — per-stage JS-first (user amendment 2026-07-30: each
-ladder stage is implemented in JavaScript first, then in the Seedling source;
-fork exists at PeerInfinity/Seedling)**
+ruling 2026-07-28); the arc continues Seedling-only.** Phase 8's real-game
+surface is **v1 + v2 COMPLETE (2026-07-30)** — the recompiled game replays
+tapes and the JS transcription reproduces it exactly through collision, room
+transitions and A\*-planned cross-level routes; per-stage JS-first (user
+amendment 2026-07-30). **NEXT: v3 (item-gated terrain), which is gated on
+the entity CLASS TABLE — 3 of 116 levels build today.**
 **Games:** Seedling only for now (redistributable, discrete sections, source
 available); Robot Wants Kitty postponed indefinitely (2026-07-28)
 
@@ -1544,13 +1546,55 @@ routes themselves remain untried.
   RETIRED (no `.oel` in the repo contains one); a recon-sweep claim that
   the 1-px loop skips sub-pixel moves was REFUTED (`0 < 0.8` executes —
   v1's bit-exact friction tails already proved it).
+- **v2 COMPLETE — SLICES 0–5 SHIPPED + PUSHED 2026-07-30**
+  (`e923c627c`, `a8fcaab43`, `0abd47259`, `e5bc7b612`, `b54c72d78`,
+  `240f03aab`, plus the as-built doc commits). The kickoff moved to
+  `CC/docs/plans/seedling-bot-v2-opus-kickoff.md`; **its §7–§13 are the
+  AS-BUILT record and correct §1–§6 in several places — read those, not
+  the brief.** The doc is
+  `docs/json/developer/procgen/seedling-bot.md`, now extended to v2.
+  - **Eleven fixtures, all oracle recordings, all EXACT** — 1084 ticks /
+    1095 observations / 4 transition records, bit for bit. The v1 five
+    stayed byte-identical throughout, and the prediction held: **zero AS3
+    edits for the whole rung.**
+  - Landed: `levelWorld.js` (the `loadlevel` subset over the committed
+    extract), `playerPhysicsV2.js` (sweeps re-armed + the stateful sticky
+    terrain resolver + the world swap), `levelSource.js`/`levelRun.js`
+    (the level is INJECTED, never loaded; one swap, two callers),
+    `botDriverV2.js` (A\* + caller-named cross-level legs), and the
+    `transitions` contract in `tapeFormat.js`.
+  - **The `transitions` field is DERIVED at RECORD time** — `botDrain`
+    hardcodes `[]`, so one `deriveTransitions` is applied by the harness on
+    both paths, the JS side derives from its OWN world swap, and the
+    harness checks the game's field is still empty so a future build
+    reporting it for real is a named failure.
+  - ⚠ **The controller is 45°-then-axis, not straight-line** — §3.4's
+    "smooth while the straight segment stays clear" put a fixture in the
+    lake. Both axes accelerate by the same quantum under vector friction.
+  - ⚠ **Five model properties are bounded vacuities** (stickiness, the
+    latch, terrain reset on a swap, the driver's teleporter policy, the
+    executor's hit-throw): mutating them kills hand-derived cases and NO
+    fixture, because levels 0 and 94 are too benign. Witnesses named in the
+    doc; **all of them are blocked by the same class table**, not by the
+    baked-in boot — cross-level walking from level 0 reaches exactly ONE
+    other level, 94.
+  - **NEXT (v3) is gated on entity semantics.** 3/116 levels build; 115
+    unclassified tags; classifying the top 20 gets you 27 levels. Sizing
+    table in kickoff §13.
 - The staged ladder below still stands for the real-game surface.
 
 - [x] Seedling v1: collision fully disabled, move to targets
       — **COMPLETE 2026-07-30** (all 5 slices). Doc:
         `docs/json/developer/procgen/seedling-bot.md`
-- [ ] v2: wall collision + pathing
-- [ ] v3: item-gated terrain awareness
+- [x] v2: wall collision + pathing
+      — **COMPLETE 2026-07-30** (all 6 slices; see below). Doc: the same
+        one, now extended to v2.
+- [ ] v3: item-gated terrain awareness — **gated on the ENTITY CLASS
+      TABLE, not on the boot, pathing or the toolchain** (3/116 levels
+      build; 115 unclassified tags; no cheap prefix — sizing table in the
+      v2 kickoff §13 and the doc)
+- [ ] v3 prerequisite worth doing first: price any rung by "which levels
+      does it need" — a one-line query against `levelWorld.ENTITY_CLASSES`
 - [ ] v4: puzzle elements with hand-written solutions
 - [ ] v5 (ambitious): enemy collision + avoid/defeat
 - [ ] ~~RWK bot~~ — inherits Phase 7's indefinite postponement (2026-07-28)

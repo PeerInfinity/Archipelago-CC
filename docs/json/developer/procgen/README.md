@@ -16,7 +16,7 @@ Developer documentation for the procedural-generation ("procgen") system: the pi
 | [Paths and Obstacles](./paths-and-obstacles.md) | The intermediate access-rule representation: the item/obstacle vocabulary, per-substrate producers, the Rule Builder compiler, and the rule→requirement inverse. |
 | [The Stepped Pipeline](./stepped-pipeline.md) | Running drivers as editable steps: the envelope, sphere/top-down step lists, byte identity, region editors, envelope rebuild, per-step CLIs. |
 | [Text Adventure Substrate](./text-adventure.md) | The prose-rendered tile-grid substrate: the AP-naive engine, the iframe wrapper, and the two-module coexistence. |
-| [Seedling Real-Game Bot](./seedling-bot.md) | Driving the real recompiled Seedling with an input tape, and the differential that checks a JS physics transcription against what the game actually did. |
+| [Seedling Real-Game Bot](./seedling-bot.md) | Driving the real recompiled Seedling with an input tape, and the differential that checks a JS physics transcription — movement, collision, room transitions and A\* pathing — against what the game actually did. |
 | [Flash Substrate](./flash.md) | Recompiled Flash games as regions: the `__swfBridge` contract and the per-game entry factory the bounce substrate builds on. |
 | [JtA Substrate](./jta.md) | Journey to Ascension as the reference zone-based substrate, with host-side shared-mana brokering. |
 | [Omsi Substrate](./omsi.md) | Idle Loops as a loop-game substrate: the host-owned clock and mana mirror, N regions overlaying one town, and the arc-D loops-mode support (step gate, per-region queues, plan-snapshot Record/Playback). |
