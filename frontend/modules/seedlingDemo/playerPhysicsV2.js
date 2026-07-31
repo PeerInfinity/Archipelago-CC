@@ -77,7 +77,7 @@
  * that the differential then blames on physics.
  */
 
-import { rectsOverlap } from './levelWorld.js';
+import { rectsOverlap, TILE_SIZE } from './levelWorld.js';
 import { coerceTerrainState } from './tapeFormat.js';
 import {
     CHECK_OFFSET_Y,
@@ -159,9 +159,34 @@ export function terrainProbeRect(x, y) {
  * different function, with NO intersect gate, returning -1 when there is no
  * tile. It is not this one with the gate left out.
  */
-export function resolveTerrainState(level, x, y, prevState, { beforeTypeFlip = false } = {}) {
-    const tile = level.nearestWalkableTile(x, y + CHECK_OFFSET_Y, { beforeTypeFlip });
+export function resolveTerrainState(
+    level, x, y, prevState, { beforeTypeFlip = false, noHazards = [] } = {},
+) {
+    const { tile, tie } = level.nearestWalkableTileWithTie(
+        x, y + CHECK_OFFSET_Y, { beforeTypeFlip },
+    );
     if (!tile) return prevState;
+    // ⚠ An exact tie is judged HERE, where the relaxation is known, and only
+    // when the two candidates would behave differently. `levelWorld` reports
+    // it without an opinion because whether it matters is a physics
+    // question: two tiles that both walk at 0.8 resolve to the same stream
+    // whoever wins, and a full tile grid ties constantly.
+    if (tie) {
+        const a = terrainEffectClass(coerceTerrainState(tile.t, noHazards));
+        const b = terrainEffectClass(coerceTerrainState(tie.t, noHazards));
+        if (a !== b) {
+            throw new PhysicsV2Error(
+                `nearestToPoint TIE at (${x},${y + CHECK_OFFSET_Y}) in level `
+                + `${level.level}: tiles (${tile.tx},${tile.ty}) type ${tile.t} and `
+                + `(${tie.tx},${tie.ty}) type ${tie.t} are exactly equidistant and `
+                + `behave DIFFERENTLY under this tape's relaxation ("${a}" vs "${b}"). `
+                + "The winner is FlashPunk's entity-list order — addUpdate PREPENDS, so "
+                + 'it is the reverse of the extract\'s — which this module does not '
+                + 'transcribe. Move the route so the probe point does not land on the '
+                + 'midline between two tile centres.',
+            );
+        }
+    }
     return rectsOverlap(tile.rect, terrainProbeRect(x, y)) ? tile.t : prevState;
 }
 
@@ -188,6 +213,36 @@ export function resolveTerrainState(level, x, y, prevState, { beforeTypeFlip = f
  * new `Teleporter` entities.
  */
 const EMPTY_LATCH = new Set();
+
+/**
+ * What the physics actually DOES with an effective terrain state — the
+ * complete set of consumers at this rung, from `Player.as:516-537` and the
+ * setter: `moveSpeed`, the friction selection, the four derived flags, and
+ * the pit branch. Two effective states in the same class are
+ * indistinguishable in the observation stream however the tie is broken.
+ *
+ * Deliberately NOT "are the two numbers equal": Ground (0) and Dirt (4) are
+ * different states and identical behaviour, and `hazard-boot-pit` — a
+ * COMMITTED R0 recording — resolves an exact tie between Dirt and a coerced
+ * Pit. Throwing on that would have failed a fixture over an ambiguity the
+ * game cannot express.
+ */
+function terrainEffectClass(effective) {
+    switch (effective) {
+        case 6: return 'pit';              // the transport branch
+        case 1: case 25: return 'water';   // WATER_FRICTION + the swim bonus
+        case 17: return 'lava';            // same branch, different state
+        case 22: return 'ice';             // slidingFriction + slidingSpeed
+        case 10: case 30: return 'stair';  // moveSpeed 0.4, no branch
+        default: return 'plain';           // dMS, DEFAULT_FRICTION, no branch
+    }
+}
+
+/** No key held — what a transport tick passes to `input()`. */
+const NO_KEYS = new Set();
+
+/** `Tile.types` index for a Pit. */
+const PIT_STATE = 6;
 
 export function initialLatch(level, x, y) {
     const box = playerBoxAt(x, y);
@@ -271,6 +326,147 @@ export function arriveIn(level, teleporter) {
 }
 
 /**
+ * ── THE PIT TRANSPORT (R1) ────────────────────────────────────────────
+ *
+ * A pit is not a floor with a speed. Standing on one starts a three-phase
+ * transport that the game drives and the player cannot steer, and every
+ * frame of it is a LIVE observed tick — `receiveInput = false` stops input,
+ * not the tick counter, so the differential sees all of it.
+ *
+ *   EDGE      `Player.as:697`. Inside the state SETTER, so it fires only on
+ *             a raw change (`_s != _state`) and only while `onGround`, and
+ *             it reads the COERCED value — which is what makes
+ *             `hazard-boot-pit` (pit coerced) and `pit-fall-83` (pit live)
+ *             a contrast pair over one room and one input span.
+ *             `fallInPitPos` snapshots the tile `getState` just resolved.
+ *   FALL-OUT  `checkFallingInPit`, run between moveY and the world clamp.
+ *             Exactly 20 ticks. Each one: `receiveInput = false` (so from
+ *             the NEXT tick input is dead — the edge tick itself still runs
+ *             `input()` normally), the position lerps a tenth of the way to
+ *             the pit tile's centre, and alpha drops 0.05 from 1.
+ *   SWAP      at `alpha <= 0`: ctor args
+ *             `floor(max(fallInPitPos - Game.fallthroughOffset, 0)/16)*16`,
+ *             then `FP.world = new Game(fallthroughLevel, x, y)` — the same
+ *             deferred end-of-tick swap a teleporter makes, so it rides
+ *             `levelRun`'s one-swap-two-callers machinery as a new arrival
+ *             KIND rather than a second implementation.
+ *   DESCENT   `Player.as:481-506`. The arrival is `fallFromCeiling`, and
+ *             `Player.check()` — which `Game.update` runs for every entity
+ *             on the new world's FIRST frame, above the `blackCover` gate —
+ *             drops the player to `FP.camera.y - (height - originY)`. That
+ *             camera is the one `loadlevel` just set from the player's own
+ *             position, UNCLAMPED, because `view()` runs after `check()`.
+ *             So the drop is always exactly 83 px and the descent is always
+ *             exactly 41 ticks, in every level. Nothing else runs while
+ *             falling: no getState, no friction, no input, no clamp.
+ *
+ * ⚠ AND THE LANDING IS THE OTHER WAY ROUND FROM THE OBVIOUS READING.
+ * `if (bouncedFromCeiling || getStatePos(x, yStart) is 6/1/17)` LANDS;
+ * everything else BOUNCES — once, at `v.y = -2`, for exactly 39 ticks. You
+ * cannot bounce on a hole or a liquid, so an ordinary floor is the case
+ * that bounces. Both are on the R1 route: 83 -> 84 lands on a PIT and does
+ * not bounce (which is what chains the next fall), 84 -> 85 and 71 -> 82
+ * land on Igneous Stone and do.
+ *
+ * ⚠ `getStatePos` is NOT routed through the coerce (verified on the `bot`
+ * branch: R0's four coerce sites do not include it). So the landing check
+ * reads the RAW tile type while the physics reads the coerced one — and the
+ * route exercises both readings of one tile, because the `48 -> 49` fall
+ * lands on ICE, which `noHazards` flattens for the physics and which the
+ * landing check sees as 22 and bounces off.
+ */
+
+/** `fallAlphaSpeed` (`Player.as:345`) and the alpha it counts down from. */
+export const FALL_ALPHA_SPEED = 0.05;
+export const FALL_ALPHA_START = 1;
+
+/** `const divisor:int = 10` in `checkFallingInPit`. */
+export const FALL_LERP_DIVISOR = 10;
+
+/**
+ * `FP.screen.height / 2 + (height - originY)` = 80 + 3.
+ *
+ * `FP.screen` caches 160x160 at Engine construction (`Screen.resize()`),
+ * and `Game.as:1854`'s per-level `FP.width/height` overwrite does NOT touch
+ * it — so this is a constant of the BUILD, not of the level.
+ */
+export const DESCENT_DROP = 83;
+
+/** `v.y += 0.1`, `v.y = Math.min(v.y, 5)`, and the bounce's `v.y = -2`. */
+export const DESCENT_GRAVITY = 0.1;
+export const DESCENT_MAX_FALL = 5;
+export const BOUNCE_VELOCITY = -2;
+
+/** The three raw states a descent does NOT bounce off (`Player.as:490`). */
+export const NO_BOUNCE_STATES = Object.freeze([6, 1, 17]);
+
+/**
+ * `Player.getStatePos(_x:int, _y:int)` (`Player.as:670-678`) — a DIFFERENT
+ * function from `getState`, and not that one with the gate left out:
+ *
+ *   - no intersect gate at all, so it answers for the nearest tile however
+ *     far away it is;
+ *   - returns -1 when the level has no tile entity at all;
+ *   - the parameters are typed `int`, so the caller's `x` (a Number) is
+ *     TRUNCATED on the way in;
+ *   - it is not coerced.
+ */
+export function getStatePos(level, x, y) {
+    const tile = level.nearestWalkableTile(Math.trunc(x), Math.trunc(y));
+    return tile ? tile.t : -1;
+}
+
+/**
+ * The ctor args `checkFallingInPit` hands `new Game(...)`, and the level it
+ * hands them to. Throws when the level has no `control` block, because the
+ * game's own `else` there is `die()`.
+ */
+export function fallDestination(level, target) {
+    const ft = level.fallthrough;
+    if (!ft) {
+        throw new PhysicsV2Error(
+            `the player fell into a pit in level ${level.level}, which has NO control `
+            + 'block — `Game.fallthroughLevel` is still -1 and `checkFallingInPit` '
+            + 'calls die(). That pit is lethal floor, not transport (27 of the 116 '
+            + 'levels are like this, Dungeon 6 and most of Dungeon 8 among them), so '
+            + 'the route must not step on it.',
+        );
+    }
+    const snap = (v, off) => Math.floor(Math.max(v - off, 0) / TILE_SIZE) * TILE_SIZE;
+    return {
+        to_level: ft.level,
+        ctor: { x: snap(target.x, ft.offsetX), y: snap(target.y, ft.offsetY) },
+    };
+}
+
+/**
+ * The arrival state for a FALL, the counterpart of `arriveIn`.
+ *
+ * The latch is armed at the CTOR position rather than at the dropped-to y,
+ * and the order is transcribed rather than assumed: `loadlevel` adds the
+ * player (`Game.as:2040`) BEFORE the teleporters (`:2169`) and
+ * `World.addUpdate` PREPENDS, so the teleporters are EARLIER in the list
+ * that `Game.update`'s first-frame `check()` walks — they see the player
+ * where the constructor put them, and `Player.check()` moves them up
+ * afterwards.
+ */
+export function arriveFromFall(level, ctor) {
+    const x = ctor.x + TILE_SIZE / 2;
+    const yStart = ctor.y + TILE_SIZE / 2;
+    return {
+        x,
+        y: yStart - DESCENT_DROP,
+        vx: 0,
+        vy: 0,
+        terrain: INITIAL_TERRAIN_STATE,
+        latched: initialLatch(level, x, yStart),
+        hitX: null,
+        hitY: null,
+        fall: { phase: 'descent', yStart, bounced: false },
+    };
+}
+
+/**
  * Advance one tick in a real level.
  *
  * `state` is `{x, y, vx, vy, terrain, latched}` and a NEW state is
@@ -317,7 +513,23 @@ export function step(state, held, opts = {}) {
     const { latched, fired } = updateTeleporters(
         level, state.x, state.y, state.latched ?? EMPTY_LATCH,
     );
+    const fall = state.fall ?? null;
     let transition = null;
+    // ⚠ A teleporter firing while a transport is IN FLIGHT is refused, not
+    // resolved. It is the same doctrine as the two-teleporter throw and it
+    // is LIVE, not defensive: level 100's exit to 101 stands ON a pit tile,
+    // so both fire on the same tick there. The teleporter would win (its
+    // swap lands at end of tick, the fall needs twenty more), but "would
+    // win" is bookkeeping this module does not get to assume — and the R1
+    // route does not cross level 100.
+    if (fired.length > 0 && fall) {
+        throw new PhysicsV2Error(
+            `a teleporter at (${fired[0].teleporter.x},${fired[0].teleporter.y}) fired in `
+            + `level ${level.level} while a pit transport was in flight (phase `
+            + `"${fall.phase}"). Which world swap wins is not transcribed — route the `
+            + 'tape so a trigger volume and a pit tile are never overlapped together.',
+        );
+    }
     if (fired.length > 1) {
         // `FP.world = ` only records a `_goto`, so two teleporters firing on
         // one tick means the LAST one in FlashPunk's update order wins — and
@@ -348,10 +560,58 @@ export function step(state, held, opts = {}) {
             );
         }
         transition = {
+            kind: 'teleporter',
             from_level: level.level,
             to_level: teleporter.to,
             teleporter,
             index: fired[0].index,
+        };
+    }
+
+    // 0b. THE DESCENT ARM. `Player.update`'s `if (fallFromCeiling)` block
+    //     is an ELSE against everything below — no getState, no
+    //     friction/input/move, no world clamp — so a descent tick is a
+    //     ballistic y and nothing else, with x frozen at the arrival value.
+    if (fall && fall.phase === 'descent') {
+        if (transition) {
+            throw new PhysicsV2Error(
+                `a teleporter fired in level ${level.level} during a fall-from-ceiling `
+                + 'descent. The descent sweeps 83 px of one column, so a trigger volume '
+                + 'on that column is crossed at speed — route the fall to a different '
+                + 'pit tile.',
+            );
+        }
+        const vy = Math.min(state.vy + DESCENT_GRAVITY, DESCENT_MAX_FALL);
+        let y = state.y + vy;
+        let nextFall = fall;
+        let nextVy = vy;
+        if (y >= fall.yStart) {
+            // ⚠ The polarity: pit/water/lava LAND, everything else BOUNCES.
+            const landed = fall.bounced
+                || NO_BOUNCE_STATES.includes(getStatePos(level, state.x, fall.yStart));
+            if (landed) {
+                // Note what is NOT here: `y` is left where the overshoot put
+                // it (3.1 px past yStart on a 41-tick descent), because the
+                // landing arm never assigns y. Only the BOUNCE arm does.
+                nextVy = 0;
+                nextFall = null;
+            } else {
+                y = fall.yStart;
+                nextVy = BOUNCE_VELOCITY;
+                nextFall = { ...fall, bounced: true };
+            }
+        }
+        return {
+            x: state.x,
+            y,
+            vx: state.vx,
+            vy: nextVy,
+            hitX: null,
+            hitY: null,
+            terrain: state.terrain ?? INITIAL_TERRAIN_STATE,
+            latched,
+            fall: nextFall,
+            transition: null,
         };
     }
 
@@ -377,7 +637,7 @@ export function step(state, held, opts = {}) {
     const terrain = resolveTerrainState(
         level, state.x, state.y,
         state.terrain ?? INITIAL_TERRAIN_STATE,
-        { beforeTypeFlip },
+        { beforeTypeFlip, noHazards },
     );
     // The guard runs on the EFFECTIVE value, so a coerced hazard is legal
     // terrain and an un-coerced one still throws by name. Bridge (29) is not
@@ -387,17 +647,71 @@ export function step(state, held, opts = {}) {
         coerceTerrainState(terrain, noHazards),
     );
 
+    // 1b. THE PIT EDGE, inside the state setter (`Player.as:690-706`).
+    //     Guarded by the RAW change gate — `_s != _state`, so re-resolving
+    //     the same pit tile does not re-arm it — and by `onGround`, which
+    //     `Enemies/LavaTrap.as:61/66` is the only writer of anywhere in the
+    //     codebase, so it is constant true everywhere R1 goes. The test is
+    //     on the COERCED value, which is the whole of `noHazards`: with pit
+    //     in the set this branch is dead and the same tape merely walks.
+    const prevTerrain = state.terrain ?? INITIAL_TERRAIN_STATE;
+    let nextFall = fall;
+    if (!fall && terrain !== prevTerrain && effective === PIT_STATE) {
+        // `fallInPitPos = new Point(tile_test.x, tile_test.y)` where
+        // `tile_test` is `nearestToPoint("Tile", x, y + checkOffsetY)` —
+        // byte-identical probe args to `getState`'s own, so it is always the
+        // tile that was just resolved, and a Tile's position IS its centre.
+        const tile = level.nearestWalkableTile(
+            state.x, state.y + CHECK_OFFSET_Y, { beforeTypeFlip },
+        );
+        nextFall = { phase: 'out', target: { x: tile.x, y: tile.y }, alpha: FALL_ALPHA_START };
+    }
+
     // 2-4. The v1 tick, unchanged, with the collision arm of the ternary
     //      selected. `world` is the LEVEL's pixel size, which is what
     //      `Game.as:1854-1855` writes into FP.width/height on every load.
-    const next = stepV1(state, held, {
+    //
+    //      ⚠ INPUT IS REFUSED ONLY IF A FALL WAS ALREADY IN FLIGHT WHEN THE
+    //      TICK STARTED. `receiveInput = false` is set inside
+    //      `checkFallingInPit`, which runs AFTER `super.update()` — so the
+    //      tick the edge fires still runs `input()` normally. Killing input
+    //      on the edge tick diverges on the first tick of every fall.
+    const next = stepV1(state, fall ? NO_KEYS : held, {
         terrainStateAt: () => effective,
         frozen,
         world: level.world,
         collides: noclip
             ? null
             : (x, y) => level.collidesSolid(playerBoxAt(x, y), { beforeTypeFlip }),
+        // `checkFallingInPit()` sits between moveY and the world clamp.
+        afterMove: nextFall ? (x, y) => ({
+            x: x + (Math.floor(nextFall.target.x / TILE_SIZE) * TILE_SIZE
+                + TILE_SIZE / 2 - x) / FALL_LERP_DIVISOR,
+            y: y + (Math.floor(nextFall.target.y / TILE_SIZE) * TILE_SIZE
+                + TILE_SIZE / 2 - y) / FALL_LERP_DIVISOR,
+        }) : null,
     });
 
-    return { ...next, terrain, latched, transition };
+    if (nextFall) {
+        // The alpha countdown, as REPEATED SUBTRACTION. Twenty subtractions
+        // of 0.05 from 1.0 land on -3.191891195797325e-16 — just below zero,
+        // so the swap is on tick 20. Computing the count as 1/0.05, or
+        // accumulating the other way, can land a hair ABOVE zero and give
+        // 21, and the recording says 20.
+        const alpha = nextFall.alpha - FALL_ALPHA_SPEED;
+        if (alpha <= 0) {
+            const dest = fallDestination(level, nextFall.target);
+            transition = {
+                kind: 'fall',
+                from_level: level.level,
+                to_level: dest.to_level,
+                ctor: dest.ctor,
+            };
+            nextFall = null;
+        } else {
+            nextFall = { ...nextFall, alpha };
+        }
+    }
+
+    return { ...next, terrain, latched, transition, fall: nextFall };
 }

@@ -38,6 +38,7 @@ import { ITEM_PROPERTIES, ITEM_NAMES } from './tapeFormat.js';
 import { spawnFromBoot } from './playerPhysicsV1.js';
 import {
     INITIAL_TERRAIN_STATE,
+    arriveFromFall,
     arriveIn,
     initialLatch,
     step as stepV2,
@@ -236,7 +237,17 @@ export function createLevelRun({
             transitions.push(record);
             level = next.transition.to_level;
             world = worldFor(level);
-            state = arriveIn(world, next.transition.teleporter);
+            // ONE swap, TWO arrival kinds. A fall lands the player at the
+            // ctor args `checkFallingInPit` computed, `fallFromCeiling`, 83
+            // px above where it will end up; a teleporter lands them at its
+            // own oel attrs, on the ground. Everything else about the swap —
+            // when it happens, the fresh velocity and terrain, the pre-armed
+            // latch, the destination world's own `beforeTypeFlip` tick — is
+            // shared, which is the point of the transition record carrying a
+            // `kind` rather than the caller sniffing which fields are set.
+            state = next.transition.kind === 'fall'
+                ? arriveFromFall(world, next.transition.ctor)
+                : arriveIn(world, next.transition.teleporter);
             firstTickInWorld = true;
             // `ticksCompleted` is already the arrival observation's index, so
             // the grant's `t` is that observation — the same tick the

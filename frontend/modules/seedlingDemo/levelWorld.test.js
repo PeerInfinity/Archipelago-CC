@@ -376,7 +376,11 @@ describe('tiles', () => {
         // direction: silently dropping a type would narrow v2's scope
         // without anyone noticing, and silently adding one of the six back
         // would let a fixture onto sound-coupled or input-stealing terrain.
-        const excluded = [1, 6, 17, 22, 25, 29];
+        // ⚠ R1 MOVED 6 (Pit) OUT of this list: it is modelled, as a
+        // TRANSPORT rather than as a floor. The other five stay out for the
+        // reasons in UNMODELLED_REASON, and Bridge still fails at build time
+        // rather than here.
+        const excluded = [1, 17, 22, 25, 29];
         const all = TILE_TYPE_ENTITY_TYPES.map((_, t) => t);
         expect([...MODELLED_TILE_TYPES].sort((a, b) => a - b))
             .toEqual(all.filter((t) => !excluded.includes(t)));
@@ -384,6 +388,7 @@ describe('tiles', () => {
             expect(MODELLED_TILE_TYPES).not.toContain(t);
             expect(() => L0.assertModelledTerrain(t)).toThrow(LevelWorldError);
         }
+        expect(L0.assertModelledTerrain(6)).toBe(6);     // Pit — R1 transport
         expect(L0.assertModelledTerrain(0)).toBe(0);
         expect(L0.assertModelledTerrain(10)).toBe(10);   // Cliff Stairs
         expect(L0.assertModelledTerrain(30)).toBe(30);   // Ghost Tile Step
@@ -461,9 +466,35 @@ describe('the queries the sweep will ask', () => {
         // Standing on the cliff at tile (15,7) — centre (248,120) — the
         // nearest "Tile" entity is a NEIGHBOUR, because the cliff left the
         // list. This is what makes the resolver's stickiness matter.
-        const near = L0.nearestWalkableTile(248, 120);
+        // Probed one pixel off the cell centre ON PURPOSE. The centre
+        // itself, (248,120), is an exact TIE between (15,6) Water and (16,7)
+        // Waterfall — two DIFFERENT terrains 16 px away in opposite
+        // directions — which the resolver now refuses rather than resolving
+        // by FlashPunk's entity-list order. One pixel is enough to break it
+        // and changes nothing about the claim being made here.
+        const near = L0.nearestWalkableTile(247, 120);
         expect(near.entityType).toBe('Tile');
         expect([near.tx, near.ty]).not.toEqual([15, 7]);
+    });
+
+    it('REPORTS an exact nearestToPoint tie, without an opinion about it', () => {
+        // Live in a committed level, not hypothetical: standing dead centre
+        // on level 0's cliff at (248,120) leaves Water and Waterfall exactly
+        // equidistant, 16 px away in opposite directions. The game picks by
+        // entity-list order (addUpdate PREPENDS, so it is the reverse of the
+        // extract's); this module does not transcribe that order, so it says
+        // there IS a tie and lets the physics decide whether it matters —
+        // which depends on the tape's relaxation, something geometry cannot
+        // know. See playerPhysicsV2.resolveTerrainState.
+        const tied = L0.nearestWalkableTileWithTie(248, 120);
+        expect(tied.tie).not.toBeNull();
+        expect([tied.tile.t, tied.tie.t].sort((a, b) => a - b)).toEqual([1, 25]);
+        // Neither face throws: the report is data.
+        expect(() => L0.nearestWalkableTile(248, 120)).not.toThrow();
+        // A tie between tiles of the SAME type is not an ambiguity at all —
+        // both resolve to the same state — and is not reported, or a full
+        // tile grid would report one on nearly every probe.
+        expect(L0.nearestWalkableTileWithTie(88, 128).tie).toBeNull();
     });
 
     it('beforeTypeFlip drops the TILE solids and keeps the object ones', () => {

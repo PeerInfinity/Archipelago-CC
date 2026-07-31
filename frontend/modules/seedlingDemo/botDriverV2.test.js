@@ -19,7 +19,10 @@ import { describe, expect, it } from 'vitest';
 
 import { loadExpectation, loadTape } from './fixtures/index.js';
 import { atlasLevelSource } from './levelSource.js';
-import { buildLevelWorld } from './levelWorld.js';
+
+/** Real level records, for the R1 pit-exit block at the bottom. */
+const levelRecord = atlasLevelSource();
+import { RELAXED_ROLES, buildLevelWorld } from './levelWorld.js';
 import { spawnFromBoot } from './playerPhysicsV1.js';
 import { playerBoxAt, terrainProbeRect } from './playerPhysicsV2.js';
 import { runTape, runTapeToStream } from './tapeRunner.js';
@@ -708,5 +711,98 @@ describe('the relaxed driver', () => {
         }
         expect(() => synthesizeLegs(WITNESS_LEGS, { levelSource, relax: RELAX }))
             .not.toThrow();
+    });
+});
+
+describe('R1: pit exits, and the forbidden-floor policy', () => {
+    const R1 = { noHazards: ['water', 'lava', 'ice', 'waterfall'], noDamage: true, grants: [] };
+    const CLUSTER = [
+        { level: 83, targets: [], exit: { pit: { tx: 2, ty: 1 } } },
+        { level: 84, targets: [], exit: { pit: { tx: 2, ty: 2 } } },
+        { level: 85, targets: [{ x: 88, y: 88 }] },
+    ];
+    const plan = () => synthesizeLegs(CLUSTER, {
+        levelSource, boot: { level: 83, x: 16, y: 16 }, name: 'cluster-probe', relax: R1,
+    });
+
+    it('falls 83 -> 84 -> 85 at the ticks the GAME put them', () => {
+        // The strongest cross-check available without another recording: the
+        // hand-authored `pit-fall-chain-85` tape holds RIGHT from a standing
+        // start and the game crossed at 28 and 89. This is a DIFFERENT tape,
+        // planned by the driver from a task list, and it crosses at the same
+        // two ticks — so the transport's timing is a property of the model
+        // rather than of one input sequence.
+        const r = plan();
+        expect(r.transitions).toEqual([
+            { t: 28, from_level: 83, to_level: 84 },
+            { t: 89, from_level: 84, to_level: 85 },
+        ]);
+        expect(r.arrivals.at(-1)).toMatchObject({ leg: 2, level: 85 });
+    });
+
+    it('emits NO input span inside a transport window', () => {
+        // The rule, from both sides: the game refuses input from the tick
+        // after the edge until the descent lands, so a span there is one the
+        // JS honours and the game drops. Checked against the run's OWN
+        // transport windows rather than against hard-coded ticks.
+        const r = plan();
+        const held = [];
+        for (const span of r.tape.inputs) {
+            for (let t = span.from; t < span.to; t += 1) held[t] = true;
+        }
+        // ⚠ `perTick[i]` is tick i+1's input (push-then-advance), so a span
+        // `[69,70)` is the input for tick 70 — the first tick AFTER the
+        // descent landed, where the player has control again and the
+        // controller legitimately presses toward the next pit. The edge tick
+        // is likewise held, and correctly: `receiveInput = false` is set
+        // after `super.update()`, so the game runs input() on it too.
+        //
+        // Window 1: the fall-out into 84 plus its descent, which lands on
+        // tick 69 — inputs for ticks 10..69, i.e. perTick[9..68].
+        for (let t = 9; t <= 68; t += 1) {
+            expect(held[t], `tick ${t + 1} is inside the first transport`).toBeUndefined();
+        }
+        // Window 2: the chained fall out of 84 and the bouncing descent into
+        // 85, from the tick after that edge until the walk resumes.
+        for (let t = 70; t <= 168; t += 1) {
+            expect(held[t], `tick ${t + 1} is inside the second transport`).toBeUndefined();
+        }
+        // Positive control: without this the two loops pass on an empty tape.
+        expect(r.tape.inputs.length).toBeGreaterThan(2);
+        expect(held[0]).toBe(true);
+    });
+
+    it('REFUSES to route across a pit the leg did not name', () => {
+        // Pit tiles stopped being unmodelled terrain when the transport
+        // landed, so `plannerBlockerAt` no longer reports them for free.
+        // Without the driver's own policy the planner walks over holes that
+        // kill in 27 of the 116 levels.
+        const L83 = buildLevelWorld(levelRecord(83), { roles: RELAXED_ROLES });
+        const opts = { noclip: true, noHazards: R1.noHazards, avoidVolumes: true };
+        const pit = tileCentre(2, 1);
+        expect(plannerObstacleAt(L83, pit.x, pit.y, null, opts))
+            .toMatchObject({ kind: 'pit' });
+        // ...and allows exactly the one tile a leg names, the same shape of
+        // exemption the leg's own teleporter gets.
+        expect(plannerObstacleAt(L83, pit.x, pit.y, null,
+            { ...opts, allowPit: { tx: 2, ty: 1 } })).toBeNull();
+        // A DIFFERENT pit stays forbidden even while one is exempt.
+        const L84 = buildLevelWorld(levelRecord(84), { roles: RELAXED_ROLES });
+        const other = tileCentre(1, 1);
+        expect(plannerObstacleAt(L84, other.x, other.y, null,
+            { ...opts, allowPit: { tx: 2, ty: 2 } })).toMatchObject({ kind: 'pit' });
+    });
+
+    it('names a pit exit that is not a pit, and one that falls elsewhere', () => {
+        expect(() => synthesizeLegs([
+            { level: 83, targets: [], exit: { pit: { tx: 0, ty: 0 } } },
+            { level: 84, targets: [] },
+        ], { levelSource, boot: { level: 83, x: 16, y: 16 }, relax: R1 }))
+            .toThrow(/has no pit there/);
+        expect(() => synthesizeLegs([
+            { level: 83, targets: [], exit: { pit: { tx: 2, ty: 1 } } },
+            { level: 12, targets: [] },
+        ], { levelSource, boot: { level: 83, x: 16, y: 16 }, relax: R1 }))
+            .toThrow(/falls to level 84, but legs\[1\] declares level 12/);
     });
 });

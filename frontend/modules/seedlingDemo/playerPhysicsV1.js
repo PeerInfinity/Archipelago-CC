@@ -332,6 +332,14 @@ export const groundTerrain = () => 0;
  * friction/input/move block in `mobileUpdate` — a frozen tick moves
  * nothing, which is why the bot must not let one consume tape.
  *
+ * `opts.afterMove(x, y)` is the seam for anything `Player.update` runs
+ * BETWEEN the move and the clamp — which at R1 is exactly one thing,
+ * `checkFallingInPit()` (`Player.as:561`, with the clamp at `:563-564`).
+ * Returning `{x, y}` replaces the position. The ordering is not cosmetic:
+ * the pit lerp happens before the world clamp, so in a small level a lerp
+ * that pulled the player outside the bounds would be clamped back, and a
+ * model that clamped first would not.
+ *
  * `opts.collides(x, y)` is the collision seam: it tests the PLAYER'S box
  * placed at (x, y) and returns the blocking entity or null. Omitting it is
  * the noclip path — the AS3's `Bot.noclip ? null : collideTypes(...)`,
@@ -342,7 +350,7 @@ export const groundTerrain = () => 0;
 export function step(state, held, opts = {}) {
     const {
         terrainStateAt = groundTerrain, frozen = false, world = LEVEL0_WORLD,
-        collides = null,
+        collides = null, afterMove = null,
     } = opts;
     const clamp = world === LEVEL0_WORLD ? CLAMP : clampFor(world);
 
@@ -379,6 +387,14 @@ export function step(state, held, opts = {}) {
         const sy = sweepAxis(y, v.y, collides && ((py) => collides(x, py)));
         y = sy.pos;
         hitY = sy.hit;
+    }
+
+    // 3b. `checkFallingInPit()` — between moveY and the clamp, where the
+    //     AS3 puts it. Nothing else lives here.
+    if (afterMove) {
+        const moved = afterMove(x, y);
+        x = moved.x;
+        y = moved.y;
     }
 
     // 4. The hard clamp is part of the tick, not a safety net.

@@ -52,7 +52,10 @@ import {
     TILE_TYPE_NAMES,
     SOLID_ENTITY_TYPES,
 } from '../flashPanel/seedlingSemantics.js';
-import { coerceTerrainState } from './tapeFormat.js';
+import { coerceTerrainState, HAZARD_STATES } from './tapeFormat.js';
+
+/** `Tile.types` index for a Pit — the transport primitive, R1. */
+const PIT_STATE = HAZARD_STATES.pit;
 
 export class LevelWorldError extends Error {
     constructor(message) {
@@ -96,6 +99,21 @@ export const MODELLED_TILE_TYPES = Object.freeze([
     3,  // Brick
     4,  // Dirt
     5,  // Dungeon Tile
+    // ⚠ 6 (Pit) is MODELLED FROM R1, and it is the only entry here that is
+    // not merely "a floor with a speed". Standing on it starts a TRANSPORT:
+    // `playerPhysicsV2` runs the fall-out lerp, the deferred swap to this
+    // level's `control` fallthrough, and the fall-from-ceiling descent.
+    // `moveSpeeds[6]` is the plain walk speed, so the tick the edge fires
+    // is an ordinary tick — which is exactly why the edge has to be modelled
+    // rather than inferred from a speed.
+    //
+    // ⚠ Being modelled here means `plannerBlockerAt` STOPS reporting pit
+    // tiles, because they are no longer unmodelled terrain. That is correct
+    // for the physics and wrong for the planner, which must keep treating
+    // them as forbidden floor (a pit in a level with no `control` block
+    // kills). The policy moved to the driver, where the teleporter-volume
+    // policy already lives — see `botDriverV2.plannerObstacleAt`.
+    6,  // Pit          (R1: a transport primitive, not a floor)
     7,  // Shield Tile
     8,  // Forest
     9,  // Cliff        (solid)
@@ -130,7 +148,6 @@ const MODELLED_TILE_SET = new Set(MODELLED_TILE_TYPES);
 /** Why each unmodelled type is out, for the error message. */
 const UNMODELLED_REASON = Object.freeze({
     1: 'Water — moveSpeed and friction couple to Music.soundPosition("Swim")',
-    6: 'Pit — sets receiveInput = false and takes the player away',
     17: 'Lava — same sound-coupled stroke burst as water, plus damage',
     22: 'Ice — rewrites both moveSpeed (1) and friction (0.025)',
     25: 'Waterfall — sound-coupled like water, at half speed',
@@ -973,6 +990,7 @@ export function buildLevelWorld(levelRecord, { roles = ROLES } = {}) {
     }
 
     // --- objects -------------------------------------------------------
+    let fallthrough = null;
     for (const e of levelRecord.entities ?? []) {
         const cls = ENTITY_CLASSES[e.type];
         if (!cls) {
@@ -995,6 +1013,34 @@ export function buildLevelWorld(levelRecord, { roles = ROLES } = {}) {
         }
         const x = Number(e.x);
         const y = Number(e.y);
+
+        // ⚠ `control` is where a PIT GOES. It is not an entity — `loadlevel`
+        // reads it as a parameter block (`Game.as:2050-2054`) into the
+        // `Game.fallthrough*` statics — and it is read here unconditionally,
+        // for every role set, because a run that walks onto a pit needs it
+        // whatever census the caller asked for.
+        //
+        // Two transcription points, both easy to get wrong:
+        //   - the offset is the control ENTITY'S OWN POSITION plus its
+        //     `xOff`/`yOff` attrs, not the attrs alone
+        //     (`fallthroughOffset = new Point(o.@x, o.@y)` then `+ tempOffset`);
+        //   - `loadlevel` LOOPS, so a level with two control blocks keeps the
+        //     LAST. None in the extract has two; transcribed anyway.
+        //
+        // `sign` is carried for completeness and consumed by nothing here:
+        // `Game.sign` picks a dungeon signpost graphic.
+        if (e.type === 'control') {
+            fallthrough = {
+                level: Number(e.attrs?.fallthrough),
+                offsetX: x + Number(e.attrs?.xOff ?? 0),
+                offsetY: y + Number(e.attrs?.yOff ?? 0),
+                sign: Number(e.attrs?.sign ?? 0) - 1,
+            };
+            if (!Number.isInteger(fallthrough.level)) {
+                fail(`${where} has a control block at (${x},${y}) with no readable `
+                    + `fallthrough level (got ${JSON.stringify(e.attrs?.fallthrough)})`);
+            }
+        }
 
         if (consults.has('pickup') && cls.pickup) {
             pickups.push({
@@ -1073,6 +1119,20 @@ export function buildLevelWorld(levelRecord, { roles = ROLES } = {}) {
         roles: [...roles],
         tiles,
         walkableTiles,
+        /**
+         * Where a pit in THIS level drops the player, from its `control`
+         * block: `{level, offsetX, offsetY, sign}`, or **null** when the
+         * level has none — and null is not "no pits here", it is LETHAL.
+         * `checkFallingInPit` guards on `Game.fallthroughLevel > -1` and
+         * calls `die()` otherwise, and 27 of the 116 levels hold pit tiles
+         * with no control block (all of Dungeon 6 and most of Dungeon 8
+         * among them). Walking onto one of those is not a divergence, it is
+         * a death, which is why pit tiles are forbidden floor for the
+         * planner everywhere except a leg's named exit.
+         */
+        fallthrough,
+        /** Pit tiles, for the planner's forbidden-floor policy. */
+        get pitTiles() { return walkableTiles.filter((t) => t.t === PIT_STATE); },
         solids,
         objectSolids,
         pixelmasks,
@@ -1165,16 +1225,49 @@ export function buildLevelWorld(levelRecord, { roles = ROLES } = {}) {
          * (Ground) pick the same physics. Modelled anyway: "unobservable"
          * is a claim about today's fixtures, not about the game.
          */
-        nearestWalkableTile(x, y, { beforeTypeFlip = false } = {}) {
+        nearestWalkableTile(x, y, opts = {}) {
+            return this.nearestWalkableTileWithTie(x, y, opts).tile;
+        },
+
+        /**
+         * The same single pass, also reporting an EXACT tie.
+         *
+         * ⚠ Ties are real and this arc met one immediately: R1's first pit
+         * recording walked UP from a tile centre, which put the probe point
+         * on y = 32.0 exactly, equidistant from tiles (2,1) and (2,2) of
+         * level 83. The GAME fell into the pit, because `nearestToPoint`
+         * walks FlashPunk's entity list and `World.addUpdate` PREPENDS — so
+         * its order is the reverse of the extract's, and a model reading the
+         * extract picks the other tile.
+         *
+         * The tie is REPORTED here rather than judged, because whether it
+         * matters is a physics question, not a geometry one: two equidistant
+         * tiles that both walk at 0.8 resolve to the same behaviour whoever
+         * wins, and a full tile grid produces ties constantly. See
+         * `playerPhysicsV2.resolveTerrainState`, which throws only when the
+         * two lead somewhere different.
+         *
+         * `tie` is the FIRST later candidate at the same distance with a
+         * different `t`; two tied tiles of the same type are not an
+         * ambiguity at all.
+         */
+        nearestWalkableTileWithTie(x, y, { beforeTypeFlip = false } = {}) {
             let best = null;
             let bestDist = Infinity;
+            let tie = null;
             for (const tile of (beforeTypeFlip ? tiles : walkableTiles)) {
                 const dx = tile.x - x;
                 const dy = tile.y - y;
                 const d = dx * dx + dy * dy;
-                if (d < bestDist) { bestDist = d; best = tile; }
+                if (d < bestDist) {
+                    bestDist = d;
+                    best = tile;
+                    tie = null;
+                } else if (d === bestDist && best && tile.t !== best.t && !tie) {
+                    tie = tile;
+                }
             }
-            return best;
+            return { tile: best, tie };
         },
 
         /**

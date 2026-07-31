@@ -135,11 +135,31 @@ export function tileAt(x, y) {
  * what the eleven committed tapes were planned under and stays that way.
  */
 export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}) {
-    const { noclip = false, noHazards = [], avoidVolumes = false } = opts;
+    const {
+        noclip = false, noHazards = [], avoidVolumes = false, allowPit = null,
+    } = opts;
     const box = playerBoxAt(x, y);
     const geometry = level.plannerBlockerAt(box, terrainProbeRect(x, y),
         { noclip, noHazards });
     if (geometry) return geometry;
+    // ⚠ PIT TILES ARE FORBIDDEN FLOOR, and this policy is LOAD-BEARING from
+    // R1 on. Until R1 a pit was unmodelled terrain, so `plannerBlockerAt`
+    // reported it for free; modelling the transport took it off that list,
+    // and without this the planner cheerfully routes ACROSS pits — the exact
+    // accident class that ate v1's `clamp-left`, except this one is fatal
+    // rather than merely misdirecting. 27 of the 116 levels hold pit tiles
+    // with NO `control` block, and `checkFallingInPit`'s else branch is
+    // `die()`: Dungeon 6 and most of Dungeon 8 are floors of lethal holes.
+    //
+    // `allowPit` is the one exemption, and it is the same shape as
+    // `allowTeleporter`: a leg names the pit it intends to fall down, by
+    // tile, and only that one tile is steppable. The driver never searches
+    // the fall graph.
+    const probe = terrainProbeRect(x, y);
+    for (const tile of level.pitTiles) {
+        if (allowPit && tile.tx === allowPit.tx && tile.ty === allowPit.ty) continue;
+        if (rectsOverlap(probe, tile.rect)) return { kind: 'pit', blocker: tile };
+    }
     if (avoidVolumes) {
         const [hit] = level.avoidVolumesAt(box);
         if (hit) return hit;
@@ -152,7 +172,10 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
     return null;
 }
 
-const describe = (o) => (o.kind === 'terrain'
+/** An empty held set — what a transport tick emits. */
+const NO_HELD = new Set();
+
+const describe = (o) => (o.kind === 'terrain' || o.kind === 'pit'
     ? `${o.kind} ${o.blocker.name} (t=${o.blocker.t}) at tile (${o.blocker.tx},${o.blocker.ty})`
     : `${o.kind} ${o.blocker.tag ?? o.blocker.cls?.as3} at (${o.blocker.x},${o.blocker.y})`);
 
@@ -369,6 +392,37 @@ function findExit(level, exit) {
 }
 
 /**
+ * Advance a PIT TRANSPORT to its end, pressing nothing.
+ *
+ * ⚠ The driver must not schedule inputs between the fall edge and the
+ * descent landing. `checkFallingInPit` sets `receiveInput = false` and the
+ * `fallFromCeiling` arm keeps it false, so a span the game ignores while
+ * the JS honours it would be the v1 boot asymmetry reborn — a tape whose
+ * two consumers disagree about what it asked for. So the driver emits an
+ * EMPTY held set for every transport tick, and the runner sees exactly the
+ * same nothing.
+ *
+ * `emitted` counts them, so a caller can pin that a transport really
+ * happened (61 ticks for a landing on a pit, 100 for one that bounces)
+ * rather than assuming.
+ */
+function coastThroughTransport(run, perTick, maxTicks, what) {
+    let emitted = 0;
+    while (run.state.fall) {
+        if (emitted >= maxTicks) {
+            fail(`${what}: the pit transport did not finish within ${maxTicks} ticks `
+                + `(phase "${run.state.fall.phase}"). A fall is 20 fall-out ticks plus a `
+                + '41-tick descent plus a 39-tick bounce if it bounces, so this means '
+                + 'the model is not converging.');
+        }
+        perTick.push(NO_HELD);
+        run.advance(NO_HELD);
+        emitted++;
+    }
+    return emitted;
+}
+
+/**
  * Drive the run to `target`, one bang-bang tick at a time.
  *
  * `until` is `'arrival'` (v1's criterion: within tolerance AND stopped) or
@@ -386,7 +440,14 @@ function drive(run, target, perTick, { until, tolerance, maxTicks, what, avoidVo
                 + `(${s.x},${s.y}) v=(${s.vx},${s.vy}) in level ${run.level}, `
                 + `aiming at (${target.x},${target.y}).`);
         }
-        const held = chooseHeld(run.state, target, tolerance);
+        // ⚠ ONCE A TRANSPORT IS IN FLIGHT, THE DRIVER PRESSES NOTHING.
+        // The twenty fall-out ticks are ordinary live ticks — `receiveInput
+        // = false` stops input, not the tick counter — so the controller
+        // would happily keep choosing keys for them, and the game would
+        // ignore every one. A span one consumer honours and the other drops
+        // is the asymmetry this format exists to prevent, so the driver
+        // emits the same nothing the game acts on.
+        const held = run.state.fall ? NO_HELD : chooseHeld(run.state, target, tolerance);
         perTick.push(held);
         const { transition, hitX, hitY } = run.advance(held);
         ticks++;
@@ -550,6 +611,56 @@ export function synthesizeLegs(legs, opts = {}) {
             fail(`legs[${li}] is the last leg but declares an exit. The driver asserts a `
                 + "crossing against the NEXT leg's level; with no next leg there is "
                 + 'nothing to assert and the tape would end mid-transition.');
+        }
+
+        // ── PIT EXIT ───────────────────────────────────────────────
+        // `exit: {pit: {tx, ty}}` — walk onto that ONE pit tile, then let
+        // the game carry the player. The caller names the pit exactly as it
+        // names a teleporter; the driver never searches the fall graph.
+        if (leg.exit.pit) {
+            const { tx, ty } = leg.exit.pit;
+            const destination = legs[li + 1].level;
+            const pit = run.world.pitTiles.find((t) => t.tx === tx && t.ty === ty);
+            if (!pit) {
+                fail(`legs[${li}].exit names pit tile (${tx},${ty}) in level `
+                    + `${leg.level}, which has no pit there. Its pits are `
+                    + `[${run.world.pitTiles.map((t) => `(${t.tx},${t.ty})`).join(' ')}].`);
+            }
+            const ft = run.world.fallthrough;
+            if (!ft) {
+                fail(`legs[${li}] falls down a pit in level ${leg.level}, which has NO `
+                    + 'control block — that pit is lethal, not transport.');
+            }
+            if (ft.level !== destination) {
+                fail(`legs[${li}].exit falls to level ${ft.level}, but legs[${li + 1}] `
+                    + `declares level ${destination}.`);
+            }
+            const centre = tileCentre(tx, ty);
+            const legPlan = { ...plan, allowPit: { tx, ty } };
+            const wps = planWaypoints(run.world, run.state, centre, null, legPlan);
+            legWaypoints.push(...wps);
+            wps.forEach((wp, wi) => {
+                const last = wi === wps.length - 1;
+                const t = drive(run, wp, perTick, {
+                    until: last ? 'transition' : 'arrival',
+                    tolerance,
+                    maxTicks: maxTicksPerTarget,
+                    avoidVolumes: Boolean(relax),
+                    what: `legs[${li}] level ${leg.level} pit exit (${tx},${ty}) `
+                        + `waypoint ${wi} (${wp.x},${wp.y})`,
+                });
+                if (last && !t) {
+                    fail(`legs[${li}] reached pit tile (${tx},${ty}) without falling. `
+                        + 'The edge is a RAW state change to 6 while onGround, so this '
+                        + 'means the route arrived already resolving that tile.');
+                }
+            });
+            // The arrival is mid-air: the fall-from-ceiling descent still has
+            // to land before the next leg can plan from a real position.
+            coastThroughTransport(run, perTick, maxTicksPerTarget,
+                `legs[${li}] pit exit (${tx},${ty})`);
+            waypoints.push(legWaypoints);
+            return;
         }
 
         const { index, teleporter } = findExit(run.world, leg.exit);

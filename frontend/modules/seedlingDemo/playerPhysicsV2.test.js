@@ -23,12 +23,26 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { LevelWorldError, buildLevelWorld } from './levelWorld.js';
+import { LevelWorldError, RELAXED_ROLES, buildLevelWorld } from './levelWorld.js';
+import { atlasLevelSource } from './levelSource.js';
+
+/** Real level records, for the R1 transport block at the bottom. */
+const levelRecord = atlasLevelSource();
 import { CHECK_OFFSET_Y, HITBOX, MOVE_SPEEDS, WALK_SPEED } from './playerPhysicsV1.js';
 import {
+    BOUNCE_VELOCITY,
+    DESCENT_DROP,
+    DESCENT_GRAVITY,
+    DESCENT_MAX_FALL,
+    FALL_ALPHA_SPEED,
+    FALL_ALPHA_START,
     INITIAL_TERRAIN_STATE,
+    NO_BOUNCE_STATES,
     PhysicsV2Error,
+    arriveFromFall,
     arriveIn,
+    fallDestination,
+    getStatePos,
     initialLatch,
     playerBoxAt,
     resolveTerrainState,
@@ -615,5 +629,162 @@ describe('room transitions', () => {
         const r = step(at, held(), { level: w });
         expect(r.transition).toBeNull();
         expect([...r.latched]).toEqual([0]);
+    });
+});
+
+describe('R1: the pit transport, hand-derived from Player.as', () => {
+    const L83 = buildLevelWorld(levelRecord(83), { roles: RELAXED_ROLES });
+    const L84 = buildLevelWorld(levelRecord(84), { roles: RELAXED_ROLES });
+    const R1 = ['water', 'lava', 'ice', 'waterfall'];
+
+    it('the fall-out is EXACTLY 20 ticks, by repeated subtraction', () => {
+        // fallAlphaSpeed = 0.05 from an Image alpha of 1, swapping at
+        // `alpha <= 0`. Twenty subtractions land on -3.19e-16 — BELOW zero,
+        // so tick 20 swaps. Computing the count as 1/0.05 gives exactly 20
+        // too, but accumulating the other way can land a hair ABOVE zero and
+        // give 21. The value is asserted, not just the count, because the
+        // count is what the recording pins and the sign is what makes it 20.
+        let alpha = FALL_ALPHA_START;
+        let n = 0;
+        while (alpha > 0) { alpha -= FALL_ALPHA_SPEED; n += 1; }
+        expect(n).toBe(20);
+        expect(alpha).toBe(-3.191891195797325e-16);
+    });
+
+    it('the descent is EXACTLY 41 ticks from a drop that is always 83 px', () => {
+        // Player.check() puts the arrival at `FP.camera.y - (height -
+        // originY)`, and loadlevel had just set that camera to `player.y -
+        // FP.screen.height/2` UNCLAMPED — view() clamps it, but view() runs
+        // after check() in the same update. 160/2 + (5 - 2) = 83, and
+        // FP.screen never changes size, so this is a constant of the BUILD
+        // rather than of the level.
+        expect(DESCENT_DROP).toBe(80 + (HITBOX.height - HITBOX.originY));
+        let y = -DESCENT_DROP;
+        let vy = 0;
+        let n = 0;
+        while (y < 0) {
+            vy = Math.min(vy + DESCENT_GRAVITY, DESCENT_MAX_FALL);
+            y += vy;
+            n += 1;
+        }
+        expect(n).toBe(41);
+        expect(y).toBeCloseTo(3.1, 10);      // the landing OVERSHOOTS yStart
+        expect(vy).toBeCloseTo(4.1, 10);
+    });
+
+    it('the bounce is EXACTLY 39 ticks and returns to yStart', () => {
+        let y = 0;
+        let vy = BOUNCE_VELOCITY;
+        let n = 0;
+        do {
+            vy = Math.min(vy + DESCENT_GRAVITY, DESCENT_MAX_FALL);
+            y += vy;
+            n += 1;
+        } while (y < 0);
+        expect(n).toBe(39);
+        expect(y).toBeCloseTo(0, 10);
+    });
+
+    it('⚠ pit/water/lava LAND; an ordinary floor BOUNCES', () => {
+        // The polarity most likely to be transcribed backwards. You cannot
+        // bounce on a hole or a liquid, so the ordinary floor is the case
+        // that bounces — once.
+        expect(NO_BOUNCE_STATES).toEqual([6, 1, 17]);
+        // Level 84's arrival tile is a PIT, which is what chains the fall.
+        expect(getStatePos(L84, 40, 40)).toBe(6);
+        // Level 83's boot tile is Dirt, which would bounce.
+        expect(getStatePos(L83, 24, 24)).toBe(4);
+    });
+
+    it('getStatePos TRUNCATES its args and is NOT coerced', () => {
+        // `getStatePos(_x:int, _y:int)` — AS3 coerces on the way in. And R0's
+        // four coerce sites do not include it, so the landing check reads the
+        // RAW tile type while the physics reads the coerced one. That is not
+        // a curiosity: the 48 -> 49 fall on the R1 route lands on ICE, which
+        // noHazards flattens for the physics and which this sees as 22 and
+        // bounces off.
+        expect(getStatePos(L84, 40.9, 40.9)).toBe(getStatePos(L84, 40, 40));
+        expect(getStatePos(L84, 40, 40)).toBe(6);   // never 0, however coerced
+    });
+
+    it('the ctor args snap to the tile grid, with the max(...,0) clamp', () => {
+        // x = floor(max(fallInPitPos.x - offset.x, 0)/16)*16. Level 83's pit
+        // (2,1) has its centre at (40,24) and its control block offsets by
+        // (0,-16) — the control ENTITY'S OWN POSITION plus its xOff/yOff
+        // attrs, not the attrs alone.
+        expect(L83.fallthrough).toEqual({
+            level: 84, offsetX: 0, offsetY: -16, sign: -1,
+        });
+        expect(fallDestination(L83, { x: 40, y: 24 }))
+            .toEqual({ to_level: 84, ctor: { x: 32, y: 32 } });
+        // ⚠ The clamp is on the SUBTRACTION and needs a POSITIVE offset to
+        // engage at all — level 83's is (0,-16), so nothing there can ever
+        // exercise it. Level 71's is (32,-64): a pit at x = 8 gives 8 - 32 =
+        // -24, which `Math.floor(-24/16)*16` sends to -32 (a ctor arg
+        // outside the level) while `max(..., 0)` sends it to 0. Written
+        // against 71 on purpose — a first cut used 83 and the mutation that
+        // deletes the clamp stayed green.
+        // roles: ['trigger'] — level 71 holds a shieldlock and a button,
+        // both still `hazard: 'unpriced'`, so consulting proximity-hazard
+        // there THROWS. The census working, not a workaround: this test
+        // needs the control block, which is read for every role set.
+        const L71 = buildLevelWorld(levelRecord(71), { roles: ['trigger'] });
+        expect(L71.fallthrough).toMatchObject({ level: 82, offsetX: 32, offsetY: -64 });
+        expect(fallDestination(L71, { x: 8, y: 216 }).ctor.x).toBe(0);
+        expect(fallDestination(L83, { x: 8, y: 8 }).ctor.x).toBe(0);
+    });
+
+    it('a pit in a level with NO control block is a NAMED death, not a fall', () => {
+        // 27 of the 116 levels hold pit tiles and no control block, and
+        // `checkFallingInPit`'s else branch is die(). Level 65 (Dungeon 6)
+        // is one of them.
+        const L65 = buildLevelWorld(levelRecord(65), { roles: RELAXED_ROLES });
+        expect(L65.fallthrough).toBeNull();
+        expect(L65.pitTiles.length).toBeGreaterThan(0);
+        expect(() => fallDestination(L65, { x: 40, y: 24 }))
+            .toThrow(/NO control block/);
+    });
+
+    it('arriveFromFall drops the player 83 px above yStart, velocity zero', () => {
+        const s = arriveFromFall(L84, { x: 32, y: 32 });
+        expect(s.x).toBe(40);
+        expect(s.fall).toEqual({ phase: 'descent', yStart: 40, bounced: false });
+        expect(s.y).toBe(40 - DESCENT_DROP);
+        expect([s.vx, s.vy]).toEqual([0, 0]);
+        expect(s.terrain).toBe(INITIAL_TERRAIN_STATE);
+    });
+
+    it('the EDGE tick still runs input(); the ticks after it do not', () => {
+        // `receiveInput = false` is set inside checkFallingInPit, which runs
+        // AFTER super.update(). A transcription that kills input on the edge
+        // tick diverges on the first tick of every fall. Driven through the
+        // real level: hold RIGHT from the tile west of level 83's pit.
+        const held = new Set(['right']);
+        let s = {
+            x: 24, y: 24, vx: 0, vy: 0, terrain: INITIAL_TERRAIN_STATE,
+            latched: new Set(), fall: null,
+        };
+        const opts = { level: L83, noclip: true, noHazards: R1 };
+        const xs = [s.x];
+        for (let i = 0; i < 12; i += 1) { s = step(s, held, opts); xs.push(s.x); }
+        // The edge fires when the resolver first answers 6...
+        const edge = xs.findIndex((_, i) => i > 0 && xs[i] - xs[i - 1] < xs[i - 1] - xs[i - 2]);
+        expect(s.fall).not.toBeNull();
+        // ...and the tick it fires on still accelerated: the limit cycle is
+        // unbroken through it (0.80, 1.35, 1.10, 0.85, 1.40, 1.15, 0.90, 1.45).
+        expect(xs[8] - xs[7]).toBeCloseTo(1.45, 10);
+        expect(edge).toBeGreaterThan(0);
+    });
+
+    it('REFUSES a teleporter firing while a transport is in flight', () => {
+        // Live, not defensive: level 100's exit to 101 stands ON a pit tile.
+        const s = {
+            x: 40, y: 24, vx: 0, vy: 0, terrain: 4, latched: new Set(),
+            fall: { phase: 'out', target: { x: 40, y: 24 }, alpha: 0.5 },
+        };
+        // Level 83's own teleporter is at (32,64); park the player in it.
+        expect(() => step({ ...s, x: 40, y: 72 }, new Set(),
+            { level: L83, noclip: true, noHazards: R1 }))
+            .toThrow(/while a pit transport was in flight/);
     });
 });
