@@ -9,15 +9,17 @@
  * somebody for node — tests, the differential harness, the driver scripts.
  * `fixtures/index.js` is the same kind of edge for tapes and expectations.
  *
- * A browser caller writes the same seam over a `fetch`ed atlas:
+ * A browser caller writes the same seam over a `fetch`ed atlas, and must
+ * import it from `./atlasSource.js` rather than from here:
  *
+ *     import { levelSourceFromAtlas } from './atlasSource.js';
  *     const atlas = await (await fetch('.../seedling-map.json')).json();
- *     const source = levelSourceFromAtlas(atlas);
- *     runTape(tape, { levelSource: source });
+ *     runTape(tape, { levelSource: levelSourceFromAtlas(atlas) });
  *
  * — which is why the shape is a plain `(level) => record` function and not
- * a class, a path, or a preloaded map of worlds. `levelSourceFromAtlas` is
- * exported and has no node dependency; only `atlasLevelSource` reads disk.
+ * a class, a path, or a preloaded map of worlds. ⚠ It is re-exported from
+ * here for the node callers that already import it, but this FILE is
+ * node-only: see the note at the import.
  *
  * The atlas is `frontend/modules/flashPanel/atlases/seedling-map.json`, the
  * committed Phase-2 extract: all 116 levels, tile placements and entities
@@ -31,6 +33,17 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
+import { levelSourceFromAtlas } from './atlasSource.js';
+
+// ⚠ RE-EXPORTED, NOT DEFINED HERE. This file imports `node:fs` at the top,
+// and an ES module runs its imports before any export is reachable — so a
+// BROWSER importing `levelSourceFromAtlas` from here dies on `node:fs` and
+// never reaches the function, however node-free the function itself is.
+// "The function has no node dependency" and "the module loads in a browser"
+// are different claims, and only the first was ever true. The watch page is
+// the first real browser caller and found it immediately.
+export { levelSourceFromAtlas };
+
 /** The committed extract. */
 export const ATLAS_PATH = fileURLToPath(
     new URL('../flashPanel/atlases/seedling-map.json', import.meta.url),
@@ -42,26 +55,6 @@ let cachedAtlas = null;
 export function loadAtlas() {
     if (!cachedAtlas) cachedAtlas = JSON.parse(readFileSync(ATLAS_PATH, 'utf8'));
     return cachedAtlas;
-}
-
-/**
- * A `levelSource` over an already-loaded atlas object.
- *
- * Throws by name on a level the atlas does not have, rather than returning
- * undefined for `buildLevelWorld` to trip over one frame later — the level
- * number in a teleporter's `to` attribute is the kind of thing that is
- * wrong by transcription, and it should say so.
- */
-export function levelSourceFromAtlas(atlas) {
-    const byLevel = new Map((atlas?.levels ?? []).map((l) => [l.level, l]));
-    return (level) => {
-        const record = byLevel.get(level);
-        if (!record) {
-            throw new Error(`seedling atlas has no level ${level} (it has `
-                + `${byLevel.size} levels)`);
-        }
-        return record;
-    };
 }
 
 /** The node convenience: a `levelSource` over the committed extract. */

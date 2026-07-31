@@ -64,6 +64,48 @@ import { groundTerrain, spawnFromBoot, step as stepV1 } from './playerPhysicsV1.
  *   and the stream therefore cannot carry).
  */
 export function runTape(tape, opts = {}) {
+    // ⚠ ONE LOOP, TWO FACES. This used to BE the loop; it now drives the
+    // stepper below to completion and returns what it returns. The watch
+    // page needs to advance a tape one tick at a time, and a second copy of
+    // the tick loop — even a "read-only viewer" copy — is the
+    // verifier-shared-assumption trap in tooling clothes: the two would
+    // agree until one was edited, and the one nobody tests is the one that
+    // drifts. `tapeRunner.test.js` pins that stepping a committed fixture to
+    // completion yields a stream byte-identical to this.
+    const stepper = createTapeStepper(tape, opts);
+    let r = stepper.next();
+    while (!r.done) r = stepper.next();
+    return r.value;
+}
+
+/**
+ * The INCREMENTAL face of `runTape`, for the watch page.
+ *
+ * Setup and validation are EAGER — the same throws `runTape` has always
+ * made happen when you create the stepper, not when you first advance it,
+ * because a caller that gets a stepper back should already know the tape
+ * can run. Only the tick loop is lazy.
+ *
+ * `next()` yields once per OBSERVATION (so `tick_count + 1` times, ending
+ * with the disarm tick), each time with:
+ *
+ *   `observation`  the `{t, x, y, level}` record just pushed
+ *   `state`        the full physics state behind it — velocity, the sticky
+ *                  terrain state, the latch, the pit-transport phase; none
+ *                  of which the stream carries and all of which the viewer
+ *                  draws
+ *   `held`         the keys this tick will dispatch
+ *   `world`        the built level world, for geometry the viewer renders
+ *   `transitions` / `grants` / `inventory`  live views, as they accumulate
+ *
+ * When the loop finishes, the generator's RETURN value is `runTape`'s whole
+ * result — which is how the two faces cannot diverge.
+ *
+ * ⚠ Tooling only. Nothing that makes a claim may consume this instead of
+ * `runTape`: the unfired-grant check fires at the END of the loop, so a
+ * consumer that stops early skips it, honestly but silently.
+ */
+export function createTapeStepper(tape, opts = {}) {
     const t = parseTape(tape);
     const { terrainStateAt = groundTerrain, onTick, levelSource } = opts;
 
@@ -121,53 +163,81 @@ export function runTape(tape, opts = {}) {
     let state = { x: spawn.x, y: spawn.y, vx: 0, vy: 0 };
     const ticks = [];
 
-    // <= tick_count: the final iteration records the last tick's result
-    // without dispatching anything, mirroring the bot's disarm tick.
-    // RECORD-THEN-ACT stays HERE and not in the run: it is a rule about
-    // where the AS3 hook sits, not about the engine.
-    for (let tick = 0; tick <= t.tick_count; tick++) {
-        const now = run ? run.state : state;
-        ticks.push({ t: tick, x: now.x, y: now.y, level: run ? run.level : t.boot.level });
-        if (onTick) onTick(tick, now, heldKeysAt(t, tick));
-        if (tick === t.tick_count) break;
-        const held = heldKeysAt(t, tick);
-        if (run) run.advance(held);
-        else state = stepV1(state, held, { terrainStateAt });
+    function* loop() {
+        // <= tick_count: the final iteration records the last tick's result
+        // without dispatching anything, mirroring the bot's disarm tick.
+        // RECORD-THEN-ACT stays HERE and not in the run: it is a rule about
+        // where the AS3 hook sits, not about the engine.
+        for (let tick = 0; tick <= t.tick_count; tick++) {
+            const now = run ? run.state : state;
+            const observation = {
+                t: tick, x: now.x, y: now.y, level: run ? run.level : t.boot.level,
+            };
+            ticks.push(observation);
+            const held = heldKeysAt(t, tick);
+            if (onTick) onTick(tick, now, held);
+            yield {
+                observation,
+                state: now,
+                held,
+                world: run ? run.world : null,
+                transitions: run ? run.transitions : [],
+                transports: run ? run.transports : [],
+                grants: run ? run.grantsFired : [],
+                inventory: run ? run.inventory : null,
+                last: tick === t.tick_count,
+            };
+            if (tick === t.tick_count) break;
+            if (run) run.advance(held);
+            else state = stepV1(state, held, { terrainStateAt });
+        }
+
+        // A grant for a level the tape never entered is a ROUTE CLAIM that
+        // stopped being true. Silently no-opping it is how a routing
+        // regression hides: the stream still matches its oracle (the grant
+        // changes no position), every assertion passes, and the tape quietly
+        // stopped visiting the room it exists to visit.
+        if (run && run.unfiredGrantLevels.length > 0) {
+            throw new Error(
+                'runTape: the tape grants items in level(s) '
+                + `${run.unfiredGrantLevels.join(', ')}, which the run never entered. A `
+                + 'grant fires on FIRST ENTRY, so this tape no longer walks where it '
+                + 'claims to. Fix the route or drop the grant — do not leave it as a '
+                + 'silent no-op.',
+            );
+        }
+
+        return {
+            ticks,
+            // Derived from the engine's OWN world swap — deliberately NOT
+            // re-derived from the level field, which is what the GAME's side
+            // is derived from (`tapeFormat.deriveTransitions`). If both sides
+            // read the level field the transitions diff would degenerate into
+            // diffing the tick stream against itself.
+            transitions: run ? run.transitions : [],
+            // The subset a PIT FALL produced. JS-side bookkeeping, not part
+            // of the stream contract — it exists so the differential harness
+            // can read `saw_input_refused` two-sidedly: a transport means the
+            // game MUST have refused input, and its absence means no fall
+            // fired.
+            transports: run ? run.transports : [],
+            final: run ? run.state : state,
+            // The R0 relaxations' JS-side outcome. `inventory` is a MIRROR —
+            // an acceptance assertion reads `botStatus.items` from the game,
+            // not this. See `levelRun.initialInventory`.
+            inventory: run ? run.inventory : null,
+            grants: run ? run.grantsFired : [],
+        };
     }
 
-    // A grant for a level the tape never entered is a ROUTE CLAIM that
-    // stopped being true. Silently no-opping it is how a routing regression
-    // hides: the stream still matches its oracle (the grant changes no
-    // position), every assertion passes, and the tape quietly stopped
-    // visiting the room it exists to visit.
-    if (run && run.unfiredGrantLevels.length > 0) {
-        throw new Error(
-            'runTape: the tape grants items in level(s) '
-            + `${run.unfiredGrantLevels.join(', ')}, which the run never entered. A grant `
-            + 'fires on FIRST ENTRY, so this tape no longer walks where it claims to. '
-            + 'Fix the route or drop the grant — do not leave it as a silent no-op.',
-        );
-    }
-
+    const it = loop();
     return {
-        ticks,
-        // Derived from the engine's OWN world swap — deliberately NOT
-        // re-derived from the level field, which is what the GAME's side is
-        // derived from (`tapeFormat.deriveTransitions`). If both sides read
-        // the level field the differential would degenerate into diffing the
-        // tick stream against itself and check nothing new.
-        transitions: run ? run.transitions : [],
-        // The subset a PIT FALL produced. JS-side bookkeeping, not part of
-        // the stream contract — it exists so the differential harness can
-        // read `saw_input_refused` two-sidedly: a transport means the game
-        // MUST have refused input, and its absence means no fall fired.
-        transports: run ? run.transports : [],
-        final: run ? run.state : state,
-        // The R0 relaxations' JS-side outcome. `inventory` is a MIRROR —
-        // an acceptance assertion reads `botStatus.items` from the game, not
-        // this. See `levelRun.initialInventory`.
-        inventory: run ? run.inventory : null,
-        grants: run ? run.grantsFired : [],
+        tape: t,
+        tickCount: t.tick_count,
+        /** The built world for a level — for a viewer drawing geometry. */
+        worldFor: run ? run.worldFor : null,
+        next: () => it.next(),
+        [Symbol.iterator]() { return it; },
     };
 }
 

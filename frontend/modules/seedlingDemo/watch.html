@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<!--
+  seedlingDemo/watch.html — watch a Seedling bot tape replay.
+
+  TOOLING ONLY: this page makes no claims and gates nothing. See
+  watchViewer.js's docblock and CC/docs/plans/seedling-bot-watch-page.md.
+
+  Serve from the REPO ROOT (paths resolve against the dev server's cwd):
+
+      ss -ltn | grep ":8000" || python3 -m http.server 8000
+
+      http://localhost:8000/frontend/modules/seedlingDemo/watch.html
+          ?tape=frontend/modules/seedlingDemo/fixtures/tapes/pit-fall-chain-85.json
+          &side=js
+
+  side=js    the JS engine, drawn on canvas. Works anywhere.
+  side=wasm  the real recompiled game in an iframe. LOCAL ONLY — the wasm
+             artifact is gitignored, and the page says so by name when it
+             is absent rather than showing a blank frame.
+
+  Deliberately NOT a GL panel: no __BUNDLED_MODULES__ entry, no substrate
+  registration. seedlingDemo is an engine-only module and a standalone
+  static page needs neither.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Seedling bot — watch</title>
+<style>
+  :root { color-scheme: dark; }
+  body {
+    margin: 0; background: #0b0b0e; color: #d8d8e0;
+    font: 13px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  header { padding: 8px 12px; border-bottom: 1px solid #24242c; }
+  h1 { font-size: 13px; margin: 0 0 4px; font-weight: 600; }
+  #title { color: #7fe0ff; font-weight: 400; }
+  #status { font-size: 12px; }
+  #status.ok { color: #7fd88f; }
+  #status.bad { color: #ff8080; }
+  #detail { font-size: 11px; color: #8a8a98; white-space: pre-wrap; margin-top: 2px; }
+  main { display: flex; gap: 12px; padding: 12px; align-items: flex-start; }
+  #stage { flex: 1 1 auto; min-width: 0; }
+  canvas { display: block; image-rendering: pixelated; background: #101014; }
+  iframe { display: none; width: 100%; height: 560px; border: 1px solid #24242c; }
+  #panel { flex: 0 0 320px; }
+  .r { display: flex; justify-content: space-between; gap: 8px; padding: 2px 6px; border-bottom: 1px solid #1a1a20; }
+  .r span { color: #8a8a98; }
+  .r b { font-weight: 600; text-align: right; word-break: break-all; }
+  .r.coerced b { color: #ffd75f; }
+  .r.transport b { color: #ff9a6a; }
+  #controls { display: flex; gap: 8px; align-items: center; margin: 8px 0; flex-wrap: wrap; }
+  button { background: #1e1e26; color: #d8d8e0; border: 1px solid #34343e; padding: 4px 12px; cursor: pointer; }
+  button:disabled { opacity: .4; cursor: default; }
+  input[type=range] { flex: 1 1 120px; min-width: 80px; }
+  label { color: #8a8a98; display: flex; gap: 4px; align-items: center; }
+  #progress { height: 4px; background: #1a1a20; margin-top: 6px; }
+  #bar { height: 100%; width: 0; background: #7fe0ff; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Seedling bot — watch <span id="title"></span></h1>
+  <div id="status">loading…</div>
+  <div id="detail"></div>
+  <div id="progress"><div id="bar"></div></div>
+</header>
+<main>
+  <div id="stage">
+    <canvas id="canvas" width="320" height="320"></canvas>
+    <iframe id="frame" title="recompiled Seedling"></iframe>
+    <div id="controls">
+      <button id="play">Pause</button>
+      <input id="scrub" type="range" min="0" max="0" value="0">
+      <label>speed <input id="speed" type="range" min="0.1" max="8" step="0.1" value="1"><span id="speedv">1x</span></label>
+      <label><input id="volumes" type="checkbox" checked> avoid volumes</label>
+    </div>
+  </div>
+  <div id="panel"><div id="hud"></div></div>
+</main>
+<script type="module">
+  import { main } from './watchViewer.js';
+  main();
+</script>
+</body>
+</html>

@@ -40,7 +40,7 @@ import { fixtureNames, loadExpectation, loadTape } from './fixtures/index.js';
 import { atlasLevelSource } from './levelSource.js';
 import { MOVE_SPEEDS, spawnFromBoot } from './playerPhysicsV1.js';
 import { deriveTransitions, diffObservationStreams } from './tapeFormat.js';
-import { runTape, runTapeToStream } from './tapeRunner.js';
+import { createTapeStepper, runTape, runTapeToStream } from './tapeRunner.js';
 
 /** Entity spawn for the fixtures' shared boot block (Player.as:357: +8,+8). */
 const SPAWN = spawnFromBoot({ x: 80, y: 128 });
@@ -504,5 +504,69 @@ describe('version 2 tapes', () => {
         expect(() => walkIntoWater({ noHazards: ['lava', 'ice'] })).toThrow(/Water/);
         const out = walkIntoWater({ noHazards: ['water', 'pit', 'lava', 'ice', 'waterfall'] });
         expect(out.ticks).toHaveLength(61);
+    });
+});
+
+
+describe('the incremental stepping face (watch page)', () => {
+    // ⚠ THE PIN THE WATCH PAGE EXISTS BEHIND. The viewer needs to advance a
+    // tape one tick at a time, and the temptation is a second little loop in
+    // the viewer. That is the verifier-shared-assumption trap in tooling
+    // clothes: two copies agree until one is edited, and the one nobody
+    // tests is the one that drifts. So `runTape` DRIVES the stepper rather
+    // than duplicating it, and these cases prove the two faces are one.
+    const names = fixtureNames();
+
+    it.each(names)('%s: stepping to completion == runTape, byte for byte', (name) => {
+        const tape = loadTape(name);
+        const whole = runTape(tape, { levelSource });
+        const stepper = createTapeStepper(tape, { levelSource });
+        const seen = [];
+        let r = stepper.next();
+        while (!r.done) { seen.push(r.value.observation); r = stepper.next(); }
+        // The observations the viewer would have drawn, one per next().
+        expect(seen).toEqual(whole.ticks);
+        // And the generator's RETURN value is runTape's whole result — which
+        // is the mechanism, not a coincidence.
+        expect(r.value.ticks).toEqual(whole.ticks);
+        expect(r.value.transitions).toEqual(whole.transitions);
+        expect(r.value.transports).toEqual(whole.transports);
+        expect(r.value.grants).toEqual(whole.grants);
+        expect(r.value.inventory).toEqual(whole.inventory);
+        expect(r.value.final).toEqual(whole.final);
+    });
+
+    it('yields tick_count + 1 times, ending on the disarm tick', () => {
+        const stepper = createTapeStepper(loadTape('straight-run'), { levelSource });
+        let n = 0;
+        let last = null;
+        for (let r = stepper.next(); !r.done; r = stepper.next()) { n += 1; last = r.value; }
+        expect(n).toBe(loadTape('straight-run').tick_count + 1);
+        expect(last.last).toBe(true);
+    });
+
+    it('hands the viewer the state and geometry the STREAM cannot carry', () => {
+        // The reason the viewer steps at all rather than replaying a
+        // recording: velocity, the sticky terrain state, the latch and the
+        // pit-transport phase are model state the observation stream does
+        // not carry, and they are exactly what makes a route debuggable.
+        const stepper = createTapeStepper(loadTape('pit-fall-chain-85'), { levelSource });
+        let sawFall = false;
+        let sawWorld = false;
+        for (let r = stepper.next(); !r.done; r = stepper.next()) {
+            if (r.value.state.fall) sawFall = true;
+            if (r.value.world && r.value.world.level === 85) sawWorld = true;
+            expect(typeof r.value.state.vx).toBe('number');
+        }
+        expect(sawFall, 'the transport phase is visible mid-fall').toBe(true);
+        expect(sawWorld, 'the world follows the run across a swap').toBe(true);
+    });
+
+    it('validates EAGERLY, when the stepper is made rather than advanced', () => {
+        // A caller holding a stepper should already know the tape can run.
+        expect(() => createTapeStepper(tape([{ key: 'right', from: 0, to: 3 }],
+            { noclip: false }))).toThrow(/no opts.levelSource/);
+        expect(() => createTapeStepper(tape([{ key: 'jump', from: 0, to: 3 }])))
+            .toThrow(/not a known key name/);
     });
 });
