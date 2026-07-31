@@ -308,14 +308,33 @@ export const ENTITY_CLASSES = Object.freeze({
         dx: 0, dy: 0, w: 16, h: 16, originX: 0, originY: 0,
         src: 'Teleporter.as:31-53',
     },
+    // ⚠ BOTH stair tags are the SAME class and the SAME trigger.
+    // `Game.as:2167-2168` differs only in the third argument:
+    //     stairsup   -> new Stairs(x, y, TRUE,  flip, to, px, py, sign)
+    //     stairsdown -> new Stairs(x, y, FALSE, flip, to, px, py, sign)
+    // and `_up` only picks a sprite frame, a sound index and a render flag
+    // (`Stairs.as:18-34`). The `super(...)` call is byte-identical either
+    // way, so the collision geometry, the forced `show`/`tag` and the
+    // trigger volume are too. Omitting `stairsup` is not a small gap: 26 of
+    // the extract's 280 triggers carry it, including one of the four
+    // arrivals that land ON another trigger (L97 -> L37).
+    stairsup: {
+        as3: 'Stairs', collider: 'trigger', type: 'Teleporter',
+        dx: 0, dy: 0, w: 16, h: 16, originX: 0, originY: 0,
+        src: 'Stairs.as:11-20 via Game.as:2167 (new Stairs(x, y, true, ...))',
+    },
     stairsdown: {
         as3: 'Stairs', collider: 'trigger', type: 'Teleporter',
         dx: 0, dy: 0, w: 16, h: 16, originX: 0, originY: 0,
-        src: 'Stairs.as:11-20 — `Stairs extends Teleporter` and calls '
+        src: 'Stairs.as:11-20 via Game.as:2168 (new Stairs(x, y, false, ...)) — '
+            + '`Stairs extends Teleporter` and calls '
             + 'super(x, y, to, px, py, true, -1, false, sign), so it is the '
             + 'identical trigger with `show` forced true and `tag` forced -1',
     },
 });
+
+/** The `.oel` tags that build a `Stairs` rather than a bare `Teleporter`. */
+export const STAIRS_TAGS = Object.freeze(['stairsup', 'stairsdown']);
 
 /** Layer names `loadlevel` knows how to build. Anything else throws. */
 const KNOWN_LAYERS = Object.freeze(['tiles', 'cliffsides']);
@@ -482,7 +501,7 @@ export function buildLevelWorld(levelRecord) {
         } else if (cls.collider === 'pixelmask') {
             pixelmasks.push({ rect: entityRect(cls, x, y), cls, tag: e.type, x, y });
         } else if (cls.collider === 'trigger') {
-            const isStairs = e.type === 'stairsdown';
+            const isStairs = STAIRS_TAGS.includes(e.type);
             // `Stairs` forces tag = -1; a bare Teleporter defaults to -1
             // when the attribute is absent (`Game.as:2169`:
             // `String(o.@tag) == "" ? -1 : o.@tag`).

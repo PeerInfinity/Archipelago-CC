@@ -939,7 +939,7 @@ Two things worth writing down because the code reads oddly without them:
 - **A teleporter targeting its own level THROWS.** The game side derives
   transitions from the level field, so a same-level teleport is invisible
   there; modelling it would put an entry in the JS stream the oracle could
-  never report. Defensive only — a scan of the extract finds **0 of 254**
+  never report. Defensive only — a scan of the extract finds **0 of 280**
   teleporters self-targeting.
 
 ### ⚠ The latch mutation does NOT turn the round trip red
@@ -953,13 +953,14 @@ the same shape as slice 2's non-sticky vacuity and is recorded the same
 way rather than left implied by a mutation table.
 
 The bound is real but not permanent, and the witnesses are concrete. A scan
-of all 254 teleporters in the extract finds **three arrivals that land ON a
+of all 280 triggers in the extract finds **four arrivals that land ON a
 trigger** — genuine ping-pong pairs where the latch is the only thing
 between the game and an infinite loop:
 
 | from | arrives | on |
 |---|---|---|
 | L11 (32,0) → L3 | (104,136) | L3 (96,128) → 11 |
+| L97 (32,16) → L37 | (584,152) | L37 (576,144) → 97 |
 | L88 (192,0) → L87 | (440,312) | L87 (432,304) → 88 |
 | L107 (0,48) → L102 | (232,104) | L102 (224,96) → 107 |
 
@@ -997,3 +998,43 @@ arrival tiles walk at 0.8 either way.
   rewritten, by `--record --only=collide-up-rock,transition-west-return`:
   `collide-up-rock` came back byte-identical and `transition-west-return`
   gained only its two `transitions` records.
+
+
+## 11. Correction to §10's trigger scan: it was 4, not 3 — and `stairsup`
+was missing from the class table (2026-07-30)
+
+Slice 3's ping-pong scan covered **254** triggers. The extract has **280**:
+`teleporter` 228, `stairsdown` 26, **`stairsup` 26**. The scan — and, more
+importantly, `levelWorld.ENTITY_CLASSES` — had `stairsdown` but not
+`stairsup`.
+
+**They are the same class and the same trigger.** `Game.as:2167-2168`
+differ only in `Stairs`' third argument:
+
+```as3
+stairsup   -> new Stairs(x, y, TRUE,  flip, to, px, py, sign)
+stairsdown -> new Stairs(x, y, FALSE, flip, to, px, py, sign)
+```
+
+and `_up` only picks a sprite frame, a sound index and a render flag
+(`Stairs.as:18-34`). The `super(...)` call is byte-identical, so the
+trigger volume, the forced `show`/`tag = -1` and the collision geometry
+are too.
+
+Consequences, both now fixed:
+- `buildLevelWorld` **threw** on any of the 26 levels holding one. Loud
+  rather than silent, so nothing was ever wrong — but slice 4 walks the
+  level graph and would have hit it immediately.
+- The ping-pong census missed a fourth pair: **L97 (32,16) → L37, arriving
+  (584,152) onto L37's trigger at (576,144) bound back to L97.** §10's
+  table is corrected above.
+
+The guard is a **wider census than the rest of the table**: every
+`teleporter`/`stairs*` tag in ALL 116 levels must be a classified trigger,
+not merely those in the fixture levels. Triggers are the exception because
+they define the LEVEL GRAPH — and a missing tag there is not a loud throw
+somewhere useful, it is an exit that silently does not exist until
+something tries to stand on it. Removing `stairsup` again turns 3 tests
+red; narrowing `isStairs` back to `=== 'stairsdown'` turns 1.
+
+vitest **3990/3990** (was 3987).

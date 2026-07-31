@@ -28,6 +28,7 @@ import {
     LevelWorldError,
     MODELLED_TILE_TYPES,
     PLAYER_SOLID_TYPES,
+    STAIRS_TAGS,
     buildLevelWorld,
     entityRect,
     rectsOverlap,
@@ -81,6 +82,57 @@ describe('census: every fixture level is fully classified', () => {
             }
         }
         expect([...unknown]).toEqual([]);
+    });
+
+    it('classifies every TRIGGER tag in ALL 116 levels, not just the fixtures', () => {
+        // Wider than the rest of the census on purpose. The other tags only
+        // have to cover the levels v2 loads, but triggers define the LEVEL
+        // GRAPH — slice 4 walks it, and a level graph with a whole tag
+        // missing is not a loud throw somewhere useful, it is an exit that
+        // silently does not exist until something tries to stand on it.
+        // This is the guard that would have caught `stairsup`, which was
+        // absent while `stairsdown` was present: same class, same trigger,
+        // 26 placements, and one of the four arrivals that land on another
+        // trigger.
+        const triggerish = new Set();
+        for (const L of MAP.levels) {
+            for (const e of L.entities) {
+                if (e.type === 'teleporter' || e.type.startsWith('stairs')) {
+                    triggerish.add(e.type);
+                }
+            }
+        }
+        expect([...triggerish].sort()).toEqual(['stairsdown', 'stairsup', 'teleporter']);
+        for (const tag of triggerish) {
+            expect(ENTITY_CLASSES[tag]?.collider, `${tag} is not a classified trigger`)
+                .toBe('trigger');
+        }
+    });
+
+    it('both stair tags are the SAME class and the same trigger', () => {
+        // Game.as:2167-2168 differ only in Stairs' third argument, and `_up`
+        // picks a sprite frame, a sound index and a render flag — the
+        // super(...) call is identical, so the geometry must be too.
+        const { src: _up, ...up } = ENTITY_CLASSES.stairsup;
+        const { src: _down, ...down } = ENTITY_CLASSES.stairsdown;
+        expect(up).toEqual(down);
+        expect(STAIRS_TAGS).toEqual(['stairsup', 'stairsdown']);
+    });
+
+    it('a stairsup gets Stairs\' forced tag = -1, like a stairsdown', () => {
+        // `Stairs` passes tag = -1 and invert = false to super regardless of
+        // direction, so neither stair tag can ever be `deactivated`.
+        const w = buildLevelWorld({
+            level: 999, width: 2, height: 2, layers: [],
+            entities: [{
+                type: 'stairsup', x: 0, y: 0,
+                attrs: { flip: '0', to: '37', playerx: '576', playery: '144' },
+            }],
+        });
+        expect(w.teleporters[0]).toMatchObject({
+            isStairs: true, tag: -1, invert: false, deactivated: false, to: 37,
+        });
+        expect(w.teleporters[0].arrival).toEqual({ x: 584, y: 152 });
     });
 
     it('every class entry cites the source it was transcribed from', () => {
