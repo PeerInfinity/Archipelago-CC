@@ -1192,26 +1192,86 @@ accident: it buys exactly one item for one AS3 batch, one pipeline run, a
 re-run of the flags-off byte-inertness gate, ~14 more levels and ~4k more
 ticks on every recording — and R5 has to retire it afterwards.
 
-## What's next: R2, and what still blocks it
+## R2: solids return, as built (partial — the walk is outstanding)
+
+R2 takes the first crutch away: **`noclip` off, the real geometry back.**
+Its brief and full as-built are `CC/docs/plans/seedling-bot-r2-opus-kickoff.md`
+(§8 the recon, §9 the rulings, §10 as-built, §11 what remains).
+
+**The headline finding.** With solids armed and the ruled crutches
+(45 persistence clears), **6 of R1's 11 items survive**, and every one of
+the five seals is a single named entity: L71's `lock@112,160` (darkshield +
+darksuit), L48's `karlore@112,272` (conch), L38's `cover@144,112` then
+L39's wandlock puzzle (wand), L63's bridge at (2,9) then L65's
+`rock@192,96` (health). The user ruled the Activators IN (game mechanics,
+not a crutch), `fire` OUT, and pushing to R3 — so **the R2 target claim is
+8 items and `hitsMax == 3`**, with conch/wand/health published on the
+blocked list beside `fire`/`ghostsword`/`firewand`.
+
+**What shipped and is verified:**
+
+- **Pixelmasks are a model, not a seam.** The seventeen MIT masks are
+  committed as `#`/`.` rows in `seedlingDemo/seedlingPixelMasks.js`
+  (`--check`-gated), and `maskHitsBox` transcribes both halves of the chain
+  that runs: `Pixelmask.collideMask` (NOT `collideHitbox` — `Entity.HITBOX`
+  is a plain `Mask`), and SWFRecomp's `bd_hit_test`, which truncates the
+  player's box TOWARD ZERO with a C cast while the bounding pre-test does
+  not. The `<cliffsides>` layer's third column picks which of five masks,
+  which the old code dropped.
+  ⚠ This matters for a route, not just for tidiness: **L65's exit to the
+  health room sits inside `OpenTreeMask`'s 10×12 doorway**, so a bounding
+  rect seals a corridor the game walks. The planner uses the real mask too.
+- **The blocking census** covers the 69 tags on the 47 route levels (39
+  rects, 6 masks, `rope`, 23 explicitly not-solid). The full census goes
+  from 11 levels to 82. The table checks itself against
+  `PLAYER_SOLID_TYPES`, which caught that `bombpusher` and `iceturret` are
+  **enemies that are Solid**.
+- **Activators are modelled** (`activators.js`): a lock opens on tick
+  **101** of a held button and a cover on **11** — not 100 and 10, because
+  `Image.alpha` clamps and the two classes test their fade on opposite
+  sides of the decrement. The restore is guarded by occupancy, which is the
+  only reason a crossing is possible at all.
+- **Tape version 3** carries `persistence: [{level, tag, note}]` — clears
+  only, applied by `botStart` before the first world is built. The AS3
+  batch was one build and **the byte-inertness gate passed before anything
+  new was recorded**: all 23 frozen fixtures byte-identical, headline claim
+  intact.
+- **The verify sweep has tiers**: `--tier=fast` (18 tapes, ~4 min) and
+  `--tier=full` (the gate).
+
+⚠ **A clear does more than despawn.** A rope SHRINKS to one cell rather
+than vanishing; a `FallRock` is ARMED by a clear (it is parked off-map
+while its flag holds), so a clear list naming one is refused by name; and
+`Teleporter.checkDeactivated` reads persistence, so a clear can open a
+DOOR. And `lock`/`wandlock` despawn only when `tSet < 0`, where `int("")`
+is 0 — so a missing `tset` means group 0, and three route locks plus 13 of
+14 wandlocks do NOT despawn.
+
+**What is outstanding:** the R2 walk itself — a `noclip: false` planning
+path in `synthesizeLegs`, a HOLD leg primitive for the button, the
+re-planned route over post-clear geometry, the segment recordings and the
+acceptance readout. Kickoff §11 lists each with what it needs.
+
+## What R2 hands on, and what still blocks a full walk
 
 The ladder is subtractive, so "what's next" is a list of what still blocks a
 full walk rather than a list of features. R1 walked the whole reachable map
 with three crutches on; **R2 takes the first one away — `noclip` off, solids
 back.**
 
-- **R2 owes the collider table.** 82 of 116 levels build for the cheap
-  roles and 115 with R1's priced volumes, but only 11 build for `blocking`.
-  `lightalpha` is not among the blockers — it was never an entity — but the
-  ~93 tags with no blocking classification are, and **pixelmask EXTRACTION
-  becomes real work** there: the walk crosses buildings and cliffsides, so
-  the bounding-rect over-throw stops being an option.
-- **R3 inherits two debts R1 took on deliberately.** `bosstotem` prices to
+- **R3 inherits three debts, and R2 made the third urgent.** `bosstotem` prices to
   an evidenced INERT only because R0's grants are property writes, so L43's
   Wand pickup is never removed and `classCount(Wand) <= 0` never fires —
   real collection changes that. And **a Bridge is a Solid** only because R1
   presses no attack key: `bridgeOpeningTimer` is decremented in exactly one
   place, `Player.as:1098`, under `t == "Spear"`. Both classifications are
-  true of a rung, not of the game.
+  true of a rung, not of the game. **R2 found three bridges ON the route** —
+  L61 (10,13) and (11,13), and L63 (2,9) — and L63's is what seals the
+  health room, so the Bridge debt is no longer theoretical.
+- **A new inventory-conditional blocker, the only one of its shape.**
+  `Karlore.added()` removes itself iff `Player.hasFire` — so L48's
+  one-tile corridor, and the conch behind it, is gated on an item R5 owns.
+  Same shape as `ShieldLock`'s conditional volume, opposite sign.
 - **`darksword` remains the one true item→item dependency**: the Witch
   (L12) grants it from `doneTalking()` under `hasWand && !hasDarkSword`, so
   at R3 it stops being a grant and becomes a KEY PRESS.
