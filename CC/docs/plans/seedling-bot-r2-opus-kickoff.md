@@ -226,3 +226,265 @@ cost only 2 tapes because the roster was split well).
   collision fixtures exact; the R2 segment chain a PARTITION of its
   headline; the acceptance readout asserting the surviving claim from the
   game's own reports, blocked list published.
+
+## 8. Slice 0 — RECON, AS BUILT (2026-07-31)
+
+No committed code. Everything below is source-verified against `~/CC/seedling`
+branch `bot` at **`f95ff64`** (the commit the deployed wasm was built from),
+the committed extract `flashPanel/atlases/seedling-map.json`, and — for the
+mask semantics — **the SWFRecomp runtime that actually executes them**
+(`~/CC/SWFRecomp-CC/SWFModernRuntime/src/avm2/avm2_bitmap.c`). Where §1–§7
+was imprecise it is corrected here; §1–§7 is the brief, this section is the
+record.
+
+### 8.1 The instrument, and its positive control
+
+Feasibility is answered at **one-pixel granularity**, not at tile centres.
+`Mobile.moveX/moveY` step ONE PIXEL at a time and re-test `collideTypes`
+after each, so the set a player can occupy is a 4-connected blob over
+INTEGER positions. A tile-centre lattice — which is what the R1 planner
+uses to author a route — over-blocks wherever a collider is smaller than a
+cell (an 8×8 SpinningAxe, a 10×12 Hermit), and the first cut of this recon
+reported seven seals that do not exist because of it.
+
+The instrument is a scratch harness (not committed; slice 2 re-derives every
+row of its table into `ENTITY_CLASSES` with citations and tests) that paints
+a blocked-position bitmap per level, floods it, and builds the
+`(level, blob)` graph over teleporters and pit edges.
+
+**Its positive control is R1.** Run with `noclip` on and the same avoid
+volumes, it must reproduce R1's published reachability — and it does:
+all eleven R1 items REACHED, `ghostsword` and `firewand` BLOCKED (L98's
+IceTurret disc covering its whole entrance room, R1 §8.6), `fire`'s room
+reachable but combat-gated. A feasibility instrument that has never
+reproduced a known answer is not evidence about an unknown one.
+
+⚠ **Two bugs in the instrument, both of the shape this arc keeps finding:**
+
+1. **`base.solids` already carries the classified ENTITY solids**, so
+   painting it *and* the recon table double-counted — and the base copy is
+   blind to the clears, which is how a cleared `breakablerock` went on
+   sealing L3.
+2. **Excluding `objectSolids` to fix (1) silently deleted every BRIDGE.** A
+   type-29 tile is an `objectSolid` with **no entity behind it**
+   (`levelWorld` sorts it there because a Bridge rewrites its own `type`),
+   so a filter written as "skip the object solids" removes a thing no
+   entity is responsible for. Three bridges are on the route — **L61
+   (10,13) and (11,13), and L63 (2,9)** — and L63's is in the corridor to
+   the health room. The fix keys on `cls !== null`. Same family as the rect
+   literal: a filter that is right about the case you were thinking of.
+
+### 8.2 ⛔ THE HEADLINE: with solids armed and the ruled crutches, 6 of 11 items survive
+
+| item | room | verdict |
+|---|---|---|
+| sword | L10 | ✅ reached |
+| shield | L20 | ✅ reached |
+| feather | L89 | ✅ reached |
+| darksword | L12 | ✅ reached |
+| torch | L30 | ✅ reached |
+| spear | L64 | ✅ reached |
+| **conch** | L49 | ⛔ sealed in **L48** |
+| **wand** | L43 | ⛔ sealed in **L38**, then again in **L39** |
+| **health** | L68 | ⛔ sealed in **L63**, then again in **L65** |
+| **darkshield** | L74 | ⛔ sealed in **L71** |
+| **darksuit** | L79 | ⛔ sealed in **L71** |
+
+Persistence clears are load-bearing and then some: without them the same
+run reaches **38 of 116 levels and 3 items**; with them, **66 levels and 6**.
+
+### 8.3 Every seal, named — each is ONE entity
+
+The instrument answers the actionable form of the question directly: remove
+one entity at a time and re-test the corridor. Each row is the complete set
+of single removals that open it.
+
+| level | the seal | what it costs | what would open it |
+|---|---|---|---|
+| **L38** | `cover@144,112` (`tset 0`) plugging the only link between the level's two halves (row 7 is solid but for column 9) | wand | hold `button@80,192` (`tset 0`) — which is across the room, so it needs `pushableblockfire@80,208` **pushed one tile up onto it** |
+| **L39** | *no single entity* — the Dungeon-4 puzzle room: three `wandlock`s stacked in the 1-wide exit shaft (`tset 3/4/5`), three covers, six buttons, two pushable blocks | wand (again) | wand shots (item use) or a three-button hold |
+| **L48** | `karlore@112,272`, an NPC standing in a 1-tile corridor — **whose own dialogue says so** ("Turn and come back in due time") | conch | `Karlore.added()` removes itself **iff `Player.hasFire`**. `tag = -1`, so no persistence clear can touch it |
+| **L63** | the **bridge at (2,9)**; *no single entity* opens the west door | health | spearing the bridge (`Player.as:1098`, `genericHit` under `t == "Spear"`) |
+| **L65** | `rock@192,96` **or** `pushableblockspear@176,128` — either alone opens it | health (again) | a plain `Rock` (no tag, not breakable) or a spear-thrown pushable |
+| **L71** | `lock@112,160` (`tset 0`, `tag 3`) | darkshield **and** darksuit | hold `button@112,176` — **directly below it** |
+
+Priced end to end, the options compose:
+
+| configuration | items |
+|---|---|
+| A — ruled crutches only | **6** |
+| B — A + `fire` granted (tape only, existing mechanism) | **7** (+conch) |
+| C — A + L71's lock opened | **8** (+darkshield, +darksuit) |
+| B + C | **9** (wand and health remain) |
+
+### 8.4 ⚠ FOUR CORRECTIONS TO §1–§2, all of them load-bearing
+
+**(a) `Lock.check()` has a THIRD condition the ruling's census missed.**
+`Puzzlements/Lock.as:42` is
+`if (tag >= 0 && tSet < 0 && !Game.checkPersistence(tag)) FP.world.remove(this)`.
+A lock wired to a button group (`tSet >= 0`) does **not** despawn on a
+cleared persistence — and `o.@tset` on a missing attribute is `int("") = 0`,
+so the default is 0, *not* −1. Of the locks on route, **L20's `lock` (tset 0),
+L71's `lock@112,160` (tset 0), L82's (tset 1) and 13 of the 14 `wandlock`s
+do NOT despawn.** §1.1's "locks ×36 across five classes — all verified
+despawn-on-cleared-persistence at source" is wrong for exactly these.
+`ShieldLock` passes `-2` and so is safe (`ShieldLock.as:26`); `BossLock`,
+`MagicalLock` and `RockLock` extend `Activators` directly and have no `tSet`
+condition at all.
+
+**(b) `rope` does not despawn — it SHRINKS.** `RopeStart.check()` calls
+`hit()`, not `remove()`, and `hit()` runs `setHitbox(16, 16, 8, 8)` — so a
+cleared rope turns from a horizontal span into a single 16×16 solid at its
+start. Its span comes from `_xend`, read from the object's `<node>` child
+(`Game.as:2201-2210`) — **and the extract does not record `<node>`
+children** (`seedlingOgmo.js:199-208` keeps only `{type, x, y, attrs}`).
+Three ropes exist in the whole game; the one on route is L39's, spanning
+(96,384) → (192,384). Slice 2 either records nodes in the extract or
+transcribes the three with their citation.
+
+**(c) `chest` IS clearable, and it was not on the list.** `Chest.as:41`
+removes it on cleared persistence exactly like the others. It matters: a
+chest is both a 16×16 Solid and an avoid volume (its open-line hazard), and
+L38's `chest@144,112` sits in the same 1-tile corridor as the cover.
+
+**(d) `statue1`, `statue2` and `shieldstatue` are NOT pixelmasks.** §2 lists
+them as classes to verify; they are plain `setHitbox` rects (`Statue`'s from
+`render()`, per the existing `statue2` entry; `ShieldStatue.as:20`
+`setHitbox(32,32)`). The real mask classes on route are
+**`building2`, `building4`, `building5`, `building6`, `opentree`,
+`snowhill`** plus `building`/`building1` (already classified) and the
+`cliffsides` layer. `treelarge` is off-route.
+
+### 8.5 The pixelmask semantics, from the runtime that executes them
+
+Not from Flash's documentation — from `SWFRecomp`, which is what runs.
+
+- **The dispatch is `Pixelmask.collideMask`, not `collideHitbox`.**
+  `Entity.HITBOX` is `private const HITBOX:Mask = new Mask` (`Entity.as:515`)
+  — a plain `Mask`, so `e._mask.collide(HITBOX)` selects `_check[Mask]`.
+  The rect handed to `hitTest` is therefore the PLAYER ENTITY's own box
+  (`other.parent.x - other.parent.originX`, `.width`, `.height`), not a
+  hitbox's offsets. Same numbers for the player, different citation — and
+  `levelWorld`'s existing comment cites the wrong one.
+- **Assigning a Pixelmask REWRITES the parent's bounds.** `Hitbox.update()`
+  sets `parent.originX/originY/width/height` from the mask, and
+  `Mask.assignTo` calls it. That is why a `Building` that never calls
+  `setHitbox` still passes `Entity.collideWith`'s bounding pre-test — the
+  bbox is the mask's.
+- **The per-pixel test truncates the player's box to integers, and the
+  bounding pre-test does not.** `bd_hit_test` (`avm2_bitmap.c:1481-1489`)
+  does `px = (int32_t) rx - tlx` — a C cast, i.e. truncation **toward
+  zero**, not `floor` — then scans `[x_min, x_max) × [y_min, y_max)` clamped
+  to the mask, returning true on the first pixel with `alpha >= threshold`
+  (`Pixelmask.threshold = 1`, so any non-transparent pixel).
+- **The `cliffsides` layer's THIRD COLUMN picks which of the five masks.**
+  `Game.as:2013` is `new CliffSide(o.@x, o.@y, Math.floor(o.@tx / Tile.w))`.
+  `levelWorld` currently destructures `[tx, ty]` and drops it — harmless
+  while every cliffside was a bounding rect, wrong the moment the masks are
+  real. This is the "index against the wrong table" family for the fourth
+  time; slice 1 resolves the frame through a committed table.
+- ⚠ **`OpenTree` assigns its mask in its FIRST `update()`, not its ctor**
+  (`OpenTree.as:20-26`), with offset (−16,−16) against an entity Tree put at
+  (x+16, y+16) — the two cancel, so the mask lands on the raw oel
+  coordinates. Before that first update it carries `Tree`'s `setHitbox(32,
+  32, 16, 16)`, which is the same bounding box; the difference is one tick
+  of rect-instead-of-mask, the same family as the tile type flip
+  `beforeTypeFlip` already models.
+- **And the OpenTree mask is why this matters.** `OpenTreeMask.png` is
+  32×32 and solid *except for a 10×12 doorway* at rows 20–31, columns
+  11–20 — a walkable gap under the canopy. **L65's exit teleporter to the
+  health room sits inside that doorway.** A bounding-rect approximation
+  seals it; the real mask opens it. That is Phase 5a's "the sprite rect
+  swallows a building's own doorway" arriving as a route-critical fact.
+
+### 8.6 The clear list: 45 entries, zero collisions
+
+Derived from the route's own named blockers, one row per (level, tag).
+Every level's tagged entities were cross-checked against **every class that
+READS persistence** — `teleporter` (whose `deactivated` is a function of
+it), `fallrock`/`fallrocklarge` (whose ctor builds them FALLEN and LIVE when
+cleared), `watcher`, `finaldoor`, `moonrock`, `bosstotem`, `lavaboss`,
+`spinner` and the rest. **No clear on the route shares a tag with any of
+them.** `FinalDoor`'s L114 tag 0 and every `Moonrock` tag are untouched, as
+ruled.
+
+⚠ **A clear can also turn a teleporter ON.** `Teleporter.checkDeactivated`
+is `deactivated = tag >= 0 && (!checkPersistence(tag) == invert)`, and
+`levelWorld` currently hardcodes `persistenceIsTrue = true` (line 1237). So
+slice 2's `buildLevelWorld` must take the cleared set and recompute
+`deactivated` — a clear does not only despawn things, it can open a door.
+
+⚠ **And the crutch is the state the game itself produces.**
+`Lock.turnOff()` (`Lock.as:88-97`) writes `Game.setPersistence(tag, false)`
+when a lock opens. The tape-driven clear is not a foreign state — it is the
+state a player reaches by solving the puzzle. Worth recording because it is
+the strongest argument the crutch is honest.
+
+### 8.7 Evidenced-inert, re-verified against R2's route AND cleared state
+
+Per §2's L38/FallRock lesson, each `evidenced-inert` entry was re-checked
+against the new state rather than inherited:
+
+- **`fallrock` / `fallrocklarge` — still inert, and the reason is now a
+  CONSTRAINT.** They are parked at `y = -16` with `type = ""` while
+  persistence is TRUE. **A clear ARMS them** (the ctor reads
+  `!checkPersistence(tag)` and builds them fallen, Solid and live). No clear
+  in §8.6 targets a fallrock tag, and that is now a rule the derivation must
+  keep, not a coincidence.
+- **`bosstotem` — still inert.** It activates on
+  `FP.world.classCount(Wand) <= 0`; R2 keeps grants as property writes, so
+  L43's Wand pickup is never removed and the count is never 0. (Moot in
+  practice — the wand room is unreachable this rung.)
+- **`shieldlock` / `shieldlocknorm` — still priced unconditionally live**,
+  and now also CLEARABLE (`tSet = -2 < 0`).
+- **The Bridge debt is LIVE and route-critical.** R1 recorded a bridge as
+  permanently Solid "because no attack key is pressed" — still true, and
+  §8.1 found three of them on the route, one of which (L63 (2,9)) is a seal.
+  The debt is no longer theoretical.
+- **A new inventory-conditional blocker: `karlore`.** `Karlore.added()`
+  removes itself iff `Player.hasFire`. Same shape as `ShieldLock`'s
+  inventory-conditional volume, opposite sign, and it is the only despawn of
+  that kind in the codebase (checked every `added()` override).
+- **`IceTurret` is SOLID when the player is FAR** — `else if (!collide(
+  "Player", x, y)) type = "Solid"` (`IceTurret.as:93-95`), the else-arm of
+  the `d <= attackRange` test. Priced as an unconditional solid: it blocks
+  precisely when you are not already inside the freeze disc the route
+  avoids.
+- **`Cover` is SOLID unless its button group is held** — `activationStep`'s
+  else-arm calls `reset()` (`type = normType`) every tick.
+
+### 8.8 The bill, counted
+
+**69 distinct entity tags on the 47 route levels lack a `blocking` entry**
+(not the ~93 §2 estimated, and not "50–60 plus masks"):
+
+- **39 need a rect** — `barstool bed bombpusher bonetorch bonetorch2
+  bosslock breakablerockghost burnabletree cover dungeonspire fallrock
+  fallrocklarge forestchar hermit iceturret karlore lavaboss lavachain lock
+  magicallock moonrockpile planttorch pulser pushableblock pushableblockfire
+  pushableblockspear rock3 rock4 ruinedpillar sensei shieldlock
+  shieldlocknorm shieldstatue spinningaxe statue1 totem treebare wandlock
+  witch`
+- **6 need a mask** — `building2 building4 building5 building6 opentree
+  snowhill`
+- **1 is special** — `rope` (needs its `<node>`)
+- **23 are NOT solid** and need an entry saying so with its citation —
+  the Enemy-typed classes (`type = "Enemy"` is in no solids list), plus
+  `button` ("Button"), `buttonroom` ("ButtonRoom"), `pull` ("Pull"),
+  `lightpole` ("LightPole"), `wire` ("Wire"), and `littlestones`,
+  `lightray`, `shadow`, `whirlpool` (which never assign `type` at all).
+
+Plus the `cliffsides` frame index (§8.5) and the five 16×16 cliffside masks.
+
+⚠ **One latent extract hazard, recorded and NOT live.** `Game.as:2009-2015`
+builds cliffsides with **no bounds guard**, while the `tiles` layer has one
+— but `seedlingOgmo.js` applies its out-of-level filter to *every* tile
+layer generically. A cliffside painted outside its level rectangle would be
+built by the game and dropped by the extract. **Zero placements are affected
+today** (checked all 116 `.oel` files), so this is a note, not a fix.
+
+### 8.9 Batch content — UNCHANGED, pending §8.3's escalation
+
+Nothing found here needs a second AS3 change. The `persistence` field is
+still the whole batch. Every seal in §8.3 is opened (or not) on the JS side
+or by the existing tape mechanisms; none of them wants a new `Bot` flag.
