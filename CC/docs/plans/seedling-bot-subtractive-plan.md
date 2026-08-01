@@ -234,9 +234,10 @@ exact differential green on everything modelled, (d) updates the honest
   working. ⚠ `lavaboss` is on a route level and IS in the player's solid
   list — slice 0 verdict required.
 
-  **🟡 PARTIAL 2026-07-31 — the geometry and the mechanics are IN and
-  verified; the WALK is outstanding.** As-built: kickoff §8 (recon), §9
-  (rulings), §10 (slices 1–5a), §11 (what remains).
+  **✅ COMPLETE 2026-08-01 — 8 items with the solids back, from the game's
+  own `botStatus`, over a 55-leg / 31-level / 3-fall / 10,136-tick walk.**
+  As-built: kickoff §8 (recon), §9 (rulings), §10 (slices 1–5a), §12 (the
+  walk).
 
   - **The slice-0 verdict, at one-pixel resolution with an R1 positive
     control:** with solids armed and the ruled crutches, **6 of the 11
@@ -260,9 +261,42 @@ exact differential green on everything modelled, (d) updates the honest
     R1's headline claim intact); `--tier=fast|full`; and the
     `l71-button-lock` / `l71-lock-shut` oracle pair, where the game agreed
     with the model to the float (116.44999999999997 vs a predicted 116.45).
-  - **Outstanding:** a `noclip: false` planning path in `synthesizeLegs`, a
-    HOLD leg primitive for the button, the re-planned route over post-clear
-    geometry, the segment recordings, and the acceptance readout.
+  - **The walk (slice 6), and the claim it delivered:** `noclip` became a
+    DECLARED field of `relax` rather than a derived one; the leg vocabulary
+    gained a **HOLD** (`{x, y, hold: {ticks, presser}}`) which the executor
+    verifies tick by tick from the run's own state and then by EFFECT, with
+    a positive control — the group must be SHUT when it starts. The route
+    was re-planned over post-clear geometry with derived HOLD EDGES, six
+    segments recorded (split at legs 12/14/25/37/45) summing to exactly the
+    headline, and the readout asserts the claim from the game's reports
+    with all 25 mutations red in CI. **8 items + `hitsMax == 3`**, the
+    latter proved by a NEGATIVE and checked on its own.
+  - ⚠ **The game answered the 101-tick fade directly.**
+    `l71-hold-101-shut` and `l71-hold-102-open` differ in exactly one field
+    — `tick_count` — and the game reports **178.5** against **177.1**.
+  - ⛔ **Two forced constructor values the `.oel` cannot reach, both wrong
+    twice over, both already cited in the file that got them wrong:**
+    `ShieldLock` forces `tSet = -2` (so a shieldlock joined group 0 AND
+    stopped despawning on its own clear), and `MoonrockPile` forces
+    `tag = 0` (so the model built a 32×16 Solid the game removes on a fresh
+    boot — on level 2's arrival tile, the third level of the walk).
+  - ⛔ **THE RUNTIME HAS A TAPE BUDGET, and the axis is INPUT SPANS.** R2's
+    first answer to the controller's overshoot cost 30% more ticks and 4.7×
+    the spans, and the game then could not load the headline at all
+    (`heap_alloc(72671) failed`, 2,569 spans, 185 KB, failing at boot,
+    twice). `allowGrazes` — a blocked sweep is a defect only if the drive
+    then fails to ARRIVE — gives the same walk in 853 spans and 63 KB.
+  - **Three planner knobs, each named by a failure**, each defaulting to
+    R1's behaviour so the 23 frozen recordings stay byte-identical:
+    `lattice: 8` (a 16 px torch half a tile off in a 2-tile corridor clipped
+    all four tile centres and reported the SPEAR unreachable),
+    `nodeMargin: 2` on a descending ladder, `triggerMargin: 4` which does
+    not descend.
+  - ⚠ **`darksword` is collected and `wand` is not, which the GAME would
+    not allow** — the Witch grants it under `hasWand && !hasDarkSword`. The
+    grant crutch is a property write on room entry and does not consult
+    her. First place on the ladder where a grant asserts something the
+    game's own logic would refuse; R3 retires it for exactly this class.
   - ⚠ **Corrections to this entry's own brief, found at slice 0:**
     `Lock.check()` needs `tSet < 0` and `int("")` is 0, so three route
     locks and 13 of 14 wandlocks do NOT despawn; a rope SHRINKS rather than

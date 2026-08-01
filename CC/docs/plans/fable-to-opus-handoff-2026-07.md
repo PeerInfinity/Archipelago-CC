@@ -2907,26 +2907,58 @@ Claude, accepted by user). Full detail in `region-atlas-plan.md` Phase 8.**
   left open, deliberately — the obvious mid-hole position in L83 lands on
   an equidistant `nearestToPoint` tie, and slice 1 already learned what a
   tie costs.
-- **QUEUE NEXT for this arc: R2 — solids come back (`noclip` off) —
-  RULED + KICKOFF READY: `NewDocs/plans/seedling-bot-r2-opus-kickoff.md`**
-  (Fable design session 2026-08-01; → `CC/docs/plans/` at implementation
-  start). Three rulings (user): interactive blockers = **tape-driven
-  persistence clears** (`tape_version: 3`, ONE new AS3 change; ~53 tagged
-  blockers on route despawn via their own `check()`; clear list derived +
-  audited; FinalDoor/Moonrock tags untouchable); **pushables (10 on route,
-  untagged) routed around, sealed corridors ESCALATE**; **R1 recordings
-  frozen as milestones + the sweep tiered `--tier=fast|full`** (a full
-  sweep is ~55 min). The bill is the blocking-role classification for the
-  ~93 unclassified tags in walked levels plus **pixelmask EXTRACTION**
-  (committed mask artifacts + transcribed collide; the throw retires class
-  by class; rect approximations stay banned). ⚠ slice-0 verdicts required:
-  per-level corridor feasibility with solids + clears (pushable seals,
-  `lavaboss` — on a route level and IN the player's solid list, geometry
-  seals with no crutch) — escalations go to the user BEFORE implementation.
-  Two debts R1 took on deliberately land at R3: `bosstotem` prices inert
-  only because grants are property writes, and **a Bridge is Solid only
-  because R1 presses no attack key** — both re-verified at R2's slice 0
-  because evidence is state-conditional (the L38/FallRock lesson).
+- **R2 — solids come back (`noclip` off): ✅ COMPLETE 2026-08-01.**
+  Kickoff + full as-built: `CC/docs/plans/seedling-bot-r2-opus-kickoff.md`
+  (§8 recon, §9 rulings, §10 slices 1–5a, §12 the walk). Doc:
+  `docs/json/developer/procgen/seedling-bot.md` §R2.
+
+  **The claim, from the game's own `botStatus`: 8 of the 13 non-combat
+  items — sword, shield, feather, darksword, torch, spear, darkshield,
+  darksuit — with `hitsMax` still 3**, over a 55-leg / 31-level / 3-fall /
+  1-hold / 10,136-tick walk. Six segments summing to exactly the headline.
+  Blocked list published with each item's ONE named seal and the rung that
+  opens it: `conch` (L48 `karlore@112,272`, R5), `wand` (L38's cover then
+  L39's wandlocks, R3), `health` (L63's bridge then L65's rock, R3),
+  `fire`/`ghostsword`/`firewand` (R5).
+
+  Geometry half: 17 committed pixelmasks + the two-half collide
+  transcription, the 69-tag blocking census (full census 11 → 82 levels),
+  the Activators state machine (a lock opens on **101**, a cover on 11 —
+  the clamped-alpha knife-edge), tape v3 + ONE AS3 change, and the
+  **byte-inertness gate PASSED** before anything new was recorded.
+
+  Walk half: `noclip` became a declared field of `relax`; the leg
+  vocabulary gained a **HOLD** the executor verifies tick by tick and then
+  by EFFECT with a positive control; the route was re-planned over
+  post-clear geometry with derived hold edges; the readout is pure
+  functions with all 25 mutations red in CI.
+
+  ⛔ **Three findings worth carrying forward.** (1) **The recompiled
+  runtime has a TAPE BUDGET and the axis is INPUT SPANS** — R2's first
+  overshoot fix cost 4.7× the spans and the game could not load the
+  headline at all (`heap_alloc(72671) failed`, 2,569 spans, 185 KB,
+  failing at boot, twice); `allowGrazes` gives the same walk in 853 spans.
+  (2) **Two forced constructor values the `.oel` cannot reach** —
+  `ShieldLock` forces `tSet = -2` and `MoonrockPile` forces `tag = 0`,
+  both wrong twice over, both already cited in the file that got them
+  wrong. (3) **A tile-centre lattice over-blocks**: a 16 px torch half a
+  tile off in a 2-tile corridor reported the SPEAR unreachable.
+
+  ⚠ **`darksword` is collected and `wand` is not, which the game would not
+  allow** — the Witch grants it under `hasWand && !hasDarkSword`, and the
+  grant crutch does not consult her. First place on the ladder where a
+  grant asserts something the game's own logic refuses; R3 retires it.
+
+- **QUEUE NEXT for this arc: R3 — interactions + real collection.** Item
+  USE (X-press swings, `genericHit`, persistence flips), which retires the
+  clear crutch class by class; PUSHING (deferred here — it buys nothing
+  alone, since both `wand` and `health` are item-USE gated behind their
+  pushables); and real walk-over collection, which retires the item grants
+  and with them the darksword anomaly above. Two debts R1 took on land
+  here and R2 made both concrete: `bosstotem` prices inert only because
+  grants are property writes, and **a Bridge is Solid only because no
+  attack key is pressed** — R2 found three on the route and L63's is what
+  seals the health room.
 
 ## 6. Everything else (unchanged queues)
 
