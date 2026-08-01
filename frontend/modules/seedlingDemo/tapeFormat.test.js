@@ -272,8 +272,62 @@ describe('serialization', () => {
         // `serializeTape` must then NOT write them back — otherwise every
         // fixture file changes for no change in meaning.
         expect(JSON.parse(serializeTape(base)).tape_version).toBe(1);
-        expect(JSON.parse(serializeTape(v2Base)).tape_version).toBe(TAPE_VERSION);
-        expect(TAPE_VERSION).toBe(2);
+        expect(JSON.parse(serializeTape(v2Base)).tape_version).toBe(2);
+        expect(TAPE_VERSION).toBe(3);
+    });
+
+    it('writes NO persistence field into a v1 or v2 tape either', () => {
+        // The same claim one version on, and the one that decides whether
+        // the R2 batch is byte-inert: all 23 committed fixtures are v1 or
+        // v2, `parseTape` normalises `persistence: []` onto every one of
+        // them, and `serializeTape` must not write it back.
+        for (const t of [base, v2Base]) {
+            expect(parseTape(t).persistence).toEqual([]);
+            expect(JSON.parse(serializeTape(t))).not.toHaveProperty('persistence');
+        }
+    });
+
+    it('a v3 tape round-trips its clears, sorted and with notes kept', () => {
+        const v3 = {
+            ...v2Base,
+            tape_version: 3,
+            persistence: [
+                { level: 71, tag: 2, note: 'shieldlock@288,256' },
+                { level: 12, tag: 3, note: 'bosslock@80,656' },
+            ],
+        };
+        const written = JSON.parse(serializeTape(v3));
+        expect(written.tape_version).toBe(3);
+        // sorted by (level, tag), so a re-derivation that changed order is
+        // not a diff
+        expect(written.persistence).toEqual([
+            { level: 12, tag: 3, note: 'bosslock@80,656' },
+            { level: 71, tag: 2, note: 'shieldlock@288,256' },
+        ]);
+        // ...and re-parsing what was written is a fixed point
+        expect(serializeTape(written)).toBe(serializeTape(v3));
+    });
+
+    it('rejects a clear that could not despawn anything', () => {
+        const withClear = (persistence) => () => parseTape({
+            ...v2Base, tape_version: 3, persistence,
+        });
+        // -1 is "untagged", and every persistence reader guards on tag >= 0
+        expect(withClear([{ level: 0, tag: -1 }])).toThrow(/is not "untagged" here/);
+        expect(withClear([{ level: 0, tag: 30 }])).toThrow(/out of range 0\.\.29/);
+        expect(withClear([{ level: 116, tag: 0 }])).toThrow(/is not a level/);
+        expect(withClear([{ level: 5, tag: 1 }, { level: 5, tag: 1 }]))
+            .toThrow(/duplicates level 5 tag 1/);
+        expect(withClear([{ level: 5, tag: 1, note: 7 }])).toThrow(/note must be a string/);
+    });
+
+    it('a v1 or v2 tape may CARRY persistence: [] but not a clear', () => {
+        // The value-not-presence rule, one version on. `parseTape` is
+        // idempotent, so a parsed v2 tape carries `persistence: []` and has
+        // to survive being parsed again.
+        expect(() => parseTape({ ...v2Base, persistence: [] })).not.toThrow();
+        expect(() => parseTape({ ...v2Base, persistence: [{ level: 1, tag: 1 }] }))
+            .toThrow(/versions below 3 mean persistence: \[\] BY DEFINITION/);
     });
 
     it('writes NO v2 fields into a v1 tape, even though parseTape adds them', () => {
@@ -447,7 +501,7 @@ describe('transition records', () => {
 describe('version 2: what a v1 tape may and may not say', () => {
     it('still parses every v1 tape', () => {
         expect(parseTape(base).tape_version).toBe(1);
-        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2]);
+        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3]);
     });
 
     it('normalises v1 to version 1 SEMANTICS so no engine branches on version', () => {
@@ -475,8 +529,8 @@ describe('version 2: what a v1 tape may and may not say', () => {
     });
 
     it('rejects an unknown version by name', () => {
-        expect(() => parseTape({ ...base, tape_version: 3 }))
-            .toThrow(/tape_version must be one of 1, 2/);
+        expect(() => parseTape({ ...base, tape_version: 4 }))
+            .toThrow(/tape_version must be one of 1, 2, 3/);
     });
 });
 

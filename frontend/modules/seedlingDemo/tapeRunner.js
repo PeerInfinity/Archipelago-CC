@@ -136,6 +136,7 @@ export function createTapeStepper(tape, opts = {}) {
             noHazards: t.noHazards,
             noDamage: t.noDamage,
             grants: t.grants,
+            persistence: t.persistence,
             // ⚠ The runner consults the SAME census the driver plans with,
             // and `noclip` is what decides it on both sides. A noclip tape
             // asks no collider question, so requiring a blocking

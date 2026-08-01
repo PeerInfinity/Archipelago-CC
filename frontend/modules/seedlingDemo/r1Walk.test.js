@@ -166,11 +166,19 @@ describe('the synthesized-fixture doctrine', () => {
                 extraVolumes: spec.extraVolumes,
                 maxTicksPerTarget: spec.maxTicksPerTarget,
             });
-            const emitted = JSON.parse(serializeTape({
+            // ⚠ BOTH SIDES GO THROUGH `serializeTape`. Comparing the
+            // emitted tape against a PARSED one was symmetric only by
+            // luck: `parseTape` normalises every version's fields in, and
+            // `serializeTape` writes back only the ones that version owns,
+            // so the day a new field arrived (R2's `persistence`) the
+            // parsed side grew a key the written side does not have. The
+            // claim is "the driver still emits the committed FILE", so
+            // compare what the writer produces for each.
+            const emitted = serializeTape({
                 ...result.tape,
                 description: tapes[spec.name].description,
-            }));
-            expect(emitted).toEqual(JSON.parse(JSON.stringify(tapes[spec.name])));
+            });
+            expect(emitted).toBe(serializeTape(tapes[spec.name]));
         // ⚠ Generous, and it has to be: re-planning the headline walk is
         // 79 legs of A* plus 14,963 simulated ticks, ~30s on an idle box
         // and past 60s when the rest of the suite is running beside it.

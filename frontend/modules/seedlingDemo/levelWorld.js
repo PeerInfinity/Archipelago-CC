@@ -78,6 +78,11 @@ export class LevelWorldError extends Error {
 
 const fail = (message) => { throw new LevelWorldError(message); };
 
+/** Is THIS entity's tag in the cleared set? (rope's shrink needs it late.) */
+const clearedHere2 = (e, entityTag, clearedTags) => Boolean(
+    clearedTags && entityTag >= 0 && clearedTags.has(entityTag),
+);
+
 export const TILE_SIZE = SEEDLING_TILE_SIZE;
 
 /**
@@ -1356,6 +1361,53 @@ export const ACTIVATOR_RESPONDERS = new Set([
 /** The two tags that press a group: `Button` and `ButtonRoom`. */
 export const ACTIVATOR_PRESSERS = new Set(['button', 'buttonroom']);
 
+/**
+ * R2: what a CLEARED persistence flag does to each class that reads one.
+ *
+ * Every entry was read at its own `check()` or constructor. The three
+ * behaviours are genuinely different and collapsing them into "remove by
+ * tag" would be wrong three ways:
+ *
+ *   'despawn'  `FP.world.remove(this)` — the entity is gone
+ *   'shrink'   `RopeStart.check()` calls `hit()`, NOT remove, and `hit()`
+ *              runs `setHitbox(16, 16, 8, 8)` — a 7-tile span becomes a
+ *              one-cell solid at its start
+ *   'arm'      `FallRock`/`FallRockLarge` are parked at y = -16/-32 with
+ *              `type = ""` WHILE the flag holds. Clearing one builds it
+ *              FALLEN, Solid and live. A clear here ADDS a blocker.
+ *   'trigger'  `Teleporter.checkDeactivated()` is
+ *              `tag >= 0 && (!checkPersistence(tag) == invert)`, so a
+ *              clear turns a non-inverted tagged teleporter ON and an
+ *              inverted one OFF. A clear can open a door.
+ *
+ * ⚠ `lock`, `wandlock` and `grasslock` despawn ONLY when `tSet < 0`
+ * (`Lock.as:42`), and `o.@tset` on a missing attribute is `int("") = 0` —
+ * so the DEFAULT is group 0, not "no group". Three locks and thirteen of
+ * the fourteen wandlocks on the R1 route do not despawn for that reason,
+ * and the R2 brief's census said they all did.
+ */
+export const PERSISTENCE_RESPONSE = Object.freeze({
+    chest: 'despawn',                 // Chest.as:41
+    breakablerock: 'despawn',         // BreakableRock.as:50
+    breakablerockghost: 'despawn',    // BreakableRock.as:50
+    burnabletree: 'despawn',          // BurnableTree.as:59 -> die()
+    bosslock: 'despawn',              // BossLock.as:43 (extends Activators, no tSet test)
+    rocklock: 'despawn',              // RockLock.as:34
+    magicallock: 'despawn',           // MagicalLock.as:51 (extends Entity, no tSet)
+    magicallockfire: 'despawn',       // MagicalLock.as:51
+    shieldlock: 'lock-despawn',       // Lock.as:42 — ShieldLock forces tSet = -2
+    shieldlocknorm: 'lock-despawn',
+    lock: 'lock-despawn',             // Lock.as:42 — needs tSet < 0
+    wandlock: 'lock-despawn',
+    grasslock: 'lock-despawn',
+    rope: 'shrink',                   // RopeStart.as:31-38 -> hit()
+    fallrock: 'arm',                  // FallRock.as:39-47
+    fallrocklarge: 'arm',             // FallRockLarge.as:45-53
+    teleporter: 'trigger',            // Teleporter.as:76-79
+    stairsup: 'trigger',              // ...but Stairs forces tag = -1, so inert
+    stairsdown: 'trigger',
+});
+
 /** Layer names `loadlevel` knows how to build. Anything else throws. */
 const KNOWN_LAYERS = Object.freeze(['tiles', 'cliffsides']);
 
@@ -1550,7 +1602,7 @@ function intAttr(attrs, name, fallback) {
  * the tileset strip, while an entity's x/y are raw pixels. Mixing them is
  * the easiest way to build a world that is 16x wrong in one place only.
  */
-export function buildLevelWorld(levelRecord, { roles = ROLES } = {}) {
+export function buildLevelWorld(levelRecord, { roles = ROLES, cleared = null } = {}) {
     if (!levelRecord || typeof levelRecord !== 'object') {
         fail('buildLevelWorld needs a level record from seedling-map.json');
     }
@@ -1562,6 +1614,13 @@ export function buildLevelWorld(levelRecord, { roles = ROLES } = {}) {
     const consults = new Set(roles);
     const level = levelRecord.level;
     const where = `level ${level}`;
+    // R2: the tags a tape's `persistence` field cleared in THIS level. Every
+    // tag it names must be owned by something that reads persistence here —
+    // a clear nobody responds to is a line in the audit list that does
+    // nothing, and the whole point of the list being derived is that each
+    // entry names a blocker.
+    const clearedTags = cleared ? new Set(cleared) : null;
+    const clearsUsed = new Set();
 
     const tiles = [];
     const walkableTiles = [];
@@ -1712,6 +1771,33 @@ export function buildLevelWorld(levelRecord, { roles = ROLES } = {}) {
         const x = Number(e.x);
         const y = Number(e.y);
 
+        // ── R2: what a cleared persistence flag does to this entity ──────
+        // Read from `PERSISTENCE_RESPONSE`, which is per CLASS, because the
+        // three behaviours are genuinely different: a chest is removed, a
+        // rope SHRINKS, and a FallRock is ARMED. "Remove everything with
+        // this tag" would be wrong in two of the three.
+        const entityTag = e.attrs?.tag === undefined ? -1 : Number(e.attrs.tag);
+        let clearedHere = false;
+        if (clearedTags && entityTag >= 0 && clearedTags.has(entityTag)) {
+            const response = PERSISTENCE_RESPONSE[e.type];
+            if (response) clearsUsed.add(entityTag);
+            if (response === 'despawn') { clearedHere = true; }
+            if (response === 'lock-despawn') {
+                // ⚠ `Lock.check()` ALSO needs `tSet < 0`, and `int("")` is 0
+                // — so a lock with no `tset` attribute is in group 0 and does
+                // NOT despawn. Three route locks and thirteen of fourteen
+                // wandlocks turn on this line.
+                if (intAttr(e.attrs, 'tset', 0) < 0) clearedHere = true;
+            }
+            if (response === 'arm') {
+                fail(`${where}: the tape clears tag ${entityTag}, which is a `
+                    + `"${e.type}" at (${x},${y}). Clearing a FallRock does not remove `
+                    + 'it — it BUILDS IT FALLEN, solid and live, and its update writes '
+                    + "the player's y. A clear list must never name a fallrock tag.");
+            }
+        }
+        if (clearedHere) continue;
+
         // ⚠ `control` is where a PIT GOES. It is not an entity — `loadlevel`
         // reads it as a parameter block (`Game.as:2050-2054`) into the
         // `Game.fallthrough*` statics — and it is read here unconditionally,
@@ -1828,7 +1914,13 @@ export function buildLevelWorld(levelRecord, { roles = ROLES } = {}) {
                     + 'built without one. Re-extract the atlas with '
                     + 'scripts/procgen/extract-seedling-map.mjs, which records nodes.');
             }
-            const w = last.x - x + TILE_SIZE;
+            // ⚠ A CLEARED ROPE SHRINKS, it does not despawn: `check()`
+            // calls `hit()`, and `hit()` runs `setHitbox(16, 16, 8, 8)`.
+            // What is left is a ONE-CELL solid at the span's start, not
+            // open floor — which is the difference between routing through
+            // and walking into a wall.
+            const w = clearedHere2(e, entityTag, clearedTags)
+                ? TILE_SIZE : last.x - x + TILE_SIZE;
             const solid = {
                 rect: rect(x + cls.dx - cls.originX, y + cls.dy - cls.originY, w, cls.h),
                 cls, tag: e.type, x, y, span: { xend: last.x, w },
@@ -1857,7 +1949,15 @@ export function buildLevelWorld(levelRecord, { roles = ROLES } = {}) {
             // persistence flag TRUE — which makes `!checkPersistence(tag)`
             // false, and a tagged, non-inverted teleporter DEACTIVATED.
             // Item-driven changes to this are v3+.
-            const persistenceIsTrue = true;   // no items, no persistence in v2
+            // R2: a clear does not only despawn things — it can open a
+            // door. `Teleporter.checkDeactivated()` is
+            // `tag >= 0 && (!checkPersistence(tag) == invert)`, so a
+            // non-inverted tagged teleporter is DEACTIVATED on a fresh boot
+            // and becomes live once its tag is cleared; an inverted one goes
+            // the other way. v2 hardcoded this true because it had no
+            // persistence to read.
+            const persistenceIsTrue = !(clearedTags && tag >= 0 && clearedTags.has(tag));
+            if (clearedTags && tag >= 0 && clearedTags.has(tag)) clearsUsed.add(tag);
             const deactivated = tag >= 0 && (!persistenceIsTrue === invert);
             teleporters.push({
                 tag, invert, deactivated, isStairs,
@@ -1874,6 +1974,22 @@ export function buildLevelWorld(levelRecord, { roles = ROLES } = {}) {
                     y: intAttr(e.attrs, 'playery') + TILE_SIZE / 2,
                 },
             });
+        }
+    }
+
+    // ⚠ A CLEAR NOBODY RESPONDS TO IS A THROW, not a no-op. The clear list
+    // is DERIVED from named blockers, so an entry that matches nothing in
+    // its level is a bookkeeping error in the derivation — and the failure
+    // it would otherwise cause is a route planned around a door that never
+    // opened, which surfaces as a physics divergence 2000 ticks later.
+    if (clearedTags) {
+        const orphans = [...clearedTags].filter((t) => !clearsUsed.has(t));
+        if (orphans.length > 0) {
+            fail(`${where}: the tape clears tag(s) ${orphans.join(', ')}, which no `
+                + 'entity in this level reads. A clear is derived from a named blocker; '
+                + 'one that matches nothing is a derivation error, not a harmless '
+                + 'extra. (Entities that read persistence here: '
+                + `${[...clearsUsed].sort((a, b) => a - b).join(', ') || 'none'}.)`);
         }
     }
 

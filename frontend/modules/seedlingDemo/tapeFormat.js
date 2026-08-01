@@ -119,10 +119,10 @@
  */
 
 /** Schema version written by `serializeTape` for new tapes. */
-export const TAPE_VERSION = 2;
+export const TAPE_VERSION = 3;
 
 /** Every version this parser accepts. v1 tapes are frozen, not deprecated. */
-export const SUPPORTED_TAPE_VERSIONS = Object.freeze([1, 2]);
+export const SUPPORTED_TAPE_VERSIONS = Object.freeze([1, 2, 3]);
 
 /**
  * ⚠ THE SPAWN IS BAKED INTO THE BUILD, so a tape's `boot` block is a CLAIM
@@ -275,6 +275,67 @@ function requireFiniteNumber(value, what) {
 }
 
 /**
+ * `persistence` (version 3): the CLEARS a tape applies before its first
+ * live tick, as `{level, tag, note}`.
+ *
+ * ── Clears only, and never wholesale ──────────────────────────────────
+ * There is no way to set a flag TRUE from a tape. Persistence is a shared,
+ * cross-level, endgame load-bearing namespace — `FinalDoor` reads level
+ * 114's tag 0 as "talked to the Watcher", `Moonrock` writes level 2's from
+ * level 0 — so a crutch that could write either way could forge an ending.
+ *
+ * `note` is an AUDIT field: it names the blocker class the entry despawns,
+ * both consumers ignore it, and it is what makes a clear list reviewable
+ * as a list rather than as forty pairs of numbers.
+ *
+ * ⚠ A NEGATIVE TAG IS NOT "no tag". Entities use -1 for untagged and every
+ * persistence reader guards on `tag >= 0`, so a clear for -1 could never
+ * despawn anything — it would be a line in the audit list that does
+ * nothing, which is worse than an absent one.
+ */
+export const TAGS_PER_LEVEL = 30;   // Game.as:525
+export const LEVEL_COUNT = 116;     // Game.levels.length
+
+function parsePersistence(raw) {
+    if (!Array.isArray(raw.persistence)) {
+        fail('persistence must be an array of {level, tag, note} on a tape_version 3 '
+            + `tape ([] when nothing is cleared), got ${JSON.stringify(raw.persistence)}`);
+    }
+    const seen = new Set();
+    const clears = raw.persistence.map((c, i) => {
+        const where = `persistence[${i}]`;
+        if (c === null || typeof c !== 'object' || Array.isArray(c)) {
+            fail(`${where} must be an object { level, tag, note }`);
+        }
+        requireInt(c.level, `${where}.level`);
+        requireInt(c.tag, `${where}.tag`);
+        if (c.level < 0 || c.level >= LEVEL_COUNT) {
+            fail(`${where}.level ${c.level} is not a level (0..${LEVEL_COUNT - 1})`);
+        }
+        if (c.tag < 0 || c.tag >= TAGS_PER_LEVEL) {
+            fail(`${where}.tag ${c.tag} is out of range 0..${TAGS_PER_LEVEL - 1}. A `
+                + 'negative tag is not "untagged" here — every persistence reader '
+                + 'guards on tag >= 0, so clearing -1 despawns nothing.');
+        }
+        if (c.note !== undefined && typeof c.note !== 'string') {
+            fail(`${where}.note must be a string naming what it despawns, got `
+                + `${JSON.stringify(c.note)}`);
+        }
+        const key = `${c.level}:${c.tag}`;
+        if (seen.has(key)) {
+            fail(`${where} duplicates level ${c.level} tag ${c.tag}. A clear is `
+                + 'idempotent, so a duplicate is a bookkeeping error in the '
+                + 'derivation rather than a harmless repeat.');
+        }
+        seen.add(key);
+        return { level: c.level, tag: c.tag, note: c.note ?? '' };
+    });
+    // Sorted so a re-derived list that changed ORDER is not a diff.
+    clears.sort((a, b) => a.level - b.level || a.tag - b.tag);
+    return clears;
+}
+
+/**
  * The three version-2 relaxation fields. Every one is REQUIRED — a tape
  * that omitted `noHazards` and a game that defaulted it to "none" would be
  * running a different experiment from a JS engine that defaulted it to
@@ -420,7 +481,7 @@ export function parseTape(input) {
     // and a parsed tape (which is normalised, below) has to survive being
     // parsed again. So the test is on the VALUE, not on presence.
     if (version === 1) {
-        const v1Semantics = { noDamage: false, noHazards: [], grants: [] };
+        const v1Semantics = { noDamage: false, noHazards: [], grants: [], persistence: [] };
         for (const [field, expected] of Object.entries(v1Semantics)) {
             const got = raw[field];
             if (got === undefined) continue;
@@ -438,6 +499,19 @@ export function parseTape(input) {
     const relax = version === 1
         ? { noDamage: false, noHazards: [], grants: [] }
         : parseRelaxations(raw);
+    // The same VALUE-not-presence rule one version further on: a parsed v2
+    // tape carries `persistence: []` because `parseTape` normalises, and a
+    // presence check here would reject every committed fixture. That is not
+    // hypothetical — it is what the first build of the R0 batch did with
+    // `noDamage`, and it cost a whole pipeline run.
+    if (version < 3 && raw.persistence !== undefined
+        && !(Array.isArray(raw.persistence) && raw.persistence.length === 0)) {
+        fail(`tape_version ${version} declares persistence: `
+            + `${JSON.stringify(raw.persistence)}, but versions below 3 mean `
+            + 'persistence: [] BY DEFINITION — the build had no such field to read. '
+            + 'Bump tape_version to 3 to clear anything.');
+    }
+    const persistence = version === 3 ? parsePersistence(raw) : [];
 
     const boot = raw.boot;
     if (boot === null || typeof boot !== 'object' || Array.isArray(boot)) {
@@ -538,6 +612,9 @@ export function parseTape(input) {
         grants: Object.freeze(relax.grants.map((g) => Object.freeze({
             level: g.level, items: Object.freeze(g.items),
         }))),
+        persistence: Object.freeze(persistence.map((c) => Object.freeze({
+            level: c.level, tag: c.tag, note: c.note,
+        }))),
         tick_count: tickCount,
         inputs: Object.freeze(inputs.map((s) => Object.freeze(s))),
         ...(raw.name ? { name: String(raw.name) } : {}),
@@ -599,6 +676,15 @@ export function serializeTape(tape) {
             noDamage: t.noDamage,
             noHazards: [...t.noHazards],
             grants: t.grants.map((g) => ({ level: g.level, items: [...g.items] })),
+        } : {}),
+        // ⚠ Written ONLY for a v3 tape, so a v1 or v2 tape round-trips
+        // byte-identically even though `parseTape` normalised the field in.
+        // Getting this wrong would rewrite all 23 committed fixtures the
+        // first time anything re-serialized them.
+        ...(t.tape_version >= 3 ? {
+            persistence: t.persistence.map((c) => ({
+                level: c.level, tag: c.tag, ...(c.note ? { note: c.note } : {}),
+            })),
         } : {}),
         tick_count: t.tick_count,
         inputs: t.inputs.map((s) => ({ key: s.key, from: s.from, to: s.to })),

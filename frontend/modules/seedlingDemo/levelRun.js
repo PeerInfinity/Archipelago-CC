@@ -106,7 +106,7 @@ function applyItem(inventory, name) {
  */
 export function createLevelRun({
     levelSource, boot, noclip = false, noHazards = [], noDamage = false, grants = [],
-    roles,
+    persistence = [], roles,
 }) {
     if (typeof levelSource !== 'function') {
         throw new TypeError('createLevelRun needs a levelSource (level) => levelRecord');
@@ -116,9 +116,26 @@ export function createLevelRun({
     // Undefined means the builder's own default, which is ALL roles — so
     // every pre-R0 caller keeps exactly the census it had.
     const worlds = new Map();
-    const buildOpts = roles ? { roles } : undefined;
+    /**
+     * R2: the tape's persistence clears, indexed BY LEVEL.
+     *
+     * A clear is `(level, tag)` and a world is built per level, so the run
+     * hands each level only its own tags. Passing the whole list would make
+     * `buildLevelWorld`'s orphan guard fire for every level that does not
+     * happen to own one — which is every level but a handful.
+     */
+    const clearedByLevel = new Map();
+    for (const c of persistence) {
+        if (!clearedByLevel.has(c.level)) clearedByLevel.set(c.level, []);
+        clearedByLevel.get(c.level).push(c.tag);
+    }
     const worldFor = (n) => {
-        if (!worlds.has(n)) worlds.set(n, buildLevelWorld(levelSource(n), buildOpts));
+        if (!worlds.has(n)) {
+            const opts = { ...(roles ? { roles } : {}) };
+            if (clearedByLevel.has(n)) opts.cleared = clearedByLevel.get(n);
+            worlds.set(n, buildLevelWorld(levelSource(n),
+                Object.keys(opts).length > 0 ? opts : undefined));
+        }
         return worlds.get(n);
     };
     /**

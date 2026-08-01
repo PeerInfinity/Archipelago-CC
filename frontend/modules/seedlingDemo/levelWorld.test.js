@@ -210,6 +210,56 @@ describe('census: every fixture level is fully classified', () => {
         }
     });
 
+    it('a CLEARED tag despawns, shrinks, or is refused — never "removed by tag"', () => {
+        // The three responses are genuinely different and collapsing them
+        // would be wrong two ways out of three.
+        //
+        // DESPAWN: L71's chest (tag 1) and its tSet -1 lock (tag 0).
+        const before = buildLevelWorld(levelRecord(71));
+        expect(before.solids.some((r) => r.tag === 'chest')).toBe(true);
+        const after = buildLevelWorld(levelRecord(71), { cleared: [0, 1] });
+        expect(after.solids.some((r) => r.tag === 'chest')).toBe(false);
+        expect(after.activators.filter((a) => a.tag === 'lock').map((a) => a.t))
+            .toEqual([0]);   // the tSet -1 one is gone; group 0's remains
+
+        // ⚠ NOT DESPAWNED: L71's `lock@112,160` is tset 0, and
+        // `Lock.check()` needs tSet < 0. Its tag is 3.
+        const withThree = buildLevelWorld(levelRecord(71), { cleared: [3] });
+        expect(withThree.solids.filter((r) => r.tag === 'lock')).toHaveLength(2);
+
+        // SHRINK: L39's rope keeps a one-cell solid at its start.
+        const rope = buildLevelWorld(levelRecord(39), { roles: RELAXED_ROLES, cleared: [9] })
+            .solids.find((r) => r.tag === 'rope');
+        expect(rope.rect).toMatchObject({ x: 96, right: 112 });
+
+        // ARM: clearing a FallRock tag is refused by name, because it would
+        // ADD a live blocker rather than remove one.
+        expect(() => buildLevelWorld(levelRecord(74), { cleared: [2] }))
+            .toThrow(/BUILDS IT FALLEN/);
+    });
+
+    it('a clear can turn a TELEPORTER ON, and one nobody reads is a throw', () => {
+        // `Teleporter.checkDeactivated` is
+        // `tag >= 0 && (!checkPersistence(tag) == invert)`, so a tagged
+        // non-inverted teleporter is dead on a fresh boot and live once its
+        // tag clears. v2 hardcoded persistence true and could not express it.
+        const tagged = MAP.levels
+            .map((l) => ({ l, tp: (l.entities ?? []).find((e) => e.type === 'teleporter'
+                && Number(e.attrs?.tag ?? -1) >= 0 && Number(e.attrs?.invert ?? 0) === 0) }))
+            .find((r) => r.tp);
+        expect(tagged, 'some level has a tagged non-inverted teleporter').toBeTruthy();
+        const tag = Number(tagged.tp.attrs.tag);
+        const shut = buildLevelWorld(tagged.l, { roles: RELAXED_ROLES });
+        const open = buildLevelWorld(tagged.l, { roles: RELAXED_ROLES, cleared: [tag] });
+        const at = (w) => w.teleporters.find((t) => t.x === tagged.tp.x && t.y === tagged.tp.y);
+        expect(at(shut).deactivated).toBe(true);
+        expect(at(open).deactivated).toBe(false);
+
+        // ...and a clear no entity in the level responds to is a THROW.
+        expect(() => buildLevelWorld(levelRecord(71), { cleared: [29] }))
+            .toThrow(/which no entity in this level reads/);
+    });
+
     it('a rope is sized from its NODE, not from a constant', () => {
         // Level 39's rope runs (96,384) -> (192,384), so its hitbox is
         // 192 - 96 + 16 = 112 wide: seven tiles, not one.
