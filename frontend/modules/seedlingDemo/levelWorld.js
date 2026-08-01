@@ -1340,6 +1340,22 @@ export const ENTITY_CLASSES = Object.freeze({
 /** The `.oel` tags that build a `Stairs` rather than a bare `Teleporter`. */
 export const STAIRS_TAGS = Object.freeze(['stairsup', 'stairsdown']);
 
+/**
+ * R2: the `Activators` tags whose SOLIDITY answers to a button group.
+ *
+ * Kept here rather than in `activators.js` because `buildLevelWorld` is
+ * what has to recognise them while building, and a module that imported
+ * the state machine to build geometry would couple the two the wrong way
+ * round. `activators.js` holds the semantics; this holds the membership,
+ * and a test pins that the two lists agree.
+ */
+export const ACTIVATOR_RESPONDERS = new Set([
+    'lock', 'wandlock', 'shieldlock', 'shieldlocknorm', 'grasslock', 'cover',
+]);
+
+/** The two tags that press a group: `Button` and `ButtonRoom`. */
+export const ACTIVATOR_PRESSERS = new Set(['button', 'buttonroom']);
+
 /** Layer names `loadlevel` knows how to build. Anything else throws. */
 const KNOWN_LAYERS = Object.freeze(['tiles', 'cliffsides']);
 
@@ -1563,6 +1579,14 @@ export function buildLevelWorld(levelRecord, { roles = ROLES } = {}) {
     // than anything the physics consults — nothing here changes a tick.
     const pickups = [];
     const proximityHazards = [];
+    // R2: the `Activators` groups. `activators` are the responders that stop
+    // being solid while their group is held; `pressers` are the volumes that
+    // hold it. Both carry the `t` the game groups them by, read from the
+    // entity's own `tset` attribute — and `int("")` is 0, so a MISSING tset
+    // means group 0, not "no group". Three route locks and thirteen of the
+    // fourteen wandlocks rely on that being read the game's way.
+    const activators = [];
+    const pressers = [];
 
     // --- tiles ---------------------------------------------------------
     // The extract has ALREADY applied loadlevel's own bounds guard
@@ -1722,6 +1746,19 @@ export function buildLevelWorld(levelRecord, { roles = ROLES } = {}) {
                 special: cls.pickup.special,
             });
         }
+        if (ACTIVATOR_PRESSERS.has(e.type)) {
+            // The press volume IS the entity's hitbox — `Button.update`
+            // collides at its own position — and `cls.hazard` already
+            // carries exactly that rect, because standing on one is also
+            // the proximity hazard R0 priced. One geometry, two questions.
+            pressers.push({
+                tag: e.type,
+                t: intAttr(e.attrs, 'tset', 0),
+                rect: entityRect(cls.hazard, x, y),
+                x,
+                y,
+            });
+        }
         if (consults.has('proximity-hazard') && cls.hazard) {
             if (cls.hazard === 'unpriced') {
                 // Classified as a hazard on evidence, with the avoid volume
@@ -1764,6 +1801,17 @@ export function buildLevelWorld(levelRecord, { roles = ROLES } = {}) {
         if (cls.collider === 'none' || cls.collider === undefined) continue;
         if (cls.collider === 'rect') {
             const solid = { rect: entityRect(cls, x, y), cls, tag: e.type, x, y };
+            if (ACTIVATOR_RESPONDERS.has(e.type)) {
+                solid.activatorId = `${e.type}@${x},${y}`;
+                activators.push({
+                    id: solid.activatorId,
+                    tag: e.type,
+                    t: intAttr(e.attrs, 'tset', 0),
+                    rect: solid.rect,
+                    x,
+                    y,
+                });
+            }
             solids.push(solid);
             objectSolids.push(solid);
         } else if (cls.collider === 'rope') {
@@ -1863,6 +1911,8 @@ export function buildLevelWorld(levelRecord, { roles = ROLES } = {}) {
         teleporters,
         pickups,
         proximityHazards,
+        activators,
+        pressers,
 
         /**
          * The R0 avoid-volume query: every pickup or proximity hazard the
@@ -1915,7 +1965,7 @@ export function buildLevelWorld(levelRecord, { roles = ROLES } = {}) {
          * other side, and it is transcribed rather than tidied because the
          * game's own comment says the order is deliberate.
          */
-        collidesSolid(box, { beforeTypeFlip = false } = {}) {
+        collidesSolid(box, { beforeTypeFlip = false, openActivators = null } = {}) {
             // Pixelmask entities (Building, TreeLarge, CliffSide) assign
             // their type in the CONSTRUCTOR, so they are armed on tick 1
             // too — only Tiles are late.
@@ -1923,6 +1973,12 @@ export function buildLevelWorld(levelRecord, { roles = ROLES } = {}) {
                 if (maskHitsBox(p.mask, p.maskX, p.maskY, box)) return p;
             }
             for (const s of (beforeTypeFlip ? objectSolids : solids)) {
+                // R2: a lock or cover whose group is held has `type = ""`,
+                // which takes it out of the solids list rather than moving
+                // it. `openActivators` is that list, owned by the RUN
+                // (`activators.js`) because it is per-tick state and this
+                // module builds static geometry.
+                if (openActivators && s.activatorId && openActivators.has(s.activatorId)) continue;
                 if (rectsOverlap(box, s.rect)) return s;
             }
             return null;
@@ -2049,7 +2105,8 @@ export function buildLevelWorld(levelRecord, { roles = ROLES } = {}) {
          *                terrain arm models it — so a disabled hazard stops
          *                being an obstacle, and one still armed does not
          */
-        plannerBlockerAt(box, probeRect = null, { noclip = false, noHazards = [] } = {}) {
+        plannerBlockerAt(box, probeRect = null,
+            { noclip = false, noHazards = [], openActivators = null } = {}) {
             if (!noclip) {
                 // ⚠ THE PLANNER USES THE REAL MASK, not the bounding rect.
                 // The conservative direction is normally right for routing,
@@ -2066,6 +2123,8 @@ export function buildLevelWorld(levelRecord, { roles = ROLES } = {}) {
                     }
                 }
                 for (const s of solids) {
+                    if (openActivators && s.activatorId
+                        && openActivators.has(s.activatorId)) continue;
                     if (rectsOverlap(box, s.rect)) return { kind: 'solid', blocker: s };
                 }
             }

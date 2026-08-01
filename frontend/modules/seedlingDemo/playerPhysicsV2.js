@@ -495,6 +495,12 @@ export function arriveFromFall(level, ctor) {
 export function step(state, held, opts = {}) {
     const {
         level, noclip = false, noHazards = [], frozen = false, beforeTypeFlip = false,
+        // R2: the ids of lock/cover activators whose group is currently held,
+        // so they are `type = ""` rather than solid. Owned by the RUN, not by
+        // the world — it is per-tick state — and stepped AFTER this call,
+        // because `World.addUpdate` prepends and `loadlevel` adds the Player
+        // LAST, so the player reads the state as of the previous tick's end.
+        openActivators = null,
     } = opts;
     if (!level || typeof level.collidesSolid !== 'function') {
         throw new PhysicsV2Error(
@@ -682,7 +688,8 @@ export function step(state, held, opts = {}) {
         world: level.world,
         collides: noclip
             ? null
-            : (x, y) => level.collidesSolid(playerBoxAt(x, y), { beforeTypeFlip }),
+            : (x, y) => level.collidesSolid(playerBoxAt(x, y),
+                { beforeTypeFlip, openActivators }),
         // `checkFallingInPit()` sits between moveY and the world clamp.
         afterMove: nextFall ? (x, y) => ({
             x: x + (Math.floor(nextFall.target.x / TILE_SIZE) * TILE_SIZE

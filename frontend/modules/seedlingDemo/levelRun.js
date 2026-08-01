@@ -34,6 +34,9 @@
  */
 
 import { buildLevelWorld } from './levelWorld.js';
+import {
+    createActivatorState, openActivatorIds, stepActivators,
+} from './activators.js';
 import { ITEM_PROPERTIES, ITEM_NAMES } from './tapeFormat.js';
 import { spawnFromBoot } from './playerPhysicsV1.js';
 import {
@@ -41,6 +44,7 @@ import {
     arriveFromFall,
     arriveIn,
     initialLatch,
+    playerBoxAt,
     step as stepV2,
 } from './playerPhysicsV2.js';
 
@@ -116,6 +120,26 @@ export function createLevelRun({
     const worldFor = (n) => {
         if (!worlds.has(n)) worlds.set(n, buildLevelWorld(levelSource(n), buildOpts));
         return worlds.get(n);
+    };
+    /**
+     * R2: per-level activator state (buttons, locks, covers).
+     *
+     * ⚠ PER LEVEL AND PER VISIT. `Game` is reconstructed on every world
+     * swap, so a Lock that was open when the player left is a fresh
+     * `type = normType` when they come back — unless the persistence its
+     * `turnOff()` wrote is what despawns it, which is a different
+     * mechanism entirely. Memoising this alongside the world would keep a
+     * lock open across a round trip the game closes.
+     */
+    const activatorStates = new Map();
+    const activatorStateFor = (n) => {
+        const w = worldFor(n);
+        if (!activatorStates.has(n)) activatorStates.set(n, createActivatorState(w));
+        return activatorStates.get(n);
+    };
+    const freshActivatorState = (n) => {
+        activatorStates.set(n, createActivatorState(worldFor(n)));
+        return activatorStates.get(n);
     };
 
     let level = boot.level;
@@ -223,13 +247,23 @@ export function createLevelRun({
          * can, and one that wants them cannot get them back.
          */
         advance(held) {
+            // The player reads the activator state as of the END of the
+            // previous tick: `World.addUpdate` PREPENDS and `loadlevel` adds
+            // the Player LAST, so the Player updates before every Button and
+            // every Lock. Stepping the machinery first would open a lock one
+            // tick early, in every run, forever.
+            const activators = activatorStateFor(level);
             const next = stepV2(state, held, {
                 level: world,
                 noclip,
                 noHazards,
                 beforeTypeFlip: firstTickInWorld,
+                openActivators: noclip ? null : openActivatorIds(activators),
             });
             ticksCompleted++;
+            // ...and THEN Button.update and Lock.update run, against where
+            // the player ended up.
+            if (!noclip) stepActivators(activators, world, playerBoxAt(next.x, next.y));
             const hits = { hitX: next.hitX, hitY: next.hitY };
 
             if (!next.transition) {
@@ -253,6 +287,8 @@ export function createLevelRun({
             if (next.transition.kind === 'fall') transports.push({ ...record });
             level = next.transition.to_level;
             world = worldFor(level);
+            // A new `Game` means new entities: every lock is solid again.
+            if (!noclip) freshActivatorState(level);
             // ONE swap, TWO arrival kinds. A fall lands the player at the
             // ctor args `checkFallingInPit` computed, `fallFromCeiling`, 83
             // px above where it will end up; a teleporter lands them at its
