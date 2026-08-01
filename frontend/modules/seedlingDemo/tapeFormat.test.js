@@ -27,8 +27,10 @@ import {
     parseTape,
     serializeTape,
     SUPPORTED_TAPE_VERSIONS,
+    TAPE_BUDGET,
     TAPE_VERSION,
     TapeFormatError,
+    assertTapeWithinRuntimeBudget,
 } from './tapeFormat.js';
 import { TILE_TYPE_NAMES } from '../flashPanel/seedlingSemantics.js';
 
@@ -654,5 +656,58 @@ describe('version 2: grants', () => {
             { level: 10, items: ['shield', 'sword'] },
             { level: 43, items: ['wand'] },
         ]);
+    });
+});
+
+describe("the runtime's tape budget (R3)", () => {
+    /** `n` non-overlapping one-tick spans on one key. */
+    const spans = (n) => Array.from({ length: n }, (_, i) => ({
+        key: 'right', from: i * 2, to: i * 2 + 1,
+    }));
+    const tapeOf = (n, extra = {}) => ({
+        ...base, ...extra, tick_count: n * 2 + 1, inputs: spans(n),
+    });
+
+    it('lets R2\'s committed headline through, with room to spare', () => {
+        // 853 spans / 63 KB is the biggest tape that has ever been recorded,
+        // and the guard exists to permit it. A limit that rejected the
+        // known-good walk would be measuring the guard, not the runtime.
+        const { spans: n, bytes } = assertTapeWithinRuntimeBudget(tapeOf(853), 'r2');
+        expect(n).toBe(853);
+        expect(bytes).toBeLessThan(TAPE_BUDGET.bytes);
+    });
+
+    it('THROWS on a span count past the budget, and names both ceilings', () => {
+        // ⚠ CAPPED, and the cap is not caution — it is what keeps a MUTATION
+        // fast. Building `TAPE_BUDGET.spans + 1` spans is fine at 1800 and
+        // catastrophic at the first mutation anyone reaches for (raise the
+        // limit): the first run of this suite against `spans: 999999` spent
+        // twenty minutes constructing a million-span tape and had to be
+        // killed. Capped, that mutation fails this test in milliseconds
+        // instead — which is the point of a mutation, not a side effect.
+        const over = Math.min(TAPE_BUDGET.spans + 1, 3000);
+        expect(() => assertTapeWithinRuntimeBudget(tapeOf(over), 'huge'))
+            .toThrow(/huge is past the recompiled runtime's tape budget/);
+        expect(() => assertTapeWithinRuntimeBudget(tapeOf(over)))
+            .toThrow(/dead run, not a slow one/);
+    });
+
+    it('THROWS on BYTES even when the span count is fine', () => {
+        // ⚠ The two ceilings are INDEPENDENT — measured, not assumed: a
+        // 853-span tape padded with an inert field still dies. A guard that
+        // only counted spans would pass exactly the tape that taught us the
+        // difference.
+        const padded = tapeOf(10, { description: 'x'.repeat(TAPE_BUDGET.bytes) });
+        expect(() => assertTapeWithinRuntimeBudget(padded, 'padded'))
+            .toThrow(/padded is past the recompiled runtime's tape budget/);
+    });
+
+    it('stays inside the MEASURED band rather than sitting on it', () => {
+        // The measurement is of one build on one machine, and what it guards
+        // against costs a whole recording deadline. Both limits must be
+        // strictly below the smallest figure the probe saw fail (2132 spans,
+        // 95 KB survived / 159 KB died).
+        expect(TAPE_BUDGET.spans).toBeLessThan(2078);
+        expect(TAPE_BUDGET.bytes).toBeLessThan(95 * 1024);
     });
 });

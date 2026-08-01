@@ -693,6 +693,67 @@ export function serializeTape(tape) {
 }
 
 /**
+ * ── THE RUNTIME'S TAPE BUDGET, measured at R3 slice 0 ─────────────────
+ *
+ * The recompiled game cannot load an arbitrarily large tape: it dies with
+ * `heap_alloc(...) failed - out of memory` BEFORE the first tick, so a tape
+ * past the budget is a DEAD RUN and not a slow one. R2 found this by
+ * running out of it — a denser plan of the same walk cost 30% more ticks
+ * and 4.7x the spans, and the game then refused the headline outright.
+ *
+ * ⚠ THERE ARE TWO INDEPENDENT CEILINGS AND NEITHER SUBSUMES THE OTHER.
+ * `scripts/procgen/probe-seedling-span-ceiling.mjs`, fresh page per load:
+ *
+ *   - SPAN COUNT: 2078 spans load, 2132 fail (at 36 bytes per synthetic
+ *     span, so 76 KB vs 78 KB — bytes were nowhere near their own limit).
+ *   - JSON BYTES: a 853-span tape padded with an inert field survives to
+ *     95 KB and dies by 159 KB, far past the 78 KB the span sweep died at.
+ *
+ * A real span costs ~74 bytes against the probe's ~36, which is why the two
+ * happen to bind at about the same tape — 2078 real spans would be ~154 KB.
+ * Budget against BOTH.
+ *
+ * The limits below sit deliberately INSIDE the measured band, because the
+ * measurement is of one build on one machine and the failure it guards
+ * against costs a whole recording deadline. R2's committed headline is 853
+ * spans / 63 KB, so this leaves it roughly twice the room it uses.
+ *
+ * ⚠ A THROW, NOT A WARNING, and at SYNTHESIS rather than at load: the
+ * point is to fail while a planner is still running and cheap, not after
+ * `--win` has spent forty minutes discovering it. Chunking `botLoadTape`
+ * was the alternative and it is not one — concatenating chunks rebuilds
+ * the same string, so it would not even address the allocation that fails.
+ */
+export const TAPE_BUDGET = Object.freeze({
+    spans: 1800,
+    bytes: 90 * 1024,
+    measured: '2078/2132 spans, 95/159 KB — probe-seedling-span-ceiling.mjs, 2026-08-01',
+});
+
+/**
+ * Throw unless `tape` is inside the budget the runtime actually has.
+ *
+ * @param {object} tape  a parsed or parseable tape
+ * @param {string} what  what to name in the error (a fixture name, usually)
+ */
+export function assertTapeWithinRuntimeBudget(tape, what = 'tape') {
+    const t = parseTape(tape);
+    const spans = t.inputs.length;
+    const bytes = serializeTape(t).length;
+    if (spans > TAPE_BUDGET.spans || bytes > TAPE_BUDGET.bytes) {
+        throw new Error(`${what} is past the recompiled runtime's tape budget: `
+            + `${spans} spans (limit ${TAPE_BUDGET.spans}), `
+            + `${Math.round(bytes / 1024)} KB (limit ${Math.round(TAPE_BUDGET.bytes / 1024)} KB). `
+            + `The game refuses such a tape at LOAD with heap_alloc failure, before the `
+            + `first tick — this is a dead run, not a slow one. Measured ceilings: `
+            + `${TAPE_BUDGET.measured}. Split the walk into more segments, or make the `
+            + 'plan less dense (R2: a smoother margin cost 4.7x the spans for 30% more '
+            + 'ticks).');
+    }
+    return { spans, bytes };
+}
+
+/**
  * The GAME's side of the `transitions` record, derived from the tick
  * stream it already drains.
  *

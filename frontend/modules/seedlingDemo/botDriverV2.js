@@ -64,7 +64,7 @@
  * scope then, not now.
  */
 
-import { serializeTape } from './tapeFormat.js';
+import { assertTapeWithinRuntimeBudget, serializeTape } from './tapeFormat.js';
 import { createLevelRun } from './levelRun.js';
 import { RELAXED_ROLES, ROLES, TILE_SIZE } from './levelWorld.js';
 import { assertRect, rectsOverlap } from './levelWorld.js';
@@ -1452,15 +1452,23 @@ export function synthesizeLegs(legs, opts = {}) {
             + 'either the legs stopped covering that room or the grant is stale.');
     }
 
+    // ⚠ `...relax` and nothing else. Spreading a `noclip` of this module's
+    // own choosing OVER the relax object — which is what this line did
+    // until R2 — is precisely the split the docblock above forbids: the
+    // tape would have said one thing and the plan another, and only the
+    // game would have found out.
+    const tape = buildTape(perTick, boot, name, relax ? { ...relax } : { noclip: false });
+
+    // The runtime's tape budget, measured at R3 slice 0 and enforced HERE
+    // because this is where a plan becomes an artifact. R2 discovered the
+    // budget by exceeding it and losing a recording deadline to a game that
+    // refused the tape at load; the driver refuses rather than recovers, and
+    // this is the same rule applied to the one failure that happens after
+    // the driver has already succeeded.
+    assertTapeWithinRuntimeBudget(tape, name ? `tape "${name}"` : 'the synthesized tape');
+
     return {
-        // ⚠ `...relax` and nothing else. Spreading a `noclip` of this
-        // module's own choosing OVER the relax object — which is what this
-        // line did until R2 — is precisely the split the docblock above
-        // forbids: the tape would have said one thing and the plan another,
-        // and only the game would have found out.
-        tape: buildTape(perTick, boot, name, relax
-            ? { ...relax }
-            : { noclip: false }),
+        tape,
         arrivals,
         transitions: run.transitions.map((t) => ({ ...t })),
         waypoints,
