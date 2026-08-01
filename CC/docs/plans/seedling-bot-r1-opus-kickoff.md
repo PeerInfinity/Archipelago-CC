@@ -1043,6 +1043,22 @@ like a harness problem.
   A claim that only ever runs against a passing twenty-minute replay is a
   claim nobody has ever seen fail.
 
+### 11.8 The mutations, and what each one bit
+
+The twenty acceptance mutations live in `r1Acceptance.test.js` and run in
+CI. These five were run by hand against the ENDS-MEET and forced-contact
+machinery, each reverted after:
+
+| mutation | what went red |
+|---|---|
+| a segment DELETED from the roster | the partition (ticks and tick-for-tick), both neighbours' ends-meet, and both remaining boundary-tick checks — 6 tests |
+| a boundary moved to L12's *fourth* visit | the two ends-meet cases either side of it, on level/position |
+| the inherited-items grant entry dropped | **every** ends-meet case, on the item set — which is the check earning its keep |
+| the persistence rect written as a `{x,y,w,h}` literal again | the synthesized-fixture doctrine for four tapes, on `assertRect` — the historical bug now cannot be reintroduced silently |
+| the L3 forced-contact declaration dropped | `legs[6] starts at (104,136) in level 3 INSIDE teleporter:-1@96,128, which the leg does not declare` |
+
+Nothing was recorded as "does not bite".
+
 ## 12. Slice 5 — THE WITNESSES (2026-07-31)
 
 §3.7 offered two, "only if the route makes them cheap". One was free and is
