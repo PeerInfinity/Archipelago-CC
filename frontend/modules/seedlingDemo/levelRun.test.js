@@ -450,6 +450,50 @@ describe('R3: the touch-lock window', () => {
         ]);
     });
 
+    /**
+     * ⚠ THE HALF OF `turnOff` WITH A FUTURE IN IT, and the reason R3's route
+     * can come back the way it went. `Lock.turnOff()` writes
+     * `setPersistence(tag, false)`, and `Lock.check()` on a NEWLY BUILT
+     * `Game` removes any lock whose flag is off — so the shield lock is not
+     * merely non-solid for this visit, it is GONE on the next one.
+     *
+     * The route depends on it: the walk goes out through L71's lock to
+     * reach darksuit and comes BACK through the same corridor to L71's pit.
+     * A model that rebuilt the level with the lock standing would send the
+     * return leg into a wall the game does not have — and it would present
+     * as a collision divergence two thousand ticks later, in another level.
+     */
+    it('EARNS the clear: the lock is gone when the level is re-entered', () => {
+        const run = runL71(DARK);
+        for (let t = 0; t < 40 && !run.inputRefused; t++) run.advance(new Set(['right']));
+        expect(run.inputRefused).toBe(true);
+        for (let t = 0; t < 200 && run.inputRefused; t++) run.advance(new Set());
+        expect(run.lockSnaps).toHaveLength(1);
+        expect(run.earnedClears).toEqual([{ level: 71, tag: 2, by: LOCK }]);
+
+        // Still THERE for the rest of this visit — non-solid, but present.
+        // Despawning it now would be a tick early and on the very tick the
+        // player is standing inside it.
+        expect(run.world.activators.some((a) => a.id === LOCK)).toBe(true);
+        expect(run.openActivators.has(LOCK)).toBe(true);
+
+        // Out east through the teleporter to L76, then back.
+        const driveUntil = (held, done, what) => {
+            for (let t = 0; t < 800; t++) {
+                run.advance(new Set(held));
+                if (done()) return;
+            }
+            throw new Error(`never ${what} (level ${run.level} at `
+                + `${run.state.x},${run.state.y})`);
+        };
+        driveUntil(['right'], () => run.level === 76, 'left L71 eastward');
+        driveUntil(['left'], () => run.level === 71, 'came back to L71');
+        // ...and NOW it is gone, because the Game that was just built read a
+        // flag the player turned off.
+        expect(run.world.activators.some((a) => a.id === LOCK)).toBe(false);
+        expect(run.world.solids.some((s) => s.tag === 'shieldlock')).toBe(false);
+    });
+
     it('the two spellings demand DIFFERENT shields', () => {
         // `Game.as:2144-2145` builds `shieldlocknorm` with `_type = 0` and
         // `shieldlock` with 1, and `ShieldLock.as:33` reads them as two arms

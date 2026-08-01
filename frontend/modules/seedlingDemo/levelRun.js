@@ -133,6 +133,40 @@ export function createLevelRun({
         if (!clearedByLevel.has(c.level)) clearedByLevel.set(c.level, []);
         clearedByLevel.get(c.level).push(c.tag);
     }
+    /**
+     * ⚠ THE CLEARS THE PLAYER EARNS (R3), pending until the next entry.
+     *
+     * `Lock.turnOff()` calls `Game.setPersistence(tag, false)`, and
+     * `Lock.check()` — which runs on a NEW `Game`'s first frame — is
+     * `tag >= 0 && tSet < 0 && !checkPersistence(tag) -> remove(this)`. So a
+     * shield lock the player opens is not merely non-solid for this visit:
+     * it is GONE the next time the level loads, exactly as a declared clear
+     * would have made it.
+     *
+     * The route depends on that. R3's walk goes out through L71's shield
+     * lock to reach darksuit and comes BACK through the same corridor to
+     * L71's pit — and a model that rebuilt the level with the lock standing
+     * would send the return leg into a wall the game does not have.
+     *
+     * ⚠ PENDING, not immediate. The world is memoised per level, and
+     * dropping the memo while the run is still standing in that level would
+     * despawn the lock mid-visit — a tick early, and on the very tick the
+     * player is inside it. So the tag is banked here and cashed in the
+     * transition path, when the destination's world is built.
+     */
+    const pendingEarnedClears = new Map();
+    const applyEarnedClears = (n) => {
+        const tags = pendingEarnedClears.get(n);
+        if (!tags) return;
+        pendingEarnedClears.delete(n);
+        if (!clearedByLevel.has(n)) clearedByLevel.set(n, []);
+        const list = clearedByLevel.get(n);
+        for (const tag of tags) if (!list.includes(tag)) list.push(tag);
+        // Drop the memo so the next `worldFor` rebuilds with the tag — which
+        // is what `Lock.check()` does to a freshly constructed `Game`.
+        worlds.delete(n);
+        activatorStates.delete(n);
+    };
     const worldFor = (n) => {
         if (!worlds.has(n)) {
             const opts = { ...(roles ? { roles } : {}) };
@@ -396,6 +430,14 @@ export function createLevelRun({
                     to: ticksCompleted,
                     ticks: ticksCompleted - lockSnap.from,
                 });
+                // `Lock.turnOff()`'s third line, and the one with a future in
+                // it: `Game.setPersistence(tag, false)`. Banked rather than
+                // applied — see `pendingEarnedClears`.
+                if (lockSnap.persistTag >= 0) {
+                    const lvl = lockSnap.level;
+                    if (!pendingEarnedClears.has(lvl)) pendingEarnedClears.set(lvl, new Set());
+                    pendingEarnedClears.get(lvl).add(lockSnap.persistTag);
+                }
                 lockSnap = null;
             }
         }
@@ -450,6 +492,22 @@ export function createLevelRun({
          * something both sides can already work out.
          */
         get lockSnaps() { return lockSnaps.map((r) => ({ ...r })); },
+        /**
+         * The `(level, tag)` clears this run EARNED — turned off by opening
+         * something rather than by the tape declaring it.
+         *
+         * The R3 ledger's other half: the game's `persistence_cleared`
+         * readout should be the tape's declared list plus this, and nothing
+         * else. Reported per level as `{level, tags}`.
+         */
+        get earnedClears() {
+            const out = [];
+            for (const r of lockSnaps) {
+                if (r.persistTag < 0) continue;
+                out.push({ level: r.level, tag: r.persistTag, by: r.id });
+            }
+            return out;
+        },
         /** Is a touch-lock refusing input RIGHT NOW? The driver's gate. */
         get inputRefused() { return lockSnap !== null; },
         /**
@@ -680,6 +738,10 @@ export function createLevelRun({
             transitions.push(record);
             if (next.transition.kind === 'fall') transports.push({ ...record });
             level = next.transition.to_level;
+            // A `Game` is constructed here, so this is where `Lock.check()`
+            // runs and where a flag the player turned off finally removes
+            // its lock.
+            applyEarnedClears(level);
             world = worldFor(level);
             // A new `Game` means new entities: every lock is solid again.
             if (!noclip) freshActivatorState(level);
