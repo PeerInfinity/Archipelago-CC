@@ -555,3 +555,161 @@ reported 4 would mean a grant fired that should not have.
    reconcile exact.
 6. **The walk** — re-plan, segments + headline, `--tier` wiring, acceptance.
 7. **Docs + close-out.**
+
+## 10. Slices 1–5a — AS BUILT (2026-07-31)
+
+### 10.1 Slice 1 — the pixelmasks became a model
+
+`scripts/procgen/extract-seedling-masks.mjs` turns the seventeen MIT mask
+PNGs into `seedlingDemo/seedlingPixelMasks.js`: a committed, import-free JS
+module, `--check`-gated like every other artifact in this arc. The rows are
+`#`/`.` strings rather than hex **because this artifact's correctness is
+visual** — a reviewer can see `OpenTreeMask`'s doorway and cannot see it in
+`ffffffe00007ffffff`. ~100 KB for something nobody could otherwise check.
+
+`maskHitsBox` transcribes the chain that actually runs, and both halves are
+cited because they disagree about rounding (§8.5). The `cliffsides` frame
+index is resolved through `CLIFFSIDE_FRAME_MASKS` rather than an inline
+array — the fourth time in this arc an index has been read against the
+wrong table.
+
+**The seam did not disappear, it moved earlier**: a `collider: 'pixelmask'`
+entry with no committed `mask` now throws from `maskPlacement` at BUILD
+time, naming the class rather than the fixture.
+
+⚠ **The planner uses the real mask too, and that moved a committed route.**
+`cross-level-leg` threads L94's cliffsides differently now. Re-recorded
+against the game rather than accepted as a test update — and the model
+matched the new recording exactly, which is the first oracle evidence the
+mask transcription is right.
+
+**Mutations:** five run. A mask row flipped, the frame index dropped and the
+missing-mask throw removed all bit. Two did NOT, and both were real gaps:
+`Math.trunc → Math.floor` (the two agree for non-negative input, and every
+committed mask sits at x,y ≥ 0 — but a player at x = 0..1 has `box.x` of
+−2..−1, and L94's cliffsides start at column 0), and dropping `+ cls.dx`
+from `maskPlacement` (in every class the ctor offset and the mask offset
+CANCEL, so all seventeen `dx`/`dy` are 0). Both are exercised directly now
+and both bite on the re-run.
+
+### 10.2 Slice 2 — the 69-tag blocking bill
+
+39 rects, 6 pixelmasks, `rope`, and 23 `notSolid` entries. The FULL census
+goes from 11 of 116 levels to **82**, and all 47 route levels build.
+
+**The table checks itself against the game**: every entry declares the
+`type` its constructor assigns, and a test requires `collider !== 'none'`
+to agree with `PLAYER_SOLID_TYPES`. A hand-written "this does not block"
+survives being wrong; a type the solids list can be asked about does not.
+
+Four transcription errors the recon had, caught by re-deriving:
+
+- `moonrockpile` is `setHitbox(spr.width, spr.height)` — **32×16**, two
+  tiles wide. The sprite had to be measured.
+- `statue1` and `statue2` are the same class with **different hitboxes**:
+  `render()` switches on the frame, and frame 0 is `(48,32,24,16)` against
+  frame 1's `(48,24,24,0)`.
+- `totem` stacks its own (+8,+40) with NPC's (+8,+8); its own source
+  comments on the trap. One offset gives a rect two tiles too high.
+- `bombpusher` and `iceturret` are **enemies that are SOLID** — both extend
+  `Enemy` and then overwrite the type. The rule that carries every other
+  enemy on the route is false for exactly these two.
+
+⚠ And one collider needed data the extract was dropping: a `RopeStart`
+spans to its `<node>` child, and `seedlingOgmo.js` kept only
+`{type, x, y, attrs}` — so a rope was a 16×16 stub instead of a 7-tile
+wall. Nested nodes are recorded generically now; the atlas diff is exactly
+the three ropes.
+
+### 10.3 Slice 3 — Activators, and the crossing the game confirmed
+
+`activators.js` models buttons, locks and covers in the game's own order:
+`Button.update` republishes `activate` to its group EVERY tick (the flag is
+not latched), then each responder fades or restores.
+
+**Two float questions, neither answer the obvious one.** `Image.alpha`'s
+setter CLAMPS to [0,1], and `Lock.activationStep` tests `alpha > 0` BEFORE
+decrementing while `Cover.update` decrements and tests in the same tick —
+so a lock opens on tick **101** and a cover on tick **11**, not 100 and 10.
+Derived by running the fade, never by dividing.
+
+⚠ **The restore is guarded by OCCUPANCY**, which is what makes the crossing
+possible: L71's button `[116,124)×[181,187)` and its lock
+`[112,128)×[160,176)` are DISJOINT, with y = 178 touching neither, so the
+player must leave one and enter the other in a single tick — after which
+the lock cannot re-close because they are inside it.
+
+⚠⚠ **The model presses on the PLAYER only** while the game presses on
+`["Player","Enemy","Solid"]`. Exact only while no static solid rests on a
+button; checked over every level that builds, with a positive control
+beside it.
+
+### 10.4 Slice 4 — the AS3 batch, the gate, and the answer
+
+One build, one change: `tape_version: 3` with `persistence: [{level, tag,
+note}]`, applied by `botStart` **before the first world is built** —
+every responder reads its flag in a constructor or in the `check()` a new
+world runs on its first frame. `botStatus` gained a `persistence` readout
+read back from the game's own array rather than echoed from the tape.
+
+**✅ THE BYTE-INERTNESS GATE PASSED BEFORE ANYTHING NEW WAS RECORDED.** All
+23 frozen fixtures replay byte-identical against the new build, including
+the 14,963-tick R1 headline with its entire claim intact — 11 items,
+`hitsMax == 4`, the blocked list still false, 47 levels, 78 crossings, and
+all sixteen chain assertions.
+
+Then the question §9.1 left open, put to the game:
+
+| fixture | model | game |
+|---|---|---|
+| `l71-button-lock` — hold 101 ticks, then walk | y = 116.45 | **116.44999999999997** |
+| `l71-lock-shut` — walk immediately | y = 178.500 | **178.5**, pinned on the south face |
+
+**The pair is the point.** The first alone is satisfied by a lock that was
+never shut; the second alone by a player who never moves. Together they say
+the lock was real, the hold opened it, and the crossing works — so
+**darkshield and darksuit are reachable and R2's claim is 8 items**. It is
+also the first oracle evidence for the 101-tick fade, the clamped alpha and
+the occupancy guard.
+
+### 10.5 Slice 5a — the tiers, and the hole the tier opened
+
+`--tier=fast` (18 tapes, ~4 min) / `--tier=full` (25, the default and the
+gate). The split is on TICK COUNT read from each tape, not a name list that
+would rot.
+
+⚠ **Adding the tier immediately caused the failure it was most likely to
+cause.** `r1AcceptanceFindings` returned an EMPTY list when a sweep replayed
+none of the R1 tapes — exactly what `--tier=fast` does — so the run printed
+`ALL CHECKS PASSED` without ever mentioning that R1's claim had not been
+looked at. Both halves are a named SKIP now, carrying the command that
+would assert them, and there is a vitest case for the replayed-nothing path
+specifically.
+
+## 11. WHAT IS NOT DONE, and what it needs
+
+**The R2 walk itself is not built.** Everything it depends on is, and is
+verified; the walk is the remaining work.
+
+- **`synthesizeLegs` cannot yet plan a `noclip: false` walk.** `botDriverV2`
+  hardcodes `noclip: Boolean(relax)`, so the relaxed path is always noclip.
+  R2's walk needs a relax shape that keeps collision ON while carrying
+  `noHazards`, `grants` and `persistence`.
+- **The planner needs a HOLD primitive.** L71's crossing is "stand on
+  (120,184) for 101 ticks, then walk north" — a leg step the leg vocabulary
+  (`targets`, `exit`, `contacts`) has no word for. The executor has to
+  verify it too, or a hold that silently ran 99 ticks would present as a
+  collision divergence.
+- **The route must be re-planned** over post-clear geometry, with
+  `(level, component)` ids computed from the CLEARED world (a cleared lock
+  merges components) — the recon instrument in slice 0 does this at pixel
+  resolution and its conclusions are §8.2/§8.3, but the committed planner
+  has not been moved over.
+- **The recordings.** ~8 segments plus a headline, at ~55 min for a full
+  sweep, with the segment boundaries chosen so a re-route touches the
+  fewest tapes (the R1 lesson).
+- **The acceptance readout** for the 8-item claim and `hitsMax == 3`.
+
+Everything above is unblocked: the geometry, the masks, the census, the
+Activators, the tape format, the build, the gate and the tiers are all in
+and green.
