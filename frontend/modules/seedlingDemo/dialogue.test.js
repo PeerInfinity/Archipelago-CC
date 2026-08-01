@@ -21,6 +21,9 @@ import {
     stepDialogue,
     validChar,
 } from './dialogue.js';
+import { loadExpectation, loadTape } from './fixtures/index.js';
+import { atlasLevelSource } from './levelSource.js';
+import { runTape, runTapeToStream } from './tapeRunner.js';
 
 /** The seven texts R3 collects, verbatim from their `Pickups/*.as` ctors. */
 const TEXTS = {
@@ -185,4 +188,102 @@ describe('the carried frame counter', () => {
         expect(cost(fresh)).toBe(9);
         expect(cost(carried)).not.toBe(9);
     });
+});
+
+/**
+ * ── R3 slice 4: THE ORACLE, SEVEN TIMES ───────────────────────────────
+ *
+ * Slice 2 put one ceremony to the game and got it exactly right. Six more
+ * followed, one per remaining item on the R3 claim, and every one of them
+ * reconciled on the first recording — which is the only reason the model
+ * above counts as transcribed rather than fitted: `r3-collect-sword` alone
+ * is one data point, and one data point is satisfied by a constant.
+ *
+ * The claim each fixture makes is `grants: []` and the property TRUE. That
+ * is the crutch retiring, item by item: the boolean goes true because the
+ * game ran the pickup's own `removed()`, not because `Bot.as` wrote it.
+ */
+describe('every R3 collection fixture: the game collected it, and nothing granted it', () => {
+    const levelSource = atlasLevelSource();
+    /** The seven items of the R3 claim, and where the game keeps each one. */
+    const COLLECTIONS = [
+        ['r3-collect-sword', 'sword', 'hasSword', 10],
+        ['r3-collect-shield', 'shield', 'hasShield', 20],
+        ['r3-collect-feather', 'feather', 'hasFeather', 89],
+        ['r3-collect-torch', 'torch', 'hasTorch', 30],
+        ['r3-collect-spear', 'spear', 'hasSpear', 64],
+        ['r3-collect-darkshield', 'darkshield', 'hasDarkShield', 74],
+        ['r3-collect-darksuit', 'darksuit', 'hasDarkSuit', 79],
+    ];
+
+    it.each(COLLECTIONS)('%s: EMPTY grants, one ceremony, the property true',
+        (name, item, property, level) => {
+            const tape = loadTape(name);
+            // ⚠ THE LEDGER CLAIM, per fixture. A grant is a property write on
+            // room entry; an empty list is what makes the true boolean below
+            // evidence about the GAME rather than about `Bot.as`.
+            expect(tape.grants).toEqual([]);
+            expect(tape.persistence).toEqual([]);
+            expect(tape.boot.level).toBe(level);
+            expect(tape.noclip).toBe(false);
+
+            const run = runTape(tape, { levelSource });
+            expect(run.grants).toEqual([]);
+            expect(run.collected).toHaveLength(1);
+            expect(run.collected[0]).toMatchObject({ item, level });
+            expect(run.inventory[property]).toBe(true);
+            // Every OTHER boolean stays false — a model that set them all
+            // would satisfy the line above.
+            const alsoTrue = Object.entries(run.inventory)
+                .filter(([k, v]) => v === true && k !== property);
+            expect(alsoTrue).toEqual([]);
+        });
+
+    it.each(COLLECTIONS)('%s: the model reproduces the RECORDING tick for tick',
+        (name) => {
+            const oracle = loadExpectation(name);
+            expect(oracle.provisional, `${name} is a real recording`).toBe(false);
+            const model = runTapeToStream(loadTape(name), { levelSource });
+            expect(model.ticks.length).toBe(oracle.stream.ticks.length);
+            for (let i = 0; i < oracle.stream.ticks.length; i++) {
+                expect(model.ticks[i], `${name} tick ${i}`).toMatchObject({
+                    x: oracle.stream.ticks[i].x,
+                    y: oracle.stream.ticks[i].y,
+                    level: oracle.stream.ticks[i].level,
+                });
+            }
+        });
+
+    /**
+     * ⚠ THE SHAPE, from the GAME's own stream rather than from the model.
+     * A ceremony is a run of IDENTICAL observations — the player is frozen
+     * — bracketed by movement on both sides. The tail is the part worth
+     * asserting: velocity SURVIVES a freeze, so the player drifts on for a
+     * few ticks after it lifts, and a model that reset `v` (or that counted
+     * the completing frame as frozen) would show them stopped dead.
+     */
+    it.each(COLLECTIONS)('%s: the recording shows a freeze, then a drift',
+        (name) => {
+            const ticks = loadExpectation(name).stream.ticks;
+            const same = (a, b) => a.x === b.x && a.y === b.y;
+            let start = -1;
+            let end = -1;
+            for (let i = 1; i < ticks.length; i++) {
+                if (same(ticks[i - 1], ticks[i])) {
+                    if (start < 0) start = i - 1;
+                    end = i;
+                } else if (start >= 0) break;
+            }
+            // A freeze long enough to be a dialogue and not a wall.
+            expect(end - start, `${name} freeze length`).toBeGreaterThan(20);
+            // Moving into it...
+            expect(same(ticks[start - 1], ticks[start])).toBe(false);
+            // ...and STILL MOVING out of it, on the completing frame itself.
+            expect(same(ticks[end], ticks[end + 1])).toBe(false);
+            // The drift decays rather than continuing: friction is
+            // subtractive, so the last observations come to a stop.
+            const last = ticks[ticks.length - 1];
+            const prev = ticks[ticks.length - 2];
+            expect(same(prev, last), `${name} came to rest`).toBe(true);
+        });
 });

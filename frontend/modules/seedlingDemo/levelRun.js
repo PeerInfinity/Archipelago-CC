@@ -452,6 +452,22 @@ export function createLevelRun({
         get lockSnaps() { return lockSnaps.map((r) => ({ ...r })); },
         /** Is a touch-lock refusing input RIGHT NOW? The driver's gate. */
         get inputRefused() { return lockSnap !== null; },
+        /**
+         * Is a pickup ceremony up RIGHT NOW?
+         *
+         * ⚠ NOT the same condition as `inputRefused`, and the two must not
+         * be collapsed. A ceremony sets `Game.freezeObjects`, which gates
+         * `Mobile.mobileUpdate` entirely — the tape's movement spans are
+         * inert but its X releases still reach `NPC.talk()`, which is how
+         * the tape drives the dialogue at all. A touch-lock sets
+         * `receiveInput = false`, which gates `Player.input()` — so movement
+         * still happens and nothing at all should be pressed.
+         *
+         * Exists for the fixture author: the number of X releases a ceremony
+         * needs is a function of its text, and reading it off the run is the
+         * alternative to counting pages by hand seven times.
+         */
+        get inCeremony() { return ceremony !== null; },
         /** `{t, level, items}` per grant that fired, in firing order. */
         get grantsFired() { return firedGrants.map((g) => ({ ...g, items: [...g.items] })); },
         /**

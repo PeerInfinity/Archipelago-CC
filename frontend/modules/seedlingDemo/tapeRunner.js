@@ -185,6 +185,7 @@ export function createTapeStepper(tape, opts = {}) {
                 transitions: run ? run.transitions : [],
                 transports: run ? run.transports : [],
                 lockSnaps: run ? run.lockSnaps : [],
+                collected: run ? run.collected : [],
                 grants: run ? run.grantsFired : [],
                 inventory: run ? run.inventory : null,
                 last: tick === t.tick_count,
@@ -228,6 +229,12 @@ export function createTapeStepper(tape, opts = {}) {
             // two-sidedly, and a ShieldLock is the second thing on the ladder
             // that refuses input by design.
             lockSnaps: run ? run.lockSnaps : [],
+            // R3: one record per COMPLETED pickup ceremony. The other half
+            // of the crutch ledger — `grants` is what was HANDED over and
+            // this is what was WALKED ONTO, so "collected for real, not
+            // granted" is exactly the statement that the first is empty and
+            // this one is not.
+            collected: run ? run.collected : [],
             final: run ? run.state : state,
             // The R0 relaxations' JS-side outcome. `inventory` is a MIRROR —
             // an acceptance assertion reads `botStatus.items` from the game,

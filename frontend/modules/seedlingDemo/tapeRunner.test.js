@@ -532,6 +532,7 @@ describe('the incremental stepping face (watch page)', () => {
         expect(r.value.transitions).toEqual(whole.transitions);
         expect(r.value.transports).toEqual(whole.transports);
         expect(r.value.lockSnaps).toEqual(whole.lockSnaps);
+        expect(r.value.collected).toEqual(whole.collected);
         expect(r.value.grants).toEqual(whole.grants);
         expect(r.value.inventory).toEqual(whole.inventory);
         expect(r.value.final).toEqual(whole.final);

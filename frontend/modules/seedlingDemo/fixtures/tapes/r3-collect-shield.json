@@ -1,0 +1,49 @@
+{
+  "tape_version": 3,
+  "game": "seedling",
+  "name": "r3-collect-shield",
+  "description": "shield@112,48 in level 20 (tag 2), the second item on every walk this arc has ever planned. L20 also holds the shieldlocknorm@176,16 that R3 does NOT touch — it is a DIFFERENT lock class argument (_type 0, so Player.hasShield), and the one R3 opens by hand is L71's dark one. Boots 24 px south of the pickup and walks north onto it, then talks its ceremony through with four X releases spaced EIGHT ticks apart. grants is EMPTY: the property becomes true because the game ran the pickup's own removed(), not because anything wrote it. What the tape pins is the ceremony's COST — contact freezes the game for the 150-frame specialTimer, which the bot's dead-frame gate skips entirely, and then the tick counter runs on through the dialogue while the player still cannot move, because Game.freezeObjects has several writers and no per-frame reset: it reads true inside Mobile.mobileUpdate and false again at the next frame's gate. That is what lets the tape supply the releases at all, since NPC.talk() reads Input.released from the NPC's own update, outside the frozen block. The spacing is load-bearing rather than tidy: slashTimer is 20, a press that lands after the ceremony reaches useItem(Main.primary), and two within twenty ticks is a DASH that moves the player. The walk key is released ON the contact tick, so no span at all overlaps the freeze. The last eight ticks are empty and are the point of the tail: velocity SURVIVES a freeze, so the player drifts on for a few ticks before friction stops them. Not driver-synthesized, because every planner on this ladder treats a pickup as an avoid volume and refuses to walk into one; the press schedule was read off the model's own dialogue and the recording is what decides whether it was right.",
+  "boot": {
+    "level": 20,
+    "x": 112,
+    "y": 72
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [
+    "water",
+    "lava",
+    "ice",
+    "waterfall"
+  ],
+  "grants": [],
+  "persistence": [],
+  "tick_count": 54,
+  "inputs": [
+    {
+      "key": "up",
+      "from": 0,
+      "to": 17
+    },
+    {
+      "key": "primary",
+      "from": 17,
+      "to": 18
+    },
+    {
+      "key": "primary",
+      "from": 26,
+      "to": 27
+    },
+    {
+      "key": "primary",
+      "from": 35,
+      "to": 36
+    },
+    {
+      "key": "primary",
+      "from": 44,
+      "to": 45
+    }
+  ]
+}
