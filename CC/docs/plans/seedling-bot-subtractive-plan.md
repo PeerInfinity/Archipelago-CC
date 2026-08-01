@@ -303,13 +303,26 @@ exact differential green on everything modelled, (d) updates the honest
     despawning (and its span lives in a `<node>` the extract was dropping);
     `chest` IS clearable and was missing from the list; the statues are
     plain hitboxes, not pixelmasks. The route bill is **69** tags, not ~93.
-- **R3 — interactions + real collection.** Item USE lands (X-press swings,
-  `genericHit`, persistence flips): breakable rocks/ropes (Sword OR Spear),
-  then locks (keys/shield/wand/magical). Real walk-over collection retires
-  the item grants (ceremony dead-frames + auto-advance + the Witch
-  dialogue); the persistence grants from R2 retire class by class. May
-  split into R3a (collection) / R3b (destructibles) / R3c (locks) —
-  cheapest-first within the rung.
+- **R3 — interactions + real collection. RULED (user 2026-08-01) +
+  kickoff ready: `seedling-bot-r3-opus-kickoff.md`.** ONE kickoff, ordered
+  slices (not the R3a/b/c split); raw tapes + CHUNKED `botLoadTape` (span
+  ceiling measured first; the directive-tape transition is its own arc
+  between R4 and R5); **target 11 items REAL-collected and REAL-opened**
+  (`hitsMax == 4` returns as a positive) with named exceptions only where
+  the opener is enemy-shaped. Slice order: ceremony collection
+  (`Bot.autoAdvance`'s FIRST live fire — probe against the existing build
+  BEFORE the batch) → talk seals (karlore; the Witch needs `hasWand` HELD,
+  so wand-before-witch is a real ordering constraint again) → slash/spear
+  + breakables + the bridge → touch-locks (ShieldLock's position-snap
+  input-window ceremony) + pushing → wand-shot activators (projectile
+  model, most novel, last). ⚠ Taxonomy correction from recon: `WandLock`
+  is only a SKIN over base `Lock` — base locks open via activators
+  (`tSet >= 0`, buttons; wand-buttons are pressed by wand PROJECTILES) or
+  via `totalEnemies() == 0` (`tSet == -1`) — **kill-enemy locks are
+  R5-shaped and stay cleared as named exceptions**. Swings/shots only in
+  enemy-free rooms (a hit consumes RNG, spawns attracting coins, and
+  decrements `totalEnemies()` — silently opening kill-locks); every
+  opened-blocker claim is a PAIR (the l71 pattern).
 - **R4 — the remaining hazards come back** (pits already live since R1),
   per hazard, cheapest first: lava (darksuit), ice (friction rewrite), and
   **water/swim LAST** (user ruling 2026-07-31: leave sound for last — the

@@ -1646,7 +1646,10 @@ routes themselves remain untried.
       recordings frozen + tiered sweep — pays the blocking-role class table
       (sizing: v2 kickoff §13) + pixelmask extraction; interactive blockers
       bridged by named persistence grants
-- [ ] R3: interactions + real collection (item use, rocks/ropes, locks;
+- [ ] R3: interactions + real collection — **RULED 2026-08-01, kickoff
+      ready** (`NewDocs/plans/seedling-bot-r3-opus-kickoff.md`): one rung,
+      ordered slices; target 11 real; raw tapes + chunked load;
+      kill-enemy locks stay cleared → R5 (item use, rocks/ropes, locks;
       grants retired) — absorbs old v3/v4's item-gate + puzzle scope
 - [ ] R4: remaining hazards return (pits live since R1): water/swim (⚠ sound-stub
       recon decides exactness), lava, ice

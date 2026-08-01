@@ -2949,16 +2949,29 @@ Claude, accepted by user). Full detail in `region-atlas-plan.md` Phase 8.**
   grant crutch does not consult her. First place on the ladder where a
   grant asserts something the game's own logic refuses; R3 retires it.
 
-- **QUEUE NEXT for this arc: R3 — interactions + real collection.** Item
-  USE (X-press swings, `genericHit`, persistence flips), which retires the
-  clear crutch class by class; PUSHING (deferred here — it buys nothing
-  alone, since both `wand` and `health` are item-USE gated behind their
-  pushables); and real walk-over collection, which retires the item grants
-  and with them the darksword anomaly above. Two debts R1 took on land
-  here and R2 made both concrete: `bosstotem` prices inert only because
-  grants are property writes, and **a Bridge is Solid only because no
-  attack key is pressed** — R2 found three on the route and L63's is what
-  seals the health room.
+- **QUEUE NEXT for this arc: R3 — interactions + real collection — RULED
+  + KICKOFF READY: `NewDocs/plans/seedling-bot-r3-opus-kickoff.md`**
+  (Fable design session 2026-08-01; → `CC/docs/plans/` at implementation
+  start). Three rulings (user): ONE kickoff with ordered slices; **raw
+  tapes + chunked `botLoadTape`** (span ceiling measured first; the
+  directive-tape/script transition is its own arc between R4 and R5);
+  **target 11 items REAL-collected and REAL-opened**, grants and clears
+  retired class by class, named exceptions only where the opener is
+  enemy-shaped. Slice order: ceremony collection (auto-advance's FIRST
+  live fire — probe against the existing build BEFORE the one AS3 batch)
+  → talk seals (karlore; Witch needs `hasWand` held — ordering is real
+  again) → slash/spear + breakables + bridge → touch-locks + pushing →
+  wand-shot activators. ⚠ Recon corrections: `WandLock` is a SKIN over
+  base `Lock` — wand-buttons are pressed by PROJECTILES, and
+  `tSet == -1` locks open on `totalEnemies() == 0` (**R5-shaped, stay
+  cleared as named exceptions**). Swings/shots only in enemy-free rooms
+  (an enemy hit consumes RNG and decrements `totalEnemies()`, silently
+  opening kill-locks). Every opened-blocker claim is a PAIR (l71
+  pattern). The two R1 debts land here as planned: `bosstotem`
+  inert-via-grants, and the Bridge Solid-because-no-attack-key (L63's
+  seals the health room). Slice-0 escalations (circular activator wiring
+  at L38's cover, enemy-room openers, bridge-window semantics, a low span
+  ceiling) go to the user BEFORE implementation.
 
 ## 6. Everything else (unchanged queues)
 
