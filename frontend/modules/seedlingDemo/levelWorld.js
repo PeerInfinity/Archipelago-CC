@@ -1362,6 +1362,39 @@ export const ACTIVATOR_RESPONDERS = new Set([
 export const ACTIVATOR_PRESSERS = new Set(['button', 'buttonroom']);
 
 /**
+ * ⚠ THE CLASSES WHOSE `tSet` THE CONSTRUCTOR DECIDES, not the `.oel`.
+ *
+ * `ShieldLock`'s ctor is `super(_x, _y, -2, _tag, ...)`
+ * (`Puzzlements/ShieldLock.as:26`) and `Game.as:2144-2145` builds it as
+ * `new ShieldLock(o.@x, o.@y, o.@tag, 0|1)` — the group is never passed,
+ * so no `tset` attribute can reach it. Nothing else in `Puzzlements/`
+ * hardcodes one (checked every `super(` call).
+ *
+ * It is a table rather than an `if` because reading `tset` off the
+ * attributes is the DEFAULT and the exception has to be looked up in one
+ * place by all three of its consumers — the despawn test, the presser
+ * list and the responder list. R2 shipped it as an `if`-less default and
+ * got both halves wrong at once: a `shieldlock` joined group 0 (so a
+ * button 176 px away "opened" it) and it stopped despawning on a cleared
+ * flag (because `int("") = 0` is not `< 0`). Both are corrected by this
+ * one lookup, which is the fourth time in this arc an index or a column
+ * has been read against the wrong table.
+ */
+export const FORCED_TSET = Object.freeze({
+    shieldlock: -2,       // ShieldLock.as:26
+    shieldlocknorm: -2,
+});
+
+/** The group an entity is in: its class's forced value, else `tset`, else 0. */
+export function tSetOf(type, attrs) {
+    const forced = FORCED_TSET[type];
+    // ⚠ `int("")` is 0, so a MISSING attribute means group 0 rather than
+    // "no group" — the line three route locks and thirteen of the fourteen
+    // wandlocks turn on.
+    return forced === undefined ? intAttr(attrs, 'tset', 0) : forced;
+}
+
+/**
  * R2: what a CLEARED persistence flag does to each class that reads one.
  *
  * Every entry was read at its own `check()` or constructor. The three
@@ -1787,7 +1820,7 @@ export function buildLevelWorld(levelRecord, { roles = ROLES, cleared = null } =
                 // — so a lock with no `tset` attribute is in group 0 and does
                 // NOT despawn. Three route locks and thirteen of fourteen
                 // wandlocks turn on this line.
-                if (intAttr(e.attrs, 'tset', 0) < 0) clearedHere = true;
+                if (tSetOf(e.type, e.attrs) < 0) clearedHere = true;
             }
             if (response === 'arm') {
                 fail(`${where}: the tape clears tag ${entityTag}, which is a `
@@ -1839,7 +1872,7 @@ export function buildLevelWorld(levelRecord, { roles = ROLES, cleared = null } =
             // the proximity hazard R0 priced. One geometry, two questions.
             pressers.push({
                 tag: e.type,
-                t: intAttr(e.attrs, 'tset', 0),
+                t: tSetOf(e.type, e.attrs),
                 rect: entityRect(cls.hazard, x, y),
                 x,
                 y,
@@ -1892,7 +1925,7 @@ export function buildLevelWorld(levelRecord, { roles = ROLES, cleared = null } =
                 activators.push({
                     id: solid.activatorId,
                     tag: e.type,
-                    t: intAttr(e.attrs, 'tset', 0),
+                    t: tSetOf(e.type, e.attrs),
                     rect: solid.rect,
                     x,
                     y,

@@ -527,6 +527,165 @@ function coastThroughTransport(run, perTick, maxTicks, what) {
 }
 
 /**
+ * ── THE HOLD PRIMITIVE (R2) ───────────────────────────────────────────
+ *
+ * "Stand on (120,184) for 101 ticks, then walk north" is not a target, and
+ * the leg vocabulary — `targets`, `exit`, `contacts` — had no word for it.
+ * L71's `lock@112,160` is the only way into Dungeon 7 and it opens on
+ * nothing but time on the `button@112,176` directly below it, so R2's walk
+ * needs one.
+ *
+ * A hold is written on the target it follows:
+ *
+ *     { x: 120, y: 184, hold: { ticks: 101, presser: { x: 112, y: 176 } } }
+ *
+ * — walk there as usual, then press NOTHING for `ticks` ticks. The presser
+ * is named by its OEL coordinates and resolved through `world.pressers`,
+ * exactly as an `exit` names a teleporter: the driver never searches for a
+ * button that would do, and an index into a list is never carried across a
+ * regeneration. (An index read against the wrong table has bitten this arc
+ * four times.)
+ *
+ * ⚠ THE EXECUTOR VERIFIES THE HOLD, FROM THE RUN'S OWN STATE. Emitting N
+ * empty ticks and moving on would make a hold that ran 99 of them present
+ * as a collision divergence 2,000 ticks later, in another level, against a
+ * lock nobody was looking at. So every tick of it is checked: the position
+ * did not change, the box is still inside the presser, and nothing crossed
+ * a level boundary. Then the EFFECT is checked — every responder sharing
+ * the presser's group is open in the run's own activator state. A hold one
+ * tick short fails HERE, by name, with the count.
+ *
+ * ⚠ And it is refused outright under `noclip`. The relaxed arm hands
+ * `stepV2` a null activator set and models no lock at all, so a hold there
+ * would emit its ticks, verify nothing, and report success for a mechanic
+ * that was not running. That is the shape of a check that cannot fail.
+ */
+/** Shape-check a `hold` before anything is planned or driven with it. */
+export function assertHold(hold, what) {
+    if (hold === null || typeof hold !== 'object' || Array.isArray(hold)) {
+        fail(`${what}: hold must be { ticks, presser: {x, y} }`);
+    }
+    if (!Number.isInteger(hold.ticks) || hold.ticks < 1) {
+        fail(`${what}: hold.ticks must be a positive integer, got `
+            + `${JSON.stringify(hold.ticks)}. The count is the CLAIM — a Lock opens on `
+            + '101 and a Cover on 11 — so there is no default for it.');
+    }
+    const p = hold.presser;
+    if (!p || !Number.isFinite(p.x) || !Number.isFinite(p.y)) {
+        fail(`${what}: hold.presser must be the button's OEL {x, y}`);
+    }
+}
+
+/**
+ * The presser a hold NAMES, resolved through the world's own table.
+ *
+ * By OEL coordinates, exactly as an `exit` names a teleporter — never by
+ * index, and never by searching for a button that would do. An index into
+ * a regenerated list is the failure this arc has now met four times.
+ */
+export function resolvePresser(world, named, what) {
+    const presser = world.pressers.find((p) => p.x === named.x && p.y === named.y);
+    if (!presser) {
+        fail(`${what}: level ${world.level} has no presser at (${named.x},${named.y}); `
+            + `it has [${world.pressers.map((p) => `${p.tag}@${p.x},${p.y}(t=${p.t})`)
+                .join(' ') || 'none'}]. A hold names its button by OEL coordinates — `
+            + 'the driver does not search for one that would do.');
+    }
+    // The R1 rect lesson, at the one boundary this primitive imports a rect
+    // across: a rect with no `right`/`bottom` never overlaps anything, so
+    // every check against it would pass and the hold would be green by
+    // construction.
+    assertRect(presser.rect, `${what}: ${presser.tag}@${presser.x},${presser.y} rect`);
+    return presser;
+}
+
+function runHold(run, perTick, hold, what) {
+    if (run.openActivators === null) {
+        fail(`${what}: a hold is a MECHANIC, and the noclip arm does not run it — `
+            + '`advance` hands `stepV2` a null activator set, so the hold would emit '
+            + 'its ticks, verify nothing and report success. A tape that holds a '
+            + 'button must declare noclip: false.');
+    }
+    const { ticks } = hold;
+    const presser = resolvePresser(run.world, hold.presser, what);
+
+    const group = run.world.activators.filter((a) => a.t === presser.t);
+    if (group.length === 0) {
+        fail(`${what}: ${presser.tag}@${presser.x},${presser.y} presses group `
+            + `t=${presser.t}, which NO responder in level ${run.level} answers — the `
+            + `level's responders are [${run.world.activators
+                .map((a) => `${a.id}(t=${a.t})`).join(' ') || 'none'}]. Holding it `
+            + 'would open nothing.');
+    }
+    // ⚠ THE POSITIVE CONTROL, BEFORE THE NEGATIVE. "The lock is open after
+    // the hold" is satisfied by a lock that was never shut — the same
+    // vacuity `l71-lock-shut` exists to close on the game's side. So the
+    // responders this hold CHANGES are recorded here, and a hold that
+    // changes nothing is a named failure rather than a silent pass.
+    const openBefore = run.openActivators;
+    const shutBefore = group.filter((a) => !openBefore.has(a.id));
+    if (shutBefore.length === 0) {
+        fail(`${what}: every responder in group t=${presser.t} `
+            + `[${group.map((a) => a.id).join(' ')}] is ALREADY OPEN before the hold `
+            + 'begins, so holding the button proves nothing about it. A hold that '
+            + 'changes nothing is a check that cannot fail.');
+    }
+
+    const start = { x: run.state.x, y: run.state.y };
+    if (!rectsOverlap(playerBoxAt(start.x, start.y), presser.rect)) {
+        fail(`${what}: the hold point (${start.x},${start.y}) is NOT on `
+            + `${presser.tag}@${presser.x},${presser.y} `
+            + `[${presser.rect.x},${presser.rect.right}) x `
+            + `[${presser.rect.y},${presser.rect.bottom}). The target before a hold has `
+            + 'to land the player box inside the button, not near it.');
+    }
+
+    for (let i = 1; i <= ticks; i++) {
+        perTick.push(NO_HELD);
+        const { transition } = run.advance(NO_HELD);
+        if (transition) {
+            fail(`${what}: hold tick ${i} of ${ticks} crossed from level `
+                + `${transition.from_level} to ${transition.to_level}. A hold stands `
+                + 'still; a button that is also a trigger is a routing defect.');
+        }
+        const s = run.state;
+        if (s.x !== start.x || s.y !== start.y) {
+            fail(`${what}: hold tick ${i} of ${ticks} MOVED, from `
+                + `(${start.x},${start.y}) to (${s.x},${s.y}). A hold presses nothing `
+                + 'from a full stop, so a position that changes means the arrival was '
+                + 'still carrying velocity or something moved the player.');
+        }
+        if (!rectsOverlap(playerBoxAt(s.x, s.y), presser.rect)) {
+            fail(`${what}: hold tick ${i} of ${ticks} is no longer inside `
+                + `${presser.tag}@${presser.x},${presser.y}.`);
+        }
+    }
+
+    // ⚠ THE EFFECT, not the ceremony. Everything above says the player stood
+    // there; only this says the game answered. `Button.update` republishes
+    // its flag every tick and `Lock.activationStep` fades by 0.01 with
+    // `Image.alpha` clamping at 0 and the test BEFORE the decrement, so a
+    // lock opens on tick 101 and 100 leaves it solid.
+    const open = run.openActivators;
+    const shut = group.filter((a) => !open.has(a.id));
+    if (shut.length > 0) {
+        fail(`${what}: held ${presser.tag}@${presser.x},${presser.y} for ${ticks} `
+            + `tick(s) and [${shut.map((a) => `${a.id}(${a.tag})`).join(' ')}] `
+            + `${shut.length === 1 ? 'is' : 'are'} STILL SOLID. A Lock needs 101 `
+            + 'continuous ticks and a Cover 11 — one short opens nothing, and the walk '
+            + 'would meet the wall somewhere it was certified clear.');
+    }
+    return {
+        presser: { tag: presser.tag, x: presser.x, y: presser.y, t: presser.t },
+        ticks,
+        at: { ...start },
+        // The responders this hold CHANGED — shut when it started, open when
+        // it ended. Not the whole group: one already open proves nothing.
+        opened: shutBefore.map((a) => a.id),
+    };
+}
+
+/**
  * Drive the run to `target`, one bang-bang tick at a time.
  *
  * `until` is `'arrival'` (v1's criterion: within tolerance AND stopped) or
@@ -714,6 +873,7 @@ export function synthesizeLegs(legs, opts = {}) {
     const perTick = [];
     const arrivals = [];
     const waypoints = [];
+    const holds = [];
 
     legs.forEach((leg, li) => {
         if (run.level !== leg.level) {
@@ -742,7 +902,33 @@ export function synthesizeLegs(legs, opts = {}) {
                 + `NOT in at (${run.state.x},${run.state.y}). A stale declaration `
                 + 're-permits something the route no longer touches.');
         }
-        const legContacts = declared;
+        /**
+         * ⚠ A HOLD'S BUTTON IS A CONTACT THE LEG IS PERMITTED TO TOUCH.
+         *
+         * A `button` is an R0 avoid volume — the presser rect IS the
+         * proximity-hazard rect, one geometry answering two questions — so
+         * without this the planner refuses to route onto it and, worse, the
+         * executor's volume detector throws the moment the walk arrives on
+         * the very thing the hold exists to stand on.
+         *
+         * The exemption is added to the PLAN set only. The leg-start
+         * assertions above still read `leg.contacts` alone, so a hold
+         * cannot smuggle in a declaration the leg does not actually make on
+         * arrival, and a stale one is still a throw. It is leg-scoped
+         * rather than moment-scoped, which is the same bounded
+         * over-permission the FORCED CONTACTS docblock records: a leg that
+         * clipped its own button somewhere other than the hold would not be
+         * caught here. What catches that instead is the hold's own
+         * verification — the button it stands on is the button it names.
+         */
+        const legContacts = new Set(declared);
+        (leg.targets ?? []).forEach((t, ti) => {
+            if (!t?.hold) return;
+            const what = `legs[${li}] level ${leg.level} target ${ti} hold`;
+            assertHold(t.hold, what);
+            const p = resolvePresser(run.world, t.hold.presser, what);
+            legContacts.add(`proximity-hazard:${p.tag}@${p.x},${p.y}`);
+        });
         // A persistence effect exists only from the leg that CAUSED it. The
         // first visit to L37 is before the button is pressed and the rock is
         // still parked at y = -16; pricing it there would be over-avoiding a
@@ -792,6 +978,15 @@ export function synthesizeLegs(legs, opts = {}) {
                 y: run.state.y,
                 level: run.level,
             });
+            if (target.hold) {
+                const from = perTick.length;
+                const record = runHold(run, perTick, target.hold,
+                    `legs[${li}] level ${leg.level} target ${ti} hold`);
+                holds.push({
+                    leg: li, index: ti, level: leg.level, from, to: perTick.length,
+                    ...record,
+                });
+            }
         });
 
         if (!leg.exit) {
@@ -921,6 +1116,11 @@ export function synthesizeLegs(legs, opts = {}) {
         arrivals,
         transitions: run.transitions.map((t) => ({ ...t })),
         waypoints,
+        // One record per HOLD the run actually verified: which button, for
+        // how many ticks, over which tick range, and which responders it
+        // opened. The tape itself is only empty spans, so this is the ONLY
+        // place a consumer can find out that the walk holds anything at all.
+        holds: holds.map((h) => ({ ...h, opened: [...h.opened] })),
         grants: relax ? run.grantsFired : [],
         inventory: relax ? run.inventory : null,
     };

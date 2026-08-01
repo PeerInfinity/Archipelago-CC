@@ -922,3 +922,162 @@ describe('R2: a relaxed walk with collision ON', () => {
         });
     });
 });
+
+/**
+ * ── R2: THE HOLD ──────────────────────────────────────────────────────
+ *
+ * L71's `lock@112,160` is the only way north into Dungeon 7 and it opens on
+ * nothing but 101 ticks on the `button@112,176` below it. The leg
+ * vocabulary had no word for that, and the executor had no way to tell a
+ * hold that ran 101 ticks from one that ran 99 — which would have
+ * presented as a collision divergence two thousand ticks later, in another
+ * level, against a lock nobody was looking at.
+ *
+ * The geometry that makes this the right fixture: the shaft to the button
+ * is sealed BELOW by `lock@112,192` (tset -1, tag 0), which a persistence
+ * clear despawns, and ABOVE by `lock@112,160` (tset 0, tag 3), which one
+ * does NOT — `Lock.check()` needs `tSet < 0`. So the hold is the only way
+ * through, and the clear is what gets you to the button at all.
+ */
+describe('R2: the hold primitive', () => {
+    const CLEARS = Object.freeze([
+        { level: 71, tag: 0, note: 'lock@112,192 (tset -1) — the shaft below the button' },
+        { level: 71, tag: 1, note: 'chest@160,256' },
+        { level: 71, tag: 2, note: 'shieldlock@288,256' },
+    ]);
+    const R2 = Object.freeze({
+        noclip: false,
+        noDamage: true,
+        noHazards: ['water', 'lava', 'ice', 'waterfall'],
+        grants: [],
+        persistence: [...CLEARS],
+    });
+    /** Tile (7,14), at the foot of the shaft. */
+    const BOOT = Object.freeze({ level: 71, x: 112, y: 224 });
+    const BUTTON = Object.freeze({ x: 112, y: 176 });
+    const LOCK_RECT = Object.freeze({ x: 112, y: 160, right: 128, bottom: 176 });
+
+    const walk = (ticks, opts = {}) => synthesizeLegs([{
+        level: 71,
+        targets: [
+            { x: 120, y: 184, hold: { ticks, presser: { ...BUTTON } } },
+            { x: 120, y: 120 },
+        ],
+    }], { levelSource, boot: { ...BOOT }, relax: R2, name: 'l71-hold', ...opts });
+
+    it('holds, opens the lock, and walks THROUGH where it stood', () => {
+        const { tape, holds, arrivals } = walk(101);
+        expect(holds).toHaveLength(1);
+        expect(holds[0].presser).toEqual({ tag: 'button', x: 112, y: 176, t: 0 });
+        expect(holds[0].ticks).toBe(101);
+        expect(holds[0].to - holds[0].from).toBe(101);
+        expect(holds[0].opened).toEqual(['lock@112,160']);
+
+        // ⚠ THE EFFECT, from an INDEPENDENT replay of the emitted tape —
+        // not from the planner's own running state. The claim is that the
+        // player ends up NORTH of a lock that was solid when the walk
+        // started, which is only possible if the hold really opened it.
+        const stream = runTapeToStream(tape, { levelSource });
+        const through = stream.ticks.filter((o) => o.x >= LOCK_RECT.x && o.x < LOCK_RECT.right
+            && o.y >= LOCK_RECT.y && o.y < LOCK_RECT.bottom);
+        expect(through.length).toBeGreaterThan(0);
+        const last = stream.ticks[stream.ticks.length - 1];
+        expect(last.level).toBe(71);
+        expect(last.y).toBeLessThan(LOCK_RECT.y);
+        expect(Math.abs(last.y - arrivals[1].y)).toBeLessThan(1e-9);
+    });
+
+    it('emits NOTHING during the hold window', () => {
+        // A hold presses no key, so no span may overlap its ticks. A span
+        // that did would be a tape whose two consumers disagree about what
+        // it asked for — the v1 boot asymmetry, one primitive later.
+        const { tape, holds } = walk(101);
+        const { from, to } = holds[0];
+        const overlapping = tape.inputs.filter((s) => s.from < to && s.to > from);
+        expect(overlapping).toEqual([]);
+    });
+
+    /**
+     * ⚠ THE MUTATION THE PRIMITIVE EXISTS FOR. `Image.alpha` clamps at 0
+     * and `Lock.activationStep` tests `alpha > 0` BEFORE decrementing, so
+     * the lock opens on 101 and 100 leaves it solid. One tick short must be
+     * a NAMED failure here, not a wall met somewhere certified clear.
+     */
+    it('goes red on a hold that is one tick short, naming the lock', () => {
+        // ⚠ 90, not 100, and the difference is the mechanic being honest.
+        // `Button.update` presses on OVERLAP, and the approach up the shaft
+        // overlaps the button for a few ticks before the controller comes to
+        // the full stop an arrival requires — so the run reaches the hold
+        // with the fade already part-way down. The declared count is
+        // therefore a FLOOR the author derives from the AS3 (101 for a
+        // Lock), safe to over-state and never to under-state, and what the
+        // executor actually asserts is the EFFECT. 94 is the first count
+        // that opens it here — the approach pressed the other 7 — and 93 is
+        // the last that does not.
+        expect(() => walk(93)).toThrow(/lock@112,160.*STILL SOLID/s);
+        expect(() => walk(93)).toThrow(/held button@112,176 for 93 tick\(s\)/);
+        expect(() => walk(94)).not.toThrow();
+    });
+
+    it('refuses a hold that opens nothing — the positive control', () => {
+        // "The lock is open after the hold" is satisfied by a lock that was
+        // never shut. So a SECOND hold on the same button, with the first
+        // one's lock still held open by occupancy, is a named failure rather
+        // than a free pass. This is `l71-lock-shut`'s job on the JS side.
+        expect(() => synthesizeLegs([{
+            level: 71,
+            targets: [
+                { x: 120, y: 184, hold: { ticks: 101, presser: { ...BUTTON } } },
+                { x: 120, y: 184, hold: { ticks: 101, presser: { ...BUTTON } } },
+            ],
+        }], { levelSource, boot: { ...BOOT }, relax: R2 }))
+            .toThrow(/ALREADY OPEN before the hold begins/);
+    });
+
+    it('refuses a presser the level does not have', () => {
+        expect(() => synthesizeLegs([{
+            level: 71,
+            targets: [{ x: 120, y: 184, hold: { ticks: 101, presser: { x: 0, y: 0 } } }],
+        }], { levelSource, boot: { ...BOOT }, relax: R2 }))
+            .toThrow(/has no presser at \(0,0\)/);
+    });
+
+    it('refuses a hold whose target does not land ON the button', () => {
+        expect(() => synthesizeLegs([{
+            level: 71,
+            // Tile (7,13) — in the shaft, one tile below the button.
+            targets: [{ x: 120, y: 216, hold: { ticks: 101, presser: { ...BUTTON } } }],
+        }], { levelSource, boot: { ...BOOT }, relax: R2 }))
+            .toThrow(/is NOT on button@112,176/);
+    });
+
+    it('refuses a hold under noclip, where it would verify nothing', () => {
+        expect(() => synthesizeLegs([{
+            level: 71,
+            targets: [{ x: 120, y: 184, hold: { ticks: 101, presser: { ...BUTTON } } }],
+        }], {
+            levelSource,
+            boot: { ...BOOT },
+            relax: { ...R2, noclip: true, persistence: undefined },
+        })).toThrow(/the noclip arm does not run it/);
+    });
+
+    it('refuses a tick count that is not a positive integer', () => {
+        for (const ticks of [0, -1, 1.5, undefined, '101']) {
+            expect(() => synthesizeLegs([{
+                level: 71,
+                targets: [{ x: 120, y: 184, hold: { ticks, presser: { ...BUTTON } } }],
+            }], { levelSource, boot: { ...BOOT }, relax: R2 }))
+                .toThrow(/hold\.ticks must be a positive integer/);
+        }
+    });
+
+    it('is unreachable at all without the clear that opens the shaft', () => {
+        // The positive control for the clear list: the same walk with L71's
+        // tag 0 not cleared cannot even get to the button, because
+        // `lock@112,192` is still standing in the shaft.
+        expect(() => walk(101, {
+            relax: { ...R2, persistence: CLEARS.filter((c) => c.tag !== 0) },
+        })).toThrow(/no walkable tile path in level 71/);
+    });
+});

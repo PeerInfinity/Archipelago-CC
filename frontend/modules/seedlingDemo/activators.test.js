@@ -23,9 +23,11 @@ import { describe, expect, it } from 'vitest';
 import {
     ACTIVATOR_PRESSERS,
     ACTIVATOR_RESPONDERS,
+    FORCED_TSET,
     RELAXED_ROLES,
     buildLevelWorld,
     rect,
+    tSetOf,
 } from './levelWorld.js';
 import { loadExpectation, loadTape } from './fixtures/index.js';
 import { runTapeToStream } from './tapeRunner.js';
@@ -256,12 +258,49 @@ describe('the ORACLE: what the game did, not what the model believes', () => {
         expect(minY(open)).toBeLessThan(120);
     });
 
+    /**
+     * ⚠ THE KNIFE-EDGE, PUT TO THE GAME. The pair above proves a hold
+     * opens the lock; it says nothing about WHEN, and "101" is a number
+     * derived by running a float loop in `opensOnTick`. These two tapes
+     * differ in exactly one field — `tick_count`, 101 against 102 — and the
+     * game answers them differently. That is what makes a hold one tick
+     * short a red on the ORACLE stratum and not only in the executor.
+     *
+     * Both walk into the lock immediately and are pinned on its south face,
+     * pressing the button from there because the box still overlaps it. So
+     * the 101st tick is the one `Lock.turnOff()` runs on and the 102nd is
+     * the first on which the player can move.
+     */
+    it('answers 101 ticks and 102 ticks DIFFERENTLY', () => {
+        const shut = loadExpectation('l71-hold-101-shut');
+        const open = loadExpectation('l71-hold-102-open');
+        expect(shut.provisional, 'l71-hold-101-shut is a real recording').toBe(false);
+        expect(open.provisional, 'l71-hold-102-open is a real recording').toBe(false);
+
+        const shutTicks = shut.stream.ticks;
+        const openTicks = open.stream.ticks;
+        // One tick of tape, and nothing else, separates them: every
+        // observation the shorter tape has, the longer one has identically.
+        expect(openTicks.length).toBe(shutTicks.length + 1);
+        shutTicks.forEach((o, i) => expect(openTicks[i], `tick ${i}`).toEqual(o));
+
+        // Pinned for the whole of the shorter tape, from the tick it
+        // first reaches the lock's south face onwards.
+        const pinnedFrom = shutTicks.findIndex((o) => o.y === 178.5);
+        expect(pinnedFrom).toBeGreaterThan(0);
+        expect(new Set(shutTicks.slice(pinnedFrom).map((o) => o.y)))
+            .toEqual(new Set([178.5]));
+        // ...and moved on the one tick the longer tape adds.
+        expect(openTicks[openTicks.length - 1].y).toBeLessThan(178.5);
+    });
+
     it('and the MODEL reproduces both, tick for tick', () => {
         // The differential in miniature: the same two tapes through the JS
         // engine must give the game's own streams. This is what makes the
         // 101-tick fade, the clamped alpha and the occupancy guard claims
         // about the GAME rather than about this file.
-        for (const name of ['l71-button-lock', 'l71-lock-shut']) {
+        for (const name of ['l71-button-lock', 'l71-lock-shut',
+            'l71-hold-101-shut', 'l71-hold-102-open']) {
             const oracle = loadExpectation(name).stream;
             const model = runTapeToStream(loadTape(name), { levelSource });
             expect(model.ticks.length, name).toBe(oracle.ticks.length);
@@ -271,5 +310,75 @@ describe('the ORACLE: what the game did, not what the model believes', () => {
                 });
             }
         }
+    });
+});
+
+/**
+ * ── The group a CONSTRUCTOR decides ───────────────────────────────────
+ *
+ * R2 slice 3 shipped `t: intAttr(e.attrs, 'tset', 0)` for every responder
+ * and presser, and the `shieldlock` entry's own comment already said
+ * "ShieldLock.as:26 is a bare super with tSet forced to -2". The code did
+ * not act on the citation, and it was wrong TWICE over in the same place:
+ *
+ *   - a `shieldlock` joined group 0, so any `button` with no `tset` — i.e.
+ *     the default — "opened" it from anywhere in the level. L71's button is
+ *     176 px away from its shieldlock and was opening it.
+ *   - `Lock.check()` needs `tSet < 0` to despawn on a cleared flag, and
+ *     `int("")` is 0, so a shieldlock stopped responding to its own clear.
+ *
+ * Neither was caught by the suite as it stood, which is the whole reason
+ * this block exists: the fix landed green.
+ */
+describe('FORCED_TSET: the group the ctor decides, not the .oel', () => {
+    const levelSource = atlasLevelSource();
+
+    it('reads `tset` off the attributes for everything else', () => {
+        expect(tSetOf('lock', { tset: '3' })).toBe(3);
+        expect(tSetOf('lock', { tset: '-1' })).toBe(-1);
+        // ⚠ `int("")` is 0: a MISSING attribute is group 0, not "no group".
+        expect(tSetOf('lock', {})).toBe(0);
+        expect(tSetOf('button', {})).toBe(0);
+    });
+
+    it('forces -2 for both ShieldLock spellings, whatever the .oel says', () => {
+        expect(FORCED_TSET).toEqual({ shieldlock: -2, shieldlocknorm: -2 });
+        for (const tag of Object.keys(FORCED_TSET)) {
+            expect(tSetOf(tag, {})).toBe(-2);
+            expect(tSetOf(tag, { tset: '0' })).toBe(-2);
+            expect(tSetOf(tag, { tset: '7' })).toBe(-2);
+        }
+    });
+
+    it('keeps L71\'s shieldlock OUT of the button\'s group', () => {
+        // `Game.as:2144-2145` builds it as `new ShieldLock(o.@x, o.@y,
+        // o.@tag, 0|1)` — the group is never passed, so no attribute can
+        // reach it. L71 is the level where it mattered: `button@112,176`
+        // (t = 0) and `shieldlock@288,256` are 176 px apart.
+        const w = buildLevelWorld(levelSource(71));
+        const shield = w.activators.find((a) => a.tag === 'shieldlock');
+        const button = w.pressers.find((p) => p.tag === 'button');
+        expect(shield.t).toBe(-2);
+        expect(button.t).toBe(0);
+        expect(w.activators.filter((a) => a.t === button.t).map((a) => a.id))
+            .toEqual(['lock@112,160']);
+    });
+
+    it('lets a cleared flag despawn a shieldlock, which tset 0 would not', () => {
+        // `Lock.check()` is `tag >= 0 && tSet < 0 && !checkPersistence(tag)`.
+        const shut = buildLevelWorld(levelSource(71));
+        expect(shut.activators.some((a) => a.tag === 'shieldlock')).toBe(true);
+        const cleared = buildLevelWorld(levelSource(71), { cleared: [2] });
+        expect(cleared.activators.some((a) => a.tag === 'shieldlock')).toBe(false);
+        expect(cleared.solids.some((s) => s.tag === 'shieldlock')).toBe(false);
+    });
+
+    it('leaves the tset-0 locks standing, which is the other half', () => {
+        // The contrast pair. L71's `lock@112,160` carries `tset 0` and
+        // `tag 3`, so clearing 3 does NOT remove it — it is the lock the
+        // hold exists to open, and a model that despawned it would make the
+        // whole R2 crossing vacuous.
+        const cleared = buildLevelWorld(levelSource(71), { cleared: [0, 1, 2, 3] });
+        expect(cleared.activators.map((a) => a.id)).toEqual(['lock@112,160']);
     });
 });
