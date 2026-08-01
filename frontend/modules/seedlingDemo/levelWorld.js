@@ -1395,6 +1395,29 @@ export function tSetOf(type, attrs) {
 }
 
 /**
+ * ⚠ THE SAME TRAP, ONE FIELD OVER: the classes whose persistence TAG the
+ * constructor decides.
+ *
+ * `MoonrockPile`'s ctor ends `tag = 0;` (`Scenery/MoonrockPile.as:23`),
+ * discarding the `_tag` it was handed — and the extract's one placement
+ * carries no `tag` attribute at all, so reading the attribute gives -1,
+ * every persistence reader guards on `tag >= 0`, and the pile looks inert.
+ * It is not: with `tag = 0` its `check()` fires on a fresh boot and removes
+ * it. Checked against every `tag = ` assignment in `src/`; this is the only
+ * one.
+ */
+export const FORCED_TAG = Object.freeze({
+    moonrockpile: 0,        // Scenery/MoonrockPile.as:23
+});
+
+/** An entity's persistence tag: its class's forced value, else `tag`, else -1. */
+export function tagOf(type, attrs) {
+    const forced = FORCED_TAG[type];
+    if (forced !== undefined) return forced;
+    return attrs?.tag === undefined ? -1 : Number(attrs.tag);
+}
+
+/**
  * R2: what a CLEARED persistence flag does to each class that reads one.
  *
  * Every entry was read at its own `check()` or constructor. The three
@@ -1418,6 +1441,19 @@ export function tSetOf(type, attrs) {
  * so the DEFAULT is group 0, not "no group". Three locks and thirteen of
  * the fourteen wandlocks on the R1 route do not despawn for that reason,
  * and the R2 brief's census said they all did.
+ *
+ * ⚠⚠ AND THE TABLE IS THE WHOLE ANSWER FOR A CLEARED TAG, so it has to
+ * cover EVERY class that reads one. `grep -rn checkPersistence src/` finds
+ * far more than the five behaviours above: every PICKUP removes itself, a
+ * `MoonrockPile` does the OPPOSITE of a FallRock (it exists only while the
+ * flag is false), a `ButtonRoom` boots ALREADY PRESSED, a `Watcher` stops
+ * updating. The first cut of this table listed twenty tags and the
+ * derivation would happily have cleared a tag a pickup shared — the game
+ * would remove the pickup, the model would keep its avoid volume, and
+ * nothing anywhere would say so. `buildLevelWorld` therefore refuses a
+ * clear that reaches ANY entity with no declared response; the four
+ * REFUSED responses below are the ones that are declared and still
+ * refused, because modelling them is a rung's work rather than a line's.
  */
 export const PERSISTENCE_RESPONSE = Object.freeze({
     chest: 'despawn',                 // Chest.as:41
@@ -1439,7 +1475,226 @@ export const PERSISTENCE_RESPONSE = Object.freeze({
     teleporter: 'trigger',            // Teleporter.as:76-79
     stairsup: 'trigger',              // ...but Stairs forces tag = -1, so inert
     stairsdown: 'trigger',
+
+    // ── the classes the first cut of this table missed ────────────────
+    // Every one carries a tag somewhere in the extract, so every one could
+    // have shared a tag with something the derivation wanted to clear.
+    spinner: 'despawn',               // Enemies/Spinner.as:47-54
+    lavaboss: 'despawn',              // Enemies/LavaBoss.as:62 — and it IS Solid
+    shieldboss: 'despawn',            // Enemies/ShieldBoss.as:56
+    moonrock: 'despawn',              // Scenery/Moonrock.as:60
+    finaldoor: 'despawn',             // Scenery/FinalDoor.as:36
+    // ⚠ A PICKUP REMOVES ITSELF ON A CLEARED FLAG, with `doActions = false`
+    // so nothing is granted. Its avoid volume goes with it. Clearing one is
+    // legal and merely wasteful (R2's grants are property writes and never
+    // touch the pickup), but it MUST be declared: undeclared, the game
+    // would remove it while the model went on routing around it.
+    sword: 'despawn',                 // Pickups/Sword.as:35
+    darksword: 'despawn',             // Pickups/DarkSword.as:35
+    wand: 'despawn',                  // Pickups/Wand.as:46
+    ghostsword: 'despawn',            // Pickups/GhostSword.as:34
+    ghostspear: 'despawn',            // Pickups/GhostSpear.as (Pickup.check)
+    feather: 'despawn',               // Pickups/Feather.as:33
+    shield: 'despawn',                // Pickups/Shield.as:34
+    darkshield: 'despawn',            // Pickups/DarkShield.as:33
+    darksuit: 'despawn',              // Pickups/DarkSuit.as:33
+    conch: 'despawn',                 // Pickups/Conch.as:33
+    health: 'despawn',                // Pickups/HealthPickup.as:38
+    torchpickup: 'despawn',           // Pickups/Torch.as (Pickup.check)
+    firewand: 'despawn',              // Pickups/FireWand.as (Pickup.check)
+
+    // ── declared, and REFUSED ─────────────────────────────────────────
+    // ⚠ `MoonrockPile` is a FallRock in a mirror: `check()` removes it while
+    // the flag is TRUE ("false = there, true = not there", its own comment),
+    // so a fresh boot has none and a CLEAR builds a 32x16 Solid. Its ctor
+    // also forces `tag = 0` (`Scenery/MoonrockPile.as:23`) whatever the .oel
+    // says — the second forced constructor value in this file. One exists,
+    // in L2, which is the third level of the walk.
+    moonrockpile: 'appear',           // Scenery/MoonrockPile.as:23-32
+    // ⚠ `ButtonRoom` reads `_active = !checkPersistence(tag)`
+    // (`Puzzlements/ButtonRoom.as:43`), so a cleared tag boots it ALREADY
+    // PRESSED and its group starts fading from frame one. `activators.js`
+    // presses on the player alone and would report those locks shut for the
+    // whole run.
+    buttonroom: 'press',              // Puzzlements/ButtonRoom.as:43
+    // `Watcher.update` runs `super.update()` only while the flag holds
+    // (`NPCs/Watcher.as:62-66`), so a clear SILENCES it — the talk circle
+    // stops firing. Harmless in itself, and the model keeps pricing the
+    // circle, which over-avoids in the safe direction. Allowed, recorded.
+    watcher: 'silence',               // NPCs/Watcher.as:44-66
+    // `LightPole.activate = !checkPersistence(tag)` drives a light radius;
+    // its type is "LightPole", which is in no solids list, and nothing this
+    // model consults reads `activate`.
+    lightpole: 'cosmetic',            // Scenery/LightPole.as:50
+    // `Oracle` picks which of two strings it says. Its collider does not move.
+    oracle: 'cosmetic',               // NPCs/Oracle.as:26
 });
+
+/**
+ * The declared responses a clear list may NOT name, and why in one line.
+ *
+ * Declared-and-refused is a different thing from unclassified: these are
+ * read, cited and understood, and modelling them is a rung's work.
+ */
+/**
+ * Classes a derived clear list will not name, even though their response
+ * IS modelled — because the ruled crutch is narrower than the mechanism.
+ *
+ * R2's persistence clear stands in for "interactive blockers the bot
+ * cannot yet operate" (locks, breakable rocks, ropes, burnable trees).
+ * `Game.checkPersistence` is not that narrow: the same flag despawns a
+ * pickup and a boss. Clearing either would work, and would be a rung's
+ * crutch smuggled in through a derivation nobody re-read — an enemy
+ * removed is R5's subject and an item removed is the game's own state.
+ */
+export const CLEAR_EXCLUDED = Object.freeze({
+    sword: 'a pickup — the game\'s item, not a blocker',
+    darksword: 'a pickup — the game\'s item, not a blocker',
+    wand: 'a pickup — the game\'s item, not a blocker',
+    ghostsword: 'a pickup — the game\'s item, not a blocker',
+    ghostspear: 'a pickup — the game\'s item, not a blocker',
+    feather: 'a pickup — the game\'s item, not a blocker',
+    shield: 'a pickup — the game\'s item, not a blocker',
+    darkshield: 'a pickup — the game\'s item, not a blocker',
+    darksuit: 'a pickup — the game\'s item, not a blocker',
+    conch: 'a pickup — the game\'s item, not a blocker',
+    health: 'a pickup — the game\'s item, not a blocker',
+    torchpickup: 'a pickup — the game\'s item, not a blocker',
+    firewand: 'a pickup — the game\'s item, not a blocker',
+    spinner: 'an ENEMY — despawning one is R5, not a blocker crutch',
+    lavaboss: 'an ENEMY (and a Solid) — despawning one is R5, not a blocker crutch',
+    shieldboss: 'an ENEMY — despawning one is R5, not a blocker crutch',
+    moonrock: 'it WRITES persistence(0, false, 2) across levels (Moonrock.as:135) — '
+        + 'the endgame namespace is untouchable',
+    finaldoor: 'the ENDGAME door (FinalDoor.as:36) — untouchable',
+});
+
+/**
+ * `(level, tag)` pairs no clear list may name, whatever carries them.
+ *
+ * `FinalDoor.as:50` reads `!checkPersistence(0, 114)` — "0 is the tag for
+ * the Watcher's text, while 114 is the room that it refers to", in its own
+ * comment — from level 113. So the flag that decides whether the ending
+ * opens lives in a level nothing else on any route cares about, under a
+ * tag that looks exactly like every other NPC dialogue flag. Named here so
+ * it can never be reached by a derivation.
+ */
+export const UNTOUCHABLE_CLEARS = Object.freeze([
+    Object.freeze({
+        level: 114,
+        tag: 0,
+        why: "the Watcher flag FinalDoor reads as \"talked to the Watcher\" "
+            + '(FinalDoor.as:50)',
+    }),
+]);
+
+export const REFUSED_CLEAR_RESPONSES = Object.freeze({
+    arm: 'clearing it does not remove it — it BUILDS IT FALLEN, Solid and live, '
+        + "and its update writes the player's y",
+    appear: 'it exists ONLY while its flag is false, so a clear ADDS a 32x16 Solid '
+        + 'that a fresh boot does not have',
+    press: 'a cleared tag boots it ALREADY PRESSED, so its whole Activators group '
+        + 'starts fading from frame one — which `activators.js` does not model',
+});
+
+/**
+ * The `(level, tag)` clears a level OFFERS, derived from its own entities.
+ *
+ * ⚠ DERIVED, NEVER AUTHORED. The R2 clear list is ~40 pairs of numbers, and
+ * a hand-written one is unreviewable — the brief's own census got it wrong
+ * three ways (it said 36 locks despawn when 16 do; it missed `chest`
+ * entirely; it called a rope a despawn when it shrinks). So the list is
+ * computed from the extract, every entry names the blocker it removes, and
+ * the ones that are REFUSED are returned too, with the reason, rather than
+ * silently absent. An empty findings list and a clean pass look identical;
+ * a refusal that is not printed is a bounded sweep that did not say what
+ * it bounded.
+ *
+ * A tag is offered when clearing it removes or shrinks at least one thing
+ * the walk would otherwise have to go around — a solid, a pixelmask, a
+ * pickup volume or a proximity hazard. A tag carried only by a teleporter
+ * or a lightpole is not a blocker and is not offered: a clear that opens a
+ * door nobody asked to open is a route change nobody reviewed.
+ *
+ * @returns {{offered: Array<{level, tag, note, removes}>,
+ *            refused: Array<{level, tag, why}>}}
+ */
+export function persistenceClearsFor(levelRecord) {
+    const level = levelRecord.level;
+    const byTag = new Map();
+    for (const e of levelRecord.entities ?? []) {
+        const tag = e.attrs?.tag === undefined ? -1 : Number(e.attrs.tag);
+        if (!(tag >= 0)) continue;
+        if (!byTag.has(tag)) byTag.set(tag, []);
+        byTag.get(tag).push(e);
+    }
+    const offered = [];
+    const refused = [];
+    for (const [tag, entities] of [...byTag.entries()].sort((a, b) => a[0] - b[0])) {
+        const untouchable = UNTOUCHABLE_CLEARS
+            .find((u) => u.level === level && u.tag === tag);
+        if (untouchable) {
+            refused.push({ level, tag, why: untouchable.why });
+            continue;
+        }
+        const unclassified = entities.filter((e) => !PERSISTENCE_RESPONSE[e.type]);
+        if (unclassified.length > 0) {
+            refused.push({
+                level,
+                tag,
+                why: `${[...new Set(unclassified.map((e) => e.type))].join(', ')} `
+                    + 'has no declared persistence response',
+            });
+            continue;
+        }
+        const blocked = entities
+            .map((e) => ({ e, response: PERSISTENCE_RESPONSE[e.type] }))
+            .find(({ response }) => REFUSED_CLEAR_RESPONSES[response]);
+        if (blocked) {
+            refused.push({
+                level,
+                tag,
+                why: `${blocked.e.type}@${blocked.e.x},${blocked.e.y} — `
+                    + `${REFUSED_CLEAR_RESPONSES[blocked.response]}`,
+            });
+            continue;
+        }
+        // ⚠ A CLEAR IS A FLAG, NOT AN ENTITY: it reaches everything in the
+        // level carrying that tag. So one excluded class refuses the whole
+        // tag — a clear that took a lock away and an item with it would be
+        // outside the ruled crutch even though only the lock was wanted.
+        const excluded = entities.find((e) => CLEAR_EXCLUDED[e.type]);
+        if (excluded) {
+            refused.push({
+                level,
+                tag,
+                why: `${excluded.type}@${excluded.x},${excluded.y} is `
+                    + `${CLEAR_EXCLUDED[excluded.type]}`,
+            });
+            continue;
+        }
+        // What the clear actually BUYS: the entities that stop being in the
+        // way. A `lock` only counts when its `tSet` is negative, which is
+        // the same test `buildLevelWorld` applies.
+        const removes = entities.filter((e) => {
+            const response = PERSISTENCE_RESPONSE[e.type];
+            if (response === 'lock-despawn') return tSetOf(e.type, e.attrs) < 0;
+            if (response === 'shrink') return true;
+            if (response !== 'despawn') return false;
+            const cls = ENTITY_CLASSES[e.type];
+            return Boolean(cls && (
+                (cls.collider && cls.collider !== 'none') || cls.hazard));
+        });
+        if (removes.length === 0) continue;
+        offered.push({
+            level,
+            tag,
+            removes: removes.map((e) => `${e.type}@${e.x},${e.y}`),
+            note: removes.map((e) => `${e.type}@${e.x},${e.y}`).join(', '),
+        });
+    }
+    return { offered, refused };
+}
 
 /** Layer names `loadlevel` knows how to build. Anything else throws. */
 const KNOWN_LAYERS = Object.freeze(['tiles', 'cliffsides']);
@@ -1809,11 +2064,42 @@ export function buildLevelWorld(levelRecord, { roles = ROLES, cleared = null } =
         // three behaviours are genuinely different: a chest is removed, a
         // rope SHRINKS, and a FallRock is ARMED. "Remove everything with
         // this tag" would be wrong in two of the three.
-        const entityTag = e.attrs?.tag === undefined ? -1 : Number(e.attrs.tag);
+        const entityTag = tagOf(e.type, e.attrs);
         let clearedHere = false;
+        // ⚠ AN "APPEAR" CLASS IS ABSENT ON A FRESH BOOT, and that is the
+        // exact mirror of a parked FallRock. `MoonrockPile.check()` is
+        // `if (tag >= 0 && checkPersistence(tag)) remove(this)` — its own
+        // comment reads "false = there, true = not there" — so while the
+        // flag holds there is NO 32x16 Solid, and the model was building
+        // one. Level 2 is the third level of the walk and its arrival tile
+        // is the pile's; the route reported the whole map unreachable.
+        // Clearing the tag is refused (REFUSED_CLEAR_RESPONSES), so the
+        // "it is there" arm is unreachable rather than unmodelled.
+        if (PERSISTENCE_RESPONSE[e.type] === 'appear'
+            && !(clearedTags && entityTag >= 0 && clearedTags.has(entityTag))) {
+            continue;
+        }
         if (clearedTags && entityTag >= 0 && clearedTags.has(entityTag)) {
             const response = PERSISTENCE_RESPONSE[e.type];
-            if (response) clearsUsed.add(entityTag);
+            // ⚠ AN UNDECLARED RESPONSE IS A THROW, and it is the guard that
+            // makes this table's completeness checkable rather than hoped
+            // for. A clear is a flag, not an entity: it reaches EVERYTHING
+            // in the level carrying that tag. If one of them is a class
+            // nobody has read, the game acts on it and the model does not,
+            // and the difference surfaces as a physics divergence with no
+            // trail back to here.
+            if (response === undefined) {
+                fail(`${where}: the tape clears tag ${entityTag}, which is also carried `
+                    + `by "${e.type}" at (${x},${y}) — a class with NO declared `
+                    + 'persistence response. Every class that reads '
+                    + 'Game.checkPersistence changes when its flag does (a pickup '
+                    + 'removes itself, a MoonrockPile APPEARS, a ButtonRoom boots '
+                    + 'pressed), so an undeclared one is a difference between the game '
+                    + 'and the model that nothing would report. Read its check()/ctor '
+                    + 'and add it to PERSISTENCE_RESPONSE with the citation, or clear a '
+                    + 'different tag.');
+            }
+            clearsUsed.add(entityTag);
             if (response === 'despawn') { clearedHere = true; }
             if (response === 'lock-despawn') {
                 // ⚠ `Lock.check()` ALSO needs `tSet < 0`, and `int("")` is 0
@@ -1822,11 +2108,11 @@ export function buildLevelWorld(levelRecord, { roles = ROLES, cleared = null } =
                 // wandlocks turn on this line.
                 if (tSetOf(e.type, e.attrs) < 0) clearedHere = true;
             }
-            if (response === 'arm') {
+            const refusal = REFUSED_CLEAR_RESPONSES[response];
+            if (refusal) {
                 fail(`${where}: the tape clears tag ${entityTag}, which is a `
-                    + `"${e.type}" at (${x},${y}). Clearing a FallRock does not remove `
-                    + 'it — it BUILDS IT FALLEN, solid and live, and its update writes '
-                    + "the player's y. A clear list must never name a fallrock tag.");
+                    + `"${e.type}" at (${x},${y}) — response "${response}", and `
+                    + `${refusal}. A clear list must never name it.`);
             }
         }
         if (clearedHere) continue;

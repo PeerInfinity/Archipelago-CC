@@ -107,6 +107,11 @@ const {
 const {
     r1AcceptanceFindings,
 } = await import(join(REPO, 'frontend/modules/seedlingDemo/r1Acceptance.js'));
+const { r2AcceptanceFindings } =
+    await import(join(REPO, 'frontend/modules/seedlingDemo/r2Acceptance.js'));
+const { r2TapeSpecs } = await import(join(REPO, 'frontend/modules/seedlingDemo/r2Walk.js'));
+const R2_ROUTE = JSON.parse(readFileSync(
+    join(REPO, 'frontend/modules/seedlingDemo/fixtures/r2-route.json'), 'utf8'));
 const {
     r1TapeSpecs,
 } = await import(join(REPO, 'frontend/modules/seedlingDemo/r1Walk.js'));
@@ -433,7 +438,7 @@ function checkReadout(name, tape, status) {
 }
 
 /**
- * R1's terminal assertion and its segment chain, from the GAME's own
+ * R1's and R2's terminal assertions and segment chains, from the GAME's own
  * reports.
  *
  * The logic itself is `frontend/modules/seedlingDemo/r1Acceptance.js`,
@@ -443,9 +448,13 @@ function checkReadout(name, tape, status) {
  * the drained status and stream, every one of its assertions is mutated and
  * asserted-red in vitest, in milliseconds. This is just the printer.
  */
-function checkR1Acceptance(replayed) {
+function checkAcceptance(replayed) {
     if (replayed.size === 0) return;
-    for (const f of r1AcceptanceFindings(R1_ROUTE, r1TapeSpecs(R1_ROUTE), replayed)) {
+    const findings = [
+        ...r1AcceptanceFindings(R1_ROUTE, r1TapeSpecs(R1_ROUTE), replayed),
+        ...r2AcceptanceFindings(R2_ROUTE, r2TapeSpecs(R2_ROUTE), replayed),
+    ];
+    for (const f of findings) {
         if (f.skipped) {
             console.log(`SKIP: ${f.name} — ${f.detail}`);
             continue;
@@ -602,7 +611,7 @@ try {
             diff === null, diff ?? '');
     }
 
-    checkR1Acceptance(replayed);
+    checkAcceptance(replayed);
 
     if (!RECORD && ONLY.size === 0) {
         // ── The live bot-driver task (v2 slice 4) ────────────────────────

@@ -162,6 +162,46 @@ export function tileAt(x, y) {
 }
 
 /**
+ * ── THE PLANNING LATTICE, and why it is an option (R2) ────────────────
+ *
+ * A\* works over cell CENTRES, and until R2 a cell was a tile: the box is
+ * 4x5 and a tile is 16x16, so it fits with 6 px to spare on every side,
+ * which is what makes tile-granular planning legitimate. It is SOUND —
+ * every route it finds is walkable — and INCOMPLETE, and the incompleteness
+ * bites the moment a collider sits OFF the tile grid.
+ *
+ * The case that forced this: `planttorch@120,152` in level 62. Its hitbox
+ * is 16x16 at (120,152), half a tile off in both axes, in a corridor two
+ * tiles wide — so it clips FOUR tile centres at once and the tile lattice
+ * reports the shaft to level 64 (and with it the SPEAR) unreachable. It is
+ * not: 16 px of the corridor is clear, and `Mobile.moveX/moveY` step ONE
+ * PIXEL at a time, so the player walks past it without touching it.
+ *
+ * So the pitch is an option. **The default is TILE_SIZE, which is exactly
+ * the behaviour every committed R1 tape was planned under** — this had to
+ * be opt-in rather than a global refinement, because the R1 recordings are
+ * frozen milestone artifacts and a finer lattice would re-route them. R2's
+ * legs pass 8, which puts a node centre at x ≡ 4 (mod 8) and threads the
+ * torch. Finer is not free: the node count goes as 1/pitch².
+ *
+ * ⚠ It changes only WHICH ROUTE is found, never whether the route is
+ * checked. Every segment the smoother keeps is still re-tested with the
+ * real box along its whole length, and the executor still throws if the
+ * run touches anything.
+ */
+export const DEFAULT_LATTICE = TILE_SIZE;
+
+/** The centre of lattice cell `(nx, ny)` at `pitch`. */
+export function nodeCentre(nx, ny, pitch) {
+    return { x: nx * pitch + pitch / 2, y: ny * pitch + pitch / 2 };
+}
+
+/** The lattice cell containing a pixel position. */
+export function nodeAt(x, y, pitch) {
+    return { tx: Math.floor(x / pitch), ty: Math.floor(y / pitch) };
+}
+
+/**
  * Everything that would stop, throw or misdirect the player standing at
  * (x, y): the geometry's kinds plus this module's own planning policy.
  *
@@ -193,9 +233,19 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
     const {
         noclip = false, noHazards = [], avoidVolumes = false, allowPit = null,
         contacts = EMPTY_CONTACTS, extraVolumes = EMPTY_VOLUMES,
-        openActivators = null,
+        openActivators = null, margin = 0, triggerMargin = 0,
     } = opts;
-    const box = playerBoxAt(x, y);
+    const box = grow(playerBoxAt(x, y), margin);
+    // ⚠ A TRIGGER IS NOT A WALL, and it needs MORE room rather than less.
+    // An overshoot into a wall is absorbed — the sweep stops, the run
+    // arrives, `allowGrazes` records it. An overshoot into a teleporter
+    // volume ends up in another level, and there is no recovering from
+    // that. So a trigger's clearance is its own number and, unlike the node
+    // margin, it does NOT descend with `planWaypoints`'s clearance ladder:
+    // one tight destination (a button in a one-column shaft) would otherwise
+    // strip the clearance from every trigger on the way to it, which is
+    // precisely how three R2 legs ended up in the wrong level.
+    const triggerBox = grow(playerBoxAt(x, y), Math.max(margin, triggerMargin));
     // ⚠ `openActivators` is LIVE STATE, not a plan setting, and that is why
     // it arrives per call rather than sitting in the leg's plan object. A
     // Lock is Solid until its button has been held for 101 ticks and Solid
@@ -232,7 +282,7 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
         if (v.level !== level.level) continue;
         if (rectsOverlap(box, v.rect)) return { kind: 'persistence-effect', blocker: v };
     }
-    const probe = terrainProbeRect(x, y);
+    const probe = grow(terrainProbeRect(x, y), margin);
     for (const tile of level.pitTiles) {
         if (allowPit && tile.tx === allowPit.tx && tile.ty === allowPit.ty) continue;
         if (rectsOverlap(probe, tile.rect)) return { kind: 'pit', blocker: tile };
@@ -249,12 +299,38 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
     for (let i = 0; i < level.teleporters.length; i++) {
         const tp = level.teleporters[i];
         if (i === allowTeleporter || tp.deactivated) continue;
-        if (!rectsOverlap(box, tp.rect)) continue;
+        if (!rectsOverlap(triggerBox, tp.rect)) continue;
         const hit = { kind: 'teleporter', blocker: tp };
         if (contacts.has(contactKey(hit))) continue;
         return hit;
     }
     return null;
+}
+
+/**
+ * A rect grown by `m` pixels on every side — the whole of the clearance
+ * machinery, used by `nodeMargin` and `triggerMargin`.
+ *
+ * ⚠ AND WHAT IT IS *NOT* USED FOR ANY MORE, because the measurement is
+ * worth keeping. The controller overshoots its waypoint before braking
+ * back, which the six pixels between a TILE centre and its edges absorbed
+ * and eight-pixel cells do not — level 0's `brickwell@208,256` leaves 1.5 px
+ * and the overshoot is nearer two. The first answer was to grow the box
+ * while TESTING a smoothed segment, so a long shortcut through a tight gap
+ * stopped qualifying and the tape gained waypoints where the geometry was
+ * close. It worked, and it cost 30% more ticks and **4.7x the input spans**
+ * — and the recompiled runtime then could not load the headline tape at
+ * all (`heap_alloc(72671) failed - out of memory`, 2,569 spans, 185 KB).
+ *
+ * `allowGrazes` is the better answer to the same problem: a wall the
+ * overshoot touches stops the sweep and the run arrives anyway, so there
+ * was never anything to route around. What genuinely needs clearance is a
+ * TRIGGER, because entering one is not absorbed — and that has its own
+ * number. The segment test now runs at zero.
+ */
+function grow(r, m) {
+    if (!m) return r;
+    return { x: r.x - m, y: r.y - m, right: r.right + m, bottom: r.bottom + m };
 }
 
 /** An empty held set — what a transport tick emits. */
@@ -286,9 +362,21 @@ const describe = (o) => {
  * exactly that belt and braces.
  */
 export function isWalkableTile(level, tx, ty, allowTeleporter = null, opts = {}) {
-    if (tx < 0 || ty < 0 || tx >= level.width || ty >= level.height) return false;
-    const c = tileCentre(tx, ty);
-    return plannerObstacleAt(level, c.x, c.y, allowTeleporter, opts) === null;
+    const pitch = opts.lattice ?? DEFAULT_LATTICE;
+    const nx = level.width * TILE_SIZE / pitch;
+    const ny = level.height * TILE_SIZE / pitch;
+    if (tx < 0 || ty < 0 || tx >= nx || ty >= ny) return false;
+    const c = nodeCentre(tx, ty, pitch);
+    // ⚠ THE NODE MARGIN IS A SEPARATE KNOB FROM THE SMOOTHER'S, and it has
+    // to be, because they want opposite things. The smoother's margin only
+    // ever REJECTS a shortcut, so more is safer. This one deletes nodes, and
+    // a corridor 16 px wide has exactly one lattice column the player fits
+    // in — inflate there and the corridor disappears, which is the
+    // over-blocking this rung has spent its whole length unpicking.
+    // `planWaypoints` therefore plans WITH it and falls back to zero when
+    // that finds no path at all.
+    return plannerObstacleAt(level, c.x, c.y, allowTeleporter,
+        { ...opts, margin: opts.nodeMargin ?? 0 }) === null;
 }
 
 /**
@@ -306,13 +394,20 @@ export function isWalkableTile(level, tx, ty, allowTeleporter = null, opts = {})
  * change.
  */
 export function planTilePath(level, from, to, allowTeleporter = null, opts = {}) {
-    const start = tileAt(from.x, from.y);
-    const goal = tileAt(to.x, to.y);
+    const pitch = opts.lattice ?? DEFAULT_LATTICE;
+    const start = nodeAt(from.x, from.y, pitch);
+    const goal = nodeAt(to.x, to.y, pitch);
 
+    // Both ENDPOINTS are checked without ANY clearance, for the same reason
+    // the goal is exempt during expansion: they are positions the caller
+    // named or the game chose, not cells the planner picked. The trigger
+    // margin especially — a leg starts where the previous leg's exit landed,
+    // which is INSIDE a trigger by construction.
+    const ends = { ...opts, nodeMargin: 0, triggerMargin: 0 };
     for (const [what, t, pos] of [['start', start, from], ['goal', goal, to]]) {
-        if (!isWalkableTile(level, t.tx, t.ty, allowTeleporter, opts)) {
-            const c = tileCentre(t.tx, t.ty);
-            const o = plannerObstacleAt(level, c.x, c.y, allowTeleporter, opts);
+        if (!isWalkableTile(level, t.tx, t.ty, allowTeleporter, ends)) {
+            const c = nodeCentre(t.tx, t.ty, pitch);
+            const o = plannerObstacleAt(level, c.x, c.y, allowTeleporter, ends);
             fail(`A* ${what} tile (${t.tx},${t.ty}) in level ${level.level} — for `
                 + `(${pos.x},${pos.y}) — is not walkable: `
                 + `${o ? describe(o) : 'outside the level'}. The planner works in whole `
@@ -321,7 +416,8 @@ export function planTilePath(level, from, to, allowTeleporter = null, opts = {})
         }
     }
 
-    const key = (tx, ty) => ty * level.width + tx;
+    const stride = level.width * TILE_SIZE / pitch;
+    const key = (tx, ty) => ty * stride + tx;
     const h = (tx, ty) => Math.abs(tx - goal.tx) + Math.abs(ty - goal.ty);
 
     const gScore = new Map([[key(start.tx, start.ty), 0]]);
@@ -358,7 +454,14 @@ export function planTilePath(level, from, to, allowTeleporter = null, opts = {})
             const nx = cur.tx + dx;
             const ny = cur.ty + dy;
             const nk = key(nx, ny);
-            if (closed.has(nk) || !isWalkableTile(level, nx, ny, allowTeleporter, opts)) continue;
+            if (closed.has(nk)) continue;
+            // The GOAL is exempt from the node margin: it is a position the
+            // caller named (a trigger's centre, a button, an item room's
+            // door), not a cell the planner chose, and refusing it for being
+            // tight would refuse the errand rather than route around it.
+            const isGoal = nx === goal.tx && ny === goal.ty;
+            if (!isWalkableTile(level, nx, ny, allowTeleporter,
+                isGoal ? { ...opts, nodeMargin: 0, triggerMargin: 0 } : opts)) continue;
             const g = cur.g + 1;
             if (gScore.has(nk) && gScore.get(nk) <= g) continue;
             gScore.set(nk, g);
@@ -442,11 +545,119 @@ export function controllerPathClear(level, a, b, allowTeleporter = null, opts = 
  * The last point is the TARGET ITSELF, not its tile's centre, so a caller
  * asking for (120, 100) gets (120, 100) and not (120, 104).
  */
+/**
+ * The A* goal for a target: its own cell, or the nearest cell to it.
+ *
+ * ⚠ A TARGET CAN BE STANDABLE IN A CELL WHOSE CENTRE IS NOT, and the case
+ * that proves it is the one the recon called route-critical.
+ * `OpenTreeMask.png` is 32x32 and solid except for a 10x12 DOORWAY, and
+ * level 12's exit to the fall cluster is a teleporter INSIDE that doorway.
+ * The target (48,696) is clear; the lattice cell containing it has its
+ * centre at (52,700), which is canopy. A* refused the goal and the walk
+ * reported darkshield and darksuit unreachable — the exact failure Phase 5a
+ * predicted for rect approximations, arriving from the opposite direction.
+ *
+ * So when the target itself is clear and its cell is not, the search aims
+ * at the nearest cell that IS, and `planWaypoints` appends the real target
+ * as the last point — which it already did, and whose segment the smoother
+ * already checks. A ring of two cells: further than that and "nearest" has
+ * stopped meaning anything about the corridor the player is in.
+ */
+function nearestGoalNode(level, to, allowTeleporter, opts) {
+    const pitch = opts.lattice ?? DEFAULT_LATTICE;
+    const ends = { ...opts, nodeMargin: 0, triggerMargin: 0 };
+    const cell = nodeAt(to.x, to.y, pitch);
+    if (isWalkableTile(level, cell.tx, cell.ty, allowTeleporter, ends)) return to;
+    // Only if the TARGET is genuinely standable. A blocked target is a
+    // caller error and must keep reporting itself as one.
+    if (plannerObstacleAt(level, to.x, to.y, allowTeleporter,
+        { ...ends, margin: 0 }) !== null) {
+        return to;
+    }
+    let best = null;
+    for (let r = 1; r <= 2 && best === null; r++) {
+        for (let dy = -r; dy <= r; dy++) {
+            for (let dx = -r; dx <= r; dx++) {
+                if (Math.max(Math.abs(dx), Math.abs(dy)) !== r) continue;
+                const tx = cell.tx + dx;
+                const ty = cell.ty + dy;
+                if (!isWalkableTile(level, tx, ty, allowTeleporter, ends)) continue;
+                const c = nodeCentre(tx, ty, pitch);
+                const d = Math.hypot(c.x - to.x, c.y - to.y);
+                // Deterministic tie-break: this route is a committed artifact.
+                if (best === null || d < best.d
+                    || (d === best.d && (ty < best.ty || (ty === best.ty && tx < best.tx)))) {
+                    best = { d, tx, ty, point: c };
+                }
+            }
+        }
+    }
+    // No substitute found: hand the original back so `planTilePath` reports
+    // the unwalkable goal by name, as it always has.
+    return best ? best.point : to;
+}
+
 export function planWaypoints(level, from, to, allowTeleporter = null, opts = {}) {
-    const path = planTilePath(level, from, to, allowTeleporter, opts);
+    // ⚠ TWO PASSES, AND THE SECOND ONE IS THE POINT. The greedy string-pull
+    // below has a FALLBACK — when no smoothed segment is clear it keeps the
+    // next A* node regardless — and that node was never clearance-checked.
+    // Level 12's `tree@32,416` is what found it: the node at (44,412) leaves
+    // the player box half a pixel clear of the trunk, the controller
+    // overshoots by more than that, and no amount of SMOOTHER margin helps
+    // because the offending waypoint is the one the smoother falls back to.
+    //
+    // So the first pass routes with clearance and the second, only if the
+    // first finds no path at all, routes without it. Where the map is roomy
+    // the route keeps its distance; where it is genuinely one lattice column
+    // wide the route still exists and the executor's throw is the net.
+    const pitch = opts.lattice ?? DEFAULT_LATTICE;
+    const goal = nearestGoalNode(level, to, allowTeleporter, opts);
+    let path = null;
+    let lastError = null;
+    // ⚠ A LADDER, NOT A SWITCH. The first cut fell straight from the full
+    // node margin to zero, and the fall is expensive: one leg through
+    // level 62's pit maze had no 2 px route, so the WHOLE leg replanned with
+    // no clearance at all and the very first hop overshot into a teleporter
+    // to the wrong level. Stepping down one pixel at a time keeps whatever
+    // clearance the map allows instead of trading all of it for the tightest
+    // cell on the route.
+    for (let m = opts.nodeMargin ?? 0; m >= 0 && path === null; m--) {
+        try {
+            path = planTilePath(level, from, goal, allowTeleporter,
+                { ...opts, nodeMargin: m });
+        } catch (e) {
+            if (!(e instanceof BotDriverV2Error)) throw e;
+            lastError = e;
+        }
+    }
+    if (path === null) throw lastError;
+    // ⚠ THE START CELL'S OWN CENTRE IS A POINT, and it exists for the
+    // smoother's FALLBACK. When no smoothed segment is clear the string-pull
+    // keeps `points[anchor + 1]` regardless of clearance, and with the start
+    // cell dropped that could be a cell TWO away from an arbitrary arrival
+    // position — a diagonal long enough to sag into something. Level 12's
+    // `pole@16,96` is the case: the arrival at (24,88), the second A* cell at
+    // (36,92), and a first hop that clipped the pole on the way.
+    //
+    // It changes nothing anywhere the fallback does not fire, because the
+    // string-pull takes the FARTHEST clear point and an extra nearer
+    // candidate cannot become that. The twenty-three frozen R1 tapes are
+    // byte-identical with it in, which is the check that says so.
+    // ...but ONLY when that cell is one the planner would have chosen. A leg
+    // begins where the previous leg's exit landed, which is beside the
+    // trigger it came through — and the start cell is exempt from every
+    // clearance for exactly that reason. Handing it to the smoother as a
+    // WAYPOINT re-imports the clearance it was exempted from: three R2 legs
+    // walked four pixels, back into the trigger they had just used, and
+    // arrived in the level they had just left.
+    const startCentre = nodeCentre(path[0].tx, path[0].ty, pitch);
+    const startIsANode = isWalkableTile(level, path[0].tx, path[0].ty, allowTeleporter,
+        { ...opts, nodeMargin: opts.nodeMargin ?? 0 })
+        && !(startCentre.x === from.x && startCentre.y === from.y);
     const points = [
         { x: from.x, y: from.y },
-        ...path.slice(1).map((t) => tileCentre(t.tx, t.ty)),
+        ...(startIsANode ? [startCentre] : []),
+        ...path.slice(1).map((t) => nodeCentre(t.tx, t.ty, pitch)),
         { x: to.x, y: to.y },
     ];
 
@@ -695,16 +906,24 @@ function runHold(run, perTick, hold, what) {
  */
 function drive(run, target, perTick, {
     until, tolerance, maxTicks, what, avoidVolumes, contacts = EMPTY_CONTACTS,
-    extraVolumes = EMPTY_VOLUMES,
+    extraVolumes = EMPTY_VOLUMES, crossTo = null, grazes = null,
 }) {
     let ticks = 0;
+    const touched = [];
     for (;;) {
-        if (until === 'arrival' && hasArrived(run.state, target, tolerance)) return null;
+        if (until === 'arrival' && hasArrived(run.state, target, tolerance)) {
+            // ⚠ A GRAZE THAT STILL ARRIVES IS NOT A RE-PLAN, and that is the
+            // whole of the distinction. See the `grazes` docblock.
+            if (touched.length > 0) grazes.push(...touched);
+            return null;
+        }
         if (ticks >= maxTicks) {
             const s = run.state;
             fail(`${what}: not reached within ${maxTicks} ticks; stalled at `
                 + `(${s.x},${s.y}) v=(${s.vx},${s.vy}) in level ${run.level}, `
-                + `aiming at (${target.x},${target.y}).`);
+                + `aiming at (${target.x},${target.y})`
+                + `${touched.length ? `, after grazing ${touched.length} solid(s): `
+                    + `${touched.slice(0, 3).map((g) => g.what).join('; ')}` : ''}.`);
         }
         // ⚠ ONCE A TRANSPORT IS IN FLIGHT, THE DRIVER PRESSES NOTHING.
         // The twenty fall-out ticks are ordinary live ticks — `receiveInput
@@ -715,13 +934,44 @@ function drive(run, target, perTick, {
         // emits the same nothing the game acts on.
         const held = run.state.fall ? NO_HELD : chooseHeld(run.state, target, tolerance);
         perTick.push(held);
+        // Where the player was when the edge could have fired. A pit's
+        // identity is the tile UNDER them, and after `advance` they are in
+        // the next level.
+        const before = { x: run.state.x, y: run.state.y };
         const { transition, hitX, hitY } = run.advance(held);
         ticks++;
 
         if (transition) {
             if (until === 'transition') return transition;
+            // ⚠ AN EARLY CROSSING THROUGH THE LEG'S OWN EXIT IS THE ERRAND,
+            // not a defect — and telling the two apart is what `crossTo` is
+            // for. The leg's exit is exempt from being an obstacle (walking
+            // into it is the whole point), so A* may route THROUGH it to
+            // reach the far side of its 16x16 volume, and the trigger then
+            // fires two waypoints before the planner expected. R1 never met
+            // it: a trigger was one tile-lattice node, so the aim point and
+            // the volume were the same cell.
+            //
+            // Accepted ONLY on identity, never on "it went somewhere
+            // plausible": the destination level AND the arrival position
+            // must be the named teleporter's own. A different trigger to the
+            // same level would land somewhere else and still be caught here,
+            // which is the case the original throw exists for.
+            if (crossTo && transition.to_level === crossTo.level
+                && (crossTo.pit
+                    ? rectsOverlap(terrainProbeRect(before.x, before.y), crossTo.pit.rect)
+                    : (run.state.x === crossTo.arrival.x
+                        && run.state.y === crossTo.arrival.y))) {
+                return transition;
+            }
             fail(`${what}: the run crossed from level ${transition.from_level} to `
-                + `${transition.to_level} at tick ${transition.t} without being asked to. `
+                + `${transition.to_level} at tick ${transition.t} without being asked to`
+                + `${crossTo ? ` — it was aiming at ${crossTo.pit
+                    ? `the pit tile (${crossTo.pit.tx},${crossTo.pit.ty}) and fell from `
+                    + `(${before.x},${before.y})`
+                    : `the exit to level ${crossTo.level}, whose arrival is `
+                    + `(${crossTo.arrival.x},${crossTo.arrival.y}), and landed at `
+                    + `(${run.state.x},${run.state.y})`}` : ''}. `
                 + 'A live teleporter volume is supposed to be an obstacle to the planner '
                 + '— this is a routing defect, not a surprise to absorb.');
         }
@@ -730,7 +980,22 @@ function drive(run, target, perTick, {
         // disagreement, because the tape would still reach the target and
         // every downstream assertion would pass.
         const hit = hitX || hitY;
-        if (hit) {
+        if (hit && grazes) {
+            // Recorded and carried, not thrown on — YET. If the drive goes on
+            // to arrive, the sweep was an overshoot the wall absorbed and
+            // nothing was re-planned; if it stalls, every graze is attached
+            // to the failure above.
+            const s = run.state;
+            touched.push({
+                what: `${hit.tag ?? hit.cls?.as3 ?? 'a solid'} at (${hit.x},${hit.y}) on `
+                    + `the ${hitX ? 'X' : 'Y'} axis, at (${s.x},${s.y}) in level `
+                    + `${run.level}, aiming at (${target.x},${target.y})`,
+                level: run.level,
+                tag: hit.tag ?? hit.cls?.as3 ?? null,
+                x: hit.x ?? null,
+                y: hit.y ?? null,
+            });
+        } else if (hit) {
             const s = run.state;
             fail(`${what}: PLANNER BUG — the sweep was blocked by `
                 + `${hit.tag ?? hit.cls?.as3 ?? 'a solid'} at (${hit.x},${hit.y}) on the `
@@ -801,7 +1066,63 @@ export function synthesizeLegs(legs, opts = {}) {
         name,
         relax = null,
         extraVolumes = EMPTY_VOLUMES,
+        // The A* cell pitch. Defaults to TILE_SIZE, which is what every
+        // committed R1 tape was planned under — see the DEFAULT_LATTICE
+        // docblock for why this is opt-in rather than a global refinement.
+        lattice = DEFAULT_LATTICE,
+        /**
+         * The clearance A* KEEPS FROM A SOLID, in pixels.
+         *
+         * ⚠ It deletes cells, so it is not a "more is safer" number: raise
+         * it and the clearance pass finds no path at all, after which
+         * `planWaypoints` walks its ladder down to nothing and the route
+         * loses the clearance everywhere rather than in the one tight spot.
+         * R2 traded one planner throw for an earlier one by moving a single
+         * number from 2 to 6. Two is enough to dodge the half-pixel
+         * clearances the smoother's fallback used to keep, and small enough
+         * that a 16 px corridor still has a column.
+         */
+        nodeMargin = 0,
+        // See `plannerObstacleAt`: a trigger's clearance is its own number
+        // and survives the clearance ladder. Zero is R1's behaviour.
+        triggerMargin = 0,
+        /**
+         * ⚠ WHEN A SWEEP THAT WAS BLOCKED IS NOT A DEFECT.
+         *
+         * The executor throws on any hit, because a hit means the geometry
+         * stopped a move the planner had certified and a silent re-plan
+         * would turn a model defect into a green run. With collision on and
+         * an eight-pixel lattice that stopped being the whole truth: the
+         * bang-bang controller OVERSHOOTS a waypoint before braking back,
+         * so it can graze a wall a pixel past its target and then arrive
+         * perfectly. Three different levels produced exactly that, and no
+         * amount of margin fixes it — the overshoot is downstream of the
+         * plan.
+         *
+         * So a graze is fatal only if the drive then FAILS TO ARRIVE.
+         * Nothing is re-planned either way; what changes is whether an
+         * absorbed overshoot ends the walk. Every graze is collected and
+         * returned, and the tape's own description carries the count, so a
+         * route that grazes forty times cannot look like one that grazes
+         * none.
+         *
+         * Defaults FALSE: R1's twenty-three tapes were planned under the
+         * strict rule and never grazed once.
+         */
+        allowGrazes = false,
     } = opts;
+    for (const [what, v] of [['nodeMargin', nodeMargin], ['triggerMargin', triggerMargin]]) {
+        if (!Number.isFinite(v) || v < 0) {
+            fail(`synthesizeLegs: opts.${what} must be a non-negative number, got `
+                + `${JSON.stringify(v)}`);
+        }
+    }
+    if (!Number.isInteger(lattice) || lattice <= 0 || TILE_SIZE % lattice !== 0) {
+        fail(`synthesizeLegs: opts.lattice must be a positive integer divisor of `
+            + `${TILE_SIZE}, got ${JSON.stringify(lattice)}. A pitch that does not `
+            + 'divide the tile puts node centres inside tile edges rather than clear of '
+            + 'them.');
+    }
     // A volume whose rect has no `right`/`bottom` never overlaps anything,
     // so every check against it passes and the route is "clear" by
     // construction. Loud here, once, rather than silently green forever.
@@ -850,8 +1171,11 @@ export function synthesizeLegs(legs, opts = {}) {
     }
     const noclip = relax ? relax.noclip : false;
     const basePlan = relax
-        ? { noclip, noHazards: relax.noHazards, avoidVolumes: true }
-        : {};
+        ? {
+            noclip, noHazards: relax.noHazards, avoidVolumes: true,
+            lattice, nodeMargin, triggerMargin,
+        }
+        : { lattice, nodeMargin, triggerMargin };
 
     const run = createLevelRun({
         levelSource,
@@ -874,6 +1198,7 @@ export function synthesizeLegs(legs, opts = {}) {
     const arrivals = [];
     const waypoints = [];
     const holds = [];
+    const grazes = allowGrazes ? [] : null;
 
     legs.forEach((leg, li) => {
         if (run.level !== leg.level) {
@@ -963,6 +1288,7 @@ export function synthesizeLegs(legs, opts = {}) {
                 avoidVolumes: Boolean(relax),
                 contacts: legContacts,
                 extraVolumes: legVolumes,
+                grazes,
                 what: `legs[${li}] level ${leg.level} target ${ti} waypoint ${wi} `
                     + `(${wp.x},${wp.y})`,
             }));
@@ -1025,11 +1351,23 @@ export function synthesizeLegs(legs, opts = {}) {
                 fail(`legs[${li}].exit falls to level ${ft.level}, but legs[${li + 1}] `
                     + `declares level ${destination}.`);
             }
-            const centre = tileCentre(tx, ty);
+            // ⚠ THE SAME ONCE-ONLY PROBLEM, one volume over. `allowPit`
+            // exempts the named tile for the whole leg, so A* would happily
+            // cross it en route to somewhere else and the fall would fire
+            // early. Approached from outside, like a trigger.
             const legPlan = planNow({ allowPit: { tx, ty } });
+            const centre = tileCentre(tx, ty);
             const wps = planWaypoints(run.world, run.state, centre, null, legPlan);
             legWaypoints.push(...wps);
-            wps.forEach((wp, wi) => {
+            // The pit's counterpart to a teleporter's early crossing, and
+            // the identity is the TILE rather than an arrival position: all
+            // of a level's pits fall to the same level, so "it went where I
+            // wanted" proves nothing. What proves it is that the player was
+            // standing on the tile the leg NAMED when the edge fired.
+            const crossTo = { level: destination, pit };
+            let fell = false;
+            for (let wi = 0; wi < wps.length && !fell; wi++) {
+                const wp = wps[wi];
                 const last = wi === wps.length - 1;
                 const t = drive(run, wp, perTick, {
                     until: last ? 'transition' : 'arrival',
@@ -1038,15 +1376,19 @@ export function synthesizeLegs(legs, opts = {}) {
                     avoidVolumes: Boolean(relax),
                     contacts: legContacts,
                     extraVolumes: legVolumes,
+                    grazes,
+                grazes,
+                    crossTo,
                     what: `legs[${li}] level ${leg.level} pit exit (${tx},${ty}) `
                         + `waypoint ${wi} (${wp.x},${wp.y})`,
                 });
-                if (last && !t) {
+                if (t) { fell = true; break; }
+                if (last) {
                     fail(`legs[${li}] reached pit tile (${tx},${ty}) without falling. `
                         + 'The edge is a RAW state change to 6 while onGround, so this '
                         + 'means the route arrived already resolving that tile.');
                 }
-            });
+            }
             // The arrival is mid-air: the fall-from-ceiling descent still has
             // to land before the next leg can plan from a real position.
             coastThroughTransport(run, perTick, maxTicksPerTarget,
@@ -1072,7 +1414,10 @@ export function synthesizeLegs(legs, opts = {}) {
         };
         const wps = planWaypoints(run.world, run.state, centre, index, planNow());
         legWaypoints.push(...wps);
-        wps.forEach((wp, wi) => {
+        const crossTo = { level: destination, arrival: { ...teleporter.arrival } };
+        let crossed = false;
+        for (let wi = 0; wi < wps.length && !crossed; wi++) {
+            const wp = wps[wi];
             const last = wi === wps.length - 1;
             const t = drive(run, wp, perTick, {
                 until: last ? 'transition' : 'arrival',
@@ -1081,16 +1426,19 @@ export function synthesizeLegs(legs, opts = {}) {
                 avoidVolumes: Boolean(relax),
                 contacts: legContacts,
                 extraVolumes: legVolumes,
+                grazes,
+                crossTo,
                 what: `legs[${li}] level ${leg.level} exit (${leg.exit.x},${leg.exit.y}) `
                     + `waypoint ${wi} (${wp.x},${wp.y})`,
             });
-            if (last && !t) {
+            if (t) { crossed = true; break; }
+            if (last) {
                 fail(`legs[${li}] reached the teleporter at (${leg.exit.x},${leg.exit.y}) `
                     + 'without triggering it. The trigger volume is 16x16 and the aim '
                     + 'point is its centre, so this means the overlap test disagrees '
                     + 'with the geometry.');
             }
-        });
+        }
         waypoints.push(legWaypoints);
     });
 
@@ -1121,6 +1469,8 @@ export function synthesizeLegs(legs, opts = {}) {
         // opened. The tape itself is only empty spans, so this is the ONLY
         // place a consumer can find out that the walk holds anything at all.
         holds: holds.map((h) => ({ ...h, opened: [...h.opened] })),
+        /** Every sweep a wall stopped that the drive went on to arrive past. */
+        grazes: grazes ? grazes.map((g) => ({ ...g })) : [],
         grants: relax ? run.grantsFired : [],
         inventory: relax ? run.inventory : null,
     };

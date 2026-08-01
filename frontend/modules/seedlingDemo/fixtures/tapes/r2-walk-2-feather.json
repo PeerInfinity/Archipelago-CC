@@ -1,0 +1,319 @@
+{
+  "tape_version": 3,
+  "game": "seedling",
+  "name": "r2-walk-2-feather",
+  "description": "R2 walk SEGMENT 2 of 6, synthesized by botDriverV2 from legs 12-14 of the committed route (fixtures/r2-route.json). It boots where segment 1 ended and inherits sword, shield in a single grant entry at the boot level, which fires on tick 0. 3 legs across 2 level(s), 2 crossings of which 0 are pit falls. 25 persistence clear(s) applied before the first live tick. Ends holding hasSword, hasShield, hasFeather, hitsMax 3. Regenerate with fixtures/regenerate-r2-tapes.mjs; the route is the artifact and this tape is derived from it.",
+  "boot": {
+    "level": 0,
+    "x": 48,
+    "y": 192
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [
+    "water",
+    "lava",
+    "ice",
+    "waterfall"
+  ],
+  "grants": [
+    {
+      "level": 0,
+      "items": [
+        "shield",
+        "sword"
+      ]
+    },
+    {
+      "level": 89,
+      "items": [
+        "feather"
+      ]
+    }
+  ],
+  "persistence": [
+    {
+      "level": 0,
+      "tag": 1,
+      "note": "breakablerock@288,176"
+    },
+    {
+      "level": 0,
+      "tag": 3,
+      "note": "breakablerock@192,32"
+    },
+    {
+      "level": 0,
+      "tag": 4,
+      "note": "breakablerock@80,112"
+    },
+    {
+      "level": 3,
+      "tag": 0,
+      "note": "breakablerock@96,112"
+    },
+    {
+      "level": 3,
+      "tag": 1,
+      "note": "breakablerockghost@0,64"
+    },
+    {
+      "level": 11,
+      "tag": 0,
+      "note": "chest@32,48"
+    },
+    {
+      "level": 12,
+      "tag": 2,
+      "note": "burnabletree@480,640"
+    },
+    {
+      "level": 12,
+      "tag": 3,
+      "note": "bosslock@80,656"
+    },
+    {
+      "level": 12,
+      "tag": 4,
+      "note": "bosslock@416,240"
+    },
+    {
+      "level": 12,
+      "tag": 5,
+      "note": "bosslock@432,240"
+    },
+    {
+      "level": 12,
+      "tag": 7,
+      "note": "magicallock@32,864"
+    },
+    {
+      "level": 12,
+      "tag": 9,
+      "note": "chest@320,816"
+    },
+    {
+      "level": 12,
+      "tag": 10,
+      "note": "shieldlocknorm@288,704"
+    },
+    {
+      "level": 12,
+      "tag": 11,
+      "note": "bosslock@112,192"
+    },
+    {
+      "level": 12,
+      "tag": 12,
+      "note": "bosslock@32,864"
+    },
+    {
+      "level": 20,
+      "tag": 0,
+      "note": "shieldlocknorm@176,16"
+    },
+    {
+      "level": 24,
+      "tag": 0,
+      "note": "burnabletree@32,128"
+    },
+    {
+      "level": 30,
+      "tag": 0,
+      "note": "bosslock@64,32"
+    },
+    {
+      "level": 30,
+      "tag": 1,
+      "note": "breakablerock@48,224"
+    },
+    {
+      "level": 30,
+      "tag": 2,
+      "note": "bosslock@224,208"
+    },
+    {
+      "level": 60,
+      "tag": 0,
+      "note": "lock@128,80"
+    },
+    {
+      "level": 71,
+      "tag": 0,
+      "note": "lock@112,192"
+    },
+    {
+      "level": 71,
+      "tag": 1,
+      "note": "chest@160,256"
+    },
+    {
+      "level": 71,
+      "tag": 2,
+      "note": "shieldlock@288,256"
+    },
+    {
+      "level": 78,
+      "tag": 0,
+      "note": "lock@32,32"
+    }
+  ],
+  "tick_count": 276,
+  "inputs": [
+    {
+      "key": "up",
+      "from": 0,
+      "to": 2
+    },
+    {
+      "key": "right",
+      "from": 0,
+      "to": 10
+    },
+    {
+      "key": "down",
+      "from": 2,
+      "to": 3
+    },
+    {
+      "key": "up",
+      "from": 3,
+      "to": 4
+    },
+    {
+      "key": "down",
+      "from": 6,
+      "to": 8
+    },
+    {
+      "key": "up",
+      "from": 11,
+      "to": 12
+    },
+    {
+      "key": "left",
+      "from": 12,
+      "to": 14
+    },
+    {
+      "key": "up",
+      "from": 18,
+      "to": 69
+    },
+    {
+      "key": "right",
+      "from": 18,
+      "to": 137
+    },
+    {
+      "key": "down",
+      "from": 69,
+      "to": 70
+    },
+    {
+      "key": "up",
+      "from": 70,
+      "to": 71
+    },
+    {
+      "key": "down",
+      "from": 71,
+      "to": 72
+    },
+    {
+      "key": "up",
+      "from": 72,
+      "to": 73
+    },
+    {
+      "key": "down",
+      "from": 73,
+      "to": 74
+    },
+    {
+      "key": "left",
+      "from": 137,
+      "to": 138
+    },
+    {
+      "key": "right",
+      "from": 140,
+      "to": 146
+    },
+    {
+      "key": "up",
+      "from": 140,
+      "to": 221
+    },
+    {
+      "key": "left",
+      "from": 146,
+      "to": 147
+    },
+    {
+      "key": "left",
+      "from": 156,
+      "to": 157
+    },
+    {
+      "key": "right",
+      "from": 160,
+      "to": 161
+    },
+    {
+      "key": "down",
+      "from": 222,
+      "to": 224
+    },
+    {
+      "key": "right",
+      "from": 228,
+      "to": 246
+    },
+    {
+      "key": "left",
+      "from": 246,
+      "to": 247
+    },
+    {
+      "key": "right",
+      "from": 247,
+      "to": 248
+    },
+    {
+      "key": "right",
+      "from": 252,
+      "to": 254
+    },
+    {
+      "key": "up",
+      "from": 252,
+      "to": 270
+    },
+    {
+      "key": "left",
+      "from": 254,
+      "to": 255
+    },
+    {
+      "key": "right",
+      "from": 255,
+      "to": 256
+    },
+    {
+      "key": "left",
+      "from": 258,
+      "to": 260
+    },
+    {
+      "key": "right",
+      "from": 263,
+      "to": 264
+    },
+    {
+      "key": "down",
+      "from": 270,
+      "to": 276
+    }
+  ]
+}
