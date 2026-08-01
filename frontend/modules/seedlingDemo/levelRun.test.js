@@ -215,3 +215,78 @@ describe('grants fire on first entry, at the arrival tick', () => {
         expect(ticks).toEqual(plain.ticks);
     });
 });
+
+/**
+ * ── R2: the run's own view of which locks are open ────────────────────
+ *
+ * `botDriverV2` re-plans before every waypoint, and whether a tile is
+ * walkable depends on per-tick state a plan object cannot hold. The getter
+ * exists so the planner reads the SAME set `advance` hands `stepV2` — the
+ * walkTo-divergence lesson, one mechanic later.
+ */
+describe('R2: openActivators', () => {
+    const levelSource = atlasLevelSource();
+    /** L71's `lock@112,160`, whose button is `button@112,176` directly below. */
+    const LOCK = 'lock@112,160';
+    /** The spawn `boot: {level: 71, x: 112, y: 176}` lands on, i.e. the button. */
+    const ON_THE_BUTTON = { level: 71, x: 112, y: 176 };
+
+    it('is null under noclip — the arm `advance` actually takes', () => {
+        const run = createLevelRun({
+            levelSource, boot: ON_THE_BUTTON, noclip: true, roles: undefined,
+        });
+        expect(run.openActivators).toBe(null);
+    });
+
+    it('opens the lock on tick 101 of standing on its button, and not on 100', () => {
+        const run = createLevelRun({ levelSource, boot: ON_THE_BUTTON });
+        expect(run.openActivators.has(LOCK)).toBe(false);
+        for (let t = 0; t < 100; t++) run.advance(new Set());
+        // ⚠ 100 is the answer `1 / 0.01` gives and it is WRONG:
+        // `Lock.activationStep` tests `alpha > 0` BEFORE decrementing and
+        // `Image.alpha` clamps at 0, so `turnOff()` lands one tick later.
+        expect(run.openActivators.has(LOCK)).toBe(false);
+        run.advance(new Set());
+        expect(run.openActivators.has(LOCK)).toBe(true);
+    });
+
+    it('shuts again when the player steps off a lock they are not inside', () => {
+        const run = createLevelRun({ levelSource, boot: ON_THE_BUTTON });
+        for (let t = 0; t < 101; t++) run.advance(new Set());
+        expect(run.openActivators.has(LOCK)).toBe(true);
+        // Walk SOUTH, away from both volumes: the occupancy guard no longer
+        // holds it open, so `returnToNormal` fires. This is the half that
+        // makes the crossing a knife-edge rather than a latch.
+        for (let t = 0; t < 40; t++) run.advance(new Set(['down']));
+        expect(run.openActivators.has(LOCK)).toBe(false);
+    });
+
+    it('is per LEVEL and per VISIT — a round trip re-solidifies it', () => {
+        const run = createLevelRun({
+            levelSource, boot: ON_THE_BUTTON,
+            noHazards: ['water', 'lava', 'ice', 'waterfall'],
+        });
+        const driveUntil = (held, done, what) => {
+            for (let t = 0; t < 600; t++) {
+                run.advance(new Set(held));
+                if (done()) return;
+            }
+            throw new Error(`never ${what} (level ${run.level} at `
+                + `${run.state.x},${run.state.y})`);
+        };
+        for (let t = 0; t < 101; t++) run.advance(new Set());
+        expect(run.openActivators.has(LOCK)).toBe(true);
+
+        // Out through L71's north trigger and straight back in through
+        // L75's. `Game` is reconstructed on every world swap, so a lock that
+        // was open when the player left is a fresh `type = normType` when
+        // they come back — memoising the state alongside the world would
+        // keep it open across a round trip the game closes.
+        driveUntil(['up'], () => run.state.y < 40, 'walked north');
+        driveUntil(['left'], () => run.state.x <= 106, 'lined up on the north trigger');
+        driveUntil(['up'], () => run.level === 75, 'left L71');
+        driveUntil(['right'], () => run.state.x > 96, 'cleared L75\'s return trigger');
+        driveUntil(['left', 'down'], () => run.level === 71, 'came back to L71');
+        expect(run.openActivators.has(LOCK)).toBe(false);
+    });
+});

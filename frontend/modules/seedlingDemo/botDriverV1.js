@@ -213,9 +213,19 @@ export function synthesizeTape(targets, opts = {}) {
  * any of the three relaxation fields makes it a v2 tape; passing a partial
  * set is a named error rather than a tape with two of three experiments
  * declared.
+ *
+ * ⚠ AND `persistence` IS SELECTED BY PRESENCE, NOT BY VALUE (R2). A v3 tape
+ * carries the field and a v1/v2 tape cannot have one — "versions below 3
+ * mean `persistence: []` BY DEFINITION, the build had no such field to
+ * read" (`tapeFormat.parseTape`). So an EMPTY clear list is still a v3
+ * tape when the caller declares one, and a caller that declares nothing
+ * gets the v2 tape it got yesterday, byte for byte. Deciding on the VALUE
+ * instead — "empty means v2" — is the R0 value-vs-presence bug: the two
+ * consumers would agree about the semantics and disagree about which
+ * artifact they were reading.
  */
 export function buildTape(perTick, boot = { level: 0, x: 80, y: 128 }, name,
-    { noclip = true, noDamage, noHazards, grants } = {}) {
+    { noclip = true, noDamage, noHazards, grants, persistence } = {}) {
     const relaxations = { noDamage, noHazards, grants };
     const declared = Object.entries(relaxations).filter(([, v]) => v !== undefined);
     if (declared.length > 0 && declared.length < 3) {
@@ -225,6 +235,16 @@ export function buildTape(perTick, boot = { level: 0, x: 80, y: 128 }, name,
             + 'different experiments.');
     }
     const v2 = declared.length === 3;
+    const v3 = persistence !== undefined;
+    if (v3 && !v2) {
+        throw new Error('buildTape: persistence is a version 3 field and version 3 is '
+            + 'version 2 plus clears, so a tape that clears anything must also declare '
+            + 'noDamage, noHazards and grants.');
+    }
+    if (v3 && !Array.isArray(persistence)) {
+        throw new Error('buildTape: persistence must be an ARRAY of {level, tag, note} '
+            + `— [] for "this is a v3 tape that clears nothing" — got ${typeof persistence}`);
+    }
 
     const open = new Map();   // key → span start tick
     const inputs = [];
@@ -245,12 +265,13 @@ export function buildTape(perTick, boot = { level: 0, x: 80, y: 128 }, name,
     }
 
     return {
-        tape_version: v2 ? 2 : 1,
+        tape_version: v3 ? 3 : (v2 ? 2 : 1),
         game: 'seedling',
         ...(name ? { name } : {}),
         boot: { level: boot.level, x: boot.x, y: boot.y },
         noclip,
         ...(v2 ? { noDamage, noHazards, grants } : {}),
+        ...(v3 ? { persistence } : {}),
         tick_count: perTick.length,
         inputs,
     };

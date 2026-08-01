@@ -243,6 +243,23 @@ export function createLevelRun({
          */
         get unfiredGrantLevels() { return [...grantsByLevel.keys()]; },
         get noDamage() { return noDamage; },
+        /**
+         * The activator ids that are NOT solid right now, in the level the
+         * run is in — or `null` under `noclip`, matching the arm `advance`
+         * hands `stepV2`.
+         *
+         * ⚠ THIS IS THE PLANNER'S ONLY LEGITIMATE VIEW OF AN OPEN LOCK.
+         * `botDriverV2` re-plans before every target, and a Lock's solidity
+         * is per-tick state: shut, then open after 101 ticks on its button,
+         * then shut again the moment the player steps off a volume they are
+         * not inside. A planner with its own idea of which locks are open
+         * would certify a route the executor then walks into a wall on —
+         * the walkTo-divergence lesson, one mechanic later. Reading it off
+         * the run means the two cannot disagree.
+         */
+        get openActivators() {
+            return noclip ? null : openActivatorIds(activatorStateFor(level));
+        },
         /** Build (and memoise) another level's world — for planning ahead. */
         worldFor,
 

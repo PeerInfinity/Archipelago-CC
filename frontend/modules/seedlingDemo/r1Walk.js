@@ -329,7 +329,7 @@ export function r1TapeSpecs(route) {
                 .filter((e) => e.fromLeg <= lastLeg)
                 .map((e) => driverVolume(e, Math.max(0, e.fromLeg - firstLeg))),
             maxTicksPerTarget: R1_MAX_TICKS_PER_WAYPOINT,
-            relax: { noDamage: true, noHazards: [...R1_NO_HAZARDS], grants },
+            relax: { noclip: true, noDamage: true, noHazards: [...R1_NO_HAZARDS], grants },
         });
     }
 
@@ -344,6 +344,11 @@ export function r1TapeSpecs(route) {
         extraVolumes: route.persistence_effects.map((e) => driverVolume(e, e.fromLeg)),
         maxTicksPerTarget: R1_MAX_TICKS_PER_WAYPOINT,
         relax: {
+            // ⚠ R1 IS THE NOCLIP RUNG, and it says so now rather than
+            // inheriting it. R2's walk keeps every other relaxation and puts
+            // the solids back, so `noclip` stopped being derivable from "is
+            // this a relaxed walk" — see `synthesizeLegs`.
+            noclip: true,
             noDamage: true,
             noHazards: [...R1_NO_HAZARDS],
             grants: route.grants.map((g) => ({ level: g.level, items: [...g.items] })),

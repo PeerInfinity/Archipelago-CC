@@ -93,6 +93,41 @@ describe('buildTape', () => {
     it('emits a valid tape', () => {
         expect(() => parseTape(buildTape([new Set(['right'])]))).not.toThrow();
     });
+
+    /**
+     * ⚠ The emitted VERSION is decided by what the caller declares, and for
+     * `persistence` that means by PRESENCE. Deciding it on the value —
+     * "an empty clear list is a version 2 tape" — is the R0 value-vs-presence
+     * bug, and it would be invisible until a rung emitted its first tape
+     * that clears nothing and got a build with no such field to read.
+     */
+    describe('R2: the version 3 field', () => {
+        const V2 = { noDamage: true, noHazards: [], grants: [] };
+        const perTick = [new Set(['right'])];
+
+        it('an EMPTY declared clear list is still a version 3 tape', () => {
+            const tape = buildTape(perTick, undefined, undefined,
+                { ...V2, noclip: false, persistence: [] });
+            expect(tape.tape_version).toBe(3);
+            expect(tape.persistence).toEqual([]);
+        });
+
+        it('an ABSENT clear list is the version 2 tape R1 emits', () => {
+            const tape = buildTape(perTick, undefined, undefined, { ...V2, noclip: true });
+            expect(tape.tape_version).toBe(2);
+            expect(tape.persistence).toBeUndefined();
+        });
+
+        it('refuses clears without the version 2 relaxations under them', () => {
+            expect(() => buildTape(perTick, undefined, undefined, { persistence: [] }))
+                .toThrow(/version 3 is version 2 plus clears/);
+        });
+
+        it('refuses a persistence that is not an array', () => {
+            expect(() => buildTape(perTick, undefined, undefined,
+                { ...V2, persistence: 'none' })).toThrow(/must be an ARRAY/);
+        });
+    });
 });
 
 describe('synthesizeTape reaches its targets', () => {

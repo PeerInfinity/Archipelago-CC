@@ -458,6 +458,7 @@ describe('the committed fixtures are what the driver emits today', () => {
         ], {
             levelSource,
             relax: {
+                noclip: true,
                 noDamage: true,
                 noHazards: ['water', 'pit', 'lava', 'ice', 'waterfall'],
                 grants: [{ level: 10, items: ['sword'] }],
@@ -605,6 +606,7 @@ describe('what wall-slide pins, in values', () => {
  */
 describe('the relaxed driver', () => {
     const RELAX = Object.freeze({
+        noclip: true,
         noDamage: true,
         noHazards: ['water', 'pit', 'lava', 'ice', 'waterfall'],
         grants: [],
@@ -619,7 +621,7 @@ describe('the relaxed driver', () => {
     ];
 
     it('refuses a partial relaxation rather than defaulting one', () => {
-        for (const missing of ['noDamage', 'noHazards', 'grants']) {
+        for (const missing of ['noclip', 'noDamage', 'noHazards', 'grants']) {
             const relax = { ...RELAX };
             delete relax[missing];
             expect(() => synthesizeLegs([{ level: 0, targets: [{ x: 96, y: 136 }] }],
@@ -731,7 +733,10 @@ describe('the relaxed driver', () => {
 });
 
 describe('R1: pit exits, and the forbidden-floor policy', () => {
-    const R1 = { noHazards: ['water', 'lava', 'ice', 'waterfall'], noDamage: true, grants: [] };
+    const R1 = {
+        noclip: true, noHazards: ['water', 'lava', 'ice', 'waterfall'],
+        noDamage: true, grants: [],
+    };
     const CLUSTER = [
         { level: 83, targets: [], exit: { pit: { tx: 2, ty: 1 } } },
         { level: 84, targets: [], exit: { pit: { tx: 2, ty: 2 } } },
@@ -820,5 +825,100 @@ describe('R1: pit exits, and the forbidden-floor policy', () => {
             { level: 12, targets: [] },
         ], { levelSource, boot: { level: 83, x: 16, y: 16 }, relax: R1 }))
             .toThrow(/falls to level 84, but legs\[1\] declares level 12/);
+    });
+});
+
+/**
+ * ── R2: the relaxation that keeps the SOLIDS ──────────────────────────
+ *
+ * Until R2 the driver read `noclip: Boolean(relax)`. Every tape that
+ * existed was a noclip tape, so the derivation was true — and it was true
+ * for a reason that stopped holding the moment a rung wanted `noDamage`,
+ * `noHazards`, `grants` and a clear list WITH collision on. What is
+ * checked here is that the one object still decides all three consumers
+ * (plan, run, tape) now that it decides one more thing.
+ */
+describe('R2: a relaxed walk with collision ON', () => {
+    const R2 = Object.freeze({
+        noclip: false,
+        noDamage: true,
+        noHazards: ['water', 'lava', 'ice', 'waterfall'],
+        grants: [],
+    });
+
+    it('emits a tape that says noclip false, and plans the same way', () => {
+        // Level 0's lake and its statue are real obstacles to this walk; the
+        // v2 fixtures already prove the planner threads them. The claim here
+        // is narrower and is the one that was derivable before: the EMITTED
+        // TAPE agrees with the plan.
+        const { tape } = synthesizeWalk([{ x: 264, y: 216 }], { levelSource, relax: R2 });
+        const parsed = parseTape(tape);
+        expect(parsed.tape_version).toBe(2);
+        expect(parsed.noclip).toBe(false);
+        expect(parsed.noDamage).toBe(true);
+        // ...and the tape the runner reads walks the walk the driver drove.
+        const run = runTape(tape, { levelSource });
+        expect(Math.abs(run.final.x - 264)).toBeLessThanOrEqual(DEFAULT_TOLERANCE);
+        expect(Math.abs(run.final.y - 216)).toBeLessThanOrEqual(DEFAULT_TOLERANCE);
+    });
+
+    it('consults the BLOCKING census, so an unpriced collider stops it by name', () => {
+        // The mirror image of R0 slice 1b: a noclip walk may cross a level
+        // whose colliders nobody priced, and a collision walk may not. Level
+        // 115 is outside R2's route bill, so its census throws — and the
+        // throw naming the tag is the whole point.
+        expect(() => synthesizeLegs([{ level: 4, targets: [{ x: 120, y: 120 }] }],
+            { levelSource, boot: { level: 4, x: 112, y: 112 }, relax: R2 }))
+            .toThrow(/"arrowtrap".*NOT for the "blocking" role/s);
+        // The same level under noclip does not even ask.
+        expect(() => buildLevelWorld(levelSource(4), { roles: RELAXED_ROLES }))
+            .not.toThrow();
+    });
+
+    it('refuses a non-boolean noclip rather than coercing it', () => {
+        expect(() => synthesizeWalk([{ x: 96, y: 136 }],
+            { levelSource, relax: { ...R2, noclip: 'false' } }))
+            .toThrow(/noclip must be a boolean/);
+    });
+
+    describe('persistence rides the same object', () => {
+        // L3's `breakablerock@96,112` carries tag 0 and `BreakableRock.as:50`
+        // removes it on a cleared flag. One clear, one blocker, one level.
+        const CLEAR = Object.freeze([{ level: 3, tag: 0, note: 'breakablerock@96,112' }]);
+
+        it('makes a version 3 tape by PRESENCE, not by value', () => {
+            const empty = synthesizeWalk([{ x: 264, y: 216 }],
+                { levelSource, relax: { ...R2, persistence: [] } });
+            expect(parseTape(empty.tape).tape_version).toBe(3);
+            expect(parseTape(empty.tape).persistence).toEqual([]);
+            // ...and omitting it is still the version 2 tape R1 emits, which
+            // is what keeps the twenty-three frozen fixtures byte-identical.
+            const absent = synthesizeWalk([{ x: 264, y: 216 }], { levelSource, relax: R2 });
+            expect(parseTape(absent.tape).tape_version).toBe(2);
+        });
+
+        it('carries the clears into the tape it emits', () => {
+            const { tape } = synthesizeLegs([{ level: 3, targets: [{ x: 40, y: 72 }] }], {
+                levelSource,
+                boot: { level: 3, x: 32, y: 64 },
+                relax: { ...R2, persistence: [...CLEAR] },
+            });
+            expect(parseTape(tape).persistence)
+                .toEqual([{ level: 3, tag: 0, note: 'breakablerock@96,112' }]);
+        });
+
+        it('plans against the CLEARED world, not the built one', () => {
+            const shut = buildLevelWorld(levelSource(3));
+            const open = buildLevelWorld(levelSource(3), { cleared: [0] });
+            const rock = (w) => w.solids.some((s) => s.tag === 'breakablerock');
+            expect(rock(shut)).toBe(true);
+            expect(rock(open)).toBe(false);
+        });
+
+        it('refuses a persistence that is not an array', () => {
+            expect(() => synthesizeWalk([{ x: 96, y: 136 }],
+                { levelSource, relax: { ...R2, persistence: { 3: 0 } } }))
+                .toThrow(/persistence must be an array/);
+        });
     });
 });

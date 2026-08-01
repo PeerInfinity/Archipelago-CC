@@ -66,7 +66,7 @@
 
 import { serializeTape } from './tapeFormat.js';
 import { createLevelRun } from './levelRun.js';
-import { RELAXED_ROLES, TILE_SIZE } from './levelWorld.js';
+import { RELAXED_ROLES, ROLES, TILE_SIZE } from './levelWorld.js';
 import { assertRect, rectsOverlap } from './levelWorld.js';
 import { playerBoxAt, terrainProbeRect } from './playerPhysicsV2.js';
 import {
@@ -193,10 +193,19 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
     const {
         noclip = false, noHazards = [], avoidVolumes = false, allowPit = null,
         contacts = EMPTY_CONTACTS, extraVolumes = EMPTY_VOLUMES,
+        openActivators = null,
     } = opts;
     const box = playerBoxAt(x, y);
+    // ⚠ `openActivators` is LIVE STATE, not a plan setting, and that is why
+    // it arrives per call rather than sitting in the leg's plan object. A
+    // Lock is Solid until its button has been held for 101 ticks and Solid
+    // again the moment the player steps off (`activators.js`), so "is this
+    // tile walkable" has different answers at two points in the SAME leg.
+    // The caller passes the RUN's own set — the same one `stepV2` consults —
+    // so the planner cannot believe a door is open that the engine will
+    // find shut.
     const geometry = level.plannerBlockerAt(box, terrainProbeRect(x, y),
-        { noclip, noHazards });
+        { noclip, noHazards, openActivators });
     if (geometry) return geometry;
     // ⚠ PIT TILES ARE FORBIDDEN FLOOR, and this policy is LOAD-BEARING from
     // R1 on. Until R1 a pit was unmodelled terrain, so `plannerBlockerAt`
@@ -648,30 +657,58 @@ export function synthesizeLegs(legs, opts = {}) {
     // of `relax` being a single argument is that `planWaypoints`,
     // `createLevelRun` and `buildTape` cannot be given different ideas of
     // which experiment this is.
+    //
+    // ⚠⚠ `noclip` JOINED THE OBJECT AT R2, and it is the reason this
+    // paragraph is not decoration. Until R2 the driver read
+    // `noclip: Boolean(relax)` — "a relaxed walk is a noclip walk" — which
+    // was true of every tape that existed and is false of every R2 tape:
+    // R2's whole subject is a walk that keeps `noDamage`, `noHazards`,
+    // `grants` and a persistence clear list while putting the SOLIDS BACK.
+    // Derived from the presence of a sibling field, `noclip` was one edit
+    // away from a planner that routed around walls the emitted tape would
+    // walk through, or the reverse. It is declared now, like the rest.
     if (relax !== null) {
-        for (const field of ['noDamage', 'noHazards', 'grants']) {
+        for (const field of ['noclip', 'noDamage', 'noHazards', 'grants']) {
             if (relax[field] === undefined) {
                 fail(`synthesizeLegs: opts.relax must declare ${field}. A relaxation `
                     + 'with a default is a tape the planner and the game read '
                     + 'differently.');
             }
         }
+        if (typeof relax.noclip !== 'boolean') {
+            fail(`synthesizeLegs: opts.relax.noclip must be a boolean, got `
+                + `${JSON.stringify(relax.noclip)}`);
+        }
+        // `persistence` is the ONE optional field, and it is optional by
+        // PRESENCE: declaring it (even as []) makes a version 3 tape,
+        // omitting it makes the version 2 tape R0 and R1 emit. See
+        // `buildTape`'s docblock for why the alternative — deciding on the
+        // value — is the R0 value-vs-presence bug.
+        if (relax.persistence !== undefined && !Array.isArray(relax.persistence)) {
+            fail('synthesizeLegs: opts.relax.persistence must be an array of '
+                + '{level, tag, note} clears, or absent for a version 2 tape');
+        }
     }
+    const noclip = relax ? relax.noclip : false;
     const basePlan = relax
-        ? { noclip: true, noHazards: relax.noHazards, avoidVolumes: true }
+        ? { noclip, noHazards: relax.noHazards, avoidVolumes: true }
         : {};
 
     const run = createLevelRun({
         levelSource,
         boot,
-        noclip: Boolean(relax),
+        noclip,
         ...(relax ? {
             noHazards: relax.noHazards,
             noDamage: relax.noDamage,
             grants: relax.grants,
+            persistence: relax.persistence ?? [],
             // A relaxed walk consults no collider, so it must not be stopped
-            // by one being unpriced — that is the whole of slice 1b.
-            roles: RELAXED_ROLES,
+            // by one being unpriced — that is the whole of slice 1b. A walk
+            // with collision ON is the opposite: it consults EVERY role, and
+            // an unpriced collider must stop it by name. R2 paid that bill
+            // for the levels its walk enters.
+            roles: noclip ? RELAXED_ROLES : ROLES,
         } : {}),
     });
     const perTick = [];
@@ -713,13 +750,25 @@ export function synthesizeLegs(legs, opts = {}) {
         // two tiles from it.
         const legVolumes = extraVolumes.filter((v) => li >= v.fromLeg);
         const plan = { ...basePlan, contacts: legContacts, extraVolumes: legVolumes };
+        /**
+         * The leg's plan AS OF NOW. Everything in `plan` is a decision the
+         * caller made about this leg; `openActivators` is the one input that
+         * changes DURING it, so it is read at the moment each waypoint list
+         * is computed rather than captured once at the top. A hold opens a
+         * lock in the middle of a leg — planning the leg's later targets
+         * against the state before the hold would route around a door the
+         * run has already opened.
+         */
+        const planNow = (extra) => ({
+            ...plan, openActivators: run.openActivators, ...extra,
+        });
 
         const legWaypoints = [];
         (leg.targets ?? []).forEach((target, ti) => {
             if (!Number.isFinite(target?.x) || !Number.isFinite(target?.y)) {
                 fail(`legs[${li}].targets[${ti}] must be {x, y} finite numbers`);
             }
-            const wps = planWaypoints(run.world, run.state, target, null, plan);
+            const wps = planWaypoints(run.world, run.state, target, null, planNow());
             legWaypoints.push(...wps);
             wps.forEach((wp, wi) => drive(run, wp, perTick, {
                 until: 'arrival',
@@ -782,7 +831,7 @@ export function synthesizeLegs(legs, opts = {}) {
                     + `declares level ${destination}.`);
             }
             const centre = tileCentre(tx, ty);
-            const legPlan = { ...plan, allowPit: { tx, ty } };
+            const legPlan = planNow({ allowPit: { tx, ty } });
             const wps = planWaypoints(run.world, run.state, centre, null, legPlan);
             legWaypoints.push(...wps);
             wps.forEach((wp, wi) => {
@@ -826,7 +875,7 @@ export function synthesizeLegs(legs, opts = {}) {
             x: teleporter.rect.x + TILE_SIZE / 2,
             y: teleporter.rect.y + TILE_SIZE / 2,
         };
-        const wps = planWaypoints(run.world, run.state, centre, index, plan);
+        const wps = planWaypoints(run.world, run.state, centre, index, planNow());
         legWaypoints.push(...wps);
         wps.forEach((wp, wi) => {
             const last = wi === wps.length - 1;
@@ -861,8 +910,13 @@ export function synthesizeLegs(legs, opts = {}) {
     }
 
     return {
+        // ⚠ `...relax` and nothing else. Spreading a `noclip` of this
+        // module's own choosing OVER the relax object — which is what this
+        // line did until R2 — is precisely the split the docblock above
+        // forbids: the tape would have said one thing and the plan another,
+        // and only the game would have found out.
         tape: buildTape(perTick, boot, name, relax
-            ? { noclip: true, ...relax }
+            ? { ...relax }
             : { noclip: false }),
         arrivals,
         transitions: run.transitions.map((t) => ({ ...t })),
