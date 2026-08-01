@@ -33,7 +33,11 @@
  * it, rather than eagerly for all 116.
  */
 
-import { buildLevelWorld } from './levelWorld.js';
+import { buildLevelWorld, rectsOverlap } from './levelWorld.js';
+import {
+    INITIAL_FRAMES_THIS_CHARACTER, PICKUP_CEREMONY, TALK_KEY,
+    beginDialogue, stepDialogue,
+} from './dialogue.js';
 import {
     createActivatorState, openActivatorIds, stepActivators,
 } from './activators.js';
@@ -224,6 +228,100 @@ export function createLevelRun({
     };
     applyGrantsFor(level);
 
+    // ── the pickup CEREMONY (R3) ──────────────────────────────────────
+    /**
+     * The ceremony currently running, or null.
+     *
+     * ⚠ THIS IS THE CRUTCH `grants` USED TO BE. R0 handed an item over as a
+     * property write on room entry; R3 walks onto the pickup and lets the
+     * game do it, which costs the tape TICKS — and the number of them is
+     * what the observation stream measures.
+     *
+     * Two phases, and only one of them is visible:
+     *
+     *   PHASE A — `Pickup.pick_up()` sets `Game.freezeObjects` and counts
+     *     `specialTimer` down from 150. `Pickup` is the only writer of the
+     *     flag on those frames, so the bot's dead-frame gate holds and the
+     *     tick counter does not advance. **The stream cannot see phase A at
+     *     all**, so this model does not represent it: no ticks, no
+     *     observations, nothing to reproduce. (It is 151 dead frames in the
+     *     `r3-collect-sword` recording, against 20 for the boot fade.)
+     *
+     *   PHASE B — the NPC is up. `Game.freezeObjects` now has several
+     *     writers and no per-frame reset, so it reads TRUE inside
+     *     `Mobile.mobileUpdate` and FALSE again at the next frame's gate:
+     *     **the tick counter runs while the player cannot move.** Every
+     *     observation repeats the contact position, and the TAPE supplies
+     *     the X releases, because `NPC.talk()` reads `Input.released` from
+     *     the NPC's own update, outside the frozen block.
+     *
+     * ⚠ VELOCITY SURVIVES. `mobileUpdate` skips friction, input AND the
+     * move, so `v` is exactly what it was when the freeze began — which is
+     * why `r3-collect-sword` shows the player still drifting for three
+     * ticks after the ceremony (61.65 -> 61.00 -> 60.60 -> 60.45) before
+     * friction stops it. Not stepping is therefore the whole model: nothing
+     * about the state is reset.
+     */
+    let ceremony = null;
+    /** `${level}:${x},${y}` of every pickup this run has already taken. */
+    const collectedPickups = new Set();
+    const pickupKey = (n, p) => `${n}:${p.x},${p.y}`;
+    /** One record per completed ceremony, for the acceptance ledger. */
+    const collected = [];
+    /**
+     * `Game.framesThisCharacter`, which is a `Game` FIELD and not the NPC's.
+     *
+     * ⚠ It carries across dialogues within one level and is fresh only on a
+     * world swap, so two ceremonies in the same room do NOT cost the same
+     * number of ticks. Owned here rather than inside a dialogue because a
+     * dialogue does not outlive its NPC and this does.
+     */
+    let framesThisCharacter = INITIAL_FRAMES_THIS_CHARACTER;
+
+    /** The item a pickup grants, and the text its ceremony shows. */
+    function ceremonyFor(p) {
+        const entry = PICKUP_CEREMONY[p.tag];
+        if (!entry) {
+            throw new Error(`levelRun: the player is standing on a "${p.tag}" pickup `
+                + 'with no ceremony entry. Add it to `dialogue.PICKUP_CEREMONY` with its '
+                + 'item name and its verbatim text — an unpriced pickup would cost the '
+                + 'tape an unknown number of ticks and every observation after it would '
+                + 'be shifted.');
+        }
+        return entry;
+    }
+
+    /**
+     * The release EDGE the ceremony's dialogue reads.
+     *
+     * `Input.released(k)` is true on the frame the KEY_UP was dispatched,
+     * which for a span `{from, to}` is tick `to` — held at `to - 1` and not
+     * at `to`. The run derives it rather than being told, so the driver and
+     * the runner cannot grow two ideas of what a release is.
+     */
+    let prevHeld = new Set();
+    const releasedThisTick = (held, key) => prevHeld.has(key) && !held.has(key);
+
+    /**
+     * Does the CURRENT position stand on an uncollected pickup?
+     *
+     * ⚠ Tested BEFORE the step, because `World.addUpdate` PREPENDS and
+     * `loadlevel` adds the Player before the pickups — so a `Pickup` tests
+     * the position the PREVIOUS tick left, exactly as a teleporter does.
+     * The recording agrees: the contact observation is 23 and the freeze
+     * covers 23..57, i.e. the pickup saw observation 23 and the advance that
+     * would have produced 24 became phase B's first frame instead.
+     */
+    function pickupUnderfoot() {
+        if (!world.pickups) return null;
+        const box = playerBoxAt(state.x, state.y);
+        for (const p of world.pickups) {
+            if (collectedPickups.has(pickupKey(level, p))) continue;
+            if (rectsOverlap(box, p.rect)) return p;
+        }
+        return null;
+    }
+
     return {
         get level() { return level; },
         get world() { return world; },
@@ -233,6 +331,15 @@ export function createLevelRun({
         get transports() { return transports.map((r) => ({ ...r })); },
         get ticksCompleted() { return ticksCompleted; },
         get inventory() { return { ...inventory }; },
+        /**
+         * One record per completed ceremony: `{t, level, item, frames}`.
+         *
+         * The crutch LEDGER at R3. A grant that fired is in `grantsFired`;
+         * an item that was walked over and talked through is here. The
+         * claim "collected for real, not granted" is exactly the statement
+         * that the first list is empty and this one is not.
+         */
+        get collected() { return collected.map((c) => ({ ...c })); },
         /** `{t, level, items}` per grant that fired, in firing order. */
         get grantsFired() { return firedGrants.map((g) => ({ ...g, items: [...g.items] })); },
         /**
@@ -287,6 +394,93 @@ export function createLevelRun({
             // every Lock. Stepping the machinery first would open a lock one
             // tick early, in every run, forever.
             const activators = activatorStateFor(level);
+
+            // ── the ceremony, before anything else ─────────────────────
+            // A pickup updates BEFORE the player, so a contact found here
+            // is a contact the game found on this frame too. Starting one
+            // and stepping one are the same branch: phase A is invisible,
+            // so the advance that discovers the contact IS phase B's first
+            // frame.
+            if (ceremony === null) {
+                const hit = pickupUnderfoot();
+                if (hit) {
+                    const entry = ceremonyFor(hit);
+                    ceremony = {
+                        pickup: hit,
+                        level,
+                        item: entry.item,
+                        // ⚠ `text: ''` is a REAL case (a totem part, a
+                        // non-zero boss key): `pick_up()` spawns no NPC, so
+                        // phase A runs and the pickup removes itself with no
+                        // dialogue at all. Charging it a dialogue would cost
+                        // the tape ticks the game never spends.
+                        dialogue: entry.text === ''
+                            ? null
+                            : beginDialogue(entry.text, { framesThisCharacter }),
+                    };
+                }
+            }
+            if (ceremony !== null) {
+                const released = releasedThisTick(held, TALK_KEY);
+                prevHeld = new Set(held);
+                if (ceremony.dialogue) stepDialogue(ceremony.dialogue, released);
+                const finishing = ceremony.dialogue === null || ceremony.dialogue.done;
+                if (finishing) {
+                    // `removeSelf()` -> `removed()`: the property write and
+                    // `Game.setPersistence`. The item lands HERE and not on
+                    // contact, which is the whole difference between a real
+                    // collection and R0's grant.
+                    collectedPickups.add(pickupKey(ceremony.level, ceremony.pickup));
+                    // `item: null` is a pickup the fourteen-property mirror
+                    // does not track (a boss key, a totem part) — the
+                    // ceremony is real, there is just nothing to apply.
+                    if (ceremony.item) applyItem(inventory, ceremony.item);
+                    collected.push({
+                        t: ticksCompleted + 1,
+                        level: ceremony.level,
+                        item: ceremony.item,
+                        frames: ceremony.dialogue ? ceremony.dialogue.frames : 1,
+                    });
+                    if (ceremony.dialogue) {
+                        framesThisCharacter = ceremony.dialogue.framesThisCharacter;
+                    }
+                    ceremony = null;
+                    // ⚠ AND THEN FALL THROUGH TO A NORMAL STEP. The frame
+                    // that ENDS a dialogue is not a frozen frame: the NPC
+                    // updates BEFORE the player (`World.addUpdate` PREPENDS
+                    // and the temporary NPC is added last), so `talking =
+                    // false` has already cleared `Game.freezeObjects` by the
+                    // time `Mobile.mobileUpdate` reads it, and the player
+                    // moves on that very tick. The oracle says so exactly:
+                    // `r3-collect-sword` is frozen for observations 24..57
+                    // and observation 58 — the completing one — is already
+                    // back in motion at y 61.00, carrying the velocity the
+                    // freeze preserved. Counting it as frozen made the model
+                    // one tick long and was the only divergence in the
+                    // whole ceremony.
+                } else {
+                    ticksCompleted++;
+                    // The game keeps updating every non-Mobile entity
+                    // through a freeze, so a Button under the frozen player
+                    // stays pressed and a Lock's fade keeps running.
+                    // Unobservable on R3's route — no ceremony is near a
+                    // presser — but transcribed rather than assumed,
+                    // because "no route does that yet" is how the statue got
+                    // its offset wrong for two slices.
+                    if (!noclip) {
+                        stepActivators(activators, world, playerBoxAt(state.x, state.y));
+                    }
+                    // No step: the position is unchanged and — critically —
+                    // so is the VELOCITY, which is why the player drifts on
+                    // for a few ticks once the freeze lifts.
+                    return {
+                        transition: null, grant: null, hitX: null, hitY: null,
+                        frozen: true,
+                    };
+                }
+            } else {
+                prevHeld = new Set(held);
+            }
             const next = stepV2(state, held, {
                 level: world,
                 noclip,

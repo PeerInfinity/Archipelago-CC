@@ -220,3 +220,79 @@ export function stepDialogue(d, released) {
     d.frames++;
     return d;
 }
+
+/**
+ * Every placed pickup, by its EXTRACT TAG: the item it grants and the text
+ * its ceremony shows.
+ *
+ * The texts are verbatim from each `Pickups/*.as` constructor and the item
+ * names are `tapeFormat.ITEM_PROPERTIES` keys, so a typo in either is a
+ * loud lookup failure rather than a ceremony that runs the wrong length.
+ *
+ * ⚠ `text: ''` IS A REAL CASE, not a gap. `Pickup.pick_up()` spawns the NPC
+ * only `if (specialTimer <= 0 && text != "")`, so a pickup with no text
+ * runs PHASE A and then removes itself on the next frame — 150 invisible
+ * frames and no dialogue at all. `BossTotemPart` has none, and `BossKey`
+ * has one only for `keyType == 0`. Modelling those as a dialogue would
+ * charge the tape ticks the game never spends.
+ *
+ * ⚠ `item: null` means "the game tracks this, the tape's inventory mirror
+ * does not" — a boss key or a totem part is not one of the fourteen
+ * properties `botStatus` reports, so there is nothing to apply here even
+ * though the ceremony is real.
+ */
+export const PICKUP_CEREMONY = Object.freeze({
+    sword: Object.freeze({
+        item: 'sword',
+        text: 'You got the sword!~Double tap to dash and swing.',
+    }),
+    shield: Object.freeze({
+        item: 'shield',
+        text: 'You got the shield!~It protects you when moving.',
+    }),
+    conch: Object.freeze({
+        item: 'conch',
+        text: 'You got the Conch!~Now you can swim in water!',
+    }),
+    feather: Object.freeze({
+        item: 'feather',
+        text: "You got the Penguin's Feather!~You can now swim up waterfalls.",
+    }),
+    torchpickup: Object.freeze({
+        item: 'torch',
+        text: 'You got the light!~It lights your path with color.',
+    }),
+    ghostspear: Object.freeze({
+        item: 'spear',
+        text: 'You got the Ghost Spear!~It hits harder and through walls.',
+    }),
+    darkshield: Object.freeze({
+        item: 'darkshield',
+        text: 'You got the Dark Shield!~It hurts what it touches.',
+    }),
+    darksuit: Object.freeze({
+        item: 'darksuit',
+        text: 'You got the Dark Suit!~It hurts what it hits, and it lets you swim in lava.',
+    }),
+    health: Object.freeze({
+        item: 'health',
+        text: 'You got health!',
+    }),
+    wand: Object.freeze({
+        item: 'wand',
+        text: 'You got the Wand!~It shoots weakly, but far.',
+    }),
+    ghostsword: Object.freeze({
+        item: 'ghostsword',
+        text: 'You got the Ghost Sword!~It hits through walls.',
+    }),
+    firewand: Object.freeze({
+        item: 'firewand',
+        text: 'You got the Fire Wand!~It shoots fire, weakly, but far.',
+    }),
+    // No text: phase A only. See the warning above.
+    totempart: Object.freeze({ item: null, text: '' }),
+});
+
+/** The tape key whose RELEASE advances a dialogue — `Player.keys[6]` is X. */
+export const TALK_KEY = 'primary';
