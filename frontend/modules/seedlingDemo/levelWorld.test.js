@@ -749,6 +749,43 @@ describe('the pixelmask seam', () => {
         expect(new Set(L94.pixelmasks.map((p) => p.cls.mask)).size).toBeGreaterThan(1);
     });
 
+    it('maskHitsBox rounds NEGATIVE box coordinates toward zero, not down', () => {
+        // ⚠ This case exists because the mutation "Math.trunc -> Math.floor"
+        // did not bite anything else. Every committed mask sits at x,y >= 0
+        // and the two agree for positive inputs, so the rule was
+        // transcribed correctly and asserted nowhere — a check that cannot
+        // fail. It IS reachable: a player at x = 0..1 has box.x = -2..-1,
+        // and level 94's cliffsides start at column 0.
+        //
+        // The mask is hand-built rather than borrowed, because the rule is
+        // arithmetic and needs a shape chosen to expose it: one solid pixel
+        // at column 2, which lands inside trunc's window [0,3) and outside
+        // floor's [0,2).
+        const m = { w: 4, h: 1, rows: ['..#.'] };
+        expect(maskHitsBox(m, 0, 0, rect(-1.5, 0, 4, 5))).toBe(true);
+        // ...and the same box a pixel further left misses it either way, so
+        // the assertion above is about the rounding and not about the mask.
+        expect(maskHitsBox(m, 0, 0, rect(-2.5, 0, 4, 5))).toBe(false);
+    });
+
+    it('maskPlacement APPLIES the class offset — all seventeen happen to be zero', () => {
+        // ⚠ Also a mutation-driven test: deleting `+ cls.dx` from
+        // `maskPlacement` broke nothing, because in every class the ctor
+        // offset and the mask offset CANCEL (TreeLarge's (+80,+96) against
+        // (-80,-96), OpenTree's (+16,+16) against (-16,-16)), so every
+        // committed `dx`/`dy` is 0. The arithmetic is still the class's, and
+        // the next class classified may not cancel — so it is exercised
+        // here directly rather than left as an expression nothing reads.
+        const shifted = { ...ENTITY_CLASSES.treelarge, dx: 7, dy: -3 };
+        expect(maskPlacement(shifted, 100, 100)).toMatchObject({ maskX: 107, maskY: 97 });
+        // and the real classes really are all zero, which is the fact that
+        // made the mutation survive — recorded rather than left implied.
+        for (const [tag, cls] of Object.entries(ENTITY_CLASSES)) {
+            if (cls.collider !== 'pixelmask') continue;
+            expect([cls.dx, cls.dy], tag).toEqual([0, 0]);
+        }
+    });
+
     it('maskHitsBox truncates the box TOWARD ZERO, as the C cast does', () => {
         // `bd_hit_test` casts the rect's x/y with `(int32_t)`, which is
         // truncation, not floor. A left-half mask at the origin, so column
