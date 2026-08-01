@@ -233,6 +233,42 @@ exact differential green on everything modelled, (d) updates the honest
   list with its rung named — losing an item to a named solid is the ladder
   working. ⚠ `lavaboss` is on a route level and IS in the player's solid
   list — slice 0 verdict required.
+
+  **🟡 PARTIAL 2026-07-31 — the geometry and the mechanics are IN and
+  verified; the WALK is outstanding.** As-built: kickoff §8 (recon), §9
+  (rulings), §10 (slices 1–5a), §11 (what remains).
+
+  - **The slice-0 verdict, at one-pixel resolution with an R1 positive
+    control:** with solids armed and the ruled crutches, **6 of the 11
+    items survive**, and each of the five seals is ONE named entity — L71
+    `lock@112,160`, L48 `karlore@112,272`, L38 `cover@144,112` (then L39's
+    wandlocks), L63's bridge at (2,9) (then L65 `rock@192,96`). `lavaboss`
+    seals nothing: L82 is the terminal leg and the boss sits 230 px from
+    the arrival.
+  - **User rulings 2026-07-31:** Activators modelled (game mechanics, not
+    a crutch) → **+darkshield +darksuit**; `fire` stays blocked so R1's and
+    R2's blocked lists keep meaning the same thing → conch stays sealed;
+    pushing deferred to R3 (it buys nothing alone — both wand and health
+    are item-USE gated behind theirs). **Target claim: 8 items,
+    `hitsMax == 3`.**
+  - **Shipped:** the 17 committed pixelmasks + the two-half collide
+    transcription + the cliffside frame index; the 69-tag blocking census
+    (full census 11 → 82 levels, and the table now checks itself against
+    `PLAYER_SOLID_TYPES`); the Activators state machine (lock opens on 101,
+    cover on 11 — the clamped-alpha knife-edge); tape v3 + the ONE AS3
+    change; **the byte-inertness gate PASSED** (23 fixtures byte-identical,
+    R1's headline claim intact); `--tier=fast|full`; and the
+    `l71-button-lock` / `l71-lock-shut` oracle pair, where the game agreed
+    with the model to the float (116.44999999999997 vs a predicted 116.45).
+  - **Outstanding:** a `noclip: false` planning path in `synthesizeLegs`, a
+    HOLD leg primitive for the button, the re-planned route over post-clear
+    geometry, the segment recordings, and the acceptance readout.
+  - ⚠ **Corrections to this entry's own brief, found at slice 0:**
+    `Lock.check()` needs `tSet < 0` and `int("")` is 0, so three route
+    locks and 13 of 14 wandlocks do NOT despawn; a rope SHRINKS rather than
+    despawning (and its span lives in a `<node>` the extract was dropping);
+    `chest` IS clearable and was missing from the list; the statues are
+    plain hitboxes, not pixelmasks. The route bill is **69** tags, not ~93.
 - **R3 — interactions + real collection.** Item USE lands (X-press swings,
   `genericHit`, persistence flips): breakable rocks/ropes (Sword OR Spear),
   then locks (keys/shield/wand/magical). Real walk-over collection retires
