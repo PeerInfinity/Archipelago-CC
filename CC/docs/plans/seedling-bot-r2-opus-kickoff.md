@@ -488,3 +488,70 @@ today** (checked all 116 `.oel` files), so this is a note, not a fix.
 Nothing found here needs a second AS3 change. The `persistence` field is
 still the whole batch. Every seal in §8.3 is opened (or not) on the JS side
 or by the existing tape mechanisms; none of them wants a new `Bot` flag.
+
+## 9. ⚖ THE SLICE-0 RULINGS (user, 2026-07-31)
+
+§8.3's escalation put three trades to the user. All three answered:
+
+1. **Model the Activators — YES.** Button/lock/cover groups become modelled
+   GAME MECHANICS, not a crutch: press detection (`Button.update` collides
+   `["Player","Enemy","Solid"]` at its own position and sets
+   `activate = v.length > 0`, propagating to every `Activators` sharing its
+   `t`), the alpha fade (`Lock.activationStep` decrements by 0.01/frame, so
+   **100 ticks of standing on the button** before `turnOff()`; `Cover`'s is
+   0.1/frame, so 10), and the `returnToNormal` guard — a lock cannot
+   re-solidify while anything in `hitables` overlaps it. Nothing later has to
+   retire this. **Buys darkshield + darksuit.**
+   ⚠ It is NOT proven the bot can cross: the player must leave the button and
+   overlap the lock **in the same tick** (the two volumes are disjoint by one
+   pixel of `y`), and whether `Lock.update` runs before or after
+   `Player.update` decides it. **That is an oracle question, and slice 4 owns
+   it** — a `hold-the-button` fixture, recorded first and reconciled EXACT.
+   If the game says no, L71 joins the blocked list and the claim is 6.
+2. **`fire` stays BLOCKED.** Granting it (which would despawn `karlore` and
+   unseal the conch) is declined so that R1's and R2's published blocked
+   lists keep meaning the same thing, and so the grant crutch stays limited
+   to items whose rooms the walk actually collects from. `conch` joins the
+   blocked list as **"L48 `karlore@112,272`, gated on `Player.hasFire` — R5"**.
+3. **Pushables → the blocked list, deferred to R3.** Modelling pushing buys
+   nothing on its own: L38's cover leads into L39's wandlock puzzle (wand
+   shots), and L65's alternative route needs L63's bridge speared first.
+   Both `wand` and `health` are ITEM-USE gated, which is R3's subject.
+
+### 9.1 The R2 target claim
+
+**8 of the 13 non-combat items:** sword, shield, feather, darksword, torch,
+spear, darkshield, darksuit — i.e. R1's eleven minus `conch`, `wand` and
+`health`. `hitsMax` stays at its base 3 (health is blocked), which is itself
+an assertion: R1's `hitsMax == 4` becomes R2's `hitsMax == 3`, and a run that
+reported 4 would mean a grant fired that should not have.
+
+**The blocked list, published with the rung that opens each:**
+
+| item | seal | rung |
+|---|---|---|
+| `conch` | L48 `karlore@112,272`, despawns only on `Player.hasFire` | R5 (`fire` needs BobBoss) |
+| `wand` | L38 `cover@144,112` needs `pushableblockfire@80,208` pushed onto `button@80,192`; then L39's three stacked `wandlock`s need wand shots | R3 (pushing + item use) |
+| `health` | L63's bridge at (2,9) needs spearing; then L65 `rock@192,96` / `pushableblockspear@176,128` | R3 (item use) |
+| `fire` | combat-gated by construction (BobBoss) | R5 |
+| `ghostsword` | L98's IceTurret disc covers its whole entrance room | R5 |
+| `firewand` | L108's darksuit-gated LavaTrap ferry | R5 |
+
+### 9.2 Slices, as re-planned by the rulings
+
+0. ✅ Recon (§8) and the rulings (§9).
+1. **Masks** — the extraction script, the committed 1-bpp artifacts, the
+   `collideMask` transcription (§8.5), the cliffside frame index, unit strata
+   from hand-read rows.
+2. **Blocking entries** — the 39 rects + 6 masks + `rope` + the 23
+   not-solid entries (§8.8), chunked, each with its ctor offset chain cited.
+3. **Activators** — buttons, locks, covers, wandlocks as a modelled
+   subsystem, with the clear set feeding `deactivated` recomputation (§8.6).
+4. **The AS3 batch** (one build): the `persistence` field; byte-inert gate
+   over all 23 frozen fixtures BEFORE any new recording.
+5. **Collision + Activators oracles** — a mask press against a building
+   doorway, a cliffside press, a despawned-lock fixture, and **the
+   hold-the-button fixture that decides §9.1's claim**. Record first,
+   reconcile exact.
+6. **The walk** — re-plan, segments + headline, `--tier` wiring, acceptance.
+7. **Docs + close-out.**
