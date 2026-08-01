@@ -302,6 +302,105 @@ export function createLevelRun({
     let prevHeld = new Set();
     const releasedThisTick = (held, key) => prevHeld.has(key) && !held.has(key);
 
+    // ── the TOUCH-LOCK ceremony (R3) ──────────────────────────────────
+    /**
+     * The ShieldLock window currently open, or null.
+     *
+     * ⚠ THIS IS NOT A FREEZE, and telling the two apart is the whole of it.
+     * A pickup ceremony sets `Game.freezeObjects`, which gates the entire
+     * friction/input/move block in `Mobile.mobileUpdate` — a frozen tick
+     * moves nothing. A ShieldLock sets `p.receiveInput = false`, which is
+     * read at the top of `Player.input()` (`Player.as:1501`) and NOWHERE
+     * else: friction still runs, the sweeps still run, `getState` still
+     * runs. So the window is not "skip the tick" — it is "run the tick with
+     * no keys", and residual velocity carries the player through it.
+     *
+     * That distinction is also why the caller must emit no spans here.
+     * `useItem(Main.primary)` is inside `input()` too, so a span in the
+     * window is inert in the game — but a span one consumer honours and the
+     * other drops is the asymmetry the tape format exists to prevent, and
+     * the driver refuses to emit one (`botDriverV2.runTouch`).
+     */
+    let lockSnap = null;
+    /** One record per COMPLETED touch-lock window, for the ledger. */
+    const lockSnaps = [];
+    const NO_KEYS = new Set();
+    /**
+     * ⚠ THE SNAP LANDS ON THE NEXT TICK, and the GAME is what said so.
+     *
+     * `Game.loadlevel` adds the Player at `Game.as:2040` and every scenery
+     * and puzzle entity in the loop BELOW it, and `World.add` -> `addUpdate`
+     * PREPENDS — so the update list is reverse add order and a Lock updates
+     * BEFORE the player, reading the position the previous frame left. That
+     * makes no difference to the activator STATE (deriving it from the
+     * post-move position at the end of tick N is the same object the game
+     * derives at the top of tick N+1) — which is why R2's button-lock
+     * recordings could never see the ordering at all. It makes every
+     * difference to the SIDE EFFECT: `p.y = y - originY + 7` is written at
+     * the top of tick N+1, before the player's own update, so the first
+     * observation showing it is N+1 and not N.
+     *
+     * The model got that wrong and the oracle caught it on the first
+     * recording: at observation 19 the game says y = 264 and the model said
+     * 263. Held here and applied at the top of the next `advance`.
+     *
+     * ⚠ Bounded imprecision, provably unreachable: teleporters are added
+     * BELOW the locks (`Game.as:2169`), so they update before them and see
+     * the UNsnapped position, while `stepV2` runs its teleporter check
+     * against the snapped one. Both the pre-snap and post-snap boxes lie
+     * inside the lock's own collide rect, and `levelRun.test.js` asserts
+     * map-wide that no teleporter overlaps one — so no position either side
+     * of a snap is ever inside a trigger.
+     */
+    let pendingSnapY = null;
+
+    /**
+     * Fold this tick's touch-responder events into the window state. The
+     * position write is DEFERRED (see `pendingSnapY`); everything else — the
+     * refusal, the ledger, the throws — lands here.
+     */
+    function applyLockEvents(events) {
+        for (const ev of events) {
+            if (ev.kind === 'snap') {
+                if (lockSnap) {
+                    throw new Error(`levelRun: ${ev.id} in level ${level} snapped the `
+                        + `player while ${lockSnap.id}'s window was still open. Two `
+                        + 'position-writing ceremonies at once is not transcribed — '
+                        + 'route the walk so it touches one lock at a time.');
+                }
+                lockSnap = {
+                    id: ev.id,
+                    level,
+                    persistTag: ev.persistTag,
+                    from: ticksCompleted,
+                    y: ev.y,
+                };
+                pendingSnapY = ev.y;
+            } else if (ev.kind === 'turnoff' && lockSnap && lockSnap.id === ev.id) {
+                // ⚠ `ShieldLock.turnOff()` restores `receiveInput` only
+                // `if (p)`, and `p` is the collide it re-ran THIS tick. A
+                // player carried out of the rect by the velocity the snap
+                // did not clear never gets input back — no later span can
+                // reach them, and the run is over without saying so.
+                if (!ev.touching) {
+                    throw new Error(`levelRun: ${ev.id} in level ${lockSnap.level} `
+                        + 'finished its fade with the player OUTSIDE its collide rect, '
+                        + "so `ShieldLock.turnOff`'s `if (p)` never ran and "
+                        + '`receiveInput` is never restored. That is terminal in the '
+                        + 'game: no tape span can reach the player again. The touch has '
+                        + 'to leave them inside the rect for the whole window, so what '
+                        + 'moved them is the velocity they carried into the snap.');
+                }
+                lockSnaps.push({
+                    ...lockSnap,
+                    to: ticksCompleted,
+                    ticks: ticksCompleted - lockSnap.from,
+                });
+                lockSnap = null;
+            }
+        }
+    }
+
     /**
      * Does the CURRENT position stand on an uncollected pickup?
      *
@@ -340,6 +439,19 @@ export function createLevelRun({
          * that the first list is empty and this one is not.
          */
         get collected() { return collected.map((c) => ({ ...c })); },
+        /**
+         * One record per COMPLETED touch-lock window:
+         * `{id, level, persistTag, from, to, ticks, y}`.
+         *
+         * The differential reads this to expect `saw_input_refused` from the
+         * game — the same two-sided rule a pit transport already follows.
+         * Derived rather than declared on the tape for the same reason: a
+         * tape field would need validating on the AS3 side too, to state
+         * something both sides can already work out.
+         */
+        get lockSnaps() { return lockSnaps.map((r) => ({ ...r })); },
+        /** Is a touch-lock refusing input RIGHT NOW? The driver's gate. */
+        get inputRefused() { return lockSnap !== null; },
         /** `{t, level, items}` per grant that fired, in firing order. */
         get grantsFired() { return firedGrants.map((g) => ({ ...g, items: [...g.items] })); },
         /**
@@ -389,11 +501,23 @@ export function createLevelRun({
          */
         advance(held) {
             // The player reads the activator state as of the END of the
-            // previous tick: `World.addUpdate` PREPENDS and `loadlevel` adds
-            // the Player LAST, so the Player updates before every Button and
-            // every Lock. Stepping the machinery first would open a lock one
-            // tick early, in every run, forever.
+            // previous tick, which is the same object the game's Locks
+            // compute at the TOP of this one (they update before the player —
+            // see `activators.stepActivators`). Stepping the machinery first
+            // here would open a lock one tick early, in every run, forever.
             const activators = activatorStateFor(level);
+
+            // ── the touch-lock's position write, from the PREVIOUS tick ──
+            // A Lock updates before the Player (see `pendingSnapY`), so its
+            // `p.y` write lands here: ahead of `getState`, ahead of friction,
+            // ahead of both sweeps. Velocity is NOT touched — the R3 slice-2
+            // lesson one mechanic over: a ceremony that stops the player does
+            // not stop their `v`, which is exactly why `turnOff`'s `if (p)`
+            // is a live question.
+            if (pendingSnapY !== null) {
+                state = { ...state, y: pendingSnapY };
+                pendingSnapY = null;
+            }
 
             // ── the ceremony, before anything else ─────────────────────
             // A pickup updates BEFORE the player, so a contact found here
@@ -468,7 +592,8 @@ export function createLevelRun({
                     // because "no route does that yet" is how the statue got
                     // its offset wrong for two slices.
                     if (!noclip) {
-                        stepActivators(activators, world, playerBoxAt(state.x, state.y));
+                        applyLockEvents(stepActivators(activators, world,
+                            playerBoxAt(state.x, state.y), { inventory }));
                     }
                     // No step: the position is unchanged and — critically —
                     // so is the VELOCITY, which is why the player drifts on
@@ -481,7 +606,15 @@ export function createLevelRun({
             } else {
                 prevHeld = new Set(held);
             }
-            const next = stepV2(state, held, {
+            // ⚠ A touch-lock window drops the KEYS, not the tick.
+            // `receiveInput` gates `Player.input()` alone, so friction, both
+            // sweeps and `getState` all still run — which is why the player
+            // keeps drifting on the velocity the snap did not clear. The
+            // tape's own `held` is still what the DIALOGUE reads above,
+            // because `NPC.talk()` reads `Input.released` from outside
+            // `Player.input()` and a refused player can still talk.
+            const acting = lockSnap ? NO_KEYS : held;
+            const next = stepV2(state, acting, {
                 level: world,
                 noclip,
                 noHazards,
@@ -491,7 +624,10 @@ export function createLevelRun({
             ticksCompleted++;
             // ...and THEN Button.update and Lock.update run, against where
             // the player ended up.
-            if (!noclip) stepActivators(activators, world, playerBoxAt(next.x, next.y));
+            if (!noclip) {
+                applyLockEvents(stepActivators(activators, world,
+                    playerBoxAt(next.x, next.y), { inventory }));
+            }
             const hits = { hitX: next.hitX, hitY: next.hitY };
 
             if (!next.transition) {
@@ -500,6 +636,20 @@ export function createLevelRun({
                 return { transition: null, grant: null, ...hits };
             }
 
+            // ⚠ A WORLD SWAP WOULD ORPHAN AN OPEN WINDOW. `Game` is
+            // reconstructed on a transition and the destination's activator
+            // state is fresh, so the lock that is refusing input ceases to
+            // exist and its `turnOff` never runs — leaving `receiveInput`
+            // false with nothing left to restore it. Named here rather than
+            // discovered 2,000 ticks later in another level.
+            if (lockSnap) {
+                throw new Error('levelRun: the run crossed from level '
+                    + `${next.transition.from_level} to ${next.transition.to_level} `
+                    + `while ${lockSnap.id}'s input-refused window was still open. The `
+                    + 'destination gets a fresh Game, so nothing is left to call '
+                    + "`turnOff` and restore input. A touch-lock's window has to end "
+                    + 'in the level it started in.');
+            }
             // End-of-tick: `Engine.checkWorld` swaps only after the whole
             // tick has run, so `next` is the old player's last (never
             // observed) position and the state that survives is the arrival.

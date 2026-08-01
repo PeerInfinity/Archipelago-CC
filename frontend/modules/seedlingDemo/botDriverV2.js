@@ -897,6 +897,194 @@ function runHold(run, perTick, hold, what) {
 }
 
 /**
+ * ── THE TOUCH PRIMITIVE (R3) ──────────────────────────────────────────
+ *
+ * R3's one real opener. A `ShieldLock` has no button and no key: the way
+ * through it is to WALK INTO IT holding the right shield, after which the
+ * lock takes the player over — it snaps `p.y`, sets `receiveInput = false`,
+ * fades for the same 101 ticks any Lock fades for, and then hands input
+ * back. See `activators.TOUCH_RESPONDERS` for the transcription.
+ *
+ * A touch is written on the target it follows, and it names its lock by OEL
+ * coordinates exactly as a hold names its button:
+ *
+ *     { x: 280, y: 264, touch: { lock: { x: 288, y: 256 } } }
+ *
+ * ⚠ THE WINDOW GETS NO SPANS. That is the transport rule again, one
+ * mechanic over: the tick counter runs while the player cannot act, so a
+ * controller left to its own devices would happily choose keys for a
+ * hundred ticks the game drops on the floor. `useItem(Main.primary)` is
+ * inside `Player.input()` too, so those spans are inert in the game as
+ * well — but a span one consumer honours and the other drops is exactly the
+ * asymmetry the tape format exists to prevent, and 100 of them is also 100
+ * spans against a runtime with a measured span ceiling.
+ *
+ * ⚠ And every claim here is a PAIR, the `l71-lock-shut` pattern: the lock
+ * must be SHUT when the touch begins and OPEN when it ends. "The player got
+ * through" is satisfied by a lock that was never there — which is what
+ * `l71-shieldlock-shut` exists to show on the game's side.
+ */
+/** Shape-check a `touch` before anything is planned or driven with it. */
+export function assertTouch(touch, what) {
+    if (touch === null || typeof touch !== 'object' || Array.isArray(touch)) {
+        fail(`${what}: touch must be { lock: {x, y} }`);
+    }
+    const l = touch.lock;
+    if (!l || !Number.isFinite(l.x) || !Number.isFinite(l.y)) {
+        fail(`${what}: touch.lock must be the lock's OEL {x, y}`);
+    }
+}
+
+/**
+ * The touch responder a touch NAMES, resolved through the world's own
+ * table. By OEL coordinates, never by index and never by searching for a
+ * lock that would do.
+ */
+export function resolveTouchLock(world, named, what) {
+    const lock = world.activators.find((a) => a.x === named.x && a.y === named.y);
+    if (!lock) {
+        fail(`${what}: level ${world.level} has no activator at (${named.x},${named.y}); `
+            + `it has [${world.activators.map((a) => `${a.tag}@${a.x},${a.y}(t=${a.t})`)
+                .join(' ') || 'none'}].`);
+    }
+    if (!lock.touchRect) {
+        fail(`${what}: ${lock.id} is a "${lock.tag}", which does not open on TOUCH — it `
+            + `answers group t=${lock.t}. Only the ShieldLock classes press themselves; `
+            + 'everything else needs its button, its key or its item.');
+    }
+    // The R1 rect lesson at the boundary this primitive imports a rect
+    // across: a rect with no `right`/`bottom` never overlaps anything, so
+    // every check against it would pass and the touch would be green by
+    // construction.
+    assertRect(lock.touchRect, `${what}: ${lock.id} touch rect`);
+    return lock;
+}
+
+function runTouch(run, perTick, touch, maxTicks, what) {
+    if (run.openActivators === null) {
+        fail(`${what}: a touch is a MECHANIC, and the noclip arm does not run it — `
+            + '`advance` hands `stepV2` a null activator set, so the walk would pass '
+            + 'through the lock whether or not it ever opened, and every check below '
+            + 'would be green for a mechanic that was not running. A tape that touches '
+            + 'a lock must declare noclip: false.');
+    }
+    const lock = resolveTouchLock(run.world, touch.lock, what);
+
+    // ⚠ THE POSITIVE CONTROL, BEFORE THE NEGATIVE.
+    if (run.openActivators.has(lock.id)) {
+        fail(`${what}: ${lock.id} is ALREADY OPEN before the touch begins, so walking `
+            + 'into it proves nothing about it. A touch that changes nothing is a check '
+            + 'that cannot fail.');
+    }
+    // The item, checked BEFORE the walk rather than diagnosed from the
+    // stall it causes. Without the shield `ShieldLock.update`'s condition is
+    // simply false, the lock stays Solid, and the approach below would spend
+    // its whole budget pressing into a wall — a timeout naming a waypoint,
+    // for a route-ordering defect.
+    if (run.inventory[lock.shield] !== true) {
+        fail(`${what}: ${lock.id} opens on \`Player.${lock.shield}\`, which the run does `
+            + 'NOT have yet. The order is load-bearing — the shield room comes first — '
+            + 'and without it the lock never activates at all.');
+    }
+
+    // ── the approach ──────────────────────────────────────────────────
+    // Aim at the lock's own centre and press until it takes over. The
+    // player never gets there: the lock is Solid, so the sweep pins them
+    // one pixel outside it, which is exactly where the `x - 1` collide
+    // rect is. Hits against THIS lock are the errand; anything else is the
+    // ordinary planner-bug throw.
+    const aim = {
+        x: (lock.rect.x + lock.rect.right) / 2,
+        y: (lock.rect.y + lock.rect.bottom) / 2,
+    };
+    const from = perTick.length;
+    let approach = 0;
+    while (!run.inputRefused) {
+        if (approach >= maxTicks) {
+            const s = run.state;
+            fail(`${what}: pressed toward ${lock.id} for ${maxTicks} ticks without the `
+                + `lock taking over; stalled at (${s.x},${s.y}) in level ${run.level}. `
+                + `Its collide rect is [${lock.touchRect.x},${lock.touchRect.right}) x `
+                + `[${lock.touchRect.y},${lock.touchRect.bottom}) — the approach has to `
+                + 'reach it, so this is a route that arrives beside the lock rather than '
+                + 'against it.');
+        }
+        const held = chooseHeld(run.state, aim, 0);
+        perTick.push(held);
+        const { transition, hitX, hitY } = run.advance(held);
+        approach++;
+        if (transition) {
+            fail(`${what}: the run crossed from level ${transition.from_level} to `
+                + `${transition.to_level} while approaching ${lock.id}. The approach `
+                + 'walks into a wall; a trigger on the way to it is a routing defect.');
+        }
+        const hit = hitX || hitY;
+        if (hit && hit.activatorId !== lock.id) {
+            const s = run.state;
+            fail(`${what}: approaching ${lock.id}, the sweep was blocked by `
+                + `${hit.tag ?? hit.cls?.as3 ?? 'a solid'} at (${hit.x},${hit.y}) at `
+                + `(${s.x},${s.y}) in level ${run.level}. Only the lock being touched may `
+                + 'stop this walk.');
+        }
+    }
+
+    // ── the window ────────────────────────────────────────────────────
+    // Not one span. The count is the GAME's — `Lock.activationStep` fades
+    // 0.01 per tick with `Image.alpha` clamping at 0 and the test before the
+    // decrement — so the driver waits for the run to say the window closed
+    // rather than counting to a number of its own.
+    const at = { x: run.state.x, y: run.state.y };
+    let window = 0;
+    while (run.inputRefused) {
+        if (window >= maxTicks) {
+            fail(`${what}: ${lock.id}'s input-refused window has run ${maxTicks} ticks `
+                + 'without closing. A Lock fades in 101; a window that does not end is a '
+                + 'fade that is not running.');
+        }
+        perTick.push(NO_HELD);
+        const { transition } = run.advance(NO_HELD);
+        window++;
+        if (transition) {
+            fail(`${what}: the run crossed from level ${transition.from_level} to `
+                + `${transition.to_level} INSIDE ${lock.id}'s window. `);
+        }
+        // The window is a position-writing ceremony, so the position is not
+        // pinned the way a hold's is — but the box must stay inside the
+        // collide rect, because `turnOff` restores input only `if (p)`.
+        const s = run.state;
+        if (!rectsOverlap(playerBoxAt(s.x, s.y), lock.touchRect)) {
+            fail(`${what}: window tick ${window} left ${lock.id}'s collide rect, at `
+                + `(${s.x},${s.y}). \`ShieldLock.turnOff\` restores \`receiveInput\` only `
+                + 'while the player is still inside it, so this run would never get '
+                + 'input back.');
+        }
+    }
+
+    // ⚠ THE EFFECT, not the ceremony. Everything above says the lock took
+    // the player over; only this says it opened.
+    if (!run.openActivators.has(lock.id)) {
+        fail(`${what}: ${lock.id}'s window ended after ${window} tick(s) and it is STILL `
+            + 'SOLID. The fade and the input window are driven by the same `activate` '
+            + 'flag, so a window that ends without opening the lock means the two have '
+            + 'come apart.');
+    }
+    const record = run.lockSnaps[run.lockSnaps.length - 1];
+    if (!record || record.id !== lock.id) {
+        fail(`${what}: the run recorded no completed touch-lock window for ${lock.id}.`);
+    }
+    return {
+        lock: { id: lock.id, tag: lock.tag, x: lock.x, y: lock.y },
+        shield: lock.shield,
+        persistTag: lock.persistTag,
+        approach,
+        window,
+        from,
+        at,
+        snappedTo: record.y,
+    };
+}
+
+/**
  * Drive the run to `target`, one bang-bang tick at a time.
  *
  * `until` is `'arrival'` (v1's criterion: within tolerance AND stopped) or
@@ -1040,6 +1228,11 @@ function drive(run, target, perTick, {
 
 /**
  * Synthesize a tape for a list of cross-level legs.
+ *
+ * A target may additionally carry a MECHANIC: `hold` (stand on a button —
+ * see THE HOLD PRIMITIVE) or `touch` (walk into a shield lock — see THE
+ * TOUCH PRIMITIVE). Both are declared by PRESENCE, so a `null` written where
+ * an omission was meant is a named failure rather than a silent skip.
  *
  * @param {Array<{level:number, targets?:Array<{x,y}>, exit?:{x,y}}>} legs
  * @param {object}   opts
@@ -1198,6 +1391,7 @@ export function synthesizeLegs(legs, opts = {}) {
     const arrivals = [];
     const waypoints = [];
     const holds = [];
+    const touches = [];
     const grazes = allowGrazes ? [] : null;
 
     legs.forEach((leg, li) => {
@@ -1247,12 +1441,32 @@ export function synthesizeLegs(legs, opts = {}) {
          * verification — the button it stands on is the button it names.
          */
         const legContacts = new Set(declared);
+        // ⚠ PRESENCE, not truthiness. A `hold: null` written by a route
+        // generator that meant to omit it would otherwise be silently
+        // skipped, and `assertHold`'s own null branch would be unreachable.
         (leg.targets ?? []).forEach((t, ti) => {
-            if (!t?.hold) return;
+            if (t?.hold === undefined) return;
             const what = `legs[${li}] level ${leg.level} target ${ti} hold`;
             assertHold(t.hold, what);
             const p = resolvePresser(run.world, t.hold.presser, what);
             legContacts.add(`proximity-hazard:${p.tag}@${p.x},${p.y}`);
+        });
+        /**
+         * ⚠ AND A TOUCH'S LOCK IS ONE TOO, for the same reason and with the
+         * same bound. A `shieldlock` is an R0 avoid volume — its `lock-snap`
+         * hazard rect IS the collide rect the mechanic uses — so without
+         * this the planner refuses to route up to it and the executor's
+         * volume detector throws on the very thing the touch exists to walk
+         * into. Leg-scoped, so a leg that clipped its own lock somewhere
+         * other than the touch would not be caught here; what catches that
+         * is the touch's own shut-before/open-after verification.
+         */
+        (leg.targets ?? []).forEach((t, ti) => {
+            if (t?.touch === undefined) return;
+            const what = `legs[${li}] level ${leg.level} target ${ti} touch`;
+            assertTouch(t.touch, what);
+            const l = resolveTouchLock(run.world, t.touch.lock, what);
+            legContacts.add(`proximity-hazard:${l.tag}@${l.x},${l.y}`);
         });
         // A persistence effect exists only from the leg that CAUSED it. The
         // first visit to L37 is before the button is pressed and the rock is
@@ -1304,13 +1518,20 @@ export function synthesizeLegs(legs, opts = {}) {
                 y: run.state.y,
                 level: run.level,
             });
-            if (target.hold) {
+            if (target.hold !== undefined) {
                 const from = perTick.length;
                 const record = runHold(run, perTick, target.hold,
                     `legs[${li}] level ${leg.level} target ${ti} hold`);
                 holds.push({
                     leg: li, index: ti, level: leg.level, from, to: perTick.length,
                     ...record,
+                });
+            }
+            if (target.touch !== undefined) {
+                const record = runTouch(run, perTick, target.touch, maxTicksPerTarget,
+                    `legs[${li}] level ${leg.level} target ${ti} touch`);
+                touches.push({
+                    leg: li, index: ti, level: leg.level, to: perTick.length, ...record,
                 });
             }
         });
@@ -1377,7 +1598,6 @@ export function synthesizeLegs(legs, opts = {}) {
                     contacts: legContacts,
                     extraVolumes: legVolumes,
                     grazes,
-                grazes,
                     crossTo,
                     what: `legs[${li}] level ${leg.level} pit exit (${tx},${ty}) `
                         + `waypoint ${wi} (${wp.x},${wp.y})`,
@@ -1477,6 +1697,12 @@ export function synthesizeLegs(legs, opts = {}) {
         // opened. The tape itself is only empty spans, so this is the ONLY
         // place a consumer can find out that the walk holds anything at all.
         holds: holds.map((h) => ({ ...h, opened: [...h.opened] })),
+        // One record per TOUCH the run verified: which lock, which shield
+        // opened it, how long the approach and the input-refused window ran,
+        // and the y the lock snapped the player to. As with `holds`, the tape
+        // is only spans and empty ticks, so this is the only place a consumer
+        // can learn the walk opens anything by hand.
+        touches: touches.map((t) => ({ ...t })),
         /** Every sweep a wall stopped that the drive went on to arrive past. */
         grazes: grazes ? grazes.map((g) => ({ ...g })) : [],
         grants: relax ? run.grantsFired : [],

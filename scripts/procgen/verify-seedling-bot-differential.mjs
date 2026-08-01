@@ -434,6 +434,34 @@ function checkReadout(name, tape, status) {
         status.menu === false && status.cutscene.every((c) => c === false),
         `menu=${status.menu}, cutscene=${JSON.stringify(status.cutscene)}`);
 
+    // ── R3: the first half of the crutch LEDGER ───────────────────────
+    // `Lock.turnOff()` calls `Game.setPersistence(tag, false)`, so a lock
+    // the PLAYER opened leaves its flag in `persistence_cleared` — the R3
+    // batch's readout, scanned from `Main.levelPersistence` rather than
+    // echoed from the tape. This asserts the direction that is already
+    // true: everything the model says was opened by hand really is off in
+    // the game's own array.
+    //
+    // ⚠ Deliberately NOT the exact-set claim yet. A pickup's `removed()`
+    // clears a flag too, so the full ledger — "off in the game iff the tape
+    // declared it or the run earned it" — needs the collected pickups'
+    // tags as well, and that lands with the walk.
+    const clearedInGame = new Set((status.persistence_cleared ?? [])
+        .map((c) => `${c.level}:${c.tag}`));
+    const opened = expected.lockSnaps ?? [];
+    if (opened.length > 0) {
+        const missing = opened
+            .filter((s) => !clearedInGame.has(`${s.level}:${s.persistTag}`))
+            .map((s) => `${s.id} (${s.level}:${s.persistTag})`);
+        check(`${name}: every touch-lock the player opened wrote its persistence flag`,
+            missing.length === 0,
+            missing.length === 0
+                ? `${opened.map((s) => `${s.id} -> ${s.level}:${s.persistTag}`).join(', ')} `
+                + `off, out of ${clearedInGame.size} flag(s) off in all`
+                : `${missing.join(', ')} still SET — the lock opened but nothing wrote `
+                + 'the flag, so the clear crutch has not actually been retired for it');
+    }
+
     return expected;
 }
 
@@ -560,22 +588,34 @@ try {
         // field is deliberate: a tape field would have to be validated by
         // `Bot.as` too, i.e. an AS3 change and a pipeline run, to state
         // something both sides can already work out.
-        const expectsTransport = Array.isArray(expectedRun?.transports)
-            && expectedRun.transports.length > 0;
-        if (expectsTransport) {
-            check(`${name}: the game refused input during the pit transport`,
+        //
+        // ⚠ R3 ADDS A SECOND WAY TO EARN IT, and it is a different mechanic
+        // rather than another fall: `ShieldLock.update` sets
+        // `receiveInput = false` for its whole ~101-tick fade. So the
+        // expectation is "the model says SOMETHING refuses input here",
+        // named by which, and the negative arm below is unchanged — a
+        // refusal the model cannot account for is still a defect.
+        const transports = expectedRun?.transports ?? [];
+        const lockSnaps = expectedRun?.lockSnaps ?? [];
+        const causes = [
+            ...(transports.length ? [`${transports.length} pit transport(s)`] : []),
+            ...lockSnaps.map((s) => `${s.id} for ${s.ticks} tick(s)`),
+        ];
+        if (causes.length > 0) {
+            check(`${name}: the game refused input where the model says it must`,
                 status.saw_input_refused === true,
                 status.saw_input_refused
-                    ? `${expectedRun.transports.length} transport(s) modelled`
-                    : `the model expects ${expectedRun.transports.length} pit transport(s) `
-                    + 'but the game never refused input — no fall fired, so this fixture '
-                    + 'proves nothing about the transport');
+                    ? `${causes.join(', ')} modelled`
+                    : `the model expects ${causes.join(', ')} but the game never refused `
+                    + 'input — the mechanic never fired, so this fixture proves nothing '
+                    + 'about it');
         } else if (status.saw_input_refused) {
             // Surfaced, not silently tolerated: receiveInput==false means the
             // game dropped input mid-tape and the stream is not comparable.
             check(`${name}: game accepted input throughout`, false,
-                'receiveInput went false mid-tape (cutscene/pit/boss?) and the model '
-                + 'does not account for it with a pit transport');
+                'receiveInput went false mid-tape (cutscene/pit/boss/shield lock?) and '
+                + 'the model accounts for it with neither a pit transport nor a '
+                + 'touch-lock window');
         }
 
         // Quantitative pin: a bot that recorded nothing, or teleported,

@@ -22,6 +22,10 @@ import { describe, expect, it } from 'vitest';
 import { loadTape } from './fixtures/index.js';
 import { createLevelRun } from './levelRun.js';
 import { atlasLevelSource } from './levelSource.js';
+import { RELAXED_ROLES, buildLevelWorld, rectsOverlap } from './levelWorld.js';
+import {
+    DEFAULT_FRICTION, SLIDING_FRICTION, SLIDING_SPEED, WALK_SPEED,
+} from './playerPhysicsV1.js';
 import { heldKeysAt } from './tapeFormat.js';
 import { runTapeToStream } from './tapeRunner.js';
 
@@ -288,5 +292,173 @@ describe('R2: openActivators', () => {
         driveUntil(['right'], () => run.state.x > 96, 'cleared L75\'s return trigger');
         driveUntil(['left', 'down'], () => run.level === 71, 'came back to L71');
         expect(run.openActivators.has(LOCK)).toBe(false);
+    });
+});
+
+/**
+ * ── R3: THE TOUCH-LOCK WINDOW ─────────────────────────────────────────
+ *
+ * The second thing on this ladder that refuses input, and it is a different
+ * animal from the first. A pit transport and a pickup ceremony both stop the
+ * player; a ShieldLock stops the player's KEYS. `receiveInput` is read at
+ * the top of `Player.input()` (`Player.as:1501`) and nowhere else, so
+ * friction, both sweeps and `getState` all keep running and whatever
+ * velocity the player carried into the snap keeps carrying them.
+ *
+ * The three throws below are guards on states the game really has. Two of
+ * them are unreachable on the committed map and say so with a census; the
+ * third is unreachable on LAND and says so with arithmetic. None of them is
+ * asserted in prose.
+ */
+describe('R3: the touch-lock window', () => {
+    const levelSource = atlasLevelSource();
+    const L71_BOOT = { level: 71, x: 256, y: 256 };
+    const DARK = [{ level: 71, items: ['darkshield'] }];
+    const NO_HAZARDS = ['water', 'lava', 'ice', 'waterfall'];
+    const LOCK = 'shieldlock@288,256';
+
+    const runL71 = (grants) => createLevelRun({
+        levelSource, boot: L71_BOOT, noclip: false, noDamage: true,
+        noHazards: NO_HAZARDS, grants,
+    });
+
+    it('refuses the KEYS, not the tick — and the velocity survives it', () => {
+        const run = runL71(DARK);
+        expect(run.inputRefused).toBe(false);
+        // Walk east into the lock. The snap fires on the tick the sweep
+        // first rests inside the `x - 1` collide rect.
+        let snapped = -1;
+        for (let t = 0; t < 40 && snapped < 0; t++) {
+            run.advance(new Set(['right']));
+            if (run.inputRefused) snapped = run.ticksCompleted;
+        }
+        expect(snapped).toBeGreaterThan(0);
+        // ⚠ THE SNAP IS NOT VISIBLE YET, and the game is what said so. A Lock
+        // is added BELOW the Player in `Game.loadlevel` and `addUpdate`
+        // PREPENDS, so it updates BEFORE the player and writes `p.y` at the
+        // top of the NEXT tick. The first recording of `l71-shieldlock-open`
+        // caught the model applying it a tick early: observation 19 is 264.
+        expect(run.state.y).toBe(264);
+
+        // ⚠ The keys are dropped, so pressing does nothing — but the tick is
+        // a REAL tick. A model that skipped it (the freeze model, one
+        // mechanic over) would shift every observation after the window.
+        run.advance(new Set(['right', 'up']));
+        // `p.y = y - originY + 7` — 264 to 263, which is the whole reason the
+        // pair's shut control shows a different y.
+        expect(run.state.y).toBe(263);
+        const held = { x: run.state.x, y: run.state.y };
+        for (let t = 2; t <= 100; t++) {
+            run.advance(new Set(['right', 'up']));
+            expect(run.state, `window tick ${t}`).toMatchObject(held);
+        }
+        expect(run.ticksCompleted).toBe(snapped + 100);
+        expect(run.inputRefused).toBe(false);
+        expect(run.openActivators.has(LOCK)).toBe(true);
+        expect(run.lockSnaps).toEqual([{
+            id: LOCK, level: 71, persistTag: 2, y: 263,
+            from: snapped, to: snapped + 100, ticks: 100,
+        }]);
+
+        // ...and input is back on the very next tick.
+        run.advance(new Set(['right']));
+        expect(run.state.x).toBeGreaterThan(held.x);
+    });
+
+    it('never fires without the shield — the lock is just a wall', () => {
+        const run = runL71([]);
+        for (let t = 0; t < 200; t++) run.advance(new Set(['right']));
+        expect(run.inputRefused).toBe(false);
+        expect(run.lockSnaps).toEqual([]);
+        expect(run.openActivators.has(LOCK)).toBe(false);
+        // Pinned on the west face, at the y nothing snapped.
+        expect(run.state.y).toBe(264);
+    });
+
+    /**
+     * ⚠ A BOUNDED VACUITY, WITH ITS WITNESS. `ShieldLock.turnOff()` restores
+     * `receiveInput` only `if (p)`, where `p` is the collide it re-ran this
+     * tick — so a player carried out of the rect during the fade never gets
+     * input back, and `levelRun` throws rather than emit a run no span can
+     * reach. That throw has never fired, and here is why it cannot on land:
+     * the snap lands the player 5 px from the rect's near edge and 6 from
+     * its far one, and friction is SUBTRACTIVE, so the whole coast from
+     * walking speed is under two pixels.
+     *
+     * The escape hatch is named: ice (friction 0.025) and a waterfall would
+     * both clear that margin easily. Both are in `noHazards` on every tape
+     * on this ladder, and no touch responder on the map sits on either.
+     */
+    it('cannot be carried out of the collide rect at walking speed', () => {
+        // The coast, from the module's own constants rather than a number
+        // typed here: |v| shortens by DEFAULT_FRICTION per tick from at most
+        // WALK_SPEED, and anything under 0.05 is zeroed.
+        let v = WALK_SPEED;
+        let coast = 0;
+        while (v >= 0.05) { v = Math.max(v - DEFAULT_FRICTION, 0); coast += v; }
+        expect(coast).toBeLessThan(2);
+        // The margin the snap leaves: box [snapY-2, snapY+3) inside
+        // [y, y+16), with snapY = y + 7.
+        const above = (7 - 2) - 0;        // 5 px before the box clears the top
+        const below = 16 - (7 + 3);       // 6 px before it clears the bottom
+        expect(coast).toBeLessThan(Math.min(above, below));
+        // And on ice it would NOT be bounded — which is the guard's reason.
+        let ice = SLIDING_SPEED;
+        let iceCoast = 0;
+        while (ice >= 0.05) { ice = Math.max(ice - SLIDING_FRICTION, 0); iceCoast += ice; }
+        expect(iceCoast).toBeGreaterThan(Math.min(above, below));
+    });
+
+    /**
+     * The other two throws, turned into map-wide facts rather than left as
+     * branches nobody can reach. Three touch responders exist in the whole
+     * extract (L12, L20, L71); a census over all of them is cheap and it is
+     * the only thing that would notice a re-extraction moving one.
+     */
+    it('no teleporter and no second touch rect overlaps a touch responder', () => {
+        const found = [];
+        const offenders = [];
+        for (let lv = 0; lv < 116; lv++) {
+            let world;
+            try {
+                world = buildLevelWorld(levelSource(lv), { roles: RELAXED_ROLES });
+            } catch { continue; }
+            const touch = world.activators.filter((a) => a.touchRect);
+            for (const a of touch) {
+                found.push(`L${lv} ${a.id}`);
+                // A trigger inside the window would swap the world out from
+                // under the lock, leaving nothing to call `turnOff`.
+                for (const tp of world.teleporters) {
+                    if (rectsOverlap(tp.rect, a.touchRect)) {
+                        offenders.push(`L${lv} ${a.id} overlaps teleporter->${tp.to}`);
+                    }
+                }
+                // Two windows at once is not transcribed.
+                for (const b of touch) {
+                    if (b !== a && rectsOverlap(b.touchRect, a.touchRect)) {
+                        offenders.push(`L${lv} ${a.id} overlaps ${b.id}`);
+                    }
+                }
+            }
+        }
+        expect(offenders).toEqual([]);
+        // ⚠ And the census is not vacuous: it really did look at three.
+        expect(found).toEqual([
+            'L12 shieldlocknorm@288,704',
+            'L20 shieldlocknorm@176,16',
+            'L71 shieldlock@288,256',
+        ]);
+    });
+
+    it('the two spellings demand DIFFERENT shields', () => {
+        // `Game.as:2144-2145` builds `shieldlocknorm` with `_type = 0` and
+        // `shieldlock` with 1, and `ShieldLock.as:33` reads them as two arms
+        // of a disjunction. Treating the argument as a sprite choice would
+        // open every normal lock on the dark shield — and L20's is the very
+        // first one a walk meets.
+        const l20 = buildLevelWorld(levelSource(20), { roles: RELAXED_ROLES });
+        const l71 = buildLevelWorld(levelSource(71), { roles: RELAXED_ROLES });
+        expect(l20.activators.find((a) => a.touchRect).shield).toBe('hasShield');
+        expect(l71.activators.find((a) => a.touchRect).shield).toBe('hasDarkShield');
     });
 });

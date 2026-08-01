@@ -1081,3 +1081,166 @@ describe('R2: the hold primitive', () => {
         })).toThrow(/no walkable tile path in level 71/);
     });
 });
+
+/**
+ * ── R3: THE TOUCH ─────────────────────────────────────────────────────
+ *
+ * L71's `shieldlock@288,256` is the last thing between the walk and
+ * `darksuit`, and R2 opened it with a persistence clear. R3's whole rung is
+ * retiring that crutch, and this is the one blocker on the bill that R3
+ * itself opens: the player walks into the lock holding the dark shield and
+ * the lock takes them over — snapping `p.y`, refusing input, fading for its
+ * 101 ticks, then handing input back and writing `setPersistence(2, false)`.
+ *
+ * Two things make it a different primitive from the hold rather than a
+ * parameterisation of it. The window REFUSES INPUT rather than merely being
+ * a stretch the driver chooses to sit out, so the count is the game's and
+ * not the author's; and the position is WRITTEN by the lock, so "did not
+ * move" is not the invariant — "stayed inside the collide rect" is, because
+ * `ShieldLock.turnOff` restores input only `if (p)`.
+ */
+describe('R3: the touch primitive', () => {
+    const R3 = Object.freeze({
+        noclip: false,
+        noDamage: true,
+        noHazards: ['water', 'lava', 'ice', 'waterfall'],
+        grants: [{ level: 71, items: ['darkshield'] }],
+        persistence: [],
+    });
+    /** Two tiles west of the lock, on its own row. */
+    const BOOT = Object.freeze({ level: 71, x: 256, y: 256 });
+    const LOCK = Object.freeze({ x: 288, y: 256 });
+    const LOCK_RECT = Object.freeze({ x: 288, y: 256, right: 304, bottom: 272 });
+
+    const walk = (opts = {}) => synthesizeLegs([
+        {
+            level: 71,
+            targets: [{ x: 272, y: 264, touch: { lock: { ...LOCK } } }],
+            exit: { x: 304, y: 256 },
+        },
+        { level: 76, targets: [{ x: 40, y: 88 }] },
+    ], {
+        levelSource,
+        boot: { ...BOOT },
+        relax: R3,
+        name: 'l71-touch',
+        lattice: 8,
+        nodeMargin: 2,
+        triggerMargin: 4,
+        allowGrazes: true,
+        ...opts,
+    });
+
+    it('touches, opens the lock, and crosses THROUGH where it stood', () => {
+        const { tape, touches, transitions } = walk();
+        expect(touches).toHaveLength(1);
+        expect(touches[0].lock).toEqual({
+            id: 'shieldlock@288,256', tag: 'shieldlock', x: 288, y: 256,
+        });
+        expect(touches[0].shield).toBe('hasDarkShield');
+        // What `Lock.turnOff()` writes false, which is exactly the clear R2
+        // used to declare on the tape.
+        expect(touches[0].persistTag).toBe(2);
+        // The GAME's count, not the driver's: `Lock.activationStep` decrements
+        // on the tick the touch itself fires, so 100 more follow it.
+        expect(touches[0].window).toBe(100);
+        expect(touches[0].snappedTo).toBe(263);
+
+        // ⚠ THE EFFECT, from an INDEPENDENT replay of the emitted tape.
+        // The player ends up east of a lock that was Solid when the walk
+        // started, and then in another level entirely.
+        const stream = runTapeToStream(tape, { levelSource });
+        const through = stream.ticks.filter((o) => o.level === 71
+            && o.x >= LOCK_RECT.x && o.x < LOCK_RECT.right
+            && o.y >= LOCK_RECT.y && o.y < LOCK_RECT.bottom);
+        expect(through.length).toBeGreaterThan(0);
+        expect(transitions.map((t) => t.to_level)).toEqual([76]);
+        expect(stream.ticks[stream.ticks.length - 1].level).toBe(76);
+    });
+
+    it('emits NOTHING during the input-refused window', () => {
+        // ⚠ THE RULE THIS PRIMITIVE EXISTS FOR. The tick counter runs while
+        // the player cannot act, so a controller left alone would choose keys
+        // for a hundred ticks the game drops on the floor — and 100 spans
+        // against a runtime with a measured span ceiling is not free either.
+        const { tape, touches } = walk();
+        const from = touches[0].from + touches[0].approach;
+        const to = touches[0].to;
+        expect(to - from).toBe(touches[0].window);
+        expect(tape.inputs.filter((s) => s.from < to && s.to > from)).toEqual([]);
+    });
+
+    it('...and the run really is refused input for exactly those ticks', () => {
+        // The other side of the same claim, from the RUN rather than the
+        // tape: an empty span list is also what a window that never opened
+        // looks like.
+        const { tape, touches } = walk();
+        const { lockSnaps } = runTape(tape, { levelSource });
+        expect(lockSnaps).toHaveLength(1);
+        expect(lockSnaps[0]).toMatchObject({
+            id: 'shieldlock@288,256', level: 71, persistTag: 2, y: 263, ticks: 100,
+        });
+        expect(lockSnaps[0].from).toBe(touches[0].from + touches[0].approach);
+        expect(lockSnaps[0].to).toBe(touches[0].to);
+    });
+
+    it('refuses a touch with no shield — which is a ROUTE ORDER defect', () => {
+        // `ShieldLock.update`'s condition is simply false without it, so the
+        // lock is an ordinary wall and the approach would spend its whole
+        // budget pressing into it. Named for what it is, not diagnosed from
+        // the stall it causes.
+        expect(() => walk({ relax: { ...R3, grants: [] } }))
+            .toThrow(/opens on `Player\.hasDarkShield`, which the run does NOT have/);
+    });
+
+    it('refuses a touch on a lock that is already gone — the positive control', () => {
+        // "The player got through" is satisfied by a lock that was never
+        // there, and a persistence clear is exactly how it would not be
+        // there. This is `l71-shieldlock-shut`'s job on the JS side.
+        expect(() => walk({
+            relax: {
+                ...R3,
+                persistence: [{ level: 71, tag: 2, note: 'shieldlock@288,256' }],
+            },
+        })).toThrow(/has no activator at \(288,256\)/);
+    });
+
+    it('refuses a responder that does not open on touch', () => {
+        // `lock@112,160` is a button-lock. Reading "it is an Activators" as
+        // "it opens on contact" would drive a walk into a wall forever.
+        expect(() => synthesizeLegs([{
+            level: 71,
+            targets: [{ x: 272, y: 264, touch: { lock: { x: 112, y: 160 } } }],
+        }], { levelSource, boot: { ...BOOT }, relax: R3 }))
+            .toThrow(/does not open on TOUCH/);
+    });
+
+    it('refuses a lock the level does not have', () => {
+        expect(() => synthesizeLegs([{
+            level: 71,
+            targets: [{ x: 272, y: 264, touch: { lock: { x: 0, y: 0 } } }],
+        }], { levelSource, boot: { ...BOOT }, relax: R3 }))
+            .toThrow(/has no activator at \(0,0\)/);
+    });
+
+    it('refuses a touch under noclip, where it would verify nothing', () => {
+        expect(() => synthesizeLegs([{
+            level: 71,
+            targets: [{ x: 272, y: 264, touch: { lock: { ...LOCK } } }],
+        }], {
+            levelSource,
+            boot: { ...BOOT },
+            relax: { ...R3, noclip: true, persistence: undefined },
+        })).toThrow(/the noclip arm does not run it/);
+    });
+
+    it('refuses a malformed touch', () => {
+        for (const touch of [null, {}, { lock: {} }, { lock: { x: 288 } }, 'shieldlock']) {
+            expect(() => synthesizeLegs([{
+                level: 71,
+                targets: [{ x: 272, y: 264, touch }],
+            }], { levelSource, boot: { ...BOOT }, relax: R3 }))
+                .toThrow(/touch(\.lock)? must be/);
+        }
+    });
+});

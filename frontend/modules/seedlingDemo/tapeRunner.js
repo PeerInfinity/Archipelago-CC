@@ -184,6 +184,7 @@ export function createTapeStepper(tape, opts = {}) {
                 world: run ? run.world : null,
                 transitions: run ? run.transitions : [],
                 transports: run ? run.transports : [],
+                lockSnaps: run ? run.lockSnaps : [],
                 grants: run ? run.grantsFired : [],
                 inventory: run ? run.inventory : null,
                 last: tick === t.tick_count,
@@ -222,6 +223,11 @@ export function createTapeStepper(tape, opts = {}) {
             // game MUST have refused input, and its absence means no fall
             // fired.
             transports: run ? run.transports : [],
+            // R3: the touch-lock windows this tape drove. Same job as
+            // `transports` — the differential reads `saw_input_refused`
+            // two-sidedly, and a ShieldLock is the second thing on the ladder
+            // that refuses input by design.
+            lockSnaps: run ? run.lockSnaps : [],
             final: run ? run.state : state,
             // The R0 relaxations' JS-side outcome. `inventory` is a MIRROR —
             // an acceptance assertion reads `botStatus.items` from the game,

@@ -1,0 +1,41 @@
+{
+  "tape_version": 3,
+  "game": "seedling",
+  "name": "l71-shieldlock-open",
+  "description": "R3's ONE REAL OPENER, put to the game. L71's shieldlock@288,256 seals the door to Dungeon 8 — the teleporter at 304,256, which is how the walk reaches darksuit — and R2 opened it by handing the game a persistence clear. Here the player opens it by TOUCHING it. The boot drops them at (264,264), 22 px west; they walk east and the lock's own Solid pins them at 285.95, which is inside its collide rect because ShieldLock.update collides at x - 1: [287,303) against a player box of [283.95,287.95). Holding the dark shield, the lock then takes them over — p.y = y - originY + 7 snaps them from 264 to 263, receiveInput goes false, and the ordinary 0.01-per-tick Lock fade runs for its 101st tick before turnOff() restores input and writes Game.setPersistence(2, false). THE WINDOW GETS NO SPANS: the right span ends at 19, the tick the snap fires, and does not resume until 119, the tick input comes back. That is the transport rule one mechanic over — the tick counter runs while the player cannot act, useItem(Main.primary) is inside the same Player.input() the refusal gates, and a span one consumer honours and the other drops is what this format exists to prevent. Observation 120 is the first movement, 121 is already INSIDE [288,304) where the lock used to be, and 134 is the crossing into level 76. Its control is l71-shieldlock-shut, which is THIS TAPE with one field changed — grants — and which the game answers by pinning the player at y 264 in level 71 forever.",
+  "boot": {
+    "level": 71,
+    "x": 256,
+    "y": 256
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [
+    "water",
+    "lava",
+    "ice",
+    "waterfall"
+  ],
+  "grants": [
+    {
+      "level": 71,
+      "items": [
+        "darkshield"
+      ]
+    }
+  ],
+  "persistence": [],
+  "tick_count": 140,
+  "inputs": [
+    {
+      "key": "right",
+      "from": 0,
+      "to": 19
+    },
+    {
+      "key": "right",
+      "from": 119,
+      "to": 140
+    }
+  ]
+}

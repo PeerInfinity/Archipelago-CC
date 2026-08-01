@@ -88,6 +88,50 @@ export const PRESSERS = Object.freeze({
     buttonroom: { as3: 'ButtonRoom', src: 'Puzzlements/ButtonRoom.as:60-99' },
 });
 
+/**
+ * ── THE RESPONDERS THAT PRESS THEMSELVES (R3) ─────────────────────────
+ *
+ * A `ShieldLock` has no button. `ShieldLock.update`
+ * (`Puzzlements/ShieldLock.as:30-41`) is the whole mechanic:
+ *
+ *     p = collide("Player", x - 1, y) as Player;
+ *     if (p && !activate && ((hasDarkShield && shieldType == 1)
+ *                         || (hasShield    && shieldType == 0))) {
+ *         p.y = y - originY + 7;
+ *         p.directionFace = 0;
+ *         p.receiveInput = false;
+ *         activate = true;
+ *     }
+ *     activationStep();
+ *
+ * Three things follow, and each of them is a way the button model above
+ * would have been wrong here:
+ *
+ * 1. **`activate` LATCHES.** `ShieldLock` forces `tSet = -2`
+ *    (`ShieldLock.as:26` — R2's FORCED_TSET finding), so no `Button`'s
+ *    `activateAll` ever republishes the flag and nothing sets it false.
+ *    The button arm's every-tick republication, and with it the occupancy
+ *    restore, is dead code for this class: once touched, the fade runs to
+ *    completion whatever the player does, and the lock never closes again.
+ * 2. **It WRITES THE PLAYER'S POSITION and REFUSES INPUT.** The fade is
+ *    ordinary — the same 0.01 per tick as any other `Lock`, so
+ *    `opensOnTick` still answers 101 — but the player cannot act for the
+ *    duration. That window is the caller's problem (`levelRun`), so this
+ *    module REPORTS it rather than pretending the fade is the whole story.
+ * 3. **⚠ `turnOff()` RESTORES INPUT ONLY `if (p)`** — and `p` is
+ *    re-collided every tick, so a player who has drifted out of the check
+ *    rect by the time the fade ends is refused input FOREVER. That is a
+ *    real terminal state in the game, not a modelling gap, and it is why
+ *    the turn-off event carries whether the player was still there.
+ *
+ * ⚠ `directionFace` is deliberately absent: it selects a sprite row and
+ * nothing in the observation stream can see it.
+ */
+export const TOUCH_RESPONDERS = Object.freeze({
+    shieldlock: { as3: 'ShieldLock', src: 'Puzzlements/ShieldLock.as:30-51' },
+    shieldlocknorm: { as3: 'ShieldLock', src: 'Puzzlements/ShieldLock.as:30-51' },
+});
+
 /** `Image.alpha`'s setter clamps — graphics/Image.as:155-158. */
 const clampAlpha = (v) => (v < 0 ? 0 : (v > 1 ? 1 : v));
 
@@ -125,7 +169,11 @@ export function opensOnTick(fade) {
 export function createActivatorState(world) {
     const byId = new Map();
     for (const a of world.activators) {
-        byId.set(a.id, { alpha: 1, open: false, held: 0 });
+        // `touched` is the LATCHED `activate` of a touch responder — see
+        // TOUCH_RESPONDERS. It is a separate field rather than a reuse of
+        // `held` because `held` counts CONTINUOUS ticks and resets, which is
+        // the opposite of a latch.
+        byId.set(a.id, { alpha: 1, open: false, held: 0, touched: false });
     }
     return { byId, level: world.level };
 }
@@ -156,20 +204,83 @@ export function pressedGroups(world, playerBox) {
 /**
  * One tick of the activator machinery, run AFTER the player has moved.
  *
- * The order is the game's: `World.addUpdate` PREPENDS and `loadlevel` adds
- * the Player LAST (`Game.as:2040`), so the Player updates FIRST and reads
- * the state as of the END of the previous tick. A caller that stepped this
- * before the movement would let the player walk into a lock on the tick it
- * opened, one tick early, forever.
+ * ⚠ THE ORDER, CORRECTED BY THE GAME AT R3. `Game.loadlevel` adds the
+ * Player at `Game.as:2040` and every scenery and puzzle entity in the loop
+ * BELOW it, and `World.add` -> `addUpdate` PREPENDS — so the update list is
+ * reverse add order and **a Lock updates BEFORE the Player**, reading the
+ * position the previous frame left. (R2's docblock here said the opposite,
+ * and no recording could tell: the player is stationary for the whole of
+ * `l71-button-lock`.)
+ *
+ * Calling this AFTER the movement is nonetheless right, because the two
+ * labellings produce the SAME STATE — "derived from the position at the end
+ * of tick N" is one object whether you compute it at the bottom of tick N or
+ * the top of tick N+1, and the player's sweep in tick N+1 reads it either
+ * way. A caller that stepped it BEFORE the movement would open a lock a tick
+ * early, in every run, forever.
+ *
+ * What the two labellings do NOT share is a SIDE EFFECT on the player. The
+ * `snap` event below is written by the lock at the top of the next tick,
+ * ahead of the player's own update, so `levelRun` defers it by one tick —
+ * see `pendingSnapY`, and the recording that found it.
+ *
+ * `opts.inventory` is the run's item mirror, and it is REQUIRED in any level
+ * holding a touch responder — see TOUCH_RESPONDERS.
+ *
+ * Returns the EVENTS a touch responder produced this tick (see `events`
+ * below), not the state: the state is mutated in place, and returning it as
+ * well would offer a caller two ways to read one thing.
+ *
+ * ⚠ ONE BOX FOR THE WHOLE PASS, which is a bounded imprecision the game
+ * does not share. A `snap` moves the player, and in the game an entity
+ * updating after the ShieldLock would collide against the NEW position. The
+ * pass here uses the pre-snap box throughout, so a SECOND responder whose
+ * volume the snap moves the player into or out of would be one tick late.
+ * L71's other two locks are 176 px away, and it is the only touch responder
+ * on any route so far; recorded rather than assumed, because "no route does
+ * that yet" is how the statue got its offset wrong for two slices.
  */
-export function stepActivators(state, world, playerBox) {
+export function stepActivators(state, world, playerBox, opts = {}) {
+    const { inventory = null } = opts;
     const pressed = pressedGroups(world, playerBox);
+    /**
+     * What a touch responder DID this tick, for the caller that owns the
+     * player: `{kind: 'snap'|'turnoff', id, y?, touching?}`.
+     *
+     * Returned rather than applied, because this module does not own the
+     * player's position and a module that reached across to write it would
+     * be the second copy of the world swap all over again.
+     */
+    const events = [];
     for (const a of world.activators) {
         const s = state.byId.get(a.id);
         if (!s) fail(`activator ${a.id} has no state — was createActivatorState called `
             + `for level ${world.level}?`);
-        const active = a.t >= 0 && pressed.has(a.t);
         const responder = RESPONDERS[a.tag];
+        let active;
+        // `p` in the AS3: re-collided EVERY tick, which is what makes the
+        // `turnOff` guard below a live question rather than a formality.
+        let touching = false;
+        if (TOUCH_RESPONDERS[a.tag]) {
+            if (inventory === null) {
+                fail(`level ${world.level} holds ${a.id}, a touch responder whose `
+                    + `activation gates on \`${a.shield}\` — but stepActivators was `
+                    + 'called with no inventory. Defaulting the item to false would '
+                    + 'model a lock that can never open, silently, in the one level '
+                    + 'where opening it is the errand.');
+            }
+            touching = rectsOverlap(playerBox, a.touchRect);
+            if (touching && !s.touched && inventory[a.shield] === true) {
+                s.touched = true;
+                events.push({ kind: 'snap', id: a.id, y: a.snapY, persistTag: a.persistTag });
+            }
+            // ⚠ THE LATCH, not the press. Nothing republishes this flag, so
+            // it stays true whatever the player does next — including
+            // walking away, which for a button-lock would close it.
+            active = s.touched;
+        } else {
+            active = a.t >= 0 && pressed.has(a.t);
+        }
         if (active) {
             if (s.alpha > 0) {
                 s.alpha = clampAlpha(s.alpha - responder.fade);
@@ -179,6 +290,16 @@ export function stepActivators(state, world, playerBox) {
                 if (responder.fade === 0.1 && s.alpha <= 0) s.open = true;
             } else if (responder.fade !== 0.1) {
                 s.open = true;   // Lock.turnOff()
+                // ⚠ AND IT KEEPS BEING CALLED. `activate` is still true and
+                // `alpha` is pinned at 0, so this branch runs on EVERY
+                // subsequent tick — `Lock.turnOff`'s own `type == normType`
+                // guard makes the second call a no-op, but `ShieldLock`'s
+                // override does not have that guard, so its `if (p)` is
+                // re-evaluated every tick. A player who missed the restore
+                // and later drifts back into the rect gets input back.
+                if (TOUCH_RESPONDERS[a.tag]) {
+                    events.push({ kind: 'turnoff', id: a.id, touching, persistTag: a.persistTag });
+                }
             }
             s.held += 1;
         } else {
@@ -192,7 +313,7 @@ export function stepActivators(state, world, playerBox) {
             }
         }
     }
-    return state;
+    return events;
 }
 
 /** The ids that are currently NOT solid. */

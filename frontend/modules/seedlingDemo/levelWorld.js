@@ -788,6 +788,23 @@ export const ENTITY_CLASSES = Object.freeze({
 
         src: 'Game.as:2145 + Puzzlements/ShieldLock.as:35-49 (new ShieldLock(x,y,tag,1))',
         why: 'snaps `p.y` and sets `p.receiveInput = false` on approach',
+        // R3: what the collide rect below cannot say. The RECT is already
+        // here — `ShieldLock.update` collides at `x - 1` and the avoid volume
+        // is that same rect, one geometry answering two questions, exactly as
+        // `pressers` reuses `cls.hazard` for the press volume. This block
+        // carries only the two facts a rect cannot: which shield opens it,
+        // and where the snap puts the player.
+        lockSnap: {
+            // `(Player.hasDarkShield && shieldType == 1)`; `shieldlock` is
+            // constructed with the default `_type = 1` (`Game.as:2145`).
+            shield: 'hasDarkShield',
+            // `p.y = y - originY + 7`, where `y` is the ENTITY's (placement
+            // + Tile.h/2 = +8, `Lock.as:31`) and `originY` is 8
+            // (`Lock.as:33`). So the snap lands the player at placement + 7,
+            // one pixel above the lock cell's centre.
+            snapDY: 7,
+            src: 'Puzzlements/ShieldLock.as:32-39',
+        },
         hazard: {
             dx: -1, dy: 0, w: 16, h: 16, originX: 0, originY: 0,
             kind: 'lock-snap',
@@ -807,6 +824,10 @@ export const ENTITY_CLASSES = Object.freeze({
 
         src: 'Game.as:2144 + Puzzlements/ShieldLock.as:35-49 (new ShieldLock(x,y,tag,0))',
         why: 'same class as `shieldlock`; the fourth argument picks a sprite',
+        // Same class, `_type = 0` — so the OTHER arm of the disjunction at
+        // `ShieldLock.as:33` and the plain shield. Not a sprite difference:
+        // reading it as one would open every normal lock on the dark shield.
+        lockSnap: { shield: 'hasShield', snapDY: 7, src: 'Puzzlements/ShieldLock.as:32-39' },
         hazard: {
             dx: -1, dy: 0, w: 16, h: 16, originX: 0, originY: 0,
             kind: 'lock-snap',
@@ -2208,14 +2229,34 @@ export function buildLevelWorld(levelRecord, { roles = ROLES, cleared = null } =
             const solid = { rect: entityRect(cls, x, y), cls, tag: e.type, x, y };
             if (ACTIVATOR_RESPONDERS.has(e.type)) {
                 solid.activatorId = `${e.type}@${x},${y}`;
-                activators.push({
+                const activator = {
                     id: solid.activatorId,
                     tag: e.type,
                     t: tSetOf(e.type, e.attrs),
                     rect: solid.rect,
                     x,
                     y,
-                });
+                    // What `Lock.turnOff()` writes: `Game.setPersistence(tag,
+                    // false)`. Carried so a consumer can say WHICH flag a
+                    // touch turned off, against the game's own
+                    // `persistence_cleared` readout — the R3 ledger's whole
+                    // point is that a flag went false because the player did
+                    // something, and a claim about "a lock opened" that
+                    // cannot name the flag is not checkable against it.
+                    persistTag: entityTag,
+                };
+                // ── R3: the responders that press THEMSELVES ────────────
+                // A `ShieldLock` has no button: its own `update` collides at
+                // `x - 1` and sets `activate`. The rect for that collide is
+                // `cls.hazard`'s, because they are the SAME rect — see the
+                // `lockSnap` note on the class.
+                if (cls.lockSnap) {
+                    activator.touchRect = assertRect(entityRect(cls.hazard, x, y),
+                        `${where}: ${e.type}@${x},${y} touch rect`);
+                    activator.shield = cls.lockSnap.shield;
+                    activator.snapY = y + cls.lockSnap.snapDY;
+                }
+                activators.push(activator);
             }
             solids.push(solid);
             objectSolids.push(solid);

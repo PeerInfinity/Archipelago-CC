@@ -52,6 +52,18 @@ const playerBox = (x, y) => rect(x - 2, y - 2, 4, 5);
 
 const L71 = buildLevelWorld(levelRecord(71));
 
+/**
+ * The item mirror `stepActivators` now needs, because L71 holds a touch
+ * responder. Empty means "no shields": every button/lock assertion below is
+ * about a mechanic that consults no item, so they all run with the shields
+ * OFF and the ShieldLock inert — which is also what R2's recordings were
+ * made under.
+ */
+const NO_ITEMS = Object.freeze({ hasShield: false, hasDarkShield: false });
+const DARK_SHIELD = Object.freeze({ hasShield: false, hasDarkShield: true });
+const step = (state, world, box, inventory = NO_ITEMS) =>
+    stepActivators(state, world, box, { inventory });
+
 describe('the membership lists agree', () => {
     it('every tag levelWorld treats as a responder has semantics here', () => {
         // Two lists in two modules is how a class ends up with geometry and
@@ -92,10 +104,10 @@ describe('the fades, which are float questions', () => {
         const onButton = playerBox(120, 184);
         expect(pressedGroups(L71, onButton).has(0)).toBe(true);
         for (let tick = 1; tick <= 100; tick++) {
-            stepActivators(state, L71, onButton);
+            step(state, L71, onButton);
             expect(openActivatorIds(state).has(lock.id), `tick ${tick}`).toBe(false);
         }
-        stepActivators(state, L71, onButton);
+        step(state, L71, onButton);
         expect(openActivatorIds(state).has(lock.id)).toBe(true);
     });
 
@@ -103,20 +115,20 @@ describe('the fades, which are float questions', () => {
         const state = createActivatorState(L71);
         const lock = L71.activators.find((a) => a.tag === 'lock' && a.t === 0);
         const onButton = playerBox(120, 184);
-        for (let tick = 1; tick <= 101; tick++) stepActivators(state, L71, onButton);
+        for (let tick = 1; tick <= 101; tick++) step(state, L71, onButton);
         expect(openActivatorIds(state).has(lock.id)).toBe(true);
         // Standing INSIDE the lock, off the button: `returnToNormal` is
         // guarded by `!collideTypes(hitables, x, y)`, so it stays open.
         const inLock = playerBox(120, 170);
-        stepActivators(state, L71, inLock);
+        step(state, L71, inLock);
         expect(openActivatorIds(state).has(lock.id)).toBe(true);
         // Clear of both: it closes on the very next tick.
         const clearOfBoth = playerBox(120, 140);
-        stepActivators(state, L71, clearOfBoth);
+        step(state, L71, clearOfBoth);
         expect(openActivatorIds(state).has(lock.id)).toBe(false);
         // ...and re-opening costs the full 101 again — the fade RESETS,
         // it does not resume, because the else-arm restores alpha to 1.
-        for (let tick = 1; tick <= 100; tick++) stepActivators(state, L71, onButton);
+        for (let tick = 1; tick <= 100; tick++) step(state, L71, onButton);
         expect(openActivatorIds(state).has(lock.id)).toBe(false);
     });
 });
@@ -163,6 +175,150 @@ describe('L71: the crossing R2\'s claim rests on', () => {
         // the case a per-level "is the lock open" flag would get wrong.
         const tagged = L71.activators.filter((a) => a.tag === 'lock');
         expect(tagged.map((a) => a.t).sort()).toEqual([-1, 0]);
+    });
+});
+
+/**
+ * ── R3: THE TOUCH LOCK ────────────────────────────────────────────────
+ *
+ * Hand-computed from `Puzzlements/ShieldLock.as:30-51` and `Lock.as:25-37`,
+ * not read off this module's output. The chain, once:
+ *
+ *   placement (288,256) -> entity (296,264)   `Lock.as:31`, +Tile.w/2
+ *   setHitbox(16,16,8,8)                      `Lock.as:33`
+ *     -> solid rect [288,304) x [256,272)
+ *   collide("Player", x - 1, y)               `ShieldLock.as:32`
+ *     -> touch rect [287,303) x [256,272)
+ *   p.y = y - originY + 7 = 264 - 8 + 7       `ShieldLock.as:35`
+ *     -> 263
+ *
+ * The game answers all of it in `l71-shieldlock-open` / `-shut`.
+ */
+describe('R3: the lock that presses itself', () => {
+    const shieldLock = () => L71.activators.find((a) => a.tag === 'shieldlock');
+    /** The last x the sweep can rest at, pressed against the lock's west face. */
+    const AGAINST = 286;
+
+    it('the touch rect is the solid rect shifted ONE pixel west', () => {
+        const lock = shieldLock();
+        expect(lock.rect).toMatchObject({ x: 288, y: 256, right: 304, bottom: 272 });
+        expect(lock.touchRect).toMatchObject({ x: 287, y: 256, right: 303, bottom: 272 });
+        expect(lock.snapY).toBe(263);
+        expect(lock.shield).toBe('hasDarkShield');
+        // What `Lock.turnOff()` writes false — L71's own tag 2, the flag R2
+        // used to hand over as a persistence clear.
+        expect(lock.persistTag).toBe(2);
+    });
+
+    it('...which leaves exactly ONE pixel column a player can touch it from', () => {
+        // The shifted rect is 15 px of solid and 1 px of air. That single
+        // column is the whole approach: everything else the sweep refuses.
+        // (The mirror of the button/lock "DISJOINT by one pixel of y" claim
+        // — here the geometry hands the mechanic a 1 px window in x.)
+        const lock = shieldLock();
+        const touchable = [];
+        for (let x = 280; x <= 292; x += 0.5) {
+            const box = playerBox(x, 264);
+            const inSolid = box.x < lock.rect.right && box.right > lock.rect.x;
+            const inTouch = box.x < lock.touchRect.right && box.right > lock.touchRect.x;
+            if (inTouch && !inSolid) touchable.push(x);
+        }
+        expect(Math.min(...touchable)).toBe(285.5);
+        expect(Math.max(...touchable)).toBe(AGAINST);
+        // And a sweep pressing east stops at the largest such x, because
+        // `sweepAxis` steps by at most 1 and stops before the collision:
+        // any resting position is in (285, 286].
+        expect(touchable.every((x) => x > 285 && x <= AGAINST)).toBe(true);
+    });
+
+    it('snaps, then opens on tick 101 — the same fade as any Lock', () => {
+        const state = createActivatorState(L71);
+        const lock = shieldLock();
+        const box = playerBox(AGAINST, 264);
+        const first = step(state, L71, box, DARK_SHIELD);
+        expect(first).toEqual([{
+            kind: 'snap', id: lock.id, y: 263, persistTag: 2,
+        }]);
+        expect(openActivatorIds(state).has(lock.id)).toBe(false);
+        // Ticks 2..100 are the rest of the fade: no events, still solid.
+        const snapped = playerBox(AGAINST, 263);
+        for (let tick = 2; tick <= 100; tick++) {
+            expect(step(state, L71, snapped, DARK_SHIELD), `tick ${tick}`).toEqual([]);
+            expect(openActivatorIds(state).has(lock.id), `tick ${tick}`).toBe(false);
+        }
+        // ⚠ 101, exactly as `opensOnTick(0.01)` says — the tick the touch
+        // itself decremented on counts as the first.
+        expect(step(state, L71, snapped, DARK_SHIELD)).toEqual([{
+            kind: 'turnoff', id: lock.id, touching: true, persistTag: 2,
+        }]);
+        expect(openActivatorIds(state).has(lock.id)).toBe(true);
+    });
+
+    it('without the shield it never activates at all', () => {
+        // The other arm of `ShieldLock.as:33`. Not "opens later" — the
+        // condition is simply false, so the lock is an ordinary wall.
+        const state = createActivatorState(L71);
+        const lock = shieldLock();
+        const box = playerBox(AGAINST, 264);
+        for (let tick = 1; tick <= 200; tick++) {
+            expect(step(state, L71, box, NO_ITEMS), `tick ${tick}`).toEqual([]);
+        }
+        expect(openActivatorIds(state).has(lock.id)).toBe(false);
+        // ...and the plain-shield spelling is a DIFFERENT item: reading the
+        // fourth ctor argument as a sprite choice would open this one on it.
+        expect(lock.shield).not.toBe('hasShield');
+        for (let tick = 1; tick <= 200; tick++) {
+            step(state, L71, box, { hasShield: true, hasDarkShield: false });
+        }
+        expect(openActivatorIds(state).has(lock.id)).toBe(false);
+    });
+
+    it('LATCHES: walking away does not close it, which a button-lock does', () => {
+        // The behavioural consequence of FORCED_TSET = -2. Nothing
+        // republishes `activate`, so the occupancy restore that closes
+        // `lock@112,160` the moment the player steps off has no counterpart
+        // here. The contrast is the assertion: same module, same fade, two
+        // different answers to "then walk away".
+        const state = createActivatorState(L71);
+        const lock = shieldLock();
+        const box = playerBox(AGAINST, 264);
+        step(state, L71, box, DARK_SHIELD);
+        const faraway = playerBox(200, 100);
+        for (let tick = 2; tick <= 101; tick++) step(state, L71, faraway, DARK_SHIELD);
+        expect(openActivatorIds(state).has(lock.id)).toBe(true);
+        for (let tick = 1; tick <= 10; tick++) step(state, L71, faraway, DARK_SHIELD);
+        expect(openActivatorIds(state).has(lock.id)).toBe(true);
+    });
+
+    it('...and reports `touching: false` when turnOff finds no player', () => {
+        // ⚠ THE TERMINAL CASE, and the reason the event carries the collide
+        // at all. `ShieldLock.turnOff()` restores `receiveInput` only
+        // `if (p)`, so a player carried out of the rect never gets input
+        // back. `levelRun` turns this flag into a named throw; here it is
+        // just the fact.
+        const state = createActivatorState(L71);
+        const lock = shieldLock();
+        step(state, L71, playerBox(AGAINST, 264), DARK_SHIELD);
+        const faraway = playerBox(200, 100);
+        let last = [];
+        for (let tick = 2; tick <= 101; tick++) last = step(state, L71, faraway, DARK_SHIELD);
+        expect(last).toEqual([{
+            kind: 'turnoff', id: lock.id, touching: false, persistTag: 2,
+        }]);
+        // ...and it goes true again the moment the player is back, because
+        // `activate` is still set and `activationStep` calls `turnOff` every
+        // tick from here on.
+        expect(step(state, L71, playerBox(AGAINST, 263), DARK_SHIELD)).toEqual([{
+            kind: 'turnoff', id: lock.id, touching: true, persistTag: 2,
+        }]);
+    });
+
+    it('refuses to run at all without an inventory', () => {
+        // Defaulting the item to false would model a lock that can never
+        // open — silently, in the one level where opening it is the errand.
+        const state = createActivatorState(L71);
+        expect(() => stepActivators(state, L71, playerBox(AGAINST, 264)))
+            .toThrow(/no inventory/);
     });
 });
 
@@ -226,7 +382,7 @@ describe('collidesSolid honours an open activator', () => {
         const inLock = playerBox(120, 168);
         expect(L71.collidesSolid(inLock)?.tag).toBe('lock');
         const onButton = playerBox(120, 184);
-        for (let tick = 1; tick <= 101; tick++) stepActivators(state, L71, onButton);
+        for (let tick = 1; tick <= 101; tick++) step(state, L71, onButton);
         const open = openActivatorIds(state);
         expect(L71.collidesSolid(inLock, { openActivators: open })).toBeNull();
         // ...and the OTHER lock in the same level is untouched by it.
