@@ -415,3 +415,109 @@ IMPRECISION with a name: the gate answers "was the flag set at the top of
 this frame", not "did the player move", and the two differ for exactly the
 frames a dialogue is open. The JS model must reproduce the tick consumption
 exactly, and the recordings are the oracle for it.
+
+## 9. ⚖ THE SLICE-0 RULINGS (user, 2026-08-01)
+
+1. **Target: 7 items, real.** sword, shield, feather, torch, spear,
+   darkshield, darksuit REAL-collected, `hitsMax == 3`. `wand`, `conch`,
+   `darksword` and `health` are each named with their rung (all R5). The
+   headline stops being "more items" and becomes **the same map with the
+   crutches off** — grants EMPTY, clears reduced to the named-exception set.
+2. **Build only what R3 retires.** Ceremony collection and the one
+   touch-lock. Talk seals, spear, wand shots, pushing and the equip
+   primitive all drop to the rung that first needs one.
+3. **L30's rock: the question dissolved.** It is one of the 17 clears the
+   walk never needed, so the enemy-free-room policy is never tested there.
+   (The user's challenge was right to press on it, and pressing found the
+   better answer: `BobSoldier` CHASES — `runRange` 80 — so the 144 px was
+   the spawn gap, not the swing gap. It still could not interfere: `"Enemy"`
+   is absent from `Mobile.solids` and both its damage paths end at
+   `Player.hit()`, which `noDamage` guards.)
+
+## 10. Slices 1–2 — AS BUILT (2026-08-01)
+
+### 10.1 Slice 1 — the AS3 batch, and the gate
+
+**Three changes, one build, `FRESH=1`.** All named by the §8.7 probe:
+
+1. `autoAdvance` fires for a `Help` as well as for `Game.talking`.
+2. `autoAdvanceHeld` — the live path drains a press that a `Help` consumed,
+   so X is never left down (and X is `useItem(Main.primary)`).
+3. `botStatus.persistence_cleared` — every flag currently off, **scanned
+   from `Main.levelPersistence` rather than echoed from the tape**. R3
+   retires the clear crutch, so flags now go false because the PLAYER did
+   something, and the ledger claim is exactly the difference between that
+   list and the declared one. No tape field, so no version bump and no new
+   place for two consumers to disagree.
+
+**✅ THE BYTE-INERTNESS GATE PASSED BEFORE ANYTHING NEW WAS RECORDED:
+298 checks, ZERO failures.** All 34 frozen fixtures byte-identical against
+the new build — R1's 14,963-tick headline with its eleven-item claim, R2's
+10,136-tick headline with its eight, every chain assertion, the live driver
+task, and `saw_auto_advance = 0` on every single tape.
+
+**Chunked `botLoadTape` came OUT of the batch**, on its own ruling's terms:
+§8.5 measured the ceiling first and found TWO, ~2100 spans and ~95–159 KB,
+with R2's headline at 2.4x span and 1.5x byte headroom. Concatenating
+chunks rebuilds the same string, so it would not address the allocation
+that fails. `tapeFormat.assertTapeWithinRuntimeBudget` replaced it, enforced
+in `synthesizeLegs` so a plan fails while the planner is still cheap; three
+mutations red in milliseconds. ⚠ Its span test CAPS the tape it builds —
+the first mutation run (`spans: 999999`) spent twenty minutes constructing
+a million-span tape and had to be killed. A mutation that hangs is not one
+that bites.
+
+### 10.2 Slice 2 — the ceremony, and three things only the game knew
+
+`dialogue.js` transcribes `Pickup`/`NPC`/`Game`'s text machinery; 13
+hand-counted cases are the second stratum. `levelRun` runs it.
+`r3-collect-sword` is the first tape on the ladder with EMPTY grants and a
+true item property, and the model matches the recording **byte for byte,
+all 76 observations**. vitest 599/599 across 14 files.
+
+| what the oracle settled | the model's state before it |
+|---|---|
+| contact at observation 23, frozen 24..57 — **34 ticks** | predicted 34, last frozen tick 57, from the AS3 alone |
+| **velocity SURVIVES a freeze** — 61.65 → 61.00 → 60.60 → 60.45 after the ceremony, then friction | implied by "do not step", and confirmed |
+| ⚠ **the COMPLETING frame is not frozen** | wrong, and it was the ONLY divergence |
+
+The completing-frame rule is the one worth carrying: `World.addUpdate`
+PREPENDS and the temporary NPC is added LAST, so it updates BEFORE the
+player — `talking = false` has already cleared `Game.freezeObjects` by the
+time `mobileUpdate` reads it, and the player moves on that very tick.
+Counting it as frozen made every ceremony one tick long.
+
+⚠ **Press spacing is load-bearing.** `slashTimer` is 20 and the sword's own
+text says "double tap to dash": a press landing after the ceremony reaches
+`useItem(Main.primary)`, so one stray press is a swing and two within
+twenty ticks is a DASH that moves the player. The fixture spaces them
+EIGHT apart, leaving exactly one stray — which the recording confirms moved
+nothing.
+
+⚠ An unpriced pickup THROWS rather than costing the tape an unknown number
+of ticks. `text: ''` is a REAL case with no dialogue at all (a totem part, a
+non-zero boss key), not a gap in the table.
+
+## 11. WHAT IS NOT DONE, and what it needs
+
+Slices 3–8. Everything they depend on is in and green.
+
+- **The ShieldLock touch** — R3's ONE real opener (`L71 tag 2
+  shieldlock@288,256`, which seals darksuit). `ShieldLock.update` collides
+  at `x - 1`, requires `Player.hasDarkShield` (`shieldlock` is `_type 1`;
+  `shieldlocknorm` is 0), snaps `p.y = y - originY + 7`, sets
+  `receiveInput = false`, runs the ~100-tick fade, then `turnOff()` restores
+  input and writes persistence. **A position-writing input-refused window:
+  the driver emits no spans inside it and the runner asserts none.** Needs
+  the l71 PAIR — the open plus a shut-before control.
+- **Six more collection fixtures**, one per remaining item. The ceremony
+  model is done; these are route authoring plus recordings.
+- **The R3 route.** `recon-seedling-r3.mjs --minimal` gives the 8-clear
+  bill; the shipped planner must CONFIRM it, and must narrow "reached" from
+  "a component of the level" to "the pickup's own tile" — R2 could stop at
+  the door because entering the room WAS collection.
+- **The walk**, its segments, and the acceptance readout: 7 items and
+  `hitsMax == 3` from `botStatus`, `grants` empty, `persistence` exactly the
+  named exceptions, and `persistence_cleared` showing the seven item tags
+  the PLAYER turned off.
+- **Docs + close-out.**
