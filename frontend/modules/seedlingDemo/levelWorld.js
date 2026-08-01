@@ -53,6 +53,7 @@ import {
     SOLID_ENTITY_TYPES,
 } from '../flashPanel/seedlingSemantics.js';
 import { coerceTerrainState, HAZARD_STATES } from './tapeFormat.js';
+import { SEEDLING_PIXEL_MASKS } from './seedlingPixelMasks.js';
 
 /**
  * The player hitbox origin, for recovering the entity position from a box.
@@ -398,30 +399,42 @@ export const ENTITY_CLASSES = Object.freeze({
         // the Engine independently of `Game.update`'s blackCover gate, so
         // the ~18 fade frames have all rendered before the first live tick.
     },
-    // --- pixelmask colliders: the loud-throw seam ------------------------
-    // Ruled 2026-07-30: NOT modelled. Phase 5a already proved neither
-    // rectangle approximation is safe — the sprite rect swallows a
+    // --- pixelmask colliders --------------------------------------------
+    // v2 ruled these an unmodelled loud-throw seam, because Phase 5a proved
+    // neither rectangle approximation safe — the sprite rect swallows a
     // building's own doorway, and the mask rect is not a rect at all.
-    // Masks are MIT and extractable if a later rung ever needs one.
-    // The rect below is the mask's BOUNDING box, used only to decide when
-    // to throw: `Pixelmask.collideHitbox` places the mask at
-    // `parent.x + _x` (masks/Pixelmask.as:collideHitbox), and the entity
-    // carries no hitbox origin, so world rect = [x+dx, +maskW) x [y+dy, +maskH).
+    //
+    // R2 MODELS THEM, because a doorway turned out to be load-bearing: the
+    // exit to the health room sits inside `OpenTreeMask`'s 10x12 opening,
+    // so a bounding rect seals a route the real mask opens (R2 kickoff
+    // §8.5). The bitmaps are committed in `seedlingPixelMasks.js`; `mask`
+    // names which one, `dx`/`dy` place its TOP-LEFT relative to the oel
+    // coordinates, and `w`/`h` stay as the mask's bounding box because the
+    // PLANNER still uses a rect (a conservative over-approximation is the
+    // right direction for routing) while the PHYSICS uses the bitmap.
+    //
+    // ⚠ THE SEAM DID NOT GO AWAY, it moved: an entry with `collider:
+    // 'pixelmask'` and no `mask` field still throws by name. That is what
+    // keeps a mask class nobody extracted from silently becoming a
+    // bounding rect.
     building: {
         as3: 'Building',
-        roles: ROLES, collider: 'pixelmask', type: 'Solid',
+        roles: ROLES, collider: 'pixelmask', type: 'Solid', mask: 'BuildingMask',
         dx: 0, dy: 0, w: 64, h: 48, originX: 0, originY: 0,
         src: 'Scenery/Building.as:20-23 + assets/graphics/BuildingMask.png (64x48)',
+        // `super(_x, _y, ...)` then `mask = new Pixelmask(buildingMasks[0], 0, 0)`,
+        // so the mask's top-left IS the oel position. `Game.buildings[_t].y = -8`
+        // on the next line is the SPRITE offset and moves no collider.
     },
     building1: {
         as3: 'Building',
-        roles: ROLES, collider: 'pixelmask', type: 'Solid',
+        roles: ROLES, collider: 'pixelmask', type: 'Solid', mask: 'Building1Mask',
         dx: 0, dy: 0, w: 48, h: 32, originX: 0, originY: 0,
         src: 'Scenery/Building.as:20-23 + assets/graphics/Building1Mask.png (48x32)',
     },
     treelarge: {
         as3: 'TreeLarge',
-        roles: ROLES, collider: 'pixelmask', type: 'Solid',
+        roles: ROLES, collider: 'pixelmask', type: 'Solid', mask: 'TreeLargeMask',
         dx: 0, dy: 0, w: 160, h: 192, originX: 0, originY: 0,
         src: 'Scenery/TreeLarge.as:22-30 + assets/graphics/TreeLargeMask.png (160x192)',
         // The entity sits at (x+80, y+96) and the mask offset is
@@ -930,6 +943,39 @@ export const CLIFFSIDE_CLASS = Object.freeze({
 });
 
 /**
+ * ⚠ WHICH of the five cliffside masks a placement uses is chosen by the
+ * `<cliffsides>` row's THIRD COLUMN, and v2 dropped it.
+ *
+ * `Game.as:2013` is `add(new CliffSide(o.@x, o.@y, Math.floor(o.@tx / Tile.w)))`
+ * and `CliffSide.as:19-32` is a `switch(frame)` over exactly this order,
+ * with the `default` arm (frame >= 4, or a negative) taking the U mask. The
+ * extract records `[x, y, tx, ty]` with `tx` raw, so the index is
+ * `floor(tx / 16)` — 0, 16, 32, 48, 64 in the committed data.
+ *
+ * While every cliffside was a bounding rect the column did not matter: all
+ * five masks are 16x16, so all five bounding boxes are the same cell. It
+ * matters now, and it is the fourth time in this arc that an index has been
+ * read against the wrong table — hence a named table rather than an inline
+ * `[a, b, c][i]`.
+ */
+export const CLIFFSIDE_FRAME_MASKS = Object.freeze([
+    'CliffSideMaskL',    // frame 0
+    'CliffSideMaskR',    // frame 1
+    'CliffSideMaskLU',   // frame 2
+    'CliffSideMaskRU',   // frame 3
+    'CliffSideMaskU',    // frame 4 and the `default` arm
+]);
+
+/** The CliffSide class for one `<cliffsides>` placement's tileset column. */
+export function cliffSideClassFor(txPixel) {
+    const frame = Math.floor(txPixel / TILE_SIZE);
+    // `default:` in the AS3 switch, i.e. anything not 0..3, is the U mask.
+    const name = (frame >= 0 && frame < 4)
+        ? CLIFFSIDE_FRAME_MASKS[frame] : CLIFFSIDE_FRAME_MASKS[4];
+    return Object.freeze({ ...CLIFFSIDE_CLASS, mask: name, frame });
+}
+
+/**
  * ⚠ A RECT CARRIES ITS OWN `right`/`bottom`, and `rectsOverlap` READS THEM.
  * A `{x, y, w, h}` literal handed to `rectsOverlap` therefore compares
  * against `undefined` and is SILENTLY never overlapping — which is a
@@ -962,6 +1008,86 @@ export function assertRect(r, what) {
  */
 export function rectsOverlap(a, b) {
     return a.x < b.right && a.right > b.x && a.y < b.bottom && a.bottom > b.y;
+}
+
+/**
+ * ── THE PIXELMASK TEST, transcribed from the two places it actually lives ──
+ *
+ * R2 slice 1. The seam v2 threw at is a model now, and it is a model of a
+ * chain that crosses a language boundary, so both halves are cited.
+ *
+ * **Which AS3 function runs.** `Entity.collideWith` takes the `!_mask`
+ * branch for the Player (which uses `setHitbox`, never `mask`) and calls
+ * `e._mask.collide(HITBOX)`. `Entity.HITBOX` is
+ * `private const HITBOX:Mask = new Mask` (`Entity.as:515`) — a plain
+ * **`Mask`**, NOT a `Hitbox` — so `Mask.collide` dispatches `_check[Mask]`,
+ * which `Pixelmask`'s constructor set to its own **`collideMask`**, not
+ * `collideHitbox`. The rect handed to `hitTest` is therefore the PLAYER
+ * ENTITY's own box, `[x - originX, +width) x [y - originY, +height)`.
+ *
+ * **What the runtime does with it.** `BitmapData.hitTest` here is
+ * SWFRecomp's `bd_hit_test` (`SWFModernRuntime/src/avm2/avm2_bitmap.c`):
+ * the mask origin goes through `avm2_coerce_to_i32`, the rect's x/y/w/h are
+ * read as doubles and **cast to `int32_t`, which truncates TOWARD ZERO**
+ * (not `floor`), and the scan is `[x_min, x_max) x [y_min, y_max)` clamped
+ * to the mask, returning true on the first pixel with
+ * `alpha >= threshold` — and `Pixelmask.threshold` is declared `1`, so any
+ * non-transparent pixel collides.
+ *
+ * ⚠ **The bounding pre-test in `collideWith` does NOT truncate.** It is a
+ * float comparison against the entity's bounds, which for a mask-carrying
+ * Entity are the MASK's (assigning a `Pixelmask` runs `Hitbox.update`,
+ * which rewrites `parent.originX/originY/width/height`). So a box can pass
+ * the float bbox test and then be truncated onto a different pixel column.
+ * Both halves are here, in that order, because that is the order they run.
+ *
+ * @param mask  a `SEEDLING_PIXEL_MASKS` entry
+ * @param mx,my where the mask's top-left pixel sits in world coordinates
+ * @param box   the player's box, from `rect()`
+ */
+export function maskHitsBox(mask, mx, my, box) {
+    // 1. `Entity.collideWith`'s float bounding test against the mask bbox.
+    if (!(box.x < mx + mask.w && box.right > mx
+        && box.y < my + mask.h && box.bottom > my)) return false;
+    // 2. `bd_hit_test`'s integer scan. `Math.trunc` IS the C cast.
+    const rx = Math.trunc(box.x) - mx;
+    const ry = Math.trunc(box.y) - my;
+    const w = Math.trunc(box.right - box.x);
+    const h = Math.trunc(box.bottom - box.y);
+    const x0 = Math.max(0, rx);
+    const x1 = Math.min(mask.w, rx + w);
+    const y0 = Math.max(0, ry);
+    const y1 = Math.min(mask.h, ry + h);
+    for (let y = y0; y < y1; y++) {
+        const row = mask.rows[y];
+        for (let x = x0; x < x1; x++) if (row[x] === '#') return true;
+    }
+    return false;
+}
+
+/**
+ * The mask a placed pixelmask entity presents, and where its top-left sits.
+ *
+ * Kept apart from `maskHitsBox` because the two answer different questions:
+ * this one is the class's CONSTRUCTOR CHAIN (which picture, at what offset
+ * from the oel coordinates), the other is FlashPunk's arithmetic. Two
+ * classes read the same picture from different origins, which is exactly
+ * the kind of thing that gets collapsed when one function owns both.
+ *
+ * ⚠ The fields are `maskX`/`maskY`, not `x`/`y`, because every caller
+ * spreads this into a record that ALREADY has an `x` and a `y` — the
+ * ENTITY's. R1 shipped a `{to: b, ...label}` whose label carried its own
+ * `to` and spent an afternoon on "NO PATH from a graph that has one".
+ */
+export function maskPlacement(cls, x, y) {
+    const mask = SEEDLING_PIXEL_MASKS[cls.mask];
+    if (!mask) {
+        fail(`${cls.as3} declares collider "pixelmask" but its mask "${cls.mask}" is not in `
+            + 'seedlingPixelMasks.js. Regenerate with '
+            + 'scripts/procgen/extract-seedling-masks.mjs, or leave the entry without a '
+            + '`mask` field so the loud-throw seam still covers it.');
+    }
+    return { mask, maskX: x + cls.dx, maskY: y + cls.dy };
 }
 
 /** The world rect an entity class occupies when placed at oel (x, y). */
@@ -1031,13 +1157,15 @@ export function buildLevelWorld(levelRecord, { roles = ROLES } = {}) {
                 + `known layers are ${KNOWN_LAYERS.join(', ')}`);
         }
         if (layer.name === 'cliffsides') {
-            for (const [tx, ty] of layer.tiles) {
+            for (const [tx, ty, txPixel] of layer.tiles) {
                 const px = tx * TILE_SIZE;
                 const py = ty * TILE_SIZE;
+                const cls = cliffSideClassFor(txPixel);
                 pixelmasks.push({
-                    rect: entityRect(CLIFFSIDE_CLASS, px, py),
-                    cls: CLIFFSIDE_CLASS,
-                    tag: 'cliffside',
+                    rect: entityRect(cls, px, py),
+                    ...maskPlacement(cls, px, py),
+                    cls,
+                    tag: `cliffside${cls.frame}`,
                     x: px,
                     y: py,
                 });
@@ -1220,7 +1348,14 @@ export function buildLevelWorld(levelRecord, { roles = ROLES } = {}) {
             solids.push(solid);
             objectSolids.push(solid);
         } else if (cls.collider === 'pixelmask') {
-            pixelmasks.push({ rect: entityRect(cls, x, y), cls, tag: e.type, x, y });
+            pixelmasks.push({
+                rect: entityRect(cls, x, y),
+                ...maskPlacement(cls, x, y),
+                cls,
+                tag: e.type,
+                x,
+                y,
+            });
         } else if (cls.collider === 'trigger') {
             const isStairs = STAIRS_TAGS.includes(e.type);
             // `Stairs` forces tag = -1; a bare Teleporter defaults to -1
@@ -1328,11 +1463,11 @@ export function buildLevelWorld(levelRecord, { roles = ROLES } = {}) {
          * Returns the first blocker or null — the AS3 sweep consumes only
          * null/non-null, so list order does not affect movement.
          *
-         * THROWS on any overlap with a pixelmask collider. Deliberately
-         * unconditional, even when a rect solid would also have blocked:
-         * the bounding rect is already an over-approximation, so this can
-         * only over-throw, and an over-throw is a loud "route the fixture
-         * elsewhere" while an under-throw is a silent divergence.
+         * Pixelmask colliders are tested PER PIXEL from R2 (`maskHitsBox`),
+         * having been an unconditional throw at v2. The throw survives for
+         * a pixelmask entry with no committed `mask` — `maskPlacement`
+         * raises it at BUILD time now, which is strictly earlier and names
+         * the class rather than the fixture.
          *
          * ⚠ `opts.beforeTypeFlip` selects the world as it exists on its
          * very FIRST live tick, when no tile is solid yet. See the note on
@@ -1342,15 +1477,10 @@ export function buildLevelWorld(levelRecord, { roles = ROLES } = {}) {
          */
         collidesSolid(box, { beforeTypeFlip = false } = {}) {
             // Pixelmask entities (Building, TreeLarge, CliffSide) assign
-            // their type in the CONSTRUCTOR, so the seam is armed on tick 1
+            // their type in the CONSTRUCTOR, so they are armed on tick 1
             // too — only Tiles are late.
             for (const p of pixelmasks) {
-                if (rectsOverlap(box, p.rect)) {
-                    fail(`unmodeled pixelmask collider: ${p.cls.as3} (${p.tag}) at `
-                        + `(${p.x},${p.y}) in ${where}. Pixelmask colliders are a v2 `
-                        + 'seam, not a model — route the fixture clear of it. '
-                        + `Source: ${p.cls.src}`);
-                }
+                if (maskHitsBox(p.mask, p.maskX, p.maskY, box)) return p;
             }
             for (const s of (beforeTypeFlip ? objectSolids : solids)) {
                 if (rectsOverlap(box, s.rect)) return s;
@@ -1481,8 +1611,19 @@ export function buildLevelWorld(levelRecord, { roles = ROLES } = {}) {
          */
         plannerBlockerAt(box, probeRect = null, { noclip = false, noHazards = [] } = {}) {
             if (!noclip) {
+                // ⚠ THE PLANNER USES THE REAL MASK, not the bounding rect.
+                // The conservative direction is normally right for routing,
+                // but not here: L65's exit to the health room sits inside
+                // `OpenTreeMask`'s 10x12 doorway, so the bounding rect
+                // refuses a corridor the game walks (R2 kickoff §8.5). This
+                // is Phase 5a's "the sprite rect swallows a building's own
+                // doorway" as a route-critical fact rather than a caveat.
+                // No committed R1 recording can change: they all declare
+                // `noclip`, which skips this arm entirely.
                 for (const p of pixelmasks) {
-                    if (rectsOverlap(box, p.rect)) return { kind: 'pixelmask', blocker: p };
+                    if (maskHitsBox(p.mask, p.maskX, p.maskY, box)) {
+                        return { kind: 'pixelmask', blocker: p };
+                    }
                 }
                 for (const s of solids) {
                     if (rectsOverlap(box, s.rect)) return { kind: 'solid', blocker: s };

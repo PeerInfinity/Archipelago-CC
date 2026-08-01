@@ -24,6 +24,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
     CLIFFSIDE_CLASS,
+    CLIFFSIDE_FRAME_MASKS,
     ENTITY_CLASSES,
     LevelWorldError,
     MODELLED_TILE_TYPES,
@@ -32,9 +33,14 @@ import {
     ROLES,
     STAIRS_TAGS,
     buildLevelWorld,
+    cliffSideClassFor,
     entityRect,
+    maskHitsBox,
+    maskPlacement,
+    rect,
     rectsOverlap,
 } from './levelWorld.js';
+import { SEEDLING_PIXEL_MASKS } from './seedlingPixelMasks.js';
 import { loadExpectation } from './fixtures/index.js';
 import { HITBOX } from './playerPhysicsV1.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
@@ -176,19 +182,24 @@ describe('census: every fixture level is fully classified', () => {
     });
 });
 
-describe('plannerBlockerAt — the same seam with the throw taken off', () => {
-    // `collidesSolid` is the PHYSICS query and its pixelmask throw is
-    // load-bearing: a tape that strays must die loudly. A PLANNER cannot use
-    // it, because routing around an obstacle by catching the exception that
-    // says you already hit it is not routing around it, and one stray probe
-    // would abort the search. So the seam has two faces, and the tests below
-    // pin which of them is allowed to be quiet.
+describe('plannerBlockerAt — the same geometry, reported instead of returned', () => {
+    // `collidesSolid` is the PHYSICS query: it answers "did the sweep stop"
+    // and returns the blocker. `plannerBlockerAt` is the PLANNING query and
+    // is strictly WIDER — it also reports the things that do not stop the
+    // player but end the run anyway (unmodelled terrain). The tests below
+    // pin that the two agree wherever they overlap.
+    //
+    // ⚠ At v2 the difference was a THROW: a pixelmask was unmodelled, so the
+    // physics died loudly and the planner reported. R2 models the masks, so
+    // both faces now answer from the same `maskHitsBox` — and BOTH use the
+    // real bitmap, not the bounding rect, because a doorway is route-critical
+    // (kickoff §8.5).
 
-    it('reports what collidesSolid THROWS on', () => {
+    it('reports a pixelmask exactly where collidesSolid returns one', () => {
         const mask = L0.pixelmasks[0];
         const box = playerBox(mask.rect.x + 4, mask.rect.y + 4);
-        expect(() => L0.collidesSolid(box)).toThrow(/unmodeled pixelmask collider/);
-        expect(L0.plannerBlockerAt(box)).toMatchObject({ kind: 'pixelmask' });
+        expect(L0.collidesSolid(box)).toBe(mask);
+        expect(L0.plannerBlockerAt(box)).toMatchObject({ kind: 'pixelmask', blocker: mask });
     });
 
     it('reports what collidesSolid returns', () => {
@@ -620,8 +631,8 @@ describe('the pixelmask seam', () => {
         // rect and collide with none of them: silent, and exactly wrong.
         expect(CLIFFSIDE_CLASS.collider).toBe('pixelmask');
         expect(CLIFFSIDE_CLASS.type).toBe('Solid');
-        expect(L94.pixelmasks.filter((p) => p.tag === 'cliffside')).toHaveLength(9);
-        expect(L0.pixelmasks.filter((p) => p.tag === 'cliffside')).toHaveLength(0);
+        expect(L94.pixelmasks.filter((p) => p.tag.startsWith('cliffside'))).toHaveLength(9);
+        expect(L0.pixelmasks.filter((p) => p.tag.startsWith('cliffside'))).toHaveLength(0);
     });
 
     it('TreeLarge\'s ctor offset and mask offset cancel', () => {
@@ -632,40 +643,153 @@ describe('the pixelmask seam', () => {
         expect(tl.rect).toMatchObject({ x: 80, y: 0, right: 240, bottom: 192 });
     });
 
-    it('overlapping one THROWS, naming it and the source', () => {
-        // The positive control for the seam: it must fire, not be
-        // decorative. Level 0's building spans [64,128) x [64,112).
-        expect(() => L0.collidesSolid(playerBox(96, 88)))
-            .toThrow(/unmodeled pixelmask collider: Building \(building\)/);
+    it('overlapping one BLOCKS, and reports the entity that did it', () => {
+        // The positive control: R2 replaced the throw with a model, and a
+        // model that never returns a blocker is the same vacuity in a new
+        // costume. Level 0's building mask spans [64,128) x [64,112) and is
+        // solid in the middle.
+        const hit = L0.collidesSolid(playerBox(96, 88));
+        expect(hit).not.toBeNull();
+        expect(hit.tag).toBe('building');
+        expect(hit.cls.as3).toBe('Building');
     });
 
-    it('throws even where a rect solid would ALSO have blocked', () => {
-        // Deliberately unconditional. The bounding rect over-approximates
-        // the mask, so this can only over-throw — and an over-throw is a
-        // loud "move the fixture" while an under-throw is a divergence
-        // nobody sees.
-        const w = buildLevelWorld({
-            level: 999, width: 4, height: 4, layers: [],
-            entities: [
-                { type: 'building', x: 0, y: 0 },
-                { type: 'pole', x: 0, y: 0 },
-            ],
-        });
-        expect(() => w.collidesSolid(playerBox(8, 8))).toThrow(/unmodeled pixelmask/);
+    it('a pixelmask entry with NO committed mask still throws, at BUILD time', () => {
+        // The seam did not go away, it moved earlier and got more specific:
+        // it now names the CLASS at construction rather than the fixture at
+        // collision, so a mask nobody extracted cannot quietly degrade into
+        // a bounding rect.
+        expect(() => maskPlacement({ ...ENTITY_CLASSES.building, mask: 'NoSuchMask' }, 0, 0))
+            .toThrow(/mask "NoSuchMask" is not in/);
+        // ...and the same for an entry that declares the collider and no
+        // mask at all, which is how a newly-classified class arrives.
+        expect(() => maskPlacement({ as3: 'Whatever', collider: 'pixelmask' }, 0, 0))
+            .toThrow(LevelWorldError);
     });
 
-    it('BOTH slice-0 fixture routes stay clear of the seam', () => {
+    it('BOTH slice-0 fixture routes stay clear of every mask', () => {
         // The claim the fixtures rest on, checked rather than asserted in
         // prose: replay every recorded position through the real query and
-        // require that none of them throws.
+        // require that none of them reports a pixelmask. These recordings
+        // predate the model, so this is also the proof that modelling the
+        // masks did not move a single committed fixture.
         for (const name of ['collide-up-rock', 'transition-west-return']) {
             const { ticks } = loadExpectation(name).stream;
             for (const o of ticks) {
                 const world = o.level === 0 ? L0 : L94;
-                expect(() => world.collidesSolid(playerBox(o.x, o.y)),
-                    `${name} tick ${o.t} at (${o.x},${o.y}) in level ${o.level}`).not.toThrow();
+                const hit = world.collidesSolid(playerBox(o.x, o.y));
+                expect(hit?.mask, `${name} tick ${o.t} at (${o.x},${o.y}) in level ${o.level}`)
+                    .toBeUndefined();
             }
         }
+    });
+
+    // ── R2 slice 1: the masks themselves ─────────────────────────────
+    //
+    // Stratum 1 is HAND-READ: values taken off the committed artifact by
+    // eye, which is the whole reason that artifact is `#`/`.` rows rather
+    // than hex. Stratum 2 is the arithmetic. Neither derives from the other.
+
+    it('the committed masks are the seventeen the game embeds, at their real sizes', () => {
+        expect(Object.keys(SEEDLING_PIXEL_MASKS)).toHaveLength(17);
+        // Hand-read from the PNG headers, not from the extractor.
+        expect(SEEDLING_PIXEL_MASKS.BuildingMask).toMatchObject({ w: 64, h: 48 });
+        expect(SEEDLING_PIXEL_MASKS.OpenTreeMask).toMatchObject({ w: 32, h: 32 });
+        expect(SEEDLING_PIXEL_MASKS.TreeLargeMask).toMatchObject({ w: 160, h: 192 });
+        for (const name of CLIFFSIDE_FRAME_MASKS) {
+            expect(SEEDLING_PIXEL_MASKS[name]).toMatchObject({ w: 16, h: 16 });
+        }
+        // Every row is exactly `w` wide and holds only `#` and `.` — the
+        // artifact is generated, so this is guarding the GENERATOR.
+        for (const [name, m] of Object.entries(SEEDLING_PIXEL_MASKS)) {
+            expect(m.rows, name).toHaveLength(m.h);
+            for (const row of m.rows) {
+                expect(row.length, name).toBe(m.w);
+                expect(/^[#.]+$/.test(row), `${name}: ${row}`).toBe(true);
+            }
+            expect(m.opaque, name)
+                .toBe(m.rows.reduce((n, r) => n + [...r].filter((c) => c === '#').length, 0));
+        }
+    });
+
+    it('OpenTreeMask has the DOORWAY the health route needs — hand-read', () => {
+        // This is the row that decides an item. R2 kickoff §8.5: L65's exit
+        // teleporter to the health room sits inside this opening, so a
+        // bounding-rect approximation seals a corridor the game walks.
+        const m = SEEDLING_PIXEL_MASKS.OpenTreeMask;
+        expect(m.rows[19]).toBe('#'.repeat(32));                    // last solid row
+        expect(m.rows[20]).toBe(`${'#'.repeat(11)}${'.'.repeat(10)}${'#'.repeat(11)}`);
+        expect(m.rows[31]).toBe(m.rows[20]);                        // ...through the bottom
+        // and the gap is exactly 10 wide by 12 tall, at x 11..20, y 20..31.
+        expect(m.rows.filter((r) => r.includes('.'))).toHaveLength(12);
+    });
+
+    it('CliffSideMaskL is the left half, CliffSideMaskU the top — hand-read', () => {
+        expect(SEEDLING_PIXEL_MASKS.CliffSideMaskL.rows[0]).toBe('########........');
+        expect(SEEDLING_PIXEL_MASKS.CliffSideMaskL.rows[15]).toBe('########........');
+        expect(SEEDLING_PIXEL_MASKS.CliffSideMaskU.rows[0]).toBe('################');
+        expect(SEEDLING_PIXEL_MASKS.CliffSideMaskU.rows[8]).toBe('................');
+    });
+
+    it('the cliffside FRAME comes from the tileset column, and default is U', () => {
+        // `Game.as:2013`: new CliffSide(x, y, floor(tx / 16)), and
+        // `CliffSide.as:19-32` switches on it in exactly this order. v2
+        // dropped the column, which was harmless only while every mask was
+        // a 16x16 bounding rect.
+        expect(cliffSideClassFor(0).mask).toBe('CliffSideMaskL');
+        expect(cliffSideClassFor(16).mask).toBe('CliffSideMaskR');
+        expect(cliffSideClassFor(32).mask).toBe('CliffSideMaskLU');
+        expect(cliffSideClassFor(48).mask).toBe('CliffSideMaskRU');
+        expect(cliffSideClassFor(64).mask).toBe('CliffSideMaskU');
+        // The AS3 `default:` arm — anything not 0..3 — is the U mask.
+        expect(cliffSideClassFor(80).mask).toBe('CliffSideMaskU');
+        expect(cliffSideClassFor(-16).mask).toBe('CliffSideMaskU');
+        // ...and a real level carries more than one frame, so the column is
+        // load-bearing rather than constant in the committed data.
+        expect(new Set(L94.pixelmasks.map((p) => p.cls.mask)).size).toBeGreaterThan(1);
+    });
+
+    it('maskHitsBox truncates the box TOWARD ZERO, as the C cast does', () => {
+        // `bd_hit_test` casts the rect's x/y with `(int32_t)`, which is
+        // truncation, not floor. A left-half mask at the origin, so column
+        // 7 is solid and column 8 is not.
+        const m = SEEDLING_PIXEL_MASKS.CliffSideMaskL;
+        // box.x = 4.9 truncates to 4; columns 4..7 are scanned; 7 is solid.
+        expect(maskHitsBox(m, 0, 0, rect(4.9, 4, 4, 5))).toBe(true);
+        // box.x = 8.0 scans 8..11, all transparent.
+        expect(maskHitsBox(m, 0, 0, rect(8, 4, 4, 5))).toBe(false);
+        // ⚠ and 7.9 truncates DOWN to 7, so it still touches the solid half
+        // — a floor would agree here, which is why the negative below is the
+        // one that would catch a wrong rounding mode if x could go negative.
+        expect(maskHitsBox(m, 0, 0, rect(7.9, 4, 4, 5))).toBe(true);
+    });
+
+    it('maskHitsBox misses through a gap a bounding rect would have blocked', () => {
+        // The claim in one assertion: same mask, same box, opposite answers
+        // from the two models. Without this the doorway test above is just a
+        // fact about a PNG.
+        const m = SEEDLING_PIXEL_MASKS.OpenTreeMask;
+        const inDoorway = rect(192 - 2, 118 - 2, 4, 5);   // mask at (176,96)
+        expect(maskHitsBox(m, 176, 96, inDoorway)).toBe(false);
+        expect(rectsOverlap(inDoorway, rect(176, 96, 32, 32))).toBe(true);
+    });
+
+    it('the mask bounding box is clamped, so a box outside it cannot hit', () => {
+        const m = SEEDLING_PIXEL_MASKS.CliffSideMaskU;
+        expect(maskHitsBox(m, 100, 100, rect(90, 100, 4, 5))).toBe(false);
+        expect(maskHitsBox(m, 100, 100, rect(100, 100, 4, 5))).toBe(true);
+    });
+
+    it('placement is the CLASS chain, and it is named apart from the entity', () => {
+        // `maskPlacement` returns maskX/maskY rather than x/y precisely so a
+        // caller can spread it beside the entity's own x/y. R1 spent an
+        // afternoon on a spread that overwrote a node id with a level number.
+        const p = maskPlacement(ENTITY_CLASSES.treelarge, 80, 0);
+        expect(p).toMatchObject({ maskX: 80, maskY: 0 });
+        expect(p.x).toBeUndefined();
+        const tl = L94.pixelmasks.find((e) => e.tag === 'treelarge');
+        expect(tl.x).toBe(80);
+        expect(tl.maskX).toBe(80);
     });
 
     it('and never overlap a solid either — the recordings are legal states', () => {

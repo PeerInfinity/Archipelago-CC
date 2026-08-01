@@ -1,7 +1,6 @@
 {
   "tape_version": 1,
   "game": "seedling",
-  "name": "cross-level-leg",
   "description": "THE CROSS-LEVEL WITNESS, synthesized by botDriverV2 from three legs: level 0 (walk to (88,168), then exit through the teleporter at oel (0,128)), level 94 (walk to (216,200), then exit through (304,160)), level 0 (arrival, no targets). The CALLER names each teleporter; the driver never searches the graph. Unlike transition-west-return, whose crossings come from a hand-authored hold, every tick here is planned around real geometry in BOTH levels — level 94 is walled by a TreeLarge pixelmask and nine cliffsides, so the return route has to be planned, not guessed. It also pins the seam the physics refuses: the aim point for an exit is the trigger's centre, which for level 0's west pair at (0,128)/(0,144) means y=136 and not the ambiguous band y in (141,146) where both volumes overlap with different arrivals. Two transitions, at the ticks the transitions records name.",
   "boot": {
     "level": 0,
@@ -102,59 +101,79 @@
       "to": 171
     },
     {
-      "key": "right",
+      "key": "up",
       "from": 175,
-      "to": 202
+      "to": 186
     },
     {
-      "key": "left",
-      "from": 204,
-      "to": 206
+      "key": "right",
+      "from": 175,
+      "to": 216
+    },
+    {
+      "key": "down",
+      "from": 186,
+      "to": 187
     },
     {
       "key": "up",
-      "from": 210,
-      "to": 234
+      "from": 187,
+      "to": 188
+    },
+    {
+      "key": "down",
+      "from": 188,
+      "to": 189
+    },
+    {
+      "key": "up",
+      "from": 189,
+      "to": 190
+    },
+    {
+      "key": "down",
+      "from": 192,
+      "to": 193
+    },
+    {
+      "key": "left",
+      "from": 218,
+      "to": 220
+    },
+    {
+      "key": "up",
+      "from": 224,
+      "to": 235
     },
     {
       "key": "right",
-      "from": 210,
+      "from": 224,
       "to": 257
     },
     {
       "key": "down",
-      "from": 234,
-      "to": 235
-    },
-    {
-      "key": "up",
       "from": 235,
       "to": 236
     },
     {
-      "key": "down",
+      "key": "up",
       "from": 236,
       "to": 237
     },
     {
-      "key": "up",
+      "key": "down",
       "from": 237,
       "to": 238
     },
     {
-      "key": "down",
-      "from": 241,
-      "to": 243
-    },
-    {
       "key": "up",
-      "from": 245,
-      "to": 247
+      "from": 238,
+      "to": 239
     },
     {
       "key": "down",
-      "from": 249,
-      "to": 250
+      "from": 242,
+      "to": 243
     }
   ]
 }

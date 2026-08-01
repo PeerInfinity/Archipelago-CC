@@ -438,13 +438,21 @@ describe('the first-tick type flip', () => {
 });
 
 describe('the seams that must stay loud', () => {
-    it('THROWS on a pixelmask collider rather than approximating it', () => {
-        // Positive control for the seam: rect-approximating a Building is
-        // the thing ruling 3 forbids, and Phase 5a proved the sprite rect
-        // swallows the building's own doorway.
-        const w = world({ entities: [{ type: 'building', x: 0, y: 0 }] });
-        expect(() => step({ x: 40, y: 40, vx: 0, vy: -3, terrain: 0 }, held('up'),
-            { level: w })).toThrow(/unmodeled pixelmask/);
+    it('STOPS on a pixelmask collider — per pixel, not per bounding rect', () => {
+        // v2 threw here, because a rect approximation is what Phase 5a
+        // forbids and no mask was modelled. R2 models them, so the sweep
+        // stops on the bitmap: the building's mask is solid at (40,40), and
+        // moving up into it pins the player exactly as a rect solid would.
+        // ⚠ With its POSITIVE CONTROL beside it: the same step in a world
+        // with no building must move. A "did not move" assertion on its own
+        // is satisfied by a physics that never moves at all, which is the
+        // vacuity this arc keeps re-meeting.
+        const start = { x: 40, y: 40, vx: 0, vy: -3, terrain: 0 };
+        const blocked = step(start, held('up'),
+            { level: world({ entities: [{ type: 'building', x: 0, y: 0 }] }) });
+        const clear = step(start, held('up'), { level: world({ entities: [] }) });
+        expect(blocked.y).toBe(40);
+        expect(clear.y).toBeLessThan(40);
     });
 
     it('THROWS when two teleporters fire on the same tick', () => {

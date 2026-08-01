@@ -80,16 +80,35 @@ describe('the planner sees four kinds of obstacle', () => {
         expect(o.blocker.tag).toBe('breakablerock');
     });
 
-    it('reports a PIXELMASK instead of throwing, which is the whole point', () => {
-        // `collidesSolid` throws on a pixelmask deliberately, so the physics
-        // dies loudly on one. A planner cannot route around an obstacle by
-        // catching the exception that says it already hit it, and one stray
-        // probe would abort the search. Two faces, one seam.
+    it('reports a PIXELMASK, per pixel, exactly where the physics stops', () => {
+        // v2 THREW here and the planner reported; R2 models the masks, so
+        // both faces answer from the same bitmap. They must agree at a
+        // solid pixel...
         const building = level0.pixelmasks.find((p) => p.cls.as3 === 'Building');
         const c = { x: building.rect.x + 8, y: building.rect.y + 8 };
-        expect(() => level0.collidesSolid(playerBoxAt(c.x, c.y))).toThrow(/pixelmask/);
-        const o = plannerObstacleAt(level0, c.x, c.y);
-        expect(o?.kind).toBe('pixelmask');
+        expect(level0.collidesSolid(playerBoxAt(c.x, c.y))).toBe(building);
+        expect(plannerObstacleAt(level0, c.x, c.y)?.kind).toBe('pixelmask');
+        // ...and at a TRANSPARENT one inside the same bounding box, which is
+        // the claim the bounding rect could not make. Level 0's building is
+        // `BuildingMask`, 64x48 with 256 transparent pixels; find one and
+        // require BOTH faces to let the player stand there.
+        const m = building.mask;
+        let gap = null;
+        for (let j = 0; j < m.h && !gap; j++) {
+            for (let i = 0; i + 4 <= m.w; i++) {
+                // a run wide and tall enough for the whole 4x5 player box
+                let clear = true;
+                for (let dy = 0; dy < 5 && clear; dy++) {
+                    for (let dx = 0; dx < 4; dx++) {
+                        if (j + dy >= m.h || m.rows[j + dy][i + dx] === '#') { clear = false; break; }
+                    }
+                }
+                if (clear) { gap = { x: building.maskX + i + 2, y: building.maskY + j + 2 }; break; }
+            }
+        }
+        expect(gap, 'BuildingMask has a player-sized transparent run').not.toBeNull();
+        expect(level0.collidesSolid(playerBoxAt(gap.x, gap.y))).toBeNull();
+        expect(plannerObstacleAt(level0, gap.x, gap.y)?.kind).not.toBe('pixelmask');
     });
 
     it('reports UNMODELLED TERRAIN, which blocks nothing at all in the game', () => {
