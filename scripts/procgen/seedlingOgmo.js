@@ -204,6 +204,20 @@ export function parseOelLevel(source, where = '<oel>') {
                     y: intAttr(e, 'y', where),
                 };
                 if (Object.keys(rest).length > 0) entity.attrs = rest;
+                // ⚠ NESTED <node> CHILDREN ARE DATA, and dropping them lost a
+                // collider. `Game.as:2201-2210` reads `o.node` to size a
+                // RopeStart: `setHitbox(_xend - _x + 16, 16, 8, 8)` where
+                // `_xend` is the last node's x. Three ropes in the game carry
+                // one each; without them a rope is a 16x16 stub instead of a
+                // horizontal span, which is a wall the model does not know
+                // about. Recorded generically rather than for `rope` alone —
+                // an Ogmo node list is a shape, not a special case.
+                const nodes = e.children.filter((c) => c.tag === 'node');
+                if (nodes.length > 0) {
+                    entity.nodes = nodes.map((n) => ({
+                        x: intAttr(n, 'x', where), y: intAttr(n, 'y', where),
+                    }));
+                }
                 return entity;
             });
             continue;

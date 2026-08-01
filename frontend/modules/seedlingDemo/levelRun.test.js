@@ -101,12 +101,16 @@ describe('what the run owns', () => {
     });
 
     it('builds a level lazily, so a level nobody enters never throws', () => {
-        // `buildLevelWorld` throws by name on geometry v2 does not model.
-        // Level 0 exits to 1, 2, 12, 13, 86, 89 and 94, and only 94 builds —
-        // so eager construction would make level 0 itself unloadable.
+        // `buildLevelWorld` throws by name on geometry the census does not
+        // cover. R2 paid the blocking bill for the 47 R1-route levels, so
+        // level 12 builds now — and the laziness still matters, because the
+        // 34 levels OFF that route still do not. Level 1 is one of them
+        // (`treelarge`'s neighbour holds an unclassified tag), and level 0
+        // exits into it, so eager construction would make level 0 itself
+        // unloadable exactly as before.
         const run = createLevelRun({ levelSource, boot, noclip: false });
         expect(run.level).toBe(0);
-        expect(() => run.worldFor(12)).toThrow(/NOT for the "blocking" role/);
+        expect(() => run.worldFor(1)).toThrow(/NOT for the "blocking" role/);
         // ...and it memoises, so a revisited level is not rebuilt.
         expect(run.worldFor(0)).toBe(run.world);
     });

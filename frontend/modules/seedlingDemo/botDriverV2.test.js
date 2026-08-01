@@ -719,15 +719,12 @@ describe('the relaxed driver', () => {
     // volume placed off-centre in a tile the route must pass through.
 
     it('builds worlds with the RELAXED census, so an unpriced collider is no bar', () => {
-        // Levels 2 and 3 fail the full census — `dungeonspire`,
-        // `moonrockpile` and `breakablerockghost` are unclassified for
-        // blocking, which is R2's bill. The relaxed walk crosses them
-        // anyway, and that is the point of slice 1b. (Level 11 now builds
-        // BOTH ways: its chest needed a blocking rect for its hazard volume
-        // to be derived from, so it got one.)
-        for (const n of [2, 3]) {
-            expect(() => buildLevelWorld(levelSource(n)), `level ${n}`).toThrow();
-        }
+        // R2 paid the blocking bill for the R1 ROUTE, so the witness chain's
+        // own levels (2 and 3 among them) build both ways now. The claim
+        // this test makes is unchanged and still has teeth — it just needs a
+        // level R2 deliberately did NOT price. Level 1 is off every route.
+        expect(() => buildLevelWorld(levelSource(1))).toThrow();
+        expect(() => buildLevelWorld(levelSource(1), { roles: RELAXED_ROLES })).not.toThrow();
         expect(() => synthesizeLegs(WITNESS_LEGS, { levelSource, relax: RELAX }))
             .not.toThrow();
     });

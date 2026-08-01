@@ -5225,7 +5225,15 @@
         { "type": "arrowtrap", "x": 96, "y": 32, "attrs": { "tset": "0", "shoot": "1" } },
         { "type": "arrowtrap", "x": 112, "y": 32, "attrs": { "tset": "0", "shoot": "1" } },
         { "type": "arrowtrap", "x": 128, "y": 32, "attrs": { "tset": "0", "shoot": "1" } },
-        { "type": "rope", "x": 32, "y": 16, "attrs": { "tset": "0", "tag": "0" } },
+        {
+          "type": "rope",
+          "x": 32,
+          "y": 16,
+          "attrs": { "tset": "0", "tag": "0" },
+          "nodes": [
+            { "x": 80, "y": 16 }
+          ]
+        },
         { "type": "bob", "x": 16, "y": 16 },
         { "type": "sandtrap", "x": 32, "y": 32, "attrs": { "tag": "1" } },
         { "type": "sandtrap", "x": 48, "y": 32, "attrs": { "tag": "2" } },
@@ -7354,7 +7362,15 @@
         { "type": "teleporter", "x": 96, "y": 0, "attrs": { "to": "25", "playerx": "96", "playery": "112", "show": "0", "tag": "-1", "invert": "0", "sign": "0" } },
         { "type": "teleporter", "x": 0, "y": 96, "attrs": { "to": "26", "playerx": "128", "playery": "208", "show": "0", "tag": "-1", "invert": "0", "sign": "0" } },
         { "type": "fallrock", "x": 112, "y": 240, "attrs": { "tset": "1", "tag": "1" } },
-        { "type": "rope", "x": 160, "y": 64, "attrs": { "tset": "1", "tag": "0" } },
+        {
+          "type": "rope",
+          "x": 160,
+          "y": 64,
+          "attrs": { "tset": "1", "tag": "0" },
+          "nodes": [
+            { "x": 192, "y": 64 }
+          ]
+        },
         { "type": "button", "x": 112, "y": 240, "attrs": { "tset": "0" } },
         { "type": "grasslock", "x": 176, "y": 208, "attrs": { "tset": "0", "tag": "2" } },
         { "type": "bobsoldier", "x": 264, "y": 168 }
@@ -11086,7 +11102,15 @@
         { "type": "wandlock", "x": 48, "y": 160, "attrs": { "tset": "1", "tag": "7" } },
         { "type": "pushableblockfire", "x": 48, "y": 176 },
         { "type": "wandlock", "x": 144, "y": 592, "attrs": { "tset": "-1", "tag": "8" } },
-        { "type": "rope", "x": 96, "y": 384, "attrs": { "tset": "6", "tag": "9" } },
+        {
+          "type": "rope",
+          "x": 96,
+          "y": 384,
+          "attrs": { "tset": "6", "tag": "9" },
+          "nodes": [
+            { "x": 192, "y": 384 }
+          ]
+        },
         { "type": "fallrock", "x": 144, "y": 624, "attrs": { "tset": "6", "tag": "10" } },
         { "type": "lightalpha", "x": 0, "y": 0, "attrs": { "alpha": "0.1" } },
         { "type": "torch", "x": 120, "y": 120, "attrs": { "c": "0xFFCC00" } },

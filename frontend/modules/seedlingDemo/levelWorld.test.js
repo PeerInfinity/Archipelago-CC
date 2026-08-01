@@ -53,6 +53,15 @@ const MAP = JSON.parse(readFileSync(
     'utf8',
 ));
 
+/**
+ * The committed R1 route — R2's blocking census is SCOPED to the levels it
+ * enters, so the route is what says which levels the guard covers.
+ */
+const R1_ROUTE = JSON.parse(readFileSync(
+    fileURLToPath(new URL('./fixtures/r1-route.json', import.meta.url)),
+    'utf8',
+));
+
 const levelRecord = (id) => MAP.levels.find((l) => l.level === id);
 /** The levels the v2 fixtures actually load. */
 const FIXTURE_LEVELS = [0, 94];
@@ -152,7 +161,8 @@ describe('census: every fixture level is fully classified', () => {
             expect(cls.roles.length, `${tag} is classified for nothing`).toBeGreaterThan(0);
             for (const role of cls.roles) expect(ROLES).toContain(role);
             if (cls.roles.includes('blocking')) {
-                expect(['rect', 'pixelmask', 'trigger', 'none']).toContain(cls.collider);
+                expect(['rect', 'pixelmask', 'trigger', 'rope', 'none'])
+                    .toContain(cls.collider);
                 // A class that does not block must say WHY, so nobody later
                 // reads the omission as an oversight and "fixes" it.
                 if (cls.collider === 'none') expect(cls.why, `${tag} has no why`).toBeTruthy();
@@ -165,6 +175,55 @@ describe('census: every fixture level is fully classified', () => {
             }
         }
         expect(CLIFFSIDE_CLASS.src).toBeTruthy();
+    });
+
+    it('every blocking answer AGREES with the game\'s own solids list', () => {
+        // ⚠ The strongest check in this file, and it exists because "this
+        // does not block" is exactly the kind of claim that survives being
+        // wrong. Every entry declares the `type` its constructor assigns;
+        // `PLAYER_SOLID_TYPES` is `Mobile.solids` plus the Player's own
+        // push. The two must agree — a collider on a type that is not in the
+        // list, or no collider on a type that IS, is a transcription error
+        // the table can catch about itself.
+        //
+        // Three classes on the route change `type` under conditions the
+        // route avoids and are named here rather than silently exempted.
+        const CONDITIONAL = {
+            iceturret: 'Enemy at rest, "Solid" whenever the player is outside its '
+                + '128 px range (IceTurret.as:93-95) — priced as the solid',
+            fallrock: '"" and parked off-map while its persistence holds, "Solid" '
+                + 'once a clear arms it (FallRock.as:39-47)',
+            fallrocklarge: 'as fallrock (FallRockLarge.as:45-53)',
+        };
+        for (const [tag, cls] of Object.entries(ENTITY_CLASSES)) {
+            if (!cls.roles.includes('blocking')) continue;
+            if (cls.collider === 'trigger' || cls.type === null) continue;
+            if (tag in CONDITIONAL) continue;
+            const blocks = cls.collider !== 'none';
+            expect(PLAYER_SOLID_TYPES.includes(cls.type), `${tag} declares type `
+                + `"${cls.type}" and collider "${cls.collider}"`).toBe(blocks);
+        }
+        // ...and the exemption list is not a place to hide: each named class
+        // must really be classified, and really be one of the three.
+        for (const tag of Object.keys(CONDITIONAL)) {
+            expect(ENTITY_CLASSES[tag].roles, tag).toContain('blocking');
+        }
+    });
+
+    it('a rope is sized from its NODE, not from a constant', () => {
+        // Level 39's rope runs (96,384) -> (192,384), so its hitbox is
+        // 192 - 96 + 16 = 112 wide: seven tiles, not one.
+        const w39 = buildLevelWorld(levelRecord(39), { roles: RELAXED_ROLES });
+        const rope = w39.solids.find((r) => r.tag === 'rope');
+        expect(rope.span).toEqual({ xend: 192, w: 112 });
+        expect(rope.rect).toMatchObject({ x: 96, y: 384, right: 208, bottom: 400 });
+        expect(rope.cls.type).toBe('Rope');
+        expect(PLAYER_SOLID_TYPES).toContain('Rope');
+        // and a rope whose node the extract lost is a LOUD failure, not a stub
+        expect(() => buildLevelWorld({
+            level: 999, width: 20, height: 20, layers: [],
+            entities: [{ type: 'rope', x: 0, y: 0, attrs: { tset: '0', tag: '0' } }],
+        })).toThrow(/with no <node> child/);
     });
 
     it('an entity absent from the table is a NAMED failure, not a silent non-collider', () => {
@@ -894,24 +953,40 @@ describe('roles: the census is per-role, and wider than the fixture levels', () 
     });
 
     it('lets a relaxed walk build levels the full census refuses', () => {
-        // The number that says whether the relaxation was worth doing.
-        // v2 built 3 of 116; classifying the level FLAGS (lightalpha alone
-        // appears in 98 levels), the fifteen pickups and the chest lifts the
-        // FULL census to 11, and consulting only the cheap roles reached 82
-        // at R0. R1 priced ten of the twelve remaining proximity volumes —
-        // three of them as an evidenced INERT — and that lifts the relaxed
-        // census to 111 of 116. What is left out is the 3 Bridge levels and
-        // the 2 holding a `pod` or the `finalboss`.
+        // The number that says how far the census has got. v2 built 3 of
+        // 116 with the full census; classifying the level FLAGS (lightalpha
+        // alone appears in 98 levels), the fifteen pickups and the chest
+        // lifted it to 11, and consulting only the cheap roles reached 82 at
+        // R0. R1 priced ten of the twelve remaining proximity volumes and
+        // took the RELAXED census to 115.
+        //
+        // R2 pays the blocking bill for the 69 tags on the R1 route, which
+        // lifts the FULL census from 11 to 82 — the same 82 the cheap roles
+        // reached at R0, and not a coincidence: what is left out is the 34
+        // levels holding one of the tags no route has needed yet.
         let full = 0;
         let relaxed = 0;
         for (const level of atlas.levels) {
-            try { buildLevelWorld(level); full++; } catch { /* priced at R2 */ }
+            try { buildLevelWorld(level); full++; } catch { /* unclassified off-route */ }
             try { buildLevelWorld(level, { roles: RELAXED_ROLES }); relaxed++; } catch {
                 /* an unpriced hazard or a Bridge tile */
             }
         }
-        expect(full).toBe(11);
+        expect(full).toBe(82);
         expect(relaxed).toBe(115);
+    });
+
+    it('the R2 route levels ALL build with the full census — that is the bill', () => {
+        // The scoped guard the rung is measured by: `blocking` is required
+        // for every level the walk enters, and a loud throw everywhere else.
+        // A level that stopped building here is a tag someone removed or an
+        // extract that changed, and it must be a red rather than a route
+        // that quietly goes somewhere else.
+        const routeLevels = [...new Set(R1_ROUTE.legs.map((l) => l.level))];
+        expect(routeLevels).toHaveLength(47);
+        for (const n of routeLevels) {
+            expect(() => buildLevelWorld(levelRecord(n)), `level ${n}`).not.toThrow();
+        }
     });
 
     it('builds every level on the R0 witness chain, and level 94', () => {
@@ -926,11 +1001,16 @@ describe('roles: the census is per-role, and wider than the fixture levels', () 
     });
 
     it('still throws for a role the caller DOES consult', () => {
-        // The relaxation must not become "throws less". Level 2 is on the
-        // witness chain and builds relaxed; asking it about blocking still
-        // names the tag and the role.
-        expect(() => buildLevelWorld(levelRecord(2)))
-            .toThrow(/classified for \[trigger, pickup, proximity-hazard\] but NOT for the "blocking" role/);
+        // The relaxation must not become "throws less". R2 classified the
+        // 69 tags on the ROUTE and deliberately no further, so an OFF-route
+        // level still refuses the blocking role by name. Level 108 is the
+        // firewand ferry — R5's, not R2's — and holds `sandtrap`.
+        expect(() => buildLevelWorld(levelRecord(108)))
+            .toThrow(/but NOT for the "blocking" role/);
+        // ...and it builds fine for the roles a relaxed walk consults, which
+        // is what makes the previous line about the ROLE and not the level.
+        expect(() => buildLevelWorld(levelRecord(108), { roles: RELAXED_ROLES }))
+            .not.toThrow();
     });
 
     it('rejects an unknown role name rather than silently consulting nothing', () => {
