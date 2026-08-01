@@ -713,3 +713,188 @@ verified; the walk is the remaining work.
 Everything above is unblocked: the geometry, the masks, the census, the
 Activators, the tape format, the build, the gate and the tiers are all in
 and green.
+
+## 12. Slice 6 — THE WALK, AS BUILT (2026-08-01)
+
+§11's five items, in the order they were built. **Zero AS3**: the whole
+half is JavaScript, and nothing found here wanted a second build.
+
+### 12.1 `noclip` stopped being derivable
+
+`synthesizeLegs` read `noclip: Boolean(relax)` — "a relaxed walk is a
+noclip walk" — which was true of every tape that existed and is false of
+every R2 tape. It is a declared field of `relax` now, beside `noDamage`,
+`noHazards` and `grants`, and the line that spread a `noclip` of the
+driver's own choosing OVER the object is gone: that was precisely the split
+the object exists to prevent, one edit from a planner routing around walls
+the tape walks through.
+
+`persistence` rides the same object and is selected by **PRESENCE**:
+declaring it (even as `[]`) makes a v3 tape, omitting it makes the v2 tape
+R1 emits. Deciding on the VALUE is the R0 value-vs-presence bug and would
+have stayed invisible until the first tape that clears nothing met a build
+with no such field to read.
+
+The planner also gained the one input it was missing: `run.openActivators`,
+read off the RUN before every waypoint list rather than captured once,
+because a Lock is Solid, then open, then Solid again inside one leg.
+
+### 12.2 The HOLD, and the knife-edge the game answered
+
+The primitive is §11's, with one correction the geometry forced: **the tick
+count is a FLOOR, not a measurement.** `Button.update` presses on OVERLAP
+and the approach overlaps the button for ~7 ticks before the controller
+reaches the full stop an arrival requires, so the run arrives with the fade
+already part-way down. 101 is safe to over-state and never to under-state,
+and what the executor asserts is the EFFECT — with a **positive control**:
+the group must be SHUT when the hold begins, because "open afterwards" is
+satisfied by a lock that was never solid.
+
+The mutation, on both strata:
+
+- **JS:** a 93-tick hold is red by name (`... is STILL SOLID`); 94 is the
+  first that opens it here. A second hold on the same button is red for
+  being vacuous.
+- **THE GAME:** `l71-hold-101-shut` and `l71-hold-102-open` differ in
+  exactly one field — `tick_count` — and the game answers **178.5** against
+  **177.1**. "101" stops being a number derived from a float loop.
+
+### 12.3 ⛔ Wiring the hold found two forced constructor values
+
+Both were wrong in TWO ways at once, both had a citation in the file
+already saying so, and both now resolve through a committed table.
+
+- **`ShieldLock` forces `tSet = -2`** (`ShieldLock.as:26`; `Game.as:2144-2145`
+  never passes a group). The model read `tset` off the .oel, so a
+  shieldlock joined group 0 — L71's button was "opening" one 176 px away —
+  and stopped despawning on its own cleared flag, because `int("")` is 0.
+  `FORCED_TSET` / `tSetOf`. Reverting it reddens 5 tests; before the fix it
+  reddened none.
+- **`MoonrockPile` forces `tag = 0`** (`MoonrockPile.as:23`) and the
+  extract's placement has no `tag` attribute — so the model read −1, every
+  reader guards on `tag >= 0`, and the pile looked inert. It is the MIRROR
+  of a FallRock: `check()` removes it while the flag is TRUE, so a fresh
+  boot has none and the model was building a 32×16 Solid. **Level 2 is the
+  third level of the walk and its arrival tile is the pile's** — the route
+  reported the whole map unreachable. `FORCED_TAG` / `tagOf`.
+
+### 12.4 The clear list is derived, and `PERSISTENCE_RESPONSE` was incomplete
+
+`persistenceClearsFor(levelRecord)` reads a level's own entities and
+returns `{offered, refused}`. The map offers 79; the route takes the 25 in
+levels it enters; each names its blocker. **The refusals for route levels
+are written into the route file** — an empty findings list and a clean pass
+print the same thing.
+
+⚠ The table it consults had twenty entries and needed forty. A clear is a
+FLAG, not an entity: it reaches EVERYTHING carrying that tag, and
+`grep -rn checkPersistence src/` finds far more than five behaviours —
+every PICKUP removes itself, a `ButtonRoom` boots ALREADY PRESSED, a
+`Watcher` stops updating. `buildLevelWorld` now REFUSES a clear that
+reaches any entity with no declared response, which is what makes the
+table's completeness checkable rather than hoped for. Three declared
+responses are still refused by name (`arm`, `appear`, `press`), and a
+policy list excludes pickups, enemies, `moonrock` and `finaldoor` — the
+ruled crutch is "interactive blockers the bot cannot yet operate", and
+`Game.checkPersistence` is not that narrow.
+
+### 12.5 The planner grew three knobs and one policy, each a named failure
+
+All default to R1's behaviour: the 23 frozen recordings are re-proved
+byte-identical after every one of these.
+
+| knob | R2 | the failure that named it |
+|---|---|---|
+| `lattice` | 8 | `planttorch@120,152` (L62) is 16×16 half a tile off in a 2-tile corridor: it clips all four surrounding tile centres, so the tile lattice reported the SPEAR unreachable when 16 px of the corridor is clear |
+| `nodeMargin` | 2 | the string-pull's fallback keeps the next A\* node unchecked; `tree@32,416` (L12) leaves the box half a pixel clear |
+| `triggerMargin` | 4 | three legs overshot into a NEIGHBOURING trigger — one aiming at L64's exit and arriving in L61. Does not descend with the clearance ladder |
+| `allowGrazes` | true | a wall the overshoot touches stops the sweep and the run arrives anyway |
+
+Four sub-lessons, all measured:
+
+1. **A ladder, not a switch.** Falling straight from the node margin to
+   zero costs the clearance for the WHOLE path; L62's pit maze had no 2 px
+   route, so one leg replanned at zero and its first hop overshot into a
+   teleporter. `planWaypoints` steps down one pixel at a time.
+2. **Endpoints are exempt from every clearance.** A leg starts where the
+   previous exit LANDED — inside a trigger by construction — and a target
+   is a position the caller named. Leaving the trigger margin on for
+   endpoints reported "A\* start tile not walkable" for three segments.
+3. **The start CELL is a waypoint, but only when it is a node.** Dropping
+   it let the first hop out of an arbitrary arrival be two cells of
+   diagonal; handing it over unconditionally re-imported the clearance the
+   start was exempted from, and three legs walked four pixels back into the
+   trigger they had just used.
+4. **A goal cell's centre is not the goal.** L12's exit to the fall cluster
+   sits inside `OpenTreeMask`'s 10×12 doorway: the target is clear, its
+   cell's centre is canopy. `nearestGoalNode` aims at the nearest cell that
+   is, and the real target stays the last point.
+
+⚠ **An early crossing through the leg's OWN named exit is the errand, not a
+defect** — accepted on IDENTITY only (destination level plus the named
+teleporter's own arrival position, or for a pit the tile the leg named),
+never on "it went somewhere plausible".
+
+### 12.6 ⛔ THE RUNTIME HAS A TAPE BUDGET, and span count is the axis
+
+R2's first answer to the controller's overshoot was a SMOOTHER MARGIN —
+grow the box while testing a shortcut, so a long segment through a tight
+gap stops qualifying and the tape densifies where the geometry is close. It
+worked. It also cost 30% more ticks and **4.7× the input spans**, and the
+recompiled game then could not load the headline tape at all:
+
+```
+heap_alloc(72671) failed - out of memory     2,569 spans, 185 KB
+```
+
+reproduced twice, failing at BOOT before the first tick. At zero smoother
+margin the same walk is **853 spans, 63 KB** and 10,136 ticks (R1's
+headline: 544 spans, 40 KB, 14,963 ticks). The smoother margin is gone —
+`allowGrazes` answers the same problem without paying for it — and the
+finding is recorded because nothing else on this ladder had priced a tape
+against the runtime before.
+
+### 12.7 The walk, and the claim
+
+**55 legs / 31 levels / 3 falls / 1 hold / 10,136 ticks.**
+Route: `fixtures/r2-route.json`; tapes: `fixtures/regenerate-r2-tapes.mjs`;
+six segments split at legs 12, 14, 25, 37, 45 — each an ARRIVAL, each at a
+hub the walk passes through once. **The six sum to exactly 10,136 and are
+the headline tick for tick.**
+
+**8 items: sword, shield, feather, darksword, torch, spear, darkshield,
+darksuit. `hitsMax == 3`.** Blocked list, each with its one named seal and
+rung, in `r2Walk.R2_BLOCKED`.
+
+⚠ **`darksword` is collected and `wand` is not, which the GAME would not
+allow** — the Witch grants darksword under `hasWand && !hasDarkSword`. The
+grant crutch is a property write on room entry and does not consult her, so
+this is the first place on the ladder where a grant asserts something the
+game's own logic would refuse. Recorded in `R2_ITEM_ROOMS` rather than
+hidden; R3 retires the crutch for exactly this class.
+
+### 12.8 The acceptance readout
+
+`r2Acceptance.js`, pure functions over the game's reports, 10 headline
+findings and 16 chain findings, each mutated and asserted red in
+`r2Acceptance.test.js` (25 cases). What it asserts that R1's did not:
+
+- **`hitsMax == 3` on its own**, because it is proved by an item's ABSENCE.
+  Folded in with the booleans it would be satisfiable by a run that
+  collected health and lost a boolean elsewhere.
+- **The hold, both halves, from the game's own stream** — the longest run
+  of consecutive observations that did not move and were inside the button
+  (derived from the stream, never from the driver's bookkeeping), then an
+  observation inside the LOCK rect after it. The test that nudges the tail
+  out of the lock asserts the FIRST half stays green, because otherwise the
+  pair would prove one thing rather than two.
+- **The clear list, from `Game`'s own array** — the (level, tag) set AND
+  `cleared === true` for every entry, which is the half that catches
+  `botStart` never running.
+- ⚠ `health` is on the blocked list and is NOT a boolean: `ITEM_PROPERTIES`
+  makes it `{kind: 'add', property: 'hitsMax', base: 3}`, so `!== false` is
+  true of the number 3 and the first cut reported it leaked on every run.
+
+`R2_HOLD_WITNESS` copies the button and lock rects (the module is
+dependency-free by design); `r2Walk.test.js` re-derives both from the
+extract and compares, and pins `PLAYER_BOX` against `playerBoxAt`.

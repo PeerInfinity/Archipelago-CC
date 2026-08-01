@@ -1192,14 +1192,14 @@ accident: it buys exactly one item for one AS3 batch, one pipeline run, a
 re-run of the flags-off byte-inertness gate, ~14 more levels and ~4k more
 ticks on every recording — and R5 has to retire it afterwards.
 
-## R2: solids return, as built (partial — the walk is outstanding)
+## R2: solids return, as built
 
 R2 takes the first crutch away: **`noclip` off, the real geometry back.**
 Its brief and full as-built are `CC/docs/plans/seedling-bot-r2-opus-kickoff.md`
 (§8 the recon, §9 the rulings, §10 as-built, §11 what remains).
 
-**The headline finding.** With solids armed and the ruled crutches
-(45 persistence clears), **6 of R1's 11 items survive**, and every one of
+**The headline finding.** With solids armed and the ruled crutches,
+**6 of R1's 11 items survive on geometry alone**, and every one of
 the five seals is a single named entity: L71's `lock@112,160` (darkshield +
 darksuit), L48's `karlore@112,272` (conch), L38's `cover@144,112` then
 L39's wandlock puzzle (wand), L63's bridge at (2,9) then L65's
@@ -1247,10 +1247,194 @@ DOOR. And `lock`/`wandlock` despawn only when `tSet < 0`, where `int("")`
 is 0 — so a missing `tset` means group 0, and three route locks plus 13 of
 14 wandlocks do NOT despawn.
 
-**What is outstanding:** the R2 walk itself — a `noclip: false` planning
-path in `synthesizeLegs`, a HOLD leg primitive for the button, the
-re-planned route over post-clear geometry, the segment recordings and the
-acceptance readout. Kickoff §11 lists each with what it needs.
+### The walk: 8 items with the solids back
+
+The claim, from the game's own `botStatus` over a **55-leg / 31-level /
+3-fall / 10,136-tick** walk: **sword, shield, feather, darksword, torch,
+spear, darkshield, darksuit — 8 of the 13 non-combat items** — with
+`hitsMax` still **3**. Six segments, `r2-walk-1-sword-shield` through
+`r2-walk-6-darksuit`, and the headline `r2-walk-full` which they are a
+PARTITION of, tick for tick.
+
+The route is data (`fixtures/r2-route.json`, authored by
+`scripts/procgen/plan-seedling-r2-route.mjs`), the tapes are derived from
+it (`fixtures/regenerate-r2-tapes.mjs`), and the claim is a pure function
+over the game's reports (`r2Acceptance.js`) with every input mutated and
+asserted red in CI.
+
+**The blocked list, each with the ONE entity that seals it:**
+
+| item | seal | rung |
+|---|---|---|
+| `conch` | L48 `karlore@112,272`, an NPC in a 1-tile corridor; `Karlore.added()` removes it only if `Player.hasFire`, and its tag is −1 so no clear reaches it | R5 |
+| `wand` | L38 `cover@144,112` needs `pushableblockfire@80,208` pushed onto `button@80,192`; then L39's three stacked wandlocks need wand shots | R3 |
+| `health` | L63's bridge at (2,9) needs spearing; then L65 `rock@192,96` or `pushableblockspear@176,128` | R3 |
+| `fire` | combat-gated by construction (BobBoss) | R5 |
+| `ghostsword` | L98's IceTurret disc covers its whole entrance room | R5 |
+| `firewand` | L108's darksuit-gated LavaTrap ferry | R5 |
+
+⚠ **`hitsMax == 3` is the one claim proved by a NEGATIVE.**
+`Player.hitsMaxDef` is 3 and `health` is the only thing that adds to it, so
+R1's walk ended at 4 and R2's must end at 3. A run reporting 4 would mean a
+grant fired for a room this walk never enters. It is checked separately
+from the item booleans, because folded together it would be satisfiable by
+a run that collected health and lost a boolean somewhere else.
+
+### The HOLD, and what it costs to believe it
+
+L71's `lock@112,160` is the only way into Dungeon 7 and it opens on nothing
+but time on the `button@112,176` below it. The leg vocabulary gained a word
+for that:
+
+```js
+{ x: 120, y: 184, hold: { ticks: 101, presser: { x: 112, y: 176 } } }
+```
+
+The presser is named by its OEL coordinates and resolved through
+`world.pressers`, exactly as an `exit` names a teleporter.
+
+**The contract has four parts, and each closes a different vacuity:**
+
+1. **The count is a FLOOR, not a measurement.** A Lock needs 101 continuous
+   ticks — but `Button.update` presses on OVERLAP, and the approach to a
+   button overlaps it for a few ticks before the controller reaches the full
+   stop an arrival requires. So the run reaches the hold with the fade
+   already part-way down. Over-stating is safe; under-stating is not.
+2. **The executor verifies every tick from the run's own state** — the
+   position did not change, the box is still inside the presser, nothing
+   crossed a level. A hold that silently ran 99 ticks would otherwise
+   present as a collision divergence two thousand ticks later, in another
+   level, against a lock nobody was looking at.
+3. **Then it verifies the EFFECT, with a positive control beside it.** The
+   group must be SHUT when the hold starts and OPEN when it ends — because
+   "open afterwards" is satisfied by a lock that was never solid. A second
+   hold on the same button is a named failure.
+4. **And the game says the same thing, twice.** `l71-button-lock` /
+   `l71-lock-shut` prove a hold opens the lock and that walking straight in
+   is stopped dead at y = 178.5. `l71-hold-101-shut` / `l71-hold-102-open`
+   differ in exactly one field — `tick_count`, 101 against 102 — and the
+   game answers them **178.5 against 177.1**. "101" stops being a number
+   this repo derived from a float loop and becomes something the oracle
+   said.
+
+The acceptance readout asserts both halves from the game's own observation
+stream, deriving the hold from the stream rather than reading the driver's
+bookkeeping: the longest run of consecutive observations that did not move
+and were inside the button, then an observation inside the LOCK rect after
+it. A hold under `noclip` is refused outright — that arm models no lock, so
+it would emit its ticks, verify nothing, and report success.
+
+### The planner grew three knobs, and each one is a named failure
+
+All three default to R1's behaviour, because the 23 R1 recordings are
+frozen milestone artifacts and any change to how a route is chosen
+re-records every one of them.
+
+- **`lattice` (R2: 8, default 16).** A tile-centre lattice is SOUND and
+  INCOMPLETE, and the incompleteness bites when a collider sits off the
+  tile grid. `planttorch@120,152` in level 62 is 16×16, half a tile off in
+  both axes, in a corridor two tiles wide: it clips all four surrounding
+  tile centres, so the tile lattice reported the shaft to level 64 — and
+  with it the SPEAR — unreachable, when 16 px of that corridor is clear.
+  This is the recon's own warning (a tile-centre instrument reported seven
+  seals at R1 that do not exist) arriving on the committed planner.
+- **`nodeMargin` (R2: 2).** The greedy string-pull has a fallback: when no
+  smoothed segment is clear it keeps the next A\* node regardless, and that
+  node was never clearance-checked. `tree@32,416` in level 12 leaves the box
+  half a pixel clear of the trunk. ⚠ It DELETES cells, so it is not a
+  "more is safer" number — `planWaypoints` walks a ladder down from it one
+  pixel at a time rather than falling straight to zero, because one tight
+  destination would otherwise strip the clearance from the whole route.
+- **`triggerMargin` (R2: 4), which does NOT descend.** An overshoot into a
+  wall is absorbed; an overshoot into a teleporter ends up in another level
+  with nothing to recover to. Three R2 legs did exactly that — one aiming
+  at level 64's exit and arriving in level 61.
+
+⚠ **The route graph does NOT use `triggerMargin`**, deliberately: an
+arrival tile is inside its own trigger, so applying it there would fragment
+a component around every door. The driver is stricter than the graph, and
+an edge the graph offers that the driver will not walk is a loud throw
+during tape synthesis, before anything is recorded.
+
+### `allowGrazes`: when a blocked sweep is not a defect
+
+The executor throws on any hit, because a hit means the geometry stopped a
+move the planner certified and a silent re-plan turns a model defect into a
+green run. With collision on and an eight-pixel lattice that stopped being
+the whole truth: the bang-bang controller OVERSHOOTS a waypoint before
+braking back, so it can graze a wall a pixel past its target and then
+arrive perfectly. Three different levels produced exactly that.
+
+**So a graze is fatal only if the drive then fails to ARRIVE.** Nothing is
+re-planned either way; what changes is whether an absorbed overshoot ends
+the walk. Every graze is collected, returned, and counted in the tape's own
+description, so a route that grazes seventy times cannot look like one that
+grazes none.
+
+⚠ **The alternative cost more than it bought, and the runtime said so.**
+R2's first answer was to grow the player box while TESTING a smoothed
+segment, which forces waypoints exactly where the geometry is close. It
+worked — and cost 30% more ticks and **4.7× the input spans**, after which
+the recompiled game could not load the headline tape at all:
+`heap_alloc(72671) failed - out of memory`, 2,569 spans, 185 KB. At zero
+smoother margin the same walk is 853 spans and 63 KB. **A tape is not free
+to the runtime, and span count is the axis that matters.**
+
+### The clear list is DERIVED, and the refusals are published
+
+`persistenceClearsFor(levelRecord)` reads each level's own entities and
+returns what it OFFERS and what it REFUSES, with the reason. The route
+takes every offered clear for the levels it enters — 25 of the 79 the map
+offers — and each entry names the blocker it removes. The refusals for
+route levels are written into the route file too: an empty findings list
+and a clean pass print the same thing.
+
+⚠ **A clear is a FLAG, not an entity: it reaches everything in the level
+carrying that tag.** So `buildLevelWorld` refuses a clear that reaches any
+entity with no declared persistence response, and the declared-and-refused
+responses are named:
+
+| response | class | why refused |
+|---|---|---|
+| `arm` | `fallrock`, `fallrocklarge` | parked off-map while the flag holds; a clear BUILDS them fallen, Solid and live |
+| `appear` | `moonrockpile` | the mirror image — it exists only while the flag is false, so a clear ADDS a 32×16 Solid |
+| `press` | `buttonroom` | a cleared tag boots it ALREADY PRESSED and its whole group starts fading from frame one |
+
+and the classes that are modelled but excluded from a derived list by
+policy: every PICKUP (the game's items, not blockers), `spinner` /
+`lavaboss` / `shieldboss` (enemies — R5, not a blocker crutch), `moonrock`
+(writes persistence across levels) and `finaldoor`. `(114, 0)` is
+untouchable by name: `FinalDoor.as:50` reads it as "talked to the Watcher"
+from level 113.
+
+### Two constructor values the .oel cannot reach
+
+Both were found by wiring, both were wrong in two ways at once, and both
+now resolve through a committed table rather than an `if`.
+
+- **`ShieldLock` forces `tSet = -2`** (`ShieldLock.as:26`; `Game.as:2144-2145`
+  never passes a group). Reading `tset` off the attributes put a shieldlock
+  in group 0 — so L71's button was "opening" one 176 px away — AND stopped
+  it despawning on its own cleared flag, because `int("")` is 0 and 0 is not
+  `< 0`. `FORCED_TSET` / `tSetOf`.
+- **`MoonrockPile` forces `tag = 0`** (`MoonrockPile.as:23`), and the
+  extract's one placement carries no `tag` attribute at all — so reading the
+  attribute gave −1, every persistence reader guards on `tag >= 0`, and the
+  pile looked inert. It is not: with `tag = 0` its `check()` fires on a fresh
+  boot and REMOVES it. Level 2 is the third level of the walk and its
+  arrival tile is the pile's, so the route reported the whole map
+  unreachable. `FORCED_TAG` / `tagOf`.
+
+### What the walk did NOT need
+
+- **No AS3.** The whole walk half is JavaScript; the `persistence` field
+  and the version-3 parse landed in slice 4 and nothing since needed a
+  second build.
+- **No re-planning around a throw.** The driver still refuses rather than
+  recovers. What changed is which events count as failures, and each of
+  those changes is a named option with a measured reason.
+- **No new relaxation.** `noclip` moved from derived to declared, which is
+  the opposite of adding one.
 
 ## What R2 hands on, and what still blocks a full walk
 
