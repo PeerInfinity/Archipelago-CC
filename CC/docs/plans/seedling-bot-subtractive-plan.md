@@ -214,14 +214,25 @@ exact differential green on everything modelled, (d) updates the honest
   exactly as the game's OWN debug warps do (`Player.as:1875` and four more).
   It suppresses a UI tutorial and nothing else, and R3 needs it too, so
   unlike `noEnemyEffects` it is not a crutch a later rung must retire.
-- **R2 — solids come back** (noclip off). v2's collision machinery re-armed
-  everywhere the walk goes; cost = a blocking-role classification for tags
-  in walked levels + **pixelmask extraction** (MIT; the loud-throw seam
-  becomes real masks — the walk will cross buildings/cliffsides, so the
-  bounding-rect throw stops being an option). Interactive blockers (locks,
-  breakable rocks, ropes) are not yet modelled as interactions: they are
-  neutralized by targeted persistence grants at the door (the grant crutch
-  widens; each one is named in the blocked-list).
+- **R2 — solids come back** (noclip off). **RULED (user 2026-08-01) +
+  kickoff ready: `seedling-bot-r2-opus-kickoff.md`.** v2's collision
+  machinery re-armed everywhere the walk goes; cost = the blocking-role
+  classification for the ~93 unclassified tags in walked levels +
+  **pixelmask extraction** (MIT, committed artifacts + the transcribed
+  Hitbox-vs-Pixelmask collide; the loud-throw seam retires CLASS BY CLASS —
+  rect approximations stay banned per Phase 5a). Interactive blockers =
+  **tape-driven persistence clears** (`tape_version: 3`,
+  `persistence: [{level, tag, note}]`, ONE new AS3 change — `Bot.botStart`
+  applies `Game.setPersistence`; ~53 tagged blockers on route despawn via
+  their own `check()`; the clear list is derived + audited, FinalDoor/
+  Moonrock tags untouchable). **Pushables (10 on route, NO tags) are routed
+  around; a sealed corridor escalates to the user.** The R1 recordings
+  FREEZE as milestone artifacts (never re-recorded, still replayed) and
+  the verify sweep gains `--tier=fast|full`. Target claim: the same 11
+  items; anything a solid seals that no crutch covers joins the blocked
+  list with its rung named — losing an item to a named solid is the ladder
+  working. ⚠ `lavaboss` is on a route level and IS in the player's solid
+  list — slice 0 verdict required.
 - **R3 — interactions + real collection.** Item USE lands (X-press swings,
   `genericHit`, persistence flips): breakable rocks/ropes (Sword OR Spear),
   then locks (keys/shield/wand/magical). Real walk-over collection retires

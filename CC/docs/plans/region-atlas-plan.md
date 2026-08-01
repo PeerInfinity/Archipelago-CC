@@ -1640,7 +1640,10 @@ routes themselves remain untried.
       walked, all 13 items granted room-by-room, exactly differentially
       verified end-to-end — kickoff ready
       (`NewDocs/plans/seedling-bot-r1-opus-kickoff.md`)
-- [ ] R2: solids return (noclip off) — pays the blocking-role class table
+- [ ] R2: solids return (noclip off) — **RULED 2026-08-01, kickoff ready**
+      (`NewDocs/plans/seedling-bot-r2-opus-kickoff.md`): persistence-clear
+      crutch (one AS3 change), pushables routed-around-or-escalated, R1
+      recordings frozen + tiered sweep — pays the blocking-role class table
       (sizing: v2 kickoff §13) + pixelmask extraction; interactive blockers
       bridged by named persistence grants
 - [ ] R3: interactions + real collection (item use, rocks/ropes, locks;

@@ -2907,13 +2907,26 @@ Claude, accepted by user). Full detail in `region-atlas-plan.md` Phase 8.**
   left open, deliberately — the obvious mid-hole position in L83 lands on
   an equidistant `nearestToPoint` tie, and slice 1 already learned what a
   tie costs.
-- **QUEUE NEXT for this arc: R2 — solids come back (`noclip` off).** The
-  bill is the blocking-role classification for the ~93 unclassified tags in
-  walked levels plus **pixelmask EXTRACTION** (the walk crosses buildings
-  and cliffsides, so the bounding-rect over-throw stops being an option).
+- **QUEUE NEXT for this arc: R2 — solids come back (`noclip` off) —
+  RULED + KICKOFF READY: `NewDocs/plans/seedling-bot-r2-opus-kickoff.md`**
+  (Fable design session 2026-08-01; → `CC/docs/plans/` at implementation
+  start). Three rulings (user): interactive blockers = **tape-driven
+  persistence clears** (`tape_version: 3`, ONE new AS3 change; ~53 tagged
+  blockers on route despawn via their own `check()`; clear list derived +
+  audited; FinalDoor/Moonrock tags untouchable); **pushables (10 on route,
+  untagged) routed around, sealed corridors ESCALATE**; **R1 recordings
+  frozen as milestones + the sweep tiered `--tier=fast|full`** (a full
+  sweep is ~55 min). The bill is the blocking-role classification for the
+  ~93 unclassified tags in walked levels plus **pixelmask EXTRACTION**
+  (committed mask artifacts + transcribed collide; the throw retires class
+  by class; rect approximations stay banned). ⚠ slice-0 verdicts required:
+  per-level corridor feasibility with solids + clears (pushable seals,
+  `lavaboss` — on a route level and IN the player's solid list, geometry
+  seals with no crutch) — escalations go to the user BEFORE implementation.
   Two debts R1 took on deliberately land at R3: `bosstotem` prices inert
   only because grants are property writes, and **a Bridge is Solid only
-  because R1 presses no attack key**.
+  because R1 presses no attack key** — both re-verified at R2's slice 0
+  because evidence is state-conditional (the L38/FallRock lesson).
 
 ## 6. Everything else (unchanged queues)
 
