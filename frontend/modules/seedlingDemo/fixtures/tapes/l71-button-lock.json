@@ -1,0 +1,29 @@
+{
+  "tape_version": 3,
+  "game": "seedling",
+  "name": "l71-button-lock",
+  "description": "R2's CLAIM, put to the game. The boot drops the player exactly on L71's button at (120,184) — Button rect [116,124)x[181,187) — whose Activators group 0 also holds the Lock at [112,128)x[160,176), the only way north to Dungeon 7. The two volumes are DISJOINT by one pixel of y, so the player cannot stand on both: they hold the button for the 101 ticks Lock.activationStep needs (alpha -= 0.01 per tick, tested BEFORE decrementing, with Image.alpha clamping at 0), then walk up — leaving the button and entering the lock in the SAME tick, after which returnToNormal cannot fire because the player is inside it. Its control is l71-lock-shut, which walks up immediately and must be stopped dead.",
+  "boot": {
+    "level": 71,
+    "x": 112,
+    "y": 176
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [
+    "water",
+    "lava",
+    "ice",
+    "waterfall"
+  ],
+  "grants": [],
+  "persistence": [],
+  "tick_count": 160,
+  "inputs": [
+    {
+      "key": "up",
+      "from": 102,
+      "to": 160
+    }
+  ]
+}

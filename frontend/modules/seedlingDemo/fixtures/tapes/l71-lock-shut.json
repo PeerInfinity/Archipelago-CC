@@ -1,0 +1,29 @@
+{
+  "tape_version": 3,
+  "game": "seedling",
+  "name": "l71-lock-shut",
+  "description": "THE POSITIVE CONTROL for l71-button-lock, and the reason that fixture is evidence rather than a description. Same boot, same level, same everything — but the player walks up IMMEDIATELY instead of holding the button for 101 ticks, so the Lock is still solid and the sweep pins them against its south face. Without this, \"the player got through\" is satisfied by a lock that was never shut.",
+  "boot": {
+    "level": 71,
+    "x": 112,
+    "y": 176
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [
+    "water",
+    "lava",
+    "ice",
+    "waterfall"
+  ],
+  "grants": [],
+  "persistence": [],
+  "tick_count": 60,
+  "inputs": [
+    {
+      "key": "up",
+      "from": 1,
+      "to": 60
+    }
+  ]
+}

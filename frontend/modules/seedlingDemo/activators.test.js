@@ -27,6 +27,9 @@ import {
     buildLevelWorld,
     rect,
 } from './levelWorld.js';
+import { loadExpectation, loadTape } from './fixtures/index.js';
+import { runTapeToStream } from './tapeRunner.js';
+import { atlasLevelSource } from './levelSource.js';
 import {
     PRESSERS,
     RESPONDERS,
@@ -227,5 +230,46 @@ describe('collidesSolid honours an open activator', () => {
         // ...and the OTHER lock in the same level is untouched by it.
         const other = L71.activators.find((a) => a.t === -1);
         expect(open.has(other.id)).toBe(false);
+    });
+});
+
+describe('the ORACLE: what the game did, not what the model believes', () => {
+    // ⚠ THE PAIR IS THE POINT. `l71-button-lock` on its own is satisfied by
+    // a lock that was never shut; `l71-lock-shut` on its own is satisfied by
+    // a player who never moves. Together they are a claim.
+    const levelSource = atlasLevelSource();
+
+    it('the game lets the player through ONLY after the button is held', () => {
+        const open = loadExpectation('l71-button-lock');
+        const shut = loadExpectation('l71-lock-shut');
+        expect(open.provisional, 'l71-button-lock is a real recording').toBe(false);
+        expect(shut.provisional, 'l71-lock-shut is a real recording').toBe(false);
+
+        const minY = (e) => Math.min(...e.stream.ticks.map((o) => o.y));
+        // Both boot at y = 184, standing on the button. The lock's south
+        // face pins the player at 178.5 — one sweep step short of overlap.
+        expect(shut.stream.ticks[0].y).toBe(184);
+        expect(open.stream.ticks[0].y).toBe(184);
+        expect(minY(shut)).toBe(178.5);
+        // ...and with the hold, the game walks THROUGH it and keeps going,
+        // well north of the lock's [160,176).
+        expect(minY(open)).toBeLessThan(120);
+    });
+
+    it('and the MODEL reproduces both, tick for tick', () => {
+        // The differential in miniature: the same two tapes through the JS
+        // engine must give the game's own streams. This is what makes the
+        // 101-tick fade, the clamped alpha and the occupancy guard claims
+        // about the GAME rather than about this file.
+        for (const name of ['l71-button-lock', 'l71-lock-shut']) {
+            const oracle = loadExpectation(name).stream;
+            const model = runTapeToStream(loadTape(name), { levelSource });
+            expect(model.ticks.length, name).toBe(oracle.ticks.length);
+            for (let i = 0; i < oracle.ticks.length; i++) {
+                expect(model.ticks[i], `${name} tick ${i}`).toMatchObject({
+                    x: oracle.ticks[i].x, y: oracle.ticks[i].y, level: oracle.ticks[i].level,
+                });
+            }
+        }
     });
 });
