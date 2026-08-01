@@ -929,7 +929,32 @@ export const CLIFFSIDE_CLASS = Object.freeze({
     src: 'Scenery/CliffSide.as:15-34 + assets/graphics/CliffSideMask*.png (all 16x16)',
 });
 
-const rect = (x, y, w, h) => ({ x, y, w, h, right: x + w, bottom: y + h });
+/**
+ * ⚠ A RECT CARRIES ITS OWN `right`/`bottom`, and `rectsOverlap` READS THEM.
+ * A `{x, y, w, h}` literal handed to `rectsOverlap` therefore compares
+ * against `undefined` and is SILENTLY never overlapping — which is a
+ * check that cannot fail, not a check that passes. R1 shipped exactly that
+ * bug in its persistence-effect volume and the GAME found it: the model
+ * walked the player straight through an armed FallRock while both the
+ * planner and the executor reported the route clear. Build every rect
+ * through this, and see `assertRect`.
+ */
+export const rect = (x, y, w, h) => ({ x, y, w, h, right: x + w, bottom: y + h });
+
+/**
+ * Loud guard for a rect that arrives from outside this module. The failure
+ * it prevents is invisible by construction, so it is worth a throw.
+ */
+export function assertRect(r, what) {
+    if (!r || !Number.isFinite(r.x) || !Number.isFinite(r.y)
+        || !Number.isFinite(r.right) || !Number.isFinite(r.bottom)) {
+        fail(`${what} is not a rect: ${JSON.stringify(r)}. `
+            + '`rectsOverlap` reads `right`/`bottom`, so a {x,y,w,h} literal never '
+            + 'overlaps anything and every check against it silently passes. Build '
+            + 'it with `levelWorld.rect(x, y, w, h)`.');
+    }
+    return r;
+}
 
 /**
  * FlashPunk's overlap test (`Entity.collideRect`) — a STRICT half-open

@@ -1,0 +1,405 @@
+{
+  "tape_version": 2,
+  "game": "seedling",
+  "name": "r1-walk-6-cluster",
+  "description": "R1 walk SEGMENT 6 of 6, synthesized by botDriverV2 from legs 65-78 of the committed route (fixtures/r1-route.json). It boots where segment 5 ended and inherits sword, shield, feather, conch, wand, darksword, torch, spear, health in a single grant entry at the boot level, which fires on tick 0. 14 legs across 10 level(s), 13 crossings of which 3 are pit falls. Ends holding hasSword, hasDarkSword, hasShield, hasDarkShield, hasWand, canSwim, hasFeather, hasSpear, hasDarkSuit, hasTorch, hitsMax 4. Regenerate with fixtures/regenerate-r1-tapes.mjs; the route is the artifact and this tape is derived from it.",
+  "boot": {
+    "level": 12,
+    "x": 16,
+    "y": 352
+  },
+  "noclip": true,
+  "noDamage": true,
+  "noHazards": [
+    "water",
+    "lava",
+    "ice",
+    "waterfall"
+  ],
+  "grants": [
+    {
+      "level": 12,
+      "items": [
+        "conch",
+        "darksword",
+        "feather",
+        "health",
+        "shield",
+        "spear",
+        "sword",
+        "torch",
+        "wand"
+      ]
+    },
+    {
+      "level": 74,
+      "items": [
+        "darkshield"
+      ]
+    },
+    {
+      "level": 79,
+      "items": [
+        "darksuit"
+      ]
+    }
+  ],
+  "tick_count": 2155,
+  "inputs": [
+    {
+      "key": "down",
+      "from": 0,
+      "to": 299
+    },
+    {
+      "key": "up",
+      "from": 301,
+      "to": 303
+    },
+    {
+      "key": "right",
+      "from": 307,
+      "to": 318
+    },
+    {
+      "key": "down",
+      "from": 307,
+      "to": 421
+    },
+    {
+      "key": "left",
+      "from": 318,
+      "to": 319
+    },
+    {
+      "key": "right",
+      "from": 319,
+      "to": 320
+    },
+    {
+      "key": "left",
+      "from": 320,
+      "to": 321
+    },
+    {
+      "key": "right",
+      "from": 321,
+      "to": 322
+    },
+    {
+      "key": "left",
+      "from": 325,
+      "to": 327
+    },
+    {
+      "key": "right",
+      "from": 329,
+      "to": 331
+    },
+    {
+      "key": "left",
+      "from": 334,
+      "to": 335
+    },
+    {
+      "key": "up",
+      "from": 421,
+      "to": 452
+    },
+    {
+      "key": "up",
+      "from": 512,
+      "to": 513
+    },
+    {
+      "key": "right",
+      "from": 612,
+      "to": 636
+    },
+    {
+      "key": "up",
+      "from": 612,
+      "to": 1063
+    },
+    {
+      "key": "left",
+      "from": 636,
+      "to": 637
+    },
+    {
+      "key": "right",
+      "from": 637,
+      "to": 638
+    },
+    {
+      "key": "left",
+      "from": 638,
+      "to": 639
+    },
+    {
+      "key": "right",
+      "from": 639,
+      "to": 640
+    },
+    {
+      "key": "left",
+      "from": 643,
+      "to": 644
+    },
+    {
+      "key": "right",
+      "from": 659,
+      "to": 724
+    },
+    {
+      "key": "left",
+      "from": 724,
+      "to": 725
+    },
+    {
+      "key": "right",
+      "from": 725,
+      "to": 726
+    },
+    {
+      "key": "left",
+      "from": 726,
+      "to": 727
+    },
+    {
+      "key": "down",
+      "from": 1063,
+      "to": 1608
+    },
+    {
+      "key": "right",
+      "from": 1238,
+      "to": 1344
+    },
+    {
+      "key": "left",
+      "from": 1344,
+      "to": 1345
+    },
+    {
+      "key": "up",
+      "from": 1610,
+      "to": 1612
+    },
+    {
+      "key": "right",
+      "from": 1616,
+      "to": 1654
+    },
+    {
+      "key": "down",
+      "from": 1616,
+      "to": 1681
+    },
+    {
+      "key": "left",
+      "from": 1654,
+      "to": 1655
+    },
+    {
+      "key": "right",
+      "from": 1655,
+      "to": 1656
+    },
+    {
+      "key": "left",
+      "from": 1656,
+      "to": 1657
+    },
+    {
+      "key": "right",
+      "from": 1657,
+      "to": 1658
+    },
+    {
+      "key": "left",
+      "from": 1661,
+      "to": 1662
+    },
+    {
+      "key": "up",
+      "from": 1681,
+      "to": 1682
+    },
+    {
+      "key": "down",
+      "from": 1682,
+      "to": 1684
+    },
+    {
+      "key": "up",
+      "from": 1686,
+      "to": 1688
+    },
+    {
+      "key": "down",
+      "from": 1692,
+      "to": 1716
+    },
+    {
+      "key": "left",
+      "from": 1692,
+      "to": 1731
+    },
+    {
+      "key": "up",
+      "from": 1716,
+      "to": 1717
+    },
+    {
+      "key": "down",
+      "from": 1717,
+      "to": 1718
+    },
+    {
+      "key": "up",
+      "from": 1718,
+      "to": 1719
+    },
+    {
+      "key": "down",
+      "from": 1719,
+      "to": 1720
+    },
+    {
+      "key": "up",
+      "from": 1723,
+      "to": 1724
+    },
+    {
+      "key": "right",
+      "from": 1731,
+      "to": 1732
+    },
+    {
+      "key": "left",
+      "from": 1732,
+      "to": 1733
+    },
+    {
+      "key": "down",
+      "from": 1737,
+      "to": 1743
+    },
+    {
+      "key": "up",
+      "from": 1743,
+      "to": 1872
+    },
+    {
+      "key": "right",
+      "from": 1750,
+      "to": 1783
+    },
+    {
+      "key": "left",
+      "from": 1783,
+      "to": 1784
+    },
+    {
+      "key": "left",
+      "from": 1791,
+      "to": 1792
+    },
+    {
+      "key": "right",
+      "from": 1795,
+      "to": 1796
+    },
+    {
+      "key": "left",
+      "from": 1803,
+      "to": 1804
+    },
+    {
+      "key": "right",
+      "from": 1807,
+      "to": 1808
+    },
+    {
+      "key": "down",
+      "from": 1873,
+      "to": 1875
+    },
+    {
+      "key": "left",
+      "from": 1879,
+      "to": 1917
+    },
+    {
+      "key": "up",
+      "from": 1879,
+      "to": 2056
+    },
+    {
+      "key": "right",
+      "from": 1917,
+      "to": 1918
+    },
+    {
+      "key": "left",
+      "from": 1918,
+      "to": 1919
+    },
+    {
+      "key": "right",
+      "from": 1919,
+      "to": 1920
+    },
+    {
+      "key": "left",
+      "from": 1920,
+      "to": 1921
+    },
+    {
+      "key": "right",
+      "from": 1921,
+      "to": 1922
+    },
+    {
+      "key": "left",
+      "from": 1922,
+      "to": 1923
+    },
+    {
+      "key": "right",
+      "from": 1926,
+      "to": 1927
+    },
+    {
+      "key": "left",
+      "from": 1993,
+      "to": 2017
+    },
+    {
+      "key": "right",
+      "from": 2017,
+      "to": 2018
+    },
+    {
+      "key": "left",
+      "from": 2018,
+      "to": 2019
+    },
+    {
+      "key": "right",
+      "from": 2019,
+      "to": 2020
+    },
+    {
+      "key": "left",
+      "from": 2020,
+      "to": 2021
+    },
+    {
+      "key": "right",
+      "from": 2024,
+      "to": 2025
+    }
+  ]
+}

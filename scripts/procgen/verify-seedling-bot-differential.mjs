@@ -104,6 +104,14 @@ const {
 const {
     runTape,
 } = await import(join(REPO, 'frontend/modules/seedlingDemo/tapeRunner.js'));
+const {
+    r1AcceptanceFindings,
+} = await import(join(REPO, 'frontend/modules/seedlingDemo/r1Acceptance.js'));
+const {
+    r1TapeSpecs,
+} = await import(join(REPO, 'frontend/modules/seedlingDemo/r1Walk.js'));
+const R1_ROUTE = JSON.parse(readFileSync(
+    join(REPO, 'frontend/modules/seedlingDemo/fixtures/r1-route.json'), 'utf8'));
 
 const RECORD = process.argv.includes('--record');
 /** `--only=name[,name...]` — restrict the sweep. Empty means "everything". */
@@ -227,14 +235,28 @@ function replayOnWindows(name, tapeObj) {
     writeFileSync(tapeWsl, JSON.stringify(tapeObj));
     try { unlinkSync(outWsl); } catch { /* first run */ }
 
-    const out = execFileSync(WIN_PY, [
-        '-3.12', `${WIN_SCRATCH_DOS}\\seedling-bot-replay-win.py`,
-        '--url', PAGE_URL,
-        '--tape', `${WIN_SCRATCH_DOS}\\tape-${name}.json`,
-        '--out', `${WIN_SCRATCH_DOS}\\stream-${name}.json`,
-        '--deadline-sec', String(Math.ceil(deadlineFor(tapeObj.tick_count) / 1000)),
-    ], { cwd: WIN_SCRATCH_WSL, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
-
+    // ⚠ `execFileSync` with a pipe means NOTHING the driver prints is
+    // visible until it exits, and an R1 walk tape is ten minutes long. The
+    // driver therefore rewrites a progress sidecar every second, and this
+    // names it up front so a watcher knows where to look — the alternative
+    // is a run whose only observable states are "still going" and "done".
+    const progressWsl = join(WIN_SCRATCH_WSL, `progress-${name}.json`);
+    try { unlinkSync(progressWsl); } catch { /* first run */ }
+    console.log(`    progress: tail ${progressWsl}`);
+    // ⚠ `execFileSync` THROWS on a non-zero exit and its `message` is only
+    // the command line — so a driver that failed and printed exactly why
+    // (`REPLAY_FAIL`, plus the last 25 page log lines) would have all of it
+    // discarded, leaving "Command failed" as the entire diagnosis. Re-raise
+    // with the driver's own output attached.
+    let out;
+    try {
+        out = runWindowsDriver(name, tapeObj);
+    } catch (e) {
+        const said = [e.stdout, e.stderr].filter(Boolean).join('\n').trim();
+        throw new Error(`${e.message}${said ? `\n${said.split('\n')
+            .filter((l) => !/wsl\.localhost|CMD\.EXE|UNC paths/i.test(l))
+            .map((l) => `      ${l}`).join('\n')}` : ''}`);
+    }
     // cmd.exe/py.exe launched from a WSL cwd emit a harmless UNC warning.
     const clean = out.replace(/\r/g, '').split('\n')
         .filter((l) => l && !/wsl\.localhost|CMD\.EXE|UNC paths/i.test(l));
@@ -243,6 +265,18 @@ function replayOnWindows(name, tapeObj) {
         throw new Error(`windows driver wrote no stream for ${name}`);
     }
     return JSON.parse(readFileSync(outWsl, 'utf8'));
+}
+
+/** The `py.exe` invocation itself, split out so its failure can be reported. */
+function runWindowsDriver(name, tapeObj) {
+    return execFileSync(WIN_PY, [
+        '-3.12', `${WIN_SCRATCH_DOS}\\seedling-bot-replay-win.py`,
+        '--url', PAGE_URL,
+        '--tape', `${WIN_SCRATCH_DOS}\\tape-${name}.json`,
+        '--out', `${WIN_SCRATCH_DOS}\\stream-${name}.json`,
+        '--progress', `${WIN_SCRATCH_DOS}\\progress-${name}.json`,
+        '--deadline-sec', String(Math.ceil(deadlineFor(tapeObj.tick_count) / 1000)),
+    ], { cwd: WIN_SCRATCH_WSL, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
 }
 
 /**
@@ -371,6 +405,28 @@ function checkReadout(name, tape, status) {
     return expected;
 }
 
+/**
+ * R1's terminal assertion and its segment chain, from the GAME's own
+ * reports.
+ *
+ * The logic itself is `frontend/modules/seedlingDemo/r1Acceptance.js`,
+ * deliberately: a claim that only ever runs against a passing eleven-minute
+ * replay is a claim nobody has ever seen FAIL, and a check that has never
+ * failed is indistinguishable from one that cannot. As a pure function over
+ * the drained status and stream, every one of its assertions is mutated and
+ * asserted-red in vitest, in milliseconds. This is just the printer.
+ */
+function checkR1Acceptance(replayed) {
+    if (replayed.size === 0) return;
+    for (const f of r1AcceptanceFindings(R1_ROUTE, r1TapeSpecs(R1_ROUTE), replayed)) {
+        if (f.skipped) {
+            console.log(`SKIP: ${f.name} — ${f.detail}`);
+            continue;
+        }
+        check(f.name, f.ok, f.detail);
+    }
+}
+
 /** Replay one tape on its own fresh page and return the drained stream. */
 async function replay(name, tapeObj) {
     if (WIN) {
@@ -424,6 +480,8 @@ try {
             unknown.length ? `unknown: ${unknown.join(', ')}` : `${ONLY.size} selected`);
     }
     const names = ONLY.size > 0 ? allNames.filter((n) => ONLY.has(n)) : allNames;
+    /** Every tape this run replayed, for the cross-tape R1 checks. */
+    const replayed = new Map();
 
     for (const name of names) {
         const tape = loadTape(name);
@@ -436,6 +494,7 @@ try {
             continue;
         }
         const { stream, status } = result;
+        replayed.set(name, { stream, status });
         const secs = ((Date.now() - t0) / 1000).toFixed(0);
 
         const expectedRun = checkReadout(name, tape, status);
@@ -504,6 +563,8 @@ try {
             + `${provisional ? 'PROVISIONAL' : 'oracle'} stream`,
             diff === null, diff ?? '');
     }
+
+    checkR1Acceptance(replayed);
 
     if (!RECORD && ONLY.size === 0) {
         // ── The live bot-driver task (v2 slice 4) ────────────────────────

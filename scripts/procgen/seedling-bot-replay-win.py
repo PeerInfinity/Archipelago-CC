@@ -86,6 +86,7 @@ def main():
     ap.add_argument("--tape", required=True, help="Windows path to the tape JSON")
     ap.add_argument("--out", required=True, help="Windows path for the stream JSON")
     ap.add_argument("--deadline-sec", type=float, default=600.0)
+    ap.add_argument("--progress", help="Windows path for a live progress sidecar")
     ap.add_argument("--headed", action="store_true", default=True)
     args = ap.parse_args()
 
@@ -140,12 +141,31 @@ def main():
                 raise RuntimeError(f"botStart: {started}")
 
             t0 = time.time()
-            status = wait_for(
-                "tape to finish",
-                lambda: (lambda s: s if s.get("finished") else None)(
-                    bot_json(page, "botStatus")),
-                args.deadline_sec,
-            )
+            # ⚠ A LIVE PROGRESS SIDECAR, because stdout is not one. The
+            # caller runs this with `execFileSync` and a pipe, so nothing
+            # printed here is visible until the process exits — and an R1
+            # walk is ~15k ticks, ten minutes of it. Without this file the
+            # only two states a caller can observe are "still running" and
+            # "done", which makes a stalled game (a freeze, a dialogue the
+            # tape cannot dismiss) indistinguishable from a slow one for the
+            # whole deadline. The file is rewritten in place every second.
+            last_written = [0.0]
+
+            def note_progress():
+                status = bot_json(page, "botStatus")
+                now = time.time()
+                if args.progress and now - last_written[0] >= 1.0:
+                    last_written[0] = now
+                    with open(args.progress, "w", encoding="utf-8") as fh:
+                        # The WHOLE status, not a chosen subset: a stalled
+                        # tape is diagnosed from the fields nobody thought to
+                        # forward (cutscene, menu, receive_input,
+                        # saw_auto_advance), and collecting them in a second
+                        # run costs another ten minutes.
+                        json.dump({**status, "elapsed": round(now - t0, 1)}, fh)
+                return status if status.get("finished") else None
+
+            status = wait_for("tape to finish", note_progress, args.deadline_sec)
             elapsed = time.time() - t0
             drained = bot_json(page, "botDrain")
             ticks = drained.get("ticks", [])

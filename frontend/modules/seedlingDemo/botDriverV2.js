@@ -67,7 +67,7 @@
 import { serializeTape } from './tapeFormat.js';
 import { createLevelRun } from './levelRun.js';
 import { RELAXED_ROLES, TILE_SIZE } from './levelWorld.js';
-import { rectsOverlap } from './levelWorld.js';
+import { assertRect, rectsOverlap } from './levelWorld.js';
 import { playerBoxAt, terrainProbeRect } from './playerPhysicsV2.js';
 import {
     DEFAULT_MAX_TICKS_PER_TARGET,
@@ -95,6 +95,61 @@ const fail = (message) => { throw new BotDriverV2Error(message); };
  * thing that would notice is the wall the executor then throws on.
  */
 export const SEGMENT_SAMPLE_STEP = 0.5;
+
+/**
+ * ── FORCED CONTACTS: what the game has already put the player inside ──
+ *
+ * A leg starts where the previous leg's exit LANDED, and an arrival is not
+ * a position the planner chose. Four of the extract's teleporters arrive on
+ * top of another trigger (the game suppresses the re-fire through the latch
+ * `arriveIn` already pre-arms), and at least one arrives inside a priced
+ * avoid volume — L37's exit to L38 lands squarely on L38's own
+ * `buttonroom` at (144,288), which is a room-entry puzzle the level was
+ * BUILT around.
+ *
+ * The planner refuses both outright: `plannerObstacleAt` reports the
+ * teleporter and the volume, so A\* fails on its own start tile and the
+ * route reports the level unreachable. That is the wrong answer — the
+ * player is standing there whatever anyone thinks about it.
+ *
+ * So a leg may DECLARE the contacts it starts inside, by key, and the
+ * planner exempts exactly those for that leg. Two rules make the exemption
+ * safe to have:
+ *
+ *   - **undeclared is a THROW.** A contact the run is actually in that the
+ *     leg does not name is a route that has silently changed under a
+ *     geometry or pricing edit — the loudest possible place to find that
+ *     out is here, before a seven-minute recording.
+ *   - **declared-but-absent is also a THROW.** A stale declaration would
+ *     quietly re-permit something the route no longer touches.
+ *
+ * ⚠ It is a LEG-SCOPED exemption, not a start-tile one, and that is a
+ * bounded over-permission recorded rather than hidden: a leg that walked
+ * off its start volume and back onto it would not be caught here. What
+ * catches it instead is the game — a re-entered trigger fires (the latch
+ * disarms the moment the box stops overlapping) and `drive` throws on the
+ * transition nobody asked for.
+ */
+const EMPTY_CONTACTS = new Set();
+const EMPTY_VOLUMES = [];
+
+/** The stable key for one contact: kind, tag and OEL position. */
+export function contactKey(hit) {
+    const b = hit.blocker;
+    return `${hit.kind}:${b.tag ?? b.cls?.as3 ?? '?'}@${b.x},${b.y}`;
+}
+
+/**
+ * Every live trigger volume and avoid volume the player is standing in at
+ * `(x, y)`, as contact keys — what a leg starting there must declare.
+ */
+export function contactsAt(level, x, y, { avoidVolumes = false } = {}) {
+    const box = playerBoxAt(x, y);
+    const hits = level.teleporterHit(box)
+        .map((tp) => ({ kind: 'teleporter', blocker: tp }));
+    if (avoidVolumes) hits.push(...level.avoidVolumesAt(box, { x, y }));
+    return hits.map(contactKey);
+}
 
 /** Tile centre, which is where `Tile` entities actually sit. */
 export function tileCentre(tx, ty) {
@@ -137,6 +192,7 @@ export function tileAt(x, y) {
 export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}) {
     const {
         noclip = false, noHazards = [], avoidVolumes = false, allowPit = null,
+        contacts = EMPTY_CONTACTS, extraVolumes = EMPTY_VOLUMES,
     } = opts;
     const box = playerBoxAt(x, y);
     const geometry = level.plannerBlockerAt(box, terrainProbeRect(x, y),
@@ -155,6 +211,18 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
     // `allowTeleporter`: a leg names the pit it intends to fall down, by
     // tile, and only that one tile is steppable. The driver never searches
     // the fall graph.
+    // ── volumes the STATIC census cannot know about ────────────────────
+    // A route can change the game's persistence, and a level built from a
+    // static extract does not know it. R1 has exactly one: the L38 arrival
+    // presses a `buttonroom` whose `room="37"` write arms L37's FallRock,
+    // and `FallRock`'s CONSTRUCTOR reads that flag — so on the return visit
+    // the rock is built already fallen, Solid, and writing `p.y` for
+    // anything overlapping it. Under `noclip` the solidity is irrelevant;
+    // the position write is not. See `r1Walk.R1_PERSISTENCE_EFFECTS`.
+    for (const v of extraVolumes) {
+        if (v.level !== level.level) continue;
+        if (rectsOverlap(box, v.rect)) return { kind: 'persistence-effect', blocker: v };
+    }
     const probe = terrainProbeRect(x, y);
     for (const tile of level.pitTiles) {
         if (allowPit && tile.tx === allowPit.tx && tile.ty === allowPit.ty) continue;
@@ -165,13 +233,17 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
         // 33 px chomp disc, an ice turret's 129 px attack range) tests the
         // player's ENTITY position against a radius, which is what the game
         // does and is not a box test at all.
-        const [hit] = level.avoidVolumesAt(box, { x, y });
+        const hit = level.avoidVolumesAt(box, { x, y })
+            .find((h) => !contacts.has(contactKey(h)));
         if (hit) return hit;
     }
     for (let i = 0; i < level.teleporters.length; i++) {
         const tp = level.teleporters[i];
         if (i === allowTeleporter || tp.deactivated) continue;
-        if (rectsOverlap(box, tp.rect)) return { kind: 'teleporter', blocker: tp };
+        if (!rectsOverlap(box, tp.rect)) continue;
+        const hit = { kind: 'teleporter', blocker: tp };
+        if (contacts.has(contactKey(hit))) continue;
+        return hit;
     }
     return null;
 }
@@ -179,9 +251,18 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
 /** An empty held set — what a transport tick emits. */
 const NO_HELD = new Set();
 
-const describe = (o) => (o.kind === 'terrain' || o.kind === 'pit'
-    ? `${o.kind} ${o.blocker.name} (t=${o.blocker.t}) at tile (${o.blocker.tx},${o.blocker.ty})`
-    : `${o.kind} ${o.blocker.tag ?? o.blocker.cls?.as3} at (${o.blocker.x},${o.blocker.y})`);
+const describe = (o) => {
+    if (o.kind === 'terrain' || o.kind === 'pit') {
+        return `${o.kind} ${o.blocker.name} (t=${o.blocker.t}) at tile `
+            + `(${o.blocker.tx},${o.blocker.ty})`;
+    }
+    if (o.kind === 'persistence-effect') {
+        return `${o.kind} ${o.blocker.tag} at (${o.blocker.rect.x},${o.blocker.rect.y}): `
+            + `${o.blocker.why}`;
+    }
+    return `${o.kind} ${o.blocker.tag ?? o.blocker.cls?.as3} `
+        + `at (${o.blocker.x},${o.blocker.y})`;
+};
 
 /**
  * Is the player box clear at this tile's CENTRE?
@@ -392,6 +473,16 @@ function findExit(level, exit) {
             + 'persistence flag is true, which deactivates a tagged, non-inverted '
             + 'trigger — fixtures must stay off tagged teleporters.');
     }
+    const tx = Math.floor(tp.x / TILE_SIZE);
+    const ty = Math.floor(tp.y / TILE_SIZE);
+    if (level.pitTiles.some((t) => t.tx === tx && t.ty === ty)) {
+        fail(`the teleporter at (${exit.x},${exit.y}) in level ${level.level} stands ON `
+            + `a PIT tile (${tx},${ty}). Walking into it fires the trigger and the pit `
+            + 'edge in the same tick, and which one wins is FlashPunk bookkeeping this '
+            + 'module does not transcribe — the physics throws on the conflict. Two '
+            + "exist in the extract (L43's exit to L37, L100's to L101); route around "
+            + 'them.');
+    }
     return { index: i, teleporter: tp };
 }
 
@@ -434,7 +525,10 @@ function coastThroughTransport(run, perTick, maxTicks, what) {
  * an exit is reached by TOUCHING it, not by parking on it, and the trigger
  * fires from the position the previous tick left).
  */
-function drive(run, target, perTick, { until, tolerance, maxTicks, what, avoidVolumes }) {
+function drive(run, target, perTick, {
+    until, tolerance, maxTicks, what, avoidVolumes, contacts = EMPTY_CONTACTS,
+    extraVolumes = EMPTY_VOLUMES,
+}) {
     let ticks = 0;
     for (;;) {
         if (until === 'arrival' && hasArrived(run.state, target, tolerance)) return null;
@@ -488,7 +582,17 @@ function drive(run, target, perTick, { until, tolerance, maxTicks, what, avoidVo
         // controllerPathClear docblock); this is what makes that safe.
         if (avoidVolumes) {
             const s = run.state;
-            const [v] = run.world.avoidVolumesAt(playerBoxAt(s.x, s.y), { x: s.x, y: s.y });
+            const box = playerBoxAt(s.x, s.y);
+            const effect = extraVolumes.find((e) => e.level === run.level
+                && rectsOverlap(box, e.rect));
+            if (effect) {
+                fail(`${what}: the route entered ${effect.tag} at `
+                    + `(${effect.rect.x},${effect.rect.y}) in level ${run.level} at `
+                    + `(${s.x},${s.y}). ${effect.why} The static census cannot see this `
+                    + 'volume, so this check is the only place it can be caught.');
+            }
+            const v = run.world.avoidVolumesAt(box, { x: s.x, y: s.y })
+                .find((h) => !contacts.has(contactKey(h)));
             if (v) {
                 fail(`${what}: the route entered a ${v.kind} — ${v.blocker.tag} at `
                     + `(${v.blocker.x},${v.blocker.y}) in level ${run.level} — at `
@@ -528,7 +632,13 @@ export function synthesizeLegs(legs, opts = {}) {
         maxTicksPerTarget = DEFAULT_MAX_TICKS_PER_TARGET,
         name,
         relax = null,
+        extraVolumes = EMPTY_VOLUMES,
     } = opts;
+    // A volume whose rect has no `right`/`bottom` never overlaps anything,
+    // so every check against it passes and the route is "clear" by
+    // construction. Loud here, once, rather than silently green forever.
+    extraVolumes.forEach((v, i) => assertRect(v.rect,
+        `opts.extraVolumes[${i}] (${v.tag}) rect`));
     if (typeof levelSource !== 'function') {
         fail('synthesizeLegs: opts.levelSource (level) => levelRecord is required — '
             + 'the v2 rung plans against real geometry and there is no default for it');
@@ -547,7 +657,7 @@ export function synthesizeLegs(legs, opts = {}) {
             }
         }
     }
-    const plan = relax
+    const basePlan = relax
         ? { noclip: true, noHazards: relax.noHazards, avoidVolumes: true }
         : {};
 
@@ -574,6 +684,36 @@ export function synthesizeLegs(legs, opts = {}) {
                 + `${run.level}. A leg's level is an ASSERTION about where the previous `
                 + "leg's exit landed, not a request to go there.");
         }
+        // What the game has already put the player inside, checked against
+        // what the leg says it starts inside — see the FORCED CONTACTS
+        // docblock. Both directions are named failures.
+        const standing = contactsAt(run.world, run.state.x, run.state.y,
+            { avoidVolumes: Boolean(relax) });
+        const declared = new Set(leg.contacts ?? []);
+        const undeclared = standing.filter((k) => !declared.has(k));
+        if (undeclared.length > 0) {
+            fail(`legs[${li}] starts at (${run.state.x},${run.state.y}) in level `
+                + `${leg.level} INSIDE ${undeclared.join(', ')}, which the leg does not `
+                + 'declare. An arrival is not a position the planner chose, so a leg may '
+                + 'declare the contacts it lands in — but an undeclared one is a route '
+                + 'that has changed under a geometry or pricing edit, and the effect '
+                + '(a trigger, a dialogue freeze, a persistence write) is real.');
+        }
+        const stale = [...declared].filter((k) => !standing.includes(k));
+        if (stale.length > 0) {
+            fail(`legs[${li}] declares contact(s) ${stale.join(', ')} that the run is `
+                + `NOT in at (${run.state.x},${run.state.y}). A stale declaration `
+                + 're-permits something the route no longer touches.');
+        }
+        const legContacts = declared;
+        // A persistence effect exists only from the leg that CAUSED it. The
+        // first visit to L37 is before the button is pressed and the rock is
+        // still parked at y = -16; pricing it there would be over-avoiding a
+        // volume that does not exist yet, in the one level whose exit sits
+        // two tiles from it.
+        const legVolumes = extraVolumes.filter((v) => li >= v.fromLeg);
+        const plan = { ...basePlan, contacts: legContacts, extraVolumes: legVolumes };
+
         const legWaypoints = [];
         (leg.targets ?? []).forEach((target, ti) => {
             if (!Number.isFinite(target?.x) || !Number.isFinite(target?.y)) {
@@ -586,6 +726,8 @@ export function synthesizeLegs(legs, opts = {}) {
                 tolerance,
                 maxTicks: maxTicksPerTarget,
                 avoidVolumes: Boolean(relax),
+                contacts: legContacts,
+                extraVolumes: legVolumes,
                 what: `legs[${li}] level ${leg.level} target ${ti} waypoint ${wi} `
                     + `(${wp.x},${wp.y})`,
             }));
@@ -650,6 +792,8 @@ export function synthesizeLegs(legs, opts = {}) {
                     tolerance,
                     maxTicks: maxTicksPerTarget,
                     avoidVolumes: Boolean(relax),
+                    contacts: legContacts,
+                    extraVolumes: legVolumes,
                     what: `legs[${li}] level ${leg.level} pit exit (${tx},${ty}) `
                         + `waypoint ${wi} (${wp.x},${wp.y})`,
                 });
@@ -691,6 +835,8 @@ export function synthesizeLegs(legs, opts = {}) {
                 tolerance,
                 maxTicks: maxTicksPerTarget,
                 avoidVolumes: Boolean(relax),
+                contacts: legContacts,
+                extraVolumes: legVolumes,
                 what: `legs[${li}] level ${leg.level} exit (${leg.exit.x},${leg.exit.y}) `
                     + `waypoint ${wi} (${wp.x},${wp.y})`,
             });
