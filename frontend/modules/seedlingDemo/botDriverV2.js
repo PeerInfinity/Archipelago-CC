@@ -336,6 +336,9 @@ function grow(r, m) {
 /** An empty held set — what a transport tick emits. */
 const NO_HELD = new Set();
 
+/** The one key a ceremony reads: `Player.keys[6]`, i.e. X. */
+const TALK_HELD = new Set(['primary']);
+
 const describe = (o) => {
     if (o.kind === 'terrain' || o.kind === 'pit') {
         return `${o.kind} ${o.blocker.name} (t=${o.blocker.t}) at tile `
@@ -1085,6 +1088,167 @@ function runTouch(run, perTick, touch, maxTicks, what) {
 }
 
 /**
+ * ── THE COLLECT PRIMITIVE (R3) ────────────────────────────────────────
+ *
+ * Every rung before this one took an item by ENTERING ITS ROOM: `grants`
+ * is a property write on the arrival tick, so a leg could stop at the door.
+ * R3 retires that, and the difference is not a smaller tolerance — it is a
+ * different verb. The player has to stand ON the pickup and then talk its
+ * ceremony through:
+ *
+ *     { x: 56, y: 56, collect: { pickup: { x: 48, y: 48 } } }
+ *
+ * ⚠ AND EVERY PLANNER ON THIS LADDER REFUSES TO WALK INTO ONE. A pickup is
+ * an R0 avoid volume, priced because walking over one freezes the game
+ * behind a dialogue an unaware tape cannot dismiss. So the leg exempts the
+ * pickup it is collecting — the hold's button exemption, one volume over —
+ * and the approach below drives the last pixels itself.
+ *
+ * ⚠ THE PRESSES ARE SPACED, AND THAT IS PHYSICS RATHER THAN TIDINESS.
+ * `slashTimer` is 20 and the sword's own text says "double tap to dash": a
+ * press that lands once the ceremony is over reaches
+ * `useItem(Main.primary)`, so one is a swing and two inside twenty ticks is
+ * a DASH that moves the player. The cadence is `PRESS_GAP`, and the
+ * executor asserts that NO press lands after the ceremony ends.
+ *
+ * ⚠ The count of releases is the CEREMONY's, not the author's. It depends
+ * on the text — `NPC.talk` sets `currentCharacter = page.length - 1`, so a
+ * release that lands mid-type-out fast-forwards the page instead of turning
+ * it — so the loop presses until the run reports the pickup collected
+ * rather than counting to a number.
+ */
+/** Ticks between the X releases that page a ceremony. See above. */
+export const PRESS_GAP = 8;
+
+/** Shape-check a `collect` before anything is planned or driven with it. */
+export function assertCollect(collect, what) {
+    if (collect === null || typeof collect !== 'object' || Array.isArray(collect)) {
+        fail(`${what}: collect must be { pickup: {x, y} }`);
+    }
+    const p = collect.pickup;
+    if (!p || !Number.isFinite(p.x) || !Number.isFinite(p.y)) {
+        fail(`${what}: collect.pickup must be the pickup's OEL {x, y}`);
+    }
+}
+
+/**
+ * The pickup a collect NAMES, resolved through the world's own table — by
+ * OEL coordinates, never by index and never by searching for one that
+ * would do.
+ */
+export function resolvePickup(world, named, what) {
+    const pickup = (world.pickups ?? []).find((p) => p.x === named.x && p.y === named.y);
+    if (!pickup) {
+        fail(`${what}: level ${world.level} has no pickup at (${named.x},${named.y}); `
+            + `it has [${(world.pickups ?? []).map((p) => `${p.tag}@${p.x},${p.y}`)
+                .join(' ') || 'none'}]. A collect names its pickup by OEL coordinates.`);
+    }
+    assertRect(pickup.rect, `${what}: ${pickup.tag}@${pickup.x},${pickup.y} rect`);
+    return pickup;
+}
+
+function runCollect(run, perTick, collect, maxTicks, what) {
+    const pickup = resolvePickup(run.world, collect.pickup, what);
+    const before = run.collected.length;
+    const level = run.level;
+
+    // ── the approach ──────────────────────────────────────────────────
+    // Aim at the pickup's centre and press until the ceremony takes over.
+    // A pickup is not solid, so any hit on the way is the ordinary
+    // planner-bug throw.
+    const aim = {
+        x: (pickup.rect.x + pickup.rect.right) / 2,
+        y: (pickup.rect.y + pickup.rect.bottom) / 2,
+    };
+    const from = perTick.length;
+    let approach = 0;
+    while (!run.inCeremony) {
+        if (approach >= maxTicks) {
+            const s = run.state;
+            fail(`${what}: walked at ${pickup.tag}@${pickup.x},${pickup.y} for `
+                + `${maxTicks} ticks without touching it; stalled at (${s.x},${s.y}) in `
+                + `level ${run.level}. Its volume is [${pickup.rect.x},`
+                + `${pickup.rect.right}) x [${pickup.rect.y},${pickup.rect.bottom}).`);
+        }
+        const held = chooseHeld(run.state, aim, 0);
+        perTick.push(held);
+        const { transition, hitX, hitY } = run.advance(held);
+        approach++;
+        if (transition) {
+            fail(`${what}: the run crossed from level ${transition.from_level} to `
+                + `${transition.to_level} while approaching `
+                + `${pickup.tag}@${pickup.x},${pickup.y}.`);
+        }
+        const hit = hitX || hitY;
+        if (hit) {
+            const s = run.state;
+            fail(`${what}: approaching ${pickup.tag}@${pickup.x},${pickup.y}, the sweep `
+                + `was blocked by ${hit.tag ?? hit.cls?.as3 ?? 'a solid'} at `
+                + `(${hit.x},${hit.y}) at (${s.x},${s.y}). A pickup is not solid, so the `
+                + 'planner and the geometry disagree about the approach.');
+        }
+    }
+
+    // ── the ceremony ──────────────────────────────────────────────────
+    // ⚠ THE MOVEMENT KEY IS ALREADY RELEASED: the approach loop pushed its
+    // last held set on the tick BEFORE contact, and everything from here is
+    // either a press or nothing. So no movement span overlaps the freeze.
+    let releases = 0;
+    let sinceRelease = PRESS_GAP;
+    let pressing = false;
+    let ticks = 0;
+    while (run.collected.length === before) {
+        if (ticks >= maxTicks) {
+            fail(`${what}: ${pickup.tag}@${pickup.x},${pickup.y}'s ceremony has not `
+                + `finished after ${maxTicks} ticks and ${releases} release(s). A `
+                + 'dialogue advances on `Input.released`, so a ceremony that never ends '
+                + 'means the releases are not reaching `NPC.talk()`.');
+        }
+        let held = NO_HELD;
+        if (pressing) { pressing = false; sinceRelease = 0; releases++; } else if (
+            sinceRelease >= PRESS_GAP) { held = TALK_HELD; pressing = true; }
+        perTick.push(held);
+        const { transition } = run.advance(held);
+        ticks++;
+        sinceRelease++;
+        if (transition) {
+            fail(`${what}: the run crossed from level ${transition.from_level} to `
+                + `${transition.to_level} DURING a ceremony. A frozen player cannot walk `
+                + 'into a trigger, so this is a pickup standing inside one.');
+        }
+    }
+
+    // ⚠ NO PRESS AFTER THE CEREMONY. The loop exits on the tick the pickup
+    // was taken, and the tick it exits on carried either nothing or the
+    // release that ended it — never a fresh press. Asserted rather than
+    // reasoned, because the consequence is a sword swing at best and a dash
+    // that moves the player at worst.
+    if (pressing) {
+        fail(`${what}: the ceremony ended with a press still down, so its release would `
+            + `land on a live frame and reach useItem(Main.primary).`);
+    }
+
+    const record = run.collected[run.collected.length - 1];
+    if (!record || run.collected.length !== before + 1) {
+        fail(`${what}: expected exactly one new ceremony, got `
+            + `${run.collected.length - before}.`);
+    }
+    if (record.level !== level) {
+        fail(`${what}: the ceremony that ran was in level ${record.level}, not `
+            + `${level}.`);
+    }
+    return {
+        pickup: { tag: pickup.tag, x: pickup.x, y: pickup.y },
+        item: record.item,
+        level,
+        approach,
+        ceremony: ticks,
+        releases,
+        from,
+    };
+}
+
+/**
  * Drive the run to `target`, one bang-bang tick at a time.
  *
  * `until` is `'arrival'` (v1's criterion: within tolerance AND stopped) or
@@ -1392,6 +1556,7 @@ export function synthesizeLegs(legs, opts = {}) {
     const waypoints = [];
     const holds = [];
     const touches = [];
+    const collects = [];
     const grazes = allowGrazes ? [] : null;
 
     legs.forEach((leg, li) => {
@@ -1468,6 +1633,20 @@ export function synthesizeLegs(legs, opts = {}) {
             const l = resolveTouchLock(run.world, t.touch.lock, what);
             legContacts.add(`proximity-hazard:${l.tag}@${l.x},${l.y}`);
         });
+        /**
+         * ⚠ AND SO IS A COLLECT'S PICKUP — the whole point of the verb.
+         * `avoidVolumesAt` reports a pickup as an avoid volume because
+         * walking over one freezes the game behind a dialogue, so without
+         * this the planner routes AROUND the item the leg exists to take
+         * and the executor throws the moment the walk reaches it.
+         */
+        (leg.targets ?? []).forEach((t, ti) => {
+            if (t?.collect === undefined) return;
+            const what = `legs[${li}] level ${leg.level} target ${ti} collect`;
+            assertCollect(t.collect, what);
+            const p = resolvePickup(run.world, t.collect.pickup, what);
+            legContacts.add(`pickup:${p.tag}@${p.x},${p.y}`);
+        });
         // A persistence effect exists only from the leg that CAUSED it. The
         // first visit to L37 is before the button is pressed and the rock is
         // still parked at y = -16; pricing it there would be over-avoiding a
@@ -1532,6 +1711,13 @@ export function synthesizeLegs(legs, opts = {}) {
                     `legs[${li}] level ${leg.level} target ${ti} touch`);
                 touches.push({
                     leg: li, index: ti, level: leg.level, to: perTick.length, ...record,
+                });
+            }
+            if (target.collect !== undefined) {
+                const record = runCollect(run, perTick, target.collect, maxTicksPerTarget,
+                    `legs[${li}] level ${leg.level} target ${ti} collect`);
+                collects.push({
+                    leg: li, index: ti, to: perTick.length, ...record,
                 });
             }
         });
@@ -1703,6 +1889,12 @@ export function synthesizeLegs(legs, opts = {}) {
         // is only spans and empty ticks, so this is the only place a consumer
         // can learn the walk opens anything by hand.
         touches: touches.map((t) => ({ ...t })),
+        // One record per ITEM the run walked onto and talked through: which
+        // pickup, which item, how long the approach and the ceremony ran,
+        // and how many releases the ceremony needed. `grants` is what was
+        // HANDED over; this is what was EARNED, and the R3 ledger is the
+        // statement that the first list is empty and this one is not.
+        collects: collects.map((c) => ({ ...c })),
         /** Every sweep a wall stopped that the drive went on to arrive past. */
         grazes: grazes ? grazes.map((g) => ({ ...g })) : [],
         grants: relax ? run.grantsFired : [],

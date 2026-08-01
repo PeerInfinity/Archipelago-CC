@@ -38,6 +38,7 @@ import {
     synthesizeWalk,
     tileAt,
     tileCentre,
+    PRESS_GAP,
 } from './botDriverV2.js';
 
 const levelSource = atlasLevelSource();
@@ -1241,6 +1242,112 @@ describe('R3: the touch primitive', () => {
                 targets: [{ x: 272, y: 264, touch }],
             }], { levelSource, boot: { ...BOOT }, relax: R3 }))
                 .toThrow(/touch(\.lock)? must be/);
+        }
+    });
+});
+
+/**
+ * ── R3: THE COLLECT ───────────────────────────────────────────────────
+ *
+ * Every rung before this one took an item by ENTERING ITS ROOM. R3 makes
+ * the driver stand on the pickup and page its dialogue through, which is a
+ * different verb rather than a tighter tolerance: the planner has to be
+ * allowed INTO a volume it exists to avoid, the ceremony costs ticks the
+ * author does not get to choose, and the presses that pay for it are one
+ * mis-spacing away from being a dash.
+ */
+describe('R3: the collect primitive', () => {
+    const R3 = Object.freeze({
+        noclip: false,
+        noDamage: true,
+        noHazards: ['water', 'lava', 'ice', 'waterfall'],
+        grants: [],
+        persistence: [],
+    });
+    /** Level 10's sword room; the pickup is at (48,48), the boot two tiles south. */
+    const BOOT = Object.freeze({ level: 10, x: 48, y: 72 });
+    const SWORD = Object.freeze({ x: 48, y: 48 });
+
+    const walk = (opts = {}, targets = null) => synthesizeLegs([{
+        level: 10,
+        targets: targets ?? [{ x: 56, y: 80, collect: { pickup: { ...SWORD } } }],
+    }], {
+        levelSource,
+        boot: { ...BOOT },
+        relax: R3,
+        name: 'l10-collect',
+        lattice: 8,
+        nodeMargin: 2,
+        triggerMargin: 4,
+        allowGrazes: true,
+        ...opts,
+    });
+
+    it('walks ONTO the pickup and pages its ceremony through', () => {
+        const { tape, collects } = walk();
+        expect(collects).toHaveLength(1);
+        expect(collects[0]).toMatchObject({
+            pickup: { tag: 'sword', x: 48, y: 48 }, item: 'sword', level: 10,
+        });
+        // The release count is the CEREMONY's, not a number in this file.
+        expect(collects[0].releases).toBeGreaterThan(0);
+
+        // ⚠ THE LEDGER, from an INDEPENDENT replay: grants EMPTY and the
+        // property true. That pair is the whole of "collected for real".
+        expect(tape.grants).toEqual([]);
+        const run = runTape(tape, { levelSource });
+        expect(run.grants).toEqual([]);
+        expect(run.collected).toHaveLength(1);
+        expect(run.collected[0]).toMatchObject({ item: 'sword', level: 10 });
+        expect(run.inventory.hasSword).toBe(true);
+    });
+
+    it('spaces every press at least PRESS_GAP apart, and lands none after the end', () => {
+        // ⚠ `slashTimer` is 20: one press after the ceremony is a swing and
+        // two inside twenty ticks is a DASH that moves the player. So the
+        // spacing is physics, and the last release must be the one that
+        // ENDED the ceremony rather than a spare after it.
+        const { tape, collects } = walk();
+        const presses = tape.inputs.filter((s) => s.key === 'primary');
+        expect(presses.length).toBe(collects[0].releases);
+        for (let i = 1; i < presses.length; i++) {
+            expect(presses[i].from - presses[i - 1].from,
+                `gap ${i}`).toBeGreaterThanOrEqual(PRESS_GAP);
+        }
+        const end = collects[0].to;
+        expect(presses[presses.length - 1].to).toBeLessThanOrEqual(end);
+    });
+
+    it('emits no MOVEMENT span once the ceremony has started', () => {
+        // The approach's last held set lands on the tick before contact, so
+        // everything from there is a press or nothing. A movement span
+        // overlapping the freeze would be inert in the game and honoured by
+        // nothing — the asymmetry the format exists to prevent.
+        const { tape, collects } = walk();
+        const from = collects[0].from + collects[0].approach;
+        const moves = tape.inputs.filter((s) => s.key !== 'primary' && s.to > from);
+        expect(moves).toEqual([]);
+    });
+
+    it('refuses a SECOND collect of the same pickup — the positive control', () => {
+        // The pickup is gone after the first ceremony, so the approach can
+        // never reach one. "The item is held afterwards" is otherwise
+        // satisfied by a collect that did nothing.
+        expect(() => walk({}, [
+            { x: 56, y: 80, collect: { pickup: { ...SWORD } } },
+            { x: 56, y: 80, collect: { pickup: { ...SWORD } } },
+        ])).toThrow(/without touching it/);
+    });
+
+    it('refuses a pickup the level does not have', () => {
+        expect(() => walk({}, [{ x: 56, y: 80, collect: { pickup: { x: 0, y: 0 } } }]))
+            .toThrow(/has no pickup at \(0,0\)/);
+    });
+
+    it('refuses a malformed collect', () => {
+        for (const collect of [null, {}, { pickup: {} }, { pickup: { x: 48 } }, 'sword']) {
+            expect(() => walk({}, [{ x: 56, y: 80, collect }]))
+                .toThrow(/collect(\.pickup)? must be/);
         }
     });
 });
