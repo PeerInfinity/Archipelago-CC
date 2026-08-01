@@ -131,6 +131,33 @@ const ONLY = new Set(
  * SWFRecomp-CC `tools/divergence/perf/WINDOWS_PLAYWRIGHT_FROM_WSL.md`.
  */
 const WIN = process.argv.includes('--win');
+
+/**
+ * `--tier=fast|full` — the sweep is ~55 minutes at full, and R1's own
+ * numbers are why: 31,476 ticks across 25 tapes, at a rate that swings
+ * 1–25 fps BY LEVEL (the big rooms crawl; L40 measured about 1/s). An
+ * iteration loop that costs an hour is one nobody runs, and a gate nobody
+ * runs is a gate that is not protecting anything.
+ *
+ * FAST is every tape below a tick threshold — the pre-walk fixtures, the
+ * collision oracles, the contrast pairs. FULL is everything, including the
+ * R1 chain and both headlines, and it is what a gate run means.
+ *
+ * ⚠ The split is on TICK COUNT, read from each tape, not on a hand-kept
+ * name list. A list would go stale the first time a fixture was added and
+ * nobody thought about which tier it belonged in — and the failure mode is
+ * a fast tier that silently stops covering the thing you just wrote.
+ * `feedback_coincidental_predicate_rots`, avoided by construction.
+ */
+const TIER_ARG = process.argv.filter((a) => a.startsWith('--tier='))
+    .map((a) => a.slice('--tier='.length).trim()).pop();
+const TIER = TIER_ARG ?? 'full';
+if (!['fast', 'full'].includes(TIER)) {
+    console.error(`--tier must be fast or full, got "${TIER}"`);
+    process.exit(1);
+}
+/** A tape longer than this is FULL-tier only. The R1 segments start at 910. */
+const FAST_TIER_MAX_TICKS = 600;
 const WIN_SCRATCH_WSL = '/mnt/c/playwright';
 const WIN_SCRATCH_DOS = 'C:\\playwright';
 const WIN_PY = '/mnt/c/Windows/py.exe';
@@ -479,7 +506,18 @@ try {
         check('every --only name is a real fixture', unknown.length === 0,
             unknown.length ? `unknown: ${unknown.join(', ')}` : `${ONLY.size} selected`);
     }
-    const names = ONLY.size > 0 ? allNames.filter((n) => ONLY.has(n)) : allNames;
+    let names = ONLY.size > 0 ? allNames.filter((n) => ONLY.has(n)) : allNames;
+    if (TIER === 'fast' && ONLY.size === 0) {
+        const deferred = names.filter((n) => loadTape(n).tick_count > FAST_TIER_MAX_TICKS);
+        names = names.filter((n) => loadTape(n).tick_count <= FAST_TIER_MAX_TICKS);
+        // ⚠ NAMED, NOT SILENT. A tier that quietly dropped tapes would read
+        // as "everything passed" — the same shape as a truncated roster
+        // reporting green. Say what was not run and how to run it.
+        console.log(`TIER fast: ${names.length} tape(s); DEFERRED to --tier=full `
+            + `(> ${FAST_TIER_MAX_TICKS} ticks): ${deferred.join(', ')}`);
+    } else if (ONLY.size === 0) {
+        console.log(`TIER full: ${names.length} tape(s), every one of them`);
+    }
     /** Every tape this run replayed, for the cross-tape R1 checks. */
     const replayed = new Map();
 

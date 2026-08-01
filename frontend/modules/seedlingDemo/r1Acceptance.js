@@ -181,16 +181,32 @@ export function r1ChainFindings(route, specs, replayed) {
 export function r1AcceptanceFindings(route, specs, replayed) {
     const found = [];
     const full = replayed.get(R1_FULL_WALK_NAME);
-    if (full) found.push(...r1HeadlineFindings(route, full));
+    if (full) {
+        found.push(...r1HeadlineFindings(route, full));
+    } else {
+        // ⚠ ALWAYS SAY SO. R2 added `--tier=fast`, whose whole purpose is to
+        // leave the long tapes out — and with them out, this function used
+        // to return NOTHING for the headline and nothing for the chain,
+        // so the run printed "ALL CHECKS PASSED" without ever mentioning
+        // that R1's claim had not been looked at. A bounded sweep that does
+        // not name what it bounded reads exactly like a complete one.
+        found.push({
+            name: `R1 headline walk: SKIPPED — this sweep did not replay ${R1_FULL_WALK_NAME}`,
+            ok: true,
+            detail: 'run --tier=full (or --only) to assert the eleven-item claim',
+            skipped: true,
+        });
+    }
 
     const have = R1_SEGMENT_NAMES.filter((n) => replayed.has(n));
     if (have.length === R1_SEGMENT_NAMES.length) {
         found.push(...r1ChainFindings(route, specs, replayed));
-    } else if (have.length > 0) {
+    } else {
         found.push({
             name: 'R1 chain: SKIPPED — the chain needs all six segments',
             ok: true,
-            detail: `this sweep replayed ${have.length} of ${R1_SEGMENT_NAMES.length}`,
+            detail: `this sweep replayed ${have.length} of ${R1_SEGMENT_NAMES.length}`
+                + (have.length === 0 ? ' — run --tier=full to assert the partition' : ''),
             skipped: true,
         });
     }

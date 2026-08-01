@@ -88,8 +88,25 @@ describe('the R1 acceptance leg passes on the real walk', () => {
     it('SKIPS the chain, loudly, when a sweep replayed only some segments', () => {
         const partial = new Map([[R1_SEGMENT_NAMES[0], replayed.get(R1_SEGMENT_NAMES[0])]]);
         const found = r1AcceptanceFindings(route, specs, partial);
-        expect(found.map((f) => f.skipped)).toEqual([true]);
-        expect(found[0].name).toMatch(/SKIPPED/);
+        // Both halves are named: the headline was not replayed either.
+        expect(found.map((f) => f.skipped)).toEqual([true, true]);
+        expect(found.map((f) => f.name).join(' ')).toMatch(/headline walk: SKIPPED/);
+        expect(found.map((f) => f.name).join(' ')).toMatch(/chain: SKIPPED/);
+    });
+
+    it('SKIPS both, loudly, when a sweep replayed NONE of them', () => {
+        // ⚠ This is `--tier=fast`, which R2 added: it deliberately leaves
+        // every R1 tape out. Before this case the function returned an EMPTY
+        // list, so the sweep printed "ALL CHECKS PASSED" without ever
+        // mentioning that R1's eleven-item claim had not been looked at. A
+        // bounded run that does not name what it bounded reads exactly like
+        // a complete one — which is the whole failure this arc keeps meeting
+        // in new costumes.
+        const found = r1AcceptanceFindings(route, specs, new Map());
+        expect(found).toHaveLength(2);
+        expect(found.every((f) => f.skipped)).toBe(true);
+        expect(found.every((f) => f.ok)).toBe(true);
+        for (const f of found) expect(f.detail).toMatch(/--tier=full/);
     });
 });
 
