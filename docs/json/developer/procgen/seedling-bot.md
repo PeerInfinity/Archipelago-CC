@@ -1,4 +1,4 @@
-# The Seedling Real-Game Bot (v1 + v2 + R0)
+# The Seedling Real-Game Bot (v1 + v2 + R0 + R1)
 
 How we drive the **real recompiled Seedling** with a scripted input tape and
 check a JavaScript model of its physics against what the game actually did.
@@ -11,7 +11,9 @@ oracle that can say "beatable in the actual game". Plan:
 trail: `CC/docs/plans/seedling-bot-v1-opus-kickoff.md`,
 `seedling-bot-v2-opus-kickoff.md` (whose §7–§14 are the as-built record —
 its §1–§6 are the original brief and are wrong in several places those
-sections correct) and `seedling-bot-r0-opus-kickoff.md` (§8 onward likewise).
+sections correct), `seedling-bot-r0-opus-kickoff.md` (§8 onward likewise)
+and `seedling-bot-r1-opus-kickoff.md` (§8 the recon, §9 the scope ruling,
+§10 the watch page, §11 the walk).
 
 **⚠ THE LADDER ABOVE v2 IS SUBTRACTIVE, NOT ADDITIVE.** The old v3 → v4 → v5
 sequence (item-gated terrain, then puzzles, then enemies) had a beatable game
@@ -24,17 +26,19 @@ measured in "what still blocks us", not in features built. v2's collision,
 A\*, transitions and exact-differential harness are exactly what rungs R2+
 re-enable — the ordering changed, the machinery did not.
 
-**Scope as of R0:** everything v2 had, plus the three tape-declared
-relaxations the ladder's first full walk needs (`noDamage`, `noHazards`,
-`grants`), a `buildLevelWorld` that relaxes BY ROLE, the full 137-tag
-proximity census, and an item/win READOUT in `botStatus` — the acceptance
-signal every later rung asserts against. Each rung lands in JavaScript first
-and then in the Seedling source; the JS side is the iteration surface and is
-*never* a load-bearing stratum for a beatability claim.
+**Scope as of R1:** everything v2 had, plus R0's three tape-declared
+relaxations (`noDamage`, `noHazards`, `grants`), a `buildLevelWorld` that
+relaxes BY ROLE, the full 137-tag proximity census and the item/win READOUT
+in `botStatus` — plus R1's **pit transport as a modelled primitive**, ten
+priced avoid volumes, and the committed 79-leg route the full walk is
+planned from. Each rung lands in JavaScript first and then in the Seedling
+source; the JS side is the iteration surface and is *never* a load-bearing
+stratum for a beatability claim.
 
-As of 2026-07-31 all **fourteen** fixtures match **exactly** — 1550 ticks,
-1564 observations and 8 transition records, bit for bit, float noise
-included.
+As of 2026-07-31 all **twenty-three** fixtures match **exactly** — 31,476
+ticks, bit for bit, float noise included. Seven of them are the R1 walk:
+six segments and the headline, and the headline is the six segments tick for
+tick.
 
 ## The shape: two implementations, one tape, compared
 
@@ -68,6 +72,11 @@ local verify script only has to answer "are the recordings still current?".
 | One world-swapping run, shared by runner and driver; the inventory mirror | `frontend/modules/seedlingDemo/levelRun.js` |
 | Tape replay → observation stream | `frontend/modules/seedlingDemo/tapeRunner.js` |
 | Targets → tape synthesis (straight line / A\*) | `botDriverV1.js`, `botDriverV2.js` |
+| The R1 walk: rooms, order, segments, tape specs | `frontend/modules/seedlingDemo/r1Walk.js` |
+| R1's terminal claim + segment chain, as pure functions | `frontend/modules/seedlingDemo/r1Acceptance.js` |
+| The committed R1 route (79 legs) | `frontend/modules/seedlingDemo/fixtures/r1-route.json` |
+| Route authoring (the `(level, component)` search) | `scripts/procgen/plan-seedling-r1-route.mjs` |
+| R1 tapes, re-synthesized from the route | `frontend/modules/seedlingDemo/fixtures/regenerate-r1-tapes.mjs` |
 | Tapes + oracle recordings | `frontend/modules/seedlingDemo/fixtures/` |
 | The differential harness | `scripts/procgen/verify-seedling-bot-differential.mjs` |
 | Real-GPU browser driver | `scripts/procgen/seedling-bot-replay-win.py` |
@@ -461,6 +470,117 @@ weaker claim than it reads. And **three `MOVE_SPEEDS` comment labels were
 wrong** (17 is Lava, 25 is Waterfall, 30 is Ghost Tile Step); the values
 were always right, which is why nothing caught them.
 
+## The pit transport (R1)
+
+A pit is not a floor with a speed. Standing on one starts a three-phase
+transport the game drives and the player cannot steer, and **every frame of
+it is a LIVE observed tick** — `receiveInput = false` stops input, not the
+tick counter, so the differential sees all of it.
+
+R1 leaves pits LIVE (`noHazards: ["water","lava","ice","waterfall"]`, pit
+omitted) and models the fall, because pits are not only a hazard: they are
+the only way into the underworld cluster that holds `darkshield` (L74) and
+`darksuit` (L79). `hazard-boot-pit` (the full five-name set, pit COERCED)
+stays committed beside `pit-fall-83` (pit live) as a contrast pair pinning
+the set semantics from both sides.
+
+**The edge** (`Player.as:685-716`). Inside the state SETTER, so it fires
+only on a RAW change (`_s != _state`), only while `onGround`, and it reads
+the COERCED value. `fallInPitPos` is the tile entity's position — the cell
+CENTRE — because the probe args are byte-identical to `getState`'s own.
+⚠ **The edge fires BEFORE the movement and `receiveInput = false` is set
+AFTER it**, inside `checkFallingInPit`, which runs after `super.update()`.
+So the tick the edge fires still accepts input and still accelerates
+normally; refusal starts on the tick after. A transcription that kills
+input on the edge tick diverges on tick 1 of every fall.
+
+**The fall-out is exactly 20 ticks, and it is a knife-edge.** `alpha` starts
+at 1 and `-= 0.05` per tick; twenty repeated double subtractions land on
+**−3.191891195797325e-16**, just below zero. Computing the count as `1/0.05`
+or accumulating differently gives 21. Transcribe it as repeated subtraction.
+The lerp is a **geometric decay**, one tenth of the remaining offset per
+tick toward `fallInPitPos` — not an arrival; 20 ticks leaves 12.16% of the
+offset, which is observable in the stream and irrelevant to the swap,
+because the swap reads `fallInPitPos` and never the player's x.
+
+**The swap** is the SAME deferred end-of-tick swap as a teleporter, so it
+flows through `levelRun`'s one-swap-two-callers machinery as a new arrival
+KIND rather than a second swap implementation. ⚠ `Game.end()` resets
+`fallthroughLevel` and the `Game` CONSTRUCTOR calls `end()` on itself, while
+`loadlevel` runs from `begin()` — the chain works only because FlashPunk
+orders `oldWorld.end()` → swap → `newWorld.begin()`.
+
+**The descent is ALWAYS exactly 83 px and 41 ticks, in every level.**
+`Player.check()` runs on the new world's first frame ABOVE the `blackCover`
+gate and reads the camera `loadlevel` just set from the player's own
+position, UNCLAMPED — `view()` clamps only afterwards. 160/2 + (5−2) = 83.
+
+⚠ **THE LANDING POLARITY IS INVERTED from the obvious reading:**
+
+```as3
+if (bouncedFromCeiling || getStatePos(x, yStart) == 6 || == 1 || == 17) land;
+else { y = yStart; v.y = -2; bouncedFromCeiling = true; }   // BOUNCE
+```
+
+You cannot bounce on a hole or a liquid, so **ordinary floor is the case
+that bounces** — once, at `v.y = -2`, for exactly 39 ticks, returning to
+`yStart` with zero float residue. ⚠ And `getStatePos` is **NOT** routed
+through the coerce (R0's four sites do not include it), so the landing check
+reads the RAW tile type while the physics reads the coerced one: the `48 ⇓
+49` fall lands on Ice, flattened for the physics and seen as 22 by the
+landing check, and therefore bounces.
+
+⚠ **L84 is a PASS-THROUGH.** The `83 ⇓ 84` arrival lands in the centre of a
+3×3 block of pit tiles: the descent ends on a pit, there is no bounce, and
+the next tick's `getState` fires the edge again. **The arrival has no
+walkable NEIGHBOUR** — the level has walkable tiles elsewhere, but none the
+player could step into from where the fall puts them — so a router that
+demanded a walkable component at the arrival reports darkshield and darksuit
+unreachable — which is what the first cut of the R1 route search
+did. A leg in a pass-through level has zero targets, zero input spans and an
+automatic exit.
+
+**Pit tiles are forbidden floor**, and that policy is load-bearing rather
+than tidy: **27 of the 116 levels hold pit tiles with NO `control` block**,
+and `checkFallingInPit`'s else branch is `die()` — Dungeon 6 and most of
+Dungeon 8 are floors of lethal holes. It was free before R1 (an uncoerced 6
+was unmodelled terrain, which `plannerBlockerAt` already reported);
+modelling the transport took it off that list, so it is now an EXPLICIT
+driver policy beside the teleporter one, with `exit: {pit: {tx, ty}}` the
+single exemption.
+
+**The driver emits NO input inside a transport window**, and the runner
+asserts none: input is refused there, and a span one consumer honours while
+the other drops it is the asymmetry this format exists to prevent. The
+harness reads `saw_input_refused` **two-sidedly** against the model — a
+transport means refusal is REQUIRED (its absence means no fall fired and the
+fixture proves nothing), and no transport means refusal is a defect. Derived
+from the model rather than from a new tape field, deliberately: a field
+would need `Bot.as` to validate it, i.e. an AS3 change, to state something
+both sides can already work out.
+
+⚠ **Two things that THROW rather than being transcribed.** A teleporter
+trigger overlapping the player during fall-out ticks, or a second pit edge
+while a fall is pending — same doctrine as the two-teleporter throw. And a
+**trigger tile that is also a pit tile is not an exit**: walking into it
+fires the teleporter (from the position the previous tick left) and the pit
+edge (from `getState`, inside the same tick's player update), and which one
+wins is FlashPunk bookkeeping. Exactly two exist in the extract — L43's exit
+to L37 and L100's to L101 — and the R1 route planner refuses both by name,
+which is why the walk leaves L43 by its stairs instead.
+
+⚠ **The `nearestToPoint` TIE is real and it bit on the first recording.**
+Walking UP from a tile centre put the probe point on y = 32.0 exactly,
+equidistant between two tiles of level 83. **The GAME fell into the pit**,
+because `nearestToPoint` walks FlashPunk's entity list and `World.addUpdate`
+PREPENDS — its order is the REVERSE of the extract's. Per the standing rule
+the fixture MOVED (approach from the west, so x crosses the boundary between
+samples). `levelWorld` now REPORTS a tie and
+`playerPhysicsV2.resolveTerrainState` throws only when the two candidates
+behave DIFFERENTLY under the tape's own relaxation — judging it in geometry
+alone failed `hazard-boot-pit`, a committed R0 recording that ties Dirt
+against a coerced pit.
+
 ## Roles: the census stopped being all-or-nothing
 
 v2's `buildLevelWorld` threw on ANY entity tag it did not carry, which was
@@ -661,6 +781,19 @@ model's geometry disagreed with the game's is never reported). Same for a
 transition nobody asked for, a leg that starts in the wrong level, and an
 `exit` whose teleporter does not go where the next leg says.
 
+**Two obstacle kinds R1 added, and they point in opposite directions.**
+`contacts` is an EXEMPTION: a leg starts where the previous leg's exit
+landed, and an arrival is not a position the planner chose — four of the
+extract's teleporters arrive on top of another trigger and at least one
+arrives inside a priced avoid volume, so a leg DECLARES what it starts
+inside and the planner exempts exactly that, with an undeclared or a stale
+declaration both named failures. `extraVolumes` is the opposite: a volume
+the STATIC census cannot know about because the ROUTE created it. R1 has
+exactly one, cited — the L38 arrival presses a `buttonroom` whose
+`room="37"` write arms L37's FallRock, and `FallRock`'s constructor reads
+that flag, so on the return visit the rock is built already fallen and its
+update writes the player's `y` directly.
+
 **Cross-level legs**: a task is `[{ level, targets: [...], exit?: {x, y} }]`.
 The driver walks the targets, then walks INTO the teleporter whose oel
 coordinates are `exit`, and asserts it arrived in the next leg's `level`.
@@ -735,6 +868,17 @@ notes from using it here:
 Each replay prints its WebGPU adapter, so a run that silently fell back to
 software rendering is visible rather than just mysteriously slow.
 
+⚠ **And it writes a LIVE PROGRESS SIDECAR**, `C:\playwright\progress-<tape>.json`,
+rewritten every second with the whole of `botStatus`. `execFileSync` with a
+pipe shows nothing until the process exits, so on a 14,963-tick tape "still
+running" and "done" were the only two observable states and a frozen game
+was indistinguishable from a slow one for the entire deadline. The whole
+status rather than a chosen subset, because a stall is diagnosed from the
+fields nobody thought to forward — that file found the inventory ceremony in
+ninety seconds. A driver that FAILS now also re-raises with its own
+`REPLAY_FAIL` line and the last 25 page log lines attached, instead of
+`execFileSync`'s bare command line.
+
 **Every tape gets a fresh page.** `botReset` forgets the tape but cannot
 rewind the *game* — the player stays where the last tape left them, so a
 second tape on the same page starts from the wrong position and records
@@ -747,10 +891,30 @@ the rest (inject → SWFRecomp → `build_wasm_avm2.sh` → `deploy_wasm_avm2.sh
 → copy into `frontend/modules/flashPanel/wasm/`, which is gitignored).
 Budget roughly ten minutes and **batch AS3 edits** — that cost is the entire
 reason `Bot.as` is a generic interpreter. Neither v2 slice needed one; R0
-needed exactly one batch, of six changes.
+needed exactly one batch, of six changes; **R1 needed exactly one LINE.**
+
+⚠ **R1's line, and why it is not a crutch.** `Inventory.update` sets
+`firstUse` as soon as `items.length >= 2` (`addItemsFromSave` adds one entry
+each for sword/fire/wand/spear) and `extended` as soon as `canSwim ||
+hasFeather`, and BOTH setters raise a tutorial that holds
+`Game.freezeObjects` until a key is pressed. Frozen frames are DEAD frames,
+so the tape's tick counter skips them and **no span in any tape can ever
+reach the release** — and `autoAdvance` cannot help, because it gates on
+`Game.talking` and a `Help` is not an NPC. A walk that collects two items
+deadlocks forever: tick stuck, `dead_frames` climbing, `cutscene` and `menu`
+both false. R0 never saw it because `grant-sword-room` grants exactly one
+item. `Bot.botStart` now sets `Inventory.help = false`, which gates both
+ceremonies at their source — and **the game's own debug warps set exactly
+that line** (`Player.as:1875`, `:1897`, `:1919`, `:1941`, `:1963`), for
+exactly this reason. It suppresses a UI tutorial and nothing else, and R3's
+real collection needs it too, so no later rung has to retire it.
 
 Traps, all real: the `.o` cache keys on mtime not flags, so `FRESH=1` after
-any define change; use `run-SWFRecomp.sh` rather than raw SWFRecomp or risk
+any define change — ⚠ **and R1 learned that an ABC change is enough**: the
+incremental build of its one-line batch produced a page that died with
+`heap_alloc(711162896) failed - out of memory` before the bot callbacks ever
+registered, which looks exactly like a harness problem rather than a build
+one. `FRESH=1` fixed it, at the cost of a full cold emcc pass; use `run-SWFRecomp.sh` rather than raw SWFRecomp or risk
 a WSL2 VM `bad_alloc`; `deploy_wasm_avm2.sh` stages the *teleport* SWF as
 `test.swf` unless you pass `DEMO_SWF`; mxmlc strips `trace()` without
 `-omit-trace-statements=false`; and mxmlc's flow analysis does not credit
@@ -811,8 +975,8 @@ would close it.
 
 | property | what a mutation kills | why no fixture sees it | the witness that would |
 |---|---|---|---|
-| sticky terrain state | 5 hand-derived | levels 0 and 94 have COMPLETE tile coverage (400/400 cells), so the strict-intersect gate can never fail along any route in them | a reachable **hole** cell: 27 levels have holes, 6 have one 4-adjacent to plain floor (99, 101, 28, 83, 102, 110). Nearest is level 83, a 5×5 room reached 0 → 12 → 83; mid-hole the 4-wide probe sits at x ∈ [6,10) while the nearest walkable tile starts at 16 |
-| the teleporter latch | 4 hand-derived | neither arrival in `transition-west-return` lands on a trigger — which is exactly *why* the round trip is two crossings and not a bounce | one of the **four** arrivals in the extract that land ON a trigger: L11(32,0)→L3 onto L3(96,128)→11; L97(32,16)→L37 onto L37(576,144)→97; L88(192,0)→L87 onto L87(432,304)→88; L107(0,48)→L102 onto L102(224,96)→107 |
+| sticky terrain state (STILL OPEN at R1) | 5 hand-derived | levels 0 and 94 have COMPLETE tile coverage (400/400 cells), so the strict-intersect gate can never fail along any route in them | a reachable **hole** cell: 27 levels have holes, 6 have one 4-adjacent to plain floor (99, 101, 28, 83, 102, 110). Nearest is level 83, a 5×5 room reached 0 → 12 → 83; mid-hole the 4-wide probe sits at x ∈ [6,10) while the nearest walkable tile starts at 16 |
+| ~~the teleporter latch~~ **CLOSED at R1** | 4 hand-derived | — | ✅ **closed by `r1-walk-1-sword-shield`**: the route walks `10 → 11 → 3` and L11's (32,0) teleporter arrives at (104,136), inside L3's own (96,128) trigger back to L11. The recording shows the game staying in level 3 while the box is still in the volume; without the pre-armed latch it would bounce straight back on the next tick |
 | terrain state reset on a swap | 1 hand-derived | both arrival tiles walk at 0.8 either way | any transition whose two sides differ in speed |
 | the driver's teleporter policy | 2 hand-derived | the only trigger a committed route approaches is the leg's own exit, which is exempt | a target on the far side of a trigger tile, forcing a detour |
 | the executor's hit-throw | nothing | it is a **diagnostic, not a detector** — running it together with the wrong statue rect turns the SAME 5 tests red as the statue mutation alone | nothing; keep it anyway, because the alternative (a silent re-plan) is how a model defect becomes a green run |
@@ -829,6 +993,23 @@ day.
 Until one of those witnesses lands, the only stratum that can see
 stickiness is the synthetic hand-built grids in `playerPhysicsV2.test.js`,
 and those share the generator's assumptions. Saying so is the point.
+
+**R1 closed the latch row and left the stickiness row open, deliberately.**
+The latch witness cost nothing — it is a leg of the route, and the arrival
+that lands on L3's own trigger is one of the four the table names. The
+stickiness witness still needs its own tape: L83's hole-adjacent tiles are
+Dirt on three rows and the stairs row's neighbours are solid Cliff, so the
+obvious mid-hole position lands on an equidistant `nearestToPoint` TIE —
+and R1's slice 1 already learned what a tie costs (the game fell in the pit
+and the model did not). Left for the rung that has a reason to be in that
+room with a speed-differing previous state, rather than forced now.
+
+R1 also added two vacuities of its own, both bounded and both recorded:
+**the leg-scoped contact exemption** (a leg that walked off its start volume
+and back onto it would not be caught here — the game's own re-fired trigger
+is the backstop), and **`extraVolumes` on any leg but L37's return** (the
+one priced effect is the only one the route causes, so the machinery is
+exercised by exactly one entry).
 
 **⚠ R0 OPENED BOTH DOORS, and the first two rows are now cheap rather than
 blocked.** v2 recorded that the stickiness and latch witnesses were shut by
@@ -848,58 +1029,196 @@ Recorded so a later slice does not re-derive it: at the v2 rung **cross-level
 walking from level 0 reached exactly ONE other level, 94**. At R0 the
 relaxed walk reaches level 10 in four hops.
 
-## What's next: R1, and what still blocks it
+## R1: the relaxed full walk, as built
+
+**One driver-planned playthrough of the real recompiled Seedling that
+reaches the room of every non-combat item it can reach with no enemy
+modelled.** 79 legs, 47 distinct levels, 4 pit falls, 1 pass-through,
+14,963 live ticks — recorded from the game and committed as seven fixtures.
+
+### The route is data, and it is committed
+
+`fixtures/r1-route.json` holds the leg list; `r1Walk.js` holds the two
+things that are DECISIONS rather than derivations (which rooms in which
+order, and where the walk breaks into recordable pieces);
+`scripts/procgen/plan-seedling-r1-route.mjs` is how the route was arrived
+at, and gates nothing. From the commit on, the ROUTE is the artifact —
+exactly as `--record` is how an oracle recording was arrived at.
+
+⚠ **LEVELS ARE NOT NODES.** The search runs over `(level, component)` pairs,
+where a component is a 4-connected blob of tiles whose CENTRE the player box
+fits at with every R1 obstacle priced. Two levels on the route have their
+exits in different components (L65's columns 3 and 7 are pit in every row;
+L60/L63 likewise), so a level-graph BFS picks a trigger that arrives in the
+wrong half and the walk is stranded with nothing wrong in the code — and
+L84's arrival has no walkable NEIGHBOUR to step into. This is the maze bot's
+`(region, arrival-exit)` lesson arriving on the real map. The first cut of
+the search kept node ids in an edge record whose label ALSO carried a `to`
+field, and the spread that merged them overwrote the node with the
+destination LEVEL; every later lookup compared `"10:0"` against `10` and
+found nothing, which presents as "NO PATH" from a graph that has one.
+
+Item order — a 2-opt tour under two real constraints: **wand before the
+Witch** (L12 grants `darksword` under `hasWand`, the one true item→item
+dependency, honoured only because L43 is reachable without L12), and **the
+fall-only cluster last**. The router also REFUSED the `12 ⇓ 21` shortcut to
+the torch on its own (L12's pit sits inside the 14-tile `pull` cluster) and
+took three more hops instead.
+
+### Forced contacts: what the game has already put the player inside
+
+A leg starts where the previous leg's exit LANDED, and an arrival is not a
+position the planner chose. **Two on this route, and the planner refused
+both outright until it learned to say so:**
+
+- **L3's own return trigger.** The walk goes `10 → 11 → 3` and L11's (32,0)
+  teleporter arrives at (104,136), inside L3's (96,128) trigger back to L11.
+  The game suppresses the re-fire through the latch `arriveIn` already
+  pre-arms; A\* just refused its own start tile.
+- **L38's arrival `buttonroom`.** `in(L38) = {37}`, and L37's only exit to
+  it arrives exactly on top of `buttonroom {tset:4, tag:5, flip:1,
+  room:37}` — a room-entry puzzle the level was built around.
+
+So a leg may DECLARE the contacts it starts inside, by key, and the planner
+exempts exactly those for that leg. **Undeclared is a throw, and so is
+declared-but-absent**: the first is a route that silently changed under a
+geometry or pricing edit, the second re-permits something the route no
+longer touches. The exemption is LEG-scoped rather than start-tile-scoped,
+which is a bounded over-permission recorded rather than hidden — what
+catches a leg that walked off its start volume and back onto it is the game
+itself, whose re-fired trigger the executor throws on.
+
+### ⚠ The one place this walk changes the game's persistence
+
+The L38 press is unavoidable and it is not decorative. It does
+`Game.setPersistence(t=4, false, room=37)`, and `FallRock`'s CONSTRUCTOR
+reads `Game.checkPersistence(tag)` — so on the RETURN visit L37's
+`fallrock {tset:0, tag:4}` at (288,32) is built already fallen, `type =
+"Solid"`, `_active = true`. **Slice 3 priced `fallrock` as an evidenced
+INERT precisely because a fresh boot leaves every persistence flag true, and
+this route is what makes that premise stop holding** — in one level, for one
+rock.
+
+Under `noclip` the solidity is irrelevant. The position write is not:
+`FallRock.update` does `if (activate && y >= fallTo) { p = collide("Player",
+x, y); if (p) p.y = ... }`, a direct write outside both `noclip` and
+`noDamage` — the eighth member of R0 §8.7a's family. So the rock's 16×16
+hitbox becomes an `extraVolumes` entry for every leg after the press, the
+route is planned AROUND it rather than found to miss it, and a test asserts
+the emitted tape's own observations clear the rect. The alternative was to
+route around L38 entirely, which costs the wand AND darksword. A persistence
+NAMESPACE is R3's job; this rung needs one flag, cited.
+
+⚠⚠ **And the first cut of that pricing was SILENTLY DEAD.** The rect was
+written as `{x, y, w, h}`, and `rectsOverlap` reads `right`/`bottom` — so
+every comparison was `288 < undefined`, false, always. The planner said
+clear, the executor's detector said clear, and the test asserting the walk
+never stands in the rock said clear: all three shared the broken rect, so
+all three were green *by construction*. **The GAME found it**, 2389 ticks
+into a segment — its `y` stopped and reversed where `FallRock.update` writes
+`p.y`, while the model's kept falling, and the differential surfaced it as a
+grant that never fired. `levelWorld.rect()` is exported now, `assertRect`
+throws on anything else, and `synthesizeLegs` checks every `extraVolumes`
+entry up front. It is the silent-watcher family in a new costume: a negative
+assertion with no positive control beside it.
+
+### The six segments, and why ENDS-MEET is the load-bearing part
+
+The full walk is ~11 minutes of real-GPU replay, over the iteration
+threshold, so the roster splits into six segment tapes at ARRIVAL-TICK
+boundaries and the headline is kept as the rung-close recording:
+
+| # | tape | ticks | legs | ends at |
+|---|---|---|---|---|
+| 1 | `r1-walk-1-sword-shield` | 910 | 13 | arrival in L0 |
+| 2 | `r1-walk-2-feather-conch` | 3548 | 17 | arrival in L44 |
+| 3 | `r1-walk-3-wand-darksword` | 2844 | 11 | arrival in L12 |
+| 4 | `r1-walk-4-torch` | 1145 | 11 | arrival in L12 |
+| 5 | `r1-walk-5-spear-health` | 4361 | 18 | arrival in L12 |
+| 6 | `r1-walk-6-cluster` | 2155 | 14 | arrival in L82 |
+| — | `r1-walk-full` | **14963** | 79 | the headline |
+
+⚠ **Every boundary is a level ARRIVAL, deliberately.** An arrival's position
+is exactly the constructor half-tile with zero velocity and a fresh terrain
+state, which is precisely what a parameterised boot reproduces — so
+`boot: {level, x, y}` matches `atBootPosition()` and the chain claim is
+EXACT rather than approximate. A boundary mid-level could not be booted into
+at all: the `Game` constructor takes ints and adds 8. A segment INHERITS its
+items through a single `{level: <boot level>, items: [...]}` entry, which
+fires on tick 0 because that is when the boot level is first observed.
+
+**Six tapes that each start wherever they like and each end wherever they
+get to are six unrelated walks**, so the chain is asserted in the strongest
+available form: the headline tape is the six segment tapes **tick for
+tick**, and the segments' tick counts sum to exactly the headline's. Every
+weaker phrasing (same level, same position, same items, same component)
+follows from that, and a deleted or reordered segment cannot pass. The GAME
+side asserts the same four ways over its own drained observations — level,
+position, item set and `hitsMax`, the last on its own because `health` ADDS
+and is the one a re-grant would silently inflate.
+
+`r1Acceptance.js` holds those assertions as pure functions over what the
+game reported, and `r1Acceptance.test.js` mutates each input in turn — an
+item dropped, a blocked item leaked, a grant unfired, a level never entered,
+a crossing lost, a ceremony fired, a boundary moved, a segment deleted,
+`hitsMax` inflated — and asserts the corresponding check goes red. A claim
+that only ever runs against a passing twenty-minute replay is a claim nobody
+has ever seen fail, and a check that has never failed is indistinguishable
+from one that cannot.
+
+### The claim, and the blocked list
+
+**10 item booleans true + `hitsMax == 4` — eleven of the thirteen
+non-combat items**: sword, darksword, shield, darkshield, wand, conch,
+feather, spear, darksuit, torch, and health's `hitsMax`. Read from
+`botStatus`, the game's own report, never from the JS mirror.
+
+**Blocked: `fire`, `ghostsword`, `firewand` — and all three have ONE
+cause**, which is what makes the ladder's remaining distance a single
+number:
+
+| item | where | what blocks it | rung |
+|---|---|---|---|
+| `ghostsword` | L106 | L98's **IceTurret**: `attackRange = 128` covers its whole 240×208 entrance room; the arrival is 64 px away and the only door into Dungeon 8 is 80 px. `IceTurretBlast` → `Player.freeze(90)`, outside both `noclip` and `noDamage` | **R5** |
+| `firewand` | L109 | past it, L108 is a **darksuit-gated LavaTrap ferry**: 153 lethal pit tiles, no `control` block, four disconnected islands, and the only crossings are three traps spaced *exactly* `chompRange` apart that haul the player over the gaps and release rather than kill when `hasDarkSuit` | **R5** |
+| `fire` | L32 | combat-gated by construction: `BobBoss` only exists once L32's `fallrocklarge` falls, and only its third form drops `Fire` | **R5** |
+| the ending | L112 → Seed | FinalBoss, the Watcher's Seed spawn, both ending branches | **R6** |
+
+**Every remaining blocker is ENEMY-shaped.** R1 takes the map as far as it
+goes without modelling an enemy, R5 takes the rest, R6 takes the ending —
+and no rung in between has to invent a crutch it would then have to retire.
+⚠ `Bot.noEnemyEffects` was DECLINED on the record rather than deferred by
+accident: it buys exactly one item for one AS3 batch, one pipeline run, a
+re-run of the flags-off byte-inertness gate, ~14 more levels and ~4k more
+ticks on every recording — and R5 has to retire it afterwards.
+
+## What's next: R2, and what still blocks it
 
 The ladder is subtractive, so "what's next" is a list of what still blocks a
-full walk rather than a list of features. R0 built the machinery; **R1 is the
-relaxed full walk** — one driver-planned task covering the item rooms,
-crossing the level graph on real triggers, avoiding every side-effect volume,
-with the terminal assertion read from `botStatus.items`.
+full walk rather than a list of features. R1 walked the whole reachable map
+with three crutches on; **R2 takes the first one away — `noclip` off, solids
+back.**
 
-Two findings from R0's recon change what R1 can CLAIM, and both are sized:
-
-**1. `Bot.noDamage` does not make enemies harmless** (the seven classes
-listed under "Roles" above). Their levels are not incidental — `lavatrap` is
-in L108, `whirlpool` in L46/L50, `iceturret` in L40/L98, `fallrock` in
-L37/L39/L43, `shieldlocknorm` in L12/L20, `pull` in L12 — all on the
-shortest live-trigger chains to the item rooms. The designed answer is the
-proximity-hazard role plus avoid volumes (each of those tags is currently
-`'unpriced'`, so the builder throws until someone transcribes the volume);
-whether that is always routable is R1's question, and the alternative is a
-`Bot.noEnemyEffects` flag, which is a fourth crutch nobody has ruled.
-
-**2. With hazards off, 2 of the 13 item rooms are UNREACHABLE, because pits
-are not only a hazard — they are a TRANSPORT primitive.** Over the trigger
-graph alone (teleporters + stairs, ignoring geometry), 100 of 116 levels are
-reachable from level 0, and **L74 (`darkshield`) and L79 (`darksuit`) are
-not among them**: every inbound trigger to each comes from L73/L75/L78/L80,
-none of which is trigger-reachable either. Add the 12 `control` blocks' pit
-edges and reachability goes to **114 of 116**, and both rooms open. So R1's
-terminal assertion is **11 of 13**, with darkshield and darksuit named on the
-blocked list until R4 re-arms pits — which is exactly the honest "what still
-blocks us" metric the ladder is measured in, not a defect.
-
-Other sizing worth carrying:
-
-- **`fire` is combat-gated and its boss is in level 32.** No `.oel` carries
-  a `bobboss1/2/3` tag, so `Game.as:2068-2070` never fires; the only live
-  construction is `Scenery/FallRockLarge.as:117`, from the fallrocklarge with
-  `bossrock && thirdboss` — which is L32's. `BobBoss.as:194` drops `Fire`
-  when the third type dies. That makes 14/14 an R5 claim.
-- **`darksword` is the one true item→item dependency**: the Witch (L12)
-  grants it from `doneTalking()` under `hasWand && !hasDarkSword`, so it is a
-  KEY PRESS, not a proximity event, and R1 must order the wand before it.
-- **R2 still owes the collider table.** 82 of 116 levels build for the cheap
-  roles; only 11 build for `blocking`. `lightalpha` is no longer among the
-  blockers — it was never an entity — but the ~93 tags with no blocking
-  classification are, and pixelmask EXTRACTION becomes real work there
-  (the walk will cross buildings and cliffsides, so the bounding-rect
-  over-throw stops being an option).
-
-Also true, and unpleasant to discover later: **49 of level 0's 152
-box-fitting tiles are unreachable from the spawn** — the north field behind
-the building, the east corridor, the west sliver. Any coverage claim about
-"level 0" should say which 103 tiles it means.
+- **R2 owes the collider table.** 82 of 116 levels build for the cheap
+  roles and 115 with R1's priced volumes, but only 11 build for `blocking`.
+  `lightalpha` is not among the blockers — it was never an entity — but the
+  ~93 tags with no blocking classification are, and **pixelmask EXTRACTION
+  becomes real work** there: the walk crosses buildings and cliffsides, so
+  the bounding-rect over-throw stops being an option.
+- **R3 inherits two debts R1 took on deliberately.** `bosstotem` prices to
+  an evidenced INERT only because R0's grants are property writes, so L43's
+  Wand pickup is never removed and `classCount(Wand) <= 0` never fires —
+  real collection changes that. And **a Bridge is a Solid** only because R1
+  presses no attack key: `bridgeOpeningTimer` is decremented in exactly one
+  place, `Player.as:1098`, under `t == "Spear"`. Both classifications are
+  true of a rung, not of the game.
+- **`darksword` remains the one true item→item dependency**: the Witch
+  (L12) grants it from `doneTalking()` under `hasWand && !hasDarkSword`, so
+  at R3 it stops being a grant and becomes a KEY PRESS.
+- Also true, and unpleasant to discover later: **49 of level 0's 152
+  box-fitting tiles are unreachable from the spawn** — the north field
+  behind the building, the east corridor, the west sliver. Any coverage
+  claim about "level 0" should say which 103 tiles it means.
 
 ## Two transcription lessons worth generalising
 

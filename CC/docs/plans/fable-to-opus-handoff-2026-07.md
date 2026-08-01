@@ -2868,28 +2868,52 @@ Claude, accepted by user). Full detail in `region-atlas-plan.md` Phase 8.**
   outlive it: the auto-advance key is **X (88), not V** (`keys[6]` is the
   second `Key.X`), and `noHazards` had to ship as a SET because R4 re-arms
   hazards one at a time.
-- **QUEUE NEXT for this arc: R1, the relaxed full walk with PITS LIVE —
-  kickoff ready: `NewDocs/plans/seedling-bot-r1-opus-kickoff.md`** (Fable
-  design session 2026-07-31; → `CC/docs/plans/` at implementation start).
-  Both §8.7 findings are resolved into the design: (1) **pits are NOT
-  coerced** (user ruling) — R1 tapes declare the 4-name `noHazards` set,
-  pit transport is modelled exactly in JS (fall edge → live-tick lerp →
-  deferred swap to `control.fallthrough` → fall-from-ceiling arrival;
-  bounce landings THROW), pit tiles are planner-forbidden floor except as
-  a named `exit: {pit: …}` leg, and the fall-only underworld cluster
-  (verified fall-only in the VANILLA game too — no trigger enters or
-  leaves it) is walked via 83→84→85→71→ring→71→82, so the terminal claim
-  is **13 of 13** items with only `fire` blocked (R5); (2) the seven
-  position-writer classes get priced avoid volumes per walked level, with
-  one named STOP checkpoint — both ring approaches to L79 (darksuit) cross
-  lavatrap levels (78/80) whose tongues drag-and-kill outside
-  `Player.hit()`, and if no corridor clears the discs the
-  guard-vs-blocked-list trade goes to the user, not the implementer. Pit
-  oracles are recorded FIRST (param boot makes them trivial); the headline
-  full-walk tape gates the rung, segment tapes permitted for iteration
-  (ends-meet asserted). Opportunistic non-gating extras: the L83
-  stickiness witness and an L11→L3 arrival-on-trigger latch witness, both
-  closing recorded v2 vacuities.
+- **R1 SHIPPED 2026-07-31 — THE RUNG IS CLOSED**
+  (`CC/docs/plans/seedling-bot-r1-opus-kickoff.md`: §8 the recon, §9 the
+  scope ruling, §10 the watch page, §11 the walk as built). **One
+  driver-planned playthrough of the real recompiled game: 79 legs, 47
+  levels, 4 pit falls, 1 pass-through, 14,963 ticks, recorded EXACT — and
+  the terminal claim, read from the game's own `botStatus`, is 10 item
+  booleans true + `hitsMax == 4`, ELEVEN of the thirteen non-combat
+  items.** All 23 fixtures exact (31,476 ticks); the 16 pre-R1 ones
+  byte-identical against the new build. Blocked and published: `fire`,
+  `ghostsword`, `firewand` — all three ENEMY-shaped, all three R5, so the
+  ladder's remaining distance is a single number.
+  ⚠ **Four findings the design did not predict**, each recorded with its
+  citation: routing had to become a `(level, component)` search *in code*
+  (the scratch emitter's `NO PATH` was a spread overwriting the node id
+  with the destination LEVEL); **two arrivals cannot be stood on and must
+  be DECLARED** (L3's own return trigger — which closes the v2 latch
+  vacuity for free — and L38's arrival `buttonroom`); **that buttonroom
+  press CHANGES PERSISTENCE**, arming L37's FallRock and invalidating slice
+  3's "fallrock is inert" premise in one level (priced as an
+  `extraVolumes` entry from the causing leg, because the alternative was
+  losing wand AND darksword); and a **second trigger standing on a pit
+  tile** (L43's exit, beside the known L100) which re-routed the walk out
+  of L43 by its stairs.
+  ⛔ **And ONE AS3 line was required after all — ruled by the user.**
+  `Inventory.update` raises a tutorial that holds `Game.freezeObjects` as
+  soon as `items.length >= 2` or `canSwim || hasFeather`; frozen frames are
+  DEAD frames, so no tape span can ever reach the release and
+  `Bot.autoAdvance` gates on `Game.talking`, which a `Help` never sets. R0
+  never saw it because its fixture grants exactly ONE item. `Bot.botStart`
+  now sets `Inventory.help = false` — the same line the game's OWN debug
+  warps set (`Player.as:1875` +4 more). UI only, and R3 needs it too, so
+  nothing has to retire it. ⚠ Its pipeline run also proved that an
+  ABC-only change is enough to need `FRESH=1`: the incremental build died
+  with `heap_alloc(711162896) failed` before the callbacks ever registered.
+  ✅ The **latch** witness is CLOSED with oracle evidence (9 ticks standing
+  in L3's own trigger without it firing); ❌ the **stickiness** witness is
+  left open, deliberately — the obvious mid-hole position in L83 lands on
+  an equidistant `nearestToPoint` tie, and slice 1 already learned what a
+  tie costs.
+- **QUEUE NEXT for this arc: R2 — solids come back (`noclip` off).** The
+  bill is the blocking-role classification for the ~93 unclassified tags in
+  walked levels plus **pixelmask EXTRACTION** (the walk crosses buildings
+  and cliffsides, so the bounding-rect over-throw stops being an option).
+  Two debts R1 took on deliberately land at R3: `bosstotem` prices inert
+  only because grants are property writes, and **a Bridge is Solid only
+  because R1 presses no attack key**.
 
 ## 6. Everything else (unchanged queues)
 

@@ -149,9 +149,13 @@ exact differential green on everything modelled, (d) updates the honest
   acceptance signal every later rung asserts against. (The full win flags
   can only fire at the ladder's top; R0 proves the plumbing: readout fields
   present, false at boot, item flags flip on grant.)
-- **R1 — the relaxed full walk, PITS LIVE.** Slices 0–3 SHIPPED
-  2026-07-31 (kickoff `seedling-bot-r1-opus-kickoff.md`, §8 the recon and §9
-  the scope ruling; slice 4, the walk itself, is the remaining work). Pits
+- **R1 — the relaxed full walk, PITS LIVE. ✅ COMPLETE 2026-07-31**
+  (kickoff `seedling-bot-r1-opus-kickoff.md`: §8 the recon, §9 the scope
+  ruling, §11 the walk as built). **The claim: 10 item booleans true +
+  `hitsMax == 4` — ELEVEN of the thirteen non-combat items — read from the
+  game's own `botStatus` over a 79-leg, 47-level, 14,963-tick walk with four
+  pit falls, recorded EXACT.** Blocked and published: `fire`, `ghostsword`,
+  `firewand`, all three enemy-shaped, all three R5. Pits
   are NOT coerced: R1 tapes declare
   `noHazards: ["water","lava","ice","waterfall"]` and **pit transport is
   modelled exactly** — edge inside the state setter on a RAW change while
@@ -187,8 +191,29 @@ exact differential green on everything modelled, (d) updates the honest
   timer** — `bridgeOpeningTimer` only ever decrements from a SPEAR hit
   (`Player.as:1098`), so on a bot boot a Bridge is permanently Solid, which
   unblocked levels 61 and 63 and with them ghostspear and health.
-  Relaxed census 82 → **115 of 116**; the 46-level route is validated
-  through the shipped planner.
+  Relaxed census 82 → **115 of 116**.
+  ⚠ **Four more findings from the walk itself (slice 4), none predicted:**
+  (a) routing had to become a `(level, component)` search for real — the
+  scratch emitter's `NO PATH` was a spread overwriting the node id with the
+  destination LEVEL; (b) **two arrivals cannot be stood on and must be
+  DECLARED** (L3's own return trigger — the v2 latch witness, free — and
+  L38's arrival `buttonroom`), with an undeclared or stale declaration a
+  named failure; (c) **that buttonroom press changes PERSISTENCE**, arming
+  L37's FallRock, which invalidates slice 3's "fallrock is inert" premise in
+  one level and is priced as an `extraVolumes` entry from the causing leg
+  onward; (d) a **second trigger standing on a pit tile** (L43's exit to
+  L37, beside the known L100), refused by name, which re-routed the walk out
+  of L43 by its stairs.
+  ⛔ **And ONE AS3 line was required after all, ruled by the user:**
+  `Inventory.update` raises a tutorial that holds `Game.freezeObjects` as
+  soon as `items.length >= 2` or `canSwim || hasFeather` — frozen frames are
+  dead frames, so no tape span can ever reach the release, and
+  `Bot.autoAdvance` gates on `Game.talking`, which a `Help` never sets. R0
+  never saw it because its fixture grants exactly one item. `Bot.botStart`
+  now sets `Inventory.help = false`, gating both ceremonies at their source,
+  exactly as the game's OWN debug warps do (`Player.as:1875` and four more).
+  It suppresses a UI tutorial and nothing else, and R3 needs it too, so
+  unlike `noEnemyEffects` it is not a crutch a later rung must retire.
 - **R2 — solids come back** (noclip off). v2's collision machinery re-armed
   everywhere the walk goes; cost = a blocking-role classification for tags
   in walked levels + **pixelmask extraction** (MIT; the loud-throw seam

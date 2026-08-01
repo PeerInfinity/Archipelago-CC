@@ -428,8 +428,9 @@ descent ends on a pit, no bounce, and the NEXT tick's `getState` fires the
 pit edge again. **L84 is a pass-through — a leg with zero targets, zero
 input spans and an automatic exit.** That is not an optimisation, it is the
 only way through: the level has no walkable component adjacent to the
-arrival at all, so a router that demanded one reports darkshield and
-darksuit unreachable (this is exactly what the first cut of the slice-0
+arrival at all (it has walkable tiles elsewhere — the claim is about the
+arrival, and a first cut of the slice-4 test over-stated it), so a router
+that demanded one reports darkshield and darksuit unreachable (this is exactly what the first cut of the slice-0
 router did, and the fix is what opened the cluster).
 
 So one fall costs 20 (fall-out) + ~19 dead frames + 41 (descent) + 39
@@ -863,3 +864,254 @@ needs a fresh page, the same rule the recording harness follows), and
 reloading keeps both sides on one code path instead of giving the JS side a
 teardown nobody tests. With no `?tape=` at all the page is a launcher rather
 than an error.
+
+## 11. Slice 4 — THE WALK, AS BUILT (2026-07-31)
+
+Seven tapes, 14,963 live ticks, all EXACT against the game on the first
+recording. What follows is the record; §3.3–§3.5 was the brief and is
+corrected here where it was wrong.
+
+### 11.1 The leg generator's bug was the one §3.3 warned about, in miniature
+
+`legs.mjs` (the slice-0 scratch emitter) reported `NO PATH to L10 from 0:0`
+against a graph that plainly had one. The cause: `add(a, b, label)` did
+`E.get(a).push({to: b, ...label})` while the label ALSO carried a `to` — the
+destination LEVEL — so the spread overwrote the node id. Every later lookup
+compared `"10:0"` against `10` and found nothing.
+
+That is exactly the `(level, component)` confusion §3.3 predicted, arriving
+through a JavaScript spread rather than through a design decision. The
+committed planner names destinations `toLevel`, keeps node ids as strings,
+and says so at the top of the file.
+
+### 11.2 Two arrivals the planner could not stand on, and the exemption
+
+Fourteen edges in the whole extract are dropped for an unsteppable arrival
+(`--drops` prints them). Two are on the R1 route:
+
+- **L11 → L3 arrives ON L3's own return trigger** — §8.8 predicted this one,
+  and it is the v2 latch witness arriving for free.
+- **L37 → L38 arrives ON L38's `buttonroom` (144,288)** — nobody predicted
+  this one, and it is not decorative (§11.3).
+
+The answer is `leg.contacts`: a leg DECLARES what it starts inside, the
+planner exempts exactly those, and both an undeclared contact and a stale
+declaration are named failures. ⚠ The exemption is LEG-scoped, not
+start-tile-scoped — a bounded over-permission, recorded rather than hidden,
+whose backstop is the game (a re-entered trigger fires and the executor
+throws on the crossing nobody asked for).
+
+Note the slice-0 recon's own component search had an 8-neighbour FALLBACK in
+`compAt` that silently absorbed both cases, which is why §8.7's route looked
+clean. The fallback was the bug that hid the finding; the shipped planner has
+no fallback and reports instead.
+
+### 11.3 ⚠ THE ROUTE CHANGES THE GAME'S PERSISTENCE, and §8.4's pricing premise with it
+
+`in(L38) = {37}` and its only inbound arrival lands on
+`buttonroom {tset:4, tag:5, flip:1, room:37}`. `ButtonRoom.update` collides
+`hitables` (which includes `"Player"`) on the arrival tick, and the setter
+runs `Game.setPersistence(t=4, false, room=37)`.
+
+L37 holds `fallrock {tset:0, tag:4}` at (288,32), and **`FallRock`'s
+CONSTRUCTOR reads `Game.checkPersistence(tag)`** — so on the return visit the
+rock is built already fallen, `type = "Solid"`, `_active = true`, and its
+update writes `p.y` for anything overlapping its 16×16 hitbox. §8.4 priced
+`fallrock` as an evidenced INERT *because a fresh boot leaves every
+persistence flag true*; this route is what makes that premise stop holding.
+
+Handled as `extraVolumes`: an `{level, fromLeg, rect, why}` entry the planner
+avoids from the causing leg onward and the executor detects, declared in
+`r1Walk.R1_PERSISTENCE_EFFECTS` with the citation, bound to the leg that
+makes the contact (a route that stopped making it is a loud failure), and
+asserted directly against the emitted tape's own observations. The
+alternative was routing around L38, which costs the wand AND darksword.
+
+### 11.3a ⚠⚠ AND THE PRICING WAS SILENTLY DEAD — the GAME found it
+
+§11.3's `extraVolumes` entry was written as `{x: 288, y: 32, w: 16, h: 16}`.
+`levelWorld.rectsOverlap` reads **`right` and `bottom`**, which that literal
+does not have, so every comparison was `288 < undefined` — **false, always.**
+The planner reported the route clear. The executor's detector reported the
+route clear. The vitest case asserting "the walk never stands in the armed
+FallRock" reported the route clear. All three used the same broken rect, so
+all three were green *by construction*, and the fix was priced, documented,
+committed — and doing nothing.
+
+**The oracle is what noticed**, 2389 ticks into `r1-walk-3-wand-darksword`:
+the game's `y` stopped increasing and REVERSED — 30.52, 30.34, 30.16, 29.99
+— exactly where `FallRock.update` writes `p.y = y - originY + p.originY -
+p.height` = 29, while the model's kept falling: 30.95, 32.29, 33.45, 34.44.
+The differential reported it as a grant that never fired (the walk never
+reached L12, so `darksword` never granted) and as `hasDarkSword: game false,
+expected true`.
+
+Three things to carry:
+
+1. **A rect literal is not a rect.** `levelWorld.rect(x, y, w, h)` is now
+   exported, `assertRect` throws on anything else, and `synthesizeLegs`
+   asserts every `extraVolumes[i].rect` up front. The route file stores
+   `{x, y, w, h}` as DATA and `r1Walk.driverVolume` rebuilds the shape,
+   because the shape is the module's to own and not JSON's.
+2. **This is the silent-watcher family** (`feedback_silent_watcher_vacuous_negative`),
+   in a new costume: not a watcher that failed to subscribe, but a
+   predicate that could not return true. The tell is the same — a negative
+   assertion with no positive control beside it.
+3. **The differential paid for itself.** No amount of reading the JS would
+   have found this; the model was self-consistently wrong. What found it was
+   the real game disagreeing about one pixel of `y`.
+
+Re-recorded: only `r1-walk-3-wand-darksword` (2616 → 2844 ticks, the detour
+around the rock) and the headline (14,735 → 14,963) changed, exactly as the
+route predicted — segments 1, 2, 4, 5 and 6 contain no L37 leg and their
+recordings stood.
+
+### 11.4 A second trigger-on-a-pit, and the route re-planned itself around it
+
+§8.1 recorded L100's exit teleporter standing on a pit tile as an off-route
+curiosity. There is a second, and it was ON the route: **L43's exit to L37 at
+(144,64) sits on pit tile (9,4)**. Walking into it fires the trigger and the
+pit edge in the same tick, which the physics throws on by doctrine.
+
+Both are now refused by name in the planner and in `findExit`, and the tour
+left L43 by its `stairsup` to L40 instead — three extra legs, found by the
+search rather than by a person. Exactly two exist in the extract.
+
+### 11.5 ⛔ THE CEREMONY THAT STOPPED THE WALK DEAD — and the user's ruling
+
+The first recording attempt froze: `tick` stuck at 2, `dead_frames` climbing
+at ~10/s, `cutscene` all false, `menu` false, `receive_input` true, position
+frozen 2.2 px from the boot spawn.
+
+`Inventory.update` sets `firstUse` as soon as `items.length >= 2`
+(`addItemsFromSave` adds one entry each for sword/fire/wand/spear) and sets
+`extended` as soon as `canSwim || hasFeather`; **both setters raise a
+tutorial that holds `Game.freezeObjects` until a key is pressed.** Frozen
+frames are DEAD frames, so the tape's tick counter skips them and no span can
+ever reach the release — and `Bot.autoAdvance` cannot help, because it gates
+on `Game.talking` and a `Help` is not an NPC. R0 never saw it because
+`grant-sword-room` grants exactly ONE item.
+
+This is why an 11-item walk cannot be recorded with zero AS3, and the trade
+went to the user per §1.4. **RULED (user, 2026-07-31): the one-line fix.**
+`Bot.botStart` sets `Inventory.help = false`, which gates BOTH ceremonies at
+their source (`if (!firstUse && _fu && help)`). The evidence it is the
+intended lever: **the game's own debug warps set exactly that line, at
+`Player.as:1875, :1897, :1919, :1941 and :1963`, for exactly this reason.**
+It suppresses a UI tutorial and nothing else — no physics, no collision, no
+damage, no hazard — so unlike `noEnemyEffects` it is not a crutch a later
+rung must retire; R3's real collection needs it too.
+
+Cost paid: one AS3 batch, one pipeline run, and the flags-off byte-inertness
+gate re-run over all sixteen pre-R1 fixtures (byte-identical: none of them
+grants two weapon-shaped items, and none grants conch or feather).
+
+⚠ **And the first pipeline run of that batch produced a BROKEN build** —
+`heap_alloc(711162896) failed - out of memory` before the bot callbacks ever
+registered. That is the documented stale-`.o` failure mode (the cache keys on
+mtime, not on content), and `FRESH=1` fixed it. Worth carrying: the symptom
+is not a wrong answer, it is a page that never comes up, which looks exactly
+like a harness problem.
+
+### 11.6 Two harness gaps the long tapes exposed
+
+- **`execFileSync` with a pipe shows nothing until the process exits.** An
+  R1 walk is ten minutes, so "still running" and "done" were the only two
+  observable states, and a frozen game was indistinguishable from a slow one
+  for the whole deadline. The Windows driver now rewrites a **progress
+  sidecar** every second — the WHOLE `botStatus`, not a chosen subset,
+  because a stall is diagnosed from the fields nobody thought to forward.
+  That file is what found §11.5 in ninety seconds.
+- **A driver failure lost its own diagnosis.** `execFileSync` throws with
+  only the command line in `message`, discarding the `REPLAY_FAIL` line and
+  the last 25 page log lines the driver had already printed. Re-raised with
+  its output attached now — which is how the `heap_alloc` failure was read.
+
+### 11.7 The numbers, and the gates
+
+- **79 legs, 47 distinct levels, 4 pit falls, 1 pass-through, 78 crossings,
+  11 grants, 14,963 live ticks.**
+- Six segments at arrival-tick boundaries (legs 12, 28, 38, 48, 65), tick
+  counts 910 / 3548 / 2844 / 1145 / 4361 / 2155 — **summing to exactly the
+  headline's 14,963**, because a segment's terminal leg contributes no ticks.
+- ENDS-MEET is asserted as a PARTITION: the headline tape is the six segment
+  tapes tick for tick. Every weaker phrasing follows, and a deleted or
+  reordered segment cannot pass.
+- The acceptance leg moved into `r1Acceptance.js` as pure functions over the
+  game's own reports, so `r1Acceptance.test.js` can mutate each input and
+  assert the matching check goes red — twenty cases, in CI, in a second.
+  A claim that only ever runs against a passing twenty-minute replay is a
+  claim nobody has ever seen fail.
+
+## 12. Slice 5 — THE WITNESSES (2026-07-31)
+
+§3.7 offered two, "only if the route makes them cheap". One was free and is
+closed; the other is not cheap and is explicitly NOT taken.
+
+### 12.1 ✅ THE LATCH WITNESS IS CLOSED, and it cost nothing
+
+§8.8 predicted it and the route delivered it: the tour walks `10 → 11 → 3`,
+and L11's (32,0) teleporter arrives at **(104,136), inside L3's own (96,128)
+trigger back to L11**. It needed no extra tape — only the planner exemption
+§11.2 had to add anyway.
+
+From the committed oracle recording of `r1-walk-1-sword-shield`: the
+`11 → 3` crossing is at **tick 429**, the arrival observation is exactly
+`(104,136)` in level 3, the trigger there is live (`tag -1`, not
+deactivated) and targets level 11 — and the game stays in level 3 for
+**nine consecutive ticks while the player's box is still inside the volume**
+before the walk carries it clear.
+
+That is the v2 vacuity table's second row, closed by a recording rather than
+by a hand-derived case. Without `arriveIn` pre-arming the latch the way
+`Game`'s own first frame does, the trigger would fire on the very next tick
+and the recording would show level 11 again — so the nine ticks are the
+witness, and the test asserts the count is greater than one so a route that
+stepped clear immediately could not pass vacuously.
+
+### 12.2 ❌ THE STICKINESS WITNESS IS NOT TAKEN, and why
+
+Not "forgotten" and not "implied" — declined, with a reason.
+
+The witness needs the player standing mid-hole in L83 with a PREVIOUS
+terrain state whose speed differs from the nearest walkable tile's, or the
+observation stream cannot tell a sticky resolver from a non-sticky one.
+L83's hole-adjacent tiles are Dirt on three rows and the stairs row's
+neighbours are solid Cliff, so **the obvious mid-hole position lands on an
+equidistant `nearestToPoint` tie** — and slice 1 already paid for a tie
+once: the game fell into the pit and the model did not, because
+`World.addUpdate` PREPENDS and its list order is the reverse of the
+extract's.
+
+So the honest options were a hand-authored tape that has to thread a tie the
+module deliberately does not transcribe, or leaving the row open. It stays
+**open** in the doc's vacuity table, with its witness still named, for a rung
+that has a reason to be in that room. R1 gained one live pass through L83 on
+the route (leg 63), which is a step toward it, not the witness itself.
+
+### 12.3 A third witness the route produced without being asked
+
+`r1-walk-6-cluster` records **L84 as a pass-through**: two crossings one
+after the other, the level-84 observations in between, and NO input span
+dispatched between them — the player never touches free floor, because L84
+has no walkable component at all (asserted directly: not one of its tile
+centres is steppable under the R1 plan). `pit-fall-chain-85` proved the
+mechanic on a hand-authored tape; this proves the ROUTE depends on it.
+
+## 13. Slice 6 — CLOSE-OUT (2026-07-31)
+
+- `docs/json/developer/procgen/seedling-bot.md` is now the **v1 + v2 + R0 +
+  R1** doc: a new "The pit transport (R1)" section (the edge's polarity, the
+  20-tick knife-edge, the geometric decay, the always-83-px descent, the
+  INVERTED landing rule, the pass-through, forbidden floor, the two throws,
+  the tie), an "R1: the relaxed full walk, as built" section (the committed
+  route, forced contacts, the persistence effect, the six segments and the
+  partition claim, the blocked-list table), a rewritten "What's next: R2",
+  the driver section's two new obstacle kinds, the AS3 line and the
+  `FRESH=1` symptom, the progress sidecar, and a vacuity table with the
+  latch row CLOSED and two new bounded entries of R1's own.
+- `CC/docs/plans/seedling-bot-subtractive-plan.md`: R1 marked ✅ COMPLETE
+  with the real claim and the four unpredicted findings.
+- `CC/docs/plans/fable-to-opus-handoff-2026-07.md` §5c: R1 closed, R2 queued
+  with its bill.
+- Memory topic `project_seedling_bot_r1.md` rewritten as the closed record.
