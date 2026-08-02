@@ -1751,3 +1751,206 @@ driver test now.
 5. Segments + headline + `r4Acceptance`, with the byte budget measured at
    synthesis.
 6. Docs + close-out.
+
+## 14. §12.3 items 4, 5 and 6 — THE RUNG, AS BUILT (2026-08-02)
+
+The route, the walk and the close-out. §13.8 said item 4 was gated on
+§13.5's ruling and nothing else; that was true, and the route then
+overturned two of this document's own rulings and shrank the claim by an
+item. Both are recorded here in full, because §11.4 and §9.1 are wrong as
+written and a reader who trusts them will re-derive a route that does not
+exist.
+
+### 14.1 ✅ WHAT SHIPPED
+
+**The claim: FIVE items real-collected — four booleans plus `hitsMax == 4`
+asserted as a POSITIVE — over a 41-leg / 25-level / 10,052-tick walk**, with
+`grants` EMPTY, `saw_auto_advance == 1`, and the persistence flags that are
+off equal to exactly eight declared + TWO EARNED + the five the pickups
+wrote. `noHazards` is `["water", "waterfall"]`: **lava and ice are LIVE**.
+
+Six segments partition it exactly: `641 + 1473 + 1964 + 1354 + 1571 + 3049
+= 10,052`.
+
+⛔ **THE BYTE BUDGET IS UNDER: 1,130 spans / 79.1 KB against 1,800 / 90 KB**
+— 88% of the byte ceiling, 63% of the span one. §11.4 projected ~95 KB. What
+closed the gap is the route being SHORTER than the one that was priced (no
+L71 cluster, no D7 tail), not the plan being denser. **None of the decision
+tree fired**: no span diet, no chunk-parse AS3 batch, no claim-shape change,
+and the batch was never reopened.
+
+### 14.2 ⛔ RULING OVERTURNED (1): `noHazards: ["water"]` IS NOT AN R4 STATE
+
+§9 armed waterfall on two true sentences — `checkDrowning` tests `eff == 1`
+only, so a waterfall cannot DROWN you; and the R3 walk really does stand on
+one for 71 ticks. Both hold. Neither says a waterfall can be **CLIMBED**:
+
+```
+Player.as:1537   if (onWaterfall && (!hasFeather || v.y >= 0))
+                     v.y += waterfallAcceleration;      // 0.8
+```
+
+and the water move speed is below 0.8. The shipped physics, asked directly:
+a featherless player entering L0's band from below and holding UP for 400
+ticks reaches **y = 125.98 and stalls** — fourteen pixels short of clearing
+it. With the feather, y = 66.73.
+
+And **L0's band is the only connection between the half the game boots in
+and the half everything else is behind.** A directed flood of L0 from the
+boot with climbs forbidden reaches 670 of 782 cells and NONE of the north
+doors; deleting those doors from the whole-map graph leaves **12 nodes
+across 11 levels and exactly one item, the sword.** The feather — the item
+that exempts the push — is on the far side of the band that needs it.
+
+⇒ R4's terminal hazard state is `["water", "waterfall"]`. Waterfall retires
+at the rung that reaches L89 another way (`L90@48,96`, `L91@16,144`, both
+behind R5 openers). `climbsArmedWaterfall` is built and pinned anyway — the
+ladder's only DIRECTED edge rule, refusing an upward STEP rather than a
+cell, because refusing the cell is what cut the map to twelve nodes.
+
+### 14.3 ⛔ RULING OVERTURNED (2): THE CLAIM IS FIVE, AND `darkshield` LEFT
+
+§11.4 ruled six: sword, feather, torch, spear, darkshield, health. Armed lava
+makes that geometrically impossible. **There are two TERMINAL branches and a
+walk can only end in one:**
+
+- `darkshield` (L74) is inside `{71:0, 72, 73, 74, 75, 80}` — strongly
+  connected, entered ONLY through L71's button lock, which a player can walk
+  through NORTHWARD alone (the button is south of it; there is none on the
+  far side). R3 left that set two ways and armed lava closes both: the pit at
+  (12,13) to L82 sits in L71's **component 3**, which no reachable component
+  touches, and the east door — reachable, since the walk would be holding the
+  shield that opens its lock — leads to an L76 ↔ L77 pair that stops at
+  L78's lava. **SWEPT**: every single clear the map offers for those eleven
+  levels, one at a time and all at once. NONE escapes.
+- `health` (L68) is terminal for its own reason. The walk enters L63 at
+  component 1 and pushes the block E onto (8,6)'s pit, which destroys it and
+  merges component 3 in; the return from L65 arrives INTO component 3 with
+  the block **rebuilt** (a `PushableBlockFire` has no persistence at all),
+  and from there the only legal push is WEST — which lands on floor and opens
+  nothing. Pitch 8, 4 and 2 agree.
+
+⇒ The rung takes the one it is FOR. `darkshield` joins `R4_BLOCKED` with the
+sweep attached, and it retires with `darksuit` — what that cluster needs is
+not a new item but an EXIT, which is L79 through L78's lava.
+
+### 14.4 The route, as planned and confirmed
+
+`scripts/procgen/plan-seedling-r4-route.mjs` → `fixtures/r4-route.json`.
+
+Itinerary: sword(L10) → feather(L89) → torch(L30) → **spear(L64) + the
+EQUIP** → bosskey(L67, one push) → L63 (one push) → L65 (three pushes) →
+L68 (the boss lock, then health).
+
+⚠ **The script does NOT search for the chains.** The stances are declared in
+`r4Walk.R4_PUSH_CHAINS` from the sweep the game confirmed; what the planner
+does is CONFIRM them with the shipped geometry — every stance standable in
+the map the previous push left, every setup point standable and axis-aligned
+BEHIND the stance along the push direction. Three stances moved from the
+sweep's own, all for the same reason: **the sweep scored RECTS and a push is
+approached from behind.**
+
+- L65 push 1 went a tile west, to (196,132). The standable band at y = 132
+  ends at x = 204 — (13,8) is a pit and the node margin reaches it from 205 —
+  so a W push at the band's east edge has nowhere to be approached from.
+- L65 push 2's setup is **six pixels south**, which is the whole band:
+  (10,11) is a pit and the margin reaches it from y = 171.
+- L67's declared setup (196,116) is a pit; it is (188,116).
+
+### 14.5 The clear bill: EIGHT, and it moves in BOTH directions
+
+```
+OFF (3)   L12 tag 7, L12 tag 12    the route no longer threads either corridor
+          L71 tag 0                the walk never enters L71 at all
+ON  (1)   L68 tag 1                magicallock@16,32 — it SHARES a cell with
+                                   the bosslock the walk opens by hand
+```
+
+⚠ `L12 tag 12` is a keyType-4 bosslock and the walk CARRIES that key from
+L67 onward. It is neither declared nor earned: the route has no errand at
+(32,864), and its probe row is an avoid volume the planner routes around
+*because* the walk holds the key.
+
+⚠⚠ **THE ONE-OUT SWEEP LIED THREE TIMES**, exactly as R3's did. Twice
+because it asks a REACHABILITY GRAPH and the claim is a WALK — `L3 tag 0`
+(the driver's own A* finds no path across L3 at any clearance) and `L11 tag
+0` (the CONTROLLER's overshoot clips a chest). And once for a reason of its
+own: it reported `L68 tag 1` NOT REQUIRED, because the health approach inside
+a level the walk itself changed is computed by a helper that asks *"is there
+a standable cell beside the pickup"* rather than *"can the stance walk to
+it"*. The planner asks the second question explicitly now. All eight
+survivors were then re-swept: every one required.
+
+### 14.6 The mechanics the route needed and §13 did not have
+
+- **`BossLock`** — a THIRD way a responder opens (`activators.KEY_RESPONDERS`).
+  Opens on tick **80**: sixty of `keyTimer` — the frame that latches
+  `activate` is also the first decrement — then `alpha -= 0.05` on a bare
+  `Number` with NO `Image.alpha` clamp, so the twentieth subtraction lands on
+  -3.19e-16. A model that clamped answers 81.
+  ⚠ `activate` LATCHES **by absence**: `tSet` is forced to -1 so no
+  `Button.activateAll` republishes it and nothing else writes it, which makes
+  `update`'s `else if (type != normType)` re-close arm unreachable after the
+  first touch. §11.4's "it RE-CLOSES on leave" is a reading of `Lock`, not of
+  `BossLock`. **The leg holds the stance for the whole window anyway** — an
+  absence is the one source reading a recording cannot confirm.
+  ⚠ **The stance is a PIXEL**: the probe row is y = 49, the box is
+  `[y-2, y+3)` and the lock's cell is `[32,48)`, so the stance needs
+  `50 <= y <= 51` and the pitch-8 lattice offers 44 and 52. The leg pins
+  against the lock's south face and the WALL stops it.
+- **The `line` volume shape** — `World.collideLine` at precision 1 is
+  `while (x < toX)` with the end-point check skipped, so the probes are ten
+  INTEGER points and not the 10x1 rect enclosing them. A rect moved R3's
+  committed L12 route (it passes `bosslock@416,240`'s row at y = 259.38 with
+  the row at 257).
+- **A CONDITIONAL avoid volume**, the only one. `BossLock.update`'s gate is
+  `p && Player.hasKey(keyType)`, so the row is inert to a walk holding no
+  key. `shieldlock`'s docblock calls a mid-route volume "a policy the planner
+  has no vocabulary for"; `planNow` threads the run's key set now, so it
+  does. **All 21 committed R1/R2/R3 tapes re-synthesize byte-identically.**
+- **`keylock` and `equip` leg verbs.** The equip costs NO TICKS and is a leg
+  target rather than a tape field because the headline COLLECTS the spear —
+  the tick at which the slot becomes selectable is a fact synthesis produces.
+  `equips` is emitted as a MEASUREMENT.
+- **The face nudge.** The controller overshoots and corrects back, so the
+  last tick with velocity points the wrong way even when the whole approach
+  was along the push axis (L67: (180.045, 116.519) facing E). One tap, then
+  friction, then a re-check of the landing position against the geometry.
+- **`to: null`** — three of the five pushes destroy the block, and the wait
+  for one is 60 ticks: 32 of glide and an eleven-frame fade.
+- **A TEXTLESS ceremony** begins and ends inside one `advance`, so
+  `inCeremony` is never observed true and `runCollect` walked on top of the
+  boss key for its whole 1,500-tick budget.
+- **The final segment must not strip its last leg.** Three rungs never saw
+  it because R1/R2/R3 all ended on an empty tail hop.
+
+### 14.7 The ledger, and the pickup that writes nothing
+
+`BossKey.removed()` is `Player.hasKeySet(keyType, true)` and does NOT call
+`super.removed()` — the one pickup on the ladder that turns no flag off.
+**Six pickups are taken and five flags go off.** Asserted on its own, because
+an exact-set claim pins that and a count papers over it.
+
+Its `text` is set only under `keyType == 0` (`BossKey.as:24-27`), so L67's
+keyType-4 key is the second textless ceremony on the ladder.
+
+⚠ A key is NOT inheritable through a boot grant — there is no channel for
+`Main.SAVE_FILE.data.hasKey` — so the key and the lock it opens are in the
+SAME segment and `assertRouteWellFormed` refuses a boundary between them.
+
+### 14.8 ⚠ WHAT THE RUNG DID NOT DO
+
+- **The BRIDGE has no live witness.** `bridges.js`, the `spear: {bridge}`
+  verb and the 64 px on-screen policy all ship and are pinned against
+  `probe-seedling-bridge.mjs`'s measured numbers — and the R4 route does not
+  need L63's bridge at all: the push opens the L65 door directly on the way
+  down, and there is no return trip. §12.3's expectation of "bridge legs" is
+  not realized, and manufacturing a detour for it would have been ~1,400
+  ticks of tape spent on a mechanic the unit tests already pin.
+- **`runTouch` gains no new recording.** R3 collected `darkshield` in order
+  to touch L71's shield lock, which was the only way to `darksuit`; with the
+  suit off the claim that touch has no errand.
+- **`L12 tag 12` was not EARNED.** The walk holds its key and the lock is 80
+  ticks of standing away; the route has no errand there and a detour to open
+  a lock with nothing behind it would be ~1,400 ticks for one ledger entry.
+  R5 retires it by going through it.

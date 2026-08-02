@@ -342,12 +342,72 @@ exact differential green on everything modelled, (d) updates the honest
   enemy-free rooms (a hit consumes RNG, spawns attracting coins, and
   decrements `totalEnemies()` — silently opening kill-locks); every
   opened-blocker claim is a PAIR (the l71 pattern).
-- **R4 — the remaining hazards come back** (pits already live since R1),
-  per hazard, cheapest first: lava (darksuit), ice (friction rewrite), and
-  **water/swim LAST** (user ruling 2026-07-31: leave sound for last — the
-  sound-stub recon and any sound-coupled modelling wait until water is the
-  rung being armed). An item whose only real route needs a hazard not yet
-  re-armed stays reported until its rung.
+- **R4 — the remaining hazards come back. ✅ COMPLETE 2026-08-02**
+  (kickoff `seedling-bot-r4-opus-kickoff.md`; as-built:
+  `docs/json/developer/procgen/seedling-bot.md` §"R4: the hazards come
+  back"). **The claim: FIVE items real-collected — four booleans plus
+  `hitsMax == 4` asserted as a POSITIVE — over a 41-leg, 25-level,
+  10,052-tick walk, with `grants` EMPTY, `saw_auto_advance == 1`, and the
+  persistence flags that are off equal to exactly eight declared + TWO
+  EARNED + the five the pickups wrote.** `noHazards` is
+  `["water", "waterfall"]`: **lava and ice are LIVE.**
+  The plan above said "per hazard, cheapest first"; what shipped is lava and
+  ice together, because ice costs nothing at all — floor policy included —
+  and the two coercions that remain turned out to be ONE CHAIN rather than
+  two steps (below).
+  ⚠ **THE HEADLINE IS `health`, and it overturns §8.5's permanent seal.**
+  Three rungs called L68 sealed on one sentence — *"but a push is not a
+  removal"* — and a push onto a PIT is a removal
+  (`PushableBlockFire.input()`). `recon-seedling-pushes.mjs` swept MULTI-push
+  states at pitch 8, 4 and 2 and found three levels breach; the game
+  confirmed the L65 chain to the pixel over 440 ticks
+  (`probe-seedling-l65-breach.mjs`, a pair one field apart). The route
+  realizes all three: L67 one push → the keyType-4 boss key, L63 one push →
+  the L65 door, L65 three pushes (including **UP at reach 2** and **reach 2
+  through a solid**, neither ever exercised before) → health's own room.
+  ⛔ **Two of this plan's own rulings were overturned BY THE ROUTE**, both
+  made from true premises:
+  (a) **`noHazards: ["water"]` is not an R4 state either.** A waterfall
+  cannot DROWN you and the R3 walk really stands on one — and neither says it
+  can be CLIMBED. `Player.input()` adds `v.y += 0.8` unless
+  `hasFeather && v.y < 0`, and the shipped physics says a featherless player
+  holding UP on level 0's band for 400 ticks reaches y = 125.98 and stalls,
+  fourteen pixels short. That band is the ONLY connection between the half
+  the game boots in and the half everything else is behind: delete its doors
+  and the reachable map is 12 nodes and one item. So waterfall needs the
+  feather and the feather is behind the waterfall — the same circular shape
+  water has, one item along.
+  (b) **The claim is FIVE items, not six: `darkshield` LEFT.** Armed lava
+  leaves two TERMINAL branches and a walk can only end in one. L74 sits
+  inside `{71:0, 72, 73, 74, 75, 80}`, entered only through L71's button lock
+  (walkable northward alone), and armed lava closes both of R3's exits —
+  swept over every single clear the map offers for those eleven levels, one
+  at a time and all at once. L68 is terminal for its own reason: the return
+  into L63 arrives on the far side of a block the level rebuilt. The rung
+  takes the one it is FOR.
+  ✅ New mechanics: the **BossLock** — a THIRD way a responder opens (a
+  save-file key and a one-pixel `collideLine` row; opens on tick **80**, and
+  `activate` latches BY ABSENCE); the **`keylock`** and **`equip`** leg
+  verbs; **`climbsArmedWaterfall`**, the ladder's only DIRECTED edge rule;
+  and the census's THIRD volume shape, a `line` of integer probes — a rect
+  enclosing them moved R3's committed L12 route.
+  ⚠ Two EARNED clears, not one, and the second is not an errand:
+  `lightpole@176,120` is toggled by the third L65 push, which no stance in
+  that row can avoid. Its ledger entry derives from the pole's FINAL STATE,
+  never from a count of hits.
+  ⚠ **The byte budget, MEASURED at synthesis: 1,130 spans / 79.1 KB against
+  1,800 / 90 KB.** §11.4 priced the rung at ~95 KB; the route is shorter than
+  the one that was priced. No span diet, no chunk-parse AS3 batch, no
+  claim-shape change.
+  ⚠ **The BRIDGE mechanic ships with unit witnesses and no live one.** The
+  R4 route does not need L63's bridge — the push opens the door directly and
+  there is no return trip — so `bridges.js` and the `spear: {bridge}` verb
+  are pinned against `probe-seedling-bridge.mjs`'s measured numbers and by no
+  recording. Said here rather than left to be discovered.
+  ⚠ **The two remaining coercions are ONE CHAIN**: BobBoss → fire → the
+  conch → `canSwim` → water; and the feather (behind the waterfall) is what
+  waterfall needs. One combat encounter retires three items and one
+  coercion. Sound stays last, as ruled.
 - **R5 — enemies come back** (noDamage off). Avoid where possible (their
   paths are LFSR-deterministic per boot), kill where required; **fire** from
   BobBoss joins the item set → 14/14.
