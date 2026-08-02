@@ -346,15 +346,43 @@ export function r4ChainFindings(route, specs, replayed) {
             held === inheritedProps,
             `ended holding [${held}]; ${nextName}'s boot grant names [${inheritedProps}]`);
 
-        // ⚠ AND THE SELECTION IS INHERITED TOO, which R3 had no equivalent
+        // ⚠ AND THE SELECTION IS CHAINED TOO, which R3 had no equivalent
         // of. A segment that boots holding the spear and does NOT select it
         // presses X as a sword — the Tile arm never runs, the reach-2 push
         // through a wall never happens, and every check but this one is
         // green.
-        const wantSlot = next.relax.equips.length > 0 ? R4_EQUIP_SLOT : 0;
-        add(`R4 chain: ${nextName} boots with Main.primary at slot ${wantSlot}`,
+        //
+        // ⚠⚠ THE EXPECTATION IS DERIVED FROM THE ROUTE, NOT FROM THE SPEC'S
+        // `relax.equips`, and the difference is a segment that equips
+        // MID-RUN. `botStatus.primary` is the value at the END of a replay
+        // and the spec's declaration is only its TICK-0 inheritance, so for
+        // the segment that COLLECTS the spear the two disagree by
+        // construction: it declares `[]` and it ends at slot 1. Reading the
+        // declaration here made this check green for the wrong reason on
+        // five segments and unable to go red on the sixth — and the fixture
+        // in `r4Acceptance.test.js` derived its own `primary` the same way,
+        // so the mutation table could not see it either. A verifier sharing
+        // the generator's assumption, one field wide.
+        //
+        // The ROUTE knows: a segment ends selected iff the equip's leg is
+        // one it covers.
+        const equipLeg = (route.equips ?? [])[0]?.leg;
+        const wantSlot = equipLeg !== undefined && equipLeg <= next.lastLeg
+            ? R4_EQUIP_SLOT : 0;
+        add(`R4 chain: ${nextName} ends with Main.primary at slot ${wantSlot}`,
             there.status.primary === wantSlot,
-            `${nextName} reports primary=${there.status.primary}; its tape declares `
+            `${nextName} reports primary=${there.status.primary}; the equip is on leg `
+            + `${equipLeg} and this segment covers legs ${next.firstLeg}-${next.lastLeg}`);
+
+        // ...and the INHERITANCE half, which is a claim about the TAPE
+        // rather than about the replay: a segment booting after the equip
+        // must declare it at tick 0, because there is no other way for a
+        // selection to survive a segment boundary.
+        const declaresBootEquip = (next.relax.equips ?? [])
+            .some((e) => e.t === 0 && e.slot === R4_EQUIP_SLOT);
+        add(`R4 chain: ${nextName} declares its inherited selection at tick 0`,
+            next.inheritsEquip === declaresBootEquip,
+            `inheritsEquip=${next.inheritsEquip}, tape declares `
             + `${JSON.stringify(next.relax.equips)}`);
 
         // ...and the slot ARRAY the game built, against what the items imply.

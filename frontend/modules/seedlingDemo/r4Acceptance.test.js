@@ -312,7 +312,14 @@ describe('the chain, and the PARTITION', () => {
                     items: itemsOf(held),
                     grants: spec.inherited.length > 0
                         ? [{ t: 0, level: spec.boot.level, items: [...spec.inherited] }] : [],
-                    primary: spec.inheritsEquip ? R4_EQUIP_SLOT : 0,
+                    // ⚠ THE END-OF-REPLAY value, which is NOT the spec's
+                    // tick-0 declaration: the segment that COLLECTS the
+                    // spear declares `[]` and ends at slot 1. Deriving this
+                    // from `spec.inheritsEquip` was the bug — the fixture
+                    // and the check shared it, so the check was green for
+                    // the wrong reason on five segments and could not go red
+                    // on the sixth.
+                    primary: ROUTE.equips[0].leg <= spec.lastLeg ? R4_EQUIP_SLOT : 0,
                     inventory_slots: inventorySlotsFor(mirror),
                 },
                 stream: {
@@ -365,8 +372,30 @@ describe('the chain, and the PARTITION', () => {
         const withEquip = R4_SEGMENT_NAMES.findIndex((n, i) => SPECS[i].inheritsEquip);
         expect(withEquip).toBeGreaterThan(0);
         replayed.get(R4_SEGMENT_NAMES[withEquip]).status.primary = 0;
-        expect(red(r4ChainFindings(ROUTE, SPECS, replayed), 'boots with Main.primary'))
+        expect(red(r4ChainFindings(ROUTE, SPECS, replayed), 'ends with Main.primary'))
             .toHaveLength(1);
+    });
+
+    it('⛔ ...and the segment that COLLECTS the spear must end selected too', () => {
+        // The one the declaration-derived check could not see: it declares
+        // `equips: []` because it inherits nothing, and it ends at slot 1
+        // because it equipped mid-run. A check reading the declaration was
+        // asserting 0 for a segment the game reports 1 for.
+        const replayed = goodReplay();
+        const collecting = SPECS.findIndex((s, i) => i < R4_SEGMENT_NAMES.length
+            && !s.inheritsEquip && ROUTE.equips[0].leg <= s.lastLeg);
+        expect(collecting).toBeGreaterThanOrEqual(0);
+        replayed.get(R4_SEGMENT_NAMES[collecting]).status.primary = 0;
+        expect(red(r4ChainFindings(ROUTE, SPECS, replayed), 'ends with Main.primary'))
+            .toHaveLength(1);
+    });
+
+    it('a segment that inherits the spear must DECLARE the selection at tick 0', () => {
+        const replayed = goodReplay();
+        const specs = SPECS.map((s) => (s.inheritsEquip
+            ? { ...s, relax: { ...s.relax, equips: [] } } : s));
+        expect(red(r4ChainFindings(ROUTE, specs, replayed),
+            'declares its inherited selection')).toHaveLength(1);
     });
 
     it('goes red when the slot ARRAY disagrees with the grant', () => {
