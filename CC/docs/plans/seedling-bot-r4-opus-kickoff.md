@@ -1954,3 +1954,12 @@ SAME segment and `assertRouteWellFormed` refuses a boundary between them.
   ticks of standing away; the route has no errand there and a detour to open
   a lock with nothing behind it would be ~1,400 ticks for one ledger entry.
   R5 retires it by going through it.
+- **L59's "grenade press-audit corridor" needed no audit.** §10.2 priced
+  `grenade@112,112` as a POLICY seal on the row-8 corridor to L67. It is a
+  `pressEnemy`, not a proximity hazard — `buildLevelWorld(59)` reports NO
+  priced volumes at all — and `Grenade.hit()` is one of the three empty
+  overrides, so under `noDamage` it costs nothing. The route threads the
+  corridor three times (legs 25, 33, 35) with no special handling and makes
+  no press in L59, so the audit has nothing to say about it. The seal was
+  real when it was written and it was a seal about R3's policy, not about
+  the level.
