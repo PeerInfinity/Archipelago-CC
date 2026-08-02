@@ -1668,6 +1668,16 @@ What the census says the toggle costs, per instance:
   cleared**, plus the pole being LIT from the ctor on the next visit
   (`activate = !Game.checkPersistence(tag)`).
 
+And what the clear COSTS on the next visit is already answered: the census
+declares `lightpole: 'cosmetic'` (`PERSISTENCE_RESPONSE`), because
+`type = "LightPole"` is in no solids list — so banking the clear and
+rebuilding L65 with it changes no geometry. ⚠ The one wrinkle to transcribe
+if the arm is modelled: it is a TOGGLE, not a latch (`hit()` flips
+`activate` behind a 25-tick `hitsTimer`, and `set activate` writes
+`setPersistence(tag, !activate)`), so a SECOND hit puts the flag back and
+the ledger has to derive the entry from the final state rather than counting
+hits.
+
 ⇒ **This is the route slice's ruling to make**, with three priced options:
 (a) MODEL the `LightPole` arm — the toggle becomes an earned clear the
 ledger accounts for, ~20 lines and zero AS3, and the arithmetic above says
@@ -1690,7 +1700,24 @@ with X while holding the sword, and the rect reaches two TREES — whose
 where `moveTypes` IS consulted and no press satisfies it) are inert with
 citations; everything else is refused with its cost.
 
-### 13.7 What is next, unchanged from §12.3
+### 13.7 The `spear` leg verb, and tape v4 on the driver's side
+
+The fourth leg verb: `spear: {bridge: {tx, ty}}` or
+`spear: {block: {x, y}, to: {tx, ty}}`, plus a DECLARED `facing`. It checks
+the stance, the facing (against `Player.direction`, because a wall-pinned
+player is the one case where holding a key and having a velocity differ),
+the POSITIVE CONTROL before the negative, and the effect from the run's own
+state after the wait. The audit stays in `levelRun.applyThrust`, where the
+rect and the world are; the verb's job is INTENT, and the two ledgers —
+`spears` (what was aimed at) and `presses` (what the rect contained) — are
+the two halves of that.
+
+`buildTape` learned version 4: `equips` is v3 plus the slot, refused without
+it. Without an equip every press is a sword slash and the Tile arm never
+runs — a green tape that opens nothing, which is the pair's shut arm and a
+driver test now.
+
+### 13.8 What is next, unchanged from §12.3
 
 4. The R4 route re-plan under `noHazards: ["water"]`, **now gated on
    §13.5's ruling**.
