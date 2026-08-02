@@ -1028,6 +1028,11 @@ describe('roles: the census is per-role, and wider than the fixture levels', () 
         // lifts the FULL census from 11 to 82 — the same 82 the cheap roles
         // reached at R0, and not a coincidence: what is left out is the 34
         // levels holding one of the tags no route has needed yet.
+        //
+        // R4's L67 probes priced `arrowtrap` for blocking (it is not — no
+        // setHitbox, no type, in no solids list), which is the whole reason
+        // 82 became 85: L67 and two other arrowtrap-only holdouts now build
+        // under the full census.
         let full = 0;
         let relaxed = 0;
         for (const level of atlas.levels) {
@@ -1036,7 +1041,7 @@ describe('roles: the census is per-role, and wider than the fixture levels', () 
                 /* an unpriced hazard or a Bridge tile */
             }
         }
-        expect(full).toBe(82);
+        expect(full).toBe(85);
         expect(relaxed).toBe(115);
     });
 

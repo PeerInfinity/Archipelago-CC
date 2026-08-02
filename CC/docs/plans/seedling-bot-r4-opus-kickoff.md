@@ -1268,3 +1268,73 @@ Option 2 is recommended: both probes are cheap, both convert source
 readings into oracle answers (the arc's standing doctrine), and the L65
 probe retires a known unknown that would otherwise resurface at every
 later rung that touches D6.
+
+### 10.6 The probes, as run (2026-08-02) — and what the oracle said
+
+⚖ The user delegated §10.5 ("I'll trust your judgement", 2026-08-02);
+**option 2 was adopted: the probes decide.** Three ran; two facts confirmed,
+two new mechanics discovered, one question left for an instrument.
+
+**Probe A — `probe-seedling-l65.mjs`: the push is REAL and §8.5's direction
+table is ORACLE-CONFIRMED at reach 1.** Boot beside L65's block at (12,8),
+baseline stop against its east face at x = 194.05, one spear press facing W,
+re-advance: the player stops at x = 178.10 — **Δx = 15.95, exactly one tile
+west, the facing direction** — with the friction-creep signature at the new
+face (178.70 → 178.00, the `collide-up-rock` shape). The `_relative` path
+works precisely as §8.5 read it.
+
+**Probe B, first attempt — `probe-seedling-l59-l67.mjs` (SUPERSEDED, kept
+for its trace).** Routed on a hand-drawn tile grid that was wrong in three
+cells; its scripted verdict misread the trace. What the trace settled
+anyway:
+
+- **(10,6) and (10,7) are PITS, and the lightpole merely STANDS on (10,6)**
+  — the "does LightPole block" route question is moot (the census claim
+  stands on source: no setHitbox, type in no solids list).
+- ⛔ **`die()` is an IN-PLACE RESPAWN at the current world's boot tile with
+  ~18 dead frames, after which THE TAPE KEEPS RUNNING.** Three deaths
+  across two runs, every respawn at exactly the boot cell (184, 120). No
+  rung models this: the floor policy must keep death unreachable, and the
+  differential should treat an unexplained snap-to-boot plus ~18 dead
+  frames as this signature rather than a mystery divergence.
+- ⚠ Probe-authoring lesson, now a comment in the probe itself: **span
+  sizes must be COAST-corrected.** Releasing a held arrow leaves
+  ~1.1–1.4 px/tick of velocity that friction drains over ~5 px; the first
+  pair sized its DOWN leg by hold distance alone, the terrain probe point
+  coasted across the y = 144 midline into (11,9)'s pit, and both arms died
+  identically — a pair that discriminated nothing.
+
+**Probe B, the pair — `probe-seedling-l67-reach2.mjs`: REACH-2
+ORACLE-CONFIRMED.** Same tape one span apart, coast-corrected: the press
+arm's final stop is (154.75, **115.90**) — the player walked INTO the
+block's vacated cell — against the control's (154.75, **130.05**), pinned
+at the block's south face with the creep signature. Zero deaths in either
+arm. **The spear pushes a `pushableblockspear` from TWO tiles away, across
+a pit — and the spear rect has no line-of-sight gate, so through walls.**
+
+**What this settles.** The walkthrough's key-room solve is mechanically
+real on the corrected map: push N from (9,8), then W from (11,6) — across
+the pit the lightpole stands on, which is exactly the comment's "the first
+push was from the other side of the light" — then W again, S from (7,4)
+THROUGH the (7,5) wall, W onto the button at (6,7). The keyType-4 chain is
+therefore R4-plannable end to end: L59's row-8 corridor (the grenade
+audit), L67's always-active door, the block choreography, the bosskey
+ceremony (the known `text: ''` case), and L68's bosslock hold-open.
+
+**What it does NOT yet settle: the L65 breach — health's actual gate.**
+§8.5's press-cell sweep must be re-run as an INSTRUMENT with the
+oracle-pinned rules: press cells are every standable cell in ANY
+currently-reachable component whose spear rect covers the block (reach 2,
+through walls and across pits); multi-push, with reachability recomputed
+after every push; a block coming to rest on water/lava/pit is DESTROYED
+(irreversible within the visit). The hand re-run in §10.3 found no breach,
+but hand grids were wrong twice tonight — the instrument, not the hand,
+closes this. **Health returns iff that sweep (or a follow-up probe on its
+candidate cells) finds a breach; otherwise ruling 2 stands with §8.5
+upgraded from source-read to oracle-tested.** Either way the close-out is
+stronger, which is what §10.5's option 2 promised.
+
+Census landed with the probes: `arrowtrap` upgraded from `cheapOnly` to
+`notSolid` (no setHitbox, no type — cited at Game.as:2129 +
+ArrowTrap.as:24 + the Activators base), which lifts the FULL census
+82 → 85 (the pin moved with its note — L67 was an arrowtrap-only holdout).

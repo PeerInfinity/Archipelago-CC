@@ -907,14 +907,16 @@ describe('R2: a relaxed walk with collision ON', () => {
 
     it('consults the BLOCKING census, so an unpriced collider stops it by name', () => {
         // The mirror image of R0 slice 1b: a noclip walk may cross a level
-        // whose colliders nobody priced, and a collision walk may not. Level
-        // 115 is outside R2's route bill, so its census throws — and the
-        // throw naming the tag is the whole point.
-        expect(() => synthesizeLegs([{ level: 4, targets: [{ x: 120, y: 120 }] }],
-            { levelSource, boot: { level: 4, x: 112, y: 112 }, relax: R2 }))
-            .toThrow(/"arrowtrap".*NOT for the "blocking" role/s);
+        // whose colliders nobody priced, and a collision walk may not.
+        // The exemplar tag has rotted once already — this test used
+        // `arrowtrap` in L4 until R4's L67 probes priced it — so the pick is
+        // now the LAST tag likely to be priced: `finaldoor`, L113, endgame.
+        // When R6 prices it, move to whatever the census still refuses.
+        expect(() => synthesizeLegs([{ level: 113, targets: [{ x: 120, y: 120 }] }],
+            { levelSource, boot: { level: 113, x: 112, y: 112 }, relax: R2 }))
+            .toThrow(/"finaldoor".*NOT for the "blocking" role/s);
         // The same level under noclip does not even ask.
-        expect(() => buildLevelWorld(levelSource(4), { roles: RELAXED_ROLES }))
+        expect(() => buildLevelWorld(levelSource(113), { roles: RELAXED_ROLES }))
             .not.toThrow();
     });
 

@@ -968,8 +968,12 @@ export const ENTITY_CLASSES = Object.freeze({
         dx: 8, dy: 8, w: 16, h: 16, originX: 8, originY: 8,
         src: 'Game.as:2139 + Puzzlements/Pulser.as:26-38',
     },
-    arrowtrap: cheapOnly('ArrowTrap', 'Game.as:2129',
-        'fires Arrows, which damage via Player.hit() (Arrow.as:49)'),
+    arrowtrap: notSolid('ArrowTrap',
+        'Game.as:2129 + Puzzlements/ArrowTrap.as:24 + Activators.as (base)',
+        '',
+        'fires Arrows, which damage via Player.hit() (Arrow.as:49); neither '
+        + 'ArrowTrap nor the Activators base calls setHitbox or assigns a '
+        + 'type, so it stays Entity-default "" — in no solids list'),
     lavachain: {
         as3: 'LavaChain',
         roles: ROLES, collider: 'rect', type: 'Solid',
