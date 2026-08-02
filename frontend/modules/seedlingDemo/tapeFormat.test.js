@@ -21,6 +21,8 @@ import {
     COERCED_TERRAIN_STATE,
     coerceTerrainState,
     HAZARD_STATES,
+    INVENTORY_ITEM_IDS,
+    inventorySlotsFor,
     ITEM_NAMES,
     ITEM_PROPERTIES,
     parseObservationStream,
@@ -275,7 +277,7 @@ describe('serialization', () => {
         // fixture file changes for no change in meaning.
         expect(JSON.parse(serializeTape(base)).tape_version).toBe(1);
         expect(JSON.parse(serializeTape(v2Base)).tape_version).toBe(2);
-        expect(TAPE_VERSION).toBe(3);
+        expect(TAPE_VERSION).toBe(4);
     });
 
     it('writes NO persistence field into a v1 or v2 tape either', () => {
@@ -321,6 +323,69 @@ describe('serialization', () => {
         expect(withClear([{ level: 5, tag: 1 }, { level: 5, tag: 1 }]))
             .toThrow(/duplicates level 5 tag 1/);
         expect(withClear([{ level: 5, tag: 1, note: 7 }])).toThrow(/note must be a string/);
+    });
+
+    it('writes NO equips field into a v1, v2 or v3 tape', () => {
+        // The same claim one version further on, and the one that decides
+        // whether the R4 batch is byte-inert: all 50 committed fixtures are
+        // v1, v2 or v3, `parseTape` normalises `equips: []` onto every one
+        // of them, and `serializeTape` must not write it back.
+        const v3Base = { ...v2Base, tape_version: 3, persistence: [] };
+        for (const t of [base, v2Base, v3Base]) {
+            expect(parseTape(t).equips).toEqual([]);
+            expect(JSON.parse(serializeTape(t))).not.toHaveProperty('equips');
+        }
+    });
+
+    it('a v4 tape round-trips its equips, sorted by tick', () => {
+        const v4 = {
+            ...v2Base,
+            tape_version: 4,
+            persistence: [],
+            equips: [{ t: 900, slot: 0 }, { t: 12, slot: 1 }],
+        };
+        const written = JSON.parse(serializeTape(v4));
+        expect(written.tape_version).toBe(4);
+        expect(written.equips).toEqual([{ t: 12, slot: 1 }, { t: 900, slot: 0 }]);
+        expect(serializeTape(written)).toBe(serializeTape(v4));
+    });
+
+    it('rejects an equip that could not select anything', () => {
+        const withEquip = (equips) => () => parseTape({
+            ...v2Base, tape_version: 4, persistence: [], equips,
+        });
+        // ⚠ A NEGATIVE SLOT IS NOT "no selection": `Inventory.getItem(-1)`
+        // is `undefined`, `useItem`'s int coercion makes it 0, and the press
+        // silently becomes a sword slash — the exact failure the directive
+        // exists to prevent.
+        expect(withEquip([{ t: 0, slot: -1 }])).toThrow(/slot must be >= 0/);
+        expect(withEquip([{ t: -1, slot: 0 }])).toThrow(/t must be >= 0/);
+        expect(withEquip([{ t: 5, slot: 0 }, { t: 5, slot: 1 }]))
+            .toThrow(/duplicates tick 5/);
+        expect(withEquip('nope')).toThrow(/equips must be an array/);
+    });
+
+    it('a v1, v2 or v3 tape may CARRY equips: [] but not an equip', () => {
+        const v3Base = { ...v2Base, tape_version: 3, persistence: [] };
+        expect(() => parseTape({ ...v3Base, equips: [] })).not.toThrow();
+        expect(() => parseTape({ ...v3Base, equips: [{ t: 0, slot: 1 }] }))
+            .toThrow(/versions below 4 mean equips: \[\] BY DEFINITION/);
+    });
+
+    it('a v4 tape still carries its v3 clears', () => {
+        // `parsePersistence` used to be gated on `version === 3`, which
+        // would have silently dropped every clear the moment a tape became
+        // v4 — and a dropped clear is a blocker that is suddenly there, i.e.
+        // a routing failure thousands of ticks later rather than an error.
+        const v4 = {
+            ...v2Base,
+            tape_version: 4,
+            persistence: [{ level: 3, tag: 0, note: 'breakablerock@96,112' }],
+            equips: [{ t: 0, slot: 1 }],
+        };
+        expect(parseTape(v4).persistence).toEqual([
+            { level: 3, tag: 0, note: 'breakablerock@96,112' },
+        ]);
     });
 
     it('a v1 or v2 tape may CARRY persistence: [] but not a clear', () => {
@@ -503,7 +568,7 @@ describe('transition records', () => {
 describe('version 2: what a v1 tape may and may not say', () => {
     it('still parses every v1 tape', () => {
         expect(parseTape(base).tape_version).toBe(1);
-        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3]);
+        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4]);
     });
 
     it('normalises v1 to version 1 SEMANTICS so no engine branches on version', () => {
@@ -531,8 +596,8 @@ describe('version 2: what a v1 tape may and may not say', () => {
     });
 
     it('rejects an unknown version by name', () => {
-        expect(() => parseTape({ ...base, tape_version: 4 }))
-            .toThrow(/tape_version must be one of 1, 2, 3/);
+        expect(() => parseTape({ ...base, tape_version: 5 }))
+            .toThrow(/tape_version must be one of 1, 2, 3, 4/);
     });
 });
 
@@ -709,5 +774,59 @@ describe("the runtime's tape budget (R3)", () => {
         // 95 KB survived / 159 KB died).
         expect(TAPE_BUDGET.spans).toBeLessThan(2078);
         expect(TAPE_BUDGET.bytes).toBeLessThan(95 * 1024);
+    });
+});
+
+// ─────────────────────────────────────────────────────────────────────────
+// R4: THE INVENTORY SLOT MODEL
+//
+// `Main.primary` is an INDEX into `Inventory.items`, and `Player.useItem`
+// switches on whatever `Inventory.getItem(index)` returns — so "which slot
+// holds the spear" is the whole of whether an X press is a thrust or a
+// slash. These cases are hand-derived from `Inventory.addItemsFromSave`
+// (`Inventory.as:277-318`) rather than from running anything, which is what
+// makes them a second stratum beside the game's own scanned readout.
+// ─────────────────────────────────────────────────────────────────────────
+
+describe('R4: the inventory slot model', () => {
+    const held = (...names) => {
+        const o = {
+            hasSword: false, hasFire: false, hasWand: false, hasSpear: false,
+            hasGhostSword: false, hasFireWand: false,
+        };
+        for (const n of names) o[n] = true;
+        return o;
+    };
+
+    it('is the PUSH order, not the id order', () => {
+        // sword, fire, wand, spear — `addItemsFromSave`'s three blocks in
+        // the order it runs them.
+        expect(inventorySlotsFor(held('hasSword', 'hasFire', 'hasWand', 'hasSpear')))
+            .toEqual([0, 1, 2, 3]);
+        expect(inventorySlotsFor(held('hasWand', 'hasSword'))).toEqual([0, 2]);
+    });
+
+    it("puts the spear in SLOT 1 under R4's own item set", () => {
+        // The whole reason one equip covers the R4 walk.
+        expect(inventorySlotsFor(held('hasSword', 'hasSpear'))).toEqual([0, 3]);
+        expect(inventorySlotsFor(held('hasSword', 'hasSpear'))[1])
+            .toBe(INVENTORY_ITEM_IDS.spear);
+    });
+
+    it('is EMPTY before the first item, which is why the check is lazy', () => {
+        expect(inventorySlotsFor(held())).toEqual([]);
+    });
+
+    it('splices the fusions rather than appending them (R5, transcribed now)', () => {
+        // ⚠ `ghostsword` is an ELSE of the sword arm AND of the spear arm,
+        // so it suppresses both — an implementation that added it beside
+        // them would put the spear back in the array and shift every later
+        // slot by one.
+        expect(inventorySlotsFor(held('hasSword', 'hasSpear', 'hasGhostSword')))
+            .toEqual([INVENTORY_ITEM_IDS.ghostsword]);
+        expect(inventorySlotsFor(held('hasFire', 'hasWand', 'hasFireWand')))
+            .toEqual([INVENTORY_ITEM_IDS.firewand]);
+        expect(inventorySlotsFor(held('hasSword', 'hasFire', 'hasWand', 'hasFireWand')))
+            .toEqual([INVENTORY_ITEM_IDS.sword, INVENTORY_ITEM_IDS.firewand]);
     });
 });

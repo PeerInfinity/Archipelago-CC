@@ -137,6 +137,7 @@ export function createTapeStepper(tape, opts = {}) {
             noDamage: t.noDamage,
             grants: t.grants,
             persistence: t.persistence,
+            equips: t.equips,
             // ⚠ The runner consults the SAME census the driver plans with,
             // and `noclip` is what decides it on both sides. A noclip tape
             // asks no collider question, so requiring a blocking
@@ -241,6 +242,11 @@ export function createTapeStepper(tape, opts = {}) {
             // not this. See `levelRun.initialInventory`.
             inventory: run ? run.inventory : null,
             grants: run ? run.grantsFired : [],
+            // R4: the equip mirror the differential asserts against the
+            // game's own `primary` / `inventory_slots` readout.
+            primary: run ? run.primary : 0,
+            inventorySlots: run ? run.inventorySlots : [],
+            equips: run ? run.equipsFired : [],
         };
     }
 

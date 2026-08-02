@@ -118,11 +118,18 @@
  * `serializeTape` writes the fields back only for a v2 tape.
  */
 
-/** Schema version written by `serializeTape` for new tapes. */
-export const TAPE_VERSION = 3;
+/**
+ * Schema version written by `serializeTape` for new tapes.
+ *
+ * ⚠ NOTHING THAT EMITS A TAPE READS THIS — see `botDriverV1`'s docblock.
+ * The emitted version is decided by WHICH FIELDS THE CALLER DECLARES, so
+ * bumping this constant cannot silently re-version the committed fixtures.
+ * It is documentation plus one test's anchor.
+ */
+export const TAPE_VERSION = 4;
 
 /** Every version this parser accepts. v1 tapes are frozen, not deprecated. */
-export const SUPPORTED_TAPE_VERSIONS = Object.freeze([1, 2, 3]);
+export const SUPPORTED_TAPE_VERSIONS = Object.freeze([1, 2, 3, 4]);
 
 /**
  * ⚠ THE SPAWN IS BAKED INTO THE BUILD, so a tape's `boot` block is a CLAIM
@@ -336,6 +343,103 @@ function parsePersistence(raw) {
 }
 
 /**
+ * ── THE INVENTORY SLOT MODEL (R4) ─────────────────────────────────────
+ *
+ * `Inventory.addItemsFromSave` (`Inventory.as:277-318`), transcribed. The
+ * ids are the game's own and are what `Player.useItem` switches on, so this
+ * table is the thing `Main.primary` indexes into.
+ *
+ * ⚠ The order is the order the pushes happen in, NOT the id order: sword,
+ * fire, wand, spear. Under R4's item set — sword and spear — the array is
+ * `[0, 3]`, so **slot 1 is the spear** and one equip covers the whole walk.
+ *
+ * The two FUSIONS splice rather than append: `ghostsword` removes the sword
+ * and the spear and inserts id 4 at index 0; `firewand` removes fire and
+ * wand and inserts id 5 at index 1. Neither is reachable at R4 (both items
+ * are R5-blocked), and they are transcribed anyway — an item table that
+ * quietly stopped at the reachable cases is how a later rung inherits a
+ * mirror that has always agreed with the game by never being asked.
+ */
+export const INVENTORY_ITEM_IDS = Object.freeze({
+    sword: 0, fire: 1, wand: 2, spear: 3, ghostsword: 4, firewand: 5,
+});
+
+/**
+ * The slot array for a set of held items, exactly as `addItemsFromSave`
+ * builds it.
+ *
+ * @param {object} items  an inventory mirror: `{hasSword, hasFire, ...}`
+ * @returns {number[]}    the item ids, in slot order
+ */
+export function inventorySlotsFor(items) {
+    const slots = [];
+    // `addItemsFromSave`'s three blocks, in its own order. Each fusion arm
+    // is an ELSE of its base arm, which is why a ghostsword suppresses the
+    // sword AND the spear rather than adding beside them.
+    if (!items.hasGhostSword) {
+        if (items.hasSword) slots.push(INVENTORY_ITEM_IDS.sword);
+    } else {
+        slots.splice(0, 0, INVENTORY_ITEM_IDS.ghostsword);
+    }
+    if (!items.hasFireWand) {
+        if (items.hasFire) slots.push(INVENTORY_ITEM_IDS.fire);
+        if (items.hasWand) slots.push(INVENTORY_ITEM_IDS.wand);
+    } else {
+        slots.splice(1, 0, INVENTORY_ITEM_IDS.firewand);
+    }
+    if (!items.hasGhostSword) {
+        if (items.hasSpear) slots.push(INVENTORY_ITEM_IDS.spear);
+    }
+    return slots;
+}
+
+/**
+ * The version-4 field: EQUIPS.
+ *
+ * `[{t, slot}]` — one write to `Main.primary` at observation tick `t`,
+ * applied by `Bot.as` at the same site grants fire and immediately after
+ * them, so a segment can inherit `spear` through a boot-level grant and
+ * select it on the same tick.
+ *
+ * ⚠ The SLOT's upper bound is deliberately NOT checked here, and the game
+ * does not check it eagerly either: `Inventory.items` is filled by
+ * `addItemsFromSave` inside `inventory.update()`, which runs later in the
+ * same frame than the equip site. The bound is checked against the MIRROR
+ * by the engine (which knows what the run holds) and against the game's own
+ * scanned `inventory_slots` readout by the differential — two sides, and
+ * neither of them the tape repeating itself.
+ */
+function parseEquips(raw) {
+    if (!Array.isArray(raw.equips)) {
+        fail('equips must be an array of {t, slot} on a tape_version 4 tape '
+            + `([] when nothing is selected), got ${JSON.stringify(raw.equips)}`);
+    }
+    const seen = new Set();
+    const equips = raw.equips.map((e, i) => {
+        const where = `equips[${i}]`;
+        if (e === null || typeof e !== 'object' || Array.isArray(e)) {
+            fail(`${where} must be an object { t, slot }`);
+        }
+        requireInt(e.t, `${where}.t`);
+        requireInt(e.slot, `${where}.slot`);
+        if (e.t < 0) fail(`${where}.t must be >= 0, got ${e.t}`);
+        if (e.slot < 0) {
+            fail(`${where}.slot must be >= 0, got ${e.slot}. A negative slot is not `
+                + '"no selection": `Inventory.getItem(-1)` is `undefined` coerced to '
+                + '0, so the press would silently become a sword slash.');
+        }
+        if (seen.has(e.t)) {
+            fail(`${where} duplicates tick ${e.t}. Two writes to Main.primary on one `
+                + 'observation would leave the winner up to array order.');
+        }
+        seen.add(e.t);
+        return { t: e.t, slot: e.slot };
+    });
+    equips.sort((a, b) => a.t - b.t);
+    return equips;
+}
+
+/**
  * The three version-2 relaxation fields. Every one is REQUIRED — a tape
  * that omitted `noHazards` and a game that defaulted it to "none" would be
  * running a different experiment from a JS engine that defaulted it to
@@ -481,7 +585,9 @@ export function parseTape(input) {
     // and a parsed tape (which is normalised, below) has to survive being
     // parsed again. So the test is on the VALUE, not on presence.
     if (version === 1) {
-        const v1Semantics = { noDamage: false, noHazards: [], grants: [], persistence: [] };
+        const v1Semantics = {
+            noDamage: false, noHazards: [], grants: [], persistence: [], equips: [],
+        };
         for (const [field, expected] of Object.entries(v1Semantics)) {
             const got = raw[field];
             if (got === undefined) continue;
@@ -511,7 +617,19 @@ export function parseTape(input) {
             + 'persistence: [] BY DEFINITION — the build had no such field to read. '
             + 'Bump tape_version to 3 to clear anything.');
     }
-    const persistence = version === 3 ? parsePersistence(raw) : [];
+    const persistence = version >= 3 ? parsePersistence(raw) : [];
+    // The VALUE-not-presence rule again, one version on. Written out rather
+    // than folded into a loop because each field's message names the build
+    // that could not read it, and that sentence is what a reader hitting the
+    // error actually needs.
+    if (version < 4 && raw.equips !== undefined
+        && !(Array.isArray(raw.equips) && raw.equips.length === 0)) {
+        fail(`tape_version ${version} declares equips: ${JSON.stringify(raw.equips)}, `
+            + 'but versions below 4 mean equips: [] BY DEFINITION — the build had no '
+            + 'such field to read, so every press would be whatever Main.primary '
+            + 'already was (0, the sword). Bump tape_version to 4 to select a slot.');
+    }
+    const equips = version >= 4 ? parseEquips(raw) : [];
 
     const boot = raw.boot;
     if (boot === null || typeof boot !== 'object' || Array.isArray(boot)) {
@@ -615,6 +733,9 @@ export function parseTape(input) {
         persistence: Object.freeze(persistence.map((c) => Object.freeze({
             level: c.level, tag: c.tag, note: c.note,
         }))),
+        equips: Object.freeze(equips.map((e) => Object.freeze({
+            t: e.t, slot: e.slot,
+        }))),
         tick_count: tickCount,
         inputs: Object.freeze(inputs.map((s) => Object.freeze(s))),
         ...(raw.name ? { name: String(raw.name) } : {}),
@@ -685,6 +806,11 @@ export function serializeTape(tape) {
             persistence: t.persistence.map((c) => ({
                 level: c.level, tag: c.tag, ...(c.note ? { note: c.note } : {}),
             })),
+        } : {}),
+        // Same rule, one version on: written ONLY for a v4 tape, so all 50
+        // committed v1/v2/v3 fixtures round-trip byte-identically.
+        ...(t.tape_version >= 4 ? {
+            equips: t.equips.map((e) => ({ t: e.t, slot: e.slot })),
         } : {}),
         tick_count: t.tick_count,
         inputs: t.inputs.map((s) => ({ key: s.key, from: s.from, to: s.to })),

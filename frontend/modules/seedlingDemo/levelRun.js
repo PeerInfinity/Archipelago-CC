@@ -41,7 +41,7 @@ import {
 import {
     createActivatorState, openActivatorIds, stepActivators,
 } from './activators.js';
-import { ITEM_PROPERTIES, ITEM_NAMES } from './tapeFormat.js';
+import { ITEM_PROPERTIES, ITEM_NAMES, inventorySlotsFor } from './tapeFormat.js';
 import { spawnFromBoot } from './playerPhysicsV1.js';
 import {
     INITIAL_TERRAIN_STATE,
@@ -110,7 +110,7 @@ function applyItem(inventory, name) {
  */
 export function createLevelRun({
     levelSource, boot, noclip = false, noHazards = [], noDamage = false, grants = [],
-    persistence = [], roles,
+    persistence = [], equips = [], roles,
 }) {
     if (typeof levelSource !== 'function') {
         throw new TypeError('createLevelRun needs a levelSource (level) => levelRecord');
@@ -261,6 +261,50 @@ export function createLevelRun({
         return record;
     };
     applyGrantsFor(level);
+
+    // ── the equip (R4) ────────────────────────────────────────────────
+    // `Main.primary` is an INDEX into `Inventory.items`, and
+    // `Player.useItem` switches on `Inventory.getItem(index)` — so this one
+    // integer decides whether an X press is a sword slash or a spear
+    // thrust, and the L63 bridge decrements only under a Spear.
+    //
+    // ⚠ THE ORDER WITHIN A TICK IS GRANTS THEN EQUIPS, on both sides. A
+    // segment inherits its items through a boot-level grant and its slot
+    // through `equips: [{t: 0, slot: 1}]`, so an equip applied first would
+    // be selecting into an empty array. `Bot.as` calls `applyEquipsFor`
+    // immediately after `applyGrantsFor` for the same reason.
+    //
+    // ⚠ AND THE BOUND IS CHECKED HERE, not in `parseTape`. The parser sees
+    // a tape; the run knows what the run HOLDS. `Inventory.getItem` on an
+    // out-of-range slot returns `undefined`, which `useItem`'s int coercion
+    // turns into 0 — the sword — so an over-range slot is a SILENT
+    // downgrade from a thrust to a slash, which is exactly the kind of
+    // divergence that surfaces two thousand ticks later against a bridge
+    // nobody was looking at.
+    let primary = 0;
+    const equipsByTick = new Map(equips.map((e) => [e.t, e.slot]));
+    const firedEquips = [];
+    const applyEquipsAt = (t) => {
+        if (!equipsByTick.has(t)) return;
+        const slot = equipsByTick.get(t);
+        // Consumed, exactly as a grant is: `advance` re-asks at the top of
+        // every tick and construction already asked for tick 0.
+        equipsByTick.delete(t);
+        const slots = inventorySlotsFor(inventory);
+        if (slot >= slots.length) {
+            throw new Error(
+                `levelRun: the tape equips slot ${slot} at tick ${t}, but the run holds `
+                + `${slots.length} item(s) (slots [${slots.join(', ')}]). `
+                + '`Inventory.getItem` on an out-of-range slot is `undefined`, which '
+                + '`useItem` coerces to 0 — so every press from here on would be a '
+                + 'SWORD SLASH and the game would never say so. Grant or collect the '
+                + 'item before selecting it.',
+            );
+        }
+        primary = slot;
+        firedEquips.push({ t, slot });
+    };
+    applyEquipsAt(0);
 
     // ── the pickup CEREMONY (R3) ──────────────────────────────────────
     /**
@@ -473,6 +517,21 @@ export function createLevelRun({
         get ticksCompleted() { return ticksCompleted; },
         get inventory() { return { ...inventory }; },
         /**
+         * The equip mirror (R4): the slot `Main.primary` should hold, and
+         * the slot array `Inventory` should have built.
+         *
+         * ⚠ THE GAME IS STILL THE ORACLE. `botStatus` reports its OWN
+         * `Main.primary` and SCANS its own `Inventory`, and the differential
+         * compares them against these — so a slot-order divergence is a
+         * named failure at the first observation after any collection,
+         * rather than a mysterious slash-instead-of-thrust later. Reading
+         * this for both sides would be the mirror agreeing with itself.
+         */
+        get primary() { return primary; },
+        get inventorySlots() { return inventorySlotsFor(inventory); },
+        /** One record per equip that fired: `{t, slot}`. */
+        get equipsFired() { return firedEquips.map((e) => ({ ...e })); },
+        /**
          * One record per completed ceremony: `{t, level, item, frames}`.
          *
          * The crutch LEDGER at R3. A grant that fired is in `grantsFired`;
@@ -596,6 +655,14 @@ export function createLevelRun({
          * can, and one that wants them cannot get them back.
          */
         advance(held) {
+            // ── the equip, first thing (R4) ───────────────────────────
+            // `Bot.as` applies it immediately after pushing observation
+            // `t` and BEFORE dispatching that tick's key edges, so on this
+            // side it has to land before the physics of tick `t` — a press
+            // on the equip's own tick is already a thrust. Construction
+            // covered tick 0; this covers every later one.
+            applyEquipsAt(ticksCompleted);
+
             // The player reads the activator state as of the END of the
             // previous tick, which is the same object the game's Locks
             // compute at the TOP of this one (they update before the player —
