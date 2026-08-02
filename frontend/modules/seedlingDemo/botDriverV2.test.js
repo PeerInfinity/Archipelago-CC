@@ -29,6 +29,7 @@ import { runTape, runTapeToStream } from './tapeRunner.js';
 import { parseTape } from './tapeFormat.js';
 import { DEFAULT_TOLERANCE } from './botDriverV1.js';
 import {
+    climbsArmedWaterfall,
     isWalkableTile,
     planTilePath,
     planWaypoints,
@@ -320,6 +321,58 @@ describe('single-level tasks', () => {
     it('refuses a target it cannot stand on, naming what is there', () => {
         expect(() => synthesizeWalk([tileCentre(9, 9)], { levelSource }))
             .toThrow(/not walkable: terrain Water/);
+    });
+});
+
+describe('R4: the DIRECTED edge rule — an armed waterfall cannot be CLIMBED', () => {
+    // ⛔ `Player.input()`'s last act is `v.y += 0.8` unless
+    // `hasFeather && v.y < 0`, and the water move speed is below 0.8. So an
+    // armed waterfall is a ONE-WAY DOWNWARD tile — the only directed edge on
+    // the ladder, and the only one a component flood cannot see.
+    const L0 = buildLevelWorld(atlasLevelSource()(0));
+    const ARMED = { noHazards: ['water'], lattice: 8 };
+    const COERCED = { noHazards: ['water', 'waterfall'], lattice: 8 };
+    // Level 0's band is two tiles: (13,7) and (16,7). At pitch 8 a tile is
+    // 2x2 cells, so tile (16,7) is cells (32..33, 14..15).
+    const below = { tx: 32, ty: 16 };
+    const inBand = { tx: 32, ty: 15 };
+    const above = { tx: 32, ty: 13 };
+
+    it('the census found exactly the two tiles', () => {
+        expect(L0.waterfallTiles.map((t) => `${t.tx},${t.ty}`).sort())
+            .toEqual(['13,7', '16,7']);
+    });
+
+    it('an UPWARD step into or out of the band is refused', () => {
+        expect(climbsArmedWaterfall(L0, below, inBand, ARMED)).toBe(true);
+        expect(climbsArmedWaterfall(L0, inBand, above, ARMED)).toBe(true);
+    });
+
+    it('...and DOWNWARD and SIDEWAYS are not, which is the whole point', () => {
+        // Refusing the CELL was the first cut, and it cut level 0 in two: a
+        // waterfall is something a route crosses downward all the time. What
+        // is impossible is climbing one, so what is forbidden is a STEP.
+        expect(climbsArmedWaterfall(L0, inBand, below, ARMED)).toBe(false);
+        expect(climbsArmedWaterfall(L0, above, inBand, ARMED)).toBe(false);
+        expect(climbsArmedWaterfall(L0, inBand, { tx: 33, ty: 15 }, ARMED)).toBe(false);
+    });
+
+    it('the FEATHER exempts it, which is what makes the seal circular', () => {
+        expect(climbsArmedWaterfall(L0, below, inBand,
+            { ...ARMED, inventory: { hasFeather: true } })).toBe(false);
+    });
+
+    it('and COERCION makes it inert — which is why R1/R2/R3 never met it', () => {
+        // The gate is the ITEM; the coercion decides whether the tile is
+        // armed at all. R4 ships with waterfall coerced, so this rule is a
+        // bounded vacuity on this rung with its witness at the next one.
+        expect(climbsArmedWaterfall(L0, below, inBand, COERCED)).toBe(false);
+    });
+
+    it('a level with no waterfall answers false without looking', () => {
+        const L10 = buildLevelWorld(atlasLevelSource()(10));
+        expect(L10.waterfallTiles).toEqual([]);
+        expect(climbsArmedWaterfall(L10, below, inBand, ARMED)).toBe(false);
     });
 });
 
