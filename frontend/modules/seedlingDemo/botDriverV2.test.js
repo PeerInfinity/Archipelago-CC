@@ -362,13 +362,44 @@ describe('R4: the spear leg verb', () => {
         expect(replay(out.tape).ticks.length).toBe(out.tape.tick_count + 1);
     });
 
-    it('refuses a facing the approach did not actually leave the player in', () => {
+    it('NUDGES a facing the approach did not leave the player in, and says so', () => {
         // `set spearing` captures `spearDirection = direction`, and
-        // `sprites()` derives that from VELOCITY — so a leg that thinks it
-        // is facing west while the walk ended going south presses at nothing.
+        // `sprites()` derives that from VELOCITY — so a leg that arrives
+        // facing south while the press aims west would fire its rect behind
+        // the player. The verb taps the facing key for one tick and lets
+        // friction stop them, where `direction` sticks.
+        //
+        // ⚠ It used to THROW here, and the route is why it does not any
+        // more: the bang-bang controller OVERSHOOTS its waypoint and
+        // corrects back, so the last tick with any velocity points the wrong
+        // way even when the whole approach was along the push axis. L67's
+        // push arrived at (180.045, 116.519) facing E — one twentieth of a
+        // pixel past the aim point — with a stance that was otherwise
+        // perfect.
+        const out = synthesizeLegs(task({ bridge: { tx: 2, ty: 9 }, facing: 'W' }), opts);
+        expect(out.spears).toHaveLength(1);
+        expect(out.spears[0]).toMatchObject({ kind: 'bridge', id: '2,9', facing: 'W' });
+        // The nudge is a TAP: the player moves a fraction of a pixel and the
+        // press still lands. A tape holding the key for longer would be a
+        // walk, not a turn.
+        const taps = out.tape.inputs.filter((i) => i.key === 'left');
+        expect(taps[taps.length - 1].to - taps[taps.length - 1].from).toBe(1);
+        // ...and it is still checked rather than assumed: the run's own
+        // facing at the press is what the record carries.
+        expect(replay(out.tape).ticks.length).toBe(out.tape.tick_count + 1);
+    });
+
+    it('...but a nudge that cannot turn the player is still a NAMED failure', () => {
+        // A stance pinned against a wall in the facing direction produces no
+        // velocity, so `direction` never changes and the press would fire at
+        // that wall. The tap is a fix for the controller's overshoot, not a
+        // licence to declare any facing from any stance.
+        //
+        // L63's bridge stance sits against the level's north edge, so a
+        // press declared NORTH cannot be turned into.
         expect(() => synthesizeLegs(
-            task({ bridge: { tx: 2, ty: 9 }, facing: 'W' }), opts,
-        )).toThrow(/declares facing W but the player is facing S/);
+            task({ bridge: { tx: 2, ty: 9 }, facing: 'N' }), opts,
+        )).toThrow(/a tap of up left them facing|bridge 2,9 is STILL SOLID/);
     });
 
     it('refuses a press with nothing to prove, and one aimed at no bridge', () => {

@@ -18,13 +18,13 @@
  * ten declared clears, with every hazard COERCED to plain floor. R4 keeps
  * every one of R3's retirements and arms the terrain:
  *
- *   - **`noHazards` is `["water"]`.** Lava, ice and waterfall are LIVE. Ice
- *     costs nothing; waterfall is modelled floor the R3 walk already stood
- *     on for 71 ticks; lava is the one that bites, and it costs `darksuit`
- *     — the R3 walk stood on it for 1,392 ticks across six levels, ALL of
- *     them before it held the suit. So `darksuit` LEAVES the claim and R4's
- *     terminal hazard state is water alone (see `R4_BLOCKED`, and §8.2 for
- *     why `noHazards: []` is not an R4 state at all).
+ *   - **`noHazards` is `["water", "waterfall"]`.** LAVA and ICE are LIVE.
+ *     Ice costs nothing; lava is the one that bites, and it costs BOTH
+ *     `darksuit` and `darkshield` — the R3 walk stood on lava for 1,392
+ *     ticks across six levels, all of them before it held the suit. See
+ *     `R4_NO_HAZARDS` for why waterfall could not be armed (the slice-0
+ *     ruling that said it could is overturned there, by the route) and §8.2
+ *     for why `noHazards: []` is not an R4 state at all.
  *   - **`health` JOINS it**, and that is the rung's headline. Three rungs
  *     called L68 sealed; §11's multi-push sweep found the breach and the
  *     game confirmed it to the pixel. It costs five spear presses across
@@ -74,21 +74,56 @@
 export const R4_BOOT = Object.freeze({ level: 0, x: 80, y: 128 });
 
 /**
- * ⛔ THE RUNG'S TERMINAL HAZARD STATE, and it is not `[]`.
+ * ⛔ THE RUNG'S TERMINAL HAZARD STATE, and it is neither `[]` NOR `["water"]`.
  *
- * `canSwim` IS THE CONCH (`Bot.as:798`), which `Karlore.added()` gates on
- * `Player.hasFire` -> BobBoss -> R5. And `drownTimer` is never reset off
- * hazard — only set to 10 on first contact, decremented, and spun by
- * `drown()` — so the whole-run budget for un-swimmable water is ELEVEN
+ * **WATER** — `canSwim` IS THE CONCH (`Bot.as:798`), which `Karlore.added()`
+ * gates on `Player.hasFire` -> BobBoss -> R5. And `drownTimer` is never
+ * reset off hazard — only set to 10 on first contact, decremented, and spun
+ * by `drown()` — so the whole-run budget for un-swimmable water is ELEVEN
  * CUMULATIVE TICKS and then `die()`. Armed as forbidden floor it takes the
- * walk from 60 reachable nodes to 10.
+ * walk from 60 reachable nodes to 10. Ruled out at slice 0 (§8.2).
  *
- * ⚠ Waterfall (25) is NOT water. `checkDrowning` tests `eff == 1` only, so
- * a waterfall cannot drown you: it is MODELLED floor with a push, not
- * forbidden floor, and forbidding it collapses 42 levels. Ice (22) costs
- * nothing at all, floor policy included.
+ * **WATERFALL** — ⛔ AND THIS ONE THE SLICE-0 RULING GOT WRONG, in a way
+ * only the route could find. §9 armed it on the strength of two true
+ * sentences: `checkDrowning` tests `eff == 1` only, so a waterfall cannot
+ * drown you; and the R3 walk really does STAND on one for 71 ticks. Both
+ * hold. What neither of them says is that a waterfall cannot be CLIMBED:
+ * `Player.input()`'s last act is
+ *
+ *     if (onWaterfall && (!hasFeather || v.y >= 0)) v.y += 0.8;
+ *
+ * and the water move speed is below 0.8. The shipped physics, asked
+ * directly: a featherless player entering level 0's band from below and
+ * holding UP for 400 ticks reaches **y = 125.98 and stalls** — fourteen
+ * pixels short of clearing it. With the feather, y = 66.73.
+ *
+ * ⛔ AND LEVEL 0'S BAND IS THE ONLY CONNECTION between the half the game
+ * BOOTS in and the half everything else is behind. A directed flood of L0
+ * from the boot with climbs forbidden reaches 670 of 782 cells and NONE of
+ * the north doors; deleting those doors from the whole-map graph leaves
+ * **12 nodes across 11 levels and exactly one item, the sword.** The feather
+ * — the item that exempts the push — is on the far side of the band that
+ * needs it.
+ *
+ * So arming waterfall at R4 is circular in the same shape water is, one
+ * item along: water needs the conch needs fire needs BobBoss; waterfall
+ * needs the feather, and under THIS rung's clear bill the only path to the
+ * feather crosses a waterfall. It retires at the rung that reaches L89
+ * another way — L90 @48,96 and L91 @16,144 both open into it, and both are
+ * behind openers R5 builds.
+ *
+ * **ICE** (22) costs nothing at all, floor policy included. **LAVA** (17) is
+ * the one this rung arms, and it is the one that bites: `darksuit` and
+ * `darkshield` both leave the claim for it.
+ *
+ * ⚠ The directed climb rule is BUILT and PINNED anyway
+ * (`botDriverV2.climbsArmedWaterfall`), against level 0's own numbers. It
+ * is inert here — coercion turns the tile back into floor before the rule
+ * looks at it — and that is a bounded vacuity with a named witness rather
+ * than dead code: the first walk that arms waterfall needs it on tick one,
+ * and finding it then would mean finding it at slice 8.
  */
-export const R4_NO_HAZARDS = Object.freeze(['water']);
+export const R4_NO_HAZARDS = Object.freeze(['water', 'waterfall']);
 
 /**
  * The item rooms, IN VISIT ORDER.
@@ -321,13 +356,13 @@ export const R4_EARNED = Object.freeze([
  * The clears that SURVIVE, each with the ONE opener it is waiting for and
  * the rung that retires it.
  *
- * ⚠ SIX, DOWN FROM R3'S TEN — and the movement is in BOTH directions, which
+ * ⚠ EIGHT, DOWN FROM R3'S TEN — and the movement is in BOTH directions, which
  * is why the list is re-derived rather than inherited. Armed lava is a
  * different map, so R3's bill is a fact about a level set this walk does not
  * cross:
  *
- *   OFF (5)   `L3 tag 0`, `L11 tag 0`   the route no longer threads either
- *             `L12 tag 7`, `L12 tag 12`  corridor
+ *   OFF (3)   `L12 tag 7`, `L12 tag 12`  the route no longer threads either
+ *                                        corridor
  *             `L71 tag 0`                the walk never enters L71 at all
  *   ON  (1)   `L68 tag 1`                the magical lock sharing a cell
  *                                        with the boss lock the walk opens
@@ -347,7 +382,10 @@ export const R4_EARNED = Object.freeze([
  * what the planner confirms with every survivor in place, at the pickup's
  * own tile with the driver's own clearances.
  *
- * ⚠⚠ AND THE SWEEP LIED ONCE, exactly as R3's did. It reported `L68 tag 1`
+ * ⚠⚠ AND THE SWEEP LIED THREE TIMES, exactly as R3's did — twice because it
+ * asks a REACHABILITY GRAPH and the claim is a WALK (`L3 tag 0`, where the
+ * driver's A* finds no path at any clearance; `L11 tag 0`, where the
+ * CONTROLLER's overshoot clips a chest), and once for a reason of its own: It reported `L68 tag 1`
  * NOT REQUIRED, because the health approach inside a level the walk itself
  * changed is computed by a helper that asks "is there a standable cell
  * beside the pickup" rather than "can the stance walk to it". The planner
@@ -355,6 +393,31 @@ export const R4_EARNED = Object.freeze([
  * opening one of two locks and opening both.
  */
 export const R4_CLEARS = Object.freeze([
+    Object.freeze({
+        level: 3, tag: 0, note: 'breakablerock@96,112',
+        opener: 'a sword swing (Player.as:1098 genericHit)',
+        why: '⚠ THE SHIPPED PLANNER PUT THIS ONE BACK, for the second rung running, and '
+            + 'the one-out sweep could not have: the sweep asks a REACHABILITY GRAPH, '
+            + 'whose flood is 4-connected lattice cells, and with the rock standing the '
+            + "DRIVER's own A* finds no walkable path across L3 at any clearance it "
+            + 'will descend to. A reachability graph and a walk are different questions. '
+            + '⚠ NEARER THAN IT LOOKS NOW: R4 has the press primitive and a '
+            + '`BreakableRock` arm would be one more entry in `PRESS_ARM_POLICY`. What '
+            + 'it still needs is a swing at a stance in an enemy-free room, which is '
+            + "R5's combat budget rather than this rung's",
+        rung: 'R5',
+    }),
+    Object.freeze({
+        level: 11, tag: 0, note: 'chest@32,48',
+        opener: 'walking under it (Chest.update collides a 1-px line beneath)',
+        why: 'ALSO THE DRIVER\'S, and not an opener question at all: the chest is a '
+            + 'Solid AND an avoid volume in a corridor the walk has to thread, and the '
+            + "CONTROLLER's overshoot clips it — which the graph cannot see either. "
+            + 'Opening one spawns a SealPiece (150 frozen frames), writes persistence, '
+            + 'and burns an UNBOUNDED number of Math.random() draws for the seal index, '
+            + 'so the RNG stream shifts by an amount that depends on saved state',
+        rung: 'R5',
+    }),
     Object.freeze({
         level: 12, tag: 3, note: 'bosslock@80,656',
         opener: 'BossKey (keyType 1) in L29',
@@ -821,8 +884,19 @@ export function r4TapeSpecs(route) {
     for (let s = 0; s < R4_SEGMENT_NAMES.length; s++) {
         const firstLeg = bounds[s];
         const lastLeg = bounds[s + 1];
+        // ⚠ THE BOUNDARY LEG IS SHARED, and stripping its targets is right
+        // for every boundary EXCEPT the last one. Segment N ends by ARRIVING
+        // in the boundary leg; segment N+1 boots there and does its work. The
+        // final segment has no N+1, so its last leg is not a boundary at all
+        // and its targets are the rung's payoff — R4's are the boss lock and
+        // health itself.
+        //
+        // R1, R2 and R3 all ended on a leg with no targets (a tail hop to a
+        // hub), so this was invisible for three rungs: the shared-boundary
+        // rule and "the walk ends on an empty leg" happened to agree.
+        const isLast = s === R4_SEGMENT_NAMES.length - 1;
         const legs = route.legs.slice(firstLeg, lastLeg + 1)
-            .map((l, i) => (i === lastLeg - firstLeg
+            .map((l, i) => ((!isLast && i === lastLeg - firstLeg)
                 ? { level: l.level, targets: [], ...(l.contacts ? { contacts: l.contacts } : {}) }
                 : JSON.parse(JSON.stringify(l))));
         const boot = route.leg_boots[firstLeg];

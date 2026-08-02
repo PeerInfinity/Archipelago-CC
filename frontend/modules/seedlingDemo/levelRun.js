@@ -1133,6 +1133,13 @@ export function createLevelRun({
         get unfiredGrantLevels() { return [...grantsByLevel.keys()]; },
         get noDamage() { return noDamage; },
         /**
+         * The tape's hazard-name set, so a caller re-asking the geometry a
+         * question mid-drive asks it under the SAME coercion the physics is
+         * running. Carried rather than re-derived for the reason `relax` is
+         * one object: two ideas of which experiment this is.
+         */
+        get noHazards() { return [...noHazards]; },
+        /**
          * The activator ids that are NOT solid right now, in the level the
          * run is in — or `null` under `noclip`, matching the arm `advance`
          * hands `stepV2`.

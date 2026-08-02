@@ -78,6 +78,8 @@ const BRIDGE_STATE = 29;
  */
 const WATER_STATE = 1;
 const LAVA_STATE = 17;
+/** R4: `Player.input()`'s waterfall push — see `waterfallTiles`. */
+const WATERFALL_STATE = 25;
 
 export class LevelWorldError extends Error {
     constructor(message) {
@@ -2831,6 +2833,31 @@ export function buildLevelWorld(levelRecord, { roles = ROLES, cleared = null } =
          */
         get lethalTerrainTiles() {
             return walkableTiles.filter((t) => t.t === WATER_STATE || t.t === LAVA_STATE);
+        },
+        /**
+         * ⚠ WATERFALL TILES, which are the THIRD floor policy and the one
+         * the docblock above says does not exist.
+         *
+         * It was right that nothing about standing on a waterfall ends a
+         * run, and wrong that that makes it ordinary floor.
+         * `Player.input()`'s last act is `v.y += 0.8` on a waterfall tile,
+         * exempted for UPWARD motion only and only with the feather
+         * (`!hasFeather || v.y >= 0`) — and the water move speed is far
+         * below 0.8. So an armed waterfall is a ONE-WAY DOWNWARD tile
+         * without the feather: a walk that plans across one climbs at a
+         * negative rate and stalls for its whole per-waypoint budget.
+         *
+         * Found by the R4 route, in level 0, on the way to the feather
+         * itself — the one leg on the ladder that necessarily runs before
+         * the item that exempts it. R3 never saw it because R3 COERCED
+         * waterfall to plain floor, and its walk stood on this very tile for
+         * 71 ticks.
+         *
+         * The gate is the ITEM, like the lethal one; the coercion decides
+         * whether the tile is armed at all.
+         */
+        get waterfallTiles() {
+            return walkableTiles.filter((t) => t.t === WATERFALL_STATE);
         },
         solids,
         objectSolids,

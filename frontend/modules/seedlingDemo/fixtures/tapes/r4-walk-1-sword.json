@@ -1,0 +1,329 @@
+{
+  "tape_version": 4,
+  "game": "seedling",
+  "name": "r4-walk-1-sword",
+  "description": "R4 walk SEGMENT 1 of 6, synthesized by botDriverV2 from legs 0-8 of the committed route (fixtures/r4-route.json). 9 legs across 5 level(s), 8 crossings. COLLECTS sword (sword@48,48, 4 release(s) over 29 ticks). Ends holding [hasSword] with hitsMax 3.",
+  "boot": {
+    "level": 0,
+    "x": 80,
+    "y": 128
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [
+    "water",
+    "waterfall"
+  ],
+  "grants": [],
+  "persistence": [
+    {
+      "level": 3,
+      "tag": 0,
+      "note": "breakablerock@96,112"
+    },
+    {
+      "level": 11,
+      "tag": 0,
+      "note": "chest@32,48"
+    },
+    {
+      "level": 12,
+      "tag": 3,
+      "note": "bosslock@80,656"
+    },
+    {
+      "level": 12,
+      "tag": 5,
+      "note": "bosslock@432,240"
+    },
+    {
+      "level": 24,
+      "tag": 0,
+      "note": "burnabletree@32,128"
+    },
+    {
+      "level": 30,
+      "tag": 0,
+      "note": "bosslock@64,32"
+    },
+    {
+      "level": 60,
+      "tag": 0,
+      "note": "lock@128,80"
+    },
+    {
+      "level": 68,
+      "tag": 1,
+      "note": "magicallock@16,32"
+    }
+  ],
+  "equips": [],
+  "tick_count": 641,
+  "inputs": [
+    {
+      "key": "down",
+      "from": 0,
+      "to": 92
+    },
+    {
+      "key": "right",
+      "from": 0,
+      "to": 148
+    },
+    {
+      "key": "up",
+      "from": 92,
+      "to": 93
+    },
+    {
+      "key": "down",
+      "from": 93,
+      "to": 96
+    },
+    {
+      "key": "up",
+      "from": 96,
+      "to": 97
+    },
+    {
+      "key": "down",
+      "from": 97,
+      "to": 98
+    },
+    {
+      "key": "up",
+      "from": 98,
+      "to": 99
+    },
+    {
+      "key": "down",
+      "from": 99,
+      "to": 100
+    },
+    {
+      "key": "left",
+      "from": 148,
+      "to": 149
+    },
+    {
+      "key": "right",
+      "from": 149,
+      "to": 150
+    },
+    {
+      "key": "left",
+      "from": 155,
+      "to": 157
+    },
+    {
+      "key": "down",
+      "from": 155,
+      "to": 353
+    },
+    {
+      "key": "right",
+      "from": 157,
+      "to": 158
+    },
+    {
+      "key": "left",
+      "from": 158,
+      "to": 159
+    },
+    {
+      "key": "right",
+      "from": 159,
+      "to": 160
+    },
+    {
+      "key": "right",
+      "from": 217,
+      "to": 241
+    },
+    {
+      "key": "left",
+      "from": 241,
+      "to": 242
+    },
+    {
+      "key": "right",
+      "from": 242,
+      "to": 243
+    },
+    {
+      "key": "left",
+      "from": 243,
+      "to": 244
+    },
+    {
+      "key": "right",
+      "from": 244,
+      "to": 245
+    },
+    {
+      "key": "left",
+      "from": 248,
+      "to": 249
+    },
+    {
+      "key": "left",
+      "from": 351,
+      "to": 353
+    },
+    {
+      "key": "right",
+      "from": 353,
+      "to": 354
+    },
+    {
+      "key": "up",
+      "from": 353,
+      "to": 354
+    },
+    {
+      "key": "down",
+      "from": 354,
+      "to": 355
+    },
+    {
+      "key": "left",
+      "from": 354,
+      "to": 355
+    },
+    {
+      "key": "right",
+      "from": 357,
+      "to": 359
+    },
+    {
+      "key": "up",
+      "from": 357,
+      "to": 359
+    },
+    {
+      "key": "down",
+      "from": 361,
+      "to": 362
+    },
+    {
+      "key": "left",
+      "from": 361,
+      "to": 362
+    },
+    {
+      "key": "right",
+      "from": 365,
+      "to": 367
+    },
+    {
+      "key": "down",
+      "from": 365,
+      "to": 371
+    },
+    {
+      "key": "left",
+      "from": 367,
+      "to": 368
+    },
+    {
+      "key": "right",
+      "from": 368,
+      "to": 369
+    },
+    {
+      "key": "left",
+      "from": 369,
+      "to": 371
+    },
+    {
+      "key": "primary",
+      "from": 371,
+      "to": 372
+    },
+    {
+      "key": "primary",
+      "from": 380,
+      "to": 381
+    },
+    {
+      "key": "primary",
+      "from": 389,
+      "to": 390
+    },
+    {
+      "key": "primary",
+      "from": 398,
+      "to": 399
+    },
+    {
+      "key": "up",
+      "from": 400,
+      "to": 559
+    },
+    {
+      "key": "left",
+      "from": 462,
+      "to": 464
+    },
+    {
+      "key": "right",
+      "from": 464,
+      "to": 465
+    },
+    {
+      "key": "left",
+      "from": 465,
+      "to": 466
+    },
+    {
+      "key": "right",
+      "from": 468,
+      "to": 470
+    },
+    {
+      "key": "left",
+      "from": 473,
+      "to": 474
+    },
+    {
+      "key": "down",
+      "from": 561,
+      "to": 562
+    },
+    {
+      "key": "left",
+      "from": 563,
+      "to": 581
+    },
+    {
+      "key": "right",
+      "from": 581,
+      "to": 582
+    },
+    {
+      "key": "left",
+      "from": 582,
+      "to": 584
+    },
+    {
+      "key": "right",
+      "from": 585,
+      "to": 587
+    },
+    {
+      "key": "left",
+      "from": 591,
+      "to": 593
+    },
+    {
+      "key": "up",
+      "from": 591,
+      "to": 641
+    },
+    {
+      "key": "right",
+      "from": 593,
+      "to": 594
+    }
+  ]
+}

@@ -1275,10 +1275,25 @@ describe('R1: the priced proximity volumes', () => {
             } else {
                 expect(cls.hazard.effect, `${tag} has a volume but no effect`).toBeTruthy();
                 expect(cls.hazard.kind, `${tag} has a volume but no kind`).toBeTruthy();
-                // Exactly one shape, never both and never neither.
-                const isPoint = Boolean(cls.hazard.point);
-                const isRect = cls.hazard.w !== undefined;
-                expect(isPoint !== isRect, `${tag} must be a point OR a rect`).toBe(true);
+                // Exactly ONE shape, never two and never none.
+                //
+                // ⚠ THREE SHAPES NOW. R4 added `line`, because the game uses
+                // three tests and not two: a rect hazard gates on
+                // `collide("Player", ...)`, a point hazard on
+                // `FP.distance(...) < r`, and a `BossLock` on
+                // `collideLine`, which walks INTEGER points along a
+                // one-pixel row and never tests its own end point. A rect
+                // enclosing those ten pixels over-avoids by up to a pixel on
+                // each side, which is not theoretical: it moved R3's
+                // committed L12 route.
+                const shapes = [
+                    ['point', Boolean(cls.hazard.point)],
+                    ['line', Boolean(cls.hazard.line)],
+                    ['rect', cls.hazard.w !== undefined],
+                ].filter(([, on]) => on).map(([n]) => n);
+                expect(shapes.length,
+                    `${tag} must be exactly one of point/line/rect, got `
+                    + `[${shapes.join(',')}]`).toBe(1);
             }
         }
         // The two still unpriced are both in level 112, the endgame room.

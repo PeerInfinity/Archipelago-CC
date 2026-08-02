@@ -136,7 +136,9 @@ export const SEGMENT_SAMPLE_STEP = 0.5;
  */
 const EMPTY_CONTACTS = new Set();
 /** R4's lethal-terrain gate, when the caller names no inventory. */
-const EMPTY_INVENTORY = Object.freeze({ canSwim: false, hasDarkSuit: false });
+const EMPTY_INVENTORY = Object.freeze({
+    canSwim: false, hasDarkSuit: false, hasFeather: false,
+});
 /** `Tile.types` indices the lethal-terrain policy is about. */
 const LETHAL_WATER = 1;
 const LETHAL_LAVA = 17;
@@ -352,6 +354,7 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
             return { kind: 'lethal-terrain', blocker: tile };
         }
     }
+
     if (avoidVolumes) {
         // The position, not just the box: a `point` hazard (lavatrap's
         // 33 px chomp disc, an ice turret's 129 px attack range) tests the
@@ -448,6 +451,51 @@ export function isWalkableTile(level, tx, ty, allowTeleporter = null, opts = {})
 }
 
 /**
+ * ⛔ THE THIRD TERRAIN POLICY, and the only DIRECTED one on the ladder.
+ *
+ * `Player.input()`'s last act is `v.y += 0.8` on a waterfall tile, exempted
+ * for UPWARD motion only and only with the feather
+ * (`!hasFeather || v.y >= 0`). The water move speed is far below 0.8, and
+ * the shipped physics agrees: a featherless player holding UP on level 0's
+ * waterfall for 120 ticks moves **3.33 px DOWN**; with the feather, 57.3 px
+ * up. So an armed waterfall is a ONE-WAY DOWNWARD tile.
+ *
+ * ⚠ AND IT CANNOT BE A BLOCKER, which is how this was first written and why
+ * that lasted about a minute. Refusing the tile outright cut level 0 in two
+ * and took the reachable map from 53 nodes to TWELVE — the walk could not
+ * reach the feather, the torch, the spear or health, because a waterfall is
+ * something the route crosses DOWNWARD all the time and nothing about that
+ * is impossible. What is impossible is climbing one, so what is forbidden is
+ * an UPWARD STEP, not a cell.
+ *
+ * Found by R4's own route, in level 0, on the way to the FEATHER — the one
+ * leg on the ladder that necessarily runs before the item that exempts it.
+ * R3 stood on that very tile for 71 ticks with it COERCED to plain floor,
+ * which is why three rungs never met this.
+ *
+ * ⚠ Applied to a step whose destination is strictly above its source when
+ * EITHER endpoint is an armed waterfall: the push is on while the terrain
+ * state is 25, so both leaving one upward and entering one upward fight it.
+ */
+export function climbsArmedWaterfall(level, from, to, opts = {}) {
+    const { noHazards = [], inventory = null, lattice = DEFAULT_LATTICE } = opts;
+    if (to.ty >= from.ty) return false;
+    if ((inventory ?? EMPTY_INVENTORY).hasFeather) return false;
+    const tiles = level.waterfallTiles;
+    if (tiles.length === 0) return false;
+    const cells = TILE_SIZE / lattice;
+    for (const tile of tiles) {
+        if (coerceTerrainState(tile.t, noHazards) !== tile.t) continue;
+        for (const n of [from, to]) {
+            if (Math.floor(n.tx / cells) === tile.tx && Math.floor(n.ty / cells) === tile.ty) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+/**
  * A* over walkable tiles, 4-connected, unit cost, Manhattan heuristic.
  *
  * 4-connected rather than 8 on purpose: a diagonal tile step can cut a
@@ -530,6 +578,13 @@ export function planTilePath(level, from, to, allowTeleporter = null, opts = {})
             const isGoal = nx === goal.tx && ny === goal.ty;
             if (!isWalkableTile(level, nx, ny, allowTeleporter,
                 isGoal ? { ...opts, nodeMargin: 0, triggerMargin: 0 } : opts)) continue;
+            // ⛔ THE ONE DIRECTED EDGE RULE — see `climbsArmedWaterfall`. A
+            // waterfall is a cell the route crosses downward all the time and
+            // cannot climb without the feather, so the refusal is on the
+            // STEP. The goal is NOT exempt here: exempting it would let a leg
+            // end one tile up a waterfall, which is a stall rather than a
+            // tight fit.
+            if (climbsArmedWaterfall(level, cur, { tx: nx, ty: ny }, opts)) continue;
             const g = cur.g + 1;
             if (gScore.has(nk) && gScore.get(nk) <= g) continue;
             gScore.set(nk, g);
@@ -1154,6 +1209,12 @@ function runKeyLock(run, perTick, keylock, what) {
  */
 const KEY_LOCK_WINDOW = opensOnKeyTick(60, 0.05);
 const KEY_LOCK_SLACK = 4;
+/** How long friction is given to bring a face nudge back to a full stop. */
+const FACE_COAST_TICKS = 20;
+/** 32 ticks of glide plus slack — the wait a push that LANDS needs. */
+const PUSH_GLIDE_TICKS = 40;
+/** ...and the eleven-frame fade on top, for a push that SINKS. */
+const PUSH_SINK_TICKS = 60;
 
 function runTouch(run, perTick, touch, maxTicks, what) {
     if (run.openActivators === null) {
@@ -1373,6 +1434,12 @@ function runSpear(run, perTick, spear, what) {
             + 'declare noclip: false.');
     }
     const { bridge = null, block = null, facing, wait = null } = spear;
+    // ⚠ `to` IS THE SPEAR'S, NOT THE BLOCK'S. A `block` names the entity by
+    // the coordinates the LEVEL built it at — which never change — and `to`
+    // names where this particular push should leave it, which is a fact
+    // about the push. An earlier cut read `block.to` and the docblock read
+    // `spear.to`; the route generator believed the docblock.
+    const to = spear.to === undefined ? undefined : spear.to;
     if ((bridge === null) === (block === null)) {
         fail(`${what}: a spear names EXACTLY ONE of \`bridge\` (by tile) or \`block\` `
             + '(by OEL coordinates, with the tile it should end on). Naming neither '
@@ -1386,14 +1453,70 @@ function runSpear(run, perTick, spear, what) {
             + 'no keys — so a stance that ended up facing the wrong way is a leg defect '
             + 'this names instead of a press that quietly hits nothing.');
     }
+    /**
+     * ── THE FACE NUDGE, and why a stance alone is not a facing ────────
+     *
+     * `sprites()` derives `direction` from VELOCITY, x before y, sticky at
+     * rest — so the facing a press captures is the way the player was LAST
+     * MOVING, not the way they are standing. And the bang-bang controller
+     * OVERSHOOTS: driving west to (180,116) it passes the target, brakes,
+     * and corrects EAST for the last tick with any velocity. The stance is
+     * perfect and the rect fires at a wall behind the player.
+     *
+     * (That is not hypothetical. L67's push is exactly it: arrival at
+     * (180.045, 116.519), facing E, one twentieth of a pixel past the aim
+     * point.)
+     *
+     * So the verb taps the facing key for ONE tick and lets friction bring
+     * the player back to a stop, where `direction` sticks. A tap is a
+     * fraction of a pixel — far less than the ~5 px coast a released HELD
+     * arrow leaves — and the position it lands on is re-checked against the
+     * geometry rather than assumed, because "a nudge is small" is exactly
+     * the kind of claim that is true until the stance is one pixel from a
+     * pit.
+     *
+     * ⚠ A SETUP TARGET IS STILL THE FIRST ANSWER. The route gives every
+     * push an axis-aligned approach point so the last leg is along the push
+     * axis; this handles the overshoot the approach cannot, and it FAILS by
+     * name if a tap does not fix it — which would mean the stance is pinned
+     * against something in the facing direction.
+     */
+    const FACE_KEY = { E: 'right', N: 'up', W: 'left', S: 'down' };
     if (run.state.direction !== FACINGS[facing]) {
-        const names = Object.entries(FACINGS)
-            .find(([, v]) => v === run.state.direction)?.[0] ?? run.state.direction;
-        fail(`${what}: the leg declares facing ${facing} but the player is facing `
-            + `${names} at (${run.state.x},${run.state.y}). \`set spearing\` captures `
-            + '`spearDirection = direction` and `sprites()` derives that from VELOCITY '
-            + '(x before y, sticky at rest), so the approach has to END moving the way '
-            + 'the press aims.');
+        const before = { x: run.state.x, y: run.state.y };
+        const tap = new Set([FACE_KEY[facing]]);
+        perTick.push(tap);
+        run.advance(tap);
+        for (let i = 0; i < FACE_COAST_TICKS; i++) {
+            if (run.state.vx === 0 && run.state.vy === 0) break;
+            perTick.push(NO_HELD);
+            const { transition } = run.advance(NO_HELD);
+            if (transition) {
+                fail(`${what}: the face nudge crossed from level `
+                    + `${transition.from_level} to ${transition.to_level}.`);
+            }
+        }
+        if (run.state.direction !== FACINGS[facing]) {
+            const names = Object.entries(FACINGS)
+                .find(([, v]) => v === run.state.direction)?.[0] ?? run.state.direction;
+            fail(`${what}: the leg declares facing ${facing}, the player was facing `
+                + `${names} at (${before.x},${before.y}), and a tap of `
+                + `${FACE_KEY[facing]} left them facing ${names} at `
+                + `(${run.state.x},${run.state.y}). A tap that changes nothing means `
+                + 'the stance is pinned against something in the facing direction, so '
+                + 'the press would fire its rect at a wall.');
+        }
+        const o = plannerObstacleAt(run.world, run.state.x, run.state.y, null, {
+            noclip: false, noHazards: run.noHazards, avoidVolumes: false,
+            openBridges: run.openBridges, pushables: run.pushables,
+            openActivators: run.openActivators, inventory: run.inventory,
+        });
+        if (o) {
+            fail(`${what}: the face nudge moved the player from (${before.x},${before.y})`
+                + ` to (${run.state.x},${run.state.y}), which is ${describe(o)}. The tap `
+                + 'is a fraction of a pixel, so a stance this close to something is a '
+                + 'stance the route should not have chosen.');
+        }
     }
 
     // ── the positive control, before the press ────────────────────────
@@ -1421,17 +1544,34 @@ function runSpear(run, perTick, spear, what) {
                 + 'named by the coordinates the LEVEL built it at, which do not change '
                 + 'when it moves.');
         }
-        if (!block.to || !Number.isInteger(block.to.tx) || !Number.isInteger(block.to.ty)) {
+        // ⚠ `to: null` IS A DECLARATION, not an omission — and it is the
+        // one three of R4's five pushes make. A block that comes to rest on
+        // water, lava or a pit DESTROYS itself
+        // (`PushableBlockFire.input()`), which is what turns a push into a
+        // REMOVAL and is the whole of §8.5's one wrong sentence. So the
+        // effect check has two arms: a tile the block should be standing on,
+        // or the block being GONE. `undefined` is still refused, because
+        // "something moved" is a check a mis-aimed press satisfies.
+        const destroys = to === null;
+        if (!destroys
+            && (!to || !Number.isInteger(to.tx) || !Number.isInteger(to.ty))) {
             fail(`${what}: a block press must name \`to: {tx, ty}\` — the tile the block `
-                + 'should be standing on when the push lands. Without it the effect '
-                + 'check is "something moved", which a mis-aimed press satisfies.');
+                + 'should be standing on when the push lands — or `to: null` for a push '
+                + 'onto water, lava or a pit, which destroys it. Without one of the two '
+                + 'the effect check is "something moved", which a mis-aimed press '
+                + 'satisfies.');
+        }
+        if (live.removed) {
+            fail(`${what}: ${id} is ALREADY GONE before the press. A block is destroyed `
+                + 'per VISIT and rebuilt on re-entry, so this means an earlier leg of '
+                + 'this visit already spent it.');
         }
         const from = { tx: Math.floor(live.rect.x / TILE_SIZE), ty: Math.floor(live.rect.y / TILE_SIZE) };
-        if (from.tx === block.to.tx && from.ty === block.to.ty) {
-            fail(`${what}: the block is ALREADY on (${block.to.tx},${block.to.ty}), so `
-                + 'the push proves nothing.');
+        if (!destroys && from.tx === to.tx && from.ty === to.ty) {
+            fail(`${what}: the block is ALREADY on (${to.tx},${to.ty}), so the push `
+                + 'proves nothing.');
         }
-        expect = { kind: 'block', id, from, to: block.to };
+        expect = { kind: 'block', id, from, to, destroys };
     }
 
     // ── the press: ONE tick of `primary` ──────────────────────────────
@@ -1456,7 +1596,15 @@ function runSpear(run, perTick, spear, what) {
     // run asserts the 64 px policy on every one of them; a block needs the
     // 32-tick glide, and `pushesSettled` is the run's own answer rather than
     // a count this verb repeats.
-    const ticks = wait ?? (expect.kind === 'bridge' ? TICKS_FROM_PRESS_TO_WALKABLE : 40);
+    // ⚠ A DESTROYING PUSH IS THE LONG ONE, and 40 was not enough. A block
+    // glides 32 ticks (0.5 px/tick over a 16 px tile), and only THEN does
+    // the sink check see it exactly on its target — after which the fade is
+    // eleven more frames at 0.1 alpha before `FP.world.remove` lands. The
+    // first cut waited 40 and reported a push that had happened as a push
+    // that had not.
+    const ticks = wait ?? (expect.kind === 'bridge'
+        ? TICKS_FROM_PRESS_TO_WALKABLE
+        : (expect.destroys ? PUSH_SINK_TICKS : PUSH_GLIDE_TICKS));
     for (let i = 1; i <= ticks; i++) {
         perTick.push(NO_HELD);
         const { transition } = run.advance(NO_HELD);
@@ -1465,7 +1613,13 @@ function runSpear(run, perTick, spear, what) {
                 + `${transition.from_level} to ${transition.to_level}.`);
         }
         if (expect.kind === 'bridge' && run.openBridges.has(expect.id)) break;
-        if (expect.kind === 'block' && run.pushesSettled && i > 1) break;
+        // ⚠ AND A DESTROYING PUSH IS NOT DONE WHEN THE GLIDE STOPS. The
+        // sink is an eleven-frame fade AFTER the block reaches the tile, and
+        // `FP.world.remove` lands at the end of it — so a wait that stopped
+        // at `pushesSettled` would check `removed` before the game had
+        // written it.
+        if (expect.kind === 'block' && run.pushesSettled && i > 1
+            && (!expect.destroys || run.pushables.get(expect.id).removed)) break;
     }
 
     // ── the effect ────────────────────────────────────────────────────
@@ -1479,11 +1633,24 @@ function runSpear(run, perTick, spear, what) {
     } else {
         const live = run.pushables.get(expect.id);
         const now = { tx: Math.floor(live.rect.x / TILE_SIZE), ty: Math.floor(live.rect.y / TILE_SIZE) };
-        if (now.tx !== expect.to.tx || now.ty !== expect.to.ty) {
+        if (expect.destroys) {
+            if (!live.removed) {
+                fail(`${what}: pressed at (${at.x},${at.y}) facing ${facing} and the `
+                    + `block is on (${now.tx},${now.ty}) and STILL THERE. The leg `
+                    + 'declares `to: null`, which is "it comes to rest on water, lava or '
+                    + 'a pit and destroys itself" — so either the destination is dry or '
+                    + 'the push went somewhere else.');
+            }
+        } else if (now.tx !== expect.to.tx || now.ty !== expect.to.ty) {
             fail(`${what}: pressed at (${at.x},${at.y}) facing ${facing} and the block is `
                 + `on (${now.tx},${now.ty}), not (${expect.to.tx},${expect.to.ty}). The `
                 + 'block moves ONE TILE in the FACING direction and refuses a hit while '
                 + 'it is already moving, and a push into a solid goes nowhere at all.');
+        } else if (live.removed) {
+            fail(`${what}: the block reached (${now.tx},${now.ty}) and was DESTROYED, `
+                + 'which the leg did not declare. A destination that turns out to be '
+                + 'water, lava or a pit is an opener the route did not plan for and a '
+                + 'block a later push in the chain will aim at and miss.');
         }
         if (!run.pushesSettled) {
             fail(`${what}: the block reached (${now.tx},${now.ty}) but is still MOVING `
@@ -1511,7 +1678,15 @@ function runCollect(run, perTick, collect, maxTicks, what) {
     };
     const from = perTick.length;
     let approach = 0;
-    while (!run.inCeremony) {
+    // ⚠ TWO EXIT CONDITIONS, and the second one is the TEXTLESS ceremony.
+    // `Pickup.pick_up()` spawns an NPC only when `text != ""`, so a boss key
+    // or a totem part runs phase A — 150 invisible frozen frames — and then
+    // resolves itself with no dialogue at all. On this side that whole
+    // ceremony begins and ENDS inside one `advance`, so `inCeremony` is
+    // never observed true and a loop waiting for it walks on top of the
+    // pickup for its entire budget. (It did: 1,500 ticks standing inside
+    // `bosskey@48,64`'s own volume.)
+    while (!run.inCeremony && run.collected.length === before) {
         if (approach >= maxTicks) {
             const s = run.state;
             fail(`${what}: walked at ${pickup.tag}@${pickup.x},${pickup.y} for `
@@ -1546,6 +1721,9 @@ function runCollect(run, perTick, collect, maxTicks, what) {
     let sinceRelease = PRESS_GAP;
     let pressing = false;
     let ticks = 0;
+    // A textless ceremony has already recorded itself by the time the
+    // approach loop exits, so this runs zero times — which is right: there
+    // is no dialogue to page and no release to send.
     while (run.collected.length === before) {
         if (ticks >= maxTicks) {
             fail(`${what}: ${pickup.tag}@${pickup.x},${pickup.y}'s ceremony has not `
