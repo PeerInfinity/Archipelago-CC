@@ -1728,8 +1728,25 @@ export function synthesizeLegs(legs, opts = {}) {
         // standing on the moment a ceremony ends must stop being an
         // obstacle — otherwise the next plan fails at its own START tile.
         const contactsNow = () => new Set([...legContacts, ...run.takenPickups]);
+        // ⚠ `inventory` joins them at R4, and for the same reason: it is an
+        // input that changes DURING a walk, not a decision the caller made
+        // about a leg. `plannerObstacleAt`'s lethal-terrain policy gates on
+        // the ITEM — `canSwim` for water, `hasDarkSuit` for lava — and
+        // until now it defaulted to "neither", which over-forbids. That
+        // default is the TRUTH for the whole R4 walk (the rung drops
+        // `darksuit` and `canSwim` is the conch, R5), so this changes no
+        // R4 route and is threaded anyway: the alternative is a later rung
+        // that holds the suit and gets a planner refusing a lava tile it
+        // could cross — a route that will not plan, discovered at slice 8.
+        //
+        // Read from `run` per call rather than captured, because the grant
+        // that would flip it fires mid-walk at a level boundary.
         const planNow = (extra) => ({
-            ...plan, contacts: contactsNow(), openActivators: run.openActivators, ...extra,
+            ...plan,
+            contacts: contactsNow(),
+            openActivators: run.openActivators,
+            inventory: run.inventory,
+            ...extra,
         });
 
         const legWaypoints = [];

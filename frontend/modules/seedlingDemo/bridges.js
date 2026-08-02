@@ -20,8 +20,27 @@
  *
  * The only decrement from gameplay is `Player.as:1098` — `(e as
  * Tile).bridgeOpeningTimer--` inside `genericHit`'s `e is Tile` arm, under
- * `t == "Spear"`. One thrust tips 60 to 59, and from then on the render
- * loop walks it down on its own.
+ * `t == "Spear"`. A thrust tips 60 to 59, and from then on the render loop
+ * walks it down on its own.
+ *
+ * ⚠ BUT ONE PRESS IS NOT ONE THRUST, and this docblock said it was until
+ * the model was wired into `levelRun`. The chain is four classes deep:
+ * `Player.update()` calls `spear()` BEFORE `super.update()`, so the rect
+ * fires on the tick AFTER the `input()` that set `spearing`; `spearing` is
+ * cleared by `spearEnd`, the COMPLETE CALLBACK of an 8-frame, 45 fps
+ * `Spritemap`; `spear()` re-fires whenever `spearDelay` (max **1**) has
+ * drained, i.e. every OTHER tick for as long as `spearing` holds; and the
+ * `e is Tile` arm has NO already-open guard, so every firing decrements.
+ * The decrement count is therefore a sprite frame rate divided by an
+ * engine frame rate — arithmetic across two subsystems this model does not
+ * have.
+ *
+ * That is measured, not derived: `scripts/procgen/probe-seedling-bridge.mjs`
+ * pins the player against L63's bridge, presses ONCE, and records the tick
+ * they step through. `framesToOpen()` below is the single-decrement
+ * answer and stays the transcription of `Tile.render`; what the probe
+ * settles is how many decrements a press buys, which is the leg's
+ * business rather than the tile's.
  *
  * ⚠ NOTHING EVER RE-INCREMENTS IT. Within one world instance the open
  * state is a LATCH: there is no re-close countdown to race, and the "60
