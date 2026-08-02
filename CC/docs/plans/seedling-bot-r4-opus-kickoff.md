@@ -1538,3 +1538,162 @@ pushes in L65, one in L63 and one in L67.
    synthesis (§11.4's ~95 KB projection against a 90 KB ceiling is the
    live risk, and it is the one thing that could still shrink the claim).
 6. Docs + close-out.
+
+## 13. §12.3 items 2 and 3, AS BUILT (2026-08-02)
+
+The two per-visit mechanics landed together, because a press changes both
+and the run needs one place that knows when a press happened.
+
+### 13.1 The pushable slide (`frontend/modules/seedlingDemo/pushables.js`)
+
+`PushableBlockFire.update()` transcribed tick for tick: the target-tile
+mechanic (`hit` moves the TARGET, not the block), the 0.5 px/tick glide —
+**32 ticks per tile, and the block is `type = "Solid"` at a straddling rect
+for every one of them** — the blocked-sweep behaviour, the sink, and the
+eleven-frame fade before `FP.world.remove` lands.
+
+Facts the transcription turned up that no plan had:
+
+- **`PushableBlockFire.update()` OVERRIDES `Mobile.update`** and never calls
+  `mobileUpdate`, so it checks NEITHER `destroy` NOR `Game.freezeObjects`. A
+  block keeps gliding through a pickup ceremony's frozen frames, which is
+  why the run steps it ABOVE the ceremony's early return.
+- **A blocked push is ASYMMETRIC**, and the asymmetry is `gridPos`'s floor
+  reading the block's TOP-LEFT corner. Blocked going EAST, `getPos` names
+  the origin cell and the block walks back; blocked going WEST it names the
+  cell it was heading for and the block **wedges straddling two cells** for
+  as long as the obstruction lasts. Only a moving solid can produce either
+  (a static one refuses the push on tick 1, going nowhere).
+- **The grid snap and `Mobile.friction()` are both INERT** — every reachable
+  state where `v` is zero is a state where the block is already on its
+  corner, and `input()` reassigns both velocity components unconditionally.
+  Transcribed with the inertness pinned by test rather than asserted in
+  prose.
+
+### 13.2 ⛔ THE OTHER PUSHABLE, AND THE COMMITTED WALK THAT MOVES ONE
+
+§10.4 ruled that the planner should treat plain `PushableBlock` EDGES as
+do-not-press-toward volumes, on the premise that no recording had ever
+leaned on one. **That premise is false, and the guard written to enforce it
+fired on ten committed fixtures.**
+
+At tick 3489 of `r3-walk-full` the player passes L22's
+`pushableblock@96,64` heading south at **(114.96, 77.62)** with `v.x` at
+**-0.126** — a **0.04 px** overlap with the block's own `x + 1` probe — and
+`PushableBlock.input()` duly sent the block a full tile WEST. The
+destination cell is free and dry (Forest, t = 8), so it went. Nothing in the
+recording can see it: the player is already past the block and never touches
+that cell again.
+
+So the walk-push is **MODELLED** (`stepWalkPushable`) rather than alarmed
+on, and the three headline walks stay byte-identical against the real game
+with the block now moving in the model too. Its own trap, transcribed:
+**`cTile` is a CEIL** where the Fire family's `gridPos` is a floor, so an
+EAST lean moves the block half a pixel and the `v.x == 0` snap arm puts it
+straight back — only a player who keeps following re-targets it — while a
+single WEST contact tick sends it the whole tile. (And `PushableBlock.tile`
+is in TILE INDICES where `PushableBlockFire.tile` is a PIXEL CENTRE: same
+field name, same package, two units.)
+
+### 13.3 The run's third state family, and the fencepost the probe settled
+
+`levelRun` grew `bridgeStates` and `pushableStates`, both **per VISIT** —
+freshened on every arrival beside `freshActivatorState`, never banked like
+an earned clear. Threaded into `collidesSolid`, `plannerBlockerAt`,
+`nearestWalkableTileWithTie` and `pressRespondersIn` as options, exactly as
+`openActivators` already was.
+
+- **Bridge (29) joined `MODELLED_TILE_TYPES`.** An open bridge is
+  `type = "Tile"`, so it LEAVES the solids list and JOINS the `getState`
+  candidates — and L63's bridge is surrounded by pit, so a resolver that
+  kept scanning only the static walkable tiles would answer 6 for a player
+  standing in the middle of the crossing and start a transport the game
+  never runs.
+- **The fencepost is the probe's, not a derivation.** `walkableAt` is
+  `pressTick + 60` and it is compared against **the observation the current
+  tick will produce**, not the one it started from. Replaying
+  `probe-seedling-bridge.mjs`'s tape through the model now reproduces its
+  measured numbers exactly: pinned at y = 141, **pin breaks at tick 85**.
+  A gate written against the entry index would open the crossing a tick
+  late.
+- **The press is one tick late by transcription** (`spear()` runs above
+  `super.update()`, so the rect fires the tick after the `input()` that set
+  `spearing`) and **one firing per press by MEASUREMENT** (`spearDelayMax`
+  is 1 and `spearing` is cleared by a 45 fps Spritemap's complete callback —
+  arithmetic across two frame rates the model does not have).
+
+### 13.4 ✅ THE L65 BREACH PAIR, REPRODUCED BY THE MODEL
+
+Both arms of `probe-seedling-l65-breach.mjs` replayed through `levelRun`:
+
+```
+control   final (194.05, 114.15)   == the game's own recorded final
+press     final (166.65,  98.05)   == the game's own recorded final,
+                                      block destroyed on (9,7)'s pit
+```
+
+Three pushes including **reach 2 across a pit**, **reach 2 through a Body
+Wall**, and the sink — to the pixel, over 440 ticks. That is the pushable
+model's real gate, and it is stronger than any hand-derived stratum could
+be.
+
+⚠ **One bug it caught on the way, and it was silent:** the press census
+answered from the block's SPAWN rect, so the chain landed its FIRST push and
+no-opped the other two. `pressRespondersIn` takes the live map now — a
+pushable is the one responder whose rect is not a constant.
+
+### 13.5 ⛔ A NEW SEAL ON THE L65 CHAIN: the third stance is not audit-clean
+
+The press audit **refuses the probe's third stance**: the spear rect
+contains `lightpole@176,120`, and `LightPole.set activate` calls
+`Game.setPersistence(tag, !activate)` — a LEDGER ENTRY, and one the
+recording could never have shown (the probe reads positions).
+
+**And no stance in that row avoids it.** The block sits at tile (10,7)
+(x 160..176, y 112..128); the pole's press box is x [179,189), y [112,128).
+A LEFT-facing rect is a 5 px band at the player's own y and spans
+`[sx-32, sx)`, so any rect that reaches the block's column also spans the
+pole's, and any rect whose y band meets the block's rows meets the pole's
+identical rows. **A spear push of that block from the east always toggles
+the pole.** A sword cannot substitute: the push needs reach 2 through a
+solid, which only the spear has.
+
+What the census says the toggle costs, per instance:
+
+- the pole is **`tset: -1`** (in no group) with **`tag: 2`**, and **L65 has
+  no activators at all**, so nothing responds to a group change;
+- `Light` kills a `DarkTrap` within `radiusMin` 28 — L65's
+  `darktrap@144,144` is **40 px** away, out of range;
+- what is left is exactly one persistence write: **`(level 65, tag 2)`
+  cleared**, plus the pole being LIT from the ctor on the next visit
+  (`activate = !Game.checkPersistence(tag)`).
+
+⇒ **This is the route slice's ruling to make**, with three priced options:
+(a) MODEL the `LightPole` arm — the toggle becomes an earned clear the
+ledger accounts for, ~20 lines and zero AS3, and the arithmetic above says
+that is its whole cost; (b) find another chain (the sweep's finer pitches
+found shorter chains, and it has not been re-asked with the pole as a
+constraint); (c) drop health again. The audit throws until then, which is
+the intended behaviour and not a blocker to be silenced.
+
+### 13.6 The press policy is an ENUMERATION now, and it had to be
+
+`presses.PRESS_ARM_POLICY` classifies every `PRESS_ARMS` key as `modelled`
+/ `inert` / `refused`, with the reason from the class's own body, and the
+test asserts the two tables have the same keys.
+
+⚠ The blanket rule it replaced ("model two arms, refuse everything else")
+**failed a committed recording**: `r3-collect-sword` pages its own dialogue
+with X while holding the sword, and the rect reaches two TREES — whose
+`hit()` is an empty body. `Tree`, `Grass` (a sound, its own `cutGrass`, and
+`Main.grassCut`) and the plain `PushableBlockFire` (the non-relative arm,
+where `moveTypes` IS consulted and no press satisfies it) are inert with
+citations; everything else is refused with its cost.
+
+### 13.7 What is next, unchanged from §12.3
+
+4. The R4 route re-plan under `noHazards: ["water"]`, **now gated on
+   §13.5's ruling**.
+5. Segments + headline + `r4Acceptance`, with the byte budget measured at
+   synthesis.
+6. Docs + close-out.
