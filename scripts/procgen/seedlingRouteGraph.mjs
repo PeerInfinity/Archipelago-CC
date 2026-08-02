@@ -495,6 +495,12 @@ export function makeRouteGraph({
         return {
             worldFor, componentAt, componentsOf, componentsTouching, edges, bfs,
             pathBetween, unbuildable, holdEdges, clearedByLevel,
+            // R3: which components a VOLUME can be walked into from. R2 used
+            // this internally to derive hold edges; R3's tour needs it to
+            // narrow "reached" from a component of the LEVEL to the pickup's
+            // own tile, so it is exported rather than transcribed a second
+            // time.
+            componentsAround,
         };
     }
     return planWith(clears);
