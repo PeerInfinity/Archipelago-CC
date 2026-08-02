@@ -178,6 +178,15 @@ export const MODELLED_TILE_TYPES = Object.freeze([
     26, // Body Floor
     27, // Body Wall    (solid)
     28, // Ghost Tile
+    // ⚠ 29 (Bridge) IS MODELLED FROM R4, and it is the only type here that
+    // is terrain only CONDITIONALLY. A closed bridge is `type = "Solid"` and
+    // never underfoot; the render that takes the `<= 0` arm writes
+    // `type = "Tile"` and from that frame the entity is in the list
+    // `getState` searches, so `state` really can be 29 — `moveSpeeds[29]` is
+    // the plain walk speed. Until R4 nothing could open one, so the type was
+    // legitimately absent; leaving it absent now would make the crossing
+    // itself throw.
+    29, // Bridge         (R4: walkable only while `openBridges` holds it)
     30, // Ghost Tile Step — moveSpeed 0.4, no side effects
     31, // Igneous-to-Lava
     32, // Odd Tile
@@ -1408,6 +1417,25 @@ export const STAIRS_TAGS = Object.freeze(['stairsup', 'stairsdown']);
  * round. `activators.js` holds the semantics; this holds the membership,
  * and a test pins that the two lists agree.
  */
+/**
+ * R4: the three pushable tags, by the `input()` they run.
+ *
+ * ⚠ THE FAMILY, NOT THE CLASS, because the class hierarchy and the
+ * behaviour disagree. `PushableBlockSpear extends PushableBlockFire` and
+ * shares its `input()` — a TARGET-TILE glide, moved by a press. Plain
+ * `PushableBlock` extends `Mobile` directly with its own `input()` — it is
+ * WALK-pushed, by a player leaning on an edge, and no arm of `genericHit`
+ * names it at all, so no press of any weapon moves one.
+ *
+ * `pushables.js` steps the `fire` family and REFUSES to step a `walk` one,
+ * which is why the distinction is data here rather than a comment.
+ */
+export const PUSHABLE_FAMILIES = Object.freeze({
+    pushableblockspear: 'fire',
+    pushableblockfire: 'fire',
+    pushableblock: 'walk',
+});
+
 export const ACTIVATOR_RESPONDERS = new Set([
     'lock', 'wandlock', 'shieldlock', 'shieldlocknorm', 'grasslock', 'cover',
 ]);
@@ -2140,6 +2168,12 @@ export function buildLevelWorld(levelRecord, { roles = ROLES, cleared = null } =
     // relaxed world has neither.
     const pressResponders = [];
     const pressEnemies = [];
+    // R4: the blocks a press MOVES. Collected beside the solids they also
+    // are, because a pushable is BOTH — a static rect until something hits
+    // it and a live one for the 32 ticks afterwards — and `pushables.js`
+    // owns the second half. See `PUSHABLE_FAMILIES` for why the family is
+    // recorded rather than the class.
+    const pushables = [];
 
     // --- tiles ---------------------------------------------------------
     // The extract has ALREADY applied loadlevel's own bounds guard
@@ -2222,13 +2256,16 @@ export function buildLevelWorld(levelRecord, { roles = ROLES, cleared = null } =
                 // bridge is already Solid on a world's first LIVE tick
                 // while an ordinary Stone is still typed "Tile".
                 //
-                // ⚠ R3 MUST REVISIT THIS. The moment the ladder teaches the
-                // bot to use the spear, the timer becomes a real timer and
-                // a bridge becomes a gated crossing with an opening
-                // animation. The classification is true of a rung, not of
-                // the game.
+                // ⚠ AND R4 REVISITED IT, exactly as this note demanded. The
+                // spear press is in the vocabulary now, so the timer is a
+                // real timer and a bridge is a gated crossing: it stays a
+                // solid HERE (a closed bridge is what the geometry is) and
+                // the run carries the per-visit `openBridges` set that takes
+                // it out of the list — the `openActivators` shape, for the
+                // same reason. `bridgeId` is the join between the two views.
                 const solid = {
                     rect: tile.rect, cls: null, tag: `tile:${tile.name}`, x, y,
+                    bridgeId: `${tx},${ty}`,
                 };
                 solids.push(solid);
                 objectSolids.push(solid);
@@ -2435,6 +2472,14 @@ export function buildLevelWorld(levelRecord, { roles = ROLES, cleared = null } =
                     src: arm.src,
                     t: tSetOf(e.type, e.attrs),
                     persistTag: entityTag,
+                    // ⚠ The ONE responder whose rect is not a constant. A
+                    // pushed block is not where the level built it, and a
+                    // press census that answered from the spawn rect would
+                    // find the block for the FIRST push of a chain and miss
+                    // it for every one after — which is exactly what the
+                    // three-push L65 chain did before this line existed.
+                    ...(PUSHABLE_FAMILIES[e.type]
+                        ? { pushableId: `${e.type}@${x},${y}` } : {}),
                 });
             } else if (cls.type === 'Enemy') {
                 // ⚠ NO RECT, AND THAT IS THE POINT. An enemy's press
@@ -2461,6 +2506,21 @@ export function buildLevelWorld(levelRecord, { roles = ROLES, cleared = null } =
         if (cls.collider === 'none' || cls.collider === undefined) continue;
         if (cls.collider === 'rect') {
             const solid = { rect: entityRect(cls, x, y), cls, tag: e.type, x, y };
+            if (PUSHABLE_FAMILIES[e.type]) {
+                // ⚠ The id shape is the activator's, deliberately: both are
+                // "the run holds live state for this entity and the geometry
+                // query has to look it up". A second id convention would be
+                // a second place for the two to fall out of step.
+                solid.pushableId = `${e.type}@${x},${y}`;
+                pushables.push({
+                    id: solid.pushableId,
+                    tag: e.type,
+                    as3: cls.as3,
+                    family: PUSHABLE_FAMILIES[e.type],
+                    x,
+                    y,
+                });
+            }
             if (ACTIVATOR_RESPONDERS.has(e.type)) {
                 solid.activatorId = `${e.type}@${x},${y}`;
                 const activator = {
@@ -2646,6 +2706,18 @@ export function buildLevelWorld(levelRecord, { roles = ROLES, cleared = null } =
         activators,
         pressers,
         /**
+         * R4: the pushable blocks, `{id, tag, as3, family, x, y}`.
+         *
+         * The `blocking` role already lists each of them in `solids` (with
+         * a `pushableId` on the entry); this is the same set from the other
+         * side, for the run that has to hold their live positions. A block
+         * is the one solid on the map whose rect is a function of what the
+         * player has DONE, and `collidesSolid`/`plannerBlockerAt` take that
+         * live map as an option for exactly the reason they take
+         * `openActivators`: the geometry is static, the state is the run's.
+         */
+        pushables,
+        /**
          * R4: every entity in this level that `Player.genericHit` names,
          * with the arm it takes and what that arm COSTS a run.
          *
@@ -2719,7 +2791,10 @@ export function buildLevelWorld(levelRecord, { roles = ROLES, cleared = null } =
          * other side, and it is transcribed rather than tidied because the
          * game's own comment says the order is deliberate.
          */
-        collidesSolid(box, { beforeTypeFlip = false, openActivators = null } = {}) {
+        collidesSolid(box, {
+            beforeTypeFlip = false, openActivators = null, pushables: live = null,
+            openBridges = null,
+        } = {}) {
             // Pixelmask entities (Building, TreeLarge, CliffSide) assign
             // their type in the CONSTRUCTOR, so they are armed on tick 1
             // too — only Tiles are late.
@@ -2733,6 +2808,25 @@ export function buildLevelWorld(levelRecord, { roles = ROLES, cleared = null } =
                 // (`activators.js`) because it is per-tick state and this
                 // module builds static geometry.
                 if (openActivators && s.activatorId && openActivators.has(s.activatorId)) continue;
+                // R4: a bridge whose timer has run out is `type = "Tile"` —
+                // it leaves the solids list and JOINS the walkable ones (see
+                // `nearestWalkableTileWithTie`, which takes the same set).
+                if (openBridges && s.bridgeId && openBridges.has(s.bridgeId)) continue;
+                // R4: a block that has been pushed is not where the level
+                // built it. `live` is the run's own state (see
+                // `pushables.createPushableState`); WITHOUT it the spawn
+                // rect is used, which is exactly right for every tape that
+                // never presses and is why no frozen fixture moves.
+                if (live && s.pushableId && live.has(s.pushableId)) {
+                    // ⚠ A MISSING ENTRY FALLS THROUGH to the spawn rect
+                    // below rather than being read as "gone". Absent and
+                    // removed are different facts, and only one of them
+                    // means the cell is clear.
+                    const now = live.get(s.pushableId);
+                    if (now.removed) continue;
+                    if (rectsOverlap(box, now.rect)) return { ...s, rect: now.rect, live: true };
+                    continue;
+                }
                 if (rectsOverlap(box, s.rect)) return s;
             }
             return null;
@@ -2789,11 +2883,11 @@ export function buildLevelWorld(levelRecord, { roles = ROLES, cleared = null } =
          * different `t`; two tied tiles of the same type are not an
          * ambiguity at all.
          */
-        nearestWalkableTileWithTie(x, y, { beforeTypeFlip = false } = {}) {
+        nearestWalkableTileWithTie(x, y, { beforeTypeFlip = false, openBridges = null } = {}) {
             let best = null;
             let bestDist = Infinity;
             let tie = null;
-            for (const tile of (beforeTypeFlip ? tiles : walkableTiles)) {
+            const scan = (tile) => {
                 const dx = tile.x - x;
                 const dy = tile.y - y;
                 const d = dx * dx + dy * dy;
@@ -2803,6 +2897,23 @@ export function buildLevelWorld(levelRecord, { roles = ROLES, cleared = null } =
                     tie = null;
                 } else if (d === bestDist && best && tile.t !== best.t && !tie) {
                     tie = tile;
+                }
+            };
+            for (const tile of (beforeTypeFlip ? tiles : walkableTiles)) scan(tile);
+            // ⚠ R4: AN OPEN BRIDGE IS A CANDIDATE, and leaving it out is not
+            // a small error — it is the difference between walking across a
+            // bridge and falling down the pit beside it. `Tile.render`'s
+            // `<= 0` arm writes `type = "Tile"`, which puts the entity INTO
+            // the list `nearestToPoint("Tile", ...)` walks. L63's bridge is
+            // surrounded by pit, so a resolver that kept scanning only the
+            // static walkable tiles would answer 6 for a player standing in
+            // the middle of the crossing and start a transport the game
+            // never runs.
+            if (openBridges && openBridges.size > 0 && !beforeTypeFlip) {
+                for (const tile of tiles) {
+                    if (tile.t === BRIDGE_STATE && openBridges.has(`${tile.tx},${tile.ty}`)) {
+                        scan(tile);
+                    }
                 }
             }
             return { tile: best, tie };
@@ -2859,8 +2970,10 @@ export function buildLevelWorld(levelRecord, { roles = ROLES, cleared = null } =
          *                terrain arm models it — so a disabled hazard stops
          *                being an obstacle, and one still armed does not
          */
-        plannerBlockerAt(box, probeRect = null,
-            { noclip = false, noHazards = [], openActivators = null } = {}) {
+        plannerBlockerAt(box, probeRect = null, {
+            noclip = false, noHazards = [], openActivators = null, pushables: live = null,
+            openBridges = null,
+        } = {}) {
             if (!noclip) {
                 // ⚠ THE PLANNER USES THE REAL MASK, not the bounding rect.
                 // The conservative direction is normally right for routing,
@@ -2879,6 +2992,20 @@ export function buildLevelWorld(levelRecord, { roles = ROLES, cleared = null } =
                 for (const s of solids) {
                     if (openActivators && s.activatorId
                         && openActivators.has(s.activatorId)) continue;
+                    if (openBridges && s.bridgeId && openBridges.has(s.bridgeId)) continue;
+                    // R4: the planner has to see a pushed block where it
+                    // IS. A planner with its own idea of a block's position
+                    // would certify the corridor the push opened and then
+                    // walk the executor into the block it did not move —
+                    // the `openActivators` lesson, one mechanic later.
+                    if (live && s.pushableId && live.has(s.pushableId)) {
+                        const now = live.get(s.pushableId);
+                        if (now.removed) continue;
+                        if (rectsOverlap(box, now.rect)) {
+                            return { kind: 'solid', blocker: { ...s, rect: now.rect, live: true } };
+                        }
+                        continue;
+                    }
                     if (rectsOverlap(box, s.rect)) return { kind: 'solid', blocker: s };
                 }
             }

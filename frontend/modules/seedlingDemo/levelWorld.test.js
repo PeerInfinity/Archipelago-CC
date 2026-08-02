@@ -29,6 +29,7 @@ import {
     LevelWorldError,
     MODELLED_TILE_TYPES,
     PLAYER_SOLID_TYPES,
+    PUSHABLE_FAMILIES,
     RELAXED_ROLES,
     ROLES,
     STAIRS_TAGS,
@@ -348,6 +349,85 @@ describe('plannerBlockerAt — the same geometry, reported instead of returned',
     });
 });
 
+describe('R4: the pushable census, and the live rect the run owns', () => {
+    // A pushable is the one solid on the map whose rect is a function of
+    // what the player has DONE. The geometry stays here; the position lives
+    // in the run (`pushables.js`), and both queries take it as an option
+    // for exactly the reason they take `openActivators`.
+    const withBlocks = () => buildLevelWorld({
+        level: 999,
+        width: 20,
+        height: 20,
+        layers: [],
+        entities: [
+            { type: 'pushableblockspear', x: 176, y: 128, attrs: {} },
+            { type: 'pushableblock', x: 32, y: 32, attrs: {} },
+            { type: 'rock3', x: 96, y: 96, attrs: {} },
+        ],
+    });
+
+    it('records the FAMILY, because the class hierarchy disagrees with it', () => {
+        // `PushableBlockSpear extends PushableBlockFire` and shares its
+        // target-tile `input()`. Plain `PushableBlock` extends `Mobile`
+        // directly with a walk-pushed one, and no arm of `genericHit` names
+        // it at all — so the two are different mechanics under one name.
+        expect(PUSHABLE_FAMILIES).toEqual({
+            pushableblockspear: 'fire', pushableblockfire: 'fire', pushableblock: 'walk',
+        });
+        const w = withBlocks();
+        expect(w.pushables.map((p) => [p.tag, p.family, p.x, p.y])).toEqual([
+            ['pushableblockspear', 'fire', 176, 128],
+            ['pushableblock', 'walk', 32, 32],
+        ]);
+        // ...and each is still an ordinary solid, with the id that joins
+        // the two views.
+        const solid = w.solids.find((s) => s.tag === 'pushableblockspear');
+        expect(solid.pushableId).toBe('pushableblockspear@176,128');
+        expect(w.solids.find((s) => s.tag === 'rock3').pushableId).toBeUndefined();
+    });
+
+    it('without the run\'s state it is the SPAWN rect — which is every frozen tape', () => {
+        const w = withBlocks();
+        expect(w.collidesSolid(playerBox(180, 132))).toMatchObject({ tag: 'pushableblockspear' });
+        expect(w.collidesSolid(playerBox(160, 132))).toBeNull();
+    });
+
+    it('with it, both queries answer at the block\'s LIVE position', () => {
+        const w = withBlocks();
+        const live = new Map([['pushableblockspear@176,128', {
+            rect: rect(160, 128, 16, 16), removed: false,
+        }]]);
+        // The vacated cell is clear...
+        expect(w.collidesSolid(playerBox(180, 132), { pushables: live })).toBeNull();
+        expect(w.plannerBlockerAt(playerBox(180, 132), null, { pushables: live })).toBeNull();
+        // ...and the cell it moved into is not.
+        expect(w.collidesSolid(playerBox(164, 132), { pushables: live }))
+            .toMatchObject({ tag: 'pushableblockspear', live: true });
+        expect(w.plannerBlockerAt(playerBox(164, 132), null, { pushables: live }))
+            .toMatchObject({ kind: 'solid', blocker: { tag: 'pushableblockspear', live: true } });
+    });
+
+    it('a REMOVED block blocks nothing, in both queries', () => {
+        const w = withBlocks();
+        const live = new Map([['pushableblockspear@176,128', {
+            rect: rect(160, 128, 16, 16), removed: true,
+        }]]);
+        expect(w.collidesSolid(playerBox(164, 132), { pushables: live })).toBeNull();
+        expect(w.plannerBlockerAt(playerBox(164, 132), null, { pushables: live })).toBeNull();
+    });
+
+    it('the three R4 chain levels each hold exactly the block §11 pushes', () => {
+        // §11.2's table, from the extract rather than from the plan: one
+        // block each in L63, L65 and L67, and all three are the spear
+        // variant (the only family a press can move).
+        for (const level of [63, 65, 67]) {
+            const w = buildLevelWorld(levelRecord(level), { roles: RELAXED_ROLES });
+            expect(w.pushables.map((p) => p.family)).toEqual(['fire']);
+            expect(w.pushables[0].tag).toBe('pushableblockspear');
+        }
+    });
+});
+
 describe('the player collides with Mobile.solids + LavaBoss', () => {
     it('is the base list plus the unconditional Player ctor push', () => {
         expect(PLAYER_SOLID_TYPES)
@@ -500,10 +580,16 @@ describe('tiles', () => {
         expect(w.solids).toHaveLength(1);
         expect(w.objectSolids).toHaveLength(1);
         expect(w.solids[0].tag).toBe('tile:Bridge');
-        // ...and it is NOT a getState candidate, so `state` can never become
-        // 29 and the resolver never has to answer for it.
+        // ...and it is not a getState candidate WHILE IT IS CLOSED, which
+        // is what `walkableTiles` records. R4 opens it: the type is legal
+        // terrain now, and the run's `openBridges` is what promotes the
+        // tile into the candidate list for the ticks it is open.
         expect(w.walkableTiles).toHaveLength(0);
-        expect(MODELLED_TILE_TYPES).not.toContain(29);
+        expect(MODELLED_TILE_TYPES).toContain(29);
+        expect(w.solids[0].bridgeId).toBe('0,0');
+        expect(w.collidesSolid(playerBox(8, 8), { openBridges: new Set(['0,0']) })).toBeNull();
+        expect(w.nearestWalkableTile(8, 8, { openBridges: new Set(['0,0']) }))
+            .toMatchObject({ t: 29, tx: 0, ty: 0 });
         // The three route levels this unblocks — 61 and 63 stand between the
         // walk and both ghostspear and health.
         expect(() => buildLevelWorld(levelRecord(61), { roles: RELAXED_ROLES }))
@@ -530,10 +616,11 @@ describe('tiles', () => {
         // `hasFire` (R5), so water is planner-forbidden floor and a run
         // that stands on one has a route defect this throw names.
         //
-        // Bridge (29) is still not modelled TERRAIN — it is a solid, so it
-        // leaves the getState candidate list entirely and `state` can never
-        // become 29.
-        const excluded = [1, 29];
+        // ⚠ R4 MOVED 29 (Bridge) IN. It is a solid while it is CLOSED and
+        // `type = "Tile"` from the render that opens it, so `state` really
+        // can be 29 once a spear press has been thrown — see the
+        // `openBridges` arm of `nearestWalkableTileWithTie`.
+        const excluded = [1];
         const all = TILE_TYPE_ENTITY_TYPES.map((_, t) => t);
         expect([...MODELLED_TILE_TYPES].sort((a, b) => a - b))
             .toEqual(all.filter((t) => !excluded.includes(t)));

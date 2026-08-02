@@ -45,9 +45,11 @@ import {
     slashRect,
     spearOrigin,
     spearRect,
+    PRESS_ARM_POLICY,
 } from './presses.js';
 import {
     LIGHTPOLE_PRESS_BOX, PRESS_ARMS, PRESS_UNKILLABLE, RELAXED_ROLES, buildLevelWorld,
+    rect as makeRect,
 } from './levelWorld.js';
 import { atlasLevelSource } from './levelSource.js';
 
@@ -278,6 +280,45 @@ describe('the level query (R4: the census half of §3.2)', () => {
         // produce, so the enumeration cannot rot into a list of typos.
         expect(Object.keys(PRESS_UNKILLABLE).sort())
             .toEqual(['BombPusher', 'DarkTrap', 'Grenade']);
+    });
+
+    it('⚠ answers at a pushed block\'s LIVE rect, not its spawn one', () => {
+        // The failure this line prevents was measured, not imagined: the
+        // three-push L65 chain landed its FIRST push and silently no-opped
+        // the other two, because the press census kept answering from the
+        // rect `loadlevel` built and the block was a tile away by then.
+        const block = L65.pressResponders.find((r) => r.as3 === 'PushableBlockSpear');
+        expect(block.pushableId).toBe('pushableblockspear@176,128');
+        // A stance whose rect covers the SPAWN cell but not the cell the
+        // block has been pushed into.
+        const atSpawn = spearRect(204, 132, LEFT);
+        expect(pressRespondersIn(L65, atSpawn).some((r) => r.pushableId)).toBe(true);
+        const moved = new Map([[block.pushableId, {
+            rect: makeRect(160, 128, 16, 16), removed: false,
+        }]]);
+        expect(pressRespondersIn(L65, atSpawn, { pushables: moved })
+            .find((r) => r.pushableId).rect.x).toBe(160);
+        const gone = new Map([[block.pushableId, { rect: makeRect(160, 128, 16, 16), removed: true }]]);
+        expect(pressRespondersIn(L65, atSpawn, { pushables: gone }).some((r) => r.pushableId))
+            .toBe(false);
+    });
+
+    it('every arm `genericHit` names has a POLICY, and no policy is orphaned', () => {
+        // An enumeration over `PRESS_ARMS`, checked in both directions. The
+        // blanket rule this replaced ("model two arms, refuse everything
+        // else") failed a COMMITTED recording: `r3-collect-sword` pages its
+        // own dialogue with X while holding the sword, and the rect reaches
+        // two TREES — whose `hit()` is an empty body.
+        expect(Object.keys(PRESS_ARM_POLICY).sort()).toEqual(Object.keys(PRESS_ARMS).sort());
+        for (const [as3, entry] of Object.entries(PRESS_ARM_POLICY)) {
+            expect(['modelled', 'inert', 'refused']).toContain(entry.policy);
+            expect(typeof entry.why).toBe('string');
+            expect(entry.why).not.toBe('');
+            expect(as3).toBeTruthy();
+        }
+        expect(PRESS_ARM_POLICY.Tree.policy).toBe('inert');
+        expect(PRESS_ARM_POLICY.LightPole.policy).toBe('refused');
+        expect(PRESS_ARM_POLICY.PushableBlockSpear.policy).toBe('modelled');
     });
 
     it('REFUSES a world built without the blocking role rather than passing', () => {

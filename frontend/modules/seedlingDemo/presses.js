@@ -182,14 +182,27 @@ export function distanceRectPoint(px, py, r) {
  * is empty because nothing was ASKED, not because nothing responds. That
  * distinction is the whole reason this throws.
  */
-export function pressRespondersIn(world, rect) {
+export function pressRespondersIn(world, rect, { pushables: live = null } = {}) {
     if (!world.roles?.includes('blocking')) {
         throw new PressError(`pressRespondersIn: level ${world.level} was built without `
             + `the "blocking" role (${(world.roles ?? []).join(', ') || 'none'}), so its `
             + 'press census is empty because nothing was asked. An audit over an '
             + 'unasked census would pass by construction.');
     }
-    const hits = world.pressResponders.filter((r) => rectsOverlap(rect, r.rect));
+    const hits = [];
+    for (const r of world.pressResponders) {
+        // ⚠ A PUSHED BLOCK MOVED, and the census did not. Every other
+        // responder's rect is a constant; this one is the run's state, and
+        // asking the static census for it is how a three-push chain lands
+        // its first push and silently no-ops the other two.
+        if (live && r.pushableId && live.has(r.pushableId)) {
+            const now = live.get(r.pushableId);
+            if (now.removed) continue;
+            if (rectsOverlap(rect, now.rect)) hits.push({ ...r, rect: now.rect, live: true });
+            continue;
+        }
+        if (rectsOverlap(rect, r.rect)) hits.push(r);
+    }
     // A bridge is a press responder and it is TERRAIN — the one arm of
     // `genericHit` that dispatches on `Tile`. Merged here so a caller
     // asking "what does this thrust touch" gets one answer rather than two
@@ -234,8 +247,8 @@ export function pressRespondersIn(world, rect) {
  * reason to prefer the sword where the geometry allows, not a reason to
  * skip the audit.
  */
-export function auditPress(world, rect, { weapon, intended = [] } = {}) {
-    const responders = pressRespondersIn(world, rect);
+export function auditPress(world, rect, { weapon, intended = [], pushables = null } = {}) {
+    const responders = pressRespondersIn(world, rect, { pushables });
     const spearOnly = new Set(['LightPole', 'Tile']);
     const live = responders.filter(
         (r) => weapon === 'spear' || !spearOnly.has(r.as3),
@@ -283,6 +296,49 @@ export function auditPress(world, rect, { weapon, intended = [] } = {}) {
  *     push is an irreversible route change;
  *   - a bridge decrement starts an opening the run did not plan.
  */
+/**
+ * What this rung DOES with each arm `genericHit` can take — the policy the
+ * executor enforces, one entry per `PRESS_ARMS` key.
+ *
+ *   `modelled`  the run tracks the effect (`levelRun`'s per-visit state)
+ *   `inert`     the arm runs in the game and changes NOTHING the model or
+ *               the observation stream can see — stated per class, from the
+ *               class's own body, never as a default
+ *   `refused`   real, unmodelled, and a synthesis-time throw
+ *
+ * ⚠ AN ENUMERATION OVER `PRESS_ARMS`, checked as one. "Everything else is
+ * refused" would have been the safe-sounding rule and it is the wrong one:
+ * `r3-collect-sword` presses X to page its own dialogue, the player is
+ * holding the sword by then, and the rect reaches two TREES — so a blanket
+ * refusal fails a COMMITTED recording over an arm whose body is empty.
+ */
+export const PRESS_ARM_POLICY = Object.freeze({
+    Tile: { policy: 'modelled', why: 'the bridge timer — `bridges.js` and the run\'s openBridges' },
+    PushableBlockSpear: { policy: 'modelled', why: 'the slide — `pushables.js` and the run\'s per-visit state' },
+    Tree: { policy: 'inert', why: '`Tree.hit()` is an EMPTY BODY (Scenery/Tree.as)' },
+    Grass: {
+        policy: 'inert',
+        why: '`cut()` plays a sound, sets its own `cutGrass` and increments '
+            + '`Main.grassCut` — a SharedObject counter with a medal at 10,000. No '
+            + 'geometry, no persistence flag, and Grass is `type = "Grass"`, in no '
+            + 'solids list.',
+    },
+    PushableBlockFire: {
+        policy: 'inert',
+        why: 'the NON-relative arm, which is the one place `moveTypes` IS consulted '
+            + '— `["Fire","Pulse"]` against a press\'s "Sword"/"Spear", so no player '
+            + 'press moves one',
+    },
+    Enemy: { policy: 'refused', why: 'a death moves totalEnemies(), which opens tSet == -1 locks' },
+    IceTurret: { policy: 'refused', why: 'the Enemy cost plus a bump; Dungeon 5, off route' },
+    BreakableRock: { policy: 'refused', why: 'despawns at its hit count AND writes persistence' },
+    RopeStart: { policy: 'refused', why: 'SHRINKS to a one-cell solid and writes persistence' },
+    ShieldBoss: { policy: 'refused', why: 'boss damage — R5' },
+    LightPole: { policy: 'refused', why: '`set activate` writes Game.setPersistence(tag, !activate)' },
+    LavaBall: { policy: 'refused', why: 'R5 — Dungeon 7' },
+    Watcher: { policy: 'refused', why: 'R6 — the ending' },
+});
+
 export const PRESS_COSTS = Object.freeze({
     death: 'moves totalEnemies(), which opens tSet == -1 locks',
     lightpole: 'toggles the group AND writes Game.setPersistence(tag, !activate)',
