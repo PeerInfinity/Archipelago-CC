@@ -56,7 +56,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
 const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
 
-const { TILE_SIZE, buildLevelWorld } = await import(join(MODULE, 'levelWorld.js'));
+const { TILE_SIZE } = await import(join(MODULE, 'levelWorld.js'));
 const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
 const { contactsAt, nodeCentre, plannerObstacleAt } =
     await import(join(MODULE, 'botDriverV2.js'));
