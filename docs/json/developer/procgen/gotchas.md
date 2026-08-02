@@ -113,6 +113,40 @@ Two things worth carrying beyond this bug:
 
 Cheap substrates (text adventure) are fine — `taswBlockModeTests` does exactly this. For an expensive one, load a **committed preset** instead and synthesize only the small piece you need (`runnerBlockModeTests` loads `runner_worldgen` and generates just the `loop_costs` sidecar with the pure generator, which is a fast pure function — and doubles as an end-to-end check of that generator).
 
+## A component flood cannot see a ONE-WAY mechanic, and it lies optimistically
+
+`componentsOf` / flood-fill is `for each neighbour: if walkable, enqueue` —
+a symmetric relation by construction. Every directed mechanic in a game is
+invisible to it, and the error is always PERMISSIVE: the graph promises a
+route the walk cannot take.
+
+The Seedling bot's R4 rung hit two in one session, and both only when the
+route was built rather than when the graph was floodable:
+
+- **A waterfall you cannot climb.** `v.y += 0.8` unless you hold the
+  feather, against a water move speed below 0.8. The flood called level 0
+  one component; the game makes its north half reachable downward only —
+  and the feather was on the far side.
+- **A lock you can only walk through one way.** The button that opens it is
+  south of it and there is none beyond, so a six-level cluster is enterable
+  and not leavable. The flood called it connected.
+
+**How to handle one:**
+
+1. Before believing a reachability answer, list the mechanics that move or
+   resist the player and ask which are DIRECTED.
+2. Model it as a refusal on the **STEP**, never on the **CELL**. Refusing
+   the cell is the tempting fix and it is wrong: a waterfall is something a
+   route crosses downward all the time, and forbidding the tile took a
+   53-node map to 12. See `botDriverV2.climbsArmedWaterfall`.
+3. The cheap instrument is a **directed flood** — the same BFS with the edge
+   predicate added — run against the undirected one as a control. 670 cells
+   versus 782 is a two-line diff and an unmissable answer.
+4. ⚠ Two one-way branches can be MUTUALLY EXCLUSIVE. If each ends in a
+   terminal set, one walk can take only one of them, and that is a claim
+   shrinkage rather than a routing difficulty. Sweep every opener the map
+   offers before reporting it — one at a time AND all at once.
+
 ## Related documentation
 
 - [Architecture](./architecture.md)
