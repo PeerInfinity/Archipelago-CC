@@ -1,0 +1,975 @@
+{
+  "generated_by": "scripts/procgen/plan-seedling-r4-route.mjs",
+  "description": "The R4 full walk: R3's map with the HAZARDS ARMED. `noHazards` is [\"water\"] alone, so lava is a wall — which costs `darksuit` and R3's whole tail — and `health` joins the claim in its place, behind five spear presses across three levels, a boss key, and a lock that opens on it. `hitsMax == 4` is asserted as a POSITIVE for the first time on the ladder. `grants` is EMPTY; two flags are EARNED (L68 tag 0 by the boss lock, L65 tag 2 by a lightpole the third push cannot geometrically avoid) and eleven declared.",
+  "boot": {
+    "level": 0,
+    "x": 80,
+    "y": 128
+  },
+  "noHazards": [
+    "water"
+  ],
+  "item_order": [
+    "sword(L10)",
+    "feather(L89)",
+    "torch(L30)",
+    "spear(L64)",
+    "bosskey(L67)",
+    "health(L68)"
+  ],
+  "start_node": "0:1",
+  "grants": [],
+  "persistence": [
+    {
+      "level": 12,
+      "tag": 3,
+      "note": "bosslock@80,656"
+    },
+    {
+      "level": 12,
+      "tag": 5,
+      "note": "bosslock@432,240"
+    },
+    {
+      "level": 24,
+      "tag": 0,
+      "note": "burnabletree@32,128"
+    },
+    {
+      "level": 30,
+      "tag": 0,
+      "note": "bosslock@64,32"
+    },
+    {
+      "level": 60,
+      "tag": 0,
+      "note": "lock@128,80"
+    },
+    {
+      "level": 68,
+      "tag": 1,
+      "note": "magicallock@16,32"
+    }
+  ],
+  "earned": [
+    {
+      "level": 68,
+      "tag": 0,
+      "by": "bosslock@16,32"
+    },
+    {
+      "level": 65,
+      "tag": 2,
+      "by": "lightpole@176,120"
+    }
+  ],
+  "equips": [
+    {
+      "leg": 29,
+      "index": 1,
+      "slot": 1
+    }
+  ],
+  "spears": [
+    {
+      "leg": 34,
+      "index": 1,
+      "level": 67,
+      "at": {
+        "x": 180,
+        "y": 116
+      },
+      "facing": "W",
+      "block": {
+        "x": 144,
+        "y": 112
+      },
+      "to": null
+    },
+    {
+      "leg": 38,
+      "index": 1,
+      "level": 63,
+      "at": {
+        "x": 100,
+        "y": 100
+      },
+      "facing": "E",
+      "block": {
+        "x": 112,
+        "y": 96
+      },
+      "to": null
+    },
+    {
+      "leg": 39,
+      "index": 1,
+      "level": 65,
+      "at": {
+        "x": 196,
+        "y": 132
+      },
+      "facing": "W",
+      "block": {
+        "x": 176,
+        "y": 128
+      },
+      "to": {
+        "tx": 10,
+        "ty": 8
+      }
+    },
+    {
+      "leg": 39,
+      "index": 3,
+      "level": 65,
+      "at": {
+        "x": 164,
+        "y": 164
+      },
+      "facing": "N",
+      "block": {
+        "x": 176,
+        "y": 128
+      },
+      "to": {
+        "tx": 10,
+        "ty": 7
+      }
+    },
+    {
+      "leg": 39,
+      "index": 5,
+      "level": 65,
+      "at": {
+        "x": 196,
+        "y": 116
+      },
+      "facing": "W",
+      "block": {
+        "x": 176,
+        "y": 128
+      },
+      "to": null
+    }
+  ],
+  "keylocks": [
+    {
+      "leg": 40,
+      "index": 1,
+      "level": 68,
+      "lock": {
+        "x": 16,
+        "y": 32
+      },
+      "at": {
+        "x": 24,
+        "y": 50
+      }
+    }
+  ],
+  "collects": [
+    {
+      "leg": 4,
+      "index": 0,
+      "level": 10,
+      "item": "sword",
+      "pickup": {
+        "x": 48,
+        "y": 48
+      },
+      "at": {
+        "x": 52,
+        "y": 44
+      }
+    },
+    {
+      "leg": 9,
+      "index": 0,
+      "level": 89,
+      "item": "feather",
+      "pickup": {
+        "x": 160,
+        "y": 96
+      },
+      "at": {
+        "x": 164,
+        "y": 92
+      }
+    },
+    {
+      "leg": 18,
+      "index": 0,
+      "level": 30,
+      "item": "torch",
+      "pickup": {
+        "x": 64,
+        "y": 64
+      },
+      "at": {
+        "x": 68,
+        "y": 60
+      }
+    },
+    {
+      "leg": 29,
+      "index": 0,
+      "level": 64,
+      "item": "spear",
+      "pickup": {
+        "x": 72,
+        "y": 24
+      },
+      "at": {
+        "x": 76,
+        "y": 20
+      }
+    },
+    {
+      "leg": 34,
+      "index": 2,
+      "level": 67,
+      "item": "bosskey",
+      "pickup": {
+        "x": 48,
+        "y": 64
+      },
+      "at": {
+        "x": 52,
+        "y": 60
+      }
+    },
+    {
+      "leg": 40,
+      "index": 2,
+      "level": 68,
+      "item": "health",
+      "pickup": {
+        "x": 16,
+        "y": 16
+      },
+      "at": {
+        "x": 20,
+        "y": 36
+      }
+    }
+  ],
+  "segment_boundaries": [
+    8,
+    13,
+    23,
+    27,
+    33
+  ],
+  "leg_boots": [
+    {
+      "level": 0,
+      "x": 80,
+      "y": 128
+    },
+    {
+      "level": 2,
+      "x": 48,
+      "y": 32
+    },
+    {
+      "level": 3,
+      "x": 64,
+      "y": 16
+    },
+    {
+      "level": 11,
+      "x": 32,
+      "y": 16
+    },
+    {
+      "level": 10,
+      "x": 48,
+      "y": 32
+    },
+    {
+      "level": 11,
+      "x": 32,
+      "y": 64
+    },
+    {
+      "level": 3,
+      "x": 96,
+      "y": 128
+    },
+    {
+      "level": 2,
+      "x": 48,
+      "y": 80
+    },
+    {
+      "level": 0,
+      "x": 256,
+      "y": 256
+    },
+    {
+      "level": 89,
+      "x": 160,
+      "y": 288
+    },
+    {
+      "level": 87,
+      "x": 16,
+      "y": 144
+    },
+    {
+      "level": 44,
+      "x": 16,
+      "y": 80
+    },
+    {
+      "level": 37,
+      "x": 16,
+      "y": 256
+    },
+    {
+      "level": 12,
+      "x": 592,
+      "y": 16
+    },
+    {
+      "level": 24,
+      "x": 48,
+      "y": 128
+    },
+    {
+      "level": 23,
+      "x": 48,
+      "y": 32
+    },
+    {
+      "level": 21,
+      "x": 16,
+      "y": 80
+    },
+    {
+      "level": 22,
+      "x": 96,
+      "y": 16
+    },
+    {
+      "level": 30,
+      "x": 64,
+      "y": 16
+    },
+    {
+      "level": 22,
+      "x": 96,
+      "y": 176
+    },
+    {
+      "level": 21,
+      "x": 80,
+      "y": 144
+    },
+    {
+      "level": 23,
+      "x": 64,
+      "y": 32
+    },
+    {
+      "level": 24,
+      "x": 96,
+      "y": 80
+    },
+    {
+      "level": 12,
+      "x": 40,
+      "y": 704
+    },
+    {
+      "level": 95,
+      "x": 608,
+      "y": 64
+    },
+    {
+      "level": 59,
+      "x": 144,
+      "y": 288
+    },
+    {
+      "level": 60,
+      "x": 16,
+      "y": 80
+    },
+    {
+      "level": 61,
+      "x": 16,
+      "y": 160
+    },
+    {
+      "level": 62,
+      "x": 48,
+      "y": 288
+    },
+    {
+      "level": 64,
+      "x": 32,
+      "y": 80
+    },
+    {
+      "level": 62,
+      "x": 112,
+      "y": 80
+    },
+    {
+      "level": 61,
+      "x": 112,
+      "y": 16
+    },
+    {
+      "level": 60,
+      "x": 144,
+      "y": 80
+    },
+    {
+      "level": 59,
+      "x": 288,
+      "y": 128
+    },
+    {
+      "level": 67,
+      "x": 208,
+      "y": 112
+    },
+    {
+      "level": 59,
+      "x": 16,
+      "y": 128
+    },
+    {
+      "level": 60,
+      "x": 16,
+      "y": 80
+    },
+    {
+      "level": 61,
+      "x": 16,
+      "y": 160
+    },
+    {
+      "level": 63,
+      "x": 16,
+      "y": 96
+    },
+    {
+      "level": 65,
+      "x": 128,
+      "y": 16
+    },
+    {
+      "level": 68,
+      "x": 16,
+      "y": 64
+    }
+  ],
+  "legs": [
+    {
+      "level": 0,
+      "targets": [],
+      "exit": {
+        "x": 256,
+        "y": 272
+      }
+    },
+    {
+      "level": 2,
+      "targets": [],
+      "exit": {
+        "x": 48,
+        "y": 96
+      }
+    },
+    {
+      "level": 3,
+      "targets": [],
+      "exit": {
+        "x": 96,
+        "y": 128
+      }
+    },
+    {
+      "level": 11,
+      "targets": [],
+      "exit": {
+        "x": 32,
+        "y": 80
+      }
+    },
+    {
+      "level": 10,
+      "targets": [
+        {
+          "x": 52,
+          "y": 44,
+          "collect": {
+            "pickup": {
+              "x": 48,
+              "y": 48
+            }
+          }
+        }
+      ],
+      "exit": {
+        "x": 48,
+        "y": 16
+      }
+    },
+    {
+      "level": 11,
+      "targets": [],
+      "exit": {
+        "x": 32,
+        "y": 0
+      }
+    },
+    {
+      "level": 3,
+      "targets": [],
+      "exit": {
+        "x": 64,
+        "y": 0
+      },
+      "contacts": [
+        "teleporter:-1@96,128"
+      ]
+    },
+    {
+      "level": 2,
+      "targets": [],
+      "exit": {
+        "x": 48,
+        "y": 16
+      }
+    },
+    {
+      "level": 0,
+      "targets": [],
+      "exit": {
+        "x": 240,
+        "y": 0
+      }
+    },
+    {
+      "level": 89,
+      "targets": [
+        {
+          "x": 164,
+          "y": 92,
+          "collect": {
+            "pickup": {
+              "x": 160,
+              "y": 96
+            }
+          }
+        }
+      ],
+      "exit": {
+        "x": 288,
+        "y": 240
+      }
+    },
+    {
+      "level": 87,
+      "targets": [],
+      "exit": {
+        "x": 464,
+        "y": 272
+      }
+    },
+    {
+      "level": 44,
+      "targets": [],
+      "exit": {
+        "x": 144,
+        "y": 128
+      }
+    },
+    {
+      "level": 37,
+      "targets": [],
+      "exit": {
+        "x": 32,
+        "y": 304
+      }
+    },
+    {
+      "level": 12,
+      "targets": [],
+      "exit": {
+        "x": 40,
+        "y": 688
+      }
+    },
+    {
+      "level": 24,
+      "targets": [],
+      "exit": {
+        "x": 96,
+        "y": 96
+      }
+    },
+    {
+      "level": 23,
+      "targets": [],
+      "exit": {
+        "x": 80,
+        "y": 32
+      }
+    },
+    {
+      "level": 21,
+      "targets": [],
+      "exit": {
+        "x": 80,
+        "y": 160
+      }
+    },
+    {
+      "level": 22,
+      "targets": [],
+      "exit": {
+        "x": 96,
+        "y": 192
+      }
+    },
+    {
+      "level": 30,
+      "targets": [
+        {
+          "x": 68,
+          "y": 60,
+          "collect": {
+            "pickup": {
+              "x": 64,
+              "y": 64
+            }
+          }
+        }
+      ],
+      "exit": {
+        "x": 64,
+        "y": 0
+      }
+    },
+    {
+      "level": 22,
+      "targets": [],
+      "exit": {
+        "x": 96,
+        "y": 0
+      }
+    },
+    {
+      "level": 21,
+      "targets": [],
+      "exit": {
+        "x": 0,
+        "y": 80
+      }
+    },
+    {
+      "level": 23,
+      "targets": [],
+      "exit": {
+        "x": 32,
+        "y": 32
+      }
+    },
+    {
+      "level": 24,
+      "targets": [],
+      "exit": {
+        "x": 32,
+        "y": 144
+      }
+    },
+    {
+      "level": 12,
+      "targets": [],
+      "exit": {
+        "x": 0,
+        "y": 352
+      }
+    },
+    {
+      "level": 95,
+      "targets": [],
+      "exit": {
+        "x": 32,
+        "y": 0
+      }
+    },
+    {
+      "level": 59,
+      "targets": [],
+      "exit": {
+        "x": 304,
+        "y": 128
+      }
+    },
+    {
+      "level": 60,
+      "targets": [],
+      "exit": {
+        "x": 160,
+        "y": 80
+      }
+    },
+    {
+      "level": 61,
+      "targets": [],
+      "exit": {
+        "x": 112,
+        "y": 0
+      }
+    },
+    {
+      "level": 62,
+      "targets": [],
+      "exit": {
+        "x": 112,
+        "y": 64
+      }
+    },
+    {
+      "level": 64,
+      "targets": [
+        {
+          "x": 76,
+          "y": 20,
+          "collect": {
+            "pickup": {
+              "x": 72,
+              "y": 24
+            }
+          }
+        },
+        {
+          "x": 76,
+          "y": 20,
+          "equip": {
+            "slot": 1
+          }
+        }
+      ],
+      "exit": {
+        "x": 32,
+        "y": 96
+      }
+    },
+    {
+      "level": 62,
+      "targets": [],
+      "exit": {
+        "x": 48,
+        "y": 304
+      }
+    },
+    {
+      "level": 61,
+      "targets": [],
+      "exit": {
+        "x": 0,
+        "y": 160
+      }
+    },
+    {
+      "level": 60,
+      "targets": [],
+      "exit": {
+        "x": 0,
+        "y": 80
+      }
+    },
+    {
+      "level": 59,
+      "targets": [],
+      "exit": {
+        "x": 0,
+        "y": 128
+      }
+    },
+    {
+      "level": 67,
+      "targets": [
+        {
+          "x": 188,
+          "y": 116
+        },
+        {
+          "x": 180,
+          "y": 116,
+          "spear": {
+            "facing": "W",
+            "block": {
+              "x": 144,
+              "y": 112
+            },
+            "to": null
+          }
+        },
+        {
+          "x": 52,
+          "y": 60,
+          "collect": {
+            "pickup": {
+              "x": 48,
+              "y": 64
+            }
+          }
+        }
+      ],
+      "exit": {
+        "x": 224,
+        "y": 112
+      }
+    },
+    {
+      "level": 59,
+      "targets": [],
+      "exit": {
+        "x": 304,
+        "y": 128
+      }
+    },
+    {
+      "level": 60,
+      "targets": [],
+      "exit": {
+        "x": 160,
+        "y": 80
+      }
+    },
+    {
+      "level": 61,
+      "targets": [],
+      "exit": {
+        "x": 224,
+        "y": 96
+      }
+    },
+    {
+      "level": 63,
+      "targets": [
+        {
+          "x": 84,
+          "y": 100
+        },
+        {
+          "x": 100,
+          "y": 100,
+          "spear": {
+            "facing": "E",
+            "block": {
+              "x": 112,
+              "y": 96
+            },
+            "to": null
+          }
+        }
+      ],
+      "exit": {
+        "x": 128,
+        "y": 304
+      }
+    },
+    {
+      "level": 65,
+      "targets": [
+        {
+          "x": 204,
+          "y": 132
+        },
+        {
+          "x": 196,
+          "y": 132,
+          "spear": {
+            "facing": "W",
+            "block": {
+              "x": 176,
+              "y": 128
+            },
+            "to": {
+              "tx": 10,
+              "ty": 8
+            }
+          }
+        },
+        {
+          "x": 164,
+          "y": 170
+        },
+        {
+          "x": 164,
+          "y": 164,
+          "spear": {
+            "facing": "N",
+            "block": {
+              "x": 176,
+              "y": 128
+            },
+            "to": {
+              "tx": 10,
+              "ty": 7
+            }
+          }
+        },
+        {
+          "x": 204,
+          "y": 116
+        },
+        {
+          "x": 196,
+          "y": 116,
+          "spear": {
+            "facing": "W",
+            "block": {
+              "x": 176,
+              "y": 128
+            },
+            "to": null
+          }
+        }
+      ],
+      "exit": {
+        "x": 184,
+        "y": 64
+      }
+    },
+    {
+      "level": 68,
+      "targets": [
+        {
+          "x": 24,
+          "y": 66
+        },
+        {
+          "x": 24,
+          "y": 50,
+          "keylock": {
+            "lock": {
+              "x": 16,
+              "y": 32
+            }
+          }
+        },
+        {
+          "x": 20,
+          "y": 36,
+          "collect": {
+            "pickup": {
+              "x": 16,
+              "y": 16
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
