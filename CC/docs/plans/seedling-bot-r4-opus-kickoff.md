@@ -1461,3 +1461,80 @@ per leg) ≈ **~95 KB, over the ceiling**. `assertTapeWithinRuntimeBudget`
 refuses loudly at synthesis rather than at record time, so this is measured
 at slice 8 and not guessed here — but it is priced NOW, per the rung's own
 "shrinkage escalates and is priced early" discipline.
+
+## 12. Session state after §11 — what shipped, and what the next slice needs
+
+### 12.1 Shipped this session
+
+- **`recon-seedling-pushes.mjs`** — the multi-push sweep (§11.1), with its
+  three corrected traps recorded at their sites.
+- **`probe-seedling-l65-breach.mjs`** — the pair that overturned §8.5.
+- **The press audit's LEVEL-QUERY half**, which had been a stated gap:
+  `PRESS_ARMS` (one entry per class `genericHit` names, with its arm, its
+  cost and its line — every other class inert *because the chain does not
+  name it*), `world.pressResponders` / `pressEnemies` / `bridgeTiles`, and
+  `presses.pressRespondersIn` / `auditPress`, which REFUSE a world built
+  without the `blocking` role rather than answering emptily.
+  ⚠ `LIGHTPOLE_PRESS_BOX`: the pole's hitbox is NOT the constructor's —
+  `render()` re-anchors `y` to `startY - originY + 2*sin(...)` and
+  `centerOO()` on a 16x16 image makes `originY` 8, so the box sits eight
+  pixels higher and bobs ±2. This overturned `presses.test.js`'s own
+  docblock: the pole does not overlap `pushableblockspear@176,128`, it is
+  flush against its top edge, and R4's thrust at that block is clean.
+  `PRESS_UNKILLABLE` enumerates the three empty `hit()` overrides.
+- **`inventory` threaded into `planNow`** — inert at R4 by construction
+  (the rung drops `darksuit`; `canSwim` is the conch), named as a bounded
+  vacuity whose witness is R5's first suit-holding leg.
+- **`probe-seedling-bridge.mjs`** and the bridge delay, MEASURED: press at
+  25, pin breaks at 85 ⇒ **`TICKS_FROM_PRESS_TO_WALKABLE` = 60**, and one
+  press is one decrement. The four-class firing chain stays documented as a
+  hazard a later rung can re-open, not as a correction.
+
+758 → 776 green across the seedling strata.
+
+### 12.2 ⚠ What the next slice has to build, and the facts it needs
+
+Wiring bridges into `levelRun` is blocked on something the ladder has
+never modelled: **`Player.direction`**. It is not in `playerPhysicsV2` at
+all, and the spear rect is a function of it. The transcription, read this
+session so it does not have to be read again:
+
+- `direction` is derived in **`sprites()`**, which runs AFTER
+  `super.update()` (i.e. after friction/input/moveX/moveY) — so the value a
+  press uses is the one the PREVIOUS tick's `sprites()` left.
+- The derivation is from VELOCITY, not from keys, x before y, and it STICKS
+  when `v` is zero: `v.x < 0 -> 2`, `v.x > 0 -> 0`, `v.y < 0 -> 1`,
+  `v.y > 0 -> 3`, else unchanged. Initial value **3**.
+- `directionFace >= 0` overrides it entirely. It is written in exactly
+  three places: `checkFallingInPit` (sets 3 while falling), the
+  `fallFromCeiling` landing (clears to -1 and sets `direction = 3`), and
+  `knockback` under `hitsTimer > 0` — which `noDamage` makes unreachable.
+  So for an R4 walk the only writer is the PIT TRANSPORT, and R1 already
+  models that: **after a fall arrival, `direction = 3`.**
+- The press itself: `input()` fires `useItem(Main.primary)` on
+  `Input.pressed(keys[4])`, `set spearing` captures `spearDirection =
+  direction`, and `spear()` — which runs BEFORE `input()` in the same
+  update — fires the rect on the NEXT tick. The bridge probe confirms that
+  one-tick lag end to end.
+
+With `direction` in hand the rest of the slice is: per-visit `openBridges`
+in `levelRun` (a Map freshened on arrival beside `freshActivatorState`, NOT
+banked like an earned clear), the `spear` leg verb with `openingWindow()`
+asserted from the run's own positions, and the pushable slide — which §11
+promoted from optional to load-bearing, since the R4 route now needs three
+pushes in L65, one in L63 and one in L67.
+
+### 12.3 The queue, in order
+
+1. `direction` in the physics + the press timing chain, with the pit-fall
+   reset and `directionFace`'s unreachability as a named bounded vacuity.
+2. `openBridges` per-visit in `levelRun` + the `spear` leg verb.
+3. The pushable slide (`PushableBlockFire` transcription: target tile,
+   0.5 px/tick glide, the `v.length > 0` re-press guard, the
+   water/lava/pit destruction) + its pair.
+4. The R4 route re-plan under `noHazards: ["water"]`, now including the
+   health chain and the keyType-4 chain.
+5. Segments + headline + `r4Acceptance`, with the BYTE BUDGET measured at
+   synthesis (§11.4's ~95 KB projection against a 90 KB ceiling is the
+   live risk, and it is the one thing that could still shrink the claim).
+6. Docs + close-out.
