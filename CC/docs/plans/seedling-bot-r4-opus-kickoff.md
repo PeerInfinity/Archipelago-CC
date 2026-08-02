@@ -1416,9 +1416,14 @@ wall rather than stop at a computed position.
 ```
 press arm    final (166.65, 98.05)   through the vacated corridor, pinned
                                      under (10,5)'s Body Wall
-control      final (194.20, 114.10)  pinned at the block's own east face,
+control      final (194.05, 114.15)  pinned at the block's own east face,
                                      then under rock@192,96
 ```
+
+The two arms track each other to the pixel for 380 ticks — the pushes
+change nothing about the walk until the last leg — and then separate by a
+tile and a half in x and sixteen pixels in y. That is the pair doing its
+job: one field apart, and each outcome a different wall.
 
 **The L65 breach is ORACLE-CONFIRMED.** Two mechanics were tested for the
 first time on the way: **UP at reach 2** (the one direction whose
