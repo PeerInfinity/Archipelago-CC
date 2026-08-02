@@ -1678,7 +1678,17 @@ if the arm is modelled: it is a TOGGLE, not a latch (`hit()` flips
 the ledger has to derive the entry from the final state rather than counting
 hits.
 
-⇒ **This is the route slice's ruling to make**, with three priced options:
+**And it is L65 ALONE.** §11.4 flagged L63 and L67 as needing the same
+audit; both were run against the shipped census, and neither is sealed:
+
+| level | push | verdict |
+|---|---|---|
+| **L63** | E from tile (6,6) at `pushableblockspear@112,96` | **CLEAN** — the block is the only responder at every stance tried; its three poles are at (64,88) and the two southern ones at y 272, nowhere near the rect |
+| **L67** | W at `pushableblockspear@144,112` | **CLEAN AT y ≥ 115.5** — `lightpole@160,104`'s box ends at y 112, so only a stance at y = 112 clips it. A RE-AIM, not a seal |
+| **L65** | W at reach 2 from tile (12,7) | **SEALED** — see above |
+
+⇒ **This is the route slice's ruling to make, and it is about ONE PUSH**,
+with three priced options:
 (a) MODEL the `LightPole` arm — the toggle becomes an earned clear the
 ledger accounts for, ~20 lines and zero AS3, and the arithmetic above says
 that is its whole cost; (b) find another chain (the sweep's finer pitches
