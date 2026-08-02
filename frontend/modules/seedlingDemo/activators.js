@@ -66,12 +66,16 @@ const fail = (message) => { throw new ActivatorError(message); };
  * continuous activation at which it stops being solid — derived here from
  * the AS3 rather than hard-coded, so the two cannot drift apart.
  *
- * ⚠ `BossLock` and `RockLock` are Activators and are NOT here. Their
- * `set activate` overrides do nothing but play a sound and store the flag
- * (`BossLock.as:49-56`, `RockLock.as:40-47`) — they open on a key or an
- * item, which is R3. `Pulser` is likewise absent: it is `type = "Solid"`
- * unconditionally and `activate` only drives its radius animation. Listing
- * them here would model an opening that does not exist.
+ * ⚠ `RockLock` is an Activator and is NOT here. Its `set activate` override
+ * does nothing but play a sound and store the flag (`RockLock.as:40-47`) —
+ * it opens on an ITEM, which is R5. `Pulser` is likewise absent: it is
+ * `type = "Solid"` unconditionally and `activate` only drives its radius
+ * animation. Listing them here would model an opening that does not exist.
+ *
+ * ⚠ `BossLock` used to be in that sentence and is not any more: R4 is the
+ * first rung whose walk can hold a `BossKey`, so its opening stopped being
+ * hypothetical. It is in `KEY_RESPONDERS` below rather than here, because
+ * its fade is not a `Lock`'s.
  */
 export const RESPONDERS = Object.freeze({
     lock: { as3: 'Lock', fade: 0.01, guard: 'occupancy', src: 'Puzzlements/Lock.as:63-104' },
@@ -132,6 +136,60 @@ export const TOUCH_RESPONDERS = Object.freeze({
     shieldlocknorm: { as3: 'ShieldLock', src: 'Puzzlements/ShieldLock.as:30-51' },
 });
 
+/**
+ * ── THE RESPONDERS THAT OPEN ON A KEY (R4) ────────────────────────────
+ *
+ * `BossLock.update` (`Puzzlements/BossLock.as:59-88`) is the whole mechanic,
+ * and it is a third shape rather than a variant of the two above:
+ *
+ *     var p = FP.world.collideLine("Player", <a one-pixel line beneath me>);
+ *     if (p && Player.hasKey(keyType)) activate = true;
+ *     if (activate) {
+ *         if (keyTimer > 0) keyTimer--;
+ *         else { scale += 0.05; alpha -= 0.05;
+ *                if (alpha <= 0 && type != "") {
+ *                    type = ""; alpha = 0; Game.setPersistence(tag, false); } }
+ *     } else if (type != normType) {
+ *         type = normType; alpha = 1; Game.setPersistence(tag, true); }
+ *
+ * Four things follow, and three of them are ways the other two families
+ * would have been wrong here:
+ *
+ * 1. **THE GATE IS A SAVE-FILE BOOLEAN, not an item property.**
+ *    `Player.hasKey(i)` reads `Main.SAVE_FILE.data.hasKey[i]`, which
+ *    `BossKey.removed()` writes and which is not one of the fourteen
+ *    properties `botStatus.items` reports. So the run carries it as its own
+ *    set and this module is told, exactly as it is told the inventory.
+ * 2. **`activate` LATCHES, by absence.** `tSet` is forced to -1 by the
+ *    ctor, so no `Button.activateAll` republishes the flag, and nothing else
+ *    in the extract writes it — which makes the `else if (type != normType)`
+ *    re-close arm unreachable after the first touch. It is transcribed
+ *    anyway (`reclose` below) so the claim is a reading of the code rather
+ *    than a silence, and a rung that finds a writer re-opens it here.
+ * 3. **THE FADE IS NOT A `Lock`'S.** Sixty ticks of `keyTimer` and then
+ *    `alpha -= 0.05` — twenty more — so it opens on tick **80** of
+ *    continuous activation against a Lock's 101. `opensOnKeyTick` runs the
+ *    subtraction rather than dividing, for the reason `opensOnTick` does.
+ * 4. **NO POSITION WRITE AND NO INPUT REFUSAL.** Unlike a ShieldLock, a
+ *    BossLock does nothing to the player at all: the walk is free for the
+ *    whole window, which is why this needs no event channel.
+ *
+ * ⚠ `Image.alpha` CLAMPS to [0,1] for a `Lock`, and `BossLock` does its own
+ * arithmetic on a plain `Number` field instead — so the value really does go
+ * NEGATIVE (-3.19e-16 on the twentieth decrement, which is what makes the
+ * `<= 0` test fire on 20 rather than 21). Do not clamp it.
+ */
+export const KEY_RESPONDERS = Object.freeze({
+    bosslock: {
+        as3: 'BossLock',
+        fade: 0.05,
+        keyTimer: 60,
+        src: 'Puzzlements/BossLock.as:59-88',
+        // The arm that cannot run once `activate` is true — see note 2.
+        reclose: 'unreachable: nothing in the extract sets BossLock.activate false',
+    },
+});
+
 /** `Image.alpha`'s setter clamps — graphics/Image.as:155-158. */
 const clampAlpha = (v) => (v < 0 ? 0 : (v > 1 ? 1 : v));
 
@@ -157,6 +215,50 @@ export function opensOnTick(fade) {
         }
     }
     return fail(`a fade of ${fade} never opens`);
+}
+
+/**
+ * The same question for a KEY responder, and the answer is not the same
+ * number: `keyTimer` ticks run FIRST and the first of them shares the frame
+ * that latched `activate`, so the count is `keyTimer + <fade ticks>`.
+ *
+ * ⚠ NO CLAMP, and the float is the whole reason this is computed rather
+ * than written down. `BossLock` decrements a bare `Number`, so after twenty
+ * subtractions of 0.05 the value is -3.19e-16 — `<= 0` and therefore OPEN.
+ * A clamped or rounded version answers 21.
+ */
+export function opensOnKeyTick(keyTimer, fade) {
+    let alpha = 1;
+    let timer = keyTimer;
+    for (let tick = 1; tick <= 1000; tick++) {
+        if (timer > 0) timer--;
+        else {
+            alpha -= fade;
+            if (alpha <= 0) return tick;
+        }
+    }
+    return fail(`a key fade of ${fade} after ${keyTimer} ticks never opens`);
+}
+
+/**
+ * `World.collideLine("Player", ...)` against the player's box, for the
+ * horizontal one-pixel line a `BossLock` walks beneath itself.
+ *
+ * ⚠ AN INTEGER POINT TEST, not a rect overlap. `collideLine`'s raycast is
+ * `while (x < toX)` at precision 1 with the end-point check skipped, and
+ * `Entity.collidePoint` is `pX >= x - originX && pX < x - originX + width`.
+ * So the question is "does the box CONTAIN one of the integer probes", and
+ * a rect overlap would also answer yes for a box that straddles the last
+ * probe without containing it — half a pixel of over-permission in the one
+ * mechanic whose false positive is a persistence write.
+ */
+export function keyLineTouches(box, line) {
+    if (!(box.y <= line.y && line.y < box.bottom)) return false;
+    const first = Math.max(line.x0, Math.ceil(box.x));
+    // `box.right` is exclusive, so the last legal integer is one below it —
+    // and `Math.ceil(r) - 1` is that for a non-integer `r` too.
+    const last = Math.min(line.x1, Math.ceil(box.right) - 1);
+    return first <= last;
 }
 
 /**
@@ -241,7 +343,7 @@ export function pressedGroups(world, playerBox) {
  * that yet" is how the statue got its offset wrong for two slices.
  */
 export function stepActivators(state, world, playerBox, opts = {}) {
-    const { inventory = null } = opts;
+    const { inventory = null, keys = null } = opts;
     const pressed = pressedGroups(world, playerBox);
     /**
      * What a touch responder DID this tick, for the caller that owns the
@@ -257,10 +359,48 @@ export function stepActivators(state, world, playerBox, opts = {}) {
         if (!s) fail(`activator ${a.id} has no state — was createActivatorState called `
             + `for level ${world.level}?`);
         const responder = RESPONDERS[a.tag];
-        let active;
         // `p` in the AS3: re-collided EVERY tick, which is what makes the
         // `turnOff` guard below a live question rather than a formality.
         let touching = false;
+        // ── the KEY arm, which shares nothing with the two below ────────
+        // Its fade is its own, it has no `alpha = 1` reset (the reset lives
+        // in the re-close arm, which cannot run — see KEY_RESPONDERS note 2)
+        // and its open is a PERSISTENCE WRITE the caller has to bank. So it
+        // returns before the shared fade machinery rather than threading a
+        // second set of constants through it.
+        const keyResponder = KEY_RESPONDERS[a.tag];
+        if (keyResponder) {
+            if (keys === null) {
+                fail(`level ${world.level} holds ${a.id}, a BossLock whose activation `
+                    + 'gates on `Player.hasKey(' + a.keyType + ')` — but stepActivators '
+                    + 'was called with no key set. Defaulting it to "no keys" would '
+                    + 'model a lock that can never open, silently, in the one level '
+                    + 'where opening it is the errand.');
+            }
+            if (!s.touched && keys.has(a.keyType) && keyLineTouches(playerBox, a.keyLine)) {
+                s.touched = true;
+            }
+            if (s.touched) {
+                // ⚠ THE DECREMENT SHARES THE LATCHING FRAME. `activate = true`
+                // is assigned above `if (activate)` in the same `update()`,
+                // so the first tick of contact is also the first `keyTimer--`.
+                if (s.held < keyResponder.keyTimer) {
+                    // `keyTimer--`
+                } else if (!s.open) {
+                    s.alpha -= keyResponder.fade;
+                    if (s.alpha <= 0) {
+                        s.open = true;
+                        s.alpha = 0;
+                        // `Game.setPersistence(tag, false)`, once — the AS3
+                        // guard is `type != ""` and `s.open` is that type.
+                        events.push({ kind: 'keyopen', id: a.id, persistTag: a.persistTag });
+                    }
+                }
+                s.held += 1;
+            }
+            continue;
+        }
+        let active;
         if (TOUCH_RESPONDERS[a.tag]) {
             if (inventory === null) {
                 fail(`level ${world.level} holds ${a.id}, a touch responder whose `

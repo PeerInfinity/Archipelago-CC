@@ -33,10 +33,14 @@ import { loadExpectation, loadTape } from './fixtures/index.js';
 import { runTapeToStream } from './tapeRunner.js';
 import { atlasLevelSource } from './levelSource.js';
 import {
+    KEY_RESPONDERS,
     PRESSERS,
     RESPONDERS,
+    TOUCH_RESPONDERS,
     createActivatorState,
+    keyLineTouches,
     openActivatorIds,
+    opensOnKeyTick,
     opensOnTick,
     pressedGroups,
     staticPressesIn,
@@ -68,20 +72,128 @@ describe('the membership lists agree', () => {
     it('every tag levelWorld treats as a responder has semantics here', () => {
         // Two lists in two modules is how a class ends up with geometry and
         // no behaviour, or behaviour and no geometry.
-        expect([...ACTIVATOR_RESPONDERS].sort()).toEqual(Object.keys(RESPONDERS).sort());
+        //
+        // ⚠ THREE FAMILIES NOW, not one. `RESPONDERS` opens on a button
+        // group, `KEY_RESPONDERS` on a save-file key — and a tag in neither
+        // would be geometry with no semantics, which is exactly what this
+        // assertion exists to catch. The union is the membership.
+        expect([...ACTIVATOR_RESPONDERS].sort())
+            .toEqual([...Object.keys(RESPONDERS), ...Object.keys(KEY_RESPONDERS)].sort());
         expect([...ACTIVATOR_PRESSERS].sort()).toEqual(Object.keys(PRESSERS).sort());
     });
 
-    it('BossLock, RockLock and Pulser are deliberately NOT responders', () => {
+    it('the three families are DISJOINT', () => {
+        // A tag in both would be stepped by two arms of `stepActivators`,
+        // and the first one to `continue` would decide which — an ordering
+        // question nobody would have reviewed.
+        for (const tag of Object.keys(KEY_RESPONDERS)) {
+            expect(RESPONDERS[tag], tag).toBeUndefined();
+            expect(TOUCH_RESPONDERS[tag], tag).toBeUndefined();
+        }
+    });
+
+    it('RockLock and Pulser are deliberately NOT responders', () => {
         // They ARE `Activators` and they DO carry a `t`, but their
         // `set activate` overrides only play a sound and store the flag —
-        // they open on a key or an item, which is R3. Pulser is
+        // RockLock opens on an ITEM, which is R5. Pulser is
         // `type = "Solid"` unconditionally and `activate` drives only its
         // radius animation. Naming them here stops "it is an Activators"
         // being read as "it opens".
-        for (const tag of ['bosslock', 'rocklock', 'pulser']) {
+        //
+        // ⚠ `bosslock` LEFT this list at R4 and that is the rung: it is the
+        // first walk that can hold a `BossKey`, so its opening stopped being
+        // hypothetical. It is in `KEY_RESPONDERS` now.
+        for (const tag of ['rocklock', 'pulser']) {
             expect(ACTIVATOR_RESPONDERS.has(tag), tag).toBe(false);
         }
+        expect(ACTIVATOR_RESPONDERS.has('bosslock')).toBe(true);
+    });
+});
+
+describe('the BossLock, whose gate is a key and whose probe is a LINE (R4)', () => {
+    const L68 = buildLevelWorld(levelRecord(68), { cleared: [1] });
+    const lock = L68.activators.find((a) => a.tag === 'bosslock');
+    const keyStep = (state, box, keys) =>
+        stepActivators(state, L68, box, { inventory: NO_ITEMS, keys });
+
+    it('the census carried the key type and the line, placement-relative', () => {
+        // `bosslock@16,32` with keyType 4. `x - originX + m` is oel.x + 2 and
+        // the raycast's `while (x < toX)` never tests `toX`, so the last
+        // probe is oel.x + width - 2m - 1 = oel.x + 11. The line sits at
+        // `y - originY + height + 1` = oel.y + 17.
+        expect(lock.keyType).toBe(4);
+        expect(lock.keyLine).toEqual({ x0: 18, x1: 27, y: 49 });
+    });
+
+    it('the line is an INTEGER probe test, not a rect overlap', () => {
+        // A box whose left edge is past the last probe overlaps the line's
+        // bounding rect and contains none of its points. Half a pixel of
+        // over-permission, in the one mechanic whose false positive writes
+        // persistence in another level.
+        expect(keyLineTouches(playerBox(24, 50), lock.keyLine)).toBe(true);
+        expect(keyLineTouches({ x: 27.5, right: 31.5, y: 48, bottom: 53 },
+            lock.keyLine)).toBe(false);
+        expect(keyLineTouches({ x: 27, right: 31, y: 48, bottom: 53 },
+            lock.keyLine)).toBe(true);
+    });
+
+    it('the stance is the PIN against the lock, and the lattice has no cell for it', () => {
+        // The player box is [x-2,x+2) x [y-2,y+3). To contain y = 49 it needs
+        // 46 < y <= 51; to stay out of the lock's [32,48) it needs y >= 50.
+        // The pitch-8 lattice offers 44 (inside the lock) and 52 (below the
+        // line) and nothing between — so the leg's target is a PIXEL, and the
+        // wall is what stops it. Named here because a route that aimed at a
+        // node centre would press nothing and say nothing.
+        expect(keyLineTouches(playerBox(24, 52), lock.keyLine)).toBe(false);
+        expect(keyLineTouches(playerBox(24, 50), lock.keyLine)).toBe(true);
+        expect(keyLineTouches(playerBox(24, 51), lock.keyLine)).toBe(true);
+    });
+
+    it('no key means no opening, ever', () => {
+        const state = createActivatorState(L68);
+        for (let tick = 1; tick <= 200; tick++) keyStep(state, playerBox(24, 50), new Set());
+        expect(openActivatorIds(state).has(lock.id)).toBe(false);
+    });
+
+    it('with the key it opens on tick 80 and writes the flag ONCE', () => {
+        const state = createActivatorState(L68);
+        const keys = new Set([4]);
+        let opens = [];
+        for (let tick = 1; tick <= 79; tick++) {
+            opens = opens.concat(keyStep(state, playerBox(24, 50), keys));
+            expect(openActivatorIds(state).has(lock.id), `tick ${tick}`).toBe(false);
+        }
+        const events = keyStep(state, playerBox(24, 50), keys);
+        expect(openActivatorIds(state).has(lock.id)).toBe(true);
+        expect(events).toEqual([{ kind: 'keyopen', id: lock.id, persistTag: 0 }]);
+        expect(opens).toEqual([]);
+        // ...and the write does not repeat: the AS3 guard is `type != ""`.
+        for (let tick = 1; tick <= 40; tick++) {
+            expect(keyStep(state, playerBox(24, 50), keys)).toEqual([]);
+        }
+    });
+
+    it('⚠ it LATCHES — walking away does not stop the fade', () => {
+        // `tSet` is forced to -1 by the ctor's `super(..., -1)`, so no
+        // `Button.activateAll` republishes the flag, and nothing else in the
+        // extract writes it. The `else if (type != normType)` re-close arm is
+        // therefore unreachable after the first touch — which is what makes
+        // this class NOT a `Lock`, whose occupancy-guarded `returnToNormal`
+        // really does shut on a player who leaves.
+        const state = createActivatorState(L68);
+        const keys = new Set([4]);
+        keyStep(state, playerBox(24, 50), keys);
+        const away = playerBox(24, 100);
+        for (let tick = 2; tick <= 79; tick++) keyStep(state, away, keys);
+        const events = keyStep(state, away, keys);
+        expect(events).toEqual([{ kind: 'keyopen', id: lock.id, persistTag: 0 }]);
+        expect(openActivatorIds(state).has(lock.id)).toBe(true);
+    });
+
+    it('and it refuses to answer at all when the run did not say which keys it holds', () => {
+        const state = createActivatorState(L68);
+        expect(() => stepActivators(state, L68, playerBox(24, 50), { inventory: NO_ITEMS }))
+            .toThrow(/no key set/);
     });
 });
 
@@ -95,6 +207,20 @@ describe('the fades, which are float questions', () => {
         // decrements and tests in the same tick.
         expect(opensOnTick(0.01)).toBe(101);
         expect(opensOnTick(0.1)).toBe(11);
+    });
+
+    it('a BossLock opens on tick 80, and NOT on 81', () => {
+        // ⚠ A DIFFERENT NUMBER AND A DIFFERENT REASON. `BossLock` runs
+        // `keyTimer` down from 60 FIRST — and the frame that latches
+        // `activate` is also the frame of the first decrement, because the
+        // assignment sits above `if (activate)` in the same `update()`. Then
+        // `alpha -= 0.05` on a bare `Number`, with NO `Image.alpha` clamp:
+        // the twentieth subtraction lands on -3.19e-16, which is `<= 0`. A
+        // model that clamped, or that read `1 / 0.05`, answers 81 and 20.
+        expect(opensOnKeyTick(60, 0.05)).toBe(80);
+        expect(60 + 20).toBe(80);
+        expect(KEY_RESPONDERS.bosslock.keyTimer).toBe(60);
+        expect(KEY_RESPONDERS.bosslock.fade).toBe(0.05);
     });
 
     it('and the model really takes that many ticks', () => {

@@ -1156,6 +1156,75 @@ export const ENTITY_CLASSES = Object.freeze({
         // `tSet` despawn condition (see the census notes) — but its ctor is
         // the same shape: super(_x + Tile.w/2, _y + Tile.h/2, g, -1) then
         // setHitbox(16, 16, 8, 8).
+        //
+        // ── R4: THE THIRD WAY A RESPONDER OPENS ────────────────────────
+        // R2 had the BUTTON (a group flag republished every tick) and R3 the
+        // TOUCH (a shield, latched). This is the KEY, and it is neither: the
+        // lock reads a SAVE-FILE boolean and a one-pixel line beneath itself.
+        //
+        //     var p = FP.world.collideLine("Player",
+        //         x - originX + m,               y - originY + height + 1,
+        //         x - originX + width - 2 * m,   y - originY + height + 1);
+        //     if (p && Player.hasKey(keyType)) activate = true;
+        //
+        // ⚠ `activate` LATCHES, and this class is the one place on the
+        // ladder where that is true *by absence*. `Activators.set activate`
+        // stores the flag; `BossLock` overrides it only to play a sound;
+        // `tSet` is forced to -1 by the ctor's `super(..., -1)` so no
+        // `Button.activateAll` ever republishes it; and nothing else in the
+        // extract writes it. So `update`'s `else if (type != normType)`
+        // re-close arm is UNREACHABLE once the lock has been touched — it can
+        // only run before the first touch, when `type` already IS `normType`.
+        // (`Lock` is the class that really does re-close, via
+        // `activationStep`'s occupancy-guarded `returnToNormal`; reading
+        // BossLock as a Lock is the mistake this paragraph exists to stop.)
+        keyLock: {
+            keyTypeAttr: 'keyType',
+            // ⚠ The line is walked by `World.collideLine` with precision 1
+            // and its loop is `while (x < toX)`, with the `precision > 1`
+            // end-point check skipped — so `toX` itself is NEVER tested. The
+            // integer probes are `[oel.x + m, oel.x + width - 2m - 1]`, i.e.
+            // x = oel.x+2 .. oel.x+11 at y = oel.y + 17. Transcribed as an
+            // inclusive INTEGER range rather than a rect because a rect
+            // overlap would also accept a box that straddles the last probe
+            // without containing it.
+            x0: 2,
+            x1: 11,
+            dy: 17,
+            // `keyTimerMax` is 60 and the decrement runs on the SAME frame
+            // the touch is found, so the fade starts on tick 61 of contact.
+            keyTimer: 60,
+            // `alpha -= 0.05` until `alpha <= 0`, at which point `type = ""`
+            // and `Game.setPersistence(tag, false)` — once, guarded by
+            // `type != ""`. Repeated subtraction, never `1 / step`.
+            fade: 0.05,
+            src: 'Puzzlements/BossLock.as:59-88',
+        },
+        // ⚠ AND THE LINE IS AN AVOID VOLUME, priced unconditionally live for
+        // exactly the reason `shieldlock`'s is: whether it fires is a
+        // function of the INVENTORY (`Player.hasKey(keyType)`), which appears
+        // halfway through a walk, and a volume that switches on mid-route is
+        // a policy the planner has no vocabulary for. Over-avoiding is the
+        // safe direction — and here the effect being avoided is a
+        // PERSISTENCE WRITE in another level, which is a silent ledger entry
+        // rather than a stall. L12 alone holds two keyType-4 bosslocks the R4
+        // walk carries the key past.
+        hazard: {
+            // ⚠ A `line`, NOT a rect — the third volume shape, and it exists
+            // because a rect is not exact enough here. See the `line` note at
+            // the `proximityHazards.push` site: R3's committed L12 route
+            // passes `bosslock@416,240` at y = 259.38 with the probe row at
+            // y = 257, which a rect test calls a hit and the game does not.
+            // The bounds are the raycast's own — `x - originX + m` to
+            // `x - originX + width - 2m - 1`, because `while (x < toX)`
+            // never tests `toX`.
+            line: { x0: 2, x1: 11, dy: 17 },
+            kind: 'key-line',
+            effect: 'a player holding the matching BossKey latches `activate`, and '
+                + '80 frames later the lock writes Game.setPersistence(tag, false) — '
+                + 'a ledger entry in whatever level the walk happens to be passing '
+                + 'through',
+        },
     },
     rocklock: cheapOnly('RockLock', 'Game.as:2137', 'opened by an item'),
     grasslock: cheapOnly('GrassLock', 'Game.as:2143', 'opened by an item'),
@@ -1438,6 +1507,10 @@ export const PUSHABLE_FAMILIES = Object.freeze({
 
 export const ACTIVATOR_RESPONDERS = new Set([
     'lock', 'wandlock', 'shieldlock', 'shieldlocknorm', 'grasslock', 'cover',
+    // R4: the KEY responder. It joins the family late because until this rung
+    // nothing could hold a BossKey, so listing it would have modelled an
+    // opening that could not happen — see `activators.KEY_RESPONDERS`.
+    'bosslock',
 ]);
 
 /** The two tags that press a group: `Button` and `ButtonRoom`. */
@@ -2392,6 +2465,12 @@ export function buildLevelWorld(levelRecord, { roles = ROLES, cleared = null } =
             pickups.push({
                 rect: entityRect(cls.pickup, x, y), cls, tag: e.type, x, y,
                 special: cls.pickup.special,
+                // R4: a `BossKey`'s `removed()` writes `Player.hasKeySet`
+                // rather than one of the fourteen item properties, so WHICH
+                // key it is has to survive the census — a `bosskey` ceremony
+                // that could not name its type would grant nothing.
+                ...(e.type === 'bosskey'
+                    ? { keyType: intAttr(e.attrs, 'keyType', 0) } : {}),
             });
         }
         if (ACTIVATOR_PRESSERS.has(e.type)) {
@@ -2434,7 +2513,8 @@ export function buildLevelWorld(levelRecord, { roles = ROLES, cleared = null } =
                     // — the player's ENTITY POSITION against a radius, which
                     // is not a box test at all and must not be approximated
                     // by one when the radius is 129 px wide.
-                    rect: cls.hazard.point ? null : entityRect(cls.hazard, x, y),
+                    rect: (cls.hazard.point || cls.hazard.line)
+                        ? null : entityRect(cls.hazard, x, y),
                     disc: cls.hazard.point
                         ? {
                             x: x + cls.hazard.point.dx,
@@ -2442,6 +2522,41 @@ export function buildLevelWorld(levelRecord, { roles = ROLES, cleared = null } =
                             r: cls.hazard.point.r,
                         }
                         : null,
+                    // ⚠ R4: A THIRD SHAPE, and it exists because the second
+                    // one was not exact enough. A `BossLock` gates on
+                    // `World.collideLine`, which tests INTEGER points along a
+                    // one-pixel row and never tests its own end point — so
+                    // the true volume is a set of ten pixels, not the 10x1
+                    // rect enclosing them. Approximating it as a rect
+                    // over-avoids by up to a pixel on each side, and it is
+                    // not a theoretical amount: R3's committed L12 route
+                    // passes at y = 259.38 with the line at y = 257, which
+                    // the rect test calls a hit and the game does not.
+                    //
+                    // Placement-relative, so the entity `x`/`y` (which carry
+                    // the ctor's half tile) are undone first.
+                    line: cls.hazard.line
+                        ? {
+                            x0: e.x + cls.hazard.line.x0,
+                            x1: e.x + cls.hazard.line.x1,
+                            y: e.y + cls.hazard.line.dy,
+                        }
+                        : null,
+                    // ⚠ AND THIS ONE VOLUME IS CONDITIONAL, which no other
+                    // hazard is. `BossLock.update`'s gate is
+                    // `p && Player.hasKey(keyType)` — the line is inert to a
+                    // walk that does not hold the key, and R1/R2/R3 hold
+                    // none, so pricing it unconditionally live (the
+                    // `shieldlock` treatment) would move three rungs of
+                    // committed routes for a mechanic that cannot fire.
+                    //
+                    // The shieldlock's own docblock calls that shape "a
+                    // policy the planner has no vocabulary for", and at R4
+                    // that stopped being true: `planNow` threads the RUN's
+                    // inventory and key set, so the caller can say what it
+                    // holds. `keyType: null` means unconditional.
+                    keyType: cls.keyLock
+                        ? intAttr(e.attrs, cls.keyLock.keyTypeAttr, 0) : null,
                 });
             }
         }
@@ -2549,6 +2664,26 @@ export function buildLevelWorld(levelRecord, { roles = ROLES, cleared = null } =
                         `${where}: ${e.type}@${x},${y} touch rect`);
                     activator.shield = cls.lockSnap.shield;
                     activator.snapY = y + cls.lockSnap.snapDY;
+                }
+                // ── R4: the responders that open on a KEY ───────────────
+                // A `BossLock` has no button and no shield: it walks a
+                // one-pixel line beneath itself and gates on a save-file
+                // boolean. The line is carried as its own INTEGER probe
+                // range rather than as a rect — `World.collideLine` tests
+                // integer points and skips its own end point, so a rect
+                // would accept a box that straddles the last probe without
+                // containing it. Placement-relative, so the entity's own
+                // `x`/`y` (which are the placement plus the half tile) are
+                // undone first.
+                if (cls.keyLock) {
+                    const kl = cls.keyLock;
+                    activator.keyType = intAttr(e.attrs, kl.keyTypeAttr, 0);
+                    activator.keyLine = Object.freeze({
+                        x0: e.x + kl.x0,
+                        x1: e.x + kl.x1,
+                        y: e.y + kl.dy,
+                    });
+                    activator.keyTimer = kl.keyTimer;
                 }
                 activators.push(activator);
             }
@@ -2752,23 +2887,40 @@ export function buildLevelWorld(levelRecord, { roles = ROLES, cleared = null } =
          * a world built without the `pickup` role has no pickups to report,
          * which is honest rather than empty.
          */
-        avoidVolumesAt(box, pos = null) {
+        avoidVolumesAt(box, pos = null, { keys = null } = {}) {
             const hits = [];
             for (const p of pickups) {
                 if (rectsOverlap(box, p.rect)) hits.push({ kind: 'pickup', blocker: p });
             }
             for (const h of proximityHazards) {
-                const hit = h.disc
+                // The one conditional volume — see the `keyType` note where
+                // these are built. `keys === null` is "the caller did not
+                // say", which keeps every pre-R4 call site exactly as
+                // permissive as it was: a walk that cannot hold a key is a
+                // walk the line cannot fire on.
+                if (h.keyType !== null && h.keyType !== undefined
+                    && !(keys && keys.has(h.keyType))) continue;
+                let hit;
+                if (h.disc) {
                     // `FP.distance(x, y, player.x, player.y) <= range`, with
                     // the result assigned to an `int` — so the true bound is
                     // `dist < range + 1` and `r` already carries the +1.
                     // Needs the player's POSITION; a caller that only has a
                     // box gets it from the box's own origin.
-                    ? Math.hypot(
+                    hit = Math.hypot(
                         (pos ? pos.x : box.x + HITBOX_ORIGIN_X) - h.disc.x,
                         (pos ? pos.y : box.y + HITBOX_ORIGIN_Y) - h.disc.y,
-                    ) < h.disc.r
-                    : rectsOverlap(box, h.rect);
+                    ) < h.disc.r;
+                } else if (h.line) {
+                    // `World.collideLine` at precision 1: does the box
+                    // CONTAIN one of the row's integer probes? See the `line`
+                    // note where these are built for why a rect is not this.
+                    hit = box.y <= h.line.y && h.line.y < box.bottom
+                        && Math.max(h.line.x0, Math.ceil(box.x))
+                            <= Math.min(h.line.x1, Math.ceil(box.right) - 1);
+                } else {
+                    hit = rectsOverlap(box, h.rect);
+                }
                 if (hit) hits.push({ kind: 'proximity-hazard', blocker: h });
             }
             return hits;

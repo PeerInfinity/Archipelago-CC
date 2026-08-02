@@ -292,6 +292,29 @@ export const PICKUP_CEREMONY = Object.freeze({
     }),
     // No text: phase A only. See the warning above.
     totempart: Object.freeze({ item: null, text: '' }),
+    /**
+     * ⚠ R4: the SECOND textless ceremony, and it is textless CONDITIONALLY.
+     *
+     * `BossKey`'s ctor sets `text` only under `if (keyType == 0)`
+     * (`Pickups/BossKey.as:24-27`), so the keyType-0 key in L19 shows "You
+     * got a key!~Keys open locks of their color." and every other one — L29's
+     * keyType 1, L40's 2, L55's 3 and **L67's 4, the only one on any route**
+     * — inherits `Pickup.text = ""` and self-resolves after 150 frozen
+     * frames.
+     *
+     * It is entered here as the textless case BECAUSE the only reachable
+     * placement is keyType 4. A rung that reaches L19 has to split this
+     * entry by keyType rather than change it, and would find out by the
+     * ceremony costing 150 ticks the recording does not have.
+     *
+     * `item: null` for the usual reason and one more: `BossKey.removed()`
+     * does not call `super.removed()` at all, so unlike every other pickup
+     * it writes NO persistence — its whole effect is
+     * `Player.hasKeySet(keyType, true)`, which `levelRun` banks as the run's
+     * key set. That absence is load-bearing for the R4 ledger: seven pickups
+     * are taken and only six flags go off.
+     */
+    bosskey: Object.freeze({ item: null, text: '' }),
 });
 
 /** The tape key whose RELEASE advances a dialogue — `Player.keys[6]` is X. */

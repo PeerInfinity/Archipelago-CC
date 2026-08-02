@@ -378,6 +378,24 @@ export function createLevelRun({
     // invisible, but `health` ADDS to `hitsMax`, so a re-grant on every
     // visit would silently inflate it.
     const inventory = initialInventory();
+    /**
+     * ── R4: `Main.SAVE_FILE.data.hasKey`, as a set of key types ────────
+     *
+     * The BossKey is the one pickup whose effect is not one of the fourteen
+     * item properties: `BossKey.removed()` is `Player.hasKeySet(keyType,
+     * true)` and nothing else — it does not even call `super.removed()`, so
+     * it writes no persistence. `BossLock.update` gates on
+     * `Player.hasKey(keyType)`, so this is the state that decides whether a
+     * lock opens, and it lives here rather than in `inventory` because the
+     * mirror's shape is `ITEM_PROPERTIES` and a key is not in it.
+     *
+     * ⚠ There is no `grants` equivalent, deliberately. A segment inherits
+     * ITEMS through a boot-level grant, and a segment that needed a key
+     * would need a second inheritance channel with its own AS3 side. The R4
+     * segmentation puts the key collection and the lock it opens in the SAME
+     * segment for that reason; `assertRouteWellFormed` checks it.
+     */
+    const keys = new Set();
     const grantsByLevel = new Map(grants.map((g) => [g.level, g.items]));
     const firedGrants = [];
     const applyGrantsFor = (n) => {
@@ -434,6 +452,32 @@ export function createLevelRun({
         firedEquips.push({ t, slot });
     };
     applyEquipsAt(0);
+    /**
+     * R4: select a slot RIGHT NOW, at the tick the run has reached.
+     *
+     * ⚠ THE TAPE CANNOT DECLARE THIS ONE, and that is the whole reason it
+     * exists. A headline walk collects the spear rather than inheriting it,
+     * so the tick at which the slot becomes selectable is a fact SYNTHESIS
+     * produces — a `relax.equips` written before the drive would be guessing
+     * the length of four legs and a ceremony. The driver calls this, the run
+     * records it in `equipsFired`, and `synthesizeLegs` writes THAT onto the
+     * tape: the emitted `{t, slot}` is a measurement, and replaying it
+     * through `applyEquipsAt` lands on exactly the same tick.
+     *
+     * A segment still declares its own at `{t: 0}` — it inherits the spear
+     * through a boot grant, which is a tick-0 fact.
+     */
+    const equipNow = (slot) => {
+        if (equipsByTick.has(ticksCompleted)) {
+            throw new Error(`levelRun: the tape already equips slot `
+                + `${equipsByTick.get(ticksCompleted)} at tick ${ticksCompleted}, and a `
+                + 'leg is selecting one there too. Two writes to `Main.primary` on one '
+                + 'observation would leave the winner up to array order, which is what '
+                + "`parseEquips`'s duplicate-tick check refuses on the tape.");
+        }
+        equipsByTick.set(ticksCompleted, slot);
+        applyEquipsAt(ticksCompleted);
+    };
 
     // ── the PRESS (R4) ────────────────────────────────────────────────
     /**
@@ -819,8 +863,37 @@ export function createLevelRun({
      * position write is DEFERRED (see `pendingSnapY`); everything else — the
      * refusal, the ledger, the throws — lands here.
      */
+    /**
+     * R4: one record per BossLock that finished its fade — `{id, level,
+     * persistTag, t}`.
+     *
+     * A separate list from `lockSnaps` because the two are different claims.
+     * A snap says the player was TAKEN OVER for 101 ticks; a key open says a
+     * lock the walk carried a key to has gone, and the only observable is
+     * the flag. Both feed `earnedClears`.
+     */
+    const keyOpens = [];
+
     function applyLockEvents(events) {
         for (const ev of events) {
+            if (ev.kind === 'keyopen') {
+                keyOpens.push({
+                    id: ev.id, level, persistTag: ev.persistTag, t: ticksCompleted,
+                });
+                // `Game.setPersistence(tag, false)` — banked exactly as a
+                // `Lock.turnOff()`'s is, and cashed when the destination
+                // world is built. `BossLock.check()` is
+                // `tag >= 0 && !checkPersistence(tag) -> remove(this)`, with
+                // no `tSet` test at all, so an opened boss lock is GONE on
+                // the next visit rather than merely non-solid on this one.
+                if (ev.persistTag >= 0) {
+                    if (!pendingEarnedClears.has(level)) {
+                        pendingEarnedClears.set(level, new Set());
+                    }
+                    pendingEarnedClears.get(level).add(ev.persistTag);
+                }
+                continue;
+            }
             if (ev.kind === 'snap') {
                 if (lockSnap) {
                     throw new Error(`levelRun: ${ev.id} in level ${level} snapped the `
@@ -929,6 +1002,31 @@ export function createLevelRun({
         /** One record per equip that fired: `{t, slot}`. */
         get equipsFired() { return firedEquips.map((e) => ({ ...e })); },
         /**
+         * Ticks the tape's own `equips` name that the run never reached.
+         *
+         * The `unfiredGrantLevels` rule, one field over: a declared equip
+         * that never fires is a tape claiming a selection the walk does not
+         * make, and every press after it would be a SWORD SLASH with nothing
+         * saying so.
+         */
+        get unfiredEquipTicks() { return [...equipsByTick.keys()]; },
+        /** Select `Main.primary` at the tick the run has reached (R4). */
+        equipNow,
+        /**
+         * The key types this run has collected — `Main.SAVE_FILE.data.hasKey`
+         * as a set. A `BossLock` opens on exactly this.
+         */
+        get keys() { return new Set(keys); },
+        /**
+         * One record per BossLock that finished its fade:
+         * `{id, level, persistTag, t}`.
+         *
+         * The KEY half of the opener ledger. `lockSnaps` is what a shield
+         * opened; this is what a key opened; `earnedClears` is both, keyed by
+         * flag.
+         */
+        get keyOpens() { return keyOpens.map((r) => ({ ...r })); },
+        /**
          * One record per completed ceremony: `{t, level, item, frames}`.
          *
          * The crutch LEDGER at R3. A grant that fired is in `grantsFired`;
@@ -981,6 +1079,15 @@ export function createLevelRun({
         get earnedClears() {
             const out = [];
             for (const r of lockSnaps) {
+                if (r.persistTag < 0) continue;
+                out.push({ level: r.level, tag: r.persistTag, by: r.id });
+            }
+            // R4: a BossLock whose fade completed. Same shape as a snap's,
+            // and deliberately a SEPARATE loop: the two are different
+            // mechanics that happen to write the same namespace, and folding
+            // them would make "which openers did this walk use" unanswerable
+            // from the ledger.
+            for (const r of keyOpens) {
                 if (r.persistTag < 0) continue;
                 out.push({ level: r.level, tag: r.persistTag, by: r.id });
             }
@@ -1157,6 +1264,9 @@ export function createLevelRun({
                         pickup: hit,
                         level,
                         item: entry.item,
+                        // R4: `null` for everything but a BossKey — see the
+                        // `keys` set and `dialogue.PICKUP_CEREMONY.bosskey`.
+                        keyType: hit.keyType === undefined ? null : hit.keyType,
                         // ⚠ `text: ''` is a REAL case (a totem part, a
                         // non-zero boss key): `pick_up()` spawns no NPC, so
                         // phase A runs and the pickup removes itself with no
@@ -1183,10 +1293,16 @@ export function createLevelRun({
                     // does not track (a boss key, a totem part) — the
                     // ceremony is real, there is just nothing to apply.
                     if (ceremony.item) applyItem(inventory, ceremony.item);
+                    // ...unless it is a BossKey, whose `removed()` writes
+                    // `Player.hasKeySet(keyType, true)` INSTEAD of an item
+                    // property and instead of persistence. R4's whole key
+                    // chain hangs off this one line.
+                    if (ceremony.keyType !== null) keys.add(ceremony.keyType);
                     collected.push({
                         t: ticksCompleted + 1,
                         level: ceremony.level,
                         item: ceremony.item,
+                        keyType: ceremony.keyType,
                         frames: ceremony.dialogue ? ceremony.dialogue.frames : 1,
                     });
                     if (ceremony.dialogue) {
@@ -1233,7 +1349,7 @@ export function createLevelRun({
                     // its offset wrong for two slices.
                     if (!noclip) {
                         applyLockEvents(stepActivators(activators, world,
-                            playerBoxAt(state.x, state.y), { inventory }));
+                            playerBoxAt(state.x, state.y), { inventory, keys }));
                     }
                     // No step: the position is unchanged and — critically —
                     // so is the VELOCITY, which is why the player drifts on
@@ -1309,7 +1425,7 @@ export function createLevelRun({
             // the player ended up.
             if (!noclip) {
                 applyLockEvents(stepActivators(activators, world,
-                    playerBoxAt(next.x, next.y), { inventory }));
+                    playerBoxAt(next.x, next.y), { inventory, keys }));
             }
             const hits = { hitX: next.hitX, hitY: next.hitY };
 

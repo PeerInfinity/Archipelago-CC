@@ -72,6 +72,7 @@ import { RELAXED_ROLES, ROLES, TILE_SIZE } from './levelWorld.js';
 import { assertRect, rectsOverlap } from './levelWorld.js';
 import { playerBoxAt, terrainProbeRect } from './playerPhysicsV2.js';
 import { TICKS_FROM_PRESS_TO_WALKABLE } from './bridges.js';
+import { keyLineTouches, opensOnKeyTick } from './activators.js';
 import {
     DEFAULT_MAX_TICKS_PER_TARGET,
     DEFAULT_TOLERANCE,
@@ -151,11 +152,15 @@ export function contactKey(hit) {
  * Every live trigger volume and avoid volume the player is standing in at
  * `(x, y)`, as contact keys — what a leg starting there must declare.
  */
-export function contactsAt(level, x, y, { avoidVolumes = false } = {}) {
+export function contactsAt(level, x, y, { avoidVolumes = false, keys = null } = {}) {
     const box = playerBoxAt(x, y);
     const hits = level.teleporterHit(box)
         .map((tp) => ({ kind: 'teleporter', blocker: tp }));
-    if (avoidVolumes) hits.push(...level.avoidVolumesAt(box, { x, y }));
+    // ⚠ `keys` is the R4 addition and it selects ONE volume: a `BossLock`'s
+    // probe row is inert to a walk that does not hold the matching BossKey.
+    // Omitting it means "no keys", which is the truth for every rung below
+    // R4 and the conservative arm anyway.
+    if (avoidVolumes) hits.push(...level.avoidVolumesAt(box, { x, y }, { keys }));
     return hits.map(contactKey);
 }
 
@@ -249,6 +254,10 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
         // answers at two points in the same leg — and a planner with its own
         // idea of either would certify a corridor the executor walks into.
         openBridges = null, pushables = null,
+        // R4: `Main.SAVE_FILE.data.hasKey`, as a set of key types. It selects
+        // exactly one avoid volume — a `BossLock`'s probe row — and it is a
+        // SET rather than a boolean because a walk can hold several.
+        keys = null,
         // R4: which lethal terrain the run can survive. Defaulted to
         // "neither", which is the conservative arm and is also the truth
         // for every rung below R4 — where both types are coerced anyway,
@@ -348,7 +357,7 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
         // 33 px chomp disc, an ice turret's 129 px attack range) tests the
         // player's ENTITY position against a radius, which is what the game
         // does and is not a box test at all.
-        const hit = level.avoidVolumesAt(box, { x, y })
+        const hit = level.avoidVolumesAt(box, { x, y }, { keys })
             .find((h) => !contacts.has(contactKey(h)));
         if (hit) return hit;
     }
@@ -1019,6 +1028,133 @@ export function resolveTouchLock(world, named, what) {
     return lock;
 }
 
+/** Shape-check a `keylock` before anything is planned or driven with it. */
+export function assertKeyLock(keylock, what) {
+    if (keylock === null || typeof keylock !== 'object' || Array.isArray(keylock)) {
+        fail(`${what}: keylock must be { lock: {x, y} }`);
+    }
+    const l = keylock.lock;
+    if (!l || !Number.isFinite(l.x) || !Number.isFinite(l.y)) {
+        fail(`${what}: keylock.lock must be the lock's OEL {x, y}`);
+    }
+}
+
+/** The `BossLock` a keylock NAMES, by OEL coordinates. */
+export function resolveKeyLock(world, named, what) {
+    const lock = world.activators.find((a) => a.x === named.x && a.y === named.y);
+    if (!lock) {
+        fail(`${what}: level ${world.level} has no activator at (${named.x},${named.y}); `
+            + `it has [${world.activators.map((a) => `${a.tag}@${a.x},${a.y}(t=${a.t})`)
+                .join(' ') || 'none'}].`);
+    }
+    if (!lock.keyLine) {
+        fail(`${what}: ${lock.id} is a "${lock.tag}", which does not open on a KEY — it `
+            + `answers group t=${lock.t}. Only a BossLock reads Player.hasKey.`);
+    }
+    return lock;
+}
+
+/**
+ * ── THE KEYLOCK PRIMITIVE (R4) ────────────────────────────────────────
+ *
+ * The fifth leg verb, and the third way a responder opens. `hold` stands on
+ * a button and the flag is republished every tick; `touch` walks into a
+ * shield lock and is TAKEN OVER for the fade; this one stands on a
+ * one-pixel line beneath a `BossLock` holding the right key, and then —
+ * uniquely — is free to do anything at all, because `activate` latches and
+ * the fade runs to completion regardless.
+ *
+ * ⚠ THE WALK STANDS THERE ANYWAY, and that is a deliberate over-payment.
+ * The latch is a claim about an ABSENCE (nothing in the extract sets
+ * `BossLock.activate` false), and an absence is the one kind of source
+ * reading a recording cannot confirm — a game that re-closed on leave and a
+ * game that latched would look identical to a walk that never leaves. So
+ * the leg holds the stance for the whole window, which is correct under
+ * BOTH readings, and the model's latch stays a transcription with nothing
+ * resting on it.
+ *
+ * Four checks, the `runSpear` shape:
+ *   1. the STANCE — the player's box really contains one of the line's
+ *      integer probes, asked of the world's own geometry;
+ *   2. the KEY — the run holds `keyType`, before the wait rather than after;
+ *   3. the POSITIVE CONTROL — the lock is SOLID now, or opening it proves
+ *      nothing;
+ *   4. the EFFECT — `run.openActivators` has it, and `run.keyOpens` names
+ *      the flag.
+ */
+function runKeyLock(run, perTick, keylock, what) {
+    if (run.openActivators === null) {
+        fail(`${what}: a keylock is a MECHANIC, and the noclip arm does not run it — `
+            + '`advance` hands `stepV2` a null activator set, so the walk would pass '
+            + 'through the lock whether or not it ever opened.');
+    }
+    const lock = resolveKeyLock(run.world, keylock.lock, what);
+    if (!run.keys.has(lock.keyType)) {
+        fail(`${what}: ${lock.id} gates on \`Player.hasKey(${lock.keyType})\` and the run `
+            + `holds key type(s) [${[...run.keys].join(', ') || 'none'}]. `
+            + '`BossKey.removed()` is the only writer, so this means the key pickup is '
+            + 'later in the route than the lock it opens — or in another segment, which '
+            + 'is the same thing: a key is NOT inheritable through a boot grant.');
+    }
+    if (run.openActivators.has(lock.id)) {
+        fail(`${what}: ${lock.id} is ALREADY OPEN before the stance, so opening it proves `
+            + 'nothing. A BossLock that opened on an earlier visit is DESPAWNED by '
+            + '`check()` rather than open, so this means an earlier leg of this visit '
+            + 'already spent the window.');
+    }
+    if (!keyLineTouches(playerBoxAt(run.state.x, run.state.y), lock.keyLine)) {
+        const b = playerBoxAt(run.state.x, run.state.y);
+        fail(`${what}: the player is at (${run.state.x},${run.state.y}) — box `
+            + `[${b.x},${b.right}) x [${b.y},${b.bottom}) — which contains none of `
+            + `${lock.id}'s probes x=${lock.keyLine.x0}..${lock.keyLine.x1} at `
+            + `y=${lock.keyLine.y}. \`World.collideLine\` tests INTEGER points and skips `
+            + 'its own end point, and the pitch-8 lattice has no cell centre in the '
+            + "band — so the leg's target has to be a pixel, pinned against the lock's "
+            + 'own south face.');
+    }
+    const from = perTick.length;
+    const window = KEY_LOCK_WINDOW;
+    for (let i = 1; i <= window + KEY_LOCK_SLACK; i++) {
+        perTick.push(NO_HELD);
+        const { transition } = run.advance(NO_HELD);
+        if (transition) {
+            fail(`${what}: tick ${i} of ${lock.id}'s window crossed from level `
+                + `${transition.from_level} to ${transition.to_level}. A world swap `
+                + 'rebuilds the Game, so the fade restarts from `keyTimer` 60 and the '
+                + 'flag is never written.');
+        }
+        if (run.openActivators.has(lock.id)) break;
+    }
+    if (!run.openActivators.has(lock.id)) {
+        fail(`${what}: ${lock.id} is STILL SOLID after ${window + KEY_LOCK_SLACK} ticks `
+            + `of standing on its line. \`opensOnKeyTick\` says ${window}.`);
+    }
+    const opened = run.keyOpens[run.keyOpens.length - 1];
+    if (!opened || opened.id !== lock.id) {
+        fail(`${what}: ${lock.id} reports open but the run's keyOpens ledger names `
+            + `${opened ? opened.id : 'nothing'} — the two halves disagree about which `
+            + 'lock this was.');
+    }
+    return {
+        lock: { tag: lock.tag, x: lock.x, y: lock.y, id: lock.id },
+        keyType: lock.keyType,
+        persistTag: lock.persistTag,
+        at: { x: run.state.x, y: run.state.y },
+        from,
+        window: perTick.length - from,
+    };
+}
+
+/**
+ * `activators.opensOnKeyTick(60, 0.05)` — imported as a NUMBER rather than
+ * recomputed, so the driver and the state machine cannot disagree about the
+ * window. The slack exists because the stance tick itself may or may not be
+ * the latching one depending on where the approach stopped, and a verb that
+ * waited exactly the window would fail by one on a stance reached mid-tick.
+ */
+const KEY_LOCK_WINDOW = opensOnKeyTick(60, 0.05);
+const KEY_LOCK_SLACK = 4;
+
 function runTouch(run, perTick, touch, maxTicks, what) {
     if (run.openActivators === null) {
         fail(`${what}: a touch is a MECHANIC, and the noclip arm does not run it — `
@@ -1589,7 +1725,7 @@ function drive(run, target, perTick, {
                     + `(${s.x},${s.y}). ${effect.why} The static census cannot see this `
                     + 'volume, so this check is the only place it can be caught.');
             }
-            const v = run.world.avoidVolumesAt(box, { x: s.x, y: s.y })
+            const v = run.world.avoidVolumesAt(box, { x: s.x, y: s.y }, { keys: run.keys })
                 .find((h) => !contacts.has(contactKey(h)));
             if (v) {
                 fail(`${what}: the route entered a ${v.kind} — ${v.blocker.tag} at `
@@ -1776,6 +1912,8 @@ export function synthesizeLegs(legs, opts = {}) {
     const touches = [];
     const collects = [];
     const spears = [];
+    const keylocks = [];
+    const equips = [];
     const grazes = allowGrazes ? [] : null;
 
     legs.forEach((leg, li) => {
@@ -1788,7 +1926,7 @@ export function synthesizeLegs(legs, opts = {}) {
         // what the leg says it starts inside — see the FORCED CONTACTS
         // docblock. Both directions are named failures.
         const standing = contactsAt(run.world, run.state.x, run.state.y,
-            { avoidVolumes: Boolean(relax) });
+            { avoidVolumes: Boolean(relax), keys: run.keys });
         const declared = new Set(leg.contacts ?? []);
         const undeclared = standing.filter((k) => !declared.has(k));
         if (undeclared.length > 0) {
@@ -1877,6 +2015,25 @@ export function synthesizeLegs(legs, opts = {}) {
             assertCollect(t.collect, what);
             resolvePickup(run.world, t.collect.pickup, what);
         });
+        /**
+         * ⚠ AND A KEYLOCK'S LINE IS AN EXEMPTED CONTACT, like a hold's
+         * button and a touch's lock, for the same reason and with the same
+         * bound. `bosslock`'s `key-line` hazard IS the rect the mechanic
+         * reads, so without this the planner refuses to route onto the one
+         * pixel band the leg exists to stand in — and the walk to the health
+         * pickup beyond it crosses the same band on the way out.
+         *
+         * Leg-scoped, so a leg that clipped its own line somewhere other
+         * than the keylock would not be caught here; what catches that is
+         * the verb's own solid-before / open-after verification.
+         */
+        (leg.targets ?? []).forEach((t, ti) => {
+            if (t?.keylock === undefined) return;
+            const what = `legs[${li}] level ${leg.level} target ${ti} keylock`;
+            assertKeyLock(t.keylock, what);
+            const l = resolveKeyLock(run.world, t.keylock.lock, what);
+            legContacts.add(`proximity-hazard:${l.tag}@${l.x},${l.y}`);
+        });
         // A persistence effect exists only from the leg that CAUSED it. The
         // first visit to L37 is before the button is pressed and the rock is
         // still parked at y = -16; pricing it there would be over-avoiding a
@@ -1912,11 +2069,26 @@ export function synthesizeLegs(legs, opts = {}) {
         //
         // Read from `run` per call rather than captured, because the grant
         // that would flip it fires mid-walk at a level boundary.
+        // ⚠ ...and so do `openBridges` and `pushables` (R4), for the third
+        // and fourth time this docblock has had to make the same point. A
+        // bridge is Solid until sixty ticks after its press and a pushed
+        // block is not where the level built it, so both have different
+        // answers at two points in the SAME leg — and R4's route depends on
+        // it in both directions: the leg that pushes L63's block plans its
+        // walk to the door AFTER the block is gone, and the leg that comes
+        // back into L65 plans around a block the game rebuilt.
+        //
+        // Reading them off the run rather than recomputing means the planner
+        // and the executor cannot disagree, which is the `openActivators`
+        // lesson and the reason all four arrive through this one function.
         const planNow = (extra) => ({
             ...plan,
             contacts: contactsNow(),
             openActivators: run.openActivators,
+            openBridges: run.openBridges,
+            pushables: run.pushables,
             inventory: run.inventory,
+            keys: run.keys,
             ...extra,
         });
 
@@ -1966,6 +2138,32 @@ export function synthesizeLegs(legs, opts = {}) {
                     leg: li, index: ti, level: leg.level, to: perTick.length, ...record,
                 });
             }
+            /**
+             * ── THE EQUIP, which is not a movement at all (R4) ─────────
+             *
+             * `equip: {slot}` costs the tape NO TICKS: it is one write to
+             * `Main.primary` at the tick the run has reached, and `Bot.as`
+             * applies it beside a grant. It is a leg TARGET rather than a
+             * tape field because the headline COLLECTS the spear — so the
+             * tick at which the slot becomes selectable is a fact synthesis
+             * produces, and a `relax.equips` written before the drive would
+             * be guessing the length of four legs and a ceremony.
+             *
+             * The target still carries an `{x, y}` and is still driven to,
+             * because a selection made at an unspecified position would put
+             * the tick — and therefore the emitted `{t, slot}` — at the mercy
+             * of wherever the previous target happened to end.
+             */
+            if (target.equip !== undefined) {
+                const what = `legs[${li}] level ${leg.level} target ${ti} equip`;
+                const slot = target.equip.slot;
+                if (!Number.isInteger(slot) || slot < 0) {
+                    fail(`${what}: equip.slot must be a non-negative integer, got `
+                        + `${JSON.stringify(slot)}`);
+                }
+                run.equipNow(slot);
+                equips.push({ leg: li, index: ti, t: perTick.length, slot });
+            }
             if (target.spear !== undefined) {
                 const from = perTick.length;
                 const record = runSpear(run, perTick, target.spear,
@@ -1973,6 +2171,13 @@ export function synthesizeLegs(legs, opts = {}) {
                 spears.push({
                     leg: li, index: ti, level: leg.level, from, to: perTick.length,
                     ...record,
+                });
+            }
+            if (target.keylock !== undefined) {
+                const record = runKeyLock(run, perTick, target.keylock,
+                    `legs[${li}] level ${leg.level} target ${ti} keylock`);
+                keylocks.push({
+                    leg: li, index: ti, level: leg.level, to: perTick.length, ...record,
                 });
             }
             if (target.collect !== undefined) {
@@ -2125,7 +2330,27 @@ export function synthesizeLegs(legs, opts = {}) {
     // until R2 — is precisely the split the docblock above forbids: the
     // tape would have said one thing and the plan another, and only the
     // game would have found out.
-    const tape = buildTape(perTick, boot, name, relax ? { ...relax } : { noclip: false });
+    // A declared equip that never fires is a tape claiming a selection the
+    // walk does not make, and every press after it would be a SWORD SLASH
+    // with nothing saying so — the `unfiredGrantLevels` rule, one field over.
+    if (relax && run.unfiredEquipTicks.length > 0) {
+        fail(`the tape equips a slot at tick(s) ${run.unfiredEquipTicks.join(', ')}, `
+            + `which the ${perTick.length}-tick walk never reaches. An equip fires at `
+            + 'its own observation, so either the walk got shorter or the tick is stale.');
+    }
+    // ⚠ `equips` IS A MEASUREMENT, not a declaration, and this line is where
+    // that becomes true of the artifact. `relax.equips` decides the tape
+    // VERSION (v4 is selected by the field's presence) and seeds the
+    // segments' own tick-0 selections; what gets WRITTEN is every equip the
+    // run actually fired, which is those plus the ones the `equip` leg verb
+    // made at ticks only synthesis could know. Replaying the emitted list
+    // through `applyEquipsAt` lands on exactly the same ticks.
+    const tape = buildTape(perTick, boot, name, relax
+        ? {
+            ...relax,
+            ...(relax.equips === undefined ? {} : { equips: run.equipsFired }),
+        }
+        : { noclip: false });
 
     // The runtime's tape budget, measured at R3 slice 0 and enforced HERE
     // because this is where a plan becomes an artifact. R2 discovered the
@@ -2165,6 +2390,17 @@ export function synthesizeLegs(legs, opts = {}) {
         // run's own `presses` ledger is the other half: this says what was
         // INTENDED, that says what the rect actually contained.
         spears: spears.map((s2) => ({ ...s2 })),
+        // One record per BOSSLOCK the run opened with a key: which lock,
+        // which key type, which flag it wrote, where the player stood and how
+        // long the window ran. The `holds`/`touches`/`spears` rule again —
+        // the tape is only empty ticks, so this is the only place a consumer
+        // can learn the walk opened anything with a key.
+        keylocks: keylocks.map((k) => ({ ...k })),
+        // One record per EQUIP a leg made, with the tick it landed on. The
+        // tape carries the same list (see `buildTape` above); this one also
+        // says WHICH leg asked for it.
+        equips: equips.map((e) => ({ ...e })),
+        keys: [...run.keys],
         presses: run.presses,
         /** Every sweep a wall stopped that the drive went on to arrive past. */
         grazes: grazes ? grazes.map((g) => ({ ...g })) : [],
