@@ -1437,9 +1437,9 @@ function runSpear(run, perTick, spear, what) {
     // ⚠ `to` IS THE SPEAR'S, NOT THE BLOCK'S. A `block` names the entity by
     // the coordinates the LEVEL built it at — which never change — and `to`
     // names where this particular push should leave it, which is a fact
-    // about the push. An earlier cut read `block.to` and the docblock read
+    // about the push. An earlier cut read `block.to` while the docblock said
     // `spear.to`; the route generator believed the docblock.
-    const to = spear.to === undefined ? undefined : spear.to;
+    const { to } = spear;
     if ((bridge === null) === (block === null)) {
         fail(`${what}: a spear names EXACTLY ONE of \`bridge\` (by tile) or \`block\` `
             + '(by OEL coordinates, with the tile it should end on). Naming neither '
