@@ -815,6 +815,48 @@ describe('R1: pit exits, and the forbidden-floor policy', () => {
             { ...opts, allowPit: { tx: 2, ty: 2 } })).toMatchObject({ kind: 'pit' });
     });
 
+    it('REFUSES to route across ARMED LETHAL TERRAIN (R4)', () => {
+        // The same trap the pit policy above exists for, one rung on.
+        // Adding 17/22/25 to `MODELLED_TILE_TYPES` is what lets a tape ARM
+        // a hazard at all — and it silently took armed lava OFF
+        // `plannerBlockerAt`'s unmodelled-terrain report, so without this
+        // policy the planner walks across a lava floor and the run drowns
+        // eleven ticks later.
+        //
+        // L71 carries 148 lava tiles and is on the R3 route. Tile (0,0) is
+        // one of them (`--hazard-tiles`).
+        const L71 = buildLevelWorld(levelRecord(71), { roles: RELAXED_ROLES });
+        const lava = L71.lethalTerrainTiles[0];
+        const at = { x: lava.tx * 16 + 8, y: lava.ty * 16 + 8 };
+        const armed = { noclip: true, noHazards: ['water', 'ice', 'waterfall'] };
+
+        // ARMED: forbidden floor.
+        expect(plannerObstacleAt(L71, at.x, at.y, null, armed))
+            .toMatchObject({ kind: 'lethal-terrain' });
+        // COERCED (R1-R3's own set): inert, exactly as those rungs planned
+        // it — which is why all 50 frozen recordings are unaffected.
+        expect(plannerObstacleAt(L71, at.x, at.y, null,
+            { noclip: true, noHazards: R1.noHazards })).toBeNull();
+        // And the gate is the ITEM, not the tape: the dark suit is what
+        // `checkDrowning` spares the player with.
+        expect(plannerObstacleAt(L71, at.x, at.y, null,
+            { ...armed, inventory: { hasDarkSuit: true } })).toBeNull();
+        expect(plannerObstacleAt(L71, at.x, at.y, null,
+            { ...armed, inventory: { canSwim: true } }))
+            .toMatchObject({ kind: 'lethal-terrain' });
+    });
+
+    it('does NOT forbid ice or waterfall, which are armed and walkable', () => {
+        // Forbidding these instead of modelling them is what collapses the
+        // walk from 60 nodes to 11 (slice 0 §8.2): a waterfall cannot drown
+        // you (`checkDrowning` tests `eff == 1` alone) and ice is merely
+        // slippery. L59 carries 28 waterfall tiles and is on the route.
+        const L59 = buildLevelWorld(levelRecord(59), { roles: RELAXED_ROLES });
+        const falls = L59.tiles.filter((t) => t.t === 25);
+        expect(falls.length).toBeGreaterThan(0);
+        expect(L59.lethalTerrainTiles.every((t) => t.t !== 25)).toBe(true);
+    });
+
     it('names a pit exit that is not a pit, and one that falls elsewhere', () => {
         expect(() => synthesizeLegs([
             { level: 83, targets: [], exit: { pit: { tx: 0, ty: 0 } } },

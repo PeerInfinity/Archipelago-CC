@@ -69,6 +69,16 @@ const PIT_STATE = HAZARD_STATES.pit;
 /** `Tile.types` index for a Bridge — Solid until something spears it. */
 const BRIDGE_STATE = 29;
 
+/**
+ * The two terrain types that KILL rather than merely slowing (R4).
+ *
+ * Both are modelled from R4, and both stay planner-forbidden floor until
+ * the item that survives them lands: `canSwim` (the conch, R5) for water
+ * and `hasDarkSuit` for lava. See `lethalTerrainTiles`.
+ */
+const WATER_STATE = 1;
+const LAVA_STATE = 17;
+
 export class LevelWorldError extends Error {
     constructor(message) {
         super(message);
@@ -2400,6 +2410,28 @@ export function buildLevelWorld(levelRecord, { roles = ROLES, cleared = null } =
         fallthrough,
         /** Pit tiles, for the planner's forbidden-floor policy. */
         get pitTiles() { return walkableTiles.filter((t) => t.t === PIT_STATE); },
+        /**
+         * Water and lava tiles, for R4's forbidden-floor policy.
+         *
+         * ⚠ EXPOSED BECAUSE MODELLING THEM TOOK THEM OFF THE OTHER LIST,
+         * which is the same trap R1 hit with pits and for the same reason.
+         * Until R4, `plannerBlockerAt` reported an armed lava tile as
+         * UNMODELLED TERRAIN and the planner routed around it for free.
+         * Adding 17/22/25 to `MODELLED_TILE_TYPES` — which is what lets a
+         * tape arm them at all — silently made the planner willing to walk
+         * across lava. The policy therefore has to become EXPLICIT, in the
+         * driver, beside the pit one.
+         *
+         * Only the two LETHAL types are here. Ice and waterfall are armed
+         * at R4 and are ordinary floor with unusual physics: nothing about
+         * standing on them ends a run. Water and lava do — `drownTimer` is
+         * never reset off-hazard, so eleven cumulative ticks without the
+         * conch (water) or the dark suit (lava) reaches `die()`, which
+         * `noDamage` does not guard.
+         */
+        get lethalTerrainTiles() {
+            return walkableTiles.filter((t) => t.t === WATER_STATE || t.t === LAVA_STATE);
+        },
         solids,
         objectSolids,
         pixelmasks,

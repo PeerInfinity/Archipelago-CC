@@ -64,7 +64,9 @@
  * scope then, not now.
  */
 
-import { assertTapeWithinRuntimeBudget, serializeTape } from './tapeFormat.js';
+import {
+    assertTapeWithinRuntimeBudget, coerceTerrainState, serializeTape,
+} from './tapeFormat.js';
 import { createLevelRun } from './levelRun.js';
 import { RELAXED_ROLES, ROLES, TILE_SIZE } from './levelWorld.js';
 import { assertRect, rectsOverlap } from './levelWorld.js';
@@ -131,6 +133,11 @@ export const SEGMENT_SAMPLE_STEP = 0.5;
  * transition nobody asked for.
  */
 const EMPTY_CONTACTS = new Set();
+/** R4's lethal-terrain gate, when the caller names no inventory. */
+const EMPTY_INVENTORY = Object.freeze({ canSwim: false, hasDarkSuit: false });
+/** `Tile.types` indices the lethal-terrain policy is about. */
+const LETHAL_WATER = 1;
+const LETHAL_LAVA = 17;
 const EMPTY_VOLUMES = [];
 
 /** The stable key for one contact: kind, tag and OEL position. */
@@ -234,7 +241,21 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
         noclip = false, noHazards = [], avoidVolumes = false, allowPit = null,
         contacts = EMPTY_CONTACTS, extraVolumes = EMPTY_VOLUMES,
         openActivators = null, margin = 0, triggerMargin = 0,
+        // R4: which lethal terrain the run can survive. Defaulted to
+        // "neither", which is the conservative arm and is also the truth
+        // for every rung below R4 — where both types are coerced anyway,
+        // so the whole policy is inert.
+        //
+        // ⚠ NOT THREADED FROM THE RUN YET, and the direction of the gap is
+        // the safe one. R4's walk drops `darksuit`, so "neither" IS the
+        // truth for every tick of it; a later rung that holds the suit and
+        // does not pass it here gets a planner that REFUSES a lava tile it
+        // could have crossed — a route that will not plan, rather than one
+        // that drowns. Threading it belongs with the leg plan, at the slice
+        // that first needs a hazard-crossing leg.
+        inventory = null,
     } = opts;
+    const lethalSafe = inventory ?? EMPTY_INVENTORY;
     const box = grow(playerBoxAt(x, y), margin);
     // ⚠ A TRIGGER IS NOT A WALL, and it needs MORE room rather than less.
     // An overshoot into a wall is absorbed — the sweep stops, the run
@@ -286,6 +307,33 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
     for (const tile of level.pitTiles) {
         if (allowPit && tile.tx === allowPit.tx && tile.ty === allowPit.ty) continue;
         if (rectsOverlap(probe, tile.rect)) return { kind: 'pit', blocker: tile };
+    }
+    // ⚠ ARMED LETHAL TERRAIN IS FORBIDDEN FLOOR (R4), and this policy is
+    // load-bearing for exactly the reason the pit one above is. Until R4,
+    // an armed water or lava tile was UNMODELLED TERRAIN and
+    // `plannerBlockerAt` reported it for free; modelling the physics — which
+    // is what lets a tape arm a hazard at all — took it off that list, and
+    // without this the planner routes cheerfully across a lava floor.
+    //
+    // The gate is the ITEM, not the tape: `checkDrowning` reads the coerced
+    // state and spares the player only with `canSwim` (water) or
+    // `hasDarkSuit` (lava). `drownTimer` is never reset off-hazard, so the
+    // budget is eleven CUMULATIVE ticks and then `die()` — which `noDamage`
+    // does not guard, because it guards `hit()` and the lava arm passes
+    // damage zero anyway.
+    //
+    // Ice and waterfall are deliberately NOT here: they are armed at R4 and
+    // are ordinary floor with unusual physics. Forbidding them instead of
+    // modelling them is what collapses the walk from 60 nodes to 11 (R4
+    // slice 0, §8.2).
+    for (const tile of level.lethalTerrainTiles) {
+        const effective = coerceTerrainState(tile.t, noHazards);
+        if (effective !== tile.t) continue;                       // coerced: inert
+        if (tile.t === LETHAL_WATER && lethalSafe.canSwim) continue;
+        if (tile.t === LETHAL_LAVA && lethalSafe.hasDarkSuit) continue;
+        if (rectsOverlap(probe, tile.rect)) {
+            return { kind: 'lethal-terrain', blocker: tile };
+        }
     }
     if (avoidVolumes) {
         // The position, not just the box: a `point` hazard (lavatrap's
