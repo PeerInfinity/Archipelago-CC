@@ -35,12 +35,25 @@
  * engine frame rate — arithmetic across two subsystems this model does not
  * have.
  *
- * That is measured, not derived: `scripts/procgen/probe-seedling-bridge.mjs`
- * pins the player against L63's bridge, presses ONCE, and records the tick
- * they step through. `framesToOpen()` below is the single-decrement
- * answer and stays the transcription of `Tile.render`; what the probe
- * settles is how many decrements a press buys, which is the leg's
- * business rather than the tile's.
+ * That was measured rather than derived, and the measurement is exact:
+ * `scripts/procgen/probe-seedling-bridge.mjs` pins the player against
+ * L63's bridge, presses ONCE at tick 25, holds DOWN, and the player's `y`
+ * first moves off the face **on tick 85**.
+ *
+ *   t=25   `input()` sets `spearing`, `spearDirection = direction` (3)
+ *   t=26   `spear()` fires the rect; the `e is Tile` arm takes 60 to 59,
+ *          and that tick's render takes it to 58
+ *   t=84   the render that walks it to 0 — STILL Solid (the `> 0` arm)
+ *   t=85   the render that takes the `<= 0` arm and writes `type = "Tile"`;
+ *          the player, already holding DOWN, moves through on that tick
+ *
+ * ⇒ **ONE PRESS IS ONE DECREMENT after all**, and `framesToOpen()`'s 60 is
+ * the whole delay. `spearing` does not survive long enough for
+ * `spearDelay` to drain and re-fire — so the four-class chain above is a
+ * hazard the model has to know about (a rung that lengthens the animation,
+ * or a weapon with a longer one, re-opens it) and not a correction. The
+ * one thing it DID confirm is the lag: the hit lands the tick AFTER the
+ * press, which is what the leg's frame count is measured from.
  *
  * ⚠ NOTHING EVER RE-INCREMENTS IT. Within one world instance the open
  * state is a LATCH: there is no re-close countdown to race, and the "60
@@ -215,4 +228,40 @@ export function assertOnScreenThroughout(positions, tileCentre, opts = {}) {
         }
     }
     return positions.length;
+}
+
+/**
+ * Ticks from the `primary` PRESS to the tick the player can move onto the
+ * tile, measured on the game (`probe-seedling-bridge.mjs`).
+ *
+ * ⚠ SIXTY, and it is the sum of two ones that cancel rather than a
+ * coincidence with `framesToOpen()`. The press at tick T sets `spearing`
+ * inside `input()`, which runs AFTER `spear()` in the same
+ * `Player.update()`; so the rect fires at T+1 and the hit's own tick is
+ * also the first render of the sixty. The sixtieth render — T+60 — is the
+ * one that writes `type = "Tile"`, and a player already holding the
+ * direction moves through on it.
+ *
+ * Held as its own constant rather than as `framesToOpen()` reused, because
+ * they answer different questions: one is the TILE's transcription and one
+ * is the LEG's obligation, and a rung that changes the spear animation
+ * moves the second without touching the first.
+ */
+export const TICKS_FROM_PRESS_TO_WALKABLE = 60;
+
+/**
+ * The on-screen window a leg must keep its promise over: the press tick
+ * through the tick the player steps on.
+ *
+ * A leg that presses at `pressTick` may not leave the 64 px radius before
+ * `pressTick + TICKS_FROM_PRESS_TO_WALKABLE` — `Tile.render` early-returns
+ * off screen and the opening simply STOPS, so a leg that wanders is not
+ * slow, it is stuck.
+ */
+export function openingWindow(pressTick) {
+    if (!Number.isInteger(pressTick) || pressTick < 0) {
+        throw new BridgeError(`openingWindow: pressTick must be a non-negative integer, `
+            + `got ${JSON.stringify(pressTick)}`);
+    }
+    return { from: pressTick, to: pressTick + TICKS_FROM_PRESS_TO_WALKABLE };
 }

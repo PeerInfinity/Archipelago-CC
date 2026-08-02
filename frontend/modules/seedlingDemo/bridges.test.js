@@ -17,7 +17,9 @@ import {
     BRIDGE_TIMER_MAX,
     BridgeError,
     ON_SCREEN_RADIUS,
+    TICKS_FROM_PRESS_TO_WALKABLE,
     assertOnScreenThroughout,
+    openingWindow,
     bridgeHit,
     bridgeRender,
     framesToOpen,
@@ -153,5 +155,27 @@ describe('the on-screen policy (§3.3)', () => {
         // A freeze OUTSIDE the window is not this check's business.
         expect(assertOnScreenThroughout(positions, centre, { frozenTicks: [50, 900] }))
             .toBe(70);
+    });
+});
+
+describe('the press-to-walkable delay (measured, not derived)', () => {
+    it('is 60 ticks from the press, and the probe says so tick for tick', () => {
+        // `probe-seedling-bridge.mjs`: press at 25, first movement at 85.
+        expect(TICKS_FROM_PRESS_TO_WALKABLE).toBe(60);
+        expect(openingWindow(25)).toEqual({ from: 25, to: 85 });
+    });
+
+    it('⚠ equals framesToOpen() by CANCELLATION, not by being the same thing', () => {
+        // The press tick is one before the hit tick, and the hit tick is
+        // the first of the sixty renders. Two ones that cancel. They are
+        // held apart because a rung that lengthens the spear animation
+        // moves one and not the other.
+        expect(framesToOpen()).toBe(BRIDGE_TIMER_MAX);
+        expect(TICKS_FROM_PRESS_TO_WALKABLE).toBe(framesToOpen());
+    });
+
+    it('refuses a press tick it cannot build a window from', () => {
+        expect(() => openingWindow(-1)).toThrow(BridgeError);
+        expect(() => openingWindow(1.5)).toThrow(BridgeError);
     });
 });
