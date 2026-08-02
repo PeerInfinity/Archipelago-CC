@@ -380,11 +380,26 @@ function checkReadout(name, tape, status) {
             : 'items/cutscene/menu/grants missing — is this the pre-R0 build?');
     if (!hasReadout) return null;
 
-    check(`${name}: no dialogue auto-advance fired`, status.saw_auto_advance === 0,
-        status.saw_auto_advance === 0 ? 'saw_auto_advance=0'
-            : `saw_auto_advance=${status.saw_auto_advance} — a ceremony the route was `
-            + 'supposed to avoid froze the game, so the proximity-hazard census missed '
-            + 'something');
+    // ⚠ VERSION-SCOPED FROM R4, and the scoping is the whole point. The
+    // counter used to increment on the RELEASE, and a `Help` ends its
+    // freeze on the PRESS — so the sword's `Help(3)` was auto-advanced on
+    // every run that collected it and the readout still said 0. The R4
+    // batch counts a Help's ARRIVAL instead, which is NOT byte-inert: it
+    // changes the reported value for the ~8 frozen R3 collection fixtures.
+    // Gating the fix on `tape_version >= 4` is what keeps those fixtures'
+    // committed expectations true, so the inertness gate stays a gate
+    // rather than failing by being correct.
+    //
+    // For v<=3 the claim is unchanged and still a CENSUS GUARD: a non-zero
+    // count means a freeze fired that nobody planned for. For a v4 tape the
+    // count is honest, and the walk asserts it as a POSITIVE.
+    if (tape.tape_version < 4) {
+        check(`${name}: no dialogue auto-advance fired`, status.saw_auto_advance === 0,
+            status.saw_auto_advance === 0 ? 'saw_auto_advance=0 (v<=3: bug-compatible)'
+                : `saw_auto_advance=${status.saw_auto_advance} — a ceremony the route was `
+                + 'supposed to avoid froze the game, so the proximity-hazard census missed '
+                + 'something');
+    }
 
     // The JS side's expectation for this tape, from the same tape the game
     // just ran. `runTape` throws if a grant never fires, so a stale route is
@@ -431,6 +446,55 @@ function checkReadout(name, tape, status) {
             : `hitsMax=${status.items.hitsMax}, `
             + `${Object.values(expected.inventory).filter((v) => v === true).length} `
             + 'flag(s) true');
+
+    // ── R4: THE EQUIP, TWO-SIDEDLY ────────────────────────────────────
+    // A new tape field is a place for two consumers to disagree, and this
+    // one is the worst-shaped kind: `Player.useItem` switches on
+    // `Inventory.getItem(Main.primary)` and falls through to NOTHING for a
+    // slot that does not exist, so a mirror that had the slot ORDER wrong
+    // would not error — every press would just quietly be a sword slash,
+    // and the first symptom would be a bridge that never opened, thousands
+    // of ticks away from the cause.
+    //
+    // So both halves are read from the GAME (`Main.primary`, and
+    // `Inventory` SCANNED slot by slot) and compared against the JS
+    // mirror's own transcription of `addItemsFromSave`. Asserted on EVERY
+    // tape, not just the ones that equip: a v1/v2/v3 fixture's expectation
+    // is `primary = 0` and a slot array that follows from its own grants,
+    // which is exactly the negative control this needs.
+    if (status.primary !== undefined) {
+        check(`${name}: Main.primary matches the mirror`,
+            status.primary === expected.primary,
+            `game: ${status.primary}, expected: ${expected.primary}`);
+        const gameSlots = (status.inventory_slots ?? []).join(',');
+        const wantSlots = (expected.inventorySlots ?? []).join(',');
+        check(`${name}: the inventory slot ARRAY matches the mirror`,
+            gameSlots === wantSlots,
+            `game: [${gameSlots}], expected: [${wantSlots}] `
+            + '(ids: 0 sword, 1 fire, 2 wand, 3 spear, 4 ghostsword, 5 firewand)');
+        // And the two together: the slot the tape selected must actually
+        // hold something. This is the check `parseTape` cannot make (it
+        // sees a tape, not a run) and the one `Bot.as` defers (the array
+        // does not exist until the first `inventory.update()`).
+        const held = status.inventory_slots ?? [];
+        check(`${name}: the selected slot holds an item`,
+            held.length === 0 ? status.primary === 0 : status.primary < held.length,
+            `primary=${status.primary} against ${held.length} slot(s)`);
+    }
+
+    // ⚠ `drownTimer` is CUMULATIVE and never reset off-hazard, so this is a
+    // POSITIVE control for the forbidden-floor policy rather than a
+    // formality: a walk that declares lava armed and still reports 0 has,
+    // in the game's own accounting, never once stood on an unprotected
+    // hazard tile. Every tape on the ladder to date should report 0 —
+    // R1-R3 coerce all four hazards, so nothing can touch it.
+    if (status.drown_timer !== undefined) {
+        check(`${name}: the game never started drowning`,
+            status.drown_timer === 0,
+            `drownTimer=${status.drown_timer} — non-zero means the player stood on `
+            + 'water without canSwim or lava without hasDarkSuit, and the timer never '
+            + 'resets once touched (11 cumulative ticks is the whole run budget)');
+    }
 
     // The win statics stay false until R6 actually beats the game. Pinned
     // here so the terminal assertion has a baseline rather than being
