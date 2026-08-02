@@ -41,6 +41,14 @@ import {
 import {
     createActivatorState, openActivatorIds, stepActivators,
 } from './activators.js';
+import {
+    BridgeError, TICKS_FROM_PRESS_TO_WALKABLE, withinOnScreenRadius,
+} from './bridges.js';
+import {
+    createPushableState, hitPushable, movedPushables, pushableRects,
+    pushablesSettled, stepPushables,
+} from './pushables.js';
+import { PRESS_ARM_POLICY, auditPress, slashRect, spearRect } from './presses.js';
 import { ITEM_PROPERTIES, ITEM_NAMES, inventorySlotsFor } from './tapeFormat.js';
 import { spawnFromBoot } from './playerPhysicsV1.js';
 import {
@@ -198,6 +206,68 @@ export function createLevelRun({
         activatorStates.set(n, createActivatorState(worldFor(n)));
         return activatorStates.get(n);
     };
+    /**
+     * ── R4: THE TWO THINGS A PRESS CHANGES, both PER VISIT ─────────────
+     *
+     * `openBridges` is `bridgeId -> {pressTick, walkableAt}` and
+     * `pushableStates` is `pushables.createPushableState`'s own object. They
+     * are a THIRD lifetime beside the two this file already holds, and the
+     * three must not be collapsed:
+     *
+     *   declared clears   the tape's, for the whole run
+     *   EARNED clears     banked, cashed when the destination is built —
+     *                     `Lock.check()` despawns on a cleared flag, so an
+     *                     opened shield lock is gone next visit too
+     *   THESE             gone the moment the level is rebuilt
+     *
+     * `Tile.bridgeOpeningTimer` and `PushableBlockFire.tile` are instance
+     * variables with no persistence at all, so a re-entered level rebuilds
+     * the bridge CLOSED and the block IN THE CORRIDOR. The R4 route walks
+     * back through L63, and a model that banked either would plan the
+     * return through a door the game has shut.
+     */
+    const bridgeStates = new Map();
+    const pushableStates = new Map();
+    const bridgeStateFor = (n) => {
+        if (!bridgeStates.has(n)) bridgeStates.set(n, new Map());
+        return bridgeStates.get(n);
+    };
+    const pushableStateFor = (n) => {
+        if (!pushableStates.has(n)) pushableStates.set(n, createPushableState(worldFor(n)));
+        return pushableStates.get(n);
+    };
+    const freshVisitState = (n) => {
+        bridgeStates.set(n, new Map());
+        pushableStates.set(n, createPushableState(worldFor(n)));
+    };
+    /**
+     * The bridges walkable RIGHT NOW, as ids the two queries take.
+     *
+     * ⚠ THE INDEX IS THE OBSERVATION THE CURRENT TICK WILL PRODUCE, not the
+     * one it started from, and the fencepost is the probe's own arithmetic:
+     * `probe-seedling-bridge.mjs` pressed at tape tick 25 and the player's
+     * `y` first moved on observation **85**. A tick that produces
+     * observation 85 ENTERS with `ticksCompleted` at 84, so a gate written
+     * against the entry index would open the crossing a tick late and the
+     * model would report the player still pinned against a tile the game had
+     * already opened.
+     */
+    // ⚠ NULL WHEN THERE IS NOTHING TO SAY, on both of these. They are asked
+    // on EVERY tick of every level — a fresh Set and a fresh Map per tick,
+    // for the 108 levels that hold neither a bridge nor a block, is pure
+    // allocation on the hot path, and `null` is already the "no live state"
+    // arm both queries take.
+    const openBridgeIdsNow = () => (bridgeStateFor(level).size === 0
+        ? null : openBridgeIds(level, ticksCompleted + 1));
+    const pushableRectsNow = () => {
+        const st = pushableStateFor(level);
+        return st.byId.size === 0 ? null : pushableRects(st);
+    };
+    const openBridgeIds = (n, observation) => {
+        const open = new Set();
+        for (const [id, b] of bridgeStateFor(n)) if (observation >= b.walkableAt) open.add(id);
+        return open;
+    };
 
     let level = boot.level;
     let world = worldFor(level);
@@ -314,6 +384,242 @@ export function createLevelRun({
         firedEquips.push({ t, slot });
     };
     applyEquipsAt(0);
+
+    // ── the PRESS (R4) ────────────────────────────────────────────────
+    /**
+     * The thrust an X press scheduled, or null.
+     *
+     * ⚠ ONE TICK LATE BY TRANSCRIPTION. `Player.update` calls `slash()` and
+     * `spear()` BEFORE `super.update()`, and `super.update()` is what runs
+     * `input()` — so the press that sets `spearing` on tick T fires its rect
+     * on tick T+1, against the position T left and the facing T STARTED
+     * with (`set spearing` captures `spearDirection = direction`, and
+     * `sprites()` — the only writer of `direction` — runs at the END of the
+     * update). The bridge probe confirmed that lag end to end.
+     *
+     * ⚠ ONE FIRING PER PRESS, MEASURED. `spearDelayMax` is 1, so `spear()`
+     * would re-collide the rect every OTHER tick for as long as `spearing`
+     * holds, and `spearing` is cleared by an 8-frame 45 fps Spritemap's
+     * complete callback — arithmetic across two frame rates this model does
+     * not have. `probe-seedling-bridge.mjs` measured the answer instead: one
+     * press, one decrement (see `bridges.js`). A rung that lengthens the
+     * animation re-opens this.
+     */
+    let pendingThrust = null;
+    /** One record per press that FIRED, for the audit ledger. */
+    const presses = [];
+    /**
+     * `Player.useItem(i)`'s switch, over `Inventory.getItem(i)`.
+     *
+     * Returns the WEAPON a press would be, or null when the press is a
+     * silent no-op — which is a real case rather than a defensive one: an
+     * item the run does not hold has no slot, and `getItem` on a missing
+     * slot returns `undefined`, which the switch does not match.
+     */
+    const weaponForPress = () => {
+        const slots = inventorySlotsFor(inventory);
+        const item = slots[primary];
+        if (item === undefined) return null;
+        // 0 sword / 4 ghostsword -> slashing; 3 spear -> spearing.
+        // ⚠ `set slashing` is guarded on `hasSword || hasGhostSword` and
+        // `set spearing` on `hasSpear`, but a slot only EXISTS because the
+        // item does, so the guard and the slot say the same thing here.
+        if (item === 0) return 'sword';
+        if (item === 4) return 'ghostsword';
+        if (item === 3) return 'spear';
+        throw new Error(`levelRun: the tape presses X with slot ${primary} holding item `
+            + `${item}, which routes through \`useItem\`'s fire/wand arms. Neither is `
+            + 'modelled at R4 (a WandShot is an entity with its own physics), so a '
+            + 'press that would spawn one is refused rather than silently dropped.');
+    };
+    /** The arms this rung MODELS; see `presses.PRESS_ARM_POLICY` for the rest. */
+    const MODELLED_PRESS_ARMS = new Set(
+        Object.entries(PRESS_ARM_POLICY)
+            .filter(([, p]) => p.policy === 'modelled').map(([as3]) => as3),
+    );
+    /** ...and the ones that run in the game and change nothing observable. */
+    const INERT_PRESS_ARMS = new Set(
+        Object.entries(PRESS_ARM_POLICY)
+            .filter(([, p]) => p.policy === 'inert').map(([as3]) => as3),
+    );
+
+    /**
+     * The block's own collision question, which is NOT the player's.
+     *
+     * `PushableBlockFire`'s ctor does `solids.push("Enemy", "Player")` on
+     * top of `Mobile`'s five, so a block collides with two things the player
+     * does not — and it excludes ITSELF, which `Entity.collide`'s `e !==
+     * this` does for free and this has to do by hand (the live map is keyed
+     * by id, so self is marked removed for the duration of its own query).
+     *
+     * ⚠ ENEMIES ARE THE NAMED BOUND. The world carries none — they do not
+     * stop the player, so the blocking census never collected them — so a
+     * push into an enemy is one this model ALLOWS and the game may refuse.
+     * The direction is the safe one (a refused push wedges the block where
+     * the pair fixture would show it), and the sweep that found R4's chains
+     * flags an enemy SPAWN in a destination cell for the same reason.
+     */
+    const pushableCtx = () => {
+        const pushState = pushableStateFor(level);
+        const openBridges = openBridgeIdsNow();
+        const openActivators = noclip ? null : openActivatorIds(activatorStateFor(level));
+        const playerBox = playerBoxAt(state.x, state.y);
+        return {
+            collides: (rect, self) => {
+                // ⚠ READ LIVE, not off a snapshot taken at the top of the
+                // tick. `stepPushables` walks the blocks one at a time and
+                // the game's update list does too, so a block that updates
+                // LATER must see the earlier one where this tick left it.
+                // (No route has two pushables close enough for it to show —
+                // L8, L39 and L40 are the only levels with more than one and
+                // none is on a route — so this is a bounded vacuity that
+                // costs nothing to close.)
+                const withoutSelf = pushableRects(pushState);
+                withoutSelf.set(self.id, { ...withoutSelf.get(self.id), removed: true });
+                const hit = world.collidesSolid(rect, {
+                    beforeTypeFlip: firstTickInWorld,
+                    openActivators,
+                    openBridges,
+                    pushables: withoutSelf,
+                });
+                if (hit) return hit;
+                // The player, at the position the PREVIOUS tick left — which
+                // is where they are when the block updates, because the
+                // block updates first.
+                return rectsOverlap(rect, playerBox) ? { tag: 'Player' } : null;
+            },
+            tileTypeAt: (x, y) => world.nearestWalkableTile(x, y, { openBridges })?.t,
+            // The walk family's `input()` reads the PLAYER — the box for its
+            // four ±1 px probes and `c.v` for the sign test — and it reads
+            // them at the position and velocity the previous tick left,
+            // because the block updates first.
+            playerBox,
+            playerVx: state.vx,
+            playerVy: state.vy,
+        };
+    };
+
+    /**
+     * The on-screen policy (§3.3), asserted from the RUN's own state.
+     *
+     * A `Tile`'s `render()` early-returns off screen, so the opening timer
+     * simply STOPS — a leg that wanders away from a bridge it opened is not
+     * slow, it is stuck. The model does not grow a camera; it holds the
+     * player to a conservative 64 px radius for the whole window and fails
+     * by name if the run leaves it.
+     *
+     * ⚠ AND THAT POLICY IS ALSO WHAT MAKES `walkableAt` EXACT. Inside the
+     * radius every tick is a rendered frame, so "sixty on-screen frames" and
+     * "sixty ticks" are the same number — which is the number the probe
+     * measured (`bridges.TICKS_FROM_PRESS_TO_WALKABLE`).
+     */
+    const assertBridgeWindows = ({ frozen = false } = {}) => {
+        const bridges = bridgeStateFor(level);
+        for (const [id, b] of bridges) {
+            if (ticksCompleted >= b.walkableAt) continue;
+            if (frozen) {
+                throw new BridgeError(`levelRun: the run is FROZEN at tick `
+                    + `${ticksCompleted} while bridge ${id} in level ${level} is opening `
+                    + `(pressed at ${b.pressTick}, walkable at ${b.walkableAt}). `
+                    + '`Tile.render` runs on frozen frames and this model counts TICKS, '
+                    + 'so the game would open the bridge EARLIER than the model says. '
+                    + 'Move the ceremony out of the opening window.');
+            }
+            if (!withinOnScreenRadius(state.x, state.y, b.centre)) {
+                throw new BridgeError(`levelRun: at tick ${ticksCompleted} the player is `
+                    + `at (${state.x}, ${state.y}), more than 64 px from bridge ${id}'s `
+                    + `centre (${b.centre.x}, ${b.centre.y}) in level ${level}, and the `
+                    + `bridge is still opening (walkable at ${b.walkableAt}). `
+                    + '`Tile.render` early-returns off screen, so the opening STOPS. '
+                    + 'Keep the leg near the bridge, or re-plan it.');
+            }
+        }
+    };
+
+    /**
+     * `spear()` / `slash()`: collide the rect, then `genericHit` everything
+     * in it.
+     *
+     * ⚠ THE UNINTENDED RESPONDERS ARE AS REAL AS THE INTENDED ONE. One
+     * thrust can decrement a bridge, push a block, toggle a lightpole and
+     * hit three enemies, and the audit is what turns the ones this rung does
+     * not model into a synthesis-time failure instead of a divergence two
+     * thousand ticks later. `intended` is deliberately NOT passed here: the
+     * run does not know what a leg meant, so it applies the arms it models
+     * and refuses everything else. The leg's own intent check lives with the
+     * leg (`presses.auditPress`).
+     */
+    const applyThrust = (thrust) => {
+        const { weapon, direction, pressTick } = thrust;
+        const rect = weapon === 'sword'
+            ? slashRect(state.x, state.y, direction)
+            : spearRect(state.x, state.y, direction);
+        // A ghostsword routes a SLASH through the Spear branch of
+        // `genericHit` — R5, and refused rather than approximated.
+        if (weapon === 'ghostsword') {
+            throw new Error('levelRun: a ghostsword press routes the slash rect through '
+                + "`genericHit`'s Spear arm and doubles the rect's height from the "
+                + 'sprite WIDTH. Neither is modelled (R5).');
+        }
+        const pushState = pushableStateFor(level);
+        const audit = auditPress(world, rect, {
+            weapon: weapon === 'spear' ? 'spear' : 'sword',
+            // The block's LIVE rect: a chain's second push aims at where the
+            // first one left it.
+            pushables: pushableRects(pushState),
+        });
+        const refused = audit.live.filter(
+            (r) => !MODELLED_PRESS_ARMS.has(r.as3) && !INERT_PRESS_ARMS.has(r.as3),
+        );
+        if (refused.length > 0) {
+            throw new Error(`levelRun: the ${weapon} press at tick ${pressTick} in level `
+                + `${level} reaches ${refused.map((r) => `${r.tag}@${r.x},${r.y}`).join(', ')}`
+                + `, whose \`genericHit\` arm this rung REFUSES `
+                + `(${refused.map((r) => PRESS_ARM_POLICY[r.as3].why).join('; ')}). A stray `
+                + 'responder is a route change, a ledger entry or a death — never a '
+                + 'no-op. Re-aim the press, or model the arm.');
+        }
+        const bridges = bridgeStateFor(level);
+        const hits = [];
+        for (const r of audit.live) {
+            if (r.as3 === 'Tile') {
+                const id = `${r.tile.tx},${r.tile.ty}`;
+                // ⚠ NO ALREADY-OPEN GUARD in `genericHit`'s Tile arm: a
+                // second press on an open bridge drives the timer negative
+                // and the `<= 0` arm keeps it open. Recorded rather than
+                // clamped, because a double press is something the executor
+                // should be reporting.
+                if (!bridges.has(id)) {
+                    bridges.set(id, {
+                        pressTick,
+                        walkableAt: pressTick + TICKS_FROM_PRESS_TO_WALKABLE,
+                        centre: { x: r.x, y: r.y },
+                    });
+                }
+                hits.push({ as3: 'Tile', id });
+            } else if (r.as3 === 'PushableBlockSpear') {
+                // ⚠ `pushableId`, not `tag@x,y`: `x`/`y` are the SPAWN
+                // coordinates the census carries and the id is keyed on
+                // them, but a caller that rebuilt the key from a live rect
+                // would miss on every push after the first.
+                const id = r.pushableId;
+                const block = pushState.byId.get(id);
+                if (!block) {
+                    throw new Error(`levelRun: the press at tick ${pressTick} reaches `
+                        + `${id} in level ${level}, which is not in the run's pushable `
+                        + 'state. The world and the run disagree about which blocks '
+                        + 'exist, which is the two-consumers failure this state family '
+                        + 'exists to prevent.');
+                }
+                const { block: after, moved, why } = hitPushable(block, direction);
+                pushState.byId.set(id, after);
+                hits.push({ as3: 'PushableBlockSpear', id, moved, why });
+            }
+        }
+        presses.push({
+            t: pressTick, fired: ticksCompleted, level, weapon, direction, rect, hits,
+        });
+    };
 
     // ── the pickup CEREMONY (R3) ──────────────────────────────────────
     /**
@@ -658,6 +964,35 @@ export function createLevelRun({
         get openActivators() {
             return noclip ? null : openActivatorIds(activatorStateFor(level));
         },
+        /**
+         * R4: the same thing for the two press families — the planner's only
+         * legitimate view of an opened bridge and a moved block.
+         *
+         * ⚠ LIVE STATE, and per VISIT. `botDriverV2` re-plans before every
+         * target, and both of these change mid-leg: a bridge is Solid until
+         * sixty ticks after the press and a block is a moving 16 px wall for
+         * thirty-two. A planner with its own copy would certify the corridor
+         * the push opened and then walk the executor into the block it did
+         * not move — the `openActivators` lesson, one mechanic later.
+         */
+        get openBridges() {
+            return noclip ? null : (openBridgeIdsNow() ?? new Set());
+        },
+        get pushables() { return noclip ? null : pushableRects(pushableStateFor(level)); },
+        /** Which blocks are no longer where the level built them, this visit. */
+        get pushedBlocks() { return noclip ? [] : movedPushables(pushableStateFor(level)); },
+        /** Is every block at rest? The `spear` leg's "the push has landed" test. */
+        get pushesSettled() { return noclip ? true : pushablesSettled(pushableStateFor(level)); },
+        /**
+         * One record per press that FIRED its rect: `{t, fired, level,
+         * weapon, direction, rect, hits}`.
+         *
+         * The press ledger the §3.2 audit is checked against. `t` is the
+         * tape's own press tick and `fired` is the tick the rect collided —
+         * they differ by one BY TRANSCRIPTION, and having both is what lets
+         * a leg say which of the two it meant.
+         */
+        get presses() { return presses.map((p) => ({ ...p, hits: p.hits.map((h) => ({ ...h })) })); },
         /** Build (and memoise) another level's world — for planning ahead. */
         worldFor,
 
@@ -686,6 +1021,21 @@ export function createLevelRun({
             // on the equip's own tick is already a thrust. Construction
             // covered tick 0; this covers every later one.
             applyEquipsAt(ticksCompleted);
+            // The keys of the PREVIOUS tick, captured before the two
+            // branches below both overwrite `prevHeld`. `Input.pressed(k)`
+            // is the rising edge, and it is what `useItem` reads.
+            const wasHeld = prevHeld;
+
+            // ── R4: the entities that update BEFORE the player ────────
+            // `Game.loadlevel` adds the Player at `:2040` and the pushables
+            // at `:2164-2166`, and `World.addUpdate` PREPENDS — so a block
+            // moves first and the player's sweep this tick reads it where
+            // this left it. And `PushableBlockFire.update()` overrides
+            // `Mobile.update` without the `Game.freezeObjects` gate, so it
+            // runs ABOVE the ceremony's early return below: a block keeps
+            // gliding through a pickup's frozen frames.
+            const pushState = pushableStateFor(level);
+            if (!noclip && pushState.byId.size > 0) stepPushables(pushState, pushableCtx());
 
             // The player reads the activator state as of the END of the
             // previous tick, which is the same object the game's Locks
@@ -770,6 +1120,22 @@ export function createLevelRun({
                     // one tick long and was the only divergence in the
                     // whole ceremony.
                 } else {
+                    // ⚠ A FROZEN TICK IS NOT A RENDERED FRAME AS FAR AS THIS
+                    // MODEL IS CONCERNED, and a bridge does not know that.
+                    // `Tile.render` keeps running, so the game would open one
+                    // EARLIER than the tick count says. Named here rather
+                    // than discovered as a crossing that happened too soon.
+                    assertBridgeWindows({ frozen: true });
+                    // `genericHit` returns immediately under
+                    // `Game.freezeObjects`, so a thrust scheduled by the
+                    // press before a ceremony would silently do NOTHING.
+                    if (pendingThrust) {
+                        throw new Error(`levelRun: a ${pendingThrust.weapon} press at tick `
+                            + `${pendingThrust.pressTick} would fire its rect on a FROZEN `
+                            + 'tick, and `genericHit` returns immediately under '
+                            + '`Game.freezeObjects` — so the press would do nothing at '
+                            + 'all. Press outside the ceremony.');
+                    }
                     ticksCompleted++;
                     // The game keeps updating every non-Mobile entity
                     // through a freeze, so a Button under the frozen player
@@ -801,17 +1167,56 @@ export function createLevelRun({
             // because `NPC.talk()` reads `Input.released` from outside
             // `Player.input()` and a refused player can still talk.
             const acting = lockSnap ? NO_KEYS : held;
+            // ── R4: the thrust the last tick's press scheduled ────────
+            // After the blocks' own update (the block's `hit` refuses while
+            // `v.length > 0`, and `v` is what its own `input()` just set)
+            // and before the player moves (`spear()` runs at the top of
+            // `Player.update`, above `super.update()`).
+            if (pendingThrust) {
+                applyThrust(pendingThrust);
+                pendingThrust = null;
+            }
+            if (!noclip) assertBridgeWindows();
+            // `set spearing` captures `spearDirection = direction`, and
+            // `sprites()` — the only writer of `direction` — runs at the END
+            // of the update. So a press consumes the facing this tick
+            // STARTED with, which is the value in `state` right now.
+            const pressFacing = state.direction;
+            const pressed = acting.has(TALK_KEY) && !wasHeld.has(TALK_KEY);
             const next = stepV2(state, acting, {
                 level: world,
                 noclip,
                 noHazards,
                 beforeTypeFlip: firstTickInWorld,
                 openActivators: noclip ? null : openActivatorIds(activators),
+                // R4: the two per-visit families, live. Under `noclip` there
+                // is no geometry to be part of, so they are inert by the
+                // same argument `openActivators` is.
+                openBridges: noclip ? null : openBridgeIdsNow(),
+                pushables: noclip ? null : pushableRectsNow(),
                 // R4: `checkDrowning` reads `canSwim` and `hasDarkSuit`,
                 // and the waterfall push reads `hasFeather`. The run's
                 // mirror is the only place those live on this side.
                 inventory,
             });
+            // ── R4: `input()`'s own last act, at the END of the tick ──
+            // `useItem(Main.primary)` fires on `Input.pressed(keys[4])` from
+            // inside `Player.input()`, which is where the sweeps happen too
+            // — so the press is part of THIS tick, and the rect it schedules
+            // fires on the next one. Recorded after the step because the
+            // ordering within `input()` is invisible: nothing this schedules
+            // is read again before the next tick.
+            if (pressed && !noclip) {
+                const weapon = weaponForPress();
+                // A slot holding nothing is a SILENT no-op in the game
+                // (`getItem` returns `undefined` and the switch matches
+                // nothing), so it is a silent no-op here — the loud version
+                // of that failure lives at the equip, which is where the
+                // run knows what it holds.
+                if (weapon) {
+                    pendingThrust = { weapon, direction: pressFacing, pressTick: ticksCompleted };
+                }
+            }
             ticksCompleted++;
             // ...and THEN Button.update and Lock.update run, against where
             // the player ended up.
@@ -862,6 +1267,17 @@ export function createLevelRun({
             world = worldFor(level);
             // A new `Game` means new entities: every lock is solid again.
             if (!noclip) freshActivatorState(level);
+            // ⚠ ...and so is every bridge, and every block is back in the
+            // corridor. `Tile.bridgeOpeningTimer` and
+            // `PushableBlockFire.tile` are instance variables with NO
+            // persistence — unlike the clear a shield lock earns, which
+            // `applyEarnedClears` above has just cashed. Two families, two
+            // lifetimes, three lines apart on purpose.
+            if (!noclip) freshVisitState(level);
+            // A thrust cannot outlive its level either: `spear()` collides
+            // the rect against `FP.world`, and by the time it fires the
+            // world is the destination's.
+            pendingThrust = null;
             // ONE swap, TWO arrival kinds. A fall lands the player at the
             // ctor args `checkFallingInPit` computed, `fallFromCeiling`, 83
             // px above where it will end up; a teleporter lands them at its

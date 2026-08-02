@@ -241,6 +241,13 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
         noclip = false, noHazards = [], avoidVolumes = false, allowPit = null,
         contacts = EMPTY_CONTACTS, extraVolumes = EMPTY_VOLUMES,
         openActivators = null, margin = 0, triggerMargin = 0,
+        // R4: the two other per-VISIT families, and they are LIVE STATE for
+        // exactly the reason `openActivators` is. A bridge is Solid until
+        // sixty ticks after a spear press and a pushed block is not where
+        // the level built it, so "is this tile walkable" has different
+        // answers at two points in the same leg — and a planner with its own
+        // idea of either would certify a corridor the executor walks into.
+        openBridges = null, pushables = null,
         // R4: which lethal terrain the run can survive. Defaulted to
         // "neither", which is the conservative arm and is also the truth
         // for every rung below R4 — where both types are coerced anyway,
@@ -276,7 +283,7 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
     // so the planner cannot believe a door is open that the engine will
     // find shut.
     const geometry = level.plannerBlockerAt(box, terrainProbeRect(x, y),
-        { noclip, noHazards, openActivators });
+        { noclip, noHazards, openActivators, openBridges, pushables });
     if (geometry) return geometry;
     // ⚠ PIT TILES ARE FORBIDDEN FLOOR, and this policy is LOAD-BEARING from
     // R1 on. Until R1 a pit was unmodelled terrain, so `plannerBlockerAt`

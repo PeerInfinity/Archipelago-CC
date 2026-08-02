@@ -32,6 +32,36 @@ import { runTapeToStream } from './tapeRunner.js';
 const levelSource = atlasLevelSource();
 const boot = { level: 0, x: 80, y: 128 };
 
+/**
+ * `probe-seedling-l65-breach.mjs`'s walk, verbatim — the CONTROL arm.
+ *
+ * Copied rather than imported: the probe is a Playwright script that boots
+ * a browser, and the tape is the only part of it a unit test can use. The
+ * three `primary` spans below are the press arm's only difference.
+ */
+const L65_BREACH_SPANS = [
+    { key: 'left', from: 5, to: 12 },
+    { key: 'down', from: 62, to: 73 },
+    { key: 'left', from: 78, to: 83 },
+    { key: 'down', from: 88, to: 99 },
+    { key: 'left', from: 104, to: 119 },
+    { key: 'up', from: 124, to: 125 },
+    { key: 'right', from: 178, to: 193 },
+    { key: 'up', from: 198, to: 205 },
+    { key: 'right', from: 210, to: 221 },
+    { key: 'up', from: 226, to: 265 },
+    { key: 'left', from: 270, to: 281 },
+    { key: 'down', from: 335, to: 350 },
+    { key: 'left', from: 355, to: 378 },
+    { key: 'up', from: 383, to: 422 },
+];
+const L65_BREACH_PRESS_SPANS = [
+    ...L65_BREACH_SPANS,
+    { key: 'primary', from: 18, to: 19 },
+    { key: 'primary', from: 130, to: 131 },
+    { key: 'primary', from: 286, to: 287 },
+];
+
 /** Drive a run by hand off a tape, the way `botDriverV2` drives it by plan. */
 function driveByHand(tape) {
     const run = createLevelRun({ levelSource, boot: tape.boot, noclip: tape.noclip });
@@ -42,6 +72,199 @@ function driveByHand(tape) {
     }
     return { ticks, transitions: run.transitions, run };
 }
+
+/**
+ * ── R4: THE PRESS, against the game's own recordings ──────────────────
+ *
+ * Two probe tapes are replayed here rather than re-derived, because both
+ * were run against the real recompiled game and both printed a number this
+ * model has to reproduce. That makes these the strongest tests in the file:
+ * everything else pins the model against the AS3, and these pin it against
+ * what the AS3 DID.
+ */
+describe('R4: the spear press, the bridge and the block', () => {
+    /** Drive a run with hand-built spans, the way a probe tape does. */
+    function drive(run, spans, ticks) {
+        for (let t = 0; t < ticks; t++) {
+            const held = new Set();
+            for (const s of spans) if (t >= s.from && t < s.to) held.add(s.key);
+            run.advance(held);
+        }
+        return run;
+    }
+    const D6_HAZARDS = ['water', 'lava', 'ice', 'waterfall'];
+
+    it('opens L63\'s bridge exactly 60 ticks after the press — the probe\'s own numbers', () => {
+        // `probe-seedling-bridge.mjs`, verbatim: boot at tile (2,8), hold
+        // DOWN until the player pins against the bridge's north face at
+        // y = 141, press ONCE at tick 25, hold DOWN for the rest. The game
+        // reported the pin breaking at tick **85**.
+        //
+        // Reproducing that number is what pins the whole fencepost chain:
+        // the press tick, the one-tick lag before the rect fires, the sixty
+        // renders, and — the part no source reading settled — which
+        // observation index the crossing lands on.
+        const run = createLevelRun({
+            levelSource,
+            boot: { level: 63, x: 32, y: 128 },
+            noHazards: D6_HAZARDS,
+            grants: [{ level: 63, items: ['sword', 'spear'] }],
+            equips: [{ t: 0, slot: 1 }],
+        });
+        const ys = [{ t: 0, y: run.state.y }];
+        const spans = [
+            { key: 'down', from: 5, to: 20 },
+            { key: 'primary', from: 25, to: 26 },
+            { key: 'down', from: 30, to: 198 },
+        ];
+        for (let t = 0; t < 200; t++) {
+            const held = new Set();
+            for (const s of spans) if (t >= s.from && t < s.to) held.add(s.key);
+            run.advance(held);
+            ys.push({ t: t + 1, y: run.state.y });
+        }
+        const pinned = ys.find((o) => o.t >= 22).y;
+        expect(pinned).toBe(141);
+        const moved = ys.find((o) => o.t >= 22 && o.y > pinned + 0.01);
+        expect(moved.t).toBe(85);
+        expect(moved.t - 25).toBe(60);
+        // The press ledger: pressed at 25, the rect fired at 26, and it hit
+        // the bridge tile (2,9) and nothing else.
+        expect(run.presses).toEqual([expect.objectContaining({
+            t: 25, fired: 26, level: 63, weapon: 'spear', direction: 3,
+            hits: [{ as3: 'Tile', id: '2,9' }],
+        })]);
+        expect([...run.openBridges]).toEqual(['2,9']);
+    });
+
+    it('...and with the SWORD equipped the same tape never opens it', () => {
+        // The pair's shut arm, one field apart: `equips` emptied, so
+        // `useItem` routes through `slashing` and `genericHit`'s Tile arm —
+        // which fires only under `t == "Spear"` — never runs.
+        const run = createLevelRun({
+            levelSource,
+            boot: { level: 63, x: 32, y: 128 },
+            noHazards: D6_HAZARDS,
+            grants: [{ level: 63, items: ['sword', 'spear'] }],
+            equips: [],
+        });
+        drive(run, [
+            { key: 'down', from: 5, to: 20 },
+            { key: 'primary', from: 25, to: 26 },
+            { key: 'down', from: 30, to: 198 },
+        ], 200);
+        expect(run.state.y).toBe(141);
+        expect([...run.openBridges]).toEqual([]);
+        expect(run.presses[0]).toMatchObject({ weapon: 'sword', hits: [] });
+    });
+
+    it('reproduces the L65 breach pair\'s CONTROL arm to the pixel', () => {
+        // `probe-seedling-l65-breach.mjs`'s control: the identical 440-tick
+        // walk with the three `primary` spans removed. The game's own final
+        // was (194.05, 114.15) — pinned at the block's east face, then under
+        // `rock@192,96`.
+        const run = createLevelRun({
+            levelSource,
+            boot: { level: 65, x: 192, y: 128 },
+            noHazards: D6_HAZARDS,
+            grants: [{ level: 65, items: ['sword', 'spear'] }],
+            equips: [{ t: 0, slot: 1 }],
+        });
+        drive(run, L65_BREACH_SPANS, 440);
+        expect(run.state.x).toBeCloseTo(194.05, 10);
+        expect(run.state.y).toBeCloseTo(114.15, 10);
+        expect(run.pushedBlocks).toEqual([]);
+    });
+
+    it('⚠ REFUSES the probe\'s third stance: the spear rect contains a lightpole', () => {
+        // The press arm of the same pair. Pushes 1 and 2 are clean; the
+        // third — W at reach 2 from tile (12,7), through the Body Wall — has
+        // `lightpole@176,120` in its 32 px rect, and `LightPole.set activate`
+        // writes `Game.setPersistence(tag, !activate)`. That is a LEDGER
+        // ENTRY, not a cosmetic, and the recording could never have shown it
+        // (the probe reads positions).
+        //
+        // ⚠ AND NO STANCE IN THAT ROW AVOIDS IT. The block sits at tile
+        // (10,7); any rect reaching x < 176 from the east spans the pole's
+        // own 176..192 column, and the pole's press box covers the whole of
+        // rows 6-7 in y. So this is a ROUTE question for the R4 chain — the
+        // arm has to be modelled or the chain re-planned — and it is a throw
+        // rather than a silent toggle until then.
+        //
+        // With the arm allowed, this model lands the press arm on
+        // (166.65, 98.05) — the game's own recorded final, to the pixel,
+        // with the block destroyed on (9,7)'s pit. Measured, not asserted
+        // here, because asserting it would mean shipping the refusal off.
+        const run = createLevelRun({
+            levelSource,
+            boot: { level: 65, x: 192, y: 128 },
+            noHazards: D6_HAZARDS,
+            grants: [{ level: 65, items: ['sword', 'spear'] }],
+            equips: [{ t: 0, slot: 1 }],
+        });
+        expect(() => drive(run, L65_BREACH_PRESS_SPANS, 440))
+            .toThrow(/lightpole@176,120/);
+        // ...and the two pushes BEFORE it landed, at the sweep's own tiles.
+        expect(run.presses).toHaveLength(2);
+        expect(run.presses.map((p) => p.hits[0].id))
+            .toEqual(['pushableblockspear@176,128', 'pushableblockspear@176,128']);
+    });
+
+    it('a block is 32 ticks of MOVING WALL, and the run reports it live', () => {
+        const run = createLevelRun({
+            levelSource,
+            boot: { level: 65, x: 192, y: 128 },
+            noHazards: D6_HAZARDS,
+            grants: [{ level: 65, items: ['sword', 'spear'] }],
+            equips: [{ t: 0, slot: 1 }],
+        });
+        const id = 'pushableblockspear@176,128';
+        drive(run, [{ key: 'left', from: 5, to: 12 }, { key: 'primary', from: 18, to: 19 }], 25);
+        // Pressed at 18, fired at 19, moving from 20 — and mid-glide the
+        // rect is in neither cell.
+        expect(run.pushables.get(id).rect.x).toBe(173.5);
+        expect(run.pushesSettled).toBe(false);
+        drive(run, [], 40);
+        expect(run.pushables.get(id).rect.x).toBe(160);
+        expect(run.pushesSettled).toBe(true);
+        expect(run.pushedBlocks).toEqual([
+            { id, x: 160, y: 128, tx: 10, ty: 8, removed: false },
+        ]);
+    });
+
+    it('⚠ both families are PER VISIT — a rebuilt level has them back', () => {
+        // `Tile.bridgeOpeningTimer` and `PushableBlockFire.tile` are instance
+        // variables with no persistence, so the level the walk RETURNS to is
+        // the level it first entered. The earned-clear family is the
+        // opposite, three lines away in the same file, and unifying them
+        // would plan the return through a door the game has shut.
+        const run = createLevelRun({
+            levelSource,
+            boot: { level: 63, x: 32, y: 128 },
+            noHazards: D6_HAZARDS,
+            grants: [{ level: 63, items: ['sword', 'spear'] }],
+            equips: [{ t: 0, slot: 1 }],
+        });
+        // Open the bridge, cross it, and keep walking down column 2 — the
+        // only north-south corridor in that half of L63 — to the L65 door at
+        // (32,304). Then turn round and come straight back.
+        drive(run, [
+            { key: 'down', from: 5, to: 20 },
+            { key: 'primary', from: 25, to: 26 },
+            { key: 'down', from: 30, to: 260 },
+        ], 100);
+        expect([...run.openBridges]).toEqual(['2,9']);
+        drive(run, [{ key: 'down', from: 0, to: 160 }], 160);
+        expect(run.level).toBe(65);
+        // ...and the same door back.
+        drive(run, [{ key: 'up', from: 0, to: 40 }], 40);
+        expect(run.level).toBe(63);
+        expect(run.transitions).toHaveLength(2);
+        // The bridge the run OPENED is closed again, because `Game` was
+        // reconstructed and `bridgeOpeningTimer` is an instance variable.
+        expect([...run.openBridges]).toEqual([]);
+    });
+});
 
 describe('one loop, two callers', () => {
     it('hand-driving it reproduces runTape exactly, across a transition', () => {

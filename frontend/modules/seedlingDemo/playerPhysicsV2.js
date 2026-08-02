@@ -163,10 +163,11 @@ export function terrainProbeRect(x, y) {
  * tile. It is not this one with the gate left out.
  */
 export function resolveTerrainState(
-    level, x, y, prevState, { beforeTypeFlip = false, noHazards = [] } = {},
+    level, x, y, prevState,
+    { beforeTypeFlip = false, noHazards = [], openBridges = null } = {},
 ) {
     const { tile, tie } = level.nearestWalkableTileWithTie(
-        x, y + CHECK_OFFSET_Y, { beforeTypeFlip },
+        x, y + CHECK_OFFSET_Y, { beforeTypeFlip, openBridges },
     );
     if (!tile) return prevState;
     // ⚠ An exact tie is judged HERE, where the relaxation is known, and only
@@ -762,6 +763,16 @@ export function step(state, held, opts = {}) {
         // because `World.addUpdate` prepends and `loadlevel` adds the Player
         // LAST, so the player reads the state as of the previous tick's end.
         openActivators = null,
+        // R4: the two other per-VISIT state families the run owns, for the
+        // same reason and with the same shape as `openActivators` — and
+        // they reach BOTH queries, because a bridge and a block each change
+        // what the sweep hits AND what `getState` answers.
+        //
+        //   `openBridges`  the ids (`"tx,ty"`) whose timer has run out: out
+        //                  of the solids list, INTO the getState candidates
+        //   `pushables`    id -> `{rect, removed}`, the blocks' live rects
+        openBridges = null,
+        pushables = null,
         // R4: `checkDrowning` reads `canSwim` and `hasDarkSuit` off the
         // Player's statics, so the run's inventory mirror is what decides
         // whether standing on an armed hazard is survivable. Defaulted to
@@ -921,7 +932,7 @@ export function step(state, held, opts = {}) {
     const terrain = resolveTerrainState(
         level, state.x, state.y,
         state.terrain ?? INITIAL_TERRAIN_STATE,
-        { beforeTypeFlip, noHazards },
+        { beforeTypeFlip, noHazards, openBridges },
     );
     // The guard runs on the EFFECTIVE value, so a coerced hazard is legal
     // terrain and an un-coerced one still throws by name. Bridge (29) is not
@@ -1019,7 +1030,7 @@ export function step(state, held, opts = {}) {
         collides: noclip
             ? null
             : (x, y) => level.collidesSolid(playerBoxAt(x, y),
-                { beforeTypeFlip, openActivators }),
+                { beforeTypeFlip, openActivators, openBridges, pushables }),
         // `checkFallingInPit()` sits between moveY and the world clamp.
         afterMove: nextFall ? (x, y) => ({
             x: x + (Math.floor(nextFall.target.x / TILE_SIZE) * TILE_SIZE
