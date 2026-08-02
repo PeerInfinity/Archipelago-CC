@@ -44,6 +44,7 @@ import {
 import { ITEM_PROPERTIES, ITEM_NAMES, inventorySlotsFor } from './tapeFormat.js';
 import { spawnFromBoot } from './playerPhysicsV1.js';
 import {
+    INITIAL_HAZARD_FLAGS,
     INITIAL_TERRAIN_STATE,
     arriveFromFall,
     arriveIn,
@@ -206,6 +207,10 @@ export function createLevelRun({
         vx: 0,
         vy: 0,
         terrain: INITIAL_TERRAIN_STATE,
+        // R4: the four sticky hazard flags and the drown timer, at the
+        // values a fresh `Player`'s initialisers give them.
+        hazard: INITIAL_HAZARD_FLAGS,
+        drown: { timer: 0, drowning: false },
         // The boot `Game` arms the latch on its first frame exactly as an
         // arrival does (`Game.as:803-812` runs `check()` above the
         // blackCover gate), so a spawn that sits on a teleporter does not
@@ -783,6 +788,10 @@ export function createLevelRun({
                 noHazards,
                 beforeTypeFlip: firstTickInWorld,
                 openActivators: noclip ? null : openActivatorIds(activators),
+                // R4: `checkDrowning` reads `canSwim` and `hasDarkSuit`,
+                // and the waterfall push reads `hasFeather`. The run's
+                // mirror is the only place those live on this side.
+                inventory,
             });
             ticksCompleted++;
             // ...and THEN Button.update and Lock.update run, against where

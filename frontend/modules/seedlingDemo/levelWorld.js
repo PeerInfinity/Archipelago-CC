@@ -141,12 +141,30 @@ export const MODELLED_TILE_TYPES = Object.freeze([
     14, // Wood natural (solid)
     15, // Dark Stone   (solid)
     16, // Igneous Stone
+    // ⚠ 17 (Lava), 22 (Ice) and 25 (Waterfall) are MODELLED FROM R4, and
+    // being in this list is what lets a tape ARM them: `noHazards` decides
+    // whether the resolver's answer is coerced, and this list decides
+    // whether an uncoerced answer is legal terrain at all. Removing a name
+    // from `noHazards` without adding its type here is the trap the R4
+    // kickoff names in §2.6 — the tape says "armed" and the resolver still
+    // throws.
+    //
+    // ⚠ 1 (Water) DELIBERATELY STAYS OUT. Its physics is transcribed
+    // (`checkDrowning`'s water arm, the shared water friction and speed),
+    // but `canSwim` is the CONCH, which `Karlore.added()` gates on
+    // `hasFire` — BobBoss, R5 — so water is planner-forbidden floor at R4
+    // and a run that stands on one has a ROUTE defect. Throwing by name at
+    // the resolver is how that surfaces as "leg 31 stood on water" rather
+    // than as a drowning eleven ticks later.
+    17, // Lava           (R4: 0.45 + WATER_FRICTION; lethal without the dark suit)
     18, // Blue Tile
     19, // Blue Wall    (solid)
     20, // Blue Wall dark (solid)
     21, // Snow
+    22, // Ice            (R4: slidingSpeed 1 AND slidingFriction 0.025)
     23, // Ice Wall     (solid)
     24, // Ice Wall glowing (solid)
+    25, // Waterfall      (R4: 0.225 + the 0.8 push, feather-gated upward)
     26, // Body Floor
     27, // Body Wall    (solid)
     28, // Ghost Tile
@@ -164,10 +182,11 @@ const MODELLED_TILE_SET = new Set(MODELLED_TILE_TYPES);
 
 /** Why each unmodelled type is out, for the error message. */
 const UNMODELLED_REASON = Object.freeze({
-    1: 'Water — moveSpeed and friction couple to Music.soundPosition("Swim")',
-    17: 'Lava — same sound-coupled stroke burst as water, plus damage',
-    22: 'Ice — rewrites both moveSpeed (1) and friction (0.025)',
-    25: 'Waterfall — sound-coupled like water, at half speed',
+    1: 'Water — `canSwim` is the CONCH, which Karlore.added() gates on hasFire '
+        + '(BobBoss, R5). `drownTimer` is never reset off-hazard, so the whole-run '
+        + 'budget is eleven cumulative ticks and then die(). Water is '
+        + 'planner-forbidden floor until R5; standing on one is a ROUTE defect, '
+        + 'which is what this throw says.',
 });
 
 /**

@@ -518,11 +518,22 @@ describe('tiles', () => {
         // without anyone noticing, and silently adding one of the six back
         // would let a fixture onto sound-coupled or input-stealing terrain.
         // ⚠ R1 MOVED 6 (Pit) OUT of this list: it is modelled, as a
-        // TRANSPORT rather than as a floor. The other five stay out for the
-        // reasons in UNMODELLED_REASON. Bridge (29) is still not modelled
-        // TERRAIN — it is a solid, so it leaves the getState candidate list
-        // entirely and `state` can never become 29.
-        const excluded = [1, 17, 22, 25, 29];
+        // TRANSPORT rather than as a floor.
+        //
+        // ⚠ R4 MOVED 17 (Lava), 22 (Ice) AND 25 (Waterfall) OUT, which is
+        // what lets a tape ARM them: `noHazards` decides whether the
+        // resolver's answer is coerced, and this list decides whether an
+        // uncoerced answer is legal terrain at all.
+        //
+        // ⚠ 1 (Water) STAYS, and its staying is a claim about the LADDER
+        // rather than about the physics: `canSwim` is the conch, gated on
+        // `hasFire` (R5), so water is planner-forbidden floor and a run
+        // that stands on one has a route defect this throw names.
+        //
+        // Bridge (29) is still not modelled TERRAIN — it is a solid, so it
+        // leaves the getState candidate list entirely and `state` can never
+        // become 29.
+        const excluded = [1, 29];
         const all = TILE_TYPE_ENTITY_TYPES.map((_, t) => t);
         expect([...MODELLED_TILE_TYPES].sort((a, b) => a - b))
             .toEqual(all.filter((t) => !excluded.includes(t)));
@@ -531,6 +542,9 @@ describe('tiles', () => {
             expect(() => L0.assertModelledTerrain(t)).toThrow(LevelWorldError);
         }
         expect(L0.assertModelledTerrain(6)).toBe(6);     // Pit — R1 transport
+        expect(L0.assertModelledTerrain(17)).toBe(17);   // Lava — R4
+        expect(L0.assertModelledTerrain(22)).toBe(22);   // Ice — R4
+        expect(L0.assertModelledTerrain(25)).toBe(25);   // Waterfall — R4
         expect(L0.assertModelledTerrain(0)).toBe(0);
         expect(L0.assertModelledTerrain(10)).toBe(10);   // Cliff Stairs
         expect(L0.assertModelledTerrain(30)).toBe(30);   // Ghost Tile Step

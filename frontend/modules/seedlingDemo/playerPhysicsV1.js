@@ -351,6 +351,22 @@ export function step(state, held, opts = {}) {
     const {
         terrainStateAt = groundTerrain, frozen = false, world = LEVEL0_WORLD,
         collides = null, afterMove = null,
+        // ── R4's two hazard seams ─────────────────────────────────────
+        // `friction` / `moveSpeed` override step 2's selection, because
+        // from R4 the choice is not a function of the terrain state alone:
+        // `Player.as:516-537` reads the STICKY `onIce`/`inWater`/`inLava`
+        // flags, which the state SETTER assigned on the last raw change
+        // and which therefore outlive the tile that set them. v2 computes
+        // them; this file stays the dry-land transcription it has always
+        // been, with the two values it selects made injectable rather than
+        // duplicated.
+        friction = null, moveSpeed: moveSpeedOverride = null,
+        // `Player.input()`'s LAST act, after the four direction checks and
+        // before `useItem` (`Player.as:1537-1540`): the waterfall push.
+        // It belongs inside the input phase rather than beside it — a
+        // model that added it after the sweeps would push the player on a
+        // frozen tick, when `mobileUpdate` runs no input at all.
+        postInput = null,
     } = opts;
     const clamp = world === LEVEL0_WORLD ? CLAMP : clampFor(world);
 
@@ -360,16 +376,18 @@ export function step(state, held, opts = {}) {
 
     // 1-2. Terrain state selects friction and speed for THIS tick.
     const terrain = terrainStateAt(x, y + CHECK_OFFSET_Y);
-    const moveSpeed = MOVE_SPEEDS[terrain];
-    if (moveSpeed === undefined) {
+    const tableSpeed = MOVE_SPEEDS[terrain];
+    if (tableSpeed === undefined) {
         throw new RangeError(
             `terrainStateAt returned state ${terrain}, which is outside the `
             + `moveSpeeds table (0..${MOVE_SPEEDS.length - 1})`,
         );
     }
-    // v1 is dry land: `f = DEFAULT_FRICTION` (`Player.as:534`). Water/ice
-    // select WATER_FRICTION / SLIDING_FRICTION — v2+ territory.
-    const f = DEFAULT_FRICTION;
+    const moveSpeed = moveSpeedOverride ?? tableSpeed;
+    // v1 is dry land: `f = DEFAULT_FRICTION` (`Player.as:534`). Water/lava
+    // select WATER_FRICTION and ice SLIDING_FRICTION — from R4, computed
+    // by v2 from the sticky flags and passed in.
+    const f = friction ?? DEFAULT_FRICTION;
 
     // 3. mobileUpdate(), gated by Game.freezeObjects.
     let hitX = null;
@@ -377,6 +395,7 @@ export function step(state, held, opts = {}) {
     if (!frozen) {
         v = applyFriction(v, f);
         v = applyInput(v, held, moveSpeed);
+        if (postInput) v = postInput(v);
         // X is FULLY resolved before Y, and Y's probe sees the NEW x —
         // `moveX(v.x); moveY(v.y);` (`Mobile.as:38-39`), where moveY reads
         // the member `x` that moveX has already written. Swapping the two

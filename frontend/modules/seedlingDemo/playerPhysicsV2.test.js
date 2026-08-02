@@ -36,9 +36,18 @@ import {
     DESCENT_MAX_FALL,
     FALL_ALPHA_SPEED,
     FALL_ALPHA_START,
+    DROWN_TIMER_MAX,
+    INITIAL_HAZARD_FLAGS,
     INITIAL_TERRAIN_STATE,
     NO_BOUNCE_STATES,
     PhysicsV2Error,
+    SLIDING_FRICTION,
+    SLIDING_SPEED,
+    WATERFALL_ACCELERATION,
+    checkDrowning,
+    drownStep,
+    hazardFlagsFor,
+    speedFrictionFor,
     arriveFromFall,
     arriveIn,
     fallDestination,
@@ -64,6 +73,16 @@ const COLUMN = Object.freeze({
     dungeon: 6,     // -> t 5  Dungeon Tile  walkable, 0.8
     cliff: 11,      // -> t 9  Cliff         SOLID
     stairs: 12,     // -> t 10 Cliff Stairs  walkable, 0.4
+    // ⚠ R4's three, and the trap the kickoff names: a tileset COLUMN is
+    // NOT a tile type. Column 19 is LAVA (t 17), column 24 is ICE (t 22)
+    // and columns 27-32 are all WATERFALL (t 25) — a sweep that used
+    // `tx / 16` as the type would report lava as ice and miss every
+    // waterfall. These go through `TILE_COLUMN_TO_TYPE` like the rest,
+    // and the first draft of this very table wrote 20 for lava and got
+    // t 18 — the trap biting inside the file that documents it.
+    lava: 19,       // -> t 17 Lava          walkable, 0.45 + water friction
+    ice: 24,        // -> t 22 Ice           walkable, speed AND friction replaced
+    waterfall: 27,  // -> t 25 Waterfall     walkable, 0.225 + the push
 });
 
 /**
@@ -605,6 +624,14 @@ describe('room transitions', () => {
             vx: 0,
             vy: 0,
             terrain: INITIAL_TERRAIN_STATE,
+            // R4: the four sticky hazard flags and the drown timer go with
+            // the old entity too, for exactly the reason `terrain` does —
+            // the arrival is a whole new `Player` and its initialisers run
+            // again. Asserted EXACTLY (toEqual, not toMatchObject) so a
+            // future field that forgets to reset is a red rather than an
+            // omission nobody notices.
+            hazard: { onIce: false, onWaterfall: false, inWater: false, inLava: false },
+            drown: { timer: 0, drowning: false },
             latched: new Set(),
             hitX: null,
             hitY: null,
@@ -794,5 +821,245 @@ describe('R1: the pit transport, hand-derived from Player.as', () => {
         expect(() => step({ ...s, x: 40, y: 72 }, new Set(),
             { level: L83, noclip: true, noHazards: R1 }))
             .toThrow(/while a pit transport was in flight/);
+    });
+});
+
+// ─────────────────────────────────────────────────────────────────────────
+// R4: THE HAZARDS COME BACK
+//
+// Every number below is read off `Player.as` / `Mobile.as` rather than off
+// this port. The hard part of these four flags is that they are STATE: the
+// setter assigns them on a RAW change and they persist until the next one,
+// so "which tile is under the player" and "which physics the player is
+// running" are two different questions — and the observation stream can
+// only ever see the second.
+// ─────────────────────────────────────────────────────────────────────────
+
+describe('R4: the sticky hazard flags', () => {
+    it('sets each flag from the COERCED state (Player.as:713-717)', () => {
+        expect(hazardFlagsFor(22)).toEqual({
+            onIce: true, onWaterfall: false, inWater: false, inLava: false,
+        });
+        expect(hazardFlagsFor(17)).toEqual({
+            onIce: false, onWaterfall: false, inWater: false, inLava: true,
+        });
+        expect(hazardFlagsFor(1)).toEqual({
+            onIce: false, onWaterfall: false, inWater: true, inLava: false,
+        });
+        expect(hazardFlagsFor(0)).toEqual(INITIAL_HAZARD_FLAGS);
+    });
+
+    it('⚠ counts a WATERFALL as inWater — `eff == 1 || eff == 25`', () => {
+        // The line the R4 kickoff got backwards in one direction and right
+        // in the other: a waterfall IS water for friction and speed, and is
+        // NOT water for drowning (`checkDrowning` tests `eff == 1` alone).
+        expect(hazardFlagsFor(25)).toEqual({
+            onIce: false, onWaterfall: true, inWater: true, inLava: false,
+        });
+    });
+
+    it('only re-assigns on a RAW state change, which is what makes it sticky', () => {
+        // Row 0 is lava, the rest is missing — so at the centre of row 2 the
+        // gate fails, the terrain stays lava, and the FLAGS stay lava too.
+        // A model that recomputed them from the tile under the player every
+        // tick would clear them here, and the player would silently walk
+        // out of lava physics without leaving lava.
+        const w = world({ rows: ['lava', null, null, null] });
+        const s0 = {
+            x: 40, y: 8, vx: 0, vy: 0, terrain: INITIAL_TERRAIN_STATE,
+            hazard: INITIAL_HAZARD_FLAGS, drown: { timer: 0, drowning: false },
+            latched: new Set(),
+        };
+        const onLava = step(s0, held(), { level: w, noclip: true, inventory: { hasDarkSuit: true } });
+        expect(onLava.terrain).toBe(17);
+        expect(onLava.hazard.inLava).toBe(true);
+        // Now step from a position the gate cannot reach: same flags.
+        const away = step({ ...onLava, x: 40, y: 40 }, held(),
+            { level: w, noclip: true, inventory: { hasDarkSuit: true } });
+        expect(away.terrain).toBe(17);
+        expect(away.hazard.inLava).toBe(true);
+    });
+});
+
+describe('R4: the friction/speed selection (Player.as:516-537)', () => {
+    const dry = { onIce: false, onWaterfall: false, inWater: false, inLava: false };
+
+    it('ICE REPLACES BOTH — it is not water with a different number', () => {
+        // `f = slidingFriction (0.025)` AND `moveSpeed = slidingSpeed (1)`.
+        // So the player accelerates FASTER than the 0.8 walk and decays ten
+        // times slower: the ~40 px coast that makes ShieldLock.turnOff's
+        // `if (p)` a live question rather than a dead arm.
+        expect(SLIDING_FRICTION).toBe(0.025);
+        expect(SLIDING_SPEED).toBe(1);
+        expect(speedFrictionFor({ ...dry, onIce: true }, 22, 22, MOVE_SPEEDS, 0))
+            .toEqual({ friction: 0.025, moveSpeed: 1 });
+    });
+
+    it('water and lava share WATER_FRICTION and the 0.45 speed', () => {
+        expect(speedFrictionFor({ ...dry, inWater: true }, 1, 1, MOVE_SPEEDS, 0))
+            .toEqual({ friction: 0.5, moveSpeed: 0.45 });
+        expect(speedFrictionFor({ ...dry, inLava: true }, 17, 17, MOVE_SPEEDS, 0))
+            .toEqual({ friction: 0.5, moveSpeed: 0.45 });
+    });
+
+    it('a waterfall is HALF the water speed', () => {
+        // moveSpeeds[25] = dMSwater / 2.
+        expect(speedFrictionFor({ ...dry, onWaterfall: true, inWater: true },
+            25, 25, MOVE_SPEEDS, 0)).toEqual({ friction: 0.5, moveSpeed: 0.225 });
+    });
+
+    it('dry land is the 0.25 default, unchanged from v1', () => {
+        expect(speedFrictionFor(dry, 0, 0, MOVE_SPEEDS, 0))
+            .toEqual({ friction: 0.25, moveSpeed: 0.8 });
+        expect(speedFrictionFor(dry, 10, 10, MOVE_SPEEDS, 0).moveSpeed).toBe(0.4);
+    });
+
+    it('ICE WINS over inWater — the branches are exclusive, ice first', () => {
+        // Unreachable from `hazardFlagsFor` (one eff sets one flag), so this
+        // pins the ORDER rather than a state: an `if (inWater) ... else if
+        // (onIce)` port would pick the wrong arm the day something else
+        // sets two flags.
+        expect(speedFrictionFor({ ...dry, onIce: true, inWater: true },
+            22, 22, MOVE_SPEEDS, 0)).toEqual({ friction: 0.025, moveSpeed: 1 });
+    });
+});
+
+describe('R4: the waterfall push (Player.as:1537-1540)', () => {
+    it('adds 0.8 to v.y, inside input(), gated by the feather', () => {
+        expect(WATERFALL_ACCELERATION).toBe(0.8);
+        const w = world({ rows: ['waterfall', 'waterfall', 'waterfall', 'waterfall'] });
+        const s0 = {
+            x: 40, y: 8, vx: 0, vy: 0, terrain: INITIAL_TERRAIN_STATE,
+            hazard: INITIAL_HAZARD_FLAGS, drown: { timer: 0, drowning: false },
+            latched: new Set(),
+        };
+        // Tick 1 RESOLVES the waterfall but the flags are assigned inside
+        // the same tick's setter, so the push is already live: v.y = 0.8
+        // with no key held and no friction to remove first (friction on a
+        // zero vector is a no-op).
+        const t1 = step(s0, held(), { level: w, noclip: true, inventory: {} });
+        expect(t1.hazard).toEqual({
+            onIce: false, onWaterfall: true, inWater: true, inLava: false,
+        });
+        expect(t1.vy).toBe(0.8);
+    });
+
+    it('⚠ the feather exempts UPWARD motion ONLY — `!hasFeather || v.y >= 0`', () => {
+        const w = world({ rows: ['waterfall', 'waterfall', 'waterfall', 'waterfall'] });
+        const base = {
+            x: 40, y: 24, vx: 0, vy: 0, terrain: 25,
+            hazard: { onIce: false, onWaterfall: true, inWater: true, inLava: false },
+            drown: { timer: 0, drowning: false }, latched: new Set(),
+        };
+        // Moving DOWN or standing still: pushed even with the feather.
+        expect(step({ ...base, vy: 0 }, held(), {
+            level: w, noclip: true, inventory: { hasFeather: true },
+        }).vy).toBeCloseTo(0.8, 10);
+        // Moving UP with the feather: exempt. Friction still runs, so the
+        // check is that 0.8 was NOT added rather than that vy is unchanged.
+        const up = step({ ...base, vy: -1 }, held(), {
+            level: w, noclip: true, inventory: { hasFeather: true },
+        });
+        const upNoFeather = step({ ...base, vy: -1 }, held(), {
+            level: w, noclip: true, inventory: {},
+        });
+        expect(upNoFeather.vy - up.vy).toBeCloseTo(0.8, 10);
+        expect(up.vy).toBeLessThan(0);
+    });
+});
+
+describe('R4: checkDrowning, and the timer that never resets', () => {
+    const none = { canSwim: false, hasDarkSuit: false };
+    const fresh = { timer: 0, drowning: false };
+
+    it('arms on the first contact tick and counts DOWN from 10', () => {
+        expect(DROWN_TIMER_MAX).toBe(10);
+        expect(checkDrowning(fresh, 1, none)).toEqual({ timer: 10, drowning: false });
+        expect(checkDrowning({ timer: 10, drowning: false }, 1, none))
+            .toEqual({ timer: 9, drowning: false });
+    });
+
+    it('latches `drowning` on the ELEVENTH contact tick', () => {
+        let d = fresh;
+        for (let i = 0; i < 11; i++) d = checkDrowning(d, 1, none);
+        expect(d).toEqual({ timer: 0, drowning: true });
+        // ...and ten is not enough, which is the half of this that a
+        // fencepost error would silently pass.
+        let e = fresh;
+        for (let i = 0; i < 10; i++) e = checkDrowning(e, 1, none);
+        expect(e.drowning).toBe(false);
+    });
+
+    it('⛔ FREEZES rather than resetting when the player steps off', () => {
+        // The single most load-bearing fact in R4's floor policy: the only
+        // three writes are the arm, the decrement and `drown()`'s spin, so
+        // the budget for un-protected hazard contact is ELEVEN TICKS FOR
+        // THE WHOLE VISIT rather than eleven in a row. A model that reset
+        // it off-hazard would make lava look survivable in short hops.
+        let d = fresh;
+        for (let i = 0; i < 6; i++) d = checkDrowning(d, 1, none);
+        expect(d.timer).toBe(5);
+        for (let i = 0; i < 50; i++) d = checkDrowning(d, 0, none);   // dry land
+        expect(d.timer).toBe(5);
+        for (let i = 0; i < 5; i++) d = checkDrowning(d, 1, none);
+        expect(d.drowning).toBe(true);
+    });
+
+    it('the ITEMS are what make it survivable, per hazard', () => {
+        // conch -> canSwim for water; the dark suit for lava. Each covers
+        // its own hazard and NOT the other, which is why R4 can arm lava
+        // and not water.
+        expect(checkDrowning(fresh, 1, { canSwim: true })).toEqual(fresh);
+        expect(checkDrowning(fresh, 17, { hasDarkSuit: true })).toEqual(fresh);
+        expect(checkDrowning(fresh, 1, { hasDarkSuit: true }).timer).toBe(10);
+        expect(checkDrowning(fresh, 17, { canSwim: true }).timer).toBe(10);
+    });
+
+    it('a WATERFALL never drowns — checkDrowning tests eff == 1 alone', () => {
+        // `inWater` includes 25; `checkDrowning` does not. This is the whole
+        // reason waterfall is MODELLED floor at R4 while water is forbidden
+        // floor, and treating them alike collapses the walk to one item.
+        expect(checkDrowning(fresh, 25, none)).toEqual(fresh);
+    });
+
+    it('drown() spins v on a cos/sin thrash and ends at zero', () => {
+        // `drownTimer = (t - 0.5 + 10) % 10`, then v.x = cos(t/10*2PI),
+        // v.y = sin(...) * 2. From a latched timer of 0 the first step wraps
+        // to 9.5.
+        const first = drownStep({ timer: 0, drowning: true });
+        expect(first.drown.timer).toBe(9.5);
+        expect(first.v.x).toBeCloseTo(Math.cos((9.5 / 10) * 2 * Math.PI), 12);
+        expect(first.v.y).toBeCloseTo(Math.sin((9.5 / 10) * 2 * Math.PI) * 2, 12);
+        expect(first.dead).toBe(false);
+        // ...and reaching zero is the die() tick.
+        expect(drownStep({ timer: 0.5, drowning: true }).dead).toBe(true);
+    });
+
+    it('THROWS rather than modelling the death', () => {
+        // A death is a ROUTE failure, not a physics outcome to reproduce:
+        // an armed hazard is planner-forbidden floor. Naming it at the tick
+        // it happens is what turns "the recording diverged 2000 ticks later"
+        // into "leg 31 stood on lava".
+        const w = world({ rows: ['lava', 'lava', 'lava', 'lava'] });
+        let s = {
+            x: 40, y: 8, vx: 0, vy: 0, terrain: INITIAL_TERRAIN_STATE,
+            hazard: INITIAL_HAZARD_FLAGS, drown: { timer: 0, drowning: false },
+            latched: new Set(),
+        };
+        expect(() => {
+            for (let i = 0; i < 40; i++) {
+                s = step(s, held(), { level: w, noclip: true, inventory: {} });
+            }
+        }).toThrow(/DROWNED/);
+        // With the dark suit the same forty ticks are an ordinary slow walk.
+        let safe = {
+            x: 40, y: 8, vx: 0, vy: 0, terrain: INITIAL_TERRAIN_STATE,
+            hazard: INITIAL_HAZARD_FLAGS, drown: { timer: 0, drowning: false },
+            latched: new Set(),
+        };
+        for (let i = 0; i < 40; i++) {
+            safe = step(safe, held(), { level: w, noclip: true, inventory: { hasDarkSuit: true } });
+        }
+        expect(safe.drown).toEqual({ timer: 0, drowning: false });
     });
 });

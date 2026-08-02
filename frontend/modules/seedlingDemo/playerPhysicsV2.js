@@ -81,7 +81,10 @@ import { rectsOverlap, TILE_SIZE } from './levelWorld.js';
 import { coerceTerrainState } from './tapeFormat.js';
 import {
     CHECK_OFFSET_Y,
+    DEFAULT_FRICTION,
     HITBOX,
+    MOVE_SPEEDS,
+    WATER_FRICTION,
     step as stepV1,
 } from './playerPhysicsV1.js';
 
@@ -244,6 +247,167 @@ const NO_KEYS = new Set();
 /** `Tile.types` index for a Pit. */
 const PIT_STATE = 6;
 
+// ── R4: THE HAZARDS COME BACK ─────────────────────────────────────────
+//
+// Four sticky booleans, three effect sites, and one cumulative timer. The
+// thing that makes them harder than a speed table is that they are STATE:
+// the setter assigns them on a RAW change (`_s != _state`) and they persist
+// until the next one, so the tile the player is standing on and the physics
+// the player is running are two different questions.
+
+/** `Tile.types` indices, the ones with hazard physics behind them. */
+const WATER_STATE = 1;
+const LAVA_STATE = 17;
+const ICE_STATE = 22;
+const WATERFALL_STATE = 25;
+
+/**
+ * The four flags a fresh `Player` starts with — all false (`Player.as:67-70`),
+ * and reset by a world swap for the same reason `terrain` is: the entity is
+ * new.
+ */
+export const INITIAL_HAZARD_FLAGS = Object.freeze({
+    onIce: false, onWaterfall: false, inWater: false, inLava: false,
+});
+
+/** `Player.as:65-80` and `Mobile.as:14-15`. */
+export const SLIDING_FRICTION = 0.025;
+export const SLIDING_SPEED = 1;
+export const WATERFALL_ACCELERATION = 0.8;
+
+/** `Player.as:312` — `drownTimerMax`. */
+export const DROWN_TIMER_MAX = 10;
+
+/**
+ * The state setter's flag assignment (`Player.as:701-724`), transcribed.
+ *
+ * ⚠ FOUR PROPERTIES, and every one of them is a way to get this wrong:
+ *
+ * 1. **It runs only on a RAW change.** The gate is `_s != _state` on the
+ *    UNCOERCED value, so re-resolving the same tile does not re-assign —
+ *    which matters because the assignment is the only thing that ever
+ *    clears a flag.
+ * 2. **It reads the COERCED value.** `var eff:int = Bot.coerceState(_s)`,
+ *    so a hazard in `noHazards` sets nothing and the whole of R1-R3 runs
+ *    with all four false.
+ * 3. **`inWater` includes WATERFALL.** `eff == 1 || eff == 25` — so a
+ *    waterfall runs water friction and the water speed table entry, and
+ *    (from `Player.as:530`) carries the `soundPosition("Swim")` term too.
+ *    The R4 kickoff bundled waterfall with water for drowning, where they
+ *    are NOT the same, and separated them here, where they are.
+ * 4. **`onGround` gates the whole block**, and its else-arm clears all
+ *    four. `Enemies/LavaTrap.as:61/66` is the only writer of `onGround`
+ *    anywhere in the codebase, so it is constant true everywhere the
+ *    ladder goes and the else-arm is dead code — recorded rather than
+ *    transcribed, because transcribing a branch no fixture can reach is
+ *    how a model grows arms nobody has ever tested.
+ */
+export function hazardFlagsFor(effective) {
+    return {
+        onIce: effective === ICE_STATE,
+        onWaterfall: effective === WATERFALL_STATE,
+        inWater: effective === WATER_STATE || effective === WATERFALL_STATE,
+        inLava: effective === LAVA_STATE,
+    };
+}
+
+/**
+ * `Player.as:1426-1450` — `checkDrowning`, and the one number that decides
+ * whether R4's forbidden-floor policy is a preference or a requirement.
+ *
+ * ⛔ **`drownTimer` IS NEVER RESET OFF-HAZARD.** The only three writes in
+ * the whole class are `= drownTimerMax` on the FIRST contact tick, the
+ * decrement below, and `drown()`'s own modular spin — so stepping off the
+ * tile freezes the timer where it is and stepping back on resumes the
+ * countdown. The whole-run budget for standing on an unprotected hazard is
+ * therefore **eleven ticks, cumulative**, after which `drowning` latches
+ * and `drown()` runs to `die()`.
+ *
+ * ⚠ `noDamage` does NOT cover this. It guards `Player.hit()`, and the lava
+ * arm's `hit(null, 0, null, 0)` passes damage ZERO anyway — the lethality
+ * is the timer, not the damage, and nothing guards `die()`.
+ *
+ * ⚠ And it reads the COERCED state, so R1-R3's tapes cannot reach it: with
+ * water and lava in `noHazards`, `eff` is 0 and this is dead. R4 arms lava,
+ * which is precisely why the walk must never stand on one — and why the
+ * game's own `drownTimer` readout is asserted 0 as a POSITIVE control
+ * rather than trusted to the planner.
+ *
+ * `canSwim` is the CONCH and `hasDarkSuit` the dark suit, both read off the
+ * run's inventory mirror.
+ */
+export function checkDrowning(drown, effective, inventory) {
+    if (drown.drowning) return drown;
+    let kind = 0;
+    if (effective === WATER_STATE && !inventory.canSwim) kind = 1;
+    else if (effective === LAVA_STATE && !inventory.hasDarkSuit) kind = 2;
+    if (kind === 0) return drown;
+    // `if (v == 2) hit(null, 0, null, 0)` — damage 0, and `Bot.noDamage`
+    // guards the body regardless, so there is no health effect to model.
+    if (drown.timer <= 0) return { ...drown, timer: DROWN_TIMER_MAX };
+    const timer = drown.timer - 1;
+    if (timer <= 0) return { timer: 0, drowning: true };
+    return { ...drown, timer };
+}
+
+/**
+ * `Player.as:1411-1423` — `drown()`, the spiral.
+ *
+ * Writes `v` DIRECTLY, ahead of the friction/input/move block, so the
+ * thrash is then subject to friction and the sweeps like any other
+ * velocity. Distinctive and deterministic, which is what makes it a usable
+ * PAIR witness short of the death it ends in.
+ */
+export function drownStep(drown) {
+    const timer = (drown.timer - 0.5 + DROWN_TIMER_MAX) % DROWN_TIMER_MAX;
+    const angle = (timer / DROWN_TIMER_MAX) * 2 * Math.PI;
+    return {
+        drown: { timer, drowning: true },
+        v: { x: Math.cos(angle), y: Math.sin(angle) * 2 },
+        dead: timer <= 0,
+    };
+}
+
+/**
+ * `Player.as:516-537` — the friction and speed the flags select.
+ *
+ * ⚠ ICE REPLACES BOTH, and it is not "water with a different number":
+ * `f = slidingFriction (0.025)` AND `moveSpeed = slidingSpeed (1)`, so the
+ * player accelerates FASTER than on dry land and decays 10x slower — the
+ * ~40 px coast that makes `ShieldLock.turnOff`'s `if (p)` a live question.
+ *
+ * ⚠ AND THE WATER ARM READS THE RAW STATE. `moveSpeed = moveSpeeds[state]`
+ * at `:530`, not `moveSpeeds[eff]` as two lines above it — which is
+ * unobservable (the arm only runs when the flag is set, and the flag is set
+ * from `eff`, so `eff === state` there) and transcribed anyway, because
+ * "unobservable" has decayed twice on this arc the moment the driver got
+ * better.
+ *
+ * ⚠ THE SOUND TERM IS NOT MODELLED, AND THAT IS A BOUNDED VACUITY WITH A
+ * NAME. `+ 0.25 * int(Music.soundPosition("Swim") < 0.1)` reads a real
+ * channel position, and the recompiled runtime's own comment says channel
+ * positions only advance when an output sink pulls
+ * (`SWFModernRuntime/src/avm2/avm2_media.c:19`) — so in the replay harness
+ * the position is expected to be a constant 0 and the term a constant
+ * +0.25. That is a HYPOTHESIS until a recording says otherwise, which is
+ * exactly what the `l71-lava-stand` pair fixture is for: the first tape on
+ * the ladder that stands on lava answers it, and the value is read off the
+ * oracle rather than assumed here.
+ */
+export function speedFrictionFor(flags, rawState, effective, moveSpeeds, swimBurst) {
+    if (flags.onIce) {
+        return { friction: SLIDING_FRICTION, moveSpeed: SLIDING_SPEED };
+    }
+    const dry = moveSpeeds[effective];
+    if (flags.inWater || flags.inLava) {
+        return {
+            friction: WATER_FRICTION,
+            moveSpeed: moveSpeeds[rawState] + swimBurst,
+        };
+    }
+    return { friction: DEFAULT_FRICTION, moveSpeed: dry };
+}
+
 export function initialLatch(level, x, y) {
     const box = playerBoxAt(x, y);
     const latched = new Set();
@@ -319,6 +483,14 @@ export function arriveIn(level, teleporter) {
         vx: 0,
         vy: 0,
         terrain: INITIAL_TERRAIN_STATE,
+        // ⚠ RESET, like `terrain` and for the same reason: the arrival is a
+        // WHOLE NEW `Player`, so `Player.as:67-70`'s initialisers run
+        // again. `drownTimer` resets here too — it is an instance field —
+        // which is the ONE thing that clears it, and it does not soften the
+        // eleven-tick budget: `checkDrowning` needs eleven ticks in ONE
+        // level, and a level change is a level the walk chose to leave.
+        hazard: INITIAL_HAZARD_FLAGS,
+        drown: { timer: 0, drowning: false },
         latched: initialLatch(level, x, y),
         hitX: null,
         hitY: null,
@@ -501,6 +673,12 @@ export function step(state, held, opts = {}) {
         // because `World.addUpdate` prepends and `loadlevel` adds the Player
         // LAST, so the player reads the state as of the previous tick's end.
         openActivators = null,
+        // R4: `checkDrowning` reads `canSwim` and `hasDarkSuit` off the
+        // Player's statics, so the run's inventory mirror is what decides
+        // whether standing on an armed hazard is survivable. Defaulted to
+        // "holds neither", which is the conservative arm: every tape below
+        // R4 coerces both hazards away, so the branch is dead there anyway.
+        inventory = null,
     } = opts;
     if (!level || typeof level.collidesSolid !== 'function') {
         throw new PhysicsV2Error(
@@ -615,6 +793,12 @@ export function step(state, held, opts = {}) {
             hitX: null,
             hitY: null,
             terrain: state.terrain ?? INITIAL_TERRAIN_STATE,
+            // The transport path runs no `getState`, so nothing can change
+            // the flags or the timer — carried through unchanged rather
+            // than defaulted, or a fall would silently clear a stickiness
+            // the game keeps.
+            hazard: state.hazard ?? INITIAL_HAZARD_FLAGS,
+            drown: state.drown ?? { timer: 0, drowning: false },
             latched,
             fall: nextFall,
             transition: null,
@@ -661,6 +845,16 @@ export function step(state, held, opts = {}) {
     //     on the COERCED value, which is the whole of `noHazards`: with pit
     //     in the set this branch is dead and the same tape merely walks.
     const prevTerrain = state.terrain ?? INITIAL_TERRAIN_STATE;
+
+    // 1c. THE FOUR HAZARD FLAGS, in the SAME setter and under the SAME two
+    //     gates as the pit edge: a RAW change, while `onGround`. They are
+    //     assigned together with it in `Player.as`'s `set state`, so they
+    //     are assigned together here — separating them would let a future
+    //     edit move one without the other, and the whole difficulty of
+    //     these flags is that they are STATE rather than a lookup.
+    const prevFlags = state.hazard ?? INITIAL_HAZARD_FLAGS;
+    const flags = terrain !== prevTerrain ? hazardFlagsFor(effective) : prevFlags;
+
     let nextFall = fall;
     if (!fall && terrain !== prevTerrain && effective === PIT_STATE) {
         // `fallInPitPos = new Point(tile_test.x, tile_test.y)` where
@@ -682,9 +876,51 @@ export function step(state, held, opts = {}) {
     //      `checkFallingInPit`, which runs AFTER `super.update()` — so the
     //      tick the edge fires still runs `input()` normally. Killing input
     //      on the edge tick diverges on the first tick of every fall.
-    const next = stepV1(state, fall ? NO_KEYS : held, {
+    // 1d. `checkDrowning()` runs BEFORE the friction/speed selection
+    //     (`Player.as:512`), and `drown()` writes `v` directly — so the
+    //     thrash is then subject to this tick's friction and sweeps like
+    //     any other velocity.
+    const heldItems = inventory ?? { canSwim: false, hasDarkSuit: false };
+    let drown = state.drown ?? { timer: 0, drowning: false };
+    let drownV = null;
+    drown = checkDrowning(drown, effective, heldItems);
+    if (drown.drowning) {
+        const spun = drownStep(drown);
+        drown = spun.drown;
+        drownV = spun.v;
+        if (spun.dead) {
+            throw new PhysicsV2Error(
+                `the player DROWNED in level ${level.level} at `
+                + `(${state.x}, ${state.y}) — terrain state ${effective}. `
+                + 'An armed hazard is PLANNER-FORBIDDEN FLOOR (the pit precedent): '
+                + '`drownTimer` is never reset off-hazard, so eleven cumulative ticks '
+                + 'on water without canSwim (the conch, R5) or lava without the dark '
+                + 'suit ends the run. Re-route, or coerce the hazard in `noHazards`.',
+            );
+        }
+    }
+
+    // 2. The selection the flags drive. `speedFrictionFor` is the whole of
+    //    `Player.as:516-537`; the `swimBurst` is the un-modelled sound term
+    //    (see its docblock — a bounded vacuity with a named witness).
+    const swimBurst = 0;
+    const { friction, moveSpeed } = speedFrictionFor(
+        flags, terrain, effective, MOVE_SPEEDS, swimBurst,
+    );
+
+    const next = stepV1({ ...state, ...(drownV ? { vx: drownV.x, vy: drownV.y } : {}) },
+        fall ? NO_KEYS : held, {
         terrainStateAt: () => effective,
         frozen,
+        friction,
+        moveSpeed,
+        // `Player.input()`'s last act. The feather exempts UPWARD motion
+        // only — `!hasFeather || v.y >= 0` — so a feather-holding player
+        // still gets pushed while falling or standing.
+        postInput: flags.onWaterfall
+            ? (v) => ((!heldItems.hasFeather || v.y >= 0)
+                ? { x: v.x, y: v.y + WATERFALL_ACCELERATION } : v)
+            : null,
         world: level.world,
         collides: noclip
             ? null
@@ -720,5 +956,5 @@ export function step(state, held, opts = {}) {
         }
     }
 
-    return { ...next, terrain, latched, transition, fall: nextFall };
+    return { ...next, terrain, hazard: flags, drown, latched, transition, fall: nextFall };
 }
