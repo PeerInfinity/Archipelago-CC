@@ -59,6 +59,13 @@ import {
     step,
     terrainProbeRect,
     updateTeleporters,
+    DIRECTION_DOWN,
+    DIRECTION_LEFT,
+    DIRECTION_RIGHT,
+    DIRECTION_UP,
+    INITIAL_DIRECTION,
+    directionAfterFall,
+    nextDirection,
 } from './playerPhysicsV2.js';
 
 const held = (...keys) => new Set(keys);
@@ -632,6 +639,11 @@ describe('room transitions', () => {
             // omission nobody notices.
             hazard: { onIce: false, onWaterfall: false, inWater: false, inLava: false },
             drown: { timer: 0, drowning: false },
+            // …and so does the FACING (R4). A walk that carried it across a
+            // door would aim the first press in the new level at whatever
+            // the last corridor of the old one pointed at. This assertion
+            // is the reason that field could not be added quietly.
+            direction: 3,
             latched: new Set(),
             hitX: null,
             hitY: null,
@@ -1061,5 +1073,50 @@ describe('R4: checkDrowning, and the timer that never resets', () => {
             safe = step(safe, held(), { level: w, noclip: true, inventory: { hasDarkSuit: true } });
         }
         expect(safe.drown).toEqual({ timer: 0, drowning: false });
+    });
+});
+
+describe('Player.direction (R4: the facing every press rect reads)', () => {
+    it('derives from VELOCITY with x before y, and STICKS at rest', () => {
+        // `Player.sprites()` (Player.as:1596-1626). The fall-through is
+        // "unchanged", not any default — which is what makes a player
+        // pinned against a wall keep facing into it.
+        expect(nextDirection(DIRECTION_DOWN, -1, 0)).toBe(DIRECTION_LEFT);
+        expect(nextDirection(DIRECTION_DOWN, 1, 0)).toBe(DIRECTION_RIGHT);
+        expect(nextDirection(DIRECTION_DOWN, 0, -1)).toBe(DIRECTION_UP);
+        expect(nextDirection(DIRECTION_UP, 0, 1)).toBe(DIRECTION_DOWN);
+        // A diagonal faces HORIZONTALLY: the x arms are tested first.
+        expect(nextDirection(DIRECTION_DOWN, -1, -1)).toBe(DIRECTION_LEFT);
+        expect(nextDirection(DIRECTION_DOWN, 1, 1)).toBe(DIRECTION_RIGHT);
+        // Zero velocity changes nothing, whatever it was.
+        expect(nextDirection(DIRECTION_LEFT, 0, 0)).toBe(DIRECTION_LEFT);
+        expect(nextDirection(DIRECTION_UP, 0, 0)).toBe(DIRECTION_UP);
+    });
+
+    it('lets directionFace override it entirely', () => {
+        expect(nextDirection(DIRECTION_LEFT, -5, 0, DIRECTION_UP)).toBe(DIRECTION_UP);
+        // …and -1 means "act normally", which is the R4 walk's whole life.
+        expect(nextDirection(DIRECTION_LEFT, 0, 5, -1)).toBe(DIRECTION_DOWN);
+    });
+
+    it('starts DOWN, and every arrival puts it back there', () => {
+        // `Player.as:61` is `direction:int = 3`, and an arrival is a whole
+        // new Player. The fall path agrees for a second reason — its
+        // landing writes `direction = 3` explicitly — which is why the two
+        // are one constant rather than a branch.
+        expect(INITIAL_DIRECTION).toBe(DIRECTION_DOWN);
+        expect(directionAfterFall()).toBe(DIRECTION_DOWN);
+    });
+
+    it('⚠ a wall-pinned player keeps the facing its LAST motion gave it', () => {
+        // The case every R4 press stance is in, and the reason a
+        // keys-based model would have been wrong: the sweep zeroes nothing
+        // but the position stops, so `v` decays to 0 through friction and
+        // the derivation falls through to "unchanged".
+        let dir = DIRECTION_DOWN;
+        dir = nextDirection(dir, -1.4, 0);            // walking WEST
+        expect(dir).toBe(DIRECTION_LEFT);
+        for (const v of [-0.9, -0.4, 0]) dir = nextDirection(dir, v, 0);
+        expect(dir).toBe(DIRECTION_LEFT);             // still facing the wall
     });
 });

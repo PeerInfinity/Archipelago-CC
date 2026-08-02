@@ -270,6 +270,84 @@ export const INITIAL_HAZARD_FLAGS = Object.freeze({
     onIce: false, onWaterfall: false, inWater: false, inLava: false,
 });
 
+/**
+ * ── R4: `Player.direction`, the facing a press reads ──────────────────
+ *
+ * The ladder ran three rungs without it because nothing ever pressed an
+ * attack key on purpose. R4 does, and every press rect is a function of
+ * this one integer (`presses.spearRect`), so it becomes state.
+ *
+ * ⚠ IT IS DERIVED FROM VELOCITY, NOT FROM KEYS, and the difference is
+ * visible in the one case that matters: a player pinned against a wall has
+ * `v` zeroed by the sweep, so holding a direction into a wall does NOT
+ * keep re-asserting the facing — it STICKS at whatever the last non-zero
+ * velocity said. Every press stance the R4 route uses is exactly that
+ * case, so a keys-based model would have been right about the direction
+ * and wrong about which tick it was right on.
+ *
+ * `Player.sprites()` (`Player.as:1596-1626`), in order:
+ *
+ *   directionFace >= 0   ->  direction = directionFace
+ *   v.x < 0              ->  2 (LEFT)
+ *   v.x > 0              ->  0 (RIGHT)
+ *   v.y < 0              ->  1 (UP)
+ *   v.y > 0              ->  3 (DOWN)
+ *   otherwise            ->  unchanged
+ *
+ * ⚠ X BEFORE Y, so a diagonal faces horizontally, and the fall-through is
+ * "unchanged" rather than any default.
+ *
+ * ⚠ AND IT RUNS AFTER THE MOVES. `sprites()` is called after
+ * `super.update()` — i.e. after friction, `input()`, `moveX` and `moveY` —
+ * so the value a press consumes is the one the PREVIOUS tick left.
+ * `input()` fires `useItem` and `set spearing` captures `spearDirection =
+ * direction` at that moment, and `spear()` itself already ran earlier in
+ * the same update, so the rect fires on the NEXT tick. The bridge probe
+ * confirms that one-tick lag end to end (press 25, pin breaks 85, and
+ * `framesToOpen()` is 60).
+ */
+export const INITIAL_DIRECTION = 3;
+export const DIRECTION_RIGHT = 0;
+export const DIRECTION_UP = 1;
+export const DIRECTION_LEFT = 2;
+export const DIRECTION_DOWN = 3;
+
+/**
+ * `sprites()`'s derivation, given this tick's post-move velocity.
+ *
+ * `directionFace` is passed explicitly rather than folded in, because its
+ * writers are a closed set and naming them is the point — see
+ * `directionAfterFall`.
+ */
+export function nextDirection(direction, vx, vy, directionFace = -1) {
+    if (directionFace >= 0) return directionFace;
+    if (vx < 0) return DIRECTION_LEFT;
+    if (vx > 0) return DIRECTION_RIGHT;
+    if (vy < 0) return DIRECTION_UP;
+    if (vy > 0) return DIRECTION_DOWN;
+    return direction;
+}
+
+/**
+ * ⚠ THE ONE `directionFace` WRITER AN R4 WALK CAN REACH, and it is the pit
+ * transport R1 already models.
+ *
+ * `directionFace` is written in exactly three places (every `directionFace
+ * =` in `Player.as`): `checkFallingInPit` sets 3 while the player spins
+ * down a hole; the `fallFromCeiling` landing clears it to -1 and sets
+ * `direction = 3`; and `knockback` sets it to the current direction under
+ * `hitsTimer > 0`, which `Bot.noDamage` makes unreachable — it guards
+ * `Player.hit()`, and `hitsTimer` is only ever set there.
+ *
+ * So for a walk with `noDamage` on, the whole of `directionFace` collapses
+ * to: **a fall arrival faces DOWN.** That is a bounded vacuity with a
+ * witness rather than an omission, and the witness is R5, whose first
+ * unguarded contact re-opens the `knockback` arm.
+ */
+export function directionAfterFall() {
+    return DIRECTION_DOWN;
+}
+
 /** `Player.as:65-80` and `Mobile.as:14-15`. */
 export const SLIDING_FRICTION = 0.025;
 export const SLIDING_SPEED = 1;
@@ -491,6 +569,12 @@ export function arriveIn(level, teleporter) {
         // level, and a level change is a level the walk chose to leave.
         hazard: INITIAL_HAZARD_FLAGS,
         drown: { timer: 0, drowning: false },
+        // ⚠ RESET, and for the same reason as `terrain` and the flags: the
+        // arrival is a whole new `Player`, so `Player.as:61`'s
+        // `direction:int = 3` initialiser runs again. A walk that carried
+        // the facing across a door would aim the first press in the new
+        // level at whatever the last corridor of the old one pointed at.
+        direction: INITIAL_DIRECTION,
         latched: initialLatch(level, x, y),
         hitX: null,
         hitY: null,
@@ -631,6 +715,11 @@ export function arriveFromFall(level, ctor) {
         vx: 0,
         vy: 0,
         terrain: INITIAL_TERRAIN_STATE,
+        // The fall arrival is a new `Player` too, AND its landing writes
+        // the same value explicitly (`directionFace = -1; direction = 3`)
+        // — the two agree, which is why this is one constant and not a
+        // branch. `directionAfterFall()` names the second path.
+        direction: directionAfterFall(),
         latched: initialLatch(level, x, yStart),
         hitX: null,
         hitY: null,
@@ -799,6 +888,11 @@ export function step(state, held, opts = {}) {
             // the game keeps.
             hazard: state.hazard ?? INITIAL_HAZARD_FLAGS,
             drown: state.drown ?? { timer: 0, drowning: false },
+            // ⚠ `checkFallingInPit` holds `directionFace = 3` for the whole
+            // descent, so the facing is pinned DOWN rather than derived
+            // from the descent's own velocity — which is downward anyway,
+            // so the two agree and the pin is what is transcribed.
+            direction: directionAfterFall(),
             latched,
             fall: nextFall,
             transition: null,
@@ -956,5 +1050,19 @@ export function step(state, held, opts = {}) {
         }
     }
 
-    return { ...next, terrain, hazard: flags, drown, latched, transition, fall: nextFall };
+    return {
+        ...next,
+        terrain,
+        hazard: flags,
+        drown,
+        latched,
+        transition,
+        fall: nextFall,
+        // `sprites()` runs AFTER `super.update()`, so it reads THIS tick's
+        // post-move velocity — and the value it leaves is what the NEXT
+        // tick's press will capture as `spearDirection`.
+        direction: nextDirection(
+            state.direction ?? INITIAL_DIRECTION, next.vx, next.vy,
+        ),
+    };
 }

@@ -44,6 +44,7 @@ import {
 import { ITEM_PROPERTIES, ITEM_NAMES, inventorySlotsFor } from './tapeFormat.js';
 import { spawnFromBoot } from './playerPhysicsV1.js';
 import {
+    INITIAL_DIRECTION,
     INITIAL_HAZARD_FLAGS,
     INITIAL_TERRAIN_STATE,
     arriveFromFall,
@@ -211,6 +212,9 @@ export function createLevelRun({
         // values a fresh `Player`'s initialisers give them.
         hazard: INITIAL_HAZARD_FLAGS,
         drown: { timer: 0, drowning: false },
+        // R4: the facing every press rect is a function of, at
+        // `Player.as:61`'s own initialiser. A boot faces DOWN.
+        direction: INITIAL_DIRECTION,
         // The boot `Game` arms the latch on its first frame exactly as an
         // arrival does (`Game.as:803-812` runs `check()` above the
         // blackCover gate), so a spawn that sits on a teleporter does not
@@ -534,6 +538,21 @@ export function createLevelRun({
          */
         get primary() { return primary; },
         get inventorySlots() { return inventorySlotsFor(inventory); },
+        /**
+         * R4: the facing (`Player.direction`) as of the END of the last
+         * completed tick — which is exactly the value a press on the NEXT
+         * tick captures as `spearDirection`.
+         *
+         * ⚠ THE LAG IS THE WHOLE REASON THIS IS A GETTER AND NOT A
+         * PARAMETER. `sprites()` runs after `super.update()`, so the
+         * direction a leg's press uses is the one the tick BEFORE it left
+         * behind. A synthesis that computed the rect from the press tick's
+         * own post-move velocity would be one tick out, and every press
+         * stance the R4 route uses is a player pinned against a wall — the
+         * one place where "the direction I am holding" and "the direction
+         * my velocity last had" are different.
+         */
+        get direction() { return state.direction; },
         /** One record per equip that fired: `{t, slot}`. */
         get equipsFired() { return firedEquips.map((e) => ({ ...e })); },
         /**
