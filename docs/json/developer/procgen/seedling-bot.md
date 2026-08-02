@@ -2015,12 +2015,11 @@ retires alone.
   holds an enemy SPAWN is flagged by the sweep; a mobile enemy elsewhere is a
   live-probe question. R5 owns it.
 
-## What R2 handed on (historical — R2's own list)
+## What R2 handed on (HISTORICAL — R2's own list, kept for its findings)
 
-The ladder is subtractive, so "what's next" is a list of what still blocks a
-full walk rather than a list of features. R1 walked the whole reachable map
-with three crutches on; **R2 takes the first one away — `noclip` off, solids
-back.**
+⚠ Superseded by the R4 list above; kept because its four findings are still
+live facts about the map. R1 walked the whole reachable map with three
+crutches on; **R2 took the first one away — `noclip` off, solids back.**
 
 - **R3 inherits three debts, and R2 made the third urgent.** `bosstotem` prices to
   an evidenced INERT only because R0's grants are property writes, so L43's
