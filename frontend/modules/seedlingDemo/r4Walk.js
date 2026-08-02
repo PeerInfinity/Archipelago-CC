@@ -36,9 +36,9 @@
  *
  * ── ⛔ AND THE CLAIM IS FIVE, NOT SIX: `darkshield` LEFT TOO ───────────
  *
- * The rung was planned for six — R3's five survivors plus health. Armed
- * lava makes that geometrically impossible, and the reason is not a
- * routing difficulty but a fact about the map:
+ * The rung was planned for six: R3's six with `darksuit` out and `health`
+ * in. Armed lava makes that geometrically impossible, and the reason is not
+ * a routing difficulty but a fact about the map:
  *
  * **THERE ARE TWO TERMINAL BRANCHES AND A WALK CAN ONLY END IN ONE.**
  *
@@ -575,7 +575,7 @@ export const R4_BLOCKED = Object.freeze([
  * that room". R4 asserts 4, which means exactly one grant of it: 3 would say
  * the collection silently failed and 5 would say something granted it twice.
  *
- * ⚠ It is checked ON ITS OWN rather than folded into the six booleans,
+ * ⚠ It is checked ON ITS OWN rather than folded into the four booleans,
  * because `health` has no boolean — `ITEM_PROPERTIES.health` is
  * `{kind: 'add'}`, so a run that lost `hasSword` and gained health would
  * satisfy any check that summed them.
