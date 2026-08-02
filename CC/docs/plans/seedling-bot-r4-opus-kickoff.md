@@ -1338,3 +1338,121 @@ Census landed with the probes: `arrowtrap` upgraded from `cheapOnly` to
 `notSolid` (no setHitbox, no type — cited at Game.as:2129 +
 ArrowTrap.as:24 + the Activators base), which lifts the FULL census
 82 → 85 (the pin moved with its note — L67 was an arrowtrap-only holdout).
+
+## 11. ⛔ THE L65 RE-SWEEP — the breach, and the game confirming it (2026-08-02)
+
+§10.6 left one question: run §8.5's press-cell sweep as an INSTRUMENT with
+the oracle-pinned rules, and let it decide health. It found a breach in
+three levels, and the game confirmed it.
+
+### 11.1 The instrument
+
+`scripts/procgen/recon-seedling-pushes.mjs`. Every cell comes from the
+shipped `buildLevelWorld` and every standability answer from the shipped
+`plannerObstacleAt` — no hand grid, no `tx/16`. The search is over
+**(block tiles × the region the PLAYER is standing in)**, under §10.6's
+five rules: facing-direction push; reach 2 across pits and through walls;
+press cells are every standable cell of the currently reachable region,
+recomputed after every push; rest-on-water/lava/pit destroys; a visit is
+the unit (`PushableBlockFire` holds its position in an instance var with
+no persistence).
+
+Three modelling traps it had to be corrected for before it answered
+anything, each of which had produced a confident wrong answer first:
+
+1. **Seeding the flood from every arrival at once** puts the player on both
+   sides of the seal, so no state can ever gain a target. L65's two doors
+   from L63 land in components that do not reach each other; the union
+   reported all four doors reachable before a single press. **One search
+   per ARRIVAL.**
+2. **Re-flooding from the arrivals after a push** scores chains the player
+   cannot walk. The player is standing on the stance when the block lands,
+   so the region is part of the state. L65's (11,9) is a cut vertex: a push
+   S opens the corridor ahead and seals the way back in the same move.
+3. **`componentsAround`'s one-CELL dilation is a pitch-8 idiom.** At pitch
+   2 it asks about cells two pixels inside a teleporter volume, and the
+   sweep duly reported every door of L65 sealed — including the two the
+   walk arrives through. The dilation is in PIXELS now.
+
+Bounds named rather than hoped: **enemies are in the BLOCK's solid list and
+not in the player's** (`Mobile.as:17` + `PushableBlockFire.as:31`), so a
+chaser in a destination tile is a live-probe question and a spawn-cell
+collision is flagged; **stances are lattice centres**, so it runs at 8 (the
+planner's own, the only pitch whose answer can become a route) and at 4 and
+2 as strictly more permissive controls.
+
+### 11.2 ⛔ THE BREACH — and it is three levels, not one
+
+| level | entry | the chain | what opens |
+|---|---|---|---|
+| **L65** | L63's door @128,304 (arrival 128,16) | W from (12,8); N from (10,10) **across the pit at (10,9)**; W from (12,7) **through the Body Wall at (11,7)**, landing the block on (9,7)'s pit | the L68 door — **health's own room** |
+| **L63** | L61 @0,96 or L62 @64,0 | ONE push E from tile (6,6), landing the block on (8,6)'s pit | the L65 door @128,304 — i.e. the entry L65's chain needs |
+| **L67** | L59 @224,112 | ONE push W from (180,116), landing the block on (8,7)'s pit | `bosskey@48,64` — the keyType-4 key |
+
+Consistent at pitch 8, 4 and 2 (the finer pitches find *shorter* chains,
+never fewer). The L65 chain's three overlaps are 80, 50 and 60 px² — none
+of them a knife-edge.
+
+**What §8.5 got wrong was not its direction table** — the oracle confirmed
+that at reach 1 and this sweep uses it unchanged. It was the sentence
+*"But a push is not a removal."* A push into a pit **is** a removal, and
+even when it is not, a block pushed out of a one-tile corridor has left it.
+§8.5 swept single pushes from one component and stopped at "the wall moves
+one tile west and still seals"; it never asked what the SECOND push does
+from the cell the first one opened.
+
+⚠ And note what the chain does NOT rest on: whether the block is DESTROYED
+on the pit (`PushableBlockFire.input()`) or merely sits on it is invisible
+to reachability, because a pit tile is forbidden floor either way. The
+claim is that the block LEAVES the corridor. The destruction rule stays a
+source reading with nothing resting on it.
+
+### 11.3 The oracle: `probe-seedling-l65-breach.mjs`
+
+A pair, differing only in whether the three `primary` spans exist; both
+arms walk the identical route and end on holds long enough to PIN against a
+wall rather than stop at a computed position.
+
+```
+press arm    final (166.65, 98.05)   through the vacated corridor, pinned
+                                     under (10,5)'s Body Wall
+control      final (194.20, 114.10)  pinned at the block's own east face,
+                                     then under rock@192,96
+```
+
+**The L65 breach is ORACLE-CONFIRMED.** Two mechanics were tested for the
+first time on the way: **UP at reach 2** (the one direction whose
+`spearRect` arm carries the asymmetric `+ 1`, and which no recording had
+ever exercised) and **reach 2 through a SOLID** — L67's confirmation went
+across a PIT, and "through walls" had been inferred from "the spear has no
+line-of-sight gate" rather than seen. Both hold.
+
+⇒ **§8.5's verdict is overturned by the game, and §9 ruling 2 is
+re-opened.** Per §10.6's own procedure, health returns.
+
+### 11.4 What health costs, as ruled by §10.6
+
+- The claim becomes **6 items REAL-collected — sword, feather, torch,
+  spear, darkshield, health — with `hitsMax == 4` asserted as a POSITIVE**
+  (health is the only adder, so 4 means exactly one grant of it and 3 means
+  the collection silently failed). `darksuit` stays out per ruling 1.
+- **The keyType-4 chain lands**: L59's row-8 corridor (the grenade
+  press-audit), L67's always-active door and its one-push solve, the
+  `bosskey` ceremony (the known `text: ''` 150-frame case), and **L68's
+  bosslock as a real hold-open PAIR** — it re-closes and re-writes the flag
+  TRUE if the player leaves before the fade completes, which is the button
+  lock's occupancy shape and the l71 pair discipline.
+- **L68's `magicallock` stays exactly ONE declared clear** (a wand shot,
+  R5), so the declared bill grows by one rather than by §8.11's two.
+- The L63 and L67 pushes each need their own §3.2 press audit, and both
+  rooms carry lightpoles — which is why the press audit's level-query half
+  had to stop being a stated gap.
+
+⚠ **The byte budget is the live risk.** `r3-walk-full` is 1,066 spans /
+76.2 KB against a 90 KB ceiling (85%). Dropping the D7 darksuit tail —
+which armed lava forces anyway — returns ~945 spans / ~69 KB, and the
+health detour plus the key chain is ~18 legs at R3's own density (~1.47 KB
+per leg) ≈ **~95 KB, over the ceiling**. `assertTapeWithinRuntimeBudget`
+refuses loudly at synthesis rather than at record time, so this is measured
+at slice 8 and not guessed here — but it is priced NOW, per the rung's own
+"shrinkage escalates and is priced early" discipline.
