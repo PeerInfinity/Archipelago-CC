@@ -521,3 +521,135 @@ Slices 3–8. Everything they depend on is in and green.
   named exceptions, and `persistence_cleared` showing the seven item tags
   the PLAYER turned off.
 - **Docs + close-out.**
+
+## 12. Slices 3–7 — AS BUILT, and the RUNG CLOSES (2026-08-01)
+
+**The claim, from the game's own `botStatus` over a 53-leg / 32-level /
+12,122-tick walk: SIX items REAL-COLLECTED with `hitsMax == 3`** — sword,
+feather, torch, spear, darkshield, darksuit — with **`grants` EMPTY** and
+the persistence flags that are OFF equal to *exactly* the ten declared
+exceptions + the one `L71 shieldlock@288,256` earned by being TOUCHED + the
+six the pickups' own `removed()` wrote. Six segments —
+641 + 1473 + 1964 + 3707 + 2162 + 2175 — **partition the headline exactly**.
+vitest 697/697; fixture roster 50; every frozen fixture byte-identical.
+
+### 12.1 Slice 3 — the touch lock, and the tick the ORACLE moved
+
+`ShieldLock.update` transcribed whole: the collide at `x - 1` (whose rect is
+the `lock-snap` avoid volume already priced — one geometry, two questions),
+`hasDarkShield` for `shieldlock` and `hasShield` for `shieldlocknorm`, the
+`p.y = y - originY + 7` snap, `receiveInput = false`, the ordinary 0.01
+`Lock` fade to its 101st tick, then `turnOff()`.
+
+Three ways it is NOT the button lock: `activate` **LATCHES** (`tSet` is
+forced to −2, so nothing republishes it); the window refuses the **KEYS**,
+not the tick (`receiveInput` gates `Player.input()` alone, so friction and
+both sweeps still run); and `turnOff()` restores input only **`if (p)`** —
+unreachable at walking speed (subtractive friction coasts under 2 px against
+a 5 px margin) but wide open on ice, which is why the guard exists.
+
+⛔ **THE ORACLE CORRECTED THE UPDATE ORDER ON THE FIRST RECORDING.**
+`Game.loadlevel` adds the Player at `Game.as:2040` and every puzzle entity
+in the loop BELOW it, and `World.add` → `addUpdate` **PREPENDS** — so a Lock
+updates **before** the player. §10's docblock (inherited from R2) said the
+opposite, and no recording could tell: the player is stationary for the
+whole of `l71-button-lock`. It changes nothing about the activator STATE
+(the same object either way) and everything about the SIDE EFFECT: `p.y` is
+written at the top of tick N+1. The model applied it at N; the game said
+observation 19 is y 264, not 263. The mutation that re-introduces it now
+bites in vitest.
+
+**The pair is ONE FIELD APART.** `l71-shieldlock-open` and
+`l71-shieldlock-shut` are the same tape with `grants` emptied: y 263 and
+level 76 against y 264 and pinned at x 285.95 for all 140 ticks.
+
+Ten mutations run, nine bite; the tenth (`turnOff` finding no player) is a
+bounded vacuity with its arithmetic witness in the suite.
+
+### 12.2 Slice 4 — the other six, EXACT on the first recording
+
+One tape per remaining item, each booting 24 px south of its pickup and
+paging the ceremony through with four X releases spaced eight apart. **All
+six reconciled on the first recording**, which is what turns slice 2's
+ceremony model from fitted into transcribed: one data point is satisfied by
+a constant, seven are not.
+
+The press schedule is READ OFF THE MODEL (`levelRun.inCeremony`) rather than
+counted by hand seven times; the recording is still what decides whether the
+answer was right, and it is sensitive in both directions because the
+ceremony's end tick is where the player starts drifting again.
+
+### 12.3 Slice 5 — the route, and TWO findings that changed the claim
+
+**`collect` is a verb, not a tolerance.** Three things had to be true:
+
+1. **The planner is kept OUT and the executor let IN.** Exempting the pickup
+   leg-wide let A* route STRAIGHT THROUGH L89's feather on the way to its
+   own approach cell — the ceremony fired mid-drive and the waypoint was
+   never reached. A 1,500-tick stall for a route one waypoint from correct.
+2. **The approach cell needs CLEARANCE.** The controller overshoots before
+   braking back, and clipping a pickup starts its ceremony a waypoint early
+   — which freezes the player, and `hasArrived` needs them STOPPED while a
+   freeze PRESERVES velocity. L64's ghostspear found it one third of a pixel
+   into a 12×4 volume.
+3. **A collected pickup must stop being an obstacle.** `run.takenPickups` is
+   live state the planner reads, exactly like `openActivators`.
+
+**The map changes halfway, because the player changes it.** `Lock.turnOff()`
+writes `setPersistence(2, false)` and `Lock.check()` removes the lock on the
+next `Game` — so the tour runs over TWO graphs, and `levelRun` banks the
+earned tag and cashes it in the transition path. The route goes east through
+the lock to darksuit and comes BACK through the same corridor to L71's pit;
+without this the return leg meets a wall the game does not have.
+
+⛔ **THE NARROWING TOOK `shield`.** "Reached" is the PICKUP'S OWN TILE now,
+not a component of the level. L20's shield is in the level's other
+component, behind `lock@32,80` (tset 0, so no clear despawns it) whose only
+presser `buttonroom@192,16` is adjacent to NO walkable component — walled in
+behind `shieldlocknorm@176,16`, which needs `Player.hasShield`. The other
+entrance is L19's stairs, and L19 is `Dungeon2_Boss`. **No clear list on the
+map unseals it**, checked one at a time over all 72 offered clears and all
+together. `plan-seedling-r3-route.mjs --survey` is the table.
+
+⛔ **THE CLEAR BILL: the recon said 8, the SHIPPED PLANNER said 10.**
+
+| clear | who demanded it |
+|---|---|
+| `L30 tag 0` `bosslock@64,32` | the NARROWING — the recon asked at LEVEL granularity |
+| `L3 tag 0` `breakablerock@96,112` | the driver's own A* — no path at any clearance |
+| `L11 tag 0` `chest@32,48` | the CONTROLLER — the overshoot clips its avoid volume |
+
+The instrument was not buggy; it answered the question it was asked.
+**A reachability graph and a walk are different questions.**
+
+⚖ **User ruling (2026-08-01):** keep the torch (6 items, 10 clears) rather
+than drop it — the rule for a surviving clear is about the OPENER's rung
+(a BossKey is R4), not about where the door sits.
+
+### 12.4 Slice 6 — the walk, and the LEDGER
+
+`r3Acceptance.js` asserts, from the game's own arrays: the six booleans,
+`hitsMax == 3` as a NEGATIVE, the blocked list still false, **`grants`
+empty**, and — the one with teeth — **`persistence_cleared` as an EXACT SET
+in both directions**. `Bot.persistenceClearedAll()` scans
+`Main.levelPersistence` rather than echoing the tape, so an exact-set claim
+over it is the only thing that distinguishes "the player did this" from
+"the tape did". `r3Acceptance.test.js` mutates every input — including
+removing each pickup's own flag one at a time, which IS the "granted, not
+collected" failure — 19 cases in CI.
+
+The chain asserts each segment ends where the next boots, ends holding
+exactly what the next inherits (a segment's single boot-level grant IS that
+inheritance; the headline has none), and that the six are a **PARTITION**.
+
+### 12.5 A blind spot in the readout, REPORTED not fixed
+
+`saw_auto_advance` increments on **phase 1** of the cadence — the RELEASE. A
+`Help` is dismissed by `Input.pressed`, so its freeze ends on phase 0, the
+next frame is live, the phase resets, and the counter never increments. The
+sword's `Help(3)` IS auto-advanced on every run that collects it (about two
+extra dead frames is the witness) and the readout still says 0. §8.8 and
+`Bot.as`'s own docblock both claim the opposite, two lines above the code
+that contradicts them. Harmless — the model reproduces every tape exactly —
+but the counter means "no NPC dialogue was auto-advanced", not "no
+auto-advance fired". Fixing it is AS3, so it waits for the next batch.

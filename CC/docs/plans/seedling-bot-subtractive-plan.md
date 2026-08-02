@@ -303,8 +303,27 @@ exact differential green on everything modelled, (d) updates the honest
     despawning (and its span lives in a `<node>` the extract was dropping);
     `chest` IS clearable and was missing from the list; the statues are
     plain hitboxes, not pixelmasks. The route bill is **69** tags, not ~93.
-- **R3 — interactions + real collection. RULED (user 2026-08-01) +
-  kickoff ready: `seedling-bot-r3-opus-kickoff.md`.** ONE kickoff, ordered
+- **R3 — interactions + real collection. ✅ CLOSED 2026-08-01.** The claim,
+  from the game's own `botStatus` over a **53-leg / 32-level / 12,122-tick**
+  walk: **SIX items REAL-COLLECTED with `hitsMax == 3`** — sword, feather,
+  torch, spear, darkshield, darksuit — with **`grants` EMPTY** and the
+  persistence flags that are OFF equal to *exactly* the ten declared
+  exceptions + the one `L71 shieldlock@288,256` earned by being TOUCHED +
+  the six the pickups' own `removed()` wrote. Six segments partition the
+  headline tick for tick (641 + 1473 + 1964 + 3707 + 2162 + 2175 = 12,122).
+  ⚠ **The target shrank twice and both are findings**: slice 0 found
+  `conch`/`wand`/`darksword` are not R3-shaped at SOURCE (and `darksword`
+  leaves R2's claim, which only had it by way of a grant the game's own
+  logic refuses); slice 5's narrowing — "reached" is the PICKUP'S OWN TILE,
+  not a component of the level — took `shield` as well, because L20's is
+  behind a lock whose only presser is walled in behind a lock that needs
+  the shield, and the other entrance is the Dungeon 2 boss room. ⚠ **The
+  clear bill is TEN, not the recon's eight**: the narrowing put `L30 tag 0`
+  back, the driver's own A* put `L3 tag 0` back, and the CONTROLLER's
+  overshoot put `L11 tag 0` back. A reachability graph and a walk are
+  different questions. Full as-built in the kickoff and
+  `docs/json/developer/procgen/seedling-bot.md` §R3.
+- **R3, as briefed (superseded by the line above):** ONE kickoff, ordered
   slices (not the R3a/b/c split); raw tapes + CHUNKED `botLoadTape` (span
   ceiling measured first; the directive-tape transition is its own arc
   between R4 and R5); **target 11 items REAL-collected and REAL-opened**

@@ -2949,8 +2949,48 @@ Claude, accepted by user). Full detail in `region-atlas-plan.md` Phase 8.**
   grant crutch does not consult her. First place on the ladder where a
   grant asserts something the game's own logic refuses; R3 retires it.
 
-- **QUEUE NEXT for this arc: R3 — interactions + real collection — RULED
-  + KICKOFF READY: `NewDocs/plans/seedling-bot-r3-opus-kickoff.md`**
+- **R3 — interactions + real collection: ✅ COMPLETE 2026-08-01.**
+  Kickoff + as-built: `CC/docs/plans/seedling-bot-r3-opus-kickoff.md`. Doc:
+  `docs/json/developer/procgen/seedling-bot.md` §R3. Memory:
+  `project_seedling_bot_r3.md`.
+
+  **The claim, from the game's own `botStatus`: SIX items REAL-COLLECTED
+  with `hitsMax == 3`** — sword, feather, torch, spear, darkshield,
+  darksuit — over a 53-leg / 32-level / 12,122-tick walk, with **`grants`
+  EMPTY** and the persistence flags that are OFF equal to *exactly* the ten
+  declared exceptions + the one `L71 shieldlock@288,256` earned by being
+  TOUCHED + the six the pickups' own `removed()` wrote. Six segments
+  (641+1473+1964+3707+2162+2175) partition the headline EXACTLY. The
+  headline is the SAME MAP as R2 with the crutches off, not more items.
+
+  ⛔ **The target shrank twice, and both are findings.** Slice 0 read the
+  sources: `conch`, `wand` and `darksword` are not R3-shaped at SOURCE (and
+  `darksword` LEAVES R2's claim — R2 only had it by way of a grant the
+  game's own logic refuses). Slice 5's **narrowing** — "reached" is the
+  PICKUP'S OWN TILE, not a component of the level — took `shield` as well:
+  L20's is behind `lock@32,80` whose only presser is walled in behind a
+  lock that needs the shield, and the other entrance is L19,
+  `Dungeon2_Boss`. **No clear list on the map unseals it.**
+
+  ⛔ **The clear bill: the recon said 8, the SHIPPED PLANNER said 10.** The
+  narrowing put `L30 tag 0` back, the driver's own A* put `L3 tag 0` back,
+  and the CONTROLLER's overshoot put `L11 tag 0` back. A reachability graph
+  and a walk are different questions, and only the second one is the claim.
+
+  ⛔ **The oracle corrected the update ORDER on the first recording.**
+  `Game.loadlevel` adds the Player at `:2040` and every puzzle entity BELOW
+  it, and `addUpdate` PREPENDS — so a Lock updates BEFORE the player. R2's
+  docblock said the opposite and no recording could tell, because the
+  player is stationary for all of `l71-button-lock`.
+
+  ⚠ **Reported, not fixed (AS3):** `saw_auto_advance` counts on phase 1,
+  the RELEASE — and a `Help` is dismissed by the PRESS, so the counter
+  cannot see a Help being auto-advanced. The sword's `Help(3)` IS
+  auto-advanced on every run that collects it and the readout still says 0.
+  `Bot.as`'s own docblock claims the opposite two lines above the code.
+
+- **R3, as originally briefed (superseded by the entry above):
+  `NewDocs/plans/seedling-bot-r3-opus-kickoff.md`**
   (Fable design session 2026-08-01; → `CC/docs/plans/` at implementation
   start). Three rulings (user): ONE kickoff with ordered slices; **raw
   tapes + chunked `botLoadTape`** (span ceiling measured first; the

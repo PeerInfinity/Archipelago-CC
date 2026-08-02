@@ -1436,6 +1436,191 @@ now resolve through a committed table rather than an `if`.
 - **No new relaxation.** `noclip` moved from derived to declared, which is
   the opposite of adding one.
 
+## R3: the crutches come off, as built
+
+R3 takes the two remaining crutches away: **items are COLLECTED, not
+granted, and one blocker is OPENED, not cleared.** Its brief and full
+as-built are `CC/docs/plans/seedling-bot-r3-opus-kickoff.md` (§8 the recon,
+§9 the rulings, §10-11 as-built).
+
+**The claim, from `botStatus` over a 53-leg / 32-level / 12,122-tick walk:
+six items REAL-collected with `hitsMax == 3`** — sword, feather, torch,
+spear, darkshield, darksuit — with `grants` EMPTY and the persistence
+flags that are off equal to exactly *the ten declared exceptions + the one
+the touch earned + the six the pickups wrote*. The headline is the SAME MAP
+AS R2 with the crutches off, not more items.
+
+### The target shrank twice, and both are findings rather than failures
+
+The brief asked for eleven. Slice 0 read the sources and found three of the
+four extras are not R3-shaped at all: `Karlore.added()` despawns on
+`Player.hasFire` and not on being talked to; `Wand.update` gates its whole
+pickup on `hasAllTotemParts()`; `darksword`'s only source is the Witch, who
+needs the wand — so R2's darksword was a grant asserting something the
+game's own logic refuses, and it LEFT the claim. That put the target at
+seven.
+
+Slice 5 took `shield` as well, and that one is the R2 crutch arriving to be
+paid for. **At R2 an item was collected by ENTERING ITS LEVEL** — the grant
+fired on the arrival tick — so a leg could touch the doorway and turn
+around. R3 has to stand on the pickup, and L20's shield is in the level's
+*other* component: the walk arrives from L13 into a 2×4 shaft sealed by
+`lock@32,80` (tset 0, so no clear despawns it), whose only presser
+`buttonroom@192,16` is adjacent to no walkable component at all — it is
+walled in behind `shieldlocknorm@176,16`, which needs `Player.hasShield`.
+The other entrance is L19's stairs, and L19 is `Dungeon2_Boss`. **No clear
+list on the map unseals it**, checked one at a time over all 72 offered
+clears and all of them together.
+
+### ⚠ The clear bill: an instrument said 8, the shipped planner said 10
+
+`recon-seedling-r3.mjs --minimal` computes an IRREDUNDANT set — and
+irredundancy is the right question, because a one-out sweep is NOT the
+bill: two clears in a doorway wide enough for either each answer "not
+required", and then both come off and the door shuts. It answered 8.
+
+The shipped planner answered 10, and the three additions are three
+different questions the instrument was not asked:
+
+| clear | who demanded it | why the recon could not see it |
+|---|---|---|
+| `L30 tag 0` `bosslock@64,32` | the NARROWING | the recon asked at LEVEL granularity, which is what R2's reachability meant |
+| `L3 tag 0` `breakablerock@96,112` | the driver's own A* | no path across L3 at any clearance the ladder descends to |
+| `L11 tag 0` `chest@32,48` | the CONTROLLER | the bang-bang overshoot clips the chest's avoid volume |
+
+The lesson is not that the instrument was buggy — it answered the question
+it was asked. **A reachability graph and a walk are different questions,
+and only the second one is the claim.**
+
+### The three verbs, and why a `collect` is not a tighter tolerance
+
+The leg vocabulary now has three mechanics, all named by OEL coordinates
+and all verified from the run's own state:
+
+- **`hold`** (R2) — stand on a button for N ticks. The count is a FLOOR;
+  what is asserted is the EFFECT, with a shut-before control.
+- **`touch`** (R3) — walk into a shield lock holding the right shield. The
+  window REFUSES INPUT, so the driver emits no spans inside it and the
+  count is the game's, not the author's.
+- **`collect`** (R3) — stand on a pickup and page its ceremony through with
+  X releases. Three things make it a verb rather than a tolerance:
+  1. **The planner has to be kept OUT and the executor let IN.** A pickup
+     is an avoid volume, so A* must route around it — exempting it
+     leg-wide let the planner cut STRAIGHT THROUGH the feather on the way
+     to its own approach cell, the ceremony fired mid-drive, and the
+     waypoint was never reached.
+  2. **The approach cell needs CLEARANCE.** The controller overshoots
+     before braking back, and clipping a pickup starts its ceremony a
+     waypoint early — which freezes the player, and `hasArrived` needs them
+     STOPPED while a freeze PRESERVES velocity. L64's ghostspear found this
+     one third of a pixel into a 12×4 volume.
+  3. **A collected pickup must stop being an obstacle.** `run.takenPickups`
+     is live state the planner reads, exactly like `openActivators` — the
+     tile the walk is standing on when a ceremony ends would otherwise be
+     reported unwalkable and every plan from it would fail at its own START.
+
+### The ceremony: the TAPE drives it, and `saw_auto_advance` stays 0
+
+`Bot.autoAdvance` has been compiled in since R0 and had never fired. The
+probe inverted the plan: **the bot CONSUMES TAPE TICKS during a dialogue.**
+`Game.freezeObjects` is a sticky static with several writers and no
+per-frame reset, so it reads TRUE inside `Mobile.mobileUpdate` and FALSE
+again at the next frame's dead-frame gate; and `NPC.talk()` reads
+`Input.released` from the NPC's own update, outside the frozen block. So a
+`primary` span pages the dialogue and `saw_auto_advance` stays **zero**.
+
+Three facts only the game knew, from the first collection recording:
+
+1. Contact at observation 23, frozen 24..57 — **34 ticks**, which the model
+   predicted from the AS3 before anything was recorded.
+2. ⚠ **VELOCITY SURVIVES A FREEZE.** Nothing is reset; not stepping IS the
+   whole model, which is why the player drifts on for three ticks after.
+3. ⚠ **THE COMPLETING FRAME IS NOT FROZEN.** `World.addUpdate` PREPENDS and
+   the temporary NPC is added LAST, so it updates BEFORE the player and
+   `talking = false` has already cleared the freeze. This was the model's
+   only divergence, and seven recordings now protect it.
+
+⚠ **Press spacing is load-bearing.** `slashTimer` is 20 and a press landing
+after the ceremony reaches `useItem(Main.primary)`: one is a swing, two
+inside twenty ticks is a **DASH that moves the player**. Every fixture
+spaces them eight apart, and the executor asserts none lands after the end.
+
+### The touch, and the tick the ORACLE moved
+
+`ShieldLock.update` collides at `x - 1`, and with `Player.hasDarkShield` it
+snaps `p.y = y - originY + 7`, sets `receiveInput = false`, runs the
+ordinary 0.01 `Lock` fade to its 101st tick, then `turnOff()` restores
+input and writes `setPersistence(2, false)`.
+
+Three ways it is NOT the button lock:
+
+- **`activate` LATCHES.** `ShieldLock` forces `tSet = -2`, so no
+  `activateAll` republishes the flag: walking away does not close it, which
+  for `lock@112,160` it does.
+- **The window refuses the KEYS, not the tick.** `receiveInput` gates
+  `Player.input()` alone, so friction and both sweeps still run.
+- **`turnOff()` restores input only `if (p)`.** A player carried out of the
+  rect never gets input back. Unreachable at walking speed — friction is
+  subtractive and the whole coast is under 2 px, against a 5 px margin —
+  but ice (friction 0.025) would clear it easily, and both ice and
+  waterfall are in `noHazards` on every tape on this ladder.
+
+⛔ **AND THE ORACLE CORRECTED THE UPDATE ORDER ON THE FIRST RECORDING.**
+`Game.loadlevel` adds the Player at `Game.as:2040` and every puzzle entity
+in the loop BELOW it, and `World.add` -> `addUpdate` PREPENDS — so **a Lock
+updates BEFORE the player**, not after. That changes nothing about the
+activator STATE (the same object either way, which is why no R2 recording
+could see it: the player is stationary for the whole of `l71-button-lock`)
+and everything about the SIDE EFFECT: `p.y` is written at the top of tick
+N+1. The model applied it at N; the game said observation 19 is y 264, not
+263.
+
+⚠ **And the clear the player earns OUTLIVES the visit.** `Lock.check()` on
+a newly constructed `Game` removes any lock whose flag is off, so the
+shield lock is GONE on the next entry to L71 — which the route depends on,
+because it goes east through the lock to reach darksuit and comes BACK
+through the same corridor to L71's pit. `levelRun` banks the tag and cashes
+it in the transition path; dropping the memoised world at `turnOff` would
+despawn the lock on the very tick the player is standing inside it.
+
+### The pair, one field apart
+
+`l71-shieldlock-open` and `l71-shieldlock-shut` are the SAME TAPE with
+`grants` emptied. The game answers y 263 and level 76 against y 264 and
+pinned at x 285.95 for all 140 ticks — so the crossing is a claim about the
+shield, not about a lock that was never there. The window gets no spans:
+the movement span ends at 19 and resumes at 119.
+
+### The ledger is the claim
+
+At rung close the game reports, from its own arrays:
+
+- `grants` **empty** on the headline (a segment may carry one boot-level
+  inheritance entry; the headline may not),
+- `persistence` — the ten declared exceptions applied,
+- `persistence_cleared` — **exactly** those ten, plus `L71 tag 2` which the
+  touch earned, plus the six tags the pickups' own `removed()` wrote.
+
+That third line is the one with teeth: `Bot.persistenceClearedAll()` scans
+`Main.levelPersistence` rather than echoing the tape, so an exact-set claim
+over it is the only thing that distinguishes "the player did this" from
+"the tape did". `r3Acceptance.js` holds it as a pure function and
+`r3Acceptance.test.js` mutates every input — including removing each
+pickup's flag one at a time, which is precisely the "granted, not
+collected" failure.
+
+### ⚠ A blind spot in the readout, reported not fixed
+
+`saw_auto_advance` counts on **phase 1** of the cadence, the RELEASE. A
+`Help` is dismissed by `Input.pressed`, so its freeze ends on phase 0 and
+phase 1 never runs — the counter cannot see a Help being auto-advanced.
+The sword's `Help(3)` IS auto-advanced on every run that collects it (about
+two extra dead frames is the witness), and `saw_auto_advance` still reports
+0. `Bot.as`'s own docblock claims the opposite two lines above the code
+that contradicts it. Harmless — the model reproduces the tapes exactly —
+but the counter means "no NPC dialogue was auto-advanced", not "no
+auto-advance fired". Fixing it is AS3, so it waits for the next batch.
+
 ## What R2 hands on, and what still blocks a full walk
 
 The ladder is subtractive, so "what's next" is a list of what still blocks a
