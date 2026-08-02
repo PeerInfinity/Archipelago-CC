@@ -1261,6 +1261,36 @@ describe('roles: pickups and proximity hazards are AVOID VOLUMES', () => {
 describe('R1: the priced proximity volumes', () => {
     const R = (id) => buildLevelWorld(levelRecord(id), { roles: RELAXED_ROLES });
 
+    it('⛔ every BUILT hazard has exactly one shape, in every buildable level', () => {
+        // ⚠ THE CLASS-TABLE ASSERTION BELOW IS NOT THIS ONE, and R4 proved
+        // it the hard way. That one checks `ENTITY_CLASSES` — the DECLARATION
+        // — and it passed while `watchViewer`'s renderer crashed on the first
+        // `BossLock` it met, because the renderer consumes the BUILT record
+        // (`{rect, disc, line}`) and its `else` arm dereferenced `h.disc.x`
+        // on an entry where both `rect` and `disc` are null. Level 12 holds
+        // five of them; the animation loop died inside `requestAnimationFrame`
+        // with no message at all.
+        //
+        // So the shape contract is asserted where the CONSUMERS read it. Any
+        // future shape lands here first, in milliseconds, instead of in a
+        // viewer nobody runs in CI.
+        const seen = new Set();
+        for (let level = 0; level < 116; level++) {
+            let world;
+            try { world = R(level); } catch { continue; }
+            for (const h of world.proximityHazards) {
+                const shapes = ['rect', 'disc', 'line'].filter((k) => h[k]);
+                expect(shapes.length,
+                    `L${level} ${h.tag}@${h.x},${h.y} (${h.kind}) has shapes `
+                    + `[${shapes.join(',')}] — exactly one of rect/disc/line, or a `
+                    + 'consumer that reads the wrong field throws').toBe(1);
+                seen.add(shapes[0]);
+            }
+        }
+        // ...and all three are really out there, so this is not vacuous.
+        expect([...seen].sort()).toEqual(['disc', 'line', 'rect']);
+    });
+
     it('every hazard is priced, INERT with evidence, or unpriced with evidence', () => {
         // Three states and no fourth. "Unpriced" and "inert" are both
         // affirmative classifications carrying their reason, so neither can

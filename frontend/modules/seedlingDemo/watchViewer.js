@@ -103,6 +103,15 @@ function makeRenderer(canvas, tape) {
     const ctx = canvas.getContext('2d');
     const trail = [];
     let scale = 1;
+    /**
+     * Hazard shapes this renderer does not know how to draw.
+     *
+     * Collected rather than thrown: a viewer that cannot draw one volume
+     * should still draw the level. Surfaced by the caller, so a fourth shape
+     * is a line in the detail bar rather than a silently missing rectangle —
+     * or, as it was before R4, a dead animation loop.
+     */
+    const unknownShapes = new Set();
 
     function fit(world) {
         const w = world.width * TILE_SIZE;
@@ -162,15 +171,40 @@ function makeRenderer(canvas, tape) {
             for (const t of world.tiles) {
                 if (t.t === PIT) outline(t.rect, '#c04040', 2);
             }
+            // ⚠ THREE SHAPES, and the third one arrived at R4 with a
+            // `BossLock`. A hazard is a rect (`collide`), a disc
+            // (`FP.distance < r`) or a LINE (`collideLine` over integer
+            // probes) — and a `line` entry carries NEITHER `rect` NOR
+            // `disc`, both null. This loop used to be `if (h.rect) ... else
+            // <disc>`, which dereferenced `h.disc.x` on the first bosslock
+            // it met and threw inside the rAF callback, killing the
+            // animation with no message at all. Level 12 holds FIVE of them.
+            //
+            // The `default` arm is the lesson, not decoration: a fourth
+            // shape should say so on the canvas rather than stop the clock.
             if (opts.volumes) {
                 for (const p of world.pickups) rect(p.rect, '#d8c030', 0.4);
                 for (const h of world.proximityHazards) {
-                    if (h.rect) { rect(h.rect, '#d05090', 0.35); continue; }
-                    ctx.strokeStyle = '#d05090';
-                    ctx.lineWidth = 1;
-                    ctx.beginPath();
-                    ctx.arc(h.disc.x * scale, h.disc.y * scale, h.disc.r * scale, 0, 7);
-                    ctx.stroke();
+                    if (h.rect) {
+                        rect(h.rect, '#d05090', 0.35);
+                    } else if (h.disc) {
+                        ctx.strokeStyle = '#d05090';
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.arc(h.disc.x * scale, h.disc.y * scale, h.disc.r * scale, 0, 7);
+                        ctx.stroke();
+                    } else if (h.line) {
+                        // The probes are the INTEGER points `[x0, x1]` on
+                        // row `y`, so the drawn band is one pixel tall and
+                        // `x1 + 1` wide — never a rect enclosing them, which
+                        // is the over-approximation the census refuses.
+                        rect({
+                            x: h.line.x0, right: h.line.x1 + 1,
+                            y: h.line.y, bottom: h.line.y + 1,
+                        }, '#ff6fae', 0.9);
+                    } else {
+                        unknownShapes.add(`${h.tag}@${h.x},${h.y} (${h.kind})`);
+                    }
                 }
             }
 
@@ -206,6 +240,8 @@ function makeRenderer(canvas, tape) {
             rect(playerBoxAt(state.x, state.y), '#ffffff', 0.9);
         },
         mark(state, level) { trail.push({ x: state.x, y: state.y, level }); },
+        /** Shapes met that this renderer has no arm for; empty is the norm. */
+        get unknownShapes() { return [...unknownShapes]; },
     };
 }
 
@@ -219,9 +255,23 @@ async function runJs(params) {
     // The census the TAPE implies — the same rule `runTape` applies, so the
     // viewer can never refuse to draw a level the run walks through.
     const roles = tape.noclip === false ? ROLES : RELAXED_ROLES;
+    // ⚠ AND THE TAPE'S CLEARS, for the same reason as the census: a viewer
+    // that built a level the run does not have would draw locks the player
+    // walks straight through. Grouped BY LEVEL because `buildLevelWorld`'s
+    // orphan guard refuses a tag the level does not own — the same rule
+    // `levelRun` follows, and the reason it groups too.
+    const clearedByLevel = new Map();
+    for (const c of tape.persistence ?? []) {
+        if (!clearedByLevel.has(c.level)) clearedByLevel.set(c.level, []);
+        clearedByLevel.get(c.level).push(c.tag);
+    }
     const worlds = new Map();
     const worldFor = (n) => {
-        if (!worlds.has(n)) worlds.set(n, buildLevelWorld(levelSource(n), { roles }));
+        if (!worlds.has(n)) {
+            const cleared = clearedByLevel.get(n);
+            worlds.set(n, buildLevelWorld(levelSource(n),
+                cleared ? { roles, cleared } : { roles }));
+        }
         return worlds.get(n);
     };
 
@@ -309,18 +359,45 @@ async function runJs(params) {
     }
 
     let acc = 0;
+    /**
+     * ⚠ A THROW IN HERE USED TO STOP THE CLOCK AND SAY NOTHING.
+     *
+     * `requestAnimationFrame(frame)` is the LAST statement, so anything that
+     * threw above it — a level whose geometry the renderer had no arm for,
+     * say — skipped the re-arm and the animation simply froze mid-walk. No
+     * status, no detail, no console line the page surfaced: indistinguishable
+     * from a slow tape or a paused one.
+     *
+     * That is exactly how R4's third hazard shape presented: the viewer
+     * stopped "near the beginning, when it entered level 12", which holds
+     * FIVE bosslocks. So the re-arm is unconditional now and the failure is
+     * REPORTED, once, with the tick it happened on — a viewer that cannot
+     * draw a frame should say which one.
+     */
+    let frameError = null;
     function frame() {
-        if (playing && frames.length) {
-            acc += speed;
-            while (acc >= 1 && cursor < frames.length - 1) {
-                cursor += 1;
-                acc -= 1;
-                renderer.mark(frames[cursor].state, frames[cursor].observation.level);
+        try {
+            if (playing && frames.length) {
+                acc += speed;
+                while (acc >= 1 && cursor < frames.length - 1) {
+                    cursor += 1;
+                    acc -= 1;
+                    renderer.mark(frames[cursor].state, frames[cursor].observation.level);
+                }
+                if (acc >= 1) acc = 0;
+                if (cursor >= frames.length - 1) playing = false;
+                $('scrub').value = String(cursor);
+                hud();
             }
-            if (acc >= 1) acc = 0;
-            if (cursor >= frames.length - 1) playing = false;
-            $('scrub').value = String(cursor);
-            hud();
+        } catch (e) {
+            playing = false;
+            if (!frameError) {
+                frameError = e;
+                const f = frames[cursor];
+                fatal(`the viewer could not draw observation ${f?.observation.t} `
+                    + `(level ${f?.observation.level}) — the RUN is unaffected, this is `
+                    + 'the drawing side', `${e.message}\n${e.stack ?? ''}`);
+            }
         }
         requestAnimationFrame(frame);
     }
@@ -340,9 +417,17 @@ async function runJs(params) {
     requestAnimationFrame(frame);
 
     if (finished) {
+        // ⚠ NAMED, NOT SILENT: a hazard shape this renderer has no arm for
+        // draws nothing, and "nothing drawn" and "no volume there" look
+        // identical on a canvas.
+        const unknown = renderer.unknownShapes;
         $('detail').textContent = `finished: ${finished.transitions.length} transition(s), `
             + `${finished.transports.length} pit transport(s), `
-            + `${finished.grants.length} grant(s)`;
+            + `${finished.grants.length} grant(s)`
+            + (unknown.length
+                ? `  ⚠ ${unknown.length} volume(s) NOT DRAWN — no renderer arm for their `
+                + `shape: ${unknown.join(', ')}`
+                : '');
     }
 }
 
