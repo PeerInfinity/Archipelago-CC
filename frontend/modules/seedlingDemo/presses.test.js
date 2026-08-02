@@ -317,7 +317,8 @@ describe('the level query (R4: the census half of §3.2)', () => {
             expect(as3).toBeTruthy();
         }
         expect(PRESS_ARM_POLICY.Tree.policy).toBe('inert');
-        expect(PRESS_ARM_POLICY.LightPole.policy).toBe('refused');
+        expect(PRESS_ARM_POLICY.LightPole.policy).toBe('modelled');
+        expect(PRESS_ARM_POLICY.Enemy.policy).toBe('refused');
         expect(PRESS_ARM_POLICY.PushableBlockSpear.policy).toBe('modelled');
     });
 

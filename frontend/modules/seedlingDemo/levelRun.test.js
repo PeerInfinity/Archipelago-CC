@@ -176,25 +176,19 @@ describe('R4: the spear press, the bridge and the block', () => {
         expect(run.pushedBlocks).toEqual([]);
     });
 
-    it('⚠ REFUSES the probe\'s third stance: the spear rect contains a lightpole', () => {
-        // The press arm of the same pair. Pushes 1 and 2 are clean; the
-        // third — W at reach 2 from tile (12,7), through the Body Wall — has
-        // `lightpole@176,120` in its 32 px rect, and `LightPole.set activate`
-        // writes `Game.setPersistence(tag, !activate)`. That is a LEDGER
-        // ENTRY, not a cosmetic, and the recording could never have shown it
-        // (the probe reads positions).
+    it('reproduces the L65 breach pair\'s PRESS arm too — and the pole it lights', () => {
+        // The same 440 ticks with three `primary` spans. The game's own
+        // recorded final was (166.65, 98.05): the player walked through the
+        // vacated corridor and pinned under (10,5)'s Body Wall, against the
+        // control's (194.05, 114.15) at the block's own east face.
         //
-        // ⚠ AND NO STANCE IN THAT ROW AVOIDS IT. The block sits at tile
-        // (10,7); any rect reaching x < 176 from the east spans the pole's
-        // own 176..192 column, and the pole's press box covers the whole of
-        // rows 6-7 in y. So this is a ROUTE question for the R4 chain — the
-        // arm has to be modelled or the chain re-planned — and it is a throw
-        // rather than a silent toggle until then.
-        //
-        // With the arm allowed, this model lands the press arm on
-        // (166.65, 98.05) — the game's own recorded final, to the pixel,
-        // with the block destroyed on (9,7)'s pit. Measured, not asserted
-        // here, because asserting it would mean shipping the refusal off.
+        // ⚠ AND THE THIRD PUSH LIGHTS A LIGHTPOLE, unavoidably. The block at
+        // tile (10,7) and `lightpole@176,120` occupy the same rows, so every
+        // rect that reaches the block spans the pole — there is no stance in
+        // that row that does not. `LightPole.set activate` writes
+        // `Game.setPersistence(tag, !activate)`, so the press is a LEDGER
+        // ENTRY, and the run reports it as an EARNED clear rather than
+        // letting it go unaccounted.
         const run = createLevelRun({
             levelSource,
             boot: { level: 65, x: 192, y: 128 },
@@ -202,12 +196,42 @@ describe('R4: the spear press, the bridge and the block', () => {
             grants: [{ level: 65, items: ['sword', 'spear'] }],
             equips: [{ t: 0, slot: 1 }],
         });
-        expect(() => drive(run, L65_BREACH_PRESS_SPANS, 440))
-            .toThrow(/lightpole@176,120/);
-        // ...and the two pushes BEFORE it landed, at the sweep's own tiles.
-        expect(run.presses).toHaveLength(2);
-        expect(run.presses.map((p) => p.hits[0].id))
-            .toEqual(['pushableblockspear@176,128', 'pushableblockspear@176,128']);
+        drive(run, L65_BREACH_PRESS_SPANS, 440);
+        expect(run.state.x).toBeCloseTo(166.65, 10);
+        expect(run.state.y).toBeCloseTo(98.05, 10);
+        // The block ended on (9,7)'s pit and was destroyed there.
+        expect(run.pushedBlocks).toEqual([{
+            id: 'pushableblockspear@176,128', x: 144, y: 112, tx: 9, ty: 7, removed: true,
+        }]);
+        expect(run.presses).toHaveLength(3);
+        // The third press hit BOTH — the block it was aimed at and the pole
+        // it could not miss.
+        expect(run.presses[2].hits.map((h) => h.as3).sort())
+            .toEqual(['LightPole', 'PushableBlockSpear']);
+        expect(run.earnedClears).toEqual([{ level: 65, tag: 2, by: 'lightpole' }]);
+    });
+
+    it('⚠ the lightpole is a TOGGLE, so the ledger reads the FINAL state', () => {
+        // `hit()` flips `activate` behind a 25-tick `hitsTimer`; a second hit
+        // puts the flag back. A ledger that counted presses would report a
+        // clear the game does not have.
+        const run = createLevelRun({
+            levelSource,
+            boot: { level: 65, x: 192, y: 128 },
+            noHazards: D6_HAZARDS,
+            grants: [{ level: 65, items: ['sword', 'spear'] }],
+            equips: [{ t: 0, slot: 1 }],
+        });
+        // The breach walk plus a FOURTH press from the same stance, 34
+        // ticks after the third — past the 25-tick timer, and by then the
+        // block is gone, so the pole is all the rect still contains.
+        drive(run, [
+            ...L65_BREACH_PRESS_SPANS,
+            { key: 'primary', from: 320, to: 321 },
+        ], 440);
+        const lit = run.presses.flatMap((p) => p.hits).filter((h) => h.as3 === 'LightPole');
+        expect(lit.map((h) => h.activate)).toEqual([true, false]);
+        expect(run.earnedClears).toEqual([]);
     });
 
     it('a block is 32 ticks of MOVING WALL, and the run reports it live', () => {

@@ -75,6 +75,8 @@ export const ENEMY_HITS_MAX = 3;
 export const ENEMY_HITS_TIMER = 30;
 /** `Player.as:119` — the double-tap window that turns two presses into a DASH. */
 export const SLASH_TIMER_MAX = 20;
+/** `Scenery/LightPole.as:20` — ticks before the same pole can be toggled again. */
+export const LIGHTPOLE_HITS_TIMER_MAX = 25;
 
 /** Facing directions, as `Player.direction` numbers them. */
 export const RIGHT = 0;
@@ -334,7 +336,22 @@ export const PRESS_ARM_POLICY = Object.freeze({
     BreakableRock: { policy: 'refused', why: 'despawns at its hit count AND writes persistence' },
     RopeStart: { policy: 'refused', why: 'SHRINKS to a one-cell solid and writes persistence' },
     ShieldBoss: { policy: 'refused', why: 'boss damage — R5' },
-    LightPole: { policy: 'refused', why: '`set activate` writes Game.setPersistence(tag, !activate)' },
+    // ⚠ MODELLED FROM R4, and it was ruled in rather than assumed. It is the
+    // only entry here whose arm has a real, banked effect that is not
+    // geometry: `set activate` calls `Game.setPersistence(tag, !activate)`,
+    // so a hit is a LEDGER ENTRY. It is modelled because L65's third push
+    // cannot avoid one — the block at (10,7) and `lightpole@176,120` occupy
+    // the same rows, so every rect that reaches the block spans the pole —
+    // and the census prices the toggle at exactly that one flag: `tset -1`
+    // (no group), L65 has no activators, the darktrap is 40 px outside the
+    // light's 28 px reach, and `PERSISTENCE_RESPONSE.lightpole` is
+    // 'cosmetic', so banking the clear changes no geometry on re-entry.
+    // ⚠ It is a TOGGLE behind a 25-tick `hitsTimer`, not a latch.
+    LightPole: {
+        policy: 'modelled',
+        why: '`hit()` toggles `activate` behind a 25-tick hitsTimer and `set activate` '
+            + 'writes Game.setPersistence(tag, !activate) — a ledger entry, banked',
+    },
     LavaBall: { policy: 'refused', why: 'R5 — Dungeon 7' },
     Watcher: { policy: 'refused', why: 'R6 — the ending' },
 });

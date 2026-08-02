@@ -48,7 +48,9 @@ import {
     createPushableState, hitPushable, movedPushables, pushableRects,
     pushablesSettled, stepPushables,
 } from './pushables.js';
-import { PRESS_ARM_POLICY, auditPress, slashRect, spearRect } from './presses.js';
+import {
+    LIGHTPOLE_HITS_TIMER_MAX, PRESS_ARM_POLICY, auditPress, slashRect, spearRect,
+} from './presses.js';
 import { ITEM_PROPERTIES, ITEM_NAMES, inventorySlotsFor } from './tapeFormat.js';
 import { spawnFromBoot } from './playerPhysicsV1.js';
 import {
@@ -236,9 +238,57 @@ export function createLevelRun({
         if (!pushableStates.has(n)) pushableStates.set(n, createPushableState(worldFor(n)));
         return pushableStates.get(n);
     };
+    /**
+     * ── R4: THE LIGHTPOLE, which is per-visit STATE over a BANKED flag ──
+     *
+     * `LightPole.hit()` toggles `activate` behind a 25-tick `hitsTimer`, and
+     * `set activate` calls `Game.setPersistence(tag, !activate)` — so a
+     * press writes a persistence flag, and the ledger has to say so.
+     *
+     * Two lifetimes AGAIN, and this one has them in the same entity: the
+     * `hitsTimer` and the entity are per visit, while the FLAG is banked
+     * (its ctor reads it back: `activate = !Game.checkPersistence(tag)`), so
+     * a pole lit on one visit boots lit on the next. `poleFlags` is the
+     * banked half; the per-visit half is rebuilt from it on every entry.
+     *
+     * ⚠ IT IS A TOGGLE, NOT A LATCH. A second hit puts the flag back, so the
+     * ledger entry is derived from the FINAL state and never from a count of
+     * hits — which is exactly the shape of error a "count the presses"
+     * accounting would make.
+     */
+    const poleFlags = new Map();
+    const poleKey = (n, tag) => `${n}:${tag}`;
+    const polesOf = (n) => worldFor(n).pressResponders.filter((r) => r.as3 === 'LightPole');
+    const poleFlagFor = (n, tag) => {
+        const key = poleKey(n, tag);
+        if (!poleFlags.has(key)) {
+            // `Game.checkPersistence(tag)` — true unless something cleared
+            // it, and the tape's declared clears are the only other writer.
+            poleFlags.set(key, !(clearedByLevel.get(n) ?? []).includes(tag));
+        }
+        return poleFlags.get(key);
+    };
+    const poleStates = new Map();
+    const poleStateFor = (n) => {
+        if (!poleStates.has(n)) {
+            const byId = new Map();
+            for (const p of polesOf(n)) {
+                byId.set(`${p.tag}@${p.x},${p.y}`, {
+                    persistTag: p.persistTag,
+                    t: p.t,
+                    // `LightPole`'s ctor, last line.
+                    activate: !poleFlagFor(n, p.persistTag),
+                    hitsTimer: 0,
+                });
+            }
+            poleStates.set(n, byId);
+        }
+        return poleStates.get(n);
+    };
     const freshVisitState = (n) => {
         bridgeStates.set(n, new Map());
         pushableStates.set(n, createPushableState(worldFor(n)));
+        poleStates.delete(n);
     };
     /**
      * The bridges walkable RIGHT NOW, as ids the two queries take.
@@ -614,6 +664,23 @@ export function createLevelRun({
                 const { block: after, moved, why } = hitPushable(block, direction);
                 pushState.byId.set(id, after);
                 hits.push({ as3: 'PushableBlockSpear', id, moved, why });
+            } else if (r.as3 === 'LightPole') {
+                const id = `${r.tag}@${r.x},${r.y}`;
+                const pole = poleStateFor(level).get(id);
+                if (pole.hitsTimer > 0) {
+                    hits.push({ as3: 'LightPole', id, moved: false, why: 'hitsTimer > 0' });
+                    continue;
+                }
+                pole.activate = !pole.activate;
+                pole.hitsTimer = LIGHTPOLE_HITS_TIMER_MAX;
+                // `set activate` — `Game.setPersistence(tag, !activate)`.
+                if (pole.persistTag >= 0) {
+                    poleFlags.set(poleKey(level, pole.persistTag), !pole.activate);
+                }
+                hits.push({
+                    as3: 'LightPole', id, moved: true, why: null,
+                    activate: pole.activate, persistTag: pole.persistTag,
+                });
             }
         }
         presses.push({
@@ -917,6 +984,17 @@ export function createLevelRun({
                 if (r.persistTag < 0) continue;
                 out.push({ level: r.level, tag: r.persistTag, by: r.id });
             }
+            // R4: a lit lightpole cleared a flag. ⚠ DERIVED FROM THE FINAL
+            // STATE, never from a count of hits — `LightPole.hit()` is a
+            // TOGGLE, so an even number of presses leaves the flag exactly
+            // as it started and a ledger that counted them would report a
+            // clear the game does not have.
+            for (const [key, held] of poleFlags) {
+                if (held) continue;
+                const [n, tag] = key.split(':').map(Number);
+                if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
+                out.push({ level: n, tag, by: 'lightpole' });
+            }
             return out;
         },
         /** Is a touch-lock refusing input RIGHT NOW? The driver's gate. */
@@ -1036,6 +1114,15 @@ export function createLevelRun({
             // gliding through a pickup's frozen frames.
             const pushState = pushableStateFor(level);
             if (!noclip && pushState.byId.size > 0) stepPushables(pushState, pushableCtx());
+            // `LightPole.update()` is `super.update(); hitUpdate();` and the
+            // class is not a `Mobile`, so — like a Button under a frozen
+            // player — it keeps counting through a ceremony. Stepped here,
+            // above the early return, for that reason.
+            if (!noclip) {
+                for (const pole of poleStateFor(level).values()) {
+                    if (pole.hitsTimer > 0) pole.hitsTimer--;
+                }
+            }
 
             // The player reads the activator state as of the END of the
             // previous tick, which is the same object the game's Locks

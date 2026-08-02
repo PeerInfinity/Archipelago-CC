@@ -1687,14 +1687,31 @@ audit; both were run against the shipped census, and neither is sealed:
 | **L67** | W at `pushableblockspear@144,112` | **CLEAN AT y ≥ 115.5** — `lightpole@160,104`'s box ends at y 112, so only a stance at y = 112 clips it. A RE-AIM, not a seal |
 | **L65** | W at reach 2 from tile (12,7) | **SEALED** — see above |
 
-⇒ **This is the route slice's ruling to make, and it is about ONE PUSH**,
-with three priced options:
-(a) MODEL the `LightPole` arm — the toggle becomes an earned clear the
-ledger accounts for, ~20 lines and zero AS3, and the arithmetic above says
-that is its whole cost; (b) find another chain (the sweep's finer pitches
-found shorter chains, and it has not been re-asked with the pole as a
-constraint); (c) drop health again. The audit throws until then, which is
-the intended behaviour and not a blocker to be silenced.
+### ⚖ RULED (user, 2026-08-02): MODEL THE ARM
+
+Option (a). The toggle is a modelled effect and an EARNED clear, not a
+refusal — health stays in at 6 items / `hitsMax == 4`, and the clear bill
+gains one earned entry rather than a declared one, which strengthens the
+ledger claim rather than weakening it.
+
+As built:
+
+- `PRESS_ARM_POLICY.LightPole` is `modelled`, with the citation.
+- `levelRun` holds the poles as a FOURTH state family, and it is the first
+  one with two lifetimes inside a single entity: the `hitsTimer` and the
+  entity are per VISIT, the FLAG is BANKED (`activate =
+  !Game.checkPersistence(tag)` in the ctor, so a pole lit on one visit boots
+  lit on the next). The per-visit half is rebuilt from the banked half on
+  every entry.
+- ⚠ **The ledger entry is derived from the FINAL STATE, never from a count
+  of hits.** `hit()` toggles behind the 25-tick timer, so an even number of
+  presses leaves the flag exactly as it started — an accounting that counted
+  presses would report a clear the game does not have. There is a test that
+  presses the same pole twice and asserts the ledger stays empty.
+- ✅ And with the arm modelled the PRESS arm of the breach pair reproduces
+  too: **(166.65, 98.05)**, the game's own recorded final, with the block
+  destroyed on (9,7)'s pit and `{level: 65, tag: 2}` in `earnedClears`. Both
+  arms of the oracle pair are now unit tests.
 
 ### 13.6 The press policy is an ENUMERATION now, and it had to be
 
