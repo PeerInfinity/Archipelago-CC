@@ -493,6 +493,28 @@ export function createLevelRun({
          */
         get lockSnaps() { return lockSnaps.map((r) => ({ ...r })); },
         /**
+         * The pickups already TAKEN in the level the run is in, as planner
+         * contact keys.
+         *
+         * ⚠ LIVE STATE, exactly like `openActivators`, and for exactly the
+         * same reason. A pickup is an avoid volume because walking over one
+         * freezes the game — and once it has been collected there is
+         * nothing there at all, so the very tile the walk is standing on
+         * after a ceremony would otherwise be reported unwalkable and every
+         * plan from it would fail at its START. A planner with its own idea
+         * of which pickups are gone would certify a route the executor then
+         * refuses; reading it off the run means the two cannot disagree.
+         */
+        get takenPickups() {
+            const keys = new Set();
+            for (const p of world.pickups ?? []) {
+                if (collectedPickups.has(pickupKey(level, p))) {
+                    keys.add(`pickup:${p.tag}@${p.x},${p.y}`);
+                }
+            }
+            return keys;
+        },
+        /**
          * The `(level, tag)` clears this run EARNED — turned off by opening
          * something rather than by the tape declaring it.
          *

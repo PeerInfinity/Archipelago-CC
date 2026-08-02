@@ -1634,18 +1634,29 @@ export function synthesizeLegs(legs, opts = {}) {
             legContacts.add(`proximity-hazard:${l.tag}@${l.x},${l.y}`);
         });
         /**
-         * ⚠ AND SO IS A COLLECT'S PICKUP — the whole point of the verb.
-         * `avoidVolumesAt` reports a pickup as an avoid volume because
-         * walking over one freezes the game behind a dialogue, so without
-         * this the planner routes AROUND the item the leg exists to take
-         * and the executor throws the moment the walk reaches it.
+         * ⚠ A COLLECT'S PICKUP IS **NOT** EXEMPTED, and that is the
+         * opposite of the hold and the touch on purpose.
+         *
+         * A button and a shield lock are things the leg walks INTO and
+         * stops at; a pickup is a thing the leg walks ONTO and cannot leave
+         * until its dialogue is paged through. Exempting it leg-wide lets
+         * A* route STRAIGHT THROUGH the item on the way to somewhere else —
+         * and L89's feather is exactly that case: its approach cell is on
+         * the far side, the planner cut across the pickup, the ceremony
+         * fired mid-drive, and the waypoint was never reached. A stall
+         * 1,500 ticks long, for a route that was one waypoint from correct.
+         *
+         * So the pickup stays an obstacle to the PLANNER, which routes
+         * around it to the approach point, and `runCollect` walks the last
+         * pixels in itself — where the ceremony is the errand rather than
+         * an accident. The shape is validated by `assertCollect` here so a
+         * malformed one is still a named failure before anything is driven.
          */
         (leg.targets ?? []).forEach((t, ti) => {
             if (t?.collect === undefined) return;
             const what = `legs[${li}] level ${leg.level} target ${ti} collect`;
             assertCollect(t.collect, what);
-            const p = resolvePickup(run.world, t.collect.pickup, what);
-            legContacts.add(`pickup:${p.tag}@${p.x},${p.y}`);
+            resolvePickup(run.world, t.collect.pickup, what);
         });
         // A persistence effect exists only from the leg that CAUSED it. The
         // first visit to L37 is before the button is pressed and the rock is
@@ -1663,8 +1674,14 @@ export function synthesizeLegs(legs, opts = {}) {
          * against the state before the hold would route around a door the
          * run has already opened.
          */
+        //
+        // ⚠ `takenPickups` joins it at R3, and it is the same kind of thing:
+        // a pickup that has been collected is GONE, so the tile the walk is
+        // standing on the moment a ceremony ends must stop being an
+        // obstacle — otherwise the next plan fails at its own START tile.
+        const contactsNow = () => new Set([...legContacts, ...run.takenPickups]);
         const planNow = (extra) => ({
-            ...plan, openActivators: run.openActivators, ...extra,
+            ...plan, contacts: contactsNow(), openActivators: run.openActivators, ...extra,
         });
 
         const legWaypoints = [];
@@ -1679,7 +1696,7 @@ export function synthesizeLegs(legs, opts = {}) {
                 tolerance,
                 maxTicks: maxTicksPerTarget,
                 avoidVolumes: Boolean(relax),
-                contacts: legContacts,
+                contacts: contactsNow(),
                 extraVolumes: legVolumes,
                 grazes,
                 what: `legs[${li}] level ${leg.level} target ${ti} waypoint ${wi} `
@@ -1781,7 +1798,7 @@ export function synthesizeLegs(legs, opts = {}) {
                     tolerance,
                     maxTicks: maxTicksPerTarget,
                     avoidVolumes: Boolean(relax),
-                    contacts: legContacts,
+                    contacts: contactsNow(),
                     extraVolumes: legVolumes,
                     grazes,
                     crossTo,
@@ -1830,7 +1847,7 @@ export function synthesizeLegs(legs, opts = {}) {
                 tolerance,
                 maxTicks: maxTicksPerTarget,
                 avoidVolumes: Boolean(relax),
-                contacts: legContacts,
+                contacts: contactsNow(),
                 extraVolumes: legVolumes,
                 grazes,
                 crossTo,

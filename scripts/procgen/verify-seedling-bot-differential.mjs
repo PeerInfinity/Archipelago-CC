@@ -112,6 +112,11 @@ const { r2AcceptanceFindings } =
 const { r2TapeSpecs } = await import(join(REPO, 'frontend/modules/seedlingDemo/r2Walk.js'));
 const R2_ROUTE = JSON.parse(readFileSync(
     join(REPO, 'frontend/modules/seedlingDemo/fixtures/r2-route.json'), 'utf8'));
+const { r3AcceptanceFindings } =
+    await import(join(REPO, 'frontend/modules/seedlingDemo/r3Acceptance.js'));
+const { r3TapeSpecs } = await import(join(REPO, 'frontend/modules/seedlingDemo/r3Walk.js'));
+const R3_ROUTE = JSON.parse(readFileSync(
+    join(REPO, 'frontend/modules/seedlingDemo/fixtures/r3-route.json'), 'utf8'));
 const {
     r1TapeSpecs,
 } = await import(join(REPO, 'frontend/modules/seedlingDemo/r1Walk.js'));
@@ -481,6 +486,7 @@ function checkAcceptance(replayed) {
     const findings = [
         ...r1AcceptanceFindings(R1_ROUTE, r1TapeSpecs(R1_ROUTE), replayed),
         ...r2AcceptanceFindings(R2_ROUTE, r2TapeSpecs(R2_ROUTE), replayed),
+        ...r3AcceptanceFindings(R3_ROUTE, r3TapeSpecs(R3_ROUTE), replayed),
     ];
     for (const f of findings) {
         if (f.skipped) {

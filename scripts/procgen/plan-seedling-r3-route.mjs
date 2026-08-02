@@ -56,10 +56,10 @@ const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
 
 const { TILE_SIZE } = await import(join(MODULE, 'levelWorld.js'));
 const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
-const { nodeCentre } = await import(join(MODULE, 'botDriverV2.js'));
+const { contactsAt, nodeCentre } = await import(join(MODULE, 'botDriverV2.js'));
 const {
-    R3_BOOT, R3_CLEARS, R3_HOLD_TICKS, R3_ITEM_ROOMS, R3_LATTICE, R3_NO_HAZARDS,
-    R3_TOUCH,
+    R3_BOOT, R3_CLEARS, R3_HOLD_TICKS, R3_ITEM_ROOMS, R3_LATTICE, R3_NODE_MARGIN,
+    R3_NO_HAZARDS, R3_SEGMENT_BOUNDARIES, R3_TOUCH, assertRouteWellFormed,
 } = await import(join(MODULE, 'r3Walk.js'));
 const { makeRouteGraph } = await import(join(HERE, 'seedlingRouteGraph.mjs'));
 
@@ -149,8 +149,8 @@ function survey(g, label) {
     return sealed;
 }
 if (process.argv.includes('--survey')) {
-    survey(phase1, 'phase 1 (the 7 declared clears)');
-    survey(phase2, 'phase 2 (+ the earned L71 tag 2)');
+    survey(phase1, `phase 1 (the ${DECLARED.length} declared clears)`);
+    survey(phase2, `phase 2 (+ the earned L${EARNED.level} tag ${EARNED.tag})`);
     console.log('\n⚠ `darksuit` SEALED in phase 1 and open in phase 2 is the TOUCH '
         + 'working, not a finding: that is the whole reason there are two phases. A room '
         + 'sealed in BOTH is a room this rung cannot collect from.');
@@ -170,7 +170,7 @@ if (process.argv.includes('--survey')) {
  * the route is a COMMITTED artifact and Map iteration order is not a
  * tie-break anyone reviewed.
  */
-function approachCell(g, level, componentId, rect) {
+function approachCell(g, level, componentId, rect, clearance = 0) {
     const map = g.componentsOf(level);
     const cx0 = Math.floor(rect.x / R3_LATTICE) - 1;
     const cx1 = Math.ceil(rect.right / R3_LATTICE);
@@ -182,6 +182,24 @@ function approachCell(g, level, componentId, rect) {
         for (let cx = cx0; cx <= cx1; cx++) {
             if (map.get(`${cx},${cy}`) !== componentId) continue;
             const p = nodeCentre(cx, cy, R3_LATTICE);
+            // ⚠ CLEARANCE FROM THE VOLUME, and it is the controller's
+            // overshoot that demands it. The bang-bang controller passes a
+            // waypoint before braking back, so a cell whose player box is
+            // merely OUTSIDE the pickup is one the drive can still clip —
+            // and clipping a pickup starts its ceremony a waypoint early,
+            // which freezes the player mid-drive. `hasArrived` needs them
+            // STOPPED, and a freeze preserves velocity rather than clearing
+            // it, so the drive never arrives and the leg stalls for its
+            // whole budget. L64's ghostspear found this at (76.36,34.91),
+            // one third of a pixel into a 12x4 volume.
+            const box = {
+                x: p.x - 2 - clearance,
+                y: p.y - 2 - clearance,
+                right: p.x + 2 + clearance,
+                bottom: p.y + 3 + clearance,
+            };
+            if (box.x < rect.right && box.right > rect.x
+                && box.y < rect.bottom && box.bottom > rect.y) continue;
             candidates.push({ ...p, d: Math.hypot(p.x - centre.x, p.y - centre.y) });
         }
     }
@@ -255,8 +273,15 @@ function collectStep(g, room) {
         `${room.item}'s own tile in L${room.level}`);
     steps.push(...hops.map((h) => ({ kind: 'hop', ...h })));
     cursor = node;
-    const at = approachCell(g, room.level, Number(node.split(':')[1]), rect);
-    if (!at) throw new Error(`no approach cell for ${room.item} in L${room.level}`);
+    // The clearance is the node margin the driver plans with: enough that
+    // the controller's overshoot cannot reach the volume from here.
+    const at = approachCell(g, room.level, Number(node.split(':')[1]), rect, R3_NODE_MARGIN);
+    if (!at) {
+        throw new Error(`no approach cell with ${R3_NODE_MARGIN} px of clearance for `
+            + `${room.item} in L${room.level} — every cell beside the pickup is one the `
+            + 'controller could overshoot into, which would start the ceremony a '
+            + 'waypoint early and stall the drive.');
+    }
     steps.push({
         kind: 'collect', level: room.level, at, pickup: { ...room.pickup },
         item: room.item,
@@ -384,6 +409,23 @@ if (open) throw new Error('the last step was an action, so the walk ends mid-lev
 legs.push({ level: standing.level, targets: [] });
 legBoots.push({ ...standing });
 
+// ── the forced contacts ───────────────────────────────────────────────
+// What each leg STARTS standing inside, computed with the driver's OWN
+// `contactsAt` so the declaration and the check cannot drift apart.
+//
+// ⚠ PER PHASE. A leg after the touch is standing in the map the player
+// changed, and asking phase 1 what it is standing in would ask about a
+// level that no longer exists — L71's own return leg is exactly that case.
+const touchLeg = touches[0].leg;
+legs.forEach((leg, i) => {
+    const g = i <= touchLeg ? phase1 : phase2;
+    const world = g.worldFor(leg.level);
+    const contacts = contactsAt(world,
+        legBoots[i].x + TILE_SIZE / 2, legBoots[i].y + TILE_SIZE / 2,
+        { avoidVolumes: true });
+    if (contacts.length > 0) leg.contacts = contacts;
+});
+
 // ── the report ────────────────────────────────────────────────────────
 console.log(`\nvisit order: ${visitOrder.join(' -> ')}`);
 console.log(`${legs.length} leg(s) across ${new Set(legs.map((l) => l.level)).size} `
@@ -405,7 +447,6 @@ for (const room of R3_ITEM_ROOMS) {
 // ⚠ THE ORDER CONSTRAINT, ASSERTED. `ShieldLock.update` gates on
 // `Player.hasDarkShield`, so the darkshield collect must precede the touch.
 const shieldLeg = collects.find((c) => c.item === R3_TOUCH.item).leg;
-const touchLeg = touches[0].leg;
 if (!(shieldLeg < touchLeg)) {
     throw new Error(`the ${R3_TOUCH.item} collect is on leg ${shieldLeg} and the touch `
         + `on leg ${touchLeg}: the shield has to come FIRST or the lock never activates`);
@@ -432,10 +473,22 @@ const route = {
     collects: collects.map((c) => ({
         leg: c.leg, level: c.level, item: c.item, pickup: c.pickup, at: c.at,
     })),
-    segment_boundaries: [],
+    segment_boundaries: R3_SEGMENT_BOUNDARIES.map(([level, occurrence], i) => {
+        // ⚠ NAMED, NOT INDEXED. "The Nth leg in level L" survives a route
+        // that shifts by a leg; a raw index silently points somewhere else.
+        let seen = 0;
+        const at = legs.findIndex((l) => l.level === level && ++seen === occurrence);
+        if (at < 0) {
+            throw new Error(`segment boundary ${i} names occurrence ${occurrence} of `
+                + `level ${level}, which the route has only ${seen} of`);
+        }
+        return at;
+    }),
     leg_boots: legBoots,
     legs,
 };
+
+assertRouteWellFormed(route);
 
 if (WRITE) {
     writeFileSync(OUT, `${JSON.stringify(route, null, 2)}\n`);
