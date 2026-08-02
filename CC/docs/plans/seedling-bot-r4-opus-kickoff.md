@@ -1113,3 +1113,158 @@ NOT in the batch, on the record: a bridge-timer readout (§3.3 verifies the
 flip by EFFECT with the l71 pair discipline, which needs no AS3), and
 anything for the press audit (the model knows every press tick and rect;
 the game's own crossing is the oracle).
+
+## 10. External evidence — the intended-play walkthrough (2026-08-02, after §9)
+
+Source: the jayisgames Seedling review's full walkthrough + its comment
+threads (`jayisgames.com/review/seedling.php#walkthrough`), read against the
+extract and the fork source. The walkthrough is evidence about INTENT — the
+game as its designer expected it to be beaten — and it lands on both sides
+of §8's verdicts. What it says was cross-checked at source before being
+recorded here; nothing below is quoted on trust alone.
+
+### 10.1 What it CONFIRMS (§8/§9 stand reinforced)
+
+- **Lava swimming is the intended deep-D7 traversal** ("the Dark Suit …
+  allows you to swim in lava. Since you can now, swim north through the
+  lava"), and the darksuit approach itself is enemy-heavy by design ("a
+  small monster that will eat you … use the spear through the wall to kill
+  it; use the spear on one and the wand to take out the other" — the
+  LavaTrap discs of §8.4). §9 ruling 1 (darksuit leaves the claim, seal
+  named per entity, all R5-shaped) matches intent exactly.
+- **Waterfall climbing is real intended traversal** — the feather "allows
+  you to swim up waterfalls", the firewand needs "smash a block with the
+  spear, swim across lava, and climb a waterfall", and Ghethis' entrance is
+  a waterfall climb. Supports §8.2's correction (waterfall = MODELLED floor,
+  real witness, feather-gated up-motion).
+- **The intended item order is wand BEFORE spear** (sword → shield → fire →
+  conch → wand → ghost spear → dark shield → dark suit → feather …). Two
+  consequences: the walkthrough player opens the health cave "with your
+  gold key" and never remarks on the magicallock — they wand it in passing —
+  so **`MagicalLock` re-read at source still blocks and still needs a shot**
+  (`MagicalLock.hit`, `lockType <= _t`; `check()` despawns on a cleared
+  tag): at R4 it stays exactly ONE declared clear. And `conch` deep in the
+  ice world (D5) matches water staying un-armable.
+
+### 10.2 ⛔ What it CONTRADICTS — the keyType-4 chain is a POLICY seal, not geometry
+
+The walkthrough's health route: *"Go West this time — you can now switch on
+the light … and move the block onto the button. You'll need to use the spear
+on it from across the gaps to move it correctly. Collect the gold key once
+you're past it"*, then *"there's block to move and a cave in a tree to
+investigate. Use your gold key on the lock in here to get an extra square of
+health."* The gold key IS `bosskey keyType 4` and the tree-cave lock IS
+L68's `bosslock` — the chain §8.7 wrote off. Source-checked:
+
+- **§8.7's test looked at the wrong levels.** It checked the door-SOURCE
+  levels (L18/L20/L59) for "a bridge tile or a pushable" — but **L67 itself
+  IS the west puzzle room**: `pushableblockspear@144,112`, `button@96,112
+  {tset 0}`, `arrowtrap {tset 0}`, `lightpole@160,104`, the key at (48,64),
+  175 pit tiles, and an ALWAYS-ACTIVE door from L59 (`tag −1`, both ways).
+- **L59's west approach is tile-clear.** Row 8 is a straight walkable
+  corridor from the entry doors to the L67 door; the only thing astride it
+  is `grenade@112,112`. "L67 unreachable under every clear list" was always
+  true — and always irrelevant: its gate is the **grenade avoid volume**, a
+  planner POLICY object, and §8.8/§9.3's own evidence prices a grenade at
+  nothing under `noDamage` (`Grenade.hit` overridden empty = unkillable;
+  damage via `Player.hit` = guarded; `knockback` overridden empty; no RNG
+  and no coins on its self-destruction per §8.9).
+- **L67's interior is likely a plain walk for the bot.** `LightPole` is
+  `type = "LightPole"` — NOT in the player's solid list — so the row-6
+  corridor does not split; the arrowtrap's arrows end at `Player.hit`
+  (guarded); the button's `tset 0` group contains only the arrowtrap
+  (human-comfort, not access); the dark is cosmetic. The block/button
+  choreography the walkthrough describes appears to be for HUMANS (light to
+  see, button to stop arrows). The bosskey ceremony is the known
+  `text: ''` 150-frame case, already modelled at R3.
+- **The bosslock open is hold-shaped and already in the vocabulary**:
+  stand beneath with the key, 60-tick `keyTimer` + ~20-tick fade, and it
+  RE-CLOSES (re-writes the flag true) if the player leaves early — the
+  button lock's occupancy shape, needing the l71 PAIR discipline, not a
+  new mechanic.
+
+⇒ **If the grenade passes the §3.2-style audit, the keyType-4 key is
+EARNABLE at R4** — which converts L68's `bosslock tag 0` from a declared
+clear into a real open and leaves health's seal resting on exactly two
+things: the L68 magicallock (one declared clear, wand, R5) and §10.3.
+
+### 10.3 ⚠ §8.5's exhaustiveness is qualified — but the seal may still hold
+
+Two comment threads describe the intended push technique, and both break
+§8.5's search assumptions: *"The spear will push two blocks away from where
+you are standing … push it then move yourself then push again a few times,
+shuffling around"*, and (for the room with "a waterfall at the top and a
+pool of lava to the right" — that is **L63**, its `pushableblockspear@
+112,96` beside the spinningaxe) *"quickly duck in and hit it with your
+spear from across the pit and then duck back out … circle around, and then
+you can move it the rest of the way."* So the intended technique is
+**multi-push with repositioning, pressing from across pits** — §8.5 swept
+single pushes from comp-1 cells only.
+
+A hand re-run of L65 under the corrected rules (press cells = any standable
+cell whose spear rect covers the block, in ANY currently-reachable
+component; multi-push; reachability recomputed after every push) still
+found no breach: W wedges at (10,8) per §8.5; the W-then-N ladder
+dead-ends at (10,5) `t=27`; E and S press cells exist only inside the
+sealed pocket. **The intended L65 opener is therefore still UNIDENTIFIED**
+— candidates that remain: a wand-shot push (the walkthrough player has the
+wand; but `PushableBlockSpear` forces `moveTypes = ["Spear"]`, and the
+projectile path is the one place `moveTypes` IS consulted — so this should
+NOT work if §8.5's `_relative` reading is right), a ghost-sword-era return
+visit, or a mechanic §8.5's source reading got wrong. ⚠ **That last one is
+the R3 lesson** (the oracle corrected the update order; the ctor corrected
+the tag): §8.5's direction table is a SOURCE READING that no recording has
+ever tested. The decisive instrument is a LIVE PROBE, not more reading:
+`probe-seedling-l65.mjs` — boot into L65 with spear granted + equipped, try
+each candidate press cell, and watch the block from the game's own report.
+The same probe pattern settles L67's interior walk and the L59 grenade
+pass (`probe-seedling-l59-l67.mjs`).
+
+### 10.4 New census facts (source-verified while checking the walkthrough)
+
+- **Plain `PushableBlock` is WALK-pushed** — its `input()` moves it one
+  tile when a Player presses against any edge with matching velocity sign
+  (0.5 px/tick glide). No rung has modelled this, and the blocking census
+  prices these as plain Solids: TRUE for every committed recording (none
+  pressed against one — the oracle matched), but the R4 planner must treat
+  plain-pushable EDGES as do-not-press-toward volumes, or a graze that
+  §8.8's `allowGrazes` absorbs could silently move a wall. The Fire/Spear
+  variants do NOT walk-push (`PushableBlockFire extends Mobile`, own
+  `input()`).
+- **A pushable that comes to rest on Water/Lava/Pit destroys itself**
+  (`myTile.t == 1 || 17 || 6 → destroy = true`) — D1's "push the second
+  block into the water" is disposal, not bridge-building. A mis-push into a
+  pit is therefore IRREVERSIBLE within the visit (and the walkthrough's
+  softlock report confirms wedges are real; recovery is re-entry — the
+  per-visit reset family, §3.3).
+- **`LightPole` does not block** (`type = "LightPole"`, absent from the
+  player's solid list) — relevant to any census entry that assumed poles
+  were scenery-solid, and to L67's corridor above.
+- **L63's own pushable at (112,96) sits beside the walk's corridor** and
+  is spear-movable by a stray press — it joins the §3.2 audit's
+  responder list for every L63 press regardless of what else is ruled.
+
+### 10.5 ⚖ The re-open question for §9 ruling 2 (user)
+
+Ruling 2 dropped health on §8.5 + §8.7. §10.2 removes §8.7 as a reason
+(the keyType-4 chain is a grenade-policy question with the evidence
+pointing to "passes"), and §10.3 qualifies §8.5 without overturning it.
+Priced options:
+
+1. **Hold ruling 2** (health stays dropped, claim stays 5 items /
+   `hitsMax == 3` as a negative). Record §10.2's chain as a NAMED candidate
+   with its two probes queued for the rung that wants it. Zero new scope.
+2. **Re-open pending two probes** (~an hour of harness time, no AS3, no
+   build): the L59/L67 walk probe and the L65 press probe. If L65 breaches
+   (probe finds an opener §8.5's reading missed), health returns at the
+   cost of: the key-chain legs (L59 west + L67 + ceremony), the bosslock
+   hold-open pair, ONE declared clear (L68 magicallock), and the L63/L65
+   press audits — and the target goes back to **6 items + `hitsMax == 4`
+   as a positive** (darksuit stays out per ruling 1). If L65 does not
+   breach, ruling 2 stands with §8.5 upgraded from source-read to
+   oracle-tested — a strictly stronger close-out either way.
+
+Option 2 is recommended: both probes are cheap, both convert source
+readings into oracle answers (the arc's standing doctrine), and the L65
+probe retires a known unknown that would otherwise resurface at every
+later rung that touches D6.
