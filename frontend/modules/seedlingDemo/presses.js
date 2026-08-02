@@ -36,6 +36,8 @@
  * question rather than a per-room one.
  */
 
+import { PRESS_ARMS, rectsOverlap } from './levelWorld.js';
+
 export class PressError extends Error {
     constructor(message) {
         super(message);
@@ -163,26 +165,93 @@ export function distanceRectPoint(px, py, r) {
 }
 
 /**
- * ⚠ WHAT IS NOT HERE YET, AND WHY IT IS A GAP RATHER THAN A DEFAULT.
+ * ── THE LEVEL QUERY: what this rect actually contains ─────────────────
  *
- * The other half of §3.2's audit — "which entities does this rect actually
- * contain" — needs the level census to EXPOSE press responders, and it
- * does not. `buildLevelWorld` sorts entities into `solids`, `activators`,
- * `pressers`, `pickups` and `proximityHazards`, and a `LightPole` is in
- * NONE of them: `type = "LightPole"` keeps it out of the player's solid
- * list (so it does not block), and it answers no activator group the
- * builder tracks. L63 carries three and L65 two, and both are levels R4
- * presses in — so a rect query written against today's world would report
- * "nothing else in the rect" for the exact entity whose stray hit writes a
- * persistence flag.
+ * The half that was a stated GAP until the census grew `PRESS_ARMS`. The
+ * reason it was a gap rather than a default is worth keeping: a
+ * `LightPole` is `collider: 'none'` — `type = "LightPole"` is in no solids
+ * list — so it appeared in NONE of `solids`, `activators`, `pressers`,
+ * `pickups` or `proximityHazards`, and a rect query written against that
+ * world would have reported "nothing else in the rect" for the exact
+ * entity whose stray hit writes a persistence flag. A query that cannot
+ * see a responder is worse than no query: it passes, and its passing reads
+ * as "the press is clean".
  *
- * A query that cannot see a responder is worse than no query: it would
- * pass, and its passing would read as "the press is clean". So the rect
- * geometry and the arithmetic ship here, hand-verified, and the level
- * query lands with the census entry it needs — `lightpole`, `grass`,
- * `breakablerock`, `ropestart` and the pushables, each with its
- * `genericHit` arm cited.
+ * ⚠ IT REFUSES RATHER THAN ANSWERING EMPTILY. A world built without the
+ * `blocking` role has no `type` and no hitboxes, so its `pressResponders`
+ * is empty because nothing was ASKED, not because nothing responds. That
+ * distinction is the whole reason this throws.
  */
+export function pressRespondersIn(world, rect) {
+    if (!world.roles?.includes('blocking')) {
+        throw new PressError(`pressRespondersIn: level ${world.level} was built without `
+            + `the "blocking" role (${(world.roles ?? []).join(', ') || 'none'}), so its `
+            + 'press census is empty because nothing was asked. An audit over an '
+            + 'unasked census would pass by construction.');
+    }
+    const hits = world.pressResponders.filter((r) => rectsOverlap(rect, r.rect));
+    // A bridge is a press responder and it is TERRAIN — the one arm of
+    // `genericHit` that dispatches on `Tile`. Merged here so a caller
+    // asking "what does this thrust touch" gets one answer rather than two
+    // lists it has to remember to consult.
+    for (const tile of world.bridgeTiles) {
+        if (!rectsOverlap(rect, tile.rect)) continue;
+        hits.push({
+            tag: `tile:${tile.name}`,
+            as3: 'Tile',
+            x: tile.x,
+            y: tile.y,
+            rect: tile.rect,
+            tile: { tx: tile.tx, ty: tile.ty },
+            arm: PRESS_ARMS.Tile.arm,
+            cost: PRESS_ARMS.Tile.cost,
+            src: PRESS_ARMS.Tile.src,
+        });
+    }
+    return hits;
+}
+
+/**
+ * §3.2's audit for ONE press, as a pure function over the census.
+ *
+ * `intended` names what the press is FOR — `{as3, x, y}` per responder, or
+ * a bridge's `{as3: 'Tile', tx, ty}`. Everything else the rect contains is
+ * an unintended responder, and the caller (leg synthesis) throws on a
+ * non-empty `illegal`: a stray push is an irreversible route change, a
+ * stray lightpole hit is a ledger entry, a stray bridge decrement is an
+ * opening the run did not plan.
+ *
+ * ⚠ THE ENEMY HALF IS NOT A RECT QUESTION and is returned separately. A
+ * chaser is wherever it is, not where it spawned, so the rule is
+ * arithmetic over the whole walk (`pressWouldKill`): one spear press is 2
+ * damage against `hitsMax` 3, so at most ONE press per enemy per walk, and
+ * `hitsTimer` (30) means a second press inside thirty ticks is a no-op on
+ * that enemy anyway. What this returns is the LEVEL's roster; the walk's
+ * own press count is what the executor tracks against it.
+ *
+ * ⚠ The `LightPole` and `Tile` arms fire only under `t == "Spear"`, so a
+ * SLASH press is audited against a smaller responder set — which is a
+ * reason to prefer the sword where the geometry allows, not a reason to
+ * skip the audit.
+ */
+export function auditPress(world, rect, { weapon, intended = [] } = {}) {
+    const responders = pressRespondersIn(world, rect);
+    const spearOnly = new Set(['LightPole', 'Tile']);
+    const live = responders.filter(
+        (r) => weapon === 'spear' || !spearOnly.has(r.as3),
+    );
+    const wanted = (r) => intended.some((i) => i.as3 === r.as3
+        && (r.tile
+            ? i.tx === r.tile.tx && i.ty === r.tile.ty
+            : i.x === r.x && i.y === r.y));
+    const illegal = live.filter((r) => !wanted(r));
+    const missing = intended.filter(
+        (i) => !live.some((r) => r.as3 === i.as3
+            && (r.tile ? r.tile.tx === i.tx && r.tile.ty === i.ty
+                : r.x === i.x && r.y === i.y)),
+    );
+    return { responders, live, illegal, missing, enemies: world.pressEnemies };
+}
 
 /**
  * ── THE PRESS AUDIT (§3.2, ruled 2026-08-02) ──────────────────────────

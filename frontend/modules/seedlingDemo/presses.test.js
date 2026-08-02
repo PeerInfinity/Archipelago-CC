@@ -3,10 +3,21 @@
  *
  * Every number is read off `Player.as`, `Enemy.as` and the sprite sheets,
  * not off this port. The reason these matter at pixel resolution: L65's
- * `lightpole@176,120` overlaps the top half of `pushableblockspear@176,128`,
- * so whether a horizontal thrust at the block also toggles a lightpole —
- * and writes a persistence flag nobody declared — is decided in the fourth
- * pixel of a five-pixel-thick rect.
+ * `lightpole@176,120` sits directly above `pushableblockspear@176,128`, so
+ * whether a horizontal thrust at the block ALSO toggles a lightpole — and
+ * writes a persistence flag nobody declared — is decided in a few pixels
+ * of a five-pixel-thick rect.
+ *
+ * ⚠ AND THE FIRST ANSWER TO THAT WAS WRONG. This docblock used to say the
+ * pole "overlaps the top half of" the block, which is true of the
+ * CONSTRUCTOR's hitbox and false of the one a press can ever meet:
+ * `LightPole.render()` re-anchors `y` to `startY - originY + 2*sin(...)`
+ * and `centerOO()` on a 16x16 image makes `originY` 8, so the pole's box
+ * sits eight pixels higher than the ctor left it — flush against the
+ * block's top edge and not inside it. `LIGHTPOLE_PRESS_BOX` records the
+ * bob envelope; the test below pins the boundary, because "they overlap by
+ * six pixels" and "they touch at exactly one edge" are the two answers to
+ * the audit's whole question.
  */
 
 import { describe, expect, it } from 'vitest';
@@ -29,10 +40,16 @@ import {
     distanceRectPoint,
     pressDamage,
     pressWouldKill,
+    auditPress,
+    pressRespondersIn,
     slashRect,
     spearOrigin,
     spearRect,
 } from './presses.js';
+import {
+    LIGHTPOLE_PRESS_BOX, PRESS_ARMS, PRESS_UNKILLABLE, RELAXED_ROLES, buildLevelWorld,
+} from './levelWorld.js';
+import { atlasLevelSource } from './levelSource.js';
 
 describe('the spear rect (Player.as:944-968)', () => {
     it('is 32 long and 5 thick', () => {
@@ -150,5 +167,126 @@ describe('the press arithmetic (Enemy.as:141-181)', () => {
         // leave exactly one stray).
         expect(ENEMY_HITS_TIMER).toBe(30);
         expect(SLASH_TIMER_MAX).toBe(20);
+    });
+});
+
+describe('the level query (R4: the census half of §3.2)', () => {
+    const source = atlasLevelSource();
+    const L65 = buildLevelWorld(source(65));
+    const L63 = buildLevelWorld(source(63));
+
+    it('sees the LightPole — the responder that is in no other list', () => {
+        // The whole reason this query exists. `type = "LightPole"` is in no
+        // solids list, so the pole is not a solid, not an activator, not a
+        // presser, not a pickup and not a proximity hazard. Before the
+        // census entry a rect query would have reported it absent.
+        const poles = L65.pressResponders.filter((r) => r.as3 === 'LightPole');
+        expect(poles.length).toBe(2);
+        expect(L65.solids.some((s) => s.tag === 'lightpole')).toBe(false);
+        for (const p of poles) {
+            expect(p.cost).toMatch(/setPersistence/);
+        }
+    });
+
+    it('⚠ the pole\'s box is the RENDER-TIME one, eight pixels above the ctor\'s', () => {
+        // `centerOO()` on a 16x16 image gives originY 8, and render() sets
+        // `y = startY - originY + 2*sin(...)` — so the ctor rect
+        // [oel.y + 2, +12) is true for at most one frame. The recorded box
+        // is the bob envelope about `oel.y`.
+        expect(LIGHTPOLE_PRESS_BOX).toMatchObject({ dy: 0, h: 16, originY: 8 });
+        const pole = L65.pressResponders.find(
+            (r) => r.as3 === 'LightPole' && r.x === 176 && r.y === 120,
+        );
+        expect(pole.rect).toMatchObject({ x: 179, right: 189, y: 112, bottom: 128 });
+        // …and that is what decides the question the module docblock asks:
+        // the pole does NOT reach `pushableblockspear@176,128`, whose rect
+        // starts at y = 128. The ctor rect would have overlapped it by 6 px.
+        const block = L65.pressResponders.find((r) => r.as3 === 'PushableBlockSpear');
+        expect(block.rect).toMatchObject({ y: 128, bottom: 144 });
+        expect(pole.rect.bottom).toBe(block.rect.y);
+    });
+
+    it('a spear thrust at L65\'s block does NOT also toggle the pole above it', () => {
+        // The press the R4 route makes: facing LEFT from tile (12,8).
+        const rect = spearRect(204, 132, LEFT);
+        const hit = pressRespondersIn(L65, rect);
+        expect(hit.map((r) => r.as3)).toEqual(['PushableBlockSpear']);
+        const audit = auditPress(L65, rect, {
+            weapon: 'spear',
+            intended: [{ as3: 'PushableBlockSpear', x: 176, y: 128 }],
+        });
+        expect(audit.illegal).toEqual([]);
+        expect(audit.missing).toEqual([]);
+    });
+
+    it('an unintended responder in the rect is what the audit reports', () => {
+        const rect = spearRect(204, 132, LEFT);
+        const audit = auditPress(L65, rect, { weapon: 'spear', intended: [] });
+        expect(audit.illegal.map((r) => r.as3)).toEqual(['PushableBlockSpear']);
+        expect(audit.illegal[0].cost).toMatch(/FACING direction/);
+    });
+
+    it('a SLASH is audited against a smaller set — two arms are Spear-only', () => {
+        // `genericHit`'s LightPole and Tile arms both sit under
+        // `t == "Spear"`, so a sword stray cannot toggle a pole or nudge a
+        // bridge. That is a reason to prefer the sword, not to skip the
+        // audit.
+        expect(PRESS_ARMS.LightPole.arm).toMatch(/ONLY under t == "Spear"/);
+        expect(PRESS_ARMS.Tile.arm).toMatch(/ONLY under t == "Spear"/);
+        const pole = L65.pressResponders.find((r) => r.as3 === 'LightPole');
+        const rect = {
+            x: pole.rect.x, y: pole.rect.y, right: pole.rect.right, bottom: pole.rect.bottom,
+        };
+        expect(auditPress(L65, rect, { weapon: 'spear' }).live
+            .some((r) => r.as3 === 'LightPole')).toBe(true);
+        expect(auditPress(L65, rect, { weapon: 'sword' }).live
+            .some((r) => r.as3 === 'LightPole')).toBe(false);
+    });
+
+    it('the bridge is a press responder, and it is TERRAIN', () => {
+        // L63's one bridge, at tile (2,9) — the health seal. It has no
+        // `.oel` object, so it comes from `bridgeTiles` rather than from
+        // the entity list, and it is the only arm of `genericHit` that
+        // dispatches on `Tile`.
+        expect(L63.bridgeTiles.length).toBe(1);
+        const b = L63.bridgeTiles[0];
+        const rect = spearRect(b.rect.x + 24, b.rect.y + 8, LEFT);
+        const hit = pressRespondersIn(L63, rect);
+        expect(hit.some((r) => r.as3 === 'Tile')).toBe(true);
+        expect(hit.find((r) => r.as3 === 'Tile').tile).toEqual({ tx: b.tx, ty: b.ty });
+    });
+
+    it('the enemy roster is carried WITHOUT rects, on purpose', () => {
+        // A chaser is wherever it is, not where it spawned, so the enemy
+        // half of the audit is arithmetic over the walk rather than a rect
+        // query.
+        expect(L65.pressEnemies.map((e) => e.tag).sort())
+            .toEqual(['bob', 'darktrap', 'turret']);
+        for (const e of L65.pressEnemies) expect(e.rect).toBeUndefined();
+    });
+
+    it('and the enemies no press can damage are named, not budgeted for', () => {
+        // `DarkTrap.hit()` is an empty override, so the press that reaches
+        // one costs nothing — which matters because a darktrap sits in the
+        // middle of both L63's and L65's press geometry. The other two
+        // L65 enemies are ordinary and each gets at most one press.
+        const byTag = Object.fromEntries(L65.pressEnemies.map((e) => [e.tag, e]));
+        expect(byTag.darktrap.unkillable).toMatch(/DarkTrap\.as/);
+        expect(byTag.bob.unkillable).toBeNull();
+        expect(byTag.turret.unkillable).toBeNull();
+        // Every name in the table is an enemy the census can actually
+        // produce, so the enumeration cannot rot into a list of typos.
+        expect(Object.keys(PRESS_UNKILLABLE).sort())
+            .toEqual(['BombPusher', 'DarkTrap', 'Grenade']);
+    });
+
+    it('REFUSES a world built without the blocking role rather than passing', () => {
+        // An empty census because nothing was ASKED reads exactly like an
+        // empty census because nothing responds — and one of those is a
+        // press audit that passes by construction.
+        const relaxed = buildLevelWorld(source(65), { roles: RELAXED_ROLES });
+        expect(relaxed.pressResponders).toEqual([]);
+        expect(() => pressRespondersIn(relaxed, spearRect(204, 132, LEFT)))
+            .toThrow(PressError);
     });
 });

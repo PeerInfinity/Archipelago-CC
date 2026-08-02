@@ -1416,6 +1416,151 @@ export const ACTIVATOR_RESPONDERS = new Set([
 export const ACTIVATOR_PRESSERS = new Set(['button', 'buttonroom']);
 
 /**
+ * ── R4: THE CLASSES A PRESS ANSWERS, and why this list is short ───────
+ *
+ * `Player.genericHit` (`Player.as:1053-1112`) is one if/else chain of
+ * `e is <Class>` tests. Every class it names is here with its arm and what
+ * the arm COSTS a run; every other class in the extract is inert under a
+ * press **because the chain does not name it**, which is a single claim
+ * about one function rather than 115 defaults. That is what makes this
+ * table checkable: re-read `genericHit` and the two lists must agree.
+ *
+ * ⚠ THE ENTRY IS BY AS3 CLASS, NOT BY `.oel` TAG, because the chain
+ * dispatches on class and several tags share one (`rock3`/`rock4` are both
+ * `Rock`; every enemy tag is an `Enemy`). The census table's `as3` field is
+ * the join.
+ *
+ * ⚠ ORDER MATTERS IN THE CHAIN and it is preserved in the comments:
+ * `e is PushableBlockSpear` is tested BEFORE `e is PushableBlockFire`, so
+ * a `PushableBlockSpear` never reaches the arm that would consult its own
+ * `moveTypes` — which is exactly why a sword pushes one (R4 §8.5).
+ */
+export const PRESS_ARMS = Object.freeze({
+    Enemy: {
+        arm: '(e as Enemy).hit(f, new Point(x, y), d, t)',
+        cost: 'hits += damage; a DEATH moves totalEnemies(), which opens tSet == -1 locks',
+        src: 'Player.as:1055-1065',
+    },
+    Grass: {
+        arm: '(e as Grass).cut(t)',
+        cost: 'cosmetic + Game.grassCut',
+        src: 'Player.as:1067-1070',
+    },
+    BreakableRock: {
+        arm: '(e as BreakableRock).hit(hasGhostSword ? 1 : 0)',
+        cost: 'despawns at its hit count AND writes Game.setPersistence(tag, false)',
+        src: 'Player.as:1071-1074',
+    },
+    RopeStart: {
+        arm: '(e as RopeStart).hit()',
+        cost: 'SHRINKS to a one-cell solid (it does not despawn) and writes persistence',
+        src: 'Player.as:1075-1078',
+    },
+    ShieldBoss: {
+        arm: '(e as ShieldBoss).hit(0, null, d)',
+        cost: 'boss damage — R5; no route enters a boss room',
+        src: 'Player.as:1079-1082',
+    },
+    LightPole: {
+        arm: '(e as LightPole).hit(), ONLY under t == "Spear"',
+        cost: 'toggles the group AND `set activate` calls Game.setPersistence(tag, !activate)',
+        src: 'Player.as:1083-1088 + Scenery/LightPole.as:45',
+    },
+    Tree: {
+        arm: '(e as Tree).hit(t)',
+        cost: 'cosmetic shake',
+        src: 'Player.as:1089-1092',
+    },
+    Tile: {
+        arm: '(e as Tile).bridgeOpeningTimer--, ONLY under t == "Spear"',
+        cost: 'starts a bridge opening — see bridges.js; no other tile reads the timer',
+        src: 'Player.as:1093-1099',
+    },
+    PushableBlockSpear: {
+        arm: 'hit(facingVector, t, _relative = TRUE)',
+        cost: 'slides ONE TILE in the FACING direction; a block resting on '
+            + 'water/lava/pit destroys itself, so a stray push is an irreversible '
+            + 'route change within the visit',
+        src: 'Player.as:1100-1103 + Puzzlements/PushableBlockFire.as:76-87',
+    },
+    PushableBlockFire: {
+        arm: 'hit(new Point(x, y), t) — the NON-relative path',
+        cost: 'nothing for a player press: the non-relative branch consults '
+            + 'moveTypes = ["Fire","Pulse"], which no weapon type satisfies',
+        src: 'Player.as:1104-1107',
+    },
+    LavaBall: {
+        arm: '(e as LavaBall).hit()',
+        cost: 'R5 — Dungeon 7',
+        src: 'Player.as:1108-1111',
+    },
+    Watcher: {
+        arm: '(e as Watcher).hit()',
+        cost: 'R6 — the ending',
+        src: 'Player.as:1112-1115',
+    },
+    IceTurret: {
+        arm: '(e as IceTurret).bump(new Point(x, y), t) BEFORE the Enemy arm',
+        cost: 'the Enemy cost plus a bump; Dungeon 5, off route',
+        src: 'Player.as:1057-1060',
+    },
+});
+
+/**
+ * The Enemy subclasses whose `hit()` override is EMPTY — no press of any
+ * weapon can damage one, so they cost the audit nothing at all.
+ *
+ * ⚠ AN ENUMERATION, not a guess: every `override public function hit(` in
+ * `src/Enemies/` was read, and exactly three have empty bodies. The others
+ * either call `super.hit` under a guard (`BossTotem`, `IceTurret`,
+ * `BobBoss`, `LavaBoss`) or are `hitPlayer` overrides, which is the
+ * opposite direction and `Bot.noDamage`'s business.
+ *
+ * This matters because a DarkTrap sits in the middle of L63's and L65's
+ * press geometry: without it the arithmetic would reserve a press budget
+ * for an enemy that can never take one.
+ */
+export const PRESS_UNKILLABLE = Object.freeze({
+    DarkTrap: 'Enemies/DarkTrap.as:56-59 — the body is empty',
+    Grenade: 'Enemies/Grenade.as:70-71 — `{		}`; its hitsMax 1 is unreachable',
+    BombPusher: 'Enemies/BombPusher.as — `hit(...):void { }` on one line',
+});
+
+/**
+ * ⚠ THE ONE PRESS RESPONDER WHOSE HITBOX MOVES, and it moves before any
+ * press can reach it.
+ *
+ * `LightPole` is `collider: 'none'` — its `type` is `"LightPole"`, which is
+ * in no solids list, so it blocks nothing and the census records no
+ * geometry for it. But `collideRectInto("LightPole", ...)` still collides
+ * against its HITBOX, so the press audit needs one, and the constructor's
+ * is not it:
+ *
+ *   ctor      entity at (oel + 8, oel + 8), `setHitbox(10, 12, 5, 6)`
+ *             -> rect [oel.x + 3, +10) x [oel.y + 2, +12)
+ *   render()  `y = startY - sprLightPole.originY + 2 * sin(...)`, and
+ *             `centerOO()` on a 16x16 image makes `originY` 8, so
+ *             `y = oel.y + 2*sin(...)` — the pole is re-anchored EIGHT
+ *             PIXELS UP and then bobs +/- 2 about that.
+ *
+ * `render()` runs every frame from the Engine (the same fact that decides
+ * a bridge's type), so the constructor rect is true for at most one frame.
+ * What is recorded here is the BOB ENVELOPE — 16 px tall, covering both
+ * extremes — because a press audit that under-states a responder's rect
+ * passes a press that toggles a group, and `set activate` writes a
+ * persistence flag no tape declared.
+ *
+ * ⚠ Conservative on purpose, and NAMED as such: the true rect is 12 px
+ * tall inside this 16, so the audit can refuse a press the game would have
+ * allowed. That direction costs a route; the other direction costs a
+ * ledger entry nobody can explain.
+ */
+export const LIGHTPOLE_PRESS_BOX = Object.freeze({
+    dx: 8, dy: 0, w: 10, h: 16, originX: 5, originY: 8,
+    src: 'Scenery/LightPole.as:32-46 (ctor) + :58-60 (render re-anchors y)',
+});
+
+/**
  * ⚠ THE CLASSES WHOSE `tSet` THE CONSTRUCTOR DECIDES, not the `.oel`.
  *
  * `ShieldLock`'s ctor is `super(_x, _y, -2, _tag, ...)`
@@ -1988,6 +2133,13 @@ export function buildLevelWorld(levelRecord, { roles = ROLES, cleared = null } =
     // fourteen wandlocks rely on that being read the game's way.
     const activators = [];
     const pressers = [];
+    // R4: what a press RECT can contain (see `PRESS_ARMS`), and the enemy
+    // roster the press arithmetic is taken over. Both are collected only
+    // for a caller that consults `blocking` — the geometry and the `type`
+    // the dispatch needs are that role's own transcription, and a
+    // relaxed world has neither.
+    const pressResponders = [];
+    const pressEnemies = [];
 
     // --- tiles ---------------------------------------------------------
     // The extract has ALREADY applied loadlevel's own bounds guard
@@ -2257,6 +2409,55 @@ export function buildLevelWorld(levelRecord, { roles = ROLES, cleared = null } =
             }
         }
 
+        // ── R4: the press census ──────────────────────────────────────
+        // Collected BEFORE the collider switch, because the responder that
+        // made this list necessary does not collide: a `LightPole` is
+        // `collider: 'none'` and would `continue` out of the loop three
+        // lines below, so a rect query written against the old world
+        // reported "nothing else in the rect" for exactly the entity whose
+        // stray hit writes a persistence flag.
+        if (consults.has('blocking')) {
+            const arm = PRESS_ARMS[cls.as3];
+            if (arm) {
+                pressResponders.push({
+                    tag: e.type,
+                    as3: cls.as3,
+                    x,
+                    y,
+                    // The lightpole's box is its own (the render() re-anchor
+                    // and the bob envelope); every other responder collides
+                    // on the hitbox the blocking role already transcribed.
+                    rect: entityRect(
+                        cls.as3 === 'LightPole' ? LIGHTPOLE_PRESS_BOX : cls, x, y,
+                    ),
+                    arm: arm.arm,
+                    cost: arm.cost,
+                    src: arm.src,
+                    t: tSetOf(e.type, e.attrs),
+                    persistTag: entityTag,
+                });
+            } else if (cls.type === 'Enemy') {
+                // ⚠ NO RECT, AND THAT IS THE POINT. An enemy's press
+                // obligation is arithmetic over the whole walk — one spear
+                // press is 2 damage against `hitsMax` 3, so the rule is
+                // "at most one press per enemy per walk" (§8.8) — and a
+                // static rect for a chaser would be a fact about where it
+                // spawned, not about where the press lands. Recording the
+                // ROSTER is the honest half; `Bot.noDamage` covers the
+                // other direction.
+                pressEnemies.push({
+                    tag: e.type,
+                    as3: cls.as3,
+                    x,
+                    y,
+                    // An enemy no press can damage costs the arithmetic
+                    // nothing; one that can is a press budget the walk
+                    // has to spend at most once (2 damage vs hitsMax 3).
+                    unkillable: PRESS_UNKILLABLE[cls.as3] ?? null,
+                });
+            }
+        }
+
         if (cls.collider === 'none' || cls.collider === undefined) continue;
         if (cls.collider === 'rect') {
             const solid = { rect: entityRect(cls, x, y), cls, tag: e.type, x, y };
@@ -2444,6 +2645,28 @@ export function buildLevelWorld(levelRecord, { roles = ROLES, cleared = null } =
         proximityHazards,
         activators,
         pressers,
+        /**
+         * R4: every entity in this level that `Player.genericHit` names,
+         * with the arm it takes and what that arm COSTS a run.
+         *
+         * ⚠ EMPTY IS NOT "NOTHING RESPONDS" unless the world was built
+         * with the `blocking` role — the dispatch needs the `type` and the
+         * hitbox that role transcribes, and a relaxed world has neither.
+         * `pressRespondersIn` refuses rather than answering emptily.
+         */
+        pressResponders,
+        /** R4: the enemy roster, for the per-walk press arithmetic. */
+        pressEnemies,
+        /**
+         * R4: the bridge tiles, which are press responders too — the one
+         * arm of `genericHit` that dispatches on `Tile` and the only
+         * reason `bridgeOpeningTimer` ever moves.
+         *
+         * Read off `tiles` rather than collected beside the entities
+         * because a bridge is terrain: it has no `.oel` object, its rect
+         * is its cell, and `bridges.js` owns everything else about it.
+         */
+        get bridgeTiles() { return tiles.filter((t) => t.t === BRIDGE_STATE); },
 
         /**
          * The R0 avoid-volume query: every pickup or proximity hazard the
