@@ -1046,3 +1046,70 @@ The numbers §3.2 asked for, all from the classes' own fields:
    `equips` directive's not-a-crutch classification (§8.6: the write grants
    nothing, the UI is unreachable by tape, SharedObject is page-local, and
    the game's own debug warps write the same line).
+
+## 9. ⚖ THE SLICE-0 RULINGS (user, 2026-08-02)
+
+1. **Arm lava and pay for it.** `noHazards: ["water"]` — ice, waterfall AND
+   lava all live, the first tape on the ladder with an armed hazard set.
+   `darksuit` leaves the claim, with its seal named per entity (§8.4). The
+   D7 tail leaving also resolves the byte-budget projection (§8.9).
+2. **Health is dropped; `hitsMax == 3` stays a NEGATIVE.** The rung's
+   headline is *the same map with a hazard armed for the first time*, not
+   more items. The equip primitive still ships — the bridge is Spear-only —
+   but it buys the MECHANIC and a level, not an item. `health` joins the
+   blocked list with `L65 rock@192,96` + the pushable's unreachable push
+   directions as its seal.
+3. **Adopt the §3.2 per-press audit**, which §8.8 made cheaper than the
+   brief assumed: no RNG and no coins on a death, `Grenade`/`DarkTrap`
+   unkillable, one spear press never kills a 3-HP enemy.
+4. **The `equips` write is UI SUPPRESSION, not a crutch** — the R1
+   `Inventory.help = false` precedent, now with the probe (§8.6) behind it.
+
+### 9.1 The R4 claim, as ruled
+
+**Five items REAL-collected — sword, feather, torch, spear, darkshield —
+with `hitsMax == 3`, `grants` EMPTY, and the headline tape declaring
+`noHazards: ["water"]`.** Plus, as mechanics rather than items: the equip
+directive, the L63 bridge opened by a real spear press, and `L3 tag 0`
+retired from a declared clear to an earned one.
+
+**Blocked, published with rungs:** `water` itself (⇒ `conch` ⇒ `fire` ⇒ R5),
+`conch`, `wand`, `darksword`, `shield`, `fire`, `ghostsword`, `firewand`
+(R5), **`darksuit`** (R5 — the LavaTrap/LavaRunner discs of L77/L78 and
+L80's lava wall), **`health`** (R5/R6 — L65's push geometry), and the
+ending (R6).
+
+### 9.2 The batch, FINALISED after slice 0
+
+1. **tape v4 `equips: [{t, slot}]`**, applied at the grant site, with a
+   LAZY loud validation. ⚠ The validation cannot be eager: a segment
+   inherits its items through a boot-level grant and its equip through
+   `equips: [{t: 0, slot: 1}]`, but `Inventory.items` is filled by
+   `addItemsFromSave` inside `inventory.update()`, which runs LATER in the
+   same frame — so an eager `slot < itemCount` check fails at t=0 by
+   construction. The write happens at `t`; the check is deferred to the
+   first frame with a non-empty inventory and names the equip's own tick.
+2. **`botStatus.primary`** (read from `Main.primary`) and
+   **`botStatus.inventory_slots`** (SCANNED from `Inventory`, never echoed
+   from the tape), so the JS slot mirror is asserted two-sidedly on every
+   tape — the R0 two-consumers protection for a new tape field.
+3. **`botStatus.hazard`** — `inWater`, `inLava`, `onIce`, `onWaterfall`,
+   `drownTimer`. R4 is the rung that arms three of the four sticky flags,
+   and STICKINESS is precisely what the observation stream cannot see (it
+   is why the sticky-terrain row of the bounded-vacuity table has been open
+   since v2). A pure readout, byte-inert, and the last cheap chance before
+   R5 — the standing rule is that AS3 edits are BATCHED.
+4. **`Inventory.itemCount`**, a public read-only accessor. `getItem(i)`
+   coerces an out-of-range `undefined` to `0`, so it cannot distinguish
+   "slot 0 holds the sword" from "there is no slot 0" — the validation and
+   the readout both need the length.
+5. **The version-scoped `saw_auto_advance` fix** (§2.9): count a `Help`
+   dismissal, gated on `tape_version >= 4`, so the ~8 frozen collection
+   fixtures keep their bug-compatible `0` and the inertness gate stays a
+   gate. R4 asserts it as a POSITIVE for the first time: exactly 1, the
+   sword's `Help(3)`.
+
+NOT in the batch, on the record: a bridge-timer readout (§3.3 verifies the
+flip by EFFECT with the l71 pair discipline, which needs no AS3), and
+anything for the press audit (the model knows every press tick and rect;
+the game's own crossing is the oracle).
