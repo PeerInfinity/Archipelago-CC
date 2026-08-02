@@ -225,7 +225,7 @@ export function synthesizeTape(targets, opts = {}) {
  * artifact they were reading.
  */
 export function buildTape(perTick, boot = { level: 0, x: 80, y: 128 }, name,
-    { noclip = true, noDamage, noHazards, grants, persistence } = {}) {
+    { noclip = true, noDamage, noHazards, grants, persistence, equips } = {}) {
     const relaxations = { noDamage, noHazards, grants };
     const declared = Object.entries(relaxations).filter(([, v]) => v !== undefined);
     if (declared.length > 0 && declared.length < 3) {
@@ -236,6 +236,19 @@ export function buildTape(perTick, boot = { level: 0, x: 80, y: 128 }, name,
     }
     const v2 = declared.length === 3;
     const v3 = persistence !== undefined;
+    // R4: `equips` is the version 4 field, and it is version 3 plus the slot
+    // — a tape that selects an item must already be declaring clears, for
+    // the same reason v3 must declare the v2 relaxations.
+    const v4 = equips !== undefined;
+    if (v4 && !v3) {
+        throw new Error('buildTape: equips is a version 4 field and version 4 is '
+            + 'version 3 plus the equip, so a tape that selects a slot must also '
+            + 'declare persistence (and therefore noDamage, noHazards and grants).');
+    }
+    if (v4 && !Array.isArray(equips)) {
+        throw new Error('buildTape: equips must be an ARRAY of {t, slot} — [] for '
+            + `"this is a v4 tape that equips nothing" — got ${typeof equips}`);
+    }
     if (v3 && !v2) {
         throw new Error('buildTape: persistence is a version 3 field and version 3 is '
             + 'version 2 plus clears, so a tape that clears anything must also declare '
@@ -265,13 +278,14 @@ export function buildTape(perTick, boot = { level: 0, x: 80, y: 128 }, name,
     }
 
     return {
-        tape_version: v3 ? 3 : (v2 ? 2 : 1),
+        tape_version: v4 ? 4 : (v3 ? 3 : (v2 ? 2 : 1)),
         game: 'seedling',
         ...(name ? { name } : {}),
         boot: { level: boot.level, x: boot.x, y: boot.y },
         noclip,
         ...(v2 ? { noDamage, noHazards, grants } : {}),
         ...(v3 ? { persistence } : {}),
+        ...(v4 ? { equips } : {}),
         tick_count: perTick.length,
         inputs,
     };

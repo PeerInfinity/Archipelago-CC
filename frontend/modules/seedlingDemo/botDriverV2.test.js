@@ -323,6 +323,75 @@ describe('single-level tasks', () => {
     });
 });
 
+describe('R4: the spear leg verb', () => {
+    // L63's bridge at tile (2,9) is a genuine seal: column 2 is the only
+    // north-south corridor in that half of the level. The stance is the one
+    // `probe-seedling-bridge.mjs` used against the real game.
+    const relax = {
+        noclip: false,
+        noDamage: true,
+        noHazards: ['water', 'lava', 'ice', 'waterfall'],
+        grants: [{ level: 63, items: ['sword', 'spear'] }],
+        persistence: [],
+        equips: [{ t: 0, slot: 1 }],
+    };
+    const task = (spear) => [{
+        level: 63,
+        targets: [{ x: 40, y: 140, spear }],
+    }];
+    const opts = { levelSource, relax, boot: { level: 63, x: 32, y: 128 } };
+
+    it('presses once, waits, and the bridge is open — and the REPLAY agrees', () => {
+        const out = synthesizeLegs(
+            task({ bridge: { tx: 2, ty: 9 }, facing: 'S' }), opts,
+        );
+        expect(out.spears).toHaveLength(1);
+        expect(out.spears[0]).toMatchObject({ kind: 'bridge', id: '2,9', facing: 'S' });
+        // The tape is ONE `primary` tick and a wait — everything else about
+        // the press lives in these records, which is why they exist.
+        expect(out.tape.tape_version).toBe(4);
+        expect(out.tape.inputs.filter((i) => i.key === 'primary'))
+            .toEqual([{ key: 'primary', from: out.spears[0].pressTick, to: out.spears[0].pressTick + 1 }]);
+        // ...and the run's own press ledger says what the rect CONTAINED,
+        // which is the other half: intent above, effect here.
+        expect(out.presses).toEqual([expect.objectContaining({
+            weapon: 'spear', level: 63, hits: [{ as3: 'Tile', id: '2,9' }],
+        })]);
+        // The tape replays in the other consumer without throwing, which is
+        // the whole point of the driver and the runner sharing `levelRun`.
+        expect(replay(out.tape).ticks.length).toBe(out.tape.tick_count + 1);
+    });
+
+    it('refuses a facing the approach did not actually leave the player in', () => {
+        // `set spearing` captures `spearDirection = direction`, and
+        // `sprites()` derives that from VELOCITY — so a leg that thinks it
+        // is facing west while the walk ended going south presses at nothing.
+        expect(() => synthesizeLegs(
+            task({ bridge: { tx: 2, ty: 9 }, facing: 'W' }), opts,
+        )).toThrow(/declares facing W but the player is facing S/);
+    });
+
+    it('refuses a press with nothing to prove, and one aimed at no bridge', () => {
+        expect(() => synthesizeLegs(
+            task({ bridge: { tx: 0, ty: 0 }, facing: 'S' }), opts,
+        )).toThrow(/no bridge tile at \(0,0\)/);
+        expect(() => synthesizeLegs(task({ facing: 'S' }), opts))
+            .toThrow(/names EXACTLY ONE/);
+        expect(() => synthesizeLegs(
+            task({ bridge: { tx: 2, ty: 9 }, facing: 'NW' }), opts,
+        )).toThrow(/must be one of E\/N\/W\/S/);
+    });
+
+    it('⚠ with the equip dropped the same leg FAILS — the arm is Spear-only', () => {
+        // The pair's shut arm as a driver-side check: `genericHit`'s Tile arm
+        // fires only under t == "Spear", so a sword press leaves the timer at
+        // 60 and the verb's effect check is what says so.
+        expect(() => synthesizeLegs(task({ bridge: { tx: 2, ty: 9 }, facing: 'S' }), {
+            ...opts, relax: { ...relax, equips: [] },
+        })).toThrow(/bridge 2,9 is STILL SOLID/);
+    });
+});
+
 describe('cross-level legs', () => {
     const task = [
         { level: 0, targets: [{ x: 88, y: 168 }], exit: { x: 0, y: 128 } },

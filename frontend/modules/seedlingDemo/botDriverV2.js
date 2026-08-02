@@ -71,6 +71,7 @@ import { createLevelRun } from './levelRun.js';
 import { RELAXED_ROLES, ROLES, TILE_SIZE } from './levelWorld.js';
 import { assertRect, rectsOverlap } from './levelWorld.js';
 import { playerBoxAt, terrainProbeRect } from './playerPhysicsV2.js';
+import { TICKS_FROM_PRESS_TO_WALKABLE } from './bridges.js';
 import {
     DEFAULT_MAX_TICKS_PER_TARGET,
     DEFAULT_TOLERANCE,
@@ -1202,6 +1203,163 @@ export function resolvePickup(world, named, what) {
     return pickup;
 }
 
+/**
+ * ── THE SPEAR PRIMITIVE (R4) ──────────────────────────────────────────
+ *
+ * The fourth leg verb, and the first one that PRESSES A KEY on purpose.
+ * `hold` stands on a volume, `touch` walks into a lock, `collect` walks onto
+ * a pickup — all three are position. A press is not: it is one `primary`
+ * span whose whole effect is decided by a 32x5 rect the player cannot see,
+ * fired one tick later, against a facing derived from VELOCITY.
+ *
+ * So the verb declares what it is FOR, and the driver checks all four of the
+ * things that could silently not happen:
+ *
+ *   1. the STANCE — the player is where the leg thinks, at a full stop;
+ *   2. the FACING — declared by name and checked against `Player.direction`,
+ *      because the direction comes from the last tick with velocity and a
+ *      wall-pinned player is the one case where "holding a key" and "having
+ *      a velocity" differ;
+ *   3. the POSITIVE CONTROL, before the negative: the bridge is CLOSED /
+ *      the block is where the leg says, or the press proves nothing;
+ *   4. the EFFECT, from the run's own state after the wait.
+ *
+ * ⚠ THE AUDIT IS NOT HERE. `levelRun.applyThrust` runs it on the tick the
+ * rect fires, because that is where the rect and the world are — a stray
+ * lightpole or an unmodelled arm throws there, naming the tick. This verb's
+ * job is the four checks above, which are about INTENT.
+ */
+function runSpear(run, perTick, spear, what) {
+    if (run.openActivators === null) {
+        fail(`${what}: a spear press is a MECHANIC, and the noclip arm does not run it — `
+            + '`advance` hands `stepV2` a null world state, so the press would emit its '
+            + 'span, change nothing and report success. A tape that presses must '
+            + 'declare noclip: false.');
+    }
+    const { bridge = null, block = null, facing, wait = null } = spear;
+    if ((bridge === null) === (block === null)) {
+        fail(`${what}: a spear names EXACTLY ONE of \`bridge\` (by tile) or \`block\` `
+            + '(by OEL coordinates, with the tile it should end on). Naming neither '
+            + 'presses at nothing; naming both makes the effect check ambiguous.');
+    }
+    const FACINGS = { E: 0, N: 1, W: 2, S: 3 };
+    if (!(facing in FACINGS)) {
+        fail(`${what}: \`facing\` must be one of E/N/W/S, got ${JSON.stringify(facing)}. `
+            + 'It is DECLARED rather than derived because `Player.direction` comes from '
+            + 'the last tick that had velocity — a wall-pinned player has a facing and '
+            + 'no keys — so a stance that ended up facing the wrong way is a leg defect '
+            + 'this names instead of a press that quietly hits nothing.');
+    }
+    if (run.state.direction !== FACINGS[facing]) {
+        const names = Object.entries(FACINGS)
+            .find(([, v]) => v === run.state.direction)?.[0] ?? run.state.direction;
+        fail(`${what}: the leg declares facing ${facing} but the player is facing `
+            + `${names} at (${run.state.x},${run.state.y}). \`set spearing\` captures `
+            + '`spearDirection = direction` and `sprites()` derives that from VELOCITY '
+            + '(x before y, sticky at rest), so the approach has to END moving the way '
+            + 'the press aims.');
+    }
+
+    // ── the positive control, before the press ────────────────────────
+    let expect = null;
+    if (bridge) {
+        const id = `${bridge.tx},${bridge.ty}`;
+        const tile = run.world.bridgeTiles.find((t) => t.tx === bridge.tx && t.ty === bridge.ty);
+        if (!tile) {
+            fail(`${what}: level ${run.level} has no bridge tile at (${bridge.tx},`
+                + `${bridge.ty}); it has [${run.world.bridgeTiles
+                    .map((t) => `(${t.tx},${t.ty})`).join(' ') || 'none'}].`);
+        }
+        if (run.openBridges.has(id)) {
+            fail(`${what}: bridge ${id} is ALREADY OPEN before the press, so opening it `
+                + 'proves nothing. A bridge rebuilds CLOSED on every entry — an open '
+                + 'one means an earlier leg in this visit already spent the press.');
+        }
+        expect = { kind: 'bridge', id };
+    } else {
+        const id = `${'pushableblockspear'}@${block.x},${block.y}`;
+        const live = run.pushables.get(id);
+        if (!live) {
+            fail(`${what}: level ${run.level} has no pushable at (${block.x},${block.y}); `
+                + `it has [${[...run.pushables.keys()].join(' ') || 'none'}]. A block is `
+                + 'named by the coordinates the LEVEL built it at, which do not change '
+                + 'when it moves.');
+        }
+        if (!block.to || !Number.isInteger(block.to.tx) || !Number.isInteger(block.to.ty)) {
+            fail(`${what}: a block press must name \`to: {tx, ty}\` — the tile the block `
+                + 'should be standing on when the push lands. Without it the effect '
+                + 'check is "something moved", which a mis-aimed press satisfies.');
+        }
+        const from = { tx: Math.floor(live.rect.x / TILE_SIZE), ty: Math.floor(live.rect.y / TILE_SIZE) };
+        if (from.tx === block.to.tx && from.ty === block.to.ty) {
+            fail(`${what}: the block is ALREADY on (${block.to.tx},${block.to.ty}), so `
+                + 'the push proves nothing.');
+        }
+        expect = { kind: 'block', id, from, to: block.to };
+    }
+
+    // ── the press: ONE tick of `primary` ──────────────────────────────
+    // One span, one firing. `spearDelayMax` is 1 and `spearing` is cleared
+    // by a sprite callback, so a LONGER hold would not fire the rect twice —
+    // it is one tick because that is what the probe measured, not because a
+    // longer one would be worse.
+    const at = { x: run.state.x, y: run.state.y };
+    const pressTick = perTick.length;
+    const PRESS = new Set(['primary']);
+    perTick.push(PRESS);
+    const pressed = run.advance(PRESS);
+    if (pressed.transition) {
+        fail(`${what}: the press tick crossed from level ${pressed.transition.from_level} `
+            + `to ${pressed.transition.to_level}. The rect fires the tick AFTER the `
+            + 'press, in whatever world the run is in by then — press away from a '
+            + 'trigger volume.');
+    }
+
+    // ── the wait ──────────────────────────────────────────────────────
+    // A bridge needs `TICKS_FROM_PRESS_TO_WALKABLE` on-screen ticks and the
+    // run asserts the 64 px policy on every one of them; a block needs the
+    // 32-tick glide, and `pushesSettled` is the run's own answer rather than
+    // a count this verb repeats.
+    const ticks = wait ?? (expect.kind === 'bridge' ? TICKS_FROM_PRESS_TO_WALKABLE : 40);
+    for (let i = 1; i <= ticks; i++) {
+        perTick.push(NO_HELD);
+        const { transition } = run.advance(NO_HELD);
+        if (transition) {
+            fail(`${what}: wait tick ${i} of ${ticks} crossed from level `
+                + `${transition.from_level} to ${transition.to_level}.`);
+        }
+        if (expect.kind === 'bridge' && run.openBridges.has(expect.id)) break;
+        if (expect.kind === 'block' && run.pushesSettled && i > 1) break;
+    }
+
+    // ── the effect ────────────────────────────────────────────────────
+    if (expect.kind === 'bridge') {
+        if (!run.openBridges.has(expect.id)) {
+            fail(`${what}: pressed at (${at.x},${at.y}) facing ${facing} and bridge `
+                + `${expect.id} is STILL SOLID after ${ticks} tick(s). The Tile arm of `
+                + '`genericHit` fires only under t == "Spear" — check the equip — and '
+                + 'the rect has to contain the tile.');
+        }
+    } else {
+        const live = run.pushables.get(expect.id);
+        const now = { tx: Math.floor(live.rect.x / TILE_SIZE), ty: Math.floor(live.rect.y / TILE_SIZE) };
+        if (now.tx !== expect.to.tx || now.ty !== expect.to.ty) {
+            fail(`${what}: pressed at (${at.x},${at.y}) facing ${facing} and the block is `
+                + `on (${now.tx},${now.ty}), not (${expect.to.tx},${expect.to.ty}). The `
+                + 'block moves ONE TILE in the FACING direction and refuses a hit while '
+                + 'it is already moving, and a push into a solid goes nowhere at all.');
+        }
+        if (!run.pushesSettled) {
+            fail(`${what}: the block reached (${now.tx},${now.ty}) but is still MOVING `
+                + `after ${ticks} tick(s). A block is 16 px of solid at a straddling `
+                + 'rect until it stops — walking now would meet it mid-glide.');
+        }
+    }
+    return {
+        ...expect, facing, at, pressTick, ticks: perTick.length - pressTick,
+    };
+}
+
 function runCollect(run, perTick, collect, maxTicks, what) {
     const pickup = resolvePickup(run.world, collect.pickup, what);
     const before = run.collected.length;
@@ -1598,6 +1756,11 @@ export function synthesizeLegs(legs, opts = {}) {
             noDamage: relax.noDamage,
             grants: relax.grants,
             persistence: relax.persistence ?? [],
+            // R4: the slot `Main.primary` holds. Without it every press is a
+            // SWORD slash and the bridge arm — which fires only under
+            // t == "Spear" — never runs, which is a green tape that opens
+            // nothing.
+            equips: relax.equips ?? [],
             // A relaxed walk consults no collider, so it must not be stopped
             // by one being unpriced — that is the whole of slice 1b. A walk
             // with collision ON is the opposite: it consults EVERY role, and
@@ -1612,6 +1775,7 @@ export function synthesizeLegs(legs, opts = {}) {
     const holds = [];
     const touches = [];
     const collects = [];
+    const spears = [];
     const grazes = allowGrazes ? [] : null;
 
     legs.forEach((leg, li) => {
@@ -1802,6 +1966,15 @@ export function synthesizeLegs(legs, opts = {}) {
                     leg: li, index: ti, level: leg.level, to: perTick.length, ...record,
                 });
             }
+            if (target.spear !== undefined) {
+                const from = perTick.length;
+                const record = runSpear(run, perTick, target.spear,
+                    `legs[${li}] level ${leg.level} target ${ti} spear`);
+                spears.push({
+                    leg: li, index: ti, level: leg.level, from, to: perTick.length,
+                    ...record,
+                });
+            }
             if (target.collect !== undefined) {
                 const record = runCollect(run, perTick, target.collect, maxTicksPerTarget,
                     `legs[${li}] level ${leg.level} target ${ti} collect`);
@@ -1984,6 +2157,15 @@ export function synthesizeLegs(legs, opts = {}) {
         // HANDED over; this is what was EARNED, and the R3 ledger is the
         // statement that the first list is empty and this one is not.
         collects: collects.map((c) => ({ ...c })),
+        // One record per SPEAR press the run verified: what it was aimed at,
+        // which way the player was facing, where they stood, and the tick
+        // range it cost. The tape carries a one-tick `primary` span and a
+        // wait, so — as with the other three verbs — this is the only place
+        // a consumer can learn the walk opens a bridge or moves a block. The
+        // run's own `presses` ledger is the other half: this says what was
+        // INTENDED, that says what the rect actually contained.
+        spears: spears.map((s2) => ({ ...s2 })),
+        presses: run.presses,
         /** Every sweep a wall stopped that the drive went on to arrive past. */
         grazes: grazes ? grazes.map((g) => ({ ...g })) : [],
         grants: relax ? run.grantsFired : [],
