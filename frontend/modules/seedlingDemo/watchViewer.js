@@ -113,6 +113,15 @@ function makeRenderer(canvas, tape) {
      */
     const unknownShapes = new Set();
 
+    /**
+     * Size the canvas to a level, at the largest INTEGER scale that fits.
+     *
+     * ⚠ THE 560 IS A BUDGET, NOT A CLAMP. `Math.max(1, ...)` wins, so a
+     * level taller than 560 px is drawn at scale 1 and the page scrolls —
+     * which is the honest arm: the alternative is a fractional scale, and a
+     * pixel-art canvas at 0.58x is a blurred lie about where the player is.
+     * Level 12 is 640x960 and really does need 960 px of canvas.
+     */
     function fit(world) {
         const w = world.width * TILE_SIZE;
         const h = world.height * TILE_SIZE;
@@ -123,6 +132,28 @@ function makeRenderer(canvas, tape) {
         canvas.width = w * scale;
         canvas.height = h * scale;
     }
+
+    /**
+     * Is the canvas already the right size for this level?
+     *
+     * ⛔ BOTH DIMENSIONS, and testing only the width was a real bug with a
+     * real symptom: *"some maps, like level 12, display at the wrong height,
+     * so the bottom part of the map is not displayed."*
+     *
+     * The R4 walk enters L37 (640x320) immediately before L12 (640x960).
+     * Both are 640 px wide and L37 sits at scale 1, so a width-only guard
+     * saw `canvas.width === 640 * 1`, skipped the refit, and drew L12 into a
+     * canvas 320 px tall — **the top third of the level, and no indication
+     * that the other 640 px existed.** It bites exactly when consecutive
+     * levels share a pixel width at the same scale, which is why it looked
+     * like "some maps".
+     *
+     * Phrased as "the canvas is world dimensions times ONE uniform scale",
+     * because that is the invariant `fit` establishes and the thing a
+     * consumer can check.
+     */
+    const fitted = (world) => canvas.width === world.width * TILE_SIZE * scale
+        && canvas.height === world.height * TILE_SIZE * scale;
 
     const rect = (r, fill, alpha = 1) => {
         ctx.globalAlpha = alpha;
@@ -142,7 +173,7 @@ function makeRenderer(canvas, tape) {
         reset() { trail.length = 0; },
         fit,
         draw(world, state, opts) {
-            if (canvas.width !== world.width * TILE_SIZE * scale) fit(world);
+            if (!fitted(world)) fit(world);
             ctx.fillStyle = '#101014';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 

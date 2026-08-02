@@ -70,7 +70,10 @@ page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
 page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
 
 const scrubValue = () => page.evaluate(() => Number(document.getElementById('scrub').value));
-/** Scrub to an observation and read the HUD's level back. */
+/**
+ * Scrub to an observation and read back what the page shows: the level the
+ * HUD names, its size in tiles, and the CANVAS the renderer sized for it.
+ */
 async function seek(t) {
     await page.evaluate((tick) => {
         const s = document.getElementById('scrub');
@@ -79,8 +82,16 @@ async function seek(t) {
     }, t);
     await page.waitForTimeout(100);
     const hud = (await page.textContent('#hud')).replace(/\s/g, '');
-    return Number(/level(\d+)\(/.exec(hud)?.[1]);
+    const m = /level(\d+)\((\d+)x(\d+)\)/.exec(hud);
+    const canvas = await page.evaluate(() => ({
+        w: document.getElementById('canvas').width,
+        h: document.getElementById('canvas').height,
+    }));
+    return m
+        ? { level: Number(m[1]), tw: Number(m[2]), th: Number(m[3]), canvas }
+        : { level: NaN, tw: 0, th: 0, canvas };
 }
+const TILE = 16;
 
 let failed = 0;
 const check = (ok, what, detail) => {
@@ -101,9 +112,25 @@ check(true, `loaded ${NAME}`, await page.textContent('#status'));
 const firstIn = new Map();
 for (const o of stream.ticks) if (!firstIn.has(o.level)) firstIn.set(o.level, o.t);
 for (const [level, t] of [...firstIn].sort((a, b) => a[1] - b[1])) {
-    const drawn = await seek(t);
-    check(drawn === level, `level ${level} draws (first at observation ${t})`,
-        drawn === level ? '' : `the HUD says level ${drawn}`);
+    const f = await seek(t);
+    check(f.level === level, `level ${level} draws (first at observation ${t})`,
+        f.level === level ? '' : `the HUD says level ${f.level}`);
+    // ⛔ AND THE WHOLE LEVEL IS ON THE CANVAS, which is a separate claim
+    // from "it drew something". A width-only refit guard sized L12
+    // (640x960) into L37's 640x320 canvas and showed the top third with
+    // nothing to say the rest existed — "some maps display at the wrong
+    // height, so the bottom part of the map is not displayed".
+    //
+    // The invariant is ONE uniform scale on both axes. Asserting the ratio
+    // rather than a pixel count is what makes it independent of how `fit`
+    // chooses that scale.
+    const sx = f.canvas.w / (f.tw * TILE);
+    const sy = f.canvas.h / (f.th * TILE);
+    check(sx === sy && Number.isInteger(sx) && sx >= 1,
+        `level ${level} is fully on the canvas`,
+        `world ${f.tw * TILE}x${f.th * TILE}, canvas ${f.canvas.w}x${f.canvas.h} `
+        + `(scale x${sx} / y${sy})`
+        + (sx !== sy ? ` — showing ${Math.round(f.canvas.h / sx)} of ${f.th * TILE} px` : ''));
 }
 
 // ── and it PLAYS, which is the thing that actually broke ──────────────
@@ -112,6 +139,7 @@ for (const [level, t] of [...firstIn].sort((a, b) => a[1] - b[1])) {
 // Start a little before the level with the most volumes on the route.
 const busiest = [...firstIn].sort((a, b) => a[1] - b[1])
     .find(([lvl]) => lvl === 12) ?? [...firstIn][1];
+
 const from = Math.max(0, busiest[1] - 200);
 await seek(from);
 if (await page.textContent('#play') === 'Play') await page.click('#play');
