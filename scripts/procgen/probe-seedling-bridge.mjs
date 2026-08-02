@@ -43,20 +43,34 @@
  *
  * Boot at tile (2,8), hold DOWN until the player pins against the bridge's
  * north face, press once, then hold DOWN for the rest of the tape. The
- * player steps through on the very tick the type flips, so the tick their
- * `y` first crosses 144 IS the answer.
+ * held key is already down when the type flips, so the tick the PIN BREAKS
+ * is the tick `collideTypes` stopped finding a wall.
  *
- *   press arm    crosses y = 144 at some tick T
- *   control      never crosses — pinned at the face for the whole tape
+ *   press arm    the pin breaks at some tick T
+ *   control      never moves — pinned at the face for the whole tape
+ *
+ * ⚠ TWO READINGS, AND ONLY THE FIRST IS THE ANSWER. The probe also reports
+ * when `y` crosses 144 (the tile's own top edge), which is TWO FURTHER
+ * ticks of acceleration. Both are printed precisely so the two numbers do
+ * not get confused: `bridges.js` says 60, and this probe's raw crossing
+ * says 62, and they are consistent.
  *
  * `bridges.framesToOpen()` predicts 60 on-screen frames after the timer
- * reaches 59. If T - pressTick is ~60 the premise holds and one press is
- * one decrement; if it is materially smaller, the rect fired more than
- * once and `bridges.js` needs the firing count, not the press count.
+ * reaches 59, and the press is one tick before the hit. If the pin breaks
+ * 60 ticks after the press the premise holds and one press is one
+ * decrement; materially smaller and the rect fired more than once, so
+ * `bridges.js` would need the firing count rather than the press count.
  *
  * ⚠ The player stays 11 px from the tile centre for the whole window, so
  * the 64 px on-screen policy is satisfied by construction and the
  * measurement is of the timer alone.
+ *
+ * ── AS RUN (2026-08-02) ───────────────────────────────────────────────
+ *
+ *   press:   pinned at y=141; PIN BROKE at tick 85; crossed 144 at 87
+ *   control: pinned at y=141; never moved in 320 ticks
+ *
+ * 85 - 25 = **60**. One press is one decrement.
  *
  * Run: node scripts/procgen/probe-seedling-bridge.mjs
  */
@@ -80,8 +94,10 @@ if (!existsSync(WASM_DIR)) {
 
 const TICKS = 320;
 const PRESS = 25;
-/** The bridge tile's own top edge — crossing it is the whole measurement. */
+/** The bridge tile's own top edge, for the secondary reading. */
 const BRIDGE_TOP = 144;
+/** By this tick the first DOWN hold has pinned the player against the face. */
+const PIN_BY = 22;
 
 const tapeFor = (withPress) => ({
     tape_version: 4,
@@ -161,9 +177,17 @@ async function runTape(tape) {
         writeFileSync(join(OUT, `${tape.name}.drain.json`), JSON.stringify(drained));
         const ticks = drained.ticks ?? [];
         const crossed = ticks.find((o) => o.y >= BRIDGE_TOP);
+        // ⚠ TWO MEASUREMENTS, AND THE FIRST ONE IS THE ANSWER. Crossing
+        // y = 144 is the player's box entering the tile, which is two
+        // ticks of acceleration AFTER the tile stopped being Solid. The
+        // quantity the model wants is the tick the PIN BREAKS — the first
+        // tick the held DOWN produced any movement at all, because that is
+        // the tick `collideTypes` stopped finding a wall.
+        const pinned = ticks.find((o) => o.t >= PIN_BY)?.y;
+        const moved = ticks.find((o) => o.t >= PIN_BY && o.y > pinned + 0.01);
         if (logs.length) console.log('  page console tail:', logs.slice(-6).join(' | '));
         const finals = ticks.at(-1) ?? {};
-        return { crossed, final: { x: finals.x, y: finals.y }, ticks };
+        return { crossed, moved, pinned, final: { x: finals.x, y: finals.y }, ticks };
     } finally {
         await page.close();
     }
@@ -175,24 +199,29 @@ try {
     console.log('\nbridge pair: CONTROL arm');
     const control = await runTape(tapeFor(false));
 
-    console.log(`\n  press:   crossed y=${BRIDGE_TOP} at tick `
-        + `${press.crossed ? press.crossed.t : 'NEVER'}; final (${press.final.x}, ${press.final.y})`);
-    console.log(`  control: crossed y=${BRIDGE_TOP} at tick `
-        + `${control.crossed ? control.crossed.t : 'NEVER'}; final (${control.final.x}, ${control.final.y})`);
-    if (press.crossed && !control.crossed) {
-        const elapsed = press.crossed.t - PRESS;
-        console.log(`\n✅ THE BRIDGE OPENED, ${elapsed} tick(s) after the press tick (${PRESS}).`);
+    for (const [label, arm] of [['press  ', press], ['control', control]]) {
+        console.log(`\n  ${label}: pinned at y=${arm.pinned}; `
+            + `PIN BROKE at tick ${arm.moved ? arm.moved.t : 'NEVER'}; `
+            + `crossed y=${BRIDGE_TOP} at tick ${arm.crossed ? arm.crossed.t : 'NEVER'}; `
+            + `final (${arm.final.x}, ${arm.final.y})`);
+    }
+    if (press.moved && !control.moved) {
+        const elapsed = press.moved.t - PRESS;
+        console.log(`\n✅ THE BRIDGE OPENED. The pin broke ${elapsed} tick(s) after the press`);
+        console.log(`   tick (${PRESS}) — and THAT is the measurement. Crossing y=${BRIDGE_TOP} is`);
+        console.log('   two further ticks of acceleration and is reported only so the two');
+        console.log('   numbers never get confused for each other.');
         console.log('   `bridges.framesToOpen()` predicts 60 on-screen frames from a SINGLE');
-        console.log('   decrement. Read the number above against that:');
-        console.log('     ~60-62  one press is one decrement — the docblock premise holds;');
+        console.log('   decrement, and the press is one tick before the hit:');
+        console.log('     60      one press is one decrement — the docblock premise holds;');
         console.log('     ~20-40  the rect fired more than once while `spearing` held, and');
         console.log('             the model must count FIRINGS rather than presses.');
-    } else if (!press.crossed && !control.crossed) {
+    } else if (!press.moved && !control.moved) {
         console.log('\n⛔ NEITHER ARM CROSSED — the press did not reach the tile, or 60 frames');
         console.log('   is short of the truth. Check the press arm\'s y against 141 (the');
         console.log('   pinned face) before blaming the timer.');
     } else {
-        console.log('\n⚠ UNEXPECTED SHAPE — the control crossed, so the tile was not Solid to');
+        console.log('\n⚠ UNEXPECTED SHAPE — the control moved, so the tile was not Solid to');
         console.log('   begin with. Diagnose the world, not the spear.');
     }
 } catch (e) {
