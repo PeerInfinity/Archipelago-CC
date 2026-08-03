@@ -1,0 +1,194 @@
+/**
+ * swimSoundClock — the JS half of the frame-clocked sound PIN.
+ *
+ * ⚠ These are HAND-DERIVED cases, not a mutation table over one derivation:
+ * every expected number here is read off `Player.as:530`, `Sfx.as:38-96`
+ * and `Main.as:27` rather than produced by the module under test. The
+ * module's OTHER stratum is the live game — `botStatus.sound_pin` reports
+ * the length the game measured and the swim probe's cross-rate pair is the
+ * behavioural witness — so this file is deliberately arithmetic only.
+ */
+
+import { describe, expect, it } from 'vitest';
+
+import { PIN_FRAME_RATE, PIN_NAMES } from './tapeFormat.js';
+import {
+    boostedFramesPerPlay,
+    channelPlaying,
+    channelPosition,
+    createPinnedChannel,
+    playChannel,
+    stepChannel,
+    stopChannel,
+    swimBonusSeries,
+    swimSpeedBonus,
+    SWIM_BOOST_BELOW_SECONDS,
+    SWIM_BOOST_SPEED,
+    SWIM_LENGTH_FRAMES,
+} from './swimSoundClock.js';
+
+describe('the constants are the AS3 ones', () => {
+    it('the frame rate is Main.FPS, not the SWF default', () => {
+        // `-default-frame-rate=30` is the stage default `Engine`'s
+        // constructor overwrites with `FP.assignedFrameRate = FPS` (60).
+        // Taking 30 would halve every position and turn six boosted ticks
+        // into three.
+        expect(PIN_FRAME_RATE).toBe(60);
+    });
+
+    it('the threshold and the addend are Player.as:530', () => {
+        expect(SWIM_BOOST_BELOW_SECONDS).toBe(0.1);
+        expect(SWIM_BOOST_SPEED).toBe(0.25);
+    });
+
+    it('the pin names are the two the AS3 parser accepts', () => {
+        expect([...PIN_NAMES]).toEqual(['sound', 'dead_frames']);
+    });
+});
+
+describe('a pinned channel refuses to exist without a length', () => {
+    it('throws rather than defaulting — the fallback is the failure', () => {
+        // A zero-length pinned channel completes on its first step and
+        // replays every frame: a boost on EVERY swimming tick, which is not
+        // an execution the vanilla game can produce. The AS3 side faults and
+        // disarms on the same condition; neither side guesses.
+        expect(() => createPinnedChannel(0)).toThrow(/positive integer/);
+        expect(() => createPinnedChannel(-1)).toThrow(/positive integer/);
+        expect(() => createPinnedChannel(1.5)).toThrow(/positive integer/);
+        expect(() => createPinnedChannel(undefined)).toThrow(/positive integer/);
+    });
+});
+
+describe('the channel is Sfx, transcribed', () => {
+    it('play opens at position 0', () => {
+        const ch = playChannel(createPinnedChannel(10));
+        expect(channelPlaying(ch)).toBe(true);
+        expect(channelPosition(ch)).toBe(0);
+    });
+
+    it('a step advances an OPEN channel and does nothing to a closed one', () => {
+        const ch = createPinnedChannel(10);
+        stepChannel(ch, 5);
+        expect(ch.frames).toBe(0);
+        playChannel(ch);
+        stepChannel(ch, 3);
+        expect(ch.frames).toBe(3);
+        expect(channelPosition(ch)).toBeCloseTo(3 / 60, 12);
+    });
+
+    it('completion closes AND zeroes — a finished sound reads 0, not its end', () => {
+        // `Sfx.onComplete` nulls `_channel` and sets `_position = 0`, so
+        // `position` (which falls back to `_position`) reports zero. A model
+        // that left the position at the length would report `0.166 s` for a
+        // 10-frame sound and never boost again.
+        const ch = playChannel(createPinnedChannel(10));
+        stepChannel(ch, 9);
+        expect(channelPlaying(ch)).toBe(true);
+        expect(ch.frames).toBe(9);
+        stepChannel(ch);
+        expect(channelPlaying(ch)).toBe(false);
+        expect(ch.frames).toBe(0);
+    });
+
+    it('stop closes but KEEPS the position — Sfx.stop is not onComplete', () => {
+        // `Sfx.stop` writes `_position = _channel.position`. The two paths
+        // differ and conflating them would make a stopped sound boost.
+        const ch = playChannel(createPinnedChannel(50));
+        stepChannel(ch, 20);
+        stopChannel(ch);
+        expect(channelPlaying(ch)).toBe(false);
+        expect(ch.frames).toBe(20);
+        expect(swimSpeedBonus(ch)).toBe(0);
+    });
+
+    it('a step count must be a non-negative integer', () => {
+        const ch = playChannel(createPinnedChannel(10));
+        expect(() => stepChannel(ch, -1)).toThrow(/non-negative integer/);
+        expect(() => stepChannel(ch, 1.5)).toThrow(/non-negative integer/);
+        expect(() => stepChannel(ch, 0)).not.toThrow();
+    });
+});
+
+describe('the boost window', () => {
+    it('is SIX frames at 60 fps, and the sixth is the exclusive edge', () => {
+        // 0/60 … 5/60 are under 0.1 s; 6/60 is EXACTLY 0.1, and the AS3
+        // test is `< 0.1`. Getting the boundary inclusive would buy the
+        // walk a seventh boosted tick per play that the game never gives.
+        expect(boostedFramesPerPlay(SWIM_LENGTH_FRAMES, 60)).toBe(6);
+        expect(5 / 60 < 0.1).toBe(true);
+        expect(6 / 60 < 0.1).toBe(false);
+    });
+
+    it('a channel shorter than the window boosts for its whole length', () => {
+        expect(boostedFramesPerPlay(3, 60)).toBe(3);
+    });
+
+    it('is NOT six at another frame rate, which is the whole point', () => {
+        // The number the pin fixes. At 30 fps three frames fit under 100 ms;
+        // at 120 fps twelve do. The unpinned game's answer was whichever of
+        // these the browser happened to produce.
+        expect(boostedFramesPerPlay(SWIM_LENGTH_FRAMES, 30)).toBe(3);
+        expect(boostedFramesPerPlay(SWIM_LENGTH_FRAMES, 120)).toBe(12);
+    });
+});
+
+describe('a swim run, in the order the game imposes', () => {
+    // Per engine frame: `Bot.update` (top of `Main.update`) steps the pinned
+    // mixer, THEN `World.update` reaches `Player.update`, which reads the
+    // position and only then replays a finished sound. Any other order moves
+    // the first boosted tick.
+    it('boosts the first six ticks of a cold swim', () => {
+        const series = swimBonusSeries(8);
+        expect(series).toEqual([0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0, 0]);
+    });
+
+    it('repeats on the sound length, not on the boost window', () => {
+        const series = swimBonusSeries(SWIM_LENGTH_FRAMES + 6);
+        const boosted = series.map((v, i) => (v > 0 ? i : -1)).filter((i) => i >= 0);
+        // Ticks 0..5, then the replay at tick 47 and 48..52.
+        expect(boosted).toEqual([0, 1, 2, 3, 4, 5, 47, 48, 49, 50, 51, 52]);
+    });
+
+    it('⛔ a COMPLETED, un-replayed channel reads 0 — so the boost latches ON', () => {
+        // Found by writing the opposite expectation and being wrong. It is
+        // not an artefact of this model: `Sfx.position` is
+        // `(_channel ? _channel.position : _position) / 1000`, and
+        // `onComplete` sets `_position = 0`. So a Swim sound that has
+        // finished and NOT been replayed reports position ZERO, which is
+        // `< 0.1`, which is a boost — indefinitely.
+        //
+        // `Player.as:531` only replays while `v.length > 0`, so this is the
+        // state a swimmer who stops moving ends up in, and the FIRST stroke
+        // after any pause is boosted because the read happens before the
+        // replay. The consequence for routing: the boost is not "six ticks
+        // per 47" for a stop-start swim, and a leg planned as though it were
+        // would under-run its target.
+        const still = swimBonusSeries(SWIM_LENGTH_FRAMES + 3, { moving: (t) => t === 0 });
+        expect(still.slice(0, 6)).toEqual([0.25, 0.25, 0.25, 0.25, 0.25, 0.25]);
+        // Ticks 6..46 are the rest of the sound: no boost.
+        expect(still.slice(6, SWIM_LENGTH_FRAMES).every((v) => v === 0)).toBe(true);
+        // Tick 47 completes it, and every tick from there reads 0.
+        expect(still.slice(SWIM_LENGTH_FRAMES)).toEqual([0.25, 0.25, 0.25]);
+    });
+
+    it('and a stop-start swimmer is boosted on every restart stroke', () => {
+        // The same fact from the routing side: pause past the sound's end,
+        // then stroke, and that stroke is boosted — because the position is
+        // read before the replay.
+        const ch = playChannel(createPinnedChannel(SWIM_LENGTH_FRAMES));
+        stepChannel(ch, SWIM_LENGTH_FRAMES);      // completes: closed, frames 0
+        expect(channelPlaying(ch)).toBe(false);
+        expect(swimSpeedBonus(ch)).toBe(SWIM_BOOST_SPEED);
+    });
+
+    it('a caller may hand in a channel that is mid-sound', () => {
+        // The window-boundary shape: a swim that crosses a director cut
+        // carries its channel across rather than restarting it.
+        const ch = playChannel(createPinnedChannel(SWIM_LENGTH_FRAMES));
+        stepChannel(ch, 40);
+        const series = swimBonusSeries(10, { channel: ch });
+        // Steps 41..46 are silent; the completion lands on the 7th tick of
+        // this run and the replay boosts from there.
+        expect(series).toEqual([0, 0, 0, 0, 0, 0, 0.25, 0.25, 0.25, 0.25]);
+    });
+});

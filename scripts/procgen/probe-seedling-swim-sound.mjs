@@ -100,6 +100,28 @@ const RUNS = Number(arg('runs', '2'));
  * and diffs it against the local run's saved stream.
  */
 const WIN = process.argv.includes('--win');
+
+/**
+ * ⛓ `--pin` IS THE PROBE'S OWN ANSWER, RUN BACK THROUGH IT.
+ *
+ * Slice 2's `--win` arm DIVERGED at tick 52 and the ruling (kickoff §13.1)
+ * took option (c): a frame-clocked `soundPosition` under a Bot flag, PIN
+ * classified. `--pin` re-runs the identical experiment with the flag ON, by
+ * bumping the tape to v5 and declaring `pins: ["sound"]`.
+ *
+ * The claim it tests is the POSITIVE one, and it is the only kind of witness
+ * a pin can have: **the pair that diverged must now be IDENTICAL.** A pin
+ * asserted only by "the 57 fixtures are still byte-inert" would be asserted
+ * by a gate it cannot fail — every one of those fixtures coerces water and
+ * never reaches `Player.as:530` at all.
+ *
+ * It also prints the game's own `sound_pin` readout, which is the second
+ * stratum on the length: `swimSoundClock.SWIM_LENGTH_FRAMES` is derived from
+ * parsing `assets/sound/swim.mp3` (30 MPEG-1 frames × 1152 samples ÷ 44.1
+ * kHz × 60 fps = 47), and `Sfx.length` is what the game measured. Two
+ * derivations of one number, and the game's is the oracle.
+ */
+const PIN = process.argv.includes('--pin');
 const WIN_STAGE = '/mnt/c/playwright';
 const WIN_DRIVE = 'C:\\playwright';
 const PY = '/mnt/c/Windows/py.exe';
@@ -115,9 +137,9 @@ const PY = '/mnt/c/Windows/py.exe';
  * twelve-thousand-tick walk to L49 for one line of arithmetic.
  */
 const TAPE = {
-    tape_version: 4,
+    tape_version: PIN ? 5 : 4,
     game: 'seedling',
-    name: 'probe-swim-sound',
+    name: PIN ? 'probe-swim-sound-pinned' : 'probe-swim-sound',
     description: 'Level 0, hold RIGHT onto the water at column 9, with water ARMED and '
         + 'canSwim granted. Two identical runs; the streams answer whether Player.as:530\'s '
         + 'Music.soundPosition("Swim") term is a wall-clock quantity on this runtime.',
@@ -130,6 +152,7 @@ const TAPE = {
     grants: [{ level: 0, items: ['conch'] }],
     persistence: [],
     equips: [],
+    ...(PIN ? { pins: ['sound'] } : {}),
     tick_count: TICKS,
     inputs: [{ key: 'right', from: 0, to: TICKS }],
 };
@@ -175,12 +198,14 @@ async function runOnce(label) {
             if (Date.now() - started > 30 * 60 * 1000) throw new Error('deadline');
             await page.waitForTimeout(1000);
         }
+        const terminal = await botJson('botStatus');
         const drained = await botJson('botDrain');
         writeFileSync(join(OUT, `probe-swim-sound.${label}.json`), JSON.stringify(drained));
         if (logs.length) console.log(`  ${label}: page console tail:`, logs.slice(-4).join(' | '));
         return {
             ticks: drained.ticks ?? [],
             secs: Math.round((Date.now() - started) / 1000),
+            status: terminal,
         };
     } finally {
         await page.close();
@@ -207,7 +232,11 @@ function runOnWindows(label) {
     const trace = JSON.parse(readFileSync(join(WIN_STAGE, `swim-out-${label}.json`), 'utf8'));
     const ticks = trace.windows[0].stream.ticks ?? [];
     writeFileSync(join(OUT, `probe-swim-sound.${label}.json`), JSON.stringify({ ticks }));
-    return { ticks, secs: Math.round((Date.now() - started) / 1000) };
+    return {
+        ticks,
+        secs: Math.round((Date.now() - started) / 1000),
+        status: trace.windows[0].status ?? {},
+    };
 }
 
 try {
@@ -248,7 +277,41 @@ try {
     const onWater = a.ticks.find((o) => o.x >= 144);
     console.log(`\n  the player's x reaches the column-9 water edge (144) at tick `
         + `${onWater ? onWater.t : '(never — lengthen the tape)'}`);
-    if (firstDiff === null) {
+
+    if (PIN) {
+        // The pin's own readouts, from every arm, so a run where the flag
+        // silently failed to arrive is a NAMED failure and not an
+        // "identical" that proves nothing. A tape that faults disarms, which
+        // truncates the stream — but `error` says why, and `pins` says
+        // whether the build even honoured the field.
+        for (let i = 0; i < runs.length; i += 1) {
+            const st = runs[i].status ?? {};
+            console.log(`  run ${i + 1} pins=${JSON.stringify(st.pins)} `
+                + `sound_pin=${JSON.stringify(st.sound_pin)} `
+                + `error=${JSON.stringify(st.error ?? '')}`);
+        }
+        const armed = runs.every((r) => r.status?.pins?.sound === true);
+        const clean = runs.every((r) => !r.status?.error);
+        const lens = runs.flatMap((r) => (r.status?.sound_pin?.channels ?? [])
+            .map((c) => c.len_frames));
+        console.log(`  measured Swim length(s), in FRAMES: ${JSON.stringify(lens)} `
+            + '(swimSoundClock.SWIM_LENGTH_FRAMES predicts 47 from the mp3 itself)');
+        if (!armed || !clean) {
+            console.log('\n⇒ ⛔ THE PIN DID NOT RUN. `pins.sound` false on some arm, or the '
+                + 'tape faulted — an "identical" from here would be identical because '
+                + 'nothing happened. Fix the arm before reading the diff.');
+        } else if (firstDiff === null) {
+            console.log('\n⇒ ✅ IDENTICAL WITH THE PIN ARMED. The pair that DIVERGED at '
+                + 'tick 52 unpinned is byte-identical across a ~25x frame-rate spread. '
+                + 'The swim term is a function of the tick count, and §6.5 is closed by '
+                + 'the pin rather than by a routing constraint.');
+        } else {
+            console.log(`\n⇒ ⛔ STILL DIVERGED at tick ${firstDiff.t} WITH THE PIN ARMED: `
+                + `x ${firstDiff.a.x} vs ${firstDiff.b.x}. The pin does not cover the term, `
+                + 'or something else in the swim block is wall-clock-shaped. This is a '
+                + 'finding for the NEXT batch, not a reason to widen this one.');
+        }
+    } else if (firstDiff === null) {
         console.log('\n⇒ IDENTICAL. On this runtime the swim term is not a wall-clock '
             + 'quantity — either the audio sink is never pulled, or the position never '
             + 'crosses 100 ms within the tape. Swim legs are EXACT and §6.5 stays shut. '

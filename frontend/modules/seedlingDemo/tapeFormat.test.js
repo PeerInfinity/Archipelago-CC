@@ -277,7 +277,7 @@ describe('serialization', () => {
         // fixture file changes for no change in meaning.
         expect(JSON.parse(serializeTape(base)).tape_version).toBe(1);
         expect(JSON.parse(serializeTape(v2Base)).tape_version).toBe(2);
-        expect(TAPE_VERSION).toBe(4);
+        expect(TAPE_VERSION).toBe(5);
     });
 
     it('writes NO persistence field into a v1 or v2 tape either', () => {
@@ -370,6 +370,74 @@ describe('serialization', () => {
         expect(() => parseTape({ ...v3Base, equips: [] })).not.toThrow();
         expect(() => parseTape({ ...v3Base, equips: [{ t: 0, slot: 1 }] }))
             .toThrow(/versions below 4 mean equips: \[\] BY DEFINITION/);
+    });
+
+    it('writes NO pins field into a v1..v4 tape', () => {
+        // The claim the R5 batch's byte-inertness gate rests on: all 57
+        // frozen fixtures are v1..v4, `parseTape` normalises `pins: []` onto
+        // every one, and `serializeTape` must not write it back.
+        const v3Base = { ...v2Base, tape_version: 3, persistence: [] };
+        const v4Base = { ...v3Base, tape_version: 4, equips: [] };
+        for (const t of [base, v2Base, v3Base, v4Base]) {
+            expect(parseTape(t).pins).toEqual([]);
+            expect(JSON.parse(serializeTape(t))).not.toHaveProperty('pins');
+        }
+    });
+
+    it('a v5 tape round-trips its pins, in PIN_NAMES order', () => {
+        const v5 = {
+            ...v2Base,
+            tape_version: 5,
+            persistence: [],
+            equips: [],
+            pins: ['dead_frames', 'sound'],
+        };
+        const written = JSON.parse(serializeTape(v5));
+        expect(written.tape_version).toBe(5);
+        expect(written.pins).toEqual(['sound', 'dead_frames']);
+        expect(serializeTape(written)).toBe(serializeTape(v5));
+    });
+
+    it('rejects a pin name neither consumer knows, and a repeat', () => {
+        const withPins = (pins) => () => parseTape({
+            ...v2Base, tape_version: 5, persistence: [], equips: [], pins,
+        });
+        expect(withPins(['rng'])).toThrow(/not a pin name/);
+        expect(withPins(['sound', 'sound'])).toThrow(/names "sound" more than once/);
+        expect(withPins('sound')).toThrow(/pins must be an array/);
+        expect(withPins([])).not.toThrow();
+    });
+
+    it('a v1..v4 tape may CARRY pins: [] but not a pin', () => {
+        const v4Base = {
+            ...v2Base, tape_version: 4, persistence: [], equips: [],
+        };
+        expect(() => parseTape({ ...v4Base, pins: [] })).not.toThrow();
+        expect(() => parseTape({ ...v4Base, pins: ['sound'] }))
+            .toThrow(/versions below 5 mean pins: \[\] BY DEFINITION/);
+        // v1's own arm names the field too, or a v1 tape could pin silently.
+        expect(() => parseTape({ ...base, pins: ['sound'] }))
+            .toThrow(/version 1 means pins: \[\] BY DEFINITION/);
+    });
+
+    it('a v5 tape still carries its v3 clears and its v4 equips', () => {
+        // The bug `parsePersistence` had once, checked one version on: a
+        // field gated on `version === N` is silently dropped the moment a
+        // tape becomes N+1, and a dropped equip is a press that becomes a
+        // sword slash thousands of ticks later rather than an error.
+        const v5 = {
+            ...v2Base,
+            tape_version: 5,
+            persistence: [{ level: 3, tag: 0, note: 'breakablerock@96,112' }],
+            equips: [{ t: 0, slot: 1 }],
+            pins: ['sound'],
+        };
+        const parsed = parseTape(v5);
+        expect(parsed.persistence).toEqual([
+            { level: 3, tag: 0, note: 'breakablerock@96,112' },
+        ]);
+        expect(parsed.equips).toEqual([{ t: 0, slot: 1 }]);
+        expect(parsed.pins).toEqual(['sound']);
     });
 
     it('a v4 tape still carries its v3 clears', () => {
@@ -568,7 +636,7 @@ describe('transition records', () => {
 describe('version 2: what a v1 tape may and may not say', () => {
     it('still parses every v1 tape', () => {
         expect(parseTape(base).tape_version).toBe(1);
-        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4]);
+        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4, 5]);
     });
 
     it('normalises v1 to version 1 SEMANTICS so no engine branches on version', () => {
@@ -596,8 +664,8 @@ describe('version 2: what a v1 tape may and may not say', () => {
     });
 
     it('rejects an unknown version by name', () => {
-        expect(() => parseTape({ ...base, tape_version: 5 }))
-            .toThrow(/tape_version must be one of 1, 2, 3, 4/);
+        expect(() => parseTape({ ...base, tape_version: 6 }))
+            .toThrow(/tape_version must be one of 1, 2, 3, 4, 5/);
     });
 });
 

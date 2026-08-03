@@ -126,10 +126,50 @@
  * bumping this constant cannot silently re-version the committed fixtures.
  * It is documentation plus one test's anchor.
  */
-export const TAPE_VERSION = 4;
+export const TAPE_VERSION = 5;
 
 /** Every version this parser accepts. v1 tapes are frozen, not deprecated. */
-export const SUPPORTED_TAPE_VERSIONS = Object.freeze([1, 2, 3, 4]);
+export const SUPPORTED_TAPE_VERSIONS = Object.freeze([1, 2, 3, 4, 5]);
+
+/**
+ * ── Version 5: the DETERMINISM PINS ───────────────────────────────────
+ *
+ * A different KIND of field from every one above it. `noDamage`, `noHazards`
+ * and `grants` are CRUTCHES — a later rung retires each. A pin is kept
+ * forever: it selects WHICH vanilla-reachable execution the run gets and
+ * creates no vanilla-unreachable one, so a recording made under it is still
+ * a real-game run, just a repeatable one (R5 kickoff §3.6, ruled at §13).
+ *
+ *   `sound`        `Music.soundPosition`/`soundIsPlaying`/`soundPercentage`
+ *                  read a FRAME CLOCK — one step per engine update from
+ *                  `playSound` — instead of the live Web Audio mixer. The
+ *                  R5 slice-2 probe measured the same tape at 0.4 fps and
+ *                  10.1 fps DIVERGING at tick 52, four ticks after the water
+ *                  edge, because `Player.as:530` compares a MILLISECOND
+ *                  reading against a frame count. See `swimSoundClock.js`,
+ *                  which is the JS half of the same arithmetic.
+ *   `dead_frames`  `Game.blackCover` decays per UPDATE rather than per
+ *                  RENDER, so a room fade costs a fixed number of dead
+ *                  frames instead of the ±2 band measured at slice 0 — and
+ *                  the `Game.time`-coupled hazards stop carrying that band
+ *                  as phase uncertainty.
+ *
+ * An ARRAY OF NAMES rather than booleans, the `noHazards` shape, for the
+ * `noHazards` reason: the next pin that gets ruled in must not cost a second
+ * full pipeline run to express.
+ */
+export const PIN_NAMES = Object.freeze(['sound', 'dead_frames']);
+
+/**
+ * The engine frame rate the sound pin reproduces — `Main.as:27`'s
+ * `FPS = 60`, which `Engine` writes to `stage.frameRate`.
+ *
+ * ⚠ NOT the SWF's `-default-frame-rate=30`: that is the stage default the
+ * `Engine` constructor immediately overwrites (`Engine.as:40,109`). Taking
+ * the compile flag's number instead would halve every pinned position and
+ * turn six boosted swim ticks into three.
+ */
+export const PIN_FRAME_RATE = 60;
 
 /**
  * ⚠ THE SPAWN IS BAKED INTO THE BUILD, so a tape's `boot` block is a CLAIM
@@ -440,6 +480,37 @@ function parseEquips(raw) {
 }
 
 /**
+ * The version-5 `pins` list — see `PIN_NAMES`.
+ *
+ * Sorted into `PIN_NAMES` order and de-duplicated by name, so two tapes that
+ * pin the same things serialize identically and a diff of two recordings is
+ * about the walk rather than about authoring order. A repeat is a named
+ * error rather than a silent set-union: a tape that says `["sound",
+ * "sound"]` was probably edited by two hands and one of them meant something
+ * else.
+ */
+function parsePins(raw) {
+    if (!Array.isArray(raw.pins)) {
+        fail('pins must be an array of pin names on a tape_version 5 tape '
+            + `([] when nothing is pinned), got ${JSON.stringify(raw.pins)}`);
+    }
+    const pins = raw.pins.map((name, i) => {
+        if (typeof name !== 'string' || !PIN_NAMES.includes(name)) {
+            fail(`pins[${i}] is ${JSON.stringify(name)}, which is not a pin name; `
+                + `legal names are ${PIN_NAMES.join(', ')}`);
+        }
+        return name;
+    });
+    for (let i = 1; i < pins.length; i++) {
+        if (pins.indexOf(pins[i]) !== i) {
+            fail(`pins names "${pins[i]}" more than once`);
+        }
+    }
+    pins.sort((a, b) => PIN_NAMES.indexOf(a) - PIN_NAMES.indexOf(b));
+    return pins;
+}
+
+/**
  * The three version-2 relaxation fields. Every one is REQUIRED — a tape
  * that omitted `noHazards` and a game that defaulted it to "none" would be
  * running a different experiment from a JS engine that defaulted it to
@@ -587,6 +658,7 @@ export function parseTape(input) {
     if (version === 1) {
         const v1Semantics = {
             noDamage: false, noHazards: [], grants: [], persistence: [], equips: [],
+            pins: [],
         };
         for (const [field, expected] of Object.entries(v1Semantics)) {
             const got = raw[field];
@@ -630,6 +702,18 @@ export function parseTape(input) {
             + 'already was (0, the sword). Bump tape_version to 4 to select a slot.');
     }
     const equips = version >= 4 ? parseEquips(raw) : [];
+    // The VALUE-not-presence rule, one version on again. Spelled out rather
+    // than looped for the reason above: the message has to name the build
+    // that could not read the field.
+    if (version < 5 && raw.pins !== undefined
+        && !(Array.isArray(raw.pins) && raw.pins.length === 0)) {
+        fail(`tape_version ${version} declares pins: ${JSON.stringify(raw.pins)}, `
+            + 'but versions below 5 mean pins: [] BY DEFINITION — the build had no '
+            + 'such field to read, so the run would use the live mixer clock and the '
+            + 'per-render fade while the JS engine modelled a pinned one. Bump '
+            + 'tape_version to 5 to pin anything.');
+    }
+    const pins = version >= 5 ? parsePins(raw) : [];
 
     const boot = raw.boot;
     if (boot === null || typeof boot !== 'object' || Array.isArray(boot)) {
@@ -736,6 +820,7 @@ export function parseTape(input) {
         equips: Object.freeze(equips.map((e) => Object.freeze({
             t: e.t, slot: e.slot,
         }))),
+        pins: Object.freeze(pins),
         tick_count: tickCount,
         inputs: Object.freeze(inputs.map((s) => Object.freeze(s))),
         ...(raw.name ? { name: String(raw.name) } : {}),
@@ -812,6 +897,9 @@ export function serializeTape(tape) {
         ...(t.tape_version >= 4 ? {
             equips: t.equips.map((e) => ({ t: e.t, slot: e.slot })),
         } : {}),
+        // Same rule again: written ONLY for a v5 tape, so all 57 frozen
+        // fixtures round-trip byte-identically past the R5 batch.
+        ...(t.tape_version >= 5 ? { pins: [...t.pins] } : {}),
         tick_count: t.tick_count,
         inputs: t.inputs.map((s) => ({ key: s.key, from: s.from, to: s.to })),
     };
