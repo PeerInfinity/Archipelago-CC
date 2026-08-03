@@ -233,3 +233,142 @@ export const KEY_LOCK_SHUT = Object.freeze({
         + 'Without this arm, "the key leg reached L32" is not evidence that anything '
         + 'was ever in the way.',
 });
+
+// ─────────────────────────────────────────────────────────────────────
+// STEP 3 — THE KARLORE PAIR, the rung's headline
+// ─────────────────────────────────────────────────────────────────────
+
+/**
+ * `NPCs/Karlore.as` — the plug that is not a fight.
+ *
+ *     override public function added():void {
+ *         super.added();
+ *         if (Player.hasFire) FP.world.remove(this);
+ *     }
+ *
+ * `NPC`'s constructor sets `type = "Solid"`, and Karlore's own
+ * `setHitbox(16, 16, 8, 8)` around `(_x + Tile/2, _y + Tile/2)` makes that a
+ * whole tile at the OEL position — [112,128) x [272,288) in L48, which is
+ * the ONE-TILE CORRIDOR the walk has to pass. So `fire` is not spent here;
+ * it is simply HELD, and the level builds differently because of it.
+ *
+ * ⛓ WHICH IS WHY THIS IS THE RUNG'S HEADLINE PAIR. `fire` is the first
+ * combat-earned boolean on the whole arc, and its witness is a tape one
+ * field apart: `grants [fire]` against `grants []`, everything else
+ * identical, including the hold. The control's hold is stopped by a Solid;
+ * the fire arm's is stopped by running out — which is the §14.10 rule
+ * applied before the recording rather than after it. 28 ticks lands the
+ * fire arm at y ≈ 260.8, inside row 16, and row 14 is WATER: a generous
+ * hold would have walked the headline into a hazard the walk cannot yet
+ * survive.
+ *
+ * ⚠ AND IT IS A *PROBE* GRANT, NOT AN EARNED ONE — the `l71-shieldlock`
+ * precedent, named. Step 2's `r5-bobboss-fire` EARNS the boolean from the
+ * boss; this pair GRANTS it, because what it is asking is what the boolean
+ * does to L48's geometry and not where it came from. The two claims are
+ * separate on purpose and the chain is what joins them.
+ */
+export const KARLORE = Object.freeze({
+    level: 48,
+    /** The OEL placement, which is also the Solid's rect origin. */
+    at: Object.freeze({ x: 112, y: 272 }),
+    tile: Object.freeze({ tx: 7, ty: 17 }),
+    /** `stairsdown`-less: L47's `teleporter@216,112` constructs this. */
+    boot: Object.freeze({ level: 48, x: 112, y: 288 }),
+    arrival: Object.freeze({ x: 120, y: 296 }),
+    holdFrom: 4,
+    holdTo: 32,
+    tickCount: 52,
+    /** Where `Mobile.moveY` leaves a box whose top is flush with y=288. */
+    pinY: 290,
+    /** Modelled: row 16, and row 14 is water. */
+    throughRow: 16,
+});
+
+/** L48's pit to L49, and the conch behind it. */
+export const CONCH = Object.freeze({
+    pit: Object.freeze({ tx: 11, ty: 3 }),
+    level: 49,
+    pickup: Object.freeze({ x: 32, y: 80 }),
+    tag: 0,
+    item: 'conch',
+    property: 'canSwim',
+});
+
+// ─────────────────────────────────────────────────────────────────────
+// THE ENCOUNTER EXEMPTION — declared, never inferred
+// ─────────────────────────────────────────────────────────────────────
+
+/**
+ * ⛔ THE FIXTURES WHOSE MODEL MIRROR CANNOT BE RIGHT, AND WHY.
+ *
+ * `verify-seedling-bot-differential` builds its expectation for a tape by
+ * running the tape through the JS engine, and then asserts the game's
+ * fourteen item properties, its inventory slot array and its
+ * `saw_input_refused` against it. That works because every mechanic on the
+ * ladder so far is one the engine models.
+ *
+ * An ENCOUNTER SCRIPT is not. `BobBoss` is 230 lines of scripted state — a
+ * rock that writes the player's respawn point, three forms with their own
+ * hit counts, two 120-frame transitions that TELEPORT the player and set
+ * `receiveInput = false`, and a reward that is spawned at runtime and is
+ * therefore in no level's pickup list. The engine cannot know any of it, so
+ * on these tapes the mirror is wrong about exactly three things and right
+ * about everything else.
+ *
+ * ⚠ THE ANSWER IS A DECLARATION, NOT A RELAXATION. Each entry names the
+ * fixture, the items the GAME earns that the tape never granted, and the
+ * reason input is refused. The harness then checks the game against
+ * `mirror + earned` — a HARDER assertion than the unamended one, because a
+ * run that failed to earn `fire` now goes red where before it would have
+ * been green. And an exemption that is not exercised is itself a finding:
+ * a fixture listed here whose game state matches the plain mirror is a
+ * fixture that did not do the thing it is exempt for.
+ *
+ * ⚠ BY NAME, never by predicate. `feedback_coincidental_predicate_rots`:
+ * "has presses" or "has enemies" would sweep in every later kill fixture,
+ * all of which are supposed to match.
+ */
+export const MODEL_EXEMPT = Object.freeze({
+    'r5-bobboss-arm': Object.freeze({
+        earned: Object.freeze([]),
+        refusesInput: false,
+        why: 'the arm probe. `FallRockLarge` freezes the game for 174 frames and the '
+            + 'engine models neither the rock nor the three `BobBossNPC` dialogues that '
+            + 'follow, so the model walks where the game stands still. It earns nothing '
+            + '— it holds no sword — so only the STREAM diverges.',
+    }),
+    'r5-bobboss-fire': Object.freeze({
+        earned: Object.freeze(['fire']),
+        refusesInput: true,
+        why: '⛓ THE FIRST BOSS KILL ON THE ARC. `fire` is spawned by `BobBoss.death` at '
+            + 'runtime — it is in no level\'s pickup list, so no engine reading the '
+            + 'extract could ever see it — and `receiveInput` goes false for the two '
+            + '120-frame form transitions. The mirror is amended with `fire` rather '
+            + 'than excused, so a run that fought and did not win goes RED here.',
+    }),
+    'r5-karlore-fire': Object.freeze({
+        earned: Object.freeze([]),
+        refusesInput: false,
+        why: '⛓ THE HEADLINE ARM, and its divergence is a DIFFERENT SHAPE from the boss '
+            + 'fixtures\': nothing here is earned and nothing is taken over. '
+            + '`Karlore.added()` reads `Player.hasFire` at LEVEL BUILD time and removes '
+            + 'the NPC, so the level the game builds is not the level the extract '
+            + 'describes — and `buildLevelWorld` has no idea an NPC\'s `added()` reads an '
+            + 'item property. The model therefore pins where the game walks through. '
+            + '⚠ Modelling `added()`-time removal is the OWED FOLLOW-UP: it is a small '
+            + 'table (one entity class today) and it would turn this divergence into an '
+            + 'exact match, which is strictly the better claim.',
+    }),
+    'r5-bobboss-fire-control': Object.freeze({
+        earned: Object.freeze([]),
+        refusesInput: false,
+        why: 'the same tape with `grants` empty. It earns nothing and is never taken '
+            + 'over — form 0 never dies, so there is no transition — but the rock still '
+            + 'freezes the game for 174 frames, so its STREAM diverges for the same '
+            + 'reason the probe\'s does.',
+    }),
+});
+
+/** The names, for a harness that wants the set rather than the table. */
+export const MODEL_EXEMPT_NAMES = Object.freeze(Object.keys(MODEL_EXEMPT));

@@ -338,7 +338,175 @@ export function keyLegFindings(replayed) {
     return found;
 }
 
+/**
+ * ── Slice 4 step 2: BOBBOSS, and `fire` as the first COMBAT-EARNED boolean
+ *
+ * The pair is ONE FIELD APART and the field is `grants`. `primary` is both
+ * the talk key and the sword, and the game keeps them apart for us: a
+ * `BobBossNPC` dialogue holds `Game.freezeObjects`, which gates
+ * `Player.input()`, so a press inside a dialogue can only PAGE and a press
+ * outside one can only SWING. The same 76-press train therefore drives both
+ * arms, and whether it kills anything is decided entirely by whether the
+ * tape handed over a sword.
+ *
+ * ⛔ AND THE LEDGER HAS AN ENTRY IN THE WRONG LEVEL. `BobBoss.death` spawns
+ * `new Fire(..., -1)`, and `Fire.removed()` calls `setPersistence(-1,
+ * false)` unconditionally — its `check()` guard is `tag >= 0 && ...`, which
+ * a -1 skips. `Main.levelPersistenceSet(i, j)` writes `levelPersistence[i *
+ * 30 + j]`, so from L32 that is index 959, which is **L31 tag 29** — its
+ * last slot. The flag is real, it is in a room the player left an hour ago,
+ * and an exact-set assertion has to name it or the walk reports a clear
+ * nobody can attribute.
+ *
+ * ⚠ `hits` IS ASSERTED FROM THE GAME'S OWN READOUT ON BOTH ARMS, which is
+ * what the R5 batch added it for. Contact-freedom used to be inferred from
+ * exactness; here it is two-sided — and it matters more than usual, because
+ * `BobBoss.death` WRITES `player.hits = 0` on the last frame of every form
+ * transition, so a mid-fight reading would have said nothing at all.
+ */
+export const BOBBOSS_FIRE = 'r5-bobboss-fire';
+export const BOBBOSS_CONTROL = 'r5-bobboss-fire-control';
+
+/** `FallRockLarge.fall()` — written on the ARM frame, not when it lands. */
+export const ROCK_FLAG = Object.freeze({ level: 32, tag: 1 });
+/** ⛔ `Fire.removed()`'s `setPersistence(-1, false)`, resolved. */
+export const FIRE_OUT_OF_BAND_FLAG = Object.freeze({ level: 31, tag: 29 });
+
+export function bobBossFindings(replayed) {
+    const fire = replayed?.get(BOBBOSS_FIRE);
+    const control = replayed?.get(BOBBOSS_CONTROL);
+    if (!fire || !control) {
+        return [{
+            name: 'R5 BobBoss: SKIPPED — this sweep did not replay both arms',
+            ok: true,
+            skipped: true,
+            detail: `have ${[fire && BOBBOSS_FIRE, control && BOBBOSS_CONTROL]
+                .filter(Boolean).join(', ') || 'neither'} — "the walk ended holding fire" `
+                + 'is not evidence that the sword did anything',
+        }];
+    }
+    const found = [];
+    const rock = `${ROCK_FLAG.level}:${ROCK_FLAG.tag}`;
+    const oob = `${FIRE_OUT_OF_BAND_FLAG.level}:${FIRE_OUT_OF_BAND_FLAG.tag}`;
+    const fireCleared = clearedSet(fire.status);
+    const controlCleared = clearedSet(control.status);
+
+    // 1. THE ITEM. `fire` is the first boolean on this arc that no pickup
+    //    on any map grants — `BobBoss.death` spawns it at runtime — so
+    //    `hasFire` true is the boss having died three times over.
+    found.push({
+        name: 'R5 BobBoss: the fire arm EARNED `hasFire`',
+        ok: fire.status?.items?.hasFire === true,
+        detail: fire.status?.items?.hasFire === true
+            ? 'hasFire=true, and the tape granted only `sword` — `Fire` is spawned by '
+                + '`BobBoss.death`, so it is in no level\'s pickup list and nothing but '
+                + 'the third form dying puts it in the room'
+            : 'hasFire is false — the fight did not finish. `BobBoss` is '
+                + 'ONE-VISIT-OR-RESTART (`if (Player.hasFire) remove(this)` in the ctor '
+                + 'and nowhere else), so a partial fight leaves nothing behind.',
+    });
+    found.push({
+        name: 'R5 BobBoss: the CONTROL arm did not',
+        ok: control.status?.items?.hasFire === false,
+        detail: control.status?.items?.hasFire === false
+            ? 'hasFire=false with the identical press train — so the presses are not '
+                + 'what earned it, the SWORD is'
+            : 'hasFire is TRUE in the arm with no sword. Something other than a sword '
+                + 'killed the boss, and this pair proves nothing about combat.',
+    });
+
+    // 2. THE LEDGER, EXACT IN BOTH DIRECTIONS, and the out-of-band entry
+    //    asserted BY NAME rather than absorbed into a count.
+    const wantFire = [rock, oob];
+    const fireMissing = wantFire.filter((k) => !fireCleared.has(k));
+    const fireExtra = [...fireCleared].filter((k) => !wantFire.includes(k));
+    found.push({
+        name: 'R5 BobBoss: the fire arm\'s ledger is EXACTLY the rock and the '
+            + 'out-of-band write',
+        ok: fireMissing.length === 0 && fireExtra.length === 0,
+        detail: fireMissing.length === 0 && fireExtra.length === 0
+            ? `{${rock}} from \`FallRockLarge.fall()\` and {${oob}} from `
+                + '`Fire.removed()` calling `setPersistence(-1, false)` in L32 — '
+                + '`i * 30 + j` puts a tag of -1 in L31\'s LAST slot, and the tape '
+                + 'declares no clears at all'
+            : `missing ${JSON.stringify(fireMissing)}, unexpected `
+                + `${JSON.stringify(fireExtra)}. {${oob}} missing means the reward was `
+                + `never taken; {${rock}} missing means the rock never armed.`,
+    });
+    found.push({
+        name: 'R5 BobBoss: the control arm cleared ONLY the rock',
+        ok: controlCleared.size === 1 && controlCleared.has(rock),
+        detail: controlCleared.size === 1 && controlCleared.has(rock)
+            ? `{${rock}} and nothing else — the walk armed the rock with its feet, which `
+                + 'both arms do, and never got past form 0'
+            : `${controlCleared.size} flag(s) off (${[...controlCleared].join(' ')}). `
+                + `A {${oob}} here would mean fire was earned without a sword.`,
+    });
+
+    // 3. THE TAKE-OVER, as a POSITIVE on one arm and its ABSENCE on the
+    //    other. `BobBoss.death` sets `receiveInput = false` for each
+    //    120-frame transition, so the fire arm must be taken over TWICE and
+    //    the control arm — whose form 0 never dies — not at all.
+    found.push({
+        name: 'R5 BobBoss: the fire arm was TAKEN OVER by the form transitions',
+        ok: fire.status?.saw_input_refused === true,
+        detail: fire.status?.saw_input_refused === true
+            ? 'receiveInput went false mid-tape — `BobBoss.death` holds it for 120 frames '
+                + 'per transition and teleports the player to (80,120) for the last 40'
+            : 'the game never refused input, so no form ever died and `hasFire` came '
+                + 'from somewhere this pair does not account for',
+    });
+    found.push({
+        name: 'R5 BobBoss: the control arm was never taken over',
+        ok: control.status?.saw_input_refused === false,
+        detail: control.status?.saw_input_refused === false
+            ? 'receiveInput stayed true for all 2500 ticks — form 0 never died, so there '
+                + 'was no transition to be taken over by'
+            : 'the control arm WAS taken over, which means a form died without a sword',
+    });
+
+    // 4. NEITHER ARM WAS HIT — from the game's own readout, on a tape that
+    //    stands still in a room with a boss swinging two spinning swords.
+    //    ⚠ This is the check the R5 batch's `hits` field exists for, and it
+    //    is also the one that would have been hardest to infer: a form
+    //    transition RESETS `player.hits` to 0, so exactness would not have
+    //    told us.
+    for (const [label, a] of [['fire', fire], ['control', control]]) {
+        const hits = a.status?.hits;
+        found.push({
+            name: `R5 BobBoss: the ${label} arm took no damage`,
+            ok: hits === 0,
+            detail: hits === 0
+                ? 'hits=0 from the game\'s own readout, with `Bot.noDamage` armed — and '
+                    + 'the walk stands inside two spinning sword lines for the whole fight'
+                : `hits=${hits} — with the guard armed this should be impossible`,
+        });
+    }
+
+    // 5. AND NEITHER ARM LEFT THE ROOM. The arena's stairs are sealed by
+    //    the fallen rock and its pit by a burnable tree, so a terminal
+    //    level other than 32 would mean an exit nobody has modelled.
+    for (const [label, a] of [['fire', fire], ['control', control]]) {
+        const end = terminal(a);
+        found.push({
+            name: `R5 BobBoss: the ${label} arm is still in the arena`,
+            ok: end?.level === 32,
+            detail: end?.level === 32
+                ? `ends L32 (${end.x},${end.y}) — the rock seals the stairs and the `
+                    + 'burnable tree seals the pit, so there is no way out yet'
+                : `ends in L${end?.level} — the arena has an exit this slice has not `
+                    + 'modelled',
+        });
+    }
+
+    return found;
+}
+
 /** Every R5 finding this sweep can make. */
 export function r5AcceptanceFindings(replayed) {
-    return [...l60KillFindings(replayed), ...keyLegFindings(replayed)];
+    return [
+        ...l60KillFindings(replayed),
+        ...keyLegFindings(replayed),
+        ...bobBossFindings(replayed),
+    ];
 }

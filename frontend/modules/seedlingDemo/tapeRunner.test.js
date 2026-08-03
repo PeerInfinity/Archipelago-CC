@@ -37,6 +37,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { fixtureNames, loadExpectation, loadTape } from './fixtures/index.js';
+import { MODEL_EXEMPT_NAMES } from './r5Chain.js';
 import { atlasLevelSource } from './levelSource.js';
 import { MOVE_SPEEDS, spawnFromBoot } from './playerPhysicsV1.js';
 import { deriveTransitions, diffObservationStreams } from './tapeFormat.js';
@@ -211,7 +212,25 @@ describe('fixture differential', () => {
      * would sweep in every kill fixture after this one, including the ones
      * that are supposed to match.
      */
-    const EXPECTED_TO_DIVERGE = ['r5-contact-control-on', 'r5-l60-kill'];
+    /**
+     * ⚠ AND THE THIRD REASON, which is a whole CLASS rather than a case.
+     *
+     * The three `r5-bobboss-*` fixtures are an ENCOUNTER SCRIPT — 230 lines
+     * of scripted state the engine does not model and is not going to:
+     * `FallRockLarge` freezes the game for 174 frames and writes the
+     * player's respawn point, three forms carry their own hit counts, two
+     * 120-frame transitions TELEPORT the player, and the reward is spawned
+     * at runtime so it is in no level's pickup list. The model walks freely
+     * through all of it, so all three streams diverge — including the
+     * CONTROL arm, whose sword is withheld but whose rock still falls.
+     *
+     * Each one's exemption is declared in `r5Chain.MODEL_EXEMPT` with the
+     * items it earns and whether it is taken over, and the differential
+     * harness asserts the game against `mirror + earned` rather than
+     * excusing it. This list is only about the STREAM.
+     */
+    const EXPECTED_TO_DIVERGE = ['r5-contact-control-on', 'r5-l60-kill',
+        ...MODEL_EXEMPT_NAMES];
 
     it.each(names.filter((n) => !EXPECTED_TO_DIVERGE.includes(n)))(
         "%s: JS stream matches the real game recording, exactly", (name) => {

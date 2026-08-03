@@ -11,6 +11,7 @@ import { describe, expect, it } from 'vitest';
 import {
     L60_CONTROL, L60_KILL, L60_LOCK, l60KillFindings,
     KEY_LEG_ARM, KEY_LEG_CONTROL, keyLegFindings,
+    BOBBOSS_FIRE, BOBBOSS_CONTROL, bobBossFindings,
 } from './r5Acceptance.js';
 
 const arm = ({ cleared = [], x = 150, level = 60, hits = 0 } = {}) => ({
@@ -212,5 +213,114 @@ describe('the key leg and its shut-before control', () => {
         expect(failing(keyLegFindings(keyPair({
             transitions: [{ from_level: 29, to_level: 21 }],
         })))).toContain('R5 key leg: the walk really went L29 → L31 → L30');
+    });
+});
+
+// ── Slice 4 step 2: BOBBOSS ───────────────────────────────────────────
+
+const ROCK = { level: 32, tag: 1 };
+const OOB = { level: 31, tag: 29 };
+
+const bossArm = ({
+    cleared = [ROCK, OOB], hasFire = true, refused = true, hits = 0, level = 32,
+} = {}) => ({
+    stream: { ticks: [{ t: 0, x: 80, y: 128, level }, { t: 1, x: 80, y: 80.7, level }] },
+    status: {
+        persistence_cleared: cleared, hits, saw_input_refused: refused,
+        items: { hitsMax: 3, hasSword: true, hasFire },
+    },
+});
+
+const bossControl = ({
+    cleared = [ROCK], hasFire = false, refused = false, hits = 0, level = 32,
+} = {}) => ({
+    stream: { ticks: [{ t: 0, x: 80, y: 128, level }, { t: 1, x: 80, y: 115.5, level }] },
+    status: {
+        persistence_cleared: cleared, hits, saw_input_refused: refused,
+        items: { hitsMax: 3, hasSword: false, hasFire },
+    },
+});
+
+const bossPair = (fireOver = {}, controlOver = {}) => new Map([
+    [BOBBOSS_FIRE, bossArm(fireOver)],
+    [BOBBOSS_CONTROL, bossControl(controlOver)],
+]);
+
+describe('the BobBoss pair — `fire` as the first combat-earned boolean', () => {
+    it('holds for the pair the game recorded', () => {
+        expect(failing(bobBossFindings(bossPair()))).toEqual([]);
+    });
+
+    it('SKIPS rather than passes when only one arm ran', () => {
+        const f = bobBossFindings(new Map([[BOBBOSS_FIRE, bossArm()]]));
+        expect(f).toHaveLength(1);
+        expect(f[0].skipped).toBe(true);
+    });
+
+    it('goes red when the fight did not finish', () => {
+        // ⚠ The failure mode that matters most: `BobBoss` is
+        // ONE-VISIT-OR-RESTART, so a partial fight leaves NOTHING behind and
+        // the next entry respawns form 0.
+        const f = bobBossFindings(bossPair({ hasFire: false, cleared: [ROCK] }));
+        expect(failing(f)).toContain('R5 BobBoss: the fire arm EARNED `hasFire`');
+        expect(f.find((x) => x.name.includes('EARNED')).detail)
+            .toMatch(/ONE-VISIT-OR-RESTART/);
+    });
+
+    it('goes red when the SWORDLESS arm somehow earned fire', () => {
+        expect(failing(bobBossFindings(bossPair({}, { hasFire: true, cleared: [ROCK, OOB] }))))
+            .toContain('R5 BobBoss: the CONTROL arm did not');
+    });
+
+    it('⛔ goes red when the OUT-OF-BAND write is missing', () => {
+        // {31,29} is `Fire.removed()` calling `setPersistence(-1, false)` in
+        // L32. A claim that only counted flags, or only checked L32, would
+        // pass here — which is the whole reason it is named.
+        expect(failing(bobBossFindings(bossPair({ cleared: [ROCK] }))))
+            .toContain('R5 BobBoss: the fire arm\'s ledger is EXACTLY the rock and the '
+                + 'out-of-band write');
+    });
+
+    it('goes red when the rock flag is missing, or a third flag appeared', () => {
+        expect(failing(bobBossFindings(bossPair({ cleared: [OOB] }))))
+            .toContain('R5 BobBoss: the fire arm\'s ledger is EXACTLY the rock and the '
+                + 'out-of-band write');
+        expect(failing(bobBossFindings(bossPair({
+            cleared: [ROCK, OOB, { level: 32, tag: 0 }],
+        })))).toContain('R5 BobBoss: the fire arm\'s ledger is EXACTLY the rock and the '
+            + 'out-of-band write');
+    });
+
+    it('goes red when the control arm cleared anything but the rock', () => {
+        expect(failing(bobBossFindings(bossPair({}, { cleared: [] }))))
+            .toContain('R5 BobBoss: the control arm cleared ONLY the rock');
+        expect(failing(bobBossFindings(bossPair({}, { cleared: [ROCK, OOB] }))))
+            .toContain('R5 BobBoss: the control arm cleared ONLY the rock');
+    });
+
+    it('goes red when the take-over did not happen, and when it happened twice', () => {
+        // A POSITIVE on one arm and its ABSENCE on the other: `BobBoss.death`
+        // is the only thing in this room that refuses input, so the fire arm
+        // must be taken over and the control arm must not.
+        expect(failing(bobBossFindings(bossPair({ refused: false }))))
+            .toContain('R5 BobBoss: the fire arm was TAKEN OVER by the form transitions');
+        expect(failing(bobBossFindings(bossPair({}, { refused: true }))))
+            .toContain('R5 BobBoss: the control arm was never taken over');
+    });
+
+    it('goes red when either arm was hit', () => {
+        // ⚠ The reading a form transition would otherwise erase: it writes
+        // `player.hits = 0`, so only the terminal value means anything.
+        expect(failing(bobBossFindings(bossPair({ hits: 2 }))))
+            .toContain('R5 BobBoss: the fire arm took no damage');
+        expect(failing(bobBossFindings(bossPair({}, { hits: 1 }))))
+            .toContain('R5 BobBoss: the control arm took no damage');
+    });
+
+    it('goes red when an arm left the sealed arena', () => {
+        expect(failing(bobBossFindings(bossPair({ level: 30 }))))
+            .toContain('R5 BobBoss: the fire arm is still in the arena');
+        expect(failing(bobBossFindings(bossPair({}, { level: 30 }))))
+            .toContain('R5 BobBoss: the control arm is still in the arena');
     });
 });

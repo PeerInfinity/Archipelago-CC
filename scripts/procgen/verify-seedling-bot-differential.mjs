@@ -121,6 +121,14 @@ const { r4AcceptanceFindings } =
     await import(join(REPO, 'frontend/modules/seedlingDemo/r4Acceptance.js'));
 const { r5AcceptanceFindings } =
     await import(join(REPO, 'frontend/modules/seedlingDemo/r5Acceptance.js'));
+// ⛔ The declared ENCOUNTER exemption — see `r5Chain.MODEL_EXEMPT`. A
+// scripted boss is not a mechanic the engine can model, so the three
+// mirror checks below are AMENDED by a per-fixture declaration rather than
+// skipped: the game is asserted against `mirror + earned`, which is a
+// harder claim than the unamended one.
+const { MODEL_EXEMPT } = await import(join(REPO, 'frontend/modules/seedlingDemo/r5Chain.js'));
+const { ITEM_PROPERTIES, inventorySlotsFor } =
+    await import(join(REPO, 'frontend/modules/seedlingDemo/tapeFormat.js'));
 const { r4TapeSpecs } = await import(join(REPO, 'frontend/modules/seedlingDemo/r4Walk.js'));
 const R4_ROUTE = JSON.parse(readFileSync(
     join(REPO, 'frontend/modules/seedlingDemo/fixtures/r4-route.json'), 'utf8'));
@@ -445,14 +453,51 @@ function checkReadout(name, tape, status) {
     // catch a grant firing early or a table wired to the wrong setter — a
     // check that only asserted the granted item would pass a build that
     // granted all fourteen.
-    const wrong = Object.entries(expected.inventory)
+    // ⛔ AMENDED BY THE DECLARED ENCOUNTER EXEMPTION, and the amendment is
+    // announced. `r5Chain.MODEL_EXEMPT` names, per fixture, the items the
+    // GAME earns through a mechanic the engine cannot model — a boss's
+    // runtime-spawned reward is in no level's pickup list, so no reading of
+    // the extract could ever produce it. Folding them in makes this check
+    // HARDER: a run that fought the boss and lost now fails here.
+    const exempt = MODEL_EXEMPT[name] ?? null;
+    const mirror = { ...expected.inventory };
+    for (const item of exempt?.earned ?? []) {
+        const spec = ITEM_PROPERTIES[item];
+        if (!spec) {
+            check(`${name}: the exemption names a real item`, false,
+                `MODEL_EXEMPT["${name}"].earned lists "${item}", which is not one of the `
+                + `fourteen (${Object.keys(ITEM_PROPERTIES).join(', ')})`);
+            continue;
+        }
+        if (spec.kind === 'add') mirror[spec.property] = spec.base + spec.value;
+        else mirror[spec.property] = true;
+    }
+    if (exempt) {
+        console.log(`MODEL-EXEMPT: ${name} — earns [${exempt.earned.join(', ') || 'nothing'}]`
+            + `${exempt.refusesInput ? ', refuses input' : ''}. ${exempt.why}`);
+    }
+    const wrong = Object.entries(mirror)
         .filter(([prop, want]) => status.items[prop] !== want)
         .map(([prop, want]) => `${prop}: game ${status.items[prop]}, expected ${want}`);
     check(`${name}: all 14 item properties match, positives and negatives`,
         wrong.length === 0, wrong.length ? wrong.join('; ')
             : `hitsMax=${status.items.hitsMax}, `
-            + `${Object.values(expected.inventory).filter((v) => v === true).length} `
-            + 'flag(s) true');
+            + `${Object.values(mirror).filter((v) => v === true).length} `
+            + `flag(s) true${exempt?.earned.length ? ` (${exempt.earned.length} EARNED, `
+                + 'not granted)' : ''}`);
+    // ...and the exemption has to be EXERCISED. An entry whose fixture
+    // matches the plain mirror is a fixture that did not do the thing it is
+    // exempt for, which is exactly the shape a stale exemption takes.
+    if (exempt && exempt.earned.length > 0) {
+        const plainWrong = Object.entries(expected.inventory)
+            .filter(([prop, want]) => status.items[prop] !== want);
+        check(`${name}: the encounter exemption is EXERCISED`, plainWrong.length > 0,
+            plainWrong.length > 0
+                ? `the game's item set really does differ from the tape's mirror by `
+                    + `[${exempt.earned.join(', ')}] — the encounter fired`
+                : 'the game matches the UNAMENDED mirror, so nothing was earned and this '
+                    + 'exemption is hiding a run that did not happen');
+    }
 
     // ── R4: THE EQUIP, TWO-SIDEDLY ────────────────────────────────────
     // A new tape field is a place for two consumers to disagree, and this
@@ -474,7 +519,12 @@ function checkReadout(name, tape, status) {
             status.primary === expected.primary,
             `game: ${status.primary}, expected: ${expected.primary}`);
         const gameSlots = (status.inventory_slots ?? []).join(',');
-        const wantSlots = (expected.inventorySlots ?? []).join(',');
+        // ⛔ RECOMPUTED FROM THE AMENDED MIRROR. `addItemsFromSave` builds the
+        // slot array from the item booleans, so an earned item is a slot the
+        // tape's own mirror cannot have — and reading the unamended array
+        // here would report the encounter's success as a slot-order defect.
+        const wantSlots = (exempt?.earned.length
+            ? inventorySlotsFor(mirror) : (expected.inventorySlots ?? [])).join(',');
         check(`${name}: the inventory slot ARRAY matches the mirror`,
             gameSlots === wantSlots,
             `game: [${gameSlots}], expected: [${wantSlots}] `
@@ -691,6 +741,14 @@ try {
                     : `the model expects ${causes.join(', ')} but the game never refused `
                     + 'input — the mechanic never fired, so this fixture proves nothing '
                     + 'about it');
+        } else if (status.saw_input_refused && MODEL_EXEMPT[name]?.refusesInput) {
+            // A DECLARED take-over. `BobBoss.death` sets `receiveInput =
+            // false` for each 120-frame form transition, so the refusal is
+            // the encounter working — and it is asserted as a POSITIVE:
+            // a fixture that declared it and did NOT get it never fought.
+            check(`${name}: the declared encounter take-over fired`, true,
+                'receiveInput went false mid-tape, which is what '
+                + `MODEL_EXEMPT["${name}"] says the script does`);
         } else if (status.saw_input_refused) {
             // Surfaced, not silently tolerated: receiveInput==false means the
             // game dropped input mid-tape and the stream is not comparable.
@@ -698,6 +756,10 @@ try {
                 'receiveInput went false mid-tape (cutscene/pit/boss/shield lock?) and '
                 + 'the model accounts for it with neither a pit transport nor a '
                 + 'touch-lock window');
+        } else if (MODEL_EXEMPT[name]?.refusesInput) {
+            check(`${name}: the declared encounter take-over fired`, false,
+                `MODEL_EXEMPT["${name}"] says this script sets receiveInput = false, and `
+                + 'the game never refused input — so the encounter did not run');
         }
 
         // Quantitative pin: a bot that recorded nothing, or teleported,
