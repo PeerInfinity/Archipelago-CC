@@ -30,6 +30,7 @@ import {
     MODELLED_TILE_TYPES,
     PLAYER_SOLID_TYPES,
     PUSHABLE_FAMILIES,
+    PRE_R5_ROLES,
     RELAXED_ROLES,
     ROLES,
     STAIRS_TAGS,
@@ -1226,8 +1227,16 @@ describe('roles: the census is per-role, and wider than the fixture levels', () 
             .toThrow(/unknown role "blockng"/);
     });
 
-    it('defaults to ALL roles, so no existing caller changed behaviour', () => {
-        expect(buildLevelWorld(levelRecord(0)).roles).toEqual(ROLES);
+    // ⚠ THIS TEST USED TO SAY "defaults to ALL roles", AND R5 MADE THAT
+    // PHRASE WRONG RATHER THAN THIS TEST WRONG. `combat` is the fifth role
+    // and it is OPT-IN: a walk with `noDamage: true` — every fixture R0
+    // through R4 recorded — is not wrong to ignore combat, and defaulting it
+    // on would throw on four committed route files to satisfy a table. The
+    // invariant the test actually protects is "no caller from before R5
+    // changed behaviour", so it is now stated against the set that names.
+    it('defaults to the four PRE-R5 roles, so no existing caller changed behaviour', () => {
+        expect(buildLevelWorld(levelRecord(0)).roles).toEqual(PRE_R5_ROLES);
+        expect(ROLES).toEqual([...PRE_R5_ROLES, 'combat']);
     });
 });
 

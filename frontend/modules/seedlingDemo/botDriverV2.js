@@ -68,7 +68,7 @@ import {
     assertTapeWithinRuntimeBudget, coerceTerrainState, serializeTape,
 } from './tapeFormat.js';
 import { createLevelRun } from './levelRun.js';
-import { RELAXED_ROLES, ROLES, TILE_SIZE } from './levelWorld.js';
+import { PRE_R5_ROLES, RELAXED_ROLES, TILE_SIZE } from './levelWorld.js';
 import { assertRect, rectsOverlap } from './levelWorld.js';
 import { playerBoxAt, terrainProbeRect } from './playerPhysicsV2.js';
 import { TICKS_FROM_PRESS_TO_WALKABLE } from './bridges.js';
@@ -2080,7 +2080,13 @@ export function synthesizeLegs(legs, opts = {}) {
             // with collision ON is the opposite: it consults EVERY role, and
             // an unpriced collider must stop it by name. R2 paid that bill
             // for the levels its walk enters.
-            roles: noclip ? RELAXED_ROLES : ROLES,
+            // ⚠ PRE_R5_ROLES, NOT "every role there is". R5 added a fifth
+            // (`combat`), and a driver that consulted it by default would
+            // throw on every committed route — all four of which were
+            // planned and recorded with `noDamage: true`, where the guard is
+            // real and the game honoured it. The R5 driver asks for combat
+            // by name; see levelWorld's PRE_R5_ROLES docblock.
+            roles: noclip ? RELAXED_ROLES : PRE_R5_ROLES,
         } : {}),
     });
     const perTick = [];

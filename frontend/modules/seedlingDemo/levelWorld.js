@@ -54,6 +54,20 @@ import {
 } from '../flashPanel/seedlingSemantics.js';
 import { coerceTerrainState, HAZARD_STATES } from './tapeFormat.js';
 import { SEEDLING_PIXEL_MASKS } from './seedlingPixelMasks.js';
+// R5 slice 2: the `combat` role. `combat.js` is deliberately dependency-free
+// (its own docblock says so) precisely so this import can exist without a
+// cycle, and `seedlingDamageSites.js` is generated data.
+import {
+    ENEMY_CLASSES,
+    PUZZLEMENT_HAZARDS,
+    LOOKS_LIKE_COMBAT,
+    TOTAL_ENEMIES_CLASSES,
+    aggroDisc,
+    combatCensus,
+    isCounted,
+    killLocksIn,
+} from './combat.js';
+import { HARMFUL_CLASSES } from './seedlingDamageSites.js';
 
 /**
  * The player hitbox origin, for recovering the entity position from a box.
@@ -242,10 +256,123 @@ const UNMODELLED_REASON = Object.freeze({
  * frames, or a shifted global RNG stream, all of which surface as "the
  * physics diverged".
  */
-export const ROLES = Object.freeze(['blocking', 'trigger', 'pickup', 'proximity-hazard']);
+export const ROLES = Object.freeze([
+    'blocking', 'trigger', 'pickup', 'proximity-hazard', 'combat',
+]);
 
 /** The three a relaxed (noclip) walk consults. `blocking` is R2's bill. */
 export const RELAXED_ROLES = Object.freeze(['trigger', 'pickup', 'proximity-hazard']);
+
+/**
+ * The four roles every rung through R4 consulted, and the DEFAULT.
+ *
+ * ⚠⚠ `combat` IS OPT-IN, AND THAT IS A DELIBERATE ASYMMETRY. Every other
+ * role was added by widening this default, because a walk that ignored a
+ * trigger or a pickup was WRONG. A walk with `noDamage: true` — which is
+ * every fixture R0 through R4 recorded, all fifty-seven of them — is not
+ * wrong to ignore combat: the guard is real and the game honoured it. Making
+ * `combat` the default would throw on the four committed route files at
+ * import time and re-open a settled rung to satisfy a table.
+ *
+ * So R5 asks for it by name, and `ROLES` stays the name of "every role there
+ * is" so that `buildLevelWorld`'s unknown-role check keeps working.
+ * See `feedback_coincidental_predicate_rots`: the set a caller consults is
+ * pinned by that caller, never inferred.
+ */
+export const PRE_R5_ROLES = Object.freeze([
+    'blocking', 'trigger', 'pickup', 'proximity-hazard',
+]);
+
+/**
+ * The roles an `ENTITY_CLASSES` entry's own `roles` field answers for.
+ *
+ * ⛔ `combat` IS NOT ONE OF THEM, and that is not an oversight. The other
+ * four are answered by the entry itself ("does it block", "does it swap the
+ * world"); the combat answer lives in `combat.js`'s two tables, which have
+ * their own vocabulary — hit points, aggro reach, which terrain kills it —
+ * and their own second stratum (`seedlingDamageSites.js`). If `combat` were
+ * in this list, then `roles: ROLES` on a hundred-odd scenery entries would
+ * silently CLAIM a combat answer none of them has, which is the exact
+ * "classified is an affirmative act, never a default" rule the ROLES
+ * docblock opens with. So the entity-table check iterates these four and the
+ * combat check is its own block, sourced from its own table.
+ */
+export const ENTITY_TABLE_ROLES = Object.freeze([
+    'blocking', 'trigger', 'pickup', 'proximity-hazard',
+]);
+
+/**
+ * The two derivations that decide whether a placed tag NEEDS a combat row.
+ *
+ * `HARMFUL_CLASS_SET` is the call-site census — a grep over the Seedling
+ * checkout for every `hit`/`drown`/`die` on a `Player`-typed receiver, which
+ * knows nothing about combat.js. `TOTAL_ENEMIES_SET` is the whitelist
+ * `Game.totalEnemies()` sums, because a COUNTED class seals a kill lock
+ * whether or not it can hurt you: `DarkTrap` is counted, unkillable and
+ * harmless, and it is the one combination that can seal a lock forever.
+ * A tag matching either one has to be priced.
+ */
+const HARMFUL_CLASS_SET = new Set(HARMFUL_CLASSES);
+const TOTAL_ENEMIES_SET = new Set(TOTAL_ENEMIES_CLASSES);
+
+/**
+ * The ONE placement table, injected into `combat.js`'s census.
+ *
+ * `combat.combatCensus` refuses to guess a constructed position, and this is
+ * why: an enemy's `x`/`y` — the coordinates `FP.distance`, `getState` and
+ * every aggro test read — are the CONSTRUCTOR's, not the `.oel` file's, and
+ * `IceTurret`'s ctor is `super(_x + Tile.w, _y + Tile.h)`, sixteen pixels
+ * down and right of the attribute. That table is `ENTITY_CLASSES`' own
+ * `dx`/`dy`, transcribed once from each class's `Game.as` construction site.
+ * One implementation, two callers — the `levelRun.js` doctrine.
+ */
+export const combatPlacementOf = (tag) => {
+    const cls = ENTITY_CLASSES[tag];
+    return cls ? { dx: cls.dx ?? 0, dy: cls.dy ?? 0 } : null;
+};
+
+/**
+ * The combat census of one level, PER INSTANCE, with counts and the two
+ * things a router asks of it: the aggro disc and the kill bill.
+ *
+ * §5's rule in one function: "L40 has enemies" is not a claim; these rows
+ * are what a claim is made of. Callable without building a world — the
+ * instruments want it that way — and `buildLevelWorld` returns exactly this
+ * on `world.combat` when the caller consults the role.
+ */
+export function combatCensusOf(levelRecord) {
+    const c = combatCensus(levelRecord, { placementOf: combatPlacementOf });
+    const counts = {};
+    for (const row of [...c.enemies, ...c.hazards]) {
+        counts[row.tag] = (counts[row.tag] ?? 0) + 1;
+    }
+    return {
+        level: c.level,
+        // Every enemy instance, with the disc a router must not cross
+        // without a declared verdict. `disc` is null for a class whose
+        // aggro range is not a number (a boss's "arena", the wallflyer's
+        // screen-width ray) — those are ENCOUNTER SCRIPTS, and a null here
+        // is what stops an envelope from quietly calling one contact-free.
+        enemies: c.enemies.map((e) => ({
+            ...e, disc: aggroDisc(e.tag, e.cx, e.cy), counted: isCounted(e.tag),
+        })),
+        // The second damage family, carrying the field the rung turns on.
+        hazards: c.hazards,
+        counts,
+        /** Counted instances only — what a `tSet == -1` lock waits on. */
+        get bill() { return c.enemies.filter((e) => e.counted); },
+        killLocks: killLocksIn(levelRecord, { placementOf: combatPlacementOf }),
+        /**
+         * ⚠ How many `Game.worldFrame`-coupled instances stand here.
+         * Exactly two classes are (BeamTower, LavaChain), and their phase
+         * rides on the accumulated dead-frame count — so a level with a
+         * non-zero count here cannot be crossed on an EXACT schedule, only
+         * inside a ±k envelope. It is the field the §6.6 pin decision is
+         * about, surfaced where a planner can see it.
+         */
+        get phaseUncertain() { return c.hazards.filter((h) => h.timing === 'worldFrame'); },
+    };
+}
 
 /**
  * A tag that is NOT an entity: `loadlevel` reads it with `hasOwnProperty`
@@ -2344,7 +2471,7 @@ function intAttr(attrs, name, fallback) {
  * the tileset strip, while an entity's x/y are raw pixels. Mixing them is
  * the easiest way to build a world that is 16x wrong in one place only.
  */
-export function buildLevelWorld(levelRecord, { roles = ROLES, cleared = null } = {}) {
+export function buildLevelWorld(levelRecord, { roles = PRE_R5_ROLES, cleared = null } = {}) {
     if (!levelRecord || typeof levelRecord !== 'object') {
         fail('buildLevelWorld needs a level record from seedling-map.json');
     }
@@ -2516,7 +2643,11 @@ export function buildLevelWorld(levelRecord, { roles = ROLES, cleared = null } =
         // Role-scoped: a tag classified for the roles this caller consults
         // is enough, even if another role is still unpriced. That is the
         // whole relaxation — see the ROLES docblock.
-        for (const role of roles) {
+        //
+        // ⚠ FOUR OF THE FIVE. `combat` is answered by `combat.js`'s tables
+        // rather than by this one's `roles` field (see ENTITY_TABLE_ROLES),
+        // and its check is the block after the object loop.
+        for (const role of roles.filter((r) => ENTITY_TABLE_ROLES.includes(r))) {
             if (!cls.roles.includes(role)) {
                 fail(`${where} contains entity "${e.type}" at (${e.x},${e.y}), which is `
                     + `classified for [${cls.roles.join(', ')}] but NOT for the "${role}" `
@@ -2920,6 +3051,50 @@ export function buildLevelWorld(levelRecord, { roles = ROLES, cleared = null } =
         }
     }
 
+    // --- the combat role (R5 slice 2) ------------------------------------
+    //
+    // ⛔ THE THROW IS THE POINT. §5: "census claims are per-INSTANCE with
+    // counts — 'L40 has enemies' is not a claim. The Puzzlements family is IN
+    // the census or the builder throws." A caller that consults `combat` has
+    // retired `noDamage`, so a placed thing that can reach `Player.hit` and
+    // has no row is not a gap in a table, it is a hazard the route does not
+    // know about.
+    //
+    // ⚠⚠ AND WHAT "NEEDS A ROW" IS DERIVED THE OTHER WAY ROUND. The obvious
+    // test — "is the tag in `combat.LOOKS_LIKE_COMBAT`" — asks the table
+    // whether the table knows about it, which is the R4 §14 shape exactly: a
+    // check that shares its subject's derivation agrees with whatever both
+    // forgot. So the requirement is sourced from `seedlingDamageSites.js`,
+    // extracted from the game's own call sites by a script with no notion of
+    // "enemy", UNIONED with `totalEnemies()`'s whitelist (a counted class
+    // seals a kill lock whether or not it can hurt you — `DarkTrap` is
+    // exactly that, and it is harmless).
+    let combat = null;
+    if (consults.has('combat')) {
+        const needsRow = [];
+        for (const e of levelRecord.entities ?? []) {
+            const cls = ENTITY_CLASSES[e.type];
+            const as3 = cls?.as3 ?? null;
+            const dangerous = as3 !== null
+                && (HARMFUL_CLASS_SET.has(as3) || TOTAL_ENEMIES_SET.has(as3));
+            const hasRow = Boolean(ENEMY_CLASSES[e.type] || PUZZLEMENT_HAZARDS[e.type]);
+            if (!hasRow && (dangerous || LOOKS_LIKE_COMBAT.has(e.type))) {
+                needsRow.push(`"${e.type}" (${as3}) at (${e.x},${e.y}) — `
+                    + (dangerous
+                        ? `${as3} reaches the player or is summed by totalEnemies()`
+                        : 'it is in the combat vocabulary'));
+            }
+        }
+        if (needsRow.length > 0) {
+            fail(`${where} contains ${needsRow.length} entit(ies) that need a COMBAT row `
+                + `and have none: ${needsRow.join('; ')}. Add them to combat.js's `
+                + 'ENEMY_CLASSES or PUZZLEMENT_HAZARDS with their damage, aggro reach, '
+                + 'timing class and setHitbox args — a route that consults `combat` has '
+                + 'retired `noDamage`, so an unpriced hazard is a contact nobody planned.');
+        }
+        combat = combatCensusOf(levelRecord);
+    }
+
     // ⚠ A CLEAR NOBODY RESPONDS TO IS A THROW, not a no-op. The clear list
     // is DERIVED from named blockers, so an entry that matches nothing in
     // its level is a bookkeeping error in the derivation — and the failure
@@ -3043,6 +3218,17 @@ export function buildLevelWorld(levelRecord, { roles = ROLES, cleared = null } =
         pressResponders,
         /** R4: the enemy roster, for the per-walk press arithmetic. */
         pressEnemies,
+        /**
+         * R5: the combat census, PER INSTANCE — or **null** when the caller
+         * did not consult the `combat` role.
+         *
+         * ⚠ NULL, NOT AN EMPTY CENSUS, and that distinction is the same one
+         * `pressResponders` draws: an empty list would read as "nothing here
+         * can hurt you", which is the single most dangerous thing this
+         * module could say untruthfully. A relaxed world has not paid for
+         * the answer and says so.
+         */
+        combat,
         /**
          * R4: the bridge tiles, which are press responders too — the one
          * arm of `genericHit` that dispatches on `Tile` and the only

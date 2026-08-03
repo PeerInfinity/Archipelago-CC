@@ -68,6 +68,32 @@
  * dead ones (`Game.as:818` sits outside the `blackCover` gate). Those two
  * are phase-uncertain by the accumulated dead-frame count and get envelope
  * treatment; the other four are self-timed and exactly modellable.
+ *
+ * ── R5 SLICE 2: THE TABLES ARE NOW CHECKED AGAINST THE CALL SITES ─────
+ *
+ * Both tables above were written by READING the classes a human already
+ * believed were dangerous, which is the shape R4 §14 caught being wrong:
+ * a census is a claim about an ABSENCE, and a check that shares its
+ * subject's derivation agrees with the omission that produced it.
+ * `seedlingDamageSites.js` is the second, independent derivation — a grep
+ * over the checkout for every `hit`/`drown`/`die` call on a `Player`-typed
+ * expression, which knows nothing about enemies — and
+ * `assertDamageFamilyCovered` requires the two to agree.
+ *
+ * ⚠ THE ENVELOPE NUMBERS. `speed` is the class's own `moveSpeed`, and it
+ * is a BOUND on displacement per tick, not the observed step: `Mobile`
+ * runs `friction()` (0.25) before `moveX/moveY`, and every chaser
+ * re-normalizes its velocity to `moveSpeed` AFTER moving, so the actual
+ * step is `moveSpeed - f`. The bound is what a contact-freedom proof needs
+ * and the slack is deliberate — see `encounters.chaseEnvelope`.
+ *
+ * ⛔ AND `Enemy.update`'s OFF-SCREEN RETURN DOES NOT FREEZE THE SUBCLASS.
+ * `Bob.update` is `super.update(); …chase…`, so an off-screen Bob still
+ * runs its chase block and still accumulates velocity — what it skips is
+ * `mobileUpdate` (friction, `moveX`/`moveY`), the terrain switch,
+ * `hitUpdate` and `hitPlayer`. So off-screen means CANNOT MOVE and CANNOT
+ * DAMAGE, which is all the envelope needs, but "frozen" is the wrong word
+ * for it and the i-frame timer does not run down out there either.
  */
 
 /**
@@ -133,14 +159,14 @@ export const TOTAL_ENEMIES_OMISSIONS = Object.freeze({
 export const ENEMY_CLASSES = Object.freeze({
     bob: {
         as3: 'Bob', kill: { hits: 3 }, aggro: { kind: 'chase', range: 80 },
-        hitbox: { w: 8, h: 8, ox: 4, oy: 4 }, damage: 1,
+        hitbox: { w: 8, h: 8, ox: 4, oy: 4 }, damage: 1, speed: 0.5,
         terrain: { water: 'dies', lava: 'dies', pit: 'falls' },
         offScreen: false, sideWrite: null,
         src: 'Enemies/Bob.as:21,41 + Enemy defaults',
     },
     bobsoldier: {
         as3: 'BobSoldier', kill: { hits: 3 }, aggro: { kind: 'chase', range: 80 },
-        hitbox: { w: 8, h: 8, ox: 4, oy: 2 }, damage: 1,
+        hitbox: { w: 8, h: 8, ox: 4, oy: 2 }, damage: 1, speed: 0.8,
         terrain: { water: 'dies', lava: 'dies', pit: 'falls' },
         offScreen: false, sideWrite: null,
         src: 'Enemies/BobSoldier.as:33,65',
@@ -149,7 +175,7 @@ export const ENEMY_CLASSES = Object.freeze({
     },
     bulb: {
         as3: 'Bulb', kill: { hits: 1 }, aggro: { kind: 'chase', range: 80 },
-        hitbox: { w: 12, h: 12, ox: 6, oy: 6 }, damage: 1,
+        hitbox: { w: 12, h: 12, ox: 6, oy: 6 }, damage: 1, speed: 0.65,
         terrain: { water: 'dies', lava: 'dies', pit: 'falls' },
         offScreen: false, sideWrite: null,
         src: 'Enemies/Bulb.as:27,30 (extends Bob → runRange 80)',
@@ -163,7 +189,7 @@ export const ENEMY_CLASSES = Object.freeze({
     },
     lavarunner: {
         as3: 'LavaRunner', kill: { hits: 2 }, aggro: { kind: 'chase', range: 80 },
-        hitbox: { w: 12, h: 12, ox: 6, oy: 6 }, damage: 1,
+        hitbox: { w: 12, h: 12, ox: 6, oy: 6 }, damage: 1, speed: 1.5,
         // ⚠ It survives LAVA and nothing else. `dieInWater` is left at the
         // `Enemy` default and `canFallInPit` likewise — so water and pits
         // clear a lavarunner for free, which is the cheap arm of three of
@@ -174,7 +200,7 @@ export const ENEMY_CLASSES = Object.freeze({
     },
     jellyfish: {
         as3: 'Jellyfish', kill: { hits: 3 }, aggro: { kind: 'chase', range: 160 },
-        hitbox: { w: 12, h: 12, ox: 6, oy: 6 }, damage: 1,
+        hitbox: { w: 12, h: 12, ox: 6, oy: 6 }, damage: 1, speed: 0.8,
         // The only class on the map that must be KILLED: it survives water
         // and lava and refuses to fall in a pit.
         terrain: { water: 'survives', lava: 'survives', pit: 'refuses' },
@@ -184,7 +210,7 @@ export const ENEMY_CLASSES = Object.freeze({
     },
     puncher: {
         as3: 'Puncher', kill: { hits: 3 }, aggro: { kind: 'chase', range: 80 },
-        hitbox: { w: 12, h: 12, ox: 6, oy: 4 }, damage: 1,
+        hitbox: { w: 12, h: 12, ox: 6, oy: 4 }, damage: 1, speed: 1,
         terrain: { water: 'dies', lava: 'dies', pit: 'falls' },
         offScreen: false, sideWrite: null,
         reach: { kind: 'punch', px: 10 },
@@ -192,7 +218,7 @@ export const ENEMY_CLASSES = Object.freeze({
     },
     drill: {
         as3: 'Drill', kill: { hits: 3 }, aggro: { kind: 'teleport-hop', range: 48 },
-        hitbox: { w: 10, h: 10, ox: 5, oy: 5 }, damage: 1,
+        hitbox: { w: 10, h: 10, ox: 5, oy: 5 }, damage: 1, speed: 16,
         terrain: { water: 'dies', lava: 'dies', pit: 'falls' },
         offScreen: false, sideWrite: null,
         src: 'Enemies/Drill.as:18,37',
@@ -200,7 +226,7 @@ export const ENEMY_CLASSES = Object.freeze({
     },
     flyer: {
         as3: 'Flyer', kill: { hits: 3 }, aggro: { kind: 'chase-through-walls', range: 80 },
-        hitbox: { w: 10, h: 8, ox: 5, oy: 12 }, damage: 2,
+        hitbox: { w: 10, h: 8, ox: 5, oy: 12 }, damage: 2, speed: 1,
         terrain: { water: 'survives', lava: 'survives', pit: 'refuses' },
         offScreen: false, sideWrite: null,
         src: 'Enemies/Flyer.as:35-43 (extends Bob → runRange 80)',
@@ -209,7 +235,7 @@ export const ENEMY_CLASSES = Object.freeze({
     },
     spinner: {
         as3: 'Spinner', kill: { hits: 3 }, aggro: { kind: 'none', range: 0 },
-        hitbox: { w: 7, h: 7, ox: 4, oy: 4 }, damage: 1,
+        hitbox: { w: 7, h: 7, ox: 4, oy: 4 }, damage: 1, speed: 1,
         terrain: { water: 'dies', lava: 'dies', pit: 'falls' },
         // ⚠ RUNS OFF SCREEN. Its body wall-bounces on `Mobile` physics with
         // no chase (`runRange = 0` makes the chase block dead), so the body
@@ -225,14 +251,14 @@ export const ENEMY_CLASSES = Object.freeze({
     },
     wallflyer: {
         as3: 'WallFlyer', kill: { hits: 3 }, aggro: { kind: 'wall-hug-launch', range: 'screen width' },
-        hitbox: { w: 14, h: 14, ox: 7, oy: 7 }, damage: 1,
+        hitbox: { w: 14, h: 14, ox: 7, oy: 7 }, damage: 1, speed: 4,
         terrain: { water: 'dies', lava: 'dies', pit: 'falls' },
         offScreen: 'in-flight only', sideWrite: null,
         src: 'Enemies/WallFlyer.as:38,71-75',
     },
     turret: {
         as3: 'Turret', kill: { hits: 3 }, aggro: { kind: 'static-shooter', range: 64 },
-        hitbox: { w: 16, h: 16, ox: 8, oy: 8 }, damage: 1,
+        hitbox: { w: 16, h: 16, ox: 8, oy: 8 }, damage: 1, speed: 0,
         terrain: { water: 'dies', lava: 'dies', pit: 'falls' },
         offScreen: false, sideWrite: null,
         projectile: { as3: 'TurretSpit', speed: 3, everyTicks: 40 },
@@ -240,7 +266,7 @@ export const ENEMY_CLASSES = Object.freeze({
     },
     iceturret: {
         as3: 'IceTurret', kill: { hits: 3 }, aggro: { kind: 'static-shooter', range: 128 },
-        hitbox: { w: 32, h: 32, ox: 16, oy: 16 }, damage: 1,
+        hitbox: { w: 32, h: 32, ox: 16, oy: 16 }, damage: 1, speed: 0,
         // ⚠ TWO-STAGE, and the second stage is where the ladder's stories
         // about it go wrong. `death()` intercepts the first `destroy`:
         // hitbox shrinks to 16x16, the "dead" anim plays, `destroy` is put
@@ -266,7 +292,7 @@ export const ENEMY_CLASSES = Object.freeze({
     },
     grenade: {
         as3: 'Grenade', kill: null, aggro: { kind: 'armed-by-proximity', range: 32 },
-        hitbox: { w: 6, h: 6, ox: 3, oy: 3 }, damage: 1,
+        hitbox: { w: 6, h: 6, ox: 3, oy: 3 }, damage: 1, speed: 0,
         terrain: { water: 'n/a', lava: 'n/a', pit: 'n/a' },
         offScreen: false, sideWrite: null,
         blast: { radius: 20, force: 2 },
@@ -277,7 +303,7 @@ export const ENEMY_CLASSES = Object.freeze({
     },
     icetrap: {
         as3: 'IceTrap', kill: null, aggro: { kind: 'static', range: 8 },
-        hitbox: { w: 16, h: 16, ox: 8, oy: 8 }, damage: 1,
+        hitbox: { w: 16, h: 16, ox: 8, oy: 8 }, damage: 1, speed: 0,
         terrain: { water: 'n/a', lava: 'n/a', pit: 'n/a' },
         offScreen: false, sideWrite: null,
         src: 'Enemies/IceTrap.as:17,28,32',
@@ -286,7 +312,7 @@ export const ENEMY_CLASSES = Object.freeze({
     },
     sandtrap: {
         as3: 'SandTrap', kill: { hits: 3 }, aggro: { kind: 'static', range: 20 },
-        hitbox: { w: 16, h: 16, ox: 8, oy: 8 }, damage: 1,
+        hitbox: { w: 16, h: 16, ox: 8, oy: 8 }, damage: 1, speed: 0,
         terrain: { water: 'dies', lava: 'dies', pit: 'falls' },
         offScreen: false, sideWrite: 'own tag',
         src: 'Enemies/SandTrap.as:17,35,85',
@@ -294,7 +320,7 @@ export const ENEMY_CLASSES = Object.freeze({
     },
     darktrap: {
         as3: 'DarkTrap', kill: null, aggro: { kind: 'static', range: 20 },
-        hitbox: { w: 16, h: 16, ox: 8, oy: 8 }, damage: 1,
+        hitbox: { w: 16, h: 16, ox: 8, oy: 8 }, damage: 1, speed: 0,
         terrain: { water: 'dies', lava: 'dies', pit: 'falls' },
         offScreen: false, sideWrite: null,
         src: 'Enemies/DarkTrap.as:56-59 (extends SandTrap → chompRange 20)',
@@ -306,7 +332,7 @@ export const ENEMY_CLASSES = Object.freeze({
     },
     lavatrap: {
         as3: 'LavaTrap', kill: { hits: 3 }, aggro: { kind: 'static-tongue', range: 32 },
-        hitbox: { w: 10, h: 10, ox: 5, oy: 5 }, damage: 1,
+        hitbox: { w: 10, h: 10, ox: 5, oy: 5 }, damage: 1, speed: 0,
         terrain: { water: 'dies', lava: 'dies', pit: 'falls' },
         offScreen: false, sideWrite: null,
         src: 'Enemies/LavaTrap.as:21,43',
@@ -317,7 +343,7 @@ export const ENEMY_CLASSES = Object.freeze({
     },
     bombpusher: {
         as3: 'BombPusher', kill: null, aggro: { kind: 'static-lobber', range: 256 },
-        hitbox: { w: 48, h: 48, ox: 24, oy: 24 }, damage: 1,
+        hitbox: { w: 48, h: 48, ox: 24, oy: 24 }, damage: 1, speed: 0,
         terrain: { water: 'n/a', lava: 'n/a', pit: 'n/a' },
         offScreen: true, sideWrite: null,
         src: 'Enemies/BombPusher.as:20-34,67',
@@ -663,6 +689,122 @@ export function assertTotalEnemiesTable(directoryClasses) {
         }
     }
     return findings;
+}
+
+/**
+ * The classes the call-site census finds dangerous that neither table
+ * carries a row for — each with the reason, and each a claim.
+ *
+ * ⚠ This is the half of `assertDamageFamilyCovered` that can go wrong
+ * QUIETLY, so it is data with citations rather than a filter. Three shapes:
+ *
+ *   `base`       the inherited site every row already prices (`Enemy`).
+ *   `projectile` a thing a placed class SPAWNS; the volume belongs to the
+ *                spawner's row, which is where a router can see it.
+ *   `unplaced`   nothing in the extract constructs it on R5's map.
+ */
+export const DAMAGE_FAMILY_EXCLUSIONS = Object.freeze({
+    Enemy: { kind: 'base', why: '`Enemy.hitPlayer` (Enemy.as:210-220) is THE contact-damage '
+        + 'site every subclass inherits — it is what each row\'s `damage` field prices. '
+        + 'Listing it as its own row would be listing the mechanism as an instance.' },
+
+    Arrow: { kind: 'projectile', of: 'arrowtrap', why: 'Arrow.as:49 — 3 per 10 frames, '
+        + 'downward at speed 5, damage 1. Priced on the arrowtrap\'s own volume.' },
+    TurretSpit: { kind: 'projectile', of: 'turret', why: 'TurretSpit.as:53 — the turret\'s '
+        + '64 px range is what decides whether one is ever fired.' },
+    IceTurretBlast: { kind: 'projectile', of: 'iceturret', why: 'IceTurretBlast.as:53 — and '
+        + 'its `freeze(15)` is OUTSIDE `noDamage`, which the iceturret row carries.' },
+    Explosion: { kind: 'projectile', of: 'grenade/bombpusher/wand', why: 'Explosion.as:60 — '
+        + 'the grenade blast (r 20), the bombpusher\'s Bomb, and a WAND kill\'s own '
+        + 'explosion, which is why §5 forbids wand kills near self.' },
+    LavaBall: { kind: 'projectile', of: 'lavaboss', why: 'LavaBall.as:69 — LavaBoss is R6\'s '
+        + 'and uncounted; the ball exists only while it is alive.' },
+    BossTotemShot: { kind: 'projectile', of: 'bosstotem', why: 'BossTotemShot.as:56 — the '
+        + 'straight-down pairs of the fight §2.6.4 rules AVOID.' },
+
+    RockFall: { kind: 'unplaced', why: '⚠⚠ NOT `FallRock`, and NOT placeable: the only two '
+        + 'construction sites are `FinalBoss.as:144,216`, so it is R6\'s. Recorded here '
+        + 'because it is the ONE gameplay-RNG damage volume in the game — '
+        + '`sprRockFall.scale = Math.random()/2 + 0.25` feeds `setHitbox` two lines later '
+        + '(RockFall.as:33,37), so the rect is 8x4..24x12 by a draw, and `Game.shake += '
+        + 'scale + 1` on landing moves the camera by a draw too. §2.1\'s "no gameplay RNG '
+        + 'in R5\'s scope" is TRUE, and this is the named reason it is true.' },
+    Pod: { kind: 'unplaced', why: 'L112 only, and L112\'s `pod` volume is unpriced BY RULING '
+        + '(R6 owns it) — the one holdout in the 115/116 blocking census. Pod.as:64-74 '
+        + 'writes the player\'s position AND calls `hit(null,0,null,1)`.' },
+    Tentacle: { kind: 'unplaced', why: 'spawned only by `TentacleBeast.as:188`, whose own '
+        + 'spawn positions are `Math.random()`-placed (TentacleBeast.as:138-139,167-168) — '
+        + 'the R6 encounter §3.6 banks the RNG-pinning question for.' },
+});
+
+/**
+ * The two tables cover every class that can reach the player — checked
+ * against a derivation that knows nothing about them.
+ *
+ * ⚠⚠ THE §14 LESSON IN ITS SLICE-2 COSTUME. `ENEMY_CLASSES` and
+ * `PUZZLEMENT_HAZARDS` were written by reading the classes somebody already
+ * believed were dangerous. A mutation table over those tables would agree
+ * with any class they BOTH forgot, because fixture and check share the
+ * derivation. `seedlingDamageSites.HARMFUL_CLASSES` is the second stratum:
+ * a grep over the checkout for `hit`/`drown`/`die` on a `Player`-typed
+ * receiver, which has no notion of "enemy" at all.
+ *
+ * @param {string[]} harmfulClasses `seedlingDamageSites.HARMFUL_CLASSES`
+ * @returns {string[]} findings; empty means the families are covered
+ */
+export function assertDamageFamilyCovered(harmfulClasses) {
+    const findings = [];
+    const covered = new Set([
+        ...Object.values(ENEMY_CLASSES).map((r) => r.as3),
+        ...Object.values(PUZZLEMENT_HAZARDS).map((r) => r.as3),
+    ]);
+    for (const cls of harmfulClasses ?? []) {
+        if (covered.has(cls)) continue;
+        if (DAMAGE_FAMILY_EXCLUSIONS[cls]) continue;
+        findings.push(`${cls} reaches the player (seedlingDamageSites) but has no row in `
+            + 'ENEMY_CLASSES or PUZZLEMENT_HAZARDS and no entry in '
+            + 'DAMAGE_FAMILY_EXCLUSIONS — classify it, or declare why it cannot fire');
+    }
+    // The other direction: an exclusion for something that is NOT dangerous
+    // is a stale claim, and stale claims are how a census rots.
+    const harmful = new Set(harmfulClasses ?? []);
+    for (const cls of Object.keys(DAMAGE_FAMILY_EXCLUSIONS)) {
+        if (!harmful.has(cls)) {
+            findings.push(`${cls} is declared a damage-family exclusion but the call-site `
+                + 'census does not find it reaching the player — the checkout moved');
+        }
+    }
+    return findings;
+}
+
+/**
+ * The per-tick displacement BOUND for one instance, for a contact-freedom
+ * proof.
+ *
+ * Deliberately the class's whole `moveSpeed` rather than its observed step
+ * (`moveSpeed - f`, because `friction()` runs before `moveX/moveY`): an
+ * envelope has to dominate, and a bound that is loose by a quarter pixel per
+ * tick is cheap. Returns 0 for anything static — a turret's threat is its
+ * PROJECTILE and lives on its own row.
+ *
+ * ⚠ It is a bound only while the instance has NOT been hit. `Enemy.hit`
+ * applies knockback force, and a knocked enemy's `v.length > moveSpeed` puts
+ * its own chase code on the `pushed` branch, which does not re-normalize. So
+ * this is sound for an avoid crossing and must not be used to price the
+ * ticks after a press lands.
+ */
+export function stepBoundFor(tag) {
+    const row = ENEMY_CLASSES[tag];
+    // ⚠ NOT 0. An unknown tag is not a thing that cannot move, it is a thing
+    // nobody priced, and `0` would let an envelope prove contact-freedom
+    // against a hazard it has never heard of.
+    if (!row) return null;
+    // ⛔ A BOSS HAS NO BOUND, and `0` would be the worst possible answer —
+    // it reads as "static" and would let an envelope declare a boss arena
+    // contact-free. `null` is "no envelope; this one is an ENCOUNTER SCRIPT",
+    // and `chaseEnvelope` refuses it by name.
+    if (row.boss) return null;
+    return Number.isFinite(row.speed) ? row.speed : null;
 }
 
 /**
