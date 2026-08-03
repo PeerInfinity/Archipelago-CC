@@ -874,12 +874,19 @@ describe('the relaxed driver', () => {
     // clips a volume that the tile-centre test cleared — which needs a
     // volume placed off-centre in a tile the route must pass through.
 
-    it('builds worlds with the RELAXED census, so an unpriced collider is no bar', () => {
+    it('builds worlds with the RELAXED census, which R5 made a vacuous distinction', () => {
         // R2 paid the blocking bill for the R1 ROUTE, so the witness chain's
-        // own levels (2 and 3 among them) build both ways now. The claim
-        // this test makes is unchanged and still has teeth — it just needs a
-        // level R2 deliberately did NOT price. Level 1 is off every route.
-        expect(() => buildLevelWorld(levelSource(1))).toThrow();
+        // own levels (2 and 3 among them) build both ways; the claim then
+        // needed a level R2 deliberately did NOT price, and level 1 was one.
+        //
+        // ⛔ R5 CLASSIFIED EVERY REMAINING TAG, so there is no longer a level
+        // that the relaxed census builds and the full one refuses — level 1
+        // included. The relaxation still exists and `synthesizeLegs` still
+        // passes it; what it no longer BUYS is a level. Asserted in that
+        // direction, and recorded as a bounded vacuity rather than deleted:
+        // the witness that would revive it is the next tag the extract
+        // gains, or R6's `pod`.
+        expect(() => buildLevelWorld(levelSource(1))).not.toThrow();
         expect(() => buildLevelWorld(levelSource(1), { roles: RELAXED_ROLES })).not.toThrow();
         expect(() => synthesizeLegs(WITNESS_LEGS, { levelSource, relax: RELAX }))
             .not.toThrow();
@@ -1058,19 +1065,25 @@ describe('R2: a relaxed walk with collision ON', () => {
         expect(Math.abs(run.final.y - 216)).toBeLessThanOrEqual(DEFAULT_TOLERANCE);
     });
 
-    it('consults the BLOCKING census, so an unpriced collider stops it by name', () => {
-        // The mirror image of R0 slice 1b: a noclip walk may cross a level
-        // whose colliders nobody priced, and a collision walk may not.
-        // The exemplar tag has rotted once already — this test used
-        // `arrowtrap` in L4 until R4's L67 probes priced it — so the pick is
-        // now the LAST tag likely to be priced: `finaldoor`, L113, endgame.
-        // When R6 prices it, move to whatever the census still refuses.
-        expect(() => synthesizeLegs([{ level: 113, targets: [{ x: 120, y: 120 }] }],
-            { levelSource, boot: { level: 113, x: 112, y: 112 }, relax: R2 }))
-            .toThrow(/"finaldoor".*NOT for the "blocking" role/s);
-        // The same level under noclip does not even ask.
-        expect(() => buildLevelWorld(levelSource(113), { roles: RELAXED_ROLES }))
-            .not.toThrow();
+    it('consults the census, and an unpriced VOLUME still stops it by name', () => {
+        // The mirror image of R0 slice 1b: a walk may not cross a level
+        // whose geometry nobody priced. The exemplar tag has now rotted
+        // TWICE — `arrowtrap` in L4 until R4's L67 probes priced it, then
+        // `finaldoor` in L113 until R5's sweep did — which is the third time
+        // this arc has learned that a coincidental exemplar rots silently.
+        //
+        // So the pick is no longer a BLOCKING holdout (there are none): it
+        // is the one piece of geometry that is unpriced by RULING rather
+        // than by neglect — `pod`, L112, whose avoid volume belongs to R6
+        // with the ending. When R6 prices it, this test moves to whatever
+        // the census still refuses, and if nothing does, it says so.
+        expect(() => synthesizeLegs([{ level: 112, targets: [{ x: 120, y: 120 }] }],
+            { levelSource, boot: { level: 112, x: 112, y: 112 }, relax: R2 }))
+            .toThrow(/"pod".*PROXIMITY HAZARD/s);
+        // ...and noclip does not save it either, because `proximity-hazard`
+        // is a CHEAP role: this one is about the volume, not the collider.
+        expect(() => buildLevelWorld(levelSource(112), { roles: RELAXED_ROLES }))
+            .toThrow(/"pod".*PROXIMITY HAZARD/s);
     });
 
     it('refuses a non-boolean noclip rather than coercing it', () => {

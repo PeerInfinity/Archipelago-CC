@@ -881,7 +881,8 @@ export const ENTITY_CLASSES = Object.freeze({
             // and over-avoiding is the safe direction, so it is always on.
         },    },
     pod: {
-        as3: 'Pod', roles: RELAXED_ROLES,
+        as3: 'Pod', roles: ROLES, collider: 'none', type: 'Pod',
+        dx: 8, dy: 8,
         src: 'Game.as:2191 + Scenery/Pod.as:70-73',
         why: 'snaps `p.x`/`p.y` to its own position, then calls Player.hit()',
         hazard: 'unpriced',
@@ -900,7 +901,8 @@ export const ENTITY_CLASSES = Object.freeze({
                 + 'has to price this volume properly.',
         },    },
     finalboss: {
-        as3: 'FinalBoss', roles: RELAXED_ROLES,
+        as3: 'FinalBoss', roles: ROLES, collider: 'none', type: 'Enemy',
+        dx: 8, dy: 8,
         src: 'Game.as:2074 + Enemies/FinalBoss.as:92',
         why: 'sets `Game.freezeObjects = true` for its intro, and writes persistence',
         hazard: 'unpriced',
@@ -918,28 +920,64 @@ export const ENTITY_CLASSES = Object.freeze({
         'damage only, via Player.hit()'),
     bobsoldier: notSolid('BobSoldier', 'Game.as:2067 + Enemies/Enemy.as:58', 'Enemy',
         'damage only'),
-    flyer: cheapOnly('Flyer', 'Game.as:2075', 'Enemy — damage only (Flyer.as:68)'),
+    flyer: notSolid('Flyer', 'Game.as:2075 + Enemies/Enemy.as:58 (via Bob)', 'Enemy',
+        'damage only (Flyer.as:68). ⚠ Its ctor is `super(_x, _y, …)` with NO half-tile '
+        + 'offset — the only enemy on the map without one — and its damage is 2, the '
+        + 'only non-boss contact that costs two hearts'),
     jellyfish: notSolid('Jellyfish', 'Game.as:2076 + Enemies/Enemy.as:58', 'Enemy',
         'damage only'),
     lavarunner: notSolid('LavaRunner', 'Game.as:2077 + Enemies/Enemy.as:58 (via Bob)',
         'Enemy', 'damage only'),
     bulb: notSolid('Bulb', 'Game.as:2078 + Enemies/Enemy.as:58 (via Bob)', 'Enemy',
         'damage only'),
-    tentaclebeast: cheapOnly('TentacleBeast', 'Game.as:2079',
-        'Enemy — damage via Tentacle.as:73, i.e. Player.hit()'),
-    drill: cheapOnly('Drill', 'Game.as:2080',
-        'Enemy — chases within runRange but only ever damages via Player.hit()'),
-    sandtrap: cheapOnly('SandTrap', 'Game.as:2081',
+    tentaclebeast: {
+        as3: 'TentacleBeast',
+        roles: ROLES, collider: 'pixelmask', type: 'Solid', mask: 'TentacleBeastMask',
+        dx: 1, dy: 2, w: 46, h: 44, originX: 0, originY: 0,
+        src: 'Game.as:2079 + Enemies/TentacleBeast.as:38-46 '
+            + '+ assets/graphics/TentacleBeastMask.png (46x44)',
+        // ⛔ THE THIRD ENEMY THAT IS SOLID, and the mask extractor said the
+        // opposite for three rungs: its docblock read `TentacleBeast extends
+        // Enemy` and concluded "type is Enemy, which is in no solids list",
+        // but the ctor OVERWRITES it — `type = "Solid"` at `:46`, exactly as
+        // `BombPusher.as:31` does. So the mask is a real collider and L57
+        // could not be built without it.
+        // ⚠ THE TWO OFFSETS ARE NOT THE SAME NUMBER, and only one `dx` field
+        // serves both readers. `super(_x + 24, _y + 24, …)` puts the ENTITY
+        // 24 px in, and `new Pixelmask(img, -23, -22)` puts the MASK 23/22
+        // back out from there — so the mask's top-left is oel + (1, 2).
+        // `entityRect` reads `x + dx - originX` and `maskPlacement` reads
+        // `x + dx`, so the pair that satisfies both is dx/dy = 1/2 with zero
+        // origins, not 24/24 with 23/22. (The `Statue` lesson again: an
+        // offset applied at one level of the chain and not the next.)
+    },
+    drill: notSolid('Drill', 'Game.as:2080 + Enemies/Enemy.as:58', 'Enemy',
+        'Enemy — chases within runRange (48, by teleport-hop along a solid-free line) '
+        + 'but only ever damages via Player.hit()'),
+    sandtrap: notSolid('SandTrap', 'Game.as:2081 + Enemies/Enemy.as:58', 'Enemy',
         'Enemy — proximity only plays a "chomp" animation and a sound '
-        + '(SandTrap.as:56-64); damage is the base Enemy contact path'),
+        + '(SandTrap.as:56-64); damage is the base Enemy contact path. ⚠ It is the one '
+        + 'plain enemy whose `removed()` writes its own persistence tag '
+        + '(SandTrap.as:85), so killing one is a LEDGER entry'),
     icetrap: notSolid('IceTrap', 'Game.as:2082 + Enemies/Enemy.as:58', 'Enemy',
         'as SandTrap: proximity animates, damage goes through Player.hit()'),
     darktrap: notSolid('DarkTrap', 'Game.as:2084 + Enemies/Enemy.as:58 (via SandTrap)',
         'Enemy', 'reacts to LIGHT sources, not to the player'),
     turret: notSolid('Turret', 'Game.as:2085 + Enemies/Enemy.as:58', 'Enemy',
         'fires projectiles that hit()'),
-    beamtower: cheapOnly('BeamTower', 'Game.as:2087',
-        'damage only (BeamTower.as:92 calls p.hit)'),
+    beamtower: {
+        as3: 'BeamTower',
+        roles: ROLES, collider: 'rect', type: 'Solid',
+        dx: 8, dy: 16, w: 16, h: 32, originX: 8, originY: 24,
+        src: 'Game.as:2087 + Puzzlements/BeamTower.as:28-44',
+        // ⚠ A DAMAGE SOURCE THAT IS ALSO A SOLID, and two tiles tall:
+        // `super(_x + 8, _y + 16, …)` then `setHitbox(16, 32, 8, 24)` gives
+        // [oel.x, +16) x [oel.y + 8, +32). The BEAM is the damage and it is
+        // not this rect — it is a swept position from
+        // `Game.worldFrame(phases, loops)`, i.e. a phase that rides on the
+        // accumulated dead-frame count (see `combat.PUZZLEMENT_HAZARDS`).
+        // Four of these flank the L108 ferry corridor.
+    },
     grenade: notSolid('Grenade', 'Game.as:2088 + Enemies/Grenade.as:41', 'Enemy',
         'damage only (Grenade.as:133)'),
     bombpusher: {
@@ -955,8 +993,20 @@ export const ENTITY_CLASSES = Object.freeze({
         // super(_x + Tile.w*3/2, _y + Tile.h*3/2) with
         // setHitbox(48, 48, 24, 24) gives [oel.x, +48) x [oel.y, +48).
     },
-    crusher: cheapOnly('Crusher', 'Game.as:2090',
-        'damage only — Crusher.as:98 goes through Player.hit()'),
+    crusher: {
+        as3: 'Crusher',
+        roles: ROLES, collider: 'rect', type: 'Solid',
+        dx: 16, dy: 16, w: 32, h: 32, originX: 16, originY: 16,
+        src: 'Game.as:2090 + Puzzlements/Crusher.as:37-40',
+        // `Crusher extends Activators`: super(_x + Tile.w, _y + Tile.h) then
+        // setHitbox(32, 32, 16, 16) — [oel.x, +32) x [oel.y, +32), two tiles
+        // square. ⛔ Its damage is **1000** ("KILL EVERYTHING",
+        // `Crusher.as:33`), so a contact is `die()` at any `hitsMax` and its
+        // volume is never a graze. `type` also becomes "BS" mid-cycle
+        // (`:57`), which is in no solids list — priced as the steady-state
+        // "Solid", which over-approximates in the safe direction for a
+        // route that stays out of a 1000-damage box anyway.
+    },
     puncher: notSolid('Puncher', 'Game.as:2091 + Enemies/Enemy.as:58', 'Enemy',
         'damage only (Puncher.as:216)'),
     wallflyer: notSolid('WallFlyer', 'Game.as:2197 + Enemies/Enemy.as:58', 'Enemy',
@@ -1009,11 +1059,37 @@ export const ENTITY_CLASSES = Object.freeze({
         // ⚠ It sits in L82 at (112,48) and the R1 route's final leg arrives
         // at (168,280) with no exit — so it seals nothing. Priced anyway.
     },
-    shieldboss: cheapOnly('ShieldBoss', 'Game.as:2170',
-        'boss — damage only (ShieldBoss.as:110); also in the player solids list'),
-    frozenboss: cheapOnly('FrozenBoss', 'Game.as:2192', 'boss — no player-side writes'),
-    lightbosscontroller: cheapOnly('LightBossController', 'Game.as:2072',
-        'spawns Flyers; writes persistence only on its own death'),
+    shieldboss: {
+        as3: 'ShieldBoss',
+        roles: ROLES, collider: 'rect', type: 'ShieldBoss',
+        dx: 24, dy: 32, w: 48, h: 48, originX: 24, originY: 24,
+        src: 'Game.as:2170 + Enemies/ShieldBoss.as:32-47',
+        // ⛔ THE SEAL ON `shield`, AND IT IS HIS BODY. "ShieldBoss" is in
+        // `PLAYER_SOLID_TYPES` — pushed unconditionally by `Player`'s own
+        // ctor — and `super(_x + Tile.w * 1.5, _y + Tile.h * 2, …)` with
+        // `setHitbox(48, 48, 24, 24)` puts a 48x48 solid at
+        // [oel.x, +48) x [oel.y + 8, +48). L19's `bosskey@96,64` is INSIDE
+        // it, and `_attract` is false, so the key cannot be taken while he
+        // lives. Three rungs called the shield sealed by L20's lock chain;
+        // it is sealed by this rect.
+    },
+    frozenboss: {
+        as3: 'FrozenBoss',
+        roles: ROLES, collider: 'rect', type: 'Solid',
+        dx: 0, dy: 0, w: 80, h: 32, originX: -32, originY: -128,
+        src: 'Game.as:2192 + Scenery/FrozenBoss.as:18-20',
+        // ⚠ NEGATIVE ORIGINS, transcribed verbatim rather than tidied:
+        // `setHitbox(80, 32, -32, -128)` puts the rect at
+        // [oel.x + 32, +80) x [oel.y + 128, +32) — a hundred and twenty-eight
+        // pixels BELOW the placement. It is `Scenery`, not `Enemies`, in
+        // spite of the name, and it writes nothing player-side.
+    },
+    lightbosscontroller: notSolid('LightBossController', 'Game.as:2072 '
+        + '+ Enemies/LightBossController.as:40', '',
+        'spawns Flyers; writes persistence only on its own death. ⚠ Its ctor is a bare '
+        + '`super()` — it takes NO position at all, so the oel x/y are read into fields '
+        + 'and the entity itself sits at (0, 0) with no hitbox and FlashPunk\'s default '
+        + 'empty type'),
 
     // NPCs. `keyNeeded` is `true` for every one of them (it is assigned in
     // exactly one place in the codebase, `Watcher.as:46`), so `NPC.talk()`
@@ -1032,24 +1108,41 @@ export const ENTITY_CLASSES = Object.freeze({
         // Its `doneTalking()` is where `darksword` comes from — a KEY PRESS,
         // not a proximity event, which is why it is not a hazard.
     },
-    oracle: cheapOnly('Oracle', 'Game.as:2177',
-        'NPC, keyNeeded true. Its `FP.world = new Game(...)` (Oracle.as:121) is in '
-        + 'doneTalking(); the proximity check at :63 is inside render() and only '
-        + 'picks an animation'),
+    oracle: {
+        as3: 'Oracle',
+        roles: ROLES, collider: 'rect', type: 'Solid',
+        dx: 8, dy: 8, w: 16, h: 24, originX: 8, originY: 12,
+        src: 'Game.as:2177 + NPCs/NPC.as:47-59 + NPCs/Oracle.as:13 (Spritemap 16x24)',
+        why: 'NPC, keyNeeded true. Its `FP.world = new Game(...)` (Oracle.as:121) is in '
+            + 'doneTalking(); the proximity check at :63 is inside render() and only '
+            + 'picks an animation',
+    },
     hermit: {
         as3: 'Hermit',
         roles: ROLES, collider: 'rect', type: 'Solid',
         dx: 8, dy: 8, w: 10, h: 12, originX: 5, originY: 6,
         src: 'Game.as:2179 + NPCs/NPC.as:47-59 + NPCs/Hermit.as:13 (Spritemap 10x12)',
     },
-    yeti: cheapOnly('Yeti', 'Game.as:2180', 'NPC, keyNeeded true'),
+    yeti: {
+        as3: 'Yeti',
+        roles: ROLES, collider: 'rect', type: 'Solid',
+        dx: 8, dy: 8, w: 10, h: 12, originX: 5, originY: 6,
+        src: 'Game.as:2180 + NPCs/NPC.as:47-59 + NPCs/Yeti.as:13 (Spritemap 10x12)',
+        why: 'NPC, keyNeeded true',
+    },
     sensei: {
         as3: 'Sensei',
         roles: ROLES, collider: 'rect', type: 'Solid',
         dx: 8, dy: 8, w: 8, h: 8, originX: 4, originY: 4,
         src: 'Game.as:2181 + NPCs/NPC.as:47-59 + NPCs/Sensei.as:13 (Spritemap 8x8)',
     },
-    sign: cheapOnly('Sign', 'Game.as:2182', 'NPC, keyNeeded true'),
+    sign: {
+        as3: 'Sign',
+        roles: ROLES, collider: 'rect', type: 'Solid',
+        dx: 8, dy: 8, w: 16, h: 16, originX: 8, originY: 8,
+        src: 'Game.as:2182 + NPCs/NPC.as:47-59 + NPCs/Sign.as:11 (Spritemap 16x16)',
+        why: 'NPC, keyNeeded true — and a Solid, like every NPC (NPC.as:59)',
+    },
     totem: {
         as3: 'Totem',
         roles: ROLES, collider: 'rect', type: 'Solid',
@@ -1106,7 +1199,18 @@ export const ENTITY_CLASSES = Object.freeze({
         // ⚠ The R2 recon priced this from the frame-1 arm and was wrong in
         // both height and origin. The two frames have DIFFERENT hitboxes.
     },
-    oraclestatue: cheapOnly('OracleStatue', 'Game.as:2195', 'scenery'),
+    oraclestatue: {
+        as3: 'OracleStatue',
+        roles: ROLES, collider: 'rect', type: 'Solid',
+        dx: 0, dy: 0, w: 32, h: 32, originX: 0, originY: 0,
+        src: 'Game.as:2195 + Scenery/OracleStatue.as:16-21',
+        // `setHitbox(32, 32)` with NO origin args, so both origins are
+        // FlashPunk's default 0 and the rect's top-left IS the oel
+        // position: [oel.x, +32) x [oel.y, +32). The `sprOracleStatue.y =
+        // -16` / `originY = 16` two lines above move the SPRITE only —
+        // `Statue`'s lesson (an offset applied at one level of the chain and
+        // not the next) pointing the other way for once.
+    },
     shieldstatue: {
         as3: 'ShieldStatue',
         roles: ROLES, collider: 'rect', type: 'Solid',
@@ -1228,8 +1332,26 @@ export const ENTITY_CLASSES = Object.freeze({
                 + 'through',
         },
     },
-    rocklock: cheapOnly('RockLock', 'Game.as:2137', 'opened by an item'),
-    grasslock: cheapOnly('GrassLock', 'Game.as:2143', 'opened by an item'),
+    rocklock: {
+        as3: 'RockLock',
+        roles: ROLES, collider: 'rect', type: 'Solid',
+        dx: 8, dy: 8, w: 16, h: 16, originX: 8, originY: 8,
+        src: 'Game.as:2137 + Puzzlements/RockLock.as:22-28',
+        // `RockLock extends Activators` directly and carries its OWN
+        // `normType = "Solid"` (`:19`) — the same shape as `Lock`'s but a
+        // separate field. L26's is a KILL lock (`tset = -1`), and
+        // `RockLock.as:52` re-states `Lock`'s kill arm rather than
+        // inheriting it.
+    },
+    grasslock: {
+        as3: 'GrassLock',
+        roles: ROLES, collider: 'rect', type: 'Solid',
+        dx: 8, dy: 8, w: 16, h: 16, originX: 8, originY: 8,
+        src: 'Game.as:2143 + Puzzlements/GrassLock.as:13-16 + Puzzlements/Lock.as:25-34',
+        // `GrassLock extends Lock` and its ctor is a bare `super(_x, _y, _t,
+        // _tag, sprGrassLock)` — every offset and the hitbox come from
+        // `Lock`, so it is the `lock` entry with a different sprite.
+    },
     wandlock: {
         as3: 'WandLock',
         roles: ROLES, collider: 'rect', type: 'Solid',
@@ -1255,9 +1377,14 @@ export const ENTITY_CLASSES = Object.freeze({
         dx: 8, dy: 8, w: 16, h: 16, originX: 8, originY: 8,
         src: 'Game.as:2149 (new MagicalLock(x, y, tag, 1)) — the same class, sprite only',
     },
-    finaldoor: cheapOnly('FinalDoor', 'Game.as:2190',
-        'opens on seal state; it READS persistence (including level 114 tag 0, the '
-        + 'Watcher) but writes nothing on approach'),
+    finaldoor: {
+        as3: 'FinalDoor',
+        roles: ROLES, collider: 'rect', type: 'Solid',
+        dx: 16, dy: 16, w: 32, h: 32, originX: 16, originY: 16,
+        src: 'Game.as:2190 + Scenery/FinalDoor.as:23-26',
+        why: 'opens on seal state; it READS persistence (including level 114 tag 0, the '
+            + 'Watcher) but writes nothing on approach',
+    },
     // ⚠ `rope` is the one entry whose footprint is not a constant: it spans
     // from its own x to its `<node>` child's, so `w` is DATA and lives with
     // the placement rather than with the class. See `ROPE_SPANS`.
@@ -1395,8 +1522,21 @@ export const ENTITY_CLASSES = Object.freeze({
         dx: 0, dy: 0, w: 80, h: 88, originX: 0, originY: 0,
         src: 'Game.as:2104 (new Building(x, y, 6)) + Scenery/Building.as:20-23',
     },
-    building7: cheapOnly('Building', 'Game.as:2105 (new Building(x, y, 7))', 'scenery (pixelmask)'),
-    building8: cheapOnly('Building', 'Game.as:2106 (new Building(x, y, 8))', 'scenery (pixelmask)'),
+    building7: {
+        as3: 'Building',
+        roles: ROLES, collider: 'pixelmask', type: 'Solid', mask: 'Building7Mask',
+        dx: 0, dy: 0, w: 80, h: 96, originX: 0, originY: 0,
+        src: 'Scenery/Building.as:20-23 + assets/graphics/Building7Mask.png (80x96)',
+        // ⚠ ON THE CRITICAL PATH, not scenery trivia: L93 is the only level
+        // with an edge into L98, i.e. into Dungeon 8, and it would not build
+        // at all while this tag was blocking-unclassified.
+    },
+    building8: {
+        as3: 'Building',
+        roles: ROLES, collider: 'pixelmask', type: 'Solid', mask: 'Building8Mask',
+        dx: 0, dy: 0, w: 64, h: 64, originX: 0, originY: 0,
+        src: 'Scenery/Building.as:20-23 + assets/graphics/Building8Mask.png (64x64)',
+    },
     wire: notSolid('Wire', 'Game.as:2107 + Scenery/Wire.as:20-26', 'Wire',
         'decoration — its own type "Wire" is in no solids list'),
     bed: {
@@ -1405,8 +1545,20 @@ export const ENTITY_CLASSES = Object.freeze({
         dx: 0, dy: 0, w: 16, h: 32, originX: 0, originY: 0,
         src: 'Game.as:2108 + Scenery/Bed.as:15-21',
     },
-    dresser: cheapOnly('Dresser', 'Game.as:2109', 'furniture'),
-    bar: cheapOnly('Bar', 'Game.as:2110', 'furniture'),
+    dresser: {
+        as3: 'Dresser',
+        roles: ROLES, collider: 'rect', type: 'Solid',
+        dx: 0, dy: 0, w: 32, h: 16, originX: 0, originY: 0,
+        src: 'Game.as:2109 + Scenery/Dresser.as:16-20',
+    },
+    bar: {
+        as3: 'Bar',
+        roles: ROLES, collider: 'rect', type: 'Solid',
+        dx: 0, dy: 0, w: 64, h: 16, originX: 0, originY: 0,
+        src: 'Game.as:2110 + Scenery/Bar.as:16-20',
+        // `setHitbox(64, 16)` — four tiles wide, one tall, top-left at the
+        // oel position. The `barstool` beside it is a separate tag.
+    },
     barstool: {
         as3: 'Barstool',
         roles: ROLES, collider: 'rect', type: 'Solid',

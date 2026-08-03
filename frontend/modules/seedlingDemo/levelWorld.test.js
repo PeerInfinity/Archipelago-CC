@@ -900,12 +900,19 @@ describe('the pixelmask seam', () => {
     // eye, which is the whole reason that artifact is `#`/`.` rows rather
     // than hex. Stratum 2 is the arithmetic. Neither derives from the other.
 
-    it('the committed masks are the seventeen the game embeds, at their real sizes', () => {
-        expect(Object.keys(SEEDLING_PIXEL_MASKS)).toHaveLength(17);
+    it('the committed masks are the eighteen the game embeds, at their real sizes', () => {
+        // ⛔ SEVENTEEN BECAME EIGHTEEN AT R5. `TentacleBeastMask.png` was
+        // skipped by the extractor's own docblock on the reading that
+        // "TentacleBeast extends Enemy, so its type is Enemy, which is in no
+        // solids list" — and `TentacleBeast.as:46` overwrites that type with
+        // "Solid", exactly as `BombPusher.as:31` does. L57 could not be
+        // built without it.
+        expect(Object.keys(SEEDLING_PIXEL_MASKS)).toHaveLength(18);
         // Hand-read from the PNG headers, not from the extractor.
         expect(SEEDLING_PIXEL_MASKS.BuildingMask).toMatchObject({ w: 64, h: 48 });
         expect(SEEDLING_PIXEL_MASKS.OpenTreeMask).toMatchObject({ w: 32, h: 32 });
         expect(SEEDLING_PIXEL_MASKS.TreeLargeMask).toMatchObject({ w: 160, h: 192 });
+        expect(SEEDLING_PIXEL_MASKS.TentacleBeastMask).toMatchObject({ w: 46, h: 44 });
         for (const name of CLIFFSIDE_FRAME_MASKS) {
             expect(SEEDLING_PIXEL_MASKS[name]).toMatchObject({ w: 16, h: 16 });
         }
@@ -988,11 +995,17 @@ describe('the pixelmask seam', () => {
         // here directly rather than left as an expression nothing reads.
         const shifted = { ...ENTITY_CLASSES.treelarge, dx: 7, dy: -3 };
         expect(maskPlacement(shifted, 100, 100)).toMatchObject({ maskX: 107, maskY: 97 });
-        // and the real classes really are all zero, which is the fact that
-        // made the mutation survive — recorded rather than left implied.
+        // ⛔ AND THE "ALL SEVENTEEN ARE ZERO" FACT DIED AT R5, which is
+        // exactly why it was pinned here rather than left implied.
+        // `TentacleBeast` is the eighteenth mask and the first whose two
+        // offsets do not cancel: the ctor puts the ENTITY at oel + (24, 24)
+        // and the Pixelmask at (-23, -22) from there, so the mask's top-left
+        // is oel + (1, 2). Named, so the next reader does not "fix" it back
+        // to zero.
+        const NON_ZERO_MASK_OFFSETS = { tentaclebeast: [1, 2] };
         for (const [tag, cls] of Object.entries(ENTITY_CLASSES)) {
             if (cls.collider !== 'pixelmask') continue;
-            expect([cls.dx, cls.dy], tag).toEqual([0, 0]);
+            expect([cls.dx, cls.dy], tag).toEqual(NON_ZERO_MASK_OFFSETS[tag] ?? [0, 0]);
         }
     });
 
@@ -1120,6 +1133,18 @@ describe('roles: the census is per-role, and wider than the fixture levels', () 
         // setHitbox, no type, in no solids list), which is the whole reason
         // 82 became 85: L67 and two other arrowtrap-only holdouts now build
         // under the full census.
+        //
+        // ⛔ R5 FINISHED IT: 85 -> 115, and the two numbers are now the SAME
+        // number. The rung's route leaves the R2 census behind at its first
+        // new room (L19's ShieldBoss, L39-L42's wand puzzle, L93's door into
+        // Dungeon 8, L100-L109's ferry are all off every earlier route), so
+        // the remaining 22 tags were classified in one sweep and the
+        // eighteenth pixelmask was extracted.
+        //
+        // ⚠ The single holdout is L112, and it is NOT a blocking question:
+        // `pod` is a proximity hazard whose avoid volume nobody has
+        // transcribed, and `proximity-hazard` is in RELAXED_ROLES — so it
+        // throws for BOTH censuses and the two counts agree at 115.
         let full = 0;
         let relaxed = 0;
         for (const level of atlas.levels) {
@@ -1128,7 +1153,7 @@ describe('roles: the census is per-role, and wider than the fixture levels', () 
                 /* an unpriced hazard or a Bridge tile */
             }
         }
-        expect(full).toBe(85);
+        expect(full).toBe(115);
         expect(relaxed).toBe(115);
     });
 
@@ -1156,17 +1181,44 @@ describe('roles: the census is per-role, and wider than the fixture levels', () 
         }
     });
 
-    it('still throws for a role the caller DOES consult', () => {
-        // The relaxation must not become "throws less". R2 classified the
-        // 69 tags on the ROUTE and deliberately no further, so an OFF-route
-        // level still refuses the blocking role by name. Level 108 is the
-        // firewand ferry — R5's, not R2's — and holds `sandtrap`.
-        expect(() => buildLevelWorld(levelRecord(108)))
-            .toThrow(/but NOT for the "blocking" role/);
-        // ...and it builds fine for the roles a relaxed walk consults, which
-        // is what makes the previous line about the ROLE and not the level.
-        expect(() => buildLevelWorld(levelRecord(108), { roles: RELAXED_ROLES }))
-            .not.toThrow();
+    it('still throws loudly for geometry the census does not cover', () => {
+        // The relaxation must not become "throws less". Until R5 this was
+        // asserted against a real level: R2 classified the 69 tags on its
+        // route and no further, so an off-route level refused `blocking` by
+        // name — and the exemplar rotted twice (`arrowtrap` in L4, then
+        // `sandtrap` in L108).
+        //
+        // ⛔ R5 CLASSIFIED THE LAST ONE, so no level in the extract can play
+        // that part any more, and the ROLE-SCOPED arm of the census throw is
+        // a bounded vacuity from here on: every tag answers for every role,
+        // so `roles: RELAXED_ROLES` and the full set build the same 115
+        // levels. Recorded rather than papered over — the witness that would
+        // close it is the next tag the extract gains.
+        //
+        // What still has teeth, and is asserted here: the UNKNOWN-TAG arm,
+        // and the unpriced-hazard arm (L112's `pod`, which R6 prices).
+        expect(() => buildLevelWorld({
+            level: 900, class: 'Synthetic', width: 2, height: 2,
+            layers: [{ name: 'tiles', set: 'tileset', tiles: [] }],
+            entities: [{ type: 'notatag', x: 16, y: 16 }],
+        })).toThrow(/"notatag".*not in the transcribed class table/s);
+        expect(() => buildLevelWorld(levelRecord(112)))
+            .toThrow(/"pod".*PROXIMITY HAZARD/s);
+        expect(() => buildLevelWorld(levelRecord(112), { roles: RELAXED_ROLES }))
+            .toThrow(/"pod".*PROXIMITY HAZARD/s);
+    });
+
+    it('every tag in the extract now answers for the blocking role', () => {
+        // R5's sweep, stated as the fact it is rather than inferred from a
+        // count. The 22 tags it classified are the ones no earlier route
+        // entered: ShieldBoss (whose 48x48 Solid body is the seal on
+        // `shield`), the wand dungeon's crushers and beamtowers, the two
+        // buildings, the NPC family, and `TentacleBeast` — whose mask the
+        // extractor had skipped on the reading that its type is "Enemy",
+        // which its own constructor overwrites with "Solid".
+        for (const [tag, cls] of Object.entries(ENTITY_CLASSES)) {
+            expect(cls.roles, tag).toContain('blocking');
+        }
     });
 
     it('rejects an unknown role name rather than silently consulting nothing', () => {

@@ -76,6 +76,29 @@ const source = atlasLevelSource();
 /** Shared across both phases: keyed by level AND its own cleared tags. */
 const cache = { worlds: new Map(), components: new Map() };
 
+
+/**
+ * ⛔ THE FROZEN CENSUS PIN — the levels this rung's `blocking` census could
+ * not build when this route was authored.
+ *
+ * R2 paid the blocking bill for the 47 levels its walk entered; R5 paid it
+ * for the whole map, and 29 of these went from "throws" to "builds". More
+ * buildable levels means more edges, and more edges means the BFS finds a
+ * DIFFERENT (shorter) tour — the R4 planner authored a route one leg
+ * shorter the first time the wider census was in place, against six
+ * recorded and frozen tapes. The committed route file is the artifact, so
+ * the graph it was authored over is pinned BY NUMBER rather than by a
+ * predicate that would rot silently at the next widening.
+ *
+ * L57 and L112 are absent because they still do not build for reasons of
+ * their own (an unextracted `TentacleBeast` mask; an unpriced `Pod`
+ * volume), which is R6's bill and not a pin.
+ */
+const FROZEN_UNBUILDABLE = new Set([
+    1, 6, 8, 16, 19, 26, 28, 33, 34, 35, 36, 41, 42, 58, 66, 69, 86, 88, 91,
+    93, 100, 101, 103, 104, 105, 107, 108, 111, 113,
+]);
+
 const planWith = (clears) => makeRouteGraph({
     source,
     clears: clears.map((c) => ({ level: c.level, tag: c.tag })),
@@ -84,6 +107,7 @@ const planWith = (clears) => makeRouteGraph({
     holdTicks: R3_HOLD_TICKS,
     levelCount: LEVEL_COUNT,
     cache,
+    excludeLevels: FROZEN_UNBUILDABLE,
 });
 
 /** The clears the walk DECLARES — the seven named exceptions. */

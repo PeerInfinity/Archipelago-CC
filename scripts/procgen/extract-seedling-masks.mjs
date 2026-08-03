@@ -39,10 +39,13 @@ const GRAPHICS = 'assets/graphics';
 /**
  * Every mask that backs a SOLID collider, with the class that reads it.
  *
- * ⚠ `TentacleBeastMask.png` is deliberately absent: `TentacleBeast extends
- * Enemy`, so its type is `"Enemy"`, which is in no solids list — it is a
- * mask the player never collides with. Extracting it would put an artifact
- * in the tree that nothing may consult, which reads as coverage.
+ * ⛔ `TentacleBeastMask.png` USED TO BE deliberately absent, on the reading
+ * that "`TentacleBeast extends Enemy`, so its type is `"Enemy"`, which is in
+ * no solids list". R5's blocking sweep read the ctor: `TentacleBeast.as:46`
+ * OVERWRITES the inherited type with `"Solid"`, exactly as `BombPusher.as:31`
+ * does — it is the THIRD enemy on the map that blocks the player (the
+ * `IceTurret` corpse is the other). The mask is a real collider and L57 could
+ * not be built without it.
  *
  * The nine building masks are `Game.buildingMasks` in index order
  * (`Game.as:343-344`); the five cliffside masks are the `switch(frame)` arms
@@ -62,6 +65,11 @@ export const MASK_SOURCES = Object.freeze([
     { name: 'OpenTreeMask', file: 'OpenTreeMask.png', as3: 'Game.imgOpenTreeMask' },
     { name: 'SnowHillMask', file: 'SnowHillMask.png', as3: 'Game.imgSnowHillMask' },
     { name: 'TreeLargeMask', file: 'TreeLargeMask.png', as3: 'Game.imgTreeLargeMask' },
+    {
+        name: 'TentacleBeastMask',
+        file: 'TentacleBeastMask.png',
+        as3: 'Enemies/TentacleBeast.as:45 (new Pixelmask(imgTentacleBeastMask, -23, -22))',
+    },
     { name: 'CliffSideMaskL', file: 'CliffSideMaskL.png', as3: 'Game.imgCliffSidesMaskL' },
     { name: 'CliffSideMaskR', file: 'CliffSideMaskR.png', as3: 'Game.imgCliffSidesMaskR' },
     { name: 'CliffSideMaskLU', file: 'CliffSideMaskLU.png', as3: 'Game.imgCliffSidesMaskLU' },
