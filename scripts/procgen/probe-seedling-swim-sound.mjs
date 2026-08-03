@@ -65,7 +65,8 @@
  *   node scripts/procgen/probe-seedling-swim-sound.mjs --ticks=90
  */
 
-import { writeFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
@@ -82,6 +83,26 @@ const arg = (name, fallback) => {
 };
 const TICKS = Number(arg('ticks', '110'));
 const RUNS = Number(arg('runs', '2'));
+
+/**
+ * ⛓ `--win` IS THE STRONG HALF OF THE EXPERIMENT, and slice 2 added it
+ * because the local pair is the weak one.
+ *
+ * Two local runs are both at ~0.4 fps. If the term were live, BOTH would
+ * cross 100 ms of sound inside their first swimming tick (a tick is 2.5
+ * SECONDS of real time down here) and both would show the same boosted-tick
+ * count — identical streams, and the wrong conclusion.
+ *
+ * The question is a MILLISECONDS-AGAINST-FRAMES one, so it is only answered
+ * by comparing across FRAME RATES: at ~24 fps a tick is 42 ms, so a live
+ * 100 ms window boosts two or three ticks, while at 0.4 fps it boosts at most
+ * one. `--win` drives the identical tape through the real-GPU Windows path
+ * and diffs it against the local run's saved stream.
+ */
+const WIN = process.argv.includes('--win');
+const WIN_STAGE = '/mnt/c/playwright';
+const WIN_DRIVE = 'C:\\playwright';
+const PY = '/mnt/c/Windows/py.exe';
 
 /**
  * The tape: `hazard-walk-water`'s own route with water ARMED.
@@ -166,11 +187,43 @@ async function runOnce(label) {
     }
 }
 
+/** Drive the same tape on the real-GPU Windows path and read its stream. */
+function runOnWindows(label) {
+    mkdirSync(WIN_STAGE, { recursive: true });
+    writeFileSync(join(WIN_STAGE, 'seedling-bot-replay-win.py'),
+        readFileSync(join(HERE, 'seedling-bot-replay-win.py')));
+    writeFileSync(join(WIN_STAGE, `swim-${label}.json`), JSON.stringify({ tapes: [TAPE] }));
+    const started = Date.now();
+    const out = execFileSync(PY, [
+        '-3.12', `${WIN_DRIVE}\\seedling-bot-replay-win.py`,
+        '--url', PAGE_URL,
+        '--tapes', `${WIN_DRIVE}\\swim-${label}.json`,
+        '--out', `${WIN_DRIVE}\\swim-out-${label}.json`,
+        '--deadline-sec', '300',
+    ], { cwd: WIN_STAGE, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
+    for (const line of out.split('\n')) {
+        if (line.startsWith('REPLAY_') || line.startsWith('WEBGPU_')) console.log(`  ${line}`);
+    }
+    const trace = JSON.parse(readFileSync(join(WIN_STAGE, `swim-out-${label}.json`), 'utf8'));
+    const ticks = trace.windows[0].stream.ticks ?? [];
+    writeFileSync(join(OUT, `probe-swim-sound.${label}.json`), JSON.stringify({ ticks }));
+    return { ticks, secs: Math.round((Date.now() - started) / 1000) };
+}
+
 try {
     const runs = [];
-    for (let i = 1; i <= RUNS; i += 1) {
-        console.log(`\n── run ${i} ──`);
-        runs.push(await runOnce(`run${i}`));
+    if (WIN) {
+        // ⚠ The LOCAL run comes first and second: the pair being compared is
+        // "same tape, ~60x apart in frame rate", so both sides have to exist.
+        console.log('\n── run 1 (local, SwiftShader) ──');
+        runs.push(await runOnce('run1'));
+        console.log('\n── run 2 (real-GPU Windows Chrome) ──');
+        runs.push(runOnWindows('win'));
+    } else {
+        for (let i = 1; i <= RUNS; i += 1) {
+            console.log(`\n── run ${i} ──`);
+            runs.push(await runOnce(`run${i}`));
+        }
     }
     console.log('\n## the diff');
     const [a, ...rest] = runs;

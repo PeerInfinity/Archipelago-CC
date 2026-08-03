@@ -245,6 +245,46 @@ function runBridge() {
         }
     }
 
+    // ⛔⛔ THE BRIDGE'S BOUNDARIES ARE RE-BOOTS, NOT CONTINUATIONS — and the
+    // run that first asked this question is what settled it.
+    //
+    // Slice 2 wired `streamBoundaryFindings` in here expecting R4's segments
+    // to be its live witness: five of the six end with a key HELD (§10.2), so
+    // the player drifts across those boundaries and the two drained streams
+    // "must" disagree. They do not. All five come back SILENT, and the reason
+    // is the same one that makes the six streams byte-identical in the first
+    // place: the drift means `atBootPosition()` fails, so `botStart` REBUILDS
+    // the world at the tape's declared boot args (`Bot.as:706-711`) and the
+    // next window's first observation lands exactly on the recording's t0.
+    // **A re-boot erases the drift.**
+    //
+    // ⇒ §10.1's byte-identity is real, and §3.1's stronger claim — "one page,
+    // N loads, ZERO RE-BOOTS after the first" — is NOT what this bridge
+    // demonstrates. It demonstrates the weaker and still-useful one: the
+    // ITEMS and the LEDGER survive six boundaries with no grant and no clear
+    // list, which is the inheritance claim. The zero-re-boots half needs
+    // windows authored to the rest rule, which R4's are not and R5's own will
+    // be.
+    //
+    // ⇒ And the checker cannot be witnessed HERE, because a re-booted
+    // boundary is continuous by construction. `--boundary-witness` is the
+    // purpose-built pair that can be.
+    console.log('\n## the stream boundaries — and what they turn out to be');
+    let continuous = 0;
+    for (let i = 1; i < run.length; i += 1) {
+        const findings = director.streamBoundaryFindings(
+            run[i - 1].stream, run[i].stream, { index: i - 1, label: R4_SEGMENTS[i] },
+        );
+        if (findings.length === 0) continuous += 1;
+        console.log(`  ${held[i - 1].length > 0 ? 'held-key' : 'at-rest '} `
+            + `${R4_SEGMENTS[i - 1]} → ${R4_SEGMENTS[i]}: ${findings.length} finding(s)`
+            + (findings[0] ? ` — ${findings[0].what} (${findings[0].detail})` : ''));
+    }
+    console.log(`  ⇒ ${continuous} of ${run.length - 1} boundaries are stream-continuous. `
+        + 'Every window whose previous one ended with a key held RE-BOOTED, which erased '
+        + 'the drift — so this bridge cannot witness `streamBoundaryFindings` in the red '
+        + 'direction, and `--boundary-witness` is what does.');
+
     console.log('\n## the trace: one page, N windows, and what carried across');
     const moved = run.filter((w) => w.moved_at_boundary).length;
     console.log(`  ${run.length} windows, ${director.traceTicks(run)} live ticks, `
@@ -296,8 +336,126 @@ function runBridge() {
     }
 }
 
+/**
+ * ⛓ THE LIVE WITNESS FOR `streamBoundaryFindings` — and why the R4 bridge
+ * cannot be one.
+ *
+ * Slice 1 shipped `streamBoundaryFindings` with unit cases only (§10.5): it
+ * was written AFTER the green run, from what that run's disagreement
+ * revealed, so nothing had ever exercised it against the game. Per the
+ * silent-watcher law a checker whose silence is the claim needs a case that
+ * makes it SPEAK.
+ *
+ * ⚠ AND THE BRIDGE IS THE WRONG PLACE TO LOOK. R4's windows 2–6 declare boot
+ * blocks naming their own segment's construction args, which are NOT where
+ * the previous window's player drifted to — so `botStart` RE-BOOTS, the new
+ * world is constructed at the declared position, and the first observation is
+ * exactly the recording's t0. That is precisely why the six streams come back
+ * byte-identical. A re-boot ERASES the drift, so every boundary in the bridge
+ * is continuous and the checker is silent at all five. Silence is the vacuous
+ * direction.
+ *
+ * So the witness is purpose-built, as a PAIR one field apart:
+ *
+ *   drifted   W1 holds `right` to `tick_count`, so the key is still down when
+ *             the tape ends; W2's boot names the SAME construction args, so
+ *             `botStart` skips the re-boot (`Bot.as:706-711`) and W2 begins
+ *             wherever the player walked to during the round trip. The two
+ *             drained streams MUST disagree.
+ *   at rest   the identical pair with W1's span released 8 ticks early — the
+ *             §10.2 authoring rule. The player coasts to a stop inside the
+ *             tape, the boundary is continuous, and the checker MUST be
+ *             silent.
+ *
+ * A run where the drifted arm is silent means the checker cannot speak; a run
+ * where the at-rest arm speaks means it cannot stay quiet. Both are failures,
+ * and one run gets both directions.
+ */
+const WITNESS_BOOT = { level: 8, x: 32, y: 120 };
+const WITNESS_TICKS = 80;
+
+function witnessTape(name, release) {
+    return {
+        tape_version: 3,
+        game: 'seedling',
+        name,
+        description: 'the streamBoundaryFindings live witness',
+        boot: { ...WITNESS_BOOT },
+        noclip: false,
+        noDamage: true,
+        noHazards: ['water', 'lava', 'ice', 'waterfall'],
+        grants: [],
+        persistence: [],
+        tick_count: WITNESS_TICKS,
+        inputs: [{ key: 'right', from: 1, to: release }],
+    };
+}
+
+function runBoundaryWitness() {
+    console.log('## the `streamBoundaryFindings` live witness — a PAIR, one field apart\n');
+    const arms = [
+        {
+            id: 'drifted',
+            release: WITNESS_TICKS,
+            expect: 'findings',
+            why: 'W1\'s span runs to tick_count, so `right` is still HELD when the tape '
+                + 'ends and the player walks on through the boundary round trip',
+        },
+        {
+            id: 'at-rest',
+            release: WITNESS_TICKS - 8,
+            expect: 'silence',
+            why: 'the same pair with the §10.2 coast — the span releases 8 ticks early and '
+                + 'friction (subtractive, 0.25/tick) stops the player inside the tape',
+        },
+    ];
+    let failures = 0;
+    for (const arm of arms) {
+        const w1 = parseTape(witnessTape(`witness-${arm.id}-1`, arm.release));
+        const w2 = parseTape(witnessTape(`witness-${arm.id}-2`, arm.release));
+        const atRest = director.assertWindowEndsAtRest(w1);
+        console.log(`\n## arm "${arm.id}" — ${arm.why}`);
+        console.log(`   assertWindowEndsAtRest(W1): ${atRest.length} finding(s)`
+            + (atRest[0] ? ` — ${atRest[0]}` : ''));
+        const run = driveWindows([w1, w2], `witness-${arm.id}`);
+        const findings = director.streamBoundaryFindings(run[0].stream, run[1].stream,
+            { index: 0, label: arm.id });
+        const last = run[0].stream.ticks.at(-1);
+        const first = run[1].stream.ticks[0];
+        console.log(`   W1 ends   L${last.level} (${last.x}, ${last.y})`);
+        console.log(`   W2 begins L${first.level} (${first.x}, ${first.y})`);
+        console.log(`   streamBoundaryFindings: ${findings.length} finding(s)`);
+        for (const f of findings) console.log(`      ${f.what} — ${f.detail}`);
+        const ok = arm.expect === 'findings' ? findings.length > 0 : findings.length === 0;
+        if (ok) {
+            console.log(`   ✓ ${arm.expect === 'findings'
+                ? 'the checker SPOKE on a boundary the game really did break'
+                : 'the checker stayed SILENT on a boundary the game kept continuous'}`);
+        } else {
+            failures += 1;
+            console.log(`   ⛔ FAIL — expected ${arm.expect}. `
+                + (arm.expect === 'findings'
+                    ? 'A watcher that cannot be made to speak makes every silence vacuous; '
+                      + 'the boundary check would be a check that cannot fail.'
+                    : 'A watcher that speaks on a clean boundary is noise, and noise is '
+                      + 'what gets ignored on the run that matters.'));
+        }
+    }
+    if (failures > 0) {
+        console.log(`\n⛔ ${failures} arm(s) failed — \`streamBoundaryFindings\` has no live `
+            + 'witness and nothing may lean on it.');
+        process.exitCode = 1;
+    } else {
+        console.log('\n✅ `streamBoundaryFindings` HAS A LIVE WITNESS, in both directions: '
+            + 'it speaks on a deliberately drifted boundary and is silent on a clean one, '
+            + 'from one pair one field apart.');
+    }
+}
+
 if (args.includes('--bridge')) runBridge();
+else if (args.includes('--boundary-witness')) runBoundaryWitness();
 else {
     console.log('usage: run-seedling-director.mjs --bridge [--keep]');
+    console.log('       run-seedling-director.mjs --boundary-witness');
     process.exitCode = 2;
 }
