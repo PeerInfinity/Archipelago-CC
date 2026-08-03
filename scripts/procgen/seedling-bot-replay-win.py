@@ -31,6 +31,8 @@ root) and reached over WSL2 localhost forwarding.
 Usage:
   py.exe -3.12 <this> --url URL --tape C:\\...\\tape.json
                       --out C:\\...\\stream.json --deadline-sec N
+  py.exe -3.12 <this> --url URL --tapes C:\\...\\windows.json
+                      --out C:\\...\\trace.json        (R5's director: ONE page)
 """
 
 import argparse
@@ -83,15 +85,60 @@ def wait_for(desc, fn, deadline_sec, poll_sec=0.25):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--url", required=True)
-    ap.add_argument("--tape", required=True, help="Windows path to the tape JSON")
+    ap.add_argument("--tape", help="Windows path to ONE tape JSON")
+    ap.add_argument("--tapes", help="Windows path to a JSON ARRAY of tapes, run in "
+                                    "order ON ONE PAGE (R5's director)")
     ap.add_argument("--out", required=True, help="Windows path for the stream JSON")
     ap.add_argument("--deadline-sec", type=float, default=600.0)
     ap.add_argument("--progress", help="Windows path for a live progress sidecar")
     ap.add_argument("--headed", action="store_true", default=True)
     args = ap.parse_args()
 
-    with open(args.tape, "r", encoding="utf-8") as fh:
-        tape = json.load(fh)
+    # ── R5: ONE PAGE, N TAPES ────────────────────────────────────────────
+    # The director's whole shape. `botReset` forgets the tape but cannot
+    # rewind the GAME, which is why every fixture gets a fresh page — and it
+    # is exactly why the director does NOT: the live game state IS window
+    # k+1's inheritance, and re-booting between windows would throw away the
+    # thing being inherited. `botStart` already skips its own re-boot when
+    # the tape's `boot` names the current level and `atBootPosition()` holds
+    # (`Bot.as:706-708`), so a window boundary at a level ARRIVAL costs no
+    # frames at all.
+    #
+    # ⚠⚠ AND A WINDOW AFTER THE FIRST MUST DECLARE NO `persistence` CLEARS.
+    # `botStart`'s clear path is not additive: when `persistLevel.length > 0`
+    # it first sets EVERY tag in EVERY level back to `true` and only then
+    # applies the declared list (`Bot.as:690-705`). A second window carrying
+    # even one clear would therefore WIPE every flag the player earned in the
+    # windows before it — every pickup's own `removed()` write, every
+    # kill-lock open. The empty list is load-bearing, not tidiness, and the
+    # boundary assert on `persistence_cleared` is what catches a breach.
+    if bool(args.tape) == bool(args.tapes):
+        raise SystemExit("pass exactly one of --tape or --tapes")
+    release_codes = []
+    if args.tapes:
+        with open(args.tapes, "r", encoding="utf-8") as fh:
+            payload = json.load(fh)
+        # ⛔ `{tapes, releaseKeyCodes}` rather than a bare array, and the
+        # second field is not decoration. A tape whose last span runs to
+        # `tick_count` leaves that key HELD when the tape ends — R1..R4 never
+        # saw it because every fixture got a fresh page, and FlashPunk's
+        # `Input` is a static nothing on a teleport path clears. Between two
+        # windows the game keeps ticking, so a held key walks the player off
+        # the boundary before the next window is armed. The codes come from
+        # `tapeFormat.KEY_CODES` so the key table still has ONE implementation.
+        tapes = payload["tapes"] if isinstance(payload, dict) else payload
+        release_codes = payload.get("releaseKeyCodes", []) if isinstance(payload, dict) else []
+        if not isinstance(tapes, list) or not tapes:
+            raise SystemExit("--tapes must be a non-empty JSON array (or {tapes: [...]})")
+        for i, t in enumerate(tapes[1:], start=1):
+            if t.get("persistence"):
+                raise SystemExit(
+                    f"window {i} ({t.get('name')}) declares persistence clears; "
+                    "botStart would reset EVERY flag in EVERY level first and "
+                    "erase what the earlier windows earned")
+    else:
+        with open(args.tape, "r", encoding="utf-8") as fh:
+            tapes = [json.load(fh)]
 
     with sync_playwright() as p:
         # Headed on the real Windows desktop: this is the whole point — a real
@@ -133,51 +180,131 @@ def main():
             # visible in the log rather than just mysteriously slow.
             print(f"WEBGPU_ADAPTER: {adapter}", flush=True)
 
-            loaded = evaluate_bot(page, "botLoadTape", json.dumps(tape))
-            if loaded != "ok":
-                raise RuntimeError(f"botLoadTape: {loaded}")
-            started = evaluate_bot(page, "botStart")
-            if started != "ok":
-                raise RuntimeError(f"botStart: {started}")
+            windows = []
+            for wi, tape in enumerate(tapes):
+                label = tape.get("name") or f"window {wi}"
+                if len(tapes) > 1:
+                    print(f"WINDOW {wi}: {label}", flush=True)
+                # The state the PREVIOUS window ended in, read before this one
+                # is armed. `botStart` zeroes `tick`, `dead_frames`, `grants`
+                # and `equips`, so a boundary assert has to sample first —
+                # and it compares window k+1's boot state to window k's DRAINED
+                # END STATE, never to the plan.
+                if wi > 0 and release_codes:
+                    # Release every key on the same hardware path the bot
+                    # dispatches on — `Input.enable()` registers its listeners
+                    # on `FP.stage`, so a KeyboardEvent there is exactly what
+                    # the game would see from a real keyboard. This is what a
+                    # fresh page did implicitly for every fixture before now.
+                    page.evaluate(
+                        """(codes) => {
+                            // The runtime's own key delivery ends at
+                            // `avm2_dispatch_event`, the same place a real
+                            // keyboard's does, so a DOM keyup is the hardware
+                            // path. Fired at every plausible target because
+                            // which one the emscripten build registers on is
+                            // a build detail, and an extra event on a target
+                            // nobody listens to is inert.
+                            const targets = [document, window,
+                                document.querySelector('canvas')].filter(Boolean);
+                            for (const c of codes) {
+                                for (const t of targets) {
+                                    t.dispatchEvent(new KeyboardEvent('keyup',
+                                        {keyCode: c, which: c, bubbles: true,
+                                         cancelable: true}));
+                                }
+                            }
+                        }""", release_codes)
+                    # Let the release land and the player come to rest before
+                    # the boundary is sampled: friction is subtractive and the
+                    # whole coast from walk speed is under 2 px.
+                    page.wait_for_timeout(400)
+                before = bot_json(page, "botStatus") if wi > 0 else None
+                loaded = evaluate_bot(page, "botLoadTape", json.dumps(tape))
+                if loaded != "ok":
+                    raise RuntimeError(f"{label}: botLoadTape: {loaded}")
+                started = evaluate_bot(page, "botStart")
+                if started != "ok":
+                    raise RuntimeError(f"{label}: botStart: {started}")
+                after = bot_json(page, "botStatus")
+                # ⛔ REPORTED, NOT RAISED — and the first run of the bridge is
+                # why. `botStart` re-boots only when the tape's boot block does
+                # not name the current world's CONSTRUCTION args, and whether
+                # it did is a fact about the boundary the caller has to weigh,
+                # not an error the driver can rule on: R4's frozen segments end
+                # with a key still HELD (`r4-walk-1-sword` runs `up` to 591..641
+                # against `tick_count` 641), so the player drifts between two
+                # windows and only a re-boot puts the stream back on the
+                # recording. R5's own windows will be authored to end AT REST,
+                # where no re-boot is needed. Both facts belong in the trace.
+                moved = (after.get("x") != before.get("x")
+                         or after.get("y") != before.get("y")) if before else False
+                windows.append({"label": label, "before": before, "after_start": after,
+                                "moved_at_boundary": moved})
+                if moved:
+                    # ⚠ ASCII ONLY in anything this driver prints: the Windows
+                    # console is cp1252 and a stray arrow raises
+                    # UnicodeEncodeError, which kills the run and reports as a
+                    # replay failure two levels up.
+                    print(f"WINDOW {wi}: boundary moved - L{before.get('level')} "
+                          f"({before.get('x')},{before.get('y')}) -> L{after.get('level')} "
+                          f"({after.get('x')},{after.get('y')})", flush=True)
 
-            t0 = time.time()
-            # ⚠ A LIVE PROGRESS SIDECAR, because stdout is not one. The
-            # caller runs this with `execFileSync` and a pipe, so nothing
-            # printed here is visible until the process exits — and an R1
-            # walk is ~15k ticks, ten minutes of it. Without this file the
-            # only two states a caller can observe are "still running" and
-            # "done", which makes a stalled game (a freeze, a dialogue the
-            # tape cannot dismiss) indistinguishable from a slow one for the
-            # whole deadline. The file is rewritten in place every second.
-            last_written = [0.0]
+                t0 = time.time()
+                # ⚠ A LIVE PROGRESS SIDECAR, because stdout is not one. The
+                # caller runs this with `execFileSync` and a pipe, so nothing
+                # printed here is visible until the process exits — and an R1
+                # walk is ~15k ticks, ten minutes of it. Without this file the
+                # only two states a caller can observe are "still running" and
+                # "done", which makes a stalled game (a freeze, a dialogue the
+                # tape cannot dismiss) indistinguishable from a slow one for the
+                # whole deadline. The file is rewritten in place every second.
+                last_written = [0.0]
 
-            def note_progress():
-                status = bot_json(page, "botStatus")
-                now = time.time()
-                if args.progress and now - last_written[0] >= 1.0:
-                    last_written[0] = now
-                    with open(args.progress, "w", encoding="utf-8") as fh:
-                        # The WHOLE status, not a chosen subset: a stalled
-                        # tape is diagnosed from the fields nobody thought to
-                        # forward (cutscene, menu, receive_input,
-                        # saw_auto_advance), and collecting them in a second
-                        # run costs another ten minutes.
-                        json.dump({**status, "elapsed": round(now - t0, 1)}, fh)
-                return status if status.get("finished") else None
+                def note_progress():
+                    status = bot_json(page, "botStatus")
+                    now = time.time()
+                    if args.progress and now - last_written[0] >= 1.0:
+                        last_written[0] = now
+                        with open(args.progress, "w", encoding="utf-8") as fh:
+                            # The WHOLE status, not a chosen subset: a stalled
+                            # tape is diagnosed from the fields nobody thought to
+                            # forward (cutscene, menu, receive_input,
+                            # saw_auto_advance), and collecting them in a second
+                            # run costs another ten minutes.
+                            json.dump({**status, "elapsed": round(now - t0, 1)}, fh)
+                    return status if status.get("finished") else None
 
-            status = wait_for("tape to finish", note_progress, args.deadline_sec)
-            elapsed = time.time() - t0
-            drained = bot_json(page, "botDrain")
-            ticks = drained.get("ticks", [])
-            fps = (len(ticks) + status.get("dead_frames", 0)) / max(elapsed, 1e-9)
-            print(f"REPLAY_OK ticks={len(ticks)} "
-                  f"dead_frames={status.get('dead_frames')} "
-                  f"seconds={elapsed:.1f} frames_per_sec={fps:.2f}", flush=True)
+                status = wait_for("tape to finish", note_progress, args.deadline_sec)
+                elapsed = time.time() - t0
+                drained = bot_json(page, "botDrain")
+                ticks = drained.get("ticks", [])
+                fps = (len(ticks) + status.get("dead_frames", 0)) / max(elapsed, 1e-9)
+                print(f"REPLAY_OK ticks={len(ticks)} "
+                      f"dead_frames={status.get('dead_frames')} "
+                      f"seconds={elapsed:.1f} frames_per_sec={fps:.2f}", flush=True)
 
+                windows[-1].update({
+                    "stream": {"ticks": ticks,
+                               "transitions": drained.get("transitions", [])},
+                    "status": status,
+                })
+
+            # ⚠ THE SHAPE OF `--out` IS THE SINGLE-TAPE SHAPE FOR ONE TAPE,
+            # unchanged, so all 57 committed fixtures keep the same contract
+            # and the harness needs no version branch. `--tapes` writes the
+            # list, which is a different question and gets a different key.
             with open(args.out, "w", encoding="utf-8") as fh:
-                json.dump({"stream": {"ticks": ticks,
-                                      "transitions": drained.get("transitions", [])},
-                           "status": status}, fh)
+                if args.tape:
+                    w = windows[0]
+                    json.dump({"stream": w["stream"], "status": w["status"]}, fh)
+                else:
+                    json.dump({"windows": [
+                        {"label": w["label"], "stream": w["stream"],
+                         "status": w["status"], "boundary_before": w["before"],
+                         "boundary_after_start": w["after_start"],
+                         "moved_at_boundary": w["moved_at_boundary"]}
+                        for w in windows]}, fh)
         except Exception as exc:  # noqa: BLE001 — report and fail loudly
             print(f"REPLAY_FAIL {type(exc).__name__}: {exc}", flush=True)
             print("PAGE LOGS (last 25):", flush=True)
