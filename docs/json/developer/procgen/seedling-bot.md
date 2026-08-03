@@ -2146,3 +2146,105 @@ synthesized). Settled in passing: the statue's `setHitbox` comes from
 - **`nearestToPoint` ties resolve by entity-list order.** If a fixture ever
   lands on an equidistant pair, move the fixture rather than transcribing
   FlashPunk's list order.
+
+## R5 slice 2: combat is a role, and five things the source was misread on
+
+Standing contracts added while the ENEMIES rung's census landed. Full
+as-built in the R5 kickoff §11; what a later reader needs is here.
+
+### The `combat` role is OPT-IN, and `buildLevelWorld`'s default is not `ROLES`
+
+`ROLES` is now five (`blocking`, `trigger`, `pickup`, `proximity-hazard`,
+`combat`), but the DEFAULT is `PRE_R5_ROLES` — the four. Every fixture R0
+through R4 recorded with `noDamage: true`, where the guard is real and the
+game honoured it, so a walk that ignores combat is not wrong; defaulting the
+role on would throw on four committed route files to satisfy a table.
+
+`ENTITY_TABLE_ROLES` names the four an `ENTITY_CLASSES` entry's own `roles`
+field answers for. **`combat` is deliberately not one of them**: the combat
+answer lives in `combat.js`'s tables, and putting it in that list would have a
+hundred scenery entries silently CLAIM an answer none of them has.
+
+A world built without the role reports `world.combat === null` — never an
+empty census, because an empty list reads as "nothing here can hurt you".
+
+### ⛔ `ENTITY_CLASSES`' `dx`/`dy` is NOT an entity's constructed position
+
+It is one only for `collider: 'rect'` entries. A `pixelmask` entry's `dx`/`dy`
+is the MASK's top-left (`tentaclebeast` is `1/2` there and `+24/+24` as an
+entity), and a `notSolid(...)`/`cheapOnly(...)` entry — **seventeen of the
+thirty-two combat tags** — has none at all, because "does it block" never
+needed one.
+
+`combat.js` owns `ctor: {dx, dy, src}` per row, transcribed from each class's
+own constructor CHAIN — and the offset is the PARENT's for `bulb`,
+`lavarunner`, `flyer` (via `Bob`) and `darktrap` (via `SandTrap`). A missing
+offset is a THROW; `levelWorld.combatPlacementOf` is the cross-check and
+returns null where the two tables answer different questions.
+
+### ⛔ `Enemy.update`'s off-screen return does not freeze the subclass
+
+`Bob.update` is `super.update(); …chase…`, so an off-screen chaser still runs
+its chase block and still accumulates velocity toward the player. What the
+early return skips is `mobileUpdate` (friction, `moveX`/`moveY`), the terrain
+switch, `hitUpdate` and `hitPlayer`. **Off-screen means cannot move and cannot
+damage** — which is what a contact-freedom envelope needs — but it is not
+"frozen", and the i-frame timer does not run down out there either.
+
+### ⛔ `Game.view()`'s round is a DEAD ZONE, and the camera never settles
+
+`view()` rounds `FP.camera` ITSELF and the next frame's lerp compounds on the
+rounded value, so a gap under 5 px gives `gap/10 < 0.5` and never closes. A
+level load leaves the camera permanently 2 px from its follow target (the
+inventory term is `Inventory.width/2 + Inventory.offset.x/2` = `33 - 35` =
+−2), so a standing player's camera is the **loadlevel SNAP**, not the follow
+position. `view()` also runs on DEAD FRAMES — only `super.update()` is inside
+the `blackCover` gate.
+
+### ⛔ The beam tower's FIRING is animation-clocked, not `Game.time`-clocked
+
+`(sprBeamTower.frame - 1) % 2 == 1` is the damage gate — a Spritemap stepped
+in `Spritemap.update` from `World.update`, which `Game.update` runs INSIDE the
+`blackCover <= 0` gate. **Dead frames do not advance it**; the cycle is exact
+in LIVE ticks (`1 / (10 * speed * 0.0333)` ≈ `3 / speed` ticks per frame,
+beaming on every other one). The `Game.worldFrame` call at `:102` is
+`y += 0.3 * sin(...)` — a POSITION bob, `+=`, so the tower's y is a running
+sum peaking 8.606 px low and returning to zero every 90 ticks.
+
+This is the same correction the R5 recon already made once for `ArrowTrap`
+(whose `worldFrame` call is in `render()`). **The genuinely worldFrame-coupled
+family is ONE class: `LavaChain`.**
+
+### ⛓ `FP.elapsed` is a CONSTANT for this bot — `Engine.as:162` clamps at 30 fps
+
+`FP.elapsed = min((t - last)/1000, MAX_ELAPSED)` with `MAX_ELAPSED = 0.0333`.
+The bot runs at ~24 ticks/s on `--win` and ~0.4 fps on SwiftShader, so both
+clamp and every recording this arc has made stepped animations at exactly
+0.0333. That is why R3's and R4's press fixtures reconciled bit-exact across a
+50x frame-rate difference. ⚠ It is a fact about the REGIME: a browser above
+30 fps would step animations differently.
+
+### ⛔⛔ `Music.soundPosition` is NOT clamped, and the swim term IS live
+
+`Player.as:530` adds `0.25 * int(Music.soundPosition("Swim") < 0.1)` to the
+move speed — 100 REAL MILLISECONDS against a frame count, through
+`SoundChannel.position`, which in a graphics build is the live Web Audio mixer
+clock. Measured, not inferred: the same tape at 0.4 fps and at 10.1 fps
+**diverges at tick 52**, four ticks after the water edge, with the SLOW run
+ahead.
+
+⇒ **Any span in which the player is `inWater` or `inLava` is not reproducible
+across frame rates.** It touches none of the frozen fixtures (all coerce
+water) and no lava span (`drownTimer` is 0 on every recording). Two runs at
+the SAME frame rate cannot see it — they cross the threshold at the same tick
+and come back identical.
+
+### The director's bridge boundaries are RE-BOOTS
+
+R4's segments end with keys held, so the player drifts, so `atBootPosition()`
+fails, so `botStart` REBUILDS the world at the tape's declared boot args — and
+the drift is erased. That is why the six streams are byte-identical, and it is
+why the bridge demonstrates the INHERITANCE claim (items and ledger survive
+with no grant and no clear list) rather than the stronger "zero re-boots"
+one. A window that really continues needs the SAME boot args as the world it
+is continuing in, and then `dead_frames` on it is 0.
