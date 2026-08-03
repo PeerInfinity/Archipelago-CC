@@ -197,19 +197,35 @@ console.log(`   both destroyed by t=${sim.allDeadAt}; the lock's 0.01/update alp
  *
  * The player box is 4x5 at origin (2,2), so its right edge is `x + 2`.
  * Blocked, `Mobile.moveX` stops one pixel short of the lock's left face:
- * `x + 2 == 128`, i.e. x = 126. Past it, the walk stops at 150 — clear of
- * the lock's [128,144) and 8 px short of the east teleporter's trigger
- * (`x + 2 > 160`), so the trace never leaves L60.
+ * `x + 2 == 128`, i.e. x = 126. Past it the walk has to stop in the 12 px
+ * between the lock's right face (a crossing needs `x - 2 >= 144`, so
+ * x >= 146) and the east teleporter's trigger (`x + 2 > 160`, so x < 158).
+ *
+ * ⛔ THE FIRST RECORDING RAN STRAIGHT THROUGH THAT WINDOW AND INTO L61,
+ * and the reason is the shape of a PAIR. The control arm's hold is stopped
+ * by the lock, so its length does not matter; the kill arm's is stopped by
+ * NOTHING once the lock opens. A hold generous enough to be safe in one arm
+ * is a hold that leaves the room in the other, and "the same input in both
+ * arms" is the whole point of the pair — so the length has to be right
+ * rather than generous.
+ *
+ * ⚠ AND IT IS MEASURED, NOT DERIVED. The number below comes from the failed
+ * recording's own stream — 123.15 at t=325 and 147.25 at t=345, i.e. 1.205
+ * px/tick once up to speed — rather than from re-deriving `dMS` and the
+ * accel ramp on this terrain. A second derivation of a number the game has
+ * already printed is a second thing to get wrong.
  */
 const WALK_START = lockOpensAt + 20;
 const PIN_X = 126;
-const CROSS_X = 150;
-// Walk speed on a Ghost Tile / coerced water is the ordinary 1 px accel to
-// a moveSpeed the R1-R4 physics already pins; the tape holds RIGHT long
-// enough to cover 38 px with a wide margin and closes ~8 ticks early so the
-// window ends AT REST (the §10.2 authoring contract).
-const WALK_TICKS = 120;
-const TICK_COUNT = WALK_START + WALK_TICKS + 12;
+/** Measured: 24.1 px over the 20 ticks from t=325 to t=345, first recording. */
+const WALK_PX_PER_TICK = 1.205;
+/** x = 147.25 at release, coasting ~3.5 px under subtractive friction. */
+const WALK_TICKS = 30;
+const CROSS_X = 151;
+// The coast tail also satisfies the §10.2 window contract: the span closes
+// well before `tick_count`, so the release edge fires inside the tape and
+// the window ends AT REST.
+const TICK_COUNT = WALK_START + WALK_TICKS + 13;
 
 /**
  * ⛔ THE BOOT BLOCK IS NOT THE PLAYER'S POSITION — it is +8/+8 short of it.
@@ -287,6 +303,9 @@ console.log(`   fight    presses at ${pressTicks.join(', ')}`);
 console.log(`   walk     RIGHT [${walkSpan.from}, ${walkSpan.to}), tick_count ${TICK_COUNT}`);
 console.log(`   control  expected terminal x ~= ${PIN_X} (pinned at the lock face)`);
 console.log(`   kill     expected terminal x ~= ${CROSS_X} (past [128,144), short of the door)`);
+console.log(`   ⚠ the crossing WINDOW is x in [146, 158) — 12 px wide, at `
+    + `${WALK_PX_PER_TICK} px/tick, so the hold is ${WALK_TICKS} ticks and not a `
+    + 'tick more. The first recording held 120 and left the room.');
 console.log(`   ledger   the kill arm must gain {level ${LEVEL}, tag ${lock.persistTag}} `
     + 'and the control arm must NOT');
 

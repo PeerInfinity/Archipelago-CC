@@ -23,7 +23,7 @@
     }
   ],
   "persistence": [],
-  "tick_count": 447,
+  "tick_count": 358,
   "inputs": [
     {
       "key": "primary",
@@ -78,7 +78,7 @@
     {
       "key": "right",
       "from": 315,
-      "to": 435
+      "to": 345
     }
   ]
 }

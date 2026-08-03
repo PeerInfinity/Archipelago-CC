@@ -94,23 +94,42 @@ export function l60KillFindings(replayed) {
     //    check a snapshot of one recording rather than a claim.
     const kEnd = terminal(kill);
     const cEnd = terminal(control);
+    // ⚠ THE DETAIL BRANCHES ON `ok`, and it does so because the first live
+    // run printed the PASSING sentence on a FAILING check — "past the lock's
+    // [128,144) and still in L60" beside a terminal level of 61. A failure
+    // report that describes the pass is worse than no detail at all: it
+    // sends the reader looking for a defect somewhere the numbers say there
+    // isn't one.
+    const pinOk = !!cEnd && cEnd.level === L60_LOCK.level
+        && cEnd.x + 2 <= L60_LOCK.rect.x && cEnd.x > L60_LOCK.rect.x - 16;
     found.push({
         name: 'R5 L60: the control arm PINS at the lock face',
-        ok: !!cEnd && cEnd.level === L60_LOCK.level
-            && cEnd.x + 2 <= L60_LOCK.rect.x && cEnd.x > L60_LOCK.rect.x - 16,
-        detail: cEnd
-            ? `ends L${cEnd.level} x=${cEnd.x} — the lock's left face is `
-                + `${L60_LOCK.rect.x} and the player's box right edge is x+2`
-            : 'no terminal observation',
+        ok: pinOk,
+        detail: !cEnd ? 'no terminal observation'
+            : pinOk
+                ? `ends L${cEnd.level} x=${cEnd.x} — the lock's left face is `
+                    + `${L60_LOCK.rect.x} and the player's box right edge is x+2`
+                : `ends L${cEnd.level} x=${cEnd.x}, which is NOT a pin against `
+                    + `[${L60_LOCK.rect.x},${L60_LOCK.rect.right}): the box edge x+2 `
+                    + `must reach ${L60_LOCK.rect.x} and no further, and the walk must `
+                    + `have moved from the stance at ${L60_LOCK.rect.x - 16}`,
     });
+    const crossOk = !!kEnd && kEnd.level === L60_LOCK.level
+        && kEnd.x - 2 >= L60_LOCK.rect.right;
     found.push({
         name: 'R5 L60: the kill arm CROSSES it',
-        ok: !!kEnd && kEnd.level === L60_LOCK.level && kEnd.x - 2 >= L60_LOCK.rect.right,
-        detail: kEnd
-            ? `ends L${kEnd.level} x=${kEnd.x} — past the lock's [${L60_LOCK.rect.x},`
-                + `${L60_LOCK.rect.right}) and still in L60, so the crossing is not a `
-                + 'door transition wearing a lock\'s clothes'
-            : 'no terminal observation',
+        ok: crossOk,
+        detail: !kEnd ? 'no terminal observation'
+            : crossOk
+                ? `ends L${kEnd.level} x=${kEnd.x} — past the lock's [${L60_LOCK.rect.x},`
+                    + `${L60_LOCK.rect.right}) and still in L60, so the crossing is not a `
+                    + 'door transition wearing a lock\'s clothes'
+                : kEnd.level !== L60_LOCK.level
+                    ? `ends in L${kEnd.level}, not L${L60_LOCK.level} — the walk left the `
+                        + 'room through the east teleporter, so "it got past the lock" is '
+                        + 'a claim about a door. Shorten the hold.'
+                    : `ends L${kEnd.level} x=${kEnd.x} — the box edge x-2 must reach `
+                        + `${L60_LOCK.rect.right} to be clear of the lock, and it did not`,
     });
 
     // 3. AND NOTHING ELSE MOVED. The pair's whole value is that one field
