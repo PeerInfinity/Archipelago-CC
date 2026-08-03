@@ -537,9 +537,117 @@ async function runContactAudit() {
     }
 }
 
+// ── --encounters ──────────────────────────────────────────────────────
+
+/**
+ * The R4 route through the ENCOUNTER LADDER (§3.2 as amended 2026-08-03).
+ *
+ * `--contact-audit` answers "how many wakes does arming `noDamage` create";
+ * this answers the question the amendment asks instead: **what does each one
+ * COST**. Every crossing is priced on the ladder — path-avoid, wake-and-
+ * thread, kill, hard-avoid — from the committed recording, with the camera
+ * track and the chase envelope.
+ *
+ * ⚠ The recording is again the right input, and for the same reason: the
+ * question is what arming `noDamage` does to the walk that happened, not
+ * what a re-planned walk would look like. §8.6's fifteen wakes are the
+ * FLOOR on the re-route bill; this says how much of that floor is real.
+ */
+async function runEncounters() {
+    const { loadExpectation } = await import(join(MODULE, 'fixtures', 'index.js'));
+    const { fixtureNames } = await import(join(MODULE, 'fixtures', 'index.js'));
+    const encounters = await import(join(MODULE, 'encounters.js'));
+    const { cameraTrack } = await import(join(MODULE, 'camera.js'));
+
+    const tapes = (opt('tapes') ?? fixtureNames().filter((n) => n.startsWith('r4-walk-'))
+        .filter((n) => n !== 'r4-walk-full').join(',')).split(',').filter(Boolean);
+
+    const worldCache = new Map();
+    const worldFor = (level) => {
+        if (!worldCache.has(level)) {
+            try {
+                worldCache.set(level, buildLevelWorld(source(level), { roles: ROLES }));
+            } catch (e) {
+                worldCache.set(level, { error: e.message });
+            }
+        }
+        return worldCache.get(level);
+    };
+
+    console.log('## the R4 route on the ENCOUNTER LADDER — what each wake COSTS\n');
+    const totals = {};
+    const allVerdicts = [];
+    for (const name of tapes) {
+        let stream;
+        try { stream = loadExpectation(name).stream; } catch {
+            console.log(`  ${name}: no committed recording — skipped`);
+            continue;
+        }
+        const ticks = stream.ticks ?? [];
+        const cam = cameraTrack(ticks, (l) => worldFor(l).world ?? { width: 160, height: 160 });
+        const camByTick = new Map(cam.map((c) => [c.t, c]));
+        const cameraAt = (t) => camByTick.get(t) ?? null;
+        const levels = [...new Set(ticks.map((o) => o.level))];
+        const perTape = [];
+        for (const level of levels) {
+            const world = worldFor(level);
+            if (world.error) {
+                console.log(`  ⚠ L${level}: ${world.error.slice(0, 90)}`);
+                continue;
+            }
+            if (world.combat.enemies.length === 0 && world.combat.hazards.length === 0) continue;
+            // A kill lock in the level puts every counted instance on the
+            // bill regardless of what the crossing costs.
+            const mustClear = new Set(world.combat.killLocks.length > 0
+                ? world.combat.bill.map((e) => `${e.tag}@${e.x},${e.y}`) : []);
+            const plan = encounters.encounterPlan(ticks, world, { cameraAt, mustClear });
+            perTape.push(...plan.verdicts);
+        }
+        perTape.sort((a, b) => a.from - b.from);
+        allVerdicts.push(...perTape);
+        console.log(`  ${name}: ${ticks.length} observations, ${perTape.length} crossings`);
+        for (const v of perTape) {
+            totals[v.rung] = (totals[v.rung] ?? 0) + 1;
+            const mark = { 'wake-and-thread': '✓', kill: '⚔', 'hard-avoid': '⛔' }[v.rung] ?? ' ';
+            console.log(`      ${mark} t${String(v.from).padStart(5)}..${String(v.to).padStart(5)}`
+                + `  L${String(v.level).padStart(3)} ${`${v.tag}@${v.x},${v.y}`.padEnd(24)}`
+                + `  ${v.rung.padEnd(16)}`
+                + (v.clearance !== undefined ? ` clearance ${String(v.clearance).padStart(7)} px` : '')
+                + (v.presses ? `  ${v.presses} presses` : ''));
+            console.log(`          ${v.why}`);
+        }
+        console.log();
+    }
+    const inst = (v) => `L${v.level} ${v.tag}@${v.x},${v.y}`;
+    console.log(`## the bill: ${allVerdicts.length} crossings over `
+        + `${new Set(allVerdicts.map(inst)).size} distinct instances`);
+    for (const [rung, n] of Object.entries(totals)) console.log(`   ${rung.padEnd(18)} ${n}`);
+
+    // ⛓ THE THREE PILES, AND ONLY THE FIRST IS A FLOOR. A verdict's `basis`
+    // says whether the instrument DECIDED or DEFERRED, and reporting one
+    // number for both would make an over-approximation look like a finding.
+    const proven = allVerdicts.filter((v) => v.proven === true);
+    const deferred = allVerdicts.filter((v) => v.basis === 'envelope-undecided'
+        || v.basis === 'phase-not-yet-pinned' || v.basis === 'no-body-proof');
+    const cleared = allVerdicts.filter((v) => v.rung === 'wake-and-thread');
+    const locked = allVerdicts.filter((v) => v.basis === undefined && v.rung === 'kill');
+    const show = (title, rows) => {
+        console.log(`\n${title} — ${rows.length} crossing(s), `
+            + `${new Set(rows.map(inst)).size} instance(s)`);
+        for (const k of [...new Set(rows.map(inst))]) console.log(`   ${k}`);
+    };
+    show('⛔ PROVEN CONTACT (the re-route FLOOR — a static\'s own body, no approximation)',
+        proven);
+    show('✓ PROVEN CONTACT-FREE by the envelope (rung 2, no re-route, no press)', cleared);
+    show('⚔ DEMANDED by a kill lock (rung 3 whatever the crossing costs)', locked);
+    show('… DEFERRED — the instrument could not decide; slice 3\'s exact transcriptions do',
+        deferred);
+}
+
 // ── main ──────────────────────────────────────────────────────────────
 
 if (flag('census')) runCensus();
+else if (flag('encounters')) await runEncounters();
 else if (flag('kill-locks')) runKillLocks();
 else if (flag('flood')) await runFlood();
 else if (flag('contact-audit')) await runContactAudit();

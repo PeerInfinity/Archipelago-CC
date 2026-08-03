@@ -160,6 +160,8 @@ export const ENEMY_CLASSES = Object.freeze({
     bob: {
         as3: 'Bob', kill: { hits: 3 }, aggro: { kind: 'chase', range: 80 },
         hitbox: { w: 8, h: 8, ox: 4, oy: 4 }, damage: 1, speed: 0.5,
+        threatPad: 0, envelopeProof: true,
+        threat: 'contact only — the 8x8 body is the whole threat',
         terrain: { water: 'dies', lava: 'dies', pit: 'falls' },
         offScreen: false, sideWrite: null,
         src: 'Enemies/Bob.as:21,41 + Enemy defaults',
@@ -167,6 +169,8 @@ export const ENEMY_CLASSES = Object.freeze({
     bobsoldier: {
         as3: 'BobSoldier', kill: { hits: 3 }, aggro: { kind: 'chase', range: 80 },
         hitbox: { w: 8, h: 8, ox: 4, oy: 2 }, damage: 1, speed: 0.8,
+        threatPad: 16, envelopeProof: true,
+        threat: '`weaponLength = sprLameSword.width` = 16, a collideLine from the body (BobSoldier.as:37,165)',
         terrain: { water: 'dies', lava: 'dies', pit: 'falls' },
         offScreen: false, sideWrite: null,
         src: 'Enemies/BobSoldier.as:33,65',
@@ -176,6 +180,8 @@ export const ENEMY_CLASSES = Object.freeze({
     bulb: {
         as3: 'Bulb', kill: { hits: 1 }, aggro: { kind: 'chase', range: 80 },
         hitbox: { w: 12, h: 12, ox: 6, oy: 6 }, damage: 1, speed: 0.65,
+        threatPad: 0, envelopeProof: true,
+        threat: 'contact only',
         terrain: { water: 'dies', lava: 'dies', pit: 'falls' },
         offScreen: false, sideWrite: null,
         src: 'Enemies/Bulb.as:27,30 (extends Bob → runRange 80)',
@@ -190,6 +196,8 @@ export const ENEMY_CLASSES = Object.freeze({
     lavarunner: {
         as3: 'LavaRunner', kill: { hits: 2 }, aggro: { kind: 'chase', range: 80 },
         hitbox: { w: 12, h: 12, ox: 6, oy: 6 }, damage: 1, speed: 1.5,
+        threatPad: 0, envelopeProof: true,
+        threat: 'contact only',
         // ⚠ It survives LAVA and nothing else. `dieInWater` is left at the
         // `Enemy` default and `canFallInPit` likewise — so water and pits
         // clear a lavarunner for free, which is the cheap arm of three of
@@ -201,6 +209,8 @@ export const ENEMY_CLASSES = Object.freeze({
     jellyfish: {
         as3: 'Jellyfish', kill: { hits: 3 }, aggro: { kind: 'chase', range: 160 },
         hitbox: { w: 12, h: 12, ox: 6, oy: 6 }, damage: 1, speed: 0.8,
+        threatPad: 0, envelopeProof: true,
+        threat: 'contact only — the reach is all leash',
         // The only class on the map that must be KILLED: it survives water
         // and lava and refuses to fall in a pit.
         terrain: { water: 'survives', lava: 'survives', pit: 'refuses' },
@@ -211,6 +221,8 @@ export const ENEMY_CLASSES = Object.freeze({
     puncher: {
         as3: 'Puncher', kill: { hits: 3 }, aggro: { kind: 'chase', range: 80 },
         hitbox: { w: 12, h: 12, ox: 6, oy: 4 }, damage: 1, speed: 1,
+        threatPad: 8, envelopeProof: true,
+        threat: 'the punch box is `r = 8` deep off the body edge (Puncher.as:201); the 10 is its attackRange, the distance at which it decides to punch',
         terrain: { water: 'dies', lava: 'dies', pit: 'falls' },
         offScreen: false, sideWrite: null,
         reach: { kind: 'punch', px: 10 },
@@ -219,6 +231,8 @@ export const ENEMY_CLASSES = Object.freeze({
     drill: {
         as3: 'Drill', kill: { hits: 3 }, aggro: { kind: 'teleport-hop', range: 48 },
         hitbox: { w: 10, h: 10, ox: 5, oy: 5 }, damage: 1, speed: 16,
+        threatPad: 0, envelopeProof: true,
+        threat: 'contact only; the hop is the motion, not the reach',
         terrain: { water: 'dies', lava: 'dies', pit: 'falls' },
         offScreen: false, sideWrite: null,
         src: 'Enemies/Drill.as:18,37',
@@ -227,6 +241,8 @@ export const ENEMY_CLASSES = Object.freeze({
     flyer: {
         as3: 'Flyer', kill: { hits: 3 }, aggro: { kind: 'chase-through-walls', range: 80 },
         hitbox: { w: 10, h: 8, ox: 5, oy: 12 }, damage: 2, speed: 1,
+        threatPad: 0, envelopeProof: true,
+        threat: '`hitPlayer` is overridden EMPTY — only the drop frame damages, and it damages on the body',
         terrain: { water: 'survives', lava: 'survives', pit: 'refuses' },
         offScreen: false, sideWrite: null,
         src: 'Enemies/Flyer.as:35-43 (extends Bob → runRange 80)',
@@ -236,6 +252,8 @@ export const ENEMY_CLASSES = Object.freeze({
     spinner: {
         as3: 'Spinner', kill: { hits: 3 }, aggro: { kind: 'none', range: 0 },
         hitbox: { w: 7, h: 7, ox: 4, oy: 4 }, damage: 1, speed: 1,
+        threatPad: 13, envelopeProof: false,
+        threat: '⚠ `hammerLength = sprSpinner.width - originX` = 18 - 5 = 13, a collideLine at `(Game.time % 45)/45 * 2π` — so the pad is real AND its angle is phase-uncertain, which is why the envelope may not clear one',
         terrain: { water: 'dies', lava: 'dies', pit: 'falls' },
         // ⚠ RUNS OFF SCREEN. Its body wall-bounces on `Mobile` physics with
         // no chase (`runRange = 0` makes the chase block dead), so the body
@@ -252,6 +270,8 @@ export const ENEMY_CLASSES = Object.freeze({
     wallflyer: {
         as3: 'WallFlyer', kill: { hits: 3 }, aggro: { kind: 'wall-hug-launch', range: 'screen width' },
         hitbox: { w: 14, h: 14, ox: 7, oy: 7 }, damage: 1, speed: 4,
+        threatPad: 160, envelopeProof: false,
+        threat: 'the trigger ray is `FP.screen.width` and the launch is 4 px/tick along it — an envelope on the body proves nothing',
         terrain: { water: 'dies', lava: 'dies', pit: 'falls' },
         offScreen: 'in-flight only', sideWrite: null,
         src: 'Enemies/WallFlyer.as:38,71-75',
@@ -259,6 +279,8 @@ export const ENEMY_CLASSES = Object.freeze({
     turret: {
         as3: 'Turret', kill: { hits: 3 }, aggro: { kind: 'static-shooter', range: 64 },
         hitbox: { w: 16, h: 16, ox: 8, oy: 8 }, damage: 1, speed: 0,
+        threatPad: 64, envelopeProof: false,
+        threat: '⛔ THE BODY IS NOT THE THREAT. `TurretSpit` (speed 3) covers the whole 64 px attackRange, so a clearance proof on the 16x16 body would declare a shooting gallery contact-free',
         terrain: { water: 'dies', lava: 'dies', pit: 'falls' },
         offScreen: false, sideWrite: null,
         projectile: { as3: 'TurretSpit', speed: 3, everyTicks: 40 },
@@ -267,6 +289,8 @@ export const ENEMY_CLASSES = Object.freeze({
     iceturret: {
         as3: 'IceTurret', kill: { hits: 3 }, aggro: { kind: 'static-shooter', range: 128 },
         hitbox: { w: 32, h: 32, ox: 16, oy: 16 }, damage: 1, speed: 0,
+        threatPad: 128, envelopeProof: false,
+        threat: 'as the turret, at 128 px, and 3 blasts per volley — plus a `freeze(15)` that is OUTSIDE `noDamage`',
         // ⚠ TWO-STAGE, and the second stage is where the ladder's stories
         // about it go wrong. `death()` intercepts the first `destroy`:
         // hitbox shrinks to 16x16, the "dead" anim plays, `destroy` is put
@@ -293,6 +317,8 @@ export const ENEMY_CLASSES = Object.freeze({
     grenade: {
         as3: 'Grenade', kill: null, aggro: { kind: 'armed-by-proximity', range: 32 },
         hitbox: { w: 6, h: 6, ox: 3, oy: 3 }, damage: 1, speed: 0,
+        threatPad: 20, envelopeProof: true,
+        threat: 'armed at 32 px, blast radius 20 — so the crossing that ARMS it is survivable at >20 px, which is the whole bait-and-stand-clear verb',
         terrain: { water: 'n/a', lava: 'n/a', pit: 'n/a' },
         offScreen: false, sideWrite: null,
         blast: { radius: 20, force: 2 },
@@ -304,6 +330,8 @@ export const ENEMY_CLASSES = Object.freeze({
     icetrap: {
         as3: 'IceTrap', kill: null, aggro: { kind: 'static', range: 8 },
         hitbox: { w: 16, h: 16, ox: 8, oy: 8 }, damage: 1, speed: 0,
+        threatPad: 0, envelopeProof: true,
+        threat: 'the 16x16 body chomps; the blast is IceTurretBlast on contact',
         terrain: { water: 'n/a', lava: 'n/a', pit: 'n/a' },
         offScreen: false, sideWrite: null,
         src: 'Enemies/IceTrap.as:17,28,32',
@@ -313,6 +341,8 @@ export const ENEMY_CLASSES = Object.freeze({
     sandtrap: {
         as3: 'SandTrap', kill: { hits: 3 }, aggro: { kind: 'static', range: 20 },
         hitbox: { w: 16, h: 16, ox: 8, oy: 8 }, damage: 1, speed: 0,
+        threatPad: 0, envelopeProof: true,
+        threat: 'the 16x16 body chomps at 20 px',
         terrain: { water: 'dies', lava: 'dies', pit: 'falls' },
         offScreen: false, sideWrite: 'own tag',
         src: 'Enemies/SandTrap.as:17,35,85',
@@ -321,6 +351,8 @@ export const ENEMY_CLASSES = Object.freeze({
     darktrap: {
         as3: 'DarkTrap', kill: null, aggro: { kind: 'static', range: 20 },
         hitbox: { w: 16, h: 16, ox: 8, oy: 8 }, damage: 1, speed: 0,
+        threatPad: 0, envelopeProof: true,
+        threat: 'the 16x16 body chomps at 20 px, and it cannot be killed',
         terrain: { water: 'dies', lava: 'dies', pit: 'falls' },
         offScreen: false, sideWrite: null,
         src: 'Enemies/DarkTrap.as:56-59 (extends SandTrap → chompRange 20)',
@@ -333,6 +365,8 @@ export const ENEMY_CLASSES = Object.freeze({
     lavatrap: {
         as3: 'LavaTrap', kill: { hits: 3 }, aggro: { kind: 'static-tongue', range: 32 },
         hitbox: { w: 10, h: 10, ox: 5, oy: 5 }, damage: 1, speed: 0,
+        threatPad: 32, envelopeProof: false,
+        threat: '⛔ the tongue LATCHES at 32 px and then writes the player\'s position absolutely — `die()` without the suit. Not a graze and not an envelope question',
         terrain: { water: 'dies', lava: 'dies', pit: 'falls' },
         offScreen: false, sideWrite: null,
         src: 'Enemies/LavaTrap.as:21,43',
@@ -344,6 +378,8 @@ export const ENEMY_CLASSES = Object.freeze({
     bombpusher: {
         as3: 'BombPusher', kill: null, aggro: { kind: 'static-lobber', range: 256 },
         hitbox: { w: 48, h: 48, ox: 24, oy: 24 }, damage: 1, speed: 0,
+        threatPad: 24, envelopeProof: false,
+        threat: 'the lobbed Bomb\'s `Explosion` is r 24 at the LANDING point, aimed at where the player stood at launch, from up to 256 px away',
         terrain: { water: 'n/a', lava: 'n/a', pit: 'n/a' },
         offScreen: true, sideWrite: null,
         src: 'Enemies/BombPusher.as:20-34,67',
