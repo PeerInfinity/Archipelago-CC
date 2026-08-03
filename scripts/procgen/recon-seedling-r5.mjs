@@ -278,9 +278,18 @@ async function runFlood() {
     } else throw new Error(`--clears=${clearsArg}?`);
 
     console.log(`## the armed-map directed flood — noHazards ${JSON.stringify(hazards)}, `
-        + `clears ${clearsArg} (${clears.length}), lattice ${lattice}\n`);
+        + `clears ${clearsArg} (${clears.length}), lattice ${lattice}`
+        + `${flag('no-volumes') ? ', AVOID VOLUMES OFF (the upper bound)' : ''}\n`);
 
-    const PLAN = { noclip: false, noHazards: hazards, avoidVolumes: true };
+    // ⚠ `--no-volumes` is the UPPER BOUND, and it exists because the flood
+    // is otherwise stricter than a LEG is. A leg may DECLARE the contacts it
+    // starts inside (R1's forced-contact rule) and the hold/collect/touch
+    // verbs all walk deliberately ONTO a priced volume — L71's `button@112,176`
+    // is a proximity-hazard cell that R3's committed route stands on for 101
+    // ticks. A flood that refuses every volume reports Dungeon 7 sealed for a
+    // reason that is a fact about the instrument, not about the map. So the
+    // sweep is run BOTH ways and the two numbers are quoted together.
+    const PLAN = { noclip: false, noHazards: hazards, avoidVolumes: !flag('no-volumes') };
     const cache = { worlds: new Map(), components: new Map() };
     const graph = makeRouteGraph({
         source, clears, plan: PLAN, lattice, holdTicks: 101,
