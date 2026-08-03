@@ -2248,3 +2248,23 @@ why the bridge demonstrates the INHERITANCE claim (items and ledger survive
 with no grant and no clear list) rather than the stronger "zero re-boots"
 one. A window that really continues needs the SAME boot args as the world it
 is continuing in, and then `dead_frames` on it is 0.
+
+### ⚖ R5 slice 2 ruling: ZERO BUILDS IS OVER
+
+The user ruled §6.5 and §6.6 at slice 2's close (kickoff §13). **One AS3 batch
+opens, and it is the first thing R5's slice 3 does**: a frame-clocked
+`soundPosition` (PIN — it makes the swim term a function of the tick count
+instead of the Web Audio clock), `blackCover` decaying per UPDATE (PIN — the
+dead-frame count stops varying, so `k` goes to 0), plus `Game.time`,
+`hits`/`hitsTimer`/`frozenTimer` readouts in `botStatus` and the
+`saw_auto_advance` unification.
+
+⇒ **"The wasm artifact hash at rung close equals R4's" is RETIRED as an
+assertable fact.** What replaces it is the R0 gate, which was always the price
+of admission and is stronger: **all 57 frozen fixtures byte-inert under the
+rebuilt artifact**, re-run before anything else is armed. Every flag stays OFF
+BY DEFAULT so the fixtures exercise the vanilla path.
+
+⚠ `k = 2` (R5 §8.8) becomes a HISTORICAL measurement — what the game did
+before the pin. The jitter bands it prices collapse once the pin is in, and
+the `phase-band` verdict `hazards.js` gives `LavaChain` retires with them.
