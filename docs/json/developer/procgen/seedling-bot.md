@@ -633,6 +633,26 @@ Levels that build: **3/116 at v2 → 11/116 with all roles** (the flags, the
 pickups and the chest) **→ 82/116 consulting only the cheap roles.** The
 remaining 34 are 31 unpriced hazards and 3 levels holding a Bridge tile.
 
+⛔ **R5 FINISHED THE CENSUS AND THE ROLE SPLIT WENT VACUOUS WITH IT.** R5's
+route leaves R2's bill behind at its first new room — L19 (ShieldBoss), L26,
+L39–L42 (the wand), **L93, the only level with an edge into Dungeon 8**, and
+L100–L109 (the ferry, `firewand`) — so 31 levels did not build at all.
+Classifying the last 22 tags took the FULL census from 85 to **115 of 116**,
+and the relaxed one is the same 115: the single holdout is L112, whose `pod`
+avoid volume is unpriced by RULING (R6 owns the ending) rather than by
+neglect. So `RELAXED_ROLES` no longer buys a level, and the role-scoped
+census throw is a bounded vacuity with no live witness — recorded here
+rather than left to be discovered, with the next tag the extract gains as
+the thing that would close it.
+
+⚠ **And widening it MOVED COMMITTED ROUTES.** More buildable levels means
+more edges in the `(level, component)` graph, and `plan-seedling-r4-route.mjs`
+promptly authored a route one leg SHORTER than the one whose six tapes are
+recorded and frozen. Each planner now names the level set its OWN rung could
+build, by number (`FROZEN_UNBUILDABLE`, 29 levels), so `--write` leaves a
+clean `git diff` again — the "pin frozen historical sets BY NAME" rule, since
+a predicate that happened to exclude them would rot at the next widening.
+
 ⚠ **`keyNeeded` is assigned in exactly ONE place in the whole codebase** —
 `NPCs/Watcher.as:46`, `keyNeeded = !Game.checkPersistence(tag)`. Every other
 NPC needs the key, so proximity alone only sets an `inRange` render flag.
@@ -1210,7 +1230,8 @@ blocked list beside `fire`/`ghostsword`/`firewand`.
 
 **What shipped and is verified:**
 
-- **Pixelmasks are a model, not a seam.** The seventeen MIT masks are
+- **Pixelmasks are a model, not a seam.** The seventeen MIT masks (⛔ R5
+  makes it EIGHTEEN — see below) are
   committed as `#`/`.` rows in `seedlingDemo/seedlingPixelMasks.js`
   (`--check`-gated), and `maskHitsBox` transcribes both halves of the chain
   that runs: `Pixelmask.collideMask` (NOT `collideHitbox` — `Entity.HITBOX`
@@ -1225,7 +1246,15 @@ blocked list beside `fire`/`ghostsword`/`firewand`.
   rects, 6 masks, `rope`, 23 explicitly not-solid). The full census goes
   from 11 levels to 82. The table checks itself against
   `PLAYER_SOLID_TYPES`, which caught that `bombpusher` and `iceturret` are
-  **enemies that are Solid**.
+  **enemies that are Solid**. ⛔ **R5 found a THIRD**: `TentacleBeast`
+  overwrites its inherited `"Enemy"` with `"Solid"` at `TentacleBeast.as:46`,
+  exactly as `BombPusher.as:31` does — and the mask extractor's docblock had
+  skipped `TentacleBeastMask.png` on the opposite reading, so L57 could not
+  be built. It is also the first of the eighteen whose two ctor offsets do
+  not cancel: the entity is at oel + (24, 24) and `Pixelmask(img, -23, -22)`
+  puts the mask back at oel + (1, 2), so the pair that satisfies both
+  `entityRect` (`x + dx - originX`) and `maskPlacement` (`x + dx`) is
+  `dx/dy = 1/2` with ZERO origins.
 - **Activators are modelled** (`activators.js`): a lock opens on tick
   **101** of a held button and a cover on **11** — not 100 and 10, because
   `Image.alpha` clamps and the two classes test their fade on opposite
