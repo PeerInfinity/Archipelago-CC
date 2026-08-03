@@ -5,8 +5,8 @@
   "description": "THE FIRST LIVE KILL, arm 1 of 2 — the presses REMOVED. Identical to `r5-l60-kill` in every field but `inputs`. Both jellyfish live, so `Game.totalEnemies()` never reaches 0, `Lock.checkEnemies` never activates, and the lock keeps `type = \"Solid\"`: the walk PINS at x = 126, one pixel of player box short of the lock's [128,144) face. Without this arm \"the walk got through\" is not evidence that anything was ever in the way.",
   "boot": {
     "level": 60,
-    "x": 112,
-    "y": 88
+    "x": 104,
+    "y": 80
   },
   "noclip": false,
   "noDamage": true,

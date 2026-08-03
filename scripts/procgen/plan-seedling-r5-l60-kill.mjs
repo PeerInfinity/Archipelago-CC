@@ -107,6 +107,8 @@ console.log(`## L60's kill lock — ${lock.id}, persistence tag ${lock.persistTa
 console.log(`   lock rect ${JSON.stringify(lock.rect)}`);
 for (const j of jellies) console.log(`   jellyfish .oel (${j.x},${j.y}) -> centre (${j.cx},${j.cy})`);
 console.log(`   stance (${STANCE.x}, ${STANCE.y}), facing DOWN (direction 3, the boot default)`);
+console.log(`   ⚠ the tape's boot block is (${STANCE.x - 8}, ${STANCE.y - 8}) — the Game `
+    + 'constructor adds Tile/2 to it, exactly as every entity ctor does');
 
 /**
  * The fight, simulated through the shipped transcriptions.
@@ -209,10 +211,28 @@ const CROSS_X = 150;
 const WALK_TICKS = 120;
 const TICK_COUNT = WALK_START + WALK_TICKS + 12;
 
+/**
+ * ⛔ THE BOOT BLOCK IS NOT THE PLAYER'S POSITION — it is +8/+8 short of it.
+ *
+ * `new Game(level, x, y)` writes `Main.playerPosition{X,Y}` and the player
+ * is constructed at `(x + Tile.w/2, y + Tile.h/2)` — the SAME half-tile
+ * offset every entity's constructor applies, and the same one that put
+ * slice 2's whole census eight pixels up and left of the game. Declaring
+ * `boot: STANCE` puts the player at (120, 96) instead of (112, 88), whose
+ * terrain probe lands in ROW 6 — and row 6 is Pit from column 8 east, which
+ * is not a coerced hazard on this tape. The model caught it before a browser
+ * did, and only because the plan states the stance and the tape states the
+ * boot as two separate things.
+ *
+ * `r5-contact-control-on` says the same thing from the other side: boot
+ * (32, 120), first observation (40, 128).
+ */
+const BOOT = { level: LEVEL, x: STANCE.x - 8, y: STANCE.y - 8 };
+
 const shared = {
     game: 'seedling',
     tape_version: 3,
-    boot: { level: LEVEL, x: STANCE.x, y: STANCE.y },
+    boot: BOOT,
     noclip: false,
     // ⚠ `noDamage` is TRUE on BOTH arms, deliberately. The pair's one field
     // is the presses; adding a second difference would make the divergence
