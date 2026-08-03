@@ -194,7 +194,24 @@ describe('fixture differential', () => {
      * `!loadTape(n).noDamage` would sweep in every future R5 fixture, all of
      * which are supposed to match.
      */
-    const EXPECTED_TO_DIVERGE = ['r5-contact-control-on'];
+    /**
+     * ⚠ AND THE SECOND ONE, for a DIFFERENT reason worth stating.
+     *
+     * `r5-l60-kill` is R5's first live kill. Its control arm
+     * (`r5-l60-kill-control`) matches the model exactly — the JS engine
+     * knows L60's `lock@128,80` is a `Solid` from the blocking role, so the
+     * model pins at the lock face just as the game does, and that arm stays
+     * in the blanket sweep as an ordinary fixture. The KILL arm cannot: the
+     * engine has no combat, so it does not know the lock opens, and it pins
+     * where the game walks through. The divergence IS the claim.
+     *
+     * Two entries, two unrelated causes (a damage the model omits; a lock
+     * the model cannot open), which is why this is a list of NAMES rather
+     * than a predicate. A predicate over "has enemies" or "has presses"
+     * would sweep in every kill fixture after this one, including the ones
+     * that are supposed to match.
+     */
+    const EXPECTED_TO_DIVERGE = ['r5-contact-control-on', 'r5-l60-kill'];
 
     it.each(names.filter((n) => !EXPECTED_TO_DIVERGE.includes(n)))(
         "%s: JS stream matches the real game recording, exactly", (name) => {

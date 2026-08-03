@@ -2268,3 +2268,127 @@ BY DEFAULT so the fixtures exercise the vanilla path.
 ⚠ `k = 2` (R5 §8.8) becomes a HISTORICAL measurement — what the game did
 before the pin. The jitter bands it prices collapse once the pin is in, and
 the `phase-band` verdict `hazards.js` gives `LavaChain` retires with them.
+
+## R5 slice 3: the AS3 batch, and what a press actually hits
+
+The batch shipped (fork `bot` @ `ba94103`). Everything below is a standing
+contract; the rung-local narrative is the kickoff's §14.
+
+### The five changes, and their classifications
+
+| change | class | where |
+|---|---|---|
+| frame-clocked sound mixer | **PIN** | `Music.pinStep` etc., `Bot.pinSoundClock` |
+| `blackCover` decays per UPDATE | **PIN** | `Game.stepBlackCover`, `Bot.pinDeadFrames` |
+| `Game.time` in `botStatus` | READOUT | `game_time` |
+| `hits` / `hitsTimer` / `frozenTimer` | READOUT | `hits`, `hits_timer`, `frozen_timer` |
+| `saw_auto_advance` unification | (R3's open item) | scoped to a v5 tape |
+
+Both pins are OFF BY DEFAULT and are turned on by a **version-5 tape's
+`pins: [...]`** — an array of names, the `noHazards` shape, so the next pin
+that gets ruled in costs no pipeline run. Value-scoped, not
+presence-scoped, like every field before it.
+
+### ⛔ Pinning the sound POSITION alone would not have worked
+
+`Player.as:530` reads `Music.soundPosition("Swim")` and `:531` REPLAYS the
+sound once it finishes. Vanilla completion is `SOUND_COMPLETE` off the same
+mixer clock, so a position-only pin leaves the RECURRENCE frame-rate
+dependent and the swim inexact past `swim.mp3`'s own length. The pin models
+the whole `Sfx` channel: play opens at 0, a step advances an open channel,
+completion CLOSES AND ZEROES (`onComplete` writes `_position = 0`), and stop
+closes with the position KEPT (`stop` writes `_position = _channel.position`).
+
+It is uniform over every sound set rather than scoped to "Swim", because
+`playSound`'s index draw advances the runtime's single global `Math.random`
+LFSR — leaving the other sets on the wall clock would leave that stream, and
+every downstream RNG-derived value, frame-rate dependent.
+
+A zero `Sfx.length` is a NAMED FAULT that disarms the tape
+(`Bot.pinFault`), never a fallback: a pinned channel with no length replays
+every frame, which is not an execution the vanilla game can produce.
+`botStatus.sound_pin` carries the measured frame length so the gate reads
+the number rather than trusting it.
+
+### ⛔ A completed, un-replayed Swim channel reads ZERO — so the boost latches
+
+`Sfx.position` is `(_channel ? _channel.position : _position) / 1000` and
+`onComplete` sets `_position = 0`. A Swim sound that finished and was NOT
+replayed therefore reports position 0, which is `< 0.1`, which is a boost —
+indefinitely. `Player.as:531` only replays while `v.length > 0`, so that is
+the state a swimmer who stops moving ends up in, and the first stroke after
+any pause is boosted because the position is read before the replay. **The
+swim boost is not "six ticks per 47" for a stop-start swim.**
+
+### What a sword press actually hits (`combatVerbs.js`)
+
+1. **A press does not hit on its own tick.** `Player.update` calls `slash()`
+   at :560 and reaches `input()` → `useItem` → `slashing = true` only at
+   :575. First hit test is press + 1.
+2. **The hit test then runs EVERY tick.** `slashDelayMax` is 0, so
+   `slashDelay` guards nothing; `slashEnd` (the 5-frame animation's
+   callback, which takes SIX ticks at `FP.elapsed` 0.0333) drops the flag.
+   What stops a second hit on one enemy inside a press is the enemy's
+   30-tick i-frame.
+3. **The scale is ONE FRAME STALE and is not reset.** `Player.render`
+   writes it after `update` and only `if (slashing)`, so `slashEnd` leaves
+   the last value in place.
+4. **The distance filter is not the rect.** The rect's own corners are
+   16.97 px from the player against a 16 px reach, so a body in one overlaps
+   the rect and is still not hit. Grass is measured centre-to-CENTRE and
+   everything else point-to-BOX — two distances in one `if`.
+5. **The LOS test has four exemptions**: `hasGhostSword`, `type == "Solid"`,
+   `type == "Rope"`, `is Flyer`.
+
+**The kill cadence is 31, not 21.** 21 is the DASH floor (a second press
+inside `slashTimer` knocks the player along their own velocity); 31 is the
+enemy i-frame one (`hitsTimerMax` 30). Different facts; the larger wins.
+The ±1 (whether the enemy's `hitUpdate` runs before or after the player's
+`slash()` on the hit tick is FlashPunk update-list order) is taken on the
+conservative side.
+
+**The ghost sword's rect is `width * 2` = 48 tall, from a 7-pixel-high
+sprite.** Reading `height` for both arms shrinks the one item whose reach is
+its reason to exist by 7x.
+
+### Chasers: three per-class facts a census does not carry
+
+- **The freeze gate differs BY CLASS.** `Bob.update` returns on
+  `Game.freezeObjects`; `Jellyfish.update` does not test it. Both stop
+  MOVING while frozen (that half is `Mobile.mobileUpdate`), but a frozen
+  jellyfish keeps accumulating chase velocity.
+- **Death is an ANIMATION and the body is still counted during it.** Both
+  override `startDeath` to `play("die")` without setting `destroy`;
+  `endAnim` does that on completion — 25 ticks for a bob, 35 for a
+  jellyfish. `Game.totalEnemies()` counts entities, so a kill lock does not
+  open on the killing blow.
+- **The off-screen return does not stop the chase, but the velocity
+  CONVERGES on `moveSpeed`.** The subclass block runs after
+  `Enemy.update`'s off-screen return, so it accumulates with nothing to
+  spend it on — but the impulse is `sign(toV.x - v.x) * moveSpeed`,
+  bang-bang TOWARD the target, so the term is zero once it arrives. The
+  camera's arrival releases one ordinary step, not a stored-up lurch.
+
+### ⛔ A `Lock` takes 100 TICKS to open after the last kill
+
+`Lock.checkEnemies` sets `activate` when `totalEnemies() == 0`, and then
+`activationStep` decays the graphic's alpha by **0.01 per update** until it
+reaches 0. Only `turnOff()` writes `type = ""` and
+`Game.setPersistence(tag, false)`. So the ledger entry lands 100 ticks after
+the fight ends — on top of the death animation the body is still counted
+during. A kill window that stopped at the last press leaves the walk
+pressing on a lock that was going to open.
+
+### The continuation assert: dead frames are what a re-boot cannot hide
+
+`director.continuationFindings`. A re-boot ERASES the drift that caused it
+— `botStart` rebuilds at the tape's boot block and the next stream starts
+exactly there, so every position check comes back clean. Dead frames do not
+lie: a re-boot pays `blackCover`'s room fade and a continuation that stays
+in one room pays none.
+
+Asserted **only for a window that never leaves its room**. A window that
+crosses a door pays a fade for the crossing, and separating that from
+`botStart`'s needs a per-load constant the director has no business owning
+— so such a window is reported UNASSERTED, never passed. A missing
+`dead_frames` is a finding too.

@@ -119,6 +119,8 @@ const R3_ROUTE = JSON.parse(readFileSync(
     join(REPO, 'frontend/modules/seedlingDemo/fixtures/r3-route.json'), 'utf8'));
 const { r4AcceptanceFindings } =
     await import(join(REPO, 'frontend/modules/seedlingDemo/r4Acceptance.js'));
+const { r5AcceptanceFindings } =
+    await import(join(REPO, 'frontend/modules/seedlingDemo/r5Acceptance.js'));
 const { r4TapeSpecs } = await import(join(REPO, 'frontend/modules/seedlingDemo/r4Walk.js'));
 const R4_ROUTE = JSON.parse(readFileSync(
     join(REPO, 'frontend/modules/seedlingDemo/fixtures/r4-route.json'), 'utf8'));
@@ -557,6 +559,10 @@ function checkAcceptance(replayed) {
         ...r2AcceptanceFindings(R2_ROUTE, r2TapeSpecs(R2_ROUTE), replayed),
         ...r3AcceptanceFindings(R3_ROUTE, r3TapeSpecs(R3_ROUTE), replayed),
         ...r4AcceptanceFindings(R4_ROUTE, r4TapeSpecs(R4_ROUTE), replayed),
+        // R5 slice 3: the first live kill, asserted as a PAIR. It needs no
+        // route or specs — the claim is entirely "what did these two arms,
+        // one field apart, do to the game's own ledger".
+        ...r5AcceptanceFindings(replayed),
     ];
     for (const f of findings) {
         if (f.skipped) {
