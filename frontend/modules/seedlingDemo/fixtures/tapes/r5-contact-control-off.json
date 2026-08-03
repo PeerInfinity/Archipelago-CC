@@ -1,0 +1,29 @@
+{
+  "tape_version": 3,
+  "game": "seedling",
+  "name": "r5-contact-control-off",
+  "description": "THE CONTACT CONTROL PAIR, arm 1 of 2 \u2014 `noDamage: TRUE`, and the ONLY field that differs from `r5-contact-control-on`. R0's table listed `noDamage` on the JS side as a BOUNDED VACUITY whose witness was 'R5', because every fixture through R4 was recorded with the guard ON: nothing had ever driven the player into something that damages, so 'the walk was contact-free' and 'the guard swallowed every contact' produced identical streams and the model was never asked. This arm is the shut-before half. L8 boots the player at (40,128) and a held RIGHT walks them due east into `sandtrap@96,128` \u2014 a STATIC enemy, so its body is exactly where the census says and the contact tick is a prediction rather than a fit. With the guard on, `Player.hit` returns at :1361 before sound, shake, knockback and the i-frame window, so the walk continues straight through and the stream must match the contact-free model tick for tick.",
+  "boot": {
+    "level": 8,
+    "x": 32,
+    "y": 120
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [
+    "water",
+    "lava",
+    "ice",
+    "waterfall"
+  ],
+  "grants": [],
+  "persistence": [],
+  "tick_count": 80,
+  "inputs": [
+    {
+      "key": "right",
+      "from": 1,
+      "to": 46
+    }
+  ]
+}

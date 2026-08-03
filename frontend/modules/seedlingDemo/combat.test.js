@@ -272,9 +272,58 @@ describe('the census over the committed extract', () => {
         expect({ cx: l98.cx, cy: l98.cy }).toEqual({ cx: 120, cy: 40 });
     });
 
-    it('refuses to run without a placement table rather than guessing', () => {
-        expect(() => combatCensus(source(98), {}))
-            .toThrow(/needs a placementOf/);
+    it('⛔ REFUSES a row with no ctor offset rather than defaulting to zero', () => {
+        // THE DEFECT THE LIVE GAME CAUGHT. Slice 2 first shipped this census
+        // taking an INJECTED placement table from `ENTITY_CLASSES` — which
+        // only carries dx/dy for entries that answer the BLOCKING role.
+        // Seventeen of the thirty-two combat tags are `notSolid`/`cheapOnly`
+        // entries with none, so the lookup returned `{dx:0, dy:0}` and the
+        // whole census stood eight pixels up and left of where the game puts
+        // things. A missing offset must be a THROW.
+        const rec = { level: 903, entities: [{ type: 'bob', x: 0, y: 0, attrs: {} }] };
+        const stripped = { ...ENEMY_CLASSES.bob, ctor: undefined };
+        expect(() => combatCensus({ ...rec, entities: [{ type: 'bob', x: 0, y: 0 }] },
+            { placementOf: () => ({ dx: 99, dy: 99 }) }))
+            .toThrow(/placement disagreement/);
+        expect(stripped.ctor).toBeUndefined();
+    });
+
+    it('the ctor offsets follow the CONSTRUCTOR CHAIN, not just the class', () => {
+        // The ladder's second transcription lesson: `Bulb`, `LavaRunner` and
+        // `Flyer` all call `super(_x, _y)` and inherit Bob's `+ Tile/2`;
+        // `DarkTrap` inherits SandTrap's. A table read off each class's own
+        // `super(...)` line alone would put four classes at the origin.
+        for (const tag of ['bulb', 'lavarunner', 'flyer', 'darktrap']) {
+            expect(ENEMY_CLASSES[tag].ctor, tag).toMatchObject({ dx: 8, dy: 8 });
+            expect(ENEMY_CLASSES[tag].ctor.src, tag).toMatch(/→|via/);
+        }
+        // ...and the ones that really are unusual.
+        expect(ENEMY_CLASSES.iceturret.ctor).toMatchObject({ dx: 16, dy: 16 });
+        expect(ENEMY_CLASSES.shieldboss.ctor).toMatchObject({ dx: 24, dy: 32 });
+        expect(ENEMY_CLASSES.bosstotem.ctor).toMatchObject({ dx: 0, dy: 0 });
+        expect(PUZZLEMENT_HAZARDS.arrowtrap.ctor).toMatchObject({ dx: 8, dy: 2.5 });
+    });
+
+    it('AGREES with levelWorld wherever both answer the same question', () => {
+        // The cross-check that keeps the two transcriptions from drifting: a
+        // `rect` collider's dx/dy IS the entity's constructed position, so
+        // where `ENTITY_CLASSES` declares one it must equal the combat row's.
+        // A `pixelmask` entry's dx/dy is the MASK's top-left and answers a
+        // different question — `tentaclebeast` is 1/2 there and +24/+24 here
+        // — which is why `combatPlacementOf` returns null for those.
+        let checked = 0;
+        for (const [tag, row] of Object.entries(
+            { ...ENEMY_CLASSES, ...PUZZLEMENT_HAZARDS })) {
+            const p = combatPlacementOf(tag);
+            if (!p) continue;
+            checked += 1;
+            expect({ tag, ...p }).toEqual({ tag, dx: row.ctor.dx, dy: row.ctor.dy });
+        }
+        // Positive count before the zero: the agreement must be over a real
+        // set, not over an empty one.
+        expect(checked).toBeGreaterThanOrEqual(9);
+        expect(combatPlacementOf('tentaclebeast')).toBeNull();
+        expect(ENEMY_CLASSES.tentaclebeast.ctor.dx).toBe(24);
     });
 
     it('the aggro disc is centre-to-centre, with both half-boxes in the margin', () => {

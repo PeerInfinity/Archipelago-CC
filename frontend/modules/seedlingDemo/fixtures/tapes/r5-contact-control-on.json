@@ -1,0 +1,29 @@
+{
+  "tape_version": 3,
+  "game": "seedling",
+  "name": "r5-contact-control-on",
+  "description": "THE CONTACT CONTROL PAIR, arm 2 of 2 \u2014 `noDamage: FALSE`, one field apart from `r5-contact-control-off`. THE POSITIVE CONTROL that arms every contact-freedom negative R5 makes. Same boot, same level, same held RIGHT, same 80 ticks: the player walks into `sandtrap@96,128` and the game does what the guard was hiding \u2014 `hits += 1`, `hitsTimer = 20` (twenty ticks with the four arrow branches skipped, `Player.as:1506`), `Game.shake += 5`, and `knockback(3, ...)` writing velocity AWAY from the trap. So the stream must DIVERGE from the contact-free model, and it must diverge at the tick the model predicts the boxes meet. A negative that cannot be made to fail is not evidence; this is what makes 'R5's walk never touched anything' a claim.",
+  "boot": {
+    "level": 8,
+    "x": 32,
+    "y": 120
+  },
+  "noclip": false,
+  "noDamage": false,
+  "noHazards": [
+    "water",
+    "lava",
+    "ice",
+    "waterfall"
+  ],
+  "grants": [],
+  "persistence": [],
+  "tick_count": 80,
+  "inputs": [
+    {
+      "key": "right",
+      "from": 1,
+      "to": 46
+    }
+  ]
+}

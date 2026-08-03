@@ -59,6 +59,7 @@ const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
 
 const {
     buildLevelWorld, RELAXED_ROLES, ROLES, TILE_SIZE, rect, ENTITY_CLASSES,
+    combatPlacementOf,
 } = await import(join(MODULE, 'levelWorld.js'));
 const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
 const { TILE_COLUMN_TO_TYPE } =
@@ -69,19 +70,24 @@ const source = atlasLevelSource();
 const LEVEL_COUNT = 116;
 
 /**
- * The ONE placement table, injected into `combat.js`'s census.
+ * ⛔ THIS SCRIPT USED TO INJECT ITS OWN PLACEMENT TABLE, AND IT WAS WRONG.
  *
- * `combat.js` refuses to guess an entity's constructed position, and this
- * is why: the offsets are per class and already transcribed once, in
- * `levelWorld.ENTITY_CLASSES`, from each class's `Game.as` construction
- * site. `IceTurret`'s is +16/+16; a census that read the `.oel` attribute
- * would ask about the tile up and left of the one the game put it on.
+ * The reasoning was "the offsets are already transcribed once, in
+ * `levelWorld.ENTITY_CLASSES`, so read them from there rather than growing a
+ * second copy". But `ENTITY_CLASSES` only carries `dx`/`dy` for entries that
+ * answer the BLOCKING role: seventeen of the thirty-two combat tags are
+ * `notSolid(...)`/`cheapOnly(...)` entries with none, and the `?? 0` turned
+ * every one of them into "at the .oel coordinate" when the real constructor
+ * puts them at `+8/+8`. **§8.6's fifteen wakes were measured eight pixels up
+ * and left of the truth**, and the live contact-control pair is what caught
+ * it — the model predicted a contact at t44 and the game hit at t49.
+ *
+ * `combat.js` owns the ctor offsets now, transcribed per class from each
+ * class's own constructor CHAIN (the offset is the PARENT's for four of
+ * them). `levelWorld.combatPlacementOf` is the cross-check, and it returns
+ * null where the two tables answer different questions.
  */
-const placementOf = (tag) => {
-    const cls = ENTITY_CLASSES[tag];
-    if (!cls) return null;
-    return { dx: cls.dx ?? 0, dy: cls.dy ?? 0 };
-};
+const placementOf = combatPlacementOf;
 const censusOf = (rec) => combat.combatCensus(rec, { placementOf });
 
 /** The fork the tables were transcribed from, for the recon's own header. */
@@ -185,9 +191,9 @@ function runKillLocks() {
     const sealed = [];
     for (let level = 0; level < LEVEL_COUNT; level += 1) {
         const rec = source(level);
-        const locks = combat.killLocksIn(rec, { placementOf });
+        const locks = combat.killLocksIn(rec, { placementOf: combatPlacementOf });
         if (locks.length === 0) continue;
-        for (const f of combat.assertNoUnclearableKillLock(rec, { placementOf })) sealed.push(f);
+        for (const f of combat.assertNoUnclearableKillLock(rec, { placementOf: combatPlacementOf })) sealed.push(f);
         for (const lock of locks) {
             found += 1;
             const bill = lock.bill.map((inst) => {

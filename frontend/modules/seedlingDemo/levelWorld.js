@@ -328,7 +328,17 @@ const TOTAL_ENEMIES_SET = new Set(TOTAL_ENEMIES_CLASSES);
  */
 export const combatPlacementOf = (tag) => {
     const cls = ENTITY_CLASSES[tag];
-    return cls ? { dx: cls.dx ?? 0, dy: cls.dy ?? 0 } : null;
+    // ⛔ ONLY A `rect` COLLIDER'S dx/dy IS THE ENTITY'S CONSTRUCTED POSITION.
+    // A `pixelmask` entry's dx/dy is the MASK's top-left (§8.2: TentacleBeast
+    // is at +24/+24 and its mask at +1/+2), and a `none` collider —
+    // `notSolid`/`cheapOnly`, which is SEVENTEEN of the thirty-two combat
+    // tags — has no dx/dy at all, because "does it block" never needed one.
+    // Returning `{dx: 0, dy: 0}` for those is what put the whole census eight
+    // pixels up and left until the live contact-control pair caught it.
+    // `combat.js` owns the ctor offsets now; this is the cross-check.
+    if (!cls || cls.collider !== 'rect') return null;
+    if (!Number.isFinite(cls.dx) || !Number.isFinite(cls.dy)) return null;
+    return { dx: cls.dx, dy: cls.dy };
 };
 
 /**

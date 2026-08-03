@@ -177,7 +177,27 @@ describe('fixture differential', () => {
         }
     });
 
-    it.each(names)("%s: JS stream matches the real game recording, exactly", (name) => {
+    /**
+     * ⛔ THE ONE FIXTURE WHOSE MODEL AND RECORDING MUST DIFFER.
+     *
+     * `r5-contact-control-on` is R5's POSITIVE CONTROL: the same walk as
+     * `r5-contact-control-off` with `noDamage` flipped and nothing else, driven
+     * into `sandtrap@96,128`. The JS engine models NO damage at all — that is
+     * the whole point — so the game's stream must diverge from it, and the
+     * blanket "matches the recording exactly" sweep would be red for the one
+     * reason that is evidence rather than a defect.
+     *
+     * ⚠ PINNED BY NAME, and the exclusion is itself checked: the test below
+     * requires each excluded fixture to ACTUALLY diverge, so this list cannot
+     * be used to quiet a genuine drift. See
+     * `feedback_coincidental_predicate_rots` — a predicate like
+     * `!loadTape(n).noDamage` would sweep in every future R5 fixture, all of
+     * which are supposed to match.
+     */
+    const EXPECTED_TO_DIVERGE = ['r5-contact-control-on'];
+
+    it.each(names.filter((n) => !EXPECTED_TO_DIVERGE.includes(n)))(
+        "%s: JS stream matches the real game recording, exactly", (name) => {
         // Everything runs with the real level geometry here, the v1 tapes
         // included — which for them is a second claim on top of the first:
         // the stateful `getState` has to agree with the game over 220 ticks
@@ -188,6 +208,16 @@ describe('fixture differential', () => {
         const { stream: expected } = loadExpectation(name);
         const actual = runTapeToStream(loadTape(name), { levelSource });
         expect(diffObservationStreams(expected, actual)).toBeNull();
+    });
+
+    it.each(EXPECTED_TO_DIVERGE)('%s: DIVERGES from the model, which is the claim', (name) => {
+        // The exclusion above is only honest if the excluded fixture really
+        // does diverge — otherwise it is a way to hide a drift. And the
+        // divergence has to be the RIGHT one, so its shape is asserted in
+        // `contactControl.test.js` against its own paired control arm.
+        const { stream: expected } = loadExpectation(name);
+        const actual = runTapeToStream(loadTape(name), { levelSource });
+        expect(diffObservationStreams(expected, actual)).not.toBeNull();
     });
 
     it.each(V1_FIVE)('%s: byte-identical on the v1 engine too', (name) => {

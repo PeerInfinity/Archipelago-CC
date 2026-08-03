@@ -158,6 +158,7 @@ export const TOTAL_ENEMIES_OMISSIONS = Object.freeze({
  */
 export const ENEMY_CLASSES = Object.freeze({
     bob: {
+        ctor: { dx: 8, dy: 8, src: 'Bob.as:33 `super(_x + Tile.w/2, _y + Tile.h/2)`' },
         as3: 'Bob', kill: { hits: 3 }, aggro: { kind: 'chase', range: 80 },
         hitbox: { w: 8, h: 8, ox: 4, oy: 4 }, damage: 1, speed: 0.5,
         threatPad: 0, envelopeProof: true,
@@ -167,6 +168,7 @@ export const ENEMY_CLASSES = Object.freeze({
         src: 'Enemies/Bob.as:21,41 + Enemy defaults',
     },
     bobsoldier: {
+        ctor: { dx: 8, dy: 8, src: 'BobSoldier.as `super(_x + Tile.w/2, _y + Tile.h/2)`' },
         as3: 'BobSoldier', kill: { hits: 3 }, aggro: { kind: 'chase', range: 80 },
         hitbox: { w: 8, h: 8, ox: 4, oy: 2 }, damage: 1, speed: 0.8,
         threatPad: 16, envelopeProof: true,
@@ -178,6 +180,7 @@ export const ENEMY_CLASSES = Object.freeze({
         reach: { kind: 'sword-line', px: 16 },
     },
     bulb: {
+        ctor: { dx: 8, dy: 8, src: 'Bulb.as `super(_x, _y)` → Bob adds Tile/2 — the offset is the PARENT\'s' },
         as3: 'Bulb', kill: { hits: 1 }, aggro: { kind: 'chase', range: 80 },
         hitbox: { w: 12, h: 12, ox: 6, oy: 6 }, damage: 1, speed: 0.65,
         threatPad: 0, envelopeProof: true,
@@ -194,6 +197,7 @@ export const ENEMY_CLASSES = Object.freeze({
         navMeshEdit: { becomes: 17, where: 'the tile under its centre', src: 'Enemies/Bulb.as:71-79' },
     },
     lavarunner: {
+        ctor: { dx: 8, dy: 8, src: 'LavaRunner.as `super(_x, _y)` → Bob adds Tile/2' },
         as3: 'LavaRunner', kill: { hits: 2 }, aggro: { kind: 'chase', range: 80 },
         hitbox: { w: 12, h: 12, ox: 6, oy: 6 }, damage: 1, speed: 1.5,
         threatPad: 0, envelopeProof: true,
@@ -207,6 +211,7 @@ export const ENEMY_CLASSES = Object.freeze({
         src: 'Enemies/LavaRunner.as:36,38,41 (extends Bob → runRange 80)',
     },
     jellyfish: {
+        ctor: { dx: 8, dy: 8, src: 'Jellyfish.as `super(_x + Tile.w/2, _y + Tile.h/2)`' },
         as3: 'Jellyfish', kill: { hits: 3 }, aggro: { kind: 'chase', range: 160 },
         hitbox: { w: 12, h: 12, ox: 6, oy: 6 }, damage: 1, speed: 0.8,
         threatPad: 0, envelopeProof: true,
@@ -219,6 +224,7 @@ export const ENEMY_CLASSES = Object.freeze({
         why: 'the longest leash on the map — 160 px, double every other chaser.',
     },
     puncher: {
+        ctor: { dx: 8, dy: 8, src: 'Puncher.as `super(_x + Tile.w/2, _y + Tile.h/2)`' },
         as3: 'Puncher', kill: { hits: 3 }, aggro: { kind: 'chase', range: 80 },
         hitbox: { w: 12, h: 12, ox: 6, oy: 4 }, damage: 1, speed: 1,
         threatPad: 8, envelopeProof: true,
@@ -229,6 +235,7 @@ export const ENEMY_CLASSES = Object.freeze({
         src: 'Enemies/Puncher.as:22-24,46,50',
     },
     drill: {
+        ctor: { dx: 8, dy: 8, src: 'Drill.as `super(_x + Tile.w/2, _y + Tile.h/2)`' },
         as3: 'Drill', kill: { hits: 3 }, aggro: { kind: 'teleport-hop', range: 48 },
         hitbox: { w: 10, h: 10, ox: 5, oy: 5 }, damage: 1, speed: 16,
         threatPad: 0, envelopeProof: true,
@@ -239,6 +246,7 @@ export const ENEMY_CLASSES = Object.freeze({
         why: 'the hop needs a solid-free line (`collideLine("Solid")`).',
     },
     flyer: {
+        ctor: { dx: 8, dy: 8, src: 'Flyer.as `super(_x, _y)` → Bob adds Tile/2' },
         as3: 'Flyer', kill: { hits: 3 }, aggro: { kind: 'chase-through-walls', range: 80 },
         hitbox: { w: 10, h: 8, ox: 5, oy: 12 }, damage: 2, speed: 1,
         threatPad: 0, envelopeProof: true,
@@ -250,6 +258,7 @@ export const ENEMY_CLASSES = Object.freeze({
             + 'overridden so only the DROP frame damages.',
     },
     spinner: {
+        ctor: { dx: 8, dy: 8, src: 'Spinner.as:30 `super(_x + Tile.w/2, _y + Tile.h/2)`' },
         as3: 'Spinner', kill: { hits: 3 }, aggro: { kind: 'none', range: 0 },
         hitbox: { w: 7, h: 7, ox: 4, oy: 4 }, damage: 1, speed: 1,
         threatPad: 13, envelopeProof: false,
@@ -268,6 +277,7 @@ export const ENEMY_CLASSES = Object.freeze({
             + 'kill-earned LEDGER entry, and the only non-boss enemy with one.',
     },
     wallflyer: {
+        ctor: { dx: 8, dy: 8, src: 'WallFlyer.as `super(_x + Tile.w/2, _y + Tile.h/2)`' },
         as3: 'WallFlyer', kill: { hits: 3 }, aggro: { kind: 'wall-hug-launch', range: 'screen width' },
         hitbox: { w: 14, h: 14, ox: 7, oy: 7 }, damage: 1, speed: 4,
         threatPad: 160, envelopeProof: false,
@@ -277,6 +287,7 @@ export const ENEMY_CLASSES = Object.freeze({
         src: 'Enemies/WallFlyer.as:38,71-75',
     },
     turret: {
+        ctor: { dx: 8, dy: 8, src: 'Turret.as `super(_x + Tile.w/2, _y + Tile.h/2)`' },
         as3: 'Turret', kill: { hits: 3 }, aggro: { kind: 'static-shooter', range: 64 },
         hitbox: { w: 16, h: 16, ox: 8, oy: 8 }, damage: 1, speed: 0,
         threatPad: 64, envelopeProof: false,
@@ -287,6 +298,7 @@ export const ENEMY_CLASSES = Object.freeze({
         src: 'Enemies/Turret.as:17-22,35',
     },
     iceturret: {
+        ctor: { dx: 16, dy: 16, src: 'IceTurret.as `super(_x + Tile.w, _y + Tile.h)` — a WHOLE tile, not half' },
         as3: 'IceTurret', kill: { hits: 3 }, aggro: { kind: 'static-shooter', range: 128 },
         hitbox: { w: 32, h: 32, ox: 16, oy: 16 }, damage: 1, speed: 0,
         threatPad: 128, envelopeProof: false,
@@ -315,6 +327,7 @@ export const ENEMY_CLASSES = Object.freeze({
         src: 'Enemies/IceTurret.as:19,44,51,56,135-151',
     },
     grenade: {
+        ctor: { dx: 8, dy: 8, src: '⚠ Grenade.as:34 spawns at `_y + Tile.h/2 - fallHeight` (48 px ABOVE) and `endY = _y + Tile.h/2` is where it lands; the RESTING position is what a route avoids' },
         as3: 'Grenade', kill: null, aggro: { kind: 'armed-by-proximity', range: 32 },
         hitbox: { w: 6, h: 6, ox: 3, oy: 3 }, damage: 1, speed: 0,
         threatPad: 20, envelopeProof: true,
@@ -328,6 +341,7 @@ export const ENEMY_CLASSES = Object.freeze({
             + 'Arm it from 32 px and stand more than 20 px away.',
     },
     icetrap: {
+        ctor: { dx: 8, dy: 8, src: 'IceTrap.as `super(_x + Tile.w/2, _y + Tile.h/2)`' },
         as3: 'IceTrap', kill: null, aggro: { kind: 'static', range: 8 },
         hitbox: { w: 16, h: 16, ox: 8, oy: 8 }, damage: 1, speed: 0,
         threatPad: 0, envelopeProof: true,
@@ -339,6 +353,7 @@ export const ENEMY_CLASSES = Object.freeze({
             + 'volume; its `IceTurretBlast` freeze is outside `noDamage`.',
     },
     sandtrap: {
+        ctor: { dx: 8, dy: 8, src: 'SandTrap.as:27 `super(_x + Tile.w/2, _y + Tile.h/2)`' },
         as3: 'SandTrap', kill: { hits: 3 }, aggro: { kind: 'static', range: 20 },
         hitbox: { w: 16, h: 16, ox: 8, oy: 8 }, damage: 1, speed: 0,
         threatPad: 0, envelopeProof: true,
@@ -349,6 +364,7 @@ export const ENEMY_CLASSES = Object.freeze({
         why: '⚠ counted AND killable AND its `removed()` writes its tag.',
     },
     darktrap: {
+        ctor: { dx: 8, dy: 8, src: 'DarkTrap.as `super(_x, _y, …)` → SandTrap adds Tile/2' },
         as3: 'DarkTrap', kill: null, aggro: { kind: 'static', range: 20 },
         hitbox: { w: 16, h: 16, ox: 8, oy: 8 }, damage: 1, speed: 0,
         threatPad: 0, envelopeProof: true,
@@ -363,6 +379,7 @@ export const ENEMY_CLASSES = Object.freeze({
         unclearableIfCounted: true,
     },
     lavatrap: {
+        ctor: { dx: 8, dy: 8, src: 'LavaTrap.as `super(_x + Tile.w/2, _y + Tile.h/2)`' },
         as3: 'LavaTrap', kill: { hits: 3 }, aggro: { kind: 'static-tongue', range: 32 },
         hitbox: { w: 10, h: 10, ox: 5, oy: 5 }, damage: 1, speed: 0,
         threatPad: 32, envelopeProof: false,
@@ -376,6 +393,7 @@ export const ENEMY_CLASSES = Object.freeze({
             + 'deletes the bridge.',
     },
     bombpusher: {
+        ctor: { dx: 24, dy: 24, src: 'BombPusher.as `super(_x + Tile.w*3/2, _y + Tile.h*3/2)`' },
         as3: 'BombPusher', kill: null, aggro: { kind: 'static-lobber', range: 256 },
         hitbox: { w: 48, h: 48, ox: 24, oy: 24 }, damage: 1, speed: 0,
         threatPad: 24, envelopeProof: false,
@@ -393,6 +411,7 @@ export const ENEMY_CLASSES = Object.freeze({
     // All four are COUNTED, so a boss in a kill-lock room is a fight, not
     // an avoid. None of them is in a kill-lock room.
     shieldboss: {
+        ctor: { dx: 24, dy: 32, src: 'ShieldBoss.as `super(_x + Tile.w*1.5, _y + Tile.h*2)` — ⚠ asymmetric' },
         as3: 'ShieldBoss', kill: { hits: 4, why: 'the first is always swallowed' },
         aggro: { kind: 'boss', range: 'arena' },
         hitbox: null, damage: 1,
@@ -402,6 +421,7 @@ export const ENEMY_CLASSES = Object.freeze({
         src: 'Enemies/ShieldBoss.as:64,103-218',
     },
     bosstotem: {
+        ctor: { dx: 0, dy: 0, src: 'BossTotem.as `super(_x, _y)` — no offset at any level of the chain' },
         as3: 'BossTotem', kill: { hits: 5, why: '`onlyHitBy = "Wand"`' },
         aggro: { kind: 'boss', range: 'arena' },
         hitbox: null, damage: 1,
@@ -412,6 +432,7 @@ export const ENEMY_CLASSES = Object.freeze({
         src: 'Enemies/BossTotem.as:478',
     },
     lavaboss: {
+        ctor: { dx: 48, dy: 40, src: 'LavaBoss.as `super(_x + 48, _y + 40)`' },
         as3: 'LavaBoss', kill: { hits: null }, aggro: { kind: 'boss', range: 'arena' },
         hitbox: null, damage: 1,
         terrain: { water: 'n/a', lava: 'n/a', pit: 'n/a' },
@@ -420,6 +441,7 @@ export const ENEMY_CLASSES = Object.freeze({
         src: 'Enemies/LavaBoss.as:137',
     },
     tentaclebeast: {
+        ctor: { dx: 24, dy: 24, src: 'TentacleBeast.as `super(_x + 24, _y + 24)` — ⚠ NOT levelWorld\'s dx/dy 1/2, which is the MASK\'s top-left and answers a different question' },
         as3: 'TentacleBeast', kill: { hits: null }, aggro: { kind: 'boss', range: 'arena' },
         hitbox: null, damage: 1,
         terrain: { water: 'n/a', lava: 'n/a', pit: 'n/a' },
@@ -427,6 +449,7 @@ export const ENEMY_CLASSES = Object.freeze({
         boss: 'R6', src: 'Enemies/TentacleBeast.as:102',
     },
     finalboss: {
+        ctor: { dx: 8, dy: 8, src: 'FinalBoss.as `super(_x + Tile.w/2, _y + Tile.h/2)`' },
         as3: 'FinalBoss', kill: { hits: null }, aggro: { kind: 'boss', range: 'arena' },
         hitbox: null, damage: 1,
         terrain: { water: 'n/a', lava: 'n/a', pit: 'n/a' },
@@ -434,6 +457,7 @@ export const ENEMY_CLASSES = Object.freeze({
         boss: 'R6', src: 'Enemies/FinalBoss.as:197,221-222',
     },
     lightbosscontroller: {
+        ctor: { dx: 0, dy: 0, src: 'LightBossController.as — an `Entity`, not a `Mobile`; it spawns LightBoss rather than standing anywhere' },
         as3: 'LightBossController', kill: null, aggro: { kind: 'spawner', range: 'level' },
         hitbox: null, damage: 0,
         terrain: { water: 'n/a', lava: 'n/a', pit: 'n/a' },
@@ -457,11 +481,13 @@ export const ENEMY_CLASSES = Object.freeze({
  */
 export const PUZZLEMENT_HAZARDS = Object.freeze({
     spinningaxe: {
+        ctor: { dx: 8, dy: 8, src: 'SpinningAxe.as:36 `super(_x + Tile.w/2, _y + Tile.h/2)`' },
         as3: 'SpinningAxe', timing: 'self', damage: 1,
         src: 'Puzzlements/SpinningAxe.as:24,45,75',
         why: 'the `rate` attribute is the spin rate; nothing shared feeds it.',
     },
     beamtower: {
+        ctor: { dx: 8, dy: 16, src: 'BeamTower.as:28 `super(_x + 8, _y + 16)`' },
         as3: 'BeamTower', timing: 'worldFrame', damage: 1,
         src: 'Puzzlements/BeamTower.as:22,92,102',
         why: '⚠ the beam position is '
@@ -470,23 +496,27 @@ export const PUZZLEMENT_HAZARDS = Object.freeze({
             + 'question is on the critical path.',
     },
     lavachain: {
+        ctor: { dx: 8, dy: 8, src: 'LavaChain.as:30 `super(_x + Tile.w/2, _y + Tile.h/2)`' },
         as3: 'LavaChain', timing: 'worldFrame', damage: 1,
         src: 'Puzzlements/LavaChain.as:23,53,90',
         why: '`if (!Game.worldFrame(Main.FPS, loops))` gates the step.',
     },
     crusher: {
+        ctor: { dx: 16, dy: 16, src: 'Crusher.as:37 `super(_x + Tile.w, _y + Tile.h)`' },
         as3: 'Crusher', timing: 'self', damage: 1000,
         src: 'Puzzlements/Crusher.as:33,98',
         why: '⛔ damage 1000 — "KILL EVERYTHING". A crusher contact is '
             + '`die()` at any `hitsMax`, so its volume is never a graze.',
     },
     pulser: {
+        ctor: { dx: 8, dy: 8, src: 'Pulser.as:42 `super(_x + Tile.w/2, _y + Tile.h/2)`' },
         as3: 'Pulser', timing: 'self', damage: 1,
         src: 'Puzzlements/Pulser.as:32-36,102-114',
         why: 'also a MECHANIC: its pulse bumps `PushableBlockFire` and a '
             + 'dead `IceTurret` with the type "Pulse".',
     },
     arrowtrap: {
+        ctor: { dx: 8, dy: 2.5, src: 'ArrowTrap.as:24 `super(_x + Tile.w/2, _y + sprArrowTrap.height/2)` — the sprite is 16x5, so the y offset is 2.5 and NOT a whole pixel' },
         as3: 'ArrowTrap', timing: 'activator', damage: 1,
         src: 'Puzzlements/ArrowTrap.as:18-19,30-38,48-63 + Projectiles/Arrow.as:49',
         why: '3 arrows every 10 frames at speed 5, downward. ⚠ The arrow\'s '
@@ -496,6 +526,7 @@ export const PUZZLEMENT_HAZARDS = Object.freeze({
             + 'picks a sprite frame, so the timing is self/activator only.',
     },
     whirlpool: {
+        ctor: { dx: 16, dy: 16, src: 'Whirlpool.as `super(_x + Tile.w, _y + Tile.h)` — a WHOLE tile' },
         as3: 'Whirlpool', timing: 'self', damage: 0, displaces: true,
         src: 'Puzzlements/Whirlpool.as:56-84',
         why: 'writes the player\'s position absolutely and then `drown()`s '
@@ -503,6 +534,7 @@ export const PUZZLEMENT_HAZARDS = Object.freeze({
             + 'knife edge — gate is overlap AND `FP.distance < 16`.',
     },
     pull: {
+        ctor: { dx: 0, dy: 0, src: 'Pull `super(_x, _y)`' },
         as3: 'Pull', timing: 'self', damage: 0, displaces: true,
         src: 'levelWorld ENTITY_CLASSES (priced as a proximity hazard since R1)',
         why: 'adds force every tick to anything overlapping. Routed around '
@@ -571,47 +603,77 @@ export function aggroDisc(tag, x, y, { margin = 8 } = {}) {
  * INSTRUMENT wants the whole list; slice 2's `combat` role is what turns
  * an unclassified tag into a build failure.
  *
- * ⚠ `placementOf` IS REQUIRED, and it is the `levelSource` seam again.
- * An enemy's `x`/`y` — the coordinates `FP.distance`, `getState` and every
- * aggro test read — are the CONSTRUCTOR's, not the `.oel` file's, and the
- * two differ per class: `IceTurret`'s ctor is `super(_x + Tile.w, _y +
- * Tile.h, …)`, sixteen pixels down and right of the attribute. That table
- * already exists as `levelWorld.ENTITY_CLASSES`' `dx`/`dy`, and the whole
- * ladder's second transcription lesson is about an offset applied at one
- * level of a constructor chain and not the next. So the caller injects the
- * one implementation rather than this module growing a second copy — which
- * also keeps `combat.js` dependency-free, so slice 2 can wire a `combat`
- * role INTO `levelWorld` without an import cycle.
+ * ⛔⛔ **THE PLACEMENT TABLE IS THIS MODULE'S, AND THE FIRST VERSION OF IT
+ * WAS WRONG — THE LIVE GAME CAUGHT IT.**
  *
- * @param {object}   levelRecord
- * @param {Function} opts.placementOf `(tag) => {dx, dy}`
+ * An enemy's `x`/`y` — the coordinates `FP.distance`, `getState` and every
+ * aggro test read — are the CONSTRUCTOR's, not the `.oel` file's. Slice 2
+ * shipped this function taking an INJECTED `placementOf`, on the reasoning
+ * that `levelWorld.ENTITY_CLASSES` already carries `dx`/`dy` and a second
+ * transcription would be a second thing to get wrong. Both halves of that
+ * reasoning were false:
+ *
+ * 1. **`ENTITY_CLASSES` only carries `dx`/`dy` for entries that answer the
+ *    BLOCKING role.** Seventeen of the thirty-two combat tags are
+ *    `notSolid(...)`/`cheapOnly(...)` entries written to say "this does not
+ *    block", which never needed a constructed position — so they have none,
+ *    and the injected lookup returned `{dx: 0, dy: 0}` for `bob`,
+ *    `sandtrap`, `darktrap`, `turret`, `jellyfish` and twelve others. Every
+ *    one of them is `+8/+8`. The whole census was eight pixels up and left.
+ * 2. **Where it DOES carry one, it can be answering a different question.**
+ *    `tentaclebeast`'s `dx/dy` is `1/2` — the MASK's top-left, per §8.2's
+ *    own note — while the entity is at `+24/+24`.
+ *
+ * The live contact-control pair is what found it: the model predicted the
+ * boxes meeting at t44 and the GAME hit at t49, and the five ticks are the
+ * eight pixels. So the ctor offset is transcribed HERE, per class, from each
+ * class's own constructor chain — including the chains where the offset is
+ * the PARENT's (`Bulb`, `LavaRunner`, `Flyer` via `Bob`; `DarkTrap` via
+ * `SandTrap`), which is the ladder's second transcription lesson exactly.
+ *
+ * `placementOf` survives as an optional CROSS-CHECK: pass one and a
+ * disagreement is a throw, not a silent preference. Where the two tables
+ * were written for the same question they must agree; where they were not
+ * (the pixelmask entries) the caller does not pass one.
+ *
+ * @param {object}    levelRecord
+ * @param {Function=} opts.placementOf `(tag) => {dx, dy}` — cross-check only
  */
-export function combatCensus(levelRecord, { placementOf } = {}) {
-    if (typeof placementOf !== 'function') {
-        throw new Error('combatCensus needs a placementOf(tag) -> {dx, dy}; pass '
-            + 'levelWorld.ENTITY_CLASSES\' own offsets rather than transcribing them again');
-    }
+export function combatCensus(levelRecord, { placementOf = null } = {}) {
     const enemies = [];
     const hazards = [];
     const unclassified = [];
-    const place = (e) => {
-        const p = placementOf(e.type);
-        if (!p || !Number.isFinite(p.dx) || !Number.isFinite(p.dy)) {
-            throw new Error(`combatCensus: no placement offset for "${e.type}" — `
-                + 'add it to levelWorld.ENTITY_CLASSES with its Game.as construction site');
+    const place = (e, row) => {
+        const c = row.ctor;
+        if (!c || !Number.isFinite(c.dx) || !Number.isFinite(c.dy)) {
+            throw new Error(`combatCensus: "${e.type}" has no \`ctor\` offset. Read its `
+                + 'constructor CHAIN — the offset is often the parent\'s — and add '
+                + '{dx, dy, src} to its row. A missing offset must never default to 0: '
+                + 'that is exactly the defect the live contact-control pair caught.');
         }
-        return { cx: e.x + p.dx, cy: e.y + p.dy };
+        if (placementOf) {
+            const p = placementOf(e.type);
+            if (p && Number.isFinite(p.dx) && (p.dx !== c.dx || p.dy !== c.dy)) {
+                throw new Error(`combatCensus: "${e.type}" placement disagreement — the `
+                    + `combat row says (${c.dx},${c.dy}) from ${c.src}, the injected table `
+                    + `says (${p.dx},${p.dy}). One of the two transcriptions is wrong, or `
+                    + 'they are answering different questions (a pixelmask entry\'s dx/dy '
+                    + 'is the MASK\'s top-left, not the entity\'s position).');
+            }
+        }
+        return { cx: e.x + c.dx, cy: e.y + c.dy };
     };
     for (const e of levelRecord.entities ?? []) {
         if (ENEMY_CLASSES[e.type]) {
             const row = ENEMY_CLASSES[e.type];
             enemies.push({
-                tag: e.type, x: e.x, y: e.y, ...place(e), attrs: e.attrs ?? {},
+                tag: e.type, x: e.x, y: e.y, ...place(e, row), attrs: e.attrs ?? {},
                 as3: row.as3, counted: isCounted(e.type), row,
             });
         } else if (PUZZLEMENT_HAZARDS[e.type]) {
             hazards.push({
-                tag: e.type, x: e.x, y: e.y, ...place(e), attrs: e.attrs ?? {},
+                tag: e.type, x: e.x, y: e.y, ...place(e, PUZZLEMENT_HAZARDS[e.type]),
+                attrs: e.attrs ?? {},
                 as3: PUZZLEMENT_HAZARDS[e.type].as3,
                 timing: PUZZLEMENT_HAZARDS[e.type].timing,
                 row: PUZZLEMENT_HAZARDS[e.type],

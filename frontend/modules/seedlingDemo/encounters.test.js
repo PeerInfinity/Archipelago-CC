@@ -19,7 +19,6 @@ import { describe, expect, it } from 'vitest';
 import {
     FRICTION,
     LADDER,
-    PLAYER_BOX,
     auditEncounterVerdicts,
     chaseEnvelope,
     crossingsOf,
@@ -28,6 +27,7 @@ import {
 } from './encounters.js';
 import { ENEMY_CLASSES, KILL_CADENCE_FLOOR } from './combat.js';
 import { cameraTrack } from './camera.js';
+import { playerBoxAt } from './playerPhysicsV2.js';
 import { ROLES, buildLevelWorld } from './levelWorld.js';
 import { atlasLevelSource } from './levelSource.js';
 import { loadExpectation } from './fixtures/index.js';
@@ -134,17 +134,18 @@ describe('the chase envelope', () => {
     });
 
     it('measures BOX separation, and adds the class\'s threat pad', () => {
-        // A bobsoldier's body is 8x8 but its sword is a 16 px collideLine
-        // past it; the player box is 2x2 at origin (4,5). At (0,0) and
-        // (40,0): gap = 40 - 4 - (4 + 16) = ... hand-computed below.
+        // Hand-computed. The player box is `playerPhysicsV2.playerBoxAt` —
+        // 4x5 with origin (2,2), so at (40,0) it is [38,42] x [-2,3]. A
+        // bobsoldier's body is 8x8 with origin (4,4), so at (0,0) it is
+        // [-4,4] x [-4,4]; its sword is a 16 px collideLine past that, which
+        // is the pad, so the grown box is [-20,20].
+        //     gap = 38 - 20 = 18
         const soldier = inst('bobsoldier', 0, 0);
         const env = chaseEnvelope(soldier, walk([[40, 0]]));
-        // enemy box grown by pad 16: [-4-16, 4+16] = [-20, 20]
-        // player box at x=40: [36, 38]  ⇒ gap 16
-        expect(env.rows[0].clearance).toBe(16);
+        expect(env.rows[0].clearance).toBe(18);
         expect(env.pad).toBe(16);
-        // The same geometry with no pad clears by 32.
-        expect(chaseEnvelope(inst('bob', 0, 0), walk([[40, 0]])).rows[0].clearance).toBe(32);
+        // The same geometry with no pad clears by 38 - 4 = 34.
+        expect(chaseEnvelope(inst('bob', 0, 0), walk([[40, 0]])).rows[0].clearance).toBe(34);
     });
 
     it('⛔ REFUSES a boss rather than answering 0 and proving the arena safe', () => {
@@ -346,7 +347,16 @@ describe('R4\'s committed route on the ladder — the re-route FLOOR', () => {
             .toThrow(/needs a world built with the `combat` role/);
     });
 
-    it('the player box is the physics module\'s, not a guess', () => {
-        expect(PLAYER_BOX).toEqual({ w: 2, h: 2, ox: 4, oy: 5 });
+    it('⛔ the player box is the PHYSICS module\'s, not a second transcription', () => {
+        // This module shipped its own — `{w:2, h:2, ox:4, oy:5}` — by reading
+        // `normalHitbox = new Rectangle(2, 2, 4, 5)` as (w,h,ox,oy) when
+        // `Rectangle` is (x,y,width,height) and `setHitbox` takes
+        // (width, height, x, y). The real box is 4x5 with origin (2,2), so
+        // the wrong one was 2 px narrower, 3 px shorter and sat 3 px high.
+        // `playerBoxAt` has had it right since v2 and four rungs of legs ride
+        // on it, which is the whole argument for importing rather than
+        // re-transcribing.
+        expect(playerBoxAt(100, 100))
+            .toEqual({ x: 98, y: 98, right: 102, bottom: 103 });
     });
 });

@@ -65,7 +65,16 @@
  */
 
 import { ENEMY_CLASSES, KILL_CADENCE_FLOOR, pressesFor, stepBoundFor } from './combat.js';
-import { SCREEN_H, SCREEN_W, instanceRect } from './camera.js';
+import { SCREEN_H, SCREEN_W } from './camera.js';
+// ⛔ THE PLAYER BOX IS THE PHYSICS MODULE'S, NEVER A SECOND TRANSCRIPTION.
+// This module shipped one — `{w: 2, h: 2, ox: 4, oy: 5}` — by reading
+// `normalHitbox = new Rectangle(2, 2, 4, 5)` as (w, h, ox, oy) when
+// `Rectangle` is (x, y, width, height) and `setHitbox` is called
+// `(width, height, x, y)`. The real box is 4x5 with origin (2,2), i.e. two
+// pixels wider and five taller than the wrong one, sitting three pixels
+// lower. `playerPhysicsV2.playerBoxAt` has had it right since v2 and every
+// leg in four rungs rides on it.
+import { playerBoxAt } from './playerPhysicsV2.js';
 import { hazardVolume, volumeHitsBox } from './hazards.js';
 
 /** `Mobile.DEFAULT_FRICTION` — what damps a chaser that stops chasing. */
@@ -76,9 +85,6 @@ export const LADDER = Object.freeze([
     'path-avoid', 'wake-and-thread', 'kill', 'hard-avoid',
 ]);
 
-/** The player's own hitbox (`Player.as:295` — normalHitbox 2x2 at (4,5)). */
-export const PLAYER_BOX = Object.freeze({ w: 2, h: 2, ox: 4, oy: 5 });
-
 export class EncounterError extends Error {
     constructor(message) {
         super(message);
@@ -88,15 +94,7 @@ export class EncounterError extends Error {
 
 const fail = (message) => { throw new EncounterError(message); };
 
-const playerBoxAt = (o) => ({
-    x: o.x - PLAYER_BOX.ox,
-    y: o.y - PLAYER_BOX.oy,
-    right: o.x - PLAYER_BOX.ox + PLAYER_BOX.w,
-    bottom: o.y - PLAYER_BOX.oy + PLAYER_BOX.h,
-});
-
-/** Half the diagonal of a box — the disc that contains it. */
-const halfDiag = (w, h) => Math.hypot(w, h) / 2;
+const boxAt = (o) => playerBoxAt(o.x, o.y);
 
 /**
  * Every point on a path that enters an instance's aggro disc, grouped into
@@ -195,7 +193,7 @@ export function chaseEnvelope(instance, path, { cameraAt = null } = {}) {
             right: instance.cx - box.ox + box.w + grow,
             bottom: instance.cy - box.oy + box.h + grow,
         };
-        const p = playerBoxAt(o);
+        const p = boxAt(o);
         const gapX = Math.max(p.x - eBox.right, eBox.x - p.right);
         const gapY = Math.max(p.y - eBox.bottom, eBox.y - p.bottom);
         const clearance = Math.max(gapX, gapY);
@@ -379,7 +377,7 @@ export function priceHazardCrossings(path, hazards, world) {
         let live = null;
         for (const o of path) {
             if (o.level !== h.level) continue;
-            const hit = volumeHitsBox(v, playerBoxAt(o));
+            const hit = volumeHitsBox(v, boxAt(o));
             if (hit) {
                 if (!live) {
                     live = {
