@@ -305,11 +305,15 @@ describe('the chain, and the PARTITION', () => {
             const held = ROUTE.collects
                 .filter((c) => c.leg <= spec.lastLeg && c.item !== 'bosskey')
                 .map((c) => c.item);
-            const mirror = {};
-            for (const item of spec.inherited) mirror[ITEM_PROPERTIES[item].property] = true;
+            // ⚠ FROM THE SEGMENT'S OWN END ITEMS, not from its boot grant.
+            // Building this from `spec.inherited` was the bug the full-tier
+            // sweep caught and this table could not: the check read the boot
+            // grant too, so fixture and check agreed while both were wrong
+            // about the segment that COLLECTS the spear.
+            const endItems = itemsOf(held);
             replayed.set(name, {
                 status: {
-                    items: itemsOf(held),
+                    items: endItems,
                     grants: spec.inherited.length > 0
                         ? [{ t: 0, level: spec.boot.level, items: [...spec.inherited] }] : [],
                     // ⚠ THE END-OF-REPLAY value, which is NOT the spec's
@@ -320,7 +324,7 @@ describe('the chain, and the PARTITION', () => {
                     // the wrong reason on five segments and could not go red
                     // on the sixth.
                     primary: ROUTE.equips[0].leg <= spec.lastLeg ? R4_EQUIP_SLOT : 0,
-                    inventory_slots: inventorySlotsFor(mirror),
+                    inventory_slots: inventorySlotsFor(endItems),
                 },
                 stream: {
                     ticks: Array.from({ length: perSegment[i] + 1 }, (_, t) => ({
@@ -398,9 +402,28 @@ describe('the chain, and the PARTITION', () => {
             'declares its inherited selection')).toHaveLength(1);
     });
 
-    it('goes red when the slot ARRAY disagrees with the grant', () => {
+    it('goes red when the slot ARRAY disagrees with the segment\'s own items', () => {
         const replayed = goodReplay();
         replayed.get(R4_SEGMENT_NAMES[1]).status.inventory_slots = [0, 3, 4];
+        expect(red(r4ChainFindings(ROUTE, SPECS, replayed), 'inventory_slots are what'))
+            .toHaveLength(1);
+    });
+
+    it('⛔ ...including on the segment that COLLECTS the spear', () => {
+        // The one the boot-grant phrasing got backwards. That segment
+        // inherits [sword, feather, torch] and ENDS holding the spear too,
+        // so a check reading its boot grant expected [0] while the game
+        // reports [0, 3] — and the fixture built the same wrong value, so
+        // the whole table agreed. Both sides come from the segment's own
+        // readout now.
+        const replayed = goodReplay();
+        const collecting = SPECS.findIndex((s, i) => i < R4_SEGMENT_NAMES.length
+            && !s.inheritsEquip && ROUTE.equips[0].leg <= s.lastLeg);
+        const seg = replayed.get(R4_SEGMENT_NAMES[collecting]);
+        // It really does end holding the spear — the premise, asserted.
+        expect(seg.status.items.hasSpear).toBe(true);
+        expect(seg.status.inventory_slots).toEqual([0, 3]);
+        seg.status.inventory_slots = [0];
         expect(red(r4ChainFindings(ROUTE, SPECS, replayed), 'inventory_slots are what'))
             .toHaveLength(1);
     });

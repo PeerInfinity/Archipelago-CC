@@ -259,6 +259,16 @@ export function r4HeadlineFindings(route, { stream, status }) {
         + '`Inventory.getItem` on an out-of-range slot is `undefined`, which `useItem` '
         + 'coerces to 0 — the sword — so a wrong slot is a SILENT downgrade');
 
+    // ...and the ARRAY that slot indexes into, from the game's own booleans
+    // through the shipped `addItemsFromSave` order. A `primary` of 1 means
+    // nothing without knowing what slot 1 HOLDS.
+    const headlineSlots = (status.inventory_slots ?? []).join(',');
+    const impliedHeadlineSlots = inventorySlotsFor(status.items ?? {}).join(',');
+    add('R4 headline walk: inventory_slots are what the items imply',
+        headlineSlots === impliedHeadlineSlots,
+        `game [${headlineSlots}], addItemsFromSave order over the game's own booleans `
+        + `implies [${impliedHeadlineSlots}]`);
+
     // Carried from R2: the win statics stay false until R6.
     add('R4 headline walk: the win statics are still false',
         status.menu === false && (status.cutscene ?? []).every((c) => c === false),
@@ -303,6 +313,31 @@ export function r4ChainFindings(route, specs, replayed) {
         const here = replayed.get(name);
         if (!here) return;
         const last = here.stream.ticks[here.stream.ticks.length - 1];
+
+        // ⛔ THE SLOT ARRAY, ASKED OF ONE SEGMENT'S OWN READOUT — the game's
+        // `inventory_slots` against what `addItemsFromSave` implies from the
+        // game's own item booleans, through the shipped `inventorySlotsFor`.
+        //
+        // ⚠⚠ IT USED TO BE ASKED OF THE NEXT SEGMENT'S BOOT GRANT, and that
+        // was the SAME BUG the `primary` check had, one field over: both are
+        // END-of-replay readouts, and a boot grant is a TICK-0 fact. The
+        // segment that COLLECTS the spear inherits [sword, feather, torch]
+        // and ends holding the spear too, so the grant implied [0] and the
+        // game reported [0, 3]. The full-tier sweep caught it; the mutation
+        // table could not, because the fixture built its `inventory_slots`
+        // from the same boot grant the check read.
+        //
+        // Phrased this way it needs no cross-segment reasoning at all, it
+        // covers the LAST segment as well, and both sides come from the
+        // game — which is what makes it two-sided rather than the mirror
+        // agreeing with itself.
+        const gameSlots = (here.status.inventory_slots ?? []).join(',');
+        const impliedSlots = inventorySlotsFor(here.status.items ?? {}).join(',');
+        add(`R4 chain: ${name}'s inventory_slots are what its own items imply`,
+            gameSlots === impliedSlots,
+            `game [${gameSlots}], addItemsFromSave order over the game's own booleans `
+            + `implies [${impliedSlots}]`);
+
         const nextName = R4_SEGMENT_NAMES[i + 1];
         if (!nextName) {
             const endLevel = route.legs[route.legs.length - 1].level;
@@ -384,15 +419,6 @@ export function r4ChainFindings(route, specs, replayed) {
             next.inheritsEquip === declaresBootEquip,
             `inheritsEquip=${next.inheritsEquip}, tape declares `
             + `${JSON.stringify(next.relax.equips)}`);
-
-        // ...and the slot ARRAY the game built, against what the items imply.
-        const mirror = {};
-        for (const item of inherited) mirror[prop(item)] = true;
-        const wantSlots = inventorySlotsFor(mirror).join(',');
-        add(`R4 chain: ${nextName}'s inventory_slots are what its grant implies`,
-            (there.status.inventory_slots ?? []).join(',') === wantSlots,
-            `game [${(there.status.inventory_slots ?? []).join(',')}], `
-            + `addItemsFromSave order implies [${wantSlots}]`);
 
         // hitsMax stays at its BASE until the last segment, which is where
         // health is. A 4 anywhere earlier is health collected out of order.
