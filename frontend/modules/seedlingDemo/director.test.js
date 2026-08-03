@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
     windowsFrom, boundaryFindings, streamBoundaryFindings, traceFindings, traceTicks,
-    assertWindowEndsAtRest, DirectorError,
+    assertWindowEndsAtRest, continuationFindings, DirectorError,
 } from './director.js';
 
 /**
@@ -171,8 +171,11 @@ describe('boundaryFindings: both sides are the GAME, one instant apart', () => {
 });
 
 describe('traceFindings: the partition claim', () => {
+    // ⚠ `dead_frames: 0` on the terminal status is not decoration — it is
+    // the CONTINUATION assert's input, and a window that paid a fade
+    // without leaving its room is a re-boot. See the block below.
     const win = (label, over = {}) => ({
-        label, stream: stream(), status: status(),
+        label, stream: stream(), status: status({ dead_frames: 0 }),
         boundary_before: status(), boundary_after_start: status(), ...over,
     });
 
@@ -265,5 +268,78 @@ describe('assertWindowEndsAtRest: the authoring rule the R4 bridge discovered', 
             { coast: 3 })).toEqual([]);
         expect(assertWindowEndsAtRest(t([{ key: 'up', from: 10, to: 95 }], 100),
             { coast: 20 })).toHaveLength(1);
+    });
+});
+
+describe('continuationFindings: the assert a re-boot ERASES its own evidence from', () => {
+    // ⛔ The shape: when a window's boot block does not match the current
+    // world, `botStart` rebuilds it — and the next stream then starts
+    // exactly on the declared boot position, so every position check comes
+    // back clean. The R4 bridge's five held-key boundaries are all of them:
+    // silent `streamBoundaryFindings`, byte-identical streams, and a
+    // continuation nobody made. Dead frames are what the re-boot cannot
+    // hide, because a room fade is ~19 frames the tape never asked for.
+    const win = (over = {}) => ({
+        label: 'w', stream: stream(), status: status({ dead_frames: 0 }), ...over,
+    });
+
+    it('holds for a window that stayed in one room and paid no fade', () => {
+        expect(continuationFindings(win(), { index: 1 })).toEqual([]);
+    });
+
+    it('NAMES a continuation window that paid dead frames', () => {
+        const f = continuationFindings(win({ status: status({ dead_frames: 19 }) }),
+            { index: 1 });
+        expect(f).toHaveLength(1);
+        expect(f[0].what).toMatch(/CONTINUATION window paid dead frames/);
+        expect(f[0].detail).toMatch(/ERASES the drift/);
+    });
+
+    it('is UNASSERTED, not passing, when the window crosses a door', () => {
+        // A window that crosses pays a fade for the crossing, and separating
+        // that from botStart's is a per-load constant this module has no
+        // business owning. An unasserted check and a passing one must not
+        // print the same thing.
+        const crossed = win({
+            status: status({ dead_frames: 19 }),
+            stream: {
+                ticks: [{ t: 0, level: 59, x: 1, y: 1 }, { t: 1, level: 60, x: 1, y: 1 }],
+                transitions: [],
+            },
+        });
+        const f = continuationFindings(crossed, { index: 1 });
+        expect(f).toHaveLength(1);
+        expect(f[0].informational).toBe(true);
+        expect(f[0].what).toMatch(/unasserted — the window crosses a door/);
+    });
+
+    it('is UNASSERTED for a window that declares a re-boot', () => {
+        const f = continuationFindings(win({ status: status({ dead_frames: 19 }) }),
+            { index: 0, reBootExpected: true });
+        expect(f[0].informational).toBe(true);
+        expect(f[0].what).toMatch(/declares a re-boot/);
+    });
+
+    it('a MISSING dead_frames is a finding, not a pass', () => {
+        // The build without the readout would otherwise make the whole
+        // assert vacuous by comparing undefined to zero.
+        const f = continuationFindings(win({ status: status({ dead_frames: undefined }) }),
+            { index: 1 });
+        expect(f).toHaveLength(1);
+        expect(f[0].informational).toBeUndefined();
+        expect(f[0].what).toMatch(/no dead_frames/);
+    });
+
+    it('traceFindings folds it in, and window 0 is exempt', () => {
+        // Window 0's fade is the boot's own. Windows 1+ are continuations.
+        const w = (over = {}) => ({
+            label: 'w', stream: stream(), status: status({ dead_frames: 0 }),
+            boundary_before: status(), boundary_after_start: status(), ...over,
+        });
+        expect(traceFindings([w({ status: status({ dead_frames: 300 }) }), w()]))
+            .toEqual([]);
+        const f = traceFindings([w(), w({ status: status({ dead_frames: 19 }) })]);
+        expect(f).toHaveLength(1);
+        expect(f[0].what).toMatch(/CONTINUATION window paid dead frames/);
     });
 });

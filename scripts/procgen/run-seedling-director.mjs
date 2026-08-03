@@ -285,6 +285,33 @@ function runBridge() {
         + 'the drift — so this bridge cannot witness `streamBoundaryFindings` in the red '
         + 'direction, and `--boundary-witness` is what does.');
 
+    // ⛓ THE CONTINUATION ASSERT, and the bridge is where it gets its
+    // NEGATIVE reading — the one the block above says this bridge cannot
+    // give `streamBoundaryFindings`.
+    //
+    // A re-boot erases the drift that caused it, so no position check can
+    // see it. Dead frames can: a re-boot pays `blackCover`'s room fade, and
+    // a window that stayed in one room pays none. Every R4 segment crosses
+    // doors, so the assert reports most of them UNASSERTED by construction —
+    // which is the honest answer and is printed as such. What it DOES say
+    // here is that the readout exists and the instrument runs against the
+    // live game, and R5's own single-room windows are where it bites.
+    console.log('\n## the continuation assert — dead frames are what a re-boot cannot hide');
+    let asserted = 0;
+    for (let i = 1; i < run.length; i += 1) {
+        const known = held[i - 1].length > 0;
+        const f = director.continuationFindings(run[i],
+            { index: i, reBootExpected: known });
+        if (!known && f.length === 0) asserted += 1;
+        const verdict = f.length === 0 ? 'CONTINUATION (dead_frames 0)'
+            : `${f[0].informational ? '…' : '⛔'} ${f[0].what}`;
+        console.log(`  ${R4_SEGMENTS[i]}: ${verdict}`);
+    }
+    console.log(`  ⇒ ${asserted} of ${run.length - 1} boundaries ASSERTED as continuations. `
+        + 'The rest are declared re-boots (the previous window held a key) or windows that '
+        + 'cross a door, whose fade is not attributable — an unasserted check and a '
+        + 'passing one must not print the same thing.');
+
     console.log('\n## the trace: one page, N windows, and what carried across');
     const moved = run.filter((w) => w.moved_at_boundary).length;
     console.log(`  ${run.length} windows, ${director.traceTicks(run)} live ticks, `
@@ -295,6 +322,15 @@ function runBridge() {
         if (f.what === 'the position changed across the boundary'
             || f.what === 'the drained stream disagrees with the status it was drained beside') {
             console.log(`  (drift) ${f.where}: ${f.detail}`);
+            continue;
+        }
+        // The continuation finding is reported in its own block above with
+        // the re-boot declaration `traceFindings` cannot know about — R4's
+        // segments hold keys, and a held key means a re-boot is EXPECTED.
+        // Counting it here too would fail the bridge for the fact it was
+        // written to document.
+        if (f.what.startsWith('a CONTINUATION window paid dead frames')) {
+            console.log(`  (re-boot) ${f.where}: ${f.detail.split('.')[0]}`);
             continue;
         }
         failures += 1;
@@ -426,6 +462,22 @@ function runBoundaryWitness() {
         console.log(`   W2 begins L${first.level} (${first.x}, ${first.y})`);
         console.log(`   streamBoundaryFindings: ${findings.length} finding(s)`);
         for (const f of findings) console.log(`      ${f.what} — ${f.detail}`);
+        // ⛓ THE CONTINUATION ASSERT'S POSITIVE READING — and this pair is
+        // the only place on the ladder that can give it one today. Both
+        // windows declare the SAME boot args, so `botStart` skips the
+        // re-boot, and both stay inside L8: dead_frames MUST be 0. If it is
+        // not, the boundary above was continuous because the world was
+        // rebuilt, and the whole arm is measuring the wrong thing.
+        const cont = director.continuationFindings(run[1], { index: 1 });
+        console.log(`   continuationFindings(W2): ${cont.length} finding(s) `
+            + `— dead_frames=${run[1].status?.dead_frames}`
+            + (cont[0] ? ` — ${cont[0].what}` : ''));
+        if (cont.length > 0) {
+            failures += 1;
+            console.log('   ⛔ W2 IS NOT A CONTINUATION. Both arms of this pair rest on '
+                + '`botStart` skipping the re-boot; a re-boot here would make the '
+                + '"silent" arm silent for the wrong reason.');
+        }
         const ok = arm.expect === 'findings' ? findings.length > 0 : findings.length === 0;
         if (ok) {
             console.log(`   ✓ ${arm.expect === 'findings'

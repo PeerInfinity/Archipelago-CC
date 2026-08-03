@@ -261,6 +261,76 @@ export function streamBoundaryFindings(prevStream, nextStream, { index = 0, labe
 }
 
 /**
+ * ⛓ THE CONTINUATION ASSERT — a silent re-boot must be a NAMED failure.
+ *
+ * ⛔ The finding this exists for is slice 2's, and it is the nastiest shape
+ * in the arc: **a re-boot ERASES the drift it was caused by.** When a
+ * window's boot block does not match the current world, `botStart` rebuilds
+ * `new Game(bootLevel, bootX, bootY)` (`Bot.as:706-711`) and the next
+ * window's first observation lands exactly on its declared boot position.
+ * So `streamBoundaryFindings` comes back SILENT, the streams come back
+ * byte-identical, and the trace reports a clean continuation it did not
+ * make. That is a graceful fallback erasing the evidence of its own
+ * trigger, and the R4 bridge's five held-key boundaries are all of them.
+ *
+ * The witness pair (`--boundary-witness`) can see it because it is
+ * purpose-built — two windows with the SAME boot args, so `botStart` skips
+ * the re-boot and a drift really does survive. That is one pair. **Every
+ * other trace needs the same guard**, or the property is checked exactly
+ * where it was already known to hold.
+ *
+ * The signal is DEAD FRAMES. A re-boot pays `blackCover`'s room fade — ~19
+ * frames, and exactly 20 under the R5 dead-frame pin — and a continuation
+ * that stays in one room pays none. So:
+ *
+ *   a window whose stream never changes level and whose terminal
+ *   `dead_frames` is NOT zero was re-booted, whatever its positions say.
+ *
+ * ⚠ It is deliberately only asserted for a window that stays in ONE ROOM.
+ * A window that crosses a door pays a fade for the door, and separating
+ * "the fade I crossed for" from "the fade botStart cost me" needs a
+ * per-load constant this module has no business owning. A window that
+ * crosses is reported as UNASSERTED rather than passed — an unasserted
+ * check and a passing one must not print the same thing.
+ *
+ * @param {object} window `{label, stream, status}` — `status` TERMINAL
+ * @param {object} opts.index
+ * @param {boolean=} opts.reBootExpected  true for window 0 (and for any
+ *   window a caller has declared as an intentional re-boot), where the
+ *   fade is the boot's own and the assert does not apply.
+ */
+export function continuationFindings(window, { index = 0, reBootExpected = false } = {}) {
+    const where = `continuation ${index}${window?.label ? ` (${window.label})` : ''}`;
+    const dead = window?.status?.dead_frames;
+    if (dead === undefined || dead === null) {
+        return [{ where, what: 'no dead_frames in the terminal status',
+            detail: 'the continuation assert cannot be made without it, and a boundary '
+                + 'nobody checked is not a boundary that held' }];
+    }
+    if (reBootExpected) {
+        return [{ where, what: 'unasserted — this window declares a re-boot',
+            detail: `dead_frames=${dead}`, informational: true }];
+    }
+    const ticks = window?.stream?.ticks ?? [];
+    const levels = new Set(ticks.map((o) => o.level));
+    if (levels.size !== 1) {
+        return [{ where, what: 'unasserted — the window crosses a door, so its fade is '
+            + 'not attributable',
+            detail: `${levels.size} level(s): ${[...levels].join(',')}, dead_frames=${dead}`,
+            informational: true }];
+    }
+    if (dead !== 0) {
+        return [{ where, what: 'a CONTINUATION window paid dead frames',
+            detail: `dead_frames=${dead} in a window that never left L${[...levels][0]}. `
+                + 'The only thing that fades a room the walk did not enter is '
+                + '`botStart` rebuilding the world — which also ERASES the drift that '
+                + 'made it rebuild, so every position check downstream of here is '
+                + 'reporting a continuation that did not happen.' }];
+    }
+    return [];
+}
+
+/**
  * The whole trace: one page, N windows, zero re-boots after the first.
  *
  * The partition claim in the shape §7's G2 asks for. Every finding names
@@ -286,6 +356,10 @@ export function traceFindings(windows) {
             windows[i - 1].stream,
             { index: i - 1, label: windows[i].label },
         ));
+        // ⛓ And the one the boundary checks CANNOT make, because a re-boot
+        // erases its own evidence. Window 0 is exempt: its fade is the
+        // boot's own.
+        findings.push(...continuationFindings(windows[i], { index: i }));
     }
     // The tick counts SUM to the walk, exactly as R1's segment chain does —
     // stated over the drained streams rather than the tapes, so a window that

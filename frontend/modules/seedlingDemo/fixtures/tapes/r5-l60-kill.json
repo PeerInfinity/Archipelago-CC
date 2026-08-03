@@ -1,0 +1,84 @@
+{
+  "tape_version": 3,
+  "game": "seedling",
+  "name": "r5-l60-kill",
+  "description": "THE FIRST LIVE KILL, arm 2 of 2 — 10 sword presses at the 31-tick cadence (21 is the DASH floor, 31 the enemy i-frame one; the larger wins). Both jellyfish chase onto the stance — the 160 px leash is the whole room — and are cut where they arrive. The count is a FLOOR: six landed hits is the arithmetic and twelve presses is the schedule, because a knocked-back body spends ticks coming back. The assertion is the EFFECT: `persistence_cleared` gains {60, 0} — which only `Lock.turnOff()` writes, 100 ticks of alpha fade after `totalEnemies()` reaches 0 — and the same held RIGHT that pins the control arm at 126 crosses to 150.",
+  "boot": {
+    "level": 60,
+    "x": 112,
+    "y": 88
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [
+    "water",
+    "waterfall"
+  ],
+  "grants": [
+    {
+      "level": 60,
+      "items": [
+        "sword"
+      ]
+    }
+  ],
+  "persistence": [],
+  "tick_count": 447,
+  "inputs": [
+    {
+      "key": "primary",
+      "from": 4,
+      "to": 6
+    },
+    {
+      "key": "primary",
+      "from": 35,
+      "to": 37
+    },
+    {
+      "key": "primary",
+      "from": 66,
+      "to": 68
+    },
+    {
+      "key": "primary",
+      "from": 97,
+      "to": 99
+    },
+    {
+      "key": "primary",
+      "from": 128,
+      "to": 130
+    },
+    {
+      "key": "primary",
+      "from": 159,
+      "to": 161
+    },
+    {
+      "key": "primary",
+      "from": 190,
+      "to": 192
+    },
+    {
+      "key": "primary",
+      "from": 221,
+      "to": 223
+    },
+    {
+      "key": "primary",
+      "from": 252,
+      "to": 254
+    },
+    {
+      "key": "primary",
+      "from": 283,
+      "to": 285
+    },
+    {
+      "key": "right",
+      "from": 315,
+      "to": 435
+    }
+  ]
+}
