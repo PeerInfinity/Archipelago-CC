@@ -407,6 +407,92 @@ export function assertWindowEndsAtRest(tape, { coast = 8 } = {}) {
 }
 
 /**
+ * ⛔ THE FLAG-WRITE CLEARANCE — a boundary may not sit inside a fade.
+ *
+ * Slice 3 measured what a `Lock` costs: `checkEnemies` sets `activate` when
+ * `totalEnemies() == 0`, `activationStep` then decays the graphic's alpha by
+ * **0.01 per update**, and only `turnOff()` writes `type = ""` and
+ * `Game.setPersistence(tag, false)`. A `BossLock` is the same shape with
+ * different numbers — 60 ticks of `keyTimer` and then 20 of `alpha -= 0.05`,
+ * so 80. Either way the ledger entry lands a LONG way after the event a
+ * reader would call "the lock opened".
+ *
+ * That is a boundary problem and not only a routing one. A window that ends
+ * inside the fade drains a `persistence_cleared` that does not yet show the
+ * open, so:
+ *
+ *   - `boundaryFindings`' monotone-ledger check compares a SHORT set against
+ *     the next window's — and passes, because nothing came back;
+ *   - the trace's exact-set claim reads the flag as belonging to whichever
+ *     window happened to catch the write, which is a fact about where the
+ *     cut fell rather than about what the walk did;
+ *   - and a re-boot at that boundary would erase the in-flight fade
+ *     entirely, since `botStart` rebuilds the world.
+ *
+ * So a boundary must be at least `clearance` ticks clear of every declared
+ * flag-opening event, or the boundary must NAME the write it is cutting
+ * across. Naming it is a legal answer — this returns a finding either way and
+ * the caller decides — but silence is not.
+ *
+ * ⚠ THE EVENTS ARE DECLARED, NOT DISCOVERED. A window's stream does not
+ * report when a lock latched; it reports where the player was. So the caller
+ * passes what its plan believes (`{window, tick, what}`), and the claim this
+ * makes is about the PLAN's cut points. The live backstop stays the exact-set
+ * ledger assert — this is the check that stops a plan from being authored
+ * into a shape whose ledger nobody can attribute.
+ *
+ * @param {object[]} windows  `[{label, stream}]`, in order
+ * @param {object[]} events   `[{window, tick, what, clearance?}]` — `tick` is
+ *   the tick WITHIN that window at which the flag write lands
+ * @param {object=} opts.clearance  default 100, a `Lock`'s alpha fade
+ * @returns {object[]} findings; empty means every boundary is clear
+ */
+export const LOCK_FLAG_WRITE_TICKS = 100;
+
+export function boundaryFlagClearanceFindings(windows, events, {
+    clearance = LOCK_FLAG_WRITE_TICKS,
+} = {}) {
+    if (!Array.isArray(windows) || windows.length === 0) {
+        fail('boundaryFlagClearanceFindings needs the window list the events index into');
+    }
+    const findings = [];
+    for (const e of events ?? []) {
+        const i = e.window;
+        if (!Number.isInteger(i) || i < 0 || i >= windows.length) {
+            fail(`a flag-write event names window ${JSON.stringify(i)}, which is not one `
+                + `of the ${windows.length} windows`);
+        }
+        // A window's last live tick. An N-tick tape yields N+1 observations
+        // (RECORD-THEN-ACT), so the last tick index is length - 1 — taken
+        // from the DRAINED STREAM rather than from `tick_count`, because the
+        // stream is what the ledger was drained beside.
+        const ticks = windows[i].stream?.ticks?.length;
+        if (!ticks) {
+            findings.push({
+                where: `flag clearance (window ${i}${windows[i].label ? ` ${windows[i].label}` : ''})`,
+                what: 'the window has no drained stream, so its boundary cannot be placed',
+                detail: `event "${e.what}" claims tick ${e.tick}`,
+            });
+            continue;
+        }
+        const need = e.clearance ?? clearance;
+        const margin = (ticks - 1) - e.tick;
+        if (margin < need) {
+            findings.push({
+                where: `flag clearance (window ${i}${windows[i].label ? ` ${windows[i].label}` : ''})`,
+                what: 'a window boundary sits inside a flag write',
+                detail: `"${e.what}" latches at tick ${e.tick} and the window ends at `
+                    + `${ticks - 1} — ${margin} tick(s) of margin against the ${need} the `
+                    + 'write costs. The next window inherits a ledger that does not yet '
+                    + 'show the open, so the flag is attributed to wherever the cut fell. '
+                    + 'Move the boundary later, or declare the in-flight write by name.',
+            });
+        }
+    }
+    return findings;
+}
+
+/**
  * How many live ticks a trace ran, from the drained streams.
  *
  * An N-tick tape yields N+1 observations (RECORD-THEN-ACT), so a window's

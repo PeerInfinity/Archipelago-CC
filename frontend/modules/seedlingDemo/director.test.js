@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
     windowsFrom, boundaryFindings, streamBoundaryFindings, traceFindings, traceTicks,
     assertWindowEndsAtRest, continuationFindings, DirectorError,
+    boundaryFlagClearanceFindings, LOCK_FLAG_WRITE_TICKS,
 } from './director.js';
 
 /**
@@ -341,5 +342,67 @@ describe('continuationFindings: the assert a re-boot ERASES its own evidence fro
         const f = traceFindings([w(), w({ status: status({ dead_frames: 19 }) })]);
         expect(f).toHaveLength(1);
         expect(f[0].what).toMatch(/CONTINUATION window paid dead frames/);
+    });
+});
+
+describe('boundaryFlagClearanceFindings: a boundary may not sit inside a fade', () => {
+    /** A window whose drained stream has `n` observations, i.e. n-1 ticks. */
+    const win = (n, label = 'w') => ({
+        label,
+        stream: { ticks: Array.from({ length: n }, (_, t) => ({ t, level: 60, x: 1, y: 1 })) },
+    });
+
+    it('is silent when the write clears the boundary by the fade', () => {
+        // 301 observations => last tick 300; a write at 200 leaves exactly
+        // the 100 the alpha decay costs.
+        expect(boundaryFlagClearanceFindings(
+            [win(301)], [{ window: 0, tick: 200, what: 'lock@128,80' }],
+        )).toEqual([]);
+    });
+
+    it('fires ONE TICK short — the boundary is the fencepost this exists for', () => {
+        const f = boundaryFlagClearanceFindings(
+            [win(300)], [{ window: 0, tick: 200, what: 'lock@128,80' }],
+        );
+        expect(f).toHaveLength(1);
+        expect(f[0].what).toMatch(/inside a flag write/);
+        // The detail carries both numbers, because "too close" without them
+        // sends the reader back to the plan to work out by how much.
+        expect(f[0].detail).toMatch(/latches at tick 200/);
+        expect(f[0].detail).toMatch(/99 tick\(s\) of margin/);
+    });
+
+    it('takes a per-event clearance — a BossLock is 80, not 100', () => {
+        // `keyTimer` 60 + twenty `alpha -= 0.05`, `activators.opensOnKeyTick`.
+        const events = [{ window: 0, tick: 200, what: 'bosslock@224,208', clearance: 80 }];
+        expect(boundaryFlagClearanceFindings([win(281)], events)).toEqual([]);
+        expect(boundaryFlagClearanceFindings([win(280)], events)).toHaveLength(1);
+    });
+
+    it('a window with no drained stream is a FINDING, not a pass', () => {
+        // Otherwise a trace that failed to drain a window would report every
+        // one of its boundaries as clear.
+        const f = boundaryFlagClearanceFindings(
+            [{ label: 'w', stream: { ticks: [] } }], [{ window: 0, tick: 0, what: 'x' }],
+        );
+        expect(f).toHaveLength(1);
+        expect(f[0].what).toMatch(/no drained stream/);
+    });
+
+    it('an event naming a window that does not exist THROWS', () => {
+        // A silently ignored event is a clearance check that ran on nothing.
+        expect(() => boundaryFlagClearanceFindings([win(10)], [{ window: 3, tick: 0, what: 'x' }]))
+            .toThrow(DirectorError);
+        expect(() => boundaryFlagClearanceFindings([win(10)], [{ tick: 0, what: 'x' }]))
+            .toThrow(/not one of the 1 windows/);
+    });
+
+    it('no events is vacuous and says so by being empty, not by passing', () => {
+        expect(boundaryFlagClearanceFindings([win(10)], [])).toEqual([]);
+        expect(boundaryFlagClearanceFindings([win(10)], undefined)).toEqual([]);
+    });
+
+    it('the default clearance is the Lock alpha fade', () => {
+        expect(LOCK_FLAG_WRITE_TICKS).toBe(100);
     });
 });

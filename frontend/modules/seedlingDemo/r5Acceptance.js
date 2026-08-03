@@ -168,7 +168,177 @@ export function l60KillFindings(replayed) {
     return found;
 }
 
+/**
+ * ── Slice 4 step 1: THE KEY LEG, and its shut-before control ──────────
+ *
+ * The claim is an OPENED BLOCKER, so the doctrine asks for a pair. A key is
+ * not a tape field, so this one is not "one field apart" and does not
+ * pretend to be: it is the SAME STANCE AND THE SAME HOLD, once with
+ * `Player.hasKey(1)` and once without.
+ *
+ *   `r5-bosskey-leg`         L29 → key → L31's pocket lock → L30's chamber
+ *                            lock, and stops beside the stairs to L32.
+ *   `r5-bosskey-lock-shut`   boots 16 px south of L30's lock and holds UP
+ *                            for 140 ticks — against a `BossLock` that
+ *                            opens on tick 80 of contact, so this is not a
+ *                            walk that ran out of patience.
+ *
+ * ⛔ AND THE KEY IS SPENT TWICE. §2.6.1 names one lock; the extract has
+ * two. L31's stairs to L30 sit in a five-tile pocket behind
+ * `bosslock@192,432`, and a flood from the L29 arrival reaches 103 tiles
+ * without it. So the exact set is `{31,0}` AND `{30,2}`.
+ *
+ * ⚠ NEITHER ARM HOLDS AN ITEM, and that is asserted rather than assumed.
+ * `BossKey.removed()` is `Player.hasKeySet(keyType, true)` and nothing
+ * else — it does not call `super.removed()`, so it writes no persistence
+ * either. A key leg whose item set moved would mean the walk picked up
+ * something it never aimed at.
+ */
+export const KEY_LEG_ARM = 'r5-bosskey-leg';
+export const KEY_LEG_CONTROL = 'r5-bosskey-lock-shut';
+
+/** The two `BossLock` flags the key opens, as an EXACT set. */
+export const KEY_LEG_FLAGS = Object.freeze([
+    Object.freeze({ level: 31, tag: 0, what: 'L31\'s pocket door' }),
+    Object.freeze({ level: 30, tag: 2, what: 'L30\'s chamber door' }),
+]);
+
+/** `bosslock@224,208`'s south face — the line a keyless walk stops on. */
+export const KEY_LEG_LOCK_FACE_Y = 224;
+
+const ITEM_BOOLEANS = Object.freeze([
+    'hasSword', 'hasDarkSword', 'hasGhostSword', 'hasShield', 'hasDarkShield',
+    'hasFire', 'hasWand', 'hasFireWand', 'canSwim', 'hasFeather', 'hasSpear',
+    'hasDarkSuit', 'hasTorch',
+]);
+
+export function keyLegFindings(replayed) {
+    const leg = replayed?.get(KEY_LEG_ARM);
+    const control = replayed?.get(KEY_LEG_CONTROL);
+    if (!leg || !control) {
+        return [{
+            name: 'R5 key leg: SKIPPED — this sweep did not replay both arms',
+            ok: true,
+            skipped: true,
+            detail: `have ${[leg && KEY_LEG_ARM, control && KEY_LEG_CONTROL]
+                .filter(Boolean).join(', ') || 'neither'} — an opened-blocker claim `
+                + 'without its shut-before control is a walk that stopped for some '
+                + 'unexamined reason',
+        }];
+    }
+    const found = [];
+    const want = KEY_LEG_FLAGS.map((f) => `${f.level}:${f.tag}`);
+    const legCleared = clearedSet(leg.status);
+    const controlCleared = clearedSet(control.status);
+
+    // 1. THE LEDGER, AS AN EXACT SET IN BOTH DIRECTIONS. `BossLock.update`'s
+    //    `turnOff` arm is the only writer of either flag, and the tape
+    //    declares no clears at all — so membership is the two locks opening
+    //    and the SIZE is "and nothing else did".
+    const missing = want.filter((k) => !legCleared.has(k));
+    const extra = [...legCleared].filter((k) => !want.includes(k));
+    found.push({
+        name: 'R5 key leg: the ledger is EXACTLY the two locks the key opens',
+        ok: missing.length === 0 && extra.length === 0,
+        detail: missing.length === 0 && extra.length === 0
+            ? `{${want.join('} {')}} are off and nothing else is — one keyType-1 key, `
+                + 'spent twice, and the tape declares no clears'
+            : `missing ${JSON.stringify(missing)}, unexpected ${JSON.stringify(extra)} `
+                + `out of ${legCleared.size} flag(s) off. A missing one is a lock the `
+                + 'walk never opened; an extra one is something it opened by accident.',
+    });
+
+    // 2. THE CONTROL'S LEDGER IS EMPTY. Not "does not contain {30,2}" —
+    //    EMPTY, because the control walks 16 px in a straight line and a
+    //    single flag off would mean it did something nobody asked for.
+    found.push({
+        name: 'R5 key leg: the CONTROL arm cleared nothing at all',
+        ok: controlCleared.size === 0,
+        detail: controlCleared.size === 0
+            ? 'no flag is off — `BossLock.update` never set `activate`, because '
+                + '`Player.hasKey(1)` is false'
+            : `${controlCleared.size} flag(s) off (${[...controlCleared].join(' ')}) in an `
+                + 'arm that holds no key and walks 16 px — the pair attributes nothing',
+    });
+
+    // 3. THE TWO ARMS PART AT THE LOCK. The control's box top pins on the
+    //    lock's south face (y = 224, so the centre lands just under 227);
+    //    the leg arm ends NORTH of the whole lock tile, inside the chamber
+    //    that only the stairs to L32 leave from.
+    const legEnd = terminal(leg);
+    const cEnd = terminal(control);
+    const pinOk = !!cEnd && cEnd.level === 30
+        && cEnd.y - 2 >= KEY_LEG_LOCK_FACE_Y && cEnd.y - 2 < KEY_LEG_LOCK_FACE_Y + 2;
+    found.push({
+        name: 'R5 key leg: the control arm PINS on the lock\'s south face',
+        ok: pinOk,
+        detail: !cEnd ? 'no terminal observation'
+            : pinOk
+                ? `ends L${cEnd.level} y=${cEnd.y} — box top ${(cEnd.y - 2).toFixed(2)} `
+                    + `against the lock's face at ${KEY_LEG_LOCK_FACE_Y}`
+                : `ends L${cEnd.level} y=${cEnd.y}, box top ${(cEnd.y - 2).toFixed(2)} — `
+                    + `which is not a pin on ${KEY_LEG_LOCK_FACE_Y}. Below it means the `
+                    + 'walk never reached the lock; above it means the lock was not there.',
+    });
+    const throughOk = !!legEnd && legEnd.level === 30
+        && legEnd.y + 3 <= KEY_LEG_LOCK_FACE_Y - 16;
+    found.push({
+        name: 'R5 key leg: the key arm is THROUGH it, inside the chamber',
+        ok: throughOk,
+        detail: !legEnd ? 'no terminal observation'
+            : throughOk
+                ? `ends L${legEnd.level} (${legEnd.x},${legEnd.y}) — north of the lock `
+                    + `tile's top at ${KEY_LEG_LOCK_FACE_Y - 16}, in the brickpole chamber `
+                    + 'whose only other door is `stairsup@224,160` to BobBoss'
+                : `ends L${legEnd.level} (${legEnd.x},${legEnd.y}), which is not inside `
+                    + `the chamber — its floor starts at y < ${KEY_LEG_LOCK_FACE_Y - 16}`,
+    });
+
+    // 4. THE ITEM SET DID NOT MOVE. A boss key is not one of the fourteen
+    //    properties, so both arms must report thirteen falses and hitsMax 3
+    //    — and the leg arm walked past a torch pickup to get here.
+    for (const [label, arm] of [['key', leg], ['control', control]]) {
+        const items = arm.status?.items ?? {};
+        const on = ITEM_BOOLEANS.filter((k) => items[k] === true);
+        found.push({
+            name: `R5 key leg: the ${label} arm holds no ITEM`,
+            ok: on.length === 0 && items.hitsMax === 3,
+            detail: on.length === 0 && items.hitsMax === 3
+                ? 'thirteen booleans false, hitsMax 3 — `BossKey.removed()` is '
+                    + '`hasKeySet` and nothing else, and the walk avoided `torchpickup@64,64`'
+                : `holds ${JSON.stringify(on)} with hitsMax ${items.hitsMax} — this walk `
+                    + 'grants nothing and collects one key, so any item is one it '
+                    + 'stepped on by accident',
+        });
+        const hits = arm.status?.hits;
+        found.push({
+            name: `R5 key leg: the ${label} arm took no damage`,
+            ok: hits === 0,
+            detail: hits === 0 ? 'hits=0 — and L30\'s `bobsoldier@48,80` was path-avoided '
+                    + 'rather than guarded against'
+                : `hits=${hits} — with \`Bot.noDamage\` true this should be impossible`,
+        });
+    }
+
+    // 5. THE ROOMS, IN ORDER. The transitions are derived from the level
+    //    field of the drained stream, so this is the game's own account of
+    //    where the walk went — and the pocket lock is the reason there are
+    //    two of them rather than one.
+    const hops = (leg.stream?.transitions ?? [])
+        .map((t) => `${t.from_level}->${t.to_level}`).join(' ');
+    found.push({
+        name: 'R5 key leg: the walk really went L29 → L31 → L30',
+        ok: hops === '29->31 31->30',
+        detail: hops === '29->31 31->30'
+            ? 'two crossings, and the second one is only possible because the pocket '
+                + 'lock opened — L31\'s stairs to L30 are behind it'
+            : `the stream says "${hops}" — the leg's own rooms are 29, 31, 30`,
+    });
+
+    return found;
+}
+
 /** Every R5 finding this sweep can make. */
 export function r5AcceptanceFindings(replayed) {
-    return [...l60KillFindings(replayed)];
+    return [...l60KillFindings(replayed), ...keyLegFindings(replayed)];
 }
