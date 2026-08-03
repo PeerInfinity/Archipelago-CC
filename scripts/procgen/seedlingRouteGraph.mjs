@@ -48,9 +48,13 @@ export { TILE_SIZE };
  *                                    calls; keyed by level AND its cleared
  *                                    tags, so two runs differing by one clear
  *                                    share every other level's flood
+ * @param {Set=}    opts.excludeLevels levels this caller's census could not
+ *                                     build when its route was authored —
+ *                                     see the docblock below
  */
 export function makeRouteGraph({
     source, clears, plan, lattice, holdTicks, levelCount, cache,
+    excludeLevels = null,
 }) {
     /** The plan half of `relax`, exactly as `synthesizeLegs` derives it. */
     const PLAN = { ...plan, lattice };
@@ -87,6 +91,24 @@ export function makeRouteGraph({
                 return w;
             }
             let world = null;
+            // ⛔ THE FROZEN-CENSUS PIN. `excludeLevels` is not an
+            // optimisation and it is not a crutch: a committed route file is
+            // an ARTIFACT, and the graph it was authored over is part of what
+            // makes it reproducible. R5 widened the `blocking` census from
+            // the 47 route levels to the whole map (31 levels that threw now
+            // build), which gives the BFS edges R3 and R4 never had — and the
+            // R4 planner promptly authored a route one leg SHORTER than the
+            // one whose six tapes are recorded and frozen. Every caller
+            // therefore names the level set its own rung could build, by
+            // number, and `--write` goes back to leaving a clean `git diff`.
+            // (This is the "pin frozen historical sets BY NAME" rule: a
+            // predicate that happened to exclude them would rot silently the
+            // next time the census moves.)
+            if (excludeLevels?.has(level)) {
+                unbuildable.set(level, 'excluded by this caller\'s frozen census pin');
+                worlds.set(wk, null);
+                return null;
+            }
             try {
                 const cleared = clearedByLevel.get(level);
                 world = buildLevelWorld(source(level), cleared ? { cleared } : undefined);
@@ -492,6 +514,204 @@ export function makeRouteGraph({
             return hops;
         }
 
+        /**
+         * R5: a DIRECTED cell-level flood from one standing position.
+         *
+         * ⛔ WHY THIS CANNOT BE A COMPONENT FLOOD. A component is an
+         * undirected notion, and R4 shipped the ladder's first DIRECTED
+         * edge rule: `climbsArmedWaterfall` refuses an upward STEP rather
+         * than a cell, because a waterfall is something a route crosses
+         * downward all the time. Ask the component machinery about an armed
+         * map and it answers optimistically — the two halves of level 0 are
+         * one blob because the band is walkable *downward*. The R5 question
+         * ("is there a FEATHERLESS crossing of L0's band?") is precisely the
+         * one an undirected flood cannot be asked.
+         *
+         * ⚠ AND IT IS A FIXED POINT, not a flood. Items open doors: the
+         * conch arms water, the feather arms an upward waterfall step, the
+         * darkshield opens a shield lock, the darksuit makes lethal terrain
+         * crossable. So the caller floods, harvests the pickups it reached,
+         * and floods again until nothing new appears. `opts.onInventory`
+         * is where that loop hooks in.
+         *
+         * ⚠ PERMISSIVE BY DESIGN, and it says which permissions it took.
+         * A kill lock is treated as PASSABLE (its bill is reported, not
+         * priced), and so is a `Lock` with a presser somewhere in its level.
+         * That is the same policy `componentsAround` states: too strict
+         * loses reachability in silence, too loose offers the tour an edge
+         * the driver refuses BY NAME before anything is recorded. Every
+         * permission taken comes back in `assumed`.
+         *
+         * @param {object}   o
+         * @param {object}   o.start        `{level, x, y}` in PIXELS
+         * @param {object}   o.inventory    threaded into `plan` for the
+         *                                  planner's own item gates
+         * @param {Function} o.stepRefusal  `(world, from, to) => boolean`,
+         *                                  cells in LATTICE coordinates
+         * @param {Set}      o.openLocks    activator ids treated as open
+         * @param {Set=}     o.openBridges  bridge tile keys treated as open
+         */
+        function directedFlood({
+            start, inventory = null, stepRefusal = null, openLocks = null, openBridges = null,
+        }) {
+            const PLAN_I = inventory ? { ...PLAN, inventory } : PLAN;
+            const free = (world, cx, cy, opts = null) => {
+                if (cx < 0 || cy < 0
+                    || cx >= world.width * CELLS || cy >= world.height * CELLS) return false;
+                const c = nodeCentre(cx, cy, R2_LATTICE);
+                try {
+                    return plannerObstacleAt(world, c.x, c.y, null,
+                        { ...PLAN_I, openActivators: openLocks, openBridges, ...(opts ?? {}) }) === null;
+                } catch { return false; }
+            };
+            /**
+             * The ring test for a PIT, which is looser by exactly one thing.
+             *
+             * A leg may DECLARE the contacts it starts inside (R1's forced-
+             * contact rule), and three of the ladder's committed pit exits are
+             * exactly that: L12's pit to L83 sits inside the 14-entity `pull`
+             * cluster's avoid volume, and the R3 route takes it as a leg's
+             * named `exit: {pit}`. Asking "is this cell free WITH avoid
+             * volumes" therefore reports the whole underworld unreachable —
+             * D7, `darkshield` and `darksuit` with it. So the pit ring is
+             * tested with `avoidVolumes` off, and every pit ring that only
+             * exists because of it is reported as a permission.
+             */
+            const freeForPit = (world, cx, cy) => free(world, cx, cy, { avoidVolumes: false });
+
+            /**
+             * `Map<"cx,cy", transition[]>` over the FREE cells a trigger or
+             * pit tile can be walked into FROM.
+             *
+             * ⛔ NOT "the cells the volume covers". A trigger volume and a pit
+             * tile are both planner-forbidden floor, so the obvious reading —
+             * step into the exit cell — never fires: the player BOX overlaps
+             * the volume from cells outside it too, so the flood meets a
+             * blocked ring that is not the volume's own cells and stops with
+             * the exit one step away. That was the first cut, and the control
+             * caught it: with every hazard coerced and no clears the flood
+             * reached 25 levels and MISSED THE SWORD, which R1 collects in
+             * four hops.
+             *
+             * The faithful reading is `componentsAround`'s, which the hold-edge
+             * derivation has used since R2: dilate the volume by one lattice
+             * cell and take the cells there the player can actually stand in.
+             *
+             * Keyed by level AND the flood's own open set, because `free`
+             * depends on both.
+             */
+            const exitCache = new Map();
+            function exitsOf(level) {
+                const key = `${levelKey(level)}#${openLocks ? [...openLocks].sort().join(',') : ''}`;
+                if (exitCache.has(key)) return exitCache.get(key);
+                const world = worldFor(level);
+                const map = new Map();
+                if (!world) { exitCache.set(key, map); return map; }
+                const mark = (rect, payload, test = free) => {
+                    const c0 = Math.floor(rect.x / R2_LATTICE) - 1;
+                    const c1 = Math.ceil(rect.right / R2_LATTICE);
+                    const r0 = Math.floor(rect.y / R2_LATTICE) - 1;
+                    const r1 = Math.ceil(rect.bottom / R2_LATTICE);
+                    for (let cy = r0; cy <= r1; cy += 1) {
+                        for (let cx = c0; cx <= c1; cx += 1) {
+                            if (!test(world, cx, cy)) continue;
+                            if (test !== free && !free(world, cx, cy)) {
+                                assumed.set(`L${level} pit@${payload.via}`,
+                                    'its ring is standable only with avoid volumes off — '
+                                    + 'a leg-declared forced contact (R1\'s rule)');
+                            }
+                            const k = `${cx},${cy}`;
+                            if (!map.has(k)) map.set(k, []);
+                            map.get(k).push(payload);
+                        }
+                    }
+                };
+                for (const tp of world.teleporters) {
+                    if (tp.deactivated) continue;
+                    const ttx = Math.floor(tp.x / TILE_SIZE);
+                    const tty = Math.floor(tp.y / TILE_SIZE);
+                    // A trigger tile that is ALSO a pit tile is not an exit —
+                    // which of the two fires is FlashPunk bookkeeping the
+                    // physics refuses to transcribe. Two exist in the extract.
+                    if (world.pitTiles.some((t) => t.tx === ttx && t.ty === tty)) continue;
+                    const dest = resolveArrival(tp.to, tp.playerx, tp.playery, []);
+                    if (!dest) continue;
+                    mark(tileRect(ttx, tty),
+                        { kind: 'teleporter', level: dest.level, boot: dest.boot, via: `${tp.x},${tp.y}` });
+                }
+                if (world.fallthrough) {
+                    for (const tile of world.pitTiles) {
+                        const ctor = fallCtor(world, tile);
+                        const dest = resolveArrival(ctor.level, ctor.x, ctor.y, []);
+                        if (!dest) continue;
+                        mark(tileRect(tile.tx, tile.ty),
+                            { kind: 'fall', level: dest.level, boot: dest.boot, via: `${tile.tx},${tile.ty}` },
+                            freeForPit);
+                    }
+                }
+                exitCache.set(key, map);
+                return map;
+            }
+
+            const seen = new Set();
+            const assumed = new Map();
+            const arrivals = [];
+            const frontier = [];
+            const push = (level, cx, cy) => {
+                const k = `${level}:${cx},${cy}`;
+                if (seen.has(k)) return;
+                seen.add(k);
+                frontier.push({ level, cx, cy });
+            };
+            const enter = (level, ctorX, ctorY, why) => {
+                const dest = resolveArrival(level, ctorX, ctorY, []);
+                if (!dest) return;
+                arrivals.push({ ...dest, why });
+                const world = worldFor(dest.level);
+                if (!world) return;
+                const px = dest.boot.x + TILE_SIZE / 2;
+                const py = dest.boot.y + TILE_SIZE / 2;
+                // The arrival cell is INSIDE its own trigger by construction
+                // (the forced-contact rule), so seed the ring around it the
+                // way `resolveStanding` does rather than the cell itself.
+                const acx = Math.floor(px / R2_LATTICE);
+                const acy = Math.floor(py / R2_LATTICE);
+                let any = false;
+                for (let dy = -2; dy <= 2; dy += 1) {
+                    for (let dx = -2; dx <= 2; dx += 1) {
+                        if (free(world, acx + dx, acy + dy)) { push(dest.level, acx + dx, acy + dy); any = true; }
+                    }
+                }
+                if (!any) arrivals[arrivals.length - 1].stranded = true;
+            };
+
+            enter(start.level, start.x, start.y, 'boot');
+
+            while (frontier.length > 0) {
+                const cur = frontier.pop();
+                const world = worldFor(cur.level);
+                if (!world) continue;
+                for (const [dx, dy] of [[0, -1], [1, 0], [0, 1], [-1, 0]]) {
+                    const nx = cur.cx + dx;
+                    const ny = cur.cy + dy;
+                    if (!free(world, nx, ny)) continue;
+                    if (stepRefusal
+                        && stepRefusal(world, { tx: cur.cx, ty: cur.cy }, { tx: nx, ty: ny })) {
+                        continue;
+                    }
+                    push(cur.level, nx, ny);
+                }
+                for (const exit of exitsOf(cur.level).get(`${cur.cx},${cur.cy}`) ?? []) {
+                    const ek = `exit:${cur.level}:${exit.kind}:${exit.via}`;
+                    if (seen.has(ek)) continue;
+                    seen.add(ek);
+                    enter(exit.level, exit.boot.x, exit.boot.y,
+                        `${exit.kind} L${cur.level}@${exit.via}`);
+                }
+            }
+            return { seen, arrivals, assumed };
+        }
+
         return {
             worldFor, componentAt, componentsOf, componentsTouching, edges, bfs,
             pathBetween, unbuildable, holdEdges, clearedByLevel,
@@ -501,6 +721,10 @@ export function makeRouteGraph({
             // own tile, so it is exported rather than transcribed a second
             // time.
             componentsAround,
+            // R5: see the docblock. Additive — nothing above it changed, and
+            // `plan-seedling-r{2,3,4}-route.mjs --write` must still leave a
+            // clean `git diff`.
+            directedFlood,
         };
     }
     return planWith(clears);
