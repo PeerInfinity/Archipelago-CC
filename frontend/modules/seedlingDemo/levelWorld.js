@@ -1969,6 +1969,50 @@ export const LIGHTPOLE_PRESS_BOX = Object.freeze({
 });
 
 /**
+ * ⛔ R5 SLICE 8: THE SECOND `entityRect` CASUALTY, found by step 0's sweep.
+ *
+ * `Watcher` is `collider: 'none'` (its `type` is "Watcher", which is in no
+ * solids list) so the entity table gives it no top-level box at all — only
+ * a `hazard` sub-object, and that one is the 48x48 AUTO-TALK CIRCLE, three
+ * times too big to stand in for a press. `Watcher` is nonetheless in
+ * `HITABLE_TYPES` and in `PRESS_ARMS` (`Player.as:1112-1115`), so the press
+ * census called `entityRect(cls, …)` on it and got `{x: NaN, y: NaN, right:
+ * NaN, bottom: NaN}` — in ELEVEN levels, L43 among them, which is the wand
+ * room the next slice opens in.
+ *
+ * ⚠ AND ITS ARM IS `refused`, exactly as the rope's was. That is now twice
+ * that a policy refusal and a geometry failure have covered for each other,
+ * and the pattern is worth naming: **a `refused` arm is the one place a
+ * malformed rect can never be caught by a route**, because no route ever
+ * queries it. The sweep is the stratum that does not care.
+ *
+ * The box is `Watcher.as:49`'s `setHitbox(16, 16, 8, 8)` against the entity
+ * position `NPC.as:47` constructs — `super(_x + Tile.w / 2, _y + Tile.h / 2,
+ * …)`, i.e. the placement's half-tile. Those two cancel: dx/dy of +8 with an
+ * origin of 8 puts the 16x16 box exactly on the placement cell.
+ */
+export const WATCHER_PRESS_BOX = Object.freeze({
+    as3: 'Watcher',
+    dx: 8, dy: 8, w: 16, h: 16, originX: 8, originY: 8,
+    src: 'NPCs/Watcher.as:49 (setHitbox) + NPCs/NPC.as:47 (the ctor half-tile)',
+});
+
+/**
+ * The press census's per-class box, for the responders whose PRESS volume
+ * is not the one the blocking role transcribed.
+ *
+ * ⚠ A TABLE RATHER THAN TWO `if`s, deliberately: there are two of these
+ * now and both arrived the same way — a class in `PRESS_ARMS` that the
+ * entity table gives no box, discovered only when something threw. Keyed on
+ * `as3`, the way `moveTypes` is (slice 6's `PUSHABLE_FAMILIES` lesson), so
+ * a family alias cannot answer for a class.
+ */
+export const PRESS_BOX_OVERRIDES = Object.freeze({
+    LightPole: LIGHTPOLE_PRESS_BOX,
+    Watcher: WATCHER_PRESS_BOX,
+});
+
+/**
  * ⚠ THE CLASSES WHOSE `tSet` THE CONSTRUCTOR DECIDES, not the `.oel`.
  *
  * `ShieldLock`'s ctor is `super(_x, _y, -2, _tag, ...)`
@@ -2561,9 +2605,33 @@ export function maskPlacement(cls, x, y) {
     return { mask, maskX: x + cls.dx, maskY: y + cls.dy };
 }
 
-/** The world rect an entity class occupies when placed at oel (x, y). */
+/**
+ * The world rect an entity class occupies when placed at oel (x, y).
+ *
+ * ⛔ R5 SLICE 8: IT ASSERTS ITS OWN OUTPUT, and that is the whole point of
+ * this slice's step 0. Nothing about the three additions below is wrong;
+ * what went wrong TWICE is that a caller handed in a class with no box —
+ * the node-terminated `rope` (slice 7) and the `Watcher` (this one) — and
+ * `x + undefined` came out the far side as a shape that type-checks,
+ * prints plausibly, and answers every `rectsOverlap` question "no". Both
+ * were ALSO refused by policy, so both read as a clean audit from every
+ * other angle. The absent INPUT is the unit of audit; this is the backstop
+ * that makes it loud. See `feedback_rect_literal_never_overlaps`.
+ */
 export function entityRect(cls, x, y) {
-    return rect(x + cls.dx - cls.originX, y + cls.dy - cls.originY, cls.w, cls.h);
+    const r = rect(x + cls.dx - cls.originX, y + cls.dy - cls.originY, cls.w, cls.h);
+    if (!Number.isFinite(r.right) || !Number.isFinite(r.bottom)
+        || !Number.isFinite(r.x) || !Number.isFinite(r.y)) {
+        fail(`entityRect("${cls.as3 ?? cls.type ?? '?'}") at (${x},${y}) built `
+            + `${JSON.stringify(r)} — a class with no box (dx/dy/w/h/originX/originY: `
+            + `${cls.dx}/${cls.dy}/${cls.w}/${cls.h}/${cls.originX}/${cls.originY}). `
+            + 'A rect with a non-finite edge NEVER OVERLAPS ANYTHING, so every '
+            + 'query against it silently answers "no" — a check that cannot fail, '
+            + 'not one that passes. Either the class needs its hitbox '
+            + 'transcribed, or this caller needs a per-class press box the way '
+            + '`LIGHTPOLE_PRESS_BOX` and `WATCHER_PRESS_BOX` are.');
+    }
+    return r;
 }
 
 /**
@@ -3087,11 +3155,17 @@ export function buildLevelWorld(levelRecord, {
                     // and either one alone would have read as "the audit is
                     // clean". Sized here from the same `<node>` span the
                     // blocking role uses, so the two cannot disagree.
+                    // ⛔ R5 SLICE 8: AND THE `Watcher` IS THE SECOND ONE.
+                    // Same shape, same cover story — `collider: 'none'`, no
+                    // top-level box, an arm that is `refused` so no route
+                    // ever asks. Eleven levels of `{x: NaN, …}`, found by
+                    // step 0's sweep rather than by anybody suspecting it.
+                    // `entityRect` now throws on such a class, so this
+                    // lookup is not an optimisation: without it the census
+                    // does not build.
                     rect: cls.collider === 'rope'
                         ? ropeSpanRect(e, cls, x, y, entityTag, clearedTags, where)
-                        : entityRect(
-                            cls.as3 === 'LightPole' ? LIGHTPOLE_PRESS_BOX : cls, x, y,
-                        ),
+                        : entityRect(PRESS_BOX_OVERRIDES[cls.as3] ?? cls, x, y),
                     // ⚠ R5 SLICE 7: THE ORIGIN, because `Player.as:1026`'s
                     // radius cut needs it and needs it WRONG. The fire
                     // distance is computed from `e.x - e.originX` (the box

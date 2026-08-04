@@ -147,6 +147,42 @@ export function crossingsOf(path, instance) {
  * @param {object[]} path  the observations from the wake tick onward
  * @param {object=} opts.cameraAt  `(t) => {x, y}` — the tightening
  */
+/**
+ * ⛔⛔ R5 SLICE 8, STEP 0: THE SWEEP'S ONE REAL FINDING IN THE ENUMERATED
+ * TEN, and it is the rope's shape wearing a disguise.
+ *
+ * `chaseEnvelope`'s body used to be `row.hitbox ?? {w:0,h:0,ox:0,oy:0}`.
+ * That keeps the arithmetic FINITE — no rect it builds is ever malformed,
+ * so the `assertRect` family could never have caught it — by giving a
+ * body-less row a ZERO-SIZE BODY. The clearance it then measures is
+ * optimistic by half the real body on each axis, and the answer is a
+ * plausible number rather than a silent `false`, which is strictly harder
+ * to notice than the rope was.
+ *
+ * ⛓ IT IS CURRENTLY UNREACHABLE, AND SILENTLY SO. All six hitbox-less rows
+ * carry `boss:`, and `encounterVerdict` returns hard-avoid at rung 4 before
+ * it ever calls the envelope. That is the same "two independent reasons,
+ * either one alone reads as a clean audit" pattern slice 7 named on the
+ * rope, which is why the default becomes a throw rather than a comment.
+ *
+ * ⚠ SEPARATE FROM ITS CALLER so it can be tested at all: every shipped row
+ * satisfies it by construction, so a test that went through `chaseEnvelope`
+ * could only ever exercise the passing arm. A guard whose failing arm no
+ * test can reach is the thing this whole step is about.
+ *
+ * @param {string} tag  the census tag, for the message
+ * @param {object} row  its `ENEMY_CLASSES` entry
+ */
+export function assertEnvelopeBody(tag, row) {
+    if (row?.hitbox) return row.hitbox;
+    if (row?.boss || row?.envelopeProof === false) return null;
+    return fail(`chaseEnvelope: "${tag}" has no transcribed hitbox and is neither a `
+        + '`boss` nor `envelopeProof: false`. A zero-size body makes every clearance '
+        + 'in this envelope optimistic by half the real body on each axis, and reports '
+        + 'a plausible number rather than failing — transcribe the hitbox, or declare '
+        + 'which of the two exemptions applies.');
+}
+
 export function chaseEnvelope(instance, path, { cameraAt = null } = {}) {
     const bound = stepBoundFor(instance.tag);
     if (bound === null) {
@@ -157,7 +193,10 @@ export function chaseEnvelope(instance, path, { cameraAt = null } = {}) {
     const row = ENEMY_CLASSES[instance.tag];
     const runRange = typeof row.aggro?.range === 'number' ? row.aggro.range : 0;
     const coastBudget = (bound * bound) / (2 * FRICTION);
-    const box = row.hitbox ?? { w: 0, h: 0, ox: 0, oy: 0 };
+    // ⛔ The body-less default is a NAMED EXEMPTION rather than a `??`.
+    // See `assertEnvelopeBody` for what the `??` was hiding, and why the
+    // guard lives outside this function.
+    const box = assertEnvelopeBody(instance.tag, row) ?? { w: 0, h: 0, ox: 0, oy: 0 };
     // ⛔ THE PAD IS NOT DECORATION. A turret's body is 16x16 and its THREAT
     // is a 64 px spit; a bobsoldier's is 8x8 and its sword line is 16 px
     // past it. An envelope that measured the body would declare a shooting

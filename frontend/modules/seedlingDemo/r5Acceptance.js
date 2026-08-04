@@ -35,8 +35,25 @@ import { outOfBandFlagForWriter } from './outOfBandLedger.js';
 export const L60_KILL = 'r5-l60-kill';
 export const L60_CONTROL = 'r5-l60-kill-control';
 
-/** `lock@128,80`'s level and persistence tag, from the shipped census. */
-export const L60_LOCK = Object.freeze({ level: 60, tag: 0, rect: Object.freeze({ x: 128, right: 144 }) });
+/**
+ * `lock@128,80`'s level and persistence tag, from the shipped census.
+ *
+ * ⚠ `rect` IS AN X BAND AND NOT A RECT, DELIBERATELY — said out loud here
+ * because R5 slice 8's rect-input sweep had to decide whether it was an
+ * oversight. It has no `y` and no `bottom` because the CLAIM has no y: the
+ * lock spans its corridor, and all six uses below are scalar comparisons of
+ * a player x against the near edge (the control walk must reach 128 and not
+ * pass it) or the far one (the kill walk must end past 144). Handing it to
+ * `rectsOverlap` would read `bottom` as `undefined` and answer "no"
+ * forever, so `r5Acceptance.test.js` asserts it is y-less rather than
+ * leaving the absence to look like a half-built rect somebody should
+ * finish. See `feedback_rect_literal_never_overlaps`.
+ */
+export const L60_LOCK = Object.freeze({
+    level: 60,
+    tag: 0,
+    rect: Object.freeze({ x: 128, right: 144, band: 'x-only — see the docblock' }),
+});
 
 const flagKey = (c) => `${c.level}:${c.tag}`;
 const clearedSet = (status) => new Set((status?.persistence_cleared ?? []).map(flagKey));

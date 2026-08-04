@@ -401,9 +401,24 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
  * TRIGGER, because entering one is not absorbed — and that has its own
  * number. The segment test now runs at zero.
  */
+/**
+ * ⛔ R5 SLICE 8, STEP 0: IT GUARDS BOTH ENDS NOW, AND NOT BECAUSE A CALLER
+ * IS SUSPECT. All three callers hand in `playerBoxAt`/`terrainProbeRect`
+ * output, which is built from frozen module constants and cannot be
+ * malformed. But this function's whole job is to build the rect a blocking
+ * sweep is then tested AGAINST, and `undefined + m` is NaN, which compares
+ * false in every direction — so a widened rect with one absent edge reports
+ * the route CLEAR. That is the rope's failure with a different missing
+ * field and a worse consequence, and the cost of ruling it out is two
+ * lines. See `levelWorld.entityRect`'s docblock for the pattern.
+ */
 function grow(r, m) {
+    assertRect(r, 'botDriverV2.grow input');
     if (!m) return r;
-    return { x: r.x - m, y: r.y - m, right: r.right + m, bottom: r.bottom + m };
+    return assertRect(
+        { x: r.x - m, y: r.y - m, right: r.right + m, bottom: r.bottom + m },
+        `botDriverV2.grow(margin ${m})`,
+    );
 }
 
 /** An empty held set — what a transport tick emits. */

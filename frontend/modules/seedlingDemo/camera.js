@@ -179,7 +179,26 @@ export function instanceRect(instance) {
     }
     const x = instance.cx - box.ox;
     const y = instance.cy - box.oy;
-    return { x, y, right: x + box.w, bottom: y + box.h, w: box.w, h: box.h };
+    // ⛔ R5 SLICE 8, STEP 0: THE `fail` ABOVE COVERS THE CASE SOMEBODY
+    // THOUGHT OF — a hitbox that is ABSENT — and not the one that has now
+    // shipped twice, a hitbox that is PRESENT with a field missing. `{ox,
+    // oy}` with no `w` walks straight past that guard and comes out as
+    // `right: NaN`, which never overlaps anything. Guarding the OUTPUT
+    // covers both, and only one of them needed a person to imagine it.
+    //
+    // ⚠ CHECKED INLINE RATHER THAN THROUGH `levelWorld.assertRect`: this
+    // module has NO imports at all, deliberately, and one added for a
+    // four-field check would be the whole reason it stops being
+    // dependency-free.
+    const r = { x, y, right: x + box.w, bottom: y + box.h, w: box.w, h: box.h };
+    if (!Number.isFinite(r.x) || !Number.isFinite(r.y)
+        || !Number.isFinite(r.right) || !Number.isFinite(r.bottom)) {
+        fail(`instanceRect: "${instance.tag}" has a hitbox with a missing field `
+            + `(${JSON.stringify(box)}), so its rect is ${JSON.stringify(r)}. A rect `
+            + 'with a non-finite edge never overlaps anything, which reads as "off '
+            + 'screen" forever rather than as an error.');
+    }
+    return r;
 }
 
 /**

@@ -18,6 +18,7 @@ import {
     SWIM_STEADY_STEP, swimPairFindings, swimLatchFindings,
     WF_SHUT, WF_CLIMB, WF_START_Y, WF_FACE_ROW, WF_CLIMB_ROW, waterfallPairFindings,
 } from './r5Acceptance.js';
+import { rectsOverlap } from './levelWorld.js';
 
 const arm = ({ cleared = [], x = 150, level = 60, hits = 0 } = {}) => ({
     stream: { ticks: [{ t: 0, x: 112, y: 88, level }, { t: 1, x, y: 88, level }] },
@@ -117,7 +118,24 @@ describe('the L60 kill pair', () => {
 
     it('names the lock by its census values, not by a literal in the check', () => {
         expect(L60_LOCK).toMatchObject({ level: 60, tag: 0 });
-        expect(L60_LOCK.rect).toEqual({ x: 128, right: 144 });
+        expect(L60_LOCK.rect).toMatchObject({ x: 128, right: 144 });
+    });
+
+    // ⚠ R5 SLICE 8, STEP 0: THE ABSENCE IS THE CLAIM. `L60_LOCK.rect` is an
+    // X BAND — six scalar comparisons of a player x against its two edges —
+    // and it has no `y`/`bottom` because the lock spans its corridor. A
+    // sweep for malformed rects has to be able to tell that apart from a
+    // rect somebody half-built, so the y-lessness is asserted rather than
+    // left to look like an oversight, and the `band` field says so in the
+    // data. Handing this to `rectsOverlap` would answer "no" forever.
+    it('⚠ is an X BAND and not a rect — and says so, in the data', () => {
+        expect(L60_LOCK.rect.y).toBeUndefined();
+        expect(L60_LOCK.rect.bottom).toBeUndefined();
+        expect(L60_LOCK.rect.band).toMatch(/x-only/);
+        expect(rectsOverlap(
+            { x: 130, y: 0, right: 140, bottom: 999 },
+            L60_LOCK.rect,
+        )).toBe(false);
     });
 });
 
