@@ -244,11 +244,19 @@ console.log('\n## ⛔ the rope: the declared stance cannot be stood in, and the 
     const f = flood(w39, rec39, { x: 152, y: 616 });
     console.log(`   from L39's arrival (9,38) with the plug deleted: ${f.cells} cells / `
         + `${f.tiles.size} tiles`);
-    const declared = `${ROPE_PULL.stance.tx},${ROPE_PULL.stance.ty}`;
+    // ⚠ THE SUPERSEDED VALUE, BY NAME. Reading `ROPE_PULL.stance` here would
+    // make this claim invert the moment the declaration was corrected — the
+    // probe would then be asserting that the CURRENT stance is unreachable,
+    // and passing that as a finding. A correction has to keep the thing it
+    // corrected, which is what `supersededStance` is for.
+    const old = ROPE_PULL.supersededStance;
+    const declared = `${old.tx},${old.ty}`;
     claim(!f.tiles.has(declared),
-        `⛔ \`ROPE_PULL.stance\` (${declared}) is NOT reachable from the arrival`,
+        `⛔ slice 7's stance (${declared}, ${old.section}) is NOT reachable from the arrival`,
         '(8,25) is wall and (7,24) is the rope itself, so the whole west shaft is behind '
         + 'the thing the stance is meant to pull. Declared in slice 7 and never walked.');
+    claim(f.tiles.has(`${ROPE_PULL.stance.tx},${ROPE_PULL.stance.ty}`),
+        `⛓ and the corrected stance (${ROPE_PULL.stance.tx},${ROPE_PULL.stance.ty}) IS`);
     const reach = [];
     for (let ty = 20; ty <= 30; ty += 1) {
         if (!f.tiles.has(`9,${ty}`)) continue;
