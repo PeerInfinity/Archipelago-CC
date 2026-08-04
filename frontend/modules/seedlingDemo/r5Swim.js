@@ -103,6 +103,188 @@ export const DROWN_EXPECTED_NAMES = Object.freeze(Object.keys(DROWN_EXPECTED));
 /** `Player.as:312` — `drownTimerMax`, restated here so the bounds can be read. */
 export const DROWN_TIMER_MAX = 10;
 
+// ─────────────────────────────────────────────────────────────────────
+// STEP 3 — THE D5 WALK, and the conch at the end of it
+// ─────────────────────────────────────────────────────────────────────
+
+/**
+ * `Pickups/Conch.as` — the item, and the two things it writes.
+ *
+ *     text = "You got the Conch!~Now you can swim in water!";
+ *     override public function removed():void {
+ *         if (doActions) { Player.canSwim = true; Game.setPersistence(tag, false); }
+ *     }
+ *
+ * So the ceremony is X-PAGED (two pages), `canSwim` is the boolean, and
+ * `{49,0}` is the ledger entry — an EARNED clear, like every real pickup on
+ * the ladder since R3.
+ */
+export const CONCH = Object.freeze({
+    level: 49,
+    pickup: Object.freeze({ x: 32, y: 80 }),
+    /** The approach cell — tile (2,4), one north of the pickup's own. */
+    approach: Object.freeze({ x: 36, y: 76 }),
+    tag: 0,
+    item: 'conch',
+    property: 'canSwim',
+});
+
+/**
+ * ⛓ THE D5 WALK — and it is the CHAIN's first payment rather than a probe.
+ *
+ * L44 → 45 → 46 → 47 → 48 → (pit 11,3) → 49. R1 walked this same corridor
+ * under noclip with all four hazards coerced and took its items by ENTERING
+ * their rooms; this walk keeps the solids, keeps lava and ice ARMED, and
+ * takes the conch with the R3 `collect` verb — the player standing on it and
+ * paging its ceremony through.
+ *
+ * ⛔ AND IT CANNOT HAPPEN WITHOUT `fire`. L48's arrival is (120,296), tile
+ * (7,18); `karlore@112,272` is tile (7,17), directly north of it, and it is
+ * the one-tile corridor out. The headline pair measured that plug at 2
+ * reachable tiles against 138. So `fire` is not decoration on this walk —
+ * the walk is where the boolean is SPENT, and `ADDED_TIME_REMOVAL` is what
+ * lets the model plan it at all.
+ *
+ * ⚠ THE GRANT IS A PROBE GRANT AND IT NAMES L44 — the `l71-shieldlock`
+ * precedent again, one level along. `r5-bobboss-fire` is where `fire` is
+ * EARNED; this tape banks it at the boot so that the walk can be recorded
+ * on its own rather than behind a 2,500-tick boss fight. The grant names the
+ * BOOT level because a boot grant lands after `new Game(44, ...)` — which is
+ * fine here and would not be in L48 (§15.8, *a boot is not an entry*): L44
+ * holds no entity whose `added()` reads an item, and the four doors between
+ * L44 and L48 are four `new Game`s the item is banked long before.
+ *
+ * ── ⛔ TWO KNOBS THIS WALK HAD TO MOVE, AND BOTH ARE ICE ──────────────
+ *
+ * **1. `tolerance` is not a safety margin on ice — it is a SEED.**
+ * `DEFAULT_TOLERANCE` is 1.0 px and its derivation is written down in
+ * `botDriverV1`: a one-tick tap from rest travels 1.70 px before ground
+ * friction (0.25) snaps the velocity to zero, so 0.85 is the tightest
+ * always-achievable arrival and 1.0 clears it. Ice replaces BOTH terms —
+ * `slidingSpeed` 1 and `slidingFriction` 0.025 — and the same tap travels
+ * about 19.5 px. At 1.0 the drive to the conch's approach cell oscillates
+ * and stalls 0.44 px away with the velocity still at 0.98.
+ *
+ * ⚠ And raising it is NOT monotone. Measured over this route:
+ *
+ *     1.0 ✗   1.25 ✓   1.5 ✗   1.75 ✗   2.0 ✓   2.1 ✓   2.2 ✓   2.25 ✓
+ *     2.4 ✗   2.5 ✓    2.6 ✓   2.75 ✓   2.9 ✓   3.0 ✓   3.1 ✗   3.25 ✗
+ *
+ * — and the failures are at DIFFERENT waypoints in different levels (L48's
+ * pit approach at 1.5/2.4/3.25, the conch's approach at 1.75/3.1, L44's
+ * first corner at 10). A tolerance decides where the controller settles,
+ * which decides the state the next drive starts from, which is a different
+ * trajectory for the whole route. There is no band to sit in the middle of;
+ * there are working points. **2.25 is one, chosen for the smallest tape
+ * (1,645 ticks / 66 spans), and frozen.**
+ *
+ * **2. The 8-tick coast is 20x short.** `assertWindowEndsAtRest`'s default
+ * is derived from ground friction too, and it is a STATIC check — it reads
+ * the spans, not the physics. On ice the walk is still moving 12 ticks after
+ * its last release, and the ceremony does not help: a `PICKUP_CEREMONY`
+ * FREEZES the player without zeroing `v`, so the velocity the approach
+ * carried in resumes the moment the dialogue ends. Measured: rest at 24
+ * coast ticks, and the shipped 32 leaves margin.
+ *
+ * ⛓ **AND WHERE IT COMES TO REST IS A WATER TILE.** The residual southward
+ * velocity slides the player off the conch's ice tile (2,5) into (2,6),
+ * which is type 1, and it is water friction that finally stops them —
+ * y = 96.01, box top 94. In THIS window water is coerced, so nothing
+ * happens; in the next one it is armed and the conch is banked, so the walk
+ * begins the swim leg already standing in it. That is a handoff rather than
+ * an accident, and it is asserted rather than hoped for.
+ */
+export const D5_WALK = Object.freeze({
+    name: 'r5-d5-conch',
+    /** The L87 arrival — the door R1's route uses to reach L44. */
+    boot: Object.freeze({ level: 44, x: 16, y: 80 }),
+    lattice: 16,
+    nodeMargin: 0,
+    allowGrazes: true,
+    /** See the docblock: a seed, not a margin. */
+    tolerance: 2.25,
+    /** See the docblock: ground's 8 is 20x short on ice; rest measured at 24. */
+    coastTicks: 32,
+    noHazards: Object.freeze(['water', 'waterfall']),
+    pins: Object.freeze(['sound', 'dead_frames']),
+    grants: Object.freeze([Object.freeze({ level: 44, items: Object.freeze(['fire']) })]),
+    legs: Object.freeze([
+        Object.freeze({ level: 44, targets: Object.freeze([]), exit: Object.freeze({ x: 64, y: 0 }) }),
+        Object.freeze({ level: 45, targets: Object.freeze([]), exit: Object.freeze({ x: 112, y: 0 }) }),
+        Object.freeze({ level: 46, targets: Object.freeze([]), exit: Object.freeze({ x: 176, y: 0 }) }),
+        Object.freeze({ level: 47, targets: Object.freeze([]), exit: Object.freeze({ x: 216, y: 112 }) }),
+        Object.freeze({ level: 48, targets: Object.freeze([]), exit: Object.freeze({ pit: Object.freeze({ tx: 11, ty: 3 }) }) }),
+        Object.freeze({
+            level: 49,
+            targets: Object.freeze([Object.freeze({
+                x: CONCH.approach.x,
+                y: CONCH.approach.y,
+                collect: Object.freeze({ pickup: Object.freeze({ ...CONCH.pickup }) }),
+            })]),
+        }),
+    ]),
+});
+
+/** The flags the D5 walk EARNS — asserted as an exact set, both ways. */
+export const D5_EARNED = Object.freeze([
+    Object.freeze({
+        level: CONCH.level, tag: CONCH.tag,
+        by: '`Conch.removed()` — `Player.canSwim = true; Game.setPersistence(tag, false)`',
+    }),
+]);
+
+/**
+ * ⚠ THE ENCOUNTER LADDER'S VERDICT, EMITTED RATHER THAN IMPLIED (§13).
+ *
+ * Discs are pricing objects, not walls: the planner walks the ladder per
+ * crossing and states what it decided, and the executor's job is only to
+ * refuse an UNDECLARED wake. §2.6.2 priced this corridor at "one jellyfish
+ * (L45), icetraps (static avoid), L46's whirlpool ~40 px off the trail,
+ * L48's spinningaxe self-timed", and the route agrees with it in a stronger
+ * form: **only ONE of the six instances is crossed at all.**
+ */
+export const D5_LADDER = Object.freeze([
+    Object.freeze({
+        level: 45, tag: 'jellyfish', at: Object.freeze({ x: 224, y: 176 }),
+        rung: 'wake-and-thread',
+        why: 'the only instance on the whole route the path crosses the disc of. The '
+            + 'chase envelope — 0.8 px/tick from the wake, 160 px leash — never reaches '
+            + 'the player: closest approach 104 px, and the visit ends long before it '
+            + 'could close. Contact-free for ANY chase policy, not only the transcribed '
+            + 'one, which is what makes it a THREAD rather than a bet.',
+    }),
+]);
+
+/**
+ * The instances the route never comes near, named because silence is not a
+ * verdict (`feedback_bounded_sweep_must_name_what_it_bounded`).
+ *
+ * An encounter plan that reports one crossing over a six-instance corridor
+ * has either threaded five of them or failed to look at five of them, and
+ * those print the same thing.
+ */
+export const D5_UNCROSSED = Object.freeze([
+    Object.freeze({ level: 45, tag: 'icetrap', at: Object.freeze({ x: 64, y: 64 }) }),
+    Object.freeze({ level: 46, tag: 'icetrap', at: Object.freeze({ x: 256, y: 384 }) }),
+    Object.freeze({ level: 46, tag: 'icetrap', at: Object.freeze({ x: 168, y: 328 }) }),
+    Object.freeze({ level: 46, tag: 'whirlpool', at: Object.freeze({ x: 160, y: 144 }) }),
+    Object.freeze({ level: 48, tag: 'spinningaxe', at: Object.freeze({ x: 208, y: 224 }) }),
+]);
+
+/**
+ * ⚠ L48's `bosslock@48,144` is `keyType 3` and this walk holds NO key.
+ *
+ * §2.6.2 calls its probe row inert and it is — but "inert" is a claim about
+ * the RUN, not about the geometry: `BossLock.update` sets `activate` when
+ * `Player.hasKey(keyType)`, so the row is inert exactly as long as nothing
+ * banks key 3. Asserted from `synthesizeLegs`' own `keys` list rather than
+ * assumed, because a later rung's chain will hold key 3 and the same
+ * sentence will stop being true without anything here changing.
+ */
+export const D5_INERT_LOCK = Object.freeze({
+    level: 48, at: Object.freeze({ x: 48, y: 144 }), keyType: 3, tag: 1,
+});
+
 /**
  * The `drownTimer` finding for one fixture, TWO-SIDED.
  *

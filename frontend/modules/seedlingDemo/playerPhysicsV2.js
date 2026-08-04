@@ -169,31 +169,45 @@ export function terrainProbeRect(x, y) {
  */
 export function resolveTerrainState(
     level, x, y, prevState,
-    { beforeTypeFlip = false, noHazards = [], openBridges = null } = {},
+    {
+        beforeTypeFlip = false, noHazards = [], openBridges = null,
+        // ⛓ R5 slice 4: called for a tie whose two candidates lead
+        // somewhere different. A CALLBACK rather than a module-level sink,
+        // because a diagnostic that outlives the run it describes is a
+        // diagnostic that will one day be read against the wrong run.
+        onDecidedTie = null,
+    } = {},
 ) {
     const { tile, tie } = level.nearestWalkableTileWithTie(
         x, y + CHECK_OFFSET_Y, { beforeTypeFlip, openBridges },
     );
     if (!tile) return prevState;
-    // ⚠ An exact tie is judged HERE, where the relaxation is known, and only
-    // when the two candidates would behave differently. `levelWorld` reports
-    // it without an opinion because whether it matters is a physics
-    // question: two tiles that both walk at 0.8 resolve to the same stream
-    // whoever wins, and a full tile grid ties constantly.
+    // ⛓ AN EXACT TIE IS NOW DECIDED, NOT REFUSED (R5 slice 4).
+    //
+    // This used to throw whenever the two candidates behaved differently
+    // under the tape's relaxation, because the winner is FlashPunk's
+    // entity-list order and `levelWorld` did not transcribe it. It does
+    // now — `addType` PREPENDS, so the list is the reverse of the extract
+    // and the LATER tile wins — and the throw's own advice ("move the
+    // route") stopped being available at the same moment: L47's arrival
+    // from L46 puts the probe exactly between a snow tile and an ice one,
+    // and a route has no say in where a teleporter drops the player.
+    //
+    // ⚠ The tie is still WORTH SEEING, so it is reported rather than
+    // dropped: a decided tie is a place where the model's answer rests on
+    // one transcribed line, and `resolveTerrainState` is not the layer that
+    // should decide whether that matters.
     if (tie) {
         const a = terrainEffectClass(coerceTerrainState(tile.t, noHazards));
         const b = terrainEffectClass(coerceTerrainState(tie.t, noHazards));
-        if (a !== b) {
-            throw new PhysicsV2Error(
-                `nearestToPoint TIE at (${x},${y + CHECK_OFFSET_Y}) in level `
-                + `${level.level}: tiles (${tile.tx},${tile.ty}) type ${tile.t} and `
-                + `(${tie.tx},${tie.ty}) type ${tie.t} are exactly equidistant and `
-                + `behave DIFFERENTLY under this tape's relaxation ("${a}" vs "${b}"). `
-                + "The winner is FlashPunk's entity-list order — addUpdate PREPENDS, so "
-                + 'it is the reverse of the extract\'s — which this module does not '
-                + 'transcribe. Move the route so the probe point does not land on the '
-                + 'midline between two tile centres.',
-            );
+        if (a !== b && onDecidedTie) {
+            onDecidedTie({
+                level: level.level,
+                x,
+                y: y + CHECK_OFFSET_Y,
+                won: { tx: tile.tx, ty: tile.ty, t: tile.t, effect: a },
+                lost: { tx: tie.tx, ty: tie.ty, t: tie.t, effect: b },
+            });
         }
     }
     return rectsOverlap(tile.rect, terrainProbeRect(x, y)) ? tile.t : prevState;
@@ -788,6 +802,10 @@ export function step(state, held, opts = {}) {
         // experiment it is in rather than inferring it — the same rule
         // `relax` already follows for `noclip`/`noHazards`/`grants`.
         pins = [],
+        // ⛓ R5 slice 4: reported when an exact `nearestToPoint` tie is
+        // DECIDED by the transcribed list order and its two candidates lead
+        // somewhere different. Nothing here consumes it; a planner does.
+        onDecidedTie = null,
     } = opts;
     if (!level || typeof level.collidesSolid !== 'function') {
         throw new PhysicsV2Error(
@@ -944,7 +962,7 @@ export function step(state, held, opts = {}) {
     const terrain = resolveTerrainState(
         level, state.x, state.y,
         state.terrain ?? INITIAL_TERRAIN_STATE,
-        { beforeTypeFlip, noHazards, openBridges },
+        { beforeTypeFlip, noHazards, openBridges, onDecidedTie },
     );
     // The guard runs on the EFFECTIVE value, so a coerced hazard is legal
     // terrain and an un-coerced one still throws by name. Bridge (29) is not

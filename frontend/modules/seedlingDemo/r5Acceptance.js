@@ -633,6 +633,150 @@ export function karloreFindings(replayed) {
     return found;
 }
 
+
+// ─────────────────────────────────────────────────────────────────────
+// ⛓ THE D5 WALK — the conch, and the chain paying for itself
+// ─────────────────────────────────────────────────────────────────────
+
+export const D5_CONCH = 'r5-d5-conch';
+
+/** `Conch.removed()`'s two writes, and the level the walk ends in. */
+export const D5_CONCH_FLAG = Object.freeze({ level: 49, tag: 0 });
+/**
+ * ⛓ WHERE THE WALK COMES TO REST, AND WHY IT IS AN ASSERTION.
+ *
+ * The residual southward velocity carried through the ceremony's freeze
+ * slides the player off the conch's ice tile (2,5) into (2,6), which is
+ * WATER — and water friction is what finally stops them. In this window
+ * water is coerced; in the next it is armed and the conch is banked, so
+ * the swim leg starts standing in it. That handoff is the reason the
+ * terminal tile is a claim rather than a curiosity.
+ */
+export const D5_REST_TILE = Object.freeze({ tx: 2, ty: 6 });
+
+/**
+ * The D5 walk's findings.
+ *
+ * ⚠ THIS IS NOT A PAIR, and the reason is worth stating rather than
+ * leaving as an omission. Every OPENED-BLOCKER claim on this arc needs a
+ * shut-before control — and this walk opens no blocker. The one thing in
+ * its way is `karlore@112,272`, whose shut-before control is
+ * `r5-karlore-plug`, already recorded and already asserted. What this walk
+ * claims is a COLLECTION, and a collection's two-sided evidence is the item
+ * the game reports and the flag `removed()` wrote: an arm that walked the
+ * corridor and did not take the conch fails both.
+ *
+ * @param {Map<string,{stream,status}>} replayed
+ */
+export function d5ConchFindings(replayed) {
+    const walk = replayed?.get(D5_CONCH);
+    if (!walk) {
+        return [{
+            name: 'R5 D5 walk: SKIPPED — this sweep did not replay it',
+            ok: true,
+            skipped: true,
+            detail: `run --only=${D5_CONCH} (or --tier=full) to assert the conch`,
+        }];
+    }
+    const found = [];
+    const st = walk.status;
+    const end = terminal(walk);
+
+    // 1. THE ITEM, from the game's own inventory readout — and the negative
+    //    half with it. `fire` is the boot grant this walk could not have
+    //    been planned without; `canSwim` is what it went to get; and
+    //    NOTHING ELSE may be true, because five doors of corridor is five
+    //    doors of chances to walk over something.
+    const held = ITEM_BOOLEANS.filter((k) => st?.items?.[k] === true).sort();
+    const want = ['canSwim', 'hasFire'];
+    found.push({
+        name: 'R5 D5: the walk ends holding EXACTLY fire and the conch',
+        ok: held.join(',') === want.join(','),
+        detail: held.join(',') === want.join(',')
+            ? 'canSwim + hasFire, and nothing else — the boot grant it needed to pass '
+                + 'karlore, and the item it went five doors to take'
+            : `the game reports [${held.join(',')}], expected [${want.join(',')}]`,
+    });
+
+    // 2. THE LEDGER. `Conch.removed()` is `canSwim = true` AND
+    //    `setPersistence(tag, false)`, so the flag is the second half of the
+    //    same line — and an EXACT set, because a walk that collected
+    //    something else on the way would show it here and nowhere else.
+    const cleared = clearedSet(st);
+    const flag = `${D5_CONCH_FLAG.level}:${D5_CONCH_FLAG.tag}`;
+    found.push({
+        name: 'R5 D5: the conch\'s flag is off, and it is the ONLY one',
+        ok: cleared.size === 1 && cleared.has(flag),
+        detail: cleared.size === 1 && cleared.has(flag)
+            ? `{${flag}} off and nothing else — \`Conch.removed()\` writes the boolean `
+                + 'and the flag on the same line, so this is the same event seen twice'
+            : `${cleared.size} flag(s) off: [${[...cleared].join(' ')}], expected exactly `
+                + `{${flag}}`,
+    });
+
+    // 3. ⛓ WHERE IT STOPS. The swim leg's starting line, asserted as a TILE
+    //    rather than as a position: the exact pixel is the recording's and
+    //    the claim is which tile it is standing on.
+    const tile = end ? { tx: Math.floor(end.x / 16), ty: Math.floor(end.y / 16) } : null;
+    const restOk = !!end && end.level === D5_CONCH_FLAG.level
+        && tile.tx === D5_REST_TILE.tx && tile.ty === D5_REST_TILE.ty;
+    found.push({
+        name: 'R5 D5: it comes to rest on the WATER tile below the conch',
+        ok: restOk,
+        detail: !end ? 'no terminal observation'
+            : restOk
+                ? `ends L${end.level} (${end.x},${end.y}) = tile `
+                    + `(${tile.tx},${tile.ty}) — water, coerced in this window and armed `
+                    + 'in the next, with the conch already banked'
+                : `ends L${end.level} tile (${tile?.tx},${tile?.ty}), not `
+                    + `(${D5_REST_TILE.tx},${D5_REST_TILE.ty}). The slide off the ice is `
+                    + 'what puts the walk there; a different tile means the coast or the '
+                    + 'ceremony left a different velocity, and the swim leg does not '
+                    + 'start where this walk says it does.',
+    });
+
+    // 4. THE PIT IS A TRANSPORT, and the game agrees. `checkFallingInPit`
+    //    sets `receiveInput = false` for the fall, so the refusal is the
+    //    mechanic working — asserted here as a POSITIVE rather than left to
+    //    the harness's two-sided check, because the pit at (11,3) is the
+    //    only way out of L48 and a walk that took a different route would
+    //    otherwise pass everything above.
+    const hops = (walk.stream?.transitions ?? [])
+        .map((t) => `${t.from_level}->${t.to_level}`).join(' ');
+    const wantHops = '44->45 45->46 46->47 47->48 48->49';
+    found.push({
+        name: 'R5 D5: five doors and a pit, in that order',
+        ok: hops === wantHops,
+        detail: hops === wantHops
+            ? `${hops} — and the last one is the pit at (11,3), not a door`
+            : `the walk crossed [${hops}], expected [${wantHops}]`,
+    });
+    found.push({
+        name: 'R5 D5: the game refused input for the pit transport',
+        ok: st?.saw_input_refused === true,
+        detail: st?.saw_input_refused === true
+            ? '`checkFallingInPit` sets receiveInput = false for the fall, so the refusal '
+                + 'is the transport firing'
+            : 'the game never refused input, so the fall never happened and L48 was left '
+                + 'some other way',
+    });
+
+    // 5. AND NOTHING DROWNED. The whole window coerces water — this is the
+    //    last walk on the arc that does — so a non-zero timer here would
+    //    mean the coercion did not reach the resolver.
+    found.push({
+        name: 'R5 D5: the coerced water never started the timer',
+        ok: st?.drown_timer === 0,
+        detail: st?.drown_timer === 0
+            ? 'drownTimer 0 across 1,677 ticks, most of them over water tiles — which is '
+                + 'what `noHazards: ["water"]` is supposed to buy and the last walk that '
+                + 'buys it'
+            : `drownTimer=${st?.drown_timer} on a window that coerces water`,
+    });
+
+    return found;
+}
+
 /** Every R5 finding this sweep can make. */
 export function r5AcceptanceFindings(replayed) {
     return [
@@ -640,5 +784,6 @@ export function r5AcceptanceFindings(replayed) {
         ...keyLegFindings(replayed),
         ...bobBossFindings(replayed),
         ...karloreFindings(replayed),
+        ...d5ConchFindings(replayed),
     ];
 }

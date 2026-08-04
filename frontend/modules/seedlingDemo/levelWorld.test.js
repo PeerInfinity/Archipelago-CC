@@ -46,7 +46,7 @@ import {
     rectsOverlap,
 } from './levelWorld.js';
 import { SEEDLING_PIXEL_MASKS } from './seedlingPixelMasks.js';
-import { loadExpectation } from './fixtures/index.js';
+import { loadExpectation, loadTape } from './fixtures/index.js';
 import { HITBOX } from './playerPhysicsV1.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
 import {
@@ -1607,5 +1607,58 @@ describe('⛓ R5: what a HELD ITEM does at level-BUILD time', () => {
         // pickup on a walk would drop every memoised world in the run.
         expect(addedTimeKey({ hasFire: true, hasSword: true }))
             .toBe(addedTimeKey({ hasFire: true }));
+    });
+});
+
+describe('⛓ R5: the nearestToPoint TIE-BREAK, transcribed', () => {
+    // `World.addType` PREPENDS (`World.as:1016-1029`) and `nearestToPoint`
+    // keeps a candidate only on a STRICT `dist < nearDist`, so the entity
+    // list is the reverse of the extract's and a tie is won by the tile
+    // that appears LATER in it.
+    const L47 = () => buildLevelWorld(levelRecord(47), { roles: ROLES });
+
+    it('⛔ L47\'s own arrival from L46 lands on a tie — this is not routable around', () => {
+        // The finding that forced the transcription. The teleporter drops
+        // the player at (248,456); the probe is one pixel down
+        // (`checkOffsetY`), i.e. (248,448) — exactly between tile (15,27)'s
+        // centre at 440 and (15,28)'s at 456. A route has no say in where a
+        // teleporter puts the player, so "move the fixture" stopped being
+        // available advice.
+        const arrival = buildLevelWorld(levelRecord(46), { roles: ROLES })
+            .teleporters.find((t) => t.to === 47).arrival;
+        expect(arrival).toEqual({ x: 248, y: 456 });
+        const { tile, tie } = L47().nearestWalkableTileWithTie(248, 448, {});
+        expect(tie, 'the arrival really is a tie').not.toBeNull();
+        // ...and the two candidates behave DIFFERENTLY once ice is armed:
+        // 21 (Snow) is plain 0.8 walk, 22 (Ice) is slidingSpeed 1 with
+        // slidingFriction 0.025. Under R1-R3, which coerced ice, this pair
+        // was indistinguishable and the old model got away with it.
+        expect([tile.t, tie.t].sort((a, b) => a - b)).toEqual([21, 22]);
+    });
+
+    it('the LATER extract entry wins, which is the FlashPunk list order', () => {
+        const w = L47();
+        const { tile } = w.nearestWalkableTileWithTie(248, 448, {});
+        const idx = (t) => w.walkableTiles.findIndex((x) => x.tx === t.tx && x.ty === t.ty);
+        const { tie } = w.nearestWalkableTileWithTie(248, 448, {});
+        expect(idx(tile)).toBeGreaterThan(idx(tie));
+    });
+
+    it('⚠ and the 59 committed recordings can NOT settle this — the D5 walk can', () => {
+        // Stated as a test so nobody reads the green suite as corroboration
+        // it is not (`feedback_same_rate_pair_cannot_answer`). Over every
+        // committed stream there are 21 observations where the two orders
+        // assign a different `state` — and at every one of them the two
+        // types either share a speed or are coerced by that tape's own
+        // `noHazards`, so both orders produce the same physics. The corpus
+        // is a NEGATIVE CONTROL (nothing regressed), not a witness.
+        //
+        // `r5-d5-conch` is the witness: it stands on L47's tie with ice
+        // ARMED, where snow and ice are 0.8-plain against 1.0-sliding, and
+        // its 1,678 observations match the real game byte for byte.
+        const { ticks } = loadExpectation('r5-d5-conch').stream;
+        expect(ticks.length).toBe(1678);
+        expect(loadTape('r5-d5-conch').noHazards).not.toContain('ice');
+        expect(ticks.some((o) => o.level === 47)).toBe(true);
     });
 });

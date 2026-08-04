@@ -13,6 +13,7 @@ import {
     KEY_LEG_ARM, KEY_LEG_CONTROL, keyLegFindings,
     BOBBOSS_FIRE, BOBBOSS_CONTROL, bobBossFindings,
     KARLORE_FIRE, KARLORE_CONTROL, karloreFindings,
+    D5_CONCH, D5_CONCH_FLAG, D5_REST_TILE, d5ConchFindings,
 } from './r5Acceptance.js';
 
 const arm = ({ cleared = [], x = 150, level = 60, hits = 0 } = {}) => ({
@@ -399,5 +400,89 @@ describe('the Karlore pair — `fire` doing something', () => {
         })))).toContain('R5 Karlore: both arms cross L47 → L48 at the same tick');
         expect(failing(karloreFindings(karPair({ transitions: [] }, { transitions: [] }))))
             .toContain('R5 Karlore: both arms cross L47 → L48 at the same tick');
+    });
+});
+
+// ── Slice 4 step 4: THE D5 WALK ───────────────────────────────────────
+
+const D5_HOPS = [
+    { from_level: 44, to_level: 45 }, { from_level: 45, to_level: 46 },
+    { from_level: 46, to_level: 47 }, { from_level: 47, to_level: 48 },
+    { from_level: 48, to_level: 49 },
+];
+
+const d5 = ({
+    items = { hitsMax: 3, hasFire: true, canSwim: true },
+    cleared = [D5_CONCH_FLAG], refused = true, drown = 0,
+    x = D5_REST_TILE.tx * 16 + 13.95, y = D5_REST_TILE.ty * 16 + 0.01,
+    level = 49, hops = D5_HOPS,
+} = {}) => new Map([[D5_CONCH, {
+    stream: { ticks: [{ t: 0, x: 24, y: 88, level: 44 }, { t: 1, x, y, level }], transitions: hops },
+    status: {
+        items, persistence_cleared: cleared, saw_input_refused: refused, drown_timer: drown,
+    },
+}]]);
+
+describe('the D5 walk — a COLLECTION claim, not an opened-blocker one', () => {
+    it('passes on the shape the recording really has', () => {
+        expect(failing(d5ConchFindings(d5()))).toEqual([]);
+    });
+
+    it('SKIPS, loudly, when the sweep did not replay it', () => {
+        const [f] = d5ConchFindings(new Map());
+        expect(f.skipped).toBe(true);
+        expect(f.ok).toBe(true);
+    });
+
+    it('⛔ RED when the conch was not taken', () => {
+        expect(failing(d5ConchFindings(d5({
+            items: { hitsMax: 3, hasFire: true, canSwim: false },
+        })))).toContain('R5 D5: the walk ends holding EXACTLY fire and the conch');
+    });
+
+    it('⛔ RED when the boot grant never landed', () => {
+        expect(failing(d5ConchFindings(d5({
+            items: { hitsMax: 3, hasFire: false, canSwim: true },
+        })))).toContain('R5 D5: the walk ends holding EXACTLY fire and the conch');
+    });
+
+    it('⛔ RED when the walk picked up something ELSE on the way', () => {
+        // The negative half. Five doors of corridor is five doors of
+        // chances to walk over a pickup, and only an exact-set check sees it.
+        expect(failing(d5ConchFindings(d5({
+            items: { hitsMax: 3, hasFire: true, canSwim: true, hasTorch: true },
+        })))).toContain('R5 D5: the walk ends holding EXACTLY fire and the conch');
+    });
+
+    it('⛔ RED when the flag is missing, and when there is an EXTRA one', () => {
+        expect(failing(d5ConchFindings(d5({ cleared: [] }))))
+            .toContain('R5 D5: the conch\'s flag is off, and it is the ONLY one');
+        expect(failing(d5ConchFindings(d5({
+            cleared: [D5_CONCH_FLAG, { level: 48, tag: 1 }],
+        })))).toContain('R5 D5: the conch\'s flag is off, and it is the ONLY one');
+    });
+
+    it('⛔ RED when it comes to rest somewhere other than the water tile', () => {
+        // The swim leg's starting line. A different tile means the coast or
+        // the ceremony left a different velocity.
+        expect(failing(d5ConchFindings(d5({ y: D5_REST_TILE.ty * 16 - 4 }))))
+            .toContain('R5 D5: it comes to rest on the WATER tile below the conch');
+    });
+
+    it('⛔ RED when a door is missing or the order is wrong', () => {
+        expect(failing(d5ConchFindings(d5({ hops: D5_HOPS.slice(0, 4) }))))
+            .toContain('R5 D5: five doors and a pit, in that order');
+        expect(failing(d5ConchFindings(d5({ hops: [...D5_HOPS].reverse() }))))
+            .toContain('R5 D5: five doors and a pit, in that order');
+    });
+
+    it('⛔ RED when the pit never refused input — L48 was left some other way', () => {
+        expect(failing(d5ConchFindings(d5({ refused: false }))))
+            .toContain('R5 D5: the game refused input for the pit transport');
+    });
+
+    it('⛔ RED when the coerced water started the timer anyway', () => {
+        expect(failing(d5ConchFindings(d5({ drown: 9 }))))
+            .toContain('R5 D5: the coerced water never started the timer');
     });
 });

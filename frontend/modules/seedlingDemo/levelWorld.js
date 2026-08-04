@@ -3515,10 +3515,12 @@ export function buildLevelWorld(levelRecord, {
          * `useHitboxes = false` — squared distance to each entity's x/y,
          * which for a Tile is its CENTRE (`World.as:640-668`).
          *
-         * Ties resolve by entity-list order in the real game. Rather than
-         * transcribe FlashPunk's list order, this keeps the extract's
-         * order and the fixtures stay off exact ties; if one ever lands on
-         * a tie, move the fixture.
+         * ⛓ TIES RESOLVE BY ENTITY-LIST ORDER, AND R5 SLICE 4 TRANSCRIBES
+         * IT (see `nearestWalkableTileWithTie` for the citation and the
+         * witness). Until then this kept the extract's order and asked
+         * fixtures to stay off exact ties — which stopped being possible
+         * the moment a route had to ENTER L47, whose arrival from L46 lands
+         * the probe exactly between a snow tile and an ice one.
          *
          * ⚠ `opts.beforeTypeFlip` searches ALL tiles instead of the
          * walkable ones. On a world's very first live tick every Tile is
@@ -3540,26 +3542,46 @@ export function buildLevelWorld(levelRecord, {
         },
 
         /**
-         * The same single pass, also reporting an EXACT tie.
+         * The same single pass, in the GAME'S OWN LIST ORDER, also reporting
+         * an exact tie.
          *
-         * ⚠ Ties are real and this arc met one immediately: R1's first pit
-         * recording walked UP from a tile centre, which put the probe point
-         * on y = 32.0 exactly, equidistant from tiles (2,1) and (2,2) of
-         * level 83. The GAME fell into the pit, because `nearestToPoint`
-         * walks FlashPunk's entity list and `World.addUpdate` PREPENDS — so
-         * its order is the reverse of the extract's, and a model reading the
-         * extract picks the other tile.
+         * ⛓ R5 SLICE 4: THE TIE-BREAK IS TRANSCRIBED, and the witness for
+         * it was recorded on this arc at R1.
          *
-         * The tie is REPORTED here rather than judged, because whether it
-         * matters is a physics question, not a geometry one: two equidistant
-         * tiles that both walk at 0.8 resolve to the same behaviour whoever
-         * wins, and a full tile grid produces ties constantly. See
-         * `playerPhysicsV2.resolveTerrainState`, which throws only when the
-         * two lead somewhere different.
+         * `nearestToPoint` walks `_typeFirst["Tile"]` and keeps a candidate
+         * only on a STRICT `dist < nearDist` (`World.as:640-668`), so among
+         * equidistant tiles the one EARLIEST IN THE LIST wins. And
+         * `World.addType` PREPENDS (`World.as:1016-1029`:
+         * `_typeFirst[type]._typePrev = e; e._typeNext = _typeFirst[type]`),
+         * while `loadlevel` adds the tiles in the extract's own order — so
+         * **the list is the reverse of the extract, and a tie is won by the
+         * tile that appears LATER in the extract.**
          *
-         * `tie` is the FIRST later candidate at the same distance with a
-         * different `t`; two tied tiles of the same type are not an
-         * ambiguity at all.
+         * ⚠ THE WITNESS IS A GAME RECORDING, not this reading. R1's first
+         * pit recording walked UP from a tile centre, putting the probe on
+         * y = 32.0 exactly, equidistant from tiles (2,1) and (2,2) of level
+         * 83. **The GAME fell into the pit and the model did not** — the
+         * model was picking the extract's earlier tile and the game the
+         * later one. That divergence is what this rule predicts, and the
+         * 59 committed recordings are what it is checked against: every one
+         * of them was produced by the real game, so a tie-break that
+         * changed any of their streams would be a wrong one.
+         *
+         * ⚠ AND AN OPEN BRIDGE IS AT THE HEAD OF THE LIST, not the tail.
+         * `Tile.render`'s `<= 0` arm writes `type = "Tile"`, and the
+         * `Entity.type` setter is `removeType` then `addType` — which
+         * PREPENDS. A bridge that opened mid-run therefore joined the list
+         * after every static tile, which puts it FIRST, which means it wins
+         * every tie it is in. Scanned first here for exactly that reason;
+         * it also happens to be the difference between walking across a
+         * bridge and falling down the pit beside it (L63's is surrounded by
+         * pit), which is why it is a candidate at all.
+         *
+         * `tie` is still REPORTED, because a tie is worth seeing even when
+         * it is decided: it is the shape that used to be a throw, and
+         * `playerPhysicsV2.resolveTerrainState` still names one whose two
+         * candidates lead somewhere different — as a finding in the stream
+         * rather than as an abort.
          */
         nearestWalkableTileWithTie(x, y, { beforeTypeFlip = false, openBridges = null } = {}) {
             let best = null;
@@ -3577,16 +3599,7 @@ export function buildLevelWorld(levelRecord, {
                     tie = tile;
                 }
             };
-            for (const tile of (beforeTypeFlip ? tiles : walkableTiles)) scan(tile);
-            // ⚠ R4: AN OPEN BRIDGE IS A CANDIDATE, and leaving it out is not
-            // a small error — it is the difference between walking across a
-            // bridge and falling down the pit beside it. `Tile.render`'s
-            // `<= 0` arm writes `type = "Tile"`, which puts the entity INTO
-            // the list `nearestToPoint("Tile", ...)` walks. L63's bridge is
-            // surrounded by pit, so a resolver that kept scanning only the
-            // static walkable tiles would answer 6 for a player standing in
-            // the middle of the crossing and start a transport the game
-            // never runs.
+            // ── the list, in the order `nearestToPoint` walks it ─────────
             if (openBridges && openBridges.size > 0 && !beforeTypeFlip) {
                 for (const tile of tiles) {
                     if (tile.t === BRIDGE_STATE && openBridges.has(`${tile.tx},${tile.ty}`)) {
@@ -3594,6 +3607,8 @@ export function buildLevelWorld(levelRecord, {
                     }
                 }
             }
+            const list = beforeTypeFlip ? tiles : walkableTiles;
+            for (let i = list.length - 1; i >= 0; i -= 1) scan(list[i]);
             return { tile: best, tie };
         },
 

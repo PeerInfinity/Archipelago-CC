@@ -18,8 +18,14 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { DROWN_TIMER_MAX as PHYSICS_DROWN_TIMER_MAX } from './playerPhysicsV2.js';
+import { DROWN_TIMER_MAX as PHYSICS_DROWN_TIMER_MAX, playerBoxAt } from './playerPhysicsV2.js';
+import { buildLevelWorld, ROLES, TILE_SIZE } from './levelWorld.js';
+import { atlasLevelSource } from './levelSource.js';
+import { HAZARD_STATES } from './tapeFormat.js';
+import { loadTape } from './fixtures/index.js';
+import { KARLORE } from './r5Chain.js';
 import {
+    CONCH, D5_EARNED, D5_INERT_LOCK, D5_LADDER, D5_UNCROSSED, D5_WALK,
     DROWN_EXPECTED, DROWN_EXPECTED_NAMES, DROWN_TIMER_MAX, R5SwimError,
     drownDeclarationRosterFindings, drownFinding,
 } from './r5Swim.js';
@@ -149,5 +155,124 @@ describe('the declaration cannot rot', () => {
             expect(d.maxTicks, name).toBeGreaterThanOrEqual(d.minTicks);
             expect(d.maxTicks, name).toBeLessThan(DROWN_TIMER_MAX + 1);
         }
+    });
+});
+
+describe('the D5 walk\'s declarations, against the EXTRACT', () => {
+    const source = atlasLevelSource();
+    /** ⛓ The world the walk really runs in — `fire` is banked at the boot. */
+    const worldFor = (n) => buildLevelWorld(source(n), {
+        roles: ROLES, inventory: { hasFire: true },
+    });
+
+    it('every declared exit is a real door in its level, in order', () => {
+        let expected = D5_WALK.boot.level;
+        for (const leg of D5_WALK.legs) {
+            expect(leg.level, 'the legs are a chain').toBe(expected);
+            const w = worldFor(leg.level);
+            if (!leg.exit) { expected = null; continue; }
+            if (leg.exit.pit) {
+                expect(w.pitTiles.some((p) => p.tx === leg.exit.pit.tx
+                    && p.ty === leg.exit.pit.ty), `L${leg.level} pit`).toBe(true);
+                // ⚠ A pit with no `control` block is `die()`, not a transport.
+                expect(w.fallthrough, `L${leg.level} fallthrough`).not.toBeNull();
+                expected = w.fallthrough.level;
+                continue;
+            }
+            const tel = w.teleporters.find((t) => t.x === leg.exit.x && t.y === leg.exit.y);
+            expect(tel, `L${leg.level}@${leg.exit.x},${leg.exit.y}`).toBeDefined();
+            expected = tel.to;
+        }
+    });
+
+    it('⛔ the route passes karlore\'s plug — so `fire` is SPENT here', () => {
+        // The claim that makes this walk the chain's first payment rather
+        // than a probe: L48's arrival is one tile south of the plug, and
+        // the plug is the corridor.
+        expect(D5_WALK.legs.map((l) => l.level)).toContain(KARLORE.level);
+        const arrival = worldFor(47).teleporters.find((t) => t.to === KARLORE.level).arrival;
+        expect(Math.floor(arrival.x / TILE_SIZE)).toBe(KARLORE.tile.tx);
+        expect(Math.floor(arrival.y / TILE_SIZE) - 1).toBe(KARLORE.tile.ty);
+        // ...and the model only builds the open version because the run
+        // banks the item first.
+        expect(buildLevelWorld(source(KARLORE.level), { roles: ROLES })
+            .solids.some((s) => s.tag === 'karlore')).toBe(true);
+        expect(worldFor(KARLORE.level).solids.some((s) => s.tag === 'karlore')).toBe(false);
+    });
+
+    it('the conch is where the declaration says, on ICE, with a walkable approach', () => {
+        const w = worldFor(CONCH.level);
+        const conch = w.pickups.find((p) => p.x === CONCH.pickup.x && p.y === CONCH.pickup.y);
+        expect(conch?.tag).toBe(CONCH.item);
+        const tileAt = (x, y) => w.walkableTiles.find(
+            (t) => t.tx === Math.floor(x / TILE_SIZE) && t.ty === Math.floor(y / TILE_SIZE));
+        // Both knobs in `D5_WALK` were derived from ice friction; if the
+        // conch stopped standing on ice, both derivations would be stale.
+        expect(tileAt(conch.rect.x + 4, conch.rect.y + 4)?.t).toBe(HAZARD_STATES.ice);
+        expect(w.collidesSolid(playerBoxAt(CONCH.approach.x, CONCH.approach.y))).toBeNull();
+        // The approach is a NEIGHBOUR cell, not the pickup's own: a collect
+        // target the planner could path to is one it walks around, not
+        // through (`runCollect` drives the last pixels itself).
+        expect(Math.floor(CONCH.approach.y / TILE_SIZE))
+            .toBe(Math.floor(conch.rect.y / TILE_SIZE) - 1);
+    });
+
+    it('the EARNED flag is the conch\'s own, and it is the only one', () => {
+        expect(D5_EARNED.map((e) => `${e.level}:${e.tag}`)).toEqual([`${CONCH.level}:${CONCH.tag}`]);
+    });
+
+    it('⚠ L48\'s bosslock really is keyType 3 — the inertness names something', () => {
+        // "Inert" is a claim about the RUN, not the geometry. The geometry
+        // half is here; the run half is the planner's own `keys` list.
+        const lock = worldFor(D5_INERT_LOCK.level).activators
+            .find((a) => a.x === D5_INERT_LOCK.at.x && a.y === D5_INERT_LOCK.at.y);
+        expect(lock?.tag).toBe('bosslock');
+        expect(lock?.keyType).toBe(D5_INERT_LOCK.keyType);
+        expect(lock?.persistTag).toBe(D5_INERT_LOCK.tag);
+    });
+
+    it('the ladder and the UNCROSSED list together are the corridor\'s whole census', () => {
+        // `feedback_bounded_sweep_must_name_what_it_bounded`: an encounter
+        // plan reporting one crossing over a six-instance corridor has
+        // either threaded five or failed to look at five, and those print
+        // the same thing. The two declarations must PARTITION the census.
+        const census = new Set();
+        for (const leg of D5_WALK.legs) {
+            const w = worldFor(leg.level);
+            for (const e of [...w.combat.enemies, ...w.combat.hazards]) {
+                census.add(`${leg.level}:${e.tag}@${e.x},${e.y}`);
+            }
+        }
+        const declared = [
+            ...D5_LADDER.map((v) => `${v.level}:${v.tag}@${v.at.x},${v.at.y}`),
+            ...D5_UNCROSSED.map((v) => `${v.level}:${v.tag}@${v.at.x},${v.at.y}`),
+        ];
+        expect([...declared].sort()).toEqual([...census].sort());
+        expect(new Set(declared).size, 'no instance declared twice').toBe(declared.length);
+    });
+
+    it('every ladder verdict is a THREAD — this walk carries no sword', () => {
+        for (const v of D5_LADDER) expect(v.rung).toBe('wake-and-thread');
+    });
+
+    it('the shipped tape carries the declared knobs and grant', () => {
+        // The tape is FROZEN once recorded, so this is the check that the
+        // declarations and the artifact have not drifted apart.
+        const tape = loadTape(D5_WALK.name);
+        expect(tape.boot).toEqual({ ...D5_WALK.boot });
+        expect(tape.noHazards).toEqual([...D5_WALK.noHazards]);
+        expect(tape.pins).toEqual([...D5_WALK.pins]);
+        expect(tape.grants).toEqual(D5_WALK.grants.map((g) => ({ level: g.level, items: [...g.items] })));
+        expect(tape.noclip).toBe(false);
+        expect(tape.persistence).toEqual([]);
+    });
+
+    it('⛔ the coast is far longer than the ground default, and it has to be', () => {
+        // `assertWindowEndsAtRest`'s 8 ticks come from ground friction
+        // (0.25); ice is 0.025 and a PICKUP_CEREMONY freezes the player
+        // WITHOUT zeroing `v`. Rest was measured at 24 coast ticks.
+        expect(D5_WALK.coastTicks).toBeGreaterThanOrEqual(24);
+        // ...and the tolerance is not the ground default either.
+        expect(D5_WALK.tolerance).toBeGreaterThan(1.0);
     });
 });
