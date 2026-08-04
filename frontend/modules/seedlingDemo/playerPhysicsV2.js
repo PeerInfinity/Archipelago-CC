@@ -791,6 +791,11 @@ export function step(state, held, opts = {}) {
         //   `pushables`    id -> `{rect, removed}`, the blocks' live rects
         openBridges = null,
         pushables = null,
+        // R5 slice 5: the third per-visit family. A BreakableRock whose
+        // `endAnim` fired is `FP.world.remove(this)`, so unlike a bridge it
+        // leaves the solids list WITHOUT joining the tiles — it reaches the
+        // sweep and nothing else.
+        brokenRocks = null,
         // R4: `checkDrowning` reads `canSwim` and `hasDarkSuit` off the
         // Player's statics, so the run's inventory mirror is what decides
         // whether standing on an armed hazard is survivable. Defaulted to
@@ -1116,7 +1121,7 @@ export function step(state, held, opts = {}) {
         collides: noclip
             ? null
             : (x, y) => level.collidesSolid(playerBoxAt(x, y),
-                { beforeTypeFlip, openActivators, openBridges, pushables }),
+                { beforeTypeFlip, openActivators, openBridges, pushables, brokenRocks }),
         // `checkFallingInPit()` sits between moveY and the world clamp.
         afterMove: nextFall ? (x, y) => ({
             x: x + (Math.floor(nextFall.target.x / TILE_SIZE) * TILE_SIZE

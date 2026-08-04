@@ -51,6 +51,9 @@ import {
 import {
     LIGHTPOLE_HITS_TIMER_MAX, PRESS_ARM_POLICY, auditPress, slashRect, spearRect,
 } from './presses.js';
+import {
+    brokenRockIds, createRockState, hitRock, outOfBandFlagFor, rockBreaksUnder,
+} from './breakableRocks.js';
 import { ITEM_PROPERTIES, ITEM_NAMES, inventorySlotsFor } from './tapeFormat.js';
 import { spawnFromBoot } from './playerPhysicsV1.js';
 import {
@@ -274,9 +277,24 @@ export function createLevelRun({
      */
     const bridgeStates = new Map();
     const pushableStates = new Map();
+    /**
+     * R5 slice 5: the breaking rocks, per VISIT.
+     *
+     * ⚠ AND PER VISIT IS THE TRANSCRIPTION, not a simplification.
+     * `BreakableRock.check()` removes a rock only when
+     * `tag >= 0 && !Game.checkPersistence(tag)`; L92's two are BOTH
+     * `tag = -1`, so every `new Game(92, ...)` rebuilds them whole and a
+     * walk that comes back pays for both again. Keyed like the bridges,
+     * cleared like them on a world swap.
+     */
+    const rockStates = new Map();
     const bridgeStateFor = (n) => {
         if (!bridgeStates.has(n)) bridgeStates.set(n, new Map());
         return bridgeStates.get(n);
+    };
+    const rockStateFor = (n) => {
+        if (!rockStates.has(n)) rockStates.set(n, createRockState());
+        return rockStates.get(n);
     };
     const pushableStateFor = (n) => {
         if (!pushableStates.has(n)) pushableStates.set(n, createPushableState(worldFor(n)));
@@ -302,6 +320,14 @@ export function createLevelRun({
      */
     const poleFlags = new Map();
     const poleKey = (n, tag) => `${n}:${tag}`;
+    /**
+     * R5 slice 5: `BreakableRock.endAnim`'s persistence writes, keyed by the
+     * flag they LAND on rather than by the rock — which for a `tag = -1`
+     * rock is a slot in another level entirely (`outOfBandFlagFor`). A Map
+     * because L92's two rocks resolve to the SAME flag ({91,29}) and the
+     * ledger has one entry, not two.
+     */
+    const rockFlags = new Map();
     const polesOf = (n) => worldFor(n).pressResponders.filter((r) => r.as3 === 'LightPole');
     const poleFlagFor = (n, tag) => {
         const key = poleKey(n, tag);
@@ -353,6 +379,8 @@ export function createLevelRun({
     // arm both queries take.
     const openBridgeIdsNow = () => (bridgeStateFor(level).size === 0
         ? null : openBridgeIds(level, ticksCompleted + 1));
+    const brokenRockIdsNow = () => (rockStateFor(level).size === 0
+        ? null : brokenRockIds(rockStateFor(level), ticksCompleted + 1));
     const pushableRectsNow = () => {
         const st = pushableStateFor(level);
         return st.byId.size === 0 ? null : pushableRects(st);
@@ -621,6 +649,7 @@ export function createLevelRun({
                     openActivators,
                     openBridges,
                     pushables: withoutSelf,
+                    brokenRocks: brokenRockIdsNow(),
                 });
                 if (hit) return hit;
                 // The player, at the position the PREVIOUS tick left — which
@@ -754,6 +783,52 @@ export function createLevelRun({
                 const { block: after, moved, why } = hitPushable(block, direction);
                 pushState.byId.set(id, after);
                 hits.push({ as3: 'PushableBlockSpear', id, moved, why });
+            } else if (r.as3 === 'BreakableRock') {
+                // ── R5 slice 5: the rock ──────────────────────────────
+                // `hit(_t)` is `if (rockType <= _t) play("break")` and
+                // `Player.as:1071-1074` passes `hasGhostSword ? 1 : 0`. A
+                // press that reaches a rock the weapon cannot break is a
+                // real no-op in the game, so it is one here — recorded,
+                // because "the swing hit nothing" is a leg defect the
+                // fixture author needs to see rather than a silent pass.
+                const id = r.rockId ?? `${r.tag}@${r.x},${r.y}`;
+                const rock = world.solids.find((s) => s.rockId === id);
+                if (!rock) {
+                    throw new Error(`levelRun: the press at tick ${pressTick} reaches `
+                        + `${id} in level ${level}, which is not in the world's solids. `
+                        + 'The press census and the geometry disagree about which rocks '
+                        + 'exist, which is the two-consumers failure this state family '
+                        + 'exists to prevent.');
+                }
+                if (!rockBreaksUnder(rock.rockType, inventory)) {
+                    hits.push({
+                        as3: 'BreakableRock', id, broke: false,
+                        why: `rockType ${rock.rockType} > `
+                            + `${inventory?.hasGhostSword ? 1 : 0} — this weapon cannot `
+                            + 'break it',
+                    });
+                    continue;
+                }
+                const st = rockStateFor(level);
+                const { started, goneAt } = hitRock(st, rock, ticksCompleted);
+                // ⚠ `endAnim` writes `Game.setPersistence(tag, false)`
+                // UNCONDITIONALLY — its `check()` guard (`tag >= 0 && ...`)
+                // does not apply — so a `tag = -1` rock clears a flag in
+                // ANOTHER LEVEL. `outOfBandFlagFor` resolves the index the
+                // way `Main.levelPersistenceSet` does; the ledger has to
+                // name it or the walk reports a clear nobody can attribute.
+                if (started) {
+                    const flag = outOfBandFlagFor(level, rock.persistTag ?? -1);
+                    rockFlags.set(`${flag.level}:${flag.tag}`, { ...flag, id, level });
+                }
+                hits.push({
+                    as3: 'BreakableRock', id, broke: started, goneAt,
+                    // A second swing does NOT restart the animation:
+                    // `Spritemap.play` early-returns for the anim already
+                    // playing. Recorded so a double press reads as the
+                    // no-op it is rather than as a shorter break.
+                    why: started ? null : 'already breaking — `play("break")` early-returns',
+                });
             } else if (r.as3 === 'LightPole') {
                 const id = `${r.tag}@${r.x},${r.y}`;
                 const pole = poleStateFor(level).get(id);
@@ -1148,6 +1223,19 @@ export function createLevelRun({
                 if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
                 out.push({ level: n, tag, by: 'lightpole' });
             }
+            // R5: a broken rock. ⚠ NOT a toggle — `endAnim` writes `false`
+            // once and the entity is gone — so unlike the lightpole this is
+            // read off the writes rather than off a final state. And two
+            // rocks that resolve to one flag are ONE entry, which is what
+            // keying the map by the flag buys.
+            for (const [key, r] of rockFlags) {
+                const [n, tag] = key.split(':').map(Number);
+                if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
+                out.push({
+                    level: n, tag,
+                    by: r.level === n ? 'breakablerock' : `breakablerock (L${r.level}, tag -1)`,
+                });
+            }
             return out;
         },
         /** Is a touch-lock refusing input RIGHT NOW? The driver's gate. */
@@ -1217,6 +1305,25 @@ export function createLevelRun({
             return noclip ? null : (openBridgeIdsNow() ?? new Set());
         },
         get pushables() { return noclip ? null : pushableRects(pushableStateFor(level)); },
+        /**
+         * R5 slice 5: which of this level's BreakableRocks are GONE right
+         * now — the planner's only legitimate view of a broken one.
+         *
+         * A rock is Solid for the whole of its break animation, so "is this
+         * cell walkable" has two answers seven ticks apart inside one leg,
+         * and a planner with its own copy would route the executor into a
+         * wall it watched shatter. The `openBridges` lesson, one mechanic
+         * later — which is now the fifth time this file has had to make it.
+         */
+        get brokenRocks() { return noclip ? null : (brokenRockIdsNow() ?? new Set()); },
+        /** `{id, hitTick, goneAt, tag, x, y}` per rock this run has broken. */
+        get rocksBroken() {
+            const out = [];
+            for (const [n, st] of rockStates) {
+                for (const [id, r] of st) out.push({ level: n, id, ...r });
+            }
+            return out;
+        },
         /** Which blocks are no longer where the level built them, this visit. */
         get pushedBlocks() { return noclip ? [] : movedPushables(pushableStateFor(level)); },
         /** Is every block at rest? The `spear` leg's "the push has landed" test. */
@@ -1450,6 +1557,7 @@ export function createLevelRun({
                 // same argument `openActivators` is.
                 openBridges: noclip ? null : openBridgeIdsNow(),
                 pushables: noclip ? null : pushableRectsNow(),
+                brokenRocks: noclip ? null : brokenRockIdsNow(),
                 // R4: `checkDrowning` reads `canSwim` and `hasDarkSuit`,
                 // and the waterfall push reads `hasFeather`. The run's
                 // mirror is the only place those live on this side.

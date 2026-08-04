@@ -255,7 +255,7 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
         // the level built it, so "is this tile walkable" has different
         // answers at two points in the same leg — and a planner with its own
         // idea of either would certify a corridor the executor walks into.
-        openBridges = null, pushables = null,
+        openBridges = null, pushables = null, brokenRocks = null,
         // R4: `Main.SAVE_FILE.data.hasKey`, as a set of key types. It selects
         // exactly one avoid volume — a `BossLock`'s probe row — and it is a
         // SET rather than a boolean because a walk can hold several.
@@ -295,7 +295,7 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
     // so the planner cannot believe a door is open that the engine will
     // find shut.
     const geometry = level.plannerBlockerAt(box, terrainProbeRect(x, y),
-        { noclip, noHazards, openActivators, openBridges, pushables });
+        { noclip, noHazards, openActivators, openBridges, pushables, brokenRocks });
     if (geometry) return geometry;
     // ⚠ PIT TILES ARE FORBIDDEN FLOOR, and this policy is LOAD-BEARING from
     // R1 on. Until R1 a pit was unmodelled terrain, so `plannerBlockerAt`
@@ -2285,6 +2285,9 @@ export function synthesizeLegs(legs, opts = {}) {
             openActivators: run.openActivators,
             openBridges: run.openBridges,
             pushables: run.pushables,
+            // R5 slice 5: the fifth. Same argument, one mechanic later —
+            // L92's rocks are Solid until seven ticks after their press.
+            brokenRocks: run.brokenRocks,
             inventory: run.inventory,
             keys: run.keys,
             ...extra,

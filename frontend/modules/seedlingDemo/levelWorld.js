@@ -3029,6 +3029,16 @@ export function buildLevelWorld(levelRecord, {
                     // three-push L65 chain did before this line existed.
                     ...(PUSHABLE_FAMILIES[e.type]
                         ? { pushableId: `${e.type}@${x},${y}` } : {}),
+                    // R5 slice 5: the same join for a BreakableRock, and for
+                    // the same reason — the run holds live state for it and
+                    // the press has to look it up. `rockType` rides along
+                    // because it is what decides whether the press does
+                    // anything at all (`rockType <= hasGhostSword ? 1 : 0`).
+                    ...(cls.as3 === 'BreakableRock'
+                        ? {
+                            rockId: `${e.type}@${x},${y}`,
+                            rockType: e.type === 'breakablerockghost' ? 1 : 0,
+                        } : {}),
                 });
             } else if (cls.type === 'Enemy') {
                 // ⚠ NO RECT, AND THAT IS THE POINT. An enemy's press
@@ -3055,6 +3065,18 @@ export function buildLevelWorld(levelRecord, {
         if (cls.collider === 'none' || cls.collider === undefined) continue;
         if (cls.collider === 'rect') {
             const solid = { rect: entityRect(cls, x, y), cls, tag: e.type, x, y };
+            // R5 slice 5: a BreakableRock is the third entity family the RUN
+            // holds live state for, and the id is the join between the two
+            // views — `pushableId`'s shape, for `pushableId`'s reason. It
+            // carries its own `persistTag` and `rockType` because both decide
+            // what a press DOES (`rockType <= hasGhostSword ? 1 : 0` breaks
+            // it; `tag` says where `endAnim`'s write lands, which for the -1
+            // rocks is another level entirely).
+            if (cls.as3 === 'BreakableRock') {
+                solid.rockId = `${e.type}@${x},${y}`;
+                solid.persistTag = tagOf(e.type, e.attrs);
+                solid.rockType = e.type === 'breakablerockghost' ? 1 : 0;
+            }
             if (PUSHABLE_FAMILIES[e.type]) {
                 // ⚠ The id shape is the activator's, deliberately: both are
                 // "the run holds live state for this entity and the geometry
@@ -3471,7 +3493,7 @@ export function buildLevelWorld(levelRecord, {
          */
         collidesSolid(box, {
             beforeTypeFlip = false, openActivators = null, pushables: live = null,
-            openBridges = null,
+            openBridges = null, brokenRocks = null,
         } = {}) {
             // Pixelmask entities (Building, TreeLarge, CliffSide) assign
             // their type in the CONSTRUCTOR, so they are armed on tick 1
@@ -3490,6 +3512,13 @@ export function buildLevelWorld(levelRecord, {
                 // it leaves the solids list and JOINS the walkable ones (see
                 // `nearestWalkableTileWithTie`, which takes the same set).
                 if (openBridges && s.bridgeId && openBridges.has(s.bridgeId)) continue;
+                // R5: a BreakableRock whose `endAnim` has fired is
+                // `FP.world.remove(this)` — off the list entirely, unlike a
+                // lock (type "") or a bridge (type "Tile"). `brokenRocks` is
+                // the run's per-VISIT set: a `tag = -1` rock is rebuilt by
+                // the next `new Game`, so this may not be baked into the
+                // geometry the way a persistence clear is.
+                if (brokenRocks && s.rockId && brokenRocks.has(s.rockId)) continue;
                 // R4: a block that has been pushed is not where the level
                 // built it. `live` is the run's own state (see
                 // `pushables.createPushableState`); WITHOUT it the spawn
@@ -3665,7 +3694,7 @@ export function buildLevelWorld(levelRecord, {
          */
         plannerBlockerAt(box, probeRect = null, {
             noclip = false, noHazards = [], openActivators = null, pushables: live = null,
-            openBridges = null,
+            openBridges = null, brokenRocks = null,
         } = {}) {
             if (!noclip) {
                 // ⚠ THE PLANNER USES THE REAL MASK, not the bounding rect.
@@ -3686,6 +3715,7 @@ export function buildLevelWorld(levelRecord, {
                     if (openActivators && s.activatorId
                         && openActivators.has(s.activatorId)) continue;
                     if (openBridges && s.bridgeId && openBridges.has(s.bridgeId)) continue;
+                    if (brokenRocks && s.rockId && brokenRocks.has(s.rockId)) continue;
                     // R4: the planner has to see a pushed block where it
                     // IS. A planner with its own idea of a block's position
                     // would certify the corridor the push opened and then

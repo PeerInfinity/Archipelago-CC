@@ -333,7 +333,24 @@ export const PRESS_ARM_POLICY = Object.freeze({
     },
     Enemy: { policy: 'refused', why: 'a death moves totalEnemies(), which opens tSet == -1 locks' },
     IceTurret: { policy: 'refused', why: 'the Enemy cost plus a bump; Dungeon 5, off route' },
-    BreakableRock: { policy: 'refused', why: 'despawns at its hit count AND writes persistence' },
+    // ⚠ MODELLED FROM R5 SLICE 5, and it was the FEATHER that ruled it in.
+    // L92's two `breakablerock`s are the only thing between L87's door and
+    // L91's, L91 is the only way into L89's top, and L89's top is the only
+    // side the feather can be reached from (`probe-seedling-r5-feather`:
+    // 256 cells and the door with both broken; 14, 14 and 92 without). So
+    // the arm stopped being avoidable, and `breakableRocks.js` is the
+    // transcription: `hit(_t)` starts a 4-frame animation, `endAnim`
+    // removes the entity AND writes `Game.setPersistence(tag, false)`, and
+    // for L92's two `tag = -1` rocks that write lands in ANOTHER LEVEL.
+    BreakableRock: {
+        policy: 'modelled',
+        why: '`hit(hasGhostSword ? 1 : 0)` breaks a rockType-0 rock with the PLAIN sword; '
+            + 'it is Solid for the whole animation and `endAnim` then removes it and '
+            + 'writes `setPersistence(tag, false)` — a ledger entry, and an out-of-band '
+            + 'one for tag -1. Per VISIT: `check()` only rebuilds-away a rock with '
+            + 'tag >= 0, so a -1 rock comes back with the next `new Game`. '
+            + 'See `breakableRocks.js`.',
+    },
     RopeStart: { policy: 'refused', why: 'SHRINKS to a one-cell solid and writes persistence' },
     ShieldBoss: { policy: 'refused', why: 'boss damage — R5' },
     // ⚠ MODELLED FROM R4, and it was ruled in rather than assumed. It is the
