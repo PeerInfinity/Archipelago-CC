@@ -408,7 +408,16 @@ const NO_HELD = new Set();
 const TALK_HELD = new Set(['primary']);
 
 const describe = (o) => {
-    if (o.kind === 'terrain' || o.kind === 'pit') {
+    // ⚠ `lethal-terrain` JOINED THIS ARM AT R5 SLICE 4, and it had to.
+    // Water was UNMODELLED terrain until the swim sound term became
+    // modellable under the pin; modelling it moved every armed water tile
+    // from `kind: "terrain"` to `kind: "lethal-terrain"`, and that arm fell
+    // through to the entity formatter below — which reads `blocker.tag`.
+    // A tile has none, so the one diagnostic a planner failure produces
+    // read "not walkable: lethal-terrain undefined at (152,152)". A message
+    // that names the obstacle as `undefined` is worse than no message: it
+    // sends the reader looking for a missing entity.
+    if (o.kind === 'terrain' || o.kind === 'pit' || o.kind === 'lethal-terrain') {
         return `${o.kind} ${o.blocker.name} (t=${o.blocker.t}) at tile `
             + `(${o.blocker.tx},${o.blocker.ty})`;
     }
@@ -2075,6 +2084,11 @@ export function synthesizeLegs(legs, opts = {}) {
             // t == "Spear" — never runs, which is a green tape that opens
             // nothing.
             equips: relax.equips ?? [],
+            // R5 slice 4: the physics refuses a wet tick without the sound
+            // pin, so a plan over armed water has to declare it here too —
+            // and the emitted tape carries the same list, per the `relax`
+            // rule that one object decides the plan AND the tape.
+            pins: relax.pins ?? [],
             // A relaxed walk consults no collider, so it must not be stopped
             // by one being unpriced — that is the whole of slice 1b. A walk
             // with collision ON is the opposite: it consults EVERY role, and

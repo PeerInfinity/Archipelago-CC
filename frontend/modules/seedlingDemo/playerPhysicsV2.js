@@ -88,6 +88,11 @@ import {
     step as stepV1,
 } from './playerPhysicsV1.js';
 
+import {
+    SWIM_LENGTH_FRAMES, createPinnedChannel, stepChannel, playChannel,
+    channelPlaying, swimSpeedBonus,
+} from './swimSoundClock.js';
+
 export class PhysicsV2Error extends Error {
     constructor(message) {
         super(message);
@@ -462,16 +467,15 @@ export function drownStep(drown) {
  * "unobservable" has decayed twice on this arc the moment the driver got
  * better.
  *
- * ⚠ THE SOUND TERM IS NOT MODELLED, AND THAT IS A BOUNDED VACUITY WITH A
- * NAME. `+ 0.25 * int(Music.soundPosition("Swim") < 0.1)` reads a real
- * channel position, and the recompiled runtime's own comment says channel
- * positions only advance when an output sink pulls
- * (`SWFModernRuntime/src/avm2/avm2_media.c:19`) — so in the replay harness
- * the position is expected to be a constant 0 and the term a constant
- * +0.25. That is a HYPOTHESIS until a recording says otherwise, which is
- * exactly what the `l71-lava-stand` pair fixture is for: the first tape on
- * the ladder that stands on lava answers it, and the value is read off the
- * oracle rather than assumed here.
+ * ⛓ THE SOUND TERM IS MODELLED NOW, AND ITS VACUITY IS CLOSED (R5 slice 4).
+ * `+ 0.25 * int(Music.soundPosition("Swim") < 0.1)` reads a real channel
+ * position — the live Web Audio mixer clock, in wall-clock milliseconds,
+ * which slice 2 measured DIVERGING across frame rates at tick 52 of an
+ * identical tape. The §13 ruling took the PIN: under a v5 tape's
+ * `pins: ["sound"]` the game reads a frame clock instead, and
+ * `swimSoundClock` is the same arithmetic on this side. `swimBurst` is what
+ * that clock says, and `step` refuses to run a wet tick without the pin
+ * rather than modelling the term as zero — see its docblock.
  */
 export function speedFrictionFor(flags, rawState, effective, moveSpeeds, swimBurst) {
     if (flags.onIce) {
@@ -779,6 +783,11 @@ export function step(state, held, opts = {}) {
         // "holds neither", which is the conservative arm: every tape below
         // R4 coerces both hazards away, so the branch is dead there anyway.
         inventory = null,
+        // R5 slice 4: the tape's `pins` list. The swim sound term is only
+        // modellable under `pins: ["sound"]`, so the physics is told which
+        // experiment it is in rather than inferring it — the same rule
+        // `relax` already follows for `noclip`/`noHazards`/`grants`.
+        pins = [],
     } = opts;
     if (!level || typeof level.collidesSolid !== 'function') {
         throw new PhysicsV2Error(
@@ -899,6 +908,9 @@ export function step(state, held, opts = {}) {
             // the game keeps.
             hazard: state.hazard ?? INITIAL_HAZARD_FLAGS,
             drown: state.drown ?? { timer: 0, drowning: false },
+            // The mixer runs through a transport too — a fall is frames, and
+            // frames are what the pinned clock counts.
+            swim: state.swim ? stepChannel({ ...state.swim }) : null,
             // ⚠ `checkFallingInPit` holds `directionFace = 3` for the whole
             // descent, so the facing is pinned DOWN rather than derived
             // from the descent's own velocity — which is downward anyway,
@@ -1005,13 +1017,69 @@ export function step(state, held, opts = {}) {
         }
     }
 
-    // 2. The selection the flags drive. `speedFrictionFor` is the whole of
-    //    `Player.as:516-537`; the `swimBurst` is the un-modelled sound term
-    //    (see its docblock — a bounded vacuity with a named witness).
-    const swimBurst = 0;
+    // 2. ⛓ THE SWIM SOUND TERM (R5 slice 4), and the mixer that drives it.
+    //
+    //    `Player.as:530-534` is TWO lines and both of them matter:
+    //
+    //        moveSpeed = moveSpeeds[state] + 0.25 * int(soundPosition("Swim") < 0.1);
+    //        if (v.length > 0 && !soundIsPlaying("Swim")) playSound("Swim");
+    //
+    //    ⚠ THE ORDER IS STEP, READ, THEN PLAY, and it is not a choice.
+    //    `Music.pinStep` is called from `Bot.update`, at the top of
+    //    `Main.update`; `Player.update` runs inside `World.update`. So the
+    //    read sees a channel the frame has already advanced, and the replay
+    //    lands after it — which is exactly why the FIRST stroke after a
+    //    pause is boosted.
+    //
+    //    ⛔ AND A COMPLETED, UN-REPLAYED CHANNEL READS ZERO, SO THE BOOST
+    //    LATCHES. `Sfx.onComplete` nulls the channel and zeroes `_position`,
+    //    and `soundPosition` divides that by 1000 — so a swim sound that
+    //    finished and was not replayed reports 0, which is `< 0.1`, which is
+    //    a boost, indefinitely. `Player.as:531` only replays while
+    //    `v.length > 0`, so that is precisely the state a swimmer who stops
+    //    moving ends up in. The swim boost is NOT "six ticks in every 47"
+    //    for a stop-start swim, and a leg priced as though it were would
+    //    under-run its target. (§14.3 — found by writing the opposite
+    //    expectation into a test and being wrong.)
+    //
+    //    ⚠ `v.length` is the velocity at the TOP of `Player.update`, i.e.
+    //    what the PREVIOUS tick's move left — `super.update()` has not run
+    //    yet — so it is `state`'s, not `next`'s.
+    const wet = flags.inWater || flags.inLava;
+    let swim = state.swim ?? null;
+    if (wet && !pins.includes('sound')) {
+        // ⛔ REFUSED, NOT DEFAULTED TO ZERO. Without the pin the term reads
+        // a wall clock and is not reproducible at all: slice 2 ran one tape
+        // at 0.4 fps and 10.1 fps and the streams parted four ticks after
+        // the water edge. A model that quietly used 0 there would agree with
+        // whichever recording it happened to be compared against and
+        // disagree with the next one.
+        throw new PhysicsV2Error(
+            `the player entered ${flags.inLava ? 'Lava' : 'Water'} in level `
+            + `${level.level} at (${state.x}, ${state.y}) on a tape that does not pin `
+            + '"sound". `Player.as:530` adds `0.25 * int(Music.soundPosition("Swim") < '
+            + '0.1)` to the swim speed, and unpinned that position is the Web Audio '
+            + 'mixer\'s WALL CLOCK — measured diverging at tick 52 between a 0.4 fps and '
+            + 'a 10.1 fps run of one tape. Add "sound" to the tape\'s `pins`, or coerce '
+            + 'the hazard in `noHazards`.',
+        );
+    }
+    if (wet && !swim) swim = createPinnedChannel(SWIM_LENGTH_FRAMES);
+    // The mixer does not stop for a dry tick, a frozen one or a room fade —
+    // so the channel steps whenever it exists, not only while swimming.
+    if (swim) swim = stepChannel({ ...swim });
+    const swimBurst = wet ? swimSpeedBonus(swim) : 0;
     const { friction, moveSpeed } = speedFrictionFor(
         flags, terrain, effective, MOVE_SPEEDS, swimBurst,
     );
+
+    // `Player.as:531`'s replay — READ FIRST (above), then play. Gated on
+    // the incoming velocity, and only inside the wet arm, because that is
+    // where the call site is.
+    if (wet && swim && !channelPlaying(swim)
+        && Math.hypot(state.vx ?? 0, state.vy ?? 0) > 0) {
+        swim = playChannel({ ...swim });
+    }
 
     const next = stepV1({ ...state, ...(drownV ? { vx: drownV.x, vy: drownV.y } : {}) },
         fall ? NO_KEYS : held, {
@@ -1066,6 +1134,7 @@ export function step(state, held, opts = {}) {
         terrain,
         hazard: flags,
         drown,
+        swim,
         latched,
         transition,
         fall: nextFall,

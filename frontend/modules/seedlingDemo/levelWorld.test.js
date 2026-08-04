@@ -320,20 +320,29 @@ describe('plannerBlockerAt — the same geometry, reported instead of returned',
         expect(L0.plannerBlockerAt(box)).toMatchObject({ kind: 'solid', blocker: rock });
     });
 
-    it('ALSO reports unmodelled terrain, which collidesSolid cannot see', () => {
-        // This is the arm that is not a collision at all. Water is walkable
-        // geometry — the player swims straight in — but standing on it ends
-        // the run through `assertModelledTerrain`. A planner asking only
-        // about solids would route a fixture into the lake, which is exactly
-        // what a first cut of slice 4 did.
+    it('⛓ R5 slice 4: the unmodelled-terrain arm is now VACUOUS, and water '
+        + 'is refused one layer up instead', () => {
+        // This arm used to be how a planner refused water: water was walkable
+        // GEOMETRY — no solid, no mask — and standing on it ended the run
+        // through `assertModelledTerrain`. Slice 4 modelled water (the swim
+        // sound term became reproducible under the pin), so `MODELLED_TILE_SET`
+        // now holds every type `TILE_COLUMN_TO_TYPE` produces and this loop
+        // can never fire for a real tile.
+        //
+        // ⚠ THE THING TO CHECK BEFORE BELIEVING THAT IS SAFE is whether the
+        // planner still refuses to route into a lake. It does, one layer up:
+        // R4's `lethal-terrain` policy in `botDriverV2.plannerObstacleAt`
+        // already listed water with a `canSwim` exemption — written for
+        // exactly this moment. Refused as LETHAL instead of as UNMODELLED,
+        // which is the more accurate reason and the same answer.
         const water = L0.tiles.find((t) => t.t === 1);
-        const at = { x: water.x, y: water.y };
-        const box = playerBox(at.x, at.y);
+        const box = playerBox(water.x, water.y);
         const probe = { ...box, y: box.y + 1, bottom: box.bottom + 1 };
         expect(L0.collidesSolid(box)).toBeNull();
         expect(L0.plannerBlockerAt(box)).toBeNull();
-        expect(L0.plannerBlockerAt(box, probe))
-            .toMatchObject({ kind: 'terrain', blocker: { t: 1 } });
+        expect(L0.plannerBlockerAt(box, probe)).toBeNull();
+        // ...and the tile is on the list the surviving policy reads.
+        expect(L0.lethalTerrainTiles.some((t) => t.t === 1)).toBe(true);
     });
 
     it('the terrain arm needs the probe rect passed in, not derived here', () => {
@@ -599,7 +608,8 @@ describe('tiles', () => {
             .not.toThrow();
     });
 
-    it('modelled terrain excludes exactly the special-mechanics types', () => {
+    it('⛓ R5 slice 4: EVERY tile type is modelled now, which makes the throw a '
+        + 'BOUNDED VACUITY', () => {
         // Stated as a COMPLEMENT, so the list cannot drift in either
         // direction: silently dropping a type would narrow v2's scope
         // without anyone noticing, and silently adding one of the six back
@@ -612,23 +622,41 @@ describe('tiles', () => {
         // resolver's answer is coerced, and this list decides whether an
         // uncoerced answer is legal terrain at all.
         //
-        // ⚠ 1 (Water) STAYS, and its staying is a claim about the LADDER
-        // rather than about the physics: `canSwim` is the conch, gated on
-        // `hasFire` (R5), so water is planner-forbidden floor and a run
-        // that stands on one has a route defect this throw names.
-        //
         // ⚠ R4 MOVED 29 (Bridge) IN. It is a solid while it is CLOSED and
         // `type = "Tile"` from the render that opens it, so `state` really
         // can be 29 once a spear press has been thrown — see the
         // `openBridges` arm of `nearestWalkableTileWithTie`.
-        const excluded = [1];
+        //
+        // ⛓⛓ AND R5 SLICE 4 MOVED **1 (Water)** IN, which empties the
+        // complement. Water was never untranscribed — `checkDrowning`'s
+        // water arm and the shared friction and speed all landed at R4 —
+        // it was NOT REPRODUCIBLE, because `Player.as:530` adds
+        // `0.25 * int(Music.soundPosition("Swim") < 0.1)` off the Web Audio
+        // mixer's WALL CLOCK. Slice 2 ran one tape at 0.4 fps and 10.1 fps
+        // and the streams parted four ticks after the water edge. The pin
+        // is what changed, not the transcription.
+        //
+        // ⛔ SO THIS THROW IS NOW A BOUNDED VACUITY, AND THE BOUND IS
+        // NAMED: `TILE_COLUMN_TO_TYPE` produces exactly types 0..37, every
+        // one of which is modelled, so `assertModelledTerrain` can no
+        // longer fire for any tile the extract can carry. What it still
+        // catches is a RESOLVER returning a value that is not a tile type
+        // at all — a different defect, and one worth keeping a guard for.
+        //
+        // ⚠ AND THE PLANNER IS UNAFFECTED, which is the thing to check
+        // before believing any of this is safe. R4's `lethal-terrain`
+        // policy in `botDriverV2.plannerObstacleAt` already listed water
+        // with a `canSwim` exemption — written for exactly this moment —
+        // so an armed water tile went from being refused as UNMODELLED to
+        // being refused as LETHAL. It is still forbidden floor.
+        const excluded = [];
         const all = TILE_TYPE_ENTITY_TYPES.map((_, t) => t);
         expect([...MODELLED_TILE_TYPES].sort((a, b) => a - b))
             .toEqual(all.filter((t) => !excluded.includes(t)));
-        for (const t of excluded) {
-            expect(MODELLED_TILE_TYPES).not.toContain(t);
-            expect(() => L0.assertModelledTerrain(t)).toThrow(LevelWorldError);
-        }
+        expect(excluded).toEqual([]);
+        // The guard still fires — for a value no tile carries.
+        expect(() => L0.assertModelledTerrain(999)).toThrow(LevelWorldError);
+        expect(L0.assertModelledTerrain(1)).toBe(1);     // Water — R5 slice 4
         expect(L0.assertModelledTerrain(6)).toBe(6);     // Pit — R1 transport
         expect(L0.assertModelledTerrain(17)).toBe(17);   // Lava — R4
         expect(L0.assertModelledTerrain(22)).toBe(22);   // Ice — R4

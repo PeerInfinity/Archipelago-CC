@@ -12,6 +12,7 @@ import {
     L60_CONTROL, L60_KILL, L60_LOCK, l60KillFindings,
     KEY_LEG_ARM, KEY_LEG_CONTROL, keyLegFindings,
     BOBBOSS_FIRE, BOBBOSS_CONTROL, bobBossFindings,
+    KARLORE_FIRE, KARLORE_CONTROL, karloreFindings,
 } from './r5Acceptance.js';
 
 const arm = ({ cleared = [], x = 150, level = 60, hits = 0 } = {}) => ({
@@ -322,5 +323,81 @@ describe('the BobBoss pair — `fire` as the first combat-earned boolean', () =>
             .toContain('R5 BobBoss: the fire arm is still in the arena');
         expect(failing(bobBossFindings(bossPair({}, { level: 30 }))))
             .toContain('R5 BobBoss: the control arm is still in the arena');
+    });
+});
+
+// ── Slice 4 step 3: KARLORE, the headline pair ────────────────────────
+
+const karArm = ({
+    y = 261.45, level = 48, hasFire = true, cleared = [], hits = 0,
+    transitions = [{ t: 14, from_level: 47, to_level: 48 }],
+} = {}) => ({
+    stream: {
+        ticks: [{ t: 0, x: 216, y: 144, level: 47 }, { t: 1, x: 120, y, level }],
+        transitions,
+    },
+    status: { persistence_cleared: cleared, hits, items: { hitsMax: 3, hasFire } },
+});
+
+const karPair = (fireOver = {}, controlOver = {}) => new Map([
+    [KARLORE_FIRE, karArm(fireOver)],
+    [KARLORE_CONTROL, karArm({ y: 290.05, hasFire: false, ...controlOver })],
+]);
+
+describe('the Karlore pair — `fire` doing something', () => {
+    it('holds for the pair the game recorded', () => {
+        expect(failing(karloreFindings(karPair()))).toEqual([]);
+    });
+
+    it('SKIPS rather than passes when only one arm ran', () => {
+        const f = karloreFindings(new Map([[KARLORE_FIRE, karArm()]]));
+        expect(f).toHaveLength(1);
+        expect(f[0].skipped).toBe(true);
+    });
+
+    it('⛔ goes red when the fire arm PINNED — the failure that cost two takes', () => {
+        // Both earlier recordings of this pair ended exactly here, and the
+        // detail names the cause rather than the symptom: `Karlore.added()`
+        // runs inside `new Game(48, ...)` and a grant applied afterwards
+        // cannot reach it.
+        const f = karloreFindings(karPair({ y: 290.05 }));
+        expect(failing(f)).toContain('R5 Karlore: the fire arm WALKS THROUGH');
+        expect(f.find((x) => x.name.includes('WALKS THROUGH')).detail)
+            .toMatch(/BEFORE `new Game\(48/);
+    });
+
+    it('goes red when the fire arm went TOO FAR — row 14 is water', () => {
+        const f = karloreFindings(karPair({ y: 240 }));
+        expect(failing(f)).toContain('R5 Karlore: the fire arm WALKS THROUGH');
+        expect(f.find((x) => x.name.includes('WALKS THROUGH')).detail).toMatch(/water/);
+    });
+
+    it('goes red when the control arm did NOT pin', () => {
+        expect(failing(karloreFindings(karPair({}, { y: 261.45 }))))
+            .toContain('R5 Karlore: the control arm PINS on the plug');
+        expect(failing(karloreFindings(karPair({}, { y: 300 }))))
+            .toContain('R5 Karlore: the control arm PINS on the plug');
+    });
+
+    it('goes red when the arms do not differ by exactly `fire`', () => {
+        expect(failing(karloreFindings(karPair({ hasFire: false }))))
+            .toContain('R5 Karlore: the two arms differ by exactly `fire`');
+        expect(failing(karloreFindings(karPair({}, { hasFire: true }))))
+            .toContain('R5 Karlore: the two arms differ by exactly `fire`');
+    });
+
+    it('goes red when either arm cleared a flag or took a hit', () => {
+        expect(failing(karloreFindings(karPair({ cleared: [{ level: 48, tag: 1 }] }))))
+            .toContain('R5 Karlore: the fire arm cleared no flag');
+        expect(failing(karloreFindings(karPair({}, { hits: 1 }))))
+            .toContain('R5 Karlore: the control arm took no damage');
+    });
+
+    it('goes red when the arms took different doors', () => {
+        expect(failing(karloreFindings(karPair({}, {
+            transitions: [{ t: 20, from_level: 47, to_level: 48 }],
+        })))).toContain('R5 Karlore: both arms cross L47 → L48 at the same tick');
+        expect(failing(karloreFindings(karPair({ transitions: [] }, { transitions: [] }))))
+            .toContain('R5 Karlore: both arms cross L47 → L48 at the same tick');
     });
 });

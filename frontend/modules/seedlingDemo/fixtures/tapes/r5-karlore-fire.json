@@ -1,0 +1,74 @@
+{
+  "tape_version": 5,
+  "game": "seedling",
+  "name": "r5-karlore-fire",
+  "description": "THE HEADLINE PAIR, arm 2 of 2 — `fire` HELD, and it is the first combat-earned boolean on the arc doing something. `fire` is never SPENT here: `Karlore.added()` reads `Player.hasFire` at LEVEL BUILD time and removes the NPC, so the plug is simply absent and the same 28-tick hold walks through tile (7,17) into row 16. ⚠ The grant is a PROBE grant (the `l71-shieldlock` precedent): `r5-bobboss-fire` is where the boolean is EARNED, and this is where it is spent. ⛔ And it ENTERS THROUGH L47: `Karlore.added()` runs inside `new Game(48, ...)` and a boot grant is applied afterwards, so a tape that booted into L48 holding fire found the plug still there — both arms pinned at y = 290.25, byte-identical. ⚠ The walk also stops in row 16 rather than going on: row 14 is WATER and this walk holds no conch, so a target chosen for generosity would have drowned the headline (§14.10, applied before the recording instead of after it).",
+  "boot": {
+    "level": 47,
+    "x": 208,
+    "y": 136
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [
+    "water",
+    "waterfall"
+  ],
+  "grants": [
+    {
+      "level": 47,
+      "items": [
+        "fire"
+      ]
+    }
+  ],
+  "persistence": [],
+  "equips": [],
+  "pins": [
+    "sound",
+    "dead_frames"
+  ],
+  "tick_count": 61,
+  "inputs": [
+    {
+      "key": "right",
+      "from": 0,
+      "to": 6
+    },
+    {
+      "key": "up",
+      "from": 0,
+      "to": 41
+    },
+    {
+      "key": "left",
+      "from": 6,
+      "to": 7
+    },
+    {
+      "key": "left",
+      "from": 13,
+      "to": 14
+    },
+    {
+      "key": "down",
+      "from": 41,
+      "to": 42
+    },
+    {
+      "key": "up",
+      "from": 42,
+      "to": 43
+    },
+    {
+      "key": "down",
+      "from": 43,
+      "to": 44
+    },
+    {
+      "key": "up",
+      "from": 44,
+      "to": 45
+    }
+  ]
+}

@@ -502,11 +502,143 @@ export function bobBossFindings(replayed) {
     return found;
 }
 
+/**
+ * ── Slice 4 step 3: KARLORE — the rung's HEADLINE PAIR ────────────────
+ *
+ * `fire` is the first combat-earned boolean on the arc, and this is it
+ * DOING something. It is the cleanest shape on the ladder for that, because
+ * fire is never spent here — it is HELD, and L48 builds differently:
+ * `Karlore.added()` is `if (Player.hasFire) FP.world.remove(this)`, and
+ * `NPC`'s constructor gives him `type = "Solid"` filling the one-tile
+ * corridor north out of L48's arrival. A flood from that arrival reaches
+ * TWO tiles with him there and 138 without.
+ *
+ * ⛔ AND THE ITEM HAS TO BE BANKED BEFORE THE LEVEL IS BUILT, which cost
+ * two recordings to learn. `added()` runs inside `new Game(48, ...)`, so:
+ *
+ *   - a BOOT grant naming L48 is applied afterwards → both arms pinned;
+ *   - a grant naming L48 on a walk that ENTERS L48 fires on the first
+ *     observation whose level is 48, which is also afterwards → both arms
+ *     pinned again, byte-identical, 62 observations each.
+ *
+ * The grant names **L47**, the level the walk boots into, so it fires at
+ * tick 0 and the door is thirteen ticks later. §2.6.2's "hold fire BEFORE
+ * entering" meant it literally, and a boot is not an entry.
+ */
+export const KARLORE_FIRE = 'r5-karlore-fire';
+export const KARLORE_CONTROL = 'r5-karlore-plug';
+
+/** `karlore@112,272`'s Solid — the face a fireless walk stops on. */
+export const KARLORE_FACE_Y = 288;
+/** Row 16's band, where the fire arm's inputs run out. */
+export const KARLORE_THROUGH = Object.freeze({ top: 256, bottom: 272 });
+
+export function karloreFindings(replayed) {
+    const fire = replayed?.get(KARLORE_FIRE);
+    const control = replayed?.get(KARLORE_CONTROL);
+    if (!fire || !control) {
+        return [{
+            name: 'R5 Karlore: SKIPPED — this sweep did not replay both arms',
+            ok: true,
+            skipped: true,
+            detail: `have ${[fire && KARLORE_FIRE, control && KARLORE_CONTROL]
+                .filter(Boolean).join(', ') || 'neither'} — "the fire arm walked north" `
+                + 'is not evidence that anything was ever in the way',
+        }];
+    }
+    const found = [];
+    const fEnd = terminal(fire);
+    const cEnd = terminal(control);
+
+    // 1. THE PIN AND THE PASS, one field apart. Both arms run the FIRE
+    //    arm's own plan; only `grants` differs.
+    const pinOk = !!cEnd && cEnd.level === 48
+        && cEnd.y - 2 >= KARLORE_FACE_Y && cEnd.y - 2 < KARLORE_FACE_Y + 1;
+    found.push({
+        name: 'R5 Karlore: the control arm PINS on the plug',
+        ok: pinOk,
+        detail: !cEnd ? 'no terminal observation'
+            : pinOk
+                ? `ends L48 (${cEnd.x},${cEnd.y}) — box top ${(cEnd.y - 2).toFixed(2)} `
+                    + `against karlore's south face at ${KARLORE_FACE_Y}`
+                : `ends L48 y=${cEnd.y}, box top ${(cEnd.y - 2).toFixed(2)} — not a pin on `
+                    + `${KARLORE_FACE_Y}. Past it means the plug was not built; short of `
+                    + 'it means the walk stopped for some other reason.',
+    });
+    const throughOk = !!fEnd && fEnd.level === 48
+        && fEnd.y >= KARLORE_THROUGH.top && fEnd.y < KARLORE_THROUGH.bottom;
+    found.push({
+        name: 'R5 Karlore: the fire arm WALKS THROUGH',
+        ok: throughOk,
+        detail: !fEnd ? 'no terminal observation'
+            : throughOk
+                ? `ends L48 (${fEnd.x},${fEnd.y}) — inside row 16, two rows short of the `
+                    + 'water at row 14, which this walk holds no conch for'
+                : fEnd.y >= KARLORE_THROUGH.bottom
+                    ? `ends L48 y=${fEnd.y} — still south of row 16, so the plug was `
+                        + 'still there. Was the grant banked BEFORE `new Game(48, ...)`?'
+                    : `ends L48 y=${fEnd.y} — NORTH of row 16, which is row 14 or beyond `
+                        + 'and that is water. Shorten the walk.',
+    });
+
+    // 2. THE ARMS DIFFER BY EXACTLY ONE ITEM, from the game's own report.
+    const fItems = ITEM_BOOLEANS.filter((k) => fire.status?.items?.[k] === true);
+    const cItems = ITEM_BOOLEANS.filter((k) => control.status?.items?.[k] === true);
+    found.push({
+        name: 'R5 Karlore: the two arms differ by exactly `fire`',
+        ok: fItems.join(',') === 'hasFire' && cItems.length === 0,
+        detail: fItems.join(',') === 'hasFire' && cItems.length === 0
+            ? 'fire arm holds hasFire and nothing else; the control holds nothing — one '
+                + 'field apart in the tape and one boolean apart in the game'
+            : `fire arm [${fItems.join(',')}], control [${cItems.join(',')}] — the pair `
+                + 'is only one field apart if the game agrees it is',
+    });
+
+    // 3. NEITHER ARM WROTE A FLAG. Karlore's tag is -1 and `NPC.removed()`
+    //    writes no persistence at all, so a cleared flag here would be
+    //    something else entirely.
+    for (const [label, a] of [['fire', fire], ['control', control]]) {
+        const cleared = clearedSet(a.status);
+        found.push({
+            name: `R5 Karlore: the ${label} arm cleared no flag`,
+            ok: cleared.size === 0,
+            detail: cleared.size === 0
+                ? 'no flag off — karlore is tag -1 and `NPC.removed()` writes no '
+                    + 'persistence, so the plug leaves no trace either way'
+                : `${cleared.size} flag(s) off (${[...cleared].join(' ')})`,
+        });
+        found.push({
+            name: `R5 Karlore: the ${label} arm took no damage`,
+            ok: a.status?.hits === 0,
+            detail: a.status?.hits === 0 ? 'hits=0' : `hits=${a.status?.hits}`,
+        });
+    }
+
+    // 4. AND BOTH CROSSED THE SAME DOOR, at the same tick. The pair's whole
+    //    value is that the two arms are the same walk until the plug — so
+    //    the crossing has to be shared, and it is the crossing that banks
+    //    the item in time.
+    const hop = (a) => (a.stream?.transitions ?? [])
+        .map((t) => `${t.t}:${t.from_level}->${t.to_level}`).join(' ');
+    found.push({
+        name: 'R5 Karlore: both arms cross L47 → L48 at the same tick',
+        ok: hop(fire) === hop(control) && /^\d+:47->48$/.test(hop(fire)),
+        detail: hop(fire) === hop(control) && /^\d+:47->48$/.test(hop(fire))
+            ? `${hop(fire)} in both — and the fire arm's grant fired at tick 0 in L47, `
+                + 'before `new Game(48, ...)` ran `Karlore.added()`'
+            : `fire [${hop(fire)}] vs control [${hop(control)}] — the arms did not take `
+                + 'the same door, so the difference between them is not the item',
+    });
+
+    return found;
+}
+
 /** Every R5 finding this sweep can make. */
 export function r5AcceptanceFindings(replayed) {
     return [
         ...l60KillFindings(replayed),
         ...keyLegFindings(replayed),
         ...bobBossFindings(replayed),
+        ...karloreFindings(replayed),
     ];
 }

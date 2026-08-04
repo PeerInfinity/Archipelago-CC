@@ -175,13 +175,29 @@ export const MODELLED_TILE_TYPES = Object.freeze([
     // kickoff names in §2.6 — the tape says "armed" and the resolver still
     // throws.
     //
-    // ⚠ 1 (Water) DELIBERATELY STAYS OUT. Its physics is transcribed
-    // (`checkDrowning`'s water arm, the shared water friction and speed),
-    // but `canSwim` is the CONCH, which `Karlore.added()` gates on
-    // `hasFire` — BobBoss, R5 — so water is planner-forbidden floor at R4
-    // and a run that stands on one has a ROUTE defect. Throwing by name at
-    // the resolver is how that surfaces as "leg 31 stood on water" rather
-    // than as a drowning eleven ticks later.
+    // ⛓ 1 (Water) JOINS THEM AT R5 SLICE 4, and the thing that let it in is
+    // not the drowning arm — that was transcribed at R4 — but the SOUND
+    // TERM. `Player.as:530` adds `0.25 * int(Music.soundPosition("Swim") <
+    // 0.1)` to the swim speed, and unpinned that position is the Web Audio
+    // mixer's wall clock: slice 2 ran one tape at 0.4 fps and 10.1 fps and
+    // the streams parted four ticks after the water edge. So water was not
+    // "untranscribed", it was NOT REPRODUCIBLE, and no amount of care in
+    // this file would have fixed it.
+    //
+    // The §13 ruling took the PIN. Under a v5 tape's `pins: ["sound"]` the
+    // game reads a frame clock, `swimSoundClock` is the same arithmetic on
+    // this side, and `playerPhysicsV2.step` REFUSES a wet tick on a tape
+    // that does not pin it — so an armed-water run without the pin is a
+    // named failure rather than a stream that matches one recording and not
+    // the next.
+    //
+    // ⚠ Being legal terrain is still not permission to stand on it.
+    // `canSwim` is the CONCH, and `checkDrowning`'s water arm gives an
+    // unprotected walk ELEVEN CUMULATIVE TICKS before `drowning` latches —
+    // the timer is never reset off-hazard. The planner's forbidden-floor
+    // policy is unchanged; what changed is that a route which HOLDS the
+    // conch can now be modelled at all.
+    1,  // Water          (R5 slice 4: WATER_FRICTION + the pinned swim burst)
     17, // Lava           (R4: 0.45 + WATER_FRICTION; lethal without the dark suit)
     18, // Blue Tile
     19, // Blue Wall    (solid)

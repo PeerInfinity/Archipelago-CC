@@ -223,13 +223,25 @@ describe('step(): the terrain state drives the speed, and persists', () => {
         expect(s.terrain).toBe(10);
     });
 
-    it('THROWS by name on terrain v2 does not model', () => {
+    it('⛓ R5 slice 4: WATER no longer throws for being unmodelled — it throws '
+        + 'for being UNPINNED', () => {
+        // The old claim was `LevelWorldError` out of `assertModelledTerrain`.
+        // Water joined `MODELLED_TILE_TYPES` when the swim sound term became
+        // reproducible under `pins: ["sound"]`, so that guard no longer
+        // fires — and the guard that replaced it is sharper, because it
+        // names the actual problem. `Player.as:530` adds
+        // `0.25 * int(Music.soundPosition("Swim") < 0.1)` off the Web Audio
+        // mixer's WALL CLOCK; slice 2 ran one tape at 0.4 fps and 10.1 fps
+        // and the streams parted four ticks after the water edge. Modelling
+        // the term as ZERO would agree with whichever recording it happened
+        // to be compared against and disagree with the next.
         const w = world({ rows: ['water', 'ground', 'ground', 'ground'] });
         const { x, y } = centre(2, 0);
-        expect(() => step({ x, y, vx: 0, vy: 0, terrain: 0 }, held(), { level: w }))
-            .toThrow(LevelWorldError);
-        expect(() => step({ x, y, vx: 0, vy: 0, terrain: 0 }, held(), { level: w }))
-            .toThrow(/Water/);
+        const at = { x, y, vx: 0, vy: 0, terrain: 0 };
+        expect(() => step(at, held(), { level: w })).toThrow(PhysicsV2Error);
+        expect(() => step(at, held(), { level: w })).toThrow(/does not pin "sound"/);
+        // ...and WITH the pin it is ordinary, modelled terrain.
+        expect(() => step(at, held(), { level: w, pins: ['sound'] })).not.toThrow();
     });
 
     it('refuses to run without a level rather than quietly being the v1 engine', () => {
@@ -847,6 +859,20 @@ describe('R1: the pit transport, hand-derived from Player.as', () => {
 // only ever see the second.
 // ─────────────────────────────────────────────────────────────────────────
 
+/**
+ * ⛓ R5 SLICE 4 ADDED `pins: ['sound']` TO THE HAZARD TESTS BELOW, and the
+ * reason is a finding rather than a chore.
+ *
+ * `Player.as:530`'s swim term lives in the `inWater || inLava` arm, and
+ * `inWater` is `eff == 1 || eff == 25` — so a WATERFALL tick reads it too.
+ * R4 armed waterfall and lava with `swimBurst` hard-coded to zero, which
+ * was silently wrong and got away with it for one reason only: no committed
+ * route ever stood on either. The bound was real and nobody had written it
+ * down. `step` refuses an unpinned wet tick now, so these tests declare the
+ * pin — which is what a tape standing on any of this terrain has to do.
+ */
+const PINNED = { pins: ['sound'] };
+
 describe('R4: the sticky hazard flags', () => {
     it('sets each flag from the COERCED state (Player.as:713-717)', () => {
         expect(hazardFlagsFor(22)).toEqual({
@@ -882,12 +908,12 @@ describe('R4: the sticky hazard flags', () => {
             hazard: INITIAL_HAZARD_FLAGS, drown: { timer: 0, drowning: false },
             latched: new Set(),
         };
-        const onLava = step(s0, held(), { level: w, noclip: true, inventory: { hasDarkSuit: true } });
+        const onLava = step(s0, held(), { level: w, noclip: true, inventory: { hasDarkSuit: true }, ...PINNED });
         expect(onLava.terrain).toBe(17);
         expect(onLava.hazard.inLava).toBe(true);
         // Now step from a position the gate cannot reach: same flags.
         const away = step({ ...onLava, x: 40, y: 40 }, held(),
-            { level: w, noclip: true, inventory: { hasDarkSuit: true } });
+            { level: w, noclip: true, inventory: { hasDarkSuit: true }, ...PINNED });
         expect(away.terrain).toBe(17);
         expect(away.hazard.inLava).toBe(true);
     });
@@ -949,7 +975,7 @@ describe('R4: the waterfall push (Player.as:1537-1540)', () => {
         // the same tick's setter, so the push is already live: v.y = 0.8
         // with no key held and no friction to remove first (friction on a
         // zero vector is a no-op).
-        const t1 = step(s0, held(), { level: w, noclip: true, inventory: {} });
+        const t1 = step(s0, held(), { level: w, noclip: true, inventory: {}, ...PINNED });
         expect(t1.hazard).toEqual({
             onIce: false, onWaterfall: true, inWater: true, inLava: false,
         });
@@ -965,15 +991,15 @@ describe('R4: the waterfall push (Player.as:1537-1540)', () => {
         };
         // Moving DOWN or standing still: pushed even with the feather.
         expect(step({ ...base, vy: 0 }, held(), {
-            level: w, noclip: true, inventory: { hasFeather: true },
+            level: w, noclip: true, inventory: { hasFeather: true }, ...PINNED,
         }).vy).toBeCloseTo(0.8, 10);
         // Moving UP with the feather: exempt. Friction still runs, so the
         // check is that 0.8 was NOT added rather than that vy is unchanged.
         const up = step({ ...base, vy: -1 }, held(), {
-            level: w, noclip: true, inventory: { hasFeather: true },
+            level: w, noclip: true, inventory: { hasFeather: true }, ...PINNED,
         });
         const upNoFeather = step({ ...base, vy: -1 }, held(), {
-            level: w, noclip: true, inventory: {},
+            level: w, noclip: true, inventory: {}, ...PINNED,
         });
         expect(upNoFeather.vy - up.vy).toBeCloseTo(0.8, 10);
         expect(up.vy).toBeLessThan(0);
@@ -1060,7 +1086,7 @@ describe('R4: checkDrowning, and the timer that never resets', () => {
         };
         expect(() => {
             for (let i = 0; i < 40; i++) {
-                s = step(s, held(), { level: w, noclip: true, inventory: {} });
+                s = step(s, held(), { level: w, noclip: true, inventory: {}, ...PINNED });
             }
         }).toThrow(/DROWNED/);
         // With the dark suit the same forty ticks are an ordinary slow walk.
@@ -1070,7 +1096,7 @@ describe('R4: checkDrowning, and the timer that never resets', () => {
             latched: new Set(),
         };
         for (let i = 0; i < 40; i++) {
-            safe = step(safe, held(), { level: w, noclip: true, inventory: { hasDarkSuit: true } });
+            safe = step(safe, held(), { level: w, noclip: true, inventory: { hasDarkSuit: true }, ...PINNED });
         }
         expect(safe.drown).toEqual({ timer: 0, drowning: false });
     });

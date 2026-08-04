@@ -123,6 +123,11 @@ function applyItem(inventory, name) {
 export function createLevelRun({
     levelSource, boot, noclip = false, noHazards = [], noDamage = false, grants = [],
     persistence = [], equips = [], roles,
+    // R5 slice 4: the tape's `pins` list, threaded to the physics. The swim
+    // sound term is only modellable under `pins: ["sound"]`, and `stepV2`
+    // REFUSES a wet tick without it rather than modelling the term as zero
+    // — so this has to reach the step, not merely be recorded on the tape.
+    pins = [],
 }) {
     if (typeof levelSource !== 'function') {
         throw new TypeError('createLevelRun needs a levelSource (level) => levelRecord');
@@ -1408,6 +1413,7 @@ export function createLevelRun({
                 // and the waterfall push reads `hasFeather`. The run's
                 // mirror is the only place those live on this side.
                 inventory,
+                pins,
             });
             // ── R4: `input()`'s own last act, at the END of the tick ──
             // `useItem(Main.primary)` fires on `Input.pressed(keys[4])` from

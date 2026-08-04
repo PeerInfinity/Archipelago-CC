@@ -273,9 +273,28 @@ export const KARLORE = Object.freeze({
     /** The OEL placement, which is also the Solid's rect origin. */
     at: Object.freeze({ x: 112, y: 272 }),
     tile: Object.freeze({ tx: 7, ty: 17 }),
-    /** `stairsdown`-less: L47's `teleporter@216,112` constructs this. */
-    boot: Object.freeze({ level: 48, x: 112, y: 288 }),
+    /**
+     * ⛔ THE PAIR BOOTS IN L47, AND THE FIRST ATTEMPT TAUGHT US WHY.
+     *
+     * The obvious tape boots straight into L48 with `grants: [{level: 48,
+     * items: ['fire']}]`. It was recorded, and BOTH ARMS PINNED at
+     * y = 290.25 — byte-identical, 53 observations each.
+     *
+     * `Karlore.added()` runs during `loadlevel`, i.e. inside
+     * `new Game(48, ...)`, and a boot grant is applied by `Bot` AFTERWARDS.
+     * So a grant naming the level it boots into cannot reach any entity's
+     * `added()` in that level: the plug is built as though the item were
+     * absent, and the arm that was supposed to walk through pins beside its
+     * own control. §2.6.2 said "hold fire BEFORE entering" and meant it
+     * literally — a boot is not an entry.
+     *
+     * ⇒ The fire arm ENTERS through L47's `teleporter@216,112`, with the
+     * grant already banked, so `new Game(48, ...)` builds a level with no
+     * Karlore in it at all.
+     */
+    boot: Object.freeze({ level: 47, x: 208, y: 136 }),
     arrival: Object.freeze({ x: 120, y: 296 }),
+    entryFrom: Object.freeze({ level: 47, teleporter: Object.freeze({ x: 216, y: 112 }) }),
     holdFrom: 4,
     holdTo: 32,
     tickCount: 52,
@@ -283,6 +302,7 @@ export const KARLORE = Object.freeze({
     pinY: 290,
     /** Modelled: row 16, and row 14 is water. */
     throughRow: 16,
+    throughY: 262,
 });
 
 /** L48's pit to L49, and the conch behind it. */

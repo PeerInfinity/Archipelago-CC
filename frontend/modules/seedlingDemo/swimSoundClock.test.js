@@ -11,6 +11,10 @@
 
 import { describe, expect, it } from 'vitest';
 
+import { buildLevelWorld, ROLES } from './levelWorld.js';
+import { atlasLevelSource } from './levelSource.js';
+import { step, PhysicsV2Error } from './playerPhysicsV2.js';
+
 import { PIN_FRAME_RATE, PIN_NAMES } from './tapeFormat.js';
 import {
     boostedFramesPerPlay,
@@ -190,5 +194,83 @@ describe('a swim run, in the order the game imposes', () => {
         // Steps 41..46 are silent; the completion lands on the 7th tick of
         // this run and the replay boosts from there.
         expect(series).toEqual([0, 0, 0, 0, 0, 0, 0.25, 0.25, 0.25, 0.25]);
+    });
+});
+
+// ── R5 slice 4: THE TERM, WIRED INTO THE PHYSICS ──────────────────────
+
+describe('the swim burst as `playerPhysicsV2.step` consumes it', () => {
+    /** A one-tile water world, hand-built so the test owns every input. */
+    const waterWorld = () => {
+        const level = buildLevelWorld(atlasLevelSource()(60), { roles: ROLES });
+        return level;
+    };
+
+    it('⛔ REFUSES a wet tick on a tape that does not pin "sound"', () => {
+        // The vacuity this closes: unpinned, the term reads the Web Audio
+        // mixer's WALL CLOCK, and slice 2 measured one tape's streams
+        // parting four ticks after the water edge between a 0.4 fps and a
+        // 10.1 fps run. A model that used 0 there would agree with whichever
+        // recording it was compared against and disagree with the next.
+        const level = waterWorld();
+        // L60 row 5 columns 2-7 are Water; (112,88) is column 7's east edge,
+        // so step west into it with the hazard ARMED.
+        const state = {
+            x: 104, y: 88, vx: 0, vy: 0, terrain: 0,
+            hazard: { onIce: false, onWaterfall: false, inWater: false, inLava: false },
+        };
+        expect(() => step(state, new Set(['left']), { level, noHazards: [], pins: [] }))
+            .toThrow(PhysicsV2Error);
+        expect(() => step(state, new Set(['left']), { level, noHazards: [], pins: [] }))
+            .toThrow(/does not pin "sound"/);
+    });
+
+    it('and does NOT refuse when the hazard is coerced away', () => {
+        // Every fixture below R5 slice 4 coerces water, so this branch is
+        // dead for all of them — which is what makes the throw safe to add.
+        const level = waterWorld();
+        const state = {
+            x: 104, y: 88, vx: 0, vy: 0, terrain: 0,
+            hazard: { onIce: false, onWaterfall: false, inWater: false, inLava: false },
+        };
+        expect(() => step(state, new Set(['left']),
+            { level, noHazards: ['water', 'waterfall'], pins: [] })).not.toThrow();
+    });
+
+    it('⛔ the boost LATCHES once the channel completes un-replayed', () => {
+        // §14.3, as arithmetic rather than as prose: `onComplete` zeroes the
+        // position, `soundPosition` divides by 1000, and 0 < 0.1. So a
+        // swimmer who stops moving is boosted indefinitely — the swim boost
+        // is NOT "six ticks in every 47" for a stop-start swim, and a leg
+        // priced that way under-runs its target.
+        const ch = createPinnedChannel(SWIM_LENGTH_FRAMES);
+        playChannel(ch);
+        for (let i = 0; i < SWIM_LENGTH_FRAMES; i += 1) stepChannel(ch);
+        expect(channelPlaying(ch)).toBe(false);
+        expect(channelPosition(ch)).toBe(0);
+        expect(swimSpeedBonus(ch)).toBe(SWIM_BOOST_SPEED);
+        // ...and it stays that way, because a closed channel does not step.
+        stepChannel(ch, 500);
+        expect(swimSpeedBonus(ch)).toBe(SWIM_BOOST_SPEED);
+    });
+
+    it('a moving swimmer gets the boost in bursts, a stopped one gets it always', () => {
+        // The two regimes side by side. Six of every 47 while stroking;
+        // every tick once the channel has run down and nothing replays it.
+        const moving = swimBonusSeries(120, { moving: () => true });
+        const boostedWhileMoving = moving.filter((b) => b > 0).length;
+        // Derived tick by tick rather than from a closed form, because the
+        // COMPLETION tick is also the first boosted tick of the next play:
+        // `stepChannel` closes the channel and zeroes `frames`, the read
+        // sees position 0, and only THEN does the replay run. So the cycles
+        // start at t = 0, 47 and 94 — three of them inside 120 ticks — and
+        // each contributes `boostedFramesPerPlay()`.
+        const cycleStarts = [];
+        for (let t = 0; t < 120; t += SWIM_LENGTH_FRAMES) cycleStarts.push(t);
+        expect(cycleStarts).toEqual([0, 47, 94]);
+        expect(boostedWhileMoving).toBe(boostedFramesPerPlay() * cycleStarts.length);
+        expect(boostedWhileMoving).toBe(18);
+        const stopped = swimBonusSeries(120, { moving: (t) => t < 1 });
+        expect(stopped.filter((b) => b > 0).length).toBeGreaterThan(boostedWhileMoving * 2);
     });
 });

@@ -122,7 +122,12 @@ describe('the planner sees four kinds of obstacle', () => {
         expect(water.t).toBe(1);
         const c = tileCentre(9, 9);
         expect(level0.collidesSolid(playerBoxAt(c.x, c.y))).toBeNull();
-        expect(plannerObstacleAt(level0, c.x, c.y)?.kind).toBe('terrain');
+        // ⛓ R5 slice 4: `lethal-terrain`, not `terrain`. Water joined
+        // `MODELLED_TILE_TYPES` when the swim sound term became modellable
+        // under the pin — so it is no longer UNMODELLED terrain. It is
+        // still forbidden floor, by the R4 lethal-terrain policy that was
+        // written for exactly this moment, and the exemption is `canSwim`.
+        expect(plannerObstacleAt(level0, c.x, c.y)?.kind).toBe('lethal-terrain');
         expect(isWalkableTile(level0, 9, 9)).toBe(false);
     });
 
@@ -187,7 +192,7 @@ describe('A*', () => {
 
     it('names the offending tile when an endpoint is not walkable', () => {
         expect(() => planTilePath(level0, SPAWN, tileCentre(9, 9)))
-            .toThrow(/goal tile \(9,9\).*not walkable: terrain Water/s);
+            .toThrow(/goal tile \(9,9\).*not walkable: lethal-terrain Water/s);
         expect(() => planTilePath(level0, tileCentre(9, 9), SPAWN))
             .toThrow(/start tile \(9,9\)/);
     });
@@ -219,7 +224,7 @@ describe('smoothing', () => {
             const o = plannerObstacleAt(level0, p.x, p.y);
             if (o) blocked.push(o.kind);
         }
-        expect(blocked).toContain('terrain');
+        expect(blocked).toContain('lethal-terrain');
     });
 
     it('collapses the tile path to far fewer waypoints, all of them clear', () => {
@@ -254,7 +259,7 @@ describe('smoothing', () => {
         const straightMidY = a.y + (b.y - a.y) * ((112 - a.x) / (b.x - a.x));
         expect(straightMidY).toBeLessThan(186);
         expect(plannerObstacleAt(level0, 112, straightMidY)).toBeNull();
-        expect(plannerObstacleAt(level0, 112, 192)?.kind).toBe('terrain');
+        expect(plannerObstacleAt(level0, 112, 192)?.kind).toBe('lethal-terrain');
         expect(controllerPathClear(level0, a, b)).toBe(false);
     });
 
@@ -320,7 +325,7 @@ describe('single-level tasks', () => {
 
     it('refuses a target it cannot stand on, naming what is there', () => {
         expect(() => synthesizeWalk([tileCentre(9, 9)], { levelSource }))
-            .toThrow(/not walkable: terrain Water/);
+            .toThrow(/not walkable: lethal-terrain Water/);
     });
 });
 

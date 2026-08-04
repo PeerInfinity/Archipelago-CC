@@ -138,6 +138,12 @@ export function createTapeStepper(tape, opts = {}) {
             grants: t.grants,
             persistence: t.persistence,
             equips: t.equips,
+            // R5 slice 4: `pins` reaches the PHYSICS, not just the tape
+            // header. `stepV2` refuses a wet tick on a tape that does not
+            // pin "sound" — the term reads a wall clock otherwise — so a
+            // runner that recorded the field and did not pass it on would
+            // refuse every armed-water tape ever written.
+            pins: t.pins ?? [],
             // ⚠ The runner consults the SAME census the driver plans with,
             // and `noclip` is what decides it on both sides. A noclip tape
             // asks no collider question, so requiring a blocking
