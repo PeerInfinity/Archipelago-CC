@@ -2965,3 +2965,121 @@ touch/key latches.
 That is the entire opening mechanic of Dungeon 4's big room, and it reaches a
 `BossLock` — so a lock that looks like it needs a key opens without one.
 Worth checking per room rather than assuming, in both directions.
+
+## R5 slice 8: a bounded sweep, and the room in front of the room
+
+Two things, and the second is the shape of a whole rung: a sweep that found a
+second silent-geometry casualty, and a leg that turned out to be a puzzle.
+
+### ⛔⛔ A `refused` arm is where a malformed rect hides
+
+Slice 7 found the rope's press rect had a null `right`. Slice 8 asked how
+many more there were, in two strata — because either alone reads as clean:
+
+1. **the enumerated sites**: every inline `{x, y, right, bottom}` derivation
+   that does not go through `levelWorld.rect()`, classified by hand with a
+   verdict each. Ten of them.
+2. **the live sweep**: build all 116 levels under all five roles and check
+   every rect the census carries. 10,175 rects.
+
+Stratum 2 found **eleven** the enumeration could not: the `Watcher`'s press
+rect, four `NaN`s, in L12/32/37/**43**/57/69/82/89/94/103/114. Same shape as
+the rope — `collider: 'none'`, no top-level box, only a `hazard` sub-object
+that is the 48x48 auto-talk circle — and, like the rope, **`refused` by
+policy**.
+
+That is the generalisation worth keeping: **a `refused` arm is the one place
+a malformed rect can never be caught by a route**, because no route ever
+queries it. Policy and geometry cover for each other. Audit with a stratum
+that does not care about policy, and make the producer loud: `entityRect`
+now throws on a boxless class, `WATCHER_PRESS_BOX` is the transcription, and
+`PRESS_BOX_OVERRIDES` is a table because there are two of these now.
+
+⚠ **And the subtlest one was not malformed at all.** `chaseEnvelope`'s
+`row.hitbox ?? {w:0,h:0,ox:0,oy:0}` keeps every rect FINITE — so no
+`assertRect` could have caught it — by giving a body-less row a **zero-size
+body**, after which the clearance is optimistic by half the real body on each
+axis. A plausible number is harder to notice than a silent `false`. It is now
+`assertEnvelopeBody`, deliberately **outside** its caller: every shipped row
+satisfies it, so a test that went through `chaseEnvelope` could only ever
+exercise the passing arm.
+
+⚠ **An absence can be a claim, and then it has to be written down.**
+`r5Acceptance.L60_LOCK.rect` is `{x, right}` with no `y` — an X BAND, because
+the lock spans its corridor and all six uses are scalar comparisons. A sweep
+has to tell that apart from a rect somebody half-built, so it carries a
+`band:` field and a test asserting both the y-lessness and that
+`rectsOverlap` against it answers false.
+
+### ⛔⛔ L38 is two rooms, and the join is a five-link chain
+
+The totem cluster's entrance was priced as three waypoints: boot, button,
+door. **L38 is two disjoint components.** L37's door — the cluster's only way
+in from outside — lands in the south room (205 lattice cells / 64 tiles);
+`buttonroom@32,48` and `teleporter@144,0 -> L39` are both in the north one
+(195 / 65), otherwise reached only from L39, which is reached only from here.
+The floods share not one tile.
+
+Row 7 is solid across all nineteen columns. The one join cell holds
+`cover@144,112 {t 0}` and, **underneath it**, `chest@144,112` —
+`type = "Solid"` in its constructor. Opening the cover does not open the
+cell; it makes the chest *openable*, because `Chest.update`'s gate is
+`!collide("Solid", x, y)`. `Chest.open()` sets `type = ""`, and that is the
+passage — an entity state change no persistence flag can express, which is
+why links 3, 4 and 5 all add **zero** to the flood.
+
+```
+  1  buttonroom@144,128 (9,8)   t2 room -1   self-latch  -> cover@208,224   +6
+  2  buttonroom@208,224 (13,14) t2's cover hid it; t1 room -1 self-latch
+                                             -> pulser@80,224 armed         +0
+  3  the PULSE shoves pushableblockfire (5,13) -> (5,12)                    +0
+  4  (5,12) IS button@80,192 {t 0} — a block presses a button
+                                             -> cover@144,112 opens         +0
+  5  Chest.open() sets type = ""                                    the passage
+```
+
+**Nobody can stand on `button@80,192`.** Its only approaches are (5,13), the
+block, and (5,14), the pulser — a permanent `type = "Solid"`. The group that
+opens the level's one join has exactly one presser and it is not a player.
+
+### ⚠ A two-member capability list gets read as one member
+
+`PushableBlockFire.moveTypes` is `["Fire", "Pulse"]`, and five consecutive
+slices read it as *"Fire is the one that matters"* — because the question was
+always *which player weapon moves this block*, and only one member answers
+that. The other member has a **writer**: `Pulser.hit()` dispatches
+`(c as PushableBlockFire).hit(new Point(x, y), "Pulse")` on its own clock,
+through the same non-relative arm a fire press takes.
+
+Before concluding a capability is inert, grep for a writer of **each** member,
+not a reader. `grep -rn '"Pulse"' src/` finds it in one command.
+
+### ⛓ The `Pulser` — the first world-driven hit on the arc
+
+Every mover this arc had modelled was a player press. `pulser.js` is the
+first thing that hits on its own clock, and three of its numbers are places
+where the closed form disagrees with the loop:
+
+- **the animation is a gate, and it LOOPS.** `add("pulse", [0,1,2,3,4], 20)`
+  takes FlashPunk's default `loop = true`, so `complete` never latches; the
+  WRAP calls the Spritemap callback (`endAnim`, which plays `""`) and that is
+  what lets `update`'s body run again. Five frames take **eight ticks** at
+  `20 * FP.elapsed`, simulated through `Spritemap.update`'s own
+  `while (_timer >= 1)`.
+- **the pulse runs 23 ticks**, because `(28 - 10) / 0.8 = 22.5` and the
+  `>= radiusMax` test is *after* the increment. Divide and floor and you are
+  one hit short every cycle.
+- **the period is 51, not 52.** The `play("pulse")` tick IS the gate's first
+  tick: `World.update` runs `e.update()` and then that same entity's
+  `e._graphic.update()` — the relationship `Player.fire()` has with
+  `sprites()`.
+
+⚠ `Pulser.hit` fills **one** vector across its three hitable types and
+iterates it once — the ordinary shape. `Player.fire()`'s 55 knockbacks are
+this code written one indent differently, so the difference is asserted
+rather than assumed.
+
+⚠ And a `Pulser` must **not** join `world.activators`. It is `type = "Solid"`
+whether its group is published or not, so an "open" one would read as
+passable and the geometry would go the unsafe direction. It needs its own
+census list and its own step.
