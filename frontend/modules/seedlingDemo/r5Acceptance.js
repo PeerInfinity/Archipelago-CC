@@ -1216,6 +1216,183 @@ export function featherFindings(replayed) {
     return found;
 }
 
+
+/**
+ * ── ⛓⛓ THE TOTEM ENTRANCE PAIR — declared at §18, recorded at slice 9 ──
+ *
+ * The first tape on the arc to drive a `Pulser`, a `Chest` or a
+ * `SealPiece`, and the first to open a room that was not reachable at all.
+ * Four claims, and the fourth is the one that could only be made by
+ * subtraction.
+ *
+ * 1. THE PIN. The control holds UP for four hundred ticks and does not
+ *    move a tile: `wandlock@144,592` is built because {39,8} was never
+ *    written. The press arm's identical span carries it 208 px north.
+ * 2. THE LEDGER, as an exact set, and it is not the entrance write alone.
+ *    Both arms carry the arrival button's {37,4}+{38,5} and the chest's
+ *    {38,1}; the press arm adds {39,8} AND {38,4}, because a `room >= 0`
+ *    ButtonRoom writes the named room's TSET *and* its own TAG.
+ * 3. WHERE THE PRESS ARM STOPS — tile (9,25), which §21.6 measured as the
+ *    only reachable stance that touches `rope@96,384`. The shaft leg
+ *    starts where this one ends, and nobody arranged that.
+ * 4. ⛓⛓ THE DEAD FRAMES, DECOMPOSED. The game reports **370** for both
+ *    arms. `FEATHER_DEAD_FRAMES`'s constants would predict 21 + 20 + 150
+ *    = 191 plus an unexplained 179, which is how this nearly became a
+ *    correction to `sealControllerTicks()`. It is not one:
+ *    `r5-l38-fade-boot` and `r5-l38-fade-door` measure this level's own
+ *    load costs as **20 and 19**, so the ceremony's share is 370 - 39 =
+ *    **331** — exactly `CEREMONY_DEAD_FRAMES.total`, 150 of
+ *    `Pickup.specialTimer` and 181 of a `SealController` derived from its
+ *    own loop and never before driven.
+ *
+ *    ⚠ **AND THAT MAKES A CONSTANT INTO A VARIABLE.** A load's dead-frame
+ *    cost is not 20: `r5-feather` measured 21 for its boot and 20 per
+ *    door, and L38 measures 20 and 19. `blackCover`'s countdown and the
+ *    frame `Bot.update` samples it on are two clocks with a phase between
+ *    them. Nothing on this rung depends on it — neither arm swims — but
+ *    `swimSoundClock.LOAD_DEAD_FRAMES` advances the PINNED channel by
+ *    exactly this number across a door, so a tape that swims after one is
+ *    a tick of mixer position out. Named rather than fixed: fixing it
+ *    needs a measurement per level, and the fixture that would show it
+ *    does not exist yet.
+ */
+export const TOTEM_ENTRANCE_WALK = Object.freeze({
+    press: 'r5-totem-entrance',
+    control: 'r5-totem-entrance-control',
+    /** Both arms, from the game. */
+    deadFrames: 370,
+    /** …attributed, by the two fade probes rather than by another tape's constants. */
+    load: Object.freeze({ boot: 20, door: 19, get total() { return this.boot + this.door; } }),
+    ceremony: 331,
+    pinnedTile: Object.freeze({ tx: 9, ty: 38 }),
+    ropeStanceTile: Object.freeze({ tx: 9, ty: 25 }),
+    shared: Object.freeze(['37:4', '38:0', '38:1', '38:3', '38:5']),
+    entranceWrites: Object.freeze(['38:4', '39:8']),
+});
+
+export function totemEntranceFindings(replayed) {
+    const press = replayed?.get(TOTEM_ENTRANCE_WALK.press);
+    const control = replayed?.get(TOTEM_ENTRANCE_WALK.control);
+    if (!press || !control) {
+        return [{
+            name: 'R5 totem entrance: SKIPPED — this sweep did not replay both arms',
+            ok: true,
+            skipped: true,
+            detail: `have ${[press && TOTEM_ENTRANCE_WALK.press,
+                control && TOTEM_ENTRANCE_WALK.control].filter(Boolean).join(', ') || 'neither'} `
+                + '— "the walk reached L39" is not evidence that anything was ever in the way',
+        }];
+    }
+    const found = [];
+    const tileOf = (arm) => {
+        const end = terminal(arm);
+        return end ? { level: end.level, tx: Math.floor(end.x / 16), ty: Math.floor(end.y / 16) } : null;
+    };
+    const pt = tileOf(press);
+    const ct = tileOf(control);
+
+    found.push({
+        name: 'R5 totem entrance: the CONTROL is pinned one tile short of the wandlock',
+        ok: !!ct && ct.level === 39 && ct.ty === TOTEM_ENTRANCE_WALK.pinnedTile.ty,
+        detail: ct
+            ? `L${ct.level} tile (${ct.tx},${ct.ty}) after 400 ticks of UP — `
+                + '`wandlock@144,592` is `tSet -1`, which on a Lock means '
+                + '`totalEnemies() <= 0`, and the three spinners that would clear it are '
+                + 'thirty tiles up on the FAR SIDE of it. The button in the previous room '
+                + 'is the only opener, and this arm did not stand on it.'
+            : 'the control produced no terminal observation',
+    });
+    found.push({
+        name: 'R5 totem entrance: …and the PRESS arm walks through where it stood',
+        ok: !!pt && !!ct && pt.level === 39 && pt.ty < ct.ty,
+        detail: pt && ct
+            ? `the same span carries it to tile (${pt.tx},${pt.ty}) — ${ct.ty - pt.ty} tiles `
+                + 'north of the pin. One target apart: two seconds on `buttonroom@32,48`.'
+            : 'one of the arms produced no terminal observation',
+    });
+    found.push({
+        name: '⛓⛓ R5 totem entrance: it comes to rest ON THE ROPE\'S OWN STANCE',
+        ok: !!pt && pt.tx === TOTEM_ENTRANCE_WALK.ropeStanceTile.tx
+            && pt.ty === TOTEM_ENTRANCE_WALK.ropeStanceTile.ty,
+        detail: pt
+            ? `tile (${pt.tx},${pt.ty}) against §21.6's (`
+                + `${TOTEM_ENTRANCE_WALK.ropeStanceTile.tx},`
+                + `${TOTEM_ENTRANCE_WALK.ropeStanceTile.ty}) — the ONLY reachable stance `
+                + 'that touches `rope@96,384`, measured a slice before this walk existed. '
+                + 'The shaft leg begins where this tape ends.'
+            : 'no terminal observation',
+    });
+
+    // ── the ledgers, as exact sets ────────────────────────────────────
+    for (const [label, arm, want] of [
+        ['control', control, TOTEM_ENTRANCE_WALK.shared],
+        ['press', press, [...TOTEM_ENTRANCE_WALK.shared, ...TOTEM_ENTRANCE_WALK.entranceWrites]],
+    ]) {
+        const got = [...clearedSet(arm.status)].sort();
+        const expect = [...want].sort();
+        found.push({
+            name: `R5 totem entrance: the ${label} arm's ledger is an EXACT set`,
+            ok: JSON.stringify(got) === JSON.stringify(expect),
+            detail: JSON.stringify(got) === JSON.stringify(expect)
+                ? `[${got.join(' ')}] — {37,4}+{38,5} from the arrival button (BOTH arms `
+                    + 'press it, R1 met it first), {38,0}+{38,3} from the two `room = -1` '
+                    + 'self-latches whose own-tag write is OUTSIDE the room branch, and '
+                    + '{38,1} from `Chest.open()`'
+                    + (label === 'press'
+                        ? ' — plus {39,8}, which deletes the wandlock, and {38,4}, which is '
+                            + 'the same `set activate` writing its OWN tag. Two writes from '
+                            + 'one press; a count would have said one.'
+                        : '. ⚠ Not empty, which is why an exact set had to name it.')
+                : `the game reports [${got.join(' ')}] and the declaration says `
+                    + `[${expect.join(' ')}]`,
+        });
+    }
+
+    // ── ⛓⛓ the dead frames, and the subtraction that attributed them ──
+    const boot = replayed?.get('r5-l38-fade-boot');
+    const door = replayed?.get('r5-l38-fade-door');
+    for (const [label, arm] of [['press', press], ['control', control]]) {
+        found.push({
+            name: `R5 totem entrance: the ${label} arm reports ${TOTEM_ENTRANCE_WALK.deadFrames} dead frames`,
+            ok: arm.status?.dead_frames === TOTEM_ENTRANCE_WALK.deadFrames,
+            detail: arm.status?.dead_frames === TOTEM_ENTRANCE_WALK.deadFrames
+                ? `${TOTEM_ENTRANCE_WALK.deadFrames} = ${TOTEM_ENTRANCE_WALK.load.total} `
+                    + `(a boot and a door, MEASURED) + ${TOTEM_ENTRANCE_WALK.ceremony} `
+                    + '(the ceremony) — and the ceremony is 150 of `Pickup.specialTimer` '
+                    + 'plus 181 of a `SealController`, which was derived from its own '
+                    + 'update loop before any tape drove one'
+                : `the game reports ${arm.status?.dead_frames}`,
+        });
+    }
+    if (boot && door) {
+        const b = boot.status?.dead_frames;
+        const d = door.status?.dead_frames;
+        found.push({
+            name: '⛓⛓ R5 totem entrance: the load cost is MEASURED, not inherited',
+            ok: b === TOTEM_ENTRANCE_WALK.load.boot && d === TOTEM_ENTRANCE_WALK.load.total,
+            detail: b === TOTEM_ENTRANCE_WALK.load.boot && d === TOTEM_ENTRANCE_WALK.load.total
+                ? `boot ${b}, boot+door ${d} ⇒ this door costs ${d - b}. ⚠ NEITHER matches `
+                    + "`r5-feather`'s 21 and 20, so a load's dead-frame cost is NOT a "
+                    + 'constant — `blackCover` and the frame `Bot.update` samples it on are '
+                    + `two clocks. Without these two probes the ceremony would have looked `
+                    + `like ${TOTEM_ENTRANCE_WALK.deadFrames - 41} and `
+                    + '`sealControllerTicks()` would have been "corrected" from 181 to 179.'
+                : `boot ${b} (expected ${TOTEM_ENTRANCE_WALK.load.boot}), boot+door ${d} `
+                    + `(expected ${TOTEM_ENTRANCE_WALK.load.total})`,
+        });
+    } else {
+        found.push({
+            name: 'R5 totem entrance: the fade probes were not replayed',
+            ok: true,
+            skipped: true,
+            detail: 'run --only=r5-l38-fade-boot,r5-l38-fade-door to attribute the 370 — '
+                + 'without them the ceremony\'s share is an assumption borrowed from '
+                + 'another level',
+        });
+    }
+    return found;
+}
+
 export function r5AcceptanceFindings(replayed) {
     return [
         ...l60KillFindings(replayed),
@@ -1227,5 +1404,6 @@ export function r5AcceptanceFindings(replayed) {
         ...swimLatchFindings(replayed),
         ...waterfallPairFindings(replayed),
         ...featherFindings(replayed),
+        ...totemEntranceFindings(replayed),
     ];
 }
