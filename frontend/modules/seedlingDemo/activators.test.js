@@ -664,3 +664,100 @@ describe('FORCED_TSET: the group the ctor decides, not the .oel', () => {
         expect(cleared.activators.map((a) => a.id)).toEqual(['lock@112,160']);
     });
 });
+
+/**
+ * ── R5 SLICE 6: THE SECOND PRESSER ────────────────────────────────────
+ *
+ * `Button.update`'s `hitables` has been `["Player", "Enemy", "Solid"]`
+ * since R2 and this model has pressed on the player alone since R2. L39's
+ * shaft is the room the docblock has been promising: three blocks, three
+ * lock-buttons, and a cover that latches itself open under whatever is
+ * standing on it.
+ *
+ * L39 is the fixture because it is the room the claim is about — the
+ * geometry is the game's, not a constructed one, and the tiles below come
+ * out of `buildLevelWorld` rather than out of this file.
+ */
+describe('R5 slice 6 — a BLOCK presses a button and latches a door', () => {
+    const L39 = buildLevelWorld(levelRecord(39));
+    const tileBox = (tx, ty) => rect(tx * 16, ty * 16, 16, 16);
+    /** Far from every button and every door in this room. */
+    const AWAY = playerBox(24, 24);
+    const solid = (tx, ty) => ({ id: `b@${tx},${ty}`, rect: tileBox(tx, ty) });
+    const doorState = (state, id) => state.byId.get(id);
+
+    it('the room is the one the plan describes', () => {
+        // Guard rather than decoration: every claim below indexes these.
+        expect(L39.pressers.map((p) => p.t).sort((a, b) => a - b)).toEqual([0, 1, 2, 3, 4, 5]);
+        expect(L39.pushables).toHaveLength(3);
+        expect(L39.activators.filter((a) => a.tag === 'cover')).toHaveLength(3);
+    });
+
+    it('a block on `button t1` presses it and the player does not have to', () => {
+        // (9,8) is `button t1`. Nobody is standing on it.
+        expect([...pressedGroups(L39, AWAY)]).toEqual([]);
+        expect([...pressedGroups(L39, AWAY, [solid(9, 8)])]).toEqual([1]);
+    });
+
+    it('and the group it presses has TWO responders — the cover and a wandlock', () => {
+        const state = createActivatorState(L39);
+        const blocks = [solid(9, 8)];
+        // 101 ticks opens a Lock; 11 opens a Cover. Run past both.
+        for (let i = 0; i < 120; i += 1) {
+            stepActivators(state, L39, AWAY, { inventory: {}, movingSolids: blocks });
+        }
+        expect(doorState(state, 'cover@176,144').open).toBe(true);
+        expect(doorState(state, 'wandlock@48,160').open).toBe(true);
+        // And nothing in another group moved.
+        expect(doorState(state, 'cover@144,112').open).toBe(false);
+    });
+
+    it('⛓ THE LATCH: the block that opened a cover can leave if another stands in it', () => {
+        const state = createActivatorState(L39);
+        const opener = solid(9, 8);          // button t1 -> cover t1 @ (11,9)
+        for (let i = 0; i < 20; i += 1) {
+            stepActivators(state, L39, AWAY, { inventory: {}, movingSolids: [opener] });
+        }
+        expect(doorState(state, 'cover@176,144').open).toBe(true);
+        // The opener leaves and NOTHING is in the cover: it re-solidifies.
+        const gone = createActivatorState(L39);
+        for (let i = 0; i < 20; i += 1) {
+            stepActivators(gone, L39, AWAY, { inventory: {}, movingSolids: [opener] });
+        }
+        stepActivators(gone, L39, AWAY, { inventory: {}, movingSolids: [] });
+        expect(doorState(gone, 'cover@176,144').open).toBe(false);
+        // Same tick, but a block is standing in the cover: it stays open.
+        stepActivators(state, L39, AWAY, { inventory: {}, movingSolids: [solid(11, 9)] });
+        expect(doorState(state, 'cover@176,144').open).toBe(true);
+        // ⛓ AND THE BLOCK IN IT IS ALSO ON `button t5`, so the wandlock the
+        // shaft needs opens from the same stone. That double duty is why
+        // three blocks can cover four holds.
+        for (let i = 0; i < 120; i += 1) {
+            stepActivators(state, L39, AWAY, { inventory: {}, movingSolids: [solid(11, 9)] });
+        }
+        expect(doorState(state, 'wandlock@144,32').open).toBe(true);
+    });
+
+    it('the PLAYER latches a door the same way — the guard reads both', () => {
+        const state = createActivatorState(L39);
+        for (let i = 0; i < 20; i += 1) {
+            stepActivators(state, L39, AWAY, { inventory: {}, movingSolids: [solid(9, 8)] });
+        }
+        // Player standing in `cover t1` at (11,9), block gone.
+        stepActivators(state, L39, playerBox(184, 152), { inventory: {}, movingSolids: [] });
+        expect(doorState(state, 'cover@176,144').open).toBe(true);
+    });
+
+    it('⚠ a cover does NOT press the button under it — the game excludes its own class', () => {
+        // `cover@144,112` sits exactly on `button t4` at (9,7). If covers
+        // pressed, group 4 would be held from the first frame and
+        // `wandlock@144,48` would never be a gate at all.
+        expect([...pressedGroups(L39, AWAY)]).toEqual([]);
+        expect(staticPressesIn(L39)).toEqual([]);
+    });
+
+    it('and `movingSolids` defaults to none, so every pre-R5 caller is unchanged', () => {
+        const before = [...pressedGroups(L71, playerBox(120, 184))];
+        expect([...pressedGroups(L71, playerBox(120, 184), [])]).toEqual(before);
+    });
+});

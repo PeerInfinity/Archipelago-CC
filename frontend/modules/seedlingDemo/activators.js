@@ -312,24 +312,44 @@ export function createActivatorState(world) {
 }
 
 /**
- * Which groups are pressed, given where the player is.
+ * Which groups are pressed, given where the player is and what SOLIDS are
+ * standing on things.
  *
- * ⚠ ONLY THE PLAYER PRESSES, in this model. The game's `hitables` is
- * `["Player", "Enemy", "Solid"]`, so an enemy or a pushed block holds a
- * button down too — and that is the intended solution to more than one
- * room (L38's `pushableblockfire` sits one tile below its button). Neither
- * enemies nor pushing is modelled at R2, and both were ruled onto the
- * blocked list rather than approximated, so this omission is the SAME
- * boundary rather than a new one.
+ * ⛓ R5 SLICE 6: THE SECOND PRESSER IS REAL AND IT IS A BLOCK. The game's
+ * `hitables` is `["Player", "Enemy", "Solid"]` and this docblock has said
+ * since R2 that "a pushed block holds a button down too — and that is the
+ * intended solution to more than one room". L39 is that room three times
+ * over, so `movingSolids` now carries the boxes of anything the RUN moves
+ * (the `pushables` state's rects) and a block on a button presses it.
+ *
+ * ⚠ STILL NOT ENEMIES. `hitables[1]` is `"Enemy"` and no enemy is modelled
+ * as a mover, so an enemy standing on a button is invisible here. That is
+ * the same boundary R2 named, narrowed by one term rather than closed, and
+ * it is unchanged in the safe direction: the model reports a group SHUT
+ * that the game may hold open, which shows up as a walk that waits rather
+ * than a walk that walks through a solid.
  *
  * ⚠ A STATIC solid resting on a button would hold it forever and this
  * model would miss it. `assertNoStaticPress` is the guard, and it runs
- * over every level rather than being asserted in prose.
+ * over every level rather than being asserted in prose. ⚠ A `movingSolids`
+ * box is NOT covered by that guard — it is the caller's live state, and the
+ * caller is the one that knows the block moved.
+ *
+ * @param {object[]=} movingSolids  `[{id, rect}]` — live boxes for solids
+ *   the run moves. A `Cover` must never appear here: the game's own loop
+ *   excludes it (`if (c && !(c is Cover))`), which is what stops a closed
+ *   cover from pressing the button it is sitting on top of.
  */
-export function pressedGroups(world, playerBox) {
+export function pressedGroups(world, playerBox, movingSolids = []) {
     const groups = new Set();
     for (const p of world.pressers) {
-        if (rectsOverlap(playerBox, p.rect)) groups.add(p.t);
+        if (rectsOverlap(playerBox, p.rect)) {
+            groups.add(p.t);
+            continue;
+        }
+        for (const s of movingSolids) {
+            if (rectsOverlap(s.rect, p.rect)) { groups.add(p.t); break; }
+        }
     }
     return groups;
 }
@@ -374,8 +394,24 @@ export function pressedGroups(world, playerBox) {
  * that yet" is how the statue got its offset wrong for two slices.
  */
 export function stepActivators(state, world, playerBox, opts = {}) {
-    const { inventory = null, keys = null } = opts;
-    const pressed = pressedGroups(world, playerBox);
+    const { inventory = null, keys = null, movingSolids = [] } = opts;
+    const pressed = pressedGroups(world, playerBox, movingSolids);
+    /**
+     * ⛓ R5 SLICE 6: THE OCCUPANCY GUARD COUNTS BLOCKS TOO, and it is the
+     * half that makes L39 solvable at all.
+     *
+     * `Cover.update`'s reset arm collides `["Solid", "Player"]` and
+     * `Lock.activationStep`'s restore arm collides `["Player", "Enemy",
+     * "Solid"]`. So a block parked on an OPEN cover keeps it open after the
+     * button that opened it is released — which is why the room is not the
+     * three-simultaneous-holds §18.5 read it as: a block latches its own
+     * cover by standing on it.
+     */
+    const occupied = (r) => {
+        if (rectsOverlap(playerBox, r)) return true;
+        for (const s of movingSolids) if (rectsOverlap(s.rect, r)) return true;
+        return false;
+    };
     /**
      * What a touch responder DID this tick, for the caller that owns the
      * player: `{kind: 'snap'|'turnoff', id, y?, touching?}`.
@@ -499,7 +535,7 @@ export function stepActivators(state, world, playerBox, opts = {}) {
             if (!s.open) s.alpha = 1;   // `if (type == normType) alpha = 1`
             // returnToNormal / reset — BOTH are guarded by occupancy, and
             // the guard is why a crossing is possible at all.
-            if (!rectsOverlap(playerBox, a.rect)) {
+            if (!occupied(a.rect)) {
                 s.open = false;
                 s.alpha = 1;
             }
