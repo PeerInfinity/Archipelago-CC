@@ -423,6 +423,8 @@ describe('⛔⛔ L38 is TWO ROOMS — §20.8\'s one-line entrance leg, refuted',
             'the pulse\'s player damage',
             'the `Chest` verb',
             'the `SealPiece` pickup',
+            '⛔⛔ the `SealController` BEHIND the SealPiece',
+            '⚠ and it moves TWO `Music` STATICS',
         ]);
         for (const u of L38_CHAIN.unbuilt) expect(u.src).toMatch(/\.as/);
         expect(L38_CHAIN.links.filter((l) => !l.modelled)).toHaveLength(3);

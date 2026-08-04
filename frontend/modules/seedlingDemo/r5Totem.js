@@ -299,11 +299,33 @@ export const L38_CHAIN = Object.freeze({
                 + 'before',
         }),
         Object.freeze({
-            what: 'the `SealPiece` pickup', src: 'Chest.as:76 + Pickups/SealPiece.as',
-            why: '`open()` adds one unconditionally. It is a `special` pickup — 150 frozen '
-                + 'frames — and it belongs to `SealController`, a collectible family this '
-                + 'arc has never touched. A ceremony the tape does not know about is 150 '
-                + 'dead frames the continuation assert WILL see.',
+            what: 'the `SealPiece` pickup', src: 'Chest.as:76 + Pickups/SealPiece.as:17-48',
+            why: '⛔ `open()` adds one UNCONDITIONALLY, at the chest\'s own position — which '
+                + 'is (9,7), the one cell the walk has to pass through. So it cannot be '
+                + 'routed around: a `special = true` pickup is 150 frozen frames the tape '
+                + 'has to know about, or the continuation assert sees them as dead.',
+        }),
+        Object.freeze({
+            what: '⛔⛔ the `SealController` BEHIND the SealPiece',
+            src: 'Pickups/SealPiece.as:41 + SealController.as:44-56,90-113,214-222',
+            why: '`SealPiece.removed()` adds `new SealController()`, whose CONSTRUCTOR sets '
+                + '`Game.freezeObjects = true` — a SECOND ceremony, chained behind the '
+                + 'first, and a third freeze shape. It runs a 60-tick fade to full '
+                + 'darkness, waits 60, and is dismissed by `Input.released(keys[6])` — the '
+                + 'X key, the dialogue key — or auto-removes at `alphaStep >= 120`. So it '
+                + 'is BOUNDED (≈120 ticks) but it is not optional, and `Bot.autoAdvance` '
+                + 'is called only from inside the dead-frame branch (§15).',
+        }),
+        Object.freeze({
+            what: '⚠ and it moves TWO `Music` STATICS',
+            src: 'Pickups/SealPiece.as:29-30 + SealController.as:221',
+            why: 'The pickup\'s ctor writes `Music.bkgdVolumeMaxExtern = 0` and '
+                + '`Music.fadeVolumeMaxExtern = 0`; `SealController.removed()` restores '
+                + 'both to 1. ⚠⚠ THE SOUND PIN READS THE MUSIC MIXER — that is the whole '
+                + 'reason `swimSoundClock` exists — so this is a static the tape\'s own '
+                + 'clock can see, and it is live for the ~120 ticks between the two '
+                + 'writes. [[feedback_a_static_survives_the_reconstruction]], on the arc\'s '
+                + 'one pinned channel.',
         }),
     ]),
 });
