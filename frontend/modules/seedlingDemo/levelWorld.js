@@ -2138,6 +2138,95 @@ export const PERSISTENCE_RESPONSE = Object.freeze({
 });
 
 /**
+ * ⛓ R5 slice 4: WHAT A HELD ITEM DOES AT LEVEL-BUILD TIME.
+ *
+ * A persistence flag is not the only thing that decides whether an entity
+ * exists. `Karlore.added()` is four lines:
+ *
+ *     override public function added():void {
+ *         super.added();
+ *         if (Player.hasFire) FP.world.remove(this);
+ *     }
+ *
+ * `added()` runs from `World.updateLists`, i.e. inside the frame that
+ * `new Game(48, ...)` builds — so the level the game builds is a function
+ * of the inventory at CONSTRUCTION, and `buildLevelWorld` had no idea. That
+ * is what made `r5-karlore-fire` a declared divergence: the model pinned
+ * against a plug the game had already removed.
+ *
+ * ⚠ THE ITEM MUST BE BANKED BEFORE THE BUILD, and that is a property of the
+ * RUN rather than of this table (§15.8). A grant naming the level it boots
+ * into, or naming the level a walk ENTERS, is applied after `new Game` —
+ * so it cannot reach any `added()` in that level. **A boot is not an
+ * entry.** `levelRun` passes the inventory it holds at the instant it
+ * builds each world, which is exactly the instant the game constructs its
+ * `Game`, and rebuilds a memoised world when that inventory has moved.
+ *
+ * ── ⛔ THE ENUMERATION, AND THE ONE THE KICKOFF GOT WRONG ─────────────
+ *
+ * §15.10 recorded this as "a small table (one entity class today)". A
+ * sweep of every constructor and `added()` in `src/` that reads a
+ * `Player.has*`/`Player.can*` finds **TWO**, and only one of them is a
+ * removal:
+ *
+ *   `NPCs/Karlore.as:27-33`     `added()`, `FP.world.remove(this)` — REAL,
+ *                               and it is this table's only entry.
+ *   `Enemies/BobBoss.as:35-43`  the CONSTRUCTOR, same two lines — and it
+ *                               is a **NO-OP**. `Game.as:2120` is
+ *                               `add(new BobBoss(...))`: the constructor
+ *                               runs to completion before `add`, so at the
+ *                               moment it calls `FP.world.remove(this)` the
+ *                               entity's `_world` is still null, and
+ *                               `World.remove` opens with
+ *                               `if (e._world !== this) return e`. Nothing
+ *                               is removed. What the guard DOES do is
+ *                               `return` out of the rest of the
+ *                               constructor, so a fire-holding player who
+ *                               re-enters L32 gets three BobBosses with no
+ *                               `bossType`, no weapon and no boss music —
+ *                               present, and differently broken. Modelling
+ *                               that as a removal would be wrong in the
+ *                               most expensive direction: the model would
+ *                               walk through a room the game still fills.
+ *
+ * ⚠ SO THE TABLE IS BY CLASS AND BY CITATION, never "an NPC that reads an
+ * item" (`feedback_coincidental_predicate_rots`) — the predicate that would
+ * read naturally here is exactly the one that sweeps in BobBoss.
+ *
+ * Each entry: `property` is the inventory mirror's own field name (the
+ * `ITEM_PROPERTIES` shape `levelRun` keeps), `cite` is where it was read.
+ */
+export const ADDED_TIME_REMOVAL = Object.freeze({
+    karlore: Object.freeze({
+        property: 'hasFire',
+        cite: 'NPCs/Karlore.as:27-33 — added(), FP.world.remove(this)',
+        why: 'the one-tile Solid plugging L48\'s corridor north out of the arrival. '
+            + '`NPC`\'s ctor sets type = "Solid" and Karlore\'s own setHitbox(16,16,8,8) '
+            + 'fills tile (7,17), so `fire` is never SPENT here — it is HELD, and the '
+            + 'level simply builds without him.',
+    }),
+});
+
+/** The item properties any level's build can depend on. */
+export const ADDED_TIME_PROPERTIES = Object.freeze([
+    ...new Set(Object.values(ADDED_TIME_REMOVAL).map((d) => d.property)),
+]);
+
+/**
+ * The build-affecting slice of an inventory mirror, as a comparable key.
+ *
+ * ⚠ A WORLD IS MEMOISED AND AN INVENTORY IS NOT. `new Game(n, ...)` re-runs
+ * every `added()` on every visit, so a level first entered without `fire`
+ * and re-entered with it is built TWICE and differently — and a memo keyed
+ * on the level alone would serve the first build to the second visit. This
+ * is what `levelRun` compares to decide whether its memo is still the world
+ * the game would construct.
+ */
+export function addedTimeKey(inventory) {
+    return ADDED_TIME_PROPERTIES.map((p) => `${p}=${inventory?.[p] === true ? 1 : 0}`).join(',');
+}
+
+/**
  * The declared responses a clear list may NOT name, and why in one line.
  *
  * Declared-and-refused is a different thing from unclassified: these are
@@ -2496,8 +2585,17 @@ function intAttr(attrs, name, fallback) {
  * `[x, y, tx, ty]` row has x/y in TILES and `tx` as a pixel offset into
  * the tileset strip, while an entity's x/y are raw pixels. Mixing them is
  * the easiest way to build a world that is 16x wrong in one place only.
+ *
+ * ⛓ `inventory` is the run's ITEM MIRROR AT CONSTRUCTION TIME (R5 slice 4),
+ * and it is optional only because most callers are asking a question no
+ * item can change. `ADDED_TIME_REMOVAL` is what reads it: an entity whose
+ * `added()` removes itself on a held item is simply not built. Omitting it
+ * builds the level a fresh save sees, which is what every caller before
+ * this got and still gets.
  */
-export function buildLevelWorld(levelRecord, { roles = PRE_R5_ROLES, cleared = null } = {}) {
+export function buildLevelWorld(levelRecord, {
+    roles = PRE_R5_ROLES, cleared = null, inventory = null,
+} = {}) {
     if (!levelRecord || typeof levelRecord !== 'object') {
         fail('buildLevelWorld needs a level record from seedling-map.json');
     }
@@ -2554,6 +2652,15 @@ export function buildLevelWorld(levelRecord, { roles = PRE_R5_ROLES, cleared = n
     // owns the second half. See `PUSHABLE_FAMILIES` for why the family is
     // recorded rather than the class.
     const pushables = [];
+    /**
+     * ⛓ R5: the entities a HELD ITEM removed at build time.
+     *
+     * Published rather than silent, for the same reason the clear list is:
+     * a world that differs from the extract has to be able to say why, and
+     * a planner asserting "the plug is gone" must be able to assert it
+     * against the build rather than against the absence of a collision.
+     */
+    const addedTimeRemoved = [];
 
     // --- tiles ---------------------------------------------------------
     // The extract has ALREADY applied loadlevel's own bounds guard
@@ -2685,6 +2792,22 @@ export function buildLevelWorld(levelRecord, { roles = PRE_R5_ROLES, cleared = n
         }
         const x = Number(e.x);
         const y = Number(e.y);
+
+        // ── ⛓ R5: what a HELD ITEM does to this entity, at build time ────
+        // `Karlore.added()` runs inside `new Game(level, ...)` and removes
+        // the NPC when `Player.hasFire`, so the level the game builds is a
+        // function of the inventory the player already had. See
+        // `ADDED_TIME_REMOVAL` — one class, by NAME and by citation,
+        // because the predicate that reads naturally here ("an NPC that
+        // reads an item") sweeps in `BobBoss`, whose identical two lines
+        // are a NO-OP in a constructor.
+        const addedRemoval = ADDED_TIME_REMOVAL[e.type];
+        if (addedRemoval && inventory?.[addedRemoval.property] === true) {
+            addedTimeRemoved.push({
+                tag: e.type, x, y, property: addedRemoval.property, cite: addedRemoval.cite,
+            });
+            continue;
+        }
 
         // ── R2: what a cleared persistence flag does to this entity ──────
         // Read from `PERSISTENCE_RESPONSE`, which is per CLASS, because the
@@ -3151,6 +3274,18 @@ export function buildLevelWorld(levelRecord, { roles = PRE_R5_ROLES, cleared = n
         roles: [...roles],
         tiles,
         walkableTiles,
+        /**
+         * ⛓ R5: the entities a HELD ITEM removed at build time, and the key
+         * the inventory they were tested against hashes to.
+         *
+         * `addedTimeKey` is what a memoising caller compares: `new Game(n,
+         * ...)` re-runs every `added()` on every visit, so a level first
+         * entered without `fire` and re-entered with it is built twice and
+         * differently, and a memo keyed on the level alone serves the first
+         * build to the second visit.
+         */
+        addedTimeRemoved,
+        addedTimeKey: addedTimeKey(inventory),
         /**
          * Where a pit in THIS level drops the player, from its `control`
          * block: `{level, offsetX, offsetY, sign}`, or **null** when the

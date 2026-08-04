@@ -307,11 +307,22 @@ describe('MODEL_EXEMPT: a declaration, never a predicate', () => {
         // this one, all of which are supposed to match the model exactly.
         expect([...MODEL_EXEMPT_NAMES].sort()).toEqual([
             'r5-bobboss-arm', 'r5-bobboss-fire', 'r5-bobboss-fire-control',
-            'r5-karlore-fire',
         ]);
         // The L60 kill pair is NOT here — its control matches the model and
         // its kill arm is exempt for a different, older reason.
         expect(MODEL_EXEMPT_NAMES).not.toContain('r5-l60-kill');
+    });
+
+    it('⛓ and `r5-karlore-fire` is NOT here any more — the model caught up', () => {
+        // Slice 4 step 4 paid the owed follow-up: `ADDED_TIME_REMOVAL` +
+        // the inventory `levelRun` hands each world it builds. The fire arm
+        // now matches its committed oracle recording byte for byte, so its
+        // exemption described nothing. Pinned by name because a re-added
+        // entry would silently re-weaken the three mirror checks — and
+        // because the divergence test in `tapeRunner.test.js` would then
+        // fail for a reason a reader could not attribute from here.
+        expect(MODEL_EXEMPT_NAMES).not.toContain('r5-karlore-fire');
+        expect(MODEL_EXEMPT_NAMES).not.toContain('r5-karlore-plug');
     });
 
     it('only ONE of them earns anything, and it is the boss fight', () => {

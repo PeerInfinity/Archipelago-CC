@@ -752,3 +752,113 @@ describe('R3: the touch-lock window', () => {
         expect(l71.activators.find((a) => a.touchRect).shield).toBe('hasDarkShield');
     });
 });
+
+describe('⛓ R5: a level BUILDS differently for a run that already holds the item', () => {
+    // `Karlore.added()` runs inside `new Game(48, ...)`, so L48's geometry
+    // is a function of the inventory at CONSTRUCTION — and which side of the
+    // construction a grant lands on is the whole of §15.8.
+    const plugged = (run) => run.world.solids.some((s) => s.tag === 'karlore');
+
+    it('a BOOT grant naming L48 does NOT open it — a boot is not an entry', () => {
+        // Two recordings were spent on this. `Bot` applies a boot grant
+        // AFTER `new Game` has run every `added()`, so the plug is built as
+        // though the item were absent; the model boots its world from an
+        // EMPTY inventory for exactly that reason. The item IS held one
+        // instant later, which is what makes this a trap rather than a bug.
+        const run = createLevelRun({
+            levelSource, boot: { level: 48, x: 120, y: 296 }, noclip: true,
+            grants: [{ level: 48, items: ['fire'] }],
+        });
+        expect(run.inventory.hasFire).toBe(true);
+        expect(plugged(run)).toBe(true);
+        expect(run.world.addedTimeRemoved).toEqual([]);
+    });
+
+    it('...and neither does a grant naming L48 on a walk that ENTERS L48', () => {
+        // The second recording's shape: `synthesizeLegs` emits the grant
+        // against the level its RUN banked the item in, which for a two-leg
+        // plan is the destination — and that grant fires on the first
+        // observation whose level is 48, i.e. after the world was built.
+        const tape = loadTape('r5-karlore-fire');
+        const run = createLevelRun({
+            levelSource, boot: tape.boot, noclip: false, noDamage: true,
+            noHazards: tape.noHazards, pins: tape.pins,
+            grants: [{ level: 48, items: ['fire'] }],
+        });
+        for (let t = 0; t < tape.tick_count; t++) run.advance(heldKeysAt(tape, t));
+        expect(run.level).toBe(48);
+        expect(run.inventory.hasFire).toBe(true);
+        expect(plugged(run)).toBe(true);
+    });
+
+    it('⛓ but a grant naming the level BEFORE it does — the shipped fixture', () => {
+        // `r5-karlore-fire`'s own grant names L47, the level the walk boots
+        // into, so the item is banked thirteen ticks before the door and
+        // `new Game(48, ...)` builds a level with no Karlore in it at all.
+        const tape = loadTape('r5-karlore-fire');
+        expect(tape.grants).toEqual([{ level: 47, items: ['fire'] }]);
+        const run = createLevelRun({
+            levelSource, boot: tape.boot, noclip: false, noDamage: true,
+            noHazards: tape.noHazards, pins: tape.pins, grants: tape.grants,
+        });
+        for (let t = 0; t < tape.tick_count; t++) run.advance(heldKeysAt(tape, t));
+        expect(run.level).toBe(48);
+        expect(plugged(run)).toBe(false);
+        expect(run.world.addedTimeRemoved.map((r) => r.tag)).toEqual(['karlore']);
+        // ...and the walk really is PAST the plug, not merely in a world
+        // without one — row 16, which the control arm cannot reach.
+        expect(Math.floor(run.state.y / 16)).toBe(16);
+    });
+
+    it('⛔ a MEMOISED world is rebuilt when the item arrives between two visits', () => {
+        // The failure this guards: a world memo keyed on the level alone
+        // serves the first build to the second visit, and the game does the
+        // opposite — `new Game(n, ...)` re-runs every `added()` every time.
+        // Driven on a real round trip: `transition-west-return` leaves L0
+        // for L94 and comes back, and the grant is banked in L94.
+        //
+        // ⚠ The vehicle is a SYNTHETIC source (L0 with a karlore added at a
+        // tile the walk never touches), because no level on a round-trip
+        // tape holds one. The entity is real, its class is real, and the
+        // question — "does the memo survive an item" — is the shipped one.
+        const tape = loadTape('transition-west-return');
+        const withKarlore = (n) => {
+            const rec = levelSource(n);
+            return n === 0
+                ? { ...rec, entities: [...rec.entities, { type: 'karlore', x: 16, y: 16, attrs: {} }] }
+                : rec;
+        };
+        const run = createLevelRun({
+            levelSource: withKarlore, boot: tape.boot, noclip: tape.noclip,
+            grants: [{ level: 94, items: ['fire'] }],
+        });
+        expect(run.level).toBe(0);
+        expect(plugged(run)).toBe(true);          // built before the item
+        for (let t = 0; t < tape.tick_count; t++) run.advance(heldKeysAt(tape, t));
+        expect(run.level).toBe(0);                // and back again
+        expect(run.inventory.hasFire).toBe(true);
+        expect(plugged(run)).toBe(false);         // ...rebuilt, as `new Game` would
+    });
+
+    it('⚠ ...and NOT mid-visit, because `added()` has already run', () => {
+        // The mirror of the earned-clears rule: dropping a memo while the
+        // run is standing in the level would remove the entity under the
+        // player's feet, and the game does not. An item picked up in L48
+        // does not make Karlore vanish; the next `new Game(48, ...)` does.
+        const tape = loadTape('transition-west-return');
+        const withKarlore = (n) => {
+            const rec = levelSource(n);
+            return n === 94
+                ? { ...rec, entities: [...rec.entities, { type: 'karlore', x: 16, y: 16, attrs: {} }] }
+                : rec;
+        };
+        const run = createLevelRun({
+            levelSource: withKarlore, boot: tape.boot, noclip: tape.noclip,
+            grants: [{ level: 94, items: ['fire'] }],
+        });
+        for (let t = 0; t < 61; t++) run.advance(heldKeysAt(tape, t));
+        expect(run.level).toBe(94);
+        expect(run.inventory.hasFire).toBe(true);  // banked ON arrival...
+        expect(plugged(run)).toBe(true);           // ...and the NPC stays put
+    });
+});

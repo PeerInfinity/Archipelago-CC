@@ -33,7 +33,7 @@
  * it, rather than eagerly for all 116.
  */
 
-import { buildLevelWorld, rectsOverlap } from './levelWorld.js';
+import { addedTimeKey, buildLevelWorld, rectsOverlap } from './levelWorld.js';
 import {
     INITIAL_FRAMES_THIS_CHARACTER, PICKUP_CEREMONY, TALK_KEY,
     beginDialogue, stepDialogue,
@@ -138,6 +138,22 @@ export function createLevelRun({
     // every pre-R0 caller keeps exactly the census it had.
     const worlds = new Map();
     /**
+     * ⛓ THE ITEM MIRROR, DECLARED HERE BECAUSE A WORLD READS IT (R5).
+     *
+     * `levelWorld.ADDED_TIME_REMOVAL`: `Karlore.added()` runs inside
+     * `new Game(48, ...)` and removes the NPC when `Player.hasFire`, so a
+     * level's GEOMETRY is a function of the inventory at construction. The
+     * grants machinery below is what fills this in; it lives above
+     * `worldFor` only because a builder cannot read a binding that has not
+     * been evaluated yet.
+     *
+     * ⚠ AND THE BOOT WORLD IS BUILT FROM AN EMPTY ONE, on purpose. A boot
+     * grant is applied AFTER the world exists — which is exactly what the
+     * game does, `Bot` applying its grant list after `new Game` has already
+     * run every `added()`. §15.8: **a boot is not an entry.**
+     */
+    const inventory = initialInventory();
+    /**
      * R2: the tape's persistence clears, indexed BY LEVEL.
      *
      * A clear is `(level, tag)` and a world is built per level, so the run
@@ -186,12 +202,35 @@ export function createLevelRun({
     };
     const worldFor = (n) => {
         if (!worlds.has(n)) {
-            const opts = { ...(roles ? { roles } : {}) };
+            const opts = { ...(roles ? { roles } : {}), inventory };
             if (clearedByLevel.has(n)) opts.cleared = clearedByLevel.get(n);
-            worlds.set(n, buildLevelWorld(levelSource(n),
-                Object.keys(opts).length > 0 ? opts : undefined));
+            worlds.set(n, buildLevelWorld(levelSource(n), opts));
         }
         return worlds.get(n);
+    };
+    /**
+     * ⛓ A MEMOISED WORLD CAN GO STALE FOR A SECOND REASON (R5 slice 4).
+     *
+     * `applyEarnedClears` drops the memo when a flag the player turned off
+     * changes what the next `Game` builds. A held ITEM does the same thing
+     * through a different door: `new Game(n, ...)` re-runs every `added()`,
+     * so a level first entered without `fire` and re-entered with it is
+     * built twice and differently.
+     *
+     * ⚠ CASHED ON THE TRANSITION PATH ONLY, and for exactly the reason the
+     * earned clears are: dropping a memo while the run is standing IN that
+     * level would remove the entity mid-visit — and mid-visit is the one
+     * time the game does NOT, because `added()` has already run. An item
+     * picked up in L48 does not make Karlore vanish under the player's
+     * feet; the next `new Game(48, ...)` is what does.
+     */
+    const dropWorldIfBuiltStale = (n) => {
+        const w = worlds.get(n);
+        if (!w || w.addedTimeKey === addedTimeKey(inventory)) return;
+        worlds.delete(n);
+        activatorStates.delete(n);
+        pushableStates.delete(n);
+        bridgeStates.delete(n);
     };
     /**
      * R2: per-level activator state (buttons, locks, covers).
@@ -382,7 +421,9 @@ export function createLevelRun({
     // FIRST entry only — a revisit does not re-grant. For a boolean that is
     // invisible, but `health` ADDS to `hitsMax`, so a re-grant on every
     // visit would silently inflate it.
-    const inventory = initialInventory();
+    //
+    // ⚠ `inventory` itself is declared beside `worldFor`, because a level's
+    // BUILD reads it (`levelWorld.ADDED_TIME_REMOVAL`).
     /**
      * ── R4: `Main.SAVE_FILE.data.hasKey`, as a set of key types ────────
      *
@@ -1480,6 +1521,9 @@ export function createLevelRun({
             // runs and where a flag the player turned off finally removes
             // its lock.
             applyEarnedClears(level);
+            // ...and so is where every `added()` runs again, which is the
+            // other way a memoised world can be the wrong one (R5 slice 4).
+            dropWorldIfBuiltStale(level);
             world = worldFor(level);
             // A new `Game` means new entities: every lock is solid again.
             if (!noclip) freshActivatorState(level);

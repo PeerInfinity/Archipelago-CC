@@ -39,8 +39,14 @@
  * The control's hold is stopped by a Solid, so its length does not matter;
  * the fire arm's is stopped by nothing until row 14, which is WATER. 28
  * ticks lands the fire arm at y ≈ 260.8, inside row 16 and two rows short
- * of a hazard this walk cannot survive. Modelled against a world with the
- * karlore entity filtered out — which is exactly the world `added()` leaves.
+ * of a hazard this walk cannot survive.
+ *
+ * ⛓ AND BOTH ARMS NOW RUN AGAINST THE SAME LEVEL SOURCE (R5 slice 4 step
+ * 4). This script used to model the fire arm against a hand-filtered
+ * record. `levelWorld.ADDED_TIME_REMOVAL` made that unnecessary: the model
+ * removes Karlore at build time when the run's banked inventory holds
+ * `fire`, exactly as `added()` does, so the fire arm matches its committed
+ * ORACLE recording byte for byte and its `MODEL_EXEMPT` entry is retired.
  *
  * Usage:
  *   node scripts/procgen/plan-seedling-r5-karlore.mjs            # plan + report
@@ -67,16 +73,17 @@ const { KARLORE, CONCH, KEY_LEG } = await import(join(MODULE, 'r5Chain.js'));
 const WRITE = process.argv.includes('--write');
 const source = atlasLevelSource();
 
-// The two worlds the two arms really run in. The fire arm's is the level
-// with the karlore entity gone, because that is what `added()` leaves —
-// modelled by filtering the RECORD rather than by patching the built world,
-// so the build path is identical for both arms.
-const fireSource = (n) => {
-    const rec = source(n);
-    return n === KARLORE.level
-        ? { ...rec, entities: rec.entities.filter((e) => e.type !== 'karlore') }
-        : rec;
-};
+// ⛓ THE FIRE ARM'S WORLD IS NOW THE MODEL'S OWN (R5 slice 4 step 4).
+//
+// This script used to filter the karlore entity out of the level RECORD and
+// hand the fire arm a doctored `levelSource`, because `buildLevelWorld` had
+// no idea an NPC's `added()` reads an item property.
+// `levelWorld.ADDED_TIME_REMOVAL` is that knowledge now, and `levelRun`
+// hands each world the inventory banked at the instant it builds it. So
+// BOTH ARMS RUN AGAINST THE SAME SOURCE, and the only thing that decides
+// which level they get is `grants` — which is what the pair claimed all
+// along and could not previously demonstrate.
+const heldFire = { hasFire: true };
 
 // ── 1. the plug, confirmed against the extract ────────────────────────
 const world = buildLevelWorld(source(KARLORE.level), { roles: ROLES });
@@ -113,7 +120,7 @@ const floodFrom = (w, start) => {
 const start = [KARLORE.tile.tx, KARLORE.tile.ty + 1];
 const beyond = `${KARLORE.tile.tx},${KARLORE.throughRow}`;
 const pluggedReach = floodFrom(world, start);
-const fireWorld = buildLevelWorld(fireSource(KARLORE.level), { roles: ROLES });
+const fireWorld = buildLevelWorld(source(KARLORE.level), { roles: ROLES, inventory: heldFire });
 const openReach = floodFrom(fireWorld, start);
 console.log(`   with the plug: ${pluggedReach.size} tiles reachable from `
     + `(${start.join(',')}); without it: ${openReach.size}`);
@@ -159,7 +166,7 @@ const synth = synthesizeLegs([
     { level: KARLORE.entryFrom.level, targets: [], exit: { ...KARLORE.entryFrom.teleporter } },
     { level: KARLORE.level, targets: [{ x: KARLORE.arrival.x, y: KARLORE.throughY }] },
 ], {
-    levelSource: fireSource,
+    levelSource: source,
     boot: { ...KARLORE.boot },
     name: 'r5-karlore-fire',
     lattice: 16,
@@ -236,7 +243,7 @@ for (const t of [control, fire]) {
 }
 
 const controlRun = runTape(control, { levelSource: source });
-const fireRun = runTape(fire, { levelSource: fireSource });
+const fireRun = runTape(fire, { levelSource: source });
 const cEnd = controlRun.ticks.at(-1);
 const fEnd = fireRun.ticks.at(-1);
 console.log(`\n## the pair — ONE FIELD APART (\`grants\`)`);
@@ -259,15 +266,26 @@ if (cEnd.y - 2 < plug.rect.bottom || cEnd.y - 2 >= plug.rect.bottom + 1) {
         + `${plug.rect.bottom}`);
 }
 
-// ⚠ The fire arm's model is the world WITHOUT karlore, which is a world
-// `buildLevelWorld` cannot produce from the extract — it has no idea an
-// NPC's `added()` reads an item property. So this arm is a declared
-// divergence (`r5Chain.MODEL_EXEMPT`), and modelling `added()`-time removal
-// is the owed follow-up rather than something this slice invented a hook for.
-const naive = runTape(fire, { levelSource: source });
-console.log(`   ⚠ the SHIPPED model (which does not know about \`added()\`) puts the fire `
-    + `arm at (${naive.ticks.at(-1).x},${naive.ticks.at(-1).y.toFixed(2)}) — a pin, like `
-    + 'the control. That is the declared divergence, not a defect.');
+// ⛓ AND THE MODEL PRODUCES BOTH OF THOSE FROM ONE SOURCE (R5 slice 4
+// step 4). This used to be the place a divergence was declared: the fire
+// arm's world was hand-filtered, `buildLevelWorld` could not produce it,
+// and `r5Chain.MODEL_EXEMPT` carried the arm by name. `ADDED_TIME_REMOVAL`
+// retired that. The two runs above differ in `grants` and in nothing else —
+// no doctored `levelSource`, no patched world — and the check that says so
+// is that the fire arm's world reports the removal it made.
+const fireBuilt = buildLevelWorld(source(KARLORE.level), { roles: ROLES, inventory: heldFire });
+const removed = fireBuilt.addedTimeRemoved;
+console.log(`   ⛓ the model builds L${KARLORE.level} from ONE source and removes `
+    + `${removed.length} entit(y/ies) for the held item: `
+    + `${removed.map((r) => `${r.tag}@${r.x},${r.y} (${r.property})`).join(', ') || 'NONE'}`);
+if (removed.length !== 1 || removed[0].tag !== 'karlore') {
+    throw new Error('the fire arm\'s world did not remove karlore at build time, so the '
+        + 'two arms are running the same geometry and the pair is measuring nothing');
+}
+if (buildLevelWorld(source(KARLORE.level), { roles: ROLES }).addedTimeRemoved.length !== 0) {
+    throw new Error('the CONTROL arm\'s world also removed something at build time — the '
+        + 'removal is not conditioned on the item and the pair proves nothing');
+}
 
 // ── 3. what is downstream, stated so the slice's gap is legible ───────
 console.log(`\n## downstream of the plug`);

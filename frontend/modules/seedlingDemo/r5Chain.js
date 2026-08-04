@@ -348,6 +348,26 @@ export const CONCH = Object.freeze({
  * ⚠ BY NAME, never by predicate. `feedback_coincidental_predicate_rots`:
  * "has presses" or "has enemies" would sweep in every later kill fixture,
  * all of which are supposed to match.
+ *
+ * ⛓ AND ONE ENTRY HAS BEEN RETIRED — `r5-karlore-fire`.
+ *
+ * It was here because `Karlore.added()` reads `Player.hasFire` at LEVEL
+ * BUILD time and `buildLevelWorld` had no idea an NPC's `added()` reads an
+ * item property, so the model pinned where the game walked through. Slice 4
+ * step 4 paid the OWED follow-up: `levelWorld.ADDED_TIME_REMOVAL` is that
+ * table, `levelRun` hands each world the inventory banked when it builds
+ * it, and the fire arm now matches its COMMITTED ORACLE RECORDING byte for
+ * byte — with no re-record, because the recording was always the game's and
+ * it is the model that caught up. A divergence turned into an exact match
+ * is strictly the better claim, and an exemption that no longer describes
+ * anything is a weakening kept for nothing.
+ *
+ * ⚠ The retirement is self-policing: `tapeRunner.test.js` asserts that
+ * every name here really does diverge, so leaving the entry in would have
+ * gone RED the moment the model caught up. That is the guard working, and
+ * it is why this is a list of names (`feedback_retired_oracle_check_the_regen`
+ * — the regen here is `EXPECTED_TO_DIVERGE`, and it reads this list rather
+ * than keeping its own).
  */
 export const MODEL_EXEMPT = Object.freeze({
     'r5-bobboss-arm': Object.freeze({
@@ -366,19 +386,6 @@ export const MODEL_EXEMPT = Object.freeze({
             + 'extract could ever see it — and `receiveInput` goes false for the two '
             + '120-frame form transitions. The mirror is amended with `fire` rather '
             + 'than excused, so a run that fought and did not win goes RED here.',
-    }),
-    'r5-karlore-fire': Object.freeze({
-        earned: Object.freeze([]),
-        refusesInput: false,
-        why: '⛓ THE HEADLINE ARM, and its divergence is a DIFFERENT SHAPE from the boss '
-            + 'fixtures\': nothing here is earned and nothing is taken over. '
-            + '`Karlore.added()` reads `Player.hasFire` at LEVEL BUILD time and removes '
-            + 'the NPC, so the level the game builds is not the level the extract '
-            + 'describes — and `buildLevelWorld` has no idea an NPC\'s `added()` reads an '
-            + 'item property. The model therefore pins where the game walks through. '
-            + '⚠ Modelling `added()`-time removal is the OWED FOLLOW-UP: it is a small '
-            + 'table (one entity class today) and it would turn this divergence into an '
-            + 'exact match, which is strictly the better claim.',
     }),
     'r5-bobboss-fire-control': Object.freeze({
         earned: Object.freeze([]),

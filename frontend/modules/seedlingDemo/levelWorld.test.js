@@ -34,6 +34,9 @@ import {
     RELAXED_ROLES,
     ROLES,
     STAIRS_TAGS,
+    ADDED_TIME_REMOVAL,
+    ADDED_TIME_PROPERTIES,
+    addedTimeKey,
     buildLevelWorld,
     cliffSideClassFor,
     entityRect,
@@ -1491,5 +1494,118 @@ describe('R1: the priced proximity volumes', () => {
         expect(L43.proximityHazards.some((h) => h.tag === 'bosstotem')).toBe(false);
         expect(ENTITY_CLASSES.bosstotem.hazard.inert).toMatch(/classCount\(Wand\)/);
         expect(ENTITY_CLASSES.bosstotem.hazard.inert).toMatch(/R3/);
+    });
+});
+
+describe('⛓ R5: what a HELD ITEM does at level-BUILD time', () => {
+    const L48 = (inventory) => buildLevelWorld(levelRecord(48), { roles: ROLES, inventory });
+
+    it('L48 builds WITH the karlore plug from an empty inventory', () => {
+        const w = L48(null);
+        expect(w.solids.some((s) => s.tag === 'karlore')).toBe(true);
+        expect(w.addedTimeRemoved).toEqual([]);
+    });
+
+    it('...and WITHOUT it when the run holds `fire`, naming what it removed', () => {
+        // `Karlore.added()` is `if (Player.hasFire) FP.world.remove(this)`,
+        // and `added()` runs inside `new Game(48, ...)` — so the level the
+        // game builds is a function of the inventory at construction.
+        const w = L48({ hasFire: true });
+        expect(w.solids.some((s) => s.tag === 'karlore')).toBe(false);
+        expect(w.addedTimeRemoved).toHaveLength(1);
+        expect(w.addedTimeRemoved[0]).toMatchObject({
+            tag: 'karlore', x: 112, y: 272, property: 'hasFire',
+        });
+        // Published, not silent: a world that differs from the extract has
+        // to be able to say why.
+        expect(w.addedTimeRemoved[0].cite).toMatch(/Karlore\.as/);
+    });
+
+    it('⚠ a FALSE property builds the plug — the test is `=== true`, not truthiness', () => {
+        // An inventory mirror carries every boolean, so `hasFire: false` is
+        // the ordinary reading and it must not remove anything. `undefined`
+        // (a caller that passes a partial mirror) must not either.
+        expect(L48({ hasFire: false }).addedTimeRemoved).toEqual([]);
+        expect(L48({ hasSword: true }).addedTimeRemoved).toEqual([]);
+        expect(L48({ hasFire: 1 }).addedTimeRemoved).toEqual([]);
+    });
+
+    it('⛔ BobBoss is NOT in the table, and the source is why — not the extract', () => {
+        // `Enemies/BobBoss.as:35-43` has Karlore's two lines VERBATIM, in a
+        // CONSTRUCTOR, and adding it here would be wrong twice over.
+        //
+        // 1. It is a NO-OP in the game. `Game.as:2120` is
+        //    `add(new BobBoss(...))`: the ctor runs to completion before
+        //    `add`, so `_world` is still null when it calls
+        //    `FP.world.remove(this)`, and `World.remove` opens with
+        //    `if (e._world !== this) return e`. Nothing is removed — the
+        //    guard only `return`s out of the rest of the constructor,
+        //    leaving a BobBoss with no bossType, no weapon and no boss
+        //    music. Present, and differently broken.
+        // 2. ⚠ AND NO LEVEL PLACES ONE, so the extract cannot even raise
+        //    the question: `BobBoss` is spawned at RUNTIME by the encounter
+        //    script, which is the same reason its reward is in no level's
+        //    pickup list. A table entry for it would be untestable AND
+        //    wrong, which is the worst pair.
+        for (const k of Object.keys(ADDED_TIME_REMOVAL)) expect(k).not.toMatch(/bobboss/);
+        expect(MAP.levels.some((L) => (L.entities ?? [])
+            .some((e) => /bobboss/.test(e.type)))).toBe(false);
+    });
+
+    it('⛓ and the table is COMPLETE against the extract: only L48 builds differently', () => {
+        // The claim the one-entry table needs, asked of the DATA rather than
+        // of the table: hand every level every item and see which ones
+        // change. A second `added()`-time reader added to the game — or
+        // missed in the sweep of `src/` — shows up here as a level whose
+        // build moved and whose class nobody declared.
+        const everything = Object.fromEntries(
+            ADDED_TIME_PROPERTIES.map((p) => [p, true]));
+        const moved = [];
+        const unbuildable = [];
+        for (const L of MAP.levels) {
+            let w;
+            try {
+                w = buildLevelWorld(L, { roles: RELAXED_ROLES, inventory: everything });
+            } catch {
+                unbuildable.push(L.level);
+                continue;
+            }
+            if (w.addedTimeRemoved.length > 0) moved.push(L.level);
+        }
+        expect(moved).toEqual([48]);
+        // ⚠ AND THE SKIPS ARE NAMED. A sweep that quietly dropped levels
+        // would report the same green if it dropped 48 itself
+        // (`feedback_bounded_sweep_must_name_what_it_bounded`). One level in
+        // 116 refuses the RELAXED census; it is pinned by number, so a build
+        // regression that widened the skip list is a red here rather than a
+        // completeness claim over a shrinking map.
+        expect(unbuildable).toEqual([112]);
+        expect(MAP.levels).toHaveLength(116);
+    });
+
+    it('the table is a list of NAMES with real item properties and citations', () => {
+        // `feedback_coincidental_predicate_rots`: the predicate that reads
+        // naturally here — "an NPC whose added() reads an item" — is exactly
+        // the one that sweeps in BobBoss.
+        expect(Object.keys(ADDED_TIME_REMOVAL).length).toBeGreaterThan(0);
+        for (const [tag, d] of Object.entries(ADDED_TIME_REMOVAL)) {
+            expect(ENTITY_CLASSES[tag], `${tag} is not a transcribed class`).toBeDefined();
+            expect(d.cite, tag).toMatch(/\.as:/);
+            expect(d.why.length, tag).toBeGreaterThan(40);
+            expect(ADDED_TIME_PROPERTIES, tag).toContain(d.property);
+        }
+    });
+
+    it('⛓ `addedTimeKey` separates the two builds — a memo keyed on the level LIES', () => {
+        // `new Game(n, ...)` re-runs every added() on every visit, so a
+        // level first entered without `fire` and re-entered with it is built
+        // twice and differently. This is what a memoising caller compares.
+        expect(addedTimeKey({ hasFire: true })).not.toBe(addedTimeKey({ hasFire: false }));
+        expect(addedTimeKey(null)).toBe(addedTimeKey({}));
+        expect(L48({ hasFire: true }).addedTimeKey).toBe(addedTimeKey({ hasFire: true }));
+        // ...and it ignores everything a build does NOT depend on, or every
+        // pickup on a walk would drop every memoised world in the run.
+        expect(addedTimeKey({ hasFire: true, hasSword: true }))
+            .toBe(addedTimeKey({ hasFire: true }));
     });
 });
