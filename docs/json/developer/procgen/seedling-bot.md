@@ -2655,3 +2655,106 @@ arrival the D5 corridor uses (321 tiles with the conch, 149 without,
 neither reaching it).
 
 Every number is committed in `r5Swim.FEATHER_BLOCKER` with a test.
+
+⛔⛔ **AND SLICE 5 RETIRED THE CONCLUSION.** The first paragraph survives —
+the pocket really is entered only from above. The second is wrong twice
+over, and both faults are worth carrying:
+
+1. it was measured on a **tile-centre lattice**, which cannot see the
+   half-tiles a `CliffSide` PIXELMASK leaves free;
+2. and `plannerObstacleAt`'s third argument is an **INDEX** into
+   `level.teleporters` while the test passed the teleporter **OBJECT**, so
+   the exemption its own comment claims ("this is not the
+   teleporter-volume policy reporting its own avoidance as a wall") never
+   fired. It was exactly that.
+
+`probe-seedling-r5-feather` reproduces every committed number with the
+instrument that produced it, then disagrees at 8 px and at ONE PIXEL. See
+the slice-5 section below.
+
+---
+
+## R5 slice 5: the feather, and the frames a mixer steps on
+
+### ⛔ Neither lattice is the game — run the third arm
+
+16 px cannot see a half-tile. 8 px cannot see a tile CENTRE: its four
+probes sit at ±4, and the centre is not one of them. So the two lattices
+disagree about L87, and only a flood at **ONE PIXEL** — the granularity
+`Mobile.moveX/moveY` actually step — settles it. It is affordable: a
+30x20 room is ~18 s.
+
+⚠ And run the coarse arm anyway, as a CONTROL. Reproducing the committed
+numbers with the instrument that produced them is what makes the fine
+arm's disagreement a measurement rather than a new opinion.
+
+### ⛓ The sixth press arm: `BreakableRock`
+
+`hit(_t)` breaks when `rockType <= _t` and `Player.as:1071-1074` passes
+`hasGhostSword ? 1 : 0` — so a PLAIN SWORD breaks every rock except the
+`breakablerockghost` family. Three things a route has to know:
+
+- **`hit()` removes nothing.** `endAnim` (the Spritemap completion
+  callback, wired in the constructor) is what calls `FP.world.remove`, so
+  the rock is Solid for the whole animation — SEVEN ticks, by simulating
+  the `while (_timer >= 1)` loop rather than dividing (the closed form
+  says six at a true 1/30, one ulp away).
+- **`endAnim` writes persistence unconditionally.** The `tag >= 0` guard
+  belongs to `check()`, not to it. For a `tag = -1` rock,
+  `levelPersistenceSet` writes `level * 30 - 1` — **the previous level's
+  tag 29**. `breakableRocks.outOfBandFlagFor` is that arithmetic, checked
+  against `Fire.removed()`'s hard-coded {31,29}.
+- **It comes back.** `check()` only removes a rock with `tag >= 0`, so a
+  `-1` rock is rebuilt by every `new Game`. A break is PER VISIT.
+
+### ⛔⛔ The swim channel is a MIXER, not a `Player` field
+
+Two facts, and a fixture had to swim across a door before either could be
+seen:
+
+1. `arriveIn` builds a whole new `Player` — right for `terrain`,
+   `direction` and `drownTimer`, and WRONG for the swim channel, because
+   `Music`'s pinned channels are STATICS and survive the door.
+2. `Bot.update` calls `Music.pinStep()` **above the armed check and above
+   the dead-frame gate**, with its own comment: *"a mixer does not stop
+   because the tape is between windows or because the room is fading."*
+
+So the channel advances on frames the tape does not count: **20 per room
+load** (`blackCover` 1 at −0.05, simulated in doubles — the twentieth
+lands at −3.19e-16) and **150 per pickup ceremony**
+(`Pickup.specialTimer`).
+
+⚠ Carry it from the STEPPED tick (`next`), not from the pre-step `state`,
+or the model lands exactly one frame behind.
+
+⛓ The game confirms both constants by arithmetic: `r5-feather` reports
+**231** fade frames = 21 (boot) + 3 × 20 (doors) + 150 (ceremony), and its
+first recording — whose ceremony never fired — reported **81**.
+
+### ⛔ A rise in pixels is not a crossing
+
+`r5-feather-climb`'s first claim was `minRise: 32` and the live window rose
+**31.70 px**. That is the CAP, not a near miss: the column above the
+pocket is two tiles and then a tree. And the number was never the
+discriminator — the refusing arm's 24.35 px stall is a DIFFERENT ROOM, so
+comparing them compares two geometries. What a refusing arm can never do
+is FINISH ABOVE THE ROW IT STALLS IN. Claim the crossing; demote the
+distance to a sanity floor.
+
+### ⛔ The totem entrance is a button, not three kills
+
+L38 → L39 lands at tile (9,38); the `wandlock tset -1 tag 8` is at (9,37)
+in a one-tile corridor; the three spinners whose deaths open it are thirty
+tiles up on the far side of it. Four cells reachable, none of the three.
+
+The opener is `L38 buttonroom@32,48 {tset: 8, flip: 1, room: 39}`:
+`ButtonRoom.as:87-93` writes `Game.setPersistence(t, persist, room)` with
+`t` the **TSET** and `flip` making a press write FALSE, so the lock is
+deleted at BUILD time from the previous room. Behind it is a second gate,
+`rope@96,384` (tag 9) — `RopeStart`, still a REFUSED press arm.
+
+    4 cells / 0 spinners   nothing cleared
+   56 cells / 0 spinners   {39,8}
+  688 cells / 3 spinners   {39,8} + {39,9}
+
+`probe-seedling-r5-totem-entrance` is the measurement.
