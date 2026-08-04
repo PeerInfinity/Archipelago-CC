@@ -77,6 +77,8 @@ import {
 } from './breakableRocks.js';
 import { keyLineTouches, opensOnKeyTick } from './activators.js';
 import { FIRE_WINDOW } from './fireVerb.js';
+import { CHEST, chestProbeLine, chestStanceBand } from './chest.js';
+import { HITBOX } from './playerPhysicsV1.js';
 import {
     DEFAULT_MAX_TICKS_PER_TARGET,
     DEFAULT_TOLERANCE,
@@ -260,6 +262,12 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
         // answers at two points in the same leg — and a planner with its own
         // idea of either would certify a corridor the executor walks into.
         openBridges = null, pushables = null, brokenRocks = null, pulledRopes = null,
+        // ⛔⛔ R5 slice 9: the SIXTH per-visit family. `Chest.open()` writes
+        // `type = ""` on the entity, and in L38 that entity is the only join
+        // between the room the walk arrives in and the room the errand is
+        // in — so a planner that could not be told about it cannot route the
+        // second half of the level at all.
+        openChests = null,
         // R4: `Main.SAVE_FILE.data.hasKey`, as a set of key types. It selects
         // exactly one avoid volume — a `BossLock`'s probe row — and it is a
         // SET rather than a boolean because a walk can hold several.
@@ -300,7 +308,7 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
     // find shut.
     const geometry = level.plannerBlockerAt(box, terrainProbeRect(x, y),
         { noclip, noHazards, openActivators, openBridges, pushables, brokenRocks,
-            pulledRopes });
+            pulledRopes, openChests });
     if (geometry) return geometry;
     // ⚠ PIT TILES ARE FORBIDDEN FLOOR, and this policy is LOAD-BEARING from
     // R1 on. Until R1 a pit was unmodelled terrain, so `plannerBlockerAt`
@@ -962,7 +970,7 @@ export function resolvePresser(world, named, what) {
     return presser;
 }
 
-function runHold(run, perTick, hold, what) {
+function runHold(run, perTick, hold, what, before = null) {
     if (run.openActivators === null) {
         fail(`${what}: a hold is a MECHANIC, and the noclip arm does not run it — `
             + '`advance` hands `stepV2` a null activator set, so the hold would emit '
@@ -973,25 +981,74 @@ function runHold(run, perTick, hold, what) {
     const presser = resolvePresser(run.world, hold.presser, what);
 
     const group = run.world.activators.filter((a) => a.t === presser.t);
-    if (group.length === 0) {
+    /**
+     * ⛓⛓ R5 SLICE 9: A GROUP WHOSE ONLY RESPONDER IS A `Pulser`.
+     *
+     * §21.65's finding, from the caller's side: a Pulser is an `Activators`
+     * with a `t`, and it is deliberately NOT in `world.activators` because
+     * it is `type = "Solid"` published or not — putting it there would make
+     * `collidesSolid` treat an armed one as passable. So the group check
+     * above, which asks "does anything answer this?", answered NO for
+     * L38's link 2 and the leg failed at the one button the level turns on.
+     *
+     * The answer is not to widen `activators`; it is that a pulser group's
+     * EFFECT is a different observable. Nothing opens. What happens is that
+     * the pulser starts hitting — see `run.armedPulsers`.
+     */
+    const pulserGroup = (run.world.pulsers ?? []).filter((p) => p.t === presser.t);
+    /**
+     * ⛔⛔ AND A THIRD OBSERVABLE: a CROSS-ROOM presser answers nothing in
+     * this level at all.
+     *
+     * `buttonroom@32,48 {t 8, room 39}` — L38's entrance button, and the
+     * only way into the whole totem cluster — publishes to NOTHING here:
+     * `ButtonRoom.as:93` writes `Game.setPersistence(t, persist, room)` and
+     * the thing it changes is what ANOTHER level BUILDS. So both checks
+     * above are structurally unanswerable for it, and the effect it does
+     * have is `run.roomWrites`.
+     *
+     * ⚠ THIS IS THE THIRD TIME IN ONE VERB that "which responder opened?"
+     * was the wrong question. A latching ButtonRoom moved the control
+     * earlier; a Pulser needed a different observable; this one has no
+     * responder at all. The pattern is that `hold` was written for a
+     * `Button` and every `ButtonRoom` is a different mechanism wearing the
+     * same rect.
+     */
+    const crossRoom = presser.room >= 0;
+    if (group.length === 0 && pulserGroup.length === 0 && !crossRoom) {
         fail(`${what}: ${presser.tag}@${presser.x},${presser.y} presses group `
             + `t=${presser.t}, which NO responder in level ${run.level} answers — the `
             + `level's responders are [${run.world.activators
-                .map((a) => `${a.id}(t=${a.t})`).join(' ') || 'none'}]. Holding it `
-            + 'would open nothing.');
+                .map((a) => `${a.id}(t=${a.t})`).join(' ')
+                || 'none'}] and its pulsers are [${(run.world.pulsers ?? [])
+                .map((p) => `${p.id}(t=${p.t})`).join(' ') || 'none'}]. Holding it `
+            + 'would open nothing and arm nothing.');
     }
     // ⚠ THE POSITIVE CONTROL, BEFORE THE NEGATIVE. "The lock is open after
     // the hold" is satisfied by a lock that was never shut — the same
     // vacuity `l71-lock-shut` exists to close on the game's side. So the
     // responders this hold CHANGES are recorded here, and a hold that
     // changes nothing is a named failure rather than a silent pass.
-    const openBefore = run.openActivators;
+    // ⛓ THE APPROACH IS PART OF THE MECHANIC for a latching presser — see
+    // the `before` snapshot at the call site. Falling back to the current
+    // state keeps every direct caller (and every test) on the old reading.
+    const openBefore = before?.open ?? run.openActivators;
     const shutBefore = group.filter((a) => !openBefore.has(a.id));
-    if (shutBefore.length === 0) {
+    // The same control for the pulser arm: quiet before, loud after.
+    const armedBefore = before?.armed ?? run.armedPulsers ?? new Set();
+    const quietBefore = pulserGroup.filter((p) => !armedBefore.has(p.id));
+    const writesBefore = crossRoom ? run.roomWrites.length : 0;
+    if (shutBefore.length === 0 && quietBefore.length === 0 && !crossRoom) {
+        // ⚠ THE DIAGNOSIS BRANCHES ON WHICH ARM IS EMPTY. A group with no
+        // pulser in it fails for the reason it always did, in the words it
+        // always used; only a group that HAS one has an "already armed"
+        // arm to be wrong about. A message that named both would describe
+        // a state the failing run is not in.
         fail(`${what}: every responder in group t=${presser.t} `
-            + `[${group.map((a) => a.id).join(' ')}] is ALREADY OPEN before the hold `
-            + 'begins, so holding the button proves nothing about it. A hold that '
-            + 'changes nothing is a check that cannot fail.');
+            + `[${[...group.map((a) => a.id), ...pulserGroup.map((p) => p.id)].join(' ')}] `
+            + `is ALREADY OPEN${pulserGroup.length > 0 ? ' (or already armed)' : ''} `
+            + 'before the hold begins, so holding the button proves nothing about it. '
+            + 'A hold that changes nothing is a check that cannot fail.');
     }
 
     const start = { x: run.state.x, y: run.state.y };
@@ -1038,6 +1095,37 @@ function runHold(run, perTick, hold, what) {
             + 'continuous ticks and a Cover 11 — one short opens nothing, and the walk '
             + 'would meet the wall somewhere it was certified clear.');
     }
+    // ⛓ THE CROSS-ROOM EFFECT: the write happened, and it names this presser.
+    let wrote = null;
+    if (crossRoom) {
+        wrote = run.roomWrites.slice(writesBefore)
+            .filter((w) => w.id === `${presser.tag}@${presser.x},${presser.y}`);
+        if (wrote.length === 0) {
+            // The write is emitted ONCE PER VISIT (`roomWritten`), so a hold
+            // that arrives after the approach already made it sees none — the
+            // same latch shape as everything else in this verb. Fall back to
+            // the whole ledger, which still fails for a presser nobody stood on.
+            wrote = run.roomWrites
+                .filter((w) => w.id === `${presser.tag}@${presser.x},${presser.y}`);
+        }
+        if (wrote.length === 0) {
+            fail(`${what}: held ${presser.tag}@${presser.x},${presser.y} for ${ticks} `
+                + `tick(s) and it made NO cross-room write. It publishes to level `
+                + `${presser.room} (t=${presser.t}, flip=${presser.flip}), and `
+                + '`ButtonRoom.set activate` fires on the rising edge of a press — so '
+                + 'no write means the stance never overlapped the button.');
+        }
+    }
+    const armedAfter = run.armedPulsers ?? new Set();
+    const quiet = pulserGroup.filter((p) => !armedAfter.has(p.id));
+    if (quiet.length > 0) {
+        fail(`${what}: held ${presser.tag}@${presser.x},${presser.y} for ${ticks} `
+            + `tick(s) and [${quiet.map((p) => p.id).join(' ')}] `
+            + `${quiet.length === 1 ? 'is' : 'are'} STILL QUIET. A room = -1 `
+            + 'ButtonRoom LATCHES its group (§20.6), so one tick standing on it is '
+            + 'enough — a pulser still quiet after the hold means the stance never '
+            + 'overlapped the button at all.');
+    }
     return {
         presser: { tag: presser.tag, x: presser.x, y: presser.y, t: presser.t },
         ticks,
@@ -1045,6 +1133,12 @@ function runHold(run, perTick, hold, what) {
         // The responders this hold CHANGED — shut when it started, open when
         // it ended. Not the whole group: one already open proves nothing.
         opened: shutBefore.map((a) => a.id),
+        // ⛓ And the pulsers it ARMED, which open nothing and are the whole
+        // effect of L38's link 2.
+        armed: quietBefore.map((p) => p.id),
+        // ⛓ …and the cross-room writes it made, which are the whole effect
+        // of L38's entrance button.
+        wrote: wrote === null ? [] : wrote.map((w) => ({ level: w.level, tag: w.tag, value: w.value })),
     };
 }
 
@@ -1931,6 +2025,199 @@ function runFire(run, perTick, fire, what) {
     };
 }
 
+/** Shape-check a `chest` before anything is planned or driven with it. */
+export function assertChest(chest, what) {
+    if (chest === null || typeof chest !== 'object' || Array.isArray(chest)) {
+        fail(`${what}: chest must be { chest: {x, y} }`);
+    }
+    const c = chest.chest;
+    if (!c || !Number.isFinite(c.x) || !Number.isFinite(c.y)) {
+        fail(`${what}: chest.chest must be the chest's OEL {x, y}`);
+    }
+}
+
+/** The `Chest` a chest leg NAMES, by OEL coordinates. */
+export function resolveChest(world, named, what) {
+    const chest = (world.chests ?? []).find((c) => c.x === named.x && c.y === named.y);
+    if (!chest) {
+        fail(`${what}: level ${world.level} has no chest at (${named.x},${named.y}); `
+            + `it has [${(world.chests ?? []).map((c) => c.id).join(' ') || 'none'}].`);
+    }
+    return chest;
+}
+
+/**
+ * ── ⛔⛔ THE CHEST PRIMITIVE (R5 slice 9) ─────────────────────────────
+ *
+ * The EIGHTH leg verb, and the fourth way a thing in the world opens. It
+ * is closest to `keylock` — a graze stance, an automatic trigger, a fade —
+ * and differs from it in the three places that matter:
+ *
+ *  1. ⛔ **THERE IS NO FLAG AND NO GROUP.** `Chest.open()` writes
+ *     `type = ""` on the entity. `run.openActivators` cannot see it and
+ *     `run.openChests` is where it lives.
+ *  2. ⛔ **THE GATE IS NOT THE PLAYER'S.** `!collide("Solid", x, y)` is the
+ *     CHEST colliding, and in L38 the thing it collides with is the cover.
+ *     So the leg has a prerequisite the stance cannot express, and it says
+ *     so by name rather than standing there failing.
+ *  3. ⛔⛔ **OPENING IT SPAWNS A PICKUP ON TOP OF THE PLAYER.** The
+ *     `SealPiece` lands at the chest's own position and comes down to
+ *     them; the ceremony behind it is 331 dead frames the stream cannot
+ *     see. The leg waits for the collection rather than assuming it, and
+ *     then waits out the 60-tick fade so the cell is genuinely clear when
+ *     the next target plans through it.
+ *
+ * ⛓ THE EFFECT CHECK IS AN EXACT SET, both ways — `runFire`'s rule, one
+ * verb later:
+ *
+ *     the tag write     `run.earnedClears` gains exactly this chest's flag
+ *     the type flip     `run.openChests` gains exactly this chest's id
+ *     the cell          `plannerObstacleAt` at the join is null AFTER and
+ *                       was NOT null before
+ *
+ * A leg that opened a chest the plan did not name, or left a cell the plan
+ * expected open still solid, is a named failure.
+ */
+function runChest(run, perTick, chest, maxTicks, what, before = null) {
+    if (run.openChests === null) {
+        fail(`${what}: a chest is a MECHANIC, and the noclip arm does not run it — `
+            + '`advance` skips the chest step entirely, so the leg would emit its '
+            + 'ticks, verify nothing and report success on a wall it never opened.');
+    }
+    const target = resolveChest(run.world, chest.chest, what);
+    // ── the POSITIVE CONTROL, from BEFORE THE APPROACH ────────────────
+    // ⛔ The trigger is a line the approach crosses, so "shut when the verb
+    // began" is a state a correct leg is never in. See the `before`
+    // snapshot at the call site — the same correction a latching
+    // `ButtonRoom` forced on `runHold`, one verb later and for a different
+    // mechanism.
+    const chestsBefore = before?.chests ?? run.openChests;
+    if (chestsBefore.has(target.id)) {
+        fail(`${what}: ${target.id} is ALREADY OPEN before the target, so opening it `
+            + 'proves nothing. A chest whose flag was cleared on an earlier visit is '
+            + 'DESPAWNED by `check()` rather than open, so this means an earlier leg '
+            + 'of this visit already opened it.');
+    }
+    const joinBefore = plannerObstacleAt(run.world, target.x + 8, target.y + 8, null, {
+        openActivators: run.openActivators,
+        openChests: chestsBefore,
+        pushables: run.pushables,
+        openBridges: run.openBridges,
+        brokenRocks: run.brokenRocks,
+        pulledRopes: run.pulledRopes,
+        avoidVolumes: false,
+    });
+    if (joinBefore === null) {
+        fail(`${what}: the cell under ${target.id} is ALREADY CLEAR before the leg, so `
+            + '"the chest opened the passage" is a claim about a cell that was never '
+            + 'blocked. The whole point of this verb is that the chest IS the wall.');
+    }
+    // ── the STANCE, asked of the same derivation the run uses ─────────
+    const band = chestStanceBand(target.x, target.y, HITBOX);
+    if (!band.includes(Math.round(run.state.y)) || Math.abs(run.state.y - Math.round(run.state.y)) > 0) {
+        // ⚠ The band is INTEGER rows because `World.collideLine` probes
+        // integer points, and the player's `y` is a float. The real test is
+        // the line test itself; this one reports the band because "you are
+        // 1.4 px low" is the diagnosis a plan author needs.
+        const b = playerBoxAt(run.state.x, run.state.y);
+        if (!keyLineTouches(b, chestProbeLine(target.x, target.y))) {
+            fail(`${what}: the player is at (${run.state.x},${run.state.y}) — box `
+                + `[${b.y},${b.bottom}) — and ${target.id}'s probe row is `
+                + `y=${chestProbeLine(target.x, target.y).y}. The reachable band is `
+                + `y in {${band.join(', ')}} and it is TWO PIXELS: the rows below it `
+                + 'miss the line and the rows above it are inside the chest, which is '
+                + 'Solid until the instant this fires.');
+        }
+    }
+    // ── the wait: the open, then the collection, then the fade ────────
+    const from = perTick.length;
+    let openedAt = null;
+    let collectedAt = null;
+    for (let i = 1; i <= maxTicks; i++) {
+        perTick.push(NO_HELD);
+        const { transition } = run.advance(NO_HELD);
+        if (transition) {
+            fail(`${what}: tick ${i} of ${target.id}'s window crossed from level `
+                + `${transition.from_level} to ${transition.to_level}. A world swap `
+                + 'rebuilds the Game and the chest with it.');
+        }
+        // ⚠ `run.chestOpens` RATHER THAN THE SET, because the approach may
+        // have opened it already: the trigger is a line and the last
+        // waypoint crosses it. The ledger carries the tick it really
+        // happened on, which is the only honest number here.
+        if (openedAt === null && run.openChests.has(target.id)) {
+            openedAt = run.chestOpens.find((c) => c.id === target.id)?.t ?? i;
+        }
+        if (openedAt !== null && collectedAt === null
+            && run.sealCollections.length > 0
+            && run.sealCollections[run.sealCollections.length - 1].from === target.id) {
+            collectedAt = i;
+        }
+        // The fade: `openTimer` runs 60 ticks after the flip and the entity
+        // is removed at the end of it. Solidity went first, so the wait is
+        // for the CEREMONY rather than for the fade — but the leg stands
+        // through both, because a plan that walked through the cell while
+        // the piece was still approaching would collect it in motion and
+        // `hasArrived` needs the player STOPPED.
+        if (collectedAt !== null && i >= collectedAt + CHEST.openTimerMax) break;
+    }
+    if (openedAt === null) {
+        fail(`${what}: ${target.id} NEVER OPENED in ${maxTicks} ticks of standing on its `
+            + 'line. `Chest.update`\'s gate is `!collide("Solid", x, y)` — the chest '
+            + 'colliding with whatever shares its cell — so the usual cause is that '
+            + 'the cover above it is still shut. The stance is not the prerequisite; '
+            + 'the cover is.');
+    }
+    if (collectedAt === null) {
+        fail(`${what}: ${target.id} opened at tick ${openedAt} but its SealPiece was `
+            + `never collected in ${maxTicks} ticks. \`Chest.open()\` spawns one `
+            + 'unconditionally at the chest\'s own position and `Pickup`\'s attraction '
+            + 'brings it to a stationary player in nine ticks — so this means the '
+            + 'player is more than 24 px away, which for a stance in the band is '
+            + 'impossible.');
+    }
+    // ── ⛓ THE EFFECT, AS AN EXACT SET ────────────────────────────────
+    const opened = [...run.openChests];
+    if (opened.length !== 1 || opened[0] !== target.id) {
+        fail(`${what}: the leg opened [${opened.join(' ')}] and named only ${target.id}. `
+            + 'A chest the leg did not name is a wall somewhere else that the plan '
+            + 'still believes is standing.');
+    }
+    const write = run.chestOpens.find((c) => c.id === target.id);
+    if (!write || write.persistTag !== target.persistTag) {
+        fail(`${what}: ${target.id} opened but the run's chestOpens ledger names `
+            + `${write ? `tag ${write.persistTag}` : 'nothing'}, against the census's `
+            + `tag ${target.persistTag} — the two halves disagree about which flag `
+            + '`open()` cleared.');
+    }
+    const joinAfter = plannerObstacleAt(run.world, target.x + 8, target.y + 8, null, {
+        openActivators: run.openActivators,
+        openChests: run.openChests,
+        pushables: run.pushables,
+        openBridges: run.openBridges,
+        brokenRocks: run.brokenRocks,
+        pulledRopes: run.pulledRopes,
+        avoidVolumes: false,
+    });
+    if (joinAfter !== null) {
+        fail(`${what}: ${target.id} reports open and its cell is STILL BLOCKED by `
+            + `${joinAfter.kind}. \`type = ""\` is the passage, so this means something `
+            + 'else shares the cell — in L38 that is the cover, and a cover whose '
+            + 'group went quiet RESETS (`Cover.update`\'s else arm collides '
+            + '["Solid","Player"] and a Chest in the cell makes it reset).');
+    }
+    return {
+        chest: { id: target.id, x: target.x, y: target.y, persistTag: target.persistTag },
+        at: { x: run.state.x, y: run.state.y },
+        /** The run tick `open()` fired on — often DURING the approach. */
+        openedAt,
+        collectedAt: from + collectedAt,
+        ticks: perTick.length - from,
+        deadFrames: run.sealCollections[run.sealCollections.length - 1].deadFrames,
+        band: [...band],
+    };
+}
+
 function runCollect(run, perTick, collect, maxTicks, what) {
     const pickup = resolvePickup(run.world, collect.pickup, what);
     const before = run.collected.length;
@@ -2368,6 +2655,8 @@ export function synthesizeLegs(legs, opts = {}) {
     const holds = [];
     const touches = [];
     const collects = [];
+    /** ⛔⛔ R5 slice 9: one record per chest leg — the join cell of L38. */
+    const chestLegs = [];
     const spears = [];
     /** ⛓ R5 slice 7: one record per FIRE press — see `runFire`. */
     const fires = [];
@@ -2493,6 +2782,33 @@ export function synthesizeLegs(legs, opts = {}) {
             const l = resolveKeyLock(run.world, t.keylock.lock, what);
             legContacts.add(`proximity-hazard:${l.tag}@${l.x},${l.y}`);
         });
+        /**
+         * ⛔⛔ AND A CHEST'S VOLUME IS THE SAME KIND OF EXEMPTION, for the
+         * same reason and with one more.
+         *
+         * `ENTITY_CLASSES.chest.hazard` is `[x, x+16) x [y, y+18)` — the
+         * chest's own cell plus the two rows the probe line and the player
+         * box need — so it IS the rect the mechanic reads, exactly as a
+         * `bosslock`'s key-line is. Without this the planner refuses the
+         * only two rows from which the chest can ever be opened.
+         *
+         * ⚠ AND IT IS LEG-SCOPED FOR A REASON THE KEYLOCK DOES NOT HAVE:
+         * once the chest is open the walk goes THROUGH the cell — it is the
+         * join between L38's two rooms — so the volume has to stop being an
+         * obstacle for every later target as well, not just for the
+         * approach. `runCollect`'s "keep the planner out, let the executor
+         * in" is the opposite trade and it is the right one there: a pickup
+         * clipped early is a ceremony fired at the wrong waypoint, while a
+         * chest clipped early is the errand happening a few ticks sooner in
+         * a cell the walk has to enter anyway.
+         */
+        (leg.targets ?? []).forEach((t, ti) => {
+            if (t?.chest === undefined) return;
+            const what = `legs[${li}] level ${leg.level} target ${ti} chest`;
+            assertChest(t.chest, what);
+            const c = resolveChest(run.world, t.chest.chest, what);
+            legContacts.add(`proximity-hazard:${c.tag}@${c.x},${c.y}`);
+        });
         // A persistence effect exists only from the leg that CAUSED it. The
         // first visit to L37 is before the button is pressed and the rock is
         // still parked at y = -16; pricing it there would be over-avoiding a
@@ -2550,6 +2866,8 @@ export function synthesizeLegs(legs, opts = {}) {
             // L92's rocks are Solid until seven ticks after their press.
             brokenRocks: run.brokenRocks,
             pulledRopes: run.pulledRopes,
+            // R5 slice 9: the sixth, and the one that opens a ROOM.
+            openChests: run.openChests,
             inventory: run.inventory,
             keys: run.keys,
             ...extra,
@@ -2560,6 +2878,41 @@ export function synthesizeLegs(legs, opts = {}) {
             if (!Number.isFinite(target?.x) || !Number.isFinite(target?.y)) {
                 fail(`legs[${li}].targets[${ti}] must be {x, y} finite numbers`);
             }
+            /**
+             * ⛓⛓ R5 SLICE 9: THE POSITIVE CONTROL IS TAKEN BEFORE THE
+             * APPROACH, NOT BEFORE THE HOLD — and the reason is a latch.
+             *
+             * `runHold` asked "was this responder shut when the hold
+             * began?", which is exactly right for a `Button` (it
+             * republishes its flag every tick, so the group closes the
+             * moment the player steps off) and STRUCTURALLY UNSATISFIABLE
+             * for a `room = -1` ButtonRoom. That presser LATCHES its group
+             * (§20.6: the setter is behind `if (a)` with the author's own
+             * "Can't be reset to false!!"), so the ARRIVAL on the button is
+             * already the whole mechanic — the cover has fully faded before
+             * the first held tick, and the control fired "already open" on
+             * a leg that had done nothing wrong.
+             *
+             * Measured on L38's link 1: `cover@208,224` opens during the
+             * drive's own braking ticks.
+             *
+             * Snapshotting here is also strictly WEAKER as a refusal and
+             * strictly STRONGER as a claim: the set of responders shut
+             * before the approach contains the set shut before the hold, so
+             * no run that passed can start failing, and what the record now
+             * reports is what the TARGET changed rather than what the last
+             * few ticks of it did.
+             */
+            const before = {
+                open: run.openActivators === null ? null : new Set(run.openActivators),
+                armed: run.armedPulsers === null ? null : new Set(run.armedPulsers),
+                // ⛔⛔ AND THE CHEST, for the same reason twice over: its
+                // trigger is a LINE the approach crosses, so by the time the
+                // verb runs the chest has already opened and a control asked
+                // then would report "already open" on a leg that did exactly
+                // what it was written to do.
+                chests: run.openChests === null ? null : new Set(run.openChests),
+            };
             const wps = planWaypoints(run.world, run.state, target, null, planNow());
             legWaypoints.push(...wps);
             wps.forEach((wp, wi) => drive(run, wp, perTick, {
@@ -2588,7 +2941,7 @@ export function synthesizeLegs(legs, opts = {}) {
             if (target.hold !== undefined) {
                 const from = perTick.length;
                 const record = runHold(run, perTick, target.hold,
-                    `legs[${li}] level ${leg.level} target ${ti} hold`);
+                    `legs[${li}] level ${leg.level} target ${ti} hold`, before);
                 holds.push({
                     leg: li, index: ti, level: leg.level, from, to: perTick.length,
                     ...record,
@@ -2657,6 +3010,13 @@ export function synthesizeLegs(legs, opts = {}) {
                     `legs[${li}] level ${leg.level} target ${ti} collect`);
                 collects.push({
                     leg: li, index: ti, to: perTick.length, ...record,
+                });
+            }
+            if (target.chest !== undefined) {
+                const record = runChest(run, perTick, target.chest, maxTicksPerTarget,
+                    `legs[${li}] level ${leg.level} target ${ti} chest`, before);
+                chestLegs.push({
+                    leg: li, index: ti, level: leg.level, to: perTick.length, ...record,
                 });
             }
         });
@@ -2854,6 +3214,21 @@ export function synthesizeLegs(legs, opts = {}) {
         // HANDED over; this is what was EARNED, and the R3 ledger is the
         // statement that the first list is empty and this one is not.
         collects: collects.map((c) => ({ ...c })),
+        // ⛔⛔ R5 slice 9. One record per CHEST the run opened: which chest,
+        // the flag `open()` cleared, the tick it fired on (often DURING the
+        // approach — the trigger is a line), the tick its SealPiece was
+        // collected, and the dead frames the ceremony cost. The tape is
+        // empty ticks here too.
+        chests: chestLegs.map((c) => ({ ...c })),
+        /** Every pulse tick, every block a pulse moved, every seal collected. */
+        pulses: {
+            hits: run.pulserHits,
+            pushes: run.pulserPushes,
+            playerHits: run.pulserPlayerHits,
+        },
+        seals: run.sealCollections,
+        chestOpens: run.chestOpens,
+        roomWrites: run.roomWrites,
         // One record per SPEAR press the run verified: what it was aimed at,
         // which way the player was facing, where they stood, and the tick
         // range it cost. The tape carries a one-tick `primary` span and a

@@ -39,7 +39,7 @@ import {
     beginDialogue, stepDialogue,
 } from './dialogue.js';
 import {
-    createActivatorState, openActivatorIds, stepActivators,
+    createActivatorState, openActivatorIds, pressedGroups, stepActivators,
 } from './activators.js';
 import {
     BridgeError, TICKS_FROM_PRESS_TO_WALKABLE, withinOnScreenRadius,
@@ -58,6 +58,11 @@ import {
     brokenRockIds, createRockState, hitRock, outOfBandFlagFor, rockBreaksUnder,
 } from './breakableRocks.js';
 import { ledgerKey, outOfBandFlagForWriter } from './outOfBandLedger.js';
+import { createChestState, stepChests } from './chest.js';
+import {
+    CEREMONY_DEAD_FRAMES, createSealPiece, sealPieceBox, stepSealPiece,
+} from './sealCeremony.js';
+import { createPulser, pulseReaches, pulsePushes, stepPulser } from './pulser.js';
 import { ITEM_PROPERTIES, ITEM_NAMES, inventorySlotsFor } from './tapeFormat.js';
 import { spawnFromBoot } from './playerPhysicsV1.js';
 import {
@@ -348,6 +353,66 @@ export function createLevelRun({
         const st = ropeStateFor(level);
         return st.size === 0 ? null : st;
     };
+    /**
+     * ── ⛔⛔ R5 SLICE 9: THE CHESTS, AND THE SEAL PIECE ONE SPAWNS ──────
+     *
+     * A SIXTH per-visit geometry family, and the first whose opening is
+     * neither a press nor a flag: `Chest.update` walks a one-pixel line
+     * beneath itself and `open()` writes `type = ""`. `chest.js` owns the
+     * transcription; this owns the two joins it needs — the gate's geometry
+     * and the persistence write — and the pickup the open spawns.
+     *
+     * ⚠ PER VISIT *AND* BANKED, like a `ShieldLock` and unlike a bridge.
+     * `open()` runs `Game.setPersistence(tag, false)` and `Chest.check()`
+     * on the next `new Game` removes any chest whose flag is off, so the
+     * clear is banked through `pendingEarnedClears` and the LIVE half is
+     * this state. Both halves, or a re-entry rebuilds the wall the leg just
+     * opened.
+     */
+    const chestStates = new Map();
+    const chestsOf = (n) => worldFor(n).chests ?? [];
+    const chestStateFor = (n) => {
+        if (!chestStates.has(n)) chestStates.set(n, createChestState(chestsOf(n)));
+        return chestStates.get(n);
+    };
+    const openChestIdsNow = () => {
+        const st = chestStateFor(level);
+        if (st.size === 0) return null;
+        const open = new Set();
+        for (const c of st.values()) if (!c.solid) open.add(c.id);
+        return open.size === 0 ? null : open;
+    };
+    /**
+     * ⛓⛓ THE PULSERS, whose state is not an activator's.
+     *
+     * A `Pulser` is `type = "Solid"` published or not, so it cannot join
+     * `activators` — "open" would read as passable (§21.65). What its group
+     * changes is that it starts HITTING, and the hit moves a block.
+     *
+     * ⚠ PER VISIT: `Activators.check()` re-derives `activate` from the
+     * group's flag on every `new Game`, and the run's own group state is
+     * rebuilt with it.
+     */
+    const pulserStates = new Map();
+    const pulsersOf = (n) => worldFor(n).pulsers ?? [];
+    const pulserStateFor = (n) => {
+        if (!pulserStates.has(n)) {
+            const byId = new Map();
+            for (const p of pulsersOf(n)) byId.set(p.id, createPulser(p.x, p.y, p.t));
+            pulserStates.set(n, byId);
+        }
+        return pulserStates.get(n);
+    };
+    /**
+     * ⛔⛔ THE LIVE SEAL PIECE — at most one, and it is not in the census.
+     *
+     * `Chest.open()` adds it at RUN time, so unlike every pickup this file
+     * has handled it is not in `world.pickups` and `pickupUnderfoot` can
+     * never see it. It is also the first pickup that MOVES TOWARD the
+     * player rather than being walked onto (`sealCeremony.js`), which is
+     * why it is stepped rather than tested.
+     */
+    let sealPiece = null;
     const pushableStateFor = (n) => {
         if (!pushableStates.has(n)) pushableStates.set(n, createPushableState(worldFor(n)));
         return pushableStates.get(n);
@@ -411,6 +476,16 @@ export function createLevelRun({
         bridgeStates.set(n, new Map());
         pushableStates.set(n, createPushableState(worldFor(n)));
         poleStates.delete(n);
+        // R5 slice 9: a chest whose flag is still TRUE is rebuilt SHUT, and
+        // a pulser's `activate` is re-derived from its group. The chest whose
+        // flag the run cleared is removed by `applyEarnedClears` ->
+        // `PERSISTENCE_RESPONSE.chest`, which is the OTHER half and runs one
+        // line earlier in the swap.
+        chestStates.delete(n);
+        pulserStates.delete(n);
+        // A seal piece cannot cross a door: `Game` is reconstructed and the
+        // pickup is a run-time entity of the old world.
+        sealPiece = null;
     };
     /**
      * The bridges walkable RIGHT NOW, as ids the two queries take.
@@ -720,6 +795,7 @@ export function createLevelRun({
                     pushables: withoutSelf,
                     brokenRocks: brokenRockIdsNow(),
                     pulledRopes: pulledRopeIdsNow(),
+                    openChests: openChestIdsNow(),
                 });
                 if (hit) return hit;
                 // The player, at the position the PREVIOUS tick left — which
@@ -1042,6 +1118,210 @@ export function createLevelRun({
             t: pressTick, fired: ticksCompleted, level, weapon, direction, rect, hits,
         });
     };
+
+    // ── ⛔⛔ R5 SLICE 9: THE CHEST, THE PULSE AND THE SEAL ─────────────
+    /**
+     * One tick of every `Chest` in the level.
+     *
+     * The two joins the transcription needs and does not own:
+     *
+     * - **the gate.** `!collide("Solid", x, y)` with `e !== this`, which for
+     *   the join cell is the chest colliding with its COVER. Asked of the
+     *   real geometry with this chest's own solid taken out, because a chest
+     *   that collided with itself would never open;
+     * - **the write.** `setPersistence(tag, false)` is BANKED, exactly like
+     *   `Lock.turnOff()`'s, because `Chest.check()` on the next `new Game`
+     *   removes a chest whose flag is off — so the clear has to survive the
+     *   visit and be cashed at the destination's build.
+     */
+    function stepChestsNow(activators) {
+        const st = chestStateFor(level);
+        if (st.size === 0) return;
+        const events = stepChests(st, {
+            playerBox: playerBoxAt(state.x, state.y),
+            hasAllSealParts: HAS_ALL_SEAL_PARTS,
+            solidOver: (c) => {
+                // The chest's own box, and its own solid excluded — the
+                // `e !== this` of `Entity.collide`.
+                const box = {
+                    x: c.x, y: c.y, right: c.x + 16, bottom: c.y + 16,
+                };
+                const openChests = new Set([c.id, ...(openChestIdsNow() ?? [])]);
+                return !!world.collidesSolid(box, {
+                    beforeTypeFlip: firstTickInWorld,
+                    openActivators: openActivatorIds(activators),
+                    openBridges: openBridgeIdsNow(),
+                    pushables: pushableRectsNow(),
+                    brokenRocks: brokenRockIdsNow(),
+                    pulledRopes: pulledRopeIdsNow(),
+                    openChests,
+                });
+            },
+        });
+        for (const ev of events) {
+            if (ev.kind !== 'chestopen') continue;
+            chestOpens.push({ t: ticksCompleted + 1, level, id: ev.id, persistTag: ev.persistTag });
+            if (ev.persistTag >= 0) {
+                if (!pendingEarnedClears.has(level)) pendingEarnedClears.set(level, new Set());
+                pendingEarnedClears.get(level).add(ev.persistTag);
+            } else {
+                // A `tag = -1` chest is the family's SIXTH member. No
+                // placement on this rung has one; the throw is here so the
+                // first that does gets a name rather than a dropped write.
+                throw new Error(`levelRun: ${ev.id} in level ${level} opened with `
+                    + 'tag -1. `Game.setPersistence(-1, false)` is an OUT-OF-BAND write '
+                    + '(`outOfBandLedger`), and no chest on any modelled route has one — '
+                    + 'so this needs a classification rather than a silent drop.');
+            }
+            // ⛓ `open()` spawns the SealPiece at the CHEST's own position,
+            // unconditionally. It cannot be routed around: in L38 that
+            // position is the one cell the walk has to pass through.
+            if (sealPiece !== null) {
+                throw new Error('levelRun: a second SealPiece spawned while one was '
+                    + 'still live. Two overlapping `special` pickups are two overlapping '
+                    + 'freezes, which is not a shape this model transcribes.');
+            }
+            sealPiece = createSealPiece(ev.x + 8, ev.y + 8);
+            sealPieceFrom = ev.id;
+        }
+    }
+
+    /**
+     * One tick of every `Pulser`, and the block it moves.
+     *
+     * ⚠ THE ACTIVATION IS THE GROUP'S, and a `Pulser` is not in
+     * `activators` — so the flag is read off the same `pressedGroups` the
+     * responders use, from the state the PREVIOUS tick left (a Pulser
+     * updates before its ButtonRoom, per the add order).
+     */
+    function stepPulsersNow(activators, pushState) {
+        const st = pulserStateFor(level);
+        if (st.size === 0) return;
+        // ⛓ THE FLAG IS THE GROUP'S, and a Pulser is not a member of
+        // `activators` — so it is read off `pressedGroups` directly, plus
+        // the groups a `room = -1` ButtonRoom has LATCHED (§20.6: the setter
+        // is behind `if (a)` with the author's own "Can't be reset to
+        // false!!"). Link 2 of L38's chain is exactly such a latch, which is
+        // why the latched set is not an optional extra here.
+        const pressed = pressedGroups(world, playerBoxAt(state.x, state.y), movingSolidsNow());
+        for (const [id, p] of st) {
+            const armed = pressed.has(p.t) || activators.latched.get(p.t) === true;
+            const r = stepPulser(p, armed);
+            st.set(id, r.state);
+            if (!r.hit) continue;
+            pulserHits.push({ t: ticksCompleted + 1, level, id });
+            // The candidates: every block, and the player.
+            const targets = [];
+            for (const [bid, rect] of pushableRects(pushState)) {
+                if (rect.removed) continue;
+                const b = pushState.byId.get(bid);
+                targets.push({
+                    id: bid,
+                    type: 'Solid',
+                    as3: b.as3 ?? 'PushableBlockFire',
+                    x: rect.rect.x + 8,
+                    y: rect.rect.y + 8,
+                    originX: 8,
+                    originY: 8,
+                    w: 16,
+                    h: 16,
+                });
+            }
+            targets.push({
+                id: 'player', type: 'Player', as3: 'Player',
+                x: state.x, y: state.y, originX: 2, originY: 2, w: 4, h: 5,
+            });
+            for (const reached of pulseReaches(r.state, targets)) {
+                if (reached.arm === 'pushable') {
+                    const block = pushState.byId.get(reached.id);
+                    const push = pulsePushes(r.state, block);
+                    pushState.byId.set(reached.id, push.block);
+                    if (push.moved) {
+                        pulsePushes_.push({
+                            t: ticksCompleted + 1, level, pulser: id, block: reached.id,
+                        });
+                    }
+                } else if (reached.arm === 'player') {
+                    // ⚠ `Player.hit`'s FIRST LINE is `if (Bot.noDamage) return`
+                    // — no knockback, no sound, no shake. So under the
+                    // ladder's own flag the ring is inert, and without it the
+                    // player is knocked back by a force this rung has not
+                    // modelled. Refused by name rather than ignored.
+                    if (!noDamage) {
+                        throw new Error(`levelRun: ${id}'s pulse reached the player at `
+                            + `tick ${ticksCompleted} with \`noDamage\` OFF. `
+                            + '`Player.hit(null, 6, …, 1)` knocks back, and this rung '
+                            + 'does not model the player\'s knockback. Route outside the '
+                            + '22 px ring, or declare the encounter.');
+                    }
+                    pulserPlayerHits.push({ t: ticksCompleted + 1, level, id });
+                }
+            }
+        }
+    }
+
+    /**
+     * One tick of the live `SealPiece`, if there is one.
+     *
+     * ⚠ ITS ORDER IS UNOBSERVABLE and that is asserted rather than assumed:
+     * a `Pickup` is `type = "Seal"`, which is in no `solids` list and in no
+     * player probe, so nothing else in the tick reads its position. What
+     * DOES matter is that it reads the player's position from the previous
+     * tick, which is what `state` is here.
+     */
+    function stepSealPieceNow() {
+        if (sealPiece === null) return;
+        const r = stepSealPiece(sealPiece, {
+            player: { x: state.x, y: state.y },
+            playerBox: playerBoxAt(state.x, state.y),
+            blockedAt: (x, y) => {
+                const b = sealPieceBox({ x, y });
+                return !!world.collidesSolid(b, {
+                    beforeTypeFlip: firstTickInWorld,
+                    openActivators: openActivatorIds(activatorStateFor(level)),
+                    openBridges: openBridgeIdsNow(),
+                    pushables: pushableRectsNow(),
+                    brokenRocks: brokenRockIdsNow(),
+                    pulledRopes: pulledRopeIdsNow(),
+                    openChests: openChestIdsNow(),
+                });
+            },
+        });
+        sealPiece = r.piece;
+        if (!r.contact) return;
+        // ⛓ THE CEREMONY IS ALL DEAD FRAMES. Phase A is 150 and the
+        // `SealController` behind it is 181 more, and the observation
+        // stream sees neither — so this costs the tape NO ticks and the
+        // evidence is the game's own `dead_frames` counter.
+        sealCollections.push({
+            t: ticksCompleted + 1,
+            level,
+            from: sealPieceFrom,
+            deadFrames: CEREMONY_DEAD_FRAMES.total,
+        });
+        sealPiece = null;
+        sealPieceFrom = null;
+    }
+
+    /**
+     * ⚠ SIXTEEN PARTS, AND R5 BANKS ONE. `SealController.hasAllSealParts()`
+     * reads `Main.hasSealPart(15)`, which is save state no bot tape carries
+     * and which a fresh `Main` leaves at -1. Written down as a constant so
+     * the rung that changes it has something to change.
+     */
+    const HAS_ALL_SEAL_PARTS = false;
+    /** One record per chest this run opened. */
+    const chestOpens = [];
+    /** One per tick a pulse's `hit()` ran, per pulser. */
+    const pulserHits = [];
+    /** One per tick a pulse reached the PLAYER — inert under `noDamage`. */
+    const pulserPlayerHits = [];
+    /** One per block a pulse actually MOVED — the chain's third link. */
+    const pulsePushes_ = [];
+    /** One per completed seal ceremony, with the dead frames it cost. */
+    const sealCollections = [];
+    /** Which chest the live piece came from, for the ledger. */
+    let sealPieceFrom = null;
 
     // ── the pickup CEREMONY (R3) ──────────────────────────────────────
     /**
@@ -1655,6 +1935,45 @@ export function createLevelRun({
         get brokenRocks() { return noclip ? null : (brokenRockIdsNow() ?? new Set()); },
         /** ⛓ R5 slice 7: the ropes pulled in the CURRENT level, this visit. */
         get pulledRopes() { return noclip ? null : (pulledRopeIdsNow() ?? new Set()); },
+        // ── ⛔⛔ R5 slice 9: the chest, the pulse and the seal ──────────
+        get openChests() { return noclip ? null : (openChestIdsNow() ?? new Set()); },
+        /** One record per chest OPENED, with the flag `open()` cleared. */
+        get chestOpens() { return chestOpens.map((c) => ({ ...c })); },
+        /**
+         * One per completed seal ceremony. ⚠ `deadFrames` is the claim and
+         * `t` is not: the ceremony costs the TAPE nothing, so the tick is
+         * where it started and the evidence is the game's own counter.
+         */
+        get sealCollections() { return sealCollections.map((c) => ({ ...c })); },
+        /** The live piece's position, or null — for a driver mid-approach. */
+        get sealPiece() { return sealPiece === null ? null : { ...sealPiece }; },
+        /** One per tick a pulse's `hit()` ran. */
+        get pulserHits() { return pulserHits.map((h) => ({ ...h })); },
+        /**
+         * The pulsers whose group is published RIGHT NOW.
+         *
+         * ⚠ THE ONLY OBSERVABLE A `hold` ON A PULSER GROUP HAS. A Pulser is
+         * `type = "Solid"` either way, so `openActivators` can never move —
+         * "the hold opened something" has to be asked of this instead, and
+         * `runHold` does.
+         */
+        get armedPulsers() {
+            if (noclip) return null;
+            const armed = new Set();
+            const st = pulserStateFor(level);
+            if (st.size === 0) return armed;
+            const activators = activatorStateFor(level);
+            const pressed = pressedGroups(world, playerBoxAt(state.x, state.y),
+                movingSolidsNow());
+            for (const [id, p] of st) {
+                if (pressed.has(p.t) || activators.latched.get(p.t) === true) armed.add(id);
+            }
+            return armed;
+        },
+        /** One per block a pulse MOVED — link 3 of L38's chain. */
+        get pulserPushes() { return pulsePushes_.map((h) => ({ ...h })); },
+        /** One per tick a pulse reached the player; inert under `noDamage`. */
+        get pulserPlayerHits() { return pulserPlayerHits.map((h) => ({ ...h })); },
         /** `{id, hitTick, goneAt, tag, x, y}` per rock this run has broken. */
         get rocksBroken() {
             const out = [];
@@ -1748,6 +2067,33 @@ export function createLevelRun({
                 state = { ...state, y: pendingSnapY };
                 pendingSnapY = null;
             }
+
+            // ── ⛔⛔ R5 SLICE 9: THE CHEST, THEN THE PULSER ─────────────
+            //
+            // ⚠ THE ORDER HERE IS THE GAME'S, AND IT IS A FENCEPOST.
+            // `World.addUpdate` PREPENDS, so the update list is the reverse
+            // of `Game.loadlevel`'s add order — which for these four is
+            //
+            //     pushableblockfire (:2217)  ->  chest (:2211)
+            //       ->  cover (:2194)  ->  pulser (:2191)  ->  … Player
+            //
+            // Two consequences, both one-tick and both load-bearing:
+            //
+            // 1. ⛔ THE BLOCK UPDATES BEFORE THE PULSER, so a pulse's `hit()`
+            //    sets a velocity the block acts on NEXT tick. `stepPushables`
+            //    above and `stepPulser` here are in that order for that
+            //    reason, and reversing them would land the block on its
+            //    button a tick early.
+            // 2. ⛔ THE CHEST UPDATES BEFORE THE COVER, so on the tick the
+            //    cover's fade completes the chest has already read it as
+            //    Solid — the chest opens on the tick AFTER the cover does.
+            //    `activators` above is exactly the previous tick's state,
+            //    which is what the game's chest sees, so this needs no
+            //    special case; it needs the note, because "open the cover
+            //    and the chest opens" is off by one.
+            if (!noclip) stepSealPieceNow();
+            if (!noclip) stepChestsNow(activators);
+            if (!noclip) stepPulsersNow(activators, pushState);
 
             // ── the ceremony, before anything else ─────────────────────
             // A pickup updates BEFORE the player, so a contact found here
@@ -1930,6 +2276,10 @@ export function createLevelRun({
                 pushables: noclip ? null : pushableRectsNow(),
                 brokenRocks: noclip ? null : brokenRockIdsNow(),
                 pulledRopes: noclip ? null : pulledRopeIdsNow(),
+                // ⛔⛔ R5 slice 9: the join cell L38's chain opens. Without
+                // this the player walks into a chest the run has already
+                // desolidified.
+                openChests: noclip ? null : openChestIdsNow(),
                 // R4: `checkDrowning` reads `canSwim` and `hasDarkSuit`,
                 // and the waterfall push reads `hasFeather`. The run's
                 // mirror is the only place those live on this side.

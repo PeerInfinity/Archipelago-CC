@@ -797,6 +797,13 @@ export function step(state, held, opts = {}) {
         // sweep and nothing else.
         brokenRocks = null,
         pulledRopes = null,
+        // ⛔⛔ R5 slice 9: the SIXTH. `Chest.open()` writes `type = ""` and
+        // the entity then fades for 60 more ticks, so the SOLIDITY goes
+        // first and one set covers both states. In L38 that flip is the
+        // only join between the room the walk arrives in and the room the
+        // errand is in — a sweep that could not be told about it walks into
+        // a wall the run has already opened.
+        openChests = null,
         // R4: `checkDrowning` reads `canSwim` and `hasDarkSuit` off the
         // Player's statics, so the run's inventory mirror is what decides
         // whether standing on an armed hazard is survivable. Defaulted to
@@ -1123,7 +1130,7 @@ export function step(state, held, opts = {}) {
             ? null
             : (x, y) => level.collidesSolid(playerBoxAt(x, y),
                 { beforeTypeFlip, openActivators, openBridges, pushables, brokenRocks,
-                    pulledRopes }),
+                    pulledRopes, openChests }),
         // `checkFallingInPit()` sits between moveY and the world clamp.
         afterMove: nextFall ? (x, y) => ({
             x: x + (Math.floor(nextFall.target.x / TILE_SIZE) * TILE_SIZE

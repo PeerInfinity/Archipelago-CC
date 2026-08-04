@@ -2749,6 +2749,27 @@ export function buildLevelWorld(levelRecord, {
     // recorded rather than the class.
     const pushables = [];
     /**
+     * ⛔⛔ R5 SLICE 9: THE TWO SOLIDS WHOSE STATE IS NOT AN ACTIVATOR'S.
+     *
+     * A `Chest` and a `Pulser` are both `type = "Solid"` and both in
+     * `solids`, and neither can live in `activators`:
+     *
+     * - a **chest** stops being solid on `open()`, which no `t` publishes
+     *   and no flag expresses — the trigger is a line beneath it and the
+     *   gate is its own `collide("Solid")`. It is the join cell of L38
+     *   (§21.4), so the run has to be able to say the cell opened;
+     * - a **pulser** is solid whether or not its group is published, so
+     *   putting it in `activators` would make `collidesSolid` treat an
+     *   "open" one as PASSABLE — the geometry would go the unsafe way
+     *   (§21.65). What its flag changes is that it starts HITTING.
+     *
+     * Both are therefore their own lists with their own ids, on the same
+     * `pushableId` join the run has used since R4: the geometry is static,
+     * the state is the run's.
+     */
+    const chests = [];
+    const pulsers = [];
+    /**
      * ⛓ R5: the entities a HELD ITEM removed at build time.
      *
      * Published rather than silent, for the same reason the clear list is:
@@ -3237,6 +3258,30 @@ export function buildLevelWorld(levelRecord, {
                 solid.persistTag = tagOf(e.type, e.attrs);
                 solid.rockType = e.type === 'breakablerockghost' ? 1 : 0;
             }
+            // ── R5 slice 9: the two solids whose state is their own ──────
+            if (cls.as3 === 'Chest') {
+                solid.chestId = `${e.type}@${x},${y}`;
+                chests.push({
+                    id: solid.chestId,
+                    tag: e.type,
+                    x,
+                    y,
+                    // `Chest(_x, _y, _tag:int = -1)` — a SIXTH member of the
+                    // out-of-band family if the attribute is absent, and
+                    // L38's carries tag 1.
+                    persistTag: tagOf(e.type, e.attrs),
+                });
+            }
+            if (cls.as3 === 'Pulser') {
+                solid.pulserId = `${e.type}@${x},${y}`;
+                pulsers.push({
+                    id: solid.pulserId,
+                    tag: e.type,
+                    x,
+                    y,
+                    t: tSetOf(e.type, e.attrs),
+                });
+            }
             if (PUSHABLE_FAMILIES[e.type]) {
                 // ⚠ The id shape is the activator's, deliberately: both are
                 // "the run holds live state for this entity and the geometry
@@ -3553,6 +3598,23 @@ export function buildLevelWorld(levelRecord, {
          */
         pushables,
         /**
+         * ⛔⛔ R5 slice 9: the chests, `{id, tag, x, y, persistTag}`.
+         *
+         * The join cell of L38 is one of these, and `Chest.open()`'s
+         * `type = ""` is the passage — an entity state change with no flag
+         * and no `t`. `chest.js` owns the live half; `collidesSolid` drops
+         * an OPENED chest's solid the way it drops a broken rock's.
+         */
+        chests,
+        /**
+         * ⛓⛓ R5 slice 9: the pulsers, `{id, tag, x, y, t}`.
+         *
+         * ⚠ NOT ACTIVATORS, deliberately (§21.65): a Pulser is Solid either
+         * way, so "open" would read as passable. Its `t` decides whether it
+         * HITS, and `pulser.js` owns that cycle.
+         */
+        pulsers,
+        /**
          * R4: every entity in this level that `Player.genericHit` names,
          * with the arm it takes and what that arm COSTS a run.
          *
@@ -3656,7 +3718,7 @@ export function buildLevelWorld(levelRecord, {
          */
         collidesSolid(box, {
             beforeTypeFlip = false, openActivators = null, pushables: live = null,
-            openBridges = null, brokenRocks = null, pulledRopes = null,
+            openBridges = null, brokenRocks = null, pulledRopes = null, openChests = null,
         } = {}) {
             // Pixelmask entities (Building, TreeLarge, CliffSide) assign
             // their type in the CONSTRUCTOR, so they are armed on tick 1
@@ -3682,6 +3744,15 @@ export function buildLevelWorld(levelRecord, {
                 // the next `new Game`, so this may not be baked into the
                 // geometry the way a persistence clear is.
                 if (brokenRocks && s.rockId && brokenRocks.has(s.rockId)) continue;
+                // ⛔⛔ R5 SLICE 9: a chest the player has OPENED. `open()`
+                // writes `type = ""` (Chest.as:77) and the entity then fades
+                // for 60 more ticks before `FP.world.remove` — so the
+                // SOLIDITY goes first and the removal is invisible, which is
+                // why one set covers both. Per VISIT and per PERSISTENCE
+                // both: the flag it clears makes `check()` despawn it on the
+                // next `new Game` (PERSISTENCE_RESPONSE.chest), and this set
+                // is the live half in between.
+                if (openChests && s.chestId && openChests.has(s.chestId)) continue;
                 // ⛓ R5 SLICE 7: a rope the player has PULLED. Not a removal
                 // and not a type flip — `RopeStart.hit()` runs
                 // `setHitbox(16, 16, 8, 8)`, so 112 px of wall becomes 16 px
@@ -3867,7 +3938,7 @@ export function buildLevelWorld(levelRecord, {
          */
         plannerBlockerAt(box, probeRect = null, {
             noclip = false, noHazards = [], openActivators = null, pushables: live = null,
-            openBridges = null, brokenRocks = null, pulledRopes = null,
+            openBridges = null, brokenRocks = null, pulledRopes = null, openChests = null,
         } = {}) {
             if (!noclip) {
                 // ⚠ THE PLANNER USES THE REAL MASK, not the bounding rect.
@@ -3889,6 +3960,12 @@ export function buildLevelWorld(levelRecord, {
                         && openActivators.has(s.activatorId)) continue;
                     if (openBridges && s.bridgeId && openBridges.has(s.bridgeId)) continue;
                     if (brokenRocks && s.rockId && brokenRocks.has(s.rockId)) continue;
+                    // ⛔⛔ R5 slice 9: an OPENED chest. The planner has to see
+                    // the join cell open or it cannot route the second half
+                    // of L38 at all — and it must NOT see it open before the
+                    // leg opens it, which is why this is run state and not a
+                    // build option.
+                    if (openChests && s.chestId && openChests.has(s.chestId)) continue;
                     // ⛓ R5 slice 7: a pulled rope SHRINKS. The planner has
                     // to see the one cell the game keeps, or it routes
                     // through the pulley.

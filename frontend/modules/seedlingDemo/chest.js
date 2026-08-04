@@ -269,10 +269,24 @@ export function stepChests(state, ctx) {
             });
             continue;
         }
-        // ── the gate, then the line ───────────────────────────────────
-        if (c.solid || c.frame === 0) {
-            const covered = ctx.solidOver(c);
-            if (!covered && keyLineTouches(ctx.playerBox, chestProbeLine(c.x, c.y))) {
+        // ── the line, then the gate ───────────────────────────────────
+        // ⚠ THE SOURCE ASKS THEM THE OTHER WAY ROUND, and swapping them is
+        // deliberate rather than sloppy. `Chest.update`'s condition is
+        // `!collide("Solid", x, y) && FP.world.collideLine("Player", …)`,
+        // so the game evaluates the GATE first — but both are pure
+        // predicates over the same frame's state, `&&` short-circuits
+        // either way, and there is no execution in which the order is
+        // observable.
+        //
+        // What IS observable is the cost. `solidOver` is a full solids
+        // scan, and asking it every tick of every visit to a level with a
+        // chest cost the frontend suite 370 ms on `r3-walk-full` — enough
+        // to push a pre-existing 10 s timeout over. The line test is a rect
+        // against three integers and it is false on all but a handful of
+        // ticks, so it goes first.
+        if (c.solid && c.frame === 0) {
+            if (keyLineTouches(ctx.playerBox, chestProbeLine(c.x, c.y))
+                && !ctx.solidOver(c)) {
                 if (c.frame === 0) {
                     c.frame = 1;
                     c.openTimer = CHEST.openTimerMax;
