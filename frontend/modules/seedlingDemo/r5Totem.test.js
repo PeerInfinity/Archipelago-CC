@@ -9,13 +9,16 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    CLUSTER, GROUP_6, TOTEM_ENTRANCE, TOTEM_PAIR, TOTEM_ROPE, TOTEM_SHAFT,
+    CLUSTER, GROUP_6, L38_CHAIN, TOTEM_ENTRANCE, TOTEM_PAIR, TOTEM_ROPE, TOTEM_SHAFT,
     TotemError, assertPresserWrites,
 } from './r5Totem.js';
+import { ROPE_PULL } from './r5Shaft.js';
+import { auditFire } from './presses.js';
+import { HAZARD_STATES } from './tapeFormat.js';
 import { crossRoomWrites, createActivatorState, stepActivators } from './activators.js';
 import { ROLES, buildLevelWorld } from './levelWorld.js';
 import { atlasLevelSource } from './levelSource.js';
-import { playerBoxAt } from './playerPhysicsV2.js';
+import { playerBoxAt, resolveTerrainState } from './playerPhysicsV2.js';
 
 const source = atlasLevelSource();
 const HELD = { hasSword: true, canSwim: true, hasFeather: true, hasFire: true };
@@ -292,5 +295,169 @@ describe('the press, stepped', () => {
         expect(() => stepActivators(stale, w, playerBoxAt(40, 56), {
             inventory: HELD, keys: new Set(),
         })).toThrow(/predates the cross-room writes/);
+    });
+});
+
+// ── R5 SLICE 8: ⛔⛔ THE ENTRANCE BUTTON IS IN A ROOM THE ARRIVAL CANNOT
+// REACH, and the chain that joins them is five links long ──────────────
+//
+// Every claim here is measured from the census, not read off `L38_CHAIN` —
+// the declaration is the transcription of the AS3 and the flood is the
+// geometry, and a helper that returned the declaration would hide a drift
+// between them. `probe-seedling-r5-l38-entrance` is the readable version.
+
+const TILE = 16;
+
+/** An 8 px lattice flood, the pitch every R5 route plans at. */
+const flood = (world, rec, start, { open = new Set(), pushables = null } = {}) => {
+    const ok = (x, y) => x > 0 && y > 0 && x < rec.width * TILE && y < rec.height * TILE
+        && !world.collidesSolid(playerBoxAt(x, y), { openActivators: open, pushables });
+    const seen = new Set([`${start.x},${start.y}`]);
+    const q = [[start.x, start.y]];
+    while (q.length) {
+        const [x, y] = q.shift();
+        for (const [dx, dy] of [[8, 0], [-8, 0], [0, 8], [0, -8]]) {
+            const nx = x + dx;
+            const ny = y + dy;
+            if (!ok(nx, ny) || seen.has(`${nx},${ny}`)) continue;
+            seen.add(`${nx},${ny}`);
+            q.push([nx, ny]);
+        }
+    }
+    return {
+        cells: seen.size,
+        tiles: new Set([...seen].map((k) => {
+            const [a, b] = k.split(',').map(Number);
+            return `${Math.floor(a / TILE)},${Math.floor(b / TILE)}`;
+        })),
+    };
+};
+
+describe('⛔⛔ L38 is TWO ROOMS — §20.8\'s one-line entrance leg, refuted', () => {
+    const rec = source(38);
+    const w = worldFor(38);
+    const blockId = w.solids.find((s) => s.pushableId)?.pushableId;
+    const blockAt = (tx, ty) => new Map([[blockId, {
+        rect: {
+            x: tx * TILE, y: ty * TILE, w: TILE, h: TILE,
+            right: tx * TILE + TILE, bottom: ty * TILE + TILE,
+        },
+        removed: false,
+    }]]);
+
+    it('the L37 arrival cannot reach the entrance button OR the L39 door', () => {
+        const south = flood(w, rec, { x: 152, y: 296 }, { pushables: blockAt(5, 13) });
+        expect(south.tiles.has('2,3')).toBe(false);   // buttonroom@32,48
+        expect(south.tiles.has('9,0')).toBe(false);   // teleporter -> L39
+        expect(south.cells).toBe(L38_CHAIN.rooms[0].cells);
+    });
+
+    it('...and the two rooms share NOT ONE TILE', () => {
+        const south = flood(w, rec, { x: 152, y: 296 }, { pushables: blockAt(5, 13) });
+        const north = flood(w, rec, { x: 152, y: 24 }, { pushables: blockAt(5, 13) });
+        expect(north.tiles.has('2,3')).toBe(true);
+        expect(north.tiles.has('9,0')).toBe(true);
+        expect(north.cells).toBe(L38_CHAIN.rooms[1].cells);
+        expect([...south.tiles].filter((t) => north.tiles.has(t))).toEqual([]);
+    });
+
+    it('⛔ the join is ONE cell, and the cover is only the OUTER of its two solids', () => {
+        const box = playerBoxAt(9 * TILE + 8, 7 * TILE + 8);
+        expect(w.collidesSolid(box)).toBeTruthy();
+        // The cover open, and the cell is STILL solid — the chest is behind it.
+        const withCoverOpen = w.collidesSolid(box, {
+            openActivators: new Set(['cover@144,112']),
+        });
+        expect(withCoverOpen?.tag).toBe('chest');
+        // ...and row 7 has no other column at all.
+        const free = [];
+        for (let tx = 0; tx < rec.width; tx += 1) {
+            if (!w.collidesSolid(playerBoxAt(tx * TILE + 8, 7 * TILE + 8))) free.push(tx);
+        }
+        expect(free).toEqual([]);
+    });
+
+    it('⛔ links 3-5 add NOTHING to the flood — the chest is an entity state change', () => {
+        const after1 = flood(w, rec, { x: 152, y: 296 },
+            { open: new Set(['cover@208,224']), pushables: blockAt(5, 13) });
+        const after4 = flood(w, rec, { x: 152, y: 296 },
+            { open: new Set(['cover@208,224', 'cover@144,112']), pushables: blockAt(5, 12) });
+        expect(after1.cells).toBeGreaterThan(L38_CHAIN.rooms[0].cells); // link 1 opens the cover
+        expect(after4.cells).toBe(after1.cells);                        // links 3+4 open nothing
+        expect(after4.tiles.has('9,7')).toBe(false);
+    });
+
+    it('⛔⛔ the `Pulser` — the engine — is not a census responder at all', () => {
+        expect(w.activators.some((a) => a.id.startsWith('pulser'))).toBe(false);
+        // ...and it is the ONLY thing group 1 has, so the group opens nothing.
+        const group1 = w.pressers.filter((p) => p.t === 1);
+        expect(group1).toHaveLength(1);
+        expect(group1[0]).toMatchObject({ tag: 'buttonroom', x: 208, y: 224 });
+        expect(w.activators.filter((a) => a.t === 1)).toEqual([]);
+    });
+
+    it('⛓ NOBODY CAN STAND ON `button@80,192` — the block is not a shortcut', () => {
+        const group0 = w.pressers.filter((p) => p.t === 0);
+        expect(group0).toHaveLength(1);
+        expect(group0[0]).toMatchObject({ tag: 'button', x: 80, y: 192 });
+        // Its two approaches are the block (5,13) and the pulser (5,14), both Solid.
+        for (const [tx, ty] of [[5, 13], [5, 14]]) {
+            expect(w.collidesSolid(playerBoxAt(tx * TILE + 8, ty * TILE + 8),
+                { pushables: blockAt(5, 13) })).toBeTruthy();
+        }
+    });
+
+    it('⛓ the block is the pulser\'s exact NORTH neighbour — a pure axis push', () => {
+        const link = L38_CHAIN.links.find((l) => l.kind === 'pulse-push');
+        expect(link.moves.from).toEqual({ tx: 5, ty: 13 });
+        expect(link.moves.to).toEqual({ tx: 5, ty: 12 });
+        // The destination IS the button cell, which is what makes it link 4.
+        const button = w.pressers.find((p) => p.t === 0);
+        expect(Math.floor(button.x / TILE)).toBe(link.moves.to.tx);
+        expect(Math.floor(button.y / TILE)).toBe(link.moves.to.ty);
+    });
+
+    it('names the three unbuilt mechanics rather than leaving the leg "hard"', () => {
+        expect(L38_CHAIN.unbuilt.map((u) => u.what)).toEqual([
+            'the `Pulser` cycle',
+            'the pulse\'s player damage',
+            'the `Chest` verb',
+            'the `SealPiece` pickup',
+        ]);
+        for (const u of L38_CHAIN.unbuilt) expect(u.src).toMatch(/\.as/);
+        expect(L38_CHAIN.links.filter((l) => !l.modelled)).toHaveLength(3);
+    });
+});
+
+describe('⛔ the rope\'s declared stance was unreachable, and its water was not on the path', () => {
+    const rec = source(39);
+    const w = buildLevelWorld(source(39), {
+        roles: ROLES, inventory: HELD, cleared: [8],
+    });
+
+    it('(7,25) is not reachable from L39\'s arrival by any path', () => {
+        const f = flood(w, rec, { x: 152, y: 616 });
+        expect(f.tiles.has('7,25')).toBe(false);
+        expect(ROPE_PULL.supersededStance).toMatchObject({ tx: 7, ty: 25, section: '§20.5' });
+    });
+
+    it('⛓ (9,25) IS, it reaches the rope, and it is the only column that does', () => {
+        const f = flood(w, rec, { x: 152, y: 616 });
+        expect(f.tiles.has(`${ROPE_PULL.stance.tx},${ROPE_PULL.stance.ty}`)).toBe(true);
+        const reach = [];
+        for (const t of f.tiles) {
+            const [tx, ty] = t.split(',').map(Number);
+            const a = auditFire(w, { x: tx * TILE + 8, y: ty * TILE + 8 });
+            if (a.live.some((r) => r.as3 === 'RopeStart')) reach.push(t);
+        }
+        expect(reach).toEqual([`${ROPE_PULL.stance.tx},${ROPE_PULL.stance.ty}`]);
+    });
+
+    it('⛔ and it is DRY — §20.5\'s canSwim prerequisite is retired', () => {
+        const t = resolveTerrainState(w, ROPE_PULL.stance.tx * TILE + 8,
+            ROPE_PULL.stance.ty * TILE + 8);
+        expect(t).toBe(ROPE_PULL.stanceTerrain);
+        expect(t).not.toBe(HAZARD_STATES.water);
+        expect(t).not.toBe(HAZARD_STATES.waterfall);
     });
 });

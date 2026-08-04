@@ -232,8 +232,36 @@ export const SHAFT_REFUTED = Object.freeze({
 export const ROPE_PULL = Object.freeze({
     level: LEVEL,
     rope: Object.freeze({ x: 96, y: 384 }),
-    /** The tile the player fires from — inside the 32x32 rect, east of the pulley. */
-    stance: Object.freeze({ tx: 7, ty: 25 }),
+    /**
+     * ⛔ R5 SLICE 8 CORRECTED THIS, and the old value could not be stood in.
+     *
+     * Slice 7 declared `(7, 25)` — a water tile in the WEST shaft, which is
+     * where §20.5's "the rope's shaft is WATER, so `canSwim` is on the
+     * critical path" came from. **(7,25) is not reachable from L39's
+     * arrival by any path**: (8,25) is wall and (7,24) is the rope itself,
+     * so the entire west shaft is behind the thing the stance exists to
+     * pull. Flooding the arrival with the plug deleted gives 29 cells and
+     * (7,25) is in none of them.
+     *
+     * The reachable stances that reach the rope at all are column 9 alone,
+     * and of those the walk arrives from the south, so it is **(9,25)** —
+     * the corridor cell directly below the pulley. `auditFire` there
+     * reaches exactly one responder, the rope.
+     *
+     * ⛓ AND IT IS DRY: `resolveTerrainState` at (152,408) is **18**, not
+     * water and not waterfall. ⇒ §20.5's canSwim claim is retired. It was
+     * found by a `PhysicsV2Error` refusing an unpinned wet tick, which is
+     * that refusal doing exactly its job — on a tick no walk can take.
+     * `probe-seedling-r5-l38-entrance` is the measurement.
+     */
+    stance: Object.freeze({ tx: 9, ty: 25 }),
+    /** Terrain 18. Named so a later reading cannot re-derive the wet one. */
+    stanceTerrain: 18,
+    supersededStance: Object.freeze({
+        tx: 7, ty: 25, section: '§20.5',
+        why: 'unreachable — (8,25) is wall and (7,24) is the rope; the west shaft is '
+            + 'behind the pull. Its water is real and no walk stands in it.',
+    }),
     clears: Object.freeze({ level: LEVEL, tag: 9 }),
     weapon: 'fire',
     cells: Object.freeze({ before: 56, after: 688 }),

@@ -144,6 +144,171 @@ export const TOTEM_ENTRANCE = Object.freeze({
 });
 
 /**
+ * ⛔⛔ R5 SLICE 8: THE ENTRANCE BUTTON IS IN A ROOM THE ARRIVAL CANNOT REACH.
+ *
+ * `TOTEM_ENTRANCE` above is entirely correct about what the button DOES and
+ * says nothing about how a walk gets to it, because until this slice nobody
+ * tried. §20.8 priced the leg in one line — "boot at (144,288), the
+ * entrance button at (36..44, 53..59), the door at (144,0)" — three
+ * waypoints and a walk.
+ *
+ * ⛔ **L38 IS TWO DISJOINT ROOMS.** The only door into the cluster is L37's,
+ * landing at (144,288) = tile (9,18) in the SOUTH room (205 lattice cells /
+ * 64 tiles). `buttonroom@32,48` (2,3) and `teleporter@144,0 -> L39` (9,0)
+ * are both in the NORTH one (195 / 65), which is otherwise entered only
+ * from L39 — and L39 is only entered from here. The two floods share not
+ * one tile.
+ *
+ * ⛔ **AND THE JOIN IS ONE CELL WITH TWO SOLIDS STACKED IN IT.** Row 7 is
+ * solid across all nineteen columns; column 9 holds `cover@144,112 {t 0}`
+ * and, underneath it, `chest@144,112 {tag 1}` — `type = "Solid"` in its
+ * constructor. Opening the cover does not open the cell; it merely makes
+ * the chest openable, because `Chest.update`'s gate is
+ * `!collide("Solid", x, y)`.
+ *
+ * ── ⛓⛓ THE CHAIN, AND ITS ENGINE IS A `Pulser` ───────────────────────
+ *
+ * ```
+ *   1  buttonroom@144,128  (9,8)   t 2, room -1   the SELF-LATCH (§20.6)
+ *        -> cover@208,224 (13,14) fades open           +6 cells
+ *   2  buttonroom@208,224  (13,14) t 1, room -1   a SECOND self-latch,
+ *        under the cover link 1 opened
+ *        -> pulser@80,224 (5,14) `activate = true`, permanently
+ *   3  ⛔⛔ THE PULSE MOVES THE BLOCK. `Pulser.hit()` dispatches
+ *        `(c as PushableBlockFire).hit(new Point(x, y), "Pulse")` on every
+ *        tick of its expansion, and `pushableblockfire@80,208` at (5,13)
+ *        is the pulser's exact NORTH neighbour — a pure axis, no atan2
+ *        ambiguity — so it is shoved to (5,12)
+ *   4  (5,12) IS `button@80,192 {t 0}`, and a block presses a button
+ *        -> cover@144,112 (9,7) fades open, uncovering the chest
+ *   5  `Chest.open()` sets **`type = ""`** (Chest.as:76). THAT is what
+ *        makes column 9 passable, and it is an ENTITY STATE CHANGE no
+ *        census flag can express — links 3, 4 and 5 add ZERO to the flood.
+ * ```
+ *
+ * ⛓ **NOBODY CAN STAND ON `button@80,192`.** It is at (5,12), and the only
+ * approaches are (5,13) — the block — and (5,14) — the pulser, a permanent
+ * `type = "Solid"`. The group that opens the level's one join has exactly
+ * one presser and it is not a player. That is what makes the block
+ * mandatory rather than a shortcut.
+ *
+ * ⚠ **AND `moveTypes = ["Fire", "Pulse"]` HAS BEEN READ FIVE TIMES ON THIS
+ * ARC AS "Fire is the one that matters"** (§18.9, §19.2, §19.8, §20.2,
+ * §20.3). The other member has a writer, and it is a level's whole opening
+ * mechanic. See [[feedback_inert_for_this_weapon]], from the other side:
+ * the question is not only which weapon, it is also who is holding it.
+ *
+ * ⇒ THREE UNBUILT MECHANICS sit between the boot and the entrance button:
+ * the `Pulser`'s periodic pulse (a world-driven `PushableBlockFire` mover
+ * AND a 22 px player damage ring, `Pulser.as:88-115`), the `Chest`'s
+ * open-and-desolidify, and the `SealPiece` that `open()` spawns — a
+ * `special` pickup with a 150-frame ceremony and a `SealController` of its
+ * own. `probe-seedling-r5-l38-entrance` is the measurement.
+ */
+export const L38_CHAIN = Object.freeze({
+    level: 38,
+    supersedes: Object.freeze({
+        section: '§20.8',
+        claim: 'the L38 leg (boot at (144,288), the entrance button, the door at (144,0))',
+        why: 'the boot and the button are in disjoint rooms; the leg is a five-link '
+            + 'puzzle whose middle three links are unmodelled',
+    }),
+    /** The two rooms, measured at the 8 px lattice every R5 route plans at. */
+    rooms: Object.freeze([
+        Object.freeze({
+            name: 'south', from: 'L37 teleporter@288,0', arrival: Object.freeze({ x: 144, y: 288 }),
+            tile: Object.freeze({ tx: 9, ty: 18 }), cells: 205, tiles: 64,
+            holds: Object.freeze(['buttonroom t2 (9,8)', 'buttonroom t1 (13,14)',
+                'button t0 (5,12)', 'the pulser (5,14)', 'the block (5,13)']),
+        }),
+        Object.freeze({
+            name: 'north', from: 'L39 teleporter@144,624', arrival: Object.freeze({ x: 144, y: 16 }),
+            tile: Object.freeze({ tx: 9, ty: 1 }), cells: 195, tiles: 65,
+            holds: Object.freeze(['buttonroom@32,48 t8 — THE ENTRANCE (2,3)',
+                'teleporter@144,0 -> L39 (9,0)']),
+        }),
+    ]),
+    join: Object.freeze({
+        tile: Object.freeze({ tx: 9, ty: 7 }),
+        stacked: Object.freeze(['cover@144,112 (t 0)', 'chest@144,112 (tag 1)']),
+        why: 'row 7 is solid across all 19 columns; this is the one cell, and the cover '
+            + 'is only the OUTER of its two solids',
+    }),
+    links: Object.freeze([
+        Object.freeze({
+            n: 1, kind: 'buttonroom-local', at: Object.freeze({ x: 144, y: 128 }), t: 2,
+            opens: 'cover@208,224', modelled: true,
+            why: 'the `room = -1` self-latch slice 7 built (§20.6)',
+        }),
+        Object.freeze({
+            n: 2, kind: 'buttonroom-local', at: Object.freeze({ x: 208, y: 224 }), t: 1,
+            opens: 'pulser@80,224', modelled: false,
+            why: '⛔ the `Pulser` is not in `world.activators` at all — the census collects '
+                + 'responders that change GEOMETRY and a Pulser is `type = "Solid"` either '
+                + 'way, so `runHold` here fails with "no responder answers"',
+        }),
+        Object.freeze({
+            n: 3, kind: 'pulse-push', at: Object.freeze({ x: 80, y: 224 }), t: 1,
+            moves: Object.freeze({ from: Object.freeze({ tx: 5, ty: 13 }), to: Object.freeze({ tx: 5, ty: 12 }) }),
+            modelled: false,
+            src: 'Puzzlements/Pulser.as:88-115 — `hit()` collides ["Player","Solid","Enemy"] '
+                + 'in a `radiusHit = 22` box, filters on `FP.distanceRectPoint`, and '
+                + 'dispatches `(c as PushableBlockFire).hit(new Point(x, y), "Pulse")`',
+            why: '⛔⛔ THE ENGINE. The block is the pulser\'s exact north neighbour, so the '
+                + 'push is a pure axis and lands on `button@80,192`.',
+        }),
+        Object.freeze({
+            n: 4, kind: 'block-presses-button', at: Object.freeze({ x: 80, y: 192 }), t: 0,
+            opens: 'cover@144,112', modelled: true,
+            why: 'slice 6\'s `movingSolids` finding, in a level nobody had looked at — and '
+                + 'here it is not an alternative to a player press, it is the ONLY one: '
+                + '(5,12)\'s approaches are the block and the pulser',
+        }),
+        Object.freeze({
+            n: 5, kind: 'chest-open', at: Object.freeze({ x: 144, y: 112 }), tag: 1,
+            modelled: false,
+            src: 'Chest.as:58-88 — `update` opens on `collideLine("Player", …)` one pixel '
+                + 'below the box, gated on `!collide("Solid", x, y)`; `open()` sets '
+                + '`type = ""`, spawns a `SealPiece`, and writes `setPersistence(tag, false)`',
+            why: '⛓ THE DESOLIDIFY IS THE PASSAGE. And the stance is a GRAZE by '
+                + 'construction, exactly as a keylock\'s is: the probe row is y = 129 and '
+                + 'the player box is `[y-2, y+3)`, so the walk has to reach y in [127,131] '
+                + 'against a chest whose box starts at 128.',
+        }),
+    ]),
+    /** What a route has to build before this leg can be planned at all. */
+    unbuilt: Object.freeze([
+        Object.freeze({
+            what: 'the `Pulser` cycle', src: 'Puzzlements/Pulser.as:51-86',
+            why: 'a 20-tick wait, a 5-frame animation, then `hit()` once per tick while '
+                + '`radius` grows from 10 by 0.8 to 28 — and `radius` is a Number, so the '
+                + 'count is `ceil((28-10)/0.8)` rather than a division somebody rounds. It '
+                + 'is the first WORLD-DRIVEN periodic hit on the arc: every mover before '
+                + 'this was a player press.',
+        }),
+        Object.freeze({
+            what: 'the pulse\'s player damage', src: 'Puzzlements/Pulser.as:110-113',
+            why: '`(c as Player).hit(null, force 6, new Point(x, y), damage 1)` inside the '
+                + 'same 22 px filter — so the ring is an encounter the ladder prices, and '
+                + 'it is live for the whole rest of the visit once link 2 latches',
+        }),
+        Object.freeze({
+            what: 'the `Chest` verb', src: 'Chest.as:58-88',
+            why: 'a graze-stance press with no button: the effect is `type = ""` plus a '
+                + 'persistence write, and the positive control is that the cell was solid '
+                + 'before',
+        }),
+        Object.freeze({
+            what: 'the `SealPiece` pickup', src: 'Chest.as:76 + Pickups/SealPiece.as',
+            why: '`open()` adds one unconditionally. It is a `special` pickup — 150 frozen '
+                + 'frames — and it belongs to `SealController`, a collectible family this '
+                + 'arc has never touched. A ceremony the tape does not know about is 150 '
+                + 'dead frames the continuation assert WILL see.',
+        }),
+    ]),
+});
+
+/**
  * ⛓ THE SEVENTH PRESS ARM: `rope@96,384 {tset: 6, tag: 9}` in L39.
  *
  * Four facts, and three of them are ways a "clear the flag instead" would
