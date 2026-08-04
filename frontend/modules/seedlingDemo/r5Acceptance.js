@@ -30,6 +30,8 @@
  * difference between them has exactly one available cause.
  */
 
+import { outOfBandFlagForWriter } from './outOfBandLedger.js';
+
 export const L60_KILL = 'r5-l60-kill';
 export const L60_CONTROL = 'r5-l60-kill-control';
 
@@ -369,8 +371,18 @@ export const BOBBOSS_CONTROL = 'r5-bobboss-fire-control';
 
 /** `FallRockLarge.fall()` — written on the ARM frame, not when it lands. */
 export const ROCK_FLAG = Object.freeze({ level: 32, tag: 1 });
-/** ⛔ `Fire.removed()`'s `setPersistence(-1, false)`, resolved. */
-export const FIRE_OUT_OF_BAND_FLAG = Object.freeze({ level: 31, tag: 29 });
+/**
+ * ⛔ `Fire.removed()`'s `setPersistence(-1, false)`, resolved.
+ *
+ * ⚠ DERIVED, NOT WRITTEN DOWN, since slice 5 step 0. It used to be the
+ * literal `{31, 29}` with `breakableRocks.outOfBandFlagFor` asserted
+ * against it — which keeps TWO members honest and says nothing about a
+ * third. `outOfBandFlagForWriter` derives it from the WRITING ENTITY
+ * (`Fire`, from L32, tag -1) against a registry that refuses an
+ * unclassified class, so the family's next member arrives classified or
+ * not at all. See `outOfBandLedger.js`.
+ */
+export const FIRE_OUT_OF_BAND_FLAG = outOfBandFlagForWriter({ as3: 'Fire', level: 32, tag: -1 });
 
 export function bobBossFindings(replayed) {
     const fire = replayed?.get(BOBBOSS_FIRE);
