@@ -2918,6 +2918,41 @@ export function buildLevelWorld(levelRecord, {
                 rect: entityRect(cls.hazard, x, y),
                 x,
                 y,
+                // ── R5 slice 5 step 2: THE CROSS-ROOM WRITE ───────────
+                // A `ButtonRoom`'s setter has TWO arms and the census
+                // carried neither, because until this rung no route
+                // pressed one deliberately.
+                //
+                //   ButtonRoom.as:87-96
+                //     var persist:Boolean = _active;      // true on a press
+                //     if (flip) persist = !persist;
+                //     if (room == -1) ...activate every Activator sharing t...
+                //     else Game.setPersistence(t, persist, room);
+                //     Game.setPersistence(tag, !activate);
+                //
+                // `room == -1` is the arm `pressedGroups` already models.
+                // The other arm writes a flag in ANOTHER LEVEL, keyed on the
+                // **TSET** rather than the tag, and then clears its OWN tag
+                // in this one. Both are ledger entries and the first changes
+                // what the other level BUILDS.
+                //
+                // ⚠ `flip` is what decides the SIGN, and the comment in the
+                // source is the authority: "persist = false, then things
+                // won't exist". A press with `flip` writes FALSE.
+                //
+                // ⚠ `persistTag` comes from `tagOf`, the census-wide helper,
+                // rather than from a second reading of the attribute — so a
+                // `ButtonRoom` and every other entity answer "what is your
+                // tag" the same way. (`tagOf` gives -1 for a missing
+                // attribute where AS3's `int("")` would give 0; all four
+                // cross-room ButtonRooms in the game carry an explicit tag,
+                // so the two cannot disagree here, and changing the
+                // convention for one class would be worse than the caveat.)
+                ...(e.type === 'buttonroom' ? {
+                    room: intAttr(e.attrs, 'room', -1),
+                    flip: intAttr(e.attrs, 'flip', 0) !== 0,
+                    persistTag: entityTag,
+                } : {}),
             });
         }
         if (consults.has('proximity-hazard') && cls.hazard) {

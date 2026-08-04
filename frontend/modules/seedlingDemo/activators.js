@@ -268,6 +268,36 @@ export function keyLineTouches(box, line) {
  * `open` is the modelled `type == ""`. It starts false because every
  * responder assigns `type = normType` in its constructor.
  */
+/**
+ * ⛓ R5 slice 5 step 2: THE CROSS-ROOM WRITES THIS VISIT HAS ALREADY MADE.
+ *
+ * A `ButtonRoom` with `room >= 0` writes persistence into ANOTHER level and
+ * clears its own tag here. `set activate` is `if (a) { ... }` with no
+ * already-pressed guard, so the game re-writes both flags on every tick the
+ * button is held — and both writes are idempotent, so what the LEDGER sees
+ * is one entry each. This set is that de-duplication, per level visit.
+ *
+ * ⚠ PER VISIT, like every other member of this family. `check()` recomputes
+ * `_active = !checkPersistence(tag)` on the next `new Game`, so a button
+ * whose own tag is now false boots ALREADY PRESSED and fires the setter
+ * again at build time — the same two writes, the same values. The run banks
+ * the clears, so the rebuild is a no-op it does not need to re-derive.
+ */
+export function crossRoomWrites(presser) {
+    if (presser?.tag !== 'buttonroom' || !(presser.room >= 0)) return [];
+    // `persist = _active` (true on a press), flipped by `flip`. The write is
+    // keyed on the TSET, in the named room — `ButtonRoom.as:93`.
+    const persist = presser.flip ? false : true;
+    const out = [{ level: presser.room, tag: presser.t, value: persist, which: 'room' }];
+    // `Game.setPersistence(tag, !activate)` — its OWN tag, in THIS level,
+    // always false on a press. `level: null` means "the level the press
+    // happened in"; the caller knows which that is and this module does not.
+    if (presser.persistTag >= 0) {
+        out.push({ level: null, tag: presser.persistTag, value: false, which: 'own' });
+    }
+    return out;
+}
+
 export function createActivatorState(world) {
     const byId = new Map();
     for (const a of world.activators) {
@@ -277,7 +307,8 @@ export function createActivatorState(world) {
         // the opposite of a latch.
         byId.set(a.id, { alpha: 1, open: false, held: 0, touched: false });
     }
-    return { byId, level: world.level };
+    // The cross-room presser ids whose write this visit has already made.
+    return { byId, level: world.level, roomWritten: new Set() };
 }
 
 /**
@@ -354,6 +385,27 @@ export function stepActivators(state, world, playerBox, opts = {}) {
      * be the second copy of the world swap all over again.
      */
     const events = [];
+    // ── R5 slice 5 step 2: the CROSS-ROOM arm of `ButtonRoom.set activate`
+    // ⚠ IT IS NOT AN `activators` MEMBER, so it cannot live in the loop
+    // below: a `ButtonRoom` is a PRESSER, its `room >= 0` arm publishes to
+    // nothing in this level, and the thing it changes is what ANOTHER level
+    // builds. Emitted once per visit — `set activate` re-writes on every
+    // held tick and both writes are idempotent, so a second entry would be
+    // a ledger the game does not have.
+    if (!state.roomWritten) {
+        fail('stepActivators: this activator state predates the cross-room writes '
+            + '(no `roomWritten`). Rebuild it with `createActivatorState` — a state '
+            + 'object that silently skipped the writes would drop a ledger entry and '
+            + 'leave the next level built with a plug the game has removed.');
+    }
+    for (const p of world.pressers ?? []) {
+        if (!(p.room >= 0)) continue;
+        const id = `${p.tag}@${p.x},${p.y}`;
+        if (state.roomWritten.has(id)) continue;
+        if (!rectsOverlap(playerBox, p.rect)) continue;
+        state.roomWritten.add(id);
+        events.push({ kind: 'roomwrite', id, presser: p, writes: crossRoomWrites(p) });
+    }
     for (const a of world.activators) {
         const s = state.byId.get(a.id);
         if (!s) fail(`activator ${a.id} has no state — was createActivatorState called `

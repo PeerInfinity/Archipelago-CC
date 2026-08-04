@@ -351,7 +351,26 @@ export const PRESS_ARM_POLICY = Object.freeze({
             + 'tag >= 0, so a -1 rock comes back with the next `new Game`. '
             + 'See `breakableRocks.js`.',
     },
-    RopeStart: { policy: 'refused', why: 'SHRINKS to a one-cell solid and writes persistence' },
+    // ⚠ STILL REFUSED AT SLICE 5 STEP 2, and now for a stated reason
+    // rather than for want of a route. `probe-seedling-r5-totem-shaft`
+    // priced it: L39's rope is 112 px of WALL across the only shaft out of
+    // the arrival corridor, a press needs no weapon type and no line of
+    // sight (`Player.as:916,1093-1095`), and pulling it is the RIGHT
+    // verdict — a declared clear would open a tile the game keeps, because
+    // `hit()` shrinks the hitbox rather than removing the entity. What it
+    // is not is USEFUL yet: the room behind it is closed by three
+    // `WandLock`s whose only holders are `PushableBlockFire`s, and no
+    // weapon this arc models moves one. So the arm stays refused until the
+    // slice that can walk through it, rather than shipping a transcription
+    // no fixture exercises. The verdict, the group-6 analysis and the
+    // arithmetic are in `r5Totem.TOTEM_ROPE` / `GROUP_6`.
+    RopeStart: {
+        policy: 'refused',
+        why: 'SHRINKS to a one-cell solid and writes persistence, and its group publication '
+            + 'arms a Pulser. Ruled an ARM rather than a clear at R5 slice 5 step 2 '
+            + '(`r5Totem.TOTEM_ROPE`) and left unbuilt because the room behind it is '
+            + 'closed by the fire-push shaft — see `TOTEM_SHAFT.blockedBy`.',
+    },
     ShieldBoss: { policy: 'refused', why: 'boss damage — R5' },
     // ⚠ MODELLED FROM R4, and it was ruled in rather than assumed. It is the
     // only entry here whose arm has a real, banked effect that is not

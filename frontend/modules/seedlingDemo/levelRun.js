@@ -54,6 +54,7 @@ import {
 import {
     brokenRockIds, createRockState, hitRock, outOfBandFlagFor, rockBreaksUnder,
 } from './breakableRocks.js';
+import { ledgerKey, outOfBandFlagForWriter } from './outOfBandLedger.js';
 import { ITEM_PROPERTIES, ITEM_NAMES, inventorySlotsFor } from './tapeFormat.js';
 import { spawnFromBoot } from './playerPhysicsV1.js';
 import {
@@ -817,12 +818,19 @@ export function createLevelRun({
                 // ⚠ `endAnim` writes `Game.setPersistence(tag, false)`
                 // UNCONDITIONALLY — its `check()` guard (`tag >= 0 && ...`)
                 // does not apply — so a `tag = -1` rock clears a flag in
-                // ANOTHER LEVEL. `outOfBandFlagFor` resolves the index the
-                // way `Main.levelPersistenceSet` does; the ledger has to
-                // name it or the walk reports a clear nobody can attribute.
+                // ANOTHER LEVEL. Since slice 5 step 0 the resolution goes
+                // through `outOfBandFlagForWriter`, which carries the
+                // FAMILY (`Fire`, `BreakableRock`, `DarkSword`) and refuses
+                // a class nobody has classified; the ledger has to name the
+                // entry or the walk reports a clear nobody can attribute.
+                // An in-band rock keeps the plain arithmetic: the family
+                // helper is for the -1 sentinel only, and says so.
                 if (started) {
-                    const flag = outOfBandFlagFor(level, rock.persistTag ?? -1);
-                    rockFlags.set(`${flag.level}:${flag.tag}`, { ...flag, id, level });
+                    const tag = rock.persistTag ?? -1;
+                    const flag = tag < 0
+                        ? outOfBandFlagForWriter({ as3: 'BreakableRock', level, tag })
+                        : outOfBandFlagFor(level, tag);
+                    rockFlags.set(ledgerKey(flag), { ...flag, id, level });
                 }
                 hits.push({
                     as3: 'BreakableRock', id, broke: started, goneAt,
@@ -997,6 +1005,17 @@ export function createLevelRun({
      * the flag. Both feed `earnedClears`.
      */
     const keyOpens = [];
+    /**
+     * ⛓ R5 slice 5 step 2: one record per `ButtonRoom` press with
+     * `room >= 0` — `{id, from, level, tag, value, which, t}`, TWO per
+     * press.
+     *
+     * Kept as WRITES rather than as clears because the sign is data: `flip`
+     * decides it, and a `flip = 0` button writes TRUE. Only the `false`
+     * writes are clears; recording both is what lets a test assert that the
+     * TRUE one did not reach the ledger.
+     */
+    const roomWrites = [];
 
     function applyLockEvents(events) {
         for (const ev of events) {
@@ -1015,6 +1034,47 @@ export function createLevelRun({
                         pendingEarnedClears.set(level, new Set());
                     }
                     pendingEarnedClears.get(level).add(ev.persistTag);
+                }
+                continue;
+            }
+            if (ev.kind === 'roomwrite') {
+                // ⛓ R5 slice 5 step 2: a `ButtonRoom` with `room >= 0`.
+                //
+                // Two writes, and they are not the same shape. The FIRST is
+                // in another level entirely and is what the route is for:
+                // `levelPersistence[room * 30 + tset] = persist`, and the
+                // next `new Game(room, ...)` builds without whatever that
+                // flag was holding up (for L38's `{tset: 8, flip: 1,
+                // room: 39}`, `Lock.check()`'s `tSet < 0 && !checkPersistence
+                // (tag)` deletes L39's plug at BUILD time). The SECOND is
+                // its own tag, here.
+                //
+                // ⚠ ONLY A `false` IS A CLEAR. `flip` decides the sign and a
+                // `flip = 0` button writes TRUE — which is a persistence
+                // write the game makes and the ledger's "cleared" list does
+                // NOT contain. Banking it as a clear would put an entry in
+                // an exact set that the game never reports.
+                for (const w of ev.writes) {
+                    const at = w.level === null ? level : w.level;
+                    roomWrites.push({
+                        id: ev.id, from: level, level: at, tag: w.tag,
+                        value: w.value, which: w.which, t: ticksCompleted,
+                    });
+                    if (w.value !== false) continue;
+                    if (!pendingEarnedClears.has(at)) pendingEarnedClears.set(at, new Set());
+                    pendingEarnedClears.get(at).add(w.tag);
+                }
+                // ⚠ AND THE WRITE INTO ANOTHER LEVEL IS CASHED IMMEDIATELY.
+                // `applyEarnedClears` runs on the transition path for the
+                // level being ENTERED, which is right for a flag in the
+                // level the player is standing in — dropping that memo
+                // mid-visit would despawn an entity the game keeps until the
+                // next `new Game`. A flag in a level the player is NOT in
+                // has no such constraint, and holding it back would leave a
+                // memoised world that the game has already invalidated.
+                for (const w of ev.writes) {
+                    if (w.level === null || w.value !== false) continue;
+                    applyEarnedClears(w.level);
                 }
                 continue;
             }
@@ -1151,6 +1211,17 @@ export function createLevelRun({
          */
         get keyOpens() { return keyOpens.map((r) => ({ ...r })); },
         /**
+         * ⛓ R5 slice 5 step 2: every `ButtonRoom` cross-room write this run
+         * made — `{id, from, level, tag, value, which, t}`.
+         *
+         * `from` is the level the button is IN and `level` the level the
+         * flag is in; for the `which: 'own'` write they are the same. A
+         * planner reads this to check that the write it routed for is the
+         * write the run actually made, which no reachability count can say:
+         * two different buttons in one room resolve to two different rooms.
+         */
+        get roomWrites() { return roomWrites.map((r) => ({ ...r })); },
+        /**
          * One record per completed ceremony: `{t, level, item, frames}`.
          *
          * The crutch LEDGER at R3. A grant that fired is in `grantsFired`;
@@ -1225,6 +1296,20 @@ export function createLevelRun({
                 const [n, tag] = key.split(':').map(Number);
                 if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
                 out.push({ level: n, tag, by: 'lightpole' });
+            }
+            // ⛓ R5 slice 5 step 2: a `ButtonRoom`'s cross-room press.
+            // ⚠ FILTERED ON THE VALUE, not on the existence of the write.
+            // `flip` decides the sign and a `flip = 0` button writes TRUE —
+            // a real `setPersistence` call that puts nothing in the game's
+            // `persistence_cleared` readout, so an exact-set assertion that
+            // banked it would go red against a correct walk.
+            for (const r of roomWrites) {
+                if (r.value !== false || r.tag < 0) continue;
+                if (out.some((o) => o.level === r.level && o.tag === r.tag)) continue;
+                out.push({
+                    level: r.level, tag: r.tag,
+                    by: r.which === 'room' ? `${r.id} (L${r.from} -> L${r.level})` : r.id,
+                });
             }
             // R5: a broken rock. ⚠ NOT a toggle — `endAnim` writes `false`
             // once and the entity is gone — so unlike the lightpole this is

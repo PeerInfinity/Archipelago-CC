@@ -2758,3 +2758,130 @@ deleted at BUILD time from the previous room. Behind it is a second gate,
   688 cells / 3 spinners   {39,8} + {39,9}
 
 `probe-seedling-r5-totem-entrance` is the measurement.
+
+## R5 slice 5 step 2: the totem entrance, and the gate behind the gate
+
+### ⛓ A `ButtonRoom` write is a MODELLED write now, not a declared clear
+
+`ButtonRoom.set activate` has two arms and the census carried neither:
+
+```
+  ButtonRoom.as:87-96
+    var persist:Boolean = _active;              // true on a press
+    if (flip) persist = !persist;               // -> FALSE
+    if (room == -1) ...activate every Activator sharing t...
+    else Game.setPersistence(t, persist, room); // ANOTHER LEVEL
+    Game.setPersistence(tag, !activate);        // its own tag, here
+```
+
+Three things a route has to know, and each was a way to get it wrong:
+
+- **`t` is the TSET, not the tag**, and for L38's `buttonroom@32,48` they
+  are different numbers (8 and 4). The write lands on L39 tag **8** — the
+  plug — and its own write on L38 tag **4**.
+- **`flip` decides the SIGN**, and the source's comment is the authority:
+  *"persist = false, then things won't exist"*. A `flip = 0` button writes
+  **TRUE**, which is a real `setPersistence` call that puts nothing in
+  `persistence_cleared`. `levelRun.roomWrites` records both values and only
+  the `false` ones reach `earnedClears`.
+- **The cross-room clear is cashed IMMEDIATELY.** `applyEarnedClears`
+  defers a flag in the level the player is standing in, because dropping
+  that memo mid-visit would despawn an entity the game keeps until the next
+  `new Game`. A flag in a level the player is *not* in has no such
+  constraint, and holding it back would leave a memoised world the game has
+  already invalidated.
+
+⚠ And the L37 → L38 arrival lands ON a second cross-room button
+(`buttonroom@144,288 {t 4, tag 5, flip 1, room 37}` — R1 met it first), so
+both arms of any L38 pair carry `{37,4}` and `{38,5}`. Declared, not
+discovered: an exact-set assertion that omitted it goes red on a correct
+walk.
+
+### ⛔⛔ 688 was the room; the errand is the 44 cells above it
+
+`probe-seedling-r5-totem-entrance` measured three rows and stopped one
+short. `probe-seedling-r5-totem-shaft` adds the fourth:
+
+```
+    4 cells   arrival pocket, plug standing
+   56 cells   {39,8} — the L38 button's write
+  688 cells   ...and {39,9} — the rope pulled
+  732 cells   ...and the three WandLocks open   <- totempart 2, and the L40 door
+```
+
+L39 is a shaft. Column 9 is the only route from the room to row 1, and rows
+2, 3 and 4 of it are `wandlock {t 3, tag 0}`, `{t 4, tag 1}` and
+`{t 5, tag 2}`. Above them are `totempart 2` and the **only** door into
+L40–L43 — so the wand, and therefore the Witch's darksword, are behind it.
+
+**They cannot be opened in sequence.** A `Lock` fades at 0.01 per tick
+while its group is held and restores the moment the group goes quiet unless
+something overlaps the lock itself. The three are vertically adjacent and
+each button is five to seven tiles away, so stepping off one to reach the
+next closes the first. And each lock-button is *under a cover* whose own
+button is elsewhere: the room is six presses, not three.
+
+### ⛔⛔ The holders are blocks, and the weapon is one this arc has never fired
+
+L39 holds exactly three `PushableBlockFire`s for exactly three
+lock-buttons. `pressedGroups`' docblock has said since R2 that the game's
+`hitables` is `["Player", "Enemy", "Solid"]` and that "a pushed block holds
+a button down too — and that is the intended solution to more than one
+room". This is that room, three times over.
+
+`PushableBlockFire.moveTypes` is `["Fire", "Pulse"]`. The sword passes
+`"Sword"` and the ghostsword `"Spear"`; the one thing that passes `"Fire"`
+is **`Player.as:1030` — `genericHit(e, "Fire", fireForce, fireDamage)`**, a
+32x32 area around the player driven by `sprFire`'s animation frames.
+`PRESS_ARM_POLICY.PushableBlockFire` has said `inert` since R2 and was
+RIGHT — *for a sword*. It answers a different question from the one this
+route asks.
+
+⇒ Slice 4 earned `fire` and recorded that it "is never SPENT", because
+Karlore's plug is removed at `added()` time. **This is where it is spent,
+as a weapon, for the first time on the arc**, and it is the price of L40,
+the wand and the darksword alike.
+
+### The rope is an ARM, not a clear — and it is not built yet
+
+`rope@96,384 {t 6, tag 9}` is 112 px of wall across the shaft
+(`Mobile.solids` contains `"Rope"`), a press needs no weapon type and no
+line of sight, and `hit()` **shrinks** the hitbox to one cell rather than
+removing the entity — so a declared clear would open a tile the game keeps.
+Its `set activate` publishes to group 6, which contains a `FallRock`, so
+the R2 "a clear reaching a fallrock is refused by name" rule had to be
+checked rather than assumed. It survives on two independent gates: the
+rock's tag is **10** and nothing writes it, and its position-writing arm is
+`activate && y >= fallTo` against a rock parked at `y = -16`. The `Pulser`
+in the same group is not inert — the publication starts a 22 px damage ring
+that was quiet before — which is why this is an arm taken at a chosen tick
+rather than a clear declared at the boot.
+
+The arm stays `refused` until the slice that can walk through it: shipping
+a transcription no fixture exercises is how an unwitnessed model gets
+believed.
+
+### Two hygiene items the slice-5 findings earned
+
+- **The `tag = -1` out-of-band writes are a FAMILY**, and it already has a
+  third member: `Witch.doneTalking()` spawns `new DarkSword(p.x - 8,
+  p.y - 8)` with the tag defaulted. `outOfBandLedger.js` derives the flag
+  from the WRITING ENTITY against a registry that refuses an unclassified
+  class. ⚠ The three are not the same shape — `Fire.removed()` and
+  `BreakableRock.endAnim()` write unconditionally, but `DarkSword.removed()`
+  writes only `if (Game.checkPersistence(tag))`, an out-of-band **READ** of
+  the very slot it would clear. The item lands regardless; the ledger entry
+  does not.
+- **The cross-swap statics are audited** (`crossSwapStatics.js`), every
+  candidate with its declaration line, every read site, and a construction
+  guard that refuses an `inert` verdict with neither a citation nor a
+  stated way of knowing there is no reader. Three mechanisms decide most of
+  it: `Game`'s constructor calls `end()`, `begin()` calls `loadlevel()`,
+  and several "statics" are instance vars. ⛔ **And there are two kinds of
+  dead frame**: `blackCover > 0` skips `super.update()` entirely, while
+  `Game.freezeObjects` does not — so a ceremony's 150 frames update every
+  entity, and the classes with no freeze gate keep moving through them.
+  ⛔ `Game.shake` is inert by a NUMBER, not by nature: a landing fallrock
+  sets 30 while holding the freeze for `cameraTimerMax` = 90 more frames.
+  L43's three fallrocks (step 4) have to re-check that against the L43
+  census.
