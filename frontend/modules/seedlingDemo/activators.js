@@ -284,18 +284,51 @@ export function keyLineTouches(box, line) {
  * the clears, so the rebuild is a no-op it does not need to re-derive.
  */
 export function crossRoomWrites(presser) {
-    if (presser?.tag !== 'buttonroom' || !(presser.room >= 0)) return [];
-    // `persist = _active` (true on a press), flipped by `flip`. The write is
-    // keyed on the TSET, in the named room — `ButtonRoom.as:93`.
+    if (presser?.tag !== 'buttonroom') return [];
+    // `persist = _active` (true on a press), flipped by `flip`.
     const persist = presser.flip ? false : true;
-    const out = [{ level: presser.room, tag: presser.t, value: persist, which: 'room' }];
-    // `Game.setPersistence(tag, !activate)` — its OWN tag, in THIS level,
-    // always false on a press. `level: null` means "the level the press
-    // happened in"; the caller knows which that is and this module does not.
+    const out = [];
+    if (presser.room >= 0) {
+        // The write is keyed on the TSET, in the named room —
+        // `ButtonRoom.as:93`.
+        out.push({ level: presser.room, tag: presser.t, value: persist, which: 'room' });
+    }
+    // ⛔⛔ R5 SLICE 7: `Game.setPersistence(tag, !activate)` IS OUTSIDE THE
+    // `room` BRANCH — `ButtonRoom.as:95`, one line below the closing brace
+    // of the `if (room == -1) … else …`. So a LOCAL-publish button writes
+    // its own tag exactly as a cross-room one does, and this function used
+    // to return an empty array for it: `if (!(presser.room >= 0)) return []`
+    // dropped the write and the publish together.
+    //
+    // ⚠ IT MATTERS BEYOND TIDINESS. Seven `room = -1` buttonrooms exist and
+    // THREE OF THEM ARE L40's — the room step 2 threads — where the publish
+    // is the entire opening mechanic: `buttonroom@272,208` latches three
+    // `WandLock`s AND a `BossLock` open by being walked over. The brief's
+    // "the cross-room machinery from slice 5 covers them" was not true.
     if (presser.persistTag >= 0) {
         out.push({ level: null, tag: presser.persistTag, value: false, which: 'own' });
     }
     return out;
+}
+
+/**
+ * ⛓ THE LOCAL PUBLISH — `ButtonRoom.as:79-91`, the `room == -1` arm.
+ *
+ * It walks every `Activators` sharing `t` and assigns `activate = persist`
+ * DIRECTLY, outside the per-tick republication a `Button` does. And the
+ * setter's whole body is behind `if (a)` with the author's own comment —
+ * *"Can't be reset to false!!"* — so once pressed it never un-presses:
+ * the group is LATCHED, and walking off it changes nothing.
+ *
+ * That is a third activation shape after the button's republication and
+ * the touch/key latches, and it is the one that opens L40.
+ *
+ * @returns {?object} `{group, value}`, or null when the presser has no
+ *   local arm.
+ */
+export function localPublish(presser) {
+    if (presser?.tag !== 'buttonroom' || presser.room >= 0) return null;
+    return { group: presser.t, value: presser.flip ? false : true };
 }
 
 export function createActivatorState(world) {
@@ -307,8 +340,10 @@ export function createActivatorState(world) {
         // the opposite of a latch.
         byId.set(a.id, { alpha: 1, open: false, held: 0, touched: false });
     }
-    // The cross-room presser ids whose write this visit has already made.
-    return { byId, level: world.level, roomWritten: new Set() };
+    // The cross-room presser ids whose write this visit has already made,
+    // and the groups a `room = -1` press has LATCHED open (see
+    // `localPublish` — the setter cannot be reset to false).
+    return { byId, level: world.level, roomWritten: new Set(), latched: new Map() };
 }
 
 /**
@@ -428,19 +463,28 @@ export function stepActivators(state, world, playerBox, opts = {}) {
     // builds. Emitted once per visit — `set activate` re-writes on every
     // held tick and both writes are idempotent, so a second entry would be
     // a ledger the game does not have.
-    if (!state.roomWritten) {
+    if (!state.roomWritten || !state.latched) {
         fail('stepActivators: this activator state predates the cross-room writes '
             + '(no `roomWritten`). Rebuild it with `createActivatorState` — a state '
             + 'object that silently skipped the writes would drop a ledger entry and '
             + 'leave the next level built with a plug the game has removed.');
     }
     for (const p of world.pressers ?? []) {
-        if (!(p.room >= 0)) continue;
+        if (p.tag !== 'buttonroom') continue;
         const id = `${p.tag}@${p.x},${p.y}`;
         if (state.roomWritten.has(id)) continue;
-        if (!rectsOverlap(playerBox, p.rect)) continue;
+        // ⚠ A `ButtonRoom` presses on the same `hitables` a `Button` does,
+        // so a BLOCK standing on one presses it too. Not a hypothetical:
+        // L40's `buttonroom@272,208` sits in a room with two fire blocks.
+        const byPlayer = rectsOverlap(playerBox, p.rect);
+        const byBlock = movingSolids.some((s) => rectsOverlap(s.rect, p.rect));
+        if (!byPlayer && !byBlock) continue;
         state.roomWritten.add(id);
-        events.push({ kind: 'roomwrite', id, presser: p, writes: crossRoomWrites(p) });
+        const publish = localPublish(p);
+        if (publish && publish.value) state.latched.set(publish.group, true);
+        events.push({
+            kind: 'roomwrite', id, presser: p, writes: crossRoomWrites(p), publish,
+        });
     }
     for (const a of world.activators) {
         const s = state.byId.get(a.id);
@@ -507,8 +551,49 @@ export function stepActivators(state, world, playerBox, opts = {}) {
             // walking away, which for a button-lock would close it.
             active = s.touched;
         } else {
-            active = a.t >= 0 && pressed.has(a.t);
+            // ⛓ ...OR LATCHED by a `room = -1` ButtonRoom's publish, which
+            // no `Button` ever republishes and nothing sets false.
+            active = a.t >= 0 && (pressed.has(a.t) || state.latched?.get(a.t) === true);
         }
+        /**
+         * ⛔⛔ R5 SLICE 7: `Lock.turnOff()`'s THIRD LINE, which every rung
+         * before this one dropped.
+         *
+         * ```
+         *   public function turnOff():void {
+         *       if (type == normType) {
+         *           type = ""; alpha = 0;
+         *           Game.setPersistence(tag, false);      // <- HERE
+         *       } }
+         *   public function returnToNormal():void {
+         *       if (type == "") {
+         *           type = normType;
+         *           Game.setPersistence(tag, true);       // <- AND HERE
+         *       } }
+         * ```
+         *
+         * A plain `Lock`/`WandLock`/`GrassLock` that fades open writes a
+         * CLEAR, and one that restores writes it back TRUE. `Bot.as`'s
+         * `persistenceClearedAll` is a live scan of `Main.levelPersistence`
+         * rather than an echo of anything the tape said, so both directions
+         * are visible in the game's own ledger — and until this slice the
+         * model emitted neither.
+         *
+         * ⚠ IT WAS INVISIBLE, NOT ABSENT. No committed fixture opens a
+         * plain Lock with a tag: `l71-button-lock` and its three siblings
+         * hold `button@112,176`, which opens `lock@112,160 {t 0, tag 3}` —
+         * but their expectations are `ticks` + `transitions` only, and the
+         * verifier's ledger check is one-directional over `lockSnaps`
+         * (touch locks). L39's three `WandLock`s are the first ones whose
+         * flags an exact-set ledger has to name.
+         *
+         * ⚠ AND THE `tag = -1` CASE IS THE OUT-OF-BAND FAMILY AGAIN.
+         * `Lock`'s `_tag` defaults to -1 and `turnOff` writes it
+         * unconditionally, so such a lock clears `(level-1, 29)`. The event
+         * carries the raw tag and the caller resolves it through
+         * `outOfBandLedger`, exactly as a `BreakableRock`'s does.
+         */
+        const writesPersistence = !TOUCH_RESPONDERS[a.tag] && responder.fade !== 0.1;
         if (active) {
             if (s.alpha > 0) {
                 s.alpha = clampAlpha(s.alpha - responder.fade);
@@ -517,6 +602,13 @@ export function stepActivators(state, world, playerBox, opts = {}) {
                 // whole difference between opening on 11 and on 101.
                 if (responder.fade === 0.1 && s.alpha <= 0) s.open = true;
             } else if (responder.fade !== 0.1) {
+                // `Lock.turnOff()`'s `if (type == normType)` guard is what
+                // makes this a TRANSITION rather than a per-tick write: the
+                // branch runs on every subsequent tick and the guard makes
+                // all but the first a no-op.
+                if (!s.open && writesPersistence) {
+                    events.push({ kind: 'lockopen', id: a.id, persistTag: a.persistTag });
+                }
                 s.open = true;   // Lock.turnOff()
                 // ⚠ AND IT KEEPS BEING CALLED. `activate` is still true and
                 // `alpha` is pinned at 0, so this branch runs on EVERY
@@ -536,6 +628,12 @@ export function stepActivators(state, world, playerBox, opts = {}) {
             // returnToNormal / reset — BOTH are guarded by occupancy, and
             // the guard is why a crossing is possible at all.
             if (!occupied(a.rect)) {
+                // `returnToNormal`'s `if (type == "")` — the write happens
+                // only for a lock that really was open, which is why this
+                // reads `s.open` BEFORE clearing it.
+                if (s.open && writesPersistence) {
+                    events.push({ kind: 'lockclose', id: a.id, persistTag: a.persistTag });
+                }
                 s.open = false;
                 s.alpha = 1;
             }

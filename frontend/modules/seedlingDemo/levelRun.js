@@ -49,8 +49,11 @@ import {
     pushablesSettled, stepPushables,
 } from './pushables.js';
 import {
-    LIGHTPOLE_HITS_TIMER_MAX, PRESS_ARM_POLICY, auditPress, slashRect, spearRect,
+    FIRE_ARM_POLICY, LIGHTPOLE_HITS_TIMER_MAX, PRESS_ARM_POLICY, auditFire, auditPress,
+    slashRect, spearRect,
 } from './presses.js';
+import { FIRE_PRESS_CADENCE, FIRE_WINDOW, fireRect } from './fireVerb.js';
+import { hitPushableFromPoint } from './pushables.js';
 import {
     brokenRockIds, createRockState, hitRock, outOfBandFlagFor, rockBreaksUnder,
 } from './breakableRocks.js';
@@ -299,6 +302,51 @@ export function createLevelRun({
     const rockStateFor = (n) => {
         if (!rockStates.has(n)) rockStates.set(n, createRockState());
         return rockStates.get(n);
+    };
+    /**
+     * ⛓ R5 SLICE 7: THE ROPES THIS VISIT HAS PULLED, per level.
+     *
+     * `RopeStart.hit()` is the fifth per-visit geometry family and it is
+     * the first one that SHRINKS rather than removing or flipping a type:
+     * `setHitbox(16, 16, 8, 8)` leaves a one-cell solid at the span's
+     * start. So the set is ids and the geometry query swaps the rect —
+     * `levelWorld.collidesSolid`'s `pulledRopes` arm.
+     *
+     * ⚠ PER VISIT, and it is not merely bookkeeping: `hit()`'s whole body
+     * is behind `if (!activate)`, and `check()` re-derives `activate` from
+     * `Game.checkPersistence(tag)` on the next `new Game`. Since this pull
+     * also BANKS the clear ({39,9}), a re-entry rebuilds the rope already
+     * shrunk — through `clearedHere2`, not through this set.
+     */
+    const ropeStates = new Map();
+    const ropeStateFor = (n) => {
+        if (!ropeStates.has(n)) ropeStates.set(n, new Set());
+        return ropeStates.get(n);
+    };
+    /**
+     * ⛓ R5 SLICE 6/7: THE SOLIDS THAT PRESS. `Button.update` collides
+     * `["Player", "Enemy", "Solid"]` and a pushed block is a `"Solid"` —
+     * which is the intended solution to L39 and, `pressedGroups`' docblock
+     * has said since R2, to more than one room. Slice 6 gave
+     * `stepActivators` the parameter; this is the caller that fills it, and
+     * without it the whole shaft is a model that says the covers never open.
+     *
+     * ⚠ A REMOVED block is not a presser. `pushableRects` keeps the entry
+     * with `removed: true` (absent and gone are different facts), so the
+     * filter is here rather than in the reader.
+     */
+    const movingSolidsNow = () => {
+        const st = pushableStateFor(level);
+        if (st.byId.size === 0) return [];
+        const out = [];
+        for (const [id, r] of pushableRects(st)) {
+            if (!r.removed) out.push({ id, rect: r.rect });
+        }
+        return out;
+    };
+    const pulledRopeIdsNow = () => {
+        const st = ropeStateFor(level);
+        return st.size === 0 ? null : st;
     };
     const pushableStateFor = (n) => {
         if (!pushableStates.has(n)) pushableStates.set(n, createPushableState(worldFor(n)));
@@ -578,8 +626,20 @@ export function createLevelRun({
      * animation re-opens this.
      */
     let pendingThrust = null;
+    /**
+     * ⛓ R5 slice 7: the FIRE windows still open — `{pressTick, hitTicks}`.
+     *
+     * A list rather than a single pending value, and the reason is the
+     * cadence: `FIRE_PRESS_CADENCE` is 11 and the window ends on T+10, so
+     * two windows can never overlap in a LEGAL tape — but an illegal one
+     * (a press inside another press's window) is exactly the thing this
+     * has to be able to see in order to refuse it.
+     */
+    const fireWindows = [];
     /** One record per press that FIRED, for the audit ledger. */
     const presses = [];
+    /** ⛓ R5 slice 7: one record per rope PULLED — `{id, level, t, flag}`. */
+    const ropePulls = [];
     /**
      * `Player.useItem(i)`'s switch, over `Inventory.getItem(i)`.
      *
@@ -599,10 +659,15 @@ export function createLevelRun({
         if (item === 0) return 'sword';
         if (item === 4) return 'ghostsword';
         if (item === 3) return 'spear';
+        // ⛓ R5 SLICE 6/7: THE SECOND WEAPON. `useItem`'s fire arm is
+        // `firing = true`, which is an AREA and an ANIMATION rather than a
+        // directed rect — see `fireVerb.js` for the five-tick window and
+        // the eleven-tick cadence, and `applyFire` below for the dispatch.
+        if (item === 1) return 'fire';
         throw new Error(`levelRun: the tape presses X with slot ${primary} holding item `
-            + `${item}, which routes through \`useItem\`'s fire/wand arms. Neither is `
-            + 'modelled at R4 (a WandShot is an entity with its own physics), so a '
-            + 'press that would spawn one is refused rather than silently dropped.');
+            + `${item}, which routes through \`useItem\`'s WAND arm. A WandShot is an `
+            + 'entity with its own physics and is not modelled (R6), so a press that '
+            + 'would spawn one is refused rather than silently dropped.');
     };
     /** The arms this rung MODELS; see `presses.PRESS_ARM_POLICY` for the rest. */
     const MODELLED_PRESS_ARMS = new Set(
@@ -654,6 +719,7 @@ export function createLevelRun({
                     openBridges,
                     pushables: withoutSelf,
                     brokenRocks: brokenRockIdsNow(),
+                    pulledRopes: pulledRopeIdsNow(),
                 });
                 if (hit) return hit;
                 // The player, at the position the PREVIOUS tick left — which
@@ -722,6 +788,119 @@ export function createLevelRun({
      * and refuses everything else. The leg's own intent check lives with the
      * leg (`presses.auditPress`).
      */
+    /**
+     * ── ⛓⛓ THE FIRE PRESS (R5 slice 7) ────────────────────────────────
+     *
+     * Not a variant of `applyThrust`. The differences are all four of the
+     * things that make a press a press:
+     *
+     *   WHEN   a slash fires ONE rect on the tick after the press; a fire
+     *          fires on FIVE ticks, `FIRE_WINDOW.hitTicks` (T+4..T+8), and
+     *          the animation is the only clock (`FIRE_PRESS_CADENCE` 11).
+     *   WHERE  a 32x32 area CENTRED on the player, not a directed rect —
+     *          so `direction` is not read at all and a fire press needs no
+     *          facing, no face nudge and no stance grammar.
+     *   WHAT   `t = "Fire"`, which is a DIFFERENT dispatch table
+     *          (`FIRE_ARM_POLICY`): a bridge and a lightpole become inert
+     *          and a `PushableBlockFire` becomes the only thing that moves.
+     *   HOW MANY  the nested `for each` gives a `"Solid"` five dispatches
+     *          per tick — 25 across the window — and it is the reason the
+     *          knockback arithmetic is what it is. For a BLOCK it does not
+     *          matter: `hit()` returns immediately while `v.length > 0`, so
+     *          dispatches 2..25 land on a block that is already moving.
+     *
+     * ⛔ AND THE PRESS HAS NO AIM. Every block the rect and the 16 px
+     * radius admit is pushed, each `atan2`-directed away from the player.
+     * That is the finding that overturned §19.8's choreography, and it is
+     * why this applies the audit's whole `modelled` list rather than one
+     * intended target.
+     */
+    const applyFire = (fire) => {
+        const { pressTick } = fire;
+        const player = { x: state.x, y: state.y };
+        const pushState = pushableStateFor(level);
+        const audit = auditFire(world, player, { pushables: pushableRects(pushState) });
+        if (audit.refused.length > 0) {
+            throw new Error(`levelRun: the fire press at tick ${pressTick} in level `
+                + `${level} reaches `
+                + `${audit.refused.map((r) => `${r.tag}@${r.x},${r.y}`).join(', ')}, whose `
+                + '`genericHit` arm under `t == "Fire"` this rung REFUSES '
+                + `(${audit.refused.map((r) => FIRE_ARM_POLICY[r.as3]?.why
+                    ?? 'no FIRE_ARM_POLICY entry at all').join('; ')}). Fire has no aim — `
+                + 'the rect is 32x32 around the player — so the only fix is a different '
+                + 'STANCE, or the arm.');
+        }
+        const hits = [];
+        for (const r of audit.modelled) {
+            if (r.as3 === 'PushableBlockFire') {
+                const id = r.pushableId;
+                const block = pushState.byId.get(id);
+                if (!block) {
+                    throw new Error(`levelRun: the fire press at tick ${pressTick} reaches `
+                        + `${id} in level ${level}, which is not in the run's pushable `
+                        + 'state.');
+                }
+                // ⚠ `hit()`'s FIRST LINE is `if (v.length > 0) return`, so a
+                // block already gliding ignores every later dispatch — which
+                // is what makes a five-tick window with five dispatches each
+                // land exactly one push. Modelled by the pushable state
+                // rather than by counting: `hitPushableFromPoint` returns
+                // `moved: false` for a block with velocity.
+                const { block: after, moved, why } = hitPushableFromPoint(block, player);
+                pushState.byId.set(id, after);
+                hits.push({ as3: 'PushableBlockFire', id, moved, why });
+                continue;
+            }
+            if (r.as3 === 'RopeStart') {
+                // ⛓ THE SEVENTH PRESS ARM, BUILT. `Player.as:1093-1095` is
+                // `(e as RopeStart).hit()` with no `t` at all, so fire pulls
+                // a rope exactly as a sword does — and the route needs it,
+                // because `rope@96,384` is 112 px of wall across the only
+                // shaft out of L39's arrival corridor (56 cells without it,
+                // 688 with).
+                // ⚠ `r.id`, NOT `${r.tag}@${r.x},${r.y}`. `fireRespondersIn`
+                // rewrites `x`/`y` to the ENTITY position the radius cut
+                // needs (a rope's is its hitbox centre, 8 px in on both
+                // axes), and the id every other consumer keys on is the
+                // OEL one. Rebuilding it from the rewritten fields gave
+                // `rope@104,392` — a key nothing else in the run shares.
+                const id = r.id;
+                const pulled = ropeStateFor(level);
+                if (pulled.has(id)) {
+                    // `hit()`'s whole body is `if (!activate)`, so a second
+                    // press is a real no-op rather than a second write.
+                    hits.push({ as3: 'RopeStart', id, pulled: false, why: 'already pulled' });
+                    continue;
+                }
+                pulled.add(id);
+                // `Game.setPersistence(tag, false)` — an EARNED CLEAR, and
+                // the tag can be -1, in which case it lands in another level
+                // through the out-of-band family.
+                const tag = r.persistTag ?? -1;
+                const flag = tag < 0
+                    ? outOfBandFlagForWriter({ as3: 'RopeStart', level, tag })
+                    : outOfBandFlagFor(level, tag);
+                if (!pendingEarnedClears.has(flag.level)) {
+                    pendingEarnedClears.set(flag.level, new Set());
+                }
+                pendingEarnedClears.get(flag.level).add(flag.tag);
+                ropePulls.push({ id, level, t: ticksCompleted, flag });
+                hits.push({ as3: 'RopeStart', id, pulled: true, why: null });
+                continue;
+            }
+            throw new Error(`levelRun: \`FIRE_ARM_POLICY\` calls ${r.as3} modelled and `
+                + 'this dispatch has no arm for it. A policy and an executor that '
+                + 'disagree is the two-consumers failure, so this throws rather than '
+                + 'silently skipping.');
+        }
+        presses.push({
+            t: pressTick, fired: ticksCompleted, level, weapon: 'fire',
+            // The 32x32 area itself, so the press ledger records WHERE the
+            // rect was rather than a field no responder carries.
+            direction: null, rect: fireRect(player.x, player.y), hits,
+        });
+    };
+
     const applyThrust = (thrust) => {
         const { weapon, direction, pressTick } = thrust;
         const rect = weapon === 'sword'
@@ -1016,9 +1195,75 @@ export function createLevelRun({
      * TRUE one did not reach the ledger.
      */
     const roomWrites = [];
+    /**
+     * ⛓ R5 slice 7: one record per plain-`Lock` persistence write —
+     * `{id, level, flag, t, value}`, with `value` the BOOLEAN the game
+     * wrote. Kept as writes rather than as clears for the same reason
+     * `roomWrites` is: only a `false` is a clear, and recording both is
+     * what lets a test assert the TRUE one left the ledger again.
+     */
+    const lockWrites = [];
 
     function applyLockEvents(events) {
         for (const ev of events) {
+            /**
+             * ⛔⛔ R5 SLICE 7: `Lock.turnOff()` / `returnToNormal()`, the
+             * two persistence writes every rung before this one dropped.
+             *
+             * A plain `Lock`/`WandLock` that fades open writes
+             * `Game.setPersistence(tag, false)`; one that restores writes it
+             * back TRUE. `Bot.as`'s `persistenceClearedAll` is a live scan
+             * of the whole array, so BOTH are visible in the game's own
+             * ledger — which means an exact-set assertion over a walk that
+             * opens one is red without this, and a walk that opens and then
+             * CLOSES one is red WITH only the first half.
+             *
+             * ⚠ CASHED IMMEDIATELY, unlike a touch lock's. The pending
+             * mechanism exists because dropping a memo mid-visit would
+             * despawn an entity the game keeps — but a `tSet >= 0` lock is
+             * NOT despawned by its flag (`Lock.check()` needs `tSet < 0`),
+             * so the flag changes nothing this level builds and there is
+             * nothing to defer. Banked into the ledger and left there.
+             */
+            if (ev.kind === 'lockopen' || ev.kind === 'lockclose') {
+                const tag = ev.persistTag ?? -1;
+                const flag = tag < 0
+                    ? outOfBandFlagForWriter({ as3: 'Lock', level, tag })
+                    : outOfBandFlagFor(level, tag);
+                lockWrites.push({
+                    id: ev.id, level, flag, t: ticksCompleted,
+                    value: ev.kind === 'lockclose',
+                });
+                if (ev.kind === 'lockopen') {
+                    if (!pendingEarnedClears.has(flag.level)) {
+                        pendingEarnedClears.set(flag.level, new Set());
+                    }
+                    pendingEarnedClears.get(flag.level).add(flag.tag);
+                    // ⚠ AND ONLY AN OUT-OF-BAND ONE IS CASHED. A flag in
+                    // THIS level stays pending: `applyEarnedClears` drops
+                    // the world memo, and dropping it mid-visit also drops
+                    // the activator and pushable state — which for the room
+                    // this arm exists to model would erase the covers, the
+                    // locks and the three blocks on the tick the shaft
+                    // finally opened. The flag changes nothing this level
+                    // builds anyway (`Lock.check()` needs `tSet < 0`), so
+                    // there is nothing to cash.
+                    if (flag.level !== level) applyEarnedClears(flag.level);
+                } else {
+                    // `returnToNormal()` writes TRUE — the flag goes back
+                    // ON, so it leaves the cleared ledger. A model that
+                    // only banked the opening would report a clear the game
+                    // has taken back.
+                    const tags = pendingEarnedClears.get(flag.level);
+                    if (tags) tags.delete(flag.tag);
+                    const list = clearedByLevel.get(flag.level);
+                    if (list) {
+                        const at = list.indexOf(flag.tag);
+                        if (at >= 0) list.splice(at, 1);
+                    }
+                }
+                continue;
+            }
             if (ev.kind === 'keyopen') {
                 keyOpens.push({
                     id: ev.id, level, persistTag: ev.persistTag, t: ticksCompleted,
@@ -1185,6 +1430,10 @@ export function createLevelRun({
         get direction() { return state.direction; },
         /** One record per equip that fired: `{t, slot}`. */
         get equipsFired() { return firedEquips.map((e) => ({ ...e })); },
+        /** ⛓ R5 slice 7: every plain-`Lock` persistence write, in order. */
+        get lockWrites() { return lockWrites.map((w) => ({ ...w, flag: { ...w.flag } })); },
+        /** ⛓ R5 slice 7: every rope this run pulled, in order. */
+        get ropePulls() { return ropePulls.map((r) => ({ ...r, flag: { ...r.flag } })); },
         /**
          * Ticks the tape's own `equips` name that the run never reached.
          *
@@ -1404,6 +1653,8 @@ export function createLevelRun({
          * later — which is now the fifth time this file has had to make it.
          */
         get brokenRocks() { return noclip ? null : (brokenRockIdsNow() ?? new Set()); },
+        /** ⛓ R5 slice 7: the ropes pulled in the CURRENT level, this visit. */
+        get pulledRopes() { return noclip ? null : (pulledRopeIdsNow() ?? new Set()); },
         /** `{id, hitTick, goneAt, tag, x, y}` per rock this run has broken. */
         get rocksBroken() {
             const out = [];
@@ -1580,6 +1831,19 @@ export function createLevelRun({
                     // `genericHit` returns immediately under
                     // `Game.freezeObjects`, so a thrust scheduled by the
                     // press before a ceremony would silently do NOTHING.
+                    // ⚠ AND A FROZEN FRAME BURNS A FIRE WINDOW rather than
+                    // stretching it: `sprites()` is called unconditionally,
+                    // so the animation advances while `genericHit` returns
+                    // at its first line. The hits are LOST, silently.
+                    // (`fireVerb.FIRE_DEAD_FRAME_RULE`.)
+                    if (fireWindows.some((w) => w.hitTicks.has(ticksCompleted))) {
+                        throw new Error('levelRun: a fire window\'s hit tick '
+                            + `${ticksCompleted} falls on a FROZEN tick. \`sprites()\` `
+                            + 'still advances `sprFire` and `genericHit` returns '
+                            + 'immediately under `Game.freezeObjects`, so the window '
+                            + 'BURNS — the press lands nothing. Press outside the '
+                            + 'ceremony.');
+                    }
                     if (pendingThrust) {
                         throw new Error(`levelRun: a ${pendingThrust.weapon} press at tick `
                             + `${pendingThrust.pressTick} would fire its rect on a FROZEN `
@@ -1597,7 +1861,8 @@ export function createLevelRun({
                     // its offset wrong for two slices.
                     if (!noclip) {
                         applyLockEvents(stepActivators(activators, world,
-                            playerBoxAt(state.x, state.y), { inventory, keys }));
+                            playerBoxAt(state.x, state.y),
+                            { inventory, keys, movingSolids: movingSolidsNow() }));
                     }
                     // No step: the position is unchanged and — critically —
                     // so is the VELOCITY, which is why the player drifts on
@@ -1627,6 +1892,24 @@ export function createLevelRun({
                 applyThrust(pendingThrust);
                 pendingThrust = null;
             }
+            // ── ⛓ THE FIRE WINDOW'S HIT TICKS ────────────────────────
+            // `Player.update` calls `fire()` in the same place it calls
+            // `slash()`/`spear()` — above `super.update()` — so the five
+            // hit ticks land here, against the position the PREVIOUS tick
+            // left and after the blocks' own update (which is what makes
+            // `hit()`'s `v.length > 0` guard bite).
+            if (!noclip) {
+                for (const w of fireWindows) {
+                    if (w.hitTicks.has(ticksCompleted)) {
+                        applyFire({ pressTick: w.pressTick });
+                    }
+                }
+                // A window whose end tick has passed cannot swallow a press
+                // any more; dropping it keeps the list at most one long.
+                for (let i = fireWindows.length - 1; i >= 0; i -= 1) {
+                    if (ticksCompleted > fireWindows[i].endTick) fireWindows.splice(i, 1);
+                }
+            }
             if (!noclip) assertBridgeWindows();
             // `set spearing` captures `spearDirection = direction`, and
             // `sprites()` — the only writer of `direction` — runs at the END
@@ -1646,6 +1929,7 @@ export function createLevelRun({
                 openBridges: noclip ? null : openBridgeIdsNow(),
                 pushables: noclip ? null : pushableRectsNow(),
                 brokenRocks: noclip ? null : brokenRockIdsNow(),
+                pulledRopes: noclip ? null : pulledRopeIdsNow(),
                 // R4: `checkDrowning` reads `canSwim` and `hasDarkSuit`,
                 // and the waterfall push reads `hasFeather`. The run's
                 // mirror is the only place those live on this side.
@@ -1666,7 +1950,29 @@ export function createLevelRun({
                 // nothing), so it is a silent no-op here — the loud version
                 // of that failure lives at the equip, which is where the
                 // run knows what it holds.
-                if (weapon) {
+                if (weapon === 'fire') {
+                    // ⚠ `useItem`'s `if (!firing)` SWALLOWS a press inside
+                    // an open window, and it runs in `super.update()` —
+                    // BEFORE `sprites()` fires `fireEnd` — so a press on the
+                    // window's own end tick does nothing at all. A tape that
+                    // does that is a tape whose author miscounted the
+                    // cadence by one, which is the whole reason
+                    // `FIRE_PRESS_CADENCE` is derived rather than written
+                    // down. Refused by name.
+                    const open = fireWindows.find((w) => ticksCompleted <= w.endTick);
+                    if (open) {
+                        throw new Error(`levelRun: a fire press at tick ${ticksCompleted} `
+                            + `lands inside the window the press at tick ${open.pressTick} `
+                            + `opened (\`firing\` is up through tick ${open.endTick}). `
+                            + '`useItem`\'s `if (!firing)` swallows it silently in the '
+                            + `game. The cadence is ${FIRE_PRESS_CADENCE}.`);
+                    }
+                    fireWindows.push({
+                        pressTick: ticksCompleted,
+                        hitTicks: new Set(FIRE_WINDOW.hitTicks.map((k) => ticksCompleted + k)),
+                        endTick: ticksCompleted + FIRE_WINDOW.endTick,
+                    });
+                } else if (weapon) {
                     pendingThrust = { weapon, direction: pressFacing, pressTick: ticksCompleted };
                 }
             }
@@ -1675,7 +1981,8 @@ export function createLevelRun({
             // the player ended up.
             if (!noclip) {
                 applyLockEvents(stepActivators(activators, world,
-                    playerBoxAt(next.x, next.y), { inventory, keys }));
+                    playerBoxAt(next.x, next.y),
+                    { inventory, keys, movingSolids: movingSolidsNow() }));
             }
             const hits = { hitX: next.hitX, hitY: next.hitY };
 

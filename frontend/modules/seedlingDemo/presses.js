@@ -37,6 +37,7 @@
  */
 
 import { PRESS_ARMS, rectsOverlap } from './levelWorld.js';
+import { fireHits } from './fireVerb.js';
 
 export class PressError extends Error {
     constructor(message) {
@@ -325,11 +326,16 @@ export const PRESS_ARM_POLICY = Object.freeze({
             + 'geometry, no persistence flag, and Grass is `type = "Grass"`, in no '
             + 'solids list.',
     },
+    // ⚠ THIS TABLE IS THE SWORD'S AND THE SPEAR'S. `FIRE_ARM_POLICY` at the
+    // bottom of this file is the third weapon's, and it disagrees here and
+    // in three other places — which is the point of it being a second table
+    // rather than a flag.
     PushableBlockFire: {
         policy: 'inert',
         why: 'the NON-relative arm, which is the one place `moveTypes` IS consulted '
-            + '— `["Fire","Pulse"]` against a press\'s "Sword"/"Spear", so no player '
-            + 'press moves one',
+            + '— `["Fire","Pulse"]` against a press\'s "Sword"/"Spear", so no SWORD '
+            + 'press moves one. ⛓ A FIRE press does: see `FIRE_ARM_POLICY`, and '
+            + '`r5Shaft` for the room that needs it.',
     },
     Enemy: { policy: 'refused', why: 'a death moves totalEnemies(), which opens tSet == -1 locks' },
     IceTurret: { policy: 'refused', why: 'the Enemy cost plus a bump; Dungeon 5, off route' },
@@ -364,12 +370,19 @@ export const PRESS_ARM_POLICY = Object.freeze({
     // slice that can walk through it, rather than shipping a transcription
     // no fixture exercises. The verdict, the group-6 analysis and the
     // arithmetic are in `r5Totem.TOTEM_ROPE` / `GROUP_6`.
+    // ⛓ BUILT AT R5 SLICE 7 — but under `FIRE_ARM_POLICY`, not here. The
+    // arm takes no `t`, so either weapon pulls a rope; the route chose fire
+    // because a SWORD press would consult the `blockedLine` oracle and then
+    // waive it (`Player.as:916` exempts `type == "Rope"`), and that oracle
+    // is one nothing else on this route needs. So the SWORD verdict stays
+    // `refused` — accurately, since no fixture makes one.
     RopeStart: {
         policy: 'refused',
         why: 'SHRINKS to a one-cell solid and writes persistence, and its group publication '
             + 'arms a Pulser. Ruled an ARM rather than a clear at R5 slice 5 step 2 '
-            + '(`r5Totem.TOTEM_ROPE`) and left unbuilt because the room behind it is '
-            + 'closed by the fire-push shaft — see `TOTEM_SHAFT.blockedBy`.',
+            + '(`r5Totem.TOTEM_ROPE`) and BUILT at slice 7 — for the FIRE press '
+            + '(`FIRE_ARM_POLICY.RopeStart`, `r5Shaft.ROPE_PULL`). A sword press at one '
+            + 'is still unmodelled and still refused.',
     },
     ShieldBoss: { policy: 'refused', why: 'boss damage — R5' },
     // ⚠ MODELLED FROM R4, and it was ruled in rather than assumed. It is the
@@ -420,4 +433,181 @@ export function pressDamage(weapon, inventory = {}) {
  */
 export function pressWouldKill(weapon, presses, inventory = {}, hitsMax = ENEMY_HITS_MAX) {
     return presses * pressDamage(weapon, inventory) >= hitsMax;
+}
+
+/**
+ * ── ⛓ THE THIRD WEAPON'S AUDIT (R5 slice 7) ───────────────────────────
+ *
+ * `PRESS_ARM_POLICY` above answers "what does a press do to each arm", and
+ * every one of its verdicts is a SWORD's or a SPEAR's. `Player.fire()`
+ * dispatches the same `genericHit` with `t = "Fire"`, and four of the
+ * answers change:
+ *
+ *   PushableBlockFire  ⛓ MODELLED — this is the whole point. `moveTypes`
+ *                      is `["Fire","Pulse"]` and the non-relative arm
+ *                      consults it, so fire is the ONE thing that moves one.
+ *   RopeStart          ⛓ MODELLED — `hit()` takes no `t` at all, so fire
+ *                      pulls a rope exactly as a sword does. Which means a
+ *                      fire press near one is not a no-op, and the route
+ *                      has to know.
+ *   BreakableRock      ⛓ MODELLED — `hit(hasGhostSword ? 1 : 0)` likewise
+ *                      ignores `t`. A fire press breaks rocks.
+ *   Tile / LightPole   INERT — both arms are `if (t == "Spear")`, so fire
+ *                      cannot decrement a bridge or toggle a pole. That is
+ *                      the OPPOSITE of the sword's Tile verdict and it is
+ *                      why this is a second table rather than a flag on the
+ *                      first.
+ *
+ * ⚠ AND `PushableBlockSpear` FLIPS THE OTHER WAY. A `PushableBlockSpear`
+ * reaches `Player.as:1118` — the `_relative` arm — before the `is
+ * PushableBlockFire` test below it, and that arm RETURNS BEFORE the
+ * `moveTypes` loop. So a spear block is pushed by the DIRECTION of the
+ * press whatever `t` is... except that `spearDirection` is only written by
+ * `set spearing`, and a fire press never sets it. Refused rather than
+ * guessed: no route fires next to one, and a wrong sign here is an
+ * irreversible push.
+ */
+export const FIRE_ARM_POLICY = Object.freeze({
+    PushableBlockFire: {
+        policy: 'modelled',
+        why: '`hit(new Point(x, y), "Fire")` — the non-relative arm, `moveTypes` '
+            + 'contains "Fire", and the destination is one whole tile away from the '
+            + 'player by `Math.atan2`. See `pushables.hitPushableFromPoint`.',
+    },
+    RopeStart: {
+        policy: 'modelled',
+        why: '`(e as RopeStart).hit()` takes no `t`, so every weapon pulls a rope. '
+            + 'See `ropes.js`.',
+    },
+    BreakableRock: {
+        policy: 'modelled',
+        why: '`(e as BreakableRock).hit(hasGhostSword ? 1 : 0)` takes no `t` either — '
+            + 'a fire press breaks a rockType-0 rock. See `breakableRocks.js`.',
+    },
+    Tile: {
+        policy: 'inert',
+        why: '`if (t == "Spear") bridgeOpeningTimer--` — "Fire" is not "Spear", so a '
+            + 'fire press over a bridge tile does NOTHING. The exact inverse of the '
+            + 'sword table\'s entry, which is why the two are separate.',
+    },
+    LightPole: {
+        policy: 'inert',
+        why: '`if (t == "Spear") (e as LightPole).hit()` — same gate, same answer. A '
+            + 'fire press cannot write a lightpole\'s persistence flag.',
+    },
+    Tree: { policy: 'inert', why: '`Tree.hit()` is an EMPTY BODY, for every `t`.' },
+    Grass: {
+        policy: 'inert',
+        why: '`cut(t)` increments `Main.grassCut` and nothing the stream can see, for '
+            + 'every `t`.',
+    },
+    PushableBlockSpear: {
+        policy: 'refused',
+        why: 'it matches `e is PushableBlockSpear` FIRST and takes the `_relative` arm, '
+            + 'which is directed by `spearDirection` — a field only `set spearing` '
+            + 'writes, and a fire press never does. Rather than guess what a stale '
+            + 'direction pushes, this rung refuses to fire beside one.',
+    },
+    Enemy: {
+        policy: 'refused',
+        why: 'ZERO damage and ZERO i-frames, but 55 knockback impulses per press '
+            + '(`fireVerb.FIRE_ON_ENEMY`) — a DISPLACE, which is a route verdict rather '
+            + 'than a press effect and is priced by the encounter ladder. Refused here '
+            + 'so an accidental one cannot happen silently.',
+    },
+    IceTurret: {
+        policy: 'refused',
+        why: '`IceTurret.bump` is gated on `t == "Fire" || t == "Pulse"` — so unlike '
+            + 'every other enemy it takes a SECOND, class-specific arm from a fire '
+            + 'press. Dungeon 5 and L40; refused until a route needs it.',
+    },
+    ShieldBoss: { policy: 'refused', why: 'boss damage — R6' },
+    LavaBall: { policy: 'refused', why: 'R5 — Dungeon 7' },
+    Watcher: { policy: 'refused', why: 'R6 — the ending' },
+});
+
+/**
+ * What a fire press at `(px, py)` REACHES, with both of `fire()`'s filters.
+ *
+ * ⚠ NOT `pressRespondersIn`. That one tests `rectsOverlap`, which is
+ * STRICT; `Entity.collideRect` is inclusive on all four edges, and the
+ * radius cut afterwards is `FP.distanceRects(...) > sprFire.width / 2` with
+ * the player's own `originY` substituted for the target's. Both live in
+ * `fireVerb`, and this is the join between them and the census.
+ *
+ * ⚠ THE BRIDGE TILES ARE DELIBERATELY NOT MERGED IN. `pressRespondersIn`
+ * appends them because a sword press's `Tile` arm is real; fire's is
+ * `if (t == "Spear")`, so a bridge tile in the rect is not a responder at
+ * all. Including it and then filtering would make the audit's `live` list
+ * disagree with what the game dispatches.
+ */
+export function fireRespondersIn(world, player, { pushables: live = null } = {}) {
+    if (!world.roles?.includes('blocking')) {
+        throw new PressError(`fireRespondersIn: level ${world.level} was built without `
+            + `the "blocking" role (${(world.roles ?? []).join(', ') || 'none'}), so its `
+            + 'press census is empty because nothing was asked.');
+    }
+    const targets = [];
+    for (const r of world.pressResponders) {
+        let rect = r.rect;
+        if (live && r.pushableId && live.has(r.pushableId)) {
+            const now = live.get(r.pushableId);
+            if (now.removed) continue;
+            rect = now.rect;
+        }
+        targets.push({
+            ...r,
+            rect,
+            // `fireHits` wants the raw entity fields, because which origin
+            // gets subtracted from which coordinate is the whole finding.
+            x: rect.x + (r.originX ?? 0),
+            y: rect.y + (r.originY ?? 0),
+            originX: r.originX ?? 0,
+            originY: r.originY ?? 0,
+            // ⚠ FROM THE EDGES, not from `rect.w`. A `RopeStart`'s width is
+            // `_xend - _x + 16` — computed from its last `<node>` — and the
+            // census's rect carries `right` without a `w`. `fireHits`
+            // refuses a non-finite dimension by name, which is how this was
+            // found rather than silently measured as a zero-width rope.
+            w: rect.right - rect.x,
+            h: rect.bottom - rect.y,
+            id: `${r.tag}@${r.x},${r.y}`,
+            // Every press responder in the census is in `hitables` — the
+            // fire rect's candidate list is by TYPE, and `fireHits` refuses
+            // a type it does not know rather than skipping it silently.
+            type: FIRE_HITABLE_TYPE_BY_ARM[r.as3] ?? 'Solid',
+        });
+    }
+    const hits = fireHits(player, targets);
+    return hits.map((h) => ({ ...targets.find((t) => t.id === h.id), ...h }));
+}
+
+/**
+ * The `hitables` type each fire-reachable class collides as.
+ *
+ * It matters because the DISPATCH COUNT is `11 - i` for `hitables[i]` — a
+ * `"Solid"` is hit five times per tick and an `"Enemy"` eleven — and the
+ * count is what the knockback arithmetic multiplies.
+ */
+export const FIRE_HITABLE_TYPE_BY_ARM = Object.freeze({
+    PushableBlockFire: 'Solid',
+    PushableBlockSpear: 'Solid',
+    RopeStart: 'Rope',
+    BreakableRock: 'Rock',
+    Tree: 'Tree',
+    Grass: 'Grass',
+    LightPole: 'LightPole',
+});
+
+/**
+ * `auditPress` for the fire weapon: everything the rect reaches, split by
+ * what this rung does with it.
+ */
+export function auditFire(world, player, { pushables = null } = {}) {
+    const live = fireRespondersIn(world, player, { pushables });
+    const verdict = (r) => FIRE_ARM_POLICY[r.as3];
+    const refused = live.filter((r) => (verdict(r)?.policy ?? 'refused') === 'refused');
+    const modelled = live.filter((r) => verdict(r)?.policy === 'modelled');
+    const inert = live.filter((r) => verdict(r)?.policy === 'inert');
+    return { live, modelled, inert, refused, enemies: world.pressEnemies };
 }

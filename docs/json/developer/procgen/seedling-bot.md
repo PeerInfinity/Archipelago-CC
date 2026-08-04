@@ -2885,3 +2885,83 @@ believed.
   sets 30 while holding the freeze for `cameraTimerMax` = 90 more frames.
   L43's three fallrocks (step 4) have to re-check that against the L43
   census.
+
+## R5 slice 7: fire has no aim, and three ledgers nobody was keeping
+
+Slice 6 modelled the fire attack and solved L39's shaft in eighteen presses,
+with a hand plan and a blind search agreeing on the trajectory. Slice 7 set
+out to price that plan in ticks. It does not survive contact with the weapon,
+and the four findings below are all things a route in any other room can hit.
+
+### ⛔⛔ A solver whose move takes a TARGET has invented an aim
+
+`Player.fire()` is a 32x32 rect centred on the player and `genericHit` runs
+on **everything inside it**, each target `Math.atan2`-directed away from the
+stance. The shaft solver's primitive was `pressOutcome(stance, blockKey, …)`
+— it took the block being aimed at. Both halves of the "independent"
+certificate shared it, so both were wrong the same way: two of the eighteen
+presses have a second block in range and shove it, and the plan ends with
+**two of three** lock-buttons held.
+
+⚠ **Every one of its presses still "works".** Each moves something, so every
+step reports green and only the END STATE is wrong — seventeen presses after
+the cause. That is the general shape: when the game's effect is an AREA, a
+radius, a splash or a group publish, the model's primitive has to take the
+whole world and return **the exact set it changed**, and the leg verb has to
+fail on *"you also moved something you did not name"* as loudly as on *"the
+thing you named did not move"*.
+
+⛓ **And the correction was an improvement.** Modelled properly, the
+collateral is the room's intended solution: park the third block one tile
+past its destination and a single press from the middle of the cross moves
+**all three** onto all three lock-buttons, each on a pure axis — retiring the
+`bothRange` diagonal special case the old plan hung on. The blind search,
+re-run without the aim, returns the same eighteen.
+
+### ⛔⛔ `Lock.turnOff()` writes persistence, and `returnToNormal()` writes it back
+
+```
+  turnOff():        if (type == normType) { …; Game.setPersistence(tag, false); }
+  returnToNormal(): if (type == "")       { …; Game.setPersistence(tag, true);  }
+```
+
+`Bot.as`'s `persistence_cleared` is a **live scan** of `Main.levelPersistence`,
+so both directions show up in the game's own ledger. No rung before this one
+emitted either.
+
+⚠ **Invisible rather than absent.** `l71-button-lock` and its three siblings
+open `lock@112,160 {t 0, tag 3}` by holding a button — but their expectations
+are `ticks` + `transitions` only, and the verifier's ledger check is
+one-directional over touch locks. An exact-set ledger over a walk that opens
+a plain Lock is red without this; over a walk that opens **and then closes**
+one it is red with only the first half.
+
+⛔ And `Lock`'s `_tag` defaults to `-1` **in the constructor** — a third route
+into the out-of-band family after a runtime spawn (`Fire`) and authored map
+data (`BreakableRock`). `Lock` and `RopeStart` are its fourth and fifth
+members.
+
+### ⛔ A rect with a null `right` never overlaps anything — on the PRODUCING side
+
+`entityRect(cls, x, y)` reads `cls.w`. A node-terminated class (the `rope`
+collider, whose width is `_xend - _x + 16` from its last `<node>`) has not got
+one, so the press census built `{x, y, h, right: null, bottom}` — and no
+overlap test can ever return true for it. The rope arm was therefore dead
+**twice**: refused by policy and unreachable by geometry, and either alone
+reads as "the audit is clean". The fix is one shared derivation
+(`ropeSpanRect`) rather than two call sites that agree by accident.
+
+### ⛔ A `room = -1` ButtonRoom writes its own tag AND latches its group
+
+`ButtonRoom.as`'s `Game.setPersistence(tag, !activate)` sits **outside** the
+`if (room == -1) … else …`, so a local-publish button writes its own flag
+exactly as a cross-room one does. And the local arm assigns
+`activate = persist` directly to every `Activators` sharing `t`, with the
+whole setter behind `if (a)` and the author's own comment — *"Can't be reset
+to false!!"*. **Walking over it once opens the group permanently**, which is a
+third activation shape after the button's per-tick republication and the
+touch/key latches.
+
+That is the entire opening mechanic of Dungeon 4's big room, and it reaches a
+`BossLock` — so a lock that looks like it needs a key opens without one.
+Worth checking per room rather than assuming, in both directions.

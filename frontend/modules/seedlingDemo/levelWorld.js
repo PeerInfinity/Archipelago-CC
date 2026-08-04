@@ -2566,6 +2566,34 @@ export function entityRect(cls, x, y) {
     return rect(x + cls.dx - cls.originX, y + cls.dy - cls.originY, cls.w, cls.h);
 }
 
+/**
+ * The `rope` collider's rect — the ONE whose width is placement data.
+ *
+ * `RopeStart`'s constructor is `setHitbox(_xend - _x + 16, 16, 8, 8)` with
+ * `_xend` taken from the entity's last `<node>` (`Game.as:2201-2210`), and
+ * `hit()` shrinks it to `setHitbox(16, 16, 8, 8)` — so a CLEARED rope is a
+ * one-cell solid at the span's start rather than open floor.
+ *
+ * ⛔ EXTRACTED INTO A FUNCTION AT R5 SLICE 7 because there were two
+ * consumers and only one of them had the code. The blocking role built
+ * this rect; the PRESS census called `entityRect`, which reads `cls.w` —
+ * absent for a node-terminated class — and produced `{right: null}`. A
+ * rect with a null `right` never overlaps anything, so the rope was
+ * invisible to `pressRespondersIn`: the arm was refused by policy AND
+ * unreachable by geometry, and either one alone reads as a clean audit.
+ */
+export function ropeSpanRect(e, cls, x, y, entityTag, clearedTags, where) {
+    const last = e.nodes?.[e.nodes.length - 1];
+    if (!last) {
+        fail(`${where} has a "${e.type}" at (${x},${y}) with no <node> child. `
+            + 'Its collider spans from its own x to that node\'s, so it cannot be '
+            + 'built without one. Re-extract the atlas with '
+            + 'scripts/procgen/extract-seedling-map.mjs, which records nodes.');
+    }
+    const w = clearedHere2(e, entityTag, clearedTags) ? TILE_SIZE : last.x - x + TILE_SIZE;
+    return rect(x + cls.dx - cls.originX, y + cls.dy - cls.originY, w, cls.h);
+}
+
 function intAttr(attrs, name, fallback) {
     const raw = attrs?.[name];
     if (raw === undefined || raw === null || raw === '') {
@@ -3048,9 +3076,32 @@ export function buildLevelWorld(levelRecord, {
                     // The lightpole's box is its own (the render() re-anchor
                     // and the bob envelope); every other responder collides
                     // on the hitbox the blocking role already transcribed.
-                    rect: entityRect(
-                        cls.as3 === 'LightPole' ? LIGHTPOLE_PRESS_BOX : cls, x, y,
-                    ),
+                    // ⛔ R5 SLICE 7: AND THE `rope` COLLIDER IS NOT A
+                    // CONSTANT EITHER. `entityRect` reads `cls.w`, which a
+                    // node-terminated class does not have, so a rope's press
+                    // rect came out `{x, y, h, right: null, bottom}` — and a
+                    // rect with a null `right` NEVER OVERLAPS ANYTHING
+                    // (`null > x` is false). So `pressRespondersIn` could
+                    // not see the rope AT ALL: the sword arm that pulls it
+                    // was `refused` by policy AND unreachable by geometry,
+                    // and either one alone would have read as "the audit is
+                    // clean". Sized here from the same `<node>` span the
+                    // blocking role uses, so the two cannot disagree.
+                    rect: cls.collider === 'rope'
+                        ? ropeSpanRect(e, cls, x, y, entityTag, clearedTags, where)
+                        : entityRect(
+                            cls.as3 === 'LightPole' ? LIGHTPOLE_PRESS_BOX : cls, x, y,
+                        ),
+                    // ⚠ R5 SLICE 7: THE ORIGIN, because `Player.as:1026`'s
+                    // radius cut needs it and needs it WRONG. The fire
+                    // distance is computed from `e.x - e.originX` (the box
+                    // left, which the rect already is) and `e.y - originY`
+                    // — the PLAYER's originY, not the target's. So the
+                    // shift a fire candidate takes is
+                    // `e.originY - HITBOX.originY`, and a census that
+                    // carried only the rect cannot express it.
+                    originX: cls.originX ?? 0,
+                    originY: cls.originY ?? 0,
                     arm: arm.arm,
                     cost: arm.cost,
                     src: arm.src,
@@ -3187,23 +3238,26 @@ export function buildLevelWorld(levelRecord, {
             // (`Game.as:2201-2210`). A rope with no node cannot be sized,
             // and guessing a 16 px stub would turn a 7-tile wall into a
             // 1-tile one — silently, and only in the level nobody visits.
-            const last = e.nodes?.[e.nodes.length - 1];
-            if (!last) {
-                fail(`${where} has a "${e.type}" at (${x},${y}) with no <node> child. `
-                    + 'Its collider spans from its own x to that node\'s, so it cannot be '
-                    + 'built without one. Re-extract the atlas with '
-                    + 'scripts/procgen/extract-seedling-map.mjs, which records nodes.');
-            }
             // ⚠ A CLEARED ROPE SHRINKS, it does not despawn: `check()`
             // calls `hit()`, and `hit()` runs `setHitbox(16, 16, 8, 8)`.
             // What is left is a ONE-CELL solid at the span's start, not
             // open floor — which is the difference between routing through
-            // and walking into a wall.
-            const w = clearedHere2(e, entityTag, clearedTags)
-                ? TILE_SIZE : last.x - x + TILE_SIZE;
+            // and walking into a wall. `ropeSpanRect` is the shared
+            // derivation; the press census reads the same one.
+            const last = e.nodes?.[e.nodes.length - 1];
+            const r = ropeSpanRect(e, cls, x, y, entityTag, clearedTags, where);
             const solid = {
-                rect: rect(x + cls.dx - cls.originX, y + cls.dy - cls.originY, w, cls.h),
-                cls, tag: e.type, x, y, span: { xend: last.x, w },
+                rect: r, cls, tag: e.type, x, y,
+                span: { xend: last.x, w: r.right - r.x },
+                // ⛓ R5 SLICE 7: the join a PULLED rope needs. Unlike a
+                // broken rock the entity survives — `hit()` shrinks the
+                // hitbox to one cell — so the run cannot express it by
+                // dropping the solid, and `collidesSolid` needs both the
+                // id and the shrunken rect.
+                ropeId: `${e.type}@${x},${y}`,
+                shrunkRect: rect(
+                    x + cls.dx - cls.originX, y + cls.dy - cls.originY, TILE_SIZE, cls.h,
+                ),
             };
             solids.push(solid);
             objectSolids.push(solid);
@@ -3528,7 +3582,7 @@ export function buildLevelWorld(levelRecord, {
          */
         collidesSolid(box, {
             beforeTypeFlip = false, openActivators = null, pushables: live = null,
-            openBridges = null, brokenRocks = null,
+            openBridges = null, brokenRocks = null, pulledRopes = null,
         } = {}) {
             // Pixelmask entities (Building, TreeLarge, CliffSide) assign
             // their type in the CONSTRUCTOR, so they are armed on tick 1
@@ -3554,6 +3608,16 @@ export function buildLevelWorld(levelRecord, {
                 // the next `new Game`, so this may not be baked into the
                 // geometry the way a persistence clear is.
                 if (brokenRocks && s.rockId && brokenRocks.has(s.rockId)) continue;
+                // ⛓ R5 SLICE 7: a rope the player has PULLED. Not a removal
+                // and not a type flip — `RopeStart.hit()` runs
+                // `setHitbox(16, 16, 8, 8)`, so 112 px of wall becomes 16 px
+                // of wall at the span's START. A model that dropped it would
+                // open a tile the game keeps, which is why this is a rect
+                // swap rather than a `continue`.
+                if (pulledRopes && s.ropeId && pulledRopes.has(s.ropeId)) {
+                    if (rectsOverlap(box, s.shrunkRect)) return { ...s, rect: s.shrunkRect };
+                    continue;
+                }
                 // R4: a block that has been pushed is not where the level
                 // built it. `live` is the run's own state (see
                 // `pushables.createPushableState`); WITHOUT it the spawn
@@ -3729,7 +3793,7 @@ export function buildLevelWorld(levelRecord, {
          */
         plannerBlockerAt(box, probeRect = null, {
             noclip = false, noHazards = [], openActivators = null, pushables: live = null,
-            openBridges = null, brokenRocks = null,
+            openBridges = null, brokenRocks = null, pulledRopes = null,
         } = {}) {
             if (!noclip) {
                 // ⚠ THE PLANNER USES THE REAL MASK, not the bounding rect.
@@ -3751,6 +3815,15 @@ export function buildLevelWorld(levelRecord, {
                         && openActivators.has(s.activatorId)) continue;
                     if (openBridges && s.bridgeId && openBridges.has(s.bridgeId)) continue;
                     if (brokenRocks && s.rockId && brokenRocks.has(s.rockId)) continue;
+                    // ⛓ R5 slice 7: a pulled rope SHRINKS. The planner has
+                    // to see the one cell the game keeps, or it routes
+                    // through the pulley.
+                    if (pulledRopes && s.ropeId && pulledRopes.has(s.ropeId)) {
+                        if (rectsOverlap(box, s.shrunkRect)) {
+                            return { kind: 'solid', blocker: { ...s, rect: s.shrunkRect } };
+                        }
+                        continue;
+                    }
                     // R4: the planner has to see a pushed block where it
                     // IS. A planner with its own idea of a block's position
                     // would certify the corridor the push opened and then

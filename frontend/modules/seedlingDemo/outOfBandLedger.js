@@ -133,6 +133,35 @@ export const OUT_OF_BAND_WRITERS = Object.freeze({
             + 'same slot, so the ENTRY appears only when that slot was already true',
         witness: 'r5-witch-darksword',
     }),
+    // ⚠ THE FOURTH AND FIFTH, registered at R5 slice 7 — and the fourth is
+    // the one this module's own docblock said "cannot be modelled" without
+    // a citation. Both come from the SOURCE rather than from a divergence.
+    Lock: Object.freeze({
+        as3: 'Puzzlements/Lock.as:90-104',
+        writeSite: 'turnOff() / returnToNormal()',
+        writesWhen: 'always',
+        minusOneFrom: 'the CONSTRUCTOR default. `Lock(_x, _y, _t, _tag:int = -1)` — every '
+            + '`<lock>`/`<wandlock>` authored without a `tag` attribute takes the '
+            + 'sentinel, and 4 of L39\'s 8 activators do',
+        skipsItsOwnGuard: '`check()`\'s `tag >= 0 && tSet < 0` guard governs whether the '
+            + 'lock is DELETED at build time; `turnOff` and `returnToNormal` have no tag '
+            + 'guard at all, so a -1 lock that fades open still writes — into the '
+            + 'previous level\'s last slot',
+        witness: 'r5-shaft',
+    }),
+    RopeStart: Object.freeze({
+        as3: 'Puzzlements/RopeStart.as:41-49',
+        writeSite: 'hit()',
+        writesWhen: 'always',
+        minusOneFrom: 'the same constructor default — `RopeStart(_x, _y, _xend, _t, '
+            + '_tag:int = -1)`. L39\'s rope carries tag 9, so this route\'s pull is '
+            + 'IN-BAND; the entry is here because the sentinel is reachable and a '
+            + 'class this helper does not know throws',
+        skipsItsOwnGuard: '`hit()`\'s only guard is `if (!activate)` — the `tag >= 0` '
+            + 'test lives in `check()`, which decides whether the rope boots already '
+            + 'pulled',
+        witness: 'r5-shaft',
+    }),
 });
 
 /**

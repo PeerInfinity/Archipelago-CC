@@ -76,6 +76,7 @@ import {
     WAIT_AFTER_PRESS_TICKS, assertWaitCovers, rockBreaksUnder,
 } from './breakableRocks.js';
 import { keyLineTouches, opensOnKeyTick } from './activators.js';
+import { FIRE_WINDOW } from './fireVerb.js';
 import {
     DEFAULT_MAX_TICKS_PER_TARGET,
     DEFAULT_TOLERANCE,
@@ -258,7 +259,7 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
         // the level built it, so "is this tile walkable" has different
         // answers at two points in the same leg — and a planner with its own
         // idea of either would certify a corridor the executor walks into.
-        openBridges = null, pushables = null, brokenRocks = null,
+        openBridges = null, pushables = null, brokenRocks = null, pulledRopes = null,
         // R4: `Main.SAVE_FILE.data.hasKey`, as a set of key types. It selects
         // exactly one avoid volume — a `BossLock`'s probe row — and it is a
         // SET rather than a boolean because a walk can hold several.
@@ -298,7 +299,8 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
     // so the planner cannot believe a door is open that the engine will
     // find shut.
     const geometry = level.plannerBlockerAt(box, terrainProbeRect(x, y),
-        { noclip, noHazards, openActivators, openBridges, pushables, brokenRocks });
+        { noclip, noHazards, openActivators, openBridges, pushables, brokenRocks,
+            pulledRopes });
     if (geometry) return geometry;
     // ⚠ PIT TILES ARE FORBIDDEN FLOOR, and this policy is LOAD-BEARING from
     // R1 on. Until R1 a pit was unmodelled terrain, so `plannerBlockerAt`
@@ -1721,6 +1723,199 @@ function runSpear(run, perTick, spear, what) {
     };
 }
 
+/**
+ * ── ⛓⛓ THE FIRE PRIMITIVE (R5 slice 7) ────────────────────────────────
+ *
+ * The sixth leg verb, and the first one with NO FACING.
+ *
+ *     { x: 152, y: 200, fire: { moves: [{ from: {tx:9,ty:11}, to: {tx:9,ty:10} }] } }
+ *     { x: 104, y: 392, fire: { rope: { x: 96, y: 384 } } }
+ *
+ * `runSpear`'s four checks were stance / facing / positive control /
+ * effect. This one keeps three of them and REPLACES the second, because
+ * `Player.fire()`'s rect is 32x32 centred on the player: which way they
+ * are pointing changes nothing, and the direction each block goes is
+ * `atan2` AWAY from the stance. A face nudge here would be ceremony.
+ *
+ * ⛔ AND THE EFFECT CHECK IS AN EXACT SET, not "the block I named moved".
+ * That is the finding this verb exists to carry: a press has no aim, so
+ * every block inside the rect moves, and a leg that lists one of two is a
+ * leg whose author did not know about the other. `moves` is checked both
+ * ways against what the run reports.
+ *
+ * ⚠ THE WAIT IS THE GLIDE, and it is the same 32 ticks a spear push takes
+ * (`pushables.TICKS_PER_TILE` — 16 px at `moveSpeed` 0.5). `PUSH_GLIDE_TICKS`
+ * is the padded number `runSpear` already uses; `run.pushesSettled` is the
+ * run's own answer and this waits for that rather than counting.
+ */
+function runFire(run, perTick, fire, what) {
+    if (run.openActivators === null) {
+        fail(`${what}: a fire press is a MECHANIC, and the noclip arm does not run it — `
+            + '`advance` hands `stepV2` a null world state, so the press would emit its '
+            + 'span, change nothing and report success. A tape that fires must declare '
+            + 'noclip: false.');
+    }
+    const { moves = null, rope = null, wait = null } = fire;
+    const named = [moves, rope].filter((e) => e !== null);
+    if (named.length !== 1) {
+        fail(`${what}: a fire press names EXACTLY ONE of \`moves\` (blocks, by the tile `
+            + 'they are on and the tile they should end on) or `rope` (a RopeStart, by '
+            + 'its OEL coordinates). Naming none fires at nothing; naming both makes '
+            + 'the effect check ambiguous.');
+    }
+    const at = { x: run.state.x, y: run.state.y };
+    if (run.state.vx !== 0 || run.state.vy !== 0) {
+        fail(`${what}: the stance (${at.x},${at.y}) is still MOVING — v=(${run.state.vx},`
+            + `${run.state.vy}). The rect is centred on the player and it fires four `
+            + 'ticks after the press, so a drifting stance aims somewhere the leg did '
+            + 'not choose. Let the approach come to rest first.');
+    }
+
+    // ── the positive control, before the press ────────────────────────
+    let expect;
+    if (rope) {
+        const id = `rope@${rope.x},${rope.y}`;
+        if (run.pulledRopes.has(id)) {
+            fail(`${what}: ${id} is ALREADY PULLED before the press, so pulling it proves `
+                + 'nothing. `RopeStart.hit()` is entirely inside `if (!activate)`, so a '
+                + 'second press is a real no-op — which means an earlier leg of this '
+                + 'visit already spent it.');
+        }
+        expect = { kind: 'rope', id };
+    } else {
+        if (!Array.isArray(moves) || moves.length === 0) {
+            fail(`${what}: fire.moves must be a non-empty array of `
+                + '{from: {tx, ty}, to: {tx, ty}}.');
+        }
+        const live = [];
+        for (const m of moves) {
+            for (const [k, v] of [['from', m.from], ['to', m.to]]) {
+                if (!v || !Number.isInteger(v.tx) || !Number.isInteger(v.ty)) {
+                    fail(`${what}: fire.moves[].${k} must be {tx, ty} integers, got `
+                        + `${JSON.stringify(v)}`);
+                }
+            }
+            // ⚠ NAMED BY WHERE IT IS, not by where it spawned. A block's id
+            // is its spawn cell and never changes; a choreography's steps
+            // are about the cell it is standing on NOW, and eighteen presses
+            // in a row is exactly where the two diverge.
+            const found = [...run.pushables.entries()].find(([, b]) => !b.removed
+                && Math.floor(b.rect.x / TILE_SIZE) === m.from.tx
+                && Math.floor(b.rect.y / TILE_SIZE) === m.from.ty);
+            if (!found) {
+                fail(`${what}: no live pushable is standing on (${m.from.tx},`
+                    + `${m.from.ty}); the level's blocks are at `
+                    + `[${[...run.pushables.entries()].filter(([, b]) => !b.removed)
+                        .map(([id, b]) => `${id} on (${Math.floor(b.rect.x / TILE_SIZE)},`
+                            + `${Math.floor(b.rect.y / TILE_SIZE)})`).join(' ') || 'none'}]`);
+            }
+            if (m.from.tx === m.to.tx && m.from.ty === m.to.ty) {
+                fail(`${what}: a move from (${m.from.tx},${m.from.ty}) to itself proves `
+                    + 'nothing.');
+            }
+            live.push({ id: found[0], from: m.from, to: m.to });
+        }
+        // ⛔ EVERY block's position BEFORE the press, not just the named
+        // ones — the other half of the exact-set check below.
+        const before = new Map([...run.pushables.entries()]
+            .filter(([, b]) => !b.removed)
+            .map(([id, b]) => [id, {
+                tx: Math.floor(b.rect.x / TILE_SIZE),
+                ty: Math.floor(b.rect.y / TILE_SIZE),
+            }]));
+        expect = { kind: 'blocks', live, before };
+    }
+
+    // ── the press: ONE tick of `primary` ──────────────────────────────
+    // The hit ticks are T+4..T+8 and `useItem`'s `if (!firing)` swallows a
+    // press inside an open window, so the span is one tick and the run's
+    // own cadence guard is what refuses a second one too early.
+    const pressTick = perTick.length;
+    const PRESS = new Set(['primary']);
+    perTick.push(PRESS);
+    const pressed = run.advance(PRESS);
+    if (pressed.transition) {
+        fail(`${what}: the press tick crossed from level ${pressed.transition.from_level} `
+            + `to ${pressed.transition.to_level}.`);
+    }
+
+    // ── the wait: the window, then the glide ──────────────────────────
+    const ticks = wait ?? PUSH_GLIDE_TICKS;
+    for (let i = 1; i <= ticks; i++) {
+        perTick.push(NO_HELD);
+        const { transition } = run.advance(NO_HELD);
+        if (transition) {
+            fail(`${what}: wait tick ${i} of ${ticks} crossed from level `
+                + `${transition.from_level} to ${transition.to_level}.`);
+        }
+        // ⚠ NOT BEFORE THE WINDOW HAS FIRED. `run.pushesSettled` is true
+        // for the first four ticks too — the hits have not landed yet — so
+        // an early break would report a press that never dispatched as a
+        // push that settled instantly.
+        if (expect.kind === 'blocks' && i > FIRE_WINDOW.lastHitTick && run.pushesSettled) break;
+    }
+
+    // ── the effect ────────────────────────────────────────────────────
+    if (expect.kind === 'rope') {
+        if (!run.pulledRopes.has(expect.id)) {
+            fail(`${what}: fired at (${at.x},${at.y}) and ${expect.id} is STILL its full `
+                + `span after ${ticks} tick(s). The 32x32 rect has to CONTAIN the rope `
+                + 'and the 16 px radius cut has to admit it — and a rope is a wide, '
+                + 'shallow box, so a stance too far along the span is outside the rect '
+                + 'even though it looks adjacent on the map.');
+        }
+    } else {
+        const got = [];
+        for (const [id, b] of run.pushables) {
+            if (b.removed) continue;
+            got.push({
+                id,
+                tx: Math.floor(b.rect.x / TILE_SIZE),
+                ty: Math.floor(b.rect.y / TILE_SIZE),
+            });
+        }
+        const wantKey = expect.live
+            .map((m) => `${m.id}->${m.to.tx},${m.to.ty}`).sort().join(' ');
+        const gotKey = expect.live
+            .map((m) => {
+                const now = got.find((g) => g.id === m.id);
+                return `${m.id}->${now ? `${now.tx},${now.ty}` : 'GONE'}`;
+            }).sort().join(' ');
+        if (wantKey !== gotKey) {
+            fail(`${what}: fired at (${at.x},${at.y}) and the declared blocks ended at `
+                + `[${gotKey}] rather than [${wantKey}].`);
+        }
+        // ⛔⛔ AND THE OTHER HALF, which is the whole reason this verb
+        // exists: NOTHING THE LEG DID NOT NAME MAY HAVE MOVED. A fire press
+        // has no aim, so a block the author did not think about is pushed
+        // exactly as hard as the one they did — and §19.8's eighteen-press
+        // choreography failed on precisely that, twice, while every one of
+        // its presses "worked".
+        const namedIds = new Set(expect.live.map((m) => m.id));
+        const strays = got.filter((g) => {
+            if (namedIds.has(g.id)) return false;
+            const was = expect.before.get(g.id);
+            return !was || was.tx !== g.tx || was.ty !== g.ty;
+        });
+        const vanished = [...expect.before.keys()]
+            .filter((id) => !namedIds.has(id) && !got.some((g) => g.id === id));
+        if (strays.length > 0 || vanished.length > 0) {
+            fail(`${what}: the press at (${at.x},${at.y}) ALSO moved `
+                + `[${strays.map((g) => `${g.id} to (${g.tx},${g.ty})`).join(', ')}`
+                + `${vanished.length ? ` and DESTROYED [${vanished.join(', ')}]` : ''}], `
+                + 'which the leg does not name. `Player.fire()` has no aim — the rect is '
+                + '32x32 around the player and `genericHit` runs on everything inside '
+                + 'it, each pushed `atan2` away from the stance. Either name the move or '
+                + 'choose a stance the other block is outside of.');
+        }
+    }
+    return {
+        kind: expect.kind, pressTick, at,
+        ...(expect.kind === 'rope' ? { id: expect.id }
+            : { moves: expect.live.map((m) => ({ ...m })) }),
+    };
+}
+
 function runCollect(run, perTick, collect, maxTicks, what) {
     const pickup = resolvePickup(run.world, collect.pickup, what);
     const before = run.collected.length;
@@ -2159,6 +2354,8 @@ export function synthesizeLegs(legs, opts = {}) {
     const touches = [];
     const collects = [];
     const spears = [];
+    /** ⛓ R5 slice 7: one record per FIRE press — see `runFire`. */
+    const fires = [];
     const keylocks = [];
     const equips = [];
     const grazes = allowGrazes ? [] : null;
@@ -2337,6 +2534,7 @@ export function synthesizeLegs(legs, opts = {}) {
             // R5 slice 5: the fifth. Same argument, one mechanic later —
             // L92's rocks are Solid until seven ticks after their press.
             brokenRocks: run.brokenRocks,
+            pulledRopes: run.pulledRopes,
             inventory: run.inventory,
             keys: run.keys,
             ...extra,
@@ -2419,6 +2617,15 @@ export function synthesizeLegs(legs, opts = {}) {
                 const record = runSpear(run, perTick, target.spear,
                     `legs[${li}] level ${leg.level} target ${ti} spear`);
                 spears.push({
+                    leg: li, index: ti, level: leg.level, from, to: perTick.length,
+                    ...record,
+                });
+            }
+            if (target.fire !== undefined) {
+                const from = perTick.length;
+                const record = runFire(run, perTick, target.fire,
+                    `legs[${li}] level ${leg.level} target ${ti} fire`);
+                fires.push({
                     leg: li, index: ti, level: leg.level, from, to: perTick.length,
                     ...record,
                 });
@@ -2640,6 +2847,7 @@ export function synthesizeLegs(legs, opts = {}) {
         // run's own `presses` ledger is the other half: this says what was
         // INTENDED, that says what the rect actually contained.
         spears: spears.map((s2) => ({ ...s2 })),
+        fires: fires.map((f) => ({ ...f })),
         // One record per BOSSLOCK the run opened with a key: which lock,
         // which key type, which flag it wrote, where the player stood and how
         // long the window ran. The `holds`/`touches`/`spears` rule again —

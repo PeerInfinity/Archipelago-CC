@@ -17,9 +17,13 @@ import { outOfBandFlagFor } from './breakableRocks.js';
 import { FIRE_OUT_OF_BAND_FLAG } from './r5Acceptance.js';
 
 describe('the family registry', () => {
-    it('has exactly the three members read out of the source, each with a citation', () => {
+    // ⛓ FIVE at R5 slice 7. `Lock` and `RopeStart` were registered from the
+    // SOURCE when the shaft's route needed them — both take `_tag:int = -1`
+    // as a CONSTRUCTOR DEFAULT, which is a third way into this family after
+    // a runtime spawn (`Fire`) and authored map data (`BreakableRock`).
+    it('has exactly the five members read out of the source, each with a citation', () => {
         expect(Object.keys(OUT_OF_BAND_WRITERS).sort())
-            .toEqual(['BreakableRock', 'DarkSword', 'Fire']);
+            .toEqual(['BreakableRock', 'DarkSword', 'Fire', 'Lock', 'RopeStart']);
         for (const [name, entry] of Object.entries(OUT_OF_BAND_WRITERS)) {
             expect(entry.as3, `${name} must cite its file and lines`).toMatch(/\.as:\d+/);
             expect(entry.writeSite, name).toMatch(/\(\)$/);
@@ -37,6 +41,8 @@ describe('the family registry', () => {
         expect(OUT_OF_BAND_WRITERS.Fire.witness).toBe('r5-bobboss-fire');
         expect(OUT_OF_BAND_WRITERS.BreakableRock.witness).toBe('r5-feather');
         expect(OUT_OF_BAND_WRITERS.DarkSword.witness).toBe('r5-witch-darksword');
+        expect(OUT_OF_BAND_WRITERS.Lock.witness).toBe('r5-shaft');
+        expect(OUT_OF_BAND_WRITERS.RopeStart.witness).toBe('r5-shaft');
     });
 });
 
@@ -139,8 +145,12 @@ describe('expectedOutOfBandEntries', () => {
         expect([...entries.keys()].sort()).toEqual(['31:29', '91:29']);
     });
 
+    // ⚠ THE CLASS THIS TEST USED TO NAME IS NOW A MEMBER. `RopeStart` was
+    // the unclassified example until slice 7 built its arm — which is the
+    // registry working, and is why the example is now a class that really
+    // has no entry rather than one that was merely waiting for a route.
     it('a walk that meets an unclassified writer FAILS rather than under-reporting', () => {
-        expect(() => expectedOutOfBandEntries([{ as3: 'RopeStart', level: 39, tag: -1 }]))
+        expect(() => expectedOutOfBandEntries([{ as3: 'Pulser', level: 39, tag: -1 }]))
             .toThrow(OutOfBandLedgerError);
     });
 

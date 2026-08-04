@@ -43,11 +43,19 @@ describe('the entrance — the census carries the cross-room fields', () => {
         expect(p.rect).toMatchObject(TOTEM_ENTRANCE.rect);
     });
 
-    it('a room = -1 buttonroom carries NO cross-room fields, and writes nothing', () => {
+    // ⛔ CORRECTED AT R5 SLICE 7. This test used to assert that a
+    // `room = -1` buttonroom "writes nothing", which was this module's
+    // reading and is wrong: `Game.setPersistence(tag, !activate)` sits
+    // OUTSIDE the `if (room == -1) … else …` in `ButtonRoom.as:95`, so a
+    // local button writes its own tag exactly as a cross-room one does. It
+    // publishes to its group as well, and that publish LATCHES — which is
+    // Dungeon 4's whole opening mechanic. See `r5Shaft.test.js`.
+    it('a room = -1 buttonroom carries no ROOM write — but it does write its own tag', () => {
         const w = worldFor(38);
         const inRoom = w.pressers.find((q) => q.tag === 'buttonroom' && q.x === 144 && q.y === 128);
         expect(inRoom.room).toBe(-1);
-        expect(crossRoomWrites(inRoom)).toEqual([]);
+        expect(crossRoomWrites(inRoom))
+            .toEqual([{ level: null, tag: 0, value: false, which: 'own' }]);
         // ...and a plain `Button` is not a cross-room presser at all.
         const plain = w.pressers.find((q) => q.tag === 'button');
         expect(crossRoomWrites(plain)).toEqual([]);
