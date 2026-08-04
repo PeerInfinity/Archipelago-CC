@@ -270,10 +270,21 @@ export const L38_CHAIN = Object.freeze({
             src: 'Chest.as:58-88 — `update` opens on `collideLine("Player", …)` one pixel '
                 + 'below the box, gated on `!collide("Solid", x, y)`; `open()` sets '
                 + '`type = ""`, spawns a `SealPiece`, and writes `setPersistence(tag, false)`',
+            // ⚠ THE COVER GATES THE CHEST, NOT THE STANCE. The stance band is
+            // IDENTICAL with the cover shut, because the cover and the chest
+            // occupy the same cell — `!collide("Solid", x, y)` is the chest
+            // colliding with the COVER, not with the player. So links 1-4 buy
+            // the chest's own permission, not the walk's approach.
+            coverGates: 'the chest\'s `!collide("Solid")`, not the player\'s approach',
             why: '⛓ THE DESOLIDIFY IS THE PASSAGE. And the stance is a GRAZE by '
-                + 'construction, exactly as a keylock\'s is: the probe row is y = 129 and '
-                + 'the player box is `[y-2, y+3)`, so the walk has to reach y in [127,131] '
-                + 'against a chest whose box starts at 128.',
+                + 'construction, exactly as a keylock\'s is — but a TWO-PIXEL one, and '
+                + 'the thing that bounds it below is the chest itself. The probe row is '
+                + 'y = 129 (`y - originY + height + 1`), the player box is `[y-2, y+3)`, '
+                + 'and the chest\'s box is `[112,128)`: so the walk has to reach '
+                + 'y ∈ {130, 131} and nothing else. Measured, not derived — '
+                + '`y - 2 <= 129 < y + 3` alone says [127,131] and four of those five '
+                + 'pixels are inside the chest.',
+            stanceBand: Object.freeze({ y: Object.freeze([130, 131]), probeRow: 129 }),
         }),
     ]),
     /** What a route has to build before this leg can be planned at all. */
