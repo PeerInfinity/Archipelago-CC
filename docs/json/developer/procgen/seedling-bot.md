@@ -2392,3 +2392,128 @@ crosses a door pays a fade for the crossing, and separating that from
 `botStart`'s needs a per-load constant the director has no business owning
 — so such a window is reported UNASSERTED, never passed. A missing
 `dead_frames` is a finding too.
+
+---
+
+## R5 slice 4: the chain — a key, a boss, an item that changes a level's build
+
+Slice 4 walks from L29's boss key to `fire` and spends it. Three pairs were
+recorded, all green; what follows is what the game corrected.
+
+### ⛔ A `keyType`-1 key opens TWO locks between L29 and BobBoss
+
+L31 is not a corridor. Its `stairsup@160,384` sits in a five-tile POCKET
+whose only entrance is `bosslock@192,432` — a second `keyType 1` lock,
+persistence tag 0. A flood from the L29 arrival reaches 103 tiles and the
+pocket is not among them, so the ledger gains `{31,0}` AND `{30,2}` from one
+key. A plan priced at one lock walks into a wall in the middle of L31 with
+the key in hand and no verb aimed at it.
+
+### ⛔ L32's pit exit is sealed by a burnable tree
+
+`control@64,0` names `fallthrough = 30`, and both pit tiles it applies to are
+covered exactly by `burnabletree@64,0`, a 32x32 `type = "Solid"` whose only
+removal path is `hit("Fire")`. The fallen rock seals the stairs and the tree
+seals the pit, so **`fire`'s first use on the whole arc is getting out of the
+room it was won in.** `BurnableTree.removed()` writes `{32,0}`.
+
+### ⛔ A keylock stance is a graze by construction, and its band is one pixel
+
+`BossLock` walks a one-pixel line beneath itself and asks
+`collideLine("Player", …)`. `(lock.x + 8, lock.y + TILE + 2)` is the stance,
+and both edges are half a pixel away in opposite directions:
+
+- `+2` **cannot be reached** — `Mobile.moveY` returns as soon as the next
+  step would collide, so a drive from below stops at ~226.5 and the planner
+  reports a blocked sweep. The stance is still right: a keylock stance IS a
+  player pressed against a lock, so `allowGrazes` is the verb, not slack.
+- `+3` **misses the probe row** — the drive lands within about half a pixel
+  either way, and half a pixel low puts the box top a fifth of a pixel past
+  the row. `collideLine` tests INTEGER points, so the lock never latches and
+  the walk stands there for its whole window reporting nothing.
+
+### ⛔ The rock's freeze is dead frames; a `BobBossNPC` dialogue's is not
+
+`FallRockLarge` costs 174 frames (60 wait + 24 fall + 90 camera) and
+`dead_frames` came back 195 — the boot fade plus exactly those. But a
+dialogue is the R3 PHASE-B shape: the tape ticks while `Mobile.mobileUpdate`
+refuses to move the player. **And `Bot.autoAdvance` is called from INSIDE the
+dead-frame branch and nowhere else**, so a freeze the gate reads as live is a
+freeze the bot never dismisses — the tape pages all fourteen pages itself, or
+it stalls at the first one forever while reporting clean dead frames.
+
+⛓ Which is what makes the BobBoss pair possible: `primary` is both the talk
+key and the sword, and the game keeps them apart — a dialogue holds
+`Game.freezeObjects`, which gates `Player.input()`, so a press inside one can
+only PAGE and a press outside one can only SWING. One press train, two arms,
+and `grants` decides what it does.
+
+### ⛔ `Fire.removed()` writes a flag in a level the player is not in
+
+`BobBoss.death` spawns `new Fire(…, -1)`; `Fire.removed()` calls
+`setPersistence(-1, false)` unconditionally (its `check()` guard is
+`tag >= 0 && …`); and `levelPersistenceSet(i, j)` writes `i * 30 + j`. From
+L32 that is index **959** = `31 * 30 + 29` — **L31's last slot.** An exact-set
+ledger has to name it or the walk reports a clear nobody can attribute.
+
+Three more the source says and §2.6.1 does not: form 1's `hitsMax` is
+`Enemy`'s default because its switch case sets none (2+3+2 is a MISSING
+case); the boss cannot be knocked back at all (`super.hit(0, null, …)` — force
+zero AND point null); and `player.hits = 0` is written by the boss on the last
+frame of every transition, so only the terminal reading is evidence.
+
+### ⛔ An item must be banked BEFORE the level is built
+
+`Karlore.added()` reads `Player.hasFire` inside `new Game(48, …)`. So:
+
+- a BOOT grant naming L48 is applied afterwards;
+- a grant naming L48 on a walk that ENTERS L48 fires on the first observation
+  whose level is 48 — also afterwards. ⚠ And `synthesizeLegs` emits the grant
+  against the level its run banked the item in, so a two-leg plan produces
+  exactly that silently.
+
+Both takes ended with the two arms byte-identical, pinned at 290. The grant
+has to name the level the walk boots into. **A boot is not an entry.**
+
+⚠ And when checking a plug like this, the neighbour test is the wrong
+question: tile (8,17) beside Karlore is OPEN. What makes the corridor one
+tile wide is that (8,18) is solid, so the only way in is a diagonal through
+the corner where a 4x5 player box overlaps both. Flood it.
+
+### An encounter script needs a declared exemption, not a relaxation
+
+The differential harness builds its expectation by running the tape through
+the JS engine, and a scripted boss is not a mechanic the engine models.
+`r5Chain.MODEL_EXEMPT` names, per fixture, the items the GAME earns and
+whether it takes input over; the harness checks against `mirror + earned`,
+which is HARDER than the unamended check (a run that fought and lost goes
+red), and an unexercised exemption is itself a finding.
+
+### ⛓ Water is modelled — and the reason it was not is not the one recorded
+
+Type 1 was out of `MODELLED_TILE_TYPES` for "canSwim is the conch", which was
+half of it. `checkDrowning`'s water arm, `WATER_FRICTION` and the speed table
+all landed at R4. What was missing is the SOUND TERM: `Player.as:530` adds
+`0.25 * int(Music.soundPosition("Swim") < 0.1)` off the Web Audio mixer's
+WALL CLOCK. **Water was not untranscribed, it was NOT REPRODUCIBLE.**
+
+`playerPhysicsV2.step` drives `swimBurst` from `swimSoundClock` in the game's
+order — step the mixer (every frame, including dead ones), read, then replay
+iff `v.length > 0 && !playing` — and REFUSES a wet tick on a tape that does
+not pin `"sound"` rather than modelling the term as zero. `pins` is threaded
+through `createLevelRun`, `runTape` and `synthesizeLegs`'s `relax`.
+
+Three consequences worth knowing:
+
+1. **Every tile type 0..37 is modelled now**, so `assertModelledTerrain` is a
+   bounded vacuity over anything the extract can carry. The guard is kept for
+   an out-of-table resolver value.
+2. **The planner is unaffected** — R4's `lethal-terrain` policy already
+   listed water with a `canSwim` exemption, so an armed tile went from
+   refused-as-unmodelled to refused-as-lethal. (`describe()` needed the arm:
+   the one diagnostic a planner failure produces read "lethal-terrain
+   undefined".)
+3. **R4 armed WATERFALL with the term hard-coded to zero.** `inWater` is
+   `eff == 1 || eff == 25`, so a waterfall tick reads it too. It got away with
+   it because no committed route stands on one — a real bound nobody had
+   written down.
