@@ -3,6 +3,7 @@ import {
     windowsFrom, boundaryFindings, streamBoundaryFindings, traceFindings, traceTicks,
     assertWindowEndsAtRest, continuationFindings, DirectorError,
     boundaryFlagClearanceFindings, LOCK_FLAG_WRITE_TICKS,
+    crutchScheduleFindings, CRUTCH_JUSTIFICATION,
 } from './director.js';
 
 /**
@@ -404,5 +405,109 @@ describe('boundaryFlagClearanceFindings: a boundary may not sit inside a fade', 
 
     it('the default clearance is the Lock alpha fade', () => {
         expect(LOCK_FLAG_WRITE_TICKS).toBe(100);
+    });
+});
+
+describe('⛓ the CRUTCH SCHEDULE — a coercion may not outlive its justification', () => {
+    const win = (label, noHazards, items) => ({
+        label,
+        tape: { noHazards },
+        boundary_after_start: { items },
+    });
+    const NOTHING = { canSwim: false, hasFeather: false, hasDarkSuit: false };
+    const CONCH = { ...NOTHING, canSwim: true };
+    const BOTH = { canSwim: true, hasFeather: true, hasDarkSuit: false };
+    const failing = (fs) => fs.filter((f) => !f.ok).map((f) => f.name);
+
+    it('⛓ THE FIRST FLIP: water retired, and `canSwim` is NAMED as the reason', () => {
+        // R5 slice 4 step 4's own boundary. The passing finding is the
+        // point — this check exists to PRINT the justification, not merely
+        // to stay quiet about it.
+        const fs = crutchScheduleFindings([
+            win('d5', ['water', 'waterfall'], NOTHING),
+            win('swim', ['waterfall'], CONCH),
+        ]);
+        expect(failing(fs)).toEqual([]);
+        const retire = fs.find((f) => f.name.includes('"water" retired'));
+        expect(retire).toBeDefined();
+        expect(retire.name).toContain('canSwim');
+        expect(retire.ok).toBe(true);
+    });
+
+    it('⛔ RED when a hazard is armed WITHOUT the item that survives it', () => {
+        const fs = crutchScheduleFindings([
+            win('d5', ['water', 'waterfall'], NOTHING),
+            win('swim', ['waterfall'], NOTHING),
+        ]);
+        expect(failing(fs)).toContain('boundary 0 (d5) → 1 (swim): "water" retired, '
+            + 'justified by `canSwim`');
+        expect(fs.find((f) => !f.ok).detail).toContain('die()');
+    });
+
+    it('⛔ RED when a coercion OUTLIVES its justification', () => {
+        // The rule that makes this a schedule. A window still coercing
+        // water while the game already holds the conch is a ladder that has
+        // stopped descending and is still reporting green.
+        const fs = crutchScheduleFindings([
+            win('d5', ['water', 'waterfall'], NOTHING),
+            win('next', ['water', 'waterfall'], CONCH),
+        ]);
+        expect(failing(fs)).toContain('boundary 0 (d5) → 1 (next): "water" is still coerced');
+    });
+
+    it('⛔ RED when a coercion comes BACK', () => {
+        const fs = crutchScheduleFindings([
+            win('swim', ['waterfall'], CONCH),
+            win('back', ['water', 'waterfall'], CONCH),
+        ]);
+        expect(failing(fs)).toContain('boundary 0 (swim) → 1 (back): no coercion came BACK');
+    });
+
+    it('the WHOLE schedule: two flips, three windows, every step justified', () => {
+        const fs = crutchScheduleFindings([
+            win('d5', ['water', 'waterfall'], NOTHING),
+            win('swim', ['waterfall'], CONCH),
+            win('feather', [], BOTH),
+        ]);
+        expect(failing(fs)).toEqual([]);
+        expect(fs.filter((f) => f.name.includes('retired')).map((f) => f.name)).toEqual([
+            'boundary 0 (d5) → 1 (swim): "water" retired, justified by `canSwim`',
+            'boundary 1 (swim) → 2 (feather): "waterfall" retired, justified by `hasFeather`',
+        ]);
+    });
+
+    it('⛔ a boundary with NO live item readout cannot answer, so it FAILS', () => {
+        // `feedback_graceful_fallback_vacuous_replay`: a schedule judged
+        // against the tape's own grants would be the plan agreeing with
+        // itself, and a check that cannot answer must not pass.
+        const fs = crutchScheduleFindings([
+            win('d5', ['water', 'waterfall'], NOTHING),
+            { label: 'swim', tape: { noHazards: ['waterfall'] } },
+        ]);
+        expect(failing(fs)).toContain('boundary 0 (d5) → 1 (swim): the schedule has a live '
+            + 'item readout to judge against');
+    });
+
+    it('⚠ ice and pit are justified by NOTHING, which is a statement not a gap', () => {
+        // Both are `null` in the table: ice is not lethal and has been armed
+        // since R4, and no item in the game makes standing on a pit
+        // survivable. Coercing either after R4 is a finding with no way to
+        // satisfy it, and that is the right answer.
+        expect(CRUTCH_JUSTIFICATION.ice).toBeNull();
+        expect(CRUTCH_JUSTIFICATION.pit).toBeNull();
+        const fs = crutchScheduleFindings([
+            win('a', ['ice'], BOTH),
+            win('b', [], BOTH),
+        ]);
+        expect(failing(fs)).toContain('boundary 0 (a) → 1 (b): "ice" retired, justified by '
+            + '`nothing in the game`');
+    });
+
+    it('refuses a caller that passes nothing', () => {
+        expect(() => crutchScheduleFindings([])).toThrow(DirectorError);
+    });
+
+    it('a single window has no boundary, so it makes no claim', () => {
+        expect(crutchScheduleFindings([win('only', ['water'], NOTHING)])).toEqual([]);
     });
 });

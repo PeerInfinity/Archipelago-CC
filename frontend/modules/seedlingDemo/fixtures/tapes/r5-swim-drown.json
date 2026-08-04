@@ -1,0 +1,63 @@
+{
+  "tape_version": 5,
+  "game": "seedling",
+  "name": "r5-swim-drown",
+  "description": "⛓ THE ARMED-WATER PAIR, arm 2 of 2 — the conch WITHHELD, and this is the arm that proves the water is real. Identical to `r5-swim-cross` in every field but `grants`, and identical in every observation too. `checkDrowning` writes `drownTimer = drownTimerMax` on the first contact tick and decrements on every later one, so seven ticks of live water leave it at 4 — a number that could not exist if `noHazards` still carried \"water\", if the walk never reached the tile, or if the item were held anyway. ⚠ SEVEN, NOT ELEVEN: at eleven `drowning` latches and `drown()` spins the player to `die()`, and a dead player's stream is a respawn, not a comparison. `r5Swim.DROWN_EXPECTED` declares the band this must land in, two-sidedly — a drowning control that reports 0 is a RED.",
+  "boot": {
+    "level": 47,
+    "x": 208,
+    "y": 136
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [
+    "waterfall"
+  ],
+  "grants": [
+    {
+      "level": 47,
+      "items": [
+        "fire"
+      ]
+    }
+  ],
+  "persistence": [],
+  "equips": [],
+  "pins": [
+    "sound",
+    "dead_frames"
+  ],
+  "tick_count": 92,
+  "inputs": [
+    {
+      "key": "right",
+      "from": 0,
+      "to": 6
+    },
+    {
+      "key": "up",
+      "from": 0,
+      "to": 6
+    },
+    {
+      "key": "left",
+      "from": 6,
+      "to": 7
+    },
+    {
+      "key": "up",
+      "from": 6,
+      "to": 52
+    },
+    {
+      "key": "left",
+      "from": 13,
+      "to": 14
+    },
+    {
+      "key": "down",
+      "from": 52,
+      "to": 68
+    }
+  ]
+}

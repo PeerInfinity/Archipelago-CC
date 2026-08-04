@@ -14,6 +14,8 @@ import {
     BOBBOSS_FIRE, BOBBOSS_CONTROL, bobBossFindings,
     KARLORE_FIRE, KARLORE_CONTROL, karloreFindings,
     D5_CONCH, D5_CONCH_FLAG, D5_REST_TILE, d5ConchFindings,
+    SWIM_CROSS, SWIM_DROWN, SWIM_LATCH_NAME, SWIM_LATCH_TICKS, SWIM_BOOST,
+    SWIM_STEADY_STEP, swimPairFindings, swimLatchFindings,
 } from './r5Acceptance.js';
 
 const arm = ({ cleared = [], x = 150, level = 60, hits = 0 } = {}) => ({
@@ -484,5 +486,120 @@ describe('the D5 walk — a COLLECTION claim, not an opened-blocker one', () => 
     it('⛔ RED when the coerced water started the timer anyway', () => {
         expect(failing(d5ConchFindings(d5({ drown: 9 }))))
             .toContain('R5 D5: the coerced water never started the timer');
+    });
+});
+
+// ── Slice 4 step 4: ARMED WATER ───────────────────────────────────────
+
+const swimStream = () => ({ ticks: [
+    { t: 0, x: 216, y: 144, level: 47 }, { t: 1, x: 120, y: 296, level: 48 },
+    { t: 2, x: 120, y: 270.25, level: 48 },
+] });
+
+const swimArm = ({ items, drown = 0, stream = swimStream() } = {}) => ({
+    stream, status: { items, drown_timer: drown },
+});
+
+const swimPair = (crossOver = {}, drownOver = {}) => new Map([
+    [SWIM_CROSS, swimArm({ items: { hitsMax: 3, hasFire: true, canSwim: true }, ...crossOver })],
+    [SWIM_DROWN, swimArm({ items: { hitsMax: 3, hasFire: true }, drown: 4, ...drownOver })],
+]);
+
+describe('the armed-water pair — the evidence is a counter, not a stream', () => {
+    it('passes on the shape the two recordings really have', () => {
+        expect(failing(swimPairFindings(swimPair()))).toEqual([]);
+    });
+
+    it('SKIPS when only one arm was replayed', () => {
+        const [f] = swimPairFindings(new Map([[SWIM_CROSS, swimArm({ items: {} })]]));
+        expect(f.skipped).toBe(true);
+    });
+
+    it('⛔⛔ RED when the drowning arm did NOT drown', () => {
+        // The two-sided half. A control that reports 0 has proved the water
+        // was still coerced, or that the walk never reached it.
+        expect(failing(swimPairFindings(swimPair({}, { drown: 0 }))))
+            .toContain('R5 swim: the conch-less arm DROWNED — water is armed');
+    });
+
+    it('⛔ RED when the conch arm\'s timer moved', () => {
+        expect(failing(swimPairFindings(swimPair({ drown: 6 }))))
+            .toContain('R5 swim: the conch arm\'s timer never started');
+    });
+
+    it('⛔ RED when the arms do not differ by exactly the conch', () => {
+        expect(failing(swimPairFindings(swimPair({}, {
+            items: { hitsMax: 3, hasFire: true, canSwim: true },
+        })))).toContain('R5 swim: the arms differ by exactly `conch`');
+    });
+
+    it('⛔ RED when the streams DIFFER — that would be a different experiment', () => {
+        // Before `drowning` latches there is no positional effect at all, so
+        // a difference means one arm latched and the pair is measuring a
+        // death rather than a timer.
+        const other = { ticks: [...swimStream().ticks.slice(0, 2), { t: 2, x: 121, y: 270.25, level: 48 }] };
+        expect(failing(swimPairFindings(swimPair({}, { stream: other }))))
+            .toContain('R5 swim: the two streams are BYTE-IDENTICAL');
+    });
+});
+
+const latchStream = (steady, boosted) => {
+    const ticks = [];
+    // y DECREASES as the player swims north, so a step is `y[t] - y[t+1]`.
+    let y = 400;
+    for (let t = 0; t <= SWIM_LATCH_TICKS.latched + 2; t += 1) {
+        ticks.push({ t, x: 120, y, level: 48 });
+        y -= (t === SWIM_LATCH_TICKS.steady ? steady
+            : t === SWIM_LATCH_TICKS.latched ? boosted : 0);
+    }
+    return { ticks };
+};
+
+const latchArm = (steady = SWIM_STEADY_STEP, boosted = SWIM_STEADY_STEP + SWIM_BOOST) =>
+    new Map([[SWIM_LATCH_NAME, {
+        stream: latchStream(steady, boosted),
+        status: { drown_timer: 0, items: { canSwim: true, hasFire: true, hitsMax: 3 } },
+    }]]);
+
+describe('the swim term\'s latch — asserted from the MOVEMENT', () => {
+    it('passes when the resumed step exceeds the mid-cycle one by exactly the addend', () => {
+        expect(failing(swimLatchFindings(latchArm()))).toEqual([]);
+    });
+
+    it('SKIPS when the leg was not replayed', () => {
+        expect(swimLatchFindings(new Map())[0].skipped).toBe(true);
+    });
+
+    it('⛔ RED when the mid-cycle baseline is not the plain water speed', () => {
+        expect(failing(swimLatchFindings(latchArm(0.8))))
+            .toContain('R5 swim latch: a mid-cycle swimming tick steps the plain water speed');
+    });
+
+    it('⛔⛔ RED when the resumed tick is NOT boosted — no latch', () => {
+        // The failure this exists for: a model that replayed the channel
+        // during the stop, or one that never completed it, would resume
+        // mid-play and step the plain 0.450.
+        expect(failing(swimLatchFindings(latchArm(SWIM_STEADY_STEP, SWIM_STEADY_STEP))))
+            .toContain('⛓ R5 swim latch: the first tick after a 90-tick stop is BOOSTED');
+    });
+
+    it('⛔ RED when the boost is the wrong SIZE, not merely absent', () => {
+        expect(failing(swimLatchFindings(latchArm(SWIM_STEADY_STEP, SWIM_STEADY_STEP + 0.5))))
+            .toContain('⛓ R5 swim latch: the first tick after a 90-tick stop is BOOSTED');
+    });
+
+    it('⛔ RED when the stream is too short to read either tick', () => {
+        const [f] = swimLatchFindings(new Map([[SWIM_LATCH_NAME, {
+            stream: { ticks: [{ t: 0, x: 1, y: 1, level: 48 }] },
+            status: { drown_timer: 0, items: {} },
+        }]]));
+        expect(f.ok).toBe(false);
+    });
+
+    it('⛔ RED when it drowned, or never held the conch', () => {
+        const m = latchArm();
+        m.get(SWIM_LATCH_NAME).status.drown_timer = 3;
+        expect(failing(swimLatchFindings(m)))
+            .toContain('R5 swim latch: it swam armed water for 310 ticks without drowning');
     });
 });

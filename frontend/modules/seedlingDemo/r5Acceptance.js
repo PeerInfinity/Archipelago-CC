@@ -777,6 +777,189 @@ export function d5ConchFindings(replayed) {
     return found;
 }
 
+
+// ─────────────────────────────────────────────────────────────────────
+// ⛓ ARMED WATER — the pair, and the swim term's live stratum
+// ─────────────────────────────────────────────────────────────────────
+
+export const SWIM_CROSS = 'r5-swim-cross';
+export const SWIM_DROWN = 'r5-swim-drown';
+export const SWIM_LATCH_NAME = 'r5-swim-latch';
+
+/** `Player.as:312` and `Player.as:530`'s addend, as the claims' own numbers. */
+export const SWIM_DROWN_TIMER_MAX = 10;
+export const SWIM_BOOST = 0.25;
+/** The plain water step the boost is measured AGAINST. */
+export const SWIM_STEADY_STEP = 0.45;
+/** The two ticks the latch claim reads, from `r5Swim.SWIM_LATCH`. */
+export const SWIM_LATCH_TICKS = Object.freeze({ steady: 166, latched: 260 });
+
+/**
+ * ⛓ THE ARMED-WATER PAIR.
+ *
+ * ⚠ AND ITS EVIDENCE IS NOT IN THE STREAMS. `checkDrowning` does not touch
+ * movement until `drowning` latches at the eleventh cumulative contact
+ * tick, and neither arm gets past seven — so the two arms produce
+ * BYTE-IDENTICAL observations and the whole difference between them is a
+ * counter inside the game. That is unusual enough to state as a check of
+ * its own: a pair whose streams differed would mean one arm had latched,
+ * which is a different experiment.
+ */
+export function swimPairFindings(replayed) {
+    const cross = replayed?.get(SWIM_CROSS);
+    const drown = replayed?.get(SWIM_DROWN);
+    if (!cross || !drown) {
+        return [{
+            name: 'R5 swim pair: SKIPPED — this sweep did not replay both arms',
+            ok: true,
+            skipped: true,
+            detail: `have ${[cross && SWIM_CROSS, drown && SWIM_DROWN].filter(Boolean).join(', ') || 'neither'} `
+                + '— "the swimmer crossed water" is not evidence that the water was armed',
+        }];
+    }
+    const found = [];
+
+    // 1. ⛓ THE CLAIM. The timer is the game's own accounting of standing on
+    //    an unprotected hazard, and it is the ONLY thing that separates
+    //    these two tapes.
+    const t = drown.status?.drown_timer;
+    const contact = Number.isFinite(t) && t > 0 ? SWIM_DROWN_TIMER_MAX - t + 1 : 0;
+    found.push({
+        name: 'R5 swim: the conch-less arm DROWNED — water is armed',
+        ok: contact > 0,
+        detail: contact > 0
+            ? `drownTimer=${t}, i.e. ${contact} cumulative tick(s) on LIVE water. That `
+                + 'number cannot exist if `noHazards` still carried "water", if the walk '
+                + 'never reached the tile, or if the conch were held anyway.'
+            : `drownTimer=${t} — the thrash never fired, so this arm is not a witness to `
+                + 'armed water and the pair proves nothing',
+    });
+    found.push({
+        name: 'R5 swim: ...and it did NOT die',
+        ok: contact > 0 && contact < SWIM_DROWN_TIMER_MAX + 1,
+        detail: contact > 0 && contact < SWIM_DROWN_TIMER_MAX + 1
+            ? `${contact} of the eleven-tick budget — the tape leaves the water with four `
+                + 'ticks to spare, because a dead player\'s stream is a respawn'
+            : `${contact} tick(s) against a budget of ${SWIM_DROWN_TIMER_MAX + 1}`,
+    });
+    found.push({
+        name: 'R5 swim: the conch arm\'s timer never started',
+        ok: cross.status?.drown_timer === 0,
+        detail: cross.status?.drown_timer === 0
+            ? '`checkDrowning`\'s water arm is `eff == 1 && !canSwim`, so the conch takes '
+                + 'the early return on the same tiles that moved the other arm\'s timer'
+            : `drownTimer=${cross.status?.drown_timer} on the arm that holds the conch`,
+    });
+
+    // 2. ONE FIELD APART, AND ONE BOOLEAN APART IN THE GAME.
+    const items = (a) => ITEM_BOOLEANS.filter((k) => a.status?.items?.[k] === true).sort();
+    const ci = items(cross).join(',');
+    const di = items(drown).join(',');
+    found.push({
+        name: 'R5 swim: the arms differ by exactly `conch`',
+        ok: ci === 'canSwim,hasFire' && di === 'hasFire',
+        detail: ci === 'canSwim,hasFire' && di === 'hasFire'
+            ? 'cross holds canSwim + hasFire; drown holds hasFire alone'
+            : `cross [${ci}], drown [${di}]`,
+    });
+
+    // 3. ⚠ AND THE STREAMS ARE THE SAME, which is the check that says the
+    //    timer is the only difference rather than merely the one we looked at.
+    const ticksOf = (a) => (a.stream?.ticks ?? [])
+        .map((o) => `${o.t}:${o.level}:${o.x}:${o.y}`).join('|');
+    const same = ticksOf(cross) === ticksOf(drown);
+    found.push({
+        name: 'R5 swim: the two streams are BYTE-IDENTICAL',
+        ok: same,
+        detail: same
+            ? `${cross.stream?.ticks?.length} observations each, identical — drowning does `
+                + 'not touch movement until it latches, so `drown_timer` is not merely the '
+                + 'best evidence here, it is the only evidence'
+            : 'the arms moved differently. Before `drowning` latches there is no positional '
+                + 'effect at all, so a difference means one arm latched — a different '
+                + 'experiment from the one this pair declares.',
+    });
+    return found;
+}
+
+/**
+ * ⛓ THE SWIM TERM, INCLUDING THE CHANNEL-LIFECYCLE LATCH.
+ *
+ * ⚠ PHRASED OVER THE MOVEMENT, NOT THE READOUT, and that is forced rather
+ * than chosen. `Sfx.onComplete` zeroes `_position`, so `botStatus.sound_pin`
+ * reports a COMPLETED channel as `{playing:false, frames:0}` — exactly what
+ * it reports for one that never played. A claim phrased over the readout
+ * would be satisfied by a run that never entered the water.
+ *
+ * What the movement says: a mid-cycle swimming tick steps 0.450, and the
+ * first tick after a 90-tick stop steps 0.700. The difference is 0.250,
+ * which is `Player.as:530`'s `0.25 * int(soundPosition("Swim") < 0.1)`
+ * exactly — and it can only be there if the channel COMPLETED during the
+ * stop and was not replayed, because `Player.as:531` gates the replay on
+ * `v.length > 0`.
+ */
+export function swimLatchFindings(replayed) {
+    const leg = replayed?.get(SWIM_LATCH_NAME);
+    if (!leg) {
+        return [{
+            name: 'R5 swim latch: SKIPPED — this sweep did not replay it',
+            ok: true,
+            skipped: true,
+            detail: `run --only=${SWIM_LATCH_NAME} to assert the swim term`,
+        }];
+    }
+    const ticks = leg.stream?.ticks ?? [];
+    // Observation t is the state after t ticks (RECORD-THEN-ACT), so the
+    // displacement PRODUCED BY tick t is observations t+1 minus t.
+    const stepAt = (t) => (ticks[t + 1] && ticks[t] ? ticks[t].y - ticks[t + 1].y : null);
+    const steady = stepAt(SWIM_LATCH_TICKS.steady);
+    const latched = stepAt(SWIM_LATCH_TICKS.latched);
+    const found = [];
+    if (steady === null || latched === null) {
+        return [{
+            name: 'R5 swim latch: the stream is long enough to read both ticks',
+            ok: false,
+            detail: `${ticks.length} observation(s); the claim reads `
+                + `${SWIM_LATCH_TICKS.steady} and ${SWIM_LATCH_TICKS.latched}`,
+        }];
+    }
+    const near = (a, b) => Math.abs(a - b) < 1e-9;
+    found.push({
+        name: 'R5 swim latch: a mid-cycle swimming tick steps the plain water speed',
+        ok: near(steady, SWIM_STEADY_STEP),
+        detail: near(steady, SWIM_STEADY_STEP)
+            ? `tick ${SWIM_LATCH_TICKS.steady} steps ${steady} px — the channel is open and `
+                + 'past frame 5, so there is no boost and this is the baseline the claim '
+                + 'below is measured against'
+            : `tick ${SWIM_LATCH_TICKS.steady} steps ${steady} px, not ${SWIM_STEADY_STEP}. `
+                + 'Either that tick is not mid-cycle any more or the water speed moved, and '
+                + 'either way the difference below is being measured against the wrong thing.',
+    });
+    found.push({
+        name: '⛓ R5 swim latch: the first tick after a 90-tick stop is BOOSTED',
+        ok: near(latched - steady, SWIM_BOOST),
+        detail: near(latched - steady, SWIM_BOOST)
+            ? `tick ${SWIM_LATCH_TICKS.latched} steps ${latched} px against the `
+                + `${steady} of a mid-cycle tick — a difference of ${SWIM_BOOST}, which is `
+                + '`Player.as:530`\'s addend exactly. It can only be there if the channel '
+                + 'COMPLETED during the stop and was never replayed: `Sfx.onComplete` '
+                + 'zeroes the position, `Player.as:531` gates the replay on `v.length > 0`, '
+                + 'and a stopped swimmer fails it. The boost LATCHES.'
+            : `tick ${SWIM_LATCH_TICKS.latched} steps ${latched} px, exceeding the `
+                + `mid-cycle ${steady} by ${latched - steady} rather than ${SWIM_BOOST}. `
+                + 'The whole claim is that a completed, un-replayed channel reads 0 and the '
+                + 'boost latches — if this is not the addend, it is not the boost.',
+    });
+    found.push({
+        name: 'R5 swim latch: it swam armed water for 310 ticks without drowning',
+        ok: leg.status?.drown_timer === 0 && leg.status?.items?.canSwim === true,
+        detail: `drownTimer=${leg.status?.drown_timer}, canSwim=${leg.status?.items?.canSwim}`
+            + ' — `noHazards` on this tape is ["waterfall"] only, so every one of those '
+            + 'ticks was on live water',
+    });
+    return found;
+}
+
 /** Every R5 finding this sweep can make. */
 export function r5AcceptanceFindings(replayed) {
     return [
@@ -785,5 +968,7 @@ export function r5AcceptanceFindings(replayed) {
         ...bobBossFindings(replayed),
         ...karloreFindings(replayed),
         ...d5ConchFindings(replayed),
+        ...swimPairFindings(replayed),
+        ...swimLatchFindings(replayed),
     ];
 }

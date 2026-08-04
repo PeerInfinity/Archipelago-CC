@@ -504,10 +504,157 @@ function runBoundaryWitness() {
     }
 }
 
+
+/**
+ * ⛓ THE SCHEDULE FLIP — the first boundary on the arc that RETIRES a crutch.
+ *
+ * R5 slice 4 step 4. §3.4's rule is that `noHazards` shrinks as items are
+ * earned and that **a coercion may never outlive its justification**; until
+ * now there has been no chain for it to be a rule about. This is the chain,
+ * at its shortest honest length:
+ *
+ *   W0  `r5-d5-conch`      noHazards ["water","waterfall"] — five doors and
+ *                          a pit to the conch, water coerced the whole way,
+ *                          ending AT REST on a water tile with `canSwim`
+ *                          banked 33 ticks earlier.
+ *   W1  `r5-swim-l49`      noHazards ["waterfall"] — water ARMED, and the
+ *                          player is already standing in it. Holds LEFT and
+ *                          SWIMS, in a room it never leaves.
+ *
+ * ⛔ AND W1 IS A REAL CONTINUATION, WHICH TOOK READING `Bot.as` TO GET
+ * RIGHT. `botStart` re-boots unless `atBootPosition()`, and that function
+ * compares `Main.playerPositionX/Y` — the args the CURRENT `Game` was
+ * CONSTRUCTED with, not where the player has since walked. W0 entered L49
+ * through the pit at (11,3), whose `control` block makes the constructor
+ * `new Game(49, 32, 32)`. So W1's boot block is `{49, 32, 32}` — a boot
+ * that names where the ROOM was built, not where the player is — and
+ * `botStart` skips the rebuild. A boot naming (45,96) would have re-booted
+ * and put the player back on the ice at (40,40).
+ *
+ * ⇒ which is also why W1 is NOT a differential fixture. Replayed on a fresh
+ * page it would boot at (40,40) and produce a different stream; it means
+ * what it means only as the second window of this trace. The
+ * `--boundary-witness` pair is the precedent — a purpose-built tape,
+ * authored inline, asserted live.
+ *
+ * What this run asserts, in order:
+ *   1. the SCHEDULE   `director.crutchScheduleFindings` — water retired,
+ *                     and `canSwim` NAMED as the justification, from the
+ *                     GAME's own item readout at the boundary
+ *   2. the CONTINUATION  dead_frames 0 in a window that never leaves L49 —
+ *                     the one thing a re-boot cannot hide
+ *   3. the BOUNDARY   the two drained streams are continuous
+ *   4. the SWIM       the player really moved, on live water, with the
+ *                     timer still at zero
+ */
+const SWIM_WINDOW = {
+    tape_version: 5,
+    game: 'seedling',
+    name: 'r5-swim-l49',
+    description: 'the first post-conch WINDOW — `noHazards` is ["waterfall"] only, so '
+        + 'water is LIVE, and the player is standing in it when the window opens. Holds '
+        + 'LEFT for 38 ticks and swims west across tile (2,6). ⛔ Its boot block names '
+        + '{49,32,32} because `atBootPosition()` compares `Main.playerPosition` — the args '
+        + 'the CURRENT Game was constructed with, which for an arrival through L48\'s pit '
+        + 'is the fallthrough ctor — so `botStart` skips the rebuild and this is a real '
+        + 'continuation rather than a second boot.',
+    boot: { level: 49, x: 32, y: 32 },
+    noclip: false,
+    noDamage: true,
+    noHazards: ['waterfall'],
+    grants: [],
+    persistence: [],
+    equips: [],
+    pins: ['sound', 'dead_frames'],
+    inputs: [{ key: 'left', from: 2, to: 40 }],
+    tick_count: 70,
+};
+
+function runSchedule() {
+    console.log('## ⛓ THE SCHEDULE FLIP — water retired, and `canSwim` is why\n');
+    const w0 = loadTape('r5-d5-conch');
+    const rest0 = director.assertWindowEndsAtRest(w0);
+    const rest1 = director.assertWindowEndsAtRest(SWIM_WINDOW);
+    console.log(`   W0 ends at rest: ${rest0.length === 0 ? 'yes' : rest0.join('; ')}`);
+    console.log(`   W1 ends at rest: ${rest1.length === 0 ? 'yes' : rest1.join('; ')}`);
+    let failures = 0;
+    if (rest0.length + rest1.length > 0) {
+        failures += 1;
+        console.log('   ⛔ a window that does not end at rest drifts across the boundary, '
+            + 'and every check below would be measuring the drift');
+    }
+    console.log(`   W0 noHazards [${w0.noHazards.join(', ')}]`);
+    console.log(`   W1 noHazards [${SWIM_WINDOW.noHazards.join(', ')}]`);
+
+    const tapes = [parseTape(w0), parseTape(SWIM_WINDOW)];
+    const run = driveWindows(tapes, 'r5-schedule');
+    const windows = run.map((w, i) => ({ ...w, label: tapes[i].name, tape: tapes[i] }));
+
+    const gate = (what, ok, detail) => {
+        if (ok) console.log(`  PASS ${what}: ${detail}`);
+        else { failures += 1; console.log(`  FAIL ${what}: ${detail}`); }
+    };
+
+    // 1. THE SCHEDULE, from the game's own item readout at the boundary.
+    console.log('\n## the crutch schedule');
+    for (const f of director.crutchScheduleFindings(windows)) gate(f.name, f.ok, f.detail);
+
+    // 2. THE CONTINUATION. W1 never leaves L49, so the assert BITES here —
+    //    which the R4 bridge could never give it, every one of its windows
+    //    crossing a door.
+    console.log('\n## the continuation assert — and this is where it BITES');
+    const cont = director.continuationFindings(windows[1], { index: 1 });
+    gate('W1 is a CONTINUATION, not a re-boot',
+        cont.length === 0,
+        cont.length === 0
+            ? `dead_frames=${windows[1].status?.dead_frames} in a window that never left `
+                + 'L49 — the only thing that fades a room the walk did not enter is '
+                + '`botStart` rebuilding the world'
+            : `${cont[0].what} — ${cont[0].detail}`);
+
+    // 3. THE BOUNDARY, from the two drained streams.
+    const sb = director.streamBoundaryFindings(windows[0].stream, windows[1].stream,
+        { index: 0, label: 'schedule' });
+    const last = windows[0].stream.ticks.at(-1);
+    const first = windows[1].stream.ticks[0];
+    gate('the streams are continuous across the flip', sb.length === 0,
+        sb.length === 0
+            ? `W0 ends L${last.level} (${last.x},${last.y}) and W1 begins there`
+            : sb.map((f) => `${f.what} (${f.detail})`).join('; '));
+
+    // 4. THE SWIM ITSELF — on LIVE water, with the timer still at zero.
+    const end = windows[1].stream.ticks.at(-1);
+    const st = windows[1].status ?? {};
+    gate('W1 held the conch across the boundary', st.items?.canSwim === true,
+        `canSwim=${st.items?.canSwim}, hasFire=${st.items?.hasFire} — inherited from the `
+        + 'live game, with no grant in the window');
+    gate('the player MOVED on armed water', end.x !== first.x || end.y !== first.y,
+        `(${first.x},${first.y}) → (${end.x},${end.y})`);
+    gate('...and never started drowning', st.drown_timer === 0,
+        `drownTimer=${st.drown_timer} — water is LIVE in this window (noHazards is `
+        + '["waterfall"] only), so a zero here is `checkDrowning`\'s canSwim arm and not '
+        + 'a coercion');
+    gate('grants EMPTY in the second window', (st.grants ?? []).length === 0,
+        JSON.stringify(st.grants ?? []));
+
+    console.log(`\n## the trace: ${windows.length} windows, `
+        + `${director.traceTicks(windows)} live ticks`);
+    if (failures > 0) {
+        console.log(`\n⛔ ${failures} check(s) failed.`);
+        process.exitCode = 1;
+    } else {
+        console.log('\n✅ THE FIRST FLIP HOLDS: water is retired at the boundary, `canSwim` '
+            + 'is the game\'s own justification for it, and the window that arms it is a '
+            + 'continuation rather than a second boot.');
+    }
+}
+
 if (args.includes('--bridge')) runBridge();
 else if (args.includes('--boundary-witness')) runBoundaryWitness();
+else if (args.includes('--schedule')) runSchedule();
 else {
     console.log('usage: run-seedling-director.mjs --bridge [--keep]');
     console.log('       run-seedling-director.mjs --boundary-witness');
+    console.log('       run-seedling-director.mjs --schedule');
     process.exitCode = 2;
 }

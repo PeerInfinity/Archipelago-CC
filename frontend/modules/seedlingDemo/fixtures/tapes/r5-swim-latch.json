@@ -1,0 +1,64 @@
+{
+  "tape_version": 5,
+  "game": "seedling",
+  "name": "r5-swim-latch",
+  "description": "⛓ THE SWIM TERM'S LIVE STRATUM, including the CHANNEL-LIFECYCLE LATCH. Three phases in one leg up L48's water column: swim 164 ticks (the channel plays, completes and REPLAYS every 47 frames because `v` is non-zero, and between the six boosted frames of each cycle the step is a flat 0.450); STOP for 90 ticks in the water (the channel completes and is NOT replayed — `Player.as:531` gates the replay on `v.length > 0` — so it sits closed at position 0 and the boost LATCHES); then swim again, and the first tick steps 0.700. ⛓ 0.700 − 0.450 = 0.250, which is `Player.as:530`'s addend exactly, and both numbers are the GAME'S OWN POSITIONS one tick apart. ⚠ The claim is phrased over the MOVEMENT because it cannot be phrased over the readout: `Sfx.onComplete` zeroes `_position`, so `sound_pin` reports a completed channel as {playing:false, frames:0} — identical to one that never played at all.",
+  "boot": {
+    "level": 47,
+    "x": 208,
+    "y": 136
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [
+    "waterfall"
+  ],
+  "grants": [
+    {
+      "level": 47,
+      "items": [
+        "conch",
+        "fire"
+      ]
+    }
+  ],
+  "persistence": [],
+  "equips": [],
+  "pins": [
+    "sound",
+    "dead_frames"
+  ],
+  "tick_count": 310,
+  "inputs": [
+    {
+      "key": "right",
+      "from": 0,
+      "to": 6
+    },
+    {
+      "key": "up",
+      "from": 0,
+      "to": 6
+    },
+    {
+      "key": "left",
+      "from": 6,
+      "to": 7
+    },
+    {
+      "key": "up",
+      "from": 6,
+      "to": 170
+    },
+    {
+      "key": "left",
+      "from": 13,
+      "to": 14
+    },
+    {
+      "key": "up",
+      "from": 260,
+      "to": 290
+    }
+  ]
+}

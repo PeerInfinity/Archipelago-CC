@@ -492,6 +492,139 @@ export function boundaryFlagClearanceFindings(windows, events, {
     return findings;
 }
 
+
+/**
+ * ⛓ THE CRUTCH SCHEDULE — a coercion may never outlive its justification.
+ *
+ * §3.4's rule, and R5 slice 4 step 4 is the first rung with a chain long
+ * enough for it to mean anything. `noHazards` is a per-TAPE field, so a
+ * trace of N windows carries N of them, and the honest form of the
+ * subtractive ladder is that the list SHRINKS as items are earned:
+ *
+ *     ["water","waterfall"]   until `canSwim`   is banked (the conch)
+ *     ["waterfall"]           until `hasFeather` is banked (L89)
+ *     []                      from there to the end — the real game
+ *
+ * Two rules, and they are different claims:
+ *
+ * 1. **A retirement must be JUSTIFIED.** A window that stops coercing a
+ *    hazard has to hold the item that makes standing on it survivable, and
+ *    the finding NAMES the item. Retiring `water` without `canSwim` is not
+ *    a bolder walk, it is eleven ticks from `die()`.
+ * 2. **A justification must be SPENT.** A window that still coerces a
+ *    hazard whose item the game already holds is carrying a crutch it has
+ *    paid for — which is exactly how a ladder stops descending. This is
+ *    the rule that makes the schedule a schedule rather than a list of
+ *    whatever each tape happened to declare.
+ *
+ * ⚠ ASKED AT BOUNDARIES, NOT WITHIN A WINDOW, and that is not a softening.
+ * The window that EARNS an item holds it for its last few ticks — the D5
+ * walk banks the conch 33 ticks before it ends — and demanding the
+ * retirement inside that window would demand a tape that arms water in the
+ * middle of itself, which a tape cannot express. The rule is that the
+ * coercion may not survive the next BOUNDARY.
+ *
+ * ⚠ AND THE ITEMS COME FROM THE GAME, not from the plan (§14's law). The
+ * reading is `boundary_after_start.items` — the live readout taken after
+ * `botStart` and before a single tape tick — so "the walk holds the conch"
+ * is the game's statement, and a schedule justified by the tape's own
+ * `grants` would be the plan agreeing with itself.
+ *
+ * @param {object[]} windows `[{label, tape, boundary_after_start}]`, in order
+ * @returns {object[]} `{name, ok, detail}` findings — one per boundary per
+ *   hazard decision, PASSING ones included, because "water was retired here
+ *   and `canSwim` is why" is the sentence this exists to print.
+ */
+export const CRUTCH_JUSTIFICATION = Object.freeze({
+    /** `Pickups/Conch.as` — `Player.canSwim = true`. `checkDrowning`'s water arm. */
+    water: 'canSwim',
+    /** `Pickups/Feather.as` — `Player.hasFeather`. The upward waterfall gate. */
+    waterfall: 'hasFeather',
+    /** `Pickups/DarkSuit.as` — `checkDrowning`'s lava arm. */
+    lava: 'hasDarkSuit',
+    /**
+     * ⚠ NULL means NOTHING RETIRES IT, which is a different statement from
+     * "not yet scheduled". Ice is not lethal and has been ARMED since R4, so
+     * a window that coerced it would be adding a crutch rather than keeping
+     * one; a pit is a transport with no item anywhere in the game that makes
+     * standing on one survivable. Either in `noHazards` after R4 is a
+     * finding with no way to satisfy it, and that is the right answer.
+     */
+    ice: null,
+    pit: null,
+});
+
+export function crutchScheduleFindings(windows) {
+    if (!Array.isArray(windows) || windows.length === 0) {
+        fail('crutchScheduleFindings needs the ordered window list');
+    }
+    const found = [];
+    const listOf = (w) => [...(w?.tape?.noHazards ?? [])];
+    const label = (w, i) => `${i}${w?.label ? ` (${w.label})` : ''}`;
+    for (let i = 1; i < windows.length; i += 1) {
+        const prev = listOf(windows[i - 1]);
+        const next = listOf(windows[i]);
+        const items = windows[i]?.boundary_after_start?.items ?? null;
+        const where = `boundary ${label(windows[i - 1], i - 1)} → ${label(windows[i], i)}`;
+        if (!items) {
+            found.push({
+                name: `${where}: the schedule has a live item readout to judge against`,
+                ok: false,
+                detail: 'no `boundary_after_start.items` — a schedule justified by the '
+                    + 'PLAN rather than by the game is the plan agreeing with itself, so '
+                    + 'this cannot be answered and must not pass',
+            });
+            continue;
+        }
+        const held = (h) => {
+            const item = CRUTCH_JUSTIFICATION[h];
+            return item ? items[item] === true : false;
+        };
+        const naming = (h) => CRUTCH_JUSTIFICATION[h] ?? 'nothing in the game';
+
+        // 1. A COERCION THAT CAME BACK. `noHazards` may only shrink: a
+        //    hazard re-added after a window that armed it is a crutch
+        //    picked back up, and no route needs one.
+        const readded = next.filter((h) => !prev.includes(h));
+        found.push({
+            name: `${where}: no coercion came BACK`,
+            ok: readded.length === 0,
+            detail: readded.length === 0
+                ? `[${prev.join(', ') || 'nothing'}] → [${next.join(', ') || 'nothing'}]`
+                : `${readded.join(', ')} re-coerced after being armed — the ladder is `
+                    + 'subtractive and a hazard that goes back on the list is a rung climbed',
+        });
+
+        // 2. EVERY RETIREMENT IS JUSTIFIED, BY NAME.
+        for (const h of prev.filter((x) => !next.includes(x))) {
+            found.push({
+                name: `${where}: "${h}" retired, justified by \`${naming(h)}\``,
+                ok: held(h),
+                detail: held(h)
+                    ? `the game reports \`${naming(h)}\` true at the boundary, so this `
+                        + `window stands on live ${h} because it can survive it`
+                    : `\`${naming(h)}\` is NOT held at the boundary. Arming ${h} without `
+                        + 'it is not a bolder walk — `checkDrowning` gives an unprotected '
+                        + 'player eleven cumulative ticks and then `die()`.',
+            });
+        }
+
+        // 3. AND EVERY SURVIVING COERCION IS STILL UNPAID.
+        for (const h of next) {
+            if (!held(h)) continue;
+            found.push({
+                name: `${where}: "${h}" is still coerced`,
+                ok: false,
+                detail: `the game already holds \`${naming(h)}\`, so this window is `
+                    + `carrying a crutch it has paid for. A coercion may not outlive its `
+                    + 'justification (§3.4) — that is how a subtractive ladder stops '
+                    + 'descending while still reporting green.',
+            });
+        }
+    }
+    return found;
+}
+
 /**
  * How many live ticks a trace ran, from the drained streams.
  *

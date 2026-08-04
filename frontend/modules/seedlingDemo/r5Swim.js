@@ -94,7 +94,17 @@ export const TILE = 16;
  * is recorded, and the guard is what makes that a rule rather than a habit.
  */
 export const DROWN_EXPECTED = Object.freeze({
-    // (empty until the drowning arm is recorded — see the note above)
+    'r5-swim-drown': Object.freeze({
+        minTicks: 3,
+        maxTicks: 9,
+        why: '⛓ THE ARMED-WATER WITNESS. `r5-swim-cross` one field apart (`grants`), with '
+            + 'the conch WITHHELD. `checkDrowning`\'s water arm is `eff == 1 && !canSwim`, '
+            + 'so this is the one tape on the ladder that stands on live water without '
+            + 'the item — and the timer moving is the game\'s own statement that the tile '
+            + 'was never coerced. The two arms\' STREAMS are byte-identical (drowning has '
+            + 'no effect on movement until it latches at eleven ticks), so this counter is '
+            + 'not merely the best evidence, it is the ONLY evidence.',
+    }),
 });
 
 /** The names, for a harness that wants the set rather than the table. */
@@ -270,6 +280,140 @@ export const D5_UNCROSSED = Object.freeze([
     Object.freeze({ level: 46, tag: 'whirlpool', at: Object.freeze({ x: 160, y: 144 }) }),
     Object.freeze({ level: 48, tag: 'spinningaxe', at: Object.freeze({ x: 208, y: 224 }) }),
 ]);
+
+
+// ─────────────────────────────────────────────────────────────────────
+// STEP 4 — ARMED WATER: the pair, and the swim term's live stratum
+// ─────────────────────────────────────────────────────────────────────
+
+/**
+ * The approach both L48 water fixtures share — `r5-karlore-fire`'s own
+ * first fourteen ticks, verbatim.
+ *
+ * The route into L48's water column is a route this arc has already
+ * recorded: boot in L47, walk into `teleporter@216,112`, arrive at
+ * (120,296), and hold north through the tile `Karlore.added()` removed.
+ * Reusing the spans rather than re-planning them means the three fixtures
+ * below differ from the headline pair in what they do AFTER the door and
+ * in nothing before it.
+ */
+export const L48_APPROACH = Object.freeze([
+    Object.freeze({ key: 'right', from: 0, to: 6 }),
+    Object.freeze({ key: 'up', from: 0, to: 6 }),
+    Object.freeze({ key: 'left', from: 6, to: 7 }),
+    Object.freeze({ key: 'left', from: 13, to: 14 }),
+]);
+
+/** The karlore pair's boot — L47, one door short of the water. */
+export const L48_BOOT = Object.freeze({ level: 47, x: 208, y: 136 });
+
+/**
+ * ⛓ L48's WATER COLUMN, and why the whole of step 4 lives in it.
+ *
+ * Tile (7,15) is the first water tile north of L48's arrival and the column
+ * runs from row 15 to row 10 — six tiles, 96 px of swimmable water in a
+ * straight line above a door the chain already opened. `r5-karlore-fire`
+ * stopped in row 16 precisely because row 14 was water and it held no
+ * conch; these fixtures are what that sentence was waiting for.
+ */
+export const L48_WATER = Object.freeze({
+    level: 48, column: 7, topRow: 10, bottomRow: 15,
+});
+
+/**
+ * ⛓ THE ARMED-WATER PAIR — and it is the purest one on the whole arc.
+ *
+ * Two tapes identical in every field but `grants`, and identical in every
+ * OBSERVATION too: `checkDrowning` has no effect on movement until
+ * `drowning` latches at the eleventh cumulative contact tick, and neither
+ * arm gets that far. So the two streams are byte-identical to each other
+ * and the entire difference between them is a counter inside the game.
+ *
+ *   r5-swim-cross   grants [fire, conch]   drownTimer 0 — `checkDrowning`'s
+ *                                          water arm takes its early return
+ *   r5-swim-drown   grants [fire]          drownTimer 4 — seven cumulative
+ *                                          contact ticks on LIVE water
+ *
+ * ⚠ AND THAT IS WHY THE DECLARATION IN `DROWN_EXPECTED` HAD TO EXIST. A
+ * pair whose streams agree cannot be read from the streams; the evidence is
+ * `drown_timer`, which the harness asserts to be ZERO on every tape. The
+ * drowning arm is the one tape on the ladder that must fail that check, by
+ * name, two-sidedly — and a drowning control reporting 0 is itself a red,
+ * because it would mean the tape never reached the water or the hazard was
+ * still coerced.
+ *
+ * ⚠ SEVEN CONTACT TICKS, NOT NINE. The budget is eleven and the model
+ * THROWS on the death; nine was reachable and leaves two ticks of margin
+ * against a mechanic whose whole point is that it does not reset. Seven
+ * leaves four, and the band in `DROWN_EXPECTED` is what holds it there.
+ */
+export const SWIM_PAIR = Object.freeze({
+    cross: 'r5-swim-cross',
+    drown: 'r5-swim-drown',
+    boot: L48_BOOT,
+    noHazards: Object.freeze(['waterfall']),
+    pins: Object.freeze(['sound', 'dead_frames']),
+    /** UP into the water, then DOWN back out onto the snow of row 16. */
+    upTo: 52,
+    downFrom: 52,
+    downTo: 68,
+    tickCount: 92,
+    /** What both arms are expected to do, modelled and then recorded. */
+    wetTicks: 7,
+    /** `DROWN_TIMER_MAX - wetTicks + 1`. */
+    drownTimer: 4,
+    /** Where both arms come to rest — row 16, snow, exactly as they left it. */
+    restY: 270.25,
+});
+
+/**
+ * ⛓ THE SWIM TERM'S LIVE STRATUM — one leg, three phases, and the LATCH.
+ *
+ * `Player.as:530-534` is two lines and the second one is the whole of this
+ * fixture:
+ *
+ *     moveSpeed = moveSpeeds[state] + 0.25 * int(soundPosition("Swim") < 0.1);
+ *     if (v.length > 0 && !soundIsPlaying("Swim")) playSound("Swim");
+ *
+ * `Sfx.onComplete` zeroes `_position`, so a sound that FINISHED and was not
+ * replayed reads **0**, which is `< 0.1`, which is a boost — indefinitely.
+ * And `v.length > 0` is exactly the condition a swimmer who stops moving
+ * fails. So:
+ *
+ *   phase A   swim north for 164 ticks. The channel plays, completes, and
+ *             REPLAYS every 47 frames because `v` is non-zero; between the
+ *             six boosted frames of each cycle the step is a flat 0.450.
+ *   phase B   stop, in the water, for 90 ticks. The channel completes at
+ *             frame 47 and is NOT replayed — `v.length` is 0 — so it sits
+ *             closed at position 0 and the boost LATCHES.
+ *   phase C   swim again. The first tick reads the latched 0 and steps
+ *             **0.700**.
+ *
+ * ⛓ 0.700 − 0.450 = **0.250**, which is `SWIM_BOOST_SPEED` exactly, and
+ * both numbers are the GAME'S OWN POSITIONS one tick apart. That is the
+ * assertion — not a claim about the model's channel object, which no
+ * readout exposes: `botStatus.sound_pin` reports a completed channel as
+ * `{playing: false, frames: 0}`, which is the same thing it reports for one
+ * that never played at all. **The latch is invisible to the readout and
+ * visible in the movement**, so the movement is where it is asserted.
+ */
+export const SWIM_LATCH = Object.freeze({
+    name: 'r5-swim-latch',
+    boot: L48_BOOT,
+    noHazards: Object.freeze(['waterfall']),
+    pins: Object.freeze(['sound', 'dead_frames']),
+    phaseA: Object.freeze({ from: 6, to: 170 }),
+    phaseC: Object.freeze({ from: 260, to: 290 }),
+    tickCount: 310,
+    /** A mid-cycle tick of phase A: the channel is open and past frame 5. */
+    steadyTick: 166,
+    /** The first tick of phase C: the latched channel reads 0. */
+    latchedTick: 260,
+    /** `swimSoundClock.SWIM_BOOST_SPEED`, restated as the claim's own number. */
+    boost: 0.25,
+    /** The plain water step, `MOVE_SPEEDS[1] * ...` as the game produces it. */
+    steadyStep: 0.45,
+});
 
 /**
  * ⚠ L48's `bosslock@48,144` is `keyType 3` and this walk holds NO key.

@@ -22,10 +22,11 @@ import { DROWN_TIMER_MAX as PHYSICS_DROWN_TIMER_MAX, playerBoxAt } from './playe
 import { buildLevelWorld, ROLES, TILE_SIZE } from './levelWorld.js';
 import { atlasLevelSource } from './levelSource.js';
 import { HAZARD_STATES } from './tapeFormat.js';
-import { loadTape } from './fixtures/index.js';
+import { loadExpectation, loadTape } from './fixtures/index.js';
 import { KARLORE } from './r5Chain.js';
 import {
     CONCH, D5_EARNED, D5_INERT_LOCK, D5_LADDER, D5_UNCROSSED, D5_WALK,
+    SWIM_PAIR, SWIM_LATCH, L48_WATER,
     DROWN_EXPECTED, DROWN_EXPECTED_NAMES, DROWN_TIMER_MAX, R5SwimError,
     drownDeclarationRosterFindings, drownFinding,
 } from './r5Swim.js';
@@ -274,5 +275,88 @@ describe('the D5 walk\'s declarations, against the EXTRACT', () => {
         expect(D5_WALK.coastTicks).toBeGreaterThanOrEqual(24);
         // ...and the tolerance is not the ground default either.
         expect(D5_WALK.tolerance).toBeGreaterThan(1.0);
+    });
+});
+
+describe('⛓ the swim term, read off the GAME\'s own recording', () => {
+    // ⚠ THE INDEPENDENT STRATUM. `r5Acceptance.test.js` mutates hand-built
+    // inputs and asserts the checks go red; this runs the SAME checks
+    // against the committed recording, which came out of the real game and
+    // was never touched by this side. A claim that only ever runs against
+    // fabricated inputs is a claim about the fabrication.
+    it('the pair\'s two streams really are byte-identical, and the timer is the difference', async () => {
+        const { swimPairFindings } = await import('./r5Acceptance.js');
+        const replayed = new Map([
+            [SWIM_PAIR.cross, {
+                stream: loadExpectation(SWIM_PAIR.cross).stream,
+                status: { drown_timer: 0, items: { hitsMax: 3, hasFire: true, canSwim: true } },
+            }],
+            [SWIM_PAIR.drown, {
+                stream: loadExpectation(SWIM_PAIR.drown).stream,
+                status: { drown_timer: SWIM_PAIR.drownTimer, items: { hitsMax: 3, hasFire: true } },
+            }],
+        ]);
+        const bad = swimPairFindings(replayed).filter((f) => !f.ok);
+        expect(bad.map((f) => `${f.name}: ${f.detail}`)).toEqual([]);
+    });
+
+    it('⛓ the LATCH is in the recorded positions — 0.700 against 0.450', async () => {
+        // The whole claim, against the game's own stream: a mid-cycle
+        // swimming tick and the first tick after a 90-tick stop, and the
+        // difference between them is `Player.as:530`'s addend.
+        const { swimLatchFindings, SWIM_BOOST, SWIM_STEADY_STEP, SWIM_LATCH_TICKS } =
+            await import('./r5Acceptance.js');
+        const stream = loadExpectation(SWIM_LATCH.name).stream;
+        const step = (t) => stream.ticks[t].y - stream.ticks[t + 1].y;
+        expect(step(SWIM_LATCH_TICKS.steady)).toBeCloseTo(SWIM_STEADY_STEP, 9);
+        expect(step(SWIM_LATCH_TICKS.latched) - step(SWIM_LATCH_TICKS.steady))
+            .toBeCloseTo(SWIM_BOOST, 9);
+        const bad = swimLatchFindings(new Map([[SWIM_LATCH.name, {
+            stream,
+            status: { drown_timer: 0, items: { canSwim: true, hasFire: true, hitsMax: 3 } },
+        }]])).filter((f) => !f.ok);
+        expect(bad.map((f) => f.name)).toEqual([]);
+    });
+
+    it('⚠ and the boost is NOT there mid-cycle — the negative half', async () => {
+        // Without this the claim above would be satisfied by a term that
+        // was on every tick. Six frames of every 47 carry it; tick 166 and
+        // its neighbours do not.
+        const { SWIM_LATCH_TICKS, SWIM_STEADY_STEP } = await import('./r5Acceptance.js');
+        const stream = loadExpectation(SWIM_LATCH.name).stream;
+        const step = (t) => stream.ticks[t].y - stream.ticks[t + 1].y;
+        for (const t of [SWIM_LATCH_TICKS.steady - 2, SWIM_LATCH_TICKS.steady - 1,
+            SWIM_LATCH_TICKS.steady, SWIM_LATCH_TICKS.steady + 1]) {
+            expect(step(t), `tick ${t}`).toBeCloseTo(SWIM_STEADY_STEP, 9);
+        }
+    });
+
+    it('the pair\'s tapes are one field apart and nothing else', () => {
+        const a = loadTape(SWIM_PAIR.cross);
+        const b = loadTape(SWIM_PAIR.drown);
+        for (const k of ['boot', 'noHazards', 'pins', 'inputs', 'tick_count', 'persistence',
+            'noclip', 'noDamage', 'equips']) {
+            expect(JSON.stringify(a[k]), k).toBe(JSON.stringify(b[k]));
+        }
+        // ⚠ `parseTape` SORTS the item list, so the assertion is on the set
+        // rather than on the order the planner happened to write.
+        expect(a.grants).toEqual([{ level: 47, items: ['conch', 'fire'] }]);
+        expect(b.grants).toEqual([{ level: 47, items: ['fire'] }]);
+        // ⛔ AND WATER IS ARMED ON BOTH. A pair that coerced it would be two
+        // walks on a floor.
+        expect(a.noHazards).not.toContain('water');
+        expect(a.noHazards).toEqual(['waterfall']);
+    });
+
+    it('⛔ the drowning arm is DECLARED, and its band contains what it does', () => {
+        expect(DROWN_EXPECTED_NAMES).toContain(SWIM_PAIR.drown);
+        const contact = DROWN_TIMER_MAX - SWIM_PAIR.drownTimer + 1;
+        const d = DROWN_EXPECTED[SWIM_PAIR.drown];
+        expect(contact).toBeGreaterThanOrEqual(d.minTicks);
+        expect(contact).toBeLessThanOrEqual(d.maxTicks);
+        // ...and the SWIM arm is NOT declared, which is the half that keeps
+        // the declaration honest.
+        expect(DROWN_EXPECTED_NAMES).not.toContain(SWIM_PAIR.cross);
+        expect(DROWN_EXPECTED_NAMES).not.toContain(SWIM_LATCH.name);
     });
 });
