@@ -127,6 +127,11 @@ const { r5AcceptanceFindings } =
 // skipped: the game is asserted against `mirror + earned`, which is a
 // harder claim than the unamended one.
 const { MODEL_EXEMPT } = await import(join(REPO, 'frontend/modules/seedlingDemo/r5Chain.js'));
+// ⛔ The declared DROWN exemption — see `r5Swim.DROWN_EXPECTED`. Same
+// doctrine, different assert: an armed-water pair needs one arm whose timer
+// MOVED, and a declared arm that reports 0 is a RED rather than a pass.
+const { drownDeclarationRosterFindings, drownFinding } =
+    await import(join(REPO, 'frontend/modules/seedlingDemo/r5Swim.js'));
 const { ITEM_PROPERTIES, inventorySlotsFor } =
     await import(join(REPO, 'frontend/modules/seedlingDemo/tapeFormat.js'));
 const { r4TapeSpecs } = await import(join(REPO, 'frontend/modules/seedlingDemo/r4Walk.js'));
@@ -545,13 +550,16 @@ function checkReadout(name, tape, status) {
     // in the game's own accounting, never once stood on an unprotected
     // hazard tile. Every tape on the ladder to date should report 0 —
     // R1-R3 coerce all four hazards, so nothing can touch it.
-    if (status.drown_timer !== undefined) {
-        check(`${name}: the game never started drowning`,
-            status.drown_timer === 0,
-            `drownTimer=${status.drown_timer} — non-zero means the player stood on `
-            + 'water without canSwim or lava without hasDarkSuit, and the timer never '
-            + 'resets once touched (11 cumulative ticks is the whole run budget)');
-    }
+    //
+    // ⛔ AMENDED BY THE DECLARED DROWN EXEMPTION (R5 slice 4 step 4), and
+    // like `MODEL_EXEMPT` it HARDENS. `r5Swim.DROWN_EXPECTED` names, per
+    // fixture, the arm that is supposed to drown and the band its contact
+    // must fall in — and a declared arm reporting 0 fails, because a
+    // drowning control that did not drown is a pair that proves nothing
+    // about armed water. The logic is a pure function so all four quadrants
+    // are mutated red in vitest rather than only ever seen passing here.
+    const drown = drownFinding(name, status.drown_timer);
+    if (drown) check(drown.name, drown.ok, drown.detail);
 
     // The win statics stay false until R6 actually beats the game. Pinned
     // here so the terminal assertion has a baseline rather than being
@@ -668,6 +676,13 @@ try {
 
     const allNames = fixtureNames();
     check('fixture roster is non-empty', allNames.length > 0, `${allNames.length} tapes`);
+
+    // ⚠ A stale drown declaration is SILENT — it is consulted only when its
+    // fixture is replayed, so a renamed or deleted arm leaves a weakening
+    // in the table that nobody ever reaches. Asserted against the WHOLE
+    // roster, not the `--only` selection: a narrowed sweep must not narrow
+    // this.
+    for (const f of drownDeclarationRosterFindings(allNames)) check(f.name, f.ok, f.detail);
 
     if (ONLY.size > 0) {
         // A misspelled --only would otherwise "pass" by sweeping nothing.
