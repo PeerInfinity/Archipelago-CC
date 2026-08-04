@@ -1082,6 +1082,111 @@ export function waterfallPairFindings(replayed) {
 }
 
 /** Every R5 finding this sweep can make. */
+/**
+ * ── Slice 5: THE FEATHER, and the arithmetic the game hands back ──────
+ *
+ * Four claims, and the fourth is the one that could not have been written
+ * before the walk ran.
+ *
+ * 1. THE ITEM, and an EXACT set. Four levels of corridor is four levels of
+ *    chances to walk over something.
+ * 2. THE LEDGER, in TWO halves that arrive by different routes:
+ *    `Feather.removed()`'s own {89,0}, and {91,29} — which is `L92 * 30 - 1`,
+ *    the out-of-band slot BOTH of L92's `tag = -1` rocks write. Two rocks,
+ *    one flag, and it is in a level the walk only passed through.
+ * 3. WHERE IT STOPS: inside the feather's pocket, which is the tile the
+ *    flip window holds UP from.
+ * 4. ⛓⛓ THE DEAD-FRAME ARITHMETIC, which is the sound pin's independent
+ *    confirmation. The game reports **231** fade frames for this tape:
+ *    21 (the boot) + 3 x 20 (the doors) + 150 (`Pickup.specialTimer`). The
+ *    first recording — the one whose ceremony never fired — reported **81**,
+ *    which is the same sum without the ceremony. Those are the two constants
+ *    `swimSoundClock.LOAD_DEAD_FRAMES` and `CEREMONY_FREEZE_FRAMES` are
+ *    derived from, measured back from the game rather than assumed, and the
+ *    whole reason this walk's stream matches at all.
+ */
+export const FEATHER_WALK_NAME = 'r5-feather';
+/** `Feather.removed()`'s own clear. */
+export const FEATHER_FLAG = Object.freeze({ level: 89, tag: 0 });
+/** ⛔ `BreakableRock.endAnim()` x2 in L92, both `tag = -1` — `92 * 30 - 1`. */
+export const ROCK_OUT_OF_BAND_FLAG = Object.freeze({ level: 91, tag: 29 });
+/** The fade-frame sum: boot + three doors + the pickup freeze. */
+export const FEATHER_DEAD_FRAMES = Object.freeze({
+    boot: 21, perDoor: 20, doors: 3, ceremony: 150,
+    get total() { return this.boot + this.perDoor * this.doors + this.ceremony; },
+});
+
+export function featherFindings(replayed) {
+    const walk = replayed?.get(FEATHER_WALK_NAME);
+    if (!walk) {
+        return [{
+            name: 'R5 feather: SKIPPED — this sweep did not replay it',
+            ok: true,
+            skipped: true,
+            detail: `run --only=${FEATHER_WALK_NAME} (or --tier=full) to assert the feather`,
+        }];
+    }
+    const found = [];
+    const st = walk.status;
+    const end = terminal(walk);
+
+    const held = ITEM_BOOLEANS.filter((k) => st?.items?.[k] === true).sort();
+    const want = ['canSwim', 'hasFeather', 'hasSword'];
+    found.push({
+        name: 'R5 feather: the walk ends holding EXACTLY the sword, the conch and the feather',
+        ok: held.join(',') === want.join(','),
+        detail: held.join(',') === want.join(',')
+            ? 'the two probe grants it needed (the sword for L92\'s rocks, the conch for '
+                + 'L89\'s pools) and the one item it went four levels to take'
+            : `the game reports [${held.join(',')}], expected [${want.join(',')}]`,
+    });
+
+    const cleared = clearedSet(st);
+    const feather = `${FEATHER_FLAG.level}:${FEATHER_FLAG.tag}`;
+    const oob = `${ROCK_OUT_OF_BAND_FLAG.level}:${ROCK_OUT_OF_BAND_FLAG.tag}`;
+    found.push({
+        name: 'R5 feather: the ledger is the feather AND the rocks\' out-of-band flag',
+        ok: cleared.size === 2 && cleared.has(feather) && cleared.has(oob),
+        detail: cleared.size === 2 && cleared.has(feather) && cleared.has(oob)
+            ? `{${feather}} from \`Feather.removed()\` and {${oob}} from `
+                + '`BreakableRock.endAnim()` — TWO rocks, both `tag = -1`, and '
+                + '`setPersistence(-1, false)` from L92 is `92 * 30 - 1`, which is L91\'s '
+                + 'last slot. One flag for two writes, in a level the walk only passed '
+                + 'through.'
+            : `${cleared.size} flag(s) off: [${[...cleared].join(' ')}], expected exactly `
+                + `{${feather}} and {${oob}}`,
+    });
+
+    const tile = end ? { tx: Math.floor(end.x / 16), ty: Math.floor(end.y / 16) } : null;
+    found.push({
+        name: 'R5 feather: it comes to rest INSIDE the pocket',
+        ok: !!tile && tile.tx === 10 && tile.ty === 6 && end.level === 89,
+        detail: tile
+            ? `L${end.level} tile (${tile.tx},${tile.ty}) — the flip window holds UP from `
+                + 'here, and it can only cross the waterfall above the pocket from inside it'
+            : 'the walk produced no terminal observation',
+    });
+
+    // ⛓⛓ THE PIN'S OWN ARITHMETIC, from the game's dead-frame counter.
+    const df = st?.dead_frames;
+    found.push({
+        name: 'R5 feather: the fade frames add up to the two pinned constants',
+        ok: df === FEATHER_DEAD_FRAMES.total,
+        detail: df === FEATHER_DEAD_FRAMES.total
+            ? `${df} = ${FEATHER_DEAD_FRAMES.boot} (boot) + ${FEATHER_DEAD_FRAMES.doors} x `
+                + `${FEATHER_DEAD_FRAMES.perDoor} (doors) + ${FEATHER_DEAD_FRAMES.ceremony} `
+                + '(`Pickup.specialTimer`) — the frames the MIXER steps on and the tape '
+                + 'does not, which is what `swimSoundClock.LOAD_DEAD_FRAMES` and '
+                + '`CEREMONY_FREEZE_FRAMES` are for. The first recording of this tape, '
+                + 'whose ceremony never fired, reported 81: the same sum minus the freeze.'
+            : `the game reports ${df} fade frame(s) and the two constants predict `
+                + `${FEATHER_DEAD_FRAMES.total}. The swim channel advances on every one of `
+                + 'them, so a mismatch here is the model and the mixer drifting apart.',
+    });
+
+    return found;
+}
+
 export function r5AcceptanceFindings(replayed) {
     return [
         ...l60KillFindings(replayed),
@@ -1092,5 +1197,6 @@ export function r5AcceptanceFindings(replayed) {
         ...swimPairFindings(replayed),
         ...swimLatchFindings(replayed),
         ...waterfallPairFindings(replayed),
+        ...featherFindings(replayed),
     ];
 }

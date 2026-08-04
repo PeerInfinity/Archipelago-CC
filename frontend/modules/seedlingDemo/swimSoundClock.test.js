@@ -11,11 +11,14 @@
 
 import { describe, expect, it } from 'vitest';
 
+import { loadTape } from './fixtures/index.js';
+import { createLevelRun } from './levelRun.js';
+
 import { buildLevelWorld, ROLES } from './levelWorld.js';
 import { atlasLevelSource } from './levelSource.js';
 import { step, PhysicsV2Error } from './playerPhysicsV2.js';
 
-import { PIN_FRAME_RATE, PIN_NAMES } from './tapeFormat.js';
+import { PIN_FRAME_RATE, PIN_NAMES, heldKeysAt } from './tapeFormat.js';
 import {
     boostedFramesPerPlay,
     channelPlaying,
@@ -29,6 +32,7 @@ import {
     SWIM_BOOST_BELOW_SECONDS,
     SWIM_BOOST_SPEED,
     SWIM_LENGTH_FRAMES,
+    LOAD_DEAD_FRAMES,
 } from './swimSoundClock.js';
 
 describe('the constants are the AS3 ones', () => {
@@ -272,5 +276,61 @@ describe('the swim burst as `playerPhysicsV2.step` consumes it', () => {
         expect(boostedWhileMoving).toBe(18);
         const stopped = swimBonusSeries(120, { moving: (t) => t < 1 });
         expect(stopped.filter((b) => b > 0).length).toBeGreaterThan(boostedWhileMoving * 2);
+    });
+});
+
+describe('⛔⛔ the frames the MIXER steps on and the TAPE does not (R5 slice 5)', () => {
+    it('a room load is TWENTY dead frames, by simulating the decay in doubles', () => {
+        // `Game.blackCover` starts at 1, `blackCoverRate` is -0.05, and
+        // `Game.update` skips `super.update()` while it is > 0. Simulated
+        // rather than divided for `animCallbackTick`'s reason: 1 - 20*0.05
+        // lands at -3.19e-16 in doubles, so the twentieth frame is the last
+        // dead one and the twenty-first runs. A closed form that said
+        // `1 / 0.05` would say twenty too — and would say it for the wrong
+        // reason on any rate whose reciprocal is not exact.
+        let cover = 1;
+        let dead = 0;
+        while (!(cover <= 0)) { dead += 1; cover = Math.min(cover - 0.05, 1); }
+        expect(dead).toBe(LOAD_DEAD_FRAMES);
+        expect(cover).toBeLessThanOrEqual(0);
+    });
+
+    it('⛓ and the swim channel CROSSES A DOOR, plus that door\'s dead frames', () => {
+        // The finding the feather walk's first recording paid for. The
+        // channel is a `Music` STATIC — `Bot.update` steps it above the
+        // armed check and above the dead-frame gate, "because a mixer does
+        // not stop because the room is fading" — while `arriveIn` builds a
+        // whole new `Player`. A model that let the arrival drop it was
+        // 0.25 px out eight ticks after the last door, which is
+        // `SWIM_BOOST_SPEED` exactly.
+        const tape = loadTape('r5-feather');
+        const run = createLevelRun({
+            levelSource: atlasLevelSource(), boot: tape.boot, noclip: tape.noclip,
+            noHazards: tape.noHazards ?? [], noDamage: tape.noDamage ?? false,
+            grants: tape.grants ?? [], persistence: tape.persistence ?? [],
+            equips: tape.equips ?? [], pins: tape.pins ?? [],
+        });
+        let before = null;
+        let after = null;
+        for (let t = 0; t < tape.tick_count; t += 1) {
+            const swimBefore = run.state.swim ? { ...run.state.swim } : null;
+            const { transition } = run.advance(heldKeysAt(tape, t));
+            // The LAST door — the only one this walk crosses with the
+            // channel open, which is why it is the only one that could
+            // measure anything. (The first two are crossed with the channel
+            // long since closed, and a closed channel does not step in
+            // either the game or the model.)
+            if (transition && swimBefore && swimBefore.open) {
+                before = swimBefore;
+                after = { ...run.state.swim };
+            }
+        }
+        expect(before, 'no door was crossed with an open channel').not.toBeNull();
+        // One step for the transition tick's own frame, then the load's
+        // twenty. The channel is 47 frames long and wraps, so the
+        // comparison is modular.
+        const expected = (before.frames + 1 + LOAD_DEAD_FRAMES) % SWIM_LENGTH_FRAMES;
+        expect(after.frames).toBe(expected);
+        expect(after.open).toBe(true);
     });
 });

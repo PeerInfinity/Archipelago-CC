@@ -242,6 +242,15 @@ export function createTapeStepper(tape, opts = {}) {
             // granted" is exactly the statement that the first is empty and
             // this one is not.
             collected: run ? run.collected : [],
+            // R3/R4/R5: the flags this run's own openers cleared —
+            // `{level, tag, by}`. The other end of the ledger the game
+            // reports as `persistence_cleared`, and the only place a
+            // PLANNER can see an out-of-band write (a `tag = -1` rock
+            // clears a slot in the previous level) before the recording
+            // does.
+            earnedClears: run ? run.earnedClears : [],
+            /** R5 slice 5: `{level, id, hitTick, goneAt, ...}` per rock broken. */
+            rocksBroken: run ? run.rocksBroken : [],
             final: run ? run.state : state,
             // The R0 relaxations' JS-side outcome. `inventory` is a MIRROR —
             // an acceptance assertion reads `botStatus.items` from the game,

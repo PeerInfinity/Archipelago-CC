@@ -72,6 +72,9 @@ import { PRE_R5_ROLES, RELAXED_ROLES, TILE_SIZE } from './levelWorld.js';
 import { assertRect, rectsOverlap } from './levelWorld.js';
 import { playerBoxAt, terrainProbeRect } from './playerPhysicsV2.js';
 import { TICKS_FROM_PRESS_TO_WALKABLE } from './bridges.js';
+import {
+    WAIT_AFTER_PRESS_TICKS, assertWaitCovers, rockBreaksUnder,
+} from './breakableRocks.js';
 import { keyLineTouches, opensOnKeyTick } from './activators.js';
 import {
     DEFAULT_MAX_TICKS_PER_TARGET,
@@ -1442,17 +1445,23 @@ function runSpear(run, perTick, spear, what) {
             + 'span, change nothing and report success. A tape that presses must '
             + 'declare noclip: false.');
     }
-    const { bridge = null, block = null, facing, wait = null } = spear;
+    const { bridge = null, block = null, rock = null, facing, wait = null } = spear;
     // ⚠ `to` IS THE SPEAR'S, NOT THE BLOCK'S. A `block` names the entity by
     // the coordinates the LEVEL built it at — which never change — and `to`
     // names where this particular push should leave it, which is a fact
     // about the push. An earlier cut read `block.to` while the docblock said
     // `spear.to`; the route generator believed the docblock.
     const { to } = spear;
-    if ((bridge === null) === (block === null)) {
-        fail(`${what}: a spear names EXACTLY ONE of \`bridge\` (by tile) or \`block\` `
-            + '(by OEL coordinates, with the tile it should end on). Naming neither '
-            + 'presses at nothing; naming both makes the effect check ambiguous.');
+    // ⛓ R5 slice 5: a THIRD effect, and the first one a SWORD causes.
+    // The verb was never really "a spear" — it is one tick of `primary`,
+    // and which weapon that is comes from the equip — so a rock press is
+    // the same four checks over a different positive control.
+    const named = [bridge, block, rock].filter((e) => e !== null);
+    if (named.length !== 1) {
+        fail(`${what}: a press names EXACTLY ONE of \`bridge\` (by tile), \`block\` `
+            + '(by OEL coordinates, with the tile it should end on) or `rock` (a '
+            + 'BreakableRock, by OEL coordinates). Naming none presses at nothing; '
+            + `naming ${named.length} makes the effect check ambiguous.`);
     }
     const FACINGS = { E: 0, N: 1, W: 2, S: 3 };
     if (!(facing in FACINGS)) {
@@ -1544,6 +1553,28 @@ function runSpear(run, perTick, spear, what) {
                 + 'one means an earlier leg in this visit already spent the press.');
         }
         expect = { kind: 'bridge', id };
+    } else if (rock) {
+        // ── R5: the rock, and its positive control ────────────────────
+        const id = `breakablerock@${rock.x},${rock.y}`;
+        const solid = run.world.solids.find((e) => e.rockId === id);
+        if (!solid) {
+            fail(`${what}: level ${run.level} has no BreakableRock at (${rock.x},`
+                + `${rock.y}); it has [${run.world.solids.filter((e) => e.rockId)
+                    .map((e) => e.rockId).join(' ') || 'none'}]. A rock is named by the `
+                + 'coordinates the LEVEL built it at.');
+        }
+        if (!rockBreaksUnder(solid.rockType, run.inventory)) {
+            fail(`${what}: ${id} is rockType ${solid.rockType} and the run holds `
+                + `${run.inventory?.hasGhostSword ? 'the ghostsword' : 'no ghostsword'}. `
+                + '`hit(_t)` breaks only when `rockType <= _t` and `Player.as:1071-1074` '
+                + 'passes `hasGhostSword ? 1 : 0`, so this press would be a real no-op.');
+        }
+        if (run.brokenRocks.has(id)) {
+            fail(`${what}: ${id} is ALREADY GONE before the press, so breaking it proves `
+                + 'nothing. A rock with tag -1 rebuilds on every entry, so a broken one '
+                + 'means an earlier leg of THIS visit already spent the swing.');
+        }
+        expect = { kind: 'rock', id, at: { x: rock.x, y: rock.y } };
     } else {
         const id = `${'pushableblockspear'}@${block.x},${block.y}`;
         const live = run.pushables.get(id);
@@ -1611,9 +1642,16 @@ function runSpear(run, perTick, spear, what) {
     // eleven more frames at 0.1 alpha before `FP.world.remove` lands. The
     // first cut waited 40 and reported a push that had happened as a push
     // that had not.
+    // ⛔ AND A ROCK'S WAIT IS A PROMISE, NOT A MEASUREMENT. The animation
+    // is seven ticks and the update order leaves ±1 of it open (see
+    // `breakableRocks.HIT_TO_GONE_TICKS`), so the leg waits comfortably
+    // past both and the difference cannot reach the stream.
     const ticks = wait ?? (expect.kind === 'bridge'
         ? TICKS_FROM_PRESS_TO_WALKABLE
-        : (expect.destroys ? PUSH_SINK_TICKS : PUSH_GLIDE_TICKS));
+        : (expect.kind === 'rock'
+            ? WAIT_AFTER_PRESS_TICKS
+            : (expect.destroys ? PUSH_SINK_TICKS : PUSH_GLIDE_TICKS)));
+    if (expect.kind === 'rock') assertWaitCovers(ticks, what);
     for (let i = 1; i <= ticks; i++) {
         perTick.push(NO_HELD);
         const { transition } = run.advance(NO_HELD);
@@ -1632,7 +1670,18 @@ function runSpear(run, perTick, spear, what) {
     }
 
     // ── the effect ────────────────────────────────────────────────────
-    if (expect.kind === 'bridge') {
+    if (expect.kind === 'rock') {
+        // ⚠ NO EARLY EXIT FROM THE WAIT ABOVE, deliberately: a bridge's
+        // loop breaks the moment the tile opens, and doing that here would
+        // shorten the tape to exactly the number the ±1 lives in.
+        if (!run.brokenRocks.has(expect.id)) {
+            fail(`${what}: pressed at (${at.x},${at.y}) facing ${facing} and `
+                + `${expect.id} is STILL SOLID after ${ticks} tick(s). The rect has to `
+                + 'CONTAIN the rock (32x5 from the player, so a diagonal stance misses '
+                + 'it) and the slot has to hold a sword — a press with an empty '
+                + '`Main.primary` is a silent no-op in the game and here.');
+        }
+    } else if (expect.kind === 'bridge') {
         if (!run.openBridges.has(expect.id)) {
             fail(`${what}: pressed at (${at.x},${at.y}) facing ${facing} and bridge `
                 + `${expect.id} is STILL SOLID after ${ticks} tick(s). The Tile arm of `

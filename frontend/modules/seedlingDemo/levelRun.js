@@ -57,6 +57,9 @@ import {
 import { ITEM_PROPERTIES, ITEM_NAMES, inventorySlotsFor } from './tapeFormat.js';
 import { spawnFromBoot } from './playerPhysicsV1.js';
 import {
+    CEREMONY_FREEZE_FRAMES, LOAD_DEAD_FRAMES, stepChannel,
+} from './swimSoundClock.js';
+import {
     INITIAL_DIRECTION,
     INITIAL_HAZARD_FLAGS,
     INITIAL_TERRAIN_STATE,
@@ -1654,9 +1657,37 @@ export function createLevelRun({
             // latch, the destination world's own `beforeTypeFlip` tick — is
             // shared, which is the point of the transition record carrying a
             // `kind` rather than the caller sniffing which fields are set.
+            // ⛔⛔ THE SWIM CHANNEL IS A MIXER, NOT A `Player` FIELD, AND IT
+            // SURVIVES THE DOOR — plus the twenty frames the door costs.
+            //
+            // `arriveIn`/`arriveFromFall` build a WHOLE NEW Player, which is
+            // right for `terrain`, `direction` and `drownTimer` (all
+            // instance initialisers) and WRONG for this: `Music`'s pinned
+            // channels are statics, and `Bot.update` steps them above the
+            // armed check and above the dead-frame gate on purpose — "a
+            // mixer does not stop because the room is fading". So the
+            // channel crosses the door AND advances by the load's
+            // `blackCover` frames, which the tape does not count.
+            //
+            // Found by the feather walk's first recording: it swims in L87,
+            // crosses three doors, swims again in L89, and the model was
+            // 0.25 px ahead eight ticks later — `SWIM_BOOST_SPEED` exactly.
+            // ⚠ FROM `next`, NOT FROM `state`. `next` is the stepped tick —
+            // the old player's last, never-observed position — and its
+            // channel is the one that took THIS frame's `pinStep`. Reading
+            // `state` would drop that step and leave the model exactly one
+            // frame behind the game, which is what the first recording
+            // measured before this line said `next`.
+            const carriedSwim = next.swim ?? state.swim ?? null;
             state = next.transition.kind === 'fall'
                 ? arriveFromFall(world, next.transition.ctor)
                 : arriveIn(world, next.transition.teleporter);
+            if (carriedSwim) {
+                state = {
+                    ...state,
+                    swim: stepChannel({ ...carriedSwim }, LOAD_DEAD_FRAMES),
+                };
+            }
             firstTickInWorld = true;
             // `ticksCompleted` is already the arrival observation's index, so
             // the grant's `t` is that observation — the same tick the

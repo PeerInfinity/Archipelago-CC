@@ -71,6 +71,46 @@ export const SWIM_BOOST_BELOW_SECONDS = 0.1;
 export const SWIM_BOOST_SPEED = 0.25;
 
 /**
+ * ⛔⛔ THE FRAMES THE MIXER STEPS ON AND THE TAPE DOES NOT — R5 slice 5.
+ *
+ * `Bot.as:1289-1297` calls `Music.pinStep()` from the TOP of `Bot.update()`,
+ * **above the armed check and above the dead-frame gate**, with its own
+ * comment saying why: *"the thing being pinned is a mixer, and a mixer does
+ * not stop because the tape is between windows or because the room is
+ * fading."* So the pinned channel advances on every engine frame, and a
+ * model that steps it once per TAPE TICK is behind by every frame the tape
+ * did not count.
+ *
+ * Until slice 5 no fixture could see it: the three swim fixtures all live
+ * inside one room and the D5 walk only reaches water on its last tick. The
+ * feather walk swims in L87, crosses three doors and swims again in L89 —
+ * and the first recording came back 0.25 px apart eight ticks after the
+ * last door, which is `SWIM_BOOST_SPEED` exactly.
+ *
+ *   `LOAD_DEAD_FRAMES`      `Game.blackCover` starts at 1 and
+ *                           `blackCoverRate` is -0.05, and `Game.update`
+ *                           skips `super.update()` while it is > 0 — so a
+ *                           room load is exactly TWENTY frames on which
+ *                           nothing moves and the mixer runs. (The BOOT
+ *                           fade measures 21; the extra frame is before
+ *                           `Bot` arms and cannot matter, because the
+ *                           channel does not exist until something swims.)
+ *   `CEREMONY_FREEZE_FRAMES` `Pickup.specialTimer` counts down from 150
+ *                           under `Game.freezeObjects` — phase A, which the
+ *                           model represents as no ticks at all.
+ *
+ * ⚠ AND PHASE B COUNTS TOO. A dialogue's frames ARE tape ticks, but the
+ * model does not run `stepV2` on them ("not stepping is the whole model"),
+ * so the channel has to be advanced by hand there as well. Every frame the
+ * game renders is a frame the mixer stepped; the model's job is to name the
+ * ones its own loop skips.
+ */
+export const LOAD_DEAD_FRAMES = 20;
+
+/** `Pickup.as:22` — `specialTimerMax`, phase A's whole length. */
+export const CEREMONY_FREEZE_FRAMES = 150;
+
+/**
  * A pinned `Sfx` channel.
  *
  * `lengthFrames` is required and must be positive. There is no default and
