@@ -16,6 +16,7 @@ import {
     D5_CONCH, D5_CONCH_FLAG, D5_REST_TILE, d5ConchFindings,
     SWIM_CROSS, SWIM_DROWN, SWIM_LATCH_NAME, SWIM_LATCH_TICKS, SWIM_BOOST,
     SWIM_STEADY_STEP, swimPairFindings, swimLatchFindings,
+    WF_SHUT, WF_CLIMB, WF_START_Y, WF_FACE_ROW, WF_CLIMB_ROW, waterfallPairFindings,
 } from './r5Acceptance.js';
 
 const arm = ({ cleared = [], x = 150, level = 60, hits = 0 } = {}) => ({
@@ -601,5 +602,80 @@ describe('the swim term\'s latch — asserted from the MOVEMENT', () => {
         m.get(SWIM_LATCH_NAME).status.drown_timer = 3;
         expect(failing(swimLatchFindings(m)))
             .toContain('R5 swim latch: it swam armed water for 310 ticks without drowning');
+    });
+});
+
+// ── Slice 4 step 5: THE ARMED WATERFALL ───────────────────────────────
+
+/**
+ * A stream ending at `y` after `held` observations in the waterfall's row.
+ *
+ * ⚠ The y values are the RECORDING'S, not row centres: the pair's third
+ * check is a RATIO (the exempting arm goes multiples further), and a
+ * synthetic fixture built from tidy row centres would put 32 px against
+ * 112 and fail a threshold the real 24.35 against 116.28 clears easily.
+ */
+const wfStream = (y, held = 0) => {
+    const ticks = [{ t: 0, x: 216, y: WF_START_Y, level: 0 }];
+    for (let i = 0; i < held; i += 1) {
+        ticks.push({ t: ticks.length, x: 216, y: 127.3, level: 0 });
+    }
+    ticks.push({ t: ticks.length, x: 216, y, level: 0 });
+    return { ticks };
+};
+/** Where each arm really ends. */
+const WF_SHUT_Y = 127.65;
+const WF_CLIMB_Y = 35.725;
+
+const wfPair = (shutOver = {}, climbOver = {}) => new Map([
+    [WF_SHUT, {
+        stream: wfStream(WF_SHUT_Y, 40),
+        status: { drown_timer: 0, items: { hitsMax: 3, canSwim: true } },
+        ...shutOver,
+    }],
+    [WF_CLIMB, {
+        stream: wfStream(WF_CLIMB_Y, 0),
+        status: { drown_timer: 0, items: { hitsMax: 3, canSwim: true, hasFeather: true } },
+        ...climbOver,
+    }],
+]);
+
+describe('the armed waterfall — the rule is a refusal, so the evidence is one', () => {
+    it('passes on the shape the two recordings really have', () => {
+        expect(failing(waterfallPairFindings(wfPair()))).toEqual([]);
+    });
+
+    it('SKIPS when only one arm was replayed', () => {
+        expect(waterfallPairFindings(new Map([[WF_CLIMB, { stream: wfStream(WF_CLIMB_Y), status: {} }]]))[0]
+            .skipped).toBe(true);
+    });
+
+    it('⛔⛔ RED when the featherless arm CLIMBED — no refusal at all', () => {
+        expect(failing(waterfallPairFindings(wfPair({ stream: wfStream(WF_CLIMB_Y, 0) }))))
+            .toContain('⛓ R5 waterfall: the FEATHERLESS arm reaches the face and STALLS');
+    });
+
+    it('⛔ RED when the featherless arm never REACHED the face', () => {
+        // The failure a "did not climb" check would miss: an arm that stopped
+        // two rows short proves nothing about the waterfall.
+        expect(failing(waterfallPairFindings(wfPair({ stream: wfStream((WF_FACE_ROW + 2) * 16 + 8, 0) }))))
+            .toContain('⛓ R5 waterfall: the FEATHERLESS arm reaches the face and STALLS');
+    });
+
+    it('⛔ RED when the feather arm did NOT climb', () => {
+        expect(failing(waterfallPairFindings(wfPair({}, { stream: wfStream(WF_SHUT_Y, 40) }))))
+            .toContain('R5 waterfall: the FEATHER arm climbs through');
+    });
+
+    it('⛔ RED when the arms do not differ by exactly the feather', () => {
+        expect(failing(waterfallPairFindings(wfPair({
+            status: { drown_timer: 0, items: { hitsMax: 3, canSwim: true, hasFeather: true } },
+        })))).toContain('R5 waterfall: the arms differ by exactly `feather`');
+    });
+
+    it('⛔ RED when either arm drowned — the water is UNCOERCED here', () => {
+        expect(failing(waterfallPairFindings(wfPair({
+            status: { drown_timer: 5, items: { hitsMax: 3, canSwim: true } },
+        })))).toContain('R5 waterfall: the shut arm never drowned, on UNCOERCED water');
     });
 });

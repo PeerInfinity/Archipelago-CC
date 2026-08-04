@@ -26,7 +26,7 @@ import { loadExpectation, loadTape } from './fixtures/index.js';
 import { KARLORE } from './r5Chain.js';
 import {
     CONCH, D5_EARNED, D5_INERT_LOCK, D5_LADDER, D5_UNCROSSED, D5_WALK,
-    SWIM_PAIR, SWIM_LATCH, L48_WATER,
+    SWIM_PAIR, SWIM_LATCH, L48_WATER, WATERFALL_PAIR, FEATHER_BLOCKER,
     DROWN_EXPECTED, DROWN_EXPECTED_NAMES, DROWN_TIMER_MAX, R5SwimError,
     drownDeclarationRosterFindings, drownFinding,
 } from './r5Swim.js';
@@ -358,5 +358,168 @@ describe('⛓ the swim term, read off the GAME\'s own recording', () => {
         // the declaration honest.
         expect(DROWN_EXPECTED_NAMES).not.toContain(SWIM_PAIR.cross);
         expect(DROWN_EXPECTED_NAMES).not.toContain(SWIM_LATCH.name);
+    });
+});
+
+describe('⛓ the armed waterfall, against the extract and the recordings', () => {
+    const source = atlasLevelSource();
+    const w = () => buildLevelWorld(source(WATERFALL_PAIR.level), { roles: ROLES });
+
+    it('the declared tile IS a waterfall, with WATER above and below', () => {
+        // ⛔ The reason `noHazards` is empty on both arms and the conch is in
+        // BOTH of them: a featherless probe standing under this tile is also
+        // a swimmer, and coercing water to keep it alive would have coerced
+        // the thing the pair is standing on.
+        const world = w();
+        const typeAt = (tx, ty) => world.walkableTiles
+            .find((t) => t.tx === tx && t.ty === ty)?.t;
+        const { tx, ty } = WATERFALL_PAIR.tile;
+        expect(typeAt(tx, ty)).toBe(HAZARD_STATES.waterfall);
+        expect(typeAt(tx, ty - 1)).toBe(HAZARD_STATES.water);
+        expect(typeAt(tx, ty + 1)).toBe(HAZARD_STATES.water);
+    });
+
+    it('the SHIPPED predicate says what the pair is a witness for', async () => {
+        // Asked of `climbsArmedWaterfall` itself, so the fixtures witness the
+        // rule the planner actually consults rather than a re-derivation.
+        const { climbsArmedWaterfall } = await import('./botDriverV2.js');
+        const world = w();
+        const { tx, ty } = WATERFALL_PAIR.tile;
+        const step = [{ tx, ty: ty + 1 }, { tx, ty }];
+        expect(climbsArmedWaterfall(world, ...step,
+            { noHazards: [], inventory: { canSwim: true }, lattice: 16 })).toBe(true);
+        expect(climbsArmedWaterfall(world, ...step,
+            { noHazards: [], inventory: { canSwim: true, hasFeather: true }, lattice: 16 }))
+            .toBe(false);
+        // ...and a COERCED waterfall is not a directed edge at all, which is
+        // how R1-R4 crossed this tile without ever meeting the rule.
+        expect(climbsArmedWaterfall(world, ...step,
+            { noHazards: ['waterfall'], inventory: { canSwim: true }, lattice: 16 }))
+            .toBe(false);
+    });
+
+    it('⛓ the RECORDED arms: one stalls on the face, the other goes through', () => {
+        const shut = loadExpectation(WATERFALL_PAIR.shut).stream.ticks;
+        const climb = loadExpectation(WATERFALL_PAIR.climb).stream.ticks;
+        const row = (o) => Math.floor(o.y / TILE_SIZE);
+        expect(row(shut.at(-1))).toBe(WATERFALL_PAIR.shutRow);
+        expect(row(climb.at(-1))).toBe(WATERFALL_PAIR.climbRow);
+        // ⚠ AND THE REFUSING ARM REALLY TOUCHED IT — the check a "did not
+        // climb" assertion would miss, because a walk that never arrived
+        // also does not climb.
+        expect(shut.filter((o) => row(o) === WATERFALL_PAIR.shutRow).length)
+            .toBeGreaterThan(20);
+        const net = (t) => WATERFALL_PAIR.startY - t.at(-1).y;
+        expect(net(climb)).toBeGreaterThan(net(shut) * 4);
+    });
+
+    it('⚠ and R4\'s recorded "3.33 px DOWN" no longer describes this game', () => {
+        // `botDriverV2`'s docblock measured the featherless arm at R4, when
+        // the swim term was hard-coded to zero. `inWater` is
+        // `eff == 1 || eff == 25`, so a waterfall runs the water speed table
+        // AND the +0.25 boost — and under the real term the same arm goes
+        // UP before it stalls. The RULE survives (0.45 + 0.25 < 0.8); the
+        // NUMBER does not.
+        const shut = loadExpectation(WATERFALL_PAIR.shut).stream.ticks;
+        expect(WATERFALL_PAIR.startY - shut.at(-1).y).toBeGreaterThan(0);
+    });
+
+    it('the two tapes are one field apart, and NOTHING is coerced', () => {
+        const a = loadTape(WATERFALL_PAIR.shut);
+        const b = loadTape(WATERFALL_PAIR.climb);
+        for (const k of ['boot', 'noHazards', 'pins', 'inputs', 'tick_count', 'noclip',
+            'noDamage', 'persistence', 'equips']) {
+            expect(JSON.stringify(a[k]), k).toBe(JSON.stringify(b[k]));
+        }
+        expect(a.noHazards).toEqual([]);
+        expect(a.grants).toEqual([{ level: 0, items: ['conch'] }]);
+        expect(b.grants).toEqual([{ level: 0, items: ['conch', 'feather'] }]);
+    });
+});
+
+describe('⛔ the FEATHER blocker — §2.6.3 overturned, and the numbers that do it', () => {
+    const source = atlasLevelSource();
+
+    it('the feather\'s pocket has WATERFALLS above and below it, and solids either side', () => {
+        const w = buildLevelWorld(source(FEATHER_BLOCKER.level), { roles: ROLES });
+        const typeAt = (tx, ty) => w.walkableTiles.find((t) => t.tx === tx && t.ty === ty)?.t;
+        const { tx, ty } = FEATHER_BLOCKER.tile;
+        const f = w.pickups.find((p) => p.x === FEATHER_BLOCKER.pickup.x
+            && p.y === FEATHER_BLOCKER.pickup.y);
+        expect(f?.tag).toBe('feather');
+        expect(typeAt(tx, ty)).toBe(HAZARD_STATES.water);
+        for (const a of FEATHER_BLOCKER.approaches) {
+            expect(typeAt(a.tx, a.ty), `${a.tx},${a.ty}`).toBe(HAZARD_STATES.waterfall);
+        }
+        // ...and the sides are solid, which is what makes the two waterfall
+        // tiles the ONLY approaches rather than merely two of several.
+        expect(w.collidesSolid(playerBoxAt((tx - 1) * TILE_SIZE + 8, ty * TILE_SIZE + 8)))
+            .not.toBeNull();
+        expect(w.collidesSolid(playerBoxAt((tx + 1) * TILE_SIZE + 8, ty * TILE_SIZE + 8)))
+            .not.toBeNull();
+    });
+
+    it('⛔ a DIRECTED flood confirms it: unreachable from L87\'s door, reachable from L91\'s', async () => {
+        // The measurement §2.6.3's sentence needed and did not have. With
+        // `canSwim` held and the waterfall ARMED, the difference between the
+        // two doors is the whole finding.
+        const { climbsArmedWaterfall } = await import('./botDriverV2.js');
+        const w = buildLevelWorld(source(FEATHER_BLOCKER.level), { roles: ROLES });
+        const opts = { noHazards: [], inventory: { canSwim: true, hasFeather: false }, lattice: 16 };
+        const walk = (tx, ty) => tx >= 0 && ty >= 0 && tx < w.width && ty < w.height
+            && !w.collidesSolid(playerBoxAt(tx * TILE_SIZE + 8, ty * TILE_SIZE + 8));
+        const flood = (start) => {
+            const seen = new Set();
+            const q = [[start.tx, start.ty]];
+            while (q.length) {
+                const [x, y] = q.pop();
+                const k = `${x},${y}`;
+                if (seen.has(k) || !walk(x, y)) continue;
+                seen.add(k);
+                for (const [nx, ny] of [[x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]]) {
+                    if (!walk(nx, ny)) continue;
+                    // ⛔ THE STEP IS REFUSED, NOT THE CELL — an armed
+                    // waterfall is crossed downward all the time.
+                    if (climbsArmedWaterfall(w, { tx: x, ty: y }, { tx: nx, ty: ny }, opts)) continue;
+                    q.push([nx, ny]);
+                }
+            }
+            return seen;
+        };
+        const key = `${FEATHER_BLOCKER.tile.tx},${FEATHER_BLOCKER.tile.ty}`;
+        for (const f of FEATHER_BLOCKER.floods) {
+            const seen = flood(f.at);
+            expect(seen.size, `from L${f.door}'s door`).toBe(f.reaches);
+            expect(seen.has(key), `feather from L${f.door}'s door`).toBe(f.feather);
+        }
+    });
+
+    it('⛔ and L87 is SPLIT: the L92 door is not in the D5 corridor\'s component', async () => {
+        // What closes the upper route. Measured with the L92 teleporter
+        // itself exempted, so this is not the teleporter-volume policy
+        // reporting its own avoidance as a wall.
+        const { isWalkableTile } = await import('./botDriverV2.js');
+        const world = buildLevelWorld(source(87), { roles: ROLES });
+        const tel = world.teleporters.find((t) => t.to === FEATHER_BLOCKER.l87.door.to);
+        expect(tel).toBeDefined();
+        for (const [inv, want] of [
+            [{ canSwim: true }, FEATHER_BLOCKER.l87.reachesWithConch],
+            [{ canSwim: false }, FEATHER_BLOCKER.l87.reachesWithout],
+        ]) {
+            const o = { noHazards: ['waterfall'], inventory: inv, lattice: 16, nodeMargin: 0 };
+            const ok = (x, y) => isWalkableTile(world, x, y, tel, o);
+            const seen = new Set();
+            const q = [[FEATHER_BLOCKER.l87.from.tx, FEATHER_BLOCKER.l87.from.ty]];
+            while (q.length) {
+                const [x, y] = q.pop();
+                const k = `${x},${y}`;
+                if (seen.has(k) || !ok(x, y)) continue;
+                seen.add(k);
+                q.push([x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]);
+            }
+            expect(seen.size, JSON.stringify(inv)).toBe(want);
+            expect(seen.has(`${FEATHER_BLOCKER.l87.door.tx},${FEATHER_BLOCKER.l87.door.ty}`))
+                .toBe(FEATHER_BLOCKER.l87.connected);
+        }
     });
 });

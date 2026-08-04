@@ -2517,3 +2517,141 @@ Three consequences worth knowing:
    `eff == 1 || eff == 25`, so a waterfall tick reads it too. It got away with
    it because no committed route stands on one — a real bound nobody had
    written down.
+
+## R5 slice 4 steps 4–5: the water arms, and the two knobs ice broke
+
+Kickoff §16 is the as-built. What follows is what a reader of this file
+needs before touching water, ice, or a window schedule.
+
+### ⛓ A level's GEOMETRY can depend on the inventory at construction
+
+`Karlore.added()` is `if (Player.hasFire) FP.world.remove(this)`, and
+`added()` runs inside `new Game(48, …)`. So `buildLevelWorld` takes an
+`inventory` now, `levelWorld.ADDED_TIME_REMOVAL` is the table (one class,
+by NAME and by citation), and `levelRun` hands each world the inventory it
+holds at the instant it builds it — which is the instant the game
+constructs its `Game`.
+
+Three consequences worth keeping:
+
+- **A boot grant lands AFTER `new Game`.** The boot world is built from an
+  EMPTY inventory on purpose. *A boot is not an entry* (§15.8).
+- **A memo keyed on the level alone LIES.** `new Game` re-runs every
+  `added()` on every visit, so a level entered twice with different items
+  is built twice and differently. `addedTimeKey` is what the memo compares,
+  and it is cashed on the TRANSITION path only — mid-visit is the one time
+  the game does NOT rebuild.
+- ⛔ **`BobBoss` has Karlore's two lines verbatim and is a NO-OP.**
+  `add(new BobBoss(…))` runs the ctor before `add`, so `_world` is null and
+  `World.remove` returns immediately. The guard only skips the rest of the
+  constructor. Modelling it as a removal would walk the model through a
+  room the game still fills.
+
+### ⛓ `nearestToPoint` ties are DECIDED now, not refused
+
+`World.addType` PREPENDS and `nearestToPoint` keeps a candidate only on a
+strict `dist < nearDist`, so the entity list is the reverse of the extract
+and **a tie is won by the tile that appears LATER in it**. The old model
+threw and told you to move the route; L47's own arrival from L46 is a tie
+(snow against ice), and a route has no say in where a teleporter drops the
+player.
+
+⚠ The 59 committed recordings cannot corroborate this — 21 observations
+differ in the assigned `state` and at all 21 the two types share a speed or
+are coerced. They are a negative control. `r5-d5-conch` is the witness: it
+stands on the tie with ice ARMED.
+
+### ⛔ On ice, `tolerance` is a SEED and the 8-tick coast is 20x short
+
+`DEFAULT_TOLERANCE` is 1.0 because a one-tick tap from rest travels 1.70 px
+under ground friction. Ice replaces both terms (`slidingSpeed` 1,
+`slidingFriction` 0.025) and the same tap travels ~19.5 px.
+
+⚠ **Raising it is not monotone.** Over the D5 route: 1.0✗ 1.25✓ 1.5✗ 1.75✗
+2.0✓ 2.2✓ 2.25✓ 2.4✗ 2.5✓ 3.0✓ 3.1✗ — and the failures land on different
+waypoints in different levels. A tolerance decides where the controller
+settles, which decides the state the next drive starts from. Pick a working
+point, declare it, freeze it.
+
+And `assertWindowEndsAtRest` reads SPANS, not physics: its 8 ticks are a
+ground number. A `PICKUP_CEREMONY` freezes the player WITHOUT zeroing `v`,
+so the approach's velocity resumes when the dialogue ends. Assert the
+modelled terminal velocity is zero; do not trust the static check.
+
+### ⛓ Armed water: the pair is a COUNTER, not a stream
+
+`checkDrowning` does not touch movement until `drowning` latches at the
+eleventh cumulative contact tick. So an armed-water pair one field apart in
+`grants` produces **byte-identical observations**, and the whole evidence
+is `drownTimer` — 0 against 4 for seven contact ticks.
+
+That is why the harness's `drownTimer === 0` check needs a per-tape NAMED
+declaration (`r5Swim.DROWN_EXPECTED`), two-sided: a declared arm that
+reports 0 is a **RED**, because a drowning control that did not drown has
+proved the water was still coerced or that the walk never reached it.
+
+### ⛓ The swim boost LATCHES, and it is invisible to the readout
+
+`Sfx.onComplete` zeroes `_position`, so a sound that finished and was not
+replayed reads 0, which is `< 0.1`, which is a boost — indefinitely. And
+`Player.as:531` gates the replay on `v.length > 0`, which a stopped swimmer
+fails.
+
+⚠ `botStatus.sound_pin` reports a COMPLETED channel as
+`{playing:false, frames:0}` — identical to one that never played. **The
+latch cannot be asserted from the readout.** Assert it from the MOVEMENT:
+a mid-cycle swimming tick steps 0.450 and the first tick after a 90-tick
+stop steps 0.700, and 0.250 is `Player.as:530`'s addend.
+
+### ⛓ The crutch schedule, and what a boundary must NAME
+
+`director.crutchScheduleFindings`: `noHazards` shrinks as items are earned,
+every retirement must be justified by an item the GAME reports at the
+boundary (and the finding NAMES it), every surviving coercion whose item is
+already held is a finding, and no coercion may come back. Asked at
+BOUNDARIES, because the window that earns an item holds it for its last few
+ticks.
+
+⛔ **A continuation window's boot block names where the ROOM was built, not
+where the player is.** `atBootPosition()` compares `Main.playerPosition` —
+the args the current `Game` was constructed with. A window continuing after
+a pit fall names the fallthrough ctor; a boot naming the live position
+would RE-BOOT.
+
+⇒ and such a window cannot also be a differential fixture: replayed on a
+fresh page it boots somewhere else. Author it inline in the trace, as
+`--boundary-witness` does.
+
+### ⛓ An armed waterfall: the refusal is the claim, so it needs an arm
+
+`climbsArmedWaterfall` finally has a live witness, and it took BOTH arms —
+"the feather-holder climbed" is equally consistent with a game where
+nothing was pushing down. `r5-waterfall-shut` (conch only) reaches the
+waterfall's face and STALLS there for 166 observations; `r5-waterfall-climb`
+(one field apart) goes 116 px through it.
+
+⚠ `noHazards` is EMPTY on both — the first tapes on the arc with no
+coercion at all — because the tiles above and below the waterfall are
+WATER, so both arms are swimmers.
+
+⚠⚠ **The swim term is LIVE on a waterfall.** `inWater` is
+`eff == 1 || eff == 25`, so a waterfall runs the water speed table AND the
+`soundPosition("Swim")` boost. R4's recorded "3.33 px DOWN" for the
+featherless arm was measured with that term at zero; under the real term
+the same arm goes **24 px UP** before it stalls. The rule survives
+(0.45 + 0.25 < 0.8); the number does not.
+
+### ⛔ The feather is a ROUTING problem, and §2.6.3 priced it wrongly
+
+`feather@160,96` is tile (10,6) in L89. East and west are solid; **above
+and below are both WATERFALL tiles.** So the pocket is reachable only from
+ABOVE, descending — and a directed flood with `canSwim` held and the
+waterfall armed says 86 tiles / no feather from the L87 door against 112 /
+feather from the L91 door. The upper doors are the ENTRANCE.
+
+And the route to them is not open either: L91 ← L92 ← L87, but L87's L92
+door at tile (1,2) is in a different connected component from the L44
+arrival the D5 corridor uses (321 tiles with the conch, 149 without,
+neither reaching it).
+
+Every number is committed in `r5Swim.FEATHER_BLOCKER` with a test.

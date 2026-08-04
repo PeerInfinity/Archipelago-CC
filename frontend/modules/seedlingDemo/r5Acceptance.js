@@ -960,6 +960,127 @@ export function swimLatchFindings(replayed) {
     return found;
 }
 
+
+// ─────────────────────────────────────────────────────────────────────
+// ⛓ THE ARMED WATERFALL — `climbsArmedWaterfall`'s live witness
+// ─────────────────────────────────────────────────────────────────────
+
+export const WF_SHUT = 'r5-waterfall-shut';
+export const WF_CLIMB = 'r5-waterfall-climb';
+/** `new Game(0, 208, 144)` puts the player at y = 152. */
+export const WF_START_Y = 152;
+/** L0's `waterfall@208,112` occupies row 7; the ground above it is row 2. */
+export const WF_FACE_ROW = 7;
+export const WF_CLIMB_ROW = 2;
+
+/**
+ * ⛓ THE RULE IS A REFUSAL, SO THE EVIDENCE HAS TO BE ONE.
+ *
+ * `Player.input()` ends with `v.y += 0.8` on a waterfall tile, exempted for
+ * upward motion only and only with the feather. The planner has encoded
+ * that as its one DIRECTED edge rule since R4 and it has never had a live
+ * witness — R3 stood on this very tile with it COERCED, and R4 armed it
+ * while the swim term was hard-coded to zero.
+ *
+ * ⚠ AND THE EXEMPTING ARM ALONE PROVES NOTHING. "The feather-holder
+ * climbed" is equally consistent with a game in which nothing was pushing
+ * down. Both arms, one field apart, or neither.
+ *
+ * ⚠⚠ AND THE SWIM TERM IS LIVE ON THE TILE. `hazardFlagsFor`'s `inWater` is
+ * `eff == 1 || eff == 25`, so the refusing arm gets the +0.25 boost ON the
+ * waterfall and still cannot climb it: 0.45 + 0.25 is under 0.8. R4's
+ * recorded "3.33 px DOWN" was measured with that term at zero.
+ */
+export function waterfallPairFindings(replayed) {
+    const shut = replayed?.get(WF_SHUT);
+    const climb = replayed?.get(WF_CLIMB);
+    if (!shut || !climb) {
+        return [{
+            name: 'R5 waterfall pair: SKIPPED — this sweep did not replay both arms',
+            ok: true,
+            skipped: true,
+            detail: `have ${[shut && WF_SHUT, climb && WF_CLIMB].filter(Boolean).join(', ') || 'neither'} `
+                + '— "the feather-holder climbed" is not evidence that anything was pushing down',
+        }];
+    }
+    const found = [];
+    const rowOf = (a) => { const e = terminal(a); return e ? Math.floor(e.y / 16) : null; };
+    const netOf = (a) => { const e = terminal(a); return e ? WF_START_Y - e.y : null; };
+    const sRow = rowOf(shut);
+    const cRow = rowOf(climb);
+
+    // 1. ⛓ THE REFUSAL. The arm reaches the waterfall's own row and is held
+    //    there — the claim is not "it did not climb", which a walk that
+    //    never arrived would also satisfy.
+    const onFace = (shut.stream?.ticks ?? [])
+        .filter((o) => Math.floor(o.y / 16) === WF_FACE_ROW).length;
+    found.push({
+        name: '⛓ R5 waterfall: the FEATHERLESS arm reaches the face and STALLS',
+        ok: sRow === WF_FACE_ROW && onFace >= 20,
+        detail: sRow === WF_FACE_ROW && onFace >= 20
+            ? `ends in row ${sRow} after ${onFace} observation(s) in the waterfall's own `
+                + `row, ${netOf(shut)?.toFixed(2)} px up from the boot — it swam the water `
+                + 'below, arrived at the face, and `v.y += 0.8` held it there'
+            : sRow !== WF_FACE_ROW
+                ? `ends in row ${sRow}, not ${WF_FACE_ROW}. Past it means the waterfall did `
+                    + 'not push; short of it means the arm never reached the face, and a '
+                    + 'refusal proved by a walk that never got there is not a refusal.'
+                : `only ${onFace} observation(s) in row ${WF_FACE_ROW} — the arm passed `
+                    + 'through rather than being held',
+    });
+
+    // 2. THE EXEMPTION. Same tape, same hold, one boolean.
+    found.push({
+        name: 'R5 waterfall: the FEATHER arm climbs through',
+        ok: cRow === WF_CLIMB_ROW,
+        detail: cRow === WF_CLIMB_ROW
+            ? `ends in row ${cRow}, ${netOf(climb)?.toFixed(2)} px up — through the tile `
+                + 'and out onto the ground above it'
+            : `ends in row ${cRow}, not ${WF_CLIMB_ROW}`,
+    });
+
+    // 3. AND THE TWO ARE FAR APART. A pair whose arms differ by a little is
+    //    a pair whose difference could be anything.
+    const s = netOf(shut) ?? 0;
+    const c = netOf(climb) ?? 0;
+    found.push({
+        name: 'R5 waterfall: the exempting arm goes MULTIPLES further',
+        ok: c > s * 4,
+        detail: `${c.toFixed(2)} px against ${s.toFixed(2)} px — the same 178-tick hold, `
+            + `and the only difference between the tapes is \`hasFeather\``,
+    });
+
+    // 4. ONE FIELD APART, from the game's own item readout — and BOTH arms
+    //    hold the conch, because both are swimmers.
+    const items = (a) => ITEM_BOOLEANS.filter((k) => a.status?.items?.[k] === true).sort();
+    const si = items(shut).join(',');
+    const ci = items(climb).join(',');
+    found.push({
+        name: 'R5 waterfall: the arms differ by exactly `feather`',
+        ok: si === 'canSwim' && ci === 'canSwim,hasFeather',
+        detail: si === 'canSwim' && ci === 'canSwim,hasFeather'
+            ? 'both hold the conch — the tiles above and below the waterfall are WATER, so '
+                + 'both arms are swimmers — and only one holds the feather'
+            : `shut [${si}], climb [${ci}]`,
+    });
+
+    // 5. ⛔ AND NOTHING WAS COERCED. The check that stops this pair from
+    //    being two walks on a floor: `noHazards` is EMPTY on both tapes, so
+    //    a zero drown timer here is `checkDrowning`'s canSwim arm and the
+    //    0.8 push is the real one.
+    for (const [label, a] of [['shut', shut], ['climb', climb]]) {
+        found.push({
+            name: `R5 waterfall: the ${label} arm never drowned, on UNCOERCED water`,
+            ok: a.status?.drown_timer === 0,
+            detail: a.status?.drown_timer === 0
+                ? 'drownTimer 0 with `noHazards` EMPTY — the first tape on the arc with no '
+                    + 'coercion anywhere, so this is the conch working rather than a crutch'
+                : `drownTimer=${a.status?.drown_timer}`,
+        });
+    }
+    return found;
+}
+
 /** Every R5 finding this sweep can make. */
 export function r5AcceptanceFindings(replayed) {
     return [
@@ -970,5 +1091,6 @@ export function r5AcceptanceFindings(replayed) {
         ...d5ConchFindings(replayed),
         ...swimPairFindings(replayed),
         ...swimLatchFindings(replayed),
+        ...waterfallPairFindings(replayed),
     ];
 }

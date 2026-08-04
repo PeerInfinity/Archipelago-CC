@@ -540,3 +540,145 @@ export function drownDeclarationRosterFindings(rosterNames) {
                 + 'weakens is weakened for nothing',
     }];
 }
+
+// ─────────────────────────────────────────────────────────────────────
+// STEP 5 — THE WATERFALL, ARMED, AND ITS TWO-ARMED WITNESS
+// ─────────────────────────────────────────────────────────────────────
+
+/**
+ * ⛓ `climbsArmedWaterfall`'s LIVE WITNESS — and it needed BOTH arms.
+ *
+ * `Player.input()`'s last act is `v.y += 0.8` on a waterfall tile, exempted
+ * for upward motion only and only with the feather
+ * (`!hasFeather || v.y >= 0`). The planner has encoded that as its one
+ * DIRECTED edge rule since R4 and it has never had a live witness: R3 stood
+ * on L0's waterfall for 71 ticks with the tile COERCED, and R4 armed it
+ * while the swim term was hard-coded to zero.
+ *
+ * ⚠ AND THE EXEMPTING ARM ALONE CANNOT DISTINGUISH THE DIRECTED RULE FROM
+ * NO RULE. "The feather-holder climbed" is equally consistent with a game
+ * in which nothing was ever pushing down. The claim is a REFUSAL, so the
+ * evidence has to be a refusal:
+ *
+ *   r5-waterfall-shut    conch only. Holds UP for 178 ticks, climbs 24 px
+ *                        of the water below, reaches the waterfall's bottom
+ *                        edge — and STALLS there, oscillating around
+ *                        y ≈ 127.3 with `onWaterfall` true. It never gets
+ *                        past the face.
+ *   r5-waterfall-climb   conch AND feather, one field apart. The same 178
+ *                        ticks carry it 116 px up, through the waterfall
+ *                        and out onto the ground above it.
+ *
+ * ⛔ AND `noHazards` IS EMPTY ON BOTH — no coercion at all, which is the
+ * first time on the whole arc. It has to be: the tiles above and below the
+ * waterfall are WATER, so a featherless probe standing under one is also a
+ * swimmer, and coercing water to keep it alive would have coerced the thing
+ * the pair is standing on. The conch is in BOTH arms for that reason and is
+ * not the field they differ in.
+ *
+ * ⚠⚠ AND THE SWIM TERM IS LIVE ON THE WATERFALL ITSELF —
+ * `hazardFlagsFor`'s `inWater` is `eff == 1 || eff == 25`, so a player on a
+ * waterfall runs the water speed table AND the `soundPosition("Swim")`
+ * boost. R4 armed this tile with that term hard-coded to ZERO and recorded
+ * "3.33 px DOWN" for the featherless arm. Under the real term the same arm
+ * goes 24 px UP and then stalls. **The old number was measured in a game
+ * that does not exist**, and the rule survives the correction: 0.45 + 0.25
+ * is still less than 0.8.
+ */
+export const WATERFALL_PAIR = Object.freeze({
+    shut: 'r5-waterfall-shut',
+    climb: 'r5-waterfall-climb',
+    level: 0,
+    /** `new Game(0, 208, 144)` — tile (13,9), two rows under the waterfall. */
+    boot: Object.freeze({ level: 0, x: 208, y: 144 }),
+    /** `waterfallTiles` in L0: (13,7) is the one this pair pushes against. */
+    tile: Object.freeze({ tx: 13, ty: 7 }),
+    holdFrom: 2,
+    holdTo: 180,
+    tickCount: 200,
+    /** NOTHING is coerced. The real game, for the first time on the arc. */
+    noHazards: Object.freeze([]),
+    pins: Object.freeze(['sound', 'dead_frames']),
+    /** The player's y at the boot — `new Game`'s +8. */
+    startY: 152,
+    /** Where the featherless arm stalls: the waterfall's bottom edge. */
+    shutRow: 7,
+    /** How far the climbing arm gets, in rows. */
+    climbRow: 2,
+});
+
+// ─────────────────────────────────────────────────────────────────────
+// ⛔ THE FEATHER — WHAT SLICE 4 STEP 5 FOUND AND COULD NOT WALK
+// ─────────────────────────────────────────────────────────────────────
+
+/**
+ * ⛔⛔ §2.6.3 IS OVERTURNED, AND IT OVERTURNED R4's PREMISE IN ITS TURN.
+ *
+ * The kickoff says: "L89 has FOUR doors, and the L87 door is **ungated on
+ * foot**; the feather itself sits ON A WATER TILE (10,6) ... **The
+ * feather's sole opener is `canSwim` — the conch — not the waterfall.**"
+ * The first half is true. The conclusion is not, and the flood says so.
+ *
+ * `feather@160,96` is tile (10,6). Its neighbours east and west are SOLID;
+ * the tile ABOVE it, (10,5), is a WATERFALL, and so is the tile BELOW it,
+ * (10,7). So the pocket has exactly two approaches and both of them are
+ * waterfall tiles — which means the feather can only be reached from ABOVE,
+ * descending, because an armed waterfall is a one-way DOWNWARD tile and
+ * `r5-waterfall-shut` is now the live proof of that.
+ *
+ * A directed flood over L89's own geometry, with `canSwim` held and the
+ * waterfall ARMED:
+ *
+ *     from the L87 door (17,15)   86 tiles reachable   feather: NO
+ *     from the L0  door (10,18)   — column 10 rises to (10,8) and stops at
+ *                                   the waterfall (10,7)
+ *     from the L91 door (13,1)   112 tiles reachable   feather: YES
+ *
+ * ⇒ THE UPPER DOORS ARE THE ENTRANCE, NOT THE EXIT. The row-4 pool §2.6.3
+ * describes is entered by DESCENDING the waterfalls at (12,3) and (13,1)
+ * from row 2, and row 2 is reached from L90's door at (16,0) or L91's at
+ * (13,0) — never from below.
+ *
+ * ⛔ AND THE ROUTE TO THOSE DOORS IS NOT OPEN EITHER. L91 is reachable from
+ * L92 (`L92@32,144`), and L92 from L87 (`L87@16,32`) — but L87's L92 door
+ * at tile (1,2) is in a DIFFERENT CONNECTED COMPONENT from the L44 arrival
+ * the D5 corridor uses. Measured with `isWalkableTile` and the L92
+ * teleporter itself exempted, with and without the conch:
+ *
+ *     from the L44 arrival (28,17), canSwim   321 tiles   L92 door: NO
+ *     from the L44 arrival (28,17), no conch  149 tiles   L92 door: NO
+ *
+ * ⇒ **the feather needs a route through L87's other half**, which this
+ * slice did not find and which is a routing problem rather than a physics
+ * one. Recorded here, with its numbers, so the next slice starts from a
+ * measurement instead of from §2.6.3's sentence.
+ *
+ * ⚠ WHAT THIS DOES **NOT** BLOCK. `climbsArmedWaterfall`'s live witness is
+ * independent of it: `WATERFALL_PAIR` grants the feather as a PROBE grant
+ * (the `l71-shieldlock` precedent, the same shape the karlore pair used for
+ * `fire`) and asks what the boolean DOES, which is a separate claim from
+ * where it comes from. The chain that joins them is what is owed.
+ */
+export const FEATHER_BLOCKER = Object.freeze({
+    level: 89,
+    pickup: Object.freeze({ x: 160, y: 96 }),
+    tile: Object.freeze({ tx: 10, ty: 6 }),
+    /** The two approaches, both waterfall tiles. */
+    approaches: Object.freeze([
+        Object.freeze({ tx: 10, ty: 5, from: 'above — DESCENDING, which is legal' }),
+        Object.freeze({ tx: 10, ty: 7, from: 'below — CLIMBING, which needs the feather' }),
+    ]),
+    /** Flood starts, and what each reaches. Measured, not read. */
+    floods: Object.freeze([
+        Object.freeze({ door: 87, at: Object.freeze({ tx: 17, ty: 15 }), reaches: 86, feather: false }),
+        Object.freeze({ door: 91, at: Object.freeze({ tx: 13, ty: 1 }), reaches: 112, feather: true }),
+    ]),
+    /** L87's own split, which is what closes the upper route. */
+    l87: Object.freeze({
+        from: Object.freeze({ tx: 28, ty: 17 }),
+        door: Object.freeze({ to: 92, tx: 1, ty: 2 }),
+        reachesWithConch: 321,
+        reachesWithout: 149,
+        connected: false,
+    }),
+});
