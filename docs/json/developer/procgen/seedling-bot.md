@@ -3083,3 +3083,97 @@ rather than assumed.
 whether its group is published or not, so an "open" one would read as
 passable and the geometry would go the unsafe direction. It needs its own
 census list and its own step.
+
+## R5 slice 9: the chest, the pickup that walks onto you, and a plan the game refused
+
+### ⛓ A chest is a verb with no button, and its stance band is derived
+
+`Chest.update` opens on a one-pixel `collideLine("Player", …)` beneath the
+box, gated on `!collide("Solid", x, y)` — **the CHEST colliding with
+whatever shares its cell, not the player**. In L38 that is the cover, so
+the four links that open the cover buy the chest's own permission and the
+stance band is identical either way.
+
+⛔ **The band is two pixels and the chest is its floor.** The line
+arithmetic alone admits five player rows; four of them put the player box
+inside a Solid. `chestStanceBand` intersects the two constraints using the
+same functions the run uses, so a two-pixel window cannot be transcribed
+twice. ⚠ And the line's right inset is `2 * m`, not `m` — 2 px on the left
+and four on the right, from a shape that looks symmetric.
+
+### ⛔⛔ The first pickup that walks onto the PLAYER
+
+`levelRun.pickupUnderfoot` tests the player's box against a pickup's STATIC
+rect, which has been right for six rungs because every pickup was a thing
+the walk stepped onto. `Chest.open()` spawns its `SealPiece` at the
+chest's own position, 8–11 px above a player standing in the band: the
+static rects never overlap and the ceremony would never fire.
+
+`Pickup`'s attraction is transcribed instead. ⚠ `stopped` is never set
+false — the only writer is `if (v.length <= 0) stopped = true` — so the
+attraction is live every tick and the piece ACCELERATES; `friction()` runs
+above the move; and the contact test runs at the position the tick started
+with. Nine live ticks to a stationary player, and it is nine from BOTH
+band rows.
+
+⛓ **A `SealController` holds the freeze for 181 ticks, not 120.** Its
+fields read "60 fade + 60 wait"; after the wait `waitTime` is 0 and
+`alphaStep` is only 60, so the `else if` arm resumes and runs it to 120
+before the removal. The whole ceremony is 331 dead frames, and the game
+confirmed both halves.
+
+⚠ **`saw_auto_advance` cannot see it.** `autoAdvance`'s gate is
+`Game.talking || helpUp`, and a `SealController` is neither — so v5's
+stated unit ("a freeze arrival, whatever raised it") and its predicate
+disagree for exactly this class.
+
+### ⚠ A load's dead-frame cost is not a constant
+
+`r5-feather` measured a boot at 21 and a door at 20 and those became
+`swimSoundClock`'s constants. L38 measures **20 and 19**. `blackCover`'s
+countdown and the frame `Bot.update` samples it on are two clocks with a
+phase between them.
+
+That nearly produced a false correction: borrowing the other tape's
+constants left the seal ceremony two frames short of the model, which
+reads exactly like a fencepost. Two throwaway fade probes — a boot alone
+and a boot with one door — attributed it instead, and the ceremony came out
+at 331 exactly. **When a dead-frame total has to be decomposed, measure the
+load in the level you are in.**
+
+### ⛔⛔ A `--record` run that passes says nothing about the model
+
+`verify-seedling-bot-differential --record` writes the game's stream and
+then compares the game against it. That is a self-comparison and it passes
+by construction. The check that matters is `tapeRunner.test.js`'s fixture
+differential — MODEL against recording — and on the shaft tape it says
+`tick 852 differs by dy = 1.4` on a tape whose `--record` run reported
+every check green.
+
+### ⛔⛔ Three certificates of one plan are one certificate
+
+`SHAFT_PLAN`'s eighteen presses were derived by hand and confirmed by a
+blind BFS, and both ran through the same unaimed press model. The game is
+the first independent stratum, and it disagrees: the three wandlocks never
+open, a flag the plan says is taken back is not, and a `FallRock`'s tag
+that nothing on the route was supposed to write is cleared.
+
+⚠ **The positions could not have caught it.** A block's position and a
+lock's alpha are invisible to the observation stream — the player walks
+the same path whether the room opened behind them or not. That is what an
+exact-set LEDGER claim is for, and it is the first time on this arc that
+the stream agreed and the ledger did not.
+
+### ⛔ A fire leg needs an `equip`, and three ways that goes wrong quietly
+
+- `useItem(Main.primary)` reads the selected slot and a fresh run's is 0,
+  so every press fires a SWORD. The fire verb then runs to completion and
+  its effect check reports the target unmoved with a paragraph about rect
+  geometry — a diagnosis of the PASS. Check the weapon first.
+- `equips` is a version-4 field and optional BY PRESENCE, so a `relax`
+  that omits it verifies with the slot selected and emits a tape that never
+  selects it. The driver is green and the replay dies hundreds of ticks
+  later in another file.
+- `earnedClears` cannot see a lock the run never leaves: a banked clear is
+  cashed when its level is next BUILT, so a run that opens three locks in
+  one room reports an empty ledger. The WRITES are the claim.
