@@ -1692,6 +1692,15 @@ export function createLevelRun({
          * this for both sides would be the mirror agreeing with itself.
          */
         get primary() { return primary; },
+        /**
+         * ⛓ R5 slice 9: WHICH WEAPON the selected slot would fire.
+         *
+         * `useItem(Main.primary)` reads the slot, and the four arms are
+         * four different mechanics. Exposed so a leg verb can refuse a
+         * press the run would route through the wrong one BY NAME, rather
+         * than letting the effect check report the target unmoved.
+         */
+        get primaryWeapon() { return weaponForPress(); },
         get inventorySlots() { return inventorySlotsFor(inventory); },
         /**
          * R4: the facing (`Player.direction`) as of the END of the last

@@ -1393,6 +1393,126 @@ export function totemEntranceFindings(replayed) {
     return found;
 }
 
+
+/**
+ * ── ⛔⛔ THE SHAFT — AND THE GAME REFUSED THE PLAN'S LEDGER ────────────
+ *
+ * `SHAFT_PLAN` has been a plan since §19.8 and a *correct* plan since
+ * §20.3, certified twice — by a hand derivation and by a blind BFS — and
+ * slice 8 named the problem with that: **both certificates ran through the
+ * same unaimed press model.** One stratum. The game is the first
+ * independent check, and this is what it said.
+ *
+ * ⛓ THE STREAM MATCHES BYTE FOR BYTE. Nineteen fire presses, 2,375 ticks,
+ * the rope pull and the eighteen — every position the model predicted.
+ *
+ * ⛔⛔ AND THE LEDGER DOES NOT. The model predicts {39,0} {39,1} {39,2}
+ * (the three wandlocks) and {39,9} (the rope), with {39,7} written and
+ * TAKEN BACK by the final press. The game reports
+ *
+ *     {39,7}  {39,8}  {39,9}  {39,10}
+ *
+ * — the three wandlocks NEVER OPENED, {39,7} was NOT taken back, and
+ * **{39,10} is the `FallRock`'s tag**, which `r5Totem.GROUP_6` argued at
+ * length that nothing on this route writes.
+ *
+ * ⚠ AND THE POSITIONS COULD NOT HAVE CAUGHT IT. A block's position and a
+ * lock's alpha are invisible to the observation stream: the player walks
+ * the same path whether the room opened behind them or not. That is the
+ * whole reason an exact-set LEDGER claim exists, and it is the first time
+ * on this arc that the stream and the ledger have disagreed.
+ *
+ * ⛔ AND THE STREAM DOES NOT MATCH EITHER — the first reading of this was
+ * WRONG and the correction is the useful part. `--record` writes the
+ * game's stream and then compares the game against it, which is a
+ * self-comparison and passes by construction; the check that matters is
+ * `tapeRunner.test.js`'s fixture differential, MODEL against recording.
+ * That one says **tick 852 differs by dy = 1.4** — one whole movement step,
+ * 850 ticks into the choreography.
+ *
+ * ⇒ THE TAPE IS NOT COMMITTED. A fixture whose model is refuted is either a
+ * permanent red or a silenced one, and neither is a finding; the numbers
+ * below ARE the finding, and re-making the recording is two commands and
+ * 160 seconds. The next slice's first job is to find which of the three it
+ * is:
+ *
+ *   1. the blocks do not end where `runFire`'s exact-set check says —
+ *      in which case the press model is still wrong, one abstraction below
+ *      where §20.2 found it;
+ *   2. they do, and a `Lock` needs something the 130-tick tail does not
+ *      give it;
+ *   3. or the rope's group-6 publication does more than `GROUP_6` priced —
+ *      {39,10} says something in that group moved, and the FallRock's
+ *      "two independent gates" argument is the thing to re-read first.
+ *
+ * ⚠⚠ AND THE GUARD THAT SHOULD HAVE SHOUTED IS OFF FOR THIS TAPE.
+ * `checkReadout` gates `saw_auto_advance === 0` on `tape_version < 4`, and
+ * a v4 tape without its own acceptance entry gets NO census guard at all.
+ * This tape reports 217 dead frames with ZERO transitions and no ceremony
+ * — ~197 unexplained — and nothing in the sweep would have said so.
+ */
+export const SHAFT_WALK = Object.freeze({
+    name: 'r5-shaft',
+    /** What the model says the eighteen presses earn. */
+    modelCleared: Object.freeze(['39:0', '39:1', '39:2', '39:9']),
+    /** …and what the game reported, at the recording of 2026-08-04. */
+    gameCleared: Object.freeze(['39:7', '39:8', '39:9', '39:10']),
+    /** ⛔ Where the MODEL's own stream parts from the game's. */
+    divergesAt: Object.freeze({ tick: 852, dy: 1.4 }),
+    ticks: 2375,
+    /** The declared clear the tape boots with — in both lists by construction. */
+    declared: '39:8',
+    deadFrames: 217,
+});
+
+export function shaftFindings(replayed) {
+    const walk = replayed?.get(SHAFT_WALK.name);
+    if (!walk) {
+        return [{
+            name: '⛔⛔ R5 shaft: NOT A FIXTURE — the model is refuted and the tape is withdrawn',
+            ok: true,
+            skipped: true,
+            detail: 'The shaft was driven, recorded and REFUTED in one session (see '
+                + '`SHAFT_WALK` for the three numbers). The tape is not committed, '
+                + 'because a fixture whose model is wrong is either a permanent red or a '
+                + 'silenced one and neither is a finding. Re-make it with '
+                + '`node scripts/procgen/plan-seedling-r5-shaft.mjs --write` and '
+                + '`verify-seedling-bot-differential --record --win --only=r5-shaft`, '
+                + 'which is 160 s — the evidence is cheap to reproduce and the '
+                + 'transcription is what is missing.',
+        }];
+    }
+    const found = [];
+    const cleared = [...clearedSet(walk.status)].sort();
+    const want = [...SHAFT_WALK.modelCleared].sort();
+    found.push({
+        name: '⛔⛔ R5 shaft: the game\'s ledger against the plan\'s — REFUTED, and kept',
+        ok: JSON.stringify(cleared) === JSON.stringify(want),
+        detail: JSON.stringify(cleared) === JSON.stringify(want)
+            ? `[${cleared.join(' ')}] — the three wandlocks and the rope, exactly as `
+                + '`SHAFT_PLAN` predicts. The eighteen presses have met an independent '
+                + 'check and survived it.'
+            : `THE GAME REPORTS [${cleared.join(' ')}] AND THE PLAN PREDICTS `
+                + `[${want.join(' ')}]. The stream matches byte for byte — a block's `
+                + 'position and a lock\'s alpha are invisible to it — so this is the '
+                + 'first time on the arc that the positions agreed and the LEDGER did '
+                + 'not. {39,10} is the `FallRock`\'s tag, which `r5Totem.GROUP_6` argued '
+                + 'nothing here writes; {39,7} was supposed to be taken back by the final '
+                + 'press and was not; and {39,0}/{39,1}/{39,2} say the three wandlocks '
+                + 'never opened at all. See `SHAFT_WALK` for the three candidates.',
+    });
+    found.push({
+        name: '⚠ R5 shaft: 217 dead frames with NO transition and NO ceremony',
+        ok: walk.status?.dead_frames === SHAFT_WALK.deadFrames,
+        detail: `${walk.status?.dead_frames} against a boot fade of ~20. ~197 frames of `
+            + 'this tape are frozen or fading and nothing in the model accounts for them '
+            + '— and `checkReadout` gates its `saw_auto_advance` census guard on '
+            + '`tape_version < 4`, so a v4 tape like this one gets no guard at all. The '
+            + 'number is asserted here so it cannot drift while it is unexplained.',
+    });
+    return found;
+}
+
 export function r5AcceptanceFindings(replayed) {
     return [
         ...l60KillFindings(replayed),
@@ -1405,5 +1525,6 @@ export function r5AcceptanceFindings(replayed) {
         ...waterfallPairFindings(replayed),
         ...featherFindings(replayed),
         ...totemEntranceFindings(replayed),
+        ...shaftFindings(replayed),
     ];
 }

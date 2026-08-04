@@ -251,6 +251,24 @@ export function createTapeStepper(tape, opts = {}) {
             earnedClears: run ? run.earnedClears : [],
             /** R5 slice 5: `{level, id, hitTick, goneAt, ...}` per rock broken. */
             rocksBroken: run ? run.rocksBroken : [],
+            /**
+             * ⛓ R5 slice 7/9: the persistence writes a plain `Lock` makes,
+             * BOTH WAYS — `turnOff()` false and `returnToNormal()` TRUE.
+             *
+             * ⚠ NOT COVERED BY `earnedClears`, and the shaft is where that
+             * stopped being academic. A banked clear is CASHED when the
+             * level it names is next built, so a run that opens three locks
+             * and never leaves the room reports an EMPTY `earnedClears` —
+             * which reads exactly like a run whose locks never opened. The
+             * writes are the claim; the cashing is bookkeeping.
+             */
+            lockWrites: run ? run.lockWrites : [],
+            /** R5 slice 7: `{level, id, flag}` per rope PULLED. */
+            ropePulls: run ? run.ropePulls : [],
+            /** ⛔⛔ R5 slice 9: `{t, level, id, persistTag}` per chest OPENED. */
+            chestOpens: run ? run.chestOpens : [],
+            /** ⛓ R5 slice 9: one per completed seal ceremony, with its dead frames. */
+            sealCollections: run ? run.sealCollections : [],
             final: run ? run.state : state,
             // The R0 relaxations' JS-side outcome. `inventory` is a MIRROR —
             // an acceptance assertion reads `botStatus.items` from the game,

@@ -1872,6 +1872,31 @@ function runFire(run, perTick, fire, what) {
             + 'its OEL coordinates). Naming none fires at nothing; naming both makes '
             + 'the effect check ambiguous.');
     }
+    /**
+     * ⛔ THE WEAPON, BEFORE ANYTHING ELSE — and the diagnosis this replaces
+     * described the PASS.
+     *
+     * `useItem(Main.primary)` reads the SELECTED SLOT, and a run whose
+     * `primary` is still 0 fires a SWORD. The whole verb then runs: the
+     * press lands, a thrust is scheduled, the 40-tick wait elapses, and the
+     * effect check reports *"the rope is STILL its full span … a stance too
+     * far along the span is outside the rect"* — a sentence about geometry,
+     * on a leg whose geometry was perfect. That cost a shaft plan an
+     * afternoon. [[feedback_failure_detail_describes_the_pass]].
+     *
+     * §20.5's "one weapon, one equip, for the whole visit" is a LEG
+     * OBLIGATION, not a remark: a fire leg needs an `equip` target ahead of
+     * it, and this is where its absence gets named.
+     */
+    if (run.primaryWeapon !== 'fire') {
+        fail(`${what}: the run's selected slot holds `
+            + `${run.primaryWeapon ? `a ${run.primaryWeapon}` : 'NOTHING'} `
+            + `(Main.primary = ${run.primary}), so \`useItem\` would fire that instead. `
+            + 'A fire press needs an `equip` target ahead of it — `fire()` is a different '
+            + 'rect, a different window and a different arm table from a slash, and the '
+            + 'effect check below would report the target unmoved without ever saying '
+            + 'why.');
+    }
     const at = { x: run.state.x, y: run.state.y };
     if (run.state.vx !== 0 || run.state.vy !== 0) {
         fail(`${what}: the stance (${at.x},${at.y}) is still MOVING — v=(${run.state.vx},`
@@ -3177,6 +3202,30 @@ export function synthesizeLegs(legs, opts = {}) {
     // run actually fired, which is those plus the ones the `equip` leg verb
     // made at ticks only synthesis could know. Replaying the emitted list
     // through `applyEquipsAt` lands on exactly the same ticks.
+    /**
+     * ⛔⛔ AN EQUIP THE TAPE WOULD DROP IS THE TWO-CONSUMERS FAILURE, and it
+     * is silent in the worst possible way.
+     *
+     * `equips` is a version-4 field and it is optional BY PRESENCE (see
+     * `buildTape`), so a `relax` that omits it makes a version-3 tape — and
+     * a leg that ran an `equip` target verifies its fire presses with the
+     * slot selected and then emits a tape that never selects it. The
+     * driver is green, the fixture is written, and the REPLAY fails
+     * hundreds of ticks later with "the sword press at tick 809 reaches a
+     * responder this rung refuses": a message about the wrong mechanic, in
+     * the wrong file, at the wrong tick.
+     *
+     * Measured on the shaft plan, which is exactly the leg the field exists
+     * for. Loud here instead.
+     */
+    if (relax && relax.equips === undefined && run.equipsFired.length > 0) {
+        fail(`synthesizeLegs: ${run.equipsFired.length} equip target(s) ran `
+            + `(slot(s) ${run.equipsFired.map((e) => e.slot).join(', ')}) and \`relax\` `
+            + 'does not declare `equips`. `equips` is version 4 and it is optional by '
+            + 'PRESENCE, so the emitted tape would be version 3 and would never select '
+            + 'the slot — the driver would verify one execution and the tape would '
+            + 'replay another. Declare `equips: []` in `relax`.');
+    }
     const tape = buildTape(perTick, boot, name, relax
         ? {
             ...relax,
