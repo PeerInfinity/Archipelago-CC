@@ -649,12 +649,171 @@ function runSchedule() {
     }
 }
 
+/**
+ * ⛓⛓ THE SECOND FLIP — `["waterfall"] -> []`, and the EARNED-CHAIN witness.
+ *
+ * The last untested piece of the crutch-schedule machinery, and the one it
+ * was built for: `hasFeather` is the only item on the ladder whose coercion
+ * is a DIRECTED rule.
+ *
+ *   W0  `r5-feather`        noHazards ["waterfall"] — the walk that EARNS
+ *                           the item, four levels and two sword swings,
+ *                           ending at rest INSIDE the feather's pocket.
+ *   W1  `r5-feather-climb`  noHazards [] — NOTHING coerced. Holds UP and
+ *                           climbs the waterfall directly above the pocket,
+ *                           in a room it never leaves.
+ *
+ * ⛓ AND W1 IS ALSO THE EARNED-CHAIN WITNESS. `r5-waterfall-climb` holds
+ * the feather because a `grants` line said so, and `r5-waterfall-shut` is
+ * the refusing arm that makes the pair evidence — 24.35 px up and STALLED
+ * on the face over 166 observations. This window holds the feather because
+ * the previous window walked four levels and picked it up. The probe-grant
+ * pair stays; this is what joins "the feather does this" to "this walk took
+ * the feather".
+ *
+ * ⛔ W1's BOOT BLOCK NAMES {89,208,16}, WHICH IS NOT WHERE THE PLAYER IS —
+ * §16.8's rule, one item later. `atBootPosition()` compares
+ * `Main.playerPosition`, the args the CURRENT `Game` was CONSTRUCTED with;
+ * W0 entered L89 through L91's teleporter, whose oel attrs are
+ * `playerx="208" playery="16"`. A boot naming the pocket would have
+ * re-booted onto the waterfall at the top of the room.
+ * ⇒ and it is therefore NOT a differential fixture, exactly as
+ * `r5-swim-l49` is not.
+ */
+const CLIMB_WINDOW = {
+    tape_version: 5,
+    game: 'seedling',
+    name: 'r5-feather-climb',
+    description: 'the first post-feather WINDOW — `noHazards` is EMPTY, so the waterfall '
+        + 'above the pocket is LIVE, and the player is standing under it holding the item '
+        + 'the previous window earned. Holds UP for 120 ticks and climbs. ⛔ Its boot '
+        + 'block names {89,208,16} because `atBootPosition()` compares '
+        + '`Main.playerPosition` — the args the CURRENT Game was constructed with, which '
+        + "for an arrival through L91's teleporter is its own `playerx`/`playery` — so "
+        + '`botStart` skips the rebuild and this is a real continuation rather than a '
+        + 'second boot. ⛓ It is the EARNED half of `climbsArmedWaterfall`: '
+        + '`r5-waterfall-shut` reaches the same kind of face on a probe grant and STALLS.',
+    boot: { level: 89, x: 208, y: 16 },
+    noclip: false,
+    noDamage: true,
+    noHazards: [],
+    grants: [],
+    persistence: [],
+    equips: [],
+    pins: ['sound', 'dead_frames'],
+    inputs: [{ key: 'up', from: 2, to: 122 }],
+    tick_count: 154,
+};
+
+async function runWaterfallSchedule() {
+    console.log('## ⛓⛓ THE SECOND FLIP — the waterfall retired, and `hasFeather` is why\n');
+    const { FEATHER_FLIP, FEATHER } = await import(join(MODULE, 'r5Feather.js'));
+    const { buildLevelWorld, ROLES } = await import(join(MODULE, 'levelWorld.js'));
+    const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
+    const buildWorld = (n) => buildLevelWorld(atlasLevelSource()(n), { roles: ROLES });
+    const w0 = loadTape('r5-feather');
+    const rest0 = director.assertWindowEndsAtRest(w0);
+    const rest1 = director.assertWindowEndsAtRest(CLIMB_WINDOW);
+    console.log(`   W0 ends at rest: ${rest0.length === 0 ? 'yes' : rest0.join('; ')}`);
+    console.log(`   W1 ends at rest: ${rest1.length === 0 ? 'yes' : rest1.join('; ')}`);
+    let failures = 0;
+    if (rest0.length + rest1.length > 0) {
+        failures += 1;
+        console.log('   ⛔ a window that does not end at rest drifts across the boundary');
+    }
+    console.log(`   W0 noHazards [${w0.noHazards.join(', ')}]`);
+    console.log(`   W1 noHazards [${CLIMB_WINDOW.noHazards.join(', ') || '(nothing)'}]`);
+
+    const tapes = [parseTape(w0), parseTape(CLIMB_WINDOW)];
+    const run = driveWindows(tapes, 'r5-waterfall-schedule');
+    const windows = run.map((w, i) => ({ ...w, label: tapes[i].name, tape: tapes[i] }));
+
+    const gate = (what, ok, detail) => {
+        if (ok) console.log(`  PASS ${what}: ${detail}`);
+        else { failures += 1; console.log(`  FAIL ${what}: ${detail}`); }
+    };
+
+    console.log('\n## the crutch schedule');
+    for (const f of director.crutchScheduleFindings(windows)) gate(f.name, f.ok, f.detail);
+
+    console.log('\n## the continuation assert');
+    const cont = director.continuationFindings(windows[1], { index: 1 });
+    gate('W1 is a CONTINUATION, not a re-boot',
+        cont.length === 0,
+        cont.length === 0
+            ? `dead_frames=${windows[1].status?.dead_frames} in a window that never left `
+                + 'L89'
+            : `${cont[0].what} — ${cont[0].detail}`);
+
+    const sb = director.streamBoundaryFindings(windows[0].stream, windows[1].stream,
+        { index: 0, label: 'waterfall-schedule' });
+    const last = windows[0].stream.ticks.at(-1);
+    const first = windows[1].stream.ticks[0];
+    gate('the streams are continuous across the flip', sb.length === 0,
+        sb.length === 0
+            ? `W0 ends L${last.level} (${last.x},${last.y}) and W1 begins there`
+            : sb.map((f) => `${f.what} (${f.detail})`).join('; '));
+
+    // ⛓ THE CLIMB — the earned-chain witness, phrased over the MOVEMENT.
+    const end = windows[1].stream.ticks.at(-1);
+    const st = windows[1].status ?? {};
+    const rise = first.y - end.y;
+    gate('W1 held the FEATHER across the boundary, and it was EARNED not granted',
+        st.items?.hasFeather === true && (st.grants ?? []).length === 0,
+        `hasFeather=${st.items?.hasFeather}, grants=${JSON.stringify(st.grants ?? [])} — `
+        + 'inherited from the live game, with no grant in the window: the previous window '
+        + 'walked four levels and picked it up');
+    // ⛔ THE CLAIM IS THE CROSSING. The pixel count is capped by the tree
+    // above the pool, and the shut arm's 24.35 px is a different room — so
+    // the number that separates the two arms is not a number at all: it is
+    // which side of the waterfall row the player finishes on.
+    const startTile = { tx: Math.floor(first.x / 16), ty: Math.floor(first.y / 16) };
+    const endTile = { tx: Math.floor(end.x / 16), ty: Math.floor(end.y / 16) };
+    const cross = FEATHER_FLIP.crossing;
+    gate('the player CROSSED an armed waterfall, and finished on the far side',
+        startTile.ty === cross.from.ty && endTile.ty <= cross.to.ty,
+        `tile (${startTile.tx},${startTile.ty}) → (${endTile.tx},${endTile.ty}), over the `
+        + `waterfall at (${cross.over.tx},${cross.over.ty}); ${rise.toFixed(2)} px. `
+        + '`r5-waterfall-shut` reaches a face without the item and STALLS IN THE '
+        + "WATERFALL'S OWN ROW for 166 observations — the rule is a REFUSAL, so what "
+        + 'makes this evidence is finishing ABOVE the row, which no featherless arm '
+        + `can. (The rise is capped at two tiles by ${cross.cappedBy}, so the px count `
+        + 'is a sanity check and not the discriminator.)');
+    gate('...and the rise clears its sanity floor', rise >= FEATHER_FLIP.minRise,
+        `${rise.toFixed(2)} px against ${FEATHER_FLIP.minRise}`);
+    gate('...on a tile that is really a waterfall',
+        (() => {
+            const world = buildWorld(FEATHER.level);
+            const t = world.walkableTiles.find(
+                (x) => x.tx === FEATHER_FLIP.tile.tx && x.ty === FEATHER_FLIP.tile.ty);
+            return t?.t === 25;
+        })(),
+        `tile (${FEATHER_FLIP.tile.tx},${FEATHER_FLIP.tile.ty}) — and \`noHazards\` is `
+        + 'EMPTY in this window, so nothing is coerced at all');
+    gate('...and never started drowning', st.drown_timer === 0,
+        `drownTimer=${st.drown_timer} — water is LIVE here too (noHazards is empty), so a `
+        + "zero is `checkDrowning`'s canSwim arm and not a coercion");
+
+    console.log(`\n## the trace: ${windows.length} windows, `
+        + `${director.traceTicks(windows)} live ticks`);
+    if (failures > 0) {
+        console.log(`\n⛔ ${failures} check(s) failed.`);
+        process.exitCode = 1;
+    } else {
+        console.log('\n✅ THE SECOND FLIP HOLDS: the waterfall is retired at the boundary, '
+            + '`hasFeather` is the game\'s own justification for it, and the item was '
+            + 'EARNED by the window before rather than handed over by a grant.');
+    }
+}
+
 if (args.includes('--bridge')) runBridge();
 else if (args.includes('--boundary-witness')) runBoundaryWitness();
 else if (args.includes('--schedule')) runSchedule();
+else if (args.includes('--waterfall-schedule')) await runWaterfallSchedule();
 else {
     console.log('usage: run-seedling-director.mjs --bridge [--keep]');
     console.log('       run-seedling-director.mjs --boundary-witness');
     console.log('       run-seedling-director.mjs --schedule');
+    console.log('       run-seedling-director.mjs --waterfall-schedule');
     process.exitCode = 2;
 }

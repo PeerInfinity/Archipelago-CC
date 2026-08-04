@@ -346,12 +346,33 @@ export const FEATHER_FLIP = Object.freeze({
     /** Held UP for this many ticks after the boundary. */
     holdTicks: 120,
     /**
-     * The claim, in the movement: a featherless swimmer STALLS on the face
-     * (`r5-waterfall-shut`, 24.35 px up over 166 observations) and this one
-     * goes through. Stated as a floor rather than an exact number because
-     * the start position is wherever W0's coast left the player.
+     * ⛔ THE CLAIM IS THE CROSSING, NOT THE DISTANCE — and the first
+     * authoring of this constant got that wrong in a way worth keeping.
+     *
+     * It declared `minRise: 32`, two tiles, and the live window rose
+     * **31.70 px** — which is not a near miss, it is the CAP. The column
+     * above the pocket is pocket (10,6) → waterfall (10,5) → pool (10,4)
+     * → a TREE at (10,3), so a climb out of this pocket cannot be more
+     * than two tiles less the player's own sub-tile offset no matter what
+     * it holds. A floor of 32 was a floor nothing could clear.
+     *
+     * ⚠ AND THE PIXEL COUNT IS NOT THE DISCRIMINATOR ANYWAY.
+     * `r5-waterfall-shut` stalls 24.35 px up on L0's face, which is a
+     * DIFFERENT ROOM with two rows of water under the waterfall — so
+     * "31.70 > 24.35" compares two geometries and settles nothing
+     * (`feedback_same_rate_pair_cannot_answer`, one shape over). What the
+     * refusing arm can never do is END ABOVE THE ROW IT STALLS IN, and
+     * that is the claim: the player starts in (10,6), crosses (10,5)
+     * entirely, and finishes in the pool at (10,4).
      */
-    minRise: 32,
+    crossing: Object.freeze({
+        from: Object.freeze({ tx: 10, ty: 6 }),
+        over: Object.freeze({ tx: 10, ty: 5 }),
+        to: Object.freeze({ tx: 10, ty: 4 }),
+        cappedBy: 'the tree at (10,3), which is why the rise cannot exceed two tiles',
+    }),
+    /** A sanity floor under the crossing, not the claim itself. */
+    minRise: 24,
 });
 
 /**
