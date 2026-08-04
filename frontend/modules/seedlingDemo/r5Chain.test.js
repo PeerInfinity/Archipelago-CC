@@ -10,15 +10,16 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { buildLevelWorld, ROLES, rectsOverlap } from './levelWorld.js';
+import { buildLevelWorld, ROLES, rectsOverlap, rect } from './levelWorld.js';
 import { atlasLevelSource } from './levelSource.js';
-import { playerBoxAt } from './playerPhysicsV2.js';
+import { playerBoxAt, resolveTerrainState } from './playerPhysicsV2.js';
 import { keyLineTouches, KEY_RESPONDERS, opensOnKeyTick } from './activators.js';
-import { loadExpectation, loadTape } from './fixtures/index.js';
+import { fixtureNames, loadExpectation, loadTape } from './fixtures/index.js';
+import { ITEM_PROPERTIES } from './tapeFormat.js';
 import {
     R5_KEY_TYPE, R5_KEY_PICKUP, R5_KEY_LOCKS, R5_ARENA_ARM_Y, R5_KEY_LEG_BOOT,
     R5_LOCK_SHUT_BOOT, KEY_LEG, KEY_LOCK_SHUT, KEY_LEG_EARNED, keyLockStance,
-    R5ChainError, TILE,
+    R5ChainError, TILE, KARLORE, CONCH, MODEL_EXEMPT, MODEL_EXEMPT_NAMES,
 } from './r5Chain.js';
 import { KEY_LEG_ARM, KEY_LEG_CONTROL, KEY_LEG_LOCK_FACE_Y } from './r5Acceptance.js';
 
@@ -215,5 +216,111 @@ describe('what the game did — the key leg and its control', () => {
         // The control's hold is deliberately longer, so a pin here cannot be
         // read as impatience.
         expect(KEY_LOCK_SHUT.holdTo - KEY_LOCK_SHUT.holdFrom).toBeGreaterThan(opensOn);
+    });
+});
+
+describe('the Karlore plug, and the conch behind it', () => {
+    it('the declared plug is where the extract puts it, and it is a Solid', () => {
+        const w = worldFor(KARLORE.level);
+        const plug = w.solids.find((s) => s.tag === 'karlore');
+        expect(plug).toBeDefined();
+        expect(plug.rect).toEqual(rect(KARLORE.at.x, KARLORE.at.y, TILE, TILE));
+        expect({ tx: plug.rect.x / TILE, ty: plug.rect.y / TILE }).toEqual(KARLORE.tile);
+    });
+
+    it('⛓ and it SEALS — 2 tiles reachable with it, 138 without', () => {
+        // Asked as a flood, not as a look at its neighbours. ⚠ Tile (8,17)
+        // beside the plug is OPEN; what makes the corridor one tile wide is
+        // that (8,18) is solid, so the only way in is a diagonal through the
+        // corner at (128,288) — where a 4x5 player box overlaps BOTH. A pair
+        // justified by "its neighbours are walls" would have been justified
+        // by a false statement with the right conclusion.
+        const flood = (w) => {
+            const seen = new Set();
+            const q = [[KARLORE.tile.tx, KARLORE.tile.ty + 1]];
+            while (q.length) {
+                const [x, y] = q.pop();
+                const k = `${x},${y}`;
+                if (seen.has(k) || x < 0 || y < 0 || x >= w.width || y >= w.height) continue;
+                if (w.collidesSolid(playerBoxAt(x * TILE + 8, y * TILE + 8))) continue;
+                seen.add(k);
+                q.push([x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]);
+            }
+            return seen;
+        };
+        const rec = source(KARLORE.level);
+        const plugged = flood(worldFor(KARLORE.level));
+        const open = flood(buildLevelWorld(
+            { ...rec, entities: rec.entities.filter((e) => e.type !== 'karlore') },
+            { roles: ROLES },
+        ));
+        expect(plugged.size).toBe(2);
+        expect(open.size).toBe(138);
+        expect(plugged.has(`${KARLORE.tile.tx},${KARLORE.throughRow}`)).toBe(false);
+        expect(open.has(`${KARLORE.tile.tx},${KARLORE.throughRow}`)).toBe(true);
+        // ...and the neighbour that would have made the easy claim wrong.
+        expect(worldFor(KARLORE.level).collidesSolid(
+            playerBoxAt((KARLORE.tile.tx + 1) * TILE + 8, KARLORE.tile.ty * TILE + 8),
+        )).toBeFalsy();
+    });
+
+    it('⚠ the walk stops in row 16 because row 14 is WATER', () => {
+        // The §14.10 rule applied before the recording: the control's hold is
+        // stopped by a Solid so its length does not matter, and the fire
+        // arm's is stopped by nothing. A target chosen for generosity would
+        // have drowned the headline.
+        const w = worldFor(KARLORE.level);
+        expect(resolveTerrainState(w, KARLORE.tile.tx * TILE + 8,
+            (KARLORE.throughRow - 2) * TILE + 8, 0, {})).toBe(1);
+        expect(Math.floor(KARLORE.throughY / TILE)).toBe(KARLORE.throughRow);
+    });
+
+    it('the pit to the conch is real, and so is the conch', () => {
+        const w = worldFor(KARLORE.level);
+        expect(w.pitTiles.some((p) => p.tx === CONCH.pit.tx && p.ty === CONCH.pit.ty))
+            .toBe(true);
+        expect(w.fallthrough.level).toBe(CONCH.level);
+        const c = worldFor(CONCH.level).pickups
+            .find((p) => p.x === CONCH.pickup.x && p.y === CONCH.pickup.y);
+        expect(c?.tag).toBe(CONCH.item);
+    });
+});
+
+describe('MODEL_EXEMPT: a declaration, never a predicate', () => {
+    it('every name is a real fixture and every earned item is a real item', () => {
+        const names = fixtureNames();
+        for (const [name, dec] of Object.entries(MODEL_EXEMPT)) {
+            expect(names, `${name} is not a fixture`).toContain(name);
+            for (const item of dec.earned) {
+                expect(Object.keys(ITEM_PROPERTIES), `${name} earns "${item}"`)
+                    .toContain(item);
+            }
+            expect(typeof dec.refusesInput).toBe('boolean');
+            // A declaration with no reason is an exemption nobody can audit.
+            expect(dec.why.length).toBeGreaterThan(40);
+        }
+    });
+
+    it('⚠ it is a LIST OF NAMES, and the names are the ones this slice added', () => {
+        // `feedback_coincidental_predicate_rots`: a predicate over "has
+        // presses" or "has enemies" would sweep in every kill fixture after
+        // this one, all of which are supposed to match the model exactly.
+        expect([...MODEL_EXEMPT_NAMES].sort()).toEqual([
+            'r5-bobboss-arm', 'r5-bobboss-fire', 'r5-bobboss-fire-control',
+            'r5-karlore-fire',
+        ]);
+        // The L60 kill pair is NOT here — its control matches the model and
+        // its kill arm is exempt for a different, older reason.
+        expect(MODEL_EXEMPT_NAMES).not.toContain('r5-l60-kill');
+    });
+
+    it('only ONE of them earns anything, and it is the boss fight', () => {
+        const earning = MODEL_EXEMPT_NAMES.filter((n) => MODEL_EXEMPT[n].earned.length > 0);
+        expect(earning).toEqual(['r5-bobboss-fire']);
+        expect([...MODEL_EXEMPT['r5-bobboss-fire'].earned]).toEqual(['fire']);
+        // ...and only that one is taken over, because `BobBoss.death` is the
+        // only thing in any of these rooms that sets `receiveInput = false`.
+        expect(MODEL_EXEMPT_NAMES.filter((n) => MODEL_EXEMPT[n].refusesInput))
+            .toEqual(['r5-bobboss-fire']);
     });
 });
