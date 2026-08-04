@@ -263,6 +263,140 @@ export function hitPushable(block, direction) {
 }
 
 /**
+ * `moveTypes` per AS3 CLASS — the list `hit()`'s ABSOLUTE arm tests `t`
+ * against.
+ *
+ * ⚠⚠ **KEYED ON `as3`, NOT ON `family`, AND THE TWO DISAGREE HERE.**
+ * `levelWorld.PUSHABLE_FAMILIES` maps `pushableblockspear` to `'fire'`
+ * because `family` records which `input()` the block RUNS — and
+ * `PushableBlockSpear extends PushableBlockFire`, so it runs its parent's.
+ * Its `moveTypes` is the one thing its constructor DOES overwrite. A lookup
+ * by family would therefore report that a spear block moves for `"Fire"`,
+ * which is the exact inversion of the fact this whole slice exists to
+ * establish.
+ *
+ * ⚠ And `e is PushableBlockFire` is TRUE for both classes, so which arm
+ * `genericHit` takes is decided by the ORDER of its `else if` chain rather
+ * than by the class — which is why `moveTypes` is consulted on exactly one
+ * of the two paths. See `hitPushableFromPoint`.
+ */
+export const MOVE_TYPES_BY_CLASS = Object.freeze({
+    PushableBlockFire: Object.freeze(['Fire', 'Pulse']),
+    PushableBlockSpear: Object.freeze(['Spear']),
+});
+
+/** `PushableBlockFire.hit`'s `const bothRange` — the diagonal band's width. */
+export const BOTH_RANGE = 0.1;
+
+/**
+ * ⛓ `genericHit`'s ABSOLUTE arm — the one a FIRE attack takes, and the one
+ * `moveTypes` actually guards.
+ *
+ * ── ⚠ THE CONTRADICTION THIS FUNCTION RESOLVES ───────────────────────
+ *
+ * R4 §8.10 recorded "`moveTypes` is never consulted — a SWORD pushes it
+ * too", and R5 §18.9 recorded "only Fire passes `moveTypes`, so the shaft is
+ * sealed". BOTH ARE RIGHT, about different arms of the same `if`:
+ *
+ * ```
+ *   Player.as:1118  else if (e is PushableBlockSpear)
+ *                       hit(<facing vector>, t, _relative = TRUE)   // R4
+ *   Player.as:1123  else if (e is PushableBlockFire)
+ *                       hit(new Point(x, y), t)                     // R5
+ * ```
+ *
+ * `hit`'s `_relative` branch RETURNS BEFORE the `moveTypes` loop
+ * (`PushableBlockFire.as:78-83`), so every R4 push — every one of them onto
+ * a `PushableBlockSpear` — is any weapon, one tile along the facing, and
+ * `moveTypes = ["Spear"]` never ran. A PLAIN `PushableBlockFire` reaches
+ * :1123 instead, `_relative` is FALSE, and `moveTypes = ["Fire", "Pulse"]`
+ * decides. The sword passes `"Sword"`. It fails. **The L39 seal stands and
+ * every R4 recording is untouched.**
+ *
+ * ── THE DESTINATION PICK ──────────────────────────────────────────────
+ *
+ * `a = atan2(p.y - centreY, p.x - centreX)` — the angle FROM the block TO
+ * the player, in screen coordinates (y down), so the two branches read
+ * inverted and both push AWAY:
+ *
+ *   `cos(a) > 0` -> the player is EAST -> `tile.x = getPos().x - Tile.w`
+ *   `sin(a) > 0` -> the player is SOUTH -> `tile.y = getPos().y - Tile.h`
+ *
+ * ⚠ **AND THE TWO BRANCHES ARE NOT EXCLUSIVE.** The guards are
+ * `|sin| - bothRange < |cos|` and `|sin| > |cos| - bothRange` with
+ * `bothRange = 0.1`, so both fire whenever `abs(|sin| - |cos|) < 0.1` — a
+ * band around every diagonal in which ONE hit moves the block on BOTH axES,
+ * diagonally, one tile each way. A stance chosen for "push it west" that
+ * lands inside the band pushes it west AND north, into a cell nothing can
+ * pull it back out of.
+ *
+ * ⚠ **AN AXIS OUTSIDE ITS BAND KEEPS ITS OLD TARGET** rather than being
+ * re-centred: the AS3 simply does not assign `tile.<axis>`. At rest the old
+ * target IS the block's own cell centre (that is what `v == 0` means), so
+ * the effect is "that axis stays put" — but the model starts from
+ * `block.target` rather than from `getPos()` so that a caller which ever
+ * calls this mid-glide gets the game's answer rather than a tidier one.
+ *
+ * @param {object} block  a `newPushable` state
+ * @param {object} p      `{x, y}` — `new Point(player.x, player.y)`, the
+ *   player's ENTITY position (its `originX/Y` is NOT subtracted here; the
+ *   AS3 passes `x, y` raw)
+ * @param {string=} t     the hit type string; defaults to `"Fire"`
+ */
+export function hitPushableFromPoint(block, p, t = 'Fire') {
+    if (!p || !Number.isFinite(p.x) || !Number.isFinite(p.y)) {
+        throw new PushableError('hitPushableFromPoint: p must be {x, y} — the AS3 passes '
+            + '`new Point(x, y)` and a missing point would silently become atan2(NaN).');
+    }
+    if (block.removed) return { block, moved: false, why: 'the block has been removed' };
+    if (block.vx !== 0 || block.vy !== 0) {
+        return { block, moved: false, why: 'the block is already moving (`v.length > 0`)' };
+    }
+    const types = MOVE_TYPES_BY_CLASS[block.as3];
+    if (!types) {
+        throw new PushableError(`hitPushableFromPoint: block ${block.id} has as3 class `
+            + `"${block.as3}", which has no \`moveTypes\`. \`PushableBlock\` (the walk-`
+            + 'pushed one) has no `hit()` at all, so this arm is not merely unknown for '
+            + 'it — it does not exist. The absolute arm is decided by that array and a '
+            + `default would be a guess; know [${Object.keys(MOVE_TYPES_BY_CLASS).join(', ')}]`);
+    }
+    if (!types.includes(t)) {
+        return {
+            block,
+            moved: false,
+            why: `"${t}" is not in moveTypes [${types.join(', ')}] — \`cont\` stays false `
+                + 'and `hit()` falls off the end without touching `tile`',
+        };
+    }
+    // `x - originX + width / 2` with the (0, 0) origin `setHitbox(16, 16)` leaves.
+    const cx = block.x + TILE / 2;
+    const cy = block.y + TILE / 2;
+    const a = Math.atan2(p.y - cy, p.x - cx);
+    const s = Math.abs(Math.sin(a));
+    const c = Math.abs(Math.cos(a));
+    const here = getPos(block.x, block.y);
+    const target = { x: block.target.x, y: block.target.y };
+    const axes = [];
+    if (s - BOTH_RANGE < c) {
+        target.x = Math.cos(a) > 0 ? here.x - TILE : here.x + TILE;
+        axes.push(Math.cos(a) > 0 ? 'W' : 'E');
+    }
+    if (s > c - BOTH_RANGE) {
+        target.y = Math.sin(a) > 0 ? here.y - TILE : here.y + TILE;
+        axes.push(Math.sin(a) > 0 ? 'N' : 'S');
+    }
+    return {
+        block: { ...block, target },
+        moved: true,
+        why: null,
+        angle: a,
+        /** The axes that actually moved — LENGTH 2 is the diagonal band. */
+        axes,
+        both: axes.length === 2,
+    };
+}
+
+/**
  * `Mobile.friction()`, transcribed — and INERT, which is the point of
  * transcribing it.
  *
