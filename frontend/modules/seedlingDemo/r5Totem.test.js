@@ -11,6 +11,7 @@ import { describe, expect, it } from 'vitest';
 import {
     CLUSTER, GROUP_6, L38_CHAIN, TOTEM_ENTRANCE, TOTEM_PAIR, TOTEM_ROPE, TOTEM_SHAFT,
     TotemError, assertPresserWrites,
+    L40_ARRIVAL, L40_PREDICTIONS,
 } from './r5Totem.js';
 import { ROPE_PULL } from './r5Shaft.js';
 import { createFallRock, fallRockFreezeTicks, publishActivate } from './fallRock.js';
@@ -478,5 +479,108 @@ describe('⛔ the rope\'s declared stance was unreachable, and its water was not
         expect(t).toBe(ROPE_PULL.stanceTerrain);
         expect(t).not.toBe(HAZARD_STATES.water);
         expect(t).not.toBe(HAZARD_STATES.waterfall);
+    });
+});
+
+/**
+ * ⛔⛔ L40 FROM THE L39 ARRIVAL — R5 slice 10.
+ *
+ * The flood is RECOMPUTED here rather than trusted from `L40_ARRIVAL`: a
+ * declaration checked against itself is not a check, and the numbers are
+ * what the two predictions turn on.
+ */
+describe('⛔⛔ L40 from the L39 arrival — two predictions, both named failures', () => {
+    const TILE = 16;
+    const l40 = () => buildLevelWorld(atlasLevelSource()(40), {
+        roles: ROLES,
+        inventory: { hasSword: true, hasFire: true, canSwim: true, hasFeather: true },
+    });
+    const rec = atlasLevelSource()(40);
+
+    const flood = (w, start, open = new Set()) => {
+        const P = L40_ARRIVAL.lattice;
+        const ok = (x, y) => x > 0 && y > 0 && x < rec.width * TILE && y < rec.height * TILE
+            && !w.collidesSolid(playerBoxAt(x, y), { openActivators: open });
+        const seen = new Set([`${start.x},${start.y}`]);
+        const q = [[start.x, start.y]];
+        while (q.length) {
+            const [x, y] = q.shift();
+            for (const [dx, dy] of [[P, 0], [-P, 0], [0, P], [0, -P]]) {
+                const nx = x + dx;
+                const ny = y + dy;
+                if (!ok(nx, ny)) continue;
+                const k = `${nx},${ny}`;
+                if (seen.has(k)) continue;
+                seen.add(k);
+                q.push([nx, ny]);
+            }
+        }
+        const tiles = new Set([...seen].map((k) => {
+            const [a, b] = k.split(',').map(Number);
+            return `${Math.floor(a / TILE)},${Math.floor(b / TILE)}`;
+        }));
+        return { cells: seen.size, tiles };
+    };
+
+    it('⛓ reaches `totempart 1` with EVERYTHING SHUT — part 1 is a free walk', () => {
+        const f = flood(l40(), L40_ARRIVAL.spawn);
+        expect(f.cells).toBe(L40_ARRIVAL.flood.cells);
+        expect(f.tiles.size).toBe(L40_ARRIVAL.flood.tiles);
+        for (const r of L40_ARRIVAL.reached) {
+            expect(f.tiles.has(`${r.tile.tx},${r.tile.ty}`), `${r.what} must be reachable`)
+                .toBe(true);
+        }
+        // The spawn is the boot plus `Player.as:357`'s half-tile, not the boot.
+        expect(L40_ARRIVAL.spawn).toEqual({
+            x: L40_ARRIVAL.boot.x + 8, y: L40_ARRIVAL.boot.y + 8,
+        });
+    });
+
+    it('⛔ PREDICTION 1: the buttonrooms are UNREACHABLE, and their groups add ZERO', () => {
+        const w = l40();
+        const shut = flood(w, L40_ARRIVAL.spawn);
+        // None of the three `room = -1` buttonrooms is in the flood…
+        for (const p of w.pressers.filter((x) => x.tag === 'buttonroom')) {
+            expect(p.room).toBe(-1);
+            expect(shut.tiles.has(`${Math.floor(p.x / TILE)},${Math.floor(p.y / TILE)}`),
+                `buttonroom@${p.x},${p.y} must NOT be reachable`).toBe(false);
+        }
+        // …and opening groups 0 and 1 by fiat adds nothing, so the rooms are
+        // behind the same wall their own groups are.
+        const open = new Set(w.activators.filter((a) => a.t === 0 || a.t === 1).map((a) => a.id));
+        expect(open.size).toBeGreaterThan(0);
+        const latched = flood(w, L40_ARRIVAL.spawn, open);
+        expect(latched.cells - shut.cells).toBe(L40_ARRIVAL.groupDelta);
+        expect(L40_ARRIVAL.groupDelta).toBe(0);
+    });
+
+    it('⛔⛔ PREDICTION 2: the bosslock is in group -1, so no publish reaches it', () => {
+        const w = l40();
+        const boss = w.activators.find((a) => a.tag === 'bosslock');
+        expect(boss.t).toBe(-1);
+        expect(boss.keyType).toBe(2);
+        const pred = L40_PREDICTIONS.find((p) => p.id === 'keytype-2-boss-key-is-not-collected');
+        expect(pred.verdict).toBe('REFUTED AT SOURCE');
+        // The wrong prediction is kept as data so this asserts a CORRECTION.
+        expect(pred.was).toMatch(/should NOT collect/);
+        // …and it is moot for this walk anyway: neither is in the flood.
+        const shut = flood(w, L40_ARRIVAL.spawn);
+        expect(shut.tiles.has('30,22'), 'bosslock@480,352').toBe(false);
+        expect(shut.tiles.has('41,33'), 'bosskey@656,528').toBe(false);
+    });
+
+    it('the unreached list is exactly what the flood says it is', () => {
+        const shut = flood(l40(), L40_ARRIVAL.spawn);
+        // Every name in `unreached` carries its own @x,y — parse it rather
+        // than duplicating the coordinates, so the list cannot drift from
+        // the thing it names.
+        for (const name of L40_ARRIVAL.unreached) {
+            const m = name.match(/@(\d+),(\d+)/);
+            expect(m, `${name} must carry its placement`).toBeTruthy();
+            const tx = Math.floor(Number(m[1]) / TILE);
+            const ty = Math.floor(Number(m[2]) / TILE);
+            expect(shut.tiles.has(`${tx},${ty}`), `${name} must NOT be reachable`).toBe(false);
+        }
+        expect(L40_ARRIVAL.unreached.length).toBe(15);
     });
 });

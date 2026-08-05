@@ -623,13 +623,46 @@ describe('FORCED_TSET: the group the ctor decides, not the .oel', () => {
         expect(tSetOf('button', {})).toBe(0);
     });
 
-    it('forces -2 for both ShieldLock spellings, whatever the .oel says', () => {
-        expect(FORCED_TSET).toEqual({ shieldlock: -2, shieldlocknorm: -2 });
-        for (const tag of Object.keys(FORCED_TSET)) {
-            expect(tSetOf(tag, {})).toBe(-2);
-            expect(tSetOf(tag, { tset: '0' })).toBe(-2);
-            expect(tSetOf(tag, { tset: '7' })).toBe(-2);
+    it('forces the ctor value, whatever the .oel says — and there are THREE', () => {
+        // ⛔⛔ R5 slice 10: `bosslock` joined this table late, and the
+        // docblock that used to say "nothing else in `Puzzlements/`
+        // hardcodes one (checked every `super(` call)" was wrong when it was
+        // written. `BossLock.as:31` puts the literal in the FOURTH argument
+        // with `_t` — the key type — in the third, which is the shape the
+        // sweep was looking for.
+        expect(FORCED_TSET).toEqual({ shieldlock: -2, shieldlocknorm: -2, bosslock: -1 });
+        for (const [tag, want] of Object.entries(FORCED_TSET)) {
+            expect(tSetOf(tag, {})).toBe(want);
+            expect(tSetOf(tag, { tset: '0' })).toBe(want);
+            expect(tSetOf(tag, { tset: '7' })).toBe(want);
         }
+        // …and the key type is NOT the group, which is the whole confusion.
+        expect(tSetOf('bosslock', { keyType: '2' })).toBe(-1);
+    });
+
+    it('⛔⛔ keeps L40\'s bosslock OUT of `buttonroom@272,208`\'s group — §20.6 REFUTED', () => {
+        // §20.6 argued the bosslock is "an `Activators` in group t = 0", so
+        // the `room = -1` buttonroom's latch would open it WITH NO KEY, and
+        // concluded the walk should not collect `bosskey@656,528`. With the
+        // group hard-wired to -1 no publication can reach it at all:
+        // `BossLock.update`'s own probe line plus `Player.hasKey(2)` is its
+        // only opener. The model had it in the UNSAFE direction — a wall it
+        // opened that the game keeps shut.
+        const w = buildLevelWorld(levelSource(40));
+        const boss = w.activators.find((a) => a.tag === 'bosslock');
+        expect(boss.id).toBe('bosslock@480,352');
+        expect(boss.t).toBe(-1);
+        expect(boss.keyType).toBe(2);
+        // The buttonroom really is in group 0 and really does latch — so the
+        // refutation is about the LOCK's group and not about the presser.
+        const room = w.pressers.find((p) => p.tag === 'buttonroom' && p.x === 272);
+        expect(room.t).toBe(0);
+        expect(room.room).toBe(-1);
+        expect(room.t).not.toBe(boss.t);
+        // …and the three wandlocks in group 0 ARE reachable by it, which is
+        // what makes this a correction rather than a blanket "nothing opens".
+        const inGroup0 = w.activators.filter((a) => a.t === 0).map((a) => a.id).sort();
+        expect(inGroup0).toEqual(['wandlock@208,128', 'wandlock@208,144', 'wandlock@208,160']);
     });
 
     it('keeps L71\'s shieldlock OUT of the button\'s group', () => {

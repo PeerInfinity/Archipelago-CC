@@ -570,3 +570,103 @@ export function assertPresserWrites(presser, declared) {
     }
     return got;
 }
+
+/**
+ * ── ⛔⛔ L40 FROM THE L39 ARRIVAL, R5 slice 10 ─────────────────────────
+ *
+ * The brief gave slice 10 two L40 predictions to turn into oracle facts or
+ * named failures. Both are named failures, and neither needed the game:
+ * one is refuted at source and the other is unreachable.
+ *
+ * ⛓ **BUT THE STEP IS NOT EMPTY.** A flood from the arrival at (488,904)
+ * with EVERYTHING SHUT reaches 437 lattice cells / 180 tiles, and
+ * `totempart 1 @160,640` is in it. Part 1 is a free walk: no group, no key,
+ * no press, and nothing the shaft does not already deliver.
+ *
+ * ⛔ **PREDICTION 1 — "buttonroom self-latching opens the wandlock groups"
+ * — CANNOT BE DRIVEN FROM HERE.** The mechanism is real and is now
+ * modelled (`activators.localPublish`, `state.latched`), and §20.6's
+ * reading of `ButtonRoom.as:79-95` stands. What does not stand is that it
+ * is "L40's entire opening mechanic" *for this route*: **none of the three
+ * `room = -1` buttonrooms is in the arrival flood**, and opening groups 0
+ * and 1 by fiat adds **ZERO** cells to it. The rooms are behind the same
+ * wall their own groups are.
+ *
+ * ⛔⛔ **PREDICTION 2 — "the keyType-2 boss key is NOT collected" — IS
+ * REFUTED AT SOURCE.** §20.6 argued `bosslock@480,352` is an `Activators`
+ * in group 0, so `buttonroom@272,208`'s latch opens it with no key.
+ * `BossLock.as:31` is
+ * `super(_x + Tile.w/2, _y + Tile.h/2, Game.bossLocks[_t], -1)` — the
+ * group is a hard-wired **−1** and `_t` is the KEY TYPE, one argument to
+ * its left. No publication can reach it; `BossLock.update`'s own probe
+ * line plus `Player.hasKey(2)` is its only opener. See
+ * `levelWorld.FORCED_TSET`, which the model was missing — it had the lock
+ * in group 0 and would have opened a wall the game keeps shut.
+ *
+ * ⚠ The question is moot for this walk either way: **neither the lock nor
+ * the key is in the arrival flood.**
+ *
+ * ⇒ **THE OPEN QUESTION, STATED RATHER THAN GUESSED:** L40's north half —
+ * `totempart 0`, all three buttonrooms, both north teleporters, both fire
+ * blocks, all three buttons, the chest and the breakable rocks — is
+ * entered by something that is not this arrival. What the arrival DOES
+ * reach besides part 1 is `stairsdown@320,576 -> L43` and the
+ * `control@224,432` pit (also to L43) — and L43 is the wand room, which
+ * this rung is told not to approach. Routing it is the next slice's.
+ */
+export const L40_ARRIVAL = Object.freeze({
+    level: 40,
+    /** `teleporter@144,0` in L39 says `playerx 480, playery 896`; +8,+8 is `Player.as:357`. */
+    from: Object.freeze({ level: 39, teleporter: 'teleporter@144,0' }),
+    boot: Object.freeze({ x: 480, y: 896 }),
+    spawn: Object.freeze({ x: 488, y: 904 }),
+    lattice: 8,
+    /** Measured with the R5 item set and every group shut. */
+    flood: Object.freeze({ cells: 437, tiles: 180 }),
+    reached: Object.freeze([
+        Object.freeze({ what: 'totempart 1', at: Object.freeze({ x: 160, y: 640 }),
+            tile: Object.freeze({ tx: 10, ty: 40 }), why: '⛓ FREE — step 3\'s part 1' }),
+        Object.freeze({ what: 'stairsdown -> L43', at: Object.freeze({ x: 320, y: 576 }),
+            tile: Object.freeze({ tx: 20, ty: 36 }), why: '⚠ the WAND room — do not approach' }),
+        Object.freeze({ what: 'control pit -> L43', at: Object.freeze({ x: 224, y: 432 }),
+            tile: Object.freeze({ tx: 14, ty: 27 }), why: '⚠ the same room, by falling' }),
+        Object.freeze({ what: 'teleporter -> L39', at: Object.freeze({ x: 480, y: 912 }),
+            tile: Object.freeze({ tx: 30, ty: 57 }), why: 'the way back' }),
+    ]),
+    /** Everything the step wanted and the arrival does not reach. */
+    unreached: Object.freeze([
+        'totempart 0 @64,144', 'buttonroom@160,128', 'buttonroom@272,208',
+        'buttonroom@880,768', 'bosslock@480,352', 'bosskey@656,528',
+        'teleporter@944,96 -> L41', 'teleporter@848,0 -> L42',
+        'button@480,384', 'button@768,400', 'button@816,400',
+        'chest@880,816', 'pushableblockfire@480,480', 'pushableblockfire@576,576',
+        'breakablerock@160,144',
+    ]),
+    /** ⛓ Opening groups 0 and 1 by fiat adds this many cells. It is zero. */
+    groupDelta: 0,
+});
+
+/**
+ * ⛔⛔ The two predictions, as data, so a test asserts the CORRECTION
+ * rather than the current string.
+ */
+export const L40_PREDICTIONS = Object.freeze([
+    Object.freeze({
+        id: 'buttonroom-latch-opens-the-wandlocks',
+        from: '§20.6',
+        verdict: 'MECHANISM CONFIRMED, NOT DRIVABLE FROM THIS ARRIVAL',
+        why: 'the `room = -1` latch is real and modelled, and none of the three '
+            + 'buttonrooms is in the arrival flood — opening groups 0 and 1 adds zero '
+            + 'cells',
+    }),
+    Object.freeze({
+        id: 'keytype-2-boss-key-is-not-collected',
+        from: '§20.6',
+        verdict: 'REFUTED AT SOURCE',
+        why: '`BossLock.as:31` hard-wires the `Activators` group to -1 (`_t` is the key '
+            + 'type, one argument to its left), so `buttonroom@272,208`\'s t = 0 publish '
+            + 'cannot reach it. The model had it in group 0 — a wall it opened that the '
+            + 'game keeps shut. See `levelWorld.FORCED_TSET`.',
+        was: 'the walk should NOT collect `bosskey@656,528`',
+    }),
+]);

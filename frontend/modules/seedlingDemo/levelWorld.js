@@ -2044,10 +2044,35 @@ export const PRESS_BOX_OVERRIDES = Object.freeze({
  * flag (because `int("") = 0` is not `< 0`). Both are corrected by this
  * one lookup, which is the fourth time in this arc an index or a column
  * has been read against the wrong table.
+ *
+ * ⛔⛔ **R5 SLICE 10: THE SENTENCE "Nothing else in `Puzzlements/`
+ * hardcodes one (checked every `super(` call)" WAS FALSE, AND A SHIPPED
+ * PREDICTION WAS BUILT ON IT.**
+ *
+ * `BossLock.as:31` is
+ * `super(_x + Tile.w/2, _y + Tile.h/2, Game.bossLocks[_t], -1)` — a
+ * literal −1 in the GROUP slot, with `_t` (the key type) one argument to
+ * its left, selecting the graphic. `Game.as:2199` builds it as
+ * `new BossLock(o.@x, o.@y, o.@keyType, o.@tag)`, so the call site has the
+ * `_t`-shaped third argument the sweep was looking for and the hardcoded
+ * value is somewhere else entirely. That is how an enumeration that named
+ * its own method still missed an instance
+ * ([[feedback_kickoff_anchor_duplicate_engines]], on its own sweep).
+ *
+ * ⛔⛔ **AND IT REFUTES §20.6's keyType-2 ANSWER.** That slice argued
+ * `bosslock@480,352` is "an `Activators` in group t = 0", so
+ * `buttonroom@272,208`'s `room = -1` latch would publish `activate = true`
+ * to it "with no key at all", and concluded **the walk should not collect
+ * `bosskey@656,528`**. With the group hard-wired to −1 no publication can
+ * reach it: `BossLock.update`'s own probe line — a player on the sill AND
+ * `Player.hasKey(2)` — is its only opener. The prediction is a NAMED
+ * FAILURE, found at source before L40 was ever driven, and the model had
+ * it wrong in the UNSAFE direction: it opened a wall the game keeps shut.
  */
 export const FORCED_TSET = Object.freeze({
     shieldlock: -2,       // ShieldLock.as:26
     shieldlocknorm: -2,
+    bosslock: -1,         // BossLock.as:31 — the group slot, not `_t`
 });
 
 /** The group an entity is in: its class's forced value, else `tset`, else 0. */
