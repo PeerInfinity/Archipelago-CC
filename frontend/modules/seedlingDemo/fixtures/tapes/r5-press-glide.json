@@ -1,0 +1,171 @@
+{
+  "tape_version": 4,
+  "game": "seedling",
+  "name": "r5-press-glide",
+  "description": "⛓⛓ THE GLIDE, MEASURED WITH THE PLAYER AS A DIPSTICK — and RECONSTRUCTED from `r5-press-delay` by removing its 120-tick shift, because the driver that authored it is now correct and therefore refuses to. Identical to the delayed arm up to and including press 5, then holds `down` for 260 ticks. A player pressed against a block gliding at 0.5 px/tick follows it in 1 px steps every other tick, so the y trace dates the glide, measures its speed and says where it stopped. ⛔⛔ THE PRESS IS WEDGED: `spinner@224,112` stands in the corridor, the block parks ~7 px into a 16 px move, and `hit()`'s `if (v.length > 0) return` swallows everything after. This is the arm that REFUTED the pre-slice-13 model, at t157.",
+  "boot": {
+    "level": 39,
+    "x": 232,
+    "y": 88
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [],
+  "grants": [
+    {
+      "level": 39,
+      "items": [
+        "conch",
+        "feather",
+        "fire",
+        "sword"
+      ]
+    }
+  ],
+  "persistence": [
+    {
+      "level": 39,
+      "tag": 8,
+      "note": "parity with `r5-shaft`: the entrance write. Inert in this room, declared so the two tapes build the same world."
+    }
+  ],
+  "equips": [
+    {
+      "t": 10,
+      "slot": 1
+    }
+  ],
+  "tick_count": 410,
+  "inputs": [
+    {
+      "key": "left",
+      "from": 0,
+      "to": 6
+    },
+    {
+      "key": "up",
+      "from": 0,
+      "to": 6
+    },
+    {
+      "key": "down",
+      "from": 6,
+      "to": 7
+    },
+    {
+      "key": "right",
+      "from": 6,
+      "to": 7
+    },
+    {
+      "key": "primary",
+      "from": 10,
+      "to": 11
+    },
+    {
+      "key": "left",
+      "from": 48,
+      "to": 59
+    },
+    {
+      "key": "right",
+      "from": 59,
+      "to": 60
+    },
+    {
+      "key": "left",
+      "from": 60,
+      "to": 62
+    },
+    {
+      "key": "right",
+      "from": 64,
+      "to": 67
+    },
+    {
+      "key": "left",
+      "from": 68,
+      "to": 70
+    },
+    {
+      "key": "left",
+      "from": 74,
+      "to": 76
+    },
+    {
+      "key": "up",
+      "from": 74,
+      "to": 83
+    },
+    {
+      "key": "right",
+      "from": 76,
+      "to": 77
+    },
+    {
+      "key": "down",
+      "from": 83,
+      "to": 84
+    },
+    {
+      "key": "up",
+      "from": 86,
+      "to": 88
+    },
+    {
+      "key": "left",
+      "from": 86,
+      "to": 95
+    },
+    {
+      "key": "down",
+      "from": 88,
+      "to": 89
+    },
+    {
+      "key": "up",
+      "from": 89,
+      "to": 90
+    },
+    {
+      "key": "down",
+      "from": 93,
+      "to": 95
+    },
+    {
+      "key": "right",
+      "from": 97,
+      "to": 99
+    },
+    {
+      "key": "up",
+      "from": 97,
+      "to": 99
+    },
+    {
+      "key": "left",
+      "from": 99,
+      "to": 100
+    },
+    {
+      "key": "right",
+      "from": 100,
+      "to": 101
+    },
+    {
+      "key": "down",
+      "from": 103,
+      "to": 104
+    },
+    {
+      "key": "primary",
+      "from": 108,
+      "to": 109
+    },
+    {
+      "key": "down",
+      "from": 146,
+      "to": 406
+    }
+  ]
+}

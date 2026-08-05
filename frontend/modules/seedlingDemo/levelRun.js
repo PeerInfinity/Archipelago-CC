@@ -63,6 +63,9 @@ import {
 import {
     burnTree, burnWrites, burnedTreeIds, createBurnState,
 } from './burnableTree.js';
+import {
+    createSpinnerState, spinnerRects, spinnerTerrainWrites, stepSpinners,
+} from './spinner.js';
 import { ledgerKey, outOfBandFlagForWriter } from './outOfBandLedger.js';
 import { createChestState, stepChests } from './chest.js';
 import {
@@ -251,6 +254,12 @@ export function createLevelRun({
         worlds.delete(n);
         activatorStates.delete(n);
         pushableStates.delete(n);
+        // R5 slice 13: the spinner roster is built from the world, so a
+        // rebuilt world needs a rebuilt roster — the same reason the blocks'
+        // does. (Nothing an item grants adds or removes a spinner today;
+        // it is dropped anyway, because "no item does" is a claim about the
+        // current census and not about the mechanism.)
+        spinnerStates.delete(n);
         bridgeStates.delete(n);
     };
     /**
@@ -538,6 +547,42 @@ export function createLevelRun({
         return pushableStates.get(n);
     };
     /**
+     * ── ⛔⛔ R5 SLICE 13: THE SPINNERS, and they are the NINTH family ────
+     *
+     * Per visit, like a block and unlike a broken rock: `Spinner` keeps
+     * `x`/`y`/`v` in instance variables with no persistence, so every `new
+     * Game` rebuilds it at its `.oel` cell heading north-east. The one thing
+     * that crosses a door is the flag a DEATH wrote, and `buildLevelWorld`
+     * applies `check()` to that already — a spinner whose tag is cleared is
+     * not in `world.spinners` at all.
+     *
+     * ⚠ IT IS THE FIRST ENEMY THE RUN STEPS, and it exists for exactly one
+     * consumer: a `PushableBlock*`'s `solids` list carries `"Enemy"`. The
+     * player still does not collide with it (`hazards.js` prices the damage),
+     * so this state never reaches the player's sweep.
+     */
+    const spinnerStates = new Map();
+    const spinnerStateFor = (n) => {
+        if (!spinnerStates.has(n)) {
+            // ⚠ HERE rather than at a call site: this is the one place a
+            // spinner roster comes into existence, so the bound cannot be
+            // skipped by a path that forgot to ask.
+            assertSpinnerSolidsBound(n);
+            spinnerStates.set(n, createSpinnerState(worldFor(n)));
+        }
+        return spinnerStates.get(n);
+    };
+    /**
+     * The live spinner bodies for the block's collision query.
+     *
+     * ⚠ NULL WHEN THERE IS NOTHING TO SAY, like `pushableRectsNow` — 112 of
+     * the 116 levels hold no spinner at all and this is on the hot path.
+     */
+    const spinnerRectsNow = () => {
+        const st = spinnerStateFor(level);
+        return st.byId.size === 0 ? null : spinnerRects(st);
+    };
+    /**
      * ── R4: THE LIGHTPOLE, which is per-visit STATE over a BANKED flag ──
      *
      * `LightPole.hit()` toggles `activate` behind a 25-tick `hitsTimer`, and
@@ -597,6 +642,9 @@ export function createLevelRun({
     const freshVisitState = (n) => {
         bridgeStates.set(n, new Map());
         pushableStates.set(n, createPushableState(worldFor(n)));
+        // R5 slice 13: a re-entered room rebuilds every spinner at its cell,
+        // heading north-east — there is no state on the class to carry.
+        spinnerStates.delete(n);
         poleStates.delete(n);
         // R5 slice 9: a chest whose flag is still TRUE is rebuilt SHUT, and
         // a pulser's `activate` is re-derived from its group. The chest whose
@@ -892,18 +940,25 @@ export function createLevelRun({
      * this` does for free and this has to do by hand (the live map is keyed
      * by id, so self is marked removed for the duration of its own query).
      *
-     * ⚠ ENEMIES ARE THE NAMED BOUND. The world carries none — they do not
-     * stop the player, so the blocking census never collected them — so a
-     * push into an enemy is one this model ALLOWS and the game may refuse.
-     * The direction is the safe one (a refused push wedges the block where
-     * the pair fixture would show it), and the sweep that found R4's chains
-     * flags an enemy SPAWN in a destination cell for the same reason.
+     * ⛓⛓ R5 SLICE 13: THE NAMED BOUND IS PARTLY CLOSED. `Spinner` is
+     * modelled and its live bodies are in this query — that is the whole of
+     * §26.3's fix, and it is what cost the shaft its ledger. Every OTHER
+     * enemy class is still a push this model allows and the game may refuse,
+     * which is why `botDriverV2.runFire` refuses a `moves` press in a room
+     * holding one rather than leaving the direction "safe": a wedge is
+     * PERMANENT (`hit()` returns on `v.length > 0`), so "the model is
+     * optimistic here" is not a graceful degradation.
      */
     const pushableCtx = () => {
         const pushState = pushableStateFor(level);
         const openBridges = openBridgeIdsNow();
         const openActivators = noclip ? null : openActivatorIds(activatorStateFor(level));
         const playerBox = playerBoxAt(state.x, state.y);
+        // ⚠ READ AT THE TOP OF THE TICK AND ON PURPOSE. The spinners have
+        // ALREADY been stepped when this ctx is built (they update before the
+        // blocks — see the step site), so these are this tick's positions,
+        // which is exactly what the game's block collides against.
+        const spinners = spinnerRectsNow();
         return {
             collides: (rect, self) => {
                 // ⚠ READ LIVE, not off a snapshot taken at the top of the
@@ -928,6 +983,20 @@ export function createLevelRun({
                     openChests: openChestIdsNow(),
                 });
                 if (hit) return hit;
+                // ⛔⛔⛔ THE CELL THAT COST THE SHAFT ITS LEDGER. A
+                // `PushableBlock*`'s ctor pushes "Enemy" onto its own solids
+                // list, so a spinner standing in the glide corridor STOPS the
+                // block — permanently, because a blocked block keeps `v`
+                // non-zero and `hit()` returns on `v.length > 0`. Above the
+                // player test because the game's `collideTypes` walks
+                // "Enemy" before "Player" (`Mobile.solids` order plus the two
+                // pushes), and the caller only reads truthiness — the order
+                // is transcribed rather than relied on.
+                if (spinners) {
+                    for (const s of spinners) {
+                        if (rectsOverlap(rect, s.rect)) return { tag: 'Enemy', id: s.id, spinner: true };
+                    }
+                }
                 // The player, at the position the PREVIOUS tick left — which
                 // is where they are when the block updates, because the
                 // block updates first.
@@ -942,6 +1011,106 @@ export function createLevelRun({
             playerVx: state.vx,
             playerVy: state.vy,
         };
+    };
+
+    /**
+     * ⛔⛔ R5 SLICE 13: THE SPINNER'S OWN COLLISION QUESTION, which is
+     * neither the player's nor the block's.
+     *
+     * `Mobile.solids` untouched — `["Solid","Tree","Rock","Rope","ShieldBoss"]`
+     * — so it reflects off static geometry and off a pushable block (`type =
+     * "Solid"`), and passes THROUGH the player and through its siblings.
+     *
+     * ⚠ `world.collidesSolid` IS THE PLAYER'S LIST, and the two differ by
+     * exactly one type: `"LavaBoss"`. Over-approximating would make a
+     * spinner reflect off something the game lets it pass, so the difference
+     * is ASSERTED AWAY rather than assumed away — `assertSpinnerSolidsBound`
+     * fails by name in any room that holds both. (It holds neither today:
+     * the four spinner levels are 18, 39, 40 and 92 and the only `lavaboss`
+     * in the game is in Dungeon 7.)
+     */
+    const spinnerCtx = () => {
+        const openBridges = openBridgeIdsNow();
+        const openActivators = noclip ? null : openActivatorIds(activatorStateFor(level));
+        // The blocks where the PREVIOUS tick left them: the spinner updates
+        // first, so this is what its sweep reads. (The block then reads the
+        // spinner at the position this tick gives it — the two are one tick
+        // apart in opposite directions, which is what the update list says.)
+        const pushables = pushableRectsNow();
+        return {
+            collides: (rect) => world.collidesSolid(rect, {
+                beforeTypeFlip: firstTickInWorld,
+                openActivators,
+                openBridges,
+                pushables,
+                brokenRocks: brokenRockIdsNow(),
+                burnedTrees: burnedTreeIdsNow(),
+                pulledRopes: pulledRopeIdsNow(),
+                fallenRocks: fallenRocksNow(),
+                openChests: openChestIdsNow(),
+            }),
+            // ⚠ THE ENTITY POINT, not a box centre — they coincide on a
+            // spinner and do NOT on a block, whose `input()` probes
+            // `x - originX + width/2`. `Enemy.getState()` takes `(x, y)`.
+            tileTypeAt: (x, y) => world.nearestWalkableTile(x, y, { openBridges })?.t,
+            // `Mobile.mobileUpdate` gates friction/input/moveX/moveY on
+            // `Game.freezeObjects`, so a ceremony PARKS a spinner. The
+            // terrain switch and `death()` are outside that gate and keep
+            // running — see `spinner.js`'s three-way split.
+            frozen: ceremony !== null,
+        };
+    };
+
+    /**
+     * ⚠ THE ONE-TICK FENCEPOST ON A CEREMONY'S LAST FRAME, REFUSED RATHER
+     * THAN APPROXIMATED.
+     *
+     * The freeze a ceremony holds is cleared by the temporary NPC's own
+     * update, and a run-time `add` is PREPENDED — so on the frame the
+     * dialogue completes the NPC runs first and `Game.freezeObjects` is
+     * already false when the spinner (and the player) update. This model
+     * steps the spinner at the TOP of the tick, before it knows whether the
+     * dialogue completes, so its `frozen` flag would be one tick stale on
+     * exactly that frame.
+     *
+     * ⛓ IT CANNOT BITE A PART-COLLECT. A totem part's ceremony has
+     * `text: ''` — no NPC, no dialogue, and its 150 frozen frames are DEAD
+     * frames the tape's counter skips entirely, so the model never ticks
+     * through them and the spinner is parked on both sides by construction.
+     * The gap is only reachable by a DIALOGUED pickup in a spinner room, of
+     * which there are none. Refusing is a sentence; forking `stepDialogue`
+     * into a pure "does this tick finish" predicate would be a second
+     * implementation of the rule, which is what this package spends its
+     * comments avoiding.
+     */
+    const assertDialogueFreeSpinnerRoom = () => {
+        if (ceremony === null || ceremony.dialogue === null) return;
+        throw new Error(`levelRun: level ${level} holds live spinners AND a DIALOGUED `
+            + `ceremony (${ceremony.item ?? 'keyType ' + ceremony.keyType}) is running at `
+            + `tick ${ticksCompleted}. A spinner is stepped at the top of the tick and the `
+            + 'freeze is cleared by the NPC that updates before it, so on the frame the '
+            + 'dialogue completes this model would park a spinner the game moves. No '
+            + 'route needs this — a totem part collects with `text: \'\'` — so it is '
+            + 'refused rather than approximated.');
+    };
+
+    /**
+     * ⚠ THE BOUND `spinnerCtx` LEANS ON, CHECKED RATHER THAN CLAIMED.
+     *
+     * Called once per level entry, not per tick: the rosters are static.
+     */
+    const assertSpinnerSolidsBound = (n) => {
+        const w = worldFor(n);
+        if ((w.spinners ?? []).length === 0) return;
+        const lavaBoss = (w.solids ?? []).filter((s) => s.cls?.type === 'LavaBoss');
+        if (lavaBoss.length > 0) {
+            throw new Error(`levelRun: level ${n} holds ${w.spinners.length} spinner(s) AND `
+                + `${lavaBoss.length} LavaBoss solid(s). \`spinnerCtx\` reuses `
+                + '`collidesSolid`, which is the PLAYER\'s solids list — `Mobile.solids` '
+                + 'plus "LavaBoss" (`Player.as:377`) — and a spinner\'s list does NOT '
+                + 'carry it. The model would reflect the spinner off something the game '
+                + 'lets it pass through. Give `collidesSolid` a mover before routing here.');
+        }
     };
 
     /**
@@ -2020,6 +2189,30 @@ export function createLevelRun({
         get treeBurns() { return treeBurns.map((b) => ({ ...b, flag: { ...b.flag } })); },
         get rockFalls() { return rockFalls.map((r) => ({ ...r, flag: r.flag && { ...r.flag } })); },
         /**
+         * ⛔⛔ R5 slice 13: every spinner that has LEFT THE WORLD this visit,
+         * and what took it — `{id, tag, cause}` per level.
+         *
+         * `Spinner.removed()` writes `Game.setPersistence(tag, false)` with no
+         * test of the cause, and `Enemy.update` destroys one in water and lava
+         * and fades one out over a pit. ⇒ **a billiard that bounces into a
+         * hazard banks the same flag a sword kill does**, on a tick no route
+         * chose. Exposed so a ledger assertion can be two-sided about it: a
+         * shaft plan that predicts nine writes has to survive a spinner
+         * quietly earning a tenth, and until this list existed the model could
+         * not have reported one. (`spinner.SPINNER_TERRAIN_WRITE`.)
+         *
+         * ⚠ PER VISIT, and by level — a re-entered room rebuilds its
+         * spinners, and it is `buildLevelWorld`'s `check()` arm that keeps a
+         * dead one dead.
+         */
+        get spinnerDeaths() {
+            const out = [];
+            for (const [n, st] of spinnerStates) {
+                for (const w of spinnerTerrainWrites(st)) out.push({ level: n, ...w });
+            }
+            return out;
+        },
+        /**
          * ⛓⛓ Frozen frames this run spent that the TAPE never advanced
          * through — the run's half of the `dead_frames` readout.
          *
@@ -2359,6 +2552,26 @@ export function createLevelRun({
             // `Mobile.update` without the `Game.freezeObjects` gate, so it
             // runs ABOVE the ceremony's early return below: a block keeps
             // gliding through a pickup's frozen frames.
+            // ── ⛔⛔ R5 SLICE 13: THE SPINNERS, ABOVE THE BLOCKS ───────
+            // `Game.loadlevel` adds the pushables at `:2216-2218` and the
+            // spinners at `:2250`, and `World.addUpdate` PREPENDS — so the
+            // update list is reverse add order and the spinner moves FIRST.
+            // The block's sweep this tick must read it where this left it,
+            // which is the difference between a wedge the model sees and the
+            // eighteen successful presses it reported instead (§25.3).
+            //
+            // ⚠ AND IT IS ABOVE THE CEREMONY'S EARLY RETURN, like the blocks
+            // and the LightPole — but for the OPPOSITE half of the reason.
+            // A block ignores `Game.freezeObjects`; a spinner is gated by it
+            // (`Mobile.mobileUpdate`) and its TERRAIN arm and `death()` are
+            // not. `spinnerCtx().frozen` carries that split, so a spinner
+            // already sinking keeps sinking through a ceremony and a moving
+            // one parks.
+            const spinState = spinnerStateFor(level);
+            if (!noclip && spinState.byId.size > 0) {
+                assertDialogueFreeSpinnerRoom();
+                stepSpinners(spinState, spinnerCtx());
+            }
             const pushState = pushableStateFor(level);
             if (!noclip && pushState.byId.size > 0) stepPushables(pushState, pushableCtx());
             // `LightPole.update()` is `super.update(); hitUpdate();` and the

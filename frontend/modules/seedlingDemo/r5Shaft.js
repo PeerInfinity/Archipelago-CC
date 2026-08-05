@@ -223,34 +223,105 @@ export const SPINNER_WEDGE = Object.freeze({
     blockerType: 'Enemy',
     moverSolids: Object.freeze(['Solid', 'Tree', 'Rock', 'Rope', 'ShieldBoss', 'Enemy', 'Player']),
     playerSolids: Object.freeze(['Solid', 'Tree', 'Rock', 'Rope', 'ShieldBoss', 'LavaBoss']),
-    /** The four probes and what each one settled. */
+    /**
+     * The four probes and what each one settled.
+     *
+     * ⛓⛓ R5 SLICE 13 ADDED THE GAME-SIDE NUMBERS, and they are the reason
+     * the fix could be checked before spending a recording. `--record` prints
+     * the FIRST diverging tick with both streams' values on it, so a refuted
+     * arm leaves behind an exact game-side observation even when its
+     * expectation file is withdrawn. `gameY` is that number, to the full
+     * double, from the slice-12 session's own log; `tickCount` is the
+     * `observation count` line minus one, and it is what makes a
+     * RECONSTRUCTED tape checkable rather than assumed (see
+     * `SPINNER_WEDGE.reconstruction`).
+     */
     probes: Object.freeze([
         Object.freeze({
             tape: 'r5-press-axes', stuckY: 83.83, divergesAt: 157,
+            gameY: 83.83122648907042, tickCount: 165, reconstructible: false,
             says: 'the shaft\'s divergence reproduces in 165 ticks, with no rope and no freeze',
+            // ⛔ ITS INPUTS ARE GONE. `r5-press-glide` and `-repeat` are pure
+            // span transforms of the COMMITTED `r5-press-delay` and come
+            // back exactly; this one's final leg is an eleven-tick walk-proof
+            // that `glide` REPLACED, so its `to` survives in no artefact.
+            // Its finding is subsumed by `glide`, which is the same tape held
+            // longer and diverges on the same tick at the same y.
         }),
         Object.freeze({
             tape: 'r5-press-glide', stuckY: 83.83, heldTicks: 260,
+            gameY: 83.83122648907042, divergesAt: 157, tickCount: 410, reconstructible: true,
             says: 'the block is PARKED, not gliding — and §24.8\'s reading of the shaft was '
                 + 'right for a reason it could not check: there, the y went constant when '
                 + 'the walk\'s INPUT SPAN ended',
         }),
         Object.freeze({
             tape: 'r5-press-repeat', stuckY: 90.98, presses: 6,
+            gameY: 90.98122648907042, divergesAt: 143, tickCount: 404, reconstructible: true,
             says: 'the player follows the glide 1 px every other tick (a 0.5 px/tick block '
                 + 'read through a 1 px sweep quantum), the model matching to the pixel, '
                 + 'and the five presses after the wedge are ALL swallowed',
         }),
         Object.freeze({
             tape: 'r5-press-delay', delayTicks: 120, byteExact: true,
+            reconstructible: null,
             says: '⛓⛓ THE DISCRIMINATOR — the same tape later is byte-exact, so the '
                 + 'blocker moves',
         }),
     ]),
+    /**
+     * ⛓⛓ HOW THE TWO RECOVERABLE ARMS COME BACK, AND WHY THIS IS NOT A GUESS.
+     *
+     * The three diagnostic tapes were authored by `synthesizeLegs` against a
+     * model that believed press 5 landed. ⛔ **THAT DRIVER CANNOT AUTHOR THEM
+     * ANY MORE** — with `spinner.js` live it correctly refuses press 5's
+     * declared move and, one leg later, the walk-proof into a cell it now
+     * knows is sealed. Re-synthesising would produce DIFFERENT tapes wearing
+     * the same names, which is the worst of the three options.
+     *
+     * ⛓ But two of them are pure span transforms of a tape that IS committed
+     * and IS byte-exact, and both transforms are invertible:
+     *
+     * ```
+     *   glide  = delay with every span at/after press 5 shifted -120,
+     *            tick_count - 120                         → 410
+     *   repeat = glide's spans before press 5, plus `down` held from
+     *            press5-2 to press5 + 6*42 + 40, plus six 1-tick `primary`
+     *            spans 42 apart, tick_count = end + 4      → 404
+     * ```
+     *
+     * ⚠ AND THE RECONSTRUCTION IS CHECKED AGAINST AN INDEPENDENT NUMBER.
+     * Both `tickCount`s above come from the slice-12 recording session's
+     * `observation count` lines — measured by the GAME, before this
+     * arithmetic existed. A transform that got a span wrong would land on a
+     * different total.
+     */
+    reconstruction: Object.freeze({
+        from: 'r5-press-delay',
+        delayTicks: 120,
+        repeatPresses: 6,
+        repeatGap: 42,
+        repeatTail: 40,
+        why: 'the driver that authored them is now correct and therefore cannot',
+    }),
     /** What is committed out of it: the pair that is green in both arms. */
     committedPair: Object.freeze({ press: 'r5-press-delay', control: 'r5-press-delay-control' }),
-    /** …and what is withdrawn, per §22.7. */
-    withdrawn: Object.freeze(['r5-press-axes', 'r5-press-glide', 'r5-press-repeat']),
+    /**
+     * ⛓⛓ R5 SLICE 13: TWO OF THE THREE CAME BACK, AS ORACLE RECORDINGS.
+     *
+     * `r5-press-glide` and `r5-press-repeat` are reconstructed
+     * (`reconstruction` above), re-recorded and BYTE-EXACT — 816 observations
+     * across the two, including the 250-tick hold and the five swallowed
+     * presses. A tape is withdrawn because its MODEL is refuted; the model is
+     * not refuted any more, so the withdrawal is not either.
+     *
+     * ⛔ `r5-press-axes` STAYS OUT, and for a different reason from the one
+     * that put it there: its inputs are gone. Not "the model is wrong about
+     * it" — nobody can author it. See `probes[0]`.
+     */
+    withdrawn: Object.freeze(['r5-press-axes']),
+    /** …and what came back, so the change is a claim and not an absence. */
+    restored: Object.freeze(['r5-press-glide', 'r5-press-repeat']),
     why: 'a wandering `Spinner` stood in the block\'s glide corridor. The model cannot see '
         + 'it because the census verdict `spinner: notSolid(... "damage only")` is a claim '
         + 'about the PLAYER\'s solids list, and a `PushableBlockFire`\'s constructor pushes '

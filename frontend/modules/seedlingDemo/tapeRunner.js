@@ -291,6 +291,28 @@ export function createTapeStepper(tape, opts = {}) {
             pulserHits: run ? run.pulserHits : [],
             pulserPlayerHits: run ? run.pulserPlayerHits : [],
             pulsePushes: run ? run.pulserPushes : [],
+            /**
+             * ⛔⛔ R5 slice 13: `{level, id, tag, cause}` per spinner that LEFT
+             * THE WORLD — and the cause is why it is here.
+             *
+             * `Spinner.removed()` writes `Game.setPersistence(tag, false)`
+             * without testing HOW it was removed, and `Enemy.update` destroys
+             * one in water or lava and fades one out over a pit. So a
+             * billiard that bounces into a hazard banks the same ledger entry
+             * a kill does, on a tick no route chose. A run that never fights
+             * one can still owe a flag; without this list nothing downstream
+             * could say so. (`spinner.SPINNER_TERRAIN_WRITE`.)
+             */
+            spinnerDeaths: run ? run.spinnerDeaths : [],
+            /**
+             * The live block rects at the END of the run, by id.
+             *
+             * ⚠ A SUMMARY, not a stream. It answers "where did the blocks
+             * finish", which a wedge probe needs and no other readout gives —
+             * `pulsePushes` records the pushes that LANDED and a swallowed
+             * one lands nothing at all.
+             */
+            pushables: run ? run.pushables : null,
             /** ⛔⛔ R5 slice 9: `{t, level, id, persistTag}` per chest OPENED. */
             chestOpens: run ? run.chestOpens : [],
             /** ⛓ R5 slice 9: one per completed seal ceremony, with its dead frames. */

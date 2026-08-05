@@ -77,6 +77,7 @@ import {
 } from './breakableRocks.js';
 import { keyLineTouches, opensOnKeyTick } from './activators.js';
 import { FIRE_WINDOW } from './fireVerb.js';
+import { MODELLED_ENEMY_CLASSES, unmodelledEnemies } from './spinner.js';
 import { CHEST, chestProbeLine, chestStanceBand } from './chest.js';
 import { HITBOX } from './playerPhysicsV1.js';
 import {
@@ -1940,15 +1941,36 @@ function runFire(run, perTick, fire, what) {
                 + 'empty one.');
         }
         const enemies = (run.world?.combat?.enemies ?? []).filter((e) => !e.removed);
-        if (enemies.length > 0 && !fire.enemyRoom) {
+        /**
+         * ⛓⛓ R5 SLICE 13 — THE REFUSAL NARROWS TO THE UNMODELLED, AND NOT
+         * ONE CLASS FURTHER.
+         *
+         * `spinner.js` steps a `Spinner`'s position every tick and
+         * `levelRun`'s `pushableCtx().collides` now asks about its body, so a
+         * glide corridor holding only spinners IS certifiable — the model
+         * predicts the wedge rather than missing it, which
+         * `r5-press-glide` and `r5-press-repeat` prove byte-exact over 816
+         * observations, and `r5-press-delay` proves in the other direction.
+         *
+         * ⚠ THE PREDICATE IS `MODELLED_ENEMY_CLASSES`, WHICH IS A LIST OF
+         * THINGS WITH A `step*`, not a list of things somebody understands.
+         * A class earns a row by having a stepper and per-visit state. That
+         * is the difference between narrowing this refusal and deleting it.
+         */
+        const unmodelled = unmodelledEnemies(enemies);
+        if (unmodelled.length > 0 && !fire.enemyRoom) {
             fail(`${what}: level ${run.level} holds ${enemies.length} live `
-                + `enem${enemies.length === 1 ? 'y' : 'ies'} `
-                + `(${[...new Set(enemies.map((e) => e.as3 ?? e.tag))].join(', ')}) and a `
-                + '`PushableBlock`\'s constructor pushes "Enemy" onto its own solids list, '
-                + 'so an enemy standing in the glide corridor WEDGES the block — '
-                + 'permanently, because a blocked block keeps `v` non-zero and `hit()` '
-                + 'returns on `v.length > 0`. The model tracks no enemy positions, so it '
-                + 'cannot certify this press. Either model the enemy\'s motion, or declare '
+                + `enem${enemies.length === 1 ? 'y' : 'ies'}, of which `
+                + `[${unmodelled.join(', ')}] ${unmodelled.length === 1 ? 'is' : 'are'} `
+                + 'NOT MODELLED — no stepper, no per-visit position. A `PushableBlock`\'s '
+                + 'constructor pushes "Enemy" onto its own solids list, so an enemy '
+                + 'standing in the glide corridor WEDGES the block — permanently, because '
+                + 'a blocked block keeps `v` non-zero and `hit()` returns on '
+                + '`v.length > 0`. The model cannot certify this press. Either model the '
+                + 'class (`spinner.js` is the worked example, and '
+                + `[${Object.keys(MODELLED_ENEMY_CLASSES).join(', ')}] `
+                + 'already ha' + (Object.keys(MODELLED_ENEMY_CLASSES).length === 1 ? 's' : 've')
+                + ' one), CLEAR the room with the encounter ladder\'s kill verb, or declare '
                 + '`fire.enemyRoom: "<what the GAME said>"` on this target — see '
                 + '`r5Shaft.SPINNER_WEDGE`.');
         }
@@ -2575,6 +2597,31 @@ function drive(run, target, perTick, {
  *   and `waypoints` the planned points per leg, for tests and for reading a
  *   fixture back later.
  */
+/**
+ * ⛓⛓ R5 SLICE 13 — `relax.roles`, and it may only WIDEN.
+ *
+ * A plan that needs the `combat` census — which every `moves` press does
+ * since §25.3, because "is there an unmodelled enemy in this room" cannot be
+ * asked without one — says so here. Narrowing is refused rather than
+ * honoured: a leg list that dropped `blocking` would silently get a walk
+ * that consults no collider, and the resulting tape would look planned.
+ */
+function rolesFor(base, asked) {
+    if (!asked) return base;
+    if (!Array.isArray(asked) || asked.length === 0) {
+        fail('synthesizeLegs: relax.roles must be a non-empty array of role names');
+    }
+    const missing = base.filter((r) => !asked.includes(r));
+    if (missing.length > 0) {
+        fail(`synthesizeLegs: relax.roles [${asked.join(', ')}] DROPS `
+            + `[${missing.join(', ')}] from this plan's base roles `
+            + `[${base.join(', ')}]. This option exists to WIDEN — a plan that asks for `
+            + '`combat` must still consult everything a walk consulted before it, or the '
+            + 'route is planned against geometry the executor will hit.');
+    }
+    return Object.freeze([...asked]);
+}
+
 export function synthesizeLegs(legs, opts = {}) {
     if (!Array.isArray(legs) || legs.length === 0) {
         fail('synthesizeLegs: legs must be a non-empty array');
@@ -2728,7 +2775,16 @@ export function synthesizeLegs(legs, opts = {}) {
             // planned and recorded with `noDamage: true`, where the guard is
             // real and the game honoured it. The R5 driver asks for combat
             // by name; see levelWorld's PRE_R5_ROLES docblock.
-            roles: noclip ? RELAXED_ROLES : PRE_R5_ROLES,
+            //
+            // ⛓⛓ R5 SLICE 13: AND THIS IS WHERE IT ASKS. `relax.roles` is
+            // that "by name" — the promise the comment above has been making
+            // since slice 2 with no mechanism behind it, which is why
+            // §25.3's absent-census refusal blocked EVERY `moves` press in
+            // the game rather than only the uncertifiable ones. ⚠ It may
+            // only WIDEN: a plan that quietly dropped `blocking` would get a
+            // walk that consults no collider, which is the same defect
+            // pointing the other way and much harder to see.
+            roles: rolesFor(noclip ? RELAXED_ROLES : PRE_R5_ROLES, relax.roles),
         } : {}),
     });
     const perTick = [];

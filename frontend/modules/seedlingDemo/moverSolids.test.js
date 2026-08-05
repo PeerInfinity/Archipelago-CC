@@ -102,12 +102,53 @@ describe('the wedge, as banked', () => {
         expect(new Set(wedged.map((p) => p.stuckY)).size).toBeGreaterThan(1);
     });
 
-    it('⚠ the withdrawn tapes are not in the fixture roster', async () => {
+    /**
+     * ⛓⛓ THIS GUARD CAUGHT ITS OWN SLICE. Slice 13 restored two of the three
+     * arms and this was the ONE red in the whole suite — a list that had
+     * gone from a fact to a memory, reported by the check that existed for
+     * exactly that. [[feedback_retired_oracle_check_the_regen]], pointing the
+     * pleasant way for once.
+     */
+    it('⚠ the withdrawn tape is not in the fixture roster, and the restored ones ARE', async () => {
         const { fixtureNames } = await import('./fixtures/index.js');
         const names = new Set(fixtureNames());
         for (const w of SPINNER_WEDGE.withdrawn) expect(names.has(w)).toBe(false);
+        // ⛔ AND THE OTHER HALF, which is what stops the first from being
+        // satisfiable by deleting fixtures: the two arms whose model is no
+        // longer refuted are back, with oracle recordings behind them.
+        for (const r of SPINNER_WEDGE.restored) expect(names.has(r)).toBe(true);
+        // …and the two lists are disjoint, so a name cannot be both.
+        for (const w of SPINNER_WEDGE.withdrawn) expect(SPINNER_WEDGE.restored).not.toContain(w);
         // …and the committed pair IS.
         expect(names.has(SPINNER_WEDGE.committedPair.press)).toBe(true);
         expect(names.has(SPINNER_WEDGE.committedPair.control)).toBe(true);
+    });
+
+    /**
+     * ⛔ AND THE ONE THAT STAYS OUT SAYS SO IN THE DATA. `reconstructible`
+     * is the field that separates "we chose not to commit this" from "its
+     * inputs do not exist" — two very different sentences that an empty
+     * `withdrawn` entry would have spelled the same way.
+     */
+    it('every restored arm is marked reconstructible and the withdrawn one is not', () => {
+        for (const r of SPINNER_WEDGE.restored) {
+            expect(SPINNER_WEDGE.probes.find((p) => p.tape === r).reconstructible).toBe(true);
+        }
+        for (const w of SPINNER_WEDGE.withdrawn) {
+            expect(SPINNER_WEDGE.probes.find((p) => p.tape === w).reconstructible).toBe(false);
+        }
+    });
+
+    /**
+     * ⛓⛓ AND THE GAME-SIDE NUMBER EACH REFUTATION LEFT BEHIND IS ASSERTED
+     * AGAINST ITS OWN ROUNDED FORM, so the double and the prose cannot drift
+     * apart. `stuckY` is what §25.3 wrote in a sentence; `gameY` is what
+     * `--record` printed.
+     */
+    it('the banked gameY agrees with the stuckY the prose quotes', () => {
+        for (const p of SPINNER_WEDGE.probes) {
+            if (p.gameY === undefined) continue;
+            expect(Number(p.gameY.toFixed(2))).toBe(p.stuckY);
+        }
     });
 });

@@ -3007,6 +3007,12 @@ export function buildLevelWorld(levelRecord, {
     /** ⛔⛔ R5 slice 10: every `FallRock`/`FallRockLarge`, parked or landed. */
     const fallRocks = [];
     /**
+     * ⛔⛔ R5 slice 13: every live `Spinner` — the first ENEMY the run steps.
+     *
+     * Unconditional, not gated on the `combat` role: see the collection site.
+     */
+    const spinners = [];
+    /**
      * ⛓ R5: the entities a HELD ITEM removed at build time.
      *
      * Published rather than silent, for the same reason the clear list is:
@@ -3513,6 +3519,39 @@ export function buildLevelWorld(levelRecord, {
                 persistTag: tagOf(e.type, e.attrs),
             });
         }
+        /**
+         * ⛔⛔ R5 SLICE 13: THE SPINNER ROSTER — collected ABOVE the
+         * `collider === 'none'` bail for the same reason the FallRock roster
+         * is, and it is the same reason twice: a verdict of "no collider"
+         * was always a verdict about the PLAYER.
+         *
+         * A `Spinner` blocks a `PushableBlock*` (`solids.push("Enemy")`) and
+         * it MOVES, so the run holds live state for it exactly as it does
+         * for a block. ⚠ AND THE ROSTER IS NOT THE COMBAT CENSUS: the
+         * `combat` role is opt-in, and a glide corridor that went uncertified
+         * because nobody asked for combat is the vacuity §25.3's refusal was
+         * built to prevent. This is unconditional.
+         *
+         * ⛓ `check()` IS APPLIED HERE. `Spinner.as:47-55` despawns one whose
+         * `tag >= 0` flag has been cleared — the same shape as a burnt tree
+         * and a looted chest, so a spinner the run already killed is not in
+         * the roster on re-entry and cannot wedge anything.
+         */
+        if (cls.as3 === 'Spinner') {
+            const spinTag = tagOf(e.type, e.attrs);
+            if (!(clearedTags && spinTag >= 0 && clearedTags.has(spinTag))) {
+                spinners.push({
+                    id: `${e.type}@${x},${y}`,
+                    tag: e.type,
+                    as3: cls.as3,
+                    x,
+                    y,
+                    persistTag: spinTag,
+                });
+            } else {
+                clearsUsed.add(spinTag);
+            }
+        }
         if (cls.collider === 'none' || cls.collider === undefined) continue;
         if (cls.collider === 'rect') {
             const solid = { rect: entityRect(cls, x, y), cls, tag: e.type, x, y };
@@ -3931,6 +3970,16 @@ export function buildLevelWorld(levelRecord, {
          * `r5Totem.GROUP_6` for the four slices this was believed impossible.
          */
         fallRocks,
+        /**
+         * ⛔⛔ R5 slice 13: the live `Spinner`s, `{id, tag, as3, x, y, persistTag}`.
+         *
+         * In NO solids list — a spinner does not block the PLAYER, and that
+         * verdict is still exactly right. It reaches the geometry through the
+         * run's per-visit state, and only for the movers whose own `solids`
+         * carry `"Enemy"`: a `PushableBlock*`, and nothing else in the game.
+         * See `spinner.js` and `SOLIDS_BY_MOVER`.
+         */
+        spinners,
         /**
          * R4: every entity in this level that `Player.genericHit` names,
          * with the arm it takes and what that arm COSTS a run.

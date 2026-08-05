@@ -1,0 +1,196 @@
+{
+  "tape_version": 4,
+  "game": "seedling",
+  "name": "r5-press-repeat",
+  "description": "⛓⛓ SIX PRESSES, 42 TICKS APART, WITH `down` HELD — the two-sided test of whether the thing in the corridor is STATIC or MOVING, RECONSTRUCTED from `r5-press-delay`. A static blocker gives the same y for the whole tape; a wandering spinner would let a later press through and the y would step down. ⛔ IT DOES NOT: the block jams ~14 px in at t143 and the FIVE LATER PRESSES ARE ALL SWALLOWED, because a blocked block keeps `v` non-zero forever (`input()` re-derives it from `tile`, `moveY` resets `tile` to the current cell) and `PushableBlockFire.hit`'s first line is `if (v.length > 0) return`. A wedged block can never be un-wedged by pressing it.",
+  "boot": {
+    "level": 39,
+    "x": 232,
+    "y": 88
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [],
+  "grants": [
+    {
+      "level": 39,
+      "items": [
+        "conch",
+        "feather",
+        "fire",
+        "sword"
+      ]
+    }
+  ],
+  "persistence": [
+    {
+      "level": 39,
+      "tag": 8,
+      "note": "parity with `r5-shaft`: the entrance write. Inert in this room, declared so the two tapes build the same world."
+    }
+  ],
+  "equips": [
+    {
+      "t": 10,
+      "slot": 1
+    }
+  ],
+  "tick_count": 404,
+  "inputs": [
+    {
+      "key": "left",
+      "from": 0,
+      "to": 6
+    },
+    {
+      "key": "up",
+      "from": 0,
+      "to": 6
+    },
+    {
+      "key": "down",
+      "from": 6,
+      "to": 7
+    },
+    {
+      "key": "right",
+      "from": 6,
+      "to": 7
+    },
+    {
+      "key": "primary",
+      "from": 10,
+      "to": 11
+    },
+    {
+      "key": "left",
+      "from": 48,
+      "to": 59
+    },
+    {
+      "key": "right",
+      "from": 59,
+      "to": 60
+    },
+    {
+      "key": "left",
+      "from": 60,
+      "to": 62
+    },
+    {
+      "key": "right",
+      "from": 64,
+      "to": 67
+    },
+    {
+      "key": "left",
+      "from": 68,
+      "to": 70
+    },
+    {
+      "key": "left",
+      "from": 74,
+      "to": 76
+    },
+    {
+      "key": "up",
+      "from": 74,
+      "to": 83
+    },
+    {
+      "key": "right",
+      "from": 76,
+      "to": 77
+    },
+    {
+      "key": "down",
+      "from": 83,
+      "to": 84
+    },
+    {
+      "key": "up",
+      "from": 86,
+      "to": 88
+    },
+    {
+      "key": "left",
+      "from": 86,
+      "to": 95
+    },
+    {
+      "key": "down",
+      "from": 88,
+      "to": 89
+    },
+    {
+      "key": "up",
+      "from": 89,
+      "to": 90
+    },
+    {
+      "key": "down",
+      "from": 93,
+      "to": 95
+    },
+    {
+      "key": "right",
+      "from": 97,
+      "to": 99
+    },
+    {
+      "key": "up",
+      "from": 97,
+      "to": 99
+    },
+    {
+      "key": "left",
+      "from": 99,
+      "to": 100
+    },
+    {
+      "key": "right",
+      "from": 100,
+      "to": 101
+    },
+    {
+      "key": "down",
+      "from": 103,
+      "to": 104
+    },
+    {
+      "key": "down",
+      "from": 106,
+      "to": 400
+    },
+    {
+      "key": "primary",
+      "from": 108,
+      "to": 109
+    },
+    {
+      "key": "primary",
+      "from": 150,
+      "to": 151
+    },
+    {
+      "key": "primary",
+      "from": 192,
+      "to": 193
+    },
+    {
+      "key": "primary",
+      "from": 234,
+      "to": 235
+    },
+    {
+      "key": "primary",
+      "from": 276,
+      "to": 277
+    },
+    {
+      "key": "primary",
+      "from": 318,
+      "to": 319
+    }
+  ]
+}
