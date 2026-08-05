@@ -234,6 +234,21 @@ const CHECKPOINT = join(CHECKPOINT_DIR, 'checkpoint.jsonl');
 /** Hash the model + data the per-tape verdicts depend on. */
 function modelFingerprint() {
     const h = createHash('sha256');
+    // ⛔⛔ THIS FILE FIRST, and it was missing from the first cut — which is
+    // the same hole one level up. A verdict is produced by the CHECKS as
+    // much as by the model: edit a threshold, a band, or the dead-frame
+    // budget's arithmetic, and every stored PASS is about a question that
+    // is no longer being asked. The fingerprint has to cover the asker.
+    h.update(readFileSync(fileURLToPath(import.meta.url)));
+    // …and the driver that produces the stream on the game side.
+    // ⚠ THE PATH IS INLINE, NOT `WIN_DRIVER`. That const is declared ~115
+    // lines below this function's only call site, and reading it here is
+    // the temporal dead zone this slice opened with (§24.2) — very nearly
+    // reproduced inside the fix for it, and caught by checking the
+    // declaration order rather than by trusting that a name in scope is a
+    // name with a value.
+    const winDriver = join(HERE, 'seedling-bot-replay-win.py');
+    if (existsSync(winDriver)) h.update(readFileSync(winDriver));
     const moduleDir = join(REPO, 'frontend', 'modules', 'seedlingDemo');
     for (const f of readdirSync(moduleDir).filter((n) => n.endsWith('.js')).sort()) {
         h.update(f);
