@@ -3177,3 +3177,111 @@ the stream agreed and the ledger did not.
 - `earnedClears` cannot see a lock the run never leaves: a banked clear is
   cashed when its level is next BUILT, so a run that opens three locks in
   one room reports an empty ledger. The WRITES are the claim.
+
+## R5 slice 10 — the rock the rope drops
+
+### ⛔⛔ Two gates that share an opener are one gate
+
+`r5Totem.GROUP_6` argued for four slices that a rope's group publication
+cannot arm `fallrock@144,624`, from two independent reasons: its tag is 10
+and "nothing on this route writes tag 10", and `FallRock.update`'s position
+arm is `activate && y >= fallTo` against a rock parked at `y = -16`.
+
+Both sentences are true **about `update()`**. The mechanism is in the
+setter:
+
+```
+  override set activate(a)  { if (a && !_active) { fall(); _active = a; } }
+  fall()                    { Game.setPersistence(tag, false);   // <- HERE
+                              trigger = true;
+                              Game.freezeObjects = true;
+                              waitToFallTimer = 60; }
+```
+
+**The publication is not a read of the flag — it is the write of it.** So
+"nothing writes tag 10" is false the instant the rope publishes, and the
+update-time gate is open because the setter opened it. Having two reasons
+made the audit *read* as safe; they were never independent.
+
+⚠ **When an audit clears a class, check the SETTER as well as `update()`.**
+An `Activators` subclass can do arbitrary work in `set activate`, and four
+of them do.
+
+### ⛓⛓ Pull the rope, drop the rock — it is an idiom, and the atlas says so
+
+Three `RopeStart`s exist in the whole game and **two publish to a
+`FallRock`** (L28 `t 1`, L39 `t 6`). A second instance of a "coincidence"
+sitting in the data is the cheapest possible refutation of it, and it costs
+one query over the atlas.
+
+### ⛓ A freeze costs the tape ZERO ticks and costs the readout everything
+
+`Bot.update`'s gate is `blackCover > 0 || Game.freezeObjects`, so a frozen
+frame advances no tick and records no observation. A 197-frame fall is
+therefore **invisible to the observation stream**: between the live tick
+that pulls the rope and the next live tick, the rock has gone from overhead
+to landed. The only instrument that sees it is `dead_frames`.
+
+So a model can resolve such a span in ONE tick — but it must bank the frame
+count, because that number is the whole of the evidence.
+
+⚠ **The boundary frames are free only if the player is still.** `fire()`
+runs above `super.update()`, so the pull frame's movement is skipped; and
+the release frame moves the player with no observation recorded. A route
+that pulls a rope *while walking* pays a ghost step in both directions.
+
+### ⛓⛓ The dead-frame budget, and why the census counter could not do it
+
+`saw_auto_advance == 0` was gated on `tape_version < 4`, so every R5 tape
+had no census guard at all. Re-arming it is necessary and **not
+sufficient**: `Bot.autoAdvance`'s predicate is `Game.talking || helpUp`,
+and the two classes that actually freeze this arc — `SealController` and
+`FallRock` — are neither. The counter reports 0 through a 197-frame freeze.
+
+The check that works is arithmetic over the readout:
+
+```
+  dead_frames  ==  the model's own freezes
+                 + each ceremony's freeze
+                 + one room-load fade per BUILD   <- a BAND, not a constant
+```
+
+A band because `blackCover` decays per RENDER while the gate samples per
+UPDATE: 21/20 on one level, 20/19 on another. The refuted shaft tape's
+residue was 217 against one load — twenty times the band.
+
+### ⛔⛔ `--record` now runs the model differential itself
+
+`--record` used to write the expectation and `continue` past every
+comparison, which is how a recording got read as evidence about a model. It
+now runs the model-against-recording diff on the stream it just wrote, as a
+named failure for that tape. The ordering cannot be forgotten because it is
+no longer an ordering.
+
+### ⛔ The literal in the argument you were not looking at
+
+`FORCED_TSET` documented its own method — "checked every `super(` call" —
+and missed `BossLock.as:31`:
+
+```
+  super(_x + Tile.w / 2, _y + Tile.h / 2, Game.bossLocks[_t], -1)
+```
+
+The group is a hard-wired **-1**; `_t` is the key type, one argument to its
+left. `Game.as` passes `o.@keyType` there, so the call site has exactly the
+`_t`-shaped argument the sweep was scanning for. Two literals exist in the
+whole game and this was the second.
+
+⚠ It had shipped a prediction: that L40's `buttonroom@272,208` opens
+`bosslock@480,352` with no key. It cannot — a group -1 lock answers no
+publication — and the model had opened a wall the game keeps shut.
+
+### ⚠ A one-tick lag is not automatically the cause of what follows it
+
+The shaft's stream parts at tick 852 by `dy = 1.4`, which is exactly the
+model's own movement step there: the game stalled one tick and stayed one
+tick behind. It is tempting to blame every later failure on it. Computing
+the margins refuted that — every one of the eighteen presses has at least
+13 px of slack against `Player.fire()`'s 16 px cut, so a 1.4 px offset
+cannot make one miss. **Measure the margin before you attribute the
+consequence.**
