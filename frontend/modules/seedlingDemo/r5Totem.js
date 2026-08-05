@@ -812,6 +812,93 @@ export const L40_CHAIN = Object.freeze({
 });
 
 /**
+ * ── ⛔⛔ L41 AND L42 END AT THE SAME WALL — R5 slice 11 ────────────────
+ *
+ * Step 4's recon, done early because its answer changes what step 4 IS.
+ * Both rooms hold one totem part and both are behind `L40_CHAIN`'s link 10
+ * (the boss key), so neither is routable this slice — but which MECHANIC
+ * blocks them is answerable from the extract, and it is **one mechanic,
+ * not two**:
+ *
+ * ```
+ *   L41  352 cells with the crusher, 408 without   totempart 3 crosses
+ *   L42  304 cells with the crushers, 356 without  totempart 4 crosses
+ * ```
+ *
+ * — measured with every activator open and every breakable rock broken, so
+ * every OTHER opener in both rooms is already given away. L42 is the pure
+ * case: it holds two crushers, one orb, one teleporter and the part, and
+ * **no activator and no presser at all**. There is nothing else it could
+ * be.
+ *
+ * ⛔⛔ **AND `tset -1` MEANS THE OPPOSITE OF WHAT IT MEANS ON A `Lock`.**
+ * `Crusher.update` opens `if (activate || t == -1)` — a crusher in group -1
+ * is ALWAYS ON. `Lock.check`'s `tSet < 0` is the kill-lock sentinel ("opens
+ * when `Game.totalEnemies() <= 0`"). Same literal, two meanings, one class
+ * apart, and both are in this cluster.
+ *
+ * ⛓ **THE MOTION, TRANSCRIBED BUT NOT BUILT.** Stationary, it snaps to the
+ * tile grid and probes: `collideLine("Solid", x, y, p.x, p.y)` with its own
+ * `type` temporarily set to `"BS"` so it does not block its own sight line;
+ * if the line is clear it tests four rects — its 32x32 body grown by
+ * `intDist` = 64 along each axis — and charges at 1 px/tick down whichever
+ * one holds the player, until `moveX`/`moveY` hits a Solid and zeroes `v`.
+ * ⚠ The direction loop has no `break`, so the LAST matching direction wins
+ * ([[feedback_nested_dispatch_reuses_accumulator]]).
+ *
+ * ⛔⛔ **AND THE LADDER'S VERDICT AND THE LEVEL'S SOLUTION ARE THE SAME
+ * VOLUME.** `hazards.hazardVolume` prices a crusher as HARD-AVOID over
+ * exactly that plus of four lanes — correctly, at damage 1000 ("KILL
+ * EVERYTHING", `Crusher.as:33`), where a contact is `die()` at any
+ * `hitsMax`. The only way past one is to stand in a lane ON PURPOSE and
+ * spend its charge. A route cannot satisfy the ladder and solve the room,
+ * and which of the two gives is a RULING rather than a derivation.
+ */
+export const L41_L42_RECON = Object.freeze({
+    /** The single mechanic between the route and totemparts 3 and 4. */
+    blocker: 'crusher-motion',
+    conflict: '⛔ hard-avoid is correct AND the charge is the solution — a ruling, not a '
+        + 'derivation. The next slice cannot route either room without deciding it.',
+    levels: Object.freeze([
+        Object.freeze({
+            level: 41,
+            boot: Object.freeze({ x: 16, y: 160 }),
+            from: 'L40 teleporter@944,96',
+            part: 3,
+            at: Object.freeze({ x: 240, y: 144 }),
+            cells: Object.freeze({ withCrusher: 352, without: 408 }),
+            why: 'every other opener is modelled and given away in the measurement — '
+                + '`button@176,176 {t 1}` opens `wandlock@240,96`, `button@248,232 {t 0}` '
+                + 'opens `cover@112,128`, and both `breakablerock`s are broken. What is '
+                + 'left is `crusher@240,64`, sitting on the room\'s east exit.',
+        }),
+        Object.freeze({
+            level: 42,
+            boot: Object.freeze({ x: 240, y: 320 }),
+            from: 'L40 teleporter@848,0',
+            part: 4,
+            at: Object.freeze({ x: 184, y: 152 }),
+            cells: Object.freeze({ withCrusher: 304, without: 356 }),
+            why: '⛓⛓ THE PURE CASE: L42 holds two crushers, one orb, one teleporter and '
+                + 'the part, and NO activator and NO presser at all. The two crushers '
+                + 'are the wall between the arrival corridor and the part\'s chamber, '
+                + 'and there is nothing else the answer could be.',
+        }),
+    ]),
+    /**
+     * ⚠⚠ THE TRAP THIS MEASUREMENT NEARLY FELL INTO, recorded because the
+     * wrong answer was convincing. Filtering `world.solids` AFTER
+     * `buildLevelWorld` is a NO-OP — `collidesSolid` closes over the list
+     * it was built with — so the first run of this comparison reported
+     * "deleting the crushers changes nothing", which reads exactly like
+     * "the crusher is not the wall". The stand-in has to be applied to the
+     * SOURCE RECORD. A stand-in that silently does nothing and a mechanic
+     * that genuinely does nothing are the same output.
+     */
+    standInMustBe: 'the level record, not `world.solids`',
+});
+
+/**
  * ⛔⛔ The two predictions, as data, so a test asserts the CORRECTION
  * rather than the current string.
  */

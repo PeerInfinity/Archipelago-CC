@@ -11,7 +11,7 @@ import { describe, expect, it } from 'vitest';
 import {
     CLUSTER, GROUP_6, L38_CHAIN, TOTEM_ENTRANCE, TOTEM_PAIR, TOTEM_ROPE, TOTEM_SHAFT,
     TotemError, assertPresserWrites,
-    L40_ARRIVAL, L40_CHAIN, L40_PREDICTIONS,
+    L40_ARRIVAL, L40_CHAIN, L40_PREDICTIONS, L41_L42_RECON,
 } from './r5Totem.js';
 import { ROPE_PULL } from './r5Shaft.js';
 import { createFallRock, fallRockFreezeTicks, publishActivate } from './fallRock.js';
@@ -687,6 +687,73 @@ describe('⛓⛓ L40\'s opening chain — the join is a PAIR, and the key is beh
         expect(pred.verdict).toBe('REFUTED AT SOURCE');
         const key = L40_CHAIN.links.find((l) => l.what.startsWith('bosskey@656,528'));
         expect(key.why).toMatch(/MANDATORY/);
+    });
+
+    /**
+     * ⛔⛔ Step 4's recon, and its answer is one mechanic rather than two.
+     *
+     * ⚠⚠ THE STAND-IN GOES IN THE LEVEL RECORD, NOT IN `world.solids`.
+     * `collidesSolid` closes over the list `buildLevelWorld` gave it, so
+     * filtering the array afterwards is a NO-OP — and the no-op reads
+     * exactly like "the crusher is not the wall", which is the answer this
+     * comparison produced first and had to throw away.
+     */
+    it('⛔⛔ L41 and L42 both end at the CRUSHER, with every other opener given away', () => {
+        for (const spec of L41_L42_RECON.levels) {
+            const base = atlasLevelSource()(spec.level);
+            const part = base.entities.find((e) => e.type === 'totempart');
+            expect(Number(part.attrs.totempart)).toBe(spec.part);
+            const results = [false, true].map((drop) => {
+                const r = drop
+                    ? { ...base, entities: base.entities.filter((e) => e.type !== 'crusher') }
+                    : base;
+                const w = buildLevelWorld(r, { roles: ROLES, inventory: INV });
+                const open = new Set(w.activators.map((a) => a.id));
+                const rocks = new Set(base.entities.filter((e) => e.type === 'breakablerock')
+                    .map((e) => `breakablerock@${e.x},${e.y}`));
+                const P = 8;
+                const ok = (x, y) => x > 0 && y > 0 && x < r.width * 16 && y < r.height * 16
+                    && !w.collidesSolid(playerBoxAt(x, y),
+                        { openActivators: open, brokenRocks: rocks });
+                const seen = new Set([`${spec.boot.x + 8},${spec.boot.y + 8}`]);
+                const q = [[spec.boot.x + 8, spec.boot.y + 8]];
+                while (q.length) {
+                    const [x, y] = q.shift();
+                    for (const [dx, dy] of [[P, 0], [-P, 0], [0, P], [0, -P]]) {
+                        const nx = x + dx;
+                        const ny = y + dy;
+                        if (!ok(nx, ny)) continue;
+                        const k = `${nx},${ny}`;
+                        if (seen.has(k)) continue;
+                        seen.add(k);
+                        q.push([nx, ny]);
+                    }
+                }
+                const tiles = new Set([...seen].map((k) => {
+                    const [a, b] = k.split(',').map(Number);
+                    return `${Math.floor(a / 16)},${Math.floor(b / 16)}`;
+                }));
+                return tiles.has(`${Math.floor(part.x / 16)},${Math.floor(part.y / 16)}`);
+            });
+            expect(results, `L${spec.level}: the part must cross on the crusher alone`)
+                .toEqual([false, true]);
+        }
+        expect(L41_L42_RECON.blocker).toBe('crusher-motion');
+    });
+
+    it('⛔⛔ `tset -1` means ALWAYS ON for a Crusher and KILL-LOCK for a Lock', () => {
+        // The same literal, two meanings, one class apart — and both are in
+        // this cluster. `Crusher.update` is `if (activate || t == -1)`;
+        // `Lock.check` is `tag >= 0 && tSet < 0 && !checkPersistence(tag)`.
+        const w = buildLevelWorld(atlasLevelSource()(42), { roles: ROLES, inventory: INV });
+        const crushers = w.solids.filter((s) => s.tag === 'crusher');
+        expect(crushers).toHaveLength(2);
+        // ⛓ L42 IS THE PURE CASE: no activator, no presser, nothing else.
+        expect(w.activators).toHaveLength(0);
+        expect(w.pressers).toHaveLength(0);
+        expect(L41_L42_RECON.levels[1].why).toMatch(/PURE CASE/);
+        // …and the ladder's verdict is a conflict rather than a clearance.
+        expect(L41_L42_RECON.conflict).toMatch(/ruling/);
     });
 
     it('the chain is eleven links, numbered, and every link cites what builds it', () => {

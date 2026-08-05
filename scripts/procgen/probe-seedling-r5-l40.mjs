@@ -60,7 +60,7 @@ const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
 const { nodeCentre, plannerObstacleAt } = await import(join(MODULE, 'botDriverV2.js'));
 const { createPushableState, pushableRects } = await import(join(MODULE, 'pushables.js'));
 const { auditFire, FIRE_ARM_POLICY } = await import(join(MODULE, 'presses.js'));
-const { L40_ARRIVAL, L40_CHAIN } = await import(join(MODULE, 'r5Totem.js'));
+const { L40_ARRIVAL, L40_CHAIN, L41_L42_RECON } = await import(join(MODULE, 'r5Totem.js'));
 
 const levelSource = atlasLevelSource();
 const LEVEL = 40;
@@ -91,9 +91,9 @@ console.log(`## L${LEVEL} — ${rec.width}x${rec.height} tiles, from `
  * [[feedback_silent_watcher_vacuous_negative]].
  */
 let throws = 0;
-function compAt(world, start, opts = {}) {
+function compAt(world, start, opts = {}, bounds = rec) {
     const free = (cx, cy) => {
-        if (cx < 0 || cy < 0 || cx >= rec.width * 2 || cy >= rec.height * 2) return false;
+        if (cx < 0 || cy < 0 || cx >= bounds.width * 2 || cy >= bounds.height * 2) return false;
         const c = nodeCentre(cx, cy, LATTICE);
         try {
             return plannerObstacleAt(world, c.x, c.y, null,
@@ -324,10 +324,70 @@ claim(throws === 0,
     `${throws} — a caught throw returns "blocked", so one bad option turns a flood into `
     + 'a silently EMPTY component that reads like level design');
 
+// ── ⛔⛔ STEP 4's RECON: L41 AND L42 END AT THE SAME WALL ──────────────
+//
+// Both are behind the boss key (link 10), so neither is routable this
+// slice — but which MECHANIC blocks them is answerable now, and it is one
+// mechanic and not two.
+console.log('\n## L41 and L42 — the last wall is the same wall');
+for (const spec of L41_L42_RECON.levels) {
+    const lrec = levelSource(spec.level);
+    const part = (lrec.entities ?? []).find((e) => e.type === 'totempart');
+    const rocks = new Set((lrec.entities ?? []).filter((e) => e.type === 'breakablerock')
+        .map((e) => `breakablerock@${e.x},${e.y}`));
+    const results = [];
+    for (const drop of [false, true]) {
+        // ⚠⚠ REMOVED AT THE SOURCE RECORD, NOT FROM `world.solids`.
+        // `collidesSolid` closes over the list it was built with, so
+        // filtering the array afterwards is a NO-OP — and the no-op reads
+        // exactly like "the crusher is not the wall", which is the answer
+        // this probe got first and had to throw away. A stand-in that
+        // silently does nothing is the same shape as a `burnedTrees`
+        // option nobody accepts.
+        const useRec = drop
+            ? { ...lrec, entities: (lrec.entities ?? []).filter((e) => e.type !== 'crusher') }
+            : lrec;
+        const w = buildLevelWorld(useRec, { roles: ROLES, inventory: INVENTORY });
+        const comp = compAt(w, spec.boot, {
+            avoidVolumes: true,
+            openActivators: new Set(w.activators.map((a) => a.id)),
+            brokenRocks: rocks,
+        }, useRec);
+        results.push({ drop, cells: comp.size, part: touches(comp, part) });
+        console.log(`   L${spec.level} crushers ${drop ? 'DELETED  ' : 'in place '} `
+            + `${String(comp.size).padStart(4)} cells   totempart `
+            + `${part.attrs.totempart} ${touches(comp, part) ? '⛓ REACHED' : '⛔ no'}`);
+    }
+    claim(!results[0].part && results[1].part,
+        `⛔⛔ L${spec.level}: the CRUSHER is the last wall — every other opener is already modelled`,
+        `${results[0].cells} cells with it, ${results[1].cells} without, and `
+        + `totempart ${part.attrs.totempart} crosses from unreachable to reachable on `
+        + `that one change alone. ${spec.why}`);
+}
+claim(L41_L42_RECON.blocker === 'crusher-motion',
+    '⛔⛔ AND IT IS ONE MECHANIC, NOT TWO — the same wall in both rooms',
+    'the crusher\'s MOTION: `Crusher.update` is `if (activate || t == -1)`, so `tset -1` '
+    + 'means ALWAYS ON (the opposite of a `Lock`, where `tSet < 0` means "opened by '
+    + 'killing everything" — the same sentinel, two meanings, one class apart). It '
+    + 'snaps to the grid, tests `collideLine("Solid")` to the player with its own type '
+    + 'temporarily "BS" so it does not hit itself, and if the line is clear it charges '
+    + 'at 1 px/tick down whichever of four 64 px lanes the player is in, until it hits '
+    + 'a Solid. ⚠ The direction loop has no `break`, so the LAST matching direction '
+    + 'wins — [[feedback_nested_dispatch_reuses_accumulator]] again.');
+claim(L41_L42_RECON.conflict.startsWith('⛔'),
+    '⛔⛔ AND THE LADDER\'S VERDICT AND THE LEVEL\'S SOLUTION ARE THE SAME VOLUME',
+    '`hazards.hazardVolume` prices a crusher as HARD-AVOID over a plus of four 64 px '
+    + 'lanes — correctly, at damage 1000, "KILL EVERYTHING" — and the only way past one '
+    + 'is to stand in a lane ON PURPOSE and make it charge. A route cannot satisfy the '
+    + 'ladder and solve the room. That is a RULING for the next slice, not a decision '
+    + 'to take here.');
+
 // ── ⚠ WHAT THIS PROBE DOES NOT SHOW ──────────────────────────────────
 console.log('\n## what is NOT shown here, named');
 console.log('   ⛔ the BURN, as a per-visit removal — the eighth geometry family');
 console.log('   ⛔ the pulser wired into `levelRun` for L40 (built for L38, §21.65)');
+console.log('   ⛔ the CRUSHER\'s motion — the one mechanic between the route and');
+console.log('      totemparts 3 and 4, and the ruling its hard-avoid verdict needs');
 console.log('   ⛔ the encounter ladder for 12 bobs, 2 punchers, a bobsoldier, an');
 console.log('      iceturret and a bombpusher — and 5 spinners on kill-write tags');
 console.log('   ⚠ the CONTROL is not a trigger: `control@224,432 {fallthrough 43}` is a');
