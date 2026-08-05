@@ -160,6 +160,11 @@ const { r5AcceptanceFindings } =
 // skipped: the game is asserted against `mirror + earned`, which is a
 // harder claim than the unamended one.
 const { MODEL_EXEMPT } = await import(join(REPO, 'frontend/modules/seedlingDemo/r5Chain.js'));
+// ⛓ The MEASURED ceremony constants, so the budget spends numbers the
+// model banked rather than literals this file invents.
+const {
+    CEREMONY_DEAD_FRAMES,
+} = await import(join(REPO, 'frontend/modules/seedlingDemo/sealCeremony.js'));
 // ⛔ The declared DROWN exemption — see `r5Swim.DROWN_EXPECTED`. Same
 // doctrine, different assert: an armed-water pair needs one arm whose timer
 // MOVED, and a declared arm that reports 0 is a RED rather than a pass.
@@ -645,12 +650,12 @@ function checkReadout(name, tape, status, stream) {
     // is armed here as exactly that. The freezes it cannot see are caught
     // by the dead-frame budget below, which is a different instrument and
     // is the one that would have caught the shaft.
-    check(`${name}: no dialogue auto-advance fired`, status.saw_auto_advance === 0,
-        status.saw_auto_advance === 0
-            ? `saw_auto_advance=0${tape.tape_version < 4 ? ' (v<=3: bug-compatible count)' : ''}`
-            : `saw_auto_advance=${status.saw_auto_advance} — a dialogue or Help the route `
-            + 'was supposed to avoid froze the game, so the proximity-hazard census '
-            + 'missed something');
+    // ⚠ THE ASSERTION ITSELF IS BELOW, beside the dead-frame budget, because
+    // its expectation is DERIVED from the model's collection list and
+    // `expected` does not exist yet at this point in the function. Reaching
+    // backwards for it is the temporal dead zone slice 11 opened with — the
+    // third time this file's ordering has mattered, so the check moved to
+    // the data rather than the data being dragged up to the check.
 
     // The JS side's expectation for this tape, from the same tape the game
     // just ran. `runTape` throws if a grant never fires, so a stale route is
@@ -702,9 +707,95 @@ function checkReadout(name, tape, status, stream) {
     // BEFORE the edit (§23.10), so the gate that would have caught it was
     // measuring the parent commit. ⇒ a sweep whose result predates the
     // change it is meant to gate is not a gate.
+    // ── ⛔⛔ THE AUTO-ADVANCE EXPECTATION IS EARNED, NOT ZERO ───────────
+    //
+    // Slice 10 re-armed this guard as `saw_auto_advance === 0` for every
+    // tape. Its first run reported `r4-walk-1-sword` and `r4-walk-full` at
+    // 1 — and both are RIGHT. `Bot.autoAdvance`'s own docblock says so:
+    // *"The sword's `Help(3)` is auto-advanced on every run that collects
+    // the sword … a v4 tape gets the honest one, and R4 asserts it as a
+    // POSITIVE."*
+    //
+    // ⛓ THREE `new Help(...)` EXIST IN THE WHOLE GAME, and only one is on
+    // any route here:
+    //
+    //   `Inventory.as:174`   `new Help(0)`  — behind `if (help)`, which is
+    //                                         exactly what R1's one AS3 line
+    //                                         (`Inventory.help = false`)
+    //                                         turns off. The suppression
+    //                                         HOLDS; this is not it.
+    //   `Game.as:938`        `new Help(2)`  — the intro cutscene's end.
+    //   `Pickups/Sword.as:48` `new Help(3)` — in `Sword.removed()`, with NO
+    //                                         `help` guard at all.
+    //
+    // ⇒ collecting the sword raises a Help that nothing suppresses, and the
+    // counter reporting it is the readout working. The defect was a
+    // CONSTANT expectation for a value the route earns.
+    //
+    // ⚠ AND IT IS STILL A CENSUS GUARD, because the expectation is exact:
+    // a Help the route did NOT earn still goes red, and a sword collection
+    // that FAILS to raise one goes red too. Version-scoped to match
+    // `autoAdvance`'s own scoping — a v<=3 tape's counter is
+    // bug-compatible and reports 0 however many Helps it dismissed.
+    const swordPickups = (expected.collected ?? []).filter((c) => c.item === 'sword').length;
+    const wantAutoAdvance = (tape.tape_version ?? 1) >= 4 ? swordPickups : 0;
+    check(`${name}: dialogue auto-advance is exactly what the route earns`,
+        status.saw_auto_advance === wantAutoAdvance,
+        status.saw_auto_advance === wantAutoAdvance
+            ? `saw_auto_advance=${status.saw_auto_advance}, and the route earns `
+                + `${wantAutoAdvance}${tape.tape_version < 4
+                    ? ' (v<=3: the counter is bug-compatible and reports 0)'
+                    : swordPickups > 0
+                        ? ` — ${swordPickups} sword pickup(s), each raising \`Sword.removed()\`'s`
+                            + ' unguarded `Help(3)`'
+                        : ''}`
+            : `saw_auto_advance=${status.saw_auto_advance} against ${wantAutoAdvance} earned `
+                + `(${swordPickups} sword pickup(s), tape v${tape.tape_version}). `
+                + (status.saw_auto_advance > wantAutoAdvance
+                    ? 'A dialogue or Help the route was supposed to avoid froze the game, so '
+                        + 'the proximity-hazard census missed something.'
+                    : 'The route collected a sword and the game raised NO Help — so either '
+                        + 'the pickup never fired or the counter has stopped seeing it.'));
+
+    // ── ⛓⛓ AND ITS FIRST RUN FOUND WHAT IT WAS MISSING — R5 slice 11 ───
+    //
+    // The budget shipped counting `sealCollections` — R5's CHEST seal — and
+    // nothing else, which was every ceremony the slice that wrote it had in
+    // front of it. Its first contact with the roster (it was in a TDZ until
+    // slice 11, so it had never run) reported 26 tapes OUT OF BAND, and
+    // every one of them by an exact multiple of a constant already banked:
+    //
+    //   23 tapes   150 x items collected   the ORDINARY `special` pickup
+    //                                      ceremony — which is what R3 and
+    //                                      R4 exist to drive
+    //    3 tapes   174 + 150 x spawned     `FallRockLarge`'s freeze in L32,
+    //                                      plus the BobBoss's RUNTIME-SPAWNED
+    //                                      reward, which is in no level's
+    //                                      pickup list and so in no
+    //                                      `collected` record
+    //
+    // ⛓⛓ AND THE INSTRUMENT REDISCOVERED TWO FACTS THE MODEL HAD ALREADY
+    // WRITTEN DOWN AND NEVER FED IT. `MODEL_EXEMPT` has described the
+    // runtime-spawned reward and the 174-frame rock since R5 slice 3, in
+    // prose. An independent stratum converging on the record is the thing
+    // §14's law keeps asking for, and it is the evidence that this budget
+    // measures the world rather than the model's assumptions.
+    //
+    // ⚠ EVERY TERM COMES FROM A BANKED CONSTANT, none from a literal here:
+    // `CEREMONY_DEAD_FRAMES.pickup` is the measured 150 and
+    // `MODEL_EXEMPT[name].freezeFrames` is `rockSchedule().bossSpawnsAt`,
+    // which runs the fall as a loop because the closed form rounds wrong.
     const loads = stream.transitions.length + 1;
-    const ceremonyFrames = (expected.sealCollections ?? [])
+    const sealFrames = (expected.sealCollections ?? [])
         .reduce((n, c) => n + (c.deadFrames ?? 0), 0);
+    /** Every ordinary `special` pickup the run walked onto. */
+    const pickupFrames = (expected.collected ?? []).length * CEREMONY_DEAD_FRAMES.pickup;
+    const exempt = MODEL_EXEMPT[name] ?? null;
+    /** A reward spawned at RUNTIME freezes exactly like a placed pickup. */
+    const spawnedFrames = (exempt?.earned ?? []).length * CEREMONY_DEAD_FRAMES.pickup;
+    /** A freeze the tape's own exemption declares — the L32 rock. */
+    const declaredFreeze = exempt?.freezeFrames ?? 0;
+    const ceremonyFrames = sealFrames + pickupFrames + spawnedFrames + declaredFreeze;
     const modelled = (expected.frozenFramesOwed ?? 0) + ceremonyFrames;
     const residue = status.dead_frames - modelled;
     const lo = loads * FADE_PER_LOAD.min;
@@ -712,7 +803,12 @@ function checkReadout(name, tape, status, stream) {
     check(`${name}: the dead frames are accounted for`,
         residue >= lo && residue <= hi,
         `${status.dead_frames} dead = ${modelled} modelled `
-        + `(${expected.frozenFramesOwed ?? 0} run freeze + ${ceremonyFrames} ceremony) `
+        // ⚠ ITEMISED, not a single "ceremony" total. The failure this check
+        // exists to diagnose is "which freeze is missing", and a lump sum
+        // makes every one of them look the same — the 26 that failed its
+        // first run were told apart by hand arithmetic off a single number.
+        + `(${expected.frozenFramesOwed ?? 0} run freeze + ${sealFrames} seal + `
+        + `${pickupFrames} pickup + ${spawnedFrames} spawned + ${declaredFreeze} declared) `
         + `+ ${residue} residue, against ${loads} load(s) at `
         + `${FADE_PER_LOAD.min}-${FADE_PER_LOAD.max} frames each `
         + `= [${lo},${hi}]${residue >= lo && residue <= hi ? '' : ' ⛔ OUT OF BAND — a '
@@ -741,7 +837,9 @@ function checkReadout(name, tape, status, stream) {
     // runtime-spawned reward is in no level's pickup list, so no reading of
     // the extract could ever produce it. Folding them in makes this check
     // HARDER: a run that fought the boss and lost now fails here.
-    const exempt = MODEL_EXEMPT[name] ?? null;
+    // ⚠ `exempt` is bound ONCE, up in the dead-frame budget — the budget
+    // spends the same row's `earned` and `freezeFrames`, so two bindings of
+    // the same lookup would be two places to keep in step.
     const mirror = { ...expected.inventory };
     for (const item of exempt?.earned ?? []) {
         const spec = ITEM_PROPERTIES[item];

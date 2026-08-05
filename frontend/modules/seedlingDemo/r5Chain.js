@@ -38,6 +38,9 @@
  * rock drops.
  */
 
+import { rockSchedule } from './bobBoss.js';
+
+
 export class R5ChainError extends Error {
     constructor(message) { super(message); this.name = 'R5ChainError'; }
 }
@@ -369,8 +372,25 @@ export const CONCH = Object.freeze({
  * — the regen here is `EXPECTED_TO_DIVERGE`, and it reads this list rather
  * than keeping its own).
  */
+/**
+ * ⛓⛓ THE FREEZE AN EXEMPT TAPE CARRIES, AS A NUMBER — R5 slice 11.
+ *
+ * `FallRockLarge`'s 174 frames were prose in three `why` strings and a
+ * number nowhere, so the dead-frame budget could not spend them: its first
+ * run against the roster reported all three bobboss tapes OUT OF BAND by
+ * exactly this amount. The budget was right and the record was unreadable.
+ *
+ * ⛓ DERIVED, NOT TRANSCRIBED. `rockSchedule()` runs the fall as a LOOP —
+ * `vy += 0.6; y += vy` from -32 — because the closed form solves to 23.7
+ * and rounds the wrong way on the frame the test fires. 60 wait + 24 fall
+ * + 90 camera = 174, and the literal never appears.
+ */
+const ROCK_FREEZE_FRAMES = rockSchedule().bossSpawnsAt;
+
 export const MODEL_EXEMPT = Object.freeze({
     'r5-bobboss-arm': Object.freeze({
+        /** `FallRockLarge`'s freeze, which every arm of this pair pays. */
+        freezeFrames: ROCK_FREEZE_FRAMES,
         earned: Object.freeze([]),
         refusesInput: false,
         why: 'the arm probe. `FallRockLarge` freezes the game for 174 frames and the '
@@ -379,6 +399,8 @@ export const MODEL_EXEMPT = Object.freeze({
             + '— it holds no sword — so only the STREAM diverges.',
     }),
     'r5-bobboss-fire': Object.freeze({
+        /** `FallRockLarge`'s freeze, which every arm of this pair pays. */
+        freezeFrames: ROCK_FREEZE_FRAMES,
         earned: Object.freeze(['fire']),
         refusesInput: true,
         why: '⛓ THE FIRST BOSS KILL ON THE ARC. `fire` is spawned by `BobBoss.death` at '
@@ -388,6 +410,8 @@ export const MODEL_EXEMPT = Object.freeze({
             + 'than excused, so a run that fought and did not win goes RED here.',
     }),
     'r5-bobboss-fire-control': Object.freeze({
+        /** `FallRockLarge`'s freeze, which every arm of this pair pays. */
+        freezeFrames: ROCK_FREEZE_FRAMES,
         earned: Object.freeze([]),
         refusesInput: false,
         why: 'the same tape with `grants` empty. It earns nothing and is never taken '
