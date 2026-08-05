@@ -95,6 +95,170 @@ const TILE = 16;
 export const centre = (tx, ty) => ({ x: tx * TILE + TILE / 2, y: ty * TILE + TILE / 2 });
 
 /**
+ * ⛓⛓ R5 SLICE 12 — WHICH PRESS THE GAME REFUSED, DERIVED FROM THE STUCK
+ * POSITION RATHER THAN FROM A NEW RECORDING.
+ *
+ * §24.8 banked one number that decides more than it was read for:
+ * the game could not leave `y = 76.34` at tile (12,4).
+ * `playerBoxAt(199.44, 76.34).bottom` is **79.34** and `moveY` sweeps in
+ * 1 px steps, so the blocker's top edge is at **y = 80** — row 5 — and the
+ * player's box spans x [197.44, 201.44), which is inside column 12.
+ *
+ * ⇒ **THE BLOCKING SOLID IS IN CELL (12,5)**: exactly where press 4 put
+ * block 2 and exactly where press 5 was supposed to move it from. A block
+ * still on its spawn (13,5) spans [208, 224) and could not have blocked
+ * that walk at all.
+ *
+ * ⛓⛓ **SO PRESS 4 LANDED IN THE GAME AND PRESS 5 DID NOT** — a two-press
+ * discrimination out of a single already-banked pixel value, and the
+ * reason slice 12 did not have to spend a recording to get it.
+ *
+ * ⚠ AND THE PAIR IS THE PART THAT IS NOT DERIVABLE. What distinguishes
+ * the two presses is not in the press: same block, same weapon, same
+ * 32x32 rect, and the angles are 0.00° and 89.98° against a `bothRange`
+ * of 0.1 — neither anywhere near the diagonal band. See
+ * `probe-seedling-r5-press-axes`, which asks whether press 5 fails ALONE
+ * or only inside the shaft's 2,375 ticks.
+ */
+export const PRESS_AXES = Object.freeze({
+    /** `SHAFT_WALK.divergence.gameStuckAtY`, and the x it was stuck at. */
+    stuck: Object.freeze({ x: 199.44, y: 76.34 }),
+    /** Derived: `playerBoxAt(stuck).bottom` + one sweep step, rounded to the cell. */
+    blockerTopEdge: 80,
+    blockerCell: Object.freeze({ tx: 12, ty: 5 }),
+    press4: Object.freeze({
+        index: 4,
+        stance: Object.freeze([14, 5]),
+        move: Object.freeze({ from: [13, 5], to: [12, 5] }),
+        axis: 'W',
+        /** atan2 from the stance centre to the block centre: dead level. */
+        angleDeg: 0,
+        landedInGame: true,
+    }),
+    press5: Object.freeze({
+        index: 5,
+        stance: Object.freeze([12, 4]),
+        move: Object.freeze({ from: [12, 5], to: [12, 6] }),
+        axis: 'S',
+        /** From the RECORDED stance (199.44, 72.24), not the tile centre. */
+        angleDeg: -87.96,
+        landedInGame: false,
+    }),
+    /** The plan's own tick numbers — 71 apart, against a 33-tick glide. */
+    pressTicks: Object.freeze({ press4: 738, press5: 809, glideSettleTicks: 33 }),
+    why: 'the blocker\'s top edge is y=80 and it overlaps the player\'s x span, so it is '
+        + 'in (12,5) — the cell press 4 filled and press 5 was to empty. The spacing '
+        + 'refutes the swallowed-press suspect on the plan\'s own numbers: 71 ticks '
+        + 'between the presses, and a glide is settled 33 ticks after the first hit tick.',
+});
+
+/**
+ * ⛔⛔⛔ R5 SLICE 12 — WHAT ACTUALLY STOPPED PRESS 5: AN ENEMY, AND A
+ * CENSUS VERDICT THAT WAS TRUE ABOUT THE WRONG MOVER.
+ *
+ * Four short tapes (`probe-seedling-r5-press-axes`), all booting straight
+ * into the block room so the rope, the corridor and the 197-frame freeze
+ * are out of the picture:
+ *
+ * ```
+ *   r5-press-axes          press W, walk-proof, press S, walk-proof
+ *                          → the game parts at t157, stuck at y 83.83
+ *   r5-press-glide         …with `down` HELD for 260 ticks instead
+ *                          → still 83.83 at t410. The block is genuinely
+ *                            PARKED ~7 px into a 16 px move
+ *   r5-press-repeat        `down` held THROUGHOUT + six presses 42 apart
+ *                          → the player descends 1 px every OTHER tick
+ *                            from t115 to t141 — the model matching to
+ *                            the pixel — and then jams at y 90.98, ~14 px
+ *                            in. The five later presses do NOTHING.
+ *   r5-press-delay         the glide probe, 120 ticks later, unchanged
+ *                          → ⛓⛓ BYTE-EXACT. The block completes its move
+ *                            and the model was right all along.
+ * ```
+ *
+ * ⛓⛓ **THE TIME SHIFT IS THE DISCRIMINATOR.** Identical inputs, identical
+ * player path, identical press, 120 ticks later — and the outcome flips
+ * from "wedged" to "the model reproduces the game exactly". A static solid
+ * in (12,6) cannot do that. **The blocker MOVES.**
+ *
+ * ⛔⛔ **AND ONLY ONE KIND OF THING CAN BE IT.** `moveY` returning a
+ * blocker is the only line in `PushableBlockFire.update` that parks a
+ * block mid-glide, and what it collides with is the block's OWN `solids`
+ * list:
+ *
+ * ```
+ *   Mobile.as:17              solids = ["Solid","Tree","Rock","Rope","ShieldBoss"]
+ *   Player.as:377             solids.push("LavaBoss")          ← the PLAYER's list
+ *   PushableBlock*.as ctor    solids.push("Enemy", "Player")   ← the BLOCK's
+ * ```
+ *
+ * Not the Player (north of a southward move); not a static Solid (the time
+ * shift); ⇒ **"Enemy"**. L39's only enemies are its three spinners
+ * (`fallRock.js` records that already), and `Spinner` is a `Mobile` with
+ * `v = moveSpeed·(cos(−π/4), sin(−π/4))`, a `friction()` override that
+ * clamps `|v| ≥ moveSpeed` so it NEVER stops, and `moveX`/`moveY`
+ * overrides that REFLECT (`v.x = -v.x`) instead of stopping. It is a
+ * billiard ball, deterministic and unmodelled.
+ *
+ * ⛓⛓⛓ **THE LESSON: A "NOT SOLID" VERDICT IS NOT SOLID FOR ONE MOVER'S
+ * `solids` LIST.** `levelWorld`'s census carries ONE solidity field per
+ * class and its docblock says *"does not block the player"* — which was
+ * true, and sufficient, for every rung up to this one, because the Player
+ * was the only mover whose collisions anybody planned against. A pushable
+ * block is the one mover in the game that collides with enemies, and the
+ * census could not express that. See `levelWorld.SOLIDS_BY_MOVER`.
+ *
+ * ⛔ **AND THE WEDGE IS PERMANENT, WHICH IS WHY ONE CELL COST THE WHOLE
+ * LEDGER.** A blocked block keeps `v` non-zero forever: `input()` re-derives
+ * it from `tile` every tick, `moveY` resets `tile` to the current cell,
+ * and the two chase each other. `hit()`'s first line is
+ * `if (v.length > 0) return`, so **every subsequent press is swallowed** —
+ * exactly what `r5-press-repeat`'s five later presses show. A wedged block
+ * can never be un-wedged by pressing it.
+ */
+export const SPINNER_WEDGE = Object.freeze({
+    kind: 'enemy-wedge',
+    /** The class that did it, and the list that let it. */
+    blocker: 'Spinner',
+    blockerType: 'Enemy',
+    moverSolids: Object.freeze(['Solid', 'Tree', 'Rock', 'Rope', 'ShieldBoss', 'Enemy', 'Player']),
+    playerSolids: Object.freeze(['Solid', 'Tree', 'Rock', 'Rope', 'ShieldBoss', 'LavaBoss']),
+    /** The four probes and what each one settled. */
+    probes: Object.freeze([
+        Object.freeze({
+            tape: 'r5-press-axes', stuckY: 83.83, divergesAt: 157,
+            says: 'the shaft\'s divergence reproduces in 165 ticks, with no rope and no freeze',
+        }),
+        Object.freeze({
+            tape: 'r5-press-glide', stuckY: 83.83, heldTicks: 260,
+            says: 'the block is PARKED, not gliding — and §24.8\'s reading of the shaft was '
+                + 'right for a reason it could not check: there, the y went constant when '
+                + 'the walk\'s INPUT SPAN ended',
+        }),
+        Object.freeze({
+            tape: 'r5-press-repeat', stuckY: 90.98, presses: 6,
+            says: 'the player follows the glide 1 px every other tick (a 0.5 px/tick block '
+                + 'read through a 1 px sweep quantum), the model matching to the pixel, '
+                + 'and the five presses after the wedge are ALL swallowed',
+        }),
+        Object.freeze({
+            tape: 'r5-press-delay', delayTicks: 120, byteExact: true,
+            says: '⛓⛓ THE DISCRIMINATOR — the same tape later is byte-exact, so the '
+                + 'blocker moves',
+        }),
+    ]),
+    /** What is committed out of it: the pair that is green in both arms. */
+    committedPair: Object.freeze({ press: 'r5-press-delay', control: 'r5-press-delay-control' }),
+    /** …and what is withdrawn, per §22.7. */
+    withdrawn: Object.freeze(['r5-press-axes', 'r5-press-glide', 'r5-press-repeat']),
+    why: 'a wandering `Spinner` stood in the block\'s glide corridor. The model cannot see '
+        + 'it because the census verdict `spinner: notSolid(... "damage only")` is a claim '
+        + 'about the PLAYER\'s solids list, and a `PushableBlockFire`\'s constructor pushes '
+        + '"Enemy" and "Player" onto its own. The wedge is permanent because a blocked '
+        + 'block keeps v non-zero and `hit()` returns on `v.length > 0`.',
+});
+
+/**
  * ⛓⛓ THE CHOREOGRAPHY — eighteen presses, in the order the tape drives them.
  *
  * `stance` is the tile the player stands in; `moves` is the EXACT SET of

@@ -1548,6 +1548,83 @@ export const SHAFT_WALK = Object.freeze({
     }),
 });
 
+/**
+ * ⛓⛓ R5 SLICE 12 — THE FIRST PAIR ON THE ARC THAT PROVES A FIRE PRESS
+ * MOVES A BLOCK.
+ *
+ * Six presses have been driven on this rung and not one of them had a
+ * committed fixture: the shaft's eighteen are withdrawn, and the rope pull
+ * moves a rect rather than a block. This pair does exactly one thing and
+ * does it twice over — press WEST, walk into the vacated cell, press
+ * SOUTH, walk into that one; and the control is the same tape with both
+ * `primary` spans deleted and every walk span identical.
+ *
+ * ⛔ It is `r5-press-delay` rather than `r5-press-axes` because the
+ * UNDELAYED arms are refuted: a wandering `Spinner` wedges the block
+ * mid-glide, and the same tape 120 ticks later is byte-exact. That time
+ * shift is the whole evidence that the blocker MOVES — see
+ * `r5Shaft.SPINNER_WEDGE`. The three diagnostic tapes are withdrawn per
+ * §22.7 and their numbers are banked there.
+ */
+export const PRESS_PAIR = Object.freeze({
+    press: 'r5-press-delay',
+    control: 'r5-press-delay-control',
+    /** Where each arm comes to rest, in tiles. */
+    pressTile: Object.freeze({ level: 39, tx: 12, ty: 5 }),
+    controlTile: Object.freeze({ level: 39, tx: 13, ty: 4 }),
+    /** The two cells a press empties, in the order the tape empties them. */
+    vacated: Object.freeze([
+        Object.freeze({ tx: 13, ty: 5 }), Object.freeze({ tx: 12, ty: 5 }),
+    ]),
+});
+
+export function pressPairFindings(replayed) {
+    const press = replayed?.get(PRESS_PAIR.press);
+    const control = replayed?.get(PRESS_PAIR.control);
+    if (!press || !control) {
+        return [{
+            name: 'R5 press pair: SKIPPED — this sweep did not replay both arms',
+            ok: true,
+            skipped: true,
+            detail: `have ${[press && PRESS_PAIR.press, control && PRESS_PAIR.control]
+                .filter(Boolean).join(', ') || 'neither'} — "the walk stood in (12,5)" is `
+                + 'not evidence that a press put it there',
+        }];
+    }
+    const found = [];
+    /** Did this arm's stream ever put the player inside that cell? */
+    const entered = (arm, c) => (arm?.stream?.ticks ?? []).some(
+        (t) => t.level === 39 && Math.floor(t.x / 16) === c.tx && Math.floor(t.y / 16) === c.ty);
+    for (const c of PRESS_PAIR.vacated) {
+        const inPress = entered(press, c);
+        const inControl = entered(control, c);
+        found.push({
+            name: `⛓⛓ R5 press pair: the game enters (${c.tx},${c.ty}) with the press and NOT without`,
+            ok: inPress && !inControl,
+            detail: inPress && !inControl
+                ? 'the fire press moved a `PushableBlockFire` a whole tile and the walk '
+                    + 'went where it stood. ⛔ Both facts come from the GAME: the two arms '
+                    + 'are byte-exact recordings one field apart, and the field is the '
+                    + '`primary` spans.'
+                : `press arm ${inPress ? 'entered' : 'did NOT enter'} it and the control `
+                    + `${inControl ? 'ALSO entered it — so the cell was never sealed and '
+                        + 'the press arm proves nothing' : 'did not'}`,
+        });
+    }
+    const end = terminal(press);
+    found.push({
+        name: '⛓ R5 press pair: …and it comes to rest in the cell press 5 empties',
+        ok: !!end && end.level === PRESS_PAIR.pressTile.level
+            && Math.floor(end.x / 16) === PRESS_PAIR.pressTile.tx
+            && Math.floor(end.y / 16) === PRESS_PAIR.pressTile.ty,
+        detail: end
+            ? `L${end.level} tile (${Math.floor(end.x / 16)},${Math.floor(end.y / 16)}) — `
+                + 'against §24.8\'s shaft, which could not leave tile (12,4) at all'
+            : 'the press arm produced no terminal observation',
+    });
+    return found;
+}
+
 export function shaftFindings(replayed) {
     const walk = replayed?.get(SHAFT_WALK.name);
     if (!walk) {
@@ -1608,6 +1685,7 @@ export function r5AcceptanceFindings(replayed) {
         ...waterfallPairFindings(replayed),
         ...featherFindings(replayed),
         ...totemEntranceFindings(replayed),
+        ...pressPairFindings(replayed),
         ...shaftFindings(replayed),
     ];
 }

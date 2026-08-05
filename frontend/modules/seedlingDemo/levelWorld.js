@@ -125,6 +125,70 @@ export const PLAYER_SOLID_TYPES = Object.freeze([...SOLID_ENTITY_TYPES, 'LavaBos
 const PLAYER_SOLID_SET = new Set(PLAYER_SOLID_TYPES);
 
 /**
+ * ⛔⛔⛔ R5 SLICE 12 — SOLIDITY IS PER MOVER, AND THE CENSUS HAD ONE FIELD.
+ *
+ * FlashPunk collision is not a property of the thing being hit: every
+ * `Mobile` carries its OWN `solids` array and `collideTypes(solids, …)`
+ * asks about that one. This file's `collider: 'none'` verdict — its own
+ * docblock says *"does not block the player"* — was therefore always a
+ * claim about ONE list, and it was the right one for four rungs because
+ * the Player was the only mover anybody planned against.
+ *
+ * ⛔ **A PUSHABLE BLOCK HAS A DIFFERENT LIST**, and it is the one mover in
+ * the game that collides with enemies:
+ *
+ * ```
+ *   Mobile.as:17              ["Solid","Tree","Rock","Rope","ShieldBoss"]
+ *   Player.as:377             …push("LavaBoss")
+ *   PushableBlock.as:28       …push("Enemy", "Player")
+ *   PushableBlockFire.as:31   …push("Enemy", "Player")
+ * ```
+ *
+ * ⛓⛓ **THAT COST R5 THE WHOLE SHAFT.** `spinner: notSolid('Spinner', …,
+ * 'damage only …')` is TRUE of the player and FALSE of a block, and a
+ * wandering `Spinner` wedged block 2 mid-glide in L39 — see
+ * `r5Shaft.SPINNER_WEDGE` for the four tapes that establish it, including
+ * the time-shifted one that is byte-exact. One cell, and every stance
+ * after it was wrong.
+ *
+ * ⇒ solidity is asked as `blocksMover(type, mover)` now. The old
+ * `PLAYER_SOLID_TYPES` export stays and stays authoritative for the
+ * player, because every existing caller means the player and a silent
+ * widening would be the same defect pointing the other way.
+ */
+export const SOLIDS_BY_MOVER = Object.freeze({
+    player: PLAYER_SOLID_TYPES,
+    /** `PushableBlock` / `PushableBlockFire` / `PushableBlockSpear`. */
+    pushable: Object.freeze([...SOLID_ENTITY_TYPES, 'Enemy', 'Player']),
+    /** `Enemy` and its subclasses add nothing — the base list, verbatim. */
+    enemy: Object.freeze([...SOLID_ENTITY_TYPES]),
+});
+
+const SOLID_SETS_BY_MOVER = Object.freeze(Object.fromEntries(
+    Object.entries(SOLIDS_BY_MOVER).map(([k, v]) => [k, new Set(v)]),
+));
+
+/**
+ * Does an entity of runtime type `type` block `mover`?
+ *
+ * ⚠ THE TYPE, NOT THE CLASS. `BombPusher` and `LavaBoss` are `Enemy`
+ * subclasses whose constructors OVERWRITE `type` (slice 11's ctor audit),
+ * so a class-name test would miss the first and mis-answer the second.
+ * The census's `type` field is the one the audit corrected.
+ *
+ * @param {string} type   the entity's runtime `type`
+ * @param {'player'|'pushable'|'enemy'} mover
+ */
+export function blocksMover(type, mover) {
+    const set = SOLID_SETS_BY_MOVER[mover];
+    if (!set) {
+        fail(`blocksMover: unknown mover "${mover}" — the solids list is a property of the `
+            + `thing MOVING, so this has to name one of [${Object.keys(SOLIDS_BY_MOVER).join(', ')}]`);
+    }
+    return set.has(type);
+}
+
+/**
  * Terrain types v2 models. Everything else throws from the resolver.
  *
  * The excluded set is not arbitrary squeamishness — it is where the
@@ -488,6 +552,13 @@ const notSolid = (as3, src, type, why) => Object.freeze({
  *   'pixelmask' — a Pixelmask; NOT modelled, a loud-throw seam (see below)
  *   'none'      — present in the level but does not block the player,
  *                 with the reason recorded so nobody "fixes" it later
+ *
+ * ⛔⛔ AND `'none'` MEANS "DOES NOT BLOCK **THE PLAYER**" — R5 slice 12.
+ * Read `blocksMover` before using it for anything else. Every `type:
+ * 'Enemy'` entry here has `collider: 'none'` and every one of them blocks
+ * a PUSHABLE BLOCK, whose constructor pushes "Enemy" onto its own solids
+ * list. That is not a defect in these entries; it is a question this table
+ * has one field for and the game answers per mover.
  *
  * Every entry cites the source it was transcribed from. The source is out
  * of repo (MIT, `~/CC/seedling`), so drift cannot be caught by a diff —
@@ -1179,7 +1250,14 @@ export const ENTITY_CLASSES = Object.freeze({
     wallflyer: notSolid('WallFlyer', 'Game.as:2197 + Enemies/Enemy.as:58', 'Enemy',
         'damage only'),
     spinner: notSolid('Spinner', 'Game.as:2198 + Enemies/Enemy.as:58', 'Enemy',
-        'damage only (Spinner.as:75); Spinner.as:50 despawns it on a cleared\n        persistence, which changes nothing about blocking'),
+        'damage only TO THE PLAYER (Spinner.as:75); Spinner.as:50 despawns it on a\n'
+        + '        cleared persistence, which changes nothing about blocking.\n'
+        + '        ⛔⛔ R5 SLICE 12: IT BLOCKS A PUSHABLE BLOCK. `PushableBlockFire.as:31`\n'
+        + '        pushes "Enemy" onto its own solids list, and this one MOVES —\n'
+        + '        `v = moveSpeed·(cos(-π/4), sin(-π/4))`, a `friction()` override that\n'
+        + '        clamps |v| >= moveSpeed so it never stops, and moveX/moveY overrides\n'
+        + '        that REFLECT. It wedged block 2 mid-glide in L39 and cost the shaft its\n'
+        + '        whole ledger — see `r5Shaft.SPINNER_WEDGE` and `blocksMover`.'),
     spinningaxe: {
         as3: 'SpinningAxe',
         roles: ROLES, collider: 'rect', type: 'Solid',

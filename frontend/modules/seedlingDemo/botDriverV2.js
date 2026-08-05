@@ -1897,6 +1897,63 @@ function runFire(run, perTick, fire, what) {
             + 'effect check below would report the target unmoved without ever saying '
             + 'why.');
     }
+    /**
+     * ⛔⛔⛔ R5 SLICE 12 — A GLIDE CORRIDOR IN A ROOM WITH ENEMIES CANNOT
+     * BE CERTIFIED, AND THIS IS WHERE THAT IS SAID OUT LOUD.
+     *
+     * `PushableBlock*`'s constructor does `solids.push("Enemy", "Player")`.
+     * A block is the ONE mover in the game that collides with enemies, and
+     * the model does not simulate a single enemy's POSITION — the combat
+     * census gives their spawn cell and their threat volume and stops
+     * there. So in any room with a live enemy, "the block glides one tile"
+     * is a prediction the model is not entitled to make.
+     *
+     * ⛔ It is not hypothetical: a wandering `Spinner` wedged block 2
+     * mid-glide in L39 and cost the shaft its entire ledger, and the model
+     * reported eighteen successful presses (`r5Shaft.SPINNER_WEDGE`; four
+     * probe tapes, one of them byte-exact once the press was moved 120
+     * ticks). A silent wrong answer is what this replaces.
+     *
+     * ⚠ THE ESCAPE HATCH IS A DECLARATION WITH EVIDENCE, not a flag. A leg
+     * may pass `fire.enemyRoom: '<why>'` to say that this particular press
+     * has been checked against the GAME — which is exactly what
+     * `r5-press-delay` is. A boolean would let the next plan silence this
+     * by typing `true`.
+     */
+    if (moves) {
+        // ⚠ `combat.enemies`, NOT `combat` — the census is a REPORT
+        // (`{level, enemies, hazards, counts, bill, killLocks, …}`) and a
+        // `?? []` on the report itself would have made this check silently
+        // vacuous, which is the exact shape of the defect it exists for.
+        //
+        // ⛔⛔ AND AN ABSENT CENSUS IS A REFUSAL, NOT A PASS. The `combat`
+        // role is OPT-IN (§11.1) and the first cut of this check read
+        // `run.world?.combat ?? []` — which on a world built without the
+        // role is an empty list and a silent green, on the one question it
+        // exists to ask. [[feedback_silent_watcher_vacuous_negative]], made
+        // on the day the check was written.
+        if (!fire.enemyRoom && !run.world?.combat) {
+            fail(`${what}: the run's world for level ${run.level} has NO COMBAT CENSUS, so `
+                + 'whether an enemy can wedge this block\'s glide cannot be asked. The '
+                + '`combat` role is opt-in; build the world with it, or declare '
+                + '`fire.enemyRoom: "<what the GAME said>"`. An absent census is not an '
+                + 'empty one.');
+        }
+        const enemies = (run.world?.combat?.enemies ?? []).filter((e) => !e.removed);
+        if (enemies.length > 0 && !fire.enemyRoom) {
+            fail(`${what}: level ${run.level} holds ${enemies.length} live `
+                + `enem${enemies.length === 1 ? 'y' : 'ies'} `
+                + `(${[...new Set(enemies.map((e) => e.as3 ?? e.tag))].join(', ')}) and a `
+                + '`PushableBlock`\'s constructor pushes "Enemy" onto its own solids list, '
+                + 'so an enemy standing in the glide corridor WEDGES the block — '
+                + 'permanently, because a blocked block keeps `v` non-zero and `hit()` '
+                + 'returns on `v.length > 0`. The model tracks no enemy positions, so it '
+                + 'cannot certify this press. Either model the enemy\'s motion, or declare '
+                + '`fire.enemyRoom: "<what the GAME said>"` on this target — see '
+                + '`r5Shaft.SPINNER_WEDGE`.');
+        }
+    }
+
     const at = { x: run.state.x, y: run.state.y };
     if (run.state.vx !== 0 || run.state.vy !== 0) {
         fail(`${what}: the stance (${at.x},${at.y}) is still MOVING — v=(${run.state.vx},`
