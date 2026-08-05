@@ -1944,9 +1944,17 @@ export const PRESS_ARMS = Object.freeze({
      *   `Enemies/LavaBoss.as`       type = "LavaBoss" (its own solids entry)
      *
      * So neither is in `pressEnemies` (wrong type) and neither had a class
-     * entry (no key) — invisible on both paths at once, which is why the
-     * table's own "every other class is inert because the chain does not
-     * name it" reads as safe. The chain names them.
+     * entry (no key) — invisible on **both of the press census's paths at
+     * once**, which is why the table's own "every other class is inert
+     * because the chain does not name it" reads as safe. The chain names
+     * them.
+     *
+     * ⚠ THE COMBAT CENSUS SEES THEM, and the distinction is worth keeping
+     * straight: `world.combat.enemies` collects by a different rule, so
+     * L40's `bombpusher@112,128` has always been in the encounter roster
+     * (and in `solids`, as a 3x3 box). What it was missing is a PRESS
+     * verdict — the answer to "what happens if I swing at it" — which is
+     * exactly the question `BombPusher.hit`'s empty body settles.
      *
      * ⛓ `BombPusher.hit` IS AN EMPTY OVERRIDE and that is the finding, not
      * a shrug: `override public function hit(f, p, d, t):void { }`. A press
