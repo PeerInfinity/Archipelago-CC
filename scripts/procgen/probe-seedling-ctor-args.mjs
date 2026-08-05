@@ -64,7 +64,8 @@ const SRC = join(process.env.HOME, 'CC', 'seedling', 'src');
 
 const ALL = process.argv.includes('--all');
 
-const { ENTITY_CLASSES, FORCED_TSET, FORCED_TAG } = await import(join(MODULE, 'levelWorld.js'));
+const { ENTITY_CLASSES, FORCED_TSET, FORCED_TAG, PRESS_ARMS } = await import(join(MODULE, 'levelWorld.js'));
+const { FIRE_ARM_POLICY, FIRE_HITABLE_TYPE_BY_ARM } = await import(join(MODULE, 'presses.js'));
 
 if (!existsSync(SRC)) {
     console.log(`SKIP: no AS3 source at ${SRC} — this probe reads the fork, which is `
@@ -412,6 +413,108 @@ finding(opaque.length === 0,
         ? 'every group and tag resolves to an atlas attribute or a literal — an `expr` '
             + 'here would mean the model is reading a number the constructor computes'
         : opaque.map((r) => `${r.ogmo}: group=${render(r.group)} tag=${render(r.tag)}`).join('; '));
+
+// ── ⛔⛔ FAILURE 5: THE PRESS-ARM JOIN, and the subclass that breaks it ─
+//
+// `genericHit` is an `e is <Class>` chain, so an arm fires for the named
+// class AND EVERY SUBCLASS OF IT. `PRESS_ARMS` is keyed on the class the
+// CHAIN TESTS; `buildLevelWorld`'s census looks it up with
+// `PRESS_ARMS[cls.as3]` — the class the ENTITY IS — and a miss is a silent
+// `if (arm)` skip rather than a complaint.
+//
+// ⛔⛔ SO A SUBCLASS IS IN NO LIST AT ALL, and if it OVERRIDES the method
+// the arm calls, the arm's declared cost is a statement about its parent.
+// `BurnableTree extends Tree`, `FIRE_ARM_POLICY.Tree` says *"`Tree.hit()`
+// is an EMPTY BODY, for every `t`"* — true of `Tree`, and false of the
+// subclass that overrides `hit` to remove a 2x2 solid and write a
+// persistence clear. The same class graph the ctor audit already walks
+// answers this in one more pass.
+const chainClasses = new Set(Object.keys(PRESS_ARMS));
+const ancestorsOf = (cls) => {
+    const out = [];
+    let cur = ctorOf(cls)?.parent;
+    let guard = 0;
+    while (cur && guard++ < 12) { out.push(cur); cur = ctorOf(cur)?.parent; }
+    return out;
+};
+/** Does this class declare its own `override … function hit(`? */
+const overridesHit = (cls) => {
+    const path = files.get(cls);
+    if (!path) return false;
+    return /override\s+public\s+function\s+hit\s*\(/.test(readFileSync(path, 'utf8'));
+};
+const subclassRows = [];
+for (const { ogmo, spec } of censusTypes) {
+    const cls = spec.as3;
+    // ⚠ NOT `if (chainClasses.has(cls)) continue`. Adding an entry for a
+    // class would then DELETE its own row, so the table would shrink as
+    // the defect was fixed and the count would stop meaning anything —
+    // a check that erases its own evidence. The row stays; what changes
+    // is whether it has an entry of its own.
+    const inherited = ancestorsOf(cls).find((a) => chainClasses.has(a));
+    if (!inherited) continue;
+    subclassRows.push({
+        ogmo,
+        cls,
+        inherited,
+        overrides: overridesHit(cls),
+        inFire: FIRE_ARM_POLICY[cls] !== undefined,
+        inHitable: FIRE_HITABLE_TYPE_BY_ARM[cls] !== undefined,
+        // ⛓ THE ENEMY FAMILY IS COLLECTED BY `type`, NOT BY CLASS.
+        // `buildLevelWorld`'s `else if (cls.type === 'Enemy')` puts every
+        // enemy in `pressEnemies` whatever its class, so an `Enemy`
+        // subclass is never invisible however it overrides `hit` — its
+        // arm's COST may still be its parent's, but that is the encounter
+        // ladder's question and not the census's. Only a responder that
+        // goes through the `PRESS_ARMS[cls.as3]` lookup can vanish.
+        censusByType: spec.type === 'Enemy',
+    });
+}
+// ⚠ THE GATE IS THE TWO TABLES THAT DECIDE VISIBILITY, and not the third.
+// `PRESS_ARMS[cls.as3]` is what the census looks up (a miss = no row at
+// all) and `FIRE_ARM_POLICY[cls.as3]` is what `auditFire` looks up (a miss
+// = `?? 'refused'`, which is loud). `FIRE_HITABLE_TYPE_BY_ARM` has a
+// DECLARED `?? 'Solid'` default and only decides the dispatch COUNT, so a
+// miss there is a different and much smaller question — named below rather
+// than folded in, so this check keeps meaning one thing.
+const armBad = subclassRows.filter((r) => r.overrides && !r.censusByType
+    && !(PRESS_ARMS[r.cls] && FIRE_ARM_POLICY[r.cls]));
+const armOwn = subclassRows.filter((r) => r.overrides && !r.censusByType);
+const typeGap = armOwn.filter((r) => !FIRE_HITABLE_TYPE_BY_ARM[r.cls]);
+finding(armBad.length === 0,
+    '⛓⛓ THE PRESS-ARM JOIN — every census class that INHERITS a `genericHit` arm and '
+    + 'overrides its method is itself in the tables',
+    subclassRows.length === 0
+        ? 'no census class inherits an arm from an ancestor'
+        : armBad.length === 0
+            ? `${subclassRows.length} class(es) land on an ancestor's arm; `
+                + `${subclassRows.filter((r) => r.overrides).length} OVERRIDE the method `
+                + `it calls, of which ${subclassRows.filter((r) => r.overrides
+                    && r.censusByType).length} are collected by \`cls.type === 'Enemy'\` `
+                + `and cannot vanish, and the remaining ${armOwn.length} carry their own `
+                + 'entries in `PRESS_ARMS` and `FIRE_ARM_POLICY`'
+            : armBad.map((r) => `${r.ogmo} (${r.cls}) lands on \`${r.inherited}\`'s arm and `
+                + `OVERRIDES \`hit\` — \`PRESS_ARMS[${r.cls}]\` is undefined, so the census `
+                + `skips it SILENTLY and no press audit can ever see it`).join('; '));
+
+console.log('## the subclasses that land on an ancestor\'s press arm');
+for (const r of subclassRows) {
+    const mark = !r.overrides ? '·' : r.censusByType ? '~' : (r.inFire ? '✓' : '⛔');
+    console.log(`   ${mark} ${r.ogmo.padEnd(18)} `
+        + `${r.cls.padEnd(20)} lands on ${r.inherited.padEnd(14)} `
+        + `${r.overrides ? 'OVERRIDES hit()' : 'inherits hit()'}`
+        + `${r.censusByType ? '   [census by type — never invisible]'
+            : r.inFire ? '   [declared]' : r.overrides ? '   ⛔ IN NO TABLE' : ''}`);
+}
+if (subclassRows.length === 0) console.log('   (none)');
+if (typeGap.length > 0) {
+    console.log(`   ⚠ ${typeGap.length} of them ride \`FIRE_HITABLE_TYPE_BY_ARM\`'s `
+        + `\`?? 'Solid'\` default: ${typeGap.map((r) => `${r.cls} (census type `
+        + `"${ENTITY_CLASSES[r.ogmo].type}")`).join(', ')}. The default only decides the`);
+    console.log('   DISPATCH COUNT, which nothing on this arc counts for these classes '
+        + 'yet — named as the sweep\'s bound, not folded into the claim above.');
+}
+console.log('');
 
 // ── ⛓ THE LITERALS, ENUMERATED ────────────────────────────────────────
 //

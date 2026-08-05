@@ -647,6 +647,171 @@ export const L40_ARRIVAL = Object.freeze({
 });
 
 /**
+ * ── ⛓⛓ L40's OPENING CHAIN, MEASURED — R5 slice 11 ───────────────────
+ *
+ * §23.9 ended on an open question — *"L40's north half is entered by
+ * something that is not this arrival"* — and this is the answer. It is
+ * ELEVEN links, and the first two are the L38 join's shape one level on.
+ *
+ * ⛔⛔ **THE FIRST GATE IS TWO SOLIDS STACKED IN A ONE-CELL PASSAGE, AND
+ * NEITHER ALONE OPENS IT.** Row 51 of the south-east chamber is wall
+ * across columns 47-57 except at (55,51), where `chest@880,816` stands;
+ * directly above it, `burnabletree@872,784` is a **32x32** solid covering
+ * (54,49), (55,49), (54,50) and (55,50). Measured, from the arrival:
+ *
+ * ```
+ *   chest opened, tree standing   +4 cells   — one cell, into the tree
+ *   tree burned, chest shut       +0 cells   — the chamber is still sealed
+ *   BOTH                         +40 cells   — and `buttonroom@880,768` is in it
+ * ```
+ *
+ * That is `L38_CHAIN`'s "the join is one cell with two solids stacked in
+ * it" (§21.4), with a different second solid — and it is why an audit of
+ * either blocker alone reads as "no way through".
+ *
+ * ⛔ **AND THE BOSS KEY IS BEHIND A BLOCK, NOT BEHIND A FLAG.** With every
+ * activator in the level open by fiat, `bosskey@656,528` is STILL
+ * unreachable: its chamber's only door is `pushableblock@576,560` at
+ * (36,35), and its own only approach is (36,36) — which
+ * `pushableblockfire@576,576` is standing in. So the mini-chain the brief
+ * named is load-bearing: `button@816,400 {t 4}` arms `pulser@592,576`, the
+ * pulse shoves the fire block WEST off (36,36) (the fire block is the
+ * pulser's exact west neighbour, `L38_CHAIN` link 3's geometry), the
+ * player steps in, and the plain block is WALK-pushed north THREE times to
+ * (36,32) before the row-33 corridor opens.
+ *
+ * ⚠ **THE PUSH IS A WALK AND NOT A PRESS** — `PushableBlock.input()`
+ * collides "Player" at x±1/y±1 and reads the player's velocity SIGN
+ * (`PUSHABLE_FAMILIES.pushableblock` is `'walk'`), so no weapon is
+ * involved and no press census sees it.
+ *
+ * ⛔⛔ **AND SLICE 10's REFUTATION IS WHAT MAKES THE KEY MANDATORY.**
+ * §20.6 concluded the walk should not collect `bosskey@656,528` because
+ * `buttonroom@272,208` would open the bosslock with no key; §23.8 refuted
+ * that (the group is a literal -1). The key is now the ONLY opener, and
+ * the bosslock is the single largest link in the chain: **+732 cells**,
+ * and it is what puts `teleporter@944,96 -> L41` and
+ * `teleporter@848,0 -> L42` — L41's and L42's only doors — in reach.
+ * ⇒ **`totempart 3` and `totempart 4` are behind this key.**
+ */
+export const L40_CHAIN = Object.freeze({
+    level: 40,
+    lattice: 8,
+    from: Object.freeze({ x: 480, y: 896 }),
+    /**
+     * ⚠ MEASURED AT THE PLANNER'S LATTICE (`nodeCentre` + `plannerObstacleAt`),
+     * which is a different phase from §23.9's `collidesSolid` flood over
+     * pixel multiples of 8 — so the two counts are not comparable and this
+     * one is deliberately not "corrected" against 437. A component the
+     * planner cannot walk is not a component; both floods agree on every
+     * VERDICT, which is the claim that matters.
+     */
+    shutCells: 660,
+    links: Object.freeze([
+        Object.freeze({
+            n: 1,
+            what: 'chest@880,816 {tag 13} opened — `type = ""`, the second seal ceremony',
+            gains: 4,
+            why: 'the only opening in row 51; `Chest.update`\'s `!collide("Solid", x, y)` '
+                + 'gate is satisfied with the tree standing, because the tree\'s box '
+                + 'ends at y = 816 and the chest\'s starts there',
+            built: 'chest.js + sealCeremony.js (§22.2, §22.3)',
+        }),
+        Object.freeze({
+            n: 2,
+            what: 'burnabletree@872,784 {tag 0} burned — a 32x32 solid, 41 ticks',
+            gains: 36,
+            why: '⛔ ZERO on its own, and +40 with link 1 — the two are one gate. '
+                + 'A FIRE press only: `BurnableTree.hit(t)` is gated on `t == "Fire"`.',
+            built: '⛔ NO — `FIRE_ARM_POLICY.BurnableTree` is `refused` and the burn is '
+                + 'a per-visit removal with no geometry family (it would be the EIGHTH)',
+        }),
+        Object.freeze({
+            n: 3,
+            what: 'buttonroom@880,768 {t 3, tag 12} — a room -1 SELF-LATCH',
+            gains: 128,
+            why: 'opens `wandlock@480,560 {tag 11}`, the plug in the arrival\'s own '
+                + 'column 30 — the first cell of the north half',
+            built: 'activators.localPublish (§20.6)',
+        }),
+        Object.freeze({
+            n: 4,
+            what: 'button@480,384 {t 2} — a PLAIN button, so it does not latch',
+            gains: 208,
+            why: 'opens `wandlock@448,432 {tag 9}` and `wandlock@512,480 {tag 10}`; '
+                + '⛔ the button is itself behind those two, so group 2 cannot '
+                + 'bootstrap itself — link 3 is what reaches it',
+            built: 'activators (R2)',
+        }),
+        Object.freeze({
+            n: 5,
+            what: 'button@768,400 {t 5} -> wandlock@800,400 {tag 21}',
+            gains: 12,
+            built: 'activators (R2)',
+        }),
+        Object.freeze({
+            n: 6,
+            what: 'button@816,400 {t 4} — arms pulser@592,576',
+            gains: 0,
+            why: '⚠ A `Button` REPUBLISHES rather than latching, so the pulser is armed '
+                + 'only while something presses it — and the block\'s glide is 32 ticks',
+            built: 'pulser.js (§21.65) — the CYCLE; not wired into `levelRun` for L40',
+        }),
+        Object.freeze({
+            n: 7,
+            what: 'the PULSE shoves pushableblockfire@576,576 WEST to (35,36)',
+            gains: 4,
+            why: 'the block is the pulser\'s exact WEST neighbour — `L38_CHAIN` link 3\'s '
+                + 'geometry, mirrored. It is the only way off that cell: a fire press '
+                + 'from the south would drive it NORTH into the plain block, and the '
+                + 'cell east of it is the pulser, a permanent Solid.',
+            built: 'pulser.pulsePushes + pushables (§21.65)',
+        }),
+        Object.freeze({
+            n: 8,
+            what: 'pushableblock@576,560 WALK-pushed north THREE times, (36,35) -> (36,32)',
+            gains: 56,
+            why: '⛔ ONE push is not enough and neither is two: the block plugs a '
+                + 'one-wide column and the player must follow it up. Measured at each '
+                + 'of (36,34) / (36,33) / (36,32); only the third reaches the key.',
+            built: 'pushables.walkPushContact (R3)',
+        }),
+        Object.freeze({
+            n: 9,
+            what: 'bosskey@656,528 {keyType 2} collected',
+            gains: 0,
+            why: '⛔⛔ MANDATORY, and §20.6 said it was not — refuted by §23.8',
+            built: 'r4 key leg',
+        }),
+        Object.freeze({
+            n: 10,
+            what: 'bosslock@480,352 {keyType 2, tag 8} unlocked',
+            gains: 732,
+            why: '⛓⛓ THE LARGEST LINK, and it is what reaches BOTH north teleporters — '
+                + 'so L41 and L42, and `totempart 3` and `totempart 4`, are behind it',
+            built: 'activators.KEY_RESPONDERS (R4)',
+        }),
+        Object.freeze({
+            n: 11,
+            what: 'buttonroom@272,208 {t 0, tag 7}, then the three breakablerocks '
+                + '{tags 22,23,24}, then buttonroom@160,128 {t 1, tag 1}',
+            gains: 240,
+            why: 'the NW cluster, in that order — and only the last of the three puts '
+                + '`totempart 0 @64,144` in reach',
+            built: 'activators + breakableRocks (R2)',
+        }),
+    ]),
+    /** What the closure reaches, against 660 shut — the whole level opened. */
+    openCells: 2084,
+    /** ⛔ The measured pairs that make link 1+2 one gate rather than two. */
+    joinPairs: Object.freeze([
+        Object.freeze({ open: 'chest only', cells: 664, reachesButtonroom: false }),
+        Object.freeze({ open: 'tree only', cells: 660, reachesButtonroom: false }),
+        Object.freeze({ open: 'both', cells: 700, reachesButtonroom: true }),
+    ]),
+});
+
+/**
  * ⛔⛔ The two predictions, as data, so a test asserts the CORRECTION
  * rather than the current string.
  */

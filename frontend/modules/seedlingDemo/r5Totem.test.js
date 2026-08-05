@@ -11,7 +11,7 @@ import { describe, expect, it } from 'vitest';
 import {
     CLUSTER, GROUP_6, L38_CHAIN, TOTEM_ENTRANCE, TOTEM_PAIR, TOTEM_ROPE, TOTEM_SHAFT,
     TotemError, assertPresserWrites,
-    L40_ARRIVAL, L40_PREDICTIONS,
+    L40_ARRIVAL, L40_CHAIN, L40_PREDICTIONS,
 } from './r5Totem.js';
 import { ROPE_PULL } from './r5Shaft.js';
 import { createFallRock, fallRockFreezeTicks, publishActivate } from './fallRock.js';
@@ -582,5 +582,121 @@ describe('⛔⛔ L40 from the L39 arrival — two predictions, both named failur
             expect(shut.tiles.has(`${tx},${ty}`), `${name} must NOT be reachable`).toBe(false);
         }
         expect(L40_ARRIVAL.unreached.length).toBe(15);
+    });
+});
+
+/**
+ * ── ⛓⛓ L40's OPENING CHAIN — R5 slice 11 ─────────────────────────────
+ *
+ * §23.9's open question, answered. The geometry is recomputed here rather
+ * than read back out of `L40_CHAIN`, for the reason the block above gives:
+ * a declaration checked against itself is not a check.
+ *
+ * ⚠ THE FLOOD IS `collidesSolid`'s, NOT THE PLANNER'S, and that is
+ * deliberate: this file already has one and a second transcription of one
+ * reachability question is how a ±1 lands in one place and not the other.
+ * It runs at a different lattice PHASE from `probe-seedling-r5-l40`, so
+ * the two disagree about cell COUNTS and agree about every verdict — which
+ * is the claim, and is why nothing here asserts a count from the probe.
+ */
+describe('⛓⛓ L40\'s opening chain — the join is a PAIR, and the key is behind a BLOCK', () => {
+    const TILE = 16;
+    const INV = { hasSword: true, hasFire: true, canSwim: true, hasFeather: true };
+    const rec = atlasLevelSource()(40);
+    /** ⚠ The burn has no per-visit family, so it is stood in for at BUILD. */
+    const TREE_TAG = 0;
+    const l40 = (cleared = []) => buildLevelWorld(rec, { roles: ROLES, inventory: INV, cleared });
+
+    const flood = (w, open = new Set(), chests = new Set()) => {
+        const P = 8;
+        const ok = (x, y) => x > 0 && y > 0 && x < rec.width * TILE && y < rec.height * TILE
+            && !w.collidesSolid(playerBoxAt(x, y),
+                { openActivators: open, openChests: chests });
+        const start = L40_ARRIVAL.spawn;
+        const seen = new Set([`${start.x},${start.y}`]);
+        const q = [[start.x, start.y]];
+        while (q.length) {
+            const [x, y] = q.shift();
+            for (const [dx, dy] of [[P, 0], [-P, 0], [0, P], [0, -P]]) {
+                const nx = x + dx;
+                const ny = y + dy;
+                if (!ok(nx, ny)) continue;
+                const k = `${nx},${ny}`;
+                if (seen.has(k)) continue;
+                seen.add(k);
+                q.push([nx, ny]);
+            }
+        }
+        return new Set([...seen].map((k) => {
+            const [a, b] = k.split(',').map(Number);
+            return `${Math.floor(a / TILE)},${Math.floor(b / TILE)}`;
+        }));
+    };
+    const CHEST = new Set(['chest@880,816']);
+    /** `buttonroom@880,768` — the first thing on the far side of the join. */
+    const BR3 = '55,48';
+
+    it('⛔⛔ the chest ALONE and the tree ALONE both leave the chamber sealed', () => {
+        expect(flood(l40()).has(BR3)).toBe(false);
+        // The chest opens one cell — into the tree.
+        expect(flood(l40(), new Set(), CHEST).has(BR3)).toBe(false);
+        // The tree opens nothing at all, because the chest is still under it.
+        expect(flood(l40([TREE_TAG])).has(BR3)).toBe(false);
+        // ⛓ …and TOGETHER they open it. `L38_CHAIN`'s shape (§21.4) with a
+        // different second solid.
+        expect(flood(l40([TREE_TAG]), new Set(), CHEST).has(BR3)).toBe(true);
+        expect(L40_CHAIN.joinPairs.map((p) => p.reachesButtonroom))
+            .toEqual([false, false, true]);
+    });
+
+    it('⛓ the tree is a 32x32 solid whose box ENDS where the chest\'s begins', () => {
+        const w = l40();
+        const tree = w.solids.find((s) => s.tag === 'burnabletree');
+        const chest = w.solids.find((s) => s.tag === 'chest');
+        expect(tree.rect).toEqual({ x: 872, y: 784, w: 32, h: 32, right: 904, bottom: 816 });
+        expect(chest.rect.y).toBe(tree.rect.bottom);
+        // ⚠ WHICH IS WHY THE CHEST IS OPENABLE WITH THE TREE STANDING.
+        // `Chest.update`'s gate is its own `!collide("Solid", x, y)`, and
+        // FlashPunk's overlap is strict — `y1 + h1 > y2` is `816 > 816`,
+        // false. One pixel of shared edge either way and the order of the
+        // two links would be forced.
+        expect(chest.rect.y < tree.rect.bottom).toBe(false);
+    });
+
+    it('⛔⛔ NO publication reaches the boss key — the key is behind a BLOCK', () => {
+        const w = l40([TREE_TAG]);
+        const everything = new Set(w.activators.map((a) => a.id));
+        expect(everything.size).toBeGreaterThan(0);
+        const f = flood(w, everything, CHEST);
+        // `bosskey@656,528` -> tile (41,33)
+        expect(f.has('41,33')).toBe(false);
+        // …and its chamber's only door is the plain, WALK-pushed block.
+        const block = w.pushables.find((p) => p.family === 'walk');
+        expect(block.id).toBe('pushableblock@576,560');
+        expect([Math.floor(block.x / TILE), Math.floor(block.y / TILE)]).toEqual([36, 35]);
+    });
+
+    it('⛔⛔ the bosslock is the largest link, and it is what reaches L41 and L42', () => {
+        const link = L40_CHAIN.links.find((l) => l.what.startsWith('bosslock@480,352'));
+        expect(link.gains).toBe(732);
+        expect(link.gains).toBe(Math.max(...L40_CHAIN.links.map((l) => l.gains)));
+        // ⇒ `totempart 3` and `totempart 4` are behind a key §20.6 wrote off
+        // and §23.8 reinstated. The two statements are asserted together so
+        // the correction cannot drift from its consequence.
+        const pred = L40_PREDICTIONS.find((p) => p.id === 'keytype-2-boss-key-is-not-collected');
+        expect(pred.verdict).toBe('REFUTED AT SOURCE');
+        const key = L40_CHAIN.links.find((l) => l.what.startsWith('bosskey@656,528'));
+        expect(key.why).toMatch(/MANDATORY/);
+    });
+
+    it('the chain is eleven links, numbered, and every link cites what builds it', () => {
+        expect(L40_CHAIN.links.map((l) => l.n)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+        for (const l of L40_CHAIN.links) expect(l.built, l.what).toBeTruthy();
+        // ⛔ …and exactly one link is declared UNBUILT, which is the honest
+        // half: a chain whose every link claimed to be built would say this
+        // level is routable today, and it is not.
+        const unbuilt = L40_CHAIN.links.filter((l) => l.built.startsWith('⛔'));
+        expect(unbuilt.map((l) => l.n)).toEqual([2]);
+        expect(unbuilt[0].what).toMatch(/burnabletree/);
     });
 });

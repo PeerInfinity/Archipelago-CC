@@ -319,6 +319,27 @@ export const PRESS_ARM_POLICY = Object.freeze({
     Tile: { policy: 'modelled', why: 'the bridge timer — `bridges.js` and the run\'s openBridges' },
     PushableBlockSpear: { policy: 'modelled', why: 'the slide — `pushables.js` and the run\'s per-visit state' },
     Tree: { policy: 'inert', why: '`Tree.hit()` is an EMPTY BODY (Scenery/Tree.as)' },
+    // ⛔⛔ R5 slice 11 — the three the census could not see, joined here so
+    // this table and `PRESS_ARMS` still have identical keys (which is what
+    // `presses.test.js` asserts, and is why the gap could not be papered
+    // over on one side only). All three reach `genericHit` through an
+    // ancestor's `e is <Class>` test and override the method it calls.
+    BurnableTree: {
+        policy: 'inert',
+        why: '⛓ INERT FOR THE SWORD AND ONLY FOR THE SWORD. `BurnableTree.hit(t)` is '
+            + 'gated on `t == "Fire"`, so a sword or spear press really is an empty '
+            + 'body — but the parent entry above says that for EVERY `t`, and for this '
+            + 'subclass a FIRE press burns it down. See `FIRE_ARM_POLICY.BurnableTree`; '
+            + '[[feedback_inert_for_this_weapon]], with the arm inherited rather than '
+            + 'shared.',
+    },
+    BombPusher: {
+        policy: 'inert',
+        why: '`override public function hit(f, p, d, t):void { }` — an EMPTY OVERRIDE, '
+            + 'so no weapon damages, knocks back or spends an i-frame on one. It escaped '
+            + '`pressEnemies` because its ctor overwrites `type` with "Solid".',
+    },
+    LavaBoss: { policy: 'refused', why: 'boss damage — R6/R7; declared so the census sees it' },
     Grass: {
         policy: 'inert',
         why: '`cut()` plays a sound, sets its own `cutGrass` and increments '
@@ -496,6 +517,21 @@ export const FIRE_ARM_POLICY = Object.freeze({
             + 'fire press cannot write a lightpole\'s persistence flag.',
     },
     Tree: { policy: 'inert', why: '`Tree.hit()` is an EMPTY BODY, for every `t`.' },
+    BurnableTree: {
+        policy: 'refused',
+        why: '⛔⛔ THE SUBCLASS THAT MAKES THE LINE ABOVE A LIE. `BurnableTree extends '
+            + 'Tree` and overrides `hit`: under `t == "Fire"` it plays a 20-frame '
+            + 'animation whose wrap callback is `die()`, which removes a 2x2 SOLID and '
+            + 'writes `setPersistence(tag, false)` from `removed()`. `genericHit` reaches '
+            + 'it through `e is Tree`, so it has always been pressable; what it did not '
+            + 'have was a table entry, and `PRESS_ARMS[cls.as3]` is how the census finds '
+            + 'one — so it was in NO list and `auditFire` beside L40\'s tree returned an '
+            + 'empty census. REFUSED rather than modelled because the burn is a '
+            + 'per-visit geometry change with no family yet (it would be the EIGHTH), '
+            + 'and a route that needs it must build one first. The tick cost is already '
+            + 'derived: `bobBoss.BURNABLE_TREE.burnTicks` is 41, because 15 * 0.0333 is '
+            + '0.4995 and not 0.5.',
+    },
     Grass: {
         policy: 'inert',
         why: '`cut(t)` increments `Main.grassCut` and nothing the stream can see, for '
@@ -521,6 +557,16 @@ export const FIRE_ARM_POLICY = Object.freeze({
             + 'every other enemy it takes a SECOND, class-specific arm from a fire '
             + 'press. Dungeon 5 and L40; refused until a route needs it.',
     },
+    BombPusher: {
+        policy: 'inert',
+        why: '⛓ AND IT IS AN EMPTY OVERRIDE, not an absence. `BombPusher.hit(f, p, d, t)` '
+            + 'has an empty body, so a fire press beside one costs nothing and does '
+            + 'nothing — unlike every other enemy, which takes 55 knockback impulses '
+            + '(`FIRE_ON_ENEMY`). It reaches the `e is Enemy` arm and is NOT in '
+            + '`pressEnemies`, because its ctor overwrites `type` with "Solid". Declared '
+            + 'so a route cannot price a kill that cannot happen; L40 has one.',
+    },
+    LavaBoss: { policy: 'refused', why: 'boss damage — R6/R7; declared so the census sees it' },
     ShieldBoss: { policy: 'refused', why: 'boss damage — R6' },
     LavaBall: { policy: 'refused', why: 'R5 — Dungeon 7' },
     Watcher: { policy: 'refused', why: 'R6 — the ending' },
@@ -595,6 +641,18 @@ export const FIRE_HITABLE_TYPE_BY_ARM = Object.freeze({
     RopeStart: 'Rope',
     BreakableRock: 'Rock',
     Tree: 'Tree',
+    // ⚠ A `BurnableTree`'s `type` is "Solid", NOT "Tree", and its own ctor
+    // comment says why: *"NOT a tree. Done so it doesn't loop with the
+    // other trees."* So it is hit FIVE times per tick, like every other
+    // Solid, and not however many a "Tree" gets — a difference that only
+    // matters once something counts the dispatches, and is transcribed now
+    // rather than when it does.
+    BurnableTree: 'Solid',
+    // ⚠ Both are `Enemy` SUBCLASSES whose ctor rewrote `type`, which is how
+    // they escaped `pressEnemies`. The dispatch count follows the type the
+    // ctor left behind, not the class's ancestry.
+    BombPusher: 'Solid',
+    LavaBoss: 'LavaBoss',
     Grass: 'Grass',
     LightPole: 'LightPole',
 });

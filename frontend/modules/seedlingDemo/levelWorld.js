@@ -1893,6 +1893,81 @@ export const PRESS_ARMS = Object.freeze({
         cost: 'cosmetic shake',
         src: 'Player.as:1089-1092',
     },
+    /**
+     * ⛔⛔ R5 SLICE 11 — THE SUBCLASS THE JOIN COULD NOT SEE.
+     *
+     * `genericHit` is an `e is <Class>` chain, so `else if (e is Tree)`
+     * fires for `Tree` AND every subclass. This table is keyed on the class
+     * the CHAIN TESTS; `buildLevelWorld`'s census looks it up with
+     * `PRESS_ARMS[cls.as3]` — the class the ENTITY IS — and a miss is a
+     * silent `if (arm)` skip. So `BurnableTree` was in NO list at all: no
+     * press responder, no fire policy, no hitable type. `auditFire` from
+     * the one stance that reaches L40's tree returned an EMPTY census —
+     * nothing modelled, nothing inert, nothing refused.
+     *
+     * ⚠⚠ AND THE ENTRY IT INHERITED SAYS THE OPPOSITE OF THE TRUTH.
+     * `FIRE_ARM_POLICY.Tree` reads *"`Tree.hit()` is an EMPTY BODY, for
+     * every `t`"* — correct about `Tree`, and false about the subclass that
+     * overrides `hit` to burn: `Scenery/BurnableTree.as:30-37` plays a
+     * 20-frame animation whose wrap callback is `die()`, which removes a
+     * 2x2 SOLID and whose `removed()` writes `setPersistence(tag, false)`.
+     * A ledger entry no route declared, and a wall the model keeps.
+     *
+     * ⛓ The mechanism was already transcribed ONCE — `bobBoss.BURNABLE_TREE`
+     * has the 41-tick burn, for L28's arena exit — and the census still
+     * could not see the class. Third time on this arc that an enumeration
+     * has missed its own instance.
+     *
+     * ⚠ Only `BurnableTree` is affected, and that is measured rather than
+     * hoped: `probe-seedling-ctor-args`'s press-arm join walks every census
+     * class's ancestor chain, and the five other subclasses that override
+     * `hit` are all `Enemy`s — collected by `cls.type === 'Enemy'` rather
+     * than by this lookup, so no class lookup can lose them.
+     */
+    BurnableTree: {
+        arm: '(e as Tree).hit(t) — dispatched by `e is Tree`, overridden by the subclass',
+        cost: 'under t == "Fire" ONLY: a 41-tick burn, then `die()` — the 2x2 Solid is '
+            + 'removed and `removed()` writes setPersistence(tag, false)',
+        src: 'Player.as:1089-1092 + Scenery/BurnableTree.as:30-37,50-56,64-68',
+    },
+    /**
+     * ⛔⛔ THE SAME DEFECT WEARING A THIRD DISGUISE — R5 slice 11.
+     *
+     * `BurnableTree` fell out of the census because the table is keyed on
+     * the class `genericHit` TESTS and the census looks up the class the
+     * entity IS. These two fall out for the mirror-image reason: they are
+     * `Enemy` subclasses, so `e is Enemy` reaches them — but the census's
+     * enemy path is `else if (cls.type === 'Enemy')`, and **both ctors
+     * OVERWRITE `type`**:
+     *
+     *   `Enemies/BombPusher.as:32`  type = "Solid"    (and it is 3x3 tiles)
+     *   `Enemies/LavaBoss.as`       type = "LavaBoss" (its own solids entry)
+     *
+     * So neither is in `pressEnemies` (wrong type) and neither had a class
+     * entry (no key) — invisible on both paths at once, which is why the
+     * table's own "every other class is inert because the chain does not
+     * name it" reads as safe. The chain names them.
+     *
+     * ⛓ `BombPusher.hit` IS AN EMPTY OVERRIDE and that is the finding, not
+     * a shrug: `override public function hit(f, p, d, t):void { }`. A press
+     * on one costs nothing and does nothing — no damage, no knockback, no
+     * i-frames — where the `Enemy` arm it would otherwise have inherited
+     * declares `hits += damage`. Declaring it is what stops a route pricing
+     * a kill that cannot happen. L40 has one at (112,128).
+     */
+    BombPusher: {
+        arm: '(e as Enemy).hit(f, p, d, t) — reached by `e is Enemy`, overridden EMPTY',
+        cost: 'NOTHING. `Enemies/BombPusher.as` overrides `hit` with an empty body, so '
+            + 'no press of any weapon damages, knocks back or spends an i-frame on one. '
+            + 'It is unkillable, it is a 3x3 Solid, and `activeOffScreen = true`.',
+        src: 'Player.as:1077-1082 + Enemies/BombPusher.as:24-36 (the `hit` override)',
+    },
+    LavaBoss: {
+        arm: '(e as Enemy).hit(f, p, d, t) — reached by `e is Enemy`, overridden',
+        cost: 'a boss damage gate keyed on `t == "LavaBall"` and `hitByFire`; R6/R7 work, '
+            + 'declared here only so the class is not invisible to the census',
+        src: 'Player.as:1077-1082 + Enemies/LavaBoss.as (the `hit` override)',
+    },
     Tile: {
         arm: '(e as Tile).bridgeOpeningTimer--, ONLY under t == "Spear"',
         cost: 'starts a bridge opening — see bridges.js; no other tile reads the timer',
