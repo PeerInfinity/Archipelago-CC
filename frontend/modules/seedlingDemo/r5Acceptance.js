@@ -1453,9 +1453,13 @@ export function totemEntranceFindings(replayed) {
  */
 export const SHAFT_WALK = Object.freeze({
     name: 'r5-shaft',
-    /** What the model says the eighteen presses earn. */
-    modelCleared: Object.freeze(['39:0', '39:1', '39:2', '39:9']),
-    /** …and what the game reported, at the recording of 2026-08-04. */
+    /**
+     * What the model says the eighteen presses earn.
+     * ⛓ R5 slice 11 adds {39,10}: `run.rockFalls` has predicted it since
+     * slice 10 and nothing summed it (see `r5Shaft.SHAFT_LEDGER`).
+     */
+    modelCleared: Object.freeze(['39:0', '39:1', '39:2', '39:9', '39:10']),
+    /** …and what the game reported, re-recorded 2026-08-04 (slice 11). */
     gameCleared: Object.freeze(['39:7', '39:8', '39:9', '39:10']),
     /** ⛔ Where the MODEL's own stream parts from the game's. */
     divergesAt: Object.freeze({ tick: 852, dy: 1.4 }),
@@ -1463,6 +1467,61 @@ export const SHAFT_WALK = Object.freeze({
     /** The declared clear the tape boots with — in both lists by construction. */
     declared: '39:8',
     deadFrames: 217,
+    /**
+     * ⛓⛓ R5 SLICE 11 — HALF THE REFUTATION IS CLOSED BY THE GAME.
+     *
+     * The re-recording confirms both of slice 10's forward predictions from
+     * the game's own instruments:
+     *
+     *   {39,10} IS IN THE GAME'S LEDGER    — the FallRock diagnosis holds
+     *   217 dead = 197 + 20, IN BAND       — the dead-frame budget PASSES,
+     *                                        60 + 46 + 90 + 1 to the frame
+     *
+     * ⛔⛔ AND THE OTHER HALF IS NOT A TIMING PHASE. §23.4 read tick 852 as
+     * "a one-tick stall, and one tick behind thereafter". It is not: of
+     * 1,524 diverging ticks, exactly ONE satisfies `game[t] == model[t-1]`,
+     * and the gap GROWS — dy -1.4 at t852, -12.65 by t863, and the walk
+     * ends 20 px east and 9 px south of the model.
+     *
+     * ⛓⛓ IT IS A BLOCKED WALK, AT A NAMED CELL. Both streams are identical
+     * through press 5's whole leg and part on the first tick of the walk
+     * that follows it:
+     *
+     *   t845..851   both at (199.44, 72.24) — tile (12,4), press 5's stance
+     *   t852..858   the MODEL walks south to y 89; the GAME CANNOT LEAVE
+     *               y 76.34, and never does
+     *
+     * `SHAFT_PLAN`'s press 5 is `stance (12,4)` moving block 2 from (12,5)
+     * to (12,6). ⇒ **in the game (12,5) is still solid when the walk
+     * resumes, and in the model it is free.** One cell, and it cascades:
+     * every later stance is wrong, so the three lock-buttons are never
+     * held ({39,0}/{39,1}/{39,2} never open) and block 1 never leaves
+     * `button t1` (so {39,7} is never taken back). **One defect explains
+     * the entire remaining ledger difference.**
+     *
+     * ⚠ WHY THE CELL IS STILL SOLID IS THE NEXT MEASUREMENT, and it is one
+     * of exactly two things: press 5 missed, or the block's glide is
+     * longer in the game than the 32 ticks the leg waits. The press
+     * geometry is NOT marginal — `fireHits` puts block 2 at d = 3.00
+     * against a 16 px cut from that stance — which points at the glide.
+     * ⛔ All three of the brief's hypotheses (a carried `Spritemap._timer`
+     * phase, the Lock's alpha accumulator, a per-press transcription of a
+     * continuous loop) are refuted by the SHAPE: none of them blocks a
+     * walk.
+     */
+    divergence: Object.freeze({
+        kind: 'blocked-walk',
+        firstTick: 852,
+        divergingTicks: 1524,
+        oneTickLagMatches: 1,
+        cell: Object.freeze({ tx: 12, ty: 5 }),
+        press: 5,
+        gameStuckAtY: 76.34,
+        pressDistance: 3,
+        why: 'the game cannot enter the cell `SHAFT_PLAN` press 5 says block 2 has '
+            + 'vacated; the model can. Either the press missed or the glide outlasts '
+            + 'the 32-tick wait.',
+    }),
 });
 
 export function shaftFindings(replayed) {
