@@ -1499,15 +1499,32 @@ export const SHAFT_WALK = Object.freeze({
      * `button t1` (so {39,7} is never taken back). **One defect explains
      * the entire remaining ledger difference.**
      *
-     * ⚠ WHY THE CELL IS STILL SOLID IS THE NEXT MEASUREMENT, and it is one
-     * of exactly two things: press 5 missed, or the block's glide is
-     * longer in the game than the 32 ticks the leg waits. The press
-     * geometry is NOT marginal — `fireHits` puts block 2 at d = 3.00
-     * against a 16 px cut from that stance — which points at the glide.
+     * ⛓⛓ AND THE BLOCK IS PARKED, NOT GLIDING — which narrows it again.
+     * The game's `y` is **constant at 76.34 for all seven blocked ticks**
+     * and then goes BACKWARD (75.09) when the span ends. A block still
+     * gliding south at 0.5 px/tick would have let the player follow it
+     * 3.5 px in that time. It does not move at all. ⇒ **press 5's push
+     * did not take effect in the game**, and this is not a glide-length
+     * or a phase problem.
+     *
+     * ⚠ TWO MECHANISMS FIT, and telling them apart is the next
+     * measurement:
+     *
+     *   · the press MISSED — though the geometry is not marginal:
+     *     `fireHits` puts block 2 at **d = 3.00** against a 16 px cut from
+     *     that stance, and the player is within 0.6 px of the stance's
+     *     centre when it fires;
+     *   · or every hit was SWALLOWED. `PushableBlockFire.hit`'s first line
+     *     is `if (v.length > 0) return` — "don't reset if we're already
+     *     moving". §20.7 read that line as collapsing the 25 dispatches
+     *     WITHIN one press; it also swallows a press that lands while the
+     *     block is still travelling from an EARLIER one. The model applies
+     *     it within a press and the game applies it across presses.
+     *
      * ⛔ All three of the brief's hypotheses (a carried `Spritemap._timer`
      * phase, the Lock's alpha accumulator, a per-press transcription of a
-     * continuous loop) are refuted by the SHAPE: none of them blocks a
-     * walk.
+     * continuous loop) are refuted by the SHAPE: none of them parks a
+     * block.
      */
     divergence: Object.freeze({
         kind: 'blocked-walk',
@@ -1518,9 +1535,16 @@ export const SHAFT_WALK = Object.freeze({
         press: 5,
         gameStuckAtY: 76.34,
         pressDistance: 3,
+        blockIsMoving: false,
         why: 'the game cannot enter the cell `SHAFT_PLAN` press 5 says block 2 has '
-            + 'vacated; the model can. Either the press missed or the glide outlasts '
-            + 'the 32-tick wait.',
+            + 'vacated; the model can. And the block is PARKED there, not gliding — the '
+            + 'game\'s y is constant for all seven blocked ticks, where a block still '
+            + 'travelling at 0.5 px/tick would have let the player follow it 3.5 px. So '
+            + 'press 5\'s push did not take effect: either it missed (d = 3.00 against a '
+            + '16 px cut, so not marginal) or its hits were swallowed by '
+            + '`PushableBlockFire.hit`\'s `if (v.length > 0) return`, which §20.7 read '
+            + 'as collapsing the 25 dispatches WITHIN a press and which also swallows a '
+            + 'press landing while the block still travels from an earlier one.',
     }),
 });
 
