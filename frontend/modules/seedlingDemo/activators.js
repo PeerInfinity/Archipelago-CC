@@ -331,6 +331,54 @@ export function localPublish(presser) {
     return { group: presser.t, value: presser.flip ? false : true };
 }
 
+/**
+ * ⛓⛓ THE ROPE PUBLISH — `Puzzlements/RopeStart.as:79-91`, R5 slice 10.
+ *
+ * A FOURTH activation shape, and the one the shaft refutation turned on.
+ *
+ * ```
+ *   override public function set activate(a:Boolean):void
+ *   {
+ *       _active = a;
+ *       var v:Vector.<Activators> = new Vector.<Activators>();
+ *       FP.world.getClass(Activators, v);
+ *       for (var i:int = 0; i < v.length; i++)
+ *           if (v[i] != this && v[i].t == t) v[i].activate = activate;
+ *   }
+ * ```
+ *
+ * ⚠⚠ **FIRST, THE SCOPE CHECK, BECAUSE IT COULD HAVE BEEN MUCH WIDER.**
+ * `Activators.as:20-23`'s base setter is `_active = a` and nothing else, so
+ * **the broadcast is ROPE-SPECIFIC and not base behaviour**. Thirteen
+ * classes extend `Activators` and ten override the setter; only
+ * `RopeStart`'s republishes. If it had been in the base, the model's
+ * activation semantics would have been wrong in every level with a group,
+ * not in this room — so the check ran before anything was transcribed.
+ *
+ * ⛓ **IT IS A LATCH BY CONSTRUCTION, NOT BY A GUARD.** `hit()` is the only
+ * caller and its whole body is `if (!activate)`, so `a` is only ever TRUE
+ * and nothing ever republishes the group as false. That makes it the same
+ * SHAPE as a `room = -1` ButtonRoom's local publish — which is why the two
+ * share `state.latched` rather than getting a second map that consumers
+ * would have to remember to read.
+ *
+ * ⚠ **WHAT IT REACHES IS PER-CLASS, AND TWO OF THE THREE MEMBERS IN L39 DO
+ * SOMETHING.** The setter it calls is the TARGET's own override:
+ * `Pulser` starts cycling, `Cover`/`Lock` fade, and — the one four slices
+ * of audit missed — **`FallRock.set activate` calls `fall()`**, which
+ * writes its own persistence tag, freezes the game for ~197 frames and
+ * drops a 16x16 solid. See `fallRock.js` and `r5Totem.GROUP_6`.
+ *
+ * @returns {?{group: number, value: true}} null for a rope with no group
+ */
+export function ropePublish(rope) {
+    if (rope?.as3 !== 'RopeStart' && rope?.tag !== 'rope') return null;
+    const group = rope.t;
+    if (!(group >= 0)) return null;
+    // `hit()` cannot publish false: `if (!activate) { … activate = true … }`.
+    return { group, value: true };
+}
+
 export function createActivatorState(world) {
     const byId = new Map();
     for (const a of world.activators) {

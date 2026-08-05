@@ -265,6 +265,32 @@ export function createTapeStepper(tape, opts = {}) {
             lockWrites: run ? run.lockWrites : [],
             /** R5 slice 7: `{level, id, flag}` per rope PULLED. */
             ropePulls: run ? run.ropePulls : [],
+            /**
+             * ⛔⛔ R5 slice 10: `{id, level, t, flag, deadFrames}` per
+             * `FallRock` an activator publication DROPPED.
+             *
+             * A rope pull's SECOND ledger entry, and the one the refuted
+             * shaft recording carried that no model produced: {39,10}, at the
+             * pull's own tick, from `fall()`'s first line.
+             */
+            rockFalls: run ? run.rockFalls : [],
+            /**
+             * ⛓⛓ R5 slice 10: frozen frames the RUN caused that the tape
+             * never advanced through — the run's share of `dead_frames`.
+             */
+            frozenFramesOwed: run ? run.frozenFramesOwed : 0,
+            /**
+             * ⛓ R5 slice 10: the armed-pulser ledgers, forwarded.
+             *
+             * `pulserHits` is every tick a ring fired; `pulserPlayerHits` is
+             * every tick one reached the PLAYER (inert only because
+             * `Bot.noDamage` is on — the run refuses it otherwise);
+             * `pulsePushes` is every block a pulse moved. A route whose
+             * clearance is a claim rather than a computation shows up here.
+             */
+            pulserHits: run ? run.pulserHits : [],
+            pulserPlayerHits: run ? run.pulserPlayerHits : [],
+            pulsePushes: run ? run.pulserPushes : [],
             /** ⛔⛔ R5 slice 9: `{t, level, id, persistTag}` per chest OPENED. */
             chestOpens: run ? run.chestOpens : [],
             /** ⛓ R5 slice 9: one per completed seal ceremony, with its dead frames. */

@@ -951,7 +951,21 @@ export const ENTITY_CLASSES = Object.freeze({
                 + 'update() are behind `!Game.checkPersistence(tag)` — so a tag >= 0 '
                 + 'rock sits at y = -16 with type "", never falls, never freezes the '
                 + 'game and never writes p.y. Every one on the R1 route carries a tag. '
-                + 'A tag = -1 rock would be live; there are none.',
+                + 'A tag = -1 rock would be live; there are none. '
+                // ⛔⛔ R5 SLICE 10: THE SENTENCE ABOVE IS TRUE AND IT IS NOT
+                // THE WHOLE STORY, and the game charged 197 frozen frames for
+                // the difference.
+                + '⛔⛔ BUT `set activate` IS NEITHER OF THOSE TWO PLACES. '
+                + '`FallRock.as:111-118` is `if (a && !_active) { fall(); _active = a; }` '
+                + 'and `fall()` runs `Game.setPersistence(tag, false)` ITSELF — so an '
+                + 'ACTIVATOR PUBLICATION arms a rock whose flag nothing else touched, and '
+                + 'the update-time gate is then open because the setter opened it. Two of '
+                + 'the game\'s three `RopeStart`s publish to a `FallRock` (L28 t1, L39 '
+                + 't6): it is the mechanism, not an edge. Modelled in `fallRock.js`; the '
+                // ⚠ THE INERTNESS THAT SURVIVES, stated exactly.
+                + 'inertness that survives is narrower — a rock is inert for a route that '
+                + 'never PUBLISHES ITS GROUP, which is every R1-R4 route and no route '
+                + 'that pulls a rope.',
         },    },
     fallrocklarge: {
         as3: 'FallRockLarge',
@@ -2769,6 +2783,8 @@ export function buildLevelWorld(levelRecord, {
      */
     const chests = [];
     const pulsers = [];
+    /** ⛔⛔ R5 slice 10: every `FallRock`/`FallRockLarge`, parked or landed. */
+    const fallRocks = [];
     /**
      * ⛓ R5: the entities a HELD ITEM removed at build time.
      *
@@ -3243,6 +3259,34 @@ export function buildLevelWorld(levelRecord, {
             }
         }
 
+        /**
+         * ⛔⛔ R5 SLICE 10: THE FALLROCK ROSTER, and it is collected ABOVE
+         * the `collider === 'none'` bail because that is exactly what a
+         * parked rock is.
+         *
+         * A `FallRock` has no collider until it LANDS, and until slice 10
+         * nothing could make one land, so `collider: 'none'` was the whole
+         * truth. `RopeStart.set activate` can: it reaches every `Activators`
+         * sharing its `t`, and `FallRock.set activate` calls `fall()`. The
+         * roster is what lets the RUN hold that live state, on the same
+         * `<id>` join `pushables`/`chests`/`pulsers` use.
+         *
+         * ⚠ THE ROSTER IS NOT A SOLID LIST. A landed rock reaches
+         * `collidesSolid` through the `fallenRocks` option, exactly as a
+         * pushed block reaches it through `pushables` — because whether it
+         * is there is a fact about the run, not about the level.
+         */
+        if (cls.as3 === 'FallRock' || cls.as3 === 'FallRockLarge') {
+            fallRocks.push({
+                id: `${e.type}@${x},${y}`,
+                tag: e.type,
+                as3: cls.as3,
+                x,
+                y,
+                t: tSetOf(e.type, e.attrs),
+                persistTag: tagOf(e.type, e.attrs),
+            });
+        }
         if (cls.collider === 'none' || cls.collider === undefined) continue;
         if (cls.collider === 'rect') {
             const solid = { rect: entityRect(cls, x, y), cls, tag: e.type, x, y };
@@ -3377,6 +3421,17 @@ export function buildLevelWorld(levelRecord, {
                 shrunkRect: rect(
                     x + cls.dx - cls.originX, y + cls.dy - cls.originY, TILE_SIZE, cls.h,
                 ),
+                // ⛔⛔ R5 SLICE 10: THE GROUP THE PULL PUBLISHES TO.
+                //
+                // `RopeStart.set activate` broadcasts to every `Activators`
+                // sharing this `t`, and two of the game's three ropes reach a
+                // `FallRock` with it. It is carried HERE — on the solid the
+                // run already looks up by `ropeId` — because the press
+                // census's own `t` field is the WEAPON TYPE ("Fire"), and a
+                // consumer reaching for the group would silently get a
+                // string. Named, not renamed: the collision is the game's.
+                ropeT: tSetOf(e.type, e.attrs),
+                ropeTag: entityTag,
             };
             solids.push(solid);
             objectSolids.push(solid);
@@ -3615,6 +3670,15 @@ export function buildLevelWorld(levelRecord, {
          */
         pulsers,
         /**
+         * ⛔⛔ R5 slice 10: the fall rocks, `{id, tag, as3, x, y, t, persistTag}`.
+         *
+         * In NO solids list, because a parked rock is `type = ""` at
+         * `y = -16`. It gets there through the run's `fallenRocks` set once
+         * an activator publication has dropped it — see `fallRock.js`, and
+         * `r5Totem.GROUP_6` for the four slices this was believed impossible.
+         */
+        fallRocks,
+        /**
          * R4: every entity in this level that `Player.genericHit` names,
          * with the arm it takes and what that arm COSTS a run.
          *
@@ -3719,12 +3783,24 @@ export function buildLevelWorld(levelRecord, {
         collidesSolid(box, {
             beforeTypeFlip = false, openActivators = null, pushables: live = null,
             openBridges = null, brokenRocks = null, pulledRopes = null, openChests = null,
+            fallenRocks = null,
         } = {}) {
             // Pixelmask entities (Building, TreeLarge, CliffSide) assign
             // their type in the CONSTRUCTOR, so they are armed on tick 1
             // too — only Tiles are late.
             for (const p of pixelmasks) {
                 if (maskHitsBox(p.mask, p.maskX, p.maskY, box)) return p;
+            }
+            // ⛔⛔ R5 SLICE 10: a rock the run has DROPPED. It is the only
+            // member of this family that ADDS a solid rather than removing or
+            // moving one — a parked `FallRock` is in no list at all, and
+            // `type = "Solid"` is written on the landing tick. So the check
+            // is above the `solids` loop rather than inside it: there is no
+            // entry to `continue` past.
+            if (fallenRocks) {
+                for (const r of fallenRocks.values()) {
+                    if (rectsOverlap(box, r.rect)) return { ...r, fallen: true };
+                }
             }
             for (const s of (beforeTypeFlip ? objectSolids : solids)) {
                 // R2: a lock or cover whose group is held has `type = ""`,
@@ -3939,8 +4015,21 @@ export function buildLevelWorld(levelRecord, {
         plannerBlockerAt(box, probeRect = null, {
             noclip = false, noHazards = [], openActivators = null, pushables: live = null,
             openBridges = null, brokenRocks = null, pulledRopes = null, openChests = null,
+            fallenRocks = null,
         } = {}) {
             if (!noclip) {
+                // ⛔⛔ R5 slice 10: a dropped rock ADDS a solid, so the
+                // planner has to be told about it the same way the collision
+                // query is. A route that pulls a rope and then walks back the
+                // way it came is the case this exists for — L39's rock lands
+                // ON the teleporter home.
+                if (fallenRocks) {
+                    for (const r of fallenRocks.values()) {
+                        if (rectsOverlap(box, r.rect)) {
+                            return { kind: 'solid', blocker: { ...r, fallen: true } };
+                        }
+                    }
+                }
                 // ⚠ THE PLANNER USES THE REAL MASK, not the bounding rect.
                 // The conservative direction is normally right for routing,
                 // but not here: L65's exit to the health room sits inside

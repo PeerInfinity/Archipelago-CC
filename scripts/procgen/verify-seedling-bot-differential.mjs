@@ -102,7 +102,7 @@ const {
     atlasLevelSource,
 } = await import(join(REPO, 'frontend/modules/seedlingDemo/levelSource.js'));
 const {
-    runTape,
+    runTape, runTapeToStream,
 } = await import(join(REPO, 'frontend/modules/seedlingDemo/tapeRunner.js'));
 const {
     r1AcceptanceFindings,
@@ -220,6 +220,21 @@ const browser = WIN ? null : await chromium.launch({
  */
 const SECONDS_PER_FRAME = 2.5;
 const FADE_FRAMES = 25;
+
+/**
+ * ⚠ THE ROOM-LOAD FADE IS A BAND, NOT A CONSTANT — R5 slice 10.
+ *
+ * `blackCover` decays from `cover()`, i.e. per RENDER, while `Bot.update`'s
+ * dead-frame gate samples per UPDATE. So the number of dead frames a load
+ * costs is "how many renders fit inside twenty units of decay", which is not
+ * the same quantity whenever the two loops are not locked 1:1. §22.6
+ * measured 21 and 20 on `r5-feather`'s two loads and 20 and 19 on L38's —
+ * "a constant that is a variable", named there and used here.
+ *
+ * The band is deliberately generous on both sides: this check exists to
+ * catch a 197-frame freeze nobody modelled, not to pin a fencepost.
+ */
+const FADE_PER_LOAD = Object.freeze({ min: 17, max: 24 });
 const deadlineFor = (tickCount) =>
     Math.ceil((tickCount + FADE_FRAMES) * SECONDS_PER_FRAME * 1000) + 60000;
 
@@ -383,7 +398,7 @@ function withDerivedTransitions(name, drained) {
  * something and a freeze fired that nobody planned for. That is exactly the
  * failure the sticky counter exists to make visible rather than absorb.
  */
-function checkReadout(name, tape, status) {
+function checkReadout(name, tape, status, stream) {
     if (!status || typeof status !== 'object') {
         check(`${name}: botStatus is readable`, false, 'no status object');
         return null;
@@ -413,13 +428,66 @@ function checkReadout(name, tape, status) {
     // For v<=3 the claim is unchanged and still a CENSUS GUARD: a non-zero
     // count means a freeze fired that nobody planned for. For a v4 tape the
     // count is honest, and the walk asserts it as a POSITIVE.
-    if (tape.tape_version < 4) {
-        check(`${name}: no dialogue auto-advance fired`, status.saw_auto_advance === 0,
-            status.saw_auto_advance === 0 ? 'saw_auto_advance=0 (v<=3: bug-compatible)'
-                : `saw_auto_advance=${status.saw_auto_advance} — a ceremony the route was `
-                + 'supposed to avoid froze the game, so the proximity-hazard census missed '
-                + 'something');
-    }
+    // ⚠⚠ R5 SLICE 10: THE GATE WAS `tape_version < 4` AND EVERY R5 TAPE IS
+    // v4 OR v5, so the arc's own fixtures had NO census guard at all. The
+    // refuted shaft tape reported 217 dead frames with zero transitions and
+    // nothing in the sweep said so (§22.8).
+    //
+    // ⛔ AND RE-ARMING IT IS NOT ENOUGH, which is the part worth writing
+    // down. `Bot.autoAdvance`'s predicate is `Game.talking || helpUp`, and
+    // v5's stated unit is "a FREEZE ARRIVAL, whatever raised it". Two
+    // classes on this arc raise one and are NEITHER:
+    //
+    //   · `SealController` (§22.3) — the chest ceremony's 181 frames;
+    //   · `FallRock` (slice 10)    — 197 frames, and it is what actually
+    //                                happened on the shaft.
+    //
+    // So `saw_auto_advance == 0` is a guard over DIALOGUE freezes, and it
+    // is armed here as exactly that. The freezes it cannot see are caught
+    // by the dead-frame budget below, which is a different instrument and
+    // is the one that would have caught the shaft.
+    check(`${name}: no dialogue auto-advance fired`, status.saw_auto_advance === 0,
+        status.saw_auto_advance === 0
+            ? `saw_auto_advance=0${tape.tape_version < 4 ? ' (v<=3: bug-compatible count)' : ''}`
+            : `saw_auto_advance=${status.saw_auto_advance} — a dialogue or Help the route `
+            + 'was supposed to avoid froze the game, so the proximity-hazard census '
+            + 'missed something');
+
+    // ── ⛓⛓ THE DEAD-FRAME BUDGET, R5 slice 10 ────────────────────────────
+    //
+    // `dead_frames` is `blackCover > 0 || Game.freezeObjects`, summed over
+    // the run. Three things put frames in it and the model knows two of them
+    // exactly:
+    //
+    //   · the freezes the RUN causes    `expected.frozenFramesOwed`
+    //                                   (a FallRock's fall, exactly derived)
+    //   · a ceremony's own freeze       `expected.sealCollections`
+    //   · one room-load fade per BUILD  ⚠ NOT A CONSTANT — §22.6 measured
+    //                                   21/20 on one level and 20/19 on
+    //                                   another, because `blackCover` decays
+    //                                   per RENDER and the gate samples per
+    //                                   UPDATE. So it is a BAND, per load.
+    //
+    // The claim is therefore about the RESIDUE, and it is falsifiable: the
+    // shaft tape's residue was 217 against one load, twenty times the band.
+    // A check that could only ever pass would be worth nothing here — this
+    // one is the reason the refutation is diagnosable at all.
+    const loads = stream.transitions.length + 1;
+    const ceremonyFrames = (expected.sealCollections ?? [])
+        .reduce((n, c) => n + (c.deadFrames ?? 0), 0);
+    const modelled = (expected.frozenFramesOwed ?? 0) + ceremonyFrames;
+    const residue = status.dead_frames - modelled;
+    const lo = loads * FADE_PER_LOAD.min;
+    const hi = loads * FADE_PER_LOAD.max;
+    check(`${name}: the dead frames are accounted for`,
+        residue >= lo && residue <= hi,
+        `${status.dead_frames} dead = ${modelled} modelled `
+        + `(${expected.frozenFramesOwed ?? 0} run freeze + ${ceremonyFrames} ceremony) `
+        + `+ ${residue} residue, against ${loads} load(s) at `
+        + `${FADE_PER_LOAD.min}-${FADE_PER_LOAD.max} frames each `
+        + `= [${lo},${hi}]${residue >= lo && residue <= hi ? '' : ' ⛔ OUT OF BAND — a '
+            + 'freeze fired that the model does not know about, and no positional '
+            + 'comparison would report it: a frozen frame advances no tape tick'}`);
 
     // The JS side's expectation for this tape, from the same tape the game
     // just ran. `runTape` throws if a grant never fires, so a stale route is
@@ -719,7 +787,7 @@ try {
         replayed.set(name, { stream, status });
         const secs = ((Date.now() - t0) / 1000).toFixed(0);
 
-        const expectedRun = checkReadout(name, tape, status);
+        const expectedRun = checkReadout(name, tape, status, stream);
 
         // ⚠ `receiveInput == false` stopped being unconditionally a defect at
         // R1. A pit transport refuses input BY DESIGN — `checkFallingInPit`
@@ -789,6 +857,48 @@ try {
             writeFileSync(join(EXPECTATIONS_DIR, `${name}.json`),
                 serializeObservationStream(stream));
             console.log(`RECORDED: ${name}.json (${stream.ticks.length} observations)`);
+            // ── ⛔⛔ R5 SLICE 10: A RECORDING IS NOT EVIDENCE ABOUT THE
+            //        MODEL, AND THIS IS WHERE THAT STOPPED BEING PROSE ─────
+            //
+            // §22.7: the shaft was recorded, `--record` came back green, and
+            // it was READ as "the plan survived the game". It was not. What
+            // `--record` did was write the game's stream and then `continue`
+            // past every comparison — a run with nothing to disagree with.
+            // The refutation surfaced later, in `tapeRunner.test.js`'s
+            // fixture differential, which is MODEL against RECORDING.
+            //
+            // So the chain is STRUCTURAL now: recording runs that
+            // differential immediately, against the stream just written, and
+            // a `--record` sweep whose model is refuted comes back RED. The
+            // ordering can no longer be forgotten, because it is not an
+            // ordering any more.
+            //
+            // ⚠ IT IS A NAMED FAILURE FOR THIS TAPE, never a throw — the
+            // recording is the GAME's and stays valid whatever the model
+            // says. That is the same rule a missing expectation follows, and
+            // it is what lets a rung record an oracle for a mechanic the JS
+            // does not model yet.
+            let modelStream = null;
+            try {
+                modelStream = runTapeToStream(tape, { levelSource: atlasLevelSource() });
+            } catch (e) {
+                check(`${name}: THE MODEL RUNS THE TAPE IT JUST RECORDED`, false,
+                    `${e.message} — the recording is the game's and is valid; the model `
+                    + 'cannot reproduce it, so this fixture is not yet a regression net');
+            }
+            if (modelStream) {
+                const modelDiff = diffObservationStreams(stream, modelStream);
+                check(`${name}: ⛓⛓ THE MODEL REPRODUCES THE RECORDING IT JUST MADE`,
+                    modelDiff === null,
+                    modelDiff === null
+                        ? `${stream.ticks.length} observations, `
+                            + `${stream.transitions.length} transition(s) — the recording is `
+                            + 'an ORACLE and the model already agrees with it'
+                        : `${modelDiff} ⛔ THE RECORDING IS VALID AND THE MODEL IS `
+                            + 'REFUTED. Do not commit this fixture: a fixture whose model '
+                            + 'is wrong is either a permanent red or a silenced one, and '
+                            + 'neither is a finding (§22.7).');
+            }
             continue;
         }
 

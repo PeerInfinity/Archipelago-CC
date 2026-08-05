@@ -381,20 +381,42 @@ export const TOTEM_ROPE = Object.freeze({
 /**
  * ⚠ THE GROUP THE ROPE PUBLISHES TO, member by member, with the verdict.
  *
+ * ⛔⛔ **R5 SLICE 10: THE `fallrock` VERDICT BELOW WAS WRONG, AND THE GAME
+ * SAID SO.** The refuted shaft recording's ledger carried {39,10} — the
+ * rock's own tag — and 197 of its 217 dead frames are the freeze the fall
+ * holds. What follows is the argument that was made and why it failed, kept
+ * rather than deleted, because the failure mode is reusable:
+ *
  * The R2 rule is that a clear reaching a `FallRock` is REFUSED BY NAME —
  * an armed rock writes the player's `y` directly and is outside both
  * `noclip` and `noDamage`. Group 6 contains one, so the arm is only
- * admissible if the publication cannot arm it. It cannot, and the reason
- * is two independent gates rather than one:
+ * admissible if the publication cannot arm it. It was argued that it cannot,
+ * for two independent reasons:
  *
  * - `FallRock`'s constructor parks it at `y = -16` with `type = ""` unless
  *   `!Game.checkPersistence(tag)`, and its tag is **10**, which nothing on
  *   this route writes. The rope's write is tag **9**.
  * - `FallRock.update`'s position-writing arm is
  *   `if (activate && y >= fallTo)`, and a parked rock has `y = -16` against
- *   `fallTo = 624`. So even with `activate` published TRUE the arm is
+ *   `fallTo = 632`. So even with `activate` published TRUE the arm is
  *   unreachable — and the whole falling branch below it is behind
  *   `if (!Game.checkPersistence(tag))`, which is the same flag again.
+ *
+ * ⛔⛔ **BOTH SENTENCES ARE TRUE ABOUT `update()`, AND THE MECHANISM IS IN
+ * `set activate`.** `FallRock` overrides it: `if (a && !_active) { fall();
+ * _active = a; }`, and `fall()`'s FIRST line is
+ * `Game.setPersistence(tag, false)`. **The publication is not a read of tag
+ * 10 — it is the write of it.** So "nothing on this route writes tag 10" is
+ * false the instant the rope publishes, and `update()`'s gate is open
+ * because the setter opened it. Two gates that share an opener are one
+ * gate, and having two of them is what made the audit read as safe.
+ * See `fallRock.js`, which transcribes all of it.
+ *
+ * ⛓⛓ **AND IT IS THE IDIOM.** Three `RopeStart`s exist in the game and TWO
+ * publish to a `FallRock` (L28's `rope@160,64 {t 1}` -> `fallrock@112,240`).
+ * Pull the rope, drop the rock — the pair was read as a coincidence for
+ * four slices. [[feedback_kickoff_anchor_duplicate_engines]] from the data
+ * side: the second instance was in the atlas the whole time.
  *
  * ⚠ THE PULSER IS NOT INERT AND IS NOT A REFUSAL EITHER. `Pulser.update`
  * is `if (activate || radius > radiusMin)`, so the publication turns it ON
@@ -416,11 +438,21 @@ export const GROUP_6 = Object.freeze([
             + 'pulse cycle and a 22 px damage ring at (72,104) that was quiet before',
     }),
     Object.freeze({
-        member: 'fallrock@144,624', verdict: 'no-op', persistTag: 10,
-        why: 'parked at y = -16 with `type = ""` because tag 10 is still TRUE, and the '
-            + 'position-writing arm is `activate && y >= fallTo` — -16 against 624. The '
-            + 'R2 refusal is not triggered: the publication is `activate`, not a clear, '
-            + 'and the flag it would need is a different tag.',
+        // ⛔⛔ REFUTED BY THE GAME, R5 slice 10. The `was` field keeps the
+        // wrong verdict as data rather than as prose, so the test that
+        // asserts the correction cannot quietly stop asserting anything.
+        member: 'fallrock@144,624', verdict: 'IT FALLS', persistTag: 10,
+        why: '`FallRock.set activate` is `if (a && !_active) { fall(); _active = a; }` '
+            + 'and `fall()` WRITES `Game.setPersistence(10, false)` itself — so the '
+            + 'publication opens the very gate the old verdict read as shut. The cost is '
+            + '197 frozen frames (`fallRock.fallRockFreezeTicks(632)`), a camera pan to '
+            + 'the landing, `Game.shake = 30`, and a 16x16 `Solid` that lands ON the '
+            + 'south teleporter back to L38.',
+        was: 'no-op',
+        wasWhy: 'parked at y = -16 with `type = ""` because tag 10 is still TRUE, and the '
+            + 'position-writing arm is `activate && y >= fallTo` — -16 against 632. Both '
+            + 'clauses are true about `update()`; neither is about `set activate`.',
+        src: 'Scenery/FallRock.as:103-118, and `fallRock.js`',
     }),
 ]);
 

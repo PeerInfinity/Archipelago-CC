@@ -13,6 +13,7 @@ import {
     TotemError, assertPresserWrites,
 } from './r5Totem.js';
 import { ROPE_PULL } from './r5Shaft.js';
+import { createFallRock, fallRockFreezeTicks, publishActivate } from './fallRock.js';
 import { auditFire } from './presses.js';
 import { HAZARD_STATES } from './tapeFormat.js';
 import { crossRoomWrites, createActivatorState, stepActivators } from './activators.js';
@@ -145,15 +146,31 @@ describe('the rope — the seventh arm', () => {
         expect(group).toEqual(GROUP_6.map((m) => m.member).sort());
     });
 
-    it('⚠ and the FallRock in it is a no-op, by two independent gates', () => {
+    it('⛔⛔ the FallRock in it FALLS — the two "independent" gates share an opener', () => {
         const rock = GROUP_6.find((m) => m.member.startsWith('fallrock'));
-        expect(rock.verdict).toBe('no-op');
+        expect(rock.verdict).toBe('IT FALLS');
+        // The wrong verdict is kept as data so this assertion is about a
+        // CORRECTION and not merely about the current string.
+        expect(rock.was).toBe('no-op');
+
+        // Both of the old gates are still exactly as described…
         // gate 1: a different tag from the one the rope writes
         expect(rock.persistTag).not.toBe(TOTEM_ROPE.persistTag);
-        // gate 2: parked off-map, so `activate && y >= fallTo` cannot fire
+        // gate 2: parked off-map at build, so `activate && y >= fallTo`
+        // cannot fire from a world the census builds
         const w = worldFor(39, [8, 9]);
-        const built = w.solids.find((s) => s.tag === 'fallrock');
-        expect(built, 'a tag-10 fallrock is parked at y = -16 with type ""').toBeFalsy();
+        expect(w.solids.find((s) => s.tag === 'fallrock'),
+            'a tag-10 fallrock is parked at y = -16 with type ""').toBeFalsy();
+
+        // …and `set activate` opens both, because `fall()` writes tag 10.
+        const parked = createFallRock(144, 624, 6, 10, false);
+        const pub = publishActivate(parked, true);
+        expect(pub.fell).toBe(true);
+        expect(pub.write).toEqual({ tag: 10, value: false });
+        expect(pub.freeze).toBe(true);
+        // …at a cost of 197 frozen frames, which is 197 of the refuted
+        // recording's 217 dead ones.
+        expect(fallRockFreezeTicks(624 + 8).total).toBe(197);
     });
 
     it('the pulser is a COST, not a wall — it is Solid either way', () => {
