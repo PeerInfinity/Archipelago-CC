@@ -453,42 +453,6 @@ function checkReadout(name, tape, status, stream) {
             + 'was supposed to avoid froze the game, so the proximity-hazard census '
             + 'missed something');
 
-    // ── ⛓⛓ THE DEAD-FRAME BUDGET, R5 slice 10 ────────────────────────────
-    //
-    // `dead_frames` is `blackCover > 0 || Game.freezeObjects`, summed over
-    // the run. Three things put frames in it and the model knows two of them
-    // exactly:
-    //
-    //   · the freezes the RUN causes    `expected.frozenFramesOwed`
-    //                                   (a FallRock's fall, exactly derived)
-    //   · a ceremony's own freeze       `expected.sealCollections`
-    //   · one room-load fade per BUILD  ⚠ NOT A CONSTANT — §22.6 measured
-    //                                   21/20 on one level and 20/19 on
-    //                                   another, because `blackCover` decays
-    //                                   per RENDER and the gate samples per
-    //                                   UPDATE. So it is a BAND, per load.
-    //
-    // The claim is therefore about the RESIDUE, and it is falsifiable: the
-    // shaft tape's residue was 217 against one load, twenty times the band.
-    // A check that could only ever pass would be worth nothing here — this
-    // one is the reason the refutation is diagnosable at all.
-    const loads = stream.transitions.length + 1;
-    const ceremonyFrames = (expected.sealCollections ?? [])
-        .reduce((n, c) => n + (c.deadFrames ?? 0), 0);
-    const modelled = (expected.frozenFramesOwed ?? 0) + ceremonyFrames;
-    const residue = status.dead_frames - modelled;
-    const lo = loads * FADE_PER_LOAD.min;
-    const hi = loads * FADE_PER_LOAD.max;
-    check(`${name}: the dead frames are accounted for`,
-        residue >= lo && residue <= hi,
-        `${status.dead_frames} dead = ${modelled} modelled `
-        + `(${expected.frozenFramesOwed ?? 0} run freeze + ${ceremonyFrames} ceremony) `
-        + `+ ${residue} residue, against ${loads} load(s) at `
-        + `${FADE_PER_LOAD.min}-${FADE_PER_LOAD.max} frames each `
-        + `= [${lo},${hi}]${residue >= lo && residue <= hi ? '' : ' ⛔ OUT OF BAND — a '
-            + 'freeze fired that the model does not know about, and no positional '
-            + 'comparison would report it: a frozen frame advances no tape tick'}`);
-
     // The JS side's expectation for this tape, from the same tape the game
     // just ran. `runTape` throws if a grant never fires, so a stale route is
     // caught before the comparison rather than by it.
@@ -509,6 +473,52 @@ function checkReadout(name, tape, status, stream) {
             + 'readout expectation below needs the model, so they are not evaluated');
         return null;
     }
+
+    // ── ⛓⛓ THE DEAD-FRAME BUDGET, R5 slice 10 ────────────────────────────
+    //
+    // `dead_frames` is `blackCover > 0 || Game.freezeObjects`, summed over
+    // the run. Three things put frames in it and the model knows two of them
+    // exactly:
+    //
+    //   · the freezes the RUN causes    `expected.frozenFramesOwed`
+    //                                   (a FallRock's fall, exactly derived)
+    //   · a ceremony's own freeze       `expected.sealCollections`
+    //   · one room-load fade per BUILD  ⚠ NOT A CONSTANT — §22.6 measured
+    //                                   21/20 on one level and 20/19 on
+    //                                   another, because `blackCover` decays
+    //                                   per RENDER and the gate samples per
+    //                                   UPDATE. So it is a BAND, per load.
+    //
+    // The claim is therefore about the RESIDUE, and it is falsifiable: the
+    // shaft tape's residue was 217 against one load, twenty times the band.
+    // A check that could only ever pass would be worth nothing here — this
+    // one is the reason the refutation is diagnosable at all.
+    //
+    // ⛔⛔ AND IT SITS *BELOW* `expected`, WHICH IS WHERE SLICE 11 HAD TO
+    // MOVE IT. Slice 10 wrote it above the `let expected` declaration, so
+    // every tape died in the temporal dead zone with `Cannot access
+    // 'expected' before initialization` — a HARNESS error, reported once
+    // and aborting the sweep on tape one. It was invisible for a whole
+    // slice because that slice's baseline sweep had imported the modules
+    // BEFORE the edit (§23.10), so the gate that would have caught it was
+    // measuring the parent commit. ⇒ a sweep whose result predates the
+    // change it is meant to gate is not a gate.
+    const loads = stream.transitions.length + 1;
+    const ceremonyFrames = (expected.sealCollections ?? [])
+        .reduce((n, c) => n + (c.deadFrames ?? 0), 0);
+    const modelled = (expected.frozenFramesOwed ?? 0) + ceremonyFrames;
+    const residue = status.dead_frames - modelled;
+    const lo = loads * FADE_PER_LOAD.min;
+    const hi = loads * FADE_PER_LOAD.max;
+    check(`${name}: the dead frames are accounted for`,
+        residue >= lo && residue <= hi,
+        `${status.dead_frames} dead = ${modelled} modelled `
+        + `(${expected.frozenFramesOwed ?? 0} run freeze + ${ceremonyFrames} ceremony) `
+        + `+ ${residue} residue, against ${loads} load(s) at `
+        + `${FADE_PER_LOAD.min}-${FADE_PER_LOAD.max} frames each `
+        + `= [${lo},${hi}]${residue >= lo && residue <= hi ? '' : ' ⛔ OUT OF BAND — a '
+            + 'freeze fired that the model does not know about, and no positional '
+            + 'comparison would report it: a frozen frame advances no tape tick'}`);
 
     // ⚠ Compared FIELD BY FIELD, not by JSON.stringify. AS3's JSON writer
     // emits object keys in its own order ({items, level, t}) and JS in
@@ -787,7 +797,25 @@ try {
         replayed.set(name, { stream, status });
         const secs = ((Date.now() - t0) / 1000).toFixed(0);
 
-        const expectedRun = checkReadout(name, tape, status, stream);
+        // ⚠ THE READOUT CHECKS ARE THEMSELVES PER-TAPE FALLIBLE, and slice 11
+        // paid for learning it. `checkReadout` already turns a `runTape`
+        // throw into a named failure — but a defect in the CHECKING code
+        // (slice 10's dead-frame budget read `expected` in its temporal dead
+        // zone) throws past all of that, out to the harness-level catch, and
+        // kills the sweep on tape one. Seventy-eight tapes went unreported
+        // behind a single line, which is precisely the failure the
+        // missing-expectation rule was written to prevent — stated for
+        // `runTape` and not for the code around it. So the boundary is here,
+        // where the per-tape loop is, and it names the tape.
+        let expectedRun;
+        try {
+            expectedRun = checkReadout(name, tape, status, stream);
+        } catch (e) {
+            check(`${name}: the readout checks run`, false,
+                `${e.message} — this is a defect in the VERIFIER, not in the game or the `
+                + 'tape. Named against this tape so the rest of the roster still reports.');
+            expectedRun = null;
+        }
 
         // ⚠ `receiveInput == false` stopped being unconditionally a defect at
         // R1. A pit transport refuses input BY DESIGN — `checkFallingInPit`
