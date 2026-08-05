@@ -51,7 +51,7 @@ const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
 const { synthesizeLegs } = await import(join(MODULE, 'botDriverV2.js'));
 const { serializeTape, parseTape } = await import(join(MODULE, 'tapeFormat.js'));
 const { runTape } = await import(join(MODULE, 'tapeRunner.js'));
-const { ROPE_PULL, SHAFT_PLAN, SHAFT_LEDGER } = await import(join(MODULE, 'r5Shaft.js'));
+const { ROPE_PULL, SHAFT_PLAN, SHAFT_LEDGER, assertPlanContinuity } = await import(join(MODULE, 'r5Shaft.js'));
 
 const WRITE = process.argv.includes('--write');
 const levelSource = atlasLevelSource();
@@ -221,9 +221,25 @@ check(out.fires.length === SHAFT_PLAN.length + 1,
  * an EMPTY `earnedClears` — indistinguishable from a run whose locks never
  * opened. The WRITES are the claim.
  */
+/**
+ * ⛔⛔ AND THE THIRD WRITER IS THE ONE THAT REFUTED THE PLAN — R5 slice 11.
+ *
+ * This list was `lockWrites` + `ropePulls` when it was written, because
+ * those were the two writers slice 9 knew about. The game's ledger came
+ * back with a fourth flag in it, **{39,10}**, and slice 10 found the
+ * mechanism: the rope's group-6 publication drops `fallrock@144,624`, and
+ * `FallRock.fall()`'s FIRST line is `Game.setPersistence(tag, false)`.
+ *
+ * `run.rockFalls` has carried that since slice 10 and NOTHING READ IT, so
+ * this script's ledger claim went on passing while omitting the flag the
+ * refutation turned on. ⇒ **the model's prediction and the check that
+ * asserts it were in different files, and only one of them was updated.**
+ * A forward prediction nobody asserts is a note.
+ */
 const writes = [
     ...(run.lockWrites ?? []).map((w) => ({ ...w.flag, value: w.value })),
     ...(run.ropePulls ?? []).map((r) => ({ ...r.flag, value: false })),
+    ...(run.rockFalls ?? []).filter((r) => r.flag).map((r) => ({ ...r.flag, value: false })),
 ];
 const net = new Map();
 for (const w of writes) net.set(`${w.level}:${w.tag}`, w.value);
@@ -247,6 +263,99 @@ for (const t of taken) {
         '`returnToNormal()` writes it TRUE again, and no rung before slice 7 modelled '
         + 'either direction');
 }
+
+// ── ⛓⛓ THE FORWARD PREDICTIONS, R5 slice 11 ──────────────────────────
+//
+// §23 corrected the model on three counts and the corrections were carried
+// as PROSE. They are claims here, before the tape is written, because a
+// recording made against an unasserted prediction proves nothing: §22.7's
+// whole lesson is that the check has to exist on the model side first.
+const rockFall = (run.rockFalls ?? [])[0];
+check(!!rockFall && rockFall.flag?.tag === 10 && rockFall.flag?.level === 39,
+    '⛔⛔ THE ROPE DROPS A ROCK — {39,10}, written by the PUBLICATION and not by a landing',
+    rockFall
+        ? `fallrock ${rockFall.id} at tick ${rockFall.t}, flag {${rockFall.flag?.level},`
+            + `${rockFall.flag?.tag}}`
+        : 'the run reports NO rock fall — the rope\'s group-6 publication is not '
+            + 'reaching `FallRock.set activate`');
+const ropeTick = (run.ropePulls ?? [])[0]?.t;
+check(rockFall && ropeTick !== undefined && rockFall.t === ropeTick,
+    '⛓⛓ …AT PULL TIME, on the same tick as the rope — not 60+46 ticks later',
+    `the pull is t${ropeTick} and the rock's flag is written at t${rockFall?.t}. `
+    + '`fall()` writes the flag FIRST and only then sets `waitToFallTimer = 60`, so a '
+    + 'model that banked the write at the landing would be 106 ticks late and would '
+    + 'still have "passed" a ledger check, because a set has no timestamps.');
+check(rockFall?.deadFrames === 197,
+    '⛓⛓ THE FREEZE IS 197 FRAMES — 60 wait + 46 fall + 90 camera + 1 release',
+    `${rockFall?.deadFrames}. ⛔ 46 AND NOT 45: the closed form `
+    + '`n(n+1)/2 * 0.6 >= 2160` is 45.99, so a model that divided and floored is a '
+    + 'frame short. Transcribed as the loop.');
+check(run.frozenFramesOwed === 197,
+    '⛓ …and the run BANKS them, so the dead-frame budget can spend them',
+    `frozenFramesOwed = ${run.frozenFramesOwed}. A frozen frame advances no tape tick, `
+    + 'so the whole fall resolves inside one model tick — which is why the readout and '
+    + 'the stream are two different instruments and only one of them saw this.');
+/**
+ * ⛔ AND THE ROCK LANDS ON THE WAY HOME. Asserted as a JOIN between two of
+ * the world's own rosters rather than by eye: the rock the run dropped, by
+ * id, against the teleporter list. "They share an @x,y in the .oel" and
+ * "the census put them in the same cell" are different claims, and the
+ * second is the one a route is planned against.
+ */
+const droppedRock = (world.fallRocks ?? []).find((r) => r.id === rockFall?.id);
+const homeDoor = (world.teleporters ?? [])
+    .find((t) => droppedRock && t.x === droppedRock.x && t.y === droppedRock.y);
+check(!!droppedRock && !!homeDoor,
+    '⛔ THE ROCK IS ON THE SOUTH TELEPORTER — after the pull, the way back out is a Solid',
+    droppedRock && homeDoor
+        ? `${droppedRock.id} and \`teleporter@${homeDoor.x},${homeDoor.y} -> L${homeDoor.to}\` `
+            + 'are the same cell. That is why `REFUSED_CLEAR_RESPONSES.arm` makes this a '
+            + 'ONE-WINDOW room: a tape may not DECLARE a fallrock tag, so the window that '
+            + 'pulls pays the 197 frames and must also do everything after them.'
+        : `rock ${droppedRock?.id ?? 'MISSING'}, teleporter ${homeDoor ? 'found' : 'NOT '
+            + 'in the same cell'}`);
+
+/**
+ * ⛓⛓ THE THREE LOCK-BUTTONS ARE HELD AT CLOSE, and this is the claim an
+ * aimed-world model fakes most easily.
+ *
+ * §20.2's failure was a plan every one of whose presses "worked" and which
+ * nonetheless ended with two of three buttons held, because press 17 shoved
+ * a second block off one. So the claim is not "eighteen presses landed" —
+ * it is where the three blocks ARE when the tape stops, taken from the
+ * run's live pushable rects rather than from the plan that placed them.
+ */
+/**
+ * ⚠ AND IT IS A COMPOSITION OF TWO CHECKS, NOT ONE READING, because
+ * `runTape` does not expose the live pushable rects — it forwards ledgers,
+ * not geometry. The two halves that DO establish it:
+ *
+ *   `assertPlanContinuity`  the PLAN's steps chain (no step starts a block
+ *                           from a cell the previous one did not leave it
+ *                           on) and it ends with a block on each of the
+ *                           three lock-buttons;
+ *   `runFire`'s exact set   every press in the RUN moved exactly the blocks
+ *                           its leg named — in BOTH directions, so a press
+ *                           that also shoved a fourth block is a failure by
+ *                           name, which is the check §20.2 exists to have.
+ *
+ * Continuity plus an exact set per press is the end state. Stating the
+ * composition is the point: a single `expect(blocks).toEqual(...)` here
+ * would look stronger and be reading the plan back to itself.
+ */
+let endCells = null;
+let continuityError = null;
+try { endCells = assertPlanContinuity(); } catch (e) { continuityError = e.message; }
+const WANT_HELD = ['9,7', '11,9', '7,9'];
+check(!!endCells && WANT_HELD.every((c) => endCells.includes(c)) && endCells.length === 3,
+    '⛓⛓ THREE LOCK-BUTTONS HELD AT CLOSE — the claim §20.2\'s plan failed and this one makes',
+    continuityError
+        ? `the plan does not chain: ${continuityError}`
+        : `blocks end on [${[...endCells].sort().join(' ')}] — and the run drove all `
+            + `${out.fires.length - 1} presses through \`runFire\`'s exact-set effect `
+            + 'check, which fails by name on a press that moves a block its leg did not '
+            + 'name. §19.8\'s plan ended with TWO of three held and every one of its '
+            + 'presses still "worked", which is why the claim is the END STATE.');
 
 let bad = 0;
 for (const c of checks) {

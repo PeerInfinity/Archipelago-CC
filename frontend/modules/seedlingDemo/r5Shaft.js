@@ -319,6 +319,20 @@ export const SHAFT_LEDGER = Object.freeze([
         why: 'held open by block 2 on `button t5` under `cover t1`',
     }),
     Object.freeze({
+        level: 39, tag: 10, net: true, from: 'fallrock@144,624 (t 6) — the ROPE drops it',
+        why: '⛔⛔ THE FLAG THAT REFUTED THIS PLAN, and it is written by the rope press. '
+            + '`RopeStart.hit()` sets `activate = true`, which publishes to every '
+            + '`Activators` in group 6 — and `FallRock.set activate` calls `fall()`, '
+            + 'whose FIRST line is `Game.setPersistence(tag, false)`. So the write lands '
+            + 'at PULL time (tick 189), not at landing, and `GROUP_6`\'s two '
+            + '"independent" gates were one gate with one opener (§23.2). '
+            + '⚠⚠ AND IT WAS PREDICTED AND UNASSERTED FOR A WHOLE SLICE: '
+            + '`runTape` has exposed `rockFalls` since slice 10 and '
+            + '`plan-seedling-r5-shaft` summed `lockWrites` + `ropePulls` only, so the '
+            + 'ledger claim went on passing while omitting the flag the refutation '
+            + 'turned on. A forward prediction nobody asserts is a note.',
+    }),
+    Object.freeze({
         level: 39, tag: 7, net: false, from: 'wandlock@48,160 (t 1)',
         why: '⛔⛔ WRITTEN AND TAKEN BACK. It opens 101 ticks after block 1 parks on '
             + '`button t1`, which is what lets block 3 out of its pocket — and the '

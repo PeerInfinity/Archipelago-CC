@@ -25,7 +25,7 @@ import {
 } from './activators.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
 import {
-    LEVEL, SHAFT_PLAN, SHAFT_REFUTED, SHAFT_LEDGER, SHAFT_LEDGER_NET, ROPE_PULL,
+    LEVEL, SHAFT_PLAN, SHAFT_REFUTED, SHAFT_LEDGER, SHAFT_LEDGER_NET, ROPE_PULL, SHAFT_PAIR,
     TOTEM_PART_2, SWAP_MARGINS, assertPlanContinuity, pressPrice, centre, ShaftError,
 } from './r5Shaft.js';
 
@@ -311,13 +311,37 @@ describe('⛔⛔ a Lock writes persistence, both ways', () => {
         expect(events.filter((e) => e.kind === 'lockopen')).toEqual([]);
     });
 
-    it('the ledger declares nine writes and eight net clears', () => {
-        expect(SHAFT_LEDGER.length).toBe(9);
-        expect(SHAFT_LEDGER_NET.length).toBe(8);
+    /**
+     * ⛔⛔ TEN WRITES AND NINE NET CLEARS — R5 slice 11, and the extra one
+     * is the flag that refuted the plan.
+     *
+     * This said NINE and EIGHT for four slices, which was right about the
+     * two writers slice 7 knew (`Lock.turnOff`/`returnToNormal` and
+     * `RopeStart.hit`) and wrong from the moment slice 10 found the third:
+     * the rope's group-6 publication drops `fallrock@144,624`, and
+     * `FallRock.fall()`'s FIRST line writes {39,10}.
+     *
+     * ⚠⚠ AND THE MODEL PREDICTED IT AND NOTHING ASSERTED IT.
+     * `runTape.rockFalls` has carried the write since slice 10;
+     * `plan-seedling-r5-shaft` summed `lockWrites` + `ropePulls` only, so
+     * the ledger claim went on passing while omitting the very flag the
+     * game's refutation turned on. **A forward prediction nobody asserts is
+     * a note.**
+     */
+    it('the ledger declares TEN writes and NINE net clears', () => {
+        expect(SHAFT_LEDGER.length).toBe(10);
+        expect(SHAFT_LEDGER_NET.length).toBe(9);
         // ⛔ {39,7} is the one that is written and TAKEN BACK.
         const taken = SHAFT_LEDGER.find((f) => !f.net);
         expect(taken).toMatchObject({ level: 39, tag: 7 });
         expect(SHAFT_LEDGER_NET.some((f) => f.tag === 7 && f.level === 39)).toBe(false);
+        // ⛓ …and {39,10} is in the NET set, written by the rope press.
+        const rock = SHAFT_LEDGER.find((f) => f.level === 39 && f.tag === 10);
+        expect(rock.net).toBe(true);
+        expect(rock.from).toMatch(/fallrock@144,624/);
+        // The pair's press-arm ledger is derived from the net set, so the
+        // correction reaches the recording's expectation too.
+        expect(SHAFT_PAIR.pressLedger).toContain('39:10');
     });
 });
 
