@@ -60,6 +60,9 @@ import { hitPushableFromPoint } from './pushables.js';
 import {
     brokenRockIds, createRockState, hitRock, outOfBandFlagFor, rockBreaksUnder,
 } from './breakableRocks.js';
+import {
+    burnTree, burnWrites, burnedTreeIds, createBurnState,
+} from './burnableTree.js';
 import { ledgerKey, outOfBandFlagForWriter } from './outOfBandLedger.js';
 import { createChestState, stepChests } from './chest.js';
 import {
@@ -303,6 +306,18 @@ export function createLevelRun({
      * cleared like them on a world swap.
      */
     const rockStates = new Map();
+    /**
+     * ⛓⛓ R5 slice 12: the BURNING trees, per VISIT — the eighth family.
+     *
+     * ⚠ PER VISIT even though L40's tree is `tag 0` and persists, because
+     * the two lifetimes answer different questions: this map is "is the
+     * 2x2 solid there RIGHT NOW, forty-one ticks into an animation", and
+     * the flag is "will the next `new Game` build it at all". A tree burned
+     * in this visit is gone from `solids` by this set; a tree burned in an
+     * EARLIER visit is gone because `buildLevelWorld` never made it
+     * (`treeBuiltIn`).
+     */
+    const burnStates = new Map();
     const bridgeStateFor = (n) => {
         if (!bridgeStates.has(n)) bridgeStates.set(n, new Map());
         return bridgeStates.get(n);
@@ -310,6 +325,10 @@ export function createLevelRun({
     const rockStateFor = (n) => {
         if (!rockStates.has(n)) rockStates.set(n, createRockState());
         return rockStates.get(n);
+    };
+    const burnStateFor = (n) => {
+        if (!burnStates.has(n)) burnStates.set(n, createBurnState());
+        return burnStates.get(n);
     };
     /**
      * ⛓ R5 SLICE 7: THE ROPES THIS VISIT HAS PULLED, per level.
@@ -546,6 +565,8 @@ export function createLevelRun({
      * ledger has one entry, not two.
      */
     const rockFlags = new Map();
+    /** ⛓ R5 slice 12: one record per BURN — `{id, level, t, goneAt, flag}`. */
+    const treeBurns = [];
     const polesOf = (n) => worldFor(n).pressResponders.filter((r) => r.as3 === 'LightPole');
     const poleFlagFor = (n, tag) => {
         const key = poleKey(n, tag);
@@ -609,6 +630,12 @@ export function createLevelRun({
         ? null : openBridgeIds(level, ticksCompleted + 1));
     const brokenRockIdsNow = () => (rockStateFor(level).size === 0
         ? null : brokenRockIds(rockStateFor(level), ticksCompleted + 1));
+    // ⚠ `ticksCompleted + 1`, exactly like the rocks': the geometry query
+    // is being made FOR the tick about to run, and a burn that completes on
+    // it has already been processed by `World.updateLists` at the top of
+    // the frame.
+    const burnedTreeIdsNow = () => (burnStateFor(level).size === 0
+        ? null : burnedTreeIds(burnStateFor(level), ticksCompleted + 1));
     const pushableRectsNow = () => {
         const st = pushableStateFor(level);
         return st.byId.size === 0 ? null : pushableRects(st);
@@ -895,6 +922,7 @@ export function createLevelRun({
                     openBridges,
                     pushables: withoutSelf,
                     brokenRocks: brokenRockIdsNow(),
+                    burnedTrees: burnedTreeIdsNow(),
                     pulledRopes: pulledRopeIdsNow(),
                     fallenRocks: fallenRocksNow(),
                     openChests: openChestIdsNow(),
@@ -1027,6 +1055,52 @@ export function createLevelRun({
                 const { block: after, moved, why } = hitPushableFromPoint(block, player);
                 pushState.byId.set(id, after);
                 hits.push({ as3: 'PushableBlockFire', id, moved, why });
+                continue;
+            }
+            if (r.as3 === 'BurnableTree') {
+                // ── ⛓⛓ R5 SLICE 12: THE BURN, THE EIGHTH FAMILY ───────
+                //
+                // ⛔ `hit()` REMOVES NOTHING. Its whole body is
+                // `if (t == "Fire" && !burn) { playSound; burn = true;
+                // play("burn") }` — so the 2x2 solid is still there, and
+                // stays there for the forty-one ticks the animation takes
+                // (`15 * 0.0333` is 0.4995, so twenty frames is not forty
+                // updates). `burnEnd -> die()` is what opens the cell.
+                //
+                // ⛔ AND THE PERSISTENCE WRITE IS IN `removed()`, at anim
+                // end — the OPPOSITE of `FallRock.fall()`, which writes on
+                // the trigger frame. So it is banked at `goneAt` rather
+                // than here, and `burnWrites` is what cashes it.
+                const id = r.treeId ?? `${r.tag}@${r.x},${r.y}`;
+                const tree = (world.burnableTrees ?? []).find((t) => t.id === id);
+                if (!tree) {
+                    throw new Error(`levelRun: the fire press at tick ${pressTick} reaches `
+                        + `${id} in level ${level}, which is not in the world's burnable `
+                        + 'trees. Either `check()` already removed it at build time (a '
+                        + 'cleared tag builds the room WITHOUT the tree) or the press '
+                        + 'census and the geometry disagree — and those are different '
+                        + 'bugs, so this does not guess.');
+                }
+                const { started, goneAt, why } = burnTree(burnStateFor(level), tree,
+                    ticksCompleted);
+                if (started) {
+                    // ⛔ THE FLAG IS BANKED HERE AND ITS TIMESTAMP IS
+                    // `goneAt`. `removed()` is what calls
+                    // `Game.setPersistence(tag, false)`, so the write lands
+                    // forty-one ticks after this line — and a SET has no
+                    // timestamps (§24.7's finding, on the rock's twin). The
+                    // ledger entry goes in now, because a run that ends
+                    // mid-burn still owes it; the TICK is carried on
+                    // `treeBurns` so a claim about WHEN the room changed
+                    // has something to assert against.
+                    const tag = tree.tag ?? -1;
+                    const flag = tag < 0
+                        ? outOfBandFlagForWriter({ as3: 'BurnableTree', level, tag })
+                        : outOfBandFlagFor(level, tag);
+                    rockFlags.set(ledgerKey(flag), { ...flag, id, level, by: 'burnabletree' });
+                    treeBurns.push({ id, level, t: ticksCompleted, goneAt, flag });
+                }
+                hits.push({ as3: 'BurnableTree', id, burned: started, goneAt, why });
                 continue;
             }
             if (r.as3 === 'RopeStart') {
@@ -1359,6 +1433,7 @@ export function createLevelRun({
                     openBridges: openBridgeIdsNow(),
                     pushables: pushableRectsNow(),
                     brokenRocks: brokenRockIdsNow(),
+                    burnedTrees: burnedTreeIdsNow(),
                     pulledRopes: pulledRopeIdsNow(),
                     fallenRocks: fallenRocksNow(),
                     openChests,
@@ -1489,6 +1564,7 @@ export function createLevelRun({
                     openBridges: openBridgeIdsNow(),
                     pushables: pushableRectsNow(),
                     brokenRocks: brokenRockIdsNow(),
+                    burnedTrees: burnedTreeIdsNow(),
                     pulledRopes: pulledRopeIdsNow(),
                     fallenRocks: fallenRocksNow(),
                     openChests: openChestIdsNow(),
@@ -1941,6 +2017,7 @@ export function createLevelRun({
          * `earnedClears`, for §22.8's reason — a banked clear is cashed on
          * the next BUILD, so a run that never leaves the level reports none.
          */
+        get treeBurns() { return treeBurns.map((b) => ({ ...b, flag: { ...b.flag } })); },
         get rockFalls() { return rockFalls.map((r) => ({ ...r, flag: r.flag && { ...r.flag } })); },
         /**
          * ⛓⛓ Frozen frames this run spent that the TAPE never advanced
@@ -2087,9 +2164,15 @@ export function createLevelRun({
             for (const [key, r] of rockFlags) {
                 const [n, tag] = key.split(':').map(Number);
                 if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
+                // ⚠ THE WRITER IS NAMED, because two families share this
+                // map now: a `BreakableRock`'s `endAnim` and (R5 slice 12) a
+                // `BurnableTree`'s `removed`. A label hard-coded to one of
+                // them would report a burn as a break — the ledger's whole
+                // job is attribution.
+                const by = r.by ?? 'breakablerock';
                 out.push({
                     level: n, tag,
-                    by: r.level === n ? 'breakablerock' : `breakablerock (L${r.level}, tag -1)`,
+                    by: r.level === n ? by : `${by} (L${r.level}, tag -1)`,
                 });
             }
             return out;
@@ -2514,6 +2597,7 @@ export function createLevelRun({
                 openBridges: noclip ? null : openBridgeIdsNow(),
                 pushables: noclip ? null : pushableRectsNow(),
                 brokenRocks: noclip ? null : brokenRockIdsNow(),
+                burnedTrees: noclip ? null : burnedTreeIdsNow(),
                 pulledRopes: noclip ? null : pulledRopeIdsNow(),
                 fallenRocks: noclip ? null : fallenRocksNow(),
                 // ⛔⛔ R5 slice 9: the join cell L38's chain opens. Without

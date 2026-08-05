@@ -21,9 +21,14 @@ describe('the family registry', () => {
     // SOURCE when the shaft's route needed them — both take `_tag:int = -1`
     // as a CONSTRUCTOR DEFAULT, which is a third way into this family after
     // a runtime spawn (`Fire`) and authored map data (`BreakableRock`).
-    it('has exactly the five members read out of the source, each with a citation', () => {
+    it('has exactly the SIX members read out of the source, each with a citation', () => {
+        // ⛓ R5 slice 12 adds `BurnableTree` — the sixth. Its write is in
+        // `removed()`, which has no tag guard, so a `-1` tree clears a flag
+        // in the PREVIOUS level exactly as `Fire` and `BreakableRock` do.
+        // Both trees in the committed extract are `tag 0`, so the sentinel
+        // is reachable and unexercised — which is why the entry is here.
         expect(Object.keys(OUT_OF_BAND_WRITERS).sort())
-            .toEqual(['BreakableRock', 'DarkSword', 'Fire', 'Lock', 'RopeStart']);
+            .toEqual(['BreakableRock', 'BurnableTree', 'DarkSword', 'Fire', 'Lock', 'RopeStart']);
         for (const [name, entry] of Object.entries(OUT_OF_BAND_WRITERS)) {
             expect(entry.as3, `${name} must cite its file and lines`).toMatch(/\.as:\d+/);
             expect(entry.writeSite, name).toMatch(/\(\)$/);
@@ -43,6 +48,10 @@ describe('the family registry', () => {
         expect(OUT_OF_BAND_WRITERS.DarkSword.witness).toBe('r5-witch-darksword');
         expect(OUT_OF_BAND_WRITERS.Lock.witness).toBe('r5-shaft');
         expect(OUT_OF_BAND_WRITERS.RopeStart.witness).toBe('r5-shaft');
+        // ⚠ AND THE SIXTH HAS NO WITNESS, said out loud rather than left
+        // blank: the burn is modelled and undriven. An unexercised member
+        // is a finding, and this is the finding.
+        expect(OUT_OF_BAND_WRITERS.BurnableTree.witness).toMatch(/none yet/);
     });
 });
 

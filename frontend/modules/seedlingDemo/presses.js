@@ -518,19 +518,22 @@ export const FIRE_ARM_POLICY = Object.freeze({
     },
     Tree: { policy: 'inert', why: '`Tree.hit()` is an EMPTY BODY, for every `t`.' },
     BurnableTree: {
-        policy: 'refused',
+        policy: 'modelled',
         why: '⛔⛔ THE SUBCLASS THAT MAKES THE LINE ABOVE A LIE. `BurnableTree extends '
             + 'Tree` and overrides `hit`: under `t == "Fire"` it plays a 20-frame '
-            + 'animation whose wrap callback is `die()`, which removes a 2x2 SOLID and '
-            + 'writes `setPersistence(tag, false)` from `removed()`. `genericHit` reaches '
-            + 'it through `e is Tree`, so it has always been pressable; what it did not '
-            + 'have was a table entry, and `PRESS_ARMS[cls.as3]` is how the census finds '
-            + 'one — so it was in NO list and `auditFire` beside L40\'s tree returned an '
-            + 'empty census. REFUSED rather than modelled because the burn is a '
-            + 'per-visit geometry change with no family yet (it would be the EIGHTH), '
-            + 'and a route that needs it must build one first. The tick cost is already '
-            + 'derived: `bobBoss.BURNABLE_TREE.burnTicks` is 41, because 15 * 0.0333 is '
-            + '0.4995 and not 0.5.',
+            + 'animation whose completion callback is `die()`, which removes a 2x2 SOLID '
+            + 'and writes `setPersistence(tag, false)` from `removed()`. `genericHit` '
+            + 'reaches it through `e is Tree`, so it has always been pressable; what it '
+            + 'did not have was a table entry, and `PRESS_ARMS[cls.as3]` is how the census '
+            + 'finds one — so it was in NO list and `auditFire` beside L40\'s tree '
+            + 'returned an empty census. ⛓ MODELLED as of R5 slice 12: `burnableTree.js` '
+            + 'is the EIGHTH geometry family. Three things a reader gets backwards and it '
+            + 'does not: the tree is SOLID for the whole 41-tick burn (`hit()` removes '
+            + 'nothing), the persistence write lands in `removed()` at ANIM END rather '
+            + 'than on the trigger frame (the opposite of a `FallRock`), and `check()` '
+            + 'means a CLEARED tag builds the room without the tree at all — so a window '
+            + 'that boots after the burn must declare the flag. ⚠ A `tag = -1` tree is '
+            + 'per visit and still writes, out of band.',
     },
     Grass: {
         policy: 'inert',

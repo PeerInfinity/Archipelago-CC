@@ -149,6 +149,22 @@ export const OUT_OF_BAND_WRITERS = Object.freeze({
             + 'previous level\'s last slot',
         witness: 'r5-shaft',
     }),
+    BurnableTree: Object.freeze({
+        as3: 'Scenery/BurnableTree.as:52-57',
+        writeSite: 'removed()',
+        writesWhen: 'always',
+        minusOneFrom: 'the CONSTRUCTOR default — `BurnableTree(_x, _y, _tag:int = -1)`. '
+            + '⚠ BOTH trees in the committed extract carry `tag="0"` (L32\'s arena exit '
+            + 'and L40\'s chest gate), so this route\'s burns are IN-BAND; the entry is '
+            + 'here because the sentinel is reachable and a class this helper does not '
+            + 'know throws',
+        skipsItsOwnGuard: '`check()`\'s `tag >= 0 && !checkPersistence(tag)` decides '
+            + 'whether the tree is BUILT; `removed()` has no tag guard at all, so a -1 '
+            + 'tree still writes — into the previous level\'s last slot. ⛔ And the write '
+            + 'is at ANIM END, forty-one ticks after the press, which is the opposite of '
+            + '`FallRock.fall()`',
+        witness: 'none yet — the burn is modelled and undriven (R5 slice 12)',
+    }),
     RopeStart: Object.freeze({
         as3: 'Puzzlements/RopeStart.as:41-49',
         writeSite: 'hit()',

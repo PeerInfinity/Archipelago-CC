@@ -68,6 +68,10 @@ import {
     killLocksIn,
 } from './combat.js';
 import { HARMFUL_CLASSES } from './seedlingDamageSites.js';
+// ⛓ R5 slice 12: `check()`'s build-time kill. `burnableTree.js` imports only
+// `breakableRocks.js`, which imports nothing at all, so this is a leaf-ward
+// edge and not a cycle — the same care `combat.js`'s import above records.
+import { treeBuiltIn } from './burnableTree.js';
 
 /**
  * The player hitbox origin, for recovering the entity position from a box.
@@ -2997,6 +3001,8 @@ export function buildLevelWorld(levelRecord, {
      * the state is the run's.
      */
     const chests = [];
+    /** ⛓ R5 slice 12: the level's BurnableTrees, for the burn verb. */
+    const burnableTrees = [];
     const pulsers = [];
     /** ⛔⛔ R5 slice 10: every `FallRock`/`FallRockLarge`, parked or landed. */
     const fallRocks = [];
@@ -3451,6 +3457,11 @@ export function buildLevelWorld(levelRecord, {
                             rockId: `${e.type}@${x},${y}`,
                             rockType: e.type === 'breakablerockghost' ? 1 : 0,
                         } : {}),
+                    // ⛓ R5 slice 12: the EIGHTH family. A `BurnableTree`'s
+                    // press arm needs the same join — the run holds the burn
+                    // state and `applyFire` looks it up by this id.
+                    ...(cls.as3 === 'BurnableTree'
+                        ? { treeId: `${e.type}@${x},${y}` } : {}),
                 });
             } else if (cls.type === 'Enemy') {
                 // ⚠ NO RECT, AND THAT IS THE POINT. An enemy's press
@@ -3516,6 +3527,22 @@ export function buildLevelWorld(levelRecord, {
                 solid.rockId = `${e.type}@${x},${y}`;
                 solid.persistTag = tagOf(e.type, e.attrs);
                 solid.rockType = e.type === 'breakablerockghost' ? 1 : 0;
+            }
+            // ⛓⛓ R5 SLICE 12: A BURNABLE TREE, THE EIGHTH GEOMETRY FAMILY.
+            //
+            // ⛔ AND `check()` DECIDES WHETHER IT IS BUILT AT ALL:
+            // `if (tag >= 0 && !Game.checkPersistence(tag)) die()`, so once
+            // the flag is cleared the room is built WITHOUT it — the same
+            // shape as a despawned chest and the opposite of a per-visit
+            // `tag = -1` tree, which every `new Game` rebuilds whole.
+            if (cls.as3 === 'BurnableTree') {
+                const treeTag = tagOf(e.type, e.attrs);
+                if (!treeBuiltIn({ tag: treeTag }, clearedTags)) continue;
+                solid.treeId = `${e.type}@${x},${y}`;
+                solid.persistTag = treeTag;
+                burnableTrees.push({
+                    id: solid.treeId, tag: treeTag, x, y, rect: solid.rect,
+                });
             }
             // ── R5 slice 9: the two solids whose state is their own ──────
             if (cls.as3 === 'Chest') {
@@ -3877,6 +3904,17 @@ export function buildLevelWorld(levelRecord, {
          */
         chests,
         /**
+         * ⛓⛓ R5 slice 12: the level's `BurnableTree`s, `{id, tag, x, y,
+         * rect}` — the EIGHTH geometry family's roster.
+         *
+         * ⚠ ALREADY FILTERED BY `check()`: a tree whose tag this run has
+         * cleared is not in this list and not in `solids` either, because
+         * the game builds the room without it. A caller that wanted "every
+         * tree the .oel declares" would have to ask the extract; what a
+         * route needs is what the level HAS.
+         */
+        burnableTrees,
+        /**
          * ⛓⛓ R5 slice 9: the pulsers, `{id, tag, x, y, t}`.
          *
          * ⚠ NOT ACTIVATORS, deliberately (§21.65): a Pulser is Solid either
@@ -3998,6 +4036,7 @@ export function buildLevelWorld(levelRecord, {
         collidesSolid(box, {
             beforeTypeFlip = false, openActivators = null, pushables: live = null,
             openBridges = null, brokenRocks = null, pulledRopes = null, openChests = null,
+            burnedTrees = null,
             fallenRocks = null,
         } = {}) {
             // Pixelmask entities (Building, TreeLarge, CliffSide) assign
@@ -4035,6 +4074,14 @@ export function buildLevelWorld(levelRecord, {
                 // the next `new Game`, so this may not be baked into the
                 // geometry the way a persistence clear is.
                 if (brokenRocks && s.rockId && brokenRocks.has(s.rockId)) continue;
+                // ⛓⛓ R5 SLICE 12: a BurnableTree whose 41-tick animation has
+                // completed. `burnEnd -> die()` writes `type = ""` AND calls
+                // `FP.world.remove(this)`, so — like a broken rock and unlike
+                // a lock — it leaves the list entirely. ⛔ AND IT IS SOLID
+                // FOR THE WHOLE BURN: `hit()` starts the animation and
+                // removes nothing, so a set keyed on the PRESS tick would
+                // open a 2x2 cell forty-one ticks early.
+                if (burnedTrees && s.treeId && burnedTrees.has(s.treeId)) continue;
                 // ⛔⛔ R5 SLICE 9: a chest the player has OPENED. `open()`
                 // writes `type = ""` (Chest.as:77) and the entity then fades
                 // for 60 more ticks before `FP.world.remove` — so the
@@ -4230,6 +4277,7 @@ export function buildLevelWorld(levelRecord, {
         plannerBlockerAt(box, probeRect = null, {
             noclip = false, noHazards = [], openActivators = null, pushables: live = null,
             openBridges = null, brokenRocks = null, pulledRopes = null, openChests = null,
+            burnedTrees = null,
             fallenRocks = null,
         } = {}) {
             if (!noclip) {
@@ -4264,6 +4312,14 @@ export function buildLevelWorld(levelRecord, {
                         && openActivators.has(s.activatorId)) continue;
                     if (openBridges && s.bridgeId && openBridges.has(s.bridgeId)) continue;
                     if (brokenRocks && s.rockId && brokenRocks.has(s.rockId)) continue;
+                // ⛓⛓ R5 SLICE 12: a BurnableTree whose 41-tick animation has
+                // completed. `burnEnd -> die()` writes `type = ""` AND calls
+                // `FP.world.remove(this)`, so — like a broken rock and unlike
+                // a lock — it leaves the list entirely. ⛔ AND IT IS SOLID
+                // FOR THE WHOLE BURN: `hit()` starts the animation and
+                // removes nothing, so a set keyed on the PRESS tick would
+                // open a 2x2 cell forty-one ticks early.
+                if (burnedTrees && s.treeId && burnedTrees.has(s.treeId)) continue;
                     // ⛔⛔ R5 slice 9: an OPENED chest. The planner has to see
                     // the join cell open or it cannot route the second half
                     // of L38 at all — and it must NOT see it open before the
