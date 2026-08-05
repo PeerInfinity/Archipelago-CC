@@ -3285,3 +3285,138 @@ the margins refuted that — every one of the eighteen presses has at least
 13 px of slack against `Player.fire()`'s 16 px cut, so a 1.4 px offset
 cannot make one miss. **Measure the margin before you attribute the
 consequence.**
+
+## R5 slice 12 — solidity is a property of the MOVER
+
+Four things landed and one of them changes how the census is read.
+
+### ⛔⛔ A "not solid" verdict is a claim about ONE mover's `solids` list
+
+`levelWorld.ENTITY_CLASSES` carries one `collider` field per class, and
+its docblock said *"'none' — present in the level but does not block the
+player"*. That is exactly right, and it is not the only question.
+
+FlashPunk collision is not a property of the thing being hit. Every
+`Mobile` carries its own array, and `collideTypes(solids, …)` asks about
+that one:
+
+```
+Mobile.as:17              solids = ["Solid","Tree","Rock","Rope","ShieldBoss"]
+Player.as:377             solids.push("LavaBoss")            ← the PLAYER's
+PushableBlock.as:28       solids.push("Enemy", "Player")     ← a BLOCK's
+PushableBlockFire.as:31   solids.push("Enemy", "Player")
+```
+
+⇒ **a pushable block is the one mover in the game that collides with
+enemies.** L39's shaft failed for four slices because a wandering
+`Spinner` — a `type: 'Enemy'`, `collider: 'none'`, "damage only" census
+row — stood in a block's glide corridor and wedged it. Every instrument
+agreed the model was right, because every instrument was asking the
+player's question.
+
+Ask it with `blocksMover(type, mover)` (`SOLIDS_BY_MOVER` has the three
+lists). And assert **both halves** in one test — this row is `'none'`
+AND it blocks a block — so neither reads as a defect in the other.
+
+⛓ **The wedge is permanent.** A blocked block keeps `v` non-zero
+forever: `input()` re-derives it from `tile`, `moveY` resets `tile` to
+the current cell, and the two chase each other. `hit()`'s first line is
+`if (v.length > 0) return`, so no later press can ever move it again.
+
+### How the mechanism was isolated, cheaply
+
+`Bot.as:811` re-boots with `new Game(bootLevel, bootX, bootY)` whenever
+the tape's boot block disagrees with where the player is — **so a probe
+tape can start inside the room it is about**. The shaft's 2,375-tick
+prologue (a rope, a corridor, a 197-frame freeze) became 165 ticks.
+
+Three probe shapes, in order of what each one settles:
+
+1. **the walk-proof** — press, then walk into the cell the push emptied.
+   Reproduces the failure and localises it to one press.
+2. **the dipstick** — hold the movement key for hundreds of ticks instead
+   of walking to a target. A driven walk stops when its INPUT SPAN ends,
+   which in a position trace looks exactly like being blocked; holding
+   the key turns the player's face into a continuous readout of the
+   obstacle. (A player pressed against a 0.5 px/tick mover follows it at
+   **1 px every other tick** — the sweep quantum is 1 px and the gap
+   opens 0.5 px.)
+3. **the time shift** — the same tape, N ticks later, nothing else
+   changed. A static solid gives the same answer; anything that moves
+   does not. Here the shifted arm came back **byte-exact**, which is
+   what proved the blocker was mobile.
+
+⚠ And the diagnostic arms are WITHDRAWN, not committed: a fixture whose
+model is wrong is either a permanent red or a silenced one. Their numbers
+are banked in `r5Shaft.SPINNER_WEDGE`; `probe-seedling-r5-press-axes
+--write-probes` regenerates them.
+
+### `runFire` refuses a glide it cannot certify
+
+The model tracks no enemy POSITION, so it is not entitled to predict a
+block's glide in a room with live enemies. `runFire` fails by name, and
+the escape hatch is a DECLARATION with evidence
+(`fire.enemyRoom: "<what the GAME said>"`) rather than a boolean.
+
+⚠ Its first cut read `run.world?.combat ?? []`. The `combat` role is
+opt-in, so on a world built without it that is an empty list and a silent
+green **on the one question the check exists to ask**. An absent census
+is a refusal now, not a pass.
+
+### The burn: the eighth geometry family
+
+`burnableTree.js`. Three things a reader gets backwards:
+
+- **the tree is SOLID for the whole burn.** `hit()`'s entire body is
+  `playSound; burn = true; play("burn")` — it removes nothing. The 2x2
+  cell opens **41 ticks** later, when `burnEnd -> die()` fires.
+- **the persistence write is in `removed()`, at anim end** — the opposite
+  of `FallRock.fall()`, which writes on the trigger frame.
+- **`check()` decides whether it is BUILT AT ALL**: `tag >= 0 &&
+  !checkPersistence(tag)`, so once the flag is cleared the room is built
+  without the tree. A window that boots after the burn must declare the
+  flag.
+
+41 is simulated, not divided: `15 * 0.0333` is 0.4995, so twenty frames
+are not forty updates. ⚠ Both `burnabletree`s in the extract carry
+`tag="0"` — neither is per-visit.
+
+### The crusher: a pursuer, not a hazard
+
+`crusher.js`. `t == -1` means **always armed** (on a `Lock` the same
+literal is the kill-lock sentinel). At rest it grid-snaps with
+`Math.round`, needs LINE OF SIGHT (`collideLine("Solid")` with a
+temporary `type = "BS"` self-swap, so **any** Solid shields it), scans
+four 64-px lanes, charges 1 px/tick and **PARKS** where a Solid stops it.
+`hit()` runs every armed tick including at rest, damage 1000, to `Enemy`
+as well as `Player`.
+
+Two consequences worth carrying:
+
+- ⚠⚠ **`update()` never tests `Game.freezeObjects`.** A pickup's 150
+  frozen frames stop MOBILES; a `Crusher` is an `Activators`. So a
+  collect near one is a **ceremony-duration survival claim**, not a
+  positional one. Read `update()` for the gate before pricing any stance
+  a ceremony will freeze the player in.
+- ⛓ The four lanes are each the body grown 64 px along ONE axis, so
+  every pairwise intersection is **exactly the body** — and standing
+  there is a 1000-damage tick. The scan's last-match-wins (there is no
+  `break`) is therefore unreachable by a living player, and the charge
+  direction is unambiguous everywhere a player can survive.
+
+### The dead-frame band is `mean·N ± c·√N`
+
+A tape's fade residue is a SUM of per-load fades: its centre grows
+linearly in the load count and its spread does not. The old linear band
+was wrong on both sides — its floor was the smallest observation ever
+seen (so a STARVED run went red) and its ceiling grew 5 frames per load,
+which on the four full walks was wide enough to admit a 150-frame freeze
+the model had MISSED.
+
+⚠ Derive the half-width from the loudest measured run-to-run NOISE, not
+from the fitted σ — those describe different things. Cap it at half the
+smallest defect you must catch, so "a missing ceremony is always caught"
+is a claim rather than a fact about today's roster. And COMMIT the
+observations (`fixtures/dead-frame-observations.json`): the numbers the
+previous band was designed from lived only in prose and did not
+reproduce.
