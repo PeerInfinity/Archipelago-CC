@@ -1,0 +1,564 @@
+{
+  "_comment": "Derived by scripts/procgen/probe-seedling-deadframe-band.mjs from the differential sweep's banked payloads. The per-load fade is the GAME's number minus the model's own freezes; this file is the committed copy because the payload directory is gitignored and was, at slice 12, the only copy of the numbers §24.85 quoted.",
+  "totalTapes": 79,
+  "totalLoads": 557,
+  "min": 18,
+  "max": 21,
+  "mean": 19.127468581687612,
+  "sigma": 0.4117392859168882,
+  "observations": [
+    {
+      "name": "collide-up-rock",
+      "loads": 1,
+      "dead": 18,
+      "modelled": 0,
+      "residue": 18
+    },
+    {
+      "name": "cross-level-leg",
+      "loads": 3,
+      "dead": 56,
+      "modelled": 0,
+      "residue": 56
+    },
+    {
+      "name": "diagonal-run",
+      "loads": 1,
+      "dead": 18,
+      "modelled": 0,
+      "residue": 18
+    },
+    {
+      "name": "direction-flip",
+      "loads": 1,
+      "dead": 18,
+      "modelled": 0,
+      "residue": 18
+    },
+    {
+      "name": "friction-stop",
+      "loads": 1,
+      "dead": 18,
+      "modelled": 0,
+      "residue": 18
+    },
+    {
+      "name": "grant-sword-room",
+      "loads": 5,
+      "dead": 94,
+      "modelled": 0,
+      "residue": 94
+    },
+    {
+      "name": "hazard-boot-pit",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
+    },
+    {
+      "name": "hazard-walk-water",
+      "loads": 1,
+      "dead": 18,
+      "modelled": 0,
+      "residue": 18
+    },
+    {
+      "name": "l71-button-lock",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
+    },
+    {
+      "name": "l71-hold-101-shut",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
+    },
+    {
+      "name": "l71-hold-102-open",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
+    },
+    {
+      "name": "l71-lock-shut",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
+    },
+    {
+      "name": "l71-shieldlock-open",
+      "loads": 2,
+      "dead": 39,
+      "modelled": 0,
+      "residue": 39
+    },
+    {
+      "name": "l71-shieldlock-shut",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
+    },
+    {
+      "name": "pit-fall-83",
+      "loads": 2,
+      "dead": 39,
+      "modelled": 0,
+      "residue": 39
+    },
+    {
+      "name": "pit-fall-chain-85",
+      "loads": 3,
+      "dead": 58,
+      "modelled": 0,
+      "residue": 58
+    },
+    {
+      "name": "r1-walk-1-sword-shield",
+      "loads": 13,
+      "dead": 246,
+      "modelled": 0,
+      "residue": 246
+    },
+    {
+      "name": "r1-walk-2-feather-conch",
+      "loads": 17,
+      "dead": 324,
+      "modelled": 0,
+      "residue": 324
+    },
+    {
+      "name": "r1-walk-3-wand-darksword",
+      "loads": 11,
+      "dead": 210,
+      "modelled": 0,
+      "residue": 210
+    },
+    {
+      "name": "r1-walk-4-torch",
+      "loads": 11,
+      "dead": 210,
+      "modelled": 0,
+      "residue": 210
+    },
+    {
+      "name": "r1-walk-5-spear-health",
+      "loads": 18,
+      "dead": 343,
+      "modelled": 0,
+      "residue": 343
+    },
+    {
+      "name": "r1-walk-6-cluster",
+      "loads": 14,
+      "dead": 267,
+      "modelled": 0,
+      "residue": 267
+    },
+    {
+      "name": "r1-walk-full",
+      "loads": 79,
+      "dead": 1500,
+      "modelled": 0,
+      "residue": 1500
+    },
+    {
+      "name": "r2-walk-1-sword-shield",
+      "loads": 13,
+      "dead": 246,
+      "modelled": 0,
+      "residue": 246
+    },
+    {
+      "name": "r2-walk-2-feather",
+      "loads": 3,
+      "dead": 58,
+      "modelled": 0,
+      "residue": 58
+    },
+    {
+      "name": "r2-walk-3-darksword-torch",
+      "loads": 12,
+      "dead": 229,
+      "modelled": 0,
+      "residue": 229
+    },
+    {
+      "name": "r2-walk-4-spear",
+      "loads": 13,
+      "dead": 248,
+      "modelled": 0,
+      "residue": 248
+    },
+    {
+      "name": "r2-walk-5-darkshield",
+      "loads": 9,
+      "dead": 172,
+      "modelled": 0,
+      "residue": 172
+    },
+    {
+      "name": "r2-walk-6-darksuit",
+      "loads": 10,
+      "dead": 191,
+      "modelled": 0,
+      "residue": 191
+    },
+    {
+      "name": "r2-walk-full",
+      "loads": 55,
+      "dead": 1044,
+      "modelled": 0,
+      "residue": 1044
+    },
+    {
+      "name": "r3-collect-darkshield",
+      "loads": 1,
+      "dead": 170,
+      "modelled": 150,
+      "residue": 20
+    },
+    {
+      "name": "r3-collect-darksuit",
+      "loads": 1,
+      "dead": 170,
+      "modelled": 150,
+      "residue": 20
+    },
+    {
+      "name": "r3-collect-feather",
+      "loads": 1,
+      "dead": 170,
+      "modelled": 150,
+      "residue": 20
+    },
+    {
+      "name": "r3-collect-shield",
+      "loads": 1,
+      "dead": 170,
+      "modelled": 150,
+      "residue": 20
+    },
+    {
+      "name": "r3-collect-spear",
+      "loads": 1,
+      "dead": 170,
+      "modelled": 150,
+      "residue": 20
+    },
+    {
+      "name": "r3-collect-sword",
+      "loads": 1,
+      "dead": 171,
+      "modelled": 150,
+      "residue": 21
+    },
+    {
+      "name": "r3-collect-torch",
+      "loads": 1,
+      "dead": 170,
+      "modelled": 150,
+      "residue": 20
+    },
+    {
+      "name": "r3-walk-1-sword",
+      "loads": 9,
+      "dead": 321,
+      "modelled": 150,
+      "residue": 171
+    },
+    {
+      "name": "r3-walk-2-feather",
+      "loads": 6,
+      "dead": 265,
+      "modelled": 150,
+      "residue": 115
+    },
+    {
+      "name": "r3-walk-3-torch",
+      "loads": 11,
+      "dead": 360,
+      "modelled": 150,
+      "residue": 210
+    },
+    {
+      "name": "r3-walk-4-spear",
+      "loads": 13,
+      "dead": 398,
+      "modelled": 150,
+      "residue": 248
+    },
+    {
+      "name": "r3-walk-5-darkshield",
+      "loads": 9,
+      "dead": 322,
+      "modelled": 150,
+      "residue": 172
+    },
+    {
+      "name": "r3-walk-6-darksuit",
+      "loads": 10,
+      "dead": 341,
+      "modelled": 150,
+      "residue": 191
+    },
+    {
+      "name": "r3-walk-full",
+      "loads": 53,
+      "dead": 1907,
+      "modelled": 900,
+      "residue": 1007
+    },
+    {
+      "name": "r4-walk-1-sword",
+      "loads": 9,
+      "dead": 321,
+      "modelled": 150,
+      "residue": 171
+    },
+    {
+      "name": "r4-walk-2-feather",
+      "loads": 6,
+      "dead": 265,
+      "modelled": 150,
+      "residue": 115
+    },
+    {
+      "name": "r4-walk-3-torch",
+      "loads": 11,
+      "dead": 360,
+      "modelled": 150,
+      "residue": 210
+    },
+    {
+      "name": "r4-walk-4-approach",
+      "loads": 5,
+      "dead": 96,
+      "modelled": 0,
+      "residue": 96
+    },
+    {
+      "name": "r4-walk-5-spear",
+      "loads": 7,
+      "dead": 284,
+      "modelled": 150,
+      "residue": 134
+    },
+    {
+      "name": "r4-walk-6-health",
+      "loads": 8,
+      "dead": 453,
+      "modelled": 300,
+      "residue": 153
+    },
+    {
+      "name": "r4-walk-full",
+      "loads": 41,
+      "dead": 1679,
+      "modelled": 900,
+      "residue": 779
+    },
+    {
+      "name": "r5-bobboss-arm",
+      "loads": 1,
+      "dead": 195,
+      "modelled": 174,
+      "residue": 21
+    },
+    {
+      "name": "r5-bobboss-fire-control",
+      "loads": 1,
+      "dead": 195,
+      "modelled": 174,
+      "residue": 21
+    },
+    {
+      "name": "r5-bobboss-fire",
+      "loads": 1,
+      "dead": 345,
+      "modelled": 324,
+      "residue": 21
+    },
+    {
+      "name": "r5-bosskey-leg",
+      "loads": 3,
+      "dead": 211,
+      "modelled": 150,
+      "residue": 61
+    },
+    {
+      "name": "r5-bosskey-lock-shut",
+      "loads": 1,
+      "dead": 21,
+      "modelled": 0,
+      "residue": 21
+    },
+    {
+      "name": "r5-contact-control-off",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
+    },
+    {
+      "name": "r5-contact-control-on",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
+    },
+    {
+      "name": "r5-d5-conch",
+      "loads": 6,
+      "dead": 271,
+      "modelled": 150,
+      "residue": 121
+    },
+    {
+      "name": "r5-feather",
+      "loads": 4,
+      "dead": 231,
+      "modelled": 150,
+      "residue": 81
+    },
+    {
+      "name": "r5-karlore-fire",
+      "loads": 2,
+      "dead": 41,
+      "modelled": 0,
+      "residue": 41
+    },
+    {
+      "name": "r5-karlore-plug",
+      "loads": 2,
+      "dead": 41,
+      "modelled": 0,
+      "residue": 41
+    },
+    {
+      "name": "r5-l38-fade-boot",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
+    },
+    {
+      "name": "r5-l38-fade-door",
+      "loads": 2,
+      "dead": 39,
+      "modelled": 0,
+      "residue": 39
+    },
+    {
+      "name": "r5-l60-kill-control",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
+    },
+    {
+      "name": "r5-l60-kill",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
+    },
+    {
+      "name": "r5-swim-cross",
+      "loads": 2,
+      "dead": 41,
+      "modelled": 0,
+      "residue": 41
+    },
+    {
+      "name": "r5-swim-drown",
+      "loads": 2,
+      "dead": 41,
+      "modelled": 0,
+      "residue": 41
+    },
+    {
+      "name": "r5-swim-latch",
+      "loads": 2,
+      "dead": 41,
+      "modelled": 0,
+      "residue": 41
+    },
+    {
+      "name": "r5-totem-entrance-control",
+      "loads": 2,
+      "dead": 370,
+      "modelled": 331,
+      "residue": 39
+    },
+    {
+      "name": "r5-totem-entrance",
+      "loads": 2,
+      "dead": 370,
+      "modelled": 331,
+      "residue": 39
+    },
+    {
+      "name": "r5-waterfall-climb",
+      "loads": 1,
+      "dead": 21,
+      "modelled": 0,
+      "residue": 21
+    },
+    {
+      "name": "r5-waterfall-shut",
+      "loads": 1,
+      "dead": 21,
+      "modelled": 0,
+      "residue": 21
+    },
+    {
+      "name": "shuffle-stop",
+      "loads": 1,
+      "dead": 18,
+      "modelled": 0,
+      "residue": 18
+    },
+    {
+      "name": "statue-press",
+      "loads": 1,
+      "dead": 18,
+      "modelled": 0,
+      "residue": 18
+    },
+    {
+      "name": "straight-run",
+      "loads": 1,
+      "dead": 18,
+      "modelled": 0,
+      "residue": 18
+    },
+    {
+      "name": "thread-the-gap",
+      "loads": 1,
+      "dead": 18,
+      "modelled": 0,
+      "residue": 18
+    },
+    {
+      "name": "transition-west-return",
+      "loads": 3,
+      "dead": 56,
+      "modelled": 0,
+      "residue": 56
+    },
+    {
+      "name": "wall-slide",
+      "loads": 1,
+      "dead": 18,
+      "modelled": 0,
+      "residue": 18
+    }
+  ]
+}

@@ -165,6 +165,11 @@ const { MODEL_EXEMPT } = await import(join(REPO, 'frontend/modules/seedlingDemo/
 const {
     CEREMONY_DEAD_FRAMES,
 } = await import(join(REPO, 'frontend/modules/seedlingDemo/sealCeremony.js'));
+// ⛓⛓ The fade band, R5 slice 12 — derived and asserted in the module, so
+// this file spends it rather than defining it.
+const {
+    describeFadeBand, fadeBand,
+} = await import(join(REPO, 'frontend/modules/seedlingDemo/deadFrameBand.js'));
 // ⛔ The declared DROWN exemption — see `r5Swim.DROWN_EXPECTED`. Same
 // doctrine, different assert: an armed-water pair needs one arm whose timer
 // MOVED, and a declared arm that reports 0 is a RED rather than a pass.
@@ -426,19 +431,21 @@ const SECONDS_PER_FRAME = 2.5;
 const FADE_FRAMES = 25;
 
 /**
- * ⚠ THE ROOM-LOAD FADE IS A BAND, NOT A CONSTANT — R5 slice 10.
+ * ⚠ THE ROOM-LOAD FADE IS A BAND, NOT A CONSTANT — R5 slice 10 — AND ITS
+ * SHAPE IS `mean * N ± c * √N`, NOT LINEAR — R5 slice 12.
  *
  * `blackCover` decays from `cover()`, i.e. per RENDER, while `Bot.update`'s
  * dead-frame gate samples per UPDATE. So the number of dead frames a load
  * costs is "how many renders fit inside twenty units of decay", which is not
- * the same quantity whenever the two loops are not locked 1:1. §22.6
- * measured 21 and 20 on `r5-feather`'s two loads and 20 and 19 on L38's —
- * "a constant that is a variable", named there and used here.
+ * the same quantity whenever the two loops are not locked 1:1.
  *
- * The band is deliberately generous on both sides: this check exists to
- * catch a 197-frame freeze nobody modelled, not to pin a fencepost.
+ * ⛔ The linear `[17*N, 24*N]` this used to be was wrong on both sides at
+ * once: its floor was the smallest observation (so a STARVED run went red)
+ * and its ceiling grew 5 frames per load (so on the four FULL WALKS it was
+ * blind to a 150-frame freeze the model had missed — measured, by name).
+ * The derivation, the banked observations and the two-sided check now live
+ * in `deadFrameBand.js` + `deadFrameBand.test.js`.
  */
-const FADE_PER_LOAD = Object.freeze({ min: 17, max: 24 });
 const deadlineFor = (tickCount) =>
     Math.ceil((tickCount + FADE_FRAMES) * SECONDS_PER_FRAME * 1000) + 60000;
 
@@ -798,8 +805,7 @@ function checkReadout(name, tape, status, stream) {
     const ceremonyFrames = sealFrames + pickupFrames + spawnedFrames + declaredFreeze;
     const modelled = (expected.frozenFramesOwed ?? 0) + ceremonyFrames;
     const residue = status.dead_frames - modelled;
-    const lo = loads * FADE_PER_LOAD.min;
-    const hi = loads * FADE_PER_LOAD.max;
+    const { lo, hi } = fadeBand(loads);
     check(`${name}: the dead frames are accounted for`,
         residue >= lo && residue <= hi,
         `${status.dead_frames} dead = ${modelled} modelled `
@@ -809,9 +815,8 @@ function checkReadout(name, tape, status, stream) {
         // first run were told apart by hand arithmetic off a single number.
         + `(${expected.frozenFramesOwed ?? 0} run freeze + ${sealFrames} seal + `
         + `${pickupFrames} pickup + ${spawnedFrames} spawned + ${declaredFreeze} declared) `
-        + `+ ${residue} residue, against ${loads} load(s) at `
-        + `${FADE_PER_LOAD.min}-${FADE_PER_LOAD.max} frames each `
-        + `= [${lo},${hi}]${residue >= lo && residue <= hi ? '' : ' ⛔ OUT OF BAND — a '
+        + `+ ${residue} residue, against ${describeFadeBand(loads)}`
+        + `${residue >= lo && residue <= hi ? '' : ' ⛔ OUT OF BAND — a '
             + 'freeze fired that the model does not know about, and no positional '
             + 'comparison would report it: a frozen frame advances no tape tick'}`);
 
