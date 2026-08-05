@@ -23,11 +23,13 @@ import { describe, expect, it } from 'vitest';
 import {
     ACTIVATOR_PRESSERS,
     ACTIVATOR_RESPONDERS,
+    FORCED_TAG,
     FORCED_TSET,
     RELAXED_ROLES,
     buildLevelWorld,
     rect,
     tSetOf,
+    tagOf,
 } from './levelWorld.js';
 import { loadExpectation, loadTape } from './fixtures/index.js';
 import { runTapeToStream } from './tapeRunner.js';
@@ -695,6 +697,76 @@ describe('FORCED_TSET: the group the ctor decides, not the .oel', () => {
         // whole R2 crossing vacuous.
         const cleared = buildLevelWorld(levelSource(71), { cleared: [0, 1, 2, 3] });
         expect(cleared.activators.map((a) => a.id)).toEqual(['lock@112,160']);
+    });
+});
+
+/**
+ * ── ⛔⛔ R5 SLICE 11: THE CONSTRUCTOR ARGUMENT-TABLE AUDIT ─────────────
+ *
+ * The literal -1 entered this arc's ledger three separate ways — a ctor
+ * DEFAULT (`Lock`, §20.4), a hardcoded group (`ShieldLock`, R4) and a
+ * second hardcoded group behind a Graphic (`BossLock`, §23.8) — and each
+ * cost its own slice, because each was found by tripping over one
+ * instance. `probe-seedling-ctor-args` resolves the whole family in one
+ * pass: `Game.as`'s argument table, every ctor's `super(` chain, and the
+ * ctor body's own `tag =` assignment.
+ *
+ * ⛓ THE GROUP SLOT CAME BACK CLEAN — all seventeen activator types put
+ * exactly what `tSetOf` reads into `Activators(_x, _y, _g:Graphic, _t:int)`'s
+ * FOURTH argument, `ShieldLock` and `BossLock` included and declared.
+ *
+ * ⛔⛔ THE TAG SLOT DID NOT, AND IT FOUND TWO MORE OF THE SAME SHAPE.
+ * `MoonrockPile` was the only forced tag anyone had found, because it is
+ * the only one a `tag = ` grep can see. A tag can also be forced by a
+ * LITERAL PARKED IN A SUPER CALL:
+ *
+ *     NPCs/Statue.as:20   super(…, Game.sprStatues, -1, _text, …)
+ *     Stairs.as:20        super(_x, _y, _to, _px, _py, true, -1, …)
+ *
+ * ⚠⚠ AND BOTH HAVE A NON-TAG ARGUMENT DIRECTLY IN FRONT OF THE LITERAL —
+ * a Graphic and a `_show` Boolean. That is the `BossLock` shape twice
+ * more, which is what makes this a family rather than three accidents.
+ */
+describe('R5 slice 11 — FORCED_TAG, and the two literals behind an argument', () => {
+    const levelSource = atlasLevelSource();
+
+    it('forces every declared tag whatever the attributes say', () => {
+        expect(FORCED_TAG).toEqual({
+            moonrockpile: 0, statue1: -1, statue2: -1, stairsup: -1, stairsdown: -1,
+        });
+        for (const [type, want] of Object.entries(FORCED_TAG)) {
+            expect(tagOf(type, {})).toBe(want);
+            expect(tagOf(type, { tag: '5' })).toBe(want);
+            expect(tagOf(type, { tag: '-1' })).toBe(want);
+        }
+    });
+
+    it('reads `tag` off the attributes for everything else, and -1 when absent', () => {
+        expect(tagOf('lock', { tag: '7' })).toBe(7);
+        expect(tagOf('chest', {})).toBe(-1);
+        // ⚠ A `teleporter` is the one call site that spells the absent case
+        // out longhand — `String(o.@tag) == "" ? -1 : o.@tag` — and it means
+        // the same thing, which is why it is NOT in the table.
+        expect(tagOf('teleporter', {})).toBe(-1);
+        expect(tagOf('teleporter', { tag: '4' })).toBe(4);
+    });
+
+    it('⚠ is INERT against the committed extract, which is why it is declared', () => {
+        // The whole point of the entry: no `statue`/`stairs` placement in
+        // any of the 116 levels carries a `tag` attribute, so `tagOf`
+        // already answered -1 — by the DATA happening not to say otherwise.
+        // A tagged stairs in a future extract would have handed the model a
+        // persistence tag the game hardcodes away, and
+        // `Teleporter.checkDeactivated`'s `tag >= 0` guard means such a
+        // stairs can never be deactivated however the flag reads.
+        for (const level of [40, 41, 42]) {
+            const w = buildLevelWorld(levelSource(level));
+            for (const s of [...w.solids, ...(w.transitions ?? [])]) {
+                if (s.tag === 'stairsup' || s.tag === 'stairsdown') {
+                    expect(s.persistTag ?? -1).toBe(-1);
+                }
+            }
+        }
     });
 });
 

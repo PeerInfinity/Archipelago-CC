@@ -2095,9 +2095,38 @@ export function tSetOf(type, attrs) {
  * It is not: with `tag = 0` its `check()` fires on a fresh boot and removes
  * it. Checked against every `tag = ` assignment in `src/`; this is the only
  * one.
+ *
+ * ⛔⛔ AND "THE ONLY ONE" WAS TRUE ABOUT `tag = ` AND FALSE ABOUT THE
+ * FAMILY — R5 slice 11, from the constructor argument-table audit
+ * (`probe-seedling-ctor-args`). A tag can also be forced by a LITERAL
+ * PARKED IN A SUPER CALL, which no `tag = ` grep reaches, and there are
+ * two more of those:
+ *
+ *   `NPCs/Statue.as:20`  super(…, Game.sprStatues, **-1**, _text, …)
+ *   `Stairs.as:20`       super(_x, _y, _to, _px, _py, true, **-1**, …)
+ *
+ * ⚠⚠ BOTH HAVE A NON-TAG ARGUMENT IMMEDIATELY IN FRONT OF THE LITERAL —
+ * a Graphic and a `_show` Boolean — which is the `BossLock` shape exactly
+ * (§23.8), and is why three separate slices each found one instance by
+ * tripping over it. The audit resolves the whole chain instead.
+ *
+ * ⚠ THEY ARE INERT AGAINST THE COMMITTED EXTRACT, AND THAT IS THE POINT
+ * OF DECLARING THEM. No `statue1`/`statue2`/`stairsup`/`stairsdown`
+ * placement in all 116 levels carries a `tag` attribute (checked: their
+ * attribute sets are `text,frames` and `flip,to,playerx,playery,sign`), so
+ * `tagOf` already answered -1 — by the DATA happening not to say
+ * otherwise, not by construction. A tagged stairs added to any future
+ * extract would have given the model a persistence tag the game hardcodes
+ * away, and `Teleporter.checkDeactivated`'s `tag >= 0` guard means such a
+ * stairs can never be deactivated however the flag reads. Declared here so
+ * the agreement is structural and the probe can gate it.
  */
 export const FORCED_TAG = Object.freeze({
     moonrockpile: 0,        // Scenery/MoonrockPile.as:23
+    statue1: -1,            // NPCs/Statue.as:20 — the NPC `_tag` slot, behind the Graphic
+    statue2: -1,            // NPCs/Statue.as:20
+    stairsup: -1,           // Stairs.as:20 — the Teleporter `_tag` slot, behind `_show`
+    stairsdown: -1,         // Stairs.as:20
 });
 
 /** An entity's persistence tag: its class's forced value, else `tag`, else -1. */
