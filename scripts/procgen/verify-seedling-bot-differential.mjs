@@ -64,11 +64,44 @@
  *    replay the extra page load is noise.
  *
  * Run: node scripts/procgen/verify-seedling-bot-differential.mjs [--record]
+ *
+ * ── ⛓⛓ `--resume` — THE SWEEP IS INTERRUPTIBLE (R5 slice 11) ──────────
+ *
+ *   node scripts/procgen/verify-seedling-bot-differential.mjs --win --resume
+ *
+ * A full `--win` sweep is ~2.5 hours of SERIAL browser replay and it used
+ * to keep nothing: results were stdout lines and an in-memory counter, so
+ * an interrupt at tape 78 threw away 78 tapes. This slice killed the sweep
+ * twice — once for the `--win` channel, once because the run had gone
+ * stale — and paid full price both times.
+ *
+ * Every tape's verdict is now appended to
+ * `test-results/seedling-differential/checkpoint.jsonl` as it completes,
+ * with its `{stream, status}` beside it, and `--resume` reuses a stored
+ * PASS **only when its fingerprint still matches**. The fingerprint covers
+ * the tape, its expectation, every `.js` under `seedlingDemo/`, the atlas,
+ * and the wasm artifact's stamp — so any edit to the model invalidates the
+ * checkpoint wholesale.
+ *
+ * ⛔ THAT BLUNTNESS IS THE POINT, and it is this slice's own finding
+ * turned into a mechanism: a sweep that imported its modules before an
+ * edit gates the PARENT commit, not the change (§24.2), and it happened
+ * TWICE in one day. A resume that trusted a stored PASS across a model
+ * edit would make that mistake silent and permanent.
+ *
+ * Three things are deliberately never reused: a stored FAIL (the failure
+ * is what the run exists to surface), anything under `--record` (a
+ * recording run must write every expectation it selects), and a verdict
+ * whose cached evidence is missing.
  */
 
 import { chromium } from 'playwright';
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import {
+    appendFileSync, existsSync, mkdirSync, readFileSync, readdirSync, statSync,
+    unlinkSync, writeFileSync,
+} from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -162,6 +195,146 @@ const ONLY = new Set(
  */
 const WIN = process.argv.includes('--win');
 
+// ── ⛓⛓ THE CHECKPOINT, R5 slice 11 ───────────────────────────────────
+//
+// A full `--win` sweep is ~2.5 hours of SERIAL browser replay, and until
+// now it kept nothing: results existed as stdout lines and an in-memory
+// counter, so an interrupt at tape 78 threw away 78 tapes. That is not a
+// theoretical cost — this slice killed the sweep TWICE, once because the
+// `--win` channel was needed and once because the run had gone stale, and
+// paid full price both times.
+//
+// ⛔⛔ AND "IT HAD GONE STALE" IS THE HALF THAT MAKES A NAIVE RESUME
+// DANGEROUS. This same slice found that slice 10's baseline sweep gated
+// the PARENT commit, because it imported its modules before the edits
+// landed — and then did it AGAIN: a run launched at 20:36 was still going
+// when `r5Acceptance.js` (which this file imports) changed at 20:40. A
+// resume that trusted a stored PASS would bake exactly that mistake into
+// the tooling and make it silent.
+//
+// So the checkpoint stores a FINGERPRINT beside every result, and a stored
+// PASS is reused only when the fingerprint still matches. The fingerprint
+// covers everything a per-tape verdict depends on:
+//
+//   · the tape file's own bytes;
+//   · every `.js` under `frontend/modules/seedlingDemo/` — the model, all
+//     of it, because "which module does this check depend on" is not
+//     answerable statically and a wrong answer here is a false green;
+//   · the committed atlas the model reads levels from;
+//   · the wasm artifact's size+mtime — the GAME side. Hashing 30 MB per
+//     run buys nothing a stamp does not.
+//
+// ⇒ any edit under `seedlingDemo/` invalidates the whole checkpoint. That
+// is deliberately blunt: a resume that is wrong once is worse than a
+// resume that is coarse every time.
+const RESUME = process.argv.includes('--resume');
+const CHECKPOINT_DIR = join(REPO, 'test-results', 'seedling-differential');
+const CHECKPOINT = join(CHECKPOINT_DIR, 'checkpoint.jsonl');
+
+/** Hash the model + data the per-tape verdicts depend on. */
+function modelFingerprint() {
+    const h = createHash('sha256');
+    const moduleDir = join(REPO, 'frontend', 'modules', 'seedlingDemo');
+    for (const f of readdirSync(moduleDir).filter((n) => n.endsWith('.js')).sort()) {
+        h.update(f);
+        h.update(readFileSync(join(moduleDir, f)));
+    }
+    const atlas = join(REPO, 'frontend', 'modules', 'flashPanel', 'atlases', 'seedling-map.json');
+    if (existsSync(atlas)) h.update(readFileSync(atlas));
+    // ⚠ THE GAME SIDE, BY STAMP RATHER THAN BY CONTENT. A rebuilt wasm is
+    // a different game and must invalidate; hashing it every run is a cost
+    // with no extra safety, because the pipeline never writes the same
+    // bytes with a different mtime.
+    for (const f of ['game.html', `${PAGE_NAME}.wasm`]) {
+        const p = join(ARTIFACT, f);
+        if (!existsSync(p)) continue;
+        const s = statSync(p);
+        h.update(`${f}:${s.size}:${s.mtimeMs}`);
+    }
+    return h.digest('hex').slice(0, 16);
+}
+const FINGERPRINT = modelFingerprint();
+/**
+ * Per-tape: the model fingerprint, the tape's own bytes, AND ITS
+ * EXPECTATION's.
+ *
+ * ⛔ THE EXPECTATION IS THE COMPARISON TARGET, so leaving it out would let
+ * a `--record` of one tape invalidate that tape's verdict while a stored
+ * PASS from before the re-record went on being reused. The oracle changing
+ * is precisely when a cached verdict is worthless.
+ */
+function tapeFingerprint(name) {
+    const h = createHash('sha256').update(FINGERPRINT);
+    h.update(readFileSync(join(REPO, 'frontend/modules/seedlingDemo/fixtures/tapes', `${name}.json`)));
+    const exp = join(EXPECTATIONS_DIR, `${name}.json`);
+    // An absent expectation is itself a state the verdict depends on (the
+    // tape fails by name), so it is hashed as such rather than skipped.
+    h.update(existsSync(exp) ? readFileSync(exp) : 'NO-EXPECTATION');
+    return h.digest('hex').slice(0, 16);
+}
+
+/**
+ * Everything the checkpoint already knows, keyed by tape AND fingerprint.
+ *
+ * ⚠ NOT BY TAPE ALONE. Keying on the name means last-write-wins, and the
+ * iteration loop this exists to serve is *edit, run, revert, run* — under
+ * which last-write-wins throws away the pre-edit result that just became
+ * valid again. Keyed by `tape@fp` the file is an accumulating cache across
+ * model states: reverting a change makes its results reusable again,
+ * because they were never overwritten. Found by testing the revert, which
+ * is the case a "does the fingerprint invalidate?" test does not reach.
+ */
+function loadCheckpoint() {
+    const out = new Map();
+    if (!existsSync(CHECKPOINT)) return out;
+    for (const line of readFileSync(CHECKPOINT, 'utf8').split('\n')) {
+        if (!line.trim()) continue;
+        try {
+            const r = JSON.parse(line);
+            if (r && r.tape && r.fp) out.set(`${r.tape}@${r.fp}`, r);
+        } catch { /* a torn last line from a kill -9; ignore it */ }
+    }
+    return out;
+}
+
+/**
+ * Append one tape's verdict. ⚠ APPEND, and one JSON object per line —
+ * a rewritten whole-file state can be truncated by a kill mid-write, and
+ * the thing this exists to survive is being killed.
+ */
+function recordCheckpoint(entry) {
+    if (!existsSync(CHECKPOINT_DIR)) mkdirSync(CHECKPOINT_DIR, { recursive: true });
+    appendFileSync(CHECKPOINT, `${JSON.stringify(entry)}\n`);
+}
+
+/**
+ * ⛓⛓ AND THE REPLAY PAYLOAD IS CACHED TOO, which is what keeps a resumed
+ * run a real gate rather than a partial one.
+ *
+ * The cross-tape findings (`r1AcceptanceFindings` and its five siblings)
+ * take the `replayed` map and REFUSE to assert when an arm is missing —
+ * "a pair asserted from one arm is not a pair". So a resume that skipped
+ * tapes but kept only PASS/FAIL would turn every one of those claims into
+ * a SKIP, and the run would exit 0 having checked far less than it looks
+ * like. That is the shape this whole slice has been finding, and building
+ * it deliberately would be worse than finding it.
+ *
+ * So each tape's `{stream, status}` is written beside its verdict, under
+ * the fingerprint, and a reused tape puts its payload back into
+ * `replayed`. A resumed run then evaluates exactly the findings a
+ * contiguous one does. ⚠ ~12 MB for the full roster; `test-results/` is
+ * gitignored.
+ */
+const payloadPath = (name) => join(CHECKPOINT_DIR, 'payloads', FINGERPRINT, `${name}.json`);
+function writePayload(name, stream, status) {
+    const dir = dirname(payloadPath(name));
+    if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+    writeFileSync(payloadPath(name), JSON.stringify({ stream, status }));
+}
+function readPayload(name) {
+    try { return JSON.parse(readFileSync(payloadPath(name), 'utf8')); } catch { return null; }
+}
+
 /**
  * `--tier=fast|full` — the sweep is ~55 minutes at full, and R1's own
  * numbers are why: 31,476 ticks across 25 tapes, at a rate that swings
@@ -195,9 +368,20 @@ const WIN_DRIVER = join(HERE, 'seedling-bot-replay-win.py');
 const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
 
 let failures = 0;
+/**
+ * ⛓ The checks made since `beginTape()`, so the checkpoint can store a
+ * tape's verdict rather than just its pass/fail bit. A stored FAIL is
+ * re-printed verbatim on resume — a resumed run must report the same
+ * failures as the run it continues, or "resume" quietly means "forget".
+ */
+let tapeChecks = null;
+const beginTape = () => { tapeChecks = []; };
+const endTape = () => { const c = tapeChecks; tapeChecks = null; return c ?? []; };
+
 function check(name, ok, detail = '') {
     console.log(`${ok ? 'PASS' : 'FAIL'}: ${name}${detail ? ` — ${detail}` : ''}`);
     if (!ok) failures++;
+    if (tapeChecks) tapeChecks.push({ name, ok, detail });
 }
 
 // Only the local (SwiftShader) path needs a browser here; --win drives
@@ -783,14 +967,60 @@ try {
     /** Every tape this run replayed, for the cross-tape R1 checks. */
     const replayed = new Map();
 
+    // ── ⛓⛓ THE RESUME, and what it refuses to reuse ───────────────────
+    //
+    // ⛔ RECORDING NEVER RESUMES. `--record` exists to write the game's
+    // stream, and skipping a tape because a previous run passed would
+    // leave the expectation unwritten while the sweep reported success.
+    const prior = (RESUME && !RECORD) ? loadCheckpoint() : new Map();
+    const reused = [];
+    if (RESUME) {
+        if (RECORD) {
+            console.log('RESUME: IGNORED under --record — a recording run must write '
+                + 'every expectation it selects, so nothing is skipped.');
+        } else {
+            console.log(`RESUME: checkpoint at ${CHECKPOINT}, fingerprint ${FINGERPRINT} `
+                + `(model + atlas + wasm stamp), ${prior.size} prior result(s)`);
+        }
+    }
     for (const name of names) {
+        const p = prior.get(`${name}@${tapeFingerprint(name)}`);
+        // ⚠ A STORED **FAIL** IS NOT REUSED. A failure is the thing the run
+        // exists to surface; re-deriving it costs one tape and removes any
+        // way for a stale red to outlive its cause.
+        if (!p || !p.ok) continue;
+        const payload = readPayload(name);
+        if (!payload) continue;   // the verdict is cached and its evidence is not
+        replayed.set(name, payload);
+        for (const c of p.checks ?? []) {
+            console.log(`PASS: ${c.name}${c.detail ? ` — ${c.detail}` : ''} [checkpoint]`);
+        }
+        reused.push(name);
+    }
+    if (reused.length > 0) {
+        // ⚠ NAMED, NOT SILENT — the same rule `--tier=fast` follows. A run
+        // that reused half its roster and printed nothing about it is a run
+        // whose green means something different from what it looks like.
+        console.log(`RESUME: reusing ${reused.length} tape(s) whose fingerprint still `
+            + `matches: ${reused.join(', ')}`);
+    }
+    const todo = names.filter((n) => !reused.includes(n));
+    if (RESUME) {
+        console.log(`RESUME: ${todo.length} tape(s) to replay`);
+    }
+
+    for (const name of todo) {
         const tape = loadTape(name);
         let result;
         const t0 = Date.now();
+        beginTape();
         try {
             result = await replay(name, tape);
         } catch (e) {
             check(`${name}: replays`, false, e.message);
+            recordCheckpoint({
+                tape: name, fp: tapeFingerprint(name), ok: false, checks: endTape(),
+            });
             continue;
         }
         const { stream, status } = result;
@@ -927,6 +1157,11 @@ try {
                             + 'is wrong is either a permanent red or a silenced one, and '
                             + 'neither is a finding (§22.7).');
             }
+            // ⛔ NO CHECKPOINT UNDER --record. The verdict a recording run
+            // reaches is about an oracle it wrote moments earlier, and the
+            // fingerprint it would be filed under is already stale — the
+            // expectation is part of that fingerprint and has just changed.
+            endTape();
             continue;
         }
 
@@ -940,12 +1175,23 @@ try {
         } catch (e) {
             check(`${name}: has a committed expectation`, false,
                 `${e.message} — record it with --record --only=${name}`);
+            recordCheckpoint({
+                tape: name, fp: tapeFingerprint(name), ok: false, checks: endTape(),
+            });
             continue;
         }
         const diff = diffObservationStreams(expected, stream);
         check(`${name}: live game matches the committed `
             + `${provisional ? 'PROVISIONAL' : 'oracle'} stream`,
             diff === null, diff ?? '');
+
+        // ── ⛓ THE TAPE IS DONE: bank it, evidence and all ──────────────
+        const checks = endTape();
+        const ok = checks.every((c) => c.ok);
+        if (ok) writePayload(name, stream, status);
+        recordCheckpoint({
+            tape: name, fp: tapeFingerprint(name), ok, checks, secs: Number(secs),
+        });
     }
 
     checkAcceptance(replayed);
