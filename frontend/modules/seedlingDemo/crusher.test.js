@@ -10,7 +10,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    CEREMONY_RULE, CRUSHER, CRUSHER_VERBS, CrusherError, DIRECTIONS,
+    CEREMONY_RULE, PLAYER_DAMAGE_PATHS, CRUSHER, CRUSHER_VERBS, CrusherError, DIRECTIONS,
     alwaysArmed, collideLineSolid, crusherRect, detectionRects, scanCrusher, stepCrusher,
 } from './crusher.js';
 import { hazardVolume } from './hazards.js';
@@ -199,7 +199,45 @@ describe('⚠⚠ the ceremony rule, and the ruling that replaces hard-avoid', ()
     it('`update()` has no freeze gate, and the rule says what that costs', () => {
         expect(CEREMONY_RULE.freezeGated).toBe(false);
         expect(CEREMONY_RULE.pickupFreezeFrames).toBe(150);
-        expect(CEREMONY_RULE.claim).toMatch(/SURVIVAL claim/);
+        expect(CEREMONY_RULE.claim).toMatch(/ONE FRAME/);
+    });
+
+    /**
+     * ⛔⛔ R5 SLICE 13 CORRECTED THIS ENTRY, and the correction is asserted
+     * rather than merely written: the crusher MOVES through a ceremony and
+     * cannot HURT through one, because its 1000 goes through `Player.hit`
+     * and that method is freeze-gated. Slice 12 conflated the two questions.
+     */
+    it('⛓⛓ it charges through the freeze and CANNOT damage a frozen player', () => {
+        expect(CEREMONY_RULE.freezeGated).toBe(false);
+        expect(CEREMONY_RULE.damagesFrozenPlayer).toBe(false);
+        expect(CEREMONY_RULE.damagePath).toMatch(/Player\.hit/);
+    });
+
+    /**
+     * ⛓⛓⛓ AND THE ENUMERATION BEHIND IT, which is the reusable half: a
+     * frozen player is invulnerable to EVERYTHING except one class.
+     */
+    it('every damage path reaches the player through the one freeze-gated method', () => {
+        expect(PLAYER_DAMAGE_PATHS.allThrough).toBe('Player.hit');
+        expect(PLAYER_DAMAGE_PATHS.frozenPlayerIsInvulnerable).toBe(true);
+        expect(PLAYER_DAMAGE_PATHS.gate).toMatch(/freezeObjects/);
+    });
+
+    /**
+     * ⛔⛔ …and the single exception is also the one place `Bot.noDamage`
+     * does not reach, which is a fact about the RELAXATION and not only
+     * about ceremonies. Declared with its levels so "no route goes there"
+     * stays a measurement.
+     */
+    it('the one exception bypasses BOTH the freeze and Bot.noDamage, and names its levels', () => {
+        expect(PLAYER_DAMAGE_PATHS.exceptions).toHaveLength(1);
+        const [lt] = PLAYER_DAMAGE_PATHS.exceptions;
+        expect(lt.as3).toBe('LavaTrap');
+        expect(lt.bypassesFreeze).toBe(true);
+        expect(lt.bypassesNoDamage).toBe(true);
+        expect(lt.onR5Route).toBe(false);
+        expect(lt.levels).toEqual([77, 78, 80, 108]);
     });
 
     it('⚖ the three verbs exist, each with the risk that makes it a ruling', () => {

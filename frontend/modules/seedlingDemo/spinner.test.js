@@ -20,7 +20,7 @@ import { buildLevelWorld, ROLES, SOLIDS_BY_MOVER, blocksMover } from './levelWor
 import { frictionStep } from './pushables.js';
 import {
     MODELLED_ENEMY_CLASSES, SPINNER, SPINNER_CTOR_RNG, SPINNER_TERRAIN_WRITE, SpinnerError,
-    createSpinnerState, hammerLine, hammerReach, newSpinner, spinnerFriction, spinnerRect,
+    createSpinnerState, hammerLine, hammerReach, hitSpinner, newSpinner, spinnerFriction, spinnerRect,
     spinnerRects, spinnerTerrainWrites, stepSpinner, stepSpinners, unmodelledEnemies,
 } from './spinner.js';
 
@@ -262,6 +262,66 @@ describe('the terrain arms — and the flag they bank', () => {
         expect(spinnerRects(st)).toHaveLength(1);
         st.byId.set('a', { ...free(), removed: true });
         expect(spinnerRects(st)).toHaveLength(0);
+    });
+});
+
+describe('`Enemy.hit` — the bill a modelled POSITION creates', () => {
+    /**
+     * ⛓⛓ THE SHAFT'S CONTROL ARM IS WHY THIS EXISTS. Recorded byte-exact,
+     * the GAME's ledger carried {39,4} — `spinner@224,112`'s tag — on an arm
+     * where the eighteen presses are DELETED and nothing fights anything.
+     * `Pulser.hit`'s third arm killed it.
+     */
+    it('a pulse does 1 damage and arms the 30-tick timer', () => {
+        const s = hitSpinner(free(), { force: 6, from: { x: 0, y: 0 }, damage: 1, t: 'Pulse' });
+        expect(s.hits).toBe(1);
+        expect(s.hitsTimer).toBe(SPINNER.hitsTimerMax);
+    });
+
+    it('…and a SECOND pulse inside the timer does nothing at all', () => {
+        const once = hitSpinner(free({ x: 40, y: 0 }), { force: 6, from: { x: 0, y: 0 }, t: 'Pulse' });
+        const twice = hitSpinner(once, { force: 6, from: { x: 0, y: 0 }, t: 'Pulse' });
+        expect(twice).toEqual(once);
+    });
+
+    it('three hits DESTROY it — and `death()` then fades it out', () => {
+        let s = free();
+        for (let i = 0; i < SPINNER.hitsMax; i += 1) {
+            s = hitSpinner({ ...s, hitsTimer: 0 }, { force: 6, from: { x: 0, y: 0 }, t: 'Pulse' });
+        }
+        expect(s.hits).toBe(SPINNER.hitsMax);
+        expect(s.destroy).toBe(true);
+        expect(s.deathCause).toBe('pulse');
+    });
+
+    /**
+     * ⛓⛓ THE KNOCKBACK IS NOT COSMETIC. `f = 6` against `moveSpeed = 1`, and
+     * `friction()`'s floor is `moveSpeed` rather than 0 — so the shove
+     * decays BACK to 1 over ~20 ticks instead of to rest, and the substep
+     * loop takes six steps a tick while it does.
+     */
+    it('the knockback is an atan2 shove that friction decays back to moveSpeed', () => {
+        const s = hitSpinner(free({ x: 100, y: 100, vx: 0, vy: 0 }),
+            { force: 6, from: { x: 100, y: 90 }, t: 'Pulse' });
+        // Shoved due SOUTH, away from a pulser due north.
+        expect(s.vy).toBeCloseTo(6, 9);
+        expect(s.vx).toBeCloseTo(0, 9);
+        let v = { vx: s.vx, vy: s.vy };
+        const lens = [];
+        for (let i = 0; i < 25; i += 1) { v = spinnerFriction(v.vx, v.vy); lens.push(Math.hypot(v.vx, v.vy)); }
+        expect(lens[0]).toBeCloseTo(5.75, 9);
+        expect(lens[lens.length - 1]).toBeCloseTo(SPINNER.moveSpeed, 9);
+    });
+
+    it('a FIRE press knocks it back and does NOT damage it — `hitByFire` is false', () => {
+        const s = hitSpinner(free({ x: 100, y: 100 }), { force: 4, from: { x: 90, y: 100 }, t: 'Fire' });
+        expect(s.hits).toBe(0);
+        expect(s.vx).toBeGreaterThan(free().vx);
+    });
+
+    it('…and NOTHING lands during a ceremony — `Enemy.hit` tests the freeze too', () => {
+        const s = hitSpinner(free(), { force: 6, from: { x: 0, y: 0 }, t: 'Pulse', frozen: true });
+        expect(s.hits).toBe(0);
     });
 });
 

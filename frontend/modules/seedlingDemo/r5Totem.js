@@ -694,6 +694,58 @@ export const L40_ARRIVAL = Object.freeze({
  * `teleporter@848,0 -> L42` — L41's and L42's only doors — in reach.
  * ⇒ **`totempart 3` and `totempart 4` are behind this key.**
  */
+/**
+ * ⛔⛔ R5 SLICE 13 — `control@224,432`, RECONNED, AND IT IS NOT A THING IN
+ * THE ROOM AT ALL.
+ *
+ * §24.5 got the shape right and left the arithmetic; the kickoff asked for
+ * the recon before any route goes near it. Read at source, it is a
+ * PARAMETER BLOCK consumed once at `Game.loadlevel` (`Game.as:2100-2106`)
+ * and never again:
+ *
+ * ```
+ *   fallthroughLevel  = @fallthrough                        = 43
+ *   fallthroughOffset = (@x, @y) + (@xOff, @yOff)
+ *                     = (224, 432) + (-64, -320)            = (160, 112)
+ *   fallthroughSign   = int(@sign) - 1                      = -1
+ * ```
+ *
+ * ⛓⛓ **SO ITS `@x,@y` IS NOT A POSITION IN L40.** It is the BASE OF AN
+ * OFFSET, and a route that treated (224,432) as a volume to avoid would be
+ * avoiding a cell with nothing in it while walking freely past the thing
+ * that matters — which is every pit in the level.
+ *
+ * ⛔ AND THE ONLY CONSUMER IS A PIT FALL. `Player.checkFallingInPit`
+ * (`Player.as:745-771`) fades the player out over twenty frames and then
+ * branches on `Game.fallthroughLevel > -1`: with the block present it
+ * TRANSPORTS to L43 at `floor(max(fallInPitPos - offset, 0) / 16) * 16`,
+ * sets `Game.setFallFromCeiling = true` and `Game.sign = -1`; without it,
+ * `die()`.
+ *
+ * ⇒ **a pit in L40 is a one-way door into the WAND ROOM**, not a death and
+ * not a hazard the ladder's `hard-avoid` verdict describes correctly. It is
+ * still a thing the route must never touch — L43 is the next slice's
+ * business and there is no way back up — but for the opposite reason from
+ * the one "hazard" implies.
+ */
+export const L40_FALLTHROUGH = Object.freeze({
+    from: 40,
+    entity: Object.freeze({ tag: 'control', x: 224, y: 432 }),
+    toLevel: 43,
+    /** `(@x,@y) + (@xOff,@yOff)` — subtracted from the fall position. */
+    offset: Object.freeze({ x: 160, y: 112 }),
+    /** `int(@sign) - 1`. */
+    sign: -1,
+    fallFromCeiling: true,
+    isTrigger: false,
+    consumedBy: 'Player.checkFallingInPit — at the END of the 20-frame fade, not on entry',
+    landing: 'floor(max(fallInPitPos - offset, 0) / 16) * 16, per axis',
+    why: 'the block is read once at loadlevel into three statics. Its @x,@y is the base '
+        + 'of an OFFSET and not a place; what a route has to avoid is every PIT in L40, '
+        + 'and what a pit does is transport rather than kill.',
+    src: 'Game.as:2100-2106 + Player.as:745-771',
+});
+
 export const L40_CHAIN = Object.freeze({
     level: 40,
     lattice: 8,

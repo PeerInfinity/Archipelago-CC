@@ -1337,6 +1337,15 @@ const KEY_LOCK_SLACK = 4;
 const FACE_COAST_TICKS = 20;
 /** 32 ticks of glide plus slack — the wait a push that LANDS needs. */
 const PUSH_GLIDE_TICKS = 40;
+
+/**
+ * ⛓ R5 slice 13: how long a threaded press will wait for its corridor.
+ *
+ * L39's spinners cross the room in well under this, so a corridor that is
+ * still occupied after it is one a wait cannot fix — which is a different
+ * finding from "the timing is tight", and the failure says so.
+ */
+const THREAD_MAX_WAIT = 400;
 /** ...and the eleven-frame fade on top, for a push that SINKS. */
 const PUSH_SINK_TICKS = 60;
 
@@ -2039,6 +2048,89 @@ function runFire(run, perTick, fire, what) {
         expect = { kind: 'blocks', live, before };
     }
 
+    /**
+     * ⛓⛓⛓ R5 SLICE 13 — THE THREAD. The press WAITS for the corridor.
+     *
+     * §25.3 left the shaft with two ways forward and only one of them keeps
+     * the certified ledger: KILL L39's three spinners and write
+     * {39,3}/{39,4}/{39,6}, or TIME the presses so no spinner is ever in a
+     * block's way. The second is what `SHAFT_LEDGER`'s nine writes mean, and
+     * it is only possible because the billiard is player-independent — so
+     * "when is this corridor clear" is a question with an answer, computed
+     * rather than searched for by re-recording.
+     *
+     * ── WHAT IS KEPT CLEAR ────────────────────────────────────────────
+     *
+     * The CORRIDOR is the union of each declared move's from-cell and
+     * to-cell, which is exactly the block's swept rect: it starts on the
+     * first and ends on the second and is a 16x16 box in between. And the
+     * SPAN is `[press + firstHitTick, press + lastHitTick + TICKS_PER_TILE]`
+     * — the block cannot move before a hit lands and takes 32 ticks to
+     * cross once one does.
+     *
+     * ⚠ A CONSERVATIVE UNION ON PURPOSE. A spinner that clips the corner of
+     * the destination cell on the last tick of the glide costs one refused
+     * press; one that clips it and is not modelled here costs the whole
+     * ledger, which is what §24.8 spent.
+     *
+     * ── ⚠ AND THE FORECAST IS NOT THE ORACLE ─────────────────────────
+     *
+     * `run.spinnerForecast` holds the other blocks still, so it can be a
+     * tick of geometry out. The exact-set effect check below is what
+     * DECIDES, and it drives the real models — so a bad thread costs a named
+     * failure and never a green tape. That asymmetry is why this is allowed
+     * to be a heuristic at all.
+     */
+    let threadedBy = 0;
+    if (moves && fire.thread) {
+        if (typeof fire.thread !== 'string' || fire.thread.length === 0) {
+            fail(`${what}: fire.thread must be a SENTENCE saying what is being threaded `
+                + 'around and why timing is the answer rather than clearing the room. A '
+                + 'boolean would let the next plan turn this on without saying which '
+                + 'mechanic it is dodging.');
+        }
+        const corridor = expect.live.map((m) => {
+            const x = Math.min(m.from.tx, m.to.tx) * TILE_SIZE;
+            const y = Math.min(m.from.ty, m.to.ty) * TILE_SIZE;
+            const w = (Math.abs(m.to.tx - m.from.tx) + 1) * TILE_SIZE;
+            const h = (Math.abs(m.to.ty - m.from.ty) + 1) * TILE_SIZE;
+            return { x, y, w, h, right: x + w, bottom: y + h };
+        });
+        const span = FIRE_WINDOW.lastHitTick + PUSH_GLIDE_TICKS;
+        const horizon = (fire.threadMaxWait ?? THREAD_MAX_WAIT) + span + 1;
+        const forecast = run.spinnerForecast(horizon);
+        const blockedAt = (i) => forecast[i]
+            ?.some((s) => corridor.some((c) => rectsOverlap(s, c))) ?? false;
+        let delay = null;
+        for (let d = 0; d <= (fire.threadMaxWait ?? THREAD_MAX_WAIT); d += 1) {
+            let clear = true;
+            for (let i = d + FIRE_WINDOW.firstHitTick; i <= d + span && clear; i += 1) {
+                if (blockedAt(i)) clear = false;
+            }
+            if (clear) { delay = d; break; }
+        }
+        if (delay === null) {
+            fail(`${what}: no clear window for the glide corridor `
+                + `[${corridor.map((c) => `(${c.x},${c.y})+${c.w}x${c.h}`).join(' ')}] in the `
+                + `next ${fire.threadMaxWait ?? THREAD_MAX_WAIT} tick(s). The declared `
+                + `thread is "${fire.thread}". A corridor that is never clear is not a `
+                + 'timing problem — clear the room with the encounter ladder, or move the '
+                + 'stance.');
+        }
+        // ⚠ IDLE, NOT HELD. A held key would move the player off the stance
+        // the rect is centred on, and `runFire` has already refused a moving
+        // one two checks above.
+        for (let i = 0; i < delay; i += 1) {
+            perTick.push(NO_HELD);
+            const { transition } = run.advance(NO_HELD);
+            if (transition) {
+                fail(`${what}: thread tick ${i + 1} of ${delay} crossed from level `
+                    + `${transition.from_level} to ${transition.to_level}.`);
+            }
+        }
+        threadedBy = delay;
+    }
+
     // ── the press: ONE tick of `primary` ──────────────────────────────
     // The hit ticks are T+4..T+8 and `useItem`'s `if (!firing)` swallows a
     // press inside an open window, so the span is one tick and the run's
@@ -2124,6 +2216,11 @@ function runFire(run, perTick, fire, what) {
     }
     return {
         kind: expect.kind, pressTick, at,
+        // ⛓ R5 slice 13: how many idle ticks the thread cost. Reported so a
+        // plan can price the wait — a schedule whose every press waits 200
+        // ticks is a schedule, and one whose presses all wait 0 is a
+        // declaration that never did anything.
+        threadedBy,
         ...(expect.kind === 'rope' ? { id: expect.id }
             : { moves: expect.live.map((m) => ({ ...m })) }),
     };
@@ -2331,7 +2428,32 @@ function runCollect(run, perTick, collect, maxTicks, what) {
     // Aim at the pickup's centre and press until the ceremony takes over.
     // A pickup is not solid, so any hit on the way is the ordinary
     // planner-bug throw.
-    const aim = {
+    /**
+     * ⛓⛓ R5 SLICE 13 — `collect.aim`, AND IT IS A DECLARATION.
+     *
+     * The default is the pickup's own centre, which is right whenever the
+     * stance sees the whole volume. `totempart@72,40` is the first one that
+     * does not: its rect straddles a column boundary, the only free cell
+     * above it is (5,1), and the line from there to the centre drifts WEST
+     * into `tile:Blue Wall (dark)` at (4,1) — the approach dies four pixels
+     * before it touches anything.
+     *
+     * ⚠ AN OVERRIDE, NOT A TOLERANCE. The approach still has to make real
+     * contact with the real volume and the sweep still fails on any blocked
+     * step; what this changes is WHICH POINT the walk aims at, and the leg
+     * has to say why. A relaxed hit test would have made the same tape pass
+     * without the player ever touching the part.
+     */
+    if (collect.aim !== undefined) {
+        if (!Number.isFinite(collect.aim?.x) || !Number.isFinite(collect.aim?.y)
+            || typeof collect.aim.why !== 'string' || collect.aim.why.length === 0) {
+            fail(`${what}: collect.aim must be {x, y, why} — a point AND a sentence saying `
+                + 'why the pickup\'s own centre is not on a clear line from the stance. '
+                + 'The default is the centre and it is right almost always; an override '
+                + 'with no reason is a tolerance wearing a coordinate.');
+        }
+    }
+    const aim = collect.aim ?? {
         x: (pickup.rect.x + pickup.rect.right) / 2,
         y: (pickup.rect.y + pickup.rect.bottom) / 2,
     };

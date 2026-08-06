@@ -31,6 +31,10 @@
  */
 
 import { outOfBandFlagForWriter } from './outOfBandLedger.js';
+// ⛓ R5 slice 13: the shaft's PAIR. The control's pin, the cell it must never
+// enter and the ledger it may earn all live beside the plan they are a
+// control for, so the two cannot drift apart.
+import { SHAFT_PAIR } from './r5Shaft.js';
 
 export const L60_KILL = 'r5-l60-kill';
 export const L60_CONTROL = 'r5-l60-kill-control';
@@ -1395,7 +1399,28 @@ export function totemEntranceFindings(replayed) {
 
 
 /**
- * ── ⛔⛔ THE SHAFT — AND THE GAME REFUSED THE PLAN'S LEDGER ────────────
+ * ── ⛓⛓⛓ THE SHAFT — CLOSED, AND THE HISTORY IS KEPT ──────────────────
+ *
+ * ⛓⛓ **R5 SLICE 13: THE SHAFT IS GREEN, ON BOTH ARMS.** 2,403 observations
+ * of press arm and 2,403 of control, byte-exact against the game, and the
+ * ledger the plan predicts is the ledger the game reports. It took ONE
+ * change to the route and the number is small enough to be worth writing
+ * down: **twenty-seven idle ticks before press 5.**
+ *
+ * ⛓ THE FIX IS `spinner.js` AND `fire.thread`. §25.3 established that a
+ * wandering `Spinner` — a billiard whose `runRange = 0` makes it entirely
+ * player-independent — was standing in block 2's glide corridor. With the
+ * motion modelled, "when is this corridor clear" is a question with a
+ * COMPUTED answer, so the press waits instead of the plan changing. ⛔ And
+ * waiting rather than KILLING is what keeps this ledger meaningful: three
+ * dead spinners would have written {39,3}/{39,4}/{39,6} and turned nine
+ * writes into twelve, re-opening every claim §24.7 closed.
+ *
+ * ⚠ THE PARAGRAPHS BELOW ARE THE REFUTATION, KEPT. They are what the game
+ * said before the fix, and the numbers in them are what made the diagnosis
+ * possible — a correction with no artefact is a claim.
+ *
+ * ── ⛔⛔ WHAT THE GAME SAID IN SLICE 11 ───────────────────────────────
  *
  * `SHAFT_PLAN` has been a plan since §19.8 and a *correct* plan since
  * §20.3, certified twice — by a hand derivation and by a blind BFS — and
@@ -1454,19 +1479,51 @@ export function totemEntranceFindings(replayed) {
 export const SHAFT_WALK = Object.freeze({
     name: 'r5-shaft',
     /**
-     * What the model says the eighteen presses earn.
+     * What the model says the eighteen presses EARN.
      * ⛓ R5 slice 11 adds {39,10}: `run.rockFalls` has predicted it since
      * slice 10 and nothing summed it (see `r5Shaft.SHAFT_LEDGER`).
      */
     modelCleared: Object.freeze(['39:0', '39:1', '39:2', '39:9', '39:10']),
-    /** …and what the game reported, re-recorded 2026-08-04 (slice 11). */
-    gameCleared: Object.freeze(['39:7', '39:8', '39:9', '39:10']),
-    /** ⛔ Where the MODEL's own stream parts from the game's. */
-    divergesAt: Object.freeze({ tick: 852, dy: 1.4 }),
-    ticks: 2375,
-    /** The declared clear the tape boots with — in both lists by construction. */
+    /**
+     * ⛔ THE DECLARED CLEAR THE TAPE BOOTS WITH — and it was described as
+     * *"in both lists by construction"* while being in only one of them.
+     *
+     * The game's `persistence_cleared` is everything the SAVE has cleared,
+     * declared and earned together; `modelCleared` is what the PLAN earns.
+     * So the comparison is `modelCleared ∪ declared`, and writing it as a
+     * straight equality left {39,8} looking like a disagreement in the one
+     * recording where everything else finally agreed. ⚠ A field whose
+     * docblock says it is accounted for, in a check that does not account
+     * for it, is worse than an absent field.
+     */
     declared: '39:8',
-    deadFrames: 217,
+    /** ⇒ what the GAME's ledger must be, and is. */
+    gameLedger: Object.freeze(['39:0', '39:1', '39:10', '39:2', '39:8', '39:9']),
+    /**
+     * ⛔ What the game reported in slice 11, KEPT — the refuted measurement.
+     * The three wandlocks never opened, {39,7} was never taken back, and one
+     * wedged block explained all of it.
+     */
+    refutedGameCleared: Object.freeze(['39:7', '39:8', '39:9', '39:10']),
+    /**
+     * ⛓⛓ RESOLVED. `divergesAt` was `{tick: 852, dy: 1.4}` — press 5's walk,
+     * against a block a spinner had parked. Both arms are byte-exact now.
+     */
+    divergesAt: null,
+    resolvedBy: 'spinner.js + `fire.thread` — 27 idle ticks before press 5',
+    ticks: 2764,
+    /**
+     * ⛓⛓⛓ 367, AND THE 150 IS THE CEREMONY — the first of the five.
+     *
+     * 197 run freeze (the rope's rock, modelled since slice 10) + 150 pickup
+     * (`totempart 2`) + one room-load fade. §24.9 recorded "NO CEREMONY WAS
+     * OBSERVED"; this number is the game's own accounting saying otherwise,
+     * and it is a stronger witness than the run's `collected` record because
+     * it comes from the other side.
+     */
+    deadFrames: 367,
+    modelledDeadFrames: 347,
+    ceremonyFrames: 150,
     /**
      * ⛓⛓ R5 SLICE 11 — HALF THE REFUTATION IS CLOSED BY THE GAME.
      *
@@ -1627,48 +1684,201 @@ export function pressPairFindings(replayed) {
 
 export function shaftFindings(replayed) {
     const walk = replayed?.get(SHAFT_WALK.name);
-    if (!walk) {
+    const control = replayed?.get(SHAFT_PAIR.control);
+    if (!walk || !control) {
         return [{
-            name: '⛔⛔ R5 shaft: NOT A FIXTURE — the model is refuted and the tape is withdrawn',
+            name: 'R5 shaft pair: SKIPPED — this sweep did not replay both arms',
             ok: true,
             skipped: true,
-            detail: 'The shaft was driven, recorded and REFUTED in one session (see '
-                + '`SHAFT_WALK` for the three numbers). The tape is not committed, '
-                + 'because a fixture whose model is wrong is either a permanent red or a '
-                + 'silenced one and neither is a finding. Re-make it with '
-                + '`node scripts/procgen/plan-seedling-r5-shaft.mjs --write` and '
-                + '`verify-seedling-bot-differential --record --win --only=r5-shaft`, '
-                + 'which is 160 s — the evidence is cheap to reproduce and the '
-                + 'transcription is what is missing.',
+            detail: `have ${[walk && SHAFT_WALK.name, control && SHAFT_PAIR.control]
+                .filter(Boolean).join(', ') || 'neither'} — "the walk reached the middle `
+                + 'of the cross" is not evidence that eighteen presses put it there. '
+                + 'Re-make both with `node scripts/procgen/plan-seedling-r5-shaft.mjs '
+                + '--write` and `verify-seedling-bot-differential --record --win '
+                + '--only=r5-shaft,r5-shaft-control`.',
         }];
     }
     const found = [];
+    /**
+     * ⛓⛓⛓ THE LEDGER, AND IT IS THE UNION.
+     *
+     * The game's `persistence_cleared` carries the tape's DECLARED clear
+     * alongside what the route earned; `modelCleared` is what the route
+     * earns. Slice 11 compared them as a straight equality, which made the
+     * declared {39,8} look like a disagreement — see `SHAFT_WALK.declared`.
+     */
     const cleared = [...clearedSet(walk.status)].sort();
-    const want = [...SHAFT_WALK.modelCleared].sort();
+    const want = [...new Set([...SHAFT_WALK.modelCleared, SHAFT_WALK.declared])].sort();
+    const agrees = JSON.stringify(cleared) === JSON.stringify(want);
     found.push({
-        name: '⛔⛔ R5 shaft: the game\'s ledger against the plan\'s — REFUTED, and kept',
-        ok: JSON.stringify(cleared) === JSON.stringify(want),
-        detail: JSON.stringify(cleared) === JSON.stringify(want)
-            ? `[${cleared.join(' ')}] — the three wandlocks and the rope, exactly as `
-                + '`SHAFT_PLAN` predicts. The eighteen presses have met an independent '
-                + 'check and survived it.'
+        name: '⛓⛓⛓ R5 shaft: the game\'s ledger IS the plan\'s — nine writes, eight net '
+            + 'clears, and {39,7} taken back',
+        ok: agrees,
+        detail: agrees
+            ? `[${cleared.join(' ')}] — the three wandlocks, the rope, the rock the rope `
+                + 'drops and the declared entrance flag, exactly as `SHAFT_PLAN` predicts. '
+                + '⛓ The eighteen presses have met an independent check and survived it, '
+                + 'and {39,7} is ABSENT because the final press moves block 1 off `button '
+                + 't1` and `returnToNormal()` writes the tag back TRUE. ⛔ Slice 11 got '
+                + `[${SHAFT_WALK.refutedGameCleared.join(' ')}] here — the three wandlocks `
+                + 'never opened at all, because a Spinner had wedged block 2 at press 5.'
             : `THE GAME REPORTS [${cleared.join(' ')}] AND THE PLAN PREDICTS `
-                + `[${want.join(' ')}]. The stream matches byte for byte — a block's `
-                + 'position and a lock\'s alpha are invisible to it — so this is the '
-                + 'first time on the arc that the positions agreed and the LEDGER did '
-                + 'not. {39,10} is the `FallRock`\'s tag, which `r5Totem.GROUP_6` argued '
-                + 'nothing here writes; {39,7} was supposed to be taken back by the final '
-                + 'press and was not; and {39,0}/{39,1}/{39,2} say the three wandlocks '
-                + 'never opened at all. See `SHAFT_WALK` for the three candidates.',
+                + `[${want.join(' ')}]. A block's position and a lock's alpha are `
+                + 'invisible to the observation stream, so a byte-exact walk beside a '
+                + 'wrong ledger is exactly what a wedged block looks like — check '
+                + '`fire.thread`\'s waits before anything else.',
+    });
+    /**
+     * ⛓⛓⛓ AND THE PAIR, which §24.9 recorded as never having been generated
+     * by anything. Without a shut arm, "the walk reached (9,9)" is a
+     * sentence about a walk.
+     */
+    const cEnd = terminal(control);
+    const enteredCross = (arm) => (arm?.stream?.ticks ?? []).some(
+        (t) => t.level === SHAFT_PAIR.pinnedAt.level
+            && Math.floor(t.x / 16) === SHAFT_PAIR.neverEnters.tx
+            && Math.floor(t.y / 16) === SHAFT_PAIR.neverEnters.ty);
+    const pressCrossed = enteredCross(walk);
+    const controlCrossed = enteredCross(control);
+    found.push({
+        name: '⛓⛓⛓ R5 shaft pair: the GAME enters the middle of the cross with the '
+            + 'eighteen presses and NOT without',
+        ok: pressCrossed && !controlCrossed,
+        detail: pressCrossed && !controlCrossed
+            ? `(${SHAFT_PAIR.neverEnters.tx},${SHAFT_PAIR.neverEnters.ty}) is reached in `
+                + 'the press arm and never touched in the control, which is the identical '
+                + 'tape with the eighteen `primary` spans deleted and the rope pull KEPT '
+                + '(the rope is what opens the shaft; a control stopped at the door would '
+                + `be testing the door). The control comes to rest at tile `
+                + `(${cEnd ? Math.floor(cEnd.x / 16) : '?'},${cEnd ? Math.floor(cEnd.y / 16) : '?'}).`
+            : `press arm ${pressCrossed ? 'entered' : 'did NOT enter'} the cross and the `
+                + `control ${controlCrossed ? 'ALSO entered it — so the covers were never '
+                    + 'shut and the press arm proves nothing' : 'did not'}`,
     });
     found.push({
-        name: '⚠ R5 shaft: 217 dead frames with NO transition and NO ceremony',
+        name: '⛓ R5 shaft pair: …and the control earns the ROPE\'s ledger and nothing else',
+        ok: (() => {
+            const c = [...clearedSet(control.status)].sort();
+            const w = [...new Set([...SHAFT_PAIR.controlEarned, SHAFT_WALK.declared])].sort();
+            return JSON.stringify(c) === JSON.stringify(w);
+        })(),
+        detail: `[${[...clearedSet(control.status)].sort().join(' ')}] against `
+            + `[${[...new Set([...SHAFT_PAIR.controlEarned, SHAFT_WALK.declared])].sort().join(' ')}] `
+            + '— the rope, the rock it drops, the declared entrance flag, and '
+            + `⛔⛔ {39,${SHAFT_PAIR.controlSpinnerKill.tag}}: `
+            + `${SHAFT_PAIR.controlSpinnerKill.id}, killed by the room's PULSER on an arm `
+            + 'where nothing fights anything. Deleting eighteen presses left three blocks '
+            + 'on their spawns, which is three moved walls, which sent the billiard '
+            + 'through the ring — a second-order consequence the pair did not predict and '
+            + '`run.spinnerWrites` reproduces exactly. ⛔ And NONE of {39,0}/{39,1}/{39,2}: '
+            + 'those are exactly the flags a HELD lock-button writes, so a control that '
+            + 'opened one would mean something other than the presses was holding them.',
+    });
+    /**
+     * ⛓⛓⛓ THE CEREMONY, FROM THE GAME'S SIDE. `dead_frames` is the game's
+     * own count of frames the tape never advanced through, and the pickup's
+     * 150 are in it. The part itself is NOT observable (`Bot.itemReadout`
+     * has no `hasTotemPart` field, §20.8), so this is the claim.
+     */
+    found.push({
+        name: '⛓⛓⛓ R5 shaft: the FIRST COLLECT CEREMONY is in the game\'s dead-frame count',
+        ok: (walk.status?.dead_frames ?? 0) - SHAFT_WALK.ceremonyFrames >= 0
+            && walk.status?.dead_frames === SHAFT_WALK.deadFrames,
+        detail: `${walk.status?.dead_frames} dead frames against `
+            + `${SHAFT_WALK.deadFrames}, of which ${SHAFT_WALK.ceremonyFrames} are `
+            + '`totempart 2`\'s freeze — ONE of the five this rung stops at. ⛔ §24.9: '
+            + '"NO CEREMONY WAS OBSERVED … part 2 is behind the shaft whose walk is '
+            + 'blocked at (12,5)". That block is unwedged.',
+    });
+    found.push({
+        name: '⛓ R5 shaft: the dead frames are the rock, the ceremony and one fade',
         ok: walk.status?.dead_frames === SHAFT_WALK.deadFrames,
-        detail: `${walk.status?.dead_frames} against a boot fade of ~20. ~197 frames of `
-            + 'this tape are frozen or fading and nothing in the model accounts for them '
-            + '— and `checkReadout` gates its `saw_auto_advance` census guard on '
-            + '`tape_version < 4`, so a v4 tape like this one gets no guard at all. The '
-            + 'number is asserted here so it cannot drift while it is unexplained.',
+        detail: `${walk.status?.dead_frames} = ${SHAFT_WALK.modelledDeadFrames} modelled `
+            + `(197 for the rope's rock — 60 wait + 46 fall + 90 camera + 1 release, `
+            + `transcribed as the LOOP, since the closed form gives 45 — plus `
+            + `${SHAFT_WALK.ceremonyFrames} for the PART) plus one room-load fade. `
+            + '⛓⛓ THE 150 IS THE FIRST CEREMONY, counted by the GAME. §24.9 recorded '
+            + '"NO CEREMONY WAS OBSERVED"; this is the other side of the run\'s own '
+            + '`collected` record and it is the better witness of the two. ⚠ Slice 11 '
+            + 'asserted the 217 while calling it unexplained; the dead-frame budget is '
+            + 'what explains it, and that instrument spent its first slice in a temporal '
+            + 'dead zone (§24.2).',
+    });
+    return found;
+}
+
+/**
+ * ⛓⛓⛓ THE SECOND CEREMONY — `totempart 1 @160,640`, and it costs a WALK.
+ *
+ * §24.5 priced L40's north half as an eleven-link chain and §23.9's arrival
+ * flood recorded which prizes need none of it. Exactly one does, and the
+ * flood was taken with every activator group SHUT — so "free" is a measured
+ * verdict about the room rather than a lucky route.
+ *
+ * ⚠ THE CLAIM IS THE CEREMONY, for the same reason `totempart 2`'s is:
+ * `Bot.itemReadout` has no `hasTotemPart` field (§20.8), so what the GAME
+ * can be asked is the 150 frozen frames — and the negatives around them,
+ * which for this level are the load-bearing part. A pit in L40 is a ONE-WAY
+ * door into the wand room (`r5Totem.L40_FALLTHROUGH`), so "it never fell"
+ * is not a hazard-survival claim, it is a claim about not having skipped
+ * two rungs of the ladder by accident.
+ */
+export const L40_PART1 = Object.freeze({
+    name: 'r5-l40-part1',
+    part: 1,
+    pickup: Object.freeze({ x: 160, y: 640 }),
+    /** One pickup ceremony and one room-load fade. */
+    ceremonyFrames: 150,
+    /** ⛓ NOTHING earned: the eleven-link chain is untouched by this leg. */
+    earns: Object.freeze([]),
+});
+
+export function l40Part1Findings(replayed) {
+    const walk = replayed?.get(L40_PART1.name);
+    if (!walk) {
+        return [{
+            name: 'R5 L40 part 1: SKIPPED — this sweep did not replay it',
+            ok: true,
+            skipped: true,
+            detail: `run --only=${L40_PART1.name} (or --tier=full) to assert the second `
+                + 'of the five ceremonies',
+        }];
+    }
+    const found = [];
+    const st = walk.status;
+    const cleared = [...clearedSet(st)].sort();
+    found.push({
+        name: '⛓⛓⛓ R5 L40 part 1: the SECOND collect ceremony is in the game\'s dead-frame count',
+        ok: (st?.dead_frames ?? 0) >= L40_PART1.ceremonyFrames,
+        detail: `${st?.dead_frames} dead frames, of which ${L40_PART1.ceremonyFrames} are `
+            + 'the pickup\'s freeze. ⛓ It costs a WALK: §23.9\'s arrival flood, taken '
+            + 'with every activator group SHUT, already recorded this part as reached and '
+            + 'every other prize in the level as not.',
+    });
+    found.push({
+        name: '⛓⛓ R5 L40 part 1: …and it earns NOTHING — the eleven-link chain is untouched',
+        ok: cleared.length === 0,
+        detail: `[${cleared.join(' ') || 'empty'}] against []. ⛔ A leg that opened a link `
+            + 'would be making the "free" claim about a different room — and a spinner '
+            + 'that bounced into a hazard would put a flag here too '
+            + '(`spinner.SPINNER_TERRAIN_WRITE`), so an empty ledger is a claim about the '
+            + 'billiards as well as about the chain.',
+    });
+    /**
+     * ⛔⛔ AND THE NEGATIVE THAT MATTERS MOST IN THIS LEVEL. Every pit is a
+     * one-way transport into L43 — the WAND room, which opens the next
+     * slice. A tape that fell would not fail; it would quietly succeed at
+     * something else.
+     */
+    const levels = [...new Set((walk.stream?.ticks ?? []).map((t) => t.level))];
+    found.push({
+        name: '⛔⛔ R5 L40 part 1: the walk never leaves L40 — no pit, no stairs, no teleporter',
+        ok: levels.length === 1 && levels[0] === 40,
+        detail: `levels [${levels.join(' ')}]. \`control@224,432\` is a PARAMETER BLOCK `
+            + 'read once at `loadlevel`, not a trigger: what it configures is a fall that '
+            + 'transports to L43 with `setFallFromCeiling` and no way back '
+            + '(`r5Totem.L40_FALLTHROUGH`). A tape that fell in would arrive somewhere '
+            + 'this rung has not reconned and would still look green.',
     });
     return found;
 }
@@ -1687,5 +1897,6 @@ export function r5AcceptanceFindings(replayed) {
         ...totemEntranceFindings(replayed),
         ...pressPairFindings(replayed),
         ...shaftFindings(replayed),
+        ...l40Part1Findings(replayed),
     ];
 }

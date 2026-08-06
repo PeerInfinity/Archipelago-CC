@@ -51,7 +51,9 @@ const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
 const { synthesizeLegs } = await import(join(MODULE, 'botDriverV2.js'));
 const { serializeTape, parseTape } = await import(join(MODULE, 'tapeFormat.js'));
 const { runTape } = await import(join(MODULE, 'tapeRunner.js'));
-const { ROPE_PULL, SHAFT_PLAN, SHAFT_LEDGER, assertPlanContinuity } = await import(join(MODULE, 'r5Shaft.js'));
+const {
+    ROPE_PULL, SHAFT_PAIR, SHAFT_PLAN, SHAFT_LEDGER, TOTEM_PART_2, assertPlanContinuity,
+} = await import(join(MODULE, 'r5Shaft.js'));
 
 const WRITE = process.argv.includes('--write');
 const levelSource = atlasLevelSource();
@@ -104,6 +106,19 @@ const targets = [
         ...centre(ROPE_PULL.stance),
         fire: { rope: { x: ROPE_PULL.rope.x, y: ROPE_PULL.rope.y } },
     },
+    /**
+     * ⛓⛓⛓ R5 SLICE 13 — EVERY PRESS IS THREADED, AND THAT IS WHAT KEEPS THE
+     * LEDGER AT NINE.
+     *
+     * §24.8's shaft died at press 5 because `spinner@224,112` was standing in
+     * block 2's glide corridor. There were two ways out and only one of them
+     * leaves `SHAFT_LEDGER` alone: KILLING L39's three spinners would write
+     * {39,3}/{39,4}/{39,6} and turn a nine-write ledger into a twelve-write
+     * one, re-opening every assertion §24.7 closed. So the route waits
+     * instead — which is possible at all only because `runRange = 0` makes
+     * the billiard player-independent, so "when is this corridor clear" has
+     * an answer that can be COMPUTED rather than re-recorded until it works.
+     */
     ...SHAFT_PLAN.map((step) => ({
         ...centre(step.stance),
         fire: {
@@ -111,8 +126,65 @@ const targets = [
                 from: { tx: m.from[0], ty: m.from[1] },
                 to: { tx: m.to[0], ty: m.to[1] },
             })),
+            thread: 'L39\'s three spinners are billiards (`spinner.js`) and a block\'s '
+                + 'own solids list carries "Enemy", so one standing in the glide corridor '
+                + 'WEDGES the block permanently. Timing rather than killing, because a '
+                + 'kill writes the spinner\'s tag and `SHAFT_LEDGER` is nine writes.',
         },
     })),
+    /**
+     * ⛓⛓⛓ R5 SLICE 13 — THE FIRST CEREMONY, AND IT IS IN THIS WINDOW BY
+     * OBLIGATION.
+     *
+     * §24.7: the rope drops a rock onto `teleporter@144,624 -> L38` and
+     * `REFUSED_CLEAR_RESPONSES.arm` forbids a tape from DECLARING a fallrock
+     * tag — so nothing can boot into L39 after the pull. **The window that
+     * pulls the rope is the window that must finish the room**, and the
+     * collect therefore rides this tape rather than getting its own.
+     *
+     * ⛓ THE STANCE IS SAFE BY CONSTRUCTION, NOT BY LUCK, and slice 13's
+     * enumeration is what makes that sentence cheap: every damage path in
+     * the game reaches the player through `Player.hit`, which is gated on
+     * `!Game.freezeObjects` (`crusher.PLAYER_DAMAGE_PATHS`). The single
+     * exception is `LavaTrap`, which is in Dungeon 7 and 8. ⇒ the 150 frozen
+     * frames cannot hurt the player HERE whatever L39's three spinners do,
+     * and — unlike a crusher — a spinner is a `Mobile`, so it does not move
+     * during them either. The claim is POSITIONAL and it is discharged by
+     * the walk arriving at all.
+     */
+    /**
+     * ⛔⛔ AND THE WAY NORTH IS NOT THE COLUMN THE PRESSES OPEN — the final
+     * press SEALS it.
+     *
+     * Press 18 parks block 1 on `button@144,112 {tset 4}` at (9,7), which
+     * is the cell `cover t0` occupies and the only opening in row 7 of
+     * column 9. So the block that HOLDS the third wandlock open is standing
+     * in the corridor those wandlocks lead to, and the route has to go
+     * round: west along row 9 is shut too (block 3 is on (7,9)), so it
+     * drops to row 10, comes back west, climbs the (5,7)-(6,7) gap to row
+     * 6, runs east under the cross to (9,6), and only then goes north
+     * through `wandlock@144,64 / @144,48 / @144,32` — the three the three
+     * held buttons just opened.
+     *
+     * ⚠ WAYPOINTS RATHER THAN ONE A*, and the reason is measured: a single
+     * goal from (9,9) to (5,1) is refused as *"different connected
+     * components"*. The corridor exists at whole-tile resolution and the
+     * planner's own lattice cannot see it in one hop, so the route names the
+     * turns. Each one is a cell this map shows free with the run's live
+     * activators and live blocks.
+     */
+    { ...centre({ tx: 10, ty: 10 }) },
+    { ...centre({ tx: 5, ty: 10 }) },
+    { ...centre({ tx: 6, ty: 7 }) },
+    { ...centre({ tx: 9, ty: 6 }) },
+    { ...centre({ tx: 9, ty: 2 }) },
+    {
+        ...centre(TOTEM_PART_2.stance),
+        collect: {
+            pickup: { x: TOTEM_PART_2.pickup.x, y: TOTEM_PART_2.pickup.y },
+            aim: { ...TOTEM_PART_2.aim },
+        },
+    },
 ];
 
 console.log(`\n## the plan: 1 rope pull + ${SHAFT_PLAN.length} presses`);
@@ -136,6 +208,14 @@ try {
             // ⛔ VERSION 4, BY PRESENCE. Without this the emitted tape drops
             // the equip and every press replays as a SWORD press.
             equips: [],
+            // ⛓⛓ R5 SLICE 13: THE PLAN ASKS FOR `combat` BY NAME. Every
+            // `moves` press needs it — "is there an unmodelled enemy in this
+            // room" cannot be asked without a census, and an absent one is a
+            // refusal rather than a pass (§25.3). L39's three spinners ARE
+            // modelled now (`spinner.js`), so with the census present the
+            // refusal narrows to nothing here and the presses are certifiable
+            // against the billiard's actual trajectory.
+            roles: [...ROLES],
         },
         name: 'r5-shaft',
         lattice: 8,
@@ -195,8 +275,22 @@ console.log(`   ${tape.tick_count} ticks, ${tape.inputs.length} spans — ends L
     + `(${Math.floor(end.x / TILE_SIZE)},${Math.floor(end.y / TILE_SIZE)})`);
 console.log(`   fires: ${out.fires.length}`);
 for (const f of out.fires) {
-    console.log(`      t${f.from}..${f.to}  ${JSON.stringify(f.expect ?? f.moved ?? '')}`);
+    console.log(`      t${f.from}..${f.to}  ${f.threadedBy ? `thread +${f.threadedBy}  ` : ''}`
+        + `${JSON.stringify(f.expect ?? f.moved ?? '')}`);
 }
+/**
+ * ⛓⛓ THE THREAD, AS A NUMBER — because a declaration that never waits is a
+ * declaration that never did anything.
+ *
+ * `fire.thread` is on all eighteen presses and the honest question about it
+ * is whether the corridor was ever actually occupied. If every wait were 0
+ * the plan would be identical to the one §24.8 recorded and the model would
+ * be claiming a fix it had not exercised — [[feedback_silent_watcher_vacuous_negative]]
+ * with the sign flipped. So the waits are printed and then ASSERTED.
+ */
+const threaded = out.fires.filter((f) => f.threadedBy > 0);
+console.log(`   threaded: ${threaded.length} of ${out.fires.length} press(es) waited, `
+    + `${out.fires.reduce((n, f) => n + (f.threadedBy ?? 0), 0)} idle tick(s) in total`);
 
 // ── 4. the claims an aimed-world model would fake ────────────────────
 console.log('\n## the claims');
@@ -205,6 +299,12 @@ const check = (ok, name, detail) => { checks.push({ ok, name, detail }); };
 check(out.fires.length === SHAFT_PLAN.length + 1,
     `⛓ ${SHAFT_PLAN.length + 1} fire presses landed — the rope and the eighteen`,
     `${out.fires.length}`);
+check(threaded.length > 0,
+    '⛓⛓ THE THREAD IS NOT VACUOUS — at least one press waited for its corridor',
+    `${threaded.length} press(es) waited: `
+    + `${threaded.map((f) => `#${f.index - 1} +${f.threadedBy}`).join(', ') || 'NONE'}. `
+    + 'A schedule where every wait is 0 is the schedule §24.8 already recorded, and '
+    + 'declaring `thread` on it would be asserting a fix nobody exercised.');
 /**
  * ⛓ THE LEDGER, from the RUN's own earned clears rather than from a count
  * of presses. §20.4's finding is that a plain `Lock` writes persistence
@@ -357,6 +457,144 @@ check(!!endCells && WANT_HELD.every((c) => endCells.includes(c)) && endCells.len
             + 'name. §19.8\'s plan ended with TWO of three held and every one of its '
             + 'presses still "worked", which is why the claim is the END STATE.');
 
+/**
+ * ⛓⛓⛓ THE FIRST CEREMONY — one of five, and the stopping condition's first
+ * unit.
+ *
+ * §24.9 recorded *"NO CEREMONY WAS OBSERVED"* and listed why: parts 0, 1, 3
+ * and 4 are behind the burn, the key and the crushers, and part 2 is behind
+ * a shaft whose walk was blocked at (12,5). The block is unwedged, so this
+ * is the first of the five.
+ *
+ * ⚠ THE CLAIM IS THE CEREMONY, NOT THE ITEM. `BossTotemPart.removed()` is
+ * `Player.hasTotemPartSet(part, true)` — a SAVE-FILE array — and
+ * `Bot.itemReadout` has no field for it (§20.8). So "the part is banked" is
+ * not observable from `botStatus` with zero further AS3, and what IS
+ * observable is the 150 frozen frames, the pickup leaving the level, and the
+ * run's own `collected` record. Phrased over those.
+ */
+{
+    const ceremonies = run.collected.filter((c) => c.level === TOTEM_PART_2.level);
+    console.log('\n## the ceremony');
+    console.log(`   ${ceremonies.length} collect(s): `
+        + `${ceremonies.map((c) => `t${c.t} item=${c.item ?? 'null'} frames=${c.frames}`).join(', ') || 'NONE'}`);
+    check(ceremonies.length === 1,
+        '⛓⛓⛓ ONE COLLECT CEREMONY — totempart 2, the FIRST of the five this rung stops at',
+        `${ceremonies.length} — §24.9 recorded "NO CEREMONY WAS OBSERVED" and named the `
+        + 'shaft as part 2\'s blocker. This is that blocker gone.');
+    check(ceremonies.length === 1 && ceremonies[0].item === null,
+        '⛓ …and it banks NO inventory property — a totem part is save-file state',
+        `item = ${ceremonies[0]?.item ?? 'null'}. \`BossTotemPart.removed()\` writes `
+        + '`Player.hasTotemPartSet`, which `Bot.itemReadout` cannot see (§20.8), so the '
+        + 'CEREMONY is the claim and the item is not.');
+    const endTile = { tx: Math.floor(end.x / TILE_SIZE), ty: Math.floor(end.y / TILE_SIZE) };
+    check(endTile.tx === TOTEM_PART_2.tile.tx + 1 && endTile.ty === TOTEM_PART_2.tile.ty,
+        '⛓ …and the walk ends standing in the part\'s own cell',
+        `(${endTile.tx},${endTile.ty}) — the approach aims STRAIGHT DOWN from (5,1) `
+        + `because the rect straddles x = 80 and (4,1) is wall (\`TOTEM_PART_2.aim\`)`);
+}
+
+/**
+ * ⛓⛓⛓ THE SHUT-BEFORE CONTROL, WHICH §24.9 SAID NOTHING HAD EVER GENERATED.
+ *
+ * `SHAFT_PAIR` has named `r5-shaft-control` and its pin at (9,5) since slice
+ * 7 and no script emitted it, so the shaft's whole claim — *"the eighteen
+ * presses open the way"* — has only ever had one arm. A walk that reaches
+ * (9,9) proves nothing until a walk WITHOUT the presses fails to.
+ *
+ * ⚠ IT KEEPS THE ROPE PRESS, and that is not a leak. The pin at (9,5) is
+ * below the lowest WandLock and the rope's shrink is what lets the player
+ * into the shaft at all; a control that could not even enter the room would
+ * be blocked by the wrong thing and would prove the wrong negative. So the
+ * FIRST `primary` span stays and the eighteen block presses go — one field
+ * apart, and the field is the choreography.
+ */
+const ropePressSpan = tape.inputs.find((sp) => sp.key === 'primary');
+const controlTape = parseTape(serializeTape({
+    ...tape,
+    name: SHAFT_PAIR.control,
+    inputs: tape.inputs.filter((sp) => sp.key !== 'primary' || sp === ropePressSpan),
+    description: '⛓⛓ THE SHUT-BEFORE CONTROL for `r5-shaft`: the identical tape with the '
+        + 'EIGHTEEN block presses deleted and the rope pull kept, because the rope is what '
+        + 'opens the shaft and a control blocked at the door would be testing the door. '
+        + 'Every walk span is byte-identical. The three covers stay shut, so the walk '
+        + 'cannot cross row 9 and comes to rest pinned in the column below the lowest '
+        + 'WandLock — and the ledger it earns is the rope\'s alone. A press arm that '
+        + 'reaches the middle of the cross proves the choreography only if this one does '
+        + 'not.',
+}));
+{
+    const cRun = runTape(controlTape, { levelSource });
+    const cEnd = cRun.ticks[cRun.ticks.length - 1];
+    const cTile = { tx: Math.floor(cEnd.x / TILE_SIZE), ty: Math.floor(cEnd.y / TILE_SIZE) };
+    console.log('\n## the control arm');
+    console.log(`   ${controlTape.tick_count} ticks, ${controlTape.inputs.length} spans — `
+        + `ends (${cEnd.x.toFixed(2)},${cEnd.y.toFixed(2)}) tile (${cTile.tx},${cTile.ty}) `
+        + `against the pin (${SHAFT_PAIR.pinnedAt.tile.tx},${SHAFT_PAIR.pinnedAt.tile.ty})`);
+    // ⛔⛔ R5 SLICE 13: `spinnerWrites` IS IN THIS SUM, and leaving it out is
+    // the §24.7 defect one mechanic later — "a forward prediction nobody
+    // asserts is a note". The game reported {39,4} on this arm before the
+    // model could; it can now, and the sum has to ask.
+    const cLedger = [...new Set([
+        ...cRun.lockWrites.filter((w) => w.flag.value === false).map((w) => `${w.flag.level}:${w.flag.tag}`),
+        ...cRun.ropePulls.map((w) => `${w.flag.level}:${w.flag.tag}`),
+        ...cRun.rockFalls.filter((w) => w.flag).map((w) => `${w.flag.level}:${w.flag.tag}`),
+        ...cRun.spinnerWrites.map((w) => `${w.flag.level}:${w.flag.tag}`),
+    ])].sort();
+    if (cRun.spinnerWrites.length > 0) {
+        console.log(`   spinner writes: ${cRun.spinnerWrites
+            .map((w) => `t${w.t} ${w.id} {${w.flag.level},${w.flag.tag}} by ${w.cause}`).join(', ')}`);
+    }
+    console.log(`   ledger: [${cLedger.join(' ')}]`);
+    // ⚠ WHY it stopped where it did, not just where. A control that fell in
+    // a pit or crossed a door would be blocked by the wrong thing, and
+    // "somewhere the presses did not reach" would read the same either way.
+    let rest = cRun.ticks.length - 1;
+    while (rest > 0 && cRun.ticks[rest - 1].x === cEnd.x && cRun.ticks[rest - 1].y === cEnd.y) {
+        rest -= 1;
+    }
+    const rows = new Set(cRun.ticks.map((t) => Math.floor(t.y / TILE_SIZE)));
+    console.log(`   levels [${[...new Set(cRun.ticks.map((t) => t.level))].join(' ')}], `
+        + `${cRun.transitions.length} transition(s), ${cRun.transports.length} pit fall(s); `
+        + `stationary since t${cRun.ticks[rest].t}; rows reached `
+        + `${Math.min(...rows)}..${Math.max(...rows)}`);
+    /**
+     * ⛓⛓⛓ THE CLAIM IS THE NEGATIVE, NOT THE RESTING CELL. §24.9's
+     * `pinnedAt: (9,5)` was a prediction about where a pressless walk would
+     * STOP, and a control does not work like that — it replays the whole
+     * input tape into a shut world, so after the first blocker the remaining
+     * spans keep shoving it and the last cell is an artefact of the last
+     * span. What the room decides is the ROW it cannot cross.
+     */
+    check(cRun.ticks.every((t) => !(Math.floor(t.x / TILE_SIZE) === SHAFT_PAIR.neverEnters.tx
+        && Math.floor(t.y / TILE_SIZE) === SHAFT_PAIR.neverEnters.ty)),
+        '⛓⛓⛓ THE CONTROL NEVER ENTERS (9,9) — the middle of the cross the press arm '
+        + 'ENDS in — on any tick',
+        '⛔ Without this arm "the walk reached the middle of the cross" is a sentence '
+        + 'about a walk and not about eighteen presses.');
+    check(Math.min(...rows) === SHAFT_PAIR.highestRowReached,
+        `⛓⛓ …and the highest row it touches is ${SHAFT_PAIR.highestRowReached}, two below `
+        + 'the crossing — the three covers hold the whole of row 9',
+        `reached row ${Math.min(...rows)}; block 1 is still on its spawn at (9,11), which `
+        + 'is what stops it there');
+    check(cTile.tx === SHAFT_PAIR.pinnedAt.tile.tx && cTile.ty === SHAFT_PAIR.pinnedAt.tile.ty,
+        '⛓ …and it comes to rest where the drive says, which is NOT where §24.9 predicted',
+        `ended (${cTile.tx},${cTile.ty}) against the banked `
+        + `(${SHAFT_PAIR.pinnedAt.tile.tx},${SHAFT_PAIR.pinnedAt.tile.ty}); the slice-7 `
+        + `prediction was (${SHAFT_PAIR.predictedPin.tile.tx},`
+        + `${SHAFT_PAIR.predictedPin.tile.ty}) and is REFUTED. Reported data, not the `
+        + 'claim — it is here to catch drift.');
+    check(!cLedger.includes('39:0') && !cLedger.includes('39:1') && !cLedger.includes('39:2'),
+        '⛓ …and NONE of the three lock-buttons opens without the presses',
+        `[${cLedger.join(' ')}] — {39,0}/{39,1}/{39,2} are exactly the flags a held button `
+        + 'writes, and a control that opened one would mean something else was pressing it');
+    check(cLedger.join(' ') === [...SHAFT_PAIR.controlEarned].sort().join(' '),
+        '⛓ …and what it DOES earn is the rope\'s two writes, the rock included',
+        `[${cLedger.join(' ')}] against [${[...SHAFT_PAIR.controlEarned].sort().join(' ')}]. `
+        + '⛔ The slice-7 list omitted {39,10}: it predates slice 10\'s finding that a '
+        + 'rope publication also calls `FallRock.fall()`.');
+}
+
 let bad = 0;
 for (const c of checks) {
     console.log(`   ${c.ok ? '✓' : '✗'} ${c.name}`);
@@ -366,9 +604,11 @@ for (const c of checks) {
 if (bad > 0) throw new Error(`${bad} of ${checks.length} claims FAILED`);
 
 if (WRITE) {
-    const path = join(MODULE, 'fixtures', 'tapes', `${tape.name}.json`);
-    writeFileSync(path, serializeTape(tape));
-    console.log(`\n   wrote ${path}`);
+    for (const t of [tape, controlTape]) {
+        const path = join(MODULE, 'fixtures', 'tapes', `${t.name}.json`);
+        writeFileSync(path, serializeTape(t));
+        console.log(`\n   wrote ${path}`);
+    }
 } else {
     console.log('\n(dry run — pass --write to emit the tape)');
 }

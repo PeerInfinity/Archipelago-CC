@@ -64,14 +64,14 @@ import {
     burnTree, burnWrites, burnedTreeIds, createBurnState,
 } from './burnableTree.js';
 import {
-    createSpinnerState, spinnerRects, spinnerTerrainWrites, stepSpinners,
+    SPINNER, createSpinnerState, hitSpinner, spinnerRects, spinnerTerrainWrites, stepSpinners,
 } from './spinner.js';
 import { ledgerKey, outOfBandFlagForWriter } from './outOfBandLedger.js';
 import { createChestState, stepChests } from './chest.js';
 import {
     CEREMONY_DEAD_FRAMES, createSealPiece, sealPieceBox, stepSealPiece,
 } from './sealCeremony.js';
-import { createPulser, pulseReaches, pulsePushes, stepPulser } from './pulser.js';
+import { PULSER, createPulser, pulseReaches, pulsePushes, stepPulser } from './pulser.js';
 import { ITEM_PROPERTIES, ITEM_NAMES, inventorySlotsFor } from './tapeFormat.js';
 import { spawnFromBoot } from './playerPhysicsV1.js';
 import {
@@ -1682,6 +1682,31 @@ export function createLevelRun({
                 id: 'player', type: 'Player', as3: 'Player',
                 x: state.x, y: state.y, originX: 2, originY: 2, w: 4, h: 5,
             });
+            /**
+             * ⛔⛔⛔ R5 SLICE 13 — AND THE ENEMIES, which cost the shaft's
+             * CONTROL arm a ledger entry before they were here.
+             *
+             * `Pulser.hit`'s third arm is `(c as Enemy).hit(force, …, damage,
+             * "Pulse")` and `pulser.armFor` has named it since slice 9; this
+             * list is what it was missing. The control arm — the eighteen
+             * presses DELETED, so nothing fights anything — came back from
+             * the game carrying **{39,4}**, `spinner@224,112`'s own tag, and
+             * the model predicted an empty ledger.
+             *
+             * ⛓ THE LESSON, AND IT IS THE GENERAL ONE: modelling a POSITION
+             * creates a bill for everything that acts on it. A spinner was
+             * inert while it had no position; the tick it acquired one, every
+             * `collideRect` in the game that names "Enemy" became a query the
+             * model owes an answer to.
+             */
+            for (const sp of spinnerRectsNow() ?? []) {
+                targets.push({
+                    id: sp.id, type: 'Enemy', as3: 'Spinner',
+                    x: sp.spinner.x, y: sp.spinner.y,
+                    originX: SPINNER.originX, originY: SPINNER.originY,
+                    w: SPINNER.w, h: SPINNER.h,
+                });
+            }
             for (const reached of pulseReaches(r.state, targets)) {
                 if (reached.arm === 'pushable') {
                     const block = pushState.byId.get(reached.id);
@@ -1706,6 +1731,30 @@ export function createLevelRun({
                             + '22 px ring, or declare the encounter.');
                     }
                     pulserPlayerHits.push({ t: ticksCompleted + 1, level, id });
+                } else if (reached.arm === 'enemy') {
+                    // ⚠ THE STATE IS THE SPINNER'S, and `hitSpinner` is
+                    // `Enemy.hit` verbatim: the `hitsTimer <= 0` gate, the
+                    // `!Game.freezeObjects` gate, `hits += damage`, and the
+                    // atan2 knockback at force 6 — which against `moveSpeed
+                    // = 1` and a friction FLOOR of 1 is twenty ticks of a
+                    // completely different trajectory, not a nudge.
+                    const spSt = spinnerStateFor(level);
+                    const sp = spSt.byId.get(reached.id);
+                    if (sp) {
+                        const after = hitSpinner(sp, {
+                            force: PULSER.force,
+                            from: { x: r.state.x, y: r.state.y },
+                            damage: PULSER.damage,
+                            t: 'Pulse',
+                            frozen: ceremony !== null,
+                        });
+                        spSt.byId.set(reached.id, after);
+                        if (after.destroy && !sp.destroy) {
+                            pulserEnemyKills.push({
+                                t: ticksCompleted + 1, level, pulser: id, enemy: reached.id,
+                            });
+                        }
+                    }
                 }
             }
         }
@@ -1771,6 +1820,24 @@ export function createLevelRun({
     const pulserPlayerHits = [];
     /** One per block a pulse actually MOVED — the chain's third link. */
     const pulsePushes_ = [];
+    /**
+     * ⛔⛔ R5 slice 13: one per ENEMY a pulse killed — `{t, level, pulser, enemy}`.
+     *
+     * A ledger entry the route never chose and could not previously see: the
+     * shaft's CONTROL arm came back from the game carrying {39,4} and the
+     * model predicted nothing at all. See the dispatch site.
+     */
+    const pulserEnemyKills = [];
+    /**
+     * ⛔⛔ R5 slice 13: one record per `Spinner.removed()` write — the flag a
+     * spinner banks by LEAVING THE WORLD, whatever took it out.
+     *
+     * `spinnerWritten` is the once-only guard: `removed` stays true for the
+     * rest of the visit, so a per-tick scan without it would bank the same
+     * flag every tick after the removal.
+     */
+    const spinnerWrites = [];
+    const spinnerWritten = new Set();
     /** One per completed seal ceremony, with the dead frames it cost. */
     const sealCollections = [];
     /** Which chest the live piece came from, for the ledger. */
@@ -2205,6 +2272,55 @@ export function createLevelRun({
          * spinners, and it is `buildLevelWorld`'s `check()` arm that keeps a
          * dead one dead.
          */
+        /**
+         * ⛓⛓ R5 SLICE 13: WHERE THE SPINNERS WILL BE, for the next `n` ticks.
+         *
+         * The whole reason `Spinner` is the one enemy worth modelling:
+         * `runRange = 0` makes its chase arm dead code and `activeOffScreen`
+         * takes the camera out of it, so the trajectory is a function of the
+         * level's geometry and the tick index — and can therefore be run
+         * FORWARD from here without the player's future being known.
+         *
+         * `forecast[i]` is the state at the top of tick
+         * `ticksCompleted + 1 + i`, which is when the blocks read it.
+         *
+         * ⚠⚠ IT IS A SEARCH HEURISTIC, NOT AN ORACLE, and the difference is
+         * load-bearing. It holds the PUSHABLES where they are now, so a
+         * spinner that would have bounced off a block mid-glide is one tick
+         * of geometry out. That is sound only because the thing downstream of
+         * it is `runFire`'s exact-set effect check, which drives the REAL
+         * models and fails by name: a wrong forecast costs a refused press,
+         * never a wrong tape. A forecast used to ASSERT anything would be
+         * [[feedback_two_cost_models_must_agree]] — a fast path predicting a
+         * slow one — and this one is allowed to be approximate precisely
+         * because nothing believes it.
+         *
+         * ⚠ AND IT DOES NOT MUTATE. The live state is deep-copied per
+         * spinner; `stepSpinner` returns new objects, so copying the Map's
+         * values is enough.
+         */
+        spinnerForecast(n) {
+            const live = spinnerStateFor(level);
+            if (live.byId.size === 0) return [];
+            const st = { byId: new Map([...live.byId].map(([k, v]) => [k, { ...v }])), level };
+            const ctx = spinnerCtx();
+            const out = [];
+            for (let i = 0; i < n; i += 1) {
+                stepSpinners(st, ctx);
+                out.push(spinnerRects(st).map((s) => s.rect));
+            }
+            return out;
+        },
+        /**
+         * ⛔⛔ R5 slice 13: `{t, level, id, flag, cause}` per `Spinner.removed()`.
+         *
+         * The ledger half of `spinnerDeaths`, in the shape `lockWrites` and
+         * `ropePulls` use — a persistence write with a tick on it, so a plan
+         * can assert WHEN as well as whether.
+         */
+        get spinnerWrites() { return spinnerWrites.map((w) => ({ ...w, flag: { ...w.flag } })); },
+        /** ⛔⛔ R5 slice 13: `{t, level, pulser, enemy}` per enemy a pulse killed. */
+        get pulserEnemyKills() { return pulserEnemyKills.map((k) => ({ ...k })); },
         get spinnerDeaths() {
             const out = [];
             for (const [n, st] of spinnerStates) {
@@ -2571,6 +2687,34 @@ export function createLevelRun({
             if (!noclip && spinState.byId.size > 0) {
                 assertDialogueFreeSpinnerRoom();
                 stepSpinners(spinState, spinnerCtx());
+                /**
+                 * ⛔⛔ AND THE FLAG A REMOVAL WRITES, BANKED HERE.
+                 *
+                 * `Spinner.removed()` is `Game.setPersistence(tag, false)`
+                 * with no test of the cause, and `World.updateLists`
+                 * processes the removal at the top of the frame — which is
+                 * the tick `stepSpinner` returns `removed: true` on. So this
+                 * is the write's real tick, not an approximation of it.
+                 *
+                 * ⚠ BANKED, NOT CASHED. Like every earned clear it lands in
+                 * `pendingEarnedClears` and is spent when the level is next
+                 * BUILT (§22.8) — so a run that never leaves the room reports
+                 * an empty `earnedClears` and a full `spinnerDeaths`, and the
+                 * ledger claim is phrased over the writes.
+                 */
+                for (const s of spinState.byId.values()) {
+                    if (!s.removed || s.persistTag < 0 || spinnerWritten.has(s.id)) continue;
+                    spinnerWritten.add(s.id);
+                    if (!pendingEarnedClears.has(level)) pendingEarnedClears.set(level, new Set());
+                    pendingEarnedClears.get(level).add(s.persistTag);
+                    spinnerWrites.push({
+                        t: ticksCompleted + 1,
+                        level,
+                        id: s.id,
+                        flag: { level, tag: s.persistTag, value: false },
+                        cause: s.deathCause,
+                    });
+                }
             }
             const pushState = pushableStateFor(level);
             if (!noclip && pushState.byId.size > 0) stepPushables(pushState, pushableCtx());

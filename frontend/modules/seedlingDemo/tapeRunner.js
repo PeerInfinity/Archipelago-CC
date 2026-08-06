@@ -305,6 +305,12 @@ export function createTapeStepper(tape, opts = {}) {
              */
             spinnerDeaths: run ? run.spinnerDeaths : [],
             /**
+             * ⛓ R5 slice 13: the same removals as PERSISTENCE WRITES, with
+             * ticks — the shape `lockWrites` and `ropePulls` use, so a
+             * ledger sum can include them without a special case.
+             */
+            spinnerWrites: run ? run.spinnerWrites : [],
+            /**
              * The live block rects at the END of the run, by id.
              *
              * ⚠ A SUMMARY, not a stream. It answers "where did the blocks

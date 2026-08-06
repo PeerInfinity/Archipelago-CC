@@ -280,13 +280,99 @@ export const CEREMONY_RULE = Object.freeze({
     src: 'Puzzlements/Crusher.as:42 — `update()` tests `activate || t == -1` and nothing else',
     /** `CEREMONY_DEAD_FRAMES.pickup`; named, not imported, to keep this file a leaf. */
     pickupFreezeFrames: 150,
-    claim: 'a part-collect within reach of a crusher is a SURVIVAL claim over the whole '
-        + 'freeze, not a positional one: the player cannot move for 150 frames and the '
-        + 'crusher advances 150 px in them. Either the stance is outside every reachable '
-        + 'charge line for the duration, or the crusher is baited and PARKED behind a '
+    /**
+     * ⛔⛔ R5 SLICE 13 — THE ORIGINAL CLAIM WAS TOO STRONG, AND CORRECTING IT
+     * MAKES IT CHECKABLE.
+     *
+     * This entry said *"150 frames of freeze against 150 px of charge"* — a
+     * survival claim over the whole ceremony. The MOTION half is right and
+     * the DAMAGE half is not: `Crusher.hit()` deals its 1000 by calling
+     * `(c as Player).hit(...)` (`Crusher.as:98`), and `Player.hit`'s own
+     * gate is `if (hitsTimer <= 0 && hits < hitsMax && !Game.freezeObjects)`
+     * (`Player.as:1380`). ⇒ **a frozen player cannot be damaged by it.** The
+     * crusher charges through the ceremony and its `hit()` lands on a
+     * no-op every one of those frames.
+     *
+     * ⛓⛓ SO THE CLAIM IS ONE FRAME, NOT 150: the crusher may not be
+     * overlapping the stance ON THE FIRST UNFROZEN TICK, because `hit()`
+     * runs on every armed tick and the freeze is what was suppressing it.
+     * That is a claim a model can discharge exactly — simulate the charge
+     * forward 150 frames and test one overlap — where "safe for the whole
+     * duration" is a claim about 150 unobservable frames.
+     *
+     * ⚠ AND THE POSITIONAL CONSEQUENCE SURVIVES INTACT. 150 px of charge
+     * lands the crusher somewhere new, and it is a 32x32 `Solid` that stays
+     * where it stopped — so a ceremony can seal the corridor the route
+     * still needs. The route still has to simulate; it just does not have
+     * to dodge.
+     */
+    damagesFrozenPlayer: false,
+    damagePath: 'Crusher.as:98 -> Player.hit -> gated on !Game.freezeObjects',
+    claim: 'a part-collect within reach of a crusher is a claim about ONE FRAME — the '
+        + 'first unfrozen tick — plus a positional claim about where 150 px of charge '
+        + 'leaves a 32x32 mobile Solid. `hit()` runs through the freeze and lands on a '
+        + 'no-op, because every damage path in this game reaches the player through '
+        + '`Player.hit` and that method is freeze-gated. Either the stance is clear of '
+        + 'the BODY when the freeze drains, or the crusher is baited and PARKED behind a '
         + 'Solid before the pickup is touched.',
     generalises: 'every ungated pursuer — read `update()` for a `Game.freezeObjects` test '
-        + 'before pricing any stance a ceremony will freeze the player in',
+        + 'to know whether it MOVES, and then read its damage call to know whether it '
+        + 'HURTS. The two are different questions and this entry conflated them for a '
+        + 'slice. See `PLAYER_DAMAGE_PATHS`.',
+});
+
+/**
+ * ⛓⛓⛓ WHAT CAN HURT A FROZEN PLAYER — ENUMERATED, BECAUSE EVERY CEREMONY
+ * FROM HERE ON IS A STANCE-SAFETY QUESTION.
+ *
+ * R5 slice 13. Five collect ceremonies stand between the route and the wand,
+ * each freezing the player for 150 frames beside whatever the room holds, so
+ * "is this stance safe" stopped being answerable one class at a time. Asked
+ * of the whole source instead — every `.hit(` call site that takes a
+ * `Player`, and every write to the player's death path:
+ *
+ * ```
+ *   Enemy.hitPlayer, Spinner's hammer, Puncher, Tentacle, BobSoldier,
+ *   ShieldBoss, BossTotem, Flyer's drop, RockFall, Pod, SpinningAxe,
+ *   Pulser's ring, Crusher, Explosion, Grenade, Arrow, TurretSpit,
+ *   LavaBall, BossTotemShot                      → ALL call Player.hit
+ *   Player.hit                                   → `!Game.freezeObjects`
+ * ```
+ *
+ * ⇒ **A FROZEN PLAYER IS INVULNERABLE, with exactly one exception in the
+ * whole game.** That is a far stronger statement than any per-class audit
+ * would have produced, and it is why a totem-part collect beside a spinner
+ * is a positional claim rather than a survival one.
+ *
+ * ⛔⛔ THE EXCEPTION IS `LavaTrap`, AND IT BYPASSES `Bot.noDamage` TOO.
+ * `LavaTrap.as:72` is `attached.die()` — the Player's own `die()`, called
+ * directly once the tongue has reeled a player without the dark suit all the
+ * way in. `Player.die()` is `dying = true; restartLevel()` with no freeze
+ * test and no `Bot.noDamage` test (the relaxation guards `hit()`'s body,
+ * `Player.as:1379`). ⚠ So the ladder's "damage is off" relaxation is NOT
+ * total, and the one class that escapes it is also the one class a ceremony
+ * cannot protect against.
+ *
+ * ⛓ INERT FOR THIS RUNG, MEASURED: `lavatrap` appears only in L77, L78, L80
+ * (Dungeon 7) and L108 (Dungeon 8), and R5's route reaches none of them. It
+ * is declared rather than omitted because "no route goes there yet" is how
+ * §24.3's statue got its offset wrong for two slices.
+ */
+export const PLAYER_DAMAGE_PATHS = Object.freeze({
+    allThrough: 'Player.hit',
+    gate: 'Player.as:1380 — `hitsTimer <= 0 && hits < hitsMax && !Game.freezeObjects`',
+    frozenPlayerIsInvulnerable: true,
+    exceptions: Object.freeze([Object.freeze({
+        as3: 'LavaTrap',
+        src: 'Enemies/LavaTrap.as:72 — `attached.die()`',
+        bypassesFreeze: true,
+        bypassesNoDamage: true,
+        why: 'it calls `Player.die()` directly rather than `Player.hit()`, so neither '
+            + '`Game.freezeObjects` nor `Bot.noDamage` is consulted. It only fires once '
+            + 'the tongue has fully reeled in a player without `hasDarkSuit`.',
+        levels: Object.freeze([77, 78, 80, 108]),
+        onR5Route: false,
+    })]),
 });
 
 /**

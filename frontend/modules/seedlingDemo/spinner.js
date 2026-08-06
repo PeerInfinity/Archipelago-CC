@@ -436,6 +436,63 @@ export function stepSpinner(s, ctx = {}) {
 }
 
 /**
+ * ⛔⛔⛔ `Enemy.hit` + `Enemy.knockback`, TRANSCRIBED — and the shaft's
+ * control arm is why this exists.
+ *
+ * Slice 13 recorded `r5-shaft-control` byte-exact and the GAME's ledger
+ * carried **{39,4}** — `spinner@224,112`'s own tag — which the model did not
+ * predict. Nothing on that arm fights anything: the eighteen presses are
+ * deleted. ⛓ What kills it is `Pulser.hit`'s THIRD arm,
+ * `(c as Enemy).hit(force, …, damage, "Pulse")` (`Pulser.as:110`) — an arm
+ * `pulser.armFor` has always named and `levelRun` never had an enemy to
+ * hand it. **Modelling a position creates a bill for everything that acts
+ * on it**, and this is the first instalment.
+ *
+ * ⚠ AND THE KNOCKBACK IS NOT COSMETIC. `f = 6` against `moveSpeed = 1`, and
+ * `friction()`'s floor means the shove decays back to 1 over ~20 ticks
+ * rather than to rest — so a pulsed spinner travels several pixels a tick
+ * for twenty of them, through a `moveX` loop that then takes SIX substeps
+ * and can reflect partway. The trajectory after a pulse is nothing like the
+ * one before it, which is exactly why "the pulser only slows it down" would
+ * have been a wrong and comfortable assumption.
+ *
+ * ⛓ THE GATES, IN SOURCE ORDER: `hitsTimer <= 0 || hitByDarkStuff`, then
+ * `!Game.freezeObjects`, then `canHit`, then `onlyHitBy`, then the fire
+ * exemption. A `Spinner` overrides none of them — `maxForce` is -1,
+ * `onlyHitBy` is "", `hitByFire` is false — so the only live ones are the
+ * timer and the freeze.
+ *
+ * @param {object} s
+ * @param {object} opts  `{force, from: {x, y}, damage, t, frozen}`
+ */
+export function hitSpinner(s, { force = 0, from = null, damage = 1, t = '', frozen = false } = {}) {
+    if (s.removed || s.destroy) return s;
+    // `hitsTimer <= 0 || hitByDarkStuff` — a Spinner is never hit by dark
+    // stuff on this arc (no Shield, no Suit), so the timer is the gate.
+    if (s.hitsTimer > 0) return s;
+    if (frozen) return s;
+    // `hitByFire` is false on `Enemy` and the Spinner does not override it,
+    // so a FIRE press knocks it back and does NOT damage it.
+    if (t === 'Fire') return knockbackSpinner(s, force, from);
+    if (s.hits >= SPINNER.hitsMax) return s;
+    const hits = s.hits + damage;
+    const next = { ...s, hits, hitsTimer: SPINNER.hitsTimerMax };
+    if (hits >= SPINNER.hitsMax) {
+        // `startDeath` -> `destroy = true`. `death()` then fades it out over
+        // `SPINNER.deathTicks` and `removed()` writes the tag.
+        return { ...next, destroy: true, deathCause: t === '' ? 'killed' : t.toLowerCase() };
+    }
+    return knockbackSpinner(next, force, from);
+}
+
+/** `Enemy.knockback` — an atan2 shove, on top of whatever `v` already is. */
+function knockbackSpinner(s, f, p) {
+    if (!p || s.destroy) return s;
+    const a = Math.atan2(s.y - p.y, s.x - p.x);
+    return { ...s, vx: s.vx + f * Math.cos(a), vy: s.vy + f * Math.sin(a) };
+}
+
+/**
  * ⚠ THE HAMMER IS A FUNCTION OF `Game.time` AND NOTHING ELSE.
  *
  * `hammerAngle = (Game.time % Game.timePerFrame) / Game.timePerFrame * 2π`,

@@ -9,6 +9,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+    L40_FALLTHROUGH,
     CLUSTER, GROUP_6, L38_CHAIN, TOTEM_ENTRANCE, TOTEM_PAIR, TOTEM_ROPE, TOTEM_SHAFT,
     TotemError, assertPresserWrites,
     L40_ARRIVAL, L40_CHAIN, L40_PREDICTIONS, L41_L42_RECON,
@@ -765,5 +766,31 @@ describe('⛓⛓ L40\'s opening chain — the join is a PAIR, and the key is beh
         const unbuilt = L40_CHAIN.links.filter((l) => l.built.startsWith('⛔'));
         expect(unbuilt.map((l) => l.n)).toEqual([2]);
         expect(unbuilt[0].what).toMatch(/burnabletree/);
+    });
+});
+
+/**
+ * ⛔⛔ R5 SLICE 13 — the recon §24.9 listed as missing, asserted.
+ *
+ * The claim worth pinning is the NEGATIVE one: this entity is not a trigger
+ * and its coordinates are not a place. A route that avoided (224,432) as a
+ * volume would be avoiding an empty cell.
+ */
+describe('control@224,432 — a parameter block, not a trigger', () => {
+    it('is read once at loadlevel and consumed only by a pit fall', () => {
+        expect(L40_FALLTHROUGH.isTrigger).toBe(false);
+        expect(L40_FALLTHROUGH.consumedBy).toMatch(/checkFallingInPit/);
+    });
+
+    it('its @x,@y is the BASE OF AN OFFSET — (224,432) + (-64,-320) = (160,112)', () => {
+        expect(L40_FALLTHROUGH.entity).toEqual({ tag: 'control', x: 224, y: 432 });
+        expect(L40_FALLTHROUGH.offset).toEqual({ x: 160, y: 112 });
+    });
+
+    it('⛔ every pit in L40 TRANSPORTS to the wand room rather than killing', () => {
+        expect(L40_FALLTHROUGH.toLevel).toBe(43);
+        expect(L40_FALLTHROUGH.fallFromCeiling).toBe(true);
+        // `int(@sign) - 1` on an @sign of "0".
+        expect(L40_FALLTHROUGH.sign).toBe(-1);
     });
 });
