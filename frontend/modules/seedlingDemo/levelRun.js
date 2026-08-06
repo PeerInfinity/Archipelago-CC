@@ -2564,6 +2564,26 @@ export function createLevelRun({
          * later — which is now the fifth time this file has had to make it.
          */
         get brokenRocks() { return noclip ? null : (brokenRockIdsNow() ?? new Set()); },
+        /**
+         * ⛓⛓ R5 SLICE 14: which of this level's `BurnableTree`s are GONE
+         * right now — the EIGHTH family's answer to the same question, and
+         * the seventh time this file has had to give it.
+         *
+         * ⛔ AND IT HAD NO READER FOR TWO SLICES. `collidesSolid` and
+         * `plannerBlockerAt` have taken `burnedTrees` since slice 12, and
+         * `levelRun` has passed `burnedTreeIdsNow()` into both — but the
+         * DRIVER's own entry point (`botDriverV2.plannerObstacleAt`) never
+         * destructured the option, and no getter existed to feed it. So a
+         * leg planned after a burn would have routed around a 2x2 solid the
+         * game had removed forty-one ticks earlier: the geometry was wired
+         * and the PLANNER was blind, which is exactly the split that makes
+         * "the family is built" and "the family is usable" different claims.
+         *
+         * ⚠ The set is per VISIT, like `brokenRocks` and unlike the flag: a
+         * `tag = -1` tree is rebuilt by the next `new Game` however this
+         * reads, and a `tag >= 0` one is not rebuilt at all (`check()`).
+         */
+        get burnedTrees() { return noclip ? null : (burnedTreeIdsNow() ?? new Set()); },
         /** ⛓ R5 slice 7: the ropes pulled in the CURRENT level, this visit. */
         get pulledRopes() { return noclip ? null : (pulledRopeIdsNow() ?? new Set()); },
         // ── ⛔⛔ R5 slice 9: the chest, the pulse and the seal ──────────

@@ -84,6 +84,7 @@
  */
 
 import { crossRoomWrites } from './activators.js';
+import { WAIT_AFTER_PRESS_TICKS as BURN_WAIT } from './burnableTree.js';
 
 export class TotemError extends Error {
     constructor(message) { super(message); this.name = 'TotemError'; }
@@ -614,6 +615,208 @@ export function assertPresserWrites(presser, declared) {
  * `control@224,432` pit (also to L43) — and L43 is the wand room, which
  * this rung is told not to approach. Routing it is the next slice's.
  */
+/**
+ * ── ⛓⛓⛓ R5 SLICE 14: THE BURN'S FIRST DRIVE, AND IT IS L37's TREE ────
+ *
+ * `burnableTree.js` shipped in slice 12 and nothing burned anything for two
+ * slices, so `OUT_OF_BAND_WRITERS.BurnableTree.witness` read `none yet`.
+ * The brief's tree was L40's — and §27.9 measured that it stands BEHIND
+ * `chest@880,816`, i.e. behind link 1 of an eleven-link chain. This one has
+ * nothing in front of it, and the room has nothing else in it either: no
+ * enemy, no pushable, no pit tile. A press here can only say one thing.
+ *
+ * ── ⛔⛔ AND "THE TREE IS A DOOR" WAS AN ARTEFACT OF THE FLOOD'S POLICY
+ *
+ * The first cut of this declaration read *"96 nodes shut, 584 burned — the
+ * walk starts in a closed room and the tree is its only exit"*, and it was
+ * **wrong in the way that is hardest to see: the flood and the DRIVE were
+ * asking different questions.** `plannerObstacleAt`'s lethal-terrain
+ * policy defaults to *"the player holds nothing"*, and the flood was run
+ * without an `inventory`; the driver's `planNow` passes `run.inventory`,
+ * and this route holds the CONCH. Re-run with the drive's own policy:
+ *
+ * ```
+ *   flooded as the DRIVE plans      2049 shut -> 2065 burned    +16
+ *   flooded holding nothing           96 shut ->  584 burned   +488
+ * ```
+ *
+ * ⇒ **+16 is the tree's own 2x2 footprint at an 8 px lattice, and nothing
+ * else.** A player who can swim walks around it; the "closed room" is
+ * closed by 26 nodes of water and a teleporter, not by the tree. §27.9's
+ * "+20" (measured over the whole level) was nearer the truth than the
+ * correction that replaced it.
+ *
+ * ⛓⛓ **SO THIS TAPE IS A VERB CERTIFICATION, NOT AN OPENED-BLOCKER PAIR**,
+ * and its load-bearing claim is the one that survives every policy: the
+ * walk enters the tree's OWN CELLS — (8,13) and (9,13) — and the control
+ * enters none of them. A cell a 32x32 Solid is standing in is unenterable
+ * by construction, whatever the router believes about the water next door.
+ *
+ * ⚠ [[feedback_verifier_shared_assumption]] in its other direction: the
+ * flood and the planner did not share an assumption they should have. The
+ * numbers below therefore carry the POLICY in their names.
+ */
+export const L37_BURN = Object.freeze({
+    level: 37,
+    lattice: 8,
+    /** `assets/levels/.../37.oel`, and the tag is >= 0 so the write is IN BAND. */
+    tree: Object.freeze({ id: 'burnabletree@128,192', tag: 1, x: 128, y: 192 }),
+    /**
+     * §27.9's stance, kept. The 32x32 fire rect at (120,232) is
+     * [104,136) x [216,248) and the tree's box is [128,160) x [192,224), so
+     * they overlap in an 8x8 corner — which is enough for
+     * `collideRectInclusive` and for the 16 px radius cut, and is the
+     * closest a player can stand to a tree whose own cell they cannot
+     * enter.
+     */
+    stance: Object.freeze({ x: 120, y: 232 }),
+    /**
+     * A tile in the closed room, far enough from the stance to need a walk.
+     *
+     * ⚠ `at` IS THE TILE CORNER AND `tile` IS WHERE THE PLAYER LANDS. A
+     * `Bot` boot is `new Game(level, bootX, bootY)` and `Player.as:357`
+     * adds (+8,+8) — the same relationship `L40_ARRIVAL` records as
+     * `boot`/`spawn`. Booting at the tile CENTRE puts the player half a
+     * tile into its neighbour, which here is a wall.
+     */
+    boot: Object.freeze({
+        tile: Object.freeze({ tx: 3, ty: 17 }),
+        at: Object.freeze({ x: 48, y: 272 }),
+    }),
+    /**
+     * The third target — a tile east of the tree, far enough that the route
+     * to it goes THROUGH the burned cells.
+     *
+     * ⚠ REPORTED, NOT CLAIMED. A player holding the conch can reach this
+     * tile with the tree standing (see the flood above), so "the control
+     * never enters it" is a fact about the control's SPANS and not about
+     * the room — the §27.5 trap, which this declaration walked into once
+     * already. The claim is `footprint` below.
+     */
+    proof: Object.freeze({ tx: 13, ty: 13 }),
+    /**
+     * ⛓⛓ THE CLAIM. The tree's own 2x2, in tiles. The route crosses (8,13)
+     * and (9,13) after the burn; the control enters none of the four on any
+     * tick. A 32x32 Solid's cells are unenterable while it stands, under
+     * every terrain policy and every inventory — which is what makes this
+     * the arm that survives.
+     */
+    footprint: Object.freeze([
+        Object.freeze({ tx: 8, ty: 12 }), Object.freeze({ tx: 9, ty: 12 }),
+        Object.freeze({ tx: 8, ty: 13 }), Object.freeze({ tx: 9, ty: 13 }),
+    ]),
+    crossed: Object.freeze(['8,13', '9,13']),
+    /** `Main.primary` — one weapon, one equip, for the whole visit (§20.5). */
+    fireSlot: 1,
+    /**
+     * ⛔ PINNED TO THE MODULE'S OWN OBLIGATION rather than typed. A burn is
+     * solid for 41 ticks and `breakableRocks` exports a constant of the
+     * SAME NAME for a 7-tick shatter; a hand-copied 53 here is how the two
+     * drift apart, and a leg that waited the rock's number would walk into
+     * a tree the game has not taken down.
+     */
+    wait: BURN_WAIT,
+    /**
+     * Measured by `plan-seedling-r5-l37-burn`, re-derived on every run —
+     * BOTH policies, because the difference between them is the finding.
+     * `held` is what the driver plans with; `nothing` is the conservative
+     * default that made the first cut of this declaration wrong.
+     */
+    flood: Object.freeze({
+        held: Object.freeze({ shut: 2049, burned: 2065, delta: 16 }),
+        nothing: Object.freeze({ shut: 96, burned: 584, delta: 488 }),
+        why: '+16 is the tree\'s own 2x2 at an 8 px lattice. A player holding the conch '
+            + 'swims round it; the 96-node "room" is bounded by 26 nodes of lethal '
+            + 'terrain and a teleporter, not by the tree.',
+    }),
+    control: Object.freeze({
+        /**
+         * The furthest column the control touches. ⚠ REPORTED DATA, per
+         * §27.5: a control replays the whole tape into an unchanged world,
+         * so its extent is the spans' artefact. It is here to catch drift,
+         * not to carry a claim.
+         */
+        maxColumn: 7,
+    }),
+});
+
+/**
+ * ── ⛓⛓⛓ R5 SLICE 14: L40 LINKS 1 AND 2, DRIVEN ──────────────────────
+ *
+ * §24.5 priced the gate and could not open it: link 2 needed a burn verb
+ * and the verb needed a `runFire` arm. Both exist now, and driving the pair
+ * turned one of §24.5's remarks into a ROUTE constraint.
+ *
+ * ⛔⛔ **THE ORDER IS FORCED BY THE ROUTE, NOT BY THE FLAGS.** §24.5 read
+ * the one pixel of shared edge — the tree's box ends at y = 816 where the
+ * chest's begins, and `816 > 816` is false, so `Chest.update`'s
+ * `!collide("Solid")` gate is satisfied with the tree standing — and
+ * concluded *"one pixel either way and the ORDER of the two links would be
+ * forced"*. It is forced anyway, one layer up: **every stance whose fire
+ * rect reaches the tree is inside the chest's own cell**, and that cell is
+ * Solid until the chest opens. The flags commute; the walk does not.
+ *
+ * ⇒ a gate can be conjunctive in its flags and SEQUENTIAL in its route, and
+ * an audit that only asks the flags reports the wrong freedom.
+ *
+ * ⛓ The three arms, re-derived from the arrival on every run of
+ * `plan-seedling-r5-l40-join`, agreeing with §24.5 exactly: 660 shut,
+ * 664 chest-only, 660 tree-only, 700 both.
+ */
+export const L40_JOIN = Object.freeze({
+    level: 40,
+    chest: Object.freeze({ id: 'chest@880,816', x: 880, y: 816, persistTag: 13 }),
+    tree: Object.freeze({ id: 'burnabletree@872,784', tag: 0, x: 872, y: 784 }),
+    /** Carries the equip. The spawn itself, so the first target is a no-op walk. */
+    approach: Object.freeze({ x: 488, y: 904 }),
+    /**
+     * ⚠ TWO ROWS, and `bobsoldier@880,832` stands in them. It is `type =
+     * "Enemy"` and therefore not Solid to the player, and `BobSoldier`'s
+     * own `update()` returns on `Game.freezeObjects` — so it neither blocks
+     * the stance nor moves through the ceremony. Both halves checked at
+     * source rather than assumed from "it is only an enemy".
+     */
+    chestStance: Object.freeze({ x: 884, y: 834 }),
+    /**
+     * ⛓ THE CHEST'S OWN CELL — tile (55,51), the +4 the chest buys. The
+     * fire rect from here is [872,904) x [808,840) and the tree's box is
+     * [872,904) x [784,816): an 8 px overlap on the tree's bottom edge,
+     * with 4 px of rect-to-rect distance against a 16 px radius cut.
+     */
+    burnStance: Object.freeze({ x: 888, y: 824 }),
+    /**
+     * A tile in the +40 chamber that is NOT `buttonroom@880,768`'s own
+     * (55,48). ⚠ Deliberate: stepping on the buttonroom is link 3 and would
+     * put {40,12} in this tape's ledger, which would make the two-write
+     * claim below a three-write one. Links are driven one tape at a time.
+     */
+    proof: Object.freeze({ x: 872, y: 776 }),
+    fireSlot: 1,
+    wait: BURN_WAIT,
+    /** `Chest.open()`'s flag, then `BurnableTree.removed()`'s. */
+    earned: Object.freeze(['40:13', '40:0']),
+    /**
+     * ⛔⛔ THE KILL-LEDGER RULE FOR THIS CHAMBER, source-verified.
+     *
+     * ```
+     *   Bob.removed()         EMPTY  (`//if(!fell) dropCoins();`)
+     *   BobSoldier.removed()  EMPTY  (the same commented-out line)
+     *   Spinner.removed()     `Game.setPersistence(tag, false)`, NO test of
+     *                         the cause
+     * ```
+     *
+     * ⇒ clearing a press room of bobs costs the ledger NOTHING, and killing
+     * a spinner costs it a flag whatever killed it — including a hazard the
+     * billiard bounced into on a tick no route chose. So "kill or thread"
+     * is decided PER SPINNER against the ledger prediction, and per BOB it
+     * is free.
+     */
+    spinners: Object.freeze([
+        Object.freeze({ id: 'spinner@816,848', tag: 15 }),
+        Object.freeze({ id: 'spinner@880,848', tag: 16 }),
+    ]),
+});
+
 export const L40_ARRIVAL = Object.freeze({
     level: 40,
     /** `teleporter@144,0` in L39 says `playerx 480, playery 896`; +8,+8 is `Player.as:357`. */

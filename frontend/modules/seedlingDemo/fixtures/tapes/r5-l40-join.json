@@ -1,0 +1,295 @@
+{
+  "tape_version": 4,
+  "game": "seedling",
+  "name": "r5-l40-join",
+  "description": "⛓⛓⛓ L40 LINKS 1 AND 2 — the chest and the tree, which are ONE GATE. Row 51 of the south-east chamber is wall except at (55,51), where `chest@880,816` stands, and `burnabletree@872,784` is a 32x32 solid on the four cells above it: chest alone +4, tree alone +0, both +40. ⛓ The ORDER is forced by the route and not by the flags — every stance that reaches the tree is inside the chest's own cell. The chest is a SEAL CEREMONY (331 dead frames) and the burn is 41 ticks of a still-solid tree. ⚠ The chamber holds a bobsoldier in the chest's stance band and two spinners; bob-family `removed()` is EMPTY so a bob kill writes nothing, and the ledger claim is that no SPINNER died.",
+  "boot": {
+    "level": 40,
+    "x": 480,
+    "y": 896
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [],
+  "grants": [
+    {
+      "level": 40,
+      "items": [
+        "conch",
+        "feather",
+        "fire",
+        "sword"
+      ]
+    }
+  ],
+  "persistence": [],
+  "equips": [
+    {
+      "t": 0,
+      "slot": 1
+    }
+  ],
+  "tick_count": 895,
+  "inputs": [
+    {
+      "key": "right",
+      "from": 0,
+      "to": 2
+    },
+    {
+      "key": "up",
+      "from": 0,
+      "to": 183
+    },
+    {
+      "key": "left",
+      "from": 2,
+      "to": 3
+    },
+    {
+      "key": "right",
+      "from": 3,
+      "to": 4
+    },
+    {
+      "key": "left",
+      "from": 6,
+      "to": 8
+    },
+    {
+      "key": "right",
+      "from": 11,
+      "to": 12
+    },
+    {
+      "key": "down",
+      "from": 183,
+      "to": 184
+    },
+    {
+      "key": "up",
+      "from": 184,
+      "to": 185
+    },
+    {
+      "key": "down",
+      "from": 185,
+      "to": 186
+    },
+    {
+      "key": "up",
+      "from": 186,
+      "to": 187
+    },
+    {
+      "key": "right",
+      "from": 191,
+      "to": 407
+    },
+    {
+      "key": "left",
+      "from": 407,
+      "to": 408
+    },
+    {
+      "key": "right",
+      "from": 408,
+      "to": 409
+    },
+    {
+      "key": "down",
+      "from": 413,
+      "to": 555
+    },
+    {
+      "key": "up",
+      "from": 555,
+      "to": 556
+    },
+    {
+      "key": "down",
+      "from": 556,
+      "to": 557
+    },
+    {
+      "key": "up",
+      "from": 559,
+      "to": 560
+    },
+    {
+      "key": "right",
+      "from": 562,
+      "to": 676
+    },
+    {
+      "key": "left",
+      "from": 676,
+      "to": 677
+    },
+    {
+      "key": "right",
+      "from": 677,
+      "to": 678
+    },
+    {
+      "key": "up",
+      "from": 682,
+      "to": 696
+    },
+    {
+      "key": "down",
+      "from": 696,
+      "to": 697
+    },
+    {
+      "key": "up",
+      "from": 697,
+      "to": 698
+    },
+    {
+      "key": "down",
+      "from": 701,
+      "to": 702
+    },
+    {
+      "key": "right",
+      "from": 768,
+      "to": 770
+    },
+    {
+      "key": "up",
+      "from": 768,
+      "to": 773
+    },
+    {
+      "key": "left",
+      "from": 770,
+      "to": 771
+    },
+    {
+      "key": "down",
+      "from": 773,
+      "to": 774
+    },
+    {
+      "key": "up",
+      "from": 774,
+      "to": 777
+    },
+    {
+      "key": "down",
+      "from": 779,
+      "to": 781
+    },
+    {
+      "key": "primary",
+      "from": 785,
+      "to": 786
+    },
+    {
+      "key": "left",
+      "from": 839,
+      "to": 841
+    },
+    {
+      "key": "up",
+      "from": 839,
+      "to": 868
+    },
+    {
+      "key": "right",
+      "from": 841,
+      "to": 842
+    },
+    {
+      "key": "left",
+      "from": 842,
+      "to": 843
+    },
+    {
+      "key": "right",
+      "from": 845,
+      "to": 847
+    },
+    {
+      "key": "left",
+      "from": 849,
+      "to": 850
+    },
+    {
+      "key": "down",
+      "from": 868,
+      "to": 869
+    },
+    {
+      "key": "up",
+      "from": 869,
+      "to": 870
+    },
+    {
+      "key": "down",
+      "from": 872,
+      "to": 873
+    },
+    {
+      "key": "left",
+      "from": 875,
+      "to": 881
+    },
+    {
+      "key": "up",
+      "from": 875,
+      "to": 881
+    },
+    {
+      "key": "down",
+      "from": 881,
+      "to": 882
+    },
+    {
+      "key": "right",
+      "from": 881,
+      "to": 882
+    },
+    {
+      "key": "left",
+      "from": 882,
+      "to": 883
+    },
+    {
+      "key": "up",
+      "from": 882,
+      "to": 883
+    },
+    {
+      "key": "down",
+      "from": 883,
+      "to": 884
+    },
+    {
+      "key": "right",
+      "from": 883,
+      "to": 884
+    },
+    {
+      "key": "left",
+      "from": 884,
+      "to": 886
+    },
+    {
+      "key": "up",
+      "from": 884,
+      "to": 886
+    },
+    {
+      "key": "down",
+      "from": 888,
+      "to": 890
+    },
+    {
+      "key": "right",
+      "from": 888,
+      "to": 890
+    }
+  ]
+}

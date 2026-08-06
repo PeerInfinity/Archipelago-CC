@@ -252,6 +252,17 @@ export function createTapeStepper(tape, opts = {}) {
             /** R5 slice 5: `{level, id, hitTick, goneAt, ...}` per rock broken. */
             rocksBroken: run ? run.rocksBroken : [],
             /**
+             * ⛓⛓ R5 slice 14: `{id, level, t, goneAt, flag}` per BURNABLE
+             * TREE set alight — and the two ticks are the whole point.
+             *
+             * `t` is the press and `goneAt` is `removed()`, forty-one ticks
+             * later, which is where `Game.setPersistence(tag, false)` lives.
+             * ⛔ THE OPPOSITE OF `rockFalls`, whose flag lands on the trigger
+             * frame — and a SET has no timestamps, so a ledger check alone
+             * cannot tell the two apart (§24.7's finding, on the rock).
+             */
+            treeBurns: run ? run.treeBurns : [],
+            /**
              * ⛓ R5 slice 7/9: the persistence writes a plain `Lock` makes,
              * BOTH WAYS — `turnOff()` false and `returnToNormal()` TRUE.
              *

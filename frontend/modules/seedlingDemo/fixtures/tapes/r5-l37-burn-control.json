@@ -1,0 +1,200 @@
+{
+  "tape_version": 4,
+  "game": "seedling",
+  "name": "r5-l37-burn-control",
+  "description": "⛓⛓ THE SHUT-BEFORE CONTROL for `r5-l37-burn`: the identical tape with the ONE fire press deleted and every walk span byte-identical. The tree stands, so the 24-tile room the walk starts in stays closed and the proof tile is never entered. ⚠ The equip is kept — it is not an input span, and a control holding no weapon would be testing the equip rather than the press.",
+  "boot": {
+    "level": 37,
+    "x": 48,
+    "y": 272
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [],
+  "grants": [
+    {
+      "level": 37,
+      "items": [
+        "conch",
+        "feather",
+        "fire",
+        "sword"
+      ]
+    }
+  ],
+  "persistence": [],
+  "equips": [
+    {
+      "t": 0,
+      "slot": 1
+    }
+  ],
+  "tick_count": 226,
+  "inputs": [
+    {
+      "key": "right",
+      "from": 0,
+      "to": 20
+    },
+    {
+      "key": "up",
+      "from": 0,
+      "to": 37
+    },
+    {
+      "key": "left",
+      "from": 20,
+      "to": 21
+    },
+    {
+      "key": "right",
+      "from": 21,
+      "to": 24
+    },
+    {
+      "key": "left",
+      "from": 24,
+      "to": 25
+    },
+    {
+      "key": "right",
+      "from": 25,
+      "to": 26
+    },
+    {
+      "key": "left",
+      "from": 31,
+      "to": 32
+    },
+    {
+      "key": "right",
+      "from": 36,
+      "to": 37
+    },
+    {
+      "key": "down",
+      "from": 37,
+      "to": 38
+    },
+    {
+      "key": "up",
+      "from": 38,
+      "to": 39
+    },
+    {
+      "key": "up",
+      "from": 42,
+      "to": 44
+    },
+    {
+      "key": "right",
+      "from": 42,
+      "to": 71
+    },
+    {
+      "key": "down",
+      "from": 44,
+      "to": 45
+    },
+    {
+      "key": "up",
+      "from": 45,
+      "to": 46
+    },
+    {
+      "key": "down",
+      "from": 48,
+      "to": 50
+    },
+    {
+      "key": "up",
+      "from": 53,
+      "to": 54
+    },
+    {
+      "key": "left",
+      "from": 71,
+      "to": 72
+    },
+    {
+      "key": "right",
+      "from": 128,
+      "to": 130
+    },
+    {
+      "key": "up",
+      "from": 128,
+      "to": 137
+    },
+    {
+      "key": "left",
+      "from": 130,
+      "to": 131
+    },
+    {
+      "key": "right",
+      "from": 131,
+      "to": 132
+    },
+    {
+      "key": "left",
+      "from": 134,
+      "to": 135
+    },
+    {
+      "key": "down",
+      "from": 139,
+      "to": 141
+    },
+    {
+      "key": "up",
+      "from": 145,
+      "to": 147
+    },
+    {
+      "key": "right",
+      "from": 145,
+      "to": 220
+    },
+    {
+      "key": "down",
+      "from": 147,
+      "to": 148
+    },
+    {
+      "key": "up",
+      "from": 148,
+      "to": 149
+    },
+    {
+      "key": "down",
+      "from": 151,
+      "to": 153
+    },
+    {
+      "key": "up",
+      "from": 156,
+      "to": 158
+    },
+    {
+      "key": "down",
+      "from": 159,
+      "to": 161
+    },
+    {
+      "key": "up",
+      "from": 164,
+      "to": 165
+    },
+    {
+      "key": "left",
+      "from": 220,
+      "to": 221
+    },
+    {
+      "key": "right",
+      "from": 221,
+      "to": 222
+    }
+  ]
+}

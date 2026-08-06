@@ -1146,3 +1146,72 @@ describe('Player.direction (R4: the facing every press rect reads)', () => {
         expect(dir).toBe(DIRECTION_LEFT);             // still facing the wall
     });
 });
+
+/**
+ * ── ⛔⛔⛔ R5 SLICE 14: THE OPTIONS `step()` WAS HANDED AND SILENTLY DROPPED
+ *
+ * `levelRun` has passed `burnedTrees` into `step()` since slice 12 and
+ * `fallenRocks` since slice 10; `levelWorld.collidesSolid` has accepted
+ * both for as long; `plannerBlockerAt` takes both. `step()` destructured
+ * NEITHER — and an unlisted key in a destructured options object is not an
+ * error, it is a silence. So the one mover whose collisions decide where a
+ * route actually goes could not see a burned tree or a dropped rock while
+ * every other query in the codebase could.
+ *
+ * ⛓⛓ THESE ARE REAL LEVELS ON PURPOSE, against this file's synthetic-grid
+ * habit: the whole defect is a wiring gap between three modules, and a
+ * hand-built grid has no `treeId` or `fallenRocks` to wire. What is
+ * hand-derived here is the GEOMETRY — `burnabletree@128,192` is a 32x32
+ * `centerOO()` solid whose box is [128,160) x [192,224), read off
+ * `Scenery/BurnableTree.as:20-30` via `Tree.as` — and the assertion is
+ * two-sided: the same step is BLOCKED without the option and PASSES with
+ * it, so neither arm can go green by the sweep having stopped caring.
+ *
+ * ⚠ [[feedback_two_member_list_one_member_read]]: `fallenRocks` came along
+ * only because the question was asked of every member of the family rather
+ * than of the one this slice needed.
+ */
+describe('⛔⛔ step(): the per-visit sets the sweep MUST be told about', () => {
+    const l37 = () => buildLevelWorld(levelRecord(37), {
+        roles: RELAXED_ROLES,
+        inventory: { hasSword: true, hasFire: true, canSwim: true, hasFeather: true },
+    });
+    const TREE = 'burnabletree@128,192';
+
+    it('⛓⛓ a BURNED tree stops blocking the player — and blocks without the set', () => {
+        const w = l37();
+        // West of the tree's box [128,160) x [192,224), on its own row, with
+        // `right` held: the sweep walks east into column 128.
+        const start = { x: 120, y: 208, vx: 0, vy: 0, terrain: 0 };
+        const walkEast = (opts) => {
+            let s = start;
+            for (let i = 0; i < 60; i += 1) s = step(s, held('right'), { level: w, ...opts });
+            return s;
+        };
+        const blocked = walkEast({});
+        const through = walkEast({ burnedTrees: new Set([TREE]) });
+        // The player box is 8 wide with originX 4, so a sweep stopped by the
+        // tree's west face pins x at 124.
+        expect(blocked.x).toBeLessThan(128);
+        expect(through.x).toBeGreaterThan(140);
+    });
+
+    it('⛓ a FALLEN rock starts blocking the player — the same gap, the other sign', () => {
+        const w = l37();
+        // A synthetic rock box dropped into the corridor the burn opens.
+        // `fallenRocks` is a map of `{rect}`, exactly as `levelRun` builds it.
+        const rock = new Map([['probe', {
+            rect: { x: 176, y: 192, right: 208, bottom: 224 },
+        }]]);
+        const start = { x: 168, y: 208, vx: 0, vy: 0, terrain: 0 };
+        const walkEast = (opts) => {
+            let s = start;
+            for (let i = 0; i < 60; i += 1) s = step(s, held('right'), { level: w, ...opts });
+            return s;
+        };
+        const free = walkEast({ burnedTrees: new Set([TREE]) });
+        const stopped = walkEast({ burnedTrees: new Set([TREE]), fallenRocks: rock });
+        expect(free.x).toBeGreaterThan(180);
+        expect(stopped.x).toBeLessThan(176);
+    });
+});

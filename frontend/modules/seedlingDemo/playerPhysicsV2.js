@@ -796,6 +796,32 @@ export function step(state, held, opts = {}) {
         // leaves the solids list WITHOUT joining the tiles — it reaches the
         // sweep and nothing else.
         brokenRocks = null,
+        /**
+         * ⛔⛔⛔ R5 SLICE 14: TWO MEMBERS OF THIS FAMILY WERE PASSED IN AND
+         * SILENTLY DROPPED — for two slices and four slices respectively.
+         *
+         * `levelRun` has handed `stepV2` a `burnedTrees` set since slice 12
+         * and a `fallenRocks` map since slice 10; `levelWorld.collidesSolid`
+         * has accepted both since the same slices; `plannerBlockerAt` takes
+         * both. This function destructured NEITHER, and an unlisted key in
+         * an options object is not an error — it is a silence. So the one
+         * mover whose collisions decide where the route actually goes could
+         * not see a burned tree or a dropped rock, while every other query
+         * in the file could.
+         *
+         * ⇒ the burn "wired end to end" in §25.4 opened the cell for the
+         * PLANNER and left it solid for the PLAYER, which is a green plan
+         * whose walk stalls on a wall the model says is gone. Found by
+         * driving it: `r5-l37-burn`'s walk-proof leg grazed
+         * `burnabletree@128,192` 1,999 times.
+         *
+         * ⚠ AND IT IS THE TWO-MEMBER-LIST SHAPE AGAIN
+         * ([[feedback_two_member_list_one_member_read]]): `fallenRocks` came
+         * along for free once the question was asked of every member instead
+         * of the one the slice needed.
+         */
+        burnedTrees = null,
+        fallenRocks = null,
         pulledRopes = null,
         // ⛔⛔ R5 slice 9: the SIXTH. `Chest.open()` writes `type = ""` and
         // the entity then fades for 60 more ticks, so the SOLIDITY goes
@@ -1130,7 +1156,7 @@ export function step(state, held, opts = {}) {
             ? null
             : (x, y) => level.collidesSolid(playerBoxAt(x, y),
                 { beforeTypeFlip, openActivators, openBridges, pushables, brokenRocks,
-                    pulledRopes, openChests }),
+                    burnedTrees, fallenRocks, pulledRopes, openChests }),
         // `checkFallingInPit()` sits between moveY and the world clamp.
         afterMove: nextFall ? (x, y) => ({
             x: x + (Math.floor(nextFall.target.x / TILE_SIZE) * TILE_SIZE

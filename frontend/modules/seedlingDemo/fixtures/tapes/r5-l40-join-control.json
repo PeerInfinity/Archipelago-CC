@@ -1,0 +1,290 @@
+{
+  "tape_version": 4,
+  "game": "seedling",
+  "name": "r5-l40-join-control",
+  "description": "⛓⛓ THE SHUT-BEFORE CONTROL for `r5-l40-join`: the identical tape with the ONE fire press deleted. ⚠ The chest still opens — it is a probe row the walk crosses, not a press — so this arm IS the +4 measurement, driven: the walk reaches the chest's own cell and the tree holds the four above it. The chamber behind the gate is never entered.",
+  "boot": {
+    "level": 40,
+    "x": 480,
+    "y": 896
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [],
+  "grants": [
+    {
+      "level": 40,
+      "items": [
+        "conch",
+        "feather",
+        "fire",
+        "sword"
+      ]
+    }
+  ],
+  "persistence": [],
+  "equips": [
+    {
+      "t": 0,
+      "slot": 1
+    }
+  ],
+  "tick_count": 895,
+  "inputs": [
+    {
+      "key": "right",
+      "from": 0,
+      "to": 2
+    },
+    {
+      "key": "up",
+      "from": 0,
+      "to": 183
+    },
+    {
+      "key": "left",
+      "from": 2,
+      "to": 3
+    },
+    {
+      "key": "right",
+      "from": 3,
+      "to": 4
+    },
+    {
+      "key": "left",
+      "from": 6,
+      "to": 8
+    },
+    {
+      "key": "right",
+      "from": 11,
+      "to": 12
+    },
+    {
+      "key": "down",
+      "from": 183,
+      "to": 184
+    },
+    {
+      "key": "up",
+      "from": 184,
+      "to": 185
+    },
+    {
+      "key": "down",
+      "from": 185,
+      "to": 186
+    },
+    {
+      "key": "up",
+      "from": 186,
+      "to": 187
+    },
+    {
+      "key": "right",
+      "from": 191,
+      "to": 407
+    },
+    {
+      "key": "left",
+      "from": 407,
+      "to": 408
+    },
+    {
+      "key": "right",
+      "from": 408,
+      "to": 409
+    },
+    {
+      "key": "down",
+      "from": 413,
+      "to": 555
+    },
+    {
+      "key": "up",
+      "from": 555,
+      "to": 556
+    },
+    {
+      "key": "down",
+      "from": 556,
+      "to": 557
+    },
+    {
+      "key": "up",
+      "from": 559,
+      "to": 560
+    },
+    {
+      "key": "right",
+      "from": 562,
+      "to": 676
+    },
+    {
+      "key": "left",
+      "from": 676,
+      "to": 677
+    },
+    {
+      "key": "right",
+      "from": 677,
+      "to": 678
+    },
+    {
+      "key": "up",
+      "from": 682,
+      "to": 696
+    },
+    {
+      "key": "down",
+      "from": 696,
+      "to": 697
+    },
+    {
+      "key": "up",
+      "from": 697,
+      "to": 698
+    },
+    {
+      "key": "down",
+      "from": 701,
+      "to": 702
+    },
+    {
+      "key": "right",
+      "from": 768,
+      "to": 770
+    },
+    {
+      "key": "up",
+      "from": 768,
+      "to": 773
+    },
+    {
+      "key": "left",
+      "from": 770,
+      "to": 771
+    },
+    {
+      "key": "down",
+      "from": 773,
+      "to": 774
+    },
+    {
+      "key": "up",
+      "from": 774,
+      "to": 777
+    },
+    {
+      "key": "down",
+      "from": 779,
+      "to": 781
+    },
+    {
+      "key": "left",
+      "from": 839,
+      "to": 841
+    },
+    {
+      "key": "up",
+      "from": 839,
+      "to": 868
+    },
+    {
+      "key": "right",
+      "from": 841,
+      "to": 842
+    },
+    {
+      "key": "left",
+      "from": 842,
+      "to": 843
+    },
+    {
+      "key": "right",
+      "from": 845,
+      "to": 847
+    },
+    {
+      "key": "left",
+      "from": 849,
+      "to": 850
+    },
+    {
+      "key": "down",
+      "from": 868,
+      "to": 869
+    },
+    {
+      "key": "up",
+      "from": 869,
+      "to": 870
+    },
+    {
+      "key": "down",
+      "from": 872,
+      "to": 873
+    },
+    {
+      "key": "left",
+      "from": 875,
+      "to": 881
+    },
+    {
+      "key": "up",
+      "from": 875,
+      "to": 881
+    },
+    {
+      "key": "down",
+      "from": 881,
+      "to": 882
+    },
+    {
+      "key": "right",
+      "from": 881,
+      "to": 882
+    },
+    {
+      "key": "left",
+      "from": 882,
+      "to": 883
+    },
+    {
+      "key": "up",
+      "from": 882,
+      "to": 883
+    },
+    {
+      "key": "down",
+      "from": 883,
+      "to": 884
+    },
+    {
+      "key": "right",
+      "from": 883,
+      "to": 884
+    },
+    {
+      "key": "left",
+      "from": 884,
+      "to": 886
+    },
+    {
+      "key": "up",
+      "from": 884,
+      "to": 886
+    },
+    {
+      "key": "down",
+      "from": 888,
+      "to": 890
+    },
+    {
+      "key": "right",
+      "from": 888,
+      "to": 890
+    }
+  ]
+}

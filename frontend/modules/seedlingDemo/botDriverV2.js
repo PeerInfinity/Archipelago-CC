@@ -76,7 +76,17 @@ import {
     WAIT_AFTER_PRESS_TICKS, assertWaitCovers, rockBreaksUnder,
 } from './breakableRocks.js';
 import { keyLineTouches, opensOnKeyTick } from './activators.js';
-import { FIRE_WINDOW } from './fireVerb.js';
+import { FIRE_WINDOW, fireRect } from './fireVerb.js';
+// ⚠ ALIASED, because `breakableRocks` exports a constant of the SAME NAME
+// eight lines above and the two are different numbers for different
+// mechanics (7 ticks of shatter against 41 of animation). An unaliased
+// second import would have silently taken whichever the bundler resolved
+// last — a burn leg waiting a rock's window is exactly the shape of a green
+// tape that walks into a wall.
+import {
+    HIT_TO_GONE_TICKS as BURN_HIT_TO_GONE_TICKS,
+    WAIT_AFTER_PRESS_TICKS as BURN_WAIT_AFTER_PRESS_TICKS,
+} from './burnableTree.js';
 import { MODELLED_ENEMY_CLASSES, unmodelledEnemies } from './spinner.js';
 import { CHEST, chestProbeLine, chestStanceBand } from './chest.js';
 import { HITBOX } from './playerPhysicsV1.js';
@@ -269,6 +279,15 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
         // in — so a planner that could not be told about it cannot route the
         // second half of the level at all.
         openChests = null,
+        // ⛓⛓ R5 slice 14: the SEVENTH per-visit family, and the one that
+        // was WIRED BUT UNREADABLE. `plannerBlockerAt` has taken
+        // `burnedTrees` since slice 12 and this function — the only way the
+        // planner ever reaches it — did not forward it, so a leg planned
+        // after a burn saw a 2x2 solid the game had removed. The gap was
+        // invisible because nothing had ever burned anything: an option
+        // whose only producer is an undriven verb cannot be caught by a
+        // green suite. Driven now, in L37 and L40.
+        burnedTrees = null,
         // R4: `Main.SAVE_FILE.data.hasKey`, as a set of key types. It selects
         // exactly one avoid volume — a `BossLock`'s probe row — and it is a
         // SET rather than a boolean because a walk can hold several.
@@ -309,7 +328,7 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
     // find shut.
     const geometry = level.plannerBlockerAt(box, terrainProbeRect(x, y),
         { noclip, noHazards, openActivators, openBridges, pushables, brokenRocks,
-            pulledRopes, openChests });
+            pulledRopes, openChests, burnedTrees });
     if (geometry) return geometry;
     // ⚠ PIT TILES ARE FORBIDDEN FLOOR, and this policy is LOAD-BEARING from
     // R1 on. Until R1 a pit was unmodelled terrain, so `plannerBlockerAt`
@@ -1874,12 +1893,13 @@ function runFire(run, perTick, fire, what) {
             + 'span, change nothing and report success. A tape that fires must declare '
             + 'noclip: false.');
     }
-    const { moves = null, rope = null, wait = null } = fire;
-    const named = [moves, rope].filter((e) => e !== null);
+    const { moves = null, rope = null, burns = null, wait = null } = fire;
+    const named = [moves, rope, burns].filter((e) => e !== null);
     if (named.length !== 1) {
         fail(`${what}: a fire press names EXACTLY ONE of \`moves\` (blocks, by the tile `
-            + 'they are on and the tile they should end on) or `rope` (a RopeStart, by '
-            + 'its OEL coordinates). Naming none fires at nothing; naming both makes '
+            + 'they are on and the tile they should end on), `rope` (a RopeStart, by '
+            + 'its OEL coordinates) or `burns` (BurnableTrees, by their OEL '
+            + 'coordinates). Naming none fires at nothing; naming more than one makes '
             + 'the effect check ambiguous.');
     }
     /**
@@ -2004,6 +2024,105 @@ function runFire(run, perTick, fire, what) {
                 + 'visit already spent it.');
         }
         expect = { kind: 'rope', id };
+    } else if (burns) {
+        /**
+         * ── ⛓⛓⛓ THE BURN ARM (R5 slice 14) ───────────────────────────
+         *
+         * The THIRD shape of a fire press, and the first whose effect is
+         * neither immediate nor local to the pressed thing. §27.10 called
+         * for it: `moves` demands a non-empty list of block displacements
+         * and a burn displaces NOTHING, so a tree pressed through the
+         * `moves` arm would fail its own shape check before the press.
+         *
+         * ── ⛔ WHY THE TREE IS NAMED BY ITS OEL (x, y) ────────────────
+         *
+         * §27.10 sketched `burns: [{tx, ty}]`. It is `{x, y}` instead, and
+         * the reason is the id: a `BurnableTree`'s is `burnabletree@x,y`,
+         * exactly as a rope's is `rope@x,y` and a chest's is `chest@x,y`,
+         * and the sprite is a 32x32 `centerOO()` — so it covers FOUR tiles
+         * and four different `{tx, ty}` would name the same tree. `moves`
+         * is keyed on tiles because a block MOVES and its id is a spawn
+         * cell it has left; nothing here moves. One spelling, no aliasing.
+         *
+         * ── ⛓ THE CHECK IS TWO-SIDED IN TIME, NOT JUST IN SET ────────
+         *
+         * `rope` and `moves` both ask "did the named thing change and
+         * nothing else". This one asks that AND a question neither of them
+         * has: **was it still solid immediately after the press?**
+         * `hit()`'s whole body is `playSound; burn = true; play("burn")`
+         * — it removes nothing — and the 2x2 opens 41 ticks later when
+         * `burnEnd -> die()` fires. A model that opened the cell on the
+         * press tick would pass a set-valued effect check and plan a step
+         * the game refuses, which is the `FallRock` mistake mirrored: that
+         * one writes its flag EARLY and this one removes its solid LATE.
+         */
+        if (!Array.isArray(burns) || burns.length === 0) {
+            fail(`${what}: fire.burns must be a non-empty array of {x, y} — the OEL `
+                + 'coordinates of the BurnableTrees this press should set alight.');
+        }
+        const roster = run.world.burnableTrees ?? [];
+        const live = [];
+        for (const b of burns) {
+            if (!b || !Number.isFinite(b.x) || !Number.isFinite(b.y)) {
+                fail(`${what}: fire.burns[] must be {x, y} finite numbers, got `
+                    + `${JSON.stringify(b)}`);
+            }
+            const tree = roster.find((t) => t.x === b.x && t.y === b.y);
+            if (!tree) {
+                fail(`${what}: level ${run.level} has no burnable tree at (${b.x},${b.y}); `
+                    + `its roster is [${roster.map((t) => t.id).join(' ') || 'none'}]. `
+                    + '⚠ A tree whose tag this run has ALREADY cleared is not in the '
+                    + 'roster at all rather than present-and-burned: `check()` is '
+                    + '`if (tag >= 0 && !Game.checkPersistence(tag)) die()`, so the next '
+                    + '`new Game` builds the room without it. An absent tree and a '
+                    + 'mistyped coordinate are different bugs and this does not guess.');
+            }
+            if ((run.burnedTrees ?? new Set()).has(tree.id)
+                || run.treeBurns.some((t) => t.id === tree.id)) {
+                fail(`${what}: ${tree.id} is ALREADY BURNING or BURNED before the press, so `
+                    + 'setting it alight proves nothing. `hit()`\'s body is behind '
+                    + '`if (t == "Fire" && !burn)`, so a second press on a burning tree '
+                    + 'is a real no-op — not a restart and not a second write.');
+            }
+            /**
+             * ⛔ THE POSITIVE CONTROL, AT THE TREE'S OWN CENTRE. A burn
+             * whose cell was already walkable is a burn that opened
+             * nothing, and the whole reason link 2 of `L40_CHAIN` exists is
+             * that the tree IS the wall.
+             */
+            const cx = tree.rect.x + (tree.rect.right - tree.rect.x) / 2;
+            const cy = tree.rect.y + (tree.rect.bottom - tree.rect.y) / 2;
+            const before = plannerObstacleAt(run.world, cx, cy, null, burnProbeOpts(run));
+            if (before === null) {
+                fail(`${what}: the cell under ${tree.id} — (${cx},${cy}) — is ALREADY CLEAR `
+                    + 'before the press, so "the burn opened the passage" would be a claim '
+                    + 'about a cell that was never blocked.');
+            }
+            live.push({ id: tree.id, tag: tree.tag, x: tree.x, y: tree.y, cx, cy });
+        }
+        /**
+         * ⛔⛔ AND A PUSHABLE INSIDE THE RECT IS A REFUSAL, NOT A STRAY.
+         *
+         * `Player.fire()` has no aim: every responder in the 32x32 rect is
+         * dispatched, so a block sharing it is pushed exactly as hard as
+         * the tree is lit. The `moves` arm refuses an unmodelled-enemy room
+         * because it cannot certify a GLIDE; this arm has no glide to
+         * certify and would rather not acquire one — so it asks the
+         * geometric question instead of the census one, and gets an answer
+         * that does not depend on what is modelled.
+         */
+        const rect = fireRect(run.state.x, run.state.y);
+        const inRect = [...(run.pushables ?? new Map()).entries()]
+            .filter(([, b]) => !b.removed && rectsOverlap(rect, b.rect))
+            .map(([id]) => id);
+        if (inRect.length > 0) {
+            fail(`${what}: the 32x32 fire rect at (${run.state.x},${run.state.y}) also `
+                + `contains pushable [${inRect.join(', ')}]. A burn press has no aim, so `
+                + 'that block is shoved `atan2` away from the stance while the tree '
+                + 'burns — and this arm certifies no glide corridor. Move the stance, or '
+                + 'press the block through `fire.moves` and name where it goes.');
+        }
+        expect = { kind: 'burns', live };
     } else {
         if (!Array.isArray(moves) || moves.length === 0) {
             fail(`${what}: fire.moves must be a non-empty array of `
@@ -2144,14 +2263,53 @@ function runFire(run, perTick, fire, what) {
             + `to ${pressed.transition.to_level}.`);
     }
 
-    // ── the wait: the window, then the glide ──────────────────────────
-    const ticks = wait ?? PUSH_GLIDE_TICKS;
+    // ── the wait: the window, then the glide (or the animation) ───────
+    /**
+     * ⛔ A BURN'S WAIT IS NOT A GLIDE'S. `PUSH_GLIDE_TICKS` is 40 and
+     * `burnableTree.WAIT_AFTER_PRESS_TICKS` is 53 — the 41-tick animation
+     * plus the press window plus the ±1 the graphic-update order leaves
+     * unknowable — so defaulting a burn to the glide number would end the
+     * leg with the tree still standing on twelve of the ticks that matter.
+     * `assertBurnWaitCovers` is the module's own statement of the same
+     * obligation and the plan side calls it; this is the driver's floor.
+     */
+    const ticks = wait ?? (expect.kind === 'burns'
+        ? BURN_WAIT_AFTER_PRESS_TICKS : PUSH_GLIDE_TICKS);
+    if (expect.kind === 'burns' && ticks < BURN_WAIT_AFTER_PRESS_TICKS) {
+        fail(`${what}: fire.wait is ${ticks} and a burn is SOLID for `
+            + `${BURN_HIT_TO_GONE_TICKS} ticks after the press — `
+            + `wait at least ${BURN_WAIT_AFTER_PRESS_TICKS}. \`hit()\` removes nothing; `
+            + '`burnEnd -> die()` does, twenty animation frames later at 15 * 0.0333 = '
+            + '0.4995 per update.');
+    }
+    let stillSolidAt = null;
     for (let i = 1; i <= ticks; i++) {
         perTick.push(NO_HELD);
         const { transition } = run.advance(NO_HELD);
         if (transition) {
             fail(`${what}: wait tick ${i} of ${ticks} crossed from level `
                 + `${transition.from_level} to ${transition.to_level}.`);
+        }
+        /**
+         * ⛓⛓ THE FIRST HALF OF THE TWO-SIDED CLAIM, TAKEN WHILE IT IS
+         * TRUE. The window has fired (`lastHitTick` is 8) and the animation
+         * has 30-odd ticks to run, so every named tree must STILL be a
+         * solid here. Asserted in the middle of the leg rather than derived
+         * afterwards, because "it was solid at T+10" is not recoverable
+         * from a run that only reports the end state.
+         */
+        if (expect.kind === 'burns' && i === FIRE_WINDOW.endTick) {
+            const walkable = expect.live.filter(
+                (t) => plannerObstacleAt(run.world, t.cx, t.cy, null, burnProbeOpts(run)) === null);
+            if (walkable.length > 0) {
+                fail(`${what}: ${walkable.map((t) => t.id).join(', ')} stopped being solid `
+                    + `${i} tick(s) after the press, and the game keeps a burning tree `
+                    + `standing for ${BURN_HIT_TO_GONE_TICKS}. \`BurnableTree.hit()\` is `
+                    + '`playSound; burn = true; play("burn")` and removes NOTHING — so a '
+                    + 'model that opens the cell here is a model whose legs walk into '
+                    + 'walls the game has not taken down yet.');
+            }
+            stillSolidAt = i;
         }
         // ⚠ NOT BEFORE THE WINDOW HAS FIRED. `run.pushesSettled` is true
         // for the first four ticks too — the hits have not landed yet — so
@@ -2168,6 +2326,47 @@ function runFire(run, perTick, fire, what) {
                 + 'and the 16 px radius cut has to admit it — and a rope is a wide, '
                 + 'shallow box, so a stance too far along the span is outside the rect '
                 + 'even though it looks adjacent on the map.');
+        }
+    } else if (expect.kind === 'burns') {
+        // ── ⛓⛓ THE SECOND HALF: GONE, AND ONLY THE NAMED ONES ────────
+        const burnedNow = run.burnedTrees ?? new Set();
+        for (const t of expect.live) {
+            if (!burnedNow.has(t.id)) {
+                fail(`${what}: fired at (${at.x},${at.y}) and ${t.id} is STILL STANDING `
+                    + `after ${ticks} tick(s). The 32x32 rect has to CONTAIN the tree's `
+                    + `own 32x32 box and the ${'`'}fireHits${'`'} radius cut has to admit `
+                    + 'it — and `hit(t)` is gated on `t == "Fire"`, so a press with any '
+                    + 'other weapon selected reaches it and does nothing.');
+            }
+            const after = plannerObstacleAt(run.world, t.cx, t.cy, null, burnProbeOpts(run));
+            if (after !== null) {
+                fail(`${what}: ${t.id} reports burned and its cell (${t.cx},${t.cy}) is `
+                    + `STILL BLOCKED by ${after.kind}. \`die()\` writes \`type = ""\` AND `
+                    + '`FP.world.remove(this)`, so the 2x2 leaves the solids list '
+                    + 'entirely — which means something else shares the cell.');
+            }
+        }
+        // ⛔ THE OTHER HALF, the rule this whole verb family runs on: no
+        // tree the leg did not name may have burned. A fire press has no
+        // aim and a 32x32 rect covers a 2x2 tree with room to spare, so two
+        // adjacent trees are one press — and the ledger would carry a write
+        // the plan never predicted.
+        const namedIds = new Set(expect.live.map((t) => t.id));
+        const strays = [...burnedNow].filter((id) => !namedIds.has(id));
+        const strayStarts = run.treeBurns.filter((b) => !namedIds.has(b.id));
+        if (strays.length > 0 || strayStarts.length > 0) {
+            fail(`${what}: the press at (${at.x},${at.y}) ALSO set alight `
+                + `[${[...new Set([...strays, ...strayStarts.map((b) => b.id)])].join(', ')}], `
+                + 'which the leg does not name. Every burn is a persistence write '
+                + '(`removed()` -> `Game.setPersistence(tag, false)`), so an unnamed one '
+                + 'is a ledger entry the plan cannot account for and a room a later '
+                + 'window boots differently.');
+        }
+        if (stillSolidAt === null) {
+            fail(`${what}: the leg never took the STILL-SOLID reading — the wait ended `
+                + `before tick ${FIRE_WINDOW.endTick}. That reading is half the claim; `
+                + 'without it "the tree burned" is compatible with a model that removed '
+                + 'it on the press tick.');
         }
     } else {
         const got = [];
@@ -2221,8 +2420,45 @@ function runFire(run, perTick, fire, what) {
         // ticks is a schedule, and one whose presses all wait 0 is a
         // declaration that never did anything.
         threadedBy,
-        ...(expect.kind === 'rope' ? { id: expect.id }
-            : { moves: expect.live.map((m) => ({ ...m })) }),
+        ...(expect.kind === 'rope' ? { id: expect.id } : {}),
+        ...(expect.kind === 'blocks' ? { moves: expect.live.map((m) => ({ ...m })) } : {}),
+        ...(expect.kind === 'burns' ? {
+            burns: expect.live.map((t) => {
+                // ⛓ THE TIMESTAMPS, REPORTED SEPARATELY, because a SET has
+                // no timestamps and the whole finding here is a gap of 41
+                // ticks between the two. `t` is the press and `goneAt` is
+                // `removed()`, which is where `Game.setPersistence` lives.
+                const rec = run.treeBurns.find((b) => b.id === t.id);
+                return {
+                    id: t.id,
+                    tag: t.tag,
+                    firedAt: rec?.t ?? null,
+                    goneAt: rec?.goneAt ?? null,
+                    flag: rec ? { ...rec.flag } : null,
+                };
+            }),
+            stillSolidAt,
+        } : {}),
+    };
+}
+
+/**
+ * ⚠ ONE OPTIONS BUILDER FOR ALL THREE BURN PROBES, because the before /
+ * still-solid / after readings are only a claim if they ask the SAME
+ * question three times. Three hand-written literals is how one of them
+ * quietly acquires an extra open set and reports a passage the other two
+ * cannot see.
+ */
+function burnProbeOpts(run) {
+    return {
+        openActivators: run.openActivators,
+        openChests: run.openChests,
+        pushables: run.pushables,
+        openBridges: run.openBridges,
+        brokenRocks: run.brokenRocks,
+        pulledRopes: run.pulledRopes,
+        burnedTrees: run.burnedTrees,
+        avoidVolumes: false,
     };
 }
 
@@ -3128,6 +3364,12 @@ export function synthesizeLegs(legs, opts = {}) {
             pulledRopes: run.pulledRopes,
             // R5 slice 9: the sixth, and the one that opens a ROOM.
             openChests: run.openChests,
+            // ⛓⛓ R5 slice 14: the seventh, and the one whose two answers are
+            // FORTY-ONE TICKS apart rather than seven. `hit()` removes
+            // nothing — the 2x2 is solid for the whole animation — so a leg
+            // that planned on the press tick would walk into a wall it had
+            // just set on fire.
+            burnedTrees: run.burnedTrees,
             inventory: run.inventory,
             keys: run.keys,
             ...extra,

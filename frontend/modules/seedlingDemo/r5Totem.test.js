@@ -13,6 +13,7 @@ import {
     CLUSTER, GROUP_6, L38_CHAIN, TOTEM_ENTRANCE, TOTEM_PAIR, TOTEM_ROPE, TOTEM_SHAFT,
     TotemError, assertPresserWrites,
     L40_ARRIVAL, L40_CHAIN, L40_PREDICTIONS, L41_L42_RECON,
+    L37_BURN, L40_JOIN,
 } from './r5Totem.js';
 import { ROPE_PULL } from './r5Shaft.js';
 import { createFallRock, fallRockFreezeTicks, publishActivate } from './fallRock.js';
@@ -22,6 +23,16 @@ import { crossRoomWrites, createActivatorState, stepActivators } from './activat
 import { ROLES, buildLevelWorld } from './levelWorld.js';
 import { atlasLevelSource } from './levelSource.js';
 import { playerBoxAt, resolveTerrainState } from './playerPhysicsV2.js';
+import { HITBOX } from './playerPhysicsV1.js';
+import { fireRect } from './fireVerb.js';
+import { rectsOverlap } from './levelWorld.js';
+import { chestStanceBand } from './chest.js';
+import { plannerObstacleAt } from './botDriverV2.js';
+import {
+    HIT_TO_GONE_TICKS as BURN_HIT_TO_GONE,
+    WAIT_AFTER_PRESS_TICKS as BURN_WAIT_AFTER_PRESS,
+    assertBurnWaitCovers,
+} from './burnableTree.js';
 
 const source = atlasLevelSource();
 const HELD = { hasSword: true, canSwim: true, hasFeather: true, hasFire: true };
@@ -792,5 +803,228 @@ describe('control@224,432 — a parameter block, not a trigger', () => {
         expect(L40_FALLTHROUGH.fallFromCeiling).toBe(true);
         // `int(@sign) - 1` on an @sign of "0".
         expect(L40_FALLTHROUGH.sign).toBe(-1);
+    });
+});
+
+/**
+ * ── ⛓⛓⛓ R5 SLICE 14: THE BURN'S TWO DRIVES ──────────────────────────
+ *
+ * Both declarations are checked against the EXTRACT and against a flood
+ * recomputed here, per this file's rule: a declaration checked against
+ * itself is not a check.
+ */
+describe('⛓⛓ the burn — L37\'s door and L40\'s join', () => {
+    const TILE = 16;
+    const INV = { hasSword: true, hasFire: true, canSwim: true, hasFeather: true };
+    const w37 = () => buildLevelWorld(atlasLevelSource()(37), { roles: ROLES, inventory: INV });
+    const w40 = () => buildLevelWorld(atlasLevelSource()(40), { roles: ROLES, inventory: INV });
+
+    /**
+     * ⚠ THE PLANNER'S QUERY, NOT `collidesSolid`. The two disagree by a
+     * whole terrain policy — pits, lethal tiles, teleporter volumes — and
+     * the declaration is about what a ROUTE can walk.
+     */
+    const plannerFlood = (w, start, opts) => {
+        const P = 8;
+        const rec = w.record ?? null;
+        const nx = (rec?.width ?? w.width) * TILE / P;
+        const ny = (rec?.height ?? w.height) * TILE / P;
+        const ok = (tx, ty) => tx >= 0 && ty >= 0 && tx < nx && ty < ny
+            && plannerObstacleAt(w, tx * P + P / 2, ty * P + P / 2, null,
+                { avoidVolumes: false, ...opts }) === null;
+        const from = [Math.floor(start.x / P), Math.floor(start.y / P)];
+        const seen = new Set();
+        const key = (a, b) => b * nx + a;
+        if (!ok(from[0], from[1])) return seen;
+        seen.add(key(from[0], from[1]));
+        const q = [from];
+        while (q.length) {
+            const [x, y] = q.pop();
+            for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+                const a = x + dx;
+                const b = y + dy;
+                if (seen.has(key(a, b)) || !ok(a, b)) continue;
+                seen.add(key(a, b));
+                q.push([a, b]);
+            }
+        }
+        return seen;
+    };
+
+    /** The 8 px flood the planner works at, over `collidesSolid`. */
+    const flood = (w, rec, start, opts = {}) => {
+        const P = 8;
+        const ok = (x, y) => x > 0 && y > 0 && x < rec.width * TILE && y < rec.height * TILE
+            && !w.collidesSolid(playerBoxAt(x, y), opts);
+        const seen = new Set([`${start.x},${start.y}`]);
+        const q = [[start.x, start.y]];
+        while (q.length) {
+            const [x, y] = q.shift();
+            for (const [dx, dy] of [[P, 0], [-P, 0], [0, P], [0, -P]]) {
+                const nx = x + dx;
+                const ny = y + dy;
+                if (!ok(nx, ny)) continue;
+                const k = `${nx},${ny}`;
+                if (seen.has(k)) continue;
+                seen.add(k);
+                q.push([nx, ny]);
+            }
+        }
+        return seen;
+    };
+
+    it('⛓ L37\'s tree is where the declaration says, and its tag is IN BAND', () => {
+        const tree = w37().burnableTrees.find((t) => t.id === L37_BURN.tree.id);
+        expect(tree).toBeDefined();
+        expect(tree.tag).toBe(L37_BURN.tree.tag);
+        expect(tree.tag).toBeGreaterThanOrEqual(0);
+        // ⇒ `removed()` writes {37,1} in band. A `tag = -1` tree would go
+        // through the out-of-band family instead, which is a DIFFERENT
+        // level's slot and a different claim.
+        expect(tree.rect).toEqual({ x: 128, y: 192, w: 32, h: 32, right: 160, bottom: 224 });
+    });
+
+    /**
+     * ⛔⛔ THE FLOOD'S POLICY IS PART OF THE MEASUREMENT, and reading it as
+     * a fact about the room is what this test exists to stop.
+     *
+     * The first cut of `L37_BURN` claimed the tree was a door: 96 nodes
+     * shut, 584 burned, "a closed room with one exit". That flood ran with
+     * `plannerObstacleAt`'s default lethal-terrain policy — "the player
+     * holds nothing" — while the DRIVE plans with `run.inventory`, which
+     * on this route includes the CONCH. Under the drive's own policy the
+     * burn opens **+16**: the tree's own 2x2 at an 8 px lattice, and
+     * nothing else. The 96-node room is bounded by 26 nodes of water and a
+     * teleporter.
+     *
+     * ⇒ both arms are asserted, each named for its policy, so neither can
+     * be quoted as the other.
+     */
+    it('⛔⛔ the burn opens its OWN 2x2 — the "door" was the flood\'s policy', () => {
+        const w = w37();
+        const B = { burnedTrees: new Set([L37_BURN.tree.id]) };
+        const shutHeld = plannerFlood(w, L37_BURN.stance, { inventory: INV });
+        const openHeld = plannerFlood(w, L37_BURN.stance, { inventory: INV, ...B });
+        expect(shutHeld.size).toBe(L37_BURN.flood.held.shut);
+        expect(openHeld.size).toBe(L37_BURN.flood.held.burned);
+        expect(openHeld.size - shutHeld.size).toBe(L37_BURN.flood.held.delta);
+        // …and the conservative arm, kept because it was once read as a
+        // finding. A number that misled should stay visible beside the
+        // reading that replaced it.
+        expect(plannerFlood(w, L37_BURN.stance, {}).size).toBe(L37_BURN.flood.nothing.shut);
+        expect(plannerFlood(w, L37_BURN.stance, B).size).toBe(L37_BURN.flood.nothing.burned);
+    });
+
+    it('⛓⛓ the claim that survives every policy: the tree\'s own cells', () => {
+        const tree = w37().burnableTrees.find((t) => t.id === L37_BURN.tree.id);
+        // The footprint IS the rect, in tiles — derived, not typed.
+        const derived = [];
+        for (let ty = tree.rect.y / TILE; ty < tree.rect.bottom / TILE; ty += 1) {
+            for (let tx = tree.rect.x / TILE; tx < tree.rect.right / TILE; tx += 1) {
+                derived.push(`${tx},${ty}`);
+            }
+        }
+        expect(L37_BURN.footprint.map((f) => `${f.tx},${f.ty}`).sort())
+            .toEqual(derived.sort());
+        // …and the two the route actually crosses are a subset of them.
+        for (const c of L37_BURN.crossed) {
+            expect(derived).toContain(c);
+        }
+    });
+
+    it('⛓ the press stance is inside the fire rect AND outside the tree', () => {
+        const tree = w37().burnableTrees.find((t) => t.id === L37_BURN.tree.id);
+        const r = fireRect(L37_BURN.stance.x, L37_BURN.stance.y);
+        expect(rectsOverlap(r, tree.rect)).toBe(true);
+        // …and the player's own box does NOT, because the tree is Solid
+        // until 41 ticks after the press.
+        expect(rectsOverlap(playerBoxAt(L37_BURN.stance.x, L37_BURN.stance.y), tree.rect))
+            .toBe(false);
+    });
+
+    it('⛔ the boot is the TILE CORNER and the spawn is the tile centre', () => {
+        // `Player.as:357` adds (+8,+8) to a `new Game(level, x, y)` boot —
+        // the same relationship `L40_ARRIVAL` records. Booting at the tile
+        // CENTRE puts the player half a tile into its neighbour, which in
+        // this room is a wall, and the failure reads as "the A* start is
+        // not walkable" rather than as a boot problem.
+        expect(L37_BURN.boot.at).toEqual({
+            x: L37_BURN.boot.tile.tx * TILE, y: L37_BURN.boot.tile.ty * TILE,
+        });
+        expect(L37_BURN.boot.at.x + 8).toBe(L37_BURN.boot.tile.tx * TILE + TILE / 2);
+    });
+
+    it('⛓ the leg\'s wait IS the module\'s obligation, not a copy of it', () => {
+        expect(L37_BURN.wait).toBe(BURN_WAIT_AFTER_PRESS);
+        expect(L40_JOIN.wait).toBe(BURN_WAIT_AFTER_PRESS);
+        expect(assertBurnWaitCovers(L37_BURN.wait, 'L37')).toBe(true);
+        // ⛔ `breakableRocks` exports a constant of the SAME NAME for a
+        // 7-tick shatter. A hand-copied number here is how the two drift,
+        // and a burn leg waiting the rock's window walks into a tree.
+        expect(BURN_WAIT_AFTER_PRESS).toBeGreaterThan(BURN_HIT_TO_GONE);
+    });
+
+    it('⛔⛔ L40\'s join: the burn stance is INSIDE the chest\'s own cell', () => {
+        const w = w40();
+        const chest = w.chests.find((c) => c.id === L40_JOIN.chest.id);
+        expect(chest.persistTag).toBe(L40_JOIN.chest.persistTag);
+        const box = playerBoxAt(L40_JOIN.burnStance.x, L40_JOIN.burnStance.y);
+        const chestRect = w.solids.find((s) => s.chestId === L40_JOIN.chest.id).rect;
+        expect(rectsOverlap(box, chestRect)).toBe(true);
+        // ⇒ THE ORDER IS FORCED BY THE ROUTE. §24.5 read the one pixel of
+        // shared edge and concluded the two links commute; they commute as
+        // FLAGS and not as a walk, because the only stance that reaches the
+        // tree is the cell the chest is standing in.
+        const tree = w.burnableTrees.find((t) => t.id === L40_JOIN.tree.id);
+        expect(rectsOverlap(fireRect(L40_JOIN.burnStance.x, L40_JOIN.burnStance.y), tree.rect))
+            .toBe(true);
+    });
+
+    it('⛓ the chest\'s stance band is TWO ROWS, and a bobsoldier stands in them', () => {
+        const band = chestStanceBand(L40_JOIN.chest.x, L40_JOIN.chest.y, HITBOX);
+        expect(band.length).toBe(2);
+        expect(band).toContain(L40_JOIN.chestStance.y);
+        const w = w40();
+        const soldier = w.combat.enemies.find((e) => e.as3 === 'BobSoldier');
+        expect(soldier.x).toBe(880);
+        // ⛓ It is `type = "Enemy"` and so NOT Solid to the player, and its
+        // own `update()` returns on `Game.freezeObjects` — so it neither
+        // blocks the stance nor moves through the 331-frame ceremony.
+        expect(w.solids.some((s) => s.tag === 'bobsoldier')).toBe(false);
+    });
+
+    it('⛔⛔ the kill-ledger rule: only the SPINNER family writes on removal', () => {
+        const w = w40();
+        const spinners = w.combat.enemies.filter((e) => e.as3 === 'Spinner');
+        // Five in the level; the two in the join's chamber are tags 15/16.
+        expect(spinners.length).toBe(5);
+        const chamber = spinners.filter((e) => e.x >= 800 && e.y >= 800)
+            .map((e) => Number(e.attrs.tag)).sort((a, b) => a - b);
+        expect(chamber).toEqual(L40_JOIN.spinners.map((s) => s.tag).sort((a, b) => a - b));
+        for (const s of spinners) expect(s.row.sideWrite).toBe('own tag');
+        // ⛓ …and the bob family's `removed()` is EMPTY, so clearing a press
+        // room of bobs costs the ledger nothing. Asserted through the
+        // census's own side-write field so the two answers come from one
+        // place.
+        for (const e of w.combat.enemies.filter((x) => x.as3 === 'Bob' || x.as3 === 'BobSoldier')) {
+            expect(e.row.sideWrite ?? 'none').not.toBe('own tag');
+        }
+    });
+
+    it('⛓ the join\'s ledger is the chest\'s tag and the tree\'s, and nothing else', () => {
+        const w = w40();
+        const chest = w.chests.find((c) => c.id === L40_JOIN.chest.id);
+        const tree = w.burnableTrees.find((t) => t.id === L40_JOIN.tree.id);
+        expect([...L40_JOIN.earned].sort())
+            .toEqual([`40:${chest.persistTag}`, `40:${tree.tag}`].sort());
+    });
+
+    it('⚠ the proof tile is NOT the buttonroom\'s own cell', () => {
+        // Stepping on `buttonroom@880,768` is LINK 3 and would put {40,12}
+        // in the join tape's ledger, turning a two-write claim into a
+        // three-write one. Links are driven one tape at a time, and this is
+        // the assertion that keeps the proof honest about which.
+        expect([Math.floor(L40_JOIN.proof.x / TILE), Math.floor(L40_JOIN.proof.y / TILE)])
+            .not.toEqual([Math.floor(880 / TILE), Math.floor(768 / TILE)]);
     });
 });
