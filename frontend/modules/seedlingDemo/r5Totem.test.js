@@ -1851,3 +1851,48 @@ describe('⛓⛓⛓ L42: two baits from the arrival, and the second is chain 2',
         expect(chain2.every((s) => s.id === C2.crusher)).toBe(true);
     });
 });
+
+/**
+ * ⛔⛔ AND CHAIN 3 IS NOT FOUND. Banked as a measurement with its death in
+ * it, because "the search returned nothing" and "the room refuses it" print
+ * the same thing otherwise.
+ */
+describe('⛔⛔ L42: chain 3 is not found, and the beam was run over', () => {
+    it('⛔ names the depth, the count and the reason it died', () => {
+        const C3 = L42_SOLVE.chain3;
+        expect(C3.found).toBe(false);
+        expect(L42_SOLVE.driven).toBe(false);
+        // ⛔ RUN OVER, not exhausted and not deduped — a different failure
+        // from the 1-tick arm's, and the counts are what say so.
+        expect(C3.diedWith.runOver).toBeGreaterThan(0);
+        expect(C3.diedWith.alreadySeen).toBe(0);
+        expect(C3.diedWith.kept).toBe(0);
+        // ⛓ Two of its three charges DID drive, so the break is located.
+        expect(C3.reachedParks).toHaveLength(2);
+        const chain3 = L42_SOLVE.ordering.filter((s) => s.chain === 3);
+        expect(chain3.map((s) => s.dir)).toEqual([...C3.charges]);
+        expect(chain3[chain3.length - 1].park).toEqual({ ...C3.park });
+        expect(chain3.slice(0, 2).map((s) => ({ ...s.park })))
+            .toEqual(C3.reachedParks.map((p) => ({ ...p })));
+    });
+
+    /**
+     * ⛓ The nook is the only escape from the third charge, and that is the
+     * solver's own claim re-checked from the other side: the pre-position
+     * the beam DID find is the northernmost cell still inside A's north
+     * lane, which is what the inclusive lane test buys.
+     */
+    it('⛓ the pre-position is the lane\'s own northern edge', () => {
+        const box = playerBoxAt(72, L42_SOLVE.chain3.prePositionY);
+        // A parked at (80,224): north lane [64,96] x [144,240].
+        const lanes = Object.fromEntries(
+            detectionRects({ x: 80, y: 224 }).map((r) => [r.dir, r]),
+        );
+        expect(box.bottom).toBe(lanes.N.y);
+        expect(laneHitsPlayer(box, lanes.N)).toBe(true);
+        // One pixel higher and the crusher never sees it.
+        expect(laneHitsPlayer(playerBoxAt(72, L42_SOLVE.chain3.prePositionY - 1), lanes.N))
+            .toBe(false);
+    });
+});
+

@@ -2254,6 +2254,56 @@ export const L42_SOLVE = Object.freeze({
         pairTicks: 852,
         idleTicks: 200,
     }),
+    /**
+     * ⛔⛔⛔ R5 SLICE 18 — CHAIN 3 IS NOT FOUND, AND IT IS §31.6's FAILURE
+     * MODE ONE ROOM UP.
+     *
+     * A's return chain — W -> (80,224), N -> (80,96), E -> (208,96) — gets
+     * its first two charges perfectly: the beam finds the derived
+     * pre-position on its own, running A west along row 14 while the player
+     * climbs the west corridor to `y = 141`, which is the northernmost cell
+     * still inside A's north lane (`box.bottom >= 144`, inclusive), and
+     * that is what buys the 64 ticks the northward outrun needs. The player
+     * clears into the top room east of `x = 96` with A still 90 px below
+     * it.
+     *
+     * ⛔ And then the THIRD charge runs it down. A charges east along the
+     * top room; the room is two tiles tall and a `Crusher` is 32 px, so
+     * there is no lateral escape and no outrunning it into B's parked body
+     * at `x = 224`. The ONLY escape is the nook at tile (6,4) — and the
+     * beam, scored on the crusher's arc length with the nook as a distance
+     * HINT, ran the player east ahead of the charge instead of ducking into
+     * it. Beam died at depth 43 with **90 of 90 successors RUN OVER**.
+     *
+     * ⇒ **A DISTANCE HINT IS NOT A CONSTRAINT.** §31.9 item 1 already said
+     * this about the room's other end — *"the ordering needs re-searching
+     * with the swept volume of the THIRD charge as an end-cell filter on
+     * the FIRST"* — and this is the same thing one level up: when the
+     * escape is a single tile and everything else is fatal, the search has
+     * to be FORBIDDEN the alternatives, not merely scored away from them.
+     * The confinement that made chain 1's escape findable is exactly that,
+     * and chain 3 was run without one.
+     */
+    chain3: Object.freeze({
+        crusher: 'crusher@96,144',
+        charges: Object.freeze(['W', 'N', 'E']),
+        park: Object.freeze({ x: 208, y: 96 }),
+        found: false,
+        /** ⛓ The first two charges DO drive — the beam found this unaided. */
+        reachedParks: Object.freeze([Object.freeze({ x: 80, y: 224 }), Object.freeze({ x: 80, y: 96 })]),
+        /** ⛓ The northernmost cell still inside A's north lane: `box.bottom == 144`. */
+        prePositionY: 141,
+        diedAtDepth: 43,
+        diedWith: Object.freeze({ runOver: 90, alreadySeen: 0, kept: 0 }),
+        why: 'the top room is two tiles tall and a Crusher is 32 px, so an eastward '
+            + 'charge there has no lateral escape and B\'s parked body at x = 224 closes '
+            + 'the far end. The nook at tile (6,4) is the only escape and it was a '
+            + 'distance HINT rather than a constraint — so the beam outran the body '
+            + 'instead of ducking, exactly as §31.6\'s did in the corridor below.',
+        next: 'confine the third charge to the nook column the way chain 1\'s escape was '
+            + 'confined to col 6, and re-run. A hint is a preference; the escape is a '
+            + 'single tile.',
+    }),
     /** ⛔ The permissive reading's first escape, DRIVEN, and it is run over. */
     permissiveRefuted: Object.freeze({
         ordering: 'A W/N/E then B W/N/E — six charges, three cheaper than the answer',
