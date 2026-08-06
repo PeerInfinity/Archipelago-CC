@@ -1664,11 +1664,10 @@ function runSpear(run, perTick, spear, what) {
                 + 'the stance is pinned against something in the facing direction, so '
                 + 'the press would fire its rect at a wall.');
         }
-        const o = plannerObstacleAt(run.world, run.state.x, run.state.y, null, {
-            noclip: false, noHazards: run.noHazards, avoidVolumes: false,
-            openBridges: run.openBridges, pushables: run.pushables,
-            openActivators: run.openActivators, inventory: run.inventory,
-        });
+        const o = plannerObstacleAt(run.world, run.state.x, run.state.y, null,
+            liveGeometryOpts(run, {
+                noclip: false, noHazards: run.noHazards, inventory: run.inventory,
+            }));
         if (o) {
             fail(`${what}: the face nudge moved the player from (${before.x},${before.y})`
                 + ` to (${run.state.x},${run.state.y}), which is ${describe(o)}. The tap `
@@ -2443,13 +2442,31 @@ function runFire(run, perTick, fire, what) {
 }
 
 /**
- * ⚠ ONE OPTIONS BUILDER FOR ALL THREE BURN PROBES, because the before /
- * still-solid / after readings are only a claim if they ask the SAME
- * question three times. Three hand-written literals is how one of them
- * quietly acquires an extra open set and reports a passage the other two
- * cannot see.
+ * ── ⛔⛔ ONE OPTIONS BUILDER FOR EVERY MID-LEG GEOMETRY PROBE ─────────
+ *
+ * A verb that asks "is this cell blocked" DURING a leg has to ask it of the
+ * world the run is actually in — every per-visit family, live. Three call
+ * sites had hand-written literals and each was missing a different subset:
+ *
+ * ```
+ *   runFire's burn probes    (new)      needed `burnedTrees`
+ *   runChest's join probes              no `burnedTrees`
+ *   runSpear's face nudge               no `brokenRocks`, no `pulledRopes`,
+ *                                       no `openChests`, no `burnedTrees`
+ * ```
+ *
+ * ⛔ AND THE LAST ONE COST A LEG. L40's second rock swing stands in the
+ * cell the FIRST swing emptied, and the nudge probe reported *"solid
+ * breakablerock at (176,144)"* — a wall the run had watched shatter. The
+ * before / still-solid / after readings of a two-sided claim are only a
+ * claim if they ask the SAME question, and so is a nudge against a stance.
+ *
+ * ⚠ The probe-specific bits (`noHazards`, `inventory`) stay per call: a
+ * face nudge is a POSITION the player will occupy and must respect the
+ * terrain policy, where a join probe is a question about a cell's solidity
+ * and must not.
  */
-function burnProbeOpts(run) {
+function liveGeometryOpts(run, extra = {}) {
     return {
         openActivators: run.openActivators,
         openChests: run.openChests,
@@ -2459,8 +2476,10 @@ function burnProbeOpts(run) {
         pulledRopes: run.pulledRopes,
         burnedTrees: run.burnedTrees,
         avoidVolumes: false,
+        ...extra,
     };
 }
+const burnProbeOpts = (run) => liveGeometryOpts(run);
 
 /** Shape-check a `chest` before anything is planned or driven with it. */
 export function assertChest(chest, what) {
@@ -2535,15 +2554,8 @@ function runChest(run, perTick, chest, maxTicks, what, before = null) {
             + 'DESPAWNED by `check()` rather than open, so this means an earlier leg '
             + 'of this visit already opened it.');
     }
-    const joinBefore = plannerObstacleAt(run.world, target.x + 8, target.y + 8, null, {
-        openActivators: run.openActivators,
-        openChests: chestsBefore,
-        pushables: run.pushables,
-        openBridges: run.openBridges,
-        brokenRocks: run.brokenRocks,
-        pulledRopes: run.pulledRopes,
-        avoidVolumes: false,
-    });
+    const joinBefore = plannerObstacleAt(run.world, target.x + 8, target.y + 8, null,
+        liveGeometryOpts(run, { openChests: chestsBefore }));
     if (joinBefore === null) {
         fail(`${what}: the cell under ${target.id} is ALREADY CLEAR before the leg, so `
             + '"the chest opened the passage" is a claim about a cell that was never '
@@ -2627,15 +2639,8 @@ function runChest(run, perTick, chest, maxTicks, what, before = null) {
             + `tag ${target.persistTag} — the two halves disagree about which flag `
             + '`open()` cleared.');
     }
-    const joinAfter = plannerObstacleAt(run.world, target.x + 8, target.y + 8, null, {
-        openActivators: run.openActivators,
-        openChests: run.openChests,
-        pushables: run.pushables,
-        openBridges: run.openBridges,
-        brokenRocks: run.brokenRocks,
-        pulledRopes: run.pulledRopes,
-        avoidVolumes: false,
-    });
+    const joinAfter = plannerObstacleAt(run.world, target.x + 8, target.y + 8, null,
+        liveGeometryOpts(run));
     if (joinAfter !== null) {
         fail(`${what}: ${target.id} reports open and its cell is STILL BLOCKED by `
             + `${joinAfter.kind}. \`type = ""\` is the passage, so this means something `

@@ -13,7 +13,7 @@ import {
     CLUSTER, GROUP_6, L38_CHAIN, TOTEM_ENTRANCE, TOTEM_PAIR, TOTEM_ROPE, TOTEM_SHAFT,
     TotemError, assertPresserWrites,
     L40_ARRIVAL, L40_CHAIN, L40_PREDICTIONS, L41_L42_RECON,
-    L37_BURN, L40_JOIN,
+    L37_BURN, L40_JOIN, L40_NW, L41_SHIELD,
 } from './r5Totem.js';
 import { ROPE_PULL } from './r5Shaft.js';
 import { createFallRock, fallRockFreezeTicks, publishActivate } from './fallRock.js';
@@ -28,6 +28,7 @@ import { fireRect } from './fireVerb.js';
 import { rectsOverlap } from './levelWorld.js';
 import { chestStanceBand } from './chest.js';
 import { plannerObstacleAt } from './botDriverV2.js';
+import { scanCrusher } from './crusher.js';
 import {
     HIT_TO_GONE_TICKS as BURN_HIT_TO_GONE,
     WAIT_AFTER_PRESS_TICKS as BURN_WAIT_AFTER_PRESS,
@@ -1026,5 +1027,86 @@ describe('⛓⛓ the burn — L37\'s door and L40\'s join', () => {
         // the assertion that keeps the proof honest about which.
         expect([Math.floor(L40_JOIN.proof.x / TILE), Math.floor(L40_JOIN.proof.y / TILE)])
             .not.toEqual([Math.floor(880 / TILE), Math.floor(768 / TILE)]);
+    });
+});
+
+/**
+ * ── ⛓⛓ R5 SLICE 14: L41's SHIELD, AGAINST THE LEVEL ─────────────────
+ *
+ * §25.6 named this gap itself: the shield claim was asserted on a
+ * CONSTRUCTED solid. Here it is asked of L41's own `world.solids`.
+ *
+ * ⚠⚠ AND THE SHAPES ARE THE TEST'S REAL RISK. `collideLineSolid` reads
+ * `s.x/s.y/s.right/s.bottom`; a `world.solids` entry carries its box on
+ * `.rect`. `scanCrusher`'s lane test needs a player BOX, not an `{x, y}`.
+ * Both wrong shapes return a clean "dir null, shieldedBy null, matched []"
+ * — a plausible "it cannot see you" that a route would have been built on.
+ * So the test asserts the UNSHIELDED direction too: a probe that silently
+ * saw nothing would fail that arm.
+ */
+describe('⛓⛓ L41\'s crusher — the rocks really do shield it', () => {
+    const INV = { hasSword: true, hasFire: true, canSwim: true, hasFeather: true };
+    const w41 = () => buildLevelWorld(atlasLevelSource()(41), { roles: ROLES, inventory: INV });
+    const boxesExcept = (w, self, dropRocks) => w.solids
+        .filter((s) => s !== self && !(dropRocks && s.rockId))
+        .map((s) => ({ ...s.rect, rockId: s.rockId, tag: s.tag }));
+    const playerAt = (x, y) => ({ ...playerBoxAt(x, y), x, y });
+
+    it('⛓⛓ shielded with the rocks standing, and charging WEST without them', () => {
+        const w = w41();
+        const self = w.solids.find((s) => s.tag === 'crusher');
+        expect(self.rect).toEqual({
+            x: 240, y: 64, w: 32, h: 32, right: 272, bottom: 96,
+        });
+        const c = { x: self.rect.x + 16, y: self.rect.y + 16 };
+        const p = playerAt(L41_SHIELD.baitFrom.x, L41_SHIELD.baitFrom.y);
+        const withRocks = scanCrusher(c, p, boxesExcept(w, self, false));
+        expect(withRocks.dir).toBe(null);
+        expect(withRocks.shieldedBy?.rockId).toBe(L41_SHIELD.shieldedBy);
+        // ⛓ THE OTHER ARM, and it is what makes the first one a finding
+        // rather than a wrong shape: with the rocks gone it charges.
+        const without = scanCrusher(c, p, boxesExcept(w, self, true));
+        expect(without.shieldedBy).toBe(null);
+        expect(without.dir).toBe(L41_SHIELD.unshieldedDir);
+        expect(L41_SHIELD.rocks.every((id) => w.solids.some((s) => s.rockId === id))).toBe(true);
+    });
+
+    it('⛔ …and the SOUTH lane is shielded by the room, rocks or no rocks', () => {
+        const w = w41();
+        const self = w.solids.find((s) => s.tag === 'crusher');
+        const c = { x: self.rect.x + 16, y: self.rect.y + 16 };
+        for (const y of [120, 140]) {
+            const p = playerAt(256, y);
+            for (const drop of [false, true]) {
+                const scan = scanCrusher(c, p, boxesExcept(w, self, drop));
+                expect(scan.dir).toBe(null);
+                expect(scan.shieldedBy?.tag).toBe(L41_SHIELD.southBlocked);
+            }
+        }
+        // ⇒ the bait can only come from the west, which is a route
+        // constraint slice 15's verb has to start from.
+        expect(L41_SHIELD.driven).toBe(false);
+    });
+});
+
+describe('⛓ L40\'s NW cluster — three rocks, TWO swings', () => {
+    it('⛔⛔ the swings name their COLLATERAL, and the union is all three rocks', () => {
+        const broken = [...new Set(L40_NW.swings.flatMap((sw) => sw.breaks))].sort();
+        expect(broken).toEqual(L40_NW.rocks.map((r) => r.id).sort());
+        expect(L40_NW.swings.length).toBe(2);
+        // ⛔ The two rocks one slash takes down are VERTICALLY ADJACENT —
+        // which is why one swing reaches both, and why a plan that named
+        // one swing per rock refused itself on target 2.
+        const pair = L40_NW.swings[0].breaks
+            .map((id) => L40_NW.rocks.find((r) => r.id === id));
+        expect(pair[0].x).toBe(pair[1].x);
+        expect(Math.abs(pair[0].y - pair[1].y)).toBe(16);
+    });
+
+    it('⛔ the buttonrooms need 101 continuous ticks, not a cover\'s 11', () => {
+        // `L38_CHAIN`'s buttonrooms open COVERS; both of these open `Lock`s.
+        // A 4-tick hold reports "held, and the wall is still solid" — which
+        // is what the first cut of the leg did.
+        expect(L40_NW.holdTicks).toBeGreaterThan(101);
     });
 });

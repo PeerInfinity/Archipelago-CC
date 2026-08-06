@@ -817,6 +817,120 @@ export const L40_JOIN = Object.freeze({
     ]),
 });
 
+/**
+ * ── ⛓⛓⛓ R5 SLICE 14: L40's NW CLUSTER — LINK 11, AND THE THIRD CEREMONY
+ *
+ * §24.5 numbered this link 11 because that is where the ARRIVAL's ordering
+ * puts it: behind the bosslock. Its own dependencies are internal and need
+ * no key, so it is drivable from a boot into the cluster — which proves the
+ * four links and the ceremony and NOT the route to them. Both halves of
+ * that are said out loud because a tape that boots somewhere is very easy
+ * to read as a tape that walked there.
+ *
+ * ── ⛔⛔ AND THE FREEZE GATES ARE NOT UNIFORM ACROSS THE ENEMY FAMILIES
+ *
+ * The brief asked for the `Spinner`/`Puncher`/`BombPusher` gates to be
+ * checked before any class was trusted to hold still through a ceremony.
+ * Source-verified, and they are a THREE-WAY SPLIT:
+ *
+ * ```
+ *   Bob.update          `if (destroy || anim == "die" || Game.freezeObjects) return`
+ *   BobSoldier.update   `if (Game.freezeObjects) return`
+ *   Spinner             no own guard; `Mobile.mobileUpdate` PARKS the motion
+ *   Puncher.update      ⛔ NO FREEZE TEST. Only `Mobile`'s gate stops it
+ *                       MOVING; its chase arm keeps re-aiming `v` and its
+ *                       attack state machine keeps running
+ *   BombPusher.update   ⛔⛔ NO FREEZE TEST AT ALL, and `super.update()` is
+ *                       the LAST line. `shotTime` keeps counting, the
+ *                       Spritemap keeps animating (graphic updates are not
+ *                       gated), and `endAnim` can `FP.world.add(new Bomb(x,
+ *                       y, new Point(p.x, p.y)))` — aimed at a player who
+ *                       cannot move. It is inert HERE only because
+ *                       `Player.hit` is freeze-gated and `Bot.noDamage` is
+ *                       on; a ceremony that ends while a bomb is in flight
+ *                       is a different question.
+ * ```
+ *
+ * ⇒ **"enemies stop during a ceremony" is true of the bob family and false
+ * as a general rule.** §27.6's "a frozen player is invulnerable" still
+ * holds — every damage path but `LavaTrap.attached.die()` goes through the
+ * freeze-gated `Player.hit`, and no LavaTrap is in L40 — but "nothing
+ * happens" does not.
+ */
+export const L40_NW = Object.freeze({
+    level: 40,
+    lattice: 8,
+    /** `Bot.as:811` re-boots into the cluster; the spawn is boot + (8,8). */
+    boot: Object.freeze({ x: 272, y: 224 }),
+    spawn: Object.freeze({ x: 280, y: 232 }),
+    /** `{t 0, tag 7}` and `{t 1, tag 1}`, both `room = -1` SELF-LATCHES. */
+    buttonroom0: Object.freeze({ x: 272, y: 208 }),
+    buttonroom1: Object.freeze({ x: 160, y: 128 }),
+    /**
+     * ⛔ 101 CONTINUOUS TICKS, NOT FOUR. `L38_CHAIN`'s buttonrooms open
+     * COVERS, which fade in 11; both of these open `Lock`s, which need
+     * **101** (`activators.opensOnKeyTick`). The self-latch means the group
+     * stays published after the player steps off — that is what makes the
+     * REST of the leg possible — but it does not make the fade shorter, and
+     * a 4-tick hold reports "held, and the wall is still solid".
+     */
+    holdTicks: 105,
+    group0: Object.freeze(['wandlock@208,128', 'wandlock@208,144', 'wandlock@208,160']),
+    group1: Object.freeze(['wandlock@176,80', 'wandlock@176,208']),
+    /**
+     * ⛔⛔ THREE ROCKS, **TWO SWINGS** — and the second one is collateral
+     * the first plan did not name.
+     *
+     * The obvious leg is one swing per rock, west-facing, from the column
+     * east of each. Driven, it fails on target 2: *"breakablerock@176,144
+     * is ALREADY GONE before the press"*. `breakablerock@176,128` and
+     * `breakablerock@176,144` are VERTICALLY ADJACENT, and a sword slash is
+     * an AREA — `genericHit` runs on everything the slash rect overlaps —
+     * so one swing at (200,136) takes both down.
+     *
+     * ⇒ [[feedback_aimed_model_hides_collateral]], on a third mechanic: the
+     * plan names the swing and its WHOLE effect, not the rock it was aimed
+     * at. The tape's ledger claim (all three tags) is what proves nothing
+     * was missed, and `runSpear`'s already-gone refusal is what caught it.
+     */
+    swings: Object.freeze([
+        Object.freeze({
+            aim: 'breakablerock@176,128',
+            x: 176, y: 128,
+            stance: Object.freeze({ x: 200, y: 136 }), facing: 'W',
+            breaks: Object.freeze(['breakablerock@176,128', 'breakablerock@176,144']),
+            why: '⛔ TWO ROCKS, ONE SLASH — the two are vertically adjacent and the '
+                + 'slash rect covers both. Naming only the aimed one is what made the '
+                + 'first cut of this leg refuse itself.',
+        }),
+        Object.freeze({
+            aim: 'breakablerock@160,144',
+            x: 160, y: 144,
+            stance: Object.freeze({ x: 184, y: 152 }), facing: 'W',
+            breaks: Object.freeze(['breakablerock@160,144']),
+            why: 'the westmost, and it is behind the two the first swing removed — its '
+                + 'stance is the cell `breakablerock@176,144` was standing in.',
+        }),
+    ]),
+    rocks: Object.freeze([
+        Object.freeze({ id: 'breakablerock@176,128', tag: 22, x: 176, y: 128 }),
+        Object.freeze({ id: 'breakablerock@176,144', tag: 24, x: 176, y: 144 }),
+        Object.freeze({ id: 'breakablerock@160,144', tag: 23, x: 160, y: 144 }),
+    ]),
+    part: Object.freeze({ x: 64, y: 144 }),
+    /** A neighbour: a planner may not route ONTO a pickup. */
+    collectStance: Object.freeze({ tx: 5, ty: 9 }),
+    /** shut / +t0 / +rocks / +t1, from the boot, at the drive's own policy. */
+    flood: Object.freeze([728, 760, 776, 968]),
+    /** Three rock tags and two buttonroom tags. */
+    earned: Object.freeze(['40:22', '40:23', '40:24', '40:7', '40:1']),
+    spinners: Object.freeze([
+        Object.freeze({ id: 'spinner@192,128', tag: 19 }),
+        Object.freeze({ id: 'spinner@192,144', tag: 18 }),
+        Object.freeze({ id: 'spinner@192,160', tag: 17 }),
+    ]),
+});
+
 export const L40_ARRIVAL = Object.freeze({
     level: 40,
     /** `teleporter@144,0` in L39 says `playerx 480, playery 896`; +8,+8 is `Player.as:357`. */
@@ -1151,6 +1265,64 @@ export const L41_L42_RECON = Object.freeze({
      * that genuinely does nothing are the same output.
      */
     standInMustBe: 'the level record, not `world.solids`',
+});
+
+/**
+ * ── ⛓⛓ R5 SLICE 14: L41's SHIELD, ASSERTED AGAINST THE LEVEL ─────────
+ *
+ * §25.6 named the gap in its own words: *"L41's 'breaking the rocks
+ * unleashes it' is asserted on the SIGHT MODEL, not on the level — the
+ * shield test uses a CONSTRUCTED solid, and the L41 census check only
+ * confirms the rocks exist."* Closed here, with L41's own solids:
+ *
+ * ```
+ *   player (200,80), rocks standing   dir null, shielded by breakablerock@224,80
+ *   the same player, rocks gone       dir W
+ *   player (256,120) or (256,140)     shielded by `tile:Blue Wall`, BOTH ways
+ * ```
+ *
+ * ⇒ **the ORDER §24.6 predicted is real**, and one more thing it did not:
+ * the SOUTH lane is shielded by the room's own wall whatever the rocks do,
+ * so the bait has to come from the WEST. A verb that assumed any lane would
+ * serve would have been baiting a crusher that cannot see it.
+ *
+ * ⚠⚠ AND THE MEASUREMENT WAS WRONG TWICE BEFORE IT WAS RIGHT, both times
+ * the same way: `collideLineSolid` reads `s.x/s.y/s.right/s.bottom` and a
+ * `world.solids` entry carries its box on `.rect`, while `scanCrusher`'s
+ * lane test needs a player BOX and not an `{x, y}`. Both wrong shapes
+ * returned *"dir null, shieldedBy null, matched []"* — a clean, plausible
+ * "the crusher does not see you", which is the answer a route would have
+ * been built on. [[feedback_rect_literal_never_overlaps]], twice in one
+ * probe.
+ */
+export const L41_SHIELD = Object.freeze({
+    level: 41,
+    crusher: Object.freeze({ id: 'crusher@240,64', rect: Object.freeze({ x: 240, y: 64, right: 272, bottom: 96 }) }),
+    /** The two `breakablerock`s that stand between it and the west lane. */
+    rocks: Object.freeze(['breakablerock@224,64', 'breakablerock@224,80']),
+    /** A player in the west lane, 40 px out. */
+    baitFrom: Object.freeze({ x: 200, y: 80 }),
+    shieldedBy: 'breakablerock@224,80',
+    unshieldedDir: 'W',
+    /**
+     * ⛔ AND THE SOUTH LANE IS SHIELDED BY THE ROOM. Both probe points
+     * report `tile:Blue Wall` with the rocks standing AND gone — so the
+     * crusher can only ever be baited westward, and `totempart 3` is on the
+     * other side of that.
+     */
+    southBlocked: 'tile:Blue Wall',
+    /**
+     * ⛔⛔ NOT DRIVEN. `crusher.js` models the scan, the charge and the
+     * park, and `levelRun` steps NO crusher: the class needs a per-visit
+     * state family, a step at the top of the tick, and its moving box in
+     * `collidesSolid` / `plannerBlockerAt` / `stepV2` — the `burnedTrees`
+     * plumbing chain again, for a solid that MOVES. Until then
+     * `hazards.hazardVolume` keeps returning `hard-avoid` and
+     * `totempart 3` / `totempart 4` are unreachable: flooded from each
+     * room's boot with every activator open and every rock broken, NEITHER
+     * part is in the component (L41 356 nodes, L42 304).
+     */
+    driven: false,
 });
 
 /**

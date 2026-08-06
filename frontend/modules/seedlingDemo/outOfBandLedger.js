@@ -154,16 +154,24 @@ export const OUT_OF_BAND_WRITERS = Object.freeze({
         writeSite: 'removed()',
         writesWhen: 'always',
         minusOneFrom: 'the CONSTRUCTOR default — `BurnableTree(_x, _y, _tag:int = -1)`. '
-            + '⚠ BOTH trees in the committed extract carry `tag="0"` (L32\'s arena exit '
-            + 'and L40\'s chest gate), so this route\'s burns are IN-BAND; the entry is '
-            + 'here because the sentinel is reachable and a class this helper does not '
-            + 'know throws',
+            + '⛔ AND "BOTH TREES" WAS TWO OF THREE. Slice 12 wrote that the extract '
+            + 'holds two, `tag="0"` each (L32\'s arena exit and L40\'s chest gate); R5 '
+            + 'slice 14 drove a THIRD, `burnabletree@128,192` in L37, which carries '
+            + '`tag="1"`. All three are in band, so this route\'s burns are too; the '
+            + 'entry is here because the sentinel is reachable and a class this helper '
+            + 'does not know throws',
         skipsItsOwnGuard: '`check()`\'s `tag >= 0 && !checkPersistence(tag)` decides '
             + 'whether the tree is BUILT; `removed()` has no tag guard at all, so a -1 '
             + 'tree still writes — into the previous level\'s last slot. ⛔ And the write '
             + 'is at ANIM END, forty-one ticks after the press, which is the opposite of '
             + '`FallRock.fall()`',
-        witness: 'none yet — the burn is modelled and undriven (R5 slice 12)',
+        witness: 'none yet — and R5 slice 14 DROVE the burn twice without earning one. '
+            + '`r5-l37-burn` writes {37,1} and `r5-l40-join` writes {40,0}, both IN '
+            + 'BAND, because every burnable tree in the committed extract carries a '
+            + 'tag >= 0. ⚠ That is a stronger statement than the old "undriven": the '
+            + 'family is exercised end to end and the -1 ARM specifically is not, so a '
+            + 'green suite says nothing about it. Only a level whose tree omits the '
+            + 'attribute can be the witness, and none exists',
     }),
     RopeStart: Object.freeze({
         as3: 'Puzzlements/RopeStart.as:41-49',
