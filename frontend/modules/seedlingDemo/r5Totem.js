@@ -1845,3 +1845,153 @@ export const L40_PREDICTIONS = Object.freeze([
         was: 'the walk should NOT collect `bosskey@656,528`',
     }),
 ]);
+
+/**
+ * ⛔⛔⛔ L40's CHAIN IS BROKEN AT LINK 4 — R5 slice 17 step 1.
+ *
+ * §28.9 named link 4 as the thing to price first and said what would follow
+ * if it did not work out: *"if they cannot, the chain from the arrival is
+ * not walkable and §24.5's ordering needs a FINDING rather than a route."*
+ * Slice 16 measured that `button@480,384 {t 2}` cannot be opened by this
+ * rung's means (`L40_LINK4`, three ways, all no). This is the other half:
+ * what that costs.
+ *
+ * ⛓⛓ **THE STEP-17 BRIEF READ IT AS A SCHEDULING PROBLEM** — the plain
+ * button's opening exists only while held, so the hold and its consumer
+ * must share one window. That framing has an escape hatch: §24.5 numbers
+ * the links by the order a WALK MEETS them, not by dependency, so link 4
+ * might be a cul-de-sac and there might be no consumer to schedule. This
+ * probe went looking for that hatch. Measured:
+ *
+ * ```
+ *   links 1-3 open, link 4 SHUT     828 cells
+ *     button@768,400 {t 5}   ⛔        button@816,400 {t 4}   ⛔
+ *   links 1-3 + link 4             1036 cells   (+208)
+ *     both buttons           ⛓
+ *   EVERY activator open except link 4's two   1784 cells, both buttons ⛔
+ * ```
+ *
+ * ⛔⛔ **SO THE ORDERING IS A DEPENDENCY AFTER ALL, AND LINK 4 IS THE
+ * UNIQUE GATE.** `button@816,400 {t 4}` is what arms `pulser@592,576`; the
+ * pulse is the only thing that moves `pushableblockfire@576,576` off the
+ * boss-key chamber's approach (a fire press from the south drives it NORTH
+ * into the plain block, and the cell east of it is the pulser itself). So
+ * the whole tail hangs off it:
+ *
+ *     link 4 -> links 5, 6 -> link 7 -> link 8 -> link 9 (the key)
+ *            -> link 10 (the bosslock) -> BOTH north teleporters
+ *
+ * ⇒ **`bosskey@656,528`, `bosslock@480,352`, `teleporter@944,96 -> L41` and
+ * `teleporter@848,0 -> L42` are UNREACHABLE FROM THE L40 ARRIVAL BY THIS
+ * RUNG'S MEANS.** And the break is at link 4 and NOWHERE else: granted
+ * links 5-8 by fiat, everything after them closes (1,624 cells, key,
+ * bosslock, both north doors, the NW cluster).
+ *
+ * ⚠ THIS DOES NOT MAKE PARTS 3 AND 4 UNPROVABLE. `r5-l40-part0` already
+ * boots into a cluster its own arrival cannot reach and says so out loud
+ * (§28.5), and `r5-l41-part3` / `r5-l42-part4` do the same. What it means
+ * is that the window that collects them cannot BEGIN at `L40 (480,896)`,
+ * and no amount of scheduling fixes that — which is a different sentence
+ * from "the parts are not collected", and both are true.
+ */
+export const L40_ARRIVAL_BREAK = Object.freeze({
+    level: 40,
+    lattice: 8,
+    policy: 'inventory sword+fire+conch+feather; burnabletree tag 0 cleared at build; '
+        + 'chest@880,816 opened; avoidVolumes off',
+    /** Links 1-3 open, link 4 shut. */
+    withoutLink4: 828,
+    /** …plus link 4's two `Lock`s by fiat. */
+    withLink4: 1036,
+    gain: 208,
+    /** ⛔ The two the chain continues through, and both are inside the +208. */
+    gatedButtons: Object.freeze([
+        Object.freeze({ id: 'button@768,400', tset: 5, link: 5 }),
+        Object.freeze({ id: 'button@816,400', tset: 4, link: 6, arms: 'pulser@592,576' }),
+    ]),
+    /** ⛓⛓ The NECESSITY arm — every OTHER activator open and still no. */
+    everyOtherActivator: Object.freeze({ cells: 1784, gatedButtonsReached: false }),
+    /** With links 5-8 granted by fiat, the tail closes and nothing else breaks. */
+    pastLink4: Object.freeze({
+        keyCells: 892, keyReached: true,
+        afterBosslock: 1624, l41Door: true, l42Door: true, nwCluster: true,
+    }),
+    verdict: 'THE CHAIN FROM THE L40 ARRIVAL STOPS AT LINK 4. One plain button, whose '
+        + 'opening exists only WHILE HELD, whose persistence write is inert because its '
+        + 'group is 2, and which no block in the level can reach, gates every remaining '
+        + 'link — so the boss key, the bosslock and both north teleporters are '
+        + 'unreachable from (480,896) by this rung\'s means. The parts behind them are '
+        + 'still collectable from their own boots; the ROUTE is not.',
+});
+
+/**
+ * ⛓⛓⛓ L42 IS SOLVED, AND THE SOLUTION IS NORTHWARD — R5 slice 17 step 0.
+ *
+ * §30.8 read L42 as a PURSUIT and banked a six-bait ordering from a
+ * component search (`L42_PART4.orderingSearched`). That ordering clears the
+ * corridor and it is not a solution, because the room's cost is not the
+ * reach — it is the ROUND TRIP:
+ *
+ *     arrival (15,20)  ->  totempart 4 @184,152  ->  teleporter@240,336
+ *
+ * and the teleporter is one tile below the arrival. Priced that way, the
+ * banked ordering is a FAILED STATE: both crushers finish in the row-13/14
+ * corridor (cols 9,10 and 11,12), which is the only way from the west
+ * corridor back to the col-15 shaft, and the row-17 bypass rejoins it at
+ * col 12 inside the same two bodies. The part is collected and the player
+ * can never leave.
+ *
+ * ⛓⛓ **THE SOLUTION PARKS BOTH CRUSHERS IN THE TOP ROOM**, which is the
+ * one part of the level nothing needs, and the search finds it blind:
+ *
+ * ```
+ *   1-3  A  W -> (80,160)   S -> (80,224)   E -> (192,224)
+ *   4-6  B  W -> (80,160)   N -> (80,96)    E -> (240,96)
+ *   7-9  A  W -> (80,224)   N -> (80,96)    E -> (208,96)
+ * ```
+ *
+ * — nine charges in THREE chains, each chain one `bait` verb whose every
+ * escape lands in the lane of the next (§30.8's shape, three times over).
+ * A's first three are the banked ordering's own moves; the last three take
+ * it back out again, which is why the answer is nine and not six.
+ *
+ * ⛓⛓⛓ **AND THE WHOLE THING TURNS ON ONE DEAD-END TILE.** The top room
+ * (rows 5,6, cols 4..15) is exactly two tiles tall, a crusher is exactly
+ * 32 px tall, and row 7 is solid across every column — so a player inside
+ * an eastward charge in that room has NO lateral escape anywhere except
+ * `(6,4)`, a one-tile nook off row 4 that leads nowhere. Both of the E
+ * charges that park the crushers out of the way end with the player
+ * standing in it.
+ *
+ * ⚠ THE SEARCH IS A PROPOSER, NOT AN ORACLE. It abstracts the escape's
+ * TIMING away (see `probe-seedling-r5-l42-solver.mjs`'s header for the one
+ * optimism and the three pessimisms), so what it returns is a candidate
+ * ordering; `plan-seedling-r5-l42-part4.mjs` driving it through `runBait`
+ * against the real `stepCrusher` is the check.
+ */
+export const L42_SOLVE = Object.freeze({
+    level: 42,
+    lattice: 8,
+    /** ⛓ The safe flood is the FREE flood minus every cell a crusher can see. */
+    arrival: Object.freeze({ freeNodes: 304, safeNodes: 172 }),
+    /** The ONE cell that makes an eastward charge in the top room survivable. */
+    nook: Object.freeze({ tx: 6, ty: 4 }),
+    ordering: Object.freeze([
+        Object.freeze({ id: 'crusher@96,144', dir: 'W', travel: 32, park: Object.freeze({ x: 80, y: 160 }), chain: 1 }),
+        Object.freeze({ id: 'crusher@96,144', dir: 'S', travel: 64, park: Object.freeze({ x: 80, y: 224 }), chain: 1 }),
+        Object.freeze({ id: 'crusher@96,144', dir: 'E', travel: 112, park: Object.freeze({ x: 192, y: 224 }), chain: 1 }),
+        Object.freeze({ id: 'crusher@128,144', dir: 'W', travel: 64, park: Object.freeze({ x: 80, y: 160 }), chain: 2 }),
+        Object.freeze({ id: 'crusher@128,144', dir: 'N', travel: 64, park: Object.freeze({ x: 80, y: 96 }), chain: 2 }),
+        Object.freeze({ id: 'crusher@128,144', dir: 'E', travel: 160, park: Object.freeze({ x: 240, y: 96 }), chain: 2 }),
+        Object.freeze({ id: 'crusher@96,144', dir: 'W', travel: 112, park: Object.freeze({ x: 80, y: 224 }), chain: 3 }),
+        Object.freeze({ id: 'crusher@96,144', dir: 'N', travel: 128, park: Object.freeze({ x: 80, y: 96 }), chain: 3 }),
+        Object.freeze({ id: 'crusher@96,144', dir: 'E', travel: 128, park: Object.freeze({ x: 208, y: 96 }), chain: 3 }),
+    ]),
+    /** Where the two bodies finish — the top room, cols 12,13 and 14,15. */
+    parks: Object.freeze({ 'crusher@96,144': Object.freeze({ x: 208, y: 96 }), 'crusher@128,144': Object.freeze({ x: 240, y: 96 }) }),
+    /** The player's own component at the end, with BOTH the part and the exit in it. */
+    solved: Object.freeze({ safeNodes: 296, partReachable: true, exitReachable: true }),
+    /** ⛔ The slice-16 ordering, priced for the return. */
+    bankedOrderingPriced: Object.freeze({ safeNodes: 212, partReachable: true, exitReachable: false }),
+    driven: false,
+});

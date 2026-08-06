@@ -14,7 +14,7 @@ import {
     TotemError, assertPresserWrites,
     L40_ARRIVAL, L40_CHAIN, L40_PREDICTIONS, L41_L42_RECON,
     L37_BURN, L40_JOIN, L40_LINK4, L40_NW, L41_SHIELD, L41_PART3, L42_PART4,
-    PARKED_SCAN_AUDIT,
+    PARKED_SCAN_AUDIT, L40_ARRIVAL_BREAK, L42_SOLVE,
 } from './r5Totem.js';
 import { ROPE_PULL } from './r5Shaft.js';
 import { createFallRock, fallRockFreezeTicks, publishActivate } from './fallRock.js';
@@ -1472,5 +1472,115 @@ describe('⛔⛔ L40 link 4: a plain button no block can reach and no boundary c
             .toEqual(L40_LINK4.pushReach.map((p) => p.id).sort());
         expect(L40_LINK4.pushReach.every((p) => !p.reachesAButton)).toBe(true);
         expect(L40_LINK4.verdict).toMatch(/UNOPENABLE BY THIS RUNG/);
+    });
+});
+
+/**
+ * ⛔⛔⛔ R5 SLICE 17 — the two findings, asserted against the level rather
+ * than against their own prose.
+ */
+describe('⛔⛔ L40: the chain from the arrival is broken at link 4', () => {
+    const inv = { hasSword: true, hasFire: true, canSwim: true, hasFeather: true };
+
+    it('⛓⛓ the two buttons the chain continues through are BOTH group 2\'s children', () => {
+        const rec = atlasLevelSource()(40);
+        const byTset = (t) => (rec.entities ?? [])
+            .find((e) => e.type === 'button' && Number(e.attrs.tset) === t);
+        for (const g of L40_ARRIVAL_BREAK.gatedButtons) {
+            const e = byTset(g.tset);
+            expect(`button@${e.x},${e.y}`).toBe(g.id);
+        }
+        // …and they are the links §24.5 numbers 5 and 6, so the tail hangs off them.
+        expect(L40_ARRIVAL_BREAK.gatedButtons.map((g) => g.link)).toEqual([5, 6]);
+        expect(L40_CHAIN.links.find((l) => l.n === 6).what).toMatch(/arms pulser@592,576/);
+    });
+
+    it('⛔⛔ …and link 4 is UNOPENABLE, so the break is a finding and not a route', () => {
+        // The three refutations slice 16 measured, unchanged.
+        expect(L40_LINK4.clearIsInert).toBe(true);
+        expect(L40_LINK4.pushReach.every((p) => !p.reachesAButton)).toBe(true);
+        expect(L40_LINK4.holdTicks).toBe(101);
+        // …and what this slice adds: the necessity arm.
+        expect(L40_ARRIVAL_BREAK.everyOtherActivator.gatedButtonsReached).toBe(false);
+        expect(L40_ARRIVAL_BREAK.withLink4 - L40_ARRIVAL_BREAK.withoutLink4)
+            .toBe(L40_ARRIVAL_BREAK.gain);
+        expect(L40_ARRIVAL_BREAK.gain).toBe(L40_CHAIN.links.find((l) => l.n === 4).gains);
+        expect(L40_ARRIVAL_BREAK.verdict).toMatch(/STOPS AT LINK 4/);
+    });
+
+    it('⛓ …and everything AFTER link 4 still closes, which is what makes it one break', () => {
+        expect(L40_ARRIVAL_BREAK.pastLink4.keyReached).toBe(true);
+        expect(L40_ARRIVAL_BREAK.pastLink4.l41Door).toBe(true);
+        expect(L40_ARRIVAL_BREAK.pastLink4.l42Door).toBe(true);
+        expect(L40_ARRIVAL_BREAK.pastLink4.nwCluster).toBe(true);
+    });
+});
+
+describe('⛓⛓⛓ L42: the ordering that prices the RETURN parks both bodies in the top room', () => {
+    const inv = { hasSword: true, hasFire: true, canSwim: true, hasFeather: true };
+    const world = buildLevelWorld(atlasLevelSource()(42), { roles: ROLES, inventory: inv });
+
+    it('⛓ every park in the ordering is a position a charge actually stops at', () => {
+        // A charge stops where the 32x32 body first overlaps a Solid, so a
+        // park is a MEASUREMENT. Re-derived from the level's own static
+        // solids, with the other crusher wherever the ordering has left it.
+        const statics = world.solids.filter((s) => !s.crusherId).map((s) => s.rect);
+        const cfg = Object.fromEntries(L42_PART4.crushers.map((c) => [c.id, { ...c.home }]));
+        const hit = (a, b) => a.x < b.right && a.right > b.x && a.y < b.bottom && a.bottom > b.y;
+        for (const step of L42_SOLVE.ordering) {
+            const other = L42_SOLVE.ordering.map((s) => s.id).find((i) => i !== step.id);
+            const blockers = [...statics, {
+                x: cfg[other].x - 16, y: cfg[other].y - 16,
+                right: cfg[other].x + 16, bottom: cfg[other].y + 16,
+            }];
+            const d = { E: [1, 0], N: [0, -1], W: [-1, 0], S: [0, 1] }[step.dir];
+            let { x, y } = cfg[step.id];
+            for (;;) {
+                const p = { x: x + d[0] - 16, y: y + d[1] - 16 };
+                const probe = { ...p, right: p.x + 32, bottom: p.y + 32 };
+                if (blockers.some((s) => hit(probe, s))) break;
+                x += d[0]; y += d[1];
+            }
+            expect({ x, y }).toEqual({ x: step.park.x, y: step.park.y });
+            expect(Math.abs(x - cfg[step.id].x) + Math.abs(y - cfg[step.id].y)).toBe(step.travel);
+            cfg[step.id] = { x, y };
+        }
+        // …and the ordering ends where the bank says it does.
+        expect(cfg).toEqual({
+            'crusher@96,144': { ...L42_SOLVE.parks['crusher@96,144'] },
+            'crusher@128,144': { ...L42_SOLVE.parks['crusher@128,144'] },
+        });
+    });
+
+    it('⛓⛓ the ordering is THREE chains — each one bait verb, each ending at REST', () => {
+        const chains = [1, 2, 3].map((n) => L42_SOLVE.ordering.filter((s) => s.chain === n));
+        expect(chains.map((c) => c.length)).toEqual([3, 3, 3]);
+        // Each chain is ONE crusher: the escape from every charge lands in
+        // the lane of the next, which is what makes it one verb (§30.8).
+        for (const c of chains) expect(new Set(c.map((s) => s.id)).size).toBe(1);
+        expect(chains.map((c) => c[0].id))
+            .toEqual(['crusher@96,144', 'crusher@128,144', 'crusher@96,144']);
+    });
+
+    it('⛔⛔ the slice-16 ordering opens the part and SEALS the exit', () => {
+        expect(L42_PART4.orderingSearched.length).toBe(6);
+        expect(L42_SOLVE.bankedOrderingPriced.partReachable).toBe(true);
+        expect(L42_SOLVE.bankedOrderingPriced.exitReachable).toBe(false);
+        // …and the solution's own end state is the opposite on the second.
+        expect(L42_SOLVE.solved.partReachable).toBe(true);
+        expect(L42_SOLVE.solved.exitReachable).toBe(true);
+    });
+
+    it('⛓⛓⛓ the nook at (6,4) is a real, free, one-tile dead end', () => {
+        const n = L42_SOLVE.nook;
+        const box = playerBoxAt(n.tx * 16 + 8, n.ty * 16 + 8);
+        const solidAt = (b) => world.solids.some((s) => rectsOverlap(b, s.rect));
+        expect(solidAt(box)).toBe(false);
+        // Its own four neighbours: only the one below it is open, which is
+        // what "leads nowhere" means.
+        const open = [[1, 0], [-1, 0], [0, 1], [0, -1]].filter(([dx, dy]) => !solidAt(
+            playerBoxAt((n.tx + dx) * 16 + 8, (n.ty + dy) * 16 + 8),
+        ));
+        expect(open).toEqual([[0, 1]]);
     });
 });
