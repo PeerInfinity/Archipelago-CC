@@ -1883,6 +1883,168 @@ export function l40Part1Findings(replayed) {
     return found;
 }
 
+/**
+ * ⛓⛓⛓ THE FOURTH CEREMONY — `totempart 3 @240,144`, AND THE CRUSHER'S
+ * FIRST LIVE CONTACT.
+ *
+ * Eight per-visit geometry families reached the game before this one and
+ * every one of them was MONOTONE: the player opened a cell and it stayed
+ * open. A `Crusher` is the ninth and the first that moves on its own, and
+ * L41 is the first room whose solution is to OPERATE one rather than avoid
+ * it — `hazardVolume` prices the four 64 px lanes hard-avoid and the
+ * solution requires standing in one.
+ *
+ * ⛓⛓ THE PAIR IS ONE FIELD APART, and the field is the two
+ * `breakablerock` tags. With them declared clear the rocks are gone, the
+ * crusher's west sight line is open, and three baits walk it onto
+ * `button@248,232` where it holds `cover@112,128` open for the rest of the
+ * visit. With them undeclared the rocks stand, `collideLine` takes its
+ * early exit, and the identical 146 spans move it not one pixel.
+ *
+ * ⚠ WHAT THE GAME CAN BE ASKED, and it is less than the model knows. The
+ * crusher's POSITION is in no readout — `Bot.itemReadout` carries items,
+ * `persistence_cleared` carries flags, and there is no third channel. So
+ * the park is witnessed by the ROOM: the drive's stream is byte-exact
+ * against a model in which the crusher is on the button, it walks through
+ * `crusher@240,64`'s own constructor cells on the way to the part, and it
+ * ends with a ceremony the control does not have. The 150-frame difference
+ * IS the park.
+ *
+ * ⛔ AND THE PART WRITES NO PERSISTENCE. `BossTotemPart.removed()` is
+ * `Player.hasTotemPartSet(3, true)` — save-file state — so the ledger for
+ * this window is `{41,0}`, the wandlock, alone.
+ */
+export const L41_PART3_PAIR = Object.freeze({
+    drive: 'r5-l41-part3',
+    control: 'r5-l41-part3-control',
+    part: 3,
+    /** The one flag this window EARNS: `wandlock@240,96`, tag 0. */
+    earns: Object.freeze(['41:0']),
+    /**
+     * ⛔⛔ AND THE TWO IT DECLARES, because `persistence_cleared` IS
+     * DECLARED + EARNED and this arc has already paid for reading it as
+     * earned-only once (§27's acceptance bug, on the seal). The tape boots
+     * with `breakablerock@224,64` {tag 1} and `breakablerock@224,80`
+     * {tag 2} clear — they shield the crusher, so the swing that removes
+     * them belongs to an earlier window — and the game reports them beside
+     * the flag this window actually wrote.
+     */
+    declares: Object.freeze(['41:1', '41:2']),
+    ceremonyFrames: 150,
+});
+
+export function l41Part3Findings(replayed) {
+    const drive = replayed?.get(L41_PART3_PAIR.drive);
+    const control = replayed?.get(L41_PART3_PAIR.control);
+    if (!drive || !control) {
+        return [{
+            name: 'R5 L41 part 3 pair: SKIPPED — this sweep did not replay both arms',
+            ok: true,
+            skipped: true,
+            detail: `have ${[drive && L41_PART3_PAIR.drive, control && L41_PART3_PAIR.control]
+                .filter(Boolean).join(', ') || 'neither'} — "the walk collected a totem `
+                + 'part" is not evidence that a crusher was ever in the way, and this '
+                + 'room\'s whole claim is that the obstacle is the machine',
+        }];
+    }
+    const found = [];
+    const dDead = drive.status?.dead_frames ?? 0;
+    const cDead = control.status?.dead_frames ?? 0;
+    /**
+     * ⛓⛓⛓ THE CEREMONY, AND THE CONTROL IS WHAT MAKES IT A MEASUREMENT.
+     * Both arms load the room exactly once and neither transitions, so the
+     * fade term is identical and the DIFFERENCE is the freeze — 150 frames,
+     * with no band arithmetic in it at all.
+     */
+    found.push({
+        name: '⛓⛓⛓ R5 L41 part 3: the FOURTH ceremony, and the DIFFERENCE between the arms is it',
+        ok: dDead - cDead === L41_PART3_PAIR.ceremonyFrames,
+        detail: `${dDead} dead against the control's ${cDead} — a difference of `
+            + `${dDead - cDead}, against ${L41_PART3_PAIR.ceremonyFrames}. ⛓ Both arms are `
+            + 'the same 146 spans and both load L41 once, so the fade term cancels and '
+            + 'this is the pickup\'s freeze with no band in it. `hasTotemPart` is not in '
+            + '`Bot.itemReadout` (§20.8), so the frozen frames are the claim — and here '
+            + 'they are a subtraction rather than a budget.',
+    });
+    const dCleared = [...clearedSet(drive.status)].sort();
+    const cCleared = [...clearedSet(control.status)].sort();
+    const wantCleared = [...L41_PART3_PAIR.declares, ...L41_PART3_PAIR.earns].sort();
+    found.push({
+        name: '⛓⛓ R5 L41 part 3: the ledger is the two DECLARED rocks plus ONE EARNED flag',
+        ok: dCleared.join(' ') === wantCleared.join(' '),
+        detail: `[${dCleared.join(' ') || 'empty'}] against [${wantCleared.join(' ')}]. `
+            + '⛔ `persistence_cleared` is DECLARED + EARNED, and reading it as '
+            + 'earned-only is a mistake this arc has already made once (§27\'s acceptance '
+            + 'compared it against the earned set and went red on a correct run). What '
+            + 'this window WRITES is `{41,0}` alone: `Lock.turnOff()` on '
+            + '`wandlock@240,96`. `{41,1}`/`{41,2}` are the two `breakablerock` tags the '
+            + 'tape declares — the rocks shield the crusher, so the swing that removes '
+            + 'them belongs to an earlier window — and `BossTotemPart.removed()` writes '
+            + '`Player.hasTotemPartSet`, which is SAVE-FILE state and not persistence. So '
+            + 'the part contributes nothing here at all.',
+    });
+    /**
+     * ⛓ AND THE EARNED HALF, ISOLATED BY THE CONTROL — which declares the
+     * same nothing and earns the same nothing, so the difference between
+     * the two sets is exactly what the baits bought.
+     */
+    found.push({
+        name: '⛓⛓⛓ R5 L41 part 3: …and the DIFFERENCE from the control is `{41,0}` alone',
+        ok: dCleared.filter((f) => !cCleared.includes(f)
+            && !L41_PART3_PAIR.declares.includes(f)).join(' ')
+            === [...L41_PART3_PAIR.earns].sort().join(' '),
+        detail: `drive [${dCleared.join(' ') || 'empty'}] minus control `
+            + `[${cCleared.join(' ') || 'empty'}] minus declared `
+            + `[${[...L41_PART3_PAIR.declares].join(' ')}] = `
+            + `[${dCleared.filter((f) => !cCleared.includes(f)
+                && !L41_PART3_PAIR.declares.includes(f)).join(' ') || 'empty'}]. The `
+            + 'wandlock is held open by a block on `button@176,176` that only exists as a '
+            + 'push because 32x32 of crusher is standing on `button@248,232`.',
+    });
+    found.push({
+        name: '⛔⛔ R5 L41 part 3: the CONTROL earns nothing and freezes for nothing',
+        ok: cCleared.length === 0 && cDead < L41_PART3_PAIR.ceremonyFrames,
+        detail: `[${cCleared.join(' ') || 'empty'}] cleared, ${cDead} dead frames. With `
+            + 'the rocks standing `crusher@240,64` is shielded by `breakablerock@224,80`, '
+            + 'never scans, and never leaves its constructor cell — so `button@248,232` is '
+            + 'never pressed, `cover@112,128` never opens, the room\'s one block has no '
+            + 'push stance, `button@176,176` is never held, `wandlock@240,96` never fades, '
+            + 'and the part chamber has no doorway. ⚠ §29.7: the OBVIOUS control — walking '
+            + 'east without baiting — is not one, because any walk into the west lane '
+            + 'drives the very mechanism it was meant to withhold.',
+    });
+    /**
+     * ⛓⛓ THE WALK THROUGH THE CONSTRUCTOR CELLS, and it is the only thing
+     * in the game's own stream that can witness a park at all.
+     *
+     * `crusher@240,64` is built at `[240,272) x [64,96)` and the part
+     * chamber's only doorway is `wandlock@240,96`, directly below it. The
+     * drive's stream stands inside that box; the control's never gets east
+     * of the rocks at all.
+     */
+    const inCtorBox = (w) => (w.stream?.ticks ?? []).some((t) => t.level === 41
+        && t.x >= 240 && t.x < 272 && t.y >= 64 && t.y < 96);
+    found.push({
+        name: '⛓⛓⛓ R5 L41 part 3: the drive stands INSIDE the crusher\'s constructor box, the control never does',
+        ok: inCtorBox(drive) && !inCtorBox(control),
+        detail: `drive ${inCtorBox(drive)}, control ${inCtorBox(control)}. `
+            + '`crusher@240,64` occupies [240,272) x [64,96) until something moves it, and '
+            + 'those cells are the part chamber\'s only approach. A crusher\'s position '
+            + 'is in NO readout the game exposes, so this is the witness: the game let the '
+            + 'player stand where the level put 32x32 of `type = "Solid"`.',
+    });
+    const levels = (w) => [...new Set((w.stream?.ticks ?? []).map((t) => t.level))];
+    found.push({
+        name: '⛓ R5 L41 part 3: neither arm leaves L41',
+        ok: levels(drive).join() === '41' && levels(control).join() === '41',
+        detail: `drive [${levels(drive).join(' ')}], control [${levels(control).join(' ')}]. `
+            + '⛔ A re-entry would rebuild the crusher at its constructor cell — `Crusher` '
+            + 'writes no persistence of any kind — so a window boundary inside a bait '
+            + 'chain undoes it.',
+    });
+    return found;
+}
+
 export function r5AcceptanceFindings(replayed) {
     return [
         ...l60KillFindings(replayed),
@@ -1898,5 +2060,6 @@ export function r5AcceptanceFindings(replayed) {
         ...pressPairFindings(replayed),
         ...shaftFindings(replayed),
         ...l40Part1Findings(replayed),
+        ...l41Part3Findings(replayed),
     ];
 }
