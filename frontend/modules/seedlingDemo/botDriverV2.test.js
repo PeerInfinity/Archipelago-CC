@@ -30,6 +30,7 @@ import { parseTape } from './tapeFormat.js';
 import { DEFAULT_TOLERANCE } from './botDriverV1.js';
 import {
     climbsArmedWaterfall,
+    heldFromKey,
     isWalkableTile,
     planTilePath,
     planWaypoints,
@@ -1687,6 +1688,88 @@ describe('R5 slice 16: `bait` — phase 1 of the crusher doctrine, as a verb', (
                 park: null,
             }),
         }])).toThrow(/RUN OVER — \d+ tick\(s\) with the player inside/);
+    });
+
+    /**
+     * ⛔⛔ R5 SLICE 18 — AND THE KEY IS A **SET**. Slice 15 built the held
+     * set as `new Set([span.key])`, which is right for every L41 span and
+     * silently wrong for the first one that needs two axes: `applyInput` is
+     * four independent `held.has(...)` tests, so a set holding the single
+     * string `"down+right"` matches none of them and the player stands
+     * still for the whole span. L42's escape is diagonal throughout.
+     *
+     * ⛓ The positive control is the DIFFERENCE the drive makes: the same
+     * bait with `down+left` in place of `down` parks the crusher at the
+     * same cell (the charge is committed and never re-aimed) but takes the
+     * player somewhere else — so the two arms are asked of the PLAYER, and
+     * the wrong reading is the one that cannot move it.
+     */
+    it('drives a diagonal bait span as BOTH keys, not as one unknown name', () => {
+        const diagonal = walk([{
+            x: 216,
+            y: 88,
+            bait: bait({ spans: [{ key: 'down+left', ticks: 40 }, { key: null, ticks: 160 }] }),
+        }]);
+        // ⛓ THE TAPE IS THE WITNESS, because it is what the game replays:
+        // both names have to be HELD across the escape's 40 ticks. `left`
+        // runs on from the approach (21) and `down` starts with the escape,
+        // and the two end together — one held set, two spans.
+        const span = (k) => diagonal.tape.inputs.filter((s) => s.key === k);
+        expect(span('down')).toEqual([{ key: 'down', from: 21, to: 61 }]);
+        expect(span('left')).toEqual([{ key: 'left', from: 0, to: 61 }]);
+        // ⛔ AND IT SURVIVES. Read as one unknown name the player does not
+        // move at all, stands in the west lane for the whole escape and the
+        // verb throws RUN OVER — so this arm is red on the old reading for
+        // two independent reasons.
+        expect(diagonal.baits[0].crusherTo).toEqual({ x: 64, y: 80 });
+    });
+
+    it('refuses a key name that is not in the canonical table', () => {
+        expect(() => walk([{
+            x: 216, y: 88, bait: bait({ spans: [{ key: 'down+dwon', ticks: 40 }] }),
+        }])).toThrow(/'dwon' is not a key \(in 'down\+dwon'\)/);
+    });
+
+    it('refuses a key name repeated in one span', () => {
+        expect(() => walk([{
+            x: 216, y: 88, bait: bait({ spans: [{ key: 'down+down', ticks: 40 }] }),
+        }])).toThrow(/'down' appears twice/);
+    });
+});
+
+/**
+ * ⛔⛔ R5 SLICE 18 — `heldFromKey`, THE ONE PLACE A PLAN AUTHORS AN INPUT.
+ *
+ * Unit-level, because the failure it exists to make loud is a SILENCE: an
+ * unrecognised name does not throw anywhere downstream, it produces a
+ * player that does not move.
+ */
+describe('R5 slice 18: `heldFromKey` — a span key is a held SET', () => {
+    it('reads null as the empty set', () => {
+        expect([...heldFromKey(null, 'x')]).toEqual([]);
+        expect([...heldFromKey(undefined, 'x')]).toEqual([]);
+    });
+
+    it('reads one name as one key', () => {
+        expect([...heldFromKey('down', 'x')]).toEqual(['down']);
+    });
+
+    it('splits a composite key on +', () => {
+        expect([...heldFromKey('down+right', 'x')].sort()).toEqual(['down', 'right']);
+        expect([...heldFromKey('up+left', 'x')].sort()).toEqual(['left', 'up']);
+    });
+
+    it('admits the non-arrow keys the table names', () => {
+        expect([...heldFromKey('primary', 'x')]).toEqual(['primary']);
+    });
+
+    it('refuses a non-string', () => {
+        expect(() => heldFromKey(40, 'x')).toThrow(/must be null or a '\+'-joined list/);
+        expect(() => heldFromKey('', 'x')).toThrow(/must be null or a '\+'-joined list/);
+    });
+
+    it('names the table in the refusal, so a typo is one read from fixed', () => {
+        expect(() => heldFromKey('norht', 'x')).toThrow(/tapeFormat\.KEY_CODES/);
     });
 });
 

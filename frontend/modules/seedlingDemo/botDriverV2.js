@@ -65,7 +65,7 @@
  */
 
 import {
-    assertTapeWithinRuntimeBudget, coerceTerrainState, serializeTape,
+    KEY_CODES, assertTapeWithinRuntimeBudget, coerceTerrainState, serializeTape,
 } from './tapeFormat.js';
 import { createLevelRun } from './levelRun.js';
 import { PRE_R5_ROLES, RELAXED_ROLES, TILE_SIZE } from './levelWorld.js';
@@ -463,6 +463,56 @@ const NO_HELD = new Set();
 
 /** The one key a ceremony reads: `Player.keys[6]`, i.e. X. */
 const TALK_HELD = new Set(['primary']);
+
+/**
+ * ⛔⛔ R5 SLICE 18 — A SPAN'S `key` IS A HELD **SET**, AND READING IT AS ONE
+ * NAME IS A SILENCE, NOT AN ERROR.
+ *
+ * Every other verb in this file hands `run.advance` a set built by the
+ * walk machinery (`chooseHeld` returns diagonals routinely). `bait.spans`
+ * is the one place a plan AUTHORS the held set by name, and slice 15 built
+ * it as `new Set([span.key])` — one string, whatever the string was. That
+ * is fine for L41, whose three choreographies are `left`/`down`/`null`, and
+ * it is fatal for L42's, whose escape from a 1 px/tick body needs both axes
+ * at once:
+ *
+ *   `applyInput` is four independent `held.has('up'|'right'|'down'|'left')`
+ *   tests (`playerPhysicsV1.js:232-235`). A set holding the single string
+ *   `"down+right"` matches NONE of them, so the player STANDS STILL — for
+ *   every tick of a choreography whose whole point is that it moves — and
+ *   the only symptom is a bait that reports the crusher parked somewhere
+ *   else. ⇒ the same shape as §30.3, one field along: an authored input
+ *   whose SHAPE was never checked because nothing had ever authored one.
+ *
+ * So: split on `+`, and refuse a token that is not in the ONE canonical
+ * table. An unknown name is loud here or it is a standing-still player
+ * three hundred ticks later.
+ */
+export function heldFromKey(key, what) {
+    if (key === null || key === undefined) return NO_HELD;
+    if (typeof key !== 'string' || key.length === 0) {
+        fail(`${what}: a span's key must be null or a '+'-joined list of held key names, `
+            + `got ${JSON.stringify(key)}.`);
+    }
+    const names = key.split('+');
+    const held = new Set();
+    for (const name of names) {
+        if (!Object.prototype.hasOwnProperty.call(KEY_CODES, name)) {
+            fail(`${what}: '${name}' is not a key (in '${key}'). The names are `
+                + `[${Object.keys(KEY_CODES).join(' ')}] — `
+                + '`tapeFormat.KEY_CODES`, the one canonical table. ⛔ This is checked '
+                + 'because `applyInput` reads four independent `held.has(...)` tests: an '
+                + 'unrecognised name is not an error there, it is a player that does not '
+                + 'move, and a choreography that stands still completes exactly like one '
+                + 'that worked.');
+        }
+        if (held.has(name)) {
+            fail(`${what}: '${name}' appears twice in '${key}'. A held set is a set.`);
+        }
+        held.add(name);
+    }
+    return held;
+}
 
 const describe = (o) => {
     // ⚠ `lethal-terrain` JOINED THIS ARM AT R5 SLICE 4, and it had to.
@@ -1107,8 +1157,7 @@ function runBait(run, perTick, bait, what) {
     const contactsBefore = run.crusherContacts.length;
     const driveSpans = (spans, phase) => {
         for (const span of spans) {
-            const keys = span.key === null || span.key === undefined
-                ? NO_HELD : new Set([span.key]);
+            const keys = heldFromKey(span.key, `${what}: the ${phase}`);
             for (let i = 0; i < span.ticks; i += 1) {
                 perTick.push(keys);
                 const { transition } = run.advance(keys);
