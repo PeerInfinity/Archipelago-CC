@@ -3601,3 +3601,170 @@ nodes in a whole overworld level — which reads like a level made of walls
 rather than like a bug in the probe. Multiply by `TILE_SIZE`, and sanity-check
 a component count against something you already know before believing a
 reachability verdict.
+
+## R5 slice 14 — the burn driven, the third ceremony, and four silent drops
+
+### ⛔⛔⛔ An options key that nobody destructures is a silence, not an error
+
+`burnableTree.js` shipped in slice 12 described as *"the eighth geometry
+family, wired end to end"*. Nothing had ever burned anything. Driving it
+found **four call sites that were handed an option and dropped it**:
+
+```
+  playerPhysicsV2.step             burnedTrees, fallenRocks
+  botDriverV2.plannerObstacleAt    burnedTrees
+  botDriverV2 runSpear face nudge  brokenRocks, pulledRopes, openChests,
+                                   burnedTrees
+  botDriverV2 runChest join probes burnedTrees
+```
+
+`levelRun` had passed `burnedTrees` into `step()` since slice 12 and
+`fallenRocks` since slice 10; `collidesSolid` and `plannerBlockerAt` had
+accepted both for as long. So **the one mover whose collisions decide where
+a route actually goes could not see a burned tree or a dropped rock**, while
+every other query could.
+
+⛓ **A green suite could not find it**, because the only producer of
+`burnedTrees` was an undriven verb — 1,745 tests passed over the gap for two
+slices. What found it was a walk-proof leg grazing the tree **1,999 times**
+while the model said the cell was open.
+
+⇒ **when you add a per-visit family, grep for a READER of every member at
+every call site.** Not the one the slice needs; all of them.
+`liveGeometryOpts(run, extra)` is now the single builder for every mid-leg
+geometry probe, because three hand-written literals is how one of them
+quietly acquires a different world from the other two.
+
+### ⛔⛔ A flood that justifies a route must run under the ROUTE'S policy
+
+`L37_BURN` was first banked with a flood reporting 96 nodes shut and 584
+burned, and the sentence *"the walk starts in a closed room and the tree is
+its only exit"*. Both numbers are real; the sentence is not.
+
+```
+  flooded as the DRIVE plans (conch held)   2049 -> 2065    +16
+  flooded holding nothing                     96 ->  584   +488
+```
+
+`plannerObstacleAt`'s lethal-terrain policy defaults to *"the player holds
+nothing"*, and the driver's `planNow` passes `run.inventory`. **+16 is the
+tree's own 2x2 footprint and nothing else**; a player who can swim goes
+round it, and the 96-node "room" is bounded by 26 nodes of water and a
+teleporter.
+
+⛔ **And the control arm would have passed anyway.** `r5-l37-burn-control`
+really never enters the far tile — because it replays the burn route's
+SPANS, not because the room is shut. A control replaying a route planned for
+a DIFFERENT world proves nothing about reachability.
+
+⇒ the claim was rewritten to the one that survives every policy: **the walk
+enters the tree's own cells and the control enters none of them.** A 32x32
+Solid's cells are unenterable while it stands, whatever the router believes
+about the water next door. Both floods stay banked, each with its policy in
+its name.
+
+### ⛓⛓ The burn arm is two-sided in TIME, not just in set
+
+`fire.burns: [{x, y}]`, beside `rope` and `moves` — OEL coordinates, because
+a tree's id is `burnabletree@x,y` and a 32x32 `centerOO()` sprite covers four
+tiles, so four different `{tx, ty}` would name the same tree.
+
+What it asks that no other fire arm has to: **was the tree still SOLID ten
+ticks after the press?** Taken mid-leg at `FIRE_WINDOW.endTick`, because
+that reading is not recoverable from an end state. `hit()`'s whole body is
+`playSound; burn = true; play("burn")` and removes nothing; `burnEnd ->
+die()` opens the cell 41 ticks later, and `removed()` writes the flag there
+too. It is the `FallRock` mistake mirrored — that one writes its flag EARLY,
+this one removes its solid LATE — and a model that opened the cell on the
+press tick would satisfy every set-valued check in the file.
+
+### ⛓ A gate can be conjunctive in its FLAGS and sequential in its ROUTE
+
+L40's join is `chest@880,816` under `burnabletree@872,784`: +4 / +0 / +40.
+§24.5 read the one pixel of shared edge (`816 > 816` is false, so the chest
+is openable with the tree standing) and concluded the two links commute.
+They commute as flags and not as a walk: **every stance whose fire rect
+reaches the tree is inside the chest's own cell**, and that cell is Solid
+until the chest opens. An audit that only asks the flags reports the wrong
+freedom.
+
+⛔ And the two writes land in **two different lists**: `earnedClears` carries
+the burn's `{40,0}` and not the chest's `{40,13}`, because a chest banks
+through `pendingEarnedClears` and that is cashed when the level is next
+built. A ledger summed from one list drops a link while looking complete.
+
+### ⛔⛔ The freeze gates are a three-way split across the enemy families
+
+Checked at source before any class was trusted to hold still through a
+ceremony:
+
+```
+  Bob.update          returns on Game.freezeObjects
+  BobSoldier.update   returns on Game.freezeObjects
+  Spinner             no own guard; Mobile.mobileUpdate parks the MOTION
+  Puncher.update      NO freeze test — only Mobile's gate stops it moving;
+                      its chase arm keeps re-aiming v, its attack state
+                      machine keeps running
+  BombPusher.update   NO freeze test at all, and super.update() is the LAST
+                      line — shotTime counts down, the Spritemap animates
+                      (graphic updates are not gated), and endAnim can
+                      FP.world.add(new Bomb(...)) aimed at a frozen player
+```
+
+⇒ *"enemies stop during a ceremony"* is true of the bob family and false as
+a general rule. *"A frozen player is invulnerable"* still holds — every
+damage path but `LavaTrap.attached.die()` goes through the freeze-gated
+`Player.hit` — but *"nothing happens"* does not.
+
+### ⛓⛓ The kill ledger: only the spinner family writes
+
+```
+  Bob.removed()         EMPTY  (`//if(!fell) dropCoins();`)
+  BobSoldier.removed()  EMPTY  (the same commented-out line)
+  Spinner.removed()     Game.setPersistence(tag, false), NO test of the cause
+```
+
+⇒ clearing a press room of bobs costs the ledger **nothing**; killing a
+spinner costs a flag **whatever killed it**, including a hazard the billiard
+bounced into on a tick no route chose. So "kill or thread" is decided per
+spinner against the ledger prediction, and per bob it is free. Every tape on
+this slice asserts `spinnerWrites` is empty — a claim, not an absence.
+
+### ⛔ A slash is an AREA: three rocks came down on two swings
+
+L40's NW cluster: one swing per rock refuses itself on target 2 with
+*"breakablerock@176,144 is ALREADY GONE before the press"*. The two east
+rocks are vertically adjacent and one slash reaches both. The plan names the
+swing and its WHOLE effect, not the rock it was aimed at.
+
+⛔ And the buttonrooms need **101 continuous ticks**, not the 11 a Cover
+takes: L38's buttonrooms open Covers, L40's open Locks. The `room = -1`
+self-latch keeps the group published after the player steps off — which is
+what makes the rest of the leg possible — and does not make the fade
+shorter.
+
+### ⚠⚠ A wrong SHAPE returns a clean, plausible "no"
+
+L41's crusher shield was measured wrong twice before it was right, the same
+way both times: `collideLineSolid` reads `s.x/s.y/s.right/s.bottom` and a
+`world.solids` entry carries its box on `.rect`; `scanCrusher`'s lane test
+needs a player BOX and not an `{x, y}`. Both wrong shapes returned *"dir
+null, shieldedBy null, matched []"* — a plausible *"the crusher does not see
+you"* that a route would have been built on. Assert the POSITIVE arm too, so
+a probe that silently saw nothing fails something.
+
+Right, against L41's own solids: with the rocks standing the crusher is
+shielded by `breakablerock@224,80`; without them it charges W; and the
+SOUTH lane is shielded by the room's own wall either way, **so the bait can
+only come from the west.**
+
+### Where the ceremonies stand
+
+Three of five. Parts 2 (the shaft), 1 (a free walk in L40) and 0 (L40's NW
+cluster) are collected and counted in the game's own dead frames — 367, 170
+and 170. **Parts 3 and 4 are behind the crusher**, and there is no way round
+it: flooded from each room's own boot with every activator open and every
+rock broken, neither part is in the component (L41 356 nodes, L42 304).
+`crusher.js` models the scan, the charge and the park; `levelRun` steps no
+crusher, and wiring one is the `burnedTrees` plumbing chain again for a
+solid that MOVES.
