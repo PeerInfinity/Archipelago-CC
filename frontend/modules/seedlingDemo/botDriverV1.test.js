@@ -118,6 +118,50 @@ describe('buildTape', () => {
             expect(tape.persistence).toBeUndefined();
         });
 
+        /**
+         * ⛔⛔ R5 SLICE 16: THE VERSION 5 ARM, AND ITS ABSENCE WAS SILENT.
+         *
+         * `synthesizeLegs` has passed `relax.pins` to `createLevelRun` since
+         * slice 4, so the driver's run really was pinned — and this function
+         * stopped at version 4, so `pins` fell off the end of the
+         * destructuring and every synthesized tape came out UNPINNED with
+         * nothing said. The driver verified one execution and the tape asked
+         * the game for another; the only pinned tape in the tree is
+         * hand-authored, which is why four slices went past it.
+         */
+        it('a declared pin list makes a version 5 tape', () => {
+            const tape = buildTape(perTick, undefined, undefined, {
+                ...V2, noclip: false, persistence: [], equips: [], pins: ['dead_frames'],
+            });
+            expect(tape.tape_version).toBe(5);
+            expect(tape.pins).toEqual(['dead_frames']);
+        });
+
+        it('an EMPTY declared pin list is still a version 5 tape', () => {
+            const tape = buildTape(perTick, undefined, undefined, {
+                ...V2, noclip: false, persistence: [], equips: [], pins: [],
+            });
+            expect(tape.tape_version).toBe(5);
+            expect(tape.pins).toEqual([]);
+        });
+
+        it('an ABSENT pin list is the version 4 tape every earlier plan emits', () => {
+            const tape = buildTape(perTick, undefined, undefined, {
+                ...V2, noclip: false, persistence: [], equips: [],
+            });
+            expect(tape.tape_version).toBe(4);
+            expect(tape.pins).toBeUndefined();
+        });
+
+        it('refuses pins without the equip under them, and a non-array pin list', () => {
+            expect(() => buildTape(perTick, undefined, undefined, {
+                ...V2, noclip: false, persistence: [], pins: [],
+            })).toThrow(/version 5 is version 4 plus the determinism pins/);
+            expect(() => buildTape(perTick, undefined, undefined, {
+                ...V2, noclip: false, persistence: [], equips: [], pins: 'dead_frames',
+            })).toThrow(/pins must be an ARRAY of pin names/);
+        });
+
         it('refuses clears without the version 2 relaxations under them', () => {
             expect(() => buildTape(perTick, undefined, undefined, { persistence: [] }))
                 .toThrow(/version 3 is version 2 plus clears/);

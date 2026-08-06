@@ -1427,14 +1427,40 @@ export const L41_PART3 = Object.freeze({
      * ⛓ Bank 1's prefix is the boot at (208,80) — tile (13,5), the swing
      * stance's own cell — with both rock tags declared clear, which is the
      * state the swing leaves.
+     *
+     * ── ⛔⛔ R5 SLICE 16: `approach` / `spans`, AND THE SPLIT IS NOT
+     *    COSMETIC ────────────────────────────────────────────────────
+     *
+     * Slice 15 banked each of these as one flat span list and drove them
+     * from a `describe` block, where "the crusher is awake" was never
+     * anybody's precondition. `botDriverV2.runBait` demanded the player be
+     * INSIDE a lane at the tick the verb starts — and baits 2 and 3 cannot
+     * satisfy that, because for them **the approach IS the trigger**: the
+     * stance they are driven to is deliberately outside the lane (standing
+     * in it would have the crusher charging before the leg is ready) and
+     * the first span is the step that enters it. So each choreography now
+     * declares which of its spans present the player (`approach`) and which
+     * get them out again (`spans`), and the verb's positive control moved
+     * from *predicting* the scan to *observing* the commit.
+     *
+     * ⛓ `stance` is the player's ENTITY position when the bait begins,
+     * MEASURED — it is the previous bait's own resting cell, so the drive
+     * to it costs ZERO ticks and the emitted stream is span-for-span what
+     * `r5Totem.test.js` has driven since slice 15. The plan asserts that
+     * zero, because a stance that cost the walk even one tick would be a
+     * choreography starting from somewhere its search never saw.
      */
     baits: Object.freeze([
         Object.freeze({
             dir: 'W',
             from: Object.freeze({ x: 256, y: 80 }),
             park: Object.freeze({ x: 64, y: 80 }),
-            spans: Object.freeze([
+            /** The boot cell (208,80) — the entity is a half-tile in. */
+            stance: Object.freeze({ x: 216, y: 88 }),
+            approach: Object.freeze([
                 Object.freeze({ key: 'left', ticks: 21 }),
+            ]),
+            spans: Object.freeze([
                 Object.freeze({ key: 'down', ticks: 40 }),
                 Object.freeze({ key: null, ticks: 160 }),
             ]),
@@ -1447,11 +1473,14 @@ export const L41_PART3 = Object.freeze({
             dir: 'S',
             from: Object.freeze({ x: 64, y: 80 }),
             park: Object.freeze({ x: 64, y: 240 }),
-            spans: Object.freeze([
+            stance: Object.freeze({ x: 185.795, y: 135.999 }),
+            approach: Object.freeze([
                 Object.freeze({ key: 'left', ticks: 40 }),
                 Object.freeze({ key: 'down', ticks: 22 }),
                 Object.freeze({ key: 'left', ticks: 70 }),
                 Object.freeze({ key: 'up', ticks: 10 }),
+            ]),
+            spans: Object.freeze([
                 Object.freeze({ key: 'down', ticks: 20 }),
                 Object.freeze({ key: 'right', ticks: 40 }),
                 Object.freeze({ key: null, ticks: 220 }),
@@ -1465,8 +1494,11 @@ export const L41_PART3 = Object.freeze({
             dir: 'E',
             from: Object.freeze({ x: 64, y: 240 }),
             park: Object.freeze({ x: 256, y: 240 }),
-            spans: Object.freeze([
+            stance: Object.freeze({ x: 104.969, y: 182.370 }),
+            approach: Object.freeze([
                 Object.freeze({ key: 'down', ticks: 40 }),
+            ]),
+            spans: Object.freeze([
                 Object.freeze({ key: 'up', ticks: 12 }),
                 Object.freeze({ key: null, ticks: 260 }),
             ]),
@@ -1480,6 +1512,14 @@ export const L41_PART3 = Object.freeze({
      * crusher's WEST lane from `(256,240)`. Walking into it charges the
      * crusher off `button@248,232`, the cover resets, and — if the block is
      * not yet parked — the room is shut again.
+     *
+     * ⛓ IT IS THE ONLY ONE OF THE FOUR THAT MATTERS, and that is measured
+     * rather than assumed. The north lane is `[240,272) x [160,256)` — tiles
+     * 15-16 of rows 10-15 — and the part chamber's own floor runs to row 10,
+     * so the collect walk passes within a tile of it; what keeps the chamber
+     * cold is the room's wall across rows 11-13, which blocks `collideLine`
+     * from `(256,240)` to every cell in there. The east and south lanes
+     * leave the room. See `PARKED_SCAN_AUDIT`.
      */
     avoidAfterBait3: Object.freeze({ x: 176, y: 224, right: 272, bottom: 256 }),
     /**
@@ -1499,6 +1539,20 @@ export const L41_PART3 = Object.freeze({
     /** `Lock`'s fade — 101 continuous ticks, and the BLOCK is what holds it. */
     lockTicks: 101,
     /**
+     * ⛓ The ceremony's stance, in tiles: the chamber cell NORTH of the part,
+     * reached through the doorway `wandlock@240,96` has just opened.
+     *
+     * ⚠ IT IS ALSO THE ONE STANCE THE PARKED CRUSHER'S NORTH LANE ALMOST
+     * REACHES. That lane is `[240,272) x [160,256)` — tiles 15-16 of rows
+     * 10-15 — and the part chamber's floor runs to row 10, so the collect
+     * walk passes within one tile of it. What keeps the whole chamber COLD
+     * is not distance: it is the room's own wall across rows 11-13, which
+     * blocks `collideLine` from (256,240) to every cell in there. Measured
+     * tick by tick by `plan-seedling-r5-l41-part3.mjs`'s parked-scanner
+     * audit, not argued from the rects.
+     */
+    collectStance: Object.freeze([15, 8]),
+    /**
      * ⚠ THE FLOOD, WITH THE CONFIGURATION THAT PRODUCED IT (§28.4's rule,
      * applied to the thing this slice varies). Both taken from the same
      * post-bait-1 stance under the ROUTE's inventory.
@@ -1508,7 +1562,58 @@ export const L41_PART3 = Object.freeze({
         crusherHome: Object.freeze({ nodes: 305, partReachable: false }),
         crusherParkedWest: Object.freeze({ nodes: 332, partReachable: true }),
     }),
-    driven: false,
+    /**
+     * ⛓⛓⛓ R5 SLICE 16 — DRIVEN, END TO END, AND RECORDED AS A PAIR.
+     *
+     * `r5-l41-part3` / `-control`: 2,261 ticks, 146 spans, one field apart
+     * (the control does not declare the two rock tags, so the rocks stand,
+     * the crusher is shielded and the identical spans move it not one
+     * pixel). `plan-seedling-r5-l41-part3.mjs` is the generator and its
+     * claims are the record.
+     */
+    tapes: Object.freeze(['r5-l41-part3', 'r5-l41-part3-control']),
+    driven: true,
+});
+
+/**
+ * ⛔⛔⛔ THE PARKED-SCANNER AUDIT — the check §29 did not name.
+ *
+ * §29.8 established that a park is a POSITION and not a state: a resting
+ * `Crusher` re-derives `v` on every tick, so it is a live scanner sitting on
+ * a button. `r5-l41-part3` then spends **1,307 ticks** after the third bait
+ * doing six block pushes, a 160-tick wait, a walk the length of the room and
+ * a 150-frame ceremony — every one of them beside it. One stance inside one
+ * of its four 64 px lanes with a clear sight line and it charges off
+ * `button@248,232`, `cover@112,128` resets, and the room shuts with the
+ * player inside it.
+ *
+ * So the tape is audited tick by tick, and the audit rides `runTape`'s OWN
+ * loop (`createTapeStepper`, which now yields `run.crusherScans` — the scan
+ * taken with the run's own solid list and the run's own two player shapes).
+ *
+ * ⛓⛓ TWO NUMBERS, AND THEY ARE DIFFERENT CLAIMS. `movedTicks` is the
+ * MEASUREMENT — the crusher's entity position never leaves `(256,240)`, and
+ * that fact is what the cover, the block chain and the ceremony all stand
+ * on. `hotTicks` is the MECHANISM — `scan.dir` is null on every one of those
+ * ticks, so the route is not surviving on a margin, it is outside the
+ * volume. A leg with only the first would be a leg that got away with it.
+ *
+ * ⚠ `nearestWestLanePx` is a CLEARANCE and the lane test is INCLUSIVE
+ * (§29.5, `Entity.as:263`'s four `>=`/`<=` where every other overlap in the
+ * package is strict), so zero would mean INSIDE.
+ */
+export const PARKED_SCAN_AUDIT = Object.freeze({
+    tape: 'r5-l41-part3',
+    crusher: 'crusher@240,64',
+    park: Object.freeze({ x: 256, y: 240 }),
+    fromTick: 955,
+    ticks: 1307,
+    movedTicks: 0,
+    hotTicks: 0,
+    /** Inside a lane but shielded — safe on geometry that MOVES, so counted apart. */
+    inLaneShieldedTicks: 0,
+    nearestWestLanePx: 36.96,
+    nearestAt: Object.freeze({ t: 1790, x: 137.31, y: 184.04 }),
 });
 
 /**

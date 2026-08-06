@@ -1566,3 +1566,197 @@ describe('R3: the collect primitive', () => {
         }
     });
 });
+
+/**
+ * ── ⛓⛓⛓ R5 SLICE 16: THE BAIT AND THE WAIT, DRIVEN ───────────────────
+ *
+ * Both verbs existed before this suite did — `bait` shipped in slice 15
+ * with three banked L41 choreographies and NO caller at all, and the first
+ * thing that put it through `synthesizeLegs` found that two of those three
+ * could not satisfy its own precondition. An undriven verb is a verb whose
+ * shape has never been checked against the thing it exists to express.
+ *
+ * The room is L41: `crusher@240,64` at rest in its constructor cell, two
+ * `breakablerock`s in front of it, and a boot at the swing stance.
+ */
+describe('R5 slice 16: `bait` — phase 1 of the crusher doctrine, as a verb', () => {
+    const CRUSHER = Object.freeze({ x: 240, y: 64 });
+    const BOOT = Object.freeze({ level: 41, x: 208, y: 80 });
+    const ROCKS_GONE = Object.freeze([{ level: 41, tag: 1 }, { level: 41, tag: 2 }]);
+    const relaxWith = (persistence) => ({
+        noclip: false,
+        noDamage: true,
+        noHazards: [],
+        grants: [{ level: 41, items: ['sword', 'fire', 'conch', 'feather'] }],
+        persistence,
+        equips: [],
+    });
+    const bait = (extra = {}) => ({
+        crusher: { ...CRUSHER },
+        approach: [{ key: 'left', ticks: 21 }],
+        spans: [{ key: 'down', ticks: 40 }, { key: null, ticks: 160 }],
+        park: { x: 64, y: 80 },
+        ...extra,
+    });
+    const walk = (targets, persistence = ROCKS_GONE) => synthesizeLegs(
+        [{ level: 41, targets }],
+        {
+            levelSource,
+            boot: { ...BOOT },
+            relax: relaxWith(persistence),
+            name: 'l41-bait',
+            lattice: 8,
+            allowGrazes: true,
+            maxTicksPerTarget: 4000,
+        },
+    );
+
+    it('walks the crusher west and parks it, with zero contacts', () => {
+        const { baits } = walk([{ x: 216, y: 88, bait: bait() }]);
+        expect(baits).toHaveLength(1);
+        expect(baits[0].crusherFrom).toEqual({ x: 256, y: 80 });
+        expect(baits[0].crusherTo).toEqual({ x: 64, y: 80 });
+        // ⛔ `from`/`to` are the TICK INDICES every other verb record uses.
+        // Slice 15 returned the crusher positions under those names and the
+        // spread in `synthesizeLegs` silently ate them.
+        expect(baits[0].from).toBe(0);
+        expect(baits[0].to).toBe(221);
+        expect(baits[0].approachTicks).toBe(21);
+        expect(baits[0].dir).toBe('W');
+    });
+
+    /**
+     * ⛓⛓ THE POSITIVE CONTROL IS AN OBSERVATION. The same spans with the
+     * rocks STANDING: `breakablerock@224,80` blocks the sight line,
+     * `collideLine` takes its early exit, and the crusher never scans — so
+     * the approach ends with it still at rest and the verb says so, naming
+     * the rock rather than reporting a park that never happened.
+     */
+    it('refuses a bait whose approach does not WAKE the crusher', () => {
+        expect(() => walk([{ x: 216, y: 88, bait: bait() }], []))
+            .toThrow(/STILL AT REST[\s\S]*CANNOT SEE the player[\s\S]*breakablerock@224,80/);
+    });
+
+    /**
+     * The slice-15 shape: no `approach`, so the stance itself is the whole
+     * trigger and the pre-flight scan is a real precondition again.
+     */
+    it('refuses a no-approach bait the stance cannot trigger', () => {
+        expect(() => walk([{
+            x: 216, y: 88, bait: bait({ approach: [], spans: [{ key: null, ticks: 10 }] }),
+        }], [])).toThrow(/CANNOT SEE the player[\s\S]*declares no `approach`/);
+    });
+
+    /**
+     * ⛔ §29.8, FROM THE VERB'S SIDE. A parked crusher is not a disarmed
+     * one, and with the rocks gone EVERY walk out of the boot cell crosses
+     * its west lane — so a bait whose stance the planner has to travel to
+     * arrives with the crusher already charging, and a choreography
+     * verified against a scan taken at rest is planning against a world
+     * that has already moved.
+     */
+    it('refuses a bait that begins mid-charge', () => {
+        expect(() => walk([{ x: 56, y: 168, bait: bait() }]))
+            .toThrow(/a crusher in this room is already CHARGING/);
+    });
+
+    it('refuses a park that is not where the leg declared', () => {
+        expect(() => walk([{ x: 216, y: 88, bait: bait({ park: { x: 80, y: 80 } }) }]))
+            .toThrow(/parked at \(64,80\), not the declared \(80,80\)/);
+    });
+
+    it('refuses a crusher the level does not have', () => {
+        expect(() => walk([{ x: 216, y: 88, bait: bait({ crusher: { x: 0, y: 0 } }) }]))
+            .toThrow(/level 41 has no crusher@0,0/);
+    });
+
+    /**
+     * ⛔ THE SURVIVAL CLAIM. `down 50` in place of `down 40` on the third
+     * bait is run over 36 times (§29.3) — here the same shape one bait
+     * earlier: an escape too short to clear the lane ends with the player
+     * inside 32x32 of body, which `Bot.noDamage` makes survivable and
+     * therefore invisible to every other check.
+     */
+    it('refuses a choreography that is RUN OVER, even though the run survives it', () => {
+        expect(() => walk([{
+            x: 216,
+            y: 88,
+            bait: bait({
+                approach: [{ key: 'left', ticks: 21 }],
+                spans: [{ key: null, ticks: 160 }],
+                park: null,
+            }),
+        }])).toThrow(/RUN OVER — \d+ tick\(s\) with the player inside/);
+    });
+});
+
+/**
+ * ── ⛓⛓⛓ R5 SLICE 16: `wait` — THE FADE THE PLAYER IS NOT HOLDING ─────
+ *
+ * Every opener the driver could express before this one was one the PLAYER
+ * held. L41's `wandlock@240,96` is held by a `pushableblockfire` parked on
+ * `button@176,176` while the player stands three tiles away, and
+ * `synthesizeLegs` plans each target against the world as it is when the
+ * target is reached — so without a verb that lets time pass, the walk to
+ * the part is refused before the fade it is waiting on has started.
+ *
+ * ⚠ THE POSITIVE PATH IS DRIVEN IN `r5Totem.test.js`, in the room the verb
+ * exists for. What is here is the SHAPE and the REFUSALS, on L71's own hold
+ * fixture — because the one thing a wait must never be is an idle span
+ * that verifies nothing, and every check below is a way of writing one.
+ */
+describe('R5 slice 16: `wait` — the refusals that keep it from being an idle span', () => {
+    /** Tile (7,14), at the foot of the shaft — nowhere near the button. */
+    const BOOT = Object.freeze({ level: 71, x: 112, y: 224 });
+    const AT_BOOT = Object.freeze({ x: 120, y: 232 });
+    const R2 = Object.freeze({
+        noclip: false,
+        noDamage: true,
+        noHazards: ['water', 'lava', 'ice', 'waterfall'],
+        grants: [],
+        persistence: [{ level: 71, tag: 0 }, { level: 71, tag: 1 }, { level: 71, tag: 2 }],
+    });
+    const walk = (targets) => synthesizeLegs([{ level: 71, targets }],
+        { levelSource, boot: { ...BOOT }, relax: R2, name: 'l71-wait' });
+    const at = (wait) => walk([{ ...AT_BOOT, wait }]);
+
+    /**
+     * ⛓⛓ THE EFFECT CHECK IS THE WHOLE VERB. Standing at the foot of the
+     * shaft presses nothing, so 140 idle ticks leave `lock@112,160` exactly
+     * as solid as they found it — and the failure names the fade rather
+     * than reporting a wait that "completed".
+     */
+    it('goes red when the thing it waited for did not open, and names the fade', () => {
+        expect(() => at({ ticks: 140, opens: 'lock@112,160', why: 'nobody is on the button' }))
+            .toThrow(/lock@112,160 is STILL SHUT after 140 idle tick\(s\)[\s\S]*101 CONTINUOUS/);
+    });
+
+    /**
+     * ⛓ THE POSITIVE CONTROL. A responder already open when the wait begins
+     * makes every later assertion vacuous — the `runHold` lesson, and worth
+     * repeating here because a wait is the one verb whose emitted ticks
+     * look identical either way.
+     */
+    it('refuses a wait for something already open', () => {
+        expect(() => walk([
+            { x: 120, y: 184, hold: { ticks: 101, presser: { x: 112, y: 176 } } },
+            {
+                x: 120,
+                y: 184,
+                wait: { ticks: 20, opens: 'lock@112,160', why: 'the hold already did it' },
+            },
+        ])).toThrow(/lock@112,160 is ALREADY OPEN before the wait/);
+    });
+
+    it('refuses a responder the level does not have', () => {
+        expect(() => at({ ticks: 10, opens: 'lock@0,0', why: 'nope' }))
+            .toThrow(/level 71 has no activator lock@0,0/);
+    });
+
+    it('refuses a wait with no effect check, no reason, or no length', () => {
+        expect(() => at({ ticks: 10, why: 'nope' })).toThrow(/wait\.opens must name/);
+        expect(() => at({ ticks: 10, opens: 'lock@112,160' })).toThrow(/wait\.why must say/);
+        expect(() => at({ opens: 'lock@112,160', why: 'nope' }))
+            .toThrow(/wait\.ticks must be a positive integer/);
+    });
+});

@@ -195,6 +195,17 @@ export function createTapeStepper(tape, opts = {}) {
                 collected: run ? run.collected : [],
                 grants: run ? run.grantsFired : [],
                 inventory: run ? run.inventory : null,
+                /**
+                 * ⛓⛓ R5 slice 16: the live crushers and what each one CAN
+                 * SEE this tick — forwarded because a parked crusher is a
+                 * live scanner and auditing a leg beside one is a per-tick
+                 * question. Reading them off this loop is what keeps the
+                 * audit and the run one walk; the alternative is a second
+                 * `createLevelRun` driven from the same tape, which is a
+                 * second copy of the tick loop wearing a plan script.
+                 */
+                crushers: run ? run.crushers : null,
+                crusherScans: run ? run.crusherScans : null,
                 last: tick === t.tick_count,
             };
             if (tick === t.tick_count) break;
@@ -330,6 +341,41 @@ export function createTapeStepper(tape, opts = {}) {
              * one lands nothing at all.
              */
             pushables: run ? run.pushables : null,
+            /**
+             * ⛔⛔ R5 SLICE 16 — THE NINTH FAMILY WAS NOT IN THIS LEDGER.
+             *
+             * Slice 15 plumbed the crusher through `levelWorld`,
+             * `levelRun`, `collidesSolid`, `plannerBlockerAt` and `stepV2`,
+             * and stopped one consumer short: a tape replayed through
+             * `runTape` reported nothing at all about it. So a fixture-level
+             * claim — "the choreography was not run over", "the crusher is
+             * still on the button at the end" — was unstateable, and the
+             * only place the family could be checked was the driver's own
+             * synthesis, which is the model checking itself.
+             * ⇒ [[feedback_dropped_option_key_is_a_silence]], one consumer
+             * further along than §28.2 found it.
+             *
+             * `crusherContacts` is every tick a 32x32 body overlapped the
+             * player (1000 damage each, survived only because
+             * `Bot.noDamage` is on, which is exactly why an empty list is a
+             * CLAIM); `crushers` is where they finished, which for L41 is
+             * the difference between a held button and a shut room.
+             */
+            /**
+             * ⛓ …and the responder set they HOLD, for the same reason.
+             * `cover@112,128` in L41 is open only while a `"Solid"` is in
+             * `button@248,232`'s cell, and the only Solid that can reach it
+             * is the crusher — so "which activators are open at the end" is
+             * the room's own answer to "did the third bait land".
+             * ⚠ Null under noclip, where nothing publishes.
+             */
+            openActivators: run ? run.openActivators : null,
+            crusherContacts: run ? run.crusherContacts : [],
+            // ⚠ `run.crushers` is NULL under noclip — `advance` steps none —
+            // and null is not "this room has no crusher". Forwarded as-is so
+            // a caller cannot read a relaxation as an empty room.
+            crushers: run ? run.crushers : null,
+            crushersParked: run ? run.crushersParked : null,
             /** ⛔⛔ R5 slice 9: `{t, level, id, persistTag}` per chest OPENED. */
             chestOpens: run ? run.chestOpens : [],
             /** ⛓ R5 slice 9: one per completed seal ceremony, with its dead frames. */

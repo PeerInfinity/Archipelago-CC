@@ -1010,9 +1010,10 @@ export function resolvePresser(world, named, what) {
  *
  * ```
  *   bait: {
- *     crusher: {x, y},                 the OEL cell — `crusher@x,y`
- *     spans:   [{key, ticks}, …],      the choreography, in order
- *     park:    {x, y},                 the ENTITY position it must END at
+ *     crusher:  {x, y},                the OEL cell — `crusher@x,y`
+ *     approach: [{key, ticks}, …],     OPTIONAL: the walk INTO the lane
+ *     spans:    [{key, ticks}, …],     the escape, in order
+ *     park:     {x, y},                the ENTITY position it must END at
  *   }
  * ```
  *
@@ -1020,9 +1021,9 @@ export function resolvePresser(world, named, what) {
  * a bait that baits nothing and a bait that works look identical from the
  * end state:
  *
- *   THE POSITIVE CONTROL   the crusher must be at REST and UNSHIELDED and
- *                          have the player in a lane when the verb starts.
- *                          A shielded crusher never moves, so "it ended
+ *   THE POSITIVE CONTROL   the crusher must be at REST when the verb
+ *                          starts and AWAKE when the approach ends. A
+ *                          shielded crusher never moves, so "it ended
  *                          where I said" would be satisfied by a crusher
  *                          that was already there.
  *   THE MOVE               it must actually END somewhere else. Same
@@ -1036,6 +1037,29 @@ export function resolvePresser(world, named, what) {
  * ⛓ AND THE PARK IS ASSERTED AS A POSITION, not as "it stopped". Phase 2
  * plans against the world this leaves, and a park one pixel from where the
  * plan thinks it is is a route certified against a different room.
+ *
+ * ── ⛔⛔ R5 SLICE 16: `approach`, AND WHY THE FIRST CUT COULD NOT DRIVE
+ *    TWO OF L41's OWN THREE BAITS ─────────────────────────────────────
+ *
+ * Slice 15 shipped this verb with ONE precondition — the player must be
+ * inside a lane with a clear sight line **at the tick the verb starts** —
+ * and banked three L41 choreographies that a `describe` block drove as raw
+ * spans. Put through `synthesizeLegs`, baits 2 and 3 fail that
+ * precondition by construction: **their approach IS the trigger.** The
+ * player walks to a cell OUTSIDE the lane (standing in it would have the
+ * crusher charging before the leg is ready), and the choreography's first
+ * span is the step that enters it. A verb that demands the lane up front
+ * can only express a bait the player happens to already be standing in —
+ * which is bait 1 and nothing else.
+ *
+ * ⛓⛓ AND THE REPLACEMENT IS AN OBSERVATION WHERE THE ORIGINAL WAS A
+ * PREDICTION. `scanCrusher` at the start says *"it will commit"*;
+ * `!run.crushersParked` after the approach says *"it did"* — the same
+ * claim, taken from the run rather than from a second copy of the model.
+ * The pre-flight scan survives as the FAILURE DIAGNOSIS (shielded by
+ * what / in no lane), which is where it was always doing its real work,
+ * and as a precondition **only when `approach` is empty**, so a bait
+ * written against slice 15's shape verifies exactly as it did.
  */
 function runBait(run, perTick, bait, what) {
     if (run.crushers === null) {
@@ -1054,43 +1078,68 @@ function runBait(run, perTick, bait, what) {
             + 'verified against a scan taken at rest, so starting one mid-charge is '
             + 'planning against a world that has already moved.');
     }
-    // ⚠ THE POSITIVE CONTROL. `scanCrusher` is asked the same question
-    // `stepCrusher` will ask on the next tick — is the line clear, and is
-    // the player in a lane — so a bait aimed at a shielded crusher fails
-    // HERE rather than passing on an end state it never influenced.
-    const solids = run.world.solidBoxesForMover(livePerVisitOpts(run), id);
-    const scan = scanCrusher({ x: before.x, y: before.y },
-        playerBoxAt(run.state.x, run.state.y), { x: run.state.x, y: run.state.y }, solids);
-    if (scan.shieldedBy) {
-        fail(`${what}: ${id} CANNOT SEE the player at (${run.state.x.toFixed(2)},`
+    /**
+     * The scan, as the game would take it right now: is the line clear, and
+     * is the player in a lane. It is a PRECONDITION only for a bait with no
+     * approach — the slice-15 shape, where standing still is the trigger —
+     * and the FAILURE DIAGNOSIS in every case.
+     */
+    const scanNow = () => scanCrusher({ x: run.crushers.get(id).x, y: run.crushers.get(id).y },
+        playerBoxAt(run.state.x, run.state.y), { x: run.state.x, y: run.state.y },
+        run.world.solidBoxesForMover(livePerVisitOpts(run), id));
+    const whyItIsAsleep = (scan) => (scan.shieldedBy
+        ? `${id} CANNOT SEE the player at (${run.state.x.toFixed(2)},`
             + `${run.state.y.toFixed(2)}) — the sight line is blocked by `
             + `${scan.shieldedBy.rockId ?? scan.shieldedBy.tag ?? 'a Solid'}. A shielded `
             + 'crusher never scans (`collideLine` is an early exit), so this bait would '
             + 'emit its ticks and move nothing. In L41 that means the `breakablerock`s '
-            + 'are still standing and the leg is in the wrong ORDER.');
-    }
-    if (scan.dir === null) {
-        fail(`${what}: the player at (${run.state.x.toFixed(2)},${run.state.y.toFixed(2)}) `
+            + 'are still standing and the leg is in the wrong ORDER.'
+        : `the player at (${run.state.x.toFixed(2)},${run.state.y.toFixed(2)}) `
             + `is in NONE of ${id}'s four lanes — the sight line is clear and nothing `
-            + 'matched. A bait starts INSIDE a lane; standing next to one is standing '
-            + 'where the game does nothing.');
+            + 'matched. A bait presents the player INSIDE a lane; standing next to one '
+            + 'is standing where the game does nothing.');
+    const approach = bait.approach ?? [];
+    if (!Array.isArray(approach)) {
+        fail(`${what}: bait.approach must be an array of {key, ticks} spans — the walk `
+            + 'that presents the player to the lane. Omit it for a bait whose stance is '
+            + 'already inside one.');
     }
     const contactsBefore = run.crusherContacts.length;
-    for (const span of bait.spans ?? []) {
-        const keys = span.key === null || span.key === undefined
-            ? NO_HELD : new Set([span.key]);
-        for (let i = 0; i < span.ticks; i += 1) {
-            perTick.push(keys);
-            const { transition } = run.advance(keys);
-            if (transition) {
-                fail(`${what}: the choreography crossed from level `
-                    + `${transition.from_level} to ${transition.to_level}. A bait stays `
-                    + 'in the room — and a re-entry would reset the crusher to its '
-                    + 'constructor cell, so a plan that left mid-bait would be undoing '
-                    + 'itself.');
+    const driveSpans = (spans, phase) => {
+        for (const span of spans) {
+            const keys = span.key === null || span.key === undefined
+                ? NO_HELD : new Set([span.key]);
+            for (let i = 0; i < span.ticks; i += 1) {
+                perTick.push(keys);
+                const { transition } = run.advance(keys);
+                if (transition) {
+                    fail(`${what}: the ${phase} crossed from level `
+                        + `${transition.from_level} to ${transition.to_level}. A bait stays `
+                        + 'in the room — and a re-entry would reset the crusher to its '
+                        + 'constructor cell, so a plan that left mid-bait would be undoing '
+                        + 'itself.');
+                }
             }
         }
+    };
+    if (approach.length === 0) {
+        const scan = scanNow();
+        if (scan.dir === null) {
+            fail(`${what}: ${whyItIsAsleep(scan)} This bait declares no \`approach\`, so `
+                + 'the stance it starts from is the whole of its trigger.');
+        }
     }
+    driveSpans(approach, 'approach');
+    /**
+     * ⛓⛓ THE POSITIVE CONTROL, AND IT IS THE RUN'S OWN ANSWER. A crusher
+     * only ever leaves rest by scanning, so "it is no longer parked" is
+     * exactly "the choreography woke it" — observed, not predicted.
+     */
+    if (run.crushersParked) {
+        fail(`${what}: the approach ended with every crusher in the room STILL AT REST, `
+            + `so nothing has been baited. ${whyItIsAsleep(scanNow())}`);
+    }
+    driveSpans(bait.spans ?? [], 'escape');
     const after = run.crushers.get(id);
     const contacts = run.crusherContacts.slice(contactsBefore);
     if (contacts.length > 0) {
@@ -1116,13 +1165,117 @@ function runBait(run, perTick, bait, what) {
             + `(${park.x},${park.y}). The park is a POSITION because phase 2's flood is `
             + 'taken against it — see `CRUSHER_PLAN.floodsBankWith`.');
     }
+    /**
+     * ⛓ THE DIRECTION IS READ OFF THE DISPLACEMENT, not off a second scan.
+     * A charge is committed at rest and never re-aimed, and `moveX` runs
+     * before `moveY` with only one of them ever non-zero — so the net
+     * displacement of a choreography that ends parked IS the direction it
+     * was charged in. Asking `scanCrusher` again would be asking a model
+     * what the run already knows.
+     */
+    const dx = after.x - before.x;
+    const dy = after.y - before.y;
+    /**
+     * ⛔ R5 SLICE 16 — `crusherFrom`/`crusherTo`, AND THE RENAME IS A FIX.
+     *
+     * Slice 15 returned these as `from`/`to`, and `synthesizeLegs` builds
+     * every verb record as `{leg, index, level, from, to: perTick.length,
+     * ...record}` — where `from`/`to` are the TICK INDICES the record
+     * spans. So the spread overwrote both with `{x, y}` objects and the
+     * bait was the one verb in the file whose record could not say WHEN it
+     * happened. Nothing caught it because nothing had ever driven the verb.
+     */
     return {
         id,
-        from: { x: before.x, y: before.y },
-        to: { x: after.x, y: after.y },
-        dir: scan.dir,
-        ticks: (bait.spans ?? []).reduce((n, s) => n + s.ticks, 0),
+        crusherFrom: { x: before.x, y: before.y },
+        crusherTo: { x: after.x, y: after.y },
+        dir: Math.abs(dx) >= Math.abs(dy) ? (dx > 0 ? 'E' : 'W') : (dy > 0 ? 'S' : 'N'),
+        approachTicks: approach.reduce((n, s) => n + s.ticks, 0),
+        ticks: approach.reduce((n, s) => n + s.ticks, 0)
+            + (bait.spans ?? []).reduce((n, s) => n + s.ticks, 0),
     };
+}
+
+/**
+ * ⛓⛓⛓ R5 SLICE 16 — `wait`: THE FADE THE PLAYER IS NOT STANDING ON.
+ *
+ * Every opener this driver could express until now was one the PLAYER
+ * held: `runHold` puts the player's own box on a presser and counts. L41
+ * is the first room whose presser is held by something else — a
+ * `pushableblockfire` parked on `button@176,176` — so the 101 continuous
+ * ticks a `Lock` needs elapse with the player standing somewhere else
+ * entirely, doing nothing.
+ *
+ * ⛔ AND THERE IS NO WAY TO EXPRESS THAT AS A SIDE EFFECT OF THE WALK.
+ * `synthesizeLegs` plans each target against the world as it is when the
+ * target is reached, and a shut `wandlock@240,96` is a wall — so the walk
+ * to the part is refused before the fade it is waiting on has started. The
+ * leg has to be able to say "let time pass here".
+ *
+ * ```
+ *   wait: {
+ *     ticks: 140,                      how long, EXACTLY — no early exit
+ *     opens: 'wandlock@240,96',        the responder that must be shut, then open
+ *     why:   '…',                      what is holding its button, since the player is not
+ *   }
+ * ```
+ *
+ * ⚠ THE TICKS ARE EMITTED IN FULL, AND `openedAt` IS THE MEASUREMENT.
+ * Breaking out the moment the responder opens would shorten the tape to
+ * exactly the number the ±1 lives in — the same reason `runSpear`'s rock
+ * arm has no early exit. The leg declares a length comfortably past the
+ * fade and asserts the tick the game opened on, so the fade length is a
+ * claim the recording can refute rather than a constant the tape encodes.
+ *
+ * ⚠ AND THE POSITIVE CONTROL IS "SHUT BEFORE". A responder already open
+ * when the wait begins makes every later assertion vacuous — which is the
+ * `runHold` lesson, and it is worth repeating here because a wait is the
+ * one verb whose ticks would look identical either way.
+ */
+function runWait(run, perTick, wait, what) {
+    if (run.openActivators === null) {
+        fail(`${what}: a wait is a MECHANIC, and the noclip arm does not run it — `
+            + '`advance` hands `stepV2` a null activator set, so the wait would emit '
+            + 'its ticks, verify nothing and report success.');
+    }
+    const { ticks, opens, why } = wait ?? {};
+    if (!Number.isInteger(ticks) || ticks <= 0) {
+        fail(`${what}: wait.ticks must be a positive integer, got ${JSON.stringify(ticks)}.`);
+    }
+    if (typeof opens !== 'string' || opens.length === 0) {
+        fail(`${what}: wait.opens must name the responder this wait is FOR — a wait with `
+            + 'no effect check is an idle span, and an idle span verifies nothing.');
+    }
+    if (typeof why !== 'string' || why.length === 0) {
+        fail(`${what}: wait.why must say what is holding ${opens}'s button, because the `
+            + 'player is not. A wait with no reason is a sleep.');
+    }
+    const responder = run.world.activators.find((a) => a.id === opens);
+    if (!responder) {
+        fail(`${what}: level ${run.level} has no activator ${opens}; it has `
+            + `[${run.world.activators.map((a) => a.id).join(' ') || 'none'}].`);
+    }
+    if (run.openActivators.has(opens)) {
+        fail(`${what}: ${opens} is ALREADY OPEN before the wait, so waiting for it proves `
+            + 'nothing. Either an earlier target opened it or its group was never shut.');
+    }
+    let openedAt = null;
+    for (let i = 1; i <= ticks; i += 1) {
+        perTick.push(NO_HELD);
+        const { transition } = run.advance(NO_HELD);
+        if (transition) {
+            fail(`${what}: wait tick ${i} of ${ticks} crossed from level `
+                + `${transition.from_level} to ${transition.to_level}.`);
+        }
+        if (openedAt === null && run.openActivators.has(opens)) openedAt = i;
+    }
+    if (!run.openActivators.has(opens)) {
+        fail(`${what}: ${opens} is STILL SHUT after ${ticks} idle tick(s). A \`Lock\` `
+            + 'needs 101 CONTINUOUS ticks of its group being published and a `Cover` 11, '
+            + 'and the count restarts the moment the button is released — so this is '
+            + 'either a wait that is too short or a presser nothing is standing on.');
+    }
+    return { opens, ticks, openedAt, why };
 }
 
 function runHold(run, perTick, hold, what, before = null) {
@@ -3340,6 +3493,8 @@ export function synthesizeLegs(legs, opts = {}) {
     const holds = [];
     /** ⛓⛓⛓ R5 slice 15: one record per `bait` — phase 1 of `CRUSHER_PLAN`. */
     const baits = [];
+    /** ⛓⛓⛓ R5 slice 16: one record per `wait` — a fade the player is not holding. */
+    const waits = [];
     const touches = [];
     const collects = [];
     /** ⛔⛔ R5 slice 9: one record per chest leg — the join cell of L38. */
@@ -3648,6 +3803,20 @@ export function synthesizeLegs(legs, opts = {}) {
                     ...record,
                 });
             }
+            /**
+             * ⛓⛓⛓ R5 slice 16: the wait, AFTER the bait and the hold. It is
+             * last of the "let the world settle" verbs because the thing it
+             * waits on is generally what one of them started.
+             */
+            if (target.wait !== undefined) {
+                const from = perTick.length;
+                const record = runWait(run, perTick, target.wait,
+                    `legs[${li}] level ${leg.level} target ${ti} wait`);
+                waits.push({
+                    leg: li, index: ti, level: leg.level, from, to: perTick.length,
+                    ...record,
+                });
+            }
             if (target.touch !== undefined) {
                 const record = runTouch(run, perTick, target.touch, maxTicksPerTarget,
                     `legs[${li}] level ${leg.level} target ${ti} touch`);
@@ -3902,12 +4071,37 @@ export function synthesizeLegs(legs, opts = {}) {
             + 'the slot — the driver would verify one execution and the tape would '
             + 'replay another. Declare `equips: []` in `relax`.');
     }
+    /**
+     * ⛔⛔ AND THE SAME FAILURE ONE VERSION LATER, found in slice 16 by a
+     * plan that declared `pins` and got an unpinned tape.
+     *
+     * `pins` reaches `createLevelRun` above, so the driver's whole
+     * verification runs with the pinned execution — and until slice 16
+     * `buildTape` had no version-5 arm, so the emitted tape asked the game
+     * for the unpinned one. The two-consumers failure with no symptom on
+     * this side at all.
+     *
+     * The guard is the mirror of the equip one: a `relax` that pins must
+     * say so, and a pin the tape would drop is loud here.
+     */
+    if (relax && relax.pins !== undefined && !Array.isArray(relax.pins)) {
+        fail('synthesizeLegs: relax.pins must be an ARRAY of pin names — [] for "this '
+            + `plan pins nothing" — got ${typeof relax.pins}. It selects which `
+            + 'vanilla-reachable execution BOTH the run and the emitted tape get, and a '
+            + 'plan that pins one and a tape that pins the other is two experiments.');
+    }
     const tape = buildTape(perTick, boot, name, relax
         ? {
             ...relax,
             ...(relax.equips === undefined ? {} : { equips: run.equipsFired }),
         }
         : { noclip: false });
+    if (relax && (relax.pins ?? []).join(' ') !== (tape.pins ?? []).join(' ')) {
+        fail(`synthesizeLegs: the plan declares pins [${(relax.pins ?? []).join(' ')}] and `
+            + `the emitted tape carries [${(tape.pins ?? []).join(' ')}]. A pin selects an `
+            + 'execution, so the run this driver verified and the run the game would '
+            + 'replay are different ones.');
+    }
 
     // The runtime's tape budget, measured at R3 slice 0 and enforced HERE
     // because this is where a plan becomes an artifact. R2 discovered the
@@ -3933,6 +4127,7 @@ export function synthesizeLegs(legs, opts = {}) {
          * measurement in the tape rather than a claim in a comment.
          */
         baits: baits.map((b) => ({ ...b })),
+        waits: waits.map((w) => ({ ...w })),
         // One record per TOUCH the run verified: which lock, which shield
         // opened it, how long the approach and the input-refused window ran,
         // and the y the lock snapped the player to. As with `holds`, the tape

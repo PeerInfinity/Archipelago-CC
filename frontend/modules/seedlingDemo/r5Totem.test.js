@@ -13,12 +13,12 @@ import {
     CLUSTER, GROUP_6, L38_CHAIN, TOTEM_ENTRANCE, TOTEM_PAIR, TOTEM_ROPE, TOTEM_SHAFT,
     TotemError, assertPresserWrites,
     L40_ARRIVAL, L40_CHAIN, L40_PREDICTIONS, L41_L42_RECON,
-    L37_BURN, L40_JOIN, L40_NW, L41_SHIELD, L41_PART3,
+    L37_BURN, L40_JOIN, L40_NW, L41_SHIELD, L41_PART3, PARKED_SCAN_AUDIT,
 } from './r5Totem.js';
 import { ROPE_PULL } from './r5Shaft.js';
 import { createFallRock, fallRockFreezeTicks, publishActivate } from './fallRock.js';
 import { auditFire } from './presses.js';
-import { HAZARD_STATES } from './tapeFormat.js';
+import { HAZARD_STATES, parseTape, serializeTape } from './tapeFormat.js';
 import { crossRoomWrites, createActivatorState, stepActivators } from './activators.js';
 import { ROLES, buildLevelWorld } from './levelWorld.js';
 import { atlasLevelSource } from './levelSource.js';
@@ -27,9 +27,10 @@ import { HITBOX } from './playerPhysicsV1.js';
 import { fireRect } from './fireVerb.js';
 import { rectsOverlap } from './levelWorld.js';
 import { chestStanceBand } from './chest.js';
-import { plannerObstacleAt } from './botDriverV2.js';
+import { plannerObstacleAt, synthesizeLegs } from './botDriverV2.js';
 import { scanCrusher } from './crusher.js';
 import { createLevelRun } from './levelRun.js';
+import { runTape } from './tapeRunner.js';
 import {
     HIT_TO_GONE_TICKS as BURN_HIT_TO_GONE,
     WAIT_AFTER_PRESS_TICKS as BURN_WAIT_AFTER_PRESS,
@@ -1161,7 +1162,7 @@ describe('⛓⛓⛓ L41: three baits walk the crusher onto the cover\'s button',
         expect(only(run)).toMatchObject(L41_PART3.baits[0].from);
         for (const bait of L41_PART3.baits) {
             expect(only(run), `before the ${bait.dir} bait`).toMatchObject(bait.from);
-            drive(run, bait.spans);
+            drive(run, [...bait.approach, ...bait.spans]);
             expect(only(run), `after the ${bait.dir} bait`).toMatchObject(bait.park);
             expect(run.crushersParked).toBe(true);
             // ⛔ THE SURVIVAL CLAIM. `Crusher.hit()` deals 1000 and
@@ -1181,7 +1182,7 @@ describe('⛓⛓⛓ L41: three baits walk the crusher onto the cover\'s button',
     it('⛓⛓⛓ …and the third park PRESSES `button@248,232` — the cover opens', () => {
         const run = l41();
         expect(run.openActivators.has(L41_PART3.cover.id)).toBe(false);
-        for (const bait of L41_PART3.baits) drive(run, bait.spans);
+        for (const bait of L41_PART3.baits) drive(run, [...bait.approach, ...bait.spans]);
         expect([...run.openActivators]).toEqual([L41_PART3.cover.id]);
         // ⛓ AND IT STAYS OPEN with the player nowhere near: a `Cover` resets
         // the tick nothing is in its cell and its button is released, and
@@ -1202,9 +1203,144 @@ describe('⛓⛓⛓ L41: three baits walk the crusher onto the cover\'s button',
             boot: { level: 41, x: 208, y: 80 },
             noDamage: true,
         });
-        for (const bait of L41_PART3.baits) drive(control, bait.spans);
+        for (const bait of L41_PART3.baits) drive(control, [...bait.approach, ...bait.spans]);
         expect(only(control)).toMatchObject(L41_PART3.baits[0].from);
         expect(control.openActivators.has(L41_PART3.cover.id)).toBe(false);
         expect(control.crusherContacts).toEqual([]);
+    });
+});
+
+/**
+ * ── ⛓⛓⛓ R5 SLICE 16: THE WHOLE ROOM, THROUGH THE DRIVER ──────────────
+ *
+ * The block above drives the three choreographies as raw spans, which is
+ * how they were searched. This one drives the LEG — three `bait` targets,
+ * six `fire.moves` presses, a `wait` and a `collect` — because the two
+ * things slice 15 could not check are exactly the ones that only appear
+ * once a driver is holding the room:
+ *
+ *   · `runBait`'s precondition. Two of the three baits present the player
+ *     to the lane WITH their first span, so a verb that demanded the lane
+ *     up front could express bait 1 and nothing else.
+ *   · the 1,307 ticks AFTER the third bait. A park is a position, not a
+ *     state — the crusher re-scans every one of them from `button@248,232`,
+ *     and if any stance in the block chain, the fade or the ceremony woke
+ *     it the cover would shut and the room would seal.
+ *
+ * `plan-seedling-r5-l41-part3.mjs` is the generator and carries the full
+ * claim list; this is the part that has to stay true in CI.
+ */
+describe('⛓⛓⛓ L41: the leg — three baits, six pushes, a fade nobody holds, a ceremony', () => {
+    const leg = () => synthesizeLegs([{
+        level: 41,
+        targets: [
+            ...L41_PART3.baits.map((b) => ({
+                ...b.stance,
+                bait: {
+                    crusher: { x: 240, y: 64 },
+                    approach: b.approach.map((sp) => ({ ...sp })),
+                    spans: b.spans.map((sp) => ({ ...sp })),
+                    park: { ...b.park },
+                },
+            })),
+            { x: 120, y: 136, equip: { slot: 1 } },
+            ...L41_PART3.pushes.map((p) => ({
+                x: p.stance[0] * 16 + 8,
+                y: p.stance[1] * 16 + 8,
+                fire: {
+                    moves: [{
+                        from: { tx: p.from[0], ty: p.from[1] },
+                        to: { tx: p.to[0], ty: p.to[1] },
+                    }],
+                },
+            })),
+            {
+                x: L41_PART3.pushes[5].stance[0] * 16 + 8,
+                y: L41_PART3.pushes[5].stance[1] * 16 + 8,
+                wait: {
+                    ticks: 160,
+                    opens: L41_PART3.wandlock.id,
+                    why: 'the block parked on `button@176,176` is what publishes group 1',
+                },
+            },
+            { x: L41_PART3.collectStance[0] * 16 + 8, y: L41_PART3.collectStance[1] * 16 + 8 },
+            {
+                x: L41_PART3.collectStance[0] * 16 + 8,
+                y: L41_PART3.collectStance[1] * 16 + 8,
+                collect: { pickup: { ...L41_PART3.part } },
+            },
+        ],
+    }], {
+        levelSource: atlasLevelSource(),
+        boot: { level: 41, x: 208, y: 80 },
+        relax: {
+            noclip: false,
+            noDamage: true,
+            noHazards: [],
+            grants: [{ level: 41, items: ['sword', 'fire', 'conch', 'feather'] }],
+            // ⛓ The window boots with its own tags clear: the rocks SHIELD
+            // the crusher, so the swing that removes them is an earlier
+            // window's, exactly as an item is.
+            persistence: L41_PART3.rocks.map((r) => ({ level: 41, tag: r.tag })),
+            equips: [],
+            roles: [...ROLES],
+        },
+        name: 'r5-l41-part3',
+        lattice: 8,
+        allowGrazes: true,
+        maxTicksPerTarget: 4000,
+    });
+
+    it('drives all three baits, and each starts where the last one ended', () => {
+        const { baits, arrivals } = leg();
+        expect(baits.map((b) => b.dir)).toEqual(['W', 'S', 'E']);
+        expect(baits.map((b) => b.crusherTo))
+            .toEqual(L41_PART3.parks.map((p) => ({ ...p.to })));
+        // ⛓ ZERO walk ticks before each bait. The choreographies were
+        // searched as one continuous chain, so a stance that cost the
+        // planner a tick would be a bait verified from a position its
+        // search never saw.
+        expect(arrivals[0].tick).toBe(0);
+        expect(arrivals[1].tick).toBe(baits[0].to);
+        expect(arrivals[2].tick).toBe(baits[1].to);
+    });
+
+    it('⛓⛓⛓ …then six pushes, a fade nobody holds, and the fourth ceremony', () => {
+        const { fires, waits, collects, tape } = leg();
+        expect(fires.map((f) => f.moves[0].to))
+            .toEqual(L41_PART3.pushes.map((p) => ({ tx: p.to[0], ty: p.to[1] })));
+        // ⛓⛓ THE FADE, MEASURED. `wandlock@240,96` needs 101 CONTINUOUS
+        // published ticks and the block's own glide already spent 25 of
+        // them inside the sixth press's settle window — so the wait sees 76.
+        expect(waits).toHaveLength(1);
+        expect(waits[0].openedAt).toBe(76);
+        expect(waits[0].to - waits[0].from).toBe(160);
+        expect(collects).toHaveLength(1);
+        expect(collects[0].item ?? null).toBeNull();
+        // The emitted tape is the committed fixture's length, less the
+        // trailing rest the plan script adds.
+        expect(tape.tick_count).toBe(2231);
+    });
+
+    /**
+     * ⛔⛔ THE PARKED-SCANNER AUDIT, in its cheap form: the run's OWN
+     * answer at the end of the leg. The plan script does it tick by tick
+     * off `createTapeStepper`; what has to hold in CI is the invariant
+     * those 1,307 ticks exist to protect.
+     */
+    it('⛔⛔ …with the crusher still on `button@248,232` and never once touched', () => {
+        // ⚠ FROM AN INDEPENDENT REPLAY OF THE EMITTED TAPE, not from the
+        // driver's own running state — this suite's oldest rule, and the
+        // ninth geometry family only became checkable this way in slice 16,
+        // when `runTape` started forwarding the crushers at all.
+        const run = runTape(parseTape(serializeTape(leg().tape)),
+            { levelSource: atlasLevelSource() });
+        expect([...run.crushers.values()][0]).toMatchObject({ ...PARKED_SCAN_AUDIT.park });
+        expect(run.crushersParked).toBe(true);
+        expect(run.crusherContacts).toEqual([]);
+        expect([...run.openActivators].sort())
+            .toEqual([L41_PART3.cover.id, L41_PART3.wandlock.id].sort());
+        expect(PARKED_SCAN_AUDIT.movedTicks).toBe(0);
+        expect(PARKED_SCAN_AUDIT.hotTicks).toBe(0);
     });
 });

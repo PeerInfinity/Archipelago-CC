@@ -66,7 +66,7 @@ import {
 import {
     SPINNER, createSpinnerState, hitSpinner, spinnerRects, spinnerTerrainWrites, stepSpinners,
 } from './spinner.js';
-import { alwaysArmed, crusherRect, stepCrusher } from './crusher.js';
+import { alwaysArmed, crusherRect, scanCrusher, stepCrusher } from './crusher.js';
 import { ledgerKey, outOfBandFlagForWriter } from './outOfBandLedger.js';
 import { createChestState, stepChests } from './chest.js';
 import {
@@ -2854,6 +2854,38 @@ export function createLevelRun({
          * the body" is a CLAIM and not a silence.
          */
         get crusherContacts() { return crusherContacts.map((c) => ({ ...c })); },
+        /**
+         * ⛓⛓⛓ R5 SLICE 16 — WHAT EVERY CRUSHER IN THIS ROOM CAN SEE RIGHT
+         * NOW, ASKED OF THE RUN.
+         *
+         * A parked crusher is not a disarmed one (§29.8): `update()`
+         * re-derives `v` on every tick it is at rest, so a leg that parks one
+         * on a button and then spends 1,300 ticks pushing blocks beside it is
+         * making a claim about every one of those ticks. Auditing that needs
+         * the scan the STEP takes — same solid list, same two player shapes,
+         * same exclusion — and the first cut of L41's audit rebuilt it in the
+         * plan script out of `botDriverV2.livePerVisitOpts`. Two views of one
+         * fact, and the one nobody steps is the one that drifts.
+         *
+         * ⚠ A SNAPSHOT, like `crushers` — and for the same reason. It says
+         * what the next tick's scan would find IF the crusher is at rest;
+         * a charging one does not re-derive `v` at all.
+         */
+        get crusherScans() {
+            if (noclip) return null;
+            const out = new Map();
+            for (const [id, c] of crusherStateFor(level)) {
+                const ctx = crusherCtx(c, liveSolidOpts());
+                out.set(id, {
+                    ...scanCrusher({ x: c.x, y: c.y }, ctx.playerBox, ctx.playerPoint,
+                        ctx.lineSolids),
+                    x: c.x,
+                    y: c.y,
+                    resting: c.vx === 0 && c.vy === 0,
+                });
+            }
+            return out;
+        },
         // ── ⛔⛔ R5 slice 9: the chest, the pulse and the seal ──────────
         get openChests() { return noclip ? null : (openChestIdsNow() ?? new Set()); },
         /** One record per chest OPENED, with the flag `open()` cleared. */

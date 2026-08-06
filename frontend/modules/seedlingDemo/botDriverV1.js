@@ -225,7 +225,7 @@ export function synthesizeTape(targets, opts = {}) {
  * artifact they were reading.
  */
 export function buildTape(perTick, boot = { level: 0, x: 80, y: 128 }, name,
-    { noclip = true, noDamage, noHazards, grants, persistence, equips } = {}) {
+    { noclip = true, noDamage, noHazards, grants, persistence, equips, pins } = {}) {
     const relaxations = { noDamage, noHazards, grants };
     const declared = Object.entries(relaxations).filter(([, v]) => v !== undefined);
     if (declared.length > 0 && declared.length < 3) {
@@ -254,6 +254,36 @@ export function buildTape(perTick, boot = { level: 0, x: 80, y: 128 }, name,
             + 'version 2 plus clears, so a tape that clears anything must also declare '
             + 'noDamage, noHazards and grants.');
     }
+    /**
+     * ⛔⛔ R5 SLICE 16 — VERSION 5, AND ITS ABSENCE WAS A SILENT DROP.
+     *
+     * `synthesizeLegs` has handed `relax.pins` to `createLevelRun` since
+     * slice 4 — the run really is pinned, and the docblock there says "the
+     * emitted tape carries the same list, per the `relax` rule that one
+     * object decides the plan AND the tape". It did not: this function
+     * stopped at version 4, so `pins` fell off the end of the destructuring
+     * and every synthesized tape was UNPINNED however the plan was written.
+     * The driver verified one execution and the tape asked the game for
+     * another — the exact failure the `equips` docblock forty lines up was
+     * written about, in the same function, one version later.
+     *
+     * Nothing caught it because the only pinned tape in the tree
+     * (`r5-bosskey-leg`) is hand-authored.
+     *
+     * Version 5 is version 4 plus the pins, for the same reason 4 is 3 plus
+     * the equip: a tape that selects an execution must already be declaring
+     * everything below it.
+     */
+    const v5 = pins !== undefined;
+    if (v5 && !v4) {
+        throw new Error('buildTape: pins is a version 5 field and version 5 is version 4 '
+            + 'plus the determinism pins, so a tape that pins anything must also declare '
+            + 'equips (and therefore persistence, noDamage, noHazards and grants).');
+    }
+    if (v5 && !Array.isArray(pins)) {
+        throw new Error('buildTape: pins must be an ARRAY of pin names — [] for "this is '
+            + `a v5 tape that pins nothing" — got ${typeof pins}`);
+    }
     if (v3 && !Array.isArray(persistence)) {
         throw new Error('buildTape: persistence must be an ARRAY of {level, tag, note} '
             + `— [] for "this is a v3 tape that clears nothing" — got ${typeof persistence}`);
@@ -278,7 +308,7 @@ export function buildTape(perTick, boot = { level: 0, x: 80, y: 128 }, name,
     }
 
     return {
-        tape_version: v4 ? 4 : (v3 ? 3 : (v2 ? 2 : 1)),
+        tape_version: v5 ? 5 : (v4 ? 4 : (v3 ? 3 : (v2 ? 2 : 1))),
         game: 'seedling',
         ...(name ? { name } : {}),
         boot: { level: boot.level, x: boot.x, y: boot.y },
@@ -286,6 +316,7 @@ export function buildTape(perTick, boot = { level: 0, x: 80, y: 128 }, name,
         ...(v2 ? { noDamage, noHazards, grants } : {}),
         ...(v3 ? { persistence } : {}),
         ...(v4 ? { equips } : {}),
+        ...(v5 ? { pins } : {}),
         tick_count: perTick.length,
         inputs,
     };
