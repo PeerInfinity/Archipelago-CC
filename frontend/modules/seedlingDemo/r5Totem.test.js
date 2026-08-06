@@ -13,14 +13,15 @@ import {
     CLUSTER, GROUP_6, L38_CHAIN, TOTEM_ENTRANCE, TOTEM_PAIR, TOTEM_ROPE, TOTEM_SHAFT,
     TotemError, assertPresserWrites,
     L40_ARRIVAL, L40_CHAIN, L40_PREDICTIONS, L41_L42_RECON,
-    L37_BURN, L40_JOIN, L40_NW, L41_SHIELD, L41_PART3, L42_PART4, PARKED_SCAN_AUDIT,
+    L37_BURN, L40_JOIN, L40_LINK4, L40_NW, L41_SHIELD, L41_PART3, L42_PART4,
+    PARKED_SCAN_AUDIT,
 } from './r5Totem.js';
 import { ROPE_PULL } from './r5Shaft.js';
 import { createFallRock, fallRockFreezeTicks, publishActivate } from './fallRock.js';
 import { auditFire } from './presses.js';
 import { HAZARD_STATES, parseTape, serializeTape } from './tapeFormat.js';
 import { crossRoomWrites, createActivatorState, stepActivators } from './activators.js';
-import { ROLES, buildLevelWorld } from './levelWorld.js';
+import { PERSISTENCE_RESPONSE, ROLES, buildLevelWorld } from './levelWorld.js';
 import { atlasLevelSource } from './levelSource.js';
 import { playerBoxAt, resolveTerrainState } from './playerPhysicsV2.js';
 import { HITBOX } from './playerPhysicsV1.js';
@@ -1416,5 +1417,60 @@ describe('⛔⛔ L42: one choreography, THREE charges — and the room is a purs
         expect(w.pressers).toEqual([]);
         expect(w.pushables).toEqual([]);
         expect(w.crushers.map((c) => c.id)).toEqual(L42_PART4.crushers.map((c) => c.id));
+    });
+});
+
+/**
+ * ── ⛔⛔ R5 SLICE 16: L40 LINK 4, AND IT IS A FINDING RATHER THAN A ROUTE ─
+ *
+ * §28.9 named this the thing to price first and said what would follow if
+ * it did not work out. It does not, three ways, and each way is asserted
+ * against the level rather than remembered.
+ */
+describe('⛔⛔ L40 link 4: a plain button no block can reach and no boundary can carry', () => {
+    const inv = { hasSword: true, hasFire: true, canSwim: true, hasFeather: true };
+    const w = () => buildLevelWorld(atlasLevelSource()(40), { roles: ROLES, inventory: inv });
+
+    it('⛓⛓ the hold is 101 ticks EXACTLY, and both Locks write together', () => {
+        const run = createLevelRun({
+            levelSource: atlasLevelSource(),
+            boot: { level: 40, x: 480, y: 384 },
+            inventory: inv,
+            noDamage: true,
+        });
+        for (let i = 0; i < L40_LINK4.holdTicks; i += 1) run.advance(new Set());
+        expect(run.lockWrites.map((wr) => wr.flag.tag).sort())
+            .toEqual(L40_LINK4.opens.map((o) => o.tag).sort());
+        expect(run.lockWrites.every((wr) => wr.t === L40_LINK4.holdTicks)).toBe(true);
+        expect([...run.openActivators].sort())
+            .toEqual(L40_LINK4.opens.map((o) => o.id).sort());
+    });
+
+    /**
+     * ⛔⛔ THE ONE THAT DECIDES IT. `Lock.turnOff()` writing persistence
+     * looks like a window-boundary answer — hold it in one window, boot the
+     * next with the tags clear. `Lock.as:42` despawns on a cleared tag only
+     * when `tSet < 0`, and these are group 2, so the cleared build is the
+     * shut build.
+     */
+    it('⛔⛔ …and the write is INERT: a cleared {40,9}/{40,10} builds the same room', () => {
+        const shut = w();
+        const cleared = buildLevelWorld(atlasLevelSource()(40), {
+            roles: ROLES, cleared: L40_LINK4.opens.map((o) => o.tag), inventory: inv,
+        });
+        expect(cleared.solids.length).toBe(shut.solids.length);
+        expect(cleared.activators.map((a) => a.id).sort())
+            .toEqual(shut.activators.map((a) => a.id).sort());
+        expect(L40_LINK4.clearIsInert).toBe(true);
+        // The reason, from the table rather than from the observation.
+        expect(PERSISTENCE_RESPONSE.wandlock).toBe('lock-despawn');
+        expect(L40_LINK4.opens.every((o) => o.tset >= 0)).toBe(true);
+    });
+
+    it('⛔ …and neither plain button is a tile any of the three blocks can be pushed to', () => {
+        expect(w().pushables.map((p) => p.id).sort())
+            .toEqual(L40_LINK4.pushReach.map((p) => p.id).sort());
+        expect(L40_LINK4.pushReach.every((p) => !p.reachesAButton)).toBe(true);
+        expect(L40_LINK4.verdict).toMatch(/UNOPENABLE BY THIS RUNG/);
     });
 });

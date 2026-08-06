@@ -1576,6 +1576,81 @@ export const L41_PART3 = Object.freeze({
 });
 
 /**
+ * ⛔⛔⛔ L40 LINK 4 — MEASURED, AND THE ANSWER IS THAT IT DOES NOT OPEN.
+ *
+ * R5 slice 16 step 2. §28.9 named this the thing to price first and said
+ * what would follow if it did not work out: *"whether L40's three blocks
+ * can reach these two is unmeasured … if they cannot, the chain from the
+ * arrival is not walkable and §24.5's ordering needs a FINDING rather than
+ * a route."* It is measured now, three ways, and all three are no.
+ *
+ * ```
+ *   button@480,384 {tset 2}       a PLAIN button — no `room`, no latch
+ *     -> wandlock@448,432 {tag 9}   Lock, 101 continuous ticks
+ *     -> wandlock@512,480 {tag 10}  Lock, 101 continuous ticks
+ * ```
+ *
+ * ⛔ **1. NO BLOCK REACHES IT.** Pushed over the whole level with EVERY
+ * activator group open, `pushableblockfire@480,480` reaches 27 tiles and
+ * neither button is among them; the other two reach ONE tile each, their
+ * own. (`button@768,400 {tset 5}` -> `wandlock@800,400 {tag 21}` is the same
+ * shape and the same answer.) The shaft solved this shape by parking blocks
+ * on buttons; L40 cannot.
+ *
+ * ⛓⛓ **2. THE PLAYER CAN HOLD IT — AND IT COSTS 101 TICKS EXACTLY.** Booted
+ * onto the button and left standing, both Locks open and both write
+ * persistence `false` on tick **101**, together. So the hold is not the
+ * problem: `Lock`'s fade is, because the player is the only thing holding
+ * the group and stepping off unpublishes it.
+ *
+ * ⛔⛔ **3. AND THE WRITE IS INERT, WHICH IS THE ONE THAT DECIDES IT.**
+ * `Lock.turnOff()` writing `Game.setPersistence(tag, false)` looks like a
+ * window-boundary answer — hold it in one window, boot the next with the
+ * tags clear, walk through a room that rebuilt without the locks. It is
+ * not: `PERSISTENCE_RESPONSE.wandlock` is `lock-despawn`, and `Lock.as:42`
+ * despawns on a cleared tag **only when `tSet < 0`**. These are group 2.
+ * `buildLevelWorld(40, {cleared: [9, 10]})` is byte-identical to the shut
+ * build — 1,121 solids either way.
+ *
+ * ⇒ **THE ONLY REMAINING OPENER IS AN ENEMY.** `Button.update` collides
+ * `["Player","Enemy","Solid"]`, L40 has no crusher, and no block can reach
+ * the cell — so what is left is parking one of the room's twelve bobs, two
+ * punchers, bobsoldier or bombpusher on it for 101 continuous ticks. That
+ * needs enemy MOTION modelled (the model has spawn cells and threat volumes
+ * and nothing else), and a `Bob`'s LOS test is commented out so it chases
+ * through walls. ⚠ NOT ATTEMPTED, and named rather than assumed.
+ */
+export const L40_LINK4 = Object.freeze({
+    button: Object.freeze({ id: 'button@480,384', tset: 2, tile: Object.freeze({ tx: 30, ty: 24 }) }),
+    opens: Object.freeze([
+        Object.freeze({ id: 'wandlock@448,432', tag: 9, tset: 2 }),
+        Object.freeze({ id: 'wandlock@512,480', tag: 10, tset: 2 }),
+    ]),
+    /** The same shape one link along, measured with it. */
+    alsoUnreachable: Object.freeze({ id: 'button@768,400', tset: 5, tile: Object.freeze({ tx: 48, ty: 25 }) }),
+    /** `Lock`'s fade, driven from a boot onto the button: both write on tick 101. */
+    holdTicks: 101,
+    /**
+     * ⛔ The push-graph over the whole level with every activator open —
+     * a block may step to a free tile when the tile OPPOSITE is free for
+     * the player to stand in. ⚠ Each block is flooded with the others
+     * STATIC, which is the bound this measurement has.
+     */
+    pushReach: Object.freeze([
+        Object.freeze({ id: 'pushableblockfire@480,480', tiles: 27, reachesAButton: false }),
+        Object.freeze({ id: 'pushableblockfire@576,576', tiles: 1, reachesAButton: false }),
+        Object.freeze({ id: 'pushableblock@576,560', tiles: 1, reachesAButton: false }),
+    ]),
+    /** ⛔ And the clear is INERT — `Lock.as:42` needs `tSet < 0` and these are 2. */
+    clearIsInert: true,
+    verdict: 'UNOPENABLE BY THIS RUNG\'S MEANS. No block reaches the button, the player '
+        + 'cannot both hold it and walk through the door it opens, and the persistence '
+        + 'write a `Lock` makes is inert for a grouped one — so a window boundary does '
+        + 'not carry it either. What is left is an ENEMY parked on the button, which '
+        + 'needs enemy motion modelled.',
+});
+
+/**
  * ⛔⛔⛔ L42 — THE PURE CASE, AND IT IS A PURSUIT LOOP.
  *
  * R5 slice 16 step 1. L41 has two gates, a block and a button; L42 has
