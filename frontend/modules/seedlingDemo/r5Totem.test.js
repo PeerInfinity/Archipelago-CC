@@ -13,7 +13,7 @@ import {
     CLUSTER, GROUP_6, L38_CHAIN, TOTEM_ENTRANCE, TOTEM_PAIR, TOTEM_ROPE, TOTEM_SHAFT,
     TotemError, assertPresserWrites,
     L40_ARRIVAL, L40_CHAIN, L40_PREDICTIONS, L41_L42_RECON,
-    L37_BURN, L40_JOIN, L40_NW, L41_SHIELD, L41_PART3, PARKED_SCAN_AUDIT,
+    L37_BURN, L40_JOIN, L40_NW, L41_SHIELD, L41_PART3, L42_PART4, PARKED_SCAN_AUDIT,
 } from './r5Totem.js';
 import { ROPE_PULL } from './r5Shaft.js';
 import { createFallRock, fallRockFreezeTicks, publishActivate } from './fallRock.js';
@@ -1342,5 +1342,79 @@ describe('⛓⛓⛓ L41: the leg — three baits, six pushes, a fade nobody hold
             .toEqual([L41_PART3.cover.id, L41_PART3.wandlock.id].sort());
         expect(PARKED_SCAN_AUDIT.movedTicks).toBe(0);
         expect(PARKED_SCAN_AUDIT.hotTicks).toBe(0);
+    });
+});
+
+/**
+ * ── ⛔⛔ R5 SLICE 16: L42, THE PURE CASE — DRIVEN AS FAR AS IT GOES ────
+ *
+ * The room has no activator, no presser and no pushable: one part, two
+ * crushers, and a two-tile-tall corridor whose middle four tiles they fill.
+ * `probe-seedling-r5-l42.mjs` carries the full measurement; what is pinned
+ * here is the one thing that IS a driven choreography, because a number in
+ * a docblock is a memory and this one has to stay true.
+ */
+describe('⛔⛔ L42: one choreography, THREE charges — and the room is a pursuit', () => {
+    it('⛓⛓⛓ A\'s chain goes W then S then E in one bait, 208 px, zero contacts', () => {
+        const chain = L42_PART4.chainA;
+        const out = synthesizeLegs([{
+            level: 42,
+            targets: [{
+                x: chain.stance.tx * 16 + 8,
+                y: chain.stance.ty * 16 + 8,
+                bait: {
+                    crusher: { x: 96, y: 144 },
+                    approach: chain.approach.map((sp) => ({ ...sp })),
+                    spans: chain.spans.map((sp) => ({ ...sp })),
+                    park: { ...chain.park },
+                },
+            }],
+        }], {
+            levelSource: atlasLevelSource(),
+            boot: { level: 42, x: 240, y: 320 },
+            relax: {
+                noclip: false,
+                noDamage: true,
+                noHazards: [],
+                grants: [{ level: 42, items: ['sword', 'fire', 'conch', 'feather'] }],
+                persistence: [],
+                equips: [],
+                pins: ['sound', 'dead_frames'],
+                roles: [...ROLES],
+            },
+            name: 'l42-chain',
+            lattice: 8,
+            allowGrazes: true,
+            maxTicksPerTarget: 6000,
+        });
+        expect(out.baits).toHaveLength(1);
+        expect(out.baits[0].crusherFrom).toEqual({ ...L42_PART4.crushers[0].home });
+        expect(out.baits[0].crusherTo).toEqual({ ...chain.park });
+        expect(out.baits[0].ticks).toBe(chain.ticks);
+        // ⛓ FROM AN INDEPENDENT REPLAY. A choreography that is run over
+        // completes exactly like one that works — `Bot.noDamage` is on —
+        // so the contact count is the claim and the park alone is not.
+        const run = runTape(parseTape(serializeTape(out.tape)),
+            { levelSource: atlasLevelSource() });
+        expect(run.crusherContacts).toEqual([]);
+        expect([...run.crushers.values()].find((c) => c.id === L42_PART4.crushers[0].id))
+            .toMatchObject({ ...chain.park });
+        // ⛔ AND THE SECOND CRUSHER HAS NOT MOVED. It is invisible from
+        // everywhere the arrival reaches — A shields its only reachable
+        // lane — which is why the order is forced and not chosen.
+        expect([...run.crushers.values()].find((c) => c.id === L42_PART4.crushers[1].id))
+            .toMatchObject({ ...L42_PART4.crushers[1].home });
+    });
+
+    it('⚠ …and the room is NOT driven — the miss is named, not implied', () => {
+        expect(L42_PART4.driven).toBe(false);
+        expect(L42_PART4.miss).toMatch(/component result, not a choreography/);
+        // The pure case, asserted against the level rather than remembered.
+        const w = buildLevelWorld(atlasLevelSource()(42),
+            { roles: ROLES, inventory: { hasSword: true, hasFire: true, canSwim: true, hasFeather: true } });
+        expect(w.activators).toEqual([]);
+        expect(w.pressers).toEqual([]);
+        expect(w.pushables).toEqual([]);
+        expect(w.crushers.map((c) => c.id)).toEqual(L42_PART4.crushers.map((c) => c.id));
     });
 });

@@ -1576,6 +1576,136 @@ export const L41_PART3 = Object.freeze({
 });
 
 /**
+ * ⛔⛔⛔ L42 — THE PURE CASE, AND IT IS A PURSUIT LOOP.
+ *
+ * R5 slice 16 step 1. L41 has two gates, a block and a button; L42 has
+ * **no activator, no presser and no pushable at all** — one part, two
+ * crushers and a corridor. §24.6 called it the pure case and it is: the
+ * only mechanism in the room is the two crushers, and the only verb is
+ * BAIT.
+ *
+ * ```
+ *   rows 9-10, cols 4..12          the corridor, 2 tiles tall
+ *     cols 4,5    free             the west corridor's mouth
+ *     cols 6,7    crusher@96,144   "A"
+ *     cols 8,9    crusher@128,144  "B"
+ *     cols 10-12  free             the part pocket — totempart 4 @184,152
+ * ```
+ *
+ * Four tiles of crusher plug a two-tile-tall corridor whose free space is
+ * 2 tiles west and 3 east, and the pocket has no other opening. The
+ * player arrives at tile (15,20) from `L40 teleporter@848,0`.
+ *
+ * ── ⛓⛓ WHAT IS MEASURED, AND IT IS A LOT ─────────────────────────────
+ *
+ * ⛓ **EACH CRUSHER SHIELDS THE OTHER, AND THE SHIELDING IS THE ORDER.**
+ * B can be seen from nowhere the player can stand: its north lane is
+ * blocked by the row 7-8 wall, its south lane by the row 11-12 wall, its
+ * east lane is inside the pocket, and its west lane is A. So A moves
+ * first, always.
+ *
+ * ⛓ **A's ONLY SIGHT LINE IS FROM THE WEST**, and its charge chain from
+ * there is DRIVEN: `up 7 / down 30 / right 120` from tile (4,11) walks it
+ * **W then S then E** — three separate charges, 208 px of travel, 557
+ * ticks, ZERO contacts — from (112,160) to (192,224). That is the first
+ * multi-charge choreography on the arc and the first time a park has
+ * armed the next charge by itself.
+ *
+ * ⛔⛔ **AND THAT IS THE PROBLEM: A PARK RE-ARMS A LANE ACROSS THE
+ * PLAYER'S OWN ESCAPE.** Every one of A's resting cells puts one of its
+ * four 64 px lanes down the corridor the player just fled into:
+ *
+ * ```
+ *   park (80,160)  cols 4,5 rows 9,10    N lane rows 5-10  } the whole west
+ *                                        S lane rows 9-14  } corridor
+ *   park (80,224)  cols 4,5 rows 13,14   N lane rows 9-14, E lane cols 4-11
+ *   park (192,224) cols 11,12 rows 13,14 W lane cols 7-12, S lane rows 13-18
+ * ```
+ *
+ * So the room is not "move the obstacle" — it is a PURSUIT. Traced by
+ * hand round the full loop, A chases the player south, east, south again
+ * along row 17, west, north up column 6 and west again, and ends back in
+ * the corridor it started in. ⚠ `Crusher` writes no persistence, so the
+ * loop has no state and no exit condition other than the player's route.
+ *
+ * ⚖ **A COMPONENT SEARCH SAYS IT IS SOLVABLE IN SIX BAITS**, and the
+ * sequence is symmetric — each crusher does the same W/S/E dance, and the
+ * FIRST one's park at cols 11,12 is exactly what stops the second at cols
+ * 9,10 instead of the wall. ⛔ But a component search is not a
+ * choreography: its first cut "solved" the room by letting the player
+ * finish on the far side of a 32 px body moving down a 2-tile corridor,
+ * and adding the swept volume was what made it honest.
+ *
+ * ⚠⚠ **NOT DRIVEN, AND NAMED AS THE MISS.** What is driven is A's chain
+ * and nothing after it. What is unmeasured is whether the return leg —
+ * the southern bypass at row 17, which A's park at (192,224) puts inside
+ * its own south lane — can be walked at all, and whether L42's part is
+ * meant to be taken WITHOUT the wand (L43 is the wand room and this rung
+ * does not enter it).
+ */
+export const L42_PART4 = Object.freeze({
+    level: 42,
+    /** From `L40 teleporter@848,0 -> (240,320)`. */
+    arrival: Object.freeze({ tx: 15, ty: 20 }),
+    part: Object.freeze({ x: 184, y: 152, index: 4 }),
+    crushers: Object.freeze([
+        Object.freeze({ id: 'crusher@96,144', home: Object.freeze({ x: 112, y: 160 }) }),
+        Object.freeze({ id: 'crusher@128,144', home: Object.freeze({ x: 144, y: 160 }) }),
+    ]),
+    /** ⛓ No activator, no presser, no pushable — the pure case. */
+    openers: Object.freeze([]),
+    /** The arrival flood with both crushers home: the part is not in it. */
+    flood: Object.freeze({
+        policy: 'inventory: sword+fire+conch+feather; crushers at their constructor cells',
+        nodes: 304,
+        partReachable: false,
+    }),
+    /**
+     * ⛓⛓ A's THREE-CHARGE CHAIN, DRIVEN — `botDriverV2.runBait` with one
+     * approach and three escapes, 0 contacts, park asserted.
+     */
+    chainA: Object.freeze({
+        stance: Object.freeze({ tx: 4, ty: 11 }),
+        approach: Object.freeze([Object.freeze({ key: 'up', ticks: 7 })]),
+        spans: Object.freeze([
+            Object.freeze({ key: 'down', ticks: 30 }),
+            Object.freeze({ key: 'right', ticks: 120 }),
+            Object.freeze({ key: null, ticks: 400 }),
+        ]),
+        charges: Object.freeze(['W', 'S', 'E']),
+        park: Object.freeze({ x: 192, y: 224 }),
+        ticks: 557,
+        contacts: 0,
+        /**
+         * ⛓ The east park is NOT the room's east wall — it is the row-14
+         * notch at cols 13,14. A crusher is 32 px tall and spans BOTH rows
+         * of the corridor, so the lower row's wall stops it two tiles
+         * short of the upper row's.
+         */
+        stoppedBy: 'tile:Blue Wall at (13,14)/(14,14) — the lower row of a 2-tile body',
+    }),
+    /**
+     * ⚖ The component search's ordering, banked because it is what a
+     * choreography would have to realise. Each entry is
+     * `{crusher, dir, park}`; the two threes are the same dance.
+     */
+    orderingSearched: Object.freeze([
+        Object.freeze({ id: 'crusher@96,144', dir: 'W', park: Object.freeze({ x: 80, y: 160 }) }),
+        Object.freeze({ id: 'crusher@96,144', dir: 'S', park: Object.freeze({ x: 80, y: 224 }) }),
+        Object.freeze({ id: 'crusher@96,144', dir: 'E', park: Object.freeze({ x: 192, y: 224 }) }),
+        Object.freeze({ id: 'crusher@128,144', dir: 'W', park: Object.freeze({ x: 80, y: 160 }) }),
+        Object.freeze({ id: 'crusher@128,144', dir: 'S', park: Object.freeze({ x: 80, y: 224 }) }),
+        /** ⛓⛓ AND THE FIRST CRUSHER'S PARK IS THE SECOND'S WALL. */
+        Object.freeze({ id: 'crusher@128,144', dir: 'E', park: Object.freeze({ x: 160, y: 224 }) }),
+    ]),
+    driven: false,
+    miss: 'the six-bait ordering is a component result, not a choreography: only A\'s '
+        + 'W/S/E chain is driven. What is unmeasured is the RETURN — the southern bypass '
+        + 'at row 17 lies inside the south lane of A\'s own east park — and whether part '
+        + '4 is meant to be taken without the wand at all.',
+});
+
+/**
  * ⛔⛔⛔ THE PARKED-SCANNER AUDIT — the check §29 did not name.
  *
  * §29.8 established that a park is a POSITION and not a state: a resting
