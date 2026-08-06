@@ -3420,3 +3420,162 @@ is a claim rather than a fact about today's roster. And COMMIT the
 observations (`fixtures/dead-frame-observations.json`): the numbers the
 previous band was designed from lived only in prose and did not
 reproduce.
+
+## R5 slice 13 — the billiard, the thread, and the first two ceremonies
+
+### ⛓⛓⛓ One enemy in the game is modellable, and `runRange = 0` is why
+
+Slice 12 found that a `PushableBlock*`'s constructor pushes `"Enemy"` onto
+its own solids list, so a wandering `Spinner` can wedge a block mid-glide —
+permanently, because a blocked block keeps `v` non-zero and
+`PushableBlockFire.hit`'s first line is `if (v.length > 0) return`. The fix
+needed the spinner's POSITION, which needed its motion to be predictable.
+
+It is, and almost uniquely so:
+
+```
+  runRange = 0        the chase arm's gate is `d <= runRange` against
+                      FP.distance ⇒ the nearestToPoint("Player") block is
+                      DEAD CODE. The motion is player-INDEPENDENT.
+  activeOffScreen     true ⇒ Enemy.update's !onScreen() return never fires.
+                      No camera coupling at all.
+  friction()          OVERRIDDEN: the floor is `moveSpeed`, not 0. It never
+                      stops, and a shove DECAYS BACK to speed 1.
+  moveX/moveY         OVERRIDDEN: `v.x = -v.x` and return, instead of stop.
+```
+
+⇒ the trajectory is a function of the level's static geometry and the tick
+index alone, so it can be simulated forward from tick 0 of a visit with no
+route input. That is what makes a press schedule threadable
+(`spinner.js`, `run.spinnerForecast`).
+
+### ⛓⛓ A refuted `--record` run leaves a game-side observation behind
+
+`--record` prints the FIRST diverging tick with BOTH streams' values on it.
+So slice 12's three withdrawn arms — whose expectation files were deleted —
+still carried exact game numbers in the session log:
+
+```
+  r5-press-glide    t157   game y = 83.83122648907042
+  r5-press-repeat   t143   game y = 90.98122648907042
+```
+
+The corrected model landed on both to the full double **before any recording
+was spent**. When you withdraw a fixture, bank its divergence numbers: a
+refuted run is not only a red.
+
+### ⛔⛔ A corrected driver cannot re-author the tapes its own defect produced
+
+With the spinner modelled, `synthesizeLegs` correctly refuses the press
+those diagnostic tapes were built around — so re-synthesising them produces
+*different tapes wearing the same names*. Two of the three were recovered
+instead, by pure span arithmetic over a tape that IS committed
+(`r5-press-delay`), and the arithmetic was checked two ways: both land on
+`tick_count`s the GAME measured (from `observation count - 1` in the old
+log), and the transform inverts byte-for-byte back to the committed tape.
+The third could not be recovered and is named rather than fabricated.
+
+### ⛔ Two alpha fades, same shape, different answers
+
+`alpha -= k` with `alpha <= 0` is an ACCUMULATION, not `1 / k`:
+
+```
+  death()          1 -= 0.1  x10  ->  1.39e-16, STILL > 0  ⇒ 11 ticks
+  fallAlphaSpeed   1 -= 0.05 x20  -> -3.19e-16,      <= 0  ⇒ 20 ticks
+```
+
+A model that divided would be one frame early on every death and right on
+every pit fall — wrong in exactly the case its own test would miss.
+
+### ⛓⛓⛓ A frozen player is invulnerable — with one exception in the game
+
+Every damage path reaches the player through `Player.hit`, whose gate is
+`hitsTimer <= 0 && hits < hitsMax && !Game.freezeObjects`. That is nineteen
+call sites — enemies, projectiles, the pulser's ring, the crusher's 1000 —
+and it means **a 150-frame pickup ceremony cannot be interrupted by
+damage**.
+
+⛔ The exception is `LavaTrap.as:72`, `attached.die()`: it calls
+`Player.die()` directly, bypassing the freeze gate AND `Bot.noDamage` (the
+relaxation guards `hit()`'s body, not `die()`). Dungeons 7 and 8 only.
+
+⇒ this corrects slice 12's crusher rule. A `Crusher` MOVES through a
+ceremony and cannot HURT through one, so a part-collect near one is a claim
+about **one frame** — the first unfrozen tick — plus where 150 px of charge
+parks a 32x32 mobile Solid. See `crusher.PLAYER_DAMAGE_PATHS`.
+
+### ⛓ `fire.thread` — the press waits for its corridor
+
+A declaration, not a flag. The corridor is the union of each declared move's
+from-cell and to-cell (the block's swept rect); the span is
+`[press + firstHitTick, press + lastHitTick + 32]`; the press emits idle
+ticks until `run.spinnerForecast` says that window is clear.
+
+⚠ The forecast is a **search heuristic** — it holds the other blocks still,
+so it can be a tick of geometry out. What DECIDES is `runFire`'s exact-set
+effect check against the real models, so a bad thread costs a refused press
+and never a green tape. A forecast used to ASSERT anything would be the
+two-cost-models trap.
+
+On the shaft, exactly one of nineteen presses waited: **27 ticks before
+press 5**, the press slice 11 measured as the failure. Killing the three
+spinners instead would have written {39,3}/{39,4}/{39,6} and turned a
+nine-write ledger into a twelve-write one.
+
+### ⛔⛔ Modelling a position creates a bill for everything that acts on it
+
+The shaft's CONTROL arm — the eighteen presses deleted, nothing fighting
+anything — came back from the game with **{39,4}** in its ledger, a
+spinner's own tag. `Pulser.hit`'s third arm is
+`(c as Enemy).hit(force, …, "Pulse")`; the model had the arm named since
+slice 9 and had never had an enemy to hand it. Leaving three blocks on their
+spawns is leaving three WALLS where the billiard bounces differently.
+
+⇒ deleting eighteen presses changed which enemy lived. A control arm is a
+real experiment, not a formality. And the knockback is not cosmetic: force 6
+against a friction floor of `moveSpeed` is twenty ticks of a different
+trajectory.
+
+### ⛔ A control's resting cell is not a claim about the room
+
+`SHAFT_PAIR.pinnedAt` was a hand prediction of where a pressless walk would
+STOP. A control replays the whole input tape into a shut world, so after the
+first blocker the remaining spans keep shoving it — the last cell is an
+artefact of the last span, and it moved twice in one slice as the tape grew.
+Assert what the ROOM decides (a cell never entered, a row never crossed) and
+keep the resting cell as reported data.
+
+### ⚠ Compare the right two sets: declared + earned vs earned
+
+The game's `persistence_cleared` is everything the SAVE has cleared —
+declared clears included. A plan's ledger is what the route EARNS. Comparing
+them as a straight equality makes every declared flag look like a
+disagreement.
+
+### ⛓ `relax.roles`, and `collect.aim`
+
+- `synthesizeLegs`' `relax.roles` is how an R5 plan asks for the `combat`
+  census by name. It may only WIDEN the base roles; narrowing is refused,
+  because a plan that dropped `blocking` would get a walk that consults no
+  collider.
+- `collect.aim` overrides the point a collect leg walks at, and takes a
+  `why`. `totempart@72,40`'s rect straddles a column boundary and the line
+  from its only approach cell to its centre runs into a wall — the override
+  moves the AIM, not the contact test.
+
+### ⛓⛓ Two of the five ceremonies, counted by the GAME
+
+`hasTotemPart` is not in `Bot.itemReadout`, so a collect is claimed over its
+**150 frozen frames** in `dead_frames` rather than over the item:
+
+```
+  r5-shaft       367 dead = 197 (the rope's rock) + 150 (part 2) + 20 fade
+  r5-l40-part1   170 dead =                          150 (part 1) + 20 fade
+```
+
+⛔ And L40's load-bearing negative is that the walk never leaves the level:
+every pit there is a ONE-WAY transport into L43, the wand room. A tape that
+fell would not fail — it would quietly succeed at something else.
+`control@224,432` looks like the trigger and is not one: it is a parameter
+block read once at `loadlevel`, and its `@x,@y` is the base of an OFFSET
+rather than a place (`r5Totem.L40_FALLTHROUGH`).
