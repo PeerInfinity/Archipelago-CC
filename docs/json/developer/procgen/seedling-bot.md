@@ -4225,3 +4225,30 @@ on the crusher's phase — once a charge commits, every candidate shares the
 crusher and a score made of crusher progress ties across the whole beam, so
 a wildcard key for "while the body travels along this row" is what tells the
 player where to be while nothing it does can change the crusher.
+
+### A distance hint is not a constraint
+
+The escape from an eastward charge in L42's top room is a single dead-end
+tile: the room is two tiles tall, a `Crusher` is 32 px, and the other
+crusher's parked body closes the far end. Given that tile as a distance term
+in the score, the beam ran the player east ahead of the charge instead of
+ducking into it, and died with every one of its 90 successors run over.
+Given the same tile as a WALL — the player's box may not pass a column —
+the equivalent search one room below found its escape on the first run.
+
+When the escape is one cell and everything else is fatal, the search has to
+be forbidden the alternatives rather than scored away from them. A hint
+expresses a preference over a continuum; a corridor with one door is not
+one.
+
+### The freeze gates are a FOUR-way split
+
+The three recorded shapes were: return on `Game.freezeObjects` (Bob,
+BobSoldier), parked by `Mobile` (Spinner), and no freeze test at all
+(Puncher, BombPusher). `IceTurret` is a fourth: its `update()` DOES test the
+flag and return — and it calls `super.update()` on the line ABOVE that test.
+So its shooting is frozen and its motion is not. A dead turret being pushed
+across a room keeps gliding through a pickup ceremony's 150 frames.
+
+Read the gate's POSITION relative to the `super` call, not just its
+presence.
