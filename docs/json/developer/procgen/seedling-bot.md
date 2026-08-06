@@ -3903,3 +3903,123 @@ out not to be the same program.**
 Still three of five. L41's room is solved and its first three moves are
 driven; its six block pushes, the 101-tick wandlock and the ceremony are
 not, and L42 is unstarted.
+
+## R5 slice 16: two verbs that had never been called, and a parked scanner
+
+Three things this slice found are about the DRIVER rather than the game, and
+all three are the same shape: a seam that was built, documented, and never
+put through the thing it exists for.
+
+### `bait` shipped with no caller, and the first call broke it
+
+`botDriverV2.runBait` landed a slice earlier with three banked L41
+choreographies and a docblock about its three controls. Nothing called it —
+the choreographies were driven as raw spans through `createLevelRun`, which
+is a different code path with no preconditions at all.
+
+Put through `synthesizeLegs`, **two of L41's own three baits cannot satisfy
+the verb's precondition.** It demanded the player be inside a detection lane
+at the tick the verb starts; for those two **the approach IS the trigger** —
+the stance is deliberately outside the lane (standing in it would have the
+crusher charging before the leg is ready) and the choreography's first span
+is the step that enters it.
+
+```js
+bait: {
+  crusher:  {x, y},              // the OEL cell — `crusher@x,y`
+  approach: [{key, ticks}, …],   // optional: the walk INTO the lane
+  spans:    [{key, ticks}, …],   // the escape
+  park:     {x, y},              // the ENTITY position it must END at
+}
+```
+
+The positive control moved from a PREDICTION (`scanCrusher` at the start
+says it will commit) to an OBSERVATION (`!run.crushersParked` after the
+approach says it did). The pre-flight scan survives as the failure
+diagnosis — *shielded by what*, or *in no lane* — and as a precondition only
+when `approach` is empty, so a bait written against the old shape verifies
+exactly as it did.
+
+⛔ Its record also named its fields `from`/`to`, which are the TICK INDICES
+every other verb record carries, so `synthesizeLegs`' `{…, from, to,
+...record}` spread overwrote both with `{x, y}` objects.
+`crusherFrom`/`crusherTo` now.
+
+⇒ **An undriven verb is a verb whose SHAPE has never been checked against
+the thing it exists to express.** That is a different failure from an
+untested one, and no amount of unit testing the function finds it.
+
+### `wait` — the first opener the player is not standing on
+
+Every opener the driver could express was one the player HELD: `runHold`
+puts the player's box on a presser and counts. L41's `wandlock@240,96` is
+held by a `pushableblockfire` parked on `button@176,176` while the player
+stands three tiles away.
+
+It cannot be a side effect of the walk, either: `synthesizeLegs` plans each
+target against the world as it is when the target is reached, and a shut
+`Lock` is a wall — so the walk to the part is refused before the fade it is
+waiting on has started.
+
+```js
+wait: { ticks: 160, opens: 'wandlock@240,96', why: '…' }   // -> openedAt 76
+```
+
+It emits **every declared tick** and measures `openedAt`. Breaking out at
+the open would shorten the tape to exactly the number a ±1 lives in — the
+same argument `runSpear`'s rock arm makes. Driven, the answer is 76, because
+the sixth block press's settle window had already spent 25 of the `Lock`'s
+101 continuous ticks.
+
+Refusals, because the one thing a wait must never be is an idle span:
+already-open before it starts, still-shut after it ends, an activator the
+level does not have, no `opens`, no `why`, no `ticks`.
+
+### `relax.pins` reached the run and not the tape
+
+`synthesizeLegs` had passed `relax.pins` to `createLevelRun` since slice 4 —
+the run really was pinned — and `buildTape` stopped at version 4, so `pins`
+fell off the end of its destructuring and every synthesized tape came out
+UNPINNED however the plan was written. The driver verified one execution and
+the tape asked the game for another.
+
+That is the two-consumers failure the `equips` docblock **in the same
+function** was written about, one version later, and nothing caught it
+because the tree's only pinned tape was hand-authored. Version 5 is version
+4 plus the pins, and `synthesizeLegs` now compares the plan's pin list
+against the emitted tape's and fails by name.
+
+### A parked crusher is a live scanner, and auditing that is a per-tick job
+
+A `Crusher` re-derives its velocity on every tick it is at rest, so a park
+is a POSITION and not a state. A leg that parks one on a button and then
+spends 1,300 ticks pushing blocks beside it is making a claim about every
+one of those ticks: one stance inside one of its four 64 px lanes charges it
+off the button and shuts the room.
+
+`levelRun.crusherScans` answers that question with the run's own solid list
+and the run's own two player shapes, and `createTapeStepper` yields it
+per tick — so an audit rides `runTape`'s loop instead of driving a second
+one.
+
+⛔ The first cut did drive a second one, and it was a **different walk**,
+twice over: it built its held-key set as one key per tick (dropping every
+diagonal, which `chooseHeld` produces constantly) and never applied the
+tape's `equips` (so its presses fired a sword and no block moved). It
+reported a clearance of 0.00 px to a lane at a tile the real walk does not
+enter. The tell was that it FAILED — an alarm is the only reason a wrong
+instrument gets read instead of believed.
+
+⇒ The rule is the one this file already states about `runTape` and
+`createTapeStepper`: **one loop, two faces.** A "read-only" replay in a plan
+script is the same trap in tooling clothes.
+
+### `runTape` forwarded nothing about the ninth geometry family
+
+The crusher was plumbed through `levelWorld`, `levelRun`, `collidesSolid`,
+`plannerBlockerAt` and `stepV2` and stopped one consumer short, so a
+fixture-level claim about it was unstateable. `crusherContacts`, `crushers`,
+`crushersParked` and `openActivators` are forwarded now — an empty contact
+list is a CLAIM (each contact is 1000 damage that `Bot.noDamage` absorbs),
+and where the crushers finished is, in L41, the difference between a held
+button and a shut room.
