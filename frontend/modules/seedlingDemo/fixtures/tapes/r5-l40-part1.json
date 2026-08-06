@@ -1,0 +1,155 @@
+{
+  "tape_version": 4,
+  "game": "seedling",
+  "name": "r5-l40-part1",
+  "description": "⛓⛓⛓ THE SECOND COLLECT CEREMONY — `totempart 1 @160,640`, and it costs a WALK. §24.5 priced L40's north half as an eleven-link chain (a chest, a burn, a pulser, three walk-pushes, a boss key) and §23.9's arrival flood recorded which prizes need none of it: exactly one does. Measured with every activator group SHUT, so \"free\" is a verdict about the room. ⚠ The route stays off every pit: `control@224,432` is a PARAMETER BLOCK, not a trigger, and what it configures is a fall that transports to L43 — the wand room, one way. The 150 frozen frames are the claim; `hasTotemPart` is not in `Bot.itemReadout`.",
+  "boot": {
+    "level": 40,
+    "x": 480,
+    "y": 896
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [],
+  "grants": [
+    {
+      "level": 40,
+      "items": [
+        "conch",
+        "feather",
+        "fire",
+        "sword"
+      ]
+    }
+  ],
+  "persistence": [],
+  "equips": [],
+  "tick_count": 493,
+  "inputs": [
+    {
+      "key": "left",
+      "from": 0,
+      "to": 2
+    },
+    {
+      "key": "up",
+      "from": 0,
+      "to": 189
+    },
+    {
+      "key": "right",
+      "from": 2,
+      "to": 3
+    },
+    {
+      "key": "left",
+      "from": 3,
+      "to": 4
+    },
+    {
+      "key": "right",
+      "from": 6,
+      "to": 8
+    },
+    {
+      "key": "left",
+      "from": 11,
+      "to": 12
+    },
+    {
+      "key": "down",
+      "from": 189,
+      "to": 190
+    },
+    {
+      "key": "up",
+      "from": 190,
+      "to": 191
+    },
+    {
+      "key": "down",
+      "from": 191,
+      "to": 192
+    },
+    {
+      "key": "up",
+      "from": 192,
+      "to": 193
+    },
+    {
+      "key": "left",
+      "from": 197,
+      "to": 448
+    },
+    {
+      "key": "right",
+      "from": 450,
+      "to": 452
+    },
+    {
+      "key": "left",
+      "from": 456,
+      "to": 458
+    },
+    {
+      "key": "up",
+      "from": 456,
+      "to": 479
+    },
+    {
+      "key": "right",
+      "from": 458,
+      "to": 459
+    },
+    {
+      "key": "left",
+      "from": 459,
+      "to": 460
+    },
+    {
+      "key": "right",
+      "from": 462,
+      "to": 464
+    },
+    {
+      "key": "left",
+      "from": 466,
+      "to": 467
+    },
+    {
+      "key": "down",
+      "from": 481,
+      "to": 483
+    },
+    {
+      "key": "up",
+      "from": 487,
+      "to": 488
+    },
+    {
+      "key": "left",
+      "from": 487,
+      "to": 493
+    },
+    {
+      "key": "down",
+      "from": 488,
+      "to": 489
+    },
+    {
+      "key": "up",
+      "from": 489,
+      "to": 490
+    },
+    {
+      "key": "down",
+      "from": 490,
+      "to": 492
+    },
+    {
+      "key": "up",
+      "from": 492,
+      "to": 493
+    }
+  ]
+}
